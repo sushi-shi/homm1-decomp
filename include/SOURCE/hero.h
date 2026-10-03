@@ -180,7 +180,7 @@ extern class heroWindow* gheroWin;
 
 void HeroMessageUpdate(char*);
 void UpdateHeroScreenStatusBar(short);
-// Stale alias of gbHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
+// Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern signed char gbHeroScreenActive;
 short HeroHandler(struct tag_message&);
 #endif // HOMM1_SOURCE_HERO_H

@@ -98,7 +98,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
-                SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
+                SetFullScreenStatus(1 - gConfig.gfx[gCurExe].fullScreen);
         }
     }
     return event->type == MESSAGE_NONE;
@@ -162,7 +162,7 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
 
 mouseCoordinates:
 #line 187
-    ProcessAssert(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
+    ProcessAssert(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
     event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
     event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
 

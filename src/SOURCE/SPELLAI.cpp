@@ -39,10 +39,10 @@ static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
 DATA(0x004c50c4)
-int giSpellAIEffectShift;
+int gSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
 DATA(0x004c50c8)
-int giSpellAITargetSide;
+int gSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
 VA(0x00437010, 0x1bd)
@@ -60,14 +60,14 @@ int combatManager::DoSpellAI(signed char side) {
     if (m_heroes[side] == NULL)
         return 0;
     if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
-        giSpellAIEffectShift = 2;
+        gSpellAIEffectShift = 2;
     else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
-        giSpellAIEffectShift = 1;
+        gSpellAIEffectShift = 1;
     else
-        giSpellAIEffectShift = 0;
+        gSpellAIEffectShift = 0;
     for (slotIndex = 0; slotIndex < HERO_SPELL_SLOT_COUNT; slotIndex++) {
         if (m_heroes[side]->m_spells[slotIndex] >= 0
-            && (gcSpellAIFlags[m_heroes[side]->m_spells[slotIndex]] & SPELL_AI_FLAG_COMBAT)
+            && (gSpellAIFlags[m_heroes[side]->m_spells[slotIndex]] & SPELL_AI_FLAG_COMBAT)
             && m_heroes[side]->m_spellCharges[slotIndex] > 0) {
             DetermineEffectOfSpell(m_heroes[side]->m_spells[slotIndex], &spellEffect, &candHex);
             if (spellEffect > bestEffect) {
@@ -154,7 +154,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
         if (m_hexCells[curHex].m_occupantIndex >= 0) {
             target =
                 &m_armies[m_hexCells[curHex].m_occupantSide][m_hexCells[curHex].m_occupantIndex];
-            giSpellAITargetSide = m_hexCells[curHex].m_occupantSide;
+            gSpellAITargetSide = m_hexCells[curHex].m_occupantSide;
         }
         switch (spell) {
             case SPELL_CURE:
@@ -188,7 +188,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
                 if (spell == SPELL_ANTI_MAGIC && m_heroes[1 - m_currentSide] == NULL)
                     spellEffect = 0;
                 else
-                    spellEffect = RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift;
+                    spellEffect = RawEffectSpellInfluence(target, spell) >> gSpellAIEffectShift;
                 if (target->m_spellEffect >= 0)
                     spellEffect -= RawEffectSpellInfluence(target, target->m_spellEffect);
                 break;
@@ -197,7 +197,7 @@ void combatManager::DetermineEffectOfSpell(int spell, int* bestEffect, int* best
             case SPELL_CURSE:
             case SPELL_BERZERKER:
             case SPELL_PARALYZE:
-                spellEffect = -(RawEffectSpellInfluence(target, spell) >> giSpellAIEffectShift);
+                spellEffect = -(RawEffectSpellInfluence(target, spell) >> gSpellAIEffectShift);
                 if (target->m_spellEffect >= 0)
                     spellEffect += RawEffectSpellInfluence(target, target->m_spellEffect);
                 break;
@@ -510,7 +510,7 @@ void combatManager::EffectSpellDamage(int* effect, int spell, int damagePerPower
     if (stacksKilled[COMBAT_DEFENDER_SIDE] >= m_numArmies[COMBAT_DEFENDER_SIDE]
         || stacksKilled[COMBAT_ATTACKER_SIDE] >= m_numArmies[COMBAT_ATTACKER_SIDE]) {
         if (combatValue[m_currentSide] <= 0)
-            *effect = 100000000 - giSpellAIValue[spell];
+            *effect = 100000000 - gSpellAIValue[spell];
         else
             *effect = combatValue[1 - m_currentSide] - combatValue[m_currentSide];
     } else

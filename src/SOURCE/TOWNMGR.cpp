@@ -180,13 +180,13 @@ short townManager::Open(short id) {
             // One name table: neutral objects, four town-type prefixes, then
             // the faction-object suffixes.
             if (buildingType < TOWN_FIRST_FACTION_OBJECT)
-                strcpy(gText, cTownObjectNames[buildingType]);
+                strcpy(gText, gTownObjectNames[buildingType]);
             else
                 sprintf(
                     gText,
                     "%s%s",
-                    cTownObjectNames[TOWN_FIRST_FACTION_OBJECT + m_town->m_type],
-                    cTownObjectNames[buildingType + TOWN_TYPE_COUNT]
+                    gTownObjectNames[TOWN_FIRST_FACTION_OBJECT + m_town->m_type],
+                    gTownObjectNames[buildingType + TOWN_TYPE_COUNT]
                 );
             m_townObjects[m_townObjectCount] = new townObject(gText);
             if (m_townObjects[m_townObjectCount] == NULL)
@@ -328,17 +328,17 @@ void townManager::SetArmyCommand(short qualifier) {
             if (qualifier) {
                 sprintf(
                     m_statusText,
-                    cTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
+                    gTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
                     gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
                 );
                 m_command = TOWN_ARMY_COMMAND_SPLIT;
             } else if (lastArmy) {
-                strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
+                strcpy(m_statusText, gTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
                 return;
             } else {
                 sprintf(
                     m_statusText,
-                    cTownCommand[TOWN_TEXT_COMBINE_ARMIES],
+                    gTownCommand[TOWN_TEXT_COMBINE_ARMIES],
                     gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
                 );
                 m_command = TOWN_ARMY_COMMAND_MERGE;
@@ -347,7 +347,7 @@ void townManager::SetArmyCommand(short qualifier) {
                    && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
             sprintf(
                 m_statusText,
-                cTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
+                gTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
                 gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
             );
             m_command = TOWN_ARMY_COMMAND_SPLIT;
@@ -355,7 +355,7 @@ void townManager::SetArmyCommand(short qualifier) {
     } else if (m_swapArmySlot == m_pendingArmySlot) {
         sprintf(
             m_statusText,
-            cTownCommand[TOWN_TEXT_VIEW_ARMY],
+            gTownCommand[TOWN_TEXT_VIEW_ARMY],
             gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
         );
         m_command = TOWN_ARMY_COMMAND_VIEW;
@@ -365,12 +365,12 @@ void townManager::SetArmyCommand(short qualifier) {
         return;
     if (m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
         if (lastArmy) {
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
             return;
         } else {
             sprintf(
                 m_statusText,
-                cTownCommand[TOWN_TEXT_MOVE_ARMY],
+                gTownCommand[TOWN_TEXT_MOVE_ARMY],
                 gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
             );
             m_command = TOWN_ARMY_COMMAND_SWAP;
@@ -378,7 +378,7 @@ void townManager::SetArmyCommand(short qualifier) {
     } else {
         sprintf(
             m_statusText,
-            cTownCommand[TOWN_TEXT_EXCHANGE_ARMIES],
+            gTownCommand[TOWN_TEXT_EXCHANGE_ARMIES],
             gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
             gArmyNames[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]
         );
@@ -396,15 +396,15 @@ void townManager::SetCommandAndText(struct tag_message& message) {
     m_command = TOWN_ARMY_COMMAND_NONE;
     switch (id) {
         case TOWN_CLOSE_CONTROL:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EXIT]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_EXIT]);
             break;
         case WINDOW_MANAGER_NO_HOVER_WIDGET:
         case TOWN_EMPTY_STATUS_CONTROL_FIRST:
         case TOWN_EMPTY_STATUS_CONTROL_LAST:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_STATUS]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_EMPTY_STATUS]);
             break;
         case TOWN_GARRISON_FIRST_CONTROL:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_GARRISON]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_GARRISON]);
             m_command = TOWN_ARMY_COMMAND_GARRISON;
             break;
         case TOWN_GARRISON_SLOT_FIRST:
@@ -420,11 +420,11 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                 m_selectedStrip = m_garrisonStrip;
                 m_selectedArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
                 if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == CREATURE_NONE)
-                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                    strcpy(m_statusText, gTownCommand[TOWN_TEXT_EMPTY_SLOT]);
                 else {
                     sprintf(
                         m_statusText,
-                        cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                        gTownCommand[TOWN_TEXT_SELECT_ARMY],
                         gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
@@ -432,7 +432,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
             }
             break;
         case TOWN_HERO_FIRST_CONTROL:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_VIEW_HERO]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_VIEW_HERO]);
             m_command = TOWN_ARMY_COMMAND_VIEW_HERO;
             break;
         case TOWN_HERO_SLOT_FIRST:
@@ -448,12 +448,12 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                 m_selectedStrip = m_heroStrip;
                 m_selectedArmySlot = id - TOWN_HERO_SLOT_FIRST;
                 if (m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot] == CREATURE_NONE) {
-                    strcpy(m_statusText, cTownCommand[TOWN_TEXT_EMPTY_SLOT]);
+                    strcpy(m_statusText, gTownCommand[TOWN_TEXT_EMPTY_SLOT]);
                     m_command = TOWN_ARMY_COMMAND_NONE;
                 } else {
                     sprintf(
                         m_statusText,
-                        cTownCommand[TOWN_TEXT_SELECT_ARMY],
+                        gTownCommand[TOWN_TEXT_SELECT_ARMY],
                         gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
@@ -461,25 +461,25 @@ void townManager::SetCommandAndText(struct tag_message& message) {
             }
             break;
         case BUILDING_SLOT_MAGE_GUILD:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_MAGE_GUILD]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_MAGE_GUILD]);
             break;
         case BUILDING_SLOT_THIEVES_GUILD:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_THIEVES_GUILD]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_THIEVES_GUILD]);
             break;
         case BUILDING_SLOT_TAVERN:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TAVERN]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TAVERN]);
             break;
         case BUILDING_SLOT_SHIPYARD:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_SHIPYARD]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_SHIPYARD]);
             break;
         case BUILDING_SLOT_WELL:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_WELL]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_WELL]);
             break;
         case BUILDING_SLOT_TENT:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TENT]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_TENT]);
             break;
         case BUILDING_SLOT_CASTLE:
-            strcpy(m_statusText, cTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_CASTLE]);
+            strcpy(m_statusText, gTownCommand[TOWN_TEXT_BUILDING_0 + BUILDING_SLOT_CASTLE]);
             break;
         case BUILDING_SLOT_DWELLING_1:
         case BUILDING_SLOT_DWELLING_2:
@@ -489,7 +489,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
         case BUILDING_SLOT_DWELLING_6:
             sprintf(
                 m_statusText,
-                cTownCommand[TOWN_TEXT_DWELLING],
+                gTownCommand[TOWN_TEXT_DWELLING],
                 gArmyNames[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
             );
             break;
@@ -2288,13 +2288,13 @@ short CastleHandler(struct tag_message& message) {
                         if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
+                                gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
+                                gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         else {
@@ -2308,7 +2308,7 @@ short CastleHandler(struct tag_message& message) {
                                 objNum = TOWN_CASTLE_INFO_CANNOT_AFFORD_MAGE_LEVEL;
                             else
                                 objNum = TOWN_CASTLE_INFO_ADD_MAGE_GUILD_LEVEL;
-                            strcpy(gText, cCastleInfo[objNum]);
+                            strcpy(gText, gCastleInfo[objNum]);
                         }
                         break;
                     case BUILDING_SLOT_THIEVES_GUILD:
@@ -2324,48 +2324,48 @@ short CastleHandler(struct tag_message& message) {
                         if (gpTownManager->m_town->m_buildings & (1 << message.id))
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
+                                gCastleInfo[TOWN_CASTLE_INFO_ALREADY_BUILT],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         else if (!(gpTownManager->m_buildableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
+                                gCastleInfo[TOWN_CASTLE_INFO_CANNOT_BUILD],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         else if (!(gpTownManager->m_affordableBuildings & (1 << message.id)))
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
+                                gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         else
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_BUILD],
+                                gCastleInfo[TOWN_CASTLE_INFO_BUILD],
                                 gpTownManager->GetBuildingName(message.id)
                             );
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
                         if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
-                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO]);
+                            strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_CANNOT_AFFORD_HERO]);
                         else if (gpCurPlayer->m_heroCount == PLAYER_HERO_CAPACITY)
                             sprintf(
                                 gText,
-                                cCastleInfo[TOWN_CASTLE_INFO_TOO_MANY_HEROES],
+                                gCastleInfo[TOWN_CASTLE_INFO_TOO_MANY_HEROES],
                                 PLAYER_HERO_CAPACITY
                             );
                         else if (gpTownManager->m_town->m_occupyingHeroId
                                  != TOWN_OCCUPYING_HERO_NONE)
-                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_TOWN_OCCUPIED]);
+                            strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_TOWN_OCCUPIED]);
                         else
-                            strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_RECRUIT_HERO]);
+                            strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_RECRUIT_HERO]);
                         break;
                     case DIALOG_BUTTON_0:
-                        strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_EXIT]);
+                        strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_EXIT]);
                         break;
                     default:
-                        strcpy(gText, cCastleInfo[TOWN_CASTLE_INFO_OPTIONS]);
+                        strcpy(gText, gCastleInfo[TOWN_CASTLE_INFO_OPTIONS]);
                         break;
                 }
                 message.command = WIDGET_COMMAND_SET_TEXT;

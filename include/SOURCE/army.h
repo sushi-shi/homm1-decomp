@@ -241,6 +241,6 @@ short GetAdjacentCellIndexNoArmy(short, short);
 // unreferenced, kept so later symbol handles stay put.
 extern short gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
-extern signed char gbGenieHalf;
+extern signed char gGenieHalf;
 // Set while SpecialAttack fires the second shot of a double shooter.
 #endif // HOMM1_SOURCE_ARMY_H

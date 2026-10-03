@@ -39,9 +39,9 @@ void BlitBitmapToScreen(
                 width
             );
     }
-    if (gbEnlargeScreenBlit != 0) {
+    if (gEnlargeScreenBlit != 0) {
         if (iMainWinScreenWidth == SCREEN_BLIT_WIDTH
-            && iMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
+            && gMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
             if (width < SCREEN_BLIT_WIDTH_END)
                 width++;
             if (height < SCREEN_BLIT_WIDTH_END)
@@ -59,10 +59,10 @@ void BlitBitmapToScreen(
     }
     RECT invalidRectangle;
     invalidRectangle.left = destinationX * iMainWinScreenWidth / SCREEN_BLIT_WIDTH;
-    invalidRectangle.top = destinationY * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
+    invalidRectangle.top = destinationY * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
     invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
     invalidRectangle.bottom =
-        (destinationY + height) * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
+        (destinationY + height) * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
     if (InvalidateRect(hwndApp, &invalidRectangle, FALSE) == FALSE)
         LogStr("InvalidateRect Failed");
     if (UpdateWindow(hwndApp) == FALSE)
@@ -104,7 +104,7 @@ void FadeIn(int increment) {
         MemError();
     done = 0;
     memset(currentPalette->m_data, 0, PALETTE_GRAPHICS_BYTES);
-    if (gConfig.gfx[giCurExe].fullScreen == 0)
+    if (gConfig.gfx[gCurExe].fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
@@ -136,7 +136,7 @@ void FadeOut(int increment) {
     if (currentPalette == NULL)
         MemError();
     done = 0;
-    if (gConfig.gfx[giCurExe].fullScreen == 0)
+    if (gConfig.gfx[gCurExe].fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     memcpy(currentPalette->m_data, gpBufferPalette->m_data, PALETTE_GRAPHICS_BYTES);
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {

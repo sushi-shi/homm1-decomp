@@ -90,7 +90,7 @@ void town::XformToCastle(void) {
 // argument and memory-limit calculation belong to its later revision.
 VA(0x0046422d, 0xa5)
 void town::View(void) {
-    if (giHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
+    if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;

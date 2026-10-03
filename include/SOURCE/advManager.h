@@ -515,14 +515,14 @@ void UpdateCPanel(signed char);
 signed char SaveGame(void);
 short CPanelHandler(struct tag_message&);
 
-// giForceSwitchMusic: the tick a network turn hand-over forced a music
+// gForceSwitchMusic: the tick a network turn hand-over forced a music
 // switch, or IDLE when none is pending (advManager::Main, game::NewDay).
 H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
     FORCED_MUSIC_IDLE = -1
 H1_ENUM_CONST_END(ForcedMusicConstant)
-extern long iLastScrollTime;
-extern int gbForceUpdate;
-// The adventure screen's bottom-right panel: iCurBottomView is the view
+extern long gLastScrollTime;
+extern int gForceUpdate;
+// The adventure screen's bottom-right panel: gCurBottomView is the view
 // UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
 // resource message, and game's DISABLED hold while the AI moves.
@@ -535,16 +535,16 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_RESOURCE = 5,
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
-extern int iCurBottomView;
-extern int iCurBottomViewEnemy;
+extern int gCurBottomView;
+extern int gCurBottomViewEnemy;
 extern int iLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
-extern int iSandAnim;
-extern int iLastHourGlassPhase;
-extern long giLastHourGlassUpdateTime;
+extern int gSandAnim;
+extern int gLastHourGlassPhase;
+extern long gLastHourGlassUpdateTime;
 // Volume per environment-sound distance step.
-extern const long glEnvironmentVolume[];
-// giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
+extern const long gEnvironmentVolume[];
+// gLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
 // whole viewport), and m_previousCursorMapX/Y with no hero-cursor cell to
 // clear (Buka 2.1 AdventureUpdateScreenConstant UPDATE_NONE).
 H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
@@ -552,13 +552,13 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
     CURSOR_CELL_NONE = -1
 H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
 
-extern int giLimitUpdMinX;
+extern int gLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;
-extern class heroWindow* cPanel;
+extern class heroWindow* gPanel;
 extern signed char bPrefsChanged;
-extern signed char bFreshSave;
+extern signed char gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern signed char bComboDraw[][17];
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
@@ -566,18 +566,18 @@ extern int TrigX;
 extern int TrigY;
 // CURSOR globals (Buka advManager.h names, CURSOR data): HoMM1 keeps byte
 // flags and the last two footstep sample handles (0x0048eb3c/0x0048eb40).
-extern signed char bMoveSoundMade;
+extern signed char gMoveSoundMade;
 extern signed char EveryOther;
-extern struct _SAMPLE* hPrevMoveSound;
-extern struct _SAMPLE* hLastMoveSound;
+extern struct _SAMPLE* gPrevMoveSound;
+extern struct _SAMPLE* gLastMoveSound;
 extern signed char S1cursorDirection;
 extern short S1cursorBaseFrame;
 extern short S1cursorFrameCount;
 extern short S1cursorCycle;
 extern short S1cursorTurning;
-extern short giStepDelay[];
+extern short gStepDelay[];
 // MoveHero's pixels per walk step by speed and the step offsets.
-extern short giPixelsPerStep[];
+extern short gPixelsPerStep[];
 extern short startVals[];
 extern int giFrameStep;
 
@@ -585,6 +585,6 @@ struct SMapChange {
     char _pad[64];
 };
 extern char cArmySizeName[];
-extern int iCurHourGlassPhase;
+extern int gCurHourGlassPhase;
 
 #endif // HOMM1_SOURCE_ADVMANAGER_H

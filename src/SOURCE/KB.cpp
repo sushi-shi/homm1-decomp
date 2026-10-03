@@ -73,14 +73,14 @@ VA(0x0044f640, 0x72)
 void PollSound() {
     if (KBTickCount() < glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT])
         return;
-    if (gbInPollSound)
+    if (gInPollSound)
         return;
-    gbInPollSound = 1;
+    gInPollSound = 1;
     glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() + 30;
-    if (gbForegroundApp)
+    if (gForegroundApp)
         gpSoundManager->PollSound();
     PollRemote();
-    gbInPollSound = 0;
+    gInPollSound = 0;
 }
 
 VA(0x0044f6b2, 0x20)
@@ -172,10 +172,10 @@ void DeleteMainClasses(void) {
 VA(0x00450046, 0x116)
 int EarlySetup(void) {
     DATA(0x0049ea98)
-    static signed char bEarlySetupDone = 0;
+    static signed char gEarlySetupDone = 0;
     int iCDRomErr;
 
-    if (bEarlySetupDone)
+    if (gEarlySetupDone)
         return 0;
     InitMainClasses();
     GetGraphicsInfo();
@@ -236,7 +236,7 @@ H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_QUIT = 4
 H1_ENUM_END(MainMenuHelp)
 
-// giEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
+// gEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
 // after the last campaign scenario; oldmain plays the matching video (the
 // value indexes lowResVideos/hiResVideos), offers a replay after LOST and
 // advances the campaign after WON.
@@ -273,9 +273,9 @@ int oldmain(void) {
     int result;
     short command;
 
-    if (bKBDone)
+    if (gKBDone)
         return 0;
-    bKBDone = 1;
+    gKBDone = 1;
     command = MAIN_MENU_NO_COMMAND;
     if (gpExec->InitSystem())
         ShutDown("Initialization failed!");
@@ -313,7 +313,7 @@ int oldmain(void) {
         );
         gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
         gpResourceManager->Dispose(font);
-        if (!gbSkipIntro) {
+        if (!gSkipIntro) {
             if (gConfig.slowVideo)
                 PlaySmacker(SMACK_NWCLOGO1);
             else
@@ -349,12 +349,12 @@ int oldmain(void) {
         backdropLoaded = 1;
         if (gGameCommand != MAIN_MENU_QUIT)
             gpWindowManager->m_updateFlags = 1;
-        giCampaignChoice = 0;
+        gCampaignChoice = 0;
         gpMouseManager->ReallyShowPointer();
 
-        if (giMenuCommand != APP_MENU_NONE) {
+        if (gMenuCommand != APP_MENU_NONE) {
         processMenuCommand:
-            switch (giMenuCommand) {
+            switch (gMenuCommand) {
                 case APP_MENU_LOAD_STANDARD_GAME:
                 case APP_MENU_LOAD_CAMPAIGN_GAME:
                 case APP_MENU_LOAD_HOT_SEAT_2:
@@ -396,14 +396,14 @@ int oldmain(void) {
                 mainWin = new heroWindow(400, 35, "stpmain.bin");
                 if (!mainWin)
                     MemError();
-                gbInSetupDialog = 1;
+                gInSetupDialog = 1;
                 gpWindowManager->DoDialog(mainWin, InitMenuHandler, 0);
                 delete mainWin;
                 command = gpWindowManager->m_dialogResult;
-                gbInSetupDialog = 0;
+                gInSetupDialog = 0;
             }
         }
-        if (giMenuCommand != APP_MENU_NONE)
+        if (gMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
 
         gpMouseManager->ReallyHidePointer();
@@ -452,10 +452,10 @@ int oldmain(void) {
         }
 
     gameSetupComplete:
-        if (giMenuCommand != APP_MENU_NONE)
+        if (gMenuCommand != APP_MENU_NONE)
             goto processMenuCommand;
         if (!leave) {
-            if (gbRemoteOn && !giThisNetPos) {
+            if (gRemoteOn && !giThisNetPos) {
                 n = 0;
                 for (idx = 0; idx < GAME_PLAYER_COUNT; idx++) {
                     if (gbHumanPlayer[idx]) {
@@ -490,7 +490,7 @@ int oldmain(void) {
                     }
                 }
             }
-            if (gbRemoteOn && gbWaitForRemoteReceive) {
+            if (gRemoteOn && gbWaitForRemoteReceive) {
                 giWaitType = DIALOG_WAIT_OTHER_PLAYER;
                 NormalDialog(
                     "Waiting for other remote player to set up game.",
@@ -513,7 +513,7 @@ int oldmain(void) {
                 }
                 gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
             }
-            gbGameInitialized = 1;
+            gGameInitialized = 1;
             backdropLoaded = 0;
             gpSoundManager->StopAllSamples();
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -530,7 +530,7 @@ int oldmain(void) {
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
         }
 
-        if (gbGameOver) {
+        if (gGameOver) {
             RemoteCleanup();
             bShowIt = 1;
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -548,13 +548,13 @@ int oldmain(void) {
             hiResVideos[GAME_END_LOST] = SMACK_LOSE1;
             hiResVideos[GAME_END_WON] = SMACK_WIN01C;
             hiResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
-            if (giEndSequence != GAME_END_WON) {
-                if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
+            if (gEndSequence != GAME_END_WON) {
+                if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                     PlaySmacker(SMACK_WIN01C);
                     PlaySmacker(SMACK_WIN02);
                 } else {
                     PlaySmacker(
-                        gConfig.slowVideo ? hiResVideos[giEndSequence] : lowResVideos[giEndSequence]
+                        gConfig.slowVideo ? hiResVideos[gEndSequence] : lowResVideos[gEndSequence]
                     );
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
@@ -566,8 +566,8 @@ int oldmain(void) {
             } else {
                 ShowCongrats();
             }
-            gbGameOver = 0;
-            if (giEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
+            gGameOver = 0;
+            if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(
                     giCurTurn,
@@ -576,13 +576,13 @@ int oldmain(void) {
                     gCampaignSideNames[gpGame->m_campaignType - CAMPAIGN_IRONFIST]
                 );
             }
-            if (gbShowHighScore) {
+            if (gShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
                 if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
                     ShutDown("Can't add manager!");
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
-                giHighScoreRank = HIGH_SCORE_EMPTY;
+                gHighScoreRank = HIGH_SCORE_EMPTY;
                 gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
@@ -591,14 +591,14 @@ int oldmain(void) {
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
-                if (giEndSequence == GAME_END_LOST) {
+                if (gEndSequence == GAME_END_LOST) {
                     sprintf(gText, "Would you like to replay this scenario?");
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
                         goto playScenario;
                     }
-                } else if (giEndSequence == GAME_END_WON) {
+                } else if (gEndSequence == GAME_END_WON) {
                     gpGame->m_campaignDay = giCurTurn + 1;
                     gpGame->m_campaignScenario++;
                     gpGame->m_campaignScenariosWon++;
@@ -620,7 +620,7 @@ int oldmain(void) {
                 }
             }
         }
-        if (gbRemoteOn)
+        if (gRemoteOn)
             leave = 1;
     }
     ShutDown(NULL);
@@ -645,8 +645,8 @@ int InterpretCommandLine(void) {
 
     giDebugLevel = 0;
     giShowIntro = 1;
-    gbColorMice = 0;
-    gbSpecialMouseMasks = 1;
+    gColorMice = 0;
+    gSpecialMouseMasks = 1;
     giScreenScroll = 1;
     giLimitPlayer = 0;
     gbBlackoutPlayer = 1;
@@ -654,31 +654,31 @@ int InterpretCommandLine(void) {
     strcpy(gFullMapName, "Claw ( Easy )");
     strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
 
-    size = strlen(gcCommandLine);
+    size = strlen(gCommandLine);
     for (i = 0; i < size; i++) {
-        if (gcCommandLine[i] == '/' && i + 1 < size) {
-            switch (toupper(gcCommandLine[i + 1])) {
+        if (gCommandLine[i] == '/' && i + 1 < size) {
+            switch (toupper(gCommandLine[i + 1])) {
                 case 'I':
                     if (i + 2 < size)
-                        giShowIntro = gcCommandLine[i + 2] - '0';
+                        giShowIntro = gCommandLine[i + 2] - '0';
                     break;
                 case 'C':
                     if (i + 2 < size)
-                        gbColorMice = gcCommandLine[i + 2] - '0';
+                        gColorMice = gCommandLine[i + 2] - '0';
                     break;
                 case 'S':
                     if (i + 2 < size)
-                        gbNoSound = 1 - (gcCommandLine[i + 2] - '0');
+                        gbNoSound = 1 - (gCommandLine[i + 2] - '0');
                     break;
                 case 'B':
                     if (i + 2 < size)
-                        gbSpecialMouseMasks = gcCommandLine[i + 2] - '0';
+                        gSpecialMouseMasks = gCommandLine[i + 2] - '0';
                     break;
             }
         }
     }
 
-    sprintf(cAggPathName, "%s%s", gcDataPath, "heroes.agg");
+    sprintf(cAggPathName, "%s%s", gDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
@@ -736,7 +736,7 @@ short InitMenuHandler(tag_message& message) {
         }
     }
 
-    if (handled || giMenuCommand != APP_MENU_NONE) {
+    if (handled || gMenuCommand != APP_MENU_NONE) {
         FINISH_DIALOG_MESSAGE(message);
         return MESSAGE_DISPATCH_FORWARD;
     }
@@ -1051,7 +1051,7 @@ void NormalDialog(
     height = heightIndex * NORMAL_DIALOG_WINDOW_ROW_HEIGHT + NORMAL_DIALOG_WINDOW_BASE_HEIGHT;
 
     if (x == NORMAL_DIALOG_AUTO_POSITION || x + width >= LOGICAL_SCREEN_WIDTH - 1) {
-        if (gpAdvManager->m_active == 1 && !gbHeroWindShowing && !gbOverviewShowing)
+        if (gpAdvManager->m_active == 1 && !gHeroWindShowing && !gOverviewShowing)
             x = NORMAL_DIALOG_ADVENTURE_X;
         else
             x = (LOGICAL_SCREEN_WIDTH - width) / 2;
@@ -1063,8 +1063,8 @@ void NormalDialog(
     }
 
     sprintf(szFilename, "evntwin%d.bin", heightIndex);
-    pNormalDialogWindow = new heroWindow(x, y, szFilename);
-    if (!pNormalDialogWindow)
+    gNormalDialogWindow = new heroWindow(x, y, szFilename);
+    if (!gNormalDialogWindow)
         MemError();
 
     message.type = MESSAGE_WIDGET;
@@ -1073,18 +1073,18 @@ void NormalDialog(
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
         message.id = NORMAL_DIALOG_BUTTON_OK;
-        pNormalDialogWindow->BroadcastMessage(message);
+        gNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
         message.id = NORMAL_DIALOG_BUTTON_CANCEL;
-        pNormalDialogWindow->BroadcastMessage(message);
+        gNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
         message.id = NORMAL_DIALOG_BUTTON_YES;
-        pNormalDialogWindow->BroadcastMessage(message);
+        gNormalDialogWindow->BroadcastMessage(message);
         message.id = NORMAL_DIALOG_BUTTON_NO;
-        pNormalDialogWindow->BroadcastMessage(message);
+        gNormalDialogWindow->BroadcastMessage(message);
     }
 
     for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
@@ -1211,7 +1211,7 @@ void NormalDialog(
         );
         if (!iconPanel)
             MemError();
-        pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
             iconPanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6,
@@ -1227,7 +1227,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_CREST) {
             iconPanel = new iconWidget(
@@ -1244,7 +1244,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         if (kind[i] == NORMAL_DIALOG_HERO) {
             sprintf(szFilename, "port%04d.icn", resourceQty[i]);
@@ -1262,7 +1262,7 @@ void NormalDialog(
             );
             if (!iconPanel)
                 MemError();
-            pNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
         }
         captionWidget = new textWidget(
             resCenterX - 50,
@@ -1277,12 +1277,12 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
     message.text = text;
-    pNormalDialogWindow->BroadcastMessage(message);
+    gNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
         szOr = static_cast<char*>(malloc(3));
@@ -1300,7 +1300,7 @@ void NormalDialog(
         );
         if (!captionWidget)
             MemError();
-        pNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gpAdvManager->m_active == 1)
@@ -1309,17 +1309,17 @@ void NormalDialog(
         gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
 
     if (dialogType == NORMAL_DIALOG_TYPE_WAIT_CANCEL || dialogType == NORMAL_DIALOG_TYPE_WAIT_OK) {
-        gpWindowManager->DoDialog(pNormalDialogWindow, WaitHandler, 0);
+        gpWindowManager->DoDialog(gNormalDialogWindow, WaitHandler, 0);
     } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(pNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gpWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(pNormalDialogWindow);
+        gpWindowManager->RemoveWindow(gNormalDialogWindow);
         gpMouseManager->ReallyShowPointer();
     } else {
-        gpWindowManager->DoDialog(pNormalDialogWindow, EventWindowHandler, 0);
+        gpWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
     }
-    delete pNormalDialogWindow;
+    delete gNormalDialogWindow;
 }
 
 // donor PoL RVA 0x000a2565; preferred Buka symbol ?UpdateNormalDialog@@YIXPAD@Z
@@ -1334,9 +1334,9 @@ void UpdateNormalDialog(char* text) {
         short show = 1; // Retained from donor and retail stack frame.
         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
         message.text = text;
-        pNormalDialogWindow->BroadcastMessage(message);
-        pNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
-        pNormalDialogWindow
+        gNormalDialogWindow->BroadcastMessage(message);
+        gNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
+        gNormalDialogWindow
             ->DrawWindow(1, WINDOW_ALL_WIDGETS_LOW, NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID);
     }
 }
@@ -1459,12 +1459,12 @@ void PlayerDead(int player) {
             gpGame->m_availableHeroes[currentPlayer->m_availableHeroIds[i]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
     }
-    if (gbRemoteOn && gbHumanPlayer[player])
+    if (gRemoteOn && gbHumanPlayer[player])
         HandleRemoteDeadPlayerExit(player);
 }
 
 DATA(0x00491058)
-char* cCombatGroundNames[8] = {
+char* gCombatGroundNames[8] = {
     "boat.xtl",
     "grass.xtl",
     "snow.xtl",
@@ -1475,7 +1475,7 @@ char* cCombatGroundNames[8] = {
     0,
 };
 DATA(0x00491078)
-char* cCombatObstacleNames[8] = {
+char* gCombatObstacleNames[8] = {
     "boat.obj",
     "grass.obj",
     "snow.obj",
@@ -1513,12 +1513,12 @@ char* gCombatFxNames[26] = {
     "moraleg.icn", "moraleb.icn",
 };
 DATA(0x00491140)
-short giSpellAIValue[29] = {
+short gSpellAIValue[29] = {
     500,  350,  300, 400, 550, 900, 400, 500, 300, 350, 250, 0, 100,  150, 1000,
     2000, 1700, 700, 700, 0,   0,   0,   0,   0,   0,   0,   0, 1200, 0,
 };
 DATA(0x00491180)
-signed char gcSpellAIFlags[29] = {
+signed char gSpellAIFlags[29] = {
     3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 };
 DATA(0x004911a0)
@@ -1558,7 +1558,7 @@ short gRadarTerrainColor[24] = {
     126, 74, 110, 179, 100, 218, 12, 12, 12, 12, 12, 12,
 };
 DATA(0x00491350)
-char* cTownObjectNames[20] = {
+char* gTownObjectNames[20] = {
     "magegld", "thievesg", "tavern", "dock", "well", "farm", "frst", "plns", "mtn", "tent",
     "cast",    "_d0",      "_d1",    "_d2",  "_d3",  "_d4",  "_d5",  "_e0",  "_e1", "_e2",
 };
@@ -1639,7 +1639,7 @@ void HandleRemoteDeadPlayerExit(int position) {
 VA(0x00452e99, 0xf1)
 void HandleRemoteSuddenExit(void) {
     int next;
-    if (!gbGameInitialized)
+    if (!gGameInitialized)
         return;
     gText[0] = giThisGamePos;
     if (gbThisNetHumanPlayer[giCurPlayer]
@@ -1682,8 +1682,8 @@ void ReceiveRemotePlayerExit(
         sprintf(gText, "You have been eliminated from the game!!!");
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
         RemoteCleanup();
-        gbGameOver = 1;
-        giEndSequence = GAME_END_LOST;
+        gGameOver = 1;
+        gEndSequence = GAME_END_LOST;
         return;
     }
     if (giNumHumanPlayers <= 2) {
@@ -1771,11 +1771,11 @@ void CheckEndGame(int forced) {
 
     if (gbInNewGameSetup)
         return;
-    if (gbGameOver)
+    if (gGameOver)
         return;
-    if (bInCheckEndGame)
+    if (gInCheckEndGame)
         return;
-    bInCheckEndGame = 1;
+    gInCheckEndGame = 1;
 
     for (player = 0; player < gpGame->m_playerCount; player++) {
         if (!gpGame->m_playerDead[player]) {
@@ -1922,33 +1922,33 @@ void CheckEndGame(int forced) {
     }
 
     if (lost) {
-        gbGameOver = 1;
-        giEndSequence = GAME_END_LOST;
+        gGameOver = 1;
+        gEndSequence = GAME_END_LOST;
     }
     if (win) {
-        gbGameOver = 1;
-        giEndSequence = GAME_END_WON;
+        gGameOver = 1;
+        gEndSequence = GAME_END_WON;
     }
     if (numLiving == 1 || humansAlive == 0
         || (humansAlive == 1 && !gbThisNetHumanPlayer[lastHumanPos])) {
         if (humansAlive == 1 && gbThisNetHumanPlayer[lastHumanPos]) {
             if (normalWin) {
-                gbGameOver = 1;
-                giEndSequence = GAME_END_WON;
+                gGameOver = 1;
+                gEndSequence = GAME_END_WON;
             }
         } else {
-            gbGameOver = 1;
-            giEndSequence = GAME_END_LOST;
+            gGameOver = 1;
+            gEndSequence = GAME_END_LOST;
         }
     }
     if (forced) {
-        gbGameOver = 1;
-        giEndSequence = GAME_END_WON;
+        gGameOver = 1;
+        gEndSequence = GAME_END_WON;
     }
-    if (gbGameOver && gpGame->m_campaignType > 0 && giEndSequence == GAME_END_WON
+    if (gGameOver && gpGame->m_campaignType > 0 && gEndSequence == GAME_END_WON
         && gpGame->m_campaignScenario + 1 == CAMPAIGN_SCENARIO_COUNT)
-        giEndSequence = GAME_END_CAMPAIGN_COMPLETE;
-    bInCheckEndGame = 0;
+        gEndSequence = GAME_END_CAMPAIGN_COMPLETE;
+    gInCheckEndGame = 0;
 }
 
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
@@ -2181,14 +2181,14 @@ short GetMonType(int score, int highScoreType) {
     int index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
         if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
-            if (giScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD] >= score)
-                return giScoreCampaignMon[index][SCORE_MONSTER_TYPE];
+            if (gScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD] >= score)
+                return gScoreCampaignMon[index][SCORE_MONSTER_TYPE];
         } else {
-            if (giScoreMon[index][SCORE_MONSTER_THRESHOLD] <= score)
-                return giScoreMon[index][SCORE_MONSTER_TYPE];
+            if (gScoreMon[index][SCORE_MONSTER_THRESHOLD] <= score)
+                return gScoreMon[index][SCORE_MONSTER_TYPE];
         }
     }
-    return giScoreMon[0][SCORE_MONSTER_TYPE];
+    return gScoreMon[0][SCORE_MONSTER_TYPE];
 }
 
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
@@ -2206,9 +2206,9 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
 
     missingFile = 0;
     if (standard == HIGH_SCORE_TYPE_STANDARD)
-        sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
+        sprintf(fileName, "%sSTANDARD.HS", gDataPath);
     else
-        sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
+        sprintf(fileName, "%sCAMPAIGN.HS", gDataPath);
     file = open(fileName, _O_BINARY);
     if (file == -1)
         missingFile = 1;
@@ -2223,15 +2223,15 @@ int AddScoreToHighScore(int score, int standard, char*, char* scenarioName) {
         close(file);
     }
 
-    gbShowHighScore = 1;
+    gShowHighScore = 1;
     giHighScoreType = standard;
-    giHighScoreRank = HIGH_SCORE_EMPTY;
+    gHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
         if ((score >= scores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
             || (score <= scores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
             || scores[entry].score == HIGH_SCORE_EMPTY) {
-            giHighScoreRank = entry;
+            gHighScoreRank = entry;
             break;
         }
     }
@@ -2352,7 +2352,7 @@ void PopNetBox(char* notice) {
     int success;
     int textWidth;
 
-    if (!gbRemoteOn)
+    if (!gRemoteOn)
         return;
     lineTextLimit = 60;
     firstId = 1;
@@ -2530,12 +2530,12 @@ void AddNetBoxLine(char* text) {
 VA(0x00454f8a, 0x14f)
 void ShutDown(char* message) {
     DATA(0x0049f468)
-    static int bInShutDown = 0;
+    static int gInShutDown = 0;
     char buffer[768];
-    if (bInShutDown)
+    if (gInShutDown)
         return;
-    bInShutDown = 1;
-    gbClosingApp = 1;
+    gInShutDown = 1;
+    gClosingApp = 1;
     buffer[0] = 0;
     if (message) {
         strcpy(buffer, message);
@@ -2550,7 +2550,7 @@ void ShutDown(char* message) {
     }
     ClearMapExtra();
     UnloadSystemwideIcons();
-    if (gbRemoteOn)
+    if (gRemoteOn)
         HandleRemoteSuddenExit();
     if (gPalette) {
         gpResourceManager->Dispose(gPalette);
@@ -2808,20 +2808,20 @@ void WaitEndSample(SAMPLE2 s, int waitTime) {
 VA(0x00455a0d, 0x7b)
 void MemError(void) {
     DATA(0x0049f534)
-    static signed char gbInMemError = 0;
-    if (gbInMemError)
+    static signed char gInMemError = 0;
+    if (gInMemError)
         return;
-    gbInMemError = 1;
+    gInMemError = 1;
     LogStr("Out of Memory");
     sprintf(
         gText,
         "\n\n%s\n%s\n%d%s\n%d%s\n\n",
-        gcMemoryErrorTitle,
-        gcMemoryRequirements,
-        giRequiredExtendedMemory,
-        gcExtendedMemoryUnits,
-        giRequiredConventionalMemory,
-        gcConventionalMemoryUnits
+        gMemoryErrorTitle,
+        gMemoryRequirements,
+        gRequiredExtendedMemory,
+        gExtendedMemoryUnits,
+        gRequiredConventionalMemory,
+        gConventionalMemoryUnits
     );
     ShutDown(gText);
 }
@@ -2938,7 +2938,7 @@ int HandleAppSpecificMenuCommands(int command) {
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     break;
             }
-            giMenuCommand = command;
+            gMenuCommand = command;
             break;
         case APP_MENU_SAVE_GAME:
             SaveGame();
@@ -3090,7 +3090,7 @@ void UpdateSystemOptionsMenu(void) {
     int checkedCommand;
     int menuCommand;
 
-    if (!gConfig.gfx[giCurExe].showMenu)
+    if (!gConfig.gfx[gCurExe].showMenu)
         return;
     if (!hmnuApp)
         return;
@@ -3236,7 +3236,7 @@ void UpdateAppSpecificMenus(void* hMenu) {
 
 VA(0x004567bf, 0x22)
 void EarlyResizeWindow(int, int, int, int) {
-    if (gbClosingApp)
+    if (gClosingApp)
         return;
 }
 
@@ -3343,7 +3343,7 @@ int gStartingResources[4][7] = {
     {0, 0, 0, 0, 0, 0, 0},
 };
 DATA(0x00491b28)
-int giMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
+int gMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
 DATA(0x00491b48)
 int gArtifactBaseRV[37] = {
     9000, 22000, 18000, 14000, 6000, 4000, 4000, 5600, 1200, 1200, 1200, 1200, -1200,
@@ -3353,21 +3353,21 @@ int gArtifactBaseRV[37] = {
 DATA(0x00491bdc)
 int gUltArtifactAvgValue = 16200;
 DATA(0x00491be0)
-char gcDataPath[352] = ".\\DATA\\";
+char gDataPath[352] = ".\\DATA\\";
 DATA(0x00491d40)
-char gcAnimPath[352] = "\\HEROES\\ANIM\\";
+char gAnimPath[352] = "\\HEROES\\ANIM\\";
 DATA(0x00491ea0)
-char gcSoundPath[352] = "\\HEROES\\SOUND\\";
+char gSoundPath[352] = "\\HEROES\\SOUND\\";
 DATA(0x00492000)
-char gcGamePath[20] = ".\\GAMES\\";
+char gGamePath[20] = ".\\GAMES\\";
 DATA(0x00492018)
-char gcMapPath[20] = ".\\MAPS\\";
+char gMapPath[20] = ".\\MAPS\\";
 DATA(0x00492030)
 signed char gHeroScoutRadius[8] = {4, 4, 4, 6, 4, 0, 0, 0};
 DATA(0x00492038)
-float gfClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
+float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
 DATA(0x00492058)
-signed char giVisRangeTown = 5;
+signed char gVisRangeTown = 5;
 DATA(0x00492060)
 tag_monsterInfo gMonsterDatabase[28] = {
     {20, 18, 9, 12, 1, 1, 1, 0, 1, 1, 1, 1, 5, 0, {3, 0, 18, 0, 5, 0}, 0},
@@ -3400,14 +3400,14 @@ tag_monsterInfo gMonsterDatabase[28] = {
     {650, 3831, 43, 2, 50, 50, 3, 0, 10, 9, 20, 30, 15, 0, {3, 0, 4, 0, 5, 0}, 2},
 };
 DATA(0x004923c8)
-float gfStatPower[41] = {
+float gStatPower[41] = {
     0.63f, 0.63f, 0.63f, 0.63f, 0.63f, 0.63f, 0.64f, 0.65f, 0.67f, 0.68f, 0.7f,
     0.72f, 0.74f, 0.76f, 0.78f, 0.81f, 0.84f, 0.87f, 0.91f, 0.95f, 1.0f,  1.05f,
     1.1f,  1.15f, 1.22f, 1.28f, 1.36f, 1.44f, 1.53f, 1.63f, 1.74f, 1.86f, 1.99f,
     2.14f, 2.3f,  2.48f, 2.67f, 2.86f, 2.86f, 2.86f, 2.86f,
 };
 DATA(0x00492470)
-float gfBattleStat[41] = {
+float gBattleStat[41] = {
     0.2f,  0.2f,  0.2f,  0.2f,  0.2f,  0.21f, 0.23f, 0.25f, 0.28f, 0.31f, 0.35f,
     0.39f, 0.43f, 0.48f, 0.53f, 0.59f, 0.66f, 0.73f, 0.81f, 0.9f,  1.0f,  1.1f,
     1.21f, 1.33f, 1.46f, 1.61f, 1.77f, 1.95f, 2.14f, 2.36f, 2.59f, 2.85f, 3.14f,
@@ -3416,12 +3416,12 @@ float gfBattleStat[41] = {
 DATA(0x00492514)
 signed char gMageGuildSpellCount[4] = {3, 5, 7, 9};
 DATA(0x00492518)
-float gfSpellCastNumMod[21] = {
+float gSpellCastNumMod[21] = {
     0.0f,  1.0f,  1.7f,  2.2f,  2.6f,  2.95f, 3.27f, 3.56f, 3.81f, 4.04f, 4.25f,
     4.45f, 4.64f, 4.83f, 5.01f, 5.19f, 5.36f, 5.53f, 5.68f, 5.82f, 5.96f,
 };
 DATA(0x00492590)
-signed char gbDrawSavedCursor = 0;
+signed char gDrawSavedCursor = 0;
 DATA(0x00492598)
 short gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -3441,7 +3441,7 @@ signed char gRouteFrame[8][8] = {
     {44, 44, 44, 34, 39, 39, 39, 34},
 };
 DATA(0x00492638)
-unsigned char giCloudType[256] = {
+unsigned char gCloudType[256] = {
     11,  7,   8,   129, 9,   10,  128, 33,  108, 29,  30,  32,  28,  133, 34,  22,  11,  7,   8,
     113, 9,   10,  128, 126, 108, 29,  30,  131, 28,  133, 34,  120, 11,  7,   8,   129, 9,   10,
     112, 127, 108, 29,  30,  32,  28,  133, 125, 121, 11,  7,   8,   113, 9,   10,  112, 103, 108,
@@ -3463,14 +3463,14 @@ signed char gMons32Width[28] = {
     21, 22, 25, 23, 27, 22, 29, 28, 32, 27, 21, 26, 21, 29,
 };
 DATA(0x00492758)
-short giScoreMon[SCORE_MONSTER_COUNT][2] = {
+short gScoreMon[SCORE_MONSTER_COUNT][2] = {
     {0, 0},    {7, 6},    {14, 12},  {21, 18},  {28, 24},  {35, 7},   {42, 1},
     {49, 19},  {56, 13},  {63, 2},   {70, 8},   {77, 25},  {84, 14},  {91, 20},
     {98, 3},   {105, 9},  {112, 15}, {119, 21}, {126, 4},  {133, 26}, {140, 16},
     {147, 10}, {154, 22}, {161, 5},  {168, 27}, {175, 11}, {182, 17}, {189, 23},
 };
 DATA(0x004927c8)
-short giScoreCampaignMon[SCORE_MONSTER_COUNT][2] = {
+short gScoreCampaignMon[SCORE_MONSTER_COUNT][2] = {
     {3600, 0},  {3400, 6},  {3200, 12}, {3000, 18}, {2600, 24}, {2400, 7},  {2200, 1},
     {2000, 19}, {1800, 13}, {1600, 2},  {1500, 8},  {1400, 25}, {1300, 14}, {1200, 20},
     {1100, 3},  {1000, 9},  {900, 15},  {800, 21},  {750, 4},   {700, 26},  {650, 16},
@@ -3648,17 +3648,17 @@ unsigned char gMonoColorMap[256] = {
     237, 238, 239, 240, 241, 242, 243, 244, 245,
 };
 DATA(0x00492e00)
-int gbLoadingMonoIcon = 0;
+int gLoadingMonoIcon = 0;
 DATA(0x00492e04)
-int giMonoIconSkip = -1;
+int gMonoIconSkip = -1;
 DATA(0x00492e08)
-int giScrollX = 0;
+int gScrollX = 0;
 DATA(0x00492e0c)
-int giScrollY = 0;
+int gScrollY = 0;
 DATA(0x00492e10)
-int gbNoBorder = 0;
+int gNoBorder = 0;
 DATA(0x00492e14)
-int gbEnlargeScreenBlit = 1;
+int gEnlargeScreenBlit = 1;
 DATA(0x00492e18)
 void* hmnuDflt = NULL;
 DATA(0x00492e1c)
@@ -3668,17 +3668,17 @@ void* hmnuAdv = NULL;
 DATA(0x00492e24)
 void* hmnuTown = NULL;
 DATA(0x00492e28)
-int gbColorMice = 0;
+int gColorMice = 0;
 DATA(0x00492e2c)
-int gbSpecialMouseMasks = 0;
+int gSpecialMouseMasks = 0;
 DATA(0x00492e30)
-int giCurExe = 0;
+int gCurExe = 0;
 DATA(0x00492e34)
-int giMenuCommand = APP_MENU_NONE;
+int gMenuCommand = APP_MENU_NONE;
 DATA(0x00492e38)
-int gbInDialog = 0;
+int gInDialog = 0;
 DATA(0x00492e40)
-SMenuEnableStatus gsMenuEnableStatus[70] = {
+SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
     {40009, 1, 1, 0}, {40012, 0, 0, 0}, {40013, 0, 0, 0}, {40014, 0, 0, 0}, {40015, 0, 0, 0},
     {40016, 1, 0, 0}, {40017, 1, 0, 0}, {40018, 1, 0, 0}, {40019, 1, 0, 0}, {40020, 1, 0, 0},
@@ -3695,17 +3695,17 @@ SMenuEnableStatus gsMenuEnableStatus[70] = {
     {40135, 0, 1, 0}, {40137, 0, 1, 0}, {40138, 0, 1, 0}, {40139, 0, 0, 0}, {40140, 0, 0, 0},
 };
 DATA(0x0049302c)
-int gbInSetupDialog = 0;
+int gInSetupDialog = 0;
 DATA(0x00493030)
-int gbMinimized = 0;
+int gMinimized = 0;
 DATA(0x00493034)
-int gbHeroMoving = 0;
+int gHeroMoving = 0;
 DATA(0x00493038)
-int gbInSmacker = 0;
+int gInSmacker = 0;
 DATA(0x00493040)
-int gbRemoteReady = 0;
+int gRemoteReady = 0;
 DATA(0x00493044)
-int gbHeartbeatSeen = 0;
+int gHeartbeatSeen = 0;
 DATA(0x00493048)
 char* gArtifactNames[38] = {
     "Ultimate Book of Knowledge",
@@ -4155,7 +4155,7 @@ char* gInitMenuHelp[5] = {
     "Quit Heroes of Might and Magic and return to the DOS prompt.",
 };
 DATA(0x00493760)
-char* cAdvMenuHelp[6] = {
+char* gAdvMenuHelp[6] = {
     "Next Hero\n\nSelect the next Hero.",
     "Continue Movement\n\nContinue the Hero's movement along his current path.",
     "Kingdom Summary\n\nView a summary of your kingdom.",
@@ -4290,7 +4290,7 @@ char* gArmySizeNames[6][2] = {
     {"Zounds!", "Zounds..."},
 };
 DATA(0x00493998)
-char* cHeroScreen[19] = {
+char* gHeroScreen[19] = {
     "Kingdom Overview",
     "View %s Info",
     "Additional hero characteristics",
@@ -4312,7 +4312,7 @@ char* cHeroScreen[19] = {
     "Hero Screen",
 };
 DATA(0x004939e8)
-char* cCastleInfo[14] = {
+char* gCastleInfo[14] = {
     "Build Mage Guild",
     "Mage Guild is at highest level.",
     "Cannot afford next level.",
@@ -4347,17 +4347,17 @@ char* gLuckInfoText[12] = {
     0,
 };
 DATA(0x00493a50)
-char* gcMemoryErrorTitle = "Out of Memory";
+char* gMemoryErrorTitle = "Out of Memory";
 DATA(0x00493a54)
-char* gcMemoryRequirements = "Heroes of Might and Magic requires approximately:";
+char* gMemoryRequirements = "Heroes of Might and Magic requires approximately:";
 DATA(0x00493a58)
-char* gcExtendedMemoryUnits = "K extended or expanded memory (XMS or EMS) and";
+char* gExtendedMemoryUnits = "K extended or expanded memory (XMS or EMS) and";
 DATA(0x00493a5c)
-char* gcConventionalMemoryUnits = "K conventional memory";
+char* gConventionalMemoryUnits = "K conventional memory";
 DATA(0x00493a60)
 char* gPlayerTypeNames[5] = {"None", "Dumb", "Average", "Smart", "Genius"};
 DATA(0x00493a78)
-char* cSpellHelp[8] = {
+char* gSpellHelp[8] = {
     "View previous page",
     "View next page",
     "View adventure spells",
@@ -4400,10 +4400,10 @@ char* gNewTurnText[7] = {
     "Astrologers proclaim week of the %s.\n\n%s growth +5.\n\nAll dwellings increase population.",
 };
 DATA(0x00493b08)
-char* cViewGeneralLabels[6] =
+char* gViewGeneralLabels[6] =
     {"Attack: ", "Defense: ", "Spell Power: ", "Knowledge: ", "Morale: ", "Luck: "};
 DATA(0x00493b20)
-char* cViewGeneralHelp[6] = {
+char* gViewGeneralHelp[6] = {
     "Stop Catapult",
     "Cast Spell",
     "Retreat",
@@ -4412,7 +4412,7 @@ char* cViewGeneralHelp[6] = {
     "General's Options",
 };
 DATA(0x00493b38)
-char* cCombatMessage[9] = {
+char* gCombatMessage[9] = {
     "",
     "Move %s here.",
     "Fly %s here.",
@@ -4424,11 +4424,11 @@ char* cCombatMessage[9] = {
     "No shots left!",
 };
 DATA(0x00493b60)
-char* cHeroLevel[3] = {"%s has gained", " a level.\n", " %d levels.\n"};
+char* gHeroLevel[3] = {"%s has gained", " a level.\n", " %d levels.\n"};
 DATA(0x00493b70)
-char* cCombatHelp[3] = {"Auto Combat", "Skip This Unit", ""};
+char* gCombatHelp[3] = {"Auto Combat", "Skip This Unit", ""};
 DATA(0x00493b80)
-char* cTownCommand[22] = {
+char* gTownCommand[22] = {
     "Redistribute %s army",
     "Cannot combine Hero's last army",
     "Combine %s armies",
@@ -4642,7 +4642,7 @@ char* gSetupGameHelp[4] = {
     "Cancel back to the main menu.",
 };
 DATA(0x00493e48)
-char* cBattleResults[11] = {
+char* gBattleResults[11] = {
     "The enemy has surrendered!",
     "The enemy has fled!",
     "A glorious victory!",
@@ -4849,61 +4849,61 @@ char* gWinSetupText[68] = {
     "World Map",
 };
 DATA(0x00494118)
-int giRequiredExtendedMemory = 4434;
+int gRequiredExtendedMemory = 4434;
 DATA(0x0049411c)
-int giRequiredConventionalMemory = 374;
+int gRequiredConventionalMemory = 374;
 DATA(0x00494120)
-int giMapSize = 0;
+int gMapSize = 0;
 DATA(0x00494124)
-int giMapDifficulty = 0;
+int gMapDifficulty = 0;
 DATA(0x00494128)
-signed char gbHeroWindShowing = 0;
+signed char gHeroWindShowing = 0;
 DATA(0x0049412c)
-signed char gbOverviewShowing = 0;
+signed char gOverviewShowing = 0;
 DATA(0x00494130)
-int gbFullCombatScreenDrawn = 1;
+int gFullCombatScreenDrawn = 1;
 DATA(0x00494134)
-int gbLimitedCombatUpdatePalette = 0;
+int gLimitedCombatUpdatePalette = 0;
 DATA(0x00494138)
-signed char gbFirstTimeThrough = 0;
+signed char gFirstTimeThrough = 0;
 DATA(0x0049413c)
-signed char gbSkipIntro = 0;
+signed char gSkipIntro = 0;
 DATA(0x00494140)
-int gbAllBlack = 0;
+int gAllBlack = 0;
 DATA(0x00494144)
-signed char gbInCombat = 0;
+signed char gInCombat = 0;
 DATA(0x00494148)
-signed char gbDirectConnect = 0;
+signed char gDirectConnect = 0;
 DATA(0x0049414c)
-long giForceSwitchMusic = FORCED_MUSIC_IDLE;
+long gForceSwitchMusic = FORCED_MUSIC_IDLE;
 DATA(0x00494150)
-int gbComputeExtent = 0;
+int gComputeExtent = 0;
 DATA(0x00494154)
-int gbSaveBiggestExtent = 0;
+int gSaveBiggestExtent = 0;
 DATA(0x00494158)
-int gbLimitToExtent = 0;
+int gLimitToExtent = 0;
 DATA(0x0049415c)
-int gbCurrArmyDrawn = 1;
+int gCurrArmyDrawn = 1;
 DATA(0x00494160)
 int gAdvDisposeLevel = 0;
 DATA(0x00494164)
-int gbRemoteOn = 0;
+int gRemoteOn = 0;
 DATA(0x00494168)
-signed char gbGameInitialized = 0;
+signed char gGameInitialized = 0;
 DATA(0x0049416c)
-signed char giHighScoreRank = -1;
+signed char gHighScoreRank = -1;
 DATA(0x00494170)
-signed char gbShowHighScore = 0;
+signed char gShowHighScore = 0;
 DATA(0x00494174)
-int giHighMemBuffer = 4000;
+int gHighMemBuffer = 4000;
 DATA(0x00494180)
-char gbInPollSound = 0;
+char gInPollSound = 0;
 // Retail places these zero-initialized flags among KB's function literals
 // (0x0049ea98-0x0049f537), each next to the literals of its only user.
 DATA(0x0049ea9c)
-signed char bKBDone = 0;
+signed char gKBDone = 0;
 DATA(0x0049f040)
-signed char bInCheckEndGame = 0;
+signed char gInCheckEndGame = 0;
 // KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
 // symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>
@@ -4956,7 +4956,7 @@ philAI* gpPhilAI;
 DATA(0x004c6708)
 char* cDEDest;
 DATA(0x004c670c)
-heroWindow* pNormalDialogWindow;
+heroWindow* gNormalDialogWindow;
 DATA(0x004c6710)
 int giHostGamePos;
 DATA(0x004c6714)
@@ -4976,7 +4976,7 @@ int giMinExtentY;
 DATA(0x004c6740)
 signed char iMPBaseType;
 DATA(0x004c6744)
-class hero* gpHVHero;
+class hero* gHVHero;
 DATA(0x004c6748)
 int giHeroScreenSrcIndex;
 DATA(0x004c674c)
@@ -5008,7 +5008,7 @@ configStruct gConfig;
 DATA(0x004c6be0)
 char gcRegAppPath[352];
 DATA(0x004c6d44)
-signed char giCampaignChoice;
+signed char gCampaignChoice;
 DATA(0x004c6d48)
 class game* gpGame;
 DATA(0x004c6d4c)
@@ -5052,7 +5052,7 @@ int iDEMaxLen;
 DATA(0x004c78b0)
 class combatManager* gpCombatManager;
 DATA(0x004c78b4)
-short giSpellEffectFrame;
+short gSpellEffectFrame;
 DATA(0x004c78b8)
 executive* gpExec;
 DATA(0x004c78c0)

@@ -142,6 +142,6 @@ public:
     void PushCombatPoint(short, short, unsigned short, unsigned short);
 };
 #pragma pack(pop)
-extern int giFullySeeded;
+extern int gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

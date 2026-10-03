@@ -310,11 +310,11 @@ short army::FlyTo(short destination) {
         giMinExtentX = giMinExtentY;
         giMaxExtentY = 0;
         giMaxExtentX = giMaxExtentY;
-        gbComputeExtent = 1;
-        gbSaveBiggestExtent = 1;
+        gComputeExtent = 1;
+        gSaveBiggestExtent = 1;
         DrawToBuffer(posX, posY);
-        gbComputeExtent = 0;
-        gbSaveBiggestExtent = 0;
+        gComputeExtent = 0;
+        gSaveBiggestExtent = 0;
         if (giMinExtentX < 0)
             giMinExtentX = 0;
         if (giMinExtentY < 0)

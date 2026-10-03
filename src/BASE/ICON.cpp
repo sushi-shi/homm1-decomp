@@ -42,7 +42,7 @@ void icon::DrawToBuffer(
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
     H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
-    if (gbComputeExtent != 0) {
+    if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (mode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight =
@@ -76,7 +76,7 @@ void icon::DrawToBuffer(
             m_drawBottom = reinterpret_cast<IconEntry*>(m_data)[frame].h
                            + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         }
-        if (gbSaveBiggestExtent != 0) {
+        if (gSaveBiggestExtent != 0) {
             if (giMinExtentX > m_drawLeft)
                 giMinExtentX = m_drawLeft;
             if (giMinExtentY > m_drawTop)
@@ -87,8 +87,8 @@ void icon::DrawToBuffer(
                 giMaxExtentY = m_drawBottom;
         }
     }
-    if (gbLimitToExtent != 0
-        && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
+    if (gLimitToExtent != 0
+        && (gCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
             || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
     if (gbIconClipOn != 0) {
@@ -142,7 +142,7 @@ void icon::FillToBuffer(
     H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
     if (orientation == ICON_DRAW_NORMAL) {
-        if (gbLimitToExtent) {
+        if (gLimitToExtent) {
             IconEntry* entry =
                 reinterpret_cast<IconEntry*>(m_data)
                 + frame; // byte-evidenced: packed frame directory decoded from icon resource bytes.
@@ -150,7 +150,7 @@ void icon::FillToBuffer(
             m_drawRight = m_drawLeft + entry->w;
             m_drawTop = y + entry->y;
             m_drawBottom = m_drawTop + entry->h;
-            if (!gbCurrArmyDrawn || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
+            if (!gCurrArmyDrawn || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
                 || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY)
                 return;
         }
@@ -176,7 +176,7 @@ void icon::DimToBuffer(
     H1_ENUM_PARAM(IconDrawOrientation, signed char) orientation,
     H1_ENUM_PARAM(IconDrawOffsetMode, signed char) mode
 ) {
-    if (gbComputeExtent != 0) {
+    if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (mode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight =
@@ -210,7 +210,7 @@ void icon::DimToBuffer(
             m_drawBottom = reinterpret_cast<IconEntry*>(m_data)[frame].h
                            + m_drawTop; // byte-evidenced: packed frame entry in resource bytes.
         }
-        if (gbSaveBiggestExtent != 0) {
+        if (gSaveBiggestExtent != 0) {
             if (giMinExtentX > m_drawLeft)
                 giMinExtentX = m_drawLeft;
             if (giMinExtentY > m_drawTop)
@@ -221,8 +221,8 @@ void icon::DimToBuffer(
                 giMaxExtentY = m_drawBottom;
         }
     }
-    if (gbLimitToExtent != 0
-        && (gbCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
+    if (gLimitToExtent != 0
+        && (gCurrArmyDrawn == 0 || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
             || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
     if (orientation == ICON_DRAW_NORMAL)

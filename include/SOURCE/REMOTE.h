@@ -115,14 +115,14 @@ struct RemoteMessage {
 };
 #pragma pack(pop)
 
-extern signed char gbInNetSetup;
-extern int iIDCtr;
+extern signed char gInNetSetup;
+extern int gIDCtr;
 extern unsigned char GameMode;
 extern unsigned char gPacketSequence;
-extern int iNetNameIndex;
+extern int gNetNameIndex;
 extern char PacketSend[];
-extern int giNumNetGuests;
-extern int giLastConfirm;
+extern int gNumNetGuests;
+extern int gLastConfirm;
 extern int iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
@@ -156,17 +156,17 @@ signed char WaitForGuest(void);
 
 // PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
 // incoming/outgoing message buffers (Buka REMOTE.h).
-extern long lLastHeartbeatSend;
-extern long lLastHeartbeatReceive;
+extern long gLastHeartbeatSend;
+extern long gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
 extern RemoteMessage rcvBufIn;
 extern int iLastIds[REMOTE_RECENT_ID_COUNT];
-extern int iInOrderCtr;
-extern int iCurLastID;
+extern int gInOrderCtr;
+extern int gCurLastID;
 // The network setup's host/guest handshake states and broadcast clock (Buka
 // Netbios.h; retail places them inside REMOTE's data, 0x0049f954-0x0049fa70).
-extern signed char iInitNetGuestStatus;
-extern signed char iWaitForHostStatus;
+extern signed char gInitNetGuestStatus;
+extern signed char gWaitForHostStatus;
 void PollRemote();
 // HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
 void RemoteMain(int);
@@ -206,7 +206,7 @@ extern inque_t inque;
 // The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
 // completes its type.
 extern struct outque_t outque;
-extern int iBaudBits;
+extern int gBaudBits;
 extern int inescape;
 extern int newpacket;
 extern int packetlen;

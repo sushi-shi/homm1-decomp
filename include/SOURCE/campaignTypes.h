@@ -3,7 +3,7 @@
 
 #include <SOURCE/game.h>
 
-// giCampaignChoice: the campaign being played (0 = a standalone map). The
+// gCampaignChoice: the campaign being played (0 = a standalone map). The
 // stpcmpgn.bin choices and the New Campaign menu commands select them in the
 // gSetupCampaignGameHelp order (Ironfist, Slayer, Lamanda, Alamar).
 H1_ENUM_BEGIN(CampaignChoice)

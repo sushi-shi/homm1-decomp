@@ -14,6 +14,6 @@ short SetupMultiPlayerGameHandler(struct tag_message&);
 short SetupNetworkGameHandler(struct tag_message&);
 short SetupGameHandler(struct tag_message&);
 
-extern int gbDoModemConfig;
+extern int gDoModemConfig;
 
 #endif // HOMM1_SOURCE_SETUP_H

@@ -33,7 +33,7 @@ H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_PAINT_Y_END = WINGRAPH_HEIGHT
 H1_ENUM_CONST_END(WingraphPaintConstant)
 
-// giGraphicsType: the WinG window backend or the DirectDraw full-screen one
+// gGraphicsType: the WinG window backend or the DirectDraw full-screen one
 // (InitGraphics picks DirectDraw for full screen; Buka WingraphGraphicsType,
 // same numbering).
 H1_ENUM_BEGIN(WingraphGraphicsType)
@@ -87,20 +87,20 @@ struct WingImage {
     void* bits;
 };
 
-extern H1_ENUM_STORAGE(WingraphGraphicsType, int) giGraphicsType;
-extern int giMainVideoModeHeight;
-extern int giMainVideoModeWidth;
-extern BOOL gbDDrawAttached;
-extern BOOL gbWinGAttached;
-extern BOOL gbWinGraphBusy;
+extern H1_ENUM_STORAGE(WingraphGraphicsType, int) gGraphicsType;
+extern int gMainVideoModeHeight;
+extern int gMainVideoModeWidth;
+extern BOOL gDDrawAttached;
+extern BOOL gWinGAttached;
+extern BOOL gWinGraphBusy;
 extern HPALETTE hpalApp;
-extern HINSTANCE hDDrawLibrary;
-extern DirectDrawCreateProc lpDirectDrawCreate;
-extern IDirectDraw* lpDD;
-extern IDirectDrawSurface* lpDDSPrimary;
-extern IDirectDrawSurface* lpDDSOne;
-extern IDirectDrawClipper* lpClipper;
-extern IDirectDrawPalette* lpDDPal;
+extern HINSTANCE gDDrawLibrary;
+extern DirectDrawCreateProc gDirectDrawCreate;
+extern IDirectDraw* gDD;
+extern IDirectDrawSurface* gDDSPrimary;
+extern IDirectDrawSurface* gDDSOne;
+extern IDirectDrawClipper* gClipper;
+extern IDirectDrawPalette* gDDPal;
 extern short gDDRestoreLineBase;
 extern short gDDSetPaletteLineBase;
 extern short gDDInitializePaletteLineBase;
@@ -110,7 +110,7 @@ extern short gCreatePrimaryLineBase;
 extern short gSetupClipperLineBase;
 extern short gDDInitLineBase;
 extern short gDDCreateSurfaceLineBase;
-extern BOOL bInDDSD;
+extern BOOL gInDDSD;
 extern short gDDSetFullScreenLineBase;
 extern short gDDPaintLineBase;
 extern RECT gDDClientRect;
@@ -118,16 +118,16 @@ extern RECT gDDSourceRect;
 extern RECT gDDDestinationRect;
 extern long gDDResult;
 extern _DDSURFACEDESC gDDSurfaceDesc;
-extern long lPaintStart;
-extern int iBusyRetry;
+extern long gPaintStart;
+extern int gBusyRetry;
 extern HDC hdcImage;
 extern HBITMAP gbmOldMonoBitmap;
 extern WingImage screenImage;
 extern WingPalette LogicalPalette;
 extern int Orientation;
-extern void* lpInitWin;
-extern int giTtlBlts;
-extern int giMainVideoModeColorDepth;
+extern void* gInitWin;
+extern int gTtlBlts;
+extern int gMainVideoModeColorDepth;
 
 void DDRestoreDisplayMode();
 void SetFullScreenStatus(int);

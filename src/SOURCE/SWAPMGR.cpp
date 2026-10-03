@@ -141,9 +141,9 @@ short swapManager::Open(short id) {
     Update();
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     KBChangeMenu(hmnuAdv);
-    giMonoIconSkip = 2;
+    gMonoIconSkip = 2;
     m_selectorIcon = gpResourceManager->GetIcon("swapbtn.icn");
-    giMonoIconSkip = -1;
+    gMonoIconSkip = -1;
     gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     m_messageFilter = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                       | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100

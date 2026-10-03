@@ -13,7 +13,7 @@
 #include <SOURCE/searchArray.h>
 
 // SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).
-extern short giCurTempMobility;
+extern short gCurTempMobility;
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
@@ -41,7 +41,7 @@ short searchArray::FindNearestObject(
     short neighborX;
     short neighborY;
 
-    giCurTempMobility = SEARCH_NEAREST_OBJECT_MOBILITY;
+    gCurTempMobility = SEARCH_NEAREST_OBJECT_MOBILITY;
     m_specialTargetX = SEARCH_INVALID_COORDINATE;
     Clear();
     PushPoint(startX, startY, direction, 0, maximumCost, 0, 0, 0, 0, 0, 0, 0);
@@ -213,8 +213,8 @@ void searchArray::SeedPosition(
     static short s_processedPointCount = 0;
 
     if (!continueSeed) {
-        giFullySeeded = 0;
-        giCurTempMobility = mobility;
+        gFullySeeded = 0;
+        gCurTempMobility = mobility;
         Clear();
         m_specialTargetY = SEARCH_INVALID_COORDINATE;
         m_specialTargetX = SEARCH_INVALID_COORDINATE;
@@ -342,14 +342,14 @@ void searchArray::SeedPosition(
                                              + CalcTerrainCost(
                                                  s_terrain,
                                                  FINDPATH_STEP_STRAIGHT,
-                                                 giCurTempMobility - s_currentNode.distance,
+                                                 gCurTempMobility - s_currentNode.distance,
                                                  costMode
                                              );
         s_stepCost[FINDPATH_STEP_DIAGONAL] = s_currentNode.distance
                                              + CalcTerrainCost(
                                                  s_terrain,
                                                  FINDPATH_STEP_DIAGONAL,
-                                                 giCurTempMobility - s_currentNode.distance,
+                                                 gCurTempMobility - s_currentNode.distance,
                                                  costMode
                                              );
         for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
@@ -395,7 +395,7 @@ void searchArray::SeedPosition(
                         + CalcTerrainCost(
                             s_possibleDirections[s_direction],
                             s_direction & SEARCH_DIAGONAL_COST_MASK,
-                            giCurTempMobility - s_currentNode.distance,
+                            gCurTempMobility - s_currentNode.distance,
                             costMode
                         )
                     < s_bestTargetCost)
@@ -403,7 +403,7 @@ void searchArray::SeedPosition(
                                        + CalcTerrainCost(
                                            s_possibleDirections[s_direction],
                                            s_direction & SEARCH_DIAGONAL_COST_MASK,
-                                           giCurTempMobility - s_currentNode.distance,
+                                           gCurTempMobility - s_currentNode.distance,
                                            costMode
                                        );
             }
@@ -434,7 +434,7 @@ void searchArray::SeedPosition(
                                 + CalcTerrainCost(
                                     s_terrain,
                                     FINDPATH_STEP_STRAIGHT,
-                                    giCurTempMobility - s_adjacentCost,
+                                    gCurTempMobility - s_adjacentCost,
                                     costMode
                                 );
                             s_stepCost[FINDPATH_STEP_DIAGONAL] =
@@ -442,7 +442,7 @@ void searchArray::SeedPosition(
                                 + CalcTerrainCost(
                                     s_terrain,
                                     FINDPATH_STEP_DIAGONAL,
-                                    giCurTempMobility - s_adjacentCost,
+                                    gCurTempMobility - s_adjacentCost,
                                     costMode
                                 );
                             PushPoint(
@@ -466,10 +466,10 @@ void searchArray::SeedPosition(
             }
         }
     }
-    giFullySeeded = 1;
+    gFullySeeded = 1;
 }
 
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
 // this flag); SeedPosition's point counter is initialized .data (0x0048e170).
 DATA(0x004a4680)
-int giFullySeeded;
+int gFullySeeded;

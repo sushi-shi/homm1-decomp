@@ -69,23 +69,23 @@ short CombatSpecialHandler(struct tag_message& message) {
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
+                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
+                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
                         break;
                     case DIALOG_BUTTON_0:
-                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_CLOSE], 1);
+                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_CLOSE], 1);
                         break;
                     case SPELL_BOOK_ENTRY_FIRST:
                     case SPELL_BOOK_ENTRY_FIRST + 1:
                     case SPELL_BOOK_ENTRY_FIRST + 2:
                     case SPELL_BOOK_ENTRY_LAST:
-                        gpCombatManager->CombatMessage(cSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
+                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
                         break;
                     default:
                         gpCombatManager->CombatMessage(
-                            cSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS],
+                            gSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS],
                             1
                         );
                         break;
@@ -117,7 +117,7 @@ short HandleCastSpell(struct tag_message& message) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = ARMY_HEX_INVALID;
                     gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
-                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && bInTeleportGetDest)
+                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
                         gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
                     else
                         gpCombatManager->CombatMessage("Select Spell Target", 1);
@@ -130,12 +130,12 @@ short HandleCastSpell(struct tag_message& message) {
             break;
         case MESSAGE_LEFT_BUTTON_DOWN:
             if (indexToCastOn != ARMY_HEX_INVALID) {
-                if (bInTeleportGetDest)
+                if (gInTeleportGetDest)
                     giNextActionGridIndex2 = indexToCastOn;
                 else {
                     giNextActionGridIndex = indexToCastOn;
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT) {
-                        bInTeleportGetDest = 1;
+                        gInTeleportGetDest = 1;
                         indexToCastOn = ARMY_HEX_INVALID;
                         message.type = MESSAGE_MOUSE_MOVE;
                         gpMouseManager->MouseCoords(message.x, message.y);
@@ -144,7 +144,7 @@ short HandleCastSpell(struct tag_message& message) {
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                 }
-                bInTeleportGetDest = 0;
+                gInTeleportGetDest = 0;
                 message.type = MESSAGE_WIDGET;
                 message.command = WIDGET_COMMAND_DIALOG_SELECT;
                 return MESSAGE_DISPATCH_FORWARD;
@@ -158,7 +158,7 @@ short HandleCastSpell(struct tag_message& message) {
             giNextAction = ACTION_NONE;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
-            bInTeleportGetDest = 0;
+            gInTeleportGetDest = 0;
             return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -192,7 +192,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) 
                 return 0;
             break;
         case SPELL_TELEPORT:
-            if (bInTeleportGetDest) {
+            if (gInTeleportGetDest) {
                 newHex = hex;
                 if (newHex == giNextActionGridIndex
                     || !m_armies[gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide]
@@ -240,7 +240,7 @@ void combatManager::SpellMessage(signed char spell, signed char hex) {
             sprintf(gText, "Cast %s", gSpellNames[spell]);
             break;
         case SPELL_TELEPORT:
-            if (bInTeleportGetDest) {
+            if (gInTeleportGetDest) {
                 sprintf(gText, "Teleport Here");
                 break;
             }
@@ -629,12 +629,12 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        giSpellEffectFrame = armyIndex;
+        gSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        giSpellEffectFrame = armyIndex;
+        gSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     if (castSide == COMBAT_SIDE_ANY) {
@@ -959,4 +959,4 @@ void combatManager::Armageddon(void) {
 // indexToCastOn (0x0048f2b0) is its local static: /Gi emits it at the head
 // of that function's literals.
 DATA(0x0048f28c)
-signed char bInTeleportGetDest = 0;
+signed char gInTeleportGetDest = 0;

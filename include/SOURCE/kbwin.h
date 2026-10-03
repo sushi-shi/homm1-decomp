@@ -114,13 +114,13 @@ H1_ENUM_CONST_END(PrefsConstant)
 
 extern void* hInstApp;
 extern void* gEventHandle;
-extern char gcCommandLine[];
+extern char gCommandLine[];
 extern unsigned char bProcessMessage[];
-extern char szAppName[];
-extern char szTitle[];
+extern char gAppName[];
+extern char gTitle[];
 extern long lTemp;
 extern struct tagRECT rcTemp;
-extern int iTempX;
+extern int gTempX;
 extern int iTempY;
 
 #pragma pack(push, 1)
@@ -161,12 +161,12 @@ void SetMenuStatus(int);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
 void SetWinText(class heroWindow*, short);
 void UpdateDfltMenu(void*);
-extern int gbForegroundApp;
-extern int gbNoDialogMenusOn;
+extern int gForegroundApp;
+extern int gNoDialogMenusOn;
 extern void* hmnuApp;
-extern int gbClosingApp;
-extern long lLastGetMessage;
-extern long lLastAilServe;
+extern int gClosingApp;
+extern long gLastGetMessage;
+extern long gLastAilServe;
 long KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(int);
@@ -174,7 +174,7 @@ char* FindLastToken(char*, char);
 void SetMenus(void*, int);
 extern void* hwndApp;
 extern int iMainWinScreenWidth;
-extern int iMainWinScreenHeight;
+extern int gMainWinScreenHeight;
 void ProcessAssert(int, char*, int);
 void WritePrefs();
 char* FindToken(char*, char);

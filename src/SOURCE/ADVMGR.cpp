@@ -571,7 +571,7 @@ H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_VIEW_CELL_COUNT = 15
 H1_ENUM_END(AdventureDrawMask)
 
-// GetCloudLookup's unseen-neighbour bits (index into giCloudType): the four
+// GetCloudLookup's unseen-neighbour bits (index into gCloudType): the four
 // edge neighbours, then the diagonals clockwise from north-east; off-map
 // columns/rows set their three neighbours at once.
 H1_ENUM_BEGIN(CloudNeighborMask)
@@ -590,7 +590,7 @@ H1_ENUM_BEGIN(CloudNeighborMask)
 H1_ENUM_END(CloudNeighborMask)
 
 // advManager::Main's right-click help on the six panel buttons: the
-// cAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
+// gAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
 // end turn, adventure options, game options).
 H1_ENUM_BEGIN(AdventurePanelHelp)
     ADVENTURE_HELP_NONE = -1,
@@ -708,7 +708,7 @@ short advManager::Open(short id) {
     int i;
 
     firstTime = 1;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     m_openState = 0;
     bShowIt = 0;
     m_adventureBorder = NULL;
@@ -839,10 +839,10 @@ short advManager::Open(short id) {
         m_heroIcons[ADVMGR_HERO_ICON_WARLOCK] = gpResourceManager->GetIcon("wrlk32.icn");
     if (m_heroIcons[ADVMGR_HERO_ICON_BOAT] == NULL)
         m_heroIcons[ADVMGR_HERO_ICON_BOAT] = gpResourceManager->GetIcon("boat32.icn");
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     if (m_boatShadowIcon == NULL)
         m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
     if (m_flagIcons[PLAYER_COLOR_BLUE] == NULL)
         m_flagIcons[PLAYER_COLOR_BLUE] = gpResourceManager->GetIcon("b-flag32.icn");
     if (m_flagIcons[PLAYER_COLOR_GREEN] == NULL)
@@ -859,10 +859,10 @@ short advManager::Open(short id) {
         m_boatFlagIcons[PLAYER_COLOR_RED] = gpResourceManager->GetIcon("r-bflg32.icn");
     if (m_boatFlagIcons[PLAYER_COLOR_YELLOW] == NULL)
         m_boatFlagIcons[PLAYER_COLOR_YELLOW] = gpResourceManager->GetIcon("y-bflg32.icn");
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     if (m_puzzleIcon == NULL)
         m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
         m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
@@ -974,7 +974,7 @@ void advManager::Close(void) {
     if (m_visibilityMap)
         delete m_visibilityMap;
     m_visibilityMap = NULL;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     m_active = 0;
 }
 
@@ -1134,7 +1134,7 @@ class mapCell* advManager::DoAdvCommand(void) {
 VA(0x00426eee, 0xe10)
 short advManager::Main(struct tag_message& message) {
     DATA(0x0048fae8)
-    static int giCheatSeq = 0;
+    static int gCheatSeq = 0;
     int yPos;
     int xPos;
     int retVal;
@@ -1150,12 +1150,12 @@ short advManager::Main(struct tag_message& message) {
 
     if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT] && ComboDraw(1))
         UpdateScreen(1, 0);
-    if (gbGameOver) {
+    if (gGameOver) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
-    if (!gbHumanPlayer[giCurPlayer] && (!gbRemoteOn || giHostGamePos == giThisGamePos)) {
+    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giHostGamePos == giThisGamePos)) {
         gpPhilAI->DoAI(giCurPlayer);
         gpGame->NextPlayer();
         return MESSAGE_DISPATCH_CONSUME;
@@ -1163,7 +1163,7 @@ short advManager::Main(struct tag_message& message) {
     CheckHandleNet();
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return CheckHandleNetPlayerWait(message, 0);
-    if (giScreenScroll && gbForegroundApp)
+    if (giScreenScroll && gForegroundApp)
         CheckScreenScroll();
     if (!(message.type & m_messageTypeMask)) {
         if (message.type) {
@@ -1172,10 +1172,10 @@ short advManager::Main(struct tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0
-        && KBTickCount() - giForceSwitchMusic > FORCED_MUSIC_DELAY
+    if (!gbNoSound && gConfig.musicVolume && gForceSwitchMusic > 0
+        && KBTickCount() - gForceSwitchMusic > FORCED_MUSIC_DELAY
         && gpSoundManager->m_currentTrack == MUSIC_TRACK_NETWORK_TURN) {
-        giForceSwitchMusic = FORCED_MUSIC_IDLE;
+        gForceSwitchMusic = FORCED_MUSIC_IDLE;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
@@ -1218,7 +1218,7 @@ short advManager::Main(struct tag_message& message) {
                                 break;
                         }
                         if (helpText >= 0)
-                            NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
+                            NormalDialog(gAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
                         break;
                 }
                 break;
@@ -1329,9 +1329,9 @@ short advManager::Main(struct tag_message& message) {
                         cmdValue = 9;
                         goto processCheatDigit;
                     processCheatDigit:
-                        giCheatSeq =
-                            giCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + cmdValue;
-                        if (giCheatSeq == CHEAT_REVEAL_MAP) {
+                        gCheatSeq =
+                            gCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + cmdValue;
+                        if (gCheatSeq == CHEAT_REVEAL_MAP) {
                             gpGame->SetVisibility(
                                 CHEAT_REVEAL_CENTER,
                                 CHEAT_REVEAL_CENTER,
@@ -1514,7 +1514,7 @@ short advManager::Main(struct tag_message& message) {
     }
     if (evtMapCell)
         DoEvent(evtMapCell, TrigX, TrigY);
-    if (gbGameOver || bQuit == 1 || giMenuCommand != APP_MENU_NONE) {
+    if (gGameOver || bQuit == 1 || gMenuCommand != APP_MENU_NONE) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
@@ -1877,7 +1877,7 @@ int advManager::ProcessDeSelect(
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else if (giBottomViewOverride != BOTTOM_VIEW_NONE)
             giBottomViewOverride = BOTTOM_VIEW_NONE;
-        else if (iCurBottomView == BOTTOM_VIEW_KINGDOM)
+        else if (gCurBottomView == BOTTOM_VIEW_KINGDOM)
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else
             giBottomViewOverride = BOTTOM_VIEW_KINGDOM;
@@ -2290,9 +2290,9 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     gpMouseManager
         ->SaveAndDraw(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
     PollSound();
-    giScrollX = m_updateMinX;
-    giScrollY = m_updateMinY;
-    if (giLimitUpdMinX == UPDATE_NONE)
+    gScrollX = m_updateMinX;
+    gScrollY = m_updateMinY;
+    if (gLimitUpdMinX == UPDATE_NONE)
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
             UPDATE_VIEWPORT_ORIGIN,
@@ -2305,15 +2305,15 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     else
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
-            giLimitUpdMinX,
+            gLimitUpdMinX,
             giLimitUpdMinY,
-            giLimitUpdMaxX - giLimitUpdMinX,
+            giLimitUpdMaxX - gLimitUpdMinX,
             giLimitUpdMaxY - giLimitUpdMinY,
-            giLimitUpdMinX,
+            gLimitUpdMinX,
             giLimitUpdMinY
         );
-    giScrollY = 0;
-    giScrollX = giScrollY;
+    gScrollY = 0;
+    gScrollX = gScrollY;
     PollSound();
     if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
         ++m_updateMaxX;
@@ -2332,7 +2332,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
             m_animationPhases[ANIMATION_PHASE_COLUMN_2] %= UPDATE_ANIMATION_PHASES;
         }
     }
-    giLimitUpdMinX = UPDATE_NONE;
+    gLimitUpdMinX = UPDATE_NONE;
     gpMouseManager->RestoreUnderlying();
     Process1WindowsMessage();
 }
@@ -2349,10 +2349,10 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
     if (!forceDraw && !bShowIt)
         return;
 
-    giLimitUpdMinX = UPDATE_NONE;
+    gLimitUpdMinX = UPDATE_NONE;
     m_previousOriginX = m_mapOriginX;
     m_previousOriginY = m_mapOriginY;
-    if (gbAllBlack)
+    if (gAllBlack)
         m_mapOriginX = m_mapOriginY = 0;
     m_comboHeroDrawn = 0;
     m_forceCompleteDraw = 0;
@@ -2441,7 +2441,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
     PollSound();
     UpdBottomView(0, 1, 1);
     DrawAdventureBorder();
-    if (gbAllBlack) {
+    if (gAllBlack) {
         m_mapOriginX = m_previousOriginX;
         m_mapOriginY = m_previousOriginY;
     }
@@ -2510,7 +2510,7 @@ int advManager::GetCloudLookup(int x, int y) {
             && (gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
             cloudMask |= CLOUD_NORTH_WEST;
     }
-    return giCloudType[cloudMask];
+    return gCloudType[cloudMask];
 }
 
 // @early-stop 99.88: `s_drawGroundTile |= cell0->m_tileIndex;` - retail
@@ -2551,7 +2551,7 @@ void advManager::DrawCell(
     pixelX7 = screenX << CELL_PIXEL_SHIFT;
     pixelY3 = screenY << CELL_PIXEL_SHIFT;
     cell0 = GetCell(mapX, mapY);
-    if (!gbAllBlack
+    if (!gAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
         s_drawStoneTile = STONE_TILE_NONE;
         if (mapX == -1) {
@@ -2581,10 +2581,10 @@ void advManager::DrawCell(
         TileToBitmap(m_stoneTiles, s_drawStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         return;
     } else {
-        if (!((!gbAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit))
+        if (!((!gAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit))
               || drawingPuzzle)) {
             s_drawCovered = 1;
-            if (gbAllBlack)
+            if (gAllBlack)
                 s_drawCloudFrame = 0;
             else
                 s_drawCloudFrame = GetCloudLookup(mapX, mapY);
@@ -3187,11 +3187,11 @@ void advManager::UpdateHeroLocator(
     message.command = WIDGET_COMMAND_SET_COLOR;
     message.id = wBase + HERO_LOCATOR_HIGHLIGHT;
     message.value = (gpCurPlayer->m_currentHero == whichHero
-                     && gpCurPlayer->m_currentHero != INVALID_HERO && !gbAllBlack)
+                     && gpCurPlayer->m_currentHero != INVALID_HERO && !gAllBlack)
                         ? LOCATOR_HIGHLIGHT_COLOR
                         : 0;
     m_adventureWindow->BroadcastMessage(message);
-    if (whichHero == INVALID_HERO || gbAllBlack) {
+    if (whichHero == INVALID_HERO || gAllBlack) {
         message.id = wBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = locatorSlot;
@@ -3290,12 +3290,12 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
         message.command = WIDGET_COMMAND_SET_COLOR;
         message.id = i + TOWN_LOCATOR_HIGHLIGHT_FIRST;
         message.value = (gpCurPlayer->m_currentTown != GAME_TOWN_NONE
-                         && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
+                         && gpCurPlayer->m_currentTown == whichTown && !gAllBlack)
                             ? LOCATOR_HIGHLIGHT_COLOR
                             : 0;
         m_adventureWindow->BroadcastMessage(message);
         message.id = i + ADVENTURE_CONTROL_TOWN_LOCATOR_1;
-        if (whichTown == GAME_TOWN_NONE || gbAllBlack) {
+        if (whichTown == GAME_TOWN_NONE || gAllBlack) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = i + LOCATOR_FRAME_EMPTY_TOWN_FIRST;
             m_adventureWindow->BroadcastMessage(message);
@@ -3336,7 +3336,7 @@ void advManager::UpdBottomView(
     signed char updated;
 
     updated = 0;
-    gbForceUpdate = forceUpdate;
+    gForceUpdate = forceUpdate;
     if (giBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
         return;
 
@@ -3359,7 +3359,7 @@ void advManager::UpdBottomView(
         }
     }
 
-    if (!gbThisNetHumanPlayer[giCurPlayer] || gbAllBlack)
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gAllBlack)
         updated = UpdBottomViewEnemyTurn();
     else if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         updated = UpdBottomViewKingdom();
@@ -3378,7 +3378,7 @@ update_bottom_view:
                 BOTTOM_VIEW_PANEL_HEIGHT
             );
     }
-    forceUpdate = gbForceUpdate;
+    forceUpdate = gForceUpdate;
 }
 
 // donor PoL RVA 0x00060d63; preferred Buka symbol ?ClearBottomView@advManager@@QAEXXZ
@@ -3388,7 +3388,7 @@ VA(0x0042cb4c, 0x132)
 void advManager::ClearBottomView(void) {
     int widgetIndex;
 
-    if (iCurBottomView == BOTTOM_VIEW_NONE)
+    if (gCurBottomView == BOTTOM_VIEW_NONE)
         return;
 
     for (widgetIndex = 0; widgetIndex < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; ++widgetIndex) {
@@ -3403,8 +3403,8 @@ void advManager::ClearBottomView(void) {
         m_bottomViewPrimaryWidgets[widgetIndex] = NULL;
         m_bottomViewSecondaryWidgets[widgetIndex] = NULL;
     }
-    iCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     iLastAnimFrame = BOTTOM_VIEW_NO_ANIMATION;
 }
 
@@ -3414,19 +3414,19 @@ void advManager::ClearBottomView(void) {
 VA(0x0042cc7e, 0x5bf)
 signed char advManager::UpdBottomViewEnemyTurn(void) {
     DATA(0x0048ff4c)
-    static long iLastSandAnimTime = 0;
+    static long gLastSandAnimTime = 0;
     DATA(0x0048ff50)
-    static long iLastNewSandAnimTime = 0;
+    static long gLastNewSandAnimTime = 0;
     signed char updated;
     tag_message message;
 
     updated = 0;
     message.type = MESSAGE_WIDGET;
-    if (iCurBottomView != BOTTOM_VIEW_ENEMY_TURN) {
+    if (gCurBottomView != BOTTOM_VIEW_ENEMY_TURN) {
         updated = 1;
-        gbForceUpdate = 1;
+        gForceUpdate = 1;
         ClearBottomView();
-        iCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
+        gCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
 
         m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(
             BOTTOM_VIEW_PANEL_X,
@@ -3467,19 +3467,19 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         );
     }
 
-    if (gbForceUpdate || KBTickCount() - iLastSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
-        iLastSandAnimTime = KBTickCount();
+    if (gForceUpdate || KBTickCount() - gLastSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
+        gLastSandAnimTime = KBTickCount();
         iLastAnimFrame = m_updateMaxX;
-        if (KBTickCount() - iLastNewSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
-            iLastNewSandAnimTime = KBTickCount();
-            iSandAnim++;
-            if (iSandAnim >= ENEMY_TURN_SAND_FRAME_LIMIT)
-                iSandAnim = ENEMY_TURN_SAND_RESTART_FRAME;
+        if (KBTickCount() - gLastNewSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
+            gLastNewSandAnimTime = KBTickCount();
+            gSandAnim++;
+            if (gSandAnim >= ENEMY_TURN_SAND_FRAME_LIMIT)
+                gSandAnim = ENEMY_TURN_SAND_RESTART_FRAME;
             updated = 1;
             if (m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
                 message.command = WIDGET_COMMAND_SET_FRAME;
                 message.id = ENEMY_TURN_SAND_ID;
-                message.value = iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET;
+                message.value = gSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET;
                 m_adventureWindow->BroadcastMessage(message);
             } else {
                 m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -3489,7 +3489,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                         ENEMY_TURN_ANIMATION_WIDTH,
                         ENEMY_TURN_ANIMATION_HEIGHT,
                         "hourglas.icn",
-                        iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET,
+                        gSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET,
                         ICON_DRAW_NORMAL,
                         ENEMY_TURN_SAND_ID,
                         ICON_WIDGET_DRAW,
@@ -3507,11 +3507,11 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         }
     }
 
-    if (gbForceUpdate || iCurBottomViewEnemy != giCurPlayer) {
+    if (gForceUpdate || gCurBottomViewEnemy != giCurPlayer) {
         updated = 1;
-        iCurBottomViewEnemy = giCurPlayer;
-        if (iCurBottomViewEnemy != giCurPlayer)
-            iCurHourGlassPhase = 0;
+        gCurBottomViewEnemy = giCurPlayer;
+        if (gCurBottomViewEnemy != giCurPlayer)
+            gCurHourGlassPhase = 0;
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = ENEMY_TURN_CREST_ID;
@@ -3540,16 +3540,16 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         }
     }
 
-    if (gbForceUpdate || iCurHourGlassPhase < iLastHourGlassPhase || iLastHourGlassPhase < 0
-        || (iCurHourGlassPhase > iLastHourGlassPhase
-            && KBTickCount() - giLastHourGlassUpdateTime >= ENEMY_TURN_PHASE_DELAY)) {
+    if (gForceUpdate || gCurHourGlassPhase < gLastHourGlassPhase || gLastHourGlassPhase < 0
+        || (gCurHourGlassPhase > gLastHourGlassPhase
+            && KBTickCount() - gLastHourGlassUpdateTime >= ENEMY_TURN_PHASE_DELAY)) {
         updated = 1;
-        iLastHourGlassPhase = iCurHourGlassPhase;
-        giLastHourGlassUpdateTime = KBTickCount();
+        gLastHourGlassPhase = gCurHourGlassPhase;
+        gLastHourGlassUpdateTime = KBTickCount();
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = ENEMY_TURN_PHASE_ID;
-            message.value = iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET;
+            message.value = gCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET;
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -3559,7 +3559,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                     ENEMY_TURN_ANIMATION_WIDTH,
                     ENEMY_TURN_ANIMATION_HEIGHT,
                     "hourglas.icn",
-                    iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET,
+                    gCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET,
                     ICON_DRAW_NORMAL,
                     ENEMY_TURN_PHASE_ID,
                     ICON_WIDGET_DRAW,
@@ -3587,11 +3587,11 @@ signed char advManager::UpdBottomViewNewTurn(void) {
     char* dayStr;
 
     frameIndex = 0;
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_NEW_TURN)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_NEW_TURN)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_NEW_TURN;
+    gCurBottomView = BOTTOM_VIEW_NEW_TURN;
     if (gpGame->m_day == 1 && (gpGame->m_month != 1 || gpGame->m_week != 1 || gpGame->m_day != 1))
         frameIndex = gpGame->m_week;
 
@@ -3682,11 +3682,11 @@ signed char advManager::UpdBottomViewResMsg(void) {
     char* countString;
     font* smFont;
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_RESOURCE)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_RESOURCE)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_RESOURCE;
+    gCurBottomView = BOTTOM_VIEW_RESOURCE;
     m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(
         BOTTOM_VIEW_PANEL_X,
         BOTTOM_VIEW_PANEL_Y,
@@ -3790,11 +3790,11 @@ signed char advManager::UpdBottomViewKingdom(void) {
     unsigned char colX[KINGDOM_VIEW_ENTRY_COUNT];
     char* texts[KINGDOM_VIEW_ENTRY_COUNT];
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_KINGDOM)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_KINGDOM)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_KINGDOM;
+    gCurBottomView = BOTTOM_VIEW_KINGDOM;
     rowY[RESOURCE_WOOD] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[RESOURCE_MERCURY] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[RESOURCE_ORE] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
@@ -3905,11 +3905,11 @@ signed char advManager::UpdBottomViewHero(void) {
     int x;
     char* heroName;
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_HERO)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_HERO)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_HERO;
+    gCurBottomView = BOTTOM_VIEW_HERO;
     targetHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
     nStacks = 0;
 
@@ -4817,7 +4817,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
         m_currentTerrain = heroSlot;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
-    if (!gbHeroMoving) {
+    if (!gHeroMoving) {
         if (wasVisible)
             gpMouseManager->ReallyShowPointer();
         gpInputManager->m_field_0x34a = 1;
@@ -5644,34 +5644,34 @@ short advManager::ControlPanel(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gameCommand = MAIN_MENU_NO_COMMAND;
     oldSpeed = gConfig.walkSpeed;
-    bFreshSave = 0;
+    gFreshSave = 0;
     mobilized = m_heroContextLocked;
     bPrefsChanged = 0;
     DemobilizeCurrHero();
-    cPanel = new heroWindow(160, 10, "cpanel.bin");
-    if (cPanel == NULL)
+    gPanel = new heroWindow(160, 10, "cpanel.bin");
+    if (gPanel == NULL)
         MemError();
-    SetWinText(cPanel, WINDOW_TEXT_CONTROL_PANEL);
-    if (gbRemoteOn) {
+    SetWinText(gPanel, WINDOW_TEXT_CONTROL_PANEL);
+    if (gRemoteOn) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
     }
     UpdateCPanel(1);
-    gpWindowManager->DoDialog(cPanel, CPanelHandler, 0);
-    delete cPanel;
+    gpWindowManager->DoDialog(gPanel, CPanelHandler, 0);
+    delete gPanel;
     switch (gpWindowManager->m_dialogResult) {
         case CONTROL_NEW_GAME:
         case CONTROL_LOAD_GAME:
@@ -5711,44 +5711,44 @@ void UpdateCPanel(signed char initialDraw) {
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, CONTROL_MUSIC_VOLUME);
     message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;
     message.value = gConfig.soundVolume ? CPANEL_FRAME_SOUND_ON : CPANEL_FRAME_SOUND_OFF;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED;
     message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
     message.value = gConfig.musicSource + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
     message.value = gConfig.showRoute + CPANEL_FRAME_SHOW_ROUTE_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
-    message.value = gbRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
+    message.value = gRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
                                : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
     message.text = onOffText[gConfig.musicVolume];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME_TEXT;
     message.text = onOffText[gConfig.soundVolume];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED_TEXT;
     message.text = walkSpeedText[gConfig.walkSpeed];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text = musicQualityText[gConfig.musicSource];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
     message.text = onOffText[1 - gConfig.blackoutComputer];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     if (!initialDraw)
-        cPanel->MoveWindow(0, 0);
+        gPanel->MoveWindow(0, 0);
 }
 
 VA(0x00432bb7, 0x232)
@@ -5768,21 +5768,21 @@ signed char SaveGame(void) {
     for (plIdx = 0; plIdx < GAME_PLAYER_COUNT; plIdx++)
         if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
-    if (giCampaignChoice > 0) {
+    if (gCampaignChoice > 0) {
         sprintf(extension, ".CGM");
         sprintf(searchMask, "*.CGM");
     } else {
         sprintf(extension, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
-    extern char gcGamePath[];
-    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gcGamePath, extension);
+    extern char gGamePath[];
+    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gGamePath, extension);
     if (!fileReq)
         MemError();
     iResult = gpExec->DoDialog(fileReq);
     if (iResult == DIALOG_BUTTON_2) {
         success = 1;
-        bFreshSave = 1;
+        gFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1);
@@ -5865,7 +5865,7 @@ short CPanelHandler(struct tag_message& message) {
                             strcpy(question, "Are you sure you want to quit?");
                         confirm_reset:
                             handled = 1;
-                            if (!bFreshSave) {
+                            if (!gFreshSave) {
                                 NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50);
                                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                                     handled = 0;
@@ -5928,7 +5928,7 @@ short CPanelHandler(struct tag_message& message) {
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_SHOW_ENEMY_MOVES:
-                            if (!gbRemoteOn) {
+                            if (!gRemoteOn) {
                                 gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
                                 changed = 1;
                                 bPrefsChanged = 1;
@@ -6183,7 +6183,7 @@ short DimensionDoorHandler(struct tag_message& message) {
 VA(0x00433b10, 0xaf6)
 signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
     DATA(0x004904a4)
-    static int giFrameCount = 0;
+    static int gFrameCount = 0;
     int updateCount;
     int drawY;
     int drawX;
@@ -6197,15 +6197,15 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         return 1;
     }
     if (animate) {
-        giFrameCount += giFrameStep;
-        if (giFrameCount < COMBO_FRAME_LIMIT) {
+        gFrameCount += giFrameStep;
+        if (gFrameCount < COMBO_FRAME_LIMIT) {
             Process1WindowsMessage();
             if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
                 glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
             PollSound();
             return 0;
         } else {
-            giFrameCount = 0;
+            gFrameCount = 0;
         }
     }
 
@@ -6352,7 +6352,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     PollSound();
     UpdBottomView(0, 1, 1);
     DrawAdventureBorder();
-    giLimitUpdMinX = ADVMGR_VIEW_CELL_COUNT;
+    gLimitUpdMinX = ADVMGR_VIEW_CELL_COUNT;
     giLimitUpdMinY = ADVMGR_VIEW_CELL_COUNT;
     giLimitUpdMaxX = 0;
     giLimitUpdMaxY = 0;
@@ -6361,8 +6361,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
             if (bComboDraw[drawX][drawY]) {
                 updateCount++;
-                if (drawX < giLimitUpdMinX)
-                    giLimitUpdMinX = drawX;
+                if (drawX < gLimitUpdMinX)
+                    gLimitUpdMinX = drawX;
                 if (drawX > giLimitUpdMaxX)
                     giLimitUpdMaxX = drawX;
                 if (drawY < giLimitUpdMinY)
@@ -6372,20 +6372,20 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
             }
         }
     }
-    giLimitUpdMinX <<= CELL_PIXEL_SHIFT;
+    gLimitUpdMinX <<= CELL_PIXEL_SHIFT;
     giLimitUpdMinY <<= CELL_PIXEL_SHIFT;
     giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << CELL_PIXEL_SHIFT) - 1;
     giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << CELL_PIXEL_SHIFT) - 1;
-    if (giLimitUpdMinX < COMBO_UPDATE_MIN)
-        giLimitUpdMinX = COMBO_UPDATE_MIN;
+    if (gLimitUpdMinX < COMBO_UPDATE_MIN)
+        gLimitUpdMinX = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
         giLimitUpdMaxX = COMBO_UPDATE_MAX;
     if (giLimitUpdMinY < COMBO_UPDATE_MIN)
         giLimitUpdMinY = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
         giLimitUpdMaxY = COMBO_UPDATE_MAX;
-    if (giLimitUpdMaxX < giLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
-        giLimitUpdMinX = giLimitUpdMaxX - 1;
+    if (giLimitUpdMaxX < gLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
+        gLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
         return 0;
     }
@@ -6474,7 +6474,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
                     m_loopingSamples[m_activeSounds[edgeOffset].soundId]
                         ->m_playbackData.activeSample,
                     100,
-                    glEnvironmentVolume[m_activeSounds[edgeOffset].volume]
+                    gEnvironmentVolume[m_activeSounds[edgeOffset].volume]
                 );
             }
         }
@@ -6535,7 +6535,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
         m_activeSounds[slot].soundId = soundId;
         m_activeSounds[slot].volume = distance;
         CheckLoadSample(soundId);
-        m_loopingSamples[soundId]->m_playbackData.volume = glEnvironmentVolume[distance];
+        m_loopingSamples[soundId]->m_playbackData.volume = gEnvironmentVolume[distance];
         m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
         m_loopingSamples[soundId]->m_playbackData.channelType = ENVIRONMENT_SOUND_CHANNEL_TYPE;
         gpSoundManager->MemorySample(m_loopingSamples[soundId]);
@@ -6547,7 +6547,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 // Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
 // declare them in advManager.h and never use them). VC4 orders .bss by name
 // key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
-// cPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
+// gPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
 // bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
 // absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
 // 0x004c50b0-0x004c50bf. .bss position does not move them, so they sit with
@@ -6583,8 +6583,8 @@ void advManager::TeleportTo(int x, int y, int) {
         oldCell->m_flags -= MAP_CELL_HERO_CURSOR;
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
-        if (!gConfig.blackoutComputer && !gbRemoteOn
-            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurWatchPlayerHighBit))
+        if (!gConfig.blackoutComputer && !gRemoteOn
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & gCurWatchPlayerHighBit))
             bShowIt = 1;
         else
             bShowIt = 0;
@@ -6864,7 +6864,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
     short buttonFrame;
 
     canReach = 0;
-    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
         return;
     if (gpCurPlayer->m_currentHero == INVALID_HERO) {
         HideRoute(redraw, 0, 1);
@@ -6934,7 +6934,7 @@ VA(0x00435c3a, 0x106)
 void advManager::HideRoute(int redraw, int clearDestination, int updateButton) {
     hero* currentHero;
 
-    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
         return;
 
     if (updateButton)
@@ -7022,7 +7022,7 @@ void advManager::SeedTo(int targetX, int targetY) {
             0,
             1
         );
-    else if (!giFullySeeded)
+    else if (!gFullySeeded)
         gpSearchArray->SeedPosition(
             currentHero->m_x,
             currentHero->m_y,
@@ -7058,7 +7058,7 @@ void advManager::ScreenScroll(signed char direction, int updatePointer) {
 
     xOrigin = m_mapOriginX;
     yOrigin = m_mapOriginY;
-    iLastScrollTime = KBTickCount();
+    gLastScrollTime = KBTickCount();
 
     switch (direction) {
         case MAP_DIRECTION_NORTH:
@@ -7123,8 +7123,8 @@ void advManager::CheckScreenScroll(void) {
     int oldX;
     int oldY;
 
-    if (KBTickCount() - iLastScrollTime > SCROLL_TICK_INTERVAL) {
-        iLastScrollTime = KBTickCount();
+    if (KBTickCount() - gLastScrollTime > SCROLL_TICK_INTERVAL) {
+        gLastScrollTime = KBTickCount();
         oldX = m_mapOriginX;
         oldY = m_mapOriginY;
         gpMouseManager->MouseCoords(mouseX, mouseY);
@@ -7198,7 +7198,7 @@ void advManager::SetInitialMapOrigin(void) {
     );
     m_lastHoverCell = m_hoverCellY = 0;
     m_cursorActive = 0;
-    gbHeroMoving = 0;
+    gHeroMoving = 0;
     if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
         m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
@@ -7245,10 +7245,10 @@ void advManager::LoadRemote(void) {
     UpdateRadar(1, 0);
     gpMouseManager->ReallyShowPointer();
     UpdBottomView(1, 1, 1);
-    if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gbRemoteOn
-        && gbThisNetHumanPlayer[giCurPlayer] && giForceSwitchMusic == FORCED_MUSIC_IDLE) {
+    if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gRemoteOn
+        && gbThisNetHumanPlayer[giCurPlayer] && gForceSwitchMusic == FORCED_MUSIC_IDLE) {
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
-        giForceSwitchMusic = KBTickCount();
+        gForceSwitchMusic = KBTickCount();
     }
 }
 
@@ -7279,7 +7279,7 @@ char* advManager::CheckHandleNet(void) {
                 PopNetBox(receivedPacket->payload.data);
                 break;
             case REMOTE_COMMAND_HERO_TOWN_DATA:
-                if (gbInCombat)
+                if (gInCombat)
                     return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
                 else
                     DoNetCombat(
@@ -7338,8 +7338,8 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message& message, signed c
 // evidence: graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
 VA(0x00436a3b, 0x1c2)
 void advManager::TrimLoopingSounds(int maxSamples) {
-    if (giHighMemBuffer > 0)
-        maxSamples += giHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
+    if (gHighMemBuffer > 0)
+        maxSamples += gHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
 
     if (maxSamples >= ADVMGR_ENVIRONMENT_SOUND_COUNT)
         return;
@@ -7435,7 +7435,7 @@ void advManager::DrawAdventureBorder(void) {
 
     if (m_adventureBorder == NULL)
         return;
-    if (gbNoBorder != 0)
+    if (gNoBorder != 0)
         return;
 
     dest = gpWindowManager->m_screen->m_pixels;
@@ -7459,32 +7459,32 @@ void advManager::DrawAdventureBorder(void) {
 }
 
 // ADVMGR owns retail .data 0x0048f828-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
-// Retail emits giCheatSeq, the sand-animation times and giFrameCount among the
+// Retail emits gCheatSeq, the sand-animation times and gFrameCount among the
 // literals of their users.
 DATA(0x0048f828)
-int giLimitUpdMinX = UPDATE_NONE;
+int gLimitUpdMinX = UPDATE_NONE;
 DATA(0x0048f82c)
-long iLastScrollTime = 0;
+long gLastScrollTime = 0;
 DATA(0x0048f830)
-int iSandAnim = 0;
+int gSandAnim = 0;
 DATA(0x0048f834)
-long giLastHourGlassUpdateTime = 0;
+long gLastHourGlassUpdateTime = 0;
 DATA(0x0048f838)
 int TrigX = 0;
 DATA(0x0048f83c)
 int TrigY = 0;
 DATA(0x0048f840)
-int iCurBottomView = BOTTOM_VIEW_NONE;
+int gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048f844)
-int iCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
+int gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
 DATA(0x0048f848)
-int iCurHourGlassPhase = 0;
+int gCurHourGlassPhase = 0;
 DATA(0x0048f84c)
-int iLastHourGlassPhase = 1;
+int gLastHourGlassPhase = 1;
 DATA(0x0048f850)
-int gbForceUpdate = 0;
+int gForceUpdate = 0;
 DATA(0x004c4f2c)
-class heroWindow* cPanel;
+class heroWindow* gPanel;
 DATA(0x004c4f4c)
 int giFrameStep;
 DATA(0x004c4f50)
@@ -7500,9 +7500,9 @@ int giLimitUpdMinY;
 DATA(0x004c4f78)
 signed char bComboDraw[17][17];
 DATA(0x004c50a0)
-signed char bFreshSave;
+signed char gFreshSave;
 DATA(0x004c50c0)
 int iLastAnimFrame;
 // ADVMGR's .rdata: ambient-sound volume by distance (0x0048c390).
 DATA(0x0048c390)
-const long glEnvironmentVolume[5] = {64, 48, 32, 16, 10};
+const long gEnvironmentVolume[5] = {64, 48, 32, 16, 10};

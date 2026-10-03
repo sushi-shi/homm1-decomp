@@ -19,11 +19,11 @@ font::font(short id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_I
     m_height = gpResourceManager->ReadWord();
     m_headerWord = gpResourceManager->ReadWord();
     gpResourceManager->Read13(name);
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     m_glyphIcon = gpResourceManager->GetIcon(
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: Read13 and GetIcon use differently signed byte names.
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
 }
 
 VA_COMPGEN(0x0047b370, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047b2c0)

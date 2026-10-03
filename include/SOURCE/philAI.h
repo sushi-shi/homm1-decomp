@@ -208,8 +208,8 @@ extern int giMaxHeroesForThisPlayer;
 // GetTurnAIVars' per-cell enemy-hero turn distance for mines.
 extern signed char gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern float gfHeroInteractionBonus[];
-extern float gfAttackHumanBonus;
-extern float gfAttackComputerBonus;
+extern float gAttackHumanBonus;
+extern float gAttackComputerBonus;
 // ValueOfEventAtPosition's event cache, per-resource mine income and the
 // ultimate artifact's average value.
 extern short gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
@@ -254,10 +254,10 @@ H1_ENUM_END(MapExtraFlag)
 // month may feature (Buka PHILAI.h).
 extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern unsigned char giCurPlayerHighBit;
-extern unsigned char giCurWatchPlayerHighBit;
+extern unsigned char gCurWatchPlayerHighBit;
 void AiPrint(char*);
 void AbsAiPrint(char*);
-extern signed char giShowComputerRoute;
+extern signed char gShowComputerRoute;
 extern unsigned char giCurWatchPlayerBit;
 extern unsigned char giCurPlayerBit;
 extern playerData* gpCurPlayer;

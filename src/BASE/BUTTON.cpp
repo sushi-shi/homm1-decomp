@@ -14,7 +14,7 @@
 #include <SOURCE/kbwin.h>
 
 DATA(0x004a2f98)
-int iLeftRightSave = 0;
+int gLeftRightSave = 0;
 
 VA(0x0047eef0, 0x31)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
@@ -58,8 +58,8 @@ inline short button::Deselect(tag_message& message) {
     message.command = WIDGET_NOTIFY_DESELECT;
     message.type = MESSAGE_WIDGET;
     message.id = m_id;
-    message.modifiers = iLeftRightSave;
-    iLeftRightSave = MESSAGE_MODIFIER_NONE;
+    message.modifiers = gLeftRightSave;
+    gLeftRightSave = MESSAGE_MODIFIER_NONE;
     return MESSAGE_DISPATCH_FORWARD;
 }
 
@@ -140,7 +140,7 @@ short button::Select(tag_message& message) {
     else
         message.command = WIDGET_NOTIFY_SELECT;
     glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
-    iLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
+    gLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
     return MESSAGE_DISPATCH_FORWARD;
 }
 

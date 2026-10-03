@@ -566,9 +566,9 @@ short CombatSpecialHandler(struct tag_message&);
 short HandleCastSpell(struct tag_message&);
 // HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
 // teleport second-click state (0x0048f28c).
-extern signed char bInTeleportGetDest;
+extern signed char gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
-// Stale alias of giSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
+// Stale alias of gSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern short giCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
 extern signed char iMaxTransferArtifacts;
@@ -580,7 +580,7 @@ extern H1_ENUM_STORAGE(CombatAction, int) giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
-// cCombatMessage indices, the command help lines CombatMessage(short)
+// gCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
 // shot%s left)", "General's Options", "View Opposing General", "View %s
 // info." and "No shots left!".

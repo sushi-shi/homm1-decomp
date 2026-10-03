@@ -35,7 +35,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// cCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
+// gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)
     COMBAT_HELP_AUTO_COMBAT = 0,
@@ -43,7 +43,7 @@ H1_ENUM_BEGIN(CombatHelpText)
     COMBAT_HELP_NONE = 2
 H1_ENUM_END(CombatHelpText)
 
-// cBattleResults rows (DoVictory's win texts and DoLoseWindow's loss texts):
+// gBattleResults rows (DoVictory's win texts and DoLoseWindow's loss texts):
 // the outcome lines, then the experience award with or without level-ups.
 H1_ENUM_BEGIN(BattleResultText)
     BATTLE_RESULT_ENEMY_SURRENDERED = 0,
@@ -546,11 +546,11 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
                         default:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             if (mouseX <= 0x32)
-                                CombatMessage(cCombatHelp[COMBAT_HELP_AUTO_COMBAT], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_AUTO_COMBAT], 1);
                             else if (mouseX >= 0x24e)
-                                CombatMessage(cCombatHelp[COMBAT_HELP_SKIP_UNIT], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_SKIP_UNIT], 1);
                             else
-                                CombatMessage(cCombatHelp[COMBAT_HELP_NONE], 1);
+                                CombatMessage(gCombatHelp[COMBAT_HELP_NONE], 1);
                             gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
                             m_selectedHex = ARMY_HEX_INVALID;
                             m_previousCommand = COMBAT_INVALID_COMMAND;
@@ -1261,16 +1261,16 @@ void combatManager::DoVictory(signed char winningSide) {
                     MemError();
                 if (m_heroes[winningSide]) {
                     if (gbCombatSurrender)
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_ENEMY_SURRENDERED]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_ENEMY_SURRENDERED]);
                     else if (gbRetreatWin)
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_ENEMY_FLED]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_ENEMY_FLED]);
                     else
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_VICTORY]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_VICTORY]);
                     if (levelsGained > 0 && winningSide == COMBAT_DEFENDER_SIDE
                         && giNumHumanPlayers > 1)
                         sprintf(
                             expText,
-                            cBattleResults[BATTLE_RESULT_EXPERIENCE_AND_LEVELS],
+                            gBattleResults[BATTLE_RESULT_EXPERIENCE_AND_LEVELS],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide],
                             levelsGained
@@ -1278,7 +1278,7 @@ void combatManager::DoVictory(signed char winningSide) {
                     else
                         sprintf(
                             expText,
-                            cBattleResults[BATTLE_RESULT_EXPERIENCE],
+                            gBattleResults[BATTLE_RESULT_EXPERIENCE],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide]
                         );
@@ -1286,11 +1286,11 @@ void combatManager::DoVictory(signed char winningSide) {
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 } else {
                     if (gbCombatSurrender)
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_ENEMY_SURRENDERED]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_ENEMY_SURRENDERED]);
                     else if (gbRetreatWin)
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_ENEMY_FLED]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_ENEMY_FLED]);
                     else
-                        sprintf(gText, cBattleResults[BATTLE_RESULT_VICTORY]);
+                        sprintf(gText, gBattleResults[BATTLE_RESULT_VICTORY]);
                 }
                 SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
                 message.text = gText;
@@ -1363,31 +1363,31 @@ void combatManager::DoLoseWindow(void) {
     if (loseWindow == NULL)
         MemError();
     bmp = gpResourceManager->GetBitmap("losecmbt.bmp");
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     walkIcon = gpResourceManager->GetIcon("losewalk.icn");
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
     if (m_heroes[losingSide]) {
         if (gbCombatSurrender)
             sprintf(
                 gText,
-                cBattleResults[BATTLE_RESULT_HERO_SURRENDERS],
+                gBattleResults[BATTLE_RESULT_HERO_SURRENDERS],
                 m_heroes[losingSide]->m_name
             );
         else if (gbRetreatWin)
-            sprintf(gText, cBattleResults[BATTLE_RESULT_HERO_FLEES], m_heroes[losingSide]->m_name);
+            sprintf(gText, gBattleResults[BATTLE_RESULT_HERO_FLEES], m_heroes[losingSide]->m_name);
         else
             sprintf(
                 gText,
-                cBattleResults[BATTLE_RESULT_HERO_DEFEATED],
+                gBattleResults[BATTLE_RESULT_HERO_DEFEATED],
                 m_heroes[losingSide]->m_name
             );
     } else {
         if (gbCombatSurrender)
-            sprintf(gText, cBattleResults[BATTLE_RESULT_FORCES_SURRENDER]);
+            sprintf(gText, gBattleResults[BATTLE_RESULT_FORCES_SURRENDER]);
         else if (gbRetreatWin)
-            sprintf(gText, cBattleResults[BATTLE_RESULT_FORCES_FLEE]);
+            sprintf(gText, gBattleResults[BATTLE_RESULT_FORCES_FLEE]);
         else
-            sprintf(gText, cBattleResults[BATTLE_RESULT_FORCES_DEFEATED]);
+            sprintf(gText, gBattleResults[BATTLE_RESULT_FORCES_DEFEATED]);
     }
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
@@ -1521,7 +1521,7 @@ void combatManager::GetControl(void) {
     m_previousCommand = COMBAT_INVALID_COMMAND;
     gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     CheckChangeSelector();
-    if (!gbRemoteOn || m_playerId[COMBAT_ATTACKER_SIDE] < 0 || m_playerId[COMBAT_DEFENDER_SIDE] < 0
+    if (!gRemoteOn || m_playerId[COMBAT_ATTACKER_SIDE] < 0 || m_playerId[COMBAT_DEFENDER_SIDE] < 0
         || !gbHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]]
         || (!gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]
             && (gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]
@@ -1581,7 +1581,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
             m_currentArmyIndex,
             m_armies[m_currentSide][m_currentArmyIndex].m_hex
         );
-    if (gbThisNetHasControl && gbRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
+    if (gbThisNetHasControl && gRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
         && m_playerId[COMBAT_DEFENDER_SIDE] >= 0 && gbHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]]
         && gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]) {
         int netPos;

@@ -66,7 +66,7 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_PUZZLE = 0xd,
     MUSIC_TRACK_STATUE = 0xe,
     // The local human's turn starting in a network game (game::NewWeek,
-    // advManager/game turn hand-over with giForceSwitchMusic).
+    // advManager/game turn hand-over with gForceSwitchMusic).
     MUSIC_TRACK_NETWORK_TURN = 0xf,
     // The same cue plays at the desert tent (EVENTS).
     MUSIC_TRACK_DESERT_TENT = MUSIC_TRACK_NETWORK_TURN,

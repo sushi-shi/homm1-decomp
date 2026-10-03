@@ -31,13 +31,13 @@ H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_LAST = MAIN_MENU_CREDITS
 H1_ENUM_END(MainMenuControl)
 
-extern char gbInPollSound;
+extern char gInPollSound;
 extern char gbNoSound;
-extern signed char gbShowHighScore;
+extern signed char gShowHighScore;
 // HeroView and the kingdom overview raise these while their screens are up;
 // NormalDialog only parks over the adventure map when neither is showing.
-extern signed char gbHeroWindShowing;
-extern signed char gbOverviewShowing;
+extern signed char gHeroWindShowing;
+extern signed char gOverviewShowing;
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
@@ -52,14 +52,14 @@ extern char* gArmyNamesPlural[];
 // tests count > 1).
 #define CREATURE_DISPLAY_NAME(type, count) ((count) > 1 ? gArmyNamesPlural[type] : gArmyNames[type])
 extern struct tag_monsterInfo gMonsterDatabase[];
-extern int gbMinimized;
-extern char* gcMemoryErrorTitle;
-extern char* gcMemoryRequirements;
-extern char* gcExtendedMemoryUnits;
-extern char* gcConventionalMemoryUnits;
-extern int giRequiredExtendedMemory;
-extern int giRequiredConventionalMemory;
-extern int gbLoadingMonoIcon;
+extern int gMinimized;
+extern char* gMemoryErrorTitle;
+extern char* gMemoryRequirements;
+extern char* gExtendedMemoryUnits;
+extern char* gConventionalMemoryUnits;
+extern int gRequiredExtendedMemory;
+extern int gRequiredConventionalMemory;
+extern int gLoadingMonoIcon;
 extern struct configStruct gConfig;
 // Retail DoDimensionDoor walks gpSearchArray paths through this delta table.
 extern struct tag_tilePoint normalDirTable[];
@@ -68,14 +68,14 @@ extern class resourceManager* gpResourceManager;
 extern class soundManager* gpSoundManager;
 extern class heroWindowManager* gpWindowManager;
 extern class mouseManager* gpMouseManager;
-extern class heroWindow* pNormalDialogWindow;
+extern class heroWindow* gNormalDialogWindow;
 extern class advManager* gpAdvManager;
 extern signed char gbThisNetHumanPlayer[];
 extern class townManager* gpTownManager;
 extern class combatManager* gpCombatManager;
 extern class executive* gpExec;
 extern class game* gpGame;
-extern int giHighMemBuffer;
+extern int gHighMemBuffer;
 extern int giBottomViewOverride;
 extern long giBottomViewOverrideEndTime;
 extern int giBottomViewResource;
@@ -85,8 +85,8 @@ extern void* hmnuAdv;
 extern void* hmnuDflt;
 extern void* hmnuCmbt;
 extern void* hmnuTown;
-extern int gbHeroMoving;
-extern int gbRemoteOn;
+extern int gHeroMoving;
+extern int gRemoteOn;
 extern class heroWindow* DataEntryWin;
 extern char* cDEDest;
 extern int iDEMaxLen;
@@ -123,8 +123,8 @@ extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
 extern class font* bigFont;
 extern class font* smallFont;
-extern short giScoreMon[][2];
-extern short giScoreCampaignMon[][2];
+extern short gScoreMon[][2];
+extern short gScoreCampaignMon[][2];
 // Combat effect icon files by effect (0x004910d8) and the one loaded effect
 // icon (0x004c709c) army draws and PowEffect share.
 extern char* gCombatFxNames[];
@@ -194,7 +194,7 @@ void HandleRemoteDeadPlayerExit(int);
 void CheckEndGame(int);
 void HandleRemoteSuddenExit(void);
 extern signed char gbRetreatWin;
-extern signed char gbGameInitialized;
+extern signed char gGameInitialized;
 extern H1_ENUM_STORAGE(MainMenuControl, short) gGameCommand;
 extern signed char gbCombatSurrender;
 // The new-map builder raises this while it claims towns and mines.
@@ -227,7 +227,7 @@ void NormalDialog(
     int = 0,
     H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
 );
-extern char* cTownObjectNames[];
+extern char* gTownObjectNames[];
 extern char* gSpellDesc[];
 extern char* gSpellNames[];
 // QuickInfo's name tables.
@@ -283,39 +283,39 @@ struct tag_tilePoint {
 struct SPlayerExit {
     signed char player[7];
 };
-extern int gbComputeExtent;
-extern int gbCurrArmyDrawn;
+extern int gComputeExtent;
+extern int gCurrArmyDrawn;
 extern signed char gbIconClipOn;
-extern int gbLimitToExtent;
-extern int gbSaveBiggestExtent;
+extern int gLimitToExtent;
+extern int gSaveBiggestExtent;
 extern int giMaxExtentX;
 extern int giMaxExtentY;
 extern int giMinExtentX;
 extern int giMinExtentY;
-extern int giMonoIconSkip;
+extern int gMonoIconSkip;
 extern unsigned char gMonoColorMap[];
 extern class inputManager* gpInputManager;
-extern int giCurExe;
+extern int gCurExe;
 extern int giDebugLevel;
 extern class palette* gpBufferPalette;
-extern int gbColorMice;
-extern int gbSpecialMouseMasks;
-extern char gcDataPath[];
-extern char gcSoundPath[];
-extern int gbInDialog;
+extern int gColorMice;
+extern int gSpecialMouseMasks;
+extern char gDataPath[];
+extern char gSoundPath[];
+extern int gInDialog;
 extern class palette* gPalette;
 // Main: right-click help for the six adventure panel buttons, the typed
 // cheat-digit sequence and the pending menu command.
-extern char* cAdvMenuHelp[];
-extern int gbAllBlack;
-extern int gbNoBorder;
+extern char* gAdvMenuHelp[];
+extern int gAllBlack;
+extern int gNoBorder;
 // Per hero type scouting radius used by TeleportTo.
 extern signed char gHeroScoutRadius[];
-extern unsigned char giCloudType[];
+extern unsigned char gCloudType[];
 // GAME stores and reloads it as a dword (retail 0x4c7ca0).
 extern int giCurWatchPlayer;
-extern long giForceSwitchMusic;
-extern int giMenuCommand;
+extern long gForceSwitchMusic;
+extern int gMenuCommand;
 extern short gMapX;
 extern short gMapY;
 // UpdBottomViewHero's per-creature mons32.icn frame width.
@@ -327,8 +327,8 @@ extern short gRadarTerrainColor[];
 // Route arrow frame by [next step][this step] path direction.
 extern signed char gRouteFrame[][8];
 // Damage multipliers for attack minus defense, -20..20 (0x00492470).
-extern float gfBattleStat[];
-extern short giSpellEffectFrame;
+extern float gBattleStat[];
+extern short gSpellEffectFrame;
 // Pow (impact) effect icons by effect (0x00491098).
 extern char* gPowEffectNames[];
 extern char* gArmySizeNames[6][2];
@@ -336,15 +336,15 @@ extern char* gArmySizeNames[6][2];
 extern signed char gbIAmGreatest;
 extern struct campaignScenario gCampaignScenarios[];
 // Victory/defeat window texts (0x00493e48).
-extern char* cBattleResults[];
+extern char* gBattleResults[];
 // Combat help lines for the auto-combat, skip and other controls.
-extern char* cCombatHelp[];
+extern char* gCombatHelp[];
 // Command help lines for CombatMessage(short) (0x00493b38).
-extern char* cCombatMessage[];
+extern char* gCombatMessage[];
 // Spell-book hover help lines (0x00493a78).
-extern char* cSpellHelp[];
+extern char* gSpellHelp[];
 // CheckHandleNet hands combat packets back while a battle is running.
-extern signed char gbInCombat;
+extern signed char gInCombat;
 // Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
 extern signed char gCombatAdjacency[45][6];
 // The loaded combat effect icon's file id (0x004c6d64).
@@ -354,32 +354,32 @@ extern int giCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
 extern signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
-extern int giMapDifficulty;
-extern int giMapSize;
+extern int gMapDifficulty;
+extern int gMapSize;
 extern char gLastFilename[];
 extern char gLastMapName[];
 extern char* gMapSizeNames[];
-extern char* cHeroScreen[];
+extern char* gHeroScreen[];
 extern char* gArtifactDesc[];
 extern char* gClassNames[];
 // Per-class sea mobility multiplier and level thresholds (retail 0x492038,
 // 0x492598).
-extern float gfClassNavigationMod[];
+extern float gClassNavigationMod[];
 extern int giHeroScreenSrcIndex;
 extern short gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
-extern class hero* gpHVHero;
+extern class hero* gHVHero;
 extern char* gStatDesc[];
 extern char* gStatNames[];
 extern class heroWindow* heroWin;
-extern signed char giHighScoreRank;
+extern signed char gHighScoreRank;
 int EarlySetup(void);
 int GameUnsaved(void);
-extern signed char gbFirstTimeThrough;
-extern char gcAnimPath[];
+extern signed char gFirstTimeThrough;
+extern char gAnimPath[];
 extern char gcRegAppPath[];
 extern char gcRegCDRomPath[];
 extern long giCurWindowsStyleFlags;
-extern struct SMenuEnableStatus gsMenuEnableStatus[];
+extern struct SMenuEnableStatus gMenuEnableStatus[];
 extern struct WindowTextEntry gWinSetup[];
 extern char* gWinSetupText[];
 int HandleAppSpecificMenuCommands(int);
@@ -387,18 +387,18 @@ int oldmain(void);
 void UpdateAppSpecificMenus(void*);
 extern int bSpecialHideCursor;
 extern int gArtifactBaseRV[];
-extern signed char gbDrawSavedCursor;
-extern signed char gcSpellAIFlags[];
+extern signed char gDrawSavedCursor;
+extern signed char gSpellAIFlags[];
 extern signed char gDwellingType[4][6];
-extern float gfSpellCastNumMod[];
+extern float gSpellCastNumMod[];
 // FightValueOfStack's primary-stat power curve, per-spell AI flags and
 // values, spell-power duration scale and per-charge cast weights.
-extern float gfStatPower[];
+extern float gStatPower[];
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern signed char giLimitPlayer;
-extern int giMineIncome[];
-extern short giSpellAIValue[];
+extern int gMineIncome[];
+extern short gSpellAIValue[];
 extern class armyGroup* gpMonGroup;
 extern class philAI* gpPhilAI;
 extern int gResourceBaseValue[];
@@ -422,54 +422,54 @@ signed char WaitForOtherPlayer(void);
 extern int giSeedingValid;
 // KB-band setup state (Buka X_GLOBAL.h): the direct-connect flag and the
 // multiplayer game type.
-extern signed char gbDirectConnect;
+extern signed char gDirectConnect;
 extern signed char iMPExtendedType;
-extern int gbInSmacker;
+extern int gInSmacker;
 extern class smackManager* gpSmackManager;
 // Spells taught per mage-guild level (retail 0x492514).
 extern signed char gMageGuildSpellCount[];
-extern char* cCastleInfo[];
-extern char* cTownCommand[];
+extern char* gCastleInfo[];
+extern char* gTownCommand[];
 extern struct TownBuildingExtent gTownBuildingExtents[4][16];
 // KB's tavern recruit dialog handler (retail 0x0045140e).
 short RecruitHeroHandler(struct tag_message&);
 extern signed char townTheme[];
-extern int gbFullCombatScreenDrawn;
-extern int gbLimitedCombatUpdatePalette;
-extern int giScrollX;
-extern int giScrollY;
+extern int gFullCombatScreenDrawn;
+extern int gLimitedCombatUpdatePalette;
+extern int gScrollX;
+extern int gScrollY;
 // CheckEndGame's re-entry guard and last offered score, the creature
 // alignment names (by type / 6) and the score labels.
-extern signed char bInCheckEndGame;
+extern signed char gInCheckEndGame;
 extern int giScore;
 // oldmain's re-entry guard and the intro, end-sequence and remote state it
 // shares with the game screens.
-extern signed char bKBDone;
+extern signed char gKBDone;
 extern short boatFrameFlip[];
 // Combat ground tiles (0x00491058) and obstacle icons (0x00491078) per
 // combat terrain.
-extern char* cCombatGroundNames[];
-extern char* cCombatObstacleNames[];
+extern char* gCombatGroundNames[];
+extern char* gCombatObstacleNames[];
 // Hero level names and the per-class primary-skill gain table.
-extern char* cHeroLevel[];
-extern char* cViewGeneralHelp[];
+extern char* gHeroLevel[];
+extern char* gViewGeneralHelp[];
 // Primary stat, morale and luck labels of the general's stats text, and the
 // combat command help lines HandleViewGeneral shows (entries 1-5).
-extern char* cViewGeneralLabels[];
+extern char* gViewGeneralLabels[];
 extern int gAdvDisposeLevel;
 extern char* gAlignmentNames[];
 extern char* gAPanelHelp[];
 // Army info strings: attack, defense, shots (combat), damage, hit points,
 // speed, morale, luck, shots (adventure); then the speed names.
 extern char* gArmyStatText[];
-extern int gbEnlargeScreenBlit;
-extern int gbHeartbeatSeen;
+extern int gEnlargeScreenBlit;
+extern int gHeartbeatSeen;
 // Setup screens: the setup-dialog flag kbwin's menus check and the
 // right-click help of each setup dialog.
-extern int gbInSetupDialog;
+extern int gInSetupDialog;
 // The other side's ready flag and the heartbeat-seen flag (REMOTE).
-extern int gbRemoteReady;
-extern signed char gbSkipIntro;
+extern int gRemoteReady;
+extern signed char gSkipIntro;
 extern signed char gbWaitForRemoteReceive;
 extern char* gCampaignScenarioNames[];
 extern char* gCampaignScenarioText[];
@@ -500,11 +500,11 @@ extern char* gHumanPlayerTypeNames[];
 // on it), scenario titles and briefings, two crest bytes per side (the first
 // is the human player's), side names and win texts, and the town a campaign
 // map renames at a fixed position (x, y, then the name).
-extern signed char giCampaignChoice;
+extern signed char gCampaignChoice;
 extern signed char giMonthType;
 extern signed char giMonthTypeExtra;
 extern char* gInitMenuHelp[];
-extern signed char giVisRangeTown;
+extern signed char gVisRangeTown;
 // Calendar specials: week/month type and the featured creature or name.
 extern signed char giWeekType;
 extern signed char giWeekTypeExtra;
@@ -556,7 +556,7 @@ H1_ENUM_BEGIN(AdvDisposeLevel)
     ADV_DISPOSE_FULL = 2
 H1_ENUM_END(AdvDisposeLevel)
 
-// giCurExe and the gConfig.gfx rows: the game and the map editor share the
+// gCurExe and the gConfig.gfx rows: the game and the map editor share the
 // registry layout (ReadPrefs/WritePrefs walk both rows; MOUSEMGR tests the
 // editor).
 H1_ENUM_BEGIN(ConfigExecutable)

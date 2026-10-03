@@ -108,7 +108,7 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
     EVENT_TEXT_BUFFER_SIZE = 500,
     EVENT_TEXT_WINDOW_END = 76,
-    // giEventMusicVolume when no music volume is parked.
+    // gEventMusicVolume when no music volume is parked.
     EVENT_MUSIC_VOLUME_NONE = -1
 H1_ENUM_CONST_END(MapEventDisplayConstant)
 
@@ -129,7 +129,7 @@ H1_ENUM_CONST_END(CombatFlowConstant)
 
 // EVENTS data (Buka EVENTS.h owner): the parked music volume DoEvent and DoCombat
 // restore (-1 when none) and the event-music flag.
-extern int giEventMusicVolume;
-extern signed char gbEventMusicPlaying;
+extern int gEventMusicVolume;
+extern signed char gEventMusicPlaying;
 
 #endif // HOMM1_SOURCE_EVENTS_H

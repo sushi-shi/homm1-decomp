@@ -78,6 +78,6 @@ extern SampleChannelStruct SCS[];
 
 void SetReady2Poll(void);
 void HandleMCIError(int, char*);
-extern int giCDDrive;
+extern int gCDDrive;
 
 #endif

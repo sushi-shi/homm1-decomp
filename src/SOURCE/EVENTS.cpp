@@ -153,7 +153,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     objType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
     fizzleMode = EVENT_FIZZLE_HERO_LOSS;
-    gbEventMusicPlaying = 1;
+    gEventMusicPlaying = 1;
     gpMouseManager->ReallyHidePointer();
     EventSound(objType, cell->m_objectMetadata);
     switch (objType) {
@@ -820,9 +820,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_TOWN:
-            if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-                gConfig.musicVolume = giEventMusicVolume;
-            giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+            if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
+                gConfig.musicVolume = gEventMusicVolume;
+            gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
             TownEvent(cell, x, y);
             break;
         case MAP_OBJECT_WHIRLPOOL:
@@ -1448,9 +1448,9 @@ void advManager::EventSound(short eventType, short eventData) {
     }
     if (musicTrack != MUSIC_TRACK_NONE) {
         gpSoundManager->SwitchAmbientMusic(musicTrack);
-        gbEventMusicPlaying = 1;
+        gEventMusicPlaying = 1;
     } else {
-        gbEventMusicPlaying = 0;
+        gEventMusicPlaying = 0;
     }
 }
 
@@ -2835,7 +2835,7 @@ int advManager::DoCombat(
     signed char savedShowIt;
     int unused;
 
-    gbInCombat = 1;
+    gInCombat = 1;
     attackPlayer = firstHero ? firstHero->m_owner : -1;
     if (secondHero)
         defendPlayer = secondHero->m_owner;
@@ -2945,9 +2945,9 @@ int advManager::DoCombat(
     }
 
     bShowIt = 1;
-    if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-        gConfig.musicVolume = giEventMusicVolume;
-    giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+    if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
+        gConfig.musicVolume = gEventMusicVolume;
+    gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
     gpCombatManager->SetupCombat(
         x,
         y,
@@ -2960,9 +2960,9 @@ int advManager::DoCombat(
         y,
         randomSeed
     );
-    if (giHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
+    if (gHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
-    else if (giHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
+    else if (gHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
     gpExec->CallManager(gpCombatManager);
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
@@ -3004,7 +3004,7 @@ combatFinished:
     MobilizeCurrHero(0);
     if (processLosses)
         gbRetreatWin = 0;
-    gbInCombat = 0;
+    gInCombat = 0;
     return gpCombatManager->m_combatResult;
 }
 
@@ -3302,6 +3302,6 @@ void advManager::ReceiveHeroTownData(
 // EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. GiveExperience's
 // assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
 DATA(0x004a0504)
-int giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+int gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
 DATA(0x004ca904)
-signed char gbEventMusicPlaying;
+signed char gEventMusicPlaying;

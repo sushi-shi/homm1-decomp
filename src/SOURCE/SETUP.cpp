@@ -126,16 +126,16 @@ signed char game::SetupCampaignGame(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            giCampaignChoice = CAMPAIGN_IRONFIST;
+            gCampaignChoice = CAMPAIGN_IRONFIST;
             break;
         case CHOICE_TWO:
-            giCampaignChoice = CAMPAIGN_SLAYER;
+            gCampaignChoice = CAMPAIGN_SLAYER;
             break;
         case CHOICE_THREE:
-            giCampaignChoice = CAMPAIGN_LAMANDA;
+            gCampaignChoice = CAMPAIGN_LAMANDA;
             break;
         case CHOICE_FOUR:
-            giCampaignChoice = CAMPAIGN_ALAMAR;
+            gCampaignChoice = CAMPAIGN_ALAMAR;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -155,16 +155,16 @@ signed char game::SetupBaud(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gConfig.baudRate[gbDirectConnect] = CBR_2400;
+            gConfig.baudRate[gDirectConnect] = CBR_2400;
             break;
         case CHOICE_TWO:
-            gConfig.baudRate[gbDirectConnect] = CBR_9600;
+            gConfig.baudRate[gDirectConnect] = CBR_9600;
             break;
         case CHOICE_THREE:
-            gConfig.baudRate[gbDirectConnect] = CBR_19200;
+            gConfig.baudRate[gDirectConnect] = CBR_19200;
             break;
         case CHOICE_FOUR:
-            gConfig.baudRate[gbDirectConnect] = CBR_38400;
+            gConfig.baudRate[gDirectConnect] = CBR_38400;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -186,23 +186,23 @@ signed char game::SetupComPort(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gConfig.comPort[gbDirectConnect] = 1;
+            gConfig.comPort[gDirectConnect] = 1;
             break;
         case CHOICE_TWO:
-            gConfig.comPort[gbDirectConnect] = 2;
+            gConfig.comPort[gDirectConnect] = 2;
             break;
         case CHOICE_THREE:
-            gConfig.comPort[gbDirectConnect] = 3;
+            gConfig.comPort[gDirectConnect] = 3;
             break;
         case CHOICE_FOUR:
-            gConfig.comPort[gbDirectConnect] = 4;
+            gConfig.comPort[gDirectConnect] = 4;
             break;
         case DIALOG_CANCEL:
             return 0;
     }
     if (!SetupBaud())
         return 0;
-    if (!gbDirectConnect) {
+    if (!gDirectConnect) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
         GetDataEntry(
@@ -274,13 +274,13 @@ VA(0x00456f96, 0x333)
 signed char game::SetupModemGame(void) {
     heroWindow* window;
 
-    if (gbDirectConnect) {
-        if (gConfig.comPort[gbDirectConnect] == 0)
+    if (gDirectConnect) {
+        if (gConfig.comPort[gDirectConnect] == 0)
             window = new heroWindow(400, 35, "stpdc.bin");
         else
             window = new heroWindow(400, 35, "stpdccfg.bin");
     } else {
-        if (gConfig.comPort[gbDirectConnect] == 0)
+        if (gConfig.comPort[gDirectConnect] == 0)
             window = new heroWindow(400, 35, "stpmodem.bin");
         else
             window = new heroWindow(400, 35, "stpmcfg.bin");
@@ -292,20 +292,20 @@ signed char game::SetupModemGame(void) {
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
             iMPExtendedType = REMOTE_GAME_MODEM_HOST;
-            if (gConfig.comPort[gbDirectConnect] == 0) {
+            if (gConfig.comPort[gDirectConnect] == 0) {
                 if (!SetupComPort())
                     return 0;
             }
-            if (!gbDirectConnect)
+            if (!gDirectConnect)
                 GetDataEntry("Please enter the telephone number.", numbuf, 35, NULL);
             break;
         case CHOICE_TWO:
             iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
-            if (gConfig.comPort[gbDirectConnect] == 0 && !SetupComPort())
+            if (gConfig.comPort[gDirectConnect] == 0 && !SetupComPort())
                 return 0;
             break;
         case CHOICE_THREE:
-            gbDoModemConfig = 1;
+            gDoModemConfig = 1;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -326,7 +326,7 @@ signed char game::SetupMultiPlayerGame(void) {
     gpWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, 0);
     delete window;
 
-    gbDirectConnect = 0;
+    gDirectConnect = 0;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
             iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
@@ -339,18 +339,18 @@ signed char game::SetupMultiPlayerGame(void) {
                 return 0;
             break;
         case CHOICE_FOUR:
-            gbDirectConnect = 1;
+            gDirectConnect = 1;
             goto setupModem;
         case CHOICE_THREE:
-            gbDirectConnect = 0;
+            gDirectConnect = 0;
         setupModem:
             iMPBaseType = MULTIPLAYER_BASE_MODEM;
             loop = 1;
             while (loop) {
                 if (!SetupModemGame())
                     return 0;
-                if (gbDoModemConfig) {
-                    gbDoModemConfig = 0;
+                if (gDoModemConfig) {
+                    gDoModemConfig = 0;
                     if (!SetupComPort())
                         return 0;
                 } else {
@@ -376,28 +376,28 @@ signed char game::SetupGame(signed char newGame) {
     iMPBaseType = MULTIPLAYER_BASE_UNSET;
     giNumHumanPlayers = 1;
     gbWaitForRemoteReceive = 0;
-    gbDirectConnect = 0;
-    gbInSetupDialog = 1;
+    gDirectConnect = 0;
+    gInSetupDialog = 1;
 
-    if (giMenuCommand != APP_MENU_NONE) {
-        switch (giMenuCommand) {
+    if (gMenuCommand != APP_MENU_NONE) {
+        switch (gMenuCommand) {
             case APP_MENU_NEW_CAMPAIGN_IRONFIST:
-                giCampaignChoice = CAMPAIGN_IRONFIST;
+                gCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_CAMPAIGN_SLAYER:
-                giCampaignChoice = CAMPAIGN_SLAYER;
+                gCampaignChoice = CAMPAIGN_SLAYER;
                 break;
             case APP_MENU_NEW_CAMPAIGN_LAMANDA:
-                giCampaignChoice = CAMPAIGN_LAMANDA;
+                gCampaignChoice = CAMPAIGN_LAMANDA;
                 break;
             case APP_MENU_NEW_CAMPAIGN_ALAMAR:
-                giCampaignChoice = CAMPAIGN_ALAMAR;
+                gCampaignChoice = CAMPAIGN_ALAMAR;
                 break;
             case APP_MENU_NEW_STANDARD_GAME:
             case APP_MENU_LOAD_STANDARD_GAME:
                 break;
             case APP_MENU_LOAD_CAMPAIGN_GAME:
-                giCampaignChoice = CAMPAIGN_IRONFIST;
+                gCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_HOT_SEAT_2:
             case APP_MENU_LOAD_HOT_SEAT_2:
@@ -438,13 +438,13 @@ signed char game::SetupGame(signed char newGame) {
             case APP_MENU_LOAD_DIRECT_HOST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_HOST;
-                gbDirectConnect = 1;
+                gDirectConnect = 1;
                 goto remoteSetup;
             case APP_MENU_NEW_DIRECT_GUEST:
             case APP_MENU_LOAD_DIRECT_GUEST:
                 iMPBaseType = MULTIPLAYER_BASE_MODEM;
                 iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
-                gbDirectConnect = 1;
+                gDirectConnect = 1;
                 goto remoteSetup;
 
             remoteSetup:
@@ -454,7 +454,7 @@ signed char game::SetupGame(signed char newGame) {
                     gbWaitForRemoteReceive = 1;
                 break;
         }
-        giMenuCommand = APP_MENU_NONE;
+        gMenuCommand = APP_MENU_NONE;
         result = 1;
         goto done;
     }
@@ -469,7 +469,7 @@ signed char game::SetupGame(signed char newGame) {
         case CHOICE_ONE:
             break;
         case CHOICE_TWO:
-            giCampaignChoice = CAMPAIGN_IRONFIST;
+            gCampaignChoice = CAMPAIGN_IRONFIST;
             if (newGame) {
                 if (!SetupCampaignGame()) {
                     result = 0;
@@ -496,7 +496,7 @@ signed char game::SetupGame(signed char newGame) {
     }
 
 done:
-    gbInSetupDialog = 0;
+    gInSetupDialog = 0;
     return result;
 }
 
@@ -512,14 +512,14 @@ signed char game::PickLoadGame(void) {
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
-    extern char gcGamePath[];
+    extern char gGamePath[];
     request = new fileRequester(
         0x136,
         0xe,
         FILE_REQUESTER_LOAD,
-        giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
-        gcGamePath,
-        giCampaignChoice > 0 ? ".CGM" : ".GM*"
+        gCampaignChoice > 0 ? "*.CGM" : "*.GM*",
+        gGamePath,
+        gCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
     if (!request)
         MemError();
@@ -604,7 +604,7 @@ short SetupComPortHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
-            if (gbDirectConnect)
+            if (gDirectConnect)
                 NormalDialog(
                     gSetupDCComPortHelp[helpIndex],
                     NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -659,7 +659,7 @@ short SetupBaudHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
-            if (gbDirectConnect)
+            if (gDirectConnect)
                 NormalDialog(
                     gSetupDCBaudHelp[helpIndex],
                     NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -749,7 +749,7 @@ short SetupModemGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST) {
-            if (gbDirectConnect)
+            if (gDirectConnect)
                 NormalDialog(
                     gSetupDCGameHelp[helpIndex],
                     NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -905,9 +905,9 @@ short BaseSetupHandler(tag_message& message) {
         }
     }
 
-    if (handled || giMenuCommand != APP_MENU_NONE) {
+    if (handled || gMenuCommand != APP_MENU_NONE) {
         FINISH_DIALOG_MESSAGE(message);
-        if (giMenuCommand != APP_MENU_NONE)
+        if (gMenuCommand != APP_MENU_NONE)
             gpWindowManager->m_dialogResult = DIALOG_CANCEL;
         return MESSAGE_DISPATCH_FORWARD;
     }
@@ -917,4 +917,4 @@ short BaseSetupHandler(tag_message& message) {
 // Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
 // object at 0x00458520.
 DATA(0x0049f6b0)
-int gbDoModemConfig = 0;
+int gDoModemConfig = 0;

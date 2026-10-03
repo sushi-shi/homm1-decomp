@@ -41,10 +41,10 @@
 
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
-int bInHighMoraleBonus = 0;
+int gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 DATA(0x00490d54)
-int giSeed = 1;
+int gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -112,7 +112,7 @@ void combatManager::SetupCombat(
 ) {
     int i;
 
-    giSeed = randomSeed;
+    gSeed = randomSeed;
     SRand(combatX * 100 + combatY);
     m_combatX = combatX;
     m_combatY = combatY;
@@ -236,7 +236,7 @@ short combatManager::Open(short priority) {
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
-    gbLimitedCombatUpdatePalette = 1;
+    gLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
     gpMouseManager->WarpPointer(
         m_hexCells[m_limitCreatureHex].m_x,
@@ -259,7 +259,7 @@ short combatManager::Open(short priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
+// gCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
 // mountain variant by MoreTreesNear), the boat for water and the graveyard.
 H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_GRASS_FOREST = 0,
@@ -289,7 +289,7 @@ void combatManager::Close(void) {
 
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     DrawCombatBorder();
-    gbLimitedCombatUpdatePalette = 0;
+    gLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
     for (i = 0; i < COMBAT_SIDE_COUNT; i++)
@@ -478,7 +478,7 @@ void combatManager::GenerateMap(void) {
     m_currentSpeed = CREATURE_SPEED_BLAZING;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
-    SRand(giSeed);
+    SRand(gSeed);
 }
 
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
@@ -486,7 +486,7 @@ void combatManager::GenerateMap(void) {
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void) {
     DATA(0x00490db0)
-    static char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
+    static char* gCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
         "frstwgrs.bkg",
         "mtnwgrsf.bkg",
         "snowfrst.bkg",
@@ -505,34 +505,34 @@ char* combatManager::GetBackgroundName(void) {
                 & MAP_TRIGGER_TYPE_MASK)
                    == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
-        return cCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
+        return gCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
     }
     switch (m_terrainType) {
         case TERRAIN_WATER:
-            return cCombatBkgNames[COMBAT_BACKGROUND_BOAT];
+            return gCombatBkgNames[COMBAT_BACKGROUND_BOAT];
         case TERRAIN_SWAMP:
-            return cCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
+            return gCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
         case TERRAIN_LAVA:
-            return cCombatBkgNames[COMBAT_BACKGROUND_LAVA];
+            return gCombatBkgNames[COMBAT_BACKGROUND_LAVA];
         case TERRAIN_DESERT:
-            return cCombatBkgNames[COMBAT_BACKGROUND_DESERT];
+            return gCombatBkgNames[COMBAT_BACKGROUND_DESERT];
         case TERRAIN_GRASS:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
         case TERRAIN_SNOW:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
         case TERRAIN_DIRT:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
     }
-    return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
+    return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
@@ -593,9 +593,9 @@ void combatManager::LoadIcons(void) {
     m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
     m_combatIcons[COMBAT_ICON_GROUND] =
-        gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
+        gpResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_OBSTACLES] =
-        gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
+        gpResourceManager->GetIcon(gCombatObstacleNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_TEXTBAR] = gpResourceManager->GetIcon("textbar.icn");
     m_combatIcons[COMBAT_ICON_TENT] = gpResourceManager->GetIcon("tent.icn");
     m_combatIcons[COMBAT_ICON_CLOUD] = gpResourceManager->GetIcon("cloud.icn");
@@ -722,11 +722,11 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
 
     if (side < 0 || index < 0)
         return;
-    if (bInHighMoraleBonus) {
-        bInHighMoraleBonus = 0;
+    if (gInHighMoraleBonus) {
+        gInHighMoraleBonus = 0;
         return;
     }
-    bInHighMoraleBonus = 0;
+    gInHighMoraleBonus = 0;
     theGroup = m_armyGroups[side];
     activeArmy = &m_armies[side][index];
     if (!activeArmy->m_quantity)
@@ -734,7 +734,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
     morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (morale <= 0 || SRandom(1, 24) > morale)
         return;
-    bInHighMoraleBonus = 1;
+    gInHighMoraleBonus = 1;
     sprintf(gText, "goodmrle.82M");
     sample = LoadPlaySample(gText);
     if (activeArmy->m_quantity <= 1)
@@ -1316,7 +1316,7 @@ void combatManager::KeepAttack(void) {
     hurt = 0;
     for (i = 0; i < dice; i++)
         hurt += SRandom(2, 3);
-    hurt = static_cast<int>(hurt * gfBattleStat[mod + 20]);
+    hurt = static_cast<int>(hurt * gBattleStat[mod + 20]);
     if (hurt <= 0)
         hurt = 1;
     numLost = target->Damage(hurt);

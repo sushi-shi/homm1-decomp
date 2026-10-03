@@ -32,8 +32,8 @@ literals, wherever it is declared in the body:
     /Gi:  ... | LIT_TWO | DD.. LIT_THREE | ...      (DD = late, at f3's head)
 
 This holds with and without a listing switch. Retail's parse-order variables
-fit this. PHILAI's `bSVSearchArrayInUse` (0x0048f7b8) comes at the start of
-`StrategicValueOfPosition`'s data and `bEvaluatingTravelGates` (0x0048f824) at
+fit this. PHILAI's `gSVSearchArrayInUse` (0x0048f7b8) comes at the start of
+`StrategicValueOfPosition`'s data and `gEvaluatingTravelGates` (0x0048f824) at
 the start of `ValueOfEventAtPosition`'s. Each is referenced only by that
 function (0x0041f2c3 and 0x0042278b respectively). Buka models both at file
 scope, but the order evidence supports function-local statics under `/Gi`.

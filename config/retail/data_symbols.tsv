@@ -14,10 +14,10 @@ rva	size	symbol	provenance
 0x000A0E30	26	?gReadLongAssertFile@@3PADA	ReadLong assertion source path
 0x000A0E4C	4	?gReadBlockAssertLine@@3FA	ReadBlock assertion line record
 0x000A0E50	26	?gReadBlockAssertFile@@3PADA	ReadBlock assertion source path
-0x000A0E70	12	?iMouseOffset@@3PAHA	three cursor-family base offsets
+0x000A0E70	12	?gMouseOffset@@3PAHA	three cursor-family base offsets
 0x000A0E7C	4	?gMouseCursorType@@3HA	current cursor family
-0x000A0E80	150	?iHotSpot@@3PAY01EA	75 two-axis cursor hotspots
-0x000A0F28	4	?gbInSetPointer@@3HA	SetPointer recursion guard
+0x000A0E80	150	?gHotSpot@@3PAY01EA	75 two-axis cursor hotspots
+0x000A0F28	4	?gInSetPointer@@3HA	SetPointer recursion guard
 0x000A0F2C	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
 0x000A0F30	28	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
 0x000A0F4C	3	?gAdventureColor@@3PADA	adventure color filename component
@@ -59,7 +59,7 @@ rva	size	symbol	provenance
 0x000CB4C0	300	?hMouseCursor@@3PAPAXA	75 cursor handles
 0x000CB5F0	300	?cAndBits@@3PAPAEA	75 cursor mask buffers
 0x000CB720	1800	?bmpColor@@3PAUtagBITMAP@@A	75 color bitmap descriptors
-0x000CBE28	300	?cColorBits@@3PAPACA	75 cursor color buffers
+0x000CBE28	300	?gColorBits@@3PAPACA	75 cursor color buffers
 0x000CBF58	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	75 cursor icon descriptors
 0x000CC538	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
 0x000A1BD0	256	_d_code	code-required identity and extent
@@ -123,7 +123,7 @@ rva	size	symbol	provenance
 0x000CAC20	1	?gWindowFadeSavedUpdate@@3CA	FadeScreen signed byte saved update flags
 0x000A1708	2	?gAdjustMusicAssertLine@@3FA	signed word assertion base used by AdjustMusicVolumes
 0x000A170C	28	?gAdjustMusicAssertFile@@3PADA	retail source assertion path, identity only
-0x000A0C7C	4	?iDialogNestCount@@3HA	dialog nesting counter
+0x000A0C7C	4	?gDialogNestCount@@3HA	dialog nesting counter
 0x000A1BB4	4	_gClipRowsLeft	src/BASE/Icon2bc.asm; clipped icon renderer scratch (rows still to draw), code-required identity
 0x000A1BB8	4	_gClipLeftSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (left clip skip), code-required identity
 0x000A1BBC	4	_gClipVisibleWidth	src/BASE/Icon2bc.asm; clipped icon renderer scratch (visible span width), code-required identity

@@ -478,11 +478,11 @@ short game::SaveGame(char* filename, signed char generateName) {
         sprintf(fileName, filename);
     }
     if (!strcmpi(fileName, "REMOTE.GAM")) {
-        extern char gcDataPath[];
-        sprintf(filePath, "%s%s", gcDataPath, fileName);
+        extern char gDataPath[];
+        sprintf(filePath, "%s%s", gDataPath, fileName);
     } else {
-        extern char gcGamePath[];
-        sprintf(filePath, "%s%s", gcGamePath, fileName);
+        extern char gGamePath[];
+        sprintf(filePath, "%s%s", gGamePath, fileName);
         if (strnicmp(fileName, "AUTOSAVE", SAVE_FILE_BASE_NAME_LENGTH)
             && strnicmp(fileName, "PLYREXIT", SAVE_FILE_BASE_NAME_LENGTH))
             strcpy(gpGame->m_saveName, filename);
@@ -566,14 +566,14 @@ short game::LoadGame(char* filename, int origData, int) {
     char buffer[0x2c];
 
     numHumans = 0;
-    gbGameOver = 0;
+    gGameOver = 0;
     m_noMapHeroes = 1;
-    extern char gcDataPath[];
-    extern char gcGamePath[];
+    extern char gDataPath[];
+    extern char gGamePath[];
     if (origData || !strcmp(filename, "REMOTE.GAM"))
-        sprintf(pathName, "%s%s", gcDataPath, filename);
+        sprintf(pathName, "%s%s", gDataPath, filename);
     else
-        sprintf(pathName, "%s%s", gcGamePath, filename);
+        sprintf(pathName, "%s%s", gGamePath, filename);
     handle = open(pathName, O_BINARY);
     if (handle == -1)
         FileError(pathName);
@@ -612,7 +612,7 @@ short game::LoadGame(char* filename, int origData, int) {
     }
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
         if (gbHumanPlayer[i]) {
-            if (!gbRemoteOn || i == giThisGamePos)
+            if (!gRemoteOn || i == giThisGamePos)
                 gbThisNetHumanPlayer[i] = 1;
             else
                 gbThisNetHumanPlayer[i] = 0;
@@ -670,7 +670,7 @@ short game::LoadGame(char* filename, int origData, int) {
         giCurWatchPlayer = (giCurWatchPlayer + 1) % m_playerCount;
     giCurWatchPlayerBit = 1 << giCurWatchPlayer;
     giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
-    giCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
     memset(mapExtra, 0, sizeof(mapExtra));
     if (!origData)
@@ -1063,11 +1063,11 @@ void game::GiveTroopsToNeutralTowns(void) {
 VA(0x0043baa8, 0x3eb)
 signed char game::NewGame(void) {
     DATA(0x004906c0)
-    static signed char gbNewGameSettingsSaved = 0;
+    static signed char gNewGameSettingsSaved = 0;
     if (!SetupGame(1))
         return 0;
-    if (giCampaignChoice > 0) {
-        InitEntireCampaign(giCampaignChoice);
+    if (gCampaignChoice > 0) {
+        InitEntireCampaign(gCampaignChoice);
         return 1;
     }
     if (gbWaitForRemoteReceive)
@@ -1077,13 +1077,13 @@ signed char game::NewGame(void) {
     if (!m_newGameWindow)
         MemError();
     SetWinText(m_newGameWindow, WINDOW_TEXT_NEW_GAME);
-    if (gbNewGameSettingsSaved) {
-        gpGame->m_difficulty = gcSavedDifficulty;
-        m_players[1].m_difficulty = gcSavedPlayerTypes[1];
-        m_players[2].m_difficulty = gcSavedPlayerTypes[2];
-        m_players[3].m_difficulty = gcSavedPlayerTypes[3];
-        gbIAmGreatest = gbSavedKingOfTheHill;
-        m_players[0].m_color = gcSavedCrest;
+    if (gNewGameSettingsSaved) {
+        gpGame->m_difficulty = gSavedDifficulty;
+        m_players[1].m_difficulty = gSavedPlayerTypes[1];
+        m_players[2].m_difficulty = gSavedPlayerTypes[2];
+        m_players[3].m_difficulty = gSavedPlayerTypes[3];
+        gbIAmGreatest = gSavedKingOfTheHill;
+        m_players[0].m_color = gSavedCrest;
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
         || (giNumHumanPlayers == 2 && gMapName[5] != '2')
@@ -1096,14 +1096,14 @@ signed char game::NewGame(void) {
                 gMapDescription,
                 "The Griffons will protect you until you are ready to make your move."
             );
-            giMapSize = MAP_SIZE_SMALL;
-            giMapDifficulty = MAP_DIFFICULTY_EASY;
+            gMapSize = MAP_SIZE_SMALL;
+            gMapDifficulty = MAP_DIFFICULTY_EASY;
         } else {
             strcpy(gMapName, "CNM51234.map");
             strcpy(gFullMapName, "Around the Bay");
             strcpy(gMapDescription, "A large island of tight passes with a circular feel.");
-            giMapSize = MAP_SIZE_MEDIUM;
-            giMapDifficulty = MAP_DIFFICULTY_NORMAL;
+            gMapSize = MAP_SIZE_MEDIUM;
+            gMapDifficulty = MAP_DIFFICULTY_NORMAL;
         }
     }
     UpdateNewGameWindow();
@@ -1114,16 +1114,16 @@ signed char game::NewGame(void) {
         return 0;
     strcpy(m_mapName, gFullMapName);
     strcpy(m_mapDescription, gMapDescription);
-    m_mapSize = giMapSize;
-    m_mapDifficulty = giMapDifficulty;
+    m_mapSize = gMapSize;
+    m_mapDifficulty = gMapDifficulty;
     strcpy(m_mapName, gFullMapName);
-    gbNewGameSettingsSaved = 1;
-    gcSavedDifficulty = gpGame->m_difficulty;
-    gcSavedPlayerTypes[1] = m_players[1].m_difficulty;
-    gcSavedPlayerTypes[2] = m_players[2].m_difficulty;
-    gcSavedPlayerTypes[3] = m_players[3].m_difficulty;
-    gbSavedKingOfTheHill = gbIAmGreatest;
-    gcSavedCrest = m_players[0].m_color;
+    gNewGameSettingsSaved = 1;
+    gSavedDifficulty = gpGame->m_difficulty;
+    gSavedPlayerTypes[1] = m_players[1].m_difficulty;
+    gSavedPlayerTypes[2] = m_players[2].m_difficulty;
+    gSavedPlayerTypes[3] = m_players[3].m_difficulty;
+    gSavedKingOfTheHill = gbIAmGreatest;
+    gSavedCrest = m_players[0].m_color;
     NewMap(gMapName);
     return 1;
 }
@@ -1283,7 +1283,7 @@ void game::NewMap(char* mapName) {
     giCurPlayerBit = 1 << giCurPlayer;
     giCurWatchPlayerBit = giCurPlayerBit;
     giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
-    giCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     giCurWatchPlayer = giCurPlayer;
     for (i = 0; i < m_playerCount; i++) {
         m_players[i].m_townCount = 0;
@@ -1872,8 +1872,8 @@ short game::LoadMap(char* filename) {
     int unused;
     short version;
 
-    extern char gcMapPath[];
-    sprintf(gText, "%s%s", gcMapPath, filename);
+    extern char gMapPath[];
+    sprintf(gText, "%s%s", gMapPath, filename);
     handle = open(gText, O_BINARY);
     if (handle == -1)
         FileError(gText);
@@ -1965,7 +1965,7 @@ void game::ClaimTown(signed char townId, signed char player) {
     cell->m_flags |= MAP_CELL_OBJECT_EXTRA;
     cell->m_objectTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
     cell->m_extraFrame = m_players[player].Color() * 2 + 1;
-    SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, giVisRangeTown);
+    SetVisibility(m_castleRecs[townId].m_x, m_castleRecs[townId].m_y, player, gVisRangeTown);
     CheckEndGame(0);
 }
 
@@ -2172,7 +2172,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_PREVIOUS_PAGE:
                             NormalDialog(
-                                cSpellHelp[SPELL_HELP_PREVIOUS_PAGE],
+                                gSpellHelp[SPELL_HELP_PREVIOUS_PAGE],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2185,7 +2185,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_NEXT_PAGE:
                             NormalDialog(
-                                cSpellHelp[SPELL_HELP_NEXT_PAGE],
+                                gSpellHelp[SPELL_HELP_NEXT_PAGE],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2198,7 +2198,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_ADVENTURE_SPELLS:
                             NormalDialog(
-                                cSpellHelp[SPELL_HELP_ADVENTURE_SPELLS],
+                                gSpellHelp[SPELL_HELP_ADVENTURE_SPELLS],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2211,7 +2211,7 @@ short ViewSpellsHandler(tag_message& message) {
                             break;
                         case SPELL_BOOK_COMBAT_SPELLS:
                             NormalDialog(
-                                cSpellHelp[SPELL_HELP_COMBAT_SPELLS],
+                                gSpellHelp[SPELL_HELP_COMBAT_SPELLS],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
                                 -1,
                                 -1,
@@ -2311,22 +2311,22 @@ short ViewSpecialHandler(tag_message& message) {
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_PREVIOUS_PAGE]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_PREVIOUS_PAGE]);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_NEXT_PAGE]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_NEXT_PAGE]);
                         break;
                     case SPELL_BOOK_ADVENTURE_SPELLS:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_ADVENTURE_SPELLS]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_ADVENTURE_SPELLS]);
                         break;
                     case SPELL_BOOK_COMBAT_SPELLS:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_COMBAT_SPELLS]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_COMBAT_SPELLS]);
                         break;
                     case DIALOG_BUTTON_0:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_CLOSE]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_CLOSE]);
                         break;
                     default:
-                        strcpy(gText, cSpellHelp[SPELL_HELP_VIEW_SPELLS]);
+                        strcpy(gText, gSpellHelp[SPELL_HELP_VIEW_SPELLS]);
                         break;
                 }
                 HeroMessageUpdate(gText);
@@ -2679,7 +2679,7 @@ void game::Overview(void) {
     short nextType;
 
     gpAdvManager->TrimLoopingSounds(8);
-    gbOverviewShowing = 1;
+    gOverviewShowing = 1;
     unusedGY = 82;
     shieldDXX = 49;
     spare1 = 73;
@@ -2889,7 +2889,7 @@ void game::Overview(void) {
     gpResourceManager->Dispose(ovIcon);
     gpResourceManager->Dispose(smallFont);
     gpResourceManager->Dispose(bigFont);
-    gbOverviewShowing = 0;
+    gOverviewShowing = 0;
 }
 
 // Buka 2.1 game::GetRandomNumTroops with HoMM1's 28 creatures.
@@ -2984,7 +2984,7 @@ void game::NextPlayer(void) {
     // Retail reserves 0x14 unused bytes above the named locals.
     char unused[20];
 
-    iCurHourGlassPhase = 0;
+    gCurHourGlassPhase = 0;
     if (gbThisNetHumanPlayer[giCurPlayer] && gConfig.autosave) {
         numHumans = 0;
         for (i = 0; i < GAME_PLAYER_COUNT; i++) {
@@ -3026,7 +3026,7 @@ void game::NextPlayer(void) {
         giBottomViewOverride = BOTTOM_VIEW_OVERRIDE_DISABLED;
         ShowComputerScreen();
         bShowIt = 0;
-        if (gbRemoteOn && (gbHumanPlayer[giCurPlayer] || giHostGamePos != giThisGamePos)) {
+        if (gRemoteOn && (gbHumanPlayer[giCurPlayer] || giHostGamePos != giThisGamePos)) {
             if (!gbHumanPlayer[giCurPlayer])
                 remote = giHostGamePos;
             else
@@ -3048,14 +3048,14 @@ void game::NextPlayer(void) {
             CancelComputerScreen();
         giCurWatchPlayerBit = giCurPlayerBit;
         giCurWatchPlayer = giCurPlayer;
-        giCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+        gCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     }
     DoNewTurn();
     gpMouseManager->ReallyShowPointer();
     CheckEndGame(0);
-    if (gbThisNetHumanPlayer[giCurPlayer] && gbRemoteOn && m_day != 1 && giForceSwitchMusic == -1) {
+    if (gbThisNetHumanPlayer[giCurPlayer] && gRemoteOn && m_day != 1 && gForceSwitchMusic == -1) {
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
-        giForceSwitchMusic = KBTickCount();
+        gForceSwitchMusic = KBTickCount();
     }
 }
 
@@ -3308,7 +3308,7 @@ void game::PerWeek(void) {
 VA(0x00442654, 0x2e1)
 void game::PerMonth(void) {
     DATA(0x004909c0)
-    static signed char giMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
+    static signed char gMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
     town* townPointer;
     short growth;
     short j;
@@ -3324,7 +3324,7 @@ void game::PerMonth(void) {
         giMonthTypeExtra = Random(0, CALENDAR_MONTH_NAME_COUNT - 1);
     } else if (i <= 9) {
         giMonthType = CALENDAR_PERIOD_CREATURE;
-        giMonthTypeExtra = giMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
+        giMonthTypeExtra = gMonType[Random(0, CALENDAR_MONTH_CREATURE_COUNT - 1)];
     } else {
         giMonthType = CALENDAR_PERIOD_PLAGUE;
     }
@@ -3514,8 +3514,8 @@ void game::SetupTown(signed char townId, signed char aiOwned) {
             newSpell = gMageGuildSpellPool[spellLevel][Random(0, 7)];
             if (aiOwned)
                 spellValue =
-                    giSpellAIValue[newSpell]
-                        * (gcSpellAIFlags[newSpell] & SPELL_AI_FLAG_SCALES_WITH_POWER ? 4 : 1)
+                    gSpellAIValue[newSpell]
+                        * (gSpellAIFlags[newSpell] & SPELL_AI_FLAG_SCALES_WITH_POWER ? 4 : 1)
                     + 50;
             else
                 spellValue = 1500;
@@ -3564,10 +3564,10 @@ void game::RandomizeMine(signed char x, signed char y) {
                 type = Random(1, 6);
                 break;
         }
-        if (!giMineTypeCount[type])
+        if (!gMineTypeCount[type])
             tries = 30;
     }
-    giMineTypeCount[type]++;
+    gMineTypeCount[type]++;
     switch (type) {
         case RESOURCE_WOOD:
             upFrame = 5;
@@ -3750,7 +3750,7 @@ void game::ProcessRandomObjects(int castlesOnly) {
     int highFV;
 
     for (i = 0; i < RESOURCE_COUNT; i++)
-        giMineTypeCount[i] = 0;
+        gMineTypeCount[i] = 0;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gRandomTownTypes[i] = TOWN_TYPE_NONE;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
@@ -3901,12 +3901,12 @@ int SGenRand(void) {
     int bitMask;
     int value = 0;
     int i;
-    iLastSeed &= 0xfff;
-    iLastSeed *= 7;
-    iLastSeed += (iLastSeed & 0xff0) >> 4;
+    gLastSeed &= 0xfff;
+    gLastSeed *= 7;
+    gLastSeed += (gLastSeed & 0xff0) >> 4;
     for (i = 31; i >= 0; --i) {
         bitMask = 1 << i;
-        if (iLastSeed & bitMask)
+        if (gLastSeed & bitMask)
             value |= 1 << i;
     }
     return value;
@@ -3917,8 +3917,8 @@ int SRandom(int low, int high) {
     int result;
     SIncRandomize(low, high);
     result = SGenRand();
-    iLastSeed += low;
-    iLastSeed += high * 8;
+    gLastSeed += low;
+    gLastSeed += high * 8;
     return result % (high - low + 1) + low;
 }
 
@@ -3929,16 +3929,16 @@ void SIncRandomize(int x, int y) {
     y *= 13;
     x &= 0xff;
     y &= 0xff;
-    iLastSeed += y << 5;
-    iLastSeed += x * 13233;
-    iLastSeed += y;
-    feedback = iLastSeed & 0x3f;
-    iLastSeed += feedback << 8;
+    gLastSeed += y << 5;
+    gLastSeed += x * 13233;
+    gLastSeed += y;
+    feedback = gLastSeed & 0x3f;
+    gLastSeed += feedback << 8;
 }
 
 VA(0x00444637, 0x24)
 void SRand(int seed) {
-    iLastSeed = seed;
+    gLastSeed = seed;
     srand(seed);
 }
 
@@ -4095,7 +4095,7 @@ void game::CancelComputerScreen(void) {
 // evidence: graph:3;base=0.481260;margin=0.673888;shape=0.345;size=0.812;calls=0.778;alternate=pol20:void game::ShowComputerScreen(void)@0x00081271
 VA(0x00444ba9, 0x115)
 void game::ShowComputerScreen(void) {
-    if (gConfig.blackoutComputer || gbRemoteOn) {
+    if (gConfig.blackoutComputer || gRemoteOn) {
         int saved = gbThisNetHumanPlayer[giCurPlayer];
         gbThisNetHumanPlayer[giCurPlayer] = 1;
         int i;
@@ -4107,13 +4107,13 @@ void game::ShowComputerScreen(void) {
                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
             );
         gpMouseManager->ReallyHidePointer();
-        gbAllBlack = 1;
+        gAllBlack = 1;
         gpAdvManager->CompleteDraw(1);
         gpAdvManager->UpdateHeroLocators(1, 1);
         gpAdvManager->UpdateTownLocators(1, 1);
         gpAdvManager->UpdBottomView(1, 1, 1);
         gpAdvManager->UpdateScreen(0, 1);
-        gbAllBlack = 0;
+        gAllBlack = 0;
         gbThisNetHumanPlayer[giCurPlayer] = saved;
         gpMouseManager->ReallyShowPointer();
     }
@@ -4140,9 +4140,9 @@ void game::ShowHeroesLogo(void) {
 // evidence: graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
 VA(0x00444d66, 0x155)
 void game::WaitForPlayer(char* text, int player) {
-    if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gbRemoteOn) {
+    if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gRemoteOn) {
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-        gbAllBlack = 1;
+        gAllBlack = 1;
         giBottomViewOverrideEndTime = KBTickCount() + 9999999;
         if (gbThisNetHumanPlayer[giCurPlayer])
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
@@ -4156,7 +4156,7 @@ void game::WaitForPlayer(char* text, int player) {
         gpAdvManager->UpdateTownLocators(1, 1);
         gpAdvManager->UpdateScreen(0, 1);
         ShowHeroesLogo();
-        gbAllBlack = 0;
+        gAllBlack = 0;
         gpMouseManager->ReallyShowPointer();
         NormalDialog(
             text,
@@ -4486,18 +4486,18 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     LogStr("Transmit Game Start");
     if (gpAdvManager->m_active == 1)
         BVResMsg("Sending Data", RESOURCE_NONE, 0);
-    while (!gbHeartbeatSeen) {
+    while (!gHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
     }
     AiPrint("Transmit Start");
     memset(acked, 0, sizeof(acked));
     SaveGame("REMOTE.GAM", 0);
-    extern char gcDataPath[];
-    sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
+    extern char gDataPath[];
+    sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
     fileSize = FileSize(pathname);
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         outData = static_cast<char*>(malloc(fileSize));
     fileData = static_cast<char*>(malloc(fileSize));
     fileHandle = open(pathname, O_BINARY);
@@ -4509,7 +4509,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     {
         read(fileHandle, fileData, fileSize);
         close(fileHandle);
-        if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+        if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
             fileSize = EncodeData(outData, fileData, fileSize);
         else
             outData = fileData;
@@ -4617,7 +4617,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
 
 cleanup:
     free(sendPacket);
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         free(outData);
     free(fileData);
     AiPrint("Transmit End");
@@ -4671,7 +4671,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     gpSoundManager->m_musicReady = 1;
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->m_musicReady = prevReady;
-    while (!gbHeartbeatSeen) {
+    while (!gHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
     }
@@ -4688,7 +4688,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     if (!result)
         ShutDown(NULL);
     memset(gotIt, 0, sizeof(gotIt));
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     inData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
@@ -4752,12 +4752,12 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
             }
         }
     }
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         dataSize = DecodeData(decodedData, inData);
     else
         decodedData = inData;
-    extern char gcDataPath[];
-    sprintf(pathname, "%s%s", gcDataPath, "REMOTE.GAM");
+    extern char gDataPath[];
+    sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
     fileHandle = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
     if (fileHandle == -1)
         FileError(pathname);
@@ -4766,7 +4766,7 @@ int game::ReceiveSaveGame(int dataSize, int remotePlayer) {
     okay = 1;
     free(sendPacket);
     free(inData);
-    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gbRemoteReady))
+    if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         free(decodedData);
     AiPrint("Receive End");
     if (gpAdvManager->m_active == 1) {
@@ -4909,7 +4909,7 @@ int game::GetBoatsBuilt(void) {
 }
 
 DATA(0x00490abc)
-signed char gbShowMapInfo = 0;
+signed char gShowMapInfo = 0;
 
 // donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
 // donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
@@ -4928,10 +4928,10 @@ void game::GetMap(void) {
     strcpy(oldMapName, gMapName);
     strcpy(saveFullName, gFullMapName);
     strcpy(oldDescription, gMapDescription);
-    gbShowMapInfo = 1;
-    strcpy(gcCurMapName, "");
-    gpReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
-    if (!gpReqExtraWindow)
+    gShowMapInfo = 1;
+    strcpy(gCurMapName, "");
+    gReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
+    if (!gReqExtraWindow)
         MemError();
     if (giNumHumanPlayers == 1)
         sprintf(mask, "????1???.MAP");
@@ -4941,13 +4941,13 @@ void game::GetMap(void) {
         sprintf(mask, "??????3?.MAP");
     else if (giNumHumanPlayers == 4)
         sprintf(mask, "???????4.MAP");
-    extern char gcMapPath[];
-    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gcMapPath, ".MAP");
+    extern char gMapPath[];
+    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gMapPath, ".MAP");
     if (!request)
         MemError();
     request->ShowMapInfo();
     result = gpExec->DoDialog(request);
-    gpWindowManager->RemoveWindow(gpReqExtraWindow);
+    gpWindowManager->RemoveWindow(gReqExtraWindow);
     if (result == DIALOG_BUTTON_2) {
         strcpy(gMapName, gLastFilename);
         delete request;
@@ -4957,8 +4957,8 @@ void game::GetMap(void) {
         strcpy(gMapDescription, oldDescription);
         delete request;
     }
-    delete gpReqExtraWindow;
-    gbShowMapInfo = 0;
+    delete gReqExtraWindow;
+    gShowMapInfo = 0;
 }
 
 // Buka 2.1 game::GetNumThievesGuilds.
@@ -5019,19 +5019,19 @@ int game::CalcDifficultyRating(void) {
             total += 10;
         }
     }
-    if (giMapSize == MAP_SIZE_SMALL) {
-    } else if (giMapSize == MAP_SIZE_MEDIUM) {
+    if (gMapSize == MAP_SIZE_SMALL) {
+    } else if (gMapSize == MAP_SIZE_MEDIUM) {
         total += 10;
-    } else if (giMapSize == MAP_SIZE_LARGE) {
+    } else if (gMapSize == MAP_SIZE_LARGE) {
         total += 20;
     }
-    if (giMapDifficulty == MAP_DIFFICULTY_EASY)
+    if (gMapDifficulty == MAP_DIFFICULTY_EASY)
         total += 20;
-    else if (giMapDifficulty == MAP_DIFFICULTY_NORMAL)
+    else if (gMapDifficulty == MAP_DIFFICULTY_NORMAL)
         total += 30;
-    else if (giMapDifficulty == MAP_DIFFICULTY_TOUGH)
+    else if (gMapDifficulty == MAP_DIFFICULTY_TOUGH)
         total += 40;
-    else if (giMapDifficulty == MAP_DIFFICULTY_IMPOSSIBLE)
+    else if (gMapDifficulty == MAP_DIFFICULTY_IMPOSSIBLE)
         total += 50;
     return total;
 }
@@ -5203,31 +5203,31 @@ void game::RestoreCell(int x, int y, int obj, int barrier, mapCell* passedCell, 
 }
 
 // GAME owns retail .data 0x00490600-0x00490b4b and .bss 0x004c50d0-0x004c512f.
-// Retail emits gbNewGameSettingsSaved, giMonType and iLastSeed among the
-// literals of their users; gbShowMapInfo is defined above GetMap.
+// Retail emits gNewGameSettingsSaved, gMonType and gLastSeed among the
+// literals of their users; gShowMapInfo is defined above GetMap.
 DATA(0x00490600)
-int gbGameOver = 0;
+int gGameOver = 0;
 DATA(0x004909cc)
-unsigned long iLastSeed = 135621123;
+unsigned long gLastSeed = 135621123;
 DATA(0x004c50d0)
 signed char gSaveCurPlayer;
 DATA(0x004c50dc)
-signed char gcSavedCrest;
+signed char gSavedCrest;
 DATA(0x004c50e0)
-signed char gcSavedDifficulty;
+signed char gSavedDifficulty;
 DATA(0x004c50e4)
-int giEndSequence;
+int gEndSequence;
 DATA(0x004c50e8)
 signed char gbDismissArmy;
 DATA(0x004c50f4)
-heroWindow* gpReqExtraWindow;
+heroWindow* gReqExtraWindow;
 DATA(0x004c50f8)
-signed char gcSavedPlayerTypes[4];
+signed char gSavedPlayerTypes[4];
 DATA(0x004c5108)
-short giMineTypeCount[RESOURCE_COUNT];
+short gMineTypeCount[RESOURCE_COUNT];
 DATA(0x004c5118)
-char gcCurMapName[16];
+char gCurMapName[16];
 DATA(0x004c5128)
-signed char gbSavedKingOfTheHill;
+signed char gSavedKingOfTheHill;
 DATA(0x004c512c)
 signed char gRandomTownTypes[4];

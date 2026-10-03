@@ -88,7 +88,7 @@ H1_ENUM_CONST_BEGIN(GameWeeklyConstant)
 H1_ENUM_CONST_END(GameWeeklyConstant)
 
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
-// and CombatSpecialHandler (cSpellHelp rows 0..3 describe 2..5); entries
+// and CombatSpecialHandler (gSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).
 H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_PREVIOUS_PAGE = 2,
@@ -537,27 +537,27 @@ short ViewSpellsHandler(struct tag_message&);
 short ViewSpecialHandler(struct tag_message&);
 short ViewArmyHandler(struct tag_message&);
 int GetBaseScore(int);
-extern int gbGameOver;
-extern int giEndSequence;
+extern int gGameOver;
+extern int gEndSequence;
 // SaveGame files the current player through this byte.
 extern signed char gSaveCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gcSavedDifficulty;
-extern signed char gcSavedPlayerTypes[];
-extern signed char gbSavedKingOfTheHill;
-extern signed char gcSavedCrest;
+extern signed char gSavedDifficulty;
+extern signed char gSavedPlayerTypes[];
+extern signed char gSavedKingOfTheHill;
+extern signed char gSavedCrest;
 extern signed char gRandomTownTypes[4];
-extern short giMineTypeCount[];
-extern unsigned long iLastSeed;
+extern short gMineTypeCount[];
+extern unsigned long gLastSeed;
 int SGenRand(void);
 int SRandom(int, int);
 void SIncRandomize(int, int);
 void SRand(int);
-// GetMap raises gbShowMapInfo around its .MAP requester and owns the
+// GetMap raises gShowMapInfo around its .MAP requester and owns the
 // reqextra.bin side window the requester fills.
-extern signed char gbShowMapInfo;
-extern heroWindow* gpReqExtraWindow;
-extern char gcCurMapName[];
+extern signed char gShowMapInfo;
+extern heroWindow* gReqExtraWindow;
+extern char gCurMapName[];
 extern signed char gbDismissArmy;
 
 #endif // HOMM1_SOURCE_GAME_H

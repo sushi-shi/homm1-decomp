@@ -44,7 +44,7 @@ H1_ENUM_BEGIN(ViewGeneralControl)
     GENERAL_CONTROL_FOURTEEN = 14
 H1_ENUM_END(ViewGeneralControl)
 
-// HandleViewGeneral's hover line: the cViewGeneralHelp row (Buka
+// HandleViewGeneral's hover line: the gViewGeneralHelp row (Buka
 // ViewGeneralHoverHelp).
 H1_ENUM_BEGIN(ViewGeneralHoverHelp)
     GENERAL_HOVER_HELP_CAST_SPELL = 1,
@@ -121,17 +121,17 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
     sprintf(
         gText,
         "\n%s%d\n%s%d\n%s%d\n%s%d\n%s%s\n%s%s\n",
-        cViewGeneralLabels[0],
+        gViewGeneralLabels[0],
         m_heroes[side]->m_primaryStats[HERO_PRIMARY_ATTACK],
-        cViewGeneralLabels[1],
+        gViewGeneralLabels[1],
         m_heroes[side]->m_primaryStats[HERO_PRIMARY_DEFENSE],
-        cViewGeneralLabels[2],
+        gViewGeneralLabels[2],
         m_heroes[side]->m_primaryStats[HERO_PRIMARY_SPELL_POWER],
-        cViewGeneralLabels[3],
+        gViewGeneralLabels[3],
         m_heroes[side]->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
-        cViewGeneralLabels[4],
+        gViewGeneralLabels[4],
         gMoraleText[morale + 3],
-        cViewGeneralLabels[5],
+        gViewGeneralLabels[5],
         gLuckText[iLuck + 3]
     );
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -258,7 +258,7 @@ short HandleViewGeneral(tag_message& message) {
                         hintIndex = GENERAL_HOVER_HELP_HERO;
                         break;
                 }
-                gpCombatManager->CombatMessage(cViewGeneralHelp[hintIndex], 1);
+                gpCombatManager->CombatMessage(gViewGeneralHelp[hintIndex], 1);
                 return MESSAGE_DISPATCH_CONSUME;
                 break;
         }

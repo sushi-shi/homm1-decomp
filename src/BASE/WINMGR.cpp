@@ -123,7 +123,7 @@ short heroWindowManager::Open(short managerOrder) {
     m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
-    m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+    m_screen->m_pixels = static_cast<signed char*>(gInitWin);
     if (m_screen != NULL) {
         m_priority = managerOrder;
         m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
@@ -264,15 +264,15 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
 VA(0x004742d0, 0x1e0)
 short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_message&), int fade) {
     DATA(0x004a0c7c)
-    static int iDialogNestCount = 0;
+    static int gDialogNestCount = 0;
     tag_message message;
     short done;
     int result;
 
-    gbInDialog = 1;
-    if (iDialogNestCount == 0)
+    gInDialog = 1;
+    if (gDialogNestCount == 0)
         SetNoDialogMenus(0);
-    iDialogNestCount++;
+    gDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
@@ -304,9 +304,9 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
             RemoveWindow(window);
         gpInputManager->Flush();
     }
-    gbInDialog = 0;
-    iDialogNestCount--;
-    if (iDialogNestCount == 0)
+    gInDialog = 0;
+    gDialogNestCount--;
+    if (gDialogNestCount == 0)
         SetNoDialogMenus(1);
     return 0;
 }
@@ -407,7 +407,7 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
     unsigned char* savePixel;
     signed char* ccycleBuf;
     if (bShowIt != 0) {
-        gbEnlargeScreenBlit = 0;
+        gEnlargeScreenBlit = 0;
         tickStart = 0;
         saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
@@ -448,7 +448,7 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         }
         DelayTilMilli(delay + tickStart);
         BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
-        gbEnlargeScreenBlit = 1;
+        gEnlargeScreenBlit = 1;
         gpWindowManager->m_updateFlags = saveFlags;
         if (m_fizzleSource != NULL)
             delete m_fizzleSource;

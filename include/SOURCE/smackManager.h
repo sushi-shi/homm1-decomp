@@ -40,7 +40,7 @@ public:
 };
 #pragma pack(pop)
 
-extern signed char bSmackNum;
+extern signed char gSmackNum;
 extern signed char gbSmackAborted;
 
 H1_C_LINKAGE void* radmalloc(unsigned long);

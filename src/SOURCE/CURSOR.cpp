@@ -81,12 +81,12 @@ void advManager::StartCursor(signed char direction) {
 VA(0x00405ab9, 0x150)
 void advManager::StopCursor(signed char stopSound) {
     if (stopSound) {
-        bMoveSoundMade = 1;
+        gMoveSoundMade = 1;
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         EveryOther = 0;
-        hPrevMoveSound = NULL;
-        hLastMoveSound = NULL;
+        gPrevMoveSound = NULL;
+        gLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != CURSOR_CELL_NONE) {
@@ -107,7 +107,7 @@ void advManager::DrawCursor(void) {
 
     if (bShowIt == 0 || bSpecialHideCursor)
         return;
-    if (gbDrawSavedCursor) {
+    if (gDrawSavedCursor) {
         m_cursorDirection = S1cursorDirection;
         m_cursorFrame = S1cursorBaseFrame;
         m_cursorFrameCount = S1cursorFrameCount;
@@ -223,12 +223,12 @@ void advManager::DrawCursor(void) {
         m_cursorFrameCount = 0;
     if (!m_cursorTurning) {
         if (m_cursorFrameCount == 0)
-            hPrevMoveSound = hLastMoveSound;
+            gPrevMoveSound = gLastMoveSound;
         if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME
-            || (gConfig.walkSpeed == WALK_SPEED_JUMP && !bMoveSoundMade)) {
-            bMoveSoundMade = 1;
+            || (gConfig.walkSpeed == WALK_SPEED_JUMP && !gMoveSoundMade)) {
+            gMoveSoundMade = 1;
             if (!EveryOther)
-                hLastMoveSound = gpSoundManager->MemorySample(
+                gLastMoveSound = gpSoundManager->MemorySample(
                     m_cursorSamples[CELL_TERRAIN(GetCell(
                         m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
                         m_mapOriginY + CURSOR_MAP_DRAW_OFFSET
@@ -236,7 +236,7 @@ void advManager::DrawCursor(void) {
                 );
         }
     }
-    if (!gbDrawSavedCursor) {
+    if (!gDrawSavedCursor) {
         S1cursorDirection = m_cursorDirection;
         S1cursorBaseFrame = m_cursorFrame;
         S1cursorFrameCount = m_cursorFrameCount;
@@ -282,7 +282,7 @@ void advManager::TurnTo(signed char direction) {
         frameStep = -1;
     m_cursorTurning = 1;
     curFrame = m_cursorDirection * TURN_FRAME_MULTIPLIER;
-    delayTime = giStepDelay[gConfig.walkSpeed];
+    delayTime = gStepDelay[gConfig.walkSpeed];
     if (gConfig.walkSpeed == WALK_SPEED_WALK)
         delayTime *= CURSOR_SLOW_TURN_MULTIPLIER;
     if (gConfig.walkSpeed == WALK_SPEED_TROT)
@@ -328,10 +328,10 @@ int advManager::GetMoveShowIt(signed char direction) {
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dirX = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
-    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gbRemoteOn))
-        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & giCurWatchPlayerHighBit)
+    if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
+        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
             || (gpGame->m_mapExtra[movingHero->m_x + dirX][movingHero->m_y + dy]
-                & giCurWatchPlayerHighBit)))
+                & gCurWatchPlayerHighBit)))
         return 1;
     else
         return 0;
@@ -368,7 +368,7 @@ mapCell* advManager::MoveHero(
         SetNoDialogMenus(0);
     *adjacentMonster = 0;
     *outOfMobility = 0;
-    gbHeroMoving = 1;
+    gHeroMoving = 1;
     retCell = NULL;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     origX = movingHero->m_x;
@@ -540,13 +540,13 @@ mapCell* advManager::MoveHero(
         gHeroScoutRadius[movingHero->m_heroClass]
     );
     m_forceCompleteDraw = 1;
-    pixelsPerStep = giPixelsPerStep[gConfig.walkSpeed];
-    msDelay = giStepDelay[gConfig.walkSpeed];
+    pixelsPerStep = gPixelsPerStep[gConfig.walkSpeed];
+    msDelay = gStepDelay[gConfig.walkSpeed];
     StartCursor(direction);
     if (gConfig.walkSpeed == WALK_SPEED_JUMP) {
         if (EveryOther)
             m_cursorFrame--;
-        bMoveSoundMade = 0;
+        gMoveSoundMade = 0;
         MoveOrigin(xInc, yInc);
         movingHero->m_x += xInc;
         movingHero->m_y += yInc;
@@ -554,8 +554,8 @@ mapCell* advManager::MoveHero(
             UpdateScreen(0, 0);
         EveryOther = 1 - EveryOther;
     } else {
-        gbEnlargeScreenBlit = 0;
-        gbNoBorder = 1;
+        gEnlargeScreenBlit = 0;
+        gNoBorder = 1;
         numSteps = CURSOR_MOVE_HALF_TILE_PIXELS / pixelsPerStep;
         for (step = 0; step < numSteps * MOVE_TILE_HALF_COUNT; step++) {
             long tick;
@@ -576,15 +576,15 @@ mapCell* advManager::MoveHero(
                 m_updateMinY += yInc * pixelsPerStep;
             }
             if (ComboDraw(0)) {
-                giLimitUpdMinX = UPDATE_NONE;
+                gLimitUpdMinX = UPDATE_NONE;
                 UpdateScreen(0, 0);
             }
             if (bShowIt)
                 DelayTilMilli(msDelay + tick);
         }
-        gbNoBorder = 0;
+        gNoBorder = 0;
         DrawAdventureBorder();
-        gbEnlargeScreenBlit = 1;
+        gEnlargeScreenBlit = 1;
     }
     movingHero->m_remainingMobility -= CalcTerrainCost(
         terrain,
@@ -648,7 +648,7 @@ mapCell* advManager::MoveHero(
         goto movementDone;
 movementDone:
     UpdateRadar(1, 1);
-    gbHeroMoving = 0;
+    gHeroMoving = 0;
     if (movingHero->m_x != origX || movingHero->m_y != origY) {
         if (mapExtra[movingHero->m_x][movingHero->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (movingHero->m_eventFlags & HERO_EVENT_EMBARKED)
@@ -858,15 +858,15 @@ void advManager::MoveOrigin(short directionX, short directionY) {
 // CURSOR owns retail .data 0x0048eb18-0x0048eb4f (initialized, before the
 // TOWNMGR band) and .bss 0x004a4b80-0x004a4b97. Initializers are retail bytes.
 DATA(0x0048eb18)
-signed char bMoveSoundMade = 1;
+signed char gMoveSoundMade = 1;
 DATA(0x0048eb20)
-short giPixelsPerStep[5] = {1, 4, 6, 8, 16};
+short gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048eb30)
-short giStepDelay[5] = {30, 45, 30, 15, 15};
+short gStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x0048eb3c)
-struct _SAMPLE* hPrevMoveSound = NULL;
+struct _SAMPLE* gPrevMoveSound = NULL;
 DATA(0x0048eb40)
-struct _SAMPLE* hLastMoveSound = NULL;
+struct _SAMPLE* gLastMoveSound = NULL;
 DATA(0x0048eb44)
 signed char EveryOther = 0;
 DATA(0x0048eb48)

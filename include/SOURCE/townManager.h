@@ -86,7 +86,7 @@ H1_ENUM_END(TownControl)
 
 // Town objects: gTownObjectType's empty entry and a .tod without a border
 // widget are NONE, as is townManager::m_selectedBuilding with no building
-// picked. cTownObjectNames holds the neutral objects, the four town-type
+// picked. gTownObjectNames holds the neutral objects, the four town-type
 // prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
 // The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
 // its level frames come in pairs.
@@ -206,7 +206,7 @@ H1_ENUM_BEGIN(TownCastleFrame)
     TOWN_CASTLE_FRAME_CANNOT_AFFORD = 0xd
 H1_ENUM_END(TownCastleFrame)
 
-// The castle window's status-bar text rows (cCastleInfo).
+// The castle window's status-bar text rows (gCastleInfo).
 H1_ENUM_BEGIN(TownCastleInfoText)
     TOWN_CASTLE_INFO_BUILD_MAGE_GUILD = 0,
     TOWN_CASTLE_INFO_MAGE_GUILD_MAX_LEVEL = 1,

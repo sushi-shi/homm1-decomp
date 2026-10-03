@@ -63,7 +63,7 @@ army::army(void) {
     m_drawShadow = 1;
     gCurLoadedSpellIcon = NULL;
     gCurLoadedSpellFileId = 0;
-    giSpellEffectFrame = 0;
+    gSpellEffectFrame = 0;
     CLEAR_ARMY_TARGET(this);
     m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
@@ -137,9 +137,9 @@ void army::LoadResources(void) {
     else
         strcpy(sprite, "swrdsman");
     sprintf(gText, "%s.std", sprite);
-    giMonoIconSkip = 0;
+    gMonoIconSkip = 0;
     m_standIcon = gpResourceManager->GetIcon(gText);
-    giMonoIconSkip = -1;
+    gMonoIconSkip = -1;
     sprintf(gText, "%s.wlk", sprite);
     m_walkIcon = gpResourceManager->GetIcon(gText);
     sprintf(gText, "move%02d.82M", m_creatureType);
@@ -350,7 +350,7 @@ void army::DrawToBuffer(short x, short y) {
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
-            gCurLoadedSpellIcon->DrawToBuffer(effectX, y, giSpellEffectFrame, m_facing, offsetMode);
+            gCurLoadedSpellIcon->DrawToBuffer(effectX, y, gSpellEffectFrame, m_facing, offsetMode);
             break;
     }
     gbIconClipOn = 0;
@@ -397,14 +397,14 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
     if (!continued) {
         giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
         giMaxExtentX = giMaxExtentY = 0;
-        gbComputeExtent = 1;
-        gbSaveBiggestExtent = 1;
+        gComputeExtent = 1;
+        gSaveBiggestExtent = 1;
         DrawToBuffer(
             gpCombatManager->m_hexCells[m_hex].m_x,
             gpCombatManager->m_hexCells[m_hex].m_y
         );
-        gbSaveBiggestExtent = 0;
-        gbComputeExtent = 0;
+        gSaveBiggestExtent = 0;
+        gComputeExtent = 0;
     }
     if (giMinExtentX < 0)
         giMinExtentX = 0;
@@ -505,14 +505,14 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
         }
         giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
         giMaxExtentX = giMaxExtentY = 0;
-        gbComputeExtent = 1;
-        gbSaveBiggestExtent = 1;
+        gComputeExtent = 1;
+        gSaveBiggestExtent = 1;
         DrawToBuffer(
             gpCombatManager->m_hexCells[m_hex].m_x,
             gpCombatManager->m_hexCells[m_hex].m_y
         );
-        gbComputeExtent = 0;
-        gbSaveBiggestExtent = 0;
+        gComputeExtent = 0;
+        gSaveBiggestExtent = 0;
         if (giMinExtentX < 0)
             giMinExtentX = 0;
         if (giMinExtentY < 0)
@@ -521,15 +521,15 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
             giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
         if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
             giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
-        gbCurrArmyDrawn = 0;
-        gbComputeExtent = 1;
-        gbLimitToExtent = 1;
+        gCurrArmyDrawn = 0;
+        gComputeExtent = 1;
+        gLimitToExtent = 1;
         m_drawShadow = 0;
         gpCombatManager->DrawFrame(0);
         m_drawShadow = 1;
-        gbLimitToExtent = 0;
-        gbComputeExtent = 0;
-        gbCurrArmyDrawn = 1;
+        gLimitToExtent = 0;
+        gComputeExtent = 0;
+        gCurrArmyDrawn = 1;
         if (giMinExtentX < rectMinX)
             rectMinX = giMinExtentX;
         if (giMinExtentY < rectMinY)
@@ -572,7 +572,7 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
 VA(0x00467b97, 0xcca)
 void army::SpecialAttack(void) {
     DATA(0x004a0888)
-    static int gbSecondShot = 0;
+    static int gSecondShot = 0;
     int targetHexCol;
     int dmg;
     int xEnd;
@@ -824,10 +824,10 @@ void army::SpecialAttack(void) {
     Stand(1);
     if (target->m_quantity > 0)
         target->Stand(1);
-    if (!gbSecondShot && m_creatureType == CREATURE_ELF && target->m_quantity > 0) {
-        gbSecondShot = 1;
+    if (!gSecondShot && m_creatureType == CREATURE_ELF && target->m_quantity > 0) {
+        gSecondShot = 1;
         SpecialAttack();
-        gbSecondShot = 0;
+        gSecondShot = 0;
     }
 }
 
@@ -1124,7 +1124,7 @@ void army::DoAttack(int retaliation) {
         }
         kills = savedKilled;
     }
-    if (gbGenieHalf)
+    if (gGenieHalf)
         sprintf(
             gText,
             "%s %s half the enemy troops!",
@@ -1438,7 +1438,7 @@ void army::DamageEnemy(
     if (!target)
         return;
     total = 0;
-    gbGenieHalf = 0;
+    gGenieHalf = 0;
     for (index = 0; index < m_quantity; index++) {
         switch (m_damageMode) {
             case ARMY_DAMAGE_MAXIMUM:
@@ -1459,7 +1459,7 @@ void army::DamageEnemy(
         delta = 20;
     if (delta < -20)
         delta = -20;
-    total *= gfBattleStat[delta + 20];
+    total *= gBattleStat[delta + 20];
     if (m_luck > 0)
         total *= 2;
     if (m_luck < 0)
@@ -1473,7 +1473,7 @@ void army::DamageEnemy(
     if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
         halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
         if (damage < halfDamage) {
-            gbGenieHalf = 1;
+            gGenieHalf = 1;
             damage = halfDamage;
         }
     }
@@ -1584,7 +1584,7 @@ void army::PowEffect(signed char effect) {
                 }
             }
         }
-        giSpellEffectFrame = step;
+        gSpellEffectFrame = step;
         gpCombatManager->DrawFrame(1);
         step++;
     }
@@ -1611,7 +1611,7 @@ void army::PowEffect(signed char effect) {
                 }
             }
         }
-        giSpellEffectFrame = step;
+        gSpellEffectFrame = step;
         gpCombatManager->DrawFrame(1);
         step++;
     }
@@ -1668,7 +1668,7 @@ void army::SpellEffect(short effect, int frameDelay) {
     for (frame = 0; frame < frameCount; frame++) {
         gpCombatManager->m_computeExtent = 1;
         glTimers[COMBAT_EFFECT_TIMER_SLOT] = KBTickCount() + frameDelay;
-        giSpellEffectFrame = frame;
+        gSpellEffectFrame = frame;
         gpCombatManager->DrawFrame(1);
         DelayTil(glTimers + COMBAT_EFFECT_TIMER_SLOT);
     }
@@ -1836,4 +1836,4 @@ void army::MoveAttack(int hex, int moveOnly) {
 
 // ARMY owns retail .data 0x004a0820-0x004a0a57 and .bss 0x004ca908-0x004ca917.
 DATA(0x004ca908)
-signed char gbGenieHalf;
+signed char gGenieHalf;

@@ -68,9 +68,9 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, COMBAT_STATUS_TEXT_CONTROL);
     message.text = text;
     m_combatWindow->BroadcastMessage(message);
-    oldCompute = gbComputeExtent;
-    prevLimit = gbLimitToExtent;
-    gbComputeExtent = gbLimitToExtent = 0;
+    oldCompute = gComputeExtent;
+    prevLimit = gLimitToExtent;
+    gComputeExtent = gLimitToExtent = 0;
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
@@ -80,8 +80,8 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
             COMBAT_STATUS_WIDTH,
             COMBAT_STATUS_HEIGHT
         );
-    gbComputeExtent = oldCompute;
-    gbLimitToExtent = prevLimit;
+    gComputeExtent = oldCompute;
+    gLimitToExtent = prevLimit;
 }
 
 // The help line for the current mouse command.
@@ -104,39 +104,39 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) mes
         case COMBAT_MESSAGE_COMMAND_DEFAULT:
             if ((currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 && currentArmy->m_stats.shots == 0 && target)
-                strcpy(gText, cCombatMessage[COMBAT_TEXT_NO_SHOTS]);
+                strcpy(gText, gCombatMessage[COMBAT_TEXT_NO_SHOTS]);
             else
-                strcpy(gText, cCombatMessage[COMBAT_TEXT_NONE]);
+                strcpy(gText, gCombatMessage[COMBAT_TEXT_NONE]);
             break;
         case COMBAT_MESSAGE_COMMAND_MOVE:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
             break;
         case COMBAT_MESSAGE_COMMAND_FLY:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
             break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
             sprintf(
                 gText,
-                cCombatMessage[COMBAT_TEXT_SHOOT],
+                gCombatMessage[COMBAT_TEXT_SHOOT],
                 gArmyNames[targetMonster],
                 currentArmy->m_stats.shots,
                 currentArmy->m_stats.shots > 1 ? "s" : ""
             );
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
-            strcpy(gText, cCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
+            strcpy(gText, gCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
             break;
         case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
-            strcpy(gText, cCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
+            strcpy(gText, gCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
             break;
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             actingType =
                 m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
             if (actingType >= 0)
-                sprintf(gText, cCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
+                sprintf(gText, gCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
             else
                 sprintf(gText, "");
             break;
@@ -184,9 +184,9 @@ void combatManager::UpdateCombatArea(void) {
     }
     if (y + height > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - y;
-    gbEnlargeScreenBlit = 0;
+    gEnlargeScreenBlit = 0;
     gpWindowManager->UpdateScreenRegion(0, y, LOGICAL_SCREEN_WIDTH, height);
-    gbEnlargeScreenBlit = 1;
+    gEnlargeScreenBlit = 1;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
 
@@ -328,7 +328,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
             giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     }
     m_gridUpdateRow = 0;
-    if (!gbLimitToExtent) {
+    if (!gLimitToExtent) {
         if (m_backgroundDrawn) {
             if (m_computeExtent || m_redrawExtent)
                 m_backgroundBuffer->CopyTo(
@@ -355,8 +355,8 @@ void combatManager::DrawFrame(signed char updateScreen) {
         }
     }
     if (m_computeExtent) {
-        gbLimitToExtent = 1;
-        gbComputeExtent = 1;
+        gLimitToExtent = 1;
+        gComputeExtent = 1;
     }
     if (!m_gridMode) {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
@@ -385,10 +385,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                 m_combatIcons[COMBAT_ICON_KEEP]
                     ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             for (hexCol = 1; hexCol <= COMBAT_GRID_LAST_COLUMN - 1; hexCol++) {
-                if (gbLimitToExtent
+                if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
-                    gbCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
             if (row == COMBAT_DEFENDER_HERO_ROW
@@ -467,10 +467,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     != COMBAT_OBSTACLE_NONE)
                     m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawObstacle();
             for (hexCol = COMBAT_GRID_LAST_COLUMN - 1; hexCol >= 1; hexCol--) {
-                if (gbLimitToExtent
+                if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
-                    gbCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
             if (row == COMBAT_ATTACKER_HERO_ROW
@@ -527,26 +527,26 @@ void combatManager::DrawFrame(signed char updateScreen) {
     if (m_computeExtent || m_redrawExtent) {
         m_computeExtent = 0;
         m_redrawExtent = 0;
-        gbLimitToExtent = 0;
-        gbComputeExtent = 0;
-        gbFullCombatScreenDrawn = 0;
+        gLimitToExtent = 0;
+        gComputeExtent = 0;
+        gFullCombatScreenDrawn = 0;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
                 giMaxExtentY = COMBAT_VIEW_HEIGHT;
-            gbEnlargeScreenBlit = 0;
+            gEnlargeScreenBlit = 0;
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
                 giMinExtentY,
                 giMaxExtentX - giMinExtentX + 1,
                 giMaxExtentY - giMinExtentY + 1
             );
-            gbEnlargeScreenBlit = 1;
+            gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }
     } else if (updateScreen == 1) {
-        gbFullCombatScreenDrawn = 1;
+        gFullCombatScreenDrawn = 1;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();

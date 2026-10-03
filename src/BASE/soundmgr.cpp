@@ -133,7 +133,7 @@ unsigned long soundManager::CDStartup(void) {
     int numDevices;
     if (gbNoSound != 0)
         return 0;
-    wsprintfA(CommandString, "open %c: type cdaudio alias CD shareable", gcSoundPath[0]);
+    wsprintfA(CommandString, "open %c: type cdaudio alias CD shareable", gSoundPath[0]);
     nMCIError = mciSendStringA(CommandString, lpszReturnString, CD_MCI_RESULT_LAST, NULL);
     if (nMCIError != MMSYSERR_NOERROR) {
         m_cdStarted = 0;
@@ -538,10 +538,10 @@ struct _SAMPLE* soundManager::StartSample(
     AIL_set_sample_type(sample, sampleType, DIG_PCM_SIGN);
     AIL_set_sample_playback_rate(sample, sampleRate);
     Process1WindowsMessage();
-    sprintf(path, "%s%s", gcSoundPath, filename);
+    sprintf(path, "%s%s", gSoundPath, filename);
     if (_access(path, 0) == -1) {
         if (_access(path, 0) == -1) {
-            sprintf(path, "%s%s", gcDataPath, filename);
+            sprintf(path, "%s%s", gDataPath, filename);
             if (_access(path, 0) == -1)
                 goto notFound;
         }
@@ -1124,7 +1124,7 @@ signed char CDTrackMap[100] = {2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 1
                                99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
                                99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
 DATA(0x004a1620)
-int giCDDrive = 0;
+int gCDDrive = 0;
 DATA(0x004cc668)
 char lpszReturnString[CD_MCI_RESULT_LAST + 1];
 DATA(0x004cc768)

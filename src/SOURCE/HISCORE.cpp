@@ -27,7 +27,7 @@ highScoreManager::highScoreManager(void) {
     for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++)
         m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
-    if (gbShowHighScore) {
+    if (gShowHighScore) {
         if (!giHighScoreType)
             m_showCampaignScores = 1;
         else
@@ -82,8 +82,8 @@ short highScoreManager::Main(struct tag_message& message) {
     tag_message windowMessage;
 
     retVal = 0;
-    if (gbShowHighScore != 0)
-        gbShowHighScore = 0;
+    if (gShowHighScore != 0)
+        gShowHighScore = 0;
 
     if (glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
         glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
@@ -162,13 +162,13 @@ void highScoreManager::Update(void) {
     HighScoreEntry record;
     int handle;
     int i;
-    extern char gcDataPath[];
+    extern char gDataPath[];
 
     bNoFile = 0;
     if (m_showCampaignScores)
-        sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
+        sprintf(fileName, "%sCAMPAIGN.HS", gDataPath);
     else
-        sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
+        sprintf(fileName, "%sSTANDARD.HS", gDataPath);
     handle = open(fileName, _O_BINARY);
     if (handle == -1)
         bNoFile = 1;
@@ -267,7 +267,7 @@ void highScoreManager::Update(void) {
         }
         m_window->BroadcastMessage(message);
 
-        if (giHighScoreRank == i) {
+        if (gHighScoreRank == i) {
             if ((m_showCampaignScores && !giHighScoreType)
                 || (!m_showCampaignScores && giHighScoreType)) {
                 message.command = WIDGET_COMMAND_SET_COLOR;

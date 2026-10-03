@@ -313,7 +313,7 @@ void searchArray::PushPoint(
         );
     m_queueCount++;
 
-    if (cost > giCurTempMobility && rvFlag2 == 0) {
+    if (cost > gCurTempMobility && rvFlag2 == 0) {
         gSearchQueueNode->rvFlag2 = 1;
         gSearchQueueNode->previousX = x - normalDirTable[direction].x;
         gSearchQueueNode->previousY = y - normalDirTable[direction].y;
@@ -443,4 +443,4 @@ void searchArray::TestPossibleDirections(
 // FINDPATH owns retail .bss 0x004c4ef0-0x004c4f2b: the search statics above
 // and the working mobility SEARCH seeds.
 DATA(0x004c4efc)
-short giCurTempMobility;
+short gCurTempMobility;

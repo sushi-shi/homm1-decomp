@@ -60,7 +60,7 @@ H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_EXTRA_VERSION = 1112
 H1_ENUM_CONST_END(MapHeaderConstant)
 
-// SMapHeader::size, giMapSize and game::m_mapSize: retail gMapSizeNames
+// SMapHeader::size, gMapSize and game::m_mapSize: retail gMapSizeNames
 // ("Small", "Medium", "Large"); CalcDifficultyRating scores them.
 H1_ENUM_BEGIN(MapSize)
     MAP_SIZE_SMALL = 0,
@@ -68,7 +68,7 @@ H1_ENUM_BEGIN(MapSize)
     MAP_SIZE_LARGE = 2
 H1_ENUM_END(MapSize)
 
-// SMapHeader::difficulty, giMapDifficulty and game::m_mapDifficulty: retail
+// SMapHeader::difficulty, gMapDifficulty and game::m_mapDifficulty: retail
 // gMapDifficultyNames ("Easy", "Normal", "Tough", "Impossible",
 // "Forget It"); CalcDifficultyRating scores the first four.
 H1_ENUM_BEGIN(MapDifficulty)
@@ -179,7 +179,7 @@ public:
 #pragma pack(pop)
 
 // Set while the default extension is a saved-game one (".G??").
-extern signed char gbRequestingGames;
-extern char* cFRDummy;
+extern signed char gRequestingGames;
+extern char* gFRDummy;
 
 #endif // HOMM1_SOURCE_FILEREQUESTER_H

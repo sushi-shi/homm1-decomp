@@ -21,44 +21,44 @@
 // retail order; initializers are retail bytes) and .bss 0x004a46a0-0x004a4b7f.
 // Its DDSD line arguments are /Gi compiler line statics (docs/patterns/vc4-gi-line-var.md).
 DATA(0x0048e178)
-BOOL gbWinGAttached = TRUE;
+BOOL gWinGAttached = TRUE;
 DATA(0x0048e17c)
-BOOL gbDDrawAttached = FALSE;
+BOOL gDDrawAttached = FALSE;
 DATA(0x0048e180)
-H1_ENUM_STORAGE(WingraphGraphicsType, int) giGraphicsType = WINGRAPH_GRAPHICS_WING;
+H1_ENUM_STORAGE(WingraphGraphicsType, int) gGraphicsType = WINGRAPH_GRAPHICS_WING;
 DATA(0x0048e184)
-int giMainVideoModeColorDepth = 16;
+int gMainVideoModeColorDepth = 16;
 DATA(0x0048e188)
-int giMainVideoModeWidth = 1024;
+int gMainVideoModeWidth = 1024;
 DATA(0x0048e18c)
-int giMainVideoModeHeight = 768;
+int gMainVideoModeHeight = 768;
 DATA(0x0048e190)
 int Orientation = 1;
 DATA(0x0048e198)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
 DATA(0x0048e59c)
-void* lpInitWin = NULL;
+void* gInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
 DATA(0x0048e5a4)
-int giTtlBlts = 0;
+int gTtlBlts = 0;
 DATA(0x0048e5a8)
-BOOL gbWinGraphBusy = FALSE;
+BOOL gWinGraphBusy = FALSE;
 DATA(0x0048e5ac)
-DirectDrawCreateProc lpDirectDrawCreate = NULL;
+DirectDrawCreateProc gDirectDrawCreate = NULL;
 DATA(0x0048e5b0)
-IDirectDraw* lpDD = NULL;
+IDirectDraw* gDD = NULL;
 DATA(0x0048e5b4)
-IDirectDrawSurface* lpDDSPrimary = NULL;
+IDirectDrawSurface* gDDSPrimary = NULL;
 DATA(0x0048e5b8)
-IDirectDrawSurface* lpDDSOne = NULL;
+IDirectDrawSurface* gDDSOne = NULL;
 DATA(0x0048e5bc)
-IDirectDrawClipper* lpClipper = NULL;
+IDirectDrawClipper* gClipper = NULL;
 DATA(0x0048e5c0)
-IDirectDrawPalette* lpDDPal = NULL;
+IDirectDrawPalette* gDDPal = NULL;
 DATA(0x0048e674)
-int iBusyRetry = 0;
+int gBusyRetry = 0;
 DATA(0x0048e84c)
-BOOL bInDDSD = FALSE;
+BOOL gInDDSD = FALSE;
 DATA(0x0048e94c)
 HDC hdcImage = NULL;
 DATA(0x0048e950)
@@ -66,7 +66,7 @@ HBITMAP gbmOldMonoBitmap = NULL;
 DATA(0x0048e954)
 HPALETTE hpalApp = NULL;
 DATA(0x0048e9fc)
-HINSTANCE hDDrawLibrary = NULL;
+HINSTANCE gDDrawLibrary = NULL;
 DATA(0x004a4b70)
 RECT gDDClientRect;
 DATA(0x004a46a8)
@@ -78,14 +78,14 @@ long gDDResult;
 DATA(0x004a46d0)
 _DDSURFACEDESC gDDSurfaceDesc;
 DATA(0x004a46c8)
-long lPaintStart;
+long gPaintStart;
 DATA(0x004a4740)
 WingImage screenImage;
 // KB owns these scroll, combat-palette and configuration globals.
-extern int giScrollX;
-extern int giScrollY;
-extern int gbFullCombatScreenDrawn;
-extern int gbLimitedCombatUpdatePalette;
+extern int gScrollX;
+extern int gScrollY;
+extern int gFullCombatScreenDrawn;
+extern int gLimitedCombatUpdatePalette;
 extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
@@ -93,8 +93,8 @@ VA(0x00403640, 0x59)
 #line 49 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDRestoreDisplayMode() {
     long result;
-    if (lpDD != NULL) {
-        result = lpDD->RestoreDisplayMode();
+    if (gDD != NULL) {
+        result = gDD->RestoreDisplayMode();
         if (result != DD_OK)
 #line 56
             DDSD(result, __FILE__, __LINE__);
@@ -106,9 +106,9 @@ BOOL DDQueryNewPalette() {
     // Buka 2.1 retains this unused local; retail's four-byte frame confirms it.
     int unused;
 
-    if (gbWinGraphBusy)
+    if (gWinGraphBusy)
         return TRUE;
-    if (!gbForegroundApp)
+    if (!gForegroundApp)
         return TRUE;
     return SetPalette();
 }
@@ -121,14 +121,14 @@ VA(0x004036df, 0x9b)
 void CreatePrimary(void) {
     long result;
 
-    lpDDSPrimary = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 1);
-    if (lpClipper != NULL) {
-        result = lpDDSPrimary->SetClipper(NULL);
+    gDDSPrimary = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 1);
+    if (gClipper != NULL) {
+        result = gDDSPrimary->SetClipper(NULL);
         if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
 #line 81
             DDSD(result, __FILE__, __LINE__);
-        lpClipper->Release();
-        lpClipper = NULL;
+        gClipper->Release();
+        gClipper = NULL;
     }
 }
 
@@ -140,16 +140,16 @@ VA(0x0040377a, 0xeb)
 void SetupClipper(void) {
     long result;
 
-    if (gConfig.gfx[giCurExe].fullScreen == 0) {
-        result = lpDD->CreateClipper(0, &lpClipper, NULL);
+    if (gConfig.gfx[gCurExe].fullScreen == 0) {
+        result = gDD->CreateClipper(0, &gClipper, NULL);
         if (result != DD_OK)
 #line 99
             DDSD(result, __FILE__, __LINE__);
-        result = lpClipper->SetHWnd(0, hwndApp);
+        result = gClipper->SetHWnd(0, hwndApp);
         if (result != DD_OK)
 #line 104
             DDSD(result, __FILE__, __LINE__);
-        result = lpDDSPrimary->SetClipper(lpClipper);
+        result = gDDSPrimary->SetClipper(gClipper);
         if (result != DD_OK)
 #line 109
             DDSD(result, __FILE__, __LINE__);
@@ -164,34 +164,34 @@ VA(0x00403865, 0x171)
 void DDInitGraphics(void) {
     long result;
 
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return;
-    result = lpDirectDrawCreate(NULL, &lpDD, NULL);
+    result = gDirectDrawCreate(NULL, &gDD, NULL);
     if (result != DD_OK)
 #line 122
         DDSD(result, __FILE__, __LINE__);
-    if (gConfig.gfx[giCurExe].fullScreen != 0) {
+    if (gConfig.gfx[gCurExe].fullScreen != 0) {
         SetMenuStatus(0);
-        result = lpDD->SetCooperativeLevel(
+        result = gDD->SetCooperativeLevel(
             hwndApp,
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
         );
         if (result != DD_OK)
 #line 134
             DDSD(result, __FILE__, __LINE__);
-        result = lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
+        result = gDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
         if (result != DD_OK)
 #line 138
             DDSD(result, __FILE__, __LINE__);
     } else {
-        result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
+        result = gDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
         if (result != DD_OK)
 #line 145
             DDSD(result, __FILE__, __LINE__);
     }
     CreatePrimary();
     SetupClipper();
-    lpDDSOne = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 0);
+    gDDSOne = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 0);
     InitializePalette();
 }
 
@@ -208,14 +208,14 @@ BOOL DDAppPaint(void* window, void* paintDC) {
     PAINTSTRUCT ps;
     POINT pt;
 
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return TRUE;
-    if (gbMinimized != 0)
+    if (gMinimized != 0)
         return TRUE;
-    if (lpDD == NULL)
+    if (gDD == NULL)
         return TRUE;
     {
-        gbWinGraphBusy = TRUE;
+        gWinGraphBusy = TRUE;
         paintDC = BeginPaint(static_cast<HWND>(window), &ps);
         GetClientRect(static_cast<HWND>(window), &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
@@ -230,12 +230,12 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         height = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
         x = CLIENT_TO_GAME_X(gDDDestinationRect.left);
         ySrc = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
-        if (giScrollX != 0) {
-            x = giScrollX + WINGRAPH_SCROLL_MARGIN;
+        if (gScrollX != 0) {
+            x = gScrollX + WINGRAPH_SCROLL_MARGIN;
             width = WINGRAPH_SCROLL_SIZE;
         }
-        if (giScrollY != 0) {
-            ySrc = giScrollY + WINGRAPH_SCROLL_MARGIN;
+        if (gScrollY != 0) {
+            ySrc = gScrollY + WINGRAPH_SCROLL_MARGIN;
             height = WINGRAPH_SCROLL_SIZE;
         }
         gDDSourceRect.left = x;
@@ -247,7 +247,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         pt.x = pt.y;
         ClientToScreen(hwndApp, &pt);
         OffsetRect(&gDDDestinationRect, pt.x, pt.y);
-        gDDResult = lpDDSOne->Unlock(NULL);
+        gDDResult = gDDSOne->Unlock(NULL);
         if (gDDResult != DD_OK)
 #line 233
             DDSD(gDDResult, __FILE__, __LINE__);
@@ -261,7 +261,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         if (gDDSourceRect.bottom > WINGRAPH_PAINT_Y_END)
             gDDSourceRect.bottom = WINGRAPH_HEIGHT;
 
-        lPaintStart = KBTickCount();
+        gPaintStart = KBTickCount();
         for (;;) {
             LogStr(
                 "BltD",
@@ -280,17 +280,17 @@ BOOL DDAppPaint(void* window, void* paintDC) {
                 0
             );
             gDDResult =
-                lpDDSPrimary->Blt(&gDDDestinationRect, lpDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
+                gDDSPrimary->Blt(&gDDDestinationRect, gDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
             if (gDDResult == DDERR_SURFACELOST) {
-                gDDResult = lpDDSPrimary->Restore();
+                gDDResult = gDDSPrimary->Restore();
                 if (gDDResult == DDERR_WRONGMODE) {
                     LogStr("ResetDisplayMode");
                     gDDResult =
-                        lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
+                        gDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
                     if (gDDResult != DD_OK)
 #line 267
                         DDSD(gDDResult, __FILE__, __LINE__);
-                    gDDResult = lpDDSPrimary->Restore();
+                    gDDResult = gDDSPrimary->Restore();
                     if (gDDResult != DD_OK)
 #line 271
                         DDSD(gDDResult, __FILE__, __LINE__);
@@ -300,8 +300,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 #line 279
                     DDSD(gDDResult, __FILE__, __LINE__);
             } else if (gDDResult == DDERR_SURFACEBUSY
-                       && KBTickCount() < lPaintStart + WINGRAPH_PAINT_TIMEOUT) {
-                iBusyRetry++;
+                       && KBTickCount() < gPaintStart + WINGRAPH_PAINT_TIMEOUT) {
+                gBusyRetry++;
             } else if (gDDResult != DD_OK) {
 #line 284
                 DDSD(gDDResult, __FILE__, __LINE__);
@@ -312,22 +312,22 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 
         memset(&gDDSurfaceDesc, 0, sizeof(gDDSurfaceDesc));
         gDDSurfaceDesc.dwSize = sizeof(gDDSurfaceDesc);
-        gDDResult = lpDDSOne->Lock(NULL, &gDDSurfaceDesc, DDLOCK_WAIT, NULL);
+        gDDResult = gDDSOne->Lock(NULL, &gDDSurfaceDesc, DDLOCK_WAIT, NULL);
         if (gDDResult != DD_OK)
 #line 294
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels =
                 static_cast<signed char*>(gDDSurfaceDesc.lpSurface);
-            lpInitWin = gDDSurfaceDesc.lpSurface;
+            gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
-            lpInitWin = gDDSurfaceDesc.lpSurface;
+            gInitWin = gDDSurfaceDesc.lpSurface;
         }
         if (gDDResult != DD_OK)
 #line 305
             DDSD(gDDResult, __FILE__, __LINE__);
         EndPaint(static_cast<HWND>(window), &ps);
-        gbWinGraphBusy = FALSE;
+        gWinGraphBusy = FALSE;
     }
     return TRUE;
 }
@@ -339,7 +339,7 @@ void DDInitializePalette() {
     long ddrval;
     HDC hdc;
     int i;
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return;
     {
         hdc = GetDC(NULL);
@@ -361,7 +361,7 @@ void DDInitializePalette() {
             LogicalPalette.entries[i].peBlue = 0;
             LogicalPalette.entries[i].peFlags = PC_NOCOLLAPSE;
         }
-        ddrval = lpDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &lpDDPal, NULL);
+        ddrval = gDD->CreatePalette(DDPCAPS_8BIT, LogicalPalette.entries, &gDDPal, NULL);
         if (ddrval != DD_OK)
 #line 378
             DDSD(ddrval, __FILE__, __LINE__);
@@ -374,13 +374,13 @@ VA(0x004040a8, 0xb3)
 #line 387 "D:\\Heroes\\Source\\wingraph.cpp"
 BOOL DDSetPalette() {
     long result;
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return TRUE;
-    if (gbForegroundApp == 0)
+    if (gForegroundApp == 0)
         return TRUE;
-    if (lpDDPal == NULL || lpDDSPrimary == NULL || lpDD == NULL)
+    if (gDDPal == NULL || gDDSPrimary == NULL || gDD == NULL)
         return TRUE;
-    result = lpDDSPrimary->SetPalette(lpDDPal);
+    result = gDDSPrimary->SetPalette(gDDPal);
     if (result != DD_OK)
 #line 407
         DDSD(result, __FILE__, __LINE__);
@@ -414,7 +414,7 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
         ddsd.dwHeight = height;
         ddsd.dwWidth = width;
     }
-    ddrval = lpDD->CreateSurface(&ddsd, &lpSurface, NULL);
+    ddrval = gDD->CreateSurface(&ddsd, &lpSurface, NULL);
     if (ddrval != DD_OK)
 #line 445
         DDSD(ddrval, __FILE__, __LINE__);
@@ -425,9 +425,9 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
             DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(ddsd.lpSurface);
-            lpInitWin = ddsd.lpSurface;
+            gInitWin = ddsd.lpSurface;
         } else {
-            lpInitWin = ddsd.lpSurface;
+            gInitWin = ddsd.lpSurface;
         }
     }
     return lpSurface;
@@ -441,10 +441,10 @@ void DDSD(int error, char* file, int line) {
     long restoreResult;
     H1_ENUM_STORAGE(DirectDrawReportCode, int) unused;
 
-    if (bInDDSD != FALSE)
+    if (gInDDSD != FALSE)
         return;
-    bInDDSD = TRUE;
-    restoreResult = lpDD->RestoreDisplayMode();
+    gInDDSD = TRUE;
+    restoreResult = gDD->RestoreDisplayMode();
     unused = DDSD_REPORT_NONE;
     switch (error) {
         case DD_OK:
@@ -554,9 +554,9 @@ void DDUpdatePalette(signed char* paletteData) {
     int entry;
     long res;
 
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return;
-    if (gbForegroundApp == 0)
+    if (gForegroundApp == 0)
         return;
     for (entry = WINGRAPH_SYSTEM_PALETTE_SIZE; entry < WINGRAPH_MUTABLE_PALETTE_END; entry++) {
         LogicalPalette.entries[entry].peRed = paletteData[entry * WINGRAPH_PALETTE_COMPONENT_COUNT]
@@ -571,8 +571,8 @@ void DDUpdatePalette(signed char* paletteData) {
     }
     // API-forced: ProcessAssert accepts the donor pointer assertion as a 32-bit int.
 #line 542
-    ProcessAssert(reinterpret_cast<int>(lpDDPal), __FILE__, __LINE__);
-    res = lpDDPal->SetEntries(
+    ProcessAssert(reinterpret_cast<int>(gDDPal), __FILE__, __LINE__);
+    res = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
@@ -593,36 +593,36 @@ void DDCleanUpWinGraphics(void) {
     long restoreVal;
     long result;
 
-    if (lpDD != NULL) {
-        restoreVal = lpDD->RestoreDisplayMode();
-        if (lpClipper != NULL) {
-            if (lpDDSPrimary != NULL) {
-                result = lpDDSPrimary->SetClipper(NULL);
+    if (gDD != NULL) {
+        restoreVal = gDD->RestoreDisplayMode();
+        if (gClipper != NULL) {
+            if (gDDSPrimary != NULL) {
+                result = gDDSPrimary->SetClipper(NULL);
                 if (result != DD_OK && result != DDERR_NOCLIPPERATTACHED)
 #line 564
                     DDSD(result, __FILE__, __LINE__);
             }
-            lpClipper->Release();
-            lpClipper = NULL;
+            gClipper->Release();
+            gClipper = NULL;
         }
-        if (lpDDSPrimary != NULL) {
-            lpDDSPrimary->Release();
-            lpDDSPrimary = NULL;
+        if (gDDSPrimary != NULL) {
+            gDDSPrimary->Release();
+            gDDSPrimary = NULL;
         }
-        if (lpDDSOne != NULL) {
-            lpDDSOne->Release();
-            lpDDSOne = NULL;
+        if (gDDSOne != NULL) {
+            gDDSOne->Release();
+            gDDSOne = NULL;
         }
-        if (lpDDPal != NULL) {
-            lpDDPal->Release();
-            lpDDPal = NULL;
+        if (gDDPal != NULL) {
+            gDDPal->Release();
+            gDDPal = NULL;
         }
-        result = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
+        result = gDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
         if (result != DD_OK)
 #line 588
             DDSD(result, __FILE__, __LINE__);
-        lpDD->Release();
-        lpDD = NULL;
+        gDD->Release();
+        gDD = NULL;
     }
 }
 
@@ -638,61 +638,61 @@ void DDSetFullScreenStatus(int fullScreen) {
     int y;
     long ddrval;
 
-    if (gbWinGraphBusy != FALSE)
+    if (gWinGraphBusy != FALSE)
         return;
-    if (gConfig.gfx[giCurExe].fullScreen == fullScreen)
+    if (gConfig.gfx[gCurExe].fullScreen == fullScreen)
         return;
     {
-        x = gConfig.gfx[giCurExe].x;
-        y = gConfig.gfx[giCurExe].y;
-        w = gConfig.gfx[giCurExe].width;
-        h = gConfig.gfx[giCurExe].height;
-        gbWinGraphBusy = TRUE;
-        gConfig.gfx[giCurExe].fullScreen = fullScreen;
-        if (gConfig.gfx[giCurExe].fullScreen != 0)
+        x = gConfig.gfx[gCurExe].x;
+        y = gConfig.gfx[gCurExe].y;
+        w = gConfig.gfx[gCurExe].width;
+        h = gConfig.gfx[gCurExe].height;
+        gWinGraphBusy = TRUE;
+        gConfig.gfx[gCurExe].fullScreen = fullScreen;
+        if (gConfig.gfx[gCurExe].fullScreen != 0)
             SetMenuStatus(0);
 
-        ddrval = lpDD->SetCooperativeLevel(
+        ddrval = gDD->SetCooperativeLevel(
             hwndApp,
             DDSCL_EXCLUSIVE | DDSCL_FULLSCREEN | DDSCL_ALLOWREBOOT
         );
         if (ddrval != DD_OK)
 #line 617
             DDSD(ddrval, __FILE__, __LINE__);
-        if (gConfig.gfx[giCurExe].fullScreen != 0) {
-            ddrval = lpDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
+        if (gConfig.gfx[gCurExe].fullScreen != 0) {
+            ddrval = gDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
             if (ddrval != DD_OK)
 #line 623
                 DDSD(ddrval, __FILE__, __LINE__);
         } else {
-            ddrval = lpDD->RestoreDisplayMode();
+            ddrval = gDD->RestoreDisplayMode();
             if (ddrval != DD_OK)
 #line 630
                 DDSD(ddrval, __FILE__, __LINE__);
-            ddrval = lpDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
+            ddrval = gDD->SetCooperativeLevel(hwndApp, DDSCL_NORMAL);
             if (ddrval != DD_OK)
 #line 635
                 DDSD(ddrval, __FILE__, __LINE__);
         }
-        if (lpDDSPrimary != NULL) {
-            lpDDSPrimary->Release();
-            lpDDSPrimary = NULL;
+        if (gDDSPrimary != NULL) {
+            gDDSPrimary->Release();
+            gDDSPrimary = NULL;
         }
         CreatePrimary();
-        ddrval = lpDDSPrimary->SetPalette(lpDDPal);
+        ddrval = gDDSPrimary->SetPalette(gDDPal);
         if (ddrval != DD_OK)
 #line 647
             DDSD(ddrval, __FILE__, __LINE__);
         WritePrefs();
-        gbWinGraphBusy = FALSE;
-        if (gConfig.gfx[giCurExe].fullScreen == 0) {
+        gWinGraphBusy = FALSE;
+        if (gConfig.gfx[gCurExe].fullScreen == 0) {
             SetMenuStatus(1);
             ResizeWindow(x, y, w, h);
         } else {
-            gConfig.gfx[giCurExe].x = x;
-            gConfig.gfx[giCurExe].y = y;
-            gConfig.gfx[giCurExe].width = w;
-            gConfig.gfx[giCurExe].height = h;
+            gConfig.gfx[gCurExe].x = x;
+            gConfig.gfx[gCurExe].y = y;
+            gConfig.gfx[gCurExe].width = w;
+            gConfig.gfx[gCurExe].height = h;
         }
         SetupClipper();
     }
@@ -753,8 +753,8 @@ void WGInitGraphics() {
     screenImage.header.biSizeImage = screenImage.header.biHeight * screenImage.header.biWidth;
     screenImage.header.biSizeImage *= Orientation;
     gbmOldMonoBitmap = static_cast<HBITMAP>(SelectObject(hdcImage, bitmap));
-    lpInitWin = screenImage.bits;
-    PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, iMainWinScreenHeight, BLACKNESS);
+    gInitWin = screenImage.bits;
+    PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
 
 VA(0x00404dd2, 0x1dd)
@@ -791,9 +791,9 @@ void WGUpdatePalette(signed char* paletteData) {
         SelectPalette(dc, hpalApp, FALSE);
     result = RealizePalette(dc);
     ReleaseDC(hwndApp, dc);
-    if (giMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
-        if (gbLimitedCombatUpdatePalette != 0) {
-            if (gbFullCombatScreenDrawn != 0)
+    if (gMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+        if (gLimitedCombatUpdatePalette != 0) {
+            if (gFullCombatScreenDrawn != 0)
                 BlitBitmapToScreen(
                     gpWindowManager->m_screen,
                     0,
@@ -889,12 +889,12 @@ BOOL WGAppPaint(void* window, void* paintDC) {
         destHeight = rect.bottom - rect.top;
         srcX = CLIENT_TO_GAME_X(destX);
         iSrcY = CLIENT_TO_GAME_Y(nDestY);
-        if (giScrollX != 0)
-            srcX += giScrollX;
-        if (giScrollY != 0)
-            iSrcY += giScrollY;
-        giTtlBlts++;
-        if (iMainWinScreenWidth == WINGRAPH_WIDTH && iMainWinScreenHeight == WINGRAPH_HEIGHT) {
+        if (gScrollX != 0)
+            srcX += gScrollX;
+        if (gScrollY != 0)
+            iSrcY += gScrollY;
+        gTtlBlts++;
+        if (iMainWinScreenWidth == WINGRAPH_WIDTH && gMainWinScreenHeight == WINGRAPH_HEIGHT) {
             destX = paintStruct.rcPaint.left & WINGRAPH_PAINT_ALIGN_MASK;
             dstW = paintStruct.rcPaint.right - destX + 1;
             nDestY = paintStruct.rcPaint.top;
@@ -906,8 +906,8 @@ BOOL WGAppPaint(void* window, void* paintDC) {
                 dstW,
                 destHeight,
                 hdcImage,
-                destX + giScrollX,
-                nDestY + giScrollY
+                destX + gScrollX,
+                nDestY + gScrollY
             );
         } else {
             WinGStretchBlt(
@@ -948,15 +948,15 @@ void WGCleanUpWinGraphics() {
 // failed-factory arm invokes ShutDown with its own error string.
 VA(0x004053bc, 0x6c)
 void ConnectToDLLs() {
-    hDDrawLibrary = LoadLibraryA("DDRAW.DLL");
-    if (reinterpret_cast<unsigned long>(hDDrawLibrary)
+    gDDrawLibrary = LoadLibraryA("DDRAW.DLL");
+    if (reinterpret_cast<unsigned long>(gDDrawLibrary)
         >= HINSTANCE_ERROR) { // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
         // API-forced: GetProcAddress returns FARPROC for the typed DirectDraw factory.
-        lpDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
-            GetProcAddress(hDDrawLibrary, "DirectDrawCreate")
+        gDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
+            GetProcAddress(gDDrawLibrary, "DirectDrawCreate")
         );
-        if (lpDirectDrawCreate != NULL)
-            gbDDrawAttached = TRUE;
+        if (gDirectDrawCreate != NULL)
+            gDDrawAttached = TRUE;
         else
             ShutDown("Error loading DDRAW.DLL");
     }
@@ -965,16 +965,16 @@ void ConnectToDLLs() {
 // Buka's DLL teardown checks the Win32 module handle before release.
 VA(0x00405428, 0x29)
 void DisconnectDLLs() {
-    if (reinterpret_cast<unsigned long>(hDDrawLibrary)
+    if (reinterpret_cast<unsigned long>(gDDrawLibrary)
         >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
-        FreeLibrary(hDDrawLibrary);
+        FreeLibrary(gDDrawLibrary);
 }
 
 // @dead-code
 // Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
 VA(0x00405451, 0x2c)
 void RestoreDisplayMode() {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return;
     else
         DDRestoreDisplayMode();
@@ -982,7 +982,7 @@ void RestoreDisplayMode() {
 
 VA(0x0040547d, 0x2e)
 BOOL SetPalette() {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return FALSE;
     else
         return DDSetPalette();
@@ -996,11 +996,11 @@ void GetGraphicsInfo(void) {
     HDC screenDC;
     screenDC = GetDC(NULL);
     if (screenDC != NULL) {
-        giMainVideoModeColorDepth = GetDeviceCaps(screenDC, BITSPIXEL);
-        giMainVideoModeWidth = GetDeviceCaps(screenDC, HORZRES);
-        giMainVideoModeHeight = GetDeviceCaps(screenDC, VERTRES);
+        gMainVideoModeColorDepth = GetDeviceCaps(screenDC, BITSPIXEL);
+        gMainVideoModeWidth = GetDeviceCaps(screenDC, HORZRES);
+        gMainVideoModeHeight = GetDeviceCaps(screenDC, VERTRES);
         ReleaseDC(NULL, screenDC);
-        if (giMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
+        if (gMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
             ShutDown(
                 "Heroes requires 256 color mode or higher.\n\nTo change color mode, right "
                 "click in an open area on the Windows 95 background, choose 'Properties', "
@@ -1013,11 +1013,11 @@ void GetGraphicsInfo(void) {
 VA(0x0040552c, 0x60)
 void InitGraphics() {
     ConnectToDLLs();
-    if (gConfig.gfx[giCurExe].fullScreen != 0)
-        giGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
+    if (gConfig.gfx[gCurExe].fullScreen != 0)
+        gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
     else
-        giGraphicsType = WINGRAPH_GRAPHICS_WING;
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+        gGraphicsType = WINGRAPH_GRAPHICS_WING;
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGInitGraphics();
     else
         DDInitGraphics();
@@ -1026,7 +1026,7 @@ void InitGraphics() {
 // Buka's graphics dispatcher returns the selected backend's paint result.
 VA(0x0040558c, 0x47)
 BOOL AppPaint(void* window, void* paintDC) {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGAppPaint(window, paintDC);
     else
         return DDAppPaint(window, paintDC);
@@ -1034,7 +1034,7 @@ BOOL AppPaint(void* window, void* paintDC) {
 
 VA(0x004055d3, 0x2c)
 void InitializePalette() {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGInitializePalette();
     else
         DDInitializePalette();
@@ -1043,7 +1043,7 @@ void InitializePalette() {
 // Retail and Buka dispatch the same palette buffer to the selected backend.
 VA(0x004055ff, 0x3a)
 void UpdatePalette(signed char* paletteData) {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGUpdatePalette(paletteData);
     else
         DDUpdatePalette(paletteData);
@@ -1051,7 +1051,7 @@ void UpdatePalette(signed char* paletteData) {
 
 VA(0x00405639, 0x31)
 void CleanUpWinGraphics() {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGCleanUpWinGraphics();
     else
         DDCleanUpWinGraphics();
@@ -1063,18 +1063,18 @@ void CleanUpWinGraphics() {
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
 VA(0x0040566a, 0xb9)
 void SetFullScreenStatus(int fullScreen) {
-    if (gbInSmacker != 0)
+    if (gInSmacker != 0)
         return;
-    if (gConfig.gfx[giCurExe].fullScreen == fullScreen)
+    if (gConfig.gfx[gCurExe].fullScreen == fullScreen)
         return;
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING) {
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING) {
         // HoMM1 has no DirectDraw-attached guard or cursor refresh here.
-        gConfig.gfx[giCurExe].fullScreen = 1;
+        gConfig.gfx[gCurExe].fullScreen = 1;
         if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
             DDSetFullScreenStatus(fullScreen);
         return;
     } else if (fullScreen == 0) {
-        if (gbWinGAttached != FALSE)
+        if (gWinGAttached != FALSE)
             SetGraphicsType(WINGRAPH_GRAPHICS_WING);
     } else {
         DDSetFullScreenStatus(fullScreen);
@@ -1083,7 +1083,7 @@ void SetFullScreenStatus(int fullScreen) {
 
 VA(0x00405723, 0x31)
 BOOL QueryNewPalette() {
-    if (giGraphicsType == WINGRAPH_GRAPHICS_WING)
+    if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGQueryNewPalette();
     else
         return DDQueryNewPalette();
@@ -1101,31 +1101,31 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int) graphicsType) {
     int h;
     int y;
 
-    if (graphicsType == giGraphicsType)
+    if (graphicsType == gGraphicsType)
         return TRUE;
-    if (graphicsType == WINGRAPH_GRAPHICS_WING && gbWinGAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_WING && gWinGAttached == FALSE)
         return FALSE;
-    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gbDDrawAttached == FALSE)
+    if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gDDrawAttached == FALSE)
         return FALSE;
 
-    fullScreen = gConfig.gfx[giCurExe].fullScreen;
-    x = gConfig.gfx[giCurExe].x;
-    y = gConfig.gfx[giCurExe].y;
-    w = gConfig.gfx[giCurExe].width;
-    h = gConfig.gfx[giCurExe].height;
+    fullScreen = gConfig.gfx[gCurExe].fullScreen;
+    x = gConfig.gfx[gCurExe].x;
+    y = gConfig.gfx[gCurExe].y;
+    w = gConfig.gfx[gCurExe].width;
+    h = gConfig.gfx[gCurExe].height;
     screenBuffer = malloc(WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     memcpy(screenBuffer, gpWindowManager->m_screen->m_pixels, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     if (graphicsType == WINGRAPH_GRAPHICS_WING) {
-        gConfig.gfx[giCurExe].fullScreen = 0;
+        gConfig.gfx[gCurExe].fullScreen = 0;
         DDCleanUpWinGraphics();
-        giGraphicsType = WINGRAPH_GRAPHICS_WING;
+        gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(gInitWin);
     } else {
         WGCleanUpWinGraphics();
-        giGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
+        gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
         DDInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(gInitWin);
     }
     memcpy(gpWindowManager->m_screen->m_pixels, screenBuffer, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     free(screenBuffer);
