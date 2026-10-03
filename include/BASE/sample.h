@@ -20,20 +20,20 @@ H1_ENUM_CONST_END(SampleDefaultConstant)
 // MemorySample addresses these fields through one sub-object pointer.
 struct SamplePlaybackData {
     struct _SAMPLE* activeSample;
-    signed char* data;
-    long size;
-    H1_ENUM_STORAGE(SamplePlaybackChannel, long) channelType;
-    long sampleRate;
-    long format;
-    long volume;
-    long loopCount;
+    i8* data;
+    i32 size;
+    H1_ENUM_STORAGE(SamplePlaybackChannel, i32) channelType;
+    i32 sampleRate;
+    i32 format;
+    i32 volume;
+    i32 loopCount;
 };
 
 class sample : public resource {
 public:
     SamplePlaybackData m_playbackData;
 
-    sample(char*, long int, long int, long int);
+    sample(char* name, i32 channelType, i32 volume, i32 loopCount);
     virtual ~sample();
 };
 #pragma pack(pop)

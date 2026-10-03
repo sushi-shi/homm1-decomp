@@ -28,7 +28,7 @@ H1_ENUM_CONST_BEGIN(SmackApiConstant)
 H1_ENUM_CONST_END(SmackApiConstant)
 
 #pragma pack(push, 1)
-        struct Smack {
+struct Smack {
     unsigned long Version;
     unsigned long Width;
     unsigned long Height;

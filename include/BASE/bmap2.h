@@ -5,15 +5,15 @@ class bitmap;
 
 void BlitBitmap(
     bitmap* source,
-    int sourceX,
-    int sourceY,
-    int width,
-    int height,
+    i32 sourceX,
+    i32 sourceY,
+    i32 width,
+    i32 height,
     bitmap* destination,
-    int dx,
-    int dy
+    i32 dx,
+    i32 dy
 );
-void DimBitmapArea(bitmap*, int, int, int, int);
-void FillBitmapArea(bitmap* image, int x, int y, int width, int height, int color);
+void DimBitmapArea(bitmap* bmp, i32 x, i32 y, i32 w, i32 h);
+void FillBitmapArea(bitmap* image, i32 x, i32 y, i32 width, i32 height, i32 color);
 
 #endif

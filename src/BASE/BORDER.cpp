@@ -23,16 +23,7 @@ border::~border(void) {
 }
 
 VA(0x004797f0, 0x5d)
-border::border(
-    short x,
-    short y,
-    short width,
-    short height,
-    short id,
-    short kind,
-    short fillColor,
-    char* name
-)
+border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
     : widget(x, y, width, height, id, kind) {
     if (name != 0)
         m_background = gpResourceManager->GetBitmap(name);
@@ -43,7 +34,7 @@ border::border(
 
 VA(0x00479850, 0xc3)
 void border::Read(void) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+    i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
@@ -56,13 +47,13 @@ void border::Read(void) {
         gpResourceManager->RestorePosition();
         return;
     }
-    short color = gpResourceManager->ReadWord();
+    i16 color = gpResourceManager->ReadWord();
     m_background = 0;
     m_fillColor = color & COLOR_INDEX_MASK;
 }
 
 VA(0x00479920, 0x15d)
-short border::Main(tag_message& message) {
+i16 border::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
@@ -71,8 +62,8 @@ short border::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.x - m_owner->m_posX;
-            short y = message.y - m_owner->m_posY;
+            i16 x = message.x - m_owner->m_posX;
+            i16 y = message.y - m_owner->m_posY;
             if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
@@ -96,8 +87,8 @@ short border::Main(tag_message& message) {
 
 VA(0x00479a80, 0x9d)
 void border::Draw(void) {
-    short x = m_owner->m_posX + m_x;
-    short y = m_owner->m_posY + m_y;
+    i16 x = m_owner->m_posX + m_x;
+    i16 y = m_owner->m_posY + m_y;
     switch (m_kind) {
         case BORDER_BACKGROUND_SOLID:
             FillBitmapArea(

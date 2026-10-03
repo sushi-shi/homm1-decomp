@@ -65,7 +65,7 @@ H1_ENUM_CONST_END(CreatureFactionConstant)
 // DEAD, HIGH_MORALE (a good-morale extra move), RETALIATED and TURN_SPENT are
 // combat state. ResetRound keeps ROUND_PERSISTENT_MASK each round; GenerateMap
 // keeps BATTLE_START_MASK when stacks enter the field.
-H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
+H1_ENUM_FLAGS_BEGIN(MonsterFlags, i32)
     MONSTER_FLAGS_NONE = 0x00,
     MONSTER_FLAGS_WIDE = 0x01,
     MONSTER_FLAGS_FLYING = 0x02,
@@ -85,25 +85,25 @@ H1_ENUM_FLAGS_END(MonsterFlags)
 // army::Init copies these 0x13 bytes from record +0xc into each combat stack.
 struct tag_monsterStats {
     // army::Resurrect divides by this byte zero-extended.
-    unsigned char hitPoints;
-    signed char speed;
-    signed char missileType;
-    signed char attack;
-    signed char defense;
-    signed char damageMin;
-    signed char damageMax;
+    u8 hitPoints;
+    i8 speed;
+    i8 missileType;
+    i8 attack;
+    i8 defense;
+    i8 damageMin;
+    i8 damageMax;
     // army::PowEffect index into gPowEffectNames.
-    signed char powEffect;
-    signed char shots;
+    i8 powEffect;
+    i8 shots;
     char unknown09[6];
-    int attributes;
+    i32 attributes;
 };
 struct tag_monsterInfo {
-    short cost;
-    int fightValue;
-    signed char iconIndex;
-    signed char growth;
-    int hitPoints;
+    i16 cost;
+    i32 fightValue;
+    i8 iconIndex;
+    i8 growth;
+    i32 hitPoints;
     tag_monsterStats stats;
 };
 #pragma pack(pop)

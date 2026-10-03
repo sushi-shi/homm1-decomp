@@ -4,16 +4,16 @@
 struct tag_message;
 
 // SETUP's dialog handlers (Buka SETUP.h).
-short BaseSetupHandler(struct tag_message&);
-short SetupCampaignGameHandler(struct tag_message&);
-short SetupBaudHandler(struct tag_message&);
-short SetupComPortHandler(struct tag_message&);
-short SetupHotSeatGameHandler(struct tag_message&);
-short SetupModemGameHandler(struct tag_message&);
-short SetupMultiPlayerGameHandler(struct tag_message&);
-short SetupNetworkGameHandler(struct tag_message&);
-short SetupGameHandler(struct tag_message&);
+i16 BaseSetupHandler(struct tag_message& message);
+i16 SetupCampaignGameHandler(struct tag_message& message);
+i16 SetupBaudHandler(struct tag_message& message);
+i16 SetupComPortHandler(struct tag_message& message);
+i16 SetupHotSeatGameHandler(struct tag_message& message);
+i16 SetupModemGameHandler(struct tag_message& message);
+i16 SetupMultiPlayerGameHandler(struct tag_message& message);
+i16 SetupNetworkGameHandler(struct tag_message& message);
+i16 SetupGameHandler(struct tag_message& message);
 
-extern int gbDoModemConfig;
+extern i32 gDoModemConfig;
 
 #endif // HOMM1_SOURCE_SETUP_H

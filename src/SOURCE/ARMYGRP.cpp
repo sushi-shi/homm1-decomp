@@ -25,13 +25,13 @@ armyGroup::armyGroup(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044795c, 0x18)
-void armyGroup::View(int) {}
+void armyGroup::View(i32) {}
 
 // HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
 VA(0x00447974, 0x11b)
-short armyGroup::GetMorale(hero* h, town* t) {
-    int morale;
-    int alignment;
+i16 armyGroup::GetMorale(hero* h, town* t) {
+    i32 morale;
+    i32 alignment;
 
     morale = 0;
     alignment = IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
@@ -61,7 +61,7 @@ short armyGroup::GetMorale(hero* h, town* t) {
 }
 
 VA(0x00447a8f, 0x31)
-void armyGroup::Dismiss(signed char slot) {
+void armyGroup::Dismiss(i8 slot) {
     m_creatureTypes[slot] = CREATURE_NONE;
     m_creatureCounts[slot] = 0;
 }
@@ -71,8 +71,8 @@ void armyGroup::Dismiss(signed char slot) {
 // evidence: graph:2;base=0.401440;margin=0.383163;shape=0.171;size=0.719;calls=1.000;alternate=pol20:int armyGroup::IsMember(int)@0x0008c3f6
 // HoMM1 retail reads a signed byte parameter and returns in AL.
 VA(0x00447ac0, 0x59)
-signed char armyGroup::IsMember(signed char creatureType) {
-    for (short slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
+i8 armyGroup::IsMember(i8 creatureType) {
+    for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_creatureTypes[slot] == creatureType)
             return 1;
     }
@@ -81,13 +81,13 @@ signed char armyGroup::IsMember(signed char creatureType) {
 
 // Buka 2.1 IsHomogeneous; HoMM1 races are six consecutive creature ids.
 VA(0x00447b19, 0x153)
-H1_ENUM_RETURN(ArmyGroupAlignmentResult, signed char) armyGroup::IsHomogeneous(signed char countRaces) {
-    int numTypes = 0;
-    signed char raceSeen[ARMY_GROUP_RACE_COUNT];
+H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
+    i32 numTypes = 0;
+    i8 raceSeen[ARMY_GROUP_RACE_COUNT];
     raceSeen[0] = raceSeen[1] = raceSeen[2] = raceSeen[3] = raceSeen[4] = 0;
-    int previous = -1;
-    int numRaces;
-    short i;
+    i32 previous = -1;
+    i32 numRaces;
+    i16 i;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
             if (countRaces == ARMY_GROUP_EMPTY_SLOT)
@@ -124,7 +124,7 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, signed char) armyGroup::IsHomogeneous(s
 // evidence: graph:2;base=0.455116;margin=0.419277;shape=0.310;size=0.702;calls=1.000;alternate=pol20:int armyGroup::CanJoin(int)@0x0008c599
 // HoMM1 retail returns in AL and sign-extends its IsMember call results.
 VA(0x00447c6c, 0x54)
-signed char armyGroup::CanJoin(signed char creatureType) {
+i8 armyGroup::CanJoin(i8 creatureType) {
     if (IsMember(creatureType))
         return 1;
     if (IsMember(CREATURE_NONE))
@@ -133,9 +133,9 @@ signed char armyGroup::CanJoin(signed char creatureType) {
 }
 
 VA(0x00447cc0, 0x59)
-short armyGroup::GetNumArmies(void) {
-    short numArmies = 0;
-    for (short i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
+i16 armyGroup::GetNumArmies(void) {
+    i16 numArmies = 0;
+    for (i16 i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE)
             ++numArmies;
     }
@@ -146,8 +146,8 @@ short armyGroup::GetNumArmies(void) {
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418523;margin=0.356193;shape=0.176;size=0.729;calls=1.000;alternate=pol20:int armyGroup::Add(int, int, int)@0x0008c641
 VA(0x00447d19, 0x132)
-short armyGroup::Add(signed char creatureType, short quantity, signed char slot) {
-    short searchSlot;
+i16 armyGroup::Add(i8 creatureType, i16 quantity, i8 slot) {
+    i16 searchSlot;
     if (slot == ARMY_GROUP_EMPTY_SLOT) {
         for (searchSlot = 0; searchSlot < ARMY_GROUP_SLOT_COUNT; ++searchSlot) {
             if (m_creatureTypes[searchSlot] == creatureType) {
@@ -176,8 +176,8 @@ short armyGroup::Add(signed char creatureType, short quantity, signed char slot)
 }
 
 VA(0x00447e4b, 0x7d)
-void armyGroup::Swap(signed char slot, armyGroup* otherGroup, signed char otherSlot) {
-    int temporary = m_creatureTypes[slot];
+void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
+    i32 temporary = m_creatureTypes[slot];
     m_creatureTypes[slot] = otherGroup->m_creatureTypes[otherSlot];
     otherGroup->m_creatureTypes[otherSlot] = temporary;
 
@@ -191,11 +191,11 @@ void armyGroup::Swap(signed char slot, armyGroup* otherGroup, signed char otherS
 // evidence: graph:2;base=0.521804;margin=0.531953;shape=0.341;size=0.892;calls=1.000;alternate=pol20:void armyGroup::DamageGroup(float)@0x0008c7d2
 VA(0x00447ec8, 0x14d)
 void armyGroup::DamageGroup(float damagePercent) {
-    int killed;
-    int chance = static_cast<int>(damagePercent * 100.0f);
-    int isFirstTroop = 1;
-    int i;
-    int j;
+    i32 killed;
+    i32 chance = static_cast<i32>(damagePercent * 100.0f);
+    i32 isFirstTroop = 1;
+    i32 i;
+    i32 j;
 
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {

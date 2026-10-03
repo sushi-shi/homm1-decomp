@@ -11,19 +11,19 @@ class border;
 #pragma pack(push, 1)
 class townObject {
 public:
-    signed char m_animationFrameCount;
-    signed char m_animationFrame;
-    signed char m_visible;
-    short m_buildingId;
-    icon *m_icon;
-    border *m_border;
+    i8 m_animationFrameCount;
+    i8 m_animationFrame;
+    i8 m_visible;
+    i16 m_buildingId;
+    icon* m_icon;
+    border* m_border;
     // --- constructors ---
     // HoMM1 reads the placement from <name>.tod (retail ret 4).
-    townObject(char *);
+    townObject(char* name);
     ~townObject();
     // --- methods ---
     // HoMM1 passes the animation-advance flag as a byte (retail ret 4, movsx).
-    void Draw(signed char);
+    void Draw(i8 advanceAnimation);
 };
 #pragma pack(pop)
 #endif // HOMM1_SOURCE_TOWNOBJECT_H

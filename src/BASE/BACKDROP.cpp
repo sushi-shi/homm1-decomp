@@ -15,7 +15,7 @@ VA_COMPGEN(0x0047d000, 0x25, "??_GbackdropWidget@@UAEPAXI@Z", 0x0047cfe0)
 backdropWidget::~backdropWidget(void) {}
 
 VA(0x0047d030, 0x34)
-backdropWidget::backdropWidget(short x, short y, short width, short height, short id, short kind)
+backdropWidget::backdropWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind)
     : widget(x, y, width, height, id, kind) {}
 
 VA(0x0047d070, 0x5f)
@@ -26,7 +26,7 @@ void backdropWidget::Read(void) {
 }
 
 VA(0x0047d0d0, 0xd)
-short backdropWidget::Main(tag_message& message) {
+i16 backdropWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 

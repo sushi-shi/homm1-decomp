@@ -25,15 +25,15 @@ textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
 
 VA(0x0047ae60, 0x61)
 textWidget::textWidget(
-    short x,
-    short y,
-    short width,
-    short height,
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
     char* text,
     char* fontName,
-    short color,
-    short id,
-    short kind
+    i16 color,
+    i16 id,
+    i16 kind
 )
     : widget(x, y, width, height, id, kind) {
     m_font = gpResourceManager->GetFont(fontName);
@@ -45,12 +45,12 @@ textWidget::textWidget(
 
 VA(0x0047aed0, 0xeb)
 void textWidget::Read(void) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+    i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    short length = gpResourceManager->ReadWord();
+    i16 length = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
     // byte-evidenced: ReadBlock accepts signed bytes for stored text.
-    gpResourceManager->ReadBlock(reinterpret_cast<signed char*>(m_text), length);
+    gpResourceManager->ReadBlock(reinterpret_cast<i8*>(m_text), length);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(
@@ -71,12 +71,12 @@ textWidget::~textWidget(void) {
 }
 
 VA(0x0047aff0, 0x1ea)
-short textWidget::Main(tag_message& message) {
+i16 textWidget::Main(tag_message& message) {
     // PoL 2.0 textWidget::Main caches the flags word in a local; retail
     // keeps it in dx for the enable test and the select/deselect stores.
-    short flags = m_flags;
-    short y;
-    short x;
+    i16 flags = m_flags;
+    i16 y;
+    i16 x;
     if (!(flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
@@ -138,7 +138,7 @@ void textWidget::Draw(void) {
 VA(0x0047b220, 0x96)
 void textWidget::SetText(char* text) {
     if (m_kind == WIDGET_KIND_TEXT || m_kind == WIDGET_KIND_TEXT_ENTRY) {
-        unsigned short newLength = strlen(text);
+        u16 newLength = strlen(text);
         if (newLength > strlen(m_text)) {
             free(m_text);
             m_text = static_cast<char*>(malloc(newLength + 5));

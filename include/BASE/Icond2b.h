@@ -3,7 +3,7 @@
 
 class icon;
 class bitmap;
-void DimIconToBitmap(icon *, bitmap *, int, int, int, int);
-void FlipDimIconToBitmap(icon *, bitmap *, int, int, int, int);
+void DimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode);
+void FlipDimIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 offsetMode);
 
 #endif // HOMM1_BASE_ICOND2B_H

@@ -37,8 +37,8 @@ town::town(void) {
 // evidence: graph:2;base=0.410733;margin=0.365325;shape=0.175;size=0.741;calls=1.000;alternate=pol20:int town::HasGarrison(void)@0x00032c65
 // HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
 VA(0x00463f7b, 0x55)
-signed char town::HasGarrison(void) {
-    for (short slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
+i8 town::HasGarrison(void) {
+    for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
             return 1;
     }
@@ -51,7 +51,7 @@ signed char town::HasGarrison(void) {
 VA(0x00463fd0, 0xe1)
 void town::GiveSpells(void) {
     hero* visitingHero;
-    short i;
+    i16 i;
 
     if (m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE)
         return;
@@ -72,7 +72,7 @@ void town::GiveSpells(void) {
 
 VA(0x004640b1, 0x17c)
 void town::XformToCastle(void) {
-    short i;
+    i16 i;
 
     for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
         gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - TOWN_FOOTPRINT_TOP].m_overlayIndex +=
@@ -90,7 +90,7 @@ void town::XformToCastle(void) {
 // argument and memory-limit calculation belong to its later revision.
 VA(0x0046422d, 0xa5)
 void town::View(void) {
-    if (giHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
+    if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
@@ -107,8 +107,8 @@ void town::View(void) {
 VA(0x004642d2, 0x152)
 void town::Deallocate(void) {
     playerData* ownerData;
-    short i;
-    signed char found;
+    i16 i;
+    i8 found;
 
     ownerData = &gpGame->m_players[m_owner];
     found = -1;

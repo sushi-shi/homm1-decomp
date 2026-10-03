@@ -25,54 +25,54 @@ H1_ENUM_CONST_END(ResourceManagerConstant)
 
 #pragma pack(push, 1)
 struct aggEntry {
-    short id;
-    long offset;
-    unsigned long size;
-    unsigned long unpackedSize;
+    i16 id;
+    i32 offset;
+    u32 size;
+    u32 unpackedSize;
 };
 
 class resourceManager : public baseManager {
 public:
     resource* m_resourceListHead;
-    int m_aggregateFd;
+    i32 m_aggregateFd;
     aggEntry* m_aggregateDir;
-    short m_aggregateEntryCount;
-    int m_expunging;
-    long m_savedPosition;
+    i16 m_aggregateEntryCount;
+    i32 m_expunging;
+    i32 m_savedPosition;
     char m_lastFileName[RESOURCE_MANAGER_FILENAME_CAPACITY];
-    int m_lastFileId;
+    i32 m_lastFileId;
 
     resourceManager();
-    virtual short Open(short);
+    virtual i16 Open(i16 priority);
     virtual void Close();
-    virtual short Main(tag_message&);
-    void GetBackdrop(char*, bitmap*);
-    void GetBackdropAtLoc(char*, bitmap*, int, int);
-    palette* GetPalette(char*);
-    bitmap* GetBitmap(char*);
-    icon* GetIcon(char*);
-    icon* GetIcon(short);
-    tileset* GetTileset(char*);
+    virtual i16 Main(tag_message&);
+    void GetBackdrop(char* name, bitmap* backdrop);
+    void GetBackdropAtLoc(char* filename, bitmap* destination, i32 destinationX, i32 destinationY);
+    palette* GetPalette(char* name);
+    bitmap* GetBitmap(char* name);
+    icon* GetIcon(char* name);
+    icon* GetIcon(i16 fileId);
+    tileset* GetTileset(char* name);
     mouse* GetMouse(char*);
-    font* GetFont(char*);
-    sample* GetSample(char*);
+    font* GetFont(char* name);
+    sample* GetSample(char* name);
     MIDIWrap* GetMIDIWrap(char* name);
-    void Dispose(resource*);
-    void AddResource(resource*);
+    void Dispose(resource* resourceToDispose);
+    void AddResource(resource* newResource);
     void Expunge();
-    resource* Query(short);
-    void RemoveResource(resource*);
-    short LoadAggregateHeader(char*);
-    void PointToFile(short);
-    unsigned long GetFileSize(short);
+    resource* Query(i16 resourceId);
+    void RemoveResource(resource* resourceToRemove);
+    i16 LoadAggregateHeader(char* aggregateName);
+    void PointToFile(i16 fileId);
+    u32 GetFileSize(i16 fileId);
     void SavePosition();
     void RestorePosition();
-    signed char ReadByte();
-    short ReadWord();
-    long ReadLong();
-    short MakeId(char*);
-    void Read13(signed char*);
-    void ReadBlock(signed char*, unsigned long);
+    i8 ReadByte();
+    i16 ReadWord();
+    i32 ReadLong();
+    i16 MakeId(char* name);
+    void Read13(i8* destination);
+    void ReadBlock(i8* destination, u32 size);
 };
 #pragma pack(pop)
 

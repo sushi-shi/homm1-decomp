@@ -17,27 +17,27 @@ H1_ENUM_CONST_END(HexcellConstant)
 #pragma pack(push, 1)
 class hexcell {
 public:
-    short m_x;
-    short m_y;
+    i16 m_x;
+    i16 m_y;
     // DrawGround draws this combat icon at this frame.
-    signed char m_groundIcon;
-    signed char m_groundFrame;
+    i8 m_groundIcon;
+    i8 m_groundFrame;
     // Castle pieces (5) draw towers and walls; other obstacles use frame 7.
-    signed char m_obstacleType;
+    i8 m_obstacleType;
     // -1 when no obstacle stands on the hex (ValidHexToStandOn).
-    H1_ENUM_STORAGE(CombatObstacleIndex, signed char) m_obstacleIndex;
-    H1_ENUM_STORAGE(CombatSide, signed char) m_occupantSide;
-    signed char m_occupantIndex;
-    signed char m_occupantFrame;
+    H1_ENUM_STORAGE(CombatObstacleIndex, i8) m_obstacleIndex;
+    H1_ENUM_STORAGE(CombatSide, i8) m_occupantSide;
+    i8 m_occupantIndex;
+    i8 m_occupantFrame;
     // army::ResetPath clears the per-cell path mark.
-    signed char m_pathFlag;
+    i8 m_pathFlag;
     // --- constructors ---
     hexcell(void);
     // --- methods ---
-    hexcell* TakeOccupant(hexcell*);
+    hexcell* TakeOccupant(hexcell* from);
     void DrawGround(void);
     void DrawOccupant(void);
-    void DrawTower(signed char);
+    void DrawTower(i8 frame);
     void DrawWall(void);
     void DrawObstacle(void);
 };

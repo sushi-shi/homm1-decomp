@@ -10,7 +10,7 @@
 #include <SOURCE/KB.h>
 
 VA(0x0047f670, 0x5a)
-widget::widget(short x, short y, short width, short height, short id, short kind) {
+widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
     m_owner = 0;
     m_next = 0;
     m_prev = 0;
@@ -28,7 +28,7 @@ VA(0x0047f6d0, 0x7)
 widget::~widget(void) {}
 
 VA(0x0047f6e0, 0x16)
-short widget::Open(short zOrder, heroWindow* owner) {
+i16 widget::Open(i16 zOrder, heroWindow* owner) {
     m_zOrder = zOrder;
     m_owner = owner;
     return 0;
@@ -38,9 +38,9 @@ VA(0x0047f700, 0x1)
 void widget::Close(void) {}
 
 VA(0x0047f710, 0x216)
-short widget::Main(tag_message& message) {
-    short x;
-    short y;
+i16 widget::Main(tag_message& message) {
+    i16 x;
+    i16 y;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -75,7 +75,7 @@ short widget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_CLEAR_FLAGS:
                     if (message.id == m_id) {
-                        short flags = message.value;
+                        i16 flags = message.value;
                         m_flags &= ~flags;
                         if (flags & WIDGET_FLAG_DIMMED)
                             Draw();
@@ -105,7 +105,7 @@ short widget::Main(tag_message& message) {
 
 VA(0x0047f930, 0x3a)
 void widget::Dim(void) {
-    short x = m_owner->m_posX + m_x;
-    short y = m_owner->m_posY + m_y;
+    i16 x = m_owner->m_posX + m_x;
+    i16 y = m_owner->m_posY + m_y;
     DimBitmapArea(gpWindowManager->m_screen, x, y, m_width, m_height);
 }

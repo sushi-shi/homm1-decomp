@@ -36,7 +36,7 @@ H1_ENUM_CONST_END(WindowFizzleConstant)
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
 VA(0x00473de0, 0x1b0)
 void CycleColors(void) {
-    signed char savedColor[PALETTE_GRAPHICS_CHANNELS];
+    i8 savedColor[PALETTE_GRAPHICS_CHANNELS];
 
     if (gpWindowManager == NULL)
         return;
@@ -115,7 +115,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
 }
 
 VA(0x00473fe0, 0xba)
-short heroWindowManager::Open(short managerOrder) {
+i16 heroWindowManager::Open(i16 managerOrder) {
     FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
     if (m_screen == NULL)
@@ -123,7 +123,7 @@ short heroWindowManager::Open(short managerOrder) {
     m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
-    m_screen->m_pixels = static_cast<signed char*>(lpInitWin);
+    m_screen->m_pixels = static_cast<i8*>(gInitWin);
     if (m_screen != NULL) {
         m_priority = managerOrder;
         m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
@@ -151,8 +151,8 @@ void heroWindowManager::Close(void) {
 }
 
 VA(0x004740f0, 0x31)
-short heroWindowManager::Main(tag_message& message) {
-    short result = MESSAGE_DISPATCH_CONTINUE;
+i16 heroWindowManager::Main(tag_message& message) {
+    i16 result = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* window = m_windowListTail;
     while (window != NULL) {
         switch (result = window->BroadcastMessage(message)) {
@@ -171,7 +171,7 @@ short heroWindowManager::Main(tag_message& message) {
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
 VA(0x00474130, 0x3c)
-short heroWindowManager::BroadcastMessage(short type, short command, short widgetId, short value) {
+i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
     message.type = type;
     message.command = command;
@@ -185,7 +185,7 @@ short heroWindowManager::BroadcastMessage(short type, short command, short widge
 // argument range (no esi/edi/ebp) is what makes /O2 colour cur/window/layer/this as
 // esi/edi/ebx/ebp; an int parameter gives esi/edi/ebx/ebp to window/this/cur/layer.
 VA(0x00474170, 0xce)
-void heroWindowManager::AddWindow(heroWindow* window, short zOrder, signed char openFlags) {
+void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
         zOrder = 0;
@@ -262,17 +262,17 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
 }
 
 VA(0x004742d0, 0x1e0)
-short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_message&), int fade) {
+i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&), i32 fade) {
     DATA(0x004a0c7c)
-    static int iDialogNestCount = 0;
+    static i32 gDialogNestCount = 0;
     tag_message message;
-    short done;
-    int result;
+    i16 done;
+    i32 result;
 
-    gbInDialog = 1;
-    if (iDialogNestCount == 0)
+    gInDialog = 1;
+    if (gDialogNestCount == 0)
         SetNoDialogMenus(0);
-    iDialogNestCount++;
+    gDialogNestCount++;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
     if (window != NULL)
         AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
@@ -304,9 +304,9 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
             RemoveWindow(window);
         gpInputManager->Flush();
     }
-    gbInDialog = 0;
-    iDialogNestCount--;
-    if (iDialogNestCount == 0)
+    gInDialog = 0;
+    gDialogNestCount--;
+    if (gDialogNestCount == 0)
         SetNoDialogMenus(1);
     return 0;
 }
@@ -315,10 +315,10 @@ short heroWindowManager::DoDialog(heroWindow* window, short (*handler)(tag_messa
 // Declaring top before left and bottom before right reproduces retail's VC4
 // colouring: equal-cost ranges are coloured, and spilled, in declaration order.
 VA(0x004744b0, 0xed)
-void heroWindowManager::UpdateScreenRegion(short x, short y, short width, short height) {
-    short top, left, bottom, right;
-    short pointerHidden;
-    short mouseX, mouseY;
+void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
+    i16 top, left, bottom, right;
+    i16 pointerHidden;
+    i16 mouseX, mouseY;
 
     left = x - gpMouseManager->m_savedUnderlying->m_width;
     top = y - gpMouseManager->m_savedUnderlying->m_height;
@@ -345,7 +345,7 @@ void heroWindowManager::UpdateScreenRegion(short x, short y, short width, short 
 // Retail byte saved-update state and word arguments precede the later donor widening.
 VA(0x004745a0, 0xbf)
 #line 550 "D:\\Heroes\\Base\\WINMGR.CPP"
-void heroWindowManager::FadeScreen(short direction, short steps, palette* currentPalette) {
+void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
     ProcessAssert(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT, __FILE__, __LINE__);
     if (currentPalette != NULL)
@@ -353,7 +353,7 @@ void heroWindowManager::FadeScreen(short direction, short steps, palette* curren
     PollSound();
     switch (direction) {
         case WINDOW_FADE_IN: {
-            signed char saved = m_updateFlags;
+            i8 saved = m_updateFlags;
             m_updateFlags = 0;
             FadeIn(steps);
             saved |= gWindowFadeSavedUpdate;
@@ -381,7 +381,7 @@ void heroWindowManager::ScreenShot(void) {
 
 // Retail omits the later donor coordinate-clamping checks.
 VA(0x004746b0, 0x88)
-void heroWindowManager::SaveFizzleSource(short x, short y, short width, short height) {
+void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
     if (bShowIt == 0)
         return;
     if (m_fizzleSource != NULL)
@@ -394,27 +394,27 @@ void heroWindowManager::SaveFizzleSource(short x, short y, short width, short he
 // donor Buka TU BASE/WINMGR; five arguments proven by stack use and ret 0x14
 // evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
 VA(0x00474740, 0x320)
-void heroWindowManager::FizzleForward(short x, short y, short width, short height, int delay) {
+void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     // Buka keeps C-style function-scope locals; their declaration order sets
     // the retail register colouring of the row pointers.
-    int sourceX;
-    int sourceY;
-    long tickStart;
-    unsigned char* screenPixel;
-    unsigned char* workPixel;
-    int frame;
-    int saveFlags;
-    unsigned char* savePixel;
-    signed char* ccycleBuf;
+    i32 sourceX;
+    i32 sourceY;
+    i32 tickStart;
+    u8* screenPixel;
+    u8* workPixel;
+    i32 frame;
+    i32 saveFlags;
+    u8* savePixel;
+    i8* ccycleBuf;
     if (bShowIt != 0) {
-        gbEnlargeScreenBlit = 0;
+        gEnlargeScreenBlit = 0;
         tickStart = 0;
         saveFlags = gpWindowManager->m_updateFlags;
         gpWindowManager->m_updateFlags = 0;
         if (delay == FIZZLE_USE_DEFAULT_DELAY)
             delay = FIZZLE_DEFAULT_DELAY;
         m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
-        ccycleBuf = static_cast<signed char*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
+        ccycleBuf = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
         BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
         for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
@@ -425,18 +425,15 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
             // (sourceY - y) * width into the frame's induction slots.
             for (sourceY = y; sourceY < y + height; sourceY++) {
                 // Byte access is proven by the retail load/shift sequence.
-                savePixel =
-                    reinterpret_cast<unsigned char*>(m_fizzleSource->m_pixels) // byte-evidenced
-                    + m_fizzleSource->m_width * (sourceY - y);
-                workPixel =
-                    reinterpret_cast<unsigned char*>(m_fizzleWork->m_pixels) // byte-evidenced
-                    + (sourceY - y) * width;
+                savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
+                            + m_fizzleSource->m_width * (sourceY - y);
+                workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
+                            + (sourceY - y) * width;
                 // Byte access is proven by the retail framebuffer stores.
-                screenPixel = reinterpret_cast<unsigned char*>(m_screen->m_pixels) // byte-evidenced
+                screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
                               + sourceY * LOGICAL_SCREEN_WIDTH + x;
                 for (sourceX = x; sourceX < x + width; sourceX++) {
-                    unsigned short lookup =
-                        *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
+                    u16 lookup = *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
                     *screenPixel++ = ccycleBuf[lookup];
                 }
             }
@@ -448,7 +445,7 @@ void heroWindowManager::FizzleForward(short x, short y, short width, short heigh
         }
         DelayTilMilli(delay + tickStart);
         BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
-        gbEnlargeScreenBlit = 1;
+        gEnlargeScreenBlit = 1;
         gpWindowManager->m_updateFlags = saveFlags;
         if (m_fizzleSource != NULL)
             delete m_fizzleSource;
@@ -471,6 +468,6 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 // Window-manager data, initialized from retail .data (0x004a0c7c..) and
 // zero-filled storage (0x004cac20..).
 DATA(0x004cac20)
-signed char gWindowFadeSavedUpdate;
+i8 gWindowFadeSavedUpdate;
 DATA(0x004cac28)
-signed char gCyclePal[PALETTE_CYCLE_BYTES];
+i8 gCyclePal[PALETTE_CYCLE_BYTES];

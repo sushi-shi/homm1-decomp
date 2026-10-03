@@ -131,42 +131,42 @@ H1_ENUM_CONST_END(InputKeyCodeConstant)
 class inputManager : public baseManager {
 public:
     tag_message m_eventRing[INPUT_EVENT_RING_CAPACITY];
-    short m_readIndex;
-    short m_writeIndex;
-    short m_mouseMessageActive;
-    short m_field_0x236;
-    short m_field_0x238;
-    short m_field_0x23a;
-    short m_keyState[INPUT_SCAN_CODE_CAPACITY];
-    short m_field_0x33c;
-    short m_requestedPriority;
-    short m_keyCodeType;
-    short m_field_0x342;
-    H1_ENUM_STORAGE(MessageModifier, short) m_modifiers;
+    i16 m_readIndex;
+    i16 m_writeIndex;
+    i16 m_mouseMessageActive;
+    i16 m_field_0x236;
+    i16 m_field_0x238;
+    i16 m_field_0x23a;
+    i16 m_keyState[INPUT_SCAN_CODE_CAPACITY];
+    i16 m_field_0x33c;
+    i16 m_requestedPriority;
+    i16 m_keyCodeType;
+    i16 m_field_0x342;
+    H1_ENUM_STORAGE(MessageModifier, i16) m_modifiers;
     char m_unknownAfterModifiers[4];
-    char m_field_0x34a;
-    int m_recordFile;
-    int m_field_0x34f;
+    i8 m_field_0x34a;
+    i32 m_recordFile;
+    i32 m_field_0x34f;
 
     inputManager(void);
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(tag_message&) OVERRIDE;
+    virtual i16 Main(tag_message&) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
     tag_message PeekEvent(void);
-    void SetMouseCoords(int, int);
-    void SetKeyCodeType(short);
-    void AsciiConvert(tag_message&);
+    void SetMouseCoords(i32, i32);
+    void SetKeyCodeType(i16 keyCodeType);
+    void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
     // Inline qualifier accessor; townManager::ShiftQualChange retains its jmp.
-    short GetModifiers(void) {
+    i16 GetModifiers(void) {
         return m_modifiers;
     }
 };
 #pragma pack(pop)
-int KeyboardMessageHandler(void*, unsigned int, unsigned int, long);
-int MouseMessageHandler(void*, unsigned int, unsigned int, long);
+i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData);
+i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData);
 
 #endif // HOMM1_BASE_INPUTMANAGER_H

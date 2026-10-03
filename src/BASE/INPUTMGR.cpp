@@ -25,7 +25,7 @@ static inline void ResetEventQueue(inputManager* manager) {
 }
 
 VA(0x0047bb40, 0x2e4)
-int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
+i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
     if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)
@@ -98,7 +98,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
-                SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
+                SetFullScreenStatus(1 - gConfig.gfx[gCurExe].fullScreen);
         }
     }
     return event->type == MESSAGE_NONE;
@@ -109,7 +109,7 @@ int KeyboardMessageHandler(void*, unsigned int message, unsigned int, long messa
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
 VA(0x0047be30, 0x27c)
 #line 137 "D:\\Heroes\\Base\\INPUTMGR.CPP"
-int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageData) {
+i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
     DATA(0x004a1a44)
     static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
     DATA(0x004a1a5c)
@@ -162,7 +162,7 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
 
 mouseCoordinates:
 #line 187
-    ProcessAssert(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
+    ProcessAssert(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
     event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
     event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
 
@@ -211,7 +211,7 @@ inputManager::inputManager(void) {
 // two stores of 1, keeps edx. Retail's heroWindowManager::Open also uses edx,
 // mouseManager's constructor eax.
 VA(0x0047c120, 0x85)
-short inputManager::Open(short priority) {
+i16 inputManager::Open(i16 priority) {
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
     m_requestedPriority = priority;
@@ -237,7 +237,7 @@ void inputManager::Close(void) {
 }
 
 VA(0x0047c1f0, 0x6)
-short inputManager::Main(tag_message&) {
+i16 inputManager::Main(tag_message&) {
     return 0;
 }
 
@@ -270,7 +270,7 @@ tag_message inputManager::GetEvent(void) {
 // The donor assigns the key-code mode and then flushes the event queue.
 // HoMM1 inlines Flush here and stores the mode as a short at +0x340.
 VA(0x0047c300, 0x1f)
-void inputManager::SetKeyCodeType(short keyCodeType) {
+void inputManager::SetKeyCodeType(i16 keyCodeType) {
     m_keyCodeType = keyCodeType;
     ResetEventQueue(this);
 }
@@ -356,7 +356,7 @@ void inputManager::AsciiConvert(tag_message& event) {
 
 VA(0x0047c4f0, 0x33c)
 void inputManager::MakeScanCodeTable(void) {
-    for (unsigned int scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
+    for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
         m_keyState[scanCode] = scanCode << INPUT_KEY_SCAN_SHIFT;
     m_keyState[INPUT_SCAN_NONE] = 0;
     m_keyState[INPUT_SCAN_ESCAPE] = INPUT_ASCII_ESCAPE;

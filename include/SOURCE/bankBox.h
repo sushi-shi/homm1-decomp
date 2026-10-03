@@ -19,11 +19,11 @@ class heroWindow;
 class bankBox {
 public:
     playerData* m_player;
-    short m_x;
-    short m_y;
+    i16 m_x;
+    i16 m_y;
     heroWindow* m_window;
     // --- constructors ---
-    bankBox(short, short, class playerData*);
+    bankBox(i16 x, i16 y, class playerData* player);
     ~bankBox();
     // --- methods ---
     // HoMM1 callers pass no argument (retail 0x00463e48).

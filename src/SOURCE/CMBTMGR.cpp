@@ -41,10 +41,10 @@
 
 // CheckApplyGoodMorale grants one extra turn at a time.
 DATA(0x00490d50)
-int bInHighMoraleBonus = 0;
+i32 gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 DATA(0x00490d54)
-int giSeed = 1;
+i32 gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x0044b440, 0x1b8)
@@ -73,8 +73,8 @@ combatManager::combatManager(void) {
 // evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
 VA(0x0044b5f8, 0x138)
 void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
-    short i;
-    short j;
+    i16 i;
+    i16 j;
 
     if (!from || !to)
         return;
@@ -99,20 +99,20 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 // Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
 VA(0x0044b730, 0x3db)
 void combatManager::SetupCombat(
-    int mapX,
-    int mapY,
+    i32 mapX,
+    i32 mapY,
     hero* attackerHero,
     armyGroup* attackerGroup,
     town* defenderTown,
     hero* defenderHero,
     armyGroup* defenderGroup,
-    int combatX,
-    int combatY,
-    int randomSeed
+    i32 combatX,
+    i32 combatY,
+    i32 randomSeed
 ) {
-    int i;
+    i32 i;
 
-    giSeed = randomSeed;
+    gSeed = randomSeed;
     SRand(combatX * 100 + combatY);
     m_combatX = combatX;
     m_combatY = combatY;
@@ -185,10 +185,10 @@ void combatManager::SetupCombat(
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
 // field, then the fade-in and a random combat theme.
 VA(0x0044bb0b, 0x40e)
-short combatManager::Open(short priority) {
-    int song;
+i16 combatManager::Open(i16 priority) {
+    i32 song;
     SAMPLE2 sample;
-    int musicList[4];
+    i32 musicList[4];
 
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                         | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
@@ -236,7 +236,7 @@ short combatManager::Open(short priority) {
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
-    gbLimitedCombatUpdatePalette = 1;
+    gLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
     gpMouseManager->WarpPointer(
         m_hexCells[m_limitCreatureHex].m_x,
@@ -259,7 +259,7 @@ short combatManager::Open(short priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
+// gCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
 // mountain variant by MoreTreesNear), the boat for water and the graveyard.
 H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_GRASS_FOREST = 0,
@@ -284,18 +284,18 @@ H1_ENUM_END(CombatBackground)
 // count of the side that held it.
 VA(0x0044bf19, 0x1ea)
 void combatManager::Close(void) {
-    int i;
-    int survivor;
+    i32 i;
+    i32 survivor;
 
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     DrawCombatBorder();
-    gbLimitedCombatUpdatePalette = 0;
+    gLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     delete m_backgroundBuffer;
     for (i = 0; i < COMBAT_SIDE_COUNT; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-        survivor = static_cast<signed char>(m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE);
+        survivor = static_cast<i8>(m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
@@ -317,9 +317,9 @@ void combatManager::Close(void) {
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
 // side's army group; a dead stack empties its slot.
 VA(0x0044c103, 0x161)
-void combatManager::UpdateArmyGroup(signed char side) {
-    short i;
-    short j;
+void combatManager::UpdateArmyGroup(i8 side) {
+    i16 i;
+    i16 j;
 
     for (i = 0; i < m_numArmies[side]; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
@@ -341,13 +341,13 @@ void combatManager::UpdateArmyGroup(signed char side) {
 // ground patches and, outside a siege, up to two obstacles.
 VA(0x0044c264, 0x7be)
 void combatManager::GenerateMap(void) {
-    short x;
-    short i;
-    short y;
-    short count;
-    int randomRow;
-    int randomCol;
-    short armyCount;
+    i16 x;
+    i16 i;
+    i16 y;
+    i16 count;
+    i32 randomRow;
+    i32 randomCol;
+    i16 armyCount;
 
     if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
         m_catapultFrame[COMBAT_ATTACKER_SIDE] = 0;
@@ -365,7 +365,7 @@ void combatManager::GenerateMap(void) {
                 ((y & 1) ? 27 : -12) + x * COMBAT_HEX_WIDTH;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_GROUND;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
-                static_cast<signed char>(SRandom(0, 3)) + 4;
+                static_cast<i8>(SRandom(0, 3)) + 4;
             if (x == 0) {
                 if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
                     m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_CASTLE;
@@ -393,7 +393,7 @@ void combatManager::GenerateMap(void) {
         randomRow = SRandom(0, 4);
         randomCol = SRandom(1, 7);
         m_hexCells[randomRow * COMBAT_GRID_COLUMNS + randomCol].m_groundFrame =
-            static_cast<signed char>(SRandom(0, 2)) + 8;
+            static_cast<i8>(SRandom(0, 2)) + 8;
     }
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
         for (x = 6; x < 8; x++) {
@@ -478,7 +478,7 @@ void combatManager::GenerateMap(void) {
     m_currentSpeed = CREATURE_SPEED_BLAZING;
     GetNextArmy(0);
     m_gridUpdateRow = 0;
-    SRand(giSeed);
+    SRand(gSeed);
 }
 
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
@@ -486,7 +486,7 @@ void combatManager::GenerateMap(void) {
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void) {
     DATA(0x00490db0)
-    static char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
+    static char* gCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
         "frstwgrs.bkg",
         "mtnwgrsf.bkg",
         "snowfrst.bkg",
@@ -505,51 +505,51 @@ char* combatManager::GetBackgroundName(void) {
                 & MAP_TRIGGER_TYPE_MASK)
                    == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
-        return cCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
+        return gCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];
     }
     switch (m_terrainType) {
         case TERRAIN_WATER:
-            return cCombatBkgNames[COMBAT_BACKGROUND_BOAT];
+            return gCombatBkgNames[COMBAT_BACKGROUND_BOAT];
         case TERRAIN_SWAMP:
-            return cCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
+            return gCombatBkgNames[COMBAT_BACKGROUND_SWAMP];
         case TERRAIN_LAVA:
-            return cCombatBkgNames[COMBAT_BACKGROUND_LAVA];
+            return gCombatBkgNames[COMBAT_BACKGROUND_LAVA];
         case TERRAIN_DESERT:
-            return cCombatBkgNames[COMBAT_BACKGROUND_DESERT];
+            return gCombatBkgNames[COMBAT_BACKGROUND_DESERT];
         case TERRAIN_GRASS:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_MOUNTAIN];
         case TERRAIN_SNOW:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_SNOW_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_SNOW_MOUNTAIN];
         case TERRAIN_DIRT:
             if (MoreTreesNear())
-                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
+                return gCombatBkgNames[COMBAT_BACKGROUND_DIRT_FOREST];
             else
-                return cCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
+                return gCombatBkgNames[COMBAT_BACKGROUND_DIRT_MOUNTAIN];
     }
-    return cCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
+    return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
 // within two cells of the battle.
 VA(0x0044cbb0, 0x1e7)
-signed char combatManager::MoreTreesNear(void) {
-    int yPos;
-    int xPos;
-    short step;
-    short homeX;
-    signed char typeTable[3][MAP_DIRECTION_COUNT];
-    short numMountains;
-    short numTrees;
+i8 combatManager::MoreTreesNear(void) {
+    i32 yPos;
+    i32 xPos;
+    i16 step;
+    i16 homeX;
+    i8 typeTable[3][MAP_DIRECTION_COUNT];
+    i16 numMountains;
+    i16 numTrees;
     mapCell* nearCell;
-    short homeY;
-    unsigned char nearbyTileset;
-    short k;
+    i16 homeY;
+    u8 nearbyTileset;
+    i16 k;
 
     memset(typeTable, -1, sizeof(typeTable));
     homeX = m_combatX;
@@ -586,16 +586,16 @@ signed char combatManager::MoreTreesNear(void) {
 // Buka CMBTMGR.cpp LoadIcons.
 VA(0x0044cd97, 0x1d7)
 void combatManager::LoadIcons(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < COMBAT_ICON_COUNT; i++)
         m_combatIcons[i] = NULL;
     m_combatIcons[COMBAT_ICON_SPELLS] = gpResourceManager->GetIcon("spells.icn");
     m_backgroundBitmap = gpResourceManager->GetBitmap(GetBackgroundName());
     m_combatIcons[COMBAT_ICON_GROUND] =
-        gpResourceManager->GetIcon(cCombatGroundNames[m_terrainType]);
+        gpResourceManager->GetIcon(gCombatGroundNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_OBSTACLES] =
-        gpResourceManager->GetIcon(cCombatObstacleNames[m_terrainType]);
+        gpResourceManager->GetIcon(gCombatObstacleNames[m_terrainType]);
     m_combatIcons[COMBAT_ICON_TEXTBAR] = gpResourceManager->GetIcon("textbar.icn");
     m_combatIcons[COMBAT_ICON_TENT] = gpResourceManager->GetIcon("tent.icn");
     m_combatIcons[COMBAT_ICON_CLOUD] = gpResourceManager->GetIcon("cloud.icn");
@@ -604,7 +604,7 @@ void combatManager::LoadIcons(void) {
         sprintf(
             gText,
             "castle%02d.icn",
-            m_combatTowns[static_cast<signed char>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type
+            m_combatTowns[static_cast<i8>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type
         );
         m_combatIcons[COMBAT_ICON_CASTLE] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
@@ -615,7 +615,7 @@ void combatManager::LoadIcons(void) {
 // Buka CMBTMGR.cpp FreeIcons.
 VA(0x0044cf6e, 0x7b)
 void combatManager::FreeIcons(void) {
-    short i;
+    i16 i;
 
     for (i = 0; i < COMBAT_ICON_COUNT; i++) {
         if (m_combatIcons[i])
@@ -627,8 +627,8 @@ void combatManager::FreeIcons(void) {
 // Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
 VA(0x0044cfe9, 0x287)
 void combatManager::LoadArmies(void) {
-    short j;
-    short i;
+    i16 j;
+    i16 i;
 
     m_numArmies[COMBAT_ATTACKER_SIDE] = m_numArmies[COMBAT_DEFENDER_SIDE] = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -668,7 +668,7 @@ void combatManager::LoadArmies(void) {
 // Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
 VA(0x0044d270, 0xdc)
 void combatManager::FreeArmies(void) {
-    short i;
+    i16 i;
 
     gpSoundManager->StopAllSamples();
     for (i = 0; i < m_numArmies[COMBAT_ATTACKER_SIDE]; i++)
@@ -691,7 +691,7 @@ void combatManager::NoShowCombatLog(char*) {}
 // Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
 // from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
 VA(0x0044d364, 0xbe)
-short combatManager::GetGridIndex(short x, short y) {
+i16 combatManager::GetGridIndex(i16 x, i16 y) {
     y -= COMBAT_FIELD_TOP;
     y /= COMBAT_HEX_HEIGHT;
     if (y & 1) {
@@ -714,19 +714,19 @@ short combatManager::GetGridIndex(short x, short y) {
 
 // Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
 VA(0x0044d422, 0x1d9)
-void combatManager::CheckApplyGoodMorale(int side, int index) {
+void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
-    int morale;
+    i32 morale;
 
     if (side < 0 || index < 0)
         return;
-    if (bInHighMoraleBonus) {
-        bInHighMoraleBonus = 0;
+    if (gInHighMoraleBonus) {
+        gInHighMoraleBonus = 0;
         return;
     }
-    bInHighMoraleBonus = 0;
+    gInHighMoraleBonus = 0;
     theGroup = m_armyGroups[side];
     activeArmy = &m_armies[side][index];
     if (!activeArmy->m_quantity)
@@ -734,7 +734,7 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
     morale = theGroup->GetMorale(m_heroes[side], m_combatTowns[side]);
     if (morale <= 0 || SRandom(1, 24) > morale)
         return;
-    bInHighMoraleBonus = 1;
+    gInHighMoraleBonus = 1;
     sprintf(gText, "goodmrle.82M");
     sample = LoadPlaySample(gText);
     if (activeArmy->m_quantity <= 1)
@@ -761,11 +761,11 @@ void combatManager::CheckApplyGoodMorale(int side, int index) {
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
 // in four.
 VA(0x0044d5fb, 0x1c6)
-int combatManager::CheckApplyBadMorale(int side, int index) {
+i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
     SAMPLE2 sample;
-    int morale;
+    i32 morale;
 
     if (side < 0 || index < 0)
         return 0;
@@ -802,14 +802,14 @@ int combatManager::CheckApplyBadMorale(int side, int index) {
 // Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
 // sides, high-morale stacks first.
 VA(0x0044d7c1, 0x209)
-signed char combatManager::GetNextArmy(int checkMorale) {
+i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* pArmy;
-    signed char iSpeed;
-    int sideIter;
-    short temp;
-    signed char stackCounter;
-    signed char stackSide;
-    int bSkip;
+    i8 iSpeed;
+    i32 sideIter;
+    i16 temp;
+    i8 stackCounter;
+    i8 stackSide;
+    i32 bSkip;
 
     stackSide = m_currentSide;
     for (iSpeed = 0; iSpeed < 5; iSpeed++) {
@@ -850,9 +850,9 @@ signed char combatManager::GetNextArmy(int checkMorale) {
 // Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
 // no live stack left.
 VA(0x0044d9ca, 0xd3)
-signed char combatManager::IsWinner(signed char side) {
-    signed char isWinner;
-    short i;
+i8 combatManager::IsWinner(i8 side) {
+    i8 isWinner;
+    i16 i;
 
     if (m_sideDefeated[1 - side])
         return 1;
@@ -871,24 +871,24 @@ signed char combatManager::IsWinner(signed char side) {
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 VA(0x0044da9d, 0xd55)
-void combatManager::CatAttack(signed char side) {
-    short dx;
+void combatManager::CatAttack(i8 side) {
+    i16 dx;
     icon* boulder;
-    short summitX;
-    short x;
-    signed char col;
-    short i;
-    short frm;
-    short dy;
-    short y;
-    short tgtY;
-    short tgtX;
-    short force;
-    short startX;
+    i16 summitX;
+    i16 x;
+    i8 col;
+    i16 i;
+    i16 frm;
+    i16 dy;
+    i16 y;
+    i16 tgtY;
+    i16 tgtX;
+    i16 force;
+    i16 startX;
     SAMPLE2 catSample;
-    signed char wallsLeft;
-    short startY;
-    short summitY;
+    i8 wallsLeft;
+    i16 startY;
+    i16 summitY;
 
     if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
@@ -1159,47 +1159,46 @@ void combatManager::RegenerateField(void) {
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0044e840, 0xb8b)
 void combatManager::KeepAttack(void) {
-    int mod;
-    short minX;
-    short minY;
-    short lastX;
-    short gapX;
-    signed char hexCol;
-    signed char keepY;
+    i32 mod;
+    i16 minX;
+    i16 minY;
+    i16 lastX;
+    i16 gapX;
+    i8 hexCol;
+    i8 keepY;
     float yAdvance;
-    short lastY;
-    signed char targetRow;
-    signed char shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
-                                 1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1,
-                                 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
-    int bestRank;
-    signed char srcCol;
+    i16 lastY;
+    i8 targetRow;
+    i8 shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1,
+                        1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    i32 bestRank;
+    i8 srcCol;
     float yRun;
-    short distance;
+    i16 distance;
     float xAdvance;
-    int targetIndex;
+    i32 targetIndex;
     SAMPLE2 sample;
-    short updRight;
-    short gapY;
-    short w;
-    short height;
+    i16 updRight;
+    i16 gapY;
+    i16 w;
+    i16 height;
     bitmap* behind;
-    int i;
-    int bestWorth;
-    int power;
-    short startX;
+    i32 i;
+    i32 bestWorth;
+    i32 power;
+    i16 startX;
     float xRun;
-    short maxY;
-    short startY;
-    short destX;
-    int numLost;
+    i16 maxY;
+    i16 startY;
+    i16 destX;
+    i32 numLost;
     army* target;
-    int priority;
-    short frontCol;
-    int hurt;
-    signed char arrowFrame;
-    int dice;
-    short targetY;
+    i32 priority;
+    i16 frontCol;
+    i32 hurt;
+    i8 arrowFrame;
+    i32 dice;
+    i16 targetY;
 
     bestRank = -1;
     bestWorth = 0;
@@ -1316,7 +1315,7 @@ void combatManager::KeepAttack(void) {
     hurt = 0;
     for (i = 0; i < dice; i++)
         hurt += SRandom(2, 3);
-    hurt = static_cast<int>(hurt * gfBattleStat[mod + 20]);
+    hurt = static_cast<i32>(hurt * gBattleStat[mod + 20]);
     if (hurt <= 0)
         hurt = 1;
     numLost = target->Damage(hurt);
@@ -1346,9 +1345,9 @@ void combatManager::KeepAttack(void) {
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
 VA(0x0044f3cb, 0x114)
-int combatManager::ExperienceValueOfStack(signed char side) {
-    int i;
-    int value;
+i32 combatManager::ExperienceValueOfStack(i8 side) {
+    i32 i;
+    i32 value;
 
     value = 0;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -1364,8 +1363,8 @@ int combatManager::ExperienceValueOfStack(signed char side) {
 // Buka CMBTMGR.cpp ResetHitByCreature.
 VA(0x0044f4df, 0x78)
 void combatManager::ResetHitByCreature(void) {
-    int j;
-    int i;
+    i32 j;
+    i32 i;
 
     for (i = 0; i < COMBAT_SIDE_COUNT; i++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++)
@@ -1375,7 +1374,7 @@ void combatManager::ResetHitByCreature(void) {
 
 // HoMM1's combat grid is nine columns by five rows.
 VA(0x0044f557, 0x30)
-int ValidHex(int hex) {
+i32 ValidHex(i32 hex) {
     return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 

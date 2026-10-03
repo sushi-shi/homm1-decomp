@@ -13,17 +13,17 @@
 #pragma intrinsic(strlen)
 
 VA(0x0047b2c0, 0xa1)
-font::font(short id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
+    i8 name[RESOURCE_NAME_CAPACITY];
     gpResourceManager->PointToFile(id);
     m_height = gpResourceManager->ReadWord();
     m_headerWord = gpResourceManager->ReadWord();
     gpResourceManager->Read13(name);
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     m_glyphIcon = gpResourceManager->GetIcon(
         reinterpret_cast<char*>(name)
     ); // byte-evidenced: Read13 and GetIcon use differently signed byte names.
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
 }
 
 VA_COMPGEN(0x0047b370, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047b2c0)
@@ -33,13 +33,13 @@ font::~font(void) {
 }
 
 VA(0x0047b3f0, 0xd1)
-void font::DrawString(char* text, short x, short y, short color) {
+void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     IconEntry* entries = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data
     ); // byte-evidenced: packed frame directory decoded from resource bytes.
-    signed char glyph = 0;
-    short drawX = x;
-    short index = 0;
+    i8 glyph = 0;
+    i16 drawX = x;
+    i16 index = 0;
     while (text[index] != 0) {
         glyph = text[index] - ' ';
         if (glyph < 0 || glyph > FONT_GLYPH_INDEX_LAST)
@@ -59,28 +59,20 @@ void font::DrawString(char* text, short x, short y, short color) {
 }
 
 VA(0x0047b4d0, 0x2d0)
-void font::DrawBoundedString(
-    char* str,
-    short x,
-    short y,
-    short width,
-    short height,
-    short color,
-    short align
-) {
-    short s;
-    signed char q;
+void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
+    i16 s;
+    i8 q;
     IconEntry* widths;
     char spaceChar;
     // Names place the frame slots; the order gives the operand sort keys of
     // p < s, p >= r, lw <= width, x + t and y + u.
-    short r;
-    short lineEnd;
-    short drawColor;
-    short t;
-    short p;
-    short lw;
-    short u;
+    i16 r;
+    i16 lineEnd;
+    i16 drawColor;
+    i16 t;
+    i16 p;
+    i16 lw;
+    i16 u;
     char* w;
     char v;
 
@@ -141,19 +133,19 @@ void font::DrawBoundedString(
 }
 
 VA(0x0047b7a0, 0x211)
-int font::LineLength(char* str, short maxW) {
-    short lw;
-    short p;
-    short s = strlen(str);
-    signed char q;
+i32 font::LineLength(char* str, i16 maxW) {
+    i16 lw;
+    i16 p;
+    i16 s = strlen(str);
+    i8 q;
     IconEntry* widths = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data
     ); // byte-evidenced: packed frame directory decoded from resource bytes.
     char spaceChar = ' ';
-    int z = 0;
-    short t = 0;
-    short y;
-    short r;
+    i32 z = 0;
+    i16 t = 0;
+    i16 y;
+    i16 r;
     char* w;
     char v;
 
@@ -197,16 +189,16 @@ int font::LineLength(char* str, short maxW) {
 }
 
 VA(0x0047b9c0, 0x108)
-int font::LineWidth(char* text) {
-    signed char q;
-    int u;
+i32 font::LineWidth(char* text) {
+    i8 q;
+    i32 u;
     IconEntry* table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
     // retail body proves y's dword store and the five word stores below
     // (u is the census's unused slot). s follows y for the operand sort key.
-    int y;
-    short s;
-    short t, r, x, p, w;
+    i32 y;
+    i16 s;
+    i16 t, r, x, p, w;
     char* v;
 
     s = strlen(text);

@@ -40,19 +40,19 @@ class baseManager {
 public:
     baseManager* m_next;
     baseManager* m_prev;
-    H1_ENUM_STORAGE(BaseManagerMessageMask, short) m_messageMask;
-    short m_priority;
+    H1_ENUM_STORAGE(BaseManagerMessageMask, i16) m_messageMask;
+    i16 m_priority;
     char m_name[BASE_MANAGER_NAME_CAPACITY];
-    short m_active;
+    i16 m_active;
 
     baseManager();
     // swapManager::Close's inline store through a this temporary.
     void Activate(void) {
         m_active = 1;
     }
-    virtual short Open(short priority) = 0;
+    virtual i16 Open(i16 priority) = 0;
     virtual void Close() = 0;
-    virtual short Main(tag_message& message) = 0;
+    virtual i16 Main(tag_message& message) = 0;
 };
 #pragma pack(pop)
 

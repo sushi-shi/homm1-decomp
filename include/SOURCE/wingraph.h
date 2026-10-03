@@ -33,7 +33,7 @@ H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
     WINGRAPH_PAINT_Y_END = WINGRAPH_HEIGHT
 H1_ENUM_CONST_END(WingraphPaintConstant)
 
-// giGraphicsType: the WinG window backend or the DirectDraw full-screen one
+// gGraphicsType: the WinG window backend or the DirectDraw full-screen one
 // (InitGraphics picks DirectDraw for full screen; Buka WingraphGraphicsType,
 // same numbering).
 H1_ENUM_BEGIN(WingraphGraphicsType)
@@ -87,51 +87,51 @@ struct WingImage {
     void* bits;
 };
 
-extern H1_ENUM_STORAGE(WingraphGraphicsType, int) giGraphicsType;
-extern int giMainVideoModeHeight;
-extern int giMainVideoModeWidth;
-extern BOOL gbDDrawAttached;
-extern BOOL gbWinGAttached;
-extern BOOL gbWinGraphBusy;
+extern H1_ENUM_STORAGE(WingraphGraphicsType, i32) gGraphicsType;
+extern i32 gMainVideoModeHeight;
+extern i32 gMainVideoModeWidth;
+extern BOOL gDDrawAttached;
+extern BOOL gWinGAttached;
+extern BOOL gWinGraphBusy;
 extern HPALETTE hpalApp;
-extern HINSTANCE hDDrawLibrary;
-extern DirectDrawCreateProc lpDirectDrawCreate;
-extern IDirectDraw* lpDD;
-extern IDirectDrawSurface* lpDDSPrimary;
-extern IDirectDrawSurface* lpDDSOne;
-extern IDirectDrawClipper* lpClipper;
-extern IDirectDrawPalette* lpDDPal;
-extern short gDDRestoreLineBase;
-extern short gDDSetPaletteLineBase;
-extern short gDDInitializePaletteLineBase;
-extern short gDDUpdatePaletteLineBase;
-extern short gDDCleanUpLineBase;
-extern short gCreatePrimaryLineBase;
-extern short gSetupClipperLineBase;
-extern short gDDInitLineBase;
-extern short gDDCreateSurfaceLineBase;
-extern BOOL bInDDSD;
-extern short gDDSetFullScreenLineBase;
-extern short gDDPaintLineBase;
+extern HINSTANCE gDDrawLibrary;
+extern DirectDrawCreateProc gDirectDrawCreate;
+extern IDirectDraw* gDD;
+extern IDirectDrawSurface* gDDSPrimary;
+extern IDirectDrawSurface* gDDSOne;
+extern IDirectDrawClipper* gClipper;
+extern IDirectDrawPalette* gDDPal;
+extern i16 gDDRestoreLineBase;
+extern i16 gDDSetPaletteLineBase;
+extern i16 gDDInitializePaletteLineBase;
+extern i16 gDDUpdatePaletteLineBase;
+extern i16 gDDCleanUpLineBase;
+extern i16 gCreatePrimaryLineBase;
+extern i16 gSetupClipperLineBase;
+extern i16 gDDInitLineBase;
+extern i16 gDDCreateSurfaceLineBase;
+extern BOOL gInDDSD;
+extern i16 gDDSetFullScreenLineBase;
+extern i16 gDDPaintLineBase;
 extern RECT gDDClientRect;
 extern RECT gDDSourceRect;
 extern RECT gDDDestinationRect;
-extern long gDDResult;
+extern i32 gDDResult;
 extern _DDSURFACEDESC gDDSurfaceDesc;
-extern long lPaintStart;
-extern int iBusyRetry;
+extern i32 gPaintStart;
+extern i32 gBusyRetry;
 extern HDC hdcImage;
 extern HBITMAP gbmOldMonoBitmap;
 extern WingImage screenImage;
 extern WingPalette LogicalPalette;
-extern int Orientation;
-extern void* lpInitWin;
-extern int giTtlBlts;
-extern int giMainVideoModeColorDepth;
+extern i32 Orientation;
+extern void* gInitWin;
+extern i32 gTtlBlts;
+extern i32 gMainVideoModeColorDepth;
 
 void DDRestoreDisplayMode();
-void SetFullScreenStatus(int);
-void DDSD(int, char*, int);
+void SetFullScreenStatus(i32 fullScreen);
+void DDSD(i32 error, char* file, i32 line);
 BOOL DDSetPalette();
 BOOL SetPalette();
 void DDCleanUpWinGraphics();
@@ -139,10 +139,10 @@ void DDInitializePalette();
 void WGInitializePalette();
 void WGInitGraphics();
 void WGCleanUpWinGraphics();
-BOOL DDAppPaint(void*, void*);
-BOOL WGAppPaint(void*, void*);
-void DDUpdatePalette(signed char*);
-void WGUpdatePalette(signed char*);
+BOOL DDAppPaint(void* window, void* paintDC);
+BOOL WGAppPaint(void* window, void* paintDC);
+void DDUpdatePalette(i8* paletteData);
+void WGUpdatePalette(i8* paletteData);
 BOOL DDQueryNewPalette();
 BOOL WGQueryNewPalette();
 void DisconnectDLLs();
@@ -151,14 +151,14 @@ void InitGraphics();
 void DDInitGraphics();
 void CreatePrimary();
 void SetupClipper();
-IDirectDrawSurface* DDCreateSurface(unsigned long, unsigned long, int);
+IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary);
 void RestoreDisplayMode();
 void InitializePalette();
-BOOL AppPaint(void*, void*);
-void UpdatePalette(signed char*);
+BOOL AppPaint(void* window, void* paintDC);
+void UpdatePalette(i8* paletteData);
 void CleanUpWinGraphics();
 BOOL QueryNewPalette();
-BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int));
+BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType);
 void GetGraphicsInfo(void);
 
 #endif

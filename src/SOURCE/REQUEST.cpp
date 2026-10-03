@@ -29,7 +29,7 @@
 
 // Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
 VA(0x00448020, 0x1c)
-int ShowThisMap(char*) {
+i32 ShowThisMap(char*) {
     return 1;
     return 0;
 }
@@ -38,25 +38,25 @@ int ShowThisMap(char*) {
 // every match of the pattern and reads .MAP headers only for GetMap's list.
 VA(0x0044803c, 0x83d)
 fileRequester::fileRequester(
-    short x,
-    short y,
-    H1_ENUM_PARAM(FileRequesterMode, short) mode,
+    i16 x,
+    i16 y,
+    H1_ENUM_PARAM(FileRequesterMode, i16) mode,
     const char* pattern,
     const char* directory,
     const char* defaultExtension
 ) {
     HANDLE dirHandle;
-    int fd;
+    i32 fd;
     char fullPath[412];
     SMapHeader header;
-    int findResult;
+    i32 findResult;
     WIN32_FIND_DATA fileData;
     char* ptr;
     char extStr[FILE_REQUESTER_LOCAL_EXTENSION_SIZE];
     char fileName[FILE_REQUESTER_LOCAL_NAME_SIZE];
-    int moveValue;
-    int sortedCount;
-    int index;
+    i32 moveValue;
+    i32 sortedCount;
+    i32 index;
 
     m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
     m_fileCount = 0;
@@ -69,9 +69,9 @@ fileRequester::fileRequester(
     m_y = y;
     strcpy(m_defaultExtension, defaultExtension);
     if (m_defaultExtension[1] == 'G')
-        gbRequestingGames = 1;
+        gRequestingGames = 1;
     else
-        gbRequestingGames = 0;
+        gRequestingGames = 0;
     m_mode = mode;
 
     sprintf(gText, "%s%s", directory, pattern);
@@ -93,7 +93,7 @@ fileRequester::fileRequester(
     m_extensions = new FileRequesterExtension[m_fileCount + 1];
     if (!m_extensions)
         MemError();
-    if (gbShowMapInfo) {
+    if (gShowMapInfo) {
         m_mapNames = new FileRequesterName[m_fileCount + 1];
         if (!m_mapNames)
             MemError();
@@ -138,7 +138,7 @@ fileRequester::fileRequester(
         FindClose(dirHandle);
     }
 
-    if (gbShowMapInfo) {
+    if (gShowMapInfo) {
         for (index = 0; index < sortedCount; index++) {
             sprintf(
                 fullPath,
@@ -198,12 +198,12 @@ void fileRequester::Close(void) {
 // Buka 2.1 Open without the map-size filter buttons; HoMM1 selects the save
 // slot whose extension digit matches the human player count.
 VA(0x004489c4, 0x431)
-short fileRequester::Open(short priority) {
-    const short scrollId = FILE_REQUESTER_SCROLL_KNOB;
-    int i;
-    const short promptId = FILE_REQUESTER_FILENAME_LABEL;
+i16 fileRequester::Open(i16 priority) {
+    const i16 scrollId = FILE_REQUESTER_SCROLL_KNOB;
+    i32 i;
+    const i16 promptId = FILE_REQUESTER_FILENAME_LABEL;
     tag_message message;
-    signed char enable;
+    i8 enable;
     char* period;
 
     strcpy(gLastMapName, "");
@@ -231,7 +231,7 @@ short fileRequester::Open(short priority) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     if (m_mode == FILE_REQUESTER_SAVE) {
         enable = 1;
-        const short textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
+        const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gpGame->m_saveName);
         period = FindLastToken(m_filename, '.');
         if (period)
@@ -264,13 +264,13 @@ short fileRequester::Open(short priority) {
         message.text = gText;
         m_window->BroadcastMessage(message);
     }
-    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
+    const i16 nameId = FILE_REQUESTER_FILENAME_ENTRY;
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, nameId);
     message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
     Update(0);
-    if (gbShowMapInfo)
-        gpWindowManager->AddWindow(gpReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+    if (gShowMapInfo)
+        gpWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     SetOK(enable);
     UpdateMapInfo();
@@ -283,7 +283,7 @@ short fileRequester::Open(short priority) {
 
 // Buka 2.1 SetOK with HoMM1's fixed dimming flags.
 VA(0x00448df5, 0x8a)
-void fileRequester::SetOK(signed char enabled) {
+void fileRequester::SetOK(i8 enabled) {
     tag_message message;
 
     SET_WIDGET_MESSAGE(
@@ -301,22 +301,22 @@ void fileRequester::SetOK(signed char enabled) {
 // Buka 2.1 Main without the map-size filter; HoMM1 checks a saved game's
 // human count, encoded as its extension digit, before accepting it.
 VA(0x00448e7f, 0xa8c)
-short fileRequester::Main(tag_message& message) {
-    int newTop;
-    int stepSize;
-    int numPages;
-    const short arrowUpId = FILE_REQUESTER_SCROLL_UP;
+i16 fileRequester::Main(tag_message& message) {
+    i32 newTop;
+    i32 stepSize;
+    i32 numPages;
+    const i16 arrowUpId = FILE_REQUESTER_SCROLL_UP;
     tag_message msg;
-    const short downArrowId = FILE_REQUESTER_SCROLL_DOWN;
-    const short railId = FILE_REQUESTER_SCROLL_GUTTER;
-    const short firstRowId = FILE_REQUESTER_LIST_FIRST;
-    const short scrollerId = FILE_REQUESTER_SCROLL_KNOB;
-    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
-    short ch;
-    short len;
-    int finished;
-    short ptrY;
-    short ptrX;
+    const i16 downArrowId = FILE_REQUESTER_SCROLL_DOWN;
+    const i16 railId = FILE_REQUESTER_SCROLL_GUTTER;
+    const i16 firstRowId = FILE_REQUESTER_LIST_FIRST;
+    const i16 scrollerId = FILE_REQUESTER_SCROLL_KNOB;
+    const i16 nameId = FILE_REQUESTER_FILENAME_ENTRY;
+    i16 ch;
+    i16 len;
+    i32 finished;
+    i16 ptrY;
+    i16 ptrX;
     char fileName[FILE_REQUESTER_LOCAL_NAME_SIZE];
 
     finished = 0;
@@ -483,8 +483,8 @@ short fileRequester::Main(tag_message& message) {
     }
 
     if (finished == 1) {
-        if (giCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
-            && gbRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
+        if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
+            && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             ch = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             if (ch < giNumHumanPlayers
                 && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
@@ -543,29 +543,29 @@ short fileRequester::Main(tag_message& message) {
 
 VA(0x0044990b, 0x9d)
 void fileRequester::UpdateMapInfo(void) {
-    if (m_selectedIndex != m_result && gbShowMapInfo) {
+    if (m_selectedIndex != m_result && gShowMapInfo) {
         if (m_selectedIndex >= 0)
-            strcpy(gcCurMapName, m_fileNames[m_selectedIndex].text);
+            strcpy(gCurMapName, m_fileNames[m_selectedIndex].text);
         else
-            strcpy(gcCurMapName, "");
+            strcpy(gCurMapName, "");
         ShowMapInfo();
     }
 }
 
 // GetMapName/GetFilename's no-selection result; data coverage is deferred.
 DATA(0x00490cfc)
-char* cFRDummy = "";
+char* gFRDummy = "";
 
 // Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
 VA(0x004499a8, 0x2b2)
 void fileRequester::DoKnob(void) {
-    int lastTop;
-    short index;
+    i32 lastTop;
+    i16 index;
     double scale;
     tag_message event;
-    short x;
-    short my;
-    short offset;
+    i16 x;
+    i16 my;
+    i16 offset;
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
@@ -583,7 +583,7 @@ void fileRequester::DoKnob(void) {
             gpMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - offset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
-                index = static_cast<short>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
+                index = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
                 if (index != lastTop) {
                     if (index > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
                         index = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
@@ -612,21 +612,21 @@ void fileRequester::DoKnob(void) {
 // Buka 2.1 Update for HoMM1's ten text rows; saved games append their human
 // count and map lists show the header title.
 VA(0x00449c5a, 0x55e)
-void fileRequester::Update(signed char drawWindow) {
+void fileRequester::Update(i8 drawWindow) {
     double gutterFactor;
-    int nHumans;
-    int showPlayers;
-    int limit;
-    int pos;
-    const short firstId = FILE_REQUESTER_LIST_FIRST;
-    const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
+    i32 nHumans;
+    i32 showPlayers;
+    i32 limit;
+    i32 pos;
+    const i16 firstId = FILE_REQUESTER_LIST_FIRST;
+    const i16 nameId = FILE_REQUESTER_FILENAME_ENTRY;
     char extra[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
-    const short hiliteColor = 0xe8;
-    const short textColor = 1;
+    const i16 hiliteColor = 0xe8;
+    const i16 textColor = 1;
     tag_message event;
-    int suffixWidth;
+    i32 suffixWidth;
     font* bigFont;
-    short row;
+    i16 row;
 
     event.type = MESSAGE_WIDGET;
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
@@ -640,14 +640,14 @@ void fileRequester::Update(signed char drawWindow) {
             event.value = WIDGET_FLAG_DRAW;
             m_window->BroadcastMessage(event);
             event.command = WIDGET_COMMAND_SET_TEXT;
-            if (gbShowMapInfo)
+            if (gShowMapInfo)
                 sprintf(gText, "%s", m_mapNames[m_topIndex + row].text);
             else
                 sprintf(gText, "%s", m_fileNames[m_topIndex + row].text);
             nHumans =
                 m_extensions[m_topIndex + row].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             showPlayers = 0;
-            if (nHumans != 1 && giCampaignChoice <= 0 && gbRequestingGames) {
+            if (nHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
                 showPlayers = 1;
                 sprintf(extra, " (%d %s)", nHumans, "Players");
                 suffixWidth = bigFont->LineWidth(extra);
@@ -679,7 +679,7 @@ void fileRequester::Update(signed char drawWindow) {
     m_window->BroadcastMessage(event);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE) {
         event.command = WIDGET_COMMAND_SET_TEXT;
-        if (gbShowMapInfo)
+        if (gShowMapInfo)
             sprintf(gText, "%s", m_mapNames[m_selectedIndex].text);
         else
             sprintf(gText, "%s", m_fileNames[m_selectedIndex].text);
@@ -707,14 +707,14 @@ char* fileRequester::GetMapName(void) {
     if (m_selectedIndex >= 0 && m_selectedIndex < m_fileCount && m_mapNames)
         return m_mapNames[m_selectedIndex].text;
     else
-        return cFRDummy;
+        return gFRDummy;
 }
 
 // Buka 2.1 GetFilename for HoMM1's two modes.
 VA(0x0044a235, 0x13f)
 char* fileRequester::GetFilename(void) {
     if (m_mode != FILE_REQUESTER_SAVE && (m_selectedIndex < 0 || m_selectedIndex >= m_fileCount))
-        return cFRDummy;
+        return gFRDummy;
 
     if (m_selectedIndex == FILE_REQUESTER_SELECTION_NONE)
         sprintf(gText, "%s%s", m_filename, m_defaultExtension);
@@ -735,26 +735,26 @@ char* fileRequester::GetFilename(void) {
 // difficulty and description.
 VA(0x0044a374, 0x269)
 void fileRequester::ShowMapInfo(void) {
-    const int sizeId = FILE_REQUESTER_MAP_SIZE;
-    const int levelId = FILE_REQUESTER_MAP_LEVEL;
-    const int descriptionId = FILE_REQUESTER_MAP_DESCRIPTION;
+    const i32 sizeId = FILE_REQUESTER_MAP_SIZE;
+    const i32 levelId = FILE_REQUESTER_MAP_LEVEL;
+    const i32 descriptionId = FILE_REQUESTER_MAP_DESCRIPTION;
     tag_message message;
 
     sprintf(gText, "");
     message.text = gText;
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        giMapSize = m_mapInfo[m_selectedIndex].size;
+        gMapSize = m_mapInfo[m_selectedIndex].size;
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, sizeId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapSizeNames[m_mapInfo[m_selectedIndex].size];
-    gpReqExtraWindow->BroadcastMessage(message);
+    gReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        giMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
-    sprintf(gText, gcCurMapName);
+        gMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
+    sprintf(gText, gCurMapName);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, levelId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
-    gpReqExtraWindow->BroadcastMessage(message);
+    gReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
@@ -762,10 +762,10 @@ void fileRequester::ShowMapInfo(void) {
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, descriptionId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = m_mapInfo[m_selectedIndex].description;
-    gpReqExtraWindow->BroadcastMessage(message);
-    gpReqExtraWindow->DrawWindow();
+    gReqExtraWindow->BroadcastMessage(message);
+    gReqExtraWindow->DrawWindow();
 }
 
 // REQUEST owns retail .bss 0x004c5130-0x004c5137.
 DATA(0x004c5130)
-signed char gbRequestingGames;
+i8 gRequestingGames;

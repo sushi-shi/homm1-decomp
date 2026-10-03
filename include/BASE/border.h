@@ -20,14 +20,14 @@ struct tag_message;
 class border : public widget {
 public:
     bitmap* m_background;
-    short m_fillColor;
+    i16 m_fillColor;
     // --- constructors ---
     border(void);
-    border(short int, short int, short int, short int, short int, short int, short int, char*);
+    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name);
     virtual inline ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
 };

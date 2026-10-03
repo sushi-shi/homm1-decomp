@@ -61,87 +61,107 @@ H1_ENUM_CONST_END(SearchConstant)
 #pragma pack(push, 1)
 struct searchNode {
     // BuildPath sign-extends both coordinates.
-    signed char x;
-    signed char y;
-    unsigned short direction : SEARCH_DIRECTION_BIT_COUNT;
-    unsigned short distance : 12;
-    unsigned char visited : SEARCH_FLAG_BIT_COUNT;
+    i8 x;
+    i8 y;
+    u16 direction : SEARCH_DIRECTION_BIT_COUNT;
+    u16 distance : 12;
+    u8 visited : SEARCH_FLAG_BIT_COUNT;
     // Buka unknownFlag: TestPossibleDirections' occupancy for the step that
     // pushed the node; SeedPosition then inspects the cell's trigger.
-    unsigned char occupied : SEARCH_FLAG_BIT_COUNT;
-    unsigned char rvFlag1 : SEARCH_FLAG_BIT_COUNT;
+    u8 occupied : SEARCH_FLAG_BIT_COUNT;
+    u8 rvFlag1 : SEARCH_FLAG_BIT_COUNT;
     // DetermineTargetPosition passes bits 3..7 to RVOfPosition as a byte.
-    unsigned char rvFlag2 : 5;
+    u8 rvFlag2 : 5;
     union {
         // SeedPosition sign-extends the adjacent monster coordinates.
         struct {
-            signed char adjacentMonsterX;
-            signed char adjacentMonsterY;
-            unsigned char previousFlags;
-            unsigned char terrain;
+            i8 adjacentMonsterX;
+            i8 adjacentMonsterY;
+            u8 previousFlags;
+            u8 terrain;
         };
         struct {
-            signed char valueX;
-            signed char valueY;
-            signed char previousX;
-            signed char previousY;
+            i8 valueX;
+            i8 valueY;
+            i8 previousX;
+            i8 previousY;
         };
     };
 };
 
 class searchArray {
 public:
-    unsigned int m_queueCount;
-    unsigned int m_maxQueueCount;
-    int m_pathLength;
-    int m_specialTargetX;
-    int m_specialTargetY;
+    u32 m_queueCount;
+    u32 m_maxQueueCount;
+    i32 m_pathLength;
+    i32 m_specialTargetX;
+    i32 m_specialTargetY;
     searchNode m_queue[SEARCH_QUEUE_CAPACITY];
     // Retail indexes the [x][y] grid with a 648-byte row stride.
     searchNode m_cells[SEARCH_GRID_SIZE][SEARCH_GRID_SIZE];
     // Retail DoDimensionDoor reads the path directions at +0xda54.
-    unsigned char m_directions[SEARCH_PATH_CAPACITY];
+    u8 m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---
     searchArray(void);
     // --- methods ---
     // HoMM1 retail 0x00402af0: word coordinates and cost cap (ret 0x14).
-    int BuildPath(short, short, short, short, short);
+    i32 BuildPath(i16 startX, i16 startY, i16 destinationX, i16 destinationY, i16 maximumCost);
     // HoMM1 retail 0x00402be0: word seed and cost cap (ret 0x30).
-    void SeedPosition(short, short, short, short, int, int, int, int, int, int, int, int);
+    void SeedPosition(
+        i16 seedX,
+        i16 seedY,
+        i16 seedDirection,
+        i16 maximumCost,
+        i32 waterMode,
+        i32 findAdjacentMonster,
+        i32 mobility,
+        i32 costMode,
+        i32 targetX,
+        i32 targetY,
+        i32 continueSeed,
+        i32 scanMap
+    );
     // HoMM1 retail 0x004028b0: seeds from a hero and builds the path to the
     // nearest cell carrying the trigger type (EVENTS finds a town with 0xa8).
-    short FindNearestObject(short, short, short, short, unsigned char);
+    i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
     void Init(void);
     void Close(void);
     void Clear(void);
-    short QuickDistance(short, short, short, short);
+    i16 QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2);
     // HoMM1 retail 0x00424d90 (ret 0x30): word x/y, unsigned word
     // direction/cost/mobility and byte flags and coordinates.
     void PushPoint(
-        short,
-        short,
-        unsigned short,
-        unsigned short,
-        unsigned short,
-        char,
-        char,
-        signed char,
-        signed char,
-        char,
-        signed char,
-        signed char
+        i16 x,
+        i16 y,
+        u16 direction,
+        u16 cost,
+        u16 mobility,
+        i8 occupied,
+        i8 rvFlag1,
+        i8 valueX,
+        i8 valueY,
+        i8 rvFlag2,
+        i8 previousX,
+        i8 previousY
     );
     // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
-    void TestPossibleDirections(short, short, signed char* const, signed char* const, short, int);
+    void TestPossibleDirections(
+        i16 x,
+        i16 y,
+        i8* const terrain,
+        i8* const occupied,
+        i16 allowOccupied,
+        i32 waterMode
+    );
     void SeedCombatPosition(class army* unit);
     // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
     // attackPath is an ArmyPathTarget (PATH.h).
-    short FindCombatPath(short, short, class army*, signed char);
+    i16 FindCombatPath(i16 sourceHex, i16 targetHex, class army* unit, i8 attackPath);
     // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
     // word distance/speed.
-    void PushCombatPoint(short, short, unsigned short, unsigned short);
+    void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)
-extern int giFullySeeded;
+extern i32 gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

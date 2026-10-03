@@ -24,8 +24,8 @@
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
 VA(0x004709f0, 0x5f)
-void combatManager::UpdateGrid(short hex, int) {
-    short row;
+void combatManager::UpdateGrid(i16 hex, i32) {
+    i16 row;
 
     row = hex / COMBAT_GRID_COLUMNS - 1;
     if (row < 0)
@@ -37,7 +37,7 @@ void combatManager::UpdateGrid(short hex, int) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00470a4f, 0x5a)
-void combatManager::UpdateGridForMove(short hex, signed char direction, int attributes) {
+void combatManager::UpdateGridForMove(i16 hex, i8 direction, i32 attributes) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
     else
@@ -60,17 +60,17 @@ H1_ENUM_CONST_END(CombatStatusLineConstant)
 // bookkeeping.
 VA(0x00470aa9, 0xb5)
 // clang-format on
-void combatManager::CombatMessage(char* text, int updateScreen) {
-    int oldCompute;
+void combatManager::CombatMessage(char* text, i32 updateScreen) {
+    i32 oldCompute;
     tag_message message;
-    int prevLimit;
+    i32 prevLimit;
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, COMBAT_STATUS_TEXT_CONTROL);
     message.text = text;
     m_combatWindow->BroadcastMessage(message);
-    oldCompute = gbComputeExtent;
-    prevLimit = gbLimitToExtent;
-    gbComputeExtent = gbLimitToExtent = 0;
+    oldCompute = gComputeExtent;
+    prevLimit = gLimitToExtent;
+    gComputeExtent = gLimitToExtent = 0;
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
@@ -80,17 +80,17 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
             COMBAT_STATUS_WIDTH,
             COMBAT_STATUS_HEIGHT
         );
-    gbComputeExtent = oldCompute;
-    gbLimitToExtent = prevLimit;
+    gComputeExtent = oldCompute;
+    gLimitToExtent = prevLimit;
 }
 
 // The help line for the current mouse command.
 VA(0x00470b5e, 0x2f3)
-void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) messageType) {
+void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
     army* target;
     army* currentArmy;
-    short targetMonster;
-    short actingType;
+    i16 targetMonster;
+    i16 actingType;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     actingType = currentArmy->m_creatureType;
@@ -104,39 +104,39 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) mes
         case COMBAT_MESSAGE_COMMAND_DEFAULT:
             if ((currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 && currentArmy->m_stats.shots == 0 && target)
-                strcpy(gText, cCombatMessage[COMBAT_TEXT_NO_SHOTS]);
+                strcpy(gText, gCombatMessage[COMBAT_TEXT_NO_SHOTS]);
             else
-                strcpy(gText, cCombatMessage[COMBAT_TEXT_NONE]);
+                strcpy(gText, gCombatMessage[COMBAT_TEXT_NONE]);
             break;
         case COMBAT_MESSAGE_COMMAND_MOVE:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
             break;
         case COMBAT_MESSAGE_COMMAND_FLY:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
-            sprintf(gText, cCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
             break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
             sprintf(
                 gText,
-                cCombatMessage[COMBAT_TEXT_SHOOT],
+                gCombatMessage[COMBAT_TEXT_SHOOT],
                 gArmyNames[targetMonster],
                 currentArmy->m_stats.shots,
                 currentArmy->m_stats.shots > 1 ? "s" : ""
             );
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
-            strcpy(gText, cCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
+            strcpy(gText, gCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
             break;
         case COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS:
-            strcpy(gText, cCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
+            strcpy(gText, gCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
             break;
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
             actingType =
                 m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
             if (actingType >= 0)
-                sprintf(gText, cCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
+                sprintf(gText, gCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
             else
                 sprintf(gText, "");
             break;
@@ -147,8 +147,8 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) mes
 // Marks every live stack for redraw; dead ones stay hidden (-1).
 VA(0x00470e51, 0xd4)
 void combatManager::ResetLimitCreature(void) {
-    int j;
-    int side;
+    i32 j;
+    i32 side;
 
     m_computeExtent = 1;
     m_extendLimitDown = 0;
@@ -163,7 +163,7 @@ void combatManager::ResetLimitCreature(void) {
 }
 
 VA(0x00470f25, 0x24)
-void combatManager::SetGridMode(signed char mode) {
+void combatManager::SetGridMode(i8 mode) {
     m_gridMode = mode;
 }
 
@@ -171,8 +171,8 @@ void combatManager::SetGridMode(signed char mode) {
 // 60-pixel top margin).
 VA(0x00470f49, 0xde)
 void combatManager::UpdateCombatArea(void) {
-    short y;
-    short height;
+    i16 y;
+    i16 height;
 
     if (!m_combatWindowOpen)
         return;
@@ -184,9 +184,9 @@ void combatManager::UpdateCombatArea(void) {
     }
     if (y + height > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - y;
-    gbEnlargeScreenBlit = 0;
+    gEnlargeScreenBlit = 0;
     gpWindowManager->UpdateScreenRegion(0, y, LOGICAL_SCREEN_WIDTH, height);
-    gbEnlargeScreenBlit = 1;
+    gEnlargeScreenBlit = 1;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
 
@@ -194,9 +194,9 @@ void combatManager::UpdateCombatArea(void) {
 // the clean screen as the combat background.
 VA(0x00471027, 0x1d4)
 void combatManager::DrawBackground(void) {
-    short x;
-    short y;
-    short wallY;
+    i16 x;
+    i16 y;
+    i16 wallY;
 
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++)
@@ -205,7 +205,7 @@ void combatManager::DrawBackground(void) {
             m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x,
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
-                static_cast<signed char>((y & 1) ? 5 : 6),
+                static_cast<i8>((y & 1) ? 5 : 6),
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -235,17 +235,17 @@ void combatManager::DrawBackground(void) {
 // Rows draw obstacles, then occupants (right to left while m_gridMode is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
 VA(0x004711fb, 0xe27)
-void combatManager::DrawFrame(signed char updateScreen) {
-    short hexCol;
-    int boxRight;
-    signed char drawn;
-    int side;
-    int i;
-    int boxBottom;
-    int boxTop;
-    int boxLeft;
-    int sideDelta;
-    short row;
+void combatManager::DrawFrame(i8 updateScreen) {
+    i16 hexCol;
+    i32 boxRight;
+    i8 drawn;
+    i32 side;
+    i32 i;
+    i32 boxBottom;
+    i32 boxTop;
+    i32 boxLeft;
+    i32 sideDelta;
+    i16 row;
 
     if (!m_combatWindowOpen)
         return;
@@ -328,7 +328,7 @@ void combatManager::DrawFrame(signed char updateScreen) {
             giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     }
     m_gridUpdateRow = 0;
-    if (!gbLimitToExtent) {
+    if (!gLimitToExtent) {
         if (m_backgroundDrawn) {
             if (m_computeExtent || m_redrawExtent)
                 m_backgroundBuffer->CopyTo(
@@ -355,8 +355,8 @@ void combatManager::DrawFrame(signed char updateScreen) {
         }
     }
     if (m_computeExtent) {
-        gbLimitToExtent = 1;
-        gbComputeExtent = 1;
+        gLimitToExtent = 1;
+        gComputeExtent = 1;
     }
     if (!m_gridMode) {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
@@ -385,10 +385,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                 m_combatIcons[COMBAT_ICON_KEEP]
                     ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             for (hexCol = 1; hexCol <= COMBAT_GRID_LAST_COLUMN - 1; hexCol++) {
-                if (gbLimitToExtent
+                if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
-                    gbCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
             if (row == COMBAT_DEFENDER_HERO_ROW
@@ -467,10 +467,10 @@ void combatManager::DrawFrame(signed char updateScreen) {
                     != COMBAT_OBSTACLE_NONE)
                     m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawObstacle();
             for (hexCol = COMBAT_GRID_LAST_COLUMN - 1; hexCol >= 1; hexCol--) {
-                if (gbLimitToExtent
+                if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
                            == row * COMBAT_GRID_COLUMNS + hexCol)
-                    gbCurrArmyDrawn = 1;
+                    gCurrArmyDrawn = 1;
                 m_hexCells[row * COMBAT_GRID_COLUMNS + hexCol].DrawOccupant();
             }
             if (row == COMBAT_ATTACKER_HERO_ROW
@@ -527,26 +527,26 @@ void combatManager::DrawFrame(signed char updateScreen) {
     if (m_computeExtent || m_redrawExtent) {
         m_computeExtent = 0;
         m_redrawExtent = 0;
-        gbLimitToExtent = 0;
-        gbComputeExtent = 0;
-        gbFullCombatScreenDrawn = 0;
+        gLimitToExtent = 0;
+        gComputeExtent = 0;
+        gFullCombatScreenDrawn = 0;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
                 giMaxExtentY = COMBAT_VIEW_HEIGHT;
-            gbEnlargeScreenBlit = 0;
+            gEnlargeScreenBlit = 0;
             gpWindowManager->UpdateScreenRegion(
                 giMinExtentX,
                 giMinExtentY,
                 giMaxExtentX - giMinExtentX + 1,
                 giMaxExtentY - giMinExtentY + 1
             );
-            gbEnlargeScreenBlit = 1;
+            gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }
     } else if (updateScreen == 1) {
-        gbFullCombatScreenDrawn = 1;
+        gFullCombatScreenDrawn = 1;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();

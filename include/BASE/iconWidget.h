@@ -19,39 +19,39 @@ struct tag_message;
 class iconWidget : public widget {
 public:
     icon* m_icon;
-    short m_frame;
-    signed char m_orientation;
-    short m_fillColor;
+    i16 m_frame;
+    i8 m_orientation;
+    i16 m_fillColor;
     // --- constructors ---
     iconWidget(void);
     iconWidget(
-        short int x,
-        short int y,
-        short int width,
-        short int height,
-        unsigned long int iconId,
-        short int frame,
-        signed char orientation,
-        short int id,
-        short int kind,
-        short int fillColor
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        u32 iconId,
+        i16 frame,
+        i8 orientation,
+        i16 id,
+        i16 kind,
+        i16 fillColor
     );
     iconWidget(
-        short int,
-        short int,
-        short int,
-        short int,
-        char*,
-        signed char,
-        signed char,
-        short int,
-        short int,
-        short int
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        char* name,
+        i8 frame,
+        i8 orientation,
+        i16 id,
+        i16 kind,
+        i16 fillColor
     );
     virtual inline ~iconWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
 };

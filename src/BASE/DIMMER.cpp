@@ -17,7 +17,7 @@ void dimmerWidget::Read(void) {
 }
 
 VA(0x0047eed0, 0xd)
-short dimmerWidget::Main(tag_message& message) {
+i16 dimmerWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 

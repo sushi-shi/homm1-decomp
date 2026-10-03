@@ -37,59 +37,59 @@ H1_ENUM_CONST_END(IconDrawOffsetConstant)
 #pragma pack(push, 1)
 class icon : public resource {
 public:
-    short m_frameCount;
-    unsigned char* m_data;
-    short m_drawLeft;
-    short m_drawRight;
-    short m_drawTop;
-    short m_drawBottom;
+    i16 m_frameCount;
+    u8* m_data;
+    i16 m_drawLeft;
+    i16 m_drawRight;
+    i16 m_drawTop;
+    i16 m_drawBottom;
     // --- constructors ---
-    icon(short);
+    icon(i16 id);
     virtual inline ~icon();
     // --- methods ---
     void DrawToBuffer(
-        short,
-        short,
-        short,
-        H1_ENUM_PARAM(IconDrawOrientation, signed char),
-        H1_ENUM_PARAM(IconDrawOffsetMode, signed char)
+        i16 x,
+        i16 y,
+        i16 frame,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
-    int CombatClipDrawToBuffer(
-        int x,
-        int y,
-        int frame,
+    i32 CombatClipDrawToBuffer(
+        i32 x,
+        i32 y,
+        i32 frame,
         struct SLimitData* limits,
-        int orientation,
-        int offset,
-        unsigned char* colorTable,
-        signed char* yModify
+        i32 orientation,
+        i32 offset,
+        u8* colorTable,
+        i8* yModify
     );
     void ClipFillToBuffer(
-        short,
-        short,
-        short,
-        short,
-        H1_ENUM_PARAM(IconDrawOrientation, signed char),
-        H1_ENUM_PARAM(IconDrawOffsetMode, signed char),
-        int,
-        int,
-        int,
-        int
+        i16 x,
+        i16 y,
+        i16 frame,
+        i16 color,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode,
+        i32 clipX,
+        i32 clipY,
+        i32 clipW,
+        i32 clipH
     );
     void FillToBuffer(
-        short,
-        short,
-        short,
-        short,
-        H1_ENUM_PARAM(IconDrawOrientation, signed char),
-        H1_ENUM_PARAM(IconDrawOffsetMode, signed char)
+        i16 x,
+        i16 y,
+        i16 frame,
+        i16 color,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
     void DimToBuffer(
-        short,
-        short,
-        short,
-        H1_ENUM_PARAM(IconDrawOrientation, signed char),
-        H1_ENUM_PARAM(IconDrawOffsetMode, signed char)
+        i16 x,
+        i16 y,
+        i16 frame,
+        H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
     );
 };
 #pragma pack(pop)

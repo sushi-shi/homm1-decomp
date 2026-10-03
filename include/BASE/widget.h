@@ -14,7 +14,7 @@
 class heroWindow;
 struct tag_message;
 
-H1_ENUM_FLAGS_BEGIN(WidgetFlag, short)
+H1_ENUM_FLAGS_BEGIN(WidgetFlag, i16)
     WIDGET_FLAG_SELECTED = 1,
     WIDGET_FLAG_ENABLED = 2,
     WIDGET_FLAG_DRAW = 4,
@@ -40,40 +40,43 @@ H1_ENUM_CONST_END(WidgetIdConstant)
 
 // (x, y), in the owner window's coordinates, lies inside widget w (Buka 2.1
 // widget.h).
-#define WIDGET_CONTAINS_LOCAL_POINT(w, x, y) \
-    ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width && (y) < (w).m_y + (w).m_height)
+#define WIDGET_CONTAINS_LOCAL_POINT(w, x, y)                                                       \
+    ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width                               \
+     && (y) < (w).m_y + (w).m_height)
 
 // A widget record's four geometry words, read in order from the open resource
 // (Buka 2.1 widget.h). VC4 rejects an assignment through (*this).member, so
 // the widget is passed by pointer.
 #define READ_WIDGET_GEOMETRY(w, resources)                                                         \
-    ((w)->m_x = (resources)->ReadWord(), (w)->m_y = (resources)->ReadWord(),                       \
-     (w)->m_width = (resources)->ReadWord(), (w)->m_height = (resources)->ReadWord())
+    ((w)->m_x = (resources)->ReadWord(),                                                           \
+     (w)->m_y = (resources)->ReadWord(),                                                           \
+     (w)->m_width = (resources)->ReadWord(),                                                       \
+     (w)->m_height = (resources)->ReadWord())
 
 #pragma pack(push, 1)
-                   class widget /* abstract */ {
+class widget /* abstract */ {
 public:
     heroWindow* m_owner;
     widget* m_next;
     widget* m_prev;
-    short m_id;
-    short m_zOrder;
-    short m_kind;
-    short m_flags;
-    short m_x;
-    short m_y;
-    short m_width;
-    short m_height;
+    i16 m_id;
+    i16 m_zOrder;
+    i16 m_kind;
+    i16 m_flags;
+    i16 m_x;
+    i16 m_y;
+    i16 m_width;
+    i16 m_height;
 
     // --- constructors ---
-    widget(short int, short int, short int, short int, short int, short int);
+    widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind);
     widget(void);
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) = 0;
     virtual ~widget(void) = 0;
-    virtual short Main(struct tag_message&) = 0;
+    virtual i16 Main(struct tag_message& message) = 0;
     // --- methods ---
-    short Open(short, class heroWindow*);
+    i16 Open(i16 zOrder, class heroWindow* owner);
     void Close(void);
     void Dim(void);
 };

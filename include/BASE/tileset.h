@@ -8,12 +8,12 @@
 #pragma pack(push, 1)
 class tileset : public resource {
 public:
-    unsigned short m_tileCount;
-    unsigned short m_tileWidth;
-    unsigned short m_tileHeight;
-    signed char *m_data;
+    u16 m_tileCount;
+    u16 m_tileWidth;
+    u16 m_tileHeight;
+    i8* m_data;
     // --- constructors ---
-    tileset(short);
+    tileset(i16 id);
     virtual inline ~tileset();
 };
 #pragma pack(pop)

@@ -33,8 +33,7 @@ enum ComConstant {
 extern ComPortState gComPorts[];
 
 VA(0x00472c60, 0x6b)
-void add_node(tag_Anchor *anchor, tag_Node *node)
-{
+void add_node(tag_Anchor* anchor, tag_Node* node) {
     node->prev = node->next = NULL;
     if (anchor->tail) {
         anchor->tail->next = node;
@@ -47,9 +46,8 @@ void add_node(tag_Anchor *anchor, tag_Node *node)
 }
 
 VA(0x00472ccb, 0x49)
-tag_Node *pop_node(tag_Anchor *anchor)
-{
-    tag_Node *node = anchor->head;
+tag_Node* pop_node(tag_Anchor* anchor) {
+    tag_Node* node = anchor->head;
 
     if (node)
         anchor->head = node->next;
@@ -59,17 +57,15 @@ tag_Node *pop_node(tag_Anchor *anchor)
 }
 
 VA(0x00472d14, 0x23)
-void init_anchor(tag_Anchor *anchor, int, int)
-{
+void init_anchor(tag_Anchor* anchor, i32, i32) {
     anchor->head = NULL;
     anchor->tail = NULL;
 }
 
 VA(0x00472d37, 0x2e5)
-short com_init(unsigned char portNumber, int baudRate, int useDtr)
-{
-    int error; // Unused, as in Buka; retail still reserves its slot.
-    int slot;
+i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
+    i32 error; // Unused, as in Buka; retail still reserves its slot.
+    i32 slot;
     DCB state;
     char portName[12];
     COMMTIMEOUTS commTimeouts;
@@ -92,24 +88,24 @@ short com_init(unsigned char portNumber, int baudRate, int useDtr)
     gComPorts[slot].savedState = state;
     GetCommTimeouts(gComPorts[slot].handle, &gComPorts[slot].savedTimeouts);
     switch (baudRate) {
-    case COM_BAUD_2400:
-        state.BaudRate = CBR_2400;
-        break;
-    case COM_BAUD_4800:
-        state.BaudRate = CBR_4800;
-        break;
-    case COM_BAUD_9600:
-        state.BaudRate = CBR_9600;
-        break;
-    case COM_BAUD_19200:
-        state.BaudRate = CBR_19200;
-        break;
-    case COM_BAUD_38400:
-        state.BaudRate = CBR_38400;
-        break;
-    default:
-        state.BaudRate = baudRate;
-        break;
+        case COM_BAUD_2400:
+            state.BaudRate = CBR_2400;
+            break;
+        case COM_BAUD_4800:
+            state.BaudRate = CBR_4800;
+            break;
+        case COM_BAUD_9600:
+            state.BaudRate = CBR_9600;
+            break;
+        case COM_BAUD_19200:
+            state.BaudRate = CBR_19200;
+            break;
+        case COM_BAUD_38400:
+            state.BaudRate = CBR_38400;
+            break;
+        default:
+            state.BaudRate = baudRate;
+            break;
     }
     state.fParity = FALSE;
     state.fOutxCtsFlow = TRUE;
@@ -138,9 +134,8 @@ short com_init(unsigned char portNumber, int baudRate, int useDtr)
 }
 
 VA(0x0047301c, 0x111)
-void com_term(short port)
-{
-    tag_Node *node;
+void com_term(i16 port) {
+    tag_Node* node;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         SetCommState(gComPorts[port].handle, &gComPorts[port].savedState);
@@ -155,11 +150,10 @@ void com_term(short port)
 }
 
 VA(0x0047312d, 0xad)
-short com_rcv(short port, unsigned short requested, void *buffer)
-{
+i16 com_rcv(i16 port, u16 requested, void* buffer) {
     DWORD currentError;
     COMSTAT status;
-    unsigned long currentBytesRead;
+    u32 currentBytesRead;
     DWORD nRead;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
@@ -170,16 +164,15 @@ short com_rcv(short port, unsigned short requested, void *buffer)
             currentBytesRead = requested;
         if (currentBytesRead) {
             if (ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL))
-                return static_cast<short>(nRead);
+                return static_cast<i16>(nRead);
         }
     }
     return 0;
 }
 
 VA(0x004731da, 0x113)
-short com_snd(short port, unsigned short, unsigned short length, void *data, int priority)
-{
-    tag_Node *node;
+i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
+    tag_Node* node;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         if (!length) {
@@ -205,31 +198,28 @@ short com_snd(short port, unsigned short, unsigned short length, void *data, int
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004732ed, 0x13)
-short __cdecl com_sess(int, int, ...)
-{
+i16 __cdecl com_sess(i32, i32, ...) {
     return 0;
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473300, 0x66)
-unsigned char com_stat(short port, unsigned short)
-{
+u8 com_stat(i16 port, u16) {
     DWORD modemStatus;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE
-        && GetCommModemStatus(gComPorts[port].handle, &modemStatus)
-        && (modemStatus & MS_CTS_ON) && (modemStatus & MS_RLSD_ON))
+        && GetCommModemStatus(gComPorts[port].handle, &modemStatus) && (modemStatus & MS_CTS_ON)
+        && (modemStatus & MS_RLSD_ON))
         return 1;
     return 0;
 }
 
 VA(0x00473366, 0xd5)
-void comm_wrt_task(void)
-{
-    ComPortState *portState;
-    tag_Node *node;
-    unsigned long totalWritten;
+void comm_wrt_task(void) {
+    ComPortState* portState;
+    tag_Node* node;
+    u32 totalWritten;
     DWORD sizeWritten;
 
     portState = gComPorts;
@@ -241,8 +231,13 @@ void comm_wrt_task(void)
             return;
         totalWritten = 0;
         while (portState->handle != INVALID_HANDLE_VALUE && node->len > totalWritten) {
-            if (WriteFile(portState->handle, &node->comData[totalWritten], node->len - totalWritten,
-                          &sizeWritten, NULL))
+            if (WriteFile(
+                    portState->handle,
+                    &node->comData[totalWritten],
+                    node->len - totalWritten,
+                    &sizeWritten,
+                    NULL
+                ))
                 totalWritten += sizeWritten;
         }
         free(node);

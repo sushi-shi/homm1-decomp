@@ -23,22 +23,22 @@ public:
     // Main indexes the pair by side byte: [1] is the constructor's first
     // (left) hero, [0] the second.
     hero* m_heroes[2];
-    signed char m_selectedSide;
-    signed char m_targetSide;
-    signed char m_selectedSlot;
-    signed char m_targetSlot;
-    signed char m_itemType;
-    short m_messageFilter;
+    i8 m_selectedSide;
+    i8 m_targetSide;
+    i8 m_selectedSlot;
+    i8 m_targetSlot;
+    i8 m_itemType;
+    i16 m_messageFilter;
     // --- constructors ---
     swapManager(void);
-    swapManager(class hero*, class hero*);
+    swapManager(class hero* leftHero, class hero* rightHero);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Reset(void);
-    int DrawSwapWin(void);
+    i32 DrawSwapWin(void);
     void DrawSelector(void);
     void ViewMon(void);
     void SwapArtifacts(void);

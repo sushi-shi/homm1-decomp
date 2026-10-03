@@ -19,7 +19,7 @@
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00472030, 0x1c9)
-int CPUSpeed(unsigned char cpuType) {
+i32 CPUSpeed(u8 cpuType) {
     double tickPeriod = 838.0965152;
     double divs = 800.0;
     double ticks;
@@ -45,7 +45,7 @@ int CPUSpeed(unsigned char cpuType) {
             freq = ticks / TimeProcessor() * 66.0;
             break;
     }
-    return static_cast<int>((freq + 0.5) * 100.0) / 100;
+    return static_cast<i32>((freq + 0.5) * 100.0) / 100;
 }
 
 // Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,
@@ -65,8 +65,8 @@ int CPUSpeed(unsigned char cpuType) {
 // Each flag probe saves EFLAGS, flips the bit with interrupts off, reads
 // EFLAGS back and restores it; EAX..EDX, DS and ES are saved around the block.
 VA(0x004721f9, 0x80)
-short GetCPUType(void) {
-    short cpuType;
+i16 GetCPUType(void) {
+    i16 cpuType;
 
     __asm {
         push eax
@@ -148,8 +148,8 @@ short GetCPUType(void) {
 //   unsigned short left = inp(0x42); left |= inp(0x42) << 8;
 //   return (short)~left;                 // ticks elapsed from 0xffff
 VA(0x00472279, 0x9d9)
-short TimeProcessor(void) {
-    short ticks;
+i16 TimeProcessor(void) {
+    i16 ticks;
 
     __asm {
         push eax

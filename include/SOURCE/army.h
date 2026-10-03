@@ -92,155 +92,167 @@ H1_ENUM_END(ArmyLuck)
 class army {
 public:
     // Attack target (GetCommand clears both to -1).
-    signed char m_targetSide;
-    signed char m_targetIndex;
+    i8 m_targetSide;
+    i8 m_targetIndex;
     // ValidRange records the chosen attack direction.
-    short m_attackDirection;
-    signed char m_unknown04;
+    i16 m_attackDirection;
+    i8 m_unknown04;
     // ValidPath records the reachable target hex here.
-    signed char m_moveTargetHex;
-    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureType;
-    signed char m_hex;
+    i8 m_moveTargetHex;
+    H1_ENUM_STORAGE(CreatureType, i8) m_creatureType;
+    i8 m_hex;
     // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
     // (Buka m_animationSequence) and the frame within it.
-    H1_ENUM_STORAGE(ArmyAnimationSequence, signed char) m_animationSequence;
-    signed char m_animationFrame;
-    H1_ENUM_STORAGE(ArmyFacing, signed char) m_facing;
+    H1_ENUM_STORAGE(ArmyAnimationSequence, i8) m_animationSequence;
+    i8 m_animationFrame;
+    H1_ENUM_STORAGE(ArmyFacing, i8) m_facing;
     // Walk sets +-16 on diagonal moves; DrawToBuffer shifts y by frame * step.
-    short m_walkYStep;
-    short m_initialQuantity;
-    short m_quantity;
-    short m_hitPointsLost;
+    i16 m_walkYStep;
+    i16 m_initialQuantity;
+    i16 m_quantity;
+    i16 m_hitPointsLost;
     // DamageEnemy: 3 rolls maximum damage, 1 minimum, 2 halves it.
-    H1_ENUM_STORAGE(ArmyDamageMode, signed char) m_damageMode;
+    H1_ENUM_STORAGE(ArmyDamageMode, i8) m_damageMode;
     // Init copies the creature speed here; m_stats.speed is the current one.
-    signed char m_baseSpeed;
+    i8 m_baseSpeed;
     // CheckLuck: 1 good luck, -1 bad luck this attack.
-    H1_ENUM_STORAGE(ArmyLuck, signed char) m_luck;
+    H1_ENUM_STORAGE(ArmyLuck, i8) m_luck;
     // Creature record bytes +0xc..+0x1e (hit points through attributes);
     // Init adds the hero's two primary skills to attack and defense.
     // Attribute bit 0 is a two-hex creature, bit 1 a flyer.
     tag_monsterStats m_stats;
-    short m_unknown29;
+    i16 m_unknown29;
     // PowEffect frames left on the stack: 4 hit, 5 killed, -1 none.
-    short m_powFrames;
-    signed char m_side;
-    signed char m_index;
+    i16 m_powFrames;
+    i8 m_side;
+    i8 m_index;
     // SpellEffect's running effect index (-1 none); DrawFrame grows the
     // redraw box upward for effects 22-25.
-    int m_effectAnimation;
+    i32 m_effectAnimation;
     // DrawToBuffer adds the shadow frames while set; Walk clears it to
     // redraw the field under the moving stack.
-    signed char m_drawShadow;
+    i8 m_drawShadow;
     // combatManager::ResetHitByCreature clears it; DoHydraAttack hits
     // each stack once.
-    char m_hitByCreature;
+    i8 m_hitByCreature;
     class icon* m_standIcon;
     class icon* m_walkIcon;
     class icon* m_attackIcon;
     // move, attack, wince and shoot sounds.
     class sample* m_samples[ARMY_SAMPLE_COUNT];
     // Active spell; HoMM1 lets a stack carry one timed effect.
-    signed char m_spellEffect;
+    i8 m_spellEffect;
     // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
     // 2 taking damage, 3 only the round count; -1 with no spell.
-    H1_ENUM_STORAGE(ArmySpellCancelType, signed char) m_spellEndCondition;
+    H1_ENUM_STORAGE(ArmySpellCancelType, i8) m_spellEndCondition;
     // ResetRound counts this down and expires the effect at zero.
-    signed char m_spellRounds;
+    i8 m_spellRounds;
     // --- constructors ---
     army(void);
     // DoSurrender inlines this test (retail jmp $+0 and dead flag test).
-    int IsAlive(void) {
+    i32 IsAlive(void) {
         return m_creatureType >= 0 && m_quantity > 0;
     }
     // --- methods ---
-    void WaitSample(int);
+    void WaitSample(i32);
     void InitClean(void);
     // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
-    void Init(signed char, short, signed char, signed char);
+    void Init(i8 type, i16 quantity, i8 side, i8 index);
     void LoadResources(void);
     void FreeResources(void);
     // HoMM1 retail: word x/y (ret 8).
-    void DrawToBuffer(short, short);
+    void DrawToBuffer(i16 x, i16 y);
     // HoMM1 retail 0x00467281: back to the standing frame, optionally
     // redrawing the combat screen (ret 4).
-    void Stand(signed char);
+    void Stand(i8 redraw);
     void Wince(void);
     // HoMM1 retail 0x00467345: word direction, byte stand-after and
     // continued-walk flags (ret 0xc).
-    void Walk(short, signed char, signed char);
+    void Walk(i16 direction, i8 standAfter, i8 continued);
     void SpecialAttack(void);
     // HoMM1 retail 0x00468fc6: word direction (ret 4).
-    void DirDoAttack(short);
+    void DirDoAttack(i16 direction);
     // HoMM1 retail 0x00468861 takes no argument.
     void DoHydraAttack(void);
     // HoMM1 retail 0x00468ff3: nonzero for a retaliation strike (ret 4).
-    void DoAttack(int);
+    void DoAttack(i32 retaliation);
     void ResetPath(void);
-    short WalkTo(void);
+    i16 WalkTo(void);
     // HoMM1 retail 0x0046a0f0 / 0x0046a213: word hex, word result.
-    short WalkTo(short);
-    short AttackTo(void);
-    short AttackTo(short);
+    i16 WalkTo(i16 destHex);
+    i16 AttackTo(void);
+    i16 AttackTo(i16 destHex);
     void CheckLuck(void);
-    void DamageEnemy(class army*, int*, int*, int, int);
+    void DamageEnemy(
+        class army* target,
+        i32* damageResult,
+        i32* killedResult,
+        i32 rangedAttack,
+        i32 defenseModifier
+    );
     // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
-    int Damage(long int);
+    i32 Damage(i32 damage);
     // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
-    void PowEffect(signed char);
-    unsigned long int Strength(void);
-    int LeaveNoBody(void);
-    void ProcessDeath(int immediate);
+    void PowEffect(i8 effect);
+    u32 Strength(void);
+    i32 LeaveNoBody(void);
+    void ProcessDeath(i32 immediate);
     // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
-    void SpellEffect(short, int);
-    void CancelSpellType(int cancelType);
-    void CancelIndividualSpell(int influence);
-    int SetSpellInfluence(int influence, int rounds);
+    void SpellEffect(i16 effect, i32 frameDelay);
+    void CancelSpellType(i32 cancelType);
+    void CancelIndividualSpell(i32 influence);
+    i32 SetSpellInfluence(i32 influence, i32 rounds);
     void DecrementSpellRounds(void);
     void GoBerserk(void);
-    void MoveAttack(int, int);
-    float SpellCastWorkChance(int spell);
-    int SpellCastWorks(int spell);
+    void MoveAttack(i32 hex, i32 moveOnly);
+    float SpellCastWorkChance(i32 spell);
+    i32 SpellCastWorks(i32 spell);
     void DispelGood(void);
     // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    void Cure(int amount);
-    int MidX(void);
-    int MidY(void);
-    int TopY(void);
-    int RightX(void);
-    int LeftX(void);
-    int OtherArmyAdjacent(int side, int index);
-    int GetPowBaseY(void);
+    void Cure(i32 amount);
+    i32 MidX(void);
+    i32 MidY(void);
+    i32 TopY(void);
+    i32 RightX(void);
+    i32 LeftX(void);
+    i32 OtherArmyAdjacent(i32 side, i32 index);
+    i32 GetPowBaseY(void);
     // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
-    short CanFit(short*);
-    short ValidFlight(short, signed char);
+    i16 CanFit(i16* hex);
+    i16 ValidFlight(i16 destination, i8 useDestination);
     // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
-    short FlyTo(void);
-    short FlyTo(short);
+    i16 FlyTo(void);
+    i16 FlyTo(i16 destination);
     // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
-    short FindPath(short, short, signed char, signed char, signed char);
+    i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
     // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
-    short ValidPath(short, signed char);
-    short GetMoveMask(short);
+    i16 ValidPath(i16 targetHex, i8 pathMode);
+    i16 GetMoveMask(i16 sourceHex);
     // HoMM1 retail 0x0041835b: word hex, byte mode and target (ret 0xc).
-    short GetAttackMask(short, signed char, signed char);
-    short ValidMove(short);
-    short ValidMove(short, short);
-    short ValidAttack(short, short, short, short, short*);
-    short GetAdjacentCellIndex(short, short);
-    short ValidRange(short);
-    short GetBestDirection(short, short, short);
+    i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
+    i16 ValidMove(i16 direction);
+    i16 ValidMove(i16 sourceHex, i16 direction);
+    i16 ValidAttack(
+        i16 sourceHex,
+        i16 direction,
+        i16 targetMode,
+        i16 requiredTargetHex,
+        i16* attackHex
+    );
+    i16 GetAdjacentCellIndex(i16 hex, i16 direction);
+    i16 ValidRange(i16 targetHex);
+    i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
 };
 #pragma pack(pop)
 
-short GetAdjacentCellIndexNoArmy(short, short);
+i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 // The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.
 // Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager):
 // unreferenced, kept so later symbol handles stay put.
-extern short gCurLoadedSpellEffect;
+extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
-extern signed char gbGenieHalf;
+extern i8 gGenieHalf;
 // Set while SpecialAttack fires the second shot of a double shooter.
 #endif // HOMM1_SOURCE_ARMY_H

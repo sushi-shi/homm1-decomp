@@ -22,12 +22,12 @@
 // Buka HISCORE.cpp:22-29; HoMM1 adds the dispatch mask and score-type selection.
 VA(0x00401000, 0xa0)
 highScoreManager::highScoreManager(void) {
-    int rank;
+    i32 rank;
     m_dispatchMask = HIGH_SCORE_DISPATCH_MASK;
     for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++)
         m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
-    if (gbShowHighScore) {
+    if (gShowHighScore) {
         if (!giHighScoreType)
             m_showCampaignScores = 1;
         else
@@ -43,7 +43,7 @@ highScoreManager::~highScoreManager() {}
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x004010bf, 0x169)
-short highScoreManager::Open(short id) {
+i16 highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
@@ -58,9 +58,9 @@ short highScoreManager::Open(short id) {
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
-        KBTickCount() + static_cast<int>(HIGH_SCORE_ANIMATION_DELAY);
-    return static_cast<short>(BASE_MANAGER_SUCCESS);
+    glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
+        KBTickCount() + static_cast<i32>(HIGH_SCORE_ANIMATION_DELAY);
+    return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
 
 // Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
@@ -76,17 +76,17 @@ void highScoreManager::Close(void) {
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
 VA(0x00401285, 0x269)
-short highScoreManager::Main(struct tag_message& message) {
-    int retVal;
-    int rank;
+i16 highScoreManager::Main(struct tag_message& message) {
+    i32 retVal;
+    i32 rank;
     tag_message windowMessage;
 
     retVal = 0;
-    if (gbShowHighScore != 0)
-        gbShowHighScore = 0;
+    if (gShowHighScore != 0)
+        gShowHighScore = 0;
 
-    if (glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
-        glTimers[static_cast<int>(HIGH_SCORE_TIMER_SLOT)] =
+    if (glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
+        glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
             KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
             m_animationFrames[rank] =
@@ -96,7 +96,7 @@ short highScoreManager::Main(struct tag_message& message) {
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
             windowMessage.value =
                 m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                + m_animationFrames[rank] / static_cast<int>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
+                + m_animationFrames[rank] / static_cast<i32>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
@@ -115,7 +115,7 @@ short highScoreManager::Main(struct tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    if ((message.modifiers & static_cast<int>(MESSAGE_MODIFIER_RIGHT_BUTTON)))
+    if ((message.modifiers & static_cast<i32>(MESSAGE_MODIFIER_RIGHT_BUTTON)))
         return MESSAGE_DISPATCH_CONSUME;
 
     switch (message.type) {
@@ -156,19 +156,19 @@ short highScoreManager::Main(struct tag_message& message) {
 // rating creature directly and highlights the new entry by fill colour.
 VA(0x004014ee, 0x667)
 void highScoreManager::Update(void) {
-    signed char bNoFile;
+    i8 bNoFile;
     char fileName[HIGH_SCORE_FILENAME_LENGTH];
     tag_message message;
     HighScoreEntry record;
-    int handle;
-    int i;
-    extern char gcDataPath[];
+    i32 handle;
+    i32 i;
+    extern char gDataPath[];
 
     bNoFile = 0;
     if (m_showCampaignScores)
-        sprintf(fileName, "%sCAMPAIGN.HS", gcDataPath);
+        sprintf(fileName, "%sCAMPAIGN.HS", gDataPath);
     else
-        sprintf(fileName, "%sSTANDARD.HS", gcDataPath);
+        sprintf(fileName, "%sSTANDARD.HS", gDataPath);
     handle = open(fileName, _O_BINARY);
     if (handle == -1)
         bNoFile = 1;
@@ -219,8 +219,7 @@ void highScoreManager::Update(void) {
             m_monsterTypes[i] = 0;
             sprintf(gText, "");
         } else {
-            m_monsterTypes[i] =
-                GetMonType(record.score, static_cast<signed char>(!m_showCampaignScores));
+            m_monsterTypes[i] = GetMonType(record.score, static_cast<i8>(!m_showCampaignScores));
         }
 
         message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
@@ -267,7 +266,7 @@ void highScoreManager::Update(void) {
         }
         m_window->BroadcastMessage(message);
 
-        if (giHighScoreRank == i) {
+        if (gHighScoreRank == i) {
             if ((m_showCampaignScores && !giHighScoreType)
                 || (!m_showCampaignScores && giHighScoreType)) {
                 message.command = WIDGET_COMMAND_SET_COLOR;

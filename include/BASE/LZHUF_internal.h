@@ -6,15 +6,15 @@
 // source-order annotations can follow retail layout.
 extern "C" {
     void Decode();
-    extern unsigned char d_code[256];
-    extern unsigned char d_len[256];
-    extern short initialSon[627];
-    extern unsigned short initialFrequency[628];
-    extern short initialParent[941];
+    extern u8 d_code[256];
+    extern u8 d_len[256];
+    extern i16 initialSon[627];
+    extern u16 initialFrequency[628];
+    extern i16 initialParent[941];
 }
 
-static void UpdateEncoderTree(short character);
-static void InsertNode(short node);
-static void DeleteNode(short node);
+static void UpdateEncoderTree(i16 character);
+static void InsertNode(i16 node);
+static void DeleteNode(i16 node);
 
 #endif // HOMM1_BASE_LZHUF_INTERNAL_H

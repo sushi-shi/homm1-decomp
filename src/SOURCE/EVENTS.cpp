@@ -126,26 +126,26 @@ H1_ENUM_CONST_END(HouseEventConstant)
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
 VA(0x0045dde0, 0x1f1a)
-void advManager::DoEvent(class mapCell* cell, int x, int y) {
+void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* pHero;
     tag_message unused;
-    signed char objType;
-    int artifactId;
-    int fizzleMode;
+    i8 objType;
+    i32 artifactId;
+    i32 fizzleMode;
     tag_message event;
-    signed char erase;
+    i8 erase;
     boatRecord* ship;
     heroWindow* win;
     char resourceName[20];
-    int resType;
-    signed char tx;
-    signed char teleportCount;
-    int res;
-    signed char adjacentMonster;
-    signed char ty;
-    int income;
+    i32 resType;
+    i8 tx;
+    i8 teleportCount;
+    i32 res;
+    i8 adjacentMonster;
+    i8 ty;
+    i32 income;
     hero* enemyHero;
-    int numDefenders;
+    i32 numDefenders;
     mapCell* prevCell;
     town* occupiedTown;
 
@@ -153,7 +153,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
     objType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
     erase = 0;
     fizzleMode = EVENT_FIZZLE_HERO_LOSS;
-    gbEventMusicPlaying = 1;
+    gEventMusicPlaying = 1;
     gpMouseManager->ReallyHidePointer();
     EventSound(objType, cell->m_objectMetadata);
     switch (objType) {
@@ -820,9 +820,9 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             }
             break;
         case MAP_OBJECT_TOWN:
-            if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-                gConfig.musicVolume = giEventMusicVolume;
-            giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+            if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
+                gConfig.musicVolume = gEventMusicVolume;
+            gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
             TownEvent(cell, x, y);
             break;
         case MAP_OBJECT_WHIRLPOOL:
@@ -832,7 +832,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
-                            == static_cast<unsigned char>(objType | MAP_TRIGGER_EVENT)
+                            == static_cast<u8>(objType | MAP_TRIGGER_EVENT)
                         && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                     : WHIRLPOOL_MIN_DISTANCE))
@@ -845,7 +845,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
-                                == static_cast<unsigned char>(objType | MAP_TRIGGER_EVENT)
+                                == static_cast<u8>(objType | MAP_TRIGGER_EVENT)
                             && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                         : WHIRLPOOL_MIN_DISTANCE)) {
@@ -1266,10 +1266,10 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
 // falls back to the trigger kept in the low seven bits of byte 7 and borrows
 // the metadata of a neighbouring cell with that trigger.
 VA(0x0045fcfa, 0x1d7)
-void advManager::EraseObj(class mapCell* cell, int x, int y) {
-    signed char erased = 0;
-    int j;
-    int i;
+void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
+    i8 erased = 0;
+    i32 j;
+    i32 i;
 
     erased = 1;
     cell->m_triggerType = MAP_OBJECT_NONE;
@@ -1317,9 +1317,9 @@ void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530630;margin=0.268223;shape=0.333;size=0.946;calls=1.000;alternate=pol20:void advManager::TownEvent(class mapCell *, int, int)@0x000af87c
 VA(0x0045ff9e, 0x1bf)
-void advManager::TownEvent(class mapCell* cell, int x, int y) {
+void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     hero* curHero;
-    int result;
+    i32 result;
     hero* defender;
     town* townRec;
 
@@ -1363,8 +1363,8 @@ void advManager::TownEvent(class mapCell* cell, int x, int y) {
 // Adventure-event music cue; HoMM1 keys the ambient track off the map
 // object type and records that an event track is playing.
 VA(0x0046015d, 0x243)
-void advManager::EventSound(short eventType, short eventData) {
-    int musicTrack = MUSIC_TRACK_NONE;
+void advManager::EventSound(i16 eventType, i16 eventData) {
+    i32 musicTrack = MUSIC_TRACK_NONE;
 
     switch (eventType) {
         case MAP_OBJECT_STRAW_HUT:
@@ -1448,9 +1448,9 @@ void advManager::EventSound(short eventType, short eventData) {
     }
     if (musicTrack != MUSIC_TRACK_NONE) {
         gpSoundManager->SwitchAmbientMusic(musicTrack);
-        gbEventMusicPlaying = 1;
+        gEventMusicPlaying = 1;
     } else {
-        gbEventMusicPlaying = 0;
+        gEventMusicPlaying = 0;
     }
 }
 
@@ -1459,24 +1459,24 @@ void advManager::EventSound(short eventType, short eventData) {
 // evidence: graph:2;base=0.574046;margin=0.505217;shape=0.246;size=0.761;calls=0.800;strings=Event ID %d;alternate=pol20:void advManager::EventWindow(int, int, char *, int, int, int, int, int)@0x000aff6c
 VA(0x004603a0, 0xde)
 void advManager::EventWindow(
-    short eventId,
-    H1_ENUM_PARAM(NormalDialogType, int) buttons,
+    i16 eventId,
+    H1_ENUM_PARAM(NormalDialogType, i32) buttons,
     char* text,
-    H1_ENUM_PARAM(NormalDialogResourceType, int) type1,
-    int value1,
-    H1_ENUM_PARAM(NormalDialogResourceType, int) type2,
-    int value2,
-    H1_ENUM_PARAM(NormalDialogOrText, int) showOrText
+    H1_ENUM_PARAM(NormalDialogResourceType, i32) type1,
+    i32 value1,
+    H1_ENUM_PARAM(NormalDialogResourceType, i32) type2,
+    i32 value2,
+    H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
 ) {
-    int unusedValue1;
-    int unusedValue7;
-    int finished;
-    int unusedValue8;
-    int unusedValue9;
-    int unusedValue11;
-    int unusedValue12;
+    i32 unusedValue1;
+    i32 unusedValue7;
+    i32 finished;
+    i32 unusedValue8;
+    i32 unusedValue9;
+    i32 unusedValue11;
+    i32 unusedValue12;
     char eventText[EVENT_TEXT_BUFFER_SIZE];
-    short unusedStyle;
+    i16 unusedStyle;
 
     finished = 0;
     GrabScreen();
@@ -1491,8 +1491,8 @@ void advManager::EventWindow(
 }
 
 VA(0x0046047e, 0xa9)
-short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
-    short slot;
+i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
+    i16 slot;
 
     for (slot = 0; slot < HERO_ARTIFACT_SLOT_COUNT; slot++) {
         if (eventHero->m_artifacts[slot] == ARTIFACT_NONE)
@@ -1510,8 +1510,8 @@ short advManager::GiveArtifact(class hero* eventHero, signed char artifact) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.483471;margin=0.618508;shape=0.306;size=0.821;calls=1.000;alternate=pol20:int advManager::GiveRandomArtifact(class hero *)@0x000b00e9
 VA(0x00460527, 0x5f)
-int advManager::GiveRandomArtifact(class hero* eventHero) {
-    signed char artifact;
+i32 advManager::GiveRandomArtifact(class hero* eventHero) {
+    i8 artifact;
 
     artifact = gpGame->GetRandomArtifactId();
     if (artifact == ARTIFACT_NONE)
@@ -1526,12 +1526,12 @@ int advManager::GiveRandomArtifact(class hero* eventHero) {
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
 VA(0x00460586, 0xb0)
 #line 1110 "D:\\Heroes\\Source\\EVENTS.CPP"
-int advManager::GiveExperience(class hero* eventHero, int experience, signed char checkLevel) {
-    int prevLevel;
-    int unusedValue1;
-    int unusedValue2;
-    int newLevel;
-    int levelGap;
+i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
+    i32 prevLevel;
+    i32 unusedValue1;
+    i32 unusedValue2;
+    i32 newLevel;
+    i32 levelGap;
 
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
@@ -1547,7 +1547,7 @@ int advManager::GiveExperience(class hero* eventHero, int experience, signed cha
 }
 
 VA(0x00460636, 0x5a)
-void advManager::GiveResource(class hero* eventHero, signed char resource, short amount) {
+void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
     if (resource >= 0 && resource <= RESOURCE_LAST)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
@@ -1556,11 +1556,11 @@ void advManager::GiveResource(class hero* eventHero, signed char resource, short
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
 VA(0x00460690, 0xec)
-void advManager::RecruitEvent(class hero* eventHero, int creatureType, class mapCell* cell) {
+void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class mapCell* cell) {
     tag_message message;
-    short availableCount;
+    i16 availableCount;
     recruitUnit* recruitWindow;
-    int result;
+    i32 result;
 
     availableCount = cell->m_objectMetadata;
     recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
@@ -1575,9 +1575,8 @@ void advManager::RecruitEvent(class hero* eventHero, int creatureType, class map
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
 VA(0x0046077c, 0x2e0)
-signed char
-advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, int x, int y) {
-    int artifact;
+i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
+    i32 artifact;
 
     switch (cell->m_objectMetadata) {
         case GHOST_SITE_SMALL:
@@ -1708,7 +1707,7 @@ advManager::GhostEvent(class hero* eventHero, class mapCell* cell, int textId, i
 // evidence: graph:2;base=0.402651;margin=0.176834;shape=0.333;size=0.492;calls=1.000;alternate=pol20:void advManager::HouseEvent(class hero *, class mapCell *)@0x000b0add
 VA(0x00460a5c, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
-    short houseIndex;
+    i16 houseIndex;
 
     houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - MAP_OBJECT_HOUSE_FIRST;
     if (!cell->m_objectMetadata) {
@@ -1723,7 +1722,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
             NORMAL_DIALOG_NO_OR_TEXT
         );
     } else {
-        signed char creatures[EVENT_HOUSE_COUNT] =
+        i8 creatures[EVENT_HOUSE_COUNT] =
             {CREATURE_GOBLIN, CREATURE_PEASANT, CREATURE_ARCHER, CREATURE_DWARF, CREATURE_PEASANT};
 
         EventWindow(
@@ -1758,19 +1757,19 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
 }
 
 VA(0x00460b7a, 0x200)
-signed char advManager::CombatMonsterEvent(
+i8 advManager::CombatMonsterEvent(
     class hero* eventHero,
-    signed char monsterType,
-    short count,
+    i8 monsterType,
+    i16 count,
     class mapCell* cell,
-    int x,
-    int y,
-    signed char heroDefends,
-    int fromX,
-    int fromY
+    i32 x,
+    i32 y,
+    i8 heroDefends,
+    i32 fromX,
+    i32 fromY
 ) {
-    short i;
-    int res;
+    i16 i;
+    i32 res;
 
     DemobilizeCurrHero();
     if (fromX == -1) {
@@ -1833,14 +1832,10 @@ signed char advManager::CombatMonsterEvent(
 // Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
 // bonuses here and is called through gpAdvManager.
 VA(0x00460d7a, 0x243)
-void advManager::GiveTakeArtifactStat(
-    class hero* targetHero,
-    signed char artifact,
-    signed char take
-) {
-    signed char stat = HERO_PRIMARY_NONE;
-    signed char amount = 0;
-    int i;
+void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
+    i8 stat = HERO_PRIMARY_NONE;
+    i8 amount = 0;
+    i32 i;
 
     switch (artifact) {
         case ARTIFACT_ULTIMATE_BOOK:
@@ -1945,8 +1940,8 @@ void advManager::GiveTakeArtifactStat(
 // evidence: graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
 VA(0x00460fbd, 0x200)
 void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero) {
-    short i;
-    short j;
+    i16 i;
+    i16 j;
 
     if (!sourceHero || !destHero)
         return;
@@ -2018,11 +2013,11 @@ void advManager::HeroLoses(class hero* lostHero) {
 // evidence: graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
 VA(0x0046123a, 0x137)
 void advManager::DoWhirlpool(class hero* eventHero) {
-    int weakest;
-    short slotNo;
-    int groupValues[ARMY_GROUP_SLOT_COUNT];
-    long worth;
-    long lowestValue;
+    i32 weakest;
+    i16 slotNo;
+    i32 groupValues[ARMY_GROUP_SLOT_COUNT];
+    i32 worth;
+    i32 lowestValue;
 
     if (!gbHumanPlayer[eventHero->m_owner])
         return;
@@ -2054,7 +2049,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
 VA(0x00461371, 0x113)
-void advManager::FizzleCenter(int fizzleType) {
+void advManager::FizzleCenter(i32 fizzleType) {
     SAMPLE2 fizzleSample;
 
     if (!bShowIt)
@@ -2088,33 +2083,33 @@ void advManager::FizzleCenter(int fizzleType) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
 VA(0x00461484, 0x1141)
-void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, int y) {
-    int troopType;
-    int available;
-    int purchaseValue;
-    int bestSlot;
+void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
+    i32 troopType;
+    i32 available;
+    i32 purchaseValue;
+    i32 bestSlot;
     playerData* origPlayerData;
-    signed char eventType;
-    int numHired;
-    int counter;
+    i8 eventType;
+    i32 numHired;
+    i32 counter;
     town* theCastle;
-    int junk[4];
-    int savedPlayer;
-    signed char erase;
-    int handled;
-    int battleResult;
-    int win;
+    i32 junk[4];
+    i32 savedPlayer;
+    i8 erase;
+    i32 handled;
+    i32 battleResult;
+    i32 win;
     boatRecord* ship;
-    signed char oldShowIt;
-    int strength;
-    int resType;
-    signed char ty;
-    signed char tx;
-    signed char teleportCount;
-    int res;
-    int cost[RESOURCE_COUNT];
-    int victory;
-    signed char adjacentMonster;
+    i8 oldShowIt;
+    i32 strength;
+    i32 resType;
+    i8 ty;
+    i8 tx;
+    i8 teleportCount;
+    i32 res;
+    i32 cost[RESOURCE_COUNT];
+    i32 victory;
+    i8 adjacentMonster;
     hero* enemyHero;
     float heroLosses;
     float theirLosses;
@@ -2381,7 +2376,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
             for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
-                            == static_cast<unsigned char>(eventType | MAP_TRIGGER_EVENT)
+                            == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
                         && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
@@ -2394,7 +2389,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
-                                == static_cast<unsigned char>(eventType | MAP_TRIGGER_EVENT)
+                                == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
                             && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
@@ -2540,14 +2535,14 @@ void advManager::PlayerMonsterInteract(
     class mapCell* cell,
     class mapCell* combatCell,
     class hero* eventHero,
-    signed char* handled,
-    int x,
-    int y,
-    signed char unused,
-    int combatX,
-    int combatY
+    i8* handled,
+    i32 x,
+    i32 y,
+    i8 unused,
+    i32 combatX,
+    i32 combatY
 ) {
-    int result;
+    i32 result;
 
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
@@ -2611,16 +2606,12 @@ void advManager::PlayerMonsterInteract(
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
 VA(0x0046275f, 0x152)
-void advManager::ComputerMonsterInteract(
-    class mapCell* cell,
-    class hero* eventHero,
-    signed char* handled
-) {
-    int numToBuy;
-    int purchaseValue;
-    int bestSlot;
-    int result;
-    int creatureCount;
+void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled) {
+    i32 numToBuy;
+    i32 purchaseValue;
+    i32 bestSlot;
+    i32 result;
+    i32 creatureCount;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
         && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
@@ -2657,22 +2648,22 @@ void advManager::ComputerMonsterInteract(
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634004;margin=0.818203;shape=0.529;size=0.995;calls=1.000;alternate=pol20:int advManager::DoNetCombat(char *)@0x000b5c40
 VA(0x004628b1, 0x18f)
-int advManager::DoNetCombat(char* packet) {
+i32 advManager::DoNetCombat(char* packet) {
     hero* defendingHero;
-    int cellY;
-    int cellX;
-    int seed;
-    int opponent;
-    signed char result;
-    int side;
+    i32 cellY;
+    i32 cellX;
+    i32 seed;
+    i32 opponent;
+    i8 result;
+    i32 side;
     hero* attackingHero;
-    int srcY;
-    int srcX;
+    i32 srcY;
+    i32 srcX;
     armyGroup* defendArmy;
     armyGroup* attArmy;
     town* siegeTown;
-    int unused;
-    int unused2;
+    i32 unused;
+    i32 unused2;
 
     attackingHero = NULL;
     attArmy = NULL;
@@ -2758,47 +2749,47 @@ H1_ENUM_CONST_END(CombatRemoteConstant)
 // combatRemoteData; hero records follow one fragment byte.
 #pragma pack(push, 1)
 struct combatRemoteData {
-    signed char fragment;
-    signed char x;
-    signed char y;
-    signed char hasFirstHero;
-    signed char hasTown;
-    signed char hasSecondHero;
-    signed char setupCombatX;
-    signed char setupCombatY;
-    int randomSeed;
-    signed char combatResult;
-    signed char retreatWin;
-    signed char combatSurrender;
-    signed char firstOwner;
-    int firstGold;
-    signed char secondOwner;
-    int secondGold;
+    i8 fragment;
+    i8 x;
+    i8 y;
+    i8 hasFirstHero;
+    i8 hasTown;
+    i8 hasSecondHero;
+    i8 setupCombatX;
+    i8 setupCombatY;
+    i32 randomSeed;
+    i8 combatResult;
+    i8 retreatWin;
+    i8 combatSurrender;
+    i8 firstOwner;
+    i32 firstGold;
+    i8 secondOwner;
+    i32 secondGold;
     armyGroup firstArmy;
     armyGroup secondArmy;
     town combatTown;
 };
 
 struct combatRemoteHeroFragment {
-    signed char fragment;
+    i8 fragment;
     char data[sizeof(hero)];
 };
 
 struct combatRemoteMessage {
-    signed char sender;
-    int id;
-    signed char type;
-    signed char command;
-    short payloadSize;
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
     combatRemoteData combat;
 };
 
 struct heroRemoteMessage {
-    signed char sender;
-    int id;
-    signed char type;
-    signed char command;
-    short payloadSize;
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
     combatRemoteHeroFragment heroFragment;
 };
 #pragma pack(pop)
@@ -2807,35 +2798,35 @@ struct heroRemoteMessage {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.590184;margin=0.564001;shape=0.455;size=0.978;calls=0.927;alternate=pol20:int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int)@0x000b5e10
 VA(0x00462a40, 0x5c6)
-int advManager::DoCombat(
-    int x,
-    int y,
+i32 advManager::DoCombat(
+    i32 x,
+    i32 y,
     class hero* firstHero,
     class armyGroup* firstArmy,
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    int setupCombatX,
-    int setupCombatY,
-    int randomSeed,
-    signed char processLosses
+    i32 setupCombatX,
+    i32 setupCombatY,
+    i32 randomSeed,
+    i8 processLosses
 ) {
     armyGroup* army2Net;
     hero* hero2Net;
     hero* hero1Net;
     armyGroup* army1Net;
     town* townNet;
-    int sender;
+    i32 sender;
     char* receivedPacket;
-    signed char combatResult;
+    i8 combatResult;
     tag_message message;
-    int defendPlayer;
-    int attackPlayer;
-    int savedPlayer;
-    signed char savedShowIt;
-    int unused;
+    i32 defendPlayer;
+    i32 attackPlayer;
+    i32 savedPlayer;
+    i8 savedShowIt;
+    i32 unused;
 
-    gbInCombat = 1;
+    gInCombat = 1;
     attackPlayer = firstHero ? firstHero->m_owner : -1;
     if (secondHero)
         defendPlayer = secondHero->m_owner;
@@ -2945,9 +2936,9 @@ int advManager::DoCombat(
     }
 
     bShowIt = 1;
-    if (giEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-        gConfig.musicVolume = giEventMusicVolume;
-    giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+    if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
+        gConfig.musicVolume = gEventMusicVolume;
+    gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
     gpCombatManager->SetupCombat(
         x,
         y,
@@ -2960,9 +2951,9 @@ int advManager::DoCombat(
         y,
         randomSeed
     );
-    if (giHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
+    if (gHighMemBuffer > COMBAT_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
-    else if (giHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
+    else if (gHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
     gpExec->CallManager(gpCombatManager);
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
@@ -3004,7 +2995,7 @@ combatFinished:
     MobilizeCurrHero(0);
     if (processLosses)
         gbRetreatWin = 0;
-    gbInCombat = 0;
+    gInCombat = 0;
     return gpCombatManager->m_combatResult;
 }
 
@@ -3013,23 +3004,23 @@ combatFinished:
 // evidence: graph:4;base=0.543308;margin=0.967008;shape=0.438;size=0.943;calls=0.684;alternate=pol20:void advManager::SendHeroTownData(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int, int, int, int)@0x000b645e
 VA(0x00463006, 0x2da)
 void advManager::SendHeroTownData(
-    int x,
-    int y,
+    i32 x,
+    i32 y,
     class hero* firstHero,
     class armyGroup* firstArmy,
     class town* combatTown,
     class hero* secondHero,
     class armyGroup* secondArmy,
-    int setupCombatX,
-    int setupCombatY,
-    int randomSeed,
-    signed char remotePlayer,
-    signed char combatResult,
-    signed char retreatWin,
-    signed char combatSurrender
+    i32 setupCombatX,
+    i32 setupCombatY,
+    i32 randomSeed,
+    i8 remotePlayer,
+    i8 combatResult,
+    i8 retreatWin,
+    i8 combatSurrender
 ) {
     char* reply;
-    int result;
+    i32 result;
     combatRemoteData* buf = NULL;
 
     buf = static_cast<combatRemoteData*>(malloc(COMBAT_REMOTE_BUFFER_SIZE));
@@ -3122,28 +3113,28 @@ void advManager::SendHeroTownData(
 VA(0x004632e0, 0x34c)
 void advManager::ReceiveHeroTownData(
     char* packet,
-    int* remotePlayer,
-    int* x,
-    int* y,
+    i32* remotePlayer,
+    i32* x,
+    i32* y,
     class hero** firstHero,
     class armyGroup** firstArmy,
     class town** combatTown,
     class hero** secondHero,
     class armyGroup** secondArmy,
-    int* setupCombatX,
-    int* setupCombatY,
-    int* randomSeed,
-    signed char* combatResult,
-    signed char* retreatWin,
-    signed char* combatSurrender
+    i32* setupCombatX,
+    i32* setupCombatY,
+    i32* randomSeed,
+    i8* combatResult,
+    i8* retreatWin,
+    i8* combatSurrender
 ) {
-    signed char hasTown;
-    int result;
-    long lastPacketTime;
-    signed char firstOwner;
-    signed char defenderOwner;
-    signed char bFirstHero;
-    signed char hasSecondHero;
+    i8 hasTown;
+    i32 result;
+    i32 lastPacketTime;
+    i8 firstOwner;
+    i8 defenderOwner;
+    i8 bFirstHero;
+    i8 hasSecondHero;
 
     *firstHero = NULL;
     *firstArmy = NULL;
@@ -3302,6 +3293,6 @@ void advManager::ReceiveHeroTownData(
 // EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. GiveExperience's
 // assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
 DATA(0x004a0504)
-int giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
+i32 gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
 DATA(0x004ca904)
-signed char gbEventMusicPlaying;
+i8 gEventMusicPlaying;

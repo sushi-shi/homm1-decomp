@@ -44,43 +44,43 @@ struct tag_message;
 class textEntryWidget : public textWidget {
 public:
     icon* m_icon;
-    short m_iconFrame;
-    unsigned short m_cursorPosition;
-    unsigned short m_maxLength;
-    short m_rectX;
-    short m_rectY;
-    short m_rectW;
-    short m_rectH;
-    short m_maxLines;
-    short m_preserveTextOnFocus;
-    H1_ENUM_STORAGE(TextEntryReadMode, short) m_entryType;
-    short m_displayOffset;
+    i16 m_iconFrame;
+    u16 m_cursorPosition;
+    u16 m_maxLength;
+    i16 m_rectX;
+    i16 m_rectY;
+    i16 m_rectW;
+    i16 m_rectH;
+    i16 m_maxLines;
+    i16 m_preserveTextOnFocus;
+    H1_ENUM_STORAGE(TextEntryReadMode, i16) m_entryType;
+    i16 m_displayOffset;
     // --- constructors ---
     textEntryWidget(void);
     textEntryWidget(
-        short int x,
-        short int y,
-        short int width,
-        short int height,
-        short int maxLength,
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        i16 maxLength,
         char* text,
         char* fontName,
-        short int color,
+        i16 color,
         char* iconName,
-        short int iconFrame,
-        short int id,
-        short int kind,
-        short int layout,
-        int horizontalInset,
-        int verticalInset
+        i16 iconFrame,
+        i16 id,
+        i16 kind,
+        i16 layout,
+        i32 horizontalInset,
+        i32 verticalInset
     );
     virtual inline ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void Read(H1_ENUM_PARAM(TextEntryReadMode, int));
-    void SetupDisplayString(char*, unsigned short int);
+    void Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type);
+    void SetupDisplayString(char* source, u16 cursor);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TEXTENTRYWIDGET_H

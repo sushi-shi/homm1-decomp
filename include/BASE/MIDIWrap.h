@@ -8,7 +8,7 @@
 class MIDIWrap {
 public:
     // --- constructors ---
-    MIDIWrap(char * name);
+    MIDIWrap(char* name);
     virtual ~MIDIWrap();
 };
 #endif // HOMM1_BASE_MIDIWRAP_H

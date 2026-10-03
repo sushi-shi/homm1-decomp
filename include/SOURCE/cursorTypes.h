@@ -19,7 +19,7 @@ H1_ENUM_BEGIN(MapDirection)
 H1_ENUM_END(MapDirection)
 
 // gConfig.walkSpeed ("Walk Speed"): the Speed menu's Walk..Jump commands
-// store 0..4; advManager's hero walk indexes giStepDelay by it and skips
+// store 0..4; advManager's hero walk indexes gStepDelay by it and skips
 // frames and sounds at JUMP.
 H1_ENUM_BEGIN(WalkSpeed)
     WALK_SPEED_WALK = 0,

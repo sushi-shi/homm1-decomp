@@ -58,7 +58,7 @@ H1_ENUM_END(ArmyFacing)
 // GetMoveMask/GetAttackMask/GetBestDirection blocked-direction masks: bit n
 // is CombatHexDirection n (GetBestDirection returns n when bit n is clear);
 // GetAttackMask == ALL_BLOCKED means no stack can be attacked from here.
-H1_ENUM_FLAGS_BEGIN(CombatDirectionMask, short)
+H1_ENUM_FLAGS_BEGIN(CombatDirectionMask, i16)
     COMBAT_DIRECTION_BIT_NORTHEAST = 0x01,
     COMBAT_DIRECTION_BIT_EAST = 0x02,
     COMBAT_DIRECTION_BIT_SOUTHEAST = 0x04,

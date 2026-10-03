@@ -26,55 +26,55 @@ public:
     void* m_cursorResource;
     bitmap* m_savedUnderlying;
     void* m_cursorImage;
-    short m_cursorFrame;
-    short m_cursorReady;
+    i16 m_cursorFrame;
+    i16 m_cursorReady;
     // Constructor and UpdateScreenRegion establish the packed tail.
-    signed char m_pointerFlags;
+    i8 m_pointerFlags;
     // CheckDoMain compares the pointer position less this offset with the
     // last drawn position at +0x5b/+0x5d.
-    short m_hotspotX;
-    short m_hotspotY;
-    short m_mouseX;
-    short m_mouseY;
-    int m_unknown49;
-    int m_unknown4d;
-    char m_unknown51;
+    i16 m_hotspotX;
+    i16 m_hotspotY;
+    i16 m_mouseX;
+    i16 m_mouseY;
+    i32 m_unknown49;
+    i32 m_unknown4d;
+    i8 m_unknown51;
     char m_unknown52[9];
-    short m_drawnX;
-    short m_drawnY;
+    i16 m_drawnX;
+    i16 m_drawnY;
 
     // --- constructors ---
     mouseManager(void);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     // CombatManager::ViewSpells passes a sign-extended word frame.
-    void SetPointer(char*, short);
-    void SetPointer(short);
-    void NewUpdate(int);
-    void MouseCoords(short&, short&);
+    void SetPointer(char* name, i16 frame);
+    void SetPointer(i16 frame);
+    void NewUpdate(i32);
+    void MouseCoords(i16& x, i16& y);
     void SaveAndDraw(void);
     // HoMM1 Windows keeps the DOS buffer-pointer hooks as empty stubs.
-    void SaveAndDraw(class bitmap*, short, short, short);
+    void SaveAndDraw(class bitmap*, i16, i16, i16);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);
     void ReallyShowPointer(void);
     void HideColorPointer(void);
     void ShowColorPointer(void);
-    int IsVis(void) {
+    i32 IsVis(void) {
         return m_pointerFlags & 1;
     }
     void CheckUpdateMousePos(void);
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
-    void MovePointer(short, short);
+    void MovePointer(i16, i16);
     // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
     // knob drag passes 4 on entry and 6 on release.
-    void SetCursorShape(int);
+    void SetCursorShape(i32);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
-    void WarpPointer(short, short);
-    void SetColorMice(int);
+    void WarpPointer(i16, i16);
+    void SetColorMice(i32);
     // The quick views hide (retail 0x00476ee0, ShowCursor(0)) and restore
     // (0x00476ef0, ShowCursor(1)) the Windows cursor around QuickViewWait.
     void HideSystemCursor(void);
@@ -107,12 +107,12 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_KEEP_CURRENT_FRAME = 1000
 H1_ENUM_CONST_END(MouseManagerConstant)
 
-extern int gMouseCursorType;
-extern int iMouseOffset[3];
-extern unsigned char iHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
+extern i32 gMouseCursorType;
+extern i32 gMouseOffset[3];
+extern u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
 extern HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
-extern signed char* cColorBits[MOUSE_CURSOR_COUNT];
-extern unsigned char* cAndBits[MOUSE_CURSOR_COUNT];
+extern i8* gColorBits[MOUSE_CURSOR_COUNT];
+extern u8* cAndBits[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];

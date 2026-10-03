@@ -43,18 +43,18 @@ H1_ENUM_BEGIN(SpellType)
     SPELL_TOWN_GATE = 28
 H1_ENUM_END(SpellType)
 
-// gcSpellAIFlags bits: the AI casts COMBAT spells in battle (rows 0..18) and
+// gSpellAIFlags bits: the AI casts COMBAT spells in battle (rows 0..18) and
 // values ADVENTURE spells (19..28) on the map. SCALES_WITH_POWER marks
 // fireball, lightning, resurrect, armageddon, storm and meteor shower, whose
 // value philAI scales by the hero's spell power (CastSpell scores) or
 // knowledge (mage guild and shrine values) and SetupTown weights four times.
-H1_ENUM_FLAGS_BEGIN(SpellAIFlag, int)
+H1_ENUM_FLAGS_BEGIN(SpellAIFlag, i32)
     SPELL_AI_FLAG_SCALES_WITH_POWER = 0x01,
     SPELL_AI_FLAG_COMBAT = 0x02,
     SPELL_AI_FLAG_ADVENTURE = 0x04
 H1_ENUM_FLAGS_END(SpellAIFlag)
 
-// cSpellHelp rows: the spell book's hover/right-click texts (CombatSpecialHandler
+// gSpellHelp rows: the spell book's hover/right-click texts (CombatSpecialHandler
 // in combat, game::ViewSpells on the map).
 H1_ENUM_BEGIN(SpellHelpText)
     SPELL_HELP_PREVIOUS_PAGE = 0,

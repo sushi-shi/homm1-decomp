@@ -134,8 +134,8 @@ whole tree; the other items cover audited cases.
   **4**. Externs and prototypes live in the owner unit's header (Buka's header
   where Buka declares the symbol, else the retail data band's owner; KB-band
   tables in `X_GLOBAL.h`). Seven retail-referent aliases were renamed at their
-  uses (`giThisNetPos`, `giSpellAIValue`, `glTimers[0]`, `gArmyNames` twice,
-  `NULL_SAMPLE2`, `gbRemoteOn`). The remaining externs: `iMPExtendedType` in
+  uses (`giThisNetPos`, `gSpellAIValue`, `glTimers[0]`, `gArmyNames` twice,
+  `NULL_SAMPLE2`, `gRemoteOn`). The remaining externs: `iMPExtendedType` in
   GAME, which retail reads as `giDebugLevel` but whose user `LoadGame` is not
   exact in the current TU state, so its body is not renamed yet; `comwin`'s
   private `gComPorts`; and `AppAbout`'s `extern "C"` definition, which the

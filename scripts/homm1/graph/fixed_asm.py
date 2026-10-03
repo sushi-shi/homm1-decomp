@@ -81,7 +81,7 @@ UNITS = {
     "BASE/MAKEFILEID": FixedAsmUnit(
         source="src/BASE/MAKEFILEID.asm",
         claims=(
-            FixedAsmClaim(0x0047CA18, 0x2A, "?MAKEFILEID@@YAKPAD@Z"),
+            FixedAsmClaim(0x0047CA18, 0x2A, "?MAKEFILEID@@YAIPAD@Z"),
         ),
     ),
     "BASE/LZHUFDEC": FixedAsmUnit(

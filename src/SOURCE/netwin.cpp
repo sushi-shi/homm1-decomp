@@ -26,12 +26,12 @@
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.601182;margin=0.610067;shape=0.521;size=0.881;calls=1.000;alternate=pol20:int is_netbios_avail(void)@0x000a6be0
 VA(0x00413c40, 0xa8)
-int is_netbios_avail(void) {
+i32 is_netbios_avail(void) {
     NCB ncb;
     memset(&ncb, 0, sizeof(ncb));
     for (gNetbiosLana = 0; gNetbiosLana < MAX_LANA; gNetbiosLana++) {
         memset(&ncb, 0, sizeof(ncb));
-        ncb.ncb_command = static_cast<unsigned char>(NETBIOS_COMMAND_PROBE);
+        ncb.ncb_command = static_cast<u8>(NETBIOS_COMMAND_PROBE);
         ncb.ncb_lana_num = gNetbiosLana;
         if (Netbios(&ncb) == NRC_ILLCMD)
             break;
@@ -47,19 +47,19 @@ int is_netbios_avail(void) {
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
 VA(0x00413ce8, 0x1b2)
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions) {
-    unsigned char* statusBuf;
+H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
+    u8* statusBuf;
     NCB ncb;
-    int i;
+    i32 i;
     // Retained unused result local from the PoL donor; retail reserves its frame word.
-    int returnCode;
+    i32 returnCode;
     if (is_netbios_avail() == 0)
         return 1;
     if (gNetbiosAvail != 0) {
-        gNbMaxSess = static_cast<unsigned char>(maxSessions);
-        for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+        gNbMaxSess = static_cast<u8>(maxSessions);
+        for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
             gNetStatus[i] = 0;
-            gNbSessLsn[i] = static_cast<unsigned char>(NETBIOS_INVALID_ID);
+            gNbSessLsn[i] = static_cast<u8>(NETBIOS_INVALID_ID);
             memset(&gNbSessNcb[i], 0, sizeof(gNbSessNcb[i]));
         }
         memset(gNbNameBuf, 0, sizeof(gNbNameBuf));
@@ -68,24 +68,23 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions) {
         init_anchor(&gNbRcvQueue, 1, 0);
         init_anchor(&gNbSndQueue, 1, 0);
         init_anchor(&gNbFreeQueue, 1, 0);
-        for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++)
+        for (i = 0; i < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); i++)
             gNbEvents[i] = CreateEventA(NULL, TRUE, FALSE, NULL);
         memset(&ncb, 0, sizeof(ncb));
-        statusBuf = static_cast<unsigned char*>(
-            GlobalAlloc(GPTR, static_cast<int>(NETBIOS_ADAPTER_STATUS_SIZE))
-        );
+        statusBuf =
+            static_cast<u8*>(GlobalAlloc(GPTR, static_cast<i32>(NETBIOS_ADAPTER_STATUS_SIZE)));
         ncb.ncb_command = NCBASTAT;
-        ncb.ncb_length = static_cast<unsigned short>(NETBIOS_ADAPTER_STATUS_SIZE);
+        ncb.ncb_length = static_cast<u16>(NETBIOS_ADAPTER_STATUS_SIZE);
         ncb.ncb_buffer = statusBuf;
         ncb.ncb_lana_num = gNetbiosLana;
         if (Netbios(&ncb) == NRC_ENVNOTDEF) {
             memset(&ncb, 0, sizeof(ncb));
             ncb.ncb_command = NCBRESET;
             ncb.ncb_lana_num = gNetbiosLana;
-            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_SESSION_LIMIT_INDEX)] =
-                static_cast<unsigned char>(NETBIOS_RESET_SESSION_LIMIT);
-            ncb.ncb_callname[static_cast<int>(NETBIOS_RESET_NAME_LIMIT_INDEX)] =
-                static_cast<unsigned char>(NETBIOS_RESET_NAME_LIMIT);
+            ncb.ncb_callname[static_cast<i32>(NETBIOS_RESET_SESSION_LIMIT_INDEX)] =
+                static_cast<u8>(NETBIOS_RESET_SESSION_LIMIT);
+            ncb.ncb_callname[static_cast<i32>(NETBIOS_RESET_NAME_LIMIT_INDEX)] =
+                static_cast<u8>(NETBIOS_RESET_NAME_LIMIT);
             Netbios(&ncb);
         }
         GlobalFree(statusBuf);
@@ -98,12 +97,12 @@ H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short maxSessions) {
 // Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
 // cancel/delete-name sequence on one stack NCB.
 VA(0x00413e9a, 0x1f0)
-H1_C_LINKAGE void __cdecl nb_term(int) {
+H1_C_LINKAGE void __cdecl nb_term(i32) {
     NCB ncb;
     tag_Node* node;
-    int i;
+    i32 i;
 
-    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++)
+    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++)
         nb_close_session(i);
     if (gNbCtlNcb.ncb_cmd_cplt == NRC_PENDING) {
         memset(&ncb, 0, sizeof(ncb));
@@ -114,7 +113,7 @@ H1_C_LINKAGE void __cdecl nb_term(int) {
         ); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
-    if (gNetStatus[gNbMaxSess] & static_cast<int>(NETBIOS_SESSION_NAME_REGISTERED)) {
+    if (gNetStatus[gNbMaxSess] & static_cast<i32>(NETBIOS_SESSION_NAME_REGISTERED)) {
         memset(&ncb, 0, sizeof(ncb));
         memcpy(ncb.ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
         ncb.ncb_command = NCBDELNAME;
@@ -128,7 +127,7 @@ H1_C_LINKAGE void __cdecl nb_term(int) {
         free(node);
     LeaveCriticalSection(&gNbSndLock);
     DeleteCriticalSection(&gNbSndLock);
-    for (i = 0; i < static_cast<int>(NETBIOS_THREAD_EVENT_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); i++) {
         CloseHandle(gNbEvents[i]);
         gNbEvents[i] = NULL;
     }
@@ -143,9 +142,9 @@ H1_C_LINKAGE void __cdecl nb_term(int) {
 
 // Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
 VA(0x0041408a, 0x90)
-H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short len, void* buffer) {
+H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
     tag_Node* node;
-    int size;
+    i32 size;
 
     EnterCriticalSection(&gNbRcvLock);
     node = pop_node(&gNbRcvQueue);
@@ -165,18 +164,17 @@ H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short len, void* buffer) {
 VA(0x0041411a, 0x104)
 // Retail has an unused leading argument and an explicit queue selection argument.
 // Their stack positions are proven by all four retail call sites.
-H1_C_LINKAGE short __cdecl
-nb_snd(int, unsigned short session, unsigned short len, void* data, int queueToFree) {
+H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
     tag_Node* node;
     if (gNbMaxSess == session && len == 0) {
         nb_add_name();
         return NRC_GOODRET;
     }
-    if (!(gNetStatus[session] & static_cast<int>(NETBIOS_SESSION_ACTIVE)))
+    if (!(gNetStatus[session] & static_cast<i32>(NETBIOS_SESSION_ACTIVE)))
         return NRC_SNUMOUT;
-    node = static_cast<tag_Node*>(malloc(len + static_cast<int>(NETBIOS_PACKET_HEADER_SIZE)));
+    node = static_cast<tag_Node*>(malloc(len + static_cast<i32>(NETBIOS_PACKET_HEADER_SIZE)));
     node->len = len;
-    node->sessionIndex = static_cast<unsigned char>(session);
+    node->sessionIndex = static_cast<u8>(session);
     memcpy(node->data, data, len);
     EnterCriticalSection(&gNbSndLock);
     if (queueToFree)
@@ -192,20 +190,20 @@ nb_snd(int, unsigned short session, unsigned short len, void* data, int queueToF
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.596373;margin=0.181597;shape=0.465;size=0.963;calls=1.000;alternate=pol20:_nb_sess@0x000a726a
 VA(0x0041421e, 0x4f6)
-H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
+H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
     NCB ncb;
     char* callName;
-    int destinationSession;
-    int bFree;
+    i32 destinationSession;
+    i32 bFree;
     va_list argList;
-    short returnCode;
-    int oldSession;
+    i16 returnCode;
+    i32 oldSession;
 
     va_start(argList, operation);
     switch (operation) {
         case NETBIOS_SESSION_REGISTER:
             callName = va_arg(argList, char*);
-            gNetStatus[gNbMaxSess] &= ~static_cast<int>(NETBIOS_SESSION_ERROR);
+            gNetStatus[gNbMaxSess] &= ~static_cast<i32>(NETBIOS_SESSION_ERROR);
             nb_format_name(callName, gNbNameBuf[gNbMaxSess].bytes);
             memset(&gNbSessNcb[gNbMaxSess], 0, sizeof(NCB));
             memcpy(gNbSessNcb[gNbMaxSess].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -213,11 +211,11 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
             gNbSessNcb[gNbMaxSess].ncb_post = nb_add_name_done;
             gNbSessNcb[gNbMaxSess].ncb_cmd_cplt = NRC_PENDING;
             gNbSessNcb[gNbMaxSess].ncb_lana_num = gNetbiosLana;
-            returnCode = static_cast<short>(Netbios(&gNbSessNcb[gNbMaxSess]));
+            returnCode = static_cast<i16>(Netbios(&gNbSessNcb[gNbMaxSess]));
             break;
 
         case NETBIOS_SESSION_RECEIVE_ANY: {
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             if (gNbSessNcb[destinationSession].ncb_cmd_cplt == NRC_PENDING) {
                 switch (gNbSessNcb[destinationSession].ncb_command & ~ASYNCH) {
                     case NCBCALL:
@@ -238,39 +236,39 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
         }
 
         case NETBIOS_SESSION_CALL:
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             callName = va_arg(argList, char*);
             nb_format_name(callName, gNbNameBuf[destinationSession].bytes);
             returnCode = nb_call(destinationSession, gNbNameBuf[destinationSession].bytes);
             break;
 
         case NETBIOS_SESSION_LISTEN_ANY:
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             nb_snd(0, gNbMaxSess, 0, NULL, 0);
             returnCode = nb_listen(destinationSession, gNbListenName);
             break;
 
         case NETBIOS_SESSION_LISTEN:
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             callName = va_arg(argList, char*);
             nb_format_name(callName, gNbNameBuf[destinationSession].bytes);
             returnCode = nb_listen(destinationSession, gNbNameBuf[destinationSession].bytes);
             break;
 
         case NETBIOS_SESSION_MOVE:
-            oldSession = va_arg(argList, int);
-            destinationSession = va_arg(argList, int);
-            bFree = va_arg(argList, int);
+            oldSession = va_arg(argList, i32);
+            destinationSession = va_arg(argList, i32);
+            bFree = va_arg(argList, i32);
             if (oldSession == gNbMaxSess)
                 gNbMaxSess = static_cast<u8>(destinationSession);
-            if (gNbSessLsn[oldSession] == static_cast<int>(NETBIOS_INVALID_ID))
+            if (gNbSessLsn[oldSession] == static_cast<i32>(NETBIOS_INVALID_ID))
                 return NRC_GOODRET;
             gNbSessLsn[destinationSession] = gNbSessLsn[oldSession];
             gNetStatus[destinationSession] = gNetStatus[oldSession];
             memcpy(gNbNameBuf[destinationSession].bytes, gNbNameBuf[oldSession].bytes, NCBNAMSZ);
             nb_arm_recv(destinationSession);
             if (bFree != 0) {
-                gNbSessLsn[oldSession] = static_cast<int>(NETBIOS_INVALID_ID);
+                gNbSessLsn[oldSession] = static_cast<i32>(NETBIOS_INVALID_ID);
                 gNetStatus[oldSession] = 0;
                 memset(gNbNameBuf[oldSession].bytes, 0, NCBNAMSZ);
             }
@@ -278,7 +276,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
             break;
 
         case NETBIOS_SESSION_CLOSE:
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             if (gNbSessNcb[destinationSession].ncb_cmd_cplt == NRC_PENDING) {
                 memset(&ncb, 0, sizeof(ncb));
                 ncb.ncb_command = NCBCANCEL;
@@ -292,13 +290,13 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
             break;
 
         case NETBIOS_SESSION_CLEAR_CONNECTED:
-            destinationSession = va_arg(argList, int);
-            gNetStatus[destinationSession] &= ~static_cast<int>(NETBIOS_SESSION_CONNECTED);
+            destinationSession = va_arg(argList, i32);
+            gNetStatus[destinationSession] &= ~static_cast<i32>(NETBIOS_SESSION_CONNECTED);
             returnCode = NRC_GOODRET;
             break;
 
         case NETBIOS_SESSION_GET_NAME:
-            destinationSession = va_arg(argList, int);
+            destinationSession = va_arg(argList, i32);
             callName = va_arg(argList, char*);
             memcpy(callName, gNbNameBuf[destinationSession].bytes, NCBNAMSZ);
             returnCode = NRC_GOODRET;
@@ -314,7 +312,7 @@ H1_C_LINKAGE short __cdecl nb_sess(int, int operation, ...) {
 
 // Buka netwin.cpp:374-380.
 VA(0x00414714, 0x1e)
-H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short session) {
+H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session) {
     return gNetStatus[session];
 }
 
@@ -325,17 +323,17 @@ void nb_thr_ctl(void)
 {
     NCB ncb;
     tag_Node* pkt;
-    int keepRunning;
-    unsigned char result;
-    int i;
-    int sendComplete;
+    i32 keepRunning;
+    u8 result;
+    i32 i;
+    i32 sendComplete;
 
     keepRunning = 1;
     if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, FALSE, 0) == WAIT_TIMEOUT)
         return;
     if (WaitForSingleObject(gNbEvents[NETBIOS_WAKE_EVENT], 0) == WAIT_OBJECT_0)
         ResetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
-    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
         if (WaitForSingleObject(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST], 0) == WAIT_OBJECT_0) {
             ResetEvent(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST]);
             nb_recv_complete(i);
@@ -373,7 +371,7 @@ void nb_thr_ctl(void)
                         case NRC_SCLOSED:
                         case NRC_SABORT:
                             gNetStatus[pkt->sessionIndex] &=
-                                ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+                                ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
                             break;
                         default:
                             break;
@@ -411,7 +409,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
 #line 538 "D:\\Heroes\\Source\\netlo.cpp"
 {
     char buf[80];
-    int j;
+    i32 j;
 
 #line 541
     ProcessAssert(ncb == &gNbSessNcb[gNbMaxSess], __FILE__, __LINE__);
@@ -445,7 +443,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
 
 // Buka netwin.cpp:520-536.
 VA(0x00414c28, 0xb8)
-unsigned short nb_recv_any(int session) {
+u16 nb_recv_any(i32 session) {
     if (gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING) {
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBDGRECVBC | ASYNCH;
@@ -461,13 +459,13 @@ unsigned short nb_recv_any(int session) {
 // Buka netwin.cpp:538-567.
 VA(0x00414ce0, 0x146)
 void __stdcall nb_recv_any_done(NCB* ncb) {
-    int i;
+    i32 i;
 
-    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
         if (&gNbSessNcb[i] == ncb)
             break;
     }
-    if (i >= static_cast<int>(NETBIOS_SESSION_COUNT))
+    if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
         return;
     if (gNbSessNcb[i].ncb_retcode == NRC_GOODRET) {
         if (memcmp(gNbRcvData[i], gNbGroupName, strlen(gNbGroupName)) == 0) {
@@ -484,7 +482,7 @@ void __stdcall nb_recv_any_done(NCB* ncb) {
 
 // Buka netwin.cpp:569-580.
 VA(0x00414e26, 0xc6)
-unsigned short nb_call(int session, void* name) {
+u16 nb_call(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
     memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -498,7 +496,7 @@ unsigned short nb_call(int session, void* name) {
 
 // Buka netwin.cpp:582-596.
 VA(0x00414eec, 0xc6)
-unsigned short nb_listen(int session, void* name) {
+u16 nb_listen(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
     memcpy(gNbSessNcb[session].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -513,13 +511,13 @@ unsigned short nb_listen(int session, void* name) {
 // Buka netwin.cpp:598-628.
 VA(0x00414fb2, 0x134)
 void __stdcall nb_call_done(NCB* ncb) {
-    int i;
+    i32 i;
 
-    for (i = 0; i < static_cast<int>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
         if (&gNbSessNcb[i] == ncb)
             break;
     }
-    if (i >= static_cast<int>(NETBIOS_SESSION_COUNT))
+    if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
         return;
     switch (gNbSessNcb[i].ncb_retcode) {
         case NRC_GOODRET:
@@ -543,10 +541,10 @@ void __stdcall nb_call_done(NCB* ncb) {
 
 // Buka netwin.cpp:630-659.
 VA(0x004150e6, 0x14e)
-void nb_arm_recv(int session)
+void nb_arm_recv(i32 session)
 #line 742 "D:\\Heroes\\Source\\netlo.cpp"
 {
-    unsigned char result;
+    u8 result;
 
     while (1) {
 #line 747
@@ -575,7 +573,7 @@ void nb_arm_recv(int session)
 
 // Buka netwin.cpp:661-679.
 VA(0x00415234, 0xbf)
-void nb_close_session(int session) {
+void nb_close_session(i32 session) {
     NCB ncb;
 
     if (gNbSessNcb[session].ncb_cmd_cplt == NRC_PENDING) {
@@ -593,13 +591,13 @@ void nb_close_session(int session) {
         ncb.ncb_command = NCBHANGUP;
         ncb.ncb_lana_num = gNetbiosLana;
         Netbios(&ncb);
-        gNetStatus[session] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+        gNetStatus[session] &= ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
     }
 }
 
 // Buka netwin.cpp:681-711.
 VA(0x004152f3, 0x176)
-void nb_recv_complete(int session) {
+void nb_recv_complete(i32 session) {
     tag_Node* node;
 
     switch (gNbSessNcb[session].ncb_command & ~ASYNCH) {
@@ -611,7 +609,7 @@ void nb_recv_complete(int session) {
                     );
                     if (node != NULL) {
                         node->len = gNbSessNcb[session].ncb_length;
-                        node->sessionIndex = static_cast<unsigned char>(session);
+                        node->sessionIndex = static_cast<u8>(session);
                         memcpy(node->data, gNbRcvData[session], node->len);
                         EnterCriticalSection(&gNbRcvLock);
                         add_node(&gNbRcvQueue, node);
@@ -622,7 +620,7 @@ void nb_recv_complete(int session) {
                 case NRC_SNUMOUT:
                 case NRC_SCLOSED:
                 case NRC_SABORT:
-                    gNetStatus[session] &= ~static_cast<int>(NETBIOS_SESSION_ACTIVE);
+                    gNetStatus[session] &= ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
                     break;
                 default:
                     nb_arm_recv(session);
@@ -633,8 +631,8 @@ void nb_recv_complete(int session) {
 
 // Buka netwin.cpp:713-721.
 VA(0x00415469, 0x81)
-void nb_format_name(char* source, unsigned char* destination) {
-    unsigned int i;
+void nb_format_name(char* source, u8* destination) {
+    u32 i;
 
     memset(destination, 0, NCBNAMSZ);
     for (i = 0; i < NCBNAMSZ - 1 && *source != '\0'; i++, source++)
@@ -645,37 +643,36 @@ void nb_format_name(char* source, unsigned char* destination) {
 
 // netwin owns retail .data 0x0048f1e4-0x0048f28b and .bss 0x004a4bc8-0x004acebf.
 DATA(0x0048f1e4)
-unsigned char gNbCallRetries = 0;
+u8 gNbCallRetries = 0;
 DATA(0x0048f1e8)
-unsigned char gNetbiosAvail = 0;
+u8 gNetbiosAvail = 0;
 DATA(0x0048f1ec)
-unsigned char gNbShutdown = 0;
+u8 gNbShutdown = 0;
 DATA(0x0048f1f0)
-unsigned char gNbMaxSess = 255;
+u8 gNbMaxSess = 255;
 DATA(0x0048f1f4)
-unsigned char gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
+u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0048f1fc)
 char* gNbGroupName = "Empire Too ";
 DATA(0x0048f200)
-unsigned char* gNbListenName = reinterpret_cast<unsigned char*>(
-    const_cast<char*>("*")
-); // API-forced: NetBIOS names are unsigned bytes
+u8* gNbListenName =
+    reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
 DATA(0x004a4bc8)
 tag_Anchor gNbFreeQueue;
 DATA(0x004a4bd0)
-unsigned char gNbSessLsn[7];
+u8 gNbSessLsn[7];
 DATA(0x004a4bd8)
-unsigned char gNbRcvData[7][0x1000];
+u8 gNbRcvData[7][0x1000];
 DATA(0x004abbd8)
 NetbiosName gNbNameBuf[7];
 DATA(0x004abc48)
-unsigned char gNbSessBuf[0xfd0];
+u8 gNbSessBuf[0xfd0];
 DATA(0x004acc48)
 NCB gNbSessNcb[7];
 DATA(0x004ace08)
 NCB gNbCtlNcb;
 DATA(0x004ace48)
-unsigned char gNbLocalNum;
+u8 gNbLocalNum;
 DATA(0x004ace50)
 tag_Anchor gNbRcvQueue;
 DATA(0x004ace58)
@@ -687,4 +684,4 @@ HANDLE gNbEvents[9];
 DATA(0x004acea0)
 CRITICAL_SECTION gNbSndLock;
 DATA(0x004aceb8)
-unsigned char gNetbiosLana;
+u8 gNetbiosLana;

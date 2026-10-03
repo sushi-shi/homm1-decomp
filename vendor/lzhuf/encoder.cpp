@@ -26,26 +26,26 @@ inline void ReconstructEncoderTree(void);
 #define MAX_FREQUENCY 0x8000
 
 extern "C" {
-DATA(0x004d4c98) short match_position;
-DATA(0x004d0df0) short prnt[TREE_SIZE + CHARACTER_COUNT];
-DATA(0x004d0908) short son[TREE_SIZE];
-DATA(0x004d47a0) unsigned short getbuf;
-DATA(0x004d4c90) unsigned char getlen;
-DATA(0x004d1558) unsigned char text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
-DATA(0x004d47a8) unsigned short freq[TREE_SIZE + 1];
-DATA(0x004d4c9c) short match_length;
-DATA(0x004ce900) short lson[WINDOW_SIZE + 1];
-DATA(0x004d2598) short rson[WINDOW_SIZE + 257];
-DATA(0x004cc8f0) short dad[WINDOW_SIZE + 1];
-DATA(0x004d1554) unsigned long textsize;
-DATA(0x004d479c) unsigned long codesize;
-DATA(0x004a2f80) unsigned short putbuf = 0;
-DATA(0x004a2f84) unsigned char putlen = 0;
+DATA(0x004d4c98) i16 match_position;
+DATA(0x004d0df0) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
+DATA(0x004d0908) i16 son[TREE_SIZE];
+DATA(0x004d47a0) u16 getbuf;
+DATA(0x004d4c90) u8 getlen;
+DATA(0x004d1558) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
+DATA(0x004d47a8) u16 freq[TREE_SIZE + 1];
+DATA(0x004d4c9c) i16 match_length;
+DATA(0x004ce900) i16 lson[WINDOW_SIZE + 1];
+DATA(0x004d2598) i16 rson[WINDOW_SIZE + 257];
+DATA(0x004cc8f0) i16 dad[WINDOW_SIZE + 1];
+DATA(0x004d1554) u32 textsize;
+DATA(0x004d479c) u32 codesize;
+DATA(0x004a2f80) u16 putbuf = 0;
+DATA(0x004a2f84) u8 putlen = 0;
 DATA(0x004d4c94) char *codePtr;
 DATA(0x004d4ca0) char *decodeOutput;
-DATA(0x004ce8f4) unsigned long decodeSize;
+DATA(0x004ce8f4) u32 decodeSize;
 // Classic Okumura StartHuff state, materialized because retail copies it.
-DATA(0x004a1dd0) short initialSon[627] = {
+DATA(0x004a1dd0) i16 initialSon[627] = {
     627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638,
     639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650,
     651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662,
@@ -101,7 +101,7 @@ DATA(0x004a1dd0) short initialSon[627] = {
     620, 622, 624,
 };
 
-DATA(0x004a2a18) unsigned short initialFrequency[628] = {
+DATA(0x004a2a18) u16 initialFrequency[628] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -157,7 +157,7 @@ DATA(0x004a2a18) unsigned short initialFrequency[628] = {
     128, 186, 314, 65535,
 };
 
-DATA(0x004a22b8) short initialParent[941] = {
+DATA(0x004a22b8) i16 initialParent[941] = {
     314, 314, 315, 315, 316, 316, 317, 317, 318, 318, 319, 319,
     320, 320, 321, 321, 322, 322, 323, 323, 324, 324, 325, 325,
     326, 326, 327, 327, 328, 328, 329, 329, 330, 330, 331, 331,
@@ -240,7 +240,7 @@ DATA(0x004a22b8) short initialParent[941] = {
 };
 }
 
-DATA(0x004a2f00) static unsigned char positionLength[64] = {
+DATA(0x004a2f00) static u8 positionLength[64] = {
     0x03, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05, 0x05,
     0x05, 0x05, 0x05, 0x05, 0x06, 0x06, 0x06, 0x06,
     0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
@@ -251,7 +251,7 @@ DATA(0x004a2f00) static unsigned char positionLength[64] = {
     0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08
 };
 
-DATA(0x004a2f40) static unsigned char positionCode[64] = {
+DATA(0x004a2f40) static u8 positionCode[64] = {
     0x00, 0x20, 0x30, 0x40, 0x50, 0x58, 0x60, 0x68,
     0x70, 0x78, 0x80, 0x88, 0x90, 0x94, 0x98, 0x9C,
     0xA0, 0xA4, 0xA8, 0xAC, 0xB0, 0xB4, 0xB8, 0xBC,
@@ -262,7 +262,7 @@ DATA(0x004a2f40) static unsigned char positionCode[64] = {
     0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
-extern "C" DATA(0x004a1bd0) unsigned char d_code[256] = {
+extern "C" DATA(0x004a1bd0) u8 d_code[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,
@@ -277,7 +277,7 @@ extern "C" DATA(0x004a1bd0) unsigned char d_code[256] = {
     48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63
 };
 
-extern "C" DATA(0x004a1cd0) unsigned char d_len[256] = {
+extern "C" DATA(0x004a1cd0) u8 d_len[256] = {
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -294,7 +294,7 @@ extern "C" DATA(0x004a1cd0) unsigned char d_len[256] = {
 
 inline void InitializeTree(void)
 {
-    short i = WINDOW_SIZE + 1;
+    i16 i = WINDOW_SIZE + 1;
     while (i <= WINDOW_SIZE + 256) {
         rson[i] = NIL;
         ++i;
@@ -309,61 +309,61 @@ inline void InitializeTree(void)
 VA(0x0047da60, 0x14f)
 inline void ReconstructEncoderTree(void)
 {
-    short k, i, j;
-    unsigned short value, length;
+    i16 k, i, j;
+    u16 value, length;
 
     j = 0;
     for (i = 0; i < TREE_SIZE; ++i) {
         if (son[i] >= TREE_SIZE) {
-            freq[j] = static_cast<unsigned short>((freq[i] + 1) / 2);
+            freq[j] = static_cast<u16>((freq[i] + 1) / 2);
             son[j] = son[i];
             ++j;
         }
     }
     for (i = 0, j = CHARACTER_COUNT; j < TREE_SIZE; i += 2, ++j) {
-        value = static_cast<unsigned short>(freq[i] + freq[i + 1]);
+        value = static_cast<u16>(freq[i] + freq[i + 1]);
         freq[j] = value;
         for (k = j - 1; value < freq[k]; --k)
             ;
         ++k;
-        length = static_cast<unsigned short>((j - k) * 2);
+        length = static_cast<u16>((j - k) * 2);
         memmove(&freq[k + 1], &freq[k], length);
         freq[k] = value;
         memmove(&son[k + 1], &son[k], length);
-        son[k] = static_cast<short>(i);
+        son[k] = static_cast<i16>(i);
     }
     for (i = 0; i < TREE_SIZE; ++i) {
         k = son[i];
         if (k >= TREE_SIZE)
-            prnt[k] = static_cast<short>(i);
+            prnt[k] = static_cast<i16>(i);
         else
-            prnt[k] = prnt[k + 1] = static_cast<short>(i);
+            prnt[k] = prnt[k + 1] = static_cast<i16>(i);
     }
 }
 
-inline void PutCode(short length, unsigned short code)
+inline void PutCode(i16 length, u16 code)
 {
-    putbuf = static_cast<unsigned short>(putbuf | (code >> putlen));
-    putlen = static_cast<unsigned char>(putlen + length);
+    putbuf = static_cast<u16>(putbuf | (code >> putlen));
+    putlen = static_cast<u8>(putlen + length);
     if (putlen >= 8) {
         *codePtr++ = static_cast<char>(putbuf >> 8);
-        putlen = static_cast<unsigned char>(putlen - 8);
+        putlen = static_cast<u8>(putlen - 8);
         if (putlen >= 8) {
             *codePtr++ = static_cast<char>(putbuf);
             codesize += 2;
-            putlen = static_cast<unsigned char>(putlen - 8);
-            putbuf = static_cast<unsigned short>(code << (length - putlen));
+            putlen = static_cast<u8>(putlen - 8);
+            putbuf = static_cast<u16>(code << (length - putlen));
         } else {
-            putbuf = static_cast<unsigned short>(putbuf << 8);
+            putbuf = static_cast<u16>(putbuf << 8);
             ++codesize;
         }
     }
 }
 
-inline void EncodeCharacter(unsigned short character)
+inline void EncodeCharacter(u16 character)
 {
-    unsigned short code;
-    short length, node;
+    u16 code;
+    i16 length, node;
 
     code = 0;
     length = 0;
@@ -371,7 +371,7 @@ inline void EncodeCharacter(unsigned short character)
     do {
         code >>= 1;
         if (node & 1)
-            code = static_cast<unsigned short>(code + 0x8000);
+            code = static_cast<u16>(code + 0x8000);
         ++length;
         node = prnt[node];
     } while (node != ROOT);
@@ -379,30 +379,30 @@ inline void EncodeCharacter(unsigned short character)
     UpdateEncoderTree(character);
 }
 
-inline void EncodePosition(unsigned short position)
+inline void EncodePosition(u16 position)
 {
-    unsigned short upper;
+    u16 upper;
 
     upper = position >> 6;
     PutCode(positionLength[upper],
-            static_cast<unsigned short>(positionCode[upper] << 8));
-    PutCode(6, static_cast<unsigned short>((position & 0x3F) << 10));
+            static_cast<u16>(positionCode[upper] << 8));
+    PutCode(6, static_cast<u16>((position & 0x3F) << 10));
 }
 
 VA(0x0047d250, 0xb9)
-long DecodeData(char *destination, char *source)
+i32 DecodeData(char *destination, char *source)
 {
-    register unsigned long size;
+    register u32 size;
 
     textsize = 0;
     codePtr = source;
-    size = static_cast<unsigned char>(*codePtr++);
+    size = static_cast<u8>(*codePtr++);
     size <<= 8;
-    size |= static_cast<unsigned char>(*codePtr++);
+    size |= static_cast<u8>(*codePtr++);
     size <<= 8;
-    size |= static_cast<unsigned char>(*codePtr++);
+    size |= static_cast<u8>(*codePtr++);
     size <<= 8;
-    size |= static_cast<unsigned char>(*codePtr++);
+    size |= static_cast<u8>(*codePtr++);
     getbuf = 0;
     getlen = 0;
     memcpy(son, initialSon, sizeof(son));
@@ -412,15 +412,15 @@ long DecodeData(char *destination, char *source)
     decodeOutput = destination;
     Decode();
     LogStr("Data decoded", size, size);
-    return static_cast<long>(size);
+    return static_cast<i32>(size);
 }
 VA(0x0047d310, 0x743)
-long EncodeData(char *destination, char *source, unsigned long sourceLength)
+i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
-    register short i, c, r, s, last_match_length;
-    register unsigned short len, currentLength;
-    short currentMatchLength;
-    unsigned long consumed;
+    register i16 i, c, r, s, last_match_length;
+    register u16 len, currentLength;
+    i16 currentMatchLength;
+    u32 consumed;
 
     getbuf = 0;
     codesize = 0;
@@ -458,7 +458,7 @@ long EncodeData(char *destination, char *source, unsigned long sourceLength)
         currentLength = len;
         currentMatchLength = match_length;
         if (currentMatchLength > currentLength)
-            match_length = static_cast<short>(currentLength);
+            match_length = static_cast<i16>(currentLength);
         if (match_length <= MATCH_THRESHOLD) {
             match_length = 1;
             EncodeCharacter(text_buf[r]);
@@ -470,9 +470,9 @@ long EncodeData(char *destination, char *source, unsigned long sourceLength)
         for (i = 0; i < last_match_length && consumed < sourceLength; ++i) {
             c = *source;
             DeleteNode(s);
-            text_buf[s] = static_cast<unsigned char>(c);
+            text_buf[s] = static_cast<u8>(c);
             if (s < LOOK_AHEAD - 1)
-                text_buf[s + WINDOW_SIZE] = static_cast<unsigned char>(c);
+                text_buf[s + WINDOW_SIZE] = static_cast<u8>(c);
             s = (s + 1) & (WINDOW_SIZE - 1);
             r = (r + 1) & (WINDOW_SIZE - 1);
             InsertNode(r);
@@ -493,14 +493,14 @@ long EncodeData(char *destination, char *source, unsigned long sourceLength)
         *codePtr++ = static_cast<char>(putbuf >> 8);
         ++codesize;
     }
-    return static_cast<long>(codesize);
+    return static_cast<i32>(codesize);
 }
 
 VA(0x0047dbb0, 0x23d)
-static void UpdateEncoderTree(short character)
+static void UpdateEncoderTree(i16 character)
 {
-    short value;
-    register short node, child, otherChild, next;
+    i16 value;
+    register i16 node, child, otherChild, next;
 
     if (freq[ROOT] == MAX_FREQUENCY)
         ReconstructEncoderTree();
@@ -516,15 +516,15 @@ static void UpdateEncoderTree(short character)
             freq[next] = value;
 
             child = son[node];
-            prnt[child] = static_cast<short>(next);
+            prnt[child] = static_cast<i16>(next);
             if (child < TREE_SIZE)
-                prnt[child + 1] = static_cast<short>(next);
+                prnt[child + 1] = static_cast<i16>(next);
             otherChild = son[next];
-            son[next] = static_cast<short>(child);
-            prnt[otherChild] = static_cast<short>(node);
+            son[next] = static_cast<i16>(child);
+            prnt[otherChild] = static_cast<i16>(node);
             if (otherChild < TREE_SIZE)
-                prnt[otherChild + 1] = static_cast<short>(node);
-            son[node] = static_cast<short>(otherChild);
+                prnt[otherChild + 1] = static_cast<i16>(node);
+            son[node] = static_cast<i16>(otherChild);
             node = next;
         }
         node = prnt[node];
@@ -532,11 +532,11 @@ static void UpdateEncoderTree(short character)
 }
 
 VA(0x0047ddf0, 0x1d9)
-static void InsertNode(short node)
+static void InsertNode(i16 node)
 {
-    register unsigned char *key;
-    register short compare, i, candidate;
-    unsigned short position;
+    register u8 *key;
+    register i16 compare, i, candidate;
+    u16 position;
 
     compare = 1;
     key = &text_buf[node];
@@ -548,54 +548,54 @@ static void InsertNode(short node)
             if (rson[candidate] != NIL)
                 candidate = rson[candidate];
             else {
-                rson[candidate] = static_cast<short>(node);
-                dad[node] = static_cast<short>(candidate);
+                rson[candidate] = static_cast<i16>(node);
+                dad[node] = static_cast<i16>(candidate);
                 return;
             }
         } else {
             if (lson[candidate] != NIL)
                 candidate = lson[candidate];
             else {
-                lson[candidate] = static_cast<short>(node);
-                dad[node] = static_cast<short>(candidate);
+                lson[candidate] = static_cast<i16>(node);
+                dad[node] = static_cast<i16>(candidate);
                 return;
             }
         }
         for (i = 1; i < LOOK_AHEAD; ++i) {
-            compare = *(reinterpret_cast<unsigned char *>(reinterpret_cast<unsigned long>(key) + static_cast<long>(i))) - text_buf[candidate + i]; // faithful: LZHUF addresses the key bytes through an integer sum
+            compare = *(reinterpret_cast<u8 *>(reinterpret_cast<u32>(key) + static_cast<i32>(i))) - text_buf[candidate + i]; // faithful: LZHUF addresses the key bytes through an integer sum
             if (compare != 0)
                 break;
         }
         if (i > MATCH_THRESHOLD) {
             if (i > match_length) {
-                match_position = static_cast<short>(
+                match_position = static_cast<i16>(
                     ((node - candidate) & (WINDOW_SIZE - 1)) - 1);
                 if ((match_length = i) >= LOOK_AHEAD)
                     break;
             }
             if (match_length == i)
-                if (static_cast<int>(position = static_cast<unsigned short>(
+                if (static_cast<i32>(position = static_cast<u16>(
                         ((node - candidate) & (WINDOW_SIZE - 1)) - 1)) <
                     match_position)
-                    match_position = static_cast<short>(position);
+                    match_position = static_cast<i16>(position);
         }
     }
     dad[node] = dad[candidate];
     lson[node] = lson[candidate];
     rson[node] = rson[candidate];
-    dad[lson[candidate]] = static_cast<short>(node);
-    dad[rson[candidate]] = static_cast<short>(node);
+    dad[lson[candidate]] = static_cast<i16>(node);
+    dad[rson[candidate]] = static_cast<i16>(node);
     if (rson[dad[candidate]] == candidate)
-        rson[dad[candidate]] = static_cast<short>(node);
+        rson[dad[candidate]] = static_cast<i16>(node);
     else
-        lson[dad[candidate]] = static_cast<short>(node);
+        lson[dad[candidate]] = static_cast<i16>(node);
     dad[candidate] = NIL;
 }
 
 VA(0x0047dfd0, 0x127)
-static void DeleteNode(short node)
+static void DeleteNode(i16 node)
 {
-    short replacement;
+    i16 replacement;
 
     if (dad[node] == NIL)
         return;
@@ -612,15 +612,15 @@ static void DeleteNode(short node)
             rson[dad[replacement]] = lson[replacement];
             dad[lson[replacement]] = dad[replacement];
             lson[replacement] = lson[node];
-            dad[lson[node]] = static_cast<short>(replacement);
+            dad[lson[node]] = static_cast<i16>(replacement);
         }
         rson[replacement] = rson[node];
-        dad[rson[node]] = static_cast<short>(replacement);
+        dad[rson[node]] = static_cast<i16>(replacement);
     }
     dad[replacement] = dad[node];
     if (rson[dad[node]] == node)
-        rson[dad[node]] = static_cast<short>(replacement);
+        rson[dad[node]] = static_cast<i16>(replacement);
     else
-        lson[dad[node]] = static_cast<short>(replacement);
+        lson[dad[node]] = static_cast<i16>(replacement);
     dad[node] = NIL;
 }

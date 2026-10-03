@@ -52,14 +52,14 @@ VA(0x00475960, 0x90)
 void resourceManager::GetBackdropAtLoc(
     char* filename,
     class bitmap* destination,
-    int destinationX,
-    int destinationY
+    i32 destinationX,
+    i32 destinationY
 ) {
-    int curRow;
+    i32 curRow;
     {
-        short imageHeight;
+        i16 imageHeight;
         {
-            short width;
+            i16 width;
             PointToFile(MakeId(filename));
             ReadWord();
             width = ReadWord();
@@ -79,7 +79,7 @@ void resourceManager::GetBackdropAtLoc(
 // 16-bit MakeId/Query pair and the derived constructors identify each member.
 VA(0x004759f0, 0x96)
 palette* resourceManager::GetPalette(char* name) {
-    short fileId = MakeId(name);
+    i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
@@ -93,7 +93,7 @@ palette* resourceManager::GetPalette(char* name) {
 
 VA(0x00475a90, 0x96)
 bitmap* resourceManager::GetBitmap(char* name) {
-    short id = MakeId(name);
+    i16 id = MakeId(name);
     resource* resourceEntry = Query(id);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
@@ -108,13 +108,13 @@ bitmap* resourceManager::GetBitmap(char* name) {
 // Retail forwards the 16-bit name ID to the cache overload below.
 VA(0x00475b30, 0x34)
 icon* resourceManager::GetIcon(char* name) {
-    short fileId = MakeId(name);
+    i16 fileId = MakeId(name);
     return GetIcon(fileId);
 }
 
 // Same cache/refcount path as the neighboring palette and tileset getters.
 VA(0x00475b70, 0x86)
-icon* resourceManager::GetIcon(short fileId) {
+icon* resourceManager::GetIcon(i16 fileId) {
     icon* iconEntry = static_cast<icon*>(Query(fileId));
     if (iconEntry != NULL) {
         iconEntry->m_refCount++;
@@ -128,7 +128,7 @@ icon* resourceManager::GetIcon(short fileId) {
 
 VA(0x00475c00, 0x96)
 tileset* resourceManager::GetTileset(char* name) {
-    short fileId = MakeId(name);
+    i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
@@ -142,7 +142,7 @@ tileset* resourceManager::GetTileset(char* name) {
 
 VA(0x00475ca0, 0x96)
 font* resourceManager::GetFont(char* name) {
-    short resourceId = MakeId(name);
+    i16 resourceId = MakeId(name);
     resource* fontEntry = Query(resourceId);
     if (fontEntry != NULL) {
         fontEntry->m_refCount++;
@@ -157,7 +157,7 @@ font* resourceManager::GetFont(char* name) {
 // The Buka cache path is source-identical; HoMM1 passes its three playback defaults.
 VA(0x00475d40, 0x9c)
 class sample* resourceManager::GetSample(char* name) {
-    short fileId = MakeId(name);
+    i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
@@ -222,7 +222,7 @@ void resourceManager::Expunge(void) {
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
 VA(0x00475f60, 0x4f)
-class resource* resourceManager::Query(short resourceId) {
+class resource* resourceManager::Query(i16 resourceId) {
     resource* cursorResource = m_resourceListHead;
     while (cursorResource != NULL && cursorResource->m_id != resourceId)
         cursorResource = cursorResource->m_next;
@@ -231,13 +231,13 @@ class resource* resourceManager::Query(short resourceId) {
 
 // donor Buka RVA 0x000b8800; HoMM1 returns its dispatch result through AX
 VA(0x00475fb0, 0x1b)
-short resourceManager::Main(tag_message&) {
+i16 resourceManager::Main(tag_message&) {
     return 0;
 }
 
 // donor Buka RVA 0x000b8810; HoMM1 loads only the default aggregate
 VA(0x00475fd0, 0x8e)
-short resourceManager::Open(short priority) {
+i16 resourceManager::Open(i16 priority) {
     if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
         return RESOURCE_MANAGER_LOAD_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
@@ -283,9 +283,9 @@ void resourceManager::Close(void) {
 
 // donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
 VA(0x00476180, 0x100)
-short resourceManager::LoadAggregateHeader(char* aggregateName) {
-    short directoryBytes;
-    int aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
+    i16 directoryBytes;
+    i32 aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
     if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
         sprintf(gText, "Can't open file: %s", aggregateName);
         ShutDown(gText);
@@ -306,8 +306,8 @@ short resourceManager::LoadAggregateHeader(char* aggregateName) {
 // donor Buka uses the same lookup and failure path across multiple aggregates;
 // HoMM1 has one packed directory and a signed 16-bit resource ID.
 VA(0x00476280, 0xf2)
-void resourceManager::PointToFile(short fileId) {
-    short entry;
+void resourceManager::PointToFile(i16 fileId) {
+    i16 entry;
     if (m_aggregateDir == NULL)
         ShutDown("File Error: .AGG File not valid");
     entry = 0;
@@ -328,10 +328,10 @@ void resourceManager::PointToFile(short fileId) {
 
 // Single-aggregate variant of the Buka 2.1 directory lookup.
 VA(0x00476380, 0xe4)
-unsigned long resourceManager::GetFileSize(short fileId) {
+u32 resourceManager::GetFileSize(i16 fileId) {
     if (m_aggregateDir == NULL)
         return 0;
-    short entry = 0;
+    i16 entry = 0;
     while (entry < m_aggregateEntryCount && m_aggregateDir[entry].id != fileId)
         entry++;
     if (m_aggregateDir[entry].id != fileId) {
@@ -368,10 +368,10 @@ void resourceManager::RestorePosition(void) {
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x004764d0, 0x55)
 #line 598 "D:\\Heroes\\Base\\RESMGR.CPP"
-signed char resourceManager::ReadByte(void) {
+i8 resourceManager::ReadByte(void) {
 #line 599
     ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
-    signed char value = 0;
+    i8 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
@@ -381,10 +381,10 @@ signed char resourceManager::ReadByte(void) {
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
 VA(0x00476530, 0x58)
 #line 619 "D:\\Heroes\\Base\\RESMGR.CPP"
-short int resourceManager::ReadWord(void) {
+i16 resourceManager::ReadWord(void) {
 #line 620
     ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
-    short value = 0;
+    i16 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
@@ -392,18 +392,18 @@ short int resourceManager::ReadWord(void) {
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x00476590, 0x58)
 #line 639 "D:\\Heroes\\Base\\RESMGR.CPP"
-long resourceManager::ReadLong(void) {
+i32 resourceManager::ReadLong(void) {
 #line 640
     ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
-    long value = 0;
+    i32 value = 0;
     _read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
 // donor Buka RVA 0x000b8ea0; HoMM1 has no translation argument and uses 16-bit IDs
 VA(0x004765f0, 0x5f)
-short resourceManager::MakeId(char* name) {
-    unsigned long result = MAKEFILEID(name);
+i16 resourceManager::MakeId(char* name) {
+    u32 result = MAKEFILEID(name);
     strcpy(m_lastFileName, name);
     m_lastFileId = result;
     return result;
@@ -411,17 +411,17 @@ short resourceManager::MakeId(char* name) {
 
 // donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
 VA(0x00476650, 0x26)
-void resourceManager::Read13(signed char* destination) {
+void resourceManager::Read13(i8* destination) {
     ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x00476680, 0x5f)
 #line 679 "D:\\Heroes\\Base\\RESMGR.CPP"
-void resourceManager::ReadBlock(signed char* destination, unsigned long size) {
+void resourceManager::ReadBlock(i8* destination, u32 size) {
 #line 680
     ProcessAssert(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE, __FILE__, __LINE__);
     PollSound();
-    int bytesRead = _read(m_aggregateFd, destination, size);
+    i32 bytesRead = _read(m_aggregateFd, destination, size);
     PollSound();
 }

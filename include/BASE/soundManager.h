@@ -66,7 +66,7 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_PUZZLE = 0xd,
     MUSIC_TRACK_STATUE = 0xe,
     // The local human's turn starting in a network game (game::NewWeek,
-    // advManager/game turn hand-over with giForceSwitchMusic).
+    // advManager/game turn hand-over with gForceSwitchMusic).
     MUSIC_TRACK_NETWORK_TURN = 0xf,
     // The same cue plays at the desert tent (EVENTS).
     MUSIC_TRACK_DESERT_TENT = MUSIC_TRACK_NETWORK_TURN,
@@ -107,79 +107,80 @@ class soundManager : public baseManager {
 public:
     struct _DIG_DRIVER* m_digitalDriver;
     struct _SAMPLE* m_activeSample;
-    int m_samplesReady;
+    i32 m_samplesReady;
     struct _SAMPLE* m_musicSample;
-    char m_musicStreamOpen;
-    char m_musicStreamRestart;
+    i8 m_musicStreamOpen;
+    i8 m_musicStreamRestart;
     void* m_musicBuffers[2];
     FILE* m_midiFile;
     struct _SAMPLE* m_sampleHandles[SOUND_SAMPLE_HANDLE_COUNT];
     char _pad_0x08a[4];
-    int m_numSampleHandles;
+    i32 m_numSampleHandles;
     char _pad_0x092[0x40];
     char m_channelVolumes[0x14];
     struct _SAMPLE* m_channelSamples[14];
     char _pad_0x11e[8];
     void* m_channelSampleData[14];
     char _pad_0x15e[8];
-    unsigned long m_channelSampleSizes[14];
+    u32 m_channelSampleSizes[14];
     char _pad_0x19e[0x3c8];
-    int m_field_0x566;
+    i32 m_field_0x566;
     char _pad_0x56a[4];
-    int m_field_0x56e;
-    char m_currentTrack;
-    char m_pollRequested;
-    char m_pollDue;
-    char m_pollToggle;
+    i32 m_field_0x56e;
+    i8 m_currentTrack;
+    i8 m_pollRequested;
+    i8 m_pollDue;
+    i8 m_pollToggle;
     char _pad_0x576[0x14];
-    long m_savedTrackPositions[60];
-    int m_fading;
-    int m_musicReady;
-    int m_fadeSteps;
-    int m_fadeTargetTrack;
-    int m_cdTrack;
-    int m_cdPlayFrame;
-    short m_auxDevice;
-    int m_cdReady;
-    int m_cdStarted;
+    i32 m_savedTrackPositions[60];
+    i32 m_fading;
+    i32 m_musicReady;
+    i32 m_fadeSteps;
+    i32 m_fadeTargetTrack;
+    i32 m_cdTrack;
+    i32 m_cdPlayFrame;
+    i16 m_auxDevice;
+    i32 m_cdReady;
+    i32 m_cdStarted;
     // --- constructors ---
     soundManager(void);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void ValidatePreviousPosition(int);
+    void ValidatePreviousPosition(i32 track);
     void CDStop(void);
-    int CDIsPlaying(void);
-    unsigned long CDStartup(void);
+    i32 CDIsPlaying(void);
+    u32 CDStartup(void);
     void CDShutdown(void);
-    void CDSetVolume(int, int);
-    void CDPlay(int, int, int, int);
+    void CDSetVolume(i32 volume, i32 fadeScale);
+    void CDPlay(i32 track, i32 resume, i32 volume, i32 restart);
     void CDPoll(void);
-    int ConvertVolume(int, int);
+    i32 ConvertVolume(i32 volume, i32 soundType);
     void AllocateSampleHandles(void);
-    struct _SAMPLE* StartSample(char*, char**, short int, short int, int, int, long int);
+    struct _SAMPLE*
+    StartSample(char* name, char**, i16, i16 loop, i32 volume, i32 channelType, i32 resume);
     void StopAllSamples(void);
-    void StopSample(struct _SAMPLE*);
-    void ModifySample(struct _SAMPLE*, short int, long int);
-    long int DigitalReport(struct _SAMPLE*, short int);
+    void StopSample(struct _SAMPLE* sample);
+    void ModifySample(struct _SAMPLE* sampleHandle, i16 operation, i32 value);
+    i32 DigitalReport(struct _SAMPLE* sample, i16 reportType);
     void AdjustSoundVolumes(void);
     void AdjustMusicVolumes(void);
     void ForcePollSound(void);
-    void SetMusicQuality(int);
-    void PlayAmbientMusic(int, long int, int);
+    void SetMusicQuality(i32 musicSource);
+    void PlayAmbientMusic(i32 track, i32 resume, i32 volume);
     void PollSound(void);
-    void SwitchAmbientMusic(int);
-    struct _SAMPLE* MemorySample(class sample*);
+    void SwitchAmbientMusic(i32 track);
+    struct _SAMPLE* MemorySample(class sample* sampleResource);
     void GetNumberCDDrives(void);
     void ServiceSound(void);
-    int MusicPlaying(void);
+    i32 MusicPlaying(void);
     void MIDIStartup(void);
     void MIDIShutdown(void);
-    void MIDIPlay(int midiTrack);
+    void MIDIPlay(i32 midiTrack);
     void MIDIStop(void);
-    int MIDIIsPlaying(void);
+    i32 MIDIIsPlaying(void);
     void MIDISetVolume(void);
     void MIDIPoll(void);
 };

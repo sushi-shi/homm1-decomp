@@ -33,8 +33,8 @@
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x0045b6f0, 0x14e)
-H1_C_LINKAGE int __stdcall
-WinMain(void* instance, void* previousInstance, char* commandLine, int showCommand) {
+H1_C_LINKAGE i32 __stdcall
+WinMain(void* instance, void* previousInstance, char* commandLine, i32 showCommand) {
     DWORD error;
     MSG message;
 
@@ -47,8 +47,8 @@ WinMain(void* instance, void* previousInstance, char* commandLine, int showComma
         return 0;
     }
 
-    memset(gcCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
-    strncpy(gcCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
     if (EarlySetup() == 0)
         return 0;
     if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
@@ -66,19 +66,19 @@ WinMain(void* instance, void* previousInstance, char* commandLine, int showComma
         }
     }
     ShutDown(NULL);
-    return static_cast<int>(message.wParam);
+    return static_cast<i32>(message.wParam);
 }
 
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
+BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
     RECT rc;
 
-    LogInt("hInstApp", reinterpret_cast<int>(hInstApp)); // API-forced handle value.
+    LogInt("hInstApp", reinterpret_cast<i32>(hInstApp)); // API-forced handle value.
     memset(bProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
     bProcessMessage[WM_CREATE] = 1;
     bProcessMessage[WM_KEYDOWN] = 1;
@@ -108,7 +108,7 @@ BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* comm
         appClass.hCursor = NULL;
         appClass.hIcon = LoadIconA(static_cast<HINSTANCE>(instance), "Heroes");
         appClass.lpszMenuName = NULL;
-        appClass.lpszClassName = szAppName;
+        appClass.lpszClassName = gAppName;
         appClass.hbrBackground =
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
         appClass.hInstance = static_cast<HINSTANCE>(instance);
@@ -122,25 +122,25 @@ BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* comm
             return FALSE;
     }
 
-    if (gConfig.gfx[giCurExe].showMenu != 0)
+    if (gConfig.gfx[gCurExe].showMenu != 0)
         giCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
     else
         giCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
     rc.left = rc.top = 0;
-    rc.right = gConfig.gfx[giCurExe].width - 1;
-    rc.bottom = gConfig.gfx[giCurExe].height - 1;
-    AdjustWindowRect(&rc, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
-    if (gConfig.gfx[giCurExe].showMenu != 0)
+    rc.right = gConfig.gfx[gCurExe].width - 1;
+    rc.bottom = gConfig.gfx[gCurExe].height - 1;
+    AdjustWindowRect(&rc, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);
+    if (gConfig.gfx[gCurExe].showMenu != 0)
         windowMenu = static_cast<HMENU>(hmnuDflt);
     else
         windowMenu = NULL;
     hwndApp = CreateWindowExA(
         0,
-        szAppName,
-        szTitle,
+        gAppName,
+        gTitle,
         giCurWindowsStyleFlags,
-        gConfig.gfx[giCurExe].x,
-        gConfig.gfx[giCurExe].y,
+        gConfig.gfx[gCurExe].x,
+        gConfig.gfx[gCurExe].y,
         rc.right - rc.left + 1,
         rc.bottom - rc.top + 1,
         NULL,
@@ -151,7 +151,7 @@ BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* comm
     if (hwndApp != NULL) {
         ShowWindow(static_cast<HWND>(hwndApp), showCommand);
         SetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE, giCurWindowsStyleFlags);
-        if (gConfig.gfx[giCurExe].showMenu == 0)
+        if (gConfig.gfx[gCurExe].showMenu == 0)
             SetMenuStatus(0);
         InitGraphics();
         SetCursor(LoadCursorA(NULL, IDC_ARROW));
@@ -165,7 +165,7 @@ BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* comm
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.
 VA(0x0045bb14, 0x31)
 BOOL AppIdle(void) {
-    if (gbForegroundApp != 0)
+    if (gForegroundApp != 0)
         return TRUE;
     else
         return TRUE;
@@ -175,17 +175,16 @@ BOOL AppIdle(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x0045bb45, 0x617)
-long int __stdcall
-AppWndProc(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
+long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
     DATA(0x0049fef4)
-    static long lLastGTimerTickCount = 0;
+    static i32 gLastGTimerTickCount = 0;
     DATA(0x0049fef8)
-    static long lLastCycleTickCount = 0;
+    static i32 gLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
         LogStr(
             "AWP",
             KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
-            reinterpret_cast<long>(window),
+            reinterpret_cast<i32>(window),
             message,
             messageParam,
             messageData
@@ -216,16 +215,16 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
             break;
         case WM_TIMER:
             lTemp = KBTickCount();
-            if (lLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
-                lLastGTimerTickCount = lTemp;
+            if (gLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
+                gLastGTimerTickCount = lTemp;
                 SetReady2Poll();
             }
-            if (lLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
-                lLastCycleTickCount = lTemp;
-                if (giGraphicsType == WINGRAPH_GRAPHICS_WING
-                    && giMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
-                    lLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
-                    if (gbHeroMoving)
+            if (gLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
+                gLastCycleTickCount = lTemp;
+                if (gGraphicsType == WINGRAPH_GRAPHICS_WING
+                    && gMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+                    gLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
+                    if (gHeroMoving)
                         return 0;
                 }
                 CycleColors();
@@ -237,7 +236,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
                     ->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
             break;
         case WM_ACTIVATEAPP:
-            gbForegroundApp = messageParam;
+            gForegroundApp = messageParam;
             return 0;
         case WM_ERASEBKGND:
             return 1;
@@ -245,48 +244,48 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
             if (hwndApp == NULL)
                 return 0;
             lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
-            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
-                && gConfig.gfx[giCurExe].fullScreen == 0) {
+            if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gClosingApp == 0
+                && gConfig.gfx[gCurExe].fullScreen == 0) {
                 GetWindowRect(static_cast<HWND>(window), &rcTemp);
-                gConfig.gfx[giCurExe].x = rcTemp.left;
-                gConfig.gfx[giCurExe].y = rcTemp.top;
+                gConfig.gfx[gCurExe].x = rcTemp.left;
+                gConfig.gfx[gCurExe].y = rcTemp.top;
                 WritePrefs();
             }
             return 0;
         case WM_SIZE:
             if (hwndApp != NULL) {
                 lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
-                gbMinimized = lTemp & WS_MINIMIZE;
+                gMinimized = lTemp & WS_MINIMIZE;
                 if ((lTemp & WS_MINIMIZE) == 0)
                     EarlyResizeWindow(0, 0, 0, 0);
                 if ((lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0
                     && (LOWORD(messageData) < KBWIN_MIN_WIDTH
                         || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
-                    iTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData)
+                    gTempX = LOWORD(messageData) > KBWIN_MIN_WIDTH ? LOWORD(messageData)
                                                                    : KBWIN_MIN_WIDTH;
                     iTempY = HIWORD(messageData) > KBWIN_MIN_HEIGHT ? HIWORD(messageData)
                                                                     : KBWIN_MIN_HEIGHT;
-                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, iTempX, iTempY);
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, gTempX, iTempY);
                     return 0;
                 }
             }
             iMainWinScreenWidth = LOWORD(messageData);
-            iMainWinScreenHeight = HIWORD(messageData);
+            gMainWinScreenHeight = HIWORD(messageData);
             if (iMainWinScreenWidth < 1)
                 iMainWinScreenWidth = 1;
-            if (iMainWinScreenHeight < 1)
-                iMainWinScreenHeight = 1;
-            if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gbClosingApp == 0
-                && gConfig.gfx[giCurExe].fullScreen == 0) {
-                gConfig.gfx[giCurExe].width = iMainWinScreenWidth;
-                gConfig.gfx[giCurExe].height = iMainWinScreenHeight;
+            if (gMainWinScreenHeight < 1)
+                gMainWinScreenHeight = 1;
+            if (hwndApp != NULL && (lTemp & (WS_MINIMIZE | WS_MAXIMIZE)) == 0 && gClosingApp == 0
+                && gConfig.gfx[gCurExe].fullScreen == 0) {
+                gConfig.gfx[gCurExe].width = iMainWinScreenWidth;
+                gConfig.gfx[gCurExe].height = gMainWinScreenHeight;
                 WritePrefs();
             }
             return 0;
         case WM_COMMAND:
             return AppCommand(window, message, messageParam, messageData);
         case WM_PALETTECHANGED:
-            if (reinterpret_cast<unsigned int>(window)
+            if (reinterpret_cast<u32>(window)
                 == messageParam) // API-forced: WPARAM carries the changing window.
                 break;
         case WM_QUERYNEWPALETTE:
@@ -314,7 +313,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
                 }
             }
         case WM_DESTROY:
-            gbClosingApp = 1;
+            gClosingApp = 1;
             PostQuitMessage(0);
         case WM_QUIT:
             ShutDown(NULL);
@@ -327,7 +326,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
 extern "C" VA(0x0045c15c, 0x90)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    int wmId;
+    i32 wmId;
     WORD codeNotify;
     HWND hwndCtl;
     switch (message) {
@@ -357,24 +356,24 @@ void AppExit(void) {
 VA(0x0045c206, 0xca)
 void Process1WindowsMessage(void) {
     DATA(0x0049ff2c)
-    static long lLastGetMessage = 0;
+    static i32 gLastGetMessage = 0;
     DATA(0x0049ff30)
-    static long lLastAilServe = 0;
+    static i32 gLastAilServe = 0;
     MSG message;
-    long currentTick;
+    i32 currentTick;
 
     while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
         TranslateMessage(&message);
         DispatchMessageA(&message);
     }
     currentTick = KBTickCount();
-    if (currentTick - lLastAilServe > 20) {
-        lLastAilServe = currentTick;
+    if (currentTick - gLastAilServe > 20) {
+        gLastAilServe = currentTick;
         if (gbNoSound == 0)
             gpSoundManager->ServiceSound();
     }
-    if (currentTick - lLastGetMessage > 150) {
-        lLastGetMessage = currentTick;
+    if (currentTick - gLastGetMessage > 150) {
+        gLastGetMessage = currentTick;
         if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
             TranslateMessage(&message);
             DispatchMessageA(&message);
@@ -386,11 +385,11 @@ void Process1WindowsMessage(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
 VA(0x0045c2d0, 0x127)
-void ResizeWindow(int x, int y, int width, int height) {
-    int xpos;
+void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
+    i32 xpos;
     RECT rect;
-    int ypos;
-    if (gConfig.gfx[giCurExe].fullScreen != 0)
+    i32 ypos;
+    if (gConfig.gfx[gCurExe].fullScreen != 0)
         return;
     GetWindowRect(hwndApp, &rect);
     if (x == KBWIN_KEEP_POSITION)
@@ -405,12 +404,12 @@ void ResizeWindow(int x, int y, int width, int height) {
     rect.top = 0;
     rect.right = width - 1;
     rect.bottom = height - 1;
-    AdjustWindowRect(&rect, giCurWindowsStyleFlags, gConfig.gfx[giCurExe].showMenu);
+    AdjustWindowRect(&rect, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);
     MoveWindow(hwndApp, xpos, ypos, rect.right - rect.left + 1, rect.bottom - rect.top + 1, TRUE);
-    gConfig.gfx[giCurExe].x = xpos;
-    gConfig.gfx[giCurExe].y = ypos;
-    gConfig.gfx[giCurExe].width = width;
-    gConfig.gfx[giCurExe].height = height;
+    gConfig.gfx[gCurExe].x = xpos;
+    gConfig.gfx[gCurExe].y = ypos;
+    gConfig.gfx[gCurExe].width = width;
+    gConfig.gfx[gCurExe].height = height;
     WritePrefs();
 }
 
@@ -418,10 +417,9 @@ void ResizeWindow(int x, int y, int width, int height) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x0045c3f7, 0x185)
-long int
-AppCommand(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
+i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC appDialogProc;
-    int command;
+    i32 command;
 
     command = LOWORD(messageParam);
     switch (command) {
@@ -473,7 +471,7 @@ AppCommand(void* window, unsigned int message, unsigned int messageParam, long i
             );
             break;
         case KBWIN_MENU_FULLSCREEN:
-            SetFullScreenStatus(1 - gConfig.gfx[giCurExe].fullScreen);
+            SetFullScreenStatus(1 - gConfig.gfx[gCurExe].fullScreen);
             break;
         default:
             return HandleAppSpecificMenuCommands(command);
@@ -484,20 +482,20 @@ AppCommand(void* window, unsigned int message, unsigned int messageParam, long i
 // PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
 VA(0x0045c57c, 0xd0)
 void UpdateDfltMenu(void* menu) {
-    int result;
-    int value;
+    i32 result;
+    i32 value;
 
-    if (gConfig.gfx[giCurExe].showMenu == 0)
+    if (gConfig.gfx[gCurExe].showMenu == 0)
         return;
-    if (giMainVideoModeWidth <= KBWIN_WIDTH_640)
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_640)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_640_480, MF_GRAYED);
-    if (giMainVideoModeWidth <= KBWIN_WIDTH_800)
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_800)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_800_600, MF_GRAYED);
-    if (giMainVideoModeWidth <= KBWIN_WIDTH_1024)
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_1024)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
-    if (giMainVideoModeWidth <= KBWIN_WIDTH_1280)
+    if (gMainVideoModeWidth <= KBWIN_WIDTH_1280)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
-    if (gbDDrawAttached == FALSE)
+    if (gDDrawAttached == FALSE)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
@@ -511,7 +509,7 @@ void KBChangeMenu(void* menu) {
     else
         hmnuCurrent = menu;
     hmnuApp = menu;
-    if (gConfig.gfx[giCurExe].showMenu) {
+    if (gConfig.gfx[gCurExe].showMenu) {
         if (menu != NULL) {
             SetMenu(hwndApp, menu);
             UpdateDfltMenu(menu);
@@ -528,22 +526,22 @@ void KBChangeMenu(void* menu) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
 VA(0x0045c6f6, 0x135)
-void SetMenuStatus(int showMenu) {
-    int clientWidth;
-    int height;
-    long windowStyle;
-    long replacedStyle;
-    if (gConfig.gfx[giCurExe].fullScreen && showMenu)
+void SetMenuStatus(i32 showMenu) {
+    i32 clientWidth;
+    i32 height;
+    i32 windowStyle;
+    i32 replacedStyle;
+    if (gConfig.gfx[gCurExe].fullScreen && showMenu)
         return;
-    clientWidth = gConfig.gfx[giCurExe].width;
-    height = gConfig.gfx[giCurExe].height;
-    gConfig.gfx[giCurExe].showMenu = showMenu;
+    clientWidth = gConfig.gfx[gCurExe].width;
+    height = gConfig.gfx[gCurExe].height;
+    gConfig.gfx[gCurExe].showMenu = showMenu;
     KBChangeMenu(NULL);
-    gConfig.gfx[giCurExe].width = clientWidth;
-    gConfig.gfx[giCurExe].height = height;
+    gConfig.gfx[gCurExe].width = clientWidth;
+    gConfig.gfx[gCurExe].height = height;
     WritePrefs();
     windowStyle = GetWindowLongA(hwndApp, GWL_STYLE);
-    if (gConfig.gfx[giCurExe].showMenu)
+    if (gConfig.gfx[gCurExe].showMenu)
         giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
     else
         giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
@@ -552,8 +550,8 @@ void SetMenuStatus(int showMenu) {
     ResizeWindow(
         KBWIN_KEEP_POSITION,
         KBWIN_KEEP_POSITION,
-        gConfig.gfx[giCurExe].width,
-        gConfig.gfx[giCurExe].height
+        gConfig.gfx[gCurExe].width,
+        gConfig.gfx[gCurExe].height
     );
 }
 
@@ -561,34 +559,34 @@ void SetMenuStatus(int showMenu) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
 VA(0x0045c82b, 0x79)
-void SetNoDialogMenus(int menusEnabled) {
+void SetNoDialogMenus(i32 menusEnabled) {
     DATA(0x0049ff50)
-    static int gbNoDialogMenusOn = 0;
-    if (gbNoDialogMenusOn && !menusEnabled)
+    static i32 gNoDialogMenusOn = 0;
+    if (gNoDialogMenusOn && !menusEnabled)
         return;
-    if (!gbNoDialogMenusOn && menusEnabled)
+    if (!gNoDialogMenusOn && menusEnabled)
         return;
     if (!hmnuApp)
         return;
-    gbNoDialogMenusOn = 1 - menusEnabled;
+    gNoDialogMenusOn = 1 - menusEnabled;
     SetMenus(hmnuApp, menusEnabled);
 }
 
 // PoL 2.0 SetMenus correspondence: recurse into popups, then restore
 // each command from the normal or setup enable table.
 VA(0x0045c8a4, 0x15a)
-void SetMenus(void* menu, int enabled) {
-    int itemIndex;
-    int numItems;
-    unsigned int id;
-    int scanIndex;
-    int k;
-    int change;
+void SetMenus(void* menu, i32 enabled) {
+    i32 itemIndex;
+    i32 numItems;
+    u32 id;
+    i32 scanIndex;
+    i32 k;
+    i32 change;
 
     numItems = GetMenuItemCount(static_cast<HMENU>(menu));
     for (itemIndex = 0; itemIndex < numItems; itemIndex++) {
         id = GetMenuItemID(static_cast<HMENU>(menu), itemIndex);
-        if (id == static_cast<unsigned int>(-1)) {
+        if (id == static_cast<u32>(-1)) {
             SetMenus(GetSubMenu(static_cast<HMENU>(menu), itemIndex), enabled);
             change = 0;
         } else {
@@ -598,13 +596,13 @@ void SetMenus(void* menu, int enabled) {
             } else {
                 scanIndex = 0;
                 for (k = 0; k < KBWIN_MENU_ENTRY_COUNT; k++) {
-                    if (gsMenuEnableStatus[k].command == id)
+                    if (gMenuEnableStatus[k].command == id)
                         scanIndex = k;
                 }
-                if (gbInSetupDialog)
-                    change = 1 - gsMenuEnableStatus[scanIndex].setupEnabled;
+                if (gInSetupDialog)
+                    change = 1 - gMenuEnableStatus[scanIndex].setupEnabled;
                 else
-                    change = 1 - gsMenuEnableStatus[scanIndex].normalEnabled;
+                    change = 1 - gMenuEnableStatus[scanIndex].normalEnabled;
             }
         }
         if (change != 0)
@@ -617,8 +615,8 @@ void SetMenus(void* menu, int enabled) {
 // speed and slow-video default from the detected processor family.
 VA(0x0045c9fe, 0x1a3)
 void SetGameDefaults(void) {
-    int cpuType;
-    int i;
+    i32 cpuType;
+    i32 i;
 
     gConfig.musicVolume = 1;
     gConfig.soundVolume = 1;
@@ -629,7 +627,7 @@ void SetGameDefaults(void) {
         gConfig.gfx[i].showMenu = 1;
         gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
         gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
-        if (giMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gbDDrawAttached) {
+        if (gMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gDDrawAttached) {
             gConfig.gfx[i].fullScreen = 1;
             gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
             gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
@@ -644,7 +642,7 @@ void SetGameDefaults(void) {
     gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
     gConfig.cdOffset = 0;
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
-    gbFirstTimeThrough = 1;
+    gFirstTimeThrough = 1;
     cpuType = GetCPUType();
     if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
         gConfig.walkSpeed = WALK_SPEED_CANTER;
@@ -660,7 +658,7 @@ void SetGameDefaults(void) {
 VA(0x0045cba1, 0x20d)
 void ReadPrefsFromFile(void) {
     FILE* fp;
-    int result;
+    i32 result;
     char buffer[100];
 
     sprintf(gText, "%s", "HEROES.CFG");
@@ -673,18 +671,18 @@ void ReadPrefsFromFile(void) {
         if (fp == NULL)
             FileError(gText);
         fread(&gConfig, sizeof(gConfig), 1, fp);
-        if (gConfig.gfx[giCurExe].width <= 0)
-            gConfig.gfx[giCurExe].width = MINIMUM_WINDOW_WIDTH;
-        if (gConfig.gfx[giCurExe].height <= 0)
-            gConfig.gfx[giCurExe].height = MINIMUM_WINDOW_HEIGHT;
-        if (gConfig.gfx[giCurExe].x < 0)
-            gConfig.gfx[giCurExe].x = 0;
-        if (gConfig.gfx[giCurExe].x > giMainVideoModeHeight - WINDOW_POSITION_MARGIN)
-            gConfig.gfx[giCurExe].x = giMainVideoModeHeight - WINDOW_POSITION_MARGIN;
-        if (gConfig.gfx[giCurExe].y < 0)
-            gConfig.gfx[giCurExe].y = 0;
-        if (gConfig.gfx[giCurExe].y > giMainVideoModeWidth - WINDOW_POSITION_MARGIN)
-            gConfig.gfx[giCurExe].y = giMainVideoModeWidth - WINDOW_POSITION_MARGIN;
+        if (gConfig.gfx[gCurExe].width <= 0)
+            gConfig.gfx[gCurExe].width = MINIMUM_WINDOW_WIDTH;
+        if (gConfig.gfx[gCurExe].height <= 0)
+            gConfig.gfx[gCurExe].height = MINIMUM_WINDOW_HEIGHT;
+        if (gConfig.gfx[gCurExe].x < 0)
+            gConfig.gfx[gCurExe].x = 0;
+        if (gConfig.gfx[gCurExe].x > gMainVideoModeHeight - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[gCurExe].x = gMainVideoModeHeight - WINDOW_POSITION_MARGIN;
+        if (gConfig.gfx[gCurExe].y < 0)
+            gConfig.gfx[gCurExe].y = 0;
+        if (gConfig.gfx[gCurExe].y > gMainVideoModeWidth - WINDOW_POSITION_MARGIN)
+            gConfig.gfx[gCurExe].y = gMainVideoModeWidth - WINDOW_POSITION_MARGIN;
         result = fclose(fp);
         if (gConfig.walkSpeed == CONFIG_UNINITIALIZED) {
             SetGameDefaults();
@@ -702,7 +700,7 @@ void ReadPrefsFromRegistry(void) {
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     DWORD dataType;
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     strcpy(szTemp, "");
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
@@ -1002,7 +1000,7 @@ void WritePrefsToRegistry(void) {
     HKEY key;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     strcpy(szTemp, "");
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
@@ -1246,22 +1244,22 @@ void WritePrefs(void) {
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
 VA(0x0045d75a, 0x4c5)
-H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
-    int count;
-    unsigned long logicalDrives;
-    int cd;
-    int fh;
-    int pass;
-    unsigned int nError;
+H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
+    i32 count;
+    u32 logicalDrives;
+    i32 cd;
+    i32 fh;
+    i32 pass;
+    u32 nError;
     char cdDrives[CD_DRIVE_LETTER_COUNT];
-    char numCD;
+    i8 numCD;
     HKEY hRegKey;
-    long pos;
+    i32 pos;
     char mciCommand[MCI_COMMAND_BUFFER_SIZE];
     char szReturn[MCI_COMMAND_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
     char driveText[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     sprintf(gText, ".\\DATA\\HEROES.AGG");
     fh = open(gText, _O_BINARY);
@@ -1286,22 +1284,22 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
         }
     }
     numCD = static_cast<char>(count);
-    giCDDrive = cdDrives[gConfig.cdOffset];
-    if (giCDDrive < CD_FIRST_DRIVE_LETTER)
-        giCDDrive = cdDrives[0];
+    gCDDrive = cdDrives[gConfig.cdOffset];
+    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
+        gCDDrive = cdDrives[0];
     if (strlen(gcRegCDRomPath)) {
         sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDRomPath);
         fh = open(gText, _O_BINARY);
         if (fh != -1) {
             close(fh);
-            sprintf(gText + 2, "%s", gcSoundPath);
-            strcpy(gcSoundPath, gText);
-            sprintf(gText + 2, "%s", gcAnimPath);
-            strcpy(gcAnimPath, gText);
+            sprintf(gText + 2, "%s", gSoundPath);
+            strcpy(gSoundPath, gText);
+            sprintf(gText + 2, "%s", gAnimPath);
+            strcpy(gAnimPath, gText);
             return CD_SETUP_READY;
         }
     }
-    if (giCDDrive < CD_FIRST_DRIVE_LETTER)
+    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
         return CD_SETUP_NO_DRIVE;
     for (pass = 0; pass < CD_SETUP_ATTEMPTS; pass++) {
         for (cd = 0; cd < numCD; cd++) {
@@ -1313,7 +1311,7 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
                 wsprintfA(mciCommand, "close CD");
                 nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
             }
-            sprintf(gText, "%c:\\_autorun\\autorun.exe", cdDrives[cd] + 'A', gcSoundPath);
+            sprintf(gText, "%c:\\_autorun\\autorun.exe", cdDrives[cd] + 'A', gSoundPath);
             fh = open(gText, _O_BINARY);
             if (fh == -1)
                 continue;
@@ -1339,10 +1337,10 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
                 );
                 RegCloseKey(hRegKey);
             }
-            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gcSoundPath);
-            strcpy(gcSoundPath, gText);
-            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gcAnimPath);
-            strcpy(gcAnimPath, gText);
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gSoundPath);
+            strcpy(gSoundPath, gText);
+            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gAnimPath);
+            strcpy(gAnimPath, gText);
             return CD_SETUP_READY;
         }
         Sleep(CD_SETUP_RETRY_DELAY);
@@ -1354,10 +1352,10 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
 VA(0x0045dc1f, 0x7c)
-void SetWinText(heroWindow* window, short id) {
-    int i;
+void SetWinText(heroWindow* window, i16 id) {
+    i32 i;
     tag_message message;
-    for (i = 0; i < static_cast<int>(WINDOW_TEXT_ENTRY_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(WINDOW_TEXT_ENTRY_COUNT); i++) {
         if (gWinSetup[i].windowId == id) {
             SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
             message.text = gWinSetupText[i];
@@ -1370,7 +1368,7 @@ void SetWinText(heroWindow* window, short id) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
 VA(0x0045dc9b, 0x16)
-long int KBTickCount(void) {
+i32 KBTickCount(void) {
     return GetTickCount();
 }
 
@@ -1378,8 +1376,8 @@ long int KBTickCount(void) {
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
 VA(0x0045dcb1, 0x63)
-void ProcessAssert(int condition, char* file, int line) {
-    int unusedAssertWord;
+void ProcessAssert(i32 condition, char* file, i32 line) {
+    i32 unusedAssertWord;
     if (condition == 0) {
         sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
         MessageBoxA(hwndApp, gText, "Assert Failure", MB_ICONHAND);
@@ -1391,8 +1389,8 @@ void ProcessAssert(int condition, char* file, int line) {
 // PoL 2.0 Misc.cpp FindToken correspondence.
 VA(0x0045dd14, 0x65)
 char* FindToken(char* text, char token) {
-    int pos;
-    int len;
+    i32 pos;
+    i32 len;
 
     len = strlen(text);
     for (pos = 0; len > pos; pos++) {
@@ -1405,8 +1403,8 @@ char* FindToken(char* text, char token) {
 // PoL 2.0 Misc.cpp FindLastToken correspondence.
 VA(0x0045dd79, 0x63)
 char* FindLastToken(char* text, char token) {
-    int pos;
-    int len;
+    i32 pos;
+    i32 len;
 
     len = strlen(text);
     for (pos = len - 1; pos >= 0; pos--) {
@@ -1418,36 +1416,36 @@ char* FindLastToken(char* text, char token) {
 
 // kbwin owns retail .data 0x0049fe50-0x004a0503 and .bss 0x004ca490-0x004ca903.
 DATA(0x0049fe50)
-char szAppName[] = "Heroes";
+char gAppName[] = "Heroes";
 DATA(0x0049fe58)
-char szTitle[] = "Heroes of Might and Magic";
+char gTitle[] = "Heroes of Might and Magic";
 DATA(0x0049fe74)
 void* hwndApp = NULL;
 DATA(0x0049fe78)
-int gbForegroundApp = 0;
+i32 gForegroundApp = 0;
 DATA(0x0049fe7c)
 void* hmnuApp = NULL;
 DATA(0x0049fe80)
 void* gEventHandle = NULL;
 DATA(0x0049fefc)
-int gbClosingApp = 0;
+i32 gClosingApp = 0;
 DATA(0x004ca490)
 void* hInstApp;
 DATA(0x004ca498)
 struct tagRECT rcTemp;
 DATA(0x004ca4a8)
-int iMainWinScreenHeight;
+i32 gMainWinScreenHeight;
 DATA(0x004ca4ac)
 void* hmnuCurrent;
 DATA(0x004ca4b0)
-int iTempX;
+i32 gTempX;
 DATA(0x004ca4b4)
-int iTempY;
+i32 iTempY;
 DATA(0x004ca4b8)
-long lTemp;
+i32 lTemp;
 DATA(0x004ca4c0)
-unsigned char bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
+u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004ca8c0)
-char gcCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
+char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 DATA(0x004ca900)
-int iMainWinScreenWidth;
+i32 iMainWinScreenWidth;

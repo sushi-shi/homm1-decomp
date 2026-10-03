@@ -15,29 +15,29 @@ class textWidget : public widget {
 public:
     char* m_text;
     font* m_font;
-    short m_color;
-    char m_alignment;
+    i16 m_color;
+    i8 m_alignment;
     // --- constructors ---
     textWidget(void);
     textWidget(
-        short int,
-        short int,
-        short int,
-        short int,
-        char*,
-        char*,
-        short int,
-        short int,
-        short int
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        char* text,
+        char* fontName,
+        i16 color,
+        i16 id,
+        i16 kind
     );
     virtual ~textWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    void SetColorIndex(short int color);
-    void SetText(char*);
+    void SetColorIndex(i16 color);
+    void SetText(char* text);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TEXTWIDGET_H

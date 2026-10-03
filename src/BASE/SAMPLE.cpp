@@ -21,7 +21,7 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
 H1_ENUM_CONST_END(SampleLoadConstant)
 
 VA(0x0047fa60, 0x17d)
-sample::sample(char* name, long channelType, long volume, long loopCount)
+sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,
           gpResourceManager->MakeId(name),
@@ -32,10 +32,10 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
     m_playbackData.channelType = channelType;
     m_playbackData.volume = volume;
     m_playbackData.loopCount = loopCount;
-    int stereo = SAMPLE_LOAD_STEREO;
+    i32 stereo = SAMPLE_LOAD_STEREO;
     strcpy(fileName, name);
     strrev(fileName);
-    for (int i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
+    for (i32 i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
         switch (fileName[i]) {
             case '1':
                 m_playbackData.sampleRate = SAMPLE_LOAD_RATE_11025;
@@ -59,8 +59,8 @@ sample::sample(char* name, long channelType, long volume, long loopCount)
         }
     }
     m_playbackData.format += stereo;
-    unsigned long size = gpResourceManager->GetFileSize(m_id);
-    m_playbackData.data = static_cast<signed char*>(malloc(size));
+    u32 size = gpResourceManager->GetFileSize(m_id);
+    m_playbackData.data = static_cast<i8*>(malloc(size));
     m_playbackData.size = size;
     gpResourceManager->PointToFile(m_id);
     gpResourceManager->ReadBlock(m_playbackData.data, size);

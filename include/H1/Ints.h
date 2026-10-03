@@ -14,6 +14,10 @@
 #ifndef HOMM1_H1_INTS_H
 #define HOMM1_H1_INTS_H
 
+// include/match.h defines the same aliases for every translation unit; this
+// header keeps them available to code that does not open match.h.
+#ifndef HOMM1_INTS_DEFINED
+#define HOMM1_INTS_DEFINED
 typedef signed char i8;
 typedef unsigned char u8;
 typedef short i16;
@@ -22,5 +26,6 @@ typedef int i32;
 typedef unsigned int u32;
 typedef __int64 i64;
 typedef unsigned __int64 u64;
+#endif
 
 #endif // HOMM1_H1_INTS_H

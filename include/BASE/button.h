@@ -20,46 +20,46 @@ struct tag_message;
 class button : public widget {
 public:
     icon* m_icon;
-    short m_normalFrame;
-    short m_pressedFrame;
-    short m_selectMode;
-    short m_hotkey;
+    i16 m_normalFrame;
+    i16 m_pressedFrame;
+    i16 m_selectMode;
+    i16 m_hotkey;
     // --- constructors ---
     button(void);
     button(
-        short int x,
-        short int y,
-        short int width,
-        short int height,
-        unsigned long int iconId,
-        short int normalFrame,
-        short int pressedFrame,
-        short int selectMode,
-        short int hotkey,
-        short int id,
-        short int kind
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
+        u32 iconId,
+        i16 normalFrame,
+        i16 pressedFrame,
+        i16 selectMode,
+        i16 hotkey,
+        i16 id,
+        i16 kind
     );
     button(
-        short int x,
-        short int y,
-        short int width,
-        short int height,
+        i16 x,
+        i16 y,
+        i16 width,
+        i16 height,
         char* iconId,
-        short int normalFrame,
-        short int pressedFrame,
-        short int selectMode,
-        short int hotkey,
-        short int id,
-        short int kind
+        i16 normalFrame,
+        i16 pressedFrame,
+        i16 selectMode,
+        i16 hotkey,
+        i16 id,
+        i16 kind
     );
     virtual inline ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    short int Select(struct tag_message&);
-    short int Deselect(struct tag_message&);
+    i16 Select(struct tag_message& message);
+    i16 Deselect(struct tag_message& message);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_BUTTON_H

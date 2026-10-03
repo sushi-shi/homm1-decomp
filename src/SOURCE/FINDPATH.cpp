@@ -20,27 +20,27 @@
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
 DATA(0x004c4f20)
-static int gSearchNextY;
+static i32 gSearchNextY;
 DATA(0x004c4f1c)
-static int gSearchNextX;
+static i32 gSearchNextX;
 DATA(0x004c4f18)
-static short gSearchHigh;
+static i16 gSearchHigh;
 DATA(0x004c4f14)
 static mapCell* gSearchCurrentCell;
 DATA(0x004c4f10)
 static searchNode* gSearchQueueNode;
 DATA(0x004c4f0c)
-static short gSearchLow;
+static i16 gSearchLow;
 DATA(0x004c4f08)
 static searchNode* gSearchCell;
 DATA(0x004c4f04)
-static int gSearchTriggerType;
+static i32 gSearchTriggerType;
 DATA(0x004c4f00)
-static int gSearchTerrain;
+static i32 gSearchTerrain;
 DATA(0x004c4ef8)
-static unsigned int gSearchMiddle;
+static u32 gSearchMiddle;
 DATA(0x004c4ef4)
-static int gSearchDirection;
+static i32 gSearchDirection;
 DATA(0x004c4ef0)
 static mapCell* gSearchNextCell;
 
@@ -61,9 +61,9 @@ void searchArray::Clear(void) {
 
 // Buka FINDPATH.cpp:83-88; retail retains short parameters/locals/return.
 VA(0x00424850, 0x4c)
-short searchArray::QuickDistance(short x1, short y1, short x2, short y2) {
-    short yDistance;
-    short xDistance;
+i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
+    i16 yDistance;
+    i16 xDistance;
 
     xDistance = abs(x1 - x2);
     yDistance = abs(y1 - y2);
@@ -73,8 +73,8 @@ short searchArray::QuickDistance(short x1, short y1, short x2, short y2) {
 // HoMM1-only per-terrain step cost that InitVars tabulates into giTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
 VA(0x004248a0, 0x54)
-short TerrainStepCost(signed char terrain, char diagonal) {
-    short cost = 0;
+i16 TerrainStepCost(i8 terrain, i8 diagonal) {
+    i16 cost = 0;
     switch (terrain) {
         case TERRAIN_WATER:
         case TERRAIN_GRASS:
@@ -97,9 +97,9 @@ short TerrainStepCost(signed char terrain, char diagonal) {
 
 // Donor CalcTerrainCost family; HoMM1 lacks pathfinding-skill/road dimensions.
 VA(0x00424900, 0x4f)
-int CalcTerrainCost(int terrain, int diagonal, int mobility, int waterMode) {
-    int baseCost;
-    int diagonalCost;
+i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
+    i32 baseCost;
+    i32 diagonalCost;
     if (waterMode == FINDPATH_WATER_MODE)
         terrain = FINDPATH_WATER_TERRAIN;
     if (diagonal == FINDPATH_STEP_STRAIGHT)
@@ -116,27 +116,22 @@ int CalcTerrainCost(int terrain, int diagonal, int mobility, int waterMode) {
 // Buka FINDPATH.cpp:405-582 without the moat slowdown: HoMM1 has no castle
 // moat, and the retail body inlines Clear and QuickDistance.
 VA(0x00424950, 0x2ff)
-short searchArray::FindCombatPath(
-    short sourceHex,
-    short targetHex,
-    army* unit,
-    signed char attackPath
-) {
-    int bestHex;
-    int direction;
-    signed char attackTargetHex;
-    unsigned char* path;
+i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
+    i32 bestHex;
+    i32 direction;
+    i8 attackTargetHex;
+    u8* path;
     searchNode node;
-    int distance;
-    short attackMask;
-    int moveMask;
-    int bestDistance;
-    int opposite;
+    i32 distance;
+    i16 attackMask;
+    i32 moveMask;
+    i32 bestDistance;
+    i32 opposite;
 
     bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = ARMY_HEX_INVALID;
     if (attackPath)
-        attackTargetHex = static_cast<signed char>(targetHex);
+        attackTargetHex = static_cast<i8>(targetHex);
     else
         attackTargetHex = ARMY_HEX_INVALID;
     Clear();
@@ -145,7 +140,7 @@ short searchArray::FindCombatPath(
     path = m_directions;
     PushCombatPoint(
         sourceHex,
-        static_cast<signed char>(
+        static_cast<i8>(
             unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST
         ),
         0,
@@ -167,7 +162,7 @@ short searchArray::FindCombatPath(
             if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
                 for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
                     if (!(attackMask & (1 << direction))) {
-                        *path++ = static_cast<unsigned char>(direction);
+                        *path++ = static_cast<u8>(direction);
                         m_pathLength++;
                         bestHex = node.x;
                         break;
@@ -214,15 +209,10 @@ short searchArray::FindCombatPath(
 
 // Buka FINDPATH.cpp:585-646; combat nodes use the first column of m_cells.
 VA(0x00424c50, 0x13a)
-void searchArray::PushCombatPoint(
-    short hex,
-    short direction,
-    unsigned short distance,
-    unsigned short speed
-) {
-    int low;
-    int high;
-    unsigned int middle;
+void searchArray::PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed) {
+    i32 low;
+    i32 high;
+    u32 middle;
     searchNode* node;
     searchNode* cell;
 
@@ -252,7 +242,7 @@ void searchArray::PushCombatPoint(
     m_queueCount++;
     if (m_queueCount > m_maxQueueCount)
         m_maxQueueCount = m_queueCount;
-    node->x = static_cast<signed char>(hex);
+    node->x = static_cast<i8>(hex);
     node->y = 0;
     node->direction = direction;
     node->distance = distance;
@@ -264,18 +254,18 @@ void searchArray::PushCombatPoint(
 // Buka FINDPATH.cpp:113-183; HoMM1 keeps word binary-search bounds.
 VA(0x00424d90, 0x2ab)
 void searchArray::PushPoint(
-    short x,
-    short y,
-    unsigned short direction,
-    unsigned short cost,
-    unsigned short mobility,
-    char occupied,
-    char rvFlag1,
-    signed char valueX,
-    signed char valueY,
-    char rvFlag2,
-    signed char previousX,
-    signed char previousY
+    i16 x,
+    i16 y,
+    u16 direction,
+    u16 cost,
+    u16 mobility,
+    i8 occupied,
+    i8 rvFlag1,
+    i8 valueX,
+    i8 valueY,
+    i8 rvFlag2,
+    i8 previousX,
+    i8 previousY
 ) {
     if (cost > mobility && mobility != 0)
         return;
@@ -313,7 +303,7 @@ void searchArray::PushPoint(
         );
     m_queueCount++;
 
-    if (cost > giCurTempMobility && rvFlag2 == 0) {
+    if (cost > gCurTempMobility && rvFlag2 == 0) {
         gSearchQueueNode->rvFlag2 = 1;
         gSearchQueueNode->previousX = x - normalDirTable[direction].x;
         gSearchQueueNode->previousY = y - normalDirTable[direction].y;
@@ -322,8 +312,8 @@ void searchArray::PushPoint(
         gSearchQueueNode->previousX = previousX;
         gSearchQueueNode->previousY = previousY;
     }
-    gSearchQueueNode->x = static_cast<signed char>(x);
-    gSearchQueueNode->y = static_cast<signed char>(y);
+    gSearchQueueNode->x = static_cast<i8>(x);
+    gSearchQueueNode->y = static_cast<i8>(y);
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
     gSearchQueueNode->occupied = occupied;
@@ -337,12 +327,12 @@ void searchArray::PushPoint(
 // Buka FINDPATH.cpp:186-316 without HoMM2's below-cell object probes.
 VA(0x00425040, 0x280)
 void searchArray::TestPossibleDirections(
-    short x,
-    short y,
-    signed char* const terrain,
-    signed char* const occupied,
-    short allowOccupied,
-    int waterMode
+    i16 x,
+    i16 y,
+    i8* const terrain,
+    i8* const occupied,
+    i16 allowOccupied,
+    i32 waterMode
 ) {
     memset(occupied, 0, MAP_DIRECTION_COUNT);
     gSearchCurrentCell = gpAdvManager->GetCell(x, y);
@@ -436,11 +426,11 @@ void searchArray::TestPossibleDirections(
         }
 
     storeDirection:
-        terrain[gSearchDirection] = static_cast<signed char>(gSearchTerrain);
+        terrain[gSearchDirection] = static_cast<i8>(gSearchTerrain);
     }
 }
 
 // FINDPATH owns retail .bss 0x004c4ef0-0x004c4f2b: the search statics above
 // and the working mobility SEARCH seeds.
 DATA(0x004c4efc)
-short giCurTempMobility;
+i16 gCurTempMobility;

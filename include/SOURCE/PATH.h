@@ -31,7 +31,7 @@ H1_ENUM_CONST_BEGIN(ArmyHexConstant)
     ARMY_HEX_INVALID = -1
 H1_ENUM_CONST_END(ArmyHexConstant)
 
-H1_ENUM_RETURN(CombatHexDirection, short)
-OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, short) direction);
+H1_ENUM_RETURN(CombatHexDirection, i16)
+OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
 
 #endif

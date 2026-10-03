@@ -60,22 +60,22 @@
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
-extern int giSeedingValid;
+extern i32 giSeedingValid;
 
 // DrawCell's per-call drawing state, kept in module storage as in Buka, which
 // defines it ahead of its functions (retail address order).
 DATA(0x004c4f48)
-int s_drawCloudFrame;
+i32 s_drawCloudFrame;
 DATA(0x004c4f70)
-unsigned short s_drawGroundTile;
+u16 s_drawGroundTile;
 DATA(0x004c509c)
-signed char s_drawFlipCloud;
+i8 s_drawFlipCloud;
 DATA(0x004c50a4)
-unsigned char s_drawTileset;
+u8 s_drawTileset;
 DATA(0x004c50a8)
-int s_drawCovered;
+i32 s_drawCovered;
 DATA(0x004c50ac)
-int s_drawStoneTile;
+i32 s_drawStoneTile;
 
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1,
@@ -571,7 +571,7 @@ H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_VIEW_CELL_COUNT = 15
 H1_ENUM_END(AdventureDrawMask)
 
-// GetCloudLookup's unseen-neighbour bits (index into giCloudType): the four
+// GetCloudLookup's unseen-neighbour bits (index into gCloudType): the four
 // edge neighbours, then the diagonals clockwise from north-east; off-map
 // columns/rows set their three neighbours at once.
 H1_ENUM_BEGIN(CloudNeighborMask)
@@ -590,7 +590,7 @@ H1_ENUM_BEGIN(CloudNeighborMask)
 H1_ENUM_END(CloudNeighborMask)
 
 // advManager::Main's right-click help on the six panel buttons: the
-// cAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
+// gAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,
 // end turn, adventure options, game options).
 H1_ENUM_BEGIN(AdventurePanelHelp)
     ADVENTURE_HELP_NONE = -1,
@@ -640,7 +640,7 @@ H1_ENUM_CONST_END(QuickViewWidget)
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
 VA(0x004252c0, 0x2cc)
 advManager::advManager(void) {
-    int i;
+    i32 i;
 
     m_groundTiles = NULL;
     m_puzzleIcon = NULL;
@@ -700,15 +700,15 @@ advManager::~advManager() {}
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
 VA(0x004255ab, 0xea6)
-short advManager::Open(short id) {
-    int savedShowIt;
-    int firstTime;
-    int oldPlayer;
-    int oldVolume;
-    int i;
+i16 advManager::Open(i16 id) {
+    i32 savedShowIt;
+    i32 firstTime;
+    i32 oldPlayer;
+    i32 oldVolume;
+    i32 i;
 
     firstTime = 1;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     m_openState = 0;
     bShowIt = 0;
     m_adventureBorder = NULL;
@@ -773,7 +773,7 @@ short advManager::Open(short id) {
     else
         gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_WAIT);
     if (m_visibilityMap == NULL) {
-        m_visibilityMap = new signed char[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
+        m_visibilityMap = new i8[MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE];
         if (m_visibilityMap == NULL)
             MemError();
     }
@@ -839,10 +839,10 @@ short advManager::Open(short id) {
         m_heroIcons[ADVMGR_HERO_ICON_WARLOCK] = gpResourceManager->GetIcon("wrlk32.icn");
     if (m_heroIcons[ADVMGR_HERO_ICON_BOAT] == NULL)
         m_heroIcons[ADVMGR_HERO_ICON_BOAT] = gpResourceManager->GetIcon("boat32.icn");
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     if (m_boatShadowIcon == NULL)
         m_boatShadowIcon = gpResourceManager->GetIcon("shadow32.icn");
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
     if (m_flagIcons[PLAYER_COLOR_BLUE] == NULL)
         m_flagIcons[PLAYER_COLOR_BLUE] = gpResourceManager->GetIcon("b-flag32.icn");
     if (m_flagIcons[PLAYER_COLOR_GREEN] == NULL)
@@ -859,10 +859,10 @@ short advManager::Open(short id) {
         m_boatFlagIcons[PLAYER_COLOR_RED] = gpResourceManager->GetIcon("r-bflg32.icn");
     if (m_boatFlagIcons[PLAYER_COLOR_YELLOW] == NULL)
         m_boatFlagIcons[PLAYER_COLOR_YELLOW] = gpResourceManager->GetIcon("y-bflg32.icn");
-    gbLoadingMonoIcon = 1;
+    gLoadingMonoIcon = 1;
     if (m_puzzleIcon == NULL)
         m_puzzleIcon = gpResourceManager->GetIcon("radar.icn");
-    gbLoadingMonoIcon = 0;
+    gLoadingMonoIcon = 0;
     for (i = 0; i < ADVMGR_ENVIRONMENT_SOUND_COUNT; i++)
         m_loopingSamples[i] = NULL;
     for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; i++) {
@@ -918,7 +918,7 @@ short advManager::Open(short id) {
 // evidence: graph:3;base=0.555933;margin=0.510723;shape=0.387;size=0.995;calls=0.909;alternate=pol20:void advManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00057028
 VA(0x00426451, 0x3bd)
 void advManager::Close(void) {
-    short index;
+    i16 index;
 
     ClearBottomView();
     gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
@@ -974,7 +974,7 @@ void advManager::Close(void) {
     if (m_visibilityMap)
         delete m_visibilityMap;
     m_visibilityMap = NULL;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     m_active = 0;
 }
 
@@ -982,11 +982,11 @@ void advManager::Close(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701218;margin=0.695021;shape=0.378;size=0.921;calls=1.000;strings=wsnd%1d%1d.82M;alternate=pol20:void advManager::GetCursorSampleSet(int)@0x00057432
 VA(0x0042680e, 0xc7)
-void advManager::GetCursorSampleSet(int sampleSet) {
+void advManager::GetCursorSampleSet(i32 sampleSet) {
     if (sampleSet >= 1)
         sampleSet = CURSOR_SAMPLE_FAST_SET;
-    signed char suffixSample[ADVMGR_CURSOR_SAMPLE_COUNT] = {0, 3, 5, 3, 4, 5, 6};
-    for (int index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
+    i8 suffixSample[ADVMGR_CURSOR_SAMPLE_COUNT] = {0, 3, 5, 3, 4, 5, 6};
+    for (i32 index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
         m_cursorSamples[index]->m_playbackData.volume = CURSOR_SAMPLE_VOLUME;
@@ -999,16 +999,16 @@ void advManager::GetCursorSampleSet(int sampleSet) {
 // evidence: graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
 VA(0x004268d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
-    signed char moveDone;
+    i8 moveDone;
     town* viewTown;
-    signed char userStop;
+    i8 userStop;
     hero* pHero;
-    int oldMapValid;
+    i32 oldMapValid;
     tag_message evt;
-    signed char hover;
+    i8 hover;
     mapCell* stopCell;
-    int moveChanged;
-    short pathIndex;
+    i32 moveChanged;
+    i16 pathIndex;
 
     stopCell = NULL;
     pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -1132,30 +1132,30 @@ class mapCell* advManager::DoAdvCommand(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x00426eee, 0xe10)
-short advManager::Main(struct tag_message& message) {
+i16 advManager::Main(struct tag_message& message) {
     DATA(0x0048fae8)
-    static int giCheatSeq = 0;
-    int yPos;
-    int xPos;
-    int retVal;
+    static i32 gCheatSeq = 0;
+    i32 yPos;
+    i32 xPos;
+    i32 retVal;
     mapCell* evtMapCell;
     hero* curHero;
-    int townIndex;
-    int cmdValue;
-    int bQuit;
-    int moved;
-    signed char bEnded;
-    int helpText;
-    int dir;
+    i32 townIndex;
+    i32 cmdValue;
+    i32 bQuit;
+    i32 moved;
+    i8 bEnded;
+    i32 helpText;
+    i32 dir;
 
     if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT] && ComboDraw(1))
         UpdateScreen(1, 0);
-    if (gbGameOver) {
+    if (gGameOver) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
-    if (!gbHumanPlayer[giCurPlayer] && (!gbRemoteOn || giHostGamePos == giThisGamePos)) {
+    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giHostGamePos == giThisGamePos)) {
         gpPhilAI->DoAI(giCurPlayer);
         gpGame->NextPlayer();
         return MESSAGE_DISPATCH_CONSUME;
@@ -1163,7 +1163,7 @@ short advManager::Main(struct tag_message& message) {
     CheckHandleNet();
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return CheckHandleNetPlayerWait(message, 0);
-    if (giScreenScroll && gbForegroundApp)
+    if (giScreenScroll && gForegroundApp)
         CheckScreenScroll();
     if (!(message.type & m_messageTypeMask)) {
         if (message.type) {
@@ -1172,10 +1172,10 @@ short advManager::Main(struct tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    if (!gbNoSound && gConfig.musicVolume && giForceSwitchMusic > 0
-        && KBTickCount() - giForceSwitchMusic > FORCED_MUSIC_DELAY
+    if (!gbNoSound && gConfig.musicVolume && gForceSwitchMusic > 0
+        && KBTickCount() - gForceSwitchMusic > FORCED_MUSIC_DELAY
         && gpSoundManager->m_currentTrack == MUSIC_TRACK_NETWORK_TURN) {
-        giForceSwitchMusic = FORCED_MUSIC_IDLE;
+        gForceSwitchMusic = FORCED_MUSIC_IDLE;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
@@ -1218,7 +1218,7 @@ short advManager::Main(struct tag_message& message) {
                                 break;
                         }
                         if (helpText >= 0)
-                            NormalDialog(cAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
+                            NormalDialog(gAdvMenuHelp[helpText], NORMAL_DIALOG_TYPE_QUICK_VIEW);
                         break;
                 }
                 break;
@@ -1329,9 +1329,9 @@ short advManager::Main(struct tag_message& message) {
                         cmdValue = 9;
                         goto processCheatDigit;
                     processCheatDigit:
-                        giCheatSeq =
-                            giCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + cmdValue;
-                        if (giCheatSeq == CHEAT_REVEAL_MAP) {
+                        gCheatSeq =
+                            gCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + cmdValue;
+                        if (gCheatSeq == CHEAT_REVEAL_MAP) {
                             gpGame->SetVisibility(
                                 CHEAT_REVEAL_CENTER,
                                 CHEAT_REVEAL_CENTER,
@@ -1514,7 +1514,7 @@ short advManager::Main(struct tag_message& message) {
     }
     if (evtMapCell)
         DoEvent(evtMapCell, TrigX, TrigY);
-    if (gbGameOver || bQuit == 1 || giMenuCommand != APP_MENU_NONE) {
+    if (gGameOver || bQuit == 1 || gMenuCommand != APP_MENU_NONE) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
@@ -1524,7 +1524,7 @@ short advManager::Main(struct tag_message& message) {
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
 VA(0x00427cfe, 0x22)
-void advManager::Reseed(int, int) {
+void advManager::Reseed(i32, i32) {
     giSeedingValid = 0;
 }
 
@@ -1532,18 +1532,18 @@ void advManager::Reseed(int, int) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
 VA(0x00427d20, 0xe39)
-int advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
-    short curX;
-    short cellType;
-    short mapIndex;
-    short curY;
+i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
+    i16 curX;
+    i16 cellType;
+    i16 mapIndex;
+    i16 curY;
     mapCell* hoverCell;
-    int iPage;
-    int isVisible;
+    i32 iPage;
+    i32 isVisible;
     tag_message mouseMsg;
     tag_message inputMessage;
     hero* hero;
-    signed char mobileResult;
+    i8 mobileResult;
 
     isVisible = 1;
     switch (message->id) {
@@ -1834,9 +1834,9 @@ int advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
 VA(0x00428b59, 0x1ea)
-int advManager::ProcessDeSelect(
+i32 advManager::ProcessDeSelect(
     struct tag_message* message,
-    int* result,
+    i32* result,
     class mapCell** eventCell
 ) {
     switch (message->id) {
@@ -1877,7 +1877,7 @@ int advManager::ProcessDeSelect(
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else if (giBottomViewOverride != BOTTOM_VIEW_NONE)
             giBottomViewOverride = BOTTOM_VIEW_NONE;
-        else if (iCurBottomView == BOTTOM_VIEW_KINGDOM)
+        else if (gCurBottomView == BOTTOM_VIEW_KINGDOM)
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else
             giBottomViewOverride = BOTTOM_VIEW_KINGDOM;
@@ -1891,13 +1891,13 @@ int advManager::ProcessDeSelect(
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
 VA(0x00428d43, 0x49b)
-int advManager::ProcessSearch(int x, int y) {
+i32 advManager::ProcessSearch(i32 x, i32 y) {
     SAMPLE2 sampleData = NULL_SAMPLE2;
-    int gaveArtifact;
+    i32 gaveArtifact;
     hero* myHero;
     mapCell* pCell;
     tag_message message;
-    int i;
+    i32 i;
 
     myHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     if (myHero->m_mobility != myHero->m_remainingMobility) {
@@ -1995,17 +1995,17 @@ int advManager::ProcessSearch(int x, int y) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
 VA(0x004291de, 0xc02)
-int advManager::ProcessHover(struct tag_message* message) {
-    short curX;
-    short curY;
+i32 advManager::ProcessHover(struct tag_message* message) {
+    i16 curX;
+    i16 curY;
     town* pTown;
     hero* hero;
     mapCell* cell;
-    int nDays;
-    signed char trigType;
-    short heroPosX;
-    short heroPosY;
-    int baseFrame;
+    i32 nDays;
+    i8 trigType;
+    i16 heroPosX;
+    i16 heroPosY;
+    i32 baseFrame;
 
     switch (message->id) {
         case ADVENTURE_CONTROL_MAP_VIEW:
@@ -2281,7 +2281,7 @@ int advManager::ProcessHover(struct tag_message* message) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
 VA(0x00429de0, 0x265)
-void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate) {
+void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     if (!forceUpdate && !bShowIt) {
         if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
             glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
@@ -2290,9 +2290,9 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     gpMouseManager
         ->SaveAndDraw(gpWindowManager->m_screen, m_updateMinX, m_updateMinY, cursorUpdate);
     PollSound();
-    giScrollX = m_updateMinX;
-    giScrollY = m_updateMinY;
-    if (giLimitUpdMinX == UPDATE_NONE)
+    gScrollX = m_updateMinX;
+    gScrollY = m_updateMinY;
+    if (gLimitUpdMinX == UPDATE_NONE)
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
             UPDATE_VIEWPORT_ORIGIN,
@@ -2305,15 +2305,15 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
     else
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
-            giLimitUpdMinX,
+            gLimitUpdMinX,
             giLimitUpdMinY,
-            giLimitUpdMaxX - giLimitUpdMinX,
+            giLimitUpdMaxX - gLimitUpdMinX,
             giLimitUpdMaxY - giLimitUpdMinY,
-            giLimitUpdMinX,
+            gLimitUpdMinX,
             giLimitUpdMinY
         );
-    giScrollY = 0;
-    giScrollX = giScrollY;
+    gScrollY = 0;
+    gScrollX = gScrollY;
     PollSound();
     if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
         ++m_updateMaxX;
@@ -2332,7 +2332,7 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
             m_animationPhases[ANIMATION_PHASE_COLUMN_2] %= UPDATE_ANIMATION_PHASES;
         }
     }
-    giLimitUpdMinX = UPDATE_NONE;
+    gLimitUpdMinX = UPDATE_NONE;
     gpMouseManager->RestoreUnderlying();
     Process1WindowsMessage();
 }
@@ -2341,18 +2341,18 @@ void advManager::UpdateScreen(signed char cursorUpdate, signed char forceUpdate)
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
 VA(0x0042a045, 0x359)
-void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
-    int drawX;
-    int drawY;
+void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
+    i32 drawX;
+    i32 drawY;
 
     PollSound();
     if (!forceDraw && !bShowIt)
         return;
 
-    giLimitUpdMinX = UPDATE_NONE;
+    gLimitUpdMinX = UPDATE_NONE;
     m_previousOriginX = m_mapOriginX;
     m_previousOriginY = m_mapOriginY;
-    if (gbAllBlack)
+    if (gAllBlack)
         m_mapOriginX = m_mapOriginY = 0;
     m_comboHeroDrawn = 0;
     m_forceCompleteDraw = 0;
@@ -2441,7 +2441,7 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
     PollSound();
     UpdBottomView(0, 1, 1);
     DrawAdventureBorder();
-    if (gbAllBlack) {
+    if (gAllBlack) {
         m_mapOriginX = m_previousOriginX;
         m_mapOriginY = m_previousOriginY;
     }
@@ -2449,15 +2449,15 @@ void advManager::CompleteDraw(short originX, short originY, int forceDraw) {
 
 // Buka 2.1 CompleteDraw(update) forwards the current map origin.
 VA(0x0042a39e, 0x3a)
-void advManager::CompleteDraw(int update) {
+void advManager::CompleteDraw(i32 update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
 VA(0x0042a3d8, 0x40d)
-int advManager::GetCloudLookup(int x, int y) {
-    int cloudMask = 0;
+i32 advManager::GetCloudLookup(i32 x, i32 y) {
+    i32 cloudMask = 0;
 
     if (x < 1)
         cloudMask |= CLOUD_WEST_EDGE;
@@ -2510,7 +2510,7 @@ int advManager::GetCloudLookup(int x, int y) {
             && (gpGame->m_mapExtra[x - 1][y - 1] & giCurWatchPlayerBit) == 0)
             cloudMask |= CLOUD_NORTH_WEST;
     }
-    return giCloudType[cloudMask];
+    return gCloudType[cloudMask];
 }
 
 // @early-stop 99.88: `s_drawGroundTile |= cell0->m_tileIndex;` - retail
@@ -2527,31 +2527,31 @@ int advManager::GetCloudLookup(int x, int y) {
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
 VA(0x0042a7e5, 0xee8)
 void advManager::DrawCell(
-    short mapX,
-    short mapY,
-    short screenX,
-    short screenY,
-    signed char drawMask,
-    signed char drawingPuzzle,
-    signed char forceDraw
+    i16 mapX,
+    i16 mapY,
+    i16 screenX,
+    i16 screenY,
+    i8 drawMask,
+    i8 drawingPuzzle,
+    i8 forceDraw
 ) {
-    signed char frame;
-    int heroYOffset6;
-    int cursorSuppressed;
-    short pixelY3;
-    short pixelX7;
+    i8 frame;
+    i32 heroYOffset6;
+    i32 cursorSuppressed;
+    i16 pixelY3;
+    i16 pixelX7;
     mapCell* cell0;
     hero* drawHero;
-    signed char iconIndex;
-    signed char flagColor;
-    signed char drawHeroIcon0;
+    i8 iconIndex;
+    i8 flagColor;
+    i8 drawHeroIcon0;
 
     if (!forceDraw && !bShowIt)
         return;
     pixelX7 = screenX << CELL_PIXEL_SHIFT;
     pixelY3 = screenY << CELL_PIXEL_SHIFT;
     cell0 = GetCell(mapX, mapY);
-    if (!gbAllBlack
+    if (!gAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
         s_drawStoneTile = STONE_TILE_NONE;
         if (mapX == -1) {
@@ -2581,10 +2581,10 @@ void advManager::DrawCell(
         TileToBitmap(m_stoneTiles, s_drawStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         return;
     } else {
-        if (!((!gbAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit))
+        if (!((!gAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit))
               || drawingPuzzle)) {
             s_drawCovered = 1;
-            if (gbAllBlack)
+            if (gAllBlack)
                 s_drawCloudFrame = 0;
             else
                 s_drawCloudFrame = GetCloudLookup(mapX, mapY);
@@ -2916,7 +2916,7 @@ void advManager::DrawCell(
 
 // Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
 VA(0x0042b6cd, 0x7d)
-mapCell* advManager::GetCell(short x, short y) {
+mapCell* advManager::GetCell(i16 x, i16 y) {
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
         return m_mapData[0];
     else
@@ -2924,15 +2924,15 @@ mapCell* advManager::GetCell(short x, short y) {
 }
 
 VA(0x0042b74a, 0x57e)
-void advManager::UpdateRadar(signed char updateScreen, int partial) {
-    short y;
-    int firstX;
-    int lastY;
-    short x;
-    short color;
-    short owner;
-    int lastX;
-    int firstY;
+void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
+    i16 y;
+    i32 firstX;
+    i32 lastY;
+    i16 x;
+    i16 color;
+    i16 owner;
+    i32 lastX;
+    i32 firstY;
     mapCell* cellPtr;
 
     if (!partial) {
@@ -3046,13 +3046,13 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.437984;margin=0.160503;shape=0.304;size=0.325;calls=0.543;strings=qwikinfo.bin;alternate=pol20:void advManager::QuickInfo(int, int)@0x0005f127
 VA(0x0042bcc8, 0x596)
-void advManager::QuickInfo(short cellX, short cellY) {
-    short posX;
+void advManager::QuickInfo(i16 cellX, i16 cellY) {
+    i16 posX;
     tag_message message;
     char savedTextLocal[200];
     mapCell* curCell;
-    short posY;
-    short flag;
+    i16 posY;
+    i16 flag;
     heroWindow* window;
 
     flag = 1;
@@ -3155,18 +3155,14 @@ void advManager::QuickInfo(short cellX, short cellY) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
 VA(0x0042c25e, 0x3c8)
-void advManager::UpdateHeroLocator(
-    int locatorSlot,
-    signed char drawWindow,
-    signed char updateScreen
-) {
+void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScreen) {
     tag_message message;
-    signed char whichHero;
-    int wBase;
-    int i;
-    int activeHero;
+    i8 whichHero;
+    i32 wBase;
+    i32 i;
+    i32 activeHero;
     hero* hPtr;
-    int moveFrame;
+    i32 moveFrame;
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return;
@@ -3187,11 +3183,11 @@ void advManager::UpdateHeroLocator(
     message.command = WIDGET_COMMAND_SET_COLOR;
     message.id = wBase + HERO_LOCATOR_HIGHLIGHT;
     message.value = (gpCurPlayer->m_currentHero == whichHero
-                     && gpCurPlayer->m_currentHero != INVALID_HERO && !gbAllBlack)
+                     && gpCurPlayer->m_currentHero != INVALID_HERO && !gAllBlack)
                         ? LOCATOR_HIGHLIGHT_COLOR
                         : 0;
     m_adventureWindow->BroadcastMessage(message);
-    if (whichHero == INVALID_HERO || gbAllBlack) {
+    if (whichHero == INVALID_HERO || gAllBlack) {
         message.id = wBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = locatorSlot;
@@ -3251,8 +3247,8 @@ void advManager::UpdateHeroLocator(
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520706;margin=0.246406;shape=0.456;size=0.777;calls=0.750;alternate=pol20:void advManager::UpdateHeroLocators(int, int)@0x000607ad
 VA(0x0042c626, 0x108)
-void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateScreen) {
-    int locatorSlot;
+void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
+    i32 locatorSlot;
     double scrollStep;
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
@@ -3266,7 +3262,7 @@ void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateSc
     } else {
         scrollStep = 73.0 / (gpCurPlayer->m_heroCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
         m_scrollLeftButton->m_y =
-            static_cast<short>(gpCurPlayer->m_heroLocatorPage * scrollStep + 195.0);
+            static_cast<i16>(gpCurPlayer->m_heroLocatorPage * scrollStep + 195.0);
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -3276,10 +3272,10 @@ void advManager::UpdateHeroLocators(signed char drawWindow, signed char updateSc
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
 VA(0x0042c72e, 0x27f)
-void advManager::UpdateTownLocators(signed char drawWindow, signed char updateScreen) {
+void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
     tag_message message;
-    short i;
-    signed char whichTown;
+    i16 i;
+    i8 whichTown;
     double scrollStep;
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
@@ -3290,12 +3286,12 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
         message.command = WIDGET_COMMAND_SET_COLOR;
         message.id = i + TOWN_LOCATOR_HIGHLIGHT_FIRST;
         message.value = (gpCurPlayer->m_currentTown != GAME_TOWN_NONE
-                         && gpCurPlayer->m_currentTown == whichTown && !gbAllBlack)
+                         && gpCurPlayer->m_currentTown == whichTown && !gAllBlack)
                             ? LOCATOR_HIGHLIGHT_COLOR
                             : 0;
         m_adventureWindow->BroadcastMessage(message);
         message.id = i + ADVENTURE_CONTROL_TOWN_LOCATOR_1;
-        if (whichTown == GAME_TOWN_NONE || gbAllBlack) {
+        if (whichTown == GAME_TOWN_NONE || gAllBlack) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.value = i + LOCATOR_FRAME_EMPTY_TOWN_FIRST;
             m_adventureWindow->BroadcastMessage(message);
@@ -3318,7 +3314,7 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
     } else {
         scrollStep = 74.0 / (gpCurPlayer->m_townCount - LOCATOR_PAGE_DENOMINATOR_OFFSET);
         m_scrollRightButton->m_y =
-            static_cast<short>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
+            static_cast<i16>(gpCurPlayer->m_townLocatorPage * scrollStep + 195.0);
     }
     if (drawWindow)
         m_adventureWindow->DrawWindow(updateScreen);
@@ -3328,15 +3324,11 @@ void advManager::UpdateTownLocators(signed char drawWindow, signed char updateSc
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
 VA(0x0042c9ad, 0x19f)
-void advManager::UpdBottomView(
-    signed char forceUpdate,
-    signed char drawWindow,
-    signed char updateScreen
-) {
-    signed char updated;
+void advManager::UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen) {
+    i8 updated;
 
     updated = 0;
-    gbForceUpdate = forceUpdate;
+    gForceUpdate = forceUpdate;
     if (giBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
         return;
 
@@ -3359,7 +3351,7 @@ void advManager::UpdBottomView(
         }
     }
 
-    if (!gbThisNetHumanPlayer[giCurPlayer] || gbAllBlack)
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gAllBlack)
         updated = UpdBottomViewEnemyTurn();
     else if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         updated = UpdBottomViewKingdom();
@@ -3378,7 +3370,7 @@ update_bottom_view:
                 BOTTOM_VIEW_PANEL_HEIGHT
             );
     }
-    forceUpdate = gbForceUpdate;
+    forceUpdate = gForceUpdate;
 }
 
 // donor PoL RVA 0x00060d63; preferred Buka symbol ?ClearBottomView@advManager@@QAEXXZ
@@ -3386,9 +3378,9 @@ update_bottom_view:
 // evidence: graph:5;base=0.613154;margin=1.071587;shape=0.489;size=0.961;calls=1.000;alternate=pol20:void advManager::ClearBottomView(void)@0x00060d63
 VA(0x0042cb4c, 0x132)
 void advManager::ClearBottomView(void) {
-    int widgetIndex;
+    i32 widgetIndex;
 
-    if (iCurBottomView == BOTTOM_VIEW_NONE)
+    if (gCurBottomView == BOTTOM_VIEW_NONE)
         return;
 
     for (widgetIndex = 0; widgetIndex < ADVMGR_BOTTOM_VIEW_WIDGET_COUNT; ++widgetIndex) {
@@ -3403,8 +3395,8 @@ void advManager::ClearBottomView(void) {
         m_bottomViewPrimaryWidgets[widgetIndex] = NULL;
         m_bottomViewSecondaryWidgets[widgetIndex] = NULL;
     }
-    iCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
-    iCurBottomView = BOTTOM_VIEW_NONE;
+    gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
+    gCurBottomView = BOTTOM_VIEW_NONE;
     iLastAnimFrame = BOTTOM_VIEW_NO_ANIMATION;
 }
 
@@ -3412,21 +3404,21 @@ void advManager::ClearBottomView(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
 VA(0x0042cc7e, 0x5bf)
-signed char advManager::UpdBottomViewEnemyTurn(void) {
+i8 advManager::UpdBottomViewEnemyTurn(void) {
     DATA(0x0048ff4c)
-    static long iLastSandAnimTime = 0;
+    static i32 gLastSandAnimTime = 0;
     DATA(0x0048ff50)
-    static long iLastNewSandAnimTime = 0;
-    signed char updated;
+    static i32 gLastNewSandAnimTime = 0;
+    i8 updated;
     tag_message message;
 
     updated = 0;
     message.type = MESSAGE_WIDGET;
-    if (iCurBottomView != BOTTOM_VIEW_ENEMY_TURN) {
+    if (gCurBottomView != BOTTOM_VIEW_ENEMY_TURN) {
         updated = 1;
-        gbForceUpdate = 1;
+        gForceUpdate = 1;
         ClearBottomView();
-        iCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
+        gCurBottomView = BOTTOM_VIEW_ENEMY_TURN;
 
         m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(
             BOTTOM_VIEW_PANEL_X,
@@ -3467,19 +3459,19 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         );
     }
 
-    if (gbForceUpdate || KBTickCount() - iLastSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
-        iLastSandAnimTime = KBTickCount();
+    if (gForceUpdate || KBTickCount() - gLastSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
+        gLastSandAnimTime = KBTickCount();
         iLastAnimFrame = m_updateMaxX;
-        if (KBTickCount() - iLastNewSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
-            iLastNewSandAnimTime = KBTickCount();
-            iSandAnim++;
-            if (iSandAnim >= ENEMY_TURN_SAND_FRAME_LIMIT)
-                iSandAnim = ENEMY_TURN_SAND_RESTART_FRAME;
+        if (KBTickCount() - gLastNewSandAnimTime > ENEMY_TURN_ANIMATION_DELAY) {
+            gLastNewSandAnimTime = KBTickCount();
+            gSandAnim++;
+            if (gSandAnim >= ENEMY_TURN_SAND_FRAME_LIMIT)
+                gSandAnim = ENEMY_TURN_SAND_RESTART_FRAME;
             updated = 1;
             if (m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
                 message.command = WIDGET_COMMAND_SET_FRAME;
                 message.id = ENEMY_TURN_SAND_ID;
-                message.value = iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET;
+                message.value = gSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET;
                 m_adventureWindow->BroadcastMessage(message);
             } else {
                 m_bottomViewPrimaryWidgets[ENEMY_TURN_SAND_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -3489,7 +3481,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                         ENEMY_TURN_ANIMATION_WIDTH,
                         ENEMY_TURN_ANIMATION_HEIGHT,
                         "hourglas.icn",
-                        iSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET,
+                        gSandAnim + ENEMY_TURN_SAND_FRAME_OFFSET,
                         ICON_DRAW_NORMAL,
                         ENEMY_TURN_SAND_ID,
                         ICON_WIDGET_DRAW,
@@ -3507,11 +3499,11 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         }
     }
 
-    if (gbForceUpdate || iCurBottomViewEnemy != giCurPlayer) {
+    if (gForceUpdate || gCurBottomViewEnemy != giCurPlayer) {
         updated = 1;
-        iCurBottomViewEnemy = giCurPlayer;
-        if (iCurBottomViewEnemy != giCurPlayer)
-            iCurHourGlassPhase = 0;
+        gCurBottomViewEnemy = giCurPlayer;
+        if (gCurBottomViewEnemy != giCurPlayer)
+            gCurHourGlassPhase = 0;
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = ENEMY_TURN_CREST_ID;
@@ -3540,16 +3532,16 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
         }
     }
 
-    if (gbForceUpdate || iCurHourGlassPhase < iLastHourGlassPhase || iLastHourGlassPhase < 0
-        || (iCurHourGlassPhase > iLastHourGlassPhase
-            && KBTickCount() - giLastHourGlassUpdateTime >= ENEMY_TURN_PHASE_DELAY)) {
+    if (gForceUpdate || gCurHourGlassPhase < gLastHourGlassPhase || gLastHourGlassPhase < 0
+        || (gCurHourGlassPhase > gLastHourGlassPhase
+            && KBTickCount() - gLastHourGlassUpdateTime >= ENEMY_TURN_PHASE_DELAY)) {
         updated = 1;
-        iLastHourGlassPhase = iCurHourGlassPhase;
-        giLastHourGlassUpdateTime = KBTickCount();
+        gLastHourGlassPhase = gCurHourGlassPhase;
+        gLastHourGlassUpdateTime = KBTickCount();
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = ENEMY_TURN_PHASE_ID;
-            message.value = iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET;
+            message.value = gCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET;
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[ENEMY_TURN_PHASE_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -3559,7 +3551,7 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
                     ENEMY_TURN_ANIMATION_WIDTH,
                     ENEMY_TURN_ANIMATION_HEIGHT,
                     "hourglas.icn",
-                    iCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET,
+                    gCurHourGlassPhase + ENEMY_TURN_PHASE_FRAME_OFFSET,
                     ICON_DRAW_NORMAL,
                     ENEMY_TURN_PHASE_ID,
                     ICON_WIDGET_DRAW,
@@ -3580,18 +3572,18 @@ signed char advManager::UpdBottomViewEnemyTurn(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
 VA(0x0042d23d, 0x3e0)
-signed char advManager::UpdBottomViewNewTurn(void) {
-    int frameIndex;
-    int month;
+i8 advManager::UpdBottomViewNewTurn(void) {
+    i32 frameIndex;
+    i32 month;
     char* weekStr;
     char* dayStr;
 
     frameIndex = 0;
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_NEW_TURN)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_NEW_TURN)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_NEW_TURN;
+    gCurBottomView = BOTTOM_VIEW_NEW_TURN;
     if (gpGame->m_day == 1 && (gpGame->m_month != 1 || gpGame->m_week != 1 || gpGame->m_day != 1))
         frameIndex = gpGame->m_week;
 
@@ -3673,20 +3665,20 @@ signed char advManager::UpdBottomViewNewTurn(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
 VA(0x0042d61d, 0x3fa)
-signed char advManager::UpdBottomViewResMsg(void) {
-    int iconW;
-    int iconH;
-    int y;
-    int lineCnt;
+i8 advManager::UpdBottomViewResMsg(void) {
+    i32 iconW;
+    i32 iconH;
+    i32 y;
+    i32 lineCnt;
     char* messageText;
     char* countString;
     font* smFont;
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_RESOURCE)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_RESOURCE)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_RESOURCE;
+    gCurBottomView = BOTTOM_VIEW_RESOURCE;
     m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(
         BOTTOM_VIEW_PANEL_X,
         BOTTOM_VIEW_PANEL_Y,
@@ -3782,19 +3774,19 @@ signed char advManager::UpdBottomViewResMsg(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
 VA(0x0042da17, 0x3ce)
-signed char advManager::UpdBottomViewKingdom(void) {
-    int numVillages;
-    int i;
-    int nCastles;
-    signed char rowY[KINGDOM_VIEW_ENTRY_COUNT];
-    unsigned char colX[KINGDOM_VIEW_ENTRY_COUNT];
+i8 advManager::UpdBottomViewKingdom(void) {
+    i32 numVillages;
+    i32 i;
+    i32 nCastles;
+    i8 rowY[KINGDOM_VIEW_ENTRY_COUNT];
+    u8 colX[KINGDOM_VIEW_ENTRY_COUNT];
     char* texts[KINGDOM_VIEW_ENTRY_COUNT];
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_KINGDOM)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_KINGDOM)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_KINGDOM;
+    gCurBottomView = BOTTOM_VIEW_KINGDOM;
     rowY[RESOURCE_WOOD] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[RESOURCE_MERCURY] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
     rowY[RESOURCE_ORE] = KINGDOM_VIEW_RESOURCE_TEXT_Y;
@@ -3892,24 +3884,24 @@ signed char advManager::UpdBottomViewKingdom(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
 VA(0x0042dde5, 0x62c)
-signed char advManager::UpdBottomViewHero(void) {
-    short slotNum;
-    signed char creatureType;
-    int n;
-    int qtyX;
+i8 advManager::UpdBottomViewHero(void) {
+    i16 slotNum;
+    i8 creatureType;
+    i32 n;
+    i32 qtyX;
     char* countStr[ARMY_GROUP_SLOT_COUNT];
-    short nStacks;
-    short iCrest;
+    i16 nStacks;
+    i16 iCrest;
     hero* targetHero;
-    int y;
-    int x;
+    i32 y;
+    i32 x;
     char* heroName;
 
-    if (!gbForceUpdate && iCurBottomView == BOTTOM_VIEW_HERO)
+    if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_HERO)
         return 0;
 
     ClearBottomView();
-    iCurBottomView = BOTTOM_VIEW_HERO;
+    gCurBottomView = BOTTOM_VIEW_HERO;
     targetHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
     nStacks = 0;
 
@@ -4057,31 +4049,26 @@ signed char advManager::UpdBottomViewHero(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
 VA(0x0042e411, 0xd46)
-void advManager::HeroQuickView(
-    signed char heroId,
-    signed char locatorSlot,
-    short windowX,
-    short windowY
-) {
-    short savedOriginX;
-    short portraitId;
-    short width;
+void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY) {
+    i16 savedOriginX;
+    i16 portraitId;
+    i16 width;
     hero* heroPtr;
-    short flagId;
+    i16 flagId;
     char* labelText[ARMY_GROUP_SLOT_COUNT];
-    short armyW;
+    i16 armyW;
     textWidget* sizeTexts[ARMY_GROUP_SLOT_COUNT];
-    short j;
-    short leftEdge;
+    i16 j;
+    i16 leftEdge;
     tag_message message;
-    short numArmies;
-    short creatureY;
+    i16 numArmies;
+    i16 creatureY;
     iconWidget* monWidgets[ARMY_GROUP_SLOT_COUNT];
     heroWindow* viewWin;
-    short savedOriginY;
-    short creatureIconHeight;
-    short enable;
-    short statWidget;
+    i16 savedOriginY;
+    i16 creatureIconHeight;
+    i16 enable;
+    i16 statWidget;
 
     armyW = HERO_QUICK_ARMY_AREA_WIDTH;
     leftEdge = ARMY_QUICK_AREA_LEFT;
@@ -4142,9 +4129,9 @@ void advManager::HeroQuickView(
             viewWin->BroadcastMessage(message);
         }
         if (numArmies) {
-            signed char monster;
-            short curIndex;
-            short startPos;
+            i8 monster;
+            i16 curIndex;
+            i16 startPos;
 
             startPos = (HERO_QUICK_ARMY_AREA_WIDTH - numArmies * ARMY_QUICK_ICON_SIZE) / 2
                        + ARMY_QUICK_AREA_LEFT;
@@ -4190,13 +4177,13 @@ void advManager::HeroQuickView(
             }
         }
     } else if (numArmies) {
-        short firstRow;
-        short slotIndex;
-        signed char creatureId;
-        short secondRow;
-        short offsetX;
-        short step;
-        short rowY;
+        i16 firstRow;
+        i16 slotIndex;
+        i8 creatureId;
+        i16 secondRow;
+        i16 offsetX;
+        i16 step;
+        i16 rowY;
 
         rowY = HERO_QUICK_VAGUE_FIRST_ROW_Y;
         switch (numArmies) {
@@ -4334,47 +4321,44 @@ void advManager::HeroQuickView(
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
 VA(0x0042f157, 0xe2)
-char* advManager::GetArmySizeName(
-    short armySize,
-    H1_ENUM_PARAM(ArmySizeNameVariant, signed char) grammar
-) {
+char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar) {
     if (giDebugLevel > 0) {
         sprintf(cArmySizeName, "%d", armySize);
         return cArmySizeName;
     }
-    if (armySize < static_cast<int>(ARMY_FEW_LIMIT))
-        return gArmySizeNames[static_cast<int>(ARMY_SIZE_FEW)][static_cast<int>(grammar)];
-    if (armySize < static_cast<int>(ARMY_SEVERAL_LIMIT))
-        return gArmySizeNames[static_cast<int>(ARMY_SIZE_SEVERAL)][static_cast<int>(grammar)];
-    if (armySize < static_cast<int>(ARMY_PACK_LIMIT))
-        return gArmySizeNames[static_cast<int>(ARMY_SIZE_PACK)][static_cast<int>(grammar)];
-    if (armySize < static_cast<int>(ARMY_LOTS_LIMIT))
-        return gArmySizeNames[static_cast<int>(ARMY_SIZE_LOTS)][static_cast<int>(grammar)];
-    if (armySize < static_cast<int>(ARMY_HORDE_LIMIT))
-        return gArmySizeNames[static_cast<int>(ARMY_SIZE_HORDE)][static_cast<int>(grammar)];
-    return gArmySizeNames[static_cast<int>(ARMY_SIZE_ZOUNDS)][static_cast<int>(grammar)];
+    if (armySize < static_cast<i32>(ARMY_FEW_LIMIT))
+        return gArmySizeNames[static_cast<i32>(ARMY_SIZE_FEW)][static_cast<i32>(grammar)];
+    if (armySize < static_cast<i32>(ARMY_SEVERAL_LIMIT))
+        return gArmySizeNames[static_cast<i32>(ARMY_SIZE_SEVERAL)][static_cast<i32>(grammar)];
+    if (armySize < static_cast<i32>(ARMY_PACK_LIMIT))
+        return gArmySizeNames[static_cast<i32>(ARMY_SIZE_PACK)][static_cast<i32>(grammar)];
+    if (armySize < static_cast<i32>(ARMY_LOTS_LIMIT))
+        return gArmySizeNames[static_cast<i32>(ARMY_SIZE_LOTS)][static_cast<i32>(grammar)];
+    if (armySize < static_cast<i32>(ARMY_HORDE_LIMIT))
+        return gArmySizeNames[static_cast<i32>(ARMY_SIZE_HORDE)][static_cast<i32>(grammar)];
+    return gArmySizeNames[static_cast<i32>(ARMY_SIZE_ZOUNDS)][static_cast<i32>(grammar)];
 }
 
 // donor PoL RVA 0x000631ad; preferred Buka symbol ?TownQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.675336;margin=0.051432;shape=0.330;size=0.961;calls=0.941;strings=mons32.icn|qtown1.bin|smalfont.fnt;alternate=pol20:void advManager::TownQuickView(int, int, int, int)@0x000631ad
 VA(0x0042f239, 0xc51)
-void advManager::TownQuickView(signed char townId, signed char, short windowX, short windowY) {
-    short portraitId;
-    short creatureIconHeight;
-    short numArmies;
+void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
+    i16 portraitId;
+    i16 creatureIconHeight;
+    i16 numArmies;
     tag_message message;
-    short i;
-    short flag;
-    short flagId;
-    short savedOriginX;
-    short width;
+    i16 i;
+    i16 flag;
+    i16 flagId;
+    i16 savedOriginX;
+    i16 width;
     heroWindow* viewWin;
     town* townPointer;
-    short savedOriginY;
-    int detailLevel;
-    short armyW;
-    short leftEdge;
+    i16 savedOriginY;
+    i32 detailLevel;
+    i16 armyW;
+    i16 leftEdge;
 
     armyW = TOWN_QUICK_ARMY_AREA_WIDTH;
     leftEdge = ARMY_QUICK_AREA_LEFT;
@@ -4461,19 +4445,19 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
             MemError();
         viewWin->AddWidget(garrisonWidget, WINDOW_Z_ORDER_APPEND);
     } else {
-        short slotIndex;
-        short rowY;
-        int xAdjust;
-        short offsetX;
-        signed char monster;
-        short step;
+        i16 slotIndex;
+        i16 rowY;
+        i32 xAdjust;
+        i16 offsetX;
+        i8 monster;
+        i16 step;
         iconWidget* iconWgts[ARMY_GROUP_SLOT_COUNT];
-        short row2;
-        short row1;
+        i16 row2;
+        i16 row1;
         textWidget* texts[ARMY_GROUP_SLOT_COUNT];
-        signed char dummy;
+        i8 dummy;
         char* labels[ARMY_GROUP_SLOT_COUNT];
-        signed char slot;
+        i8 slot;
 
         rowY = TOWN_QUICK_FIRST_ROW_Y;
         switch (numArmies) {
@@ -4635,7 +4619,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.562981;margin=0.429826;shape=0.444;size=0.906;calls=0.909;alternate=pol20:void advManager::RedrawAdvScreen(int, int)@0x00063dd6
 VA(0x0042fe8a, 0xe8)
-void advManager::RedrawAdvScreen(int update) {
+void advManager::RedrawAdvScreen(i32 update) {
     if (!bShowIt)
         return;
     gpResourceManager->GetBackdrop("bord.bmp", gpWindowManager->m_screen);
@@ -4666,7 +4650,7 @@ void advManager::DeactivateCurrHero(void) {
 }
 
 VA(0x0042ffb8, 0x59)
-void advManager::MobilizeCurrHero(int update) {
+void advManager::MobilizeCurrHero(i32 update) {
     if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
     if (m_heroContextLocked)
@@ -4708,10 +4692,10 @@ void advManager::DemobilizeCurrHero(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
 VA(0x004301aa, 0x255)
-void advManager::SetTownContext(signed char townId) {
-    short k;
-    signed char townNo;
-    signed char wasVisible;
+void advManager::SetTownContext(i8 townId) {
+    i16 k;
+    i8 townNo;
+    i8 wasVisible;
     town* townPointer;
 
     DeactivateCurrHero();
@@ -4753,10 +4737,10 @@ void advManager::SetTownContext(signed char townId) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
 VA(0x004303ff, 0x3e6)
-void advManager::SetHeroContext(signed char heroId, signed char update) {
-    signed char wasVisible;
-    signed char heroSlot;
-    short n;
+void advManager::SetHeroContext(i8 heroId, i8 update) {
+    i8 wasVisible;
+    i8 heroSlot;
+    i16 n;
     mapCell* cellPtr;
     hero* currentHero;
 
@@ -4817,7 +4801,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
         m_currentTerrain = heroSlot;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
     }
-    if (!gbHeroMoving) {
+    if (!gHeroMoving) {
         if (wasVisible)
             gpMouseManager->ReallyShowPointer();
         gpInputManager->m_field_0x34a = 1;
@@ -4831,13 +4815,13 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
 VA(0x004307e5, 0x290)
 void advManager::DoHeroKnob(void) {
     double scale;
-    short pg;
+    i16 pg;
     tag_message message;
-    short numHeroes;
-    signed char prevPage;
-    short x;
-    short my;
-    short offset;
+    i16 numHeroes;
+    i8 prevPage;
+    i16 x;
+    i16 my;
+    i16 offset;
 
     gpMouseManager->SetCursorShape(4);
     prevPage = gpCurPlayer->m_heroLocatorPage;
@@ -4857,7 +4841,7 @@ void advManager::DoHeroKnob(void) {
             m_scrollLeftButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
-                pg = static_cast<short>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pg = static_cast<i16>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_heroLocatorPage = pg;
                     if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
@@ -4883,13 +4867,13 @@ void advManager::DoHeroKnob(void) {
 VA(0x00430a75, 0x290)
 void advManager::DoTownKnob(void) {
     double scale;
-    short pg;
+    i16 pg;
     tag_message message;
-    short numHeroes;
-    signed char prevPage;
-    short x;
-    short offset;
-    short my;
+    i16 numHeroes;
+    i8 prevPage;
+    i16 x;
+    i16 offset;
+    i16 my;
 
     gpMouseManager->SetCursorShape(4);
     prevPage = gpCurPlayer->m_townLocatorPage;
@@ -4909,7 +4893,7 @@ void advManager::DoTownKnob(void) {
             m_scrollRightButton->m_y = message.y - offset;
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
-                pg = static_cast<short>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
+                pg = static_cast<i16>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
                 if (prevPage != pg) {
                     gpCurPlayer->m_townLocatorPage = pg;
                     if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
@@ -4934,12 +4918,12 @@ void advManager::DoTownKnob(void) {
 // evidence: graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
 VA(0x00430d05, 0x3da)
 void advManager::ViewPuzzle(void) {
-    int puzzleX;
-    int puzzleY;
-    signed char visibleCount;
+    i32 puzzleX;
+    i32 puzzleY;
+    i8 visibleCount;
     icon* puzzlePieces;
     heroWindow* pWin;
-    short j;
+    i16 j;
 
     visibleCount = 0;
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_PUZZLE);
@@ -4966,8 +4950,8 @@ void advManager::ViewPuzzle(void) {
 
     puzzleX = gpGame->m_ultimateArtifactX - ADVMGR_VIEW_CENTER;
     puzzleY = gpGame->m_ultimateArtifactY - ADVMGR_VIEW_CENTER;
-    int biasX = 0;
-    int biasY = 0;
+    i32 biasX = 0;
+    i32 biasY = 0;
     biasX =
         (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_ALIGNMENT_DIVISOR - 1;
     biasY = (gpGame->m_ultimateArtifactY * PUZZLE_Y_ADJUST_Y_FACTOR
@@ -5022,13 +5006,13 @@ void advManager::ViewPuzzle(void) {
 // HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
 // visible object/overlay frames and marking the target cell.
 VA(0x004310df, 0x236)
-void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
-    int y;
+void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
+    i32 y;
     mapCell* cell;
-    int x;
-    unsigned char tileset;
-    short screenX;
-    short screenY;
+    i32 x;
+    u8 tileset;
+    i16 screenX;
+    i16 screenY;
 
     for (y = 0; y < ADVMGR_VIEW_CELL_COUNT; y++) {
         for (x = 0; x < ADVMGR_VIEW_CELL_COUNT; x++) {
@@ -5093,9 +5077,9 @@ void advManager::PuzzleDraw(int left, int top, int markX, int markY) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
 VA(0x00431315, 0x1f2)
-void advManager::CastSpell(signed char spell) {
+void advManager::CastSpell(i8 spell) {
     hero* caster;
-    int guardianCount;
+    i32 guardianCount;
 
     if (gpCurPlayer->CurrentHero() != INVALID_HERO)
         caster = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -5154,28 +5138,24 @@ void advManager::CastSpell(signed char spell) {
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
 VA(0x00431507, 0x1127)
-void advManager::ViewWorld(
-    signed char spellType,
-    signed char drawAllObjects,
-    signed char drawAllTerrains
-) {
+void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
     hero* curHero;
-    signed char ts;
-    signed char flip;
+    i8 ts;
+    i8 flip;
     icon* letters;
-    short index;
+    i16 index;
     heroWindow* win;
-    unsigned short mask;
-    short x;
-    short owner;
+    u16 mask;
+    i16 x;
+    i16 owner;
     mapCell* cell;
     icon* tilesets[VIEW_WORLD_TILESET_COUNT];
-    short i;
-    short y;
-    short screenX;
+    i16 i;
+    i16 y;
+    i16 screenX;
     icon* spheres;
-    short screenY;
+    i16 screenY;
     icon* ground;
 
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -5633,45 +5613,45 @@ H1_ENUM_END(ControlPanelHelp)
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
 // that also applies the walk-speed sample set and saves changed preferences.
 VA(0x0043266f, 0x321)
-short advManager::ControlPanel(void) {
+i16 advManager::ControlPanel(void) {
     tag_message message;
-    int mobilized;
-    signed char oldSpeed;
-    int gameCommand;
-    int n;
+    i32 mobilized;
+    i8 oldSpeed;
+    i32 gameCommand;
+    i32 n;
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gameCommand = MAIN_MENU_NO_COMMAND;
     oldSpeed = gConfig.walkSpeed;
-    bFreshSave = 0;
+    gFreshSave = 0;
     mobilized = m_heroContextLocked;
     bPrefsChanged = 0;
     DemobilizeCurrHero();
-    cPanel = new heroWindow(160, 10, "cpanel.bin");
-    if (cPanel == NULL)
+    gPanel = new heroWindow(160, 10, "cpanel.bin");
+    if (gPanel == NULL)
         MemError();
-    SetWinText(cPanel, WINDOW_TEXT_CONTROL_PANEL);
-    if (gbRemoteOn) {
+    SetWinText(gPanel, WINDOW_TEXT_CONTROL_PANEL);
+    if (gRemoteOn) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        cPanel->BroadcastMessage(message);
+        gPanel->BroadcastMessage(message);
     }
     UpdateCPanel(1);
-    gpWindowManager->DoDialog(cPanel, CPanelHandler, 0);
-    delete cPanel;
+    gpWindowManager->DoDialog(gPanel, CPanelHandler, 0);
+    delete gPanel;
     switch (gpWindowManager->m_dialogResult) {
         case CONTROL_NEW_GAME:
         case CONTROL_LOAD_GAME:
@@ -5706,59 +5686,59 @@ short advManager::ControlPanel(void) {
 
 // Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
 VA(0x00432990, 0x227)
-void UpdateCPanel(signed char initialDraw) {
+void UpdateCPanel(i8 initialDraw) {
     tag_message message;
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, CONTROL_MUSIC_VOLUME);
     message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;
     message.value = gConfig.soundVolume ? CPANEL_FRAME_SOUND_ON : CPANEL_FRAME_SOUND_OFF;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED;
     message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
     message.value = gConfig.musicSource + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
     message.value = gConfig.showRoute + CPANEL_FRAME_SHOW_ROUTE_FIRST;
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
-    message.value = gbRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
-                               : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
-    cPanel->BroadcastMessage(message);
+    message.value = gRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
+                              : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
+    gPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
     message.text = onOffText[gConfig.musicVolume];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME_TEXT;
     message.text = onOffText[gConfig.soundVolume];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED_TEXT;
     message.text = walkSpeedText[gConfig.walkSpeed];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text = musicQualityText[gConfig.musicSource];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
     message.text = onOffText[1 - gConfig.blackoutComputer];
-    cPanel->BroadcastMessage(message);
+    gPanel->BroadcastMessage(message);
     if (!initialDraw)
-        cPanel->MoveWindow(0, 0);
+        gPanel->MoveWindow(0, 0);
 }
 
 VA(0x00432bb7, 0x232)
-signed char SaveGame(void) {
-    short iResult;
+i8 SaveGame(void) {
+    i16 iResult;
     fileRequester* fileReq;
     char searchMask[16];
-    signed char success;
-    int humans;
-    int plIdx;
+    i8 success;
+    i32 humans;
+    i32 plIdx;
     char extension[8];
 
     success = 0;
@@ -5768,21 +5748,21 @@ signed char SaveGame(void) {
     for (plIdx = 0; plIdx < GAME_PLAYER_COUNT; plIdx++)
         if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
             humans++;
-    if (giCampaignChoice > 0) {
+    if (gCampaignChoice > 0) {
         sprintf(extension, ".CGM");
         sprintf(searchMask, "*.CGM");
     } else {
         sprintf(extension, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
-    extern char gcGamePath[];
-    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gcGamePath, extension);
+    extern char gGamePath[];
+    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gGamePath, extension);
     if (!fileReq)
         MemError();
     iResult = gpExec->DoDialog(fileReq);
     if (iResult == DIALOG_BUTTON_2) {
         success = 1;
-        bFreshSave = 1;
+        gFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1);
@@ -5794,14 +5774,14 @@ signed char SaveGame(void) {
 
 // Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
 VA(0x00432de9, 0x54b)
-short CPanelHandler(struct tag_message& message) {
-    signed char changed = 0;
+i16 CPanelHandler(struct tag_message& message) {
+    i8 changed = 0;
     char question[120];
-    signed char handled = 0;
+    i8 handled = 0;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                int helpIndex = CPANEL_HELP_NONE;
+                i32 helpIndex = CPANEL_HELP_NONE;
                 switch (message.id) {
                     case CONTROL_NEW_GAME:
                         helpIndex = CPANEL_HELP_NEW_GAME;
@@ -5865,7 +5845,7 @@ short CPanelHandler(struct tag_message& message) {
                             strcpy(question, "Are you sure you want to quit?");
                         confirm_reset:
                             handled = 1;
-                            if (!bFreshSave) {
+                            if (!gFreshSave) {
                                 NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50);
                                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                                     handled = 0;
@@ -5928,7 +5908,7 @@ short CPanelHandler(struct tag_message& message) {
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_SHOW_ENEMY_MOVES:
-                            if (!gbRemoteOn) {
+                            if (!gRemoteOn) {
                                 gConfig.blackoutComputer = 1 - gConfig.blackoutComputer;
                                 changed = 1;
                                 bPrefsChanged = 1;
@@ -5975,7 +5955,7 @@ VA(0x004333df, 0x213)
 void advManager::AdvPanel(void) {
     heroWindow* adventurePanel;
     struct tag_message message;
-    int mobilized;
+    i32 mobilized;
 
     TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -6025,12 +6005,12 @@ void advManager::AdvPanel(void) {
 // Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
 // chains the dialog-select stores.
 VA(0x004335f2, 0x1d3)
-short APanelHandler(struct tag_message& message) {
-    signed char handled = 0;
+i16 APanelHandler(struct tag_message& message) {
+    i8 handled = 0;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
             if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
-                int helpIndex = PANEL_NO_HELP;
+                i32 helpIndex = PANEL_NO_HELP;
                 switch (message.id) {
                     case PANEL_VIEW_WORLD:
                         helpIndex = PANEL_VIEW_WORLD_HELP;
@@ -6091,10 +6071,10 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
 VA(0x004337c5, 0x34b)
-short DimensionDoorHandler(struct tag_message& message) {
-    signed char result;
-    short mouseX;
-    short mouseY;
+i16 DimensionDoorHandler(struct tag_message& message) {
+    i8 result;
+    i16 mouseX;
+    i16 mouseY;
     mapCell* cell;
 
     if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
@@ -6181,12 +6161,12 @@ short DimensionDoorHandler(struct tag_message& message) {
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 // HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
 VA(0x00433b10, 0xaf6)
-signed char advManager::ComboDraw(short originX, short originY, signed char animate) {
+i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     DATA(0x004904a4)
-    static int giFrameCount = 0;
-    int updateCount;
-    int drawY;
-    int drawX;
+    static i32 gFrameCount = 0;
+    i32 updateCount;
+    i32 drawY;
+    i32 drawX;
     mapCell* cellPtr;
 
     PollSound();
@@ -6197,15 +6177,15 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         return 1;
     }
     if (animate) {
-        giFrameCount += giFrameStep;
-        if (giFrameCount < COMBO_FRAME_LIMIT) {
+        gFrameCount += giFrameStep;
+        if (gFrameCount < COMBO_FRAME_LIMIT) {
             Process1WindowsMessage();
             if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
                 glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
             PollSound();
             return 0;
         } else {
-            giFrameCount = 0;
+            gFrameCount = 0;
         }
     }
 
@@ -6352,7 +6332,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
     PollSound();
     UpdBottomView(0, 1, 1);
     DrawAdventureBorder();
-    giLimitUpdMinX = ADVMGR_VIEW_CELL_COUNT;
+    gLimitUpdMinX = ADVMGR_VIEW_CELL_COUNT;
     giLimitUpdMinY = ADVMGR_VIEW_CELL_COUNT;
     giLimitUpdMaxX = 0;
     giLimitUpdMaxY = 0;
@@ -6361,8 +6341,8 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
         for (drawX = 0; drawX < ADVMGR_VIEW_CELL_COUNT; drawX++) {
             if (bComboDraw[drawX][drawY]) {
                 updateCount++;
-                if (drawX < giLimitUpdMinX)
-                    giLimitUpdMinX = drawX;
+                if (drawX < gLimitUpdMinX)
+                    gLimitUpdMinX = drawX;
                 if (drawX > giLimitUpdMaxX)
                     giLimitUpdMaxX = drawX;
                 if (drawY < giLimitUpdMinY)
@@ -6372,20 +6352,20 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
             }
         }
     }
-    giLimitUpdMinX <<= CELL_PIXEL_SHIFT;
+    gLimitUpdMinX <<= CELL_PIXEL_SHIFT;
     giLimitUpdMinY <<= CELL_PIXEL_SHIFT;
     giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << CELL_PIXEL_SHIFT) - 1;
     giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << CELL_PIXEL_SHIFT) - 1;
-    if (giLimitUpdMinX < COMBO_UPDATE_MIN)
-        giLimitUpdMinX = COMBO_UPDATE_MIN;
+    if (gLimitUpdMinX < COMBO_UPDATE_MIN)
+        gLimitUpdMinX = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
         giLimitUpdMaxX = COMBO_UPDATE_MAX;
     if (giLimitUpdMinY < COMBO_UPDATE_MIN)
         giLimitUpdMinY = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
         giLimitUpdMaxY = COMBO_UPDATE_MAX;
-    if (giLimitUpdMaxX < giLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
-        giLimitUpdMinX = giLimitUpdMaxX - 1;
+    if (giLimitUpdMaxX < gLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
+        gLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
         return 0;
     }
@@ -6394,7 +6374,7 @@ signed char advManager::ComboDraw(short originX, short originY, signed char anim
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.
 VA(0x00434606, 0x3a)
-signed char advManager::ComboDraw(int update) {
+i8 advManager::ComboDraw(i32 update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
@@ -6402,11 +6382,11 @@ signed char advManager::ComboDraw(int update) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
 VA(0x00434640, 0x2dd)
-void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSounds) {
-    int soundRadius;
-    int edgeOffset;
-    int maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
-    int layer;
+void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) {
+    i32 soundRadius;
+    i32 edgeOffset;
+    i32 maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
+    i32 layer;
 
     if (gpSoundManager->m_musicReady == 0)
         return;
@@ -6474,7 +6454,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
                     m_loopingSamples[m_activeSounds[edgeOffset].soundId]
                         ->m_playbackData.activeSample,
                     100,
-                    glEnvironmentVolume[m_activeSounds[edgeOffset].volume]
+                    gEnvironmentVolume[m_activeSounds[edgeOffset].volume]
                 );
             }
         }
@@ -6485,7 +6465,7 @@ void advManager::SetEnvironmentOrigin(short originX, short originY, short stopSo
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
 VA(0x0043491d, 0x69)
-void advManager::CheckLoadSample(int index) {
+void advManager::CheckLoadSample(i32 index) {
     if (m_loopingSamples[index] == NULL) {
         TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
         sprintf(gText, "loop%04d.82M", index);
@@ -6497,11 +6477,11 @@ void advManager::CheckLoadSample(int index) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
 VA(0x00434986, 0x251)
-void advManager::InsertSound(short x, short y, short distance, signed char soundLayer) {
-    int slot;
-    int distanceLimit;
-    int i;
-    int soundId;
+void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
+    i32 slot;
+    i32 distanceLimit;
+    i32 i;
+    i32 soundId;
 
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
         return;
@@ -6535,7 +6515,7 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
         m_activeSounds[slot].soundId = soundId;
         m_activeSounds[slot].volume = distance;
         CheckLoadSample(soundId);
-        m_loopingSamples[soundId]->m_playbackData.volume = glEnvironmentVolume[distance];
+        m_loopingSamples[soundId]->m_playbackData.volume = gEnvironmentVolume[distance];
         m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
         m_loopingSamples[soundId]->m_playbackData.channelType = ENVIRONMENT_SOUND_CHANNEL_TYPE;
         gpSoundManager->MemorySample(m_loopingSamples[soundId]);
@@ -6547,27 +6527,27 @@ void advManager::InsertSound(short x, short y, short distance, signed char sound
 // Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
 // declare them in advManager.h and never use them). VC4 orders .bss by name
 // key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
-// cPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
+// gPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
 // bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
 // absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
 // 0x004c50b0-0x004c50bf. .bss position does not move them, so they sit with
 // the spell code (USMsg and CDMsg after TeleportTo).
 DATA(0x004c4f30)
-int iThisMaxY;
+i32 iThisMaxY;
 DATA(0x004c4f34)
-int iThisMinY;
+i32 iThisMinY;
 
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
 VA(0x00434bd7, 0x340)
-void advManager::TeleportTo(int x, int y, int) {
-    int savedShow;
-    int fizzle;
+void advManager::TeleportTo(i32 x, i32 y, i32) {
+    i32 savedShow;
+    i32 fizzle;
     mapCell* destinationCell;
     mapCell* oldCell;
-    int tmp;
-    signed char newTerrain;
+    i32 tmp;
+    i8 newTerrain;
     hero* mapHero;
     town* occupiedTown;
 
@@ -6583,8 +6563,8 @@ void advManager::TeleportTo(int x, int y, int) {
         oldCell->m_flags -= MAP_CELL_HERO_CURSOR;
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
-        if (!gConfig.blackoutComputer && !gbRemoteOn
-            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & giCurWatchPlayerHighBit))
+        if (!gConfig.blackoutComputer && !gRemoteOn
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & gCurWatchPlayerHighBit))
             bShowIt = 1;
         else
             bShowIt = 0;
@@ -6647,8 +6627,8 @@ VA(0x00434f17, 0x246)
 void advManager::DimensionDoor(void) {
     hero* heroPointer;
     heroWindow* win;
-    short x;
-    short y;
+    i16 x;
+    i16 y;
     mapCell* targetCell;
 
     win = new heroWindow(0, 0, "dimdoor.bin");
@@ -6689,11 +6669,11 @@ struct tag_message CDMsg;
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
 VA(0x0043515d, 0x2a6)
 void advManager::TownGate(void) {
-    int k;
-    int bestDist;
-    int bestTown;
+    i32 k;
+    i32 bestDist;
+    i32 bestTown;
     hero* heroPointer;
-    int distance;
+    i32 distance;
 
     bestDist = TOWN_PORTAL_DISTANCE_LIMIT;
     bestTown = -1;
@@ -6740,18 +6720,18 @@ void advManager::TownGate(void) {
 VA(0x00435403, 0x51c)
 void advManager::SummonBoat(void) {
     hero* pHero;
-    signed char boatFound;
+    i8 boatFound;
     mapCell* pCell;
-    short iDirection;
-    signed char foundCell;
+    i16 iDirection;
+    i8 foundCell;
     boatRecord* thisBoat;
-    short slotIndex;
-    signed char heroNum;
+    i16 slotIndex;
+    i8 heroNum;
     mapCell* fromCell;
-    short drawHeight;
-    short drawY;
-    short drawWidth;
-    short drawX;
+    i16 drawHeight;
+    i16 drawY;
+    i16 drawWidth;
+    i16 drawX;
 
     pHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     foundCell = 0;
@@ -6849,22 +6829,22 @@ summon_done:
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
 VA(0x0043591f, 0x31b)
-void advManager::ShowRoute(int redraw, int, int updateButton) {
+void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
     hero* pHero;
-    int canReach;
-    int fromDirection;
-    int x;
-    int y;
-    int dir;
-    int j;
-    int remMob;
-    int terr;
+    i32 canReach;
+    i32 fromDirection;
+    i32 x;
+    i32 y;
+    i32 dir;
+    i32 j;
+    i32 remMob;
+    i32 terr;
     // The widget command for the continue-route button; retail allocation
     // follows this local name (renaming it moves registers).
-    short buttonFrame;
+    i16 buttonFrame;
 
     canReach = 0;
-    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
         return;
     if (gpCurPlayer->m_currentHero == INVALID_HERO) {
         HideRoute(redraw, 0, 1);
@@ -6931,10 +6911,10 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.524051;margin=0.948488;shape=0.403;size=0.809;calls=1.000;alternate=pol20:void advManager::HideRoute(int, int, int)@0x00068720
 VA(0x00435c3a, 0x106)
-void advManager::HideRoute(int redraw, int clearDestination, int updateButton) {
+void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
     hero* currentHero;
 
-    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !giShowComputerRoute))
+    if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
         return;
 
     if (updateButton)
@@ -6980,7 +6960,7 @@ void advManager::CheckDimHero(void) {
 // evidence: graph:3;base=0.454682;margin=0.437763;shape=0.225;size=0.845;calls=1.000;alternate=pol20:void advManager::CheckDimNextHeroBut(void)@0x000688b4
 VA(0x00435dd1, 0x6e)
 void advManager::CheckDimNextHeroBut(void) {
-    short frame;
+    i16 frame;
 
     if (!gbThisNetHumanPlayer[giCurPlayer] || !gpCurPlayer->HasMobileHero())
         frame = WIDGET_COMMAND_SET_FLAGS;
@@ -6998,7 +6978,7 @@ void advManager::CheckDimNextHeroBut(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.530039;margin=0.750383;shape=0.400;size=0.820;calls=1.000;alternate=pol20:void advManager::SeedTo(int, int)@0x0006891f
 VA(0x00435e3f, 0x152)
-void advManager::SeedTo(int targetX, int targetY) {
+void advManager::SeedTo(i32 targetX, i32 targetY) {
     hero* currentHero;
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
@@ -7022,7 +7002,7 @@ void advManager::SeedTo(int targetX, int targetY) {
             0,
             1
         );
-    else if (!giFullySeeded)
+    else if (!gFullySeeded)
         gpSearchArray->SeedPosition(
             currentHero->m_x,
             currentHero->m_y,
@@ -7052,13 +7032,13 @@ void advManager::ForceNewHover(void) {
 }
 
 VA(0x00435fe0, 0x1b6)
-void advManager::ScreenScroll(signed char direction, int updatePointer) {
-    short yOrigin;
-    short xOrigin;
+void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
+    i16 yOrigin;
+    i16 xOrigin;
 
     xOrigin = m_mapOriginX;
     yOrigin = m_mapOriginY;
-    iLastScrollTime = KBTickCount();
+    gLastScrollTime = KBTickCount();
 
     switch (direction) {
         case MAP_DIRECTION_NORTH:
@@ -7118,13 +7098,13 @@ void advManager::ScreenScroll(signed char direction, int updatePointer) {
 // evidence: graph:3;base=0.475412;margin=0.607960;shape=0.306;size=0.761;calls=1.000;alternate=pol20:void advManager::CheckScreenScroll(void)@0x00068c5c
 VA(0x00436196, 0x1e1)
 void advManager::CheckScreenScroll(void) {
-    short mouseX;
-    short mouseY;
-    int oldX;
-    int oldY;
+    i16 mouseX;
+    i16 mouseY;
+    i32 oldX;
+    i32 oldY;
 
-    if (KBTickCount() - iLastScrollTime > SCROLL_TICK_INTERVAL) {
-        iLastScrollTime = KBTickCount();
+    if (KBTickCount() - gLastScrollTime > SCROLL_TICK_INTERVAL) {
+        gLastScrollTime = KBTickCount();
         oldX = m_mapOriginX;
         oldY = m_mapOriginY;
         gpMouseManager->MouseCoords(mouseX, mouseY);
@@ -7163,9 +7143,9 @@ void advManager::CheckScreenScroll(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.376012;margin=0.441568;shape=0.180;size=0.620;calls=1.000;alternate=pol20:int advManager::MouseInScrollZone(void)@0x00068e17
 VA(0x00436377, 0xa3)
-int advManager::MouseInScrollZone(void) {
-    short mouseX;
-    short mouseY;
+i32 advManager::MouseInScrollZone(void) {
+    i16 mouseX;
+    i16 mouseY;
 
     gpMouseManager->MouseCoords(mouseX, mouseY);
     if (mouseX >= 0 && mouseX < LOGICAL_SCREEN_WIDTH && mouseY >= 0
@@ -7183,8 +7163,8 @@ int advManager::MouseInScrollZone(void) {
 // evidence: graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
 VA(0x0043641a, 0x283)
 void advManager::SetInitialMapOrigin(void) {
-    short x;
-    short y;
+    i16 x;
+    i16 y;
     game* gameState;
     hero* initialHero;
     town* townPointer;
@@ -7198,7 +7178,7 @@ void advManager::SetInitialMapOrigin(void) {
     );
     m_lastHoverCell = m_hoverCellY = 0;
     m_cursorActive = 0;
-    gbHeroMoving = 0;
+    gHeroMoving = 0;
     if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
         m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
@@ -7245,10 +7225,10 @@ void advManager::LoadRemote(void) {
     UpdateRadar(1, 0);
     gpMouseManager->ReallyShowPointer();
     UpdBottomView(1, 1, 1);
-    if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gbRemoteOn
-        && gbThisNetHumanPlayer[giCurPlayer] && giForceSwitchMusic == FORCED_MUSIC_IDLE) {
+    if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gRemoteOn
+        && gbThisNetHumanPlayer[giCurPlayer] && gForceSwitchMusic == FORCED_MUSIC_IDLE) {
         gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
-        giForceSwitchMusic = KBTickCount();
+        gForceSwitchMusic = KBTickCount();
     }
 }
 
@@ -7258,7 +7238,7 @@ void advManager::LoadRemote(void) {
 VA(0x004367ef, 0x178)
 char* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
-    int remotePlayerExited;
+    i32 remotePlayerExited;
 
     // API-forced: GetRemoteData and DoNetCombat pass queue records as char*.
     receivedPacket = reinterpret_cast<RemoteMessage*>(GetRemoteData(1));
@@ -7279,7 +7259,7 @@ char* advManager::CheckHandleNet(void) {
                 PopNetBox(receivedPacket->payload.data);
                 break;
             case REMOTE_COMMAND_HERO_TOWN_DATA:
-                if (gbInCombat)
+                if (gInCombat)
                     return reinterpret_cast<char*>(receivedPacket); // API-forced: char* record.
                 else
                     DoNetCombat(
@@ -7306,7 +7286,7 @@ char* advManager::CheckHandleNet(void) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.447497;margin=1.157842;shape=0.264;size=0.731;calls=1.000;alternate=pol20:int advManager::CheckHandleNetPlayerWait(struct tag_message &, int)@0x0006952a
 VA(0x00436967, 0xd4)
-short advManager::CheckHandleNetPlayerWait(struct tag_message& message, signed char doMain) {
+i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain) {
     if (message.type == MESSAGE_MOUSE_MOVE)
         gpMouseManager->Main(message);
 
@@ -7337,18 +7317,18 @@ short advManager::CheckHandleNetPlayerWait(struct tag_message& message, signed c
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
 VA(0x00436a3b, 0x1c2)
-void advManager::TrimLoopingSounds(int maxSamples) {
-    if (giHighMemBuffer > 0)
-        maxSamples += giHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
+void advManager::TrimLoopingSounds(i32 maxSamples) {
+    if (gHighMemBuffer > 0)
+        maxSamples += gHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
 
     if (maxSamples >= ADVMGR_ENVIRONMENT_SOUND_COUNT)
         return;
 
-    signed char keep[ADVMGR_ENVIRONMENT_SOUND_COUNT];
-    int loaded = 0;
+    i8 keep[ADVMGR_ENVIRONMENT_SOUND_COUNT];
+    i32 loaded = 0;
     memset(keep, 0, sizeof(keep));
 
-    int i;
+    i32 i;
     for (i = 0; i < ADVMGR_ACTIVE_SOUND_COUNT; ++i) {
         if (m_activeSounds[i].soundId >= 0
             && m_activeSounds[i].soundId < ADVMGR_ENVIRONMENT_SOUND_COUNT)
@@ -7402,10 +7382,10 @@ void advManager::SaveAdventureBorder(void) {
     if (m_adventureBorder != NULL)
         return;
 
-    m_adventureBorder = static_cast<unsigned char*>(malloc(BORDER_BUFFER_SIZE));
-    unsigned char* savedPixels = m_adventureBorder;
-    signed char* src = gpWindowManager->m_screen->m_pixels;
-    int row;
+    m_adventureBorder = static_cast<u8*>(malloc(BORDER_BUFFER_SIZE));
+    u8* savedPixels = m_adventureBorder;
+    i8* src = gpWindowManager->m_screen->m_pixels;
+    i32 row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, src, ADVENTURE_VIEWPORT_EXTENT);
         src += LOGICAL_SCREEN_WIDTH;
@@ -7429,13 +7409,13 @@ void advManager::SaveAdventureBorder(void) {
 // evidence: graph:2;base=0.567997;margin=0.477634;shape=0.397;size=0.978;calls=1.000;alternate=pol20:void advManager::DrawAdventureBorder(void)@0x00069abb
 VA(0x00436ed5, 0x134)
 void advManager::DrawAdventureBorder(void) {
-    unsigned char* savedPixels;
-    signed char* dest;
-    int row;
+    u8* savedPixels;
+    i8* dest;
+    i32 row;
 
     if (m_adventureBorder == NULL)
         return;
-    if (gbNoBorder != 0)
+    if (gNoBorder != 0)
         return;
 
     dest = gpWindowManager->m_screen->m_pixels;
@@ -7459,50 +7439,50 @@ void advManager::DrawAdventureBorder(void) {
 }
 
 // ADVMGR owns retail .data 0x0048f828-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
-// Retail emits giCheatSeq, the sand-animation times and giFrameCount among the
+// Retail emits gCheatSeq, the sand-animation times and gFrameCount among the
 // literals of their users.
 DATA(0x0048f828)
-int giLimitUpdMinX = UPDATE_NONE;
+i32 gLimitUpdMinX = UPDATE_NONE;
 DATA(0x0048f82c)
-long iLastScrollTime = 0;
+i32 gLastScrollTime = 0;
 DATA(0x0048f830)
-int iSandAnim = 0;
+i32 gSandAnim = 0;
 DATA(0x0048f834)
-long giLastHourGlassUpdateTime = 0;
+i32 gLastHourGlassUpdateTime = 0;
 DATA(0x0048f838)
-int TrigX = 0;
+i32 TrigX = 0;
 DATA(0x0048f83c)
-int TrigY = 0;
+i32 TrigY = 0;
 DATA(0x0048f840)
-int iCurBottomView = BOTTOM_VIEW_NONE;
+i32 gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048f844)
-int iCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
+i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
 DATA(0x0048f848)
-int iCurHourGlassPhase = 0;
+i32 gCurHourGlassPhase = 0;
 DATA(0x0048f84c)
-int iLastHourGlassPhase = 1;
+i32 gLastHourGlassPhase = 1;
 DATA(0x0048f850)
-int gbForceUpdate = 0;
+i32 gForceUpdate = 0;
 DATA(0x004c4f2c)
-class heroWindow* cPanel;
+class heroWindow* gPanel;
 DATA(0x004c4f4c)
-int giFrameStep;
+i32 giFrameStep;
 DATA(0x004c4f50)
 char cArmySizeName[12];
 DATA(0x004c4f5c)
-int giLimitUpdMaxX;
+i32 giLimitUpdMaxX;
 DATA(0x004c4f60)
-int giLimitUpdMaxY;
+i32 giLimitUpdMaxY;
 DATA(0x004c4f6c)
-signed char bPrefsChanged;
+i8 bPrefsChanged;
 DATA(0x004c4f74)
-int giLimitUpdMinY;
+i32 giLimitUpdMinY;
 DATA(0x004c4f78)
-signed char bComboDraw[17][17];
+i8 bComboDraw[17][17];
 DATA(0x004c50a0)
-signed char bFreshSave;
+i8 gFreshSave;
 DATA(0x004c50c0)
-int iLastAnimFrame;
+i32 iLastAnimFrame;
 // ADVMGR's .rdata: ambient-sound volume by distance (0x0048c390).
 DATA(0x0048c390)
-const long glEnvironmentVolume[5] = {64, 48, 32, 16, 10};
+const i32 gEnvironmentVolume[5] = {64, 48, 32, 16, 10};

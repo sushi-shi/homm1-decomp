@@ -28,15 +28,9 @@ H1_ENUM_CONST_END(CombatPathConstant)
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
 VA(0x004180f0, 0x152)
-short army::FindPath(
-    short sourceHex,
-    short targetHex,
-    signed char,
-    signed char ignoreSpeed,
-    signed char pathMode
-) {
-    short pathResult;
-    int savedSpeed;
+i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
+    i16 pathResult;
+    i32 savedSpeed;
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return 0;
@@ -64,9 +58,9 @@ short army::FindPath(
 
 // Buka PATH.cpp ValidPath.
 VA(0x00418242, 0x9e)
-short army::ValidPath(short targetHex, signed char pathMode) {
-    int pathResult;
-    int unusedExtra;
+i16 army::ValidPath(i16 targetHex, i8 pathMode) {
+    i32 pathResult;
+    i32 unusedExtra;
 
     if (!ValidHex(targetHex))
         return 0;
@@ -82,10 +76,10 @@ short army::ValidPath(short targetHex, signed char pathMode) {
 
 // Buka PATH.cpp GetMoveMask.
 VA(0x004182e0, 0x7b)
-short army::GetMoveMask(short sourceHex) {
-    short blockedMask;
-    short mask;
-    short direction;
+i16 army::GetMoveMask(i16 sourceHex) {
+    i16 blockedMask;
+    i16 mask;
+    i16 direction;
 
     blockedMask = 0;
     mask = 1;
@@ -99,12 +93,12 @@ short army::GetMoveMask(short sourceHex) {
 
 // Buka PATH.cpp GetAttackMask.
 VA(0x0041835b, 0xbf)
-short army::GetAttackMask(short sourceHex, signed char targetMode, signed char targetHex) {
-    short direction;
-    short hex;
-    short dirBit;
-    short blockedMask;
-    short nDirectionCount;
+i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
+    i16 direction;
+    i16 hex;
+    i16 dirBit;
+    i16 blockedMask;
+    i16 nDirectionCount;
 
     if (m_stats.attributes & MONSTER_FLAGS_WIDE)
         blockedMask = 0;
@@ -125,17 +119,17 @@ short army::GetAttackMask(short sourceHex, signed char targetMode, signed char t
 
 // Buka PATH.cpp ValidMove(direction).
 VA(0x0041841a, 0x2d)
-short army::ValidMove(short direction) {
+i16 army::ValidMove(i16 direction) {
     return ValidMove(m_hex, direction);
 }
 
 // Buka PATH.cpp ValidMove; HoMM1 has no castle gate exception.
 VA(0x00418447, 0x1fc)
-short army::ValidMove(short sourceHex, short direction) {
-    signed char frontValid;
-    short dest;
-    signed char backHex;
-    signed char rearValid;
+i16 army::ValidMove(i16 sourceHex, i16 direction) {
+    i8 frontValid;
+    i16 dest;
+    i8 backHex;
+    i8 rearValid;
 
     if (!ValidHex(sourceHex))
         return 0;
@@ -181,15 +175,15 @@ short army::ValidMove(short sourceHex, short direction) {
 
 // Buka PATH.cpp ValidAttack.
 VA(0x00418643, 0x295)
-short army::ValidAttack(
-    short sourceHex,
-    short direction,
-    short targetMode,
-    short requiredTargetHex,
-    short* attackHex
+i16 army::ValidAttack(
+    i16 sourceHex,
+    i16 direction,
+    i16 targetMode,
+    i16 requiredTargetHex,
+    i16* attackHex
 ) {
-    short adjacentHex;
-    signed char occupantSide;
+    i16 adjacentHex;
+    i8 occupantSide;
 
     if (!ValidHex(sourceHex))
         return 0;
@@ -198,7 +192,7 @@ short army::ValidAttack(
         if (direction == COMBAT_DIRECTION_WIDE_WEST)
             *attackHex = GetAdjacentCellIndex(
                 sourceHex,
-                static_cast<signed char>(
+                static_cast<i8>(
                     m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_NORTHWEST
                                                  : COMBAT_DIRECTION_NORTHEAST
                 )
@@ -206,7 +200,7 @@ short army::ValidAttack(
         else if (direction == COMBAT_DIRECTION_WIDE_EAST)
             *attackHex = GetAdjacentCellIndex(
                 sourceHex,
-                static_cast<signed char>(
+                static_cast<i8>(
                     m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_SOUTHWEST
                                                  : COMBAT_DIRECTION_SOUTHEAST
                 )
@@ -253,17 +247,17 @@ short army::ValidAttack(
 
 // Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
 VA(0x004188d8, 0x11e)
-short army::GetAdjacentCellIndex(short hex, short direction)
+i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 #line 311 "D:\\Heroes\\Source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
     if (direction == COMBAT_DIRECTION_WIDE_WEST)
-        direction = static_cast<signed char>(
+        direction = static_cast<i8>(
             m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST
         );
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
-        direction = static_cast<signed char>(
+        direction = static_cast<i8>(
             m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST
         );
 #line 322
@@ -279,7 +273,7 @@ short army::GetAdjacentCellIndex(short hex, short direction)
 
 // Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
 VA(0x004189f6, 0xf8)
-short GetAdjacentCellIndexNoArmy(short hex, short direction)
+i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 #line 328 "D:\\Heroes\\Source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
@@ -303,9 +297,9 @@ short GetAdjacentCellIndexNoArmy(short hex, short direction)
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00418aee, 0x4c2)
-short army::ValidRange(short targetHex) {
-    short adjacentHex;
-    short directionResult;
+i16 army::ValidRange(i16 targetHex) {
+    i16 adjacentHex;
+    i16 directionResult;
 
     if (!ValidHex(targetHex))
         return 0;
@@ -402,13 +396,13 @@ short army::ValidRange(short targetHex) {
 // evidence: retail body uses signed WORD loads and returns through AX;
 // alternate=pol20:int OppositeDirection(int)@0x000be9e7
 VA(0x00418fb0, 0x58)
-H1_ENUM_RETURN(CombatHexDirection, short)
-OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, short) direction) {
-    if (static_cast<int>(direction) < COMBAT_DIRECTION_ADJACENT_COUNT)
+H1_ENUM_RETURN(CombatHexDirection, i16)
+OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
+    if (static_cast<i32>(direction) < COMBAT_DIRECTION_ADJACENT_COUNT)
         return H1_ENUM_CAST(
             CombatHexDirection,
-            short,
-            (static_cast<int>(direction) + COMBAT_DIRECTION_OPPOSITE_OFFSET)
+            i16,
+            (static_cast<i32>(direction) + COMBAT_DIRECTION_OPPOSITE_OFFSET)
                 % COMBAT_DIRECTION_ADJACENT_COUNT
         );
     else {
@@ -422,15 +416,15 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, short) direction) {
 // Buka PATH.cpp GetBestDirection with HoMM1's nine-hex rows and byte
 // row/column flags.
 VA(0x00419008, 0x984)
-short army::GetBestDirection(short sourceHex, short targetHex, short blockedMask) {
-    signed char targetCol;
-    signed char targetRowVal;
-    signed char sourceColumnCheck;
-    signed char iIsMovingDown;
-    signed char movingUp;
-    signed char sourceRowVal;
-    signed char rightFl;
-    signed char iLeftFl;
+i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
+    i8 targetCol;
+    i8 targetRowVal;
+    i8 sourceColumnCheck;
+    i8 iIsMovingDown;
+    i8 movingUp;
+    i8 sourceRowVal;
+    i8 rightFl;
+    i8 iLeftFl;
 
     if (!ValidHex(sourceHex) || !ValidHex(targetHex))
         return COMBAT_DIRECTION_INVALID;
