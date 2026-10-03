@@ -36,9 +36,11 @@ both C1XX and C2.
 - **C1 handle state shifts.** Code-identical functions change operand order.
   A survey compiled each unit with its profile, with `/Z7` replaced by
   `/Zi /Gi`, and measured each function's code distance to retail (relocated
-  operands relaxed). The exact count rises from 838 to 915 over 1,018
-  functions. Large gains: GAME (+19/-3), ADVMGR (+10/-2), PHILAI (+9/-3), AI
-  (+8), COMMAND, SPELLS and soundmgr (+5 each). TOWNMGR's three CUR dips
+  operands relaxed). Both compiles used the same source and the same
+  harness. The exact count rises from 874 to 915 over 1,018 functions (64
+  gained, 23 lost). Measured against the banked base objects, the large
+  gains are GAME (+19/-3), ADVMGR (+10/-2), PHILAI (+9/-3), AI (+8), and
+  COMMAND, SPELLS and soundmgr (+5 each). TOWNMGR's three CUR dips
   `SetArmyCommand`, `SetupCastle` and `RecruitHero` reach distance 0; its
   only loss is `BuyBuild`, whose source spells the line word out instead of
   using `__LINE__`. Losses, such as ARMY (-7) and CMBTMGR (-2), are
