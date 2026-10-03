@@ -61,15 +61,15 @@
 #include <sys/stat.h>
 
 // Retail score-dialog owner byte (.bss).
-DATA(0x004c794c)
+DATA(0x004c7dfc)
 i8 giHighScoreType;
 // InitVars proves seven terrain rows, ordinary/diagonal cost columns.
-DATA(0x004c6d50)
+DATA(0x004c7200)
 i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.
-VA(0x0044f640, 0x72)
+VA(0x0044f740, 0x72)
 void PollSound() {
     if (KBTickCount() < glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT])
         return;
@@ -83,7 +83,7 @@ void PollSound() {
     gInPollSound = 0;
 }
 
-VA(0x0044f6b2, 0x20)
+VA(0x0044f7b2, 0x20)
 void ForcePollSound() {
     glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() - 1;
     PollSound();
@@ -92,7 +92,7 @@ void ForcePollSound() {
 // donor PoL RVA 0x000965be; preferred Buka symbol ?InitMainClasses@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
-VA(0x0044f6d2, 0x607)
+VA(0x0044f7d2, 0x607)
 void InitMainClasses(void) {
     gpExec = new executive;
     gpInputManager = new inputManager;
@@ -114,7 +114,7 @@ void InitMainClasses(void) {
 
 // Buka 2.1 DeleteMainClasses; HoMM1 also owns the smacker manager and frees the
 // resource manager before the window, mouse and input managers.
-VA(0x0044fcd9, 0x36d)
+VA(0x0044fdd9, 0x36d)
 void DeleteMainClasses(void) {
     if (gpBufferPalette)
         delete gpBufferPalette;
@@ -169,7 +169,7 @@ void DeleteMainClasses(void) {
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
-VA(0x00450046, 0x116)
+VA(0x00450146, 0x116)
 i32 EarlySetup(void) {
     DATA(0x0049ea98)
     static i8 gEarlySetupDone = 0;
@@ -257,7 +257,7 @@ H1_ENUM_CONST_END(NetPositionConstant)
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
-VA(0x0045015c, 0xe22)
+VA(0x0045025c, 0xe23)
 i32 oldmain(void) {
     char saveBuf[20];
     H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[GAME_END_SEQUENCE_COUNT];
@@ -306,7 +306,7 @@ i32 oldmain(void) {
         );
         font = gpResourceManager->GetFont("bigfont.fnt");
         font->DrawString(
-            "Loading Heroes of Might and Magic for Windows 95 (version 1.0)",
+            "Loading Heroes of Might and Magic for Windows 95 (version 1.1)",
             10,
             10,
             1
@@ -628,7 +628,7 @@ i32 oldmain(void) {
 }
 
 // Buka 2.1 toupper; HoMM1 keeps the narrow character form.
-VA(0x00450f7e, 0x3e)
+VA(0x0045107f, 0x3e)
 char toupper(char character) {
     if (character >= 'a' && character <= 'z')
         return character - 32;
@@ -637,7 +637,7 @@ char toupper(char character) {
 }
 
 // Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
-VA(0x00450fbc, 0x288)
+VA(0x004510bd, 0x288)
 i32 InterpretCommandLine(void) {
     i32 size;
     i32 i;
@@ -695,7 +695,7 @@ i32 InterpretCommandLine(void) {
 
 // Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
 // release; the main menu draws its own hover frames.
-VA(0x00451244, 0x1b6)
+VA(0x00451345, 0x1b6)
 i16 InitMenuHandler(tag_message& message) {
     i32 handled = 0;
     i32 helpIndex;
@@ -743,14 +743,14 @@ i16 InitMenuHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-VA(0x004513fa, 0x14)
+VA(0x004514fb, 0x14)
 i16 NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
 // Buka 2.1 RecruitHeroHandler: HoMM1 offers two heroes, each with its own
 // view (its portrait, rcrthero.bin ids 2-3) and recruit (ids 8-9) button.
-VA(0x0045140e, 0x1cb)
+VA(0x0045150f, 0x1cb)
 i16 RecruitHeroHandler(tag_message& message) {
     // Retail keeps these four ids as stored locals.
     const i16 viewButton1 = RECRUIT_HERO_PORTRAIT_FIRST;
@@ -803,7 +803,7 @@ i16 RecruitHeroHandler(tag_message& message) {
 }
 
 // HoMM1 has seven neutral building slots before six per-faction dwellings.
-VA(0x004515d9, 0x47)
+VA(0x004516da, 0x47)
 char* GetBuildingName(i32 race, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return gNeutralBuildingNames[building];
@@ -812,7 +812,7 @@ char* GetBuildingName(i32 race, i16 building) {
             [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
 }
 
-VA(0x00451620, 0x9f)
+VA(0x00451721, 0x9f)
 void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
@@ -829,7 +829,7 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
     }
 }
 
-VA(0x004516bf, 0x1a)
+VA(0x004517c0, 0x1a)
 char* GetMonsterName(i32 monster) {
     return gArmyNames[monster];
 }
@@ -837,7 +837,7 @@ char* GetMonsterName(i32 monster) {
 // donor PoL RVA 0x0009992c; preferred Buka symbol ?GetMonsterCost@@YIXHQAH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
-VA(0x004516d9, 0xe6)
+VA(0x004517da, 0xe6)
 void GetMonsterCost(i32 monster, i32* const cost) {
     i32 index;
     for (index = 0; index < RESOURCE_COUNT; index++)
@@ -863,7 +863,7 @@ void GetMonsterCost(i32 monster, i32* const cost) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
 // HoMM1 retail returns the result in AL (xor al,al / mov al,1).
-VA(0x004517bf, 0x144)
+VA(0x004518c0, 0x144)
 i8 CanBuild(town* t, i16 building) {
     mapCell* cell;
     u16 required;
@@ -895,7 +895,7 @@ i8 CanBuild(town* t, i16 building) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
 // Retail returns a byte flag (xor al,al / mov al,1); philAI::CanBuyBHC tests al.
-VA(0x00451903, 0xce)
+VA(0x00451a04, 0xce)
 i8 CanBuy(town* t, i16 type) {
     i32 cost[RESOURCE_COUNT];
     playerData* rec;
@@ -918,7 +918,7 @@ i8 CanBuy(town* t, i16 type) {
 }
 
 // HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
-VA(0x004519d1, 0x60)
+VA(0x00451ad2, 0x60)
 i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
@@ -934,7 +934,7 @@ i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
 // Buka 2.1 NormalDialog without HoMM2's timeout, saved resource globals,
 // primary-skill/monster/secondary-skill slots and centered x; HoMM1 measures
 // the text with a temporary bigfont.fnt and frames heroes with port%04d.icn.
-VA(0x00451a31, 0xf03)
+VA(0x00451b32, 0xf03)
 void NormalDialog(
     char* text,
     H1_ENUM_PARAM(NormalDialogType, i32) dialogType,
@@ -1327,7 +1327,7 @@ void NormalDialog(
 // evidence: graph:2;base=0.563703;margin=0.348381;shape=0.417;size=0.972;calls=1.000;alternate=pol20:void UpdateNormalDialog(char *)@0x000a2565
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x00452934, 0x6b)
+VA(0x00452a35, 0x6b)
 void UpdateNormalDialog(char* text) {
     tag_message message;
     {
@@ -1344,7 +1344,7 @@ void UpdateNormalDialog(char* text) {
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
-VA(0x0045299f, 0x1c5)
+VA(0x00452aa0, 0x1c5)
 i16 WaitHandler(tag_message& message) {
     i8 result = 0;
     gbFunctionComplete = 1;
@@ -1402,7 +1402,7 @@ i16 WaitHandler(tag_message& message) {
 }
 
 // Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
-VA(0x00452b64, 0x114)
+VA(0x00452c65, 0x114)
 i16 EventWindowHandler(tag_message& message) {
     if (!gpSoundManager->MusicPlaying())
         gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
@@ -1431,7 +1431,7 @@ i16 EventWindowHandler(tag_message& message) {
 }
 
 // Buka 2.1 TrueFalseDialogHandler.
-VA(0x00452c78, 0x1c)
+VA(0x00452d79, 0x1c)
 i16 TrueFalseDialogHandler(tag_message& message) {
     return EventWindowHandler(message);
 }
@@ -1439,7 +1439,7 @@ i16 TrueFalseDialogHandler(tag_message& message) {
 // donor PoL RVA 0x0009a52f; preferred Buka symbol ?PlayerDead@@YIXH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
-VA(0x00452c94, 0x16c)
+VA(0x00452d95, 0x16c)
 void PlayerDead(i32 player) {
     playerData* currentPlayer;
     i32 i;
@@ -1610,7 +1610,7 @@ DATA(0x00491820)
 i8 gCastleResources[4] = {0, 2, -1, -1};
 
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
-VA(0x00452e00, 0x99)
+VA(0x00452f01, 0x9a)
 void HandleRemoteDeadPlayerExit(i32 position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
@@ -1636,7 +1636,7 @@ void HandleRemoteDeadPlayerExit(i32 position) {
 }
 
 // Buka 2.1 HandleRemoteSuddenExit; HoMM1 names the next human player itself.
-VA(0x00452e99, 0xf1)
+VA(0x00452f9b, 0xf1)
 void HandleRemoteSuddenExit(void) {
     i32 next;
     if (!gGameInitialized)
@@ -1669,7 +1669,7 @@ void HandleRemoteSuddenExit(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
 
-VA(0x00452f8a, 0x1ea)
+VA(0x0045308c, 0x1ea)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
 // elimination and timeout.
 void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
@@ -1747,7 +1747,7 @@ H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
     END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
 H1_ENUM_CONST_END(CheckEndGameConstant)
 
-VA(0x00453174, 0x7d4)
+VA(0x00453276, 0x7d4)
 void CheckEndGame(i32 forced) {
     town* goalTown;
     hero* artifactHero;
@@ -1949,7 +1949,7 @@ void CheckEndGame(i32 forced) {
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.435968;margin=0.219505;shape=0.250;size=0.859;calls=0.600;alternate=pol20:void QuickViewWait(void)@0x0009c07c
-VA(0x00453948, 0x95)
+VA(0x00453a4a, 0x95)
 void QuickViewWait(void) {
     tag_message event;
     i32 done = 0;
@@ -1968,7 +1968,7 @@ void QuickViewWait(void) {
 // donor PoL RVA 0x0009c111; preferred Buka symbol ?InitVars@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
-VA(0x004539dd, 0x1cb)
+VA(0x00453adf, 0x1cb)
 void InitVars(void) {
     i32 i;
     NULL_SAMPLE2.pSample = NULL;
@@ -2034,7 +2034,7 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_FIVE_ALIGNMENTS = 20
 H1_ENUM_END(MoraleInfoText)
 
-VA(0x00453ba8, 0x450)
+VA(0x00453caa, 0x450)
 void game::ShowMoraleInfo(hero* h, i32 dialogType) {
     i32 faction;
     i32 i;
@@ -2122,7 +2122,7 @@ H1_ENUM_END(LuckInfoText)
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
-VA(0x00453ff8, 0x1f7)
+VA(0x004540fa, 0x1f7)
 void game::ShowLuckInfo(hero* h, i32 dialogType) {
     i32 alignments;
     i32 baseLen;
@@ -2153,7 +2153,7 @@ void game::ShowLuckInfo(hero* h, i32 dialogType) {
     NormalDialog(gText, dialogType);
 }
 
-VA(0x004541ef, 0x70)
+VA(0x004542f1, 0x70)
 void ClearMapExtra(void) {
     i32 i;
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
@@ -2171,7 +2171,7 @@ H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
     SCORE_MONSTER_THRESHOLD = 0,
     SCORE_MONSTER_TYPE = 1
 H1_ENUM_CONST_END(ScoreMonsterConstant)
-VA(0x0045425f, 0x8e)
+VA(0x00454361, 0x8e)
 i16 GetMonType(i32 score, i32 highScoreType) {
     i32 index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
@@ -2189,7 +2189,7 @@ i16 GetMonType(i32 score, i32 highScoreType) {
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
-VA(0x004542ed, 0x3d2)
+VA(0x004543ef, 0x3d2)
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
@@ -2256,7 +2256,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 // donor PoL RVA 0x0009d2c0; preferred Buka symbol ?BVResMsg@@YIXPADHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
-VA(0x004546bf, 0x5b)
+VA(0x004547c1, 0x5b)
 void BVResMsg(char* s, i32 res, i32 qty) {
     giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     giBottomViewOverrideEndTime = KBTickCount() + 5000;
@@ -2267,14 +2267,14 @@ void BVResMsg(char* s, i32 res, i32 qty) {
 }
 
 // Buka 2.1 GOut.
-VA(0x0045471a, 0x2e)
+VA(0x0045481c, 0x2e)
 void GOut(char* text) {
     if (gpAdvManager->m_active == 1)
         AiPrint(text);
 }
 
 // HoMM1 maps every remote position other than the host to the one opponent slot.
-VA(0x00454748, 0x39)
+VA(0x0045484a, 0x39)
 i8 NetPosToGamePos(i32 netPos) {
     if (netPos == NET_POSITION_HOST)
         return 0;
@@ -2283,7 +2283,7 @@ i8 NetPosToGamePos(i32 netPos) {
     return GAME_PLAYER_NONE;
 }
 
-VA(0x00454781, 0xda)
+VA(0x00454883, 0xda)
 i8 WaitForOtherPlayer(void) {
     i32 result = 0;
     RemoteMessage* data;
@@ -2322,7 +2322,7 @@ H1_ENUM_CONST_END(NetBoxConstant)
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
-VA(0x0045485b, 0x6f4)
+VA(0x0045495d, 0x6f4)
 void PopNetBox(char* notice) {
     char* data;
     i8 blinkState;
@@ -2513,7 +2513,7 @@ void PopNetBox(char* notice) {
 }
 
 // Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
-VA(0x00454f4f, 0x3b)
+VA(0x00455051, 0x3b)
 void AddNetBoxLine(char* text) {
     strcpy(cNetBoxLine[0], cNetBoxLine[1]);
     strcpy(cNetBoxLine[1], text);
@@ -2522,7 +2522,7 @@ void AddNetBoxLine(char* text) {
 // donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
-VA(0x00454f8a, 0x14f)
+VA(0x0045508c, 0x14f)
 void ShutDown(char* message) {
     DATA(0x0049f468)
     static i32 gInShutDown = 0;
@@ -2570,7 +2570,7 @@ void ShutDown(char* message) {
 // donor PoL RVA 0x0009e306; preferred Buka symbol ?FileError@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.316461;margin=0.125092;shape=0.216;size=0.484;calls=0.500;alternate=pol20:void FileError(char *)@0x0009e306
-VA(0x004550d9, 0x4a)
+VA(0x004551db, 0x4a)
 void FileError(char* filename) {
     char message[200];
     LogStr("File Error");
@@ -2598,7 +2598,7 @@ H1_ENUM_CONST_END(CongratsConstant)
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
 // as a creature and file it with the high scores.
-VA(0x00455123, 0x3be)
+VA(0x00455225, 0x3be)
 void ShowCongrats(void) {
     char name[32];
     i32 i;
@@ -2666,7 +2666,7 @@ void ShowCongrats(void) {
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
-VA(0x004554e1, 0xb1)
+VA(0x004555e3, 0xb1)
 void CongratsWait(void) {
     i32 cmd = 0;
     i8 finished = 0;
@@ -2690,7 +2690,7 @@ H1_ENUM_BEGIN(DataEntryControl)
 H1_ENUM_END(DataEntryControl)
 
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
-VA(0x00455592, 0x1c7)
+VA(0x00455694, 0x1c7)
 void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText) {
     i16 widgetId = DATA_ENTRY_TEXT;
     tag_message message;
@@ -2719,7 +2719,7 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
     delete DataEntryWin;
 }
 
-VA(0x00455759, 0x1d9)
+VA(0x0045585b, 0x1d9)
 i16 DataEntryWindowHandler(tag_message& message) {
     i16 widgetId = DATA_ENTRY_TEXT;
 
@@ -2767,7 +2767,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
 // donor PoL RVA 0x0009e999; preferred Buka symbol ?LoadPlaySample@@YIPAVsample@@PAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.524829;margin=1.189024;shape=0.423;size=0.802;calls=1.000;alternate=pol20:struct SAMPLE2 LoadPlaySample(char *)@0x0009e999
-VA(0x00455932, 0x51)
+VA(0x00455a34, 0x51)
 SAMPLE2 LoadPlaySample(char* name) {
     SAMPLE2 s;
     s.pSample = gpResourceManager->GetSample(name);
@@ -2781,7 +2781,7 @@ SAMPLE2 LoadPlaySample(char* name) {
 // donor PoL RVA 0x0009e9ed; preferred Buka symbol ?WaitEndSample@@YIXPAPAVsample@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.479563;margin=0.490944;shape=0.207;size=0.957;calls=1.000;alternate=pol20:void WaitEndSample(struct SAMPLE2, int)@0x0009e9ed
-VA(0x00455983, 0x8a)
+VA(0x00455a85, 0x8a)
 void WaitEndSample(SAMPLE2 s, i32 waitTime) {
     if (waitTime < 0)
         waitTime = 4000;
@@ -2800,7 +2800,7 @@ void WaitEndSample(SAMPLE2 s, i32 waitTime) {
 // donor PoL RVA 0x0009ea7c; preferred Buka symbol ?MemError@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
-VA(0x00455a0d, 0x7b)
+VA(0x00455b0f, 0x7b)
 void MemError(void) {
     DATA(0x0049f534)
     static i8 gInMemError = 0;
@@ -2824,20 +2824,20 @@ void MemError(void) {
 // Buka 2.1 MiscRuntime MemSize: a fixed reported memory size.
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x00455a88, 0x15)
+VA(0x00455b8a, 0x15)
 i32 MemSize(i32) {
     return 16034;
 }
 
 // Buka 2.1 CheckMem without HoMM2's memory globals.
-VA(0x00455a9d, 0x12)
+VA(0x00455b9f, 0x12)
 i8 CheckMem(void) {
     return 1;
 }
 
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.
-VA(0x00455aaf, 0xdc)
+VA(0x00455bb1, 0xdc)
 char* GetTownName(i32 i) {
     town* townPointer = gpGame->GetTown(i);
     if (gpGame->m_campaignType > 0
@@ -2849,14 +2849,14 @@ char* GetTownName(i32 i) {
 }
 
 // Buka 2.1 Misc IsCDDrive.
-VA(0x00455b8b, 0x51)
+VA(0x00455c8d, 0x51)
 i32 IsCDDrive(i32 driveIndex) {
     sprintf(gText, "A:\\");
     gText[0] += driveIndex;
     return GetDriveTypeA(gText) == DRIVE_CDROM;
 }
 
-VA(0x00455bdc, 0x64)
+VA(0x00455cde, 0x64)
 void LoadSystemwideIcons(void) {
     gBuyBuildIcons = gpResourceManager->GetIcon("buybuild.icn");
     gSystemIcons = gpResourceManager->GetIcon("system.icn");
@@ -2864,7 +2864,7 @@ void LoadSystemwideIcons(void) {
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
 }
 
-VA(0x00455c40, 0x54)
+VA(0x00455d42, 0x54)
 void UnloadSystemwideIcons(void) {
     gpResourceManager->Dispose(gBuyBuildIcons);
     gpResourceManager->Dispose(gSystemIcons);
@@ -2873,11 +2873,11 @@ void UnloadSystemwideIcons(void) {
 }
 
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
-VA(0x00455c94, 0x10)
+VA(0x00455d96, 0x10)
 void EarlyShutDownSystem(void) {}
 
 // Buka 2.1 GameUnsaved.
-VA(0x00455ca4, 0x7e)
+VA(0x00455da6, 0x7e)
 i32 GameUnsaved(void) {
     if ((gpAdvManager && gpAdvManager->m_active == 1)
         || (gpCombatManager && gpCombatManager->m_active == 1)
@@ -2890,7 +2890,7 @@ i32 GameUnsaved(void) {
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.410709;margin=0.595745;shape=0.257;size=0.699;calls=0.542;alternate=pol20:int HandleAppSpecificMenuCommands(int)@0x0009ec05
-VA(0x00455d22, 0x629)
+VA(0x00455e24, 0x629)
 i32 HandleAppSpecificMenuCommands(i32 command) {
     i32 menuChanged;
 
@@ -3080,7 +3080,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
 
 // Checks the music, sound and walk-speed radio groups, then the CD,
 // route and enemy-move toggles.
-VA(0x0045634b, 0x3b7)
+VA(0x0045644d, 0x3b7)
 void UpdateSystemOptionsMenu(void) {
     i32 checkedCommand;
     i32 menuCommand;
@@ -3207,7 +3207,7 @@ void UpdateSystemOptionsMenu(void) {
     );
 }
 
-VA(0x00456702, 0x99)
+VA(0x00456804, 0x99)
 void CleanUpMenus(void) {
     if (hmnuApp) {
         SetMenu(static_cast<HWND>(hwndApp), NULL);
@@ -3223,13 +3223,13 @@ void CleanUpMenus(void) {
     hmnuApp = NULL;
 }
 
-VA(0x0045679b, 0x24)
+VA(0x0045689d, 0x24)
 void UpdateAppSpecificMenus(void* hMenu) {
     if (hmnuAdv == hMenu)
         UpdateSystemOptionsMenu();
 }
 
-VA(0x004567bf, 0x22)
+VA(0x004568c1, 0x22)
 void EarlyResizeWindow(i32, i32, i32, i32) {
     if (gClosingApp)
         return;
@@ -4904,203 +4904,203 @@ i8 gInCheckEndGame = 0;
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/mapCell.h>
 
-DATA(0x004c5138)
+DATA(0x004c55e8)
 i32 gbHumanPlayer[4];
-DATA(0x004c5148)
+DATA(0x004c55f8)
 i32 giMaxExtentX;
-DATA(0x004c514c)
+DATA(0x004c55fc)
 i32 giMaxExtentY;
-DATA(0x004c5150)
+DATA(0x004c5600)
 class font* smallFont;
-DATA(0x004c5158)
+DATA(0x004c5608)
 i32 giBottomViewOverrideEndTime;
-DATA(0x004c5160)
+DATA(0x004c5610)
 i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-DATA(0x004c516c)
+DATA(0x004c561c)
 i32 giBottomViewResource;
-DATA(0x004c5170)
+DATA(0x004c5620)
 i32 giSeedingValid;
-DATA(0x004c5174)
+DATA(0x004c5624)
 i8 giLimitPlayer;
-DATA(0x004c517c)
+DATA(0x004c562c)
 inputManager* gpInputManager;
-DATA(0x004c5180)
+DATA(0x004c5630)
 SAMPLE2 NULL_SAMPLE2;
-DATA(0x004c5188)
+DATA(0x004c5638)
 i32 iMaxMapExtra;
-DATA(0x004c518c)
+DATA(0x004c563c)
 palette* gPalette;
-DATA(0x004c5190)
+DATA(0x004c5640)
 resourceManager* gpResourceManager;
-DATA(0x004c5230)
+DATA(0x004c56e0)
 u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004c6670)
+DATA(0x004c6b20)
 i32 bSpecialHideCursor;
-DATA(0x004c6674)
+DATA(0x004c6b24)
 class searchArray* gpSearchArray;
-DATA(0x004c6678)
+DATA(0x004c6b28)
 i32 gbBlackoutPlayer;
-DATA(0x004c6680)
+DATA(0x004c6b30)
 char cNetBoxLine[2][60];
-DATA(0x004c66fc)
+DATA(0x004c6bac)
 heroWindow* DataEntryWin;
-DATA(0x004c6700)
+DATA(0x004c6bb0)
 i8 giWeekTypeExtra;
-DATA(0x004c6704)
+DATA(0x004c6bb4)
 philAI* gpPhilAI;
-DATA(0x004c6708)
+DATA(0x004c6bb8)
 char* cDEDest;
-DATA(0x004c670c)
+DATA(0x004c6bbc)
 heroWindow* gNormalDialogWindow;
-DATA(0x004c6710)
+DATA(0x004c6bc0)
 i32 giHostGamePos;
-DATA(0x004c6714)
+DATA(0x004c6bc4)
 mouseManager* gpMouseManager;
-DATA(0x004c6718)
+DATA(0x004c6bc8)
 class font* bigFont;
-DATA(0x004c671c)
+DATA(0x004c6bcc)
 class icon* gSystemIcons;
-DATA(0x004c6720)
+DATA(0x004c6bd0)
 i8 gbCombatSurrender;
-DATA(0x004c6728)
+DATA(0x004c6bd8)
 char gMapName[16];
-DATA(0x004c6738)
+DATA(0x004c6be8)
 i32 giMinExtentX;
-DATA(0x004c673c)
+DATA(0x004c6bec)
 i32 giMinExtentY;
-DATA(0x004c6740)
+DATA(0x004c6bf0)
 i8 iMPBaseType;
-DATA(0x004c6744)
+DATA(0x004c6bf4)
 class hero* gHVHero;
-DATA(0x004c6748)
+DATA(0x004c6bf8)
 i32 giHeroScreenSrcIndex;
-DATA(0x004c674c)
+DATA(0x004c6bfc)
 i8 giWeekType;
-DATA(0x004c6750)
+DATA(0x004c6c00)
 char gText[768];
-DATA(0x004c6a50)
+DATA(0x004c6f00)
 i32 gbInNewGameSetup;
-DATA(0x004c6a54)
+DATA(0x004c6f04)
 palette* gpBufferPalette;
-DATA(0x004c6a58)
+DATA(0x004c6f08)
 i8 giMonthTypeExtra;
-DATA(0x004c6a5c)
+DATA(0x004c6f0c)
 i8 iMPExtendedType;
-DATA(0x004c6a60)
+DATA(0x004c6f10)
 smackManager* gpSmackManager;
-DATA(0x004c6a68)
+DATA(0x004c6f18)
 char gFullMapName[20];
-DATA(0x004c6a7c)
+DATA(0x004c6f2c)
 i32 giShowIntro;
-DATA(0x004c6a80)
+DATA(0x004c6f30)
 i32 glTimers[GLOBAL_TIMER_COUNT];
-DATA(0x004c6a98)
+DATA(0x004c6f48)
 i32 giScore;
-DATA(0x004c6aa0)
+DATA(0x004c6f50)
 armyGroup* gpMonGroup;
-DATA(0x004c6aa8)
+DATA(0x004c6f58)
 configStruct gConfig;
-DATA(0x004c6be0)
+DATA(0x004c7090)
 char gcRegAppPath[352];
-DATA(0x004c6d44)
+DATA(0x004c71f4)
 i8 gCampaignChoice;
-DATA(0x004c6d48)
+DATA(0x004c71f8)
 class game* gpGame;
-DATA(0x004c6d4c)
+DATA(0x004c71fc)
 i8 gbRetreatWin;
-DATA(0x004c6d60)
+DATA(0x004c7210)
 H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
-DATA(0x004c6d64)
+DATA(0x004c7214)
 i16 gCurLoadedSpellFileId;
-DATA(0x004c6d68)
+DATA(0x004c7218)
 i32 giBottomViewOverride;
-DATA(0x004c6d70)
+DATA(0x004c7220)
 char gLastFilename[352];
-DATA(0x004c6ed0)
+DATA(0x004c7380)
 class icon* gBuyBuildIcons;
-DATA(0x004c6ed4)
+DATA(0x004c7384)
 i8 gbNoSound;
-DATA(0x004c6ed8)
+DATA(0x004c7388)
 char gcBottomViewText[92];
-DATA(0x004c6f34)
+DATA(0x004c73e4)
 i32 giThisNetPos;
-DATA(0x004c6f38)
+DATA(0x004c73e8)
 char gcRegCDRomPath[352];
-DATA(0x004c7098)
+DATA(0x004c7548)
 class heroWindow* heroWin;
-DATA(0x004c709c)
+DATA(0x004c754c)
 class icon* gCurLoadedSpellIcon;
-DATA(0x004c70a0)
+DATA(0x004c7550)
 void* ppMapExtra[255];
-DATA(0x004c749c)
+DATA(0x004c794c)
 i32 giCurGeneral;
-DATA(0x004c74a0)
-i32 giThisGamePos;
-DATA(0x004c74a4)
-i32 giNumHumanPlayers;
-DATA(0x004c74a8)
-i8 gbIconClipOn;
-DATA(0x004c74b0)
-i32 pwSizeOfMapExtra[255];
-DATA(0x004c78ac)
-i32 iDEMaxLen;
-DATA(0x004c78b0)
-class combatManager* gpCombatManager;
-DATA(0x004c78b4)
-i16 gSpellEffectFrame;
-DATA(0x004c78b8)
-executive* gpExec;
-DATA(0x004c78c0)
-i8 giGroundToTerrain[140];
 DATA(0x004c7950)
-i32 giCurWindowsStyleFlags;
+i32 giThisGamePos;
 DATA(0x004c7954)
-H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
+i32 giNumHumanPlayers;
 DATA(0x004c7958)
-i8 giMonthType;
+i8 gbIconClipOn;
 DATA(0x004c7960)
-char gMapDescription[124];
-DATA(0x004c79dc)
-char* DEFAULT_AGGREGATE_NAME;
-DATA(0x004c79e0)
-i8 gbThisNetHumanPlayer[4];
-DATA(0x004c79e8)
-char cAggPathName[352];
-DATA(0x004c7b48)
-class highScoreManager* gpHighScoreManager;
-DATA(0x004c7b4c)
-i8 gbFunctionComplete;
-DATA(0x004c7b50)
-i8 gbIAmGreatest;
-DATA(0x004c7b58)
-i16 gMapX;
-DATA(0x004c7b5c)
-i16 gMapY;
-DATA(0x004c7b60)
-char gcWinText[300];
-DATA(0x004c7c8c)
-i8 bDataEntryTime;
-DATA(0x004c7c90)
-i32 bShowIt;
-DATA(0x004c7c94)
-i32 giDebugLevel;
-DATA(0x004c7c9c)
-heroWindowManager* gpWindowManager;
-DATA(0x004c7ca0)
-i32 giCurWatchPlayer;
-DATA(0x004c7ca4)
-i32 giBottomViewResourceQty;
-DATA(0x004c7ca8)
-soundManager* gpSoundManager;
-DATA(0x004c7cac)
-i8 gbWaitForRemoteReceive;
-DATA(0x004c7cb0)
-char gLastMapName[352];
+i32 pwSizeOfMapExtra[255];
+DATA(0x004c7d5c)
+i32 iDEMaxLen;
+DATA(0x004c7d60)
+class combatManager* gpCombatManager;
+DATA(0x004c7d64)
+i16 gSpellEffectFrame;
+DATA(0x004c7d68)
+executive* gpExec;
+DATA(0x004c7d70)
+i8 giGroundToTerrain[140];
+DATA(0x004c7e00)
+i32 giCurWindowsStyleFlags;
+DATA(0x004c7e04)
+H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
+DATA(0x004c7e08)
+i8 giMonthType;
 DATA(0x004c7e10)
+char gMapDescription[124];
+DATA(0x004c7e8c)
+char* DEFAULT_AGGREGATE_NAME;
+DATA(0x004c7e90)
+i8 gbThisNetHumanPlayer[4];
+DATA(0x004c7e98)
+char cAggPathName[352];
+DATA(0x004c7ff8)
+class highScoreManager* gpHighScoreManager;
+DATA(0x004c7ffc)
+i8 gbFunctionComplete;
+DATA(0x004c8000)
+i8 gbIAmGreatest;
+DATA(0x004c8008)
+i16 gMapX;
+DATA(0x004c800c)
+i16 gMapY;
+DATA(0x004c8010)
+char gcWinText[300];
+DATA(0x004c813c)
+i8 bDataEntryTime;
+DATA(0x004c8140)
+i32 bShowIt;
+DATA(0x004c8144)
+i32 giDebugLevel;
+DATA(0x004c814c)
+heroWindowManager* gpWindowManager;
+DATA(0x004c8150)
+i32 giCurWatchPlayer;
+DATA(0x004c8154)
+i32 giBottomViewResourceQty;
+DATA(0x004c8158)
+soundManager* gpSoundManager;
+DATA(0x004c815c)
+i8 gbWaitForRemoteReceive;
+DATA(0x004c8160)
+char gLastMapName[352];
+DATA(0x004c82c0)
 townManager* gpTownManager;
-DATA(0x004c7e14)
+DATA(0x004c82c4)
 i8 giScreenScroll;
-DATA(0x004c7e18)
+DATA(0x004c82c8)
 advManager* gpAdvManager;
-DATA(0x004c7e1c)
+DATA(0x004c82cc)
 i8 gbGamePosToNetPos[4];

@@ -96,7 +96,7 @@ void soundManager::CDSetVolume(i32 volume, i32 fadeScale) {
     auxSetVolume(m_auxDevice, stereoVolume);
 }
 
-VA(0x00476f00, 0x20e)
+VA(0x004774d0, 0x20e)
 void soundManager::CDStop(void) {
     char position[CD_POSITION_BUFFER_SIZE];
     if (gbNoSound != 0)
@@ -127,7 +127,7 @@ i32 soundManager::CDIsPlaying(void) {
     return _stricmp(lpszReturnString, "playing") == 0;
 }
 
-VA(0x00477110, 0xd7)
+VA(0x004776e0, 0xd7)
 u32 soundManager::CDStartup(void) {
     i32 device;
     i32 numDevices;
@@ -158,7 +158,7 @@ u32 soundManager::CDStartup(void) {
 
 // PoL declares t1..t3 for KBTickCount timings. HoMM1 emits no timing calls, but the three
 // C1 handles are needed by later functions' register ties (WAVE_init_driver).
-VA(0x004771f0, 0x5b7)
+VA(0x004777c0, 0x5b7)
 void soundManager::CDPlay(i32 track, i32 resume, i32 volume, i32 restart) {
     i32 t1;
     i32 t2;
@@ -259,7 +259,7 @@ void soundManager::CDPlay(i32 track, i32 resume, i32 volume, i32 restart) {
 }
 
 // PoL SetReady2Poll correspondence; HoMM1 also requests a stream poll.
-VA(0x004777b0, 0x42)
+VA(0x00477d80, 0x42)
 void SetReady2Poll(void) {
     if (gpSoundManager == NULL)
         return;
@@ -270,7 +270,7 @@ void SetReady2Poll(void) {
         gpSoundManager->m_pollDue = 1;
 }
 
-VA(0x00477800, 0x63)
+VA(0x00477dd0, 0x63)
 soundManager::soundManager(void) {
     m_active = 0;
     m_fadeSteps = 0;
@@ -285,7 +285,7 @@ soundManager::soundManager(void) {
     m_cdPlayFrame = 0;
 }
 
-VA(0x00477870, 0xf3)
+VA(0x00477e40, 0xf3)
 struct _DIG_DRIVER*
 WAVE_init_driver(u32 sampleRate, u16 bitsPerSample, u16 channels, u16 showErrors) {
     u32 numDevs;
@@ -341,7 +341,7 @@ void soundManager::AllocateSampleHandles(void) {
 
 // PoL keeps the gbNoSound bypass as `goto managerReady`; the label also places the
 // inlined AllocateSampleHandles handles where retail colours them.
-VA(0x00477970, 0x1bc)
+VA(0x00477f40, 0x1bc)
 i16 soundManager::Open(i16) {
     i32 keyState;
     keyState = GetAsyncKeyState(VK_F6);
@@ -413,7 +413,7 @@ void soundManager::CDShutdown(void) {
         HandleMCIError(nMCIError, CommandString);
 }
 
-VA(0x00477b30, 0x179)
+VA(0x00478100, 0x179)
 void soundManager::Close(void) {
     if (m_active != 1)
         return;
@@ -431,7 +431,7 @@ void soundManager::Close(void) {
     m_musicBuffers[1] = NULL;
 }
 
-VA(0x00477cb0, 0x6)
+VA(0x00478280, 0x6)
 i16 soundManager::Main(tag_message&) {
     return 0;
 }
@@ -458,7 +458,7 @@ i32 soundManager::ConvertVolume(i32 volume, i32 soundType) {
 }
 
 // Retail shares one `return NULL` tail between the missing-file and fopen-failure exits.
-VA(0x00477cc0, 0x331)
+VA(0x00478290, 0x331)
 struct _SAMPLE* soundManager::StartSample(
     char* name,
     char**,
@@ -557,7 +557,7 @@ notFound:
     return NULL;
 }
 
-VA(0x00478000, 0xe1)
+VA(0x004785d0, 0xe1)
 #line 740 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::StopAllSamples(void) {
     i16 sampleIndex;
@@ -588,7 +588,7 @@ void soundManager::StopAllSamples(void) {
 }
 
 // /Ob2 expands this ordinary routine in StartSample and PlayAmbientMusic.
-VA(0x004780f0, 0x4f)
+VA(0x004786c0, 0x4f)
 void soundManager::StopSample(struct _SAMPLE* sample) {
     i32 wait;
     u8 music;
@@ -606,7 +606,7 @@ void soundManager::StopSample(struct _SAMPLE* sample) {
     }
 }
 
-VA(0x00478140, 0x1f1)
+VA(0x00478710, 0x1f1)
 #line 808 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::ModifySample(struct _SAMPLE* sampleHandle, i16 operation, i32 value) {
     if (gbNoSound != 0)
@@ -642,7 +642,7 @@ void soundManager::ModifySample(struct _SAMPLE* sampleHandle, i16 operation, i32
 }
 
 // The retail volume updater expands this same query helper.
-VA(0x00478340, 0x4d)
+VA(0x00478910, 0x4d)
 i32 soundManager::DigitalReport(struct _SAMPLE* sample, i16 reportType) {
     i32 sampleStatus;
     if (gbNoSound != 0)
@@ -657,7 +657,7 @@ i32 soundManager::DigitalReport(struct _SAMPLE* sample, i16 reportType) {
     return 0;
 }
 
-VA(0x00478390, 0xbd)
+VA(0x00478960, 0xbd)
 void soundManager::AdjustSoundVolumes(void) {
     i32 sampleIndex;
     struct _SAMPLE* sampleHandle;
@@ -680,7 +680,7 @@ void soundManager::AdjustSoundVolumes(void) {
     }
 }
 
-VA(0x00478450, 0x16c)
+VA(0x00478a20, 0x16c)
 #line 900 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::AdjustMusicVolumes(void) {
     u8 savePosition;
@@ -719,7 +719,7 @@ void soundManager::AdjustMusicVolumes(void) {
     }
 }
 
-VA(0x004785c0, 0x104)
+VA(0x00478b90, 0x104)
 void soundManager::SetMusicQuality(i32 musicSource) {
     i32 track;
     if (gbNoSound != 0)
@@ -750,7 +750,7 @@ void soundManager::SetMusicQuality(i32 musicSource) {
         PlayAmbientMusic(track, 0, SOUND_VOLUME_FROM_CONFIG);
 }
 
-VA(0x004786d0, 0x26e)
+VA(0x00478ca0, 0x26e)
 #line 1008 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::PlayAmbientMusic(i32 track, i32 resume, i32 volume) {
     char filename[MUSIC_FILENAME_CAPACITY];
@@ -832,7 +832,7 @@ void soundManager::PlayAmbientMusic(i32 track, i32 resume, i32 volume) {
 // donor PoL RVA 0x000cd320; preferred Buka symbol ?PollSound@soundManager@@QAEXXZ
 // donor Buka TU BASE/soundmgr; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void soundManager::PollSound(void)@0x000cd320
-VA(0x00478940, 0x489)
+VA(0x00478f10, 0x489)
 #line 1118 "D:\\Heroes\\Base\\Soundmgr.cpp"
 void soundManager::PollSound(void) {
     i32 volume;
@@ -1008,7 +1008,7 @@ void soundManager::PollSound(void) {
     m_pollRequested = 0;
 }
 
-VA(0x00478dd0, 0x1ad)
+VA(0x004793a0, 0x1ad)
 void soundManager::SwitchAmbientMusic(i32 track) {
     if (gbNoSound != 0)
         return;
@@ -1034,7 +1034,7 @@ void soundManager::SwitchAmbientMusic(i32 track) {
     }
 }
 
-VA(0x00478f80, 0x1ea)
+VA(0x00479550, 0x1ea)
 struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
     struct _SAMPLE* handle;
     i16 channel;
@@ -1086,13 +1086,13 @@ struct _SAMPLE* soundManager::MemorySample(sample* sampleResource) {
     return handle;
 }
 
-VA(0x00479170, 0x10)
+VA(0x00479740, 0x10)
 void soundManager::ServiceSound(void) {
     if (gbNoSound == 0)
         AIL_serve();
 }
 
-VA(0x00479180, 0xfe)
+VA(0x00479750, 0xfe)
 i32 soundManager::MusicPlaying(void) {
     if (gbNoSound != 0)
         return 0;
@@ -1103,32 +1103,32 @@ i32 soundManager::MusicPlaying(void) {
 
 // Sound-manager data, initialized from retail .data (0x004a0fd0..) and
 // zero-filled MCI/AIL work storage (0x004cc668..).
-DATA(0x004a0fd0)
+DATA(0x004a1478)
 SampleChannelStruct SCS[4] = {{0, 1, 0}, {1, 2, 1}, {2, 6, 2}, {6, 16, 6}};
-DATA(0x004a1000)
+DATA(0x004a14a8)
 char CDPreviousPosition[60][CD_POSITION_CAPACITY] = {0};
-DATA(0x004a1384)
+DATA(0x004a182c)
 i32 CDPlayOnce = 0;
-DATA(0x004a138c)
+DATA(0x004a1834)
 i32 CDPlaying = 0;
-DATA(0x004a1390)
+DATA(0x004a1838)
 i8 CDTrackMap[100] = {2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18,
                       19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 99,
                       99, 99, 99, 99, 99, 99, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45,
                       46, 47, 48, 49, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
                       99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99,
                       99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 99, 50};
-DATA(0x004a1620)
+DATA(0x004a1ad0)
 i32 gCDDrive = 0;
-DATA(0x004cc668)
+DATA(0x004ccb18)
 char lpszReturnString[CD_MCI_RESULT_LAST + 1];
-DATA(0x004cc768)
+DATA(0x004ccc18)
 u32 nMCIError;
-DATA(0x004cc770)
+DATA(0x004ccc20)
 i16 gSampleVolumes[SAMPLE_VOLUME_TABLE_BYTES / sizeof(i16)];
-DATA(0x004cc7b0)
+DATA(0x004ccc60)
 char CommandString[256];
-DATA(0x004cc8b0)
+DATA(0x004ccd60)
 AUXCAPSA gAuxCaps;
-DATA(0x004cc8e0)
+DATA(0x004ccd90)
 PCMWAVEFORMAT gWaveFormat;

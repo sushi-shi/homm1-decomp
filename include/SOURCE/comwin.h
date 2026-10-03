@@ -36,6 +36,8 @@ void init_anchor(tag_Anchor* anchor, i32, i32);
 void add_node(tag_Anchor* anchor, tag_Node* node);
 tag_Node* pop_node(tag_Anchor* anchor);
 
+void ShutdownComError(char* function);
+
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr);
 void com_term(i16 port);
 i16 com_rcv(i16 port, u16 requested, void* buffer);

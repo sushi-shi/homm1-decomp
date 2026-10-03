@@ -2,7 +2,7 @@
 
     homm1 clean --out build/clean
     homm1 clean --out build/clean --verify
-    homm1 clean --out build/clean --verify --publish source-win95-1996
+    homm1 clean --out build/clean --verify --publish source-win95-1.1-1996
 
 The matching tree carries scaffolding that exists only to prove the source
 reproduces retail object code: address annotations (`VA`, `DATA`,
@@ -32,7 +32,7 @@ from homm1.core.usage import logged
 
 MARKER = ".homm1-clean-generated"
 PROVENANCE = "Generated-By: homm1 clean"
-DEFAULT_BRANCH = "source-win95-1996"
+DEFAULT_BRANCH = "source-win95-1.1-1996"
 
 
 def git(repo: Path, *arguments: str, **kwargs) -> str:

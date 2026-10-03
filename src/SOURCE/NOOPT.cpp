@@ -18,7 +18,7 @@ H1_ENUM_CONST_END(DelayTicksConstant)
 // No direct caller survives in retail; the HoMM2 timer slot names glTimers.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00464430, 0x40)
+VA(0x00464550, 0x40)
 void DelayTicks(i32 ticks) {
     i32 unused = 0;
 
@@ -26,7 +26,7 @@ void DelayTicks(i32 ticks) {
     DelayTil(glTimers + DELAY_TICKS_TIMER_SLOT);
 }
 
-VA(0x00464470, 0x54)
+VA(0x00464590, 0x54)
 #line 15 "D:\\Heroes\\Source\\NOOPT.CPP"
 void DelayTil(i32* endTime) {
 #line 16
@@ -37,12 +37,12 @@ void DelayTil(i32* endTime) {
     }
 }
 
-VA(0x004644c4, 0x23)
+VA(0x004645e4, 0x23)
 void DelayMilli(i32 delay) {
     DelayTilMilli(KBTickCount() + delay);
 }
 
-VA(0x004644e7, 0x2d)
+VA(0x00464607, 0x2d)
 void DelayTilMilli(i32 endTime) {
     while (endTime > KBTickCount()) {
         Process1WindowsMessage();

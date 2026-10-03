@@ -20,7 +20,7 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_LOAD_STEREO = 2
 H1_ENUM_CONST_END(SampleLoadConstant)
 
-VA(0x0047fa60, 0x17d)
+VA(0x00480030, 0x17d)
 sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,
@@ -68,7 +68,7 @@ sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
 
 // Retail has no out-of-line ~sample: the scalar deleting destructor at
 // 0x0047fbe0 expands this body between the vptr reset and ~resource.
-VA_COMPGEN(0x0047fbe0, 0x3b, "??_Gsample@@UAEPAXI@Z", 0x0047fa60)
+VA_COMPGEN(0x004801b0, 0x3b, "??_Gsample@@UAEPAXI@Z", 0x00480030)
 inline sample::~sample() {
     free(m_playbackData.data);
     m_playbackData.size = 0;

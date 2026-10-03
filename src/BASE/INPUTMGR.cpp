@@ -24,7 +24,7 @@ static inline void ResetEventQueue(inputManager* manager) {
     manager->m_readIndex = 0;
 }
 
-VA(0x0047bb40, 0x2e4)
+VA(0x0047c110, 0x2e4)
 i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
     if (gpInputManager == NULL)
         return 1;
@@ -107,12 +107,12 @@ i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
 // donor PoL RVA 0x000cde60; preferred Buka symbol ?MouseMessageHandler@@YIHPAXIIJ@Z
 // donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
-VA(0x0047be30, 0x27c)
+VA(0x0047c400, 0x27c)
 #line 137 "D:\\Heroes\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
-    DATA(0x004a1a44)
+    DATA(0x004a1ef4)
     static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
-    DATA(0x004a1a5c)
+    DATA(0x004a1f0c)
     static char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
     if (gpInputManager == NULL)
         return 1;
@@ -189,7 +189,7 @@ afterMouseCoordinates:
     return event->type == MESSAGE_NONE;
 }
 
-VA(0x0047c0b0, 0x64)
+VA(0x0047c680, 0x64)
 inputManager::inputManager(void) {
     m_active = 0;
     m_mouseMessageActive = 0;
@@ -210,7 +210,7 @@ inputManager::inputManager(void) {
 // retail). Probes: `return 1` moves it to ebp; an int priority, or swapping the
 // two stores of 1, keeps edx. Retail's heroWindowManager::Open also uses edx,
 // mouseManager's constructor eax.
-VA(0x0047c120, 0x85)
+VA(0x0047c6f0, 0x85)
 i16 inputManager::Open(i16 priority) {
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
@@ -225,7 +225,7 @@ i16 inputManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-VA(0x0047c1b0, 0x3b)
+VA(0x0047c780, 0x3b)
 void inputManager::Close(void) {
     if (m_active != 1)
         return;
@@ -236,19 +236,19 @@ void inputManager::Close(void) {
     m_active = 0;
 }
 
-VA(0x0047c1f0, 0x6)
+VA(0x0047c7c0, 0x6)
 i16 inputManager::Main(tag_message&) {
     return 0;
 }
 
 // Buka 2.1 and PoL 2.0 both reset the two queue indices in this method.
 // HoMM1's body confirms the same short fields at +0x230 and +0x232.
-VA(0x0047c200, 0x11)
+VA(0x0047c7d0, 0x11)
 void inputManager::Flush(void) {
     ResetEventQueue(this);
 }
 
-VA(0x0047c220, 0xd1)
+VA(0x0047c7f0, 0xd1)
 tag_message inputManager::GetEvent(void) {
     tag_message event;
     PollSound();
@@ -269,13 +269,13 @@ tag_message inputManager::GetEvent(void) {
 
 // The donor assigns the key-code mode and then flushes the event queue.
 // HoMM1 inlines Flush here and stores the mode as a short at +0x340.
-VA(0x0047c300, 0x1f)
+VA(0x0047c8d0, 0x1f)
 void inputManager::SetKeyCodeType(i16 keyCodeType) {
     m_keyCodeType = keyCodeType;
     ResetEventQueue(this);
 }
 
-VA(0x0047c320, 0x1cb)
+VA(0x0047c8f0, 0x1cb)
 void inputManager::AsciiConvert(tag_message& event) {
     if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
          && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)
@@ -354,7 +354,7 @@ void inputManager::AsciiConvert(tag_message& event) {
     }
 }
 
-VA(0x0047c4f0, 0x33c)
+VA(0x0047cac0, 0x33c)
 void inputManager::MakeScanCodeTable(void) {
     for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
         m_keyState[scanCode] = scanCode << INPUT_KEY_SCAN_SHIFT;

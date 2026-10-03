@@ -117,7 +117,7 @@ H1_ENUM_END(SetupGameHelp)
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
-VA(0x004567f0, 0x164)
+VA(0x004568f0, 0x164)
 i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
@@ -146,7 +146,7 @@ i8 game::SetupCampaignGame(void) {
 // donor PoL RVA 0x00010ebf; preferred Buka symbol ?SetupBaud@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
-VA(0x00456954, 0x190)
+VA(0x00456a54, 0x190)
 i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
@@ -175,7 +175,7 @@ i8 game::SetupBaud(void) {
 // donor PoL RVA 0x00011000; preferred Buka symbol ?SetupComPort@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
-VA(0x00456ae4, 0x222)
+VA(0x00456be4, 0x222)
 i8 game::SetupComPort(void) {
     char initStr[40];
 
@@ -221,7 +221,7 @@ i8 game::SetupComPort(void) {
 // donor PoL RVA 0x00011200; preferred Buka symbol ?SetupHotSeatGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
-VA(0x00456d06, 0x15d)
+VA(0x00456e06, 0x15d)
 i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
@@ -247,7 +247,7 @@ i8 game::SetupHotSeatGame(void) {
 // donor PoL RVA 0x00011438; preferred Buka symbol ?SetupNetworkGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
-VA(0x00456e63, 0x133)
+VA(0x00456f63, 0x133)
 i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
@@ -270,7 +270,7 @@ i8 game::SetupNetworkGame(void) {
 // donor PoL RVA 0x00011795; preferred Buka symbol ?SetupModemGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
-VA(0x00456f96, 0x333)
+VA(0x00457096, 0x333)
 i8 game::SetupModemGame(void) {
     heroWindow* window;
 
@@ -316,7 +316,7 @@ i8 game::SetupModemGame(void) {
 // donor PoL RVA 0x00011aac; preferred Buka symbol ?SetupMultiPlayerGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
-VA(0x004572c9, 0x218)
+VA(0x004573c9, 0x218)
 i8 game::SetupMultiPlayerGame(void) {
     i32 loop;
 
@@ -366,7 +366,7 @@ i8 game::SetupMultiPlayerGame(void) {
 
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.
-VA(0x004574e1, 0x486)
+VA(0x004575e1, 0x486)
 i8 game::SetupGame(i8 newGame) {
     heroWindow* window;
     i32 result;
@@ -503,7 +503,7 @@ done:
 // donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
-VA(0x00457967, 0x1e7)
+VA(0x00457a67, 0x1e7)
 i8 game::PickLoadGame(void) {
     fileRequester* request;
     i16 result;
@@ -537,7 +537,7 @@ i8 game::PickLoadGame(void) {
 }
 
 // Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
-VA(0x00457b4e, 0x112)
+VA(0x00457c4e, 0x112)
 i16 SetupCampaignGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -578,7 +578,7 @@ i16 SetupCampaignGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00457c60, 0x149)
+VA(0x00457d60, 0x149)
 i16 SetupComPortHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -633,7 +633,7 @@ i16 SetupComPortHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00457da9, 0x149)
+VA(0x00457ea9, 0x149)
 i16 SetupBaudHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -688,7 +688,7 @@ i16 SetupBaudHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00457ef2, 0x102)
+VA(0x00457ff2, 0x102)
 i16 SetupHotSeatGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -726,7 +726,7 @@ i16 SetupHotSeatGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00457ff4, 0x139)
+VA(0x004580f4, 0x139)
 i16 SetupModemGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -778,7 +778,7 @@ i16 SetupModemGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0045812d, 0x112)
+VA(0x0045822d, 0x112)
 i16 SetupMultiPlayerGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -819,7 +819,7 @@ i16 SetupMultiPlayerGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0045823f, 0xe1)
+VA(0x0045833f, 0xe1)
 i16 SetupNetworkGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -854,7 +854,7 @@ i16 SetupNetworkGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00458320, 0x102)
+VA(0x00458420, 0x102)
 i16 SetupGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -892,7 +892,7 @@ i16 SetupGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x00458422, 0xf1)
+VA(0x00458522, 0xf1)
 i16 BaseSetupHandler(tag_message& message) {
     i32 handled = 0;
 

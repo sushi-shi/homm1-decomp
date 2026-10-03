@@ -18,7 +18,7 @@
 // by the measured ticks to MHz.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00472030, 0x1c9)
+VA(0x00472150, 0x1c9)
 i32 CPUSpeed(u8 cpuType) {
     double tickPeriod = 838.0965152;
     double divs = 800.0;
@@ -64,7 +64,7 @@ i32 CPUSpeed(u8 cpuType) {
 //
 // Each flag probe saves EFLAGS, flips the bit with interrupts off, reads
 // EFLAGS back and restores it; EAX..EDX, DS and ES are saved around the block.
-VA(0x004721f9, 0x80)
+VA(0x00472319, 0x80)
 i16 GetCPUType(void) {
     i16 cpuType;
 
@@ -147,7 +147,7 @@ i16 GetCPUType(void) {
 //   outp(0x43, 0x80);                    // latch channel 2
 //   unsigned short left = inp(0x42); left |= inp(0x42) << 8;
 //   return (short)~left;                 // ticks elapsed from 0xffff
-VA(0x00472279, 0x9d9)
+VA(0x00472399, 0x9d9)
 i16 TimeProcessor(void) {
     i16 ticks;
 

@@ -1,7 +1,7 @@
 # Heroes of Might and Magic — source
 
 C++ source for the Windows 95 release of Heroes of Might and Magic
-(New World Computing, February 1996 `HEROES.EXE`), built with the original
+(New World Computing, May 1996 (Windows 95 1.1) `HEROES.EXE`), built with the original
 Visual C++ 4.0 toolchain.
 
 ## Branches
@@ -10,13 +10,13 @@ Visual C++ 4.0 toolchain.
               master
                  |
                  v
-  source-win95-1996 (you are here)
+  source-win95-1.1-1996 (you are here)
 ```
 
 | Branch | Purpose |
 | --- | --- |
-| `master` | Reconstruction and matching against the Win95 1.0 `HEROES.EXE` |
-| `source-win95-1996` | Generated clean source (`homm1 clean`): no matching annotations or comments; builds the game with the pinned toolchain |
+| `master` | Reconstruction and matching against the Win95 1.1 `HEROES.EXE` |
+| `source-win95-1.1-1996` | Generated clean source (`homm1 clean`): no matching annotations or comments; builds the game with the pinned toolchain |
 
 ## Play
 

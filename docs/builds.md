@@ -1,13 +1,17 @@
 # HoMM1 builds
 
 This page catalogues the known HoMM1 executables, how each was built, and the
-runtime libraries each one ships. The pinned target is the Windows 95 1.0
+runtime libraries each one ships. The pinned target in this fork is Windows 95 1.1
 `HEROES.EXE` (`config/retail/targets.json`).
 
 Local copies are kept outside the repository in `~/Projects/homm1/exe`, listed
 in its `MANIFEST.md5`. Archive.org item ids are given as `item` or
 `item/file`. File offsets, RVAs and counts were measured from the bytes listed
 here.
+
+The comparison measurements below were made in the parent 1.0 repository;
+"current reconstruction" in those comparisons refers to that snapshot.
+See [the 1.1 migration](win95-1.1.md) for this fork.
 
 "Shared with 1.0" means a function from the retail census, minus a few short
 functions that have no ≥6-byte unrelocated anchor, appears byte-for-byte in the
@@ -17,8 +21,8 @@ other image. Relocated fields are masked for this comparison.
 
 | Build | File | Size | PE stamp (UTC) | Linker | Compiler | `__LINE__` style | Debug data |
 |---|---|---|---|---|---|---|---|
-| Win95 1.0 (target) | `HEROES_win95_1996-02-01.exe` | 713216 | 1996-02-01 05:15:33 | 3.00 | VC 4.0 | /Gi line words | none |
-| Win95 1.1 | `HEROES_win95_1.1_1996-05-07.exe` | 715776 | 1996-05-07 20:09:38 | 3.00 | VC 4.0 | /Gi line words | none |
+| Win95 1.0 | `HEROES_win95_1996-02-01.exe` | 713216 | 1996-02-01 05:15:33 | 3.00 | VC 4.0 | /Gi line words | none |
+| Win95 1.1 (target) | `HEROES_win95_1.1_1996-05-07.exe` | 715776 | 1996-05-07 20:09:38 | 3.00 | VC 4.0 | /Gi line words | none |
 | Win95 1.2 (HEROESW) | `HEROESW_win95_1997-08-29.exe` | 726016 | 1997-08-29 20:36:28 | 3.10 | VC 4.1 | /Gi line words | none |
 | Buka 2003 (Russian) | `HEROES_buka_ru_2003-04-11.exe` | 692297 | 2003-04-11 14:42:15 | 6.00 | VC 6 | immediates | NB10 reference, no PDB |
 | Editor 1.0 | `EDITOR_win95_1996-02-01.exe` | 305152 | 1996-02-01 01:08:14 | 3.00 | VC 4.0 | mixed | none |
@@ -72,7 +76,7 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   audio), USER32 (51–53), GDI32 (12), ADVAPI32 (4 registry calls), KERNEL32
   (84 in 1.0/1.1, 89 in 1.2).
 
-## Windows 95 1.0 — `HEROES.EXE` (target)
+## Windows 95 1.0 — `HEROES.EXE` (parent target)
 
 - **sha256** `0d707d3456aacd470f4da601ac388a8b0be8976414b4ef689c8b849b9b2a1ce8`,
   md5 `58a5ddcc48793618632d48dff2522fa9`, 713216 bytes. The version string
@@ -107,9 +111,9 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   - `wail32.dll`: 18 `_AIL_*` digital-sample calls.
   - `smkwai32.dll`: 11 functions by ordinal.
   - `WING32.dll`: 6 functions.
-- **Usefulness:** this is the matching target.
+- **Usefulness:** the parent repository matching target and source of this fork.
 
-## Windows 95 1.1 — `HEROES.EXE`
+## Windows 95 1.1 — `HEROES.EXE` (target)
 
 - **sha256** `bb69db9112dc48c9eec26c4700cae2265c2c7838410c23ed3a70e57131bfc681`,
   md5 `0c3f9b12b6608faad9ac6f7ced223605`, 715776 bytes. The version string
@@ -163,7 +167,7 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   SetMusicQuality, UpdBottomViewEnemyTurn, LoadGame, CalcDifficultyRating,
   HandleRemoteDeadPlayerExit and army::DrawToBuffer. As a target it would trade
   those for its real changes and for 1.0-exact functions it flips. It is not a
-  better target.
+  better target by that metric. This fork implements it as a separate target.
 
 ## Windows 95 1.2 — `HEROESW.EXE`
 

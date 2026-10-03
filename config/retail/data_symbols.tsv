@@ -1,132 +1,132 @@
 rva	size	symbol	provenance
-0x0008F590	4	$SG16676	VC4 literal `at+` including terminator
-0x0008F594	8	$SG16677	VC4 literal `KB.LOG` plus alignment byte
-0x0008F59C	2	$SG16678	VC4 newline literal including terminator
-0x000A0D00	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	code-required resourceManager literal identity
-0x000A0D10	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	code-required open-error literal identity
-0x000A0D24	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	code-required invalid-aggregate literal identity
-0x000A0D44	76	$anon_str_eb27b9b48e8c2732b85397bc8636fc7eeb79802771cac487ea5e2a5fc9705844_0	code-required missing-resource literal identity
-0x000A0DEC	4	?gReadByteAssertLine@@3FA	ReadByte assertion line record
-0x000A0DF0	26	?gReadByteAssertFile@@3PADA	ReadByte assertion source path
-0x000A0E0C	4	?gReadWordAssertLine@@3FA	ReadWord assertion line record
-0x000A0E10	26	?gReadWordAssertFile@@3PADA	ReadWord assertion source path
-0x000A0E2C	4	?gReadLongAssertLine@@3FA	ReadLong assertion line record
-0x000A0E30	26	?gReadLongAssertFile@@3PADA	ReadLong assertion source path
-0x000A0E4C	4	?gReadBlockAssertLine@@3FA	ReadBlock assertion line record
-0x000A0E50	26	?gReadBlockAssertFile@@3PADA	ReadBlock assertion source path
-0x000A0E70	12	?gMouseOffset@@3PAHA	three cursor-family base offsets
-0x000A0E7C	4	?gMouseCursorType@@3HA	current cursor family
-0x000A0E80	150	?gHotSpot@@3PAY01EA	75 two-axis cursor hotspots
-0x000A0F28	4	?gInSetPointer@@3HA	SetPointer recursion guard
-0x000A0F2C	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
-0x000A0F30	28	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
-0x000A0F4C	3	?gAdventureColor@@3PADA	adventure color filename component
-0x000A0F50	3	?gAdventureMonochrome@@3PADA	adventure monochrome filename component
-0x000A0F54	15	?gAdventureBitmapFormat@@3PADA	adventure cursor bitmap format
-0x000A0F64	3	?gSpellColor@@3PADA	spell color filename component
-0x000A0F68	3	?gSpellMonochrome@@3PADA	spell monochrome filename component
-0x000A0F6C	15	?gSpellBitmapFormat@@3PADA	spell cursor bitmap format
-0x000A0F7C	3	?gCombatColor@@3PADA	combat color filename component
-0x000A0F80	3	?gCombatMonochrome@@3PADA	combat monochrome filename component
-0x000A0F84	15	?gCombatBitmapFormat@@3PADA	combat cursor bitmap format
-0x000A0F94	28	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
-0x000A0FB0	28	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
-0x000A1778	4	?gSoundManagerAssertLine@@3FA	PollSound assertion line base
-0x000A177C	28	?gSoundManagerAssertFile1@@3PADA	first PollSound assertion source path
-0x000A1798	28	?gSoundManagerAssertFile2@@3PADA	second PollSound assertion source path
-0x000A17B4	28	?gSoundManagerAssertFile3@@3PADA	third PollSound assertion source path
-0x000A17D0	28	?gSoundManagerAssertFile4@@3PADA	fourth PollSound assertion source path
-0x000A17EC	28	?gSoundManagerAssertFile5@@3PADA	fifth PollSound assertion source path
-0x000A1808	4	_gIconXAdjust	code-required icon-frame scratch identity
-0x000A180C	4	_gIconYAdjust	code-required icon-frame scratch identity
-0x000A1810	4	_gIconDataBase	code-required icon-data base identity
-0x000A1814	4	_gIconWidth	code-required icon-frame width identity
-0x000A1818	4	_gIconHeight	code-required icon-frame height identity
-0x000A1A00	20	?gCallManagerError1@@3PADA	first 20-byte manager-add failure slot used by CallManager
-0x000A1A14	20	?gCallManagerError2@@3PADA	second distinct 20-byte manager-add failure slot used by CallManager
-0x000A1A40	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
-0x000A1A44	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
-0x000A1A5C	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
-0x000A1A74	28	?gInputManagerAssertFile@@3PADA	code-required assertion source path
-0x000A0CE8	18	?gDynamicConstruct@@3PADA	code-required heroWindow constructor name
-0x000A1AA0	256	_gDimPalette	code-required palette identity and extent
-0x000A1BA0	4	_gBitmapSourceSkip	code-required bitmap source row-skip scratch
-0x000A1BA4	4	_gBitmapRowSkip	code-required bitmap row-skip scratch
-0x000A1BC8	4	_gTileScratch	code-required identity only
-0x000A1BCC	2	_gTileRows	code-required identity only
-0x000CAC88	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
-0x000CADB8	1800	?bmpAndMask@@3PAUtagBITMAP@@A	75 cursor mask bitmap descriptors
-0x000CB4C0	300	?hMouseCursor@@3PAPAXA	75 cursor handles
-0x000CB5F0	300	?cAndBits@@3PAPAEA	75 cursor mask buffers
-0x000CB720	1800	?bmpColor@@3PAUtagBITMAP@@A	75 color bitmap descriptors
-0x000CBE28	300	?gColorBits@@3PAPACA	75 cursor color buffers
-0x000CBF58	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	75 cursor icon descriptors
-0x000CC538	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
-0x000A1BD0	256	_d_code	code-required identity and extent
-0x000A1CD0	256	_d_len	code-required identity and extent
-0x000A1DD0	1254	_initialSon	code-required identity and extent
-0x000A22B8	1882	_initialParent	code-required identity and extent
-0x000A2A18	1256	_initialFrequency	code-required identity and extent
-0x000A2F00	64	_positionLength$S481	code-required position-code table
-0x000A2F40	64	_positionCode$S482	code-required position-code table
-0x000A2F80	2	_putbuf	code-required identity and extent
-0x000A2F84	1	_putlen	code-required identity and extent
-0x000A2F88	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
-0x000CC8F0	8194	_dad	code-required identity and extent
-0x000CE8F4	4	_decodeSize	code-required identity and extent
-0x000CE900	8194	_lson	code-required identity and extent
-0x000D0908	1254	_son	code-required identity and extent
-0x000D0DF0	1882	_prnt	code-required identity and extent
-0x000D1554	4	_textsize	code-required identity and extent
-0x000D1558	4155	_text_buf	code-required identity and extent
-0x000D2598	8706	_rson	code-required identity and extent
-0x000D479C	4	_codesize	code-required identity and extent
-0x000D47A0	2	_getbuf	code-required identity and extent
-0x000D47A8	1256	_freq	code-required identity and extent
-0x000D4C90	1	_getlen	code-required identity and extent
-0x000D4C94	4	_codePtr	code-required identity and extent
-0x000D4C98	2	_match_position	code-required identity and extent
-0x000D4C9C	2	_match_length	code-required identity and extent
-0x000D4CA0	4	_decodeOutput	code-required identity and extent
-0x000A138C	4	?CDPlaying@@3HA	retail-backed code identity only
-0x000A1384	4	?CDPlayOnce@@3HA	retail-backed code identity only
-0x000A1390	1	?CDTrackMap@@3PACA	retail-backed code identity only
-0x000A1000	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
-0x000CC7B0	256	?CommandString@@3PADA	retail-backed code identity only
-0x000CC668	256	?lpszReturnString@@3PADA	retail-backed code identity only
-0x000CC768	4	?nMCIError@@3IA	retail-backed code identity only
-0x000A14F8	2	?gCDPositionAssertLine@@3FA	retail-backed code identity only
-0x000A14FC	26	?gCDPositionAssertFile@@3PADA	retail-backed code identity only
-0x000A1728	2	?gAmbientMusicAssertLine@@3FA	PlayAmbientMusic signed word plus37
-0x000A172C	26	?gAmbientMusicAssertFile@@3PADA	PlayAmbientMusic assertion filename
-0x000A1920	20	?gDialogManagerError1@@3PADA	retail DoDialog separate manager-add failure slot
-0x000A1934	20	?gDialogManagerError2@@3PADA	retail DoDialog separate manager-add failure slot
-0x000A1948	20	?gDialogManagerError3@@3PADA	retail DoDialog separate manager-add failure slot
-0x000A195C	20	?gDialogManagerError4@@3PADA	retail DoDialog separate manager-add failure slot
-0x000A1694	2	?gStartSampleAssertLine@@3FA	retail code-required identity, initializer/complete extent deferred
-0x000A1698	26	?gStartSampleAssertFile@@3PADA	retail code-required identity, initializer/complete extent deferred
-0x000A16E8	2	?gModifySampleAssertLine@@3FA	ModifySample loads signed line word then adds 27
-0x000A16EC	26	?gModifySampleAssertFile@@3PADA	ModifySample assertion filename identity, initializer coverage deferred
-0x000CC770	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
-0x000A1820	56	?gResourceManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000A1858	80	?gInputManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000A18A8	28	?gSoundManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000A18C4	28	?gMouseManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000A18E0	64	?gWindowManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000CAC28	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
-0x000CC8E0	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
-0x000CC8B0	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
-0x000ACC48	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
-0x0008C000	12	??_7highScoreManager@@6B@	retail ctor vptr; three slots Open10bf,Close1228,Main1285
-0x000A0C80	2	?gWindowFadeAssertLine@@3FA	FadeScreen signed word assertion line base
-0x000A0C84	26	?gWindowFadeAssertFile@@3PADA	FadeScreen WINMGR source assertion path
-0x000CAC20	1	?gWindowFadeSavedUpdate@@3CA	FadeScreen signed byte saved update flags
-0x000A1708	2	?gAdjustMusicAssertLine@@3FA	signed word assertion base used by AdjustMusicVolumes
-0x000A170C	28	?gAdjustMusicAssertFile@@3PADA	retail source assertion path, identity only
-0x000A0C7C	4	?gDialogNestCount@@3HA	dialog nesting counter
-0x000A1BB4	4	_gClipRowsLeft	src/BASE/Icon2bc.asm; clipped icon renderer scratch (rows still to draw), code-required identity
-0x000A1BB8	4	_gClipLeftSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (left clip skip), code-required identity
-0x000A1BBC	4	_gClipVisibleWidth	src/BASE/Icon2bc.asm; clipped icon renderer scratch (visible span width), code-required identity
-0x000A1BC0	4	_gClipRowSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (destination row skip), code-required identity
-0x000A1BC4	4	_gClipColumn	src/BASE/Icon2bc.asm; clipped icon renderer scratch (current column), code-required identity
-0x000A2FB8	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
+0x0008f590	4	$SG16676	VC4 literal `at+` including terminator
+0x0008f594	8	$SG16677	VC4 literal `KB.LOG` plus alignment byte
+0x0008f59c	2	$SG16678	VC4 newline literal including terminator
+0x000a11ac	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	code-required resourceManager literal identity
+0x000a11bc	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	code-required open-error literal identity
+0x000a11d0	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	code-required invalid-aggregate literal identity
+0x000a11f0	76	$anon_str_eb27b9b48e8c2732b85397bc8636fc7eeb79802771cac487ea5e2a5fc9705844_0	code-required missing-resource literal identity
+0x000a1298	4	?gReadByteAssertLine@@3FA	ReadByte assertion line record
+0x000a129c	26	?gReadByteAssertFile@@3PADA	ReadByte assertion source path
+0x000a12b8	4	?gReadWordAssertLine@@3FA	ReadWord assertion line record
+0x000a12bc	26	?gReadWordAssertFile@@3PADA	ReadWord assertion source path
+0x000a12d8	4	?gReadLongAssertLine@@3FA	ReadLong assertion line record
+0x000a12dc	26	?gReadLongAssertFile@@3PADA	ReadLong assertion source path
+0x000a12f8	4	?gReadBlockAssertLine@@3FA	ReadBlock assertion line record
+0x000a12fc	26	?gReadBlockAssertFile@@3PADA	ReadBlock assertion source path
+0x000a1318	12	?gMouseOffset@@3PAHA	three cursor-family base offsets
+0x000a1324	4	?gMouseCursorType@@3HA	current cursor family
+0x000a1328	150	?gHotSpot@@3PAY01EA	75 two-axis cursor hotspots
+0x000a13d0	4	?gInSetPointer@@3HA	SetPointer recursion guard
+0x000a13d4	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
+0x000a13d8	28	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
+0x000a13f4	3	?gAdventureColor@@3PADA	adventure color filename component
+0x000a13f8	3	?gAdventureMonochrome@@3PADA	adventure monochrome filename component
+0x000a13fc	15	?gAdventureBitmapFormat@@3PADA	adventure cursor bitmap format
+0x000a140c	3	?gSpellColor@@3PADA	spell color filename component
+0x000a1410	3	?gSpellMonochrome@@3PADA	spell monochrome filename component
+0x000a1414	15	?gSpellBitmapFormat@@3PADA	spell cursor bitmap format
+0x000a1424	3	?gCombatColor@@3PADA	combat color filename component
+0x000a1428	3	?gCombatMonochrome@@3PADA	combat monochrome filename component
+0x000a142c	15	?gCombatBitmapFormat@@3PADA	combat cursor bitmap format
+0x000a143c	28	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
+0x000a1458	28	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
+0x000a1c28	4	?gSoundManagerAssertLine@@3FA	PollSound assertion line base
+0x000a1c2c	28	?gSoundManagerAssertFile1@@3PADA	first PollSound assertion source path
+0x000a1c48	28	?gSoundManagerAssertFile2@@3PADA	second PollSound assertion source path
+0x000a1c64	28	?gSoundManagerAssertFile3@@3PADA	third PollSound assertion source path
+0x000a1c80	28	?gSoundManagerAssertFile4@@3PADA	fourth PollSound assertion source path
+0x000a1c9c	28	?gSoundManagerAssertFile5@@3PADA	fifth PollSound assertion source path
+0x000a1cb8	4	_gIconXAdjust	code-required icon-frame scratch identity
+0x000a1cbc	4	_gIconYAdjust	code-required icon-frame scratch identity
+0x000a1cc0	4	_gIconDataBase	code-required icon-data base identity
+0x000a1cc4	4	_gIconWidth	code-required icon-frame width identity
+0x000a1cc8	4	_gIconHeight	code-required icon-frame height identity
+0x000a1eb0	20	?gCallManagerError1@@3PADA	first 20-byte manager-add failure slot used by CallManager
+0x000a1ec4	20	?gCallManagerError2@@3PADA	second distinct 20-byte manager-add failure slot used by CallManager
+0x000a1ef0	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
+0x000a1ef4	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
+0x000a1f0c	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
+0x000a1f24	28	?gInputManagerAssertFile@@3PADA	code-required assertion source path
+0x000a1194	18	?gDynamicConstruct@@3PADA	code-required heroWindow constructor name
+0x000a1f50	256	_gDimPalette	code-required palette identity and extent
+0x000a2050	4	_gBitmapSourceSkip	code-required bitmap source row-skip scratch
+0x000a2054	4	_gBitmapRowSkip	code-required bitmap row-skip scratch
+0x000a2078	4	_gTileScratch	code-required identity only
+0x000a207c	2	_gTileRows	code-required identity only
+0x000cb138	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
+0x000cb268	1800	?bmpAndMask@@3PAUtagBITMAP@@A	75 cursor mask bitmap descriptors
+0x000cb970	300	?hMouseCursor@@3PAPAXA	75 cursor handles
+0x000cbaa0	300	?cAndBits@@3PAPAEA	75 cursor mask buffers
+0x000cbbd0	1800	?bmpColor@@3PAUtagBITMAP@@A	75 color bitmap descriptors
+0x000cc2d8	300	?gColorBits@@3PAPACA	75 cursor color buffers
+0x000cc408	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	75 cursor icon descriptors
+0x000cc9e8	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
+0x000a2080	256	_d_code	code-required identity and extent
+0x000a2180	256	_d_len	code-required identity and extent
+0x000a2280	1254	_initialSon	code-required identity and extent
+0x000a2768	1882	_initialParent	code-required identity and extent
+0x000a2ec8	1256	_initialFrequency	code-required identity and extent
+0x000a33b0	64	_positionLength$S481	code-required position-code table
+0x000a33f0	64	_positionCode$S482	code-required position-code table
+0x000a3430	2	_putbuf	code-required identity and extent
+0x000a3434	1	_putlen	code-required identity and extent
+0x000a3438	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
+0x000ccda0	8194	_dad	code-required identity and extent
+0x000ceda4	4	_decodeSize	code-required identity and extent
+0x000cedb0	8194	_lson	code-required identity and extent
+0x000d0db8	1254	_son	code-required identity and extent
+0x000d12a0	1882	_prnt	code-required identity and extent
+0x000d1a04	4	_textsize	code-required identity and extent
+0x000d1a08	4155	_text_buf	code-required identity and extent
+0x000d2a48	8706	_rson	code-required identity and extent
+0x000d4c4c	4	_codesize	code-required identity and extent
+0x000d4c50	2	_getbuf	code-required identity and extent
+0x000d4c58	1256	_freq	code-required identity and extent
+0x000d5140	1	_getlen	code-required identity and extent
+0x000d5144	4	_codePtr	code-required identity and extent
+0x000d5148	2	_match_position	code-required identity and extent
+0x000d514c	2	_match_length	code-required identity and extent
+0x000d5150	4	_decodeOutput	code-required identity and extent
+0x000a1834	4	?CDPlaying@@3HA	retail-backed code identity only
+0x000a182c	4	?CDPlayOnce@@3HA	retail-backed code identity only
+0x000a1838	1	?CDTrackMap@@3PACA	retail-backed code identity only
+0x000a14a8	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
+0x000ccc60	256	?CommandString@@3PADA	retail-backed code identity only
+0x000ccb18	256	?lpszReturnString@@3PADA	retail-backed code identity only
+0x000ccc18	4	?nMCIError@@3IA	retail-backed code identity only
+0x000a19a0	2	?gCDPositionAssertLine@@3FA	retail-backed code identity only
+0x000a19a4	26	?gCDPositionAssertFile@@3PADA	retail-backed code identity only
+0x000a1bd8	2	?gAmbientMusicAssertLine@@3FA	PlayAmbientMusic signed word plus37
+0x000a1bdc	26	?gAmbientMusicAssertFile@@3PADA	PlayAmbientMusic assertion filename
+0x000a1dd0	20	?gDialogManagerError1@@3PADA	retail DoDialog separate manager-add failure slot
+0x000a1de4	20	?gDialogManagerError2@@3PADA	retail DoDialog separate manager-add failure slot
+0x000a1df8	20	?gDialogManagerError3@@3PADA	retail DoDialog separate manager-add failure slot
+0x000a1e0c	20	?gDialogManagerError4@@3PADA	retail DoDialog separate manager-add failure slot
+0x000a1b44	2	?gStartSampleAssertLine@@3FA	retail code-required identity, initializer/complete extent deferred
+0x000a1b48	26	?gStartSampleAssertFile@@3PADA	retail code-required identity, initializer/complete extent deferred
+0x000a1b98	2	?gModifySampleAssertLine@@3FA	ModifySample loads signed line word then adds 27
+0x000a1b9c	26	?gModifySampleAssertFile@@3PADA	ModifySample assertion filename identity, initializer coverage deferred
+0x000ccc20	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
+0x000a1cd0	56	?gResourceManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000a1d08	80	?gInputManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000a1d58	28	?gSoundManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000a1d74	28	?gMouseManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000a1d90	64	?gWindowManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000cb0d8	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
+0x000ccd90	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
+0x000ccd60	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
+0x000ad0f8	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x0008c000	12	??_7highScoreManager@@6B@	retail ctor vptr; three slots Open10bf,Close1228,Main1285
+0x000a112c	2	?gWindowFadeAssertLine@@3FA	FadeScreen signed word assertion line base
+0x000a1130	26	?gWindowFadeAssertFile@@3PADA	FadeScreen WINMGR source assertion path
+0x000cb0d0	1	?gWindowFadeSavedUpdate@@3CA	FadeScreen signed byte saved update flags
+0x000a1bb8	2	?gAdjustMusicAssertLine@@3FA	signed word assertion base used by AdjustMusicVolumes
+0x000a1bbc	28	?gAdjustMusicAssertFile@@3PADA	retail source assertion path, identity only
+0x000a1128	4	?gDialogNestCount@@3HA	dialog nesting counter
+0x000a2064	4	_gClipRowsLeft	src/BASE/Icon2bc.asm; clipped icon renderer scratch (rows still to draw), code-required identity
+0x000a2068	4	_gClipLeftSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (left clip skip), code-required identity
+0x000a206c	4	_gClipVisibleWidth	src/BASE/Icon2bc.asm; clipped icon renderer scratch (visible span width), code-required identity
+0x000a2070	4	_gClipRowSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (destination row skip), code-required identity
+0x000a2074	4	_gClipColumn	src/BASE/Icon2bc.asm; clipped icon renderer scratch (current column), code-required identity
+0x000a3468	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity

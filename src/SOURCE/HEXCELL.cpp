@@ -8,7 +8,7 @@
 #include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 
-VA(0x0046e5b0, 0x4a)
+VA(0x0046e6d0, 0x4a)
 hexcell::hexcell(void) {
     m_groundIcon = COMBAT_ICON_GROUND;
     m_groundFrame = 0;
@@ -20,7 +20,7 @@ hexcell::hexcell(void) {
 }
 
 // Moves the live occupant from another cell into this one.
-VA(0x0046e5fa, 0x4d)
+VA(0x0046e71a, 0x4d)
 hexcell* hexcell::TakeOccupant(hexcell* from) {
     m_occupantSide = from->m_occupantSide;
     m_occupantIndex = from->m_occupantIndex;
@@ -30,13 +30,13 @@ hexcell* hexcell::TakeOccupant(hexcell* from) {
     return this;
 }
 
-VA(0x0046e647, 0x4b)
+VA(0x0046e767, 0x4b)
 void hexcell::DrawGround(void) {
     gpCombatManager->m_combatIcons[m_groundIcon]
         ->DrawToBuffer(m_x, m_y, m_groundFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
-VA(0x0046e692, 0x8a)
+VA(0x0046e7b2, 0x8a)
 void hexcell::DrawOccupant(void) {
     i8 frame;
     army* occupant;
@@ -49,7 +49,7 @@ void hexcell::DrawOccupant(void) {
     }
 }
 
-VA(0x0046e71c, 0x151)
+VA(0x0046e83c, 0x151)
 void hexcell::DrawTower(i8 frame) {
     i8 flip;
     i16 row;
@@ -68,7 +68,7 @@ void hexcell::DrawTower(i8 frame) {
             ->DrawToBuffer(flip ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
-VA(0x0046e86d, 0x2b3)
+VA(0x0046e98d, 0x2b3)
 void hexcell::DrawWall(void) {
     i8 flip;
     i16 row;
@@ -131,7 +131,7 @@ void hexcell::DrawWall(void) {
     }
 }
 
-VA(0x0046eb20, 0x181)
+VA(0x0046ec40, 0x181)
 void hexcell::DrawObstacle(void) {
     if (m_obstacleType == COMBAT_ICON_CASTLE) {
         switch (m_obstacleIndex) {

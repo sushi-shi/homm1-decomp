@@ -6,6 +6,7 @@
 | Giten (giten-enums) | `94435eff949d6190fa0b1b697caae9f21c53bb6b` | Constants work list and enum-domain/reuse review |
 | Gruntz | `b1de0e555576a215898907b8ec8ed5423368883e` | Original pipeline ancestry and cross-review |
 | Gruntz | `38fd8e9f7` (main) | `gruntz play`, game prefix and clean-export runner |
+| Gruntz | `f272a806b3084d721f8f8304705413279b8ef273` | 1.1 fingerprint review against `verify/link_tier.py` relocation masking |
 | HoMM2 Buka | `299514f88900c0cf30ba03422c72830a38fc1cb7` | Initial capability review |
 | HoMM2 Buka | `e0689d3f71b2942b544fd677cb54085a13503d7b` | Exact-overload fingerprint review; `homm2 clean` |
 | kf1 | `62870641`, `1a1e594e`, `904687dd`, `5ad5875f`, `655774b2`, `53cc73af` | `kf clean` export, verification and snapshot branches |
@@ -62,6 +63,18 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
   that MASM resolved inside one module the REL32 relocation that the delinked
   target carries. A postcondition proves that the call target is unchanged.
   This lets one retail module stay a single object (`BASE/LZHUFDEC`).
+- The 1.1 fork retains HoMM2 Buka `e0689d3`'s fixed-MASM claim mechanism;
+  only target VAs change. The new `sema fid` is a HoMM1 discovery command,
+  reviewed against Gruntz's `verify/link_tier.py` masking and HoMM2's
+  `build/fixed_asm.py` and `analysis/disasm.py`. It reuses the existing PE,
+  relocation and usage-log modules. Retained: decoded relative operands and
+  HIGHLOW site masks. Adapted: whole-image anchor search and monotonic-order
+  disambiguation. Deferred: changed-function similarity scoring and automatic
+  claim admission; neither is authorized by a fingerprint. Inapplicable:
+  interpreting a discovery match as the strict comparison score. The same-image
+  control resolves only identity mappings; the 1.0-to-1.1 report preserves
+  ambiguous candidates for call/vtable review. Clean-export target labels and
+  the default source branch now identify Windows 95 1.1; publication was not run.
 - HoMM2's VC6 worker/compiler settings and C++11 strict-enum hook are not
   HoMM1 build controls. Giten's `editor/nvim` integration and research
   solvers are `inapplicable`.
@@ -83,5 +96,5 @@ The audit compares committed donor blobs, including skills, hooks, docs and
 editor files (editor paths are inapplicable here). Presence, content hashes and AST equality establish inventory
 coverage only. New ports or removals must update the dispositions above, review
 both Gruntz and HoMM2, preserve usage logging and run applicable controls.
-Candidate linking remains incomplete; unresolved definitions are reconstruction
-findings, not grounds for forced linking.
+The 1.1 candidate links without unresolved definitions. Future unresolved
+definitions remain reconstruction findings, not grounds for forced linking.

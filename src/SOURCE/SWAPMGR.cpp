@@ -70,7 +70,7 @@ H1_ENUM_CONST_END(SwapManagerConstant)
 // Buka 2.1 swapManager::swapManager(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046ecb0, 0x75)
+VA(0x0046edd0, 0x75)
 swapManager::swapManager(void) {
     m_window = NULL;
     m_selectorIcon = NULL;
@@ -83,18 +83,18 @@ swapManager::swapManager(void) {
     m_heroes[SWAP_SIDE_RIGHT] = NULL;
 }
 
-VA(0x0046ed25, 0x3e)
+VA(0x0046ee45, 0x3e)
 swapManager::swapManager(class hero* leftHero, class hero* rightHero) {
     m_heroes[SWAP_SIDE_LEFT] = leftHero;
     m_heroes[SWAP_SIDE_RIGHT] = rightHero;
 }
 
-VA(0x0046ed63, 0x4d)
+VA(0x0046ee83, 0x4d)
 void swapManager::Reset(void) {
     m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE;
 }
 
-VA(0x0046edb0, 0x2d5)
+VA(0x0046eed0, 0x2d5)
 i16 swapManager::Open(i16 id) {
     tag_message message;
     i32 i; // Unused; retail still reserves its frame slot.
@@ -158,7 +158,7 @@ i16 swapManager::Open(i16 id) {
 // donor PoL RVA 0x000548be; preferred Buka symbol ?Close@swapManager@@UAEXXZ
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.610218;margin=0.602384;shape=0.500;size=0.986;calls=1.000;alternate=pol20:void swapManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x000548be
-VA(0x0046f085, 0x123)
+VA(0x0046f1a5, 0x123)
 void swapManager::Close(void) {
     tag_message message;
 
@@ -184,7 +184,7 @@ void swapManager::Close(void) {
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
 }
 
-VA(0x0046f1a8, 0x21f)
+VA(0x0046f2c8, 0x21f)
 void swapManager::DrawSelector(void) {
     const i16 frameColor = 232;
     const i16 leftArmyBase = 24;
@@ -236,7 +236,7 @@ void swapManager::DrawSelector(void) {
 // donor PoL RVA 0x00054be3; preferred Buka symbol ?Main@swapManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
-VA(0x0046f3c7, 0x9ac)
+VA(0x0046f4e7, 0x9ac)
 i16 swapManager::Main(struct tag_message& message) {
     i8 closeRequested = 0;
     i8 quickView;
@@ -586,7 +586,7 @@ i16 swapManager::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-VA(0x0046fd73, 0xa5)
+VA(0x0046fe93, 0xa5)
 void swapManager::ViewMon(void) {
     gpGame->ViewArmy(
         TOWN_ARMY_VIEW_X,
@@ -604,7 +604,7 @@ void swapManager::ViewMon(void) {
 }
 
 // Buka 2.1 swapManager::SwapArtifacts.
-VA(0x0046fe18, 0x112)
+VA(0x0046ff38, 0x112)
 void swapManager::SwapArtifacts(void) {
     i8 dstArt;
     i8 srcArt;
@@ -619,7 +619,7 @@ void swapManager::SwapArtifacts(void) {
     gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], srcArt, 0);
 }
 
-VA(0x0046ff2a, 0x28e)
+VA(0x0047004a, 0x28e)
 void swapManager::SwapMons(void) {
     armyGroup* destTroops;
     armyGroup* sourceTroops;
@@ -664,7 +664,7 @@ void swapManager::SwapMons(void) {
     sourceTroops->Swap(m_selectedSlot, destTroops, m_targetSlot);
 }
 
-VA(0x004701b8, 0x492)
+VA(0x004702d8, 0x492)
 void swapManager::Update(void) {
     tag_message message;
     i16 i;
@@ -771,7 +771,7 @@ void swapManager::Update(void) {
 // donor PoL RVA 0x00055fbd; preferred Buka symbol ?SplitMons@swapManager@@QAEXXZ
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
-VA(0x0047064a, 0x39f)
+VA(0x0047076a, 0x39f)
 void swapManager::SplitMons(void) {
     i16 textId;
     armyGroup* dstTroops;

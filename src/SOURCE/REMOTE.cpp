@@ -27,7 +27,7 @@
 #include <string.h>
 
 // Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
-VA(0x00458520, 0x8d)
+VA(0x00458620, 0x8d)
 void RemoteCleanup(void) {
     if (!gRemoteOn)
         return;
@@ -48,7 +48,7 @@ void RemoteCleanup(void) {
 
 // @dead-code
 // Zero-ref: reads one block from a file offset into the caller buffer.
-VA(0x004585ad, 0x74)
+VA(0x004586ad, 0x74)
 void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
     FILE* fp;
     fp = fopen(filename, "r+b");
@@ -61,7 +61,7 @@ void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
 }
 
 // Buka 2.1 MiscRuntime FileSize.
-VA(0x00458621, 0x7b)
+VA(0x00458721, 0x7b)
 i32 FileSize(char* filename) {
     i32 length;
     FILE* f;
@@ -84,7 +84,7 @@ struct outque_t {
 
 // Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
 // keeps the modem reset sequence in ModemSetup (0x459530).
-VA(0x0045869c, 0x27a)
+VA(0x0045879c, 0x27a)
 void RemoteMain(i32 gameMode) {
     char directConnectMessage[164];
 
@@ -161,7 +161,7 @@ void RemoteMain(i32 gameMode) {
     gInNetSetup = 0;
 }
 
-VA(0x00458916, 0x5b)
+VA(0x00458a16, 0x5b)
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver) {
     switch (networkDriver) {
         case REMOTE_DRIVER_SERIAL:
@@ -180,7 +180,7 @@ H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
     REMOTE_CRC_POLYNOMIAL = 0x1021
 H1_ENUM_CONST_END(RemoteCrcConstant)
 
-VA(0x00458971, 0xb6)
+VA(0x00458a71, 0xb6)
 void calc_crc(u16* crc, u8* data, i32 length) {
     i32 unused = 0;
     i16 carry;
@@ -200,7 +200,7 @@ void calc_crc(u16* crc, u8* data, i32 length) {
     }
 }
 
-VA(0x00458a27, 0x86)
+VA(0x00458b27, 0x86)
 i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
     u16 crc;
 
@@ -220,7 +220,7 @@ i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
 // donor PoL RVA 0x000a3aa7; preferred Buka symbol ?DecodePacket@@YIHPAEH@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.496845;margin=0.356674;shape=0.447;size=0.760;calls=0.750;alternate=pol20:int DecodePacket(unsigned char *, int)@0x000a3aa7
-VA(0x00458aad, 0x162)
+VA(0x00458bad, 0x162)
 i32 DecodePacket(u8* data, i32 source) {
     u16 computedCrc;
     u16 crc;
@@ -262,7 +262,7 @@ i32 DecodePacket(u8* data, i32 source) {
 // donor PoL RVA 0x000a3be1; preferred Buka symbol ?SendRemoteData@@YIHPAE0HH@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.468075;margin=0.614352;shape=0.312;size=0.933;calls=0.500;alternate=pol20:int SendRemoteData(unsigned char *, unsigned char *, int, int)@0x000a3be1
-VA(0x00458c0f, 0x141)
+VA(0x00458d0f, 0x141)
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length) {
     i32 len;
     i32 result;
@@ -304,7 +304,7 @@ finished:
 // donor PoL RVA 0x000a3d6f; preferred Buka symbol ?ReceiveRemoteData@@YIHPAE0H@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
-VA(0x00458d50, 0xf4)
+VA(0x00458e50, 0xf4)
 i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
     i32 receiveResult;
     i32 result;
@@ -336,7 +336,7 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
 // donor PoL RVA 0x000132f0; preferred Buka symbol ?InitNetHost@@YICXZ
 // donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
-VA(0x00458e44, 0x194)
+VA(0x00458f44, 0x194)
 i8 InitNetHost(void) {
     DATA(0x0049f954)
     static i8 gInitNetHostStatus = 0;
@@ -385,7 +385,7 @@ i8 InitNetHost(void) {
 // donor PoL RVA 0x00013445; preferred Buka symbol ?InitNetGuest@@YICXZ
 // donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.423322;margin=0.095753;shape=0.173;size=0.829;calls=0.833;alternate=pol20:signed char InitNetGuest(void)@0x00013445
-VA(0x00458fd8, 0x1f1)
+VA(0x004590d8, 0x1f1)
 i8 InitNetGuest(void) {
     i32 status;
     i32 unregistered;
@@ -440,7 +440,7 @@ i8 InitNetGuest(void) {
     return 0;
 }
 
-VA(0x004591c9, 0x9e)
+VA(0x004592c9, 0x9e)
 i8 WaitForHost(void) {
     char buffer[80];
     i32 status;
@@ -464,7 +464,7 @@ i8 WaitForHost(void) {
 // donor PoL RVA 0x0001364f; preferred Buka symbol ?WaitForGuest@@YICXZ
 // donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
-VA(0x00459267, 0x101)
+VA(0x00459367, 0x101)
 i8 WaitForGuest(void) {
     DATA(0x0049fa6c)
     static i8 gWaitForGuestStatus = 0;
@@ -496,7 +496,7 @@ i8 WaitForGuest(void) {
 }
 
 // Buka 2.1 Netbios nbnet_init; the host also sends the guest count.
-VA(0x00459368, 0x1c8)
+VA(0x00459468, 0x1c8)
 i32 nbnet_init(void) {
     char buffer[80];
     i32 status;
@@ -575,7 +575,7 @@ i32 nbnet_init(void) {
 }
 
 // Buka 2.1 ModemSetup reset loop: open the port and reset a dial-up modem.
-VA(0x00459530, 0xf7)
+VA(0x00459630, 0xf7)
 void ModemSetup(void) {
     char command[104];
     i32 resetAttempt;
@@ -604,7 +604,7 @@ void ModemSetup(void) {
 // donor PoL RVA 0x0000cb3e; preferred Buka symbol ?Dial@@YIJXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.658408;margin=0.279474;shape=0.349;size=0.861;calls=1.000;strings=%s %s|ATDT%s|CONNECT;alternate=pol20:long int Dial(void)@0x0000cb3e
-VA(0x00459627, 0xa5)
+VA(0x00459727, 0xa5)
 i32 Dial(void) {
     char dialCommand[40];
     iLastDialPos = 0;
@@ -620,7 +620,7 @@ i32 Dial(void) {
 // donor PoL RVA 0x0000cbdc; preferred Buka symbol ?Wait@@YIJXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.520648;margin=0.735557;shape=0.143;size=0.710;calls=1.000;strings=CONNECT|RING;alternate=pol20:long int Wait(void)@0x0000cbdc
-VA(0x004596cc, 0x5d)
+VA(0x004597cc, 0x5d)
 i32 Wait(void) {
     GUIModemResponse("Waiting for ring...", "RING");
     GUIModemCommand("Initializing modem...", "ATA");
@@ -632,7 +632,7 @@ i32 Wait(void) {
 // donor PoL RVA 0x0000cc30; preferred Buka symbol ?GUIModemCommand@@YIXPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
-VA(0x00459729, 0x71)
+VA(0x00459829, 0x71)
 void GUIModemCommand(char* message, char* command) {
     iLastActionTime = 0;
     iModemCommandPos = 0;
@@ -656,7 +656,7 @@ void GUIModemCommand(char* message, char* command) {
 // donor PoL RVA 0x0000cca9; preferred Buka symbol ?GUIModemCommandExec@@YICXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.478276;margin=0.078716;shape=0.283;size=0.851;calls=1.000;alternate=pol20:signed char GUIModemCommandExec(void)@0x0000cca9
-VA(0x0045979a, 0x94)
+VA(0x0045989a, 0x94)
 i8 GUIModemCommandExec(void) {
     i32 commandLength;
     if (KBTickCount() < iLastActionTime + 250)
@@ -675,7 +675,7 @@ i8 GUIModemCommandExec(void) {
 }
 
 // Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
-VA(0x0045982e, 0x6c)
+VA(0x0045992e, 0x6c)
 void ModemCommand(char* command) {
     i32 pos;
     i32 len = strlen(command);
@@ -689,7 +689,7 @@ void ModemCommand(char* command) {
 // donor PoL RVA 0x0000cdcc; preferred Buka symbol ?GUIModemResponse@@YICPAD0@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
-VA(0x0045989a, 0x7a)
+VA(0x0045999a, 0x7a)
 i8 GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
@@ -714,7 +714,7 @@ i8 GUIModemResponse(char* message, char* response) {
 // donor PoL RVA 0x0000ce4e; preferred Buka symbol ?GUIModemResponseExec@@YICXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.623720;margin=0.638042;shape=0.611;size=0.792;calls=1.000;alternate=pol20:signed char GUIModemResponseExec(void)@0x0000ce4e
-VA(0x00459914, 0xe2)
+VA(0x00459a14, 0xe2)
 i8 GUIModemResponseExec(void) {
     GUIMRc = read_byte();
     if (GUIMRc == -1)
@@ -740,13 +740,13 @@ compareResponse:
 }
 
 // Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
-VA(0x004599f6, 0x2b)
+VA(0x00459af6, 0x2b)
 i32 write_buffer(char* buffer, i32 length) {
     com_snd(0, 0, length, buffer, 0);
     return 1;
 }
 
-VA(0x00459a21, 0x47)
+VA(0x00459b21, 0x47)
 i32 read_byte(void) {
     u8 ch;
     i32 received = com_rcv(0, 1, &ch);
@@ -758,7 +758,7 @@ i32 read_byte(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00459a68, 0x24)
+VA(0x00459b68, 0x24)
 void write_byte(i32 value) {
     com_snd(0, 0, 1, &value, 0);
 }
@@ -766,7 +766,7 @@ void write_byte(i32 value) {
 // donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
-VA(0x00459a8c, 0x2c0)
+VA(0x00459b8c, 0x2c0)
 void Connect(void) {
     i32 result;
     char msg[20];
@@ -819,7 +819,7 @@ void Connect(void) {
 // donor PoL RVA 0x0000d1a7; preferred Buka symbol ?WaitForDirectConnect@@YIHXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
-VA(0x00459d4c, 0x316)
+VA(0x00459e4c, 0x316)
 i32 WaitForDirectConnect(void) {
     char idMessage[20];
     u32 seed;
@@ -881,7 +881,7 @@ i32 WaitForDirectConnect(void) {
 // donor PoL RVA 0x0000d3b8; preferred Buka symbol ?ReadPacket@@YIDXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530036;margin=0.483413;shape=0.466;size=0.966;calls=0.333;alternate=pol20:char ReadPacket(void)@0x0000d3b8
-VA(0x0045a062, 0x109)
+VA(0x0045a162, 0x109)
 char ReadPacket(void) {
     i32 input;
     // Unused; retail reserves 0x20 bytes with the input below it.
@@ -923,7 +923,7 @@ readPacketStart:
 // donor PoL RVA 0x0000d4df; preferred Buka symbol ?WriteModemPacket@@YIXPADH@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
-VA(0x0045a16b, 0xdc)
+VA(0x0045a26b, 0xdc)
 void WriteModemPacket(char* buffer, i32 length) {
     char buf[544];
     i32 pos = 0;
@@ -954,7 +954,7 @@ void WriteModemPacket(char* buffer, i32 length) {
 // donor PoL RVA 0x000a3ec7; preferred Buka symbol ?TransmitRemoteData@@YIHPADHHCCCC@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
-VA(0x0045a247, 0x231)
+VA(0x0045a347, 0x231)
 // HoMM1 callers pass an eighth flag that maps a game position to its net position.
 i32 TransmitRemoteData(
     char* data,
@@ -1036,7 +1036,7 @@ i32 TransmitRemoteData(
 // donor PoL RVA 0x000a40e1; preferred Buka symbol ?GetRemoteData@@YIPADC@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.517569;margin=0.974708;shape=0.366;size=0.825;calls=1.000;alternate=pol20:char * GetRemoteData(signed char)@0x000a40e1
-VA(0x0045a478, 0x10c)
+VA(0x0045a578, 0x10c)
 char* GetRemoteData(i8 remove) {
     i32 oldest;
     i32 i;
@@ -1066,7 +1066,7 @@ char* GetRemoteData(i8 remove) {
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
 
-VA(0x0045a584, 0x4fe)
+VA(0x0045a684, 0x4fe)
 void PollRemote(void) {
     DATA(0x0049fc80)
     static i8 gInTimeoutFail = 0;
@@ -1203,7 +1203,7 @@ done:;
 // donor PoL RVA 0x000a48e0; preferred Buka symbol ?TransmitAndWait@@YIHPADHHCCPAPAD@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
-VA(0x0045aa82, 0x14f)
+VA(0x0045ab82, 0x14f)
 i32 TransmitAndWait(
     char* bytes,
     i32 destination,
@@ -1290,57 +1290,57 @@ DATA(0x0049f958)
 i8 gInitNetGuestStatus = 0;
 DATA(0x0049f9d0)
 i8 gWaitForHostStatus = 0;
-DATA(0x004c7e70)
+DATA(0x004c8320)
 char idstr[8];
-DATA(0x004c7e78)
+DATA(0x004c8328)
 char rcvBufOut[REMOTE_MESSAGE_SIZE];
-DATA(0x004c7f78)
+DATA(0x004c8428)
 i32 GUIMRc;
-DATA(0x004c7f7c)
+DATA(0x004c842c)
 i32 iModemCommandPos;
-DATA(0x004c7f80)
+DATA(0x004c8430)
 i32 GUIMRrespptr;
-DATA(0x004c7f84)
+DATA(0x004c8434)
 i32 localstage;
-DATA(0x004c7f88)
+DATA(0x004c8438)
 char numbuf[40];
-DATA(0x004c7fb0)
+DATA(0x004c8460)
 i32 iLastIds[REMOTE_RECENT_ID_COUNT];
-DATA(0x004c8028)
+DATA(0x004c84d8)
 i32 WFDCStage;
-DATA(0x004c8030)
+DATA(0x004c84e0)
 char remoteidstr[8];
-DATA(0x004c8038)
+DATA(0x004c84e8)
 char PacketSend[256];
-DATA(0x004c8138)
+DATA(0x004c85e8)
 i32 stime;
-DATA(0x004c8140)
+DATA(0x004c85f0)
 i32 iInOrder[REMOTE_QUEUE_CAPACITY];
-DATA(0x004c8160)
+DATA(0x004c8610)
 RemoteMessage sndBuf;
-DATA(0x004c8260)
+DATA(0x004c8710)
 char cModemCommand[40];
-DATA(0x004c8288)
+DATA(0x004c8738)
 i32 iLastDialPos;
-DATA(0x004c828c)
+DATA(0x004c873c)
 i32 remotestage;
-DATA(0x004c8290)
+DATA(0x004c8740)
 i32 gNumNetGuests;
-DATA(0x004c8298)
+DATA(0x004c8748)
 char GUIMRresp[40];
-DATA(0x004c82c0)
+DATA(0x004c8770)
 i32 oldsec;
-DATA(0x004c82c8)
+DATA(0x004c8778)
 inque_t inque;
-DATA(0x004c92d8)
+DATA(0x004c9788)
 char packet[256];
-DATA(0x004c93d8)
+DATA(0x004c9888)
 i32 iLastActionTime;
-DATA(0x004c93e0)
+DATA(0x004c9890)
 RemoteMessage rcvBufIn;
-DATA(0x004c94e0)
+DATA(0x004c9990)
 char GUIMRresponse[80];
-DATA(0x004c9530)
+DATA(0x004c99e0)
 RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
-DATA(0x004c9c80)
+DATA(0x004ca130)
 outque_t outque;

@@ -18,7 +18,7 @@
 // donor PoL RVA 0x00032c00; preferred Buka symbol ??0town@@QAE@XZ
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.468183;margin=0.431232;shape=0.273;size=0.841;calls=1.000;alternate=pol20:void town::constructor(void)@0x00032c00
-VA(0x00463f10, 0x6b)
+VA(0x00464030, 0x6b)
 town::town(void) {
     m_type = 0;
     m_threat = 0;
@@ -36,7 +36,7 @@ town::town(void) {
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410733;margin=0.365325;shape=0.175;size=0.741;calls=1.000;alternate=pol20:int town::HasGarrison(void)@0x00032c65
 // HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
-VA(0x00463f7b, 0x55)
+VA(0x0046409b, 0x55)
 i8 town::HasGarrison(void) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
@@ -48,7 +48,7 @@ i8 town::HasGarrison(void) {
 // donor PoL RVA 0x00032cb9; preferred Buka symbol ?GiveSpells@town@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430933;margin=0.601053;shape=0.167;size=0.987;calls=0.667;alternate=pol20:void town::GiveSpells(class hero *)@0x00032cb9
-VA(0x00463fd0, 0xe1)
+VA(0x004640f0, 0xe1)
 void town::GiveSpells(void) {
     hero* visitingHero;
     i16 i;
@@ -70,7 +70,7 @@ void town::GiveSpells(void) {
     }
 }
 
-VA(0x004640b1, 0x17c)
+VA(0x004641d1, 0x17c)
 void town::XformToCastle(void) {
     i16 i;
 
@@ -88,7 +88,7 @@ void town::XformToCastle(void) {
 // evidence: graph:4;base=0.510810;margin=0.878787;shape=0.327;size=0.842;calls=1.000;alternate=pol20:void town::View(int)@0x00032e74
 // HoMM1's callee returns with `ret` and always fades; the donor's noFade
 // argument and memory-limit calculation belong to its later revision.
-VA(0x0046422d, 0xa5)
+VA(0x0046434d, 0xa5)
 void town::View(void) {
     if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
@@ -104,7 +104,7 @@ void town::View(void) {
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 
-VA(0x004642d2, 0x152)
+VA(0x004643f2, 0x152)
 void town::Deallocate(void) {
     playerData* ownerData;
     i16 i;

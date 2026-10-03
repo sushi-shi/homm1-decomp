@@ -17,8 +17,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
-VA(0x0047a6b0, 0x2a)
-VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)
+VA(0x0047ac80, 0x2a)
+VA_COMPGEN(0x0047acb0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047ac80)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = BITMAP_TYPE_NONE;
     m_width = 0;
@@ -26,7 +26,7 @@ bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_
     m_pixels = NULL;
 }
 
-VA(0x0047a720, 0x4d)
+VA(0x0047acf0, 0x4d)
 bitmap::bitmap(i16 type, i16 width, i16 height)
     : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = type;
@@ -36,7 +36,7 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 }
 
 // Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
-VA(0x0047a770, 0xa1)
+VA(0x0047ad40, 0xa1)
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_bitmapType = gpResourceManager->ReadWord();
@@ -56,19 +56,19 @@ bitmap::~bitmap(void) {
     m_pixels = NULL;
 }
 
-VA(0x0047a820, 0x3e)
+VA(0x0047adf0, 0x3e)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
     BlitBitmap(this, 0, 0, m_width, m_height, gpWindowManager->m_screen, x, y);
     PollSound();
 }
 
-VA(0x0047a860, 0x18)
+VA(0x0047ae30, 0x18)
 void bitmap::GrabScreen(i16 x, i16 y) {
     GrabScreenBitmap(this, x, y);
 }
 
-VA(0x0047a880, 0x2b)
+VA(0x0047ae50, 0x2b)
 void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
     BlitBitmap(source, x, y, m_width, m_height, this, 0, 0);
 }
@@ -76,7 +76,7 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 // Raw screenshot writer: combat palette followed by the pixel plane.
 // Retail colours palette/file/this in that order (esi/edi/ebx); VC4 ties follow
 // symbol order, so the palette pointer is declared before the file handle.
-VA(0x0047a8b0, 0x7f)
+VA(0x0047ae80, 0x7f)
 void bitmap::Write(char* filename) {
     palette* combatPalette;
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
@@ -90,7 +90,7 @@ void bitmap::Write(char* filename) {
     }
 }
 
-VA(0x0047a930, 0xbd)
+VA(0x0047af00, 0xbd)
 void bitmap::CopyTo(
     bitmap* destination,
     i32 destinationX,

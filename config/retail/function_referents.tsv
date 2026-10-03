@@ -2,157 +2,157 @@
 # These are symbol identities only: they remain in anonymous delink buckets and
 # do not become source claims or matching-denominator entries.
 rva	name	provenance
-0x000745A0	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	retail FadeScreen word arguments and town::View call at 0x06427e
-0x000599F6	?write_buffer@@YAHPADH@Z	GUIModemCommandExec calls 0x0599F6 with buffer and byte count; donor names write_buffer
-0x000818A0	_strlen	GUIModemCommandExec passes command buffer to 0x0818A0; one-argument C strlen call
-0x00059A21	?read_byte@@YAHXZ	GUIModemResponseExec reads one serial byte from 0x059A21; donor name
-0x00082300	_strncmp	GUIModemResponseExec compares received and expected response prefixes at 0x082300
-0x00051A31	?NormalDialog@@YAXPADHHHHHHHH@Z	GUIModemCommand call at 0x05976F uses nine stack arguments; donor NormalDialog family
-0x0005C8A4	?SetMenus@@YAXPAXH@Z	SetNoDialogMenus call at 0x05C892 and HoMM2 Buka 2.1/PoL 2.0 correspondence
-0x0007C220	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	QuickViewWait call at 0x053970 and matching retail GetEvent body; HoMM2 Buka 2.1 correspondence
+0x00074b70	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	retail FadeScreen word arguments and town::View call at 0x06427e
+0x00059af6	?write_buffer@@YAHPADH@Z	GUIModemCommandExec calls 0x0599F6 with buffer and byte count; donor names write_buffer
+0x00081e70	_strlen	GUIModemCommandExec passes command buffer to 0x0818A0; one-argument C strlen call
+0x00059b21	?read_byte@@YAHXZ	GUIModemResponseExec reads one serial byte from 0x059A21; donor name
+0x000828d0	_strncmp	GUIModemResponseExec compares received and expected response prefixes at 0x082300
+0x00051b32	?NormalDialog@@YAXPADHHHHHHHH@Z	GUIModemCommand call at 0x05976F uses nine stack arguments; donor NormalDialog family
+0x0005c9a4	?SetMenus@@YAXPAXH@Z	SetNoDialogMenus call at 0x05C892 and HoMM2 Buka 2.1/PoL 2.0 correspondence
+0x0007c7f0	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	QuickViewWait call at 0x053970 and matching retail GetEvent body; HoMM2 Buka 2.1 correspondence
 0x00005184	?WGAppPaint@@YAHPAX0@Z	wingraph AppPaint direct call; Buka 2.1 wingraph backend order
-0x0004F640	_PollSound	ReadBlock call target and donor C linkage
-0x0005A584	?PollRemote@@YAXXZ	base-object relocation and decoded retail target
-0x0005DC9B	?KBTickCount@@YAHXZ	base-object relocation and decoded retail target
-0x000644E7	?DelayTilMilli@@YAXH@Z	FizzleForward frame pacing call with the accumulated tick target
-0x000735F0	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	screen-buffer copy into a bitmap with two integer coordinates
-0x000738C0	?PostprocessBitmap@@YAXPACHH@Z	semantic provisional name from three bitmap-load callers and pixel/dimension arguments
-0x000744B0	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	WINDOW draw/move calls and four signed-word region arguments
-0x00076DD0	?ReallyShowPointer@mouseManager@@QAEXXZ	paired cursor-show call after drawing
-0x00076DE0	?ReallyHidePointer@mouseManager@@QAEXXZ	paired cursor-hide call before drawing
-0x00078940	?PollSound@soundManager@@QAEXXZ	base-object relocation and decoded retail target
-0x00078140	?ModifySample@soundManager@@QAEXPAU_SAMPLE@@FH@Z	PollSound sample-volume update call shape
-0x000786D0	?PlayAmbientMusic@soundManager@@QAEXHHH@Z	PollSound fade-target switch call shape
-0x0007FA60	??0sample@@QAE@PADHHH@Z	four-argument sample constructor and exact allocation size
-0x000805F0	_strcpy	donor identity and seven-byte VC4 strcpy entry stub
-0x000805F8	_strcat	donor identity and LogStr append call
-0x000806E0	??2@YAPAXI@Z	VC4 operator new body and GetSample allocation call
-0x000806F0	_sprintf	exact VC4 libc member and LoadAggregateHeader call shape
-0x00080880	_free	exact VC4 libc member and LoadAggregateHeader call shape
-0x000809F0	_malloc	exact VC4 libc member and LoadAggregateHeader call shape
-0x00081940	_fclose	donor identity and LogStr stream-close call
-0x00081EB0	_fread	four-argument 0x4000-byte stream fill
-0x00082120	_ftell	saved music-file position query
-0x00083520	_rewind	one-argument music stream restart
-0x000819E0	_fputs	unique VC4 CRT prefix and LogStr stream-write call
-0x00081A90	_fopen	donor identity and LogStr two-argument stream-open call
-0x00081890	_abs	absolute coordinate delta used twice by MoveWindow
-0x00082500	__lseek	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES lseek resolves to it)
-0x00082890	__close	donor identity and LoadAggregateHeader file-descriptor call; LIBCMT runtime symbol (OLDNAMES close resolves to it)
-0x00082990	__read	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES read resolves to it)
-0x00082C40	__open	donor identity and two-argument binary-open call; LIBCMT runtime symbol (OLDNAMES open resolves to it)
-0x00083510	__purecall	retail widget pure slots point here; push runtime error25 then _amsg_exit
-0x0008B050	__tell	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES tell resolves to it)
-0x00019B4A	?LogStr@@YAXPADHH@Z	decoded three-argument logging body
-0x0007FC58	_LzhufMemmove	byte-identical legacy helper in all surveyed DOS releases
-0x00081B00	_memmove	VC encoder relocation and CRT body
+0x0004f740	_PollSound	ReadBlock call target and donor C linkage
+0x0005a684	?PollRemote@@YAXXZ	base-object relocation and decoded retail target
+0x0005dd9b	?KBTickCount@@YAHXZ	base-object relocation and decoded retail target
+0x00064607	?DelayTilMilli@@YAXH@Z	FizzleForward frame pacing call with the accumulated tick target
+0x00073bc0	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	screen-buffer copy into a bitmap with two integer coordinates
+0x00073e90	?PostprocessBitmap@@YAXPACHH@Z	semantic provisional name from three bitmap-load callers and pixel/dimension arguments
+0x00074a80	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	WINDOW draw/move calls and four signed-word region arguments
+0x000773a0	?ReallyShowPointer@mouseManager@@QAEXXZ	paired cursor-show call after drawing
+0x000773b0	?ReallyHidePointer@mouseManager@@QAEXXZ	paired cursor-hide call before drawing
+0x00078f10	?PollSound@soundManager@@QAEXXZ	base-object relocation and decoded retail target
+0x00078710	?ModifySample@soundManager@@QAEXPAU_SAMPLE@@FH@Z	PollSound sample-volume update call shape
+0x00078ca0	?PlayAmbientMusic@soundManager@@QAEXHHH@Z	PollSound fade-target switch call shape
+0x00080030	??0sample@@QAE@PADHHH@Z	four-argument sample constructor and exact allocation size
+0x00080bc0	_strcpy	donor identity and seven-byte VC4 strcpy entry stub
+0x00080bc8	_strcat	donor identity and LogStr append call
+0x00080cb0	??2@YAPAXI@Z	VC4 operator new body and GetSample allocation call
+0x00080cc0	_sprintf	exact VC4 libc member and LoadAggregateHeader call shape
+0x00080e50	_free	exact VC4 libc member and LoadAggregateHeader call shape
+0x00080fc0	_malloc	exact VC4 libc member and LoadAggregateHeader call shape
+0x00081f10	_fclose	donor identity and LogStr stream-close call
+0x00082480	_fread	four-argument 0x4000-byte stream fill
+0x000826f0	_ftell	saved music-file position query
+0x00083af0	_rewind	one-argument music stream restart
+0x00081fb0	_fputs	unique VC4 CRT prefix and LogStr stream-write call
+0x00082060	_fopen	donor identity and LogStr two-argument stream-open call
+0x00081e60	_abs	absolute coordinate delta used twice by MoveWindow
+0x00082ad0	__lseek	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES lseek resolves to it)
+0x00082e60	__close	donor identity and LoadAggregateHeader file-descriptor call; LIBCMT runtime symbol (OLDNAMES close resolves to it)
+0x00082f60	__read	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES read resolves to it)
+0x00083210	__open	donor identity and two-argument binary-open call; LIBCMT runtime symbol (OLDNAMES open resolves to it)
+0x00083ae0	__purecall	retail widget pure slots point here; push runtime error25 then _amsg_exit
+0x0008b620	__tell	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES tell resolves to it)
+0x00019b4a	?LogStr@@YAXPADHH@Z	decoded three-argument logging body
+0x00080228	_LzhufMemmove	byte-identical legacy helper in all surveyed DOS releases
+0x000820d0	_memmove	VC encoder relocation and CRT body
 0x00003640	?DDRestoreDisplayMode@@YAXXZ	wingraph RestoreDisplayMode direct call; Buka 2.1 graphics family
-0x00003F68	?DDInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
-0x000040A8	?DDSetPalette@@YAHXZ	wingraph SetPalette direct call; Buka 2.1 graphics family
-0x00004DD2	?WGUpdatePalette@@YAXPAC@Z	wingraph UpdatePalette direct call; Buka 2.1 wingraph backend order
-0x00004FAF	?WGInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
-0x000738D0	?PostprocessIcon@@YAXPAVicon@@@Z	paired no-op load hook following PostprocessBitmap, called once after icon data read
-0x000805E0	??3@YAXPAX@Z	VC4 operator delete wrapper calls the reviewed _free body at 0x80880
-0x0007A5A0	?MainLoop@executive@@QAEXXZ	CallManager invokes executive event loop between manager switches
-0x00079A80	?Draw@border@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x000797B0	??_Gborder@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007AD60	?Draw@iconWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007AA20	??_GiconWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007B1E0	?Draw@textWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007AE10	??_GtextWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007D000	??_GbackdropWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007EB60	?Draw@textEntryWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007E130	??_GtextEntryWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007F620	?Draw@button@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007EF30	??_Gbutton@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x00079170	?ServiceSound@soundManager@@QAEXXZ	Process1WindowsMessage calls this method at 0x05C279; HoMM2 Buka 2.1 correspondence
-0x0001EC81	?TurnsToBuy@philAI@@QAEMQAH@Z	FutureDeflator calls this philAI method at 0x01FEEE; HoMM2 Buka 2.1 correspondence
-0x00078340	?DigitalReport@soundManager@@QAEHPAU_SAMPLE@@F@Z	WaitEndSample calls soundManager::DigitalReport at 0x0559C0 with sample handle and mode 4
-0x000801DC	_WinGSetDIBColorTable@16	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall four-argument palette call
-0x000801E2	_WinGStretchBlt@40	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall ten-argument paint call
-0x000801E8	_WinGBitBlt@32	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall eight-argument paint call
-0x00078F80	?MemorySample@soundManager@@QAEPAU_SAMPLE@@PAVsample@@@Z	LoadPlaySample calls soundManager::MemorySample at 0x05596B; PoL 2.0 signature and retail sample playback layout
-0x000801CA	_WinGCreateBitmap@12	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall bitmap creation call
-0x000801D0	_WinGCreateDC@0	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DC creation call
-0x000801D6	_WinGRecommendDIBFormat@4	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DIB format call
-0x00079920	?Main@border@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007ABA0	?Main@iconWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007AFF0	?Main@textWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007E360	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007F050	?Main@button@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x00080A68	__ftol	LikelihoodOfEnemyAttacking float-to-int conversion; all 39 retail instruction bytes exactly match pinned VC4 libc.lib ftol.obj __ftol
-0x00076F00	?CDStop@soundManager@@QAEXXZ	CDPlay retail call and PoL source family
-0x0005D740	?WritePrefs@@YAXXZ	CDPlay retail call and PoL source family
-0x0005DD14	?FindToken@@YAPADPADD@Z	CDPlay retail call and PoL source family
-0x00083410	__stricmp	CDPlay retail call and PoL source family; LIBCMT runtime symbol (OLDNAMES strcmpi resolves to it)
-0x00080810	_atoi	CDPlay retail call and PoL source family
-0x0007AFC0	??1textWidget@@UAE@XZ	textEntry deleting destructor calls this nondeleting text destructor body, Dispose font then free text then widget destructor
-0x00081E80	_strncpy	SetupDisplayString bounded prefix-copy and retail CRT entry
-0x000644C4	?DelayMilli@@YAXH@Z	retail tick wrapper, PoL and Buka NOOPT declaration
-0x00077CC0	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHH@Z	seven arguments with two short homes, SAMPLE pointer result
-0x0005C57C	?UpdateDfltMenu@@YAXPAX@Z	KBChangeMenu retail call0x0045C6AD; Buka donor default menu updater
-0x0005679B	?UpdateAppSpecificMenus@@YAXPAX@Z	KBChangeMenu retail call0x0045C6B9; Buka donor app menu updater
-0x0008B070	__strrev	pinned retail CRT call and VC4 library identity
-0x000834C0	__access	pinned retail CRT call and VC4 library identity
-0x00082040	_fseek	pinned retail CRT call and VC4 library identity
-0x0007CA44	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument screen-clipped renderer identity only
-0x0007CCA4	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument flipped screen-clipped renderer identity only
-0x0007343C	_Netbios@4	is_netbios_avail calls retail import thunk jmp[0x004D65AC]; pinned PE IAT Netbios and VC4 nb30.h stdcall signature
-0x00055c94	?EarlyShutDownSystem@@YAXXZ	executive ShutDownSystem call7a235; Buka EXEC/KB EarlyShutDownSystem correspondence
-0x00019BD4	?LogStr@@YAXPADHHHHH@Z	provisional five-value logging family identity from existing two-long overload and retail argument/formatter census, no body coverage
-0x00072D14	?init_anchor@@YAXPAUtag_Anchor@@HH@Z	nb_init three queue initialization calls; retail helper clears head/tail pointers+0/+4; Buka comwin signature
-0x000149A1	?nb_add_name@@YAXXZ	nb_snd registration special case retail call; Buka donor no-argument helper
-0x00072C60	?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z	nb_snd queue append retail calls; helper proves prev+0,next+4 and anchor head+0,tail+4
-0x000808A0	_memcpy	nb_snd retail packet copy and pinned VC4 CRT call identity
+0x00003f68	?DDInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
+0x000040a8	?DDSetPalette@@YAHXZ	wingraph SetPalette direct call; Buka 2.1 graphics family
+0x00004dd2	?WGUpdatePalette@@YAXPAC@Z	wingraph UpdatePalette direct call; Buka 2.1 wingraph backend order
+0x00004faf	?WGInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
+0x00073ea0	?PostprocessIcon@@YAXPAVicon@@@Z	paired no-op load hook following PostprocessBitmap, called once after icon data read
+0x00080bb0	??3@YAXPAX@Z	VC4 operator delete wrapper calls the reviewed _free body at 0x80880
+0x0007ab70	?MainLoop@executive@@QAEXXZ	CallManager invokes executive event loop between manager switches
+0x0007a050	?Draw@border@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x00079d80	??_Gborder@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007b330	?Draw@iconWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007aff0	??_GiconWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007b7b0	?Draw@textWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007b3e0	??_GtextWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007d5d0	??_GbackdropWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007f130	?Draw@textEntryWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007e700	??_GtextEntryWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007fbf0	?Draw@button@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007f500	??_Gbutton@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x00079740	?ServiceSound@soundManager@@QAEXXZ	Process1WindowsMessage calls this method at 0x05C279; HoMM2 Buka 2.1 correspondence
+0x0001ec7d	?TurnsToBuy@philAI@@QAEMQAH@Z	FutureDeflator calls this philAI method at 0x01FEEE; HoMM2 Buka 2.1 correspondence
+0x00078910	?DigitalReport@soundManager@@QAEHPAU_SAMPLE@@F@Z	WaitEndSample calls soundManager::DigitalReport at 0x0559C0 with sample handle and mode 4
+0x000807ac	_WinGSetDIBColorTable@16	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall four-argument palette call
+0x000807b2	_WinGStretchBlt@40	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall ten-argument paint call
+0x000807b8	_WinGBitBlt@32	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall eight-argument paint call
+0x00079550	?MemorySample@soundManager@@QAEPAU_SAMPLE@@PAVsample@@@Z	LoadPlaySample calls soundManager::MemorySample at 0x05596B; PoL 2.0 signature and retail sample playback layout
+0x0008079a	_WinGCreateBitmap@12	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall bitmap creation call
+0x000807a0	_WinGCreateDC@0	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DC creation call
+0x000807a6	_WinGRecommendDIBFormat@4	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DIB format call
+0x00079ef0	?Main@border@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007b170	?Main@iconWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007b5c0	?Main@textWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007e930	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x0007f620	?Main@button@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
+0x00081038	__ftol	LikelihoodOfEnemyAttacking float-to-int conversion; all 39 retail instruction bytes exactly match pinned VC4 libc.lib ftol.obj __ftol
+0x000774d0	?CDStop@soundManager@@QAEXXZ	CDPlay retail call and PoL source family
+0x0005d840	?WritePrefs@@YAXXZ	CDPlay retail call and PoL source family
+0x0005de14	?FindToken@@YAPADPADD@Z	CDPlay retail call and PoL source family
+0x000839e0	__stricmp	CDPlay retail call and PoL source family; LIBCMT runtime symbol (OLDNAMES strcmpi resolves to it)
+0x00080de0	_atoi	CDPlay retail call and PoL source family
+0x0007b590	??1textWidget@@UAE@XZ	textEntry deleting destructor calls this nondeleting text destructor body, Dispose font then free text then widget destructor
+0x00082450	_strncpy	SetupDisplayString bounded prefix-copy and retail CRT entry
+0x000645e4	?DelayMilli@@YAXH@Z	retail tick wrapper, PoL and Buka NOOPT declaration
+0x00078290	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHH@Z	seven arguments with two short homes, SAMPLE pointer result
+0x0005c67c	?UpdateDfltMenu@@YAXPAX@Z	KBChangeMenu retail call0x0045C6AD; Buka donor default menu updater
+0x0005689d	?UpdateAppSpecificMenus@@YAXPAX@Z	KBChangeMenu retail call0x0045C6B9; Buka donor app menu updater
+0x0008b640	__strrev	pinned retail CRT call and VC4 library identity
+0x00083a90	__access	pinned retail CRT call and VC4 library identity
+0x00082610	_fseek	pinned retail CRT call and VC4 library identity
+0x0007d014	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument screen-clipped renderer identity only
+0x0007d274	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument flipped screen-clipped renderer identity only
+0x00073a1a	_Netbios@4	is_netbios_avail calls retail import thunk jmp[0x004D65AC]; pinned PE IAT Netbios and VC4 nb30.h stdcall signature
+0x00055d96	?EarlyShutDownSystem@@YAXXZ	executive ShutDownSystem call7a235; Buka EXEC/KB EarlyShutDownSystem correspondence
+0x00019bd4	?LogStr@@YAXPADHHHHH@Z	provisional five-value logging family identity from existing two-long overload and retail argument/formatter census, no body coverage
+0x00072e34	?init_anchor@@YAXPAUtag_Anchor@@HH@Z	nb_init three queue initialization calls; retail helper clears head/tail pointers+0/+4; Buka comwin signature
+0x000149a1	?nb_add_name@@YAXXZ	nb_snd registration special case retail call; Buka donor no-argument helper
+0x00072d80	?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z	nb_snd queue append retail calls; helper proves prev+0,next+4 and anchor head+0,tail+4
+0x00080e70	_memcpy	nb_snd retail packet copy and pinned VC4 CRT call identity
 0x00015469	?nb_format_name@@YAXPADPAE@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00014A5C	?nb_add_name_done@@YGXPAU_NCB@@@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00014C28	?nb_recv_any@@YAGH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00014E26	?nb_call@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00014EEC	?nb_listen@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x000150E6	?nb_arm_recv@@YAXH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
+0x00014a5c	?nb_add_name_done@@YGXPAU_NCB@@@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
+0x00014c28	?nb_recv_any@@YAGH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
+0x00014e26	?nb_call@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
+0x00014eec	?nb_listen@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
+0x000150e6	?nb_arm_recv@@YAXH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
 0x00015234	?nb_close_session@@YAXH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00073820	?Random@@YAHHH@Z	Buka BASE/Misc.h Random(int,int); retail highScore constructor pushes bounds0,17 and consumes eax
-0x00073D90	??0baseManager@@QAE@XZ	retail highScore constructor base call; shared 0x30-byte base owner initialization
-0x000803B0	___CxxFrameHandler	config/retail/dna_bands.tsv row 803b0; exact pinned VC4 libc.lib member 1877; inline EH registration REL32 handler identity
-0x00080C17	__adj_fdiv_r	config/retail/dna_bands.tsv crt-exact __adj_fdiv_r; philAI::TurnCostResource FDIV-safe fdivrp site
-0x000810DC	__adj_fdiv_m32	config/retail/dna_bands.tsv crt-exact __adj_fdiv_m32; philAI float-memory FDIV-safe divide sites
-0x00081128	__adj_fdiv_m64	philAI::GetGameAttentionValue double-memory FDIV-safe divide sites call this LIBC fdiv band member where VC4 emits __adj_fdiv_m64
-0x00039174	?CountVisitedObelisks@playerData@@QAECXZ	philAI::TurnValueOfObelisk calls it on &players[p]; counts set bits of the 48-bit obelisk bitmap at player+0x9b
-0x00039873	?IsMobile@game@@QAECC@Z	HoMM2 Buka 2.1 game::IsMobile; advManager::CheckDimHero passes the signed current-hero byte and tests the AL result
-0x0003910C	?HasMobileHero@playerData@@QAECXZ	HoMM2 Buka 2.1 playerData::HasMobileHero; CheckDimNextHeroBut tests the sign-extended AL result
-0x000513FA	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
-0x000519D1	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
-0x00081228	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
-0x0006BEA0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
-0x00081D00	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
-0x00081D10	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
-0x00081D70	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
-0x000830C0	__write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it; LIBCMT runtime symbol (OLDNAMES write resolves to it)
-0x00043B3C	?SetRandomHeroArmies@game@@QAEXFH@Z	hero::Deallocate re-arms the freed hero with a word id and 0; Buka game::SetRandomHeroArmies correspondence
-0x00047974	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings
-0x00040366	?Overview@game@@QAEXXZ	HeroHandler crest click calls it on gpGame with no arguments; body loads overmain.bmp, advmice.mse and the fonts
-0x0003F758	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
-0x00082610	__chdir	SetupCDDrive's chdir call; config/retail/dna_bands.tsv crt-exact libc.lib:/1152 __chdir; LIBCMT runtime symbol (OLDNAMES chdir resolves to it)
-0x00082340	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
-0x00083340	__strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside __stricmp at 0x083410; LIBCMT runtime symbol (OLDNAMES strnicmp resolves to it)
-0x00076EC0	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release
-0x0003D4C3	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot
-0x000028B0	?FindNearestObject@searchArray@@QAEXFFFHH@Z	advManager::DoEvent signpost case calls it on gpSearchArray with the hero x/y/direction words, -1 and trigger 0xa8 (ret 0x14); body clears the search, seeds and stores the nearest match at +0xc/+0x10
-0x00066A2C	?DrawToBuffer@army@@QAEXFF@Z	hexcell::DrawOccupant calls it on the occupying stack with the cell x/y words (ret 8); HoMM1 army sprite draw, Buka army::DrawToBuffer without the effects flag
-0x000811DC	__adj_fdivr_m32	config/retail/dna_bands.tsv crt-exact __adj_fdivr_m32; philAI::CheckReload float-constant fdivr FDIV-safe site calls this LIBC fdiv band member
-0x00081AB0	_pow	config/retail/dna_bands.tsv LIBC band stub 0x81ab0 (mov edx,table; jmp two-argument dispatcher); philAI::ProbableOutcomeOfBattle pushes two doubles and stores the float result, Buka pow(attackerStrength, powerCurve)
-0x00002AF0	?BuildPath@searchArray@@QAEHFFFFF@Z	advManager::DoAdvCommand and philAI::DoAI call it on gpSearchArray with hero x/y, destination x/y and a word mobility limit (ret 0x14), then read m_pathLength; HoMM2 Buka 2.1 searchArray::BuildPath
-0x00080188	_SmackClose	smkwai32.dll ordinal 14 import thunk; __cdecl call site in smackManager::Main: one Smack* argument at smackManager::Main's movie teardown (0x05b5b2); ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x0008018E	_SmackToBufferRect	smkwai32.dll ordinal 29 import thunk; __cdecl call site in smackManager::Main: (Smack*, 1) loop condition before each BlitBitmapToScreen of Smack+0x684..0x690 rectangle; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x00080194	_SmackDoFrame	smkwai32.dll ordinal 17 import thunk; __cdecl call site in smackManager::Main: one Smack* argument at the head of every frame of smackManager::Main; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x0008019A	_SmackGoto	smkwai32.dll ordinal 20 import thunk; __cdecl call site in smackManager::Main: (Smack*, frame 0x7d/0x65) seek before SmackDoFrame; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801A0	_SmackSoundOnOff	smkwai32.dll ordinal 26 import thunk; __cdecl call site in smackManager::Main: (Smack*, 0 / gConfig.musicVolume) sound toggle; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801A6	_SmackVolumePan	smkwai32.dll ordinal 31 import thunk; __cdecl call site in smackManager::Main: (Smack*, track 0x200, 0, 0) four-argument call; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801AC	_SmackWait	smkwai32.dll ordinal 32 import thunk; __cdecl call site in smackManager::Main: one Smack* argument polled with the frame-delay tick loop; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801B2	_SmackNextFrame	smkwai32.dll ordinal 21 import thunk; __cdecl call site in smackManager::Main: one Smack* argument when the frame counter has not reached Smack+0xc Frames; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801B8	_SmackToBuffer	smkwai32.dll ordinal 28 import thunk; __cdecl call site in smackManager::Main: (Smack*, 0, 0, 640, 480, screen pixels, 0) seven-argument call; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801BE	_SmackOpen	smkwai32.dll ordinal 22 import thunk; __cdecl call site in smackManager::Main: (gText path, open flags, -1 extrabuf) returns the Smack* tested for NULL; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x000801C4	_SmackSoundUseMSS	smkwai32.dll ordinal 50 import thunk; __cdecl call site in smackManager::Main: one argument, the soundManager MSS digital driver; ordinals 14-32 also follow Smacker's alphabetical export numbering
-0x00081C50	_strcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15224 _strcmp; game::LoadGame and UpdateNewGameWindow call it cdecl with two strings
-0x00081CE0	_strchr	config/retail/dna_bands.tsv crt-exact libc.lib:/15194 _strchr; game::UpdateNewGameWindow calls it cdecl
-0x00081920	_memcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15011 _memcmp; netwin nb_recv_any_done compares the received name cdecl
+0x00073df0	?Random@@YAHHH@Z	Buka BASE/Misc.h Random(int,int); retail highScore constructor pushes bounds0,17 and consumes eax
+0x00074360	??0baseManager@@QAE@XZ	retail highScore constructor base call; shared 0x30-byte base owner initialization
+0x00080980	___CxxFrameHandler	config/retail/dna_bands.tsv row 803b0; exact pinned VC4 libc.lib member 1877; inline EH registration REL32 handler identity
+0x000811e7	__adj_fdiv_r	config/retail/dna_bands.tsv crt-exact __adj_fdiv_r; philAI::TurnCostResource FDIV-safe fdivrp site
+0x000816ac	__adj_fdiv_m32	config/retail/dna_bands.tsv crt-exact __adj_fdiv_m32; philAI float-memory FDIV-safe divide sites
+0x000816f8	__adj_fdiv_m64	philAI::GetGameAttentionValue double-memory FDIV-safe divide sites call this LIBC fdiv band member where VC4 emits __adj_fdiv_m64
+0x000391e4	?CountVisitedObelisks@playerData@@QAECXZ	philAI::TurnValueOfObelisk calls it on &players[p]; counts set bits of the 48-bit obelisk bitmap at player+0x9b
+0x000398e3	?IsMobile@game@@QAECC@Z	HoMM2 Buka 2.1 game::IsMobile; advManager::CheckDimHero passes the signed current-hero byte and tests the AL result
+0x0003917c	?HasMobileHero@playerData@@QAECXZ	HoMM2 Buka 2.1 playerData::HasMobileHero; CheckDimNextHeroBut tests the sign-extended AL result
+0x000514fb	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
+0x00051ad2	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
+0x000817f8	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
+0x0006bfc0	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
+0x000822d0	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
+0x000822e0	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
+0x00082340	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
+0x00083690	__write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it; LIBCMT runtime symbol (OLDNAMES write resolves to it)
+0x00043c31	?SetRandomHeroArmies@game@@QAEXFH@Z	hero::Deallocate re-arms the freed hero with a word id and 0; Buka game::SetRandomHeroArmies correspondence
+0x00047a64	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings
+0x0004043a	?Overview@game@@QAEXXZ	HeroHandler crest click calls it on gpGame with no arguments; body loads overmain.bmp, advmice.mse and the fonts
+0x0003f82c	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
+0x00082be0	__chdir	SetupCDDrive's chdir call; config/retail/dna_bands.tsv crt-exact libc.lib:/1152 __chdir; LIBCMT runtime symbol (OLDNAMES chdir resolves to it)
+0x00082910	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
+0x00083910	__strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside __stricmp at 0x083410; LIBCMT runtime symbol (OLDNAMES strnicmp resolves to it)
+0x00077490	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release
+0x0003d597	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot
+0x000028b0	?FindNearestObject@searchArray@@QAEXFFFHH@Z	advManager::DoEvent signpost case calls it on gpSearchArray with the hero x/y/direction words, -1 and trigger 0xa8 (ret 0x14); body clears the search, seeds and stores the nearest match at +0xc/+0x10
+0x00066b4c	?DrawToBuffer@army@@QAEXFF@Z	hexcell::DrawOccupant calls it on the occupying stack with the cell x/y words (ret 8); HoMM1 army sprite draw, Buka army::DrawToBuffer without the effects flag
+0x000817ac	__adj_fdivr_m32	config/retail/dna_bands.tsv crt-exact __adj_fdivr_m32; philAI::CheckReload float-constant fdivr FDIV-safe site calls this LIBC fdiv band member
+0x00082080	_pow	config/retail/dna_bands.tsv LIBC band stub 0x81ab0 (mov edx,table; jmp two-argument dispatcher); philAI::ProbableOutcomeOfBattle pushes two doubles and stores the float result, Buka pow(attackerStrength, powerCurve)
+0x00002af0	?BuildPath@searchArray@@QAEHFFFFF@Z	advManager::DoAdvCommand and philAI::DoAI call it on gpSearchArray with hero x/y, destination x/y and a word mobility limit (ret 0x14), then read m_pathLength; HoMM2 Buka 2.1 searchArray::BuildPath
+0x00080758	_SmackClose	smkwai32.dll ordinal 14 import thunk; __cdecl call site in smackManager::Main: one Smack* argument at smackManager::Main's movie teardown (0x05b5b2); ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x0008075e	_SmackToBufferRect	smkwai32.dll ordinal 29 import thunk; __cdecl call site in smackManager::Main: (Smack*, 1) loop condition before each BlitBitmapToScreen of Smack+0x684..0x690 rectangle; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080764	_SmackDoFrame	smkwai32.dll ordinal 17 import thunk; __cdecl call site in smackManager::Main: one Smack* argument at the head of every frame of smackManager::Main; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x0008076a	_SmackGoto	smkwai32.dll ordinal 20 import thunk; __cdecl call site in smackManager::Main: (Smack*, frame 0x7d/0x65) seek before SmackDoFrame; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080770	_SmackSoundOnOff	smkwai32.dll ordinal 26 import thunk; __cdecl call site in smackManager::Main: (Smack*, 0 / gConfig.musicVolume) sound toggle; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080776	_SmackVolumePan	smkwai32.dll ordinal 31 import thunk; __cdecl call site in smackManager::Main: (Smack*, track 0x200, 0, 0) four-argument call; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x0008077c	_SmackWait	smkwai32.dll ordinal 32 import thunk; __cdecl call site in smackManager::Main: one Smack* argument polled with the frame-delay tick loop; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080782	_SmackNextFrame	smkwai32.dll ordinal 21 import thunk; __cdecl call site in smackManager::Main: one Smack* argument when the frame counter has not reached Smack+0xc Frames; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080788	_SmackToBuffer	smkwai32.dll ordinal 28 import thunk; __cdecl call site in smackManager::Main: (Smack*, 0, 0, 640, 480, screen pixels, 0) seven-argument call; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x0008078e	_SmackOpen	smkwai32.dll ordinal 22 import thunk; __cdecl call site in smackManager::Main: (gText path, open flags, -1 extrabuf) returns the Smack* tested for NULL; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00080794	_SmackSoundUseMSS	smkwai32.dll ordinal 50 import thunk; __cdecl call site in smackManager::Main: one argument, the soundManager MSS digital driver; ordinals 14-32 also follow Smacker's alphabetical export numbering
+0x00082220	_strcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15224 _strcmp; game::LoadGame and UpdateNewGameWindow call it cdecl with two strings
+0x000822b0	_strchr	config/retail/dna_bands.tsv crt-exact libc.lib:/15194 _strchr; game::UpdateNewGameWindow calls it cdecl
+0x00081ef0	_memcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15011 _memcmp; netwin nb_recv_any_done compares the received name cdecl

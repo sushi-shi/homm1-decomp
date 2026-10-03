@@ -1,6 +1,6 @@
 # HoMM1 reconstruction
 
-Use the pinned February 1996 Windows `HEROES.EXE` from
+Use the pinned May 1996 (Windows 95 1.1) Windows `HEROES.EXE` from
 `config/retail/targets.json`. Retail bytes, RVAs and relocations are the
 authority. The editor and other releases are secondary evidence.
 

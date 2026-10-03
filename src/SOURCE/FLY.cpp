@@ -20,7 +20,7 @@
 
 // HoMM1: the hex arrives through a word pointer; a two-hex creature that
 // does not fit facing forward moves its hex to the other side.
-VA(0x0044a5e0, 0x267)
+VA(0x0044a6d0, 0x267)
 i16 army::CanFit(i16* hex) {
     hexcell* cell;
     i16 candidateHex;
@@ -76,7 +76,7 @@ i16 army::CanFit(i16* hex) {
 
 // Buka FLY.cpp ValidFlight; HoMM1 passes a flag that takes the destination
 // as the enemy hex, and CanFit moves the landing hex in place.
-VA(0x0044a847, 0x468)
+VA(0x0044a937, 0x468)
 i16 army::ValidFlight(i16 destination, i8 useDestination) {
     i16 directionMask;
     i16 temp;
@@ -184,14 +184,14 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
 // Buka FLY.cpp FlyTo(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0044acaf, 0x27)
+VA(0x0044ad9f, 0x27)
 i16 army::FlyTo(void) {
     return FlyTo(m_moveTargetHex);
 }
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
-VA(0x0044acd6, 0x75e)
+VA(0x0044adc6, 0x75e)
 i16 army::FlyTo(i16 destination) {
     i16 iFinalY;
     i16 centerY;

@@ -10,7 +10,7 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA(0x0047a9f0, 0x2a)
+VA(0x0047afc0, 0x2a)
 iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_frame = 0;
     m_icon = 0;
@@ -18,13 +18,13 @@ iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_orientation = ICON_DRAW_NORMAL;
 }
 
-VA_COMPGEN(0x0047aa20, 0x36, "??_GiconWidget@@UAEPAXI@Z", 0x0047a9f0)
+VA_COMPGEN(0x0047aff0, 0x36, "??_GiconWidget@@UAEPAXI@Z", 0x0047afc0)
 iconWidget::~iconWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
 // Retail reads the frame argument as a signed byte before widening it.
-VA(0x0047aa60, 0x61)
+VA(0x0047b030, 0x61)
 iconWidget::iconWidget(
     i16 x,
     i16 y,
@@ -44,7 +44,7 @@ iconWidget::iconWidget(
     m_orientation = orientation;
 }
 
-VA(0x0047aad0, 0xce)
+VA(0x0047b0a0, 0xce)
 void iconWidget::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -61,7 +61,7 @@ void iconWidget::Read(void) {
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
-VA(0x0047aba0, 0x1bc)
+VA(0x0047b170, 0x1bc)
 i16 iconWidget::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -119,7 +119,7 @@ i16 iconWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047ad60, 0x68)
+VA(0x0047b330, 0x68)
 void iconWidget::Draw(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;

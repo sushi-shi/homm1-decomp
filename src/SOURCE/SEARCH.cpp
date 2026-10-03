@@ -163,51 +163,51 @@ void searchArray::SeedPosition(
     i32 continueSeed,
     i32 scanMap
 ) {
-    DATA(0x004a4620)
+    DATA(0x004a4ad0)
     static i16 s_direction;
-    DATA(0x004a4624)
+    DATA(0x004a4ad4)
     static i32 s_terrain;
-    DATA(0x004a4670)
+    DATA(0x004a4b20)
     static searchNode s_currentNode;
-    DATA(0x004a4628)
+    DATA(0x004a4ad8)
     static i32 s_mapX;
-    DATA(0x004a462c)
+    DATA(0x004a4adc)
     static i32 s_mapY;
-    DATA(0x004a4630)
+    DATA(0x004a4ae0)
     static i32 s_adjacentMonsterX;
-    DATA(0x004a4634)
+    DATA(0x004a4ae4)
     static i32 s_adjacentMonsterY;
-    DATA(0x004a4638)
+    DATA(0x004a4ae8)
     static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
-    DATA(0x004a4640)
+    DATA(0x004a4af0)
     static i8 s_possibleDirections[MAP_DIRECTION_COUNT];
-    DATA(0x004a4648)
+    DATA(0x004a4af8)
     static i32 s_currentCost;
-    DATA(0x004a464c)
+    DATA(0x004a4afc)
     static i32 s_hasTarget;
-    DATA(0x004a4650)
+    DATA(0x004a4b00)
     static hero* s_currentHero;
-    DATA(0x004a4654)
+    DATA(0x004a4b04)
     static i32 s_neighborX;
-    DATA(0x004a4658)
+    DATA(0x004a4b08)
     static i32 s_neighborY;
-    DATA(0x004a4660)
+    DATA(0x004a4b10)
     static u8 s_directionOccupied[MAP_DIRECTION_COUNT];
-    DATA(0x004a467c)
+    DATA(0x004a4b2c)
     static i32 s_directionBlocked;
-    DATA(0x004a4684)
+    DATA(0x004a4b34)
     static mapCell* s_targetCell;
-    DATA(0x004a4688)
+    DATA(0x004a4b38)
     static i8 s_hasAdjacentMonster;
-    DATA(0x004a468c)
+    DATA(0x004a4b3c)
     static i32 s_triggerType;
-    DATA(0x004a4690)
+    DATA(0x004a4b40)
     static i32 s_adjacentX;
-    DATA(0x004a4694)
+    DATA(0x004a4b44)
     static i32 s_adjacentY;
-    DATA(0x004a4698)
+    DATA(0x004a4b48)
     static i32 s_adjacentCost;
-    DATA(0x004a469c)
+    DATA(0x004a4b4c)
     static i32 s_bestTargetCost;
     DATA(0x0048e170)
     static i16 s_processedPointCount = 0;
@@ -471,5 +471,5 @@ void searchArray::SeedPosition(
 
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
 // this flag); SeedPosition's point counter is initialized .data (0x0048e170).
-DATA(0x004a4680)
+DATA(0x004a4b30)
 i32 gFullySeeded;

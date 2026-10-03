@@ -57,7 +57,7 @@ H1_ENUM_END(ViewGeneralHoverHelp)
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
-VA(0x00438310, 0x56d)
+VA(0x00438380, 0x56d)
 i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     i16 pictureCtrl;
     i16 borderId;
@@ -188,7 +188,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 
 // Buka VIEW.cpp:290-390 without the right-click help: Cast Spell, Retreat,
 // Surrender and Close end the dialog; hovering shows their help line.
-VA(0x0043887d, 0x222)
+VA(0x004388ed, 0x222)
 i16 HandleViewGeneral(tag_message& message) {
     i32 hintIndex;
     i16 pictureCtrl;
@@ -272,7 +272,7 @@ i16 HandleViewGeneral(tag_message& message) {
 
 // Buka VIEW.cpp:442-488: the creature quick view, placed beside the stack
 // and clamped to the screen.
-VA(0x00438a9f, 0x152)
+VA(0x00438b0f, 0x152)
 void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
     i16 xPos;
     i16 yPos;

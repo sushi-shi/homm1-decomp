@@ -1,31 +1,31 @@
 # Vtable claims sized from retail.
 rva	size	name	kind	note
-0x8c000	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
-0x8c010	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
-0x8c068	0xc	??_7townManager@@6B@	primary	Open/Close/Main
-0x8c3c8	0xc	??_7advManager@@6B@	primary	Open/Close/Main
-0x8c478	0xc	??_7fileRequester@@6B@	primary	Open/Close/Main
-0x8c498	0xc	??_7combatManager@@6B@	primary	Open/Close/Main
-0x8c4a8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
-0x8c528	0xc	??_7swapManager@@6B@	primary	Open/Close/Main
-0x8c5a0	0xc	??_7baseManager@@6B@	primary	three pure slots (_purecall 0x483510): Open/Close/Main
-0x8c5b0	0xc	??_7heroWindowManager@@6B@	primary	Open/Close/Main
-0x8c5c0	0xc	??_7resourceManager@@6B@	primary	Open/Close/Main
-0x8c5d0	0xc	??_7mouseManager@@6B@	primary	Open/Close/Main
-0x8c5e0	0xc	??_7soundManager@@6B@	primary	Open/Close/Main
-0x8c5f0	0xc	??_7border@@6B@	primary	Draw/~border/Main
-0x8c5fc	0x4	??_7icon@@6B@	primary	virtual destructor; 0x48c600 starts bitmap
-0x8c600	0x4	??_7bitmap@@6B@	primary	virtual destructor; retail relocates 0x48c600 only (0x48c604 is zero)
-0x8c608	0xc	??_7iconWidget@@6B@	primary	Draw/~iconWidget/Main
-0x8c618	0xc	??_7textWidget@@6B@	primary	Draw/~textWidget/Main
-0x8c624	0x4	??_7font@@6B@	primary	virtual destructor
-0x8c628	0xc	??_7inputManager@@6B@	primary	Open/Close/Main
-0x8c634	0x4	??_7palette@@6B@	primary	virtual destructor
-0x8c638	0xc	??_7backdropWidget@@6B@	primary	Draw/~backdropWidget/Main
-0x8c648	0xc	??_7textEntryWidget@@6B@	primary	Draw/~textEntryWidget/Main
-0x8c658	0xc	??_7dimmerWidget@@6B@	primary	Draw/~dimmerWidget/Main
-0x8c668	0xc	??_7button@@6B@	primary	Draw/~button/Main
-0x8c678	0xc	??_7widget@@6B@	primary	three pure slots, each relocated to _purecall (0x483510)
-0x8c684	0x4	??_7tileset@@6B@	primary	virtual destructor
-0x8c688	0x4	??_7sample@@6B@	primary	virtual destructor
-0x8c68c	0x4	??_7resource@@6B@	primary	pure virtual destructor slot (_purecall); 0x48c690 is EH data (-1)
+0x0008c000	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
+0x0008c010	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
+0x0008c068	0xc	??_7townManager@@6B@	primary	Open/Close/Main
+0x0008c3c8	0xc	??_7advManager@@6B@	primary	Open/Close/Main
+0x0008c478	0xc	??_7fileRequester@@6B@	primary	Open/Close/Main
+0x0008c498	0xc	??_7combatManager@@6B@	primary	Open/Close/Main
+0x0008c4a8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
+0x0008c528	0xc	??_7swapManager@@6B@	primary	Open/Close/Main
+0x0008c5a0	0xc	??_7baseManager@@6B@	primary	three pure slots (_purecall 0x483510): Open/Close/Main
+0x0008c5b0	0xc	??_7heroWindowManager@@6B@	primary	Open/Close/Main
+0x0008c5c0	0xc	??_7resourceManager@@6B@	primary	Open/Close/Main
+0x0008c5d0	0xc	??_7mouseManager@@6B@	primary	Open/Close/Main
+0x0008c5e0	0xc	??_7soundManager@@6B@	primary	Open/Close/Main
+0x0008c5f0	0xc	??_7border@@6B@	primary	Draw/~border/Main
+0x0008c5fc	0x4	??_7icon@@6B@	primary	virtual destructor; 0x48c600 starts bitmap
+0x0008c600	0x4	??_7bitmap@@6B@	primary	virtual destructor; retail relocates 0x48c600 only (0x48c604 is zero)
+0x0008c608	0xc	??_7iconWidget@@6B@	primary	Draw/~iconWidget/Main
+0x0008c618	0xc	??_7textWidget@@6B@	primary	Draw/~textWidget/Main
+0x0008c624	0x4	??_7font@@6B@	primary	virtual destructor
+0x0008c628	0xc	??_7inputManager@@6B@	primary	Open/Close/Main
+0x0008c634	0x4	??_7palette@@6B@	primary	virtual destructor
+0x0008c638	0xc	??_7backdropWidget@@6B@	primary	Draw/~backdropWidget/Main
+0x0008c648	0xc	??_7textEntryWidget@@6B@	primary	Draw/~textEntryWidget/Main
+0x0008c658	0xc	??_7dimmerWidget@@6B@	primary	Draw/~dimmerWidget/Main
+0x0008c668	0xc	??_7button@@6B@	primary	Draw/~button/Main
+0x0008c678	0xc	??_7widget@@6B@	primary	three pure slots, each relocated to _purecall (0x483510)
+0x0008c684	0x4	??_7tileset@@6B@	primary	virtual destructor
+0x0008c688	0x4	??_7sample@@6B@	primary	virtual destructor
+0x0008c68c	0x4	??_7resource@@6B@	primary	pure virtual destructor slot (_purecall); 0x48c690 is EH data (-1)

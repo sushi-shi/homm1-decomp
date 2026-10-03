@@ -125,7 +125,7 @@ H1_ENUM_CONST_END(HouseEventConstant)
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
-VA(0x0045dde0, 0x1f1a)
+VA(0x0045dee0, 0x1f1a)
 void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* pHero;
     tag_message unused;
@@ -1265,7 +1265,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
 // Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
 // falls back to the trigger kept in the low seven bits of byte 7 and borrows
 // the metadata of a neighbouring cell with that trigger.
-VA(0x0045fcfa, 0x1d7)
+VA(0x0045fdfa, 0x1f9)
 void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     i8 erased = 0;
     i32 j;
@@ -1274,6 +1274,8 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     erased = 1;
     cell->m_triggerType = MAP_OBJECT_NONE;
     cell->m_objectIndex = MAP_CELL_NO_FRAME;
+    if (cell->m_flags & MAP_CELL_OBJECT_ANIMATED)
+        cell->m_flags -= MAP_CELL_OBJECT_ANIMATED;
     if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) > 0
         && (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) < 0x7f) {
         cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
@@ -1302,7 +1304,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
 // donor PoL RVA 0x000aea02; preferred Buka symbol ?HeroSwap@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.621863;margin=0.183841;shape=0.591;size=0.854;calls=1.000;alternate=pol20:void advManager::HeroSwap(class hero *, class hero *)@0x000aea02
-VA(0x0045fed1, 0xcd)
+VA(0x0045fff3, 0xcd)
 void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
     swapManager* swapMgr;
 
@@ -1316,7 +1318,7 @@ void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
 // donor PoL RVA 0x000af87c; preferred Buka symbol ?TownEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530630;margin=0.268223;shape=0.333;size=0.946;calls=1.000;alternate=pol20:void advManager::TownEvent(class mapCell *, int, int)@0x000af87c
-VA(0x0045ff9e, 0x1bf)
+VA(0x004600c0, 0x1bf)
 void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     hero* curHero;
     i32 result;
@@ -1362,7 +1364,7 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
 
 // Adventure-event music cue; HoMM1 keys the ambient track off the map
 // object type and records that an event track is playing.
-VA(0x0046015d, 0x243)
+VA(0x0046027f, 0x243)
 void advManager::EventSound(i16 eventType, i16 eventData) {
     i32 musicTrack = MUSIC_TRACK_NONE;
 
@@ -1457,7 +1459,7 @@ void advManager::EventSound(i16 eventType, i16 eventData) {
 // donor PoL RVA 0x000aff6c; preferred Buka symbol ?EventWindow@advManager@@QAEXHHPADHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.574046;margin=0.505217;shape=0.246;size=0.761;calls=0.800;strings=Event ID %d;alternate=pol20:void advManager::EventWindow(int, int, char *, int, int, int, int, int)@0x000aff6c
-VA(0x004603a0, 0xde)
+VA(0x004604c2, 0xde)
 void advManager::EventWindow(
     i16 eventId,
     H1_ENUM_PARAM(NormalDialogType, i32) buttons,
@@ -1490,7 +1492,7 @@ void advManager::EventWindow(
     NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
 }
 
-VA(0x0046047e, 0xa9)
+VA(0x004605a0, 0xa9)
 i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
     i16 slot;
 
@@ -1509,7 +1511,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
 // donor PoL RVA 0x000b00e9; preferred Buka symbol ?GiveRandomArtifact@advManager@@QAEHPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.483471;margin=0.618508;shape=0.306;size=0.821;calls=1.000;alternate=pol20:int advManager::GiveRandomArtifact(class hero *)@0x000b00e9
-VA(0x00460527, 0x5f)
+VA(0x00460649, 0x5f)
 i32 advManager::GiveRandomArtifact(class hero* eventHero) {
     i8 artifact;
 
@@ -1524,7 +1526,7 @@ i32 advManager::GiveRandomArtifact(class hero* eventHero) {
 // donor PoL RVA 0x000b0147; preferred Buka symbol ?GiveExperience@advManager@@QAEHPAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
-VA(0x00460586, 0xb0)
+VA(0x004606a8, 0xb0)
 #line 1110 "D:\\Heroes\\Source\\EVENTS.CPP"
 i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
     i32 prevLevel;
@@ -1546,7 +1548,7 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     return newLevel - prevLevel;
 }
 
-VA(0x00460636, 0x5a)
+VA(0x00460758, 0x5a)
 void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
     if (resource >= 0 && resource <= RESOURCE_LAST)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
@@ -1555,7 +1557,7 @@ void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
 // donor PoL RVA 0x000b022e; preferred Buka symbol ?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
-VA(0x00460690, 0xec)
+VA(0x004607b2, 0xec)
 void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class mapCell* cell) {
     tag_message message;
     i16 availableCount;
@@ -1574,7 +1576,7 @@ void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class map
 // donor PoL RVA 0x000b07e5; preferred Buka symbol ?GhostEvent@advManager@@QAEHPAVhero@@PAVmapCell@@PADHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
-VA(0x0046077c, 0x2e0)
+VA(0x0046089e, 0x2e0)
 i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
     i32 artifact;
 
@@ -1705,7 +1707,7 @@ i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId
 // donor PoL RVA 0x000b0add; preferred Buka symbol ?HouseEvent@advManager@@QAEXPAVhero@@PAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.402651;margin=0.176834;shape=0.333;size=0.492;calls=1.000;alternate=pol20:void advManager::HouseEvent(class hero *, class mapCell *)@0x000b0add
-VA(0x00460a5c, 0x11e)
+VA(0x00460b7e, 0x11e)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     i16 houseIndex;
 
@@ -1756,7 +1758,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     }
 }
 
-VA(0x00460b7a, 0x200)
+VA(0x00460c9c, 0x200)
 i8 advManager::CombatMonsterEvent(
     class hero* eventHero,
     i8 monsterType,
@@ -1831,7 +1833,7 @@ i8 advManager::CombatMonsterEvent(
 
 // Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
 // bonuses here and is called through gpAdvManager.
-VA(0x00460d7a, 0x243)
+VA(0x00460e9c, 0x243)
 void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
     i8 stat = HERO_PRIMARY_NONE;
     i8 amount = 0;
@@ -1938,7 +1940,7 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 ta
 // donor PoL RVA 0x000b1973; preferred Buka symbol ?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
-VA(0x00460fbd, 0x200)
+VA(0x004610df, 0x200)
 void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero) {
     i16 i;
     i16 j;
@@ -1996,7 +1998,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
 // donor PoL RVA 0x000b1b50; preferred Buka symbol ?HeroLoses@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.567256;margin=0.641527;shape=0.448;size=0.872;calls=1.000;alternate=pol20:void advManager::HeroLoses(class hero *)@0x000b1b50
-VA(0x004611bd, 0x7d)
+VA(0x004612df, 0x7d)
 void advManager::HeroLoses(class hero* lostHero) {
     if (!lostHero)
         return;
@@ -2011,7 +2013,7 @@ void advManager::HeroLoses(class hero* lostHero) {
 // donor PoL RVA 0x000b1bcf; preferred Buka symbol ?DoWhirlpool@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
-VA(0x0046123a, 0x137)
+VA(0x0046135c, 0x137)
 void advManager::DoWhirlpool(class hero* eventHero) {
     i32 weakest;
     i16 slotNo;
@@ -2048,7 +2050,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 // donor PoL RVA 0x000b1d01; preferred Buka symbol ?FizzleCenter@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
-VA(0x00461371, 0x113)
+VA(0x00461493, 0x113)
 void advManager::FizzleCenter(i32 fizzleType) {
     SAMPLE2 fizzleSample;
 
@@ -2082,7 +2084,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
 // donor PoL RVA 0x000b1e43; preferred Buka symbol ?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
-VA(0x00461484, 0x1141)
+VA(0x004615a6, 0x1141)
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
     i32 troopType;
     i32 available;
@@ -2530,7 +2532,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
 // donor PoL RVA 0x000b4fd5; preferred Buka symbol ?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PAHHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
-VA(0x004625c5, 0x19a)
+VA(0x004626e7, 0x19a)
 void advManager::PlayerMonsterInteract(
     class mapCell* cell,
     class mapCell* combatCell,
@@ -2605,7 +2607,7 @@ void advManager::PlayerMonsterInteract(
 
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
-VA(0x0046275f, 0x152)
+VA(0x00462881, 0x152)
 void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled) {
     i32 numToBuy;
     i32 purchaseValue;
@@ -2647,7 +2649,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 // donor PoL RVA 0x000b5c40; preferred Buka symbol ?DoNetCombat@advManager@@QAEHPAD@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634004;margin=0.818203;shape=0.529;size=0.995;calls=1.000;alternate=pol20:int advManager::DoNetCombat(char *)@0x000b5c40
-VA(0x004628b1, 0x18f)
+VA(0x004629d3, 0x18f)
 i32 advManager::DoNetCombat(char* packet) {
     hero* defendingHero;
     i32 cellY;
@@ -2797,7 +2799,7 @@ struct heroRemoteMessage {
 // donor PoL RVA 0x000b5e10; preferred Buka symbol ?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.590184;margin=0.564001;shape=0.455;size=0.978;calls=0.927;alternate=pol20:int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int)@0x000b5e10
-VA(0x00462a40, 0x5c6)
+VA(0x00462b62, 0x5c6)
 i32 advManager::DoCombat(
     i32 x,
     i32 y,
@@ -3002,7 +3004,7 @@ combatFinished:
 // donor PoL RVA 0x000b645e; preferred Buka symbol ?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.543308;margin=0.967008;shape=0.438;size=0.943;calls=0.684;alternate=pol20:void advManager::SendHeroTownData(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int, int, int, int)@0x000b645e
-VA(0x00463006, 0x2da)
+VA(0x00463128, 0x2da)
 void advManager::SendHeroTownData(
     i32 x,
     i32 y,
@@ -3110,7 +3112,7 @@ void advManager::SendHeroTownData(
 // donor PoL RVA 0x000b67cd; preferred Buka symbol ?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493176;margin=0.152223;shape=0.314;size=0.857;calls=0.909;alternate=pol20:void advManager::ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *)@0x000b67cd
-VA(0x004632e0, 0x34c)
+VA(0x00463402, 0x34c)
 void advManager::ReceiveHeroTownData(
     char* packet,
     i32* remotePlayer,
@@ -3294,5 +3296,5 @@ void advManager::ReceiveHeroTownData(
 // assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
 DATA(0x004a0504)
 i32 gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
-DATA(0x004ca904)
+DATA(0x004cadb4)
 i8 gEventMusicPlaying;

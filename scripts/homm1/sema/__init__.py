@@ -12,6 +12,8 @@
     homm1 sema map     [sub ...]         retail address-space map
     homm1 sema match   <unit|rva|name>   objdiff scores for a unit / function
     homm1 sema frame   <unit|function>   VC4 candidate local names and /Od slots
+    homm1 sema fid     --old ... --new ... --census ... --out ...
+                                       cross-build fingerprint candidates
 
 Every module is also a direct entry: `python3 -m homm1.sema.xref 0x136180`.
 `homm1 sema -` is batch mode: newline-delimited view commands on stdin,
@@ -52,6 +54,7 @@ SUBCOMMANDS = {
     "map": "homm1.sema.map",
     "match": "homm1.sema.match",
     "frame": "homm1.sema.frame",
+    "fid": "homm1.sema.fid",
 }
 
 

@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-VA(0x0047e100, 0x2d)
+VA(0x0047e6d0, 0x2d)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
     m_icon = NULL;
@@ -28,12 +28,12 @@ textEntryWidget::textEntryWidget(void) : textWidget() {
     m_displayOffset = 0;
 }
 
-VA_COMPGEN(0x0047e130, 0x36, "??_GtextEntryWidget@@UAEPAXI@Z", 0x0047e100)
+VA_COMPGEN(0x0047e700, 0x36, "??_GtextEntryWidget@@UAEPAXI@Z", 0x0047e6d0)
 textEntryWidget::~textEntryWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
-VA(0x0047e170, 0x1e8)
+VA(0x0047e740, 0x1e8)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -80,7 +80,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-VA(0x0047e360, 0x7f4)
+VA(0x0047e930, 0x7f4)
 i16 textEntryWidget::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -269,7 +269,7 @@ i16 textEntryWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047eb60, 0x124)
+VA(0x0047f130, 0x124)
 void textEntryWidget::Draw(void) {
     if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
         char display[TEXT_ENTRY_DISPLAY_CAPACITY];
@@ -305,7 +305,7 @@ void textEntryWidget::Draw(void) {
     }
 }
 
-VA(0x0047ec90, 0x182)
+VA(0x0047f260, 0x182)
 void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
     i32 changed;
     char display[TEXT_ENTRY_DISPLAY_CAPACITY];

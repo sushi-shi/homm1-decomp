@@ -5,7 +5,7 @@
 
 #include <BASE/resource.h>
 
-VA(0x0047fc20, 0x2f)
+VA(0x004801f0, 0x2f)
 resource::resource(
     i16 category,
     i16 id,
@@ -18,5 +18,5 @@ resource::resource(
     m_next = next;
 }
 
-VA(0x0047fc50, 0x7)
+VA(0x00480220, 0x7)
 resource::~resource(void) {}

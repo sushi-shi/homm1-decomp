@@ -871,13 +871,13 @@ DATA(0x0048eb44)
 i8 EveryOther = 0;
 DATA(0x0048eb48)
 i16 startVals[3] = {16, 0, -16};
-DATA(0x004a4b80)
+DATA(0x004a5030)
 i16 S1cursorCycle;
-DATA(0x004a4b84)
+DATA(0x004a5034)
 i16 S1cursorFrameCount;
-DATA(0x004a4b88)
+DATA(0x004a5038)
 i16 S1cursorTurning;
-DATA(0x004a4b8c)
+DATA(0x004a503c)
 i16 S1cursorBaseFrame;
-DATA(0x004a4b90)
+DATA(0x004a5040)
 i8 S1cursorDirection;

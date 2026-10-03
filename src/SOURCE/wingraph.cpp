@@ -67,19 +67,19 @@ DATA(0x0048e954)
 HPALETTE hpalApp = NULL;
 DATA(0x0048e9fc)
 HINSTANCE gDDrawLibrary = NULL;
-DATA(0x004a4b70)
+DATA(0x004a5020)
 RECT gDDClientRect;
-DATA(0x004a46a8)
+DATA(0x004a4b58)
 RECT gDDSourceRect;
-DATA(0x004a46b8)
+DATA(0x004a4b68)
 RECT gDDDestinationRect;
-DATA(0x004a46a0)
+DATA(0x004a4b50)
 i32 gDDResult;
-DATA(0x004a46d0)
+DATA(0x004a4b80)
 _DDSURFACEDESC gDDSurfaceDesc;
-DATA(0x004a46c8)
+DATA(0x004a4b78)
 i32 gPaintStart;
-DATA(0x004a4740)
+DATA(0x004a4bf0)
 WingImage screenImage;
 // KB owns these scroll, combat-palette and configuration globals.
 extern i32 gScrollX;

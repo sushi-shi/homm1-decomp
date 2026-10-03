@@ -34,7 +34,7 @@
 // reached.
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x0045abe0, 0x4c)
+VA(0x0045ace0, 0x4c)
 H1_C_LINKAGE void* radmalloc(u32 numbytes) {
     void* mem;
     if (numbytes == 0)
@@ -48,7 +48,7 @@ H1_C_LINKAGE void* radmalloc(u32 numbytes) {
 
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x0045ac2c, 0x1c)
+VA(0x0045ad2c, 0x1c)
 H1_C_LINKAGE void radfree(void* ptr) {
     free(ptr);
 }
@@ -82,10 +82,10 @@ H1_ENUM_CONST_BEGIN(SmackManagerConstant)
     SMACK_MESSAGE_PUMP_INTERVAL = 25
 H1_ENUM_CONST_END(SmackManagerConstant)
 
-VA(0x0045ac48, 0x2a)
+VA(0x0045ad48, 0x2a)
 smackManager::smackManager(void) : baseManager() {}
 
-VA(0x0045ac72, 0x53)
+VA(0x0045ad72, 0x53)
 i16 smackManager::Open(i16 priority) {
     gbSmackAborted = 0;
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
@@ -95,12 +95,12 @@ i16 smackManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-VA(0x0045acc5, 0x1f)
+VA(0x0045adc5, 0x1f)
 void smackManager::Close(void) {
     m_active = 0;
 }
 
-VA(0x0045ace4, 0x975)
+VA(0x0045ade4, 0x975)
 i16 smackManager::Main(struct tag_message& msg) {
     i8 savedUpdateFlags;
     i32 startFrame;
@@ -364,7 +364,7 @@ i16 smackManager::Main(struct tag_message& msg) {
     return MESSAGE_DISPATCH_FORWARD;
 }
 
-VA(0x0045b659, 0x93)
+VA(0x0045b759, 0x93)
 void PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber) {
     gInSmacker = 1;
     gpSoundManager->m_musicReady = 1;
@@ -389,7 +389,7 @@ SSmackOptions SmackOptions[8] = {
     {"win02.smk", 0, 1, 1, 0},
     {"lose1.smk", 0, 1, 1, 0},
 };
-DATA(0x004ca488)
+DATA(0x004ca938)
 i8 gSmackNum;
-DATA(0x004ca48c)
+DATA(0x004ca93c)
 i8 gbSmackAborted;

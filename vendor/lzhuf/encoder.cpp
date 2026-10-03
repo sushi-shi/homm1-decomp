@@ -1,6 +1,6 @@
 // Okumura-style LZSS with adaptive Huffman coding, used for HoMM1's
 // multiplayer save transfer.  The tables and stream framing are taken from
-// the pinned February 1996 executable.
+// the parent February 1996 executable (unchanged codec in May 1996).
 
 #include <match.h>
 
@@ -26,26 +26,26 @@ inline void ReconstructEncoderTree(void);
 #define MAX_FREQUENCY 0x8000
 
 extern "C" {
-DATA(0x004d4c98) i16 match_position;
-DATA(0x004d0df0) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
-DATA(0x004d0908) i16 son[TREE_SIZE];
-DATA(0x004d47a0) u16 getbuf;
-DATA(0x004d4c90) u8 getlen;
-DATA(0x004d1558) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
-DATA(0x004d47a8) u16 freq[TREE_SIZE + 1];
-DATA(0x004d4c9c) i16 match_length;
-DATA(0x004ce900) i16 lson[WINDOW_SIZE + 1];
-DATA(0x004d2598) i16 rson[WINDOW_SIZE + 257];
-DATA(0x004cc8f0) i16 dad[WINDOW_SIZE + 1];
-DATA(0x004d1554) u32 textsize;
-DATA(0x004d479c) u32 codesize;
-DATA(0x004a2f80) u16 putbuf = 0;
-DATA(0x004a2f84) u8 putlen = 0;
-DATA(0x004d4c94) char *codePtr;
-DATA(0x004d4ca0) char *decodeOutput;
-DATA(0x004ce8f4) u32 decodeSize;
+DATA(0x004d5148) i16 match_position;
+DATA(0x004d12a0) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
+DATA(0x004d0db8) i16 son[TREE_SIZE];
+DATA(0x004d4c50) u16 getbuf;
+DATA(0x004d5140) u8 getlen;
+DATA(0x004d1a08) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
+DATA(0x004d4c58) u16 freq[TREE_SIZE + 1];
+DATA(0x004d514c) i16 match_length;
+DATA(0x004cedb0) i16 lson[WINDOW_SIZE + 1];
+DATA(0x004d2a48) i16 rson[WINDOW_SIZE + 257];
+DATA(0x004ccda0) i16 dad[WINDOW_SIZE + 1];
+DATA(0x004d1a04) u32 textsize;
+DATA(0x004d4c4c) u32 codesize;
+DATA(0x004a3430) u16 putbuf = 0;
+DATA(0x004a3434) u8 putlen = 0;
+DATA(0x004d5144) char *codePtr;
+DATA(0x004d5150) char *decodeOutput;
+DATA(0x004ceda4) u32 decodeSize;
 // Classic Okumura StartHuff state, materialized because retail copies it.
-DATA(0x004a1dd0) i16 initialSon[627] = {
+DATA(0x004a2280) i16 initialSon[627] = {
     627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638,
     639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650,
     651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662,
@@ -101,7 +101,7 @@ DATA(0x004a1dd0) i16 initialSon[627] = {
     620, 622, 624,
 };
 
-DATA(0x004a2a18) u16 initialFrequency[628] = {
+DATA(0x004a2ec8) u16 initialFrequency[628] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -157,7 +157,7 @@ DATA(0x004a2a18) u16 initialFrequency[628] = {
     128, 186, 314, 65535,
 };
 
-DATA(0x004a22b8) i16 initialParent[941] = {
+DATA(0x004a2768) i16 initialParent[941] = {
     314, 314, 315, 315, 316, 316, 317, 317, 318, 318, 319, 319,
     320, 320, 321, 321, 322, 322, 323, 323, 324, 324, 325, 325,
     326, 326, 327, 327, 328, 328, 329, 329, 330, 330, 331, 331,
@@ -240,7 +240,7 @@ DATA(0x004a22b8) i16 initialParent[941] = {
 };
 }
 
-DATA(0x004a2f00) static u8 positionLength[64] = {
+DATA(0x004a33b0) static u8 positionLength[64] = {
     0x03, 0x04, 0x04, 0x04, 0x05, 0x05, 0x05, 0x05,
     0x05, 0x05, 0x05, 0x05, 0x06, 0x06, 0x06, 0x06,
     0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06, 0x06,
@@ -251,7 +251,7 @@ DATA(0x004a2f00) static u8 positionLength[64] = {
     0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08
 };
 
-DATA(0x004a2f40) static u8 positionCode[64] = {
+DATA(0x004a33f0) static u8 positionCode[64] = {
     0x00, 0x20, 0x30, 0x40, 0x50, 0x58, 0x60, 0x68,
     0x70, 0x78, 0x80, 0x88, 0x90, 0x94, 0x98, 0x9C,
     0xA0, 0xA4, 0xA8, 0xAC, 0xB0, 0xB4, 0xB8, 0xBC,
@@ -262,7 +262,7 @@ DATA(0x004a2f40) static u8 positionCode[64] = {
     0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
-extern "C" DATA(0x004a1bd0) u8 d_code[256] = {
+extern "C" DATA(0x004a2080) u8 d_code[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,
@@ -277,7 +277,7 @@ extern "C" DATA(0x004a1bd0) u8 d_code[256] = {
     48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63
 };
 
-extern "C" DATA(0x004a1cd0) u8 d_len[256] = {
+extern "C" DATA(0x004a2180) u8 d_len[256] = {
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -306,7 +306,7 @@ inline void InitializeTree(void)
     }
 }
 
-VA(0x0047da60, 0x14f)
+VA(0x0047e030, 0x14f)
 inline void ReconstructEncoderTree(void)
 {
     i16 k, i, j;
@@ -389,7 +389,7 @@ inline void EncodePosition(u16 position)
     PutCode(6, static_cast<u16>((position & 0x3F) << 10));
 }
 
-VA(0x0047d250, 0xb9)
+VA(0x0047d820, 0xb9)
 i32 DecodeData(char *destination, char *source)
 {
     register u32 size;
@@ -414,7 +414,7 @@ i32 DecodeData(char *destination, char *source)
     LogStr("Data decoded", size, size);
     return static_cast<i32>(size);
 }
-VA(0x0047d310, 0x743)
+VA(0x0047d8e0, 0x743)
 i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
     register i16 i, c, r, s, last_match_length;
@@ -496,7 +496,7 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     return static_cast<i32>(codesize);
 }
 
-VA(0x0047dbb0, 0x23d)
+VA(0x0047e180, 0x23d)
 static void UpdateEncoderTree(i16 character)
 {
     i16 value;
@@ -531,7 +531,7 @@ static void UpdateEncoderTree(i16 character)
     } while (node != 0);
 }
 
-VA(0x0047ddf0, 0x1d9)
+VA(0x0047e3c0, 0x1d9)
 static void InsertNode(i16 node)
 {
     register u8 *key;
@@ -592,7 +592,7 @@ static void InsertNode(i16 node)
     dad[candidate] = NIL;
 }
 
-VA(0x0047dfd0, 0x127)
+VA(0x0047e5a0, 0x127)
 static void DeleteNode(i16 node)
 {
     i16 replacement;

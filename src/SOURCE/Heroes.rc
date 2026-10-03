@@ -15,7 +15,7 @@ FONT 8, "System"
 BEGIN
     ICON            "HEROES", -1, 9, 23, 18, 20
     CTEXT           "Heroes of Might and Magic", -1, 22, 5, 101, 8
-    CTEXT           "Version 1.0", -1, 51, 32, 42, 8
+    CTEXT           "Version 1.1", -1, 51, 32, 42, 8
     CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
     DEFPUSHBUTTON   "OK", 1, 53, 59, 32, 14, 0x20000 // + WS_GROUP
 END

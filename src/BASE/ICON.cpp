@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 
-VA(0x00479b20, 0x6d)
+VA(0x0047a0f0, 0x6d)
 icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_frameCount = gpResourceManager->ReadWord();
@@ -27,14 +27,14 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     PostprocessIcon(this);
 }
 
-VA_COMPGEN(0x00479b90, 0x33, "??_Gicon@@UAEPAXI@Z", 0x00479b20)
+VA_COMPGEN(0x0047a160, 0x33, "??_Gicon@@UAEPAXI@Z", 0x0047a0f0)
 icon::~icon(void) {
     free(m_data);
 }
 
 // Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does; VC4
 // tail-merges the two copies and carries the arm's frame-entry address across the join.
-VA(0x00479bd0, 0x22a)
+VA(0x0047a1a0, 0x22a)
 void icon::DrawToBuffer(
     i16 x,
     i16 y,
@@ -104,7 +104,7 @@ void icon::DrawToBuffer(
     }
 }
 
-VA(0x00479e00, 0x51)
+VA(0x0047a3d0, 0x51)
 void icon::ClipFillToBuffer(
     i16 x,
     i16 y,
@@ -132,7 +132,7 @@ void icon::ClipFillToBuffer(
     );
 }
 
-VA(0x00479e60, 0x132)
+VA(0x0047a430, 0x132)
 void icon::FillToBuffer(
     i16 x,
     i16 y,
@@ -168,7 +168,7 @@ void icon::FillToBuffer(
     }
 }
 
-VA(0x00479fa0, 0x1c2)
+VA(0x0047a570, 0x1c2)
 void icon::DimToBuffer(
     i16 x,
     i16 y,

@@ -8,29 +8,29 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA(0x0047cfe0, 0x1e)
+VA(0x0047d5b0, 0x1e)
 backdropWidget::backdropWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 
-VA_COMPGEN(0x0047d000, 0x25, "??_GbackdropWidget@@UAEPAXI@Z", 0x0047cfe0)
+VA_COMPGEN(0x0047d5d0, 0x25, "??_GbackdropWidget@@UAEPAXI@Z", 0x0047d5b0)
 backdropWidget::~backdropWidget(void) {}
 
-VA(0x0047d030, 0x34)
+VA(0x0047d600, 0x34)
 backdropWidget::backdropWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind)
     : widget(x, y, width, height, id, kind) {}
 
-VA(0x0047d070, 0x5f)
+VA(0x0047d640, 0x5f)
 void backdropWidget::Read(void) {
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
 }
 
-VA(0x0047d0d0, 0xd)
+VA(0x0047d6a0, 0xd)
 i16 backdropWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047d0e0, 0x2d)
+VA(0x0047d6b0, 0x2d)
 void backdropWidget::Draw(void) {
     gpWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);

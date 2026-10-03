@@ -1,48 +1,48 @@
 # Reviewed retail relocation referents that the delinker cannot infer from
 # containment alone. This is the Gruntz manifest schema; fields are image RVAs.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
-0x00076940	0x000CADBC	0x00076C43	?bmpAndMask@@3PAUtagBITMAP@@A	0x4	1	BITMAP bmWidth field
-0x00076940	0x000CADC0	0x00076C4D	?bmpAndMask@@3PAUtagBITMAP@@A	0x8	1	BITMAP bmHeight field
-0x00076940	0x000CADC4	0x00076C53	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	BITMAP bmWidthBytes field
-0x00076940	0x000CADC8	0x00076C5E	?bmpAndMask@@3PAUtagBITMAP@@A	0x10	1	BITMAP bmPlanes field
-0x00076940	0x000CADCA	0x00076C67	?bmpAndMask@@3PAUtagBITMAP@@A	0x12	1	BITMAP bmBitsPixel field
-0x00076940	0x000CADC4	0x00076C6E	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	repeated BITMAP bmWidthBytes field
-0x00076940	0x000CADCC	0x00076C78	?bmpAndMask@@3PAUtagBITMAP@@A	0x14	1	BITMAP bmBits field
-0x00076940	0x000CB724	0x00076CD3	?bmpColor@@3PAUtagBITMAP@@A	0x4	1	BITMAP bmWidth field
-0x00076940	0x000CB728	0x00076CD9	?bmpColor@@3PAUtagBITMAP@@A	0x8	1	BITMAP bmHeight field
-0x00076940	0x000CB730	0x00076CE0	?bmpColor@@3PAUtagBITMAP@@A	0x10	1	BITMAP bmPlanes field
-0x00076940	0x000CB732	0x00076CE7	?bmpColor@@3PAUtagBITMAP@@A	0x12	1	BITMAP bmBitsPixel field
-0x00076940	0x000CB72C	0x00076CEF	?bmpColor@@3PAUtagBITMAP@@A	0xC	1	BITMAP bmWidthBytes field
-0x00076940	0x000CB734	0x00076CF5	?bmpColor@@3PAUtagBITMAP@@A	0x14	1	BITMAP bmBits field
-0x00076940	0x000CBF5C	0x00076D3B	?mouseIconInfo@@3PAU_ICONINFO@@A	0x4	1	ICONINFO xHotspot field
-0x00076940	0x000A0E81	0x00076D46	?gHotSpot@@3PAY01EA	0x1	1	second cursor-hotspot axis
-0x00076940	0x000CBF60	0x00076D4C	?mouseIconInfo@@3PAU_ICONINFO@@A	0x8	1	ICONINFO yHotspot field
-0x00076940	0x000CBF64	0x00076D52	?mouseIconInfo@@3PAU_ICONINFO@@A	0xC	1	ICONINFO hbmMask field
-0x00076940	0x000CBF68	0x00076D61	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	ICONINFO hbmColor field
-0x00076940	0x000CBF68	0x00076D69	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	ICONINFO hbmColor zero branch
-0x0007FF0C	0x000D0906	0x0007FF2B	_son	0xFFFFFFFE	1	legacy object overlapping dword load uses son-2
-0x00033B10	0x000C4F77	0x00033D45	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033D5C	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033D72	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033D8A	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033DC2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033DD7	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033EAC	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033EC3	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x00033F47	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x00033B10	0x000C4F77	0x000342B2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
-0x0005DDE0	0x0009332C	0x0005EF1C	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): DoEvent indexes spell names by a 1-based spell
-0x0003C1BF	0x00092C4E	0x0003C303	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): InitCampaignMap indexes crest pairs by a 1-based campaign side
-0x00041E09	0x00091399	0x00041F00	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x00041E09	0x00091399	0x00041FF9	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x00042654	0x00091399	0x0004275D	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x00042654	0x00091399	0x000427B0	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x0006D9AE	0x000930CC	0x0006D9E2	?gStatNames@@3PAPADA	0xFFFFFEBC	1	retail operand below the claimed start (biased subscript): status-bar widget id less the first stat widget id
-0x0005015C	0x00093F9C	0x00050CF9	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): campaign type less CAMPAIGN_IRONFIST
-0x0001D7D8	0x00091399	0x0001DA83	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x0001D7D8	0x00091399	0x0001DBFC	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x0002196D	0x00091399	0x00021A91	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x0002278B	0x0009113E	0x00023B1F	?gSpellAIValue@@3PAFA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): event spell is 1-based
-0x0002278B	0x0009117F	0x00023B70	?gSpellAIFlags@@3PACA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): event spell is 1-based
-0x00008ED2	0x00091399	0x00009256	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
-0x0000C478	0x00091399	0x0000C52F	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00076f10	0x000cb26c	0x00077213	?bmpAndMask@@3PAUtagBITMAP@@A	0x4	1	BITMAP bmWidth field
+0x00076f10	0x000cb270	0x0007721d	?bmpAndMask@@3PAUtagBITMAP@@A	0x8	1	BITMAP bmHeight field
+0x00076f10	0x000cb274	0x00077223	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	BITMAP bmWidthBytes field
+0x00076f10	0x000cb278	0x0007722e	?bmpAndMask@@3PAUtagBITMAP@@A	0x10	1	BITMAP bmPlanes field
+0x00076f10	0x000cb27a	0x00077237	?bmpAndMask@@3PAUtagBITMAP@@A	0x12	1	BITMAP bmBitsPixel field
+0x00076f10	0x000cb274	0x0007723e	?bmpAndMask@@3PAUtagBITMAP@@A	0xC	1	repeated BITMAP bmWidthBytes field
+0x00076f10	0x000cb27c	0x00077248	?bmpAndMask@@3PAUtagBITMAP@@A	0x14	1	BITMAP bmBits field
+0x00076f10	0x000cbbd4	0x000772a3	?bmpColor@@3PAUtagBITMAP@@A	0x4	1	BITMAP bmWidth field
+0x00076f10	0x000cbbd8	0x000772a9	?bmpColor@@3PAUtagBITMAP@@A	0x8	1	BITMAP bmHeight field
+0x00076f10	0x000cbbe0	0x000772b0	?bmpColor@@3PAUtagBITMAP@@A	0x10	1	BITMAP bmPlanes field
+0x00076f10	0x000cbbe2	0x000772b7	?bmpColor@@3PAUtagBITMAP@@A	0x12	1	BITMAP bmBitsPixel field
+0x00076f10	0x000cbbdc	0x000772bf	?bmpColor@@3PAUtagBITMAP@@A	0xC	1	BITMAP bmWidthBytes field
+0x00076f10	0x000cbbe4	0x000772c5	?bmpColor@@3PAUtagBITMAP@@A	0x14	1	BITMAP bmBits field
+0x00076f10	0x000cc40c	0x0007730b	?mouseIconInfo@@3PAU_ICONINFO@@A	0x4	1	ICONINFO xHotspot field
+0x00076f10	0x000a1329	0x00077316	?gHotSpot@@3PAY01EA	0x1	1	second cursor-hotspot axis
+0x00076f10	0x000cc410	0x0007731c	?mouseIconInfo@@3PAU_ICONINFO@@A	0x8	1	ICONINFO yHotspot field
+0x00076f10	0x000cc414	0x00077322	?mouseIconInfo@@3PAU_ICONINFO@@A	0xC	1	ICONINFO hbmMask field
+0x00076f10	0x000cc418	0x00077331	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	ICONINFO hbmColor field
+0x00076f10	0x000cc418	0x00077339	?mouseIconInfo@@3PAU_ICONINFO@@A	0x10	1	ICONINFO hbmColor zero branch
+0x000804dc	0x000d0db6	0x000804fb	_son	0xFFFFFFFE	1	legacy object overlapping dword load uses son-2
+0x00033b70	0x000c5427	0x00033da5	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033dbc	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033dd2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033dea	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033e22	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033e37	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033f0c	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033f23	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00033fa7	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x00033b70	0x000c5427	0x00034312	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): ComboDraw indexes its combo rows from 1
+0x0005dee0	0x0009332c	0x0005f01c	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): DoEvent indexes spell names by a 1-based spell
+0x0003c293	0x00092c4e	0x0003c3d7	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): InitCampaignMap indexes crest pairs by a 1-based campaign side
+0x00041efe	0x00091399	0x00041ff5	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00041efe	0x00091399	0x000420ee	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00042749	0x00091399	0x00042852	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00042749	0x00091399	0x000428a5	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0006dace	0x000930cc	0x0006db02	?gStatNames@@3PAPADA	0xFFFFFEBC	1	retail operand below the claimed start (biased subscript): status-bar widget id less the first stat widget id
+0x0005025c	0x00093f9c	0x00050dfa	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	retail operand below the claimed start (biased subscript): campaign type less CAMPAIGN_IRONFIST
+0x0001d7d4	0x00091399	0x0001da7f	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0001d7d4	0x00091399	0x0001dbf8	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00021969	0x00091399	0x00021a8d	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x00022787	0x0009113e	0x00023b1b	?gSpellAIValue@@3PAFA	0xFFFFFFFE	1	retail operand below the claimed start (biased subscript): event spell is 1-based
+0x00022787	0x0009117f	0x00023b6c	?gSpellAIFlags@@3PACA	0xFFFFFFFF	1	retail operand below the claimed start (biased subscript): event spell is 1-based
+0x00008ed2	0x00091399	0x00009256	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST
+0x0000c478	0x00091399	0x0000c52f	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	retail operand below the claimed start (biased subscript): dwelling column is the building slot less BUILDING_SLOT_DWELLING_FIRST

@@ -1,15 +1,15 @@
 {
   "game": {
     "name": "HEROES.EXE",
-    "size": 713216,
-    "sha256": "0d707d3456aacd470f4da601ac388a8b0be8976414b4ef689c8b849b9b2a1ce8",
+    "size": 715776,
+    "sha256": "bb69db9112dc48c9eec26c4700cae2265c2c7838410c23ed3a70e57131bfc681",
     "env_var": "HOMM1_EXE",
     "option": "--exe"
   },
   "editor": {
     "name": "EDITOR.EXE",
-    "size": 305152,
-    "sha256": "c572831acdb56009e07343de25d67a10c29b50c8b5f984ffb1c24eee906f0cc2",
+    "size": 306176,
+    "sha256": "6342f3e8e251605cbac685c698e9b84c9f2ec44d473a75b95ac031dc05dff28c",
     "env_var": "HOMM1_EDITOR_EXE",
     "option": "--editor-exe"
   }

@@ -23,7 +23,7 @@
 #include <string.h>
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
-VA(0x004709f0, 0x5f)
+VA(0x00470b10, 0x5f)
 void combatManager::UpdateGrid(i16 hex, i32) {
     i16 row;
 
@@ -36,7 +36,7 @@ void combatManager::UpdateGrid(i16 hex, i32) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00470a4f, 0x5a)
+VA(0x00470b6f, 0x5a)
 void combatManager::UpdateGridForMove(i16 hex, i8 direction, i32 attributes) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
@@ -58,7 +58,7 @@ H1_ENUM_CONST_END(CombatStatusLineConstant)
 
 // Sets the combat window's text line and redraws it outside the extent
 // bookkeeping.
-VA(0x00470aa9, 0xb5)
+VA(0x00470bc9, 0xb5)
 // clang-format on
 void combatManager::CombatMessage(char* text, i32 updateScreen) {
     i32 oldCompute;
@@ -85,7 +85,7 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
 }
 
 // The help line for the current mouse command.
-VA(0x00470b5e, 0x2f3)
+VA(0x00470c7e, 0x2f3)
 void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
     army* target;
     army* currentArmy;
@@ -145,7 +145,7 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
 }
 
 // Marks every live stack for redraw; dead ones stay hidden (-1).
-VA(0x00470e51, 0xd4)
+VA(0x00470f71, 0xd4)
 void combatManager::ResetLimitCreature(void) {
     i32 j;
     i32 side;
@@ -162,14 +162,14 @@ void combatManager::ResetLimitCreature(void) {
     }
 }
 
-VA(0x00470f25, 0x24)
+VA(0x00471045, 0x24)
 void combatManager::SetGridMode(i8 mode) {
     m_gridMode = mode;
 }
 
 // Blits the rows from m_gridUpdateRow down (the first row also takes the
 // 60-pixel top margin).
-VA(0x00470f49, 0xde)
+VA(0x00471069, 0xde)
 void combatManager::UpdateCombatArea(void) {
     i16 y;
     i16 height;
@@ -192,7 +192,7 @@ void combatManager::UpdateCombatArea(void) {
 
 // Draws the hex ground, the castle wall strip and the moat ends, then keeps
 // the clean screen as the combat background.
-VA(0x00471027, 0x1d4)
+VA(0x00471147, 0x1d4)
 void combatManager::DrawBackground(void) {
     i16 x;
     i16 y;
@@ -234,7 +234,7 @@ void combatManager::DrawBackground(void) {
 // m_limitCreatureCount when m_computeExtent is set, else the whole area.
 // Rows draw obstacles, then occupants (right to left while m_gridMode is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
-VA(0x004711fb, 0xe27)
+VA(0x0047131b, 0xe27)
 void combatManager::DrawFrame(i8 updateScreen) {
     i16 hexCol;
     i32 boxRight;

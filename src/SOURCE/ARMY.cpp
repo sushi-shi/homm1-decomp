@@ -47,7 +47,7 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_MISSILE_HALF_HEIGHT = 30
 H1_ENUM_CONST_END(ArmyDrawingConstant)
 
-VA(0x00466490, 0xc9)
+VA(0x004665b0, 0xc9)
 army::army(void) {
     i32 i;
 
@@ -71,12 +71,12 @@ army::army(void) {
 }
 
 // The Windows build waits on no sample channel.
-VA(0x00466559, 0x18)
+VA(0x00466679, 0x18)
 void army::WaitSample(i32) {
     return;
 }
 
-VA(0x00466571, 0x71)
+VA(0x00466691, 0x71)
 void army::InitClean(void) {
     i32 i;
 
@@ -97,7 +97,7 @@ void army::InitClean(void) {
 // commander's C1 handle 10-11 past its place relative to `this` (or a whole-TU
 // shift S with +k: S=1 k=9..11, S=2 k=8..11, S=5 k=5..8); no uniform shift in
 // 0..511 works. Declaring commander at its first assignment moves it +1 only.
-VA(0x004665e2, 0x122)
+VA(0x00466702, 0x122)
 void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     hero* commander;
 
@@ -126,7 +126,7 @@ void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     m_index = index;
 }
 
-VA(0x00466704, 0x237)
+VA(0x00466824, 0x237)
 void army::LoadResources(void) {
     char sprite[16];
     i32 i;
@@ -169,7 +169,7 @@ void army::LoadResources(void) {
 // donor PoL RVA 0x0004b36e; preferred Buka symbol ?FreeResources@army@@QAEXXZ
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
-VA(0x0046693b, 0xf1)
+VA(0x00466a5b, 0xf1)
 void army::FreeResources(void) {
     i32 i;
 
@@ -195,7 +195,7 @@ void army::FreeResources(void) {
 
 // m_animationSequence selects the stand, walk, attack or spell-effect pose and
 // m_animationFrame its frame; m_drawShadow adds the shadow frames.
-VA(0x00466a2c, 0x855)
+VA(0x00466b4c, 0x856)
 void army::DrawToBuffer(i16 x, i16 y) {
     i16 effectX;
     i8 offsetMode;
@@ -356,7 +356,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
     gbIconClipOn = 0;
 }
 
-VA(0x00467281, 0x63)
+VA(0x004673a2, 0x63)
 void army::Stand(i8 redraw) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
@@ -366,7 +366,7 @@ void army::Stand(i8 redraw) {
         gpCombatManager->DrawFrame(1);
 }
 
-VA(0x004672e4, 0x61)
+VA(0x00467405, 0x61)
 void army::Wince(void) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 2;
@@ -377,7 +377,7 @@ void army::Wince(void) {
 
 // One hex of walking: six frames redrawn inside the union of the old and
 // new extents; a stack turned away from the step moves before animating.
-VA(0x00467345, 0x852)
+VA(0x00467466, 0x853)
 void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     i32 rectMaxX;
     i32 rectMaxY;
@@ -569,7 +569,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
 // A ranged attack: turn toward the target, animate the missile hex by hex
 // over a saved screen patch, apply wall and luck modifiers, report the
 // damage; creature 14 shoots twice.
-VA(0x00467b97, 0xcca)
+VA(0x00467cb9, 0xcca)
 void army::SpecialAttack(void) {
     DATA(0x004a0888)
     static i32 gSecondShot = 0;
@@ -832,7 +832,7 @@ void army::SpecialAttack(void) {
 }
 
 // Attacks every enemy next to the stack (the hydra), then turns them back.
-VA(0x00468861, 0x765)
+VA(0x00468983, 0x765)
 void army::DoHydraAttack(void) {
     i32 killedNow;
     i32 damage;
@@ -973,7 +973,7 @@ void army::DoHydraAttack(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00468fc6, 0x2d)
+VA(0x004690e8, 0x2d)
 void army::DirDoAttack(i16 direction) {
     m_attackDirection = direction;
     DoAttack(0);
@@ -982,7 +982,7 @@ void army::DirDoAttack(i16 direction) {
 // A melee strike in m_attackDirection: breath attackers (attribute 8) also
 // hit the hex behind, some creatures cast on the target, the target
 // retaliates once, and creatures 5 and 8 strike twice.
-VA(0x00468ff3, 0x108d)
+VA(0x00469115, 0x108d)
 void army::DoAttack(i32 retaliation) {
     i32 unused;
     i32 oldMode;
@@ -1287,7 +1287,7 @@ secondStrike:
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046a080, 0x49)
+VA(0x0046a1a2, 0x49)
 void army::ResetPath(void) {
     i16 i;
 
@@ -1297,13 +1297,13 @@ void army::ResetPath(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046a0c9, 0x27)
+VA(0x0046a1eb, 0x27)
 i16 army::WalkTo(void) {
     return WalkTo(m_moveTargetHex);
 }
 
 // Walks the found path one hex at a time, at most the stack's speed.
-VA(0x0046a0f0, 0xfc)
+VA(0x0046a212, 0xfc)
 i16 army::WalkTo(i16 destHex) {
     i8 step;
     i32 moved;
@@ -1324,13 +1324,13 @@ i16 army::WalkTo(i16 destHex) {
     return 0;
 }
 
-VA(0x0046a1ec, 0x27)
+VA(0x0046a30e, 0x27)
 i16 army::AttackTo(void) {
     return AttackTo(m_moveTargetHex);
 }
 
 // Flyers jump next to the target; walkers stop short when out of moves.
-VA(0x0046a213, 0x1c9)
+VA(0x0046a335, 0x1c9)
 i16 army::AttackTo(i16 destHex) {
     i8 step;
     i32 moved;
@@ -1373,7 +1373,7 @@ i16 army::AttackTo(i16 destHex) {
 // donor PoL RVA 0x0004f93e; preferred Buka symbol ?CheckLuck@army@@QAEXXZ
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.723107;margin=0.234495;shape=0.473;size=0.925;calls=0.875;strings=badluck.82m|goodluck.82m;alternate=pol20:void army::CheckLuck(void)@0x0004f93e
-VA(0x0046a3dc, 0x249)
+VA(0x0046a4fe, 0x249)
 void army::CheckLuck(void) {
     i32 luck;
 
@@ -1419,7 +1419,7 @@ void army::CheckLuck(void) {
 // donor PoL RVA 0x0004fbc0; preferred Buka symbol ?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.387284;margin=0.228483;shape=0.296;size=0.628;calls=0.714;alternate=pol20:void army::DamageEnemy(class army *, int *, int *, int, int)@0x0004fbc0
-VA(0x0046a625, 0x2ae)
+VA(0x0046a747, 0x2ae)
 void army::DamageEnemy(
     class army* target,
     i32* damageResult,
@@ -1489,7 +1489,7 @@ void army::DamageEnemy(
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
 // A stack whose spell (2) breaks on damage loses it.
-VA(0x0046a8d3, 0x176)
+VA(0x0046a9f5, 0x176)
 i32 army::Damage(i32 damage) {
     i8 facing;
     i32 minKilled;
@@ -1529,7 +1529,7 @@ i32 army::Damage(i32 damage) {
 
 // Plays the impact effect on every stack hit this attack (m_powFrames),
 // fading the killed ones out, then restores the grid.
-VA(0x0046aa49, 0x8a9)
+VA(0x0046ab6b, 0x8a9)
 void army::PowEffect(i8 effect) {
     i16 frames;
     i16 stackIndex;
@@ -1642,13 +1642,13 @@ void army::PowEffect(i8 effect) {
             gpCombatManager->m_armies[side][stackIndex].WaitSample(ARMY_SAMPLE_WINCE);
 }
 
-VA(0x0046b2f2, 0x34)
+VA(0x0046b414, 0x34)
 u32 army::Strength(void) {
     return gMonsterDatabase[m_creatureType].fightValue * m_quantity;
 }
 
 // Plays a combat effect animation over this stack.
-VA(0x0046b326, 0x131)
+VA(0x0046b448, 0x131)
 void army::SpellEffect(i16 effect, i32 frameDelay) {
     i16 frame;
     i16 effectFileId;
@@ -1677,7 +1677,7 @@ void army::SpellEffect(i16 effect, i32 frameDelay) {
 
 // Slow (and the other speed spells) restore the base speed and flight;
 // effect 9 gave three defense.
-VA(0x0046b457, 0xb2)
+VA(0x0046b579, 0xb2)
 void army::CancelSpell(void) {
     switch (m_spellEffect) {
         case SPELL_HASTE:
@@ -1699,7 +1699,7 @@ void army::CancelSpell(void) {
 }
 
 // A berserk stack attacks a random neighbour, or flies or steps at random.
-VA(0x0046b509, 0x1de)
+VA(0x0046b62b, 0x1de)
 void army::GoBerserk(void) {
     i8 found;
     i16 tryCount;
@@ -1758,7 +1758,7 @@ void army::GoBerserk(void) {
 
 // Attacks the stack on the hex (flying, shooting or picking the adjacent
 // direction) or moves there; a second argument forbids attacking.
-VA(0x0046b6e7, 0x3a3)
+VA(0x0046b809, 0x3a3)
 void army::MoveAttack(i32 hex, i32 moveOnly) {
     hexcell* pCell;
     i32 baseHex;
@@ -1835,5 +1835,5 @@ void army::MoveAttack(i32 hex, i32 moveOnly) {
 }
 
 // ARMY owns retail .data 0x004a0820-0x004a0a57 and .bss 0x004ca908-0x004ca917.
-DATA(0x004ca908)
+DATA(0x004cadb8)
 i8 gGenieHalf;

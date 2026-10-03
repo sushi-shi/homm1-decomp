@@ -657,31 +657,31 @@ char* gNbGroupName = "Empire Too ";
 DATA(0x0048f200)
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
-DATA(0x004a4bc8)
+DATA(0x004a5078)
 tag_Anchor gNbFreeQueue;
-DATA(0x004a4bd0)
+DATA(0x004a5080)
 u8 gNbSessLsn[7];
-DATA(0x004a4bd8)
+DATA(0x004a5088)
 u8 gNbRcvData[7][0x1000];
-DATA(0x004abbd8)
+DATA(0x004ac088)
 NetbiosName gNbNameBuf[7];
-DATA(0x004abc48)
+DATA(0x004ac0f8)
 u8 gNbSessBuf[0xfd0];
-DATA(0x004acc48)
+DATA(0x004ad0f8)
 NCB gNbSessNcb[7];
-DATA(0x004ace08)
+DATA(0x004ad2b8)
 NCB gNbCtlNcb;
-DATA(0x004ace48)
+DATA(0x004ad2f8)
 u8 gNbLocalNum;
-DATA(0x004ace50)
+DATA(0x004ad300)
 tag_Anchor gNbRcvQueue;
-DATA(0x004ace58)
+DATA(0x004ad308)
 tag_Anchor gNbSndQueue;
-DATA(0x004ace60)
+DATA(0x004ad310)
 CRITICAL_SECTION gNbRcvLock;
-DATA(0x004ace78)
+DATA(0x004ad328)
 HANDLE gNbEvents[9];
-DATA(0x004acea0)
+DATA(0x004ad350)
 CRITICAL_SECTION gNbSndLock;
-DATA(0x004aceb8)
+DATA(0x004ad368)
 u8 gNetbiosLana;

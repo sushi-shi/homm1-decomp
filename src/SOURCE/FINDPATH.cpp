@@ -19,29 +19,29 @@
 #include <string.h>
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
-DATA(0x004c4f20)
+DATA(0x004c53d0)
 static i32 gSearchNextY;
-DATA(0x004c4f1c)
+DATA(0x004c53cc)
 static i32 gSearchNextX;
-DATA(0x004c4f18)
+DATA(0x004c53c8)
 static i16 gSearchHigh;
-DATA(0x004c4f14)
+DATA(0x004c53c4)
 static mapCell* gSearchCurrentCell;
-DATA(0x004c4f10)
+DATA(0x004c53c0)
 static searchNode* gSearchQueueNode;
-DATA(0x004c4f0c)
+DATA(0x004c53bc)
 static i16 gSearchLow;
-DATA(0x004c4f08)
+DATA(0x004c53b8)
 static searchNode* gSearchCell;
-DATA(0x004c4f04)
+DATA(0x004c53b4)
 static i32 gSearchTriggerType;
-DATA(0x004c4f00)
+DATA(0x004c53b0)
 static i32 gSearchTerrain;
-DATA(0x004c4ef8)
+DATA(0x004c53a8)
 static u32 gSearchMiddle;
-DATA(0x004c4ef4)
+DATA(0x004c53a4)
 static i32 gSearchDirection;
-DATA(0x004c4ef0)
+DATA(0x004c53a0)
 static mapCell* gSearchNextCell;
 
 // Buka FINDPATH.cpp:48-51 without the heap cell pointer: HoMM1 cells are inline.
@@ -432,5 +432,5 @@ void searchArray::TestPossibleDirections(
 
 // FINDPATH owns retail .bss 0x004c4ef0-0x004c4f2b: the search statics above
 // and the working mobility SEARCH seeds.
-DATA(0x004c4efc)
+DATA(0x004c53ac)
 i16 gCurTempMobility;

@@ -28,6 +28,7 @@ read by the named tooling. Generated state belongs in `build/`.
 
 All RVAs refer to the pinned `HEROES.EXE`.
 
+- `win95-1.0-to-1.1.tsv`: migration correspondence and evidence from the parent target.
 - `targets.json`: hashes of the game and optional editor executables.
 - `functions.tsv`, `data.tsv`: hand-owned `.text`/data start censuses. They
   supply structure only; names and sizes come from source and provider claims.
