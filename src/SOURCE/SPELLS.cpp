@@ -7,10 +7,10 @@
 #include <BASE/icon.h>
 #include <BASE/Icon2b.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>

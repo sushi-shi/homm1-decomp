@@ -8,7 +8,7 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>

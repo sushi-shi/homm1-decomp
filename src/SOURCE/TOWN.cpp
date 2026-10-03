@@ -4,7 +4,6 @@
 
 #include <BASE/executive.h>
 #include <BASE/heroWindowManager.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/game.h>

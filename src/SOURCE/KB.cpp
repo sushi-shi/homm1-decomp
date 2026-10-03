@@ -4,7 +4,6 @@
 
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/baseManager.h>
 #include <BASE/executive.h>
@@ -36,18 +35,13 @@
 #include <SOURCE/town.h>
 #include <SOURCE/townManager.h>
 #include <SOURCE/KB.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/miscwin.h>
-#include <BASE/MOUSEMGR_TYPES.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/artifactTypes.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/creatureTypes.h>
-#include <SOURCE/highScoreRuntime.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>

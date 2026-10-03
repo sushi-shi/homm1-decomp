@@ -8,9 +8,9 @@
 #include <BASE/BITS.h>
 #include <BASE/BMAP2.h>
 #include <BASE/display.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
+#include <BASE/mouseManager.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/miscwin.h>
@@ -28,7 +28,7 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/EVENTS.h>
-#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/highScoreManager.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapObjectTypes.h>
 

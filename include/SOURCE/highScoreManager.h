@@ -5,6 +5,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
+#include <Domains.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -104,5 +105,21 @@ H1_ENUM_BEGIN(HighScoreType)
     HIGH_SCORE_TYPE_CAMPAIGN = 0,
     HIGH_SCORE_TYPE_STANDARD = 1
 H1_ENUM_END(HighScoreType)
+
+// HighScoreEntry::score of an unused rank (KB AddScoreToHighScore, Update).
+H1_ENUM_CONST_BEGIN(HighScoreRuntimeConstant)
+    HIGH_SCORE_EMPTY = -1
+H1_ENUM_CONST_END(HighScoreRuntimeConstant)
+
+// HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
+// score from the fixed prefix.
+#pragma pack(push, 1)
+                     struct HighScoreEntry {
+    char playerName[17];
+    char scenarioName[15];
+    int score;
+    char unknown24[0x33];
+};
+#pragma pack(pop)
 
 #endif // HOMM1_SOURCE_HIGHSCOREMANAGER_H

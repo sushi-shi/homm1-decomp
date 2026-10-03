@@ -5,13 +5,14 @@
 #include <BASE/baseManager.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/mouseManager.h>
 #include <BASE/widget.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/bankBox.h>
-#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/highScoreManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/philAI.h>

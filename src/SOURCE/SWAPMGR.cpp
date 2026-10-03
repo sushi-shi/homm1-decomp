@@ -6,11 +6,11 @@
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/widget.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/EVENTS.h>

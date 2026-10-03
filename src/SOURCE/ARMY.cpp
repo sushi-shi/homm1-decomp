@@ -7,10 +7,11 @@
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/soundManager.h>

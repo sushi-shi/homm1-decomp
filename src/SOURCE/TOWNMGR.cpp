@@ -13,7 +13,6 @@
 #include <BASE/icon.h>
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
@@ -23,7 +22,6 @@
 #include <BASE/soundManager.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/bankBox.h>

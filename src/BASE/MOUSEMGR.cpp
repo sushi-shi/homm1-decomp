@@ -8,7 +8,6 @@
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
-#include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>

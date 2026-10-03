@@ -14,9 +14,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
-#include <BASE/INPUTMGR_TYPES.h>
-#include <BASE/MISC_TYPES.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/kbwin.h>

@@ -10,7 +10,6 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
 #include <BASE/message.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 

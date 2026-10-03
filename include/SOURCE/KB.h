@@ -559,4 +559,13 @@ H1_ENUM_BEGIN(AdvDisposeLevel)
     ADV_DISPOSE_FULL = 2
 H1_ENUM_END(AdvDisposeLevel)
 
+// giCurExe and the gConfig.gfx rows: the game and the map editor share the
+// registry layout (ReadPrefs/WritePrefs walk both rows; MOUSEMGR tests the
+// editor).
+H1_ENUM_BEGIN(ConfigExecutable)
+    CONFIG_EXECUTABLE_GAME = 0,
+    CONFIG_EXECUTABLE_EDITOR = 1,
+    CONFIG_EXECUTABLE_COUNT = 2
+H1_ENUM_END(ConfigExecutable)
+
 #endif

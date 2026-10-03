@@ -17,9 +17,7 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/netwin.h>
-#include <SOURCE/netwinRuntime.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>

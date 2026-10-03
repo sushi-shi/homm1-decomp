@@ -17,10 +17,8 @@
 #include <BASE/Iconm2b.h>
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/miscwin.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
@@ -31,7 +29,6 @@
 #include <BASE/TILE.h>
 #include <BASE/tileset.h>
 #include <BASE/widget.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/armyGroup.h>
@@ -40,7 +37,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
 #include <SOURCE/hero.h>
-#include <SOURCE/highScoreRuntime.h>
+#include <SOURCE/highScoreManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapCell.h>

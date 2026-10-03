@@ -15,7 +15,7 @@
 #include <string.h>
 
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/KB.h>
 #include <BASE/heroWindow.h>

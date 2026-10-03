@@ -4,6 +4,8 @@
 
 #include <match.h>
 
+#include <BASE/miscwin.h>
+
 #include <windows.h>
 
 #include <BASE/bitmap.h>
@@ -11,7 +13,6 @@
 #include <BASE/display.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
@@ -174,7 +175,6 @@ void FadeOut(int increment) {
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 
 #include <stdlib.h>
 #include <string.h>

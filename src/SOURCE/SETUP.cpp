@@ -7,9 +7,10 @@
 #include <BASE/executive.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/mouseManager.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/campaignTypes.h>
@@ -18,7 +19,6 @@
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
-#include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>
 

@@ -4,7 +4,8 @@
 
 #include <match.h>
 
-#include <BASE/INPUTMGR_TYPES.h>
+#include <BASE/inputManager.h>
+#include <BASE/mouseManager.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>

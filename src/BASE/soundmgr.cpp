@@ -18,7 +18,7 @@
 #include <BASE/baseManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MOUSEMGR_TYPES.h>
+#include <BASE/mouseManager.h>
 #include <BASE/sample.h>
 #include <BASE/soundManager.h>
 #include <SOURCE/KB.h>

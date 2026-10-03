@@ -10,16 +10,14 @@
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/inputManager.h>
-#include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
-#include <BASE/MISC_TYPES.h>
 #include <BASE/miscwin.h>
+#include <BASE/mouseManager.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <BASE/soundmgr.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <H1/Macros.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>

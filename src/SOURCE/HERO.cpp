@@ -10,7 +10,6 @@
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <BASE/widget.h>
-#include <BASE/WINMGR_TYPES.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/dialogTypes.h>
