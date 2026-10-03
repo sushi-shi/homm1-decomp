@@ -784,7 +784,7 @@ void philAI::DoAI(i32 player) {
         CheckBerserk(aiHero);
         gShowComputerRoute = 0;
         if (gConfig.blackoutComputer == 0 && gRemoteOn == 0
-            && (gpGame->m_mapExtra[aiHero->m_x][aiHero->m_y] & giCurWatchPlayerBit)) {
+            && (gpGame->m_mapExtra[aiHero->m_x][aiHero->m_y] & gCurWatchPlayerHighBit)) {
             bShowIt = 1;
             gpAdvManager->SetHeroContext(aiHero->m_id, 0);
         } else {
@@ -2877,7 +2877,7 @@ void philAI::HeroInteractionAtTown(
             estWeight = 0.13f;
         curveTerm = fShareDiff + 1.0f - 0.22;
         transferRating = static_cast<i32>(
-            (curveTerm * curveTerm - 1.0f) * (heroStrength + garrisonFV)
+            ((curveTerm * curveTerm - 1.0f) * (heroStrength + garrisonFV))
             * gpCurPlayer->m_aiData.m_upgradeValueWeight * estWeight
         );
         if (transferRating < 0)
@@ -3841,7 +3841,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 gEventRV = 0;
             } else {
                 gEventRV = static_cast<i32>(
-                    pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * 2500.0f
+                    (pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * 2500.0f)
                     + (gpCurPlayer->m_aiData.m_artifactValue + pHero->m_aiFightValue * 100.0)
                     + pHero->m_aiFightValue * 300.0 + gafAITurnCostResource[RESOURCE_GOLD] * -750.0
                 );
