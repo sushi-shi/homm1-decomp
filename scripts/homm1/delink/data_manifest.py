@@ -759,6 +759,12 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
             if not mine or len(mine) != len(theirs):
                 continue
             found, corroborated = [], True
+            # Sites whose known anchor disagrees with retail. A function whose
+            # only disagreements are adjacent swapped pairs of its own anchors
+            # (cl loaded `a == b` as `b == a`: the sortnode order, not a
+            # referent) still pairs every site positionally, so its literals
+            # stay addressed.
+            swapped = []
             for (site, sym), target in zip(mine, theirs):
                 at = img.off(target)
                 if at is None:
@@ -777,8 +783,11 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
                 if anchor is None:      # not ours to check
                     continue
                 if value != anchor + addend:
-                    corroborated = False
-                    break
+                    swapped.append((anchor + addend, value))
+            if len(swapped) % 2 or any(
+                    a != (d, c) for a, (c, d) in
+                    zip(swapped[0::2], swapped[1::2])):
+                corroborated = False
             if corroborated:
                 for sym, value in found:
                     votes[sym].add(value)
