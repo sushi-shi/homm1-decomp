@@ -130,11 +130,7 @@ H1_ENUM_CONST_END(CombatFlowConstant)
 // clang-format on
 
 // EVENTS data (Buka EVENTS.h owner): the parked music volume DoEvent and DoCombat
-// restore (-1 when none) and the event-music flag. gEventsAssertLine is a stale
-// declaration: GiveExperience's line base is now its /Gi compiler static, but
-// removing this extern shifts every later handle of the 20+ including TUs
-// (-15 CUR exact), so it stays until a header retune.
-extern short gEventsAssertLine;
+// restore (-1 when none) and the event-music flag.
 extern int giEventMusicVolume;
 extern signed char gbEventMusicPlaying;
 

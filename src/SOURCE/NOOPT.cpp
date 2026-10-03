@@ -28,8 +28,10 @@ void DelayTicks(int ticks) {
 }
 
 VA(0x00464470, 0x54)
+#line 15 "D:\\Heroes\\Source\\NOOPT.CPP"
 void DelayTil(int* endTime) {
-    ProcessAssert(*endTime > 10000, "D:\\Heroes\\Source\\NOOPT.CPP", gNooptAssertLine + 1);
+#line 16
+    ProcessAssert(*endTime > 10000, __FILE__, __LINE__);
     while (*endTime > KBTickCount()) {
         Process1WindowsMessage();
         PollSound();
@@ -49,7 +51,5 @@ void DelayTilMilli(long endTime) {
     }
 }
 
-// NOOPT owns retail .data 0x004a0800-0x004a081f: DelayTil's source-line base
-// (15) and its NOOPT.CPP literal.
-DATA(0x004a0800)
-short gNooptAssertLine = 15;
+// NOOPT's retail .data 0x004a0800-0x004a081f is DelayTil's /Gi line static (15)
+// and its NOOPT.CPP literal (evidence/vc4-gi-line-var.md).
