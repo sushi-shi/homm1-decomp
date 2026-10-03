@@ -276,7 +276,7 @@ signed char game::IsMobile(signed char heroId) {
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
     int terrain =
-        giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
+        CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
                terrain,
                mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
@@ -3345,7 +3345,7 @@ void game::PerMonth(void) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
-                if (!spot->m_triggerType && giGroundToTerrain[spot->m_tileIndex]) {
+                if (!spot->m_triggerType && CELL_TERRAIN(spot)) {
                     if (Random(0, 360) == 10) {
                         spot->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         spot->m_objectTileset = TILESET_MONS32;

@@ -120,6 +120,8 @@ extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern H1_ENUM_STORAGE(TerrainType, signed char) giGroundToTerrain[];
+// The terrain type under a map cell (Buka 2.1 KBDeclarations.h).
+#define CELL_TERRAIN(cell) (giGroundToTerrain[(cell)->m_tileIndex])
 extern int bShowIt;
 extern char gText[];
 extern char* gArmyNames[];

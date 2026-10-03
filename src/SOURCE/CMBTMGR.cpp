@@ -104,7 +104,7 @@ void combatManager::SetupCombat(
         m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
     else
         m_battlefieldCell = NULL;
-    m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
+    m_terrainType = CELL_TERRAIN(m_battlefieldCell);
     if (attackerHero) {
         m_playerId[COMBAT_ATTACKER_SIDE] = attackerHero->m_owner;
         attackerGroup = &attackerHero->m_army;

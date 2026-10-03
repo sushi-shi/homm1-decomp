@@ -2950,7 +2950,7 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                 if (giCurPlayer == owner)
                     color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                 else
-                    color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                    color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
             } else {
                 switch (cellPtr->m_objectTileset & MAP_CELL_TILESET_MASK) {
                     case TILESET_TOWN32:
@@ -2970,17 +2970,17 @@ void advManager::UpdateRadar(signed char updateScreen, int partial) {
                                     [owner >= 0 ? gpGame->m_players[owner].m_color : 4];
                                 break;
                             default:
-                                color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                                color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
                                 break;
                         }
                         break;
                     case TILESET_MTN32:
                     case TILESET_TREE32:
-                        color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]]
+                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)]
                                 + RADAR_TERRAIN_SHADE;
                         break;
                     default:
-                        color = gRadarTerrainColor[giGroundToTerrain[cellPtr->m_tileIndex]];
+                        color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
                         break;
                 }
             }
@@ -3063,7 +3063,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
                     sprintf(
                         gText,
                         "\n\n%s",
-                        gTerrainNames[giGroundToTerrain[curCell->m_tileIndex]]
+                        gTerrainNames[CELL_TERRAIN(curCell)]
                     );
                     break;
                 case MAP_OBJECT_MINE:
@@ -4711,7 +4711,7 @@ void advManager::SetTownContext(signed char townId) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    townNo = giGroundToTerrain[GetCell(townPointer->m_x, townPointer->m_y)->m_tileIndex];
+    townNo = CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y));
     if (m_currentTerrain != townNo) {
         m_currentTerrain = townNo;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -4785,7 +4785,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    heroSlot = giGroundToTerrain[cellPtr->m_tileIndex];
+    heroSlot = CELL_TERRAIN(cellPtr);
     if (m_currentTerrain != heroSlot) {
         m_currentTerrain = heroSlot;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -6590,7 +6590,7 @@ void advManager::TeleportTo(int x, int y, int) {
         gpMouseManager->ReallyShowPointer();
     }
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
-    newTerrain = giGroundToTerrain[destinationCell->m_tileIndex];
+    newTerrain = CELL_TERRAIN(destinationCell);
     if (m_currentTerrain != newTerrain) {
         m_currentTerrain = newTerrain;
         gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
@@ -6846,7 +6846,7 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
         y = pHero->m_y;
         for (j = gpSearchArray->m_pathLength - 1; j >= 0; --j) {
             dir = gpSearchArray->m_directions[j];
-            terr = giGroundToTerrain[GetCell(x, y)->m_tileIndex];
+            terr = CELL_TERRAIN(GetCell(x, y));
             remMob -=
                 CalcTerrainCost(terr, dir & MAP_DIRECTION_DIAGONAL_BIT, remMob, pHero->m_heroClass);
             x += normalDirTable[dir].x;

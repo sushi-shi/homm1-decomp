@@ -1001,7 +1001,7 @@ void philAI::DetermineTargetPosition(
     gbActualBoatFound = 0;
     spacing = pHero->m_mobility / 6;
     thisCell = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
-    heroTerrainType = giGroundToTerrain[thisCell->m_tileIndex];
+    heroTerrainType = CELL_TERRAIN(thisCell);
     if (heroTerrainType == TERRAIN_SNOW || heroTerrainType == TERRAIN_SWAMP) {
         spacing--;
         mobility = static_cast<short>(mobility * 1.25);
@@ -1054,9 +1054,9 @@ void philAI::DetermineTargetPosition(
                             && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
                         || (x % spacing == 0 && y % spacing == 0
                             && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                 && giGroundToTerrain[thisCell->m_tileIndex] == TERRAIN_WATER)
+                                 && CELL_TERRAIN(thisCell) == TERRAIN_WATER)
                                 || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                    && giGroundToTerrain[thisCell->m_tileIndex] != TERRAIN_WATER)))
+                                    && CELL_TERRAIN(thisCell) != TERRAIN_WATER)))
                         || (x == gpCurPlayer->m_ultimateArtifactHintX
                             && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
@@ -2138,7 +2138,7 @@ int philAI::StrategicValueOfPosition(
             }
         }
     }
-    baseTerrain = giGroundToTerrain[gpAdvManager->GetCell(targetX, targetY)->m_tileIndex];
+    baseTerrain = CELL_TERRAIN(gpAdvManager->GetCell(targetX, targetY));
     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
         if (gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id) {
             nGap =
