@@ -4512,7 +4512,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                     )
                 );
             else
-                strcpy(labels[slotIndex], "?");
+                strcpy(labels[slotIndex], "???");
             texts[slotIndex] = new textWidget(
                 step * slotIndex + offsetX + xAdjust - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                 rowY + ARMY_QUICK_ICON_BASELINE,
@@ -4565,7 +4565,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
                         )
                     );
                 else
-                    strcpy(labels[slotIndex], "?");
+                    strcpy(labels[slotIndex], "???");
                 texts[slotIndex] = new textWidget(
                     (slotIndex - row1) * step + offsetX - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                     rowY + ARMY_QUICK_ICON_BASELINE,

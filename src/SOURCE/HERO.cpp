@@ -415,7 +415,7 @@ signed char hero::HeroView(signed char viewOnly) {
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
-    sprintf(gText, "%ld", m_experience);
+    sprintf(gText, "\n%d", m_experience);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = HERO_SCREEN_EXPERIENCE;
     message.text = gText;
