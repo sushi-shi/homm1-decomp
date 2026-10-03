@@ -1682,3 +1682,6 @@ src/SOURCE/kbwin.cpp	Process1WindowsMessage	150	comparison-or-bound	operator >	t
 src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int, int, BOOL) argument [45]	an inclusive RECT's width/height (right - left + 1)
 src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
 src/SOURCE/kbwin.cpp	SetGameDefaults	0xff	bitwise-or-packing	operator & cpuType	GetCPUType's family is its low byte (the high byte flags CPUID)
+src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	4	array-index	array subscript gRadarOwnerColor	the radar neutral colour slot in an owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to the char arm's type)
+src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
+src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
