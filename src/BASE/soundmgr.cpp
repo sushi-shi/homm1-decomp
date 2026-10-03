@@ -463,7 +463,6 @@ int soundManager::ConvertVolume(int volume, int soundType) {
 
 // Retail shares one `return NULL` tail between the missing-file and fopen-failure exits.
 VA(0x00477cc0, 0x331)
-#line 605 "D:\\Heroes\\Base\\Soundmgr.cpp"
 struct _SAMPLE* soundManager::StartSample(
     char* name,
     char**,
@@ -472,6 +471,7 @@ struct _SAMPLE* soundManager::StartSample(
     int volume,
     int channelType,
     long resume
+#line 605 "D:\\Heroes\\Base\\Soundmgr.cpp"
 ) {
     short channel;
     struct _SAMPLE* sample;
