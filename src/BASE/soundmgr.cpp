@@ -6,6 +6,13 @@
 
 #include <BASE/soundmgr.h>
 
+// MSS precedes windows.h and Misc.h as in Buka's soundmgr include list. Its
+// C1 handles set the /O2 range ids (C1 handle & 31) of the AIL import pointers
+// against the C2 loop counters: SetMusicQuality's inlined StopSample wait loop
+// needs AIL_serve's bucket below the counter's, and Open's inlined
+// AllocateSampleHandles needs AIL_allocate_sample_handle ahead of its nodes
+// (docs/patterns/vc4-register-tie-order-is-the-range-id.md).
+#include <mss.h>
 #include <windows.h>
 
 #include <BASE/Misc.h>
@@ -15,9 +22,6 @@
 #include <SOURCE/NOOPT.h>
 
 #include <io.h>
-// MSS comes first: AIL_allocate_sample_handle's C1 handle must precede the
-// inlined AllocateSampleHandles nodes for Open's esi/edi colouring.
-#include <mss.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -249,7 +253,7 @@ void soundManager::CDPlay(int track, int resume, int volume, int restart) {
     } else {
         CDSetVolume(volume, 0);
     }
-    m_currentTrack = static_cast<char>(track);
+    m_currentTrack = track;
 }
 
 // PoL SetReady2Poll correspondence; HoMM1 also requests a stream poll.

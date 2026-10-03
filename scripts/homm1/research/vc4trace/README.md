@@ -86,3 +86,32 @@ tier 1 is local order only, tier 2 adds between-function insertions with
 control-flow spelling hints, and tier 3 adds the whole-TU shift. `--verify`
 compiles each tier's result. The realisation is in scratch only and uses typedef
 runs as stand-ins for the authentic edits; nothing is written back to `src/`.
+
+## Register allocation (/O2)
+
+    # trace the allocator: range ids (C1 bucket), simplify list/removals/edges, colours
+    python3 -m homm1.research.vc4trace.trace SOURCE/UNIT --spec homm1/research/vc4trace/ra-graph.spec --out DIR
+    python3 -m homm1.research.vc4trace.rasim check DIR/UNIT.trace             # replay must be exact
+    python3 -m homm1.research.vc4trace.rasim show DIR/UNIT.trace DIR/il/UNIT FUNC
+
+    # colouring classes reachable by region handle offsets, with measured distances
+    python3 -m homm1.research.vc4trace.rasolve SOURCE/UNIT FUNC [--point before:TEXT|after:TEXT|fn:DEC]... \
+        [--grid 32] [--verify N] [--validate N]
+
+`rasolve` traces the unit once and once per insertion point with one typedef there.
+A range's region is the set of points that move its C1 bucket; C2-created symbols move
+with none. It predicts the colouring for every combination of offsets by renumbering
+the ranges and replaying simplify/select on the traced graph, groups the
+combinations by colouring and compiles representatives (`--verify`).
+`--validate N` traces N random combinations and compares them with the prediction.
+Functions whose allocator re-runs after spill code (several passes with spills) can
+change their graph under offsets, and the replay does not model that.
+Findings: `docs/patterns/vc4-register-tie-order-is-the-range-id.md`.
+
+| address | what |
+|---|---|
+| `0x4113de` | range-id walk: buckets `0x48a540 + 4*(C1 handle & 31)`, ids from `0x4020` (counter `0x481f40`); id stored at `0x411460` |
+| `0x4074bd` | node into bucket `id & 31` of `0x48b4e0` (user) / `0x48b560` (`0x8000+`), newest first |
+| `0x40ccd7` | simplify: list built at `0x40cd01`, removal at `0x40cd33`, neighbour degree drop at `0x40cd47` |
+| `0x40cbe1` | select: node `[esp+0x14]` (`+0x18` id, `+0x16` weight, `+0x14` degree) gets register `ecx` |
+| `0x4151f5` | per-function allocator entry (`[0x48b3c0]` = K) |
