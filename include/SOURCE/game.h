@@ -22,7 +22,6 @@ class town;
 struct SMapHeader;
 struct tag_message;
 
-// clang-format off
 // game::m_difficulty: the four new-game difficulty buttons and
 // gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
 H1_ENUM_BEGIN(GameDifficulty)
@@ -182,7 +181,6 @@ H1_ENUM_CONST_BEGIN(SaveFileConstant)
     SAVE_FILE_BASE_NAME_LENGTH = 8,
     SAVE_FILE_NAME_SCAN_STOP = 999
 H1_ENUM_CONST_END(SaveFileConstant)
-// clang-format on
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
@@ -219,7 +217,6 @@ struct boatRecord {
 // mapTownExtra's owner is UNSET (-2) when the map leaves it open; SetupTowns
 // copies only the buildings in EXTRA_BUILDING_MASK (every slot but the tent
 // and castle bits, which the record's castle flag decides).
-// clang-format off
 H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
     MAP_TOWN_TYPE_MASK = 0x7f,
     MAP_TOWN_OWNER_UNSET = -2,
@@ -227,7 +224,6 @@ H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
     // mapHeroExtra::artifacts: a placed hero's four starting artifacts.
     MAP_HERO_EXTRA_ARTIFACT_COUNT = 4
 H1_ENUM_CONST_END(MapTownRecordConstant)
-// clang-format on
 
 // SetupTowns and RandomizeTown read a town's map-extra record: custom flag,
 // owner, buildings, mage-guild level and garrison.

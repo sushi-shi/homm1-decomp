@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(MessageType)
     MESSAGE_NONE = 0,
     MESSAGE_KEY_DOWN = 1,
@@ -59,7 +58,6 @@ H1_ENUM_BEGIN(MessageModifier)
     MESSAGE_MODIFIER_RIGHT_BUTTON = 0x200,
     MESSAGE_MODIFIER_BUTTON_MASK = 0x300
 H1_ENUM_END(MessageModifier)
-// clang-format on
 
 #pragma pack(push, 1)
 // Retail reaches every word directly off the message (the hover filters load

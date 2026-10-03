@@ -3,15 +3,14 @@
 
 #include <Domains.h>
 
-// clang-format off
 // WM_COMMAND ids of the retail MNUADV/MNUDFLT/MNUCMBT/MNUTOWN menu resources.
 // Names follow each item's menu path and text. The Display and Help items
 // keep their kbwin.h names (KbwinMenuConstant). giMenuCommand holds
 // APP_MENU_NONE until HandleAppSpecificMenuCommands defers a new/load item;
 // oldmain, SETUP and advManager::Main test it before running the command.
 H1_ENUM_BEGIN(AppMenuCommand)
-    // giMenuCommand when no menu command is queued (SETUP/KB/ADVMGR reset
-    // and test it).
+// giMenuCommand when no menu command is queued (SETUP/KB/ADVMGR reset
+// and test it).
     APP_MENU_NONE = -1,
     APP_MENU_VIEW_WORLD = 0x9c4c,
     APP_MENU_VIEW_PUZZLE = 0x9c4d,
@@ -81,6 +80,5 @@ H1_ENUM_BEGIN(AppMenuCommand)
     APP_MENU_SAVE_GAME = 0x9ccb,
     APP_MENU_QUIT = 0x9ccc
 H1_ENUM_END(AppMenuCommand)
-// clang-format on
 
 #endif // HOMM1_SOURCE_APPMENU_H

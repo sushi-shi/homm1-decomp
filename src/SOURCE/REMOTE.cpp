@@ -160,13 +160,11 @@ void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short) networkDriver) {
 }
 
 // CRC-16/CCITT over the packet bytes, most significant bit first.
-// clang-format off
 H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
     REMOTE_CRC_BYTE_TOP_BIT = 0x80,
     REMOTE_CRC_TOP_BIT = 0x8000,
     REMOTE_CRC_POLYNOMIAL = 0x1021
 H1_ENUM_CONST_END(RemoteCrcConstant)
-// clang-format on
 
 VA(0x00458971, 0xb6)
 void calc_crc(unsigned short* crc, unsigned char* data, int length) {

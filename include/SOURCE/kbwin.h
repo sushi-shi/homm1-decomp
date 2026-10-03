@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(WindowTextConstant)
     WINDOW_TEXT_ENTRY_COUNT = 68
 H1_ENUM_CONST_END(WindowTextConstant)
@@ -112,9 +111,8 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_WIDTH = 240,
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
-    // clang-format on
 
-    extern char gcRegAppPath[];
+extern char gcRegAppPath[];
 extern char gcRegCDRomPath[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];

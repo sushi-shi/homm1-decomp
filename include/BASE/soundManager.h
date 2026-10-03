@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(SoundManagerConstant)
     MUSIC_TRACK_COUNT = 60,
     MUSIC_POSITION_TRACK_END = 7,
@@ -97,7 +96,6 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_BATTLE_4 = 0x35,
     MUSIC_TRACK_CONGRATULATIONS = 0x36
 H1_ENUM_END(MusicTrack)
-// clang-format on
 
 // forward declarations:
 class sample;

@@ -14,7 +14,6 @@
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/X_GLOBAL.h>
 
-// clang-format off
 // Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
 // and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
 H1_ENUM_CONST_BEGIN(CursorConstant)
@@ -42,11 +41,9 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     MOVE_TILE_HALF_COUNT = 2
 H1_ENUM_CONST_END(CursorConstant)
 
-   // clang-format on
-
-   // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
-   // walk speed and indexes the map directly.
-   VA(0x00405950, 0x169)
+// Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
+// walk speed and indexes the map directly.
+VA(0x00405950, 0x169)
 void advManager::StartCursor(signed char direction) {
     short directionX;
     short newX;

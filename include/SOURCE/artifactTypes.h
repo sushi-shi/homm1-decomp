@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // Artifact ids follow retail gArtifactNames (0x00493048); member names use
 // the short titles of gArtifactDesc, which follows it. Hero artifact slots
 // mark an empty slot with -1.
@@ -54,6 +53,5 @@ H1_ENUM_BEGIN(ArtifactType)
     ARTIFACT_REGULAR_FIRST = ARTIFACT_ARCANE_NECKLACE,
     ARTIFACT_REGULAR_END = ARTIFACT_MAGIC_BOOK
 H1_ENUM_END(ArtifactType)
-// clang-format on
 
 #endif // HOMM1_SOURCE_ARTIFACTTYPES_H

@@ -8,7 +8,6 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 
-// clang-format off
 // Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
 // wide-creature directions, the speed FindPath grants when speed is ignored,
 // and the second hex of a wide creature.
@@ -17,7 +16,6 @@ H1_ENUM_CONST_BEGIN(CombatPathConstant)
     IGNORE_SPEED = 99,
     WIDE_HEX_OFFSET = 1
 H1_ENUM_CONST_END(CombatPathConstant)
-// clang-format on
 
 // Compiler line-base words for PATH.CPP's ProcessAssert sites.
 DATA(0x0048f4d4) short gAdjacentCellAssertLine = 311;

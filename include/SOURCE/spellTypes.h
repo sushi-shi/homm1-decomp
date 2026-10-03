@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // HoMM1 spell ids: the order of retail gSpellNames (0x00493330), which
 // combatManager::SpellMessage and the spell shrine print by id. The combat
 // arms agree: ValidSpellTarget sends 1 to enemies, 4 to friends, 11 to
@@ -67,6 +66,5 @@ H1_ENUM_BEGIN(SpellHelpText)
     SPELL_HELP_SELECT_SPELL = 6,
     SPELL_HELP_VIEW_COMBAT_SPELLS = 7
 H1_ENUM_END(SpellHelpText)
-// clang-format on
 
 #endif // HOMM1_SOURCE_SPELLTYPES_H

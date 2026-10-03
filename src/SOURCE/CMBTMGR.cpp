@@ -243,7 +243,6 @@ short combatManager::Open(short priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// clang-format off
 // cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
 // mountain variant by MoreTreesNear), the boat for water and the graveyard.
 H1_ENUM_BEGIN(CombatBackground)
@@ -260,7 +259,6 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_GRAVEYARD = 10,
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
-// clang-format on
 
 // CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
 // table after Open's literals, followed by its own literals.

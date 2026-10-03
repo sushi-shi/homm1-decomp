@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(MiscLogConstant)
     MISC_FILE_DEBUG_BEGIN = 2,
     MISC_DEBUGGER_OUTPUT_LEVEL = 3,
@@ -32,13 +31,11 @@ H1_ENUM_CONST_BEGIN(PaletteGraphicsConstant)
     PALETTE_WINDOWED_FADE_SCALE = 2,
     PALETTE_CYCLE_BYTES = PALETTE_CYCLE_COLOR_COUNT * PALETTE_GRAPHICS_CHANNELS
 H1_ENUM_CONST_END(PaletteGraphicsConstant)
-// clang-format on
 
 class palette;
 extern palette* gpBufferPalette;
 extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
 
-// clang-format off
 // giCurExe and the gConfig.gfx rows: the game and the map editor share the
 // registry layout (ReadPrefs/WritePrefs walk both rows; MOUSEMGR tests the
 // editor).
@@ -47,7 +44,6 @@ H1_ENUM_BEGIN(ConfigExecutable)
     CONFIG_EXECUTABLE_EDITOR = 1,
     CONFIG_EXECUTABLE_COUNT = 2
 H1_ENUM_END(ConfigExecutable)
-// clang-format on
 
 extern int giCurExe;
 extern void* hwndApp;

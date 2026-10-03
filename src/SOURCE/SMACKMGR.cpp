@@ -53,7 +53,6 @@ H1_C_LINKAGE void radfree(void* ptr) {
     free(ptr);
 }
 
-// clang-format off
 // smackManager::Main's playback (HoMM1 movies): a skipped intro restarts at
 // frame 125; the publisher logo freezes on frame 101 under its "Presents..."
 // caption (bigfont, colour 255, an 80x20 update box); win02 draws the win
@@ -82,9 +81,8 @@ H1_ENUM_CONST_BEGIN(SmackManagerConstant)
     SMACK_FRAME_SILENT_WAIT = 50,
     SMACK_MESSAGE_PUMP_INTERVAL = 25
 H1_ENUM_CONST_END(SmackManagerConstant)
-   // clang-format on
 
-   VA(0x0045ac48, 0x2a)
+VA(0x0045ac48, 0x2a)
 smackManager::smackManager(void) : baseManager() {}
 
 VA(0x0045ac72, 0x53)

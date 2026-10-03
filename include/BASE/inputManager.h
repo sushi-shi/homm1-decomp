@@ -5,7 +5,6 @@
 #include <BASE/message.h>
 #include <H1/Macros.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(InputManagerConstant)
     INPUT_GAME_WIDTH = 640,
     INPUT_GAME_HEIGHT = 480,
@@ -127,7 +126,6 @@ H1_ENUM_CONST_BEGIN(InputKeyCodeConstant)
     INPUT_ASCII_ESCAPE = 0x1b,
     INPUT_ASCII_DELETE = 0x7f
 H1_ENUM_CONST_END(InputKeyCodeConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class inputManager : public baseManager {

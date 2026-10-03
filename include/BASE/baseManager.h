@@ -5,7 +5,6 @@
 
 struct tag_message;
 
-// clang-format off
 // executive::AddManager appends a manager whose priority is unassigned after
 // the list tail (Buka BASE_MANAGER_PRIORITY_UNASSIGNED).
 H1_ENUM_BEGIN(BaseManagerPriority)
@@ -35,7 +34,6 @@ H1_ENUM_END(BaseManagerMessageMask)
 H1_ENUM_CONST_BEGIN(BaseManagerConstant)
     BASE_MANAGER_NAME_CAPACITY = 30
 H1_ENUM_CONST_END(BaseManagerConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class baseManager {

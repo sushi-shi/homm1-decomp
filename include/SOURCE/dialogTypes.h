@@ -13,7 +13,6 @@ H1_ENUM_BEGIN(NormalDialogResult)
     NORMAL_DIALOG_CANCEL = 0x7806
 H1_ENUM_END(NormalDialogResult)
 
-// clang-format off
 // HoMM1 NormalDialog's resource slot kinds (frames of resource.icn first).
 H1_ENUM_BEGIN(NormalDialogResourceType)
     NORMAL_DIALOG_NO_RESOURCE = -1,
@@ -82,6 +81,5 @@ H1_ENUM_CONST_BEGIN(NormalDialogLayout)
     NORMAL_DIALOG_TEXT_WIDGET_ID = 1,
     NORMAL_DIALOG_BUTTON_FLAGS = 6
 H1_ENUM_CONST_END(NormalDialogLayout)
-// clang-format on
 
 #endif // HOMM1_SOURCE_DIALOGTYPES_H

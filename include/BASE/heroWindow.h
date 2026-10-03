@@ -11,7 +11,6 @@ class widget;
 class bitmap;
 struct tag_message;
 
-// clang-format off
 H1_ENUM_BEGIN(WindowFlag)
     WINDOW_FLAG_NONE = 0,
     WINDOW_FLAG_FIXED_LAYER = 1,
@@ -40,7 +39,6 @@ H1_ENUM_CONST_BEGIN(HeroWindowConstant)
     WINDOW_ALL_WIDGETS_LOW = -65535,
     WINDOW_ALL_WIDGETS_HIGH = 65535
 H1_ENUM_CONST_END(HeroWindowConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class heroWindow {

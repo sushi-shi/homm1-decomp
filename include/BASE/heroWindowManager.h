@@ -14,13 +14,11 @@ class palette;
 class bitmap;
 struct tag_message;
 
-// clang-format off
 // FizzleForward's delay argument asking for the manager's default transition
 // delay (WINMGR.cpp FIZZLE_DEFAULT_DELAY).
 H1_ENUM_CONST_BEGIN(FizzleDelayConstant)
     FIZZLE_USE_DEFAULT_DELAY = -1
 H1_ENUM_CONST_END(FizzleDelayConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class heroWindowManager : public baseManager {

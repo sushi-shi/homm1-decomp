@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_IN = 0,
     WINDOW_FADE_OUT = 1
@@ -23,7 +22,6 @@ H1_ENUM_CONST_BEGIN(WindowManagerConstant)
     // heroWindowManager::Open when the screen bitmap is missing.
     WINDOW_MANAGER_OPEN_FAILURE = 1
 H1_ENUM_CONST_END(WindowManagerConstant)
-// clang-format on
 
 class palette;
 extern palette* gPalette;

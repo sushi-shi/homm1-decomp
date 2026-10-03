@@ -13,14 +13,12 @@ class heroWindow;
 class town;
 struct tag_message;
 
-// clang-format off
 // m_sourceType: an event recruit (RecruitEvent) or a town dwelling; Close
 // refreshes the town strips only for TOWN.
 H1_ENUM_BEGIN(RecruitSourceType)
     RECRUIT_SOURCE_EVENT = -1,
     RECRUIT_SOURCE_TOWN = 0x28
 H1_ENUM_END(RecruitSourceType)
-// clang-format on
 
 // Both retail constructors, Open, Update and Main fix this packed layout.
 #pragma pack(push, 1)

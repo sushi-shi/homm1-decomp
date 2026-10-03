@@ -8,7 +8,6 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/mouseManager.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_COUNT = 75,
     MOUSE_CURSOR_AXIS_COUNT = 2,
@@ -33,7 +32,6 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_SPELL = 2,
     MOUSE_KEEP_CURRENT_FRAME = 1000
 H1_ENUM_CONST_END(MouseManagerConstant)
-// clang-format on
 
 extern int gbColorMice;
 extern int gbSpecialMouseMasks;

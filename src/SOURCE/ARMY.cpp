@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // DrawToBuffer's outline colours (palette indices FillToBuffer paints the
 // sprite with): the stack m_limitCreature highlights, a beneficial spell
 // (haste, bless, protection, anti-magic) and any other spell. SpecialAttack
@@ -31,7 +30,6 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_MISSILE_HALF_WIDTH = 35,
     ARMY_MISSILE_HALF_HEIGHT = 30
 H1_ENUM_CONST_END(ArmyDrawingConstant)
-// clang-format on
 
 VA(0x00466490, 0xc9)
 army::army(void) {

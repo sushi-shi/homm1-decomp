@@ -7,7 +7,6 @@
 
 struct tag_message;
 
-// clang-format off
 // SmackOptions rows (retail 0x0049fd08), named by their movie files. Rows
 // 0..1 are the publisher logos that draw "Presents...", 2..3 the intro and
 // 4..7 the endings; oldmain and the end sequence pick one of each pair
@@ -25,7 +24,6 @@ H1_ENUM_BEGIN(SmackVideo)
     SMACK_WIN02 = 6,
     SMACK_LOSE1 = 7
 H1_ENUM_END(SmackVideo)
-// clang-format on
 
 // InitMainClasses allocates 0x32 bytes: the 0x30-byte baseManager prefix and
 // one trailing word.

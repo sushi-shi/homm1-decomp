@@ -30,7 +30,6 @@ struct SAMPLE2;
 struct SMapChange;
 struct tag_message;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
     // m_bottomViewPrimaryWidgets slots (Buka 2.1 names): the stone backdrop,
@@ -192,9 +191,8 @@ H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
-                            // clang-format on
 
-                            struct adventureSoundCell {
+struct adventureSoundCell {
     int soundId;
     int volume;
 };
@@ -514,18 +512,15 @@ short CPanelHandler(struct tag_message&);
 extern int gbNoBorder;
 // giForceSwitchMusic: the tick a network turn hand-over forced a music
 // switch, or IDLE when none is pending (advManager::Main, game::NewDay).
-// clang-format off
 H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
     FORCED_MUSIC_IDLE = -1
 H1_ENUM_CONST_END(ForcedMusicConstant)
-                  // clang-format on
-                  extern long giForceSwitchMusic;
+extern long giForceSwitchMusic;
 extern long iLastScrollTime;
 extern int gbForceUpdate;
 extern int gbAllBlack;
 extern int giFullySeeded;
 extern class searchArray* gpSearchArray;
-// clang-format off
 // The adventure screen's bottom-right panel: iCurBottomView is the view
 // UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
@@ -539,7 +534,6 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_RESOURCE = 5,
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
-// clang-format on
 extern int iCurBottomView;
 extern int iCurBottomViewEnemy;
 extern int iLastAnimFrame;
@@ -567,7 +561,6 @@ extern const long glEnvironmentVolume[];
 extern signed char gRouteFrame[][8];
 // Per hero type scouting radius used by TeleportTo.
 extern signed char gHeroScoutRadius[];
-// clang-format off
 // giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
 // whole viewport), and m_previousCursorMapX/Y with no hero-cursor cell to
 // clear (Buka 2.1 AdventureUpdateScreenConstant UPDATE_NONE).
@@ -575,9 +568,8 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
     UPDATE_NONE = -1,
     CURSOR_CELL_NONE = -1
 H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
-                                // clang-format on
 
-                                extern int giLimitUpdMinX;
+extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;

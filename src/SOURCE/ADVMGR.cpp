@@ -49,7 +49,6 @@ int s_drawCovered;
 DATA(0x004c50ac)
 int s_drawStoneTile;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
     BUTTON_BROADCAST_ARG = 1,
     PANEL_CONTINUE_ROUTE = 2
@@ -512,8 +511,8 @@ H1_ENUM_CONST_BEGIN(AdventureBottomHeroViewConstant)
 H1_ENUM_CONST_END(AdventureBottomHeroViewConstant)
 
 H1_ENUM_CONST_BEGIN(AdventureScrollConstant)
-    // The adventure view is ADVMGR_VIEW_CELL_COUNT cells square; the hero
-    // stands on its centre cell, ADVMGR_VIEW_CENTER from the origin.
+// The adventure view is ADVMGR_VIEW_CELL_COUNT cells square; the hero
+// stands on its centre cell, ADVMGR_VIEW_CENTER from the origin.
     ADVMGR_VIEW_CENTER = 7,
     SCROLL_MIN_ORIGIN = -7,
     SCROLL_MAX_ORIGIN = 64,
@@ -589,7 +588,6 @@ H1_ENUM_CONST_BEGIN(QuickViewWidget)
     // The map-click views pass no locator slot.
     QUICK_VIEW_NO_LOCATOR = -1
 H1_ENUM_CONST_END(QuickViewWidget)
-// clang-format on
 
 // Buka 2.1's unconditional six-button enable/disable broadcast.
 #define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
@@ -609,9 +607,9 @@ H1_ENUM_CONST_END(QuickViewWidget)
      (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
      (window)->BroadcastMessage(message))
 
-        // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
-        // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-        // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
+// donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
+// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
         VA(0x004252c0, 0x2cc)
 advManager::advManager(void) {
     int i;
@@ -5556,7 +5554,6 @@ void advManager::GrabScreen(void) {
     gpMouseManager->ReallyShowPointer();
 }
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(ControlPanelDialogConstant)
     CONTROL_NEW_GAME = 1,
     CONTROL_LOAD_GAME = 2,
@@ -5607,7 +5604,6 @@ H1_ENUM_BEGIN(ControlPanelHelp)
     CPANEL_HELP_SHOW_ENEMY_MOVES = 10,
     CPANEL_HELP_SCENARIO_INFO = 11
 H1_ENUM_END(ControlPanelHelp)
-// clang-format on
 
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
 // that also applies the walk-speed sample set and saves changed preferences.
@@ -6060,7 +6056,6 @@ short APanelHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// clang-format off
 // DimensionDoor's dimdoor.bin dialog (Buka 2.1 AdventureTravelSpellConstant
 // names): hovering the map view (FIRST_BUTTON) sets m_dialogResult to
 // ACCEPT over a free cell, else REJECT, as does the other area (LAST_BUTTON);
@@ -6073,9 +6068,8 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     DIMENSION_DOOR_LAST_BUTTON = 11,
     TOWN_PORTAL_DISTANCE_LIMIT = 1000
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
- // clang-format on
 
- VA(0x004337c5, 0x34b)
+VA(0x004337c5, 0x34b)
 short DimensionDoorHandler(struct tag_message& message) {
     signed char result;
     short mouseX;

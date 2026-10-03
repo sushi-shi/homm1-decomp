@@ -19,7 +19,6 @@ class town;
 class townObject;
 struct tag_message;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_MANAGER_OBJECT_CAPACITY = 16,
     TOWN_MANAGER_STATUS_TEXT_SIZE = 0x50,
@@ -40,9 +39,7 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_VIEWPORT_WIDTH = 0x280,
     TOWN_VIEWPORT_HEIGHT = 0x100
 H1_ENUM_CONST_END(TownManagerStorageConstant)
-   // clang-format on
 
-   // clang-format off
 H1_ENUM_BEGIN(TownArmyCommand)
     TOWN_ARMY_COMMAND_NONE = -1,
     TOWN_ARMY_COMMAND_SELECT = 0,
@@ -284,7 +281,6 @@ H1_ENUM_BEGIN(TownRecruitHeroControl)
     RECRUIT_HERO_SELECT_FIRST = 8,
     RECRUIT_HERO_SELECT_SECOND = 9
 H1_ENUM_END(TownRecruitHeroControl)
-// clang-format on
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
 // fix these packed offsets; names follow Buka where the use matches.

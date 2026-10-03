@@ -31,7 +31,6 @@ class hero;
 class mapCell;
 class town;
 // Buka 2.1 purchase record: town, kind, building/dwelling and count.
-// clang-format off
 // DoAI's boat plan holds back the shipyard's price (gNeutralBuildingCosts
 // row BUILDING_SLOT_SHIPYARD: 2000 gold, 20 wood) while it buys other things,
 // as it holds back TOWN_BOAT_GOLD_COST/WOOD_COST for the boat.
@@ -51,7 +50,6 @@ H1_ENUM_BEGIN(AIPurchaseType)
     PURCHASE_HERO = 1,
     PURCHASE_CREATURE = 2
 H1_ENUM_END(AIPurchaseType)
-// clang-format on
 
 struct BHC {
     town* pTown;
@@ -217,7 +215,6 @@ extern int gUltArtifactAvgValue;
 // DoAI: the single player the AI may run for, and the places each hero has
 // already started from this turn.
 extern signed char giLimitPlayer;
-// clang-format off
 // DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
 // from; a target already in it ends the hero's turn (Buka 2.1 ADVMGR.h
 // names).
@@ -225,8 +222,7 @@ H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
     ADVMGR_PLACE_VISIT_COUNT = 30,
     ADVMGR_PLACE_COORDINATE_COUNT = 2
 H1_ENUM_CONST_END(AIPlaceVisitConstant)
-    // clang-format on
-    extern int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
+extern int iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
 extern int iCurPlaceToVisit;
 void ResetHeroRVs(int, int, int);
 // DetermineTargetPosition's shipyard search state.
@@ -251,23 +247,19 @@ extern float gfSpellCastNumMod[];
 extern float fReduceFactor;
 // ValueOfBuyingHero: the hero class native to each town type.
 extern signed char gTownHeroClass[];
-// clang-format off
 // The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
 // gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
 // evaluated; ResetHeroRVs writes it back (Buka's name).
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
-         // clang-format on
-         // GoodAdjacent skips cells whose adjacency byte carries the monster bit.
-         extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-// clang-format off
+// GoodAdjacent skips cells whose adjacency byte carries the monster bit.
+extern unsigned char mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // mapExtra bit 7: game::SetupAdjacentMons sets it where FindAdjacentMonster
 // finds a guard next to the cell and clears it (mask 0x7f) elsewhere.
 H1_ENUM_BEGIN(MapExtraFlag)
     MAP_EXTRA_MONSTER_ADJACENT = 0x80
 H1_ENUM_END(MapExtraFlag)
-// clang-format on
 
 // Shared with GAME and EVENTS: the per-cell bitmask of the players whose
 // heroes have stood there and the current/watch players' high bits (all in

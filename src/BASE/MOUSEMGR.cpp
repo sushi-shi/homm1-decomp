@@ -29,12 +29,15 @@ char gMouseManagerAssertFile2[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 char gMouseManagerAssertFile3[] = "D:\\Heroes\\Base\\MOUSEMGR.CPP";
 
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
-MOUSE_INITIAL_POINTER_FLAGS = 6,
-    MOUSE_INITIAL_X = 320, MOUSE_INITIAL_Y = 240, MOUSE_SAVED_BITMAP_SIZE = 0x40,
+    MOUSE_INITIAL_POINTER_FLAGS = 6,
+    MOUSE_INITIAL_X = 320,
+    MOUSE_INITIAL_Y = 240,
+    MOUSE_SAVED_BITMAP_SIZE = 0x40,
     MOUSE_MANAGER_MESSAGE_MASK = 0x40,
-    MOUSE_CURSOR_FILENAME_CAPACITY = 16 H1_ENUM_CONST_END(MouseManagerStateConstant)
+    MOUSE_CURSOR_FILENAME_CAPACITY = 16
+H1_ENUM_CONST_END(MouseManagerStateConstant)
 
-        VA(0x004766e0, 0xab)
+VA(0x004766e0, 0xab)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorImage = NULL;

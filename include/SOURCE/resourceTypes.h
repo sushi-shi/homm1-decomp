@@ -3,10 +3,9 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(ResourceType)
-    // No resource (Buka RES_NONE): recruitUnit's creature without a
-    // secondary cost.
+// No resource (Buka RES_NONE): recruitUnit's creature without a
+// secondary cost.
     RESOURCE_NONE = -1,
     RESOURCE_WOOD = 0,
     RESOURCE_FIRST = RESOURCE_WOOD,
@@ -23,6 +22,5 @@ H1_ENUM_BEGIN(ResourceType)
     RESOURCE_LAST = RESOURCE_GOLD,
     RESOURCE_COUNT = 7
 H1_ENUM_END(ResourceType)
-// clang-format on
 
 #endif

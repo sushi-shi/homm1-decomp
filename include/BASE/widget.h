@@ -14,7 +14,6 @@
 class heroWindow;
 struct tag_message;
 
-// clang-format off
 H1_ENUM_FLAGS_BEGIN(WidgetFlag, short)
     WIDGET_FLAG_SELECTED = 1,
     WIDGET_FLAG_ENABLED = 2,
@@ -38,7 +37,6 @@ H1_ENUM_END(WidgetKind)
 H1_ENUM_CONST_BEGIN(WidgetIdConstant)
     WIDGET_ID_NONE = -1
 H1_ENUM_CONST_END(WidgetIdConstant)
-// clang-format on
 
 #pragma pack(push, 1)
                    class widget /* abstract */ {

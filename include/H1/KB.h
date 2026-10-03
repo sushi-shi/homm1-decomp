@@ -6,7 +6,6 @@
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/terrainTypes.h>
 
-// clang-format off
 // Town building ids: the order of retail gBuildingNames (0x004933a8), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
@@ -48,9 +47,7 @@ H1_ENUM_BEGIN(BuildingSlotType)
     // give it to barbarian towns only; no HoMM1 reader tests it.
     BUILDING_SLOT_SPECIAL = 13
 H1_ENUM_END(BuildingSlotType)
-    // clang-format on
 
-    // clang-format off
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
 // (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
 // GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
@@ -86,7 +83,6 @@ H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_CREDITS = 6,
     MAIN_MENU_LAST = MAIN_MENU_CREDITS
 H1_ENUM_END(MainMenuControl)
-// clang-format on
 
 class soundManager;
 class heroWindowManager;
@@ -106,7 +102,6 @@ extern signed char gbShowHighScore;
 // NormalDialog only parks over the adventure map when neither is showing.
 extern signed char gbHeroWindShowing;
 extern signed char gbOverviewShowing;
-// clang-format off
 // giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
 // scores (CAMPAIGN.HS, fewest days first; giScoreCampaignMon) or standard
 // scores (STANDARD.HS, highest first; giScoreMon). highScoreManager shows the
@@ -115,7 +110,6 @@ H1_ENUM_BEGIN(HighScoreType)
     HIGH_SCORE_TYPE_CAMPAIGN = 0,
     HIGH_SCORE_TYPE_STANDARD = 1
 H1_ENUM_END(HighScoreType)
-// clang-format on
 extern signed char giHighScoreType;
 extern signed char giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
@@ -192,7 +186,6 @@ extern int gMageBaseResourceValues[];
 extern int gNeutralBaseResourceValues[];
 extern int gDwellingBaseResourceValues[];
 extern char cNetBoxLine[][60];
-// clang-format off
 // ppMapExtra/pwSizeOfMapExtra: the map file's extra records (signs, events,
 // town customizations), addressed by a cell's or town's byte index. Record 0
 // is never allocated, so iMaxMapExtra restarts at FIRST_RECORD (InitVars,
@@ -201,8 +194,7 @@ H1_ENUM_CONST_BEGIN(MapExtraConstant)
     MAP_EXTRA_FIRST_RECORD = 1,
     MAP_EXTRA_RECORD_CAPACITY = 255
 H1_ENUM_CONST_END(MapExtraConstant)
-                         // clang-format on
-                         extern void* ppMapExtra[];
+extern void* ppMapExtra[];
 extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
 extern class font* bigFont;
@@ -297,28 +289,26 @@ void GetMonsterCost(int, int* const);
 // philAI::BuildHero charges this word-sized gold price.
 extern short gHeroGoldCost;
 void PopNetBox(char*);
-// clang-format off
 // NormalDialog's x/y: AUTO_POSITION lets it place the window (the adventure
 // screen's NORMAL_DIALOG_ADVENTURE_X or centred; y centred up to
 // NORMAL_DIALOG_MAX_TOP).
 H1_ENUM_CONST_BEGIN(NormalDialogPosition)
     NORMAL_DIALOG_AUTO_POSITION = -1
 H1_ENUM_CONST_END(NormalDialogPosition)
-    // clang-format on
 
-    // Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
-    // timeout argument).
-    void NormalDialog(
-        char*,
-        H1_ENUM_PARAM(NormalDialogType, int),
-        int = NORMAL_DIALOG_AUTO_POSITION,
-        int = NORMAL_DIALOG_AUTO_POSITION,
-        H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
-        int = 0,
-        H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
-        int = 0,
-        H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
-    );
+// Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
+// timeout argument).
+void NormalDialog(
+    char*,
+    H1_ENUM_PARAM(NormalDialogType, int),
+    int = NORMAL_DIALOG_AUTO_POSITION,
+    int = NORMAL_DIALOG_AUTO_POSITION,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+    int = 0,
+    H1_ENUM_PARAM(NormalDialogResourceType, int) = NORMAL_DIALOG_NO_RESOURCE,
+    int = 0,
+    H1_ENUM_PARAM(NormalDialogOrText, int) = NORMAL_DIALOG_NO_OR_TEXT
+);
 void SetWinText(heroWindow*, short);
 extern char* cTownObjectNames[];
 extern char* gSpellDesc[];

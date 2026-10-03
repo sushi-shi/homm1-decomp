@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // cCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)
@@ -83,7 +82,6 @@ H1_ENUM_BEGIN(CombatControlId)
     COMBAT_CONTROL_SKIP_TURN = 8,
     COMBAT_CONTROL_FIELD = 0x40
 H1_ENUM_END(CombatControlId)
-// clang-format on
 
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.

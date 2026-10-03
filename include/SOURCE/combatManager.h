@@ -21,7 +21,6 @@ class town;
 struct SBolt;
 struct tag_message;
 
-// clang-format off
 // Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
 // and DoCommand runs it (move, fly, shoot, own and opposing hero options,
 // view, attack, spell book, retreat, surrender).
@@ -168,7 +167,6 @@ H1_ENUM_BEGIN(CombatIconSlot)
     COMBAT_ICON_SPELLS = 8,
     COMBAT_ICON_COUNT = 9
 H1_ENUM_END(CombatIconSlot)
-// clang-format on
 
 // Buka CombatRemotePacket: the combat action relayed through
 // GetRemoteData (command 0x17) or a net chat line (command 0xb).
@@ -544,7 +542,6 @@ extern H1_ENUM_STORAGE(CombatAction, int) giNextAction;
 extern int giNextActionGridIndex;
 extern int giNextActionExtra;
 extern int giNextActionGridIndex2;
-// clang-format off
 // cCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
 // shot%s left)", "General's Options", "View Opposing General", "View %s
@@ -561,7 +558,6 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_NO_SHOTS = 8,
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
-// clang-format on
 // Command help lines for CombatMessage(short) (0x00493b38).
 extern char* cCombatMessage[];
 // Combat help lines for the auto-combat, skip and other controls.

@@ -78,8 +78,14 @@ StatementMacros:
 # listed above.
 WhitespaceSensitiveMacros:
   - VA_COMPGEN
-# H1_ENUM_* expand to enum braces; without these definitions clang-format
+# Every H1_ENUM_* BEGIN/END form expands to enum braces; without these definitions clang-format
 # folds every enumerator block into its neighbours.
 Macros:
   - H1_ENUM_BEGIN(name)=enum name {
   - H1_ENUM_END(name)=};
+  - H1_ENUM_BEGIN_SPLIT(name, storage)=enum name {
+  - H1_ENUM_END_SPLIT(name)=};
+  - H1_ENUM_FLAGS_BEGIN(name, storage)=enum name {
+  - H1_ENUM_FLAGS_END(name)=};
+  - H1_ENUM_CONST_BEGIN(name)=enum name {
+  - H1_ENUM_CONST_END(name)=};

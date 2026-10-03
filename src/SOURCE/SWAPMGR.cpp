@@ -13,7 +13,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// clang-format off
 // swapwin.bin widget ids (Buka 2.1 SWAPMGR.cpp SwapManagerControl; HoMM1 has
 // no secondary skills). LEFT is the constructor's first hero, m_heroes[SWAP_SIDE_LEFT].
 H1_ENUM_BEGIN(SwapManagerControl)
@@ -56,12 +55,11 @@ H1_ENUM_CONST_BEGIN(SwapManagerConstant)
     SWAP_SLOT_NONE = -1,
     SWAP_ARTIFACTS_PER_COLUMN = 7
 H1_ENUM_CONST_END(SwapManagerConstant)
-                  // clang-format on
 
-                  // Buka 2.1 swapManager::swapManager(void).
-                  // @dead-code
-                  // Zero-ref: no incoming call, jump or relocated reference in retail.
-                  VA(0x0046ecb0, 0x75)
+// Buka 2.1 swapManager::swapManager(void).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046ecb0, 0x75)
 swapManager::swapManager(void) {
     m_window = NULL;
     m_selectorIcon = NULL;

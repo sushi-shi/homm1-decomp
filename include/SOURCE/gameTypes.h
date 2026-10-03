@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // game object table extents (players, towns, heroes, mines, boats); the
 // per-player records size their town lists and locators with them too.
 H1_ENUM_CONST_BEGIN(GameStorageConstant)
@@ -46,6 +45,5 @@ H1_ENUM_CONST_BEGIN(GameCalendarConstant)
     CALENDAR_DAYS_PER_MONTH = 28,
     CALENDAR_WEEKS_PER_MONTH = 4
 H1_ENUM_CONST_END(GameCalendarConstant)
-// clang-format on
 
 #endif

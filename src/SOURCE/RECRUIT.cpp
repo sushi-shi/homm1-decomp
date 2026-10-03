@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // Buka RecruitConstant (HoMM1 values): window and dialog positions and
 // SetupRecruitWin's text buffers.
 H1_ENUM_CONST_BEGIN(RecruitConstant)
@@ -45,7 +44,6 @@ H1_ENUM_BEGIN(RecruitControl)
     RECRUIT_RESOURCE_IMAGE_CONTROL = 0x4e,
     RECRUIT_RESOURCE_TOTAL_CONTROL = 0x4f
 H1_ENUM_END(RecruitControl)
-// clang-format on
 
 // Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
 // sets the creature portrait by frame rather than by icon name.

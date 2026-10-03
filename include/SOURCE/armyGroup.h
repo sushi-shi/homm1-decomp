@@ -11,7 +11,6 @@
 class hero;
 class town;
 
-// clang-format off
 // Buka ArmyGroupConstant: Add's "any slot" argument, the five troop slots,
 // IsHomogeneous' race table (creature / CREATURE_FACTION_SIZE: four town
 // races and the neutrals) and GetMorale's clamp.
@@ -34,7 +33,6 @@ H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_NO_BONUS_LAST = 0,
     ARMY_GROUP_ALIGNMENT_SAME = 1
 H1_ENUM_END(ArmyGroupAlignmentResult)
-// clang-format on
 
 #pragma pack(push, 1)
 class armyGroup {

@@ -197,7 +197,6 @@ int EarlySetup(void) {
     return 1;
 }
 
-// clang-format off
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_NONE = -1,
@@ -225,12 +224,11 @@ H1_ENUM_CONST_BEGIN(NetPositionConstant)
     NET_POSITION_NONE = -1,
     NET_POSITION_HOST = 0
 H1_ENUM_CONST_END(NetPositionConstant)
-                     // clang-format on
 
-                     // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
-                     // menu (new, load, campaign, high scores, credits, quit), one network
-                     // handshake and the campaign replay/next-scenario loop.
-                     VA(0x0045015c, 0xe22)
+// Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
+// menu (new, load, campaign, high scores, credits, quit), one network
+// handshake and the campaign replay/next-scenario loop.
+VA(0x0045015c, 0xe22)
 int oldmain(void) {
     char saveBuf[20];
     H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[GAME_END_SEQUENCE_COUNT];
@@ -1723,7 +1721,6 @@ void ReceiveRemotePlayerExit(
 // donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
-// clang-format off
 // playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
 // losing the last town starts a GRACE_DAYS countdown (Buka
 // END_GAME_GRACE_DAYS) that game::NewDay runs down to elimination.
@@ -1731,9 +1728,8 @@ H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
     END_GAME_NO_GRACE_PERIOD = -1,
     END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
 H1_ENUM_CONST_END(CheckEndGameConstant)
-                            // clang-format on
 
-                            VA(0x00453174, 0x7d4)
+VA(0x00453174, 0x7d4)
 void CheckEndGame(int forced) {
     town* goalTown;
     hero* artifactHero;
@@ -1993,7 +1989,6 @@ void InitVars(void) {
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
-// clang-format off
 // KB's morale-screen text table; the five-alignment line was appended last.
 H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_GOOD = 0,
@@ -2018,7 +2013,6 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_NONE = 19,
     MORALE_INFO_FIVE_ALIGNMENTS = 20
 H1_ENUM_END(MoraleInfoText)
-// clang-format on
 
 VA(0x00453ba8, 0x450)
 void game::ShowMoraleInfo(hero* h, int dialogType) {
@@ -2089,7 +2083,6 @@ void game::ShowMoraleInfo(hero* h, int dialogType) {
     NormalDialog(gText, dialogType);
 }
 
-// clang-format off
 // KB's luck-screen text table: three verdicts, a header, then one line per
 // luck source in the order ShowLuckInfo appends them.
 H1_ENUM_BEGIN(LuckInfoText)
@@ -2105,7 +2098,6 @@ H1_ENUM_BEGIN(LuckInfoText)
     LUCK_INFO_FOUNTAIN = 9,
     LUCK_INFO_NONE = 10
 H1_ENUM_END(LuckInfoText)
-// clang-format on
 
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -2154,14 +2146,12 @@ void ClearMapExtra(void) {
 }
 
 // HoMM1 score-to-monster tables pair a threshold word with a monster word.
-// clang-format off
 H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
     SCORE_MONSTER_COUNT = 28,
     SCORE_MONSTER_THRESHOLD = 0,
     SCORE_MONSTER_TYPE = 1
 H1_ENUM_CONST_END(ScoreMonsterConstant)
-    // clang-format on
-    VA(0x0045425f, 0x8e)
+VA(0x0045425f, 0x8e)
 short GetMonType(int score, int highScoreType) {
     int index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
@@ -2294,7 +2284,6 @@ signed char WaitForOtherPlayer(void) {
     return result;
 }
 
-// clang-format off
 // netbox.bin text widgets: the two scrolled chat lines (cNetBoxLine) and the
 // line being typed.
 H1_ENUM_BEGIN(NetBoxControl)
@@ -2309,12 +2298,11 @@ H1_ENUM_CONST_BEGIN(NetBoxConstant)
     NET_BOX_BLINK_TIMER_SLOT = 0,
     NET_BOX_BLINK_DELAY = 360
 H1_ENUM_CONST_END(NetBoxConstant)
-    // clang-format on
 
-    // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
-    // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-    // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
-    VA(0x0045485b, 0x6f4)
+// donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
+// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
+VA(0x0045485b, 0x6f4)
 void PopNetBox(char* notice) {
     char* data;
     signed char blinkState;
@@ -2569,7 +2557,6 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// clang-format off
 // congspre.bin / congrats.bin text widgets: the title (or the campaign's win
 // text), the five gScoreLabels captions, and the standard game's days, base
 // score, difficulty, final score and creature rating.
@@ -2586,12 +2573,11 @@ H1_ENUM_END(CongratsControl)
 H1_ENUM_CONST_BEGIN(CongratsConstant)
     CONGRATS_SCORE_LABEL_COUNT = 5
 H1_ENUM_CONST_END(CongratsConstant)
-    // clang-format on
 
-    // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
-    // scenario's win text; standard games score the days played, rank the result
-    // as a creature and file it with the high scores.
-    VA(0x00455123, 0x3be)
+// HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
+// scenario's win text; standard games score the days played, rank the result
+// as a creature and file it with the high scores.
+VA(0x00455123, 0x3be)
 void ShowCongrats(void) {
     char name[32];
     int i;
@@ -2676,13 +2662,11 @@ void CongratsWait(void) {
     }
 }
 
-// clang-format off
 // dataentr.bin widgets: the prompt text and the edit field.
 H1_ENUM_BEGIN(DataEntryControl)
     DATA_ENTRY_PROMPT = 1,
     DATA_ENTRY_TEXT = 10
 H1_ENUM_END(DataEntryControl)
-    // clang-format on
 
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
 VA(0x00455592, 0x1c7)

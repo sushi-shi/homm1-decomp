@@ -661,7 +661,6 @@ short game::LoadGame(char* filename, int origData, int) {
     return 1;
 }
 
-// clang-format off
 // newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);
 // difficulty buttons are FIRST + game::m_difficulty. OK and CANCEL are role
 // names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
@@ -709,7 +708,6 @@ H1_ENUM_BEGIN(NewGameHelp)
     NEW_GAME_HELP_RATING = 7,
     NEW_GAME_HELP_HUMAN_OPPONENT = 8
 H1_ENUM_END(NewGameHelp)
-// clang-format on
 
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
@@ -938,7 +936,6 @@ void game::UpdateNewGameWindow(void) {
     m_newGameWindow->BroadcastMessage(message);
 }
 
-// clang-format off
 // GiveTroopsToNeutralTowns (Buka NeutralTownReinforcementConstant names): a
 // 1..15 roll picks the tier, whose key plus the town type selects the
 // recruit and whose range the count.
@@ -961,11 +958,10 @@ H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
     REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
     REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
 H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
- // clang-format on
 
- // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
- // unowned town on the map gains a random tier of its own creatures.
- VA(0x0043b7e5, 0x2c3)
+// Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
+// unowned town on the map gains a random tier of its own creatures.
+VA(0x0043b7e5, 0x2c3)
 void game::GiveTroopsToNeutralTowns(void) {
     int howMany;
     int die;
@@ -2326,7 +2322,6 @@ short ViewSpecialHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// clang-format off
 // armywin.bin widget ids; Buka ViewArmyControlId names the dismiss (DIALOG_BUTTON_3)
 // and close (DIALOG_BUTTON_0) buttons. The animation icon cycles
 // VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
@@ -2347,12 +2342,11 @@ H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     // glTimers slot the army window's animation runs on.
     VIEW_ARMY_TIMER_SLOT = 0
 H1_ENUM_CONST_END(ViewArmyConstant)
-    // clang-format on
 
-    // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
-    // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-    // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-    VA(0x0043f8cd, 0x8e1)
+// donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
+// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+// evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
+VA(0x0043f8cd, 0x8e1)
 void game::ViewArmy(
     short x,
     short y,
@@ -2619,14 +2613,12 @@ short ViewArmyHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// clang-format off
 // overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
 H1_ENUM_BEGIN(OverviewControl)
     OVERVIEW_RESOURCE_BASE = 1,
     OVERVIEW_DATE = 64,
     OVERVIEW_DAILY_GOLD = 65
 H1_ENUM_END(OverviewControl)
-// clang-format on
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
@@ -3162,7 +3154,6 @@ void game::PerDay(void) {
     }
 }
 
-// clang-format off
 // Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
 // creature week or month picks from, and gNewTurnText's announcement rows.
 H1_ENUM_CONST_BEGIN(CalendarConstant)
@@ -3178,12 +3169,11 @@ H1_ENUM_CONST_BEGIN(CalendarConstant)
     NEW_TURN_TEXT_WEEK_NORMAL = 5,
     NEW_TURN_TEXT_WEEK_CREATURE = 6
 H1_ENUM_CONST_END(CalendarConstant)
- // clang-format on
 
- // Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
- // (computer towns grow faster), refreshes the tavern heroes and restocks the
- // map's renewable sites.
- VA(0x00441e09, 0x84b)
+// Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
+// (computer towns grow faster), refreshes the tavern heroes and restocks the
+// map's renewable sites.
+VA(0x00441e09, 0x84b)
 void game::PerWeek(void) {
     short posY;
     short posX;
@@ -4172,17 +4162,15 @@ void game::WaitForPlayer(char* text, int player) {
     }
 }
 
-// clang-format off
 // Ground tiles come in groups of four interchangeable variants;
 // RandomizeTerrainTiles rerolls the variant within its group.
 H1_ENUM_CONST_BEGIN(TerrainTileConstant)
     TERRAIN_TILE_VARIANT_COUNT = 4
 H1_ENUM_CONST_END(TerrainTileConstant)
-    // clang-format on
 
-    // HoMM1 rerolls the variant within each four-tile group, past the first
-    // four tiles of every twenty-tile terrain block.
-    VA(0x00444ebb, 0xb2)
+// HoMM1 rerolls the variant within each four-tile group, past the first
+// four tiles of every twenty-tile terrain block.
+VA(0x00444ebb, 0xb2)
 void game::RandomizeTerrainTiles(void) {
     mapCell* cellPtr;
     // Retail reserves an unused slot above the loop counters.
@@ -4425,7 +4413,6 @@ void game::CheckHeroConsistency(void) {
     }
 }
 
-// clang-format off
 // REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
 // size (BOX_REMOTE_SAVE, answered by REMOTE_COMMAND_SAVE_INIT_RESPONSE),
 // streams SEGMENT_SIZE-byte segments (SAVE_DATA), asks for each
@@ -4442,15 +4429,14 @@ H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
     REMOTE_SAVE_TRANSFER_SOUNDS = 8
 H1_ENUM_CONST_END(RemoteSaveConstant)
- // clang-format on
 
- // donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
- // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
- // evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
+// donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
+// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
 
- // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
- // segments, 100 segments per acknowledged block.
- VA(0x004459a5, 0x6e9)
+// Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
+// segments, 100 segments per acknowledged block.
+VA(0x004459a5, 0x6e9)
 int game::TransmitSaveGame(int remotePlayer, int playerExited) {
     int okay;
     char pathname[456];

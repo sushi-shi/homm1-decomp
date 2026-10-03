@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // mapCell::m_objectMetadata payloads DoEvent/DoAIEvent decode per object
 // (Buka EVENTS.h MapObjectEncodingConstant, HoMM1 numbering): campfire
 // packed resource/amount, skeleton, artifact pickup modes, daemon cave
@@ -127,7 +126,6 @@ H1_ENUM_CONST_BEGIN(CombatFlowConstant)
     COMBAT_RANDOM_SEED_NEW = -1,
     COMBAT_RANDOM_SEED_MAX = 1000
 H1_ENUM_CONST_END(CombatFlowConstant)
-// clang-format on
 
 // EVENTS data (Buka EVENTS.h owner): the assertion records (file literals and
 // line base, as in MOUSEMGR), the parked music volume DoEvent and DoCombat

@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // mapCell::m_triggerType: the low seven bits select the object, the high bit
 // marks the cell whose entry runs the object's event (DoEvent dispatches on
 // the masked type only when the bit is set; RandomizeEvents clears it from
@@ -124,6 +123,5 @@ H1_ENUM_BEGIN(MapFileObjectType)
     MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG = 70,
     MAP_FILE_OBJECT_HERO = 71
 H1_ENUM_END(MapFileObjectType)
-// clang-format on
 
 #endif // HOMM1_SOURCE_MAPOBJECTTYPES_H

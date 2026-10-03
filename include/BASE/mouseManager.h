@@ -10,14 +10,12 @@
 struct tag_message;
 class bitmap;
 
-// clang-format off
 // SetPointer frame that leaves the current pointer alone: SetPointer returns
 // for any negative frame (TOWNMGR Close and ADVMGR pass it; Buka
 // MOUSE_INVALID_CURSOR_FRAME).
 H1_ENUM_CONST_BEGIN(MouseCursorFrameConstant)
     MOUSE_INVALID_CURSOR_FRAME = -1
 H1_ENUM_CONST_END(MouseCursorFrameConstant)
-// clang-format on
 
 #pragma pack(push, 1)
                                class mouseManager : public baseManager {

@@ -9,8 +9,6 @@
 #include <SOURCE/creatureTypes.h>
 #include <SOURCE/spellTypes.h>
 
-// clang-format off
-
 // army::m_animationSequence: the pose army::DrawToBuffer draws. 0 stands
 // (std icon), 1 walks (wlk icon, Walk and FlyTo), 2 attacks (atk/std
 // icon, SpecialAttack), 3 shows a PowEffect/SpellEffect hit.
@@ -30,7 +28,6 @@ H1_ENUM_BEGIN(ArmySampleType)
     ARMY_SAMPLE_SHOOT = 3,
     ARMY_SAMPLE_COUNT = 4
 H1_ENUM_END(ArmySampleType)
-
 
 // army::m_spellEndCondition: what ends m_spellEffect early (Buka
 // ArmySpellCancelType numbering); Init and CancelSpell store NONE.
@@ -84,7 +81,6 @@ H1_ENUM_BEGIN(ArmyLuck)
     ARMY_LUCK_NONE = 0,
     ARMY_LUCK_GOOD = 1
 H1_ENUM_END(ArmyLuck)
-// clang-format on
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.

@@ -9,14 +9,18 @@
 #include <stdlib.h>
 #include <string.h>
 
-
 H1_ENUM_CONST_BEGIN(SampleLoadConstant)
-SAMPLE_FILENAME_CAPACITY = 32, SAMPLE_FORMAT_SUFFIX_LENGTH = 3, SAMPLE_LOAD_RATE_11025 = 11025,
-                               SAMPLE_LOAD_RATE_22050 = 22050, SAMPLE_LOAD_RATE_44100 = 44100,
-                               SAMPLE_LOAD_FORMAT_8_BIT = 0, SAMPLE_LOAD_FORMAT_16_BIT = 1,
-                               SAMPLE_LOAD_STEREO = 2 H1_ENUM_CONST_END(SampleLoadConstant)
+    SAMPLE_FILENAME_CAPACITY = 32,
+    SAMPLE_FORMAT_SUFFIX_LENGTH = 3,
+    SAMPLE_LOAD_RATE_11025 = 11025,
+    SAMPLE_LOAD_RATE_22050 = 22050,
+    SAMPLE_LOAD_RATE_44100 = 44100,
+    SAMPLE_LOAD_FORMAT_8_BIT = 0,
+    SAMPLE_LOAD_FORMAT_16_BIT = 1,
+    SAMPLE_LOAD_STEREO = 2
+H1_ENUM_CONST_END(SampleLoadConstant)
 
-                                   VA(0x0047fa60, 0x17d)
+VA(0x0047fa60, 0x17d)
 sample::sample(char* name, long channelType, long volume, long loopCount)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,

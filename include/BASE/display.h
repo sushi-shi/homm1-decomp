@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // The 640x480 logical screen that heroWindowManager draws and updates,
 // as in HoMM2 Buka's BASE/display.h.
 H1_ENUM_CONST_BEGIN(LogicalScreenConstant)
@@ -17,6 +16,5 @@ H1_ENUM_CONST_BEGIN(PaletteFormatConstant)
     PALETTE_COLOR_COUNT = 256,
     COLOR_INDEX_MASK = 0xff
 H1_ENUM_CONST_END(PaletteFormatConstant)
-// clang-format on
 
 #endif // HOMM1_BASE_DISPLAY_H

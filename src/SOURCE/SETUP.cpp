@@ -19,7 +19,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// clang-format off
 H1_ENUM_BEGIN(SetupDialogResult)
     DIALOG_CANCEL = 0x7801
 H1_ENUM_END(SetupDialogResult)
@@ -40,8 +39,8 @@ H1_ENUM_BEGIN(SetupHelpIndex)
     HELP_FIRST = 0
 H1_ENUM_END(SetupHelpIndex)
 
-// Each setup handler's help row (the gSetup*Help table texts name them); the
-// rows follow CHOICE_ONE.. and end with the cancel row.
+    // Each setup handler's help row (the gSetup*Help table texts name them); the
+    // rows follow CHOICE_ONE.. and end with the cancel row.
 
 // gSetupCampaignGameHelp: the four campaign heroes.
 H1_ENUM_BEGIN(SetupCampaignHelp)
@@ -109,7 +108,6 @@ H1_ENUM_BEGIN(SetupGameHelp)
     SETUP_GAME_HELP_MULTIPLAYER = 2,
     SETUP_GAME_HELP_CANCEL = 3
 H1_ENUM_END(SetupGameHelp)
-// clang-format on
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
