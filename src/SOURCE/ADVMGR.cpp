@@ -1970,13 +1970,13 @@ VA(0x004291de, 0xc02)
 int advManager::ProcessHover(struct tag_message* message) {
     short curX;
     short curY;
-    short heroPosX;
-    short heroPosY;
     town* pTown;
     hero* hero;
     mapCell* cell;
     int nDays;
     signed char trigType;
+    short heroPosX;
+    short heroPosY;
     int baseFrame;
 
     switch (message->id) {
@@ -4813,8 +4813,8 @@ void advManager::DoHeroKnob(void) {
     short numHeroes;
     signed char prevPage;
     short x;
-    short offset;
     short my;
+    short offset;
 
     gpMouseManager->SetCursorShape(4);
     prevPage = gpCurPlayer->m_heroLocatorPage;
@@ -6712,10 +6712,10 @@ void advManager::SummonBoat(void) {
     short slotIndex;
     signed char heroNum;
     mapCell* fromCell;
-    short drawX;
-    short drawY;
     short drawHeight;
+    short drawY;
     short drawWidth;
+    short drawX;
 
     pHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
     foundCell = 0;
