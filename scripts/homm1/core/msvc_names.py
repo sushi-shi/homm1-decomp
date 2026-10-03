@@ -14,7 +14,11 @@ Two directions over the same vocabulary:
       2. array storage class - clang spells a top-level array `@@<d>Q` (const
          pointer), cl 5.0 `@@<d>P`;
       3. TU-local storage - cl's `outdname` wraps a datum with no external
-         linkage as `_<mangled>$S<n>`; the `<n>` is dropped (see MASK).
+         linkage as `_<mangled>$S<n>`; the `<n>` is dropped (see MASK);
+      4. multi-dimensional array element qualifiers - clang spells a cv
+         element of an `[m][n]` array `Y<dims>$$CB<type>`, cl 5.0 omits the
+         qualifier: `const signed char gTownObjectType[4][16]` is cl's
+         `?gTownObjectType@@3PAY0BA@CA` (SOURCE/TOWNMGR's own definition).
 
   * MASK (joining). cl stamps a per-object CodeView counter onto every TU-local
     datum (`name$S<n>`) and numbers a function-local static's enclosing lexical
@@ -37,6 +41,9 @@ import hashlib
 
 #: clang's top-level-array storage class, at the mangled storage-class digit.
 ARRAY_STORAGE = re.compile(r"@@([0-9])Q")
+#: clang's cv-qualified element of a multi-dimensional array type, which cl
+#: does not encode: `Y` + dimension count + dimensions, then `$$C<cv>`.
+ARRAY_ELEMENT_CV = re.compile(r"(@@[0-9][PQ][A-D]Y(?:[0-9]|[A-P]+@)+)\$\$C[A-D]")
 #: cl's per-object CodeView counter on a TU-local datum. Every occurrence is
 #: volatile, not just the trailing one (a function-local static's guard byte is
 #: spelled `?$S<n>@?<scope>??<fn>@4EA$S<n>`). A name that is NOTHING BUT `$S<n>`
@@ -72,7 +79,7 @@ def data(name: str, *, internal: bool, decorated: bool = False) -> str:
     namespace-scope `const`, and a function-local static all reach the object
     as `_<mangled>$S<n>`, whatever their mangling.
     """
-    out = ARRAY_STORAGE.sub(r"@@\1P", name)
+    out = ARRAY_ELEMENT_CV.sub(r"\1", ARRAY_STORAGE.sub(r"@@\1P", name))
     if not decorated:
         out = decorate(out)
     if internal:
