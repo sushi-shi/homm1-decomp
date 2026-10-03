@@ -69,9 +69,17 @@ those pinned buckets.
 - **Prediction against traced colourings** at random region offsets: SetMusicQuality
   12/12, `heroWindowManager::AddWindow` 8/8, `searchArray::FindNearestObject` 8/8,
   `inputManager::Open` 8/8.
-- **Where prediction fails.** `searchArray::SeedPosition` matched 1/8. It re-runs the
-  allocator after inserting spill code (7 passes), and the offsets change those spills,
-  so the last pass's graph is not invariant. The replay needs a spill-code model there.
+- **Spill rounds.** `searchArray::SeedPosition` re-runs the allocator after inserting
+  spill code: 7 passes in 3 rounds (each round tries both spill metrics, then re-runs
+  the one with the smaller spilled weight). `rasolve` replays every round and continues
+  only while the predicted spill set equals the traced one; the base state replays
+  exactly. Under TU offsets, though, SeedPosition's graph itself changes (15 of 16
+  sampled offsets): its statics and parameters feed the operand sort, so the IL that
+  reaches the allocator differs, and no allocator-only replay can predict it. `rasolve`
+  reports such states as graph changes.
+- **SeedPosition measured.** After-include offsets 0..600 give at best 10 diff lines
+  (offsets 69, 103, 326, 549, 583; base 15) and never 0. Single moves of its 24 static
+  declarations (`.bss` order is name-hashed, so the move is data-neutral) reach only 24.
 
 ## Using it
 
@@ -103,6 +111,7 @@ those pinned buckets.
 
 - How C2 picks the fixed buckets of the symbols it creates (`0xc` for the reversed-loop
   counter, multiples of 4 in SEARCH).
-- Multi-pass spill replay. That is the next step for SeedPosition.
+- Predicting allocator input when the operand sort changes the IL (sortsim and rasim
+  combined). SeedPosition needs it.
 - `/Od` units have no register allocation. `advManager::DrawCell`'s `|=` residue (ADVMGR
   is `/Od`) belongs to the sortnode replay, not here.

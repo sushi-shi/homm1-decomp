@@ -99,11 +99,40 @@ class Work:
         return obj
 
 
-def last_pass(trace_path, il_prefix, func):
+def all_passes(trace_path, il_prefix, func):
     fns = rasim.parse(trace_path)
     names = il.globals_by_handle(il_prefix)
     h, passes = rasim.find(fns, names, func)
-    return [p for p in passes if p.work][-1]
+    return [p for p in passes if p.work]
+
+
+def last_pass(trace_path, il_prefix, func):
+    return all_passes(trace_path, il_prefix, func)[-1]
+
+
+def rounds(passes):
+    """Group allocator passes into rounds: consecutive passes over the same graph (the driver
+    tries both spill metrics, then re-runs the chosen one); a round ends when spill code
+    changes the graph."""
+    out = []
+    for p in passes:
+        key = (frozenset(w[0] for w in p.work), frozenset((a, b) for a, s in p.edges.items() for b in s))
+        if out and out[-1][0] == key:
+            out[-1][1].append(p)
+        else:
+            out.append((key, [p]))
+    return [ps for _k, ps in out]
+
+
+def spilled(p, colour=None):
+    colour = p.colour if colour is None else colour
+    return frozenset(w[0] for w in p.work if w[0] not in colour)
+
+
+def pass_mode(p):
+    """(K, metric) that reproduces a traced pass."""
+    got = [r[0] for r in p.removed]
+    return next(((k, m) for k in (6, 7) for m in (3, 4) if rasim.simplify(p, k, metric_kind=m) == got), None)
 
 
 def regions(base, probes):
@@ -136,6 +165,48 @@ def w_d(ps, i):
     return None
 
 
+def renumber(base, reg, shifts):
+    """{base range id: id after shifting each region's buckets}."""
+    rank0 = {i: n for n, (i, _b, _t) in enumerate(base.ids)}
+    nb = {i: (b + sum(shifts[p] for p in reg[i])) % 32 for i, b, _t in base.ids}
+    newer = lambda i: -len(reg[i])
+    order_ids = sorted(nb, key=lambda i: (nb[i], newer(i), rank0[i]))
+    return {i: 0x4020 + n for n, i in enumerate(order_ids)}
+
+
+def list_order(p, newid):
+    nid = lambda i: newid.get(i, i)
+    temps = [i for i in p.order if i >= 0x8000]
+    users = sorted((w[0] for w in p.work if w[0] < 0x8000), key=lambda i: (-(nid(i) & 31), nid(i)))
+    return temps + users
+
+
+def predict_rounds(passes, reg, shifts):
+    """Final colouring after replaying every allocator round under shifted ids, or None when
+    a round's chosen spill set differs from the traced one (the next graph is then unknown).
+    Within a round C2 runs both spill metrics and keeps the smaller spilled weight."""
+    base = passes[0]
+    newid = renumber(base, reg, shifts)
+    rs = rounds(passes)
+    for n, rp in enumerate(rs):
+        g = rp[-1]
+        if n == len(rs) - 1:
+            k, m = pass_mode(g)
+            return rasim.select(g, rasim.simplify(g, k, order=list_order(g, newid), metric_kind=m))
+        weight = {i: w for i, _d, w in g.work}
+        best = None
+        for p in rp[:-1] or rp:
+            k, m = pass_mode(p)
+            col = rasim.select(g, rasim.simplify(g, k, order=list_order(g, newid), metric_kind=m))
+            sp = spilled(g, col)
+            cost = sum(weight[i] for i in sp)
+            if best is None or cost < best[0]:
+                best = (cost, sp)
+        if best[1] != spilled(g):
+            return None
+    return None
+
+
 def predict(base, reg, shifts, k, mk):
     """Colouring {range id: reg} after shifting each region's buckets."""
     rank0 = {i: n for n, (i, _b, _t) in enumerate(base.ids)}
@@ -148,7 +219,7 @@ def predict(base, reg, shifts, k, mk):
     # ranges numbered elsewhere (spill/temporary user ids) keep their ids; the list runs
     # by id & 31 from bucket 31 down
     nid = lambda i: newid.get(i, i)
-    users = sorted((i for i in work_ids if i < 0x8000), key=lambda i: (-(nid(i) & 31), -nid(i)))
+    users = sorted((i for i in work_ids if i < 0x8000), key=lambda i: (-(nid(i) & 31), nid(i)))
     rem = rasim.simplify(base, k, order=temps + users, metric_kind=mk)
     return rasim.select(base, rem)
 
@@ -173,42 +244,54 @@ def main(argv: list[str] | None = None) -> int:
     retail = objdis.normalized(objdis.retail_obj(a.unit), a.func)
 
     tr, ilp, obj = W.traced(text, 'base')
-    base = last_pass(tr, ilp, a.func)
-    k, mk = next((kk, m) for kk in (6, 7) for m in (3, 4)
-                 if rasim.simplify(base, kk, metric_kind=m) == [r[0] for r in base.removed])
+    passes = all_passes(tr, ilp, a.func)
+    base = passes[0]
+    k, mk = pass_mode(passes[-1])
     probes = []
     for n, p in enumerate(points):
         cnt = [1 if q == n else 0 for q in range(len(points))]
         ptr, pil, _ = W.traced(realise(text, offs, cnt), f'probe{n}')
-        probes.append(last_pass(ptr, pil, a.func))
+        probes.append(all_passes(ptr, pil, a.func)[0])
     reg = regions(base, probes)
     names = {i: f'{i:x}(b{b:x},{"".join(str(p) for p in sorted(reg[i])) or "-"})' for i, b, _t in base.ids}
-    print(f'[rasolve] {a.unit} {a.func}: K={k} m{mk}; points {points}')
+    print(f'[rasolve] {a.unit} {a.func}: {len(passes)} passes in {len(rounds(passes))} rounds; points {points}')
     print('[rasolve] ranges (id(bucket,regions)):', ' '.join(names[i] for i, _b, _t in base.ids))
     print('[rasolve] base distance', objdis.distance(obj, a.unit, a.func, retail))
 
     if a.validate:
         import random
         rnd = random.Random(1)
-        ok = 0
+        ok = unk = chg = 0
         sig = lambda ps, i: (next((t for j, _b, t in ps.ids if j == i), None), w_d(ps, i))
         for n in range(a.validate):
             s = tuple(rnd.randrange(a.grid) for _ in points)
-            col = predict(base, reg, s, k, mk)
+            col = predict_rounds(passes, reg, s)
             ptr, pil, _ = W.traced(realise(text, offs, list(s)), 'val_' + '_'.join(map(str, s)))
             got = last_pass(ptr, pil, a.func)
-            want = sorted((sig(base, i), c) for i, c in col.items() if any(i == j for j, _b, _t in base.ids))
+            gp = all_passes(ptr, pil, a.func)
+            same_graph = [sorted((w[1], w[2]) for w in q.work) for q in gp] == \
+                [sorted((w[1], w[2]) for w in q.work) for q in passes]
+            if not same_graph:
+                chg += 1
+                print(f'  validate {s}: the traced graphs differ (operand order / IL changed), not an RA prediction')
+                continue
+            if col is None:
+                unk += 1
+                print(f'  validate {s}: spill set changes (not predicted)')
+                continue
+            want = sorted((sig(passes[-1], i), c) for i, c in col.items() if any(i == j for j, _b, _t in base.ids))
             have = sorted((sig(got, i), c) for i, c in got.colour.items() if any(i == j for j, _b, _t in got.ids))
             same = want == have
             ok += same
             if not same:
                 print(f'  validate {s}: predicted != traced')
-        print(f'[rasolve] validation: {ok}/{a.validate} traced colourings predicted exactly')
+        print(f'[rasolve] validation: {ok}/{a.validate - unk - chg} predicted colourings matched the trace; '
+              f'{unk} states change the spill set; {chg} states change the graph itself')
 
     classes = {}
     for shifts in itertools.product(range(a.grid), repeat=len(points)):
-        col = predict(base, reg, shifts, k, mk)
-        key = tuple(sorted((i, c) for i, c in col.items() if c > 2))
+        col = predict_rounds(passes, reg, shifts)
+        key = ('spill set changes',) if col is None else tuple(sorted((i, c) for i, c in col.items() if c > 2))
         classes.setdefault(key, []).append(shifts)
     print(f'[rasolve] {len(classes)} predicted colouring classes over {a.grid ** len(points)} offset combinations')
     for key, shifts in sorted(classes.items(), key=lambda kv: -len(kv[1])):
@@ -216,7 +299,7 @@ def main(argv: list[str] | None = None) -> int:
         for s in shifts[:a.verify]:
             o = W.compiled(realise(text, offs, list(s)), 'v_' + '_'.join(map(str, s)))
             dists.append((s, objdis.distance(o, a.unit, a.func, retail)))
-        desc = ' '.join(f'{i:x}={rasim.REG[c]}' for i, c in key)
+        desc = key[0] if key and isinstance(key[0], str) else ' '.join(f'{i:x}={rasim.REG[c]}' for i, c in key)
         print(f'  class {desc}: {len(shifts)} combos, e.g. {shifts[0]}; measured {dists}')
     return 0
 
