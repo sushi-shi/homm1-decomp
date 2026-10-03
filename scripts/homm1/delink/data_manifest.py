@@ -78,6 +78,8 @@ ORDINARY_STORAGE = {".data": "data", ".rdata": "rdata"}
 FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
 #: The CRT's absolute SEH-chain head, `fs:[__except_list]` in /GX code.
 EXCEPT_LIST = "__except_list"
+#: cl's pooled (/Gf) string literal spelling: the payload is the name.
+POOLED_LITERAL_NAME = re.compile(r"^\?\?_C@.*$")
 #: cl's unpooled (no /Gf) string literal spelling.
 SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+$")
 #: literal family -> (cl's member spelling, manifest name prefix, provenance,
@@ -386,7 +388,7 @@ def claim_rows(model: Model, tail_oracle) -> tuple[list, list, Counter]:
     return rows, withheld, skipped
 
 
-def string_rows(base_dir=BASE_DIR):
+def string_rows(base_dir=BASE_DIR, model: Model | None = None):
     """Enrollable `??_C@` string-literal definitions + the withheld ones.
 
     Both facts are PROVEN: the retail RVA comes from content-matching each
@@ -395,9 +397,13 @@ def string_rows(base_dir=BASE_DIR):
     that defines the literal. A payload emitted by SEVERAL units enrolls once
     PER OWNING UNIT (that is what a COMDAT is - the linker folded all of them
     onto one rva). Identical payloads at two retail RVAs collide on one
-    content-derived name; both are withheld.
+    content-derived name; both are withheld unless (given the `model`) the
+    relocation-paired referrers of that name, across every owning unit,
+    agree on exactly one of those rvas.
     """
     owners: dict[bytes, dict[str, str]] = defaultdict(dict)
+    votes: dict[str, set[int]] = defaultdict(set)
+    maps = _referrer_maps(model) if model is not None else None
     for stem, c in coffx.objects(base_dir):
         for idx, value, secnum in c.iter_symbols():
             name = c.sym_name(idx)
@@ -405,6 +411,10 @@ def string_rows(base_dir=BASE_DIR):
                 cs = c.cstring(secnum, value)
                 if cs is not None:
                     owners[cs][stem] = name
+        if maps is not None:
+            for name, seen in _paired_votes(c, POOLED_LITERAL_NAME,
+                                            *maps).items():
+                votes[name] |= seen
 
     img = retail()
     rows, withheld, by_name = [], [], defaultdict(list)
@@ -427,6 +437,13 @@ def string_rows(base_dir=BASE_DIR):
                  "provenance": "candidate-COFF-string"})
     for name, group in by_name.items():
         addrs = {r["rva"] for r in group}
+        if len(addrs) > 1 and len(votes.get(name, ())) == 1 \
+                and votes[name] <= addrs:
+            chosen = next(iter(votes[name]))
+            group = [r for r in group if r["rva"] == chosen]
+            for r in group:
+                r["provenance"] = "candidate-COFF-string"
+            addrs = {chosen}
         if len(addrs) == 1:
             rows += group
         else:
@@ -665,6 +682,102 @@ def ehfuncinfo_rows(model: Model):
     return rows, withheld
 
 
+def _referrer_maps(model: Model):
+    """(known, fn_extent, data_rva): every claimed symbol's rva, and the
+    claimed functions' and data's own rva (+ size for functions), all keyed
+    by the MASKED name so a base obj's own relocation symbol (cl's CodeView
+    counter intact) meets the Model's canonical one."""
+    from homm1.delink.pdb_synth import UNIT_CHANNELS
+    known, fn_extent, data_rva = {}, {}, {}
+    for b in model.functions:
+        if b.channel in UNIT_CHANNELS and b.name:
+            known[msvc_names.mask(b.name)] = b.rva
+            fn_extent[msvc_names.mask(b.name)] = (b.rva, b.size)
+    for b in model.data:
+        if not b.channel or not b.name:
+            continue
+        known.setdefault(msvc_names.mask(b.name), b.rva)
+        data_rva.setdefault(msvc_names.mask(b.name), b.rva)
+    return known, fn_extent, data_rva
+
+
+def _paired_votes(c, member_re, known, fn_extent, data_rva):
+    """{member: {rva, ...}} - the retail address each relocation-paired
+    referrer of a `member_re` symbol of base obj `c` reaches (see
+    fp_pool_rows for the pairing and its corroboration)."""
+    import struct
+
+    img = retail()
+    sites = img.reloc_sites
+    votes: dict[str, set[int]] = defaultdict(set)
+    for sec in c.section_table:
+        code = bool(sec["characteristics"] & MEM_EXECUTE)
+        if not code and (ORDINARY_STORAGE.get(sec["name"]) is None
+                         or sec["characteristics"] & LNK_COMDAT):
+            continue
+        # `__except_list` is the absolute fs:[0] slot (value 0): the
+        # linker leaves no base relocation for it, so it has no retail
+        # partner and would shift every later pair of a /GX function.
+        rel = {site: nm for site, (nm, typ)
+               in c.typed_relocations(sec["index"]).items()
+               if typ == COFF_DIR32 and nm != EXCEPT_LIST}
+        if not rel:
+            continue
+        text = c.section_payload(sec["index"])
+        # The referrers: claimed functions in code, and claimed data
+        # (a table of literal pointers) in .data/.rdata, whose extent is
+        # cl's own member span.
+        if code:
+            referrers = [(off, fn_extent.get(msvc_names.mask(name)))
+                         for off, name in c.defined_symbols(sec["index"])]
+        else:
+            members = c.section_members(sec["index"])
+            starts = sorted({o for o, _n, _s in members})
+            referrers = []
+            for off, name, _scl in members:
+                rva = data_rva.get(msvc_names.mask(name))
+                if rva is not None:
+                    end = next((o for o in starts if o > off), sec["size"])
+                    referrers.append((off, (rva, end - off)))
+        for off, hit in referrers:
+            if hit is None:
+                continue
+            rva, size = hit
+            mine = sorted((s, n) for s, n in rel.items()
+                          if off <= s < off + size)
+            lo = bisect.bisect_left(sites, rva)
+            hi = bisect.bisect_left(sites, rva + size)
+            theirs = sites[lo:hi]
+            if not mine or len(mine) != len(theirs):
+                continue
+            found, corroborated = [], True
+            for (site, sym), target in zip(mine, theirs):
+                at = img.off(target)
+                if at is None:
+                    corroborated = False
+                    break
+                value = struct.unpack("<I", img.data[at:at + 4])[0] \
+                    - img.image_base
+                # The inline addend is signed (`gTable[i - 7]`), and a
+                # literal's own sites carry one too (a double's high
+                # dword is `$T+4`): the member's base is value - addend.
+                addend = struct.unpack("<i", text[site:site + 4])[0]
+                if member_re.fullmatch(sym):
+                    found.append((sym, value - addend))
+                    continue
+                anchor = known.get(msvc_names.mask(sym))
+                if anchor is None:      # not ours to check
+                    continue
+                if value != anchor + addend:
+                    corroborated = False
+                    break
+            if corroborated:
+                for sym, value in found:
+                    votes[sym].add(value)
+
+    return votes
+
+
 def sg_literal_rows(model: Model, base_dir=BASE_DIR):
     """`$SG<n>` string literals, addressed exactly as `fp_pool_rows` addresses
     the FP pool: VC4 does not pool them (no /Gf), so identical payloads sit at
@@ -698,22 +811,10 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
     img = retail()
     sites = img.reloc_sites
 
-    # both maps are keyed by the MASKED name so a base obj's own relocation
-    # symbol (cl's CodeView counter intact) meets the Model's canonical one.
-    from homm1.delink.pdb_synth import UNIT_CHANNELS
-    known, fn_extent = {}, {}
-    for b in model.functions:
-        if b.channel in UNIT_CHANNELS and b.name:
-            known[msvc_names.mask(b.name)] = b.rva
-            fn_extent[msvc_names.mask(b.name)] = (b.rva, b.size)
+    known, fn_extent, data_rva = _referrer_maps(model)
     pins: dict[str, list[tuple[int, int]]] = defaultdict(list)
-    data_rva: dict[str, int] = {}
     for b in model.data:
-        if not b.channel or not b.name:
-            continue
-        known.setdefault(msvc_names.mask(b.name), b.rva)
-        data_rva.setdefault(msvc_names.mask(b.name), b.rva)
-        if b.channel in ("data_compgen", "src_data_compgen") \
+        if b.channel in ("data_compgen", "src_data_compgen") and b.name \
                 and member_re.fullmatch(b.name):
             pins[b.unit].append((b.rva, b.size))
 
@@ -745,71 +846,7 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
         if not pool:
             continue
 
-        votes: dict[str, set[int]] = defaultdict(set)
-        for sec in c.section_table:
-            code = bool(sec["characteristics"] & MEM_EXECUTE)
-            if not code and (ORDINARY_STORAGE.get(sec["name"]) is None
-                             or sec["characteristics"] & LNK_COMDAT):
-                continue
-            # `__except_list` is the absolute fs:[0] slot (value 0): the
-            # linker leaves no base relocation for it, so it has no retail
-            # partner and would shift every later pair of a /GX function.
-            rel = {site: nm for site, (nm, typ)
-                   in c.typed_relocations(sec["index"]).items()
-                   if typ == COFF_DIR32 and nm != EXCEPT_LIST}
-            if not rel:
-                continue
-            text = c.section_payload(sec["index"])
-            # The referrers: claimed functions in code, and claimed data
-            # (a table of literal pointers) in .data/.rdata, whose extent is
-            # cl's own member span.
-            if code:
-                referrers = [(off, fn_extent.get(msvc_names.mask(name)))
-                             for off, name in c.defined_symbols(sec["index"])]
-            else:
-                members = c.section_members(sec["index"])
-                starts = sorted({o for o, _n, _s in members})
-                referrers = []
-                for off, name, _scl in members:
-                    rva = data_rva.get(msvc_names.mask(name))
-                    if rva is not None:
-                        end = next((o for o in starts if o > off), sec["size"])
-                        referrers.append((off, (rva, end - off)))
-            for off, hit in referrers:
-                if hit is None:
-                    continue
-                rva, size = hit
-                mine = sorted((s, n) for s, n in rel.items()
-                              if off <= s < off + size)
-                lo = bisect.bisect_left(sites, rva)
-                hi = bisect.bisect_left(sites, rva + size)
-                theirs = sites[lo:hi]
-                if not mine or len(mine) != len(theirs):
-                    continue
-                found, corroborated = [], True
-                for (site, sym), target in zip(mine, theirs):
-                    at = img.off(target)
-                    if at is None:
-                        corroborated = False
-                        break
-                    value = struct.unpack("<I", img.data[at:at + 4])[0] \
-                        - img.image_base
-                    # The inline addend is signed (`gTable[i - 7]`), and a
-                    # literal's own sites carry one too (a double's high
-                    # dword is `$T+4`): the member's base is value - addend.
-                    addend = struct.unpack("<i", text[site:site + 4])[0]
-                    if member_re.fullmatch(sym):
-                        found.append((sym, value - addend))
-                        continue
-                    anchor = known.get(msvc_names.mask(sym))
-                    if anchor is None:      # not ours to check
-                        continue
-                    if value != anchor + addend:
-                        corroborated = False
-                        break
-                if corroborated:
-                    for sym, value in found:
-                        votes[sym].add(value)
+        votes = _paired_votes(c, member_re, known, fn_extent, data_rva)
 
         def emit(member, rva, storage, size, want, how):
             at = img.off(rva)
@@ -918,7 +955,7 @@ def candidates(model: Model):
     tail_oracle = _candidate_member_storage()
     rows, withheld, skipped = claim_rows(model, tail_oracle)
 
-    strings, w = string_rows()
+    strings, w = string_rows(model=model)
     rows += strings
     withheld += w
     vtables, w = vtable_rows(model)
