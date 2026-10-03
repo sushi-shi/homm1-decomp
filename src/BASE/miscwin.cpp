@@ -301,13 +301,13 @@ void ClippedMonoIconToBitmap(
 // follows the names, not this order.
 static int sClipY;
 static int sClipBottom;
-static int sClipX;
-static unsigned int sClipRun;
 static int sClipRowStart;
 static signed char* sClipRow;
 static IconEntry* sClipEntry;
 static unsigned char* sClipSource;
 static int sClipRight;
+static int sClipX;
+static unsigned int sClipRun;
 static BOOL sClipInside;
 
 VA(0x00473ad0, 0x2ad)
