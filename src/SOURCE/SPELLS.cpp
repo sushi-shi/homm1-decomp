@@ -13,7 +13,9 @@
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
 
+#include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
