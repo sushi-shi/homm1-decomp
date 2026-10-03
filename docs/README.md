@@ -1,7 +1,7 @@
 # Project documentation
 
 - [Build and comparison](build-system.md), [command map](tooling-map.md),
-  [workflow and skills](workflow.md), [Neovim](../editor/nvim/README.md).
+  [workflow and skills](workflow.md).
 - [Compiler evidence/setup](compiler.md), [profiles](compiler-flags.md),
   [candidate linking](linker-flags.md), [relocations](relocations.md).
 - [Score tracking](match-status.md), [permutation](permuter.md),

@@ -100,13 +100,13 @@ def whole_tree(donor: Path):
     rows = []
     for path in paths:
         original = subprocess.check_output(["git", "-C", str(donor), "show", f"{GITEN_REV}:{path}"])
-        dest = mapping.get(path, path.replace("scripts/giten/", "scripts/homm1/")
-                           .replace("editor/nvim/lua/giten/", "editor/nvim/lua/homm1/")
-                           .replace("editor/nvim/plugin/giten.lua", "editor/nvim/plugin/homm1.lua"))
+        dest = mapping.get(path, path.replace("scripts/giten/", "scripts/homm1/"))
         target = REPO / dest
         row = {"path": path, "donor_sha256": hashlib.sha256(original).hexdigest()}
         if path in exceptions:
             row["status"], row["reason"] = exceptions[path]
+        elif path.startswith("editor/nvim/"):
+            row.update(status="inapplicable", reason="Editor integration removed by the user")
         elif (path.startswith(("src/", "include/", "config/retail/", "config/cleanliness/")) and path not in mapping) or path == "config/match_baseline.tsv":
             row.update(status="target_specific", reason="Preserve HoMM1 source, retail facts and campaign ledger; never copy donor game facts")
         elif target.is_file() or target.is_symlink():

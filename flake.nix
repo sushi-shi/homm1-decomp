@@ -118,16 +118,6 @@
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
         export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc40"
         export PYTHONDONTWRITEBYTECODE=1
-        if [ -z "''${HOMM1_NVIM_WRAPPED:-}" ] && command -v nvim >/dev/null 2>&1; then
-          homm1_nvim_real="$(command -v nvim)"
-          homm1_nvim_bin="$HOMM1_DIR/build/nvim-shim"
-          mkdir -p "$homm1_nvim_bin"
-          printf '#!/bin/sh\nexec "%s" --cmd "set rtp^=%s/editor/nvim" "$@"\n' \
-            "$homm1_nvim_real" "$HOMM1_DIR" > "$homm1_nvim_bin/nvim"
-          chmod +x "$homm1_nvim_bin/nvim"
-          export PATH="$homm1_nvim_bin:$PATH"
-          export HOMM1_NVIM_WRAPPED=1
-        fi
       '';
     in {
       packages.${system} = {

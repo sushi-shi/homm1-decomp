@@ -29,9 +29,8 @@ The unit merge driver preserves independent additions/deletions and refuses
 conflicting changes to one unit. It does not decide compiler profiles or
 reconstruction ownership. Git history and review still decide those facts.
 
-[Neovim integration](../editor/nvim/README.md) provides assembly, diff, status,
-VA navigation and opt-in match-on-save. Root `.clangd` reads the generated
-compilation database; no global editor settings are changed.
+Root `.clangd` reads the generated compilation database; no global editor
+settings are changed.
 
 README status is a build product. `homm1 verify readme` updates only the marked
 block, does not bank scores, and refuses comparison-mode ledger mismatches.
