@@ -2,7 +2,8 @@
 
 - [Matching workflow](tooling.md), [build system](build-system.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
-- [Compiler and toolchain](compiler.md), [candidate linking](linker-flags.md),
+- [Compiler and toolchain](compiler.md), [other builds](builds.md),
+  [candidate linking](linker-flags.md),
   [candidate-image checks](image-diff.md), [playing the build](play.md),
   [clean source branch](clean-source.md).
 - [Score tracking](match-status.md), [permutation](permuter.md),
