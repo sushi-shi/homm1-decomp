@@ -12,7 +12,9 @@ Three independent retail signals (ported; rebuilt on homm1.sema.image):
 Cutting each run at {COL starts} u {code-referenced starts} de-merges
 adjacent vtables and yields exact per-vtable entry counts. Confidence:
 `rtti` / `code-ref` (>=2 slots, .rdata) / `code-ref-weak` / `unref` (run
-head with no signal: EH/jump tables, NOT a vtable).
+head with no signal: EH/jump tables, NOT a vtable) / `library` (no RTTI, every
+code reference and every slot inside the linked C runtime per the DNA census:
+a CRT function-pointer table, not a game vtable).
 
     python3 -m homm1.verify.vtable_scan [--new] [--holds 0xRVA] [--dump 0xRVA]
 """
@@ -97,6 +99,8 @@ def scan() -> list[dict]:
 
     # --- code-referenced starts (vptr stamps) -------------------------------
     code_ref: dict[int, int] = {}
+    code_ref_game: dict[int, int] = {}
+    in_runtime = _runtime_predicate(base)
     for s, t in reloc.items():
         if not img.is_text(s) or t not in members:
             continue
@@ -104,6 +108,8 @@ def scan() -> list[dict]:
         if b and b[0] == 0xFF and b[1] in (0x15, 0x25):
             continue                      # devirtualised call through a slot
         code_ref[t] = code_ref.get(t, 0) + 1
+        if not in_runtime(s):
+            code_ref_game[t] = code_ref_game.get(t, 0) + 1
 
     col_start: dict[int, tuple[str, int]] = {}
     for lo, hi in runs:
@@ -134,14 +140,40 @@ def scan() -> list[dict]:
                      code_refs=code_ref.get(st, 0),
                      head_of_run=(st == lo),
                      first=img.u32(st) - base)
+            v["library"] = (not c and code_ref.get(st, 0)
+                            and not code_ref_game.get(st, 0)
+                            and all(in_runtime(img.u32(a) - base)
+                                    for a in range(st, en, 4)))
             v["conf"] = confidence(v)
             out.append(v)
     return out
 
 
+def _runtime_predicate(base: int):
+    """rva -> inside a C-runtime function of the committed DNA census."""
+    import bisect
+    from homm1.core.paths import RETAIL
+    spans = []
+    path = RETAIL / "dna_bands.tsv"
+    if path.is_file():
+        for line in path.read_text().splitlines():
+            f = line.split("\t")
+            if len(f) > 3 and f[0].startswith("0x") and f[3].startswith("crt-"):
+                spans.append((int(f[0], 16), int(f[0], 16) + int(f[1], 16)))
+    spans.sort()
+    los = [lo for lo, _ in spans]
+
+    def inside(rva: int) -> bool:
+        i = bisect.bisect_right(los, rva) - 1
+        return i >= 0 and rva < spans[i][1]
+    return inside
+
+
 def confidence(v: dict) -> str:
     if v["rtti"]:
         return "rtti"
+    if v.get("library"):
+        return "library"
     if v["code_refs"] and v["size"] >= 2 and v["sec"] == ".rdata":
         return "code-ref"
     if v["code_refs"]:
