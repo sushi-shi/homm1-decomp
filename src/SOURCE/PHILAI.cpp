@@ -1481,7 +1481,9 @@ void philAI::ValueOfBuyingCreature(
     int nPoints;
     float peril;
     int monsterCost[RESOURCE_COUNT];
-    int breathStacks;
+    // Counts breath-attack stacks; retail allocation follows this local name
+    // (renaming it moves registers).
+    int archers;
     int creatRV;
     int rvCost;
     float attackChance;
@@ -1492,7 +1494,7 @@ void philAI::ValueOfBuyingCreature(
     hero* occupant;
     int slotNum;
 
-    breathStacks = 0;
+    archers = 0;
     GetMonsterCost(creature, monsterCost);
     rvCost = purchaseCount * RVConversion(monsterCost);
     creatRV = static_cast<int>(
@@ -1509,9 +1511,9 @@ void philAI::ValueOfBuyingCreature(
                 if (occupant->m_army.m_creatureTypes[n] != CREATURE_NONE
                     && (gMonsterDatabase[occupant->m_army.m_creatureTypes[n]].stats.attributes
                         & MONSTER_FLAGS_BREATH_ATTACK))
-                    breathStacks++;
+                    archers++;
             }
-            creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
+            creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
         }
         creatRV = static_cast<int>(
             creatRV
@@ -1524,9 +1526,9 @@ void philAI::ValueOfBuyingCreature(
             if (townPointer->m_army.m_creatureTypes[slotNum] != CREATURE_NONE
                 && (gMonsterDatabase[townPointer->m_army.m_creatureTypes[slotNum]].stats.attributes
                     & MONSTER_FLAGS_BREATH_ATTACK))
-                breathStacks++;
+                archers++;
         }
-        creatRV = static_cast<int>(creatRV * (1.18 - breathStacks * 0.06));
+        creatRV = static_cast<int>(creatRV * (1.18 - archers * 0.06));
     }
     LikelihoodOfEnemyAttacking(
         townPointer,
@@ -2502,7 +2504,7 @@ int philAI::QuickCombat(
         NULL,
         townBattle,
         townId,
-        defenderHero != NULL ? defenderHero->m_owner : GAME_PLAYER_NONE,
+        defenderHero != NULL ? defenderHero->m_owner : -1,
         winChance,
         aDead,
         dDead,
@@ -2857,7 +2859,7 @@ void philAI::ChooseEvaluateBattle(
         NULL,
         isCastle,
         castleId,
-        defenderHero != NULL ? defenderHero->m_owner : GAME_PLAYER_NONE,
+        defenderHero != NULL ? defenderHero->m_owner : -1,
         chance,
         lossA,
         lossB,
