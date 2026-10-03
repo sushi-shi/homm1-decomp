@@ -80,13 +80,21 @@ FP_POOL_NAME = re.compile(r"^\$T[0-9]+$")
 EXCEPT_LIST = "__except_list"
 #: cl's pooled (/Gf) string literal spelling: the payload is the name.
 POOLED_LITERAL_NAME = re.compile(r"^\?\?_C@.*$")
-#: cl's unpooled (no /Gf) string literal spelling.
-SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+$")
+#: cl's unpooled (no /Gf) string literal spelling; /Gi appends the literal's
+#: index within its function (`$SG3396$3`).
+SG_LITERAL_NAME = re.compile(r"^\$SG[0-9]+(?:\$[0-9]+)?$")
+#: /Gi's per-function compiler data, named after the owning function: an
+#: optimized unit's string literals (`??_C?CDStop@soundManager@@QAEXXZ0`) and
+#: the function's __LINE__ word (`?__LINE__Var@?1??Fn@@...@4JA`). The names
+#: are stable, so the target takes cl's own spelling.
+GI_FUNCTION_DATA_NAME = re.compile(r"^(?:\?\?_C\?|\?__LINE__Var@).*$")
 #: literal family -> (cl's member spelling, manifest name prefix, provenance,
 #: the noun the withheld reasons use).
 _LITERAL_FAMILIES = {
     "fp": (FP_POOL_NAME, "$T", "retail-reloc-fp-pool", "FP constant"),
     "sg": (SG_LITERAL_NAME, "$SG", "retail-reloc-sg-literal", "string literal"),
+    "gi": (GI_FUNCTION_DATA_NAME, None, "retail-reloc-gi-function-data",
+           "per-function datum"),
 }
 
 #: The value c2's per-section alignment ratchet starts at (see _alignment).
@@ -836,11 +844,13 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
                     continue
                 end = next((o for o in offsets if o > off), sec["size"])
                 want = payload[off:end]
-                if literal == "sg":
+                if literal == "sg" or name.startswith("??_C?"):
                     nul = want.find(b"\0")
                     if nul < 0:
                         continue
                     want = want[:nul + 1]
+                elif name.startswith("?__LINE__Var@"):
+                    want = want[:4]           # a long line number
                 pool[name] = (storage, off, want, len(want))
                 section_of[name] = sec["index"]
         if not pool:
@@ -860,7 +870,8 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
                 withheld.append((rva, member,
                                  f"{noun} storage {start} is not {storage}"))
                 return
-            rows.append({"name": f"{prefix}{rva}", "member": member,
+            rows.append({"name": member if prefix is None else f"{prefix}{rva}",
+                         "member": member,
                          "object": f"{stem}.c", "rva": rva, "size": size,
                          "storage": storage, "provenance": how})
 
@@ -992,8 +1003,10 @@ def candidates(model: Model):
     withheld += w
     sg, w = sg_literal_rows(model)
     withheld += w
+    gi, w = fp_pool_rows(model, literal="gi")
+    withheld += w
     spoken_for = {r["rva"]: r["name"] for r in rows}
-    for r in fp + sg:
+    for r in fp + sg + gi:
         other = spoken_for.get(r["rva"])
         if other in (None, r["name"]):
             rows.append(r)
