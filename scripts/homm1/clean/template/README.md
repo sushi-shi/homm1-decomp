@@ -10,17 +10,17 @@ Visual C++ 4.0 toolchain.
 decomp-win95-1.0 --------------------> decomp-win95-1.1
         |                                      |
         v                                      v
-source-win95-1996                  source-win95-1.1-1996
+source-win95-1.0                  source-win95-1.1-1996
 ```
 
 | Branch | Purpose |
 | --- | --- |
 | `decomp-win95-1.0` | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
 | `decomp-win95-1.1` | Derived reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
-| `source-win95-1996` | Generated clean source for Win95 1.0 |
+| `source-win95-1.0` | Generated clean source for Win95 1.0 |
 | `source-win95-1.1-1996` | Generated clean source for Win95 1.1 |
 
-This generated checkout is `source-win95-1996`. The horizontal arrow shows
+This generated checkout is `source-win95-1.0`. The horizontal arrow shows
 reconstruction lineage; the vertical arrows show clean-source generation.
 
 ## Play

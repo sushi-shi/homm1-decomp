@@ -7,7 +7,7 @@ can publish it as a local single-commit branch. The port follows HoMM2 Buka's
 ```sh
 homm1 clean --out build/clean                        # generate
 homm1 clean --out build/clean --verify               # build and compare
-homm1 clean --out build/clean --verify --publish     # branch source-win95-1996
+homm1 clean --out build/clean --verify --publish     # branch source-win95-1.0
 ```
 
 `--ref REVISION` exports another commit. `--working-tree` previews tracked and
@@ -74,7 +74,7 @@ match claim. The game has not been run from the generated executable here.
 
 ## Publication
 
-`--publish [BRANCH]` (default `source-win95-1996`) writes the tree as one root
+`--publish [BRANCH]` (default `source-win95-1.0`) writes the tree as one root
 commit through a private Git index, so no worktree changes. The message records
 `Generated-By: homm1 clean` and `Source-Commit:`. Regeneration replaces the
 snapshot. An identical regeneration from the same commit is a no-op. The command
