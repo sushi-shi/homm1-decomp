@@ -410,7 +410,7 @@ def string_rows(base_dir=BASE_DIR, model: Model | None = None):
     agree on exactly one of those rvas.
     """
     owners: dict[bytes, dict[str, str]] = defaultdict(dict)
-    votes: dict[str, set[int]] = defaultdict(set)
+    votes: dict[str, Counter] = defaultdict(Counter)
     maps = _referrer_maps(model) if model is not None else None
     for stem, c in coffx.objects(base_dir):
         for idx, value, secnum in c.iter_symbols():
@@ -422,7 +422,7 @@ def string_rows(base_dir=BASE_DIR, model: Model | None = None):
         if maps is not None:
             for name, seen in _paired_votes(c, POOLED_LITERAL_NAME,
                                             *maps).items():
-                votes[name] |= seen
+                votes[name].update(seen)
 
     img = retail()
     rows, withheld, by_name = [], [], defaultdict(list)
@@ -446,7 +446,7 @@ def string_rows(base_dir=BASE_DIR, model: Model | None = None):
     for name, group in by_name.items():
         addrs = {r["rva"] for r in group}
         if len(addrs) > 1 and len(votes.get(name, ())) == 1 \
-                and votes[name] <= addrs:
+                and set(votes[name]) <= addrs:
             chosen = next(iter(votes[name]))
             group = [r for r in group if r["rva"] == chosen]
             for r in group:
@@ -717,7 +717,8 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
 
     img = retail()
     sites = img.reloc_sites
-    votes: dict[str, set[int]] = defaultdict(set)
+    # member -> {rva: number of referrers that reach it}
+    votes: dict[str, Counter] = defaultdict(Counter)
     for sec in c.section_table:
         code = bool(sec["characteristics"] & MEM_EXECUTE)
         if not code and (ORDINARY_STORAGE.get(sec["name"]) is None
@@ -789,8 +790,8 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
                     zip(swapped[0::2], swapped[1::2])):
                 corroborated = False
             if corroborated:
-                for sym, value in found:
-                    votes[sym].add(value)
+                for sym, value in set(found):
+                    votes[sym][value] += 1
 
     return votes
 
@@ -887,10 +888,17 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
         stranded = []
         for member in sorted(pool):
             storage, _off, want, size = pool[member]
-            seen = votes.get(member) or set()
+            seen = votes.get(member) or Counter()
+            ranked = seen.most_common(2)
             if len(seen) == 1:
                 emit(member, next(iter(seen)), storage, size, want,
                      provenance)
+            elif seen and ranked[0][1] > ranked[1][1]:
+                # cl shares one slot where retail kept two (a referrer whose
+                # own retail copy lies elsewhere): the slot belongs where most
+                # of its referrers reach; the others then differ, as they do.
+                emit(member, ranked[0][0], storage, size, want,
+                     f"{provenance}-majority")
             elif seen:
                 withheld.append((0, member, "referrers disagree on the rva"))
             else:
