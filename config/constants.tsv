@@ -163,7 +163,6 @@ src/SOURCE/GAME.cpp	game::RandomizeEvents	*	case-label	switch on Random()	a rand
 *	*	[01]	call-argument	ViewSpells(* argument *	the spell book's view-only / mode flags
 *	*	[01]	call-argument	DrawWindow(* argument *	heroWindow::DrawWindow's update flag and widget id range
 *	*	*	call-argument	DelayMilli(long) argument 1	a delay in milliseconds
-*	*	*	call-argument	DelayTil(* argument 1	a tick deadline
 *	*	*	call-argument	BlitBitmap(* argument [2-8]	source and destination rectangle in pixels
 *	*	*	call-argument	nb_*(* argument *	a NetBIOS driver (netwin) session slot, adapter or length argument
 *	*	*	call-argument	com_*(* argument *	a serial driver (comwin) port, length or flag argument
@@ -871,8 +870,6 @@ src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store closeRequested	a boo
 src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store found	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/SWAPMGR.cpp	*	1	trivial-function-literal	1 store quickView	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store gAdvDisposeLevel	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/TOWN.cpp	*	1	trivial-function-literal	1 store gAdvDisposeLevel	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store exitTown	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store found	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 store lastArmy	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -909,7 +906,6 @@ src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality EarlySetup()	a bool
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality GameUnsaved()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality KeyboardMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality MouseMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegQueryValueExA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality change	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality condition	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -918,7 +914,6 @@ src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality gbClosingApp	a bool
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality gbForegroundApp	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality gbNoSound	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality nError	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality rc	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality showMenu	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 store blackoutComputer	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 store change	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -935,7 +930,6 @@ src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store showRoute	a boolean fl
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store slowVideo	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store soundVolume	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality bottom	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality ddrval	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality gbForegroundApp	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality gbFullCombatScreenDrawn	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -945,8 +939,6 @@ src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality gbMinimized	a bo
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality giScrollX	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality giScrollY	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality primary	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality res	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality result	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality right	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 store fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	1	trivial-function-literal	1 store fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -961,8 +953,6 @@ src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 bound numTroops	a count, day/
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 bound removeCount	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality dwellingCount	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality giMapDifficulty	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality giMapSize	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality giNumHumanPlayers	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality i	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_day	a count, day/week or index of one (the first or a single item)
@@ -973,14 +963,10 @@ src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 for-init	a count, day/week or
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store dwellingRoll[[]]	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gbHumanPlayer[[]]	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gbThisNetHumanPlayer[[]]	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store giBottomViewOverride	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store giMapDifficulty	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store giMapSize	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store giNumHumanPlayers	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store iMaxMapExtra	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_campaignDay	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_day	a count, day/week or index of one (the first or a single item)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_difficulty	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_heroCount	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_playerCount	a count, day/week or index of one (the first or a single item)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_week	a count, day/week or index of one (the first or a single item)
@@ -1014,10 +1000,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store fileHandle	a counter, a
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gText[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbThisNetHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giBottomViewOverride	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giCurPlayer	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giMapDifficulty	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giMapSize	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giMineTypeCount[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giNumHumanPlayers	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gold	a counter, accumulator, coordinate or field reset to zero
@@ -1064,13 +1047,11 @@ src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_quantity	a counter
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_resourceCost	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store m_resourceTotal	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 store resourcePrice	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store difficulty	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store fileName[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store gText[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store m_topIndex	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store period	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store ptr	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store size	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store m_splitAmount	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_buildState	a counter, accumulator, coordinate or field reset to zero
@@ -1128,8 +1109,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 case	a roll or slot case l
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 conditional	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality giCurPlayer	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality giMapDifficulty	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality giMapSize	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality heading	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality i	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 equality m_owner	a zero test of a count, id or index (no sentinel name: zero is the first or empty value)
@@ -1159,12 +1138,10 @@ src/SOURCE/kbwin.cpp	*	-1	trivial-function-literal	-1 equality pos	the -1 failur
 src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 array-index raceSeen	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/ARMYGRP.cpp	*	1	trivial-function-literal	1 array-index raceSeen	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index armyTable	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index dwellingRoll	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index fileName	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gCampaignSideCrests	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gDwellingType	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gMageGuildSpellPool	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gText	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_availableHeroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_garrison	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
@@ -1173,20 +1150,15 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_players	the fir
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_townIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index monsterName	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index present	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index taken	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index armyTable	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index dwellingRoll	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gDwellingType	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gMageGuildSpellPool	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gcSavedPlayerTypes	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_availableHeroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_garrison	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_players	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index present	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index taken	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/HISCORE.cpp	*	0	trivial-function-literal	0 array-index gText	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/NOOPT.cpp	*	1	trivial-function-literal	1 array-index glTimers	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 array-index monsterName	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 array-index fileName	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 array-index m_filename	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
@@ -1202,14 +1174,12 @@ src/SOURCE/TOWN.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 <
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/ARMYGRP.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/CPUSPEED.cpp	CPUSpeed	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/CPUSPEED.cpp	CPUSpeed	*	case-label	switch on cpuType	a case label of a numeric roll, slot or CPU-family switch
 src/SOURCE/CPUSPEED.cpp	CPUSpeed	*	store	store to clockNs	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/CPUSPEED.cpp	CPUSpeed	*	arithmetic	operator *	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	playerData::Write	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	*	*	call-argument	write(int, const void *, unsigned int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	playerData::Read	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	*	*	call-argument	read(int, void *, unsigned int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
-src/SOURCE/GAME.cpp	*	*	call-argument	CalcTerrainCost(int, int, int, int) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	*	*	call-argument	Scan(signed char *, signed char, signed char) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	*	*	call-argument	RandomScan(signed char *, signed char, signed char, int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	game::SaveGame	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
@@ -1227,8 +1197,6 @@ src/SOURCE/GAME.cpp	game::RandomizeEvents	*	case-label	switch on	a case label of
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator + Random()	a random roll's range arithmetic or threshold (retail odds)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	comparison-or-bound	operator <= Random()	a random roll's range arithmetic or threshold (retail odds)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	comparison-or-bound	operator > m_objectIndex	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::RandomizeEvents	*	array-index	array subscript gMageGuildSpellPool	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::RandomizeEvents	*	comparison-or-bound	operator == m_triggerType	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ClaimMine	*	store	store to frame	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ClaimMine	*	arithmetic	operator - y	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ClaimMine	*	arithmetic	operator - x	a retail tuning factor, odds, weight, frame or formula constant of this routine
@@ -1290,15 +1258,12 @@ src/SOURCE/GAME.cpp	game::RandomizeMine	*	comparison-or-bound	operator < tries	a
 src/SOURCE/GAME.cpp	game::RandomizeMine	*	store	store to tries	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::RandomizeMine	*	store	store to upFrame	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::RandomizeMine	*	store	store to objFrame	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::RandomizeMine	*	comparison-or-bound	operator <=	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::SetRandomHeroArmies	*	initializer-payload	*	a retail table payload written in the source (spell-book window positions, SetRandomHeroArmies class table)
 src/SOURCE/GAME.cpp	game::SetRandomHeroArmies	*	array-index	array subscript present	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::SetRandomHeroArmies	*	array-index	array subscript armyTable	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::SetRandomHeroArmies	*	arithmetic	operator /	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	*	*	call-argument	RandomizeTown(signed char, signed char, signed char) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	game::ProcessRandomObjects	*	store	store to lowFV	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ProcessRandomObjects	*	store	store to highFV	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::ProcessRandomObjects	*	store	store to m_randomArtifacts[[]]	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::SetVisibility	*	comparison-or-bound	operator >= radius	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::SetVisibility	*	store	store to cutoff	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::ExperienceValueOfStack	*	arithmetic	compound assignment to expValue	a retail tuning factor, odds, weight, frame or formula constant of this routine
@@ -1330,8 +1295,6 @@ src/SOURCE/GAME.cpp	*	*	call-argument	fileRequester(short, short, short, const c
 src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	arithmetic	compound assignment to total	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	arithmetic	operator *	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	comparison-or-bound	operator ==	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	comparison-or-bound	operator == giMapSize	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/GAME.cpp	game::CalcDifficultyRating	*	comparison-or-bound	operator == giMapDifficulty	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	GetBaseScore	*	store	store to score	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	GetBaseScore	*	comparison-or-bound	operator <= days	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/GAME.cpp	GetBaseScore	*	arithmetic	compound assignment to score	a retail tuning factor, odds, weight, frame or formula constant of this routine
@@ -1340,7 +1303,6 @@ src/SOURCE/GAME.cpp	GetBaseScore	*	comparison-or-bound	operator < score	a retail
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator * m_color	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/GAME.cpp	game::ShowScenInfo	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/NOOPT.cpp	DelayTicks	*	arithmetic	operator * ticks	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/RECRUIT.cpp	recruitUnit::Update	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/RECRUIT.cpp	*	*	call-argument	ViewArmy(short, short, signed char, short, class town *, signed char, signed char, signed char, class hero *, class army *, class armyGroup *) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/REQUEST.cpp	fileRequester::fileRequester	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
@@ -1349,7 +1311,6 @@ src/SOURCE/REQUEST.cpp	*	*	call-argument	SetOK(signed char) argument *	a flag, m
 src/SOURCE/REQUEST.cpp	fileRequester::Main	*	arithmetic	operator + firstRowId	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/REQUEST.cpp	*	*	call-argument	SetCursorShape(int) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/REQUEST.cpp	fileRequester::Update	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/STRIP.cpp	*	*	call-argument	heroWindow(short, short, short, short, short) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/STRIP.cpp	*	*	call-argument	border(short, short, short, short, short, short, short, char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/STRIP.cpp	*	*	call-argument	AddWidget(class widget *, short) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/STRIP.cpp	*	*	call-argument	DrawIcons(signed char) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
@@ -1360,8 +1321,6 @@ src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_RIGHT_A
 src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_LEFT_ARMY_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/SWAPMGR.cpp	swapManager::Main	*	arithmetic	operator + CONTROL_RIGHT_ARMY_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWN.cpp	*	*	call-argument	AddSpell(signed char, signed char, int) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
-src/SOURCE/TOWN.cpp	town::View	*	comparison-or-bound	operator > giHighMemBuffer	a retail tuning factor, odds, weight, frame or formula constant of this routine
-src/SOURCE/TOWN.cpp	town::View	*	store	store to gAdvDisposeLevel	a retail tuning factor, odds, weight, frame or formula constant of this routine
 src/SOURCE/TOWNMGR.cpp	townObject::townObject	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	border(short, short, short, short, short, short, short, char *) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	PlayAmbientMusic(int, long, int) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
@@ -1374,7 +1333,6 @@ src/SOURCE/TOWNMGR.cpp	*	*	call-argument	DrawWindow(short, int, int) argument *	
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	heroWindow(short, short, short, short, short) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator * width	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/TOWNMGR.cpp	*	*	call-argument	FizzleForward(short, short, short, short, int) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	CreateBoat(signed char, signed char) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator + TOWN_GARRISON_SLOT_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWNMGR.cpp	townManager::Main	*	arithmetic	operator + TOWN_HERO_SLOT_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
@@ -1407,7 +1365,6 @@ src/SOURCE/TOWNMGR.cpp	*	*	call-argument	textWidget(short, short, short, short, 
 src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	comparison-or-bound	operator < row	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	arithmetic	compound assignment to totalWidth	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	store	store to nEntryWidth	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/TOWNMGR.cpp	*	*	call-argument	iconWidget(short, short, short, short, char *, signed char, signed char, short, short, short) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	townManager::SetupMage	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	townManager::SetupMage	*	case-label	switch on spellIndex	a case label of a numeric roll, slot or CPU-family switch
 src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_SPELL_CONTROL	the n-th control of a widget-id run (FIRST + n) in a case label or range
@@ -1703,8 +1660,6 @@ src/SOURCE/CURSOR.cpp	advManager::MoveHero	0	call-argument	CalcTerrainCost(* arg
 src/SOURCE/CURSOR.cpp	*	0	call-argument	ComboDraw(* argument 3	ComboDraw's animate flag
 src/SOURCE/CURSOR.cpp	*	1	call-argument	PlayerMonsterInteract(* argument 7	PlayerMonsterInteract's flag argument
 src/SOURCE/CURSOR.cpp	advManager::MoveHero	4	comparison-or-bound	operator <	the first ground tiles of each terrain run (% MAP_CELL_TILES_PER_TERRAIN < 4)
-src/SOURCE/CURSOR.cpp	*	-1	call-argument	FindAdjacentMonster(* argument [56]	FindAdjacentMonster's no-limit -1 arguments
-src/SOURCE/CURSOR.cpp	*	-1	call-argument	FizzleForward(* argument 5	FizzleForward's default delay
 src/SOURCE/EVENTS.cpp	*	20	store	initializer of resourceName	the resource name buffer's extent
 src/SOURCE/EVENTS.cpp	*	4	store	initializer of junk	an unused retail scratch buffer
 src/SOURCE/EVENTS.cpp	*	0	call-argument	AddSpell(* argument 3	AddSpell's flag argument
@@ -1715,7 +1670,24 @@ src/SOURCE/EVENTS.cpp	*	*	call-argument	SendHeroTownData(* argument 1[234]	SendH
 src/SOURCE/EVENTS.cpp	*	*	call-argument	CheckHandleNetPlayerWait(* argument 2	CheckHandleNetPlayerWait's flag argument
 src/SOURCE/EVENTS.cpp	*	*	call-argument	RestoreCell(* argument [126]	RestoreCell's whole-map (-1, -1) position and its restore mode
 src/SOURCE/EVENTS.cpp	*	0	call-argument	PlayerMonsterInteract(* argument 7	PlayerMonsterInteract's flag argument
-src/SOURCE/EVENTS.cpp	*	-1	call-argument	FindNearestObject(* argument 4	FindNearestObject's no-limit argument
-src/SOURCE/EVENTS.cpp	*	-1	call-argument	FizzleForward(* argument 5	FizzleForward's default delay
 src/SOURCE/EVENTS.cpp	advManager::EraseObj	0x7f	comparison-or-bound	operator <	EraseObj's object-index limit
 src/SOURCE/SETUP.cpp	game::PickLoadGame	0	call-argument	fileRequester(* argument [46]	a campaign is chosen; retail compares > 0, so neither a member nor a boundary name keeps the operator
+src/SOURCE/ARMYGRP.cpp	armyGroup::GetMorale	2	arithmetic	compound assignment to morale	the Fizbin of Misfortune's morale penalty (two points)
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	[234]	array-index	array subscript raceSeen	IsHomogeneous clears its five-race table entry by entry (races have no enum; creature / CREATURE_FACTION_SIZE)
+src/SOURCE/ARMYGRP.cpp	armyGroup::IsHomogeneous	[345]	comparison-or-bound	operator == numRaces	a count of distinct races selecting the alignment penalty
+src/SOURCE/GAME.cpp	NewGameHandler	[23]	array-index	array subscript m_players	the new-game dialog compacts opponent seats 1..3 by fixed seat index
+src/SOURCE/GAME.cpp	game::NewGame	[23]	array-index	array subscript *	the saved new-game opponent types per fixed seat (1..3)
+src/SOURCE/GAME.cpp	game::NewGame	[4567]	array-index	array subscript gMapName	the map file name's player-count digit for n humans sits at character 3 + n (CNM51234.map); "camp" is four characters
+src/SOURCE/GAME.cpp	*	[234]	comparison-or-bound	operator == giNumHumanPlayers	a human-player count (2..4) selecting the map name mask or digit
+src/SOURCE/GAME.cpp	game::NewMap	4	comparison-or-bound	operator < i	NewMap grants the neutral towns four rounds of GiveTroopsToNeutralTowns
+src/SOURCE/GAME.cpp	game::ClaimTown	2	store	store to m_turnsOwned	a captured neutral town counts as already owned two turns
+src/SOURCE/GAME.cpp	game::ClaimTown	2	arithmetic	operator * Color()	flag32 has a left and a right flag frame per player colour
+src/SOURCE/GAME.cpp	game::GetRandomNumTroops	3	return	return value	the default stack size of a creature without a table range
+src/SOURCE/GAME.cpp	advManager::FindAdjacentMonster	2	arithmetic	operator + origin?	the 3x3 neighbourhood's last row/column (origin - 1 .. origin + 1, exclusive end)
+src/SOURCE/kbwin.cpp	AppAbout	0xffff	bitwise-or-packing	operator &*	Win32 LOWORD/HIWORD split of wParam spelled as mask and shift (retail and/shr)
+src/SOURCE/kbwin.cpp	AppAbout	16	bitwise-or-packing	operator >> wParam	Win32 LOWORD/HIWORD split of wParam spelled as mask and shift (retail and/shr)
+src/SOURCE/kbwin.cpp	Process1WindowsMessage	20	comparison-or-bound	operator >	the AIL service interval in milliseconds
+src/SOURCE/kbwin.cpp	Process1WindowsMessage	150	comparison-or-bound	operator >	the blocking GetMessage interval in milliseconds
+src/SOURCE/kbwin.cpp	ResizeWindow	1	call-argument	MoveWindow(HWND, int, int, int, int, BOOL) argument [45]	an inclusive RECT's width/height (right - left + 1)
+src/SOURCE/kbwin.cpp	SetMenus	-1	trivial-function-literal	-1 cxx_static_cast_expr	GetMenuItemID's (UINT)-1 for a submenu entry (no Win32 macro in the VC4 headers)
+src/SOURCE/kbwin.cpp	SetGameDefaults	0xff	bitwise-or-packing	operator & cpuType	GetCPUType's family is its low byte (the high byte flags CPUID)

@@ -4,11 +4,11 @@
 
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
-#include <BASE/WINMGR_TYPES.h>
-#include <BASE/widget.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/resourceManager.h>
+#include <BASE/widget.h>
+#include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
 #include <SOURCE/highScoreManager.h>

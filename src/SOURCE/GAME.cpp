@@ -279,7 +279,7 @@ signed char game::IsMobile(signed char heroId) {
         giGroundToTerrain[gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y)->m_tileIndex];
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
                terrain,
-               mobileHero->m_direction & 1,
+               mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
                mobileHero->m_remainingMobility,
                mobileHero->m_heroClass
            );

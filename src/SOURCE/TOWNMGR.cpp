@@ -55,7 +55,7 @@ townObject::townObject(char* name) {
         y = TOWN_MAGE_GUILD_BOTTOM_Y - h;
     }
     if (id != TOWN_OBJECT_NONE) {
-        m_border = new border(x, y, w, h, id, 1, 0, NULL);
+        m_border = new border(x, y, w, h, id, WIDGET_KIND_TRANSPARENT, 0, NULL);
         if (m_border == NULL)
             MemError();
     }
@@ -273,7 +273,7 @@ void townManager::Close(void) {
     delete m_townWindow;
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
-    gpMouseManager->SetPointer(-1);
+    gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
 

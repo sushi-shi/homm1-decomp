@@ -44,7 +44,7 @@ strip::strip(
             STRIP_PORTRAIT_BORDER_WIDTH,
             STRIP_BORDER_HEIGHT,
             firstBorderId,
-            1,
+            WIDGET_KIND_TRANSPARENT,
             0,
             NULL
         );
@@ -58,7 +58,7 @@ strip::strip(
                 STRIP_ARMY_BORDER_WIDTH,
                 STRIP_BORDER_HEIGHT,
                 i + firstBorderId + 1,
-                1,
+                WIDGET_KIND_TRANSPARENT,
                 0,
                 NULL
             );
