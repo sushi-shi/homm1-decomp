@@ -85,7 +85,9 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
     job = {"src": str(src), "out": str(out), "flags": flags,
            "name": retail_name or default_name(src, unit),
            "repo": str((repo or REPO).resolve()), "msvc": str((msvc or msvc_dir()).resolve()),
-           "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve())}
+           "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve()),
+           # research knob: put include/ under D:\\Heroes\\<dir> instead of beside the sources
+           "include": os.environ.get("HOMM1_FIXEDROOT_INCLUDE", "")}
     env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[2]) + os.pathsep
                + os.environ.get("PYTHONPATH", ""))
     if timeout is None:
@@ -133,13 +135,14 @@ def _inner(job: dict) -> int:
     _mount("-t", "tmpfs", "homm1-wineserver", str(SERVER_DIR))
     os.chmod(SERVER_DIR, 0o700)
     heroes = ROOT / "Heroes"
-    for top in (repo / "src", repo / "include"):
+    inc = job.get("include", "")
+    for top, base in ((repo / "src", heroes), (repo / "include", heroes / inc if inc else heroes)):
         for d in sorted(top.iterdir()):
             if d.is_dir():
-                _link_tree(heroes / DIR_NAMES.get(d.name.upper(), d.name), d)
-            elif not (heroes / d.name).exists():
-                heroes.mkdir(parents=True, exist_ok=True)
-                (heroes / d.name).symlink_to(d.resolve())
+                _link_tree(base / DIR_NAMES.get(d.name.upper(), d.name), d)
+            elif not (base / d.name).exists():
+                base.mkdir(parents=True, exist_ok=True)
+                (base / d.name).symlink_to(d.resolve())
     vendor = sorted(d for d in (repo / "vendor").iterdir() if d.is_dir()) if (repo / "vendor").is_dir() else []
     (heroes / "Vendor").mkdir(parents=True, exist_ok=True)
     for d in vendor:
@@ -152,30 +155,36 @@ def _inner(job: dict) -> int:
     if named.exists() or named.is_symlink():
         named.unlink()
     named.symlink_to(src)
-    # private dosdevices and registry copies over the shared prefix
-    dos = ROOT / ".dosdevices"
-    dos.mkdir()
-    (dos / "c:").symlink_to(prefix / "drive_c")
-    (dos / "d:").symlink_to(ROOT)
-    (dos / "z:").symlink_to("/")
-    _mount("--bind", str(dos), str(prefix / "dosdevices"))
-    reg = ROOT / ".reg"
-    reg.mkdir()
-    for f in prefix.glob("*.reg"):
-        text = f.read_text(encoding="latin-1")
+    # A private WINEPREFIX on the namespace's tmpfs: copies of the registry files
+    # (never written back), the update stamp (so wine does not re-run its
+    # prefix update), and dosdevices c: -> the shared drive_c, d: -> the fixed
+    # root, z: -> /. Nothing is mounted over, or written into, the shared prefix.
+    # Belt and braces: the shared prefix is read-only inside the namespace.
+    _mount("--bind", str(prefix), str(prefix))
+    _mount("-o", "remount,ro,bind", str(prefix))
+    private = ROOT / ".prefix"
+    (private / "dosdevices").mkdir(parents=True)
+    (private / "dosdevices" / "c:").symlink_to(prefix / "drive_c")
+    (private / "dosdevices" / "d:").symlink_to(ROOT)
+    (private / "dosdevices" / "z:").symlink_to("/")
+    (private / "drive_c").symlink_to(prefix / "drive_c")
+    for f in [*prefix.glob("*.reg"), prefix / ".update-timestamp"]:
+        if not f.is_file():
+            continue
+        data = f.read_bytes()
         if f.name == "user.reg":
             # %TEMP% (the compiler's -il intermediates) on the private root, at a
             # path that does not depend on the host user name.
-            text = re.sub(r'^"(TEMP|TMP)"=".*"$', r'"\1"="D:\\\\TMP"', text, flags=re.M)
-        (reg / f.name).write_text(text, encoding="latin-1")
-        _mount("--bind", str(reg / f.name), str(f))
+            data = re.sub(rb'^"(TEMP|TMP)"=".*"$', rb'"\1"="D:\\\\TMP"', data, flags=re.M)
+        (private / f.name).write_bytes(data)
     (ROOT / "TMP").mkdir()
     d = f"D:\\Heroes\\{rdir}"
     obj = workdir / (Path(rname).stem + ".obj")
-    incs = ["/X", "/ID:\\Heroes", *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
+    incs = ["/X", "/ID:\\Heroes" + (f"\\{inc}" if inc else ""), *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
     argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{d}\\{obj.name}",
             f"{d}\\{rname}"]
-    env = dict(os.environ, WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos"))
+    env = dict(os.environ, WINEPREFIX=str(private),
+               WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos"))
     r = subprocess.run(argv, cwd=workdir, env=env, stdin=subprocess.DEVNULL)
     if obj.exists():
         shutil.copyfile(obj, out)
