@@ -67,21 +67,6 @@ H1_ENUM_CONST_BEGIN(AdventureBorderConstant)
     BORDER_BUFFER_SIZE = 0x7400
 H1_ENUM_CONST_END(AdventureBorderConstant)
 
-H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
-    LOCATOR_VISIBLE_COUNT = 4,
-    LOCATOR_PAGE_THRESHOLD = 5,
-    LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
-    LOCATOR_SCROLL_NO_PAGES_Y = 232,
-    // The knobs slide from SCROLL_BASE_Y over the hero (73) or town (74)
-    // span; a click on the track maps the 92-pixel strip from 194 to a page
-    // (Buka 2.1 AdventureLocatorConstant names).
-    LOCATOR_SCROLL_BASE_Y = 195,
-    LOCATOR_HERO_SCROLL_SPAN = 73,
-    LOCATOR_TOWN_SCROLL_SPAN = 74,
-    LOCATOR_SCROLL_MOUSE_BASE_Y = LOCATOR_SCROLL_BASE_Y - 1,
-    LOCATOR_SCROLL_MOUSE_SPAN = 92
-H1_ENUM_CONST_END(AdventureLocatorConstant)
-
 // adv_wind.bin hero locator rows: seven widgets per slot from
 // HERO_LOCATOR_WIDGET_BASE + slot * HERO_LOCATOR_WIDGET_STRIDE (UpdateHeroLocator);
 // +1 is the mobility bar, +2 the portrait, +5 the clickable
@@ -580,11 +565,6 @@ H1_ENUM_BEGIN(CloudNeighborMask)
     CLOUD_NORTH_EDGE = 0x91,
     CLOUD_WEST_EDGE = 0xc8
 H1_ENUM_END(CloudNeighborMask)
-
-H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
-    ADVMGR_PANEL_BUTTON_FIRST = 1,
-    ADVMGR_PANEL_BUTTON_LAST = 6
-H1_ENUM_CONST_END(AdventurePanelButtonConstant)
 
 // advManager::Main's right-click help on the six panel buttons: the
 // cAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,

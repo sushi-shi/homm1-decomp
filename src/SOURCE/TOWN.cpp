@@ -114,10 +114,10 @@ void town::Deallocate(void) {
     if (ownerData->m_currentTown == m_id)
         ownerData->m_currentTown = GAME_TOWN_NONE;
     ownerData->m_townCount--;
-    if (ownerData->m_townCount < 5)
+    if (ownerData->m_townCount < LOCATOR_PAGE_THRESHOLD)
         ownerData->m_townLocatorPage = 0;
-    else if (ownerData->m_townLocatorPage + 5 > ownerData->m_townCount)
-        ownerData->m_townLocatorPage = ownerData->m_townCount - 5;
+    else if (ownerData->m_townLocatorPage + LOCATOR_PAGE_THRESHOLD > ownerData->m_townCount)
+        ownerData->m_townLocatorPage = ownerData->m_townCount - LOCATOR_PAGE_THRESHOLD;
     gpGame->m_townOwners[m_id] = GAME_PLAYER_NONE;
     m_owner = GAME_PLAYER_NONE;
 }

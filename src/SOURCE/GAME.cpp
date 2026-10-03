@@ -4079,7 +4079,7 @@ void game::CancelComputerScreen(void) {
     TurnOffAIMusic();
     bShowIt = 1;
     int i;
-    for (i = 1; i <= 6; ++i)
+    for (i = ADVMGR_PANEL_BUTTON_FIRST; i <= ADVMGR_PANEL_BUTTON_LAST; ++i)
         gpWindowManager->BroadcastMessage(
             MESSAGE_WIDGET,
             WIDGET_COMMAND_CLEAR_FLAGS,
@@ -4097,7 +4097,7 @@ void game::ShowComputerScreen(void) {
         int saved = gbThisNetHumanPlayer[giCurPlayer];
         gbThisNetHumanPlayer[giCurPlayer] = 1;
         int i;
-        for (i = 1; i <= 6; ++i)
+        for (i = ADVMGR_PANEL_BUTTON_FIRST; i <= ADVMGR_PANEL_BUTTON_LAST; ++i)
             gpWindowManager->BroadcastMessage(
                 MESSAGE_WIDGET,
                 WIDGET_COMMAND_SET_FLAGS,
