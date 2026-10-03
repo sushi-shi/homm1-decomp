@@ -80,7 +80,7 @@ def disposable_stem(stem: str) -> str:
 def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: str | None = None,
             unit: str | None = None, repo: Path | None = None, msvc: Path | None = None, timeout: float | None = None) -> str:
     """Compile SRC to OUT through the fixed view; return the compiler output."""
-    from homm1.core.paths import REPO, msvc_dir, vendor_include_dirs
+    from homm1.core.paths import REPO, VENDOR, msvc_dir, vendor_include_dirs
     from homm1.tool import ToolError
     src, out = Path(src).resolve(), Path(out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -96,7 +96,8 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
            # the object directory under D:\\ (empty: the source directory)
            "objdir": os.environ.get("HOMM1_FIXEDROOT_OBJDIR", OBJ_DIR),
            # vendor/<sdk> trees and the pinned SDKs' installed include dirs
-           "vendor": [[name, str(d.resolve())] for name, d in vendor_include_dirs()]}
+           "vendor": [[name, str(d.resolve())] for name, d in
+                      vendor_include_dirs(Path(repo) / "vendor" if repo else VENDOR)]}
     env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[2]) + os.pathsep
                + os.environ.get("PYTHONPATH", ""))
     if timeout is None:
