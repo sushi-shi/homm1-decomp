@@ -101,7 +101,7 @@ comwin	10	10
 kbwin	27	26
 miscwin	12	8
 netwin	19	19
-soundmgr	23	11
+soundmgr	23	14
 wingraph	32	30
 # [functions]	unit	function	best_pct	cur_pct	tries	src_hash	rva	hist_pct	state
 ADVMGR	??0advManager@@QAE@XZ	100.0000	100.0000	4	12aa0c8ab556	0x252c0	100.0000	
@@ -1064,7 +1064,7 @@ netwin	_nb_term	100.0000	100.0000	3	353b052b62a8	0x13e9a	100.0000
 soundmgr	??0soundManager@@QAE@XZ	100.0000	100.0000	1	5037a8abc498	0x77800	100.0000	
 soundmgr	?AdjustMusicVolumes@soundManager@@QAEXXZ	100.0000	96.2097	3	c38a177dd87b	0x78450	100.0000	
 soundmgr	?AdjustSoundVolumes@soundManager@@QAEXXZ	100.0000	99.2754	3	a664626eea93	0x78390	100.0000	
-soundmgr	?CDPlay@soundManager@@QAEXHHHH@Z	100.0000	100.0000	5	3e438970ce30	0x771f0	100.0000	
+soundmgr	?CDPlay@soundManager@@QAEXHHHH@Z	100.0000	100.0000	6	83038e8fa55d	0x771f0	100.0000	
 soundmgr	?CDStartup@soundManager@@QAEKXZ	100.0000	100.0000	4	3e7301f33d3e	0x77110	100.0000	
 soundmgr	?CDStop@soundManager@@QAEXXZ	100.0000	100.0000	4	9a24bb151975	0x76f00	100.0000	
 soundmgr	?Close@soundManager@@UAEXXZ	100.0000	100.0000	2	11e9778704e8	0x77b30	100.0000	
@@ -1073,15 +1073,15 @@ soundmgr	?Main@soundManager@@UAEFAAUtag_message@@@Z	100.0000	100.0000	2	2396bf17
 soundmgr	?MemorySample@soundManager@@QAEPAU_SAMPLE@@PAVsample@@@Z	100.0000	98.1073	2	02399e2c625d	0x78f80	100.0000	
 soundmgr	?ModifySample@soundManager@@QAEXPAU_SAMPLE@@FJ@Z	100.0000	99.7797	2	2591dcf29e48	0x78140	100.0000	
 soundmgr	?MusicPlaying@soundManager@@QAEHXZ	100.0000	100.0000	1	a7ad3d36f4ee	0x79180	100.0000	
-soundmgr	?Open@soundManager@@UAEFF@Z	100.0000	99.8032	4	cefd209bb0a2	0x77970	100.0000	
-soundmgr	?PlayAmbientMusic@soundManager@@QAEXHJH@Z	100.0000	95.5833	4	cbe035ea3cf2	0x786d0	100.0000	
+soundmgr	?Open@soundManager@@UAEFF@Z	100.0000	100.0000	4	cefd209bb0a2	0x77970	100.0000	
+soundmgr	?PlayAmbientMusic@soundManager@@QAEXHJH@Z	100.0000	95.7794	4	cbe035ea3cf2	0x786d0	100.0000	
 soundmgr	?PollSound@soundManager@@QAEXXZ	100.0000	100.0000	7	04e2049c629e	0x78940	100.0000	
 soundmgr	?ServiceSound@soundManager@@QAEXXZ	100.0000	100.0000	1	910fa45c47ba	0x79170	100.0000	
-soundmgr	?SetMusicQuality@soundManager@@QAEXH@Z	96.1446	96.1446	3	48b11b217d87	0x785c0	100.0000	
+soundmgr	?SetMusicQuality@soundManager@@QAEXH@Z	100.0000	100.0000	3	48b11b217d87	0x785c0	100.0000	
 soundmgr	?SetReady2Poll@@YAXXZ	100.0000	100.0000	1	2e164a177ffb	0x777b0	100.0000	
-soundmgr	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHJ@Z	100.0000	97.7657	6	c277519aa700	0x77cc0	100.0000	
-soundmgr	?StopAllSamples@soundManager@@QAEXXZ	100.0000	97.5694	3	1c9c32bcc9b4	0x78000	100.0000	
-soundmgr	?StopSample@soundManager@@QAEXPAU_SAMPLE@@@Z	100.0000	99.3548	1	f6a3fab15ff9	0x780f0	100.0000	
+soundmgr	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHJ@Z	100.0000	97.8007	6	c277519aa700	0x77cc0	100.0000	
+soundmgr	?StopAllSamples@soundManager@@QAEXXZ	100.0000	99.5139	3	1c9c32bcc9b4	0x78000	100.0000	
+soundmgr	?StopSample@soundManager@@QAEXPAU_SAMPLE@@@Z	100.0000	100.0000	1	f6a3fab15ff9	0x780f0	100.0000	
 soundmgr	?SwitchAmbientMusic@soundManager@@QAEXH@Z	100.0000	99.5935	2	bd91e2a9c2ea	0x78dd0	100.0000	
 soundmgr	?WAVE_init_driver@@YAPAU_DIG_DRIVER@@KGGG@Z	100.0000	95.0633	3	1f0d76f3ec2b	0x77870	100.0000	
 wingraph	?AppPaint@@YAHPAX0@Z	100.0000	100.0000	3	63fd259f6e3b	0x558c	100.0000	
