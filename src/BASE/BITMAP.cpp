@@ -16,7 +16,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-#pragma intrinsic(memcpy)
 
 VA(0x0047a6b0, 0x2a)
 VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)

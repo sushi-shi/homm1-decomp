@@ -20,7 +20,6 @@
 #include <io.h>
 #include <string.h>
 
-#pragma intrinsic(memset, strcpy)
 
 short gInputManagerAssertLine = 137;
 char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";

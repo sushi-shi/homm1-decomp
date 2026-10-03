@@ -27,7 +27,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma intrinsic(strcpy, memset)
 
 short gSoundManagerAssertLine = 0;
 char gSoundManagerAssertFile1[] = "D:\\Heroes\\Base\\Soundmgr.cpp";

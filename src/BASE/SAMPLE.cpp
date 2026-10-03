@@ -9,7 +9,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma intrinsic(strcpy)
 
 H1_ENUM_CONST_BEGIN(SampleLoadConstant)
 SAMPLE_FILENAME_CAPACITY = 32, SAMPLE_FORMAT_SUFFIX_LENGTH = 3, SAMPLE_LOAD_RATE_11025 = 11025,

@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma intrinsic(memcpy, strcpy)
 
 // clang-format off
 // FizzleForward's colour-cycle transition (Buka WINMGR.cpp WindowFizzleConstant,
