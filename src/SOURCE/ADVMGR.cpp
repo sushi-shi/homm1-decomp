@@ -30,6 +30,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+// The route-overlay byte at (column, row) of this->m_visibilityMap (Buka 2.1
+// ADVMGR.cpp; HoMM1 indexes row-major as row * size + column).
+#define ADVMGR_VISIBILITY_AT(column, row) (m_visibilityMap[(row) * MAP_CELL_GRID_SIZE + (column)])
+
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
 extern int giSeedingValid;
@@ -2607,14 +2611,14 @@ void advManager::DrawCell(
                     s_drawCloudFrame - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
-        } else if (m_routeShown && m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX]) {
-            if (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FLIPPED)
+        } else if (m_routeShown && ADVMGR_VISIBILITY_AT(mapX, mapY)) {
+            if (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FLIPPED)
                 FlipIconToBitmap(
                     m_objectIcons[TILESET_ROUTE],
                     gpWindowManager->m_screen,
                     pixelX7 + CELL_LAST_PIXEL,
                     pixelY3 + ROUTE_DRAW_Y_OFFSET,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1,
+                    (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FRAME_MASK) - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
             else
@@ -2623,7 +2627,7 @@ void advManager::DrawCell(
                     gpWindowManager->m_screen,
                     pixelX7,
                     pixelY3 + ROUTE_DRAW_Y_OFFSET,
-                    (m_visibilityMap[mapY * MAP_CELL_GRID_SIZE + mapX] & ROUTE_CELL_FRAME_MASK) - 1,
+                    (ADVMGR_VISIBILITY_AT(mapX, mapY) & ROUTE_CELL_FRAME_MASK) - 1,
                     ICON_DRAW_OFFSET_FULL
                 );
         }
@@ -6852,14 +6856,14 @@ void advManager::ShowRoute(int redraw, int, int updateButton) {
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = ROUTE_CELL_DESTINATION;
+                ADVMGR_VISIBILITY_AT(x, y) = ROUTE_CELL_DESTINATION;
             } else {
                 fromDirection = gpSearchArray->m_directions[j - 1];
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] = gRouteFrame[fromDirection][dir];
+                ADVMGR_VISIBILITY_AT(x, y) = gRouteFrame[fromDirection][dir];
             }
             if (remMob >= 0) {
-                m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] =
-                    m_visibilityMap[y * MAP_CELL_GRID_SIZE + x] + ROUTE_CELL_REACHABLE_OFFSET;
+                ADVMGR_VISIBILITY_AT(x, y) =
+                    ADVMGR_VISIBILITY_AT(x, y) + ROUTE_CELL_REACHABLE_OFFSET;
                 canReach = 1;
             }
         }
