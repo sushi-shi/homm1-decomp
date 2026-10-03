@@ -13,7 +13,10 @@ H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_SOUTH_WEST = 5,
     MAP_DIRECTION_WEST = 6,
     MAP_DIRECTION_NORTH_WEST = 7,
-    MAP_DIRECTION_COUNT = 8
+    MAP_DIRECTION_COUNT = 8,
+    // Cursor/hero directions after this one use the mirrored frames
+    // (advManager::CompleteDraw's redraw order).
+    MAP_DIRECTION_UNMIRRORED_LAST = MAP_DIRECTION_SOUTH
 H1_ENUM_END(MapDirection)
 
 // gConfig.walkSpeed ("Walk Speed"): the Speed menu's Walk..Jump commands
@@ -25,14 +28,17 @@ H1_ENUM_BEGIN(WalkSpeed)
     WALK_SPEED_TROT = 1,
     WALK_SPEED_CANTER = 2,
     WALK_SPEED_GALLOP = 3,
-    WALK_SPEED_JUMP = 4
+    WALK_SPEED_JUMP = 4,
+    WALK_SPEED_COUNT = 5
 H1_ENUM_END(WalkSpeed)
 
 // The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
 // path walk-back and PushPoint; Buka KB_TYPES.h MapDirectionConstant).
 H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_OPPOSITE_OFFSET = 4,
-    MAP_DIRECTION_INDEX_MASK = 7
+    MAP_DIRECTION_INDEX_MASK = 7,
+    // Odd directions are the diagonals (CalcTerrainCost's diagonal step).
+    MAP_DIRECTION_DIAGONAL_BIT = 1
 H1_ENUM_CONST_END(MapDirectionConstant)
 
 H1_ENUM_CONST_BEGIN(CursorFrameConstant)

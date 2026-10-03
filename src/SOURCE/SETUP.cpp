@@ -507,7 +507,7 @@ signed char game::PickLoadGame(void) {
     request = new fileRequester(
         0x136,
         0xe,
-        0,
+        FILE_REQUESTER_LOAD,
         giCampaignChoice > 0 ? "*.CGM" : "*.GM*",
         gcGamePath,
         giCampaignChoice > 0 ? ".CGM" : ".GM*"

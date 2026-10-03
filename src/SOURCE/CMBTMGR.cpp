@@ -6,6 +6,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
+#include <BASE/soundmgr.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
 #include <H1/KB.h>
@@ -178,7 +179,7 @@ short combatManager::Open(short priority) {
                         | MESSAGE_WIDGET;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
-    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, -1);
+    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, SOUND_VOLUME_FROM_CONFIG);
     m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 0;
     sample = NULL_SAMPLE2;
