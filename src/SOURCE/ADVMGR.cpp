@@ -896,7 +896,7 @@ void advManager::Close(void) {
     short index;
 
     ClearBottomView();
-    gpMouseManager->SetPointer(-1);
+    gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
     gpSoundManager->StopAllSamples();
     if (m_adventureBorder) {
@@ -3054,7 +3054,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
                     break;
                 case MAP_OBJECT_NONE:
                 case MAP_OBJECT_COAST:
-                case 50:
+                case MAP_OBJECT_SHADOW:
                     sprintf(
                         gText,
                         "\n\n%s",

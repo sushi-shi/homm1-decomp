@@ -4004,7 +4004,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
                     (gpCurPlayer->m_ultimateArtifactHintChance - 15) * gUltArtifactAvgValue / 100;
             } else {
                 iDefaultEventType = pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                if (iDefaultEventType >= MAP_OBJECT_NOTHING_HERE
+                if (iDefaultEventType >= MAP_OBJECT_NON_EVENT_FIRST
                     && iDefaultEventType <= MAP_OBJECT_TREES_LAST)
                     iEventRV = 0;
             }
