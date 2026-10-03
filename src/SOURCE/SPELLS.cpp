@@ -32,7 +32,7 @@
 
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
-VA(0x004154f0, 0x147)
+VA(0x0040db10, 0x147)
 i8 combatManager::ViewSpells(i32) {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != SPELL_NONE) {
@@ -59,7 +59,7 @@ i8 combatManager::ViewSpells(i32) {
 }
 
 // Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
-VA(0x00415637, 0x160)
+VA(0x0040dc57, 0x160)
 i16 CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -104,9 +104,9 @@ H1_ENUM_END(SpellPointerFrame)
 
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
-VA(0x00415797, 0x295)
+VA(0x0040ddb7, 0x295)
 i16 HandleCastSpell(struct tag_message& message) {
-    DATA(0x0048f2b0)
+    DATA(0x004906b4)
     static i8 indexToCastOn = -1;
     i16 hex;
 
@@ -166,7 +166,7 @@ i16 HandleCastSpell(struct tag_message& message) {
 
 // Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
 // anti-magic, dispel and green dragons stop every spell but the area ones.
-VA(0x00415a2c, 0x2f0)
+VA(0x0040e04c, 0x2f0)
 i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
     i32 unused;
     army* target = NULL;
@@ -230,7 +230,7 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
 }
 
 // Buka SPELLS.cpp SpellMessage without the resurrection target.
-VA(0x00415d1c, 0x128)
+VA(0x0040e33c, 0x128)
 void combatManager::SpellMessage(i8 spell, i8 hex) {
     switch (spell) {
         case SPELL_FIREBALL:
@@ -259,7 +259,7 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
 
 // Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
 // per stack and no eagle eye, mirror image or elementals.
-VA(0x00415e44, 0xd69)
+VA(0x0040e464, 0xd69)
 void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
     army* targetArmy;
     i32 damage;
@@ -564,7 +564,7 @@ done:
 }
 
 // Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
-VA(0x00416bad, 0xcb)
+VA(0x0040f1cd, 0xcb)
 void combatManager::DefaultSpell(i8 targetHex) {
     army* target;
 
@@ -580,7 +580,7 @@ void combatManager::DefaultSpell(i8 targetHex) {
 
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
-VA(0x00416c78, 0x407)
+VA(0x0040f298, 0x407)
 void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     i32 last;
     i32 unused;
@@ -642,7 +642,7 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
 
 // HoMM1: lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
-VA(0x0041707f, 0x12e)
+VA(0x0040f69f, 0x12e)
 void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
     army* curArmy;
     i16 i;
@@ -674,7 +674,7 @@ void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
 
 // Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
 // always hits the target hex and its six neighbours.
-VA(0x004171ad, 0x432)
+VA(0x0040f7cd, 0x432)
 void combatManager::Fireball(i8 targetHex) {
     i32 damage;
     icon* fireballIcon;
@@ -745,7 +745,7 @@ void combatManager::Fireball(i8 targetHex) {
 
 // Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
 // hexes in turn.
-VA(0x004175df, 0x439)
+VA(0x0040fbff, 0x439)
 void combatManager::MeteorShower(i8 targetHex) {
     i16 i;
     i32 damage;
@@ -820,7 +820,7 @@ void combatManager::MeteorShower(i8 targetHex) {
 }
 
 // Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
-VA(0x00417a18, 0x2f3)
+VA(0x00410038, 0x2f3)
 void combatManager::ElementalStorm(void) {
     i32 damage;
     i16 index;
@@ -885,7 +885,7 @@ void combatManager::ElementalStorm(void) {
 
 // Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
 // shaking the screen.
-VA(0x00417d0b, 0x3dc)
+VA(0x0041032b, 0x3dc)
 void combatManager::Armageddon(void) {
     i16 sideIdx;
     i32 damage;
@@ -950,8 +950,8 @@ void combatManager::Armageddon(void) {
     delete workPal;
 }
 
-// SPELLS owns retail .data 0x0048f28c-0x0048f4d3. HandleCastSpell's
-// indexToCastOn (0x0048f2b0) is its local static: /Gi emits it at the head
+// SPELLS owns retail .data 0x00490690-0x0048f4d3. HandleCastSpell's
+// indexToCastOn (0x004906b4) is its local static: /Gi emits it at the head
 // of that function's literals.
-DATA(0x0048f28c)
+DATA(0x00490690)
 i8 gInTeleportGetDest = 0;

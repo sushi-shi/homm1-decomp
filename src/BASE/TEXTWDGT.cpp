@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-VA(0x0047b3a0, 0x3e)
-VA_COMPGEN(0x0047b3e0, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047b3a0)
+VA(0x0047ce50, 0x3e)
+VA_COMPGEN(0x0047ce90, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047ce50)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
@@ -23,7 +23,7 @@ textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_kind = WIDGET_KIND_TEXT;
 }
 
-VA(0x0047b430, 0x61)
+VA(0x0047cee0, 0x61)
 textWidget::textWidget(
     i16 x,
     i16 y,
@@ -43,7 +43,7 @@ textWidget::textWidget(
     m_color = color;
 }
 
-VA(0x0047b4a0, 0xeb)
+VA(0x0047cf50, 0xeb)
 void textWidget::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -64,13 +64,13 @@ void textWidget::Read(void) {
     m_kind = WIDGET_KIND_TEXT;
 }
 
-VA(0x0047b590, 0x2d)
+VA(0x0047d040, 0x2d)
 textWidget::~textWidget(void) {
     gpResourceManager->Dispose(m_font);
     free(m_text);
 }
 
-VA(0x0047b5c0, 0x1ea)
+VA(0x0047d070, 0x1ea)
 i16 textWidget::Main(tag_message& message) {
     // PoL 2.0 textWidget::Main caches the flags word in a local; retail
     // keeps it in dx for the enable test and the select/deselect stores.
@@ -122,7 +122,7 @@ i16 textWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047b7b0, 0x3b)
+VA(0x0047d260, 0x3b)
 void textWidget::Draw(void) {
     m_font->DrawBoundedString(
         m_text,
@@ -135,7 +135,7 @@ void textWidget::Draw(void) {
     );
 }
 
-VA(0x0047b7f0, 0x96)
+VA(0x0047d2a0, 0x96)
 void textWidget::SetText(char* text) {
     if (m_kind == WIDGET_KIND_TEXT || m_kind == WIDGET_KIND_TEXT_ENTRY) {
         u16 newLength = strlen(text);

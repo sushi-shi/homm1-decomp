@@ -40,14 +40,14 @@
 #include <string.h>
 
 // CheckApplyGoodMorale grants one extra turn at a time.
-DATA(0x00490d50)
+DATA(0x004a2878)
 i32 gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
-DATA(0x00490d54)
+DATA(0x004a287c)
 i32 gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
-VA(0x0044b530, 0x1b8)
+VA(0x0046a300, 0x1b8)
 combatManager::combatManager(void) {
     m_gridMode = 0;
     m_unknown6f9 = -1;
@@ -71,7 +71,7 @@ combatManager::combatManager(void) {
 // donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
-VA(0x0044b6e8, 0x138)
+VA(0x0046a4b8, 0x138)
 void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
     i16 i;
     i16 j;
@@ -97,7 +97,7 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 }
 
 // Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
-VA(0x0044b820, 0x3db)
+VA(0x0046a5f0, 0x3db)
 void combatManager::SetupCombat(
     i32 mapX,
     i32 mapY,
@@ -184,7 +184,7 @@ void combatManager::SetupCombat(
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
 // field, then the fade-in and a random combat theme.
-VA(0x0044bbfb, 0x419)
+VA(0x0046a9cb, 0x419)
 i16 combatManager::Open(i16 priority) {
     i32 song;
     SAMPLE2 sample;
@@ -277,13 +277,13 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
 
-// CMBTMGR owns retail .data 0x00490d50-0x00491057. The backdrop table is
+// CMBTMGR owns retail .data 0x004a2878-0x00491057. The backdrop table is
 // GetBackgroundName's local static: /Gi emits it after Open's literals,
 // followed by its own.
 
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
-VA(0x0044c014, 0x1ea)
+VA(0x0046ade4, 0x1ea)
 void combatManager::Close(void) {
     i32 i;
     i32 survivor;
@@ -317,7 +317,7 @@ void combatManager::Close(void) {
 
 // Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
 // side's army group; a dead stack empties its slot.
-VA(0x0044c1fe, 0x161)
+VA(0x0046afce, 0x161)
 void combatManager::UpdateArmyGroup(i8 side) {
     i16 i;
     i16 j;
@@ -340,7 +340,7 @@ void combatManager::UpdateArmyGroup(i8 side) {
 
 // Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
 // ground patches and, outside a siege, up to two obstacles.
-VA(0x0044c35f, 0x7be)
+VA(0x0046b12f, 0x7be)
 void combatManager::GenerateMap(void) {
     i16 x;
     i16 i;
@@ -484,9 +484,9 @@ void combatManager::GenerateMap(void) {
 
 // Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
 // one) forces the graveyard field.
-VA(0x0044cb1d, 0x18e)
+VA(0x0046b8ed, 0x18e)
 char* combatManager::GetBackgroundName(void) {
-    DATA(0x00490db0)
+    DATA(0x004a28d8)
     static char* gCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
         "frstwgrs.bkg",
         "mtnwgrsf.bkg",
@@ -538,7 +538,7 @@ char* combatManager::GetBackgroundName(void) {
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
 // within two cells of the battle.
-VA(0x0044ccab, 0x1e7)
+VA(0x0046ba7b, 0x1e7)
 i8 combatManager::MoreTreesNear(void) {
     i32 yPos;
     i32 xPos;
@@ -585,7 +585,7 @@ i8 combatManager::MoreTreesNear(void) {
 }
 
 // Buka CMBTMGR.cpp LoadIcons.
-VA(0x0044ce92, 0x1d7)
+VA(0x0046bc62, 0x1d7)
 void combatManager::LoadIcons(void) {
     i32 i;
 
@@ -614,7 +614,7 @@ void combatManager::LoadIcons(void) {
 }
 
 // Buka CMBTMGR.cpp FreeIcons.
-VA(0x0044d069, 0x7b)
+VA(0x0046be39, 0x7b)
 void combatManager::FreeIcons(void) {
     i16 i;
 
@@ -626,7 +626,7 @@ void combatManager::FreeIcons(void) {
 }
 
 // Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
-VA(0x0044d0e4, 0x287)
+VA(0x0046beb4, 0x287)
 void combatManager::LoadArmies(void) {
     i16 j;
     i16 i;
@@ -667,7 +667,7 @@ void combatManager::LoadArmies(void) {
 }
 
 // Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
-VA(0x0044d36b, 0xdc)
+VA(0x0046c13b, 0xdc)
 void combatManager::FreeArmies(void) {
     i16 i;
 
@@ -686,12 +686,12 @@ void combatManager::FreeArmies(void) {
 // for unshown battles is the nearest one-argument fit.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0044d447, 0x18)
+VA(0x0046c217, 0x18)
 void combatManager::NoShowCombatLog(char*) {}
 
 // Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
 // from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
-VA(0x0044d45f, 0xbe)
+VA(0x0046c22f, 0xbe)
 i16 combatManager::GetGridIndex(i16 x, i16 y) {
     y -= COMBAT_FIELD_TOP;
     y /= COMBAT_HEX_HEIGHT;
@@ -714,7 +714,7 @@ i16 combatManager::GetGridIndex(i16 x, i16 y) {
 }
 
 // Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
-VA(0x0044d51d, 0x1d9)
+VA(0x0046c2ed, 0x1d9)
 void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
@@ -761,7 +761,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
 
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
 // in four.
-VA(0x0044d6f6, 0x1c6)
+VA(0x0046c4c6, 0x1c6)
 i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
@@ -802,7 +802,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
 
 // Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
 // sides, high-morale stacks first.
-VA(0x0044d8bc, 0x209)
+VA(0x0046c68c, 0x209)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* pArmy;
     i8 iSpeed;
@@ -850,7 +850,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
 
 // Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
 // no live stack left.
-VA(0x0044dac5, 0xd3)
+VA(0x0046c895, 0xd3)
 i8 combatManager::IsWinner(i8 side) {
     i8 isWinner;
     i16 i;
@@ -871,7 +871,7 @@ i8 combatManager::IsWinner(i8 side) {
 // HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
-VA(0x0044db98, 0xd55)
+VA(0x0046c968, 0xd55)
 void combatManager::CatAttack(i8 side) {
     i16 dx;
     icon* boulder;
@@ -1146,7 +1146,7 @@ void combatManager::CatAttack(i8 side) {
 // the field before a full redraw.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0044e8ed, 0x4e)
+VA(0x0046d6bd, 0x4e)
 void combatManager::RegenerateField(void) {
     FreeArmies();
     LoadArmies();
@@ -1158,7 +1158,7 @@ void combatManager::RegenerateField(void) {
 
 // HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
-VA(0x0044e93b, 0xb8b)
+VA(0x0046d70b, 0xb63)
 void combatManager::KeepAttack(void) {
     i32 mod;
     i16 minX;
@@ -1345,7 +1345,7 @@ void combatManager::KeepAttack(void) {
 
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
-VA(0x0044f4c6, 0x114)
+VA(0x0046e26e, 0x114)
 i32 combatManager::ExperienceValueOfStack(i8 side) {
     i32 i;
     i32 value;
@@ -1362,7 +1362,7 @@ i32 combatManager::ExperienceValueOfStack(i8 side) {
 }
 
 // Buka CMBTMGR.cpp ResetHitByCreature.
-VA(0x0044f5da, 0x78)
+VA(0x0046e382, 0x78)
 void combatManager::ResetHitByCreature(void) {
     i32 j;
     i32 i;
@@ -1374,13 +1374,13 @@ void combatManager::ResetHitByCreature(void) {
 }
 
 // HoMM1's combat grid is nine columns by five rows.
-VA(0x0044f652, 0x30)
+VA(0x0046e3fa, 0x30)
 i32 ValidHex(i32 hex) {
     return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 
 // HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
-VA(0x0044f682, 0x64)
+VA(0x0046e42a, 0x64)
 void combatManager::SaveCombatBorder(void) {
     if (!m_savedBorder)
         m_savedBorder = static_cast<char*>(
@@ -1394,7 +1394,7 @@ void combatManager::SaveCombatBorder(void) {
 }
 
 // HoMM1 DrawCombatBorder: put the saved rows back.
-VA(0x0044f6e6, 0x53)
+VA(0x0046e48e, 0x53)
 void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)
         return;

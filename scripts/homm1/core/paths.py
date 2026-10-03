@@ -8,6 +8,7 @@ mis-resolve to main.
 from __future__ import annotations
 
 import os
+import tomllib
 from pathlib import Path
 
 
@@ -56,7 +57,8 @@ def sdk_lib_dirs() -> list[Path]:
 
 def msvc_dir() -> Path:
     """The installed VC4 tree, overridable for compiler probes."""
-    return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains/vc40")
+    compiler = tomllib.loads((CONFIG / "units.toml").read_text())["build"]["compiler"]
+    return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains" / compiler)
 
 
 def dxsdk_dir() -> Path:
@@ -67,4 +69,4 @@ def dxsdk_dir() -> Path:
 
 
 def retail_exe() -> Path:
-    return Path(os.environ.get("HOMM1_EXE") or BUILD / "orig/HEROES.EXE")
+    return Path(os.environ.get("HOMM1_EXE") or BUILD / "orig/HEROESW.EXE")

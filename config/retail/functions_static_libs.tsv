@@ -2,4 +2,4 @@
 # in config/retail/dna_bands.tsv: enrolling the whole runtime band here
 # changes Vostok's anonymous-module partition.
 rva	name	lib	confidence	source
-0x00080df0	_memset	libc.lib	crt-exact	config/retail/dna_bands.tsv; retail bytes match VC4 memset
+0x00080370	_memset	libc.lib	crt-exact	config/retail/dna_bands.tsv; retail bytes match VC4 memset

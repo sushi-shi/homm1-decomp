@@ -39,7 +39,7 @@ from homm1.tool.wine import winepath
 #: Retail's descriptors read WINMM, KERNEL32, USER32, GDI32, ADVAPI32,
 #: NETAPI32, smkwai32, WING32, wail32, yet wail32's hint/names come after the
 #: second-pass USER32/GDI32 entries (0x004d72b4). Only BASE's soundmgr calls
-#: AIL, so wail32.lib was searched before the BASE library: it pulls nothing
+#: AIL, so mss32.lib was searched before the BASE library: it pulls nothing
 #: in the first pass and everything in the second. Any slot between gdi32.lib
 #: and the BASE library gives the same image. smkwai32 and WING32 follow the
 #: BASE library, because their thunks follow the BASE run.
@@ -50,10 +50,10 @@ from homm1.tool.wine import winepath
 #: synthesized by `homm1.graph.implib` from the retail import table plus the
 #: reviewed import-thunk names in function_referents.tsv.
 LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
-             "advapi32.lib", "netapi32.lib", "wail32.lib", "smkwai32.lib",
+             "advapi32.lib", "netapi32.lib", "mss32.lib", "smackw32.lib",
              "wing32.lib"]
 
-#: Retail's C runtime is the VC4.0 multithreaded LIBCMT.LIB, not the
+#: Retail's C runtime is the VC4.1 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
 #: _mtinit/_getptd (TlsAlloc, TlsGetValue, TlsSetValue, GetCurrentThreadId,
 #: SetLastError), _lock/_unlock and the *_lk stream/file variants. Against
@@ -64,21 +64,21 @@ LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
 CRT_LIBRARY = "libcmt.lib"
 CRT_REPLACES = "libc.lib"
 
-#: The module definition: export directory (AppAbout, AppWndProc), module
-#: name and stack reserve - see the file's own header.
+#: 1.2 has no export directory. Passing even an empty /DEF to VC4 LINK
+#: creates an export directory, so stack sizes are explicit linker flags.
 MODULE_DEF = REPO / "config/heroes.def"
 
-#: Retail .text has NETAPI32's `Netbios` jump thunk at 0x0047343c, between
+#: Retail .text has NETAPI32's `Netbios` jump thunk at 0x004731d0, between
 #: comwin (the last game object of the SOURCE run) and the BASE run starting
 #: at 0x00473450. A thunk is an import-library member, and LINK places
 #: library members after every object on the line, in the order it pulls
 #: them; so everything from here on was itself pulled from a library searched
-#: after netapi32.lib (and after wail32.lib, see LINK_LIBS) - the BASE
+#: after netapi32.lib (and after mss32.lib, see LINK_LIBS) - the BASE
 #: library. Its member order is VC4 LINK's pull order (first reference in
 #: the undefined-symbol list), not a list we choose.
-BASE_LIBRARY_FROM = 0x00073450
+BASE_LIBRARY_FROM = 0x00073200
 BASE_LIBRARY = "base.lib"
-BASE_LIBRARY_AFTER = "wail32.lib"
+BASE_LIBRARY_AFTER = "mss32.lib"
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
@@ -249,7 +249,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         f"/OUT:{winepath(out)}", f"/MAP:{winepath(mapf)}",
         "/NOLOGO", "/SUBSYSTEM:WINDOWS", f"/BASE:{base}",
         "/INCREMENTAL:YES" if incremental else "/INCREMENTAL:NO",
-        f"/DEF:{winepath(MODULE_DEF)}",
+        "/STACK:0x10240,0x1000",
     ]
     if keep_all:
         # Keep every unreferenced COMDAT/thunk so the map is complete. Retail

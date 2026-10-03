@@ -65,7 +65,7 @@ def resolve_include_dirs() -> tuple[Path, str]:
     msvc_inc = msvc_dir() / "include"
     if not msvc_inc.is_dir():
         raise SystemExit("[compdb] ERROR: VC4 headers are missing; run "
-                         "`homm1 toolchain install --id vc40 --media ...`")
+                         "`homm1 toolchain install --id vc41 --media ...`")
     return msvc_inc, str(msvc_dir())
 
 

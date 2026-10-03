@@ -484,7 +484,7 @@ def play_main(argv: list[str] | None = None) -> int:
 
     The installed game folder is given once with --data and remembered; the
     user's folder is never written. `--retail` runs the staged retail
-    HEROES.EXE in the same environment, the control for triaging Wine.
+    HEROESW.EXE in the same environment, the control for triaging Wine.
     """
     import argparse
     from homm1.graph import play
@@ -495,7 +495,7 @@ def play_main(argv: list[str] | None = None) -> int:
                          "remembered after the first launch")
     ap.add_argument("--cd", type=Path, help="the game CD's contents (remembered)")
     ap.add_argument("--retail", action="store_true",
-                    help="run the staged retail HEROES.EXE instead of the candidate")
+                    help="run the staged retail HEROESW.EXE instead of the candidate")
     ap.add_argument("--dry-run", action="store_true",
                     help="build, install and prepare the prefix, but do not launch")
     a = ap.parse_args(argv)
@@ -520,7 +520,7 @@ def play_main(argv: list[str] | None = None) -> int:
         executable = REPO / graph.CANDIDATE_EXE
         if not has_rsrc(executable):
             print("[play] the candidate has no .rsrc (menus, About box, icon): install "
-                  "the pinned resource compiler with `homm1 toolchain install --id vc40 "
+                  "the pinned resource compiler with `homm1 toolchain install --id vc41 "
                   "--media build/downloads/MSVC40.iso`", file=sys.stderr)
             return 1
     try:

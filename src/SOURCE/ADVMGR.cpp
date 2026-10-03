@@ -64,17 +64,17 @@ extern i32 giSeedingValid;
 
 // DrawCell's per-call drawing state, kept in module storage as in Buka, which
 // defines it ahead of its functions (retail address order).
-DATA(0x004c53f8)
+DATA(0x004cb000)
 i32 s_drawCloudFrame;
-DATA(0x004c5420)
+DATA(0x004cb150)
 u16 s_drawGroundTile;
-DATA(0x004c554c)
+DATA(0x004cb16c)
 i8 s_drawFlipCloud;
-DATA(0x004c5554)
+DATA(0x004cafdc)
 u8 s_drawTileset;
-DATA(0x004c5558)
+DATA(0x004cb00c)
 i32 s_drawCovered;
-DATA(0x004c555c)
+DATA(0x004cb020)
 i32 s_drawStoneTile;
 
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
@@ -638,7 +638,7 @@ H1_ENUM_CONST_END(QuickViewWidget)
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
-VA(0x004252c0, 0x2cc)
+VA(0x00452ec0, 0x2cc)
 advManager::advManager(void) {
     i32 i;
 
@@ -693,13 +693,13 @@ advManager::advManager(void) {
 }
 
 // InitMainClasses deletes gpAdvManager through this vtable-reset destructor.
-VA(0x0042558c, 0x1f)
+VA(0x0045318c, 0x1f)
 advManager::~advManager() {}
 
 // donor PoL RVA 0x0005665f; preferred Buka symbol ?Open@advManager@@UAEHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
-VA(0x004255ab, 0xea6)
+VA(0x004531ab, 0xea6)
 i16 advManager::Open(i16 id) {
     i32 savedShowIt;
     i32 firstTime;
@@ -916,7 +916,7 @@ i16 advManager::Open(i16 id) {
 // donor PoL RVA 0x00057028; preferred Buka symbol ?Close@advManager@@UAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.555933;margin=0.510723;shape=0.387;size=0.995;calls=0.909;alternate=pol20:void advManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00057028
-VA(0x00426451, 0x3bd)
+VA(0x00454051, 0x3bd)
 void advManager::Close(void) {
     i16 index;
 
@@ -981,7 +981,7 @@ void advManager::Close(void) {
 // donor PoL RVA 0x00057432; preferred Buka symbol ?GetCursorSampleSet@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701218;margin=0.695021;shape=0.378;size=0.921;calls=1.000;strings=wsnd%1d%1d.82M;alternate=pol20:void advManager::GetCursorSampleSet(int)@0x00057432
-VA(0x0042680e, 0xc7)
+VA(0x0045440e, 0xc7)
 void advManager::GetCursorSampleSet(i32 sampleSet) {
     if (sampleSet >= 1)
         sampleSet = CURSOR_SAMPLE_FAST_SET;
@@ -997,7 +997,7 @@ void advManager::GetCursorSampleSet(i32 sampleSet) {
 // donor PoL RVA 0x0005751b; preferred Buka symbol ?DoAdvCommand@advManager@@QAEPAVmapCell@@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
-VA(0x004268d5, 0x619)
+VA(0x004544d5, 0x619)
 class mapCell* advManager::DoAdvCommand(void) {
     i8 moveDone;
     town* viewTown;
@@ -1131,9 +1131,9 @@ class mapCell* advManager::DoAdvCommand(void) {
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
-VA(0x00426eee, 0xe10)
+VA(0x00454aee, 0xe10)
 i16 advManager::Main(struct tag_message& message) {
-    DATA(0x0048fae8)
+    DATA(0x004a1a74)
     static i32 gCheatSeq = 0;
     i32 yPos;
     i32 xPos;
@@ -1523,7 +1523,7 @@ i16 advManager::Main(struct tag_message& message) {
 }
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
-VA(0x00427cfe, 0x22)
+VA(0x004558fe, 0x22)
 void advManager::Reseed(i32, i32) {
     giSeedingValid = 0;
 }
@@ -1531,7 +1531,7 @@ void advManager::Reseed(i32, i32) {
 // donor PoL RVA 0x00058d68; preferred Buka symbol ?ProcessSelect@advManager@@QAEHPAUtag_message@@PAPAVmapCell@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
-VA(0x00427d20, 0xe39)
+VA(0x00455920, 0xe39)
 i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
     i16 curX;
     i16 cellType;
@@ -1833,7 +1833,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 // donor PoL RVA 0x00059c19; preferred Buka symbol ?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
-VA(0x00428b59, 0x1ea)
+VA(0x00456759, 0x1ea)
 i32 advManager::ProcessDeSelect(
     struct tag_message* message,
     i32* result,
@@ -1890,7 +1890,7 @@ i32 advManager::ProcessDeSelect(
 // donor PoL RVA 0x0005a07c; preferred Buka symbol ?ProcessSearch@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
-VA(0x00428d43, 0x49b)
+VA(0x00456943, 0x49b)
 i32 advManager::ProcessSearch(i32 x, i32 y) {
     SAMPLE2 sampleData = NULL_SAMPLE2;
     i32 gaveArtifact;
@@ -1994,7 +1994,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
-VA(0x004291de, 0xc62)
+VA(0x00456dde, 0xc62)
 i32 advManager::ProcessHover(struct tag_message* message) {
     i16 curX;
     i16 curY;
@@ -2282,7 +2282,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
 // donor PoL RVA 0x0005b094; preferred Buka symbol ?UpdateScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
-VA(0x00429e40, 0x265)
+VA(0x00457a40, 0x265)
 void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     if (!forceUpdate && !bShowIt) {
         if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
@@ -2342,7 +2342,7 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
 // donor PoL RVA 0x0005b2ae; preferred Buka symbol ?CompleteDraw@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
-VA(0x0042a0a5, 0x359)
+VA(0x00457ca5, 0x359)
 void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
     i32 drawX;
     i32 drawY;
@@ -2450,14 +2450,14 @@ void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
 }
 
 // Buka 2.1 CompleteDraw(update) forwards the current map origin.
-VA(0x0042a3fe, 0x3a)
+VA(0x00457ffe, 0x3a)
 void advManager::CompleteDraw(i32 update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
-VA(0x0042a438, 0x40d)
+VA(0x00458038, 0x40d)
 i32 advManager::GetCloudLookup(i32 x, i32 y) {
     i32 cloudMask = 0;
 
@@ -2527,7 +2527,7 @@ i32 advManager::GetCloudLookup(i32 x, i32 y) {
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
-VA(0x0042a845, 0xee8)
+VA(0x00458445, 0xee8)
 void advManager::DrawCell(
     i16 mapX,
     i16 mapY,
@@ -2917,7 +2917,7 @@ void advManager::DrawCell(
 }
 
 // Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
-VA(0x0042b72d, 0x7d)
+VA(0x0045932d, 0x7d)
 mapCell* advManager::GetCell(i16 x, i16 y) {
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
         return m_mapData[0];
@@ -2925,7 +2925,7 @@ mapCell* advManager::GetCell(i16 x, i16 y) {
         return &m_mapData[x][y];
 }
 
-VA(0x0042b7aa, 0x57e)
+VA(0x004593aa, 0x57e)
 void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
     i16 y;
     i32 firstX;
@@ -3047,7 +3047,7 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
 // donor PoL RVA 0x0005f127; preferred Buka symbol ?QuickInfo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.437984;margin=0.160503;shape=0.304;size=0.325;calls=0.543;strings=qwikinfo.bin;alternate=pol20:void advManager::QuickInfo(int, int)@0x0005f127
-VA(0x0042bd28, 0x596)
+VA(0x00459928, 0x584)
 void advManager::QuickInfo(i16 cellX, i16 cellY) {
     i16 posX;
     tag_message message;
@@ -3156,7 +3156,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
 // donor PoL RVA 0x00060465; preferred Buka symbol ?UpdateHeroLocator@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
-VA(0x0042c2be, 0x3c8)
+VA(0x00459eac, 0x3c8)
 void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScreen) {
     tag_message message;
     i8 whichHero;
@@ -3248,7 +3248,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
 // donor PoL RVA 0x000607ad; preferred Buka symbol ?UpdateHeroLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520706;margin=0.246406;shape=0.456;size=0.777;calls=0.750;alternate=pol20:void advManager::UpdateHeroLocators(int, int)@0x000607ad
-VA(0x0042c686, 0x108)
+VA(0x0045a274, 0xec)
 void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
     i32 locatorSlot;
     double scrollStep;
@@ -3273,7 +3273,7 @@ void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
 // donor PoL RVA 0x000608af; preferred Buka symbol ?UpdateTownLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
-VA(0x0042c78e, 0x27f)
+VA(0x0045a360, 0x263)
 void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
     tag_message message;
     i16 i;
@@ -3325,7 +3325,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
 // donor PoL RVA 0x00060b97; preferred Buka symbol ?UpdBottomView@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
-VA(0x0042ca0d, 0x19f)
+VA(0x0045a5c3, 0x19f)
 void advManager::UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen) {
     i8 updated;
 
@@ -3378,7 +3378,7 @@ update_bottom_view:
 // donor PoL RVA 0x00060d63; preferred Buka symbol ?ClearBottomView@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.613154;margin=1.071587;shape=0.489;size=0.961;calls=1.000;alternate=pol20:void advManager::ClearBottomView(void)@0x00060d63
-VA(0x0042cbac, 0x132)
+VA(0x0045a762, 0x132)
 void advManager::ClearBottomView(void) {
     i32 widgetIndex;
 
@@ -3405,11 +3405,11 @@ void advManager::ClearBottomView(void) {
 // donor PoL RVA 0x00060e95; preferred Buka symbol ?UpdBottomViewEnemyTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
-VA(0x0042ccde, 0x5bf)
+VA(0x0045a894, 0x5bf)
 i8 advManager::UpdBottomViewEnemyTurn(void) {
-    DATA(0x0048ff4c)
+    DATA(0x004a1ed8)
     static i32 gLastSandAnimTime = 0;
-    DATA(0x0048ff50)
+    DATA(0x004a1edc)
     static i32 gLastNewSandAnimTime = 0;
     i8 updated;
     tag_message message;
@@ -3573,7 +3573,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
 // donor PoL RVA 0x000613b0; preferred Buka symbol ?UpdBottomViewNewTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
-VA(0x0042d29d, 0x3e0)
+VA(0x0045ae53, 0x3e0)
 i8 advManager::UpdBottomViewNewTurn(void) {
     i32 frameIndex;
     i32 month;
@@ -3666,7 +3666,7 @@ i8 advManager::UpdBottomViewNewTurn(void) {
 // donor PoL RVA 0x00061716; preferred Buka symbol ?UpdBottomViewResMsg@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
-VA(0x0042d67d, 0x3fa)
+VA(0x0045b233, 0x3fa)
 i8 advManager::UpdBottomViewResMsg(void) {
     i32 iconW;
     i32 iconH;
@@ -3775,7 +3775,7 @@ i8 advManager::UpdBottomViewResMsg(void) {
 // donor PoL RVA 0x00061a75; preferred Buka symbol ?UpdBottomViewKingdom@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
-VA(0x0042da77, 0x3ce)
+VA(0x0045b62d, 0x3ce)
 i8 advManager::UpdBottomViewKingdom(void) {
     i32 numVillages;
     i32 i;
@@ -3885,7 +3885,7 @@ i8 advManager::UpdBottomViewKingdom(void) {
 // donor PoL RVA 0x00061dd8; preferred Buka symbol ?UpdBottomViewHero@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
-VA(0x0042de45, 0x62c)
+VA(0x0045b9fb, 0x62c)
 i8 advManager::UpdBottomViewHero(void) {
     i16 slotNum;
     i8 creatureType;
@@ -4050,7 +4050,7 @@ i8 advManager::UpdBottomViewHero(void) {
 // donor PoL RVA 0x0006235b; preferred Buka symbol ?HeroQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
-VA(0x0042e471, 0xd46)
+VA(0x0045c027, 0xd31)
 void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY) {
     i16 savedOriginX;
     i16 portraitId;
@@ -4322,7 +4322,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
 // donor PoL RVA 0x0006308d; preferred Buka symbol ?GetArmySizeName@advManager@@QAEPADHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
-VA(0x0042f1b7, 0xe2)
+VA(0x0045cd58, 0xe2)
 char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar) {
     if (giDebugLevel > 0) {
         sprintf(cArmySizeName, "%d", armySize);
@@ -4344,7 +4344,7 @@ char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVarian
 // donor PoL RVA 0x000631ad; preferred Buka symbol ?TownQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.675336;margin=0.051432;shape=0.330;size=0.961;calls=0.941;strings=mons32.icn|qtown1.bin|smalfont.fnt;alternate=pol20:void advManager::TownQuickView(int, int, int, int)@0x000631ad
-VA(0x0042f299, 0xc51)
+VA(0x0045ce3a, 0xc4b)
 void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
     i16 portraitId;
     i16 creatureIconHeight;
@@ -4620,7 +4620,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
 // donor PoL RVA 0x00063dd6; preferred Buka symbol ?RedrawAdvScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.562981;margin=0.429826;shape=0.444;size=0.906;calls=0.909;alternate=pol20:void advManager::RedrawAdvScreen(int, int)@0x00063dd6
-VA(0x0042feea, 0xe8)
+VA(0x0045da85, 0xe8)
 void advManager::RedrawAdvScreen(i32 update) {
     if (!bShowIt)
         return;
@@ -4639,19 +4639,19 @@ void advManager::RedrawAdvScreen(i32 update) {
 }
 
 // Buka 2.1 DeactivateCurrTown clears the current player's town slot.
-VA(0x0042ffd2, 0x1f)
+VA(0x0045db6d, 0x1f)
 void advManager::DeactivateCurrTown(void) {
     gpCurPlayer->m_currentTown = GAME_TOWN_NONE;
 }
 
 // Buka 2.1 DeactivateCurrHero demobilizes before clearing the hero slot.
-VA(0x0042fff1, 0x27)
+VA(0x0045db8c, 0x27)
 void advManager::DeactivateCurrHero(void) {
     DemobilizeCurrHero();
     gpCurPlayer->m_currentHero = INVALID_HERO;
 }
 
-VA(0x00430018, 0x59)
+VA(0x0045dbb3, 0x59)
 void advManager::MobilizeCurrHero(i32 update) {
     if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
@@ -4663,7 +4663,7 @@ void advManager::MobilizeCurrHero(i32 update) {
 // donor PoL RVA 0x00063f95; preferred Buka symbol ?DemobilizeCurrHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.450729;margin=0.647673;shape=0.295;size=0.807;calls=0.800;alternate=pol20:void advManager::DemobilizeCurrHero(void)@0x00063f95
-VA(0x00430071, 0x199)
+VA(0x0045dc0c, 0x199)
 void advManager::DemobilizeCurrHero(void) {
     if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
@@ -4693,7 +4693,7 @@ void advManager::DemobilizeCurrHero(void) {
 // donor PoL RVA 0x00064101; preferred Buka symbol ?SetTownContext@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
-VA(0x0043020a, 0x255)
+VA(0x0045dda5, 0x255)
 void advManager::SetTownContext(i8 townId) {
     i16 k;
     i8 townNo;
@@ -4738,7 +4738,7 @@ void advManager::SetTownContext(i8 townId) {
 // donor PoL RVA 0x00064318; preferred Buka symbol ?SetHeroContext@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
-VA(0x0043045f, 0x3e6)
+VA(0x0045dffa, 0x3e6)
 void advManager::SetHeroContext(i8 heroId, i8 update) {
     i8 wasVisible;
     i8 heroSlot;
@@ -4814,7 +4814,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
 // donor PoL RVA 0x000646aa; preferred Buka symbol ?DoHeroKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.410865;margin=0.380092;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoHeroKnob(void)@0x000646aa
-VA(0x00430845, 0x290)
+VA(0x0045e3e0, 0x25e)
 void advManager::DoHeroKnob(void) {
     double scale;
     i16 pg;
@@ -4866,7 +4866,7 @@ void advManager::DoHeroKnob(void) {
 // donor PoL RVA 0x000648d9; preferred Buka symbol ?DoTownKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.410865;margin=0.000000;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoTownKnob(void)@0x000648d9
-VA(0x00430ad5, 0x290)
+VA(0x0045e63e, 0x25e)
 void advManager::DoTownKnob(void) {
     double scale;
     i16 pg;
@@ -4918,7 +4918,7 @@ void advManager::DoTownKnob(void) {
 // donor PoL RVA 0x0006a1dd; preferred Buka symbol ?ViewPuzzle@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
-VA(0x00430d65, 0x3da)
+VA(0x0045e89c, 0x3da)
 void advManager::ViewPuzzle(void) {
     i32 puzzleX;
     i32 puzzleY;
@@ -5007,7 +5007,7 @@ void advManager::ViewPuzzle(void) {
 
 // HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
 // visible object/overlay frames and marking the target cell.
-VA(0x0043113f, 0x236)
+VA(0x0045ec76, 0x236)
 void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
     i32 y;
     mapCell* cell;
@@ -5078,7 +5078,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
 // donor PoL RVA 0x00064b08; preferred Buka symbol ?CastSpell@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
-VA(0x00431375, 0x1f2)
+VA(0x0045eeac, 0x1f2)
 void advManager::CastSpell(i8 spell) {
     hero* caster;
     i32 guardianCount;
@@ -5139,7 +5139,7 @@ void advManager::CastSpell(i8 spell) {
 // Buka 2.1 advManager::ViewWorld (SOURCE/Viewwrld).
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
-VA(0x00431567, 0x1127)
+VA(0x0045f09e, 0x1157)
 void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
     hero* curHero;
@@ -5554,7 +5554,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
 }
 
 // HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
-VA(0x0043268e, 0x41)
+VA(0x004601f5, 0x41)
 void advManager::GrabScreen(void) {
     gpMouseManager->ReallyHidePointer();
     GrabScreenBitmap(gpWindowManager->m_screen, 0, 0);
@@ -5614,7 +5614,7 @@ H1_ENUM_END(ControlPanelHelp)
 
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
 // that also applies the walk-speed sample set and saves changed preferences.
-VA(0x004326cf, 0x321)
+VA(0x00460236, 0x321)
 i16 advManager::ControlPanel(void) {
     tag_message message;
     i32 mobilized;
@@ -5687,7 +5687,7 @@ i16 advManager::ControlPanel(void) {
 }
 
 // Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
-VA(0x004329f0, 0x227)
+VA(0x00460557, 0x227)
 void UpdateCPanel(i8 initialDraw) {
     tag_message message;
 
@@ -5733,7 +5733,7 @@ void UpdateCPanel(i8 initialDraw) {
         gPanel->MoveWindow(0, 0);
 }
 
-VA(0x00432c17, 0x232)
+VA(0x0046077e, 0x232)
 i8 SaveGame(void) {
     i16 iResult;
     fileRequester* fileReq;
@@ -5775,7 +5775,7 @@ i8 SaveGame(void) {
 }
 
 // Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
-VA(0x00432e49, 0x54b)
+VA(0x004609b0, 0x54b)
 i16 CPanelHandler(struct tag_message& message) {
     i8 changed = 0;
     char question[120];
@@ -5933,7 +5933,7 @@ i16 CPanelHandler(struct tag_message& message) {
 // donor PoL RVA 0x000650eb; preferred Buka symbol ?CheckCastSpell@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.587490;margin=0.208808;shape=0.255;size=0.813;calls=0.857;strings=advmice.mse;alternate=pol20:void advManager::CheckCastSpell(void)@0x000650eb
-VA(0x00433394, 0xab)
+VA(0x00460efb, 0xab)
 void advManager::CheckCastSpell(void) {
     if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
         MobilizeCurrHero(0);
@@ -5953,7 +5953,7 @@ void advManager::CheckCastSpell(void) {
 // donor PoL RVA 0x0006a724; preferred Buka symbol ?AdvPanel@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644374;margin=0.446733;shape=0.427;size=0.786;calls=0.720;strings=advmice.mse|apanel.bin;alternate=pol20:void advManager::AdvPanel(void)@0x0006a724
-VA(0x0043343f, 0x213)
+VA(0x00460fa6, 0x213)
 void advManager::AdvPanel(void) {
     heroWindow* adventurePanel;
     struct tag_message message;
@@ -6006,7 +6006,7 @@ void advManager::AdvPanel(void) {
 
 // Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
 // chains the dialog-select stores.
-VA(0x00433652, 0x1d3)
+VA(0x004611b9, 0x1d3)
 i16 APanelHandler(struct tag_message& message) {
     i8 handled = 0;
     if (message.type == MESSAGE_WIDGET) {
@@ -6072,7 +6072,7 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     TOWN_PORTAL_DISTANCE_LIMIT = 1000
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
-VA(0x00433825, 0x34b)
+VA(0x0046138c, 0x34b)
 i16 DimensionDoorHandler(struct tag_message& message) {
     i8 result;
     i16 mouseX;
@@ -6162,9 +6162,9 @@ i16 DimensionDoorHandler(struct tag_message& message) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 // HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
-VA(0x00433b70, 0xaf5)
+VA(0x004616d7, 0xaf7)
 i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
-    DATA(0x004904a4)
+    DATA(0x004a2430)
     static i32 gFrameCount = 0;
     i32 updateCount;
     i32 drawY;
@@ -6375,7 +6375,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
 }
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.
-VA(0x00434665, 0x3a)
+VA(0x004621ce, 0x3a)
 i8 advManager::ComboDraw(i32 update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
 }
@@ -6383,7 +6383,7 @@ i8 advManager::ComboDraw(i32 update) {
 // donor PoL RVA 0x0006668e; preferred Buka symbol ?SetEnvironmentOrigin@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
-VA(0x0043469f, 0x2dd)
+VA(0x00462208, 0x2dd)
 void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) {
     i32 soundRadius;
     i32 edgeOffset;
@@ -6466,7 +6466,7 @@ void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) 
 // donor PoL RVA 0x000669c6; preferred Buka symbol ?CheckLoadSample@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
-VA(0x0043497c, 0x69)
+VA(0x004624e5, 0x69)
 void advManager::CheckLoadSample(i32 index) {
     if (m_loopingSamples[index] == NULL) {
         TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
@@ -6478,7 +6478,7 @@ void advManager::CheckLoadSample(i32 index) {
 // donor PoL RVA 0x00066ef0; preferred Buka symbol ?InsertSound@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
-VA(0x004349e5, 0x251)
+VA(0x0046254e, 0x251)
 void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     i32 slot;
     i32 distanceLimit;
@@ -6534,15 +6534,15 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
 // absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
 // 0x004c50b0-0x004c50bf. .bss position does not move them, so they sit with
 // the spell code (USMsg and CDMsg after TeleportTo).
-DATA(0x004c53e0)
+// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 i32 iThisMaxY;
-DATA(0x004c53e4)
+// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 i32 iThisMinY;
 
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
-VA(0x00434c36, 0x340)
+VA(0x0046279f, 0x340)
 void advManager::TeleportTo(i32 x, i32 y, i32) {
     i32 savedShow;
     i32 fizzle;
@@ -6625,7 +6625,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
 // donor PoL RVA 0x00067539; preferred Buka symbol ?DimensionDoor@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.671113;margin=0.501597;shape=0.372;size=0.883;calls=0.867;strings=dimdoor.bin;alternate=pol20:void advManager::DimensionDoor(void)@0x00067539
-VA(0x00434f76, 0x246)
+VA(0x00462adf, 0x246)
 void advManager::DimensionDoor(void) {
     hero* heroPointer;
     heroWindow* win;
@@ -6661,15 +6661,15 @@ void advManager::DimensionDoor(void) {
     }
 }
 
-DATA(0x004c53e8)
+// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 struct tag_message USMsg;
-DATA(0x004c5560)
+// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 struct tag_message CDMsg;
 
 // donor PoL RVA 0x0006785d; preferred Buka symbol ?TownGate@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
-VA(0x004351bc, 0x2a6)
+VA(0x00462d25, 0x2a6)
 void advManager::TownGate(void) {
     i32 k;
     i32 bestDist;
@@ -6719,7 +6719,7 @@ void advManager::TownGate(void) {
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.502597;margin=0.051626;shape=0.294;size=0.965;calls=0.867;alternate=pol20:void advManager::SummonBoat(void)@0x00067c9b
-VA(0x00435462, 0x51c)
+VA(0x00462fcb, 0x51c)
 void advManager::SummonBoat(void) {
     hero* pHero;
     i8 boatFound;
@@ -6830,7 +6830,7 @@ summon_done:
 // donor PoL RVA 0x00068247; preferred Buka symbol ?ShowRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
-VA(0x0043597e, 0x31b)
+VA(0x004634e7, 0x31b)
 void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
     hero* pHero;
     i32 canReach;
@@ -6912,7 +6912,7 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
 // donor PoL RVA 0x00068720; preferred Buka symbol ?HideRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.524051;margin=0.948488;shape=0.403;size=0.809;calls=1.000;alternate=pol20:void advManager::HideRoute(int, int, int)@0x00068720
-VA(0x00435c99, 0x106)
+VA(0x00463802, 0x106)
 void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
     hero* currentHero;
 
@@ -6946,7 +6946,7 @@ void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
 // donor PoL RVA 0x00068827; preferred Buka symbol ?CheckDimHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.465466;margin=0.233620;shape=0.306;size=0.738;calls=1.000;alternate=pol20:void advManager::CheckDimHero(void)@0x00068827
-VA(0x00435d9f, 0x91)
+VA(0x00463908, 0x91)
 void advManager::CheckDimHero(void) {
     if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == INVALID_HERO)
         return;
@@ -6960,7 +6960,7 @@ void advManager::CheckDimHero(void) {
 // donor PoL RVA 0x000688b4; preferred Buka symbol ?CheckDimNextHeroBut@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.454682;margin=0.437763;shape=0.225;size=0.845;calls=1.000;alternate=pol20:void advManager::CheckDimNextHeroBut(void)@0x000688b4
-VA(0x00435e30, 0x6e)
+VA(0x00463999, 0x6e)
 void advManager::CheckDimNextHeroBut(void) {
     i16 frame;
 
@@ -6979,7 +6979,7 @@ void advManager::CheckDimNextHeroBut(void) {
 // donor PoL RVA 0x0006891f; preferred Buka symbol ?SeedTo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.530039;margin=0.750383;shape=0.400;size=0.820;calls=1.000;alternate=pol20:void advManager::SeedTo(int, int)@0x0006891f
-VA(0x00435e9e, 0x152)
+VA(0x00463a07, 0x152)
 void advManager::SeedTo(i32 targetX, i32 targetY) {
     hero* currentHero;
 
@@ -7022,7 +7022,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
 }
 
 // Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
-VA(0x00435ff0, 0x4f)
+VA(0x00463b59, 0x4f)
 void advManager::ForceNewHover(void) {
     struct tag_message msg;
 
@@ -7033,7 +7033,7 @@ void advManager::ForceNewHover(void) {
     ProcessHover(&msg);
 }
 
-VA(0x0043603f, 0x1b6)
+VA(0x00463ba8, 0x1b6)
 void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
     i16 yOrigin;
     i16 xOrigin;
@@ -7098,7 +7098,7 @@ void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
 // donor PoL RVA 0x00068c5c; preferred Buka symbol ?CheckScreenScroll@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.475412;margin=0.607960;shape=0.306;size=0.761;calls=1.000;alternate=pol20:void advManager::CheckScreenScroll(void)@0x00068c5c
-VA(0x004361f5, 0x1e1)
+VA(0x00463d5e, 0x1e1)
 void advManager::CheckScreenScroll(void) {
     i16 mouseX;
     i16 mouseY;
@@ -7144,7 +7144,7 @@ void advManager::CheckScreenScroll(void) {
 // donor PoL RVA 0x00068e17; preferred Buka symbol ?MouseInScrollZone@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.376012;margin=0.441568;shape=0.180;size=0.620;calls=1.000;alternate=pol20:int advManager::MouseInScrollZone(void)@0x00068e17
-VA(0x004363d6, 0xa3)
+VA(0x00463f3f, 0xa3)
 i32 advManager::MouseInScrollZone(void) {
     i16 mouseX;
     i16 mouseY;
@@ -7163,7 +7163,7 @@ i32 advManager::MouseInScrollZone(void) {
 // donor PoL RVA 0x00068ea8; preferred Buka symbol ?SetInitialMapOrigin@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
-VA(0x00436479, 0x283)
+VA(0x00463fe2, 0x283)
 void advManager::SetInitialMapOrigin(void) {
     i16 x;
     i16 y;
@@ -7213,7 +7213,7 @@ void advManager::SetInitialMapOrigin(void) {
 // donor PoL RVA 0x00069160; preferred Buka symbol ?LoadRemote@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.559158;margin=0.708697;shape=0.333;size=0.638;calls=0.706;strings=advmice.mse;alternate=pol20:void advManager::LoadRemote(void)@0x00069160
-VA(0x004366fc, 0x15d)
+VA(0x00464265, 0x15d)
 void advManager::LoadRemote(void) {
     gpMouseManager->ReallyHidePointer();
     if (gbThisNetHumanPlayer[giCurPlayer])
@@ -7238,7 +7238,7 @@ void advManager::LoadRemote(void) {
 // donor PoL RVA 0x0006931e; preferred Buka symbol ?CheckHandleNet@advManager@@QAEPADXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410587;margin=0.478746;shape=0.288;size=0.750;calls=0.692;alternate=pol20:char * advManager::CheckHandleNet(void)@0x0006931e
-VA(0x00436859, 0x178)
+VA(0x004643c2, 0x178)
 char* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     i32 remotePlayerExited;
@@ -7288,7 +7288,7 @@ char* advManager::CheckHandleNet(void) {
 // donor PoL RVA 0x0006952a; preferred Buka symbol ?CheckHandleNetPlayerWait@advManager@@QAEHAAUtag_message@@H@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.447497;margin=1.157842;shape=0.264;size=0.731;calls=1.000;alternate=pol20:int advManager::CheckHandleNetPlayerWait(struct tag_message &, int)@0x0006952a
-VA(0x004369d1, 0xd4)
+VA(0x0046453a, 0xd4)
 i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain) {
     if (message.type == MESSAGE_MOUSE_MOVE)
         gpMouseManager->Main(message);
@@ -7319,7 +7319,7 @@ i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain)
 // donor PoL RVA 0x000695f7; preferred Buka symbol ?TrimLoopingSounds@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
-VA(0x00436aa5, 0x1c2)
+VA(0x0046460e, 0x1c2)
 void advManager::TrimLoopingSounds(i32 maxSamples) {
     if (gHighMemBuffer > 0)
         maxSamples += gHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
@@ -7364,7 +7364,7 @@ disposeSamples:
 }
 
 // Buka 2.1 advManager::DisableButtons.
-VA(0x00436c67, 0xd0)
+VA(0x004647d0, 0xd0)
 void advManager::DisableButtons(void) {
     if (gpAdvManager->m_active != 1)
         return;
@@ -7372,7 +7372,7 @@ void advManager::DisableButtons(void) {
     SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_CLEAR_FLAGS);
 }
 
-VA(0x00436d37, 0xd0)
+VA(0x004648a0, 0xd0)
 void advManager::EnableButtons(void) {
     if (gpAdvManager->m_active != 1)
         return;
@@ -7380,7 +7380,7 @@ void advManager::EnableButtons(void) {
     SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
 }
 
-VA(0x00436e07, 0x138)
+VA(0x00464970, 0x138)
 void advManager::SaveAdventureBorder(void) {
     if (m_adventureBorder != NULL)
         return;
@@ -7410,7 +7410,7 @@ void advManager::SaveAdventureBorder(void) {
 // donor PoL RVA 0x00069abb; preferred Buka symbol ?DrawAdventureBorder@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.567997;margin=0.477634;shape=0.397;size=0.978;calls=1.000;alternate=pol20:void advManager::DrawAdventureBorder(void)@0x00069abb
-VA(0x00436f3f, 0x134)
+VA(0x00464aa8, 0x134)
 void advManager::DrawAdventureBorder(void) {
     u8* savedPixels;
     i8* dest;
@@ -7441,51 +7441,51 @@ void advManager::DrawAdventureBorder(void) {
     }
 }
 
-// ADVMGR owns retail .data 0x0048f828-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
+// ADVMGR owns retail .data 0x004a17b4-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
 // Retail emits gCheatSeq, the sand-animation times and gFrameCount among the
 // literals of their users.
-DATA(0x0048f828)
+DATA(0x004a17b4)
 i32 gLimitUpdMinX = UPDATE_NONE;
-DATA(0x0048f82c)
+DATA(0x004a17b8)
 i32 gLastScrollTime = 0;
-DATA(0x0048f830)
+DATA(0x004a17bc)
 i32 gSandAnim = 0;
-DATA(0x0048f834)
+DATA(0x004a17c0)
 i32 gLastHourGlassUpdateTime = 0;
-DATA(0x0048f838)
+DATA(0x004a17c4)
 i32 TrigX = 0;
-DATA(0x0048f83c)
+DATA(0x004a17c8)
 i32 TrigY = 0;
-DATA(0x0048f840)
+DATA(0x004a17cc)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;
-DATA(0x0048f844)
+DATA(0x004a17d0)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
-DATA(0x0048f848)
+DATA(0x004a17d4)
 i32 gCurHourGlassPhase = 0;
-DATA(0x0048f84c)
+DATA(0x004a17d8)
 i32 gLastHourGlassPhase = 1;
-DATA(0x0048f850)
+DATA(0x004a17dc)
 i32 gForceUpdate = 0;
-DATA(0x004c53dc)
+DATA(0x004cb168)
 class heroWindow* gPanel;
-DATA(0x004c53fc)
+DATA(0x004cafe4)
 i32 giFrameStep;
-DATA(0x004c5400)
+DATA(0x004cb170)
 char cArmySizeName[12];
-DATA(0x004c540c)
+DATA(0x004cb014)
 i32 giLimitUpdMaxX;
-DATA(0x004c5410)
+DATA(0x004cb018)
 i32 giLimitUpdMaxY;
-DATA(0x004c541c)
+DATA(0x004cb01c)
 i8 bPrefsChanged;
-DATA(0x004c5424)
+DATA(0x004cb14c)
 i32 giLimitUpdMinY;
-DATA(0x004c5428)
+DATA(0x004cb028)
 i8 bComboDraw[17][17];
-DATA(0x004c5550)
+DATA(0x004cb004)
 i8 gFreshSave;
-DATA(0x004c5570)
+DATA(0x004cafe0)
 i32 iLastAnimFrame;
-// ADVMGR's .rdata: ambient-sound volume by distance (0x0048c390).
-DATA(0x0048c390)
+// ADVMGR's .rdata: ambient-sound volume by distance (0x0048d4b8).
+DATA(0x0048d4b8)
 const i32 gEnvironmentVolume[5] = {64, 48, 32, 16, 10};

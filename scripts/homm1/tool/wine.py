@@ -75,8 +75,8 @@ def ensure_link_deps() -> None:
     """Verify the VC4 linker and its local PDB runtime are installed."""
     root = toolchain_root()
     era_tool("link.exe")
-    if find_ci(root / "bin", "mspdb40.dll") is None:
-        raise ToolError(f"MSPDB40.DLL not found under {root}/bin - reinstall "
+    if not any(find_ci(root / "bin", name) for name in ("mspdb40.dll", "mspdb41.dll")):
+        raise ToolError(f"VC4 PDB runtime not found under {root}/bin - reinstall "
                         "the pinned VC4 toolchain")
 
 

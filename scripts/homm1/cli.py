@@ -77,7 +77,7 @@ def _toolchain(argv: list[str]) -> int:
     from homm1 import toolchain
     ap = argparse.ArgumentParser(prog="homm1 toolchain")
     ap.add_argument("action", choices=("install", "check", "symbols"))
-    ap.add_argument("--id", choices=sorted(toolchain.pins()), default="vc40")
+    ap.add_argument("--id", choices=sorted(toolchain.pins()), default="vc41")
     ap.add_argument("--media", type=Path)
     ap.add_argument("--archive", type=Path,
                     help="install the pinned combined release from a local archive")

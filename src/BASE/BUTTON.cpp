@@ -13,10 +13,10 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-DATA(0x004a3448)
+DATA(0x004a54c0)
 i32 gLeftRightSave = 0;
 
-VA(0x0047f4c0, 0x31)
+VA(0x0047eb50, 0x31)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_normalFrame = 0;
     m_pressedFrame = 0;
@@ -25,12 +25,12 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
-VA_COMPGEN(0x0047f500, 0x36, "??_Gbutton@@UAEPAXI@Z", 0x0047f4c0)
+VA_COMPGEN(0x0047eb90, 0x36, "??_Gbutton@@UAEPAXI@Z", 0x0047eb50)
 button::~button(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
-VA(0x0047f540, 0xda)
+VA(0x0047ebd0, 0xda)
 void button::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -63,7 +63,7 @@ inline i16 button::Deselect(tag_message& message) {
     return MESSAGE_DISPATCH_FORWARD;
 }
 
-VA(0x0047f620, 0x528)
+VA(0x0047ecb0, 0x528)
 i16 button::Main(tag_message& message) {
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
         && KBTickCount() > glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT])
@@ -126,7 +126,7 @@ i16 button::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047fb50, 0x92)
+VA(0x0047f1e0, 0x92)
 i16 button::Select(tag_message& message) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;
@@ -144,7 +144,7 @@ i16 button::Select(tag_message& message) {
     return MESSAGE_DISPATCH_FORWARD;
 }
 
-VA(0x0047fbf0, 0x4d)
+VA(0x0047f280, 0x4d)
 void button::Draw(void) {
     if (m_flags & WIDGET_FLAG_SELECTED) {
         m_icon->DrawToBuffer(

@@ -60,7 +60,7 @@ H1_ENUM_END(RecruitControl)
 
 // Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
 // sets the creature portrait by frame rather than by icon name.
-VA(0x00401b60, 0x164)
+VA(0x004669b0, 0x164)
 void SetupRecruitWin(
     heroWindow* window,
     i32 creatureType,
@@ -109,7 +109,7 @@ void SetupRecruitWin(
 }
 
 // Buka RECRUIT.cpp:114-178; HoMM1 has no saved recruit menu.
-VA(0x00401cc4, 0x282)
+VA(0x00466b14, 0x282)
 i16 recruitUnit::Open(i16 priority) {
     i32 resourceMaximum;
     i32 goldMaximum;
@@ -175,7 +175,7 @@ i16 recruitUnit::Open(i16 priority) {
 
 // Buka RECRUIT.cpp:180-204; HoMM1 refreshes town strips whenever a town
 // recruit succeeded.
-VA(0x00401f46, 0xd1)
+VA(0x00466d96, 0xd1)
 void recruitUnit::Close(void) {
     gpWindowManager->RemoveWindow(m_window);
     delete m_window;
@@ -206,7 +206,7 @@ void recruitUnit::Close(void) {
 
 // Buka RECRUIT.cpp:206-232. Retail reserves an unreferenced 20-byte text
 // buffer above the message; the strings are formatted into gText.
-VA(0x00402017, 0x127)
+VA(0x00466e67, 0x127)
 void recruitUnit::Update(void) {
     char text[20];
     tag_message message;
@@ -234,7 +234,7 @@ void recruitUnit::Update(void) {
 
 // Buka RECRUIT.cpp:234-378; HoMM1 handles quantity edits on select and
 // the buttons on deselect, redrawing through a zero MoveWindow.
-VA(0x0040213e, 0x3e5)
+VA(0x00466f8e, 0x3e5)
 i16 recruitUnit::Main(struct tag_message& message) {
     i32 done;
     // Buka's unreferenced cost local; retail reserves its frame word.
@@ -350,7 +350,7 @@ i16 recruitUnit::Main(struct tag_message& message) {
 
 // Buka RECRUIT.cpp:380-398; HoMM1 stores the creature byte and has no
 // refresh-town argument.
-VA(0x00402523, 0xd6)
+VA(0x00467373, 0xd6)
 recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
     i32 unitCosts[RESOURCE_COUNT];
     i32 i;
@@ -374,7 +374,7 @@ recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
     }
 }
 
-VA(0x004025f9, 0xf4)
+VA(0x00467449, 0xf4)
 recruitUnit::recruitUnit(town* townData, i8 dwelling) {
     i32 unitCosts[RESOURCE_COUNT];
     i32 i;
@@ -399,7 +399,7 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
 }
 
 // Buka RECRUIT.cpp:414-451; HoMM1 hides the pointer around the quick view.
-VA(0x004026ed, 0x1b4)
+VA(0x0046753d, 0x1b4)
 void QuickViewRecruit(town* townData, i8 dwelling) {
     i32 iGoldCost;
     i32 avail;

@@ -36,7 +36,7 @@ enum ComConstant {
 
 extern ComPortState gComPorts[];
 
-VA(0x00472d80, 0x6b)
+VA(0x00437270, 0x6b)
 void add_node(tag_Anchor* anchor, tag_Node* node) {
     node->prev = node->next = NULL;
     if (anchor->tail) {
@@ -49,7 +49,7 @@ void add_node(tag_Anchor* anchor, tag_Node* node) {
     }
 }
 
-VA(0x00472deb, 0x49)
+VA(0x004372db, 0x49)
 tag_Node* pop_node(tag_Anchor* anchor) {
     tag_Node* node = anchor->head;
 
@@ -60,14 +60,14 @@ tag_Node* pop_node(tag_Anchor* anchor) {
     return node;
 }
 
-VA(0x00472e34, 0x23)
+VA(0x00437324, 0x23)
 void init_anchor(tag_Anchor* anchor, i32, i32) {
     anchor->head = NULL;
     anchor->tail = NULL;
 }
 
 // HoMM2 Buka 2.1 ShutdownComError; literals and error cases verified in 1.1.
-VA(0x00472e57, 0x3da)
+VA(0x00437347, 0x395)
 void ShutdownComError(char* function) {
     DWORD error;
     char errorName[COM_ERROR_NAME_SIZE];
@@ -144,7 +144,7 @@ void ShutdownComError(char* function) {
     ShutDown(message);
 }
 
-VA(0x00473231, 0x358)
+VA(0x004376dc, 0x358)
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     i32 error; // Unused, as in Buka; retail still reserves its slot.
     i32 slot;
@@ -225,7 +225,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     return slot;
 }
 
-VA(0x00473589, 0x111)
+VA(0x00437a34, 0x111)
 void com_term(i16 port) {
     tag_Node* node;
 
@@ -241,7 +241,7 @@ void com_term(i16 port) {
     }
 }
 
-VA(0x0047369a, 0xd9)
+VA(0x00437b45, 0xd9)
 i16 com_rcv(i16 port, u16 requested, void* buffer) {
     DWORD currentError;
     COMSTAT status;
@@ -267,7 +267,7 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
     return 0;
 }
 
-VA(0x00473773, 0x147)
+VA(0x00437c1e, 0x147)
 i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
     tag_Node* node;
     BOOL result;
@@ -299,14 +299,14 @@ i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x004738ba, 0x13)
+VA(0x00437d65, 0x13)
 i16 __cdecl com_sess(i32, i32, ...) {
     return 0;
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x004738cd, 0x66)
+VA(0x00437d78, 0x66)
 u8 com_stat(i16 port, u16) {
     DWORD modemStatus;
 
@@ -317,7 +317,7 @@ u8 com_stat(i16 port, u16) {
     return 0;
 }
 
-VA(0x00473933, 0xe7)
+VA(0x00437dde, 0xe7)
 void comm_wrt_task(void) {
     ComPortState* portState;
     tag_Node* node;
@@ -350,5 +350,5 @@ void comm_wrt_task(void) {
 }
 
 // comwin owns retail .bss 0x004ca918-0x004cabb7.
-DATA(0x004cadc8)
+DATA(0x004c29b0)
 ComPortState gComPorts[COM_PORT_COUNT];

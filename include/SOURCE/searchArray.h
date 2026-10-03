@@ -104,9 +104,9 @@ public:
     // --- constructors ---
     searchArray(void);
     // --- methods ---
-    // HoMM1 retail 0x00402af0: word coordinates and cost cap (ret 0x14).
+    // HoMM1 retail 0x0046e730: word coordinates and cost cap (ret 0x14).
     i32 BuildPath(i16 startX, i16 startY, i16 destinationX, i16 destinationY, i16 maximumCost);
-    // HoMM1 retail 0x00402be0: word seed and cost cap (ret 0x30).
+    // HoMM1 retail 0x0046e820: word seed and cost cap (ret 0x30).
     void SeedPosition(
         i16 seedX,
         i16 seedY,
@@ -121,14 +121,14 @@ public:
         i32 continueSeed,
         i32 scanMap
     );
-    // HoMM1 retail 0x004028b0: seeds from a hero and builds the path to the
+    // HoMM1 retail 0x0046e4f0: seeds from a hero and builds the path to the
     // nearest cell carrying the trigger type (EVENTS finds a town with 0xa8).
     i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
     void Init(void);
     void Close(void);
     void Clear(void);
     i16 QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2);
-    // HoMM1 retail 0x00424d90 (ret 0x30): word x/y, unsigned word
+    // HoMM1 retail 0x0044ec60 (ret 0x30): word x/y, unsigned word
     // direction/cost/mobility and byte flags and coordinates.
     void PushPoint(
         i16 x,
@@ -144,7 +144,7 @@ public:
         i8 previousX,
         i8 previousY
     );
-    // HoMM1 retail 0x00425040 (ret 0x18): word coordinates and occupancy flag.
+    // HoMM1 retail 0x0044ef10 (ret 0x18): word coordinates and occupancy flag.
     void TestPossibleDirections(
         i16 x,
         i16 y,
@@ -154,10 +154,10 @@ public:
         i32 waterMode
     );
     void SeedCombatPosition(class army* unit);
-    // HoMM1 retail 0x00424950 takes four arguments (ret 0x10).
+    // HoMM1 retail 0x0044e820 takes four arguments (ret 0x10).
     // attackPath is an ArmyPathTarget (PATH.h).
     i16 FindCombatPath(i16 sourceHex, i16 targetHex, class army* unit, i8 attackPath);
-    // HoMM1 retail 0x00424c50 (ret 0x10): word hex/direction and unsigned
+    // HoMM1 retail 0x0044eb20 (ret 0x10): word hex/direction and unsigned
     // word distance/speed.
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };

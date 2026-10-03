@@ -12,13 +12,13 @@ from homm1.core.inputs import REPO
 
 
 RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
-RELEASE_TAG = "toolchain-vc40-masm611-sdk1"
-RELEASE_ASSET = "homm1-toolchain-vc40-masm611-sdk1.tar.xz"
-RELEASE_SHA256 = "eb582d9a293cd0d666ea56eb937b6b8c0891da231bce1c5566e6450f15c4e9a5"
+RELEASE_TAG = "toolchain-win95-1.2-v1"
+RELEASE_ASSET = "homm1-toolchain-win95-1.2-v1.tar.xz"
+RELEASE_SHA256 = "b2430574160559ccfa9df604beb427955e5b641180265a3fc91e562ae87bcd63"
 #: VC4 + MASM, and the vendor SDK files pinned in config/toolchains.json
 #: (each extracted from its original media; `install --id <sdk> --media`
 #: rebuilds any of them from archive.org).
-RELEASE_COMPONENTS = ("vc40", "wing10", "dx1")
+RELEASE_COMPONENTS = ("vc41", "wing10", "dx1")
 
 
 def pins():
@@ -57,9 +57,8 @@ def verify(name, directory=None):
 
 def resource_entries(name):
     """The resource compiler pair (RC.EXE + RCDLL.DLL) and CVTRES.EXE, which
-    LINK runs on a .res input. They come from the same pinned media but are
-    not part of the compiler release bundle, so the compiler verification
-    does not require them."""
+    LINK runs on a .res input. They come from the same pinned media. The
+    Win95 1.2 release includes them; older release bundles may omit them."""
     return dict(pins()[name].get('resource_files', {}))
 
 
@@ -168,6 +167,8 @@ def install_release(archive=None):
         staged_root = extraction / 'toolchains'
         for name in RELEASE_COMPONENTS:
             verify(name, staged_root / name)
+            if resource_entries(name):
+                verify_resources(name, staged_root / name)
         for name in RELEASE_COMPONENTS:
             source = staged_root / name
             destination = root(name)

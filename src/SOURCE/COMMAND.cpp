@@ -106,7 +106,7 @@ H1_ENUM_END(CombatControlId)
 
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
-VA(0x0040f2c0, 0x311)
+VA(0x00449d70, 0x311)
 i16 combatManager::Main(struct tag_message& message) {
     i32 result = MESSAGE_DISPATCH_CONSUME;
     army* thisArmy;
@@ -174,7 +174,7 @@ processAction:
 
 // Buka COMMAND.cpp ValidHexToStandOn; HoMM1 rows are nine hexes wide and
 // the edge columns are never standable.
-VA(0x0040f5d1, 0xd6)
+VA(0x0044a081, 0xd6)
 i8 combatManager::ValidHexToStandOn(i32 hex) {
     if (hex == COMBAT_REAR_HEX_UNUSED)
         return 1;
@@ -190,7 +190,7 @@ i8 combatManager::ValidHexToStandOn(i32 hex) {
 
 // Buka COMMAND.cpp SetCombatDirections; HoMM1 reads the global adjacency
 // table and keeps the 24-sector map as bytes.
-VA(0x0040f6a7, 0x7e9)
+VA(0x0044a157, 0x7e9)
 void combatManager::SetCombatDirections(i32 targetHex) {
     i32 mapped;
     i32 targetSide;
@@ -363,7 +363,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
 
 // Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
 // odd rows shift by 66 pixels.
-VA(0x0040fe90, 0x620)
+VA(0x0044a940, 0x60c)
 void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex) {
     i32 hexDir;
     i32 savedDir;
@@ -496,7 +496,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
 
 // Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
 // command and retail maps command 13 to pointer 5, preserving all others.
-VA(0x004104b0, 0x34)
+VA(0x0044af4c, 0x34)
 H1_ENUM_RETURN(CombatPointerCode, i32)
 combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
     if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
@@ -507,7 +507,7 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
 
 // Buka COMMAND.cpp ProcessCombatMsg; HoMM1 hovers the combat field as
 // widget 0x40 and handles F1, space, H, T and C keys.
-VA(0x004104e4, 0x5bc)
+VA(0x0044af80, 0x5bc)
 i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
     i16 mouseX = message.x;
     i16 mouseY = message.y;
@@ -646,7 +646,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
 
 // Buka COMMAND.cpp ResetRound; HoMM1 has five stacks a side, one keep and
 // a byte spell-round counter.
-VA(0x00410aa0, 0x139)
+VA(0x0044b53c, 0x139)
 void combatManager::ResetRound(void) {
     i32 unusedRoundWord;
     i32 index;
@@ -678,7 +678,7 @@ void combatManager::ResetRound(void) {
 
 // Buka COMMAND.cpp CheckWin; HoMM1 returns the byte flag and names the
 // winning side directly (-1 for a draw).
-VA(0x00410bd9, 0x15d)
+VA(0x0044b675, 0x15d)
 i32 combatManager::CheckWin(struct tag_message* message) {
     i32 armyIndex;
     i8 combatEnded;
@@ -712,7 +712,7 @@ i32 combatManager::CheckWin(struct tag_message* message) {
 
 // Buka COMMAND.cpp GetCommand; HoMM1 returns each command directly, has no
 // small view or ballista and clears the target through the current stack.
-VA(0x00410d36, 0x316)
+VA(0x0044b7d2, 0x316)
 i8 combatManager::GetCommand(i16 hex) {
     i8 unusedCol = hex % COMBAT_GRID_COLUMNS;
     i8 rowIndex = hex / COMBAT_GRID_COLUMNS;
@@ -788,7 +788,7 @@ i8 combatManager::GetCommand(i16 hex) {
 
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
 // army view also takes the side.
-VA(0x0041104c, 0x1dc)
+VA(0x0044bae8, 0x1dc)
 i8 combatManager::RightClick(i8 hex) {
     i8 unusedColumn = hex % COMBAT_GRID_COLUMNS;
     i8 row = hex / COMBAT_GRID_COLUMNS;
@@ -837,7 +837,7 @@ i8 combatManager::RightClick(i8 hex) {
 
 // Buka COMMAND.cpp DoCommand; HoMM1 has no ballista or negation sphere and
 // views the army at the selected hex on the current side.
-VA(0x00411228, 0x333)
+VA(0x0044bcc4, 0x333)
 void combatManager::DoCommand(i8 command) {
     i32 unusedValue1;
     i32 unusedValue2;
@@ -929,7 +929,7 @@ void combatManager::DoCommand(i8 command) {
 
 // Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
 // cycles a single six-frame animation.
-VA(0x0041155b, 0x1a3)
+VA(0x0044bff7, 0x1a3)
 i16 WinCombatHandler(struct tag_message& message) {
     i32 finalDelay = 0x5a;
     i16 frame = 1;
@@ -971,7 +971,7 @@ i16 WinCombatHandler(struct tag_message& message) {
 }
 
 // Buka COMMAND.cpp ClearWinLoseBottom (fifteen icon/text widget pairs).
-VA(0x004116fe, 0x110)
+VA(0x0044c19a, 0x110)
 void combatManager::ClearWinLoseBottom(class heroWindow* window) {
     i32 i;
 
@@ -990,7 +990,7 @@ void combatManager::ClearWinLoseBottom(class heroWindow* window) {
 }
 
 // Buka COMMAND.cpp ShowWinLoseArtifact.
-VA(0x0041180e, 0x2fa)
+VA(0x0044c2aa, 0x2fa)
 void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) {
     char* artifactName;
     i16 boxWidth = 0x140;
@@ -1058,7 +1058,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
 
 // Buka COMMAND.cpp ShowDeadArmies; HoMM1 lays out up to five casualties a
 // side with fixed 40-pixel spacing.
-VA(0x00411b08, 0x7d0)
+VA(0x0044c5a4, 0x7d9)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 numLost[COMBAT_SIDE_COUNT];
     char* buffer;
@@ -1200,7 +1200,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
 
 // Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
 // grabs the screen instead of fading it.
-VA(0x004122d8, 0x7a1)
+VA(0x0044cd7d, 0x7a1)
 void combatManager::DoVictory(i8 winningSide) {
     i32 levelsGained;
     tag_message message;
@@ -1316,7 +1316,7 @@ void combatManager::DoVictory(i8 winningSide) {
 
 // Buka COMMAND.cpp DoLoseWindow; HoMM1 walks the defeated hero across a
 // scrolling backdrop until the window's button is released.
-VA(0x00412a79, 0x549)
+VA(0x0044d51e, 0x549)
 void combatManager::DoLoseWindow(void) {
     i16 walkFrame;
     i16 lAnimY;
@@ -1427,7 +1427,7 @@ void combatManager::DoLoseWindow(void) {
 
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
 // no quill or diplomacy discount.
-VA(0x00412fc2, 0x2c6)
+VA(0x0044da67, 0x2c6)
 i16 combatManager::DoSurrender(void) {
     heroWindow* win;
     i16 unusedResult;
@@ -1469,7 +1469,7 @@ i16 combatManager::DoSurrender(void) {
 
 // Buka COMMAND.cpp CheckChangeSelector; HoMM1 redraws the grid from the
 // lower of the old and new selector hexes.
-VA(0x00413288, 0xc2)
+VA(0x0044dd2d, 0xc2)
 void combatManager::CheckChangeSelector(void) {
     army* currentArmy;
 
@@ -1486,7 +1486,7 @@ void combatManager::CheckChangeSelector(void) {
 }
 
 // Buka COMMAND.cpp CheckCastleAttack; HoMM1 keys both on the castle side.
-VA(0x0041334a, 0xdf)
+VA(0x0044ddef, 0xdf)
 void combatManager::CheckCastleAttack(void) {
     if (m_castleSide[1 - m_currentSide]) {
         while (m_catapultAttacksRemaining[m_currentSide] > 0) {
@@ -1503,7 +1503,7 @@ void combatManager::CheckCastleAttack(void) {
 }
 
 // Buka COMMAND.cpp CheckGetAIMove; HoMM1 tries the retreat first.
-VA(0x00413429, 0x79)
+VA(0x0044dece, 0x79)
 void combatManager::CheckGetAIMove(void) {
     if (AICheckRetreat())
         return;
@@ -1514,7 +1514,7 @@ void combatManager::CheckGetAIMove(void) {
 
 // Buka COMMAND.cpp GetControl; HoMM1 always resets the pointer and has no
 // small view.
-VA(0x004134a2, 0x16a)
+VA(0x0044df47, 0x16a)
 void combatManager::GetControl(void) {
     m_selectedHex = ARMY_HEX_INVALID;
     m_previousCommand = COMBAT_INVALID_COMMAND;
@@ -1539,7 +1539,7 @@ resetMouse:
 }
 
 // Buka COMMAND.cpp ResetMouse; HoMM1 sends a hover over the combat field.
-VA(0x0041360c, 0xdb)
+VA(0x0044e0b1, 0xdb)
 void combatManager::ResetMouse(void) {
     tag_message message;
     i16 x;
@@ -1563,7 +1563,7 @@ void combatManager::ResetMouse(void) {
 
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
 // action, broadcasts it to a human net opponent and has no door or cycling.
-VA(0x004136e7, 0x552)
+VA(0x0044e18c, 0x552)
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
     army* actingArmy;
     i8 advance;
@@ -1675,21 +1675,21 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
 }
 
 // COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
-DATA(0x004a5048)
+DATA(0x004c2c7c)
 i8 gbThisNetHasControl;
-DATA(0x004a504c)
+DATA(0x004c2c98)
 i32 iCurTransferArtifact;
-DATA(0x004a5050)
+DATA(0x004c2ca4)
 i8 iMaxTransferArtifacts;
-DATA(0x004a5054)
+DATA(0x004c2c78)
 i32 giNextActionExtra;
-DATA(0x004a5058)
+DATA(0x004c2c9c)
 i32 giNextActionGridIndex;
-DATA(0x004a505c)
+DATA(0x004c2ca8)
 i32 giSurrenderCost;
-DATA(0x004a5060)
+DATA(0x004c2c88)
 i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
-DATA(0x004a5070)
+DATA(0x004c2ca0)
 i32 giNextAction;
-DATA(0x004a5074)
+DATA(0x004c2c80)
 i32 giNextActionGridIndex2;

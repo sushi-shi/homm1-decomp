@@ -17,23 +17,23 @@
 #include <stdlib.h>
 #include <string.h>
 
-DATA(0x004a13f4)
+DATA(0x004a31e0)
 char gAdventureColor[] = "CO";
-DATA(0x004a13f8)
+DATA(0x004a31e4)
 char gAdventureMonochrome[] = "BW";
-DATA(0x004a13fc)
+DATA(0x004a31e8)
 char gAdventureBitmapFormat[] = "ADVM%s%02d.BMP";
-DATA(0x004a140c)
+DATA(0x004a31f8)
 char gSpellColor[] = "CO";
-DATA(0x004a1410)
+DATA(0x004a31fc)
 char gSpellMonochrome[] = "BW";
-DATA(0x004a1414)
+DATA(0x004a3200)
 char gSpellBitmapFormat[] = "SPEL%s%02d.BMP";
-DATA(0x004a1424)
+DATA(0x004a3210)
 char gCombatColor[] = "CO";
-DATA(0x004a1428)
+DATA(0x004a3214)
 char gCombatMonochrome[] = "BW";
-DATA(0x004a142c)
+DATA(0x004a3218)
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
@@ -45,7 +45,7 @@ H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_CURSOR_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(MouseManagerStateConstant)
 
-VA(0x00476cb0, 0xab)
+VA(0x00473200, 0xab)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorImage = NULL;
@@ -67,7 +67,7 @@ mouseManager::mouseManager(void) {
     memset(hMouseCursor, 0, sizeof(hMouseCursor));
 }
 
-VA(0x00476d60, 0x46)
+VA(0x004732b0, 0x46)
 i16 mouseManager::Open(i16 priority) {
     m_savedUnderlying =
         new bitmap(BITMAP_TYPE_MEMORY, MOUSE_SAVED_BITMAP_SIZE, MOUSE_SAVED_BITMAP_SIZE);
@@ -78,7 +78,7 @@ i16 mouseManager::Open(i16 priority) {
 }
 
 // Retail releases both monochrome/color masks and pauses around cursor teardown.
-VA(0x00476db0, 0xf2)
+VA(0x00473300, 0xf2)
 void mouseManager::Close(void) {
     i32 cursorIndex;
     if (m_active == 1) {
@@ -108,13 +108,13 @@ void mouseManager::Close(void) {
     }
 }
 
-VA(0x00476eb0, 0x6)
+VA(0x00473400, 0x6)
 i16 mouseManager::Main(tag_message&) {
     return 0;
 }
 
 // HoMM1 selects the cursor family by name and forwards the requested frame.
-VA(0x00476ec0, 0x45)
+VA(0x00473410, 0x45)
 void mouseManager::SetPointer(char* name, i16 frame) {
     if (*name == 'a' || *name == 'A')
         gMouseCursorType = MOUSE_CURSOR_ADVENTURE;
@@ -128,10 +128,10 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 // donor PoL RVA 0x000c9630; preferred Buka symbol ?SetPointer@mouseManager@@QAEXH@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
-VA(0x00476f10, 0x489)
-#line 232 "D:\\Heroes\\Base\\MOUSEMGR.CPP"
+VA(0x00473460, 0x489)
+#line 232 "F:\\H1w95src\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(i16 frame) {
-    DATA(0x004a13d0)
+    DATA(0x004a31b8)
     static BOOL gInSetPointer = FALSE;
     i32 cursorIndex;
     i32 x;
@@ -265,46 +265,46 @@ void mouseManager::SetPointer(i16 frame) {
 
 // The Windows build leaves the software-pointer hooks empty; these names
 // follow the HoMM2 mouseManager methods with the same call arity.
-VA(0x004773a0, 0x1)
+VA(0x004738f0, 0x1)
 void mouseManager::ReallyShowPointer(void) {}
 
-VA(0x004773b0, 0x1)
+VA(0x00473900, 0x1)
 void mouseManager::ReallyHidePointer(void) {}
 
-VA(0x004773c0, 0x1)
+VA(0x00473910, 0x1)
 void mouseManager::HideColorPointer(void) {}
 
 // townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
 // under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
 // RestoreUnderlying pair); retail keeps only the returns.
-VA(0x004773d0, 0x1)
+VA(0x00473920, 0x1)
 void mouseManager::RestoreUnderlying(void) {}
 
 // advManager::UpdateScreen pushes the two origin words and a sign-extended
 // cursor flag word.
-VA(0x004773e0, 0x3)
+VA(0x00473930, 0x3)
 void mouseManager::SaveAndDraw(bitmap*, i16, i16, i16) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
 // build ignores it (`ret 8`).
-VA(0x004773f0, 0x3)
+VA(0x00473940, 0x3)
 void mouseManager::MovePointer(i16, i16) {}
 
-VA(0x00477400, 0x1)
+VA(0x00473950, 0x1)
 void mouseManager::ShowColorPointer(void) {}
 
 // townManager::Open forces a pointer refresh here; the Windows build keeps
 // only the one-argument return.
-VA(0x00477410, 0x3)
+VA(0x00473960, 0x3)
 void mouseManager::NewUpdate(i32) {}
 
-VA(0x00477420, 0x3)
+VA(0x00473970, 0x3)
 void mouseManager::WarpPointer(i16, i16) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.387847;margin=0.576156;shape=0.081;size=0.906;calls=1.000;alternate=pol20:void mouseManager::MouseCoords(int &, int &)@0x000c9ec0
-VA(0x00477430, 0x5a)
+VA(0x00473980, 0x5a)
 void mouseManager::MouseCoords(i16& x, i16& y) {
     POINT point;
 
@@ -314,30 +314,30 @@ void mouseManager::MouseCoords(i16& x, i16& y) {
     y = CLIENT_TO_GAME_Y(point.y);
 }
 
-VA(0x00477490, 0x3)
+VA(0x004739e0, 0x3)
 void mouseManager::SetCursorShape(i32) {}
 
 // advManager::Open passes the colour-pointer preference; Windows ignores it.
-VA(0x004774a0, 0x3)
+VA(0x004739f0, 0x3)
 void mouseManager::SetColorMice(i32) {}
 
-VA(0x004774b0, 0x9)
+VA(0x00473a00, 0x9)
 void mouseManager::HideSystemCursor(void) {
     ShowCursor(FALSE);
 }
 
-VA(0x004774c0, 0x9)
+VA(0x00473a10, 0x9)
 void mouseManager::ShowSystemCursor(void) {
     ShowCursor(TRUE);
 }
 
 // Mouse-manager data, initialized from retail .data (0x004a0e70..) and
 // zero-filled cursor tables (0x004cac88..).
-DATA(0x004a1318)
+DATA(0x004a3100)
 i32 gMouseOffset[3] = {0, 40, 55};
-DATA(0x004a1324)
+DATA(0x004a310c)
 i32 gMouseCursorType = 0;
-DATA(0x004a1328)
+DATA(0x004a3110)
 u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {2, 3},   {2, 3},   {12, 11}, {12, 13}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},
     {15, 15}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},   {15, 15}, {15, 11}, {10, 10},
@@ -349,19 +349,19 @@ u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
     {22, 23}, {22, 23}, {22, 23}
 };
-DATA(0x004cb138)
+DATA(0x004cea00)
 HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
-DATA(0x004cb268)
+DATA(0x004cd860)
 BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
-DATA(0x004cb970)
+DATA(0x004ce670)
 HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
-DATA(0x004cbaa0)
+DATA(0x004cf110)
 u8* cAndBits[MOUSE_CURSOR_COUNT];
-DATA(0x004cbbd0)
+DATA(0x004cdf68)
 BITMAP bmpColor[MOUSE_CURSOR_COUNT];
-DATA(0x004cc2d8)
+DATA(0x004ce8d0)
 i8* gColorBits[MOUSE_CURSOR_COUNT];
-DATA(0x004cc408)
+DATA(0x004ceb30)
 ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
-DATA(0x004cc9e8)
+DATA(0x004ce7a0)
 HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];

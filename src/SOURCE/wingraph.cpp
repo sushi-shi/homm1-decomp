@@ -17,69 +17,69 @@
 #include <stdlib.h>
 #include <string.h>
 
-// wingraph owns retail .data 0x0048e178-0x0048eb17 (definitions below in
+// wingraph owns retail .data 0x0049fe60-0x0048eb17 (definitions below in
 // retail order; initializers are retail bytes) and .bss 0x004a46a0-0x004a4b7f.
 // Its DDSD line arguments are /Gi compiler line statics (docs/patterns/vc4-gi-line-var.md).
-DATA(0x0048e178)
+DATA(0x0049fe60)
 BOOL gWinGAttached = TRUE;
-DATA(0x0048e17c)
+DATA(0x0049fe64)
 BOOL gDDrawAttached = FALSE;
-DATA(0x0048e180)
+DATA(0x0049fe68)
 H1_ENUM_STORAGE(WingraphGraphicsType, i32) gGraphicsType = WINGRAPH_GRAPHICS_WING;
-DATA(0x0048e184)
+DATA(0x0049fe6c)
 i32 gMainVideoModeColorDepth = 16;
-DATA(0x0048e188)
+DATA(0x0049fe70)
 i32 gMainVideoModeWidth = 1024;
-DATA(0x0048e18c)
+DATA(0x0049fe74)
 i32 gMainVideoModeHeight = 768;
-DATA(0x0048e190)
+DATA(0x0049fe78)
 i32 Orientation = 1;
-DATA(0x0048e198)
+DATA(0x0049fe80)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
-DATA(0x0048e59c)
+DATA(0x004a0284)
 void* gInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
-DATA(0x0048e5a4)
+DATA(0x004a028c)
 i32 gTtlBlts = 0;
-DATA(0x0048e5a8)
+DATA(0x004a0290)
 BOOL gWinGraphBusy = FALSE;
-DATA(0x0048e5ac)
+DATA(0x004a0294)
 DirectDrawCreateProc gDirectDrawCreate = NULL;
-DATA(0x0048e5b0)
+DATA(0x004a0298)
 IDirectDraw* gDD = NULL;
-DATA(0x0048e5b4)
+DATA(0x004a029c)
 IDirectDrawSurface* gDDSPrimary = NULL;
-DATA(0x0048e5b8)
+DATA(0x004a02a0)
 IDirectDrawSurface* gDDSOne = NULL;
-DATA(0x0048e5bc)
+DATA(0x004a02a4)
 IDirectDrawClipper* gClipper = NULL;
-DATA(0x0048e5c0)
+DATA(0x004a02a8)
 IDirectDrawPalette* gDDPal = NULL;
-DATA(0x0048e674)
+DATA(0x004a035c)
 i32 gBusyRetry = 0;
-DATA(0x0048e84c)
+DATA(0x004a0534)
 BOOL gInDDSD = FALSE;
-DATA(0x0048e94c)
+DATA(0x004a0634)
 HDC hdcImage = NULL;
-DATA(0x0048e950)
+DATA(0x004a0638)
 HBITMAP gbmOldMonoBitmap = NULL;
-DATA(0x0048e954)
+DATA(0x004a063c)
 HPALETTE hpalApp = NULL;
-DATA(0x0048e9fc)
+DATA(0x004a06e4)
 HINSTANCE gDDrawLibrary = NULL;
-DATA(0x004a5020)
+DATA(0x004c24f0)
 RECT gDDClientRect;
-DATA(0x004a4b58)
+DATA(0x004c2500)
 RECT gDDSourceRect;
-DATA(0x004a4b68)
+DATA(0x004c24d8)
 RECT gDDDestinationRect;
-DATA(0x004a4b50)
+DATA(0x004c24e8)
 i32 gDDResult;
-DATA(0x004a4b80)
+DATA(0x004c2510)
 _DDSURFACEDESC gDDSurfaceDesc;
-DATA(0x004a4b78)
+DATA(0x004c29ac)
 i32 gPaintStart;
-DATA(0x004a4bf0)
+DATA(0x004c2580)
 WingImage screenImage;
 // KB owns these scroll, combat-palette and configuration globals.
 extern i32 gScrollX;
@@ -89,8 +89,8 @@ extern i32 gLimitedCombatUpdatePalette;
 extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
-VA(0x00403640, 0x59)
-#line 49 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00434f60, 0x59)
+#line 49 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDRestoreDisplayMode() {
     i32 result;
     if (gDD != NULL) {
@@ -101,7 +101,7 @@ void DDRestoreDisplayMode() {
     }
 }
 
-VA(0x00403699, 0x46)
+VA(0x00434fb9, 0x46)
 BOOL DDQueryNewPalette() {
     // Buka 2.1 retains this unused local; retail's four-byte frame confirms it.
     i32 unused;
@@ -116,8 +116,8 @@ BOOL DDQueryNewPalette() {
 // donor PoL RVA 0x0003532b; preferred Buka symbol ?CreatePrimary@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.466160;margin=0.260025;shape=0.308;size=0.761;calls=1.000;alternate=pol20:void CreatePrimary(void)@0x0003532b
-VA(0x004036df, 0x9b)
-#line 71 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00434fff, 0x9b)
+#line 71 "F:\\h1w95src\\source\\wingraph.cpp"
 void CreatePrimary(void) {
     i32 result;
 
@@ -135,8 +135,8 @@ void CreatePrimary(void) {
 // donor PoL RVA 0x000353bf; preferred Buka symbol ?SetupClipper@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462387;margin=0.608484;shape=0.302;size=0.757;calls=1.000;alternate=pol20:void SetupClipper(void)@0x000353bf
-VA(0x0040377a, 0xeb)
-#line 91 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x0043509a, 0xeb)
+#line 91 "F:\\h1w95src\\source\\wingraph.cpp"
 void SetupClipper(void) {
     i32 result;
 
@@ -159,8 +159,8 @@ void SetupClipper(void) {
 // donor PoL RVA 0x000354a2; preferred Buka symbol ?DDInitGraphics@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.478180;margin=0.785524;shape=0.323;size=0.780;calls=1.000;alternate=pol20:void DDInitGraphics(void)@0x000354a2
-VA(0x00403865, 0x171)
-#line 114 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00435185, 0x171)
+#line 114 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDInitGraphics(void) {
     i32 result;
 
@@ -198,8 +198,8 @@ void DDInitGraphics(void) {
 // donor PoL RVA 0x00035601; preferred Buka symbol ?DDAppPaint@@YIHPAX0@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
-VA(0x004039d6, 0x592)
-#line 161 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x004352f6, 0x592)
+#line 161 "F:\\h1w95src\\source\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
     i32 ySrc;
     i32 height;
@@ -332,8 +332,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 }
 
 // Both donors retain the DirectDraw palette setup and its three locals.
-VA(0x00403f68, 0x140)
-#line 315 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00435888, 0x140)
+#line 315 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDInitializePalette() {
     i32 ddrval;
     HDC hdc;
@@ -369,8 +369,8 @@ void DDInitializePalette() {
 }
 
 // Buka's palette attachment; PoL retains the error line-base source form.
-VA(0x004040a8, 0xb3)
-#line 387 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x004359c8, 0xb3)
+#line 387 "F:\\h1w95src\\source\\wingraph.cpp"
 BOOL DDSetPalette() {
     i32 result;
     if (gWinGraphBusy != FALSE)
@@ -389,8 +389,8 @@ BOOL DDSetPalette() {
 // donor PoL RVA 0x00035d1c; preferred Buka symbol ?DDCreateSurface@@YIPAUIDirectDrawSurface@@KKH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
-VA(0x0040415b, 0x12a)
-#line 417 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00435a7b, 0x12a)
+#line 417 "F:\\h1w95src\\source\\wingraph.cpp"
 struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
@@ -435,7 +435,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 // donor PoL RVA 0x00035e4f; preferred Buka symbol ?DDSD@@YIXHPADH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.296609;margin=0.202074;shape=0.224;size=0.647;calls=0.194;alternate=pol20:void DDSD(int, char *, int)@0x00035e4f
-VA(0x00404285, 0x3ee)
+VA(0x00435ba5, 0x3ee)
 void DDSD(i32 error, char* file, i32 line) {
     i32 restoreResult;
     H1_ENUM_STORAGE(DirectDrawReportCode, i32) unused;
@@ -547,8 +547,8 @@ void DDSD(i32 error, char* file, i32 line) {
 // donor PoL RVA 0x00036421; preferred Buka symbol ?DDUpdatePalette@@YAXPAC@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
-VA(0x00404673, 0x11c)
-#line 524 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x00435f93, 0x11c)
+#line 524 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
     i32 res;
@@ -585,8 +585,8 @@ void DDUpdatePalette(i8* paletteData) {
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.511358;margin=0.374406;shape=0.341;size=0.862;calls=1.000;alternate=pol20:void DDCleanUpWinGraphics(void)@0x00036539
-VA(0x0040478f, 0x17f)
-#line 550 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x004360af, 0x17f)
+#line 550 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDCleanUpWinGraphics(void) {
     // Both locals survive in Buka591-632 and PoL481-519; restoreVal is written.
     i32 restoreVal;
@@ -628,8 +628,8 @@ void DDCleanUpWinGraphics(void) {
 // donor PoL RVA 0x000366b0; preferred Buka symbol ?DDSetFullScreenStatus@@YIXH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
-VA(0x0040490e, 0x2ea)
-#line 596 "D:\\Heroes\\Source\\wingraph.cpp"
+VA(0x0043622e, 0x2ea)
+#line 596 "F:\\h1w95src\\source\\wingraph.cpp"
 void DDSetFullScreenStatus(i32 fullScreen) {
     i32 w;
     i32 x;
@@ -698,7 +698,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
 }
 
 // The WinG palette path uses the application window and palette handles.
-VA(0x00404bf8, 0x89)
+VA(0x00436518, 0x89)
 BOOL WGQueryNewPalette() {
     i32 paletteChanges;
     {
@@ -722,7 +722,7 @@ BOOL WGQueryNewPalette() {
 // records; retail uses 10..245 for mutable entries.
 // Donor Buka 2.1 supplies the DIB setup; retail's one-word frame and API
 // call graph confirm this WinG backend initializer.
-VA(0x00404c81, 0x151)
+VA(0x004365a1, 0x151)
 void WGInitGraphics() {
     HBITMAP bitmap;
 
@@ -756,7 +756,7 @@ void WGInitGraphics() {
     PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
 
-VA(0x00404dd2, 0x1dd)
+VA(0x004366f2, 0x1dd)
 void WGUpdatePalette(i8* paletteData) {
     HDC dc;
     i32 result;
@@ -818,7 +818,7 @@ void WGUpdatePalette(i8* paletteData) {
 
 // Buka 2.1 initializes the system-reserved WinG colors and leaves the
 // mutable interior flagged for palette animation; retail uses the same bands.
-VA(0x00404faf, 0x1d5)
+VA(0x004368cf, 0x1d5)
 void WGInitializePalette() {
     HDC hdc;
     i32 i;
@@ -861,7 +861,7 @@ void WGInitializePalette() {
 
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
 // client-to-game transform uses its pinned 640x480 viewport.
-VA(0x00405184, 0x1c0)
+VA(0x00436aa4, 0x1c0)
 BOOL WGAppPaint(void* window, void* paintDC) {
     i32 srcX;
     i32 iSrcY;
@@ -927,7 +927,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
     return TRUE;
 }
 
-VA(0x00405344, 0x78)
+VA(0x00436c64, 0x78)
 void WGCleanUpWinGraphics() {
     HGDIOBJ bitmap;
 
@@ -945,7 +945,7 @@ void WGCleanUpWinGraphics() {
 
 // The Buka loader supplies the DLL and factory sequence; HoMM1 retail's
 // failed-factory arm invokes ShutDown with its own error string.
-VA(0x004053bc, 0x6c)
+VA(0x00436cdc, 0x6c)
 void ConnectToDLLs() {
     gDDrawLibrary = LoadLibraryA("DDRAW.DLL");
     if (reinterpret_cast<u32>(gDDrawLibrary)
@@ -962,7 +962,7 @@ void ConnectToDLLs() {
 }
 
 // Buka's DLL teardown checks the Win32 module handle before release.
-VA(0x00405428, 0x29)
+VA(0x00436d48, 0x29)
 void DisconnectDLLs() {
     if (reinterpret_cast<u32>(gDDrawLibrary)
         >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
@@ -971,7 +971,7 @@ void DisconnectDLLs() {
 
 // @dead-code
 // Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
-VA(0x00405451, 0x2c)
+VA(0x00436d71, 0x2c)
 void RestoreDisplayMode() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return;
@@ -979,7 +979,7 @@ void RestoreDisplayMode() {
         DDRestoreDisplayMode();
 }
 
-VA(0x0040547d, 0x2e)
+VA(0x00436d9d, 0x2e)
 BOOL SetPalette() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return FALSE;
@@ -990,7 +990,7 @@ BOOL SetPalette() {
 // donor PoL RVA 0x0003728a; preferred Buka symbol ?GetGraphicsInfo@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.553360;margin=0.492664;shape=0.455;size=0.829;calls=1.000;alternate=pol20:void GetGraphicsInfo(void)@0x0003728a
-VA(0x004054ab, 0x81)
+VA(0x00436dcb, 0x81)
 void GetGraphicsInfo(void) {
     HDC screenDC;
     screenDC = GetDC(NULL);
@@ -1009,7 +1009,7 @@ void GetGraphicsInfo(void) {
 }
 
 // Buka's graphics startup sequence; HoMM1 has no intervening debug logs.
-VA(0x0040552c, 0x60)
+VA(0x00436e4c, 0x60)
 void InitGraphics() {
     ConnectToDLLs();
     if (gConfig.gfx[gCurExe].fullScreen != 0)
@@ -1023,7 +1023,7 @@ void InitGraphics() {
 }
 
 // Buka's graphics dispatcher returns the selected backend's paint result.
-VA(0x0040558c, 0x47)
+VA(0x00436eac, 0x47)
 BOOL AppPaint(void* window, void* paintDC) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGAppPaint(window, paintDC);
@@ -1031,7 +1031,7 @@ BOOL AppPaint(void* window, void* paintDC) {
         return DDAppPaint(window, paintDC);
 }
 
-VA(0x004055d3, 0x2c)
+VA(0x00436ef3, 0x2c)
 void InitializePalette() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGInitializePalette();
@@ -1040,7 +1040,7 @@ void InitializePalette() {
 }
 
 // Retail and Buka dispatch the same palette buffer to the selected backend.
-VA(0x004055ff, 0x3a)
+VA(0x00436f1f, 0x3a)
 void UpdatePalette(i8* paletteData) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGUpdatePalette(paletteData);
@@ -1048,7 +1048,7 @@ void UpdatePalette(i8* paletteData) {
         DDUpdatePalette(paletteData);
 }
 
-VA(0x00405639, 0x31)
+VA(0x00436f59, 0x31)
 void CleanUpWinGraphics() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGCleanUpWinGraphics();
@@ -1060,7 +1060,7 @@ void CleanUpWinGraphics() {
 // donor PoL RVA 0x00037483; preferred Buka symbol ?SetFullScreenStatus@@YIXH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
-VA(0x0040566a, 0xb9)
+VA(0x00436f8a, 0xb9)
 void SetFullScreenStatus(i32 fullScreen) {
     if (gInSmacker != 0)
         return;
@@ -1080,7 +1080,7 @@ void SetFullScreenStatus(i32 fullScreen) {
     }
 }
 
-VA(0x00405723, 0x31)
+VA(0x00437043, 0x31)
 BOOL QueryNewPalette() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGQueryNewPalette();
@@ -1091,7 +1091,7 @@ BOOL QueryNewPalette() {
 // donor PoL RVA 0x00037595; preferred Buka symbol ?SetGraphicsType@@YIHH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565182;margin=0.258783;shape=0.434;size=0.909;calls=1.000;alternate=pol20:int SetGraphicsType(int)@0x00037595
-VA(0x00405754, 0x1f3)
+VA(0x00437074, 0x1f3)
 BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     void* screenBuffer;
     i32 w;

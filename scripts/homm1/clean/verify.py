@@ -14,10 +14,10 @@ numbers, so dropping the scaffolding includes, `#line` pins and comment lines
 moves register and operand choices. The control tree isolates the transforms
 from that compiler state: the same macro expansions and comment removal, with
 every line, `#line` pin, scaffolding header and include kept. The control must reproduce every matching object section and the
-candidate HEROES.EXE byte for byte, LINK's TimeDateStamps aside.
+candidate HEROESW.EXE byte for byte, LINK's TimeDateStamps aside.
 
 Finally the tree's own `build.py` runs through its flake, which fetches the
-hash-pinned toolchain release, and must produce HEROES.EXE.
+hash-pinned toolchain release, and must produce HEROESW.EXE.
 
 Objects are compared section by section outside `.debug$*` (raw bytes,
 relocation offsets/types/target names, flags). Nothing is patched or banked;
@@ -216,7 +216,7 @@ def _build_tree(tree: Path, work: Path, label: str) -> tuple[list, dict[str, lis
 
 def _link(work: Path, built: list, res: Path | None, label: str) -> tuple[bool, dict]:
     from homm1.graph.link import candidate
-    exe = work / "HEROES.EXE"
+    exe = work / "HEROESW.EXE"
     result = candidate(exe, work / "obj", explicit=[str(o) for _u, _o, o in built], res=res)
     same, counts = compare_images(exe, REPO / graph.CANDIDATE_EXE)
     print(f"[clean] verify: {label}: linked {exe.relative_to(REPO) if exe.is_relative_to(REPO) else exe} "
@@ -296,7 +296,7 @@ def standalone(tree: Path) -> int:
         command += ["--icon-from", str(retail_exe())]
     print(f"[clean] verify: standalone: {' '.join(command[:3])} -c python3 build.py")
     result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
-    exe = tree / "build" / "HEROES.EXE"
+    exe = tree / "build" / "HEROESW.EXE"
     if result.returncode or not exe.is_file():
         print("\n".join((result.stdout + result.stderr).strip().splitlines()[-20:]),
               file=sys.stderr)

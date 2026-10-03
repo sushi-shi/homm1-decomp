@@ -301,26 +301,22 @@ def run_census():
                        "source": source, "symbol": candidate.symbol,
                        "detail": f"between exact anchors 0x{lo_rva:x},0x{hi_rva:x}"})
 
-    # Exact identities make the link boundary visible.  In this image the
-    # final vendor import-thunk block is immediately followed by LIBCMT and
-    # all later non-thunk text has dense LIBCMT anchors through the section end.
-    # Preserve ambiguous names as address labels while still assigning their
-    # proven band ownership; those rows leave the game reconstruction target.
-    crt_anchors = sorted(row["rva"] for row in rows
-                         if row["class"] in ("crt-exact", "crt-prefix"))
-    if crt_anchors:
-        before = [row["rva"] for row in rows
-                  if row["class"] == "import-thunk" and row["rva"] < crt_anchors[0]]
-        if before:
-            boundary = next((row["rva"] for row in rows
-                             if row["rva"] > max(before)
-                             and row["class"] != "linker-pad"), crt_anchors[0])
-            for row in rows:
-                if row["rva"] >= boundary and row["class"] == "unknown":
-                    row.update(**{"class": "crt-band", "source": "libcmt.lib:(link-band)",
-                                  "symbol": f"__crt_{row['rva'] + 0x400000:08X}",
-                                  "detail": (f"LIBCMT band 0x{boundary:x}..text-end; "
-                                             "symbol unresolved")})
+    # Library placement changes between releases. A vendor thunk can precede
+    # the entire BASE library, so it cannot establish where CRT ownership starts.
+    # Use the reviewed retail link band and require exact CRT anchors inside it.
+    from homm1.retail_labels.censuses import link_bands
+    for lo, hi, band in link_bands():
+        if band != "crt":
+            continue
+        if not any(lo <= row["rva"] < hi and row["class"] == "crt-exact"
+                   for row in rows):
+            raise ValueError(f"CRT band 0x{lo:x}..0x{hi:x} has no exact library controls")
+        for row in rows:
+            if lo <= row["rva"] < hi and row["class"] == "unknown":
+                row.update(**{"class": "crt-band", "source": "libcmt.lib:(link-band)",
+                              "symbol": f"__crt_{row['rva'] + 0x400000:08X}",
+                              "detail": (f"reviewed LIBCMT band 0x{lo:x}..0x{hi:x}; "
+                                         "symbol unresolved")})
     return rows
 
 

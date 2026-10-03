@@ -93,12 +93,12 @@ extern i32 iDEMaxLen;
 extern i8 bDataEntryTime;
 extern H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 extern i8 gbFunctionComplete;
-// Artifact names (0x00493048).
+// Artifact names (0x00492e60).
 extern char* gArtifactNames[];
 extern char* gNeutralBuildingNames[];
 extern char* gDwellingNames[];
-// BuyBuild's building descriptions (0x00493e78, 0x00493908) and per-dwelling
-// prerequisite building masks (0x00491a68); CanBuild reads six masks per
+// BuyBuild's building descriptions (0x00493c90, 0x00493720) and per-dwelling
+// prerequisite building masks (0x00491880); CanBuild reads six masks per
 // faction.
 extern char* gNeutralBuildingDescriptions[];
 extern char* gDwellingDescriptions[];
@@ -125,7 +125,7 @@ extern class font* bigFont;
 extern class font* smallFont;
 extern i16 gScoreMon[][2];
 extern i16 gScoreCampaignMon[][2];
-// Combat effect icon files by effect (0x004910d8) and the one loaded effect
+// Combat effect icon files by effect (0x00490ef0) and the one loaded effect
 // icon (0x004c709c) army draws and PowEffect share.
 extern char* gCombatFxNames[];
 extern class icon* gCurLoadedSpellIcon;
@@ -326,26 +326,26 @@ extern i16 gRadarOwnerColor[];
 extern i16 gRadarTerrainColor[];
 // Route arrow frame by [next step][this step] path direction.
 extern i8 gRouteFrame[][8];
-// Damage multipliers for attack minus defense, -20..20 (0x00492470).
+// Damage multipliers for attack minus defense, -20..20 (0x00492288).
 extern float gBattleStat[];
 extern i16 gSpellEffectFrame;
-// Pow (impact) effect icons by effect (0x00491098).
+// Pow (impact) effect icons by effect (0x00490eb0).
 extern char* gPowEffectNames[];
 extern char* gArmySizeNames[6][2];
 // New-game "King of the Hill" option; campaign scenarios preset it.
 extern i8 gbIAmGreatest;
 extern struct campaignScenario gCampaignScenarios[];
-// Victory/defeat window texts (0x00493e48).
+// Victory/defeat window texts (0x00493c60).
 extern char* gBattleResults[];
 // Combat help lines for the auto-combat, skip and other controls.
 extern char* gCombatHelp[];
-// Command help lines for CombatMessage(short) (0x00493b38).
+// Command help lines for CombatMessage(short) (0x00493950).
 extern char* gCombatMessage[];
-// Spell-book hover help lines (0x00493a78).
+// Spell-book hover help lines (0x00493890).
 extern char* gSpellHelp[];
 // CheckHandleNet hands combat packets back while a battle is running.
 extern i8 gInCombat;
-// Neighbour hex per combat hex and direction (0x004911c0), -1 off grid.
+// Neighbour hex per combat hex and direction (0x00490fd8), -1 off grid.
 extern i8 gCombatAdjacency[45][6];
 // The loaded combat effect icon's file id (0x004c6d64).
 extern i16 gCurLoadedSpellFileId;
@@ -446,7 +446,7 @@ extern i32 giScore;
 // shares with the game screens.
 extern i8 gKBDone;
 extern i16 boatFrameFlip[];
-// Combat ground tiles (0x00491058) and obstacle icons (0x00491078) per
+// Combat ground tiles (0x00490e70) and obstacle icons (0x00490e90) per
 // combat terrain.
 extern char* gCombatGroundNames[];
 extern char* gCombatObstacleNames[];

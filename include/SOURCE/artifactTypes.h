@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-// Artifact ids follow retail gArtifactNames (0x00493048); member names use
+// Artifact ids follow retail gArtifactNames (0x00492e60); member names use
 // the short titles of gArtifactDesc, which follows it. Hero artifact slots
 // mark an empty slot with -1.
 H1_ENUM_BEGIN(ArtifactType)

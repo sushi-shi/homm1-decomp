@@ -224,12 +224,12 @@ public:
     // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
-    // HoMM1 retail 0x004180f0: word hexes, byte speed/flags (ret 0x14).
+    // HoMM1 retail 0x0046f280: word hexes, byte speed/flags (ret 0x14).
     i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
-    // HoMM1 retail 0x00418242: word hex, byte path mode, word result (ret 8).
+    // HoMM1 retail 0x0046f3d2: word hex, byte path mode, word result (ret 8).
     i16 ValidPath(i16 targetHex, i8 pathMode);
     i16 GetMoveMask(i16 sourceHex);
-    // HoMM1 retail 0x0041835b: word hex, byte mode and target (ret 0xc).
+    // HoMM1 retail 0x0046f4eb: word hex, byte mode and target (ret 0xc).
     i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
     i16 ValidMove(i16 direction);
     i16 ValidMove(i16 sourceHex, i16 direction);

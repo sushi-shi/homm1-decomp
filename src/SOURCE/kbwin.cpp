@@ -32,7 +32,7 @@
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
-VA(0x0045b7f0, 0x14e)
+VA(0x00432870, 0x14e)
 H1_C_LINKAGE i32 __stdcall
 WinMain(void* instance, void* previousInstance, char* commandLine, i32 showCommand) {
     DWORD error;
@@ -72,7 +72,7 @@ WinMain(void* instance, void* previousInstance, char* commandLine, i32 showComma
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
-VA(0x0045b93e, 0x2d6)
+VA(0x004329be, 0x2d6)
 BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
@@ -163,7 +163,7 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
 }
 
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.
-VA(0x0045bc14, 0x31)
+VA(0x00432c94, 0x31)
 BOOL AppIdle(void) {
     if (gForegroundApp != 0)
         return TRUE;
@@ -174,11 +174,11 @@ BOOL AppIdle(void) {
 // donor PoL RVA 0x0001c190; preferred Buka symbol ?AppWndProc@@YGJPAXIIJ@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
-VA(0x0045bc45, 0x617)
+VA(0x00432cc5, 0x617)
 long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
-    DATA(0x0049fef4)
+    DATA(0x0049f84c)
     static i32 gLastGTimerTickCount = 0;
-    DATA(0x0049fef8)
+    DATA(0x0049f850)
     static i32 gLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
         LogStr(
@@ -322,9 +322,9 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
     return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
 }
 
-// Identity: PE export AppAbout, ordinal 1.
+// About-dialog callback; 1.2 does not export this function.
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
-extern "C" VA(0x0045c25c, 0x90)
+extern "C" VA(0x004332dc, 0x90)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     i32 wmId;
     WORD codeNotify;
@@ -344,7 +344,7 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     return FALSE;
 }
 
-VA(0x0045c2ec, 0x1a)
+VA(0x0043336c, 0x1a)
 void AppExit(void) {
     CleanUpWinGraphics();
     CleanUpMenus();
@@ -353,11 +353,11 @@ void AppExit(void) {
 // donor PoL RVA 0x0001c7b8; preferred Buka symbol ?Process1WindowsMessage@@YIXXZ
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
-VA(0x0045c306, 0xca)
+VA(0x00433386, 0xca)
 void Process1WindowsMessage(void) {
-    DATA(0x0049ff2c)
+    DATA(0x0049f884)
     static i32 gLastGetMessage = 0;
-    DATA(0x0049ff30)
+    DATA(0x0049f888)
     static i32 gLastAilServe = 0;
     MSG message;
     i32 currentTick;
@@ -384,7 +384,7 @@ void Process1WindowsMessage(void) {
 // donor PoL RVA 0x0001c880; preferred Buka symbol ?ResizeWindow@@YIXHHHH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
-VA(0x0045c3d0, 0x127)
+VA(0x00433450, 0x127)
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     i32 xpos;
     RECT rect;
@@ -416,7 +416,7 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 // donor PoL RVA 0x0001c9c7; preferred Buka symbol ?AppCommand@@YIJPAXIIJ@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
-VA(0x0045c4f7, 0x185)
+VA(0x00433577, 0x185)
 i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC appDialogProc;
     i32 command;
@@ -426,7 +426,7 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
         case KBWIN_MENU_ABOUT:
             appDialogProc = reinterpret_cast<DLGPROC>(
                 AppAbout
-            ); // AppAbout is the exported BOOL dialog procedure.
+            ); // AppAbout is the BOOL dialog procedure.
             DialogBoxParamA(
                 static_cast<HINSTANCE>(hInstApp),
                 "HEROES",
@@ -480,7 +480,7 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
 }
 
 // PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
-VA(0x0045c67c, 0xd0)
+VA(0x004336fc, 0xd0)
 void UpdateDfltMenu(void* menu) {
     i32 result;
     i32 value;
@@ -502,7 +502,7 @@ void UpdateDfltMenu(void* menu) {
 // donor PoL RVA 0x0001cc35; preferred Buka symbol ?KBChangeMenu@@YIXPAX@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.545069;margin=0.304682;shape=0.429;size=0.841;calls=1.000;alternate=pol20:void KBChangeMenu(void *)@0x0001cc35
-VA(0x0045c74c, 0xaa)
+VA(0x004337cc, 0xaa)
 void KBChangeMenu(void* menu) {
     if (menu == NULL)
         menu = hmnuCurrent;
@@ -525,7 +525,7 @@ void KBChangeMenu(void* menu) {
 // donor PoL RVA 0x0001cce1; preferred Buka symbol ?SetMenuStatus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
-VA(0x0045c7f6, 0x135)
+VA(0x00433876, 0x135)
 void SetMenuStatus(i32 showMenu) {
     i32 clientWidth;
     i32 height;
@@ -558,9 +558,9 @@ void SetMenuStatus(i32 showMenu) {
 // donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
-VA(0x0045c92b, 0x79)
+VA(0x004339ab, 0x79)
 void SetNoDialogMenus(i32 menusEnabled) {
-    DATA(0x0049ff50)
+    DATA(0x0049f8a8)
     static i32 gNoDialogMenusOn = 0;
     if (gNoDialogMenusOn && !menusEnabled)
         return;
@@ -574,7 +574,7 @@ void SetNoDialogMenus(i32 menusEnabled) {
 
 // PoL 2.0 SetMenus correspondence: recurse into popups, then restore
 // each command from the normal or setup enable table.
-VA(0x0045c9a4, 0x15a)
+VA(0x00433a24, 0x15a)
 void SetMenus(void* menu, i32 enabled) {
     i32 itemIndex;
     i32 numItems;
@@ -613,7 +613,7 @@ void SetMenus(void* menu, i32 enabled) {
 
 // PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
 // speed and slow-video default from the detected processor family.
-VA(0x0045cafe, 0x1a3)
+VA(0x00433b7e, 0x1a3)
 void SetGameDefaults(void) {
     i32 cpuType;
     i32 i;
@@ -655,7 +655,7 @@ void SetGameDefaults(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0045cca1, 0x20d)
+VA(0x00433d21, 0x20d)
 void ReadPrefsFromFile(void) {
     FILE* fp;
     i32 result;
@@ -693,7 +693,7 @@ void ReadPrefsFromFile(void) {
     strcpy(gcRegAppPath, "");
 }
 
-VA(0x0045ceae, 0x523)
+VA(0x00433f2e, 0x525)
 void ReadPrefsFromRegistry(void) {
     HKEY key;
     DWORD cbData;
@@ -974,14 +974,14 @@ void ReadPrefsFromRegistry(void) {
     }
 }
 
-VA(0x0045d3d1, 0x15)
+VA(0x00434453, 0x15)
 void ReadPrefs(void) {
     ReadPrefsFromRegistry();
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0045d3e6, 0x8a)
+VA(0x00434468, 0x8a)
 void WritePrefsToFile(void) {
     FILE* file;
     char buffer[100];
@@ -995,7 +995,7 @@ void WritePrefsToFile(void) {
     fclose(file);
 }
 
-VA(0x0045d470, 0x3d0)
+VA(0x004344f2, 0x3c7)
 void WritePrefsToRegistry(void) {
     HKEY key;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
@@ -1235,7 +1235,7 @@ void WritePrefsToRegistry(void) {
     }
 }
 
-VA(0x0045d840, 0x1a)
+VA(0x004348b9, 0x1a)
 void WritePrefs(void) {
     UpdateSystemOptionsMenu();
     WritePrefsToRegistry();
@@ -1243,7 +1243,7 @@ void WritePrefs(void) {
 
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
-VA(0x0045d85a, 0x4c5)
+VA(0x004348d3, 0x4cb)
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     i32 count;
     u32 logicalDrives;
@@ -1351,7 +1351,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
 // donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
-VA(0x0045dd1f, 0x7c)
+VA(0x00434d9e, 0x7c)
 void SetWinText(heroWindow* window, i16 id) {
     i32 i;
     tag_message message;
@@ -1367,7 +1367,7 @@ void SetWinText(heroWindow* window, i16 id) {
 // donor PoL RVA 0x0001d011; preferred Buka symbol ?KBTickCount@@YIJXZ
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
-VA(0x0045dd9b, 0x16)
+VA(0x00434e1a, 0x16)
 i32 KBTickCount(void) {
     return GetTickCount();
 }
@@ -1375,7 +1375,7 @@ i32 KBTickCount(void) {
 // donor PoL RVA 0x000c47f0; preferred Buka symbol ?ProcessAssert@@YIXHPADH@Z
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
-VA(0x0045ddb1, 0x63)
+VA(0x00434e30, 0x63)
 void ProcessAssert(i32 condition, char* file, i32 line) {
     i32 unusedAssertWord;
     if (condition == 0) {
@@ -1387,7 +1387,7 @@ void ProcessAssert(i32 condition, char* file, i32 line) {
 }
 
 // PoL 2.0 Misc.cpp FindToken correspondence.
-VA(0x0045de14, 0x65)
+VA(0x00434e93, 0x65)
 char* FindToken(char* text, char token) {
     i32 pos;
     i32 len;
@@ -1401,7 +1401,7 @@ char* FindToken(char* text, char token) {
 }
 
 // PoL 2.0 Misc.cpp FindLastToken correspondence.
-VA(0x0045de79, 0x63)
+VA(0x00434ef8, 0x63)
 char* FindLastToken(char* text, char token) {
     i32 pos;
     i32 len;
@@ -1414,38 +1414,38 @@ char* FindLastToken(char* text, char token) {
     return NULL;
 }
 
-// kbwin owns retail .data 0x0049fe50-0x004a0503 and .bss 0x004ca490-0x004ca903.
-DATA(0x0049fe50)
+// kbwin owns retail .data 0x0049f7a8-0x004a0503 and .bss 0x004ca490-0x004ca903.
+DATA(0x0049f7a8)
 char gAppName[] = "Heroes";
-DATA(0x0049fe58)
+DATA(0x0049f7b0)
 char gTitle[] = "Heroes of Might and Magic";
-DATA(0x0049fe74)
+DATA(0x0049f7cc)
 void* hwndApp = NULL;
-DATA(0x0049fe78)
+DATA(0x0049f7d0)
 i32 gForegroundApp = 0;
-DATA(0x0049fe7c)
+DATA(0x0049f7d4)
 void* hmnuApp = NULL;
-DATA(0x0049fe80)
+DATA(0x0049f7d8)
 void* gEventHandle = NULL;
-DATA(0x0049fefc)
+DATA(0x0049f854)
 i32 gClosingApp = 0;
-DATA(0x004ca940)
+DATA(0x004c2088)
 void* hInstApp;
-DATA(0x004ca948)
+DATA(0x004c2068)
 struct tagRECT rcTemp;
-DATA(0x004ca958)
+DATA(0x004c207c)
 i32 gMainWinScreenHeight;
-DATA(0x004ca95c)
+DATA(0x004c2490)
 void* hmnuCurrent;
-DATA(0x004ca960)
+DATA(0x004c2080)
 i32 gTempX;
-DATA(0x004ca964)
+DATA(0x004c2084)
 i32 iTempY;
-DATA(0x004ca968)
+DATA(0x004c2078)
 i32 lTemp;
-DATA(0x004ca970)
+DATA(0x004c2090)
 u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
-DATA(0x004cad70)
+DATA(0x004c2498)
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
-DATA(0x004cadb0)
+DATA(0x004c2494)
 i32 iMainWinScreenWidth;

@@ -60,8 +60,8 @@ OBJDIFF_JSON = f"{COMPARE_DIR}/objdiff.json"
 REPORT_JSON = f"{COMPARE_DIR}/report.json"
 
 #: Phase 2 (opt-in): candidate image and link map.
-CANDIDATE_EXE = "build/exe/HEROES.candidate.EXE"
-CANDIDATE_MAP = "build/exe/HEROES.candidate.map"
+CANDIDATE_EXE = "build/exe/HEROESW.candidate.EXE"
+CANDIDATE_MAP = "build/exe/HEROESW.candidate.map"
 LINK_OMF_DIR = "build/link/omf"
 RESOURCE_SCRIPT = "src/SOURCE/Heroes.rc"
 RESOURCE_RES = "build/gen/heroes.res"

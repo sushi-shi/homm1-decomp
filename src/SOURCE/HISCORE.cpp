@@ -20,7 +20,7 @@
 #include <string.h>
 
 // Buka HISCORE.cpp:22-29; HoMM1 adds the dispatch mask and score-type selection.
-VA(0x00401000, 0xa0)
+VA(0x00465ec0, 0xa0)
 highScoreManager::highScoreManager(void) {
     i32 rank;
     m_dispatchMask = HIGH_SCORE_DISPATCH_MASK;
@@ -36,13 +36,13 @@ highScoreManager::highScoreManager(void) {
 }
 
 // HoMM1 keeps an empty destructor; it only restores this class's vtable.
-VA(0x004010a0, 0x1f)
+VA(0x00465f60, 0x1f)
 highScoreManager::~highScoreManager() {}
 
 // donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
-VA(0x004010bf, 0x169)
+VA(0x00465f7f, 0x169)
 i16 highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
@@ -64,7 +64,7 @@ i16 highScoreManager::Open(i16 id) {
 }
 
 // Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
-VA(0x00401228, 0x5d)
+VA(0x004660e8, 0x5d)
 void highScoreManager::Close(void) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpWindowManager->RemoveWindow(m_window);
@@ -75,7 +75,7 @@ void highScoreManager::Close(void) {
 // donor PoL RVA 0x00089c40; preferred Buka symbol ?Main@highScoreManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
-VA(0x00401285, 0x269)
+VA(0x00466145, 0x269)
 i16 highScoreManager::Main(struct tag_message& message) {
     i32 retVal;
     i32 rank;
@@ -154,7 +154,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
 // evidence: graph:2;base=0.683474;margin=0.421632;shape=0.404;size=0.957;calls=0.730;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:void highScoreManager::Update(void)@0x00089e6a
 // Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
 // rating creature directly and highlights the new entry by fill colour.
-VA(0x004014ee, 0x667)
+VA(0x004663ae, 0x5f5)
 void highScoreManager::Update(void) {
     i8 bNoFile;
     char fileName[HIGH_SCORE_FILENAME_LENGTH];

@@ -20,7 +20,7 @@
 
 #include <string.h>
 
-VA(0x00473a20, 0x199)
+VA(0x00475c40, 0x199)
 void BlitBitmapToScreen(
     bitmap* sourceBitmap,
     i32 sourceX,
@@ -69,7 +69,7 @@ void BlitBitmapToScreen(
         LogStr("UpdateWindow Failed");
 }
 
-VA(0x00473bc0, 0x30)
+VA(0x00475de0, 0x30)
 void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     BlitBitmap(
         gpWindowManager->m_screen,
@@ -83,7 +83,7 @@ void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     );
 }
 
-VA(0x00473bf0, 0x45)
+VA(0x00475e10, 0x45)
 void SetPalette(i8* paletteData, i32 updateDisplay) {
     memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
     memcpy(
@@ -95,7 +95,7 @@ void SetPalette(i8* paletteData, i32 updateDisplay) {
         UpdatePalette(gpBufferPalette->m_data);
 }
 
-VA(0x00473c40, 0xdd)
+VA(0x00475e60, 0xdd)
 void FadeIn(i32 increment) {
     i8 done;
     i32 i, j, threshold;
@@ -128,7 +128,7 @@ void FadeIn(i32 increment) {
     delete currentPalette;
 }
 
-VA(0x00473d20, 0xcd)
+VA(0x00475f40, 0xcd)
 void FadeOut(i32 increment) {
     i8 done;
     i32 i, j;
@@ -167,7 +167,7 @@ void FadeOut(i32 increment) {
 // LINK pulls a library member once per object in first-reference order, and
 // only a shared object reproduces retail's BASE order (this group first,
 // although the first symbol SOURCE references is Random). The OLDASM assert
-// keeps its own file name (retail 0x004a0c44).
+// keeps its own file name (retail 0x004a0838).
 // ---------------------------------------------------------------------------
 
 // HoMM1 OLDASM.CPP helpers; the assert literal names the retail source file.
@@ -185,8 +185,8 @@ struct PaletteColor {
     u8 blue;
 };
 
-VA(0x00473df0, 0x3a)
-#line 207 "D:\\Heroes\\Base\\OLDASM.CPP"
+VA(0x00476010, 0x3a)
+#line 207 "F:\\H1w95src\\Base\\OLDASM.CPP"
 i32 Random(i32 low, i32 high) {
 #line 208
     H1_ASSERT(high > low);
@@ -194,7 +194,7 @@ i32 Random(i32 low, i32 high) {
 }
 
 // Called on the loaded kb.pal data before SetPalette.
-VA(0x00473e30, 0x60)
+VA(0x00476050, 0x60)
 void PostprocessPalette(i8* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
@@ -205,10 +205,10 @@ void PostprocessPalette(i8* data) {
     free(remapped);
 }
 
-VA(0x00473e90, 0x1)
+VA(0x004760b0, 0x1)
 void PostprocessBitmap(i8*, i32, i32) {}
 
-VA(0x00473ea0, 0x1)
+VA(0x004760c0, 0x1)
 void PostprocessIcon(icon*) {}
 
 // HoMM1's C++ mono clipping path, corresponding to donor Iconm2b.cpp.
@@ -220,7 +220,7 @@ void PostprocessIcon(icon*) {}
 
 #include <string.h>
 
-VA(0x00473eb0, 0x1e6)
+VA(0x004760d0, 0x1e6)
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
@@ -291,28 +291,28 @@ void ClippedMonoIconToBitmap(
 // working value in file statics, as in the assembly renderers. Their
 // declaration order sets the compare operand sort keys; the .bss layout
 // follows the names, not this order.
-DATA(0x004cb080)
+DATA(0x004cf52c)
 static i32 sClipY;
-DATA(0x004cb078)
+DATA(0x004cf530)
 static i32 sClipBottom;
-DATA(0x004cb0cc)
+DATA(0x004cf520)
 static i32 sClipRowStart;
-DATA(0x004cb06c)
+DATA(0x004cf518)
 static i8* sClipRow;
-DATA(0x004cb070)
+DATA(0x004cf4c8)
 static IconEntry* sClipEntry;
-DATA(0x004cb084)
+DATA(0x004cf51c)
 static u8* sClipSource;
-DATA(0x004cb068)
+DATA(0x004cf524)
 static i32 sClipRight;
-DATA(0x004cb07c)
+DATA(0x004cf4d0)
 static i32 sClipX;
-DATA(0x004cb074)
+DATA(0x004cf4cc)
 static u32 sClipRun;
-DATA(0x004cb0c8)
+DATA(0x004cf528)
 static BOOL sClipInside;
 
-VA(0x004740a0, 0x2a5)
+VA(0x004762c0, 0x2a8)
 void ClipIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
@@ -378,5 +378,5 @@ void ClipIconToBitmap(
 // ShutDown calls it. Buka keeps a debug-heap report here; HoMM1 retail ships
 // the empty release body.
 
-VA(0x00474350, 0x1)
+VA(0x00476570, 0x1)
 void PrintMemoryLeaks(void) {}

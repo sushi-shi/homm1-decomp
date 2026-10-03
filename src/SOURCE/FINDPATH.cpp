@@ -19,39 +19,39 @@
 #include <string.h>
 
 // Pathfinder scratch state shared by PushPoint and TestPossibleDirections.
-DATA(0x004c53d0)
+DATA(0x004c2ccc)
 static i32 gSearchNextY;
-DATA(0x004c53cc)
+DATA(0x004c2cc8)
 static i32 gSearchNextX;
-DATA(0x004c53c8)
+DATA(0x004c2cd8)
 static i16 gSearchHigh;
-DATA(0x004c53c4)
+DATA(0x004c2cc4)
 static mapCell* gSearchCurrentCell;
-DATA(0x004c53c0)
+DATA(0x004c2cac)
 static searchNode* gSearchQueueNode;
-DATA(0x004c53bc)
+DATA(0x004c2cb8)
 static i16 gSearchLow;
-DATA(0x004c53b8)
+DATA(0x004c2cb4)
 static searchNode* gSearchCell;
-DATA(0x004c53b4)
+DATA(0x004c2cc0)
 static i32 gSearchTriggerType;
-DATA(0x004c53b0)
+DATA(0x004c2cd4)
 static i32 gSearchTerrain;
-DATA(0x004c53a8)
+DATA(0x004c2cb0)
 static u32 gSearchMiddle;
-DATA(0x004c53a4)
+DATA(0x004c2cdc)
 static i32 gSearchDirection;
-DATA(0x004c53a0)
+DATA(0x004c2cbc)
 static mapCell* gSearchNextCell;
 
 // Buka FINDPATH.cpp:48-51 without the heap cell pointer: HoMM1 cells are inline.
-VA(0x00424810, 0xa)
+VA(0x0044e6e0, 0x10)
 searchArray::searchArray(void) {
     m_maxQueueCount = 0;
 }
 
 // Donor Clear; retail retains inline cells instead of HoMM2 heap storage.
-VA(0x00424820, 0x23)
+VA(0x0044e6f0, 0x30)
 void searchArray::Clear(void) {
     memset(m_queue, 0, sizeof(m_queue));
     memset(m_cells, 0, sizeof(m_cells));
@@ -60,7 +60,7 @@ void searchArray::Clear(void) {
 }
 
 // Buka FINDPATH.cpp:83-88; retail retains short parameters/locals/return.
-VA(0x00424850, 0x4c)
+VA(0x0044e720, 0x50)
 i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
     i16 yDistance;
     i16 xDistance;
@@ -72,7 +72,7 @@ i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
 
 // HoMM1-only per-terrain step cost that InitVars tabulates into giTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
-VA(0x004248a0, 0x54)
+VA(0x0044e770, 0x60)
 i16 TerrainStepCost(i8 terrain, i8 diagonal) {
     i16 cost = 0;
     switch (terrain) {
@@ -96,7 +96,7 @@ i16 TerrainStepCost(i8 terrain, i8 diagonal) {
 }
 
 // Donor CalcTerrainCost family; HoMM1 lacks pathfinding-skill/road dimensions.
-VA(0x00424900, 0x4f)
+VA(0x0044e7d0, 0x4f)
 i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
     i32 baseCost;
     i32 diagonalCost;
@@ -115,7 +115,7 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
 
 // Buka FINDPATH.cpp:405-582 without the moat slowdown: HoMM1 has no castle
 // moat, and the retail body inlines Clear and QuickDistance.
-VA(0x00424950, 0x2ff)
+VA(0x0044e820, 0x2ff)
 i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 attackPath) {
     i32 bestHex;
     i32 direction;
@@ -208,7 +208,7 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
 }
 
 // Buka FINDPATH.cpp:585-646; combat nodes use the first column of m_cells.
-VA(0x00424c50, 0x13a)
+VA(0x0044eb20, 0x140)
 void searchArray::PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed) {
     i32 low;
     i32 high;
@@ -252,7 +252,7 @@ void searchArray::PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 spee
 }
 
 // Buka FINDPATH.cpp:113-183; HoMM1 keeps word binary-search bounds.
-VA(0x00424d90, 0x2ab)
+VA(0x0044ec60, 0x2b0)
 void searchArray::PushPoint(
     i16 x,
     i16 y,
@@ -325,7 +325,7 @@ void searchArray::PushPoint(
 }
 
 // Buka FINDPATH.cpp:186-316 without HoMM2's below-cell object probes.
-VA(0x00425040, 0x280)
+VA(0x0044ef10, 0x280)
 void searchArray::TestPossibleDirections(
     i16 x,
     i16 y,
@@ -432,5 +432,5 @@ void searchArray::TestPossibleDirections(
 
 // FINDPATH owns retail .bss 0x004c4ef0-0x004c4f2b: the search statics above
 // and the working mobility SEARCH seeds.
-DATA(0x004c53ac)
+DATA(0x004c2cd0)
 i16 gCurTempMobility;

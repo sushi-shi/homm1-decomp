@@ -1,35 +1,26 @@
 # Compiler and toolchain
 
-The working compiler is **Visual C++ 4.0, 10.00.5270**. Complete per-unit
-profiles live in `config/units.toml`; `/Od`, optimized BASE profiles and inline
-controls are separate measured choices. `/Z7` supplies COFF function extents.
-Do not substitute Giten VC5 or HoMM3 VC6 flags.
-
-## Setup
+This branch uses **Visual C++ 4.1, CL 10.10.6038 / LINK 3.10.6038**.
+The [original-media and real-TU controls](patterns/vc41-win95-1997.md)
+explain the selection. `config/units.toml` retains the measured `/Gi`, `/Od`,
+optimized BASE and `/GX` profiles and pins the recovered source paths.
 
 ```sh
 nix develop .#build
 homm1 toolchain install
-homm1 toolchain check --id vc40
+homm1 toolchain check --id vc41
 homm1 tool wine --init
 homm1 build
 ```
 
-`config/toolchains.json` pins media, components and release hashes.
-Installation explicitly downloads a SHA-256-checked VC4/MASM 6.11 release;
-`init` and `build` do not fetch tools implicitly. Tools, media and the local
-Wine prefix stay in ignored `build/`. Inherited CL, _CL_, INCLUDE and LIB cannot
-change compilation. SDK filenames are lowercase for native Clang analysis;
-Wine uses the same verified compiler inputs.
+The hash-pinned `toolchain-win95-1.2-v1` bundle contains VC4.1, MASM 6.11,
+WinG 1.0 and DirectX 1, including RC/RCDLL/CVTRES. Reproduce it with
+`nix-shell scripts/toolchain/create-toolchain-release.nix`; see the controls
+above for original-media hashes and the installed-files reproduction route.
+Retail game and runtime DLLs are separate user inputs.
 
-Reproduce the release with
-`nix-shell scripts/toolchain/create-toolchain-release.nix`. The builder verifies
-original media, reconstructs the MASM disk, expands KWAJ members, checks outputs
-and normalizes archive metadata. VC4 media is the
-[MSVC4x archive](https://archive.org/details/msvc4x), `MSVC40.iso`, SHA-256
-`961326efbfbd299794e2cbb102e9ff3bfe78ebf91a11b89978095f59e0aea93e`;
-MASM comes from PCjs's preserved diskette. `toolchain install --id ID --media PATH`
-is the component-repair route; the VC4 disc does not contain MASM.
+The following observations describe the earlier VC4.0 reconstruction and
+remain historical evidence; they do not override this branch's VC4.1 pins.
 
 ## Identification limits and callback control
 

@@ -2,6 +2,7 @@
 
 - [Matching workflow](tooling.md), [build system](build-system.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
+- [Win95 1.2 changes and port evidence](win95-1.2.md), [Win95 1.1 changes](win95-1.1.md).
 - [Compiler and toolchain](compiler.md), [other builds](builds.md),
   [candidate linking](linker-flags.md),
   [candidate-image checks](image-diff.md), [playing the build](play.md),

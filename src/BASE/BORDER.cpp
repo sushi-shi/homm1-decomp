@@ -13,16 +13,16 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA(0x00479d50, 0x2b)
+VA(0x0047d340, 0x2b)
 border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE), m_background(0), m_fillColor(0) {}
 
-VA_COMPGEN(0x00479d80, 0x3a, "??_Gborder@@UAEPAXI@Z", 0x00479d50)
+VA_COMPGEN(0x0047d370, 0x3a, "??_Gborder@@UAEPAXI@Z", 0x0047d340)
 border::~border(void) {
     if (m_background)
         gpResourceManager->Dispose(m_background);
 }
 
-VA(0x00479dc0, 0x5d)
+VA(0x0047d3b0, 0x5d)
 border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
     : widget(x, y, width, height, id, kind) {
     if (name != 0)
@@ -32,7 +32,7 @@ border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillCo
     m_fillColor = fillColor;
 }
 
-VA(0x00479e20, 0xc3)
+VA(0x0047d410, 0xc3)
 void border::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -52,7 +52,7 @@ void border::Read(void) {
     m_fillColor = color & COLOR_INDEX_MASK;
 }
 
-VA(0x00479ef0, 0x15d)
+VA(0x0047d4e0, 0x15d)
 i16 border::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -85,7 +85,7 @@ i16 border::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047a050, 0x9d)
+VA(0x0047d640, 0x9d)
 void border::Draw(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;

@@ -1,7 +1,11 @@
 # Per-TU build contract, following Gruntz. See config/README.md.
 [build]
 platform = "win32"
-compiler = "vc40"
+compiler = "vc41"
+# Literal __FILE__ roots recovered from the August 1997 retail image.
+[build.source_roots]
+BASE = 'F:\H1w95src\Base'
+SOURCE = 'F:\h1w95src\source'
 
 [flags]
 # Retail was compiled incrementally (/Zi /Gi; VC4 /Gi needs /Zi): its __LINE__
@@ -9,7 +13,7 @@ compiler = "vc40"
 # literals and Misc+PHILAI's _$E2-first dynamic initializer are /Gi output
 # (docs/patterns/vc4-gi-incremental-compilation.md, docs/patterns/vc4-gi-line-var.md).
 # /Gi code depends on the opened files' path strings, so /Gi compiles run through
-# homm1.tool.fixedroot (D:\\Heroes\\Source\\X.CPP whatever the checkout).
+# homm1.tool.fixedroot (the source_roots above, independent of checkout).
 # SOURCE objects are packed and keep unreferenced functions: no /Gy, and a
 # listing switch (/Fa) makes the pinned C2 emit one .text section
 # (docs/patterns/vc4-gi-listing-packs-functions.md). BASE C++ is /Gy

@@ -3,6 +3,9 @@
 // the epilogue jump); SetGameDefaults picks the walk speed from GetCPUType.
 
 #include <match.h>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <string.h>
 
 #include <SOURCE/kbwin.h>
 
@@ -18,7 +21,7 @@
 // by the measured ticks to MHz.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00472150, 0x1c9)
+VA(0x0043c840, 0x145)
 i32 CPUSpeed(u8 cpuType) {
     double tickPeriod = 838.0965152;
     double divs = 800.0;
@@ -48,87 +51,18 @@ i32 CPUSpeed(u8 cpuType) {
     return static_cast<i32>((freq + 0.5) * 100.0) / 100;
 }
 
-// Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,
-// otherwise the CPUID family with 1 in the high byte.
-// What the assembly does, in C++ (the 3 and 4 only reach AX, which the final
-// pops restore, so on a 386/486 cpuType is returned unwritten):
-//
-//   short cpuType;                                  // uninitialized
-//   if (EFLAGS.AC (bit 18) toggles) {               // not a 386
-//       if (EFLAGS.ID (bit 21) toggles) {            // CPUID present
-//           unsigned eax = cpuid(1).eax;             // emitted 0F A2
-//           cpuType = (short)(0x100 | ((eax & 0xf00) >> 8));
-//       }                                            // else ax = 4, discarded
-//   }                                                // else ax = 3, discarded
-//   return cpuType;
-//
-// Each flag probe saves EFLAGS, flips the bit with interrupts off, reads
-// EFLAGS back and restores it; EAX..EDX, DS and ES are saved around the block.
-VA(0x00472319, 0x80)
+// Win95 1.2 asks Windows for the processor family; unknown types return zero.
+VA(0x0043c985, 0x87)
 i16 GetCPUType(void) {
-    i16 cpuType;
-
-    __asm {
-        push eax
-        push ebx
-        push ecx
-        push edx
-        push ds
-        push es
-        cli
-        pushfd
-        pop eax
-        mov ebx, eax
-        xor eax, 40000h
-        push eax
-        popfd
-        pushfd
-        pop eax
-        push ebx
-        popfd
-        sti
-        xor eax, ebx
-        jnz check_486
-        mov ax, 3
-        jmp done
-    check_486:
-        cli
-        pushfd
-        pop eax
-        mov ebx, eax
-        xor eax, 200000h
-        push eax
-        popfd
-        pushfd
-        pop eax
-        push ebx
-        popfd
-        sti
-        xor eax, ebx
-        jnz has_cpuid
-        mov ax, 4
-        jmp done
-    has_cpuid:
-        push ecx
-        push edx
-        mov eax, 1
-        _emit 0x0f
-        _emit 0xa2
-        and eax, 0f00h
-        shr eax, 8
-        mov ah, 1
-        mov cpuType, ax
-        pop edx
-        pop ecx
-    done:
-        pop es
-        pop ds
-        pop edx
-        pop ecx
-        pop ebx
-        pop eax
+    SYSTEM_INFO info;
+    memset(&info, 0, sizeof(info));
+    GetSystemInfo(&info);
+    switch (info.dwProcessorType) {
+        case PROCESSOR_INTEL_386: return CPU_FAMILY_386;
+        case PROCESSOR_INTEL_486: return CPU_FAMILY_486;
+        case PROCESSOR_INTEL_PENTIUM: return CPU_FAMILY_PENTIUM;
     }
-    return cpuType;
+    return 0;
 }
 
 // Counts PIT channel-2 ticks across the divide loop with the speaker gate
@@ -147,7 +81,7 @@ i16 GetCPUType(void) {
 //   outp(0x43, 0x80);                    // latch channel 2
 //   unsigned short left = inp(0x42); left |= inp(0x42) << 8;
 //   return (short)~left;                 // ticks elapsed from 0xffff
-VA(0x00472399, 0x9d9)
+VA(0x0043ca0c, 0x9d9)
 i16 TimeProcessor(void) {
     i16 ticks;
 

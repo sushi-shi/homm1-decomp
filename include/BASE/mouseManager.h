@@ -69,7 +69,7 @@ public:
     void CheckUpdateMousePos(void);
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(i16, i16);
-    // Empty in the Windows build (retail 0x00476ec0, `ret 4`); the locator
+    // Empty in the Windows build (retail 0x00473410, `ret 4`); the locator
     // knob drag passes 4 on entry and 6 on release.
     void SetCursorShape(i32);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).

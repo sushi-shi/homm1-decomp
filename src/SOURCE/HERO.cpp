@@ -31,7 +31,7 @@
 
 // clang-format off
 // herowind.bin widget ids. Names follow UpdateHeroScreenStatusBar's
-// gHeroScreen texts (0x00493998) and what HeroView, UpdateArmies and
+// gHeroScreen texts (0x004937b0) and what HeroView, UpdateArmies and
 // HeroHandler send to or do with each id; artifact and army slots are
 // indexed from their first id, primary stats by HeroPrimaryStat.
 H1_ENUM_BEGIN(HeroScreenControl)
@@ -63,7 +63,7 @@ H1_ENUM_BEGIN(HeroScreenControl)
     HERO_SCREEN_DISMISS = DIALOG_BUTTON_3
 H1_ENUM_END(HeroScreenControl)
 
-// gHeroScreen (0x00493998) status-bar texts, as UpdateHeroScreenStatusBar
+// gHeroScreen (0x004937b0) status-bar texts, as UpdateHeroScreenStatusBar
 // picks them: "Kingdom Overview", "View %s Info", "Additional hero
 // characteristics", good/neutral/bad morale and luck, "View Experience
 // Info", "Select %s", "Empty", "Move %s", "Exchange %s with %s", "View
@@ -131,7 +131,7 @@ H1_ENUM_END(HeroLevelText)
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0
-VA(0x0046bbb0, 0x68)
+VA(0x00447250, 0x68)
 // clang-format on
 hero::hero(void) {
     m_id = 0;
@@ -148,10 +148,10 @@ hero::hero(void) {
 // Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046bc18, 0x18)
+VA(0x004472b8, 0x18)
 void hero::GetArmyStrengths(u32* const) {}
 
-VA(0x0046bc30, 0x5d)
+VA(0x004472d0, 0x5d)
 i8 hero::HasArtifact(i8 artifact) {
     i16 i;
 
@@ -165,7 +165,7 @@ i8 hero::HasArtifact(i8 artifact) {
 // donor PoL RVA 0x0006c526; preferred Buka symbol ?CalcMobility@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
-VA(0x0046bc8d, 0x1ed)
+VA(0x0044732d, 0x1ed)
 i16 hero::CalcMobility(void) {
     i16 mobility[3] = {40, 50, 60};
     const i16 seaMobility = 60;
@@ -207,7 +207,7 @@ i16 hero::CalcMobility(void) {
     return result;
 }
 
-VA(0x0046be7a, 0x56)
+VA(0x0044751a, 0x56)
 i8 hero::HasSpell(i8 spell) {
     i32 i;
 
@@ -218,7 +218,7 @@ i8 hero::HasSpell(i8 spell) {
     return 0;
 }
 
-VA(0x0046bed0, 0xf0)
+VA(0x00447570, 0xf0)
 i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
     i16 combat = 0;
     i16 adventure = 0;
@@ -243,7 +243,7 @@ i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
     return 0;
 }
 
-VA(0x0046bfc0, 0x217)
+VA(0x00447660, 0x217)
 void hero::UseSpell(i8 spell) {
     i16 i;
     i32 j;
@@ -286,7 +286,7 @@ void hero::UseSpell(i8 spell) {
     }
 }
 
-VA(0x0046c1d7, 0x1e3)
+VA(0x00447877, 0x1e3)
 i32 hero::AddSpell(i8 spell, i8 charges, i32 checkOnly) {
     i32 added = 0;
     i16 i;
@@ -328,7 +328,7 @@ done:
 // donor PoL RVA 0x0006f305; preferred Buka symbol ?RedrawHeroScreen@@YIXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.519414;margin=0.462427;shape=0.417;size=0.819;calls=1.000;alternate=pol20:void RedrawHeroScreen(void)@0x0006f305
-VA(0x0046c3ba, 0x53)
+VA(0x00447a5a, 0x53)
 void hero::RedrawHeroScreen(void) {
     gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
     heroWin->DrawWindow();
@@ -338,7 +338,7 @@ void hero::RedrawHeroScreen(void) {
 // donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
-VA(0x0046c40d, 0x6c2)
+VA(0x00447aad, 0x6c2)
 i8 hero::HeroView(i8 viewOnly) {
     i32 armyLuckLevel;
     i32 armyMoraleLevel;
@@ -479,7 +479,7 @@ i8 hero::HeroView(i8 viewOnly) {
 // donor PoL RVA 0x0006cab1; preferred Buka symbol ?HeroMessageUpdate@@YIXPAD@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.570065;margin=0.065812;shape=0.448;size=0.919;calls=1.000;alternate=pol20:void HeroMessageUpdate(char *)@0x0006cab1
-VA(0x0046cacf, 0x7c)
+VA(0x0044816f, 0x7c)
 void HeroMessageUpdate(char* text) {
     tag_message message;
 
@@ -495,7 +495,7 @@ void HeroMessageUpdate(char* text) {
 // donor PoL RVA 0x0006cb33; preferred Buka symbol ?HeroScreenUpdate@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.542456;margin=0.317795;shape=0.400;size=0.865;calls=1.000;alternate=pol20:void hero::HeroScreenUpdate(void)@0x0006cb33
-VA(0x0046cb4b, 0xab)
+VA(0x004481eb, 0xab)
 void hero::HeroScreenUpdate(void) {
     tag_message message;
     i16 i;
@@ -518,7 +518,7 @@ void hero::HeroScreenUpdate(void) {
 // donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520009;margin=0.290164;shape=0.295;size=0.980;calls=0.909;alternate=pol20:void hero::UpdateArmies(void)@0x0006cbdb
-VA(0x0046cbf6, 0x1ba)
+VA(0x00448296, 0x1ba)
 void hero::UpdateArmies(void) {
     tag_message message;
     i16 i;
@@ -562,7 +562,7 @@ void hero::UpdateArmies(void) {
     }
 }
 
-VA(0x0046cdb0, 0x1af)
+VA(0x00448450, 0x1af)
 void hero::ViewStat(i8 stat, i8 quickView) {
     heroWindow* win;
     tag_message message;
@@ -597,7 +597,7 @@ void hero::ViewStat(i8 stat, i8 quickView) {
     delete win;
 }
 
-VA(0x0046cf5f, 0x4a)
+VA(0x004485ff, 0x4a)
 void hero::ViewArtifact(i8 artifact, i8 quickView) {
     NormalDialog(
         gArtifactDesc[artifact],
@@ -615,7 +615,7 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
-VA(0x0046cfa9, 0x59)
+VA(0x00448649, 0x59)
 i8 hero::Dismiss(void) {
     NormalDialog(
         "Are you sure you want to dismiss this Hero?",
@@ -638,7 +638,7 @@ i8 hero::Dismiss(void) {
 // donor PoL RVA 0x0006cee8; preferred Buka symbol ?Deallocate@hero@@QAEXH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
-VA(0x0046d002, 0x452)
+VA(0x004486a2, 0x452)
 void hero::Deallocate(void) {
     playerData* player;
     i8 heroNum;
@@ -707,7 +707,7 @@ void hero::Deallocate(void) {
 }
 
 // Buka 2.1 hero::GetExperience.
-VA(0x0046d454, 0xd0)
+VA(0x00448af4, 0xd0)
 i32 hero::GetExperience(i32 level) {
     i32 experience;
     i32 stage;
@@ -730,7 +730,7 @@ i32 hero::GetExperience(i32 level) {
     return experience;
 }
 
-VA(0x0046d524, 0xf2)
+VA(0x00448bc4, 0xf2)
 i32 hero::GetLevel(i32 experienceValue) {
     i32 experience;
     i32 nLevel;
@@ -755,7 +755,7 @@ i32 hero::GetLevel(i32 experienceValue) {
     return nLevel - 1;
 }
 
-VA(0x0046d616, 0x14f)
+VA(0x00448cb6, 0x14f)
 void hero::ApplyBattleWinTemps(void) {
     if (m_eventFlags & HERO_EVENT_GRAVEYARD) {
         m_morale++;
@@ -787,7 +787,7 @@ void hero::ApplyBattleWinTemps(void) {
     }
 }
 
-VA(0x0046d765, 0x1e)
+VA(0x00448e05, 0x1e)
 void hero::ApplyBattleLossTemps(void) {
     ApplyBattleWinTemps();
 }
@@ -795,7 +795,7 @@ void hero::ApplyBattleLossTemps(void) {
 // donor PoL RVA 0x0006d83f; preferred Buka symbol ?CheckLevel@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
-VA(0x0046d783, 0x2f4)
+VA(0x00448e23, 0x2f4)
 void hero::CheckLevel(void) {
     i32 lvl;
     i32 i;
@@ -866,7 +866,7 @@ void hero::CheckLevel(void) {
 }
 
 // Buka 2.1 hero::NumArtifacts.
-VA(0x0046da77, 0x57)
+VA(0x00449117, 0x57)
 i32 hero::NumArtifacts(void) {
     i32 count = 0;
     i32 i;
@@ -878,7 +878,7 @@ i32 hero::NumArtifacts(void) {
     return count;
 }
 
-VA(0x0046dace, 0x52e)
+VA(0x0044916e, 0x52e)
 void UpdateHeroScreenStatusBar(i16 widgetId) {
     tag_message message; // Unused; retail keeps the donor's message frame.
     i16 slot;
@@ -1016,7 +1016,7 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
 // donor PoL RVA 0x0006e816; preferred Buka symbol ?HeroHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
-VA(0x0046dffc, 0x6c8)
+VA(0x0044969c, 0x6c8)
 i16 HeroHandler(struct tag_message& message) {
     tag_message newEvent;
     i32 unusedValue15;
@@ -1208,6 +1208,6 @@ i16 HeroHandler(struct tag_message& message) {
     }
 }
 
-// HERO owns retail .data 0x004a0a58-0x004a0b2b.
-DATA(0x004a0a58)
+// HERO owns retail .data 0x004a12bc-0x004a0b2b.
+DATA(0x004a12bc)
 class heroWindow* gheroWin = NULL;

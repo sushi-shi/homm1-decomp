@@ -18,34 +18,34 @@
 
 // Per-spell weights of a stack's fight value (Buka keeps the same named
 // float constants for its larger spell list).
-DATA(0x0048c3d8)
+DATA(0x0048d500)
 static const float SPELL_AI_SLOW_MODIFIER = -0.11f;
-DATA(0x0048c3dc)
+DATA(0x0048d504)
 static const float SPELL_AI_BLIND_MODIFIER = -0.6f;
-DATA(0x0048c3e0)
+DATA(0x0048d508)
 static const float SPELL_AI_CURSE_MODIFIER = -0.18f;
-DATA(0x0048c3e4)
+DATA(0x0048d50c)
 static const float SPELL_AI_PARALYZE_MODIFIER = -0.6f;
-DATA(0x0048c3e8)
+DATA(0x0048d510)
 static const float SPELL_AI_BERSERK_MODIFIER = -0.7f;
-DATA(0x0048c3ec)
+DATA(0x0048d514)
 static const float SPELL_AI_HASTE_MODIFIER = 0.33f;
-DATA(0x0048c3f0)
+DATA(0x0048d518)
 static const float SPELL_AI_BLESS_MODIFIER = 0.18f;
-DATA(0x0048c3f4)
+DATA(0x0048d51c)
 static const float SPELL_AI_STONESKIN_MODIFIER = 0.24f;
-DATA(0x0048c3f8)
+DATA(0x0048d520)
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
-DATA(0x004c5574)
+DATA(0x004cb180)
 i32 gSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
-DATA(0x004c5578)
+DATA(0x004cb17c)
 i32 gSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
-VA(0x00437080, 0x1bd)
+VA(0x00464be0, 0x1bd)
 i32 combatManager::DoSpellAI(i8 side) {
     i32 selectedSpell;
     i32 bestEffect;
@@ -98,7 +98,7 @@ H1_ENUM_END(CombatSpellAITargetMode)
 
 // Buka SPELLAI.cpp:141-733 reduced to HoMM1's nineteen combat spells: each
 // spell is scored once, across the area grid, or over one side's stacks.
-VA(0x0043723d, 0x4b4)
+VA(0x00464d9d, 0x4b4)
 void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 spellEffect;
     i32 durMax;
@@ -238,7 +238,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
 
 // Buka SPELLAI.cpp:802-960: a spell's value as a share of the stack's
 // fight value.
-VA(0x004376f1, 0x2f6)
+VA(0x00465251, 0x2e0)
 i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
     i32 stackValue;
     i32 effect;
@@ -300,7 +300,7 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
 }
 
 // Buka SPELLAI.cpp:962-973.
-VA(0x004379e7, 0x63)
+VA(0x00465531, 0x63)
 void combatManager::ClearEffects(void) {
     i32 side;
     i32 index;
@@ -311,7 +311,7 @@ void combatManager::ClearEffects(void) {
 }
 
 // Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
-VA(0x00437a4a, 0x40)
+VA(0x00465594, 0x40)
 void combatManager::NextPos(i32* hex) {
     if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_GRID_COLUMNS == 0)
         *hex += COMBAT_SPELL_AI_ROW_SKIP;
@@ -321,7 +321,7 @@ void combatManager::NextPos(i32* hex) {
 
 // Buka SPELLAI.cpp:983-995: the next hex at or after startHex holding a
 // stack of the side (2: either side).
-VA(0x00437a8a, 0x87)
+VA(0x004655d4, 0x87)
 i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
         if (m_hexCells[startHex].m_occupantSide == side
@@ -337,7 +337,7 @@ i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
 
 // Buka SPELLAI.cpp:1022-1136: the value of cancelling a side's (2: both
 // sides') spell effects; HoMM1 stacks carry a single effect.
-VA(0x00437b11, 0x273)
+VA(0x0046565b, 0x273)
 void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
     i32 curSide;
     i32 negEffect;
@@ -396,7 +396,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
 
 // Buka SPELLAI.cpp:1147-1166: the fight value Resurrect would restore to
 // the stack on hex.
-VA(0x00437d84, 0xf9)
+VA(0x004658ce, 0xf9)
 void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     army* targetArmy;
     i32 resurrectPower;
@@ -417,7 +417,7 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
 
 // Buka SPELLAI.cpp:1183-1525: the net fight value a damage spell destroys,
 // or a decisive value when it wipes out a side.
-VA(0x00437e7d, 0x501)
+VA(0x004659c7, 0x4ed)
 void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex) {
     i32 partValue[COMBAT_SIDE_COUNT];
     i32 killed;

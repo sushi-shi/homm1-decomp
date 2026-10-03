@@ -22,7 +22,7 @@ authority. The editor and other releases are secondary evidence.
   artifacts belong in ignored `build/`.
 - Data identities, types and initializers come from retail bytes and their code
   users; never model data as untyped byte blobs.
-- Use the pinned VC4 profiles in `config/units.toml`; compiler claims require
+- Use the pinned VC4.1 profiles in `config/units.toml`; compiler claims require
   retail-backed controls. Do not reuse HoMM3
   VC6 flags. HoMM2 Buka 2.1 is the preferred source-correspondence donor, with
   2.0 as secondary evidence.

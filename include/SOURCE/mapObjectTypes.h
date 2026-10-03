@@ -12,7 +12,7 @@ H1_ENUM_CONST_BEGIN(MapTriggerEncoding)
     MAP_TRIGGER_EVENT = 0x80
 H1_ENUM_CONST_END(MapTriggerEncoding)
 
-// Adventure-map object types. Names follow retail gObjectNames (0x00493468),
+// Adventure-map object types. Names follow retail gObjectNames (0x00493280),
 // which advManager::QuickInfo prints for the masked type, and the
 // advManager::DoEvent arm each value runs. Equal retail strings are split by
 // their arm: houses 13..17 recruit HouseEvent's goblins, peasants, archers,

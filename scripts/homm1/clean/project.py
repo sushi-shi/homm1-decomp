@@ -4,7 +4,7 @@
 contract of `homm1.graph.link`: objects in retail code order (each unit's
 lowest claimed function address, read from the annotations before they are
 removed), the BASE units archived into the library LINK searches after
-wail32.lib, the library line and flags. `imports/` holds the stub-DLL sources
+mss32.lib, the library line and flags. `imports/` holds the stub-DLL sources
 `homm1.graph.implib` derives from the retail import table for the vendor DLLs
 whose SDKs ship no import library. Only names, ordinals and order are carried;
 no address reaches the tree.
@@ -66,8 +66,7 @@ def manifest(files: dict[str, bytes]) -> dict:
             "library_after": BASE_LIBRARY_AFTER,
             "libraries": [*LINK_LIBS, CRT_LIBRARY],
             "flags": ["/SUBSYSTEM:WINDOWS", "/BASE:0x400000", "/INCREMENTAL:NO",
-                      f"/NODEFAULTLIB:{CRT_REPLACES}"],
-            "definition": "heroes.def",
+                      f"/NODEFAULTLIB:{CRT_REPLACES}", "/STACK:0x10240,0x1000"],
         },
     }
 

@@ -1,5 +1,5 @@
 {
-  description = "Heroes of Might and Magic (Windows 95, 1996) reconstructed source";
+  description = "Heroes of Might and Magic (Windows 95, 1997) reconstructed source";
 
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/@NIXPKGS_REV@";
 
@@ -11,7 +11,7 @@
         url = "@TOOLCHAIN_URL@";
         sha256 = "@TOOLCHAIN_SHA256@";
       };
-      toolchain = pkgs.runCommand "homm1-vc40-toolchain" { } ''
+      toolchain = pkgs.runCommand "homm1-vc41-toolchain" { } ''
         mkdir -p $out
         tar xf ${release} -C $out
       '';

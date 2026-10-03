@@ -65,7 +65,7 @@ from homm1.graph.scan import Scanner
 
 SCRIPTS = "scripts/homm1"
 MANIFEST = "config/units.toml"
-RETAIL_EXE = "build/orig/HEROES.EXE"
+RETAIL_EXE = "build/orig/HEROESW.EXE"
 COMPDB = "build/clangd/compile_commands.json"
 RELOC_REFERENTS = "config/retail/reloc_referents.tsv"
 FUNCTION_REFERENTS = "config/retail/function_referents.tsv"
@@ -172,7 +172,7 @@ def load_units() -> tuple[dict, list[dict]]:
                 "carrying the FULL set instead.")
         u["compiler"] = u.get("compiler", data.get("build", {}).get(
             "compiler", "vc40"))
-        if u["compiler"] != "vc40":
+        if u["compiler"] not in {"vc40", "vc41"}:
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' has unsupported "
                              f"compiler '{u['compiler']}'")
         u["cflags"] = list(profiles[u["flags"]])
@@ -302,7 +302,7 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
     ordinary OMF output, exactly as the donor build does, so replace only the
     fixed assembly objects on this edge.
     """
-    w.comment("=== PHASE 2: link -> candidate HEROES.EXE + .map (opt-in) ===")
+    w.comment("=== PHASE 2: link -> candidate HEROESW.EXE + .map (opt-in) ===")
     link_objs = []
     for obj, src, _headers, _cflags, unit, assembly in cl_edges:
         if assembly is None:
@@ -334,7 +334,7 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
     w.rule("link",
            command=(f"$py -m homm1.graph.link --out {graph.CANDIDATE_EXE} "
                     f"--objs-dir {graph.BASE_DIR}{res_flag} $objects"),
-           description="link candidate HEROES.EXE + map")
+           description="link candidate HEROESW.EXE + map")
     w.build([graph.CANDIDATE_EXE, graph.CANDIDATE_MAP], "link",
             inputs=link_objs,
             implicit=([graph.RESOURCE_RES] if with_res else [])
@@ -484,7 +484,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         w.rule("delink",
                command=(f"$py -m homm1.delink.run --target-dir {graph.TARGET_DIR} "
                         f"--delink-dir {graph.DELINK_RAW} && touch $out"),
-               description="delink HEROES.EXE -> target objs")
+               description="delink HEROESW.EXE -> target objs")
         w.build(graph.DELINK_STAMP, "delink",
                 inputs=[graph.BINDINGS, RETAIL_EXE],
                 implicit=[RELOC_REFERENTS, FUNCTION_REFERENTS, *DELINK_MODS,

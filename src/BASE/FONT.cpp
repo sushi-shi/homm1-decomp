@@ -12,7 +12,7 @@
 
 #pragma intrinsic(strlen)
 
-VA(0x0047b890, 0xa1)
+VA(0x0047a900, 0xa1)
 font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     i8 name[RESOURCE_NAME_CAPACITY];
     gpResourceManager->PointToFile(id);
@@ -26,13 +26,13 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
     gLoadingMonoIcon = 0;
 }
 
-VA_COMPGEN(0x0047b940, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047b890)
-VA(0x0047b980, 0x39)
+VA_COMPGEN(0x0047a9b0, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047a900)
+VA(0x0047a9f0, 0x39)
 font::~font(void) {
     gpResourceManager->Dispose(m_glyphIcon);
 }
 
-VA(0x0047b9c0, 0xd1)
+VA(0x0047aa30, 0xd1)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     IconEntry* entries = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data
@@ -58,7 +58,7 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     }
 }
 
-VA(0x0047baa0, 0x2d0)
+VA(0x0047ab10, 0x2d0)
 void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
     i16 s;
     i8 q;
@@ -132,7 +132,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     }
 }
 
-VA(0x0047bd70, 0x211)
+VA(0x0047ade0, 0x211)
 i32 font::LineLength(char* str, i16 maxW) {
     i16 lw;
     i16 p;
@@ -188,7 +188,7 @@ i32 font::LineLength(char* str, i16 maxW) {
     return z;
 }
 
-VA(0x0047bf90, 0x108)
+VA(0x0047b000, 0x108)
 i32 font::LineWidth(char* text) {
     i8 q;
     i32 u;

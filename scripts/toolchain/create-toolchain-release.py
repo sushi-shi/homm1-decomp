@@ -72,12 +72,18 @@ def media(variable: str, expected: str) -> Path:
 def extract_component(name: str, source: Path, destination: Path,
                       config: dict) -> None:
     extraction = destination.parent / f".{name}-media"
-    paths = [entry["media_path"] for entry in config["files"].values()]
+    pinned = {**config["files"], **config.get("resource_files", {})}
+    paths = [entry["media_path"] for entry in pinned.values()]
     run("7z", "x", "-y", f"-o{extraction}", str(source), *paths)
-    for relative, entry in config["files"].items():
+    for relative, entry in pinned.items():
         target = destination / relative
         target.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copyfile(extraction / entry["media_path"], target)
+        source_file = extraction / entry["media_path"]
+        if entry.get("expand") == "szdd":
+            expanded = extraction / ".expanded" / relative
+            run("7z", "x", "-y", f"-o{expanded}", str(source_file))
+            source_file, = [p for p in expanded.iterdir() if p.is_file()]
+        shutil.copyfile(source_file, target)
 
 
 def reconstruct_pcjs_disk(source: Path, output: Path) -> None:
@@ -170,12 +176,13 @@ def install_masm(source: Path, vc40: Path, work: Path) -> None:
 def entries(config: dict) -> dict:
     result = dict(config["files"])
     result.update(config.get("release_files", {}))
+    result.update(config.get("resource_files", {}))
     return result
 
 
 def verify(root: Path, configs: dict) -> None:
     count = 0
-    for name in ("vc40",):
+    for name in ("vc41", "wing10", "dx1"):
         for relative, expected in entries(configs[name]).items():
             path = root / name / relative
             if not path.is_file():
@@ -215,20 +222,31 @@ def main() -> None:
         verify(Path(sys.argv[2]).resolve(), configs)
         return
 
-    vc_media = media("MSVC40_MEDIA", configs["vc40"]["media"]["sha256"])
-    masm_media = Path(os.environ["MASM611_DISK1"]).resolve()
     output = Path(os.environ.get(
-        "OUTPUT", REPO / "build/homm1-toolchain-vc40-masm611.tar.xz")).resolve()
-
+        "OUTPUT", REPO / "build/homm1-toolchain-win95-1.2-v1.tar.xz")).resolve()
+    installed = None
+    if len(sys.argv) > 1:
+        if len(sys.argv) != 3 or sys.argv[1] != "--from-installed":
+            raise SystemExit("usage: create-toolchain-release.py [--from-installed ROOT]")
+        installed = Path(sys.argv[2]).resolve()
+        verify(installed, configs)
     (REPO / "build").mkdir(exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=".toolchain-release-",
                                      dir=REPO / "build") as scratch_name:
         work = Path(scratch_name)
         root = work / "toolchains"
-        log("extracting pinned Visual C++ 4.0 files")
-        extract_component("vc40", vc_media, root / "vc40", configs["vc40"])
-        log("reconstructing MASM 6.11 from its preserved diskette")
-        install_masm(masm_media, root / "vc40", work)
+        for name, variable in (("vc41", "MSVC41_MEDIA"),
+                               ("wing10", "WING10_MEDIA"), ("dx1", "DX1_MEDIA")):
+            if installed:
+                for relative in entries(configs[name]):
+                    target = root / name / relative
+                    target.parent.mkdir(parents=True, exist_ok=True)
+                    shutil.copyfile(installed / name / relative, target)
+            else:
+                source = media(variable, configs[name]["media"]["sha256"])
+                extract_component(name, source, root / name, configs[name])
+        if not installed:
+            install_masm(Path(os.environ["MASM611_DISK1"]).resolve(), root / "vc41", work)
         verify(root, configs)
         package(root, output)
 

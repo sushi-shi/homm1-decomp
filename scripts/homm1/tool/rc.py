@@ -35,7 +35,7 @@ from homm1.tool import ToolError
 from homm1.tool.wine import era_tool, run, toolchain_root, winepath
 
 #: The toolchain whose pinned RC/CVTRES compile the candidate resources.
-RESOURCE_TOOLCHAIN = "vc40"
+RESOURCE_TOOLCHAIN = "vc41"
 #: The file name the resource script gives the retail icon.
 RETAIL_ICON = "heroes.ico"
 

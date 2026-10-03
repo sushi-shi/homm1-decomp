@@ -17,18 +17,18 @@
 // donor PoL RVA 0x0008c040; preferred Buka symbol ??0armyGroup@@QAE@XZ
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.513410;margin=0.267257;shape=0.385;size=0.817;calls=1.000;alternate=pol20:void armyGroup::constructor(void)@0x0008c040
-VA(0x00447a10, 0x3c)
+VA(0x00467700, 0x3c)
 armyGroup::armyGroup(void) {
     CLEAR_ARMY_GROUP(*this);
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00447a4c, 0x18)
+VA(0x0046773c, 0x18)
 void armyGroup::View(i32) {}
 
 // HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
-VA(0x00447a64, 0x11b)
+VA(0x00467754, 0x11b)
 i16 armyGroup::GetMorale(hero* h, town* t) {
     i32 morale;
     i32 alignment;
@@ -60,7 +60,7 @@ i16 armyGroup::GetMorale(hero* h, town* t) {
     return morale;
 }
 
-VA(0x00447b7f, 0x31)
+VA(0x0046786f, 0x31)
 void armyGroup::Dismiss(i8 slot) {
     m_creatureTypes[slot] = CREATURE_NONE;
     m_creatureCounts[slot] = 0;
@@ -70,7 +70,7 @@ void armyGroup::Dismiss(i8 slot) {
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.401440;margin=0.383163;shape=0.171;size=0.719;calls=1.000;alternate=pol20:int armyGroup::IsMember(int)@0x0008c3f6
 // HoMM1 retail reads a signed byte parameter and returns in AL.
-VA(0x00447bb0, 0x59)
+VA(0x004678a0, 0x59)
 i8 armyGroup::IsMember(i8 creatureType) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_creatureTypes[slot] == creatureType)
@@ -80,7 +80,7 @@ i8 armyGroup::IsMember(i8 creatureType) {
 }
 
 // Buka 2.1 IsHomogeneous; HoMM1 races are six consecutive creature ids.
-VA(0x00447c09, 0x153)
+VA(0x004678f9, 0x153)
 H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
     i32 numTypes = 0;
     i8 raceSeen[ARMY_GROUP_RACE_COUNT];
@@ -123,7 +123,7 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRa
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.455116;margin=0.419277;shape=0.310;size=0.702;calls=1.000;alternate=pol20:int armyGroup::CanJoin(int)@0x0008c599
 // HoMM1 retail returns in AL and sign-extends its IsMember call results.
-VA(0x00447d5c, 0x54)
+VA(0x00467a4c, 0x54)
 i8 armyGroup::CanJoin(i8 creatureType) {
     if (IsMember(creatureType))
         return 1;
@@ -132,7 +132,7 @@ i8 armyGroup::CanJoin(i8 creatureType) {
     return 0;
 }
 
-VA(0x00447db0, 0x59)
+VA(0x00467aa0, 0x59)
 i16 armyGroup::GetNumArmies(void) {
     i16 numArmies = 0;
     for (i16 i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
@@ -145,7 +145,7 @@ i16 armyGroup::GetNumArmies(void) {
 // donor PoL RVA 0x0008c641; preferred Buka symbol ?Add@armyGroup@@QAEHHHH@Z
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418523;margin=0.356193;shape=0.176;size=0.729;calls=1.000;alternate=pol20:int armyGroup::Add(int, int, int)@0x0008c641
-VA(0x00447e09, 0x132)
+VA(0x00467af9, 0x132)
 i16 armyGroup::Add(i8 creatureType, i16 quantity, i8 slot) {
     i16 searchSlot;
     if (slot == ARMY_GROUP_EMPTY_SLOT) {
@@ -175,7 +175,7 @@ i16 armyGroup::Add(i8 creatureType, i16 quantity, i8 slot) {
     return 1;
 }
 
-VA(0x00447f3b, 0x7d)
+VA(0x00467c2b, 0x7d)
 void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
     i32 temporary = m_creatureTypes[slot];
     m_creatureTypes[slot] = otherGroup->m_creatureTypes[otherSlot];
@@ -189,7 +189,7 @@ void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
 // donor PoL RVA 0x0008c7d2; preferred Buka symbol ?DamageGroup@armyGroup@@QAEXM@Z
 // donor Buka TU SOURCE/ARMYGRP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.521804;margin=0.531953;shape=0.341;size=0.892;calls=1.000;alternate=pol20:void armyGroup::DamageGroup(float)@0x0008c7d2
-VA(0x00447fb8, 0x14d)
+VA(0x00467ca8, 0x14d)
 void armyGroup::DamageGroup(float damagePercent) {
     i32 killed;
     i32 chance = static_cast<i32>(damagePercent * 100.0f);

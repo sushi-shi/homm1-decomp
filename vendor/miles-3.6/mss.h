@@ -45,6 +45,7 @@
 #define DIG_F_STEREO_8    2
 #define DIG_F_STEREO_16   3
 #define DIG_PCM_SIGN      0x0001
+#define DIG_USE_WAVEOUT    15
 
 typedef struct _DIG_DRIVER FAR* HDIGDRIVER;
 typedef struct _MDI_DRIVER FAR* HMDIDRIVER;
@@ -73,6 +74,8 @@ DXDEC S32       AILCALL AIL_waveOutOpen             (HDIGDRIVER FAR* drvr,
                                                      LPHWAVEOUT FAR* lphWaveOut,
                                                      S32             dwDeviceID,
                                                      LPWAVEFORMAT    lpFormat);
+DXDEC S32       AILCALL AIL_digital_handle_release  (HDIGDRIVER dig);
+DXDEC S32       AILCALL AIL_digital_handle_reacquire(HDIGDRIVER dig);
 DXDEC void      AILCALL AIL_serve                   (void);
 
 

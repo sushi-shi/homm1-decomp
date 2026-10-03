@@ -14,9 +14,7 @@ public:
     // --- constructors ---
     dimmerWidget(void);
     dimmerWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind);
-    virtual ~dimmerWidget() OVERRIDE {} // EXPLICIT but inline: retail has ??_E/??_G (deleting
-                                        // dtors) at 0x4dd410 with the base dtor folded in and
-                                        // NO standalone ??1 — an out-of-line body would emit one.
+    virtual inline ~dimmerWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;

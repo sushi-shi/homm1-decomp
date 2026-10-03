@@ -7,7 +7,7 @@ can publish it as a local single-commit branch. The port follows HoMM2 Buka's
 ```sh
 homm1 clean --out build/clean                        # generate
 homm1 clean --out build/clean --verify               # build and compare
-homm1 clean --out build/clean --verify --publish     # branch source-win95-1.1-1996
+homm1 clean --out build/clean --verify --publish     # branch source-win95-1.2-1997
 ```
 
 `--ref REVISION` exports another commit. `--working-tree` previews tracked and
@@ -45,7 +45,7 @@ The tree carries the unit sources, every header, `Heroes.rc`, the module
 definition, a `build.json` link contract, import stubs for `wail32.dll` and
 `smkwai32.dll` (from the retail import table through `homm1.graph.implib`), a
 `build.py`, the `play.py` runner, a flake and a short README. LZHUF's reference sources, research
-notes and all tooling stay on `decomp-win95-1.1`. `build.json` keeps retail object order
+notes and all tooling stay on `decomp-win95-1.2`. `build.json` keeps retail object order
 and the BASE library, computed from the annotations before removal; no address
 reaches the tree.
 
@@ -58,7 +58,7 @@ unit's profile and links both through `homm1.graph.link` without `/FORCE`.
 - The control tree applies the same expansions and comment removal but keeps
   every line, the `#line` pins and the scaffolding headers and their includes.
   It must reproduce every non-debug object section and the candidate
-  `HEROES.EXE` byte for byte, apart from LINK's timestamps.
+  `HEROESW.EXE` byte for byte, apart from LINK's timestamps.
 - The clean tree must compile and link. Its code differs: under retail's `/Gi`,
   VC4's symbol handles follow the path strings of the opened files and the
   source line numbers ([handle paths](patterns/vc4-gi-handles-follow-path-lengths.md),
@@ -66,7 +66,7 @@ unit's profile and links both through `homm1.graph.link` without `/FORCE`.
   alone leaves 16 of 62 C++ units identical; the `#line` pins change assertion
   line words and file literals.
 - Finally the tree's `build.py` runs through its own flake and must produce
-  `HEROES.EXE`.
+  `HEROESW.EXE`.
 
 The per-section differences of both trees are written to
 `build/clean-verify/differences.tsv`. Nothing is banked; this is not a retail
@@ -74,7 +74,7 @@ match claim. The game has not been run from the generated executable here.
 
 ## Publication
 
-`--publish [BRANCH]` (default `source-win95-1.1-1996`) writes the tree as one root
+`--publish [BRANCH]` (default `source-win95-1.2-1997`) writes the tree as one root
 commit through a private Git index, so no worktree changes. The message records
 `Generated-By: homm1 clean` and `Source-Commit:`. Regeneration replaces the
 snapshot. An identical regeneration from the same commit is a no-op. The command
@@ -85,7 +85,7 @@ generate. It never pushes; update a remote with an explicit
 ## Standalone build
 
 ```sh
-nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE
+nix develop -c python3 build.py --icon-from /path/to/HEROESW.EXE
 ```
 
 The flake fetches the hash-pinned toolchain release (VC4, MASM 6.11, WinG,
@@ -104,7 +104,7 @@ nix run path:. -- --data "/path/to/HEROES"    # remembered; later: nix run path:
 
 The flake's app runs `play.py`, a copy of `homm1.graph.play` (see
 [playing the build](play.md)): it builds with `build.py`, taking the icon from the
-`HEROES.EXE` in `--data`, installs the result in `build/game/game/` beside copies
+`HEROESW.EXE` in `--data`, installs the result in `build/game/game/` beside copies
 of the user's `DATA`, `MAPS` and `GAMES`, maps `--cd` or a stand-in as `D:`
 and starts the game through gamescope in its own Wine prefix. `--dry-run`
 stops before launching. The generated README carries the branch diagram and

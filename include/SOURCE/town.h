@@ -111,7 +111,7 @@ public:
 };
 #pragma pack(pop)
 
-// Town building ids: the order of retail gBuildingNames (0x004933a8), then
+// Town building ids: the order of retail gBuildingNames (0x004931c0), then
 // six dwellings named per race by gDwellingNames. town::m_buildings holds
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
 // at the dock cell, 5 is never built and 0 has mage-guild levels.

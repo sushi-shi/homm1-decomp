@@ -354,19 +354,19 @@ public:
     i32 HasValidSpellTarget(i32 spell);
     i8 ViewSpells(i32);
     i32 FindResurrectArmyIndex(i32 side, i32 spell, i32 hex);
-    // HoMM1 retail 0x00415a2c: byte spell and hex, byte result (ret 8).
+    // HoMM1 retail 0x0040e04c: byte spell and hex, byte result (ret 8).
     i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
-    // HoMM1 retail 0x00415d1c: byte spell and hex (ret 8).
+    // HoMM1 retail 0x0040e33c: byte spell and hex (ret 8).
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
-    // HoMM1 retail 0x00415e44: byte spell, hex, creature flag and teleport
+    // HoMM1 retail 0x0040e464: byte spell, hex, creature flag and teleport
     // destination (ret 0x10).
     void
     CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
     void DefaultSpell(i8 targetHex);
-    // HoMM1 retail 0x00416c78: Cure (one side) and Dispel (both sides)
+    // HoMM1 retail 0x0040f298: Cure (one side) and Dispel (both sides)
     // animation; byte side (2 = both) and cure-only flag (ret 8).
     void CastMassSpell(i8 castSide, i8 cureOnly);
-    // HoMM1 retail 0x0041707f: cancels the side's spells after the mass
+    // HoMM1 retail 0x0040f69f: cancels the side's spells after the mass
     // animation (ret 8).
     void CancelSideSpells(i8 side, i8 cureOnly);
     void Fireball(i8 targetHex);
@@ -561,8 +561,8 @@ i32 ValidHex(i32 hex);
 i16 WinCombatHandler(struct tag_message& message);
 i16 CombatSpecialHandler(struct tag_message& message);
 i16 HandleCastSpell(struct tag_message& message);
-// HandleCastSpell: the hex under the spell pointer (0x0048f2b0) and the
-// teleport second-click state (0x0048f28c).
+// HandleCastSpell: the hex under the spell pointer (0x004906b4) and the
+// teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
 // Stale alias of gSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.

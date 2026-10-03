@@ -360,7 +360,7 @@ public:
 };
 #pragma pack(pop)
 
-// BuildObj's fizzle rectangle per town type and building (0x00491868).
+// BuildObj's fizzle rectangle per town type and building (0x00491680).
 struct TownBuildingExtent {
     i16 x;
     i16 y;
@@ -368,7 +368,7 @@ struct TownBuildingExtent {
     i16 height;
 };
 
-// Open's per-type town-object layout (0x0048c028).
+// Open's per-type town-object layout (0x0048d428).
 extern const i8 gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
 i16 TavernHandler(struct tag_message& message);
 i16 MageGuildHandler(struct tag_message& message);

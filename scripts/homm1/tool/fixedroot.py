@@ -13,19 +13,14 @@ sandbox lives.
 So every compile runs in a private mount namespace (`unshare -r -m`, no root
 needed) that shows the compiler the same tree, whatever the checkout path:
 
-    D:\\Heroes\\Source\\   src/SOURCE/* and include/SOURCE/* (symlinks)
-    D:\\Heroes\\Base\\     src/BASE/* and include/BASE/*
-    D:\\Heroes\\H1\\, EDITOR\\, match.h, Domains.h      the rest of include/
-    D:\\Heroes\\Vendor\\<sdk>\\                          vendor/<sdk>, or a pinned SDK's
-                                                     build/toolchains/<sdk>/include
-    D:\\MSDEV\\                                          the pinned VC4 tree
+    F:\\h1w95src\\source\\   src/SOURCE/* and include/SOURCE/* (symlinks)
+    F:\\H1w95src\\Base\\     src/BASE/* and include/BASE/*
+    D:\\MSDEV\\              the pinned VC4.1 tree
 
-The source compiles as D:\\Heroes\\Source\\<NAME>.CPP (retail __FILE__ shape:
-D:\\Heroes\\Source\\TOWNMGR.CPP, D:\\Heroes\\Base\\WINMGR.CPP); a unit whose
-retail name differs passes --retail-name. Includes are `/X /I D:\\Heroes ...
-/I D:\\MSDEV\\INCLUDE`, so `#include <SOURCE/army.h>` opens
-D:\\Heroes\\SOURCE\\army.h. The working directory (vc40.pdb/vc40.idb, /Fa
-listings) is D:\\Heroes\\<Dir>\\ on a private tmpfs.
+The source roots come from `build.source_roots` in config/units.toml;
+1.0/1.1 contracts without that table retain D:\\Heroes. The working directory
+and object output live beside the source on a private tmpfs. Header roots
+follow the selected source root; compiler and SDK inputs remain pinned.
 
 The namespace also gets its own wineserver (a tmpfs over /tmp/.wine-0), its own
 dosdevices (d: -> the fixed root) and private copies of the prefix's registry
@@ -42,6 +37,7 @@ import subprocess
 import sys
 import tempfile
 import time
+import tomllib
 from pathlib import Path
 
 ROOT = Path("/tmp/homm1-fixedroot")          # empty mount point; a tmpfs inside the namespace
@@ -87,7 +83,11 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
     out.unlink(missing_ok=True)
     ROOT.mkdir(exist_ok=True)
     SERVER_DIR.mkdir(mode=0o700, exist_ok=True)
-    job = {"src": str(src), "out": str(out), "flags": flags,
+    source_repo = (repo or REPO).resolve()
+    contract = tomllib.loads((source_repo / "config/units.toml").read_text())
+    source_dir = (unit.split("/", 1)[0] if unit else src.parent.name).upper()
+    source_root = contract.get("build", {}).get("source_roots", {}).get(source_dir)
+    job = {"source_root": source_root, "src": str(src), "out": str(out), "flags": flags,
            "name": retail_name or default_name(src, unit),
            "repo": str((repo or REPO).resolve()), "msvc": str((msvc or msvc_dir()).resolve()),
            "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve()),
@@ -144,7 +144,10 @@ def _inner(job: dict) -> int:
     _mount("-t", "tmpfs", "homm1-fixedroot", str(ROOT))
     _mount("-t", "tmpfs", "homm1-wineserver", str(SERVER_DIR))
     os.chmod(SERVER_DIR, 0o700)
-    heroes = ROOT / "Heroes"
+    source_root = job.get("source_root")
+    project_root = source_root.rsplit("\\", 1)[0] if source_root else "D:\\Heroes"
+    drive, project = project_root.split(":\\", 1)
+    heroes = ROOT.joinpath(*project.split("\\"))
     inc = job.get("include", "")
     for top, base in ((repo / "src", heroes), (repo / "include", heroes / inc if inc else heroes)):
         for d in sorted(top.iterdir()):
@@ -175,7 +178,8 @@ def _inner(job: dict) -> int:
     private = ROOT / ".prefix"
     (private / "dosdevices").mkdir(parents=True)
     (private / "dosdevices" / "c:").symlink_to(prefix / "drive_c")
-    (private / "dosdevices" / "d:").symlink_to(ROOT)
+    for letter in {"d", drive.lower()}:
+        (private / "dosdevices" / (letter + ":")).symlink_to(ROOT)
     (private / "dosdevices" / "z:").symlink_to("/")
     (private / "drive_c").symlink_to(prefix / "drive_c")
     for f in [*prefix.glob("*.reg"), prefix / ".update-timestamp"]:
@@ -188,7 +192,7 @@ def _inner(job: dict) -> int:
             data = re.sub(rb'^"(TEMP|TMP)"=".*"$', rb'"\1"="D:\\\\TMP"', data, flags=re.M)
         (private / f.name).write_bytes(data)
     (ROOT / "TMP").mkdir()
-    d = f"D:\\Heroes\\{rdir}"
+    d = source_root or f"D:\\Heroes\\{rdir}"
     objdir = job.get("objdir") or ""
     if objdir:
         odir = ROOT.joinpath(*objdir.split("\\"))
@@ -197,7 +201,7 @@ def _inner(job: dict) -> int:
     else:
         odir, fo = workdir, d
     obj = odir / (Path(rname).stem + ".obj")
-    incs = ["/X", "/ID:\\Heroes" + (f"\\{inc}" if inc else ""), *[f"/ID:\\Heroes\\Vendor\\{v}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
+    incs = ["/X", "/I" + project_root + (f"\\{inc}" if inc else ""), *[f"/I{project_root}\\Vendor\\{v}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
     argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{fo}\\{obj.name}",
             f"{d}\\{rname}"]
     env = dict(os.environ, WINEPREFIX=str(private),

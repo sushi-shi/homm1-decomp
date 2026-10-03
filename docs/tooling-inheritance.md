@@ -98,3 +98,25 @@ coverage only. New ports or removals must update the dispositions above, review
 both Gruntz and HoMM2, preserve usage logging and run applicable controls.
 The 1.1 candidate links without unresolved definitions. Future unresolved
 definitions remain reconstruction findings, not grounds for forced linking.
+
+## Win95 1.2 toolchain and target port
+
+Reviewed Gruntz `ee6365395c443019e3c0b8d82f54642f9621bbd2`
+(`scripts/create-toolchain-release.py` and `.nix`) and HoMM2 Buka
+`e0689d3f71b2942b544fd677cb54085a13503d7b`
+(`scripts/homm2/init/toolchain.py` and toolchain release scripts), retaining
+original-media hashes, per-file verification, deterministic archives and
+separate tool/runtime provisioning. Adapted: VC4.1 with MASM/WinG/DirectX,
+resource tools included and checked at release installation, and an explicit
+verified-installed-tree packaging route. Donor VC5/VC6 compiler patches and
+flags are inapplicable; no patch was imported. Existing usage-logged CLI
+entry points are retained; the release builder retains its existing logging.
+
+The fixed compiler path view reads `build.source_roots` rather than assuming
+1.0/1.1's D: layout. Both ordinary and clean builds use HEROESW and the new
+runtime imports, omit exports, and retain the stack contract. Clean publication
+remains opt-in. DNA classification uses the reviewed retail CRT band and
+requires exact library controls within it: the last vendor import thunk is
+insufficient because 1.2 puts the whole BASE library after those thunks.
+This is a target-fact adaptation within the existing census pipeline.
+Giten remains pinned at `39384dc6726478357b5efd42c66522781e8310fe`.

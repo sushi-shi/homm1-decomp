@@ -14,45 +14,45 @@
 #include <SOURCE/kbwin.h>
 
 // Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
-DATA(0x004a1cd0)
+DATA(0x004a3bb4)
 char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
-DATA(0x004a1d08)
+DATA(0x004a3bec)
 char gInputManagerInitError[] =
     "Unable to initialize input devices - possible problem with mouse or keyboard.";
-DATA(0x004a1d58)
+DATA(0x004a3c3c)
 char gSoundManagerInitError[] = "Unable to initialize sound.";
-DATA(0x004a1d74)
+DATA(0x004a3c58)
 char gMouseManagerInitError[] = "Unable to initialize mouse.";
-DATA(0x004a1d90)
+DATA(0x004a3c74)
 char gWindowManagerInitError[] = "Unable to initialize windows - possible memory or disk error.";
-DATA(0x004a1dd0)
+DATA(0x004a3cb4)
 char gDialogManagerError1[] = "Can't add manager!";
-DATA(0x004a1de4)
+DATA(0x004a3cc8)
 char gDialogManagerError2[] = "Can't add manager!";
-DATA(0x004a1df8)
+DATA(0x004a3cdc)
 char gDialogManagerError3[] = "Can't add manager!";
-DATA(0x004a1e0c)
+DATA(0x004a3cf0)
 char gDialogManagerError4[] = "Can't add manager!";
 // Retail keeps the manager-list dump texts (PoL SExecutiveText names) between the
 // dialog and call-manager errors; HoMM1 code no longer references them.
-DATA(0x004a1e20)
+DATA(0x004a3d04)
 char gManagerListStart[] = "-----Manager List Start-----";
-DATA(0x004a1e40)
+DATA(0x004a3d24)
 char gManagerListDivider1[] = "-----";
-DATA(0x004a1e48)
+DATA(0x004a3d2c)
 char gManagerListHeaderFormat[] = "Head %d   Tail %d";
-DATA(0x004a1e5c)
+DATA(0x004a3d40)
 char gManagerListDivider2[] = "-----";
-DATA(0x004a1e64)
+DATA(0x004a3d48)
 char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
-DATA(0x004a1e90)
+DATA(0x004a3d74)
 char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
-DATA(0x004a1eb0)
+DATA(0x004a3d94)
 char gCallManagerError1[] = "Can't add manager!";
-DATA(0x004a1ec4)
+DATA(0x004a3da8)
 char gCallManagerError2[] = "Can't add manager!";
 
-VA(0x0047a740, 0x10)
+VA(0x00477fe0, 0x10)
 executive::executive(void) {
     m_managerListHead = NULL;
     m_managerListTail = NULL;
@@ -61,7 +61,7 @@ executive::executive(void) {
 }
 
 // Retail opens sound unconditionally and returns AX.
-VA(0x0047a750, 0xa9)
+VA(0x00477ff0, 0xa9)
 i16 executive::InitSystem(void) {
     if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
@@ -77,7 +77,7 @@ i16 executive::InitSystem(void) {
 }
 
 // Retail preserves next before removing a manager, then closes resources/input.
-VA(0x0047a800, 0x84)
+VA(0x004780a0, 0x84)
 void executive::ShutDownSystem(void) {
     EarlyShutDownSystem();
     gpSoundManager->Close();
@@ -98,7 +98,7 @@ void executive::ShutDownSystem(void) {
 }
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
-VA(0x0047a890, 0x10c)
+VA(0x00478130, 0x10c)
 i16 executive::DoDialog(baseManager* manager) {
     baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     i32 index;
@@ -135,7 +135,7 @@ i16 executive::DoDialog(baseManager* manager) {
     return dialogExecutive.m_result;
 }
 
-VA(0x0047a9a0, 0xd2)
+VA(0x00478240, 0xd2)
 i16 executive::AddManager(baseManager* manager, i16 priority) {
     if (manager == NULL)
         return BASE_MANAGER_ERROR;
@@ -172,7 +172,7 @@ i16 executive::AddManager(baseManager* manager, i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-VA(0x0047aa80, 0x76)
+VA(0x00478320, 0x76)
 void executive::RemoveManager(baseManager* manager) {
     if (manager == NULL)
         return;
@@ -199,7 +199,7 @@ void executive::RemoveManager(baseManager* manager) {
     manager->m_next = NULL;
 }
 
-VA(0x0047ab00, 0x62)
+VA(0x004783a0, 0x62)
 void executive::CallManager(baseManager* manager) {
     baseManager* saved = m_activeManager;
     RemoveManager(saved);
@@ -213,7 +213,7 @@ void executive::CallManager(baseManager* manager) {
 }
 
 // Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
-VA(0x0047ab70, 0x108)
+VA(0x00478410, 0x108)
 void executive::MainLoop(void) {
     i8 done = 0;
     tag_message message;

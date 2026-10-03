@@ -1,27 +1,8 @@
 # Heroes of Might and Magic — source
 
 C++ source for the Windows 95 release of Heroes of Might and Magic
-(New World Computing, May 1996 (Windows 95 1.1) `HEROES.EXE`), built with the original
-Visual C++ 4.0 toolchain.
-
-## Branches
-
-```text
-decomp-win95-1.0 --------------------> decomp-win95-1.1
-        |                                      |
-        v                                      v
-source-win95-1.0                  source-win95-1.1-1996
-```
-
-| Branch | Purpose |
-| --- | --- |
-| `decomp-win95-1.0` | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
-| `decomp-win95-1.1` | Derived reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
-| `source-win95-1.0` | Generated clean source for Win95 1.0 |
-| `source-win95-1.1-1996` | Generated clean source for Win95 1.1 |
-
-This generated checkout is `source-win95-1.1-1996`. The horizontal arrow shows
-reconstruction lineage; the vertical arrows show clean-source generation.
+(New World Computing, August 1997 (Windows 95 1.2) `HEROESW.EXE`), built with the original
+Visual C++ 4.1 toolchain.
 
 ## Play
 
@@ -33,7 +14,7 @@ nix run path:.                      # later launches reuse the remembered folder
 ```
 
 `--data` is your installed Windows 95 game folder with `DATA/HEROES.AGG`,
-`SMKWAI32.DLL` and `WAIL32.DLL`. Pass `--cd /path/to/cd` with the CD's contents
+`SMACKW32.DLL` and `MSS32.DLL`. Pass `--cd /path/to/cd` with the CD's contents
 for sound effects and videos. Each launch builds the game, installs it in
 `build/game/game/` (saves and high scores stay there; your folder is never
 written) and runs it in its own Wine prefix with the CD mapped as drive `D:`.
@@ -43,11 +24,11 @@ Wine. `--dry-run` prepares everything without starting the game.
 ## Build
 
 ```sh
-nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE
+nix develop -c python3 build.py --icon-from /path/to/HEROESW.EXE
 ```
 
-This writes `build/HEROES.EXE`. The flake fetches the hash-pinned Visual C++
-4.0, MASM 6.11, WinG and DirectX 1 files and supplies Wine and LLVM's resource
+This writes `build/HEROESW.EXE`. The flake fetches the hash-pinned Visual C++
+4.1, MASM 6.11, WinG and DirectX 1 files and supplies Wine and LLVM's resource
 tools. `--icon-from` takes the program icon from your own executable. Game data
 and the Smacker and Miles runtime DLLs are not included.
 

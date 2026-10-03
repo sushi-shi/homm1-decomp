@@ -283,7 +283,7 @@ public:
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(i8 direction);
     i32 GetMoveShowIt(i8 direction);
-    // HoMM1 retail 0x0040660c: byte direction/flags, seven arguments (ret 0x1c).
+    // HoMM1 retail 0x0043ab9c: byte direction/flags, seven arguments (ret 0x1c).
     class mapCell* MoveHero(
         i8 direction,
         i8 stopAfterMove,
@@ -592,7 +592,7 @@ extern i8 bComboDraw[][17];
 extern i32 TrigX;
 extern i32 TrigY;
 // CURSOR globals (Buka advManager.h names, CURSOR data): HoMM1 keeps byte
-// flags and the last two footstep sample handles (0x0048eb3c/0x0048eb40).
+// flags and the last two footstep sample handles (0x004a0d4c/0x004a0d50).
 extern i8 gMoveSoundMade;
 extern i8 EveryOther;
 extern struct _SAMPLE* gPrevMoveSound;

@@ -34,7 +34,7 @@ H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
 H1_ENUM_CONST_END(WindowFizzleConstant)
 
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
-VA(0x004743b0, 0x1b0)
+VA(0x00476580, 0x1b0)
 void CycleColors(void) {
     i8 savedColor[PALETTE_GRAPHICS_CHANNELS];
 
@@ -96,7 +96,7 @@ void CycleColors(void) {
 }
 
 // Retail constructor initializes the recovered HoMM1 manager layout.
-VA(0x00474560, 0x46)
+VA(0x00476730, 0x46)
 heroWindowManager::heroWindowManager(void) : baseManager() {
     m_active = 0;
     m_activeWindow = NULL;
@@ -114,7 +114,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
 }
 
-VA(0x004745b0, 0xba)
+VA(0x00476780, 0xba)
 i16 heroWindowManager::Open(i16 managerOrder) {
     FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
@@ -134,7 +134,7 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     return WINDOW_MANAGER_OPEN_FAILURE;
 }
 
-VA(0x00474670, 0x43)
+VA(0x00476840, 0x43)
 void heroWindowManager::Close(void) {
     if (m_active != 1)
         return;
@@ -150,7 +150,7 @@ void heroWindowManager::Close(void) {
     m_active = 0;
 }
 
-VA(0x004746c0, 0x31)
+VA(0x00476890, 0x31)
 i16 heroWindowManager::Main(tag_message& message) {
     i16 result = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* window = m_windowListTail;
@@ -170,7 +170,7 @@ i16 heroWindowManager::Main(tag_message& message) {
 // donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
-VA(0x00474700, 0x3c)
+VA(0x004768d0, 0x3c)
 i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
     message.type = type;
@@ -184,7 +184,7 @@ i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16
 // The open flags are a signed char, the type heroWindow::Open takes: the char-typed
 // argument range (no esi/edi/ebp) is what makes /O2 colour cur/window/layer/this as
 // esi/edi/ebx/ebp; an int parameter gives esi/edi/ebx/ebp to window/this/cur/layer.
-VA(0x00474740, 0xce)
+VA(0x00476910, 0xce)
 void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
@@ -227,7 +227,7 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) 
 // donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.383824;margin=0.385483;shape=0.180;size=0.618;calls=1.000;alternate=pol20:void heroWindowManager::RemoveWindow(class heroWindow *)@0x000cad40
-VA(0x00474810, 0x87)
+VA(0x004769e0, 0x87)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
     if (window != NULL) {
         window->Close();
@@ -261,9 +261,9 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
     }
 }
 
-VA(0x004748a0, 0x1e0)
+VA(0x00476a70, 0x1e9)
 i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&), i32 fade) {
-    DATA(0x004a1128)
+    DATA(0x004a3b34)
     static i32 gDialogNestCount = 0;
     tag_message message;
     i16 done;
@@ -314,7 +314,7 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
 // HoMM1 hides the software pointer only when it overlaps the updated region.
 // Declaring top before left and bottom before right reproduces retail's VC4
 // colouring: equal-cost ranges are coloured, and spilled, in declaration order.
-VA(0x00474a80, 0xed)
+VA(0x00476c60, 0xed)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
     i16 top, left, bottom, right;
     i16 pointerHidden;
@@ -343,8 +343,8 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
 }
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
-VA(0x00474b70, 0xbf)
-#line 550 "D:\\Heroes\\Base\\WINMGR.CPP"
+VA(0x00476d50, 0xbf)
+#line 550 "F:\\H1w95src\\Base\\WINMGR.CPP"
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
     H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);
@@ -369,7 +369,7 @@ void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPal
     PollSound();
 }
 
-VA(0x00474c30, 0x4e)
+VA(0x00476e10, 0x4e)
 void heroWindowManager::ScreenShot(void) {
     char filename[SCREENSHOT_FILENAME_CAPACITY];
     sprintf(filename, "shot%04d.raw", m_screenshotIndex);
@@ -380,7 +380,7 @@ void heroWindowManager::ScreenShot(void) {
 }
 
 // Retail omits the later donor coordinate-clamping checks.
-VA(0x00474c80, 0x88)
+VA(0x00476e60, 0x88)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
     if (bShowIt == 0)
         return;
@@ -393,7 +393,7 @@ void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
 // donor PoL RVA 0x000cb1e0; HoMM1 removes the later palette-fade arguments
 // donor Buka TU BASE/WINMGR; five arguments proven by stack use and ret 0x14
 // evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
-VA(0x00474d10, 0x320)
+VA(0x00476ef0, 0x320)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     // Buka keeps C-style function-scope locals; their declaration order sets
     // the retail register colouring of the row pointers.
@@ -458,16 +458,16 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
 }
 
 // Donor WINMGR ownership; seven trailing padding bytes are excluded.
-VA(0x00475030, 0x19)
+VA(0x00477210, 0x19)
 void heroWindowManager::ReleaseFizzleSource(void) {
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
     m_fizzleSource = NULL;
 }
 
-// Window-manager data, initialized from retail .data (0x004a0c7c..) and
+// Window-manager data, initialized from retail .data (0x004a0870..) and
 // zero-filled storage (0x004cac20..).
-DATA(0x004cb0d0)
+DATA(0x004cf538)
 i8 gWindowFadeSavedUpdate;
-DATA(0x004cb0d8)
+DATA(0x004cf540)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];

@@ -8,7 +8,7 @@
 
 struct tag_message;
 
-// SmackOptions rows (retail 0x0049fd08), named by their movie files. Rows
+// SmackOptions rows (retail 0x004a0d60), named by their movie files. Rows
 // 0..1 are the publisher logos that draw "Presents...", 2..3 the intro and
 // 4..7 the endings; oldmain and the end sequence pick one of each pair
 // from gConfig.slowVideo.

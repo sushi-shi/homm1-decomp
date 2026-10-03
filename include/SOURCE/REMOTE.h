@@ -171,7 +171,7 @@ extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
 // The network setup's host/guest handshake states and broadcast clock (Buka
-// Netbios.h; retail places them inside REMOTE's data, 0x0049f954-0x0049fa70).
+// Netbios.h; retail places them inside REMOTE's data, 0x004a2d4c-0x004a2e68).
 extern i8 gInitNetGuestStatus;
 extern i8 gWaitForHostStatus;
 void PollRemote();

@@ -17,7 +17,7 @@ extern i16 gCurTempMobility;
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
-VA(0x004028b0, 0x23a)
+VA(0x0046e4f0, 0x240)
 i16 searchArray::FindNearestObject(
     i16 startX,
     i16 startY,
@@ -109,7 +109,7 @@ i16 searchArray::FindNearestObject(
 }
 
 // Buka SEARCH.cpp BuildPath over HoMM1's packed node word.
-VA(0x00402af0, 0xe4)
+VA(0x0046e730, 0xf0)
 i32 searchArray::BuildPath(
     i16 startX,
     i16 startY,
@@ -148,7 +148,7 @@ i32 searchArray::BuildPath(
 // precomputes the straight and diagonal step costs once per node. Buka's
 // file-scope scratch is function-static here: only that TU state gives
 // retail's esi/edi/ebx allocation of this, continueSeed and zero.
-VA(0x00402be0, 0xa53)
+VA(0x0046e820, 0xa60)
 void searchArray::SeedPosition(
     i16 seedX,
     i16 seedY,
@@ -163,53 +163,53 @@ void searchArray::SeedPosition(
     i32 continueSeed,
     i32 scanMap
 ) {
-    DATA(0x004a4ad0)
+    DATA(0x004cb194)
     static i16 s_direction;
-    DATA(0x004a4ad4)
+    DATA(0x004cb1dc)
     static i32 s_terrain;
-    DATA(0x004a4b20)
+    DATA(0x004cb1c8)
     static searchNode s_currentNode;
-    DATA(0x004a4ad8)
+    DATA(0x004cb18c)
     static i32 s_mapX;
-    DATA(0x004a4adc)
+    DATA(0x004cb190)
     static i32 s_mapY;
-    DATA(0x004a4ae0)
+    DATA(0x004cb204)
     static i32 s_adjacentMonsterX;
-    DATA(0x004a4ae4)
+    DATA(0x004cb208)
     static i32 s_adjacentMonsterY;
-    DATA(0x004a4ae8)
+    DATA(0x004cb1e8)
     static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
-    DATA(0x004a4af0)
+    DATA(0x004cb1a8)
     static i8 s_possibleDirections[MAP_DIRECTION_COUNT];
-    DATA(0x004a4af8)
+    DATA(0x004cb1c0)
     static i32 s_currentCost;
-    DATA(0x004a4afc)
+    DATA(0x004cb1d8)
     static i32 s_hasTarget;
-    DATA(0x004a4b00)
+    DATA(0x004cb188)
     static hero* s_currentHero;
-    DATA(0x004a4b04)
+    DATA(0x004cb198)
     static i32 s_neighborX;
-    DATA(0x004a4b08)
+    DATA(0x004cb19c)
     static i32 s_neighborY;
-    DATA(0x004a4b10)
+    DATA(0x004cb1f8)
     static u8 s_directionOccupied[MAP_DIRECTION_COUNT];
-    DATA(0x004a4b2c)
+    DATA(0x004cb1bc)
     static i32 s_directionBlocked;
-    DATA(0x004a4b34)
+    DATA(0x004cb1a0)
     static mapCell* s_targetCell;
-    DATA(0x004a4b38)
+    DATA(0x004cb1b8)
     static i8 s_hasAdjacentMonster;
-    DATA(0x004a4b3c)
+    DATA(0x004cb1b0)
     static i32 s_triggerType;
-    DATA(0x004a4b40)
+    DATA(0x004cb1e0)
     static i32 s_adjacentX;
-    DATA(0x004a4b44)
+    DATA(0x004cb1e4)
     static i32 s_adjacentY;
-    DATA(0x004a4b48)
+    DATA(0x004cb200)
     static i32 s_adjacentCost;
-    DATA(0x004a4b4c)
+    DATA(0x004cb1f0)
     static i32 s_bestTargetCost;
-    DATA(0x0048e170)
+    DATA(0x004a2b80)
     static i16 s_processedPointCount = 0;
 
     if (!continueSeed) {
@@ -470,6 +470,6 @@ void searchArray::SeedPosition(
 }
 
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
-// this flag); SeedPosition's point counter is initialized .data (0x0048e170).
-DATA(0x004a4b30)
+// this flag); SeedPosition's point counter is initialized .data (0x004a2b80).
+DATA(0x004cb1f4)
 i32 gFullySeeded;

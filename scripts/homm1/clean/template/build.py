@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Build HEROES.EXE with the Visual C++ 4.0 toolchain under Wine.
+"""Build HEROESW.EXE with the Visual C++ 4.1 toolchain under Wine.
 
-    python3 build.py [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
+    python3 build.py [--toolchain DIR] [--icon-from HEROESW.EXE] [--jobs N]
 
-DIR holds vc40/ (CL, ML, LINK and the VC4 headers and libraries), wing10/ and
+DIR holds vc41/ (CL, ML, LINK and the VC4 headers and libraries), wing10/ and
 dx1/ (the WinG and DirectX 1 SDK files), as in the hash-pinned release the
 flake fetches. Resources compile with llvm-rc and llvm-cvtres. The icon is a
-retail asset: `--icon-from` extracts it from your HEROES.EXE; without it the
+retail asset: `--icon-from` extracts it from your HEROESW.EXE; without it the
 executable carries the menus and About box but no icon.
 """
 
@@ -33,11 +33,11 @@ def windows(path: Path) -> str:
 class Wine:
     def __init__(self, toolchain: Path):
         self.toolchain = toolchain
-        self.bin = toolchain / "vc40" / "bin"
+        self.bin = toolchain / "vc41" / "bin"
         includes = [ROOT / "include", *sorted(p for p in (ROOT / "vendor").iterdir() if p.is_dir()),
                     toolchain / "wing10" / "include", toolchain / "dx1" / "include",
-                    toolchain / "vc40" / "include"]
-        libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / "vc40" / "lib"]
+                    toolchain / "vc41" / "include"]
+        libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / "vc41" / "lib"]
         prefix = Path(os.environ.get("WINEPREFIX") or OUT / "wineprefix")
         self.env = dict(os.environ, WINEPREFIX=str(prefix), WINEPATH=windows(self.bin),
                         INCLUDE=";".join(map(windows, includes)),
@@ -65,7 +65,7 @@ def compile_unit(wine: Wine, unit: dict) -> Path:
     source = ROOT / unit["source"]
     obj = OUT / "obj" / f"{unit['unit']}.obj"
     obj.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc40.pdb/.idb
+    with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc41.pdb/.idb
         if source.suffix.lower() == ".asm":
             wine.run("ML.EXE", ["/nologo", "/c", f"/Fo{windows(obj)}", windows(source)],
                      Path(scratch), obj)
@@ -157,11 +157,11 @@ def build() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("HOMM1_TOOLCHAIN"))
-    parser.add_argument("--icon-from", type=Path, help="your HEROES.EXE, for the icon")
+    parser.add_argument("--icon-from", type=Path, help="your HEROESW.EXE, for the icon")
     parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1))
     args = parser.parse_args()
-    if args.toolchain is None or not (args.toolchain / "vc40/bin/CL.EXE").is_file():
-        parser.error("--toolchain (or HOMM1_TOOLCHAIN) must hold vc40/bin/CL.EXE; "
+    if args.toolchain is None or not (args.toolchain / "vc41/bin/CL.EXE").is_file():
+        parser.error("--toolchain (or HOMM1_TOOLCHAIN) must hold vc41/bin/CL.EXE; "
                      "`nix develop` supplies it")
     for tool in ("wine", "wineboot", "llvm-rc", "llvm-cvtres"):
         if shutil.which(tool) is None:
@@ -187,11 +187,11 @@ def build() -> int:
     wine.run("LINK.EXE", ["-lib", f"@{windows(response)}"], OUT, library)
     libraries = list(link["libraries"])
     libraries.insert(libraries.index(link["library_after"]) + 1, windows(library))
-    executable = OUT / "HEROES.EXE"
+    executable = OUT / "HEROESW.EXE"
     response = OUT / "link.rsp"
     response.write_text("\n".join([
         f"/OUT:{windows(executable)}", f"/MAP:{windows(OUT / 'HEROES.map')}", "/NOLOGO",
-        *link["flags"], f"/DEF:{windows(ROOT / link['definition'])}", *libraries,
+        *link["flags"], *libraries,
         *[f'"{windows(objects[u])}"' for u in link["objects"]], f'"{windows(rsrc)}"']) + "\n")
     wine.run("LINK.EXE", [f"@{windows(response)}"], OUT, executable)
     print(f"built {executable.relative_to(ROOT)}", flush=True)

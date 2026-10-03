@@ -26,7 +26,7 @@
 // Buka AI.cpp AICheckRetreat: compares the two sides' fight values,
 // weighting the defender of a town and unspent stacks, against a chance
 // raised by the hero's artifacts and experience.
-VA(0x00464640, 0x783)
+VA(0x0043de80, 0x7db)
 i32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
         return 0;
@@ -125,7 +125,7 @@ i32 combatManager::AICheckRetreat(void) {
 // walkers attack by target class, walkers otherwise close in; a castle
 // defender steps toward the gate. The chosen move is nudged onto a free hex
 // next to an enemy.
-VA(0x00464dc3, 0x9ce)
+VA(0x0043e65b, 0x9ce)
 void combatManager::DoCompAI(i8) {
     i8 stronger;
     i16 ranged[COMBAT_SIDE_COUNT];
@@ -300,7 +300,7 @@ finish:
 
 // Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
 // builds word masks (dead flag 0x10, shooter 4, flyer 2).
-VA(0x00465791, 0xca)
+VA(0x0043f029, 0xca)
 i16 combatManager::GetShooterMask(i8 side) {
     i16 armyIndex = 0;
     i16 bitMask = 1;
@@ -317,7 +317,7 @@ i16 combatManager::GetShooterMask(i8 side) {
     return armyMask;
 }
 
-VA(0x0046585b, 0xbb)
+VA(0x0043f0f3, 0xbb)
 i16 combatManager::GetFlyerMask(i8 side) {
     i16 armyIndex = 0;
     i16 armyMask;
@@ -335,7 +335,7 @@ i16 combatManager::GetFlyerMask(i8 side) {
     return armyMask;
 }
 
-VA(0x00465916, 0xd7)
+VA(0x0043f1ae, 0xd7)
 i16 combatManager::GetWalkerMask(i8 side) {
     i16 armyIndex = 0;
     i16 bitMask = 1;
@@ -353,7 +353,7 @@ i16 combatManager::GetWalkerMask(i8 side) {
     return armyMask;
 }
 
-VA(0x004659ed, 0xb3)
+VA(0x0043f285, 0xb3)
 i16 combatManager::GetBestArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
@@ -374,7 +374,7 @@ i16 combatManager::GetBestArmy(i8 side, i16 mask) {
     return best;
 }
 
-VA(0x00465aa0, 0xb3)
+VA(0x0043f338, 0xb3)
 i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
@@ -395,7 +395,7 @@ i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
     return worst;
 }
 
-VA(0x00465b53, 0x109)
+VA(0x0043f3eb, 0x109)
 i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
     i32 val;
     i16 armyIndex = 0;
@@ -423,7 +423,7 @@ i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
     return bestArmy;
 }
 
-VA(0x00465c5c, 0xbb)
+VA(0x0043f4f4, 0xbb)
 u32 combatManager::GetStrength(i8 side, i16 mask) {
     i16 index = 0;
     i16 bitMask = 1;
@@ -443,7 +443,7 @@ u32 combatManager::GetStrength(i8 side, i16 mask) {
 
 // Ghosts (26) pick the weakest stack; a missed two-hex target is retried
 // from its rear hex.
-VA(0x00465d17, 0x1b0)
+VA(0x0043f5af, 0x1b0)
 i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
     i16 targetArmy;
     i32 targetHex;
@@ -481,7 +481,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
     return 0;
 }
 
-VA(0x00465ec7, 0x2a9)
+VA(0x0043f75f, 0x2a9)
 i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     i16 otherHex;
     i16 hex;
@@ -532,7 +532,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     }
 }
 
-VA(0x00466170, 0x20f)
+VA(0x0043fa08, 0x20f)
 i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
     i16 frontHex;
     i32 armyIndex;
@@ -581,7 +581,7 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
     return WalkTowardArmy(currentArmy, side, mask);
 }
 
-VA(0x0046637f, 0x229)
+VA(0x0043fc17, 0x229)
 i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
     i32 armyIndex;
     i8 savedSpeed;

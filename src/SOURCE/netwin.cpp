@@ -25,7 +25,7 @@
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.601182;margin=0.610067;shape=0.521;size=0.881;calls=1.000;alternate=pol20:int is_netbios_avail(void)@0x000a6be0
-VA(0x00413c40, 0xa8)
+VA(0x004515d0, 0xa8)
 i32 is_netbios_avail(void) {
     NCB ncb;
     memset(&ncb, 0, sizeof(ncb));
@@ -46,7 +46,7 @@ i32 is_netbios_avail(void) {
 // donor PoL RVA 0x000a6c88; preferred Buka symbol _nb_init
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
-VA(0x00413ce8, 0x1b2)
+VA(0x00451678, 0x1b2)
 H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     u8* statusBuf;
     NCB ncb;
@@ -96,7 +96,7 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
 
 // Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
 // cancel/delete-name sequence on one stack NCB.
-VA(0x00413e9a, 0x1f0)
+VA(0x0045182a, 0x1f0)
 H1_C_LINKAGE void __cdecl nb_term(i32) {
     NCB ncb;
     tag_Node* node;
@@ -141,7 +141,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
 }
 
 // Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
-VA(0x0041408a, 0x90)
+VA(0x00451a1a, 0x90)
 H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
     tag_Node* node;
     i32 size;
@@ -161,7 +161,7 @@ H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
 // donor PoL RVA 0x000a7186; preferred Buka symbol _nb_snd
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.424579;margin=0.396789;shape=0.244;size=0.738;calls=0.875;alternate=pol20:@nb_snd@12@0x000a7186
-VA(0x0041411a, 0x104)
+VA(0x00451aaa, 0x104)
 // Retail has an unused leading argument and an explicit queue selection argument.
 // Their stack positions are proven by all four retail call sites.
 H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
@@ -189,7 +189,7 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
 // donor PoL RVA 0x000a726a; preferred Buka symbol _nb_sess
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.596373;margin=0.181597;shape=0.465;size=0.963;calls=1.000;alternate=pol20:_nb_sess@0x000a726a
-VA(0x0041421e, 0x4f6)
+VA(0x00451bae, 0x4f6)
 H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
     NCB ncb;
     char* callName;
@@ -311,15 +311,15 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
 }
 
 // Buka netwin.cpp:374-380.
-VA(0x00414714, 0x1e)
+VA(0x004520a4, 0x1e)
 H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session) {
     return gNetStatus[session];
 }
 
 // Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
-VA(0x00414732, 0x26f)
+VA(0x004520c2, 0x2a8)
 void nb_thr_ctl(void)
-#line 414 "D:\\Heroes\\Source\\netlo.cpp"
+#line 414 "F:\\h1w95src\\source\\netlo.cpp"
 {
     NCB ncb;
     tag_Node* pkt;
@@ -339,7 +339,9 @@ void nb_thr_ctl(void)
             nb_recv_complete(i);
         }
     }
+    LogInt("In SendSection Start", KBTickCount());
     while (keepRunning) {
+        LogInt("In SendSection", KBTickCount());
         EnterCriticalSection(&gNbSndLock);
         pkt = pop_node(&gNbFreeQueue);
         if (pkt == NULL)
@@ -381,10 +383,11 @@ void nb_thr_ctl(void)
             free(pkt);
         }
     }
+    LogInt("Leaving SendSection", KBTickCount());
 }
 
 // Buka netwin.cpp:455-475.
-VA(0x004149a1, 0xbb)
+VA(0x0045236a, 0xbb)
 void nb_add_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
         strcpy(
@@ -404,9 +407,9 @@ void nb_add_name(void) {
 
 // Buka netwin.cpp:477-518; HoMM1 reports failures with wsprintf and
 // OutputDebugString instead of ShutDown.
-VA(0x00414a5c, 0x1cc)
+VA(0x00452425, 0x1cc)
 void __stdcall nb_add_name_done(NCB* ncb)
-#line 538 "D:\\Heroes\\Source\\netlo.cpp"
+#line 538 "F:\\h1w95src\\source\\netlo.cpp"
 {
     char buf[80];
     i32 j;
@@ -442,7 +445,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
 }
 
 // Buka netwin.cpp:520-536.
-VA(0x00414c28, 0xb8)
+VA(0x004525f1, 0xb8)
 u16 nb_recv_any(i32 session) {
     if (gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING) {
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
@@ -457,7 +460,7 @@ u16 nb_recv_any(i32 session) {
 }
 
 // Buka netwin.cpp:538-567.
-VA(0x00414ce0, 0x146)
+VA(0x004526a9, 0x146)
 void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
 
@@ -481,7 +484,7 @@ void __stdcall nb_recv_any_done(NCB* ncb) {
 }
 
 // Buka netwin.cpp:569-580.
-VA(0x00414e26, 0xc6)
+VA(0x004527ef, 0xc6)
 u16 nb_call(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
@@ -495,7 +498,7 @@ u16 nb_call(i32 session, void* name) {
 }
 
 // Buka netwin.cpp:582-596.
-VA(0x00414eec, 0xc6)
+VA(0x004528b5, 0xc6)
 u16 nb_listen(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
     memcpy(gNbSessNcb[session].ncb_callname, name, NCBNAMSZ);
@@ -509,7 +512,7 @@ u16 nb_listen(i32 session, void* name) {
 }
 
 // Buka netwin.cpp:598-628.
-VA(0x00414fb2, 0x134)
+VA(0x0045297b, 0x134)
 void __stdcall nb_call_done(NCB* ncb) {
     i32 i;
 
@@ -540,9 +543,9 @@ void __stdcall nb_call_done(NCB* ncb) {
 }
 
 // Buka netwin.cpp:630-659.
-VA(0x004150e6, 0x14e)
+VA(0x00452aaf, 0x14e)
 void nb_arm_recv(i32 session)
-#line 742 "D:\\Heroes\\Source\\netlo.cpp"
+#line 742 "F:\\h1w95src\\source\\netlo.cpp"
 {
     u8 result;
 
@@ -572,7 +575,7 @@ void nb_arm_recv(i32 session)
 }
 
 // Buka netwin.cpp:661-679.
-VA(0x00415234, 0xbf)
+VA(0x00452bfd, 0xbf)
 void nb_close_session(i32 session) {
     NCB ncb;
 
@@ -596,7 +599,7 @@ void nb_close_session(i32 session) {
 }
 
 // Buka netwin.cpp:681-711.
-VA(0x004152f3, 0x176)
+VA(0x00452cbc, 0x176)
 void nb_recv_complete(i32 session) {
     tag_Node* node;
 
@@ -630,7 +633,7 @@ void nb_recv_complete(i32 session) {
 }
 
 // Buka netwin.cpp:713-721.
-VA(0x00415469, 0x81)
+VA(0x00452e32, 0x81)
 void nb_format_name(char* source, u8* destination) {
     u32 i;
 
@@ -641,47 +644,47 @@ void nb_format_name(char* source, u8* destination) {
         destination[i] = ' ';
 }
 
-// netwin owns retail .data 0x0048f1e4-0x0048f28b and .bss 0x004a4bc8-0x004acebf.
-DATA(0x0048f1e4)
+// netwin globals retain their individually reviewed retail identities below.
+DATA(0x004a16c4)
 u8 gNbCallRetries = 0;
-DATA(0x0048f1e8)
+DATA(0x004a16c8)
 u8 gNetbiosAvail = 0;
-DATA(0x0048f1ec)
+DATA(0x004a16cc)
 u8 gNbShutdown = 0;
-DATA(0x0048f1f0)
+DATA(0x004a16d0)
 u8 gNbMaxSess = 255;
-DATA(0x0048f1f4)
+DATA(0x004a16d4)
 u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
-DATA(0x0048f1fc)
+DATA(0x004a16dc)
 char* gNbGroupName = "Empire Too ";
-DATA(0x0048f200)
+DATA(0x004a16e0)
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
-DATA(0x004a5078)
+DATA(0x004c2ce8)
 tag_Anchor gNbFreeQueue;
-DATA(0x004a5080)
+DATA(0x004c2d28)
 u8 gNbSessLsn[7];
-DATA(0x004a5088)
+DATA(0x004c2d38)
 u8 gNbRcvData[7][0x1000];
-DATA(0x004ac088)
+DATA(0x004caf50)
 NetbiosName gNbNameBuf[7];
-DATA(0x004ac0f8)
+DATA(0x004c9d50)
 u8 gNbSessBuf[0xfd0];
-DATA(0x004ad0f8)
+DATA(0x004cad50)
 NCB gNbSessNcb[7];
-DATA(0x004ad2b8)
+DATA(0x004caf10)
 NCB gNbCtlNcb;
-DATA(0x004ad2f8)
+DATA(0x004c2cf0)
 u8 gNbLocalNum;
-DATA(0x004ad300)
+DATA(0x004c2d20)
 tag_Anchor gNbRcvQueue;
-DATA(0x004ad308)
+DATA(0x004c2d30)
 tag_Anchor gNbSndQueue;
-DATA(0x004ad310)
+DATA(0x004c9d38)
 CRITICAL_SECTION gNbRcvLock;
-DATA(0x004ad328)
+DATA(0x004c2cf8)
 HANDLE gNbEvents[9];
-DATA(0x004ad350)
+DATA(0x004cafc0)
 CRITICAL_SECTION gNbSndLock;
-DATA(0x004ad368)
+DATA(0x004c2d1c)
 u8 gNetbiosLana;

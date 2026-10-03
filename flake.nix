@@ -116,7 +116,7 @@
       commonHook = ''
         export HOMM1_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
-        export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc40"
+        export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc41"
         export PYTHONDONTWRITEBYTECODE=1
       '';
     in {

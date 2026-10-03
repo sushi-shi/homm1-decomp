@@ -27,7 +27,7 @@ H1_ENUM_CONST_END(CombatPathConstant)
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
-VA(0x004180f0, 0x152)
+VA(0x0046f280, 0x152)
 i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
     i16 pathResult;
     i32 savedSpeed;
@@ -57,7 +57,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
 }
 
 // Buka PATH.cpp ValidPath.
-VA(0x00418242, 0x9e)
+VA(0x0046f3d2, 0x9e)
 i16 army::ValidPath(i16 targetHex, i8 pathMode) {
     i32 pathResult;
     i32 unusedExtra;
@@ -75,7 +75,7 @@ i16 army::ValidPath(i16 targetHex, i8 pathMode) {
 }
 
 // Buka PATH.cpp GetMoveMask.
-VA(0x004182e0, 0x7b)
+VA(0x0046f470, 0x7b)
 i16 army::GetMoveMask(i16 sourceHex) {
     i16 blockedMask;
     i16 mask;
@@ -92,7 +92,7 @@ i16 army::GetMoveMask(i16 sourceHex) {
 }
 
 // Buka PATH.cpp GetAttackMask.
-VA(0x0041835b, 0xbf)
+VA(0x0046f4eb, 0xbf)
 i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
     i16 direction;
     i16 hex;
@@ -118,13 +118,13 @@ i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
 }
 
 // Buka PATH.cpp ValidMove(direction).
-VA(0x0041841a, 0x2d)
+VA(0x0046f5aa, 0x2d)
 i16 army::ValidMove(i16 direction) {
     return ValidMove(m_hex, direction);
 }
 
 // Buka PATH.cpp ValidMove; HoMM1 has no castle gate exception.
-VA(0x00418447, 0x1fc)
+VA(0x0046f5d7, 0x1fc)
 i16 army::ValidMove(i16 sourceHex, i16 direction) {
     i8 frontValid;
     i16 dest;
@@ -174,7 +174,7 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
 }
 
 // Buka PATH.cpp ValidAttack.
-VA(0x00418643, 0x295)
+VA(0x0046f7d3, 0x295)
 i16 army::ValidAttack(
     i16 sourceHex,
     i16 direction,
@@ -246,9 +246,9 @@ i16 army::ValidAttack(
 }
 
 // Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
-VA(0x004188d8, 0x11e)
+VA(0x0046fa68, 0x11e)
 i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
-#line 311 "D:\\Heroes\\Source\\PATH.CPP"
+#line 311 "F:\\h1w95src\\source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
@@ -270,9 +270,9 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 }
 
 // Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
-VA(0x004189f6, 0xf8)
+VA(0x0046fb86, 0xf8)
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
-#line 328 "D:\\Heroes\\Source\\PATH.CPP"
+#line 328 "F:\\h1w95src\\source\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
@@ -292,7 +292,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 // Buka PATH.cpp ValidRange.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00418aee, 0x4c2)
+VA(0x0046fc7e, 0x4c2)
 i16 army::ValidRange(i16 targetHex) {
     i16 adjacentHex;
     i16 directionResult;
@@ -391,7 +391,7 @@ i16 army::ValidRange(i16 targetHex) {
 // donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order
 // evidence: retail body uses signed WORD loads and returns through AX;
 // alternate=pol20:int OppositeDirection(int)@0x000be9e7
-VA(0x00418fb0, 0x58)
+VA(0x00470140, 0x58)
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     if (static_cast<i32>(direction) < COMBAT_DIRECTION_ADJACENT_COUNT)
@@ -411,7 +411,7 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
 
 // Buka PATH.cpp GetBestDirection with HoMM1's nine-hex rows and byte
 // row/column flags.
-VA(0x00419008, 0x984)
+VA(0x00470198, 0x984)
 i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
     i8 targetCol;
     i8 targetRowVal;
