@@ -13,8 +13,7 @@ handles follow the path strings of every opened file and the source line
 numbers, so dropping the scaffolding includes, `#line` pins and comment lines
 moves register and operand choices. The control tree isolates the transforms
 from that compiler state: the same macro expansions and comment removal, with
-every line, `#line` pin and include of the (now empty) scaffolding headers
-kept. The control must reproduce every matching object section and the
+every line, `#line` pin, scaffolding header and include kept. The control must reproduce every matching object section and the
 candidate HEROES.EXE byte for byte, LINK's TimeDateStamps aside.
 
 Finally the tree's own `build.py` runs through its flake, which fetches the
