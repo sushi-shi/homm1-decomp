@@ -658,7 +658,7 @@ unsigned char gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0048f1fc)
 char* gNbGroupName = "Empire Too ";
 DATA(0x0048f200)
-unsigned char* gNbListenName = (unsigned char*)"*";
+unsigned char* gNbListenName = reinterpret_cast<unsigned char*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
 DATA(0x004a4bc8)
 tag_Anchor gNbFreeQueue;
 DATA(0x004a4bd0)

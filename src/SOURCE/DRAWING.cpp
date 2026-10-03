@@ -198,7 +198,7 @@ void combatManager::DrawBackground(void) {
             m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x,
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
-                (signed char)((y & 1) ? 5 : 6),
+                static_cast<signed char>((y & 1) ? 5 : 6),
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );

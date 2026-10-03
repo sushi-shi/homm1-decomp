@@ -561,7 +561,7 @@ static void InsertNode(short node)
             }
         }
         for (i = 1; i < LOOK_AHEAD; ++i) {
-            compare = *((unsigned char *)((unsigned long)key + (long)i)) - text_buf[candidate + i];
+            compare = *(reinterpret_cast<unsigned char *>(reinterpret_cast<unsigned long>(key) + static_cast<long>(i))) - text_buf[candidate + i]; // faithful: LZHUF addresses the key bytes through an integer sum
             if (compare != 0)
                 break;
         }

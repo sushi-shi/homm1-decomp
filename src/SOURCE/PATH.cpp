@@ -185,9 +185,9 @@ short army::ValidAttack(short sourceHex, short direction, short targetMode, shor
     adjacentHex = sourceHex;
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         if (direction == COMBAT_DIRECTION_WIDE_WEST)
-            *attackHex = GetAdjacentCellIndex(sourceHex, (signed char)(m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST));
+            *attackHex = GetAdjacentCellIndex(sourceHex, static_cast<signed char>(m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST));
         else if (direction == COMBAT_DIRECTION_WIDE_EAST)
-            *attackHex = GetAdjacentCellIndex(sourceHex, (signed char)(m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST));
+            *attackHex = GetAdjacentCellIndex(sourceHex, static_cast<signed char>(m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST));
         else {
             switch (m_facing) {
                 case ARMY_FACING_LEFT:
@@ -235,9 +235,9 @@ short army::GetAdjacentCellIndex(short hex, short direction)
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
     if (direction == COMBAT_DIRECTION_WIDE_WEST)
-        direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST);
+        direction = static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST);
     else if (direction == COMBAT_DIRECTION_WIDE_EAST)
-        direction = (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST);
+        direction = static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST);
 #line 322
     ProcessAssert(direction >= 0 && direction < COMBAT_DIRECTION_ADJACENT_COUNT, __FILE__, __LINE__);
 #line 323

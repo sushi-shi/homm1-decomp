@@ -135,7 +135,7 @@ short searchArray::FindCombatPath(
     bestDistance = FINDPATH_INITIAL_BEST_DISTANCE;
     bestHex = ARMY_HEX_INVALID;
     if (attackPath)
-        attackTargetHex = (signed char)targetHex;
+        attackTargetHex = static_cast<signed char>(targetHex);
     else
         attackTargetHex = ARMY_HEX_INVALID;
     Clear();
@@ -144,7 +144,7 @@ short searchArray::FindCombatPath(
     path = m_directions;
     PushCombatPoint(
         sourceHex,
-        (signed char)(unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST
+        static_cast<signed char>(unit->m_facing == ARMY_FACING_LEFT ? COMBAT_DIRECTION_WEST
                                                          : COMBAT_DIRECTION_EAST),
         0,
         unit->m_stats.speed
@@ -165,7 +165,7 @@ short searchArray::FindCombatPath(
             if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
                 for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
                     if (!(attackMask & (1 << direction))) {
-                        *path++ = (unsigned char)direction;
+                        *path++ = static_cast<unsigned char>(direction);
                         m_pathLength++;
                         bestHex = node.x;
                         break;
@@ -250,7 +250,7 @@ void searchArray::PushCombatPoint(
     m_queueCount++;
     if (m_queueCount > m_maxQueueCount)
         m_maxQueueCount = m_queueCount;
-    node->x = (signed char)hex;
+    node->x = static_cast<signed char>(hex);
     node->y = 0;
     node->direction = direction;
     node->distance = distance;
@@ -320,8 +320,8 @@ void searchArray::PushPoint(
         gSearchQueueNode->previousX = previousX;
         gSearchQueueNode->previousY = previousY;
     }
-    gSearchQueueNode->x = (signed char)x;
-    gSearchQueueNode->y = (signed char)y;
+    gSearchQueueNode->x = static_cast<signed char>(x);
+    gSearchQueueNode->y = static_cast<signed char>(y);
     gSearchQueueNode->direction = direction;
     gSearchQueueNode->distance = cost;
     gSearchQueueNode->occupied = occupied;
@@ -434,7 +434,7 @@ void searchArray::TestPossibleDirections(
         }
 
     storeDirection:
-        terrain[gSearchDirection] = (signed char)gSearchTerrain;
+        terrain[gSearchDirection] = static_cast<signed char>(gSearchTerrain);
     }
 }
 

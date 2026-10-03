@@ -163,12 +163,12 @@ int EarlySetup(void) {
     LogTruncate();
     iCDRomErr = SetupCDDrive();
     if (iCDRomErr == CD_SETUP_NO_DRIVE) {
-        MessageBoxA((HWND)hwndApp, "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
+        MessageBoxA(static_cast<HWND>(hwndApp), "Unable to access CD Drive.", "Startup Error", MB_ICONHAND);
         exit(0);
     }
     if (iCDRomErr == CD_SETUP_NOT_FOUND) {
         MessageBoxA(
-            (HWND)hwndApp,
+            static_cast<HWND>(hwndApp),
             "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
             "Might and Magic.  \n\nPlease insert the CD and try again.",
             "Startup Error",
@@ -178,7 +178,7 @@ int EarlySetup(void) {
     }
     if (iCDRomErr == CD_SETUP_NO_APP_PATH) {
         MessageBoxA(
-            (HWND)hwndApp,
+            static_cast<HWND>(hwndApp),
             "Unable to change to the Heroes directory.  Please run the installation "
             "program.",
             "Startup Error",
@@ -188,7 +188,7 @@ int EarlySetup(void) {
     }
     if (iCDRomErr == CD_SETUP_NO_DATA) {
         MessageBoxA(
-            (HWND)hwndApp,
+            static_cast<HWND>(hwndApp),
             "Unable to find the Heroes data files.  Please run the installation program.",
             "Startup Error",
             MB_ICONHAND
@@ -1950,7 +1950,7 @@ VA(0x004539dd, 0x1cb)
 void InitVars(void) {
     int i;
     NULL_SAMPLE2.pSample = NULL;
-    NULL_SAMPLE2.pMem = (struct _SAMPLE*)NULL_SAMPLE2.pSample;
+    NULL_SAMPLE2.pMem = reinterpret_cast<struct _SAMPLE*>(NULL_SAMPLE2.pSample); // faithful: SAMPLE2 stores the MSS sample handle as a sample*
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
@@ -1968,10 +1968,10 @@ void InitVars(void) {
     strcpy(cNetBoxLine[1], "");
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         ppMapExtra[i] = NULL;
-    hmnuDflt = LoadMenuA((HINSTANCE)hInstApp, "mnuDflt");
-    hmnuCmbt = LoadMenuA((HINSTANCE)hInstApp, "mnuCmbt");
-    hmnuAdv = LoadMenuA((HINSTANCE)hInstApp, "mnuAdv");
-    hmnuTown = LoadMenuA((HINSTANCE)hInstApp, "mnuTown");
+    hmnuDflt = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuDflt");
+    hmnuCmbt = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuCmbt");
+    hmnuAdv = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuAdv");
+    hmnuTown = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuTown");
     LogStr(
         "LoadMenus",
         reinterpret_cast<long>(hmnuDflt),
@@ -2512,7 +2512,7 @@ void ShutDown(char* message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
         LogStr(buffer);
-        MessageBoxA((HWND)hwndApp, buffer, "Unexpected Program Termination", MB_ICONHAND);
+        MessageBoxA(static_cast<HWND>(hwndApp), buffer, "Unexpected Program Termination", MB_ICONHAND);
     }
     ClearMapExtra();
     UnloadSystemwideIcons();
@@ -2910,7 +2910,7 @@ int HandleAppSpecificMenuCommands(int command) {
             SaveGame();
             break;
         case APP_MENU_QUIT:
-            PostMessage((HWND)hwndApp, WM_CLOSE, 0, 0);
+            PostMessage(static_cast<HWND>(hwndApp), WM_CLOSE, 0, 0);
             break;
         case APP_MENU_MUSIC_OFF:
             gConfig.musicVolume = SOUND_VOLUME_OFF;
@@ -3064,7 +3064,7 @@ void UpdateSystemOptionsMenu(void) {
         return;
 
     for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
-        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
     switch (gConfig.musicVolume) {
         case 1:
             checkedCommand = APP_MENU_MUSIC_100;
@@ -3100,10 +3100,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_MUSIC_OFF;
             break;
     }
-    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
 
     for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
-        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
     switch (gConfig.soundVolume) {
         case 1:
             checkedCommand = APP_MENU_SOUND_100;
@@ -3139,10 +3139,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SOUND_OFF;
             break;
     }
-    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
 
     for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
-        CheckMenuItem((HMENU)hmnuApp, menuCommand, MF_UNCHECKED);
+        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
         case WALK_SPEED_JUMP:
             checkedCommand = APP_MENU_SPEED_JUMP;
@@ -3160,19 +3160,19 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SPEED_WALK;
             break;
     }
-    CheckMenuItem((HMENU)hmnuApp, checkedCommand, MF_CHECKED);
+    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
     CheckMenuItem(
-        (HMENU)hmnuApp,
+        static_cast<HMENU>(hmnuApp),
         APP_MENU_CD_STEREO,
         gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED
     );
     CheckMenuItem(
-        (HMENU)hmnuApp,
+        static_cast<HMENU>(hmnuApp),
         APP_MENU_SHOW_PATH,
         gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED
     );
     CheckMenuItem(
-        (HMENU)hmnuApp,
+        static_cast<HMENU>(hmnuApp),
         APP_MENU_VIEW_ENEMY_MOVES,
         1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED
     );
@@ -3181,15 +3181,15 @@ void UpdateSystemOptionsMenu(void) {
 VA(0x00456702, 0x99)
 void CleanUpMenus(void) {
     if (hmnuApp) {
-        SetMenu((HWND)hwndApp, NULL);
+        SetMenu(static_cast<HWND>(hwndApp), NULL);
         if (hmnuAdv)
-            DestroyMenu((HMENU)hmnuAdv);
+            DestroyMenu(static_cast<HMENU>(hmnuAdv));
         if (hmnuDflt)
-            DestroyMenu((HMENU)hmnuDflt);
+            DestroyMenu(static_cast<HMENU>(hmnuDflt));
         if (hmnuCmbt)
-            DestroyMenu((HMENU)hmnuCmbt);
+            DestroyMenu(static_cast<HMENU>(hmnuCmbt));
         if (hmnuTown)
-            DestroyMenu((HMENU)hmnuTown);
+            DestroyMenu(static_cast<HMENU>(hmnuTown));
     }
     hmnuApp = NULL;
 }

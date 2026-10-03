@@ -29,7 +29,7 @@ short army::CanFit(short* hex) {
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         candidateHex = GetAdjacentCellIndex(
             *hex,
-            (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST
+            static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST
                                                         : COMBAT_DIRECTION_WEST)
         );
         if (ValidHex(candidateHex))
@@ -43,7 +43,7 @@ short army::CanFit(short* hex) {
         } else {
             candidateHex = GetAdjacentCellIndex(
                 *hex,
-                (signed char)(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST
+                static_cast<signed char>(m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST
                                                             : COMBAT_DIRECTION_EAST)
             );
             if (ValidHex(candidateHex))

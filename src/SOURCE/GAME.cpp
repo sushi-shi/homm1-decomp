@@ -4496,8 +4496,8 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
         else
             outData = fileData;
 
-        ((int*)sendPacket)[0] = fileSize;
-        ((int*)sendPacket)[1] = playerExited;
+        reinterpret_cast<int*>(sendPacket)[0] = fileSize; // byte-evidenced: the save-transfer packet header words
+        reinterpret_cast<int*>(sendPacket)[1] = playerExited; // byte-evidenced: the save-transfer packet header words
         status = TransmitAndWait(
             sendPacket,
             remotePlayer,
@@ -4529,7 +4529,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                             len = fileSize - sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE;
                         else
                             len = REMOTE_SAVE_SEGMENT_SIZE;
-                        *(short*)sendPacket = static_cast<short>(sendPacketIndex);
+                        *reinterpret_cast<short*>(sendPacket) = static_cast<short>(sendPacketIndex); // byte-evidenced: the save-transfer packet header words
                         memcpy(
                             sendPacket + REMOTE_SAVE_INDEX_SIZE,
                             outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE,
@@ -4550,7 +4550,7 @@ int game::TransmitSaveGame(int remotePlayer, int playerExited) {
                     }
                 }
                 LogStr("PreWait");
-                *(short*)sendPacket = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE);
+                *reinterpret_cast<short*>(sendPacket) = static_cast<short>(block * REMOTE_SAVE_BATCH_SIZE); // byte-evidenced: the save-transfer packet header words
                 status = TransmitAndWait(
                     sendPacket,
                     remotePlayer,
