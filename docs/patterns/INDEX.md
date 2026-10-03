@@ -18,6 +18,7 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [Call arguments](call-argument-evaluated-before-pushes-means-a-temporary.md) — an inner call evaluated before the other pushes went through a local.
 - [Translation-unit context](tu-state-probe-family-decides-reachability.md) — unchanged function text can emit different code.
 - [Operand sort keys (HoMM1 VC4, measured)](vc4-operand-sort-key-is-the-symbol-handle.md) — C2 orders commutative/compare operands by a hash of their C1 symbol handles; local declaration order is the lever.
+- [Sortnode replay (HoMM1 VC4, measured)](vc4-sortnode-is-a-replayable-function-of-handles.md) — the C2 operand sort is a pure function of C1 handles; a traced compile replays and predicts every sorted tree, so declaration orders and handle shifts can be planned instead of searched.
 - [/O2 register allocation (HoMM1 VC4, measured)](vc4-global-register-allocation-is-chaitin-briggs.md) — Chaitin-Briggs colouring; ties follow declaration order (C1 handle & 31); reference counts weigh 5^loop depth.
 - [Control flow consumes handles (HoMM1 VC4, measured)](vc4-control-flow-consumes-c1-handles.md) — labels, `&&`/nested `if`, loops, switches and casts take C1 handles, so a code-identical rewrite shifts every later function's handle state.
 - [Data emission order (HoMM1 VC4, measured)](vc4-data-emission-order.md) — `.data` variables in definition order ahead of literals; `.bss` by name hash % 1024; dynamic initializers at the definition point.
