@@ -8,6 +8,8 @@
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
 
+#include <math.h>
+
 // HoMM1: the hex arrives through a word pointer; a two-hex creature that
 // does not fit facing forward moves its hex to the other side.
 VA(0x0044a5e0, 0x267)

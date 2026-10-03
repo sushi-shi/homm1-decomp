@@ -1685,3 +1685,4 @@ src/SOURCE/kbwin.cpp	SetGameDefaults	0xff	bitwise-or-packing	operator & cpuType	
 src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	4	array-index	array subscript gRadarOwnerColor	the radar neutral colour slot in an owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to the char arm's type)
 src/SOURCE/PHILAI.cpp	philAI::QuickCombat	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
 src/SOURCE/PHILAI.cpp	philAI::ChooseEvaluateBattle	-1	call-argument	ProbableOutcomeOfBattle(*	no defending player in the m_owner ternary: retail's int literal (an enumerator narrows VC4's ?: result to char)
+src/SOURCE/EVENTS.cpp	*	-1	trivial-function-literal	-1 conditional	retail's int-literal arm of `owner ? m_owner : -1`; an enumerator arm narrows the conditional to signed char (VC4)

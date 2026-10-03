@@ -2807,7 +2807,7 @@ int advManager::DoCombat(
     int unused;
 
     gbInCombat = 1;
-    attackPlayer = firstHero ? firstHero->m_owner : GAME_PLAYER_NONE;
+    attackPlayer = firstHero ? firstHero->m_owner : -1;
     if (secondHero)
         defendPlayer = secondHero->m_owner;
     else if (combatTown)
@@ -3015,10 +3015,10 @@ void advManager::SendHeroTownData(
     buf->combatResult = combatResult;
     buf->retreatWin = retreatWin;
     buf->combatSurrender = combatSurrender;
-    buf->firstOwner = firstHero ? firstHero->m_owner : GAME_PLAYER_NONE;
+    buf->firstOwner = firstHero ? firstHero->m_owner : -1;
     buf->firstGold =
         firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
-    buf->secondOwner = secondHero ? secondHero->m_owner : GAME_PLAYER_NONE;
+    buf->secondOwner = secondHero ? secondHero->m_owner : -1;
     buf->secondGold =
         secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     memcpy(&buf->firstArmy, firstArmy, sizeof(armyGroup));

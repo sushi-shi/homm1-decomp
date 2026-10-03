@@ -24,4 +24,5 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [Data emission order (HoMM1 VC4, measured)](vc4-data-emission-order.md) — `.data` variables in definition order ahead of literals; `.bss` by name hash % 1024; dynamic initializers at the definition point.
 - [Signed remainder](signed-modulo-pow2-abs-restore.md) — sign correction around a power-of-two mask.
 - [VC4 float expression shape](vc4-float-expression-shape.md) — store/compare order follows declarations; parentheses stop product reassociation; C-style float casts add a temporary (HoMM1-measured).
+- [Conditional with an enumerator arm (HoMM1 VC4, measured)](vc4-conditional-enum-narrowing.md) — `c ? <char field> : ENUM` takes the char type (byte temporary + `movsx`); an `int` literal arm keeps it `int`. A function that no TU-state trial moves after an enum edit is the tell.
 
