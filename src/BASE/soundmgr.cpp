@@ -1008,7 +1008,7 @@ void soundManager::PollSound(void) {
     m_pollRequested = 0;
 }
 
-VA(0x004793a0, 0x1ad)
+VA(0x004793a0, 0x1ae)
 void soundManager::SwitchAmbientMusic(i32 track) {
     if (gbNoSound != 0)
         return;

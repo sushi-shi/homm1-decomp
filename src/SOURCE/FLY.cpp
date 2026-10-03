@@ -191,7 +191,7 @@ i16 army::FlyTo(void) {
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
-VA(0x0044adc6, 0x75e)
+VA(0x0044adc6, 0x75f)
 i16 army::FlyTo(i16 destination) {
     i16 iFinalY;
     i16 centerY;
