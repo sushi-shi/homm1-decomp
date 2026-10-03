@@ -3,8 +3,7 @@
 HOMM1.EXE statically links MFC + CRT; library code is never hand-
 reconstructed - it gets a functions_static_libs.tsv / data_static_libs.tsv
 row and game code calls it through the real headers. A retail RVA is
-therefore a src RECONSTRUCTION xor a library CARVE-OUT (the vendored zlib
-channel is the deliberate coexistence and lives in its own tables).
+therefore a src RECONSTRUCTION xor a library CARVE-OUT.
 
 The Model's precedence quietly ALIASES a static-libs label under a winning
 src claim; this gate makes that loud (the merged verify_library_overlap

@@ -36,9 +36,8 @@ All RVAs refer to the pinned `HEROES.EXE`.
 - `function_referents.tsv`, `reloc_referents.tsv`, `data_symbols.tsv`: reviewed
   identities of referenced functions, relocation targets and data that the
   delinker cannot infer.
-- `functions_static_libs.tsv`, `functions_zlib.tsv`, `data_zlib.tsv`,
-  `data_vtables.tsv`, `data_static_libs.tsv`, `data_compgen.tsv`: provider
-  claim channels (`homm1 model`).
+- `functions_static_libs.tsv`, `data_vtables.tsv`, `data_static_libs.tsv`,
+  `data_compgen.tsv`: provider claim channels (`homm1 model`).
 - `import_libraries.tsv`: vendor import libraries whose format differs from
   VC4 LINK output (`homm1.graph.implib`).
 - `link_order.tsv`, `link_bands.tsv`: link-layout channels; admitting rows

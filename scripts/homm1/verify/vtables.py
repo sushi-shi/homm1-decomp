@@ -5,7 +5,7 @@ slot binding.
                RTTI + code-ref starts, MI secondaries included) is admitted -
                a `vtable`-kind census row claimed by data_vtables /
                data_static_libs, or interior to another admitted claim (a
-               fn-ptr table like zlib's configuration_table). Anything else
+               fn-ptr table). Anything else
                is a GAME vtable with no binding: FATAL.
   VIRTUALITY   every primary game vtable's class is REAL: defined in source,
                and its resolved virtual count (own + transitive bases, MFC
@@ -102,8 +102,7 @@ def _model_rows():
         elif b.channel == "data_static_libs":
             lib.add(b.rva)
     syms = {b.rva: (b.name, b.unit) for b in m.functions
-            if b.name and (b.channel.startswith("src")
-                           or b.channel == "functions_zlib")}
+            if b.name and b.channel.startswith("src")}
     spans.sort()
     return game, lib, spans, syms
 

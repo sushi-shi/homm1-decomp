@@ -392,11 +392,18 @@ def write_config(rows) -> dict[str, int]:
                   "crt-order": "definition-order", "crt-band": "link-band"}[row["class"]]
         library_rows.append((row["rva"], row["symbol"], library, confidence,
                              f"{source}:{member}"))
+    # Hand-admitted provider rows survive a rewrite: only the header is owned
+    # here, the census never enrolls the whole runtime band.
+    kept = []
+    if STATIC_LIBS.is_file():
+        lines = STATIC_LIBS.read_text().splitlines(keepends=True)
+        body = [line for line in lines if not line.startswith("#")]
+        kept = body[1:] if body and body[0].startswith("rva\t") else body
     STATIC_LIBS.write_text(
         "# Delinker-active CRT/SDK providers. DNA identities intentionally stay\n"
         "# in config/retail/dna_bands.tsv: enrolling the whole runtime band here\n"
         "# changes Vostok's anonymous-module partition.\n"
-        "rva\tname\tlib\tconfidence\tsource\n"
+        "rva\tname\tlib\tconfidence\tsource\n" + "".join(kept)
     )
     return {"eh": len(eh),
             "thunk": sum(row["class"] == "import-thunk" for row in report),

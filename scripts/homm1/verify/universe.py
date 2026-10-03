@@ -18,7 +18,7 @@ import csv
 from homm1.core.paths import REPO
 
 #: winning channels that make a row a CLAIMED reconstruction target
-_TARGET_CHANNELS = ("src", "src_compgen", "functions_zlib")
+_TARGET_CHANNELS = ("src", "src_compgen")
 
 CATEGORIES = (
     ("eh", "EH unwind funclets",
