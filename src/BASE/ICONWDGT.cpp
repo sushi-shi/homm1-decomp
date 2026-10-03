@@ -8,7 +8,7 @@
 #include <BASE/iconWidget.h>
 #include <BASE/message.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 VA(0x0047a9f0, 0x2a)
 iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {

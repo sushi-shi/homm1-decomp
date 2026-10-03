@@ -11,7 +11,7 @@
 #include <BASE/message.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
 DATA(0x004a2f98)

@@ -5,7 +5,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/resourceManager.h>
 #include <BASE/tileset.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <stdlib.h>
 

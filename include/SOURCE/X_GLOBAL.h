@@ -8,7 +8,7 @@
 class armyGroup;
 
 // Global tables and state as in Buka's X_GLOBAL.h; KBDeclarations-style
-// globals stay in H1/KB.h. Most sit in KB's retail data band; the rest wait
+// globals stay in SOURCE/KB.h. Most sit in KB's retail data band; the rest wait
 // for the data campaign to place them.
 
 extern int gbEnlargeScreenBlit;

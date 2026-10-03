@@ -11,7 +11,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/X_GLOBAL.h>
 

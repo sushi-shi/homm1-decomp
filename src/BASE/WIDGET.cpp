@@ -7,7 +7,7 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>
 #include <BASE/widget.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 VA(0x0047f670, 0x5a)
 widget::widget(short x, short y, short width, short height, short id, short kind) {

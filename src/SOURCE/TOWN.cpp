@@ -4,7 +4,7 @@
 
 #include <BASE/WINMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/X_GLOBAL.h>
 
 // donor PoL RVA 0x00032c00; preferred Buka symbol ??0town@@QAE@XZ

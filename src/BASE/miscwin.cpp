@@ -13,13 +13,12 @@
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
-#include <H1/KB.h>
 #include <H1/Types.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/wingraph.h>
 #include <SOURCE/X_GLOBAL.h>
 
 #include <string.h>
-
 
 VA(0x00473450, 0x199)
 void BlitBitmapToScreen(

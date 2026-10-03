@@ -6,7 +6,7 @@
 #include <BASE/icon.h>
 #include <BASE/IconEntry.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <string.h>
 

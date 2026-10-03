@@ -4,7 +4,7 @@
 
 #include <BASE/dimmerWidget.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 VA(0x0047ee20, 0x1e)
 dimmerWidget::dimmerWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}

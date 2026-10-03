@@ -11,7 +11,7 @@
 #include <BASE/Misc.h>
 #include <BASE/MISC_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/highScoreRuntime.h>

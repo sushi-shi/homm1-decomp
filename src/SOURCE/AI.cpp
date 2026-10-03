@@ -6,7 +6,7 @@
 
 #include <BASE/INPUTMGR_TYPES.h>
 #include <H1/All.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
 #include <SOURCE/X_GLOBAL.h>

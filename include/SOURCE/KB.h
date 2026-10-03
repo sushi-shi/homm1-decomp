@@ -1,5 +1,5 @@
-#ifndef HOMM1_H1_KB_H
-#define HOMM1_H1_KB_H
+#ifndef HOMM1_SOURCE_KB_H
+#define HOMM1_SOURCE_KB_H
 
 #include <Domains.h>
 #include <SOURCE/dialogTypes.h>

@@ -8,14 +8,13 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 #include <fcntl.h>
 #include <io.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
-
 
 VA(0x0047a6b0, 0x2a)
 VA_COMPGEN(0x0047a6e0, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047a6b0)

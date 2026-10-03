@@ -7,10 +7,10 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/Misc.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/campaignTypes.h>
 #include <SOURCE/comwin.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>

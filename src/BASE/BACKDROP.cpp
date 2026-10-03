@@ -6,7 +6,7 @@
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/resourceManager.h>
-#include <H1/KB.h>
+#include <SOURCE/KB.h>
 
 VA(0x0047cfe0, 0x1e)
 backdropWidget::backdropWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}

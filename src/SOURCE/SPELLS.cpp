@@ -8,8 +8,8 @@
 #include <BASE/Misc.h>
 #include <BASE/palette.h>
 #include <H1/All.h>
-#include <H1/KB.h>
 #include <SOURCE/combatTypes.h>
+#include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/PATH.h>
