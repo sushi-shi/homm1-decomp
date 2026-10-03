@@ -10,7 +10,7 @@
 #define DIV_BX __asm div bx
 #define DIV_BX_10 DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX DIV_BX
 #define DIV_BX_100                                                                                 \
-    DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10     \
+    DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10 DIV_BX_10      \
         DIV_BX_10
 
 // Expected PIT ticks for 800 divides at the family's reference clock, scaled
@@ -18,8 +18,7 @@
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00472030, 0x1c9)
-int CPUSpeed(unsigned char cpuType)
-{
+int CPUSpeed(unsigned char cpuType) {
     double tickPeriod = 838.0965152;
     double divs = 800.0;
     double ticks;
@@ -29,21 +28,21 @@ int CPUSpeed(unsigned char cpuType)
     double divNs;
 
     switch (cpuType) {
-    case 3:
-        clockNs = 62.5;
-        ticks = (totalNs = (divNs = clockNs * 22.0) * divs) / tickPeriod;
-        freq = ticks / TimeProcessor() * 16.0;
-        break;
-    case 4:
-        clockNs = 30.303030303030305;
-        ticks = (totalNs = (divNs = clockNs * 24.0) * divs) / tickPeriod;
-        freq = ticks / TimeProcessor() * 33.0;
-        break;
-    default:
-        clockNs = 15.151515151515152;
-        ticks = (totalNs = (divNs = clockNs * 25.0) * divs) / tickPeriod;
-        freq = ticks / TimeProcessor() * 66.0;
-        break;
+        case CPU_FAMILY_386:
+            clockNs = 62.5;
+            ticks = (totalNs = (divNs = clockNs * 22.0) * divs) / tickPeriod;
+            freq = ticks / TimeProcessor() * 16.0;
+            break;
+        case CPU_FAMILY_486:
+            clockNs = 30.303030303030305;
+            ticks = (totalNs = (divNs = clockNs * 24.0) * divs) / tickPeriod;
+            freq = ticks / TimeProcessor() * 33.0;
+            break;
+        default:
+            clockNs = 15.151515151515152;
+            ticks = (totalNs = (divNs = clockNs * 25.0) * divs) / tickPeriod;
+            freq = ticks / TimeProcessor() * 66.0;
+            break;
     }
     return static_cast<int>((freq + 0.5) * 100.0) / 100;
 }
@@ -51,8 +50,7 @@ int CPUSpeed(unsigned char cpuType)
 // Family 3 when EFLAGS.AC cannot toggle, 4 when EFLAGS.ID cannot toggle,
 // otherwise the CPUID family with 1 in the high byte.
 VA(0x004721f9, 0x80)
-short GetCPUType(void)
-{
+short GetCPUType(void) {
     short cpuType;
 
     __asm {
@@ -121,8 +119,7 @@ short GetCPUType(void)
 // Counts PIT channel-2 ticks across the divide loop with the speaker gate
 // raised and NMI masked.
 VA(0x00472279, 0x9d9)
-short TimeProcessor(void)
-{
+short TimeProcessor(void) {
     short ticks;
 
     __asm {

@@ -41,6 +41,19 @@ H1_ENUM_BEGIN(ComputerPlayerType)
     PLAYER_TYPE_NO_WEEKDAY_BONUS_LAST = 3
 H1_ENUM_END(ComputerPlayerType)
 
+// A human seat's playerData::m_difficulty indexes gHandicapNames ("Human-",
+// "Human-Easy", "Human-Normal", "Human-Hard", "Human-Expert"); the scenario
+// info prints gHandicapNames[game difficulty + 1] for the game itself.
+// NewGameHandler never leaves a human seat at NONE (it wraps to EASY) and
+// InitCampaignMap gives the campaign's human EXPERT.
+H1_ENUM_BEGIN(HumanHandicap)
+    HUMAN_HANDICAP_NONE = 0,
+    HUMAN_HANDICAP_EASY = 1,
+    HUMAN_HANDICAP_NORMAL = 2,
+    HUMAN_HANDICAP_HARD = 3,
+    HUMAN_HANDICAP_EXPERT = 4
+H1_ENUM_END(HumanHandicap)
+
 // Player colours: playerData::m_color indexes the constructor's flag ICNs
 // (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
 // {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);

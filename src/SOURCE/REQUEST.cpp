@@ -151,8 +151,8 @@ fileRequester::fileRequester(
             } else {
                 strcpy(m_mapNames[index].text, m_fileNames[index].text);
                 strcpy(m_mapInfo[index].description, "");
-                m_mapInfo[index].difficulty = 0;
-                m_mapInfo[index].size = 0;
+                m_mapInfo[index].difficulty = MAP_DIFFICULTY_EASY;
+                m_mapInfo[index].size = MAP_SIZE_SMALL;
             }
             close(fd);
         }

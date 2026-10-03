@@ -692,7 +692,7 @@ void ReadPrefsFromRegistry(void) {
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
     key = NULL;
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
-    if (rc == 0) {
+    if (rc == ERROR_SUCCESS) {
         cbData = REGISTRY_DWORD_BYTES;
         if (RegQueryValueExA(
                 key,
@@ -702,7 +702,7 @@ void ReadPrefsFromRegistry(void) {
                 reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
                 &cbData
             )
-            != 0) {
+            != ERROR_SUCCESS) {
             memset(&gConfig, 0, sizeof(gConfig));
             SetGameDefaults();
             RegCloseKey(key);
@@ -944,7 +944,7 @@ void ReadPrefsFromRegistry(void) {
                 reinterpret_cast<LPBYTE>(gcRegAppPath),
                 &cbData
             )
-            != 0)
+            != ERROR_SUCCESS)
             strcpy(gcRegAppPath, "");
         if (RegQueryValueExA(
                 key,
@@ -954,7 +954,7 @@ void ReadPrefsFromRegistry(void) {
                 reinterpret_cast<LPBYTE>(gcRegCDRomPath),
                 &cbData
             )
-            != 0)
+            != ERROR_SUCCESS)
             strcpy(gcRegCDRomPath, "");
         RegCloseKey(key);
     }
@@ -992,7 +992,7 @@ void WritePrefsToRegistry(void) {
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
     key = NULL;
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
-    if (rc == 0) {
+    if (rc == ERROR_SUCCESS) {
         RegSetValueExA(
             key,
             "Music Volume",
@@ -1311,7 +1311,7 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
             strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
             hRegKey = NULL;
             rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_WRITE, &hRegKey);
-            if (rc == 0) {
+            if (rc == ERROR_SUCCESS) {
                 wsprintfA(driveText, "%c:", cdDrives[cd] + 'A');
                 pass = RegSetValueExA(
                     hRegKey,

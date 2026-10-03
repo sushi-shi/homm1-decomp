@@ -96,6 +96,24 @@ H1_ENUM_CONST_BEGIN(AdventureSpellConstant)
     SPELL_TRAVEL_MOBILITY_COST = 12
 H1_ENUM_CONST_END(AdventureSpellConstant)
 
+// Hero/town locator paging: VISIBLE_COUNT rows show at once; a column with
+// fewer than PAGE_THRESHOLD entries has no pages (advManager's knobs and
+// town::Deallocate's page clamp).
+H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
+    LOCATOR_VISIBLE_COUNT = 4,
+    LOCATOR_PAGE_THRESHOLD = 5,
+    LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
+    LOCATOR_SCROLL_NO_PAGES_Y = 232,
+    // The knobs slide from SCROLL_BASE_Y over the hero (73) or town (74)
+    // span; a click on the track maps the 92-pixel strip from 194 to a page
+    // (Buka 2.1 AdventureLocatorConstant names).
+    LOCATOR_SCROLL_BASE_Y = 195,
+    LOCATOR_HERO_SCROLL_SPAN = 73,
+    LOCATOR_TOWN_SCROLL_SPAN = 74,
+    LOCATOR_SCROLL_MOUSE_BASE_Y = LOCATOR_SCROLL_BASE_Y - 1,
+    LOCATOR_SCROLL_MOUSE_SPAN = 92
+H1_ENUM_CONST_END(AdventureLocatorConstant)
+
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand
@@ -126,9 +144,17 @@ H1_ENUM_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
     ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
 H1_ENUM_END(AdventureControl)
-// clang-format on
 
-struct adventureSoundCell {
+// The six panel buttons (ADVENTURE_CONTROL_NEXT_HERO..GAME_OPTIONS) that
+// DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim
+// (Buka AdventurePanelButtonConstant).
+H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
+    ADVMGR_PANEL_BUTTON_FIRST = 1,
+    ADVMGR_PANEL_BUTTON_LAST = 6
+H1_ENUM_CONST_END(AdventurePanelButtonConstant)
+                            // clang-format on
+
+                            struct adventureSoundCell {
     int soundId;
     int volume;
 };
@@ -502,9 +528,9 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
     UPDATE_NONE = -1,
     CURSOR_CELL_NONE = -1
 H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
-// clang-format on
+                                // clang-format on
 
-extern int giLimitUpdMinX;
+                                extern int giLimitUpdMinX;
 extern int giLimitUpdMinY;
 extern int giLimitUpdMaxX;
 extern int giLimitUpdMaxY;

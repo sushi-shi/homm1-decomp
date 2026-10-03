@@ -182,7 +182,7 @@ short townManager::Open(short id) {
     gpWindowManager->AddWindow(m_townWindow, 0, 1);
     crest = gpCurPlayer->m_color;
     if (m_town->OccupyingHero() != TOWN_OCCUPYING_HERO_NONE) {
-        crest = crest << 2;
+        crest = crest * HERO_CLASS_COUNT;
         crest += gpGame->GetHero(m_town->m_occupyingHeroId)->m_heroClass;
     } else
         crest += TOWN_CREST_NO_HERO_OFFSET;
@@ -190,7 +190,8 @@ short townManager::Open(short id) {
     m_garrisonStrip = new strip(
         0,
         TOWN_GARRISON_STRIP_Y,
-        m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
+        m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? TOWN_CREST_FRAME_WITHOUT_HERO
+                                                              : TOWN_CREST_FRAME_WITH_HERO,
         gpResourceManager->MakeId(gText),
         0,
         &m_town->m_army,
@@ -204,7 +205,7 @@ short townManager::Open(short id) {
         m_heroStrip = new strip(
             0,
             TOWN_HERO_STRIP_Y,
-            3,
+            TOWN_HERO_STRIP_FRAME_COUNT,
             gpResourceManager->MakeId(gText),
             0,
             &gpGame->GetHero(m_town->m_occupyingHeroId)->m_army,
@@ -219,7 +220,7 @@ short townManager::Open(short id) {
         m_heroStrip = new strip(
             0,
             TOWN_HERO_STRIP_Y,
-            3,
+            TOWN_HERO_STRIP_FRAME_COUNT,
             gpResourceManager->MakeId("strip.icn"),
             TOWN_EMPTY_HERO_PORTRAIT_FRAME,
             NULL,
@@ -552,7 +553,8 @@ short townManager::Main(struct tag_message& message) {
                                 TOWN_CLOSE_CONTROL,
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
-                            m_coverWindow = new heroWindow(0, 0x100, 0x280, 6, 2);
+                            m_coverWindow =
+                                new heroWindow(0, 0x100, 0x280, 6, WINDOW_FLAG_SAVE_BACKGROUND);
                             if (m_coverWindow == NULL)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -679,7 +681,13 @@ short townManager::Main(struct tag_message& message) {
                                 }
                                 width = width * 88 + 0x70;
                                 DrawTown(1, 1);
-                                gpWindowManager->FizzleForward(0, 0x100, width, 0xcc, -1);
+                                gpWindowManager->FizzleForward(
+                                    0,
+                                    0x100,
+                                    width,
+                                    0xcc,
+                                    FIZZLE_USE_DEFAULT_DELAY
+                                );
                                 WaitEndSample(res, SAMPLE_WAIT_DEFAULT);
                                 m_recruitResult = 0;
                                 gpMouseManager->ReallyShowPointer();
@@ -1270,7 +1278,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
         numPrereqs = 0;
         requirements = gDwellingRequirements
             [building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION];
-        for (j = 0; j < 12; j++) {
+        for (j = 0; j < BUILDING_SLOT_REQUIREMENT_END; j++) {
             if (requirements & (1 << j)) {
                 if (numPrereqs == 0)
                     strcat(descText, "\n\nRequires:");
@@ -1327,8 +1335,17 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
     iEvt.id = BUY_BUILD_NAME_CONTROL;
     iEvt.text = gText;
     nBuildWindow->BroadcastMessage(iEvt);
-    descWidget =
-        new textWidget(0x18, baseY, 0xee, (numLines << 4) + 6, descText, "bigfont.fnt", 1, -1, 8);
+    descWidget = new textWidget(
+        0x18,
+        baseY,
+        0xee,
+        (numLines << 4) + 6,
+        descText,
+        "bigfont.fnt",
+        1,
+        WIDGET_ID_NONE,
+        8
+    );
     if (descWidget == NULL)
         MemError();
     nBuildWindow->AddWidget(descWidget, WINDOW_Z_ORDER_APPEND);
@@ -1374,7 +1391,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     amountText[resIndex],
                     "smalfont.fnt",
                     1,
-                    -1,
+                    WIDGET_ID_NONE,
                     8
                 );
                 if (amountWidgets[resIndex] == NULL)
@@ -1387,7 +1404,7 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
                     "resource.icn",
                     resType[resIndex],
                     ICON_DRAW_NORMAL,
-                    -1,
+                    WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
                     1
                 );
@@ -1510,7 +1527,7 @@ void townManager::BuildObj(short building) {
         gTownBuildingExtents[m_town->m_type][building].y,
         gTownBuildingExtents[m_town->m_type][building].width,
         gTownBuildingExtents[m_town->m_type][building].height,
-        -1
+        FIZZLE_USE_DEFAULT_DELAY
     );
     WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
     m_selectedBuilding = TOWN_BUILDING_NONE;
@@ -1907,7 +1924,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, short categories) 
                     "townwind.icn",
                     gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     ICON_DRAW_NORMAL,
-                    -1,
+                    WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
                     1
                 );
@@ -2125,7 +2142,8 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
         m_garrisonStrip = new strip(
             0,
             TOWN_GARRISON_STRIP_Y,
-            m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? 4 : 1,
+            m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? TOWN_CREST_FRAME_WITHOUT_HERO
+                                                                  : TOWN_CREST_FRAME_WITH_HERO,
             gpResourceManager->MakeId(gText),
             0,
             &m_town->m_army,
@@ -2139,7 +2157,7 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
         m_heroStrip = new strip(
             0,
             TOWN_HERO_STRIP_Y,
-            3,
+            TOWN_HERO_STRIP_FRAME_COUNT,
             gpResourceManager->MakeId(gText),
             0,
             &m_recruitHeroes[m_recruitState]->m_army,

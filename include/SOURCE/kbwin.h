@@ -70,6 +70,11 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     CONFIG_UNINITIALIZED = 99,
     // ResizeWindow keeps the window's current left/top for this x/y.
     KBWIN_KEEP_POSITION = -1,
+    // GetCPUType's family (low byte): 386 when EFLAGS.AC cannot toggle,
+    // 486 when EFLAGS.ID cannot, else the CPUID family; CPUSpeed picks its
+    // reference clock by it.
+    CPU_FAMILY_386 = 3,
+    CPU_FAMILY_486 = 4,
     CPU_FAMILY_PENTIUM = 5,
     DEFAULT_WINDOW_ORIGIN = 10,
     DEFAULT_WINDOW_WIDTH = 640,
@@ -107,9 +112,9 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_WIDTH = 240,
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
- // clang-format on
+    // clang-format on
 
- extern char gcRegAppPath[];
+    extern char gcRegAppPath[];
 extern char gcRegCDRomPath[];
 extern signed char gbFirstTimeThrough;
 extern char gcAnimPath[];

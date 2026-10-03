@@ -101,6 +101,27 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
 
+// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
+// progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
+// fills them; KB's EventWindowHandler restarts the scenario on RESTART.
+H1_ENUM_BEGIN(CampaignInfoControl)
+    CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2,
+    CAMPAIGN_INFO_PROGRESS = 3,
+    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385
+H1_ENUM_END(CampaignInfoControl)
+
+// game::m_campaignScenario: scenarios LORD_FIRST..LORD_LAST are the four
+// rival-lord scenarios, one per CampaignChoice in order; KB's scenario
+// advance skips the player's own lord. In them the human starts with one
+// hero and no town (NewMap), and a placed town the human owns takes the
+// crest's race (RandomizeTown).
+H1_ENUM_CONST_BEGIN(CampaignScenarioConstant)
+    CAMPAIGN_SCENARIO_LORD_FIRST = 4,
+    CAMPAIGN_SCENARIO_LORD_LAST = 7
+H1_ENUM_CONST_END(CampaignScenarioConstant)
+
 // game::m_mapSounds entry of a cell without an environment sound; new and
 // loaded games clear the table to it and EraseObj resets erased cells.
 H1_ENUM_CONST_BEGIN(MapSoundConstant)
@@ -140,6 +161,9 @@ H1_ENUM_CONST_BEGIN(GameRandomHeroConstant)
     RANDOM_HERO_ARMY_SELECTION_COUNT = 2,
     RANDOM_HERO_ARMY_OPTION_COUNT = 3,
     RANDOM_HERO_ARMY_FIELD_COUNT = 3,
+    RANDOM_HERO_ARMY_FIELD_CREATURE = 0,
+    RANDOM_HERO_ARMY_FIELD_MIN = 1,
+    RANDOM_HERO_ARMY_FIELD_MAX = 2,
     RANDOM_HERO_COUNT_SCALE = 10,
     RANDOM_HERO_COUNT_ROUNDING = 9,
     RANDOM_HERO_EMPTY_COUNT = -1
@@ -163,7 +187,7 @@ H1_ENUM_CONST_END(SaveFileConstant)
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
 #pragma pack(push, 1)
-        struct mineRecord {
+     struct mineRecord {
     signed char id;
     signed char owner;
     signed char type;

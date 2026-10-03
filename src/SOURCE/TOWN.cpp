@@ -82,10 +82,10 @@ void town::XformToCastle(void) {
 // argument and memory-limit calculation belong to its later revision.
 VA(0x0046422d, 0xa5)
 void town::View(void) {
-    if (giHighMemBuffer > 200)
-        gAdvDisposeLevel = 2;
+    if (giHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
+        gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else
-        gAdvDisposeLevel = 1;
+        gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
 
     townManager* manager = gpTownManager;
     manager->SetTown(this);
@@ -93,7 +93,7 @@ void town::View(void) {
     gpExec->CallManager(gpTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
-    gAdvDisposeLevel = 0;
+    gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 
 VA(0x004642d2, 0x152)
@@ -114,10 +114,10 @@ void town::Deallocate(void) {
     if (ownerData->m_currentTown == m_id)
         ownerData->m_currentTown = GAME_TOWN_NONE;
     ownerData->m_townCount--;
-    if (ownerData->m_townCount < 5)
+    if (ownerData->m_townCount < LOCATOR_PAGE_THRESHOLD)
         ownerData->m_townLocatorPage = 0;
-    else if (ownerData->m_townLocatorPage + 5 > ownerData->m_townCount)
-        ownerData->m_townLocatorPage = ownerData->m_townCount - 5;
+    else if (ownerData->m_townLocatorPage + LOCATOR_PAGE_THRESHOLD > ownerData->m_townCount)
+        ownerData->m_townLocatorPage = ownerData->m_townCount - LOCATOR_PAGE_THRESHOLD;
     gpGame->m_townOwners[m_id] = GAME_PLAYER_NONE;
     m_owner = GAME_PLAYER_NONE;
 }

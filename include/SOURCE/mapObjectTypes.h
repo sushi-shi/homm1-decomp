@@ -77,7 +77,14 @@ H1_ENUM_BEGIN(MapObjectType)
     MAP_OBJECT_OAK_TREE = 46,
     MAP_OBJECT_MEGALITH = 47,
     MAP_OBJECT_ARTIFACT = 48,
+    // The event objects end here; NOTHING_HERE and the mountain/tree
+    // obstacles after it run no event (RandomizeTown keeps an event object
+    // under a placed town as the cell's secondary trigger).
+    MAP_OBJECT_EVENT_LAST = MAP_OBJECT_ARTIFACT,
     MAP_OBJECT_NOTHING_HERE = 49,
+    // Unnamed in gObjectNames: a shadow cell placed without an event bit;
+    // RandomizeEvents marks it MAP_CELL_OBJECT_SHADOW_ONLY.
+    MAP_OBJECT_SHADOW = 50,
     MAP_OBJECT_MOUNTAINS = 52,
     MAP_OBJECT_MOUNTAINS_2 = 53,
     MAP_OBJECT_MOUNTAINS_3 = 54,
