@@ -85,7 +85,12 @@ def read_coff(path: Path):
         )
         name = name_at(raw_name)
         symbols[i] = name
-        if secnum > 0 and storage == 2 and typ == 0x20:
+        # External functions, and internal-linkage (`static`) source functions
+        # such as LZHUF's ?UpdateEncoderTree@@YAXF@Z, get a row; the
+        # compiler-generated statics (`_$E<n>`, `$L...`) only bound extents.
+        if secnum > 0 and typ == 0x20 and (
+            storage == 2 or (storage == 3 and not name.startswith(("_$", "$")))
+        ):
             section_functions.setdefault(secnum, []).append((value, name))
         if secnum > 0 and storage in (2, 3) and typ == 0x20:
             section_boundaries.setdefault(secnum, set()).add(value)
