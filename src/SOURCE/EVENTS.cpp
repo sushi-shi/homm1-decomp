@@ -994,7 +994,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 pHero->m_x,
                 pHero->m_y,
                 pHero->m_direction,
-                -1,
+                SEARCH_NO_COST_LIMIT,
                 MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN
             );
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)

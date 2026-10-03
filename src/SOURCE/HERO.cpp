@@ -694,7 +694,7 @@ void hero::Deallocate(void) {
     m_owner = HERO_OWNER_NONE;
     m_destinationX = m_destinationY = HERO_DESTINATION_NONE;
     if (!gbCombatSurrender)
-        gpGame->SetRandomHeroArmies(m_id, 0);
+        gpGame->SetRandomHeroArmies(m_id, RANDOM_HERO_NORMAL_ARMY);
     CheckEndGame(0);
 }
 
