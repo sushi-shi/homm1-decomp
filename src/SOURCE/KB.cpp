@@ -37,6 +37,7 @@
 #include <SOURCE/townManager.h>
 #include <SOURCE/KB.h>
 #include <BASE/MISC_TYPES.h>
+#include <BASE/miscwin.h>
 #include <BASE/MOUSEMGR_TYPES.h>
 #include <BASE/WINMGR_TYPES.h>
 #include <BASE/soundmgr.h>

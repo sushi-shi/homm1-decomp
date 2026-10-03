@@ -178,11 +178,6 @@ public:
 };
 #pragma pack(pop)
 
-// GetMap raises gbShowMapInfo around its .MAP requester and owns the
-// reqextra.bin side window the requester fills.
-extern signed char gbShowMapInfo;
-extern heroWindow* gpReqExtraWindow;
-extern char gcCurMapName[];
 // Set while the default extension is a saved-game one (".G??").
 extern signed char gbRequestingGames;
 extern char* cFRDummy;

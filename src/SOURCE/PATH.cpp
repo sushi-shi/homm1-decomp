@@ -9,6 +9,7 @@
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/searchArray.h>
 
 // Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two

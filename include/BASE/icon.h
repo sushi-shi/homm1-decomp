@@ -94,6 +94,5 @@ public:
 };
 #pragma pack(pop)
 
-void PostprocessIcon(icon*);
 
 #endif // HOMM1_BASE_ICON_H

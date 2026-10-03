@@ -516,7 +516,6 @@ H1_ENUM_CONST_BEGIN(ForcedMusicConstant)
 H1_ENUM_CONST_END(ForcedMusicConstant)
 extern long iLastScrollTime;
 extern int gbForceUpdate;
-extern int giFullySeeded;
 // The adventure screen's bottom-right panel: iCurBottomView is the view
 // UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
@@ -539,10 +538,7 @@ extern long iLastNewSandAnimTime;
 extern int iSandAnim;
 extern int iLastHourGlassPhase;
 extern long giLastHourGlassUpdateTime;
-extern signed char giShowComputerRoute;
-extern unsigned char giCurWatchPlayerBit;
 extern int giCheatSeq;
-extern unsigned char giCurPlayerBit;
 // Volume per environment-sound distance step.
 extern const long glEnvironmentVolume[];
 // giLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
@@ -563,7 +559,6 @@ extern signed char bFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern signed char bComboDraw[][17];
 extern int giFrameCount;
-void ComputeUALoc(int);
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern int TrigX;
 extern int TrigY;
@@ -587,5 +582,7 @@ extern int giFrameStep;
 struct SMapChange {
     char _pad[64];
 };
+extern char cArmySizeName[];
+extern int iCurHourGlassPhase;
 
 #endif // HOMM1_SOURCE_ADVMANAGER_H

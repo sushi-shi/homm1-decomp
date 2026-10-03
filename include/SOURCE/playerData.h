@@ -165,7 +165,4 @@ public:
 };
 #pragma pack(pop)
 
-extern playerData* gpCurPlayer;
-extern signed char giCurPlayer;
-extern int giCurTurn;
 #endif // HOMM1_SOURCE_PLAYERDATA_H

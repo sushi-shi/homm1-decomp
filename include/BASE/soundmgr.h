@@ -76,8 +76,8 @@ struct SampleChannelStruct {
 };
 extern SampleChannelStruct SCS[];
 
-char* FindToken(char*, char);
 void SetReady2Poll(void);
 void HandleMCIError(int, char*);
+extern int giCDDrive;
 
 #endif

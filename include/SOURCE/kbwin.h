@@ -112,7 +112,6 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
 
-extern int giCDDrive;
 extern void* hInstApp;
 extern void* gEventHandle;
 extern char gcCommandLine[];
@@ -159,8 +158,6 @@ void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
 H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void);
 int AppInit(void*, void*, int, char*);
-int KeyboardMessageHandler(void*, unsigned int, unsigned int, long);
-int MouseMessageHandler(void*, unsigned int, unsigned int, long);
 long __stdcall AppWndProc(void*, unsigned int, unsigned int, long);
 void KBChangeMenu(void*);
 void ResizeWindow(int, int, int, int);
@@ -179,5 +176,11 @@ void Process1WindowsMessage();
 void SetNoDialogMenus(int);
 char* FindLastToken(char*, char);
 void SetMenus(void*, int);
+extern void* hwndApp;
+extern int iMainWinScreenWidth;
+extern int iMainWinScreenHeight;
+void ProcessAssert(int, char*, int);
+void WritePrefs();
+char* FindToken(char*, char);
 
 #endif

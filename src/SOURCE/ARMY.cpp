@@ -10,6 +10,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/MAKEFILEID.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/soundManager.h>

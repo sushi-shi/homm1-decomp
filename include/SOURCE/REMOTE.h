@@ -154,9 +154,6 @@ signed char InitNetGuest(void);
 signed char WaitForHost(void);
 signed char WaitForGuest(void);
 
-// HoMM1 transport entry points as the remote layer calls them: each carries a
-// leading unused selector, unlike HoMM2's narrower netwin signatures.
-void com_term(short);
 H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short);
 H1_C_LINKAGE void __cdecl nb_term(int);
 H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short, void*);
@@ -181,5 +178,8 @@ extern signed char iWaitForHostStatus;
 extern signed char iWaitForGuestStatus;
 extern long iLastBroadcastTime;
 void PollRemote();
+// HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
+void RemoteMain(int);
+int nbnet_init(void);
 
 #endif

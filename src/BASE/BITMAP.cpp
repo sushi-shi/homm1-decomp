@@ -6,6 +6,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/miscwin.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>

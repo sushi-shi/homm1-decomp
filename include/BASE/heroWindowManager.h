@@ -6,6 +6,7 @@
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
 #include <BASE/display.h>
+#include <BASE/MISC_TYPES.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -71,5 +72,9 @@ public:
 // heroWindowManager.h).
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
+void CycleColors(void);
+extern int iDialogNestCount;
+extern signed char gWindowFadeSavedUpdate;
 
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H

@@ -13,6 +13,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/miscwin.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>

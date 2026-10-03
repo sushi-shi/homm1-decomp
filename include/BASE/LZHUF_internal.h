@@ -13,7 +13,6 @@ extern unsigned short initialFrequency[628];
 extern short initialParent[941];
 }
 
-void LogStr(char *, long, long);
 
 static void UpdateEncoderTree(short character);
 static void InsertNode(short node);

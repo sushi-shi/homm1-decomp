@@ -20,7 +20,9 @@
 #include <SOURCE/KB.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/miscwin.h>
 #include <BASE/soundManager.h>
 #include <H1/Macros.h>
 #include <SOURCE/cursorTypes.h>

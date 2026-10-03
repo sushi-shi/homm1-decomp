@@ -14,6 +14,7 @@
 #include <BASE/mouseManager.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/philAI.h>
 #include <SOURCE/wingraph.h>
 
 #include <io.h>

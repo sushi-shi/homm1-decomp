@@ -6,6 +6,7 @@
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>
 #include <BASE/widget.h>
@@ -20,6 +21,7 @@
 #include <SOURCE/kbwin.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/town.h>
 #include <SOURCE/townManager.h>

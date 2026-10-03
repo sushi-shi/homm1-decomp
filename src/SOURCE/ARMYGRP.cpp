@@ -7,6 +7,7 @@
 #include <BASE/Misc.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/game.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/town.h>

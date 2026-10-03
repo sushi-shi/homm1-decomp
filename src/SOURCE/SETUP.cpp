@@ -17,6 +17,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/Modem.h>
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/REMOTE.h>

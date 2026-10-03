@@ -17,7 +17,6 @@ void ShowStatus();
 void CheckDoMain(int, int);
 extern int iDummy;
 extern int bHeroBuiltThisTurn;
-extern int iCurHourGlassPhase;
 
 // forward declarations:
 class armyGroup;
@@ -244,7 +243,13 @@ H1_ENUM_END(MapExtraFlag)
 extern signed char mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern unsigned char giCurPlayerHighBit;
 extern unsigned char giCurWatchPlayerHighBit;
-extern signed char gbDismissArmy;
-extern signed char giMonType[];
+void AiPrint(char*);
+void AbsAiPrint(char*);
+extern signed char giShowComputerRoute;
+extern unsigned char giCurWatchPlayerBit;
+extern unsigned char giCurPlayerBit;
+extern playerData* gpCurPlayer;
+extern signed char giCurPlayer;
+extern int giCurTurn;
 
 #endif // HOMM1_SOURCE_PHILAI_H

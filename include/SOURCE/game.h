@@ -537,5 +537,17 @@ extern signed char gbSavedKingOfTheHill;
 extern signed char gcSavedCrest;
 extern signed char gRandomTownTypes[4];
 extern short giMineTypeCount[];
+extern unsigned long iLastSeed;
+int SGenRand(void);
+int SRandom(int, int);
+void SIncRandomize(int, int);
+void SRand(int);
+// GetMap raises gbShowMapInfo around its .MAP requester and owns the
+// reqextra.bin side window the requester fills.
+extern signed char gbShowMapInfo;
+extern heroWindow* gpReqExtraWindow;
+extern char gcCurMapName[];
+extern signed char gbDismissArmy;
+extern signed char giMonType[];
 
 #endif // HOMM1_SOURCE_GAME_H

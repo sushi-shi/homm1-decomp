@@ -40,5 +40,4 @@ public:
 };
 #pragma pack(pop)
 
-void PostprocessBitmap(signed char*, int, int);
 #endif // HOMM1_BASE_BITMAP_H

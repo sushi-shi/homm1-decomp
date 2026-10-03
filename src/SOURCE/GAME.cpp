@@ -13,6 +13,7 @@
 #include <BASE/LZHUF.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/resource.h>
 #include <BASE/resourceManager.h>
 #include <BASE/soundManager.h>

@@ -16,6 +16,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>

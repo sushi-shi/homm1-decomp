@@ -14,6 +14,7 @@
 #include <BASE/MISC_TYPES.h>
 #include <BASE/palette.h>
 #include <SOURCE/KB.h>
+#include <SOURCE/kbwin.h>
 #include <SOURCE/wingraph.h>
 
 #include <string.h>

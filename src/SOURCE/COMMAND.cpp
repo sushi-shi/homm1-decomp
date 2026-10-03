@@ -12,6 +12,7 @@
 #include <BASE/INPUTMGR_TYPES.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
+#include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <BASE/soundManager.h>
@@ -26,6 +27,7 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 #include <SOURCE/PATH.h>
+#include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
 
