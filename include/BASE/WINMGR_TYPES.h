@@ -23,9 +23,9 @@ H1_ENUM_CONST_BEGIN(WindowManagerConstant)
     // heroWindowManager::Open when the screen bitmap is missing.
     WINDOW_MANAGER_OPEN_FAILURE = 1
 H1_ENUM_CONST_END(WindowManagerConstant)
-    // clang-format on
+// clang-format on
 
-    class palette;
+class palette;
 extern palette* gPalette;
 extern int gbInDialog;
 extern int iDialogNestCount;

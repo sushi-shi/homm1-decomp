@@ -253,9 +253,7 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     MONSTER_FRAME_STRIDE = 7,
     MONSTER_FACING_FRAME_BASE = MONSTER_FRAME_STRIDE - 1,
     MONSTER_DRAW_Y_OFFSET = 5,
-    HERO_BOAT_Y_OFFSET = -10,
-    HERO_FRAME_MIRROR_FLAG = 0x80,
-    HERO_FRAME_INDEX_MASK = 0x7f
+    HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
 // UpdateScreen's dirty box and animation clock (Buka 2.1
@@ -264,7 +262,6 @@ H1_ENUM_CONST_END(AdventureDrawConstant)
 // no limit box means the whole 448-pixel viewport at 16,16; odd steps
 // advance columns 1 and 3, even ones 0 and 2, each modulo 6 frames.
 H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
-    UPDATE_NONE = -1,
     UPDATE_VIEWPORT_ORIGIN = 16,
     UPDATE_VIEWPORT_SIZE = 448,
     UPDATE_ANIMATION_PHASES = 6,
@@ -4743,7 +4740,7 @@ void advManager::SetHeroContext(signed char heroId, signed char update) {
     m_mapOriginX = currentHero->m_x - ADVMGR_VIEW_CENTER;
     m_mapOriginY = currentHero->m_y - ADVMGR_VIEW_CENTER;
     m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
-    m_previousCursorMapX = m_previousCursorMapY = -1;
+    m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
     if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
         m_cursorType = ADVMGR_HERO_ICON_BOAT;
     else

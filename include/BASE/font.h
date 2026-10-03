@@ -21,7 +21,7 @@ H1_ENUM_CONST_END(FontGlyphConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-                             class font : public resource {
+class font : public resource {
 public:
     short m_height;
     short m_headerWord;

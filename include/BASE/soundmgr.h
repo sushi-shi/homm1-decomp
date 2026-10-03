@@ -32,7 +32,9 @@ H1_ENUM_CONST_BEGIN(CDPlaybackConstant)
     SAMPLE_STATUS_DONE = 2,
     SAMPLE_VOLUME_TABLE_BYTES = 0x40,
     SOUND_STATE_RESET_SPAN = 0xae,
-    MUSIC_STOP_WAIT_MILLISECONDS = 5
+    MUSIC_STOP_WAIT_MILLISECONDS = 5,
+    // soundManager::m_auxDevice before CDStartup finds a CD-audio aux device.
+    CD_AUX_DEVICE_NONE = -1
 H1_ENUM_CONST_END(CDPlaybackConstant)
 
 H1_ENUM_CONST_BEGIN(SampleStreamConstant)
@@ -43,6 +45,9 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SAMPLE_RATE_HIGH = 44100,
     SAMPLE_FORMAT_16_BIT = 1,
     SAMPLE_FORMAT_STEREO = 2,
+    // gConfig.musicVolume/soundVolume level that silences the channel
+    // (Buka CONFIG_VOLUME_MUTED).
+    SOUND_VOLUME_OFF = 0,
     SOUND_VOLUME_FIRST = 1,
     SOUND_VOLUME_LAST = 10,
     SOUND_VOLUME_EFFECT = 100,

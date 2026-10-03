@@ -19,8 +19,8 @@ H1_ENUM_CONST_END(SampleDefaultConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-                       // MemorySample addresses these fields through one sub-object pointer.
-                       struct SamplePlaybackData {
+// MemorySample addresses these fields through one sub-object pointer.
+struct SamplePlaybackData {
     struct _SAMPLE* activeSample;
     signed char* data;
     long size;

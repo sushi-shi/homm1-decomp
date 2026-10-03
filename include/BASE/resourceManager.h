@@ -25,7 +25,7 @@ H1_ENUM_CONST_END(ResourceManagerConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-        struct aggEntry {
+struct aggEntry {
     short id;
     long offset;
     unsigned long size;

@@ -22,8 +22,6 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_DRAW_Y = 0xff,
     CURSOR_BOAT_DRAW_Y_ADJUST = 10,
     CURSOR_SHADOW_FLIP_X_ADJUST = 0x20,
-    CURSOR_FLIP_FLAG = 0x80,
-    CURSOR_FRAME_MASK = 0x7f,
     CURSOR_FLAG_FRAME_BASE = 0x38,
     CURSOR_FLAG_FRAME_CYCLE_MASK = 3,
     CURSOR_LAST_FRAME_COUNT = 8,
@@ -84,10 +82,10 @@ void advManager::StopCursor(signed char stopSound) {
         hLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
-    if (m_previousCursorMapX != -1) {
+    if (m_previousCursorMapX != CURSOR_CELL_NONE) {
         m_mapData[m_mapOriginX + m_previousCursorMapX][m_mapOriginY + m_previousCursorMapY]
             .m_flags &= ~MAP_CELL_HERO_CURSOR;
-        m_previousCursorMapX = m_previousCursorMapY = -1;
+        m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
     }
     m_cursorTurning = 0;
 }
@@ -113,9 +111,9 @@ void advManager::DrawCursor(void) {
     screenY = m_updateMinY + CURSOR_DRAW_Y;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         screenY -= CURSOR_BOAT_DRAW_Y_ADJUST;
-    if (m_cursorFrame & CURSOR_FLIP_FLAG) {
+    if (m_cursorFrame & HERO_FRAME_MIRROR_FLAG) {
         drawX += CURSOR_SHADOW_FLIP_X_ADJUST;
-        drawFrame = (m_cursorFrame & CURSOR_FRAME_MASK) + m_cursorFrameCount;
+        drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK) + m_cursorFrameCount;
         if (m_drawHeroShadows && m_cursorType != ADVMGR_HERO_ICON_BOAT)
             FlipDimIconToBitmap(
                 m_boatShadowIcon,
@@ -135,7 +133,7 @@ void advManager::DrawCursor(void) {
         );
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT) {
             if (m_cursorCycle == 0)
-                drawFrame = m_cursorFrame & CURSOR_FRAME_MASK;
+                drawFrame = m_cursorFrame & HERO_FRAME_INDEX_MASK;
             FlipIconToBitmap(
                 m_boatFlagIcons[gpCurPlayer->m_color],
                 gpWindowManager->m_screen,
@@ -147,7 +145,7 @@ void advManager::DrawCursor(void) {
         } else {
             if (m_cursorCycle == 0)
                 drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
-                            + (m_cursorFrame & CURSOR_FRAME_MASK) + CURSOR_FLAG_FRAME_BASE;
+                            + (m_cursorFrame & HERO_FRAME_INDEX_MASK) + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
                 gpWindowManager->m_screen,
@@ -319,7 +317,7 @@ int advManager::GetMoveShowIt(signed char direction) {
     hero* movingHero;
     short dirX;
 
-    if (gpCurPlayer->CurrentHero() == -1)
+    if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         return 0;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dirX = normalDirTable[direction].x;
@@ -434,7 +432,7 @@ mapCell* advManager::MoveHero(
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT,
-                    -1
+                    FIZZLE_USE_DEFAULT_DELAY
                 );
                 break;
             case MAP_OBJECT_BUOY:
@@ -572,7 +570,7 @@ mapCell* advManager::MoveHero(
                 m_updateMinY += yInc * pixelsPerStep;
             }
             if (ComboDraw(0)) {
-                giLimitUpdMinX = -1;
+                giLimitUpdMinX = UPDATE_NONE;
                 UpdateScreen(0, 0);
             }
             if (bShowIt)
@@ -654,7 +652,7 @@ movementDone:
                        == MAP_OBJECT_SHIP)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
-            if (movingHero->m_owner == -1)
+            if (movingHero->m_owner == GAME_PLAYER_NONE)
                 retCell = NULL;
         }
     }
@@ -680,7 +678,7 @@ void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
 
     theHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dead = 0;
-    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, -1, -1)) {
+    if (FindAdjacentMonster(theHero->m_x, theHero->m_y, &monX, &monY, SEARCH_INVALID_COORDINATE, SEARCH_INVALID_COORDINATE)) {
         StopCursor(1);
         CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
         UpdateScreen(0, 0);
@@ -831,7 +829,7 @@ void advManager::MoveOrigin(short directionX, short directionY) {
         cellX = m_cursorMapX + m_mapOriginX;
         cellY = m_cursorMapY + m_mapOriginY;
         m_mapData[cellX][cellY].m_flags |= MAP_CELL_HERO_CURSOR;
-        if (m_previousCursorMapX != -1) {
+        if (m_previousCursorMapX != CURSOR_CELL_NONE) {
             m_mapData[m_previousCursorMapX + oldOriginX][m_previousCursorMapY + oldOriginY]
                 .m_flags &= ~MAP_CELL_HERO_CURSOR;
             m_previousCursorMapX += directionX;

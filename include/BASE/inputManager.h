@@ -130,7 +130,7 @@ H1_ENUM_CONST_END(InputKeyCodeConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-        class inputManager : public baseManager {
+class inputManager : public baseManager {
 public:
     tag_message m_eventRing[INPUT_EVENT_RING_CAPACITY];
     short m_readIndex;

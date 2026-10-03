@@ -38,7 +38,7 @@ H1_ENUM_CONST_END(BaseManagerConstant)
 // clang-format on
 
 #pragma pack(push, 1)
-    class baseManager {
+class baseManager {
 public:
     baseManager* m_next;
     baseManager* m_prev;
