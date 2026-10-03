@@ -13,7 +13,13 @@ Measured with the HoMM1 VC4 `/Od /G5 /Ob1` profiles (PHILAI, 2026-10).
   `n * d * d * gfBonus` is emitted with the global factor first
   (`fild n; fmul gfBonus; fmul d; fmul d`). Parenthesizing the local part,
   `(n * d * d) * gfBonus`, keeps the written order
-  (`ProbableOutcomeOfBattle`, human-bonus arm).
+  (`ProbableOutcomeOfBattle`, human-bonus arm). Sum chains behave the same
+  way: `ValueOfEventAtPosition`'s daemon-cave value and
+  `HeroInteractionAtTown`'s transfer rating only take retail's association
+  once the first pair is parenthesized. This is not cosmetic: a different
+  association rounds differently on the x87 before `__ftol`, so an
+  unmatched chain is a behavioural difference, not residue
+  (docs/equivalence/PHILAI.md).
 - **Cast temporaries.** `diff = (float)(c ? a - b : b - a);` stores each arm
   to a float temporary and copies it with an integer `mov`; the same
   expression with `static_cast<float>` or no cast stores straight into
