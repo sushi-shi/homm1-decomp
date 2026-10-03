@@ -14,7 +14,9 @@
 #include <H1/KB.h>
 #include <SOURCE/kbwin.h>
 
+DATA(0x004c6a88)
 long gButtonRepeatTimer;
+DATA(0x004a2f98)
 int iLeftRightSave;
 
 VA(0x0047eef0, 0x31)
