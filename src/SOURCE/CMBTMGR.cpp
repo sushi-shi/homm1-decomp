@@ -260,22 +260,9 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
 
-// CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
-// table after Open's literals, followed by its own literals.
-DATA(0x00490db0)
-char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
-    "frstwgrs.bkg",
-    "mtnwgrsf.bkg",
-    "snowfrst.bkg",
-    "snowmtnf.bkg",
-    "swamp.bkg",
-    "lava.bkg",
-    "desert.bkg",
-    "frstwdrt.bkg",
-    "mtnwdrtf.bkg",
-    "boat.bkg",
-    "gravyard.bkg",
-};
+// CMBTMGR owns retail .data 0x00490d50-0x00491057. The backdrop table is
+// GetBackgroundName's local static: /Gi emits it after Open's literals,
+// followed by its own.
 
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
@@ -464,6 +451,19 @@ void combatManager::GenerateMap(void) {
 // one) forces the graveyard field.
 VA(0x0044ca22, 0x18e)
 char* combatManager::GetBackgroundName(void) {
+    DATA(0x00490db0) static char* cCombatBkgNames[COMBAT_BACKGROUND_COUNT] = {
+        "frstwgrs.bkg",
+        "mtnwgrsf.bkg",
+        "snowfrst.bkg",
+        "snowmtnf.bkg",
+        "swamp.bkg",
+        "lava.bkg",
+        "desert.bkg",
+        "frstwdrt.bkg",
+        "mtnwdrtf.bkg",
+        "boat.bkg",
+        "gravyard.bkg",
+    };
     if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
         || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
             && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType

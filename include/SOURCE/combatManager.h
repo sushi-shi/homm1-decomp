@@ -577,5 +577,4 @@ extern signed char gbThisNetHasControl;
 extern signed char gbInCombat;
 // Battlefield backdrops per combat terrain (CMBTMGR data, 0x00490db0); the
 // ground and obstacle tables are in X_GLOBAL.h.
-extern char* cCombatBkgNames[];
 #endif // HOMM1_SOURCE_COMBATMANAGER_H
