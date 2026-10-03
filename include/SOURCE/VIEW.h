@@ -4,6 +4,6 @@
 struct tag_message;
 
 // The combat general's stats window handler (Buka VIEW.h).
-short HandleViewGeneral(struct tag_message& message);
+i16 HandleViewGeneral(struct tag_message& message);
 
 #endif // HOMM1_SOURCE_VIEW_H

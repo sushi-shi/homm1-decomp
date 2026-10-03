@@ -62,7 +62,7 @@ executive::executive(void) {
 
 // Retail opens sound unconditionally and returns AX.
 VA(0x0047a180, 0xa9)
-short executive::InitSystem(void) {
+i16 executive::InitSystem(void) {
     if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
     if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
@@ -99,14 +99,14 @@ void executive::ShutDownSystem(void) {
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
 VA(0x0047a2c0, 0x10c)
-short executive::DoDialog(baseManager* manager) {
+i16 executive::DoDialog(baseManager* manager) {
     baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    int index;
+    i32 index;
     baseManager* savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     baseManager* savedNextManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     baseManager* currentManager;
     executive dialogExecutive;
-    int count = 0;
+    i32 count = 0;
     currentManager = m_managerListHead;
     while (currentManager != NULL) {
         savedManagers[count] = currentManager;
@@ -136,7 +136,7 @@ short executive::DoDialog(baseManager* manager) {
 }
 
 VA(0x0047a3d0, 0xd2)
-short executive::AddManager(baseManager* manager, short priority) {
+i16 executive::AddManager(baseManager* manager, i16 priority) {
     if (manager == NULL)
         return BASE_MANAGER_ERROR;
     if (priority == BASE_MANAGER_PRIORITY_UNASSIGNED) {
@@ -215,9 +215,9 @@ void executive::CallManager(baseManager* manager) {
 // Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
 VA(0x0047a5a0, 0x108)
 void executive::MainLoop(void) {
-    signed char done = 0;
+    i8 done = 0;
     tag_message message;
-    signed char dispatch = 1;
+    i8 dispatch = 1;
     if (m_managerListHead == NULL)
         return;
     gpInputManager->Flush();

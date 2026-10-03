@@ -24,16 +24,16 @@
 // evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
 VA(0x00463630, 0x2de)
 strip::strip(
-    short x,
-    short y,
-    signed char stripType,
-    short portraitId,
-    signed char portraitFrame,
+    i16 x,
+    i16 y,
+    i8 stripType,
+    i16 portraitId,
+    i8 portraitFrame,
     class armyGroup* army,
-    short firstBorderId,
-    int drawWindow
+    i16 firstBorderId,
+    i32 drawWindow
 ) {
-    short i;
+    i16 i;
 
     m_selectedSlot = STRIP_SLOT_NONE;
     m_x = x;
@@ -88,7 +88,7 @@ strip::strip(
 // evidence: graph:2;base=0.560366;margin=0.278966;shape=0.418;size=0.916;calls=1.000;alternate=pol20:void strip::~destructor(void)@0x000324ae
 VA(0x0046390e, 0x112)
 strip::~strip() {
-    short i;
+    i16 i;
 
     gpWindowManager->RemoveWindow(m_window);
     if (m_army) {
@@ -116,9 +116,9 @@ void strip::Draw(void) {
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.411442;margin=0.465209;shape=0.280;size=0.697;calls=0.714;alternate=pol20:void strip::DrawIcons(int)@0x00032632
 VA(0x00463a62, 0x26e)
-void strip::DrawIcons(signed char drawWindow) {
-    short i;
-    signed char creatureType;
+void strip::DrawIcons(i8 drawWindow) {
+    i16 i;
+    i8 creatureType;
 
     m_portraitIcon->DrawToBuffer(
         m_x + STRIP_PORTRAIT_X,
@@ -199,7 +199,7 @@ void strip::DrawFrame(void) {
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.721149;margin=0.159729;shape=0.520;size=0.843;calls=0.833;strings=bankbox.bin;alternate=pol20:void bankBox::constructor(int, int, class playerData *)@0x00032a38
 VA(0x00463d07, 0xfe)
-bankBox::bankBox(short x, short y, class playerData* player) {
+bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     m_player = player;
     m_x = x;
     m_y = y;
@@ -223,7 +223,7 @@ VA(0x00463e48, 0xc5)
 void bankBox::Update(void) {
     char text[12];
     tag_message message;
-    short i;
+    i16 i;
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;

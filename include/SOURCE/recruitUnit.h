@@ -24,38 +24,38 @@ H1_ENUM_END(RecruitSourceType)
 #pragma pack(push, 1)
 class recruitUnit : public baseManager {
 public:
-    H1_ENUM_STORAGE(RecruitSourceType, signed char) m_sourceType;
-    signed char m_creatureType;
+    H1_ENUM_STORAGE(RecruitSourceType, i8) m_sourceType;
+    i8 m_creatureType;
     char m_unknown32[4];
-    int m_goldCost;
-    signed char m_resourceType;
-    short m_resourceCost;
+    i32 m_goldCost;
+    i8 m_resourceType;
+    i16 m_resourceCost;
     heroWindow* m_window;
     char m_unknown41[4];
     armyGroup* m_army;
-    char m_unknown49;
-    signed char m_recruited;
-    signed char m_noRoom;
-    short* m_available;
-    short m_maximum;
-    int m_goldTotal;
-    short m_resourceTotal;
-    short m_quantity;
+    i8 m_unknown49;
+    i8 m_recruited;
+    i8 m_noRoom;
+    i16* m_available;
+    i16 m_maximum;
+    i32 m_goldTotal;
+    i16 m_resourceTotal;
+    i16 m_quantity;
     // RecruitEvent allocates 0x5c bytes.
     char m_unknown5a[2];
     // --- constructors ---
-    recruitUnit(class armyGroup*, int, short int*);
+    recruitUnit(class armyGroup*, i32, i16*);
     // HoMM1 has no refresh-town argument (retail ret 8).
-    recruitUnit(class town*, signed char);
+    recruitUnit(class town*, i8);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void Update(void);
 };
 #pragma pack(pop)
 
-void SetupRecruitWin(class heroWindow*, int, int, int, int, int);
-void QuickViewRecruit(class town*, signed char);
+void SetupRecruitWin(class heroWindow*, i32, i32, i32, i32, i32);
+void QuickViewRecruit(class town*, i8);
 #endif // HOMM1_SOURCE_RECRUITUNIT_H

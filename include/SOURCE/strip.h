@@ -46,24 +46,24 @@ class strip {
 public:
     heroWindow* m_window;
     char m_unknown04[0x12];
-    short m_x;
-    short m_y;
-    signed char m_stripType;
-    signed char m_selectedSlot;
+    i16 m_x;
+    i16 m_y;
+    i8 m_stripType;
+    i8 m_selectedSlot;
     border* m_borders[6];
     font* m_font;
     icon* m_stripIcon;
     icon* m_monsterIcon;
     icon* m_portraitIcon;
-    signed char m_portraitFrame;
+    i8 m_portraitFrame;
     armyGroup* m_army;
     // --- constructors ---
     // HoMM1 retail: eight arguments (ret 0x20).
-    strip(short, short, signed char, short, signed char, class armyGroup*, short, int);
+    strip(i16, i16, i8, i16, i8, class armyGroup*, i16, i32);
     ~strip();
     // --- methods ---
     void Draw(void);
-    void DrawIcons(signed char);
+    void DrawIcons(i8);
     void DrawFrame(void);
 };
 #pragma pack(pop)

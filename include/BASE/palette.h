@@ -14,13 +14,13 @@ H1_ENUM_CONST_END(PaletteConstant)
 #pragma pack(push, 1)
 class palette : public resource {
 public:
-    signed char* m_data;
+    i8* m_data;
     // --- constructors ---
     palette(void);
-    palette(short);
+    palette(i16);
     virtual inline ~palette();
     // --- methods ---
-    signed char* Data(void);
+    i8* Data(void);
 };
 #pragma pack(pop)
 

@@ -25,33 +25,33 @@ H1_ENUM_CONST_END(ResourceManagerConstant)
 
 #pragma pack(push, 1)
 struct aggEntry {
-    short id;
-    long offset;
-    unsigned long size;
-    unsigned long unpackedSize;
+    i16 id;
+    i32 offset;
+    u32 size;
+    u32 unpackedSize;
 };
 
 class resourceManager : public baseManager {
 public:
     resource* m_resourceListHead;
-    int m_aggregateFd;
+    i32 m_aggregateFd;
     aggEntry* m_aggregateDir;
-    short m_aggregateEntryCount;
-    int m_expunging;
-    long m_savedPosition;
+    i16 m_aggregateEntryCount;
+    i32 m_expunging;
+    i32 m_savedPosition;
     char m_lastFileName[RESOURCE_MANAGER_FILENAME_CAPACITY];
-    int m_lastFileId;
+    i32 m_lastFileId;
 
     resourceManager();
-    virtual short Open(short);
+    virtual i16 Open(i16);
     virtual void Close();
-    virtual short Main(tag_message&);
+    virtual i16 Main(tag_message&);
     void GetBackdrop(char*, bitmap*);
-    void GetBackdropAtLoc(char*, bitmap*, int, int);
+    void GetBackdropAtLoc(char*, bitmap*, i32, i32);
     palette* GetPalette(char*);
     bitmap* GetBitmap(char*);
     icon* GetIcon(char*);
-    icon* GetIcon(short);
+    icon* GetIcon(i16);
     tileset* GetTileset(char*);
     mouse* GetMouse(char*);
     font* GetFont(char*);
@@ -60,19 +60,19 @@ public:
     void Dispose(resource*);
     void AddResource(resource*);
     void Expunge();
-    resource* Query(short);
+    resource* Query(i16);
     void RemoveResource(resource*);
-    short LoadAggregateHeader(char*);
-    void PointToFile(short);
-    unsigned long GetFileSize(short);
+    i16 LoadAggregateHeader(char*);
+    void PointToFile(i16);
+    u32 GetFileSize(i16);
     void SavePosition();
     void RestorePosition();
-    signed char ReadByte();
-    short ReadWord();
-    long ReadLong();
-    short MakeId(char*);
-    void Read13(signed char*);
-    void ReadBlock(signed char*, unsigned long);
+    i8 ReadByte();
+    i16 ReadWord();
+    i32 ReadLong();
+    i16 MakeId(char*);
+    void Read13(i8*);
+    void ReadBlock(i8*, u32);
 };
 #pragma pack(pop)
 

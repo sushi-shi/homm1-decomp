@@ -23,13 +23,13 @@ H1_ENUM_END(ResourceReferenceCount)
 #pragma pack(push, 1)
 class resource {
 public:
-    H1_ENUM_STORAGE(ResourceCategory, short) m_resourceType;
-    short m_refCount;
-    short m_id;
+    H1_ENUM_STORAGE(ResourceCategory, i16) m_resourceType;
+    i16 m_refCount;
+    i16 m_id;
     resource* m_next;
 
     resource();
-    resource(short, short, H1_ENUM_PARAM(ResourceReferenceCount, short), resource*);
+    resource(i16, i16, H1_ENUM_PARAM(ResourceReferenceCount, i16), resource*);
     virtual ~resource() = 0;
 };
 #pragma pack(pop)

@@ -90,97 +90,97 @@ H1_ENUM_END(HeroPrimaryStat)
 class hero {
 public:
     // CheckLevel and Deallocate sign-extend the hero id.
-    signed char m_id;
-    signed char m_owner;
+    i8 m_id;
+    i8 m_owner;
     char m_name[0x11];
     // UpdBottomViewHero copies this 8-character label into its name widget.
     char m_shortName[9];
     // Indexes gClassNames, gMinExpForLevel and the class crest frames;
     // combat copies it to m_heroType.
-    signed char m_heroClass;
+    i8 m_heroClass;
     // port%04d.icn portrait number.
-    char m_portrait;
-    signed char m_x;
-    signed char m_y;
-    signed char m_destinationX;
-    signed char m_destinationY;
-    unsigned char m_direction;
-    unsigned char m_locationType;
+    i8 m_portrait;
+    i8 m_x;
+    i8 m_y;
+    i8 m_destinationX;
+    i8 m_destinationY;
+    u8 m_direction;
+    u8 m_locationType;
     // SetHeroContext passes it zero-extended to game::RestoreCell.
-    unsigned char m_occupiedTown;
-    short m_mobility;
-    short m_remainingMobility;
-    int m_experience;
-    char m_unknown2d;
-    short m_level;
+    u8 m_occupiedTown;
+    i16 m_mobility;
+    i16 m_remainingMobility;
+    i32 m_experience;
+    i8 m_unknown2d;
+    i16 m_level;
     // GiveTakeArtifactStat raises a fifth stat byte for artifact 17.
-    signed char m_primaryStats[HERO_STARTING_STAT_COUNT];
-    signed char m_morale;
-    signed char m_luck;
+    i8 m_primaryStats[HERO_STARTING_STAT_COUNT];
+    i8 m_morale;
+    i8 m_luck;
     // ShowMoraleInfo reports the cowardice byte separately.
-    signed char m_cowardice;
-    char m_unknown38;
+    i8 m_cowardice;
+    i8 m_unknown38;
     // DoAIEvent tests and sets one bit per visited site index.
-    int m_visitedSites;
-    short m_randomSeed;
+    i32 m_visitedSites;
+    i16 m_randomSeed;
     char m_unknown3f[0x18];
     armyGroup m_army;
     // Combat spells fill the first 19 slots, adventure spells the last 10;
     // each memorized spell keeps its remaining casts in the parallel array.
-    H1_ENUM_STORAGE(SpellType, signed char) m_spells[HERO_SPELL_SLOT_COUNT];
-    signed char m_spellCharges[HERO_SPELL_SLOT_COUNT];
-    H1_ENUM_STORAGE(ArtifactType, signed char) m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
-    int m_eventFlags;
+    H1_ENUM_STORAGE(SpellType, i8) m_spells[HERO_SPELL_SLOT_COUNT];
+    i8 m_spellCharges[HERO_SPELL_SLOT_COUNT];
+    H1_ENUM_STORAGE(ArtifactType, i8) m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
+    i32 m_eventFlags;
     float m_aiFightValue;
-    int IsEmbarked(void) {
+    i32 IsEmbarked(void) {
         return m_eventFlags & HERO_EVENT_EMBARKED;
     }
     // --- constructors ---
     hero(void);
     // --- methods ---
-    void Read(int file, signed char expansion);
-    void Write(int file, signed char expansion);
-    void GetArmyStrengths(unsigned long int* const);
-    signed char HasArtifact(H1_ENUM_PARAM(ArtifactType, signed char));
-    short CalcMobility(void);
-    signed char HasSpell(H1_ENUM_PARAM(SpellType, signed char));
-    int GetNthSpell(int type, int spellNumber);
-    short GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char));
-    void UseSpell(H1_ENUM_PARAM(SpellType, signed char));
-    int AddSpell(H1_ENUM_PARAM(SpellType, signed char), signed char, int);
+    void Read(i32 file, i8 expansion);
+    void Write(i32 file, i8 expansion);
+    void GetArmyStrengths(u32* const);
+    i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8));
+    i16 CalcMobility(void);
+    i8 HasSpell(H1_ENUM_PARAM(SpellType, i8));
+    i32 GetNthSpell(i32 type, i32 spellNumber);
+    i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8));
+    void UseSpell(H1_ENUM_PARAM(SpellType, i8));
+    i32 AddSpell(H1_ENUM_PARAM(SpellType, i8), i8, i32);
     void HeroScreenUpdate(void);
     void UpdateArmies(void);
     void RedrawHeroScreen(void);
-    signed char HeroView(signed char);
-    void ViewStat(signed char, signed char);
-    void ViewArtifact(signed char, signed char);
-    signed char Dismiss(void);
+    i8 HeroView(i8);
+    void ViewStat(i8, i8);
+    void ViewArtifact(i8, i8);
+    i8 Dismiss(void);
     void Deallocate(void);
-    int GetExperience(int);
-    int GetLevel(int);
+    i32 GetExperience(i32);
+    i32 GetLevel(i32);
     void ApplyBattleWinTemps(void);
     void ApplyBattleLossTemps(void);
     void CheckLevel(void);
-    int NumArtifacts(void);
-    void SetSS(int skill, int level);
-    int TakeSS(int skill, int levels);
-    int GiveSS(int skill, int levels);
-    int CreatureTypeCount(int creatureType);
-    void UpgradeCreatures(int oldCreatureType, int newCreatureType);
-    int GetNthSS(int ordinal);
+    i32 NumArtifacts(void);
+    void SetSS(i32 skill, i32 level);
+    i32 TakeSS(i32 skill, i32 levels);
+    i32 GiveSS(i32 skill, i32 levels);
+    i32 CreatureTypeCount(i32 creatureType);
+    void UpgradeCreatures(i32 oldCreatureType, i32 newCreatureType);
+    i32 GetNthSS(i32 ordinal);
     class town* GetOccupiedTown(void);
-    signed char Stats(int stat);
-    signed char GetSSLevel(int skill);
-    void DoSSLevelDialog(int skill, int quickView);
-    void CheckAnduranPieces(int showDialog);
+    i8 Stats(i32 stat);
+    i8 GetSSLevel(i32 skill);
+    void DoSSLevelDialog(i32 skill, i32 quickView);
+    void CheckAnduranPieces(i32 showDialog);
 };
 #pragma pack(pop)
 
 extern class heroWindow* gheroWin;
 
 void HeroMessageUpdate(char*);
-void UpdateHeroScreenStatusBar(short);
+void UpdateHeroScreenStatusBar(i16);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
-extern signed char gbHeroScreenActive;
-short HeroHandler(struct tag_message&);
+extern i8 gbHeroScreenActive;
+i16 HeroHandler(struct tag_message&);
 #endif // HOMM1_SOURCE_HERO_H

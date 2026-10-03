@@ -186,14 +186,14 @@ H1_ENUM_CONST_END(SaveFileConstant)
 // owner at +1 and the type at +2, as in HoMM2's mineRecord.
 #pragma pack(push, 1)
 struct mineRecord {
-    signed char id;
-    signed char owner;
-    signed char type;
-    signed char guardianType;
-    unsigned char guardianCount;
+    i8 id;
+    i8 owner;
+    i8 type;
+    i8 guardianType;
+    u8 guardianCount;
     // GetMineId sign-extends both coordinates.
-    signed char x;
-    signed char y;
+    i8 x;
+    i8 y;
 };
 #pragma pack(pop)
 
@@ -201,14 +201,14 @@ struct mineRecord {
 // boatRecord order (direction 2, owner at +7).
 #pragma pack(push, 1)
 struct boatRecord {
-    signed char id;
-    signed char x;
-    signed char y;
-    signed char direction;
-    unsigned char savedTriggerType;
-    unsigned char savedEventData;
-    signed char heroId;
-    signed char owner;
+    i8 id;
+    i8 x;
+    i8 y;
+    i8 direction;
+    u8 savedTriggerType;
+    u8 savedEventData;
+    i8 heroId;
+    i8 owner;
 };
 #pragma pack(pop)
 
@@ -229,12 +229,12 @@ H1_ENUM_CONST_END(MapTownRecordConstant)
 // owner, buildings, mage-guild level and garrison.
 #pragma pack(push, 1)
 struct mapTownExtra {
-    signed char customized;
-    signed char owner;
-    short buildings;
-    signed char buildState;
-    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
-    short troopCounts[ARMY_GROUP_SLOT_COUNT];
+    i8 customized;
+    i8 owner;
+    i16 buildings;
+    i8 buildState;
+    i8 troopTypes[ARMY_GROUP_SLOT_COUNT];
+    i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
 };
 #pragma pack(pop)
 
@@ -242,12 +242,12 @@ struct mapTownExtra {
 // garrison, hero id, four artifacts and starting experience.
 #pragma pack(push, 1)
 struct mapHeroExtra {
-    signed char owner;
-    signed char troopTypes[ARMY_GROUP_SLOT_COUNT];
-    short troopCounts[ARMY_GROUP_SLOT_COUNT];
-    signed char heroId;
-    signed char artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
-    int experience;
+    i8 owner;
+    i8 troopTypes[ARMY_GROUP_SLOT_COUNT];
+    i16 troopCounts[ARMY_GROUP_SLOT_COUNT];
+    i8 heroId;
+    i8 artifacts[MAP_HERO_EXTRA_ARTIFACT_COUNT];
+    i32 experience;
 };
 #pragma pack(pop)
 
@@ -258,139 +258,139 @@ struct mapHeroExtra {
 class game {
 public:
     // ShowCongrats scales the base score by this percentage.
-    short m_difficultyRating;
-    char m_unknown0002;
+    i16 m_difficultyRating;
+    i8 m_unknown0002;
     // ControlPanel's scenario-info choice shows the campaign when positive.
-    int m_campaignType;
-    int m_campaignScenario;
+    i32 m_campaignType;
+    i32 m_campaignScenario;
     // Incremented per campaign victory; names the SCENWN%02d save and picks
     // the campaign-info frame.
-    int m_campaignScenariosWon;
+    i32 m_campaignScenariosWon;
     // InitEntireCampaign starts it at 1; InitCampaignMap derives the
     // calendar from it.
-    int m_campaignDay;
+    i32 m_campaignDay;
     // NewGame copies the chosen map's size, difficulty, title and
     // description; ShowCongrats files the title with the high score.
-    signed char m_mapSize;
-    signed char m_mapDifficulty;
+    i8 m_mapSize;
+    i8 m_mapDifficulty;
     char m_mapName[0x11];
     char m_mapDescription[0x79];
     // SaveGame/LoadGame and the save requester's default name.
     char m_saveName[0x15f];
     // InitEntireCampaign stores 3 here.
-    signed char m_difficulty;
-    signed char m_playerCount;
-    char m_unknown200;
-    signed char m_deadPlayerCount;
-    signed char m_playerDead[GAME_PLAYER_COUNT];
-    unsigned short m_day;
-    unsigned short m_week;
-    unsigned short m_month;
+    i8 m_difficulty;
+    i8 m_playerCount;
+    i8 m_unknown200;
+    i8 m_deadPlayerCount;
+    i8 m_playerDead[GAME_PLAYER_COUNT];
+    u16 m_day;
+    u16 m_week;
+    u16 m_month;
     class playerData m_players[GAME_PLAYER_COUNT];
     class mapCell m_map[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     char m_unknownd0a0[0x5100];
-    signed char m_obeliskCount;
+    i8 m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
     // ClaimTown mirrors each town owner into this byte array.
-    signed char m_townOwners[GAME_TOWN_COUNT];
-    unsigned char m_townBuiltToday[4];
+    i8 m_townOwners[GAME_TOWN_COUNT];
+    u8 m_townBuiltToday[4];
     class hero m_heroRecs[GAME_HERO_COUNT];
-    signed char m_availableHeroes[GAME_HERO_COUNT];
+    i8 m_availableHeroes[GAME_HERO_COUNT];
     mineRecord m_mines[GAME_MINE_COUNT];
     // ClaimMine mirrors each mine owner into this byte array.
-    signed char m_mineOwners[GAME_MINE_COUNT];
+    i8 m_mineOwners[GAME_MINE_COUNT];
     // GetRandomArtifactId scans artifacts 4..36 for a free (-1) entry.
-    signed char m_randomArtifacts[0x25];
+    i8 m_randomArtifacts[0x25];
     boatRecord m_boats[GAME_BOAT_COUNT];
-    signed char m_boatSlots[GAME_BOAT_COUNT];
+    i8 m_boatSlots[GAME_BOAT_COUNT];
     // Obelisk events test and set the visiting player bit, one byte per obelisk.
-    signed char m_obeliskVisitors[0x30];
+    i8 m_obeliskVisitors[0x30];
     // InsertSound reads the environment sound id per [x][y] cell (MAP_SOUND_NONE
     // when silent).
-    signed char m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    i8 m_mapSounds[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // GetCloudLookup tests the watching player bit per [x][y] cell.
-    unsigned char m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-    signed char m_ultimateArtifactX;
-    signed char m_ultimateArtifactY;
-    signed char m_ultimateArtifactId;
+    u8 m_mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    i8 m_ultimateArtifactX;
+    i8 m_ultimateArtifactY;
+    i8 m_ultimateArtifactId;
     // NewGame's newgame.bin window.
     class heroWindow* m_newGameWindow;
-    char m_unknown16e5d;
+    i8 m_unknown16e5d;
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter (Buka name).
-    short m_viewArmyResult;
+    i16 m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
     // ViewSpells' window state (Buka m_viewSpells*): the hero's spell slots
     // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
     class heroWindow* m_viewSpellsWindow;
     class hero* m_viewSpellsHero;
-    short m_spellFirst;
-    short m_spellLast;
-    short m_viewSpell;
-    short m_viewSpellsTop;
-    short (*m_viewSpellsCallback)(struct tag_message&);
-    signed char m_viewSpellsReadOnly;
+    i16 m_spellFirst;
+    i16 m_spellLast;
+    i16 m_viewSpell;
+    i16 m_viewSpellsTop;
+    i16 (*m_viewSpellsCallback)(struct tag_message&);
+    i8 m_viewSpellsReadOnly;
     // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
     // trigger cell. While set, every player starts with a town hero;
     // otherwise the map's heroes are processed.
-    signed char m_noMapHeroes;
-    hero* GetHero(signed char id) {
+    i8 m_noMapHeroes;
+    hero* GetHero(i8 id) {
         return &m_heroRecs[id];
     }
     // TownEvent passes the unsigned cell metadata through a signed byte.
-    town* GetTown(signed char id) {
+    town* GetTown(i8 id) {
         return &m_castleRecs[id];
     }
-    hero* GetPlayerHero(int player, int index) {
+    hero* GetPlayerHero(i32 player, i32 index) {
         return &m_heroRecs[m_players[player].m_heroIds[index]];
     }
-    town* GetPlayerTown(int player, int index) {
+    town* GetPlayerTown(i32 player, i32 index) {
         return &m_castleRecs[m_players[player].m_townIds[index]];
     }
     // --- methods ---
-    void SetupDynamicStuff(int redraw, int updateKnob, int forceUpdate);
-    void SetupNewOverviewType(int overviewType, int redrawFrom);
+    void SetupDynamicStuff(i32 redraw, i32 updateKnob, i32 forceUpdate);
+    void SetupNewOverviewType(i32 overviewType, i32 redrawFrom);
     void SetupResources(void);
     void Overview(void);
     void DoKnob(void);
-    int ProcessIconSelect(int widgetId, int quickView);
-    signed char SetupCampaignGame(void);
-    signed char SetupBaud(void);
-    signed char SetupComPort(void);
-    signed char SetupHotSeatGame(void);
-    signed char SetupNetworkGame(void);
-    int SetupNetworkGame2(void);
-    signed char SetupModemGame(void);
-    signed char SetupMultiPlayerGame(void);
-    signed char SetupGame(signed char);
-    signed char PickLoadGame(void);
-    int HandleCampaignWin(void);
-    void PlayPreScenarioSmacker(int side, int map);
-    void ShowCampaignInfo(int, int, int);
-    void CampaignInfoUpdate(int redraw);
-    void InitEntireCampaign(int);
+    i32 ProcessIconSelect(i32 widgetId, i32 quickView);
+    i8 SetupCampaignGame(void);
+    i8 SetupBaud(void);
+    i8 SetupComPort(void);
+    i8 SetupHotSeatGame(void);
+    i8 SetupNetworkGame(void);
+    i32 SetupNetworkGame2(void);
+    i8 SetupModemGame(void);
+    i8 SetupMultiPlayerGame(void);
+    i8 SetupGame(i8);
+    i8 PickLoadGame(void);
+    i32 HandleCampaignWin(void);
+    void PlayPreScenarioSmacker(i32 side, i32 map);
+    void ShowCampaignInfo(i32, i32, i32);
+    void CampaignInfoUpdate(i32 redraw);
+    void InitEntireCampaign(i32);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
-    void InitCampaignMap(int, int);
-    int MineTypesOwned(int owner, int mineType);
-    int SetupPuzzlePieces(int player, int justCount);
-    signed char IsMobile(signed char);
+    void InitCampaignMap(i32, i32);
+    i32 MineTypesOwned(i32 owner, i32 mineType);
+    i32 SetupPuzzlePieces(i32 player, i32 justCount);
+    i8 IsMobile(i8);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     // Inline world-map file I/O (LoadMap, SaveGame, LoadGame): each
     // expansion leaves its jmp $+0 after the read or write call.
-    void ReadWorldMap(int);
-    void WriteWorldMap(int);
-    signed char CreateBoat(signed char, signed char);
-    signed char Scan(signed char*, signed char, signed char);
-    signed char RandomScan(signed char*, signed char, signed char, int);
-    signed char GetNewHeroId(signed char);
-    signed char GetTownId(signed char, signed char);
-    signed char GetMineId(signed char, signed char);
-    short SaveGame(char*, signed char);
+    void ReadWorldMap(i32);
+    void WriteWorldMap(i32);
+    i8 CreateBoat(i8, i8);
+    i8 Scan(i8*, i8, i8);
+    i8 RandomScan(i8*, i8, i8, i32);
+    i8 GetNewHeroId(i8);
+    i8 GetTownId(i8, i8);
+    i8 GetMineId(i8, i8);
+    i16 SaveGame(char*, i8);
     void SetupOrigData(void);
     // HoMM1 retail returns 1 in AX (ret 0xc).
-    short LoadGame(char*, int, int);
-    void GiveTroopsToNeutralTown(int townId);
+    i16 LoadGame(char*, i32, i32);
+    void GiveTroopsToNeutralTown(i32 townId);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char*);
     void RandomizeEvents(void);
@@ -398,166 +398,166 @@ public:
     void RandomizeBarrier(class mapCell* cell);
     void RandomizePassword(class mapCell* cell);
     // HoMM1 retail returns 0 in AX.
-    short LoadMap(char*);
-    void ClaimTown(signed char, signed char);
-    void ClaimMine(signed char, signed char);
+    i16 LoadMap(char*);
+    void ClaimTown(i8, i8);
+    void ClaimMine(i8, i8);
     // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
-    signed char ViewSpells(
+    i8 ViewSpells(
         class hero*,
-        H1_ENUM_PARAM(HeroSpellType, signed char),
-        short (*)(struct tag_message&),
-        signed char
+        H1_ENUM_PARAM(HeroSpellType, i8),
+        i16 (*)(struct tag_message&),
+        i8
     );
     // HoMM1: limits the spell page to the combat or adventure slots.
-    void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, short));
+    void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, i16));
     void UpdateSpellWidgets(void);
     // HoMM1 retail: word x/y, byte creature/flags, word count, eleven
     // arguments (ret 0x2c); combatManager::ViewArmy pushes its word locals
     // unextended and the body hands them to heroWindow(short, short, char*).
     void ViewArmy(
-        short,
-        short,
-        signed char,
-        short,
+        i16,
+        i16,
+        i8,
+        i16,
         class town*,
-        signed char,
-        signed char,
-        signed char,
+        i8,
+        i8,
+        i8,
         class hero*,
         class army*,
         class armyGroup*
     );
     // HoMM1 retail: byte creature, count returned in AL.
-    signed char GetRandomNumTroops(signed char);
+    i8 GetRandomNumTroops(i8);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
     void NextPlayer(void);
-    int ComputeDailyGold(int);
+    i32 ComputeDailyGold(i32);
     void PerDay(void);
     void PerWeek(void);
     void WeeklyRecruitSite(class mapCell* cell);
     void WeeklyGenericSite(class mapCell* cell);
     void PerMonth(void);
     void ConvertObject(
-        int left,
-        int top,
-        int right,
-        int bottom,
-        int oldTileset,
-        int oldFirstIndex,
-        int oldLastIndex,
-        int newTileset,
-        int newFirstIndex,
-        int oldTrigger,
-        int newTrigger
+        i32 left,
+        i32 top,
+        i32 right,
+        i32 bottom,
+        i32 oldTileset,
+        i32 oldFirstIndex,
+        i32 oldLastIndex,
+        i32 newTileset,
+        i32 newFirstIndex,
+        i32 oldTrigger,
+        i32 newTrigger
     );
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
-    void RandomizeTown(signed char, signed char, signed char);
+    void RandomizeTown(i8, i8, i8);
     // HoMM1 retail: byte x and y (ret 8).
-    void RandomizeMine(signed char, signed char);
+    void RandomizeMine(i8, i8);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
-    void SetupTown(signed char, signed char);
+    void SetupTown(i8, i8);
     void InitRandomArtifacts(void);
-    signed char GetRandomArtifactId(void);
+    i8 GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
-    void SetRandomHeroArmies(short, int);
+    void SetRandomHeroArmies(i16, i32);
     // HoMM1 retail: towns-only pass flag (ret 4).
-    void ProcessRandomObjects(int);
-    void SetVisibility(short, short, short, short);
-    void MakeAllWaterVisible(int player);
-    void GiveArmy(class armyGroup*, int, int, int);
-    int ExperienceValueOfStack(class armyGroup*, class hero*);
+    void ProcessRandomObjects(i32);
+    void SetVisibility(i16, i16, i16, i16);
+    void MakeAllWaterVisible(i32 player);
+    void GiveArmy(class armyGroup*, i32, i32, i32);
+    i32 ExperienceValueOfStack(class armyGroup*, class hero*);
     // HoMM1 retail: hero and army only (ret 8).
-    int GetLuck(class hero*, class army*);
-    int GetPlayerCrest(int player) {
+    i32 GetLuck(class hero*, class army*);
+    i32 GetPlayerCrest(i32 player) {
         return m_players[player].m_color;
     }
     void SetupAdjacentMons(void);
     void CancelComputerScreen(void);
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
-    void WaitForPlayer(char*, int);
-    int HasLateOverlay(int column, int row);
-    void ConvertFlagToLateOverlay(int column, int row);
-    int HasObjectTilesetIndex(int column, int row, int tileset, int index);
-    void ConvertAllToLateOverlay(int column, int row);
+    void WaitForPlayer(char*, i32);
+    i32 HasLateOverlay(i32 column, i32 row);
+    void ConvertFlagToLateOverlay(i32 column, i32 row);
+    i32 HasObjectTilesetIndex(i32 column, i32 row, i32 tileset, i32 index);
+    void ConvertAllToLateOverlay(i32 column, i32 row);
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
-    void SettleOverlay(int, int);
+    void SettleOverlay(i32, i32);
     // HoMM1: NewMap rerolls each cell's terrain tile variant after LoadMap.
     void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
     // Retail returns whether no town took an owner from its map extra (AL).
-    signed char SetupTowns(void);
+    i8 SetupTowns(void);
     void ProcessOnMapHeroes(void);
     void CheckHeroConsistency(void);
-    int TransmitSaveGame(int, int);
-    int ReceiveSaveGame(int, int);
+    i32 TransmitSaveGame(i32, i32);
+    i32 ReceiveSaveGame(i32, i32);
     void DoNewTurn(void);
-    int GetBoatsBuilt(void);
-    int GetNumThievesGuilds(int);
-    int CalcDifficultyRating(void);
-    void RestoreCell(int, int, int, int, class mapCell*, int);
-    void SetMapSize(int width, int height);
-    int HeroIDToHeroPos(class playerData* player, int heroId);
-    int TownIDToTownPos(class playerData* player, int townId);
+    i32 GetBoatsBuilt(void);
+    i32 GetNumThievesGuilds(i32);
+    i32 CalcDifficultyRating(void);
+    void RestoreCell(i32, i32, i32, i32, class mapCell*, i32);
+    void SetMapSize(i32 width, i32 height);
+    i32 HeroIDToHeroPos(class playerData* player, i32 heroId);
+    i32 TownIDToTownPos(class playerData* player, i32 townId);
     void SetupNewRumour(void);
     void CheckForTimeEvent(void);
-    int CountShrines(int player);
-    void ShowMoraleInfo(class hero*, int);
-    void ShowLuckInfo(class hero*, int);
+    i32 CountShrines(i32 player);
+    void ShowMoraleInfo(class hero*, i32);
+    void ShowLuckInfo(class hero*, i32);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
     void ProcessNewMap(struct SMapHeader* header);
     void InitNewGame(struct SMapHeader* header);
     void SetupNetPlayerNames(void);
     // Retail returns the started flag in AL.
-    signed char NewGame(void);
+    i8 NewGame(void);
     void CleanUpNewGameWindow(void);
     void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
-    int ProcessNGKeyPress(struct tag_message& message);
-    void NGKPSetupDisplayString(char* text, unsigned short int cursor);
-    void DrawNGKPDisplayString(int updateScreen);
+    i32 ProcessNGKeyPress(struct tag_message& message);
+    void NGKPSetupDisplayString(char* text, u16 cursor);
+    void DrawNGKPDisplayString(i32 updateScreen);
     void ShowScenInfo(void);
     // HoMM1: NewMap gives every opponent a distinct crest.
     void RandomizePlayerCrests(void);
     void GetLossConditionText(char* text);
     void GetVictoryConditionText(char* text);
-    int GetSideDesc(char* text, int firstPlayer, int lastPlayer);
+    i32 GetSideDesc(char* text, i32 firstPlayer, i32 lastPlayer);
     // DoEvent's obelisk branch (byte player, ret 4).
-    void VisitObelisk(signed char);
+    void VisitObelisk(i8);
 };
 #pragma pack(pop)
 
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
-void ComputeUALoc(int);
+void ComputeUALoc(i32);
 // GAME's dialog handlers and the standard-game day score ShowCongrats files.
-short ViewSpellsHandler(struct tag_message&);
-short ViewSpecialHandler(struct tag_message&);
-short ViewArmyHandler(struct tag_message&);
-int GetBaseScore(int);
-extern int gGameOver;
-extern int gEndSequence;
+i16 ViewSpellsHandler(struct tag_message&);
+i16 ViewSpecialHandler(struct tag_message&);
+i16 ViewArmyHandler(struct tag_message&);
+i32 GetBaseScore(i32);
+extern i32 gGameOver;
+extern i32 gEndSequence;
 // SaveGame files the current player through this byte.
-extern signed char gSaveCurPlayer;
+extern i8 gSaveCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
-extern signed char gSavedDifficulty;
-extern signed char gSavedPlayerTypes[];
-extern signed char gSavedKingOfTheHill;
-extern signed char gSavedCrest;
-extern signed char gRandomTownTypes[4];
-extern short gMineTypeCount[];
-extern unsigned long gLastSeed;
-int SGenRand(void);
-int SRandom(int, int);
-void SIncRandomize(int, int);
-void SRand(int);
+extern i8 gSavedDifficulty;
+extern i8 gSavedPlayerTypes[];
+extern i8 gSavedKingOfTheHill;
+extern i8 gSavedCrest;
+extern i8 gRandomTownTypes[4];
+extern i16 gMineTypeCount[];
+extern u32 gLastSeed;
+i32 SGenRand(void);
+i32 SRandom(i32, i32);
+void SIncRandomize(i32, i32);
+void SRand(i32);
 // GetMap raises gShowMapInfo around its .MAP requester and owns the
 // reqextra.bin side window the requester fills.
-extern signed char gShowMapInfo;
+extern i8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
-extern signed char gbDismissArmy;
+extern i8 gbDismissArmy;
 
 #endif // HOMM1_SOURCE_GAME_H

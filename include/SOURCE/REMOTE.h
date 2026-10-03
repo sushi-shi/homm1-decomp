@@ -77,11 +77,11 @@ H1_ENUM_END(RemoteDriverType)
 // DecodePacket/EncodePacket frame every wire packet with this six-byte header.
 #pragma pack(push, 1)
 struct RemotePacketHeader {
-    signed char source;
-    signed char destination;
-    unsigned char sequence;
-    unsigned char payloadSize;
-    unsigned short crc;
+    i8 source;
+    i8 destination;
+    u8 sequence;
+    u8 payloadSize;
+    u16 crc;
 };
 #pragma pack(pop)
 
@@ -93,84 +93,84 @@ struct RemotePacketHeader {
 // and copies the payload to +9; GetRemoteData copies 0x100-byte records.
 #pragma pack(push, 1)
 struct RemoteMessage {
-    signed char sender;
-    int id;
-    signed char type;
-    signed char command;
-    short payloadSize;
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
     union {
         char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
         // WaitForOtherPlayer passes the first payload dword to ReceiveSaveGame;
         // CheckHandleNet also reads the sender's exit flag after it.
         struct {
-            int saveSize;
-            int playerExited;
+            i32 saveSize;
+            i32 playerExited;
         };
         // Save-game transfer segments: segment index, then segment bytes.
         struct {
-            short index;
+            i16 index;
             char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
         } segment;
     } payload;
 };
 #pragma pack(pop)
 
-extern signed char gInNetSetup;
-extern int gIDCtr;
-extern unsigned char GameMode;
-extern unsigned char gPacketSequence;
-extern int gNetNameIndex;
+extern i8 gInNetSetup;
+extern i32 gIDCtr;
+extern u8 GameMode;
+extern u8 gPacketSequence;
+extern i32 gNetNameIndex;
 extern char PacketSend[];
-extern int gNumNetGuests;
-extern int gLastConfirm;
-extern int iInOrder[REMOTE_QUEUE_CAPACITY];
+extern i32 gNumNetGuests;
+extern i32 gLastConfirm;
+extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
 
-int SendRemoteData(unsigned char*, unsigned char*, int, int);
-int ReceiveRemoteData(unsigned char*, unsigned char*, int);
-int TransmitRemoteData(
+i32 SendRemoteData(u8*, u8*, i32, i32);
+i32 ReceiveRemoteData(u8*, u8*, i32);
+i32 TransmitRemoteData(
     char*,
-    int,
-    int,
-    signed char,
-    signed char,
-    signed char,
-    signed char,
-    signed char
+    i32,
+    i32,
+    i8,
+    i8,
+    i8,
+    i8,
+    i8
 );
-char* GetRemoteData(signed char);
-int TransmitAndWait(char*, int, int, signed char, signed char, char**);
+char* GetRemoteData(i8);
+i32 TransmitAndWait(char*, i32, i32, i8, i8, char**);
 void RemoteCleanup(void);
-void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, short));
-long FileSize(char*);
-void WriteModemPacket(char*, int);
+void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16));
+i32 FileSize(char*);
+void WriteModemPacket(char*, i32);
 char ReadPacket(void);
-void calc_crc(unsigned short*, unsigned char*, int);
-int EncodePacket(unsigned char*, char, char, int);
-int DecodePacket(unsigned char*, int);
-signed char InitNetHost(void);
-signed char InitNetGuest(void);
-signed char WaitForHost(void);
-signed char WaitForGuest(void);
+void calc_crc(u16*, u8*, i32);
+i32 EncodePacket(u8*, i8, i8, i32);
+i32 DecodePacket(u8*, i32);
+i8 InitNetHost(void);
+i8 InitNetGuest(void);
+i8 WaitForHost(void);
+i8 WaitForGuest(void);
 
 // PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
 // incoming/outgoing message buffers (Buka REMOTE.h).
-extern long gLastHeartbeatSend;
-extern long gLastHeartbeatReceive;
+extern i32 gLastHeartbeatSend;
+extern i32 gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
 extern RemoteMessage rcvBufIn;
-extern int iLastIds[REMOTE_RECENT_ID_COUNT];
-extern int gInOrderCtr;
-extern int gCurLastID;
+extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
+extern i32 gInOrderCtr;
+extern i32 gCurLastID;
 // The network setup's host/guest handshake states and broadcast clock (Buka
 // Netbios.h; retail places them inside REMOTE's data, 0x0049f954-0x0049fa70).
-extern signed char gInitNetGuestStatus;
-extern signed char gWaitForHostStatus;
+extern i8 gInitNetGuestStatus;
+extern i8 gWaitForHostStatus;
 void PollRemote();
 // HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
-void RemoteMain(int);
-int nbnet_init(void);
+void RemoteMain(i32);
+i32 nbnet_init(void);
 
 H1_ENUM_BEGIN(ModemResponseLimit)
     MODEM_RESPONSE_LAST = 79
@@ -188,49 +188,49 @@ H1_ENUM_CONST_BEGIN(ModemPacketConstant)
     MODEM_PACKET_MAX_LENGTH = 0x100
 H1_ENUM_CONST_END(ModemPacketConstant)
 
-extern int iLastActionTime;
-extern int iModemCommandPos;
+extern i32 iLastActionTime;
+extern i32 iModemCommandPos;
 extern char cModemCommand[];
 extern char GUIMRresponse[];
 extern char GUIMRresp[];
-extern int GUIMRrespptr;
-extern int GUIMRc;
-extern int iLastDialPos;
+extern i32 GUIMRrespptr;
+extern i32 GUIMRc;
+extern i32 iLastDialPos;
 extern char numbuf[];
 struct inque_t {
-    int readPosition;
-    int writePosition;
+    i32 readPosition;
+    i32 writePosition;
     char data[4096];
 };
 extern inque_t inque;
 // The transmit queue holds 2K (retail 0x004c9c80-0x004ca487); SETUP.cpp
 // completes its type.
 extern struct outque_t outque;
-extern int gBaudBits;
-extern int inescape;
-extern int newpacket;
-extern int packetlen;
+extern i32 gBaudBits;
+extern i32 inescape;
+extern i32 newpacket;
+extern i32 packetlen;
 extern char packet[];
 extern char idstr[];
 extern char remoteidstr[];
-extern int oldsec;
-extern int stime;
-extern int remotestage;
-extern int localstage;
-extern int WFDCStage;
+extern i32 oldsec;
+extern i32 stime;
+extern i32 remotestage;
+extern i32 localstage;
+extern i32 WFDCStage;
 
 void GUIModemCommand(char*, char*);
 void ModemCommand(char*);
 void ModemSetup(void);
-long Dial(void);
-long Wait(void);
+i32 Dial(void);
+i32 Wait(void);
 void Connect(void);
-signed char GUIModemResponse(char*, char*);
-int write_buffer(char*, int);
-int read_byte(void);
+i8 GUIModemResponse(char*, char*);
+i32 write_buffer(char*, i32);
+i32 read_byte(void);
 // Modem.cpp's wait-loop steps that KB's WaitHandler drives.
-signed char GUIModemCommandExec(void);
-signed char GUIModemResponseExec(void);
-int WaitForDirectConnect(void);
+i8 GUIModemCommandExec(void);
+i8 GUIModemResponseExec(void);
+i32 WaitForDirectConnect(void);
 
 #endif

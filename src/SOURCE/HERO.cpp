@@ -149,11 +149,11 @@ hero::hero(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046baf8, 0x18)
-void hero::GetArmyStrengths(unsigned long int* const) {}
+void hero::GetArmyStrengths(u32* const) {}
 
 VA(0x0046bb10, 0x5d)
-signed char hero::HasArtifact(signed char artifact) {
-    short i;
+i8 hero::HasArtifact(i8 artifact) {
+    i16 i;
 
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         if (m_artifacts[i] == artifact)
@@ -166,17 +166,17 @@ signed char hero::HasArtifact(signed char artifact) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
 VA(0x0046bb6d, 0x1ed)
-short hero::CalcMobility(void) {
-    short mobility[3] = {40, 50, 60};
-    const short seaMobility = 60;
-    const short lighthouseExtra = 20;
-    const short astrolabe = 40;
-    const short compass = 20;
-    const short nomadBonus = 24;
-    const short travelerBonus = 12;
-    int result;
-    short speed;
-    int j;
+i16 hero::CalcMobility(void) {
+    i16 mobility[3] = {40, 50, 60};
+    const i16 seaMobility = 60;
+    const i16 lighthouseExtra = 20;
+    const i16 astrolabe = 40;
+    const i16 compass = 20;
+    const i16 nomadBonus = 24;
+    const i16 travelerBonus = 12;
+    i32 result;
+    i16 speed;
+    i32 j;
 
     if (m_eventFlags & HERO_EVENT_EMBARKED) {
         if (gpGame->m_mines[MINE_SLOT_LIGHTHOUSE].owner == m_owner)
@@ -185,7 +185,7 @@ short hero::CalcMobility(void) {
             result = seaMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
             result += astrolabe;
-        result = static_cast<int>(result * gClassNavigationMod[m_heroClass]);
+        result = static_cast<i32>(result * gClassNavigationMod[m_heroClass]);
     } else {
         speed = CREATURE_SPEED_FAST;
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
@@ -208,8 +208,8 @@ short hero::CalcMobility(void) {
 }
 
 VA(0x0046bd5a, 0x56)
-signed char hero::HasSpell(signed char spell) {
-    int i;
+i8 hero::HasSpell(i8 spell) {
+    i32 i;
 
     for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++) {
         if (m_spells[i] == spell)
@@ -219,10 +219,10 @@ signed char hero::HasSpell(signed char spell) {
 }
 
 VA(0x0046bdb0, 0xf0)
-short hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char) type) {
-    short combat = 0;
-    short adventure = 0;
-    short i;
+i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
+    i16 combat = 0;
+    i16 adventure = 0;
+    i16 i;
 
     for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
         if (m_spells[i] != SPELL_NONE)
@@ -244,10 +244,10 @@ short hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, signed char) type) {
 }
 
 VA(0x0046bea0, 0x217)
-void hero::UseSpell(signed char spell) {
-    short i;
-    int j;
-    int k;
+void hero::UseSpell(i8 spell) {
+    i16 i;
+    i32 j;
+    i32 k;
 
     if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
         for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
@@ -287,9 +287,9 @@ void hero::UseSpell(signed char spell) {
 }
 
 VA(0x0046c0b7, 0x1e3)
-int hero::AddSpell(signed char spell, signed char charges, int checkOnly) {
-    int added = 0;
-    short i;
+i32 hero::AddSpell(i8 spell, i8 charges, i32 checkOnly) {
+    i32 added = 0;
+    i16 i;
 
     if (spell >= 0 && spell < HERO_COMBAT_SPELL_SLOT_COUNT) {
         for (i = 0; i < HERO_COMBAT_SPELL_SLOT_COUNT; i++) {
@@ -339,12 +339,12 @@ void hero::RedrawHeroScreen(void) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
 VA(0x0046c2ed, 0x6c2)
-signed char hero::HeroView(signed char viewOnly) {
-    int armyLuckLevel;
-    int armyMoraleLevel;
+i8 hero::HeroView(i8 viewOnly) {
+    i32 armyLuckLevel;
+    i32 armyMoraleLevel;
     tag_message message;
-    short i;
-    int shown;
+    i16 i;
+    i32 shown;
 
     gpAdvManager->TrimLoopingSounds(8);
     gHeroWindShowing = 1;
@@ -498,7 +498,7 @@ void HeroMessageUpdate(char* text) {
 VA(0x0046ca2b, 0xab)
 void hero::HeroScreenUpdate(void) {
     tag_message message;
-    short i;
+    i16 i;
 
     message.type = MESSAGE_WIDGET;
     UpdateArmies();
@@ -521,7 +521,7 @@ void hero::HeroScreenUpdate(void) {
 VA(0x0046cad6, 0x1ba)
 void hero::UpdateArmies(void) {
     tag_message message;
-    short i;
+    i16 i;
 
     message.type = MESSAGE_WIDGET;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -563,7 +563,7 @@ void hero::UpdateArmies(void) {
 }
 
 VA(0x0046cc90, 0x1af)
-void hero::ViewStat(signed char stat, signed char quickView) {
+void hero::ViewStat(i8 stat, i8 quickView) {
     heroWindow* win;
     tag_message message;
 
@@ -598,7 +598,7 @@ void hero::ViewStat(signed char stat, signed char quickView) {
 }
 
 VA(0x0046ce3f, 0x4a)
-void hero::ViewArtifact(signed char artifact, signed char quickView) {
+void hero::ViewArtifact(i8 artifact, i8 quickView) {
     NormalDialog(
         gArtifactDesc[artifact],
         quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -616,7 +616,7 @@ void hero::ViewArtifact(signed char artifact, signed char quickView) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0046ce89, 0x59)
-signed char hero::Dismiss(void) {
+i8 hero::Dismiss(void) {
     NormalDialog(
         "Are you sure you want to dismiss this Hero?",
         NORMAL_DIALOG_TYPE_YES_NO,
@@ -641,11 +641,11 @@ signed char hero::Dismiss(void) {
 VA(0x0046cee2, 0x452)
 void hero::Deallocate(void) {
     playerData* player;
-    signed char heroNum;
-    short i;
-    int owner;
+    i8 heroNum;
+    i16 i;
+    i32 owner;
     town* townRec;
-    int slotNum;
+    i32 slotNum;
 
     owner = m_owner;
     player = &gpGame->m_players[m_owner];
@@ -708,22 +708,22 @@ void hero::Deallocate(void) {
 
 // Buka 2.1 hero::GetExperience.
 VA(0x0046d334, 0xd0)
-int hero::GetExperience(int level) {
-    int experience;
-    int stage;
-    int incr;
+i32 hero::GetExperience(i32 level) {
+    i32 experience;
+    i32 stage;
+    i32 incr;
 
     if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
         return gMinExpForLevel[m_heroClass][level - 1];
     stage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    incr = static_cast<int>(
+    incr = static_cast<i32>(
         (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
          - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
         * 1.2
     );
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
     while (stage < level) {
-        incr = static_cast<int>(incr * 1.2);
+        incr = static_cast<i32>(incr * 1.2);
         experience += incr;
         stage++;
     }
@@ -731,16 +731,16 @@ int hero::GetExperience(int level) {
 }
 
 VA(0x0046d404, 0xf2)
-int hero::GetLevel(int experienceValue) {
-    int experience;
-    int nLevel;
-    int growth;
+i32 hero::GetLevel(i32 experienceValue) {
+    i32 experience;
+    i32 nLevel;
+    i32 growth;
 
     for (nLevel = 1; nLevel <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; nLevel++) {
         if (gMinExpForLevel[m_heroClass][nLevel - 1] > experienceValue)
             return nLevel - 1;
     }
-    growth = static_cast<int>(
+    growth = static_cast<i32>(
         (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
          - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
         * 1.2
@@ -748,7 +748,7 @@ int hero::GetLevel(int experienceValue) {
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
     nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
     while (experience < experienceValue) {
-        growth = static_cast<int>(growth * 1.2);
+        growth = static_cast<i32>(growth * 1.2);
         experience += growth;
         nLevel++;
     }
@@ -797,13 +797,13 @@ void hero::ApplyBattleLossTemps(void) {
 // evidence: graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
 VA(0x0046d663, 0x2f4)
 void hero::CheckLevel(void) {
-    int lvl;
-    int i;
-    int stats[HERO_PRIMARY_STAT_COUNT];
-    int levelCount;
-    int highIndex;
+    i32 lvl;
+    i32 i;
+    i32 stats[HERO_PRIMARY_STAT_COUNT];
+    i32 levelCount;
+    i32 highIndex;
     char text[50];
-    int roll;
+    i32 roll;
 
     lvl = GetLevel(m_experience);
     if (m_level == lvl)
@@ -867,9 +867,9 @@ void hero::CheckLevel(void) {
 
 // Buka 2.1 hero::NumArtifacts.
 VA(0x0046d957, 0x57)
-int hero::NumArtifacts(void) {
-    int count = 0;
-    int i;
+i32 hero::NumArtifacts(void) {
+    i32 count = 0;
+    i32 i;
 
     for (i = 0; i < HERO_ARTIFACT_SLOT_COUNT; i++) {
         if (m_artifacts[i] >= 0)
@@ -879,9 +879,9 @@ int hero::NumArtifacts(void) {
 }
 
 VA(0x0046d9ae, 0x52e)
-void UpdateHeroScreenStatusBar(short widgetId) {
+void UpdateHeroScreenStatusBar(i16 widgetId) {
     tag_message message; // Unused; retail keeps the donor's message frame.
-    short slot;
+    i16 slot;
 
     switch (widgetId) {
         case HERO_SCREEN_CREST:
@@ -1017,19 +1017,19 @@ void UpdateHeroScreenStatusBar(short widgetId) {
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
 VA(0x0046dedc, 0x6c8)
-short HeroHandler(struct tag_message& message) {
+i16 HeroHandler(struct tag_message& message) {
     tag_message newEvent;
-    int unusedValue15;
-    int unusedValue21;
-    int unusedValue16;
-    int unusedValue22;
-    int heroLevel;
-    int nextLevelExp;
-    signed char quickView;
-    signed char finished = 0;
-    short slot;
-    short temporary;
-    int spare;
+    i32 unusedValue15;
+    i32 unusedValue21;
+    i32 unusedValue16;
+    i32 unusedValue22;
+    i32 heroLevel;
+    i32 nextLevelExp;
+    i8 quickView;
+    i8 finished = 0;
+    i16 slot;
+    i16 temporary;
+    i32 spare;
 
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         quickView = 1;

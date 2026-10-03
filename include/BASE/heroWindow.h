@@ -43,37 +43,37 @@ H1_ENUM_CONST_END(HeroWindowConstant)
 #pragma pack(push, 1)
 class heroWindow {
 public:
-    short m_zOrder;
+    i16 m_zOrder;
     heroWindow* m_nextWindow;
     heroWindow* m_prevWindow;
     char m_name[HERO_WINDOW_NAME_CAPACITY];
-    H1_ENUM_STORAGE(WindowFlag, short) m_winFlags;
-    H1_ENUM_STORAGE(WindowState, short) m_winState;
-    short m_posX;
-    short m_posY;
-    short m_winWidth;
-    short m_winHeight;
+    H1_ENUM_STORAGE(WindowFlag, i16) m_winFlags;
+    H1_ENUM_STORAGE(WindowState, i16) m_winState;
+    i16 m_posX;
+    i16 m_posY;
+    i16 m_winWidth;
+    i16 m_winHeight;
     widget* m_widgetListTail;
     widget* m_widgetListHead;
     bitmap* m_savedBackground;
 
     // --- constructors ---
     heroWindow(void);
-    heroWindow(short, short, short, short, short);
-    heroWindow(short, short, char*);
+    heroWindow(i16, i16, i16, i16, i16);
+    heroWindow(i16, i16, char*);
     // --- methods ---
-    short Open(short, signed char);
-    void RemoveAndDeleteWidget(int id);
+    i16 Open(i16, i8);
+    void RemoveAndDeleteWidget(i32 id);
     void Close(void);
-    void AddWidget(class widget*, short);
+    void AddWidget(class widget*, i16);
     void RemoveWidget(class widget*);
-    short BroadcastMessage(struct tag_message&);
+    i16 BroadcastMessage(struct tag_message&);
     void DrawWindow(void);
-    void DrawWindow(short);
-    void DrawWindow(short, int, int);
-    short SaveBackground(void);
+    void DrawWindow(i16);
+    void DrawWindow(i16, i32, i32);
+    i16 SaveBackground(void);
     void RestoreBackground(void);
-    void MoveWindow(short, short);
+    void MoveWindow(i16, i16);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_HEROWINDOW_H

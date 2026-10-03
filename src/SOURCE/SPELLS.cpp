@@ -33,7 +33,7 @@
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
 VA(0x004154f0, 0x147)
-signed char combatManager::ViewSpells(int) {
+i8 combatManager::ViewSpells(i32) {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
@@ -60,7 +60,7 @@ signed char combatManager::ViewSpells(int) {
 
 // Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
 VA(0x00415637, 0x160)
-short CombatSpecialHandler(struct tag_message& message) {
+i16 CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
@@ -105,10 +105,10 @@ H1_ENUM_END(SpellPointerFrame)
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
 VA(0x00415797, 0x295)
-short HandleCastSpell(struct tag_message& message) {
+i16 HandleCastSpell(struct tag_message& message) {
     DATA(0x0048f2b0)
-    static signed char indexToCastOn = -1;
-    short hex;
+    static i8 indexToCastOn = -1;
+    i16 hex;
 
     switch (message.type) {
         case MESSAGE_MOUSE_MOVE:
@@ -167,10 +167,10 @@ short HandleCastSpell(struct tag_message& message) {
 // Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
 // anti-magic, dispel and green dragons stop every spell but the area ones.
 VA(0x00415a2c, 0x2f0)
-signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) {
-    int unused;
+i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
+    i32 unused;
     army* target = NULL;
-    short newHex;
+    i16 newHex;
 
     if (!ValidHex(hex))
         return 0;
@@ -231,7 +231,7 @@ signed char combatManager::ValidSpellTarget(signed char spell, signed char hex) 
 
 // Buka SPELLS.cpp SpellMessage without the resurrection target.
 VA(0x00415d1c, 0x128)
-void combatManager::SpellMessage(signed char spell, signed char hex) {
+void combatManager::SpellMessage(i8 spell, i8 hex) {
     switch (spell) {
         case SPELL_FIREBALL:
         case SPELL_ARMAGEDDON:
@@ -261,20 +261,20 @@ void combatManager::SpellMessage(signed char spell, signed char hex) {
 // per stack and no eagle eye, mirror image or elementals.
 VA(0x00415e44, 0xd69)
 void combatManager::CastSpell(
-    signed char spell,
-    signed char targetHex,
-    signed char castByCreature,
-    signed char teleportDest
+    i8 spell,
+    i8 targetHex,
+    i8 castByCreature,
+    i8 teleportDest
 ) {
     army* targetArmy;
-    int damage;
-    int targetIndex;
-    int side;
-    int result;
-    int armyIndex;
+    i32 damage;
+    i32 targetIndex;
+    i32 side;
+    i32 result;
+    i32 armyIndex;
     SAMPLE2 sample;
-    int quantity;
-    short newHex;
+    i32 quantity;
+    i16 newHex;
     army* teleportArmy;
 
     sample = NULL_SAMPLE2;
@@ -570,7 +570,7 @@ done:
 
 // Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
 VA(0x00416bad, 0xcb)
-void combatManager::DefaultSpell(signed char targetHex) {
+void combatManager::DefaultSpell(i8 targetHex) {
     army* target;
 
     if (!ValidHex(targetHex) || m_hexCells[targetHex].m_occupantSide < 0)
@@ -586,13 +586,13 @@ void combatManager::DefaultSpell(signed char targetHex) {
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
 VA(0x00416c78, 0x407)
-void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
-    int last;
-    int unused;
-    short side;
-    short armyIndex;
-    short fileId;
-    int startSide;
+void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
+    i32 last;
+    i32 unused;
+    i16 side;
+    i16 armyIndex;
+    i16 fileId;
+    i32 startSide;
 
     m_computeExtent = m_redrawExtent = 0;
     fileId = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
@@ -648,9 +648,9 @@ void combatManager::CastMassSpell(signed char castSide, signed char cureOnly) {
 // HoMM1: lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
 VA(0x0041707f, 0x12e)
-void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
+void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
     army* curArmy;
-    short i;
+    i16 i;
 
     for (i = 0; i < m_numArmies[side]; i++) {
         curArmy = &m_armies[side][i];
@@ -680,15 +680,15 @@ void combatManager::CancelSideSpells(signed char side, signed char cureOnly) {
 // Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
 // always hits the target hex and its six neighbours.
 VA(0x004171ad, 0x432)
-void combatManager::Fireball(signed char targetHex) {
-    int damage;
+void combatManager::Fireball(i8 targetHex) {
+    i32 damage;
     icon* fireballIcon;
-    short x;
+    i16 x;
     army* curArmy;
-    short y;
-    short i;
-    short adjHexes[COMBAT_DIRECTION_ADJACENT_COUNT + 1];
-    signed char hit;
+    i16 y;
+    i16 i;
+    i16 adjHexes[COMBAT_DIRECTION_ADJACENT_COUNT + 1];
+    i8 hit;
 
     if (!ValidHex(targetHex))
         return;
@@ -751,14 +751,14 @@ void combatManager::Fireball(signed char targetHex) {
 // Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
 // hexes in turn.
 VA(0x004175df, 0x439)
-void combatManager::MeteorShower(signed char targetHex) {
-    short i;
-    int damage;
+void combatManager::MeteorShower(i8 targetHex) {
+    i16 i;
+    i32 damage;
     icon* rockIcon;
     army* curArmy;
-    short adjHexes[COMBAT_DIRECTION_ADJACENT_COUNT + 1];
-    short j;
-    signed char hit;
+    i16 adjHexes[COMBAT_DIRECTION_ADJACENT_COUNT + 1];
+    i16 j;
+    i8 hit;
 
     if (!ValidHex(targetHex))
         return;
@@ -827,16 +827,16 @@ void combatManager::MeteorShower(signed char targetHex) {
 // Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
 VA(0x00417a18, 0x2f3)
 void combatManager::ElementalStorm(void) {
-    int damage;
-    short index;
-    short x;
+    i32 damage;
+    i16 index;
+    i16 x;
     army* curArmy;
-    short cycle;
-    short frm;
-    short y;
+    i16 cycle;
+    i16 frm;
+    i16 y;
     icon* storm;
-    short sideIdx;
-    signed char hit;
+    i16 sideIdx;
+    i8 hit;
 
     storm = gpResourceManager->GetIcon("storm.icn");
     for (cycle = 0; cycle < 5; cycle++) {
@@ -892,16 +892,16 @@ void combatManager::ElementalStorm(void) {
 // shaking the screen.
 VA(0x00417d0b, 0x3dc)
 void combatManager::Armageddon(void) {
-    short sideIdx;
-    int damage;
-    short index;
-    signed char* palData;
-    short fadeStep;
+    i16 sideIdx;
+    i32 damage;
+    i16 index;
+    i8* palData;
+    i16 fadeStep;
     army* curArmy;
     palette* kbPal;
-    short i;
+    i16 i;
     palette* workPal;
-    signed char hit;
+    i8 hit;
 
     damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
     hit = 0;
@@ -959,4 +959,4 @@ void combatManager::Armageddon(void) {
 // indexToCastOn (0x0048f2b0) is its local static: /Gi emits it at the head
 // of that function's literals.
 DATA(0x0048f28c)
-signed char gInTeleportGetDest = 0;
+i8 gInTeleportGetDest = 0;

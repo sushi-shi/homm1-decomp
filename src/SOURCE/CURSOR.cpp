@@ -54,11 +54,11 @@ H1_ENUM_CONST_END(CursorConstant)
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
 VA(0x00405950, 0x169)
-void advManager::StartCursor(signed char direction) {
-    short directionX;
-    short newX;
-    short directionY;
-    short newY;
+void advManager::StartCursor(i8 direction) {
+    i16 directionX;
+    i16 newX;
+    i16 directionY;
+    i16 newY;
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
@@ -79,7 +79,7 @@ void advManager::StartCursor(signed char direction) {
 
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
 VA(0x00405ab9, 0x150)
-void advManager::StopCursor(signed char stopSound) {
+void advManager::StopCursor(i8 stopSound) {
     if (stopSound) {
         gMoveSoundMade = 1;
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
@@ -101,9 +101,9 @@ void advManager::StopCursor(signed char stopSound) {
 // counts flag frames with m_updateMaxY.
 VA(0x00405c09, 0x5e4)
 void advManager::DrawCursor(void) {
-    short drawX;
-    short screenY;
-    short drawFrame;
+    i16 drawX;
+    i16 screenY;
+    i16 drawFrame;
 
     if (bShowIt == 0 || bSpecialHideCursor)
         return;
@@ -249,31 +249,31 @@ void advManager::DrawCursor(void) {
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
 VA(0x004061ed, 0x88)
-short advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, short) direction) {
-    if (static_cast<int>(direction) > static_cast<int>(MAP_DIRECTION_SOUTH)) {
+i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
+    if (static_cast<i32>(direction) > static_cast<i32>(MAP_DIRECTION_SOUTH)) {
         switch (direction) {
             case MAP_DIRECTION_SOUTH_WEST:
-                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_5);
+                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_5);
             case MAP_DIRECTION_WEST:
-                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_6);
+                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_6);
             case MAP_DIRECTION_NORTH_WEST:
-                return static_cast<short>(CURSOR_BOAT_BASE_FRAME_7);
+                return static_cast<i16>(CURSOR_BOAT_BASE_FRAME_7);
             default:
                 return 0;
         }
     } else {
-        return static_cast<int>(direction) * static_cast<int>(CURSOR_FRAMES_PER_DIRECTION);
+        return static_cast<i32>(direction) * static_cast<i32>(CURSOR_FRAMES_PER_DIRECTION);
     }
 }
 
 // Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
 // word-sized step delays.
 VA(0x00406275, 0x261)
-void advManager::TurnTo(signed char direction) {
-    short frameStep = 1;
-    short curFrame;
-    short directionDifference = direction - m_cursorDirection;
-    int delayTime;
+void advManager::TurnTo(i8 direction) {
+    i16 frameStep = 1;
+    i16 curFrame;
+    i16 directionDifference = direction - m_cursorDirection;
+    i32 delayTime;
 
     if (directionDifference == 0)
         return;
@@ -318,10 +318,10 @@ void advManager::TurnTo(signed char direction) {
 // and tests the watch player's high bit (0x004be7cc) directly in the
 // map-extra grid.
 VA(0x004064d6, 0x136)
-int advManager::GetMoveShowIt(signed char direction) {
-    short dy;
+i32 advManager::GetMoveShowIt(i8 direction) {
+    i16 dy;
     hero* movingHero;
-    short dirX;
+    i16 dirX;
 
     if (gpCurPlayer->CurrentHero() == INVALID_HERO)
         return 0;
@@ -342,27 +342,27 @@ int advManager::GetMoveShowIt(signed char direction) {
 
 VA(0x0040660c, 0xe1e)
 mapCell* advManager::MoveHero(
-    signed char direction,
-    signed char stopAfterMove,
-    int* eventX,
-    int* eventY,
-    int* outOfMobility,
-    signed char processEvent,
-    signed char* adjacentMonster
+    i8 direction,
+    i8 stopAfterMove,
+    i32* eventX,
+    i32* eventY,
+    i32* outOfMobility,
+    i8 processEvent,
+    i8* adjacentMonster
 ) {
     mapCell* pCursorCell;
-    int step;
-    int origX;
+    i32 step;
+    i32 origX;
     mapCell* nextCell;
-    signed char terrain;
+    i8 terrain;
     mapCell* retCell;
-    short xInc;
-    short yInc;
-    short pixelsPerStep;
+    i16 xInc;
+    i16 yInc;
+    i16 pixelsPerStep;
     hero* movingHero;
-    int origY;
-    int msDelay;
-    short numSteps;
+    i32 origY;
+    i32 msDelay;
+    i16 numSteps;
 
     if (gbThisNetHumanPlayer[giCurPlayer])
         SetNoDialogMenus(0);
@@ -558,7 +558,7 @@ mapCell* advManager::MoveHero(
         gNoBorder = 1;
         numSteps = CURSOR_MOVE_HALF_TILE_PIXELS / pixelsPerStep;
         for (step = 0; step < numSteps * MOVE_TILE_HALF_COUNT; step++) {
-            long tick;
+            i32 tick;
 
             if (step == numSteps) {
                 MoveOrigin(xInc, yInc);
@@ -674,11 +674,11 @@ adjacentDone:
 // Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
 // three-argument CompleteDraw.
 VA(0x0040742a, 0x181)
-void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
-    int monX;
-    int monY;
+void advManager::CheckAdjacentMon(i8* adjacentMonster) {
+    i32 monX;
+    i32 monY;
     hero* theHero;
-    signed char dead;
+    i8 dead;
     mapCell* heroCell;
     mapCell* monsterCell;
 
@@ -724,11 +724,11 @@ void advManager::CheckAdjacentMon(signed char* adjacentMonster) {
 // boat, forbids landing a boat on most objects and defers the rest to
 // ValidMove.
 VA(0x004075ab, 0x20a)
-short advManager::ValidMoveWithEvent(hero* movingHero, short direction) {
-    short deltaY;
-    short newY;
-    short deltaX;
-    short newX;
+i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
+    i16 deltaY;
+    i16 newY;
+    i16 deltaX;
+    i16 newX;
     mapCell* cell;
 
     deltaX = normalDirTable[direction].x;
@@ -775,15 +775,15 @@ short advManager::ValidMoveWithEvent(hero* movingHero, short direction) {
 // Buka CURSOR.cpp:1006 ValidMove; HoMM1 indexes from the cursor's map
 // position and tests the north/south object masks directly.
 VA(0x004077b5, 0x2a3)
-short advManager::ValidMove(short direction) {
-    short directionX;
-    short downMask;
+i16 advManager::ValidMove(i16 direction) {
+    i16 directionX;
+    i16 downMask;
     mapCell* hereCell;
     mapCell* destCell;
-    short directionY;
-    short north;
-    short newX;
-    short newY;
+    i16 directionY;
+    i16 north;
+    i16 newX;
+    i16 newY;
 
     directionX = normalDirTable[direction].x;
     directionY = normalDirTable[direction].y;
@@ -822,11 +822,11 @@ short advManager::ValidMove(short direction) {
 
 // Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
 VA(0x00407a58, 0x329)
-void advManager::MoveOrigin(short directionX, short directionY) {
-    short cellY;
-    short cellX;
-    short oldOriginX;
-    short oldOriginY;
+void advManager::MoveOrigin(i16 directionX, i16 directionY) {
+    i16 cellY;
+    i16 cellX;
+    i16 oldOriginX;
+    i16 oldOriginY;
 
     oldOriginX = m_mapOriginX;
     oldOriginY = m_mapOriginY;
@@ -858,26 +858,26 @@ void advManager::MoveOrigin(short directionX, short directionY) {
 // CURSOR owns retail .data 0x0048eb18-0x0048eb4f (initialized, before the
 // TOWNMGR band) and .bss 0x004a4b80-0x004a4b97. Initializers are retail bytes.
 DATA(0x0048eb18)
-signed char gMoveSoundMade = 1;
+i8 gMoveSoundMade = 1;
 DATA(0x0048eb20)
-short gPixelsPerStep[5] = {1, 4, 6, 8, 16};
+i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048eb30)
-short gStepDelay[5] = {30, 45, 30, 15, 15};
+i16 gStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x0048eb3c)
 struct _SAMPLE* gPrevMoveSound = NULL;
 DATA(0x0048eb40)
 struct _SAMPLE* gLastMoveSound = NULL;
 DATA(0x0048eb44)
-signed char EveryOther = 0;
+i8 EveryOther = 0;
 DATA(0x0048eb48)
-short startVals[3] = {16, 0, -16};
+i16 startVals[3] = {16, 0, -16};
 DATA(0x004a4b80)
-short S1cursorCycle;
+i16 S1cursorCycle;
 DATA(0x004a4b84)
-short S1cursorFrameCount;
+i16 S1cursorFrameCount;
 DATA(0x004a4b88)
-short S1cursorTurning;
+i16 S1cursorTurning;
 DATA(0x004a4b8c)
-short S1cursorBaseFrame;
+i16 S1cursorBaseFrame;
 DATA(0x004a4b90)
-signed char S1cursorDirection;
+i8 S1cursorDirection;

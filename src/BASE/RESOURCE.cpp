@@ -7,12 +7,12 @@
 
 VA(0x0047fc20, 0x2f)
 resource::resource(
-    short category,
-    short id,
-    H1_ENUM_PARAM(ResourceReferenceCount, short) refCount,
+    i16 category,
+    i16 id,
+    H1_ENUM_PARAM(ResourceReferenceCount, i16) refCount,
     resource* next
 ) {
-    m_resourceType = H1_ENUM_CAST(ResourceCategory, short, category);
+    m_resourceType = H1_ENUM_CAST(ResourceCategory, i16, category);
     m_id = id;
     m_refCount = refCount;
     m_next = next;

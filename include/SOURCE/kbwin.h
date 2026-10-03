@@ -115,67 +115,68 @@ H1_ENUM_CONST_END(PrefsConstant)
 extern void* hInstApp;
 extern void* gEventHandle;
 extern char gCommandLine[];
-extern unsigned char bProcessMessage[];
+extern u8 bProcessMessage[];
 extern char gAppName[];
 extern char gTitle[];
-extern long lTemp;
+extern i32 lTemp;
 extern struct tagRECT rcTemp;
-extern int gTempX;
-extern int iTempY;
+extern i32 gTempX;
+extern i32 iTempY;
 
 #pragma pack(push, 1)
 struct SMenuEnableStatus {
-    unsigned int command;
-    unsigned char normalEnabled;
-    unsigned char setupEnabled;
-    unsigned char reserved;
+    u32 command;
+    u8 normalEnabled;
+    u8 setupEnabled;
+    u8 reserved;
 };
 #pragma pack(pop)
 
 #pragma pack(push, 1)
 struct WindowTextEntry {
-    short widgetId;
-    short windowId;
+    i16 widgetId;
+    i16 windowId;
 };
 #pragma pack(pop)
 
 extern void* hmnuCurrent;
-long AppCommand(void*, unsigned int, unsigned int, long);
-int AppIdle(void);
+i32 AppCommand(void*, u32, u32, i32);
+i32 AppIdle(void);
 void AppExit(void);
-short GetCPUType(void);
+i16 GetCPUType(void);
 // CPUSpeed's PIT-timed divide loop (CPUSPEED.cpp).
-short TimeProcessor(void);
+i16 TimeProcessor(void);
 void SetGameDefaults(void);
 void ReadPrefsFromFile(void);
 void ReadPrefsFromRegistry(void);
 void ReadPrefs(void);
 void WritePrefsToFile(void);
 void WritePrefsToRegistry(void);
-H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void);
-int AppInit(void*, void*, int, char*);
-long __stdcall AppWndProc(void*, unsigned int, unsigned int, long);
+H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
+i32 AppInit(void*, void*, i32, char*);
+// WNDPROC: LRESULT and LPARAM are the SDK's long.
+long __stdcall AppWndProc(void*, u32, u32, long);
 void KBChangeMenu(void*);
-void ResizeWindow(int, int, int, int);
-void SetMenuStatus(int);
+void ResizeWindow(i32, i32, i32, i32);
+void SetMenuStatus(i32);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
-void SetWinText(class heroWindow*, short);
+void SetWinText(class heroWindow*, i16);
 void UpdateDfltMenu(void*);
-extern int gForegroundApp;
-extern int gNoDialogMenusOn;
+extern i32 gForegroundApp;
+extern i32 gNoDialogMenusOn;
 extern void* hmnuApp;
-extern int gClosingApp;
-extern long gLastGetMessage;
-extern long gLastAilServe;
-long KBTickCount();
+extern i32 gClosingApp;
+extern i32 gLastGetMessage;
+extern i32 gLastAilServe;
+i32 KBTickCount();
 void Process1WindowsMessage();
-void SetNoDialogMenus(int);
+void SetNoDialogMenus(i32);
 char* FindLastToken(char*, char);
-void SetMenus(void*, int);
+void SetMenus(void*, i32);
 extern void* hwndApp;
-extern int iMainWinScreenWidth;
-extern int gMainWinScreenHeight;
-void ProcessAssert(int, char*, int);
+extern i32 iMainWinScreenWidth;
+extern i32 gMainWinScreenHeight;
+void ProcessAssert(i32, char*, i32);
 void WritePrefs();
 char* FindToken(char*, char);
 

@@ -48,7 +48,7 @@ H1_ENUM_END(SpellType)
 // fireball, lightning, resurrect, armageddon, storm and meteor shower, whose
 // value philAI scales by the hero's spell power (CastSpell scores) or
 // knowledge (mage guild and shrine values) and SetupTown weights four times.
-H1_ENUM_FLAGS_BEGIN(SpellAIFlag, int)
+H1_ENUM_FLAGS_BEGIN(SpellAIFlag, i32)
     SPELL_AI_FLAG_SCALES_WITH_POWER = 0x01,
     SPELL_AI_FLAG_COMBAT = 0x02,
     SPELL_AI_FLAG_ADVENTURE = 0x04

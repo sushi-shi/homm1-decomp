@@ -70,34 +70,34 @@ H1_ENUM_CONST_END(TownViewConstant)
 class town {
 public:
     // Retail constructor and HasGarrison establish this packed prefix.
-    signed char m_id;
-    signed char m_owner;
-    signed char m_threat;
-    signed char m_type;
+    i8 m_id;
+    i8 m_owner;
+    i8 m_threat;
+    i8 m_type;
     // XformToCastle sign-extends the map coordinates.
-    signed char m_x;
-    signed char m_y;
+    i8 m_x;
+    i8 m_y;
     armyGroup m_army;
-    signed char m_occupyingHeroId;
-    short m_buildings;
-    signed char m_buildState;
-    char m_unknown19;
-    short m_garrison[6];
+    i8 m_occupyingHeroId;
+    i16 m_buildings;
+    i8 m_buildState;
+    i8 m_unknown19;
+    i16 m_garrison[6];
     // ProcessMapExtra files the cell's map-extra index here; SetupTowns
     // marks towns whose extra record carries a custom setup.
-    unsigned char m_extraIndex;
-    signed char m_customized;
+    u8 m_extraIndex;
+    i8 m_customized;
     char m_unknown28[4];
-    signed char m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
+    i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
-    unsigned short m_turnsOwned;
+    u16 m_turnsOwned;
     // --- constructors ---
     town(void);
     // --- methods ---
-    signed char HasGarrison(void);
+    i8 HasGarrison(void);
     // Buka town::OccupyingHero inline; townManager::Open emits its jmp $+0.
-    signed char OccupyingHero(void) {
+    i8 OccupyingHero(void) {
         return m_occupyingHeroId;
     }
     // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
@@ -105,9 +105,9 @@ public:
     void XformToCastle(void);
     void View(void);
     void Deallocate(void);
-    void BuildBuilding(int building);
-    int CanBuildDock(void);
-    void CalcNumLevelArchers(int* numArchers, int* mageGuildLevel);
+    void BuildBuilding(i32 building);
+    i32 CanBuildDock(void);
+    void CalcNumLevelArchers(i32* numArchers, i32* mageGuildLevel);
 };
 #pragma pack(pop)
 

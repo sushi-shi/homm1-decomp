@@ -54,12 +54,12 @@
 VA(0x00407d90, 0x1f1)
 townObject::townObject(char* name) {
     char fileName[16];
-    short w;
-    short tmp;
-    short id;
-    short x;
-    short h;
-    short y;
+    i16 w;
+    i16 tmp;
+    i16 id;
+    i16 x;
+    i16 h;
+    i16 y;
 
     m_animationFrame = 0;
     m_icon = NULL;
@@ -102,8 +102,8 @@ townObject::~townObject() {
 // Buka TOWNMGR.cpp:537-625; HoMM1 draws the base frame, then the castle's
 // mage-guild levels and the animation frame.
 VA(0x00407fe1, 0x117)
-void townObject::Draw(signed char advanceAnimation) {
-    short level;
+void townObject::Draw(i8 advanceAnimation) {
+    i16 level;
 
     if (!m_visible)
         return;
@@ -151,11 +151,11 @@ townManager::townManager(void) {
 // Buka TOWNMGR.cpp Open/SetupTown; retail vtable slot 0 (0x0048c068).
 // HoMM1 builds the town window, objects, strips and bank box here.
 VA(0x0040816c, 0x7ec)
-short townManager::Open(short id) {
-    short crest;
+i16 townManager::Open(i16 id) {
+    i16 crest;
     tag_message message;
-    short i;
-    signed char buildingType;
+    i16 i;
+    i8 buildingType;
 
     gpGame->CheckHeroConsistency();
     gpSoundManager->PlayAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE, 0, -1);
@@ -284,7 +284,7 @@ short townManager::Open(short id) {
 // Retail vtable slot 1: HoMM1's Close performs Buka's UnloadTown work.
 VA(0x00408958, 0x1c4)
 void townManager::Close(void) {
-    short index;
+    i16 index;
 
     delete m_bankBox;
     if (m_heroStrip)
@@ -306,10 +306,10 @@ void townManager::Close(void) {
 // Buka TOWNMGR.cpp:944-1020; HoMM1 matches the dragged creature against
 // every slot of the target army and keeps word-sized flags.
 VA(0x00408b1c, 0x3b6)
-void townManager::SetArmyCommand(short qualifier) {
-    short lastArmy;
-    short i;
-    short sameType;
+void townManager::SetArmyCommand(i16 qualifier) {
+    i16 lastArmy;
+    i16 i;
+    i16 sameType;
 
     m_command = TOWN_ARMY_COMMAND_NONE;
     lastArmy = 0;
@@ -390,7 +390,7 @@ void townManager::SetArmyCommand(short qualifier) {
 // six dwellings through gDwellingType.
 VA(0x00408ed2, 0x468)
 void townManager::SetCommandAndText(struct tag_message& message) {
-    short id;
+    i16 id;
 
     id = message.id;
     m_command = TOWN_ARMY_COMMAND_NONE;
@@ -519,9 +519,9 @@ void townManager::ShowText(char*) {
 // Buka TOWNMGR.cpp Main; HoMM1 opens the castle, mage guild, well and thieves
 // guild over a bottom cover window, sells the spell book and builds boats.
 VA(0x004093ae, 0x131f)
-short townManager::Main(struct tag_message& message) {
-    int exitTown;
-    signed char rightClick;
+i16 townManager::Main(struct tag_message& message) {
+    i32 exitTown;
+    i8 rightClick;
     SAMPLE2 res;
     recruitUnit* recruitMgr;
 
@@ -693,8 +693,8 @@ short townManager::Main(struct tag_message& message) {
                                 BuildObj(m_selectedBuilding);
                             if (m_recruitResult) {
                                 hero* theHero;
-                                int i;
-                                int width;
+                                i32 i;
+                                i32 width;
 
                                 gpMouseManager->ReallyHidePointer();
                                 res = NULL_SAMPLE2;
@@ -819,7 +819,7 @@ short townManager::Main(struct tag_message& message) {
                             break;
                         default:
                             if (rightClick) {
-                                int found;
+                                i32 found;
                                 hero* viewHero;
 
                                 found = 0;
@@ -907,12 +907,12 @@ short townManager::Main(struct tag_message& message) {
 // Buka TOWNMGR.cpp:1817-1902; HoMM1 merges duplicate stacks after a swap
 // and opens the kingdom overview from the town.
 VA(0x0040a6cd, 0x65f)
-void townManager::DoCommand(signed char command) {
+void townManager::DoCommand(i8 command) {
     hero* visitor;
-    int temp;
-    short i;
+    i32 temp;
+    i16 i;
     hero* viewedHero;
-    int single;
+    i32 single;
 
     switch (command) {
         case TOWN_ARMY_COMMAND_SELECT:
@@ -1035,11 +1035,11 @@ void townManager::RedrawTownScreen(void) {
 // into the first matching slot of the target army.
 VA(0x0040add1, 0x37e)
 void townManager::SplitArmy(void) {
-    short messageId = 1;
+    i16 messageId = 1;
     tag_message message;
-    short merge;
-    short numberId = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
-    short n;
+    i16 merge;
+    i16 numberId = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
+    i16 n;
 
     m_heroWindow1 = new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
     if (m_heroWindow1 == NULL)
@@ -1119,8 +1119,8 @@ void townManager::ResetStrips(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0040b2c8, 0x95)
-void townManager::Toggle(signed char building) {
-    short index;
+void townManager::Toggle(i8 building) {
+    i16 index;
 
     if (m_town->m_buildings & (1 << building)) {
         for (index = 0; index < m_townObjectCount; index++) {
@@ -1133,10 +1133,10 @@ void townManager::Toggle(signed char building) {
 // Buka TOWNMGR.cpp:2005-2029; HoMM1 draws a bitmap background and folds
 // the mouse pointer into the screen buffer around the viewport blit.
 VA(0x0040b35d, 0xf8)
-void townManager::DrawTown(signed char updateScreen, int drawFlags) {
-    short index;
-    short x;
-    short y;
+void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
+    i16 index;
+    i16 x;
+    i16 y;
 
     m_backgroundBitmap->DrawToBuffer(0, 0);
     for (index = 0; index < m_townObjectCount; index++)
@@ -1164,47 +1164,47 @@ void townManager::DrawTown(signed char updateScreen, int drawFlags) {
 // draws the building through the castle frame of buybuil%d.bin.
 VA(0x0040b455, 0x1023)
 #line 1483 "D:\\Heroes\\Source\\TOWNMGR.CPP"
-short townManager::BuyBuild(short building, signed char cannotBuy, signed char quickView) {
-    unsigned short requirements;
-    int yPos;
-    int resIndex;
+i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
+    u16 requirements;
+    i32 yPos;
+    i32 resIndex;
     char* descText;
     textWidget* amountWidgets[RESOURCE_COUNT];
-    int nRowTypes[4];
-    int row;
-    short currX;
-    short unusedTop;
-    int totalWidth;
-    int numLines;
+    i32 nRowTypes[4];
+    i32 row;
+    i16 currX;
+    i16 unusedTop;
+    i32 totalWidth;
+    i32 numLines;
     heroWindow* nBuildWindow;
-    short unusedValue;
-    short unusedField;
-    short unusedControl;
-    short firstRow;
-    int space;
+    i16 unusedValue;
+    i16 unusedField;
+    i16 unusedControl;
+    i16 firstRow;
+    i32 space;
     tag_message iEvt;
-    signed char resType[RESOURCE_COUNT];
-    int binSize;
-    int dwellIndex;
+    i8 resType[RESOURCE_COUNT];
+    i32 binSize;
+    i32 dwellIndex;
     iconWidget* resWidgets[RESOURCE_COUNT];
-    short startX;
+    i16 startX;
     font* iF;
-    short unusedType;
-    short nBottomCount;
-    int inRow;
-    short pResourceCount;
-    int j;
+    i16 unusedType;
+    i16 nBottomCount;
+    i32 inRow;
+    i16 pResourceCount;
+    i32 j;
     textWidget* descWidget;
-    int iTotalHeight;
-    short prices[RESOURCE_COUNT];
-    short unusedKind;
-    int nEntryWidth;
-    int curCost;
-    int numPrereqs;
-    short unusedMode1;
-    int iMageLevel;
+    i32 iTotalHeight;
+    i16 prices[RESOURCE_COUNT];
+    i16 unusedKind;
+    i32 nEntryWidth;
+    i32 curCost;
+    i32 numPrereqs;
+    i16 unusedMode1;
+    i32 iMageLevel;
     char* amountText[RESOURCE_COUNT];
-    int baseY;
+    i32 baseY;
 
     iMageLevel = 0;
     j = 0;
@@ -1500,8 +1500,8 @@ short townManager::BuyBuild(short building, signed char cannotBuy, signed char q
 // Buka TOWNMGR.cpp:2475; HoMM1 fizzles a fixed per-building rectangle
 // instead of computing the drawn extent.
 VA(0x0040c478, 0x3a0)
-void townManager::BuildObj(short building) {
-    short i;
+void townManager::BuildObj(i16 building) {
+    i16 i;
     SAMPLE2 sample;
 
     gpMouseManager->ReallyHidePointer();
@@ -1567,12 +1567,12 @@ void townManager::BuildObj(short building) {
 // six dwellings plus the hero-recruit slot with fixed frames.
 VA(0x0040c818, 0x4b5)
 void townManager::SetupCastle(class heroWindow* window) {
-    short builtIcon = TOWN_CASTLE_FRAME_BUILT;
-    short cannotBuild = TOWN_CASTLE_FRAME_CANNOT_BUILD;
-    short noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
-    short i;
+    i16 builtIcon = TOWN_CASTLE_FRAME_BUILT;
+    i16 cannotBuild = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+    i16 noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
+    i16 i;
     tag_message message;
-    int stateFrame;
+    i32 stateFrame;
 
     m_affordableBuildings = m_buildableBuildings = 0;
     for (i = 0; i < BUILDING_SLOT_COUNT; i++) {
@@ -1668,14 +1668,14 @@ void townManager::SetupCastle(class heroWindow* window) {
 // capitalises the creature name in gText.
 VA(0x0040cccd, 0x24d)
 void townManager::SetupWell(class heroWindow* window) {
-    short iconBase = TOWN_WELL_FIRST_ICON_CONTROL;
-    short buildingName = TOWN_WELL_FIRST_NAME_CONTROL;
-    short growthRate;
-    short firstMonsterIcon = TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
-    short creatureId = TOWN_WELL_FIRST_CREATURE_CONTROL;
-    short firstAvailable = TOWN_WELL_FIRST_AVAILABLE_CONTROL;
+    i16 iconBase = TOWN_WELL_FIRST_ICON_CONTROL;
+    i16 buildingName = TOWN_WELL_FIRST_NAME_CONTROL;
+    i16 growthRate;
+    i16 firstMonsterIcon = TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
+    i16 creatureId = TOWN_WELL_FIRST_CREATURE_CONTROL;
+    i16 firstAvailable = TOWN_WELL_FIRST_AVAILABLE_CONTROL;
     tag_message message;
-    short i;
+    i16 i;
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -1722,17 +1722,17 @@ void townManager::SetupWell(class heroWindow* window) {
 // the levels above the guild and stacking tower frames by level.
 VA(0x0040cf1a, 0x331)
 void townManager::SetupMage(class heroWindow* window) {
-    short off = 0;
-    short shown = 1;
-    short iconFrame = 2;
-    short messageId = TOWN_MAGE_DESCRIPTION_CONTROL;
-    short slotBase = TOWN_MAGE_FIRST_SPELL_CONTROL;
-    short iconOffset = TOWN_MAGE_FIRST_ICON_CONTROL;
-    short nameBase = TOWN_MAGE_FIRST_NAME_CONTROL;
-    short firstTower = TOWN_MAGE_FIRST_TOWER_CONTROL;
+    i16 off = 0;
+    i16 shown = 1;
+    i16 iconFrame = 2;
+    i16 messageId = TOWN_MAGE_DESCRIPTION_CONTROL;
+    i16 slotBase = TOWN_MAGE_FIRST_SPELL_CONTROL;
+    i16 iconOffset = TOWN_MAGE_FIRST_ICON_CONTROL;
+    i16 nameBase = TOWN_MAGE_FIRST_NAME_CONTROL;
+    i16 firstTower = TOWN_MAGE_FIRST_TOWER_CONTROL;
     tag_message message;
-    short spellIndex;
-    int spellState;
+    i16 spellIndex;
+    i32 spellState;
 
     message.type = MESSAGE_WIDGET;
     if (m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE) {
@@ -1817,13 +1817,13 @@ void townManager::SetupMage(class heroWindow* window) {
 // Buka TOWNMGR.cpp:2735 MageGuildHandler; HoMM1 numbers spells 1-9 and
 // icons 10-18 and bounds them by the guild level.
 VA(0x0040d24b, 0x186)
-short MageGuildHandler(struct tag_message& message) {
-    short firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
-    short iconBase = TOWN_MAGE_FIRST_ICON_CONTROL;
-    int quickView;
-    int spellId;
-    int mageLevel;
-    int spellPos;
+i16 MageGuildHandler(struct tag_message& message) {
+    i16 firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
+    i16 iconBase = TOWN_MAGE_FIRST_ICON_CONTROL;
+    i32 quickView;
+    i32 spellId;
+    i32 mageLevel;
+    i32 spellPos;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -1885,26 +1885,26 @@ short MageGuildHandler(struct tag_message& message) {
 // Buka TOWNMGR.cpp:3328 SetupThievesGuild; HoMM1 only draws the ranking
 // flags, with the category count taken from the number of guilds owned.
 VA(0x0040d3d1, 0x2ec)
-void townManager::SetupThievesGuild(class heroWindow* window, short categories) {
+void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     iconWidget* marker;
-    short firstPlayer;
-    int numThieves;
-    short wUnusedRankX = THIEVES_RANK_FIRST_X;
-    short iUnusedRankWidth = THIEVES_PLAYER_COLUMN_WIDTH;
-    short top = THIEVES_FIRST_CATEGORY_Y;
-    short rowSpacing = THIEVES_CATEGORY_ROW_HEIGHT;
-    short frameBase = THIEVES_FLAG_FRAME_BASE;
-    short pos;
-    short lMarkWidth = THIEVES_RANK_ICON_WIDTH;
-    short bIconHeight = THIEVES_RANK_ICON_HEIGHT;
-    short bColWidth = THIEVES_PLAYER_WIDTH;
-    signed char ranking[GAME_PLAYER_COUNT];
-    short rank;
-    short categoryIndex;
-    long totals[GAME_PLAYER_COUNT];
-    short startPos;
-    short hi;
-    short tied;
+    i16 firstPlayer;
+    i32 numThieves;
+    i16 wUnusedRankX = THIEVES_RANK_FIRST_X;
+    i16 iUnusedRankWidth = THIEVES_PLAYER_COLUMN_WIDTH;
+    i16 top = THIEVES_FIRST_CATEGORY_Y;
+    i16 rowSpacing = THIEVES_CATEGORY_ROW_HEIGHT;
+    i16 frameBase = THIEVES_FLAG_FRAME_BASE;
+    i16 pos;
+    i16 lMarkWidth = THIEVES_RANK_ICON_WIDTH;
+    i16 bIconHeight = THIEVES_RANK_ICON_HEIGHT;
+    i16 bColWidth = THIEVES_PLAYER_WIDTH;
+    i8 ranking[GAME_PLAYER_COUNT];
+    i16 rank;
+    i16 categoryIndex;
+    i32 totals[GAME_PLAYER_COUNT];
+    i16 startPos;
+    i16 hi;
+    i16 tied;
 
     if (categories == THIEVES_CATEGORIES_BY_GUILDS) {
         numThieves = gpGame->GetNumThievesGuilds(giCurPlayer);
@@ -1961,16 +1961,16 @@ void townManager::SetupThievesGuild(class heroWindow* window, short categories) 
 // resources per row and counts obelisks through playerData.
 VA(0x0040d6bd, 0x484)
 void townManager::GetCategoryStats(
-    signed char category,
-    long* const stats,
-    signed char* const order
+    i8 category,
+    i32* const stats,
+    i8* const order
 ) {
-    short townIndex;
-    short index;
-    long strength;
-    short player;
-    short numTowns;
-    short numCastles;
+    i16 townIndex;
+    i16 index;
+    i32 strength;
+    i16 player;
+    i16 numTowns;
+    i16 numCastles;
     hero* playerHero;
     town* theTown;
 
@@ -2041,11 +2041,11 @@ void townManager::GetCategoryStats(
 
 // Buka TOWNMGR.cpp:3843-3862 SortStats, a townManager member in HoMM1.
 VA(0x0040db41, 0xea)
-void townManager::SortStats(long* const stats, signed char* const order) {
-    long temp;
-    short firstPlayer;
-    short secondPlayer;
-    signed char tempColor;
+void townManager::SortStats(i32* const stats, i8* const order) {
+    i32 temp;
+    i16 firstPlayer;
+    i16 secondPlayer;
+    i8 tempColor;
 
     for (firstPlayer = 0; firstPlayer < gpGame->m_playerCount - 1; firstPlayer++) {
         for (secondPlayer = firstPlayer + 1; secondPlayer < gpGame->m_playerCount; secondPlayer++) {
@@ -2063,23 +2063,23 @@ void townManager::SortStats(long* const stats, signed char* const order) {
 
 // HoMM1 town-type wrapper over the global building-name table lookup.
 VA(0x0040dc2b, 0x2f)
-char* townManager::GetBuildingName(short building) {
+char* townManager::GetBuildingName(i16 building) {
     return ::GetBuildingName(m_town->m_type, building);
 }
 
 // Buka TOWNMGR.cpp RecruitHero; HoMM1's tavern shows both candidate heroes,
 // a cannot-recruit view is a timed quick view, and the town strips are rebuilt.
 VA(0x0040dc5a, 0x981)
-signed char townManager::RecruitHero(signed char cannotRecruit) {
+i8 townManager::RecruitHero(i8 cannotRecruit) {
     tag_message message;
-    short unusedButtonText = 1;
-    short unusedDimState = 2;
-    short unusedControlId = 3;
-    short unusedPortraitState = 4;
-    short unusedTextState = 6;
-    short unusedPortraitControl = 7;
-    short unusedButtonIcon = 8;
-    short unusedMode = 9;
+    i16 unusedButtonText = 1;
+    i16 unusedDimState = 2;
+    i16 unusedControlId = 3;
+    i16 unusedPortraitState = 4;
+    i16 unusedTextState = 6;
+    i16 unusedPortraitControl = 7;
+    i16 unusedButtonIcon = 8;
+    i16 unusedMode = 9;
 
     m_heroWindow1 = new heroWindow(0xb1, 0x10, "rcrthero.bin");
     if (m_heroWindow1 == NULL)
@@ -2125,9 +2125,9 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
         gpWindowManager->DoDialog(m_heroWindow1, RecruitHeroHandler, 0);
     delete m_heroWindow1;
     if (m_recruitState != RECRUIT_HERO_NONE) {
-        int newHeroClass;
-        short townY;
-        short townX;
+        i32 newHeroClass;
+        i16 townY;
+        i16 townX;
 
         gpCurPlayer->m_resources[RESOURCE_GOLD] -= gHeroGoldCost;
         gpCurPlayer->m_heroIds[gpCurPlayer->m_heroCount] =
@@ -2216,9 +2216,9 @@ signed char townManager::RecruitHero(signed char cannotRecruit) {
 // evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
 // Buka TOWNMGR.cpp:2968-3000; HoMM1 animates frames 1-8 of control 2.
 VA(0x0040e5db, 0x155)
-short TavernHandler(struct tag_message& message) {
-    int unusedDelay = TOWN_TAVERN_ANIMATION_DELAY;
-    short unusedFrame = TOWN_TAVERN_UNUSED_FRAME;
+i16 TavernHandler(struct tag_message& message) {
+    i32 unusedDelay = TOWN_TAVERN_ANIMATION_DELAY;
+    i16 unusedFrame = TOWN_TAVERN_UNUSED_FRAME;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2256,7 +2256,7 @@ short TavernHandler(struct tag_message& message) {
 // rumour and restores the town theme afterwards.
 VA(0x0040e730, 0x136)
 void townManager::DoTavern(void) {
-    int unusedValue = 0;
+    i32 unusedValue = 0;
 
     m_heroWindow0 = new heroWindow(TOWN_TAVERN_WINDOW_X, TOWN_TAVERN_WINDOW_Y, "tavwin.bin");
     if (m_heroWindow0 == NULL)
@@ -2271,11 +2271,11 @@ void townManager::DoTavern(void) {
 // Buka Castle.cpp CastleHandler; HoMM1 hovers by widget id, has no
 // captain or formation controls and recruits a single hero (control 0x30).
 VA(0x0040e866, 0x726)
-short CastleHandler(struct tag_message& message) {
-    short statusId = TOWN_CASTLE_STATUS_CONTROL;
-    int result = 0;
-    int quickFlag;
-    int objNum;
+i16 CastleHandler(struct tag_message& message) {
+    i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
+    i32 result = 0;
+    i32 quickFlag;
+    i32 objNum;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2450,12 +2450,12 @@ short CastleHandler(struct tag_message& message) {
 // Buka TOWNMGR.cpp:3034 SplitArmyHandler; HoMM1 handles the amount
 // buttons on selection and redraws the whole split window.
 VA(0x0040ef8c, 0x32d)
-short SplitArmyHandler(struct tag_message& message) {
-    short plusControl = TOWN_SPLIT_INCREASE_CONTROL;
-    int unusedAction;
-    short minusButton = TOWN_SPLIT_DECREASE_CONTROL;
-    short amountText = TOWN_SPLIT_AMOUNT_CONTROL;
-    int handled = 0;
+i16 SplitArmyHandler(struct tag_message& message) {
+    i16 plusControl = TOWN_SPLIT_INCREASE_CONTROL;
+    i32 unusedAction;
+    i16 minusButton = TOWN_SPLIT_DECREASE_CONTROL;
+    i16 amountText = TOWN_SPLIT_AMOUNT_CONTROL;
+    i32 handled = 0;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2520,7 +2520,7 @@ update_amount:
 }
 // TOWNMGR's .rdata: Open's per-type town-object layout.
 DATA(0x0048c028)
-const signed char gTownObjectType[4][16] = {
+const i8 gTownObjectType[4][16] = {
     {5, 6, 8, 11, 7, 0, 1, 2, 10, 9, 3, 4, 12, -1, -1, -1},
     {5, 6, 12, 8, 0, 9, 10, 1, 2, 11, 3, 4, 7, -1, -1, -1},
     {13, 5, 6, 9, 7, 11, 0, 1, 2, 10, 8, 12, 3, 4, -1, -1},

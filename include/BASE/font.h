@@ -21,22 +21,22 @@ H1_ENUM_CONST_END(FontGlyphConstant)
 #pragma pack(push, 1)
 class font : public resource {
 public:
-    short m_height;
-    short m_headerWord;
+    i16 m_height;
+    i16 m_headerWord;
     icon* m_glyphIcon;
     // --- constructors ---
-    font(short);
+    font(i16);
     virtual ~font();
     // --- methods ---
 protected:
     void
-    DrawStringExecute(char* text, int x, int y, int mode, int clipL, int clipT, int clipR, int clipB); // ?...@font@@IAE... (protected)
+    DrawStringExecute(char* text, i32 x, i32 y, i32 mode, i32 clipL, i32 clipT, i32 clipR, i32 clipB); // ?...@font@@IAE... (protected)
 public:
-    void DrawString(char*, short, short, short);
-    int GetCharacterWidth(unsigned char character);
-    void DrawBoundedString(char*, short, short, short, short, short, short);
-    int LineLength(char*, short);
-    int LineWidth(char*);
+    void DrawString(char*, i16, i16, i16);
+    i32 GetCharacterWidth(u8 character);
+    void DrawBoundedString(char*, i16, i16, i16, i16, i16, i16);
+    i32 LineLength(char*, i16);
+    i32 LineWidth(char*);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_FONT_H

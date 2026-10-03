@@ -79,19 +79,19 @@ H1_ENUM_CONST_END(HighScoreColor)
 #pragma pack(push, 1)
 class highScoreManager : public baseManager {
 public:
-    short m_animationFrames[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
-    short m_monsterTypes[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
-    signed char m_showCampaignScores;
+    i16 m_animationFrames[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    i16 m_monsterTypes[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    i8 m_showCampaignScores;
     heroWindow* m_window;
     // HoMM1 Main tests this additional mask against message.m_type.
-    short m_dispatchMask;
+    i16 m_dispatchMask;
     // --- constructors ---
     highScoreManager(void);
     ~highScoreManager();
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void Update(void);
 };
@@ -117,7 +117,7 @@ H1_ENUM_CONST_END(HighScoreRuntimeConstant)
 struct HighScoreEntry {
     char playerName[17];
     char scenarioName[15];
-    int score;
+    i32 score;
     char unknown24[0x33];
 };
 #pragma pack(pop)

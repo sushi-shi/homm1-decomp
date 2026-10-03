@@ -21,9 +21,9 @@
 // HoMM1: the hex arrives through a word pointer; a two-hex creature that
 // does not fit facing forward moves its hex to the other side.
 VA(0x0044a5e0, 0x267)
-short army::CanFit(short* hex) {
+i16 army::CanFit(i16* hex) {
     hexcell* cell;
-    short candidateHex;
+    i16 candidateHex;
 
     candidateHex = *hex;
     cell = NULL;
@@ -36,7 +36,7 @@ short army::CanFit(short* hex) {
     if (m_stats.attributes & MONSTER_FLAGS_WIDE) {
         candidateHex = GetAdjacentCellIndex(
             *hex,
-            static_cast<signed char>(
+            static_cast<i8>(
                 m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_EAST : COMBAT_DIRECTION_WEST
             )
         );
@@ -51,7 +51,7 @@ short army::CanFit(short* hex) {
         } else {
             candidateHex = GetAdjacentCellIndex(
                 *hex,
-                static_cast<signed char>(
+                static_cast<i8>(
                     m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_WEST : COMBAT_DIRECTION_EAST
                 )
             );
@@ -77,19 +77,19 @@ short army::CanFit(short* hex) {
 // Buka FLY.cpp ValidFlight; HoMM1 passes a flag that takes the destination
 // as the enemy hex, and CanFit moves the landing hex in place.
 VA(0x0044a847, 0x468)
-short army::ValidFlight(short destination, signed char useDestination) {
-    short directionMask;
-    short temp;
-    short hitHex;
-    short attackDirections;
-    short nextHex;
-    short i;
-    signed char dir;
-    short j;
+i16 army::ValidFlight(i16 destination, i8 useDestination) {
+    i16 directionMask;
+    i16 temp;
+    i16 hitHex;
+    i16 attackDirections;
+    i16 nextHex;
+    i16 i;
+    i8 dir;
+    i16 j;
     army* opponent;
-    short targetHex;
-    short n;
-    signed char attackDirection;
+    i16 targetHex;
+    i16 n;
+    i8 attackDirection;
 
     if (!ValidHex(destination))
         return 0;
@@ -185,41 +185,41 @@ short army::ValidFlight(short destination, signed char useDestination) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0044acaf, 0x27)
-short army::FlyTo(void) {
+i16 army::FlyTo(void) {
     return FlyTo(m_moveTargetHex);
 }
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
 VA(0x0044acd6, 0x75e)
-short army::FlyTo(short destination) {
-    short iFinalY;
-    short centerY;
-    short yLow;
-    short posX;
-    short xOff;
-    signed char curRow;
-    short rowDist;
-    short colCount;
-    short yStep;
-    short posY;
-    short steps;
-    short i;
-    int maxExtentX;
-    int oldMaxY;
-    signed char colFrom;
-    signed char backwards;
-    signed char toHexRow;
-    signed char endCol;
-    short yFrom;
-    int oldX;
-    short xStep;
-    short xFrom;
-    int oldY;
-    short destX;
-    short farX;
-    short firstX;
-    short destY;
+i16 army::FlyTo(i16 destination) {
+    i16 iFinalY;
+    i16 centerY;
+    i16 yLow;
+    i16 posX;
+    i16 xOff;
+    i8 curRow;
+    i16 rowDist;
+    i16 colCount;
+    i16 yStep;
+    i16 posY;
+    i16 steps;
+    i16 i;
+    i32 maxExtentX;
+    i32 oldMaxY;
+    i8 colFrom;
+    i8 backwards;
+    i8 toHexRow;
+    i8 endCol;
+    i16 yFrom;
+    i32 oldX;
+    i16 xStep;
+    i16 xFrom;
+    i32 oldY;
+    i16 destX;
+    i16 farX;
+    i16 firstX;
+    i16 destY;
 
     if (!ValidHex(destination))
         return 0;

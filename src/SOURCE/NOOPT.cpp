@@ -19,8 +19,8 @@ H1_ENUM_CONST_END(DelayTicksConstant)
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00464430, 0x40)
-void DelayTicks(int ticks) {
-    int unused = 0;
+void DelayTicks(i32 ticks) {
+    i32 unused = 0;
 
     glTimers[DELAY_TICKS_TIMER_SLOT] = KBTickCount() + ticks * DELAY_TICK_MILLISECONDS;
     DelayTil(glTimers + DELAY_TICKS_TIMER_SLOT);
@@ -28,7 +28,7 @@ void DelayTicks(int ticks) {
 
 VA(0x00464470, 0x54)
 #line 15 "D:\\Heroes\\Source\\NOOPT.CPP"
-void DelayTil(int* endTime) {
+void DelayTil(i32* endTime) {
 #line 16
     ProcessAssert(*endTime > 10000, __FILE__, __LINE__);
     while (*endTime > KBTickCount()) {
@@ -38,12 +38,12 @@ void DelayTil(int* endTime) {
 }
 
 VA(0x004644c4, 0x23)
-void DelayMilli(long delay) {
+void DelayMilli(i32 delay) {
     DelayTilMilli(KBTickCount() + delay);
 }
 
 VA(0x004644e7, 0x2d)
-void DelayTilMilli(long endTime) {
+void DelayTilMilli(i32 endTime) {
     while (endTime > KBTickCount()) {
         Process1WindowsMessage();
         PollSound();

@@ -84,10 +84,10 @@ class playerAIData {
 public:
     playerAttentionWeights m_attentionWeights;
     char m_unknown18[0x1c];
-    int m_income[RESOURCE_COUNT];
-    int m_obeliskValue;
+    i32 m_income[RESOURCE_COUNT];
+    i32 m_obeliskValue;
     // GetTurnAIVars stores MeanRVOfUnexploredTerritory here (+0xf5).
-    int m_unexploredValue;
+    i32 m_unexploredValue;
     // EvaluateOneTimeCreaturePurchase weights fight value by the float at +0xf9;
     // FightEvent adds the artifact float at +0xfd.
     float m_upgradeValueWeight;
@@ -104,62 +104,62 @@ public:
     char m_unknown00[0x11];
     // Buka m_color (Color()); SetupThievesGuild adds it to the town-window
     // flag frame base.
-    H1_ENUM_STORAGE(PlayerColor, signed char) m_color;
+    H1_ENUM_STORAGE(PlayerColor, i8) m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
     // it and hero::CalcMobility grants computer heroes +3 from level 3.
-    signed char m_difficulty;
-    signed char m_heroCount;
-    signed char m_currentHero;
-    signed char m_heroLocatorPage;
-    signed char m_heroIds[PLAYER_HERO_CAPACITY];
-    signed char m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
+    i8 m_difficulty;
+    i8 m_heroCount;
+    i8 m_currentHero;
+    i8 m_heroLocatorPage;
+    i8 m_heroIds[PLAYER_HERO_CAPACITY];
+    i8 m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
     char m_unknown20[0x32];
     // Saved one byte at a time between the hero and town blocks.
-    signed char m_ultimateArtifactHintChance;
-    signed char m_ultimateArtifactHintX;
-    signed char m_ultimateArtifactHintY;
+    i8 m_ultimateArtifactHintChance;
+    i8 m_ultimateArtifactHintX;
+    i8 m_ultimateArtifactHintY;
     // Buka m_daysLeft: 7 when the last town falls, -1 when a town is held;
     // the turn counts it down.
-    signed char m_daysLeft;
-    signed char m_townCount;
-    signed char m_currentTown;
-    signed char m_townLocatorPage;
-    signed char m_townIds[GAME_TOWN_COUNT];
-    int m_resources[RESOURCE_COUNT];
+    i8 m_daysLeft;
+    i8 m_townCount;
+    i8 m_currentTown;
+    i8 m_townLocatorPage;
+    i8 m_townIds[GAME_TOWN_COUNT];
+    i32 m_resources[RESOURCE_COUNT];
     char m_unknown99[2];
-    unsigned char m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
+    u8 m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
     // --- methods ---
-    void Write(int);
-    void Read(int);
-    signed char NextHero(int);
-    signed char HasMobileHero(void);
-    int BuildingsOwned(int, int, int);
-    int NumOfGivenArtifact(int);
-    signed char CountVisitedObelisks(void);
-    signed char CurrentHero(void) {
+    void Write(i32);
+    void Read(i32);
+    i8 NextHero(i32);
+    i8 HasMobileHero(void);
+    i32 BuildingsOwned(i32, i32, i32);
+    i32 NumOfGivenArtifact(i32);
+    i8 CountVisitedObelisks(void);
+    i8 CurrentHero(void) {
         return m_currentHero;
     }
-    signed char CurrentTown(void) {
+    i8 CurrentTown(void) {
         return m_currentTown;
     }
     // Buka Color(); RecruitHero's crest index inlines this byte read.
-    H1_ENUM_RETURN(PlayerColor, signed char) Color(void) {
+    H1_ENUM_RETURN(PlayerColor, i8) Color(void) {
         return m_color;
     }
-    signed char HeroCount(void) {
+    i8 HeroCount(void) {
         return m_heroCount;
     }
-    signed char TownCount(void) {
+    i8 TownCount(void) {
         return m_townCount;
     }
-    signed char HeroId(int index) {
+    i8 HeroId(i32 index) {
         return m_heroIds[index];
     }
-    signed char TownId(int index) {
+    i8 TownId(i32 index) {
         return m_townIds[index];
     }
-    signed char AvailableHeroId(int index) {
+    i8 AvailableHeroId(i32 index) {
         return m_availableHeroIds[index];
     }
 };

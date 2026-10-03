@@ -118,7 +118,7 @@ H1_ENUM_END(SetupGameHelp)
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
 VA(0x004567f0, 0x164)
-signed char game::SetupCampaignGame(void) {
+i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
         MemError();
@@ -147,7 +147,7 @@ signed char game::SetupCampaignGame(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
 VA(0x00456954, 0x190)
-signed char game::SetupBaud(void) {
+i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
         MemError();
@@ -176,7 +176,7 @@ signed char game::SetupBaud(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456ae4, 0x222)
-signed char game::SetupComPort(void) {
+i8 game::SetupComPort(void) {
     char initStr[40];
 
     heroWindow* window = new heroWindow(400, 35, "stpcom.bin");
@@ -222,7 +222,7 @@ signed char game::SetupComPort(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
 VA(0x00456d06, 0x15d)
-signed char game::SetupHotSeatGame(void) {
+i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
         MemError();
@@ -248,7 +248,7 @@ signed char game::SetupHotSeatGame(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
 VA(0x00456e63, 0x133)
-signed char game::SetupNetworkGame(void) {
+i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
         MemError();
@@ -271,7 +271,7 @@ signed char game::SetupNetworkGame(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
 VA(0x00456f96, 0x333)
-signed char game::SetupModemGame(void) {
+i8 game::SetupModemGame(void) {
     heroWindow* window;
 
     if (gDirectConnect) {
@@ -317,8 +317,8 @@ signed char game::SetupModemGame(void) {
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
 VA(0x004572c9, 0x218)
-signed char game::SetupMultiPlayerGame(void) {
-    int loop;
+i8 game::SetupMultiPlayerGame(void) {
+    i32 loop;
 
     heroWindow* window = new heroWindow(400, 35, "stpmp.bin");
     if (!window)
@@ -367,9 +367,9 @@ signed char game::SetupMultiPlayerGame(void) {
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.
 VA(0x004574e1, 0x486)
-signed char game::SetupGame(signed char newGame) {
+i8 game::SetupGame(i8 newGame) {
     heroWindow* window;
-    int result;
+    i32 result;
 
     result = 1;
     iMPExtendedType = REMOTE_GAME_UNSET;
@@ -465,7 +465,7 @@ signed char game::SetupGame(signed char newGame) {
     gpWindowManager->DoDialog(window, SetupGameHandler, 0);
     delete window;
 
-    switch (static_cast<short>(gpWindowManager->m_dialogResult)) {
+    switch (static_cast<i16>(gpWindowManager->m_dialogResult)) {
         case CHOICE_ONE:
             break;
         case CHOICE_TWO:
@@ -504,9 +504,9 @@ done:
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x00457967, 0x1e7)
-signed char game::PickLoadGame(void) {
+i8 game::PickLoadGame(void) {
     fileRequester* request;
-    short result;
+    i16 result;
 
     if (!SetupGame(0))
         return 0;
@@ -538,8 +538,8 @@ signed char game::PickLoadGame(void) {
 
 // Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
 VA(0x00457b4e, 0x112)
-short SetupCampaignGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupCampaignGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -579,8 +579,8 @@ short SetupCampaignGameHandler(tag_message& message) {
 }
 
 VA(0x00457c60, 0x149)
-short SetupComPortHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupComPortHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -634,8 +634,8 @@ short SetupComPortHandler(tag_message& message) {
 }
 
 VA(0x00457da9, 0x149)
-short SetupBaudHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupBaudHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -689,8 +689,8 @@ short SetupBaudHandler(tag_message& message) {
 }
 
 VA(0x00457ef2, 0x102)
-short SetupHotSeatGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupHotSeatGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -727,8 +727,8 @@ short SetupHotSeatGameHandler(tag_message& message) {
 }
 
 VA(0x00457ff4, 0x139)
-short SetupModemGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupModemGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -779,8 +779,8 @@ short SetupModemGameHandler(tag_message& message) {
 }
 
 VA(0x0045812d, 0x112)
-short SetupMultiPlayerGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupMultiPlayerGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -820,8 +820,8 @@ short SetupMultiPlayerGameHandler(tag_message& message) {
 }
 
 VA(0x0045823f, 0xe1)
-short SetupNetworkGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupNetworkGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -855,8 +855,8 @@ short SetupNetworkGameHandler(tag_message& message) {
 }
 
 VA(0x00458320, 0x102)
-short SetupGameHandler(tag_message& message) {
-    int helpIndex;
+i16 SetupGameHandler(tag_message& message) {
+    i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         && (message.command == WIDGET_NOTIFY_SELECT
@@ -893,8 +893,8 @@ short SetupGameHandler(tag_message& message) {
 }
 
 VA(0x00458422, 0xf1)
-short BaseSetupHandler(tag_message& message) {
-    int handled = 0;
+i16 BaseSetupHandler(tag_message& message) {
+    i32 handled = 0;
 
     PollSound();
     if (message.type == MESSAGE_WIDGET) {
@@ -917,4 +917,4 @@ short BaseSetupHandler(tag_message& message) {
 // Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
 // object at 0x00458520.
 DATA(0x0049f6b0)
-int gDoModemConfig = 0;
+i32 gDoModemConfig = 0;

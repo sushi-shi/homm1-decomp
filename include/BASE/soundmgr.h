@@ -8,7 +8,7 @@ struct pcmwaveformat_tag;
 struct tagAUXCAPSA;
 extern pcmwaveformat_tag gWaveFormat;
 extern tagAUXCAPSA gAuxCaps;
-_DIG_DRIVER* WAVE_init_driver(unsigned long, unsigned short, unsigned short, unsigned short);
+_DIG_DRIVER* WAVE_init_driver(u32, u16, u16, u16);
 
 H1_ENUM_CONST_BEGIN(CDPlaybackConstant)
     CD_POSITION_BUFFER_SIZE = 20,
@@ -61,23 +61,23 @@ H1_ENUM_BEGIN(SampleReportQuery)
     SAMPLE_REPORT_PLAYING = 4
 H1_ENUM_END(SampleReportQuery)
 
-extern int CDPlaying;
-extern int CDPlayOnce;
-extern signed char CDTrackMap[];
+extern i32 CDPlaying;
+extern i32 CDPlayOnce;
+extern i8 CDTrackMap[];
 extern char CDPreviousPosition[][CD_POSITION_CAPACITY];
 extern char CommandString[];
 extern char lpszReturnString[];
-extern unsigned long nMCIError;
-extern short gSampleVolumes[];
+extern u32 nMCIError;
+extern i16 gSampleVolumes[];
 struct SampleChannelStruct {
-    int startChannel;
-    int endChannel;
-    int currentChannel;
+    i32 startChannel;
+    i32 endChannel;
+    i32 currentChannel;
 };
 extern SampleChannelStruct SCS[];
 
 void SetReady2Poll(void);
-void HandleMCIError(int, char*);
-extern int gCDDrive;
+void HandleMCIError(i32, char*);
+extern i32 gCDDrive;
 
 #endif

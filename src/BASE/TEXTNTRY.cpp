@@ -34,13 +34,13 @@ textEntryWidget::~textEntryWidget(void) {
 }
 
 VA(0x0047e170, 0x1e8)
-void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
+    i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
     // byte-evidenced: ReadBlock accepts signed bytes for text storage.
-    gpResourceManager->ReadBlock(reinterpret_cast<signed char*>(m_text), m_maxLength);
+    gpResourceManager->ReadBlock(reinterpret_cast<i8*>(m_text), m_maxLength);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_font = gpResourceManager->GetFont(
@@ -81,7 +81,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, int) type) {
 }
 
 VA(0x0047e360, 0x7f4)
-short textEntryWidget::Main(tag_message& message) {
+i16 textEntryWidget::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
@@ -90,8 +90,8 @@ short textEntryWidget::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.x - m_owner->m_posX;
-            short y = message.y - m_owner->m_posY;
+            i16 x = message.x - m_owner->m_posX;
+            i16 y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                     message.command = WIDGET_NOTIFY_RIGHT_CLICK;
@@ -108,7 +108,7 @@ short textEntryWidget::Main(tag_message& message) {
                 char copy[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char original[TEXT_ENTRY_DISPLAY_CAPACITY];
                 tag_message event;
-                short done;
+                i16 done;
 
                 gpMouseManager->ReallyHidePointer();
                 x = m_owner->m_posX + m_x;
@@ -274,7 +274,7 @@ void textEntryWidget::Draw(void) {
     if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
         char display[TEXT_ENTRY_DISPLAY_CAPACITY];
         strcpy(display, m_text + m_displayOffset);
-        unsigned int length = strlen(display);
+        u32 length = strlen(display);
         while (m_font->LineWidth(display) > m_width)
             display[--length] = 0;
         m_icon->DrawToBuffer(
@@ -306,8 +306,8 @@ void textEntryWidget::Draw(void) {
 }
 
 VA(0x0047ec90, 0x182)
-void textEntryWidget::SetupDisplayString(char* source, unsigned short cursor) {
-    int changed;
+void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
+    i32 changed;
     char display[TEXT_ENTRY_DISPLAY_CAPACITY];
     if (cursor > 0)
         strncpy(m_text, source, cursor);

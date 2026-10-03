@@ -24,8 +24,8 @@
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
 VA(0x004709f0, 0x5f)
-void combatManager::UpdateGrid(short hex, int) {
-    short row;
+void combatManager::UpdateGrid(i16 hex, i32) {
+    i16 row;
 
     row = hex / COMBAT_GRID_COLUMNS - 1;
     if (row < 0)
@@ -37,7 +37,7 @@ void combatManager::UpdateGrid(short hex, int) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00470a4f, 0x5a)
-void combatManager::UpdateGridForMove(short hex, signed char direction, int attributes) {
+void combatManager::UpdateGridForMove(i16 hex, i8 direction, i32 attributes) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
     else
@@ -60,10 +60,10 @@ H1_ENUM_CONST_END(CombatStatusLineConstant)
 // bookkeeping.
 VA(0x00470aa9, 0xb5)
 // clang-format on
-void combatManager::CombatMessage(char* text, int updateScreen) {
-    int oldCompute;
+void combatManager::CombatMessage(char* text, i32 updateScreen) {
+    i32 oldCompute;
     tag_message message;
-    int prevLimit;
+    i32 prevLimit;
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, COMBAT_STATUS_TEXT_CONTROL);
     message.text = text;
@@ -86,11 +86,11 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
 
 // The help line for the current mouse command.
 VA(0x00470b5e, 0x2f3)
-void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) messageType) {
+void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
     army* target;
     army* currentArmy;
-    short targetMonster;
-    short actingType;
+    i16 targetMonster;
+    i16 actingType;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     actingType = currentArmy->m_creatureType;
@@ -147,8 +147,8 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, short) mes
 // Marks every live stack for redraw; dead ones stay hidden (-1).
 VA(0x00470e51, 0xd4)
 void combatManager::ResetLimitCreature(void) {
-    int j;
-    int side;
+    i32 j;
+    i32 side;
 
     m_computeExtent = 1;
     m_extendLimitDown = 0;
@@ -163,7 +163,7 @@ void combatManager::ResetLimitCreature(void) {
 }
 
 VA(0x00470f25, 0x24)
-void combatManager::SetGridMode(signed char mode) {
+void combatManager::SetGridMode(i8 mode) {
     m_gridMode = mode;
 }
 
@@ -171,8 +171,8 @@ void combatManager::SetGridMode(signed char mode) {
 // 60-pixel top margin).
 VA(0x00470f49, 0xde)
 void combatManager::UpdateCombatArea(void) {
-    short y;
-    short height;
+    i16 y;
+    i16 height;
 
     if (!m_combatWindowOpen)
         return;
@@ -194,9 +194,9 @@ void combatManager::UpdateCombatArea(void) {
 // the clean screen as the combat background.
 VA(0x00471027, 0x1d4)
 void combatManager::DrawBackground(void) {
-    short x;
-    short y;
-    short wallY;
+    i16 x;
+    i16 y;
+    i16 wallY;
 
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++)
@@ -205,7 +205,7 @@ void combatManager::DrawBackground(void) {
             m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x,
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
-                static_cast<signed char>((y & 1) ? 5 : 6),
+                static_cast<i8>((y & 1) ? 5 : 6),
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -235,17 +235,17 @@ void combatManager::DrawBackground(void) {
 // Rows draw obstacles, then occupants (right to left while m_gridMode is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
 VA(0x004711fb, 0xe27)
-void combatManager::DrawFrame(signed char updateScreen) {
-    short hexCol;
-    int boxRight;
-    signed char drawn;
-    int side;
-    int i;
-    int boxBottom;
-    int boxTop;
-    int boxLeft;
-    int sideDelta;
-    short row;
+void combatManager::DrawFrame(i8 updateScreen) {
+    i16 hexCol;
+    i32 boxRight;
+    i8 drawn;
+    i32 side;
+    i32 i;
+    i32 boxBottom;
+    i32 boxTop;
+    i32 boxLeft;
+    i32 sideDelta;
+    i16 row;
 
     if (!m_combatWindowOpen)
         return;

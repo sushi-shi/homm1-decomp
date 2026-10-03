@@ -14,7 +14,7 @@
 #include <SOURCE/kbwin.h>
 
 DATA(0x004a2f98)
-int gLeftRightSave = 0;
+i32 gLeftRightSave = 0;
 
 VA(0x0047eef0, 0x31)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
@@ -32,7 +32,7 @@ button::~button(void) {
 
 VA(0x0047ef70, 0xda)
 void button::Read(void) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+    i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
@@ -48,7 +48,7 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
-inline short button::Deselect(tag_message& message) {
+inline i16 button::Deselect(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_SELECTED))
         return MESSAGE_DISPATCH_CONTINUE;
     m_flags &= ~WIDGET_FLAG_SELECTED;
@@ -64,7 +64,7 @@ inline short button::Deselect(tag_message& message) {
 }
 
 VA(0x0047f050, 0x528)
-short button::Main(tag_message& message) {
+i16 button::Main(tag_message& message) {
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
         && KBTickCount() > glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT])
         return Deselect(message);
@@ -84,8 +84,8 @@ short button::Main(tag_message& message) {
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.x - m_owner->m_posX;
-            short y = message.y - m_owner->m_posY;
+            i16 x = message.x - m_owner->m_posX;
+            i16 y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                     SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_RIGHT_CLICK, m_id);
@@ -127,9 +127,9 @@ short button::Main(tag_message& message) {
 }
 
 VA(0x0047f580, 0x92)
-short button::Select(tag_message& message) {
-    short x = m_owner->m_posX + m_x;
-    short y = m_owner->m_posY + m_y;
+i16 button::Select(tag_message& message) {
+    i16 x = m_owner->m_posX + m_x;
+    i16 y = m_owner->m_posY + m_y;
     m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
     m_flags |= WIDGET_FLAG_SELECTED;

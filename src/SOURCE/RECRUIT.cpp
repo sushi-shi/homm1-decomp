@@ -63,11 +63,11 @@ H1_ENUM_END(RecruitControl)
 VA(0x00401b60, 0x164)
 void SetupRecruitWin(
     heroWindow* window,
-    int creatureType,
-    int goldCost,
-    int resourceType,
-    int resourceCost,
-    int available
+    i32 creatureType,
+    i32 goldCost,
+    i32 resourceType,
+    i32 resourceCost,
+    i32 available
 ) {
     char monsterName[RECRUIT_NAME_SIZE];
     char label[RECRUIT_LABEL_SIZE];
@@ -110,9 +110,9 @@ void SetupRecruitWin(
 
 // Buka RECRUIT.cpp:114-178; HoMM1 has no saved recruit menu.
 VA(0x00401cc4, 0x282)
-short recruitUnit::Open(short priority) {
-    int resourceMaximum;
-    int goldMaximum;
+i16 recruitUnit::Open(i16 priority) {
+    i32 resourceMaximum;
+    i32 goldMaximum;
 
     m_window = new heroWindow(
         RECRUIT_WINDOW_X,
@@ -235,11 +235,11 @@ void recruitUnit::Update(void) {
 // Buka RECRUIT.cpp:234-378; HoMM1 handles quantity edits on select and
 // the buttons on deselect, redrawing through a zero MoveWindow.
 VA(0x0040213e, 0x3e5)
-short recruitUnit::Main(struct tag_message& message) {
-    int done;
+i16 recruitUnit::Main(struct tag_message& message) {
+    i32 done;
     // Buka's unreferenced cost local; retail reserves its frame word.
-    int cost;
-    signed char quickView;
+    i32 cost;
+    i8 quickView;
 
     done = 0;
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -351,9 +351,9 @@ short recruitUnit::Main(struct tag_message& message) {
 // Buka RECRUIT.cpp:380-398; HoMM1 stores the creature byte and has no
 // refresh-town argument.
 VA(0x00402523, 0xd6)
-recruitUnit::recruitUnit(armyGroup* army, int creatureType, short* available) {
-    int unitCosts[RESOURCE_COUNT];
-    int i;
+recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
+    i32 unitCosts[RESOURCE_COUNT];
+    i32 i;
 
     m_sourceType = RECRUIT_SOURCE_EVENT;
     m_army = army;
@@ -375,9 +375,9 @@ recruitUnit::recruitUnit(armyGroup* army, int creatureType, short* available) {
 }
 
 VA(0x004025f9, 0xf4)
-recruitUnit::recruitUnit(town* townData, signed char dwelling) {
-    int unitCosts[RESOURCE_COUNT];
-    int i;
+recruitUnit::recruitUnit(town* townData, i8 dwelling) {
+    i32 unitCosts[RESOURCE_COUNT];
+    i32 i;
 
     m_sourceType = RECRUIT_SOURCE_TOWN;
     m_army = &townData->m_army;
@@ -400,15 +400,15 @@ recruitUnit::recruitUnit(town* townData, signed char dwelling) {
 
 // Buka RECRUIT.cpp:414-451; HoMM1 hides the pointer around the quick view.
 VA(0x004026ed, 0x1b4)
-void QuickViewRecruit(town* townData, signed char dwelling) {
-    int iGoldCost;
-    int avail;
-    int resourcePrice;
-    int resourceIndex;
+void QuickViewRecruit(town* townData, i8 dwelling) {
+    i32 iGoldCost;
+    i32 avail;
+    i32 resourcePrice;
+    i32 resourceIndex;
     heroWindow* win;
-    int resourceType;
-    int iMonsterType;
-    int unitCosts[RESOURCE_COUNT];
+    i32 resourceType;
+    i32 iMonsterType;
+    i32 unitCosts[RESOURCE_COUNT];
 
     iMonsterType = gDwellingType[townData->m_type][dwelling];
     avail = townData->m_garrison[dwelling];

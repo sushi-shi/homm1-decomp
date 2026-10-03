@@ -18,12 +18,12 @@ H1_ENUM_END(ComBaudCode)
 struct tag_Node {
     tag_Node *prev;
     tag_Node *next;
-    unsigned short len;
+    u16 len;
     union {
-        unsigned char comData[1];
+        u8 comData[1];
         struct {
-            unsigned char sessionIndex;
-            unsigned char data[1];
+            u8 sessionIndex;
+            u8 data[1];
         };
     };
 };
@@ -32,16 +32,16 @@ struct tag_Anchor {
     tag_Node *tail;
 };
 
-void init_anchor(tag_Anchor *, int, int);
+void init_anchor(tag_Anchor *, i32, i32);
 void add_node(tag_Anchor *, tag_Node *);
 tag_Node *pop_node(tag_Anchor *);
 
-short com_init(unsigned char, int, int);
-void com_term(short);
-short com_rcv(short, unsigned short, void *);
-short com_snd(short, unsigned short, unsigned short, void *, int);
-short __cdecl com_sess(int, int, ...);
-unsigned char com_stat(short, unsigned short);
+i16 com_init(u8, i32, i32);
+void com_term(i16);
+i16 com_rcv(i16, u16, void *);
+i16 com_snd(i16, u16, u16, void *, i32);
+i16 __cdecl com_sess(i32, i32, ...);
+u8 com_stat(i16, u16);
 void comm_wrt_task(void);
 
 #endif

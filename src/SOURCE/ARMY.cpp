@@ -49,7 +49,7 @@ H1_ENUM_CONST_END(ArmyDrawingConstant)
 
 VA(0x00466490, 0xc9)
 army::army(void) {
-    int i;
+    i32 i;
 
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 0;
@@ -72,13 +72,13 @@ army::army(void) {
 
 // The Windows build waits on no sample channel.
 VA(0x00466559, 0x18)
-void army::WaitSample(int) {
+void army::WaitSample(i32) {
     return;
 }
 
 VA(0x00466571, 0x71)
 void army::InitClean(void) {
-    int i;
+    i32 i;
 
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++)
         m_samples[i] = NULL;
@@ -98,7 +98,7 @@ void army::InitClean(void) {
 // shift S with +k: S=1 k=9..11, S=2 k=8..11, S=5 k=5..8); no uniform shift in
 // 0..511 works. Declaring commander at its first assignment moves it +1 only.
 VA(0x004665e2, 0x122)
-void army::Init(signed char type, short quantity, signed char side, signed char index) {
+void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     hero* commander;
 
     InitClean();
@@ -129,7 +129,7 @@ void army::Init(signed char type, short quantity, signed char side, signed char 
 VA(0x00466704, 0x237)
 void army::LoadResources(void) {
     char sprite[16];
-    int i;
+    i32 i;
     char buf[16];
 
     if (m_creatureType != CREATURE_SWORDSMAN)
@@ -171,7 +171,7 @@ void army::LoadResources(void) {
 // evidence: graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
 VA(0x0046693b, 0xf1)
 void army::FreeResources(void) {
-    int i;
+    i32 i;
 
     if (m_standIcon) {
         gpResourceManager->Dispose(m_standIcon);
@@ -196,14 +196,14 @@ void army::FreeResources(void) {
 // m_animationSequence selects the stand, walk, attack or spell-effect pose and
 // m_animationFrame its frame; m_drawShadow adds the shadow frames.
 VA(0x00466a2c, 0x855)
-void army::DrawToBuffer(short x, short y) {
-    short effectX;
-    signed char offsetMode;
-    signed char outlined;
-    short outlineColor;
+void army::DrawToBuffer(i16 x, i16 y) {
+    i16 effectX;
+    i8 offsetMode;
+    i8 outlined;
+    i16 outlineColor;
     char countText[ARMY_QUANTITY_TEXT_SIZE];
-    short iconX;
-    short qtyX;
+    i16 iconX;
+    i16 qtyX;
 
     offsetMode = ICON_DRAW_OFFSET_FULL;
     outlined = 0;
@@ -357,7 +357,7 @@ void army::DrawToBuffer(short x, short y) {
 }
 
 VA(0x00467281, 0x63)
-void army::Stand(signed char redraw) {
+void army::Stand(i8 redraw) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
     m_walkYStep = 0;
@@ -378,21 +378,21 @@ void army::Wince(void) {
 // One hex of walking: six frames redrawn inside the union of the old and
 // new extents; a stack turned away from the step moves before animating.
 VA(0x00467345, 0x852)
-void army::Walk(short direction, signed char standAfter, signed char continued) {
-    int rectMaxX;
-    int rectMaxY;
-    short moveDist;
-    short startFrame;
-    short step;
-    short reverse;
-    short i;
-    short baseHex;
-    short flag;
-    int rectMinX;
-    int partnerHex;
-    short targetHex;
-    int rectMinY;
-    int nextTail;
+void army::Walk(i16 direction, i8 standAfter, i8 continued) {
+    i32 rectMaxX;
+    i32 rectMaxY;
+    i16 moveDist;
+    i16 startFrame;
+    i16 step;
+    i16 reverse;
+    i16 i;
+    i16 baseHex;
+    i16 flag;
+    i32 rectMinX;
+    i32 partnerHex;
+    i16 targetHex;
+    i32 rectMinY;
+    i32 nextTail;
 
     if (!continued) {
         giMinExtentX = giMinExtentY = COMBAT_EXTENT_MIN_START;
@@ -572,47 +572,47 @@ void army::Walk(short direction, signed char standAfter, signed char continued) 
 VA(0x00467b97, 0xcca)
 void army::SpecialAttack(void) {
     DATA(0x004a0888)
-    static int gSecondShot = 0;
-    int targetHexCol;
-    int dmg;
-    int xEnd;
-    signed char arrowFrame;
-    int firstX;
-    int destY;
-    int killCount;
+    static i32 gSecondShot = 0;
+    i32 targetHexCol;
+    i32 dmg;
+    i32 xEnd;
+    i8 arrowFrame;
+    i32 firstX;
+    i32 destY;
+    i32 killCount;
     army* target;
-    int startY;
-    int destX;
-    int startX;
-    int maxY;
+    i32 startY;
+    i32 destX;
+    i32 startX;
+    i32 maxY;
     bitmap* saved;
-    int iMaxX;
-    signed char faceLeft;
-    int facing;
-    int dx;
-    int dy;
-    int yStep;
-    int posY;
-    int steps;
-    int j;
-    int yOffset[5];
-    int i;
-    int y2;
-    signed char myRow;
-    int y0;
-    int prevY;
-    signed char targetRow;
-    signed char srcCol;
-    signed char pitchSign;
-    int offY;
-    int minY;
-    int prevX;
-    signed char tgtCol;
-    int offX;
-    int minX;
-    int xStep;
-    int posX;
-    signed char inCastle;
+    i32 iMaxX;
+    i8 faceLeft;
+    i32 facing;
+    i32 dx;
+    i32 dy;
+    i32 yStep;
+    i32 posY;
+    i32 steps;
+    i32 j;
+    i32 yOffset[5];
+    i32 i;
+    i32 y2;
+    i8 myRow;
+    i32 y0;
+    i32 prevY;
+    i8 targetRow;
+    i8 srcCol;
+    i8 pitchSign;
+    i32 offY;
+    i32 minY;
+    i32 prevX;
+    i8 tgtCol;
+    i32 offX;
+    i32 minX;
+    i32 xStep;
+    i32 posX;
+    i8 inCastle;
 
     facing = m_facing;
     m_walkYStep = 0;
@@ -750,14 +750,14 @@ void army::SpecialAttack(void) {
     if (gpCombatManager->m_castleSide[COMBAT_DEFENDER_SIDE]
         && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
         && target->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
-        int targetR;
-        int wallDist;
-        int gateHex;
-        int hitRow;
-        int colDist;
-        int myR;
-        int sCol;
-        int tgtC;
+        i32 targetR;
+        i32 wallDist;
+        i32 gateHex;
+        i32 hitRow;
+        i32 colDist;
+        i32 myR;
+        i32 sCol;
+        i32 tgtC;
 
         sCol = m_hex % COMBAT_GRID_COLUMNS;
         myR = m_hex / COMBAT_GRID_COLUMNS;
@@ -834,17 +834,17 @@ void army::SpecialAttack(void) {
 // Attacks every enemy next to the stack (the hydra), then turns them back.
 VA(0x00468861, 0x765)
 void army::DoHydraAttack(void) {
-    int killedNow;
-    int damage;
-    short occSide;
-    short i;
-    short dir;
-    short armyIndex;
-    short attackMask;
+    i32 killedNow;
+    i32 damage;
+    i16 occSide;
+    i16 i;
+    i16 dir;
+    i16 armyIndex;
+    i16 attackMask;
     army* pTarget;
-    short targetHex;
-    int totalLost;
-    int totDmg;
+    i16 targetHex;
+    i32 totalLost;
+    i32 totDmg;
     army* eachArmy;
 
     m_walkYStep = 0;
@@ -974,7 +974,7 @@ void army::DoHydraAttack(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00468fc6, 0x2d)
-void army::DirDoAttack(short direction) {
+void army::DirDoAttack(i16 direction) {
     m_attackDirection = direction;
     DoAttack(0);
 }
@@ -983,19 +983,19 @@ void army::DirDoAttack(short direction) {
 // hit the hex behind, some creatures cast on the target, the target
 // retaliates once, and creatures 5 and 8 strike twice.
 VA(0x00468ff3, 0x108d)
-void army::DoAttack(int retaliation) {
-    int unused;
-    int oldMode;
-    short frameBase;
+void army::DoAttack(i32 retaliation) {
+    i32 unused;
+    i32 oldMode;
+    i16 frameBase;
     army* target2;
-    int dmg;
-    short newHex;
-    int curDir;
-    short facing;
-    int attackDir;
-    int didCast;
+    i32 dmg;
+    i16 newHex;
+    i32 curDir;
+    i16 facing;
+    i32 attackDir;
+    i32 didCast;
     army* target;
-    int kills;
+    i32 kills;
 
     oldMode = 0;
     dmg = 0;
@@ -1043,7 +1043,7 @@ void army::DoAttack(int retaliation) {
     gpCombatManager->ResetLimitCreature();
     gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
     if (m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) {
-        short behindHex;
+        i16 behindHex;
 
         if (ValidHex(newHex) && gpCombatManager->m_hexCells[newHex].m_occupantSide >= 0
             && gpCombatManager->m_hexCells[newHex].m_occupantIndex >= 0)
@@ -1084,8 +1084,8 @@ void army::DoAttack(int retaliation) {
     target2 = NULL;
     target = NULL;
     if (ValidHex(newHex)) {
-        int savedKilled;
-        short nextHex;
+        i32 savedKilled;
+        i16 nextHex;
 
         if (gpCombatManager->m_hexCells[newHex].m_occupantSide >= 0
             && gpCombatManager->m_hexCells[newHex].m_occupantIndex >= 0) {
@@ -1246,7 +1246,7 @@ void army::DoAttack(int retaliation) {
         } else {
             target->m_attackDirection = OppositeDirection(m_attackDirection);
             if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                short checkHex;
+                i16 checkHex;
 
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
@@ -1256,7 +1256,7 @@ void army::DoAttack(int retaliation) {
                     target->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
-                    static_cast<signed char>(
+                    static_cast<i8>(
                         target->m_facing ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST
                     )
                 );
@@ -1289,7 +1289,7 @@ secondStrike:
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a080, 0x49)
 void army::ResetPath(void) {
-    short i;
+    i16 i;
 
     for (i = 0; i < COMBAT_HEX_COUNT; i++)
         gpCombatManager->m_hexCells[i].m_pathFlag = 0;
@@ -1298,15 +1298,15 @@ void army::ResetPath(void) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a0c9, 0x27)
-short army::WalkTo(void) {
+i16 army::WalkTo(void) {
     return WalkTo(m_moveTargetHex);
 }
 
 // Walks the found path one hex at a time, at most the stack's speed.
 VA(0x0046a0f0, 0xfc)
-short army::WalkTo(short destHex) {
-    signed char step;
-    int moved;
+i16 army::WalkTo(i16 destHex) {
+    i8 step;
+    i32 moved;
 
     m_targetSide = m_targetIndex = COMBAT_ARMY_INDEX_NONE;
     if (!FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
@@ -1325,15 +1325,15 @@ short army::WalkTo(short destHex) {
 }
 
 VA(0x0046a1ec, 0x27)
-short army::AttackTo(void) {
+i16 army::AttackTo(void) {
     return AttackTo(m_moveTargetHex);
 }
 
 // Flyers jump next to the target; walkers stop short when out of moves.
 VA(0x0046a213, 0x1c9)
-short army::AttackTo(short destHex) {
-    signed char step;
-    int moved;
+i16 army::AttackTo(i16 destHex) {
+    i8 step;
+    i32 moved;
 
     if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         if (m_hex != destHex)
@@ -1375,7 +1375,7 @@ short army::AttackTo(short destHex) {
 // evidence: graph:1;base=0.723107;margin=0.234495;shape=0.473;size=0.925;calls=0.875;strings=badluck.82m|goodluck.82m;alternate=pol20:void army::CheckLuck(void)@0x0004f93e
 VA(0x0046a3dc, 0x249)
 void army::CheckLuck(void) {
-    int luck;
+    i32 luck;
 
     if (!gpCombatManager->m_heroes[m_side])
         return;
@@ -1422,18 +1422,18 @@ void army::CheckLuck(void) {
 VA(0x0046a625, 0x2ae)
 void army::DamageEnemy(
     class army* target,
-    int* damageResult,
-    int* killedResult,
-    int rangedAttack,
-    int defenseModifier
+    i32* damageResult,
+    i32* killedResult,
+    i32 rangedAttack,
+    i32 defenseModifier
 ) {
     float total;
-    short delta;
-    int halfDamage;
-    int damage;
-    short defenseBonus;
-    short index;
-    short attBonus;
+    i16 delta;
+    i32 halfDamage;
+    i32 damage;
+    i16 defenseBonus;
+    i16 index;
+    i16 attBonus;
 
     if (!target)
         return;
@@ -1469,7 +1469,7 @@ void army::DamageEnemy(
         total /= 2;
     if (m_damageMode == ARMY_DAMAGE_HALF)
         total /= 2;
-    damage = static_cast<int>(total + 0.5);
+    damage = static_cast<i32>(total + 0.5);
     if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
         halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
         if (damage < halfDamage) {
@@ -1490,10 +1490,10 @@ void army::DamageEnemy(
 // evidence: graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
 // A stack whose spell (2) breaks on damage loses it.
 VA(0x0046a8d3, 0x176)
-int army::Damage(long int damage) {
-    signed char facing;
-    int minKilled;
-    int kills;
+i32 army::Damage(i32 damage) {
+    i8 facing;
+    i32 minKilled;
+    i32 kills;
 
     damage += m_hitPointsLost;
     kills = damage / m_stats.hitPoints;
@@ -1530,15 +1530,15 @@ int army::Damage(long int damage) {
 // Plays the impact effect on every stack hit this attack (m_powFrames),
 // fading the killed ones out, then restores the grid.
 VA(0x0046aa49, 0x8a9)
-void army::PowEffect(signed char effect) {
-    short frames;
-    short stackIndex;
-    short armyNum;
-    short step;
-    short longest;
-    int cellHex;
+void army::PowEffect(i8 effect) {
+    i16 frames;
+    i16 stackIndex;
+    i16 armyNum;
+    i16 step;
+    i16 longest;
+    i32 cellHex;
     army* curArmy;
-    short side;
+    i16 side;
 
     longest = 0;
     for (armyNum = 0; armyNum < gpCombatManager->m_numArmies[COMBAT_ATTACKER_SIDE]; armyNum++)
@@ -1643,16 +1643,16 @@ void army::PowEffect(signed char effect) {
 }
 
 VA(0x0046b2f2, 0x34)
-unsigned long int army::Strength(void) {
+u32 army::Strength(void) {
     return gMonsterDatabase[m_creatureType].fightValue * m_quantity;
 }
 
 // Plays a combat effect animation over this stack.
 VA(0x0046b326, 0x131)
-void army::SpellEffect(short effect, int frameDelay) {
-    short frame;
-    short effectFileId;
-    short frameCount;
+void army::SpellEffect(i16 effect, i32 frameDelay) {
+    i16 frame;
+    i16 effectFileId;
+    i16 frameCount;
 
     m_effectAnimation = effect;
     effectFileId = MAKEFILEID(gCombatFxNames[effect]);
@@ -1701,12 +1701,12 @@ void army::CancelSpell(void) {
 // A berserk stack attacks a random neighbour, or flies or steps at random.
 VA(0x0046b509, 0x1de)
 void army::GoBerserk(void) {
-    signed char found;
-    short tryCount;
-    short dir;
-    short attackMask;
-    short targetHex;
-    short target;
+    i8 found;
+    i16 tryCount;
+    i16 dir;
+    i16 attackMask;
+    i16 targetHex;
+    i16 target;
 
     found = 0;
     dir = COMBAT_DIRECTION_NORTHEAST;
@@ -1759,13 +1759,13 @@ void army::GoBerserk(void) {
 // Attacks the stack on the hex (flying, shooting or picking the adjacent
 // direction) or moves there; a second argument forbids attacking.
 VA(0x0046b6e7, 0x3a3)
-void army::MoveAttack(int hex, int moveOnly) {
+void army::MoveAttack(i32 hex, i32 moveOnly) {
     hexcell* pCell;
-    int baseHex;
-    short meleeMask;
-    short atkMask;
-    int adjHex;
-    int dirIndex;
+    i32 baseHex;
+    i16 meleeMask;
+    i16 atkMask;
+    i32 adjHex;
+    i32 dirIndex;
 
     gpCombatManager->m_limitCreature = 0;
     CLEAR_ARMY_TARGET(this);
@@ -1836,4 +1836,4 @@ void army::MoveAttack(int hex, int moveOnly) {
 
 // ARMY owns retail .data 0x004a0820-0x004a0a57 and .bss 0x004ca908-0x004ca917.
 DATA(0x004ca908)
-signed char gGenieHalf;
+i8 gGenieHalf;

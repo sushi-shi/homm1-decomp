@@ -117,17 +117,17 @@ struct FileRequesterExtension {
 // description into one 103-byte record per listed map.
 #pragma pack(push, 1)
 struct FileRequesterMapInfo {
-    signed char difficulty;
-    signed char size;
+    i8 difficulty;
+    i8 size;
     char description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE];
 };
 
 // .MAP header as the requester reads it: 0x554 bytes, id 1000 marks a valid
 // map; the name and description offsets are fixed by the constructor.
 struct SMapHeader {
-    short id;
-    signed char difficulty;
-    signed char size;
+    i16 id;
+    i8 difficulty;
+    i8 size;
     char name[0x96];
     char description[0x4ba];
 };
@@ -137,41 +137,41 @@ struct SMapHeader {
 class fileRequester : public baseManager {
 public:
     heroWindow* m_window;
-    short m_x;
-    short m_y;
+    i16 m_x;
+    i16 m_y;
     // 0 lists files to load, 1 saves the current game.
-    H1_ENUM_STORAGE(FileRequesterMode, short) m_mode;
+    H1_ENUM_STORAGE(FileRequesterMode, i16) m_mode;
     FileRequesterName* m_fileNames;
     FileRequesterExtension* m_extensions;
     FileRequesterName* m_mapNames;
     FileRequesterMapInfo* m_mapInfo;
     char m_defaultExtension[FILE_REQUESTER_EXTENSION_SIZE];
     char m_filename[FILE_REQUESTER_NAME_SIZE];
-    short m_fileCount;
-    short m_topIndex;
-    short m_selectedIndex;
-    short m_result;
+    i16 m_fileCount;
+    i16 m_topIndex;
+    i16 m_selectedIndex;
+    i16 m_result;
     iconWidget* m_scrollKnob;
-    short m_acceptMask;
+    i16 m_acceptMask;
     // --- constructors ---
     fileRequester(
-        short,
-        short,
-        H1_ENUM_PARAM(FileRequesterMode, short),
+        i16,
+        i16,
+        H1_ENUM_PARAM(FileRequesterMode, i16),
         const char*,
         const char*,
         const char*
     );
     ~fileRequester();
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    void SetOK(signed char);
+    void SetOK(i8);
     void UpdateMapInfo(void);
     void DoKnob(void);
-    void Update(signed char);
+    void Update(i8);
     char* GetMapName(void);
     char* GetFilename(void);
     void ShowMapInfo(void);
@@ -179,7 +179,7 @@ public:
 #pragma pack(pop)
 
 // Set while the default extension is a saved-game one (".G??").
-extern signed char gRequestingGames;
+extern i8 gRequestingGames;
 extern char* gFRDummy;
 
 #endif // HOMM1_SOURCE_FILEREQUESTER_H

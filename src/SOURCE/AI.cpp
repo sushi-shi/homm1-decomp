@@ -27,7 +27,7 @@
 // weighting the defender of a town and unspent stacks, against a chance
 // raised by the hero's artifacts and experience.
 VA(0x00464520, 0x783)
-int combatManager::AICheckRetreat(void) {
+i32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
         return 0;
     if (!m_heroes[m_currentSide])
@@ -40,13 +40,13 @@ int combatManager::AICheckRetreat(void) {
     hero* sideHero;
     float retreatRatio;
     float prob;
-    int treasureValue;
-    int armyIndex;
-    int side;
+    i32 treasureValue;
+    i32 armyIndex;
+    i32 side;
     armyGroup bareGroup;
-    int artifactTotals[COMBAT_SIDE_COUNT];
+    i32 artifactTotals[COMBAT_SIDE_COUNT];
     float expBonus;
-    int force[COMBAT_SIDE_COUNT];
+    i32 force[COMBAT_SIDE_COUNT];
 
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         if (m_heroes[side]) {
@@ -64,7 +64,7 @@ int combatManager::AICheckRetreat(void) {
                     armyPtr->m_creatureCounts[armyIndex] = m_armies[side][armyIndex].m_quantity;
                 else
                     armyPtr->m_creatureCounts[armyIndex] =
-                        static_cast<short>(m_armies[side][armyIndex].m_quantity * 1.2);
+                        static_cast<i16>(m_armies[side][armyIndex].m_quantity * 1.2);
             } else {
                 armyPtr->m_creatureTypes[armyIndex] = CREATURE_NONE;
                 armyPtr->m_creatureCounts[armyIndex] = 0;
@@ -72,7 +72,7 @@ int combatManager::AICheckRetreat(void) {
         }
         force[side] = gpPhilAI->FightValueOfStack(armyPtr, sideHero, 1, 0, 0);
         if (m_combatTowns[side])
-            force[side] = static_cast<int>(force[side] * 1.1);
+            force[side] = static_cast<i32>(force[side] * 1.1);
         artifactTotals[side] = 0;
         if (sideHero) {
             for (armyIndex = 0; armyIndex < HERO_ARTIFACT_SLOT_COUNT; armyIndex++) {
@@ -82,7 +82,7 @@ int combatManager::AICheckRetreat(void) {
             }
         }
     }
-    force[1 - m_currentSide] = static_cast<int>(force[1 - m_currentSide] * 1.1);
+    force[1 - m_currentSide] = static_cast<i32>(force[1 - m_currentSide] * 1.1);
     treasureValue = artifactTotals[m_currentSide];
     if (artifactTotals[m_currentSide] < COMBAT_AI_MIN_ARTIFACT_VALUE)
         return 0;
@@ -126,29 +126,29 @@ int combatManager::AICheckRetreat(void) {
 // defender steps toward the gate. The chosen move is nudged onto a free hex
 // next to an enemy.
 VA(0x00464ca3, 0x9ce)
-void combatManager::DoCompAI(signed char) {
-    signed char stronger;
-    short ranged[COMBAT_SIDE_COUNT];
-    long shootStrengths[COMBAT_SIDE_COUNT];
-    long total;
-    short walkerMask[COMBAT_SIDE_COUNT];
-    short plan;
-    int dirIndex;
+void combatManager::DoCompAI(i8) {
+    i8 stronger;
+    i16 ranged[COMBAT_SIDE_COUNT];
+    i32 shootStrengths[COMBAT_SIDE_COUNT];
+    i32 total;
+    i16 walkerMask[COMBAT_SIDE_COUNT];
+    i16 plan;
+    i32 dirIndex;
     army* currentArmy;
-    short sideEnemy;
-    long foeShooters;
-    short flyerMasks[COMBAT_SIDE_COUNT];
-    int minShootPower;
-    signed char targetIndex;
-    int dummy;
-    long myShootPower;
-    signed char canOutshoot;
+    i16 sideEnemy;
+    i32 foeShooters;
+    i16 flyerMasks[COMBAT_SIDE_COUNT];
+    i32 minShootPower;
+    i8 targetIndex;
+    i32 dummy;
+    i32 myShootPower;
+    i8 canOutshoot;
     hexcell* hexCell;
-    int wallStrength;
+    i32 wallStrength;
     town* castleTown;
-    int numArchers;
-    int targetHex;
-    int adj;
+    i32 numArchers;
+    i32 targetHex;
+    i32 adj;
 
     m_limitCreature = 0;
     gpMouseManager->ReallyHidePointer();
@@ -301,11 +301,11 @@ finish:
 // Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
 // builds word masks (dead flag 0x10, shooter 4, flyer 2).
 VA(0x00465671, 0xca)
-short combatManager::GetShooterMask(signed char side) {
-    short armyIndex = 0;
-    short bitMask = 1;
+i16 combatManager::GetShooterMask(i8 side) {
+    i16 armyIndex = 0;
+    i16 bitMask = 1;
     class army* army;
-    short armyMask = 0;
+    i16 armyMask = 0;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         army = &m_armies[side][armyIndex];
@@ -318,10 +318,10 @@ short combatManager::GetShooterMask(signed char side) {
 }
 
 VA(0x0046573b, 0xbb)
-short combatManager::GetFlyerMask(signed char side) {
-    short armyIndex = 0;
-    short armyMask;
-    short bitMask = 1;
+i16 combatManager::GetFlyerMask(i8 side) {
+    i16 armyIndex = 0;
+    i16 armyMask;
+    i16 bitMask = 1;
     class army* army;
 
     armyMask = 0;
@@ -336,10 +336,10 @@ short combatManager::GetFlyerMask(signed char side) {
 }
 
 VA(0x004657f6, 0xd7)
-short combatManager::GetWalkerMask(signed char side) {
-    short armyIndex = 0;
-    short bitMask = 1;
-    short armyMask = 0;
+i16 combatManager::GetWalkerMask(i8 side) {
+    i16 armyIndex = 0;
+    i16 bitMask = 1;
+    i16 armyMask = 0;
     class army* army;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
@@ -354,12 +354,12 @@ short combatManager::GetWalkerMask(signed char side) {
 }
 
 VA(0x004658cd, 0xb3)
-short combatManager::GetBestArmy(signed char side, short mask) {
-    short armyIndex = 0;
-    short bitFlag = 1;
-    unsigned long strength;
-    unsigned long bestStrength = 0;
-    short best = COMBAT_ARMY_INDEX_NONE;
+i16 combatManager::GetBestArmy(i8 side, i16 mask) {
+    i16 armyIndex = 0;
+    i16 bitFlag = 1;
+    u32 strength;
+    u32 bestStrength = 0;
+    i16 best = COMBAT_ARMY_INDEX_NONE;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
@@ -375,12 +375,12 @@ short combatManager::GetBestArmy(signed char side, short mask) {
 }
 
 VA(0x00465980, 0xb3)
-short combatManager::GetWorstArmy(signed char side, short mask) {
-    short armyIndex = 0;
-    short bitFlag = 1;
-    unsigned long strength;
-    unsigned long worstStrength = COMBAT_AI_WORST_STRENGTH_LIMIT;
-    short worst = COMBAT_ARMY_INDEX_NONE;
+i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
+    i16 armyIndex = 0;
+    i16 bitFlag = 1;
+    u32 strength;
+    u32 worstStrength = COMBAT_AI_WORST_STRENGTH_LIMIT;
+    i16 worst = COMBAT_ARMY_INDEX_NONE;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
@@ -396,13 +396,13 @@ short combatManager::GetWorstArmy(signed char side, short mask) {
 }
 
 VA(0x00465a33, 0x109)
-short combatManager::GetClosestArmy(class army* currentArmy, signed char side, short mask) {
-    int val;
-    short armyIndex = 0;
+i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
+    i32 val;
+    i16 armyIndex = 0;
     army* target;
-    short bitFlag = 1;
-    int closestDist = FINDPATH_INITIAL_BEST_DISTANCE;
-    short bestArmy = COMBAT_ARMY_INDEX_NONE;
+    i16 bitFlag = 1;
+    i32 closestDist = FINDPATH_INITIAL_BEST_DISTANCE;
+    i16 bestArmy = COMBAT_ARMY_INDEX_NONE;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
@@ -424,10 +424,10 @@ short combatManager::GetClosestArmy(class army* currentArmy, signed char side, s
 }
 
 VA(0x00465b3c, 0xbb)
-unsigned long int combatManager::GetStrength(signed char side, short mask) {
-    short index = 0;
-    short bitMask = 1;
-    unsigned long total = 0;
+u32 combatManager::GetStrength(i8 side, i16 mask) {
+    i16 index = 0;
+    i16 bitMask = 1;
+    u32 total = 0;
     class army* army;
 
     for (index = 0; index < m_numArmies[side]; index++) {
@@ -444,9 +444,9 @@ unsigned long int combatManager::GetStrength(signed char side, short mask) {
 // Ghosts (26) pick the weakest stack; a missed two-hex target is retried
 // from its rear hex.
 VA(0x00465bf7, 0x1b0)
-signed char combatManager::AttemptAttack(class army* currentArmy, signed char side, short mask) {
-    short targetArmy;
-    int targetHex;
+i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
+    i16 targetArmy;
+    i32 targetHex;
 
     while (mask) {
         if (currentArmy->m_creatureType == CREATURE_GHOST)
@@ -482,14 +482,14 @@ signed char combatManager::AttemptAttack(class army* currentArmy, signed char si
 }
 
 VA(0x00465da7, 0x2a9)
-signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
-    short otherHex;
-    short hex;
-    short oneBit;
-    short dir;
-    short enemyMask;
-    short openMask;
-    short target;
+i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
+    i16 otherHex;
+    i16 hex;
+    i16 oneBit;
+    i16 dir;
+    i16 enemyMask;
+    i16 openMask;
+    i16 target;
 
     openMask =
         ~currentArmy->GetAttackMask(currentArmy->m_hex, ARMY_ATTACK_TARGET_ENEMY, ARMY_HEX_INVALID);
@@ -533,15 +533,15 @@ signed char combatManager::AttemptAdjacentAttack(class army* currentArmy) {
 }
 
 VA(0x00466050, 0x20f)
-signed char
-combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, short mask) {
-    short frontHex;
-    int armyIndex;
-    int frontDelta;
-    int canReach;
-    signed char oldSpeed;
-    short pathNdx;
-    short left;
+i8
+combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
+    i16 frontHex;
+    i32 armyIndex;
+    i32 frontDelta;
+    i32 canReach;
+    i8 oldSpeed;
+    i16 pathNdx;
+    i16 left;
 
     CLEAR_ARMY_TARGET(currentArmy);
     armyIndex = GetClosestArmy(currentArmy, side, mask);
@@ -583,16 +583,16 @@ combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, sh
 }
 
 VA(0x0046625f, 0x229)
-signed char combatManager::WalkTowardArmy(class army* currentArmy, signed char side, short mask) {
-    int armyIndex;
-    signed char savedSpeed;
-    int routeGot;
-    short attackMask;
-    short pathNdx;
-    short left;
+i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
+    i32 armyIndex;
+    i8 savedSpeed;
+    i32 routeGot;
+    i16 attackMask;
+    i16 pathNdx;
+    i16 left;
     army* targetPtr;
-    short goalHex;
-    int dest;
+    i16 goalHex;
+    i32 dest;
 
     armyIndex = GetClosestArmy(currentArmy, side, mask);
     if (armyIndex == COMBAT_ARMY_INDEX_NONE)

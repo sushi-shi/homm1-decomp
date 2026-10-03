@@ -30,15 +30,15 @@ public:
     baseManager* m_managerListHead;
     baseManager* m_managerListTail;
     baseManager* m_activeManager;
-    int m_result;
+    i32 m_result;
     // --- constructors ---
     executive(void);
     // --- methods ---
-    short InitSystem(void);
+    i16 InitSystem(void);
     void ShutDownSystem(void);
-    short DoDialog(class baseManager*);
+    i16 DoDialog(class baseManager*);
     void PrintManagerList(void);
-    short AddManager(class baseManager*, short);
+    i16 AddManager(class baseManager*, i16);
     void RemoveManager(class baseManager*);
     void CallManager(class baseManager*);
     void MainLoop(void);

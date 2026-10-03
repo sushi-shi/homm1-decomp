@@ -9,10 +9,10 @@ struct tag_message;
 class backdropWidget : public widget {
 public:
     backdropWidget(void);
-    backdropWidget(short, short, short, short, short, short);
+    backdropWidget(i16, i16, i16, i16, i16, i16);
     virtual inline ~backdropWidget() OVERRIDE;
     virtual void Draw(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     void Read(void);
 };
 

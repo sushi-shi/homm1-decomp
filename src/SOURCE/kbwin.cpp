@@ -33,8 +33,8 @@
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x0045b6f0, 0x14e)
-H1_C_LINKAGE int __stdcall
-WinMain(void* instance, void* previousInstance, char* commandLine, int showCommand) {
+H1_C_LINKAGE i32 __stdcall
+WinMain(void* instance, void* previousInstance, char* commandLine, i32 showCommand) {
     DWORD error;
     MSG message;
 
@@ -66,19 +66,19 @@ WinMain(void* instance, void* previousInstance, char* commandLine, int showComma
         }
     }
     ShutDown(NULL);
-    return static_cast<int>(message.wParam);
+    return static_cast<i32>(message.wParam);
 }
 
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x0045b83e, 0x2d6)
-BOOL AppInit(void* instance, void* previousInstance, int showCommand, char* commandLine) {
+BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
     RECT rc;
 
-    LogInt("hInstApp", reinterpret_cast<int>(hInstApp)); // API-forced handle value.
+    LogInt("hInstApp", reinterpret_cast<i32>(hInstApp)); // API-forced handle value.
     memset(bProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
     bProcessMessage[WM_CREATE] = 1;
     bProcessMessage[WM_KEYDOWN] = 1;
@@ -175,17 +175,17 @@ BOOL AppIdle(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x0045bb45, 0x617)
-long int __stdcall
-AppWndProc(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
+long __stdcall
+AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
     DATA(0x0049fef4)
-    static long gLastGTimerTickCount = 0;
+    static i32 gLastGTimerTickCount = 0;
     DATA(0x0049fef8)
-    static long gLastCycleTickCount = 0;
+    static i32 gLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
         LogStr(
             "AWP",
             KBTickCount() % KBWIN_TRACE_TICK_MODULUS / KBWIN_TRACE_TICK_DIVISOR,
-            reinterpret_cast<long>(window),
+            reinterpret_cast<i32>(window),
             message,
             messageParam,
             messageData
@@ -286,7 +286,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
         case WM_COMMAND:
             return AppCommand(window, message, messageParam, messageData);
         case WM_PALETTECHANGED:
-            if (reinterpret_cast<unsigned int>(window)
+            if (reinterpret_cast<u32>(window)
                 == messageParam) // API-forced: WPARAM carries the changing window.
                 break;
         case WM_QUERYNEWPALETTE:
@@ -327,7 +327,7 @@ AppWndProc(void* window, unsigned int message, unsigned int messageParam, long i
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
 extern "C" VA(0x0045c15c, 0x90)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    int wmId;
+    i32 wmId;
     WORD codeNotify;
     HWND hwndCtl;
     switch (message) {
@@ -357,11 +357,11 @@ void AppExit(void) {
 VA(0x0045c206, 0xca)
 void Process1WindowsMessage(void) {
     DATA(0x0049ff2c)
-    static long gLastGetMessage = 0;
+    static i32 gLastGetMessage = 0;
     DATA(0x0049ff30)
-    static long gLastAilServe = 0;
+    static i32 gLastAilServe = 0;
     MSG message;
-    long currentTick;
+    i32 currentTick;
 
     while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
         TranslateMessage(&message);
@@ -386,10 +386,10 @@ void Process1WindowsMessage(void) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
 VA(0x0045c2d0, 0x127)
-void ResizeWindow(int x, int y, int width, int height) {
-    int xpos;
+void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
+    i32 xpos;
     RECT rect;
-    int ypos;
+    i32 ypos;
     if (gConfig.gfx[gCurExe].fullScreen != 0)
         return;
     GetWindowRect(hwndApp, &rect);
@@ -418,10 +418,10 @@ void ResizeWindow(int x, int y, int width, int height) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x0045c3f7, 0x185)
-long int
-AppCommand(void* window, unsigned int message, unsigned int messageParam, long int messageData) {
+i32
+AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC appDialogProc;
-    int command;
+    i32 command;
 
     command = LOWORD(messageParam);
     switch (command) {
@@ -484,8 +484,8 @@ AppCommand(void* window, unsigned int message, unsigned int messageParam, long i
 // PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
 VA(0x0045c57c, 0xd0)
 void UpdateDfltMenu(void* menu) {
-    int result;
-    int value;
+    i32 result;
+    i32 value;
 
     if (gConfig.gfx[gCurExe].showMenu == 0)
         return;
@@ -528,11 +528,11 @@ void KBChangeMenu(void* menu) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
 VA(0x0045c6f6, 0x135)
-void SetMenuStatus(int showMenu) {
-    int clientWidth;
-    int height;
-    long windowStyle;
-    long replacedStyle;
+void SetMenuStatus(i32 showMenu) {
+    i32 clientWidth;
+    i32 height;
+    i32 windowStyle;
+    i32 replacedStyle;
     if (gConfig.gfx[gCurExe].fullScreen && showMenu)
         return;
     clientWidth = gConfig.gfx[gCurExe].width;
@@ -561,9 +561,9 @@ void SetMenuStatus(int showMenu) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
 VA(0x0045c82b, 0x79)
-void SetNoDialogMenus(int menusEnabled) {
+void SetNoDialogMenus(i32 menusEnabled) {
     DATA(0x0049ff50)
-    static int gNoDialogMenusOn = 0;
+    static i32 gNoDialogMenusOn = 0;
     if (gNoDialogMenusOn && !menusEnabled)
         return;
     if (!gNoDialogMenusOn && menusEnabled)
@@ -577,18 +577,18 @@ void SetNoDialogMenus(int menusEnabled) {
 // PoL 2.0 SetMenus correspondence: recurse into popups, then restore
 // each command from the normal or setup enable table.
 VA(0x0045c8a4, 0x15a)
-void SetMenus(void* menu, int enabled) {
-    int itemIndex;
-    int numItems;
-    unsigned int id;
-    int scanIndex;
-    int k;
-    int change;
+void SetMenus(void* menu, i32 enabled) {
+    i32 itemIndex;
+    i32 numItems;
+    u32 id;
+    i32 scanIndex;
+    i32 k;
+    i32 change;
 
     numItems = GetMenuItemCount(static_cast<HMENU>(menu));
     for (itemIndex = 0; itemIndex < numItems; itemIndex++) {
         id = GetMenuItemID(static_cast<HMENU>(menu), itemIndex);
-        if (id == static_cast<unsigned int>(-1)) {
+        if (id == static_cast<u32>(-1)) {
             SetMenus(GetSubMenu(static_cast<HMENU>(menu), itemIndex), enabled);
             change = 0;
         } else {
@@ -617,8 +617,8 @@ void SetMenus(void* menu, int enabled) {
 // speed and slow-video default from the detected processor family.
 VA(0x0045c9fe, 0x1a3)
 void SetGameDefaults(void) {
-    int cpuType;
-    int i;
+    i32 cpuType;
+    i32 i;
 
     gConfig.musicVolume = 1;
     gConfig.soundVolume = 1;
@@ -660,7 +660,7 @@ void SetGameDefaults(void) {
 VA(0x0045cba1, 0x20d)
 void ReadPrefsFromFile(void) {
     FILE* fp;
-    int result;
+    i32 result;
     char buffer[100];
 
     sprintf(gText, "%s", "HEROES.CFG");
@@ -702,7 +702,7 @@ void ReadPrefsFromRegistry(void) {
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     DWORD dataType;
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     strcpy(szTemp, "");
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
@@ -1002,7 +1002,7 @@ void WritePrefsToRegistry(void) {
     HKEY key;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     strcpy(szTemp, "");
     strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
@@ -1246,22 +1246,22 @@ void WritePrefs(void) {
 // HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
 // drive's autorun file and remember the first one in the registry.
 VA(0x0045d75a, 0x4c5)
-H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
-    int count;
-    unsigned long logicalDrives;
-    int cd;
-    int fh;
-    int pass;
-    unsigned int nError;
+H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
+    i32 count;
+    u32 logicalDrives;
+    i32 cd;
+    i32 fh;
+    i32 pass;
+    u32 nError;
     char cdDrives[CD_DRIVE_LETTER_COUNT];
-    char numCD;
+    i8 numCD;
     HKEY hRegKey;
-    long pos;
+    i32 pos;
     char mciCommand[MCI_COMMAND_BUFFER_SIZE];
     char szReturn[MCI_COMMAND_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
     char driveText[REGISTRY_TEXT_BUFFER_SIZE];
-    long rc;
+    i32 rc;
 
     sprintf(gText, ".\\DATA\\HEROES.AGG");
     fh = open(gText, _O_BINARY);
@@ -1354,10 +1354,10 @@ H1_ENUM_RETURN(CdSetupResult, int) SetupCDDrive(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
 VA(0x0045dc1f, 0x7c)
-void SetWinText(heroWindow* window, short id) {
-    int i;
+void SetWinText(heroWindow* window, i16 id) {
+    i32 i;
     tag_message message;
-    for (i = 0; i < static_cast<int>(WINDOW_TEXT_ENTRY_COUNT); i++) {
+    for (i = 0; i < static_cast<i32>(WINDOW_TEXT_ENTRY_COUNT); i++) {
         if (gWinSetup[i].windowId == id) {
             SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
             message.text = gWinSetupText[i];
@@ -1370,7 +1370,7 @@ void SetWinText(heroWindow* window, short id) {
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
 VA(0x0045dc9b, 0x16)
-long int KBTickCount(void) {
+i32 KBTickCount(void) {
     return GetTickCount();
 }
 
@@ -1378,8 +1378,8 @@ long int KBTickCount(void) {
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
 VA(0x0045dcb1, 0x63)
-void ProcessAssert(int condition, char* file, int line) {
-    int unusedAssertWord;
+void ProcessAssert(i32 condition, char* file, i32 line) {
+    i32 unusedAssertWord;
     if (condition == 0) {
         sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
         MessageBoxA(hwndApp, gText, "Assert Failure", MB_ICONHAND);
@@ -1391,8 +1391,8 @@ void ProcessAssert(int condition, char* file, int line) {
 // PoL 2.0 Misc.cpp FindToken correspondence.
 VA(0x0045dd14, 0x65)
 char* FindToken(char* text, char token) {
-    int pos;
-    int len;
+    i32 pos;
+    i32 len;
 
     len = strlen(text);
     for (pos = 0; len > pos; pos++) {
@@ -1405,8 +1405,8 @@ char* FindToken(char* text, char token) {
 // PoL 2.0 Misc.cpp FindLastToken correspondence.
 VA(0x0045dd79, 0x63)
 char* FindLastToken(char* text, char token) {
-    int pos;
-    int len;
+    i32 pos;
+    i32 len;
 
     len = strlen(text);
     for (pos = len - 1; pos >= 0; pos--) {
@@ -1424,30 +1424,30 @@ char gTitle[] = "Heroes of Might and Magic";
 DATA(0x0049fe74)
 void* hwndApp = NULL;
 DATA(0x0049fe78)
-int gForegroundApp = 0;
+i32 gForegroundApp = 0;
 DATA(0x0049fe7c)
 void* hmnuApp = NULL;
 DATA(0x0049fe80)
 void* gEventHandle = NULL;
 DATA(0x0049fefc)
-int gClosingApp = 0;
+i32 gClosingApp = 0;
 DATA(0x004ca490)
 void* hInstApp;
 DATA(0x004ca498)
 struct tagRECT rcTemp;
 DATA(0x004ca4a8)
-int gMainWinScreenHeight;
+i32 gMainWinScreenHeight;
 DATA(0x004ca4ac)
 void* hmnuCurrent;
 DATA(0x004ca4b0)
-int gTempX;
+i32 gTempX;
 DATA(0x004ca4b4)
-int iTempY;
+i32 iTempY;
 DATA(0x004ca4b8)
-long lTemp;
+i32 lTemp;
 DATA(0x004ca4c0)
-unsigned char bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
+u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004ca8c0)
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 DATA(0x004ca900)
-int iMainWinScreenWidth;
+i32 iMainWinScreenWidth;

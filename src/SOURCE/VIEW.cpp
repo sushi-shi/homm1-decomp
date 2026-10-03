@@ -58,26 +58,26 @@ H1_ENUM_END(ViewGeneralHoverHelp)
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
 VA(0x00438310, 0x56d)
-signed char combatManager::ViewGeneral(int side, int allowActions, int quickView) {
-    short pictureCtrl;
-    short borderId;
-    int morale;
-    int iLuck;
-    short barId;
-    short castSpellControl;
+i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
+    i16 pictureCtrl;
+    i16 borderId;
+    i32 morale;
+    i32 iLuck;
+    i16 barId;
+    i16 castSpellControl;
     tag_message message;
-    short surrenderBtn;
-    short colorControl;
+    i16 surrenderBtn;
+    i16 colorControl;
     heroWindow* wnd;
-    short nameCtrl;
-    short frameWidgetId;
-    short statBoxId;
-    short cornerCtrl;
-    int spare;
-    short captionCtrl;
-    short edgeCtrl;
-    short retreatId;
-    short baseCtrl;
+    i16 nameCtrl;
+    i16 frameWidgetId;
+    i16 statBoxId;
+    i16 cornerCtrl;
+    i32 spare;
+    i16 captionCtrl;
+    i16 edgeCtrl;
+    i16 retreatId;
+    i16 baseCtrl;
 
     if (m_heroes[side] == NULL)
         return 0;
@@ -189,23 +189,23 @@ signed char combatManager::ViewGeneral(int side, int allowActions, int quickView
 // Buka VIEW.cpp:290-390 without the right-click help: Cast Spell, Retreat,
 // Surrender and Close end the dialog; hovering shows their help line.
 VA(0x0043887d, 0x222)
-short HandleViewGeneral(tag_message& message) {
-    int hintIndex;
-    short pictureCtrl;
-    short borderId;
-    short barId;
-    short castSpellControl;
-    short surrenderBtn;
-    signed char retVal;
-    short colorControl;
-    short nameCtrl;
-    short frameWidgetId;
-    short statBoxId;
-    short cornerCtrl;
-    short captionCtrl;
-    short edgeCtrl;
-    short retreatId;
-    short baseCtrl;
+i16 HandleViewGeneral(tag_message& message) {
+    i32 hintIndex;
+    i16 pictureCtrl;
+    i16 borderId;
+    i16 barId;
+    i16 castSpellControl;
+    i16 surrenderBtn;
+    i8 retVal;
+    i16 colorControl;
+    i16 nameCtrl;
+    i16 frameWidgetId;
+    i16 statBoxId;
+    i16 cornerCtrl;
+    i16 captionCtrl;
+    i16 edgeCtrl;
+    i16 retreatId;
+    i16 baseCtrl;
 
     nameCtrl = GENERAL_NAME_WIDGET;
     pictureCtrl = GENERAL_PORTRAIT_WIDGET;
@@ -273,14 +273,14 @@ short HandleViewGeneral(tag_message& message) {
 // Buka VIEW.cpp:442-488: the creature quick view, placed beside the stack
 // and clamped to the screen.
 VA(0x00438a9f, 0x152)
-void combatManager::ViewArmy(army* viewedArmy, int side, int quickView) {
-    short xPos;
-    short yPos;
-    short wndWidth;
-    short viewXOffset;
-    short xAdjust;
-    short viewYOffset;
-    short height;
+void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
+    i16 xPos;
+    i16 yPos;
+    i16 wndWidth;
+    i16 viewXOffset;
+    i16 xAdjust;
+    i16 viewYOffset;
+    i16 height;
 
     if (viewedArmy == NULL)
         return;

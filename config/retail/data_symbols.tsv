@@ -94,7 +94,7 @@ rva	size	symbol	provenance
 0x000A1000	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
 0x000CC7B0	256	?CommandString@@3PADA	retail-backed code identity only
 0x000CC668	256	?lpszReturnString@@3PADA	retail-backed code identity only
-0x000CC768	4	?nMCIError@@3KA	retail-backed code identity only
+0x000CC768	4	?nMCIError@@3IA	retail-backed code identity only
 0x000A14F8	2	?gCDPositionAssertLine@@3FA	retail-backed code identity only
 0x000A14FC	26	?gCDPositionAssertFile@@3PADA	retail-backed code identity only
 0x000A1728	2	?gAmbientMusicAssertLine@@3FA	PlayAmbientMusic signed word plus37

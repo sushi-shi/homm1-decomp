@@ -29,35 +29,35 @@ public:
     heroWindow* m_windowListTail;
     heroWindow* m_focusWindow;
     heroWindow* m_activeWindow;
-    char m_unknown40;
-    char m_unknown41;
+    i8 m_unknown40;
+    i8 m_unknown41;
     bitmap* m_screen;
     bitmap* m_fizzleSource;
     bitmap* m_fizzleWork;
-    short m_screenshotIndex;
-    short m_updateFlags;
-    int m_dialogResult;
-    signed char m_lastHoverId;
+    i16 m_screenshotIndex;
+    i16 m_updateFlags;
+    i32 m_dialogResult;
+    i8 m_lastHoverId;
 
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
-    short ConvertToHover(struct tag_message& message);
-    short BroadcastMessage(short, short, short, short);
-    void AddWindow(class heroWindow*, short, signed char);
+    i16 ConvertToHover(struct tag_message& message);
+    i16 BroadcastMessage(i16, i16, i16, i16);
+    void AddWindow(class heroWindow*, i16, i8);
     void RemoveWindow(class heroWindow*);
-    short DoDialog(class heroWindow*, short (*)(struct tag_message&), int);
+    i16 DoDialog(class heroWindow*, i16 (*)(struct tag_message&), i32);
     void UpdateScreen(void);
-    void UpdateScreenRegion(short, short, short, short);
+    void UpdateScreenRegion(i16, i16, i16, i16);
     void RedrawScreen(void);
-    void FadeScreen(short, short, class palette*);
+    void FadeScreen(i16, i16, class palette*);
     void ScreenShot(void);
-    void SaveFizzleSource(short, short, short, short);
-    void FizzleForward(short, short, short, short, int);
+    void SaveFizzleSource(i16, i16, i16, i16);
+    void FizzleForward(i16, i16, i16, i16, i32);
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)
@@ -73,9 +73,9 @@ public:
 // heroWindowManager.h).
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
-extern signed char gCyclePal[PALETTE_CYCLE_BYTES];
+extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern signed char gWindowFadeSavedUpdate;
+extern i8 gWindowFadeSavedUpdate;
 
 H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_IN = 0,

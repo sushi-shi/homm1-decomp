@@ -23,15 +23,15 @@
 VA(0x00473450, 0x199)
 void BlitBitmapToScreen(
     bitmap* sourceBitmap,
-    int sourceX,
-    int sourceY,
-    int width,
-    int height,
-    int destinationX,
-    int destinationY
+    i32 sourceX,
+    i32 sourceY,
+    i32 width,
+    i32 height,
+    i32 destinationX,
+    i32 destinationY
 ) {
     if (gpWindowManager->m_screen != sourceBitmap) {
-        for (int row = 0; row < height; row++)
+        for (i32 row = 0; row < height; row++)
             memcpy(
                 gpWindowManager->m_screen->m_pixels + (destinationY + row) * SCREEN_BLIT_WIDTH
                     + destinationX,
@@ -70,7 +70,7 @@ void BlitBitmapToScreen(
 }
 
 VA(0x004735f0, 0x30)
-void GrabScreenBitmap(bitmap* destination, int x, int y) {
+void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     BlitBitmap(
         gpWindowManager->m_screen,
         x,
@@ -84,7 +84,7 @@ void GrabScreenBitmap(bitmap* destination, int x, int y) {
 }
 
 VA(0x00473620, 0x45)
-void SetPalette(signed char* paletteData, int updateDisplay) {
+void SetPalette(i8* paletteData, i32 updateDisplay) {
     memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
     memcpy(
         gCyclePal,
@@ -96,9 +96,9 @@ void SetPalette(signed char* paletteData, int updateDisplay) {
 }
 
 VA(0x00473670, 0xdd)
-void FadeIn(int increment) {
-    signed char done;
-    int i, j, threshold;
+void FadeIn(i32 increment) {
+    i8 done;
+    i32 i, j, threshold;
     palette* currentPalette = new palette;
     if (currentPalette == NULL)
         MemError();
@@ -129,9 +129,9 @@ void FadeIn(int increment) {
 }
 
 VA(0x00473750, 0xcd)
-void FadeOut(int increment) {
-    signed char done;
-    int i, j;
+void FadeOut(i32 increment) {
+    i8 done;
+    i32 i, j;
     palette* currentPalette = new palette;
     if (currentPalette == NULL)
         MemError();
@@ -180,14 +180,14 @@ void FadeOut(int increment) {
 #include <string.h>
 
 struct PaletteColor {
-    unsigned char red;
-    unsigned char green;
-    unsigned char blue;
+    u8 red;
+    u8 green;
+    u8 blue;
 };
 
 VA(0x00473820, 0x3a)
 #line 207 "D:\\Heroes\\Base\\OLDASM.CPP"
-int Random(int low, int high) {
+i32 Random(i32 low, i32 high) {
 #line 208
     ProcessAssert(high > low, __FILE__, __LINE__);
     return rand() % (high - low + 1) + low;
@@ -195,10 +195,10 @@ int Random(int low, int high) {
 
 // Called on the loaded kb.pal data before SetPalette.
 VA(0x00473860, 0x60)
-void PostprocessPalette(signed char* data) {
+void PostprocessPalette(i8* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
-    for (int index = 0; index < PALETTE_COLOR_COUNT; index++)
+    for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
         remapped[gMonoColorMap[index]] =
             reinterpret_cast<PaletteColor*>(data)[index]; // byte-evidenced: 3-byte colour copies
     memcpy(data, remapped, PALETTE_GRAPHICS_BYTES);
@@ -206,7 +206,7 @@ void PostprocessPalette(signed char* data) {
 }
 
 VA(0x004738c0, 0x1)
-void PostprocessBitmap(signed char*, int, int) {}
+void PostprocessBitmap(i8*, i32, i32) {}
 
 VA(0x004738d0, 0x1)
 void PostprocessIcon(icon*) {}
@@ -224,29 +224,29 @@ VA(0x004738e0, 0x1e6)
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
-    int x,
-    int y,
-    int frame,
-    int color,
-    int mode,
-    int clipX,
-    int clipY,
-    int clipW,
-    int clipH
+    i32 x,
+    i32 y,
+    i32 frame,
+    i32 color,
+    i32 mode,
+    i32 clipX,
+    i32 clipY,
+    i32 clipW,
+    i32 clipH
 ) {
-    int clipRight = clipX + clipW - 1;
-    int clipBottom = clipY + clipH - 1;
+    i32 clipRight = clipX + clipW - 1;
+    i32 clipBottom = clipY + clipH - 1;
     IconEntry* entry =
         reinterpret_cast<IconEntry*>(sourceIcon->m_data)
         + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
-    unsigned char* source = sourceIcon->m_data + entry->srcOffset;
-    int position = x + entry->x;
+    u8* source = sourceIcon->m_data + entry->srcOffset;
+    i32 position = x + entry->x;
     BOOL drawing = TRUE;
-    int row = y + entry->y;
-    int rowOffset = row * ICON_SCREEN_ROW_BYTES;
+    i32 row = y + entry->y;
+    i32 rowOffset = row * ICON_SCREEN_ROW_BYTES;
     while (drawing) {
-        unsigned char run = *source;
-        if (static_cast<signed char>(run) < 0) {
+        u8 run = *source;
+        if (static_cast<i8>(run) < 0) {
             run &= ICON_MONO_SKIP_MASK;
             if (run != 0) {
                 position += run;
@@ -292,23 +292,23 @@ void ClippedMonoIconToBitmap(
 // declaration order sets the compare operand sort keys; the .bss layout
 // follows the names, not this order.
 DATA(0x004cabd0)
-static int sClipY;
+static i32 sClipY;
 DATA(0x004cabc8)
-static int sClipBottom;
+static i32 sClipBottom;
 DATA(0x004cac1c)
-static int sClipRowStart;
+static i32 sClipRowStart;
 DATA(0x004cabbc)
-static signed char* sClipRow;
+static i8* sClipRow;
 DATA(0x004cabc0)
 static IconEntry* sClipEntry;
 DATA(0x004cabd4)
-static unsigned char* sClipSource;
+static u8* sClipSource;
 DATA(0x004cabb8)
-static int sClipRight;
+static i32 sClipRight;
 DATA(0x004cabcc)
-static int sClipX;
+static i32 sClipX;
 DATA(0x004cabc4)
-static unsigned int sClipRun;
+static u32 sClipRun;
 DATA(0x004cac18)
 static BOOL sClipInside;
 
@@ -316,14 +316,14 @@ VA(0x00473ad0, 0x2ad)
 void ClipIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
-    int x,
-    int y,
-    int frame,
-    int mode,
-    int clipX,
-    int clipY,
-    int clipW,
-    int clipH
+    i32 x,
+    i32 y,
+    i32 frame,
+    i32 mode,
+    i32 clipX,
+    i32 clipY,
+    i32 clipW,
+    i32 clipH
 ) {
     sClipEntry = reinterpret_cast<IconEntry*>(sourceIcon->m_data)
                  + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
@@ -341,7 +341,7 @@ void ClipIconToBitmap(
     sClipRow = destination->m_pixels + destination->m_width * sClipY;
     for (;;) {
         sClipRun = *sClipSource++;
-        if (static_cast<signed char>(sClipRun) < 0) {
+        if (static_cast<i8>(sClipRun) < 0) {
             if ((sClipRun & ICON_MONO_SKIP_MASK) == 0)
                 return;
             sClipX += sClipRun & ICON_MONO_SKIP_MASK;

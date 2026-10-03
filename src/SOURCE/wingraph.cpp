@@ -25,22 +25,22 @@ BOOL gWinGAttached = TRUE;
 DATA(0x0048e17c)
 BOOL gDDrawAttached = FALSE;
 DATA(0x0048e180)
-H1_ENUM_STORAGE(WingraphGraphicsType, int) gGraphicsType = WINGRAPH_GRAPHICS_WING;
+H1_ENUM_STORAGE(WingraphGraphicsType, i32) gGraphicsType = WINGRAPH_GRAPHICS_WING;
 DATA(0x0048e184)
-int gMainVideoModeColorDepth = 16;
+i32 gMainVideoModeColorDepth = 16;
 DATA(0x0048e188)
-int gMainVideoModeWidth = 1024;
+i32 gMainVideoModeWidth = 1024;
 DATA(0x0048e18c)
-int gMainVideoModeHeight = 768;
+i32 gMainVideoModeHeight = 768;
 DATA(0x0048e190)
-int Orientation = 1;
+i32 Orientation = 1;
 DATA(0x0048e198)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
 DATA(0x0048e59c)
 void* gInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
 DATA(0x0048e5a4)
-int gTtlBlts = 0;
+i32 gTtlBlts = 0;
 DATA(0x0048e5a8)
 BOOL gWinGraphBusy = FALSE;
 DATA(0x0048e5ac)
@@ -56,7 +56,7 @@ IDirectDrawClipper* gClipper = NULL;
 DATA(0x0048e5c0)
 IDirectDrawPalette* gDDPal = NULL;
 DATA(0x0048e674)
-int gBusyRetry = 0;
+i32 gBusyRetry = 0;
 DATA(0x0048e84c)
 BOOL gInDDSD = FALSE;
 DATA(0x0048e94c)
@@ -74,25 +74,25 @@ RECT gDDSourceRect;
 DATA(0x004a46b8)
 RECT gDDDestinationRect;
 DATA(0x004a46a0)
-long gDDResult;
+i32 gDDResult;
 DATA(0x004a46d0)
 _DDSURFACEDESC gDDSurfaceDesc;
 DATA(0x004a46c8)
-long gPaintStart;
+i32 gPaintStart;
 DATA(0x004a4740)
 WingImage screenImage;
 // KB owns these scroll, combat-palette and configuration globals.
-extern int gScrollX;
-extern int gScrollY;
-extern int gFullCombatScreenDrawn;
-extern int gLimitedCombatUpdatePalette;
+extern i32 gScrollX;
+extern i32 gScrollY;
+extern i32 gFullCombatScreenDrawn;
+extern i32 gLimitedCombatUpdatePalette;
 extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00403640, 0x59)
 #line 49 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDRestoreDisplayMode() {
-    long result;
+    i32 result;
     if (gDD != NULL) {
         result = gDD->RestoreDisplayMode();
         if (result != DD_OK)
@@ -104,7 +104,7 @@ void DDRestoreDisplayMode() {
 VA(0x00403699, 0x46)
 BOOL DDQueryNewPalette() {
     // Buka 2.1 retains this unused local; retail's four-byte frame confirms it.
-    int unused;
+    i32 unused;
 
     if (gWinGraphBusy)
         return TRUE;
@@ -119,7 +119,7 @@ BOOL DDQueryNewPalette() {
 VA(0x004036df, 0x9b)
 #line 71 "D:\\Heroes\\Source\\wingraph.cpp"
 void CreatePrimary(void) {
-    long result;
+    i32 result;
 
     gDDSPrimary = DDCreateSurface(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, 1);
     if (gClipper != NULL) {
@@ -138,7 +138,7 @@ void CreatePrimary(void) {
 VA(0x0040377a, 0xeb)
 #line 91 "D:\\Heroes\\Source\\wingraph.cpp"
 void SetupClipper(void) {
-    long result;
+    i32 result;
 
     if (gConfig.gfx[gCurExe].fullScreen == 0) {
         result = gDD->CreateClipper(0, &gClipper, NULL);
@@ -162,7 +162,7 @@ void SetupClipper(void) {
 VA(0x00403865, 0x171)
 #line 114 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDInitGraphics(void) {
-    long result;
+    i32 result;
 
     if (gWinGraphBusy != FALSE)
         return;
@@ -201,10 +201,10 @@ void DDInitGraphics(void) {
 VA(0x004039d6, 0x592)
 #line 161 "D:\\Heroes\\Source\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
-    int ySrc;
-    int height;
-    int x;
-    int width;
+    i32 ySrc;
+    i32 height;
+    i32 x;
+    i32 width;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -318,7 +318,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
             gpWindowManager->m_screen->m_pixels =
-                static_cast<signed char*>(gDDSurfaceDesc.lpSurface);
+                static_cast<i8*>(gDDSurfaceDesc.lpSurface);
             gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
             gInitWin = gDDSurfaceDesc.lpSurface;
@@ -336,9 +336,9 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 VA(0x00403f68, 0x140)
 #line 315 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDInitializePalette() {
-    long ddrval;
+    i32 ddrval;
     HDC hdc;
-    int i;
+    i32 i;
     if (gWinGraphBusy != FALSE)
         return;
     {
@@ -373,7 +373,7 @@ void DDInitializePalette() {
 VA(0x004040a8, 0xb3)
 #line 387 "D:\\Heroes\\Source\\wingraph.cpp"
 BOOL DDSetPalette() {
-    long result;
+    i32 result;
     if (gWinGraphBusy != FALSE)
         return TRUE;
     if (gForegroundApp == 0)
@@ -392,14 +392,14 @@ BOOL DDSetPalette() {
 // evidence: graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
 VA(0x0040415b, 0x12a)
 #line 417 "D:\\Heroes\\Source\\wingraph.cpp"
-struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long height, int primary) {
+struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
     // Donor unused locals (Buka count/unused, PoL cnt/unused); retail keeps
     // two unreferenced slots between lpSurface and the result.
-    int i;
-    int tmp;
-    long ddrval;
+    i32 i;
+    i32 tmp;
+    i32 ddrval;
 
     memset(&ddsd, 0, sizeof(ddsd));
     ddsd.dwSize = sizeof(ddsd);
@@ -424,7 +424,7 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
 #line 453
             DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(ddsd.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(ddsd.lpSurface);
             gInitWin = ddsd.lpSurface;
         } else {
             gInitWin = ddsd.lpSurface;
@@ -437,9 +437,9 @@ struct IDirectDrawSurface* DDCreateSurface(unsigned long width, unsigned long he
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.296609;margin=0.202074;shape=0.224;size=0.647;calls=0.194;alternate=pol20:void DDSD(int, char *, int)@0x00035e4f
 VA(0x00404285, 0x3ee)
-void DDSD(int error, char* file, int line) {
-    long restoreResult;
-    H1_ENUM_STORAGE(DirectDrawReportCode, int) unused;
+void DDSD(i32 error, char* file, i32 line) {
+    i32 restoreResult;
+    H1_ENUM_STORAGE(DirectDrawReportCode, i32) unused;
 
     if (gInDDSD != FALSE)
         return;
@@ -550,9 +550,9 @@ void DDSD(int error, char* file, int line) {
 // evidence: graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
 VA(0x00404673, 0x11c)
 #line 524 "D:\\Heroes\\Source\\wingraph.cpp"
-void DDUpdatePalette(signed char* paletteData) {
-    int entry;
-    long res;
+void DDUpdatePalette(i8* paletteData) {
+    i32 entry;
+    i32 res;
 
     if (gWinGraphBusy != FALSE)
         return;
@@ -571,7 +571,7 @@ void DDUpdatePalette(signed char* paletteData) {
     }
     // API-forced: ProcessAssert accepts the donor pointer assertion as a 32-bit int.
 #line 542
-    ProcessAssert(reinterpret_cast<int>(gDDPal), __FILE__, __LINE__);
+    ProcessAssert(reinterpret_cast<i32>(gDDPal), __FILE__, __LINE__);
     res = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
@@ -590,8 +590,8 @@ VA(0x0040478f, 0x17f)
 #line 550 "D:\\Heroes\\Source\\wingraph.cpp"
 void DDCleanUpWinGraphics(void) {
     // Both locals survive in Buka591-632 and PoL481-519; restoreVal is written.
-    long restoreVal;
-    long result;
+    i32 restoreVal;
+    i32 result;
 
     if (gDD != NULL) {
         restoreVal = gDD->RestoreDisplayMode();
@@ -631,12 +631,12 @@ void DDCleanUpWinGraphics(void) {
 // evidence: graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
 VA(0x0040490e, 0x2ea)
 #line 596 "D:\\Heroes\\Source\\wingraph.cpp"
-void DDSetFullScreenStatus(int fullScreen) {
-    int w;
-    int x;
-    int h;
-    int y;
-    long ddrval;
+void DDSetFullScreenStatus(i32 fullScreen) {
+    i32 w;
+    i32 x;
+    i32 h;
+    i32 y;
+    i32 ddrval;
 
     if (gWinGraphBusy != FALSE)
         return;
@@ -701,7 +701,7 @@ void DDSetFullScreenStatus(int fullScreen) {
 // The WinG palette path uses the application window and palette handles.
 VA(0x00404bf8, 0x89)
 BOOL WGQueryNewPalette() {
-    int paletteChanges;
+    i32 paletteChanges;
     {
         HDC hdc;
 
@@ -758,10 +758,10 @@ void WGInitGraphics() {
 }
 
 VA(0x00404dd2, 0x1dd)
-void WGUpdatePalette(signed char* paletteData) {
+void WGUpdatePalette(i8* paletteData) {
     HDC dc;
-    int result;
-    int index;
+    i32 result;
+    i32 index;
 
     for (index = WINGRAPH_SYSTEM_PALETTE_SIZE; index < WINGRAPH_MUTABLE_PALETTE_END; index++) {
         LogicalPalette.entries[index].peRed = paletteData[index * 3] << 2;
@@ -822,7 +822,7 @@ void WGUpdatePalette(signed char* paletteData) {
 VA(0x00404faf, 0x1d5)
 void WGInitializePalette() {
     HDC hdc;
-    int i;
+    i32 i;
 
     if (hpalApp != NULL)
         return;
@@ -864,16 +864,16 @@ void WGInitializePalette() {
 // client-to-game transform uses its pinned 640x480 viewport.
 VA(0x00405184, 0x1c0)
 BOOL WGAppPaint(void* window, void* paintDC) {
-    int srcX;
-    int iSrcY;
-    int dstW;
-    int destX;
-    int nDestY;
+    i32 srcX;
+    i32 iSrcY;
+    i32 dstW;
+    i32 destX;
+    i32 nDestY;
     RECT rect;
-    int destHeight;
-    int padding;
+    i32 destHeight;
+    i32 padding;
     PAINTSTRUCT paintStruct;
-    char unused;
+    i8 unused;
 
     unused = 0;
     if (screenImage.bits != NULL) {
@@ -949,7 +949,7 @@ void WGCleanUpWinGraphics() {
 VA(0x004053bc, 0x6c)
 void ConnectToDLLs() {
     gDDrawLibrary = LoadLibraryA("DDRAW.DLL");
-    if (reinterpret_cast<unsigned long>(gDDrawLibrary)
+    if (reinterpret_cast<u32>(gDDrawLibrary)
         >= HINSTANCE_ERROR) { // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
         // API-forced: GetProcAddress returns FARPROC for the typed DirectDraw factory.
         gDirectDrawCreate = reinterpret_cast<DirectDrawCreateProc>(
@@ -965,7 +965,7 @@ void ConnectToDLLs() {
 // Buka's DLL teardown checks the Win32 module handle before release.
 VA(0x00405428, 0x29)
 void DisconnectDLLs() {
-    if (reinterpret_cast<unsigned long>(gDDrawLibrary)
+    if (reinterpret_cast<u32>(gDDrawLibrary)
         >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
         FreeLibrary(gDDrawLibrary);
 }
@@ -1042,7 +1042,7 @@ void InitializePalette() {
 
 // Retail and Buka dispatch the same palette buffer to the selected backend.
 VA(0x004055ff, 0x3a)
-void UpdatePalette(signed char* paletteData) {
+void UpdatePalette(i8* paletteData) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGUpdatePalette(paletteData);
     else
@@ -1062,7 +1062,7 @@ void CleanUpWinGraphics() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
 VA(0x0040566a, 0xb9)
-void SetFullScreenStatus(int fullScreen) {
+void SetFullScreenStatus(i32 fullScreen) {
     if (gInSmacker != 0)
         return;
     if (gConfig.gfx[gCurExe].fullScreen == fullScreen)
@@ -1093,13 +1093,13 @@ BOOL QueryNewPalette() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565182;margin=0.258783;shape=0.434;size=0.909;calls=1.000;alternate=pol20:int SetGraphicsType(int)@0x00037595
 VA(0x00405754, 0x1f3)
-BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int) graphicsType) {
+BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     void* screenBuffer;
-    int w;
-    int fullScreen;
-    int x;
-    int h;
-    int y;
+    i32 w;
+    i32 fullScreen;
+    i32 x;
+    i32 h;
+    i32 y;
 
     if (graphicsType == gGraphicsType)
         return TRUE;
@@ -1120,12 +1120,12 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, int) graphicsType) {
         DDCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
     } else {
         WGCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
         DDInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<signed char*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
     }
     memcpy(gpWindowManager->m_screen->m_pixels, screenBuffer, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     free(screenBuffer);

@@ -22,14 +22,14 @@ H1_ENUM_CONST_BEGIN(FindPathTerrainConstant)
     FINDPATH_WATER_MODE = 1
 H1_ENUM_CONST_END(FindPathTerrainConstant)
 
-int CalcTerrainCost(int, int, int, int);
+i32 CalcTerrainCost(i32, i32, i32, i32);
 // clang-format on
-short TerrainStepCost(signed char, char);
+i16 TerrainStepCost(i8, i8);
 // FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
-extern short gCurTempMobility;
+extern i16 gCurTempMobility;
 
 // PoL FINDPATH.cpp:32-36 retains this inline approximation helper.
-inline short ApproximateGridDistance(short xDistance, short yDistance) {
+inline i16 ApproximateGridDistance(i16 xDistance, i16 yDistance) {
     if (xDistance >= yDistance)
         return xDistance + yDistance / DISTANCE_MINOR_DIVISOR;
     return yDistance + xDistance / DISTANCE_MINOR_DIVISOR;

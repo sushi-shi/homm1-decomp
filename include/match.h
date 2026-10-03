@@ -1,6 +1,21 @@
 #ifndef HOMM1_MATCH_H
 #define HOMM1_MATCH_H
 
+// Fixed-width integer aliases (H1/Ints.h). Every translation unit opens this
+// header first, so defining them here makes them reachable everywhere without
+// opening another header (under /Gi the opened-header set moves C1 handles).
+#ifndef HOMM1_INTS_DEFINED
+#define HOMM1_INTS_DEFINED
+typedef signed char i8;
+typedef unsigned char u8;
+typedef short i16;
+typedef unsigned short u16;
+typedef int i32;
+typedef unsigned int u32;
+typedef __int64 i64;
+typedef unsigned __int64 u64;
+#endif
+
 // Reconstruction metadata. The compiler receives ordinary C++.
 #ifdef __clang__
 #define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))

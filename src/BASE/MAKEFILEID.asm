@@ -25,7 +25,7 @@ option epilogue:none
 ;       }
 ;       return hash;
 ;   }
-?MAKEFILEID@@YAKPAD@Z PROC
+?MAKEFILEID@@YAIPAD@Z PROC
     push ebp
     mov ebp, esp
     push esi
@@ -50,6 +50,6 @@ hash_done:
     pop esi
     pop ebp
     ret
-?MAKEFILEID@@YAKPAD@Z ENDP
+?MAKEFILEID@@YAIPAD@Z ENDP
 
 END

@@ -13,33 +13,33 @@
 #include <SOURCE/searchArray.h>
 
 // SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).
-extern short gCurTempMobility;
+extern i16 gCurTempMobility;
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
 VA(0x004028b0, 0x23a)
-short searchArray::FindNearestObject(
-    short startX,
-    short startY,
-    short direction,
-    short maximumCost,
-    unsigned char triggerType
+i16 searchArray::FindNearestObject(
+    i16 startX,
+    i16 startY,
+    i16 direction,
+    i16 maximumCost,
+    u8 triggerType
 ) {
     // node.x/node.y are read in place: retail spills the coordinate as a CSE
     // temporary in the dword slot below node. The declaration order gives the
     // start-versus-destination compares their retail operand order.
     searchNode node;
-    signed char possibleDirections[MAP_DIRECTION_COUNT];
-    signed char directionCosts[MAP_DIRECTION_COUNT];
-    short i;
-    short terrain;
-    short cost;
+    i8 possibleDirections[MAP_DIRECTION_COUNT];
+    i8 directionCosts[MAP_DIRECTION_COUNT];
+    i16 i;
+    i16 terrain;
+    i16 cost;
     searchNode* pathNode;
-    unsigned char* pathDirection;
-    short destinationY;
-    short destinationX;
-    short neighborX;
-    short neighborY;
+    u8* pathDirection;
+    i16 destinationY;
+    i16 destinationX;
+    i16 neighborX;
+    i16 neighborY;
 
     gCurTempMobility = SEARCH_NEAREST_OBJECT_MOBILITY;
     m_specialTargetX = SEARCH_INVALID_COORDINATE;
@@ -97,11 +97,11 @@ short searchArray::FindNearestObject(
         if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
         destinationX += normalDirTable
-                            [static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                            [static_cast<i16>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
                              & MAP_DIRECTION_INDEX_MASK]
                                 .x;
         destinationY += normalDirTable
-                            [static_cast<short>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                            [static_cast<i16>(pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
                              & MAP_DIRECTION_INDEX_MASK]
                                 .y;
     }
@@ -110,14 +110,14 @@ short searchArray::FindNearestObject(
 
 // Buka SEARCH.cpp BuildPath over HoMM1's packed node word.
 VA(0x00402af0, 0xe4)
-int searchArray::BuildPath(
-    short startX,
-    short startY,
-    short destinationX,
-    short destinationY,
-    short maximumCost
+i32 searchArray::BuildPath(
+    i16 startX,
+    i16 startY,
+    i16 destinationX,
+    i16 destinationY,
+    i16 maximumCost
 ) {
-    unsigned char* pathDirection = m_directions;
+    u8* pathDirection = m_directions;
     m_pathLength = 0;
     while (startX != destinationX || startY != destinationY) {
         searchNode* node = &m_cells[destinationX][destinationY];
@@ -133,11 +133,11 @@ int searchArray::BuildPath(
             }
         }
         destinationX += normalDirTable
-                            [static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                            [static_cast<i16>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
                              & MAP_DIRECTION_INDEX_MASK]
                                 .x;
         destinationY += normalDirTable
-                            [static_cast<short>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
+                            [static_cast<i16>(node->direction + MAP_DIRECTION_OPPOSITE_OFFSET)
                              & MAP_DIRECTION_INDEX_MASK]
                                 .y;
     }
@@ -150,67 +150,67 @@ int searchArray::BuildPath(
 // retail's esi/edi/ebx allocation of this, continueSeed and zero.
 VA(0x00402be0, 0xa53)
 void searchArray::SeedPosition(
-    short seedX,
-    short seedY,
-    short seedDirection,
-    short maximumCost,
-    int waterMode,
-    int findAdjacentMonster,
-    int mobility,
-    int costMode,
-    int targetX,
-    int targetY,
-    int continueSeed,
-    int scanMap
+    i16 seedX,
+    i16 seedY,
+    i16 seedDirection,
+    i16 maximumCost,
+    i32 waterMode,
+    i32 findAdjacentMonster,
+    i32 mobility,
+    i32 costMode,
+    i32 targetX,
+    i32 targetY,
+    i32 continueSeed,
+    i32 scanMap
 ) {
     DATA(0x004a4620)
-    static short s_direction;
+    static i16 s_direction;
     DATA(0x004a4624)
-    static int s_terrain;
+    static i32 s_terrain;
     DATA(0x004a4670)
     static searchNode s_currentNode;
     DATA(0x004a4628)
-    static int s_mapX;
+    static i32 s_mapX;
     DATA(0x004a462c)
-    static int s_mapY;
+    static i32 s_mapY;
     DATA(0x004a4630)
-    static int s_adjacentMonsterX;
+    static i32 s_adjacentMonsterX;
     DATA(0x004a4634)
-    static int s_adjacentMonsterY;
+    static i32 s_adjacentMonsterY;
     DATA(0x004a4638)
-    static int s_stepCost[FINDPATH_STEP_COST_COUNT];
+    static i32 s_stepCost[FINDPATH_STEP_COST_COUNT];
     DATA(0x004a4640)
-    static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
+    static i8 s_possibleDirections[MAP_DIRECTION_COUNT];
     DATA(0x004a4648)
-    static int s_currentCost;
+    static i32 s_currentCost;
     DATA(0x004a464c)
-    static int s_hasTarget;
+    static i32 s_hasTarget;
     DATA(0x004a4650)
     static hero* s_currentHero;
     DATA(0x004a4654)
-    static int s_neighborX;
+    static i32 s_neighborX;
     DATA(0x004a4658)
-    static int s_neighborY;
+    static i32 s_neighborY;
     DATA(0x004a4660)
-    static unsigned char s_directionOccupied[MAP_DIRECTION_COUNT];
+    static u8 s_directionOccupied[MAP_DIRECTION_COUNT];
     DATA(0x004a467c)
-    static int s_directionBlocked;
+    static i32 s_directionBlocked;
     DATA(0x004a4684)
     static mapCell* s_targetCell;
     DATA(0x004a4688)
-    static signed char s_hasAdjacentMonster;
+    static i8 s_hasAdjacentMonster;
     DATA(0x004a468c)
-    static int s_triggerType;
+    static i32 s_triggerType;
     DATA(0x004a4690)
-    static int s_adjacentX;
+    static i32 s_adjacentX;
     DATA(0x004a4694)
-    static int s_adjacentY;
+    static i32 s_adjacentY;
     DATA(0x004a4698)
-    static int s_adjacentCost;
+    static i32 s_adjacentCost;
     DATA(0x004a469c)
-    static int s_bestTargetCost;
+    static i32 s_bestTargetCost;
     DATA(0x0048e170)
-    static short s_processedPointCount = 0;
+    static i16 s_processedPointCount = 0;
 
     if (!continueSeed) {
         gFullySeeded = 0;
@@ -280,7 +280,7 @@ void searchArray::SeedPosition(
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
-                    && gpGame->m_availableHeroes[static_cast<unsigned char>(
+                    && gpGame->m_availableHeroes[static_cast<u8>(
                            gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_objectMetadata
                        )] == giCurPlayer)
                     goto point_complete;
@@ -333,7 +333,7 @@ void searchArray::SeedPosition(
             s_currentNode.x,
             s_currentNode.y,
             s_possibleDirections,
-            reinterpret_cast<signed char*>(s_directionOccupied),
+            reinterpret_cast<i8*>(s_directionOccupied),
             1,
             waterMode
         );
@@ -472,4 +472,4 @@ void searchArray::SeedPosition(
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
 // this flag); SeedPosition's point counter is initialized .data (0x0048e170).
 DATA(0x004a4680)
-int gFullySeeded;
+i32 gFullySeeded;

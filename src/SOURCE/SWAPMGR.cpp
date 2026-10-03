@@ -95,9 +95,9 @@ void swapManager::Reset(void) {
 }
 
 VA(0x0046edb0, 0x2d5)
-short swapManager::Open(short id) {
+i16 swapManager::Open(i16 id) {
     tag_message message;
-    int i; // Unused; retail still reserves its frame slot.
+    i32 i; // Unused; retail still reserves its frame slot.
 
     Reset();
     m_window = new heroWindow(16, 16, "swapwin.bin");
@@ -186,17 +186,17 @@ void swapManager::Close(void) {
 
 VA(0x0046f1a8, 0x21f)
 void swapManager::DrawSelector(void) {
-    const short frameColor = 232;
-    const short leftArmyBase = 24;
-    const short rightMonsterBase = 252;
-    const short troopTop = 148;
-    const short armySpacing = 35;
-    const short art1 = 76;
-    const short art2 = 305;
-    const short artTop = 194;
-    const short itemGap = 35;
-    short x = 0;
-    short y = 0;
+    const i16 frameColor = 232;
+    const i16 leftArmyBase = 24;
+    const i16 rightMonsterBase = 252;
+    const i16 troopTop = 148;
+    const i16 armySpacing = 35;
+    const i16 art1 = 76;
+    const i16 art2 = 305;
+    const i16 artTop = 194;
+    const i16 itemGap = 35;
+    i16 x = 0;
+    i16 y = 0;
 
     if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != SWAP_SLOT_NONE) {
         switch (m_selectedSide) {
@@ -237,10 +237,10 @@ void swapManager::DrawSelector(void) {
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
 VA(0x0046f3c7, 0x9ac)
-short swapManager::Main(struct tag_message& message) {
-    signed char closeRequested = 0;
-    signed char quickView;
-    int artIndex;
+i16 swapManager::Main(struct tag_message& message) {
+    i8 closeRequested = 0;
+    i8 quickView;
+    i32 artIndex;
 
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         quickView = 1;
@@ -606,8 +606,8 @@ void swapManager::ViewMon(void) {
 // Buka 2.1 swapManager::SwapArtifacts.
 VA(0x0046fe18, 0x112)
 void swapManager::SwapArtifacts(void) {
-    signed char dstArt;
-    signed char srcArt;
+    i8 dstArt;
+    i8 srcArt;
 
     srcArt = m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot];
     dstArt = m_heroes[m_targetSide]->m_artifacts[m_targetSlot];
@@ -623,8 +623,8 @@ VA(0x0046ff2a, 0x28e)
 void swapManager::SwapMons(void) {
     armyGroup* destTroops;
     armyGroup* sourceTroops;
-    short i;
-    short j;
+    i16 i;
+    i16 j;
 
     sourceTroops = &m_heroes[m_selectedSide]->m_army;
     destTroops = &m_heroes[m_targetSide]->m_army;
@@ -667,7 +667,7 @@ void swapManager::SwapMons(void) {
 VA(0x004701b8, 0x492)
 void swapManager::Update(void) {
     tag_message message;
-    short i;
+    i16 i;
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
@@ -773,13 +773,13 @@ void swapManager::Update(void) {
 // evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
 VA(0x0047064a, 0x39f)
 void swapManager::SplitMons(void) {
-    short textId;
+    i16 textId;
     armyGroup* dstTroops;
     armyGroup* selectedArmy;
-    short amountWidget;
+    i16 amountWidget;
     tag_message message;
-    short found;
-    short i;
+    i16 found;
+    i16 i;
 
     amountWidget = TOWN_SPLIT_AMOUNT_CONTROL;
     found = 0;

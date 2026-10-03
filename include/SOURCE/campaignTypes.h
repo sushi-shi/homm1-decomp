@@ -25,15 +25,15 @@ H1_ENUM_CONST_END(CampaignScenarioTableConstant)
 // every player's starting resources.
 #pragma pack(push, 1)
 struct campaignScenario {
-    signed char kingOfTheHill;
-    signed char victoryTownX;
-    signed char victoryTownY;
+    i8 kingOfTheHill;
+    i8 victoryTownX;
+    i8 victoryTownY;
     // Space-padded name of the campaign town the map renames (not NUL-terminated).
     char victoryTownName[0x10];
-    signed char playerTypes[GAME_PLAYER_COUNT];
+    i8 playerTypes[GAME_PLAYER_COUNT];
     // Opponent crests, indexed by player position.
-    short playerCrests[3];
-    unsigned short resources[GAME_PLAYER_COUNT][7];
+    i16 playerCrests[3];
+    u16 resources[GAME_PLAYER_COUNT][7];
 };
 #pragma pack(pop)
 

@@ -76,28 +76,28 @@ H1_ENUM_END(MapTileset)
 class mapCell {
 public:
     // Tile index read zero-extended into the terrain lookup table.
-    unsigned char m_tileIndex;
+    u8 m_tileIndex;
     // PuzzleDraw masks the object and overlay tileset low nibbles and their
     // 0xff-terminated frame indices.
-    unsigned char m_objectTileset;
-    unsigned char m_objectIndex;
-    unsigned char m_overlayTileset;
-    unsigned char m_overlayIndex;
+    u8 m_objectTileset;
+    u8 m_objectIndex;
+    u8 m_overlayTileset;
+    u8 m_overlayIndex;
     // Frame of the extra sprite DrawCell adds from the high-nibble tileset:
     // town and mine owner flags (flags 0x10/0x20) and a mine's resource icon.
-    unsigned char m_extraFrame;
+    u8 m_extraFrame;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
-    unsigned char m_flags;
+    u8 m_flags;
     // A second trigger sharing the cell (low seven bits): EraseObj promotes it
     // when the primary object goes. Bit 7 blocks pathing; map setup sets it
     // where an object continues into the next cell.
-    unsigned char m_secondaryTrigger;
+    u8 m_secondaryTrigger;
     // Whole-byte trigger: readers mask the low seven type bits and the
     // 0x80 event bit; DemobilizeCurrHero stores the hero trigger directly.
-    unsigned char m_triggerType;
+    u8 m_triggerType;
     // Object instance (town, hero, mine, guard index); 109 of 119 retail
     // readers zero-extend it.
-    unsigned char m_objectMetadata;
+    u8 m_objectMetadata;
 };
 #pragma pack(pop)
 

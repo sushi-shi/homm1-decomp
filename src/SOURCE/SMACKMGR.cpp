@@ -35,7 +35,7 @@
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
 VA(0x0045abe0, 0x4c)
-H1_C_LINKAGE void* radmalloc(unsigned long numbytes) {
+H1_C_LINKAGE void* radmalloc(u32 numbytes) {
     void* mem;
     if (numbytes == 0)
         return NULL;
@@ -86,7 +86,7 @@ VA(0x0045ac48, 0x2a)
 smackManager::smackManager(void) : baseManager() {}
 
 VA(0x0045ac72, 0x53)
-short smackManager::Open(short priority) {
+i16 smackManager::Open(i16 priority) {
     gbSmackAborted = 0;
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
@@ -101,16 +101,16 @@ void smackManager::Close(void) {
 }
 
 VA(0x0045ace4, 0x975)
-short smackManager::Main(struct tag_message& msg) {
-    char savedUpdateFlags;
-    int startFrame;
-    int currentFrame;
+i16 smackManager::Main(struct tag_message& msg) {
+    i8 savedUpdateFlags;
+    i32 startFrame;
+    i32 currentFrame;
     palette* pPalette;
-    signed char* savedPal;
+    i8* savedPal;
     font* bigFont;
     Smack* smk;
-    long frameStartTick;
-    long lastTick;
+    i32 frameStartTick;
+    i32 lastTick;
 
     startFrame = 1;
     KBChangeMenu(hmnuDflt);
@@ -160,11 +160,11 @@ short smackManager::Main(struct tag_message& msg) {
             SmackGoto(smk, startFrame);
             SmackSoundOnOff(smk, gConfig.musicVolume);
             if (smk->paletteSelector == 1)
-                pPalette->m_data = reinterpret_cast<signed char*>(
+                pPalette->m_data = reinterpret_cast<i8*>(
                     smk->Palette
                 ); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = reinterpret_cast<signed char*>(
+                pPalette->m_data = reinterpret_cast<i8*>(
                     smk->alternatePalette
                 ); // API-forced: Smacker palettes are unsigned bytes.
             SetPalette(pPalette->m_data, 1);
@@ -186,11 +186,11 @@ short smackManager::Main(struct tag_message& msg) {
             SmackDoFrame(smk);
             if (SmackOptions[gSmackNum].fadeIn && currentFrame == startFrame) {
                 if (smk->paletteSelector == 1)
-                    pPalette->m_data = reinterpret_cast<signed char*>(
+                    pPalette->m_data = reinterpret_cast<i8*>(
                         smk->Palette
                     ); // API-forced: Smacker palettes are unsigned bytes.
                 else
-                    pPalette->m_data = reinterpret_cast<signed char*>(
+                    pPalette->m_data = reinterpret_cast<i8*>(
                         smk->alternatePalette
                     ); // API-forced: Smacker palettes are unsigned bytes.
                 if (gMainVideoModeColorDepth == 8 || gConfig.gfx[gCurExe].fullScreen) {
@@ -326,11 +326,11 @@ short smackManager::Main(struct tag_message& msg) {
         }
         if (SmackOptions[gSmackNum].fadeOut) {
             if (smk->paletteSelector == 1)
-                pPalette->m_data = reinterpret_cast<signed char*>(
+                pPalette->m_data = reinterpret_cast<i8*>(
                     smk->Palette
                 ); // API-forced: Smacker palettes are unsigned bytes.
             else
-                pPalette->m_data = reinterpret_cast<signed char*>(
+                pPalette->m_data = reinterpret_cast<i8*>(
                     smk->alternatePalette
                 ); // API-forced: Smacker palettes are unsigned bytes.
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, pPalette);
@@ -365,7 +365,7 @@ short smackManager::Main(struct tag_message& msg) {
 }
 
 VA(0x0045b659, 0x93)
-void PlaySmacker(H1_ENUM_PARAM(SmackVideo, signed char) smackNumber) {
+void PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber) {
     gInSmacker = 1;
     gpSoundManager->m_musicReady = 1;
     gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, SOUND_VOLUME_FROM_CONFIG);
@@ -390,6 +390,6 @@ SSmackOptions SmackOptions[8] = {
     {"lose1.smk", 0, 1, 1, 0},
 };
 DATA(0x004ca488)
-signed char gSmackNum;
+i8 gSmackNum;
 DATA(0x004ca48c)
-signed char gbSmackAborted;
+i8 gbSmackAborted;

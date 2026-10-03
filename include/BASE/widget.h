@@ -14,7 +14,7 @@
 class heroWindow;
 struct tag_message;
 
-H1_ENUM_FLAGS_BEGIN(WidgetFlag, short)
+H1_ENUM_FLAGS_BEGIN(WidgetFlag, i16)
     WIDGET_FLAG_SELECTED = 1,
     WIDGET_FLAG_ENABLED = 2,
     WIDGET_FLAG_DRAW = 4,
@@ -56,24 +56,24 @@ public:
     heroWindow* m_owner;
     widget* m_next;
     widget* m_prev;
-    short m_id;
-    short m_zOrder;
-    short m_kind;
-    short m_flags;
-    short m_x;
-    short m_y;
-    short m_width;
-    short m_height;
+    i16 m_id;
+    i16 m_zOrder;
+    i16 m_kind;
+    i16 m_flags;
+    i16 m_x;
+    i16 m_y;
+    i16 m_width;
+    i16 m_height;
 
     // --- constructors ---
-    widget(short int, short int, short int, short int, short int, short int);
+    widget(i16, i16, i16, i16, i16, i16);
     widget(void);
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) = 0;
     virtual ~widget(void) = 0;
-    virtual short Main(struct tag_message&) = 0;
+    virtual i16 Main(struct tag_message&) = 0;
     // --- methods ---
-    short Open(short, class heroWindow*);
+    i16 Open(i16, class heroWindow*);
     void Close(void);
     void Dim(void);
 };

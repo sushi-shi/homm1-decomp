@@ -26,16 +26,16 @@ iconWidget::~iconWidget(void) {
 // Retail reads the frame argument as a signed byte before widening it.
 VA(0x0047aa60, 0x61)
 iconWidget::iconWidget(
-    short x,
-    short y,
-    short width,
-    short height,
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
     char* name,
-    signed char frame,
-    signed char orientation,
-    short id,
-    short kind,
-    short fillColor
+    i8 frame,
+    i8 orientation,
+    i16 id,
+    i16 kind,
+    i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
     m_icon = gpResourceManager->GetIcon(name);
@@ -46,7 +46,7 @@ iconWidget::iconWidget(
 
 VA(0x0047aad0, 0xce)
 void iconWidget::Read(void) {
-    signed char name[RESOURCE_NAME_CAPACITY];
+    i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
@@ -55,14 +55,14 @@ void iconWidget::Read(void) {
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_frame = gpResourceManager->ReadWord();
-    m_orientation = static_cast<signed char>(gpResourceManager->ReadWord());
+    m_orientation = static_cast<i8>(gpResourceManager->ReadWord());
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
 VA(0x0047aba0, 0x1bc)
-short iconWidget::Main(tag_message& message) {
+i16 iconWidget::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
@@ -71,8 +71,8 @@ short iconWidget::Main(tag_message& message) {
     switch (message.type) {
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            short x = message.x - m_owner->m_posX;
-            short y = message.y - m_owner->m_posY;
+            i16 x = message.x - m_owner->m_posX;
+            i16 y = message.y - m_owner->m_posY;
             if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
@@ -121,8 +121,8 @@ short iconWidget::Main(tag_message& message) {
 
 VA(0x0047ad60, 0x68)
 void iconWidget::Draw(void) {
-    short x = m_owner->m_posX + m_x;
-    short y = m_owner->m_posY + m_y;
+    i16 x = m_owner->m_posX + m_x;
+    i16 y = m_owner->m_posY + m_y;
     switch (m_kind) {
         case ICON_WIDGET_DRAW:
             PollSound();

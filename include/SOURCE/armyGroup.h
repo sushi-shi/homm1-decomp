@@ -43,25 +43,25 @@ H1_ENUM_END(ArmyGroupAlignmentResult)
 class armyGroup {
 public:
     // Retail constructor clears five signed type bytes, then five short counts.
-    H1_ENUM_STORAGE(CreatureType, signed char) m_creatureTypes[ARMY_GROUP_SLOT_COUNT];
-    short m_creatureCounts[ARMY_GROUP_SLOT_COUNT];
+    H1_ENUM_STORAGE(CreatureType, i8) m_creatureTypes[ARMY_GROUP_SLOT_COUNT];
+    i16 m_creatureCounts[ARMY_GROUP_SLOT_COUNT];
     // --- constructors ---
     armyGroup(void);
     // --- methods ---
-    void View(int);
-    int HasAllUndead(void);
-    int HasSomeUndead(void);
+    void View(i32);
+    i32 HasAllUndead(void);
+    i32 HasSomeUndead(void);
     // HoMM1 retail: hero and town only (ret 8), morale in AX.
-    short GetMorale(class hero*, class town*);
-    void Dismiss(signed char);
-    signed char IsMember(signed char);
-    H1_ENUM_RETURN(ArmyGroupAlignmentResult, signed char) IsHomogeneous(signed char);
-    signed char CanJoin(signed char);
+    i16 GetMorale(class hero*, class town*);
+    void Dismiss(i8);
+    i8 IsMember(i8);
+    H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) IsHomogeneous(i8);
+    i8 CanJoin(i8);
     // HoMM1 returns the count in AX (callers sign-extend).
-    short GetNumArmies(void);
+    i16 GetNumArmies(void);
     // HoMM1 retail: byte creature/slot, word count, word result (ret 0xc).
-    short Add(signed char, short, signed char);
-    void Swap(signed char, class armyGroup*, signed char);
+    i16 Add(i8, i16, i8);
+    void Swap(i8, class armyGroup*, i8);
     void DamageGroup(float);
 };
 #pragma pack(pop)

@@ -7,25 +7,25 @@
 void ClippedMonoIconToBitmap(
     class icon*,
     class bitmap*,
-    int,
-    int,
-    int,
-    int,
-    int,
-    int,
-    int,
-    int,
-    int
+    i32,
+    i32,
+    i32,
+    i32,
+    i32,
+    i32,
+    i32,
+    i32,
+    i32
 );
-void ClipIconToBitmap(class icon*, class bitmap*, int, int, int, int, int, int, int, int);
-int Random(int, int);
-void FadeIn(int);
-void FadeOut(int);
+void ClipIconToBitmap(class icon*, class bitmap*, i32, i32, i32, i32, i32, i32, i32, i32);
+i32 Random(i32, i32);
+void FadeIn(i32);
+void FadeOut(i32);
 void PrintMemoryLeaks(void);
-void PostprocessPalette(signed char*);
-void BlitBitmapToScreen(class bitmap*, int, int, int, int, int, int);
-void PostprocessBitmap(signed char*, int, int);
-void GrabScreenBitmap(class bitmap*, int, int);
+void PostprocessPalette(i8*);
+void BlitBitmapToScreen(class bitmap*, i32, i32, i32, i32, i32, i32);
+void PostprocessBitmap(i8*, i32, i32);
+void GrabScreenBitmap(class bitmap*, i32, i32);
 void PostprocessIcon(class icon*);
 
 H1_ENUM_CONST_BEGIN(ScreenBlitConstant)

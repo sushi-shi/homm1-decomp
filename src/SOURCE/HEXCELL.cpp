@@ -38,7 +38,7 @@ void hexcell::DrawGround(void) {
 
 VA(0x0046e692, 0x8a)
 void hexcell::DrawOccupant(void) {
-    signed char frame;
+    i8 frame;
     army* occupant;
 
     if (m_occupantSide != COMBAT_SIDE_NONE) {
@@ -50,9 +50,9 @@ void hexcell::DrawOccupant(void) {
 }
 
 VA(0x0046e71c, 0x151)
-void hexcell::DrawTower(signed char frame) {
-    signed char flip;
-    short row;
+void hexcell::DrawTower(i8 frame) {
+    i8 flip;
+    i16 row;
 
     flip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
@@ -70,9 +70,9 @@ void hexcell::DrawTower(signed char frame) {
 
 VA(0x0046e86d, 0x2b3)
 void hexcell::DrawWall(void) {
-    signed char flip;
-    short row;
-    short damageLevel;
+    i8 flip;
+    i16 row;
+    i16 damageLevel;
 
     flip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;

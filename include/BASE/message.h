@@ -64,23 +64,23 @@ H1_ENUM_END(MessageModifier)
 // m_lastHoverId first); a named payload level changes VC4's operand order.
 // The anonymous unions only name the per-message-type views of each word.
 struct tag_message {
-    H1_ENUM_STORAGE(MessageType, short) type;
+    H1_ENUM_STORAGE(MessageType, i16) type;
     union {
-        H1_ENUM_STORAGE(BaseWidgetCommand, short) command;
-        H1_ENUM_STORAGE(ExecutiveCommand, short) executiveCommand;
-        short keyCode;
-        short x;
+        H1_ENUM_STORAGE(BaseWidgetCommand, i16) command;
+        H1_ENUM_STORAGE(ExecutiveCommand, i16) executiveCommand;
+        i16 keyCode;
+        i16 x;
     };
     union {
-        short id;
-        short y;
+        i16 id;
+        i16 y;
     };
-    short modifiers;
+    i16 modifiers;
     char unknown8[4];
     union {
-        long value;
+        i32 value;
         char* text;
-        int result;
+        i32 result;
     };
 };
 #pragma pack(pop)

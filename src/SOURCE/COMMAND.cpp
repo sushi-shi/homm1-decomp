@@ -107,8 +107,8 @@ H1_ENUM_END(CombatControlId)
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
 VA(0x0040f2c0, 0x311)
-short combatManager::Main(struct tag_message& message) {
-    int result = MESSAGE_DISPATCH_CONSUME;
+i16 combatManager::Main(struct tag_message& message) {
+    i32 result = MESSAGE_DISPATCH_CONSUME;
     army* thisArmy;
     CombatRemotePacket* packet;
 
@@ -175,7 +175,7 @@ processAction:
 // Buka COMMAND.cpp ValidHexToStandOn; HoMM1 rows are nine hexes wide and
 // the edge columns are never standable.
 VA(0x0040f5d1, 0xd6)
-signed char combatManager::ValidHexToStandOn(int hex) {
+i8 combatManager::ValidHexToStandOn(i32 hex) {
     if (hex == COMBAT_REAR_HEX_UNUSED)
         return 1;
     if (hex != ARMY_HEX_INVALID && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN
@@ -191,21 +191,21 @@ signed char combatManager::ValidHexToStandOn(int hex) {
 // Buka COMMAND.cpp SetCombatDirections; HoMM1 reads the global adjacency
 // table and keeps the 24-sector map as bytes.
 VA(0x0040f6a7, 0x7e9)
-void combatManager::SetCombatDirections(int targetHex) {
-    int mapped;
-    int targetSide;
-    int numUnset;
-    signed char hasPath[COMBAT_DIRECTION_COUNT];
-    int after;
-    int rear[COMBAT_DIRECTION_COUNT];
-    int before;
-    int outDir;
-    int dir;
-    int directionHexes[COMBAT_DIRECTION_COUNT];
+void combatManager::SetCombatDirections(i32 targetHex) {
+    i32 mapped;
+    i32 targetSide;
+    i32 numUnset;
+    i8 hasPath[COMBAT_DIRECTION_COUNT];
+    i32 after;
+    i32 rear[COMBAT_DIRECTION_COUNT];
+    i32 before;
+    i32 outDir;
+    i32 dir;
+    i32 directionHexes[COMBAT_DIRECTION_COUNT];
     army* curArmy;
-    int targetIndex;
+    i32 targetIndex;
     army* target;
-    signed char canStand[COMBAT_DIRECTION_COUNT];
+    i8 canStand[COMBAT_DIRECTION_COUNT];
 
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     targetSide = curArmy->m_targetSide;
@@ -296,7 +296,7 @@ void combatManager::SetCombatDirections(int targetHex) {
         if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
             mapped = (dir + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT;
         else
-            mapped = static_cast<signed char>(
+            mapped = static_cast<i8>(
                 dir == COMBAT_DIRECTION_WIDE_WEST ? COMBAT_DIRECTION_WIDE_EAST
                                                   : COMBAT_DIRECTION_WIDE_WEST
             );
@@ -364,17 +364,17 @@ void combatManager::SetCombatDirections(int targetHex) {
 // Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
 // odd rows shift by 66 pixels.
 VA(0x0040fe90, 0x620)
-void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex) {
-    int hexDir;
-    int savedDir;
-    int alternate;
+void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex) {
+    i32 hexDir;
+    i32 savedDir;
+    i32 alternate;
     float ratio;
-    int index;
+    i32 index;
     army* curArmy;
-    int distX;
-    int distY;
+    i32 distX;
+    i32 distY;
     army* target;
-    int backHex;
+    i32 backHex;
 
     if (m_gridSelectionDisabled)
         return;
@@ -497,8 +497,8 @@ void combatManager::CheckSetMouseDirection(int mouseX, int mouseY, int targetHex
 // Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
 // command and retail maps command 13 to pointer 5, preserving all others.
 VA(0x004104b0, 0x34)
-H1_ENUM_RETURN(CombatPointerCode, int)
-combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, int) command) {
+H1_ENUM_RETURN(CombatPointerCode, i32)
+combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
     if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
         return COMBAT_POINTER_VIEW;
     else
@@ -508,11 +508,11 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, int) command) {
 // Buka COMMAND.cpp ProcessCombatMsg; HoMM1 hovers the combat field as
 // widget 0x40 and handles F1, space, H, T and C keys.
 VA(0x004104e4, 0x5bb)
-int combatManager::ProcessCombatMsg(struct tag_message& message) {
-    short mouseX = message.x;
-    short mouseY = message.y;
-    signed char unused = 0;
-    short selectedHex;
+i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
+    i16 mouseX = message.x;
+    i16 mouseY = message.y;
+    i8 unused = 0;
+    i16 selectedHex;
 
     if (!(m_messageTypeMask & message.type))
         return 0;
@@ -648,9 +648,9 @@ int combatManager::ProcessCombatMsg(struct tag_message& message) {
 // a byte spell-round counter.
 VA(0x00410a9f, 0x139)
 void combatManager::ResetRound(void) {
-    int unusedRoundWord;
-    int index;
-    int side;
+    i32 unusedRoundWord;
+    i32 index;
+    i32 side;
     army* curArmy;
 
     m_catapultAttacksRemaining[COMBAT_ATTACKER_SIDE] = m_catapultAttackCount[COMBAT_ATTACKER_SIDE];
@@ -679,10 +679,10 @@ void combatManager::ResetRound(void) {
 // Buka COMMAND.cpp CheckWin; HoMM1 returns the byte flag and names the
 // winning side directly (-1 for a draw).
 VA(0x00410bd8, 0x15d)
-int combatManager::CheckWin(struct tag_message* message) {
-    int armyIndex;
-    signed char combatEnded;
-    int unusedWinWord;
+i32 combatManager::CheckWin(struct tag_message* message) {
+    i32 armyIndex;
+    i8 combatEnded;
+    i32 unusedWinWord;
 
     combatEnded = 0;
     if (IsWinner(m_currentSide)) {
@@ -713,12 +713,12 @@ int combatManager::CheckWin(struct tag_message* message) {
 // Buka COMMAND.cpp GetCommand; HoMM1 returns each command directly, has no
 // small view or ballista and clears the target through the current stack.
 VA(0x00410d35, 0x316)
-signed char combatManager::GetCommand(short hex) {
-    signed char unusedCol = hex % COMBAT_GRID_COLUMNS;
-    signed char rowIndex = hex / COMBAT_GRID_COLUMNS;
+i8 combatManager::GetCommand(i16 hex) {
+    i8 unusedCol = hex % COMBAT_GRID_COLUMNS;
+    i8 rowIndex = hex / COMBAT_GRID_COLUMNS;
     army* currentArmy;
-    signed char targetIndex;
-    signed char enemySide;
+    i8 targetIndex;
+    i8 enemySide;
 
     if (hex == ARMY_HEX_INVALID)
         return COMBAT_MESSAGE_COMMAND_DEFAULT;
@@ -789,9 +789,9 @@ signed char combatManager::GetCommand(short hex) {
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
 // army view also takes the side.
 VA(0x0041104b, 0x1dc)
-signed char combatManager::RightClick(signed char hex) {
-    signed char unusedColumn = hex % COMBAT_GRID_COLUMNS;
-    signed char row = hex / COMBAT_GRID_COLUMNS;
+i8 combatManager::RightClick(i8 hex) {
+    i8 unusedColumn = hex % COMBAT_GRID_COLUMNS;
+    i8 row = hex / COMBAT_GRID_COLUMNS;
 
     if (hex == ARMY_HEX_INVALID)
         return 0;
@@ -811,8 +811,8 @@ signed char combatManager::RightClick(signed char hex) {
         default:
             if (hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
                 return 0;
-            signed char side = m_hexCells[hex].m_occupantSide;
-            signed char armyIndex = m_hexCells[hex].m_occupantIndex;
+            i8 side = m_hexCells[hex].m_occupantSide;
+            i8 armyIndex = m_hexCells[hex].m_occupantIndex;
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return 0;
             else if (side != COMBAT_SIDE_NONE) {
@@ -838,9 +838,9 @@ signed char combatManager::RightClick(signed char hex) {
 // Buka COMMAND.cpp DoCommand; HoMM1 has no ballista or negation sphere and
 // views the army at the selected hex on the current side.
 VA(0x00411227, 0x333)
-void combatManager::DoCommand(signed char command) {
-    int unusedValue1;
-    int unusedValue2;
+void combatManager::DoCommand(i8 command) {
+    i32 unusedValue1;
+    i32 unusedValue2;
     army* currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
 
     switch (command) {
@@ -930,9 +930,9 @@ void combatManager::DoCommand(signed char command) {
 // Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
 // cycles a single six-frame animation.
 VA(0x0041155a, 0x1a3)
-short WinCombatHandler(struct tag_message& message) {
-    int finalDelay = 0x5a;
-    short frame = 1;
+i16 WinCombatHandler(struct tag_message& message) {
+    i32 finalDelay = 0x5a;
+    i16 frame = 1;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -973,7 +973,7 @@ short WinCombatHandler(struct tag_message& message) {
 // Buka COMMAND.cpp ClearWinLoseBottom (fifteen icon/text widget pairs).
 VA(0x004116fd, 0x110)
 void combatManager::ClearWinLoseBottom(class heroWindow* window) {
-    int i;
+    i32 i;
 
     for (i = 0; i < WIN_LOSE_SLOT_COUNT; i++) {
         if (m_winLoseBottomWidgets[i]) {
@@ -991,10 +991,10 @@ void combatManager::ClearWinLoseBottom(class heroWindow* window) {
 
 // Buka COMMAND.cpp ShowWinLoseArtifact.
 VA(0x0041180d, 0x2fa)
-void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) {
+void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) {
     char* artifactName;
-    short boxWidth = 0x140;
-    short bottom = 0x1ca;
+    i16 boxWidth = 0x140;
+    i16 bottom = 0x1ca;
     tag_message message;
 
     sprintf(gText, "You have captured an enemy artifact!");
@@ -1060,18 +1060,18 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
 // side with fixed 40-pixel spacing.
 VA(0x00411b07, 0x7d0)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
-    int numLost[COMBAT_SIDE_COUNT];
+    i32 numLost[COMBAT_SIDE_COUNT];
     char* buffer;
-    int casualtyType[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-    int iconSpacing;
-    int armyIndex;
-    int side;
-    short boxWidth = 0x140;
-    short bottom = 0x1ca;
-    int rowY;
+    i32 casualtyType[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+    i32 iconSpacing;
+    i32 armyIndex;
+    i32 side;
+    i16 boxWidth = 0x140;
+    i16 bottom = 0x1ca;
+    i32 rowY;
     tag_message message;
-    int casualtyCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-    int firstX;
+    i32 casualtyCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+    i32 firstX;
 
     for (side = 0; side < WIN_LOSE_SLOT_COUNT; side++) {
         m_winLoseBottomWidgets[side] = NULL;
@@ -1201,10 +1201,10 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
 // Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
 // grabs the screen instead of fading it.
 VA(0x004122d7, 0x7a1)
-void combatManager::DoVictory(signed char winningSide) {
-    int levelsGained;
+void combatManager::DoVictory(i8 winningSide) {
+    i32 levelsGained;
     tag_message message;
-    int i;
+    i32 i;
     char expText[156];
 
     levelsGained = 0;
@@ -1318,22 +1318,22 @@ void combatManager::DoVictory(signed char winningSide) {
 // scrolling backdrop until the window's button is released.
 VA(0x00412a78, 0x549)
 void combatManager::DoLoseWindow(void) {
-    short walkFrame;
-    short lAnimY;
-    short unusedWalkX;
-    short unusedWalkY;
+    i16 walkFrame;
+    i16 lAnimY;
+    i16 unusedWalkX;
+    i16 unusedWalkY;
     tag_message message;
     heroWindow* loseWindow;
     bitmap* bmp;
-    short result;
-    int iDelay;
-    short offset;
-    int losingSide;
-    short width;
-    short animX;
-    short blitHeight;
-    short iAreaWidth;
-    short stop;
+    i16 result;
+    i32 iDelay;
+    i16 offset;
+    i32 losingSide;
+    i16 width;
+    i16 animX;
+    i16 blitHeight;
+    i16 iAreaWidth;
+    i16 stop;
     icon* walkIcon;
 
     iDelay = 0xb4;
@@ -1428,12 +1428,12 @@ void combatManager::DoLoseWindow(void) {
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
 // no quill or diplomacy discount.
 VA(0x00412fc1, 0x2c6)
-short combatManager::DoSurrender(void) {
+i16 combatManager::DoSurrender(void) {
     heroWindow* win;
-    short unusedResult;
-    int armyIndex;
+    i16 unusedResult;
+    i32 armyIndex;
     tag_message message;
-    short unusedType;
+    i16 unusedType;
 
     giSurrenderCost = 0;
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
@@ -1542,8 +1542,8 @@ resetMouse:
 VA(0x0041360b, 0xdb)
 void combatManager::ResetMouse(void) {
     tag_message message;
-    short x;
-    short y;
+    i16 x;
+    i16 y;
 
     if (gbThisNetHasControl && m_playerId[m_currentSide] >= 0
         && gbHumanPlayer[m_playerId[m_currentSide]]) {
@@ -1564,11 +1564,11 @@ void combatManager::ResetMouse(void) {
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
 // action, broadcasts it to a human net opponent and has no door or cycling.
 VA(0x004136e6, 0x552)
-short combatManager::ProcessNextAction(struct tag_message& message) {
+i16 combatManager::ProcessNextAction(struct tag_message& message) {
     army* actingArmy;
-    signed char advance;
-    int result;
-    int data[4];
+    i8 advance;
+    i32 result;
+    i32 data[4];
 
     if (giNextAction)
         LogStr(
@@ -1584,7 +1584,7 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
     if (gbThisNetHasControl && gRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
         && m_playerId[COMBAT_DEFENDER_SIDE] >= 0 && gbHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]]
         && gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]) {
-        int netPos;
+        i32 netPos;
 
         netPos = m_playerId[1 - m_currentSide];
         if (netPos < 0 || !gbHumanPlayer[netPos])
@@ -1676,20 +1676,20 @@ short combatManager::ProcessNextAction(struct tag_message& message) {
 
 // COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
 DATA(0x004a4b98)
-signed char gbThisNetHasControl;
+i8 gbThisNetHasControl;
 DATA(0x004a4b9c)
-int iCurTransferArtifact;
+i32 iCurTransferArtifact;
 DATA(0x004a4ba0)
-signed char iMaxTransferArtifacts;
+i8 iMaxTransferArtifacts;
 DATA(0x004a4ba4)
-int giNextActionExtra;
+i32 giNextActionExtra;
 DATA(0x004a4ba8)
-int giNextActionGridIndex;
+i32 giNextActionGridIndex;
 DATA(0x004a4bac)
-int giSurrenderCost;
+i32 giSurrenderCost;
 DATA(0x004a4bb0)
-signed char iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
 DATA(0x004a4bc0)
-int giNextAction;
+i32 giNextAction;
 DATA(0x004a4bc4)
-int giNextActionGridIndex2;
+i32 giNextActionGridIndex2;

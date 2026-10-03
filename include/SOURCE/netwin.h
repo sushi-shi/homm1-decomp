@@ -13,8 +13,8 @@ H1_ENUM_BEGIN(NetbiosProbeCommand)
     NETBIOS_COMMAND_PROBE = 0x7f
 H1_ENUM_END(NetbiosProbeCommand)
 
-extern unsigned char gNetbiosLana;
-extern unsigned char gNetbiosAvail;
+extern u8 gNetbiosLana;
+extern u8 gNetbiosAvail;
 
 H1_ENUM_CONST_BEGIN(NetbiosRuntimeConstant)
     NETBIOS_SESSION_COUNT = 7,
@@ -53,34 +53,34 @@ H1_ENUM_BEGIN(NetbiosSessionOperation)
 H1_ENUM_END(NetbiosSessionOperation)
 
 struct NetbiosName {
-    unsigned char bytes[NCBNAMSZ];
+    u8 bytes[NCBNAMSZ];
 };
 
 void nb_add_name(void);
-void nb_format_name(char*, unsigned char*);
+void nb_format_name(char*, u8*);
 void __stdcall nb_add_name_done(NCB*);
-unsigned short nb_recv_any(int);
-unsigned short nb_call(int, void*);
-unsigned short nb_listen(int, void*);
-void nb_arm_recv(int);
-void nb_close_session(int);
-void nb_recv_complete(int);
+u16 nb_recv_any(i32);
+u16 nb_call(i32, void*);
+u16 nb_listen(i32, void*);
+void nb_arm_recv(i32);
+void nb_close_session(i32);
+void nb_recv_complete(i32);
 void __stdcall nb_recv_any_done(NCB*);
 void __stdcall nb_call_done(NCB*);
 void nb_thr_ctl(void);
-extern unsigned char* gNbListenName;
+extern u8* gNbListenName;
 
-extern unsigned char gNbMaxSess;
-extern unsigned char gNbShutdown;
-extern unsigned char gNetStatus[7];
-extern unsigned char gNbSessLsn[7];
+extern u8 gNbMaxSess;
+extern u8 gNbShutdown;
+extern u8 gNetStatus[7];
+extern u8 gNbSessLsn[7];
 extern NCB gNbSessNcb[7];
 extern NCB gNbCtlNcb;
-extern unsigned char gNbSessBuf[];
-extern unsigned char gNbLocalNum;
+extern u8 gNbSessBuf[];
+extern u8 gNbLocalNum;
 extern char* gNbGroupName;
-extern unsigned char gNbCallRetries;
-extern unsigned char gNbRcvData[7][0x1000];
+extern u8 gNbCallRetries;
+extern u8 gNbRcvData[7][0x1000];
 extern NetbiosName gNbNameBuf[7];
 extern CRITICAL_SECTION gNbRcvLock;
 extern CRITICAL_SECTION gNbSndLock;
@@ -89,11 +89,11 @@ extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbFreeQueue;
 extern HANDLE gNbEvents[9];
 // NetBIOS driver entry points REMOTE calls (C linkage, cdecl).
-H1_C_LINKAGE unsigned short __cdecl nb_init(unsigned short);
-H1_C_LINKAGE void __cdecl nb_term(int);
-H1_C_LINKAGE short __cdecl nb_rcv(int, unsigned short, void*);
-H1_C_LINKAGE short __cdecl nb_snd(int, unsigned short, unsigned short, void*, int);
-H1_C_LINKAGE short __cdecl nb_sess(int, int, ...);
-H1_C_LINKAGE unsigned char __cdecl nb_stat(int, unsigned short);
+H1_C_LINKAGE u16 __cdecl nb_init(u16);
+H1_C_LINKAGE void __cdecl nb_term(i32);
+H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16, void*);
+H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16, u16, void*, i32);
+H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32, ...);
+H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16);
 
 #endif

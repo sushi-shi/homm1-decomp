@@ -18,15 +18,15 @@ public:
     void ResetMapsPlayed(void);
     void ResetAwards(void);
     void ResetBonusChoices(void);
-    void GrantAward(int award);
-    void RemoveAward(int award);
-    signed char HasAward(int award);
+    void GrantAward(i32 award);
+    void RemoveAward(i32 award);
+    i8 HasAward(i32 award);
     void SetMapWasPlayed(void);
-    void InitNewCampaign(int campaignId);
+    void InitNewCampaign(i32 campaignId);
     void InitMap(void);
-    void ShowInfo(int, int);
-    void UpdateInfo(int redraw);
-    int HandleVictory(void);
+    void ShowInfo(i32, i32);
+    void UpdateInfo(i32 redraw);
+    i32 HandleVictory(void);
     void HandleVictory1(void);
     void HandleVictory2(void);
     void HandleVictory3(void);
@@ -36,19 +36,19 @@ public:
     void ReplaySmacker2(void);
     void ReplaySmacker3(void);
     void ReplaySmacker4(void);
-    unsigned char IsCompleted(void);
-    signed char IsThisMapCompleted(void);
+    u8 IsCompleted(void);
+    i8 IsThisMapCompleted(void);
 private:
-    static int MessageHandler(struct tag_message & message);   // ?...@ExpCampaign@@CIH... (private static)
+    static i32 MessageHandler(struct tag_message & message);   // ?...@ExpCampaign@@CIH... (private static)
 public:
     void Autosave(void);
-    int Choose(void);
-    short int Days(void);
-    int CampaignID(void);
+    i32 Choose(void);
+    i16 Days(void);
+    i32 CampaignID(void);
     char * JosephName(void);
     char * IvanName(void);
-    signed char IsSpecialGoldenBow(int x, int y);
-    signed char IsSpecialUA(void);
-    signed char IsSpecialLossCondition(int playerIndex);
+    i8 IsSpecialGoldenBow(i32 x, i32 y);
+    i8 IsSpecialUA(void);
+    i8 IsSpecialLossCondition(i32 playerIndex);
 };
 #endif // HOMM1_SOURCE_EXPCAMPAIGN_H

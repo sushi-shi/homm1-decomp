@@ -8,13 +8,13 @@ class bitmap;
 // Map-grid (taxicab) distance of an offset (Buka 2.1 Misc.h).
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 
-void SetPalette(signed char*, int);
+void SetPalette(i8*, i32);
 void LogTruncate();
-void LogInt(char*, int);
+void LogInt(char*, i32);
 void LogStr(char*);
-void LogStr(char*, long, long);
-void LogStr(char*, long, long, long, long, long);
-void LogStr(char*, long, long, long, long, long, long, long);
+void LogStr(char*, i32, i32);
+void LogStr(char*, i32, i32, i32, i32, i32);
+void LogStr(char*, i32, i32, i32, i32, i32, i32, i32);
 
 H1_ENUM_CONST_BEGIN(MiscLogConstant)
     MISC_FILE_DEBUG_BEGIN = 2,

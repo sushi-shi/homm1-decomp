@@ -290,43 +290,43 @@ public:
     town* m_town;
     bitmap* m_backgroundBitmap;
     townObject* m_townObjects[TOWN_MANAGER_OBJECT_CAPACITY];
-    signed char m_townObjectCount;
+    i8 m_townObjectCount;
     // Main covers the town bottom while a building dialog is open.
     heroWindow* m_coverWindow;
     heroWindow* m_townWindow;
     strip* m_garrisonStrip;
     strip* m_heroStrip;
     strip* m_selectedStrip;
-    short m_selectedArmySlot;
+    i16 m_selectedArmySlot;
     strip* m_swapStrip;
-    short m_swapArmySlot;
+    i16 m_swapArmySlot;
     strip* m_pendingStrip;
-    short m_pendingArmySlot;
+    i16 m_pendingArmySlot;
     bankBox* m_bankBox;
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
-    short m_lastHoverId;
-    H1_ENUM_STORAGE(TownArmyCommand, signed char) m_command;
+    i16 m_lastHoverId;
+    H1_ENUM_STORAGE(TownArmyCommand, i8) m_command;
     // SetupCastle's recruit-slot state and its affordable/buildable masks.
-    signed char m_recruitResult;
-    unsigned short m_affordableBuildings;
-    unsigned short m_buildableBuildings;
-    signed char m_castleDialogActive;
-    short m_selectedBuilding;
+    i8 m_recruitResult;
+    u16 m_affordableBuildings;
+    u16 m_buildableBuildings;
+    i8 m_castleDialogActive;
+    i16 m_selectedBuilding;
     heroWindow* m_heroWindow0;
     heroWindow* m_heroWindow1;
-    short m_splitAmount;
-    short m_splitMaximum;
+    i16 m_splitAmount;
+    i16 m_splitMaximum;
     // RecruitHero: the chosen tavern slot (-1 if none) and both candidates.
-    short m_recruitState;
+    i16 m_recruitState;
     hero* m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
-    short m_dispatchMask;
+    i16 m_dispatchMask;
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
-    virtual short Open(short) OVERRIDE;
+    virtual i16 Open(i16) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual short Main(struct tag_message&) OVERRIDE;
+    virtual i16 Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
     void SetTown(town* value) {
@@ -335,43 +335,43 @@ public:
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
-    void SetArmyCommand(short);
+    void SetArmyCommand(i16);
     void SetCommandAndText(struct tag_message&);
     void ShowText(char*);
-    void DoCommand(signed char);
+    void DoCommand(i8);
     void RedrawTownScreen(void);
     void SplitArmy(void);
     void ShiftQualChange(void);
     void ResetStrips(void);
-    void Toggle(signed char);
-    void DrawTown(signed char, int);
-    short BuyBuild(short, signed char, signed char);
-    void BuildObj(short);
+    void Toggle(i8);
+    void DrawTown(i8, i32);
+    i16 BuyBuild(i16, i8, i8);
+    void BuildObj(i16);
     void SetupMage(class heroWindow*);
-    signed char RecruitHero(signed char);
+    i8 RecruitHero(i8);
     void DoTavern(void);
     void SetupWell(class heroWindow*);
-    void SetupThievesGuild(class heroWindow*, short);
+    void SetupThievesGuild(class heroWindow*, i16);
     void SetupCastle(class heroWindow*);
-    char* GetBuildingName(short);
+    char* GetBuildingName(i16);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
-    void GetCategoryStats(signed char, long* const, signed char* const);
-    void SortStats(long* const, signed char* const);
+    void GetCategoryStats(i8, i32* const, i8* const);
+    void SortStats(i32* const, i8* const);
 };
 #pragma pack(pop)
 
 // BuildObj's fizzle rectangle per town type and building (0x00491868).
 struct TownBuildingExtent {
-    short x;
-    short y;
-    short width;
-    short height;
+    i16 x;
+    i16 y;
+    i16 width;
+    i16 height;
 };
 
 // Open's per-type town-object layout (0x0048c028).
-extern const signed char gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
-short TavernHandler(struct tag_message&);
-short MageGuildHandler(struct tag_message&);
-short SplitArmyHandler(struct tag_message&);
-short CastleHandler(struct tag_message&);
+extern const i8 gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
+i16 TavernHandler(struct tag_message&);
+i16 MageGuildHandler(struct tag_message&);
+i16 SplitArmyHandler(struct tag_message&);
+i16 CastleHandler(struct tag_message&);
 #endif // HOMM1_SOURCE_TOWNMANAGER_H
