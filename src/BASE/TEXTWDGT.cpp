@@ -75,9 +75,12 @@ textWidget::~textWidget(void) {
 
 VA(0x0047aff0, 0x1ea)
 short textWidget::Main(tag_message& message) {
+    // PoL 2.0 textWidget::Main caches the flags word in a local; retail
+    // keeps it in dx for the enable test and the select/deselect stores.
+    short flags = m_flags;
     short y;
     short x;
-    if (!(m_flags & WIDGET_FLAG_ENABLED)) {
+    if (!(flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
         return MESSAGE_DISPATCH_CONTINUE;
