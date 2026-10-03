@@ -80,9 +80,7 @@ short iconWidget::Main(tag_message& message) {
                 m_flags |= WIDGET_FLAG_SELECTED;
                 if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
-                message.type = MESSAGE_WIDGET;
-                message.command = WIDGET_NOTIFY_SELECT;
-                message.id = m_id;
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
@@ -91,9 +89,7 @@ short iconWidget::Main(tag_message& message) {
         case MESSAGE_RIGHT_BUTTON_UP:
             if (m_flags & WIDGET_FLAG_SELECTED) {
                 m_flags &= ~WIDGET_FLAG_SELECTED;
-                message.type = MESSAGE_WIDGET;
-                message.command = WIDGET_NOTIFY_DESELECT;
-                message.id = m_id;
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;

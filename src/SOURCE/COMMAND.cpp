@@ -934,9 +934,7 @@ short WinCombatHandler(struct tag_message& message) {
         }
     }
     if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = WIN_LOSE_ANIMATION;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, WIN_LOSE_ANIMATION);
         gpGame->m_viewArmyResult++;
         message.value = gpGame->m_viewArmyResult % 6 + 1;
         gpCombatManager->m_winLoseWindow->BroadcastMessage(message);
@@ -974,9 +972,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     tag_message message;
 
     sprintf(gText, "You have captured an enemy artifact!");
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = WIN_LOSE_RESULT_TEXT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] = new iconWidget(
@@ -1245,9 +1241,7 @@ void combatManager::DoVictory(signed char winningSide) {
                     else
                         sprintf(gText, cBattleResults[BATTLE_RESULT_VICTORY]);
                 }
-                message.type = MESSAGE_WIDGET;
-                message.command = WIDGET_COMMAND_SET_TEXT;
-                message.id = WIN_LOSE_RESULT_TEXT;
+                SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
                 message.text = gText;
                 m_winLoseWindow->BroadcastMessage(message);
                 ShowDeadArmies(m_winLoseWindow);
@@ -1336,9 +1330,7 @@ void combatManager::DoLoseWindow(void) {
         else
             sprintf(gText, cBattleResults[BATTLE_RESULT_FORCES_DEFEATED]);
     }
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = WIN_LOSE_RESULT_TEXT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
     loseWindow->BroadcastMessage(message);
     ShowDeadArmies(loseWindow);
@@ -1395,9 +1387,7 @@ short combatManager::DoSurrender(void) {
     win = new heroWindow(0x55, 0x50, "surrendr.bin");
     if (win == NULL)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = SURRENDER_PORTRAIT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_ICON, SURRENDER_PORTRAIT);
     sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_portrait);
     message.text = gText;
     win->BroadcastMessage(message);

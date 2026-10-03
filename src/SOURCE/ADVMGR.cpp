@@ -3116,9 +3116,7 @@ void advManager::QuickInfo(short cellX, short cellY) {
             m_mapOriginX + cellX,
             m_mapOriginY + cellY
         );
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = 1;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, 1);
     message.text = gText;
     window->BroadcastMessage(message);
     GrabScreen();
@@ -4378,9 +4376,7 @@ void advManager::TownQuickView(signed char townId, signed char, short windowX, s
     SetWinText(viewWin, WINDOW_TEXT_TOWN_QUICK_VIEW);
 
     numArmies = 0;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = QUICK_VIEW_PORTRAIT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, QUICK_VIEW_PORTRAIT);
     message.value = townPointer->m_type + TOWN_QUICK_TYPE_FRAME_BASE;
     if (gpGame->GetTown(townId)->m_buildings & (1 << BUILDING_SLOT_CASTLE))
         message.value += TOWN_QUICK_CASTLE_FRAME_OFFSET;
@@ -5688,9 +5684,7 @@ VA(0x00432990, 0x227)
 void UpdateCPanel(signed char initialDraw) {
     tag_message message;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = CONTROL_MUSIC_VOLUME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, CONTROL_MUSIC_VOLUME);
     message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
     cPanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;

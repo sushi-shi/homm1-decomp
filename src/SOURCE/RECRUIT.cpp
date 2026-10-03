@@ -65,9 +65,7 @@ void SetupRecruitWin(
     strcpy(monsterName, GetMonsterName(creatureType));
     monsterName[0] -= 'a' - 'A';
     sprintf(label, "%s %s", "Recruit", monsterName);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = RECRUIT_TITLE_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, RECRUIT_TITLE_CONTROL);
     message.text = label;
     window->BroadcastMessage(message);
 
@@ -85,9 +83,7 @@ void SetupRecruitWin(
     message.text = gText;
     window->BroadcastMessage(message);
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = RECRUIT_CREATURE_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, RECRUIT_CREATURE_CONTROL);
     message.value = creatureType;
     window->BroadcastMessage(message);
     if (resourceType != RESOURCE_NONE) {

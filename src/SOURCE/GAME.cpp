@@ -888,9 +888,7 @@ void game::UpdateNewGameWindow(void) {
     period = strchr(gText, '.');
     if (period)
         *period = 0;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = NEW_GAME_SCENARIO_NAME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NEW_GAME_SCENARIO_NAME);
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -1128,9 +1126,7 @@ void game::ShowCampaignInfo(int scenario, int fromMenu, int) {
     window = new heroWindow(105, 96, "campaign.bin");
     if (!window)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = CAMPAIGN_INFO_NAME;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, CAMPAIGN_INFO_NAME);
     strcpy(gText, gCampaignScenarioNames[scenario]);
     message.text = gText;
     window->BroadcastMessage(message);
@@ -2607,9 +2603,7 @@ short ViewArmyHandler(tag_message& message) {
         }
     }
     if (KBTickCount() > glTimers[VIEW_ARMY_TIMER_SLOT]) {
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = VIEW_ARMY_ANIMATION;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, VIEW_ARMY_ANIMATION);
         gpGame->m_viewArmyResult++;
         message.value = gpGame->m_viewArmyResult % VIEW_ARMY_ANIMATION_FRAMES;
         gpGame->m_viewArmyWindow->BroadcastMessage(message);
@@ -2854,9 +2848,7 @@ void game::Overview(void) {
     if (!win)
         MemError();
     SetWinText(win, WINDOW_TEXT_OVERVIEW);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = OVERVIEW_DATE;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, OVERVIEW_DATE);
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
     message.text = gText;
     win->BroadcastMessage(message);
@@ -5092,9 +5084,7 @@ void game::ShowScenInfo(void) {
     scenWindow = new heroWindow(159, 14, "sceninfo.bin");
     if (!scenWindow)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = nameId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, nameId);
     message.text = m_mapName;
     scenWindow->BroadcastMessage(message);
     difficulty = m_difficulty;

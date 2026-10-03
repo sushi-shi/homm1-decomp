@@ -95,9 +95,7 @@ short widget::Main(tag_message& message) {
             x = message.x - m_owner->m_posX;
             y = message.y - m_owner->m_posY;
             if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
-                message.type = MESSAGE_WIDGET;
-                message.command = WIDGET_COMMAND_HOVER;
-                message.id = m_id;
+                SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_HOVER, m_id);
                 return MESSAGE_DISPATCH_FORWARD;
             }
             break;

@@ -57,9 +57,7 @@ void combatManager::CombatMessage(char* text, int updateScreen) {
     tag_message message;
     int prevLimit;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = COMBAT_STATUS_TEXT_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, COMBAT_STATUS_TEXT_CONTROL);
     message.text = text;
     m_combatWindow->BroadcastMessage(message);
     oldCompute = gbComputeExtent;

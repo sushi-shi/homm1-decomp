@@ -472,9 +472,7 @@ void HeroMessageUpdate(char* text) {
 
     if (!gheroWin)
         return;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = HERO_SCREEN_STATUS_TEXT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, HERO_SCREEN_STATUS_TEXT);
     message.text = text;
     gheroWin->BroadcastMessage(message);
     gheroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
@@ -575,15 +573,11 @@ void hero::ViewStat(signed char stat, signed char quickView) {
     if (!win)
         MemError();
     strcpy(gText, gStatNames[stat]);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = HERO_STAT_VIEW_TITLE;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, HERO_STAT_VIEW_TITLE);
     message.text = gText;
     win->BroadcastMessage(message);
     strcpy(gText, gStatDesc[stat]);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = HERO_STAT_VIEW_DESCRIPTION;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, HERO_STAT_VIEW_DESCRIPTION);
     message.text = gText;
     win->BroadcastMessage(message);
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
