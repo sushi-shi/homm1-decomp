@@ -27,14 +27,13 @@
 #include <stdlib.h>
 #include <string.h>
 
-#pragma intrinsic(strcpy, memset)
 
 // Retail compiled Soundmgr.cpp incrementally (/Gi): every assertion's __LINE__ is
 // read from a per-function static (?__LINE__Var@...) holding the function's
 // original line, plus the assertion's offset (`movsx reg, word [var]; add reg, n`).
 // The #line directives restore the original file name and the retail line values
 // (52, 605, 740, 808, 900, 1008, 1118) so VC4 emits the same statics; see
-// evidence/vc4-gi-line-var.md. PoL's CD/sample helpers are ordinary member
+// docs/patterns/vc4-gi-line-var.md. PoL's CD/sample helpers are ordinary member
 // functions: /Ob2 expands them and the linker drops the unreferenced copies, and
 // ValidatePreviousPosition's single line static (52) is shared by CDStop and CDPlay.
 

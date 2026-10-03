@@ -15,7 +15,6 @@
 
 #include <stdio.h>
 
-// clang-format off
 // vgenwin.bin widget ids (Buka 2.1 VIEW.cpp ViewGeneralControl): name,
 // portrait, colour and stats boxes, the Cast Spell / Retreat / Surrender
 // buttons ViewGeneral disables and HandleViewGeneral returns, and the
@@ -45,7 +44,6 @@ H1_ENUM_BEGIN(ViewGeneralHoverHelp)
     GENERAL_HOVER_HELP_CLOSE = 4,
     GENERAL_HOVER_HELP_HERO = 5
 H1_ENUM_END(ViewGeneralHoverHelp)
-// clang-format on
 
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when

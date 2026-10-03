@@ -14,7 +14,6 @@
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/X_GLOBAL.h>
 
-// clang-format off
 // Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
 // and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
 H1_ENUM_CONST_BEGIN(CursorConstant)
@@ -42,11 +41,9 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     MOVE_TILE_HALF_COUNT = 2
 H1_ENUM_CONST_END(CursorConstant)
 
-   // clang-format on
-
-   // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
-   // walk speed and indexes the map directly.
-   VA(0x00405950, 0x169)
+// Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
+// walk speed and indexes the map directly.
+VA(0x00405950, 0x169)
 void advManager::StartCursor(signed char direction) {
     short directionX;
     short newX;
@@ -222,11 +219,7 @@ void advManager::DrawCursor(void) {
             bMoveSoundMade = 1;
             if (!EveryOther)
                 hLastMoveSound = gpSoundManager->MemorySample(
-                    m_cursorSamples[giGroundToTerrain[GetCell(
-                                                          m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
-                                                          m_mapOriginY + CURSOR_MAP_DRAW_OFFSET
-                    )
-                                                          ->m_tileIndex]]
+                    m_cursorSamples[CELL_TERRAIN(GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET))]
                 );
         }
     }
@@ -370,7 +363,7 @@ mapCell* advManager::MoveHero(
     xInc = normalDirTable[direction].x;
     yInc = normalDirTable[direction].y;
     bShowIt = GetMoveShowIt(direction);
-    terrain = giGroundToTerrain[GetCell(movingHero->m_x, movingHero->m_y)->m_tileIndex];
+    terrain = CELL_TERRAIN(GetCell(movingHero->m_x, movingHero->m_y));
     nextCell = GetCell(movingHero->m_x + xInc, movingHero->m_y + yInc);
     if (CalcTerrainCost(
             terrain,
@@ -474,7 +467,7 @@ mapCell* advManager::MoveHero(
                     movingHero->m_heroClass
                 );
                 if (CalcTerrainCost(
-                        giGroundToTerrain[nextCell->m_tileIndex],
+                        CELL_TERRAIN(nextCell),
                         0,
                         movingHero->m_remainingMobility,
                         movingHero->m_heroClass
@@ -498,7 +491,7 @@ mapCell* advManager::MoveHero(
                         movingHero->m_heroClass
                     );
                     if (CalcTerrainCost(
-                            giGroundToTerrain[nextCell->m_tileIndex],
+                            CELL_TERRAIN(nextCell),
                             0,
                             movingHero->m_remainingMobility,
                             movingHero->m_heroClass
@@ -587,7 +580,7 @@ mapCell* advManager::MoveHero(
         movingHero->m_heroClass
     );
     if (CalcTerrainCost(
-            giGroundToTerrain[nextCell->m_tileIndex],
+            CELL_TERRAIN(nextCell),
             0,
             movingHero->m_remainingMobility,
             movingHero->m_heroClass
@@ -783,7 +776,7 @@ short advManager::ValidMove(short direction) {
     destCell = &m_mapData[m_cursorMapX + newX][m_cursorMapY + newY];
     if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
         return 0;
-    if (giGroundToTerrain[destCell->m_tileIndex] == TERRAIN_WATER) {
+    if (CELL_TERRAIN(destCell) == TERRAIN_WATER) {
         if (m_cursorType != ADVMGR_HERO_ICON_BOAT
             && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
             && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))

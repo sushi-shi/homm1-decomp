@@ -20,7 +20,6 @@
 
 #include <string.h>
 
-#pragma intrinsic(memcpy, memset)
 
 VA(0x00473450, 0x199)
 void BlitBitmapToScreen(
@@ -182,7 +181,6 @@ void FadeOut(int increment) {
 #include <stdlib.h>
 #include <string.h>
 
-#pragma intrinsic(memcpy, memset)
 
 struct PaletteColor {
     unsigned char red;
@@ -226,7 +224,6 @@ void PostprocessIcon(icon*) {}
 
 #include <string.h>
 
-#pragma intrinsic(memcpy, memset)
 
 VA(0x004738e0, 0x1e6)
 void ClippedMonoIconToBitmap(

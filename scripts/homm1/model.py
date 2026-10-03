@@ -14,11 +14,11 @@ admitted start.
 Resolution policy (this module is the ONLY place policy lives):
   * LOW-confidence static-lib rows are leads, not claims - filtered here;
   * channel precedence per rva: src > src_compgen > src_dyninit >
-    src_data_compgen > functions_zlib/data_zlib > data_vtables >
+    src_data_compgen > data_vtables >
     data_compgen > data_static_libs > functions_static_libs; later claims on
     the same rva become recorded ALIASES, never silent losers;
   * function extent = claimed size when the winning channel states one
-    (src / zlib), else the census-derived extent;
+    (src), else the census-derived extent;
   * kind compatibility: func claims bind kind ''|helper (static-lib labels
     also thunk - retail interleaves are real); data claims must match their
     census kind where the channel implies one (vtable/rtti/common/copy).
@@ -36,24 +36,24 @@ BINDINGS = BUILD / "gen/bindings.tsv"
 VIOLATIONS = BUILD / "gen/violations.tsv"
 
 _PRECEDENCE = ["src", "src_compgen", "src_dyninit", "src_data_compgen",
-               "functions_zlib", "data_zlib", "data_vtables", "data_compgen",
+               "data_vtables", "data_compgen",
                "data_static_libs", "functions_static_libs", "src_decl"]
 
 #: channels whose claimed size is the exact matched extent (overrides derived,
 #: bounded by it - the overrun check guards the other direction). Every channel
 #: that states a size means it; label-only channels state None.
 _SIZE_AUTHORITY = {"src", "src_compgen", "src_dyninit", "src_data_compgen",
-                   "functions_zlib", "data_zlib", "data_vtables",
+                   "data_vtables",
                    "data_static_libs", "data_compgen"}
 
 #: census kinds a func claim may bind, per channel
 _FUNC_KINDS = {"src": {"", "helper"}, "src_compgen": {"", "helper"},
-               "src_dyninit": {""}, "functions_zlib": {""},
+               "src_dyninit": {""},
                "functions_static_libs": {"", "thunk", "helper"},
                "src_decl": {"", "helper"}}
 
 #: census kind a data channel implies (None = any non-bookkeeping kind)
-_DATA_KIND = {"data_vtables": "vtable", "data_zlib": None, "src": None}
+_DATA_KIND = {"data_vtables": "vtable", "src": None}
 
 
 class Binding(NamedTuple):

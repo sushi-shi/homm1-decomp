@@ -8,7 +8,6 @@
 #include <H1/All.h>
 #include <H1/KB.h>
 
-// clang-format off
 // Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
 // wide-creature directions, the speed FindPath grants when speed is ignored,
 // and the second hex of a wide creature.
@@ -17,11 +16,10 @@ H1_ENUM_CONST_BEGIN(CombatPathConstant)
     IGNORE_SPEED = 99,
     WIDE_HEX_OFFSET = 1
 H1_ENUM_CONST_END(CombatPathConstant)
-// clang-format on
 
 // Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
 // function's compiler line static plus an offset; #line restores the original
-// file and lines (evidence/vc4-gi-line-var.md).
+// file and lines (docs/patterns/vc4-gi-line-var.md).
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.

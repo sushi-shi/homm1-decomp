@@ -21,7 +21,7 @@ not a catalogue of matching victories or proof of original source.
 - Failed searches do not prove impossibility. Matching bytes do not uniquely
   determine types, scope, source spelling, or ownership.
 - Link to canonical tool, build, and lineage documentation instead of copying
-  their contracts here. Record HoMM1 validation under `evidence/`.
+  their contracts here. Record HoMM1 validation in the pattern note itself.
 
 ## Historical material
 

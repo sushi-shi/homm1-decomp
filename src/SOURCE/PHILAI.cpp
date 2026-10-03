@@ -822,7 +822,7 @@ void philAI::GetTurnAIVars(int player) {
                 for (x = xPos - 10; x <= xPos + 10; x++) {
                     for (y = yPos - 10; y <= yPos + 10; y++) {
                         if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
-                            mineValue = abs(abs(x - xPos) + abs(y - yPos) - 4) >> 2;
+                            mineValue = abs(MANHATTAN_LENGTH(x - xPos, y - yPos) - 4) >> 2;
                             if (gaiTurnValueOfMine[x][y] > mineValue)
                                 gaiTurnValueOfMine[x][y] = mineValue;
                         }
@@ -1001,7 +1001,7 @@ void philAI::DetermineTargetPosition(
     gbActualBoatFound = 0;
     spacing = pHero->m_mobility / 6;
     thisCell = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
-    heroTerrainType = giGroundToTerrain[thisCell->m_tileIndex];
+    heroTerrainType = CELL_TERRAIN(thisCell);
     if (heroTerrainType == TERRAIN_SNOW || heroTerrainType == TERRAIN_SWAMP) {
         spacing--;
         mobility = static_cast<short>(mobility * 1.25);
@@ -1054,9 +1054,9 @@ void philAI::DetermineTargetPosition(
                             && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
                         || (x % spacing == 0 && y % spacing == 0
                             && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                 && giGroundToTerrain[thisCell->m_tileIndex] == TERRAIN_WATER)
+                                 && CELL_TERRAIN(thisCell) == TERRAIN_WATER)
                                 || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                    && giGroundToTerrain[thisCell->m_tileIndex] != TERRAIN_WATER)))
+                                    && CELL_TERRAIN(thisCell) != TERRAIN_WATER)))
                         || (x == gpCurPlayer->m_ultimateArtifactHintX
                             && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
@@ -1093,7 +1093,7 @@ void philAI::DetermineTargetPosition(
                 }
                 if (x == targetX && y == targetY) {
                     cellValue = static_cast<int>(cellValue * AI_TARGET_HUMAN_VALUE_FACTOR);
-                    if (abs(x - pHero->m_x) + abs(y - pHero->m_y) > 3)
+                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y) > 3)
                         cellValue++;
                 }
             scored:
@@ -1102,8 +1102,8 @@ void philAI::DetermineTargetPosition(
                     bestY = y;
                     bestRV = cellValue;
                 } else if (cellValue == bestRV && cellValue == 0) {
-                    if (abs(bestY - pHero->m_y) + abs(bestX - pHero->m_x)
-                        < abs(x - pHero->m_x) + abs(y - pHero->m_y)) {
+                    if (MANHATTAN_LENGTH(bestY - pHero->m_y, bestX - pHero->m_x)
+                        < MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)) {
                         bestX = x;
                         bestY = y;
                     }
@@ -1872,7 +1872,7 @@ float philAI::TurnsToBuy(int* const resources) {
                 );
             else
                 fTurns = 99.0f;
-            maxT = fTurns > maxT ? fTurns : maxT;
+            maxT = __max(fTurns, maxT);
         }
     }
     return maxT;
@@ -2138,7 +2138,7 @@ int philAI::StrategicValueOfPosition(
             }
         }
     }
-    baseTerrain = giGroundToTerrain[gpAdvManager->GetCell(targetX, targetY)->m_tileIndex];
+    baseTerrain = CELL_TERRAIN(gpAdvManager->GetCell(targetX, targetY));
     for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
         if (gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id) {
             nGap =
@@ -2189,7 +2189,7 @@ int philAI::ValueOfTown(town* townPointer) {
             sum += GetBuildingBaseResourceValue(
                 townPointer->m_type,
                 building,
-                townPointer->m_buildState > 0 ? townPointer->m_buildState : 0
+                __max(townPointer->m_buildState, 0)
             );
     }
     sum = static_cast<int>(sum + gafAITurnCostResource[RESOURCE_GOLD] * 1250.0f * 1.5);
@@ -2607,7 +2607,7 @@ void philAI::HeroInteractionAtTown(
     if (doInteraction) {
         if ((townPointer->m_buildings & (1 << BUILDING_SLOT_SHIPYARD))
             && townPointer->m_id != giBestShipyardId) {
-            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
             if (gbActualShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -2623,7 +2623,7 @@ void philAI::HeroInteractionAtTown(
                    && gpAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1)->m_tileIndex
                           < MAP_CELL_TILES_PER_TERRAIN
                    && !gbActualShipyardFound && townPointer->m_id != giBestShipyardId) {
-            i = abs(townPointer->m_x - heroPointer->m_x) + abs(townPointer->m_y - heroPointer->m_y);
+            i = MANHATTAN_LENGTH(townPointer->m_x - heroPointer->m_x, townPointer->m_y - heroPointer->m_y);
             if (gbPossibleShipyardFound) {
                 if (giBestShipyardDist > i) {
                     giBestShipyardDist = i;
@@ -3051,8 +3051,7 @@ signed char philAI::CombatMonsterEvent(hero* h, signed char monType, int* pCount
     short newCount;
     short i;
 
-    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, sizeof(gpMonGroup->m_creatureTypes));
-    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    CLEAR_ARMY_GROUP(*gpMonGroup);
     if (*pCount / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monType;
@@ -3436,8 +3435,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             break;
         case MAP_OBJECT_MONSTER:
             iMonsterCount = pEventCell->m_objectMetadata & MONSTER_COUNT_MASK;
-            memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, sizeof(gpMonGroup->m_creatureTypes));
-            memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+            CLEAR_ARMY_GROUP(*gpMonGroup);
             if (iMonsterCount / ARMY_GROUP_SLOT_COUNT > 0) {
                 for (iEventLoop = 0; iEventLoop < ARMY_GROUP_SLOT_COUNT; iEventLoop++) {
                     gpMonGroup->m_creatureTypes[iEventLoop] = pEventCell->m_objectIndex;
@@ -3969,7 +3967,7 @@ int philAI::ValueOfEventAtPosition(hero* pHero, short x, short y, int immediate,
             for (gateY28 = 0; gateY28 < MAP_CELL_GRID_SIZE; gateY28++) {
                 for (gateX1 = 0; gateX1 < MAP_CELL_GRID_SIZE; gateX1++) {
                     exitCell = gpAdvManager->GetCell(gateX1, gateY28);
-                    if (abs(gateX1 - x) + abs(gateY28 - y)
+                    if (MANHATTAN_LENGTH(gateX1 - x, gateY28 - y)
                             > ((pEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                        == MAP_OBJECT_STONE_LITHS
                                    ? 1

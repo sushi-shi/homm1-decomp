@@ -3,7 +3,7 @@
     python3 -m homm1.tool.fixedroot --src S --out O [--retail-name NAME] -- <cl flags>
 
 VC4's incremental compilation (/Gi, which retail used; see
-docs/patterns/vc4-gi-incremental-compilation.md and evidence/vc4-gi-line-var.md)
+docs/patterns/vc4-gi-incremental-compilation.md and docs/patterns/vc4-gi-line-var.md)
 makes the generated code depend on the path strings of the files the compiler
 opens (the source and every header): the same ARMY.cpp compiled from two
 directories whose names differ in length gives different operand orders.

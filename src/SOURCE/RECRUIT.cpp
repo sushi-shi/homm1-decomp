@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // Buka RecruitConstant (HoMM1 values): window and dialog positions and
 // SetupRecruitWin's text buffers.
 H1_ENUM_CONST_BEGIN(RecruitConstant)
@@ -45,7 +44,6 @@ H1_ENUM_BEGIN(RecruitControl)
     RECRUIT_RESOURCE_IMAGE_CONTROL = 0x4e,
     RECRUIT_RESOURCE_TOTAL_CONTROL = 0x4f
 H1_ENUM_END(RecruitControl)
-// clang-format on
 
 // Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
 // sets the creature portrait by frame rather than by icon name.
@@ -65,9 +63,7 @@ void SetupRecruitWin(
     strcpy(monsterName, GetMonsterName(creatureType));
     monsterName[0] -= 'a' - 'A';
     sprintf(label, "%s %s", "Recruit", monsterName);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = RECRUIT_TITLE_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, RECRUIT_TITLE_CONTROL);
     message.text = label;
     window->BroadcastMessage(message);
 
@@ -85,9 +81,7 @@ void SetupRecruitWin(
     message.text = gText;
     window->BroadcastMessage(message);
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = RECRUIT_CREATURE_CONTROL;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, RECRUIT_CREATURE_CONTROL);
     message.value = creatureType;
     window->BroadcastMessage(message);
     if (resourceType != RESOURCE_NONE) {
@@ -137,7 +131,7 @@ short recruitUnit::Open(short priority) {
     goldMaximum = gpCurPlayer->m_resources[RESOURCE_GOLD] / m_goldCost;
     if (m_resourceType != RESOURCE_NONE) {
         resourceMaximum = gpCurPlayer->m_resources[m_resourceType] / m_resourceCost;
-        m_maximum = goldMaximum < resourceMaximum ? goldMaximum : resourceMaximum;
+        m_maximum = __min(goldMaximum, resourceMaximum);
     } else
         m_maximum = goldMaximum;
     if (*m_available < m_maximum)

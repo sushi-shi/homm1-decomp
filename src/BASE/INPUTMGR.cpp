@@ -20,7 +20,6 @@
 #include <io.h>
 #include <string.h>
 
-#pragma intrinsic(memset, strcpy)
 
 char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
 char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
@@ -165,8 +164,8 @@ int MouseMessageHandler(void*, unsigned int message, unsigned int, long messageD
 mouseCoordinates:
 #line 187
     ProcessAssert(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0, __FILE__, __LINE__);
-    event->x = LOWORD(messageData) * INPUT_GAME_WIDTH / iMainWinScreenWidth;
-    event->y = HIWORD(messageData) * INPUT_GAME_HEIGHT / iMainWinScreenHeight;
+    event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
+    event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {

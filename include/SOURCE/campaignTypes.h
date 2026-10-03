@@ -3,7 +3,6 @@
 
 #include <SOURCE/game.h>
 
-// clang-format off
 // giCampaignChoice: the campaign being played (0 = a standalone map). The
 // stpcmpgn.bin choices and the New Campaign menu commands select them in the
 // gSetupCampaignGameHelp order (Ironfist, Slayer, Lamanda, Alamar).
@@ -20,7 +19,6 @@ H1_ENUM_END(CampaignChoice)
 H1_ENUM_CONST_BEGIN(CampaignScenarioTableConstant)
     CAMPAIGN_SCENARIO_COUNT = 9
 H1_ENUM_CONST_END(CampaignScenarioTableConstant)
-// clang-format on
 
 // HoMM1's campaign scenario table: 85-byte records with the King of the Hill
 // flag, the town CheckEndGame watches, the three opponents' player types and

@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(MessageType)
     MESSAGE_NONE = 0,
     MESSAGE_KEY_DOWN = 1,
@@ -59,11 +58,10 @@ H1_ENUM_BEGIN(MessageModifier)
     MESSAGE_MODIFIER_RIGHT_BUTTON = 0x200,
     MESSAGE_MODIFIER_BUTTON_MASK = 0x300
 H1_ENUM_END(MessageModifier)
-// clang-format on
 
 #pragma pack(push, 1)
-// Retail reaches every word directly off the message (evidence/
-// message-flat-layout.md); a named payload level changes VC4's operand order.
+// Retail reaches every word directly off the message (the hover filters load
+// m_lastHoverId first); a named payload level changes VC4's operand order.
 // The anonymous unions only name the per-message-type views of each word.
 struct tag_message {
     H1_ENUM_STORAGE(MessageType, short) type;
@@ -86,6 +84,11 @@ struct tag_message {
     };
 };
 #pragma pack(pop)
+
+// Address a widget command to widget idValue (Buka 2.1 message.h).
+#define SET_WIDGET_MESSAGE(messageValue, commandValue, idValue)                                    \
+    ((messageValue).type = MESSAGE_WIDGET, (messageValue).command = (commandValue),                \
+     (messageValue).id = (idValue))
 
 #define IS_WIDGET_SELECTION_NOTIFICATION(command)                                                  \
     ((command) == WIDGET_NOTIFY_SELECT || (command) == WIDGET_NOTIFY_RIGHT_CLICK)

@@ -3,7 +3,6 @@
 
 #include <SOURCE/combatTypes.h>
 
-// clang-format off
 // army::ValidAttack / GetAttackMask targetMode: the assigned target stack
 // (m_targetSide/m_targetIndex), any enemy stack, or any occupied hex (Buka
 // army.h ArmyAttackTarget, same numbering and switch).
@@ -31,7 +30,6 @@ H1_ENUM_END(ArmyPathTarget)
 H1_ENUM_CONST_BEGIN(ArmyHexConstant)
     ARMY_HEX_INVALID = -1
 H1_ENUM_CONST_END(ArmyHexConstant)
-// clang-format on
 
 H1_ENUM_RETURN(CombatHexDirection, short)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, short) direction);

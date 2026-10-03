@@ -12,7 +12,6 @@ struct tag_message;
 class heroWindow;
 class iconWidget;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_NAME_SIZE = 0x15f,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
@@ -105,9 +104,8 @@ H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
     FILE_REQUESTER_DISPATCH_MASK = 0x32f,
     FILE_REQUESTER_FILENAME_MAX_LENGTH = 255
 H1_ENUM_CONST_END(FileRequesterListConstant)
-    // clang-format on
 
-    struct FileRequesterName {
+struct FileRequesterName {
     char text[FILE_REQUESTER_NAME_SIZE];
 };
 

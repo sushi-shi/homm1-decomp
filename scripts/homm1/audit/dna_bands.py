@@ -34,12 +34,11 @@ from homm1.retail_labels.censuses import functions
 
 
 OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
-EVIDENCE = REPO / "evidence/homm1-dna-bands.tsv"
+EVIDENCE = RETAIL / "dna_bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
-BANDS_EVIDENCE = REPO / "evidence/homm1-code-link-bands.tsv"
 #: Retail links VC4.0 LIBCMT.LIB (multithreaded), not LIBC.LIB: its _mtinit,
 #: _getptd and _lock/*_lk bodies match retail exactly (189 exact CRT bodies
-#: against LIBCMT, 106 against LIBC). See evidence/link-layout.md.
+#: against LIBCMT, 106 against LIBC).
 RUNTIME_LIBS = ("libcmt.lib", "oldnames.lib")
 PREFIX = 24
 PRIVATE = re.compile(r"^(?:_?\$E\d+|\?\?_[EG])")
@@ -183,7 +182,7 @@ def _donor_helper_hints() -> dict[int, tuple[str, str]]:
     first retail row is a lifecycle helper.  Keep the ordinal as evidence and
     classify the row by kind, exactly as HoMM2's compgen census does.
     """
-    path = REPO / "evidence/homm2-tu-segments.tsv"
+    path = RETAIL / "homm2_tu_segments.tsv"
     if not path.is_file():
         return {}
     _body, _header, rows = read_tsv(path)
@@ -393,35 +392,18 @@ def write_config(rows) -> dict[str, int]:
                   "crt-order": "definition-order", "crt-band": "link-band"}[row["class"]]
         library_rows.append((row["rva"], row["symbol"], library, confidence,
                              f"{source}:{member}"))
+    # Hand-admitted provider rows survive a rewrite: only the header is owned
+    # here, the census never enrolls the whole runtime band.
+    kept = []
+    if STATIC_LIBS.is_file():
+        lines = STATIC_LIBS.read_text().splitlines(keepends=True)
+        body = [line for line in lines if not line.startswith("#")]
+        kept = body[1:] if body and body[0].startswith("rva\t") else body
     STATIC_LIBS.write_text(
         "# Delinker-active CRT/SDK providers. DNA identities intentionally stay\n"
-        "# in evidence/homm1-dna-bands.tsv: enrolling the whole runtime band here\n"
+        "# in config/retail/dna_bands.tsv: enrolling the whole runtime band here\n"
         "# changes Vostok's anonymous-module partition.\n"
-        "rva\tname\tlib\tconfidence\tsource\n"
-    )
-    first_crt = min(row["rva"] for row in rows
-                    if row["class"].startswith("crt-"))
-    main_thunks = sorted(
-        (row for row in rows
-         if row["class"] == "import-thunk" and row["rva"] < first_crt),
-        key=lambda row: row["rva"],
-    )
-    thunk_start = main_thunks[-1]["rva"]
-    for previous, current in zip(reversed(main_thunks[:-1]),
-                                 reversed(main_thunks[1:])):
-        if previous["rva"] + previous["size"] != current["rva"]:
-            break
-        thunk_start = previous["rva"]
-    text = retail().pe.section(".text")
-    text_lo, text_hi = text["va"], text["va"] + text["vsize"]
-    BANDS_EVIDENCE.write_text(
-        "# Code-only link-layout ownership recovered from the executable DNA census.\n"
-        "# This remains evidence until data matching begins; config/retail/link_bands.tsv\n"
-        "# deliberately stays empty because it activates strict data-target ownership.\n"
-        "lo\thi\tband\n"
-        f"0x{text_lo:08x}\t0x{thunk_start:08x}\tgame\n"
-        f"0x{thunk_start:08x}\t0x{first_crt:08x}\timport-thunks\n"
-        f"0x{first_crt:08x}\t0x{text_hi:08x}\tlibc\n"
+        "rva\tname\tlib\tconfidence\tsource\n" + "".join(kept)
     )
     return {"eh": len(eh),
             "thunk": sum(row["class"] == "import-thunk" for row in report),

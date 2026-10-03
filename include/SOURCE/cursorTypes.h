@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_NORTH = 0,
     MAP_DIRECTION_NORTH_EAST = 1,
@@ -71,6 +70,5 @@ H1_ENUM_CONST_BEGIN(AdventurePointerConstant)
     ADVENTURE_POINTER_DAY_STRIDE = 6,
     ADVENTURE_POINTER_DAY_LAST = 3
 H1_ENUM_CONST_END(AdventurePointerConstant)
-// clang-format on
 
 #endif

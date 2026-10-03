@@ -30,6 +30,71 @@ _gClipColumn DWORD 0
 
 ; Draw one unscaled icon frame into a bitmap, clipped to the bitmap bounds.
 ; Buka 2.1 icon2bc.cpp supplies the identity; HoMM1 retail is hand-written.
+;
+; C++ equivalent (include/BASE/Icon2b.h, __cdecl). The frame setup and RLE
+; are Icon2b.asm's. Rows above the bitmap are skipped by scanning the source
+; for its row-end 0 byte (a 0 inside a literal run would end the row early).
+; gClipColumn is not cleared on entry; every row end clears it. "visible" ==
+; 0 means "no right clip". Column bookkeeping is retail's, quirks included:
+; a skip run that straddles the left edge adds only its visible part.
+;
+;   void ClippedIconToBitmap(icon* ic, bitmap* bmp, int x, int y, int frame, int offsetMode) {
+;       /* frame setup (Icon2b.asm) without the x/y clamps */
+;       int w = gIconWidth, h = gIconHeight;
+;       x += gIconXAdjust;
+;       if (x < 0) { gClipLeftSkip = -x; w -= gClipLeftSkip; x = 0; }
+;       else gClipLeftSkip = 0;
+;       y += gIconYAdjust;
+;       if (y < 0) {
+;           if ((h += y) <= 0) return;
+;           for (int rows = -y; rows; --rows) while (*src++ != 0) {}
+;           y = 0;
+;       }
+;       if (bmp->m_height <= y) return;
+;       gClipRowsLeft = (y + h > bmp->m_height) ? bmp->m_height - y : h;
+;       if (bmp->m_width <= x) return;
+;       gClipVisibleWidth = (x + w > bmp->m_width) ? bmp->m_width - x : 0;
+;       unsigned char* rowStart = (unsigned char*)bmp->m_pixels + y * bmp->m_width + x;
+;       unsigned char* out = rowStart;
+;       gClipRowSkip = gClipLeftSkip;                    // left pixels still to drop
+;       for (;;) {
+;           int b = *src++;
+;           if (b == 0) {                                // next row
+;       next_row:
+;               out = rowStart += bmp->m_width;
+;               gClipColumn = 0;  gClipRowSkip = gClipLeftSkip;
+;               if (--gClipRowsLeft == 0) return;
+;           } else if (b & 0x80) {                       // transparent run
+;               if (!(b &= 0x7f)) return;
+;               if (gClipLeftSkip) {
+;                   if (gClipRowSkip >= b) { gClipRowSkip -= b; gClipColumn += b; continue; }
+;                   b -= gClipRowSkip;  gClipRowSkip = 0;
+;                   out += b;  gClipColumn += b;  continue;
+;               }
+;               if (gClipVisibleWidth && gClipVisibleWidth - gClipColumn - b < 0) {
+;                   while (*src++ != 0) {}  goto next_row;
+;               }
+;               out += b;  gClipColumn += b;
+;           } else {                                     // b literal pixels
+;               if (gClipLeftSkip) {
+;                   if (gClipRowSkip >= b) {
+;                       src += b; gClipColumn += b; gClipRowSkip -= b; continue;
+;                   }
+;                   src += gClipRowSkip; b -= gClipRowSkip;
+;                   gClipColumn += gClipRowSkip; gClipRowSkip = 0;
+;               }
+;               if (gClipVisibleWidth) {
+;                   int room = gClipVisibleWidth - gClipColumn;
+;                   if (room == 0 || room - b < 0) {         // right edge reached
+;                       if (room) { gClipColumn += room; memcpy(out, src, room); src += room; }
+;                       while (*src++ != 0) {}  goto next_row;
+;                   }
+;               }
+;               gClipColumn += b;
+;               memcpy(out, src, b); out += b; src += b;     // DWORDs + tail
+;           }
+;       }
+;   }
 ?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -124,6 +189,8 @@ clip_7cb33:
     mov edx, edi
     mov eax, _gClipLeftSkip
     mov _gClipRowSkip, eax
+; Run loop: 0 = next row, 80h|n = n transparent (80h ends), n = n literal
+; bytes; gClipRowSkip drops the left-clipped pixels of each row first.
 clip_7cb54:
     xor eax, eax
     lodsb
@@ -230,6 +297,22 @@ clip_7cc9f:
 EVEN
 ; Draw one unscaled icon frame mirrored horizontally, clipped to the bitmap.
 ; Buka 2.1 iconf2bc.cpp supplies the identity; HoMM1 retail is hand-written.
+;
+; C++ equivalent: ClippedIconToBitmap with the frame drawn right to left from
+; x (its right edge). Only the horizontal setup and the write direction
+; differ; the rows above the bitmap, gClipRowsLeft and the RLE/clip loop are
+; the same, with "out += n" / literal copies replaced by "out -= n" /
+; "*out-- = *src++". Pixels beyond the right edge play gClipLeftSkip's role:
+;
+;   x -= gIconXAdjust;
+;   int W = bmp->m_width;
+;   if (x < 0 || x >= W - 1) {                       // unsigned "x + 1 - W" carry test
+;       gClipLeftSkip = x - (W - 1);  w -= gClipLeftSkip;  x = W - 1;
+;   } else
+;       gClipLeftSkip = 0;
+;   /* y clip as ClippedIconToBitmap */
+;   if (x < 0) return;
+;   gClipVisibleWidth = (x - w + 1 < 0) ? x + 1 : 0;  // pixels left of x, if clipped
 ?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -329,6 +412,7 @@ flipclip_7cd96:
     mov edx, edi
     mov eax, _gClipLeftSkip
     mov _gClipRowSkip, eax
+; Run loop: as ClippedIconToBitmap's, writing leftwards.
 flipclip_7cdb7:
     xor eax, eax
     lodsb

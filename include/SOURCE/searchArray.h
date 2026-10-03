@@ -9,7 +9,6 @@
 // forward declarations:
 class army;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
     SEARCH_CELL_CAPACITY = 5184,
@@ -55,7 +54,6 @@ H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_UNLIMITED_COST = 999,
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
-// clang-format on
 
 // Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2

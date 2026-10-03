@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(ModemResponseLimit)
     MODEM_RESPONSE_LAST = 79
 H1_ENUM_END(ModemResponseLimit)
@@ -19,7 +18,6 @@ H1_ENUM_END(ModemPacketControl)
 H1_ENUM_CONST_BEGIN(ModemPacketConstant)
     MODEM_PACKET_MAX_LENGTH = 0x100
 H1_ENUM_CONST_END(ModemPacketConstant)
-// clang-format on
 
 extern int iLastActionTime;
 extern int iModemCommandPos;

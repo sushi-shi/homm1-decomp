@@ -13,7 +13,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // Flags and sentinels of this SDK generation as smackManager::Main passes
 // them. SmackOpen's audio-track bits sit four bits lower than in the 3.0g
 // SDK HoMM2 ships (SMACKTRACK1 0x2000, Buka AUDIO_OPEN_FLAGS 0xfe000): the
@@ -27,7 +26,6 @@ H1_ENUM_CONST_BEGIN(SmackApiConstant)
     SMACK_AUTO_EXTRA = -1,
     SMACK_SURFACE_SLOW = 1
 H1_ENUM_CONST_END(SmackApiConstant)
-// clang-format on
 
 #pragma pack(push, 1)
         struct Smack {

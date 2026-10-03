@@ -18,7 +18,6 @@ H1_ENUM_BEGIN(RemoteBoxCommand)
     BOX_REMOTE_SETUP = 0x1f
 H1_ENUM_END(RemoteBoxCommand)
 
-// clang-format off
 // RemoteMessage::command values (TransmitRemoteData's command argument and
 // the receivers' switches). The save-game transfer (TransmitSaveGame /
 // ReceiveSaveGame) and the hero/town exchange before a networked battle
@@ -38,7 +37,6 @@ H1_ENUM_BEGIN(RemoteCommand)
     REMOTE_COMMAND_COMBAT_ACTION = 0x17,
     REMOTE_COMMAND_PLAYER_EXIT = 30
 H1_ENUM_END(RemoteCommand)
-// clang-format on
 
 H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_BROADCAST_PLAYER = 0x7f,

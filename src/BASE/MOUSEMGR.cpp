@@ -25,12 +25,15 @@ char gCombatMonochrome[] = "BW";
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
-MOUSE_INITIAL_POINTER_FLAGS = 6,
-    MOUSE_INITIAL_X = 320, MOUSE_INITIAL_Y = 240, MOUSE_SAVED_BITMAP_SIZE = 0x40,
+    MOUSE_INITIAL_POINTER_FLAGS = 6,
+    MOUSE_INITIAL_X = 320,
+    MOUSE_INITIAL_Y = 240,
+    MOUSE_SAVED_BITMAP_SIZE = 0x40,
     MOUSE_MANAGER_MESSAGE_MASK = 0x40,
-    MOUSE_CURSOR_FILENAME_CAPACITY = 16 H1_ENUM_CONST_END(MouseManagerStateConstant)
+    MOUSE_CURSOR_FILENAME_CAPACITY = 16
+H1_ENUM_CONST_END(MouseManagerStateConstant)
 
-        VA(0x004766e0, 0xab)
+VA(0x004766e0, 0xab)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorImage = NULL;
@@ -294,8 +297,8 @@ void mouseManager::MouseCoords(short& x, short& y) {
 
     GetCursorPos(&point);
     ScreenToClient(hwndApp, &point);
-    x = point.x * LOGICAL_SCREEN_WIDTH / iMainWinScreenWidth;
-    y = point.y * LOGICAL_SCREEN_HEIGHT / iMainWinScreenHeight;
+    x = CLIENT_TO_GAME_X(point.x);
+    y = CLIENT_TO_GAME_Y(point.y);
 }
 
 VA(0x00476ec0, 0x3)

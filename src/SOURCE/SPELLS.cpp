@@ -84,13 +84,11 @@ short CombatSpecialHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// clang-format off
 // spelmous.mse frames: HandleCastSpell shows the selected SpellType's own
 // frame over a valid target and frame 19, after the combat spells, otherwise.
 H1_ENUM_BEGIN(SpellPointerFrame)
     SPELL_POINTER_NO_TARGET = 19
 H1_ENUM_END(SpellPointerFrame)
-// clang-format on
 
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
@@ -392,8 +390,7 @@ void combatManager::CastSpell(
                 gText,
                 "The lightning bolt does %d damage to the %s.",
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
-                targetArmy->m_quantity > 1 ? gArmyNamesPlural[targetArmy->m_creatureType]
-                                           : gArmyNames[targetArmy->m_creatureType]
+                CREATURE_DISPLAY_NAME(targetArmy->m_creatureType, targetArmy->m_quantity)
             );
             CombatMessage(gText, 1);
             targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);

@@ -35,7 +35,6 @@ H1_ENUM_CONST_BEGIN(CombatPointerSectorConstant)
     COMBAT_POINTER_SECTOR_FILLED = 10
 H1_ENUM_CONST_END(CombatPointerSectorConstant)
 
-// clang-format off
 // combatManager's per-side arrays (m_armies, m_heroes, m_playerId, ...).
 // HoMM1's SetupCombat stores the attacker in side 1 and the defender in side
 // 0 (Buka 2.1 combatTypes.h CombatSide has the opposite numbering); -1 marks
@@ -177,7 +176,6 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
     COMBAT_GRID_FIRST_INNER_COLUMN = 1,
     COMBAT_GRID_LAST_INNER_COLUMN = 7
 H1_ENUM_CONST_END(CombatGridDimension)
-// clang-format on
 
 // Area spells mark each stack once per cast: [side][army slot].
 extern signed char gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];

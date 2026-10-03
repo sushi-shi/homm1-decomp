@@ -58,7 +58,7 @@ LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
 #: _mtinit/_getptd (TlsAlloc, TlsGetValue, TlsSetValue, GetCurrentThreadId,
 #: SetLastError), _lock/_unlock and the *_lk stream/file variants. Against
 #: LIBCMT the DNA census finds 189 exact CRT bodies (35052 of 44700 band
-#: bytes); against LIBC only 106 (14686). See evidence/link-layout.md. It
+#: bytes); against LIBC only 106 (14686). It
 #: follows the import libraries, the position of the objects' default
 #: library, so the import thunks still precede the CRT.
 CRT_LIBRARY = "libcmt.lib"

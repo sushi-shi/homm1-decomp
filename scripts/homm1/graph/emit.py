@@ -76,8 +76,7 @@ FUNCTION_REFERENTS = "config/retail/function_referents.tsv"
 MODEL_TABLES = [
     "config/retail/functions.tsv", "config/retail/data.tsv",
     "config/retail/link_order.tsv", "config/retail/link_bands.tsv",
-    "config/retail/functions_static_libs.tsv", "config/retail/functions_zlib.tsv",
-    "config/retail/data_zlib.tsv", "config/retail/data_vtables.tsv",
+    "config/retail/functions_static_libs.tsv", "config/retail/data_vtables.tsv",
     "config/retail/data_static_libs.tsv", "config/retail/data_compgen.tsv",
 ]
 

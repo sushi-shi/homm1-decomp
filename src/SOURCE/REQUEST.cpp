@@ -257,9 +257,7 @@ short fileRequester::Open(short priority) {
         m_window->BroadcastMessage(message);
     }
     const short nameId = FILE_REQUESTER_FILENAME_ENTRY;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_MAX_LENGTH;
-    message.id = nameId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, nameId);
     message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
     Update(0);
@@ -280,9 +278,7 @@ VA(0x00448df5, 0x8a)
 void fileRequester::SetOK(signed char enabled) {
     tag_message message;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
-    message.id = DIALOG_BUTTON_2;
+    SET_WIDGET_MESSAGE(message, enabled ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS, DIALOG_BUTTON_2);
     message.value = WIDGET_FLAG_DIMMED;
     m_window->BroadcastMessage(message);
     message.command = enabled ? WIDGET_COMMAND_SET_FLAGS : WIDGET_COMMAND_CLEAR_FLAGS;
@@ -376,9 +372,7 @@ short fileRequester::Main(tag_message& message) {
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
                         case nameId:
-                            msg.type = MESSAGE_WIDGET;
-                            msg.command = WIDGET_COMMAND_GET_TEXT;
-                            msg.id = nameId;
+                            SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_GET_TEXT, nameId);
                             m_window->BroadcastMessage(msg);
                             memset(fileName, 0, 9);
                             strcpy(fileName, msg.text);
@@ -738,18 +732,14 @@ void fileRequester::ShowMapInfo(void) {
     message.text = gText;
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         giMapSize = m_mapInfo[m_selectedIndex].size;
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = sizeId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, sizeId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapSizeNames[m_mapInfo[m_selectedIndex].size];
     gpReqExtraWindow->BroadcastMessage(message);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         giMapDifficulty = m_mapInfo[m_selectedIndex].difficulty;
     sprintf(gText, gcCurMapName);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = levelId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, levelId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = gMapDifficultyNames[m_mapInfo[m_selectedIndex].difficulty];
     gpReqExtraWindow->BroadcastMessage(message);
@@ -757,9 +747,7 @@ void fileRequester::ShowMapInfo(void) {
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = descriptionId;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, descriptionId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         message.text = m_mapInfo[m_selectedIndex].description;
     gpReqExtraWindow->BroadcastMessage(message);

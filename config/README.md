@@ -1,40 +1,47 @@
-# Configuration and retail evidence
+# Configuration
 
-The layout follows the Gruntz census/provider model. Retail observations stay
-separate from build enrollment, matching scores and cleanliness policy.
+Build contracts live here; retail facts live under `retail/`. Every file is
+read by the named tooling. Generated state belongs in `build/`.
 
-`units.toml` is the per-TU build manifest. Named `[flags]` profiles contain the
-complete VC4 command line, and each `[[unit]]` selects one source and profile.
-`match_baseline.tsv` is the hand-banked RVA-keyed MAX ledger used by the score
-regression gate. Files under `cleanliness/` are committed ratchet floors and
-small evidence-backed exceptions.
+## Build and scoring
 
-`retail/` contains hand-owned facts:
+- `units.toml`: per-TU manifest. `[flags]` profiles hold the complete VC4
+  command line; each `[[unit]]` selects one source and profile.
+- `compare.toml`: comparison mode (`data_matching`). The ledger records its mode.
+- `match_baseline.tsv`: RVA-keyed CUR/MAX/HIST ledger, written only by
+  `homm1 verify bank`.
+- `toolchains.json`: pinned compiler media, components and release hashes
+  (`homm1 toolchain`).
+- `heroes.def`: module name and exports for the candidate link (`homm1 link`).
+- `probes/compiler.cpp`: ABI fixture for the compiler-contract probe
+  (`homm1.probes`).
+- `constants.tsv`: numeric spellings kept on purpose (`homm1 verify constants`).
+- `reviews/enum-reuse.tsv`: enum-reuse review ledger (`homm1 verify enum-reuse`).
 
-- `targets.json` pins the game and optional editor executables.
-- `functions.tsv` is the complete 1,250-start `.text` partition. Its initial
-  starts came from a one-time Ghidra 12 analysis of the pinned executable; the
-  build never regenerates it. Extents are derived to the next start.
-- `data.tsv` currently lists only the four storage identities required by the
-  admitted code. Data matching and complete data partitioning are deferred.
-- `function_referents.tsv` names unclaimed function targets proven by admitted
-  object relocations and decoded retail operands. These names do not create
-  source claims or matching-denominator entries.
-- `reloc_referents.tsv` uses the donor schema for exceptional relocation
-  aliases that containment cannot infer. It is currently empty.
-- `import_libraries.tsv` records vendor import libraries whose archive
-  format or member names differ from what VC4 LINK emits (WING32). The
-  import-library synthesis in `homm1.graph.implib` reads it.
-- `link_order.tsv` and `link_bands.tsv` are empty until link-layout evidence is
-  admitted.
-- `functions_static_libs.tsv`, `functions_zlib.tsv`, `data_zlib.tsv`,
-  `data_vtables.tsv`, `data_static_libs.tsv`, and `data_compgen.tsv` retain the
-  donor provider channels and are currently empty.
+## Cleanliness floors (`cleanliness/`)
 
-Base censuses supply structure. Source `RVA`/`DATA` annotations and provider
-tables supply identity. Exact function sizes come from `VA(va, size)` claims;
-data identities do not imply that initializers or bytes are matched.
+- `cleanliness-text-baseline.tsv`, `cleanliness-semantic-baseline.tsv`:
+  `verify board` floors.
+- `tu-order-baseline.tsv`, `kept-comdat-exiles.tsv`: `verify tu-order`.
+- `data-tu-order-baseline.tsv`: `verify data-tu-order`.
+- `types.toml`: admitted incomplete types (`verify undefined-closure`).
 
-All RVAs in these tables refer to `HEROES.EXE`. Editor evidence needs a separate
-namespace. Promote generated observations from ignored `build/analysis/` only
-after review, and merge hand-owned tables per row.
+## Retail facts (`retail/`)
+
+All RVAs refer to the pinned `HEROES.EXE`.
+
+- `targets.json`: hashes of the game and optional editor executables.
+- `functions.tsv`, `data.tsv`: hand-owned `.text`/data start censuses. They
+  supply structure only; names and sizes come from source and provider claims.
+- `function_referents.tsv`, `reloc_referents.tsv`, `data_symbols.tsv`: reviewed
+  identities of referenced functions, relocation targets and data that the
+  delinker cannot infer.
+- `functions_static_libs.tsv`, `data_vtables.tsv`, `data_static_libs.tsv`,
+  `data_compgen.tsv`: provider claim channels (`homm1 model`).
+- `import_libraries.tsv`: vendor import libraries whose format differs from
+  VC4 LINK output (`homm1.graph.implib`).
+- `link_order.tsv`, `link_bands.tsv`: link-layout channels; admitting rows
+  changes delinker ownership.
+- `dna_bands.tsv`: executable DNA census against VC4 LIBCMT/OLDNAMES
+  (`homm1 audit dna-bands`, `verify.universe`).
+- `homm2_tu_segments.tsv`: HoMM2 TU segment correspondence read by the DNA census.

@@ -25,20 +25,6 @@ def functions_static_libs(path: Path | None = None) -> list[Claim]:
             for r in _rows("functions_static_libs.tsv", path)]
 
 
-def functions_zlib(path: Path | None = None) -> list[Claim]:
-    return [Claim(int(r["rva"], 16), r["name"], "func", "functions_zlib",
-                  rint(r["size"]) if r["size"].strip() else None,
-                  r["unit"], {})
-            for r in _rows("functions_zlib.tsv", path)]
-
-
-def data_zlib(path: Path | None = None) -> list[Claim]:
-    return [Claim(int(r["rva"], 16), r["name"], "data", "data_zlib",
-                  rint(r["size"]) if r["size"].strip() else None,
-                  r["unit"], {})
-            for r in _rows("data_zlib.tsv", path)]
-
-
 def data_vtables(path: Path | None = None) -> list[Claim]:
     return [Claim(int(r["rva"], 16), r["name"], "data", "data_vtables",
                   rint(r["size"]), "", {"vkind": r["kind"], "note": r["note"]})
@@ -58,5 +44,5 @@ def data_compgen(path: Path | None = None) -> list[Claim]:
 
 
 def all_claims() -> list[Claim]:
-    return (functions_static_libs() + functions_zlib() + data_zlib()
-            + data_vtables() + data_static_libs() + data_compgen())
+    return (functions_static_libs() + data_vtables() + data_static_libs()
+            + data_compgen())

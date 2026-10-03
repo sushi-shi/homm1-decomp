@@ -323,7 +323,7 @@ short army::FlyTo(short destination) {
             oldMaxY = giMaxExtentY;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-        gpWindowManager->UpdateScreenRegion(oldX, oldY, maxExtentX - oldX + 1, oldMaxY - oldY + 1);
+        UPDATE_INCLUSIVE_REGION(oldX, oldY, maxExtentX, oldMaxY);
         if (backwards == 1)
             m_animationFrame = m_animationFrame - 1;
         else

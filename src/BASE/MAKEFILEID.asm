@@ -8,6 +8,23 @@ option epilogue:none
 
 .code
 
+; C++ equivalent (include/BASE/MAKEFILEID.h: unsigned long MAKEFILEID(char*),
+; __cdecl). The hash runs in the 16-bit AX; EAX starts at zero, so the result
+; always has a zero high word. EBX is used as scratch without being saved.
+; HoMM2's MAKEFILEID (Buka BASE/Misc.cpp) is a different, C++ hash.
+;
+;   unsigned long MAKEFILEID(char* name) {
+;       unsigned short hash = 0;
+;       for (; *name; ++name) {
+;           unsigned char c = *name & 0x7f;
+;           if (c >= 0x60)                       // fold 'a'..'z' (and `{|}~DEL)
+;               c -= 0x20;
+;           hash = (unsigned short)((hash >> 8) | (hash << 8));   // xchg al, ah
+;           hash = (unsigned short)((hash << 1) | (hash >> 15));  // rol ax, 1
+;           hash -= c;
+;       }
+;       return hash;
+;   }
 ?MAKEFILEID@@YAKPAD@Z PROC
     push ebp
     mov ebp, esp

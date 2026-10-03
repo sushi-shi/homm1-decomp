@@ -104,7 +104,7 @@ void combatManager::SetupCombat(
         m_battlefieldCell = gpAdvManager->GetCell(mapX, mapY);
     else
         m_battlefieldCell = NULL;
-    m_terrainType = giGroundToTerrain[m_battlefieldCell->m_tileIndex];
+    m_terrainType = CELL_TERRAIN(m_battlefieldCell);
     if (attackerHero) {
         m_playerId[COMBAT_ATTACKER_SIDE] = attackerHero->m_owner;
         attackerGroup = &attackerHero->m_army;
@@ -243,7 +243,6 @@ short combatManager::Open(short priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// clang-format off
 // cCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
 // mountain variant by MoreTreesNear), the boat for water and the graveyard.
 H1_ENUM_BEGIN(CombatBackground)
@@ -260,7 +259,6 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_GRAVEYARD = 10,
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
-// clang-format on
 
 // CMBTMGR owns retail .data 0x00490d50-0x00491057. Retail emits the backdrop
 // table after Open's literals, followed by its own literals.
@@ -1210,7 +1208,7 @@ void combatManager::KeepAttack(void) {
     }
     gapX = abs(frontCol - srcCol);
     gapY = abs(targetRow - keepY);
-    distance = gapX > gapY ? gapX : gapY;
+    distance = __max(gapX, gapY);
     arrowFrame = shotShape[target->m_hex];
     startX = 0x24d;
     startY = 0x19;
@@ -1247,7 +1245,7 @@ void combatManager::KeepAttack(void) {
         behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
         m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
         DelayTil(glTimers);
-        gpWindowManager->UpdateScreenRegion(minX, minY, updRight - minX + 1, maxY - minY + 1);
+        UPDATE_INCLUSIVE_REGION(minX, minY, updRight, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = xRun;
         lastY = yRun;
@@ -1291,8 +1289,7 @@ void combatManager::KeepAttack(void) {
             hurt,
             "Damage",
             numLost,
-            numLost > 1 ? gArmyNamesPlural[target->m_creatureType]
-                        : gArmyNames[target->m_creatureType],
+            CREATURE_DISPLAY_NAME(target->m_creatureType, numLost),
             numLost > 1 ? "perish" : "perishes"
         );
     else

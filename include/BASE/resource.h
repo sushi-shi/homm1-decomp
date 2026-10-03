@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_BEGIN(ResourceCategory)
     RESOURCE_CATEGORY_BITMAP = 0,
     RESOURCE_CATEGORY_ICON = 1,
@@ -20,7 +19,6 @@ H1_ENUM_BEGIN(ResourceReferenceCount)
     RESOURCE_REFERENCE_EMPTY = 0,
     RESOURCE_REFERENCE_INITIAL = 1
 H1_ENUM_END(ResourceReferenceCount)
-// clang-format on
 
 #pragma pack(push, 1)
 class resource {

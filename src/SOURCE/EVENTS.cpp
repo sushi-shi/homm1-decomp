@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // advManager::EventWindow's eventId: the gEventText row it prints, or
 // EVENT_TEXT_CUSTOM for caller text (Buka 2.1 EVENTS.h MapEventTextId; HoMM1
 // numbers its own rows). The five houses use RECRUIT/RANKS_FULL/EMPTY of the
@@ -96,19 +95,18 @@ H1_ENUM_CONST_BEGIN(HouseEventConstant)
     EVENT_TEXT_HOUSE_STRIDE = 3,
     EVENT_HOUSE_COUNT = 5
 H1_ENUM_CONST_END(HouseEventConstant)
-    // clang-format on
 
-    // @early-stop 99.45: m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] in
-    // the campfire arm - retail adds the column term first. As in EraseObj,
-    // the column mul (one add below it) is lighter than the row's (x 72) for
-    // every handle state and no authentic spelling is known; one more
-    // code-free node on the column reproduces retail (99.69 with `+ 0`). The
-    // abs(tx - x) + abs(ty - y) operand orders are handle state (solver:
-    // whole-TU shift T=58 leaves only this site, 4 lines).
-    // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
-    // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
-    // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
-    VA(0x0045dde0, 0x1f1a)
+// @early-stop 99.45: m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] in
+// the campfire arm - retail adds the column term first. As in EraseObj,
+// the column mul (one add below it) is lighter than the row's (x 72) for
+// every handle state and no authentic spelling is known; one more
+// code-free node on the column reproduces retail (99.69 with `+ 0`). The
+// abs(tx - x) + abs(ty - y) operand orders are handle state (solver:
+// whole-TU shift T=58 leaves only this site, 4 lines).
+// donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
+// donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
+// evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
+VA(0x0045dde0, 0x1f1a)
 void advManager::DoEvent(class mapCell* cell, int x, int y) {
     hero* pHero;
     tag_message unused;
@@ -758,9 +756,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
             SetWinText(win, WINDOW_TEXT_THIEVES_GUILD);
             gpTownManager->SetupThievesGuild(win, THIEVES_CATEGORY_COUNT);
             strcpy(gText, "Shrine - Player Rankings");
-            event.type = MESSAGE_WIDGET;
-            event.command = WIDGET_COMMAND_SET_TEXT;
-            event.id = 0;
+            SET_WIDGET_MESSAGE(event, WIDGET_COMMAND_SET_TEXT, 0);
             event.text = gText;
             win->BroadcastMessage(event);
             gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
@@ -818,7 +814,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                     : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -831,7 +827,7 @@ void advManager::DoEvent(class mapCell* cell, int x, int y) {
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(objType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (objType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                         : WHIRLPOOL_MIN_DISTANCE)) {
                             if (--teleportCount <= 0)
@@ -1772,8 +1768,7 @@ signed char advManager::CombatMonsterEvent(
             UpdateScreen(0, 0);
         m_lastQuickViewX = QUICK_VIEW_CLEARED;
     }
-    memset(gpMonGroup->m_creatureTypes, CREATURE_NONE, ARMY_GROUP_SLOT_COUNT);
-    memset(gpMonGroup->m_creatureCounts, 0, sizeof(gpMonGroup->m_creatureCounts));
+    CLEAR_ARMY_GROUP(*gpMonGroup);
     if (count / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             gpMonGroup->m_creatureTypes[i] = monsterType;
@@ -2368,7 +2363,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                 for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                     if (gpGame->m_map[tx][ty].m_triggerType
                             == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                        && abs(tx - x) + abs(ty - y)
+                        && MANHATTAN_LENGTH(tx - x, ty - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
                         teleportCount++;
@@ -2381,7 +2376,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, int x, in
                     for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
                         if (gpGame->m_map[tx][ty].m_triggerType
                                 == (unsigned char)(eventType | MAP_TRIGGER_EVENT)
-                            && abs(tx - x) + abs(ty - y)
+                            && MANHATTAN_LENGTH(tx - x, ty - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
                                           : WHIRLPOOL_MIN_DISTANCE)) {
@@ -2727,7 +2722,6 @@ int advManager::DoNetCombat(char* packet) {
     return 1;
 }
 
-// clang-format off
 // Remote combat hand-off (Buka CombatRemoteCommand / CombatRemoteFragment):
 // SendHeroTownData sends the combat record as COMMAND (answered by
 // CONFIRM), then each hero in its own fragment.
@@ -2740,8 +2734,6 @@ H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
     COMBAT_REMOTE_BUFFER_SIZE = 0xff,
     COMBAT_REMOTE_TIMEOUT = 20000
 H1_ENUM_CONST_END(CombatRemoteConstant)
-
-// clang-format on
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's
 // combatRemoteData; hero records follow one fragment byte.
@@ -3210,7 +3202,7 @@ void advManager::ReceiveHeroTownData(
 }
 
 // EVENTS owns retail .data 0x004a0504-0x004a07bb and .bss 0x004ca904. GiveExperience's
-// assertion line is its /Gi compiler line static (1110, evidence/vc4-gi-line-var.md).
+// assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
 DATA(0x004a0504)
 int giEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
 DATA(0x004ca904)

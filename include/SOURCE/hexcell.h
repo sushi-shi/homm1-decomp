@@ -8,13 +8,11 @@
 #include <H1/Macros.h>
 #include <SOURCE/combatTypes.h>
 
-// clang-format off
 // m_occupantFrame: the facing DrawOccupant last drew the occupant with; the
 // constructor and TakeOccupant reset it to NONE so the next frame redraws.
 H1_ENUM_CONST_BEGIN(HexcellConstant)
     HEXCELL_OCCUPANT_FRAME_NONE = -1
 H1_ENUM_CONST_END(HexcellConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class hexcell {

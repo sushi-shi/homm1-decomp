@@ -6,7 +6,6 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 
-// clang-format off
 // strip window layout and strip.icn frames (Buka strip.h StripConstant
 // names and values; HoMM1 picks the faction background as type / 6 + 3).
 H1_ENUM_CONST_BEGIN(StripConstant)
@@ -33,10 +32,9 @@ H1_ENUM_CONST_BEGIN(StripConstant)
     // no slot picked.
     STRIP_SLOT_NONE = -1
 H1_ENUM_CONST_END(StripConstant)
-                    // clang-format on
 
-                    // forward declarations:
-                    class armyGroup;
+// forward declarations:
+class armyGroup;
 class border;
 class font;
 class heroWindow;

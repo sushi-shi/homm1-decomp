@@ -38,7 +38,6 @@ H1_ENUM_BEGIN(CreatureType)
     CREATURE_COUNT = 28
 H1_ENUM_END(CreatureType)
 
-// clang-format off
 // tag_monsterStats::speed, indexing gSpeedText ("", Slow, Medium, Fast,
 // Blazing). Slow sets SLOW, haste BLAZING, blind NONE; combat rounds count
 // m_currentSpeed down from BLAZING.
@@ -79,6 +78,5 @@ H1_ENUM_FLAGS_BEGIN(MonsterFlags, int)
     MONSTER_FLAGS_ROUND_PERSISTENT_MASK = 0x1f,
     MONSTER_FLAGS_BATTLE_START_MASK = 0x3f
 H1_ENUM_FLAGS_END(MonsterFlags)
-// clang-format on
 
 #endif

@@ -6,7 +6,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(MapCellConstant)
     MAP_CELL_GRID_SIZE = 72,
     // An object or overlay index of 0xff draws no frame (PuzzleDraw,
@@ -72,7 +71,6 @@ H1_ENUM_BEGIN(MapTileset)
     TILESET_STONBACK = 19,
     TILESET_MINIMON = 20
 H1_ENUM_END(MapTileset)
-// clang-format on
 
 #pragma pack(push, 1)
 class mapCell {

@@ -14,7 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// clang-format off
 // cCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)
@@ -83,7 +82,6 @@ H1_ENUM_BEGIN(CombatControlId)
     COMBAT_CONTROL_SKIP_TURN = 8,
     COMBAT_CONTROL_FIELD = 0x40
 H1_ENUM_END(CombatControlId)
-// clang-format on
 
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
@@ -191,8 +189,7 @@ void combatManager::SetCombatDirections(int targetHex) {
     curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     targetSide = curArmy->m_targetSide;
     targetIndex = curArmy->m_targetIndex;
-    curArmy->m_targetSide = COMBAT_SIDE_NONE;
-    curArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    CLEAR_ARMY_TARGET(curArmy);
     target = &m_armies[targetSide][targetIndex];
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
@@ -721,8 +718,7 @@ signed char combatManager::GetCommand(short hex) {
             enemySide = m_hexCells[hex].m_occupantSide;
             targetIndex = m_hexCells[hex].m_occupantIndex;
             currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-            currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-            currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+            CLEAR_ARMY_TARGET(currentArmy);
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
             else if (enemySide != COMBAT_SIDE_NONE) {
@@ -741,8 +737,7 @@ signed char combatManager::GetCommand(short hex) {
                             if (currentArmy->ValidPath(hex, ARMY_PATH_EXACT_TARGET_HEX) == 1)
                                 return COMBAT_MESSAGE_COMMAND_ATTACK;
                             else {
-                                currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-                                currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+                                CLEAR_ARMY_TARGET(currentArmy);
                                 return COMBAT_MESSAGE_COMMAND_DEFAULT;
                             }
                         }
@@ -920,8 +915,7 @@ short WinCombatHandler(struct tag_message& message) {
                                 iTransferArtifacts[iCurTransferArtifact]
                             );
                         } else {
-                            gpWindowManager->m_dialogResult = message.id;
-                            message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+                            FINISH_DIALOG_MESSAGE(message);
                             return MESSAGE_DISPATCH_FORWARD;
                         }
                         break;
@@ -934,9 +928,7 @@ short WinCombatHandler(struct tag_message& message) {
         }
     }
     if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
-        message.type = MESSAGE_WIDGET;
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = WIN_LOSE_ANIMATION;
+        SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, WIN_LOSE_ANIMATION);
         gpGame->m_viewArmyResult++;
         message.value = gpGame->m_viewArmyResult % 6 + 1;
         gpCombatManager->m_winLoseWindow->BroadcastMessage(message);
@@ -974,9 +966,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, int artifact) 
     tag_message message;
 
     sprintf(gText, "You have captured an enemy artifact!");
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = WIN_LOSE_RESULT_TEXT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
     m_winLoseBottomWidgets[0] = new iconWidget(
@@ -1245,9 +1235,7 @@ void combatManager::DoVictory(signed char winningSide) {
                     else
                         sprintf(gText, cBattleResults[BATTLE_RESULT_VICTORY]);
                 }
-                message.type = MESSAGE_WIDGET;
-                message.command = WIDGET_COMMAND_SET_TEXT;
-                message.id = WIN_LOSE_RESULT_TEXT;
+                SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
                 message.text = gText;
                 m_winLoseWindow->BroadcastMessage(message);
                 ShowDeadArmies(m_winLoseWindow);
@@ -1336,9 +1324,7 @@ void combatManager::DoLoseWindow(void) {
         else
             sprintf(gText, cBattleResults[BATTLE_RESULT_FORCES_DEFEATED]);
     }
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = WIN_LOSE_RESULT_TEXT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
     loseWindow->BroadcastMessage(message);
     ShowDeadArmies(loseWindow);
@@ -1395,9 +1381,7 @@ short combatManager::DoSurrender(void) {
     win = new heroWindow(0x55, 0x50, "surrendr.bin");
     if (win == NULL)
         MemError();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = SURRENDER_PORTRAIT;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_ICON, SURRENDER_PORTRAIT);
     sprintf(gText, "port%04d.icn", m_heroes[1 - m_currentSide]->m_portrait);
     message.text = gText;
     win->BroadcastMessage(message);

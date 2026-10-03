@@ -138,7 +138,7 @@ Details and proven exceptions: the `wall-identifier` skill.
 
 Commit the focused source, reusable pattern docs, and baseline rows once
 `homm1 build` is clean; `homm1 verify check` runs the gates at merge
-preparation. Tooling changes run `homm1 test`; source changes run `homm1 build`.
+preparation. Source and tooling changes run `homm1 build`.
 
 Report the MAX change, the structural correction, its evidence and
 compiler controls, the referent verdict, and any remaining wall.

@@ -8,7 +8,6 @@
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/resourceTypes.h>
 
-// clang-format off
 // playerData::m_heroIds: a player keeps at most eight heroes (TOWNMGR's
 // recruit and swap tests).
 // The obelisk puzzle has 48 pieces kept as bits in m_obelisksVisited (Buka
@@ -69,7 +68,6 @@ H1_ENUM_BEGIN(PlayerColor)
     PLAYER_COLOR_COUNT = 4,
     PLAYER_COLOR_NEUTRAL = 4
 H1_ENUM_END(PlayerColor)
-// clang-format on
 
 // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
 // HoMM2's per-player AI block (without its last float) inside playerData.

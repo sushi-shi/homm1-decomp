@@ -3,7 +3,6 @@
 
 #include <BASE/resource.h>
 
-// clang-format off
 H1_ENUM_BEGIN(SamplePlaybackChannel)
     SAMPLE_PLAYBACK_CHANNEL_MUSIC = 0,
     SAMPLE_PLAYBACK_CHANNEL_GROUP = 2,
@@ -16,7 +15,6 @@ H1_ENUM_CONST_BEGIN(SampleDefaultConstant)
     SAMPLE_VOLUME_FULL = 127,
     SAMPLE_LOOP_ONCE = 1
 H1_ENUM_CONST_END(SampleDefaultConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 // MemorySample addresses these fields through one sub-object pointer.

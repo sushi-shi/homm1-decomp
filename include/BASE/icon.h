@@ -8,7 +8,6 @@
 // forward declarations:
 struct SLimitData;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
     ICON_MONO_SKIP_MASK = 0x7f,
     ICON_MONO_END_COMMAND = 0x80,
@@ -34,7 +33,6 @@ H1_ENUM_END(IconDrawOffsetMode)
 H1_ENUM_CONST_BEGIN(IconDrawOffsetConstant)
     ICON_DRAW_QUARTER_OFFSET_SHIFT = 2
 H1_ENUM_CONST_END(IconDrawOffsetConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class icon : public resource {

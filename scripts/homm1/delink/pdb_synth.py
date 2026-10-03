@@ -56,7 +56,7 @@ def ilt_band_end():
 
 #: Function channels that attribute a unit (a static-lib label names a library
 #: body; its code is never partitioned into a TU).
-UNIT_CHANNELS = ("src", "src_compgen", "src_dyninit", "functions_zlib")
+UNIT_CHANNELS = ("src", "src_compgen", "src_dyninit")
 
 #: Link-layout bands (config/retail/link_bands.tsv) whose relocation SITES are
 #: game/engine contributions - game and engine TUs interleave through all

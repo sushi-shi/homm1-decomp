@@ -535,8 +535,7 @@ combatManager::WalkTowardArmyFront(class army* currentArmy, signed char side, sh
     short pathNdx;
     short left;
 
-    currentArmy->m_targetSide = COMBAT_SIDE_NONE;
-    currentArmy->m_targetIndex = COMBAT_ARMY_INDEX_NONE;
+    CLEAR_ARMY_TARGET(currentArmy);
     armyIndex = GetClosestArmy(currentArmy, side, mask);
     if (armyIndex == COMBAT_ARMY_INDEX_NONE)
         return 0;

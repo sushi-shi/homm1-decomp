@@ -19,7 +19,7 @@
 
 // Retail compiled this file incrementally (/Gi): each netlo.cpp ProcessAssert line is the
 // function's compiler line static plus an offset; #line restores the original
-// file and lines (evidence/vc4-gi-line-var.md).
+// file and lines (docs/patterns/vc4-gi-line-var.md).
 
 // donor PoL RVA 0x000a6be0; preferred Buka symbol ?is_netbios_avail@@YIHXZ
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
@@ -150,7 +150,7 @@ H1_C_LINKAGE unsigned short __cdecl nb_rcv(int, unsigned short len, void *buffer
     node = pop_node(&gNbRcvQueue);
     LeaveCriticalSection(&gNbRcvLock);
     if (node) {
-        size = node->len < len ? node->len : len;
+        size = __min(node->len, len);
         memcpy(buffer, node->data, size);
         free(node);
         return size;

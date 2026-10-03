@@ -160,30 +160,30 @@ void searchArray::SeedPosition(
     int continueSeed,
     int scanMap
 ) {
-    static short s_direction;
-    static int s_terrain;
-    static searchNode s_currentNode;
-    static int s_mapX;
-    static int s_mapY;
-    static int s_adjacentMonsterX;
-    static int s_adjacentMonsterY;
-    static int s_stepCost[FINDPATH_STEP_COST_COUNT];
-    static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
-    static int s_currentCost;
-    static int s_hasTarget;
-    static hero* s_currentHero;
-    static int s_neighborX;
-    static int s_neighborY;
-    static unsigned char s_directionOccupied[MAP_DIRECTION_COUNT];
-    static int s_directionBlocked;
-    static mapCell* s_targetCell;
-    static signed char s_hasAdjacentMonster;
-    static int s_triggerType;
-    static int s_adjacentX;
-    static int s_adjacentY;
-    static int s_adjacentCost;
-    static int s_bestTargetCost;
-    static short s_processedPointCount;
+    DATA(0x004a4620) static short s_direction;
+    DATA(0x004a4624) static int s_terrain;
+    DATA(0x004a4670) static searchNode s_currentNode;
+    DATA(0x004a4628) static int s_mapX;
+    DATA(0x004a462c) static int s_mapY;
+    DATA(0x004a4630) static int s_adjacentMonsterX;
+    DATA(0x004a4634) static int s_adjacentMonsterY;
+    DATA(0x004a4638) static int s_stepCost[FINDPATH_STEP_COST_COUNT];
+    DATA(0x004a4640) static signed char s_possibleDirections[MAP_DIRECTION_COUNT];
+    DATA(0x004a4648) static int s_currentCost;
+    DATA(0x004a464c) static int s_hasTarget;
+    DATA(0x004a4650) static hero* s_currentHero;
+    DATA(0x004a4654) static int s_neighborX;
+    DATA(0x004a4658) static int s_neighborY;
+    DATA(0x004a4660) static unsigned char s_directionOccupied[MAP_DIRECTION_COUNT];
+    DATA(0x004a467c) static int s_directionBlocked;
+    DATA(0x004a4684) static mapCell* s_targetCell;
+    DATA(0x004a4688) static signed char s_hasAdjacentMonster;
+    DATA(0x004a468c) static int s_triggerType;
+    DATA(0x004a4690) static int s_adjacentX;
+    DATA(0x004a4694) static int s_adjacentY;
+    DATA(0x004a4698) static int s_adjacentCost;
+    DATA(0x004a469c) static int s_bestTargetCost;
+    DATA(0x0048e170) static short s_processedPointCount = 0;
 
     if (!continueSeed) {
         giFullySeeded = 0;
@@ -200,7 +200,7 @@ void searchArray::SeedPosition(
         s_targetCell = gpAdvManager->GetCell(targetX, targetY);
         if (s_targetCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)
             return;
-        if (!giGroundToTerrain[s_targetCell->m_tileIndex]) {
+        if (!CELL_TERRAIN(s_targetCell)) {
             if (waterMode) {
                 if (s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
                     || s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP))
@@ -311,7 +311,7 @@ void searchArray::SeedPosition(
             waterMode
         );
         s_terrain =
-            giGroundToTerrain[gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_tileIndex];
+            CELL_TERRAIN(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y));
         s_stepCost[FINDPATH_STEP_STRAIGHT] = s_currentNode.distance
                                              + CalcTerrainCost(
                                                  s_terrain,
@@ -401,7 +401,7 @@ void searchArray::SeedPosition(
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
                             && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
-                            s_terrain = giGroundToTerrain[s_targetCell->m_tileIndex];
+                            s_terrain = CELL_TERRAIN(s_targetCell);
                             s_adjacentCost = m_cells[s_adjacentX][s_adjacentY].distance;
                             s_stepCost[FINDPATH_STEP_STRAIGHT] =
                                 s_adjacentCost
@@ -444,7 +444,6 @@ void searchArray::SeedPosition(
 }
 
 // SEARCH owns retail .bss 0x004a4620-0x004a469f (SeedPosition's statics and
-// this flag). Retail keeps SeedPosition's point counter initialized
-// (.data 0x0048e170); that body edit waits until SeedPosition is exact.
+// this flag); SeedPosition's point counter is initialized .data (0x0048e170).
 DATA(0x004a4680)
 int giFullySeeded;

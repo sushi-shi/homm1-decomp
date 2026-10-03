@@ -3,12 +3,10 @@
 
 #include <Domains.h>
 
-// clang-format off
 // HighScoreEntry::score of an unused rank (KB AddScoreToHighScore, Update).
 H1_ENUM_CONST_BEGIN(HighScoreRuntimeConstant)
     HIGH_SCORE_EMPTY = -1
 H1_ENUM_CONST_END(HighScoreRuntimeConstant)
-// clang-format on
 
 // HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
 // score from the fixed prefix.

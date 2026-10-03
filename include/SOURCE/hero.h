@@ -25,7 +25,6 @@ class town;
 #define HERO_EVENT_SHIPWRECK 0x40u
 #define HERO_EVENT_STATUE 0x100u
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_PRIMARY_STAT_COUNT = 4,
     HERO_STARTING_STAT_COUNT = 5,
@@ -84,8 +83,6 @@ H1_ENUM_BEGIN(HeroPrimaryStat)
     HERO_PRIMARY_KNOWLEDGE = 3,
     HERO_PRIMARY_BALLISTA = 4
 H1_ENUM_END(HeroPrimaryStat)
-
-// clang-format on
 
 // Retail strides hero records by 0xb6 bytes from game+0x12985; the tail
 // keeps HoMM2's event-flag dword and AI fight-value float.

@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // giGroundToTerrain's values: the order of retail gTerrainNames
 // (0x00493428), which advManager::QuickInfo prints for a bare cell. HoMM1
 // prints the water terrain as "Ocean"; HoMM2 Buka's TerrainType keeps the
@@ -23,6 +22,5 @@ H1_ENUM_BEGIN(TerrainType)
     // Terrains after WATER_LAST are land (philAI's embark/landing tests).
     TERRAIN_WATER_LAST = TERRAIN_WATER
 H1_ENUM_END(TerrainType)
-// clang-format on
 
 #endif // HOMM1_SOURCE_TERRAINTYPES_H

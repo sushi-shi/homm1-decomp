@@ -7,7 +7,6 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 
-// clang-format off
 H1_ENUM_BEGIN(TextEntryReadMode)
     TEXT_ENTRY_READ_DEFAULT = 1,
     TEXT_ENTRY_READ_RECT = 2,
@@ -36,7 +35,6 @@ H1_ENUM_CONST_BEGIN(TextEntryConstant)
     TEXT_ENTRY_KEYPAD_3 = 0x51,
     TEXT_ENTRY_KEYPAD_0 = 0x52
 H1_ENUM_CONST_END(TextEntryConstant)
-// clang-format on
 
 // forward declarations:
 class icon;

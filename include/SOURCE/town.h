@@ -10,7 +10,6 @@
 // forward declarations:
 class hero;
 
-// clang-format off
 H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_MAGE_GUILD_SPELL_COUNT = 9,
     // town::m_occupyingHeroId when no hero stands in the town (Buka's name).
@@ -66,7 +65,6 @@ H1_ENUM_CONST_END(TownFootprintConstant)
 H1_ENUM_CONST_BEGIN(TownViewConstant)
     TOWN_VIEW_HIGH_MEMORY_LIMIT = 200
 H1_ENUM_CONST_END(TownViewConstant)
-// clang-format on
 
 #pragma pack(push, 1)
          class town {

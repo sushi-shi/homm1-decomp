@@ -3,7 +3,6 @@
 
 #include <Domains.h>
 
-// clang-format off
 // The 640x480 logical screen that heroWindowManager draws and updates,
 // as in HoMM2 Buka's BASE/display.h.
 H1_ENUM_CONST_BEGIN(LogicalScreenConstant)
@@ -17,6 +16,10 @@ H1_ENUM_CONST_BEGIN(PaletteFormatConstant)
     PALETTE_COLOR_COUNT = 256,
     COLOR_INDEX_MASK = 0xff
 H1_ENUM_CONST_END(PaletteFormatConstant)
-// clang-format on
+
+// A client-area coordinate scaled to the logical screen (Buka 2.1
+// inputManager.h). iMainWinScreenWidth/Height are kbwin's client extents.
+#define CLIENT_TO_GAME_X(x) (((x) * LOGICAL_SCREEN_WIDTH) / iMainWinScreenWidth)
+#define CLIENT_TO_GAME_Y(y) (((y) * LOGICAL_SCREEN_HEIGHT) / iMainWinScreenHeight)
 
 #endif // HOMM1_BASE_DISPLAY_H

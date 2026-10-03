@@ -14,13 +14,11 @@ class palette;
 class bitmap;
 struct tag_message;
 
-// clang-format off
 // FizzleForward's delay argument asking for the manager's default transition
 // delay (WINMGR.cpp FIZZLE_DEFAULT_DELAY).
 H1_ENUM_CONST_BEGIN(FizzleDelayConstant)
     FIZZLE_USE_DEFAULT_DELAY = -1
 H1_ENUM_CONST_END(FizzleDelayConstant)
-// clang-format on
 
 #pragma pack(push, 1)
 class heroWindowManager : public baseManager {
@@ -61,4 +59,17 @@ public:
     void ReleaseFizzleSource(void);
 };
 #pragma pack(pop)
+
+// A dialog handler records the selected widget as the dialog result and turns
+// the message into the dialog-select notification (Buka 2.1
+// heroWindowManager.h; HoMM1 assigns id and command in one chain).
+#define FINISH_DIALOG_MESSAGE(message)                                                             \
+    (gpWindowManager->m_dialogResult = (message).id,                                               \
+     (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
+
+// Redraw the inclusive screen rectangle left..right, top..bottom (Buka 2.1
+// heroWindowManager.h).
+#define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
+    (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+
 #endif // HOMM1_BASE_HEROWINDOWMANAGER_H
