@@ -36,6 +36,25 @@ _gBitmapRowSkip DWORD 0
 
 .code
 
+; All four are __cdecl C++ functions (include/BASE/bmap2.h). Row loops are
+; do/while: callers pass height >= 1 (and width >= 1). A width wider than the
+; bitmap's row returns without drawing.
+
+; Buka BASE/bmap2.cpp BlitBitmap is the same copy written in C++ (it keeps its
+; cursors in globals instead of the two skip words).
+;
+;   void BlitBitmap(bitmap* src, int sx, int sy, int w, int h,
+;                   bitmap* dst, int dx, int dy) {
+;       if ((gBitmapSourceSkip = src->m_width - w) < 0) return;
+;       unsigned char* in = (unsigned char*)src->m_pixels + sy * src->m_width + sx;
+;       if ((gBitmapRowSkip = dst->m_width - w) < 0) return;
+;       unsigned char* out = (unsigned char*)dst->m_pixels + dy * dst->m_width + dx;
+;       do {
+;           memcpy(out, in, w);                          // w / 4 DWORDs, then w & 3 bytes
+;           in += w + gBitmapSourceSkip;
+;           out += w + gBitmapRowSkip;
+;       } while (--h);
+;   }
 ?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -89,6 +108,37 @@ blit_done:
 ?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z ENDP
 
 EVEN
+; Overlap-safe copy inside one bitmap (no header declares it; no retail caller
+; is known). Direction: rows moving down copy bottom-up and right to left.
+; When the rows are equal, retail compares sx against dy (not dx).
+;
+;   void MoveBitmapArea(bitmap* bmp, int sx, int sy, int w, int h, int dx, int dy) {
+;       int skip = bmp->m_width - w;
+;       if (skip < 0) return;
+;       gBitmapSourceSkip = skip;
+;       bool backward = sy < dy || (sy == dy && sx < dy);
+;       if (sy == dy && sx == dy) return;
+;       unsigned char* base = (unsigned char*)bmp->m_pixels;
+;       if (!backward) {
+;           unsigned char* in = base + sy * bmp->m_width + sx;
+;           unsigned char* out = base + dy * bmp->m_width + dx;
+;           do {                                         // same row: byte copy
+;               memcpy(out, in, w);                      // else DWORDs + tail
+;               in += w + skip; out += w + skip;
+;           } while (--h);
+;       } else {                                         // STD
+;           unsigned char* in = base + (sy + h - 1) * bmp->m_width + sx + w - 1;
+;           unsigned char* out = base + (dy + h - 1) * bmp->m_width + dx + w - 1;
+;           do {
+;               for (int i = 0; i < w; ++i) *out-- = *in--;
+;               in -= skip; out -= skip;
+;           } while (--h);
+;       }
+;   }
+;
+; The backward different-row path moves w / 4 DWORDs first with ESI/EDI on
+; the row's LAST byte, so for w >= 4 each DWORD reaches 3 bytes past the row
+; end; the byte loop above is the w < 4 / same-row behaviour.
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -209,6 +259,20 @@ backward_same_row:
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z ENDP
 
 EVEN
+; Buka BASE/bmap2.cpp DimBitmapArea is the C++ successor; HoMM2 adds a dim
+; level selecting one of several tables, HoMM1 has the single gDimPalette.
+; The width check is unsigned (jb).
+;
+;   void DimBitmapArea(bitmap* bmp, int x, int y, int w, int h) {
+;       if ((unsigned)bmp->m_width < (unsigned)w) return;
+;       gBitmapRowSkip = bmp->m_width - w;
+;       unsigned char* p = (unsigned char*)bmp->m_pixels + y * bmp->m_width + x;
+;       do {
+;           for (int i = 0; i < w; ++i, ++p)             // lodsb / xlat / stosb
+;               *p = gDimPalette[*p];
+;           p += gBitmapRowSkip;
+;       } while (--h);
+;   }
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z PROC NEAR
     push ebp
     mov ebp, esp
@@ -249,6 +313,17 @@ dim_done:
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z ENDP
 
 EVEN
+; Buka BASE/bmap2.cpp FillBitmapArea is the C++ successor (same arguments).
+;
+;   void FillBitmapArea(bitmap* bmp, int x, int y, int w, int h, int color) {
+;       if ((unsigned)bmp->m_width < (unsigned)w) return;
+;       gBitmapRowSkip = bmp->m_width - w;
+;       unsigned char* p = (unsigned char*)bmp->m_pixels + y * bmp->m_width + x;
+;       do {
+;           memset(p, (unsigned char)color, w);          // rep stosb
+;           p += w + gBitmapRowSkip;
+;       } while (--h);
+;   }
 ?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp

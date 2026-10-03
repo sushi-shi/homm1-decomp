@@ -33,6 +33,22 @@ EXTERN decodeOutput:DWORD
 
 .code
 
+; C equivalents: vendor/lzhuf/reference/decoder_correspondence.c (ordinary
+; C of the same algorithm; Okumura/Yoshizaki LZHUF as in Paul Edwards' 1990
+; lzhuf.c with N = 4096, F = 60, THRESHOLD = 2, N_CHAR = 314, T = 627,
+; R = 626, MAX_FREQ = 8000h). The procedures use the Watcom register
+; convention: arguments in EAX, EDX, EBX; result in EAX; every other
+; register is preserved. Only Decode is called from C++ (LZHUF_internal.h:
+; void Decode(), which reads its arguments from globals).
+
+; void LzhufMemmove(void* dest /*EAX*/, const void* src /*EDX*/, unsigned count /*EBX*/)
+; memmove: copies backwards (words, then the odd byte, under STD) when the
+; source starts below an overlapping destination, else forwards (DWORDs,
+; then bytes). ES is reloaded from DS around the string moves.
+;
+;   if (src == dest) return;
+;   if (src < dest && src + count > dest) copy from the end down;
+;   else memcpy(dest, src, count);
 LzhufMemmove PROC C
     push ecx
     push esi
@@ -86,6 +102,22 @@ L_7fca1:
     ret
 LzhufMemmove ENDP
 
+; int GetBit(void): the next code bit, MSB first.
+;
+;   if (getlen > 8) {
+;       unsigned short i = getbuf;
+;       getbuf <<= 1;  getlen--;
+;       return (i & 0x8000) >> 15;
+;   }
+;   unsigned short dx = getbuf;  unsigned char glen = getlen;
+;   do {                                              // refill whole bytes
+;       dx |= (unsigned short)(*(unsigned char*)codePtr++ << (8 - glen));
+;       glen += 8;
+;   } while (glen <= 8);
+;   getbuf = dx << 1;  getlen = glen - 1;
+;   return (dx & 0x8000) >> 15;
+;
+; (The "(int)byte < 0 -> 0" test the reference C keeps is a dead jge here.)
 GetBit PROC C
     cmp BYTE PTR getlen,8
     jle L_7fcd1
@@ -136,6 +168,17 @@ L_7fcf0:
     ret
 GetBit ENDP
 
+; int DecodePosition(void): a match offset - the upper 6 bits from the
+; d_code/d_len tables indexed by the next byte, the lower 6 from more bits.
+;
+;   unsigned short dx = getbuf;  unsigned char glen = getlen;
+;   while (glen <= 8) { dx |= *(unsigned char*)codePtr++ << (8 - glen); glen += 8; }
+;   getbuf = dx << 8;  getlen = glen - 8;
+;   unsigned i = dx >> 8;
+;   unsigned c = (unsigned)d_code[i] << 6;
+;   unsigned j = d_len[i] - 2;
+;   while (j--) i = (i << 1) + GetBit();
+;   return c | (i & 0x3f);
 DecodePosition PROC C
     push ebx
     push ecx
@@ -211,6 +254,23 @@ L_7fde9:
     ret
 DecodePosition ENDP
 
+; void UpdateDecoderTree(short c /*EAX*/): adaptive Huffman update after
+; symbol c (Watcom C/386 10.0a reproduces this body from the reference C).
+;
+;   if (freq[R] == MAX_FREQ) ReconstructDecoderTree();
+;   c = prnt[c + T];
+;   do {
+;       short k = ++freq[c], l = c + 1;
+;       if (k > freq[l]) {                            // keep freq sorted
+;           while (k > freq[++l]) {}
+;           l--;
+;           freq[c] = freq[l];  freq[l] = k;
+;           short i = son[c];  prnt[i] = l;  if (i < T) prnt[i + 1] = l;
+;           short j = son[l];  son[l] = i;
+;           prnt[j] = c;  if (j < T) prnt[j + 1] = c;
+;           son[c] = j;  c = l;
+;       }
+;   } while ((c = prnt[c]) != 0);
 UpdateDecoderTree PROC C
     push edx
     push ebx
@@ -289,6 +349,26 @@ L_7fef0:
     ret
 UpdateDecoderTree ENDP
 
+; void ReconstructDecoderTree(void): halve all leaf frequencies and rebuild
+; the tree (two locals: [esp+4] is i, [esp] the byte offset of k + 1).
+;
+;   short j = 0;
+;   for (short i = 0; i < T; i++)                     // collect the leaves
+;       if (son[i] >= T) { freq[j] = (freq[i] + 1) / 2; son[j] = son[i]; j++; }
+;   for (short i = 0, j = N_CHAR; j < T; i += 2, j++) {  // connect the nodes
+;       unsigned short f = freq[j] = freq[i] + freq[i + 1];
+;       short k = j - 1;
+;       while (f < freq[k]) k--;
+;       k++;
+;       unsigned l = (j - k) * 2;
+;       LzhufMemmove(&freq[k + 1], &freq[k], l);  freq[k] = f;
+;       LzhufMemmove(&son[k + 1], &son[k], l);    son[k] = i;
+;   }
+;   for (short i = 0; i < T; i++) {                   // connect the parents
+;       short k = son[i];
+;       if (k >= T) prnt[k] = i;
+;       else prnt[k] = prnt[k + 1] = i;
+;   }
 ReconstructDecoderTree PROC C
     push ebx
     push ecx
@@ -406,6 +486,31 @@ L_80055:
     ret
 ReconstructDecoderTree ENDP
 
+; void Decode(void): decode until textsize + decodeSize bytes have been
+; produced, writing only bytes [textsize, textsize + decodeSize) to
+; decodeOutput. Every register (EAX too) is restored; the count left in EAX
+; before the final pops is discarded.
+;
+;   char* output = decodeOutput;  unsigned long length = decodeSize;
+;   short r = N - F;
+;   for (unsigned long count = 0; count < textsize + length; ) {
+;       unsigned short c = son[R];
+;       while (c < T) c = son[c + GetBit()];
+;       c -= T;
+;       UpdateDecoderTree(c);
+;       if (c < 256) {                                // literal
+;           if (count >= textsize) *output++ = (char)c;
+;           text_buf[r++] = (unsigned char)c;  r &= N - 1;  count++;
+;       } else {                                      // match
+;           short i = (r - DecodePosition() - 1) & (N - 1);
+;           short j = c - 255 + THRESHOLD;
+;           for (short k = 0; k < j; k++) {
+;               unsigned char b = text_buf[(i + k) & (N - 1)];
+;               if (count >= textsize && count < textsize + length) *output++ = b;
+;               text_buf[r++] = b;  r &= N - 1;  count++;
+;           }
+;       }
+;   }
 Decode PROC C
     push eax
     push ebx
