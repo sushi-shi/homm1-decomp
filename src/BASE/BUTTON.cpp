@@ -12,6 +12,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <H1/KB.h>
+#include <SOURCE/kbwin.h>
 
 long gButtonRepeatTimer;
 int iLeftRightSave;
