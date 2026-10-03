@@ -1077,10 +1077,10 @@ soundmgr	?Open@soundManager@@UAEFF@Z	99.6850	99.6850	4	cefd209bb0a2	0x77970	99.6
 soundmgr	?PlayAmbientMusic@soundManager@@QAEXHJH@Z	95.5833	95.5833	5	09b47c1be864	0x786d0	95.7794	
 soundmgr	?PollSound@soundManager@@QAEXXZ	100.0000	100.0000	8	42b49bfc8a50	0x78940	100.0000	
 soundmgr	?ServiceSound@soundManager@@QAEXXZ	100.0000	100.0000	1	910fa45c47ba	0x79170	100.0000	
-soundmgr	?SetMusicQuality@soundManager@@QAEXH@Z	99.7590	99.7590	3	48b11b217d87	0x785c0	99.7590	
+soundmgr	?SetMusicQuality@soundManager@@QAEXH@Z	100.0000	99.7590	3	48b11b217d87	0x785c0	100.0000	
 soundmgr	?SetReady2Poll@@YAXXZ	100.0000	100.0000	1	2e164a177ffb	0x777b0	100.0000	
-soundmgr	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHJ@Z	99.9301	99.9301	7	327dc33522fa	0x77cc0	99.9301	
-soundmgr	?StopAllSamples@soundManager@@QAEXXZ	99.7222	99.7222	4	943ef24a8535	0x78000	100.0000	
+soundmgr	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHJ@Z	100.0000	99.9301	7	327dc33522fa	0x77cc0	100.0000	
+soundmgr	?StopAllSamples@soundManager@@QAEXXZ	100.0000	99.7222	4	943ef24a8535	0x78000	100.0000	
 soundmgr	?StopSample@soundManager@@QAEXPAU_SAMPLE@@@Z	100.0000	99.3548	1	f6a3fab15ff9	0x780f0	100.0000	
 soundmgr	?SwitchAmbientMusic@soundManager@@QAEXH@Z	97.4390	97.4390	3	549e2b8b5158	0x78dd0	99.9594	
 soundmgr	?WAVE_init_driver@@YAPAU_DIG_DRIVER@@KGGG@Z	100.0000	100.0000	3	1f0d76f3ec2b	0x77870	100.0000	
