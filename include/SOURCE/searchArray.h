@@ -46,6 +46,9 @@ H1_ENUM_CONST_END(SearchDirectionConstant)
 // ADVMGR ROUTE_PATH_COST_LIMIT (59999) plays the same role.
 H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_INVALID_COORDINATE = -1,
+    // maximumCost <= 0 imposes no cost cap (FindNearestObject, SeedPosition
+    // test maximumCost > 0); EVENTS' signpost search passes -1.
+    SEARCH_NO_COST_LIMIT = -1,
     SEARCH_TARGET_COST_WINDOW = 4,
     SEARCH_MONSTER_RESEED_WINDOW = 12,
     SEARCH_NEAREST_OBJECT_MOBILITY = 500,
