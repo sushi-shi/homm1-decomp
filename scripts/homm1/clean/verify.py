@@ -282,7 +282,7 @@ def standalone(tree: Path) -> int:
     command = ["nix", "develop", f"path:{tree}", "-c", "python3", "build.py"]
     if retail_exe().is_file():
         command += ["--icon-from", str(retail_exe())]
-    print(f"[clean] verify: standalone: {' '.join(command[:4])} -c python3 build.py")
+    print(f"[clean] verify: standalone: {' '.join(command[:3])} -c python3 build.py")
     result = subprocess.run(command, cwd=tree, env=env, capture_output=True, text=True)
     exe = tree / "build" / "HEROES.EXE"
     if result.returncode or not exe.is_file():
