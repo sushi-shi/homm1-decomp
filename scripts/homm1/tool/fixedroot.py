@@ -46,6 +46,10 @@ from pathlib import Path
 ROOT = Path("/tmp/homm1-fixedroot")          # empty mount point; a tmpfs inside the namespace
 SERVER_DIR = Path("/tmp/.wine-0")           # wineserver socket dir of uid 0 (the namespace uid)
 DIR_NAMES = {"SOURCE": "Source", "BASE": "Base"}
+#: The object directory, relative to D:\\ (empty: beside the source). Under /Gi
+#: C1's symbol handles grow with the length of the -Fo path, so this is a
+#: fitted build fact (docs/patterns/vc4-gi-handles-follow-path-lengths.md).
+OBJ_DIR = ""
 
 
 def split_name(name: str) -> tuple[str, str]:
@@ -87,7 +91,9 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
            "repo": str((repo or REPO).resolve()), "msvc": str((msvc or msvc_dir()).resolve()),
            "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve()),
            # research knob: put include/ under D:\\Heroes\\<dir> instead of beside the sources
-           "include": os.environ.get("HOMM1_FIXEDROOT_INCLUDE", "")}
+           "include": os.environ.get("HOMM1_FIXEDROOT_INCLUDE", ""),
+           # the object directory under D:\\ (empty: the source directory)
+           "objdir": os.environ.get("HOMM1_FIXEDROOT_OBJDIR", OBJ_DIR)}
     env = dict(os.environ, PYTHONPATH=str(Path(__file__).resolve().parents[2]) + os.pathsep
                + os.environ.get("PYTHONPATH", ""))
     if timeout is None:
@@ -179,9 +185,16 @@ def _inner(job: dict) -> int:
         (private / f.name).write_bytes(data)
     (ROOT / "TMP").mkdir()
     d = f"D:\\Heroes\\{rdir}"
-    obj = workdir / (Path(rname).stem + ".obj")
+    objdir = job.get("objdir") or ""
+    if objdir:
+        odir = ROOT.joinpath(*objdir.split("\\"))
+        odir.mkdir(parents=True, exist_ok=True)
+        fo = "D:\\" + objdir
+    else:
+        odir, fo = workdir, d
+    obj = odir / (Path(rname).stem + ".obj")
     incs = ["/X", "/ID:\\Heroes" + (f"\\{inc}" if inc else ""), *[f"/ID:\\Heroes\\Vendor\\{v.name}" for v in vendor], "/ID:\\MSDEV\\INCLUDE"]
-    argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{d}\\{obj.name}",
+    argv = ["wine", "D:\\MSDEV\\BIN\\CL.EXE", *incs, *job["flags"], f"/Fo{fo}\\{obj.name}",
             f"{d}\\{rname}"]
     env = dict(os.environ, WINEPREFIX=str(private),
                WINEDEBUG=os.environ.get("WINEDEBUG", "fixme-all,err-kerberos"))
