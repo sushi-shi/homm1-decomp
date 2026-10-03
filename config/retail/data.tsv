@@ -1,4 +1,4 @@
-# Only identities needed by admitted code; data matching is deferred.
+# Retail data starts and kinds; identities come from source DATA claims.
 rva	kind
 0x0008E180	
 0x0008E5A8	

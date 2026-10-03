@@ -36,7 +36,6 @@ from homm1.retail_labels.censuses import functions
 OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
 EVIDENCE = RETAIL / "dna_bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
-BANDS_EVIDENCE = RETAIL / "code_link_bands.tsv"
 #: Retail links VC4.0 LIBCMT.LIB (multithreaded), not LIBC.LIB: its _mtinit,
 #: _getptd and _lock/*_lk bodies match retail exactly (189 exact CRT bodies
 #: against LIBCMT, 106 against LIBC).
@@ -398,30 +397,6 @@ def write_config(rows) -> dict[str, int]:
         "# in config/retail/dna_bands.tsv: enrolling the whole runtime band here\n"
         "# changes Vostok's anonymous-module partition.\n"
         "rva\tname\tlib\tconfidence\tsource\n"
-    )
-    first_crt = min(row["rva"] for row in rows
-                    if row["class"].startswith("crt-"))
-    main_thunks = sorted(
-        (row for row in rows
-         if row["class"] == "import-thunk" and row["rva"] < first_crt),
-        key=lambda row: row["rva"],
-    )
-    thunk_start = main_thunks[-1]["rva"]
-    for previous, current in zip(reversed(main_thunks[:-1]),
-                                 reversed(main_thunks[1:])):
-        if previous["rva"] + previous["size"] != current["rva"]:
-            break
-        thunk_start = previous["rva"]
-    text = retail().pe.section(".text")
-    text_lo, text_hi = text["va"], text["va"] + text["vsize"]
-    BANDS_EVIDENCE.write_text(
-        "# Code-only link-layout ownership recovered from the executable DNA census.\n"
-        "# This remains evidence until data matching begins; config/retail/link_bands.tsv\n"
-        "# deliberately stays empty because it activates strict data-target ownership.\n"
-        "lo\thi\tband\n"
-        f"0x{text_lo:08x}\t0x{thunk_start:08x}\tgame\n"
-        f"0x{thunk_start:08x}\t0x{first_crt:08x}\timport-thunks\n"
-        f"0x{first_crt:08x}\t0x{text_hi:08x}\tlibc\n"
     )
     return {"eh": len(eh),
             "thunk": sum(row["class"] == "import-thunk" for row in report),

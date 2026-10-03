@@ -1,4 +1,4 @@
-# Vtable claims; data matching is deferred.
+# Vtable claims sized from retail.
 rva	size	name	kind	note
 0x8c000	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
 0x8c010	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
