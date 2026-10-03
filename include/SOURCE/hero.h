@@ -132,6 +132,9 @@ public:
     H1_ENUM_STORAGE(ArtifactType, signed char) m_artifacts[HERO_ARTIFACT_SLOT_COUNT];
     int m_eventFlags;
     float m_aiFightValue;
+    int IsEmbarked(void) {
+        return m_eventFlags & HERO_EVENT_EMBARKED;
+    }
     // --- constructors ---
     hero(void);
     // --- methods ---

@@ -300,6 +300,12 @@ public:
     void VWCompleteDraw(void);
     void GetCursorSampleSet(int);
     class mapCell* DoAdvCommand(void);
+    int GetCommandTargetX(void) {
+        return m_commandTargetX;
+    }
+    int GetCommandTargetY(void) {
+        return m_commandTargetY;
+    }
     void CheckSetEvilInterface(int, int);
     void Reseed(int, int);
     int ProcessSelect(struct tag_message*, class mapCell**);
