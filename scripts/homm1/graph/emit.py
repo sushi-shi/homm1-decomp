@@ -75,6 +75,7 @@ FUNCTION_REFERENTS = "config/retail/function_referents.tsv"
 #: rather than globbed: reloc_referents.tsv is a DELINKER input and belongs on
 #: that edge, and a new table should be a deliberate edit here.
 MODEL_TABLES = [
+    FUNCTION_REFERENTS,
     "config/retail/functions.tsv", "config/retail/data.tsv",
     "config/retail/link_order.tsv", "config/retail/link_bands.tsv",
     "config/retail/functions_static_libs.tsv", "config/retail/data_vtables.tsv",

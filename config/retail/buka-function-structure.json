@@ -1,0 +1,1496 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Map contribution ownership independently of source-body matching. Ctype guard sequences are compiler-verified in buka-ctype-guard.json; each startup body follows the final body in an independently anchored TU with at most alignment padding. Sixty initializers call separate registration bodies; two optimized initializers inline registration. All register the shared cleanup. Other ownership and ABI evidence remains in buka-function-map.json. Only exact body spans are added to link_order.tsv. No source implementation or matching credit follows from ownership.",
+  "ctype_contributions": [
+    {
+      "unit": "SOURCE/ADVMGR",
+      "source_anchor_rva": "0x114e2",
+      "source_anchor_name": "?DrawAdventureBorder@advManager@@QAEXXZ",
+      "preceding_body_rva": "0x114e2",
+      "preceding_body_role": "?DrawAdventureBorder@advManager@@QAEXXZ",
+      "initializer_rva": "0x11616",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x1163d",
+      "registration_inlined": false,
+      "registration_sha256": "d5e072d19d0b6ff314dbe9f110bb888ef96e10051798132348983209a0c56e2e",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/AI",
+      "source_anchor_rva": "0x130f8",
+      "source_anchor_name": "?WalkTowardArmy@combatManager@@QAECPAVarmy@@CF@Z",
+      "preceding_body_rva": "0x130f8",
+      "preceding_body_role": "?WalkTowardArmy@combatManager@@QAECPAVarmy@@CF@Z",
+      "initializer_rva": "0x132ee",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x13315",
+      "registration_inlined": false,
+      "registration_sha256": "fc0b1d634d962e0d35a95cf60546e7fdd1393a7f48139acfb34bc5119210f9b0",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/ARMY",
+      "source_anchor_rva": "0x1811f",
+      "source_anchor_name": "?MoveAttack@army@@QAEXHH@Z",
+      "preceding_body_rva": "0x1811f",
+      "preceding_body_role": "?MoveAttack@army@@QAEXHH@Z",
+      "initializer_rva": "0x18469",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x18490",
+      "registration_inlined": false,
+      "registration_sha256": "76f1831d5f77e755850d8207f80e64ff24f1c3eddbb462f4c77d2321eb3b85a8",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/ARMYGRP",
+      "source_anchor_rva": "0x189b6",
+      "source_anchor_name": "?DamageGroup@armyGroup@@QAEXM@Z",
+      "preceding_body_rva": "0x189b6",
+      "preceding_body_role": "?DamageGroup@armyGroup@@QAEXM@Z",
+      "initializer_rva": "0x18ae9",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x18b10",
+      "registration_inlined": false,
+      "registration_sha256": "90c5a8cb0d8c70c7c06104a13acc26e1675abbe0d5bccd1e820fd635f0792fa1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/CMBTMGR",
+      "source_anchor_rva": "0x1c87d",
+      "source_anchor_name": "?DrawCombatBorder@combatManager@@QAEXXZ",
+      "preceding_body_rva": "0x1c87d",
+      "preceding_body_role": "?DrawCombatBorder@combatManager@@QAEXXZ",
+      "initializer_rva": "0x1c8bf",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x1c8e6",
+      "registration_inlined": false,
+      "registration_sha256": "8e46d0fbc9612b8d7b5d8106b80d49e6eff06fc1d4744674dd4464e23c29e142",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/comwin",
+      "source_anchor_rva": "0x1d357",
+      "source_anchor_name": "?comm_wrt_task@@YAXXZ",
+      "preceding_body_rva": "0x1d357",
+      "preceding_body_role": "?comm_wrt_task@@YAXXZ",
+      "initializer_rva": "0x1d41f",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x1d446",
+      "registration_inlined": false,
+      "registration_sha256": "fbaf6171a9c21a508d5ab5cdfc6a2d8adfda3890fbee8a5cd8f66989078dc3a7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/COMMAND",
+      "source_anchor_rva": "0x210c0",
+      "source_anchor_name": "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z",
+      "preceding_body_rva": "0x210c0",
+      "preceding_body_role": "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z",
+      "initializer_rva": "0x21586",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x215ad",
+      "registration_inlined": false,
+      "registration_sha256": "6cf350b5c9483f1b9f495c4c304acdcc7ace1071f90af27db09da5518f010161",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/CURSOR",
+      "source_anchor_rva": "0x23344",
+      "source_anchor_name": "?MoveOrigin@advManager@@QAEXFF@Z",
+      "preceding_body_rva": "0x23344",
+      "preceding_body_role": "?MoveOrigin@advManager@@QAEXFF@Z",
+      "initializer_rva": "0x2362c",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x23653",
+      "registration_inlined": false,
+      "registration_sha256": "132c231e45f8affec75bddd552fbcbe023dcd07670a4b0e8c23e50bce78eb7a3",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/DRAWING",
+      "source_anchor_rva": "0x23d6c",
+      "source_anchor_name": "?DrawFrame@combatManager@@QAEXC@Z",
+      "preceding_body_rva": "0x23d6c",
+      "preceding_body_role": "?DrawFrame@combatManager@@QAEXC@Z",
+      "initializer_rva": "0x24a0f",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x24a36",
+      "registration_inlined": false,
+      "registration_sha256": "9acee58cdb7a9db4b5bb47f832118102ca32ea96cc6b9e3ef85f2d0b0a289bb7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/EVENTS",
+      "source_anchor_rva": "0x2990d",
+      "source_anchor_name": "?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z",
+      "preceding_body_rva": "0x2990d",
+      "preceding_body_role": "?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z",
+      "initializer_rva": "0x29c1c",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x29c43",
+      "registration_inlined": false,
+      "registration_sha256": "04588458675157a1cd013ac131f48a433927552560fb1b919ff9bc20164b5922",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/FLY",
+      "source_anchor_rva": "0x2acac",
+      "source_anchor_name": "?FlyTo@army@@QAEFF@Z",
+      "preceding_body_rva": "0x2acac",
+      "preceding_body_role": "?FlyTo@army@@QAEFF@Z",
+      "initializer_rva": "0x2b3b8",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x2b3df",
+      "registration_inlined": false,
+      "registration_sha256": "412a5d4b4f9f8c517f1ef4c51c6aa78fc329d825f803a997f7b082e90cef0c89",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/GAME",
+      "source_anchor_rva": "0x38e58",
+      "source_anchor_name": "?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z",
+      "preceding_body_rva": "0x38e58",
+      "preceding_body_role": "?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z",
+      "initializer_rva": "0x38edf",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x38f06",
+      "registration_inlined": false,
+      "registration_sha256": "0973b666b97fc1fbe6fc4b2b12fc2cc426c9743e65d95c3e266a7e3e02f42632",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/HERO",
+      "source_anchor_rva": "0x3b0b5",
+      "source_anchor_name": "?HeroHandler@@YAFAAUtag_message@@@Z",
+      "preceding_body_rva": "0x3b0b5",
+      "preceding_body_role": "?HeroHandler@@YAFAAUtag_message@@@Z",
+      "initializer_rva": "0x3b6c5",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x3b6ec",
+      "registration_inlined": false,
+      "registration_sha256": "8aaaec24d773b802730dc7733363e4be517dd36970bac2219d436764ee6a58dc",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/HEXCELL",
+      "source_anchor_rva": "0x3bbcf",
+      "source_anchor_name": "?DrawObstacle@hexcell@@QAEXXZ",
+      "preceding_body_rva": "0x3bbcf",
+      "preceding_body_role": "?DrawObstacle@hexcell@@QAEXXZ",
+      "initializer_rva": "0x3bd20",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x3bd47",
+      "registration_inlined": false,
+      "registration_sha256": "ba551f0b68ca8892eee54e152897dbe033d2b7231c753b47ac65a1225397e959",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/HISCORE",
+      "source_anchor_rva": "0x3c17f",
+      "source_anchor_name": "?Update@highScoreManager@@QAEXXZ",
+      "preceding_body_rva": "0x3c17f",
+      "preceding_body_role": "?Update@highScoreManager@@QAEXXZ",
+      "initializer_rva": "0x3c76b",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x3c792",
+      "registration_inlined": false,
+      "registration_sha256": "1038504086c3a550dbd2a8eb0fb5c1b2678da998331812bd595a3fb54da0bbd6",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "source_anchor_rva": "0x42c5e",
+      "source_anchor_name": "?EarlyResizeWindow@@YAXHHHH@Z",
+      "preceding_body_rva": "0x42c5e",
+      "preceding_body_role": "?EarlyResizeWindow@@YAXHHHH@Z",
+      "initializer_rva": "0x42c63",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x42c8a",
+      "registration_inlined": false,
+      "registration_sha256": "a03e4ab5a7e24d595f432d9a49b5382bd9e093f26ad1467fd0c2635c248a6f7e",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/kbwin",
+      "source_anchor_rva": "0x44bfe",
+      "source_anchor_name": "?FindLastToken@@YAPADPADD@Z",
+      "preceding_body_rva": "0x44bfe",
+      "preceding_body_role": "?FindLastToken@@YAPADPADD@Z",
+      "initializer_rva": "0x44c4e",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x44c75",
+      "registration_inlined": false,
+      "registration_sha256": "35de8ea32a89a84327340bb363609ce9699b2b0ae986f2563b2528d4c81c8396",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/netwin",
+      "source_anchor_rva": "0x462be",
+      "source_anchor_name": "?nb_format_name@@YAXPADPAE@Z",
+      "preceding_body_rva": "0x462be",
+      "preceding_body_role": "?nb_format_name@@YAXPADPAE@Z",
+      "initializer_rva": "0x4632c",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x46353",
+      "registration_inlined": false,
+      "registration_sha256": "50447d30ebd4dcdf98ab2d93b1b729728086f0fd20bf6e23757e391017efa83b",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/NOOPT",
+      "source_anchor_rva": "0x463ef",
+      "source_anchor_name": "?DelayTilMilli@@YAXH@Z",
+      "preceding_body_rva": "0x463ef",
+      "preceding_body_role": "?DelayTilMilli@@YAXH@Z",
+      "initializer_rva": "0x4640a",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x46431",
+      "registration_inlined": false,
+      "registration_sha256": "a411088836310d13b1dc9a77560f992893255adf41e7260745d63101dae3105b",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/PATH",
+      "source_anchor_rva": "0x47103",
+      "source_anchor_name": "?GetBestDirection@army@@QAEFFFF@Z",
+      "preceding_body_rva": "0x47103",
+      "preceding_body_role": "?GetBestDirection@army@@QAEFFFF@Z",
+      "initializer_rva": "0x478ba",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x478e1",
+      "registration_inlined": false,
+      "registration_sha256": "68ea1d7d47f2290cddc17d335442bc27b19645fb7d95f874b2678dcf74e8564d",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "source_anchor_rva": "0x4efb4",
+      "source_anchor_name": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+      "preceding_body_rva": "0x4efb4",
+      "preceding_body_role": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+      "initializer_rva": "0x50ceb",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x50d12",
+      "registration_inlined": false,
+      "registration_sha256": "3b94e25d4df4b1cdda885f144b761810be46e751d904705078df52d68637c5f8",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/RECRUIT",
+      "source_anchor_rva": "0x5182c",
+      "source_anchor_name": "?QuickViewRecruit@@YAXPAVtown@@C@Z",
+      "preceding_body_rva": "0x5182c",
+      "preceding_body_role": "?QuickViewRecruit@@YAXPAVtown@@C@Z",
+      "initializer_rva": "0x519a9",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x519d0",
+      "registration_inlined": false,
+      "registration_sha256": "83287b5af674011849f12f9082c937b7b144b8140e6436f50337fcd2b82a4bec",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/REMOTE",
+      "source_anchor_rva": "0x53a1b",
+      "source_anchor_name": "?TransmitAndWait@@YAHPADHHCCPAPAD@Z",
+      "preceding_body_rva": "0x53a1b",
+      "preceding_body_role": "?TransmitAndWait@@YAHPADHHCCPAPAD@Z",
+      "initializer_rva": "0x53b2f",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x53b56",
+      "registration_inlined": false,
+      "registration_sha256": "880b3df71c8e08dc3eb609c0ffa1de56a28562e18b7336a58e9fa0cacf54dfe1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/REQUEST",
+      "source_anchor_rva": "0x55c0e",
+      "source_anchor_name": "?ShowMapInfo@fileRequester@@QAEXXZ",
+      "preceding_body_rva": "0x55c0e",
+      "preceding_body_role": "?ShowMapInfo@fileRequester@@QAEXXZ",
+      "initializer_rva": "0x55e14",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x55e3b",
+      "registration_inlined": false,
+      "registration_sha256": "e588d3bf5361422fa25978d02f5e8060a1925cadcc60873f68134bbef4feeafd",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SETUP",
+      "source_anchor_rva": "0x58151",
+      "source_anchor_name": "?BaseSetupHandler@@YAFAAUtag_message@@@Z",
+      "preceding_body_rva": "0x58151",
+      "preceding_body_role": "?BaseSetupHandler@@YAFAAUtag_message@@@Z",
+      "initializer_rva": "0x58205",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x5822c",
+      "registration_inlined": false,
+      "registration_sha256": "1f1e9999ae6062383ec8f245f1d7e7c5488bd2f48eae7b3902bd6b4754947414",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SMACKMGR",
+      "source_anchor_rva": "0x58cf4",
+      "source_anchor_name": "?PlaySmacker@@YAHC@Z",
+      "preceding_body_rva": "0x58cf4",
+      "preceding_body_role": "?PlaySmacker@@YAHC@Z",
+      "initializer_rva": "0x58d9d",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x58dc4",
+      "registration_inlined": false,
+      "registration_sha256": "8a49ffaab31121fa67298786cd7f588631d1932ac6dee245844e1490ea86a439",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SPELLAI",
+      "source_anchor_rva": "0x599be",
+      "source_anchor_name": "?EffectSpellDamage@combatManager@@QAEXPAHHHH@Z",
+      "preceding_body_rva": "0x599be",
+      "preceding_body_role": "?EffectSpellDamage@combatManager@@QAEXPAHHHH@Z",
+      "initializer_rva": "0x59e4f",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x59e76",
+      "registration_inlined": false,
+      "registration_sha256": "3ff7f909a9fd86053dbb09bae2c6a5a7b47dab5fa5673ffc876fc6a23f4b5422",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SPELLS",
+      "source_anchor_rva": "0x5c2bd",
+      "source_anchor_name": "?Armageddon@combatManager@@QAEXXZ",
+      "preceding_body_rva": "0x5c2bd",
+      "preceding_body_role": "?Armageddon@combatManager@@QAEXXZ",
+      "initializer_rva": "0x5c673",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x5c69a",
+      "registration_inlined": false,
+      "registration_sha256": "4453e3d36719a8df6eeadbe2c7367cd4c78cc47ef662e4b76bc1b1a304b1079b",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/STRIP",
+      "source_anchor_rva": "0x5cde5",
+      "source_anchor_name": "?Update@bankBox@@QAEXXZ",
+      "preceding_body_rva": "0x5cde5",
+      "preceding_body_role": "?Update@bankBox@@QAEXXZ",
+      "initializer_rva": "0x5ce9f",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x5cec6",
+      "registration_inlined": false,
+      "registration_sha256": "a2a154d52d93b9b13b85b1d368b558cbd94a9807ce804cb6d57399cd8298be64",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SWAPMGR",
+      "source_anchor_rva": "0x5e628",
+      "source_anchor_name": "?SplitMons@swapManager@@QAEXXZ",
+      "preceding_body_rva": "0x5e628",
+      "preceding_body_role": "?SplitMons@swapManager@@QAEXXZ",
+      "initializer_rva": "0x5e97a",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x5e9a1",
+      "registration_inlined": false,
+      "registration_sha256": "716eb332f2047ef2188fb4e12f6d3bf4d2725d6ab3e0a579dabf586d862eea1a",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/TOWN",
+      "source_anchor_rva": "0x5ed10",
+      "source_anchor_name": "?Deallocate@town@@QAEXXZ",
+      "preceding_body_rva": "0x5ed10",
+      "preceding_body_role": "?Deallocate@town@@QAEXXZ",
+      "initializer_rva": "0x5ee4d",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x5ee74",
+      "registration_inlined": false,
+      "registration_sha256": "1cd1605cc9c2b490b9d75176f00d95306ea332fc951396fa2c9e6ce8de05ac40",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/TOWNMGR",
+      "source_anchor_rva": "0x65bea",
+      "source_anchor_name": "?SplitArmyHandler@@YAFAAUtag_message@@@Z",
+      "preceding_body_rva": "0x65bea",
+      "preceding_body_role": "?SplitArmyHandler@@YAFAAUtag_message@@@Z",
+      "initializer_rva": "0x65eb6",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x65edd",
+      "registration_inlined": false,
+      "registration_sha256": "66938ef3c42834fce7304c33ef485e26d7ec208bba3b3eba3570713e2937d8d4",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/VIEW",
+      "source_anchor_rva": "0x66595",
+      "source_anchor_name": "?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z",
+      "preceding_body_rva": "0x66595",
+      "preceding_body_role": "?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z",
+      "initializer_rva": "0x666ca",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x666f1",
+      "registration_inlined": false,
+      "registration_sha256": "40afd8b25419a049e5729ef453cfbfc1aec8be9f3dd68efe8cf4aacaf77b3985",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/wingraph",
+      "source_anchor_rva": "0x683da",
+      "source_anchor_name": "?SetGraphicsType@@YAHH@Z",
+      "preceding_body_rva": "0x683da",
+      "preceding_body_role": "?SetGraphicsType@@YAHH@Z",
+      "initializer_rva": "0x685a0",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x685c7",
+      "registration_inlined": false,
+      "registration_sha256": "689d63d68ac7915608072e546d75619ebb6f554cacff6f3f71abd78e8dfd9065",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/BASEMGR",
+      "source_anchor_rva": "0x688c0",
+      "source_anchor_name": "??0baseManager@@QAE@XZ",
+      "preceding_body_rva": "0x6891a",
+      "preceding_body_role": "Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero.",
+      "initializer_rva": "0x68962",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x68989",
+      "registration_inlined": false,
+      "registration_sha256": "27cd4a8d2ee033a2a8efe5a7ab3df5ed8110ba9db5f060b44c0258135ad27653",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/Audio",
+      "source_anchor_rva": "0x69dd5",
+      "source_anchor_name": "?SetVolumes@@YAXHH@Z",
+      "preceding_body_rva": "0x69dd5",
+      "preceding_body_role": "?SetVolumes@@YAXHH@Z",
+      "initializer_rva": "0x69df2",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x69e19",
+      "registration_inlined": false,
+      "registration_sha256": "bd138ccfd8b37c382b5a31a49d1cbd48d0438553355f4b6a01083ba6535a76b9",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/WINMGR",
+      "source_anchor_rva": "0x6b487",
+      "source_anchor_name": "?ReleaseFizzleSource@heroWindowManager@@QAEXXZ",
+      "preceding_body_rva": "0x6b487",
+      "preceding_body_role": "?ReleaseFizzleSource@heroWindowManager@@QAEXXZ",
+      "initializer_rva": "0x6b4d4",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6b4fb",
+      "registration_inlined": false,
+      "registration_sha256": "e42dec59b143b7fdfb310f685380e68d09e3f5dc1cabbbdccb334c48faea0b98",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/MOUSEMGR",
+      "source_anchor_rva": "0x6c08f",
+      "source_anchor_name": "?ShowSystemCursor@mouseManager@@QAEXXZ",
+      "preceding_body_rva": "0x6c08f",
+      "preceding_body_role": "?ShowSystemCursor@mouseManager@@QAEXXZ",
+      "initializer_rva": "0x6c0a2",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6c0c9",
+      "registration_inlined": false,
+      "registration_sha256": "cf2b6c10a56c16d6a7efb09c6649edeca2294793208c9308a7ae372fb3b6a107",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/RESMGR",
+      "source_anchor_rva": "0x6cdb0",
+      "source_anchor_name": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "preceding_body_rva": "0x6cdb0",
+      "preceding_body_role": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "initializer_rva": "0x6ce02",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6ce29",
+      "registration_inlined": false,
+      "registration_sha256": "365f6f8f9f28512db0a92a7bfb4f3ee8b648e3b15ee6f4bf6a0e9762e1d9c606",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/BACKDROP",
+      "source_anchor_rva": "0x6cf3a",
+      "source_anchor_name": "?Draw@backdropWidget@@UAEXXZ",
+      "preceding_body_rva": "0x6cf3a",
+      "preceding_body_role": "?Draw@backdropWidget@@UAEXXZ",
+      "initializer_rva": "0x6cf88",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6cfaf",
+      "registration_inlined": false,
+      "registration_sha256": "2782bcdd6c16e4970fd5219deb990dcfd576e5ccc834b45dae598b49660b4793",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/WINDOW",
+      "source_anchor_rva": "0x6dcb2",
+      "source_anchor_name": "?MoveWindow@heroWindow@@QAEXFF@Z",
+      "preceding_body_rva": "0x6dcb2",
+      "preceding_body_role": "?MoveWindow@heroWindow@@QAEXFF@Z",
+      "initializer_rva": "0x6de6e",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6de95",
+      "registration_inlined": false,
+      "registration_sha256": "6d2aed4cce40534f970eee1e66ea1360745649f0cd8b93d354ed12c6fe2a0601",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/ICONWDGT",
+      "source_anchor_rva": "0x6e439",
+      "source_anchor_name": "?Draw@iconWidget@@UAEXXZ",
+      "preceding_body_rva": "0x6e439",
+      "preceding_body_role": "?Draw@iconWidget@@UAEXXZ",
+      "initializer_rva": "0x6e4ea",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6e511",
+      "registration_inlined": false,
+      "registration_sha256": "60f2a08cd1f7fd13d431a9d701336586a3598b72a32312374059acf9ed4734fd",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/INPUTMGR",
+      "source_anchor_rva": "0x6f3cb",
+      "source_anchor_name": "?MakeScanCodeTable@inputManager@@QAEXXZ",
+      "preceding_body_rva": "0x6f3cb",
+      "preceding_body_role": "?MakeScanCodeTable@inputManager@@QAEXXZ",
+      "initializer_rva": "0x6f835",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x6f85c",
+      "registration_inlined": false,
+      "registration_sha256": "6d03a2e8a77dfe4c5b888a2229a13fe3fae8c4a99aec2afffe3087f1b8db0e20",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/miscwin",
+      "source_anchor_rva": "0x70076",
+      "source_anchor_name": "?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z",
+      "preceding_body_rva": "0x70076",
+      "preceding_body_role": "?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z",
+      "initializer_rva": "0x7037d",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x703a4",
+      "registration_inlined": false,
+      "registration_sha256": "16233d19f16450019345c5f7fe31e9e6e46df6da0bf9977be3912d1c865e42c6",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/ICON",
+      "source_anchor_rva": "0x71453",
+      "source_anchor_name": "?DimToBuffer@icon@@QAEXFFFCC@Z",
+      "preceding_body_rva": "0x71453",
+      "preceding_body_role": "?DimToBuffer@icon@@QAEXFFFCC@Z",
+      "initializer_rva": "0x716fb",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x71722",
+      "registration_inlined": false,
+      "registration_sha256": "4c9c8f2d7485bf2ce79ebef1a15df477ccf6059cea4b5c41dd8e6c1b31344115",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/TEXTWDGT",
+      "source_anchor_rva": "0x71cb7",
+      "source_anchor_name": "?SetText@textWidget@@QAEXPAD@Z",
+      "preceding_body_rva": "0x71cb7",
+      "preceding_body_role": "?SetText@textWidget@@QAEXPAD@Z",
+      "initializer_rva": "0x71d58",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x71d7f",
+      "registration_inlined": false,
+      "registration_sha256": "28b9147db75b6d16e9433c567c021ae9eafaedc2ff8b3f2e4959461ebd9ec3b1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/FONT",
+      "source_anchor_rva": "0x725eb",
+      "source_anchor_name": "?LineWidth@font@@QAEHPAD@Z",
+      "preceding_body_rva": "0x725eb",
+      "preceding_body_role": "?LineWidth@font@@QAEHPAD@Z",
+      "initializer_rva": "0x7271e",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x72745",
+      "registration_inlined": false,
+      "registration_sha256": "2d1ae768793939af5441cfe5df00bb134a4ca801f8688666dcf63467a986c13c",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/EXEC",
+      "source_anchor_rva": "0x72fb5",
+      "source_anchor_name": "?MainLoop@executive@@QAEXXZ",
+      "preceding_body_rva": "0x73120",
+      "preceding_body_role": "Executive diagnostic method calling ShutDown with string at 0xa1728.",
+      "initializer_rva": "0x73138",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x7315f",
+      "registration_inlined": false,
+      "registration_sha256": "5fe5a876ebff0375e45af1e996a5b8e6ae6f4c0b330c053b42e7bdc52e52caad",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/BITMAP",
+      "source_anchor_rva": "0x73501",
+      "source_anchor_name": "?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z",
+      "preceding_body_rva": "0x73501",
+      "preceding_body_role": "?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z",
+      "initializer_rva": "0x735a7",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x735ce",
+      "registration_inlined": false,
+      "registration_sha256": "5e71678717bd9ec586dff642824c96c7914c0d821c4f82af8b90de3219a617c7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/MAKEFILEID",
+      "source_anchor_rva": "0x73610",
+      "source_anchor_name": "?MAKEFILEID@@YAIPAD@Z",
+      "preceding_body_rva": "0x73610",
+      "preceding_body_role": "?MAKEFILEID@@YAIPAD@Z",
+      "initializer_rva": "0x7373b",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x73762",
+      "registration_inlined": false,
+      "registration_sha256": "476fada19c1d6a3c4ab0dad5d20745d77e7943ffbc69fab3ecb77961f17b47c7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/LZHUF",
+      "source_anchor_rva": "0x7474c",
+      "source_anchor_name": "?EncodeEnd@@YAXXZ",
+      "preceding_body_rva": "0x7474c",
+      "preceding_body_role": "?EncodeEnd@@YAXXZ",
+      "initializer_rva": "0x74796",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x747bd",
+      "registration_inlined": false,
+      "registration_sha256": "11ed51c47f23cc494423952fa078d22dfceeeca572ef73736b2ad2ed821ef66d",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/PALETTE",
+      "source_anchor_rva": "0x748c8",
+      "source_anchor_name": "?Data@palette@@QAEPACXZ",
+      "preceding_body_rva": "0x748c8",
+      "preceding_body_role": "?Data@palette@@QAEPACXZ",
+      "initializer_rva": "0x748d9",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x74900",
+      "registration_inlined": false,
+      "registration_sha256": "79837c8383b7164aa85c964448b48deb3a146d3f82e397f7874472862190b522",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/BORDER",
+      "source_anchor_rva": "0x74d52",
+      "source_anchor_name": "?Draw@border@@UAEXXZ",
+      "preceding_body_rva": "0x74d52",
+      "preceding_body_role": "?Draw@border@@UAEXXZ",
+      "initializer_rva": "0x74e29",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x74e50",
+      "registration_inlined": false,
+      "registration_sha256": "ab093bcb15a19dc0a49d3175152db7f58925f8c44f0c8d8de0b2697639a21b5f",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/TILESET",
+      "source_anchor_rva": "0x74fbc",
+      "source_anchor_name": "??1tileset@@UAE@XZ",
+      "preceding_body_rva": "0x74fbc",
+      "preceding_body_role": "??1tileset@@UAE@XZ",
+      "initializer_rva": "0x74fe7",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x7500e",
+      "registration_inlined": false,
+      "registration_sha256": "545a18cc61a005fa3aba5f47d89a7e195cc0978f00598d588eb731c85dd2ffc7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/SAMPLE",
+      "source_anchor_rva": "0x75282",
+      "source_anchor_name": "??1sample@@UAE@XZ",
+      "preceding_body_rva": "0x75282",
+      "preceding_body_role": "??1sample@@UAE@XZ",
+      "initializer_rva": "0x75301",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x75328",
+      "registration_inlined": false,
+      "registration_sha256": "6672f8f7f4613bfbb0565040e4ec9fef26d2fff3160e58305618e3307a37758c",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/WIDGET",
+      "source_anchor_rva": "0x75783",
+      "source_anchor_name": "?Dim@widget@@QAEXXZ",
+      "preceding_body_rva": "0x75783",
+      "preceding_body_role": "?Dim@widget@@QAEXXZ",
+      "initializer_rva": "0x757ea",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x75811",
+      "registration_inlined": false,
+      "registration_sha256": "f74e24ecfcbd5b3e49e69393f8ba3504b7acc1b91b742c8dc4865d45175af5c4",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/TEXTNTRY",
+      "source_anchor_rva": "0x76838",
+      "source_anchor_name": "?SetupDisplayString@textEntryWidget@@QAEXPADG@Z",
+      "preceding_body_rva": "0x76838",
+      "preceding_body_role": "?SetupDisplayString@textEntryWidget@@QAEXPADG@Z",
+      "initializer_rva": "0x76a75",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x76a9c",
+      "registration_inlined": false,
+      "registration_sha256": "32a9a343c020f2110e837f8e4af3115c99ae5344712dee1dd520410921fd1d73",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/DIMMER",
+      "source_anchor_rva": "0x76bda",
+      "source_anchor_name": "?Draw@dimmerWidget@@UAEXXZ",
+      "preceding_body_rva": "0x76bda",
+      "preceding_body_role": "?Draw@dimmerWidget@@UAEXXZ",
+      "initializer_rva": "0x76bed",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x76c14",
+      "registration_inlined": false,
+      "registration_sha256": "9b9f3f643771572180f26b6822c8e2578e894b8f83de1d823aafbc7bb34d1323",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/BUTTON",
+      "source_anchor_rva": "0x77545",
+      "source_anchor_name": "?Draw@button@@UAEXXZ",
+      "preceding_body_rva": "0x77545",
+      "preceding_body_role": "?Draw@button@@UAEXXZ",
+      "initializer_rva": "0x775de",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x77605",
+      "registration_inlined": false,
+      "registration_sha256": "2e5c11f624f51cfc0299b7cd7e42da759c8aa3fac33825ad4faa081815bd33d6",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "BASE/RESOURCE",
+      "source_anchor_rva": "0x776cf",
+      "source_anchor_name": "??1resource@@UAE@XZ",
+      "preceding_body_rva": "0x776cf",
+      "preceding_body_role": "??1resource@@UAE@XZ",
+      "initializer_rva": "0x776e3",
+      "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
+      "registration_rva": "0x7770a",
+      "registration_inlined": false,
+      "registration_sha256": "06b0bc3ff9a8441af6d226e3744064532fbb2b6a6e75763404e8a8022a215d5b",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/FINDPATH",
+      "source_anchor_rva": "0x2a440",
+      "source_anchor_name": "?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z",
+      "preceding_body_rva": "0x2a440",
+      "preceding_body_role": "?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z",
+      "initializer_rva": "0x2a680",
+      "initializer_sha256": "cb36aa77f7c96d7e4d8f480d5fda36de86017320b93f8aceb8b206c333165faf",
+      "registration_rva": null,
+      "registration_inlined": true,
+      "registration_sha256": "cb36aa77f7c96d7e4d8f480d5fda36de86017320b93f8aceb8b206c333165faf",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "unit": "SOURCE/SEARCH",
+      "source_anchor_rva": "0x56150",
+      "source_anchor_name": "?SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z",
+      "preceding_body_rva": "0x56150",
+      "preceding_body_role": "?SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z",
+      "initializer_rva": "0x56af0",
+      "initializer_sha256": "021dd3c4925d990516eafcd8ccce38417756574af91030a7be818c767c619694",
+      "registration_rva": null,
+      "registration_inlined": true,
+      "registration_sha256": "021dd3c4925d990516eafcd8ccce38417756574af91030a7be818c767c619694",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    }
+  ],
+  "refptr_roles": [
+    {
+      "rva": "0x69e30",
+      "role": "audiere::RefPtr<OutputStream> destructor",
+      "size": 44,
+      "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150"
+    },
+    {
+      "rva": "0x69e60",
+      "role": "audiere::RefPtr<OutputStream>::operator=(OutputStream*)",
+      "size": 81,
+      "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655"
+    },
+    {
+      "rva": "0x69ec0",
+      "role": "audiere::RefPtr<SampleSource> destructor",
+      "size": 44,
+      "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150"
+    },
+    {
+      "rva": "0x69ef0",
+      "role": "audiere::RefPtr<SampleSource>::operator=(SampleSource*)",
+      "size": 81,
+      "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655"
+    },
+    {
+      "rva": "0x69f50",
+      "role": "audiere::RefPtr<AudioDevice> destructor",
+      "size": 44,
+      "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150"
+    },
+    {
+      "rva": "0x69f80",
+      "role": "AudiereSampleNode destructor; inlined destruction of its OutputStreamPtr member",
+      "size": 44,
+      "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150"
+    }
+  ],
+  "refptr_callers": [
+    {
+      "function_rva": "0x689a0",
+      "function_name": "?CleanupSamples@@YAXXZ",
+      "target_rva": "0x69f80",
+      "role": "AudiereSampleNode destructor; inlined destruction of its OutputStreamPtr member",
+      "instruction_rva": "0x68a04",
+      "context": [
+        {
+          "rva": "0x689f2",
+          "asm": "mov dword ptr [ebp - 0x14], edx"
+        },
+        {
+          "rva": "0x689f5",
+          "asm": "mov eax, dword ptr [ebp - 0x14]"
+        },
+        {
+          "rva": "0x689f8",
+          "asm": "mov dword ptr [ebp - 0x10], eax"
+        },
+        {
+          "rva": "0x689fb",
+          "asm": "cmp dword ptr [ebp - 0x10], 0"
+        },
+        {
+          "rva": "0x689ff",
+          "asm": "je 0x68a29"
+        },
+        {
+          "rva": "0x68a01",
+          "asm": "mov ecx, dword ptr [ebp - 0x10]"
+        },
+        {
+          "rva": "0x68a04",
+          "asm": "call 0x69f80"
+        },
+        {
+          "rva": "0x68a09",
+          "asm": "mov ecx, 1"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x689a0",
+      "function_name": "?CleanupSamples@@YAXXZ",
+      "target_rva": "0x69f80",
+      "role": "AudiereSampleNode destructor; inlined destruction of its OutputStreamPtr member",
+      "instruction_rva": "0x68ab3",
+      "context": [
+        {
+          "rva": "0x68aa1",
+          "asm": "mov dword ptr [ebp - 0x1c], edx"
+        },
+        {
+          "rva": "0x68aa4",
+          "asm": "mov eax, dword ptr [ebp - 0x1c]"
+        },
+        {
+          "rva": "0x68aa7",
+          "asm": "mov dword ptr [ebp - 0x18], eax"
+        },
+        {
+          "rva": "0x68aaa",
+          "asm": "cmp dword ptr [ebp - 0x18], 0"
+        },
+        {
+          "rva": "0x68aae",
+          "asm": "je 0x68ad8"
+        },
+        {
+          "rva": "0x68ab0",
+          "asm": "mov ecx, dword ptr [ebp - 0x18]"
+        },
+        {
+          "rva": "0x68ab3",
+          "asm": "call 0x69f80"
+        },
+        {
+          "rva": "0x68ab8",
+          "asm": "mov ecx, 1"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x68b37",
+      "function_name": "?PlaySample@@YAXPAVsample@@@Z",
+      "target_rva": "0x69e60",
+      "role": "audiere::RefPtr<OutputStream>::operator=(OutputStream*)",
+      "instruction_rva": "0x68c2a",
+      "context": [
+        {
+          "rva": "0x68c13",
+          "asm": "mov edx, dword ptr [0x4ce104]"
+        },
+        {
+          "rva": "0x68c19",
+          "asm": "mov dword ptr [ebp - 0x3c], edx"
+        },
+        {
+          "rva": "0x68c1c",
+          "asm": "mov eax, dword ptr [ebp - 0x24]"
+        },
+        {
+          "rva": "0x68c1f",
+          "asm": "mov dword ptr [eax], 0"
+        },
+        {
+          "rva": "0x68c25",
+          "asm": "push 0"
+        },
+        {
+          "rva": "0x68c27",
+          "asm": "mov ecx, dword ptr [ebp - 0x24]"
+        },
+        {
+          "rva": "0x68c2a",
+          "asm": "call 0x69e60"
+        },
+        {
+          "rva": "0x68c2f",
+          "asm": "mov byte ptr [ebp - 4], 1"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x68b37",
+      "function_name": "?PlaySample@@YAXPAVsample@@@Z",
+      "target_rva": "0x69e60",
+      "role": "audiere::RefPtr<OutputStream>::operator=(OutputStream*)",
+      "instruction_rva": "0x68c38",
+      "context": [
+        {
+          "rva": "0x68c25",
+          "asm": "push 0"
+        },
+        {
+          "rva": "0x68c27",
+          "asm": "mov ecx, dword ptr [ebp - 0x24]"
+        },
+        {
+          "rva": "0x68c2a",
+          "asm": "call 0x69e60"
+        },
+        {
+          "rva": "0x68c2f",
+          "asm": "mov byte ptr [ebp - 4], 1"
+        },
+        {
+          "rva": "0x68c33",
+          "asm": "push 0"
+        },
+        {
+          "rva": "0x68c35",
+          "asm": "mov ecx, dword ptr [ebp - 0x24]"
+        },
+        {
+          "rva": "0x68c38",
+          "asm": "call 0x69e60"
+        },
+        {
+          "rva": "0x68c3d",
+          "asm": "mov ecx, dword ptr [ebp - 0x24]"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x692fd",
+      "function_name": "?PlayMusic@@YAXH@Z",
+      "target_rva": "0x69ef0",
+      "role": "audiere::RefPtr<SampleSource>::operator=(SampleSource*)",
+      "instruction_rva": "0x69458",
+      "context": [
+        {
+          "rva": "0x69441",
+          "asm": "call dword ptr [0x48a2e0]"
+        },
+        {
+          "rva": "0x69447",
+          "asm": "mov dword ptr [ebp - 0x2c], eax"
+        },
+        {
+          "rva": "0x6944a",
+          "asm": "mov dword ptr [ebp - 0x10], 0"
+        },
+        {
+          "rva": "0x69451",
+          "asm": "mov ecx, dword ptr [ebp - 0x2c]"
+        },
+        {
+          "rva": "0x69454",
+          "asm": "push ecx"
+        },
+        {
+          "rva": "0x69455",
+          "asm": "lea ecx, [ebp - 0x10]"
+        },
+        {
+          "rva": "0x69458",
+          "asm": "call 0x69ef0"
+        },
+        {
+          "rva": "0x6945d",
+          "asm": "mov dword ptr [ebp - 4], 0"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x692fd",
+      "function_name": "?PlayMusic@@YAXH@Z",
+      "target_rva": "0x69e60",
+      "role": "audiere::RefPtr<OutputStream>::operator=(OutputStream*)",
+      "instruction_rva": "0x694c3",
+      "context": [
+        {
+          "rva": "0x694af",
+          "asm": "call dword ptr [ecx + 0xc]"
+        },
+        {
+          "rva": "0x694b2",
+          "asm": "mov dword ptr [ebp - 0x38], eax"
+        },
+        {
+          "rva": "0x694b5",
+          "asm": "mov dword ptr [ebp - 0x18], 0"
+        },
+        {
+          "rva": "0x694bc",
+          "asm": "mov eax, dword ptr [ebp - 0x38]"
+        },
+        {
+          "rva": "0x694bf",
+          "asm": "push eax"
+        },
+        {
+          "rva": "0x694c0",
+          "asm": "lea ecx, [ebp - 0x18]"
+        },
+        {
+          "rva": "0x694c3",
+          "asm": "call 0x69e60"
+        },
+        {
+          "rva": "0x694c8",
+          "asm": "mov byte ptr [ebp - 4], 3"
+        }
+      ]
+    },
+    {
+      "function_rva": "0x891eb",
+      "function_name": "EH cleanup",
+      "target_rva": "0x69e30",
+      "role": "audiere::RefPtr<OutputStream> destructor",
+      "instruction_rva": "0x891ee",
+      "context": [
+        {
+          "rva": "0x891eb",
+          "asm": "mov ecx, dword ptr [ebp - 0x24]"
+        },
+        {
+          "rva": "0x891ee",
+          "asm": "call 0x69e30"
+        },
+        {
+          "rva": "0x891f3",
+          "asm": "ret "
+        }
+      ]
+    },
+    {
+      "function_rva": "0x891f4",
+      "function_name": "EH cleanup",
+      "target_rva": "0x69f50",
+      "role": "audiere::RefPtr<AudioDevice> destructor",
+      "instruction_rva": "0x891f7",
+      "context": [
+        {
+          "rva": "0x891f4",
+          "asm": "lea ecx, [ebp - 0x28]"
+        },
+        {
+          "rva": "0x891f7",
+          "asm": "call 0x69f50"
+        },
+        {
+          "rva": "0x891fc",
+          "asm": "ret "
+        }
+      ]
+    },
+    {
+      "function_rva": "0x89207",
+      "function_name": "EH cleanup",
+      "target_rva": "0x69ec0",
+      "role": "audiere::RefPtr<SampleSource> destructor",
+      "instruction_rva": "0x8920a",
+      "context": [
+        {
+          "rva": "0x89207",
+          "asm": "lea ecx, [ebp - 0x10]"
+        },
+        {
+          "rva": "0x8920a",
+          "asm": "call 0x69ec0"
+        },
+        {
+          "rva": "0x8920f",
+          "asm": "ret "
+        }
+      ]
+    },
+    {
+      "function_rva": "0x89210",
+      "function_name": "EH cleanup",
+      "target_rva": "0x69f50",
+      "role": "audiere::RefPtr<AudioDevice> destructor",
+      "instruction_rva": "0x89213",
+      "context": [
+        {
+          "rva": "0x89210",
+          "asm": "lea ecx, [ebp - 0x24]"
+        },
+        {
+          "rva": "0x89213",
+          "asm": "call 0x69f50"
+        },
+        {
+          "rva": "0x89218",
+          "asm": "ret "
+        }
+      ]
+    },
+    {
+      "function_rva": "0x89219",
+      "function_name": "EH cleanup",
+      "target_rva": "0x69e30",
+      "role": "audiere::RefPtr<OutputStream> destructor",
+      "instruction_rva": "0x8921c",
+      "context": [
+        {
+          "rva": "0x89219",
+          "asm": "lea ecx, [ebp - 0x18]"
+        },
+        {
+          "rva": "0x8921c",
+          "asm": "call 0x69e30"
+        },
+        {
+          "rva": "0x89221",
+          "asm": "ret "
+        }
+      ]
+    }
+  ],
+  "refptr_type_evidence": [
+    "PlayMusic local [ebp-0x10] receives OpenSampleSource; assignment 0x69ef0 and EH cleanup 0x89207 -> 0x69ec0.",
+    "PlayMusic local [ebp-0x18] receives AudioDevice::openStream; assignment 0x69e60 and EH cleanup 0x89219 -> 0x69e30.",
+    "GetAudioDevice temporaries in PlaySample [ebp-0x28] and PlayMusic [ebp-0x24] use EH cleanup 0x69f50.",
+    "CleanupSamples invokes 0x69f80 on complete AudiereSampleNode objects before operator delete. The member at offset zero is OutputStreamPtr, explaining the identical destructor instructions."
+  ],
+  "unknown_symbols": [
+    {
+      "rva": "0x0003e3c0",
+      "unit": "SOURCE/KB",
+      "role": "Singular creature display name lookup through gArmyNames at RVA 0x9258c. Following GetMonsterName uses plural table 0x9266c."
+    },
+    {
+      "rva": "0x0006891a",
+      "unit": "BASE/BASEMGR",
+      "role": "Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero."
+    },
+    {
+      "rva": "0x00069126",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::stream initializer wrapper"
+    },
+    {
+      "rva": "0x00069135",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::stream RefPtr null initialization"
+    },
+    {
+      "rva": "0x00069196",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::stream atexit registration"
+    },
+    {
+      "rva": "0x000691a8",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::stream guarded RefPtr cleanup"
+    },
+    {
+      "rva": "0x000691ee",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::source initializer wrapper"
+    },
+    {
+      "rva": "0x000691fd",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::source RefPtr null initialization"
+    },
+    {
+      "rva": "0x0006925e",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::source atexit registration"
+    },
+    {
+      "rva": "0x00069270",
+      "unit": "BASE/AudiereMusic",
+      "role": "AudiereMusic::source guarded RefPtr cleanup"
+    },
+    {
+      "rva": "0x00069a8e",
+      "unit": "BASE/Audio",
+      "role": "AudiereDevice::device initializer wrapper"
+    },
+    {
+      "rva": "0x00069a9d",
+      "unit": "BASE/Audio",
+      "role": "AudiereDevice::device RefPtr null initialization"
+    },
+    {
+      "rva": "0x00069afe",
+      "unit": "BASE/Audio",
+      "role": "AudiereDevice::device atexit registration"
+    },
+    {
+      "rva": "0x00069b10",
+      "unit": "BASE/Audio",
+      "role": "AudiereDevice::device guarded RefPtr cleanup"
+    },
+    {
+      "rva": "0x00069e30",
+      "unit": "BASE/Audio",
+      "role": "audiere::RefPtr<OutputStream> destructor"
+    },
+    {
+      "rva": "0x00069e60",
+      "unit": "BASE/Audio",
+      "role": "audiere::RefPtr<OutputStream>::operator=(OutputStream*)"
+    },
+    {
+      "rva": "0x00069ec0",
+      "unit": "BASE/Audio",
+      "role": "audiere::RefPtr<SampleSource> destructor"
+    },
+    {
+      "rva": "0x00069ef0",
+      "unit": "BASE/Audio",
+      "role": "audiere::RefPtr<SampleSource>::operator=(SampleSource*)"
+    },
+    {
+      "rva": "0x00069f50",
+      "unit": "BASE/Audio",
+      "role": "audiere::RefPtr<AudioDevice> destructor"
+    },
+    {
+      "rva": "0x00069f80",
+      "unit": "BASE/Audio",
+      "role": "AudiereSampleNode destructor; inlined destruction of its OutputStreamPtr member"
+    },
+    {
+      "rva": "0x0006a393",
+      "unit": "BASE/WINMGR",
+      "role": "Hit-test windows at two short coordinates; update current/previous hover windows and return whether selection changed."
+    },
+    {
+      "rva": "0x0006abdb",
+      "unit": "BASE/WINMGR",
+      "role": "Unused no-argument window-manager method, empty body; original method name unresolved."
+    },
+    {
+      "rva": "0x0006acd9",
+      "unit": "BASE/WINMGR",
+      "role": "Palette lookup-table generator: 64-cubed nearest-color search and derived color tables; original function name unresolved."
+    },
+    {
+      "rva": "0x0006bf7a",
+      "unit": "BASE/MOUSEMGR",
+      "role": "Unused mouse-manager method, two stack arguments, empty body; original method name unresolved."
+    },
+    {
+      "rva": "0x0006bfa8",
+      "unit": "BASE/MOUSEMGR",
+      "role": "Unused mouse-manager method, no stack arguments, empty body; original method name unresolved."
+    },
+    {
+      "rva": "0x0006bfb3",
+      "unit": "BASE/MOUSEMGR",
+      "role": "Unused mouse-manager method, two stack arguments, empty body; original method name unresolved."
+    },
+    {
+      "rva": "0x0006bfff",
+      "unit": "BASE/MOUSEMGR",
+      "role": "Unused mouse-manager method, one stack argument, empty body; original method name unresolved."
+    },
+    {
+      "rva": "0x0006defe",
+      "unit": "BASE/ICONWDGT",
+      "role": "iconWidget constructor overload: resource id, signed-byte frame and flags, geometry/id/kind/fillColor; invokes GetIcon(short)."
+    },
+    {
+      "rva": "0x0006efd7",
+      "unit": "BASE/INPUTMGR",
+      "role": "Normalize short flag to 0/1 in member +0x238."
+    },
+    {
+      "rva": "0x0006f008",
+      "unit": "BASE/INPUTMGR",
+      "role": "Set short member +0x23a to positive argument, otherwise one."
+    },
+    {
+      "rva": "0x0006f039",
+      "unit": "BASE/INPUTMGR",
+      "role": "Store two short arguments into members +0x346 and +0x348."
+    },
+    {
+      "rva": "0x0006f085",
+      "unit": "BASE/INPUTMGR",
+      "role": "Translate event code [argument+2] through 128-entry table at 0xa1388 when code is in range."
+    },
+    {
+      "rva": "0x0006fa2c",
+      "unit": "BASE/miscwin",
+      "role": "Full-bitmap screen blit wrapper: source/destination origin zero, width/height from bitmap."
+    },
+    {
+      "rva": "0x0006fd82",
+      "unit": "BASE/miscwin",
+      "role": "Unused free function returning short zero; original name/signature unresolved."
+    },
+    {
+      "rva": "0x00071ef2",
+      "unit": "BASE/FONT",
+      "role": "CP1251 font glyph mapping: A8->A0, B8->C1, below C0->A1, C0..DF subtract40, E0..FF subtract3F."
+    },
+    {
+      "rva": "0x00073120",
+      "unit": "BASE/EXEC",
+      "role": "Executive diagnostic method calling ShutDown with string at 0xa1728."
+    },
+    {
+      "rva": "0x00075340",
+      "unit": "BASE/SAMPLE",
+      "role": "sample scalar deleting destructor; calls sample::~sample then conditional operator delete."
+    },
+    {
+      "rva": "0x00075886",
+      "unit": "BASE/TEXTNTRY",
+      "role": "textEntryWidget parameterized constructor, 12 arguments; textWidget base, max-length, icon resource/frame, selection state."
+    },
+    {
+      "rva": "0x00076cd9",
+      "unit": "BASE/BUTTON",
+      "role": "button constructor overload with short resource id; 11 arguments, GetIcon(short)."
+    },
+    {
+      "rva": "0x00076d87",
+      "unit": "BASE/BUTTON",
+      "role": "button constructor overload with resource name; 11 arguments, GetIcon(char*)."
+    }
+  ],
+  "runtime_interleaves": [
+    {
+      "rva": "0x00077c4d",
+      "name": "??3@YAXPAX@Z"
+    },
+    {
+      "rva": "0x0008872a",
+      "name": "__tell"
+    },
+    {
+      "rva": "0x00088740",
+      "name": "__strrev"
+    }
+  ],
+  "validation": {
+    "census_bodies": 1203,
+    "census_starts_and_extents": "All map rows equal the pinned census; no row removed or added.",
+    "ownership": "Every census body has one owner; all active model owners agree with the reviewed map. No contribution overlaps. Existing named source bindings retain their RVA, name and owner.",
+    "remaining_symbol_work": "Semantic-only rows retain unknown original names or signatures. Ownership does not provide a source body.",
+    "tests": "56 regression tests passed; usage, Gruntz and Giten whole-tree tooling audits passed; clean export and both language catalog controls passed.",
+    "link": "659456-byte candidate executable; zero unresolved externals and duplicate symbols; no /FORCE.",
+    "strict_build": "Build and build verify stop at unprovided data RVA 0xa6c0c; full verification remains incomplete."
+  }
+}

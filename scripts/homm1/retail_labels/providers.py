@@ -1,4 +1,4 @@
-"""homm1.retail_labels.providers - the six committed claim channels, parse-only.
+"""homm1.retail_labels.providers - the committed claim channels, parse-only.
 
 No policy here: LOW rows are returned (the model filters), alias multi-rows
 per rva are returned in file order (the model picks + records aliases).
@@ -25,6 +25,13 @@ def functions_static_libs(path: Path | None = None) -> list[Claim]:
             for r in _rows("functions_static_libs.tsv", path)]
 
 
+def functions_referents(path: Path | None = None) -> list[Claim]:
+    """Reviewed linker names, without source-body or extent authority."""
+    return [Claim(int(r["rva"], 16), r["name"], "func", "functions_referents",
+                  None, "", {"source": r["provenance"]})
+            for r in _rows("function_referents.tsv", path)]
+
+
 def data_vtables(path: Path | None = None) -> list[Claim]:
     return [Claim(int(r["rva"], 16), r["name"], "data", "data_vtables",
                   rint(r["size"]), "", {"vkind": r["kind"], "note": r["note"]})
@@ -45,4 +52,4 @@ def data_compgen(path: Path | None = None) -> list[Claim]:
 
 def all_claims() -> list[Claim]:
     return (functions_static_libs() + data_vtables() + data_static_libs()
-            + data_compgen())
+            + data_compgen() + functions_referents())

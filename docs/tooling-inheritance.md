@@ -477,3 +477,23 @@ compiler locales, too-small array rejection, and rejection in RC strings.
 Whole-table VC6 controls verify both the Russian and original English campaign
 initializers. Clean-export controls verify that the copied renderer handles
 these fields and retains both catalog versions. Matching rules are unchanged.
+
+
+## Reviewed function ownership before body reconstruction
+
+Reviewed Giten `d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` and Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` retail-label providers and model
+joins, and HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/symbol_providers.py`. Retained: source annotations take precedence,
+provider labels do not establish source bodies, and census starts bound extents.
+Adapted: the existing reviewed function-referent table now supplies fallback
+names to HoMM1's canonical model, with an explicit build dependency. Reviewed
+link-order contribution spans also attribute unnamed bodies to their TU.
+Generated ordinals and unresolved original names remain unnamed. The ordinary
+delinker keeps its existing referent validation and anonymous address buckets;
+no separate mapping pipeline or source body is introduced. Baseline scoring
+still requires an emitted source or source-compiler-generated body with strict
+reference evidence. The three runtime interleaves remain in the denominator.
+Tests cover source precedence, unknown gaps, missing census starts, label-only
+extent handling, and zero-credit runtime ownership. HoMM2's unrelated import
+provider mechanisms are inapplicable to this function-ownership change.

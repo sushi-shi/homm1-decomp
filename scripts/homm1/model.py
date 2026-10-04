@@ -15,8 +15,11 @@ Resolution policy (this module is the ONLY place policy lives):
   * LOW-confidence static-lib rows are leads, not claims - filtered here;
   * channel precedence per rva: src > src_compgen > src_dyninit >
     src_data_compgen > data_vtables >
-    data_compgen > data_static_libs > functions_static_libs; later claims on
+    data_compgen > data_static_libs > functions_static_libs > src_decl >
+    functions_referents; later claims on
     the same rva become recorded ALIASES, never silent losers;
+  * reviewed link-order bands provide TU ownership for unnamed bodies and
+    label-only referents; ownership does not grant a symbol or source body;
   * function extent = claimed size when the winning channel states one
     (src), else the census-derived extent;
   * kind compatibility: func claims bind kind ''|helper (static-lib labels
@@ -37,7 +40,8 @@ VIOLATIONS = BUILD / "gen/violations.tsv"
 
 _PRECEDENCE = ["src", "src_compgen", "src_dyninit", "src_data_compgen",
                "data_vtables", "data_compgen",
-               "data_static_libs", "functions_static_libs", "src_decl"]
+               "data_static_libs", "functions_static_libs", "src_decl",
+               "functions_referents"]
 
 #: channels whose claimed size is the exact matched extent (overrides derived,
 #: bounded by it - the overrun check guards the other direction). Every channel
@@ -50,7 +54,8 @@ _SIZE_AUTHORITY = {"src", "src_compgen", "src_dyninit", "src_data_compgen",
 _FUNC_KINDS = {"src": {"", "helper"}, "src_compgen": {"", "helper"},
                "src_dyninit": {""},
                "functions_static_libs": {"", "thunk", "helper"},
-               "src_decl": {"", "helper"}}
+               "src_decl": {"", "helper"},
+               "functions_referents": {"", "thunk", "helper"}}
 
 #: census kind a data channel implies (None = any non-bookkeeping kind)
 _DATA_KIND = {"data_vtables": "vtable", "src": None}
@@ -341,7 +346,7 @@ def resolve() -> Model:
         cands = per_rva.pop(("func", rva), [])
         if not cands:
             functions.append(Binding(rva, row["size"], row["kind"], "text",
-                                     "", "", "", ()))
+                                     "", band_owner(rva) or "", "", ()))
             continue
         win, rest = pick(cands)
         if win.channel == "src_dyninit":
@@ -364,7 +369,7 @@ def resolve() -> Model:
             else:
                 size = win.size
         functions.append(Binding(rva, size, row["kind"], "text",
-                                 win.name, win.unit, win.channel, tuple(rest),
+                                 win.name, win.unit or band_owner(rva) or "", win.channel, tuple(rest),
                                  tuple(win.meta.get("also_units", ()))))
 
     data: list[Binding] = []

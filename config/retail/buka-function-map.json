@@ -17566,5 +17566,6 @@
       "evidence": "buka-lzhuf.json",
       "status": "source-claim"
     }
-  ]
+  ],
+  "structure_followup": "buka-function-structure.json and the current TSV recover all TU ownership, including compiler-generated startup bodies, and refine Audiere cleanup roles. Original symbols/signatures still unresolved are explicitly semantic-only."
 }

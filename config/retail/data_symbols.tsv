@@ -175,3 +175,29 @@ rva	size	symbol	provenance
 0x000910f0	352	?gSoundPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x000913c4	20	?gMapPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x00091bc8	272	?gWinSetup@@3PAUWindowTextEntry@@A	Buka typed initializer and code users; buka-resource-paths.json
+0x000a9738	1	?giMonthType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7492	1	?giMonthTypeExtra@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7494	1	?giWeekType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a74d0	1	?giWeekTypeExtra@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7b80	13	?gMapName@@3PADA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a74dc	4	?gbInNewGameSetup@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a6cc8	1020	?pwSizeOfMapExtra@@3PAHA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9921	1	?gOverviewShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9914	4	?gHeartbeatSeen@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9920	1	?gHeroWindShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7fb4	4	?gHVHero@@3PAVhero@@A	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9949	1	?gShowHighScore@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7624	1	?giHighScoreType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9951	1	?gInPollSound@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9952	1	_?gEarlySetupDone@?1??EarlySetup@@YAHXZ@4CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9953	1	?gKBDone@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7620	4	?giShowIntro@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9929	1	?gSkipIntro@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7bb4	4	?gbGamePosToNetPos@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a98ec	4	?gColorMice@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a98f0	4	?gSpecialMouseMasks@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7ba9	1	?giLimitPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a78b0	352	?cAggPathName@@3PADA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9954	1	?gInCheckEndGame@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7484	14	?giTerrainCost@@3PAY01CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a9900	4	?gMinimized@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json

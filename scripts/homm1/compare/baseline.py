@@ -129,7 +129,8 @@ def summarize(report, target_dir, out_dir):
         key = (b.unit.rsplit("/", 1)[-1], b.name)
         row = {"rva": hex(b.rva), "name": b.name, "unit": b.unit,
                "census_size": c["size"], "size": b.size, "score": 0.0}
-        reason = "unmapped function"
+        reason = ("no source body" if b.channel in ("functions_referents", "src_decl", "src_dyninit")
+                  or (b.unit and not b.channel) else "unmapped function")
         # Both channels bind a body emitted by the candidate compiler. A
         # VA_COMPGEN identity still passes every reference check below; a
         # declaration or an unbound dynamic initializer cannot earn credit.
@@ -219,7 +220,7 @@ def module_table(rows, sources):
     groups = {}
     for row in rows:
         source = sources.get(row["unit"])
-        module = rm.module_of(source) if source else "(unmapped)"
+        module = rm.module_of(source) if source else ("CRT" if row["unit"] == "CRT" else "(unmapped)")
         groups.setdefault(module, []).append(row)
     table_rows = []
     for module in sorted(groups, key=lambda k: (k == "(unmapped)", -len(groups[k]))):

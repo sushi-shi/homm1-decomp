@@ -61,10 +61,10 @@
 #include <sys/stat.h>
 
 // Retail score-dialog owner byte (.bss).
-DATA(0x004a7d4c)
+DATA(0x004a7624)
 i8 giHighScoreType;
 // InitVars proves seven terrain rows, ordinary/diagonal cost columns.
-DATA(0x004a7b98)
+DATA(0x004a7484)
 i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
@@ -160,7 +160,7 @@ void DeleteMainClasses(void) {
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
 VA(0x0043cfcb, 0xf9)
 i32 EarlySetup(void) {
-    DATA(0x0049e8b0)
+    DATA(0x004a9952)
     static i8 gEarlySetupDone = 0;
     i32 iCDRomErr;
 
@@ -3590,9 +3590,9 @@ DATA(0x004a98e4)
 void* hmnuAdv = NULL;
 DATA(0x004a98e8)
 void* hmnuTown = NULL;
-DATA(0x00492c40)
+DATA(0x004a98ec)
 i32 gColorMice = 0;
-DATA(0x00492c44)
+DATA(0x004a98f0)
 i32 gSpecialMouseMasks = 0;
 DATA(0x004a98f4)
 i32 gCurExe = 0;
@@ -3619,7 +3619,7 @@ SMenuEnableStatus gMenuEnableStatus[70] = {
 };
 DATA(0x004a98fc)
 i32 gInSetupDialog = 0;
-DATA(0x00492e48)
+DATA(0x004a9900)
 i32 gMinimized = 0;
 DATA(0x004a9904)
 i32 gHeroMoving = 0;
@@ -3627,7 +3627,7 @@ DATA(0x004a9908)
 i32 gInSmacker = 0;
 DATA(0x004a9910)
 i32 gRemoteReady = 0;
-DATA(0x00492e5c)
+DATA(0x004a9914)
 i32 gHeartbeatSeen = 0;
 DATA(0x0049238c)
 char* gArtifactNames[38] = {
@@ -4660,9 +4660,9 @@ DATA(0x004a9918)
 i32 gMapSize = 0;
 DATA(0x004a991c)
 i32 gMapDifficulty = 0;
-DATA(0x00493f40)
+DATA(0x004a9920)
 i8 gHeroWindShowing = 0;
-DATA(0x00493f44)
+DATA(0x004a9921)
 i8 gOverviewShowing = 0;
 DATA(0x00493f48)
 i32 gFullCombatScreenDrawn = 1;
@@ -4670,7 +4670,7 @@ DATA(0x004a9924)
 i32 gLimitedCombatUpdatePalette = 0;
 DATA(0x004a9928)
 i8 gFirstTimeThrough = 0;
-DATA(0x00493f54)
+DATA(0x004a9929)
 i8 gSkipIntro = 0;
 DATA(0x004a992c)
 i32 gAllBlack = 0;
@@ -4696,17 +4696,17 @@ DATA(0x00493f80)
 i8 gGameInitialized = 0;
 DATA(0x00493f84)
 i8 gHighScoreRank = -1;
-DATA(0x00493f88)
+DATA(0x004a9949)
 i8 gShowHighScore = 0;
 DATA(0x00493440)
 i32 gHighMemBuffer = 4000;
-DATA(0x00493f98)
+DATA(0x004a9951)
 i8 gInPollSound = 0;
 // Retail places these zero-initialized flags among KB's function literals
 // (0x0049e8b0-0x0049f537), each next to the literals of its only user.
-DATA(0x0049e8b4)
+DATA(0x004a9953)
 i8 gKBDone = 0;
-DATA(0x0049ee58)
+DATA(0x004a9954)
 i8 gInCheckEndGame = 0;
 // KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
 // symbol-hash walk, not definition order).
@@ -4729,7 +4729,7 @@ DATA(0x004a74c4)
 i32 giBottomViewResource;
 DATA(0x004a9408)
 i32 giSeedingValid;
-DATA(0x004a82f0)
+DATA(0x004a7ba9)
 i8 giLimitPlayer;
 DATA(0x004a7b90)
 inputManager* gpInputManager;
@@ -4751,7 +4751,7 @@ DATA(0x004a7838)
 char cNetBoxLine[2][60];
 DATA(0x004a7b98)
 heroWindow* DataEntryWin;
-DATA(0x004a7bf0)
+DATA(0x004a74d0)
 i8 giWeekTypeExtra;
 DATA(0x004a74e4)
 philAI* gpPhilAI;
@@ -4769,33 +4769,33 @@ DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7495)
 i8 gbCombatSurrender;
-DATA(0x004a82c0)
-char gMapName[16];
+DATA(0x004a7b80)
+char gMapName[13];
 DATA(0x004a9560)
 i32 giMinExtentX;
 DATA(0x004a9564)
 i32 giMinExtentY;
 DATA(0x004a7b9c)
 i8 iMPBaseType;
-DATA(0x004a86fc)
+DATA(0x004a7fb4)
 class hero* gHVHero;
 DATA(0x004a747c)
 i32 giHeroScreenSrcIndex;
-DATA(0x004a7bb0)
+DATA(0x004a7494)
 i8 giWeekType;
 DATA(0x004a7168)
 char gText[768];
-DATA(0x004a7bfc)
+DATA(0x004a74dc)
 i32 gbInNewGameSetup;
 DATA(0x004a7830)
 palette* gpBufferPalette;
-DATA(0x004a7ba8)
+DATA(0x004a7492)
 i8 giMonthTypeExtra;
 DATA(0x004a74a0)
 i8 iMPExtendedType;
 DATA(0x004a74b0)
 char gFullMapName[20];
-DATA(0x004a7d48)
+DATA(0x004a7620)
 i32 giShowIntro;
 DATA(0x004a98a0)
 i32 glTimers[GLOBAL_TIMER_COUNT];
@@ -4845,7 +4845,7 @@ DATA(0x004a749c)
 i32 giNumHumanPlayers;
 DATA(0x004a955c)
 i8 gbIconClipOn;
-DATA(0x004a73c8)
+DATA(0x004a6cc8)
 i32 pwSizeOfMapExtra[255];
 DATA(0x004a95cc)
 i32 iDEMaxLen;
@@ -4861,7 +4861,7 @@ DATA(0x004a9734)
 i32 giCurWindowsStyleFlags;
 DATA(0x004a746c)
 H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
-DATA(0x004a9e90)
+DATA(0x004a9738)
 i8 giMonthType;
 DATA(0x004a6c4c)
 char gMapDescription[124];
@@ -4869,7 +4869,7 @@ DATA(0x004a7498)
 char* DEFAULT_AGGREGATE_NAME;
 DATA(0x004a7b94)
 i8 gbThisNetHumanPlayer[4];
-DATA(0x004a7ff0)
+DATA(0x004a78b0)
 char cAggPathName[352];
 DATA(0x004a7634)
 class highScoreManager* gpHighScoreManager;
@@ -4905,5 +4905,5 @@ DATA(0x004a782c)
 i8 giScreenScroll;
 DATA(0x004a7480)
 advManager* gpAdvManager;
-DATA(0x004a82fc)
+DATA(0x004a7bb4)
 i8 gbGamePosToNetPos[4];
