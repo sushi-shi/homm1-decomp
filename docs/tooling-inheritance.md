@@ -340,7 +340,7 @@ objdiff name/addend checks, and the separate manual score bank. Adapted:
 `--report-unprovided` preserves unresolved names only in marked diagnostic
 objects and writes every unresolved reference site. `homm1 compare --baseline`
 uses those objects with the existing comparison pipeline and counts unreviewed
-functions/references as zero over the current-image game census. Missing
+annotated bodies/references as zero over the current-image source-body claims. Missing
 absolute relocations also withhold the function. Diagnostic reports are rejected
 by the verified score loader; the README baseline is separately generated and
 checks its input fingerprint. Deferred: completing the Buka identity migration
@@ -351,8 +351,8 @@ The Buka baseline README rollup reuses HoMM1's module classifier and Markdown
 table formatter. Reviewed Gruntz `5287280c97453c356a8ec835676ece8b498ca953`
 `verify/readme.py` and HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
 `match/status.py`: retained generated blocks, module ownership and byte-weighted
-fuzzy reporting; adapted the rollup to the complete Buka census, counting
-unscored rows as zero and retaining unknown owners in an explicit unmapped row.
+fuzzy reporting; adapted the rollup to explicit Buka source-body annotations, counting
+unscored annotated bodies as zero. The full census remains structural evidence.
 MAX/HIST banking remains deferred until strict verification is complete; no
 score policy or normalization changed. Existing logged command entry points
 are retained.
@@ -493,7 +493,23 @@ Generated ordinals and unresolved original names remain unnamed. The ordinary
 delinker keeps its existing referent validation and anonymous address buckets;
 no separate mapping pipeline or source body is introduced. Baseline scoring
 still requires an emitted source or source-compiler-generated body with strict
-reference evidence. The three runtime interleaves remain in the denominator.
+reference evidence. Referent-only identities do not enroll matching targets.
 Tests cover source precedence, unknown gaps, missing census starts, label-only
-extent handling, and zero-credit runtime ownership. HoMM2's unrelated import
+extent handling, and annotation-based matching eligibility. HoMM2's unrelated import
 provider mechanisms are inapplicable to this function-ownership change.
+
+
+## Buka README target enrollment correction
+
+Reviewed Giten `d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` and Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` `verify/readme.py`, and HoMM2
+`e0689d3f71b2942b544fd677cb54085a13503d7b` `match/status.py`. Retained:
+generated module tables, strict comparison and separate score banking. Adapted:
+HoMM1's diagnostic baseline now enrolls only `VA`/`VA_COMPGEN` source bodies;
+retail labels and inferred TU ownership cannot create README matching targets.
+This corrects the former whole-census denominator that accidentally enrolled
+unannotated library/header bodies. The complete census and referent identities
+remain available for structural recovery and reference checks. Annotated bodies
+without usable comparisons still count as zero. Deferred: full strict build
+verification. Donor-specific report schemas and carve-out tables are inapplicable;
+no new command or logging path is introduced.

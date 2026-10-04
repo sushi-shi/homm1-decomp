@@ -3,7 +3,8 @@
 Uses the ordinary delinker, normalizer and objdiff comparison. Diagnostic
 objects retain unknown relocation names; only functions whose identity and
 reference sites have current-image evidence contribute to this lower bound.
-Unscored census entries remain in the denominator. This never updates MAX.
+Only source-annotated bodies enter the denominator; unscored annotated bodies
+still count as zero. The retail census remains intact. This never updates MAX.
 """
 from __future__ import annotations
 
@@ -69,6 +70,17 @@ def reference_reason(name, site, target, owner, size, proofs, known_referents):
     return ""
 
 
+def reconstruction_census(census, bindings):
+    """Annotations enroll bodies for matching; inventory labels only name targets.
+
+    VA and VA_COMPGEN supply source bodies. Declaration-only labels, dynamic
+    initializer owner pins, library identities and inferred TU ownership do not.
+    Keep annotated bodies even when their comparison is absent or unscored.
+    """
+    bodies = {b.rva for b in bindings if b.channel in ("src", "src_compgen")}
+    return [row for row in census if not row["kind"] and row["rva"] in bodies]
+
+
 def summarize(report, target_dir, out_dir):
     from homm1.core.inputs import read_verified, targets
     from homm1.core.pe import image
@@ -81,16 +93,11 @@ def summarize(report, target_dir, out_dir):
     read_verified(pin, pin.destination)
     pe = image()
     model = resolve()
-    # The Buka census already separates EH and pad starts. An inherited NWC
-    # DNA partition must not silently remove bytes from the new denominator.
+    # The census supplies current-image boundaries, not reconstruction targets.
     banners, _, _ = read_tsv(RETAIL / "functions.tsv")
     if f"# image-sha256: {pin.sha256}" not in banners:
         raise ValueError("baseline requires an image-pinned structural census")
-    bands = censuses.link_bands()
-    if any(band != "crt" for _, _, band in bands):
-        raise ValueError("baseline library exclusions need reviewed CRT bands")
-    census = [r for r in censuses.functions() if not r["kind"]
-              and not any(lo <= r["rva"] < hi for lo, hi, _ in bands)]
+    census = reconstruction_census(censuses.functions(), model.functions)
     reviewed, proofs = evidence(sorted(RETAIL.glob("buka-*.json")), pin.sha256)
     reviewed.update((rva, value[0]) for rva, value in
                     pdb_synth.referent_function_names().items())
@@ -129,8 +136,7 @@ def summarize(report, target_dir, out_dir):
         key = (b.unit.rsplit("/", 1)[-1], b.name)
         row = {"rva": hex(b.rva), "name": b.name, "unit": b.unit,
                "census_size": c["size"], "size": b.size, "score": 0.0}
-        reason = ("no source body" if b.channel in ("functions_referents", "src_decl", "src_dyninit")
-                  or (b.unit and not b.channel) else "unmapped function")
+        reason = "unreviewed or missing source comparison"
         # Both channels bind a body emitted by the candidate compiler. A
         # VA_COMPGEN identity still passes every reference check below; a
         # declaration or an unbound dynamic initializer cannot earn credit.
@@ -179,7 +185,7 @@ def summarize(report, target_dir, out_dir):
     path = out_dir / "baseline.json"
     path.write_text(json.dumps(summary, indent=2) + "\n")
     print(f"Baseline: {exact}/{len(rows)} exact ({summary['exact_percent']:.2f}%); "
-          f"{summary['fuzzy_percent']:.2f}% fuzzy across the whole game. "
+          f"{summary['fuzzy_percent']:.2f}% fuzzy across source-annotated bodies. "
           f"{len(scored)} scored; {len(rows)-len(scored)} unscored (counted as zero).")
     return summary
 
@@ -215,12 +221,12 @@ def input_digest():
 
 
 def module_table(rows, sources):
-    """Roll up the full census; unidentified owners remain an explicit row."""
+    """Roll up annotated reconstruction bodies by their source module."""
     from homm1.verify import readme as rm
     groups = {}
     for row in rows:
         source = sources.get(row["unit"])
-        module = rm.module_of(source) if source else ("CRT" if row["unit"] == "CRT" else "(unmapped)")
+        module = rm.module_of(source) if source else "(unmapped)"
         groups.setdefault(module, []).append(row)
     table_rows = []
     for module in sorted(groups, key=lambda k: (k == "(unmapped)", -len(groups[k]))):
@@ -247,7 +253,7 @@ def readme():
     return rm.write_block("\n".join([
         rm.RM_START,
         f"**Matching lower bound: {summary['exact_percent']:.2f}% exact "
-        f"({summary['exact_functions']:,}/{summary['functions']:,} functions); "
+        f"({summary['exact_functions']:,}/{summary['functions']:,} annotated functions); "
         f"{summary['fuzzy_percent']:.2f}% fuzzy.**",
         "",
         *module_table(summary["rows"], {u["unit"]: u["source"] for u in manifest.units()}),

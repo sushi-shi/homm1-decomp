@@ -3,9 +3,10 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from unittest.mock import patch
 
-from homm1.compare.baseline import evidence, module_table, reference_reason, totals
+from homm1.compare.baseline import evidence, module_table, reference_reason, reconstruction_census, totals
 from homm1.verify.scores import load
 
 
@@ -37,13 +38,24 @@ class BaselineTests(unittest.TestCase):
         self.assertIn(["`lzhuf`", "1", "1 / 1 (100.0%)", "100.0%"], cells)
         self.assertIn(["`(unmapped)`", "—", "0 / 1 (0.0%)", "0.0%"], cells)
 
-    def test_identified_runtime_interleaves_remain_in_denominator(self):
-        rows = [dict(unit="CRT", census_size=17, size=17,
-                     score=0., status="no source body")]
-        lines = module_table(rows, {})
-        self.assertTrue(any("`CRT`" in line and "0 / 1" in line for line in lines))
-        self.assertEqual(totals(rows)["functions"], 1)
+    def test_only_source_bodies_enter_matching_without_address_exclusions(self):
+        channels = ["src", "src_compgen", "functions_referents",
+                    "functions_static_libs", "", "src_decl", "src_dyninit"]
+        bindings = [SimpleNamespace(rva=i + 1, channel=channel)
+                    for i, channel in enumerate(channels)]
+        census = [dict(rva=b.rva, kind="", size=17) for b in bindings]
+        selected = reconstruction_census(census, bindings)
+        self.assertEqual([r["rva"] for r in selected], [1, 2])
+        # A missing comparison still counts as zero once a body is annotated.
+        rows = [dict(unit="SOURCE/A", census_size=r["size"], size=r["size"],
+                     score=0., status="unreviewed or missing source comparison")
+                for r in selected]
+        self.assertEqual(totals(rows)["functions"], 2)
         self.assertEqual(totals(rows)["scored_functions"], 0)
+        lines = module_table(rows, {"SOURCE/A": "src/SOURCE/A.cpp"})
+        self.assertFalse(any("CRT" in line for line in lines))
+        # Selection does not erase identities from the structural inventory.
+        self.assertEqual(len(census), len(channels))
 
     def test_unknown_name_never_becomes_proven_even_if_listed(self):
         for name in ("UNPROVISIONED_00412345", "DAT_00412345", "FUN_00412345"):
