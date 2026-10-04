@@ -385,11 +385,6 @@ source = "src/SOURCE/HEXCELL.cpp"
 flags = "cpp_buka"
 
 [[unit]]
-unit = "SOURCE/CPUSPEED"
-source = "src/SOURCE/CPUSPEED.cpp"
-flags = "cpp_buka"
-
-[[unit]]
 unit = "SOURCE/SPELLAI"
 source = "src/SOURCE/SPELLAI.cpp"
 flags = "cpp_buka"

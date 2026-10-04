@@ -368,7 +368,7 @@ extern struct campaignScenario gCampaignScenarios[];
 extern char* gBattleResults[];
 // Combat help lines for the auto-combat, skip and other controls.
 extern char* gCombatHelp[];
-// Command help lines for CombatMessage(short) (0x00493950).
+// Command help lines for CombatMessage(short) (0x00492ea8).
 extern char* gCombatMessage[];
 // Spell-book hover help lines (0x00493890).
 extern char* gSpellHelp[];

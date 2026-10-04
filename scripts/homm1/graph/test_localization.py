@@ -104,6 +104,63 @@ class LocalizationTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, 'placeholders differ'):
                     loc.Catalog.load(self.root)
 
+    def write_variant(self, value=None):
+        path = self.root / 'locales/format-variants.json'
+        path.write_text(json.dumps(value if value is not None else {
+            'resource.gold': {'en': ['s', 'd', 's'], 'ru': ['s', 'd']}}))
+        return path
+
+    def test_format_variants_require_exact_declared_signatures(self):
+        self.write_catalog('Shoot %s(%d shot%s left)', 'Стрелять %s (%d)')
+        with self.assertRaisesRegex(ValueError, 'placeholders differ'):
+            loc.Catalog.load(self.root)
+        self.write_variant()
+        self.assertEqual(loc.Catalog.load(self.root).english['resource.gold'],
+                         'Shoot %s(%d shot%s left)')
+        for value in ({'unknown.id': {'en': ['s'], 'ru': ['d']}},
+                      {'resource.gold': {'en': ['s'], 'ru': ['d']}},
+                      {'resource.gold': {'en': ['s'], 'ru': ['s']}},
+                      {'resource.gold': {'en': 's', 'ru': ['s']}},
+                      {'resource.gold': {'en': ['s'], 'ru': ['d'], 'other': []}}):
+            with self.subTest(value=value), self.assertRaises(ValueError):
+                self.write_variant(value)
+                loc.Catalog.load(self.root)
+
+    def test_locale_branch_preserves_offsets_and_ignores_quoted_identifiers(self):
+        text = ('// HOMM1_RUSSIAN\n"HOMM1_RUSSIAN";\n#if HOMM1_RUSSIAN\n'
+                'localization::Tr("resource.gold")\n#endif\nDATA(123) int n;')
+        catalog = loc.Catalog.load(self.root)
+        for locale, value in [('en', '0'), ('ru', '1')]:
+            rendered = catalog.render(text, locale=locale)
+            self.assertIn('#if ' + value, rendered)
+            self.assertIn('// HOMM1_RUSSIAN\n"HOMM1_RUSSIAN";', rendered)
+            self.assertEqual(len(text.encode()), len(rendered.encode()))
+            self.assertEqual(text.index('DATA'), rendered.index('DATA'))
+            self.assertEqual([i for i, b in enumerate(text) if b == '\n'],
+                             [i for i, b in enumerate(rendered) if b == '\n'])
+            self.assertIn('#if ' + value + '\n', catalog.render(text, expanded=True, locale=locale))
+
+    def test_real_compiler_checks_both_format_variant_calls(self):
+        self.write_catalog('Shoot %s(%d shot%s left)', 'Стрелять %s (%d)')
+        variant = self.write_variant()
+        source = self.root / 'src/test.cpp'
+        text = ('extern "C" int printf(const char*, ...);\nvoid f() {\n'
+                '#if HOMM1_RUSSIAN\n'
+                'printf(localization::Tr("resource.gold"), "name", 3);\n'
+                '#else\n'
+                'printf(localization::Tr("resource.gold"), "name", 3, "s");\n'
+                '#endif\n}\n')
+        source.write_text(text)
+        for locale in ('en', 'ru'):
+            self.assertEqual(loc.check_formats(self.root, source, locale=locale), [])
+            _, _, _, deps = loc.prepare(self.root, source, locale=locale)
+            self.assertIn(variant, deps)
+        source.write_text(text.replace('3, "s"', '3'))
+        self.assertTrue(loc.check_formats(self.root, source, locale='en'))
+        self.assertEqual(loc.check_formats(self.root, source, locale='ru'), [])
+        source.write_text(text.replace('"name", 3);', '"name", "bad");'))
+        self.assertTrue(loc.check_formats(self.root, source, locale='ru'))
+
     def test_stars_and_length_modifiers(self):
         self.assertEqual(loc.format_signature('%*.*s %ld %%'), ['*', '*', 's', 'ld'])
         self.assertEqual(loc.format_signature('50% protection and 10% of the cost'), [])

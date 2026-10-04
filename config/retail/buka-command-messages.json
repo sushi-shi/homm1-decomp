@@ -1,0 +1,555 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "localized_tables": [
+    {
+      "name": "?gCombatMessage@@3PAPADA",
+      "unit": "SOURCE/KB",
+      "rva": "0x92ea8",
+      "size": 36,
+      "old_rva": "0x93950",
+      "slots": [
+        {
+          "offset": "0x0",
+          "id": null,
+          "target_rva": "0xa9984",
+          "literal_size": 1,
+          "literal_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "nwc_pointer_site": "0x93950",
+          "nwc_string_rva": "0x9aed0",
+          "english": "",
+          "format_signatures": {
+            "en": [],
+            "ru": []
+          }
+        },
+        {
+          "offset": "0x4",
+          "id": "table.gCombatMessage.1",
+          "target_rva": "0x9a4e4",
+          "literal_size": 16,
+          "literal_sha256": "d7706308e992c27b9ac03461cb74a5ff134957b4ecd6a464f2240481b484f893",
+          "nwc_pointer_site": "0x93954",
+          "nwc_string_rva": "0x9aed4",
+          "english": "Move %s here.",
+          "format_signatures": {
+            "en": [
+              "s"
+            ],
+            "ru": [
+              "s"
+            ]
+          }
+        },
+        {
+          "offset": "0x8",
+          "id": "table.gCombatMessage.2",
+          "target_rva": "0x9a4f4",
+          "literal_size": 22,
+          "literal_sha256": "f81c27272de2448fd80fb5139714e8928184ae92221cfaf973a99664edca6221",
+          "nwc_pointer_site": "0x93958",
+          "nwc_string_rva": "0x9aee4",
+          "english": "Fly %s here.",
+          "format_signatures": {
+            "en": [
+              "s"
+            ],
+            "ru": [
+              "s"
+            ]
+          }
+        },
+        {
+          "offset": "0xc",
+          "id": "table.gCombatMessage.3",
+          "target_rva": "0x9a50c",
+          "literal_size": 13,
+          "literal_sha256": "0ce1bca4b668d46af0bbe04cfd04dbe3afe7c7317dcff738f99e96327886e2a4",
+          "nwc_pointer_site": "0x9395c",
+          "nwc_string_rva": "0x9aef4",
+          "english": "Attack %s",
+          "format_signatures": {
+            "en": [
+              "s"
+            ],
+            "ru": [
+              "s"
+            ]
+          }
+        },
+        {
+          "offset": "0x10",
+          "id": "table.gCombatMessage.4",
+          "target_rva": "0x9a51c",
+          "literal_size": 38,
+          "literal_sha256": "2eb61a6dee3439bf00ce31b5711c53ac16a90a42556d2b6dc728dbc1a6eb1b9c",
+          "nwc_pointer_site": "0x93960",
+          "nwc_string_rva": "0x9af00",
+          "english": "Shoot %s(%d shot%s left)",
+          "format_signatures": {
+            "en": [
+              "s",
+              "d",
+              "s"
+            ],
+            "ru": [
+              "s",
+              "d"
+            ]
+          }
+        },
+        {
+          "offset": "0x14",
+          "id": "table.gCombatMessage.5",
+          "target_rva": "0x9a544",
+          "literal_size": 18,
+          "literal_sha256": "2a60f9b8c1ca952555fb8d13542ab1bac8de1fa3bae28d90e8e97a87cf07bfb1",
+          "nwc_pointer_site": "0x93964",
+          "nwc_string_rva": "0x9af1c",
+          "english": "General's Options",
+          "format_signatures": {
+            "en": [],
+            "ru": []
+          }
+        },
+        {
+          "offset": "0x18",
+          "id": "table.gCombatMessage.6",
+          "target_rva": "0x9a558",
+          "literal_size": 16,
+          "literal_sha256": "ddabbddb95b4523d94b6c54aeff90e6dfe4e41689cee5b6417324efd01b964f3",
+          "nwc_pointer_site": "0x93968",
+          "nwc_string_rva": "0x9af30",
+          "english": "View Opposing General",
+          "format_signatures": {
+            "en": [],
+            "ru": []
+          }
+        },
+        {
+          "offset": "0x1c",
+          "id": "table.gCombatMessage.7",
+          "target_rva": "0x9a568",
+          "literal_size": 24,
+          "literal_sha256": "205d0ce9afa5a9f1c64d64e1d5894b2a5f65367d25c4f928dec96170283947b2",
+          "nwc_pointer_site": "0x9396c",
+          "nwc_string_rva": "0x9af48",
+          "english": "View %s info.",
+          "format_signatures": {
+            "en": [
+              "s"
+            ],
+            "ru": [
+              "s"
+            ]
+          }
+        },
+        {
+          "offset": "0x20",
+          "id": "table.gCombatMessage.8",
+          "target_rva": "0x9a580",
+          "literal_size": 11,
+          "literal_sha256": "0887487dc29681fa71ea4bffd3499eb7d37ee6c74b1187ff0e72680772c0b989",
+          "nwc_pointer_site": "0x93970",
+          "nwc_string_rva": "0x9af58",
+          "english": "No shots left!",
+          "format_signatures": {
+            "en": [],
+            "ru": []
+          }
+        }
+      ]
+    }
+  ],
+  "behavior_changes": [
+    {
+      "function": "?CombatMessage@combatManager@@QAEXF@Z",
+      "rva": "0x237b4",
+      "size": 646,
+      "changes": [
+        "Attack and shoot commands use gArmyNamesPlural. Move, fly and information keep gArmyNames.",
+        "Russian shooting format consumes name and shot count; original English also consumes the conditional suffix."
+      ],
+      "retail_control": {
+        "attack_name_operand": "0x238fe",
+        "shoot_name_operand": "0x2392a",
+        "shoot_call": "0x2393b",
+        "shoot_stack_cleanup": 16,
+        "empty_literal_operand": "0x239dc",
+        "empty_literal_target": "0xa6ac8"
+      }
+    }
+  ],
+  "functions": [
+    {
+      "unit": "SOURCE/DRAWING",
+      "name": "?CombatMessage@combatManager@@QAEXF@Z",
+      "rva": "0x237b4",
+      "size": 646,
+      "references": [
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23883",
+          "target_rva": "0x92ec8",
+          "kind": 6,
+          "addend": "0x20"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x23889",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_strcpy",
+          "site_rva": "0x2388e",
+          "target_rva": "0x77c60",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23898",
+          "target_rva": "0x92ea8",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x2389e",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_strcpy",
+          "site_rva": "0x238a3",
+          "target_rva": "0x77c60",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gArmyNames@@3PAPADA",
+          "site_rva": "0x238b6",
+          "target_rva": "0x9258c",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x238bc",
+          "target_rva": "0x92eac",
+          "kind": 6,
+          "addend": "0x4"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x238c2",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x238c7",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gArmyNames@@3PAPADA",
+          "site_rva": "0x238da",
+          "target_rva": "0x9258c",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x238e0",
+          "target_rva": "0x92eb0",
+          "kind": 6,
+          "addend": "0x8"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x238e6",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x238eb",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gArmyNamesPlural@@3PAPADA",
+          "site_rva": "0x238fe",
+          "target_rva": "0x9266c",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23904",
+          "target_rva": "0x92eb4",
+          "kind": 6,
+          "addend": "0xc"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x2390a",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x2390f",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gArmyNamesPlural@@3PAPADA",
+          "site_rva": "0x2392a",
+          "target_rva": "0x9266c",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23931",
+          "target_rva": "0x92eb8",
+          "kind": 6,
+          "addend": "0x10"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x23937",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x2393c",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23949",
+          "target_rva": "0x92ebc",
+          "kind": 6,
+          "addend": "0x14"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x2394f",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_strcpy",
+          "site_rva": "0x23954",
+          "target_rva": "0x77c60",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x23962",
+          "target_rva": "0x92ec0",
+          "kind": 6,
+          "addend": "0x18"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x23968",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_strcpy",
+          "site_rva": "0x2396d",
+          "target_rva": "0x77c60",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gArmyNames@@3PAPADA",
+          "site_rva": "0x239c1",
+          "target_rva": "0x9258c",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gCombatMessage@@3PAPADA",
+          "site_rva": "0x239c7",
+          "target_rva": "0x92ec4",
+          "kind": 6,
+          "addend": "0x1c"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x239cd",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x239d2",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x239e1",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x239e6",
+          "target_rva": "0x7823f",
+          "kind": 20,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x239f0",
+          "target_rva": "0xa7168",
+          "kind": 6,
+          "addend": "0x0"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+          "site_rva": "0x239f8",
+          "target_rva": "0x23707",
+          "kind": 20,
+          "addend": "0x0"
+        }
+      ],
+      "local_slot_map": {
+        "-20": -20,
+        "-12": -12,
+        "-4": -16,
+        "-16": -8,
+        "-8": -4,
+        "-24": -24
+      },
+      "internal_targets": [
+        {
+          "offset": "0xab",
+          "target_offset": "0x24e"
+        },
+        {
+          "offset": "0x24e",
+          "target_offset": "0xaf"
+        },
+        {
+          "offset": "0x252",
+          "target_offset": "0xfb"
+        },
+        {
+          "offset": "0x256",
+          "target_offset": "0x11f"
+        },
+        {
+          "offset": "0x25a",
+          "target_offset": "0x167"
+        },
+        {
+          "offset": "0x25e",
+          "target_offset": "0x194"
+        },
+        {
+          "offset": "0x262",
+          "target_offset": "0x1c2"
+        },
+        {
+          "offset": "0x266",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x26a",
+          "target_offset": "0x143"
+        },
+        {
+          "offset": "0x26e",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x272",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x276",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x27a",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x27e",
+          "target_offset": "0x239"
+        },
+        {
+          "offset": "0x282",
+          "target_offset": "0x1ac"
+        }
+      ],
+      "private_literals": [
+        {
+          "operand": "0x239dc",
+          "target": "0xa6ac8",
+          "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+          "size": 1
+        }
+      ],
+      "object_sha256": "671ee7b7b4f943b7a43db1b34963404c89daa4d484e70c7208884ad0e9878064",
+      "retail_body_sha256": "30c0cfa1fbd1aed210593570b70cf971488adbe068a24d54423a6e6f3296568e",
+      "method": "All instruction bytes, internal branches and switch targets identical after resolving real relocation operands and the recorded injective local-stack map; public names and addends checked against reviewed claims. Strict comparison unchanged."
+    }
+  ],
+  "validation": {
+    "instructions": 156,
+    "public_references": 36,
+    "internal_targets": 15,
+    "pointer_slots": 9,
+    "compiled_table_object_sha256": "83687fc7c26ef29d37139c80965046f47d3ca8c1162d85fc3519c6e385668297"
+  },
+  "locale_controls": {
+    "english_table_object_sha256": "c75f7ace7f31c927895ee33e109da6f26648fb460d8cd8e6d8477bd4d5dd9819",
+    "english_table_slots": 9,
+    "calls": [
+      {
+        "locale": "en",
+        "object_sha256": "1e0050744711ffe17cf44883579665aa4213d01b08c87f4cc2c8fa1bbb0bc56c",
+        "function_size": 678,
+        "shoot_call_offset": "0x1a7",
+        "stack_cleanup": 20,
+        "format_arguments": 3
+      },
+      {
+        "locale": "ru",
+        "object_sha256": "671ee7b7b4f943b7a43db1b34963404c89daa4d484e70c7208884ad0e9878064",
+        "function_size": 646,
+        "shoot_call_offset": "0x187",
+        "stack_cleanup": 16,
+        "format_arguments": 2
+      }
+    ]
+  }
+}

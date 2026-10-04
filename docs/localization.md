@@ -12,6 +12,15 @@ Windows-1251 bytes as fixed-width octal escapes. Unknown or stale IDs, missing
 translations, fuzzy entries, mismatched printf arguments and unencodable text
 fail validation.
 
+When retail changes a format argument list, `locales/format-variants.json`
+records the exact English and Russian signatures for that ID. Unknown IDs,
+stale signatures and unnecessary variants fail validation. `HOMM1_RUSSIAN`
+selects the corresponding source call at build time; the renderer replaces it
+with `1` or `0` before either compiler sees the file. Both compiler views retain
+source offsets. Clean exports carry the same manifest and renderer. This is
+used by the combat shooting message, whose English suffix argument is absent
+from Buka. Other catalog entries still require identical format signatures.
+
 Clang sees a VFS overlay retaining original filenames, byte offsets and lines.
 VC6 sees a generated source/header mirror. Catalog edits invalidate compile and
 extraction edges; source fingerprints include the pinned target's expanded literals.
@@ -29,9 +38,7 @@ Run the catalog/source check with `python3 -m homm1.graph.localization`, and the
 portable catalog/overlay tests with
 `python3 -m unittest homm1.graph.test_localization` inside `nix develop .#build`.
 
-The 565 migrated table entries retain exact 1.2 English. Their source
-commit, old and new pointer slots, and literal hashes are recorded in
-`config/retail/buka-localization.tsv`. The transitional 1.2 control explicitly selects English in targets.json; Buka
-will select Russian. Nonmatching locale objects must use build/ordinary/<locale>.
-Other candidate correspondences remain
-in the migration evidence until reviewed.
+Migrated table entries retain exact 1.2 English. Their source commit, old and
+new pointer slots, and literal hashes are recorded in
+`config/retail/buka-localization.tsv`. The pinned Buka target selects Russian;
+nonmatching English objects use `build/ordinary/en`.

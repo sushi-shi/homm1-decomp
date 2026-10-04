@@ -4306,17 +4306,17 @@ char* gViewGeneralHelp[6] = {
     "Cancel",
     "General's Options",
 };
-DATA(0x00493950)
+DATA(0x00492ea8)
 char* gCombatMessage[9] = {
     "",
-    "Move %s here.",
-    "Fly %s here.",
-    "Attack %s",
-    "Shoot %s(%d shot%s left)",
-    "General's Options",
-    "View Opposing General",
-    "View %s info.",
-    "No shots left!",
+    localization::Tr("table.gCombatMessage.1"),
+    localization::Tr("table.gCombatMessage.2"),
+    localization::Tr("table.gCombatMessage.3"),
+    localization::Tr("table.gCombatMessage.4"),
+    localization::Tr("table.gCombatMessage.5"),
+    localization::Tr("table.gCombatMessage.6"),
+    localization::Tr("table.gCombatMessage.7"),
+    localization::Tr("table.gCombatMessage.8"),
 };
 DATA(0x00493978)
 char* gHeroLevel[3] = {

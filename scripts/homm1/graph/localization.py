@@ -63,6 +63,8 @@ def prepare(repo, source, *, locale=None):
     _write_generated(header, header_text)
     dependencies = [repo / 'locales/messages.def', repo / 'locales/ru.po', Path(__file__),
                     Path(__file__).with_name('catalog.py')]
+    if (repo / 'locales/format-variants.json').is_file():
+        dependencies.append(repo / 'locales/format-variants.json')
     roots, compiled = [], source
     views = {}
     for path in [source, *(repo / p for p in scanner.headers(str(source)))]:

@@ -120,7 +120,7 @@ def generate(files: dict[str, bytes], *, control: bool = False
         problems += [f"{name}: stranded punctuation: {line}"
                      for line in source.stranded(text, cleaned, **kinds[kind])]
         output[name] = cleaned.encode("utf-8")
-    for name in ("locales/messages.def", "locales/ru.po"):
+    for name in ("locales/messages.def", "locales/ru.po", "locales/format-variants.json"):
         if name in files:
             output[name] = files[name]
     if "locales/messages.def" in files:

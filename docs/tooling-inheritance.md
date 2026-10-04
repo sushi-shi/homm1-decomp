@@ -409,3 +409,28 @@ initializers remain ineligible. No byte normalization, reference rule,
 denominator or MAX policy changes. The previously reviewed complete scalar
 destructor controls provide the end-to-end positive controls; the existing
 unknown/conflicting-reference tests remain negative controls.
+
+
+## Locale-specific format arguments
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/catalog.py` and `build/localization.py`, and Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` `clean/__init__.py`.
+Retained: HoMM2's portable catalog, literal expansion, offset-preserving Clang
+view, separate ordinary English objects, and actual compiler format checks;
+Gruntz's explicit clean-export input enumeration. Adapted: a per-ID declaration
+of both exact format signatures for retail-proven argument-list differences,
+and the compile-time `HOMM1_RUSSIAN` selector. All undeclared entries retain the
+original equal-signature rule. Catalog dependencies and clean exports include
+the variant manifest. Negative controls reject unknown, stale and unnecessary
+variants; actual Clang controls check each language's argument list. No runtime
+translation layer or separate build pipeline was introduced. Gruntz has no
+bilingual catalog to port. The clean-export link-order gate exposed the obsolete, unclaimed NWC CPUSPEED
+unit. Its source and unused declarations were removed using the existing Buka
+absence evidence; no ordering fallback or invented function claim was added.
+
+The resulting full clean tree generates successfully and both locale branches
+render from it. The final ordinary English DRAWING and KB objects compile with
+the pinned VC6 compiler; the table's complete strings equal NWC retail. The
+Russian build retains its literal, call and jump-table controls. Full clean
+executable equivalence is not claimed by these focused controls.

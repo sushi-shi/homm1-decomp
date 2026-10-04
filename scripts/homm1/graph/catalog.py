@@ -128,6 +128,15 @@ class Catalog:
             if errors:
                 raise ValueError(f'{name}:{errors[0][0]}: {errors[0][1]}')
         english = parse_registry(registry_text)
+        variants_path = root / 'format-variants.json'
+        variants = json.loads(variants_path.read_text()) if variants_path.is_file() else {}
+        if not isinstance(variants, dict) or variants.keys() - english.keys():
+            raise ValueError('unknown format variant ID')
+        for key, signatures in variants.items():
+            if (not isinstance(signatures, dict) or set(signatures) != {'en', 'ru'} or
+                    any(not isinstance(v, list) or not all(isinstance(t, str) for t in v)
+                        for v in signatures.values()) or signatures['en'] == signatures['ru']):
+                raise ValueError(f'{key}: invalid format variant signatures')
         russian = {}
         for entry in parse_po(po_text):
             key = entry.get('msgctxt')
@@ -138,7 +147,11 @@ class Catalog:
             value = entry.get('msgstr')
             if not value:
                 raise ValueError(f'{key}: missing Russian translation')
-            if format_signature(value) != format_signature(english[key]):
+            signatures = {'en': format_signature(english[key]), 'ru': format_signature(value)}
+            if key in variants:
+                if signatures != variants[key]:
+                    raise ValueError(f'{key}: stale format variant signatures')
+            elif signatures['ru'] != signatures['en']:
                 raise ValueError(f'{key}: English/Russian printf placeholders differ')
             literal(value)  # Fail on unrepresentable Unicode, never replace it.
             russian[key] = value
@@ -195,16 +208,22 @@ class Catalog:
     def render(self, text, *, expanded=False, locale='ru'):
         messages = self.messages(locale)
         out = text
-        for start, end, key in reversed(list(self.calls(text))):
+        replacements = [(t.start(), t.end(), '1' if locale == 'ru' else '0')
+                        for t in tokens(text)
+                        if t.lastgroup == 'identifier' and t.group() == 'HOMM1_RUSSIAN']
+        for start, end, key in self.calls(text):
             if expanded:
                 replacement = literal(messages[key])
             else:
                 # Macro names are shorter than "localization". Padding retains
                 # original UTF-8 byte positions, even for multiline calls.
+                replacement = self.macro(key)
+            replacements.append((start, end, replacement))
+        for start, end, replacement in sorted(replacements, reverse=True):
+            if not expanded:
                 old = text[start:end].encode('utf-8')
-                macro = self.macro(key)
-                replacement = macro + ''.join('\n' if c == 10 else ' '
-                                               for c in old[len(macro):])
+                replacement += ''.join('\n' if c == 10 else ' '
+                                       for c in old[len(replacement.encode('utf-8')):])
             out = out[:start] + replacement + out[end:]
         return out
 

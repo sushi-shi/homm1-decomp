@@ -4251,3 +4251,35 @@ msgstr "Общая сила армии:"
 msgctxt "table.gWinSetupText.67"
 msgid "World Map"
 msgstr "Карта мира"
+
+msgctxt "table.gCombatMessage.1"
+msgid "Move %s here."
+msgstr "%s - идти сюда."
+
+msgctxt "table.gCombatMessage.2"
+msgid "Fly %s here."
+msgstr "%s - перелететь сюда."
+
+msgctxt "table.gCombatMessage.3"
+msgid "Attack %s"
+msgstr "Атаковать %s"
+
+msgctxt "table.gCombatMessage.4"
+msgid "Shoot %s(%d shot%s left)"
+msgstr "Стрелять в %s (осталось %d выстрелов)"
+
+msgctxt "table.gCombatMessage.5"
+msgid "General's Options"
+msgstr "Возможности героя"
+
+msgctxt "table.gCombatMessage.6"
+msgid "View Opposing General"
+msgstr "Вражеский герой"
+
+msgctxt "table.gCombatMessage.7"
+msgid "View %s info."
+msgstr "Информация о воине (%s)"
+
+msgctxt "table.gCombatMessage.8"
+msgid "No shots left!"
+msgstr "Нет стрел!"

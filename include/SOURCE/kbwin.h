@@ -73,12 +73,6 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     CONFIG_UNINITIALIZED = 99,
     // ResizeWindow keeps the window's current left/top for this x/y.
     KBWIN_KEEP_POSITION = -1,
-    // GetCPUType's family (low byte): 386 when EFLAGS.AC cannot toggle,
-    // 486 when EFLAGS.ID cannot, else the CPUID family; CPUSpeed picks its
-    // reference clock by it.
-    CPU_FAMILY_386 = 3,
-    CPU_FAMILY_486 = 4,
-    CPU_FAMILY_PENTIUM = 5,
     DEFAULT_WINDOW_ORIGIN = 10,
     DEFAULT_WINDOW_WIDTH = 640,
     DEFAULT_WINDOW_HEIGHT = 480,
@@ -148,9 +142,6 @@ extern void* hmnuCurrent;
 i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData);
 i32 AppIdle(void);
 void AppExit(void);
-i16 GetCPUType(void);
-// CPUSpeed's PIT-timed divide loop (CPUSPEED.cpp).
-i16 TimeProcessor(void);
 void SetGameDefaults(void);
 void ReadPrefsFromFile(void);
 void ReadPrefsFromRegistry(void);

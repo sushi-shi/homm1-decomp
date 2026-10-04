@@ -138,3 +138,4 @@ rva	size	symbol	provenance
 0x000a9908	4	?gInSmacker@@3HA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x0008fa60	10	?gPixelsPerStep@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x0008fa78	6	?startVals@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x00092ea8	36	?gCombatMessage@@3PAPADA	Both retail pointer tables and command formatter; buka-command-messages.json

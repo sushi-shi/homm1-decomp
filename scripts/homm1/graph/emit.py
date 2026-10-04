@@ -100,7 +100,8 @@ def _mods(*rel: str) -> list[str]:
 #: toolchain would re-run all of them whenever an unrelated module is touched.
 TOOL_MODS = _mods("tool/__init__.py", "tool/wine.py", "core/paths.py")
 LOCALIZATION_MODS = _mods("graph/catalog.py", "graph/localization.py", "graph/scan.py") + [
-    "locales/messages.def", "locales/ru.po", "config/retail/targets.json"]
+    "locales/messages.def", "locales/ru.po", "locales/format-variants.json",
+    "config/retail/targets.json"]
 CL_MODS = LOCALIZATION_MODS + _mods("graph/cc.py", "tool/cl.py", "tool/fixedroot.py") + TOOL_MODS
 ML_MODS = _mods("graph/fixed_asm.py", "tool/ml.py") + TOOL_MODS
 COMPDB_MODS = LOCALIZATION_MODS + _mods("graph/compdb.py", "tool/clang.py", "manifest.py",

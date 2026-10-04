@@ -115,9 +115,21 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
             sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
+#if HOMM1_RUSSIAN
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNamesPlural[targetMonster]);
+#else
             sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
+#endif
             break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
+#if HOMM1_RUSSIAN
+            sprintf(
+                gText,
+                gCombatMessage[COMBAT_TEXT_SHOOT],
+                gArmyNamesPlural[targetMonster],
+                currentArmy->m_stats.shots
+            );
+#else
             sprintf(
                 gText,
                 gCombatMessage[COMBAT_TEXT_SHOOT],
@@ -125,6 +137,7 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
                 currentArmy->m_stats.shots,
                 currentArmy->m_stats.shots > 1 ? "s" : ""
             );
+#endif
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
             strcpy(gText, gCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
