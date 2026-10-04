@@ -5,8 +5,7 @@
 
 H1_ENUM_BEGIN(SoundMusicSource)
     SOUND_MUSIC_SOURCE_DIGITAL = 0,
-    SOUND_MUSIC_SOURCE_DIGITAL_STEREO = 1,
-    SOUND_MUSIC_SOURCE_CD = 2
+    SOUND_MUSIC_SOURCE_CD = 1
 H1_ENUM_END(SoundMusicSource)
 
 // Logical music tracks for PlayMusic (the Ogg backend maps them to file numbers). 0..6 are the TerrainType themes and the town themes

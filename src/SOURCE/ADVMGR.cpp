@@ -5534,7 +5534,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
 }
 
 // HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
-VA(0x004601f5, 0x41)
+VA(0x0040d2a5, 0x36)
 void advManager::GrabScreen(void) {
     gpMouseManager->ReallyHidePointer();
     GrabScreenBitmap(gpWindowManager->m_screen, 0, 0);
@@ -5562,8 +5562,8 @@ H1_ENUM_CONST_BEGIN(ControlPanelDialogConstant)
 H1_ENUM_CONST_END(ControlPanelDialogConstant)
 
 // UpdateCPanel's button frames: off/on pairs for music and sound, then one
-// frame per walk speed, show-route and enemy-moves state and music source
-// (the setting's value added to the _FIRST frame).
+// frame per walk speed, show-route and enemy-moves state. Music source
+// maps its boolean setting to the retained 0/2 display entries.
 H1_ENUM_CONST_BEGIN(ControlPanelFrame)
     CPANEL_FRAME_MUSIC_OFF = 10,
     CPANEL_FRAME_MUSIC_ON = 11,
@@ -5574,6 +5574,13 @@ H1_ENUM_CONST_BEGIN(ControlPanelFrame)
     CPANEL_FRAME_ENEMY_MOVES_FIRST = 23,
     CPANEL_FRAME_MUSIC_SOURCE_FIRST = 27
 H1_ENUM_CONST_END(ControlPanelFrame)
+
+// The music-source setting is boolean; the retained labels and frames use
+// slots 0 and 2, leaving the original middle quality label unused.
+H1_ENUM_CONST_BEGIN(ControlPanelMusicLabel)
+    CPANEL_MUSIC_LABEL_LOCAL = 0,
+    CPANEL_MUSIC_LABEL_CD = 2
+H1_ENUM_CONST_END(ControlPanelMusicLabel)
 
 // CPanelHandler's right-click help: the gCPanelHelp row for each control.
 H1_ENUM_BEGIN(ControlPanelHelp)
@@ -5594,7 +5601,7 @@ H1_ENUM_END(ControlPanelHelp)
 
 // HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
 // that also applies the walk-speed sample set and saves changed preferences.
-VA(0x00460236, 0x321)
+VA(0x0040d2db, 0x2eb)
 i16 advManager::ControlPanel(void) {
     tag_message message;
     i32 mobilized;
@@ -5650,9 +5657,13 @@ i16 advManager::ControlPanel(void) {
             SaveGame();
             break;
     }
-    if (oldSpeed != gConfig.walkSpeed) {
-        for (n = 0; n < ADVMGR_CURSOR_SAMPLE_COUNT; n++)
-            gpResourceManager->Dispose(m_cursorSamples[n]);
+    if (gConfig.walkSpeed != oldSpeed) {
+        for (n = 0; n < ADVMGR_CURSOR_SAMPLE_COUNT; n++) {
+            if (m_cursorSamples[n]) {
+                gpResourceManager->Dispose(m_cursorSamples[n]);
+                m_cursorSamples[n] = NULL;
+            }
+        }
         GetCursorSampleSet(gConfig.walkSpeed);
     }
     if (bPrefsChanged)
@@ -5667,7 +5678,7 @@ i16 advManager::ControlPanel(void) {
 }
 
 // Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
-VA(0x00460557, 0x227)
+VA(0x0040d5c6, 0x207)
 void UpdateCPanel(i8 initialDraw) {
     tag_message message;
 
@@ -5681,14 +5692,17 @@ void UpdateCPanel(i8 initialDraw) {
     message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
-    message.value = gConfig.musicSource + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
+    message.value = (gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL)
+                    + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
     message.value = gConfig.showRoute + CPANEL_FRAME_SHOW_ROUTE_FIRST;
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
-    message.value = gRemoteOn ? CPANEL_FRAME_ENEMY_MOVES_FIRST
-                              : 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
+    if (gRemoteOn)
+        message.value = CPANEL_FRAME_ENEMY_MOVES_FIRST;
+    else
+        message.value = 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
     gPanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
@@ -5701,7 +5715,8 @@ void UpdateCPanel(i8 initialDraw) {
     message.text = walkSpeedText[gConfig.walkSpeed];
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
-    message.text = musicQualityText[gConfig.musicSource];
+    message.text = musicQualityText[gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD
+                                                       : CPANEL_MUSIC_LABEL_LOCAL];
     gPanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
@@ -5713,7 +5728,7 @@ void UpdateCPanel(i8 initialDraw) {
         gPanel->MoveWindow(0, 0);
 }
 
-VA(0x0046077e, 0x232)
+VA(0x0040d7cd, 0x205)
 i8 SaveGame(void) {
     i16 iResult;
     fileRequester* fileReq;
@@ -5747,7 +5762,7 @@ i8 SaveGame(void) {
         gFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
-            NormalDialog("Game saved successfully.", NORMAL_DIALOG_TYPE_OK, 0xb1);
+            NormalDialog(localization::Tr("adventure.save.success"), NORMAL_DIALOG_TYPE_OK, 0xb1);
     }
     delete fileReq;
     gpAdvManager->EnableButtons();
@@ -5755,7 +5770,7 @@ i8 SaveGame(void) {
 }
 
 // Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
-VA(0x004609b0, 0x54b)
+VA(0x0040d9d2, 0x49e)
 i16 CPanelHandler(struct tag_message& message) {
     i8 changed = 0;
     char question[120];
@@ -5812,19 +5827,17 @@ i16 CPanelHandler(struct tag_message& message) {
                         case CONTROL_NEW_GAME:
                             strcpy(
                                 question,
-                                "Are you sure you want to restart?  (Your current game will be "
-                                "lost)"
+                                localization::Tr("adventure.confirm_restart")
                             );
                             goto confirm_reset;
                         case CONTROL_LOAD_GAME:
                             strcpy(
                                 question,
-                                "Are you sure you want to load a new game?  (Your current game "
-                                "will be lost)"
+                                localization::Tr("adventure.confirm_load")
                             );
                             goto confirm_reset;
                         case CONTROL_QUIT:
-                            strcpy(question, "Are you sure you want to quit?");
+                            strcpy(question, localization::Tr("adventure.confirm_quit"));
                         confirm_reset:
                             handled = 1;
                             if (!gFreshSave) {
@@ -5865,12 +5878,12 @@ i16 CPanelHandler(struct tag_message& message) {
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_MUSIC_SOURCE:
-                            if (gConfig.musicSource == SOUND_MUSIC_SOURCE_CD) {
+                            if (gConfig.musicSource) {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
                             } else {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
                             }
-                            SetMusicSource(gConfig.musicSource);
+                            SetMusicSource(gConfig.musicSource != 0);
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
@@ -5903,7 +5916,7 @@ i16 CPanelHandler(struct tag_message& message) {
 // donor PoL RVA 0x000650eb; preferred Buka symbol ?CheckCastSpell@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.587490;margin=0.208808;shape=0.255;size=0.813;calls=0.857;strings=advmice.mse;alternate=pol20:void advManager::CheckCastSpell(void)@0x000650eb
-VA(0x00460efb, 0xab)
+VA(0x0040de70, 0x95)
 void advManager::CheckCastSpell(void) {
     if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
         MobilizeCurrHero(0);
@@ -7424,7 +7437,7 @@ DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
 DATA(0x004a6758)
 i32 gForceUpdate = 0;
-DATA(0x004cb168)
+DATA(0x004a6728)
 class heroWindow* gPanel;
 DATA(0x004cafe4)
 i32 giFrameStep;
@@ -7434,13 +7447,13 @@ DATA(0x004a65dc)
 i32 giLimitUpdMaxX;
 DATA(0x004a65e0)
 i32 giLimitUpdMaxY;
-DATA(0x004cb01c)
+DATA(0x004a65e4)
 i8 bPrefsChanged;
 DATA(0x004a6710)
 i32 giLimitUpdMinY;
 DATA(0x004cb028)
 i8 bComboDraw[17][17];
-DATA(0x004cb004)
+DATA(0x004a65cc)
 i8 gFreshSave;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;

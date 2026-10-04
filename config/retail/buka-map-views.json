@@ -6587,5 +6587,6 @@
     },
     "readme": "homm1 verify readme cannot generate scores without the strict comparison report.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit: 202 adaptations awaiting review and 2 missing modules. No tooling implementation changed."
-  }
+  },
+  "checkpoint": "Historical validation at 296438ba. The control-panel checkpoint supersedes its next-reference blocker; source/object fingerprints identify that earlier state."
 }

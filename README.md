@@ -29,9 +29,12 @@ cleanup; their remaining stack-local differences are documented. Adventure
 redraw, hero/town context switching and locator scrolling are also migrated,
 including Buka’s removal of the demobilization log call. Puzzle/world views and
 spell dispatch now have reviewed claims, switch tables and exception cleanup;
-the two spell dialogs preserve English through the catalog. Strict delinking
-currently stops at data identity `0x8eb74` in the control panel. The old score
-ledger has been reset.
+the two spell dialogs preserve English through the catalog. Control-panel and
+save-dialog claims are now migrated, including sample cleanup, boolean music
+source, localized option/help tables and the smaller Buka configuration. The
+removed slow-video mode is reflected in defaults and AI callers. Strict
+delinking currently stops at data identity `0x8ec74` in `AdvPanel`. The old
+score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

@@ -593,10 +593,9 @@ void SetMenus(void* menu, i32 enabled) {
 }
 
 // PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
-// speed and slow-video default from the detected processor family.
+// speed unconditionally in Buka; the old processor/slow-video choice is gone.
 VA(0x00433b7e, 0x1a3)
 void SetGameDefaults(void) {
-    i32 cpuType;
     i32 i;
 
     gConfig.musicVolume = 1;
@@ -621,17 +620,9 @@ void SetGameDefaults(void) {
     gConfig.blackoutComputer = 0;
     gConfig.currentMapOffset = 0;
     gConfig.firstMapOffset = Random(0, DEFAULT_MAP_OFFSET_LIMIT);
-    gConfig.cdOffset = 0;
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gFirstTimeThrough = 1;
-    cpuType = GetCPUType();
-    if ((cpuType & 0xff) >= CPU_FAMILY_PENTIUM) {
-        gConfig.walkSpeed = WALK_SPEED_CANTER;
-        gConfig.slowVideo = 0;
-    } else {
-        gConfig.walkSpeed = WALK_SPEED_GALLOP;
-        gConfig.slowVideo = 1;
-    }
+    gConfig.walkSpeed = WALK_SPEED_CANTER;
 }
 
 // @dead-code
@@ -800,22 +791,6 @@ void ReadPrefsFromRegistry(void) {
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.autosave),
-            &cbData
-        );
-        RegQueryValueExA(
-            key,
-            "CD Offset",
-            NULL,
-            &dataType,
-            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
-            &cbData
-        );
-        RegQueryValueExA(
-            key,
-            "Slow Video",
-            NULL,
-            &dataType,
-            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
             &cbData
         );
         RegQueryValueExA(
@@ -1082,22 +1057,6 @@ void WritePrefsToRegistry(void) {
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.autosave),
-            REGISTRY_DWORD_BYTES
-        );
-        RegSetValueExA(
-            key,
-            "CD Offset",
-            0,
-            REG_DWORD,
-            reinterpret_cast<LPBYTE>(&gConfig.cdOffset),
-            REGISTRY_DWORD_BYTES
-        );
-        RegSetValueExA(
-            key,
-            "Slow Video",
-            0,
-            REG_DWORD,
-            reinterpret_cast<LPBYTE>(&gConfig.slowVideo),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(

@@ -252,8 +252,9 @@ struct exeGfxConfig {
     i32 height;
     i32 fullScreen;
 };
-// ReadPrefsFromFile reads 0x134 bytes at the owner base. The registry
-// readers and writers name every persisted field except the 0x50 interval.
+// Buka clears 0x12c bytes at the owner base (retail 0x43ff8). Registry
+// operands place musicSource at 0xb4; the old cdOffset and slowVideo fields
+// are absent. The 0x50 interval still needs its original type recovered.
 struct configStruct {
     i32 walkSpeed;
     i32 musicVolume;
@@ -265,12 +266,10 @@ struct configStruct {
     i32 firstMapOffset;
     i32 currentMapOffset;
     char _pad_0x050[0x64];
-    i32 cdOffset;
     i32 musicSource;
     i32 comPort[2];
     i32 baudRate[2];
     char modemInitString[100];
-    i32 slowVideo;
 };
 struct tag_tilePoint {
     i8 x;

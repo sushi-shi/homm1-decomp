@@ -3331,3 +3331,131 @@ msgstr "Вражеские герои полностью опознаны."
 msgctxt "adventure.spell.too_tired"
 msgid "Your hero is too tired to cast this spell today.  Try again tomorrow."
 msgstr "Ваш герой слишком устал, чтобы направлять сегодня заклинания. Попробуйте завтра."
+
+msgctxt "table.onOffText.0"
+msgid "Off"
+msgstr "Выкл."
+
+msgctxt "table.onOffText.1"
+msgid "On"
+msgstr "Вкл."
+
+msgctxt "table.onOffText.2"
+msgid "On\nVolume 9"
+msgstr "Вкл.\nГромкость 9"
+
+msgctxt "table.onOffText.3"
+msgid "On\nVolume 8"
+msgstr "Вкл.\nГромкость 8"
+
+msgctxt "table.onOffText.4"
+msgid "On\nVolume 7"
+msgstr "Вкл.\nГромкость 7"
+
+msgctxt "table.onOffText.5"
+msgid "On\nVolume 6"
+msgstr "Вкл.\nГромкость 6"
+
+msgctxt "table.onOffText.6"
+msgid "On\nVolume 5"
+msgstr "Вкл.\nГромкость 5"
+
+msgctxt "table.onOffText.7"
+msgid "On\nVolume 4"
+msgstr "Вкл.\nГромкость 4"
+
+msgctxt "table.onOffText.8"
+msgid "On\nVolume 3"
+msgstr "Вкл.\nГромкость 3"
+
+msgctxt "table.onOffText.9"
+msgid "On\nVolume 2"
+msgstr "Вкл.\nГромкость 2"
+
+msgctxt "table.onOffText.10"
+msgid "On\nVolume 1"
+msgstr "Вкл.\nГромкость 1"
+
+msgctxt "table.walkSpeedText.0"
+msgid "Walk"
+msgstr "Шагом"
+
+msgctxt "table.walkSpeedText.1"
+msgid "Trot"
+msgstr "Рысью"
+
+msgctxt "table.walkSpeedText.2"
+msgid "Canter"
+msgstr "Аллюром"
+
+msgctxt "table.walkSpeedText.3"
+msgid "Gallop"
+msgstr "Галопом"
+
+msgctxt "table.walkSpeedText.4"
+msgid "Jump"
+msgstr "Прыжками"
+
+msgctxt "table.musicQualityText.0"
+msgid "8 Bit Mono"
+msgstr "8 бит моно"
+
+msgctxt "table.musicQualityText.1"
+msgid "8 Bit Stereo"
+msgstr "8 бит стерео"
+
+msgctxt "table.musicQualityText.2"
+msgid "CD Stereo"
+msgstr "CD стерео"
+
+msgctxt "table.gCPanelHelp.0"
+msgid "Start a single or multi-player game."
+msgstr "Начать одиночную или сетевую игру."
+
+msgctxt "table.gCPanelHelp.1"
+msgid "Load a previously saved game."
+msgstr "Загрузить ранее сохраненную игру."
+
+msgctxt "table.gCPanelHelp.2"
+msgid "Quit Heroes of Might and Magic and return to the DOS prompt."
+msgstr "Выйти из Героев Меча и Магии и вернуться в ОС."
+
+msgctxt "table.gCPanelHelp.3"
+msgid "Exit this menu without doing anything."
+msgstr "Выйти из этого меню, ничего не делая."
+
+msgctxt "table.gCPanelHelp.4"
+msgid "Save the current game."
+msgstr "Сохранить данную игру."
+
+msgctxt "table.gCPanelHelp.5"
+msgid "Toggle ambient music on/off"
+msgstr "Включить или выключить музыку"
+
+msgctxt "table.gCPanelHelp.6"
+msgid "Toggle foreground sounds on/off"
+msgstr "Включить или выключить фоновые звуки"
+
+msgctxt "table.gCPanelHelp.7"
+msgid "Change the speed at which Heroes move on the main screen."
+msgstr "Изменить скорость передвижения героев по карте."
+
+msgctxt "table.gCPanelHelp.8"
+msgid "Change the quality level of the sound.  CD stereo sounds the best, and usually is less of a drag on system performance, because no processing is required.  However, some systems may not be set up to handle CD stereo, so 8 bit sound is the fallback."
+msgstr "Изменить качество звука. CD-стерео имеет наилучшее качество, и, как правило, не снижает производительность системы. Однако некоторые системы не способны воспроизводить звук с компакт-диска; тогда приходится использовать 8-битный звук."
+
+msgctxt "table.gCPanelHelp.9"
+msgid "Toggle 'Show Path' on/off.  If 'Show Path' is on, your first click on a map location will show the path to get there, your second will start you moving. If this option is off, one click starts you moving immediately."
+msgstr "Вкл./Выкл. 'Показать путь'. Если опция отмечена, первый щелчок по объекту на игровой карте показывает путь до него, а по второму щелчку начинается движение. Если эта опция отключена, движение к заданной точке начинается по первому щелчку мыши."
+
+msgctxt "table.gCPanelHelp.10"
+msgid "Toggle 'Show Enemy Moves' on/off.  If on, all enemies moving within your visible area will be shown.  If off, no computer movement will be shown.  Note that this option is automatically set to off during network and modem play."
+msgstr "Включение/выключение режима 'Показать перемещения противника'. Если этот режим включен, будут показаны перемещения всех противников на открытой части игровой карты. Следует иметь в виду, что при игре по сети или модему этот режим автоматически отключается."
+
+msgctxt "table.gCPanelHelp.11"
+msgid "View information on the scenario you are currently playing."
+msgstr "Показать информацию о текущем сценарии."
+
+msgctxt "adventure.save.success"
+msgid "Game saved successfully."
+msgstr "Игра успешно сохранена."

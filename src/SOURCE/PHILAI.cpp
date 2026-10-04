@@ -806,16 +806,9 @@ void philAI::DoAI(i32 player) {
             stepMax = 5;
         minRV = aiHero->m_mobility + 42;
         stepMax = static_cast<i32>(stepMax * (1.7 - gpCurPlayer->m_difficulty * 0.1));
-        if (gConfig.slowVideo)
-            stepMax *= 2;
-        if (gConfig.slowVideo)
-            minRV = static_cast<i16>(
-                minRV * ((gpCurPlayer->m_difficulty - PLAYER_TYPE_DUMB) * 0.03 + 0.8)
-            );
-        else
-            minRV = static_cast<i16>(
-                minRV * ((gpCurPlayer->m_difficulty - PLAYER_TYPE_DUMB) * 0.06 + 0.8)
-            );
+        minRV = static_cast<i16>(
+            minRV * ((gpCurPlayer->m_difficulty - PLAYER_TYPE_DUMB) * 0.06 + 0.8)
+        );
         while (!moveDone && aiHero->m_remainingMobility >= 4) {
             if (gGameOver) {
                 ResumeSamples();
@@ -2265,8 +2258,6 @@ i32 philAI::StrategicValueOfPosition(
         newSeedRange = 60;
     } else {
         newSeedRange = 36;
-        if (gConfig.slowVideo)
-            newSeedRange = 24;
     }
     pSearch->SeedPosition(
         targetX,

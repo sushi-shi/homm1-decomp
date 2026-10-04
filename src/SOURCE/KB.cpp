@@ -2977,7 +2977,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             } else {
                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
             }
-            SetMusicSource(gConfig.musicSource);
+            SetMusicSource(gConfig.musicSource != 0);
             menuChanged = 1;
             break;
         case APP_MENU_SHOW_PATH:
@@ -3283,7 +3283,7 @@ DATA(0x00491b58)
 char gAnimPath[352] = "\\HEROES\\ANIM\\";
 DATA(0x00491cb8)
 char gSoundPath[352] = "\\HEROES\\SOUND\\";
-DATA(0x00491e18)
+DATA(0x004913b0)
 char gGamePath[20] = ".\\GAMES\\";
 DATA(0x00491e30)
 char gMapPath[20] = ".\\MAPS\\";
@@ -4031,22 +4031,28 @@ DATA(0x00493590)
 char* gLuckText[7] = {"Cursed", "Awful", "Bad", "Normal", "Good", "Great", "Irish"};
 DATA(0x004935b0)
 char* gMoraleText[7] = {"Treason", "Awful", "Poor", "Normal", "Good", "Great", "Blood!"};
-DATA(0x004935d0)
+DATA(0x00492b58)
 char* onOffText[11] = {
-    "Off",
-    "On",
-    "On\nVolume 9",
-    "On\nVolume 8",
-    "On\nVolume 7",
-    "On\nVolume 6",
-    "On\nVolume 5",
-    "On\nVolume 4",
-    "On\nVolume 3",
-    "On\nVolume 2",
-    "On\nVolume 1",
+    localization::Tr("table.onOffText.0"),
+    localization::Tr("table.onOffText.1"),
+    localization::Tr("table.onOffText.2"),
+    localization::Tr("table.onOffText.3"),
+    localization::Tr("table.onOffText.4"),
+    localization::Tr("table.onOffText.5"),
+    localization::Tr("table.onOffText.6"),
+    localization::Tr("table.onOffText.7"),
+    localization::Tr("table.onOffText.8"),
+    localization::Tr("table.onOffText.9"),
+    localization::Tr("table.onOffText.10")
 };
-DATA(0x00493600)
-char* walkSpeedText[5] = {"Walk", "Trot", "Canter", "Gallop", "Jump"};
+DATA(0x00492b84)
+char* walkSpeedText[5] = {
+    localization::Tr("table.walkSpeedText.0"),
+    localization::Tr("table.walkSpeedText.1"),
+    localization::Tr("table.walkSpeedText.2"),
+    localization::Tr("table.walkSpeedText.3"),
+    localization::Tr("table.walkSpeedText.4")
+};
 DATA(0x00493618)
 char* gColorNames[4] = {
     localization::Tr("table.gColorNames.0"),
@@ -4346,26 +4352,20 @@ char* gHeroNames[36][2] = {
     {"Wrathmont", "Wrath"},
     {"Vesper", "Vesper"},
 };
-DATA(0x00493b28)
+DATA(0x00493070)
 char* gCPanelHelp[12] = {
-    "Start a single or multi-player game.",
-    "Load a previously saved game.",
-    "Quit Heroes of Might and Magic and return to the DOS prompt.",
-    "Exit this menu without doing anything.",
-    "Save the current game.",
-    "Toggle ambient music on/off",
-    "Toggle foreground sounds on/off",
-    "Change the speed at which Heroes move on the main screen.",
-    "Change the quality level of the sound.  CD stereo sounds the best, and usually is less of a "
-    "drag on system performance, because no processing is required.  However, some systems may not "
-    "be set up to handle CD stereo, so 8 bit sound is the fallback.",
-    "Toggle 'Show Path' on/off.  If 'Show Path' is on, your first click on a map location will "
-    "show the path to get there, your second will start you moving. If this option is off, one "
-    "click starts you moving immediately.",
-    "Toggle 'Show Enemy Moves' on/off.  If on, all enemies moving within your visible area will be "
-    "shown.  If off, no computer movement will be shown.  Note that this option is automatically "
-    "set to off during network and modem play.",
-    "View information on the scenario you are currently playing.",
+    localization::Tr("table.gCPanelHelp.0"),
+    localization::Tr("table.gCPanelHelp.1"),
+    localization::Tr("table.gCPanelHelp.2"),
+    localization::Tr("table.gCPanelHelp.3"),
+    localization::Tr("table.gCPanelHelp.4"),
+    localization::Tr("table.gCPanelHelp.5"),
+    localization::Tr("table.gCPanelHelp.6"),
+    localization::Tr("table.gCPanelHelp.7"),
+    localization::Tr("table.gCPanelHelp.8"),
+    localization::Tr("table.gCPanelHelp.9"),
+    localization::Tr("table.gCPanelHelp.10"),
+    localization::Tr("table.gCPanelHelp.11")
 };
 DATA(0x00493b58)
 char* gNewGameHelp[9] = {
@@ -4594,8 +4594,12 @@ char* gHandicapNames[5] = {
     localization::Tr("table.gHandicapNames.3"),
     localization::Tr("table.gHandicapNames.4")
 };
-DATA(0x00493e10)
-char* musicQualityText[3] = {"8 Bit Mono", "8 Bit Stereo", "CD Stereo"};
+DATA(0x0049330c)
+char* musicQualityText[3] = {
+    localization::Tr("table.musicQualityText.0"),
+    localization::Tr("table.musicQualityText.1"),
+    localization::Tr("table.musicQualityText.2")
+};
 DATA(0x00493e20)
 char* gWinSetupText[68] = {
     "Buy Spellbook:",
@@ -4822,7 +4826,7 @@ DATA(0x004a9428)
 configStruct gConfig;
 DATA(0x004a8150)
 char gcRegAppPath[352];
-DATA(0x004a9b58)
+DATA(0x004a9410)
 i8 gCampaignChoice;
 DATA(0x004a7ba0)
 class game* gpGame;
@@ -4834,7 +4838,7 @@ DATA(0x004a7c08)
 i16 gCurLoadedSpellFileId;
 DATA(0x004a761c)
 i32 giBottomViewOverride;
-DATA(0x004a7df8)
+DATA(0x004a76c4)
 char gLastFilename[352];
 DATA(0x004a7b84)
 class icon* gBuyBuildIcons;
@@ -4868,7 +4872,7 @@ DATA(0x004a7f64)
 class combatManager* gpCombatManager;
 DATA(0x004a7b8c)
 i16 gSpellEffectFrame;
-DATA(0x004a9d1c)
+DATA(0x004a95c8)
 executive* gpExec;
 DATA(0x004a7638)
 i8 giGroundToTerrain[140];
