@@ -53,7 +53,7 @@ H1_ENUM_CONST_END(CursorConstant)
 
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
-VA(0x00439ee0, 0x169)
+VA(0x004215c0, 0x143)
 void advManager::StartCursor(i8 direction) {
     i16 directionX;
     i16 newX;
@@ -62,10 +62,7 @@ void advManager::StartCursor(i8 direction) {
 
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
-    if (gConfig.walkSpeed > WALK_SPEED_FIRST)
-        m_cursorCycle = 1;
-    else
-        m_cursorCycle = SLOW_CURSOR_CYCLE_START;
+    m_cursorCycle = gConfig.walkSpeed > WALK_SPEED_FIRST ? 1 : SLOW_CURSOR_CYCLE_START;
     directionX = normalDirTable[direction].x;
     directionY = normalDirTable[direction].y;
     m_previousCursorMapX = m_cursorMapX;
@@ -149,8 +146,8 @@ void advManager::DrawCursor(void) {
             );
         } else {
             if (m_cursorCycle == 0)
-                drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
-                            + (m_cursorFrame & HERO_FRAME_INDEX_MASK) + CURSOR_FLAG_FRAME_BASE;
+                drawFrame = (m_cursorFrame & HERO_FRAME_INDEX_MASK)
+                            + (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + CURSOR_FLAG_FRAME_BASE;
             FlipIconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
                 gpWindowManager->m_screen,
@@ -193,7 +190,7 @@ void advManager::DrawCursor(void) {
             );
         } else {
             if (m_cursorCycle == 0)
-                drawFrame = (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK) + m_cursorFrame
+                drawFrame = m_cursorFrame + (m_updateMaxY & CURSOR_FLAG_FRAME_CYCLE_MASK)
                             + CURSOR_FLAG_FRAME_BASE;
             IconToBitmap(
                 m_flagIcons[gpCurPlayer->m_color],
@@ -264,7 +261,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
 
 // Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
 // word-sized step delays.
-VA(0x0043a805, 0x261)
+VA(0x00421e15, 0x20e)
 void advManager::TurnTo(i8 direction) {
     i16 frameStep = 1;
     i16 curFrame;
@@ -285,10 +282,9 @@ void advManager::TurnTo(i8 direction) {
         delayTime = delayTime * 1.5;
     do {
         m_cursorCycle = 1;
-        if (m_cursorType >= ADVMGR_HERO_ICON_CLASS_END)
-            m_cursorFrame = boatFrameFlip[curFrame];
-        else
-            m_cursorFrame = horseFrameFlip[curFrame];
+        m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END
+                            ? horseFrameFlip[curFrame]
+                            : boatFrameFlip[curFrame];
         m_cursorFrameCount = 0;
         glTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
         if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
@@ -313,7 +309,7 @@ void advManager::TurnTo(i8 direction) {
 // Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
 // and tests the watch player's high bit (0x004be7cc) directly in the
 // map-extra grid.
-VA(0x0043aa66, 0x136)
+VA(0x00422023, 0x104)
 i32 advManager::GetMoveShowIt(i8 direction) {
     i16 dy;
     hero* movingHero;
@@ -857,19 +853,19 @@ DATA(0x0048fa5c)
 i8 gMoveSoundMade = 1;
 DATA(0x004a0d30)
 i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
-DATA(0x004a0d40)
+DATA(0x0048fa6c)
 i16 gStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x004a6ac6)
 i8 EveryOther = 0;
 DATA(0x004a0d58)
 i16 startVals[3] = {16, 0, -16};
-DATA(0x004c2c5c)
+DATA(0x004a6ac2)
 i16 S1cursorCycle;
-DATA(0x004c2c50)
+DATA(0x004a6abc)
 i16 S1cursorFrameCount;
-DATA(0x004c2c60)
+DATA(0x004a6ac4)
 i16 S1cursorTurning;
-DATA(0x004c2c54)
+DATA(0x004a6abe)
 i16 S1cursorBaseFrame;
-DATA(0x004c2c58)
+DATA(0x004a6ac0)
 i8 S1cursorDirection;

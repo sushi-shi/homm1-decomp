@@ -353,7 +353,8 @@ unit = "SOURCE/CURSOR"
 source = "src/SOURCE/CURSOR.cpp"
 # 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
 # no fs:[0] frame appears in the band.
-flags = "cpp_buka"
+# Retail argument loads omit /G6 clears; unchanged-body controls in buka-cursor-state.json.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/comwin"

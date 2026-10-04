@@ -188,9 +188,12 @@ rva	name	provenance
 0x00020ed8	?GetControl@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00021003	?ResetMouse@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000210c0	?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
+0x000215c0	?StartCursor@advManager@@QAEXC@Z	Complete cursor instruction, branch, call/data and typed-initializer correspondence; buka-cursor-state.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
 0x00021820	?DrawCursor@advManager@@QAEXXZ	Buka DrawCell instruction/CFG review: 0x6c02; buka-adventure-cell.json
 0x00021dc4	?GetCursorBaseFrame@advManager@@QAEFF@Z	Buka DrawCell instruction/CFG review: 0x67ac, 0x686f; buka-adventure-cell.json
+0x00021e15	?TurnTo@advManager@@QAEXC@Z	Complete cursor instruction, branch, call/data and typed-initializer correspondence; buka-cursor-state.json
+0x00022023	?GetMoveShowIt@advManager@@QAEHC@Z	Complete cursor instruction, branch, call/data and typed-initializer correspondence; buka-cursor-state.json
 0x00022127	?MoveHero@advManager@@QAEPAVmapCell@@CCPAH00CPAC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x25e1; buka-adventure-commands.json
 0x00023670	?UpdateGrid@combatManager@@QAEXFF@Z	Buka army drawing/movement instruction and CFG review: 0x1400f, 0x14064; buka-army-drawing.json
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6; buka-combat-messages.json

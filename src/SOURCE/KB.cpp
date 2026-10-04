@@ -1519,9 +1519,9 @@ i8 gCombatAdjacency[45][6] = {
     {30, 40, -1, -1, 38, 29}, {31, 41, -1, -1, 39, 30}, {32, 42, -1, -1, 40, 31},
     {33, 43, -1, -1, 41, 32}, {34, -1, -1, -1, 42, 33}, {-1, -1, -1, -1, -1, -1},
 };
-DATA(0x004910e8)
+DATA(0x0049053c)
 i16 horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
-DATA(0x00491108)
+DATA(0x0049055c)
 i16 boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
 DATA(0x0049057c)
 // Four player colors and the neutral-owner color; the following bytes are linker alignment.
@@ -3343,7 +3343,7 @@ float gSpellCastNumMod[21] = {
     0.0f,  1.0f,  1.7f,  2.2f,  2.6f,  2.95f, 3.27f, 3.56f, 3.81f, 4.04f, 4.25f,
     4.45f, 4.64f, 4.83f, 5.01f, 5.19f, 5.36f, 5.53f, 5.68f, 5.82f, 5.96f,
 };
-DATA(0x004923a8)
+DATA(0x004a98ca)
 i8 gDrawSavedCursor = 0;
 DATA(0x0049192c)
 i16 gMinExpForLevel[4][12] = {
@@ -4781,7 +4781,7 @@ DATA(0x004a74d8)
 resourceManager* gpResourceManager;
 DATA(0x004a7fc0)
 u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004a7bec)
+DATA(0x004a74cc)
 i32 bSpecialHideCursor;
 DATA(0x004a74ac)
 class searchArray* gpSearchArray;
