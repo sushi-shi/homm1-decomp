@@ -3459,3 +3459,23 @@ msgstr "Показать информацию о текущем сценарии
 msgctxt "adventure.save.success"
 msgid "Game saved successfully."
 msgstr "Игра успешно сохранена."
+
+msgctxt "adventure.dimension_door.failed"
+msgid "Dimension Door failed!!!"
+msgstr "Не удалось перенестись!"
+
+msgctxt "adventure.town_gate.land_required"
+msgid "Town Gate Failed!!!  You must be on land for this spell to work."
+msgstr "Заклинание Врата города провалено! Вы должны быть на суше, чтобы это заклинание сработало."
+
+msgctxt "adventure.town_gate.no_town"
+msgid "No available town.  Town Gate Failed!!!"
+msgstr "Нет доступного города. Не удалось направить Врата города!"
+
+msgctxt "adventure.town_gate.occupied"
+msgid "Nearest town occupied.  Town Gate Failed!!!"
+msgstr "Ближайший город оккупирован. Не удалось направить Врата города!"
+
+msgctxt "adventure.summon_boat.failed"
+msgid "Summon Boat failed!!!"
+msgstr "Не удалось вызвать корабль!"

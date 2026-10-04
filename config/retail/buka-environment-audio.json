@@ -1099,5 +1099,6 @@
       "missing": 2,
       "review": "Giten pinned source-derived identities, Gruntz 7d7e44b78aa15b543d92bfc4876b84cded474002 array rewrites, and HoMM2 Buka e0689d3f71b2942b544fd677cb54085a13503d7b unit-aware data-name checks reviewed; see docs/tooling-inheritance.md."
     }
-  }
+  },
+  "checkpoint": "Historical validation at ddf811f3. The travel/route review supersedes its next-reference blocker; fingerprints identify that earlier state."
 }

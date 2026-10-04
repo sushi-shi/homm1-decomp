@@ -3175,7 +3175,7 @@ DATA(0x00491648)
 i16 gHeroGoldCost = 2500;
 DATA(0x00491650)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
-DATA(0x00491660)
+DATA(0x00490a9c)
 tag_tilePoint normalDirTable[8] = {
     {0, -1, 16},
     {1, -1, 16},
@@ -3287,7 +3287,7 @@ DATA(0x004913b0)
 char gGamePath[20] = ".\\GAMES\\";
 DATA(0x00491e30)
 char gMapPath[20] = ".\\MAPS\\";
-DATA(0x00491e48)
+DATA(0x004913d8)
 i8 gHeroScoutRadius[8] = {4, 4, 4, 6, 4, 0, 0, 0};
 DATA(0x00491e50)
 float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
@@ -3354,7 +3354,7 @@ i16 gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
 };
-DATA(0x00492410)
+DATA(0x0049198c)
 i8 gRouteFrame[8][8] = {
     {1, 6, 6, 6, 1, 38, 38, 38},
     {12, 2, 7, 7, 7, 2, 12, 12},

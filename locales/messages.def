@@ -865,3 +865,8 @@ HOMM1_MESSAGE("table.gCPanelHelp.9", "Toggle 'Show Path' on/off.  If 'Show Path'
 HOMM1_MESSAGE("table.gCPanelHelp.10", "Toggle 'Show Enemy Moves' on/off.  If on, all enemies moving within your visible area will be shown.  If off, no computer movement will be shown.  Note that this option is automatically set to off during network and modem play.")
 HOMM1_MESSAGE("table.gCPanelHelp.11", "View information on the scenario you are currently playing.")
 HOMM1_MESSAGE("adventure.save.success", "Game saved successfully.")
+HOMM1_MESSAGE("adventure.dimension_door.failed", "Dimension Door failed!!!")
+HOMM1_MESSAGE("adventure.town_gate.land_required", "Town Gate Failed!!!  You must be on land for this spell to work.")
+HOMM1_MESSAGE("adventure.town_gate.no_town", "No available town.  Town Gate Failed!!!")
+HOMM1_MESSAGE("adventure.town_gate.occupied", "Nearest town occupied.  Town Gate Failed!!!")
+HOMM1_MESSAGE("adventure.summon_boat.failed", "Summon Boat failed!!!")

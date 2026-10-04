@@ -6511,7 +6511,7 @@ i32 iThisMinY;
 // donor PoL RVA 0x0006712a; preferred Buka symbol ?TeleportTo@advManager@@QAEXPAVhero@@HHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.494469;margin=0.364782;shape=0.352;size=0.864;calls=0.864;alternate=pol20:void advManager::TeleportTo(class hero *, int, int, int, int)@0x0006712a
-VA(0x0046279f, 0x340)
+VA(0x0040f55c, 0x2f7)
 void advManager::TeleportTo(i32 x, i32 y, i32) {
     i32 savedShow;
     i32 fizzle;
@@ -6581,7 +6581,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     }
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
     newTerrain = CELL_TERRAIN(destinationCell);
-    if (m_currentTerrain != newTerrain) {
+    if (newTerrain != m_currentTerrain) {
         m_currentTerrain = newTerrain;
         PlayMusic(m_currentTerrain);
     }
@@ -6594,7 +6594,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
 // donor PoL RVA 0x00067539; preferred Buka symbol ?DimensionDoor@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.671113;margin=0.501597;shape=0.372;size=0.883;calls=0.867;strings=dimdoor.bin;alternate=pol20:void advManager::DimensionDoor(void)@0x00067539
-VA(0x00462adf, 0x246)
+VA(0x0040f853, 0x1fd)
 void advManager::DimensionDoor(void) {
     hero* heroPointer;
     heroWindow* win;
@@ -6617,7 +6617,7 @@ void advManager::DimensionDoor(void) {
              && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
             || (!(heroPointer->m_eventFlags & HERO_EVENT_EMBARKED)
                 && targetCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)) {
-            NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
+            NormalDialog(localization::Tr("adventure.dimension_door.failed"), NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
             UpdateRadar(1, 0);
         } else {
             PlayMusic(MUSIC_TRACK_TELEPORT);
@@ -6638,7 +6638,7 @@ struct tag_message CDMsg;
 // donor PoL RVA 0x0006785d; preferred Buka symbol ?TownGate@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.385467;margin=0.208066;shape=0.290;size=0.657;calls=0.526;alternate=pol20:void advManager::TownGate(int)@0x0006785d
-VA(0x00462d25, 0x2a6)
+VA(0x0040fa50, 0x240)
 void advManager::TownGate(void) {
     i32 k;
     i32 bestDist;
@@ -6651,7 +6651,7 @@ void advManager::TownGate(void) {
     heroPointer = gpGame->GetHero(gpCurPlayer->m_currentHero);
     if (heroPointer->m_eventFlags & HERO_EVENT_EMBARKED) {
         NormalDialog(
-            "Town Gate Failed!!!  You must be on land for this spell to work.",
+            localization::Tr("adventure.town_gate.land_required"),
             NORMAL_DIALOG_TYPE_OK
         );
         return;
@@ -6665,10 +6665,10 @@ void advManager::TownGate(void) {
         }
     }
     if (bestTown == -1)
-        NormalDialog("No available town.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK);
+        NormalDialog(localization::Tr("adventure.town_gate.no_town"), NORMAL_DIALOG_TYPE_OK);
     if (gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_occupyingHeroId
         != TOWN_OCCUPYING_HERO_NONE) {
-        NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61);
+        NormalDialog(localization::Tr("adventure.town_gate.occupied"), NORMAL_DIALOG_TYPE_OK, 0x61);
         return;
     }
     PlayMusic(MUSIC_TRACK_TELEPORT);
@@ -6688,7 +6688,7 @@ void advManager::TownGate(void) {
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.502597;margin=0.051626;shape=0.294;size=0.965;calls=0.867;alternate=pol20:void advManager::SummonBoat(void)@0x00067c9b
-VA(0x00462fcb, 0x51c)
+VA(0x0040fc90, 0x4bb)
 void advManager::SummonBoat(void) {
     hero* pHero;
     i8 boatFound;
@@ -6704,7 +6704,7 @@ void advManager::SummonBoat(void) {
     i16 drawWidth;
     i16 drawX;
 
-    pHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
+    pHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     foundCell = 0;
     boatFound = 0;
     pCell = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER);
@@ -6712,8 +6712,8 @@ void advManager::SummonBoat(void) {
         goto summon_done;
     for (iDirection = 0; iDirection < MAP_DIRECTION_COUNT; iDirection++) {
         pCell = GetCell(
-            normalDirTable[iDirection].x + m_mapOriginX + ADVMGR_VIEW_CENTER,
-            normalDirTable[iDirection].y + m_mapOriginY + ADVMGR_VIEW_CENTER
+            m_mapOriginX + normalDirTable[iDirection].x + ADVMGR_VIEW_CENTER,
+            m_mapOriginY + normalDirTable[iDirection].y + ADVMGR_VIEW_CENTER
         );
         if (pCell->m_objectIndex == MAP_CELL_NO_FRAME
             && pCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
@@ -6771,8 +6771,8 @@ void advManager::SummonBoat(void) {
                 gpWindowManager
                     ->FizzleForward(drawX, drawY, drawWidth, drawHeight, FIZZLE_USE_DEFAULT_DELAY);
             }
-            thisBoat->x = normalDirTable[iDirection].x + m_mapOriginX + ADVMGR_VIEW_CENTER;
-            thisBoat->y = normalDirTable[iDirection].y + m_mapOriginY + ADVMGR_VIEW_CENTER;
+            thisBoat->x = m_mapOriginX + normalDirTable[iDirection].x + ADVMGR_VIEW_CENTER;
+            thisBoat->y = m_mapOriginY + normalDirTable[iDirection].y + ADVMGR_VIEW_CENTER;
             thisBoat->savedTriggerType = pCell->m_triggerType;
             thisBoat->savedEventData = pCell->m_objectMetadata;
             pCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
@@ -6793,13 +6793,13 @@ summon_done:
     UpdateScreen(0, 0);
     Reseed(0, 0);
     if (!boatFound)
-        NormalDialog("Summon Boat failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
+        NormalDialog(localization::Tr("adventure.summon_boat.failed"), NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
 }
 
 // donor PoL RVA 0x00068247; preferred Buka symbol ?ShowRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.438878;margin=0.464254;shape=0.279;size=0.721;calls=1.000;alternate=pol20:void advManager::ShowRoute(int, int, int)@0x00068247
-VA(0x004634e7, 0x31b)
+VA(0x0041014b, 0x2de)
 void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
     hero* pHero;
     i32 canReach;
@@ -6847,14 +6847,13 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
             x += normalDirTable[dir].x;
             y += normalDirTable[dir].y;
             if (j == 0) {
-                ADVMGR_VISIBILITY_AT(x, y) = ROUTE_CELL_DESTINATION;
+                m_visibilityMap[x + y * MAP_CELL_GRID_SIZE] = ROUTE_CELL_DESTINATION;
             } else {
                 fromDirection = gpSearchArray->m_directions[j - 1];
-                ADVMGR_VISIBILITY_AT(x, y) = gRouteFrame[fromDirection][dir];
+                m_visibilityMap[x + y * MAP_CELL_GRID_SIZE] = gRouteFrame[fromDirection][dir];
             }
             if (remMob >= 0) {
-                ADVMGR_VISIBILITY_AT(x, y) =
-                    ADVMGR_VISIBILITY_AT(x, y) + ROUTE_CELL_REACHABLE_OFFSET;
+                m_visibilityMap[x + y * MAP_CELL_GRID_SIZE] += ROUTE_CELL_REACHABLE_OFFSET;
                 canReach = 1;
             }
         }
@@ -6929,14 +6928,13 @@ void advManager::CheckDimHero(void) {
 // donor PoL RVA 0x000688b4; preferred Buka symbol ?CheckDimNextHeroBut@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.454682;margin=0.437763;shape=0.225;size=0.845;calls=1.000;alternate=pol20:void advManager::CheckDimNextHeroBut(void)@0x000688b4
-VA(0x00463999, 0x6e)
+VA(0x00410577, 0x63)
 void advManager::CheckDimNextHeroBut(void) {
     i16 frame;
 
-    if (!gbThisNetHumanPlayer[giCurPlayer] || !gpCurPlayer->HasMobileHero())
-        frame = WIDGET_COMMAND_SET_FLAGS;
-    else
-        frame = WIDGET_COMMAND_CLEAR_FLAGS;
+    frame = gbThisNetHumanPlayer[giCurPlayer] && gpCurPlayer->HasMobileHero()
+                ? static_cast<i16>(WIDGET_COMMAND_CLEAR_FLAGS)
+                : static_cast<i16>(WIDGET_COMMAND_SET_FLAGS);
     gpWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
         frame,
@@ -6948,7 +6946,7 @@ void advManager::CheckDimNextHeroBut(void) {
 // donor PoL RVA 0x0006891f; preferred Buka symbol ?SeedTo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.530039;margin=0.750383;shape=0.400;size=0.820;calls=1.000;alternate=pol20:void advManager::SeedTo(int, int)@0x0006891f
-VA(0x00463a07, 0x152)
+VA(0x004105da, 0x12d)
 void advManager::SeedTo(i32 targetX, i32 targetY) {
     hero* currentHero;
 

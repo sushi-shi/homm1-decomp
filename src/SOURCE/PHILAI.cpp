@@ -97,7 +97,7 @@ DATA(0x004b1b80)
 i8 gbPossibleShipyardFound;
 DATA(0x004b3010)
 float gafAITurnCostResource[RESOURCE_COUNT];
-DATA(0x004af2f8)
+DATA(0x004b7430)
 u8 gCurWatchPlayerHighBit;
 DATA(0x004c2044)
 i32 iCurPlaceToVisit;

@@ -61,6 +61,7 @@ rva	name	provenance
 0x0000f038	?SetEnvironmentOrigin@advManager@@QAEXFFF@Z	Buka context/locator instruction/CFG review: 0xb273, 0xb60f; buka-adventure-context.json
 0x0000f2f3	?CheckLoadSample@advManager@@QAEXH@Z	Buka environment-audio instruction/CFG/EH review: complete environment-audio review, 0xf4e5; buka-environment-audio.json
 0x0000f34d	?InsertSound@advManager@@QAEXFFFC@Z	Buka environment-audio instruction/CFG/EH review: 0xf11a, 0xf17a, 0xf19e, 0xf1c2, 0xf1e6, complete environment-audio review; buka-environment-audio.json
+0x0000f55c	?TeleportTo@advManager@@QAEXHHH@Z	Buka travel-spell/route instruction/CFG/EH review: complete travel-spell/route review, 0xf9fa, 0xfc0f; buka-travel.json
 0x0000f853	?DimensionDoor@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc1de; buka-map-views.json
 0x0000fa50	?TownGate@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc1e8; buka-map-views.json
 0x0000fc90	?SummonBoat@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc167; buka-map-views.json
@@ -128,11 +129,14 @@ rva	name	provenance
 0x000443f7	?WritePrefs@@YAXXZ	Buka control-panel instruction/CFG/EH review: 0xd569; buka-control-panel.json
 0x00044ae3	?SetWinText@@YAXPAVheroWindow@@F@Z	Buka quick-view instruction/CFG/EH review: 0x96b9, 0xa3f6; buka-quick-views.json
 0x00044b4e	?KBTickCount@@YAHXZ	Buka Main complete instruction/CFG correspondence: 0x2995, 0x2ad0; buka-adventure-commands.json
+0x000463d9	?DelayMilli@@YAXH@Z	Buka travel-spell/route instruction/CFG/EH review: 0xf6c8; buka-travel.json
 0x00048a6f	?DoAI@philAI@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2a18; buka-adventure-commands.json
 0x00053b7a	??0fileRequester@@QAE@FFFPBD00@Z	Buka control-panel instruction/CFG/EH review: 0xd8e0; buka-control-panel.json
 0x00054354	??1fileRequester@@QAE@XZ	Buka control-panel instruction/CFG/EH review: 0xd98b; buka-control-panel.json
 0x00056080	?BuildPath@searchArray@@QAEHFFFFF@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x24fb; buka-adventure-commands.json
+0x00056150	?SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z	Buka travel-spell/route instruction/CFG/EH review: 0x10692, 0x106fd; buka-travel.json
 0x0005ea20	?HasGarrison@town@@QAECXZ	Buka input-handler instruction/CFG review: 0x524c; buka-adventure-input.json
+0x0005ea63	?GiveSpells@town@@QAEXXZ	Buka travel-spell/route instruction/CFG/EH review: 0xfc5b; buka-travel.json
 0x0005ec84	?View@town@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x27bd, 0x2840; buka-adventure-commands.json
 0x000685e0	_waveOutGetDevCapsA@12	Buka FF25 import thunk at 0x685e0; PE IAT 0x8a2d8 WINMM.dll!waveOutGetDevCapsA; decoration from pinned or verified import library, or compiled WinG caller
 0x000685e6	_waveOutGetNumDevs@0	Buka FF25 import thunk at 0x685e6; PE IAT 0x8a2d4 WINMM.dll!waveOutGetNumDevs; decoration from pinned or verified import library, or compiled WinG caller
@@ -331,6 +335,7 @@ rva	name	provenance
 0x0007831b	_malloc	Buka turn-panel instruction/CFG/EH review: 0x8742, 0x8818; buka-bottom-turns.json
 0x00078460	_strlen	Buka panel instruction/CFG/EH review: 0x8a1e, 0x9436, 0x94a7; buka-bottom-panels.json
 0x000784e0	_memset	Buka adventure-panel instruction/CFG/EH review: 0xe595; buka-adventure-panel.json
+0x00078538	_abs	Buka travel-spell/route instruction/CFG/EH review: 0xfb05, 0xfb36; buka-travel.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
