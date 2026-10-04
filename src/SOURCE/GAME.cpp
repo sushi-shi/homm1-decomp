@@ -3300,7 +3300,7 @@ void game::PerWeek(void) {
 // plague month, the creature month also seeding wandering monsters.
 VA(0x0043435e, 0x2c0)
 void game::PerMonth(void) {
-    DATA(0x00490ce0)
+    DATA(0x0048fcbc)
     static i8 gMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
     town* townPointer;
     i16 growth;

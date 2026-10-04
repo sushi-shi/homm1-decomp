@@ -131,7 +131,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 VA(0x0046b8b2, 0x6bd)
 #line 232 "F:\\H1w95src\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(i16 frame) {
-    DATA(0x004a31b8)
+    DATA(0x004cfb44)
     static BOOL gInSetPointer = FALSE;
     i32 cursorIndex;
     i32 x;
@@ -335,7 +335,7 @@ void mouseManager::ShowSystemCursor(void) {
 // zero-filled cursor tables (0x004cac88..).
 DATA(0x004a3100)
 i32 gMouseOffset[3] = {0, 40, 55};
-DATA(0x004a310c)
+DATA(0x004cfb40)
 i32 gMouseCursorType = 0;
 DATA(0x004a3110)
 u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
@@ -349,19 +349,19 @@ u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23}, {22, 23},
     {22, 23}, {22, 23}, {22, 23}
 };
-DATA(0x004cea00)
+DATA(0x004cf30c)
 HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
-DATA(0x004cd860)
+DATA(0x004ce178)
 BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
-DATA(0x004ce670)
+DATA(0x004cef88)
 HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
-DATA(0x004cf110)
+DATA(0x004cfa14)
 u8* cAndBits[MOUSE_CURSOR_COUNT];
-DATA(0x004cdf68)
+DATA(0x004ce880)
 BITMAP bmpColor[MOUSE_CURSOR_COUNT];
-DATA(0x004ce8d0)
+DATA(0x004cf1e0)
 i8* gColorBits[MOUSE_CURSOR_COUNT];
-DATA(0x004ceb30)
+DATA(0x004cf438)
 ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
-DATA(0x004ce7a0)
+DATA(0x004cf0b4)
 HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];

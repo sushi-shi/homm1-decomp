@@ -1485,7 +1485,7 @@ char* gCombatFxNames[26] = {
     "magic03.icn", "magic06.icn",  "magic01.icn", "magic01.icn", "rainbluk.icn", "cloudluk.icn",
     "moraleg.icn", "moraleb.icn",
 };
-DATA(0x00490f58)
+DATA(0x004903b0)
 i16 gSpellAIValue[29] = {
     500,  350,  300, 400, 550, 900, 400, 500, 300, 350, 250, 0, 100,  150, 1000,
     2000, 1700, 700, 700, 0,   0,   0,   0,   0,   0,   0,   0, 1200, 0,
@@ -1494,7 +1494,7 @@ DATA(0x004903ec)
 i8 gSpellAIFlags[29] = {
     3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 };
-DATA(0x00490fb8)
+DATA(0x0049040c)
 i8 gMageGuildSpellPool[4][8] = {
     {9, 13, 6, 8, 10, 20, 19, 8},
     {1, 5, 3, 7, 11, 21, 26, 12},
@@ -1543,14 +1543,14 @@ i8 gDwellingType[4][6] = {
     {6, 7, 8, 9, 10, 11},
     {18, 19, 20, 21, 22, 23},
 };
-DATA(0x004911d0)
+DATA(0x00490620)
 i32 gMageBuildingCosts[4][7] = {
     {5, 0, 5, 0, 0, 0, 2000},
     {5, 4, 5, 4, 4, 4, 1000},
     {5, 6, 5, 6, 6, 6, 1000},
     {5, 10, 5, 10, 10, 10, 1000},
 };
-DATA(0x00491240)
+DATA(0x00490690)
 i32 gNeutralBuildingCosts[7][7] = {
     {5, 0, 5, 0, 0, 0, 2000},
     {5, 0, 0, 0, 0, 0, 750},
@@ -1569,7 +1569,7 @@ i32 gDwellingBaseResourceValues[24] = {
     858,  2225, 2816, 7385, 13754, 29785, 1684, 2256, 3736, 7213, 15181, 27684,
     1802, 2615, 3414, 6967, 12212, 38141, 1956, 2607, 3869, 7510, 16002, 111967,
 };
-DATA(0x00491398)
+DATA(0x004907e0)
 i32 gDwellingCosts[24][7] = {
     {0, 0, 0, 0, 0, 0, 200},    {0, 0, 0, 0, 0, 0, 1000},   {0, 0, 5, 0, 0, 0, 1000},
     {10, 0, 10, 0, 0, 0, 2000}, {20, 0, 0, 0, 0, 0, 3000},  {20, 0, 0, 0, 20, 0, 5000},
@@ -3184,7 +3184,7 @@ tag_tilePoint normalDirTable[8] = {
     {-1, 0, 16},
     {-1, -1, 16},
 };
-DATA(0x00491680)
+DATA(0x00490ac0)
 TownBuildingExtent gTownBuildingExtents[4][16] = {
     {{296, 0, 88, 156},
      {128, 64, 136, 128},
@@ -3258,7 +3258,7 @@ u16 gDwellingRequirements[24] = {
 };
 DATA(0x00490cf0)
 i32 gResourceBaseValue[7] = {250, 250, 200, 250, 250, 250, 1};
-DATA(0x004918d0)
+DATA(0x00490d0c)
 i32 gStartingResources[4][7] = {
     {30, 10, 30, 10, 10, 10, 10000},
     {20, 5, 20, 5, 5, 5, 7500},
@@ -3287,7 +3287,7 @@ DATA(0x004913c4)
 char gMapPath[20] = ".\\MAPS\\";
 DATA(0x004913d8)
 i8 gHeroScoutRadius[8] = {4, 4, 4, 6, 4, 0, 0, 0};
-DATA(0x00491e50)
+DATA(0x004913e0)
 float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
 DATA(0x00491400)
 i8 gVisRangeTown = 5;
@@ -3336,7 +3336,7 @@ float gBattleStat[41] = {
     1.21f, 1.33f, 1.46f, 1.61f, 1.77f, 1.95f, 2.14f, 2.36f, 2.59f, 2.85f, 3.14f,
     3.45f, 3.8f,  4.18f, 4.59f, 5.0f,  5.0f,  5.0f,  5.0f,
 };
-DATA(0x0049232c)
+DATA(0x004918b4)
 i8 gMageGuildSpellCount[4] = {3, 5, 7, 9};
 DATA(0x004918b8)
 float gSpellCastNumMod[21] = {
@@ -4652,9 +4652,9 @@ char* gWinSetupText[68] = {
     localization::Tr("table.gWinSetupText.66"),
     localization::Tr("table.gWinSetupText.67"),
 };
-DATA(0x00493f30)
+DATA(0x00493428)
 i32 gRequiredExtendedMemory = 4434;
-DATA(0x00493f34)
+DATA(0x0049342c)
 i32 gRequiredConventionalMemory = 374;
 DATA(0x004a9918)
 i32 gMapSize = 0;

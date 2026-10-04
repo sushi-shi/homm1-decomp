@@ -4,3 +4,5 @@
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00024a50	0x000926d8	0x00025b25	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	Buka DoEvent shrine: gSpellNames[objectMetadata - 1]; indexed load biases table base by -4; full operand and CFG proof in buka-events.json
 0x000779d1	0x000d20aa	0x000779f0	_son	0xFFFFFFFE	1	Buka adaptive Huffman reconstruction indexes son from one word before its base; complete ordered instruction and addend proof in buka-lzhuf.json
+0x0002e595	0x00091fde	0x0002e6d1	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	Buka campaign index minus one: exact operand, owner and signed addend; buka-data-layout.json
+0x0003d0c4	0x000932bc	0x0003dac9	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	Buka campaign index minus one: exact operand, owner and signed addend; buka-data-layout.json

@@ -22,19 +22,19 @@ struct AudiereSampleNode {
     inline ~AudiereSampleNode();
 };
 
-// Buka retail VA 0x004cdf58.
+DATA(0x004cdf58)
 static void* gSampleBuffer;
-// Buka retail VA 0x004cdf5c.
+DATA(0x004cdf5c)
 static int gSampleFrames;
-// Buka retail VA 0x004cdf60.
+DATA(0x004cdf60)
 static int gSampleChannels;
-// Buka retail VA 0x004cdf64.
+DATA(0x004cdf64)
 static int gSampleRate;
-// Buka retail VA 0x004cdf68.
+DATA(0x004cdf68)
 static audiere::SampleFormat gSampleFormat;
-// Buka retail VA 0x004ce104.
+DATA(0x004ce104)
 static AudiereSampleNode* gSamples;
-// Buka retail VA 0x004ce108.
+DATA(0x004ce108)
 static int gSampleSuspensions;
 
 VA(0x004689a0, 0x162)

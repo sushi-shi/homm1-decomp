@@ -1282,7 +1282,7 @@ DATA(0x004cc815)
 u8 gPacketSequence = 0;
 DATA(0x004a2c40)
 i32 gLastHeartbeatSend = 0;
-DATA(0x004a2c44)
+DATA(0x0049f05c)
 i32 gLastHeartbeatReceive = 1999999999;
 DATA(0x004cc81c)
 i8 gInNetSetup = 0;

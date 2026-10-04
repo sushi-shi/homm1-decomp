@@ -467,7 +467,7 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 
 // Window-manager data, initialized from retail .data (0x004a0870..) and
 // zero-filled storage (0x004cac20..).
-DATA(0x004cf538)
+DATA(0x004ce110)
 i8 gWindowFadeSavedUpdate;
 DATA(0x004ce114)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];

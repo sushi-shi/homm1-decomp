@@ -2512,7 +2512,7 @@ update_amount:
     return MESSAGE_DISPATCH_CONSUME;
 }
 // TOWNMGR's .rdata: Open's per-type town-object layout.
-DATA(0x0048d428)
+DATA(0x0048a70c)
 const i8 gTownObjectType[4][16] = {
     {5, 6, 8, 11, 7, 0, 1, 2, 10, 9, 3, 4, 12, -1, -1, -1},
     {5, 6, 12, 8, 0, 9, 10, 1, 2, 11, 3, 4, 7, -1, -1, -1},

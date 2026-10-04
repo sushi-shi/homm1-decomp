@@ -8,15 +8,15 @@
 
 #include <stdio.h>
 
-// Buka retail VA 0x004cddec.
+DATA(0x004cddec)
 audiere::OutputStreamPtr AudiereMusic::stream;
-// Buka retail VA 0x004cdf6c.
+DATA(0x004cdf6c)
 audiere::SampleSourcePtr AudiereMusic::source;
-// Buka retail VA 0x004cdde8.
+DATA(0x004cdde8)
 static int gMusicSuspensions;
-// Buka retail VA 0x004a0d70.
+DATA(0x004a0d70)
 static int gCurrentTrack = -1;
-// Buka retail VA 0x004a0d74.
+DATA(0x004a0d74)
 static int gCDTrackMap[100] = {
     2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
     22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
@@ -25,11 +25,11 @@ static int gCDTrackMap[100] = {
     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 50,
 };
 
-// Buka retail VA 0x004cddf0.
+DATA(0x004cddf0)
 static char gMusicFilename[352];
-// Buka retail VA 0x004cdf74.
+DATA(0x004cdf74)
 static int gMusicPositions[100];
-// Buka retail VA 0x004ce10c.
+DATA(0x004ce10c)
 static int gMusicSource;
 
 VA(0x004692b6, 0x47)

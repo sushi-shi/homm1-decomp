@@ -108,7 +108,7 @@ H1_ENUM_END(SpellPointerFrame)
 // mouse manager before re-entering for the teleport destination.
 VA(0x0045a0b0, 0x25d)
 i16 HandleCastSpell(struct tag_message& message) {
-    DATA(0x004906b4)
+    DATA(0x0049f97c)
     static i8 indexToCastOn = -1;
     i16 hex;
 

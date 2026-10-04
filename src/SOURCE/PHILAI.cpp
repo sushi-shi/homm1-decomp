@@ -135,7 +135,7 @@ i8 gbActualShipyardFound;
 // the anonymous float literals.
 DATA(0x0048d070)
 static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
-DATA(0x0048d074)
+DATA(0x0048a4b0)
 static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
 DATA(0x0048d078)
 static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;

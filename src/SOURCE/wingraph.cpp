@@ -34,12 +34,12 @@ DATA(0x004a01a0)
 i32 gMainVideoModeHeight = 768;
 DATA(0x0049fe78)
 i32 Orientation = 1;
-DATA(0x0049fe80)
+DATA(0x004a01a8)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
-DATA(0x004a0284)
+DATA(0x004cdda4)
 void* gInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
-DATA(0x004a028c)
+DATA(0x004cddac)
 i32 gTtlBlts = 0;
 DATA(0x004cddb0)
 BOOL gWinGraphBusy = FALSE;
@@ -53,11 +53,11 @@ DATA(0x004cddc0)
 IDirectDrawSurface* gDDSOne = NULL;
 DATA(0x004cddc4)
 IDirectDrawClipper* gClipper = NULL;
-DATA(0x004a02a8)
+DATA(0x004cddc8)
 IDirectDrawPalette* gDDPal = NULL;
-DATA(0x004a035c)
+DATA(0x004cddcc)
 i32 gBusyRetry = 0;
-DATA(0x004a0534)
+DATA(0x004cddd0)
 BOOL gInDDSD = FALSE;
 DATA(0x004cddd4)
 HDC hdcImage = NULL;
@@ -67,17 +67,17 @@ DATA(0x004cdddc)
 HPALETTE hpalApp = NULL;
 DATA(0x004cdde0)
 HINSTANCE gDDrawLibrary = NULL;
-DATA(0x004c24f0)
+DATA(0x004cdd78)
 RECT gDDClientRect;
-DATA(0x004c2500)
+DATA(0x004cd938)
 RECT gDDSourceRect;
-DATA(0x004c24d8)
+DATA(0x004cdd90)
 RECT gDDDestinationRect;
-DATA(0x004c24e8)
+DATA(0x004cd8c0)
 i32 gDDResult;
-DATA(0x004c2510)
+DATA(0x004cd8c8)
 _DDSURFACEDESC gDDSurfaceDesc;
-DATA(0x004c29ac)
+DATA(0x004cdd88)
 i32 gPaintStart;
 DATA(0x004c2580)
 WingImage screenImage;
