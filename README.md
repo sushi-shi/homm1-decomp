@@ -25,9 +25,11 @@ preserved. Enemy-turn and new-turn panels now have reviewed Buka claims,
 including their animation state and calendar labels. The resource, kingdom and
 hero panels and resource-message producer are also migrated. Hero/town quick
 views and army-size names now have reviewed claims, CFGs, data and exception
-cleanup; their remaining stack-local differences are documented. Strict
-delinking currently stops at data identity `0x8ea58` in adventure-screen redraw.
-The old score ledger has been reset.
+cleanup; their remaining stack-local differences are documented. Adventure
+redraw, hero/town context switching and locator scrolling are also migrated,
+including removal of Buka’s absent demobilization log call. Strict delinking
+currently stops at data identity `0x8ea64` in puzzle view. The old score ledger
+has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

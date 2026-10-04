@@ -4610,7 +4610,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
 // donor PoL RVA 0x00063dd6; preferred Buka symbol ?RedrawAdvScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.562981;margin=0.429826;shape=0.444;size=0.906;calls=0.909;alternate=pol20:void advManager::RedrawAdvScreen(int, int)@0x00063dd6
-VA(0x0045da85, 0xe8)
+VA(0x0040ae3d, 0xd1)
 void advManager::RedrawAdvScreen(i32 update) {
     if (!bShowIt)
         return;
@@ -4629,13 +4629,13 @@ void advManager::RedrawAdvScreen(i32 update) {
 }
 
 // Buka 2.1 DeactivateCurrTown clears the current player's town slot.
-VA(0x0045db6d, 0x1f)
+VA(0x0040af0e, 0x14)
 void advManager::DeactivateCurrTown(void) {
     gpCurPlayer->m_currentTown = GAME_TOWN_NONE;
 }
 
 // Buka 2.1 DeactivateCurrHero demobilizes before clearing the hero slot.
-VA(0x0045db8c, 0x27)
+VA(0x0040af22, 0x1c)
 void advManager::DeactivateCurrHero(void) {
     DemobilizeCurrHero();
     gpCurPlayer->m_currentHero = INVALID_HERO;
@@ -4653,7 +4653,7 @@ void advManager::MobilizeCurrHero(i32 update) {
 // donor PoL RVA 0x00063f95; preferred Buka symbol ?DemobilizeCurrHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.450729;margin=0.647673;shape=0.295;size=0.807;calls=0.800;alternate=pol20:void advManager::DemobilizeCurrHero(void)@0x00063f95
-VA(0x0045dc0c, 0x199)
+VA(0x0040af7f, 0x15e)
 void advManager::DemobilizeCurrHero(void) {
     if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
@@ -4662,10 +4662,9 @@ void advManager::DemobilizeCurrHero(void) {
 
     m_heroContextLocked = 0;
     hero* currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    LogInt(currentHero->m_name, currentHero->m_x);
     StopCursor(1);
-    currentHero->m_x = m_cursorMapX + m_mapOriginX;
-    currentHero->m_y = m_cursorMapY + m_mapOriginY;
+    currentHero->m_x = m_mapOriginX + m_cursorMapX;
+    currentHero->m_y = m_mapOriginY + m_cursorMapY;
     mapCell* cell = GetCell(currentHero->m_x, currentHero->m_y);
     currentHero->m_locationType = cell->m_triggerType;
     currentHero->m_occupiedTown = cell->m_objectMetadata;
@@ -4683,7 +4682,7 @@ void advManager::DemobilizeCurrHero(void) {
 // donor PoL RVA 0x00064101; preferred Buka symbol ?SetTownContext@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.489027;margin=0.082311;shape=0.312;size=0.827;calls=0.923;alternate=pol20:void advManager::SetTownContext(int)@0x00064101
-VA(0x0045dda5, 0x255)
+VA(0x0040b0dd, 0x224)
 void advManager::SetTownContext(i8 townId) {
     i16 k;
     i8 townNo;
@@ -4702,9 +4701,9 @@ void advManager::SetTownContext(i8 townId) {
         if (gpCurPlayer->m_townIds[k] == townId)
             townNo = k;
     }
-    if (gpCurPlayer->m_townLocatorPage > townNo)
+    if (townNo < gpCurPlayer->m_townLocatorPage)
         gpCurPlayer->m_townLocatorPage = townNo;
-    else if (gpCurPlayer->m_townLocatorPage + (LOCATOR_VISIBLE_COUNT - 1) < townNo)
+    else if (townNo > gpCurPlayer->m_townLocatorPage + (LOCATOR_VISIBLE_COUNT - 1))
         gpCurPlayer->m_townLocatorPage = townNo - (LOCATOR_VISIBLE_COUNT - 1);
     UpdateHeroLocators(1, 1);
     UpdateTownLocators(1, 1);
@@ -4715,7 +4714,7 @@ void advManager::SetTownContext(i8 townId) {
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
     townNo = CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y));
-    if (m_currentTerrain != townNo) {
+    if (townNo != m_currentTerrain) {
         m_currentTerrain = townNo;
         PlayMusic(m_currentTerrain);
     }
@@ -4728,7 +4727,7 @@ void advManager::SetTownContext(i8 townId) {
 // donor PoL RVA 0x00064318; preferred Buka symbol ?SetHeroContext@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.499995;margin=0.151356;shape=0.325;size=0.844;calls=0.947;alternate=pol20:void advManager::SetHeroContext(int, int)@0x00064318
-VA(0x0045dffa, 0x3e6)
+VA(0x0040b301, 0x38d)
 void advManager::SetHeroContext(i8 heroId, i8 update) {
     i8 wasVisible;
     i8 heroSlot;
@@ -4750,10 +4749,9 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     m_mapOriginY = currentHero->m_y - ADVMGR_VIEW_CENTER;
     m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
     m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
-    if (currentHero->m_eventFlags & HERO_EVENT_EMBARKED)
-        m_cursorType = ADVMGR_HERO_ICON_BOAT;
-    else
-        m_cursorType = currentHero->m_heroClass;
+    m_cursorType = currentHero->m_eventFlags & HERO_EVENT_EMBARKED
+                       ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
+                       : currentHero->m_heroClass;
     m_cursorDirection = currentHero->m_direction;
     m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
     cellPtr = GetCell(currentHero->m_x, currentHero->m_y);
@@ -4771,9 +4769,9 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
         if (gpCurPlayer->m_heroIds[n] == heroId)
             heroSlot = n;
     }
-    if (gpCurPlayer->m_heroLocatorPage > heroSlot)
+    if (heroSlot < gpCurPlayer->m_heroLocatorPage)
         gpCurPlayer->m_heroLocatorPage = heroSlot;
-    else if (gpCurPlayer->m_heroLocatorPage + (LOCATOR_VISIBLE_COUNT - 1) < heroSlot)
+    else if (heroSlot > gpCurPlayer->m_heroLocatorPage + (LOCATOR_VISIBLE_COUNT - 1))
         gpCurPlayer->m_heroLocatorPage = heroSlot - (LOCATOR_VISIBLE_COUNT - 1);
     UpdateHeroLocators(1, 1);
     UpdateTownLocators(1, 1);
@@ -4789,7 +4787,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     UpdateScreen(0, 0);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
     heroSlot = CELL_TERRAIN(cellPtr);
-    if (m_currentTerrain != heroSlot) {
+    if (heroSlot != m_currentTerrain) {
         m_currentTerrain = heroSlot;
         PlayMusic(m_currentTerrain);
     }
@@ -4804,7 +4802,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
 // donor PoL RVA 0x000646aa; preferred Buka symbol ?DoHeroKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.410865;margin=0.380092;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoHeroKnob(void)@0x000646aa
-VA(0x0045e3e0, 0x25e)
+VA(0x0040b68e, 0x245)
 void advManager::DoHeroKnob(void) {
     double scale;
     i16 pg;
@@ -4834,9 +4832,9 @@ void advManager::DoHeroKnob(void) {
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
                 pg = static_cast<i16>((m_scrollLeftButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
-                if (prevPage != pg) {
+                if (pg != prevPage) {
                     gpCurPlayer->m_heroLocatorPage = pg;
-                    if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
+                    if (pg > numHeroes - (LOCATOR_VISIBLE_COUNT - 1))
                         pg = numHeroes - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateHeroLocators(0, 1);
                     m_scrollLeftButton->m_y = message.y - offset;
@@ -4856,7 +4854,7 @@ void advManager::DoHeroKnob(void) {
 // donor PoL RVA 0x000648d9; preferred Buka symbol ?DoTownKnob@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.410865;margin=0.000000;shape=0.246;size=0.742;calls=0.733;alternate=pol20:void advManager::DoTownKnob(void)@0x000648d9
-VA(0x0045e63e, 0x25e)
+VA(0x0040b8d3, 0x245)
 void advManager::DoTownKnob(void) {
     double scale;
     i16 pg;
@@ -4886,9 +4884,9 @@ void advManager::DoTownKnob(void) {
             m_adventureWindow->DrawWindow();
             if (numHeroes > LOCATOR_VISIBLE_COUNT) {
                 pg = static_cast<i16>((m_scrollRightButton->m_y - LOCATOR_SCROLL_BASE_Y) / scale);
-                if (prevPage != pg) {
+                if (pg != prevPage) {
                     gpCurPlayer->m_townLocatorPage = pg;
-                    if (numHeroes - (LOCATOR_VISIBLE_COUNT - 1) < pg)
+                    if (pg > numHeroes - (LOCATOR_VISIBLE_COUNT - 1))
                         pg = numHeroes - (LOCATOR_VISIBLE_COUNT - 1);
                     UpdateTownLocators(0, 1);
                     m_scrollRightButton->m_y = message.y - offset;

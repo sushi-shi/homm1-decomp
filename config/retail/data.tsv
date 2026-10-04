@@ -9,6 +9,7 @@
 # Turn-panel operand and typed payload review: buka-bottom-turns.json.
 # Panel and resource-message operand/payload review: buka-bottom-panels.json.
 # Quick-view typed data and complete pointer-payload review: buka-quick-views.json.
+# Context/locator operand/payload review: buka-adventure-context.json.
 rva	kind
 0x0008a38c	vtable
 0x0008a398	fppool
@@ -168,7 +169,6 @@ rva	kind
 0x00092cf4	
 0x00092e44	
 0x00092e48	
-0x00092e4c	
 0x00092e50	
 0x00092e58	
 0x00092e5c	
@@ -607,6 +607,7 @@ rva	kind
 0x000a98d0	
 0x000a98d4	
 0x000a98e4	
+0x000a9904	
 0x000a992c	
 0x000a9940	
 0x000a9944	

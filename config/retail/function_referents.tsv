@@ -35,6 +35,8 @@ rva	name	provenance
 0x0000a208	?GetArmySizeName@advManager@@QAEPADFC@Z	Buka QuickInfo instruction/CFG/EH review: 0x75bc; buka-quick-info.json
 0x0000a2b5	?TownQuickView@advManager@@QAEXCCFF@Z	Buka input-handler instruction/CFG review: 0x3782, 0x3ce6; buka-adventure-input.json
 0x0000ae3d	?RedrawAdvScreen@advManager@@QAEXH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2886; buka-adventure-commands.json
+0x0000af0e	?DeactivateCurrTown@advManager@@QAEXXZ	Buka context/locator instruction/CFG review: complete context/locator review, 0xb337; buka-adventure-context.json
+0x0000af22	?DeactivateCurrHero@advManager@@QAEXXZ	Buka context/locator instruction/CFG review: complete context/locator review, 0xb0ea, 0xb34d; buka-adventure-context.json
 0x0000af3e	?MobilizeCurrHero@advManager@@QAEXH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2522; buka-adventure-commands.json
 0x0000af7f	?DemobilizeCurrHero@advManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x278e, 0x27d1; buka-adventure-commands.json
 0x0000b0dd	?SetTownContext@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2924; buka-adventure-commands.json
@@ -50,6 +52,7 @@ rva	name	provenance
 0x0000df05	?AdvPanel@advManager@@QAEXXZ	Buka input-handler instruction/CFG review: 0x44c2; buka-adventure-input.json
 0x0000e4c1	?ComboDraw@advManager@@QAECFFC@Z	Buka command helper family: 0xf02e; buka-adventure-commands.json
 0x0000f009	?ComboDraw@advManager@@QAECH@Z	Buka Main complete instruction/CFG correspondence: 0x29a7; buka-adventure-commands.json
+0x0000f038	?SetEnvironmentOrigin@advManager@@QAEXFFF@Z	Buka context/locator instruction/CFG review: 0xb273, 0xb60f; buka-adventure-context.json
 0x0001014b	?ShowRoute@advManager@@QAEXHHH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x253f, 0x2720; buka-adventure-commands.json
 0x00010429	?HideRoute@advManager@@QAEXHHH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2569, 0x26fb; buka-adventure-commands.json
 0x000104fa	?CheckDimHero@advManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x2781; buka-adventure-commands.json
@@ -61,6 +64,7 @@ rva	name	provenance
 0x00010aad	?MouseInScrollZone@advManager@@QAEHXZ	Buka input-handler instruction/CFG review: 0x548d; buka-adventure-input.json
 0x00010e9f	?CheckHandleNet@advManager@@QAEPADXZ	Buka Main complete instruction/CFG correspondence: 0x2a34; buka-adventure-commands.json
 0x00010fda	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	Buka Main complete instruction/CFG correspondence: 0x2a54; buka-adventure-commands.json
+0x000113a4	?SaveAdventureBorder@advManager@@QAEXXZ	Buka context/locator instruction/CFG review: 0xae6f; buka-adventure-context.json
 0x000114e2	?DrawAdventureBorder@advManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x5a93; buka-adventure-drawing.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
@@ -88,6 +92,7 @@ rva	name	provenance
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
 0x000384f3	?GetNumThievesGuilds@game@@QAEHH@Z	Buka quick-view instruction/CFG/EH review: 0xa3db; buka-quick-views.json
 0x00038934	?ShowScenInfo@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x3256; buka-adventure-commands.json
+0x00038e58	?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z	Buka context/locator instruction/CFG review: 0xb494; buka-adventure-context.json
 0x0003949f	?AddSpell@hero@@QAEHCCH@Z	Buka Main complete instruction/CFG correspondence: 0x2dd9; buka-adventure-commands.json
 0x0003968e	?HeroView@hero@@QAECC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x287c; buka-adventure-commands.json
 0x0003a114	?ViewArtifact@hero@@QAEXCC@Z	Buka input-handler instruction/CFG review: 0x491b; buka-adventure-input.json
@@ -245,8 +250,10 @@ rva	name	provenance
 0x0006bf9d	?RestoreUnderlying@mouseManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x579a; buka-adventure-drawing.json
 0x0006bfc0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	Buka drawing-family instruction/CFG review: 0x5593; buka-adventure-drawing.json
 0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	Buka input-handler instruction/CFG review: 0x3878, 0x3923, 0x4058, 0x4a76; buka-adventure-input.json
+0x0006c062	?SetCursorShape@mouseManager@@QAEXH@Z	Buka context/locator instruction/CFG review: 0xb6a0, 0xb8a2, 0xb8e5, 0xbae7; buka-adventure-context.json
 0x0006c07c	?HideSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ea; buka-quick-info.json
 0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7721; buka-quick-info.json
+0x0006c15a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	Buka context/locator instruction/CFG review: 0xae67; buka-adventure-context.json
 0x0006c586	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	Buka panel instruction/CFG/EH review: 0x89df; buka-bottom-panels.json
 0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
@@ -254,6 +261,7 @@ rva	name	provenance
 0x0006d817	?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z	Buka turn-panel instruction/CFG/EH review: 0x8126, 0x81b2, 0x82fa, 0x8434, 0x8560, 0x86ad, 0x873b, 0x8811, 0x88d3; buka-bottom-turns.json
 0x0006d92a	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	Buka radar/locator family instruction/CFG review: 0x7f75, 0x7fcd; buka-radar-locators.json
 0x0006da11	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z	Buka radar/locator family instruction/CFG review: 0x7898, 0x78d2, 0x7913, 0x795d, 0x799e, 0x7a15, 0x7a3e, 0x7a67, 0x7a90, 0x7c77, 0x7cb6, 0x7cd5, 0x7cf6, 0x7d4c; buka-radar-locators.json
+0x0006da72	?DrawWindow@heroWindow@@QAEXXZ	Buka context/locator instruction/CFG review: 0xb7cc, 0xb85f, 0xba11, 0xbaa4; buka-adventure-context.json
 0x0006da87	?DrawWindow@heroWindow@@QAEXF@Z	Buka radar/locator family instruction/CFG review: 0x7bae, 0x7dd3; buka-radar-locators.json
 0x0006daab	?DrawWindow@heroWindow@@QAEXFHH@Z	Buka radar/locator family instruction/CFG review: 0x7ab3, 0x7ee5; buka-radar-locators.json
 0x0006dfa0	??0iconWidget@@QAE@FFFFPADCCFFF@Z	Buka turn-panel instruction/CFG/EH review: 0x80dc, 0x8168, 0x82b0, 0x83ea, 0x8516, 0x8666, 0x86f4; buka-bottom-turns.json

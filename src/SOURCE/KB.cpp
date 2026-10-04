@@ -3623,7 +3623,7 @@ DATA(0x00492e44)
 i32 gInSetupDialog = 0;
 DATA(0x00492e48)
 i32 gMinimized = 0;
-DATA(0x00492e4c)
+DATA(0x004a9904)
 i32 gHeroMoving = 0;
 DATA(0x00492e50)
 i32 gInSmacker = 0;
