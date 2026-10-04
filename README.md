@@ -15,7 +15,9 @@ source/data claims still need migration. The reviewed absolute-reference
 manifest is installed, and the delinker supports Buka’s `/FIXED` image and
 embedded import table. The adventure-manager migration now includes the
 Buka audio-volume and cleanup changes, with original English confirmation
-text preserved in the catalog. The old score ledger has been reset.
+text preserved in the catalog. The command handler and its helpers are being
+migrated; `Main` now agrees with the retail CFG and code size. The old score
+ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

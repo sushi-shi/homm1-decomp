@@ -45,7 +45,7 @@ extern i8 gDwellingType[4][6];
 // PHILAI's module state in retail address order: .data 0x0049f4c8-0x0048f827
 // (shared with its logging helpers' literals), then .bss 0x004acec0-0x004c4eef
 // (VC4 orders .bss by name hash, not by definition).
-DATA(0x0049f4c8)
+DATA(0x004ca188)
 i8 gShowComputerRoute = 0;
 DATA(0x0049f4d8)
 float gAttackHumanBonus = 2.0f;

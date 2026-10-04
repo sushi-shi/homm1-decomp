@@ -6446,7 +6446,7 @@
     ]
   },
   "profile_control_stage": "Whole-TU G5/G6 controls precede the cursor-volume correction and catalog replacement. Final functions records use the current compiled source; controls are diagnostic compiler evidence, not strict scores.",
-  "data_claim_caveat": "Buka gbThisNetHumanPlayer at 0xa7b94 overlaps the still-unmigrated NWC gpAdvManager claim. That NWC claim remains unreviewed; the matching coarse data.tsv start has been retained. Remaining inherited claim collisions are not Buka identities.",
+  "data_claim_caveat": "The NWC gpAdvManager collision at Buka gbThisNetHumanPlayer has been resolved by the later command-helper review in buka-adventure-commands.json. Other inherited claims remain unreviewed.",
   "validation": {
     "build": "All source units compile; strict delinking stops at unprovided data RVA 0xa674c.",
     "build_verify": "Fails at the same strict delink blocker; final gates have not passed.",
@@ -6455,5 +6455,7 @@
     "readme": "Generator cannot run without the strict report; no scores inserted by hand.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit completed; 202 adapted_review_required and two known missing modules remain. No tool implementation changed in this checkpoint.",
     "runtime": "Reconstructed candidate runtime not tested; strict source/data migration remains incomplete."
-  }
+  },
+  "snapshot_commit": "5b6b5b8f",
+  "subsequent_review": "Main CFG/size discrepancy and the gpAdvManager address collision are resolved in buka-adventure-commands.json; the original measurements in this file describe the preceding checkpoint."
 }

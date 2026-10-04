@@ -996,7 +996,7 @@ void advManager::GetCursorSampleSet(i32 sampleSet) {
 // donor PoL RVA 0x0005751b; preferred Buka symbol ?DoAdvCommand@advManager@@QAEPAVmapCell@@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.528946;margin=1.360342;shape=0.339;size=0.921;calls=0.947;alternate=pol20:class mapCell * advManager::DoAdvCommand(void)@0x0005751b
-VA(0x004544d5, 0x619)
+VA(0x0040244a, 0x541)
 class mapCell* advManager::DoAdvCommand(void) {
     i8 moveDone;
     town* viewTown;
@@ -1132,7 +1132,7 @@ class mapCell* advManager::DoAdvCommand(void) {
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
 VA(0x0040298b, 0xc7e)
 i16 advManager::Main(struct tag_message& message) {
-    DATA(0x004a1a74)
+    DATA(0x004a6760)
     static i32 gCheatSeq = 0;
     i32 yPos;
     i32 xPos;
@@ -1147,7 +1147,7 @@ i16 advManager::Main(struct tag_message& message) {
     i32 helpText;
     i32 dir;
 
-    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT] && ComboDraw(1))
+    if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount() && ComboDraw(1))
         UpdateScreen(1, 0);
     if (gGameOver) {
         message.type = MESSAGE_EXECUTIVE;
@@ -1276,10 +1276,9 @@ i16 advManager::Main(struct tag_message& message) {
                         break;
                     case INPUT_SCAN_F9:
                         for (cmdValue = 0; cmdValue < RESOURCE_COUNT; cmdValue++) {
-                            if (cmdValue == RESOURCE_GOLD)
-                                gpCurPlayer->m_resources[cmdValue] += CHEAT_GOLD_AMOUNT;
-                            else
-                                gpCurPlayer->m_resources[cmdValue] += CHEAT_RESOURCE_AMOUNT;
+                            gpCurPlayer->m_resources[cmdValue] +=
+                                (cmdValue == RESOURCE_GOLD ? CHEAT_GOLD_AMOUNT
+                                                          : CHEAT_RESOURCE_AMOUNT);
                         }
                         break;
                     case INPUT_SCAN_F11:
@@ -1466,8 +1465,8 @@ i16 advManager::Main(struct tag_message& message) {
                                 townIndex = 0;
                                 for (cmdValue = 0; cmdValue < gpCurPlayer->m_townCount;
                                      cmdValue++) {
-                                    if (gpCurPlayer->m_townIds[cmdValue]
-                                        == gpCurPlayer->CurrentTown()) {
+                                    if (gpCurPlayer->CurrentTown()
+                                        == gpCurPlayer->m_townIds[cmdValue]) {
                                         if (cmdValue == gpCurPlayer->m_townCount - 1)
                                             townIndex = gpCurPlayer->m_townIds[0];
                                         else
@@ -1521,7 +1520,7 @@ i16 advManager::Main(struct tag_message& message) {
 }
 
 // Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
-VA(0x004558fe, 0x22)
+VA(0x00403609, 0x17)
 void advManager::Reseed(i32, i32) {
     giSeedingValid = 0;
 }
@@ -2454,7 +2453,7 @@ void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
 }
 
 // Buka 2.1 CompleteDraw(update) forwards the current map origin.
-VA(0x00457ffe, 0x3a)
+VA(0x00405ace, 0x2f)
 void advManager::CompleteDraw(i32 update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
@@ -2921,7 +2920,7 @@ void advManager::DrawCell(
 }
 
 // Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
-VA(0x0045932d, 0x7d)
+VA(0x00406d26, 0x58)
 mapCell* advManager::GetCell(i16 x, i16 y) {
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
         return m_mapData[0];
@@ -4655,7 +4654,7 @@ void advManager::DeactivateCurrHero(void) {
     gpCurPlayer->m_currentHero = INVALID_HERO;
 }
 
-VA(0x0045dbb3, 0x59)
+VA(0x0040af3e, 0x41)
 void advManager::MobilizeCurrHero(i32 update) {
     if (gpCurPlayer->m_currentHero == INVALID_HERO)
         return;
@@ -6369,7 +6368,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
 }
 
 // Buka 2.1 ComboDraw(update) forwards the current map origin.
-VA(0x004621ce, 0x3a)
+VA(0x0040f009, 0x2f)
 i8 advManager::ComboDraw(i32 update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
 }
@@ -6894,7 +6893,7 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
 // donor PoL RVA 0x00068720; preferred Buka symbol ?HideRoute@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.524051;margin=0.948488;shape=0.403;size=0.809;calls=1.000;alternate=pol20:void advManager::HideRoute(int, int, int)@0x00068720
-VA(0x00463802, 0x106)
+VA(0x00410429, 0xd1)
 void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
     hero* currentHero;
 
@@ -6928,7 +6927,7 @@ void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
 // donor PoL RVA 0x00068827; preferred Buka symbol ?CheckDimHero@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.465466;margin=0.233620;shape=0.306;size=0.738;calls=1.000;alternate=pol20:void advManager::CheckDimHero(void)@0x00068827
-VA(0x00463908, 0x91)
+VA(0x004104fa, 0x7d)
 void advManager::CheckDimHero(void) {
     if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == INVALID_HERO)
         return;
@@ -7004,7 +7003,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
 }
 
 // Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
-VA(0x00463b59, 0x4f)
+VA(0x00410707, 0x3f)
 void advManager::ForceNewHover(void) {
     struct tag_message msg;
 
@@ -7434,9 +7433,9 @@ DATA(0x004a17bc)
 i32 gSandAnim = 0;
 DATA(0x004a17c0)
 i32 gLastHourGlassUpdateTime = 0;
-DATA(0x004a17c4)
+DATA(0x004a6748)
 i32 TrigX = 0;
-DATA(0x004a17c8)
+DATA(0x004a674c)
 i32 TrigY = 0;
 DATA(0x004a6750)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;

@@ -5183,7 +5183,7 @@ void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, 
 // GAME owns retail .data 0x00490920-0x00490b4b and .bss 0x004c50d0-0x004c512f.
 // Retail emits gNewGameSettingsSaved, gMonType and gLastSeed among the
 // literals of their users; gShowMapInfo is defined above GetMap.
-DATA(0x00490920)
+DATA(0x004a6c24)
 i32 gGameOver = 0;
 DATA(0x00490cec)
 u32 gLastSeed = 135621123;

@@ -1407,7 +1407,7 @@ DATA(0x0049f7b0)
 char gTitle[] = "Heroes of Might and Magic";
 DATA(0x0049f7cc)
 HWND hwndApp = NULL;
-DATA(0x0049f7d0)
+DATA(0x004a9e38)
 i32 gForegroundApp = 0;
 DATA(0x0049f7d4)
 void* hmnuApp = NULL;

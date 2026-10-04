@@ -3597,7 +3597,7 @@ DATA(0x00492c44)
 i32 gSpecialMouseMasks = 0;
 DATA(0x00492c48)
 i32 gCurExe = 0;
-DATA(0x00492c4c)
+DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
 DATA(0x00492c50)
 i32 gInDialog = 0;
@@ -3999,14 +3999,14 @@ char* gInitMenuHelp[5] = {
     localization::Tr("table.gInitMenuHelp.3"),
     localization::Tr("table.gInitMenuHelp.4"),
 };
-DATA(0x00493578)
+DATA(0x00492b08)
 char* gAdvMenuHelp[6] = {
-    "Next Hero\n\nSelect the next Hero.",
-    "Continue Movement\n\nContinue the Hero's movement along his current path.",
-    "Kingdom Summary\n\nView a summary of your kingdom.",
-    "End Turn\n\nEnd your turn and let the computer take its turn.",
-    "Adventure Options\n\nBring up the adventure options menu.",
-    "Game Options\n\nBring up the game options menu.",
+    localization::Tr("table.gAdvMenuHelp.0"),
+    localization::Tr("table.gAdvMenuHelp.1"),
+    localization::Tr("table.gAdvMenuHelp.2"),
+    localization::Tr("table.gAdvMenuHelp.3"),
+    localization::Tr("table.gAdvMenuHelp.4"),
+    localization::Tr("table.gAdvMenuHelp.5"),
 };
 DATA(0x00493590)
 char* gLuckText[7] = {"Cursed", "Awful", "Bad", "Normal", "Good", "Great", "Irish"};
@@ -4674,7 +4674,7 @@ DATA(0x00493f5c)
 i8 gInCombat = 0;
 DATA(0x00493f60)
 i8 gDirectConnect = 0;
-DATA(0x00493f64)
+DATA(0x00493434)
 i32 gForceSwitchMusic = FORCED_MUSIC_IDLE;
 DATA(0x00493f68)
 i32 gComputeExtent = 0;
@@ -4686,7 +4686,7 @@ DATA(0x00493f74)
 i32 gCurrArmyDrawn = 1;
 DATA(0x004a9940)
 i32 gAdvDisposeLevel = 0;
-DATA(0x00493f7c)
+DATA(0x004a9944)
 i32 gRemoteOn = 0;
 DATA(0x00493f80)
 i8 gGameInitialized = 0;
@@ -4709,7 +4709,7 @@ i8 gInCheckEndGame = 0;
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/mapCell.h>
 
-DATA(0x004a9b60)
+DATA(0x004a9414)
 i32 gbHumanPlayer[4];
 DATA(0x004a82b4)
 i32 giMaxExtentX;
@@ -4723,11 +4723,11 @@ DATA(0x004aa020)
 i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 DATA(0x004a7be4)
 i32 giBottomViewResource;
-DATA(0x004a9b50)
+DATA(0x004a9408)
 i32 giSeedingValid;
 DATA(0x004a82f0)
 i8 giLimitPlayer;
-DATA(0x004a82d4)
+DATA(0x004a7b90)
 inputManager* gpInputManager;
 DATA(0x004a7d54)
 i32 iMaxMapExtra;
@@ -4739,7 +4739,7 @@ DATA(0x004a8708)
 u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004a7bec)
 i32 bSpecialHideCursor;
-DATA(0x004a7bcc)
+DATA(0x004a74ac)
 class searchArray* gpSearchArray;
 DATA(0x004a82bc)
 i32 gbBlackoutPlayer;
@@ -4749,13 +4749,13 @@ DATA(0x004a82dc)
 heroWindow* DataEntryWin;
 DATA(0x004a7bf0)
 i8 giWeekTypeExtra;
-DATA(0x004a7c04)
+DATA(0x004a74e4)
 philAI* gpPhilAI;
 DATA(0x004a82f4)
 char* cDEDest;
 DATA(0x004a7c10)
 heroWindow* gNormalDialogWindow;
-DATA(0x004a7b88)
+DATA(0x004a7b70)
 i32 giHostGamePos;
 DATA(0x004a7164)
 mouseManager* gpMouseManager;
@@ -4819,7 +4819,7 @@ DATA(0x004a7df8)
 char gLastFilename[352];
 DATA(0x004a7b84)
 class icon* gBuyBuildIcons;
-DATA(0x004a7c0c)
+DATA(0x004a74ea)
 i8 gbNoSound;
 DATA(0x004a9cc0)
 char gcBottomViewText[92];
@@ -4835,7 +4835,7 @@ DATA(0x004a8300)
 void* ppMapExtra[255];
 DATA(0x004a9ff8)
 i32 giCurGeneral;
-DATA(0x004a82b0)
+DATA(0x004a7474)
 i32 giThisGamePos;
 DATA(0x004a7bbc)
 i32 giNumHumanPlayers;
@@ -4855,7 +4855,7 @@ DATA(0x004a7d68)
 i8 giGroundToTerrain[140];
 DATA(0x004a9e8c)
 i32 giCurWindowsStyleFlags;
-DATA(0x004a7b7c)
+DATA(0x004a746c)
 H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 DATA(0x004a9e90)
 i8 giMonthType;
@@ -4883,7 +4883,7 @@ DATA(0x004a7bac)
 i8 bDataEntryTime;
 DATA(0x004a98bc)
 i32 bShowIt;
-DATA(0x004a7340)
+DATA(0x004a6c48)
 i32 giDebugLevel;
 DATA(0x004a74a8)
 heroWindowManager* gpWindowManager;
@@ -4897,9 +4897,9 @@ DATA(0x004a9d28)
 char gLastMapName[352];
 DATA(0x004a9b54)
 townManager* gpTownManager;
-DATA(0x004a7f6c)
+DATA(0x004a782c)
 i8 giScreenScroll;
-DATA(0x004a7b94)
+DATA(0x004a7480)
 advManager* gpAdvManager;
 DATA(0x004a82fc)
 i8 gbGamePosToNetPos[4];

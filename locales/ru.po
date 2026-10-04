@@ -2930,3 +2930,27 @@ msgstr "Загрузить новую игру? (Данная игра буде�
 msgctxt "adventure.confirm_quit"
 msgid "Are you sure you want to quit?"
 msgstr "Вы хотите выйти из игры?"
+
+msgctxt "table.gAdvMenuHelp.0"
+msgid "Next Hero\n\nSelect the next Hero."
+msgstr "Следующий герой\n\nВыбрать следующего героя."
+
+msgctxt "table.gAdvMenuHelp.1"
+msgid "Continue Movement\n\nContinue the Hero's movement along his current path."
+msgstr "Продолжить движение \n\nПродолжить движение героя по намеченному пути."
+
+msgctxt "table.gAdvMenuHelp.2"
+msgid "Kingdom Summary\n\nView a summary of your kingdom."
+msgstr "Обзор королевства\n\nОсмотреть ваши владения."
+
+msgctxt "table.gAdvMenuHelp.3"
+msgid "End Turn\n\nEnd your turn and let the computer take its turn."
+msgstr "Окончить ход\n\nОкончить ход и передать управление компьютеру."
+
+msgctxt "table.gAdvMenuHelp.4"
+msgid "Adventure Options\n\nBring up the adventure options menu."
+msgstr "Игровые действия\n\nОткрывает окно игровых действий."
+
+msgctxt "table.gAdvMenuHelp.5"
+msgid "Game Options\n\nBring up the game options menu."
+msgstr "Настройки игры\n\nОткрыть окно настроек игры."
