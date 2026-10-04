@@ -28,3 +28,6 @@ function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x0000e4c1	0x000a65eb	0x0000e936	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
 0x0004ac0d	0x00090601	0x0004ae93	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
 0x0004ac0d	0x00090601	0x0004afe8	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
+0x00007276	0x000926f4	0x00007557	?gResourceNames@@3PAPADA	0xFFFFFF0C	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
+0x0003a599	0x0009192a	0x0003a5b9	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
+0x0003abb3	0x00092410	0x0003ac62	?gStatNames@@3PAPADA	0xFFFFFEBC	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json

@@ -5758,13 +5758,14 @@
       "evidence": "buka-adventure-commands.json"
     },
     {
-      "site_rva": "0x29fd",
-      "target_rva": "0xa7b70",
-      "symbol": "?giHostGamePos@@3HA",
       "kind": 6,
       "owner_rva": "0xa7b70",
       "addend": 0,
-      "evidence": "buka-adventure-commands.json"
+      "evidence": "buka-adventure-commands.json",
+      "superseded_site_rva": "0x29fd",
+      "superseded_target_rva": "0xa7b70",
+      "superseded_symbol": "?giHostGamePos@@3HA",
+      "superseded_reason": "Reversed host/local address claim; direct setup-argument/store controls in buka-network-positions.json establish the correct identities."
     },
     {
       "site_rva": "0x2a60",
@@ -5776,13 +5777,14 @@
       "evidence": "buka-adventure-commands.json"
     },
     {
-      "site_rva": "0x2a03",
-      "target_rva": "0xa7474",
-      "symbol": "?giThisGamePos@@3HA",
       "kind": 6,
       "owner_rva": "0xa7474",
       "addend": 0,
-      "evidence": "buka-adventure-commands.json"
+      "evidence": "buka-adventure-commands.json",
+      "superseded_site_rva": "0x2a03",
+      "superseded_target_rva": "0xa7474",
+      "superseded_symbol": "?giThisGamePos@@3HA",
+      "superseded_reason": "Reversed host/local address claim; direct setup-argument/store controls in buka-network-positions.json establish the correct identities."
     },
     {
       "site_rva": "0x2a13",

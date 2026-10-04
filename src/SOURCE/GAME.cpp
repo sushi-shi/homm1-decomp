@@ -2412,7 +2412,7 @@ void game::ViewArmy(
     message.type = MESSAGE_WIDGET;
 
     if (monsterType != CREATURE_SWORDSMAN)
-        strcpy(iconName, gArmyNames[monsterType]);
+        strcpy(iconName, gArmySpriteNames[monsterType]);
     else
         strcpy(iconName, "swrdsman");
     monsterInfo = &gMonsterDatabase[monsterType];
@@ -2455,7 +2455,7 @@ void game::ViewArmy(
     m_viewArmyWindow->AddWidget(monsterWidget, WINDOW_Z_ORDER_APPEND);
 
     strcpy(fileName, gArmyNames[monsterType]);
-    fileName[0] -= 'a' - 'A';
+    fileName[0] = CyrillicToUpper(fileName[0]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = VIEW_ARMY_TITLE;
     message.text = fileName;
@@ -3039,8 +3039,8 @@ void game::NextPlayer(void) {
         SetNoDialogMenus(1);
         gpInputManager->Flush();
         if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
-            sprintf(gText, "%s player turn.", gColorNames[gpGame->m_players[giCurPlayer].m_color]);
-            gText[0] -= 'a' - 'A';
+            sprintf(gText, localization::Tr("turn.player.prompt"), gColorNames[gpGame->m_players[giCurPlayer].m_color]);
+            gText[0] = CyrillicToUpper(gText[0]);
             WaitForPlayer(gText, giCurPlayer);
         }
         if (gbThisNetHumanPlayer[giCurPlayer])
@@ -4786,7 +4786,7 @@ void game::DoNewTurn(void) {
                 gNewTurnText[NEW_TURN_TEXT_LAST_DAY],
                 gColorNames[gpGame->m_players[giCurPlayer].Color()]
             );
-            gText[0] -= 'a' - 'A';
+            gText[0] = CyrillicToUpper(gText[0]);
         } else {
             sprintf(
                 gText,
@@ -4794,7 +4794,7 @@ void game::DoNewTurn(void) {
                 gColorNames[gpGame->m_players[giCurPlayer].Color()],
                 gpCurPlayer->m_daysLeft
             );
-            gText[0] -= 'a' - 'A';
+            gText[0] = CyrillicToUpper(gText[0]);
         }
         NormalDialog(
             gText,
@@ -4826,12 +4826,12 @@ void game::DoNewTurn(void) {
                         gMonthNames[giMonthTypeExtra]
                     );
                 } else if (giMonthType == CALENDAR_PERIOD_CREATURE) {
-                    strcpy(monsterName, gArmyNames[giMonthTypeExtra]);
-                    monsterName[0] -= 'a' - 'A';
+                    strcpy(monsterName, gArmyNamesPlural[giMonthTypeExtra]);
+                    monsterName[0] = CyrillicToLower(monsterName[0]);
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_MONTH_CREATURE],
-                        gArmyNames[giMonthTypeExtra],
+                        gArmyNamesPlural[giMonthTypeExtra],
                         monsterName
                     );
                 } else {
@@ -4846,12 +4846,12 @@ void game::DoNewTurn(void) {
                         gWeekNames[giWeekTypeExtra]
                     );
                 } else {
-                    strcpy(monsterName, gArmyNames[giWeekTypeExtra]);
-                    monsterName[0] -= 'a' - 'A';
+                    strcpy(monsterName, gArmyNamesPlural[giWeekTypeExtra]);
+                    monsterName[0] = CyrillicToLower(monsterName[0]);
                     sprintf(
                         gText,
                         gNewTurnText[NEW_TURN_TEXT_WEEK_CREATURE],
-                        gArmyNames[giWeekTypeExtra],
+                        gArmyNamesPlural[giWeekTypeExtra],
                         monsterName
                     );
                 }

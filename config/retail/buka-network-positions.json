@@ -1,0 +1,301 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Direct argument/store dataflow at both network setup paths establishes independent host and local identity. Only DATA claims change; callers retain their source semantics. Prior incorrect references are retained under superseded keys and excluded from active identity proofs.",
+  "data": [
+    {
+      "name": "?giHostGamePos@@3HA",
+      "rva": "0xa7474",
+      "prior_rva": "0xa7b70",
+      "size": 4,
+      "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    },
+    {
+      "name": "?giThisGamePos@@3HA",
+      "rva": "0xa7b70",
+      "prior_rva": "0xa7474",
+      "size": 4,
+      "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    }
+  ],
+  "controls": [
+    {
+      "start_rva": "0x41153",
+      "end_rva": "0x4117d",
+      "meaning": "NetPosToGamePos(giThisNetPos) stores the local player at 0xa7b70; NetPosToGamePos(0) stores the host at 0xa7474.",
+      "instructions": [
+        {
+          "rva": "0x41153",
+          "asm": "mov edx, dword ptr [0x4a74d4]"
+        },
+        {
+          "rva": "0x41159",
+          "asm": "push edx"
+        },
+        {
+          "rva": "0x4115a",
+          "asm": "call 0x410d6"
+        },
+        {
+          "rva": "0x4115f",
+          "asm": "add esp, 4"
+        },
+        {
+          "rva": "0x41162",
+          "asm": "movsx eax, al"
+        },
+        {
+          "rva": "0x41165",
+          "asm": "mov dword ptr [0x4a7b70], eax"
+        },
+        {
+          "rva": "0x4116a",
+          "asm": "push 0"
+        },
+        {
+          "rva": "0x4116c",
+          "asm": "call 0x410d6"
+        },
+        {
+          "rva": "0x41171",
+          "asm": "add esp, 4"
+        },
+        {
+          "rva": "0x41174",
+          "asm": "movsx ecx, al"
+        },
+        {
+          "rva": "0x41177",
+          "asm": "mov dword ptr [0x4a7474], ecx"
+        }
+      ]
+    },
+    {
+      "start_rva": "0x3d709",
+      "end_rva": "0x3d726",
+      "meaning": "Host setup converts network position zero, stores it at 0xa7474, then copies the host game position to the local position at 0xa7b70.",
+      "instructions": [
+        {
+          "rva": "0x3d709",
+          "asm": "push 0"
+        },
+        {
+          "rva": "0x3d70b",
+          "asm": "call 0x410d6"
+        },
+        {
+          "rva": "0x3d710",
+          "asm": "add esp, 4"
+        },
+        {
+          "rva": "0x3d713",
+          "asm": "movsx edx, al"
+        },
+        {
+          "rva": "0x3d716",
+          "asm": "mov dword ptr [0x4a7474], edx"
+        },
+        {
+          "rva": "0x3d71c",
+          "asm": "mov eax, dword ptr [0x4a7474]"
+        },
+        {
+          "rva": "0x3d721",
+          "asm": "mov dword ptr [0x4a7b70], eax"
+        }
+      ]
+    }
+  ],
+  "verified_reference_sites": [
+    {
+      "site_rva": "0x41166",
+      "target_rva": "0xa7b70",
+      "symbol": "?giThisGamePos@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x41179",
+      "target_rva": "0xa7474",
+      "symbol": "?giHostGamePos@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x3d718",
+      "target_rva": "0xa7474",
+      "symbol": "?giHostGamePos@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x3d71d",
+      "target_rva": "0xa7474",
+      "symbol": "?giHostGamePos@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x3d722",
+      "target_rva": "0xa7b70",
+      "symbol": "?giThisGamePos@@3HA",
+      "kind": 6
+    }
+  ],
+  "superseded_references": [
+    {
+      "file": "config/retail/buka-data-layout.json/data_migrations/13/controls/0/known_anchors/3",
+      "operand_rva": "0x53819",
+      "retail_target": "0xa7b70",
+      "incorrect_symbol": "?giHostGamePos@@3HA",
+      "correct_symbol": "?giThisGamePos@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-layout.json/data_migrations/13/controls/0/known_anchors/4",
+      "operand_rva": "0x5381f",
+      "retail_target": "0xa7474",
+      "incorrect_symbol": "?giThisGamePos@@3HA",
+      "correct_symbol": "?giHostGamePos@@3HA"
+    },
+    {
+      "file": "config/retail/buka-reviewed-claims.json/typed_reference_operands/463",
+      "operand_rva": "0x29fd",
+      "retail_target": "0xa7b70",
+      "incorrect_symbol": "?giHostGamePos@@3HA",
+      "correct_symbol": "?giThisGamePos@@3HA"
+    },
+    {
+      "file": "config/retail/buka-reviewed-claims.json/typed_reference_operands/465",
+      "operand_rva": "0x2a03",
+      "retail_target": "0xa7474",
+      "incorrect_symbol": "?giThisGamePos@@3HA",
+      "correct_symbol": "?giHostGamePos@@3HA"
+    }
+  ],
+  "compiled_control": {
+    "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+    "object_sha256": "42ac30b6f72ade7dee2f98385cbd916a04f3e7eff8a7a5680efe6b91b37e7dbc",
+    "source_sha256": "4c0314c75a64d86c249ecc01a9e0e697fd950aba5dfd9be36e192543c1349d4a",
+    "method": "Complete ordered instruction operands, registers, access widths, branch destinations, public identity/addend pairs and packed switch targets checked. Consistent injective local-slot mapping; comparison remains strict.",
+    "functions": [
+      {
+        "unit": "SOURCE/KB",
+        "name": "?WaitForOtherPlayer@@YACXZ",
+        "rva": "0x410f1",
+        "size": 177,
+        "object_size": 177,
+        "object_code_size": 177,
+        "retail_code_size": 177,
+        "instruction_count": 55,
+        "references": [
+          {
+            "symbol": "_PollSound",
+            "site_rva": "0x410ff",
+            "target_rva": "0x3c7b0",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?GetRemoteData@@YAPADC@Z",
+            "site_rva": "0x41106",
+            "target_rva": "0x534cb",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?gbGamePosToNetPos@@3PACA",
+            "site_rva": "0x41147",
+            "target_rva": "0xa7bb4",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "_memcpy",
+            "site_rva": "0x4114c",
+            "target_rva": "0x78550",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?giThisNetPos@@3HA",
+            "site_rva": "0x41155",
+            "target_rva": "0xa74d4",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?NetPosToGamePos@@YACH@Z",
+            "site_rva": "0x4115b",
+            "target_rva": "0x410d6",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?giThisGamePos@@3HA",
+            "site_rva": "0x41166",
+            "target_rva": "0xa7b70",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?NetPosToGamePos@@YACH@Z",
+            "site_rva": "0x4116d",
+            "target_rva": "0x410d6",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?giHostGamePos@@3HA",
+            "site_rva": "0x41179",
+            "target_rva": "0xa7474",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "site_rva": "0x4118f",
+            "target_rva": "0xa7ba0",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?ReceiveSaveGame@game@@QAEHHH@Z",
+            "site_rva": "0x41194",
+            "target_rva": "0x376cf",
+            "addend": "0x0",
+            "kind": 20
+          }
+        ],
+        "internal_targets": [],
+        "branches": [
+          {
+            "operand_rva": "0x41114",
+            "target": "0x4119b"
+          },
+          {
+            "operand_rva": "0x41124",
+            "target": "0x4119b"
+          },
+          {
+            "operand_rva": "0x41133",
+            "target": "0x4117f"
+          },
+          {
+            "operand_rva": "0x41139",
+            "target": "0x4113d"
+          },
+          {
+            "operand_rva": "0x4113b",
+            "target": "0x4119b"
+          },
+          {
+            "operand_rva": "0x4117d",
+            "target": "0x4119b"
+          }
+        ],
+        "local_slot_map": {
+          "-4": -4,
+          "-8": -8,
+          "-12": -12
+        },
+        "retail_body_sha256": "86692d32a65b1144f57f0e1745b21e379b7f9ded83f8732d8b0cbfcdc15a71c7"
+      }
+    ]
+  },
+  "current_source_sha256": "4c0314c75a64d86c249ecc01a9e0e697fd950aba5dfd9be36e192543c1349d4a"
+}

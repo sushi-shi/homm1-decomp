@@ -23309,7 +23309,9 @@
       "symbol": "?giThisGamePos@@3HA",
       "proposed_rva": "0xa7b70",
       "prior_rva": "0xa7474",
-      "reason": "Host/local position identities have conflicting callers; resolve both together. No candidate reference is admitted from this proposal."
+      "prior_reason": "Host/local position identities have conflicting callers; resolve both together. No candidate reference is admitted from this proposal.",
+      "status": "resolved",
+      "resolution": "buka-network-positions.json: direct setup dataflow and complete compiled WaitForOtherPlayer instruction/reference proof."
     }
   ],
   "pending_contexts": [
@@ -23329,19 +23331,27 @@
   "pending_payloads": [
     {
       "name": "?gViewGeneralLabels@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-dialog-tables.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gNewTurnText@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-dialog-tables.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gTownObjectNames@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-dialog-tables.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gDifficultyNames@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-dialog-tables.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gTitle@@3PADA",
@@ -23357,15 +23367,21 @@
     },
     {
       "name": "?gLuckText@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-army-window.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gMoraleText@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-army-window.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gViewGeneralHelp@@3PAPADA",
-      "reason": "pointer payload needs full slot/string verification"
+      "prior_reason": "pointer payload needs full slot/string verification",
+      "status": "resolved",
+      "resolution": "buka-dialog-tables.json: complete emitted table pointers and strings checked in both compiled locales."
     },
     {
       "name": "?gDialogManagerError1@@3PADA",

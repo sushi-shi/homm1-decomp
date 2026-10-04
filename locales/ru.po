@@ -4771,3 +4771,207 @@ msgstr "Герои"
 msgctxt "window.gTitle"
 msgid "Heroes of Might and Magic"
 msgstr "Герои Меча и Магии"
+
+msgctxt "table.gSpeedText.1"
+msgid "Slow"
+msgstr "Низкая"
+
+msgctxt "table.gSpeedText.2"
+msgid "Medium"
+msgstr "Средняя"
+
+msgctxt "table.gSpeedText.3"
+msgid "Fast"
+msgstr "Высокая"
+
+msgctxt "table.gSpeedText.4"
+msgid "Blazing"
+msgstr "Оч. высокая"
+
+msgctxt "table.gArmyStatText.0"
+msgid "Attack Skill: "
+msgstr "Атака: "
+
+msgctxt "table.gArmyStatText.1"
+msgid "Defense Skill: "
+msgstr "Защита: "
+
+msgctxt "table.gArmyStatText.2"
+msgid "Shots left: "
+msgstr "Выстрелов: "
+
+msgctxt "table.gArmyStatText.3"
+msgid "Damage: "
+msgstr "Урон: "
+
+msgctxt "table.gArmyStatText.4"
+msgid "Hit Points: "
+msgstr "Здоровье: "
+
+msgctxt "table.gArmyStatText.5"
+msgid "Speed: "
+msgstr "Скорость: "
+
+msgctxt "table.gArmyStatText.6"
+msgid "Morale: "
+msgstr "Мораль: "
+
+msgctxt "table.gArmyStatText.7"
+msgid "Luck: "
+msgstr "Удача: "
+
+msgctxt "table.gArmyStatText.8"
+msgid "Shots: "
+msgstr "Стрел: "
+
+msgctxt "table.gLuckText.0"
+msgid "Cursed"
+msgstr "Проклятая"
+
+msgctxt "table.gLuckText.1"
+msgid "Awful"
+msgstr "Ужасная"
+
+msgctxt "table.gLuckText.2"
+msgid "Bad"
+msgstr "Плохая"
+
+msgctxt "table.gLuckText.3"
+msgid "Normal"
+msgstr "Обычная"
+
+msgctxt "table.gLuckText.4"
+msgid "Good"
+msgstr "Хорошая"
+
+msgctxt "table.gLuckText.5"
+msgid "Great"
+msgstr "Отличная"
+
+msgctxt "table.gLuckText.6"
+msgid "Irish"
+msgstr "Божественная"
+
+msgctxt "table.gMoraleText.0"
+msgid "Treason"
+msgstr "Предательская"
+
+msgctxt "table.gMoraleText.1"
+msgid "Awful"
+msgstr "Ужасная"
+
+msgctxt "table.gMoraleText.2"
+msgid "Poor"
+msgstr "Плохая"
+
+msgctxt "table.gMoraleText.3"
+msgid "Normal"
+msgstr "Обычная"
+
+msgctxt "table.gMoraleText.4"
+msgid "Good"
+msgstr "Хорошая"
+
+msgctxt "table.gMoraleText.5"
+msgid "Great"
+msgstr "Отличная"
+
+msgctxt "table.gMoraleText.6"
+msgid "Blood!"
+msgstr "Кровавая!"
+
+msgctxt "turn.player.prompt"
+msgid "%s player turn."
+msgstr "Ходит %s игрок."
+
+msgctxt "table.gNewTurnText.0"
+msgid "%s player, you only have %d days left to capture a town, or you will be banished from this land."
+msgstr "%s игрок, у вас осталось всего %d дней на то, чтобы завоевать хотя бы один город; иначе вы будете навеки изгнаны из страны."
+
+msgctxt "table.gNewTurnText.1"
+msgid "%s player, this is your last day to capture a town, or you will be banished from this land."
+msgstr "%s игрок, настал последний день, когда вы еще можете завоевать себе город; в противном случае вы будете навеки изгнаны из страны."
+
+msgctxt "table.gNewTurnText.2"
+msgid "Astrologers proclaim month of the %s.\n\nAll dwellings increase population."
+msgstr "Астрологи объявляют месяц %s.\n\nНаселение всех жилищ возросло."
+
+msgctxt "table.gNewTurnText.3"
+msgid "Astrologers proclaim month of the %s.\n\n%s population doubles!\n\nAll dwellings increase population."
+msgstr "Астрологи объявляют, что этому месяцу покровительствует сила %s.\n\nПопуляция %s удваивается!\n\nНаселение всех жилищ возросло."
+
+msgctxt "table.gNewTurnText.4"
+msgid "Astrologers proclaim month of the PLAGUE!\n\nAll populations are halved."
+msgstr "Астрологи объявляют месяц ЧУМЫ!\n\nНаселение всех жилищ уменьшилось вдвое."
+
+msgctxt "table.gNewTurnText.5"
+msgid "Astrologers proclaim week of the %s.\n\nAll dwellings increase population."
+msgstr "Астрологи объявляют неделю %s.\n\nНаселение всех жилищ возросло."
+
+msgctxt "table.gNewTurnText.6"
+msgid "Astrologers proclaim week of the %s.\n\n%s growth +5.\n\nAll dwellings increase population."
+msgstr "Астрологи объявляют, что этой неделе покровительствует сила %s.\n\nПопуляция %s +5.\n\nНаселение всех жилищ возросло."
+
+msgctxt "table.gViewGeneralLabels.0"
+msgid "Attack: "
+msgstr "Атака: "
+
+msgctxt "table.gViewGeneralLabels.1"
+msgid "Defense: "
+msgstr "Защита: "
+
+msgctxt "table.gViewGeneralLabels.2"
+msgid "Spell Power: "
+msgstr "Сила магии: "
+
+msgctxt "table.gViewGeneralLabels.3"
+msgid "Knowledge: "
+msgstr "Знания: "
+
+msgctxt "table.gViewGeneralLabels.4"
+msgid "Morale: "
+msgstr "Мораль: "
+
+msgctxt "table.gViewGeneralLabels.5"
+msgid "Luck: "
+msgstr "Удача: "
+
+msgctxt "table.gViewGeneralHelp.0"
+msgid "Stop Catapult"
+msgstr "Остановить катапульту"
+
+msgctxt "table.gViewGeneralHelp.1"
+msgid "Cast Spell"
+msgstr "Направить заклинание"
+
+msgctxt "table.gViewGeneralHelp.2"
+msgid "Retreat"
+msgstr "Отступить"
+
+msgctxt "table.gViewGeneralHelp.3"
+msgid "Surrender"
+msgstr "Сдаться"
+
+msgctxt "table.gViewGeneralHelp.4"
+msgid "Cancel"
+msgstr "Отмена"
+
+msgctxt "table.gViewGeneralHelp.5"
+msgid "General's Options"
+msgstr "Возможности героя"
+
+msgctxt "table.gDifficultyNames.0"
+msgid "Easy"
+msgstr "Легкая"
+
+msgctxt "table.gDifficultyNames.1"
+msgid "Normal"
+msgstr "Обычная"
+
+msgctxt "table.gDifficultyNames.2"
+msgid "Hard"
+msgstr "Тяжелая"
+
+msgctxt "table.gDifficultyNames.3"
+msgid "Expert"
+msgstr "Эксперт"

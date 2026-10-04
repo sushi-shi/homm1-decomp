@@ -3452,18 +3452,20 @@
               "kind": 6
             },
             {
-              "symbol": "?giHostGamePos@@3HA",
-              "site_rva": "0x53819",
-              "target_rva": "0xa7b70",
               "addend": "0x0",
-              "kind": 6
+              "kind": 6,
+              "superseded_site_rva": "0x53819",
+              "superseded_target_rva": "0xa7b70",
+              "superseded_symbol": "?giHostGamePos@@3HA",
+              "superseded_reason": "Reversed host/local address claim; direct setup-argument/store controls in buka-network-positions.json establish the correct identities."
             },
             {
-              "symbol": "?giThisGamePos@@3HA",
-              "site_rva": "0x5381f",
-              "target_rva": "0xa7474",
               "addend": "0x0",
-              "kind": 6
+              "kind": 6,
+              "superseded_site_rva": "0x5381f",
+              "superseded_target_rva": "0xa7474",
+              "superseded_symbol": "?giThisGamePos@@3HA",
+              "superseded_reason": "Reversed host/local address claim; direct setup-argument/store controls in buka-network-positions.json establish the correct identities."
             }
           ],
           "migrated_references": [

@@ -1531,10 +1531,28 @@ i16 gRadarTerrainColor[24] = {
     82,  99, 7,   180, 26,  123, 55, 0,  16, 48, 98, 160,
     126, 74, 110, 179, 100, 218, 12, 12, 12, 12, 12, 12,
 };
-DATA(0x00491168)
+DATA(0x004905b8)
 char* gTownObjectNames[20] = {
-    "magegld", "thievesg", "tavern", "dock", "well", "farm", "frst", "plns", "mtn", "tent",
-    "cast",    "_d0",      "_d1",    "_d2",  "_d3",  "_d4",  "_d5",  "_e0",  "_e1", "_e2",
+    "magegld",
+    "thievesg",
+    "tavern",
+    "dock",
+    "well",
+    "farm",
+    "frst",
+    "plns",
+    "mtn",
+    "tent",
+    "cast",
+    "_d0",
+    "_d1",
+    "_d2",
+    "_d3",
+    "_d4",
+    "_d5",
+    "_e0",
+    "_e1",
+    "_e2",
 };
 DATA(0x00490608)
 i8 gDwellingType[4][6] = {
@@ -1580,7 +1598,7 @@ i32 gDwellingCosts[24][7] = {
     {0, 0, 0, 0, 0, 0, 500},    {0, 0, 10, 0, 0, 0, 1000},  {0, 0, 0, 0, 0, 0, 2000},
     {0, 0, 0, 0, 0, 10, 3000},  {0, 0, 0, 10, 0, 0, 4000},  {0, 0, 30, 20, 0, 0, 15000},
 };
-DATA(0x00491638)
+DATA(0x00490a80)
 i8 gCastleResources[4] = {0, 2, -1, -1};
 
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
@@ -3167,11 +3185,11 @@ void EarlyResizeWindow(i32, i32, i32, i32) {
 // address order, followed by their initializer literals (0x00494184-0x0049ea97,
 // emitted in this order). Initializers are retail bytes. Unreferenced storage at
 // 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
-DATA(0x00491640)
+DATA(0x00490a84)
 i16 gCastleAmounts[4] = {20, 20, 0, 0};
 DATA(0x00490a8c)
 i16 gHeroGoldCost = 2500;
-DATA(0x00491650)
+DATA(0x00490a90)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
 DATA(0x00490a9c)
 tag_tilePoint normalDirTable[8] = {
@@ -3265,7 +3283,7 @@ i32 gStartingResources[4][7] = {
     {10, 0, 10, 0, 0, 0, 5000},
     {0, 0, 0, 0, 0, 0, 0},
 };
-DATA(0x00491940)
+DATA(0x00490d7c)
 i32 gMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
 DATA(0x00490d98)
 i32 gArtifactBaseRV[37] = {
@@ -3273,7 +3291,7 @@ i32 gArtifactBaseRV[37] = {
     2000, 1800,  1800,  2000,  1000, 3600, 5600, 4000, 5040, 2700, 3900, 4950, 5850,
     7000, 6000,  4000,  4500,  2250, 1200, 1200, 1200, 1200, 3500, 1500,
 };
-DATA(0x004919f4)
+DATA(0x00490e2c)
 i32 gUltArtifactAvgValue = 16200;
 DATA(0x00490e30)
 char gDataPath[352] = ".\\DATA\\";
@@ -4025,10 +4043,26 @@ char* gAdvMenuHelp[6] = {
     localization::Tr("table.gAdvMenuHelp.4"),
     localization::Tr("table.gAdvMenuHelp.5"),
 };
-DATA(0x00493590)
-char* gLuckText[7] = {"Cursed", "Awful", "Bad", "Normal", "Good", "Great", "Irish"};
-DATA(0x004935b0)
-char* gMoraleText[7] = {"Treason", "Awful", "Poor", "Normal", "Good", "Great", "Blood!"};
+DATA(0x00492b20)
+char* gLuckText[7] = {
+    localization::Tr("table.gLuckText.0"),
+    localization::Tr("table.gLuckText.1"),
+    localization::Tr("table.gLuckText.2"),
+    localization::Tr("table.gLuckText.3"),
+    localization::Tr("table.gLuckText.4"),
+    localization::Tr("table.gLuckText.5"),
+    localization::Tr("table.gLuckText.6"),
+};
+DATA(0x00492b3c)
+char* gMoraleText[7] = {
+    localization::Tr("table.gMoraleText.0"),
+    localization::Tr("table.gMoraleText.1"),
+    localization::Tr("table.gMoraleText.2"),
+    localization::Tr("table.gMoraleText.3"),
+    localization::Tr("table.gMoraleText.4"),
+    localization::Tr("table.gMoraleText.5"),
+    localization::Tr("table.gMoraleText.6"),
+};
 DATA(0x00492b58)
 char* onOffText[11] = {
     localization::Tr("table.onOffText.0"),
@@ -4222,19 +4256,25 @@ char* gSpellHelp[8] = {
     localization::Tr("table.gSpellHelp.6"),
     localization::Tr("table.gSpellHelp.7"),
 };
-DATA(0x004938b0)
-char* gSpeedText[5] = {"", "Slow", "Medium", "Fast", "Blazing"};
-DATA(0x004938c8)
+DATA(0x00492e18)
+char* gSpeedText[5] = {
+    "",
+    localization::Tr("table.gSpeedText.1"),
+    localization::Tr("table.gSpeedText.2"),
+    localization::Tr("table.gSpeedText.3"),
+    localization::Tr("table.gSpeedText.4"),
+};
+DATA(0x00492e2c)
 char* gArmyStatText[9] = {
-    "Attack Skill: ",
-    "Defense Skill: ",
-    "Shots left: ",
-    "Damage: ",
-    "Hit Points: ",
-    "Speed: ",
-    "Morale: ",
-    "Luck: ",
-    "Shots: ",
+    localization::Tr("table.gArmyStatText.0"),
+    localization::Tr("table.gArmyStatText.1"),
+    localization::Tr("table.gArmyStatText.2"),
+    localization::Tr("table.gArmyStatText.3"),
+    localization::Tr("table.gArmyStatText.4"),
+    localization::Tr("table.gArmyStatText.5"),
+    localization::Tr("table.gArmyStatText.6"),
+    localization::Tr("table.gArmyStatText.7"),
+    localization::Tr("table.gArmyStatText.8"),
 };
 DATA(0x00492e50)
 char* gOverviewText[3] = {
@@ -4242,29 +4282,33 @@ char* gOverviewText[3] = {
     localization::Tr("table.gOverviewText.1"),
     localization::Tr("table.gOverviewText.2"),
 };
-DATA(0x00493900)
+DATA(0x00492e5c)
 char* gNewTurnText[7] = {
-    "%s player, you only have %d days left to capture a town, or you will be banished from this "
-    "land.",
-    "%s player, this is your last day to capture a town, or you will be banished from this land.",
-    "Astrologers proclaim month of the %s.\n\nAll dwellings increase population.",
-    "Astrologers proclaim month of the %s.\n\n%s population doubles!\n\nAll dwellings increase "
-    "population.",
-    "Astrologers proclaim month of the PLAGUE!\n\nAll populations are halved.",
-    "Astrologers proclaim week of the %s.\n\nAll dwellings increase population.",
-    "Astrologers proclaim week of the %s.\n\n%s growth +5.\n\nAll dwellings increase population.",
+    localization::Tr("table.gNewTurnText.0"),
+    localization::Tr("table.gNewTurnText.1"),
+    localization::Tr("table.gNewTurnText.2"),
+    localization::Tr("table.gNewTurnText.3"),
+    localization::Tr("table.gNewTurnText.4"),
+    localization::Tr("table.gNewTurnText.5"),
+    localization::Tr("table.gNewTurnText.6"),
 };
-DATA(0x00493920)
-char* gViewGeneralLabels[6] =
-    {"Attack: ", "Defense: ", "Spell Power: ", "Knowledge: ", "Morale: ", "Luck: "};
-DATA(0x00493938)
+DATA(0x00492e78)
+char* gViewGeneralLabels[6] = {
+    localization::Tr("table.gViewGeneralLabels.0"),
+    localization::Tr("table.gViewGeneralLabels.1"),
+    localization::Tr("table.gViewGeneralLabels.2"),
+    localization::Tr("table.gViewGeneralLabels.3"),
+    localization::Tr("table.gViewGeneralLabels.4"),
+    localization::Tr("table.gViewGeneralLabels.5"),
+};
+DATA(0x00492e90)
 char* gViewGeneralHelp[6] = {
-    "Stop Catapult",
-    "Cast Spell",
-    "Retreat",
-    "Surrender",
-    "Cancel",
-    "General's Options",
+    localization::Tr("table.gViewGeneralHelp.0"),
+    localization::Tr("table.gViewGeneralHelp.1"),
+    localization::Tr("table.gViewGeneralHelp.2"),
+    localization::Tr("table.gViewGeneralHelp.3"),
+    localization::Tr("table.gViewGeneralHelp.4"),
+    localization::Tr("table.gViewGeneralHelp.5"),
 };
 DATA(0x00492ea8)
 char* gCombatMessage[9] = {
@@ -4547,8 +4591,13 @@ char* gCampaignScenarioText[9] = {
     localization::Tr("table.gCampaignScenarioText.7"),
     localization::Tr("table.gCampaignScenarioText.8"),
 };
-DATA(0x00493da8)
-char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
+DATA(0x004932b0)
+char* gDifficultyNames[4] = {
+    localization::Tr("table.gDifficultyNames.0"),
+    localization::Tr("table.gDifficultyNames.1"),
+    localization::Tr("table.gDifficultyNames.2"),
+    localization::Tr("table.gDifficultyNames.3"),
+};
 DATA(0x004932c0)
 char* gCampaignSideNames[4] = {
     localization::Tr("table.gCampaignSideNames.0"),
@@ -4759,7 +4808,7 @@ DATA(0x004a7bac)
 char* cDEDest;
 DATA(0x004a74ec)
 heroWindow* gNormalDialogWindow;
-DATA(0x004a7b70)
+DATA(0x004a7474)
 i32 giHostGamePos;
 DATA(0x004a7164)
 mouseManager* gpMouseManager;
@@ -4839,7 +4888,7 @@ DATA(0x004a7bb8)
 void* ppMapExtra[255];
 DATA(0x004a989c)
 i32 giCurGeneral;
-DATA(0x004a7474)
+DATA(0x004a7b70)
 i32 giThisGamePos;
 DATA(0x004a749c)
 i32 giNumHumanPlayers;

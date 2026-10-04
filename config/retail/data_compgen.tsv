@@ -8,6 +8,7 @@
 # DamageGroup percentage and survivor thresholds: buka-army-group.json.
 # Complete-body constant references and exact typed payloads: buka-reference-completion.json.
 # Typed operands, unique instruction contexts and full payloads: buka-floating-constants.json.
+# Typed operands, unique instruction contexts and full payloads: buka-current-floating-constants.json.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
@@ -44,6 +45,7 @@ rva	size	name	owner	class
 0x0008a4c8	0x4	__real@4@4000c000000000000000	SOURCE/PHILAI	fppool
 0x0008a4d0	0x8	__real@8@3ffeccccccccccccd000	SOURCE/PHILAI	fppool
 0x0008a4d8	0x8	__real@8@3fffd999999999999800	SOURCE/PHILAI	fppool
+0x0008a4e0	0x8	__real@8@3ffbccccccccccccd000	SOURCE/PHILAI	fppool
 0x0008a4e8	0x8	__real@8@3ffbf5c28f5c28f5c000	SOURCE/PHILAI	fppool
 0x0008a4f0	0x8	__real@8@3ffb8f5c28f5c28f6000	SOURCE/PHILAI	fppool
 0x0008a4f8	0x8	__real@8@40048400000000000000	SOURCE/PHILAI	fppool
@@ -80,6 +82,7 @@ rva	size	name	owner	class
 0x0008a630	0x8	__real@8@3ffe9999999999999800	SOURCE/PHILAI	fppool
 0x0008a640	0x8	__real@8@3ff8a3d70a3d70a3d800	SOURCE/PHILAI	fppool
 0x0008a648	0x8	__real@8@3ffe8a3d70a3d70a4000	SOURCE/PHILAI	fppool
+0x0008a658	0x4	__real@4@4008fa00000000000000	SOURCE/PHILAI	fppool
 0x0008a660	0x8	__real@8@3ffed999999999999800	SOURCE/PHILAI	fppool
 0x0008a6c0	0x8	__real@8@40069c00000000000000	SOURCE/REQUEST	fppool
 0x0008a6c8	0x8	__real@8@4004e000000000000000	SOURCE/REQUEST	fppool

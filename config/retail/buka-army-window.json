@@ -1,0 +1,449 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "method": "ViewArmy stat format arguments identify all nine stat-label slots and the indexed speed-name table. Exact pointer values and complete string payloads checked in both retail releases; original English retained in the catalog. Resource stems use gArmySpriteNames; the display title uses gArmyNames and the existing CP1251 uppercase helper. Luck and morale use seven-entry tables indexed by the signed value plus three; both base addresses and every original/Russian payload are verified.",
+  "tables": [
+    {
+      "name": "?gSpeedText@@3PAPADA",
+      "rva": "0x92e18",
+      "old_rva": "0x938b0",
+      "size": 20,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": null,
+          "offset": 0,
+          "nwc_pointer_site": "0x938b0",
+          "nwc_string_rva": "0x9aaec",
+          "buka_pointer_site": "0x92e18",
+          "buka_string_rva": "0xa9980",
+          "size": 1,
+          "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+        },
+        {
+          "id": "table.gSpeedText.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x938b4",
+          "nwc_string_rva": "0x9aaf0",
+          "buka_pointer_site": "0x92e1c",
+          "buka_string_rva": "0x9a0ac",
+          "size": 7,
+          "payload_sha256": "8d161bed179a5b5cd6d1d0003e82f469119084f5848aabae960f91fb9fa794d2"
+        },
+        {
+          "id": "table.gSpeedText.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x938b8",
+          "nwc_string_rva": "0x9aaf8",
+          "buka_pointer_site": "0x92e20",
+          "buka_string_rva": "0x9a0b4",
+          "size": 8,
+          "payload_sha256": "39adf8c1853a29d294337eb26741305504b34feb872cbccb1ba014e38b68943a"
+        },
+        {
+          "id": "table.gSpeedText.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x938bc",
+          "nwc_string_rva": "0x9ab00",
+          "buka_pointer_site": "0x92e24",
+          "buka_string_rva": "0x9a0bc",
+          "size": 8,
+          "payload_sha256": "d2e7e7df6e50558182129935c86632a24d08433a756986d17c7fbac2c573d275"
+        },
+        {
+          "id": "table.gSpeedText.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x938c0",
+          "nwc_string_rva": "0x9ab08",
+          "buka_pointer_site": "0x92e28",
+          "buka_string_rva": "0x9a0c4",
+          "size": 12,
+          "payload_sha256": "2ead8e266b8a4fa2783bcd1758912d3fe226ef7ec4af70ea5af6199f67f7ef86"
+        }
+      ]
+    },
+    {
+      "name": "?gArmyStatText@@3PAPADA",
+      "rva": "0x92e2c",
+      "old_rva": "0x938c8",
+      "size": 36,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": "table.gArmyStatText.0",
+          "offset": 0,
+          "nwc_pointer_site": "0x938c8",
+          "nwc_string_rva": "0x9ab10",
+          "buka_pointer_site": "0x92e2c",
+          "buka_string_rva": "0x9a0d0",
+          "size": 8,
+          "payload_sha256": "c62b97ce0e64b81441b951523af371591ba3f41a66002f254fa2aaf15a2cdbc1"
+        },
+        {
+          "id": "table.gArmyStatText.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x938cc",
+          "nwc_string_rva": "0x9ab20",
+          "buka_pointer_site": "0x92e30",
+          "buka_string_rva": "0x9a0d8",
+          "size": 9,
+          "payload_sha256": "9e935037c6d5bf0b02de07c02f0c7e29f85db75d844abad0325ed0dfc25a4879"
+        },
+        {
+          "id": "table.gArmyStatText.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x938d0",
+          "nwc_string_rva": "0x9ab30",
+          "buka_pointer_site": "0x92e34",
+          "buka_string_rva": "0x9a0e4",
+          "size": 12,
+          "payload_sha256": "b4e5cf472d6f7021ab1e80be9ec31eea0d5187b3ec07aa2da9cb815841a59f72"
+        },
+        {
+          "id": "table.gArmyStatText.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x938d4",
+          "nwc_string_rva": "0x9ab40",
+          "buka_pointer_site": "0x92e38",
+          "buka_string_rva": "0x9a0f0",
+          "size": 7,
+          "payload_sha256": "5b4e025d40ffd88c73454944b55e47ffddfe437ebfb143d781024b82676e3ed1"
+        },
+        {
+          "id": "table.gArmyStatText.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x938d8",
+          "nwc_string_rva": "0x9ab4c",
+          "buka_pointer_site": "0x92e3c",
+          "buka_string_rva": "0x9a0f8",
+          "size": 11,
+          "payload_sha256": "cf0a864ff9d9a44f3481e27e3c95788ec73c1ff6ec58a6fa30a9aa52f8a96af2"
+        },
+        {
+          "id": "table.gArmyStatText.5",
+          "offset": 20,
+          "nwc_pointer_site": "0x938dc",
+          "nwc_string_rva": "0x9ab5c",
+          "buka_pointer_site": "0x92e40",
+          "buka_string_rva": "0x9a104",
+          "size": 11,
+          "payload_sha256": "29d4a96277d1d6cbe1be70efcddff2b4c7e2d9edacb01c3403dc8b72acde3802"
+        },
+        {
+          "id": "table.gArmyStatText.6",
+          "offset": 24,
+          "nwc_pointer_site": "0x938e0",
+          "nwc_string_rva": "0x9ab64",
+          "buka_pointer_site": "0x92e44",
+          "buka_string_rva": "0x9a110",
+          "size": 9,
+          "payload_sha256": "f32e85bd7db82786bc555a28b9af496ab3a5771a09e305823a81b3f5ad7783ce"
+        },
+        {
+          "id": "table.gArmyStatText.7",
+          "offset": 28,
+          "nwc_pointer_site": "0x938e4",
+          "nwc_string_rva": "0x9ab70",
+          "buka_pointer_site": "0x92e48",
+          "buka_string_rva": "0x9a11c",
+          "size": 8,
+          "payload_sha256": "0945cc1f08886838f52179617275e1f5b010f157476ba9ece5cae922737f804a"
+        },
+        {
+          "id": "table.gArmyStatText.8",
+          "offset": 32,
+          "nwc_pointer_site": "0x938e8",
+          "nwc_string_rva": "0x9ab78",
+          "buka_pointer_site": "0x92e4c",
+          "buka_string_rva": "0x9a124",
+          "size": 8,
+          "payload_sha256": "f79deaaaae0bbc100562ea11a72734e8f9b9620683d81920de48c04ff89e2534"
+        }
+      ]
+    },
+    {
+      "name": "?gLuckText@@3PAPADA",
+      "rva": "0x92b20",
+      "old_rva": "0x93590",
+      "size": 28,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": "table.gLuckText.0",
+          "offset": 0,
+          "nwc_pointer_site": "0x93590",
+          "nwc_string_rva": "0x9968c",
+          "buka_pointer_site": "0x92b20",
+          "buka_string_rva": "0x98a64",
+          "size": 10,
+          "payload_sha256": "a4c5c212b6eb08ab579000b9c4403311796127b8c7f502574a6f8fe512f062ed"
+        },
+        {
+          "id": "table.gLuckText.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x93594",
+          "nwc_string_rva": "0x99694",
+          "buka_pointer_site": "0x92b24",
+          "buka_string_rva": "0x98a70",
+          "size": 8,
+          "payload_sha256": "13f9ac5e20eceec2541a2e5738d75afafc07be8dcfe9af9bc13f98d1b0088641"
+        },
+        {
+          "id": "table.gLuckText.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x93598",
+          "nwc_string_rva": "0x9969c",
+          "buka_pointer_site": "0x92b28",
+          "buka_string_rva": "0x98a78",
+          "size": 7,
+          "payload_sha256": "0587b7678dd922a877efab1ffc2de0bcdc85aa362041de92711454adc476731e"
+        },
+        {
+          "id": "table.gLuckText.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x9359c",
+          "nwc_string_rva": "0x996a0",
+          "buka_pointer_site": "0x92b2c",
+          "buka_string_rva": "0x98a80",
+          "size": 8,
+          "payload_sha256": "06e42820fa6d304089492b79e3417d4c87198e1e1929b24a5ff89c44b429d671"
+        },
+        {
+          "id": "table.gLuckText.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x935a0",
+          "nwc_string_rva": "0x996a8",
+          "buka_pointer_site": "0x92b30",
+          "buka_string_rva": "0x98a88",
+          "size": 8,
+          "payload_sha256": "438092439f7db48a19854b6991ecb9dca083884616ca2ef90ccf267eabc087ad"
+        },
+        {
+          "id": "table.gLuckText.5",
+          "offset": 20,
+          "nwc_pointer_site": "0x935a4",
+          "nwc_string_rva": "0x996b0",
+          "buka_pointer_site": "0x92b34",
+          "buka_string_rva": "0x98a90",
+          "size": 9,
+          "payload_sha256": "77bd19f6a528839e741342ebb2bb05bcc15654b11205e8ea281838354f4c8047"
+        },
+        {
+          "id": "table.gLuckText.6",
+          "offset": 24,
+          "nwc_pointer_site": "0x935a8",
+          "nwc_string_rva": "0x996b8",
+          "buka_pointer_site": "0x92b38",
+          "buka_string_rva": "0x98a9c",
+          "size": 13,
+          "payload_sha256": "4338ccf249273dcf7227b001872d60d9f76e1be4d5313626fa1538b99cd0315a"
+        }
+      ]
+    },
+    {
+      "name": "?gMoraleText@@3PAPADA",
+      "rva": "0x92b3c",
+      "old_rva": "0x935b0",
+      "size": 28,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": "table.gMoraleText.0",
+          "offset": 0,
+          "nwc_pointer_site": "0x935b0",
+          "nwc_string_rva": "0x996c0",
+          "buka_pointer_site": "0x92b3c",
+          "buka_string_rva": "0x98aac",
+          "size": 14,
+          "payload_sha256": "c9ef47dc7a4a63f3ebc2f69f8ff5949d305a5a1c33233e2c4596e7557eee4fe9"
+        },
+        {
+          "id": "table.gMoraleText.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x935b4",
+          "nwc_string_rva": "0x996c8",
+          "buka_pointer_site": "0x92b40",
+          "buka_string_rva": "0x98abc",
+          "size": 8,
+          "payload_sha256": "13f9ac5e20eceec2541a2e5738d75afafc07be8dcfe9af9bc13f98d1b0088641"
+        },
+        {
+          "id": "table.gMoraleText.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x935b8",
+          "nwc_string_rva": "0x996d0",
+          "buka_pointer_site": "0x92b44",
+          "buka_string_rva": "0x98ac4",
+          "size": 7,
+          "payload_sha256": "0587b7678dd922a877efab1ffc2de0bcdc85aa362041de92711454adc476731e"
+        },
+        {
+          "id": "table.gMoraleText.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x935bc",
+          "nwc_string_rva": "0x996d8",
+          "buka_pointer_site": "0x92b48",
+          "buka_string_rva": "0x98acc",
+          "size": 8,
+          "payload_sha256": "06e42820fa6d304089492b79e3417d4c87198e1e1929b24a5ff89c44b429d671"
+        },
+        {
+          "id": "table.gMoraleText.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x935c0",
+          "nwc_string_rva": "0x996e0",
+          "buka_pointer_site": "0x92b4c",
+          "buka_string_rva": "0x98ad4",
+          "size": 8,
+          "payload_sha256": "438092439f7db48a19854b6991ecb9dca083884616ca2ef90ccf267eabc087ad"
+        },
+        {
+          "id": "table.gMoraleText.5",
+          "offset": 20,
+          "nwc_pointer_site": "0x935c4",
+          "nwc_string_rva": "0x996e8",
+          "buka_pointer_site": "0x92b50",
+          "buka_string_rva": "0x98adc",
+          "size": 9,
+          "payload_sha256": "77bd19f6a528839e741342ebb2bb05bcc15654b11205e8ea281838354f4c8047"
+        },
+        {
+          "id": "table.gMoraleText.6",
+          "offset": 24,
+          "nwc_pointer_site": "0x935c8",
+          "nwc_string_rva": "0x996f0",
+          "buka_pointer_site": "0x92b54",
+          "buka_string_rva": "0x98ae8",
+          "size": 10,
+          "payload_sha256": "1525bd02819ace76c6042c56af329ab7ee7cfd80490e3f4bb4cc50ef85e85098"
+        }
+      ]
+    }
+  ],
+  "verified_reference_sites": [
+    {
+      "site_rva": "0x319e3",
+      "target_rva": "0x92e2c",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x0",
+      "kind": 6,
+      "instruction": "mov edx, dword ptr [0x492e2c]"
+    },
+    {
+      "site_rva": "0x31a64",
+      "target_rva": "0x92e30",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x4",
+      "kind": 6,
+      "instruction": "mov eax, dword ptr [0x492e30]"
+    },
+    {
+      "site_rva": "0x31b34",
+      "target_rva": "0x92e34",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x8",
+      "kind": 6,
+      "instruction": "mov edx, dword ptr [0x492e34]"
+    },
+    {
+      "site_rva": "0x31b53",
+      "target_rva": "0x92e4c",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x20",
+      "kind": 6,
+      "instruction": "mov ecx, dword ptr [0x492e4c]"
+    },
+    {
+      "site_rva": "0x31b85",
+      "target_rva": "0x92e38",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0xc",
+      "kind": 6,
+      "instruction": "mov edx, dword ptr [0x492e38]"
+    },
+    {
+      "site_rva": "0x31bf5",
+      "target_rva": "0x92e3c",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x10",
+      "kind": 6,
+      "instruction": "mov ecx, dword ptr [0x492e3c]"
+    },
+    {
+      "site_rva": "0x31c27",
+      "target_rva": "0x92e18",
+      "symbol": "?gSpeedText@@3PAPADA",
+      "addend": "0x0",
+      "kind": 6,
+      "instruction": "mov edx, dword ptr [ecx*4 + 0x492e18]"
+    },
+    {
+      "site_rva": "0x31c2d",
+      "target_rva": "0x92e40",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x14",
+      "kind": 6,
+      "instruction": "mov eax, dword ptr [0x492e40]"
+    },
+    {
+      "site_rva": "0x31c62",
+      "target_rva": "0x92e44",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x18",
+      "kind": 6,
+      "instruction": "mov ecx, dword ptr [0x492e44]"
+    },
+    {
+      "site_rva": "0x31cad",
+      "target_rva": "0x92e48",
+      "symbol": "?gArmyStatText@@3PAPADA",
+      "addend": "0x1c",
+      "kind": 6,
+      "instruction": "mov ecx, dword ptr [0x492e48]"
+    },
+    {
+      "site_rva": "0x31c5b",
+      "target_rva": "0x92b48",
+      "symbol": "?gMoraleText@@3PAPADA",
+      "addend": "0xc",
+      "kind": 6,
+      "instruction": "mov eax, dword ptr [edx*4 + 0x492b48]"
+    },
+    {
+      "site_rva": "0x31ca6",
+      "target_rva": "0x92b2c",
+      "symbol": "?gLuckText@@3PAPADA",
+      "addend": "0xc",
+      "kind": 6,
+      "instruction": "mov eax, dword ptr [edx*4 + 0x492b2c]"
+    }
+  ],
+  "removed_interior_census_starts": [
+    "0x92e44",
+    "0x92e48"
+  ],
+  "compiled_controls": [
+    {
+      "locale": "ru",
+      "object_sha256": "42ac30b6f72ade7dee2f98385cbd916a04f3e7eff8a7a5680efe6b91b37e7dbc",
+      "tables": 4,
+      "pointer_slots": 28,
+      "check": "Every COFF pointer relocation and complete emitted NUL-terminated payload agrees with the corresponding pinned retail image."
+    },
+    {
+      "locale": "en",
+      "object_sha256": "7d48be80611560366e3a51c9256ae287f73e0b50ce9912c5739470d6985b34eb",
+      "tables": 4,
+      "pointer_slots": 28,
+      "check": "Every COFF pointer relocation and complete emitted NUL-terminated payload agrees with the corresponding pinned retail image."
+    }
+  ],
+  "source_sha256": {
+    "src/SOURCE/KB.cpp": "4c0314c75a64d86c249ecc01a9e0e697fd950aba5dfd9be36e192543c1349d4a",
+    "src/SOURCE/GAME.cpp": "ec50131452ae7e14115daadffe115d6c5b3e99619710c5bb1c095f7ff7cc6efc"
+  }
+}
