@@ -20,6 +20,7 @@
 # Army drawing/movement review: buka-army-drawing.json.
 # Combat message buffers and flags: buka-combat-messages.json.
 # Army movement/luck/damage review: buka-army-luck.json.
+# Army effects/movement review: buka-army-effects.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
@@ -107,6 +108,8 @@ rva	kind
 0x0008eb64	string
 0x00090040	
 0x000901dc	
+0x00090308	
+0x00090348	
 0x00090538	
 0x0009057c	
 0x00090588	
@@ -120,8 +123,6 @@ rva	kind
 0x00090ddc	
 0x00090e70	
 0x00090e90	
-0x00090eb0	
-0x00090ef0	
 0x00090f58	
 0x00090f98	
 0x00090fb8	

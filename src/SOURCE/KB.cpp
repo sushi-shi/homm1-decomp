@@ -1460,7 +1460,7 @@ char* gCombatObstacleNames[8] = {
     "dgrass.obj",
     0,
 };
-DATA(0x00490eb0)
+DATA(0x00490308)
 char* gPowEffectNames[16] = {
     "cloud.icn",
     "physical.icn",
@@ -1479,7 +1479,7 @@ char* gPowEffectNames[16] = {
     "cloud.icn",
     "cloud.icn",
 };
-DATA(0x00490ef0)
+DATA(0x00490348)
 char* gCombatFxNames[26] = {
     "redfire.icn", "elecfire.icn", "magic04.icn", "magic01.icn", "magic01.icn",  "magic02.icn",
     "magic02.icn", "magic06.icn",  "magic07.icn", "magic01.icn", "magic06.icn",  "magic08.icn",

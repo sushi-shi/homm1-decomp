@@ -105,6 +105,7 @@ rva	name	provenance
 0x00013fd9	?Stand@army@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: army drawing/movement review, 0x1484a; buka-army-drawing.json
 0x0001402e	?Wince@army@@QAEXXZ	Buka army drawing/movement instruction and CFG review: army drawing/movement review; buka-army-drawing.json
 0x00014084	?Walk@army@@QAEXFCC@Z	Buka army drawing/movement instruction and CFG review: army drawing/movement review; buka-army-drawing.json
+0x00014854	?SpecialAttack@army@@QAEXXZ	Buka army effects/movement complete instruction and CFG review: 0x182b3; buka-army-effects.json
 0x000154c8	?DoHydraAttack@army@@QAEXXZ	Buka combat message/hydra review: full instruction/CFG review; buka-combat-messages.json
 0x00015c2b	?DirDoAttack@army@@QAEXF@Z	Buka combat message/hydra review: full instruction/CFG review; buka-combat-messages.json
 0x00015c4d	?DoAttack@army@@QAEXH@Z	Buka combat message/hydra review: 0x15c43; buka-combat-messages.json
@@ -120,6 +121,8 @@ rva	name	provenance
 0x00017d6f	?Strength@army@@QAEIXZ	Buka combat-AI instruction/CFG/EH review: 0x12889, 0x12928, 0x12aea; buka-combat-ai.json
 0x00017d94	?SpellEffect@army@@QAEXFH@Z	Buka army movement/luck/damage complete instruction and CFG review: 0x17110, 0x1715e; buka-army-luck.json
 0x00017eaf	?CancelSpell@army@@QAEXXZ	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x15cc1, 0x16a4d; buka-melee-attack.json
+0x00017f49	?GoBerserk@army@@QAEXXZ	Buka army effects/movement complete instruction and CFG review: complete function review; buka-army-effects.json
+0x0001811f	?MoveAttack@army@@QAEXHH@Z	Buka army effects/movement complete instruction and CFG review: complete function review; buka-army-effects.json
 0x000184b0	??0armyGroup@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x11708; buka-combat-ai.json
 0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
@@ -143,6 +146,7 @@ rva	name	provenance
 0x00029da0	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	Buka combat-AI instruction/CFG/EH review: 0x13030, 0x131c6, 0x13238; buka-combat-ai.json
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97; config/retail/buka-pathfinding.json
 0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef; config/retail/buka-pathfinding.json
+0x0002a8a0	?ValidFlight@army@@QAEFFC@Z	Buka army effects/movement complete instruction and CFG review: 0x1806b, 0x18249, 0x18429; buka-army-effects.json
 0x0002acac	?FlyTo@army@@QAEFF@Z	Buka army movement/luck/damage complete instruction and CFG review: 0x16e68; buka-army-luck.json
 0x0002b7d3	?NextHero@playerData@@QAECH@Z	Buka Main complete instruction/CFG correspondence: 0x3327; buka-adventure-commands.json
 0x0002b8d3	?HasMobileHero@playerData@@QAECXZ	Buka input-handler instruction/CFG review: 0x44e7; buka-adventure-input.json
@@ -197,6 +201,8 @@ rva	name	provenance
 0x00046450	?FindPath@army@@QAEFFFCCC@Z	Buka army movement/luck/damage complete instruction and CFG review: 0x16d6b, 0x16ecc; buka-army-luck.json
 0x0004656e	?ValidPath@army@@QAEFFC@Z	Buka combat-AI instruction/CFG/EH review: 0x12bb4, 0x12c4b; buka-combat-ai.json
 0x00046666	?GetAttackMask@army@@QAEFFCC@Z	Buka combat-AI instruction/CFG/EH review: 0x12cac, 0x13176; buka-combat-ai.json
+0x00046712	?ValidMove@army@@QAEFF@Z	Buka army effects/movement complete instruction and CFG review: 0x180c3; buka-army-effects.json
+0x000468bc	?ValidAttack@army@@QAEFFFFFPAF@Z	Buka army effects/movement complete instruction and CFG review: 0x17fe3; buka-army-effects.json
 0x00046ad2	?GetAdjacentCellIndex@army@@QAEFFF@Z	Buka combat-AI instruction/CFG/EH review: 0x1254a, 0x12d19, 0x12dfd, 0x130b2, 0x132bb; buka-combat-ai.json
 0x000470ce	?OppositeDirection@@YAFF@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x16b32; buka-melee-attack.json
 0x00047aa1	?CheckDoMain@@YAXHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x1100a; buka-scroll-network.json
@@ -367,6 +373,7 @@ rva	name	provenance
 0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7721; buka-quick-info.json
 0x0006c15a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	Buka context/locator instruction/CFG review: 0xae67; buka-adventure-context.json
 0x0006c3db	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	Buka map-view instruction/CFG/EH review: 0xbb62, 0xc2a8, 0xc2bb, 0xc2ce, 0xc2e1, 0xc329, 0xc33c, 0xc34f; buka-map-views.json
+0x0006c407	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	Buka army effects/movement complete instruction and CFG review: 0x17deb; buka-army-effects.json
 0x0006c586	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	Buka panel instruction/CFG/EH review: 0x89df; buka-bottom-panels.json
 0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
@@ -383,6 +390,7 @@ rva	name	provenance
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	Buka DoAdvCommand instruction/CFG correspondence: 0x261f, 0x268c; buka-adventure-commands.json
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	Buka drawing-family instruction/CFG review: 0x55e0, 0x5628; buka-adventure-drawing.json
 0x0006f9f5	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	Buka control-panel instruction/CFG/EH review: 0xd2c5; buka-control-panel.json
+0x0006fd8a	?Random@@YAHHH@Z	Buka army effects/movement complete instruction and CFG review: 0x17f9f, 0x18012, 0x180af; buka-army-effects.json
 0x00070076	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	Buka DrawCell instruction/CFG review: 0x6771; buka-adventure-cell.json
 0x000703b8	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x62c8, 0x63be, 0x64bb, 0x654e, 0x65a4, 0x65ef, 0x6717, 0x6b5e, 0x6ba2, 0x6c76, 0x6ccd, 0x6d19; buka-adventure-cell.json
 0x0007048e	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6294, 0x6371, 0x66dc, 0x69e8, 0x6a30; buka-adventure-cell.json
@@ -402,6 +410,7 @@ rva	name	provenance
 0x000729a6	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	Buka map-view instruction/CFG/EH review: 0xc3aa; buka-map-views.json
 0x00072b98	?DoDialog@executive@@QAEFPAVbaseManager@@@Z	Buka control-panel instruction/CFG/EH review: 0xd919; buka-control-panel.json
 0x00073501	?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z	Buka army drawing/movement instruction and CFG review: 0x14495, 0x14527; buka-army-drawing.json
+0x00073610	?MAKEFILEID@@YAIPAD@Z	Buka army effects/movement complete instruction and CFG review: 0x17db4; buka-army-effects.json
 0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
 0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
 0x00077d50	??2@YAPAXI@Z	Buka QuickInfo instruction/CFG/EH review: 0x7314; buka-quick-info.json

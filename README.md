@@ -54,8 +54,11 @@ attack has complete CFG and register-dataflow correspondence, with its remaining
 byte differences documented; the ranged attack still needs full review.
 Movement, luck and damage routines now have complete instruction and CFG
 reviews. Luck messages use plural creature names; damage rules and all combat
-multipliers remain unchanged. Strict delinking reaches `PowEffect`, stopping
-at its effect-name table (`0x90308`); inherited data overlaps also remain. The old score ledger
+multipliers remain unchanged. Effect animation, spell cancellation, berserk
+actions and move/attack dispatch now have complete CFG and data reviews too.
+The effect-name tables preserve all original resource filenames. Strict
+delinking reaches `armyGroup::DamageGroup`, stopping at a floating constant
+(`0x8a410`); inherited data overlaps also remain. The old score ledger
 has been reset.
 Supply your own game executable and assets; they are not included here.
 

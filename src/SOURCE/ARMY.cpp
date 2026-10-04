@@ -1529,7 +1529,7 @@ i32 army::Damage(i32 damage) {
 
 // Plays the impact effect on every stack hit this attack (m_powFrames),
 // fading the killed ones out, then restores the grid.
-VA(0x0040ad9c, 0x8a9)
+VA(0x004174f1, 0x87e)
 void army::PowEffect(i8 effect) {
     i16 frames;
     i16 stackIndex;
@@ -1551,7 +1551,7 @@ void army::PowEffect(i8 effect) {
         frames = 10;
     else
         frames = longest;
-    if (effect != gCurLoadedSpellFileId) {
+    if (gCurLoadedSpellFileId != effect) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
         gCurLoadedSpellIcon = gpResourceManager->GetIcon(gPowEffectNames[effect]);
         gCurLoadedSpellFileId = effect;
@@ -1642,13 +1642,13 @@ void army::PowEffect(i8 effect) {
             WaitSample(gpCombatManager->m_armies[side][stackIndex].m_samples[ARMY_SAMPLE_WINCE]);
 }
 
-VA(0x0040b645, 0x34)
+VA(0x00417d6f, 0x25)
 u32 army::Strength(void) {
     return gMonsterDatabase[m_creatureType].fightValue * m_quantity;
 }
 
 // Plays a combat effect animation over this stack.
-VA(0x0040b679, 0x131)
+VA(0x00417d94, 0x11b)
 void army::SpellEffect(i16 effect, i32 frameDelay) {
     i16 frame;
     i16 effectFileId;
@@ -1677,7 +1677,7 @@ void army::SpellEffect(i16 effect, i32 frameDelay) {
 
 // Slow (and the other speed spells) restore the base speed and flight;
 // effect 9 gave three defense.
-VA(0x0040b7aa, 0xb2)
+VA(0x00417eaf, 0x9a)
 void army::CancelSpell(void) {
     switch (m_spellEffect) {
         case SPELL_HASTE:
@@ -1699,7 +1699,7 @@ void army::CancelSpell(void) {
 }
 
 // A berserk stack attacks a random neighbour, or flies or steps at random.
-VA(0x0040b85c, 0x1de)
+VA(0x00417f49, 0x1d6)
 void army::GoBerserk(void) {
     i8 found;
     i16 tryCount;
@@ -1758,7 +1758,7 @@ void army::GoBerserk(void) {
 
 // Attacks the stack on the hex (flying, shooting or picking the adjacent
 // direction) or moves there; a second argument forbids attacking.
-VA(0x0040ba3a, 0x3a3)
+VA(0x0041811f, 0x34a)
 void army::MoveAttack(i32 hex, i32 moveOnly) {
     hexcell* pCell;
     i32 baseHex;
@@ -1782,7 +1782,7 @@ void army::MoveAttack(i32 hex, i32 moveOnly) {
         m_moveTargetHex = hex;
         meleeMask = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
         if ((m_stats.attributes & MONSTER_FLAGS_FLYING)
-            && meleeMask == COMBAT_ALL_DIRECTIONS_BLOCKED && m_moveTargetHex != m_hex
+            && meleeMask == COMBAT_ALL_DIRECTIONS_BLOCKED && m_hex != m_moveTargetHex
             && !ValidFlight(m_moveTargetHex, ARMY_PATH_ANY_TARGET_HEX))
             return;
         if (m_spellEffect == SPELL_BERZERKER)
@@ -1806,12 +1806,8 @@ void army::MoveAttack(i32 hex, i32 moveOnly) {
                         && dirIndex >= COMBAT_DIRECTION_WESTERN_FIRST
                         && dirIndex <= COMBAT_DIRECTION_WESTERN_LAST)
                         baseHex--;
-                    if (dirIndex >= COMBAT_DIRECTION_WIDE_FIRST) {
-                        if (m_facing == ARMY_FACING_RIGHT)
-                            baseHex++;
-                        else
-                            baseHex--;
-                    }
+                    if (dirIndex >= COMBAT_DIRECTION_WIDE_FIRST)
+                        baseHex += m_facing ? -1 : 1;
                     adjHex = GetAdjacentCellIndex(baseHex, dirIndex);
                     if (ValidHex(adjHex)) {
                         pCell = &gpCombatManager->m_hexCells[adjHex];
