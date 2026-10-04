@@ -4906,7 +4906,7 @@ void advManager::DoTownKnob(void) {
 // donor PoL RVA 0x0006a1dd; preferred Buka symbol ?ViewPuzzle@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634399;margin=0.712778;shape=0.353;size=0.798;calls=0.917;strings=advmice.mse|puzzle.icn|viewpuzl.bin;alternate=pol20:void advManager::ViewPuzzle(void)@0x0006a1dd
-VA(0x0045e89c, 0x3da)
+VA(0x0040bb18, 0x3a6)
 void advManager::ViewPuzzle(void) {
     i32 puzzleX;
     i32 puzzleY;
@@ -4944,8 +4944,8 @@ void advManager::ViewPuzzle(void) {
     i32 biasY = 0;
     biasX =
         (gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_ALIGNMENT_DIVISOR - 1;
-    biasY = (gpGame->m_ultimateArtifactY * PUZZLE_Y_ADJUST_Y_FACTOR
-             + gpGame->m_ultimateArtifactX * PUZZLE_Y_ADJUST_X_FACTOR)
+    biasY = (gpGame->m_ultimateArtifactX * PUZZLE_Y_ADJUST_X_FACTOR
+             + gpGame->m_ultimateArtifactY * PUZZLE_Y_ADJUST_Y_FACTOR)
                 % PUZZLE_ALIGNMENT_DIVISOR
             - 1;
     if ((gpGame->m_ultimateArtifactX + gpGame->m_ultimateArtifactY) % PUZZLE_ALIGNMENT_DIVISOR
@@ -4995,7 +4995,7 @@ void advManager::ViewPuzzle(void) {
 
 // HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
 // visible object/overlay frames and marking the target cell.
-VA(0x0045ec76, 0x236)
+VA(0x0040bebe, 0x1e5)
 void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
     i32 y;
     mapCell* cell;
@@ -5066,7 +5066,7 @@ void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
 // donor PoL RVA 0x00064b08; preferred Buka symbol ?CastSpell@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.339671;margin=1.295843;shape=0.207;size=0.620;calls=0.615;alternate=pol20:void advManager::CastSpell(int)@0x00064b08
-VA(0x0045eeac, 0x1f2)
+VA(0x0040c0a3, 0x1a0)
 void advManager::CastSpell(i8 spell) {
     hero* caster;
     i32 guardianCount;
@@ -5088,7 +5088,7 @@ void advManager::CastSpell(i8 spell) {
         case SPELL_IDENTIFY_HERO:
             m_identifyHeroActive = 1;
             NormalDialog(
-                "Enemy Heroes are now fully identifiable.",
+                localization::Tr("adventure.spell.identify_hero"),
                 NORMAL_DIALOG_TYPE_OK,
                 0x61,
                 0x91
@@ -5101,7 +5101,7 @@ void advManager::CastSpell(i8 spell) {
         case SPELL_TOWN_GATE:
             if (caster->m_remainingMobility == 0) {
                 NormalDialog(
-                    "Your hero is too tired to cast this spell today.  Try again tomorrow.",
+                    localization::Tr("adventure.spell.too_tired"),
                     NORMAL_DIALOG_TYPE_OK
                 );
                 return;
@@ -5127,7 +5127,7 @@ void advManager::CastSpell(i8 spell) {
 // Buka 2.1 advManager::ViewWorld (SOURCE/Viewwrld).
 // HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
 // CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
-VA(0x0045f09e, 0x1157)
+VA(0x0040c243, 0x1062)
 void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
     hero* curHero;
@@ -5163,7 +5163,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     tilesets[TILESET_MTN32] = gpResourceManager->GetIcon("mtn6.icn");
     tilesets[TILESET_TOWN32] = gpResourceManager->GetIcon("town6.icn");
     if (gpCurPlayer->CurrentHero() != INVALID_HERO)
-        curHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
+        curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     FillBitmapArea(
         gpWindowManager->m_screen,
         UPDATE_VIEWPORT_ORIGIN,
@@ -5182,13 +5182,13 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                 flip = 0;
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 screenY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
-                index = cell->m_tileIndex >> VIEW_WORLD_GROUND_TILE_SHIFT;
+                index = cell->m_tileIndex / (1 << VIEW_WORLD_GROUND_TILE_SHIFT);
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL)
                     flip = 1;
                 if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL)
                     index += VIEW_WORLD_GROUND_FLIPPED_FRAMES;
                 ground->DrawToBuffer(
-                    (flip == 1 ? VIEW_WORLD_CELL_PIXELS - 1 : 0) + screenX,
+                    screenX + (flip == 1 ? VIEW_WORLD_CELL_PIXELS - 1 : 0),
                     screenY,
                     index,
                     flip,
@@ -5196,7 +5196,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                 );
                 if (cell->m_objectIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
-                    if (mask & (1 << ts))
+                    if ((1 << ts) & mask)
                         tilesets[ts]->DrawToBuffer(
                             screenX,
                             screenY,
@@ -5270,10 +5270,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cell->m_objectMetadata];
-                                if (owner >= 0)
-                                    index = gpGame->m_players[owner].m_color;
-                                else
-                                    index = PLAYER_COLOR_NEUTRAL;
+                                index = owner < 0 ? PLAYER_COLOR_NEUTRAL
+                                                  : gpGame->m_players[owner].m_color;
                                 spheres->DrawToBuffer(
                                     screenX,
                                     screenY,
@@ -5298,10 +5296,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         owner = gpGame->m_mineOwners
                                                     [gpGame->m_heroRecs[cell->m_objectMetadata]
                                                          .m_occupiedTown];
-                                        if (owner >= 0)
-                                            index = gpGame->m_players[owner].m_color;
-                                        else
-                                            index = PLAYER_COLOR_NEUTRAL;
+                                        index = owner < 0 ? PLAYER_COLOR_NEUTRAL
+                                                          : gpGame->m_players[owner].m_color;
                                         spheres->DrawToBuffer(
                                             screenX,
                                             screenY,
@@ -5341,10 +5337,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cell->m_objectMetadata];
-                                if (owner >= 0)
-                                    index = gpGame->m_players[owner].m_color;
-                                else
-                                    index = PLAYER_COLOR_NEUTRAL;
+                                index = owner < 0 ? PLAYER_COLOR_NEUTRAL
+                                                  : gpGame->m_players[owner].m_color;
                                 spheres->DrawToBuffer(
                                     screenX,
                                     screenY,
@@ -5369,10 +5363,8 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         owner = gpGame->m_mineOwners
                                                     [gpGame->m_heroRecs[cell->m_objectMetadata]
                                                          .m_occupiedTown];
-                                        if (owner >= 0)
-                                            index = gpGame->m_players[owner].m_color;
-                                        else
-                                            index = PLAYER_COLOR_NEUTRAL;
+                                        index = owner < 0 ? PLAYER_COLOR_NEUTRAL
+                                                          : gpGame->m_players[owner].m_color;
                                         spheres->DrawToBuffer(
                                             screenX,
                                             screenY,
@@ -5504,7 +5496,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                 screenY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
                     ts = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
-                    if (mask & (1 << ts))
+                    if ((1 << ts) & mask)
                         tilesets[ts]->DrawToBuffer(
                             screenX,
                             screenY,

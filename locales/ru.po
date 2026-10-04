@@ -3323,3 +3323,11 @@ msgstr "Неизвестно"
 msgctxt "adventure.quick.none"
 msgid "None"
 msgstr "Нет"
+
+msgctxt "adventure.spell.identify_hero"
+msgid "Enemy Heroes are now fully identifiable."
+msgstr "Вражеские герои полностью опознаны."
+
+msgctxt "adventure.spell.too_tired"
+msgid "Your hero is too tired to cast this spell today.  Try again tomorrow."
+msgstr "Ваш герой слишком устал, чтобы направлять сегодня заклинания. Попробуйте завтра."

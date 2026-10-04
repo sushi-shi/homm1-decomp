@@ -27,9 +27,11 @@ hero panels and resource-message producer are also migrated. Hero/town quick
 views and army-size names now have reviewed claims, CFGs, data and exception
 cleanup; their remaining stack-local differences are documented. Adventure
 redraw, hero/town context switching and locator scrolling are also migrated,
-including removal of Buka’s absent demobilization log call. Strict delinking
-currently stops at data identity `0x8ea64` in puzzle view. The old score ledger
-has been reset.
+including Buka’s removal of the demobilization log call. Puzzle/world views and
+spell dispatch now have reviewed claims, switch tables and exception cleanup;
+the two spell dialogs preserve English through the catalog. Strict delinking
+currently stops at data identity `0x8eb74` in the control panel. The old score
+ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

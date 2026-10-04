@@ -3935,5 +3935,6 @@
     },
     "readme": "homm1 verify readme cannot generate scores without the strict comparison report.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit: 202 adaptations awaiting review and 2 missing modules. No tooling implementation changed."
-  }
+  },
+  "validation_checkpoint": "6f21cb19; historical validation at that source/object fingerprint. buka-map-views.json supplies the former 0x8ea64 blocker."
 }
