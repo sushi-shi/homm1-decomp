@@ -6205,5 +6205,6 @@
     "build_verify": "Failed at unprovided identity 0x8e140; final strict gates remain incomplete.",
     "readme": "Generator reports missing strict report.json; no scores added manually.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit completed: 202 adapted_review_required, two missing modules. No tool implementation changed."
-  }
+  },
+  "validation_checkpoint": "fc0a85cb; historical validation. Subsequent drawing-family migration provides 0x8e140; see buka-adventure-drawing.json."
 }

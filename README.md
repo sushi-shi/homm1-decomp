@@ -18,8 +18,9 @@ Buka audio-volume and cleanup changes, with original English confirmation
 text preserved in the catalog. The command handler, its helpers and four
 adventure input handlers now have reviewed Buka claims. `Main` and the input
 handlers agree with retail CFGs and code sizes; eleven more dialogs use the
-catalog. Strict delinking currently stops at data identity `0x8e140`. The old
-score ledger has been reset.
+catalog. Screen updates, full drawing, cloud lookup and cell drawing also have
+reviewed Buka claims and reference identities. Strict delinking currently stops
+at data identity `0x9057c` in radar drawing. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

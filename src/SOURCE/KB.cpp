@@ -3364,7 +3364,7 @@ i8 gRouteFrame[8][8] = {
     {41, 41, 35, 40, 40, 40, 35, 41},
     {44, 44, 44, 34, 39, 39, 39, 34},
 };
-DATA(0x00492450)
+DATA(0x004919cc)
 u8 gCloudType[256] = {
     11,  7,   8,   129, 9,   10,  128, 33,  108, 29,  30,  32,  28,  133, 34,  22,  11,  7,   8,
     113, 9,   10,  128, 126, 108, 29,  30,  131, 28,  133, 34,  120, 11,  7,   8,   129, 9,   10,
@@ -3575,9 +3575,9 @@ DATA(0x004a98cc)
 i32 gLoadingMonoIcon = 0;
 DATA(0x00492c1c)
 i32 gMonoIconSkip = -1;
-DATA(0x00492c20)
+DATA(0x004a98d0)
 i32 gScrollX = 0;
-DATA(0x00492c24)
+DATA(0x004a98d4)
 i32 gScrollY = 0;
 DATA(0x00492c28)
 i32 gNoBorder = 0;
@@ -4668,7 +4668,7 @@ DATA(0x00493f50)
 i8 gFirstTimeThrough = 0;
 DATA(0x00493f54)
 i8 gSkipIntro = 0;
-DATA(0x00493f58)
+DATA(0x004a992c)
 i32 gAllBlack = 0;
 DATA(0x00493f5c)
 i8 gInCombat = 0;

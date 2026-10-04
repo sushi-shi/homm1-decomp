@@ -16,6 +16,8 @@ rva	name	provenance
 0x00005530	?UpdateScreen@advManager@@QAEXCC@Z	Buka Main complete instruction/CFG correspondence: 0x29ba, 0x2ed7, 0x2ff3; buka-adventure-commands.json
 0x000057a9	?CompleteDraw@advManager@@QAEXFFH@Z	Buka command helper family: 0x5af3; buka-adventure-commands.json
 0x00005ace	?CompleteDraw@advManager@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2ecb, 0x2fe7; buka-adventure-commands.json
+0x00005afd	?GetCloudLookup@advManager@@QAEHHH@Z	Buka drawing-family instruction/CFG review: complete drawing-family review; buka-adventure-drawing.json
+0x00005efb	?DrawCell@advManager@@QAEXFFFFCCC@Z	Buka drawing-family instruction/CFG review: 0x586a, 0x58c6, 0x5942, 0x598e, 0x59d2, 0x5a18, 0x5a74; buka-adventure-drawing.json
 0x00006d26	?GetCell@advManager@@QAEPAVmapCell@@FF@Z	Buka exact pathfinding instruction correspondence: 0x2a465, 0x2a4e0, 0x561d5, 0x563b8, 0x564c1, 0x56504, 0x5660c, 0x56909, 0x5695d; config/retail/buka-pathfinding.json
 0x00006d7e	?UpdateRadar@advManager@@QAEXCH@Z	Buka Main complete instruction/CFG correspondence: 0x2ec1, 0x2fdd; buka-adventure-commands.json
 0x00007276	?QuickInfo@advManager@@QAEXFF@Z	Buka input-handler instruction/CFG review: 0x3b0e, 0x3d6b; buka-adventure-input.json
@@ -53,8 +55,11 @@ rva	name	provenance
 0x00010aad	?MouseInScrollZone@advManager@@QAEHXZ	Buka input-handler instruction/CFG review: 0x548d; buka-adventure-input.json
 0x00010e9f	?CheckHandleNet@advManager@@QAEPADXZ	Buka Main complete instruction/CFG correspondence: 0x2a34; buka-adventure-commands.json
 0x00010fda	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	Buka Main complete instruction/CFG correspondence: 0x2a54; buka-adventure-commands.json
+0x000114e2	?DrawAdventureBorder@advManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x5a93; buka-adventure-drawing.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
+0x00021820	?DrawCursor@advManager@@QAEXXZ	Buka DrawCell instruction/CFG review: 0x6c02; buka-adventure-cell.json
+0x00021dc4	?GetCursorBaseFrame@advManager@@QAEFF@Z	Buka DrawCell instruction/CFG review: 0x67ac, 0x686f; buka-adventure-cell.json
 0x00022127	?MoveHero@advManager@@QAEPAVmapCell@@CCPAH00CPAC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x25e1; buka-adventure-commands.json
 0x00024a50	?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2762; buka-adventure-commands.json
 0x00026be9	?EventSound@advManager@@QAEXFF@Z	Buka input-handler instruction/CFG review: 0x486e; buka-adventure-input.json
@@ -79,6 +84,7 @@ rva	name	provenance
 0x0003949f	?AddSpell@hero@@QAEHCCH@Z	Buka Main complete instruction/CFG correspondence: 0x2dd9; buka-adventure-commands.json
 0x0003968e	?HeroView@hero@@QAECC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x287c; buka-adventure-commands.json
 0x0003a114	?ViewArtifact@hero@@QAEXCC@Z	Buka input-handler instruction/CFG review: 0x491b; buka-adventure-input.json
+0x0003c7b0	_PollSound	Buka drawing-family instruction/CFG review: 0x5598, 0x5646, 0x57b3, 0x58eb, 0x5a7d; buka-adventure-drawing.json
 0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	Buka Main complete instruction/CFG correspondence: 0x2c4b, 0x31f1; buka-adventure-commands.json
 0x0003fb8e	?CheckEndGame@@YAXH@Z	Buka Main complete instruction/CFG correspondence: 0x2d87, 0x2da3; buka-adventure-commands.json
 0x000411a2	?PopNetBox@@YAXPAD@Z	Buka Main complete instruction/CFG correspondence: 0x2d52; buka-adventure-commands.json
@@ -222,11 +228,22 @@ rva	name	provenance
 0x0006b8b2	?SetPointer@mouseManager@@QAEXF@Z	Buka adventure-manager family: 0x203a; buka-advmgr.json
 0x0006bf6f	?ReallyShowPointer@mouseManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x272b; buka-adventure-commands.json
 0x0006bf87	?ReallyHidePointer@mouseManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x2574; buka-adventure-commands.json
+0x0006bf9d	?RestoreUnderlying@mouseManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x579a; buka-adventure-drawing.json
+0x0006bfc0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	Buka drawing-family instruction/CFG review: 0x5593; buka-adventure-drawing.json
 0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	Buka input-handler instruction/CFG review: 0x3878, 0x3923, 0x4058, 0x4a76; buka-adventure-input.json
 0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
 0x0006eeb6	?Flush@inputManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x257f; buka-adventure-commands.json
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	Buka DoAdvCommand instruction/CFG correspondence: 0x261f, 0x268c; buka-adventure-commands.json
+0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	Buka drawing-family instruction/CFG review: 0x55e0, 0x5628; buka-adventure-drawing.json
+0x00070076	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	Buka DrawCell instruction/CFG review: 0x6771; buka-adventure-cell.json
+0x000703b8	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x62c8, 0x63be, 0x64bb, 0x654e, 0x65a4, 0x65ef, 0x6717, 0x6b5e, 0x6ba2, 0x6c76, 0x6ccd, 0x6d19; buka-adventure-cell.json
+0x0007048e	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6294, 0x6371, 0x66dc, 0x69e8, 0x6a30; buka-adventure-cell.json
+0x00070704	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6b25; buka-adventure-cell.json
+0x000707de	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x69a9; buka-adventure-cell.json
+0x000708b4	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6a94, 0x6ad9; buka-adventure-cell.json
+0x00070b14	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6910, 0x6957; buka-adventure-cell.json
+0x00070d6c	_TileToBitmap	Buka DrawCell instruction/CFG review: 0x60f0, 0x61b6, 0x643e; buka-adventure-cell.json
 0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
 0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
 0x00078156	_free	Buka adventure-manager family: 0x205a; buka-advmgr.json

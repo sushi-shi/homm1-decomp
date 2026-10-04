@@ -56,7 +56,7 @@
 
 // The route-overlay byte at (column, row) of this->m_visibilityMap (Buka 2.1
 // ADVMGR.cpp; HoMM1 indexes row-major as row * size + column).
-#define ADVMGR_VISIBILITY_AT(column, row) (m_visibilityMap[(row) * MAP_CELL_GRID_SIZE + (column)])
+#define ADVMGR_VISIBILITY_AT(column, row) (*(m_visibilityMap + (column) + (row) * MAP_CELL_GRID_SIZE))
 
 // Buka's giSeedingValid is the dword zeroed by retail Reseed at VA 0x4c5170.
 // Code-use identity only; no initializer-byte coverage is asserted.
@@ -64,17 +64,17 @@ extern i32 giSeedingValid;
 
 // DrawCell's per-call drawing state, kept in module storage as in Buka, which
 // defines it ahead of its functions (retail address order).
-DATA(0x004cb000)
+DATA(0x004a65c8)
 i32 s_drawCloudFrame;
-DATA(0x004cb150)
+DATA(0x004a6714)
 u16 s_drawGroundTile;
-DATA(0x004cb16c)
+DATA(0x004a672c)
 i8 s_drawFlipCloud;
-DATA(0x004cafdc)
+DATA(0x004a65a4)
 u8 s_drawTileset;
-DATA(0x004cb00c)
+DATA(0x004a65d4)
 i32 s_drawCovered;
-DATA(0x004cb020)
+DATA(0x004a65e8)
 i32 s_drawStoneTile;
 
 H1_ENUM_CONST_BEGIN(AdventureButtonConstant)
@@ -2280,10 +2280,10 @@ i32 advManager::ProcessHover(struct tag_message* message) {
 // donor PoL RVA 0x0005b094; preferred Buka symbol ?UpdateScreen@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.492392;margin=0.157827;shape=0.294;size=0.928;calls=0.818;alternate=pol20:void advManager::UpdateScreen(int, int)@0x0005b094
-VA(0x00457a40, 0x265)
+VA(0x00405530, 0x279)
 void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     if (!forceUpdate && !bShowIt) {
-        if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
+        if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount())
             glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
         return;
     }
@@ -2315,7 +2315,7 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     gScrollY = 0;
     gScrollX = gScrollY;
     PollSound();
-    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
+    if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount()) {
         ++m_updateMaxX;
         if (m_updateMaxX >= UPDATE_FRAME_CYCLE)
             m_updateMaxX = 0;
@@ -2340,7 +2340,7 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
 // donor PoL RVA 0x0005b2ae; preferred Buka symbol ?CompleteDraw@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.459172;margin=1.327145;shape=0.409;size=0.723;calls=0.706;alternate=pol20:void advManager::CompleteDraw(int, int, int, int)@0x0005b2ae
-VA(0x00457ca5, 0x359)
+VA(0x004057a9, 0x325)
 void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
     i32 drawX;
     i32 drawY;
@@ -2455,7 +2455,7 @@ void advManager::CompleteDraw(i32 update) {
 
 // Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
 // masks first, then each unseen neighbour, indexed into the cloud table.
-VA(0x00458038, 0x40d)
+VA(0x00405afd, 0x3fe)
 i32 advManager::GetCloudLookup(i32 x, i32 y) {
     i32 cloudMask = 0;
 
@@ -2513,19 +2513,13 @@ i32 advManager::GetCloudLookup(i32 x, i32 y) {
     return gCloudType[cloudMask];
 }
 
-// @early-stop 99.88: `s_drawGroundTile |= cell0->m_tileIndex;` - retail
-// builds the result in eax (mov eax,ecx after the zero-extended byte load,
-// then loads the global into cx); we or into ecx. 2 bytes, no other diff.
-// Types match retail (byte m_tileIndex at +0 of the local cell0, unsigned
-// 16-bit global: zero-extending loads); C1 trace: no handle state of
-// s_drawGroundTile/cell0 changes it, solver distance 5 in every tier, no
-// TU-state trial closes it. `a = a | b`, `a = b | a`, casts of the byte
-// (unsigned short, short, int, unsigned) and of the result, and static
-// linkage all compile identically.
+// Buka instruction/CFG review: retail size and all 153 blocks agree.
+// Remaining differences are EBP-local displacements; see
+// config/retail/buka-adventure-cell.json.
 // donor PoL RVA 0x0005bb7c; preferred Buka symbol ?DrawCell@advManager@@QAEXHHHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.286321;margin=0.495913;shape=0.238;size=0.410;calls=0.525;alternate=pol20:void advManager::DrawCell(int, int, int, int, int, int)@0x0005bb7c
-VA(0x00458445, 0xee8)
+VA(0x00405efb, 0xe2b)
 void advManager::DrawCell(
     i16 mapX,
     i16 mapY,
@@ -2560,19 +2554,27 @@ void advManager::DrawCell(
             else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = STONE_TILE_BOTTOM_LEFT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapY & CLOUD_VARIANT_MASK) + STONE_TILE_LEFT_BASE;
+                s_drawStoneTile =
+                    ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                    + STONE_TILE_LEFT_BASE;
         } else if (mapX == MAP_CELL_GRID_SIZE) {
             if (mapY == -1)
                 s_drawStoneTile = STONE_TILE_TOP_RIGHT;
             else if (mapY == MAP_CELL_GRID_SIZE)
                 s_drawStoneTile = STONE_TILE_BOTTOM_RIGHT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapY & CLOUD_VARIANT_MASK) + STONE_TILE_RIGHT_BASE;
+                s_drawStoneTile =
+                    ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                    + STONE_TILE_RIGHT_BASE;
         } else if (mapY == -1) {
             if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = (mapX & CLOUD_VARIANT_MASK) + STONE_TILE_TOP_BASE;
+                s_drawStoneTile =
+                    ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                    + STONE_TILE_TOP_BASE;
         } else if (mapY == MAP_CELL_GRID_SIZE && mapX >= 0 && mapX < MAP_CELL_GRID_SIZE) {
-            s_drawStoneTile = (mapX & CLOUD_VARIANT_MASK) + STONE_TILE_BOTTOM_BASE;
+            s_drawStoneTile =
+                ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                + STONE_TILE_BOTTOM_BASE;
         }
         if (s_drawStoneTile == STONE_TILE_NONE)
             s_drawStoneTile =
@@ -2660,7 +2662,7 @@ void advManager::DrawCell(
     if (drawMask & ADVMGR_DRAW_GROUND) {
         s_drawGroundTile = cell0->m_flags;
         s_drawGroundTile <<= MAP_CELL_GROUND_FLIP_SHIFT;
-        s_drawGroundTile |= cell0->m_tileIndex;
+        s_drawGroundTile |= cell0->m_tileIndex & 0xff;
         TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         if (cell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
             s_drawTileset = cell0->m_objectTileset & MAP_CELL_TILESET_MASK;
@@ -2717,7 +2719,7 @@ void advManager::DrawCell(
             && cell0->m_objectIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = cell0->m_objectTileset & MAP_CELL_TILESET_MASK;
             if (s_drawTileset == TILESET_MONS32 && cell0->m_objectIndex <= CREATURE_COUNT - 1) {
-                if (m_lastQuickViewX == mapX && m_lastQuickViewY == mapY) {
+                if (mapX == m_lastQuickViewX && mapY == m_lastQuickViewY) {
                     if (m_mineGuardianFacingLeft)
                         FlipIconToBitmap(
                             m_objectIcons[TILESET_MINIMON],
@@ -2763,14 +2765,12 @@ void advManager::DrawCell(
             heroYOffset6 = 0;
             if (cell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 drawHero = gpGame->GetHero(cell0->m_objectMetadata);
-                if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                    flagColor = PLAYER_COLOR_NONE;
-                else
-                    flagColor = gpGame->m_players[drawHero->m_owner].m_color;
-                if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                    iconIndex = ADVMGR_HERO_ICON_BOAT;
-                else
-                    iconIndex = drawHero->m_heroClass;
+                flagColor = (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                ? PLAYER_COLOR_NONE
+                                : gpGame->m_players[drawHero->m_owner].m_color;
+                iconIndex = (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                ? (i8)ADVMGR_HERO_ICON_BOAT
+                                : drawHero->m_heroClass;
                 frame = GetCursorBaseFrame(drawHero->m_direction);
                 drawHeroIcon0 = 1;
                 if (drawHero->m_eventFlags & HERO_EVENT_EMBARKED)
@@ -2875,8 +2875,8 @@ void advManager::DrawCell(
             }
         }
         if (m_cursorActive && (cell0->m_flags & MAP_CELL_HERO_CURSOR) && !m_comboHeroDrawn
-            && m_mapOriginX + ADVMGR_VIEW_CENTER == mapX
-            && m_mapOriginY + ADVMGR_VIEW_CENTER == mapY) {
+            && mapX == m_mapOriginX + ADVMGR_VIEW_CENTER
+            && mapY == m_mapOriginY + ADVMGR_VIEW_CENTER) {
             DrawCursor();
             m_comboHeroDrawn = 1;
         }
@@ -7417,10 +7417,10 @@ void advManager::DrawAdventureBorder(void) {
     }
 }
 
-// ADVMGR owns retail .data 0x004a17b4-0x004905b7 and .bss 0x004c4f2c-0x004c50c3.
-// Retail emits gCheatSeq, the sand-animation times and gFrameCount among the
-// literals of their users.
-DATA(0x004a17b4)
+// ADVMGR globals: reviewed Buka claims are recorded in config/retail/buka-*.json.
+// Remaining NWC claims still require migration. Retail emits some globals among
+// the literals of their users.
+DATA(0x0048e140)
 i32 gLimitUpdMinX = UPDATE_NONE;
 DATA(0x004a17b8)
 i32 gLastScrollTime = 0;
@@ -7448,13 +7448,13 @@ DATA(0x004cafe4)
 i32 giFrameStep;
 DATA(0x004cb170)
 char cArmySizeName[12];
-DATA(0x004cb014)
+DATA(0x004a65dc)
 i32 giLimitUpdMaxX;
-DATA(0x004cb018)
+DATA(0x004a65e0)
 i32 giLimitUpdMaxY;
 DATA(0x004cb01c)
 i8 bPrefsChanged;
-DATA(0x004cb14c)
+DATA(0x004a6710)
 i32 giLimitUpdMinY;
 DATA(0x004cb028)
 i8 bComboDraw[17][17];

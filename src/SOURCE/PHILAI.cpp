@@ -109,7 +109,7 @@ DATA(0x004aa0e8)
 i16 gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004c205c)
 i8 gbActualBoatFound;
-DATA(0x004b1b88)
+DATA(0x004b9cbc)
 u8 giCurWatchPlayerBit;
 DATA(0x004b4ba8)
 playerData* gpCurPlayer;
