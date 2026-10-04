@@ -112,6 +112,7 @@ rva	name	provenance
 0x0001717c	?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z	Buka combat message/hydra review: 0x15787; buka-combat-messages.json
 0x000174f1	?PowEffect@army@@QAEXC@Z	Buka combat message/hydra review: 0x158e5; buka-combat-messages.json
 0x00017d6f	?Strength@army@@QAEIXZ	Buka combat-AI instruction/CFG/EH review: 0x12889, 0x12928, 0x12aea; buka-combat-ai.json
+0x00017eaf	?CancelSpell@army@@QAEXXZ	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x15cc1, 0x16a4d; buka-melee-attack.json
 0x000184b0	??0armyGroup@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x11708; buka-combat-ai.json
 0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
@@ -148,6 +149,7 @@ rva	name	provenance
 0x00032f8c	?NextPlayer@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x2a23; buka-adventure-commands.json
 0x00035a74	?SetVisibility@game@@QAEXFFFF@Z	Buka Main complete instruction/CFG correspondence: 0x2eb5, 0x2f8c, 0x2f9f, 0x2fb2, 0x2fc5; buka-adventure-commands.json
 0x00035ca3	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	Buka Main complete instruction/CFG correspondence: 0x2e1c, 0x2e34; buka-adventure-commands.json
+0x00035e77	?SRandom@@YAHHH@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x166c3, 0x166fe, 0x1673d, 0x16778, 0x167ba, 0x167f5; buka-melee-attack.json
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
 0x000363dc	?CancelComputerScreen@game@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: 0x10dd1; buka-scroll-network.json
 0x000376cf	?ReceiveSaveGame@game@@QAEHHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f1c; buka-scroll-network.json
@@ -186,6 +188,7 @@ rva	name	provenance
 0x0004656e	?ValidPath@army@@QAEFFC@Z	Buka combat-AI instruction/CFG/EH review: 0x12bb4, 0x12c4b; buka-combat-ai.json
 0x00046666	?GetAttackMask@army@@QAEFFCC@Z	Buka combat-AI instruction/CFG/EH review: 0x12cac, 0x13176; buka-combat-ai.json
 0x00046ad2	?GetAdjacentCellIndex@army@@QAEFFF@Z	Buka combat-AI instruction/CFG/EH review: 0x1254a, 0x12d19, 0x12dfd, 0x130b2, 0x132bb; buka-combat-ai.json
+0x000470ce	?OppositeDirection@@YAFF@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x16b32; buka-melee-attack.json
 0x00047aa1	?CheckDoMain@@YAXHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x1100a; buka-scroll-network.json
 0x00048a6f	?DoAI@philAI@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2a18; buka-adventure-commands.json
 0x0004cd57	?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z	Buka combat-AI instruction/CFG/EH review: 0x11961; buka-combat-ai.json
@@ -194,6 +197,7 @@ rva	name	provenance
 0x00054354	??1fileRequester@@QAE@XZ	Buka control-panel instruction/CFG/EH review: 0xd98b; buka-control-panel.json
 0x00056080	?BuildPath@searchArray@@QAEHFFFFF@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x24fb; buka-adventure-commands.json
 0x00056150	?SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z	Buka travel-spell/route instruction/CFG/EH review: 0x10692, 0x106fd; buka-travel.json
+0x0005a668	?CastSpell@combatManager@@QAEXCCCC@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x1672b, 0x167a5, 0x1682e; buka-melee-attack.json
 0x0005ea20	?HasGarrison@town@@QAECXZ	Buka input-handler instruction/CFG review: 0x524c; buka-adventure-input.json
 0x0005ea63	?GiveSpells@town@@QAEXXZ	Buka travel-spell/route instruction/CFG/EH review: 0xfc5b; buka-travel.json
 0x0005ec84	?View@town@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x27bd, 0x2840; buka-adventure-commands.json

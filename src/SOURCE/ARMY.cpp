@@ -983,7 +983,7 @@ void army::DirDoAttack(i16 direction) {
 // A melee strike in m_attackDirection: breath attackers (attribute 8) also
 // hit the hex behind, some creatures cast on the target, the target
 // retaliates once, and creatures 5 and 8 strike twice.
-VA(0x00409388, 0x108d)
+VA(0x00415c4d, 0x1092)
 void army::DoAttack(i32 retaliation) {
     i32 unused;
     i32 oldMode;
@@ -1103,8 +1103,8 @@ void army::DoAttack(i32 retaliation) {
             && m_attackDirection < COMBAT_DIRECTION_ADJACENT_COUNT && ValidHex(nextHex)
             && gpCombatManager->m_hexCells[nextHex].m_occupantSide >= 0
             && gpCombatManager->m_hexCells[nextHex].m_occupantIndex >= 0
-            && gpCombatManager->m_hexCells[newHex].m_occupantIndex
-                   != gpCombatManager->m_hexCells[nextHex].m_occupantIndex) {
+            && gpCombatManager->m_hexCells[nextHex].m_occupantIndex
+                   != gpCombatManager->m_hexCells[newHex].m_occupantIndex) {
             gpCombatManager
                 ->m_limitCreatureCount[gpCombatManager->m_hexCells[nextHex].m_occupantSide]
                                       [gpCombatManager->m_hexCells[nextHex].m_occupantIndex]++;
@@ -1257,9 +1257,11 @@ void army::DoAttack(i32 retaliation) {
 
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
-                    target->m_facing ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST
+                    static_cast<i8>(
+                        target->m_facing ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST
+                    )
                 );
-                if (m_hex == checkHex)
+                if (checkHex == m_hex)
                     target->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
@@ -1267,7 +1269,7 @@ void army::DoAttack(i32 retaliation) {
                         target->m_facing ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST
                     )
                 );
-                if (m_hex == checkHex)
+                if (checkHex == m_hex)
                     target->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
             }
             target->DoAttack(1);

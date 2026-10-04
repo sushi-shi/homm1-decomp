@@ -5717,5 +5717,6 @@
       "source_correspondence": "army::DoAttack",
       "meaning": "First genie-message fragment; payload is now catalog-backed and verified, but full-function correspondence/claim migration is incomplete."
     }
-  }
+  },
+  "historical_validation_scope": "The compiled-object and source fingerprints here describe checkpoint a758076d. DoAttack subsequently receives complete CFG/dataflow review and a Buka function claim in buka-melee-attack.json. SpecialAttack remains pending."
 }

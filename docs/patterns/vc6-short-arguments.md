@@ -68,3 +68,20 @@ explicit control result, not a normalization accepted by strict comparison.
 See [`buka-army-drawing.json`](../../config/retail/buka-army-drawing.json) for
 all nine function controls and hashes. `Wince`'s separate boolean-materialization
 residue remains visible after the profile correction.
+
+
+## Melee retaliation direction controls
+
+The Buka melee routine passes both wide-creature retaliation direction choices
+through a signed byte before extending to its word parameter. The choices
+remain 0/5 and 2/3. Restoring the missing conversion in the first expression
+recovers the byte-to-word extension; the retail callee reads words for both
+arguments. See [the complete melee review](../../config/retail/buka-melee-attack.json).
+
+Do not infer full-register equality from a byte argument. Retail's `SETcc`
+leaves upper bits untouched, whereas the candidate's `NEG/SBB` idiom can define
+them. The per-bit dataflow review checks only the argument bits the retail
+callee actually consumes and rejects an artificial 32-bit contract here.
+Explicit signed-byte conversion and logical negation at the `SetGridMode`
+call both retain the non-retail materialization; neither control was kept.
+These observations do not authorize a new CPU profile or comparison mask.
