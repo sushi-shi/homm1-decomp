@@ -1,68 +1,14 @@
 # homm1-decomp-buka
 
-Porting **Heroes of Might and Magic** from Windows 95 1.2 to the 2003 Buka
-release, using ordinary C++ and preserving the original English alongside
-Russian catalogs. Work is on `decomp-buka-2003`, branched from 1.2 at
-`43cf275fee2f`. See [the Buka migration](docs/buka-2003.md) for documented
-behavior changes, evidence, validation and remaining work.
+C++ reconstruction of **Heroes of Might and Magic — Buka 2003**, using VC6 SP5.
+Original English is preserved alongside the Russian translation catalog.
 
-The active target is now the Buka `HEROES.EXE`, with VC6 SP5 and Russian
-catalog output. Audiere device, music, sample playback and the Smacker loop
-are implemented and compile. The candidate links without unresolved symbols,
-and all seven Russian resource payloads match retail. Strict comparison is
-not available yet: the Buka function boundaries are reviewed, but most
-source/data claims still need migration. The reviewed absolute-reference
-manifest is installed, and the delinker supports Buka’s `/FIXED` image and
-embedded import table. The adventure-manager migration now includes the
-Buka audio-volume and cleanup changes, with original English confirmation
-text preserved in the catalog. The command handler, its helpers and four
-adventure input handlers now have reviewed Buka claims. `Main` and the input
-handlers agree with retail CFGs and code sizes; eleven more dialogs use the
-catalog. Screen updates, full drawing, cloud lookup and cell drawing also have
-reviewed Buka claims and reference identities. Radar, locators and quick info
-are migrated too, including Buka’s mine-name table with original English
-preserved. Enemy-turn and new-turn panels now have reviewed Buka claims,
-including their animation state and calendar labels. The resource, kingdom and
-hero panels and resource-message producer are also migrated. Hero/town quick
-views and army-size names now have reviewed claims, CFGs, data and exception
-cleanup; their remaining stack-local differences are documented. Adventure
-redraw, hero/town context switching and locator scrolling are also migrated,
-including Buka’s removal of the demobilization log call. Puzzle/world views and
-spell dispatch now have reviewed claims, switch tables and exception cleanup;
-the two spell dialogs preserve English through the catalog. Control-panel and
-save-dialog claims are now migrated, including sample cleanup, boolean music
-source, localized option/help tables and the smaller Buka configuration. The
-removed slow-video mode is reflected in defaults and AI callers. Adventure
-options, Dimension Door input, incremental drawing and ambient sound are also
-reviewed, including corrected Close help and Buka’s distance-volume table.
-Travel spells, route helpers, scrolling, network handling and border copying
-now have reviewed Buka claims. Every explicit function annotation in
-`ADVMGR.cpp` has migrated; stack-local matching differences and missing
-library-header startup emissions remain documented. Five travel dialogs
-preserve original English, and Buka’s removed network-exit log is reflected
-in the source. The shared VC6 locale guard is now enrolled from compiled
-evidence. All thirteen combat AI functions now have reviewed Buka addresses,
-data dependencies and floating constants, with the measured `/G5` profile.
-Army initialization and resource loading are now reviewed, including separate
-English sprite stems and translated display names, plus the increased sample
-volume. Army drawing and walking are now migrated with the measured `/G5`
-profile and word-sized grid-update arguments; remaining stack placement and
-`Wince` boolean-conversion differences are documented. Combat messages now use
-CP1251 case helpers and catalog fragments with original English preserved.
-The hydra attack, directional wrapper and melee attack are migrated. The melee
-attack has complete CFG and register-dataflow correspondence, with its remaining
-byte differences documented; the ranged attack still needs full review.
-Movement, luck and damage routines now have complete instruction and CFG
-reviews. Luck messages use plural creature names; damage rules and all combat
-multipliers remain unchanged. Effect animation, spell cancellation, berserk
-actions and move/attack dispatch now have complete CFG and data reviews too.
-The effect-name tables preserve all original resource filenames. All eleven
-army-group functions now have reviewed Buka claims and the measured `/G5`
-profile; morale and damage rules remain unchanged. Strict delinking reaches
-the combat-manager constructor, stopping at its vtable (`0x8a414`); inherited
-data overlaps also remain. The old score ledger
-has been reset.
-Supply your own game executable and assets; they are not included here.
+**Matching: unavailable.** Strict delinking is incomplete, so no valid Buka
+comparison percentage has been generated. Sources compile and the candidate
+links; the port is still in progress.
+
+See [port changes and evidence](docs/buka-2003.md). Supply your own executable
+and game assets.
 
 ## Branches
 
