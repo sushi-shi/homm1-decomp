@@ -134,8 +134,7 @@ void RemoteMain(i32 gameMode) {
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(
                     directConnectMessage,
-                    "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' "
-                    "to abort."
+                    localization::Tr("network.direct.wait")
                 );
                 NormalDialog(
                     directConnectMessage,
@@ -346,7 +345,7 @@ i8 InitNetHost(void) {
     switch (gInitNetHostStatus) {
         case 0:
             if (static_cast<i16>(nb_init(0)) == 1) {
-                ShutDown("NETBIOS is not loaded.");
+                ShutDown(localization::Tr("network.netbios.missing"));
             } else {
                 gInitNetHostStatus++;
                 gRemoteOn = 1;
@@ -366,7 +365,7 @@ i8 InitNetHost(void) {
             if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 gInitNetHostStatus++;
             else
-                ShutDown("Network initialization failed");
+                ShutDown(localization::Tr("network.initialize.failed"));
             break;
         case 3:
             needName = nb_stat(0, 0);
@@ -375,7 +374,7 @@ i8 InitNetHost(void) {
             } else if (needName & NETBIOS_SESSION_ERROR) {
                 gNetNameIndex++;
                 if (gNetNameIndex > REMOTE_NET_NAME_LAST)
-                    ShutDown("Network initialization failed, all game slots used!");
+                    ShutDown(localization::Tr("network.initialize.slots_full"));
             }
             break;
     }
@@ -1015,7 +1014,7 @@ i32 TransmitRemoteData(
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
             NormalDialog(
-                "Error sending data.  Keep trying??",
+                localization::Tr("network.send.retry"),
                 NORMAL_DIALOG_TYPE_YES_NO,
                 -1,
                 -1,
@@ -1102,8 +1101,7 @@ void PollRemote(void) {
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
         NormalDialog(
-            "The other player's computer is not responding.  Do you wish to keep waiting for a "
-            "response?",
+            localization::Tr("network.peer.wait"),
             NORMAL_DIALOG_TYPE_YES_NO,
             -1,
             -1,
@@ -1229,7 +1227,7 @@ i32 TransmitAndWait(
     while (!complete) {
         if (KBTickCount() > start + 20000) {
             NormalDialog(
-                "Error sending data.  Keep trying??",
+                localization::Tr("network.send.retry"),
                 NORMAL_DIALOG_TYPE_YES_NO,
                 -1,
                 -1,

@@ -1524,7 +1524,7 @@ i32 advManager::GiveRandomArtifact(class hero* eventHero) {
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
 VA(0x00426f65, 0x9e)
-#line 1113 "F:\\h1w95src\\source\\EVENTS.CPP"
+#line 1113 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\EVENTS.CPP"
 i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
     i32 prevLevel;
     i32 unusedValue1;
@@ -1954,7 +1954,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             || gbThisNetHumanPlayer[destHero->m_owner]) {
                             sprintf(
                                 gText,
-                                "As you reach for the %s, it mysteriously disappears.",
+                                localization::Tr("event.artifact.disappears"),
                                 gArtifactNames[sourceHero->m_artifacts[j]]
                             );
                             NormalDialog(
@@ -3286,9 +3286,5 @@ void advManager::ReceiveHeroTownData(
     }
 }
 
-// EVENTS owns retail .data 0x00490040-0x004a07bb and .bss 0x004ca904. GiveExperience's
-// assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
-DATA(0x00490040)
-i32 gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
 DATA(0x004a6acc)
 i8 gEventMusicPlaying;

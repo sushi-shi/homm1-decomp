@@ -144,10 +144,8 @@ i32 AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
 void ReadPrefsFromFile(void);
-void ReadPrefsFromRegistry(void);
 void ReadPrefs(void);
 void WritePrefsToFile(void);
-void WritePrefsToRegistry(void);
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
 i32 AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine);
 // WNDPROC: LRESULT and LPARAM are the SDK's long.

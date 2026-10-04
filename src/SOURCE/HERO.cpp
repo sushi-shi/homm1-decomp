@@ -355,7 +355,7 @@ i8 hero::HeroView(i8 viewOnly) {
     gheroWin = heroWin;
     SetWinText(heroWin, WINDOW_TEXT_HERO);
     message.type = MESSAGE_WIDGET;
-    sprintf(gText, "%s the %s", m_name, gClassNames[m_heroClass]);
+    sprintf(gText, localization::Tr("hero.title"), m_name, gClassNames[m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = HERO_SCREEN_TITLE;
     message.text = gText;
@@ -1095,7 +1095,7 @@ i16 HeroHandler(struct tag_message& message) {
                         nextLevelExp = gHVHero->GetExperience(heroLevel + 1);
                         sprintf(
                             gText,
-                            "Level %d\n\nCurrent experience %d\nNext level %d",
+                            localization::Tr("hero.experience.details"),
                             heroLevel,
                             gHVHero->m_experience,
                             nextLevelExp

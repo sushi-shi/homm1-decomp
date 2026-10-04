@@ -120,9 +120,9 @@ i16 HandleCastSpell(struct tag_message& message) {
                     indexToCastOn = ARMY_HEX_INVALID;
                     gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
                     if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
-                        gpCombatManager->CombatMessage("Invalid Teleport Destination", 1);
+                        gpCombatManager->CombatMessage(localization::Tr("spell.teleport.invalid"), 1);
                     else
-                        gpCombatManager->CombatMessage("Select Spell Target", 1);
+                        gpCombatManager->CombatMessage(localization::Tr("spell.target.select"), 1);
                 } else {
                     indexToCastOn = hex;
                     gpMouseManager->SetPointer(gpCombatManager->m_selectedSpell);
@@ -142,7 +142,7 @@ i16 HandleCastSpell(struct tag_message& message) {
                         message.type = MESSAGE_MOUSE_MOVE;
                         gpMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
-                        gpCombatManager->CombatMessage("Select teleport destination.", 1);
+                        gpCombatManager->CombatMessage(localization::Tr("spell.teleport.select"), 1);
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                 }
@@ -320,9 +320,9 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                     || (targetArmy->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
                 sample = LoadPlaySample("RSBRYFZL.82M");
                 if (targetArmy->m_creatureType == CREATURE_DRAGON)
-                    CombatMessage("Dragons are not affected by magic!", 1);
+                    CombatMessage(localization::Tr("spell.dragon.immune"), 1);
                 else
-                    CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
+                    CombatMessage(localization::Tr("spell.dwarf.resisted"), 1);
                 WaitSample(sample);
                 goto done;
             }
@@ -400,7 +400,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
         case SPELL_LIGHTNING_BOLT:
             sprintf(
                 gText,
-                "The lightning bolt does %d damage to the %s.",
+                localization::Tr("spell.lightning.damage"),
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
                 CREATURE_DISPLAY_NAME(targetArmy->m_creatureType, targetArmy->m_quantity)
             );
@@ -428,14 +428,14 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             if (targetArmy->m_quantity - quantity > 1)
                 sprintf(
                     gText,
-                    "%d %s rise from the dead!",
+                    localization::Tr("spell.resurrect.plural"),
                     targetArmy->m_quantity - quantity,
                     gArmyNamesPlural[targetArmy->m_creatureType]
                 );
             else
                 sprintf(
                     gText,
-                    "%d %s rises from the dead!",
+                    localization::Tr("spell.resurrect.singular"),
                     targetArmy->m_quantity - quantity,
                     gArmyNames[targetArmy->m_creatureType]
                 );
@@ -729,7 +729,7 @@ void combatManager::Fireball(i8 targetHex) {
         }
     }
     if (hit) {
-        sprintf(gText, "The fireball does %d damage.", damage);
+        sprintf(gText, localization::Tr("spell.fireball.damage"), damage);
         CombatMessage(gText, 1);
     }
     curArmy->PowEffect(COMBAT_POW_RED_FIRE);
@@ -805,7 +805,7 @@ void combatManager::MeteorShower(i8 targetHex) {
         }
     }
     if (hit) {
-        sprintf(gText, "The meteor shower does %d damage.", damage);
+        sprintf(gText, localization::Tr("spell.meteor.damage"), damage);
         CombatMessage(gText, 1);
     }
     curArmy->PowEffect(COMBAT_POW_PHYSICAL);
@@ -871,7 +871,7 @@ void combatManager::ElementalStorm(void) {
         }
     }
     if (hit) {
-        sprintf(gText, "The elemental storm does %d damage.", damage);
+        sprintf(gText, localization::Tr("spell.storm.damage"), damage);
         CombatMessage(gText, 1);
     }
     curArmy->PowEffect(COMBAT_POW_ELECTRIC);

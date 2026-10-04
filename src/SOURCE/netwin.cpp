@@ -319,7 +319,7 @@ H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session) {
 // Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
 VA(0x00445712, 0x21c)
 void nb_thr_ctl(void)
-#line 414 "F:\\h1w95src\\source\\netlo.cpp"
+#line 414 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
 {
     NCB ncb;
     tag_Node* pkt;
@@ -409,7 +409,7 @@ void nb_add_name(void) {
 // OutputDebugString instead of ShutDown.
 VA(0x004459e3, 0x196)
 void __stdcall nb_add_name_done(NCB* ncb)
-#line 538 "F:\\h1w95src\\source\\netlo.cpp"
+#line 538 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
 {
     char buf[80];
     i32 j;
@@ -545,7 +545,7 @@ void __stdcall nb_call_done(NCB* ncb) {
 // Buka netwin.cpp:630-659.
 VA(0x00445fb1, 0x126)
 void nb_arm_recv(i32 session)
-#line 742 "F:\\h1w95src\\source\\netlo.cpp"
+#line 742 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
 {
     u8 result;
 

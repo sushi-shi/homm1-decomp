@@ -129,7 +129,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
 VA(0x0046b8b2, 0x6bd)
-#line 232 "F:\\H1w95src\\Base\\MOUSEMGR.CPP"
+#line 232 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(i16 frame) {
     DATA(0x004cfb44)
     static BOOL gInSetPointer = FALSE;

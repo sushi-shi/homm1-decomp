@@ -186,7 +186,7 @@ struct PaletteColor {
 };
 
 VA(0x0046fd8a, 0x39)
-#line 207 "F:\\H1w95src\\Base\\OLDASM.CPP"
+#line 207 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\OLDASM.CPP"
 i32 Random(i32 low, i32 high) {
 #line 208
     H1_ASSERT(high > low);

@@ -1,0 +1,1026 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Retail prologue installs owner-specific EH frame. VC6 registration stub, FuncInfo scalar fields, unwind state transitions, complete cleanup instructions and destructor identities all match. Compiler local ordinals map to owner-derived EH names.",
+  "references": [
+    {
+      "owner": "?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z",
+      "unit": "SOURCE/EVENTS",
+      "owner_rva": "0x2706d",
+      "site_rva": "0x27073",
+      "target_rva": "0x88bb8",
+      "symbol": "__ehreg$?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8bc60",
+      "states": 1,
+      "funcinfo_sha256": "8e43cfc63aa6f2f2cb8c4fa5efe59acf30f668669d5e76936a1add9f6f7fde77",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88bad",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88bb2",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "0c8f21525d137c6748ca91376f792b1fb0d858a6e9b4ee1a4623a69b656e6337"
+        }
+      ],
+      "object_sha256": "58f9266174609041383945af93343504c29d180e3298ae94633682c74bc7ac25"
+    },
+    {
+      "owner": "?NewGame@game@@QAECXZ",
+      "unit": "SOURCE/GAME",
+      "owner_rva": "0x2dec4",
+      "site_rva": "0x2deca",
+      "target_rva": "0x88bdb",
+      "symbol": "__ehreg$?NewGame@game@@QAECXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8bc88",
+      "states": 1,
+      "funcinfo_sha256": "19538506053e3ebb12c43d66988e6f695fe06f7656b3f8104432e22c7cc76064",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88bd0",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88bd5",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "c4ee63a7b4cdcc3f66354aff81c2c0994ce42bca8ebb7dae1e1fe3efc388ad0f"
+        }
+      ],
+      "object_sha256": "3b623a6e200672eaf089feb343d2267b0a55004835c04b8db5d1c835cd91aa14"
+    },
+    {
+      "owner": "?ViewArmy@game@@QAEXFFCFPAVtown@@CCCPAVhero@@PAVarmy@@PAVarmyGroup@@@Z",
+      "unit": "SOURCE/GAME",
+      "owner_rva": "0x3165b",
+      "site_rva": "0x31661",
+      "target_rva": "0x88c36",
+      "symbol": "__ehreg$?ViewArmy@game@@QAEXFFCFPAVtown@@CCCPAVhero@@PAVarmy@@PAVarmyGroup@@@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8bd08",
+      "states": 2,
+      "funcinfo_sha256": "ca83a9289bfe7adc4ed407ba4dbd3fc3b26119ed2e3e2ee193c6bf846e1ea6b1",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88c1a",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x88c22",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "9ce4551dac13e313b67faa391bbc73448f2ceef3201d92e06b5404f394742f3c"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x88c28",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x88c30",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "948585c1f19560e759feb82418082dbd040cf21f6ac0d46e5863b851d03a5e9d"
+        }
+      ],
+      "object_sha256": "3b623a6e200672eaf089feb343d2267b0a55004835c04b8db5d1c835cd91aa14"
+    },
+    {
+      "owner": "?GetMap@game@@SAXXZ",
+      "unit": "SOURCE/GAME",
+      "owner_rva": "0x38180",
+      "site_rva": "0x38186",
+      "target_rva": "0x88c74",
+      "symbol": "__ehreg$?GetMap@game@@SAXXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8bd60",
+      "states": 2,
+      "funcinfo_sha256": "36cbe548e3c5a313dd7237e1e01be13fbaa6489701d1ade12870bde30550f0f7",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88c58",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x88c60",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "11c366b534c4e221fdccd1cad5f885cd18d0bd3e001d67faa654000e7df4d220"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x88c66",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x88c6e",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "4accc9ee98b9cbf58b1cf388d148966cd4b34dc38329dd1e2190ea1f75bbb173"
+        }
+      ],
+      "object_sha256": "3b623a6e200672eaf089feb343d2267b0a55004835c04b8db5d1c835cd91aa14"
+    },
+    {
+      "owner": "?oldmain@@YAHXZ",
+      "unit": "SOURCE/KB",
+      "owner_rva": "0x3d0c4",
+      "site_rva": "0x3d0ca",
+      "target_rva": "0x88d9f",
+      "symbol": "__ehreg$?oldmain@@YAHXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8bec0",
+      "states": 1,
+      "funcinfo_sha256": "a246f58e36e600e8e63ece92cdac017731bcb99d72892d52fc61b6c6dc3a9112",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88d94",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88d99",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "36c859711e059c207ac19279f27636a82a1e8c54401fe6972435114c0269f0a0"
+        }
+      ],
+      "object_sha256": "ea0c630c9cae85648833e5ab6bccc1faa8ecf6f23a02a90d80df6b977207c923"
+    },
+    {
+      "owner": "?ShowCongrats@@YAXXZ",
+      "unit": "SOURCE/KB",
+      "owner_rva": "0x41977",
+      "site_rva": "0x4197d",
+      "target_rva": "0x88e43",
+      "symbol": "__ehreg$?ShowCongrats@@YAXXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8bf68",
+      "states": 2,
+      "funcinfo_sha256": "5f8ba982718114719dddc8d1964f92ade33173fdb67a506d3c3e9b82e6d901b4",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88e2d",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88e32",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "0529360ea65496274a5c285fa25b5da108f56d1cacfd8d9603fe924bcf0d4381"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x88e38",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88e3d",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "1c8a2ed6280e322f865bb90518ad8342c4967e189efbfedef230beb13cb28bc2"
+        }
+      ],
+      "object_sha256": "ea0c630c9cae85648833e5ab6bccc1faa8ecf6f23a02a90d80df6b977207c923"
+    },
+    {
+      "owner": "?StrategicValueOfPosition@philAI@@QAEHPAVhero@@FFCPAH@Z",
+      "unit": "SOURCE/PHILAI",
+      "owner_rva": "0x4c217",
+      "site_rva": "0x4c21d",
+      "target_rva": "0x88e7b",
+      "symbol": "__ehreg$?StrategicValueOfPosition@philAI@@QAEHPAVhero@@FFCPAH@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8bfc0",
+      "states": 1,
+      "funcinfo_sha256": "ff2c11964cd3397abf5d4ce22183f3d91a617307b44e017f87e5023e74d5a12e",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88e70",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88e75",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "157eee13b9e7f9a8d6c6f2b7e62b99bd6f5b06bc913ac2891254ff4ad0a3b9a7"
+        }
+      ],
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f"
+    },
+    {
+      "owner": "??0strip@@QAE@FFCFCPAVarmyGroup@@FH@Z",
+      "unit": "SOURCE/STRIP",
+      "owner_rva": "0x5c6b0",
+      "site_rva": "0x5c6b6",
+      "target_rva": "0x89001",
+      "symbol": "__ehreg$??0strip@@QAE@FFCFCPAVarmyGroup@@FH@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c210",
+      "states": 3,
+      "funcinfo_sha256": "6bf5de3e03fb721a3a0664449d186c4b7d70a079f567474ae84b62fb99de65ad",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x88fe0",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88fe5",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "7765f5fa80578eda79a5a88d6aa8242e5ca1b672111e1f8b9c9d2c91c32d1aa9"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x88feb",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88ff0",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "9aa3d694e5cdf1b44419818442ecc4d18a10671729b36b449f4f32ea4d17d798"
+        },
+        {
+          "state": 2,
+          "to_state": -1,
+          "cleanup_rva": "0x88ff6",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x88ffb",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "56e8c57145b715e5d2e0aad9ab27ecff18049f545283bad61107e53679e09fb3"
+        }
+      ],
+      "object_sha256": "0b76ea0bacc4944b83e79eccd7d335330065aef6755152eecc3102c521787c9b"
+    },
+    {
+      "owner": "??0bankBox@@QAE@FFPAVplayerData@@@Z",
+      "unit": "SOURCE/STRIP",
+      "owner_rva": "0x5ccdd",
+      "site_rva": "0x5cce3",
+      "target_rva": "0x89016",
+      "symbol": "__ehreg$??0bankBox@@QAE@FFPAVplayerData@@@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c248",
+      "states": 1,
+      "funcinfo_sha256": "eef2ed87b2c500cd5eacbb84f8df3e2470811953a99e0a2b1cda4cd0a402c4f2",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x8900b",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89010",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "9cbf407b6216b3849e8d56b07210b9feed517c3f895cc9c3f6cb9e4c0910b9a7"
+        }
+      ],
+      "object_sha256": "0b76ea0bacc4944b83e79eccd7d335330065aef6755152eecc3102c521787c9b"
+    },
+    {
+      "owner": "?SplitMons@swapManager@@QAEXXZ",
+      "unit": "SOURCE/SWAPMGR",
+      "owner_rva": "0x5e628",
+      "site_rva": "0x5e62e",
+      "target_rva": "0x89040",
+      "symbol": "__ehreg$?SplitMons@swapManager@@QAEXXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8c298",
+      "states": 1,
+      "funcinfo_sha256": "c1fb4d82dce037feafb966f041785c3e4aedb06b9b0cca63c7c3099b62f0d148",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89035",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x8903a",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "b1f5d26150ed3ec2aaefc988f468fa87c916e00f5477e7ca1377dbf41b21aff1"
+        }
+      ],
+      "object_sha256": "a326952866612c32e3075ec5fbf886c4d6fca9cc3f3c7548ec26c445a246fb42"
+    },
+    {
+      "owner": "??0townObject@@QAE@PAD@Z",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x5ee90",
+      "site_rva": "0x5ee96",
+      "target_rva": "0x8905b",
+      "symbol": "__ehreg$??0townObject@@QAE@PAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c2c0",
+      "states": 1,
+      "funcinfo_sha256": "a18ab3427f0c58aaa701b42ebc9e0a4df067b4049fbd7a59df5471f204a95d7c",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89050",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89055",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "cf8dbe06905dcb96bcac87e2874c41be24104c2f2926db3cd3cf88651a678634"
+        }
+      ],
+      "object_sha256": "28135fe75cfad705a7b9f7e0c12cecd60310d26a5c2ec525e08227d1a10cb9fa"
+    },
+    {
+      "owner": "?SplitArmy@townManager@@QAEXXZ",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x62053",
+      "site_rva": "0x62059",
+      "target_rva": "0x8911e",
+      "symbol": "__ehreg$?SplitArmy@townManager@@QAEXXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8c398",
+      "states": 1,
+      "funcinfo_sha256": "e27ec2b6610a8af2cd824136e7fae1f14767ac2f14e64f32c7bc66fd1e0bb5c6",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89113",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89118",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "f4214c11996445cc23d789587efb9318b4b4755b4430cd56bd5a089b90d4ef39"
+        }
+      ],
+      "object_sha256": "28135fe75cfad705a7b9f7e0c12cecd60310d26a5c2ec525e08227d1a10cb9fa"
+    },
+    {
+      "owner": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x62630",
+      "site_rva": "0x62636",
+      "target_rva": "0x89160",
+      "symbol": "__ehreg$?BuyBuild@townManager@@QAEFFCC@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c3c0",
+      "states": 4,
+      "funcinfo_sha256": "b757e688170991d0b28ac02cc9b0268826a623b146a7cdae42574501e82eaa4c",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89128",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x89130",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "fa19628e981e66ce9541630165358afbb201c10d3e94292c68895f73277fa843"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x89136",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x8913e",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "0e2b055541ced11af4eeee45a4e06bc70d9b4101f1f29aad358a04cc71a3380d"
+        },
+        {
+          "state": 2,
+          "to_state": -1,
+          "cleanup_rva": "0x89144",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x8914c",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "b38ac8d9ea99ca57b46e3506c296a5c5d8a6a03fb09c4e0678ef10be4b82e14d"
+        },
+        {
+          "state": 3,
+          "to_state": -1,
+          "cleanup_rva": "0x89152",
+          "size": 14,
+          "references": [
+            {
+              "site_rva": "0x8915a",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "1a59c3eb4f5acf71bbf07cf09761936c3d2f37eafb939256d2b0435a345286ea"
+        }
+      ],
+      "object_sha256": "28135fe75cfad705a7b9f7e0c12cecd60310d26a5c2ec525e08227d1a10cb9fa"
+    },
+    {
+      "owner": "?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@F@Z",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x64277",
+      "site_rva": "0x6427d",
+      "target_rva": "0x89175",
+      "symbol": "__ehreg$?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c400",
+      "states": 1,
+      "funcinfo_sha256": "4ec72eb9944933c0f2ce0dc6231e55b499de77eddfdc880481875a4dd774f0e9",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x8916a",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x8916f",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "246ab839be14da39845df0359bf885f34bb2bb96a859b819f56bf561edf7a689"
+        }
+      ],
+      "object_sha256": "28135fe75cfad705a7b9f7e0c12cecd60310d26a5c2ec525e08227d1a10cb9fa"
+    },
+    {
+      "owner": "?RecruitHero@townManager@@QAECC@Z",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x64a47",
+      "site_rva": "0x64a4d",
+      "target_rva": "0x891a0",
+      "symbol": "__ehreg$?RecruitHero@townManager@@QAECC@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c428",
+      "states": 3,
+      "funcinfo_sha256": "e97462600608c83a86d200a2f11eebdbd1d9e6fb72c75ecddb2ddc7f42500ba4",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x8917f",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89184",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "af7f239b2eeec2997d7c59f738f3e92d5c92a0eb7ffd6d3df3b3efb459cce4e4"
+        },
+        {
+          "state": 1,
+          "to_state": -1,
+          "cleanup_rva": "0x8918a",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x8918f",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "0cf7456f8befb6f2f0b1a3b934b7fc30eab23457fe02356ee4e9736cbb7c5d40"
+        },
+        {
+          "state": 2,
+          "to_state": -1,
+          "cleanup_rva": "0x89195",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x8919a",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "fac8c67e99aaa2749ef8d95fa8ace4888bdd59446709e0c922e036edde93cf7a"
+        }
+      ],
+      "object_sha256": "28135fe75cfad705a7b9f7e0c12cecd60310d26a5c2ec525e08227d1a10cb9fa"
+    },
+    {
+      "owner": "?ViewGeneral@combatManager@@QAECHHH@Z",
+      "unit": "SOURCE/VIEW",
+      "owner_rva": "0x65ef0",
+      "site_rva": "0x65ef6",
+      "target_rva": "0x891cb",
+      "symbol": "__ehreg$?ViewGeneral@combatManager@@QAECHHH@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c488",
+      "states": 1,
+      "funcinfo_sha256": "d4757e285e731553e06ff1f3f6d551a4e4fc5d768ae4ce720ffea5fa29031326",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x891c0",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x891c5",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "ddf825dadf2ab08868885d8af4bbe00bcb5a1d76f0e1b7731af1369da697f6dc"
+        }
+      ],
+      "object_sha256": "a9b494cfdb60cdc7fc7ac9f9de328ceb43234017b913d01d71a26b06d11346ca"
+    },
+    {
+      "owner": "?Open@heroWindowManager@@UAEFF@Z",
+      "unit": "BASE/WINMGR",
+      "owner_rva": "0x6a1eb",
+      "site_rva": "0x6a1f1",
+      "target_rva": "0x8923b",
+      "symbol": "__ehreg$?Open@heroWindowManager@@UAEFF@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c528",
+      "states": 1,
+      "funcinfo_sha256": "52eb3612b81e9aefa6d2958311e2574e6f19a9561b1de117d11abc7bca579521",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89230",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89235",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "6d818b754f587ee47bd12b5ddee5adf3bf971297d5797465546dd5f53330e946"
+        }
+      ],
+      "object_sha256": "ed57367a35c5acb06b90f83bedac1c8fe78ba952e68667d0af430a6f3e3de9a1"
+    },
+    {
+      "owner": "?Open@mouseManager@@UAEFF@Z",
+      "unit": "BASE/MOUSEMGR",
+      "owner_rva": "0x6b612",
+      "site_rva": "0x6b618",
+      "target_rva": "0x8927b",
+      "symbol": "__ehreg$?Open@mouseManager@@UAEFF@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c5a0",
+      "states": 1,
+      "funcinfo_sha256": "bea0b07dadb7ab54b8467d18c36a000245d197c1ae00b1c9d7918af35a00b9e8",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89270",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89275",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "7beb656697d44685c427b192478ad2576089300032fd63ac9fa7120ff291c806"
+        }
+      ],
+      "object_sha256": "494eb402d1d5a6a5013f4239d642b698c3182e493aca3e11cd07eb0c45bc6b64"
+    },
+    {
+      "owner": "?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z",
+      "unit": "BASE/RESMGR",
+      "owner_rva": "0x6c25b",
+      "site_rva": "0x6c261",
+      "target_rva": "0x8929b",
+      "symbol": "__ehreg$?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c5c8",
+      "states": 1,
+      "funcinfo_sha256": "271325092ee3b29e71c6d2a9d8cc3f4faa80ec3de69df199dbb5e13b8ebcc1ad",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89290",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89295",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "5e8ef5451e3944b5e2dd9388fc0aa0e15fc59bf3e8fbd7a99c520ff6b36a14da"
+        }
+      ],
+      "object_sha256": "4b491975a7e8bc258f49f06a363d871d21d28038fa65bfb079ae02f1b0a2f1f4"
+    },
+    {
+      "owner": "?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
+      "unit": "BASE/RESMGR",
+      "owner_rva": "0x6c31b",
+      "site_rva": "0x6c321",
+      "target_rva": "0x892b0",
+      "symbol": "__ehreg$?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c5f0",
+      "states": 1,
+      "funcinfo_sha256": "100032cb9d4151dc93c28147310e6b1ba127ebbda9d1bd386770e65c84df1896",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x892a5",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x892aa",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "9647f3af1784621fe730688ba39f8405ddc633c60064d30a975ed990fba93677"
+        }
+      ],
+      "object_sha256": "4b491975a7e8bc258f49f06a363d871d21d28038fa65bfb079ae02f1b0a2f1f4"
+    },
+    {
+      "owner": "?GetSample@resourceManager@@QAEPAVsample@@PAD@Z",
+      "unit": "BASE/RESMGR",
+      "owner_rva": "0x6c646",
+      "site_rva": "0x6c64c",
+      "target_rva": "0x89304",
+      "symbol": "__ehreg$?GetSample@resourceManager@@QAEPAVsample@@PAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c690",
+      "states": 1,
+      "funcinfo_sha256": "d485dcb5f8937964f8a5287baed47da347366b376b5f2f3cd458ccfee9818845",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x892f9",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x892fe",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "9bd037f8a8355756f746c816c7c2cf3d941355389943b27ad8dea751aa143d20"
+        }
+      ],
+      "object_sha256": "4b491975a7e8bc258f49f06a363d871d21d28038fa65bfb079ae02f1b0a2f1f4"
+    },
+    {
+      "owner": "?SaveBackground@heroWindow@@QAEFXZ",
+      "unit": "BASE/WINDOW",
+      "owner_rva": "0x6db7e",
+      "site_rva": "0x6db84",
+      "target_rva": "0x89388",
+      "symbol": "__ehreg$?SaveBackground@heroWindow@@QAEFXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8c720",
+      "states": 1,
+      "funcinfo_sha256": "9c2727e4003569b080d4acb94235bb6680a8146deab2b3d664449c5d4ab9e635",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x8937d",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x89382",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "5f3567240c4efe8f87e38c5a0922f093b59af9fa3d1ff9c2542a6f52741ed8ad"
+        }
+      ],
+      "object_sha256": "6a0f320fe99d4104690568215f6a6ed9cc47a28e9eea31b2f2faf054ebb3a312"
+    },
+    {
+      "owner": "??0icon@@QAE@F@Z",
+      "unit": "BASE/ICON",
+      "owner_rva": "0x70ea0",
+      "site_rva": "0x70ea6",
+      "target_rva": "0x893e9",
+      "symbol": "__ehreg$??0icon@@QAE@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c7c0",
+      "states": 1,
+      "funcinfo_sha256": "a61bc3b493efbe73867c2cc2fd2939eccab556e8d30af06276191bb7a791355c",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x893e0",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x893e4",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "e4ebb8db81c3eee6536ebe32b43690b489e910f4b6903d665926750cd5046f32"
+        }
+      ],
+      "object_sha256": "48e530af009d0e79a69f78df28a0ba36b3bbae3b67628f7411fe7240658e1fe7"
+    },
+    {
+      "owner": "??0font@@QAE@F@Z",
+      "unit": "BASE/FONT",
+      "owner_rva": "0x71dd0",
+      "site_rva": "0x71dd6",
+      "target_rva": "0x89439",
+      "symbol": "__ehreg$??0font@@QAE@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c838",
+      "states": 1,
+      "funcinfo_sha256": "1307162ef280fd29e88c76dd888cd5a4ba65af6b3c04109867e9fdf5776e35c1",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89430",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x89434",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "e554f4b8de85a8f6753e4043bc6a537754ab3b476dc3a02513fcc7a6d39fd719"
+        }
+      ],
+      "object_sha256": "705320c58d76ddefdad628bb4242399db5367a87a28bd70acfab3ba0c908b2e4"
+    },
+    {
+      "owner": "??0bitmap@@QAE@F@Z",
+      "unit": "BASE/BITMAP",
+      "owner_rva": "0x73230",
+      "site_rva": "0x73236",
+      "target_rva": "0x89469",
+      "symbol": "__ehreg$??0bitmap@@QAE@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c888",
+      "states": 1,
+      "funcinfo_sha256": "2237e5d3fe54b31b2f94f9b71d882cbb630400b01ceadc4e2282fc1d5c75137c",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89460",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x89464",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "8914a750227d21b2bcabed95c542529ac5fd4110f76ede21cb281595c42f7dac"
+        }
+      ],
+      "object_sha256": "2e555c37d3596b79defd708fb5b793b68d659d03a133d3804e8e793b72327243"
+    },
+    {
+      "owner": "??0palette@@QAE@F@Z",
+      "unit": "BASE/PALETTE",
+      "owner_rva": "0x7480a",
+      "site_rva": "0x74810",
+      "target_rva": "0x89489",
+      "symbol": "__ehreg$??0palette@@QAE@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c8b0",
+      "states": 1,
+      "funcinfo_sha256": "5c6e4baf4bdcf1926b54c52a0ac12da596f57da65668e23616b252a3710d1c61",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x89480",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x89484",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "3007955f87ccc154fd8d555633ccbeb304a39d6dc375a722b7cd4412371db0ea"
+        }
+      ],
+      "object_sha256": "03badbf152160f2a96ee0efbc0b9b4cfc9d5ce01deefc92106d2da8a28da8815"
+    },
+    {
+      "owner": "??0border@@QAE@FFFFFFFPAD@Z",
+      "unit": "BASE/BORDER",
+      "owner_rva": "0x7498e",
+      "site_rva": "0x74994",
+      "target_rva": "0x894a9",
+      "symbol": "__ehreg$??0border@@QAE@FFFFFFFPAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c8d8",
+      "states": 1,
+      "funcinfo_sha256": "db98cce6ae0f029059e878b67a6434369caadd942dea18842bcea3a2c97cd8b0",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x894a0",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x894a4",
+              "target_rva": "0x75478",
+              "symbol": "??1widget@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "0f2abfe3ca90cadccca342436a5152bffb1258d862eb429e3b9a87ee6a1537aa"
+        }
+      ],
+      "object_sha256": "a3c311eec3aefae6821a75e8a237f4962766aa168f5470d38d16ec20c956b14f"
+    },
+    {
+      "owner": "??0tileset@@QAE@F@Z",
+      "unit": "BASE/TILESET",
+      "owner_rva": "0x74ea0",
+      "site_rva": "0x74ea6",
+      "target_rva": "0x894d9",
+      "symbol": "__ehreg$??0tileset@@QAE@F@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c928",
+      "states": 1,
+      "funcinfo_sha256": "56b760e05b771e9a78ce6471c7c92a753f21fcd14f9f72fdfdf89ba737e9e9b7",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x894d0",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x894d4",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "5be2df5140b7a57df20c5d39d1b0a9e1277f4ad49737acb2aaf76c6133247385"
+        }
+      ],
+      "object_sha256": "e1068d3107187f89b5f083e7265981277c586aee169e26e04740d59a56f5c126"
+    },
+    {
+      "owner": "??0sample@@QAE@PAD@Z",
+      "unit": "BASE/SAMPLE",
+      "owner_rva": "0x75050",
+      "site_rva": "0x75056",
+      "target_rva": "0x894f9",
+      "symbol": "__ehreg$??0sample@@QAE@PAD@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c950",
+      "states": 1,
+      "funcinfo_sha256": "21f3f025ec9a646e868ac68d2e2870b163f1713cb0f20fa9e07a3eec9d6927f9",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x894f0",
+          "size": 9,
+          "references": [
+            {
+              "site_rva": "0x894f4",
+              "target_rva": "0x776cf",
+              "symbol": "??1resource@@UAE@XZ",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "d704cb9773de917acb4700a4ac3e4bffe2a985824788b9dcd54a5e6b8f6b1a45"
+        }
+      ],
+      "object_sha256": "1e9aa6496bc14dc0f84ecbedcae77fc67b4d25963683244c3391705307eb6ccf"
+    }
+  ]
+}

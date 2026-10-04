@@ -314,7 +314,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                     || m_heroes[SWAP_SIDE_LEFT]->m_artifacts[artIndex]
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
-                                    "This item can't be traded.",
+                                    localization::Tr("artifact.trade.forbidden"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     -1,
                                     -1,
@@ -383,7 +383,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                     || m_heroes[SWAP_SIDE_RIGHT]->m_artifacts[artIndex]
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
-                                    "This item can't be traded.",
+                                    localization::Tr("artifact.trade.forbidden"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     -1,
                                     -1,
@@ -796,7 +796,7 @@ void swapManager::SplitMons(void) {
     message.type = MESSAGE_WIDGET;
     sprintf(
         gText,
-        "Move how many %s troops from %s to %s?",
+        localization::Tr("army.transfer.prompt"),
         gArmyNames[selectedArmy->m_creatureTypes[m_selectedSlot]],
         m_heroes[m_selectedSide]->m_name,
         m_heroes[m_targetSide]->m_name

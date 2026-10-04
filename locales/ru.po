@@ -4975,3 +4975,231 @@ msgstr "Тяжелая"
 msgctxt "table.gDifficultyNames.3"
 msgid "Expert"
 msgstr "Эксперт"
+
+msgctxt "event.artifact.disappears"
+msgid "As you reach for the %s, it mysteriously disappears."
+msgstr "Это %s. Но едва вы добрались до артефакта, как он таинственным образом исчез..."
+
+msgctxt "save.name.autosave"
+msgid "AUTOSAVE"
+msgstr "АВТОСОХРАНЕНИЕ"
+
+msgctxt "save.name.player_exit"
+msgid "PLYREXIT"
+msgstr "ИГРОК ВЫШЕЛ"
+
+msgctxt "save.name.new_game"
+msgid "NEWGAME"
+msgstr "НОВАЯ ИГРА"
+
+msgctxt "game.opponent.required"
+msgid "A game requires at least one opponent."
+msgstr "Игра требует как минимум одного оппонента."
+
+msgctxt "spell.none.available"
+msgid "No spells to cast."
+msgstr "Нет заклинаний."
+
+msgctxt "army.dismiss.confirm"
+msgid "Are you sure you want to dismiss this army?"
+msgstr "Вы хотите распустить этот отряд?"
+
+msgctxt "network.send.title"
+msgid "Sending Data"
+msgstr "Пересылка данных"
+
+msgctxt "network.receive.title"
+msgid "Receiving Data"
+msgstr "Получение данных"
+
+msgctxt "hero.title"
+msgid "%s the %s"
+msgstr "%s %s"
+
+msgctxt "hero.experience.details"
+msgid "Level %d\n\nCurrent experience %d\nNext level %d"
+msgstr "%d уровень\n\n%d оч. опыта\nСледующий уровень: %d"
+
+msgctxt "startup.initialize.failed"
+msgid "Initialization failed!"
+msgstr "Не удалось инициализировать игру!"
+
+msgctxt "startup.loading.game"
+msgid "Loading Heroes of Might and Magic for Windows 95 (version 1.2)"
+msgstr "Загрузка Героев Меча и Магии (версия 1.1)"
+
+msgctxt "network.setup.wait"
+msgid "Waiting for other remote player to set up game."
+msgstr "Ожидаю других игроков для установки игры."
+
+msgctxt "startup.manager.failed"
+msgid "Can't add manager!"
+msgstr "Не могу добавить менеджера!"
+
+msgctxt "campaign.victory"
+msgid "My heroes, our foes have been scattered, their castles broken and laid bare.  The great campaign is now complete, and I stand before you as the undisputed High King!\n\nOur victory was achieved in %d days!"
+msgstr "Мои герои! Наши враги были разбиты, а их замки преданы разорению. Великий поход окончен, и я предстаю перед вами как всеми признанный Великий Король!\n\nМы достигли  победы за %d дней!"
+
+msgctxt "campaign.replay.confirm"
+msgid "Would you like to replay this scenario?"
+msgstr "Вы хотите переиграть этот сценарий?"
+
+msgctxt "save.name.campaign"
+msgid "SCENWN"
+msgstr "НОВЫЙ СЦЕНАРИЙ"
+
+msgctxt "campaign.next.confirm"
+msgid "Your campaign has been saved as %s.  Would you like to start the next scenario?"
+msgstr "Ваша кампания была сохранена как %s. Желаете начать новый сценарий?"
+
+msgctxt "dialog.income.per_day"
+msgid "%d/day"
+msgstr "%d/день"
+
+msgctxt "dialog.choice.or"
+msgid "or"
+msgstr "или"
+
+msgctxt "network.player.eliminated"
+msgid "You have been eliminated from the game!!!"
+msgstr "Вы были исключены из игры!"
+
+msgctxt "player.vanquished"
+msgid "%s player has been vanquished!"
+msgstr "%s игрок разгромлен!"
+
+msgctxt "network.player.exit.computer"
+msgid "Player %d is exiting the game.  The current game has been saved as 'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for player %d?"
+msgstr "Игрок %d покинул игру. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Вы желаете продолжить игру с компьютерным игроком, занявшим место выбывшего %d игрока?"
+
+msgctxt "score.name.prompt"
+msgid "Please enter your name for the high score list."
+msgstr "Наберите ваше имя русскими буквами."
+
+msgctxt "network.incoming.close"
+msgid "[ Incoming data, must exit... ]"
+msgstr "[ Входящая информация, необходимо закрыть... ]"
+
+msgctxt "file.open.failed"
+msgid "Error opening file %s!"
+msgstr "Ошибка открытия файла %s!"
+
+msgctxt "network.direct.wait"
+msgid "Waiting for other computer to log in to direct connection.\n\nPress 'CANCEL' to abort."
+msgstr "Ожидание другого компьютера для прямого соединения.\n\nНажмите 'ОТМЕНА', чтобы отменить действие."
+
+msgctxt "network.send.retry"
+msgid "Error sending data.  Keep trying??"
+msgstr "Ошибка отправки данных. Продолжать?"
+
+msgctxt "network.peer.wait"
+msgid "The other player's computer is not responding.  Do you wish to keep waiting for a response?"
+msgstr "Компьютер другого игрока не отвечает. Желаете продолжить ожидание? "
+
+msgctxt "file.save.label"
+msgid "File to Save:"
+msgstr "Сохранить:"
+
+msgctxt "file.load.label"
+msgid "File to Load:"
+msgstr "Загрузить:"
+
+msgctxt "file.selection.required"
+msgid "Please make a selection from the list, or press cancel."
+msgstr "Выберите файл из списка или отмените действия."
+
+msgctxt "file.humans.minimum"
+msgid "The game you have chosen only has slots for %d human(s).  You need one with room for at least %d humans."
+msgstr "Выбранная вами игра позволяет играть только %d игрокам. Вам нужна игра как минимум для %d человек."
+
+msgctxt "file.humans.computer"
+msgid "The game you have chosen was being played with %d humans. Is it OK if the computer takes the place of the last %d human(s)?"
+msgstr "Выбранная игра предназначена для %d человек. Разрешается ли занять оставшиеся %d мест компьютеру? "
+
+msgctxt "file.players.label"
+msgid "Players"
+msgstr "Игроки"
+
+msgctxt "spell.teleport.invalid"
+msgid "Invalid Teleport Destination"
+msgstr "Ошибочная точка телепортации"
+
+msgctxt "spell.target.select"
+msgid "Select Spell Target"
+msgstr "Выберите цель заклинания"
+
+msgctxt "spell.teleport.select"
+msgid "Select teleport destination."
+msgstr "Выберите место назначения."
+
+msgctxt "spell.dragon.immune"
+msgid "Dragons are not affected by magic!"
+msgstr "Магия не действует на драконов!"
+
+msgctxt "spell.dwarf.resisted"
+msgid "The Dwarves' magic resistance canceled the spell!"
+msgstr "Сопротивляемость магии гномов отразила заклинание!"
+
+msgctxt "spell.lightning.damage"
+msgid "The lightning bolt does %d damage to the %s."
+msgstr "Молния наносит %d ед. урона отряду %s."
+
+msgctxt "spell.resurrect.plural"
+msgid "%d %s rise from the dead!"
+msgstr "%d %s были воскрешены из мертвых!"
+
+msgctxt "spell.resurrect.singular"
+msgid "%d %s rises from the dead!"
+msgstr "%d %s был воскрешен из мертвых!"
+
+msgctxt "spell.fireball.damage"
+msgid "The fireball does %d damage."
+msgstr "Огненный шар наносит %d ед. урона."
+
+msgctxt "spell.meteor.damage"
+msgid "The meteor shower does %d damage."
+msgstr "Звездопад наносит %d ед. урона."
+
+msgctxt "spell.storm.damage"
+msgid "The elemental storm does %d damage."
+msgstr "Шторм наносить %d ед. урона."
+
+msgctxt "artifact.trade.forbidden"
+msgid "This item can't be traded."
+msgstr "Нельзя передать этот предмет."
+
+msgctxt "army.transfer.prompt"
+msgid "Move how many %s troops from %s to %s?"
+msgstr "Перенести %s воинов от %s к %s?"
+
+msgctxt "town.screen.title"
+msgid "Town Screen"
+msgstr "Экран города"
+
+msgctxt "town.spellbook.no_space"
+msgid "You must purchase a spell book to use the mage guild, but you currently have no room for a spell book.  Try giving one of your artifacts to another hero."
+msgstr "Вам следует купить Волшебную книгу, чтобы воспользоваться Гильдией магов, но сейчас у вас нет места для книги. Передайте другому герою один из артефактов."
+
+msgctxt "town.boat.unavailable"
+msgid "Cannot build another boat."
+msgstr "Нельзя построить еще один корабль."
+
+msgctxt "town.build.requires"
+msgid "\n\nRequires:"
+msgstr "\nНужно:"
+
+msgctxt "town.well.empty"
+msgid "Available:\nNONE\nGrowth Rate:\nN/A"
+msgstr "Доступно:\nНЕТ\nПрирост:\nН/Д"
+
+msgctxt "town.well.growth"
+msgid "Available:\n%d\nGrowth Rate:\n%d/week"
+msgstr "Доступно:\n%d\nПрирост:\n%d/нед."
+
+msgctxt "town.mage.spells"
+msgid "The above spells are available here."
+msgstr "Указанные заклинания доступны здесь."
+
+msgctxt "file.aggregate.open_failed"
+msgid "Can't open file: %s"
+msgstr "Не могу открыть файл: %s"

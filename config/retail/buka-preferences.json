@@ -1,0 +1,1416 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "path": "src/BASE/Misc.cpp",
+    "scope": "Shared Buka registry path, prefixed persistent value names, create-on-read and KEY_ALL_ACCESS write access corroborate direct HoMM1 retail instructions."
+  },
+  "method": "Reconstruct the two complete public preference bodies from retail instructions. Buka has no separate registry helper bodies; read creates the Platinum key and uses HMM1-prefixed values, copies volume temporaries into gConfig and applies audio settings. Write updates the menu, opens with full access and writes volume snapshots. Keep all retail failure branches and buffer-length arguments.",
+  "functions": [
+    {
+      "name": "?ReadPrefs@@YAXXZ",
+      "rva": "0x43f8f",
+      "size": 1128,
+      "unit": "SOURCE/kbwin"
+    },
+    {
+      "name": "?WritePrefs@@YAXXZ",
+      "rva": "0x443f7",
+      "size": 779,
+      "unit": "SOURCE/kbwin"
+    }
+  ],
+  "persistent_value_names": {
+    "Music Volume": "HMM1 MusicVolume",
+    "Sound Volume": "HMM1 FXVolume",
+    "Walk Speed": "HMM1 WalkSpeed",
+    "Show Route": "HMM1 ShowRoute",
+    "Blackout Computer": "HMM1 BlackoutComputer",
+    "Sound Quality": "HMM1 SoundQuality",
+    "Direct Connect Com Port": "HMM1 DirectConnectComPort",
+    "Direct Connect Baud Rate": "HMM1 DirectConnectBaudRate",
+    "Modem Com Port": "HMM1 ModemComPort",
+    "Modem Baud Rate": "HMM1 ModemBaudRate",
+    "Modem Init String": "HMM1 ModemInitString",
+    "Autosave": "HMM1 UseAutosave",
+    "First Map Offset": "HMM1 FirstMapOffset",
+    "Current Map Offset": "HMM1 CurrentMapOffset",
+    "Main Game Show Menu": "HMM1 GameShowMenu",
+    "Main Game X": "HMM1 GameWindowXLeft",
+    "Main Game Y": "HMM1 GameWindowYTop",
+    "Main Game Width": "HMM1 GameWindowWidth",
+    "Main Game Height": "HMM1 GameWindowHeight",
+    "Main Game Full Screen": "HMM1 GameFullScreen",
+    "Editor Show Menu": "HMM1 EditorShowMenu",
+    "Editor X": "HMM1 EditorWindowXLeft",
+    "Editor Y": "HMM1 EditorWindowYTop",
+    "Editor Width": "HMM1 EditorWindowWidth",
+    "Editor Height": "HMM1 EditorWindowHeight",
+    "Editor Full Screen": "HMM1 EditorFullScreen",
+    "CDDrive": "HMM1 CDDrive"
+  },
+  "data": [
+    {
+      "name": "?gcRegAppPath@@3PADA",
+      "rva": "0xa7a10",
+      "old_rva": "0xa8150",
+      "size": 352,
+      "neighbor_rva": "0xa7b70",
+      "payload_sha256": "627f6149015f853f26db2f3dffba1b7c30b3b74b87c5cfb9f346c1616e3636d0",
+      "object_sha256": "ea0c630c9cae85648833e5ab6bccc1faa8ecf6f23a02a90d80df6b977207c923"
+    }
+  ],
+  "known_retail_quirks": [
+    "ModemInitString is stored as REG_SZ with size4, as in retail.",
+    "The initial music query tests whether defaults are needed; the next query reads the actual music-volume temporary.",
+    "The byte-count variable is reused for successive registry reads, including between AppPath and CDDrive."
+  ],
+  "compiled_control": {
+    "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+    "object_sha256": "cedff07e2e2b8d25f0b91e7d6e897e5d938792eb033a483366c4bb83f35d9767",
+    "source_sha256": "119c8d29e2eebd45a395e0a3a8930851f14dcc55ff791f36cc817e6a3146d119",
+    "method": "Complete ordered instruction operands, registers, access widths, branch destinations, public identity/addend pairs and packed switch targets checked. Consistent injective local-slot mapping; comparison remains strict.",
+    "functions": [
+      {
+        "unit": "SOURCE/kbwin",
+        "name": "?ReadPrefs@@YAXXZ",
+        "rva": "0x43f8f",
+        "size": 1128,
+        "object_size": 1128,
+        "object_code_size": 1128,
+        "retail_code_size": 1128,
+        "instruction_count": 362,
+        "references": [
+          {
+            "symbol": "_strcpy",
+            "site_rva": "0x43fa2",
+            "target_rva": "0x77c60",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "__imp__RegCreateKeyA@12",
+            "site_rva": "0x43fbf",
+            "target_rva": "0x8a008",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x43ff0",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44000",
+            "target_rva": "0xa9428",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "_memset",
+            "site_rva": "0x44005",
+            "target_rva": "0x784e0",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?SetGameDefaults@@YAXXZ",
+            "site_rva": "0x4400d",
+            "target_rva": "0x43e4a",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "__imp__RegCloseKey@4",
+            "site_rva": "0x44017",
+            "target_rva": "0x8a010",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?WritePrefs@@YAXXZ",
+            "site_rva": "0x4401c",
+            "target_rva": "0x443f7",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4403e",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4405b",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44064",
+            "target_rva": "0xa942c",
+            "addend": "0x4",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4406d",
+            "target_rva": "0xa9430",
+            "addend": "0x8",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44076",
+            "target_rva": "0xa9428",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4408b",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44094",
+            "target_rva": "0xa9438",
+            "addend": "0x10",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x440a9",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x440b2",
+            "target_rva": "0xa943c",
+            "addend": "0x14",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x440c7",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x440d0",
+            "target_rva": "0xa94dc",
+            "addend": "0xb4",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x440e5",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x440ee",
+            "target_rva": "0xa94e4",
+            "addend": "0xbc",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44103",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4410c",
+            "target_rva": "0xa94ec",
+            "addend": "0xc4",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44121",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4412a",
+            "target_rva": "0xa94e0",
+            "addend": "0xb8",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4413f",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44148",
+            "target_rva": "0xa94e8",
+            "addend": "0xc0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4415d",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4416d",
+            "target_rva": "0xa94f0",
+            "addend": "0xc8",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44182",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44192",
+            "target_rva": "0xa9434",
+            "addend": "0xc",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x441a7",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x441b0",
+            "target_rva": "0xa9470",
+            "addend": "0x48",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x441c5",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x441ce",
+            "target_rva": "0xa9474",
+            "addend": "0x4c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x441e3",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x441ec",
+            "target_rva": "0xa9440",
+            "addend": "0x18",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44201",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4420a",
+            "target_rva": "0xa9444",
+            "addend": "0x1c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4421f",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44228",
+            "target_rva": "0xa9448",
+            "addend": "0x20",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4423d",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44246",
+            "target_rva": "0xa944c",
+            "addend": "0x24",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4425b",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44264",
+            "target_rva": "0xa9450",
+            "addend": "0x28",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44279",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44282",
+            "target_rva": "0xa9454",
+            "addend": "0x2c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44297",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x442a0",
+            "target_rva": "0xa9458",
+            "addend": "0x30",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x442b5",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x442be",
+            "target_rva": "0xa945c",
+            "addend": "0x34",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x442d3",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x442dc",
+            "target_rva": "0xa9460",
+            "addend": "0x38",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x442f1",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x442fa",
+            "target_rva": "0xa9464",
+            "addend": "0x3c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4430f",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44318",
+            "target_rva": "0xa9468",
+            "addend": "0x40",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4432d",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44336",
+            "target_rva": "0xa946c",
+            "addend": "0x44",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x4434b",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gcRegAppPath@@3PADA",
+            "site_rva": "0x4435b",
+            "target_rva": "0xa7a10",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x44370",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gcRegAppPath@@3PADA",
+            "site_rva": "0x4437e",
+            "target_rva": "0xa7a10",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "_strcpy",
+            "site_rva": "0x44383",
+            "target_rva": "0x77c60",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?gcRegCDRomPath@@3PADA",
+            "site_rva": "0x4438f",
+            "target_rva": "0xa973c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegQueryValueExA@24",
+            "site_rva": "0x443a4",
+            "target_rva": "0x8a00c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gcRegCDRomPath@@3PADA",
+            "site_rva": "0x443b2",
+            "target_rva": "0xa973c",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "_strcpy",
+            "site_rva": "0x443b7",
+            "target_rva": "0x77c60",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "__imp__RegCloseKey@4",
+            "site_rva": "0x443c4",
+            "target_rva": "0x8a010",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x443ca",
+            "target_rva": "0xa942c",
+            "addend": "0x4",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x443d1",
+            "target_rva": "0xa9430",
+            "addend": "0x8",
+            "kind": 6
+          },
+          {
+            "symbol": "?SetVolumes@@YAXHH@Z",
+            "site_rva": "0x443d7",
+            "target_rva": "0x69dd5",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x443e2",
+            "target_rva": "0xa94dc",
+            "addend": "0xb4",
+            "kind": 6
+          },
+          {
+            "symbol": "?SetMusicSource@@YAXH@Z",
+            "site_rva": "0x443ec",
+            "target_rva": "0x698fb",
+            "addend": "0x0",
+            "kind": 20
+          }
+        ],
+        "internal_targets": [
+          {
+            "literal_operand": "0x43f99",
+            "literal_target": "0x9e7c0",
+            "size": 59,
+            "payload_sha256": "4601b0a295667dda9fc97b3c5d72f7b488fead73f0fc3f91094e1917e364aea7"
+          },
+          {
+            "literal_operand": "0x43fe6",
+            "literal_target": "0x9e7fc",
+            "size": 17,
+            "payload_sha256": "7642c40a28bb24c85d7892e0046b2bc2ab2517322d3d0dddec89c296d5a7a14e"
+          },
+          {
+            "literal_operand": "0x44034",
+            "literal_target": "0x9e810",
+            "size": 17,
+            "payload_sha256": "7642c40a28bb24c85d7892e0046b2bc2ab2517322d3d0dddec89c296d5a7a14e"
+          },
+          {
+            "literal_operand": "0x44051",
+            "literal_target": "0x9e824",
+            "size": 14,
+            "payload_sha256": "9efc4606dab314f5e64cac4d8424c2fc60b9da78256105dfac50e6e2d03fd395"
+          },
+          {
+            "literal_operand": "0x44081",
+            "literal_target": "0x9e834",
+            "size": 15,
+            "payload_sha256": "56120d33448530e99184e22325e9ffbe7f890b842e42c4f567a5532de4edce77"
+          },
+          {
+            "literal_operand": "0x4409f",
+            "literal_target": "0x9e844",
+            "size": 15,
+            "payload_sha256": "96298e5f068012d13f04ca4d37428971c726cf82a30f08460d95a84a4df12114"
+          },
+          {
+            "literal_operand": "0x440bd",
+            "literal_target": "0x9e854",
+            "size": 22,
+            "payload_sha256": "afa1a39763936694813311328994880593da4d0063328aee63db576cbba85d81"
+          },
+          {
+            "literal_operand": "0x440db",
+            "literal_target": "0x9e86c",
+            "size": 18,
+            "payload_sha256": "3b4a36931e5ff28f58be0c3dd76e0d93d4fb710ee43ad8249bbb66888c79afb5"
+          },
+          {
+            "literal_operand": "0x440f9",
+            "literal_target": "0x9e880",
+            "size": 26,
+            "payload_sha256": "5ecef42e201e7f61353f18ee77dee88c7d9682a4f86b61f42a06b92925f476d8"
+          },
+          {
+            "literal_operand": "0x44117",
+            "literal_target": "0x9e89c",
+            "size": 27,
+            "payload_sha256": "0bb17f504744df9273b1c25b19877a5031c946d1fd585144587dc66b96b27fbe"
+          },
+          {
+            "literal_operand": "0x44135",
+            "literal_target": "0x9e8b8",
+            "size": 18,
+            "payload_sha256": "5f72641cf13edc2979dc99947963f816f8c3f7fd7976d9f9aac919ae3dc87cd8"
+          },
+          {
+            "literal_operand": "0x44153",
+            "literal_target": "0x9e8cc",
+            "size": 19,
+            "payload_sha256": "b884d6a8ecc19261d2357c001cdb4df71bff6a66d143263433f25155a0d4d7a3"
+          },
+          {
+            "literal_operand": "0x44178",
+            "literal_target": "0x9e8e0",
+            "size": 21,
+            "payload_sha256": "677ef14f5f0dfb3c0a6b46c11d096e7b82f0a14201b3cdd6d24ac9becab652d9"
+          },
+          {
+            "literal_operand": "0x4419d",
+            "literal_target": "0x9e8f8",
+            "size": 17,
+            "payload_sha256": "aa468fe25f103c4bc8fafbfdc9a7ef7b169b20752c2deefb33df5b0e735b1f86"
+          },
+          {
+            "literal_operand": "0x441bb",
+            "literal_target": "0x9e90c",
+            "size": 20,
+            "payload_sha256": "eb36c00c1854cea0a2f33f60be217e14cf175b078199a98d1ee47ec6799fd665"
+          },
+          {
+            "literal_operand": "0x441d9",
+            "literal_target": "0x9e920",
+            "size": 22,
+            "payload_sha256": "e501803b9ad3ef987d98730793226732590a440f02dafd824abc117cdcb6d49f"
+          },
+          {
+            "literal_operand": "0x441f7",
+            "literal_target": "0x9e938",
+            "size": 18,
+            "payload_sha256": "d3a6dcc011f5feb7057c0fc8e386d40bee3ec9a66878b55a73fb602f5333c206"
+          },
+          {
+            "literal_operand": "0x44215",
+            "literal_target": "0x9e94c",
+            "size": 21,
+            "payload_sha256": "783546a5896b7b8d80b77a479b866f23856276dee1047b2545bc1243265232f7"
+          },
+          {
+            "literal_operand": "0x44233",
+            "literal_target": "0x9e964",
+            "size": 20,
+            "payload_sha256": "0984916f907b79469839e4a4290be86915409d0c504e485d1dd964534b02e7d8"
+          },
+          {
+            "literal_operand": "0x44251",
+            "literal_target": "0x9e978",
+            "size": 21,
+            "payload_sha256": "8d49c17291885eb389420478dcf49d34017d01d488ce86c2f180c8582f8c61ed"
+          },
+          {
+            "literal_operand": "0x4426f",
+            "literal_target": "0x9e990",
+            "size": 22,
+            "payload_sha256": "9efee2894eb0451321df6923182745f1a19b95cfd240959467e473796b2c3b84"
+          },
+          {
+            "literal_operand": "0x4428d",
+            "literal_target": "0x9e9a8",
+            "size": 20,
+            "payload_sha256": "dba463b2630dbb85fdd9f5e9edd965a89c09e21bb8748007025d16ea6ad48238"
+          },
+          {
+            "literal_operand": "0x442ab",
+            "literal_target": "0x9e9bc",
+            "size": 20,
+            "payload_sha256": "0b4a490464c2c76dea89286ae98d312a52650401022fa5c923a10720ef1aa495"
+          },
+          {
+            "literal_operand": "0x442c9",
+            "literal_target": "0x9e9d0",
+            "size": 23,
+            "payload_sha256": "934cae40238b2d6325352e1b7b647cc2bbc6348010f973ff6d12dc4bd61b3066"
+          },
+          {
+            "literal_operand": "0x442e7",
+            "literal_target": "0x9e9e8",
+            "size": 22,
+            "payload_sha256": "99bb80a2f3456002eb002cc6ef6ef3affe155afccef17fc67d018e3c2e2f4b71"
+          },
+          {
+            "literal_operand": "0x44305",
+            "literal_target": "0x9ea00",
+            "size": 23,
+            "payload_sha256": "da6e87c127a7e1b88384443dfaa49b4732e1befd12ec27612c20840b514e104d"
+          },
+          {
+            "literal_operand": "0x44323",
+            "literal_target": "0x9ea18",
+            "size": 24,
+            "payload_sha256": "f953ad56db2abe00dee3b2e61b281baadc34b4f08a374a76f651c3e71888a9e6"
+          },
+          {
+            "literal_operand": "0x44341",
+            "literal_target": "0x9ea30",
+            "size": 22,
+            "payload_sha256": "2f58d839baf034f7f316ae4b1d31c10267e7cce677e3c0e9dce883cb2179c6e8"
+          },
+          {
+            "literal_operand": "0x44366",
+            "literal_target": "0x9ea48",
+            "size": 8,
+            "payload_sha256": "9fcc23198c723246d2d0bc35c3a4e22dba80915c0541b0da28cd12d1c2da5415"
+          },
+          {
+            "literal_operand": "0x44379",
+            "literal_target": "0xa9e5c",
+            "size": 1,
+            "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+          },
+          {
+            "literal_operand": "0x4439a",
+            "literal_target": "0x9ea50",
+            "size": 13,
+            "payload_sha256": "88a25484cb8c845663f366285c0c1ce9a0d51fac6814449da249010800c65ab4"
+          },
+          {
+            "literal_operand": "0x443ad",
+            "literal_target": "0xa9e60",
+            "size": 1,
+            "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+          }
+        ],
+        "branches": [
+          {
+            "operand_rva": "0x43fca",
+            "target": "0x443f3"
+          },
+          {
+            "operand_rva": "0x43ff6",
+            "target": "0x44025"
+          },
+          {
+            "operand_rva": "0x44020",
+            "target": "0x443f3"
+          },
+          {
+            "operand_rva": "0x44376",
+            "target": "0x4438a"
+          },
+          {
+            "operand_rva": "0x443aa",
+            "target": "0x443be"
+          }
+        ],
+        "local_slot_map": {
+          "-128": -108,
+          "-24": -112,
+          "-4": -8,
+          "-8": -116,
+          "-28": -124,
+          "-20": -4,
+          "-16": -120,
+          "-12": -128
+        },
+        "retail_body_sha256": "d14f9c2d3ac87a39f48245ad096795e1f2574b7b278f1a8837c95af3a2fcb1de"
+      },
+      {
+        "unit": "SOURCE/kbwin",
+        "name": "?WritePrefs@@YAXXZ",
+        "rva": "0x443f7",
+        "size": 779,
+        "object_size": 779,
+        "object_code_size": 779,
+        "retail_code_size": 779,
+        "instruction_count": 241,
+        "references": [
+          {
+            "symbol": "?UpdateSystemOptionsMenu@@YAXXZ",
+            "site_rva": "0x443fe",
+            "target_rva": "0x428ae",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "_strcpy",
+            "site_rva": "0x4440c",
+            "target_rva": "0x77c60",
+            "addend": "0x0",
+            "kind": 20
+          },
+          {
+            "symbol": "__imp__RegOpenKeyExA@20",
+            "site_rva": "0x44430",
+            "target_rva": "0x8a000",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44442",
+            "target_rva": "0xa9430",
+            "addend": "0x8",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4444b",
+            "target_rva": "0xa942c",
+            "addend": "0x4",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44467",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44480",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44487",
+            "target_rva": "0xa9428",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4449a",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x444a1",
+            "target_rva": "0xa9438",
+            "addend": "0x10",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x444b4",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x444bb",
+            "target_rva": "0xa943c",
+            "addend": "0x14",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x444ce",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x444d5",
+            "target_rva": "0xa94dc",
+            "addend": "0xb4",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x444e8",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x444ef",
+            "target_rva": "0xa94e4",
+            "addend": "0xbc",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44502",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44509",
+            "target_rva": "0xa94ec",
+            "addend": "0xc4",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4451c",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44523",
+            "target_rva": "0xa94e0",
+            "addend": "0xb8",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44536",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4453d",
+            "target_rva": "0xa94e8",
+            "addend": "0xc0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44550",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44557",
+            "target_rva": "0xa94f0",
+            "addend": "0xc8",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4456a",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44571",
+            "target_rva": "0xa9434",
+            "addend": "0xc",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44584",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4458b",
+            "target_rva": "0xa9470",
+            "addend": "0x48",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4459e",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x445a5",
+            "target_rva": "0xa9474",
+            "addend": "0x4c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x445b8",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x445bf",
+            "target_rva": "0xa9440",
+            "addend": "0x18",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x445d2",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x445d9",
+            "target_rva": "0xa9444",
+            "addend": "0x1c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x445ec",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x445f3",
+            "target_rva": "0xa9448",
+            "addend": "0x20",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44606",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4460d",
+            "target_rva": "0xa944c",
+            "addend": "0x24",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44620",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44627",
+            "target_rva": "0xa9450",
+            "addend": "0x28",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4463a",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44641",
+            "target_rva": "0xa9454",
+            "addend": "0x2c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44654",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4465b",
+            "target_rva": "0xa9458",
+            "addend": "0x30",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x4466e",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x44675",
+            "target_rva": "0xa945c",
+            "addend": "0x34",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x44688",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x4468f",
+            "target_rva": "0xa9460",
+            "addend": "0x38",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x446a2",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x446a9",
+            "target_rva": "0xa9464",
+            "addend": "0x3c",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x446bc",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x446c3",
+            "target_rva": "0xa9468",
+            "addend": "0x40",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x446d6",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "?gConfig@@3UconfigStruct@@A",
+            "site_rva": "0x446dd",
+            "target_rva": "0xa946c",
+            "addend": "0x44",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegSetValueExA@24",
+            "site_rva": "0x446f0",
+            "target_rva": "0x8a004",
+            "addend": "0x0",
+            "kind": 6
+          },
+          {
+            "symbol": "__imp__RegCloseKey@4",
+            "site_rva": "0x446fa",
+            "target_rva": "0x8a010",
+            "addend": "0x0",
+            "kind": 6
+          }
+        ],
+        "internal_targets": [
+          {
+            "literal_operand": "0x44403",
+            "literal_target": "0x9ea60",
+            "size": 59,
+            "payload_sha256": "4601b0a295667dda9fc97b3c5d72f7b488fead73f0fc3f91094e1917e364aea7"
+          },
+          {
+            "literal_operand": "0x4445d",
+            "literal_target": "0x9ea9c",
+            "size": 17,
+            "payload_sha256": "7642c40a28bb24c85d7892e0046b2bc2ab2517322d3d0dddec89c296d5a7a14e"
+          },
+          {
+            "literal_operand": "0x44476",
+            "literal_target": "0x9eab0",
+            "size": 14,
+            "payload_sha256": "9efc4606dab314f5e64cac4d8424c2fc60b9da78256105dfac50e6e2d03fd395"
+          },
+          {
+            "literal_operand": "0x44490",
+            "literal_target": "0x9eac0",
+            "size": 15,
+            "payload_sha256": "56120d33448530e99184e22325e9ffbe7f890b842e42c4f567a5532de4edce77"
+          },
+          {
+            "literal_operand": "0x444aa",
+            "literal_target": "0x9ead0",
+            "size": 15,
+            "payload_sha256": "96298e5f068012d13f04ca4d37428971c726cf82a30f08460d95a84a4df12114"
+          },
+          {
+            "literal_operand": "0x444c4",
+            "literal_target": "0x9eae0",
+            "size": 22,
+            "payload_sha256": "afa1a39763936694813311328994880593da4d0063328aee63db576cbba85d81"
+          },
+          {
+            "literal_operand": "0x444de",
+            "literal_target": "0x9eaf8",
+            "size": 18,
+            "payload_sha256": "3b4a36931e5ff28f58be0c3dd76e0d93d4fb710ee43ad8249bbb66888c79afb5"
+          },
+          {
+            "literal_operand": "0x444f8",
+            "literal_target": "0x9eb0c",
+            "size": 26,
+            "payload_sha256": "5ecef42e201e7f61353f18ee77dee88c7d9682a4f86b61f42a06b92925f476d8"
+          },
+          {
+            "literal_operand": "0x44512",
+            "literal_target": "0x9eb28",
+            "size": 27,
+            "payload_sha256": "0bb17f504744df9273b1c25b19877a5031c946d1fd585144587dc66b96b27fbe"
+          },
+          {
+            "literal_operand": "0x4452c",
+            "literal_target": "0x9eb44",
+            "size": 18,
+            "payload_sha256": "5f72641cf13edc2979dc99947963f816f8c3f7fd7976d9f9aac919ae3dc87cd8"
+          },
+          {
+            "literal_operand": "0x44546",
+            "literal_target": "0x9eb58",
+            "size": 19,
+            "payload_sha256": "b884d6a8ecc19261d2357c001cdb4df71bff6a66d143263433f25155a0d4d7a3"
+          },
+          {
+            "literal_operand": "0x44560",
+            "literal_target": "0x9eb6c",
+            "size": 21,
+            "payload_sha256": "677ef14f5f0dfb3c0a6b46c11d096e7b82f0a14201b3cdd6d24ac9becab652d9"
+          },
+          {
+            "literal_operand": "0x4457a",
+            "literal_target": "0x9eb84",
+            "size": 17,
+            "payload_sha256": "aa468fe25f103c4bc8fafbfdc9a7ef7b169b20752c2deefb33df5b0e735b1f86"
+          },
+          {
+            "literal_operand": "0x44594",
+            "literal_target": "0x9eb98",
+            "size": 20,
+            "payload_sha256": "eb36c00c1854cea0a2f33f60be217e14cf175b078199a98d1ee47ec6799fd665"
+          },
+          {
+            "literal_operand": "0x445ae",
+            "literal_target": "0x9ebac",
+            "size": 22,
+            "payload_sha256": "e501803b9ad3ef987d98730793226732590a440f02dafd824abc117cdcb6d49f"
+          },
+          {
+            "literal_operand": "0x445c8",
+            "literal_target": "0x9ebc4",
+            "size": 18,
+            "payload_sha256": "d3a6dcc011f5feb7057c0fc8e386d40bee3ec9a66878b55a73fb602f5333c206"
+          },
+          {
+            "literal_operand": "0x445e2",
+            "literal_target": "0x9ebd8",
+            "size": 21,
+            "payload_sha256": "783546a5896b7b8d80b77a479b866f23856276dee1047b2545bc1243265232f7"
+          },
+          {
+            "literal_operand": "0x445fc",
+            "literal_target": "0x9ebf0",
+            "size": 20,
+            "payload_sha256": "0984916f907b79469839e4a4290be86915409d0c504e485d1dd964534b02e7d8"
+          },
+          {
+            "literal_operand": "0x44616",
+            "literal_target": "0x9ec04",
+            "size": 21,
+            "payload_sha256": "8d49c17291885eb389420478dcf49d34017d01d488ce86c2f180c8582f8c61ed"
+          },
+          {
+            "literal_operand": "0x44630",
+            "literal_target": "0x9ec1c",
+            "size": 22,
+            "payload_sha256": "9efee2894eb0451321df6923182745f1a19b95cfd240959467e473796b2c3b84"
+          },
+          {
+            "literal_operand": "0x4464a",
+            "literal_target": "0x9ec34",
+            "size": 20,
+            "payload_sha256": "dba463b2630dbb85fdd9f5e9edd965a89c09e21bb8748007025d16ea6ad48238"
+          },
+          {
+            "literal_operand": "0x44664",
+            "literal_target": "0x9ec48",
+            "size": 20,
+            "payload_sha256": "0b4a490464c2c76dea89286ae98d312a52650401022fa5c923a10720ef1aa495"
+          },
+          {
+            "literal_operand": "0x4467e",
+            "literal_target": "0x9ec5c",
+            "size": 23,
+            "payload_sha256": "934cae40238b2d6325352e1b7b647cc2bbc6348010f973ff6d12dc4bd61b3066"
+          },
+          {
+            "literal_operand": "0x44698",
+            "literal_target": "0x9ec74",
+            "size": 22,
+            "payload_sha256": "99bb80a2f3456002eb002cc6ef6ef3affe155afccef17fc67d018e3c2e2f4b71"
+          },
+          {
+            "literal_operand": "0x446b2",
+            "literal_target": "0x9ec8c",
+            "size": 23,
+            "payload_sha256": "da6e87c127a7e1b88384443dfaa49b4732e1befd12ec27612c20840b514e104d"
+          },
+          {
+            "literal_operand": "0x446cc",
+            "literal_target": "0x9eca4",
+            "size": 24,
+            "payload_sha256": "f953ad56db2abe00dee3b2e61b281baadc34b4f08a374a76f651c3e71888a9e6"
+          },
+          {
+            "literal_operand": "0x446e6",
+            "literal_target": "0x9ecbc",
+            "size": 22,
+            "payload_sha256": "2f58d839baf034f7f316ae4b1d31c10267e7cce677e3c0e9dce883cb2179c6e8"
+          }
+        ],
+        "branches": [
+          {
+            "operand_rva": "0x4443b",
+            "target": "0x446fe"
+          }
+        ],
+        "local_slot_map": {
+          "-116": -104,
+          "-16": -108,
+          "-4": -4,
+          "-8": -116,
+          "-12": -112
+        },
+        "retail_body_sha256": "8c4e12e8c1ddb7354a8bb207aff5c5e6a5c580ffcb561cd351d10f4db076ca39"
+      }
+    ]
+  }
+}

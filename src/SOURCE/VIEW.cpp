@@ -111,7 +111,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     message.id = GENERAL_COLOR_WIDGET;
     message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(message);
-    sprintf(gText, "%s the %s", m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
+    sprintf(gText, localization::Tr("hero.title"), m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = GENERAL_NAME_WIDGET;
     message.text = gText;

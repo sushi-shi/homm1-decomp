@@ -107,9 +107,7 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_WHIRLPOOL_TRIGGER_MAX = 3,
     EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
     EVENT_TEXT_BUFFER_SIZE = 500,
-    EVENT_TEXT_WINDOW_END = 76,
-    // gEventMusicVolume when no music volume is parked.
-    EVENT_MUSIC_VOLUME_NONE = -1
+    EVENT_TEXT_WINDOW_END = 76
 H1_ENUM_CONST_END(MapEventDisplayConstant)
 
 // DoCombat's network wait marker and memory thresholds (Buka EVENTS.cpp
@@ -127,9 +125,7 @@ H1_ENUM_CONST_BEGIN(CombatFlowConstant)
     COMBAT_RANDOM_SEED_MAX = 1000
 H1_ENUM_CONST_END(CombatFlowConstant)
 
-// EVENTS data (Buka EVENTS.h owner): the parked music volume DoEvent and DoCombat
-// restore (-1 when none) and the event-music flag.
-extern i32 gEventMusicVolume;
+// Event-music flag used by the Buka event/audio flow.
 extern i8 gEventMusicPlaying;
 
 #endif // HOMM1_SOURCE_EVENTS_H

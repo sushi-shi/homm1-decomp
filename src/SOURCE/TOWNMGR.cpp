@@ -175,7 +175,7 @@ i16 townManager::Open(i16 id) {
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_NAME_TEXT_CONTROL);
     message.text = gText;
     m_townWindow->BroadcastMessage(message);
-    strcpy(gText, "Town Screen");
+    strcpy(gText, localization::Tr("town.screen.title"));
     message.id = TOWN_STATUS_TEXT_CONTROL;
     message.text = gText;
     m_townWindow->BroadcastMessage(message);
@@ -629,11 +629,7 @@ i16 townManager::Main(struct tag_message& message) {
                                                 ->NumArtifacts()
                                             == HERO_ARTIFACT_SLOT_COUNT)
                                             NormalDialog(
-                                                "You must purchase a spell book to use the mage "
-                                                "guild, but "
-                                                "you currently have no room for a spell book.  Try "
-                                                "giving "
-                                                "one of your artifacts to another hero.",
+                                                localization::Tr("town.spellbook.no_space"),
                                                 NORMAL_DIALOG_TYPE_OK,
                                                 -1,
                                                 -1,
@@ -822,7 +818,7 @@ i16 townManager::Main(struct tag_message& message) {
                                 }
                             } else
                                 NormalDialog(
-                                    "Cannot build another boat.",
+                                    localization::Tr("town.boat.unavailable"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     0xd0,
                                     0x28,
@@ -1190,7 +1186,7 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
 // tables with asserts, sizes resource slots by the gold-icon width and
 // draws the building through the castle frame of buybuil%d.bin.
 VA(0x00462630, 0xdd2)
-#line 1483 "F:\\h1w95src\\source\\TOWNMGR.CPP"
+#line 1483 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP"
 i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     u16 requirements;
     i32 yPos;
@@ -1325,7 +1321,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         for (j = 0; j < BUILDING_SLOT_REQUIREMENT_END; j++) {
             if (requirements & (1 << j)) {
                 if (numPrereqs == 0)
-                    strcat(descText, "\n\nRequires:");
+                    strcat(descText, localization::Tr("town.build.requires"));
                 numPrereqs++;
                 strcat(descText, "\n");
                 if (j <= BUILDING_SLOT_STRUCTURE_LAST)
@@ -1725,13 +1721,13 @@ void townManager::SetupWell(class heroWindow* window) {
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
         message.id = i + TOWN_WELL_FIRST_AVAILABLE_CONTROL;
         if (!(m_town->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
-            strcpy(gText, "Available:\nNONE\nGrowth Rate:\nN/A");
+            strcpy(gText, localization::Tr("town.well.empty"));
         else {
             growthRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
             growthRate += WEEKLY_WELL_GROWTH_BONUS;
             sprintf(
                 gText,
-                "Available:\n%d\nGrowth Rate:\n%d/week",
+                localization::Tr("town.well.growth"),
                 m_town->m_garrison[i],
                 growthRate
             );
@@ -1759,7 +1755,7 @@ void townManager::SetupMage(class heroWindow* window) {
 
     message.type = MESSAGE_WIDGET;
     if (m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE) {
-        strcpy(gText, "The above spells are available here.");
+        strcpy(gText, localization::Tr("town.mage.spells"));
         message.command = WIDGET_COMMAND_SET_TEXT;
         message.id = TOWN_MAGE_DESCRIPTION_CONTROL;
         message.text = gText;

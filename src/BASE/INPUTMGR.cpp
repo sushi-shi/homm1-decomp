@@ -108,7 +108,7 @@ i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
 // donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
 VA(0x0046e9c4, 0x33a)
-#line 137 "F:\\H1w95src\\Base\\INPUTMGR.CPP"
+#line 137 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
     DATA(0x004a3dcc)
     static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";

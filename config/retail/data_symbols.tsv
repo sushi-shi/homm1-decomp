@@ -425,3 +425,4 @@ rva	size	symbol	provenance
 0x00090e2c	4	?gUltArtifactAvgValue@@3HA	Complete typed payload in both retail images, adjacent reviewed data and callers; buka-stale-data-owners.json
 0x00091408	868	?gMonsterDatabase@@3PAUtag_monsterInfo@@A	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-current-data-references.json
 0x0009192c	96	?gMinExpForLevel@@3PAY0M@FA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-current-data-references.json
+0x000a7a10	352	?gcRegAppPath@@3PADA	ReadPrefs AppPath query/failure clear and SetupCDDrive chdir; 352-byte storage ends at independently reviewed giThisGamePos; buka-preferences.json

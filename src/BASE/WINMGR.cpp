@@ -344,7 +344,7 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
 VA(0x0046aaa3, 0xd3)
-#line 550 "F:\\H1w95src\\Base\\WINMGR.CPP"
+#line 550 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\WINMGR.CPP"
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
     H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);

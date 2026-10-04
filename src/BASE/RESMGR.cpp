@@ -286,7 +286,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
     i32 aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
     if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
-        sprintf(gText, "Can't open file: %s", aggregateName);
+        sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }

@@ -89,7 +89,7 @@ void SetupRecruitWin(
         window->BroadcastMessage(message);
     }
 
-    sprintf(gText, "%s%d", "Available: ", available);
+    sprintf(gText, "%s%d", localization::Tr("recruitment.available.label"), available);
     message.id = RECRUIT_AVAILABLE_CONTROL;
     message.text = gText;
     window->BroadcastMessage(message);

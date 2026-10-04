@@ -483,8 +483,8 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     } else {
         extern char gGamePath[];
         sprintf(filePath, "%s%s", gGamePath, fileName);
-        if (strnicmp(fileName, "AUTOSAVE", SAVE_FILE_BASE_NAME_LENGTH)
-            && strnicmp(fileName, "PLYREXIT", SAVE_FILE_BASE_NAME_LENGTH))
+        if (strnicmp(fileName, localization::Tr("save.name.autosave"), SAVE_FILE_BASE_NAME_LENGTH)
+            && strnicmp(fileName, localization::Tr("save.name.player_exit"), SAVE_FILE_BASE_NAME_LENGTH))
             strcpy(gpGame->m_saveName, filename);
     }
     file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
@@ -653,7 +653,7 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
         memset(mapVisited, 0, sizeof(mapVisited));
-        strcpy(gpGame->m_saveName, "NEWGAME");
+        strcpy(gpGame->m_saveName, localization::Tr("save.name.new_game"));
     } else {
         read(handle, m_mapSounds, sizeof(m_mapSounds));
         read(handle, m_mapExtra, sizeof(m_mapExtra));
@@ -809,7 +809,7 @@ i16 NewGameHandler(tag_message& message) {
                             }
                             if (gpGame->m_playerCount < GAME_MIN_PLAYER_COUNT) {
                                 NormalDialog(
-                                    "A game requires at least one opponent.",
+                                    localization::Tr("game.opponent.required"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     0xb1,
                                     0x3c,
@@ -2041,7 +2041,7 @@ i8 game::ViewSpells(
     i16 winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {
         NormalDialog(
-            "No spells to cast.",
+            localization::Tr("spell.none.available"),
             NORMAL_DIALOG_TYPE_OK,
             -1,
             -1,
@@ -2591,7 +2591,7 @@ i16 ViewArmyHandler(tag_message& message) {
                         return MESSAGE_DISPATCH_FORWARD;
                     case VIEW_ARMY_DISMISS:
                         NormalDialog(
-                            "Are you sure you want to dismiss this army?",
+                            localization::Tr("army.dismiss.confirm"),
                             NORMAL_DIALOG_TYPE_YES_NO,
                             0xb1,
                             0x36,
@@ -2989,7 +2989,7 @@ void game::NextPlayer(void) {
             if (!m_playerDead[i] && gbHumanPlayer[i])
                 numHumans++;
         }
-        SaveGame("AUTOSAVE", 1);
+        SaveGame(localization::Tr("save.name.autosave"), 1);
     }
     if (gpGame->m_players[giCurPlayer].m_daysLeft > 0)
         gpGame->m_players[giCurPlayer].m_daysLeft--;
@@ -4473,7 +4473,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 
     LogStr("Transmit Game Start");
     if (gpAdvManager->m_active == 1)
-        BVResMsg("Sending Data", RESOURCE_NONE, 0);
+        BVResMsg(localization::Tr("network.send.title"), RESOURCE_NONE, 0);
     while (!gHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
@@ -4649,7 +4649,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     okay = 0;
     oldTrack = MUSIC_TRACK_NONE;
     if (gpAdvManager->m_active == 1)
-        BVResMsg("Receiving Data", RESOURCE_NONE, 0);
+        BVResMsg(localization::Tr("network.receive.title"), RESOURCE_NONE, 0);
     oldTrack = GetCurrentTrack();
     StopMusic();
     while (!gHeartbeatSeen) {
@@ -4679,7 +4679,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         CheckDoMain(0, 1);
         if (lastPacketTime + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
             NormalDialog(
-                "Error receiving data.  Keep trying??",
+                localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO,
                 -1,
                 -1,

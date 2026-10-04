@@ -1,0 +1,68 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "object_sha256": "a82a9c615e097fc2c167dc33b9b6b2b71d2ccd9e835b194fecdc4ac98601d817",
+  "method": "Complete second-shot guard dataflow checked in both compiled and retail tails: zero guard, signed creature byte equals14, positive signed target quantity, set guard1, recursive this call, clear guard0. All three short-circuit branches target the common exit. Full typed zero initializer agrees. Scratch-register rotation is verified by each producer/consumer chain; no source or comparison changes.",
+  "controls": [
+    {
+      "side": "candidate",
+      "instructions": [
+        "c79: cmp dword ptr [0], 0",
+        "c80: jne 0xcbe",
+        "c82: mov eax, dword ptr [ebp - 0xf8]",
+        "c88: movsx ecx, byte ptr [eax + 6]",
+        "c8c: cmp ecx, 0xe",
+        "c8f: jne 0xcbe",
+        "c91: mov edx, dword ptr [ebp - 0xb8]",
+        "c97: movsx eax, word ptr [edx + 0xf]",
+        "c9b: test eax, eax",
+        "c9d: jle 0xcbe",
+        "c9f: mov dword ptr [0], 1",
+        "ca9: mov ecx, dword ptr [ebp - 0xf8]",
+        "caf: call 0xcb4",
+        "cb4: mov dword ptr [0], 0"
+      ]
+    },
+    {
+      "side": "retail",
+      "instructions": [
+        "15478: cmp dword ptr [0x4a67d8], 0",
+        "1547f: jne 0x154ba",
+        "15481: mov ecx, dword ptr [ebp - 0xf8]",
+        "15487: movsx edx, byte ptr [ecx + 6]",
+        "1548b: cmp edx, 0xe",
+        "1548e: jne 0x154ba",
+        "15490: mov eax, dword ptr [ebp - 0x50]",
+        "15493: movsx ecx, word ptr [eax + 0xf]",
+        "15497: test ecx, ecx",
+        "15499: jle 0x154ba",
+        "1549b: mov dword ptr [0x4a67d8], 1",
+        "154a5: mov ecx, dword ptr [ebp - 0xf8]",
+        "154ab: call 0x14854",
+        "154b0: mov dword ptr [0x4a67d8], 0"
+      ]
+    }
+  ],
+  "verified_reference_sites": [
+    {
+      "site_rva": "0x1547a",
+      "target_rva": "0xa67d8",
+      "symbol": "_?gSecondShot@?1??SpecialAttack@army@@QAEXXZ@4HA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "site_rva": "0x1549d",
+      "target_rva": "0xa67d8",
+      "symbol": "_?gSecondShot@?1??SpecialAttack@army@@QAEXXZ@4HA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "site_rva": "0x154b2",
+      "target_rva": "0xa67d8",
+      "symbol": "_?gSecondShot@?1??SpecialAttack@army@@QAEXXZ@4HA",
+      "kind": 6,
+      "addend": "0x0"
+    }
+  ]
+}

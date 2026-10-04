@@ -286,7 +286,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
             if (window == hwndApp) {
                 if (GameUnsaved() != 0) {
                     NormalDialog(
-                        "Are you sure you want to quit?",
+                        localization::Tr("adventure.confirm_quit"),
                         NORMAL_DIALOG_TYPE_YES_NO,
                         -1,
                         -1,
@@ -665,27 +665,29 @@ void ReadPrefsFromFile(void) {
     strcpy(gcRegAppPath, "");
 }
 
-// NWC-only: no standalone Buka body; see buka-function-map.json.
-void ReadPrefsFromRegistry(void) {
+
+VA(0x00443f8f, 0x468)
+void ReadPrefs(void) {
     HKEY key;
     DWORD cbData;
-    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     DWORD dataType;
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
     i32 rc;
+    DWORD volumeProbe;
+    DWORD musicVolume;
+    DWORD soundVolume;
 
-    strcpy(szTemp, "");
-    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    strcpy(szSubKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
     key = NULL;
-    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    rc = RegCreateKeyA(HKEY_LOCAL_MACHINE, szSubKey, &key);
     if (rc == ERROR_SUCCESS) {
         cbData = REGISTRY_DWORD_BYTES;
         if (RegQueryValueExA(
                 key,
-                "Music Volume",
+                "HMM1 MusicVolume",
                 NULL,
                 &dataType,
-                reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+                reinterpret_cast<LPBYTE>(&volumeProbe),
                 &cbData
             )
             != ERROR_SUCCESS) {
@@ -697,23 +699,25 @@ void ReadPrefsFromRegistry(void) {
         }
         RegQueryValueExA(
             key,
-            "Music Volume",
+            "HMM1 MusicVolume",
             NULL,
             &dataType,
-            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            reinterpret_cast<LPBYTE>(&musicVolume),
             &cbData
         );
         RegQueryValueExA(
             key,
-            "Sound Volume",
+            "HMM1 FXVolume",
             NULL,
             &dataType,
-            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            reinterpret_cast<LPBYTE>(&soundVolume),
             &cbData
         );
+        gConfig.musicVolume = musicVolume;
+        gConfig.soundVolume = soundVolume;
         RegQueryValueExA(
             key,
-            "Walk Speed",
+            "HMM1 WalkSpeed",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
@@ -721,7 +725,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Show Route",
+            "HMM1 ShowRoute",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.showRoute),
@@ -729,7 +733,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Blackout Computer",
+            "HMM1 BlackoutComputer",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
@@ -737,7 +741,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Sound Quality",
+            "HMM1 SoundQuality",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.musicSource),
@@ -745,7 +749,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Direct Connect Com Port",
+            "HMM1 DirectConnectComPort",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
@@ -753,7 +757,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Direct Connect Baud Rate",
+            "HMM1 DirectConnectBaudRate",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
@@ -761,7 +765,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Modem Com Port",
+            "HMM1 ModemComPort",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
@@ -769,7 +773,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Modem Baud Rate",
+            "HMM1 ModemBaudRate",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
@@ -778,7 +782,7 @@ void ReadPrefsFromRegistry(void) {
         cbData = REGISTRY_TEXT_VALUE_SIZE;
         RegQueryValueExA(
             key,
-            "Modem Init String",
+            "HMM1 ModemInitString",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(gConfig.modemInitString),
@@ -787,7 +791,7 @@ void ReadPrefsFromRegistry(void) {
         cbData = REGISTRY_DWORD_BYTES;
         RegQueryValueExA(
             key,
-            "Autosave",
+            "HMM1 UseAutosave",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.autosave),
@@ -795,7 +799,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "First Map Offset",
+            "HMM1 FirstMapOffset",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
@@ -803,7 +807,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Current Map Offset",
+            "HMM1 CurrentMapOffset",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
@@ -811,7 +815,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game Show Menu",
+            "HMM1 GameShowMenu",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
@@ -819,7 +823,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game X",
+            "HMM1 GameWindowXLeft",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
@@ -827,7 +831,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game Y",
+            "HMM1 GameWindowYTop",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
@@ -835,7 +839,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game Width",
+            "HMM1 GameWindowWidth",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
@@ -843,7 +847,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game Height",
+            "HMM1 GameWindowHeight",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
@@ -851,7 +855,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Main Game Full Screen",
+            "HMM1 GameFullScreen",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
@@ -859,7 +863,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor Show Menu",
+            "HMM1 EditorShowMenu",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
@@ -867,7 +871,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor X",
+            "HMM1 EditorWindowXLeft",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
@@ -875,7 +879,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor Y",
+            "HMM1 EditorWindowYTop",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
@@ -883,7 +887,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor Width",
+            "HMM1 EditorWindowWidth",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
@@ -891,7 +895,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor Height",
+            "HMM1 EditorWindowHeight",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
@@ -899,7 +903,7 @@ void ReadPrefsFromRegistry(void) {
         );
         RegQueryValueExA(
             key,
-            "Editor Full Screen",
+            "HMM1 EditorFullScreen",
             NULL,
             &dataType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
@@ -918,7 +922,7 @@ void ReadPrefsFromRegistry(void) {
             strcpy(gcRegAppPath, "");
         if (RegQueryValueExA(
                 key,
-                "CDDrive",
+                "HMM1 CDDrive",
                 NULL,
                 &dataType,
                 reinterpret_cast<LPBYTE>(gcRegCDRomPath),
@@ -927,12 +931,9 @@ void ReadPrefsFromRegistry(void) {
             != ERROR_SUCCESS)
             strcpy(gcRegCDRomPath, "");
         RegCloseKey(key);
+        SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
+        SetMusicSource(gConfig.musicSource != 0);
     }
-}
-
-VA(0x00443f8f, 0x468)
-void ReadPrefs(void) {
-    ReadPrefsFromRegistry();
 }
 
 // @dead-code
@@ -951,37 +952,41 @@ void WritePrefsToFile(void) {
     fclose(file);
 }
 
-// NWC-only: no standalone Buka body; see buka-function-map.json.
-void WritePrefsToRegistry(void) {
+
+VA(0x004443f7, 0x30b)
+void WritePrefs(void) {
     HKEY key;
-    char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
     char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
     i32 rc;
+    DWORD musicVolume;
+    DWORD soundVolume;
 
-    strcpy(szTemp, "");
-    strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
+    UpdateSystemOptionsMenu();
+    strcpy(szSubKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
     key = NULL;
-    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_READ, &key);
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_ALL_ACCESS, &key);
     if (rc == ERROR_SUCCESS) {
+        soundVolume = gConfig.soundVolume;
+        musicVolume = gConfig.musicVolume;
         RegSetValueExA(
             key,
-            "Music Volume",
+            "HMM1 MusicVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&gConfig.musicVolume),
+            reinterpret_cast<LPBYTE>(&musicVolume),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
             key,
-            "Sound Volume",
+            "HMM1 FXVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&gConfig.soundVolume),
+            reinterpret_cast<LPBYTE>(&soundVolume),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
             key,
-            "Walk Speed",
+            "HMM1 WalkSpeed",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
@@ -989,7 +994,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Show Route",
+            "HMM1 ShowRoute",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.showRoute),
@@ -997,7 +1002,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Blackout Computer",
+            "HMM1 BlackoutComputer",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
@@ -1005,7 +1010,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Sound Quality",
+            "HMM1 SoundQuality",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.musicSource),
@@ -1013,7 +1018,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Direct Connect Com Port",
+            "HMM1 DirectConnectComPort",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
@@ -1021,7 +1026,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Direct Connect Baud Rate",
+            "HMM1 DirectConnectBaudRate",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
@@ -1029,7 +1034,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Modem Com Port",
+            "HMM1 ModemComPort",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
@@ -1037,7 +1042,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Modem Baud Rate",
+            "HMM1 ModemBaudRate",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
@@ -1045,7 +1050,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Modem Init String",
+            "HMM1 ModemInitString",
             0,
             REG_SZ,
             reinterpret_cast<LPBYTE>(gConfig.modemInitString),
@@ -1053,7 +1058,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Autosave",
+            "HMM1 UseAutosave",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.autosave),
@@ -1061,7 +1066,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "First Map Offset",
+            "HMM1 FirstMapOffset",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
@@ -1069,7 +1074,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Current Map Offset",
+            "HMM1 CurrentMapOffset",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
@@ -1077,7 +1082,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game Show Menu",
+            "HMM1 GameShowMenu",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
@@ -1085,7 +1090,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game X",
+            "HMM1 GameWindowXLeft",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
@@ -1093,7 +1098,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game Y",
+            "HMM1 GameWindowYTop",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
@@ -1101,7 +1106,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game Width",
+            "HMM1 GameWindowWidth",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
@@ -1109,7 +1114,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game Height",
+            "HMM1 GameWindowHeight",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
@@ -1117,7 +1122,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Main Game Full Screen",
+            "HMM1 GameFullScreen",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
@@ -1125,7 +1130,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor Show Menu",
+            "HMM1 EditorShowMenu",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
@@ -1133,7 +1138,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor X",
+            "HMM1 EditorWindowXLeft",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
@@ -1141,7 +1146,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor Y",
+            "HMM1 EditorWindowYTop",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
@@ -1149,7 +1154,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor Width",
+            "HMM1 EditorWindowWidth",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
@@ -1157,7 +1162,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor Height",
+            "HMM1 EditorWindowHeight",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
@@ -1165,7 +1170,7 @@ void WritePrefsToRegistry(void) {
         );
         RegSetValueExA(
             key,
-            "Editor Full Screen",
+            "HMM1 EditorFullScreen",
             0,
             REG_DWORD,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
@@ -1173,12 +1178,6 @@ void WritePrefsToRegistry(void) {
         );
         RegCloseKey(key);
     }
-}
-
-VA(0x004443f7, 0x30b)
-void WritePrefs(void) {
-    UpdateSystemOptionsMenu();
-    WritePrefsToRegistry();
 }
 
 // Buka retail data VA 0x0049e720. This path deliberately has no leading slash.

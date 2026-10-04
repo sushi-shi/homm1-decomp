@@ -266,7 +266,7 @@ i32 oldmain(void) {
     gKBDone = 1;
     command = MAIN_MENU_NO_COMMAND;
     if (gpExec->InitSystem())
-        ShutDown("Initialization failed!");
+        ShutDown(localization::Tr("startup.initialize.failed"));
     CheckMem();
     KBChangeMenu(hmnuDflt);
     gPalette = gpResourceManager->GetPalette("kb.pal");
@@ -294,7 +294,7 @@ i32 oldmain(void) {
         );
         font = gpResourceManager->GetFont("bigfont.fnt");
         font->DrawString(
-            "Loading Heroes of Might and Magic for Windows 95 (version 1.1)",
+            localization::Tr("startup.loading.game"),
             10,
             10,
             1
@@ -394,7 +394,7 @@ i32 oldmain(void) {
                 break;
             case MAIN_MENU_HIGH_SCORES:
                 if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
-                    ShutDown("Can't add manager!");
+                    ShutDown(localization::Tr("startup.manager.failed"));
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 backdropLoaded = 0;
@@ -473,7 +473,7 @@ i32 oldmain(void) {
             if (gRemoteOn && gbWaitForRemoteReceive) {
                 giWaitType = DIALOG_WAIT_OTHER_PLAYER;
                 NormalDialog(
-                    "Waiting for other remote player to set up game.",
+                    localization::Tr("network.setup.wait"),
                     NORMAL_DIALOG_TYPE_WAIT_CANCEL
                 );
                 if (!gbFunctionComplete)
@@ -500,7 +500,7 @@ i32 oldmain(void) {
             gMapX = 0;
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
-                ShutDown("Can't add manager!");
+                ShutDown(localization::Tr("startup.manager.failed"));
             if (command == MAIN_MENU_NEW_GAME)
                 gpAdvManager->SetHeroContext(gpGame->m_players[0].NextHero(0), 0);
             gpExec->MainLoop();
@@ -517,9 +517,7 @@ i32 oldmain(void) {
             gpMouseManager->ReallyHidePointer();
             sprintf(
                 gcWinText,
-                "My heroes, our foes have been scattered, their castles broken and laid bare.  "
-                "The great campaign is now complete, and I stand before you as the undisputed "
-                "High King!\n\nOur victory was achieved in %d days!",
+                localization::Tr("campaign.victory"),
                 giCurTurn
             );
             endVideos[GAME_END_LOST] = SMACK_LOSE;
@@ -554,7 +552,7 @@ i32 oldmain(void) {
             if (gShowHighScore) {
                 gpMouseManager->ReallyShowPointer();
                 if (gpExec->AddManager(gpHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
-                    ShutDown("Can't add manager!");
+                    ShutDown(localization::Tr("startup.manager.failed"));
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 gHighScoreRank = HIGH_SCORE_EMPTY;
@@ -567,7 +565,7 @@ i32 oldmain(void) {
             }
             if (gpGame->m_campaignType > 0) {
                 if (gEndSequence == GAME_END_LOST) {
-                    sprintf(gText, "Would you like to replay this scenario?");
+                    sprintf(gText, localization::Tr("campaign.replay.confirm"));
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                         gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
@@ -581,12 +579,11 @@ i32 oldmain(void) {
                         == gpGame->m_campaignType - CAMPAIGN_IRONFIST)
                         gpGame->m_campaignScenario++;
                     gpGame->InitCampaignMap(gpGame->m_campaignScenario, 0);
-                    sprintf(saveBuf, "%s%02d", "SCENWN", gpGame->m_campaignScenariosWon);
+                    sprintf(saveBuf, "%s%02d", localization::Tr("save.name.campaign"), gpGame->m_campaignScenariosWon);
                     gpGame->SaveGame(saveBuf, 1);
                     sprintf(
                         gText,
-                        "Your campaign has been saved as %s.  Would you like to start the next "
-                        "scenario?",
+                        localization::Tr("campaign.next.confirm"),
                         saveBuf
                     );
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
@@ -1075,7 +1072,7 @@ void NormalDialog(
             else if (resourceQty[i] == 0)
                 strcpy(amountText[i], "");
             else
-                sprintf(amountText[i], "%d/day", -resourceQty[i]);
+                sprintf(amountText[i], localization::Tr("dialog.income.per_day"), -resourceQty[i]);
             strcpy(szFilename, "resource.icn");
             resourceFrame = kind[i];
         } else if (kind[i] == NORMAL_DIALOG_SPELL) {
@@ -1260,8 +1257,8 @@ void NormalDialog(
     gNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
-        szOr = static_cast<char*>(malloc(3));
-        strcpy(szOr, "or");
+        szOr = static_cast<char*>(malloc(strlen(localization::Tr("dialog.choice.or")) + 1));
+        strcpy(szOr, localization::Tr("dialog.choice.or"));
         captionWidget = new textWidget(
             width / 2 - 17,
             resourceYPos + 30,
@@ -1666,7 +1663,7 @@ VA(0x0043f956, 0x238)
 // elimination and timeout.
 void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
     if (position == giThisGamePos) {
-        sprintf(gText, "You have been eliminated from the game!!!");
+        sprintf(gText, localization::Tr("network.player.eliminated"));
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
         RemoteCleanup();
         gGameOver = 1;
@@ -1674,11 +1671,11 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
         return;
     }
     if (giNumHumanPlayers <= 2) {
-        gpGame->SaveGame("PLYREXIT", 1);
+        gpGame->SaveGame(localization::Tr("save.name.player_exit"), 1);
         if (eliminated) {
             sprintf(
                 gText,
-                "%s player has been vanquished!",
+                localization::Tr("player.vanquished"),
                 gColorNames[gpGame->m_players[position].Color()]
             );
             gText[0] -= 32;
@@ -1706,9 +1703,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
             else
                 sprintf(
                     gText,
-                    "Player %d is exiting the game.  The current game has been saved as "
-                    "'PLYREXIT'.  Do "
-                    "you wish to continue playing with a computer player filling in for player %d?",
+                    localization::Tr("network.player.exit.computer"),
                     position + 1,
                     position + 1
                 );
@@ -1771,7 +1766,7 @@ void CheckEndGame(i32 forced) {
                 PlayerDead(player);
                 sprintf(
                     gText,
-                    "%s player has been vanquished!",
+                    localization::Tr("player.vanquished"),
                     gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
                 );
                 gText[0] -= 32;
@@ -2223,7 +2218,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
         for (dest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; dest >= entry; dest--)
             scores[dest + 1] = scores[dest];
         GetDataEntry(
-            "Please enter your name for the high score list.",
+            localization::Tr("score.name.prompt"),
             enteredPlayerName,
             16,
             NULL
@@ -2391,7 +2386,7 @@ void PopNetBox(char* notice) {
                             msgTime = KBTickCount();
                         break;
                     default:
-                        AddNetBoxLine("[ Incoming data, must exit... ]");
+                        AddNetBoxLine(localization::Tr("network.incoming.close"));
                         drawLines = 1;
                         exitForIncomingData = 1;
                         break;
@@ -2562,7 +2557,7 @@ VA(0x00441943, 0x34)
 void FileError(char* filename) {
     char message[200];
     LogStr("File Error");
-    sprintf(message, "Error opening file %s!", filename);
+    sprintf(message, localization::Tr("file.open.failed"), filename);
     ShutDown(message);
 }
 
@@ -4854,7 +4849,7 @@ DATA(0x004a9404)
 armyGroup* gpMonGroup;
 DATA(0x004a9428)
 configStruct gConfig;
-DATA(0x004a8150)
+DATA(0x004a7a10)
 char gcRegAppPath[352];
 DATA(0x004a9410)
 i8 gCampaignChoice;

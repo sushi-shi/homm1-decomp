@@ -240,7 +240,7 @@ i16 fileRequester::Open(i16 priority) {
         message.text = m_filename;
         m_window->BroadcastMessage(message);
         message.id = promptId;
-        sprintf(gText, "File to Save:");
+        sprintf(gText, localization::Tr("file.save.label"));
         message.text = gText;
         m_window->BroadcastMessage(message);
         for (i = 0; i < m_fileCount; i++) {
@@ -260,7 +260,7 @@ i16 fileRequester::Open(i16 priority) {
             }
         }
         message.id = promptId;
-        sprintf(gText, "File to Load:");
+        sprintf(gText, localization::Tr("file.load.label"));
         message.text = gText;
         m_window->BroadcastMessage(message);
     }
@@ -359,7 +359,7 @@ i16 fileRequester::Main(tag_message& message) {
                             if (m_selectedIndex == FILE_REQUESTER_SELECTION_NONE
                                 && !m_filename[0]) {
                                 NormalDialog(
-                                    "Please make a selection from the list, or press cancel.",
+                                    localization::Tr("file.selection.required"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     -1,
                                     -1,
@@ -490,8 +490,7 @@ i16 fileRequester::Main(tag_message& message) {
                 && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
                 sprintf(
                     gText,
-                    "The game you have chosen only has slots for %d human(s).  You need one "
-                    "with room for at least %d humans.",
+                    localization::Tr("file.humans.minimum"),
                     ch,
                     giNumHumanPlayers
                 );
@@ -511,8 +510,7 @@ i16 fileRequester::Main(tag_message& message) {
             if (ch > giNumHumanPlayers) {
                 sprintf(
                     gText,
-                    "The game you have chosen was being played with %d humans. Is it OK if the "
-                    "computer takes the place of the last %d human(s)?",
+                    localization::Tr("file.humans.computer"),
                     ch,
                     ch - giNumHumanPlayers
                 );
@@ -649,7 +647,7 @@ void fileRequester::Update(i8 drawWindow) {
             showPlayers = 0;
             if (nHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
                 showPlayers = 1;
-                sprintf(extra, " (%d %s)", nHumans, "Players");
+                sprintf(extra, " (%d %s)", nHumans, localization::Tr("file.players.label"));
                 suffixWidth = bigFont->LineWidth(extra);
             }
             limit = FILE_REQUESTER_ROW_TEXT_WIDTH;
