@@ -35,10 +35,14 @@ source, localized option/help tables and the smaller Buka configuration. The
 removed slow-video mode is reflected in defaults and AI callers. Adventure
 options, Dimension Door input, incremental drawing and ambient sound are also
 reviewed, including corrected Close help and Buka’s distance-volume table.
-Travel spells and route helpers now have reviewed Buka claims, complete
-instruction/CFG checks and five cataloged dialogs with original English
-preserved. Strict delinking currently stops at data identity `0xa673c` in
-`ScreenScroll`. The old score ledger has been reset.
+Travel spells, route helpers, scrolling, network handling and border copying
+now have reviewed Buka claims. Every explicit function annotation in
+`ADVMGR.cpp` has migrated; stack-local matching differences and missing
+library-header startup emissions remain documented. Five travel dialogs
+preserve original English, and Buka’s removed network-exit log is reflected
+in the source. The shared VC6 locale guard is now enrolled from compiled
+evidence. Strict delinking reaches `AICheckRetreat` in `SOURCE/AI`, stopping at
+data identity `0x8a3e8`. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

@@ -2,6 +2,7 @@
 # Evidence and complete payload/operand checks: buka-radar-locators.json.
 # TownQuickView unpooled strings: every use site and full payload independently verified; buka-quick-views.json.
 # ViewWorld unpooled strings: every use site and full payload independently verified; buka-map-views.json.
+# VC6 ctype<wchar_t>::id one-byte COMMON guard; full controls: buka-ctype-guard.json.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
@@ -27,3 +28,4 @@ rva	size	name	owner	class
 0x0008eb4c	0x9	$SG584524	SOURCE/ADVMGR	string
 0x0008eb58	0xa	$SG584536	SOURCE/ADVMGR	string
 0x0008eb64	0xe	$SG584548	SOURCE/ADVMGR	string
+0x000d82d8	0x1	??_B?1???id@?$ctype@G@std@@$D@@9@51	std::ctype<wchar_t>::id	common

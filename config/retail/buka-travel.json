@@ -7411,5 +7411,6 @@
       "source_correspondence": "ScreenScroll follows ForceNewHover in source/retail order; full review pending",
       "evidence": "Reviewed absolute_reference_evidence.tsv and pinned functions.tsv census."
     }
-  }
+  },
+  "checkpoint": "Historical validation at a52d1460. The scrolling/network review supersedes its next-reference blocker; fingerprints identify that earlier state."
 }

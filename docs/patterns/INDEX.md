@@ -36,3 +36,4 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 
 - [VC6 local-static data names (HoMM1 Buka, measured)](vc6-static-data-names.md).
 - [VC6 array data names (HoMM1 Buka, measured)](vc6-array-data-names.md).
+- [VC6 locale startup and COMMON guard (HoMM1 Buka, measured)](vc6-ctype-startup.md).

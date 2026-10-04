@@ -74,6 +74,8 @@ rva	name	provenance
 0x00010746	?ScreenScroll@advManager@@QAEXCH@Z	Buka Main complete instruction/CFG correspondence: 0x3012, 0x303a, 0x3062, 0x308a, 0x30b2, 0x30da, 0x3102, 0x312a; buka-adventure-commands.json
 0x00010916	?CheckScreenScroll@advManager@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x2a75; buka-adventure-commands.json
 0x00010aad	?MouseInScrollZone@advManager@@QAEHXZ	Buka input-handler instruction/CFG review: 0x548d; buka-adventure-input.json
+0x00010b26	?SetInitialMapOrigin@advManager@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: complete scroll/network/border review; buka-scroll-network.json
+0x00010d6e	?LoadRemote@advManager@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: complete scroll/network/border review, 0x10f4c; buka-scroll-network.json
 0x00010e9f	?CheckHandleNet@advManager@@QAEPADXZ	Buka Main complete instruction/CFG correspondence: 0x2a34; buka-adventure-commands.json
 0x00010fda	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	Buka Main complete instruction/CFG correspondence: 0x2a54; buka-adventure-commands.json
 0x0001107c	?TrimLoopingSounds@advManager@@QAEXH@Z	Buka control-panel instruction/CFG/EH review: 0xd2ff; buka-control-panel.json
@@ -90,6 +92,7 @@ rva	name	provenance
 0x00026be9	?EventSound@advManager@@QAEXFF@Z	Buka input-handler instruction/CFG review: 0x486e; buka-adventure-input.json
 0x00026e86	?GiveArtifact@advManager@@QAEFPAVhero@@C@Z	Buka input-handler instruction/CFG review: 0x481f; buka-adventure-input.json
 0x00026f65	?GiveExperience@advManager@@QAEHPAVhero@@HC@Z	Buka Main complete instruction/CFG correspondence: 0x2df9; buka-adventure-commands.json
+0x00028f98	?DoNetCombat@advManager@@QAEHPAD@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f7b; buka-scroll-network.json
 0x00029c70	?Clear@searchArray@@QAEXXZ	Buka exact pathfinding instruction correspondence: 0x55e6a, 0x56175; config/retail/buka-pathfinding.json
 0x00029d50	?CalcTerrainCost@@YAHHHHH@Z	Buka exact pathfinding instruction correspondence: 0x55f72, 0x56646, 0x56665, 0x56863, 0x56897, 0x56a18, 0x56a3f; config/retail/buka-pathfinding.json
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97; config/retail/buka-pathfinding.json
@@ -100,6 +103,7 @@ rva	name	provenance
 0x0002bf56	?IsMobile@game@@QAECC@Z	Buka command helper family: 0x10543; buka-adventure-commands.json
 0x0002bfee	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	Buka adventure-manager family: 0x1265, reviewed source family; buka-advmgr.json
 0x0002c4dd	?SaveGame@game@@QAEFPADC@Z	Buka control-panel instruction/CFG/EH review: 0xd946; buka-control-panel.json
+0x0002cc73	?LoadGame@game@@QAEFPADHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10db4; buka-scroll-network.json
 0x0002e2ad	?ShowCampaignInfo@game@@QAEXHHH@Z	Buka Main complete instruction/CFG correspondence: 0x3249; buka-adventure-commands.json
 0x00030bef	?ViewSpells@game@@QAECPAVhero@@CP6AFAAUtag_message@@@ZC@Z	Buka control-panel instruction/CFG/EH review: 0xdef4; buka-control-panel.json
 0x00032089	?Overview@game@@QAEXXZ	Buka input-handler instruction/CFG review: 0x455b; buka-adventure-input.json
@@ -107,6 +111,9 @@ rva	name	provenance
 0x00035a74	?SetVisibility@game@@QAEXFFFF@Z	Buka Main complete instruction/CFG correspondence: 0x2eb5, 0x2f8c, 0x2f9f, 0x2fb2, 0x2fc5; buka-adventure-commands.json
 0x00035ca3	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	Buka Main complete instruction/CFG correspondence: 0x2e1c, 0x2e34; buka-adventure-commands.json
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
+0x000363dc	?CancelComputerScreen@game@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: 0x10dd1; buka-scroll-network.json
+0x000376cf	?ReceiveSaveGame@game@@QAEHHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f1c; buka-scroll-network.json
+0x00037b7f	?DoNewTurn@game@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: 0x10ddc; buka-scroll-network.json
 0x000384f3	?GetNumThievesGuilds@game@@QAEHH@Z	Buka quick-view instruction/CFG/EH review: 0xa3db; buka-quick-views.json
 0x00038934	?ShowScenInfo@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x3256; buka-adventure-commands.json
 0x00038e58	?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z	Buka context/locator instruction/CFG review: 0xb494; buka-adventure-context.json
@@ -119,10 +126,12 @@ rva	name	provenance
 0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	Buka Main complete instruction/CFG correspondence: 0x2c4b, 0x31f1; buka-adventure-commands.json
 0x0003f5ef	?EventWindowHandler@@YAFAAUtag_message@@@Z	Buka map-view instruction/CFG/EH review: 0xbe40; buka-map-views.json
 0x0003f6a2	?TrueFalseDialogHandler@@YAFAAUtag_message@@@Z	Buka map-view instruction/CFG/EH review: 0xd124; buka-map-views.json
+0x0003f956	?ReceiveRemotePlayerExit@@YAXCCCC@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f41, 0x10f94; buka-scroll-network.json
 0x0003fb8e	?CheckEndGame@@YAXH@Z	Buka Main complete instruction/CFG correspondence: 0x2d87, 0x2da3; buka-adventure-commands.json
 0x000404c4	?QuickViewWait@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ef; buka-quick-info.json
 0x00041066	?BVResMsg@@YAXPADHH@Z	Buka panel instruction/CFG/EH review: complete panel and resource-message review; buka-bottom-panels.json
 0x000411a2	?PopNetBox@@YAXPAD@Z	Buka Main complete instruction/CFG correspondence: 0x2d52; buka-adventure-commands.json
+0x00041824	?ShutDown@@YAXPAD@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f27; buka-scroll-network.json
 0x00042146	?MemError@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7380; buka-quick-info.json
 0x000421b7	?GetTownName@@YAPADH@Z	Buka quick-view instruction/CFG/EH review: 0xa4fd; buka-quick-views.json
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
@@ -130,7 +139,9 @@ rva	name	provenance
 0x00044ae3	?SetWinText@@YAXPAVheroWindow@@F@Z	Buka quick-view instruction/CFG/EH review: 0x96b9, 0xa3f6; buka-quick-views.json
 0x00044b4e	?KBTickCount@@YAHXZ	Buka Main complete instruction/CFG correspondence: 0x2995, 0x2ad0; buka-adventure-commands.json
 0x000463d9	?DelayMilli@@YAXH@Z	Buka travel-spell/route instruction/CFG/EH review: 0xf6c8; buka-travel.json
+0x00047aa1	?CheckDoMain@@YAXHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x1100a; buka-scroll-network.json
 0x00048a6f	?DoAI@philAI@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2a18; buka-adventure-commands.json
+0x000534cb	?GetRemoteData@@YAPADC@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10eab; buka-scroll-network.json
 0x00053b7a	??0fileRequester@@QAE@FFFPBD00@Z	Buka control-panel instruction/CFG/EH review: 0xd8e0; buka-control-panel.json
 0x00054354	??1fileRequester@@QAE@XZ	Buka control-panel instruction/CFG/EH review: 0xd98b; buka-control-panel.json
 0x00056080	?BuildPath@searchArray@@QAEHFFFFF@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x24fb; buka-adventure-commands.json
@@ -287,6 +298,7 @@ rva	name	provenance
 0x0006bf87	?ReallyHidePointer@mouseManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x2574; buka-adventure-commands.json
 0x0006bf9d	?RestoreUnderlying@mouseManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x579a; buka-adventure-drawing.json
 0x0006bfc0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	Buka drawing-family instruction/CFG review: 0x5593; buka-adventure-drawing.json
+0x0006bff2	?WarpPointer@mouseManager@@QAEXFF@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10d52; buka-scroll-network.json
 0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	Buka input-handler instruction/CFG review: 0x3878, 0x3923, 0x4058, 0x4a76; buka-adventure-input.json
 0x0006c062	?SetCursorShape@mouseManager@@QAEXH@Z	Buka context/locator instruction/CFG review: 0xb6a0, 0xb8a2, 0xb8e5, 0xbae7; buka-adventure-context.json
 0x0006c07c	?HideSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ea; buka-quick-info.json
@@ -336,6 +348,7 @@ rva	name	provenance
 0x00078460	_strlen	Buka panel instruction/CFG/EH review: 0x8a1e, 0x9436, 0x94a7; buka-bottom-panels.json
 0x000784e0	_memset	Buka adventure-panel instruction/CFG/EH review: 0xe595; buka-adventure-panel.json
 0x00078538	_abs	Buka travel-spell/route instruction/CFG/EH review: 0xfb05, 0xfb36; buka-travel.json
+0x00078550	_memcpy	Buka scroll/network/border instruction/CFG/EH review: 0x11415, 0x1145c, 0x11476, 0x114bd, 0x1154b, 0x11591, 0x115ab, 0x115f2; buka-scroll-network.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller

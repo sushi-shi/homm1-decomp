@@ -1,0 +1,1119 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "guard_rva": "0xd82d8",
+  "guard_name": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+  "size": 1,
+  "storage": "COFF COMMON, allocated as one zero-initialized byte by the linker",
+  "owner": "VC6 std::ctype<wchar_t>::id (wchar_t is unsigned short in this ABI)",
+  "method": "Complete compiler-output instruction controls from three existing VC6 audio objects; all instructions and all four initializer relocations checked. Registration target, atexit callee and five-byte compiler-generated cleanup are independently verified for each complete retail occurrence. No decompiler, handwritten stub, source guard variable, alias or comparison change.",
+  "compiler_controls": [
+    {
+      "unit": "BASE/Audio",
+      "object_sha256": "61be6c6be174efb154115761500c774f07db58a3f01ae636492b575589005622",
+      "initializer": "_$E28",
+      "registration": "_$E27",
+      "cleanup": "?id@?$ctype@G@std@@$E",
+      "common_symbol": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+      "common_size": 1,
+      "guard_reference_offsets": [
+        6,
+        19,
+        28
+      ],
+      "registration_call_offset": 33,
+      "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
+      "registration_hex": "558bec6800000000e80000000083c4045dc3",
+      "cleanup_hex": "558bec5dc3"
+    },
+    {
+      "unit": "BASE/AudiereMusic",
+      "object_sha256": "b4f6455bbb02c9aac649e5247963037c299db4f4f4c9998e97fad6f1acdbd997",
+      "initializer": "_$E33",
+      "registration": "_$E32",
+      "cleanup": "?id@?$ctype@G@std@@$E",
+      "common_symbol": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+      "common_size": 1,
+      "guard_reference_offsets": [
+        6,
+        19,
+        28
+      ],
+      "registration_call_offset": 33,
+      "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
+      "registration_hex": "558bec6800000000e80000000083c4045dc3",
+      "cleanup_hex": "558bec5dc3"
+    },
+    {
+      "unit": "BASE/AudiereEffects",
+      "object_sha256": "b0b76f40dfc9c70dafc09c26bb215c400761f166ad34f3b93cd01be5366f2d3c",
+      "initializer": "_$E22",
+      "registration": "_$E21",
+      "cleanup": "?id@?$ctype@G@std@@$E",
+      "common_symbol": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+      "common_size": 1,
+      "guard_reference_offsets": [
+        6,
+        19,
+        28
+      ],
+      "registration_call_offset": 33,
+      "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
+      "registration_hex": "558bec6800000000e80000000083c4045dc3",
+      "cleanup_hex": "558bec5dc3"
+    }
+  ],
+  "retail_occurrences": [
+    {
+      "initializer_rva": "0x11616",
+      "guard_operands": [
+        "0x1161c",
+        "0x11629",
+        "0x11632"
+      ],
+      "registration_rva": "0x1163d",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x132ee",
+      "guard_operands": [
+        "0x132f4",
+        "0x13301",
+        "0x1330a"
+      ],
+      "registration_rva": "0x13315",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x18469",
+      "guard_operands": [
+        "0x1846f",
+        "0x1847c",
+        "0x18485"
+      ],
+      "registration_rva": "0x18490",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x18ae9",
+      "guard_operands": [
+        "0x18aef",
+        "0x18afc",
+        "0x18b05"
+      ],
+      "registration_rva": "0x18b10",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x1c8bf",
+      "guard_operands": [
+        "0x1c8c5",
+        "0x1c8d2",
+        "0x1c8db"
+      ],
+      "registration_rva": "0x1c8e6",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x1d41f",
+      "guard_operands": [
+        "0x1d425",
+        "0x1d432",
+        "0x1d43b"
+      ],
+      "registration_rva": "0x1d446",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x21586",
+      "guard_operands": [
+        "0x2158c",
+        "0x21599",
+        "0x215a2"
+      ],
+      "registration_rva": "0x215ad",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x2362c",
+      "guard_operands": [
+        "0x23632",
+        "0x2363f",
+        "0x23648"
+      ],
+      "registration_rva": "0x23653",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x24a0f",
+      "guard_operands": [
+        "0x24a15",
+        "0x24a22",
+        "0x24a2b"
+      ],
+      "registration_rva": "0x24a36",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x29c1c",
+      "guard_operands": [
+        "0x29c22",
+        "0x29c2f",
+        "0x29c38"
+      ],
+      "registration_rva": "0x29c43",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x2b3b8",
+      "guard_operands": [
+        "0x2b3be",
+        "0x2b3cb",
+        "0x2b3d4"
+      ],
+      "registration_rva": "0x2b3df",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x38edf",
+      "guard_operands": [
+        "0x38ee5",
+        "0x38ef2",
+        "0x38efb"
+      ],
+      "registration_rva": "0x38f06",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x3b6c5",
+      "guard_operands": [
+        "0x3b6cb",
+        "0x3b6d8",
+        "0x3b6e1"
+      ],
+      "registration_rva": "0x3b6ec",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x3bd20",
+      "guard_operands": [
+        "0x3bd26",
+        "0x3bd33",
+        "0x3bd3c"
+      ],
+      "registration_rva": "0x3bd47",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x3c76b",
+      "guard_operands": [
+        "0x3c771",
+        "0x3c77e",
+        "0x3c787"
+      ],
+      "registration_rva": "0x3c792",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x42c63",
+      "guard_operands": [
+        "0x42c69",
+        "0x42c76",
+        "0x42c7f"
+      ],
+      "registration_rva": "0x42c8a",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x44c4e",
+      "guard_operands": [
+        "0x44c54",
+        "0x44c61",
+        "0x44c6a"
+      ],
+      "registration_rva": "0x44c75",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x4632c",
+      "guard_operands": [
+        "0x46332",
+        "0x4633f",
+        "0x46348"
+      ],
+      "registration_rva": "0x46353",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x4640a",
+      "guard_operands": [
+        "0x46410",
+        "0x4641d",
+        "0x46426"
+      ],
+      "registration_rva": "0x46431",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x478ba",
+      "guard_operands": [
+        "0x478c0",
+        "0x478cd",
+        "0x478d6"
+      ],
+      "registration_rva": "0x478e1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x50ceb",
+      "guard_operands": [
+        "0x50cf1",
+        "0x50cfe",
+        "0x50d07"
+      ],
+      "registration_rva": "0x50d12",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x519a9",
+      "guard_operands": [
+        "0x519af",
+        "0x519bc",
+        "0x519c5"
+      ],
+      "registration_rva": "0x519d0",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x53b2f",
+      "guard_operands": [
+        "0x53b35",
+        "0x53b42",
+        "0x53b4b"
+      ],
+      "registration_rva": "0x53b56",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x55e14",
+      "guard_operands": [
+        "0x55e1a",
+        "0x55e27",
+        "0x55e30"
+      ],
+      "registration_rva": "0x55e3b",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x58205",
+      "guard_operands": [
+        "0x5820b",
+        "0x58218",
+        "0x58221"
+      ],
+      "registration_rva": "0x5822c",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x58d9d",
+      "guard_operands": [
+        "0x58da3",
+        "0x58db0",
+        "0x58db9"
+      ],
+      "registration_rva": "0x58dc4",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x59e4f",
+      "guard_operands": [
+        "0x59e55",
+        "0x59e62",
+        "0x59e6b"
+      ],
+      "registration_rva": "0x59e76",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x5c673",
+      "guard_operands": [
+        "0x5c679",
+        "0x5c686",
+        "0x5c68f"
+      ],
+      "registration_rva": "0x5c69a",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x5ce9f",
+      "guard_operands": [
+        "0x5cea5",
+        "0x5ceb2",
+        "0x5cebb"
+      ],
+      "registration_rva": "0x5cec6",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x5e97a",
+      "guard_operands": [
+        "0x5e980",
+        "0x5e98d",
+        "0x5e996"
+      ],
+      "registration_rva": "0x5e9a1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x5ee4d",
+      "guard_operands": [
+        "0x5ee53",
+        "0x5ee60",
+        "0x5ee69"
+      ],
+      "registration_rva": "0x5ee74",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x65eb6",
+      "guard_operands": [
+        "0x65ebc",
+        "0x65ec9",
+        "0x65ed2"
+      ],
+      "registration_rva": "0x65edd",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x666ca",
+      "guard_operands": [
+        "0x666d0",
+        "0x666dd",
+        "0x666e6"
+      ],
+      "registration_rva": "0x666f1",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x685a0",
+      "guard_operands": [
+        "0x685a6",
+        "0x685b3",
+        "0x685bc"
+      ],
+      "registration_rva": "0x685c7",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x68962",
+      "guard_operands": [
+        "0x68968",
+        "0x68975",
+        "0x6897e"
+      ],
+      "registration_rva": "0x68989",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x69df2",
+      "guard_operands": [
+        "0x69df8",
+        "0x69e05",
+        "0x69e0e"
+      ],
+      "registration_rva": "0x69e19",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6b4d4",
+      "guard_operands": [
+        "0x6b4da",
+        "0x6b4e7",
+        "0x6b4f0"
+      ],
+      "registration_rva": "0x6b4fb",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6c0a2",
+      "guard_operands": [
+        "0x6c0a8",
+        "0x6c0b5",
+        "0x6c0be"
+      ],
+      "registration_rva": "0x6c0c9",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6ce02",
+      "guard_operands": [
+        "0x6ce08",
+        "0x6ce15",
+        "0x6ce1e"
+      ],
+      "registration_rva": "0x6ce29",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6cf88",
+      "guard_operands": [
+        "0x6cf8e",
+        "0x6cf9b",
+        "0x6cfa4"
+      ],
+      "registration_rva": "0x6cfaf",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6de6e",
+      "guard_operands": [
+        "0x6de74",
+        "0x6de81",
+        "0x6de8a"
+      ],
+      "registration_rva": "0x6de95",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6e4ea",
+      "guard_operands": [
+        "0x6e4f0",
+        "0x6e4fd",
+        "0x6e506"
+      ],
+      "registration_rva": "0x6e511",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x6f835",
+      "guard_operands": [
+        "0x6f83b",
+        "0x6f848",
+        "0x6f851"
+      ],
+      "registration_rva": "0x6f85c",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x7037d",
+      "guard_operands": [
+        "0x70383",
+        "0x70390",
+        "0x70399"
+      ],
+      "registration_rva": "0x703a4",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x716fb",
+      "guard_operands": [
+        "0x71701",
+        "0x7170e",
+        "0x71717"
+      ],
+      "registration_rva": "0x71722",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x71d58",
+      "guard_operands": [
+        "0x71d5e",
+        "0x71d6b",
+        "0x71d74"
+      ],
+      "registration_rva": "0x71d7f",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x7271e",
+      "guard_operands": [
+        "0x72724",
+        "0x72731",
+        "0x7273a"
+      ],
+      "registration_rva": "0x72745",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x73138",
+      "guard_operands": [
+        "0x7313e",
+        "0x7314b",
+        "0x73154"
+      ],
+      "registration_rva": "0x7315f",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x735a7",
+      "guard_operands": [
+        "0x735ad",
+        "0x735ba",
+        "0x735c3"
+      ],
+      "registration_rva": "0x735ce",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x7373b",
+      "guard_operands": [
+        "0x73741",
+        "0x7374e",
+        "0x73757"
+      ],
+      "registration_rva": "0x73762",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x74796",
+      "guard_operands": [
+        "0x7479c",
+        "0x747a9",
+        "0x747b2"
+      ],
+      "registration_rva": "0x747bd",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x748d9",
+      "guard_operands": [
+        "0x748df",
+        "0x748ec",
+        "0x748f5"
+      ],
+      "registration_rva": "0x74900",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x74e29",
+      "guard_operands": [
+        "0x74e2f",
+        "0x74e3c",
+        "0x74e45"
+      ],
+      "registration_rva": "0x74e50",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x74fe7",
+      "guard_operands": [
+        "0x74fed",
+        "0x74ffa",
+        "0x75003"
+      ],
+      "registration_rva": "0x7500e",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x75301",
+      "guard_operands": [
+        "0x75307",
+        "0x75314",
+        "0x7531d"
+      ],
+      "registration_rva": "0x75328",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x757ea",
+      "guard_operands": [
+        "0x757f0",
+        "0x757fd",
+        "0x75806"
+      ],
+      "registration_rva": "0x75811",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x76a75",
+      "guard_operands": [
+        "0x76a7b",
+        "0x76a88",
+        "0x76a91"
+      ],
+      "registration_rva": "0x76a9c",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x76bed",
+      "guard_operands": [
+        "0x76bf3",
+        "0x76c00",
+        "0x76c09"
+      ],
+      "registration_rva": "0x76c14",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x775de",
+      "guard_operands": [
+        "0x775e4",
+        "0x775f1",
+        "0x775fa"
+      ],
+      "registration_rva": "0x77605",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    },
+    {
+      "initializer_rva": "0x776e3",
+      "guard_operands": [
+        "0x776e9",
+        "0x776f6",
+        "0x776ff"
+      ],
+      "registration_rva": "0x7770a",
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903"
+    }
+  ],
+  "donor": {
+    "project": "HoMM2 Buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "file": "config/compiler_generated_data.tsv",
+    "corroboration": "Same compiler-generated std::ctype<wchar_t>::id guard identity is modeled as COMMON; this HoMM1 claim is established by its own complete instruction controls."
+  },
+  "remaining": "The guard data identity is enrolled. Most game TUs do not yet emit the corresponding library-header startup routines; their source/header reconstruction and matching remain incomplete. Volatile _$E ordinals are recorded as control evidence only, not pinned as source identities.",
+  "optimized_occurrences": [
+    {
+      "initializer_rva": "0x2a680",
+      "size": 32,
+      "guard_operands": [
+        "0x2a682",
+        "0x2a690"
+      ],
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903",
+      "code_except_verified_references": "8a0d00000000b00184c875080ac8880d000000006800000000e80000000059c3"
+    },
+    {
+      "initializer_rva": "0x56af0",
+      "size": 32,
+      "guard_operands": [
+        "0x56af2",
+        "0x56b00"
+      ],
+      "cleanup_rva": "0x11650",
+      "atexit_rva": "0x78903",
+      "code_except_verified_references": "8a0d00000000b00184c875080ac8880d000000006800000000e80000000059c3"
+    }
+  ],
+  "optimized_control": {
+    "source": "#include <string>\n",
+    "flags": "/O2 /Ob2 /GX /MT /G5",
+    "object_sha256": "94df01150e0114a4f7421d3a62151645b817c42d5edc57ac9a84ecd10f7927e0",
+    "symbol": "_$E19",
+    "bytes": 32,
+    "relocations": {
+      "2": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+      "16": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+      "21": "?id@?$ctype@G@std@@$E",
+      "26": "_atexit"
+    },
+    "cleanup": "The optimized control emits a one-byte ret cleanup; retail folds references to the five-byte unoptimized cleanup supplied by the earliest unit. Both bodies are compiler-emitted.",
+    "other_header_controls": [
+      "<locale> emits both collate<char> and ctype<wchar_t> initialization in one 63-byte body; it does not reproduce the isolated retail guard.",
+      "<xlocale> alone emits no initializer; its declarations are insufficient to trigger this instantiation."
+    ]
+  },
+  "all_guard_references": {
+    "count": 184,
+    "result": "All 184 reviewed absolute references to 0xd82d8 are the three checked operands in each of sixty unoptimized initializers plus two in each of two optimized initializers; no guard users remain unreviewed."
+  },
+  "crt_initializers": [
+    {
+      "site": "0x8e004",
+      "target": "0x11616",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e008",
+      "target": "0x132ee",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e00c",
+      "target": "0x18469",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e010",
+      "target": "0x18ae9",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e014",
+      "target": "0x1c8bf",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e018",
+      "target": "0x1d41f",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e01c",
+      "target": "0x21586",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e020",
+      "target": "0x2362c",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e024",
+      "target": "0x24a0f",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e028",
+      "target": "0x29c1c",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e02c",
+      "target": "0x2a680",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e030",
+      "target": "0x2b3b8",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e034",
+      "target": "0x38edf",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e038",
+      "target": "0x3b6c5",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e03c",
+      "target": "0x3bd20",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e040",
+      "target": "0x3c76b",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e044",
+      "target": "0x42c63",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e048",
+      "target": "0x44c4e",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e04c",
+      "target": "0x4632c",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e050",
+      "target": "0x4640a",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e054",
+      "target": "0x478ba",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e05c",
+      "target": "0x50ceb",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e060",
+      "target": "0x519a9",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e064",
+      "target": "0x53b2f",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e068",
+      "target": "0x55e14",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e06c",
+      "target": "0x56af0",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e070",
+      "target": "0x58205",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e074",
+      "target": "0x58d9d",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e078",
+      "target": "0x59e4f",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e07c",
+      "target": "0x5c673",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e080",
+      "target": "0x5ce9f",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e084",
+      "target": "0x5e97a",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e088",
+      "target": "0x5ee4d",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e08c",
+      "target": "0x65eb6",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e090",
+      "target": "0x666ca",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e094",
+      "target": "0x685a0",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e098",
+      "target": "0x68962",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0a8",
+      "target": "0x69df2",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0ac",
+      "target": "0x6b4d4",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0b0",
+      "target": "0x6c0a2",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0b4",
+      "target": "0x6ce02",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0b8",
+      "target": "0x6cf88",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0bc",
+      "target": "0x6de6e",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0c0",
+      "target": "0x6e4ea",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0c4",
+      "target": "0x6f835",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0c8",
+      "target": "0x7037d",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0cc",
+      "target": "0x716fb",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0d0",
+      "target": "0x71d58",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0d4",
+      "target": "0x7271e",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0d8",
+      "target": "0x73138",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0dc",
+      "target": "0x735a7",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0e0",
+      "target": "0x7373b",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0e4",
+      "target": "0x74796",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0e8",
+      "target": "0x748d9",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0ec",
+      "target": "0x74e29",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0f0",
+      "target": "0x74fe7",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0f4",
+      "target": "0x75301",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0f8",
+      "target": "0x757ea",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e0fc",
+      "target": "0x76a75",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e100",
+      "target": "0x76bed",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e104",
+      "target": "0x775de",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    },
+    {
+      "site": "0x8e108",
+      "target": "0x776e3",
+      "evidence": "CRT initialization/termination array; bound pushes 0x78e26, 0x78e35, 0x78eed, 0x78efe; _initterm at 0x78f3f"
+    }
+  ],
+  "header_control": {
+    "path": "build/toolchains/vc6/include/XLOCALE",
+    "sha256": "233e8bb556eb11ac2e63cf6b8889018c3f661924d86179ff8cf97e30c022988a",
+    "source": "std::ctype<_E>::id is declared as locale::id and defined in the header; locale::id has the size_t _Id member. wchar_t is unsigned short in VC6. The compiler emits the one-byte COMMON guard and synthesized five-byte cleanup; neither is hand-authored reconstruction source."
+  },
+  "enrolled_manifest_row": {
+    "name": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
+    "object": "BASE/AudiereEffects.c",
+    "rva": "0xd82d8",
+    "size": "0x1",
+    "storage": "bss",
+    "alignment": "0x4",
+    "section_ordinal": "-",
+    "section_offset": "-",
+    "scope": "external",
+    "provenance": "src-DATA-sizeof"
+  },
+  "fingerprints": {
+    "config/retail/data_compgen.tsv": "fa2a7242716b3a8a6f8a92af8208295af26f705b91c1f258b60e8bdeea00d3e1",
+    "config/retail/data.tsv": "f9fbb60e66a45b7b4ffe21b4211dfa51a434269a1d84fdaf1d99af013479fe87"
+  },
+  "validation": {
+    "common": "The generated manifest provides the existing emitted COMMON as one bss byte. All three current audio controls and the optimized header-only control agree with the documented instruction/reference checks.",
+    "coverage": "Every one of 184 guard operands and 62 CRT array entries verified.",
+    "build": "Strict delinking accepts the guard and advances to SOURCE/AI data identity 0x8a3e8.",
+    "limitations": "Most game units still lack the header-triggered startup emission; no strict source match is claimed for those routines. No data aliases, fake source guards or volatile function ordinal claims were added."
+  }
+}

@@ -3580,7 +3580,7 @@ DATA(0x004a98d0)
 i32 gScrollX = 0;
 DATA(0x004a98d4)
 i32 gScrollY = 0;
-DATA(0x00492c28)
+DATA(0x004a98d8)
 i32 gNoBorder = 0;
 DATA(0x00492c2c)
 i32 gEnlargeScreenBlit = 1;
@@ -4693,7 +4693,7 @@ DATA(0x00493f54)
 i8 gSkipIntro = 0;
 DATA(0x004a992c)
 i32 gAllBlack = 0;
-DATA(0x00493f5c)
+DATA(0x004a9930)
 i8 gInCombat = 0;
 DATA(0x00493f60)
 i8 gDirectConnect = 0;
@@ -4717,7 +4717,7 @@ DATA(0x00493f84)
 i8 gHighScoreRank = -1;
 DATA(0x00493f88)
 i8 gShowHighScore = 0;
-DATA(0x00493f8c)
+DATA(0x00493440)
 i32 gHighMemBuffer = 4000;
 DATA(0x00493f98)
 i8 gInPollSound = 0;

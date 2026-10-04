@@ -7000,7 +7000,7 @@ void advManager::ForceNewHover(void) {
     ProcessHover(&msg);
 }
 
-VA(0x00463ba8, 0x1b6)
+VA(0x00410746, 0x1d0)
 void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
     i16 yOrigin;
     i16 xOrigin;
@@ -7065,7 +7065,7 @@ void advManager::ScreenScroll(i8 direction, i32 updatePointer) {
 // donor PoL RVA 0x00068c5c; preferred Buka symbol ?CheckScreenScroll@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.475412;margin=0.607960;shape=0.306;size=0.761;calls=1.000;alternate=pol20:void advManager::CheckScreenScroll(void)@0x00068c5c
-VA(0x00463d5e, 0x1e1)
+VA(0x00410916, 0x197)
 void advManager::CheckScreenScroll(void) {
     i16 mouseX;
     i16 mouseY;
@@ -7111,7 +7111,7 @@ void advManager::CheckScreenScroll(void) {
 // donor PoL RVA 0x00068e17; preferred Buka symbol ?MouseInScrollZone@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.376012;margin=0.441568;shape=0.180;size=0.620;calls=1.000;alternate=pol20:int advManager::MouseInScrollZone(void)@0x00068e17
-VA(0x00463f3f, 0xa3)
+VA(0x00410aad, 0x79)
 i32 advManager::MouseInScrollZone(void) {
     i16 mouseX;
     i16 mouseY;
@@ -7130,7 +7130,7 @@ i32 advManager::MouseInScrollZone(void) {
 // donor PoL RVA 0x00068ea8; preferred Buka symbol ?SetInitialMapOrigin@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.512925;margin=0.905583;shape=0.330;size=0.958;calls=0.778;alternate=pol20:void advManager::SetInitialMapOrigin(void)@0x00068ea8
-VA(0x00463fe2, 0x283)
+VA(0x00410b26, 0x248)
 void advManager::SetInitialMapOrigin(void) {
     i16 x;
     i16 y;
@@ -7180,7 +7180,7 @@ void advManager::SetInitialMapOrigin(void) {
 // donor PoL RVA 0x00069160; preferred Buka symbol ?LoadRemote@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.559158;margin=0.708697;shape=0.333;size=0.638;calls=0.706;strings=advmice.mse;alternate=pol20:void advManager::LoadRemote(void)@0x00069160
-VA(0x00464265, 0x15d)
+VA(0x00410d6e, 0x131)
 void advManager::LoadRemote(void) {
     gpMouseManager->ReallyHidePointer();
     if (gbThisNetHumanPlayer[giCurPlayer])
@@ -7205,7 +7205,7 @@ void advManager::LoadRemote(void) {
 // donor PoL RVA 0x0006931e; preferred Buka symbol ?CheckHandleNet@advManager@@QAEPADXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410587;margin=0.478746;shape=0.288;size=0.750;calls=0.692;alternate=pol20:char * advManager::CheckHandleNet(void)@0x0006931e
-VA(0x004643c2, 0x178)
+VA(0x00410e9f, 0x13b)
 char* advManager::CheckHandleNet(void) {
     RemoteMessage* receivedPacket;
     i32 remotePlayerExited;
@@ -7237,7 +7237,6 @@ char* advManager::CheckHandleNet(void) {
                     ); // API-forced: char* record.
                 break;
             case REMOTE_COMMAND_PLAYER_EXIT:
-                LogStr("receive exit");
                 ReceiveRemotePlayerExit(
                     receivedPacket->payload.data[0],
                     receivedPacket->payload.data[1],
@@ -7255,7 +7254,7 @@ char* advManager::CheckHandleNet(void) {
 // donor PoL RVA 0x0006952a; preferred Buka symbol ?CheckHandleNetPlayerWait@advManager@@QAEHAAUtag_message@@H@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.447497;margin=1.157842;shape=0.264;size=0.731;calls=1.000;alternate=pol20:int advManager::CheckHandleNetPlayerWait(struct tag_message &, int)@0x0006952a
-VA(0x0046453a, 0xd4)
+VA(0x00410fda, 0xa2)
 i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain) {
     if (message.type == MESSAGE_MOUSE_MOVE)
         gpMouseManager->Main(message);
@@ -7286,7 +7285,7 @@ i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain)
 // donor PoL RVA 0x000695f7; preferred Buka symbol ?TrimLoopingSounds@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.593881;margin=0.540898;shape=0.483;size=0.978;calls=1.000;alternate=pol20:void advManager::TrimLoopingSounds(int)@0x000695f7
-VA(0x0046460e, 0x1c2)
+VA(0x0041107c, 0x1a2)
 void advManager::TrimLoopingSounds(i32 maxSamples) {
     if (gHighMemBuffer > 0)
         maxSamples += gHighMemBuffer / HIGH_MEMORY_BUFFER_DIVISOR;
@@ -7331,7 +7330,7 @@ disposeSamples:
 }
 
 // Buka 2.1 advManager::DisableButtons.
-VA(0x004647d0, 0xd0)
+VA(0x0041121e, 0xc3)
 void advManager::DisableButtons(void) {
     if (gpAdvManager->m_active != 1)
         return;
@@ -7339,7 +7338,7 @@ void advManager::DisableButtons(void) {
     SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_CLEAR_FLAGS);
 }
 
-VA(0x004648a0, 0xd0)
+VA(0x004112e1, 0xc3)
 void advManager::EnableButtons(void) {
     if (gpAdvManager->m_active != 1)
         return;
@@ -7347,7 +7346,7 @@ void advManager::EnableButtons(void) {
     SET_ADVENTURE_BUTTON_FLAGS(message, m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
 }
 
-VA(0x00464970, 0x138)
+VA(0x004113a4, 0x13e)
 void advManager::SaveAdventureBorder(void) {
     if (m_adventureBorder != NULL)
         return;
@@ -7377,7 +7376,7 @@ void advManager::SaveAdventureBorder(void) {
 // donor PoL RVA 0x00069abb; preferred Buka symbol ?DrawAdventureBorder@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.567997;margin=0.477634;shape=0.397;size=0.978;calls=1.000;alternate=pol20:void advManager::DrawAdventureBorder(void)@0x00069abb
-VA(0x00464aa8, 0x134)
+VA(0x004114e2, 0x134)
 void advManager::DrawAdventureBorder(void) {
     u8* savedPixels;
     i8* dest;
@@ -7413,7 +7412,7 @@ void advManager::DrawAdventureBorder(void) {
 // the literals of their users.
 DATA(0x0048e140)
 i32 gLimitUpdMinX = UPDATE_NONE;
-DATA(0x004a17b8)
+DATA(0x004a673c)
 i32 gLastScrollTime = 0;
 DATA(0x004a6740)
 i32 gSandAnim = 0;

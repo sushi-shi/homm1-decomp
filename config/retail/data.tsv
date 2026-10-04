@@ -14,6 +14,7 @@
 # Adventure-panel/drawing operand and payload review: buka-adventure-panel.json.
 # Ambient-sound operand and payload review: buka-environment-audio.json.
 # Travel-spell/route operand/payload review: buka-travel.json.
+# Scroll/network/border operand/payload review: buka-scroll-network.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
@@ -172,7 +173,6 @@ rva	kind
 0x00092b58	
 0x00092b84	
 0x00092c1c	
-0x00092c28	
 0x00092c2c	
 0x00092c30	
 0x00092c34	
@@ -202,6 +202,7 @@ rva	kind
 0x00093380	
 0x00093410	
 0x00093434	
+0x00093440	
 0x00093560	
 0x00093590	
 0x000935b0	
@@ -268,7 +269,6 @@ rva	kind
 0x00093f4c	
 0x00093f50	
 0x00093f54	
-0x00093f5c	
 0x00093f60	
 0x00093f68	
 0x00093f6c	
@@ -277,7 +277,6 @@ rva	kind
 0x00093f80	
 0x00093f84	
 0x00093f88	
-0x00093f8c	
 0x00093f98	
 0x0009e8b0	
 0x0009e8b4	
@@ -357,7 +356,6 @@ rva	kind
 0x000a16f4	
 0x000a1754	
 0x000a1790	
-0x000a17b8	
 0x000a2824	
 0x000a2878	
 0x000a287c	
@@ -492,6 +490,7 @@ rva	kind
 0x000a6728	
 0x000a672c	
 0x000a6730	
+0x000a673c	
 0x000a6740	
 0x000a6744	
 0x000a6748	
@@ -626,9 +625,11 @@ rva	kind
 0x000a98cc	
 0x000a98d0	
 0x000a98d4	
+0x000a98d8	
 0x000a98e4	
 0x000a9904	
 0x000a992c	
+0x000a9930	
 0x000a9940	
 0x000a9944	
 0x000a9b48	
@@ -851,3 +852,4 @@ rva	kind
 0x000d4708	
 0x000d690c	
 0x000d6910	
+0x000d82d8	common
