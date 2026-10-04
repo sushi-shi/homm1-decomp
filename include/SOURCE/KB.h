@@ -150,6 +150,37 @@ i8 CanBuy(class town* t, i16 type);
 extern "C" void PollSound();
 void ForcePollSound();
 char toupper(char character);
+H1_ENUM_CONST_BEGIN(Cp1251CaseConstant)
+    CYRILLIC_CASE_OFFSET = 0x20,
+    CYRILLIC_CAPITAL_YO = 0xa8,
+    CYRILLIC_SMALL_YO = 0xb8,
+    CYRILLIC_CAPITAL_A = 0xc0,
+    CYRILLIC_CAPITAL_YA = 0xdf,
+    CYRILLIC_SMALL_A = 0xe0,
+    CYRILLIC_SMALL_YA = 0xff
+H1_ENUM_CONST_END(Cp1251CaseConstant)
+
+// Buka combat messages fold ASCII and the Russian CP1251 alphabet, including
+// the separate Yo pair. Other codepage characters retain their original byte.
+inline char CyrillicToUpper(char c) {
+    if (static_cast<u8>(c) >= 'a' && static_cast<u8>(c) <= 'z')
+        return static_cast<u8>(c) - CYRILLIC_CASE_OFFSET;
+    if (static_cast<u8>(c) >= CYRILLIC_SMALL_A && static_cast<u8>(c) <= CYRILLIC_SMALL_YA)
+        return static_cast<u8>(c) - CYRILLIC_CASE_OFFSET;
+    if (static_cast<u8>(c) == CYRILLIC_SMALL_YO)
+        return static_cast<char>(CYRILLIC_CAPITAL_YO);
+    return c;
+}
+
+inline char CyrillicToLower(char c) {
+    if (static_cast<u8>(c) >= 'A' && static_cast<u8>(c) <= 'Z')
+        return static_cast<u8>(c) + CYRILLIC_CASE_OFFSET;
+    if (static_cast<u8>(c) >= CYRILLIC_CAPITAL_A && static_cast<u8>(c) <= CYRILLIC_CAPITAL_YA)
+        return static_cast<u8>(c) + CYRILLIC_CASE_OFFSET;
+    if (static_cast<u8>(c) == CYRILLIC_CAPITAL_YO)
+        return static_cast<char>(CYRILLIC_SMALL_YO);
+    return c;
+}
 i16 NullHandler(struct tag_message&);
 char* GetBuildingName(i32 race, i16 building);
 void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel);

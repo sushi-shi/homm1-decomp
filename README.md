@@ -47,10 +47,12 @@ Army initialization and resource loading are now reviewed, including separate
 English sprite stems and translated display names, plus the increased sample
 volume. Army drawing and walking are now migrated with the measured `/G5`
 profile and word-sized grid-update arguments; remaining stack placement and
-`Wince` boolean-conversion differences are documented. Strict delinking reaches
-`SpecialAttack`, stopping at data identity `0xa6770`; overlapping inherited data
-claims also remain. The old score ledger
-has been reset.
+`Wince` boolean-conversion differences are documented. Combat messages now use
+CP1251 case helpers and catalog fragments with original English preserved.
+The hydra attack and directional wrapper are migrated; the larger ranged and
+melee attacks still need complete review. Strict delinking reaches `DoAttack`,
+stopping at its first genie-message fragment (`0x8ef3c`); overlapping inherited
+data claims also remain. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

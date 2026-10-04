@@ -47,6 +47,12 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_MISSILE_HALF_HEIGHT = 30
 H1_ENUM_CONST_END(ArmyDrawingConstant)
 
+H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
+    TARGET_NAME_SIZE = 100
+H1_ENUM_CONST_END(ArmyMessageConstant)
+
+DATA(0x004a6770) static char gTargetName[TARGET_NAME_SIZE];
+
 VA(0x00413330, 0xbc)
 army::army(void) {
     i32 i;
@@ -557,7 +563,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
 // damage; creature 14 shoots twice.
 VA(0x00407f77, 0xc7f)
 void army::SpecialAttack(void) {
-    DATA(0x00490368)
+    DATA(0x004a67d8)
     static i32 gSecondShot = 0;
     i32 targetHexCol;
     i32 dmg;
@@ -777,28 +783,33 @@ void army::SpecialAttack(void) {
             inCastle = 0;
     }
     DamageEnemy(target, &dmg, &killCount, 1, inCastle ? ARMY_CASTLE_WALL_DEFENSE_BONUS : 0);
-    if (killCount > 0)
+    if (killCount > 0) {
+        strcpy(gTargetName, gArmyNames[target->m_creatureType]);
+        gTargetName[0] = CyrillicToLower(gTargetName[0]);
         sprintf(
             gText,
-            "%s %s %d %s.  %d %s %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.  %d %s %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             dmg,
-            "Damage",
+            localization::Tr("combat.fragment.damage_points"),
             killCount,
-            CREATURE_DISPLAY_NAME(target->m_creatureType, killCount),
-            killCount > 1 ? "perish" : "perishes"
+            killCount <= 1 ? gTargetName : gArmyNamesPlural[target->m_creatureType],
+            killCount <= 1 ? localization::Tr("combat.fragment.dies")
+                           : localization::Tr("combat.fragment.killed")
         );
-    else
+    } else
         sprintf(
             gText,
-            "%s %s %d %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             dmg,
-            "Damage"
+            localization::Tr("combat.fragment.damage_points")
         );
-    gText[0] -= 32;
+    gText[0] = CyrillicToUpper(gText[0]);
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
     if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
@@ -818,7 +829,7 @@ void army::SpecialAttack(void) {
 }
 
 // Attacks every enemy next to the stack (the hydra), then turns them back.
-VA(0x00408bf6, 0x765)
+VA(0x004154c8, 0x763)
 void army::DoHydraAttack(void) {
     i32 killedNow;
     i32 damage;
@@ -884,25 +895,29 @@ void army::DoHydraAttack(void) {
     if (totalLost > 0)
         sprintf(
             gText,
-            "%s %s %d %s.  %d %s %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.  %d %s %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             totDmg,
-            "Damage",
+            localization::Tr("combat.fragment.damage_points"),
             totalLost,
-            totalLost > 1 ? "creatures" : "creature",
-            totalLost > 1 ? "perish" : "perishes"
+            totalLost <= 1 ? localization::Tr("combat.fragment.troop")
+                           : localization::Tr("combat.fragment.troops"),
+            totalLost <= 1 ? localization::Tr("combat.fragment.dies")
+                           : localization::Tr("combat.fragment.killed")
         );
     else
         sprintf(
             gText,
-            "%s %s %d %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             totDmg,
-            "Damage"
+            localization::Tr("combat.fragment.damage_points")
         );
-    gText[0] -= 32;
+    gText[0] = CyrillicToUpper(gText[0]);
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
     WaitSample(m_samples[ARMY_SAMPLE_ATTACK]);
@@ -959,7 +974,7 @@ void army::DoHydraAttack(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0040935b, 0x2d)
+VA(0x00415c2b, 0x22)
 void army::DirDoAttack(i16 direction) {
     m_attackDirection = direction;
     DoAttack(0);
@@ -1113,32 +1128,38 @@ void army::DoAttack(i32 retaliation) {
     if (gGenieHalf)
         sprintf(
             gText,
-            "%s %s half the enemy troops!",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "destroy" : "destroys"
+            localization::Tr("combat.genie.half_army.buka"),
+            m_quantity <= 1 ? gArmyNames[m_creatureType] : gArmyNamesPlural[m_creatureType],
+            m_quantity <= 1 ? localization::Tr("combat.fragment.destroy_singular")
+                            : localization::Tr("combat.fragment.destroy_plural")
         );
-    else if (kills > 0)
+    else if (kills > 0) {
+        strcpy(gTargetName, gArmyNames[target->m_creatureType]);
+        gTargetName[0] = CyrillicToLower(gTargetName[0]);
         sprintf(
             gText,
-            "%s %s %d %s.  %d %s %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.  %d %s %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             dmg,
-            "Damage",
+            localization::Tr("combat.fragment.damage_points"),
             kills,
-            CREATURE_DISPLAY_NAME(target->m_creatureType, kills),
-            kills > 1 ? "perish" : "perishes"
+            kills <= 1 ? gTargetName : gArmyNamesPlural[target->m_creatureType],
+            kills <= 1 ? localization::Tr("combat.fragment.dies")
+                           : localization::Tr("combat.fragment.killed")
         );
-    else
+    } else
         sprintf(
             gText,
-            "%s %s %d %s.",
-            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
-            m_quantity > 1 ? "do" : "does",
+            "%s %s %s %d %s.",
+            localization::Tr("combat.fragment.attack"),
+            gArmyNamesPlural[m_creatureType],
+            localization::Tr("combat.fragment.does_damage"),
             dmg,
-            "Damage"
+            localization::Tr("combat.fragment.damage_points")
         );
-    gText[0] -= 32;
+    gText[0] = CyrillicToUpper(gText[0]);
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
     gpCombatManager->m_extendLimitDown = oldMode;
@@ -1820,6 +1841,6 @@ void army::MoveAttack(i32 hex, i32 moveOnly) {
     gpCombatManager->m_limitCreature = 1;
 }
 
-// ARMY owns retail .data 0x00490300-0x004a0a57 and .bss 0x004ca908-0x004ca917.
-DATA(0x004a72d4)
+// DamageEnemy sets this byte when the genie halves its target stack.
+DATA(0x004a67d4)
 i8 gGenieHalf;

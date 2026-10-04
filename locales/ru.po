@@ -3479,3 +3479,47 @@ msgstr "Ближайший город оккупирован. Не удалос�
 msgctxt "adventure.summon_boat.failed"
 msgid "Summon Boat failed!!!"
 msgstr "Не удалось вызвать корабль!"
+
+msgctxt "combat.fragment.attack"
+msgid "The"
+msgstr "Атака"
+
+msgctxt "combat.fragment.does_damage"
+msgid "do"
+msgstr "наносит"
+
+msgctxt "combat.fragment.damage_points"
+msgid "Damage"
+msgstr "ед. урона"
+
+msgctxt "combat.fragment.dies"
+msgid "perishes"
+msgstr "умирает."
+
+msgctxt "combat.fragment.killed"
+msgid "perish"
+msgstr "умирает."
+
+msgctxt "combat.fragment.troop"
+msgid "creature"
+msgstr "воин"
+
+msgctxt "combat.fragment.troops"
+msgid "creatures"
+msgstr "воинов"
+
+msgctxt "combat.fragment.destroy_singular"
+msgid "destroys"
+msgstr "уничтожено."
+
+msgctxt "combat.fragment.destroy_plural"
+msgid "destroy"
+msgstr "уничтожен."
+
+msgctxt "combat.genie.half_army.buka"
+msgid "%s %s half the enemy troops!"
+msgstr "%s %s уничтожил вражеских воинов!"
+
+msgctxt "combat.fragment.does_damage_singular"
+msgid "does"
+msgstr "наносит"

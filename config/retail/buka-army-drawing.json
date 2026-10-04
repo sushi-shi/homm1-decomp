@@ -7892,5 +7892,6 @@
       "source_correspondence": "army::SpecialAttack",
       "evidence": "Pinned absolute_reference_evidence.tsv: pushed address followed by repeated byte reads/writes. Byte-buffer identity needs complete review; no type or name is claimed."
     }
-  }
+  },
+  "historical_validation_scope": "Validation and source/object fingerprints in this file describe checkpoint adc8c600. Subsequent combat-message changes are recorded in buka-combat-messages.json."
 }

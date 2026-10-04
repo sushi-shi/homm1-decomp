@@ -870,3 +870,19 @@ HOMM1_MESSAGE("adventure.town_gate.land_required", "Town Gate Failed!!!  You mus
 HOMM1_MESSAGE("adventure.town_gate.no_town", "No available town.  Town Gate Failed!!!")
 HOMM1_MESSAGE("adventure.town_gate.occupied", "Nearest town occupied.  Town Gate Failed!!!")
 HOMM1_MESSAGE("adventure.summon_boat.failed", "Summon Boat failed!!!")
+
+// Buka combat message fragments. The original singular verb remains available.
+// Original NWC patterns (argument lists are preserved in buka-combat-messages.json):
+// "%s %s %d %s.  %d %s %s."
+// "%s %s %d %s."
+HOMM1_MESSAGE("combat.fragment.attack", "The")
+HOMM1_MESSAGE("combat.fragment.does_damage", "do")
+HOMM1_MESSAGE("combat.fragment.damage_points", "Damage")
+HOMM1_MESSAGE("combat.fragment.dies", "perishes")
+HOMM1_MESSAGE("combat.fragment.killed", "perish")
+HOMM1_MESSAGE("combat.fragment.troop", "creature")
+HOMM1_MESSAGE("combat.fragment.troops", "creatures")
+HOMM1_MESSAGE("combat.fragment.destroy_singular", "destroys")
+HOMM1_MESSAGE("combat.fragment.destroy_plural", "destroy")
+HOMM1_MESSAGE("combat.genie.half_army.buka", "%s %s half the enemy troops!")
+HOMM1_MESSAGE("combat.fragment.does_damage_singular", "does")

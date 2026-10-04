@@ -105,14 +105,23 @@ rva	name	provenance
 0x00013fd9	?Stand@army@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: army drawing/movement review, 0x1484a; buka-army-drawing.json
 0x0001402e	?Wince@army@@QAEXXZ	Buka army drawing/movement instruction and CFG review: army drawing/movement review; buka-army-drawing.json
 0x00014084	?Walk@army@@QAEXFCC@Z	Buka army drawing/movement instruction and CFG review: army drawing/movement review; buka-army-drawing.json
+0x000154c8	?DoHydraAttack@army@@QAEXXZ	Buka combat message/hydra review: full instruction/CFG review; buka-combat-messages.json
+0x00015c2b	?DirDoAttack@army@@QAEXF@Z	Buka combat message/hydra review: full instruction/CFG review; buka-combat-messages.json
+0x00015c4d	?DoAttack@army@@QAEXH@Z	Buka combat message/hydra review: 0x15c43; buka-combat-messages.json
+0x00016fdc	?CheckLuck@army@@QAEXXZ	Buka combat message/hydra review: 0x154df; buka-combat-messages.json
+0x0001717c	?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z	Buka combat message/hydra review: 0x15787; buka-combat-messages.json
+0x000174f1	?PowEffect@army@@QAEXC@Z	Buka combat message/hydra review: 0x158e5; buka-combat-messages.json
 0x00017d6f	?Strength@army@@QAEIXZ	Buka combat-AI instruction/CFG/EH review: 0x12889, 0x12928, 0x12aea; buka-combat-ai.json
 0x000184b0	??0armyGroup@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x11708; buka-combat-ai.json
+0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
 0x00021820	?DrawCursor@advManager@@QAEXXZ	Buka DrawCell instruction/CFG review: 0x6c02; buka-adventure-cell.json
 0x00021dc4	?GetCursorBaseFrame@advManager@@QAEFF@Z	Buka DrawCell instruction/CFG review: 0x67ac, 0x686f; buka-adventure-cell.json
 0x00022127	?MoveHero@advManager@@QAEPAVmapCell@@CCPAH00CPAC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x25e1; buka-adventure-commands.json
 0x00023670	?UpdateGrid@combatManager@@QAEXFF@Z	Buka army drawing/movement instruction and CFG review: 0x1400f, 0x14064; buka-army-drawing.json
+0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6; buka-combat-messages.json
+0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x15500, 0x15906; buka-combat-messages.json
 0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c; buka-army-drawing.json
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x14024, 0x14435, 0x14654; buka-army-drawing.json
 0x00024a50	?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2762; buka-adventure-commands.json
