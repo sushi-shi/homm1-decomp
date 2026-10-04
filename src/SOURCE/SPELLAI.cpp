@@ -20,13 +20,13 @@
 // float constants for its larger spell list).
 DATA(0x0048a6d0)
 static const float SPELL_AI_SLOW_MODIFIER = -0.11f;
-DATA(0x0048d504)
+DATA(0x0048a6d4)
 static const float SPELL_AI_BLIND_MODIFIER = -0.6f;
-DATA(0x0048d508)
+DATA(0x0048a6d8)
 static const float SPELL_AI_CURSE_MODIFIER = -0.18f;
-DATA(0x0048d50c)
+DATA(0x0048a6dc)
 static const float SPELL_AI_PARALYZE_MODIFIER = -0.6f;
-DATA(0x0048d510)
+DATA(0x0048a6e0)
 static const float SPELL_AI_BERSERK_MODIFIER = -0.7f;
 DATA(0x0048a6e4)
 static const float SPELL_AI_HASTE_MODIFIER = 0.33f;
@@ -34,14 +34,14 @@ DATA(0x0048a6e8)
 static const float SPELL_AI_BLESS_MODIFIER = 0.18f;
 DATA(0x0048a6ec)
 static const float SPELL_AI_STONESKIN_MODIFIER = 0.24f;
-DATA(0x0048d520)
+DATA(0x0048a6f0)
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
 DATA(0x004cccb4)
 i32 gSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
-DATA(0x004cb17c)
+DATA(0x004cccb0)
 i32 gSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.

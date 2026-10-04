@@ -176,7 +176,7 @@ BOOL AppIdle(void) {
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x00443052, 0x6ad)
 long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
-    DATA(0x0049f850)
+    DATA(0x004a9e48)
     static i32 gLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
         LogStr(
@@ -1360,10 +1360,10 @@ char* FindLastToken(char* text, char token) {
 }
 
 // kbwin owns retail .data 0x0049f7a8-0x004a0503 and .bss 0x004ca490-0x004ca903.
-DATA(0x0049f7a8)
-char gAppName[] = "Heroes";
-DATA(0x0049f7b0)
-char gTitle[] = "Heroes of Might and Magic";
+DATA(0x0049e700)
+char gAppName[] = localization::Tr("window.gAppName");
+DATA(0x0049e708)
+char gTitle[] = localization::Tr("window.gTitle");
 DATA(0x004a9e34)
 HWND hwndApp = NULL;
 DATA(0x004a9e38)
@@ -1372,23 +1372,23 @@ DATA(0x004a9e3c)
 void* hmnuApp = NULL;
 DATA(0x004a9e40)
 void* gEventHandle = NULL;
-DATA(0x0049f854)
+DATA(0x004a9e4c)
 i32 gClosingApp = 0;
 DATA(0x004a99e8)
 void* hInstApp;
-DATA(0x004c2068)
+DATA(0x004a99c8)
 struct tagRECT rcTemp;
 DATA(0x004a99dc)
 i32 gMainWinScreenHeight;
 DATA(0x004a9dec)
 void* hmnuCurrent;
-DATA(0x004c2080)
+DATA(0x004a99e0)
 i32 gTempX;
-DATA(0x004c2084)
+DATA(0x004a99e4)
 i32 iTempY;
-DATA(0x004c2078)
+DATA(0x004a99d8)
 i32 lTemp;
-DATA(0x004c2090)
+DATA(0x004a99ec)
 u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004a9df4)
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];

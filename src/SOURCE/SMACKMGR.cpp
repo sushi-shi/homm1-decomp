@@ -28,7 +28,7 @@ struct SmackSoundFormat {
 };
 #pragma pack(pop)
 
-// Buka retail VA 0x0049f7c0: twelve packed WAVE_FORMAT capability choices.
+DATA(0x0049f7c0)
 static SmackSoundFormat gSmackSoundFormats[12] = {
     {WAVE_FORMAT_4S16, 2, 44100, 16},
     {WAVE_FORMAT_4S08, 2, 44100, 8},
@@ -43,7 +43,7 @@ static SmackSoundFormat gSmackSoundFormats[12] = {
     {WAVE_FORMAT_1M16, 1, 11025, 16},
     {WAVE_FORMAT_1M08, 1, 11025, 8}
 };
-// Buka retail VA 0x0049f850.
+DATA(0x0049f850)
 SSmackOptions SmackOptions[6] = {
     {"BUKA", "", 1, 1, 1, 0, 0, 0, 0},
     {"NWCLOGO", "", 1, 1, 1, 0, 0, 0, 0},
@@ -52,39 +52,39 @@ SSmackOptions SmackOptions[6] = {
     {"WIN1", "", 1, 1, 0, 0, 0, 0, 0},
     {"WIN2", "", 1, 1, 0, 0, 0, 0, 0}
 };
-// Buka retail VA 0x0049f8f4.
+DATA(0x0049f8f4)
 static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
-// Buka retail VA 0x004cc8d0.
+DATA(0x004cc8d0)
 i8 gSmackNum;
-// Buka retail VA 0x004cc8d4. Set on natural completion; a user skip leaves zero.
+DATA(0x004cc8d4)
 static i32 gSmackCompleted;
-// Buka retail VA 0x004cc8d8.
+DATA(0x004cc8d8)
 static WAVEOUTCAPS gSmackWaveCaps;
-// Buka retail VA 0x004cc910.
+DATA(0x004cc910)
 static SmackSum gSmackSummary;
-// Buka retail VA 0x004cc964.
+DATA(0x004cc964)
 static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];
-// Buka retail VA 0x004ccc68.
+DATA(0x004ccc68)
 static i8 gSmackMainDone;
-// Buka retail VA 0x004ccc70.
+DATA(0x004ccc70)
 static SmackSoundFormat gSmackSoundFormat;
-// Buka retail VA 0x004ccc80.
+DATA(0x004ccc80)
 static PCMWAVEFORMAT gSmackWaveFormat;
-// Buka retail VA 0x004ccc90.
+DATA(0x004ccc90)
 static i32 gSmackLastFramePlayed;
-// Buka retail VA 0x004ccc94.
+DATA(0x004ccc94)
 static i32 gSmackSound;
-// Buka retail VA 0x004ccc98. The only surviving users dispose this resource.
+DATA(0x004ccc98)
 static resource* gSmackResource;
-// Buka retail VA 0x004ccc9c.
+DATA(0x004ccc9c)
 static font* gSmackFont;
-// Buka retail VA 0x004ccca0.
+DATA(0x004ccca0)
 static HDIGDRIVER gSmackDriver;
-// Buka retail VA 0x004ccca4.
+DATA(0x004ccca4)
 static i32 gSmackCollectSummary;
-// Buka retail VA 0x004ccca8.
+DATA(0x004ccca8)
 static Smack* gSmackPrimary;
-// Buka retail VA 0x004cccac.
+DATA(0x004cccac)
 static Smack* gSmackCompanion;
 
 VA(0x00458240, 0x18f)

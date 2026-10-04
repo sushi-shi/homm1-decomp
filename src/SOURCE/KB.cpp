@@ -2494,7 +2494,7 @@ void AddNetBoxLine(char* text) {
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
 VA(0x00441824, 0x11f)
 void ShutDown(char* message) {
-    DATA(0x0049f280)
+    DATA(0x004a9958)
     static i32 gInShutDown = 0;
     char buffer[768];
     if (gInShutDown)
@@ -3169,7 +3169,7 @@ void EarlyResizeWindow(i32, i32, i32, i32) {
 // 0x00492570 (2 x 16 bytes), 0x0049303c and 0x00494178 is not yet named.
 DATA(0x00491640)
 i16 gCastleAmounts[4] = {20, 20, 0, 0};
-DATA(0x00491648)
+DATA(0x00490a8c)
 i16 gHeroGoldCost = 2500;
 DATA(0x00491650)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
@@ -4664,7 +4664,7 @@ DATA(0x004a9920)
 i8 gHeroWindShowing = 0;
 DATA(0x004a9921)
 i8 gOverviewShowing = 0;
-DATA(0x00493f48)
+DATA(0x00493430)
 i32 gFullCombatScreenDrawn = 1;
 DATA(0x004a9924)
 i32 gLimitedCombatUpdatePalette = 0;
@@ -4692,9 +4692,9 @@ DATA(0x004a9940)
 i32 gAdvDisposeLevel = 0;
 DATA(0x004a9944)
 i32 gRemoteOn = 0;
-DATA(0x00493f80)
+DATA(0x004a9948)
 i8 gGameInitialized = 0;
-DATA(0x00493f84)
+DATA(0x0049343c)
 i8 gHighScoreRank = -1;
 DATA(0x004a9949)
 i8 gShowHighScore = 0;
@@ -4799,7 +4799,7 @@ DATA(0x004a7620)
 i32 giShowIntro;
 DATA(0x004a98a0)
 i32 glTimers[GLOBAL_TIMER_COUNT];
-DATA(0x004a8704)
+DATA(0x004a7fbc)
 i32 giScore;
 DATA(0x004a9404)
 armyGroup* gpMonGroup;

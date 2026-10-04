@@ -20,7 +20,7 @@
 // wingraph owns retail .data 0x0049fe60-0x0048eb17 (definitions below in
 // retail order; initializers are retail bytes) and .bss 0x004a46a0-0x004a4b7f.
 // Its DDSD line arguments are /Gi compiler line statics (docs/patterns/vc4-gi-line-var.md).
-DATA(0x0049fe60)
+DATA(0x004a0190)
 BOOL gWinGAttached = TRUE;
 DATA(0x004cdda0)
 BOOL gDDrawAttached = FALSE;
@@ -32,7 +32,7 @@ DATA(0x004a019c)
 i32 gMainVideoModeWidth = 1024;
 DATA(0x004a01a0)
 i32 gMainVideoModeHeight = 768;
-DATA(0x0049fe78)
+DATA(0x004a01a4)
 i32 Orientation = 1;
 DATA(0x004a01a8)
 WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
@@ -79,7 +79,7 @@ DATA(0x004cd8c8)
 _DDSURFACEDESC gDDSurfaceDesc;
 DATA(0x004cdd88)
 i32 gPaintStart;
-DATA(0x004c2580)
+DATA(0x004cd948)
 WingImage screenImage;
 // KB owns these scroll, combat-palette and configuration globals.
 extern i32 gScrollX;

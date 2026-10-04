@@ -47,97 +47,97 @@ extern i8 gDwellingType[4][6];
 // (VC4 orders .bss by name hash, not by definition).
 DATA(0x004ca188)
 i8 gShowComputerRoute = 0;
-DATA(0x0049f4d8)
+DATA(0x0049ef78)
 float gAttackHumanBonus = 2.0f;
-DATA(0x0049f4dc)
+DATA(0x0049ef7c)
 float gAttackComputerBonus = 0.8f;
-DATA(0x004af300)
+DATA(0x004b7434)
 i16 gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004aca74)
+DATA(0x004b4bac)
 float fBerserkFactor;
-DATA(0x004c0b90)
+DATA(0x004c8cb8)
 i32 iLastFrameRateTimer;
 DATA(0x004b4aa4)
 i8 giCurPlayer;
-DATA(0x004aca64)
+DATA(0x004b4b9c)
 float gWinChance;
-DATA(0x004aa034)
+DATA(0x004b2174)
 i32 gEventLoop;
 DATA(0x004ca164)
 i8 giBuildShipyard[GAME_PLAYER_COUNT];
-DATA(0x004c2048)
+DATA(0x004ca16c)
 i32 giMaxHeroesForThisPlayer;
 DATA(0x004b4ba0)
 i8 giBuildBoat[GAME_PLAYER_COUNT];
-DATA(0x004aa0cc)
+DATA(0x004b220c)
 float fReduceFactor;
 DATA(0x004c8cd0)
 u8 giCurPlayerBit;
-DATA(0x004aa030)
+DATA(0x004b2170)
 i8 giBestShipyardDist;
 DATA(0x004c8cc8)
 i32 bHeroBuiltThisTurn;
-DATA(0x004c0bb0)
+DATA(0x004c8cd4)
 i16 gaiHeroLiveChance[GAME_HERO_COUNT];
-DATA(0x004b2fec)
+DATA(0x004bb11c)
 i32 gAttackerLoss;
-DATA(0x004b2ff0)
+DATA(0x004bb120)
 i32 gDefenderLoss;
-DATA(0x004aa0d8)
+DATA(0x004b2218)
 i32 giHumanTownConquered;
 DATA(0x004c8cc4)
 i32 giCurTurn;
-DATA(0x004b2fd0)
+DATA(0x004bb100)
 i32 costTemp[RESOURCE_COUNT];
-DATA(0x004b1b90)
+DATA(0x004b9cc0)
 i8 gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004b221c)
 i32 iDummy;
-DATA(0x004b1b80)
+DATA(0x004b9cb4)
 i8 gbPossibleShipyardFound;
 DATA(0x004bb13c)
 float gafAITurnCostResource[RESOURCE_COUNT];
 DATA(0x004b7430)
 u8 gCurWatchPlayerHighBit;
-DATA(0x004c2044)
+DATA(0x004ca168)
 i32 iCurPlaceToVisit;
-DATA(0x004aa0e0)
+DATA(0x004b2220)
 i8 giBestShipyardId;
-DATA(0x004c0bf8)
+DATA(0x004c8d1c)
 i8 mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004aa0e8)
+DATA(0x004b2224)
 i16 gaiHeroStrategicRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004c205c)
+DATA(0x004ca180)
 i8 gbActualBoatFound;
 DATA(0x004b9cbc)
 u8 giCurWatchPlayerBit;
 DATA(0x004b4ba8)
 playerData* gpCurPlayer;
-DATA(0x004aa038)
+DATA(0x004b2178)
 float gfHeroInteractionBonus[GAME_HERO_COUNT];
-DATA(0x004c203c)
+DATA(0x004ca160)
 i32 gbBerserk;
-DATA(0x004c2054)
+DATA(0x004ca178)
 u8 giCurPlayerHighBit;
-DATA(0x004aca78)
+DATA(0x004b4bb0)
 i16 gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004b9cb8)
 i8 giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 DATA(0x004ac970)
 i32 iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
-DATA(0x004c0b98)
+DATA(0x004c8cc0)
 i32 gbTroopReload;
-DATA(0x004c204c)
+DATA(0x004ca170)
 i8 gbActualShipyardFound;
 
 // Buka 2.1's named AI factors. They are loaded, not folded, at /Od, and
 // retail .rdata keeps them in this declaration order at 0x0048d070 ahead of
 // the anonymous float literals.
-DATA(0x0048d070)
+DATA(0x0048a4ac)
 static const float AI_TARGET_HUMAN_VALUE_FACTOR = 1.5f;
 DATA(0x0048a4b0)
 static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
-DATA(0x0048d078)
+DATA(0x0048a4b4)
 static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
 DATA(0x0048a4b8)
 static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
@@ -1891,13 +1891,13 @@ void philAI::ValueOfBuyingHero(
 }
 
 // ValueOfEventAtPosition module state (.bss order follows names, not position).
-DATA(0x004b2ff4)
+DATA(0x004bb124)
 i32 gAttackerRemaining;
-DATA(0x004b2ff8)
+DATA(0x004bb128)
 i32 gDefenderRemaining;
-DATA(0x004b2ffc)
+DATA(0x004bb12c)
 i32 gOutcome;
-DATA(0x004b3000)
+DATA(0x004bb130)
 i32 gArtifactChoice1;
 
 // donor PoL RVA 0x0003e2a8; preferred Buka symbol ?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
@@ -2199,7 +2199,7 @@ i32 philAI::RVOfPosition(
 
 // Buka SVSearchArray: StrategicValueOfPosition's shared search, constructed
 // by its dynamic initializer between RVOfPosition and its first user.
-DATA(0x004b3038)
+DATA(0x004bb160)
 searchArray SVSearchArray;
 RVA_DYNINIT(0x0004c208, 0xf, SVSearchArray)
 // Its .CRT$XCU thunk (0x0048e008 -> 0x00427d90) opens this retail object:
@@ -2217,7 +2217,7 @@ i32 philAI::StrategicValueOfPosition(
     i8 immediate,
     i32* liveChance
 ) {
-    DATA(0x0049f734)
+    DATA(0x004ca198)
     static i8 gSVSearchArrayInUse = 0;
     i32 nGap;
     searchArray* pSearch;
@@ -2359,7 +2359,7 @@ i32 philAI::StrategicValueOfPosition(
 }
 
 // ValueOfEventAtPosition module state (.bss order follows names, not position).
-DATA(0x004b3004)
+DATA(0x004bb134)
 i32 gArtifactChoice2;
 
 // Buka 2.1 ValueOfTown without the later scenario-town bonuses: built
@@ -3470,35 +3470,35 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
 }
 
 // ValueOfEventAtPosition module state (.bss order follows names, not position).
-DATA(0x004b3008)
+DATA(0x004bb138)
 i32 gArtifactChoice3;
-DATA(0x004c0b8c)
+DATA(0x004c8cb4)
 i32 gEventTownId;
-DATA(0x004c2038)
+DATA(0x004ca15c)
 i32 gEventSeen;
-DATA(0x004aa0d4)
+DATA(0x004b2214)
 i32 gPurchaseNum;
-DATA(0x004c0ba4)
+DATA(0x004c8ccc)
 i32 gPurchaseSlot;
-DATA(0x004c2058)
+DATA(0x004ca17c)
 armyGroup* gEventTownArmy;
-DATA(0x004b302c)
+DATA(0x004bb158)
 i32 gDefaultEventType;
-DATA(0x004c0b94)
+DATA(0x004c8cbc)
 mapCell* gEventCell;
-DATA(0x004aca60)
+DATA(0x004b4b98)
 i32 gReduceByReload;
-DATA(0x004c2050)
+DATA(0x004ca174)
 i32 gReduceByBerserk;
-DATA(0x004c2060)
+DATA(0x004ca184)
 town* gEventTown;
-DATA(0x004aa0c8)
+DATA(0x004b2208)
 i32 gEventRV;
-DATA(0x004b3030)
+DATA(0x004bb15c)
 i32 gMonsterCount;
-DATA(0x004aa0d0)
+DATA(0x004b2210)
 i32 gTownValue;
-DATA(0x004aca6c)
+DATA(0x004b4ba4)
 hero* gEventHero;
 
 // @early-stop 99.77: the daemon-cave reward sum. Retail adds
@@ -3515,7 +3515,7 @@ hero* gEventHero;
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
 VA(0x0044efb4, 0x1d37)
 i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32* liveChance) {
-    DATA(0x0049f7a0)
+    DATA(0x0049ef80)
     static i32 gEvaluatingTravelGates = 1;
     i32 numToBuy;
     i32 bWon9;

@@ -338,7 +338,7 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00452137, 0x16d)
 i8 InitNetHost(void) {
-    DATA(0x004a2d4c)
+    DATA(0x004cc81d)
     static i8 gInitNetHostStatus = 0;
     i32 unused;
     i32 needName;
@@ -1068,7 +1068,7 @@ char* GetRemoteData(i8 remove) {
 
 VA(0x004535af, 0x46c)
 void PollRemote(void) {
-    DATA(0x004a3078)
+    DATA(0x004cc828)
     static i8 gInTimeoutFail = 0;
     i8 newControl;
     i8 queueFull;
@@ -1260,9 +1260,9 @@ transmitComplete:
 // The object's .data and .bss, in retail address order.
 DATA(0x0049f048)
 i32 gNetNameIndex = -1;
-DATA(0x004a2c04)
+DATA(0x004cc7f0)
 i32 gIDCtr = 0;
-DATA(0x004a2c1c)
+DATA(0x0049f054)
 i32 gBaudBits = 8;
 DATA(0x004cc800)
 i32 packetlen = 0;
@@ -1270,17 +1270,17 @@ DATA(0x004cc804)
 i32 inescape = 0;
 DATA(0x004cc808)
 i32 newpacket = 0;
-DATA(0x004a2c2c)
+DATA(0x004cc80c)
 i32 gInOrderCtr = 0;
-DATA(0x004a2c30)
+DATA(0x0049f058)
 i32 gLastConfirm = -1;
-DATA(0x004a2c34)
+DATA(0x004cc810)
 i32 gCurLastID = 0;
 DATA(0x004cc814)
 u8 GameMode = 0;
 DATA(0x004cc815)
 u8 gPacketSequence = 0;
-DATA(0x004a2c40)
+DATA(0x004cc818)
 i32 gLastHeartbeatSend = 0;
 DATA(0x0049f05c)
 i32 gLastHeartbeatReceive = 1999999999;
@@ -1290,7 +1290,7 @@ DATA(0x004cc81e)
 i8 gInitNetGuestStatus = 0;
 DATA(0x004cc81f)
 i8 gWaitForHostStatus = 0;
-DATA(0x004cd858)
+DATA(0x004cc7e8)
 char idstr[8];
 DATA(0x004cc6e8)
 char rcvBufOut[REMOTE_MESSAGE_SIZE];
@@ -1300,35 +1300,35 @@ DATA(0x004cb3e0)
 i32 iModemCommandPos;
 DATA(0x004cb3d8)
 i32 GUIMRrespptr;
-DATA(0x004cb300)
+DATA(0x004ca28c)
 i32 localstage;
 DATA(0x004ca1a0)
 char numbuf[40];
-DATA(0x004cd6e0)
+DATA(0x004cc670)
 i32 iLastIds[REMOTE_RECENT_ID_COUNT];
-DATA(0x004cc580)
+DATA(0x004cb510)
 i32 WFDCStage;
-DATA(0x004cb310)
+DATA(0x004ca29c)
 char remoteidstr[8];
 DATA(0x004cb564)
 char PacketSend[256];
-DATA(0x004cb30c)
+DATA(0x004ca298)
 i32 stime;
 DATA(0x004cb3f0)
 i32 iInOrder[REMOTE_QUEUE_CAPACITY];
-DATA(0x004cc480)
+DATA(0x004cb410)
 RemoteMessage sndBuf;
 DATA(0x004ca264)
 char cModemCommand[40];
 DATA(0x004ca294)
 i32 iLastDialPos;
-DATA(0x004cc44c)
+DATA(0x004cb3dc)
 i32 remotestage;
 DATA(0x004cb3e4)
 i32 gNumNetGuests;
 DATA(0x004cb2b0)
 char GUIMRresp[40];
-DATA(0x004cb304)
+DATA(0x004ca290)
 i32 oldsec;
 DATA(0x004ca2a8)
 inque_t inque;
@@ -1336,11 +1336,11 @@ DATA(0x004cb2d8)
 char packet[256];
 DATA(0x004cb3ec)
 i32 iLastActionTime;
-DATA(0x004cc6d8)
+DATA(0x004cb664)
 RemoteMessage rcvBufIn;
 DATA(0x004cb514)
 char GUIMRresponse[80];
 DATA(0x004cbf70)
 RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
-DATA(0x004cc7d8)
+DATA(0x004cb768)
 outque_t outque;

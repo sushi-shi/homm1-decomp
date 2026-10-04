@@ -13,7 +13,7 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-DATA(0x004a54c0)
+DATA(0x004d7f60)
 i32 gLeftRightSave = 0;
 
 VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)

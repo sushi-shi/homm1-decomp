@@ -17,21 +17,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-DATA(0x004a31e0)
+DATA(0x004a10e4)
 char gAdventureColor[] = "CO";
-DATA(0x004a31e4)
+DATA(0x004a10e8)
 char gAdventureMonochrome[] = "BW";
 DATA(0x004a31e8)
 char gAdventureBitmapFormat[] = "ADVM%s%02d.BMP";
-DATA(0x004a31f8)
+DATA(0x004a10fc)
 char gSpellColor[] = "CO";
-DATA(0x004a31fc)
+DATA(0x004a1100)
 char gSpellMonochrome[] = "BW";
 DATA(0x004a3200)
 char gSpellBitmapFormat[] = "SPEL%s%02d.BMP";
-DATA(0x004a3210)
+DATA(0x004a1114)
 char gCombatColor[] = "CO";
-DATA(0x004a3214)
+DATA(0x004a1118)
 char gCombatMonochrome[] = "BW";
 DATA(0x004a3218)
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
@@ -337,7 +337,7 @@ DATA(0x004a3100)
 i32 gMouseOffset[3] = {0, 40, 55};
 DATA(0x004cfb40)
 i32 gMouseCursorType = 0;
-DATA(0x004a3110)
+DATA(0x004a1004)
 u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {2, 3},   {2, 3},   {12, 11}, {12, 13}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},
     {15, 15}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},   {15, 15}, {15, 11}, {10, 10},

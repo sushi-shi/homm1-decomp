@@ -767,5 +767,5 @@ void fileRequester::ShowMapInfo(void) {
 }
 
 // REQUEST owns retail .bss 0x004c5130-0x004c5137.
-DATA(0x004cb184)
+DATA(0x004cc82c)
 i8 gRequestingGames;

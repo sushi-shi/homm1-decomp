@@ -4763,3 +4763,11 @@ msgstr "Виспер"
 msgctxt "table.gHeroNames.35.1"
 msgid "Vesper"
 msgstr "Виспер"
+
+msgctxt "window.gAppName"
+msgid "Heroes"
+msgstr "Герои"
+
+msgctxt "window.gTitle"
+msgid "Heroes of Might and Magic"
+msgstr "Герои Меча и Магии"

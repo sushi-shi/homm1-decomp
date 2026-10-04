@@ -6,18 +6,18 @@ rva	size	symbol	provenance
 0x0009f518	2	$SG16678	VC4 newline literal including terminator
 0x000a3100	12	?gMouseOffset@@3PAHA	three cursor-family base offsets
 0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000a3110	150	?gHotSpot@@3PAY01EA	75 two-axis cursor hotspots
+0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
 0x000a31bc	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
 0x000a31c0	30	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
-0x000a31e0	3	?gAdventureColor@@3PADA	adventure color filename component
-0x000a31e4	3	?gAdventureMonochrome@@3PADA	adventure monochrome filename component
+0x000a10e4	3	?gAdventureColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a10e8	3	?gAdventureMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a31e8	15	?gAdventureBitmapFormat@@3PADA	adventure cursor bitmap format
-0x000a31f8	3	?gSpellColor@@3PADA	spell color filename component
-0x000a31fc	3	?gSpellMonochrome@@3PADA	spell monochrome filename component
+0x000a10fc	3	?gSpellColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a1100	3	?gSpellMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a3200	15	?gSpellBitmapFormat@@3PADA	spell cursor bitmap format
-0x000a3210	3	?gCombatColor@@3PADA	combat color filename component
-0x000a3214	3	?gCombatMonochrome@@3PADA	combat monochrome filename component
+0x000a1114	3	?gCombatColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a1118	3	?gCombatMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a3218	15	?gCombatBitmapFormat@@3PADA	combat cursor bitmap format
 0x000a3228	30	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
 0x000a3248	30	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
@@ -283,3 +283,120 @@ rva	size	symbol	provenance
 0x000a0f04	4	_gEffectsVolume	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000a0f08	4	_gMusicVolume	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000a0f0c	44	_gVolumeLevels	Buka audio: complete typed payload and retail code users; buka-audio-data.json
+0x000b2208	4	?gEventRV@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8cbc	4	?gEventCell@@3PAVmapCell@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc7e8	8	?idstr@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2174	4	?gEventLoop@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a99ec	1024	?bProcessMessage@@3PAEA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b4b9c	4	?gWinChance@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cb664	256	?rcvBufIn@@3URemoteMessage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8cd4	72	?gaiHeroLiveChance@@3PAFA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b4b98	4	?gReduceByReload@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca184	4	?gEventTown@@3PAVtown@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cb410	256	?sndBuf@@3URemoteMessage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca16c	4	?giMaxHeroesForThisPlayer@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2220	1	?giBestShipyardId@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca170	1	?gbActualShipyardFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cb3dc	4	?remotestage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca28c	4	?localstage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8d1c	5184	?mapVisited@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009ef7c	4	?gAttackComputerBonus@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b4ba4	4	?gEventHero@@3PAVhero@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8ccc	4	?gPurchaseSlot@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2214	4	?gPurchaseNum@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc81d	1	_?gInitNetHostStatus@?1??InitNetHost@@YACXZ@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2170	1	?giBestShipyardDist@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x00090a8c	2	?gHeroGoldCost@@3FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb12c	4	?gOutcome@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cb510	4	?WFDCStage@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2224	10368	?gaiHeroStrategicRVOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b7434	10368	?gaiHeroEventStratRVOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009ef78	4	?gAttackHumanBonus@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b9cb4	1	?gbPossibleShipyardFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb11c	4	?gAttackerLoss@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc7f0	4	?gIDCtr@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8cc0	4	?gbTroopReload@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb128	4	?gDefenderRemaining@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb124	4	?gAttackerRemaining@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb120	4	?gDefenderLoss@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb15c	4	?gMonsterCount@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca17c	4	?gEventTownArmy@@3PAVarmyGroup@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc82c	1	?gRequestingGames@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x00093430	4	?gFullCombatScreenDrawn@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca178	1	?giCurPlayerHighBit@@3EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009343c	1	?gHighScoreRank@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9e4c	4	?gClosingApp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a99d8	4	?lTemp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca160	4	?gbBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b4bac	4	?fBerserkFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b9cc0	5184	?gaiTurnValueOfMine@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca180	1	?gbActualBoatFound@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca198	1	_?gSVSearchArrayInUse@?1??StrategicValueOfPosition@philAI@@QAEHPAVhero@@FFCPAH@Z@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca174	4	?gReduceByBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009ef80	4	_?gEvaluatingTravelGates@?1??ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb158	4	?gDefaultEventType@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc670	120	?iLastIds@@3PAHA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc80c	4	?gInOrderCtr@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc810	4	?gCurLastID@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9948	1	?gGameInitialized@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9958	4	_?gInShutDown@?1??ShutDown@@YAXPAD@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b220c	4	?fReduceFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2218	4	?giHumanTownConquered@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2178	144	?gfHeroInteractionBonus@@3PAMA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b4bb0	10368	?gaiLiveChanceOfPos@@3PAY0EI@FA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb100	28	?costTemp@@3PAHA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8cb4	4	?gEventTownId@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cb768	2056	?outque@@3Uoutque_t@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca29c	8	?remoteidstr@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009f058	4	?gLastConfirm@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc818	4	?gLastHeartbeatSend@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cc828	1	_?gInTimeoutFail@?1??PollRemote@@YAXXZ@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a01a4	4	?Orientation@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a0190	4	?gWinGAttached@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a7fbc	4	?giScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca168	4	?iCurPlaceToVisit@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a4ac	4	_AI_TARGET_HUMAN_VALUE_FACTOR	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a4b4	4	_AI_CREATURE_SAME_RACE_FACTOR	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb160	56148	?SVSearchArray@@3VsearchArray@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009f054	4	?gBaudBits@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cccb0	4	?gSpellAITargetSide@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a6d4	4	_SPELL_AI_BLIND_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a6d8	4	_SPELL_AI_CURSE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a6dc	4	_SPELL_AI_PARALYZE_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a6e0	4	_SPELL_AI_BERSERK_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0008a6f0	4	_SPELL_AI_SHIELD_MODIFIER	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000d7f60	4	?gLeftRightSave@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb138	4	?gArtifactChoice3@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000b2210	4	?gTownValue@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca290	4	?oldsec@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca298	4	?stime@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000cd948	1068	?screenImage@@3UWingImage@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000c8cb8	4	?iLastFrameRateTimer@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a99c8	16	?rcTemp@@3UtagRECT@@A	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a99e0	4	?gTempX@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a99e4	4	?iTempY@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb130	4	?gArtifactChoice1@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000bb134	4	?gArtifactChoice2@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000ca15c	4	?gEventSeen@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x0009f7c0	144	_gSmackSoundFormats	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x0009f850	162	?SmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x0009f8f4	44	_gSmackVolumes	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cc8d0	1	?gSmackNum@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cc8d4	4	_gSmackCompleted	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cc8d8	52	_gSmackWaveCaps	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cc910	84	_gSmackSummary	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cc964	768	_gSmackSavedPalette	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc68	1	_gSmackMainDone	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc70	12	_gSmackSoundFormat	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc80	16	_gSmackWaveFormat	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc90	4	_gSmackLastFramePlayed	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc94	4	_gSmackSound	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc98	4	_gSmackResource	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccc9c	4	_gSmackFont	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccca0	4	_gSmackDriver	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccca4	4	_gSmackCollectSummary	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000ccca8	4	_gSmackPrimary	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cccac	4	_gSmackCompanion	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x0009e700	6	?gAppName@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x0009e708	19	?gTitle@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
