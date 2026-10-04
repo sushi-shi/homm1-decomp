@@ -1,9 +1,10 @@
-# Vtable claims sized from retail.
+# Vtable migration in progress: advManager/baseManager reviewed for Buka; other rows remain inherited NWC evidence.
 rva	size	name	kind	note
+0x0008a38c	0xc	??_7advManager@@6B@	primary	Buka constructor/destructor vptr stores and complete three-slot COFF layout; buka-advmgr.json
+0x0008a758	0xc	??_7baseManager@@6B@	primary	Buka constructor/destructor vptr stores and complete three-slot COFF layout; buka-advmgr.json
 0x0008d3c8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
 0x0008d468	0xc	??_7townManager@@6B@	primary	Open/Close/Main
 0x0008d4a8	0xc	??_7swapManager@@6B@	primary	Open/Close/Main
-0x0008d4f0	0xc	??_7advManager@@6B@	primary	Open/Close/Main
 0x0008d538	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
 0x0008d548	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
 0x0008d570	0xc	??_7fileRequester@@6B@	primary	Open/Close/Main
@@ -20,7 +21,6 @@ rva	size	name	kind	note
 0x0008d600	0xc	??_7iconWidget@@6B@	primary	Draw/~iconWidget/Main
 0x0008d610	0xc	??_7textWidget@@6B@	primary	Draw/~textWidget/Main
 0x0008d620	0xc	??_7border@@6B@	primary	Draw/~border/Main
-0x0008d630	0xc	??_7baseManager@@6B@	primary	three pure slots (_purecall 0x483510): Open/Close/Main
 0x0008d640	0xc	??_7backdropWidget@@6B@	primary	Draw/~backdropWidget/Main
 0x0008d650	0xc	??_7textEntryWidget@@6B@	primary	Draw/~textEntryWidget/Main
 0x0008d660	0xc	??_7dimmerWidget@@6B@	primary	Draw/~dimmerWidget/Main

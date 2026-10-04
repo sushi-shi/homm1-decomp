@@ -2918,3 +2918,15 @@ msgstr "&Экран"
 msgctxt "resource.MNUTOWN.popup.2"
 msgid "&Help"
 msgstr "&Помощь"
+
+msgctxt "adventure.confirm_restart"
+msgid "Are you sure you want to restart?  (Your current game will be lost)"
+msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+
+msgctxt "adventure.confirm_load"
+msgid "Are you sure you want to load a new game?  (Your current game will be lost)"
+msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
+
+msgctxt "adventure.confirm_quit"
+msgid "Are you sure you want to quit?"
+msgstr "Вы хотите выйти из игры?"

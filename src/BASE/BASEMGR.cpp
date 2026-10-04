@@ -6,7 +6,7 @@
 
 #include <string.h>
 
-VA(0x0047dbe0, 0x4a)
+VA(0x004688c0, 0x5a)
 baseManager::baseManager(void) : m_next(NULL), m_prev(NULL) {
     m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
     m_messageMask = BASE_MANAGER_MESSAGE_MASK_ALL;

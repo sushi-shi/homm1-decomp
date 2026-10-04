@@ -125,7 +125,7 @@ H1_ENUM_CONST_END(HouseEventConstant)
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
-VA(0x00401000, 0x1f1a)
+// NWC 1.2: VA 0x00401000, size 0x1f1a; Buka identity awaits review.
 void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* pHero;
     tag_message unused;

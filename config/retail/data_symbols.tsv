@@ -1,3 +1,4 @@
+# Data-name migration in progress; only rows explicitly marked Buka are Buka evidence.
 rva	size	symbol	provenance
 0x0008d538	12	??_7highScoreManager@@6B@	retail ctor vptr; three slots Open10bf,Close1228,Main1285
 0x0009f50c	4	$SG16676	VC4 literal `at+` including terminator

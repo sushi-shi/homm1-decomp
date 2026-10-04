@@ -57,7 +57,7 @@ DATA(0x004aca74)
 float fBerserkFactor;
 DATA(0x004c0b90)
 i32 iLastFrameRateTimer;
-DATA(0x004ac968)
+DATA(0x004b4aa4)
 i8 giCurPlayer;
 DATA(0x004aca64)
 float gWinChance;
@@ -111,7 +111,7 @@ DATA(0x004c205c)
 i8 gbActualBoatFound;
 DATA(0x004b1b88)
 u8 giCurWatchPlayerBit;
-DATA(0x004aca70)
+DATA(0x004b4ba8)
 playerData* gpCurPlayer;
 DATA(0x004aa038)
 float gfHeroInteractionBonus[GAME_HERO_COUNT];

@@ -307,7 +307,7 @@ i8 game::IsMobile(i8 heroId) {
 }
 
 // Buka 2.1 game::GetWorldMapData.
-VA(0x00411d26, 0x1e)
+VA(0x0042bfee, 0x13)
 mapCell (*game::GetWorldMapData(void)) [MAP_CELL_GRID_SIZE] { return m_map; }
 
 // Buka 2.1 game::CreateBoat without the network map-change notice.

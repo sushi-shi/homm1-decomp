@@ -381,7 +381,7 @@ H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
 H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     FORCED_MUSIC_DELAY = 6000,
     CURSOR_SAMPLE_FAST_SET = 2,
-    CURSOR_SAMPLE_VOLUME = 0x40,
+    CURSOR_SAMPLE_VOLUME = 127,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
     // Open's locator scroll knobs (scroll.icn frame 4).
     SCROLL_Y = 195,
@@ -638,7 +638,7 @@ H1_ENUM_CONST_END(QuickViewWidget)
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
-VA(0x00452ec0, 0x2cc)
+VA(0x00401000, 0x2af)
 advManager::advManager(void) {
     i32 i;
 
@@ -693,13 +693,13 @@ advManager::advManager(void) {
 }
 
 // InitMainClasses deletes gpAdvManager through this vtable-reset destructor.
-VA(0x0045318c, 0x1f)
+VA(0x004012af, 0x14)
 advManager::~advManager() {}
 
 // donor PoL RVA 0x0005665f; preferred Buka symbol ?Open@advManager@@UAEHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.608500;margin=0.280356;shape=0.449;size=0.637;calls=0.611;strings=advManager|adv_wind.bin|advmice.mse;alternate=pol20:int advManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x0005665f
-VA(0x004531ab, 0xea6)
+VA(0x004012c3, 0xd5d)
 i16 advManager::Open(i16 id) {
     i32 savedShowIt;
     i32 firstTime;
@@ -905,7 +905,7 @@ i16 advManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     giBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
-    SetEffectsVolume(gConfig.soundVolume);
+    SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
     m_messageMask = BASE_MANAGER_ACCEPT_ADVENTURE;
     m_priority = id;
     m_active = 1;
@@ -916,14 +916,13 @@ i16 advManager::Open(i16 id) {
 // donor PoL RVA 0x00057028; preferred Buka symbol ?Close@advManager@@UAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.555933;margin=0.510723;shape=0.387;size=0.995;calls=0.909;alternate=pol20:void advManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x00057028
-VA(0x00454051, 0x3bd)
+VA(0x00402020, 0x388)
 void advManager::Close(void) {
     i16 index;
 
     ClearBottomView();
     gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
-    StopMusic();
-    StopAllSamples();
+    StopAllAudio();
     if (m_adventureBorder) {
         free(m_adventureBorder);
         m_adventureBorder = NULL;
@@ -965,7 +964,8 @@ void advManager::Close(void) {
         m_loopingSamples[index] = NULL;
     }
     for (index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; index++) {
-        gpResourceManager->Dispose(m_cursorSamples[index]);
+        if (m_cursorSamples[index])
+            gpResourceManager->Dispose(m_cursorSamples[index]);
         m_cursorSamples[index] = NULL;
     }
     gpWindowManager->RemoveWindow(m_adventureWindow);
@@ -981,7 +981,7 @@ void advManager::Close(void) {
 // donor PoL RVA 0x00057432; preferred Buka symbol ?GetCursorSampleSet@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701218;margin=0.695021;shape=0.378;size=0.921;calls=1.000;strings=wsnd%1d%1d.82M;alternate=pol20:void advManager::GetCursorSampleSet(int)@0x00057432
-VA(0x0045440e, 0xc7)
+VA(0x004023a8, 0xa2)
 void advManager::GetCursorSampleSet(i32 sampleSet) {
     if (sampleSet >= 1)
         sampleSet = CURSOR_SAMPLE_FAST_SET;
@@ -1130,7 +1130,7 @@ class mapCell* advManager::DoAdvCommand(void) {
 // donor PoL RVA 0x00057d6c; preferred Buka symbol ?Main@advManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.507706;margin=0.523825;shape=0.297;size=0.996;calls=0.852;alternate=pol20:int advManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00057d6c
-VA(0x00454aee, 0xe10)
+VA(0x0040298b, 0xc7e)
 i16 advManager::Main(struct tag_message& message) {
     DATA(0x004a1a74)
     static i32 gCheatSeq = 0;
@@ -1427,20 +1427,19 @@ i16 advManager::Main(struct tag_message& message) {
                         cmdValue = MAIN_MENU_NEW_GAME;
                         strcpy(
                             gText,
-                            "Are you sure you want to restart?  (Your current game will be lost)"
+                            localization::Tr("adventure.confirm_restart")
                         );
                         goto confirmGameCommand;
                     case INPUT_SCAN_L:
                         cmdValue = MAIN_MENU_LOAD_GAME;
                         strcpy(
                             gText,
-                            "Are you sure you want to load a new game?  (Your current game will be "
-                            "lost)"
+                            localization::Tr("adventure.confirm_load")
                         );
                         goto confirmGameCommand;
                     case INPUT_SCAN_Q:
                         cmdValue = MAIN_MENU_QUIT;
-                        strcpy(gText, "Are you sure you want to quit?");
+                        strcpy(gText, localization::Tr("adventure.confirm_quit"));
                         goto confirmGameCommand;
                     confirmGameCommand:
                         bQuit = 1;
@@ -7439,7 +7438,7 @@ DATA(0x004a17c4)
 i32 TrigX = 0;
 DATA(0x004a17c8)
 i32 TrigY = 0;
-DATA(0x004a17cc)
+DATA(0x004a6750)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x004a17d0)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;

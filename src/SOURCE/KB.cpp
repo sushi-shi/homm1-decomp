@@ -3571,7 +3571,7 @@ u8 gMonoColorMap[256] = {
     218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236,
     237, 238, 239, 240, 241, 242, 243, 244, 245,
 };
-DATA(0x00492c18)
+DATA(0x004a98cc)
 i32 gLoadingMonoIcon = 0;
 DATA(0x00492c1c)
 i32 gMonoIconSkip = -1;
@@ -3587,7 +3587,7 @@ DATA(0x00492c30)
 void* hmnuDflt = NULL;
 DATA(0x00492c34)
 void* hmnuCmbt = NULL;
-DATA(0x00492c38)
+DATA(0x004a98e4)
 void* hmnuAdv = NULL;
 DATA(0x00492c3c)
 void* hmnuTown = NULL;
@@ -4684,7 +4684,7 @@ DATA(0x00493f70)
 i32 gLimitToExtent = 0;
 DATA(0x00493f74)
 i32 gCurrArmyDrawn = 1;
-DATA(0x00493f78)
+DATA(0x004a9940)
 i32 gAdvDisposeLevel = 0;
 DATA(0x00493f7c)
 i32 gRemoteOn = 0;
@@ -4731,9 +4731,9 @@ DATA(0x004a82d4)
 inputManager* gpInputManager;
 DATA(0x004a7d54)
 i32 iMaxMapExtra;
-DATA(0x004a7f74)
+DATA(0x004a7834)
 palette* gPalette;
-DATA(0x004a7bf8)
+DATA(0x004a74d8)
 resourceManager* gpResourceManager;
 DATA(0x004a8708)
 u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
@@ -4757,7 +4757,7 @@ DATA(0x004a7c10)
 heroWindow* gNormalDialogWindow;
 DATA(0x004a7b88)
 i32 giHostGamePos;
-DATA(0x004a7870)
+DATA(0x004a7164)
 mouseManager* gpMouseManager;
 DATA(0x004a7b78)
 class font* bigFont;
@@ -4779,7 +4779,7 @@ DATA(0x004a7b90)
 i32 giHeroScreenSrcIndex;
 DATA(0x004a7bb0)
 i8 giWeekType;
-DATA(0x004a7878)
+DATA(0x004a7168)
 char gText[768];
 DATA(0x004a7bfc)
 i32 gbInNewGameSetup;
@@ -4793,19 +4793,19 @@ DATA(0x004a7bd0)
 char gFullMapName[20];
 DATA(0x004a7d48)
 i32 giShowIntro;
-DATA(0x004aa000)
+DATA(0x004a98a0)
 i32 glTimers[GLOBAL_TIMER_COUNT];
 DATA(0x004a8704)
 i32 giScore;
 DATA(0x004a9b4c)
 armyGroup* gpMonGroup;
-DATA(0x004a9b70)
+DATA(0x004a9428)
 configStruct gConfig;
 DATA(0x004a8150)
 char gcRegAppPath[352];
 DATA(0x004a9b58)
 i8 gCampaignChoice;
-DATA(0x004a82e4)
+DATA(0x004a7ba0)
 class game* gpGame;
 DATA(0x004a7f58)
 i8 gbRetreatWin;
@@ -4813,7 +4813,7 @@ DATA(0x004a82d0)
 H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 DATA(0x004a7c08)
 i16 gCurLoadedSpellFileId;
-DATA(0x004a7d44)
+DATA(0x004a761c)
 i32 giBottomViewOverride;
 DATA(0x004a7df8)
 char gLastFilename[352];
@@ -4863,7 +4863,7 @@ DATA(0x004a7348)
 char gMapDescription[124];
 DATA(0x004a7bb8)
 char* DEFAULT_AGGREGATE_NAME;
-DATA(0x004a82d8)
+DATA(0x004a7b94)
 i8 gbThisNetHumanPlayer[4];
 DATA(0x004a7ff0)
 char cAggPathName[352];
@@ -4873,21 +4873,21 @@ DATA(0x004a77c4)
 i8 gbFunctionComplete;
 DATA(0x004a82ec)
 i8 gbIAmGreatest;
-DATA(0x004a7f5c)
+DATA(0x004a7824)
 i16 gMapX;
-DATA(0x004a7f60)
+DATA(0x004a7826)
 i16 gMapY;
 DATA(0x004a7c18)
 char gcWinText[300];
 DATA(0x004a7bac)
 i8 bDataEntryTime;
-DATA(0x004aa01c)
+DATA(0x004a98bc)
 i32 bShowIt;
 DATA(0x004a7340)
 i32 giDebugLevel;
-DATA(0x004a7bc8)
+DATA(0x004a74a8)
 heroWindowManager* gpWindowManager;
-DATA(0x004a7bc4)
+DATA(0x004a74a4)
 i32 giCurWatchPlayer;
 DATA(0x004a9ca8)
 i32 giBottomViewResourceQty;

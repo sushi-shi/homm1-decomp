@@ -1,14 +1,20 @@
-# Buka function identities: reviewed PE import thunks and exact pathfinding call referents.
-# These names do not create source claims or matching-denominator entries.
-# Inherited NWC identities are retired; remaining Buka referents still require review.
+# Buka reviewed function identities; source claims and strict matching remain separate.
 # image-sha256: 34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db
 rva	name	provenance
+0x00001000	??0advManager@@QAE@XZ	Buka adventure-manager family: reviewed source family; buka-advmgr.json
+0x000012af	??1advManager@@QAE@XZ	Buka adventure-manager family: reviewed source family; buka-advmgr.json
+0x000012c3	?Open@advManager@@UAEFF@Z	Buka adventure-manager family: reviewed source family; buka-advmgr.json
+0x00002020	?Close@advManager@@UAEXXZ	Buka adventure-manager family: reviewed source family; buka-advmgr.json
+0x000023a8	?GetCursorSampleSet@advManager@@QAEXH@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
+0x0000298b	?Main@advManager@@UAEFAAUtag_message@@@Z	Buka adventure-manager family: reviewed source family; buka-advmgr.json
 0x00006d26	?GetCell@advManager@@QAEPAVmapCell@@FF@Z	Buka exact pathfinding instruction correspondence: 0x2a465, 0x2a4e0, 0x561d5, 0x563b8, 0x564c1, 0x56504, 0x5660c, 0x56909, 0x5695d; config/retail/buka-pathfinding.json
+0x00007f20	?ClearBottomView@advManager@@QAEXXZ	Buka adventure-manager family: 0x202d; buka-advmgr.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x00029c70	?Clear@searchArray@@QAEXXZ	Buka exact pathfinding instruction correspondence: 0x55e6a, 0x56175; config/retail/buka-pathfinding.json
 0x00029d50	?CalcTerrainCost@@YAHHHHH@Z	Buka exact pathfinding instruction correspondence: 0x55f72, 0x56646, 0x56665, 0x56863, 0x56897, 0x56a18, 0x56a3f; config/retail/buka-pathfinding.json
 0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97; config/retail/buka-pathfinding.json
 0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef; config/retail/buka-pathfinding.json
+0x0002bfee	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	Buka adventure-manager family: 0x1265, reviewed source family; buka-advmgr.json
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
 0x000685e0	_waveOutGetDevCapsA@12	Buka FF25 import thunk at 0x685e0; PE IAT 0x8a2d8 WINMM.dll!waveOutGetDevCapsA; decoration from pinned or verified import library, or compiled WinG caller
 0x000685e6	_waveOutGetNumDevs@0	Buka FF25 import thunk at 0x685e6; PE IAT 0x8a2d4 WINMM.dll!waveOutGetNumDevs; decoration from pinned or verified import library, or compiled WinG caller
@@ -131,7 +137,19 @@ rva	name	provenance
 0x000688a4	_SmackSoundUseMSS@4	Buka FF25 import thunk at 0x688a4; PE IAT 0x8a31c smackw32.DLL!33; decoration from pinned or verified import library, or compiled WinG caller
 0x000688aa	_SmackClose@4	Buka FF25 import thunk at 0x688aa; PE IAT 0x8a320 smackw32.DLL!18; decoration from pinned or verified import library, or compiled WinG caller
 0x000688b0	_Netbios@4	Buka FF25 import thunk at 0x688b0; PE IAT 0x8a1f8 NETAPI32.dll!Netbios; decoration from pinned or verified import library, or compiled WinG caller
+0x000688c0	??0baseManager@@QAE@XZ	Buka adventure-manager family: 0x100d, reviewed source family; buka-advmgr.json
+0x00069d8e	?StopAllAudio@@YAXXZ	Buka adventure-manager family: 0x203f; buka-advmgr.json
+0x00069dd5	?SetVolumes@@YAXHH@Z	Buka adventure-manager family: Open call 0x1fd4; manually reconstructed Audio.cpp and buka-audio.json; buka-advmgr.json
+0x0006a657	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	Buka adventure-manager family: 0x2337; buka-advmgr.json
+0x0006b8b2	?SetPointer@mouseManager@@QAEXF@Z	Buka adventure-manager family: 0x203a; buka-advmgr.json
+0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
+0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
+0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
+0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
+0x00078156	_free	Buka adventure-manager family: 0x205a; buka-advmgr.json
+0x0007823f	_sprintf	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
+0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
 0x0007b09e	_GetCurrentThread@0	Buka FF25 import thunk at 0x7b09e; PE IAT 0x8a124 KERNEL32.dll!GetCurrentThread; decoration from pinned or verified import library, or compiled WinG caller
 0x00088550	_RtlUnwind@16	Buka FF25 import thunk at 0x88550; PE IAT 0x8a1c4 KERNEL32.dll!RtlUnwind; decoration from pinned or verified import library, or compiled WinG caller

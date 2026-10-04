@@ -183,7 +183,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/ADVMGR"
 source = "src/SOURCE/ADVMGR.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/CMBTMGR"
