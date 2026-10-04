@@ -6,7 +6,9 @@ Russian catalogs. Work is on `decomp-buka-2003`, branched from 1.2 at
 `43cf275fee2f`. See [the Buka migration](docs/buka-2003.md) for documented
 behavior changes, evidence, validation and remaining work.
 
-The port is in progress. The active compiler, address claims and comparison
+The Audiere device and Ogg music routines are reconstructed and compile with
+the pinned VC6 SP5 toolchain; sample playback and caller integration remain.
+The active compiler, address claims and comparison
 still use the August 1997 **1.2 regression control**, pinned in
 [targets.json](config/retail/targets.json). The generated scores below describe
 that control; they are not Buka matching results.

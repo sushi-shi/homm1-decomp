@@ -1,6 +1,6 @@
 {
   "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
-  "status": "retail evidence; descriptive function names are not recovered symbols; source integration pending",
+  "status": "retail evidence; device and music sources reconstructed and compiler-checked; sample/caller and strict-target integration pending; descriptive names are not recovered symbols",
   "music": {
     "play_rva": "0x000692fd",
     "stop_rva": "0x00069742",
@@ -323,6 +323,175 @@
     "play_rva": "0x00068b37",
     "volume_scale_rva": "0x00069d6e",
     "volume_divisor_rva": "0x0008a764",
-    "volume_divisor": 127.0
+    "volume_divisor": 127.0,
+    "destructor_rva": "0x00075282",
+    "destructor_behavior": "StopSample(this), delete sample data, zero the complete 28-byte playback data subobject, then destroy resource base"
+  },
+  "source_identities": {
+    "src/BASE/Audio.cpp": {
+      "functions": [
+        {
+          "name": "VolumeLevel",
+          "rva": "0x00069b56",
+          "size": "0xf"
+        },
+        {
+          "name": "GetAudioDevice",
+          "rva": "0x00069b65",
+          "size": "0x70"
+        },
+        {
+          "name": "InitAudio",
+          "rva": "0x00069bd5",
+          "size": "0x132"
+        },
+        {
+          "name": "ShutdownAudio",
+          "rva": "0x00069d07",
+          "size": "0x5c"
+        },
+        {
+          "name": "GetEffectsVolume",
+          "rva": "0x00069d63",
+          "size": "0xb"
+        },
+        {
+          "name": "ScaleSampleVolume",
+          "rva": "0x00069d6e",
+          "size": "0x15"
+        },
+        {
+          "name": "GetMusicVolume",
+          "rva": "0x00069d83",
+          "size": "0xb"
+        },
+        {
+          "name": "StopAllAudio",
+          "rva": "0x00069d8e",
+          "size": "0xf"
+        },
+        {
+          "name": "SetEffectsVolume",
+          "rva": "0x00069d9d",
+          "size": "0x1c"
+        },
+        {
+          "name": "SetMusicVolume",
+          "rva": "0x00069db9",
+          "size": "0x1c"
+        },
+        {
+          "name": "SetVolumes",
+          "rva": "0x00069dd5",
+          "size": "0x1d"
+        }
+      ],
+      "data": [
+        {
+          "declaration": "audiere::AudioDevicePtr AudiereDevice::device;",
+          "rva": "0x000cdf50"
+        },
+        {
+          "declaration": "static float gEffectsVolume = 1.0f;",
+          "rva": "0x000a0f04"
+        },
+        {
+          "declaration": "static float gMusicVolume = 1.0f;",
+          "rva": "0x000a0f08"
+        },
+        {
+          "declaration": "static float gVolumeLevels[11] = {",
+          "rva": "0x000a0f0c"
+        }
+      ]
+    },
+    "src/BASE/AudiereMusic.cpp": {
+      "functions": [
+        {
+          "name": "ShouldRepeatMusic",
+          "rva": "0x000692b6",
+          "size": "0x47"
+        },
+        {
+          "name": "PlayMusic",
+          "rva": "0x000692fd",
+          "size": "0x43b"
+        },
+        {
+          "name": "GetCurrentTrack",
+          "rva": "0x00069738",
+          "size": "0xa"
+        },
+        {
+          "name": "StopMusic",
+          "rva": "0x00069742",
+          "size": "0x164"
+        },
+        {
+          "name": "UpdateMusicVolume",
+          "rva": "0x000698a6",
+          "size": "0x55"
+        },
+        {
+          "name": "SetMusicSource",
+          "rva": "0x000698fb",
+          "size": "0x128"
+        },
+        {
+          "name": "MusicPlaying",
+          "rva": "0x00069a23",
+          "size": "0x36"
+        },
+        {
+          "name": "SuspendMusic",
+          "rva": "0x00069a59",
+          "size": "0x12"
+        },
+        {
+          "name": "ResumeMusic",
+          "rva": "0x00069a6b",
+          "size": "0x12"
+        },
+        {
+          "name": "MusicSuspended",
+          "rva": "0x00069a7d",
+          "size": "0x11"
+        }
+      ],
+      "data": [
+        {
+          "declaration": "audiere::OutputStreamPtr AudiereMusic::stream;",
+          "rva": "0x000cddec"
+        },
+        {
+          "declaration": "audiere::SampleSourcePtr AudiereMusic::source;",
+          "rva": "0x000cdf6c"
+        },
+        {
+          "declaration": "static int gMusicSuspensions;",
+          "rva": "0x000cdde8"
+        },
+        {
+          "declaration": "static int gCurrentTrack = -1;",
+          "rva": "0x000a0d70"
+        },
+        {
+          "declaration": "static int gCDTrackMap[100] = {",
+          "rva": "0x000a0d74"
+        },
+        {
+          "declaration": "static char gMusicFilename[352];",
+          "rva": "0x000cddf0"
+        },
+        {
+          "declaration": "static int gMusicPositions[100];",
+          "rva": "0x000cdf74"
+        },
+        {
+          "declaration": "static int gMusicSource;",
+          "rva": "0x000ce10c"
+        }
+      ]
+    }
   }
 }

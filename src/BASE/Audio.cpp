@@ -1,0 +1,88 @@
+// Buka 2003 audio device and volume controls.
+
+#include <match.h>
+
+#include <BASE/audio.h>
+
+// Buka retail VA 0x004cdf50.
+audiere::AudioDevicePtr AudiereDevice::device;
+// Buka retail VA 0x004a0f04.
+static float gEffectsVolume = 1.0f;
+// Buka retail VA 0x004a0f08.
+static float gMusicVolume = 1.0f;
+// Buka retail VA 0x004a0f0c.
+static float gVolumeLevels[11] = {
+    0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f,
+    0.3f, 0.2f, 0.15f, 0.1f, 0.05f
+};
+
+// Buka retail VA 0x00469b56, size 0xf.
+float VolumeLevel(int level) {
+    return gVolumeLevels[level];
+}
+
+// Buka retail VA 0x00469b65, size 0x70.
+audiere::AudioDevicePtr GetAudioDevice() {
+    return AudiereDevice::device;
+}
+
+// Buka retail VA 0x00469bd5, size 0x132.
+bool InitAudio() {
+    audiere::AudioDevice* device = audiere::OpenDevice("winmm", NULL);
+    if (device) {
+        AudiereDevice::device = device;
+    } else {
+        AudiereDevice::device = audiere::OpenDevice("", NULL);
+        if (!AudiereDevice::device)
+            return false;
+        // Retail releases even a successful fallback device (RVA 0x69caf).
+        AudiereDevice::device = NULL;
+        return true;
+    }
+    return true;
+}
+
+// Buka retail VA 0x00469d07, size 0x5c.
+void ShutdownAudio() {
+    StopAllAudio();
+    AudiereDevice::device = NULL;
+}
+
+// Buka retail VA 0x00469d63, size 0xb.
+float GetEffectsVolume() {
+    return gEffectsVolume;
+}
+
+// Buka retail VA 0x00469d6e, size 0x15.
+float ScaleSampleVolume(int volume) {
+    return GetEffectsVolume() * volume / 127.0f;
+}
+
+// Buka retail VA 0x00469d83, size 0xb.
+float GetMusicVolume() {
+    return gMusicVolume;
+}
+
+// Buka retail VA 0x00469d8e, size 0xf.
+void StopAllAudio() {
+    StopAllSamples();
+    StopMusic();
+}
+
+// Buka retail VA 0x00469d9d, size 0x1c.
+void SetEffectsVolume(int level) {
+    gEffectsVolume = VolumeLevel(level);
+    UpdateAllSampleVolumes();
+}
+
+// Buka retail VA 0x00469db9, size 0x1c.
+void SetMusicVolume(int level) {
+    gMusicVolume = VolumeLevel(level);
+    UpdateMusicVolume();
+}
+
+// Buka retail VA 0x00469dd5, size 0x1d.
+void SetVolumes(int effects, int music) {
+    SetEffectsVolume(effects);
+    SetMusicVolume(music);
+}
