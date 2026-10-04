@@ -166,12 +166,17 @@ rva	name	provenance
 0x0001d306	?com_stat@@YAEFG@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001d460	?Main@combatManager@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x0001d6dc	?ValidHexToStandOn@combatManager@@QAECH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001e408	?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x0001e900	?ResetRound@combatManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x0001ea22	?CheckWin@combatManager@@QAEHPAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x0001edae	?RightClick@combatManager@@QAECC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001f389	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020cd1	?CheckChangeSelector@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00020d8c	?CheckCastleAttack@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
+0x00020e7c	?CheckGetAIMove@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x00020ed8	?GetControl@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00021003	?ResetMouse@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x000210c0	?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
 0x00021820	?DrawCursor@advManager@@QAEXXZ	Buka DrawCell instruction/CFG review: 0x6c02; buka-adventure-cell.json
 0x00021dc4	?GetCursorBaseFrame@advManager@@QAEFF@Z	Buka DrawCell instruction/CFG review: 0x67ac, 0x686f; buka-adventure-cell.json

@@ -1,0 +1,331 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "function": {
+    "unit": "SOURCE/COMMAND",
+    "name": "?Main@combatManager@@UAEFAAUtag_message@@@Z",
+    "rva": "0x1d460",
+    "size": 636,
+    "object_size": 636,
+    "retail_code_size": 636,
+    "object_code_size": 636,
+    "normalized_body_equal": true,
+    "cfg_equal": true,
+    "block_counts": [
+      40,
+      40
+    ],
+    "object_refs": [
+      {
+        "offset": "0x11",
+        "kind": 20,
+        "symbol": "?KBTickCount@@YAHXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d471",
+        "target_rva": "0x44b4e"
+      },
+      {
+        "offset": "0x17",
+        "kind": 6,
+        "symbol": "?glTimers@@3PAHA",
+        "addend": "0x0",
+        "site_rva": "0x1d477",
+        "target_rva": "0xa98a0",
+        "owner_rva": "0xa98a0"
+      },
+      {
+        "offset": "0x1e",
+        "kind": 20,
+        "symbol": "_PollSound",
+        "addend": "0x0",
+        "site_rva": "0x1d47e",
+        "target_rva": "0x3c7b0"
+      },
+      {
+        "offset": "0x23",
+        "kind": 20,
+        "symbol": "?KBTickCount@@YAHXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d483",
+        "target_rva": "0x44b4e"
+      },
+      {
+        "offset": "0x2b",
+        "kind": 6,
+        "symbol": "?glTimers@@3PAHA",
+        "addend": "0x0",
+        "site_rva": "0x1d48b",
+        "target_rva": "0xa98a0",
+        "owner_rva": "0xa98a0"
+      },
+      {
+        "offset": "0x33",
+        "kind": 20,
+        "symbol": "?CheckCastleAttack@combatManager@@QAEXXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d493",
+        "target_rva": "0x20d8c"
+      },
+      {
+        "offset": "0x3f",
+        "kind": 20,
+        "symbol": "?CheckWin@combatManager@@QAEHPAUtag_message@@@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d49f",
+        "target_rva": "0x1ea22"
+      },
+      {
+        "offset": "0x53",
+        "kind": 20,
+        "symbol": "?GetRemoteData@@YAPADC@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d4b3",
+        "target_rva": "0x534cb"
+      },
+      {
+        "offset": "0x8d",
+        "kind": 6,
+        "symbol": "?giNextAction@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d4ed",
+        "target_rva": "0xa6aac",
+        "owner_rva": "0xa6aac"
+      },
+      {
+        "offset": "0x99",
+        "kind": 6,
+        "symbol": "?giNextActionExtra@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d4f9",
+        "target_rva": "0xa6a88",
+        "owner_rva": "0xa6a88"
+      },
+      {
+        "offset": "0xa5",
+        "kind": 6,
+        "symbol": "?giNextActionGridIndex@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d505",
+        "target_rva": "0xa6aa8",
+        "owner_rva": "0xa6aa8"
+      },
+      {
+        "offset": "0xb0",
+        "kind": 6,
+        "symbol": "?giNextActionGridIndex2@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d510",
+        "target_rva": "0xa6a90",
+        "owner_rva": "0xa6a90"
+      },
+      {
+        "offset": "0xc1",
+        "kind": 20,
+        "symbol": "?PopNetBox@@YAXPAD@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d521",
+        "target_rva": "0x411a2"
+      },
+      {
+        "offset": "0xcb",
+        "kind": 6,
+        "symbol": "?gbThisNetHasControl@@3CA",
+        "addend": "0x0",
+        "site_rva": "0x1d52b",
+        "target_rva": "0xa6a8c",
+        "owner_rva": "0xa6a8c"
+      },
+      {
+        "offset": "0xf3",
+        "kind": 20,
+        "symbol": "?PopNetBox@@YAXPAD@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d553",
+        "target_rva": "0x411a2"
+      },
+      {
+        "offset": "0x13f",
+        "kind": 20,
+        "symbol": "?GoBerserk@army@@QAEXXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d59f",
+        "target_rva": "0x17f49"
+      },
+      {
+        "offset": "0x14b",
+        "kind": 20,
+        "symbol": "?CheckWin@combatManager@@QAEHPAUtag_message@@@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d5ab",
+        "target_rva": "0x1ea22"
+      },
+      {
+        "offset": "0x19b",
+        "kind": 6,
+        "symbol": "?gpInputManager@@3PAVinputManager@@A",
+        "addend": "0x0",
+        "site_rva": "0x1d5fb",
+        "target_rva": "0xa7b90",
+        "owner_rva": "0xa7b90"
+      },
+      {
+        "offset": "0x1a0",
+        "kind": 20,
+        "symbol": "?GetEvent@inputManager@@QAE?AUtag_message@@XZ",
+        "addend": "0x0",
+        "site_rva": "0x1d600",
+        "target_rva": "0x6eed9"
+      },
+      {
+        "offset": "0x1d5",
+        "kind": 6,
+        "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+        "addend": "0x0",
+        "site_rva": "0x1d635",
+        "target_rva": "0xa7164",
+        "owner_rva": "0xa7164"
+      },
+      {
+        "offset": "0x1da",
+        "kind": 20,
+        "symbol": "?ReallyShowPointer@mouseManager@@QAEXXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d63a",
+        "target_rva": "0x6bf6f"
+      },
+      {
+        "offset": "0x1e2",
+        "kind": 20,
+        "symbol": "?CheckChangeSelector@combatManager@@QAEXXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d642",
+        "target_rva": "0x20cd1"
+      },
+      {
+        "offset": "0x1e8",
+        "kind": 6,
+        "symbol": "?giNextAction@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d648",
+        "target_rva": "0xa6aac",
+        "owner_rva": "0xa6aac"
+      },
+      {
+        "offset": "0x221",
+        "kind": 6,
+        "symbol": "?gbThisNetHumanPlayer@@3PACA",
+        "addend": "0x0",
+        "site_rva": "0x1d681",
+        "target_rva": "0xa7b94",
+        "owner_rva": "0xa7b94"
+      },
+      {
+        "offset": "0x23b",
+        "kind": 20,
+        "symbol": "?CheckGetAIMove@combatManager@@QAEXXZ",
+        "addend": "0x0",
+        "site_rva": "0x1d69b",
+        "target_rva": "0x20e7c"
+      },
+      {
+        "offset": "0x249",
+        "kind": 20,
+        "symbol": "?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d6a9",
+        "target_rva": "0x1e408"
+      },
+      {
+        "offset": "0x252",
+        "kind": 6,
+        "symbol": "?giNextAction@@3HA",
+        "addend": "0x0",
+        "site_rva": "0x1d6b2",
+        "target_rva": "0xa6aac",
+        "owner_rva": "0xa6aac"
+      },
+      {
+        "offset": "0x261",
+        "kind": 20,
+        "symbol": "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z",
+        "addend": "0x0",
+        "site_rva": "0x1d6c1",
+        "target_rva": "0x210c0"
+      }
+    ]
+  },
+  "source_change": {
+    "before": "KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]",
+    "after": "glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()",
+    "control": "Same 636-byte body and all reference offsets. Only CMP operand order and paired JLE/JGE condition differed before; the corrected full instruction body matches with relocation fields excluded. Strict references are checked separately."
+  },
+  "donor": {
+    "repo": "homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "path": "src/SOURCE/COMMAND.cpp",
+    "function": "combatManager::Main",
+    "scope": "Timer comparison order only; no HoMM2 gameplay imported."
+  },
+  "data_migrations": [
+    {
+      "name": "?giNextActionGridIndex2@@3HA",
+      "unit": "SOURCE/COMMAND",
+      "old_rva": "0xc2c80",
+      "rva": "0xa6a90",
+      "size": 4,
+      "type": "i32",
+      "initial_value": 0,
+      "users": [
+        {
+          "site_rva": "0x1d510",
+          "target_rva": "0xa6a90",
+          "evidence": "Main: packet +0x15 fourth int32 combat-action field"
+        },
+        {
+          "site_rva": "0x2118f",
+          "target_rva": "0xa6a90",
+          "evidence": "ProcessNextAction: fourth int32 outgoing action field"
+        },
+        {
+          "site_rva": "0x21241",
+          "target_rva": "0xa6a90",
+          "evidence": "ProcessNextAction: teleport-destination byte passed to CastSpell"
+        },
+        {
+          "site_rva": "0x5a1f7",
+          "target_rva": "0xa6a90",
+          "evidence": "HandleCastSpell: sign-extended destination hex stored as int32"
+        }
+      ]
+    }
+  ],
+  "callee_identities": [
+    {
+      "rva": "0x20d8c",
+      "name": "?CheckCastleAttack@combatManager@@QAEXXZ"
+    },
+    {
+      "rva": "0x1ea22",
+      "name": "?CheckWin@combatManager@@QAEHPAUtag_message@@@Z"
+    },
+    {
+      "rva": "0x20e7c",
+      "name": "?CheckGetAIMove@combatManager@@QAEXXZ"
+    },
+    {
+      "rva": "0x1e408",
+      "name": "?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z"
+    },
+    {
+      "rva": "0x210c0",
+      "name": "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z"
+    }
+  ],
+  "validation": {
+    "instruction_bytes": 636,
+    "references": 28,
+    "source_sha256": "8852794f3af02cec6b0162e387544f02ea2035faf41c10e6c6a3f75ba4e21594",
+    "object_sha256": "fd857e1b17f047daad925c4f391b85b451f545b608e7476099d990988dd675db",
+    "typed_zero_initializer": true,
+    "all_call_and_data_identities_checked": true
+  }
+}

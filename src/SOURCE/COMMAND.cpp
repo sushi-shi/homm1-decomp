@@ -112,7 +112,7 @@ i16 combatManager::Main(struct tag_message& message) {
     army* thisArmy;
     CombatRemotePacket* packet;
 
-    if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
+    if (glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
         PollSound();
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0x4b;
     }
@@ -1674,7 +1674,7 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
+// COMMAND globals; unmigrated NWC addresses remain pending Buka review.
 DATA(0x004a6a8c)
 i8 gbThisNetHasControl;
 DATA(0x004c2c98)
@@ -1691,5 +1691,5 @@ DATA(0x004c2c88)
 i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
 DATA(0x004a6aac)
 i32 giNextAction;
-DATA(0x004c2c80)
+DATA(0x004a6a90)
 i32 giNextActionGridIndex2;
