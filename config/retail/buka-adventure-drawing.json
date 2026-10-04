@@ -1935,5 +1935,6 @@
     "link": "663552-byte candidate; zero unresolved externals and zero duplicate-symbol warnings; no /FORCE.",
     "readme": "Generator cannot produce status without strict report.json; no score counts edited manually.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit completed: 202 adapted_review_required and two missing modules. No tool implementation changed."
-  }
+  },
+  "validation_checkpoint": "db67f999; historical validation. The subsequent radar/locator review provides 0x9057c; see buka-radar-locators.json."
 }

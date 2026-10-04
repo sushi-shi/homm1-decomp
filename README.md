@@ -19,8 +19,10 @@ text preserved in the catalog. The command handler, its helpers and four
 adventure input handlers now have reviewed Buka claims. `Main` and the input
 handlers agree with retail CFGs and code sizes; eleven more dialogs use the
 catalog. Screen updates, full drawing, cloud lookup and cell drawing also have
-reviewed Buka claims and reference identities. Strict delinking currently stops
-at data identity `0x9057c` in radar drawing. The old score ledger has been reset.
+reviewed Buka claims and reference identities. Radar, locators and quick info
+are migrated too, including Buka’s mine-name table with original English
+preserved. Strict delinking currently stops at data identity `0x8e7d8` in the
+enemy-turn panel. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

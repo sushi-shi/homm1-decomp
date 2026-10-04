@@ -229,6 +229,7 @@ extern char* gSpellNames[];
 // QuickInfo's name tables.
 extern char* gTerrainNames[];
 extern char* gResourceNames[];
+extern char* gMineNames[];
 extern char* gObjectNames[];
 // KB's map-extra record count and sizes (Buka KBDeclarations).
 extern i32 iMaxMapExtra;

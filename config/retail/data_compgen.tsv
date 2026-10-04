@@ -1,2 +1,6 @@
-# Compiler-generated data claims (none admitted).
+# Reviewed VC6 compiler-generated floating constants; stable value-encoded names.
+# Evidence and complete payload/operand checks: buka-radar-locators.json.
 rva	size	name	owner	class
+0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
+0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
+0x0008a3a8	0x8	__real@8@40059400000000000000	SOURCE/ADVMGR	fppool

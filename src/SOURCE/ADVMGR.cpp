@@ -2923,7 +2923,7 @@ mapCell* advManager::GetCell(i16 x, i16 y) {
         return &m_mapData[x][y];
 }
 
-VA(0x004593aa, 0x57e)
+VA(0x00406d7e, 0x4f8)
 void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
     i16 y;
     i32 firstX;
@@ -2975,15 +2975,15 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
             cellPtr = &m_mapData[x][y];
             if ((cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO) {
                 owner = gpGame->m_availableHeroes[cellPtr->m_objectMetadata];
-                if (giCurPlayer == owner)
-                    color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                if (owner == giCurPlayer)
+                    color = gRadarOwnerColor[owner < 0 ? 4 : gpGame->m_players[owner].m_color];
                 else
                     color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
             } else {
                 switch (cellPtr->m_objectTileset & MAP_CELL_TILESET_MASK) {
                     case TILESET_TOWN32:
                         owner = gpGame->m_townOwners[cellPtr->m_objectMetadata];
-                        color = gRadarOwnerColor[owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                        color = gRadarOwnerColor[owner < 0 ? 4 : gpGame->m_players[owner].m_color];
                         break;
                     case TILESET_RSRC32:
                         switch (cellPtr->m_triggerType) {
@@ -2995,7 +2995,7 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                             case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
                                 owner = gpGame->m_mineOwners[cellPtr->m_objectMetadata];
                                 color = gRadarOwnerColor
-                                    [owner >= 0 ? gpGame->m_players[owner].m_color : 4];
+                                    [owner < 0 ? 4 : gpGame->m_players[owner].m_color];
                                 break;
                             default:
                                 color = gRadarTerrainColor[CELL_TERRAIN(cellPtr)];
@@ -3045,7 +3045,7 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
 // donor PoL RVA 0x0005f127; preferred Buka symbol ?QuickInfo@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.437984;margin=0.160503;shape=0.304;size=0.325;calls=0.543;strings=qwikinfo.bin;alternate=pol20:void advManager::QuickInfo(int, int)@0x0005f127
-VA(0x00459928, 0x584)
+VA(0x00407276, 0x50f)
 void advManager::QuickInfo(i16 cellX, i16 cellY) {
     i16 posX;
     tag_message message;
@@ -3074,15 +3074,15 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
 
     if (m_mapOriginX + cellX < 0 || m_mapOriginX + cellX >= MAP_CELL_GRID_SIZE
         || m_mapOriginY + cellY < 0 || m_mapOriginY + cellY >= MAP_CELL_GRID_SIZE) {
-        sprintf(gText, "\n\n%s", "Border");
+        sprintf(gText, "\n\n%s", localization::Tr("adventure.quick_info.border"));
     } else {
         curCell = GetCell(m_mapOriginX + cellX, m_mapOriginY + cellY);
         if (!(gpGame->m_mapExtra[m_mapOriginX + cellX][m_mapOriginY + cellY] & giCurPlayerBit)) {
-            sprintf(gText, "\n\n%s", "Uncharted territory");
+            sprintf(gText, "\n\n%s", localization::Tr("adventure.quick_info.uncharted"));
         } else {
             switch (curCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                 case MAP_OBJECT_ARTIFACT:
-                    sprintf(gText, "\n\n%s", "Artifact");
+                    sprintf(gText, "\n\n%s", localization::Tr("adventure.quick_info.artifact"));
                     break;
                 case MAP_OBJECT_NONE:
                 case MAP_OBJECT_COAST:
@@ -3092,13 +3092,12 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                 case MAP_OBJECT_MINE:
                     sprintf(
                         gText,
-                        "\n\n%s %s",
-                        gResourceNames[gpGame->m_mines[curCell->m_objectMetadata].type],
-                        "Mine"
+                        "\n\n%s",
+                        gMineNames[gpGame->m_mines[curCell->m_objectMetadata].type]
                     );
                     break;
                 case MAP_OBJECT_RESOURCE:
-                    sprintf(gText, "\n\n%s", gSpellNames[curCell->m_objectIndex + 9]);
+                    sprintf(gText, "\n\n%s", gResourceNames[curCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE]);
                     break;
                 case 51:
                     sprintf(gText, "\n\n%s", gResourceNames[curCell->m_objectIndex + 2]);
@@ -3154,7 +3153,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
 // donor PoL RVA 0x00060465; preferred Buka symbol ?UpdateHeroLocator@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.539169;margin=0.099782;shape=0.447;size=0.791;calls=0.917;alternate=pol20:void advManager::UpdateHeroLocator(int, int, int)@0x00060465
-VA(0x00459eac, 0x3c8)
+VA(0x00407785, 0x360)
 void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScreen) {
     tag_message message;
     i8 whichHero;
@@ -3171,7 +3170,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
         if (activeHero == INVALID_HERO)
             return;
         for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
-            if (gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i] == activeHero)
+            if (activeHero == gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i])
                 locatorSlot = i;
         }
         if (locatorSlot == LOCATOR_SLOT_CURRENT_HERO)
@@ -3182,7 +3181,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
     whichHero = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + locatorSlot];
     message.command = WIDGET_COMMAND_SET_COLOR;
     message.id = wBase + HERO_LOCATOR_HIGHLIGHT;
-    message.value = (gpCurPlayer->m_currentHero == whichHero
+    message.value = (whichHero == gpCurPlayer->m_currentHero
                      && gpCurPlayer->m_currentHero != INVALID_HERO && !gAllBlack)
                         ? LOCATOR_HIGHLIGHT_COLOR
                         : 0;
@@ -3246,7 +3245,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
 // donor PoL RVA 0x000607ad; preferred Buka symbol ?UpdateHeroLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520706;margin=0.246406;shape=0.456;size=0.777;calls=0.750;alternate=pol20:void advManager::UpdateHeroLocators(int, int)@0x000607ad
-VA(0x0045a274, 0xec)
+VA(0x00407ae5, 0xd3)
 void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
     i32 locatorSlot;
     double scrollStep;
@@ -3271,7 +3270,7 @@ void advManager::UpdateHeroLocators(i8 drawWindow, i8 updateScreen) {
 // donor PoL RVA 0x000608af; preferred Buka symbol ?UpdateTownLocators@advManager@@QAEXHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.535916;margin=0.510257;shape=0.379;size=0.971;calls=0.800;alternate=pol20:void advManager::UpdateTownLocators(int, int)@0x000608af
-VA(0x0045a360, 0x263)
+VA(0x00407bb8, 0x225)
 void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
     tag_message message;
     i16 i;
@@ -3286,7 +3285,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
         message.command = WIDGET_COMMAND_SET_COLOR;
         message.id = i + TOWN_LOCATOR_HIGHLIGHT_FIRST;
         message.value = (gpCurPlayer->m_currentTown != GAME_TOWN_NONE
-                         && gpCurPlayer->m_currentTown == whichTown && !gAllBlack)
+                         && whichTown == gpCurPlayer->m_currentTown && !gAllBlack)
                             ? LOCATOR_HIGHLIGHT_COLOR
                             : 0;
         m_adventureWindow->BroadcastMessage(message);
@@ -3323,7 +3322,7 @@ void advManager::UpdateTownLocators(i8 drawWindow, i8 updateScreen) {
 // donor PoL RVA 0x00060b97; preferred Buka symbol ?UpdBottomView@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.587774;margin=0.642167;shape=0.494;size=0.843;calls=1.000;alternate=pol20:void advManager::UpdBottomView(int, int, int)@0x00060b97
-VA(0x0045a5c3, 0x19f)
+VA(0x00407ddd, 0x143)
 void advManager::UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen) {
     i8 updated;
 
@@ -3376,7 +3375,7 @@ update_bottom_view:
 // donor PoL RVA 0x00060d63; preferred Buka symbol ?ClearBottomView@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.613154;margin=1.071587;shape=0.489;size=0.961;calls=1.000;alternate=pol20:void advManager::ClearBottomView(void)@0x00060d63
-VA(0x0045a762, 0x132)
+VA(0x00407f20, 0x126)
 void advManager::ClearBottomView(void) {
     i32 widgetIndex;
 
@@ -7434,13 +7433,13 @@ DATA(0x004a674c)
 i32 TrigY = 0;
 DATA(0x004a6750)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;
-DATA(0x004a17d0)
+DATA(0x0048e144)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
 DATA(0x004a17d4)
 i32 gCurHourGlassPhase = 0;
 DATA(0x004a17d8)
 i32 gLastHourGlassPhase = 1;
-DATA(0x004a17dc)
+DATA(0x004a6758)
 i32 gForceUpdate = 0;
 DATA(0x004cb168)
 class heroWindow* gPanel;
@@ -7460,7 +7459,7 @@ DATA(0x004cb028)
 i8 bComboDraw[17][17];
 DATA(0x004cb004)
 i8 gFreshSave;
-DATA(0x004cafe0)
+DATA(0x004a65a8)
 i32 iLastAnimFrame;
 // ADVMGR's .rdata: ambient-sound volume by distance (0x0048d4b8).
 DATA(0x0048d4b8)

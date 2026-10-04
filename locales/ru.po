@@ -2998,3 +2998,308 @@ msgstr "О, ужас - враг нашел первым Око Гороса! В�
 msgctxt "adventure.search.nothing_here"
 msgid "Nothing here.\nWhere could it be?"
 msgstr "Здесь ничего нет.\nГде же он?"
+
+msgctxt "adventure.quick_info.border"
+msgid "Border"
+msgstr "Граница"
+
+msgctxt "adventure.quick_info.uncharted"
+msgid "Uncharted territory"
+msgstr "Неизученная земля"
+
+msgctxt "adventure.quick_info.artifact"
+msgid "Artifact"
+msgstr "Артефакт"
+
+
+msgctxt "table.gTerrainNames.0"
+msgid "Ocean"
+msgstr "Вода"
+
+msgctxt "table.gTerrainNames.1"
+msgid "Grass"
+msgstr "Трава"
+
+msgctxt "table.gTerrainNames.2"
+msgid "Snow"
+msgstr "Снег"
+
+msgctxt "table.gTerrainNames.3"
+msgid "Swamp"
+msgstr "Болото"
+
+msgctxt "table.gTerrainNames.4"
+msgid "Lava"
+msgstr "Лава"
+
+msgctxt "table.gTerrainNames.5"
+msgid "Desert"
+msgstr "Пустыня"
+
+msgctxt "table.gTerrainNames.6"
+msgid "Dirt"
+msgstr "Равнина"
+
+msgctxt "table.gObjectNames.1"
+msgid "Alchemist Lab"
+msgstr "Лаборатория алхимика"
+
+msgctxt "table.gObjectNames.2"
+msgid "Signpost"
+msgstr "Указатель"
+
+msgctxt "table.gObjectNames.3"
+msgid "Buoy"
+msgstr "Буй"
+
+msgctxt "table.gObjectNames.4"
+msgid "Skeleton"
+msgstr "Скелет"
+
+msgctxt "table.gObjectNames.5"
+msgid "Daemon Cave"
+msgstr "Пещера демона"
+
+msgctxt "table.gObjectNames.6"
+msgid "Treasure Chest"
+msgstr "Ларец с сокровищами"
+
+msgctxt "table.gObjectNames.7"
+msgid "Faerie Ring"
+msgstr "Кольцо фейри"
+
+msgctxt "table.gObjectNames.8"
+msgid "Campfire"
+msgstr "Костер"
+
+msgctxt "table.gObjectNames.9"
+msgid "Fountain"
+msgstr "Фонтан"
+
+msgctxt "table.gObjectNames.10"
+msgid "Gazebo"
+msgstr "Беседка"
+
+msgctxt "table.gObjectNames.11"
+msgid "Ancient Lamp"
+msgstr "Древняя лампа"
+
+msgctxt "table.gObjectNames.12"
+msgid "Graveyard"
+msgstr "Кладбище"
+
+msgctxt "table.gObjectNames.13"
+msgid "Straw Hut"
+msgstr "Лачуга"
+
+msgctxt "table.gObjectNames.14"
+msgid "House"
+msgstr "Дом"
+
+msgctxt "table.gObjectNames.15"
+msgid "Cabin"
+msgstr "Будка"
+
+msgctxt "table.gObjectNames.16"
+msgid "Log Cabin"
+msgstr "Хижина"
+
+msgctxt "table.gObjectNames.17"
+msgid "Log Cabin"
+msgstr "Хижина"
+
+msgctxt "table.gObjectNames.18"
+msgid "Inn 1"
+msgstr "Таверна 1"
+
+msgctxt "table.gObjectNames.19"
+msgid "Inn 2"
+msgstr "Таверна 2"
+
+msgctxt "table.gObjectNames.20"
+msgid "Inn 3"
+msgstr "Таверна 3"
+
+msgctxt "table.gObjectNames.21"
+msgid "Inn 4"
+msgstr "Таверна 4"
+
+msgctxt "table.gObjectNames.22"
+msgid "Dragon City"
+msgstr "Драконий город"
+
+msgctxt "table.gObjectNames.23"
+msgid "Lighthouse"
+msgstr "Маяк"
+
+msgctxt "table.gObjectNames.24"
+msgid "Waterwheel"
+msgstr "Водяная мельница"
+
+msgctxt "table.gObjectNames.25"
+msgid "Mine"
+msgstr "Шахта"
+
+msgctxt "table.gObjectNames.26"
+msgid "Army Camp"
+msgstr "Бивуак"
+
+msgctxt "table.gObjectNames.27"
+msgid "Obelisk"
+msgstr "Обелиск"
+
+msgctxt "table.gObjectNames.28"
+msgid "Oasis"
+msgstr "Оазис"
+
+msgctxt "table.gObjectNames.29"
+msgid "Resource"
+msgstr "Ресурсы"
+
+msgctxt "table.gObjectNames.30"
+msgid "Rosebush"
+msgstr "Розовый куст"
+
+msgctxt "table.gObjectNames.31"
+msgid "Sandpit"
+msgstr "Яма в песке"
+
+msgctxt "table.gObjectNames.32"
+msgid "Sawmill"
+msgstr "Лесопилка"
+
+msgctxt "table.gObjectNames.33"
+msgid "Shrine"
+msgstr "Святилище"
+
+msgctxt "table.gObjectNames.34"
+msgid "Shrine"
+msgstr "Святилище"
+
+msgctxt "table.gObjectNames.35"
+msgid "Shipwreck"
+msgstr "Кораблекрушение"
+
+msgctxt "table.gObjectNames.36"
+msgid "Statue"
+msgstr "Статуя"
+
+msgctxt "table.gObjectNames.37"
+msgid "Tree Stump"
+msgstr "Пень"
+
+msgctxt "table.gObjectNames.38"
+msgid "Swan Pond"
+msgstr "Лебединое озеро"
+
+msgctxt "table.gObjectNames.39"
+msgid "Desert Tent"
+msgstr "Шатры"
+
+msgctxt "table.gObjectNames.40"
+msgid "Town"
+msgstr "Город"
+
+msgctxt "table.gObjectNames.41"
+msgid "Stone Liths"
+msgstr "Менгир"
+
+msgctxt "table.gObjectNames.42"
+msgid "Wagon Camp"
+msgstr "Фургоны"
+
+msgctxt "table.gObjectNames.43"
+msgid "Well"
+msgstr "Колодец"
+
+msgctxt "table.gObjectNames.44"
+msgid "Whirlpool"
+msgstr "Водоворот"
+
+msgctxt "table.gObjectNames.45"
+msgid "Windmill"
+msgstr "Ветряная мельница"
+
+msgctxt "table.gObjectNames.46"
+msgid "Oak Tree"
+msgstr "Дуб"
+
+msgctxt "table.gObjectNames.47"
+msgid "Megalith"
+msgstr "Мегалит"
+
+msgctxt "table.gObjectNames.48"
+msgid "Artifact"
+msgstr "Артефакт"
+
+msgctxt "table.gObjectNames.49"
+msgid "Nothing here"
+msgstr "Тут ничего нет"
+
+msgctxt "table.gObjectNames.52"
+msgid "Mountains"
+msgstr "Горы"
+
+msgctxt "table.gObjectNames.53"
+msgid "Mountains"
+msgstr "Горы"
+
+msgctxt "table.gObjectNames.54"
+msgid "Mountains"
+msgstr "Горы"
+
+msgctxt "table.gObjectNames.55"
+msgid "Mountains"
+msgstr "Горы"
+
+msgctxt "table.gObjectNames.56"
+msgid "Trees"
+msgstr "Деревья"
+
+msgctxt "table.gObjectNames.57"
+msgid "Trees"
+msgstr "Деревья"
+
+msgctxt "table.gObjectNames.58"
+msgid "Trees"
+msgstr "Деревья"
+
+msgctxt "table.gObjectNames.59"
+msgid "Trees"
+msgstr "Деревья"
+
+msgctxt "table.gObjectNames.60"
+msgid "Trees"
+msgstr "Деревья"
+
+msgctxt "table.gObjectNames.62"
+msgid "Ship"
+msgstr "Корабль"
+
+msgctxt "table.gMineNames.0"
+msgid "Wood Mine"
+msgstr "Лесопилка"
+
+msgctxt "table.gMineNames.1"
+msgid "Mercury Mine"
+msgstr "Лаборатория алхимика"
+
+msgctxt "table.gMineNames.2"
+msgid "Ore Mine"
+msgstr "Рудная шахта"
+
+msgctxt "table.gMineNames.3"
+msgid "Sulfur Mine"
+msgstr "Серная шахта"
+
+msgctxt "table.gMineNames.4"
+msgid "Crystal Mine"
+msgstr "Кристальная шахта"
+
+msgctxt "table.gMineNames.5"
+msgid "Gems Mine"
+msgstr "Самоцветная шахта"
+
+msgctxt "table.gMineNames.6"
+msgid "Gold Mine"
+msgstr "Золотоносная шахта"

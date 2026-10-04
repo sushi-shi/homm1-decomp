@@ -1525,9 +1525,10 @@ DATA(0x004910e8)
 i16 horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
 DATA(0x00491108)
 i16 boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
-DATA(0x00491128)
-i16 gRadarOwnerColor[8] = {79, 105, 200, 129, 10, 0, 0, 0};
-DATA(0x00491138)
+DATA(0x0049057c)
+// Four player colors and the neutral-owner color; the following bytes are linker alignment.
+i16 gRadarOwnerColor[5] = {79, 105, 200, 129, 10};
+DATA(0x00490588)
 i16 gRadarTerrainColor[24] = {
     82,  99, 7,   180, 26,  123, 55, 0,  16, 48, 98, 160,
     126, 74, 110, 179, 100, 218, 12, 12, 12, 12, 12, 12,
@@ -3794,7 +3795,7 @@ char* gArmyNames[28] = {
     localization::Tr("table.gArmyNames.24"), localization::Tr("table.gArmyNames.25"),
     localization::Tr("table.gArmyNames.26"), localization::Tr("table.gArmyNames.27"),
 };
-DATA(0x004930d8)
+DATA(0x0049266c)
 char* gArmyNamesPlural[28] = {
     localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"),
     localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"),
@@ -3854,9 +3855,17 @@ char* gDwellingNames[24] = {
     localization::Tr("table.gDwellingNames.20"), localization::Tr("table.gDwellingNames.21"),
     localization::Tr("table.gDwellingNames.22"), localization::Tr("table.gDwellingNames.23"),
 };
-DATA(0x00493240)
-char* gTerrainNames[7] = {"Ocean", "Grass", "Snow", "Swamp", "Lava", "Desert", "Dirt"};
-DATA(0x00493260)
+DATA(0x004927cc)
+char* gTerrainNames[7] = {
+    localization::Tr("table.gTerrainNames.0"),
+    localization::Tr("table.gTerrainNames.1"),
+    localization::Tr("table.gTerrainNames.2"),
+    localization::Tr("table.gTerrainNames.3"),
+    localization::Tr("table.gTerrainNames.4"),
+    localization::Tr("table.gTerrainNames.5"),
+    localization::Tr("table.gTerrainNames.6")
+};
+DATA(0x004927e8)
 char* gResourceNames[7] = {
     localization::Tr("table.gResourceNames.0"),
     localization::Tr("table.gResourceNames.1"),
@@ -3866,71 +3875,81 @@ char* gResourceNames[7] = {
     localization::Tr("table.gResourceNames.5"),
     localization::Tr("table.gResourceNames.6")
 };
-DATA(0x00493280)
+DATA(0x00492804)
+char* gMineNames[7] = {
+    localization::Tr("table.gMineNames.0"),
+    localization::Tr("table.gMineNames.1"),
+    localization::Tr("table.gMineNames.2"),
+    localization::Tr("table.gMineNames.3"),
+    localization::Tr("table.gMineNames.4"),
+    localization::Tr("table.gMineNames.5"),
+    localization::Tr("table.gMineNames.6")
+};
+DATA(0x00492820)
 char* gObjectNames[63] = {
     "",
-    "Alchemist Lab",
-    "Signpost",
-    "Buoy",
-    "Skeleton",
-    "Daemon Cave",
-    "Treasure Chest",
-    "Faerie Ring",
-    "Campfire",
-    "Fountain",
-    "Gazebo",
-    "Ancient Lamp",
-    "Graveyard",
-    "Straw Hut",
-    "House",
-    "Cabin",
-    "Log Cabin",
-    "Log Cabin",
-    "Inn 1",
-    "Inn 2",
-    "Inn 3",
-    "Inn 4",
-    "Dragon City",
-    "Lighthouse",
-    "Waterwheel",
-    "Mine",
-    "Army Camp",
-    "Obelisk",
-    "Oasis",
-    "Resource",
-    "Rosebush",
-    "Sandpit",
-    "Sawmill",
-    "Shrine",
-    "Shrine",
-    "Shipwreck",
-    "Statue",
-    "Tree Stump",
-    "Swan Pond",
-    "Desert Tent",
-    "Town",
-    "Stone Liths",
-    "Wagon Camp",
-    "Well",
-    "Whirlpool",
-    "Windmill",
-    "Oak Tree",
-    "Megalith",
-    "Artifact",
-    "Nothing here",
+    localization::Tr("table.gObjectNames.1"),
+    localization::Tr("table.gObjectNames.2"),
+    localization::Tr("table.gObjectNames.3"),
+    localization::Tr("table.gObjectNames.4"),
+    localization::Tr("table.gObjectNames.5"),
+    localization::Tr("table.gObjectNames.6"),
+    localization::Tr("table.gObjectNames.7"),
+    localization::Tr("table.gObjectNames.8"),
+    localization::Tr("table.gObjectNames.9"),
+    localization::Tr("table.gObjectNames.10"),
+    localization::Tr("table.gObjectNames.11"),
+    localization::Tr("table.gObjectNames.12"),
+    localization::Tr("table.gObjectNames.13"),
+    localization::Tr("table.gObjectNames.14"),
+    localization::Tr("table.gObjectNames.15"),
+    localization::Tr("table.gObjectNames.16"),
+    localization::Tr("table.gObjectNames.17"),
+    localization::Tr("table.gObjectNames.18"),
+    localization::Tr("table.gObjectNames.19"),
+    localization::Tr("table.gObjectNames.20"),
+    localization::Tr("table.gObjectNames.21"),
+    localization::Tr("table.gObjectNames.22"),
+    localization::Tr("table.gObjectNames.23"),
+    localization::Tr("table.gObjectNames.24"),
+    localization::Tr("table.gObjectNames.25"),
+    localization::Tr("table.gObjectNames.26"),
+    localization::Tr("table.gObjectNames.27"),
+    localization::Tr("table.gObjectNames.28"),
+    localization::Tr("table.gObjectNames.29"),
+    localization::Tr("table.gObjectNames.30"),
+    localization::Tr("table.gObjectNames.31"),
+    localization::Tr("table.gObjectNames.32"),
+    localization::Tr("table.gObjectNames.33"),
+    localization::Tr("table.gObjectNames.34"),
+    localization::Tr("table.gObjectNames.35"),
+    localization::Tr("table.gObjectNames.36"),
+    localization::Tr("table.gObjectNames.37"),
+    localization::Tr("table.gObjectNames.38"),
+    localization::Tr("table.gObjectNames.39"),
+    localization::Tr("table.gObjectNames.40"),
+    localization::Tr("table.gObjectNames.41"),
+    localization::Tr("table.gObjectNames.42"),
+    localization::Tr("table.gObjectNames.43"),
+    localization::Tr("table.gObjectNames.44"),
+    localization::Tr("table.gObjectNames.45"),
+    localization::Tr("table.gObjectNames.46"),
+    localization::Tr("table.gObjectNames.47"),
+    localization::Tr("table.gObjectNames.48"),
+    localization::Tr("table.gObjectNames.49"),
     "",
     "",
-    "Mountains",
-    "Mountains",
-    "Mountains",
-    "Mountains",
-    "Trees",
-    "Trees",
-    "Trees",
-    "Trees",
-    "Trees",
+    localization::Tr("table.gObjectNames.52"),
+    localization::Tr("table.gObjectNames.53"),
+    localization::Tr("table.gObjectNames.54"),
+    localization::Tr("table.gObjectNames.55"),
+    localization::Tr("table.gObjectNames.56"),
+    localization::Tr("table.gObjectNames.57"),
+    localization::Tr("table.gObjectNames.58"),
+    localization::Tr("table.gObjectNames.59"),
+    localization::Tr("table.gObjectNames.60"),
     "",
-    "Ship",
+    localization::Tr("table.gObjectNames.62")
 };
 DATA(0x00493380)
 char* gTownNames[36] = {
@@ -4851,7 +4870,7 @@ DATA(0x004a7b8c)
 i16 gSpellEffectFrame;
 DATA(0x004a9d1c)
 executive* gpExec;
-DATA(0x004a7d68)
+DATA(0x004a7638)
 i8 giGroundToTerrain[140];
 DATA(0x004a9e8c)
 i32 giCurWindowsStyleFlags;

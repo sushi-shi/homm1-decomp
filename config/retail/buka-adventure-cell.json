@@ -3007,5 +3007,6 @@
       "frame_size": 52,
       "remaining_differences": "146 EBP-local displacement bytes; all other instruction bytes, CFGs and referenced identities agree."
     }
-  ]
+  ],
+  "validation_checkpoint": "db67f999; historical validation. The subsequent radar/locator review provides 0x9057c; see buka-radar-locators.json."
 }

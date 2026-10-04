@@ -26,7 +26,13 @@ rva	name	provenance
 0x00007bb8	?UpdateTownLocators@advManager@@QAEXCC@Z	Buka input-handler instruction/CFG review: 0x39a6, 0x39db, 0x3a1e; buka-adventure-input.json
 0x00007ddd	?UpdBottomView@advManager@@QAEXCCC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2739; buka-adventure-commands.json
 0x00007f20	?ClearBottomView@advManager@@QAEXXZ	Buka adventure-manager family: 0x202d; buka-advmgr.json
+0x00008046	?UpdBottomViewEnemyTurn@advManager@@QAECXZ	Buka radar/locator family instruction/CFG review: 0x7e89; buka-radar-locators.json
+0x00008575	?UpdBottomViewNewTurn@advManager@@QAECXZ	Buka radar/locator family instruction/CFG review: 0x7e44; buka-radar-locators.json
+0x000088e7	?UpdBottomViewResMsg@advManager@@QAECXZ	Buka radar/locator family instruction/CFG review: 0x7e5e; buka-radar-locators.json
+0x00008c76	?UpdBottomViewKingdom@advManager@@QAECXZ	Buka radar/locator family instruction/CFG review: 0x7e51, 0x7eab; buka-radar-locators.json
+0x00008fe4	?UpdBottomViewHero@advManager@@QAECXZ	Buka radar/locator family instruction/CFG review: 0x7eb8; buka-radar-locators.json
 0x00009569	?HeroQuickView@advManager@@QAEXCCFF@Z	Buka input-handler instruction/CFG review: 0x36dd, 0x3c4c; buka-adventure-input.json
+0x0000a208	?GetArmySizeName@advManager@@QAEPADFC@Z	Buka QuickInfo instruction/CFG/EH review: 0x75bc; buka-quick-info.json
 0x0000a2b5	?TownQuickView@advManager@@QAEXCCFF@Z	Buka input-handler instruction/CFG review: 0x3782, 0x3ce6; buka-adventure-input.json
 0x0000ae3d	?RedrawAdvScreen@advManager@@QAEXH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2886; buka-adventure-commands.json
 0x0000af3e	?MobilizeCurrHero@advManager@@QAEXH@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2522; buka-adventure-commands.json
@@ -87,7 +93,9 @@ rva	name	provenance
 0x0003c7b0	_PollSound	Buka drawing-family instruction/CFG review: 0x5598, 0x5646, 0x57b3, 0x58eb, 0x5a7d; buka-adventure-drawing.json
 0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	Buka Main complete instruction/CFG correspondence: 0x2c4b, 0x31f1; buka-adventure-commands.json
 0x0003fb8e	?CheckEndGame@@YAXH@Z	Buka Main complete instruction/CFG correspondence: 0x2d87, 0x2da3; buka-adventure-commands.json
+0x000404c4	?QuickViewWait@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ef; buka-quick-info.json
 0x000411a2	?PopNetBox@@YAXPAD@Z	Buka Main complete instruction/CFG correspondence: 0x2d52; buka-adventure-commands.json
+0x00042146	?MemError@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7380; buka-quick-info.json
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
 0x00044b4e	?KBTickCount@@YAHXZ	Buka Main complete instruction/CFG correspondence: 0x2995, 0x2ad0; buka-adventure-commands.json
 0x00048a6f	?DoAI@philAI@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2a18; buka-adventure-commands.json
@@ -223,7 +231,9 @@ rva	name	provenance
 0x00069d8e	?StopAllAudio@@YAXXZ	Buka adventure-manager family: 0x203f; buka-advmgr.json
 0x00069dd5	?SetVolumes@@YAXHH@Z	Buka adventure-manager family: Open call 0x1fd4; manually reconstructed Audio.cpp and buka-audio.json; buka-advmgr.json
 0x0006a4b4	?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z	Buka command helper family: 0x10478; buka-adventure-commands.json
+0x0006a4f1	?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z	Buka QuickInfo instruction/CFG/EH review: 0x76df; buka-quick-info.json
 0x0006a657	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	Buka adventure-manager family: 0x2337; buka-advmgr.json
+0x0006a917	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	Buka radar/locator family instruction/CFG review: 0x71b4, 0x7adb, 0x7f09; buka-radar-locators.json
 0x0006aaa3	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2897; buka-adventure-commands.json
 0x0006b8b2	?SetPointer@mouseManager@@QAEXF@Z	Buka adventure-manager family: 0x203a; buka-advmgr.json
 0x0006bf6f	?ReallyShowPointer@mouseManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x272b; buka-adventure-commands.json
@@ -231,8 +241,15 @@ rva	name	provenance
 0x0006bf9d	?RestoreUnderlying@mouseManager@@QAEXXZ	Buka drawing-family instruction/CFG review: 0x579a; buka-adventure-drawing.json
 0x0006bfc0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	Buka drawing-family instruction/CFG review: 0x5593; buka-adventure-drawing.json
 0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	Buka input-handler instruction/CFG review: 0x3878, 0x3923, 0x4058, 0x4a76; buka-adventure-input.json
+0x0006c07c	?HideSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ea; buka-quick-info.json
+0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7721; buka-quick-info.json
 0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
+0x0006d150	??0heroWindow@@QAE@FFPAD@Z	Buka QuickInfo instruction/CFG/EH review: 0x7347; buka-quick-info.json
+0x0006d92a	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	Buka radar/locator family instruction/CFG review: 0x7f75, 0x7fcd; buka-radar-locators.json
+0x0006da11	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z	Buka radar/locator family instruction/CFG review: 0x7898, 0x78d2, 0x7913, 0x795d, 0x799e, 0x7a15, 0x7a3e, 0x7a67, 0x7a90, 0x7c77, 0x7cb6, 0x7cd5, 0x7cf6, 0x7d4c; buka-radar-locators.json
+0x0006da87	?DrawWindow@heroWindow@@QAEXF@Z	Buka radar/locator family instruction/CFG review: 0x7bae, 0x7dd3; buka-radar-locators.json
+0x0006daab	?DrawWindow@heroWindow@@QAEXFHH@Z	Buka radar/locator family instruction/CFG review: 0x7ab3, 0x7ee5; buka-radar-locators.json
 0x0006eeb6	?Flush@inputManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x257f; buka-adventure-commands.json
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	Buka DoAdvCommand instruction/CFG correspondence: 0x261f, 0x268c; buka-adventure-commands.json
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	Buka drawing-family instruction/CFG review: 0x55e0, 0x5628; buka-adventure-drawing.json
@@ -244,10 +261,15 @@ rva	name	provenance
 0x000708b4	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6a94, 0x6ad9; buka-adventure-cell.json
 0x00070b14	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	Buka DrawCell instruction/CFG review: 0x6910, 0x6957; buka-adventure-cell.json
 0x00070d6c	_TileToBitmap	Buka DrawCell instruction/CFG review: 0x60f0, 0x61b6, 0x643e; buka-adventure-cell.json
+0x000712a1	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	Buka radar/locator family instruction/CFG review: 0x7178; buka-radar-locators.json
+0x000712f5	?FillToBuffer@icon@@QAEXFFFFCC@Z	Buka radar/locator family instruction/CFG review: 0x6eda, 0x7123; buka-radar-locators.json
 0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
 0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
+0x00077d50	??2@YAPAXI@Z	Buka QuickInfo instruction/CFG/EH review: 0x7314; buka-quick-info.json
+0x00077df6	___CxxFrameHandler	Buka QuickInfo instruction/CFG/EH review: complete EH record/instruction review; buka-quick-info.json
 0x00078156	_free	Buka adventure-manager family: 0x205a; buka-advmgr.json
 0x0007823f	_sprintf	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
+0x000782f4	__ftol	Buka radar/locator family instruction/CFG review: 0x7b85, 0x7daa; buka-radar-locators.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
