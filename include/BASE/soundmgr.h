@@ -79,6 +79,5 @@ extern SampleChannelStruct SCS[];
 
 void SetReady2Poll(void);
 void HandleMCIError(i32 errorCode, char* command);
-extern i32 gCDDrive;
 
 #endif

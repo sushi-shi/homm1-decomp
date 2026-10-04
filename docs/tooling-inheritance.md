@@ -215,3 +215,30 @@ still reports missing `sema/exe_map.py` and `verify/selftest.py`, plus adaptatio
 requiring broader review. These are recorded limitations, not silently treated
 as parity. `homm1 build verify` stops at the unmigrated census; `homm1 link`
 rejects inherited resource identities before linking.
+
+
+## Buka resources and VC6 import archives
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+(`build/import_lib.py`, `build/test_import_lib.py`,
+`build/symbol_providers.py`, `BASE/MiscRuntime.cpp`) and Gruntz
+`d1cdb537caa6142849c7345eedc306dbb5af3763` (`graph/implib.py`,
+`delink/implib.py`). Retained: the single resource gate and catalog, retail
+hint/ordinal/public-symbol validation, old COFF import support, and exact
+DLL-backed symbol identities. Adapted: shared catalog rendering for authored
+RC, generated UTF-16 literals for both RC.EXE and llvm-rc, and VC6 short-import
+verification using the existing delinker decoder. Failed validation no longer
+publishes a generated library. Direct-IAT ordinal symbol facts live in the
+hash-bound `config/retail/import_symbols.json`, validated against PE slots;
+these supplement the existing jump-thunk lookup rather than bypass it.
+Audiere is now an explicit link input.
+
+Measured: seven Russian resource payloads exact through both compilers;
+seven English payloads preserved through the portable path; 41 relevant tests
+pass inside `nix develop .#build`; usage audit passes. The whole-tree Giten audit
+still reports missing `sema/exe_map.py` and `verify/selftest.py`, plus broader
+adaptation reviews. The candidate links without unresolved symbols or duplicate
+warnings. Deferred: full clean/runtime validation, strict census and fixed-image
+referents, and complete startup/preferences migration. The build and final
+verification still stop at the inherited NWC census; these results do not
+establish full command or behavioral parity.

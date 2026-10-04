@@ -6,8 +6,9 @@ In-process (same function):
     from homm1.tool import rc
     rc.compile(rc_path, res_path, retail=retail_exe())
 
-RC.EXE is the VC4 driver over RCDLL.DLL from the pinned media
-(`config/toolchains.json` vc40 `resource_files`). Repo include/ and the
+RC.EXE and RCDLL.DLL come from the selected pinned compiler media
+(`config/toolchains.json` resource files). Catalog calls are expanded only in
+the temporary resource stage, using the target locale and Unicode literals. Repo include/ and the
 source's own directory are passed as /i; the HoMM1 script needs no system
 header.
 
@@ -25,12 +26,11 @@ The success signal is the produced .res.
 from __future__ import annotations
 
 import json
-import shutil
 import struct
 import tempfile
 from pathlib import Path
 
-from homm1.core.paths import INCLUDE, compiler_id
+from homm1.core.paths import INCLUDE, REPO, compiler_id
 from homm1.tool import ToolError
 from homm1.tool.wine import era_tool, run, toolchain_root, winepath
 
@@ -158,10 +158,18 @@ def _check_tools() -> None:
 def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
             extra_includes: list[Path] = (), timeout: float | None = None,
             retail: Path | str | None = None,
-            report: Path | str | None = None) -> str:
+            report: Path | str | None = None, locale: str | None = None) -> str:
     """Compile one .rc; return rc.exe's output. Raises ToolError without a
     .res, or (with `retail`) when any payload differs from retail."""
     src, out = Path(src).resolve(), Path(out).resolve()
+    from homm1.graph.catalog import Catalog
+    from homm1.graph.localization import matching_locale
+    matching = matching_locale(REPO)
+    locale = locale or matching
+    if locale not in ('ru', 'en'):
+        raise ToolError(f'unsupported resource locale: {locale}')
+    if locale != matching and not out.is_relative_to(REPO / 'build/ordinary' / locale):
+        raise ToolError(f'nonmatching resources must use build/ordinary/{locale}')
     if not src.exists():
         raise ToolError(f"resource script missing: {src}")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -171,10 +179,12 @@ def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
     rc_exe = era_tool("rc.exe")
     retail_leaves = retail_resources(retail) if retail is not None else None
     with tempfile.TemporaryDirectory(prefix=".rc-", dir=out.parent) as stage_name:
-        script = src
+        script = Path(stage_name) / src.name
+        text = src.read_text(encoding='utf-8')
+        if (REPO / 'locales/messages.def').is_file():
+            text = Catalog.load(REPO).render_resource(text, locale=locale)
+        script.write_text(text, encoding='ascii')
         if retail_leaves is not None:
-            script = Path(stage_name) / src.name
-            shutil.copyfile(src, script)
             (script.parent / RETAIL_ICON).write_bytes(icon_container(retail_leaves))
         inc = [src.parent, *([INCLUDE] if INCLUDE.is_dir() else []), *extra_includes]
         argv = ["wine", str(rc_exe), "/r", *[f"/i{winepath(d)}" for d in inc],
@@ -218,12 +228,14 @@ def main() -> int:
                     help="retail image: stage its icon and gate every payload")
     ap.add_argument("--report", type=Path,
                     help="JSON payload report (with --verify-exe)")
+    ap.add_argument("--locale", choices=("ru", "en"),
+                    help="alternate locale requires build/ordinary/<locale> output")
     ap.add_argument("flags", nargs=argparse.REMAINDER)
     a = ap.parse_args()
     flags = a.flags[1:] if a.flags and a.flags[0] == "--" else a.flags
     try:
-        compile(a.src, a.out, flags=flags, retail=a.verify_exe, report=a.report)
-    except (ToolError, OSError) as e:
+        compile(a.src, a.out, flags=flags, retail=a.verify_exe, report=a.report, locale=a.locale)
+    except (ToolError, OSError, ValueError) as e:
         print(f"[rc] {e}", file=sys.stderr)
         return 1
     return 0

@@ -1,0 +1,65 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "evidence": {
+    "file": "SMACKW32_buka_2003.dll",
+    "sha256": "0d9973230fd4eff0632c01954a49bd43a372828be5b932c3f84da08896431e68",
+    "record": "buka-2003.json inputs/SMACKW32_buka_2003.dll/exports",
+    "review": "Direct IAT calls in SMACKMGR retail assembly/CFGs; ordinal decorations verified against the shipped DLL export table."
+  },
+  "imports": [
+    {
+      "slot_rva": "0x0008a304",
+      "dll": "smackw32.DLL",
+      "import_key": 20,
+      "symbol": "_SmackSummary@8"
+    },
+    {
+      "slot_rva": "0x0008a308",
+      "dll": "smackw32.DLL",
+      "import_key": 19,
+      "symbol": "_SmackDoFrame@4"
+    },
+    {
+      "slot_rva": "0x0008a30c",
+      "dll": "smackw32.DLL",
+      "import_key": 32,
+      "symbol": "_SmackWait@4"
+    },
+    {
+      "slot_rva": "0x0008a310",
+      "dll": "smackw32.DLL",
+      "import_key": 21,
+      "symbol": "_SmackNextFrame@4"
+    },
+    {
+      "slot_rva": "0x0008a314",
+      "dll": "smackw32.DLL",
+      "import_key": 23,
+      "symbol": "_SmackToBuffer@28"
+    },
+    {
+      "slot_rva": "0x0008a318",
+      "dll": "smackw32.DLL",
+      "import_key": 14,
+      "symbol": "_SmackOpen@12"
+    },
+    {
+      "slot_rva": "0x0008a31c",
+      "dll": "smackw32.DLL",
+      "import_key": 33,
+      "symbol": "_SmackSoundUseMSS@4"
+    },
+    {
+      "slot_rva": "0x0008a320",
+      "dll": "smackw32.DLL",
+      "import_key": 18,
+      "symbol": "_SmackClose@4"
+    },
+    {
+      "slot_rva": "0x0008a324",
+      "dll": "smackw32.DLL",
+      "import_key": 28,
+      "symbol": "_SmackToBufferRect@8"
+    }
+  ]
+}

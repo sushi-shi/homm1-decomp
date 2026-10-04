@@ -116,10 +116,10 @@ NORMALIZE_MODS = _mods("compare/normalize.py", "compare/canonicalize.py",
                        "core/data_matching.py") + ["config/compare.toml"]
 PROJECT_MODS = _mods("compare/project.py", "compare/normalize.py", "manifest.py")
 REPORT_MODS = _mods("tool/objdiff.py")
-LINK_MODS = _mods("graph/link.py", "graph/implib.py", "tool/link.py",
+LINK_MODS = _mods("graph/link.py", "graph/implib.py", "delink/implib.py", "tool/link.py",
                   "core/pe.py") + TOOL_MODS + [
     "config/heroes.def", "config/retail/function_referents.tsv",
-    "config/retail/import_libraries.tsv"]
+    "config/retail/import_libraries.tsv", "config/retail/import_symbols.json"]
 VERIFY_MODS = _mods("verify/", "model.py", "core/tsv.py", "core/paths.py")
 #: committed inputs of the default-tier verify gates (fast+normal): the MAX
 #: ledger and every gate's own baseline/allowlist. Named so a bless re-runs
@@ -329,7 +329,7 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
         w.build(graph.RESOURCE_RES, "rc", inputs=graph.RESOURCE_SCRIPT,
                 implicit=[RETAIL_EXE, graph.TOOLCHAIN_ID]
                          + _mods("tool/rc.py", "core/pe.py", "toolchain.py")
-                         + TOOL_MODS)
+                         + LOCALIZATION_MODS + TOOL_MODS)
     else:
         w.comment("VC4 tree has no pinned RC.EXE/CVTRES.EXE; candidate links "
                   "without resources")

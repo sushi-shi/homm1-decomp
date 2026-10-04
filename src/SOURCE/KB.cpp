@@ -2786,9 +2786,8 @@ char* GetTownName(i32 i) {
     return gTownNames[townPointer->m_threat];
 }
 
-// Buka 2.1 Misc IsCDDrive.
-VA(0x00427132, 0x51)
-i32 IsCDDrive(i32 driveIndex) {
+// Buka retail VA 0x00442254, size 0x39; returns bool in AL.
+bool IsCDDrive(i32 driveIndex) {
     sprintf(gText, "A:\\");
     gText[0] += driveIndex;
     return GetDriveTypeA(gText) == DRIVE_CDROM;

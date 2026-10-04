@@ -1222,27 +1222,44 @@ void WritePrefs(void) {
     WritePrefsToRegistry();
 }
 
-// HoMM1 CD discovery: prefer the registered drive, then probe each CD-ROM
-// drive's autorun file and remember the first one in the registry.
-VA(0x004348d3, 0x4cb)
+// Buka retail data VA 0x0049e720. This path deliberately has no leading slash.
+static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
+
+// Buka retail VA 0x00444702, size 0x72.
+// Suppress the system's critical-error dialog while probing an empty drive.
+static bool DriveSupportsFreeSpaceQuery(char driveLetter) {
+    UINT oldMode;
+    char path[CD_DRIVE_QUERY_PATH_SIZE];
+    ULARGE_INTEGER available;
+    ULARGE_INTEGER total;
+    ULARGE_INTEGER freeBytes;
+
+    wsprintfA(path, "%c:", driveLetter);
+    oldMode = SetErrorMode(SEM_FAILCRITICALERRORS);
+    if (GetDiskFreeSpaceExA(path, &available, &total, &freeBytes) != 0) {
+        SetErrorMode(oldMode);
+        return true;
+    } else {
+        SetErrorMode(oldMode);
+        return false;
+    }
+}
+
+// Buka retail VA 0x00444774, size 0x36f.
+// The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
-    i32 count;
     u32 logicalDrives;
     i32 cd;
     i32 fh;
-    i32 pass;
-    u32 nError;
-    char cdDrives[CD_DRIVE_LETTER_COUNT];
-    i8 numCD;
-    HKEY hRegKey;
+    i32 index;
+    i32 cdDrives[CD_DRIVE_LETTER_COUNT];
+    char buffer[CD_PROBE_BUFFER_SIZE];
     i32 pos;
-    char mciCommand[MCI_COMMAND_BUFFER_SIZE];
-    char szReturn[MCI_COMMAND_BUFFER_SIZE];
-    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
-    char driveText[REGISTRY_TEXT_BUFFER_SIZE];
-    i32 rc;
+    i32 numCD;
+    HKEY key;
+    char subKey[REGISTRY_TEXT_BUFFER_SIZE];
 
-    sprintf(gText, ".\\DATA\\HEROES.AGG");
+    sprintf(gText, "%sHEROES.AGG", ".\\DATA\\");
     fh = open(gText, _O_BINARY);
     if (fh == -1) {
         if (_chdir(gcRegAppPath) == -1)
@@ -1252,77 +1269,65 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
             return CD_SETUP_NO_DATA;
     }
     close(fh);
-    logicalDrives = 0;
     logicalDrives = GetLogicalDrives();
-    count = 0;
-    memset(cdDrives, 0, sizeof(cdDrives));
-    for (cd = CD_FIRST_DRIVE_LETTER; cd < CD_DRIVE_LETTER_COUNT; cd++) {
+    // Retail clears 26 bytes, although the drive slots are 32-bit integers.
+    memset(cdDrives, 0, CD_DRIVE_LETTER_COUNT);
+    for (cd = CD_FIRST_DRIVE_LETTER, index = 0; cd < CD_DRIVE_LETTER_COUNT; cd++) {
         if (logicalDrives & (1 << cd)) {
             if (IsCDDrive(cd)) {
-                cdDrives[count] = static_cast<char>(cd);
-                count++;
+                cdDrives[index] = cd;
+                index++;
             }
         }
     }
-    numCD = static_cast<char>(count);
-    gCDDrive = cdDrives[gConfig.cdOffset];
-    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
-        gCDDrive = cdDrives[0];
-    if (strlen(gcRegCDRomPath)) {
-        sprintf(gText, "%s\\_autorun\\autorun.exe", gcRegCDRomPath);
+    numCD = index;
+    if (strlen(gcRegCDRomPath) > 0 && gcRegCDRomPath[0] >= 'A' && gcRegCDRomPath[0] <= 'Z'
+        && DriveSupportsFreeSpaceQuery(gcRegCDRomPath[0])) {
+        sprintf(gText, "%s%s", gcRegCDRomPath, gcCDTrackName);
         fh = open(gText, _O_BINARY);
         if (fh != -1) {
             close(fh);
-            sprintf(gText + 2, "%s", gSoundPath);
-            strcpy(gSoundPath, gText);
-            sprintf(gText + 2, "%s", gAnimPath);
-            strcpy(gAnimPath, gText);
             return CD_SETUP_READY;
         }
     }
-    if (gCDDrive < CD_FIRST_DRIVE_LETTER)
+    if (numCD <= 0)
         return CD_SETUP_NO_DRIVE;
-    for (pass = 0; pass < CD_SETUP_ATTEMPTS; pass++) {
-        for (cd = 0; cd < numCD; cd++) {
-            wsprintfA(mciCommand, "open %c: type cdaudio alias CD", cdDrives[cd] + 'A');
-            nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
-            if (nError == 0) {
-                wsprintfA(mciCommand, "info CD UPC wait");
-                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
-                wsprintfA(mciCommand, "close CD");
-                nError = mciSendStringA(mciCommand, szReturn, CD_MCI_RESULT_LAST, NULL);
+    for (cd = 0; cd < CD_SETUP_ATTEMPTS; cd++) {
+        for (index = 0; index < numCD; index++) {
+            if (DriveSupportsFreeSpaceQuery(cdDrives[index] + 'A')) {
+                sprintf(gText, "%c:%s", cdDrives[index] + 'A', gcCDTrackName);
+                fh = open(gText, _O_BINARY);
+                if (fh == -1)
+                    continue;
+                pos = _lseek(fh, 0, SEEK_END);
+                if (pos != -1) {
+                    pos = _lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                    if (pos != -1)
+                        pos = read(fh, buffer, CD_AUTORUN_TAIL_BYTES);
+                }
+                close(fh);
+                if (pos != -1) {
+                    sprintf(gcRegCDRomPath, "%c:", cdDrives[index] + 'A');
+                    strcpy(
+                        subKey,
+                        "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
+                    );
+                    key = NULL;
+                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, KEY_WRITE, &key)
+                        == ERROR_SUCCESS) {
+                        RegSetValueExA(
+                            key,
+                            "HMM1 CDDrive",
+                            0,
+                            REG_SZ,
+                            reinterpret_cast<LPBYTE>(gcRegCDRomPath),
+                            strlen(gcRegCDRomPath) + 1
+                        );
+                        RegCloseKey(key);
+                    }
+                    return CD_SETUP_READY;
+                }
             }
-            sprintf(gText, "%c:\\_autorun\\autorun.exe", cdDrives[cd] + 'A', gSoundPath);
-            fh = open(gText, _O_BINARY);
-            if (fh == -1)
-                continue;
-            pos = _lseek(fh, 0, SEEK_END);
-            if (pos != -1) {
-                pos = _lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
-                if (pos != -1)
-                    pos = read(fh, szReturn, CD_AUTORUN_TAIL_BYTES);
-            }
-            close(fh);
-            strcpy(szSubKey, "SOFTWARE\\New World Computing\\Heroes of Might and Magic\\1.0");
-            hRegKey = NULL;
-            rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_WRITE, &hRegKey);
-            if (rc == ERROR_SUCCESS) {
-                wsprintfA(driveText, "%c:", cdDrives[cd] + 'A');
-                pass = RegSetValueExA(
-                    hRegKey,
-                    "CDDrive",
-                    0,
-                    REG_SZ,
-                    reinterpret_cast<LPBYTE>(driveText),
-                    lstrlenA(driveText) + 1
-                );
-                RegCloseKey(hRegKey);
-            }
-            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gSoundPath);
-            strcpy(gSoundPath, gText);
-            sprintf(gText, "%c:%s", cdDrives[cd] + 'A', gAnimPath);
-            strcpy(gAnimPath, gText);
-            return CD_SETUP_READY;
         }
         Sleep(CD_SETUP_RETRY_DELAY);
     }

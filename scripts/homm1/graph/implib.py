@@ -56,6 +56,8 @@ needs the real MSS32/SMACKW32 DLLs (those are runtime-only).
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 import struct
 from pathlib import Path
@@ -150,19 +152,41 @@ def import_slots(pe: Pe | None = None) -> dict[int, tuple[str, str | int]]:
     return out
 
 
+def _reviewed_import_symbols(pe: Pe, slots: dict, path: Path) -> dict:
+    """Validate direct-IAT symbol facts against the exact selected image."""
+    if not path.exists():
+        return {}
+    facts = json.loads(path.read_text())
+    if facts.get("image_sha256") != hashlib.sha256(pe.data).hexdigest():
+        raise ToolError(f"{path}: import symbols belong to a different image")
+    out = {}
+    seen = set()
+    for row in facts["imports"]:
+        slot = int(row["slot_rva"], 16)
+        dll, key, sym = row["dll"], row["import_key"], row["symbol"]
+        if slot in seen or slots.get(slot) != (dll, key) or not sym:
+            raise ToolError(f"{path}: invalid or duplicate IAT identity at {slot:#x}")
+        seen.add(slot)
+        have = out.setdefault(dll, {}).setdefault(key, sym)
+        if have != sym:
+            raise ToolError(f"{path}: conflicting symbol for {dll} {key!r}")
+    return out
+
+
 def referent_imports(pe: Pe | None = None
                      ) -> dict[str, dict[str | int, str]]:
     """{dll: {retail name or ordinal: reviewed decorated symbol}}.
 
-    Each reviewed row of FUNCTION_REFERENTS whose retail bytes are an import
-    thunk (`FF 25 <slot>`) names what that slot's callers link against. A row
+    Reviewed direct-IAT facts in import_symbols.json supply symbols for
+    imports that have no jump thunk. Each reviewed row of FUNCTION_REFERENTS
+    whose retail bytes are an import thunk (`FF 25 <slot>`) names what that slot's callers link against. A row
     whose slot is no import, or two names for one slot, is a review defect and
     fails rather than being guessed around.
     """
     from homm1.core.paths import RETAIL
     pe = pe or image()
     slots = import_slots(pe)
-    out: dict[str, dict[str | int, str]] = {}
+    out = _reviewed_import_symbols(pe, slots, RETAIL / "import_symbols.json")
     for ln in (RETAIL / "function_referents.tsv").read_text().splitlines():
         if not ln or ln.startswith("#") or ln.startswith("rva\t"):
             continue
@@ -354,38 +378,91 @@ def stub_source(dll: str, names, hints: dict[str, int] | None = None,
     return "\n".join(lines) + "\n", entries
 
 
-def _verify_hints(lib: Path, want: dict[str, int]) -> None:
-    """Fail unless every hint/name blob in `lib`'s .idata$6 matches `want`.
-
-    The hint a member carries is what the linker copies into the image, so this
-    re-reads the produced archive rather than trusting the export-table maths.
-    """
+def _import_members(lib: Path):
+    """Read complete archive members; malformed generated archives are fatal."""
     data = lib.read_bytes()
     if data[:8] != b"!<arch>\n":
         raise ToolError(f"{lib}: not an archive")
-    got: dict[str, int] = {}
     off = 8
-    while off + 60 <= len(data):
-        size = int(data[off + 48:off + 58].decode().strip() or "0")
-        body = off + 60
-        m = data[body:body + size]
-        if len(m) > 20 and m[:4] != b"\xff\xff\0\0":      # skip linker members
+    while off < len(data):
+        header = data[off:off + 60]
+        if len(header) != 60 or header[58:] != b"`\n":
+            raise ToolError(f"{lib}: malformed archive header at {off}")
+        try:
+            size = int(header[48:58])
+        except ValueError as error:
+            raise ToolError(f"{lib}: invalid archive member size") from error
+        end = off + 60 + size
+        if size < 0 or end + (size & 1) > len(data):
+            raise ToolError(f"{lib}: truncated archive member")
+        yield data[off + 60:end]
+        off = end + (size & 1)
+
+
+def _checked_short_import(lib: Path, member: bytes):
+    """Validate VC6's short header before using the shared import decoder."""
+    from homm1.delink.implib import _short_import
+    if member[:4] != b"\0\0\xff\xff":
+        return None
+    if len(member) < 20:
+        raise ToolError(f"{lib}: truncated short import")
+    _, _, version, machine, _, size, _, flags = struct.unpack_from(
+        "<HHHHIIHH", member)
+    kind = (flags >> 2) & 7
+    strings = member[20:].split(b"\0")
+    count = 4 if kind == 4 else 3
+    if (version != 0 or machine != 0x14c or size != len(member) - 20
+            or kind > 4 or flags & ~0x1f or (flags & 3) > 2
+            or len(strings) != count or strings[-1] != b""
+            or not all(strings[:-1])):
+        raise ToolError(f"{lib}: malformed short import")
+    return _short_import(member)
+
+
+def _record_import(lib: Path, got: dict, name: str, value: int) -> None:
+    old = got.setdefault(name, value)
+    if old != value:
+        raise ToolError(f"{lib}: conflicting import records for {name}: {old}, {value}")
+
+
+def _verify_hints(lib: Path, want: dict[str, int]) -> None:
+    """Verify retail hints in both traditional COFF and VC6 short imports."""
+    got: dict[str, int] = {}
+    for member in _import_members(lib):
+        short = _checked_short_import(lib, member)
+        if short is not None:
+            name, _dll, hint, kind = short
+            if kind == 0:
+                continue
+            if kind in (2, 3):
+                name = name[1:] if name[:1] in ("_", "@", "?") else name
+            if kind == 3:
+                name = name.split("@", 1)[0]
+            elif kind == 4:
+                name = member[20:].split(b"\0")[2].decode("latin1")
+            if name in want:
+                _record_import(lib, got, name, hint)
+        elif member[:2] == b"\x4c\x01":
             try:
-                nsec = struct.unpack_from("<H", m, 2)[0]
+                nsec = struct.unpack_from("<H", member, 2)[0]
+                optsz = struct.unpack_from("<H", member, 16)[0]
                 for i in range(nsec):
-                    raw = m[20 + 40 * i:20 + 40 * (i + 1)]
+                    off = 20 + optsz + 40 * i
+                    raw = member[off:off + 40]
+                    if len(raw) != 40:
+                        raise ValueError("truncated section table")
                     if raw[:8].rstrip(b"\0") != b".idata$6":
                         continue
-                    rsz, rp = struct.unpack_from("<II", raw, 16)
-                    blob = m[rp:rp + rsz]
-                    if len(blob) > 3:
-                        hint = struct.unpack_from("<H", blob, 0)[0]
-                        name = blob[2:blob.find(b"\0", 2)].decode("latin-1")
-                        if name in want:
-                            got[name] = hint
-            except (struct.error, ValueError):
-                pass
-        off = body + size + (size & 1)
+                    size, ptr = struct.unpack_from("<II", raw, 16)
+                    blob = member[ptr:ptr + size]
+                    if len(blob) != size or len(blob) < 4:
+                        raise ValueError("truncated hint/name")
+                    hint = struct.unpack_from("<H", blob)[0]
+                    name = blob[2:blob.index(b"\0", 2)].decode("latin1")
+                    if name in want:
+                        _record_import(lib, got, name, hint)
+            except (struct.error, ValueError) as error:
+                raise ToolError(f"{lib}: malformed COFF import: {error}") from error
     bad = {n: (want[n], got.get(n)) for n in want if got.get(n) != want[n]}
     if bad:
         raise ToolError(f"{lib.name}: hint mismatch after synthesis: {bad}")
@@ -403,39 +480,21 @@ def _lib_publics(lib: Path) -> set[str]:
 
 def _verify_ordinals(lib: Path, want: dict[int, str]) -> None:
     """Fail unless each reviewed symbol's member imports exactly its ordinal."""
-    data = lib.read_bytes()
+    from homm1.delink.implib import _coff_import_ordinal_and_imp
     got: dict[str, int] = {}
-    off = 8
-    while off + 60 <= len(data):
-        size = int(data[off + 48:off + 58].decode().strip() or "0")
-        m = data[off + 60:off + 60 + size]
-        if len(m) > 20 and m[:4] != b"\xff\xff\0\0":
+    for member in _import_members(lib):
+        short = _checked_short_import(lib, member)
+        if short is not None:
+            sym, _dll, ordinal, kind = short
+            if kind == 0:
+                _record_import(lib, got, sym, ordinal)
+        else:
             try:
-                nsec = struct.unpack_from("<H", m, 2)[0]
-                symp, nsym = struct.unpack_from("<II", m, 8)
-                ordinal = None
-                for i in range(nsec):
-                    raw = m[20 + 40 * i:20 + 40 * (i + 1)]
-                    if raw[:8].rstrip(b"\0") == b".idata$5":
-                        rsz, rp = struct.unpack_from("<II", raw, 16)
-                        v = struct.unpack_from("<I", m, rp)[0] if rsz >= 4 else 0
-                        if v & 0x80000000:
-                            ordinal = v & 0xFFFF
-                if ordinal is not None and symp and nsym:
-                    strt = symp + nsym * 18
-                    for k in range(nsym):
-                        o = symp + 18 * k
-                        raw = m[o:o + 8]
-                        if raw[:4] == b"\0\0\0\0":
-                            so = strt + struct.unpack_from("<I", raw, 4)[0]
-                            name = m[so:m.index(b"\0", so)].decode("latin-1")
-                        else:
-                            name = raw.rstrip(b"\0").decode("latin-1")
-                        if name in want.values():
-                            got[name] = ordinal
-            except (struct.error, ValueError):
-                pass
-        off = off + 60 + size + (size & 1)
+                ordinal, imp = _coff_import_ordinal_and_imp(member)
+            except (struct.error, ValueError) as error:
+                raise ToolError(f"{lib}: malformed COFF import: {error}") from error
+            if ordinal is not None and imp:
+                _record_import(lib, got, imp.removeprefix("__imp_"), ordinal)
     bad = {s: (o, got.get(s)) for o, s in want.items() if got.get(s) != o}
     if bad:
         raise ToolError(f"{lib.name}: ordinal mismatch after synthesis: {bad}")
@@ -559,7 +618,6 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
               cwd=out_dir, expect=[tmp_lib], exe=linker)
     if shape.get("member") and linker is not None:
         _rename_members(tmp_lib, shape["member"])
-    tmp_lib.replace(lib)
     # The stub DLL and its .exp are scaffolding; only the .lib is a build input.
     # link.exe names the .exp after the /IMPLIB path, so the temp lib's name is
     # what it carries - `<stem>.exp` is a file that never existed, and the two
@@ -567,14 +625,15 @@ def synthesize(dll: str, hints: dict[str, int], out_dir: Path = OUT_DIR,
     for f in (stub_dll, tmp_lib.with_suffix(".exp"), out_dir / f"{stem}.exp",
               obj):
         f.unlink(missing_ok=True)
-    _verify_hints(lib, hints)
-    _verify_ordinals(lib, {k: v for k, v in decorated.items()
+    _verify_hints(tmp_lib, hints)
+    _verify_ordinals(tmp_lib, {k: v for k, v in decorated.items()
                            if isinstance(k, int)})
-    publics = _lib_publics(lib)
+    publics = _lib_publics(tmp_lib)
     missing = sorted(v for v in decorated.values() if v not in publics)
     if missing:
         raise ToolError(f"{lib.name}: reviewed symbol(s) not public after "
                         f"synthesis: {missing}")
+    tmp_lib.replace(lib)
     if verbose:
         nord = sum(isinstance(k, int) for k in decorated)
         form = (f", {shape['format']} format, members {shape['member']}"
@@ -602,9 +661,10 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
     """
     from homm1.core.paths import RETAIL, retail_exe
     stamp = max(p.stat().st_mtime
-                for p in (Path(__file__), retail_exe(),
+                for p in (Path(__file__), Path(__file__).parents[1] / "delink/implib.py", retail_exe(),
                           RETAIL / "function_referents.tsv",
-                          RETAIL / "import_libraries.tsv") if p.exists())
+                          RETAIL / "import_libraries.tsv",
+                          RETAIL / "import_symbols.json") if p.exists())
     referents = referent_imports()
     shapes = lib_shapes()
     ordinals = ordinal_imports()
@@ -616,7 +676,7 @@ def ensure_all(out_dir: Path = OUT_DIR, verbose: bool = True) -> list[Path]:
         unnamed = sorted(o for o in ordinals.get(dll, ()) if o not in decorated)
         if unnamed and verbose:
             print(f"[implib] {dll}: ordinal(s) {unnamed} have no reviewed "
-                  "thunk name in function_referents.tsv; left out")
+                  "symbol in function_referents.tsv/import_symbols.json; left out")
         if not hints and not any(isinstance(k, int) for k in decorated):
             if verbose:
                 print(f"[implib] {dll}: no named or reviewed ordinal imports; "

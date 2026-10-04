@@ -213,9 +213,41 @@ class LocalizationTests(unittest.TestCase):
         catalog = loc.Catalog.load(root)
         with (root / 'config/retail/buka-localization.tsv').open() as stream:
             rows = list(csv.DictReader(stream, delimiter='\t'))
-        self.assertEqual(set(catalog.english), {row['id'] for row in rows})
+        resource_rows = json.loads((root / 'config/retail/buka-resource-localization.json').read_text())['messages']
+        self.assertEqual(set(catalog.english),
+                         {row['id'] for row in rows} | {row['id'] for row in resource_rows})
         self.assertEqual(catalog.english['table.gResourceNames.0'], 'Wood')
         import hashlib
         for row in rows:
             payload = catalog.russian[row['id']].encode('cp1251') + b'\0'
             self.assertEqual(hashlib.sha256(payload).hexdigest(), row['russian_sha256'])
+
+        for row in resource_rows:
+            for name, messages in [('english', catalog.english), ('russian', catalog.russian)]:
+                payload = messages[row['id']].encode('utf-16le')
+                self.assertEqual(hashlib.sha256(payload).hexdigest(), row[name + '_sha256'])
+
+    def test_resource_render_selects_language_and_preserves_english(self):
+        self.write_catalog('Gold', 'Золото')
+        source = 'LANGUAGE HOMM1_RESOURCE_LANGUAGE, 1\nMENUITEM localization::Tr("resource.gold"), 42\n'
+        catalog = loc.Catalog.load(self.root)
+        russian = catalog.render_resource(source)
+        english = catalog.render_resource(source, locale='en')
+        self.assertTrue(russian.isascii())
+        self.assertIn('HOMM1_RESOURCE_LANGUAGE 0x19', russian)
+        self.assertIn('HOMM1_RESOURCE_LANGUAGE 0x09', english)
+        from homm1.graph.catalog import resource_literal
+        self.assertIn('MENUITEM ' + resource_literal('Gold') + ', 42', english)
+        self.assertIn('MENUITEM ' + resource_literal('Золото') + ', 42', russian)
+        self.assertIn(r'\x0417\x043e', russian)
+
+    def test_resource_inline_russian_is_rejected(self):
+        (self.root / 'src/menu.rc').write_text('MENUITEM "Золото", 42')
+        errors, _used = loc.check_tree(self.root)
+        self.assertTrue(any('inline non-ASCII' in error for error in errors))
+
+    def test_nonmatching_resource_output_guard_precedes_compilation(self):
+        from homm1.tool import rc, ToolError
+        with mock.patch('homm1.graph.localization.matching_locale', return_value='ru'), \
+                self.assertRaisesRegex(ToolError, 'build/ordinary/en'):
+            rc.compile(self.root / 'src/missing.rc', self.root / 'bad.res', locale='en')

@@ -171,7 +171,7 @@ void ClearMapExtra(void);
 i16 GetMonType(i32 score, i32 highScoreType);
 i32 MemSize(i32);
 i8 CheckMem(void);
-i32 IsCDDrive(i32 driveIndex);
+bool IsCDDrive(i32 driveIndex);
 void LoadSystemwideIcons(void);
 void UnloadSystemwideIcons(void);
 void UpdateSystemOptionsMenu(void);

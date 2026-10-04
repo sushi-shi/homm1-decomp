@@ -40,6 +40,13 @@ def literal(value: str) -> str:
     return '"' + ''.join(out) + '"'
 
 
+def resource_literal(value: str) -> str:
+    """RC wide literal: numeric narrow escapes are not code-page decoded."""
+    data = value.encode('utf-16le')
+    return 'L"' + ''.join('\\x%04x' % int.from_bytes(data[i:i + 2], 'little')
+                           for i in range(0, len(data), 2)) + '"'
+
+
 def parse_registry(text):
     ts = tokens(text)
     entries = {}
@@ -155,6 +162,20 @@ class Catalog:
             raise ValueError('localization macro hash collision')
         return ''.join(f'#define {self.macro(key)} {literal(value)}\n'
                        for key, value in sorted(self.messages(locale).items()))
+
+    def render_resource(self, text, *, locale='ru'):
+        """RC input with Unicode literals and the selected Windows language.
+
+        Numeric narrow escapes in RC strings represent Unicode code points,
+        unlike C++ CP1251 byte literals. Generate explicit wide strings from
+        the same catalog, without embedding translated text in authored RC.
+        """
+        messages = self.messages(locale)
+        rendered = text
+        for start, end, key in reversed(list(self.calls(text))):
+            rendered = rendered[:start] + resource_literal(messages[key]) + rendered[end:]
+        language = 0x19 if locale == 'ru' else 0x09
+        return f'#define HOMM1_RESOURCE_LANGUAGE 0x{language:02x}\n' + rendered
 
     def calls(self, text):
         ts = tokens(text)

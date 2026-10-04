@@ -123,7 +123,7 @@ def check_tree(repo):
     errors, used = [], set()
     for directory in ('src', 'include'):
         for path in sorted((Path(repo) / directory).rglob('*')):
-            if path.suffix not in ('.cpp', '.h', '.c', '.hpp', '.inc'):
+            if path.suffix not in ('.cpp', '.h', '.c', '.hpp', '.inc', '.rc'):
                 continue
             text = path.read_text(encoding='utf-8')
             errors.extend(f'{path}:{line}: {message}' for line, message in hidden_text_errors(text))

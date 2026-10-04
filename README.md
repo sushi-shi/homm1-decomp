@@ -8,7 +8,8 @@ behavior changes, evidence, validation and remaining work.
 
 The active target is now the Buka `HEROES.EXE`, with VC6 SP5 and Russian
 catalog output. Audiere device, music, sample playback and the Smacker loop
-are implemented and compile. Strict comparison is not available yet: the
+are implemented and compile. The candidate links without unresolved symbols,
+and all seven Russian resource payloads match retail. Strict comparison is not available yet: the
 inherited NWC address census and claims still need migration, and the Buka
 absolute-reference manifest needs review. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.

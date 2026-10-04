@@ -51,7 +51,7 @@ from homm1.tool.wine import winepath
 #: reviewed import-thunk names in function_referents.tsv.
 LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
              "advapi32.lib", "netapi32.lib", "mss32.lib", "smackw32.lib",
-             "wing32.lib"]
+             "wing32.lib", "audiere.lib"]
 
 #: Retail's C runtime is the VC4.1 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's

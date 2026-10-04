@@ -140,8 +140,10 @@ def icon_group(executable: Path) -> bytes:
     return header + images
 
 
-def resources(icon_from: Path | None) -> Path:
-    script = (ROOT / "src/SOURCE/Heroes.rc").read_text()
+def resources(icon_from: Path | None, locale: str) -> Path:
+    from catalog import Catalog
+    script = Catalog.load(ROOT).render_resource(
+        (ROOT / "src/SOURCE/Heroes.rc").read_text(), locale=locale)
     stage = OUT / "rsrc"
     stage.mkdir(parents=True, exist_ok=True)
     if icon_from:
@@ -204,7 +206,7 @@ def build() -> int:
     with ThreadPoolExecutor(args.jobs) as pool:
         objects = dict(zip((u["unit"] for u in manifest["units"]),
                            pool.map(lambda u: compile_unit(wine, u), manifest["units"])))
-    rsrc = resources(args.icon_from)
+    rsrc = resources(args.icon_from, args.locale)
 
     link = manifest["link"]
     library = OUT / link["library"]

@@ -2262,3 +2262,659 @@ msgstr "Включить автобой"
 msgctxt "table.gCombatHelp.1"
 msgid "Skip This Unit"
 msgstr "Пропустить ход отряда"
+
+msgctxt "resource.HEROES.ok"
+msgid "OK"
+msgstr "ОК"
+
+msgctxt "resource.HEROES.title"
+msgid "Heroes of Might and Magic"
+msgstr "Герои Меча и Магии"
+
+msgctxt "resource.HEROES.version"
+msgid "Version 1.1"
+msgstr "Версия 1.1"
+
+msgctxt "resource.MNUADV.command40005"
+msgid "&640 x 480"
+msgstr "&640 x 480"
+
+msgctxt "resource.MNUADV.command40006"
+msgid "&800 x 600"
+msgstr "&800 x 600"
+
+msgctxt "resource.MNUADV.command40007"
+msgid "&1024 x 768"
+msgstr "&1024 x 768"
+
+msgctxt "resource.MNUADV.command40008"
+msgid "1&280 x 1024"
+msgstr "1&280 x 1024"
+
+msgctxt "resource.MNUADV.command40009"
+msgid "&Full Screen (F4)"
+msgstr "&Полный экран (F4)"
+
+msgctxt "resource.MNUADV.command40012"
+msgid "View &World"
+msgstr "Показать &мир"
+
+msgctxt "resource.MNUADV.command40013"
+msgid "View &Puzzle"
+msgstr "Показать &загадку"
+
+msgctxt "resource.MNUADV.command40014"
+msgid "&Cast Spell"
+msgstr "&Направить заклинание"
+
+msgctxt "resource.MNUADV.command40015"
+msgid "&Dig"
+msgstr "&Копать"
+
+msgctxt "resource.MNUADV.command40016"
+msgid "Off"
+msgstr "Выкл."
+
+msgctxt "resource.MNUADV.command40017"
+msgid "On - 100%"
+msgstr "Вкл. - 100%"
+
+msgctxt "resource.MNUADV.command40018"
+msgid "On - 90%"
+msgstr "Вкл. - 90%"
+
+msgctxt "resource.MNUADV.command40019"
+msgid "On - 80%"
+msgstr "Вкл. - 80%"
+
+msgctxt "resource.MNUADV.command40020"
+msgid "On - 70%"
+msgstr "Вкл. - 70%"
+
+msgctxt "resource.MNUADV.command40021"
+msgid "On - 60%"
+msgstr "Вкл. - 60%"
+
+msgctxt "resource.MNUADV.command40022"
+msgid "On - 50%"
+msgstr "Вкл. - 50%"
+
+msgctxt "resource.MNUADV.command40023"
+msgid "On - 40%"
+msgstr "Вкл. - 40%"
+
+msgctxt "resource.MNUADV.command40024"
+msgid "On - 30%"
+msgstr "Вкл. - 30%"
+
+msgctxt "resource.MNUADV.command40025"
+msgid "On - 20%"
+msgstr "Вкл. - 20%"
+
+msgctxt "resource.MNUADV.command40026"
+msgid "On - 10%"
+msgstr "Вкл. - 10%"
+
+msgctxt "resource.MNUADV.command40028"
+msgid "Off"
+msgstr "Выкл."
+
+msgctxt "resource.MNUADV.command40029"
+msgid "On - 100%"
+msgstr "Вкл. - 100%"
+
+msgctxt "resource.MNUADV.command40030"
+msgid "On - 90%"
+msgstr "Вкл. - 90%"
+
+msgctxt "resource.MNUADV.command40031"
+msgid "On - 80%"
+msgstr "Вкл. - 80%"
+
+msgctxt "resource.MNUADV.command40032"
+msgid "On - 70%"
+msgstr "Вкл. - 70%"
+
+msgctxt "resource.MNUADV.command40033"
+msgid "On - 60%"
+msgstr "Вкл. - 60%"
+
+msgctxt "resource.MNUADV.command40034"
+msgid "On - 50%"
+msgstr "Вкл. - 50%"
+
+msgctxt "resource.MNUADV.command40035"
+msgid "On - 40%"
+msgstr "Вкл. - 40%"
+
+msgctxt "resource.MNUADV.command40036"
+msgid "On - 30%"
+msgstr "Вкл. - 30%"
+
+msgctxt "resource.MNUADV.command40037"
+msgid "On - 20%"
+msgstr "Вкл. - 20%"
+
+msgctxt "resource.MNUADV.command40038"
+msgid "On - 10%"
+msgstr "Вкл. - 10%"
+
+msgctxt "resource.MNUADV.command40040"
+msgid "&Jump"
+msgstr "&Прыжками"
+
+msgctxt "resource.MNUADV.command40041"
+msgid "&Gallop"
+msgstr "&Галопом"
+
+msgctxt "resource.MNUADV.command40042"
+msgid "&Canter"
+msgstr "&Рысью"
+
+msgctxt "resource.MNUADV.command40043"
+msgid "&Trot"
+msgstr "&Аллюром"
+
+msgctxt "resource.MNUADV.command40044"
+msgid "&Walk"
+msgstr "&Шагом"
+
+msgctxt "resource.MNUADV.command40045"
+msgid "&CD Stereo"
+msgstr "&CD стерео"
+
+msgctxt "resource.MNUADV.command40046"
+msgid "Show &Path"
+msgstr "Показывать &путь"
+
+msgctxt "resource.MNUADV.command40047"
+msgid "&View Enemy Moves"
+msgstr "&Показывать движение врага"
+
+msgctxt "resource.MNUADV.command40052"
+msgid "&Help Topics"
+msgstr "&Темы помощи"
+
+msgctxt "resource.MNUADV.command40053"
+msgid "&About Heroes of Might and Magic"
+msgstr "&О Героях Меча и Магии"
+
+msgctxt "resource.MNUADV.command40102"
+msgid "&Standard Game"
+msgstr "&Обычная игра"
+
+msgctxt "resource.MNUADV.command40104"
+msgid "Play Lord &Ironfist"
+msgstr "Играть за лорда &Айронфиста"
+
+msgctxt "resource.MNUADV.command40105"
+msgid "Play Lord &Slayer"
+msgstr "Играть за вождя &Слэйера"
+
+msgctxt "resource.MNUADV.command40106"
+msgid "Play Queen &Lamanda"
+msgstr "Играть за царицу &Ламанду"
+
+msgctxt "resource.MNUADV.command40107"
+msgid "Play Lord &Alamar"
+msgstr "Играть за колдуна &Аламара"
+
+msgctxt "resource.MNUADV.command40110"
+msgid "&2 Players"
+msgstr "&2 игрока"
+
+msgctxt "resource.MNUADV.command40111"
+msgid "&3 Players"
+msgstr "&3 игрока"
+
+msgctxt "resource.MNUADV.command40112"
+msgid "&4 Players"
+msgstr "&4 игрока"
+
+msgctxt "resource.MNUADV.command40114"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUADV.command40115"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUADV.command40117"
+msgid "&Host (Dials)"
+msgstr "&Сервер (Звонки)"
+
+msgctxt "resource.MNUADV.command40118"
+msgid "&Guest (Answers)"
+msgstr "&Гость (Ответы)"
+
+msgctxt "resource.MNUADV.command40120"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUADV.command40121"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUADV.command40123"
+msgid "&Standard Game"
+msgstr "&Обычная игра"
+
+msgctxt "resource.MNUADV.command40124"
+msgid "&Campaign Game"
+msgstr "&Кампания"
+
+msgctxt "resource.MNUADV.command40127"
+msgid "&2 Players"
+msgstr "&2 игрока"
+
+msgctxt "resource.MNUADV.command40128"
+msgid "&3 Players"
+msgstr "&3 игрока"
+
+msgctxt "resource.MNUADV.command40129"
+msgid "&4 Players"
+msgstr "&4 игрока"
+
+msgctxt "resource.MNUADV.command40131"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUADV.command40132"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUADV.command40134"
+msgid "&Host (Dials)"
+msgstr "&Сервер (Звонки)"
+
+msgctxt "resource.MNUADV.command40135"
+msgid "&Guest (Answers)"
+msgstr "&Гость (Ответы)"
+
+msgctxt "resource.MNUADV.command40137"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUADV.command40138"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUADV.command40139"
+msgid "&Save Game"
+msgstr "&Сохранить игру"
+
+msgctxt "resource.MNUADV.command40140"
+msgid "&Quit"
+msgstr "&Выйти"
+
+msgctxt "resource.MNUADV.popup.0"
+msgid "&File"
+msgstr "&Файл"
+
+msgctxt "resource.MNUADV.popup.0_0"
+msgid "&New Game"
+msgstr "&Новая игра"
+
+msgctxt "resource.MNUADV.popup.0_0_1"
+msgid "&Campaign Game"
+msgstr "&Кампания"
+
+msgctxt "resource.MNUADV.popup.0_0_2"
+msgid "&Multi-Player Game"
+msgstr "&Сетевая игра"
+
+msgctxt "resource.MNUADV.popup.0_0_2_0"
+msgid "&Hot Seat"
+msgstr "&За одним компьютером"
+
+msgctxt "resource.MNUADV.popup.0_0_2_1"
+msgid "&Network"
+msgstr "&Сеть"
+
+msgctxt "resource.MNUADV.popup.0_0_2_2"
+msgid "&Modem"
+msgstr "&Модем"
+
+msgctxt "resource.MNUADV.popup.0_0_2_3"
+msgid "&Direct-Connect"
+msgstr "&Прямое соединение"
+
+msgctxt "resource.MNUADV.popup.0_1"
+msgid "&Load Game"
+msgstr "&Загрузить игру"
+
+msgctxt "resource.MNUADV.popup.0_1_2"
+msgid "&Multi-Player Game"
+msgstr "&Сетевая игра"
+
+msgctxt "resource.MNUADV.popup.0_1_2_0"
+msgid "&Hot Seat"
+msgstr "&За одной машиной"
+
+msgctxt "resource.MNUADV.popup.0_1_2_1"
+msgid "&Network"
+msgstr "&Сеть"
+
+msgctxt "resource.MNUADV.popup.0_1_2_2"
+msgid "&Modem"
+msgstr "&Модем"
+
+msgctxt "resource.MNUADV.popup.0_1_2_3"
+msgid "&Direct-Connect"
+msgstr "&Прямое соединение"
+
+msgctxt "resource.MNUADV.popup.1"
+msgid "&Control Panel"
+msgstr "&Панель управления"
+
+msgctxt "resource.MNUADV.popup.1_0"
+msgid "&Music"
+msgstr "&Музыка"
+
+msgctxt "resource.MNUADV.popup.1_1"
+msgid "&Sound"
+msgstr "&Звук"
+
+msgctxt "resource.MNUADV.popup.1_2"
+msgid "Speed"
+msgstr "Скорость"
+
+msgctxt "resource.MNUADV.popup.2"
+msgid "&Adventure"
+msgstr "&Стратегическая карта"
+
+msgctxt "resource.MNUADV.popup.3"
+msgid "&Display"
+msgstr "&Экран"
+
+msgctxt "resource.MNUADV.popup.4"
+msgid "&Help"
+msgstr "&Помощь"
+
+msgctxt "resource.MNUCMBT.command40005"
+msgid "&640 x 480"
+msgstr "&640 x 480"
+
+msgctxt "resource.MNUCMBT.command40006"
+msgid "&800 x 600"
+msgstr "&800 x 600"
+
+msgctxt "resource.MNUCMBT.command40007"
+msgid "&1024 x 768"
+msgstr "&1024 x 768"
+
+msgctxt "resource.MNUCMBT.command40008"
+msgid "1&280 x 1024"
+msgstr "1&280 x 1024"
+
+msgctxt "resource.MNUCMBT.command40009"
+msgid "&Full Screen (F4)"
+msgstr "&Полный экран (F4)"
+
+msgctxt "resource.MNUCMBT.command40052"
+msgid "&Help Topics"
+msgstr "&Темы помощи"
+
+msgctxt "resource.MNUCMBT.command40053"
+msgid "&About Heroes of Might and Magic"
+msgstr "&О героях Меча и Магии"
+
+msgctxt "resource.MNUCMBT.command40140"
+msgid "&Quit"
+msgstr "&Выйти"
+
+msgctxt "resource.MNUCMBT.popup.0"
+msgid "&File"
+msgstr "&Файл"
+
+msgctxt "resource.MNUCMBT.popup.1"
+msgid "&Display"
+msgstr "&Экран"
+
+msgctxt "resource.MNUCMBT.popup.2"
+msgid "&Help"
+msgstr "&Помощь"
+
+msgctxt "resource.MNUDFLT.command40005"
+msgid "&640 x 480"
+msgstr "&640 x 480"
+
+msgctxt "resource.MNUDFLT.command40006"
+msgid "&800 x 600"
+msgstr "&800 x 600"
+
+msgctxt "resource.MNUDFLT.command40007"
+msgid "&1024 x 768"
+msgstr "&1024 x 768"
+
+msgctxt "resource.MNUDFLT.command40008"
+msgid "1&280 x 1024"
+msgstr "1&280 x 1024"
+
+msgctxt "resource.MNUDFLT.command40009"
+msgid "&Full Screen (F4)"
+msgstr "&Полный экран (F4)"
+
+msgctxt "resource.MNUDFLT.command40052"
+msgid "&Help Topics"
+msgstr "&Темы помощи"
+
+msgctxt "resource.MNUDFLT.command40053"
+msgid "&About Heroes of Might and Magic"
+msgstr "&О Героях Меча и Магии"
+
+msgctxt "resource.MNUDFLT.command40102"
+msgid "&Standard Game"
+msgstr "&Обычная игра"
+
+msgctxt "resource.MNUDFLT.command40104"
+msgid "Play Lord &Ironfist"
+msgstr "Играть за лорда &Айронфиста"
+
+msgctxt "resource.MNUDFLT.command40105"
+msgid "Play Lord &Slayer"
+msgstr "Играть за вождя &Слэйера"
+
+msgctxt "resource.MNUDFLT.command40106"
+msgid "Play Queen &Lamanda"
+msgstr "Играть за царицу &Ламанду"
+
+msgctxt "resource.MNUDFLT.command40107"
+msgid "Play Lord &Alamar"
+msgstr "Играть за колдуна &Аламара"
+
+msgctxt "resource.MNUDFLT.command40110"
+msgid "&2 Players"
+msgstr "&2 игрока"
+
+msgctxt "resource.MNUDFLT.command40111"
+msgid "&3 Players"
+msgstr "&3 игрока"
+
+msgctxt "resource.MNUDFLT.command40112"
+msgid "&4 Players"
+msgstr "&4 игрока"
+
+msgctxt "resource.MNUDFLT.command40114"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUDFLT.command40115"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUDFLT.command40117"
+msgid "&Host (Dials)"
+msgstr "&Сервер (Звонки)"
+
+msgctxt "resource.MNUDFLT.command40118"
+msgid "&Guest (Answers)"
+msgstr "&Гость (Ответы)"
+
+msgctxt "resource.MNUDFLT.command40120"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUDFLT.command40121"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUDFLT.command40123"
+msgid "&Standard Game"
+msgstr "&Обычная игра"
+
+msgctxt "resource.MNUDFLT.command40124"
+msgid "&Campaign Game"
+msgstr "&Кампания"
+
+msgctxt "resource.MNUDFLT.command40127"
+msgid "&2 Players"
+msgstr "&2 игрока"
+
+msgctxt "resource.MNUDFLT.command40128"
+msgid "&3 Players"
+msgstr "&3 игрока"
+
+msgctxt "resource.MNUDFLT.command40129"
+msgid "&4 Players"
+msgstr "&4 игрока"
+
+msgctxt "resource.MNUDFLT.command40131"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUDFLT.command40132"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUDFLT.command40134"
+msgid "&Host (Dials)"
+msgstr "&Сервер (Звонки)"
+
+msgctxt "resource.MNUDFLT.command40135"
+msgid "&Guest (Answers)"
+msgstr "&Гость (Ответы)"
+
+msgctxt "resource.MNUDFLT.command40137"
+msgid "&Host"
+msgstr "&Сервер"
+
+msgctxt "resource.MNUDFLT.command40138"
+msgid "&Guest"
+msgstr "&Гость"
+
+msgctxt "resource.MNUDFLT.command40139"
+msgid "&Save Game"
+msgstr "&Сохранить игру"
+
+msgctxt "resource.MNUDFLT.command40140"
+msgid "&Quit"
+msgstr "&Выйти"
+
+msgctxt "resource.MNUDFLT.popup.0"
+msgid "&File"
+msgstr "&Файл"
+
+msgctxt "resource.MNUDFLT.popup.0_0"
+msgid "&New Game"
+msgstr "&Новая игра"
+
+msgctxt "resource.MNUDFLT.popup.0_0_1"
+msgid "&Campaign Game"
+msgstr "&Кампания"
+
+msgctxt "resource.MNUDFLT.popup.0_0_2"
+msgid "&Multi-Player Game"
+msgstr "&Сетевая игра"
+
+msgctxt "resource.MNUDFLT.popup.0_0_2_0"
+msgid "&Hot Seat"
+msgstr "&За одной машиной"
+
+msgctxt "resource.MNUDFLT.popup.0_0_2_1"
+msgid "&Network"
+msgstr "&Сеть"
+
+msgctxt "resource.MNUDFLT.popup.0_0_2_2"
+msgid "&Modem"
+msgstr "&Модем"
+
+msgctxt "resource.MNUDFLT.popup.0_0_2_3"
+msgid "&Direct-Connect"
+msgstr "&Прямое соединение"
+
+msgctxt "resource.MNUDFLT.popup.0_1"
+msgid "&Load Game"
+msgstr "&Загрузить игру"
+
+msgctxt "resource.MNUDFLT.popup.0_1_2"
+msgid "&Multi-Player Game"
+msgstr "&Сетевая игра"
+
+msgctxt "resource.MNUDFLT.popup.0_1_2_0"
+msgid "&Hot Seat"
+msgstr "&За одной машиной"
+
+msgctxt "resource.MNUDFLT.popup.0_1_2_1"
+msgid "&Network"
+msgstr "&Сеть"
+
+msgctxt "resource.MNUDFLT.popup.0_1_2_2"
+msgid "&Modem"
+msgstr "&Модем"
+
+msgctxt "resource.MNUDFLT.popup.0_1_2_3"
+msgid "&Direct-Connect"
+msgstr "&Прямое соединение"
+
+msgctxt "resource.MNUDFLT.popup.1"
+msgid "&Display"
+msgstr "&Экран"
+
+msgctxt "resource.MNUDFLT.popup.2"
+msgid "&Help"
+msgstr "&Помощь"
+
+msgctxt "resource.MNUTOWN.command40005"
+msgid "&640 x 480"
+msgstr "&640 x 480"
+
+msgctxt "resource.MNUTOWN.command40006"
+msgid "&800 x 600"
+msgstr "&800 x 600"
+
+msgctxt "resource.MNUTOWN.command40007"
+msgid "&1024 x 768"
+msgstr "&1024 x 768"
+
+msgctxt "resource.MNUTOWN.command40008"
+msgid "1&280 x 1024"
+msgstr "1&280 x 1024"
+
+msgctxt "resource.MNUTOWN.command40009"
+msgid "&Full Screen (F4)"
+msgstr "&Полный экран (F4)"
+
+msgctxt "resource.MNUTOWN.command40052"
+msgid "&Help Topics"
+msgstr "&Темы помощи"
+
+msgctxt "resource.MNUTOWN.command40053"
+msgid "&About Heroes of Might and Magic"
+msgstr "&О Героях Меча и Магии"
+
+msgctxt "resource.MNUTOWN.command40140"
+msgid "&Quit"
+msgstr "&Выйти"
+
+msgctxt "resource.MNUTOWN.popup.0"
+msgid "&File"
+msgstr "&Файл"
+
+msgctxt "resource.MNUTOWN.popup.1"
+msgid "&Display"
+msgstr "&Экран"
+
+msgctxt "resource.MNUTOWN.popup.2"
+msgid "&Help"
+msgstr "&Помощь"

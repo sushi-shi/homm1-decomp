@@ -59,7 +59,7 @@ H1_ENUM_BEGIN(ConfigConnection)
 H1_ENUM_END(ConfigConnection)
 
 // SetupCDDrive's result, which KB keeps in iCDRomErr: READY when the CD is
-// found, else why not (no CD-ROM drive, no HEROES CD in any drive, no
+// found by its Ogg probe, else why not (no CD-ROM drive, no matching disc, no
 // registered application path, no data directory).
 H1_ENUM_BEGIN(CdSetupResult)
     CD_SETUP_READY = 0,
@@ -96,7 +96,8 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     CD_SETUP_ATTEMPTS = 2,
     CD_SETUP_RETRY_DELAY = 3000,
     CD_AUTORUN_TAIL_BYTES = 100,
-    MCI_COMMAND_BUFFER_SIZE = 256,
+    CD_PROBE_BUFFER_SIZE = 256,
+    CD_DRIVE_QUERY_PATH_SIZE = 256,
     KBWIN_COMMAND_LINE_CLEAR_SIZE = 61,
     KBWIN_COMMAND_LINE_LIMIT = 60,
     KBWIN_MESSAGE_FILTER_SIZE = 0x400,

@@ -225,7 +225,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/NOOPT"
@@ -315,7 +315,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/netwin"
