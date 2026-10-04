@@ -6,6 +6,7 @@
 # Drawing-family operand and typed payload review: buka-adventure-cell.json.
 # Drawing-family operand and typed payload review: buka-radar-locators.json.
 # QuickInfo typed table and operand review: buka-quick-info.json.
+# Turn-panel operand and typed payload review: buka-bottom-turns.json.
 rva	kind
 0x0008a38c	vtable
 0x0008a398	fppool
@@ -59,6 +60,7 @@ rva	kind
 0x0008d694	vtable
 0x0008e140	
 0x0008e144	
+0x0008e148	
 0x00090040	
 0x000901dc	
 0x00090368	
@@ -329,12 +331,6 @@ rva	kind
 0x000a1754	
 0x000a1790	
 0x000a17b8	
-0x000a17bc	
-0x000a17c0	
-0x000a17d4	
-0x000a17d8	
-0x000a1ed8	
-0x000a1edc	
 0x000a2430	
 0x000a2824	
 0x000a2878	
@@ -464,11 +460,16 @@ rva	kind
 0x000a6710	
 0x000a6714	
 0x000a672c	
+0x000a6740	
+0x000a6744	
 0x000a6748	
 0x000a674c	
 0x000a6750	
+0x000a6754	
 0x000a6758	
 0x000a6760	
+0x000a6764	
+0x000a6768	
 0x000a6b9c	
 0x000a6ba0	
 0x000a6ba4	

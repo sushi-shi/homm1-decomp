@@ -469,7 +469,8 @@ public:
     i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
     // HoMM1 retail: hero and army only (ret 8).
     i32 GetLuck(class hero* h, class army*);
-    i32 GetPlayerCrest(i32 player) {
+    // Buka enemy-turn crest reads widen the stored color to a signed short.
+    i16 GetPlayerColor(i32 player) {
         return m_players[player].m_color;
     }
     void SetupAdjacentMons(void);

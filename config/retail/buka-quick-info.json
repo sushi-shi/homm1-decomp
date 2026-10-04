@@ -3146,5 +3146,6 @@
     "link": "homm1 link succeeds: 663552-byte candidate, zero unresolved externals and duplicate-symbol warnings, no /FORCE.",
     "readme": "homm1 verify readme cannot generate scores until the strict comparison report exists.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit: 202 adaptations awaiting review, two missing modules. No tool implementation changed."
-  }
+  },
+  "validation_checkpoint": "1de5b876; historical validation at that source/object fingerprint. buka-bottom-turns.json supplies the former 0x8e7d8 blocker."
 }

@@ -3303,3 +3303,15 @@ msgstr "Самоцветная шахта"
 msgctxt "table.gMineNames.6"
 msgid "Gold Mine"
 msgstr "Золотоносная шахта"
+
+msgctxt "calendar.month.label"
+msgid "Month"
+msgstr "Месяц"
+
+msgctxt "calendar.week.label"
+msgid "Week"
+msgstr "Неделя"
+
+msgctxt "calendar.day.label"
+msgid "Day"
+msgstr "День"

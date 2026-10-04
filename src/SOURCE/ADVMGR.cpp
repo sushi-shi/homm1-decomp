@@ -3402,11 +3402,11 @@ void advManager::ClearBottomView(void) {
 // donor PoL RVA 0x00060e95; preferred Buka symbol ?UpdBottomViewEnemyTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.738388;margin=0.356312;shape=0.508;size=0.910;calls=0.857;strings=brcrest.icn|hourglas.icn|stonback.icn;alternate=pol20:int advManager::UpdBottomViewEnemyTurn(void)@0x00060e95
-VA(0x0045a894, 0x5bf)
+VA(0x00408046, 0x52f)
 i8 advManager::UpdBottomViewEnemyTurn(void) {
-    DATA(0x004a1ed8)
+    DATA(0x004a6764)
     static i32 gLastSandAnimTime = 0;
-    DATA(0x004a1edc)
+    DATA(0x004a6768)
     static i32 gLastNewSandAnimTime = 0;
     i8 updated;
     tag_message message;
@@ -3506,7 +3506,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
         if (m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST]) {
             message.command = WIDGET_COMMAND_SET_FRAME;
             message.id = ENEMY_TURN_CREST_ID;
-            message.value = gpGame->m_players[giCurPlayer].Color();
+            message.value = gpGame->GetPlayerColor(giCurPlayer);
             m_adventureWindow->BroadcastMessage(message);
         } else {
             m_bottomViewPrimaryWidgets[ENEMY_TURN_CREST_SLOT + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
@@ -3516,7 +3516,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
                     ENEMY_TURN_ANIMATION_WIDTH,
                     ENEMY_TURN_ANIMATION_HEIGHT,
                     "brcrest.icn",
-                    gpGame->m_players[giCurPlayer].Color(),
+                    gpGame->GetPlayerColor(giCurPlayer),
                     ICON_DRAW_NORMAL,
                     ENEMY_TURN_CREST_ID,
                     ICON_WIDGET_DRAW,
@@ -3570,7 +3570,7 @@ i8 advManager::UpdBottomViewEnemyTurn(void) {
 // donor PoL RVA 0x000613b0; preferred Buka symbol ?UpdBottomViewNewTurn@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.861364;margin=0.145966;shape=0.778;size=0.910;calls=0.840;strings=%s: %d|%s: %d  %s: %d|bigfont.fnt;alternate=pol20:int advManager::UpdBottomViewNewTurn(void)@0x000613b0
-VA(0x0045ae53, 0x3e0)
+VA(0x00408575, 0x372)
 i8 advManager::UpdBottomViewNewTurn(void) {
     i32 frameIndex;
     i32 month;
@@ -3625,7 +3625,14 @@ i8 advManager::UpdBottomViewNewTurn(void) {
     );
 
     weekStr = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
-    sprintf(weekStr, "%s: %d  %s: %d", "Month", gpGame->m_month, "Week", gpGame->m_week);
+    sprintf(
+        weekStr,
+        "%s: %d  %s: %d",
+        localization::Tr("calendar.month.label"),
+        gpGame->m_month,
+        localization::Tr("calendar.week.label"),
+        gpGame->m_week
+    );
     m_bottomViewSecondaryWidgets[0] = new textWidget(
         NEW_TURN_DATE_TEXT_X,
         NEW_TURN_WEEK_TEXT_Y,
@@ -3642,7 +3649,7 @@ i8 advManager::UpdBottomViewNewTurn(void) {
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
     dayStr = static_cast<char*>(malloc(BOTTOM_VIEW_TEXT_BUFFER_SIZE));
-    sprintf(dayStr, "%s: %d", "Day", gpGame->m_day);
+    sprintf(dayStr, "%s: %d", localization::Tr("calendar.day.label"), gpGame->m_day);
     m_bottomViewSecondaryWidgets[0] = new textWidget(
         NEW_TURN_DATE_TEXT_X,
         NEW_TURN_DAY_TEXT_Y,
@@ -7423,9 +7430,9 @@ DATA(0x0048e140)
 i32 gLimitUpdMinX = UPDATE_NONE;
 DATA(0x004a17b8)
 i32 gLastScrollTime = 0;
-DATA(0x004a17bc)
+DATA(0x004a6740)
 i32 gSandAnim = 0;
-DATA(0x004a17c0)
+DATA(0x004a6744)
 i32 gLastHourGlassUpdateTime = 0;
 DATA(0x004a6748)
 i32 TrigX = 0;
@@ -7435,9 +7442,9 @@ DATA(0x004a6750)
 i32 gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048e144)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
-DATA(0x004a17d4)
+DATA(0x004a6754)
 i32 gCurHourGlassPhase = 0;
-DATA(0x004a17d8)
+DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
 DATA(0x004a6758)
 i32 gForceUpdate = 0;
