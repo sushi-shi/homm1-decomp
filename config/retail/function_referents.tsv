@@ -96,6 +96,11 @@ rva	name	provenance
 0x00012c92	?AttemptAdjacentAttack@combatManager@@QAECPAVarmy@@@Z	Buka combat-AI instruction/CFG/EH review: 0x120d3, 0x12301, complete combat-AI review; buka-combat-ai.json
 0x00012f0e	?WalkTowardArmyFront@combatManager@@QAECPAVarmy@@CF@Z	Buka combat-AI instruction/CFG/EH review: 0x12343, complete combat-AI review; buka-combat-ai.json
 0x000130f8	?WalkTowardArmy@combatManager@@QAECPAVarmy@@CF@Z	Buka combat-AI instruction/CFG/EH review: 0x123dd, 0x12403, 0x12429, 0x12ffc, 0x130ee, complete combat-AI review; buka-combat-ai.json
+0x00013330	??0army@@QAE@XZ	Buka army initialization/resources instruction/CFG review: complete army initialization/resources review; buka-army-resources.json
+0x000133ec	?InitClean@army@@QAEXXZ	Buka army initialization/resources instruction/CFG review: complete army initialization/resources review, 0x1345d; buka-army-resources.json
+0x00013450	?Init@army@@QAEXCFCC@Z	Buka army initialization/resources instruction/CFG review: complete army initialization/resources review; buka-army-resources.json
+0x00013555	?LoadResources@army@@QAEXXZ	Buka army initialization/resources instruction/CFG review: complete army initialization/resources review; buka-army-resources.json
+0x00013760	?FreeResources@army@@QAEXXZ	Buka army initialization/resources instruction/CFG review: complete army initialization/resources review; buka-army-resources.json
 0x00017d6f	?Strength@army@@QAEIXZ	Buka combat-AI instruction/CFG/EH review: 0x12889, 0x12928, 0x12aea; buka-combat-ai.json
 0x000184b0	??0armyGroup@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x11708; buka-combat-ai.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json

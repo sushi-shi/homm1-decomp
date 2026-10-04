@@ -47,6 +47,8 @@ extern H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[];
 extern i32 bShowIt;
 extern char gText[];
 extern char* gArmyNames[];
+// Locale-independent resource stems; display names stay in the catalog.
+extern char* gArmySpriteNames[28];
 extern char* gArmyNamesPlural[];
 // A creature's name, plural for counts above one (Buka 2.1 KBDeclarations.h; HoMM1
 // tests count > 1).

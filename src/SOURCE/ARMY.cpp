@@ -1,5 +1,5 @@
-// Combat stacks. Retail starts this object at army::army (0x00466490),
-// after the SOURCE/AI object's int3 fill; hero::hero starts the next one.
+// Combat stacks. Buka starts this object at army::army (RVA 0x13330),
+// after the SOURCE/AI locale startup and INT3 fill.
 
 #include <match.h>
 
@@ -47,7 +47,7 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_MISSILE_HALF_HEIGHT = 30
 H1_ENUM_CONST_END(ArmyDrawingConstant)
 
-VA(0x00406870, 0xc9)
+VA(0x00413330, 0xbc)
 army::army(void) {
     i32 i;
 
@@ -70,7 +70,7 @@ army::army(void) {
     m_moveTargetHex = 0;
 }
 
-VA(0x00406951, 0x71)
+VA(0x004133ec, 0x64)
 void army::InitClean(void) {
     i32 i;
 
@@ -84,14 +84,7 @@ void army::InitClean(void) {
 }
 
 // The commanding hero's attack and defense raise the copied creature stats.
-// @early-stop 99.91: `commander->m_primaryStats[0] + m_stats.attack` - the /Od
-// add takes m_stats.attack first. sortnode model: both sides are two constant
-// adds over a load (member offsets are value-hashed constants, so header member
-// order cannot move them); only k4(this) and k4(commander) decide. Retail needs
-// commander's C1 handle 10-11 past its place relative to `this` (or a whole-TU
-// shift S with +k: S=1 k=9..11, S=2 k=8..11, S=5 k=5..8); no uniform shift in
-// 0..511 works. Declaring commander at its first assignment moves it +1 only.
-VA(0x004069c2, 0x122)
+VA(0x00413450, 0x105)
 void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     hero* commander;
 
@@ -103,8 +96,8 @@ void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     m_spellEndCondition = ARMY_CANCEL_SPELLS_NONE;
     commander = gpCombatManager->m_heroes[side];
     if (commander) {
-        m_stats.attack = commander->m_primaryStats[HERO_PRIMARY_ATTACK] + m_stats.attack;
-        m_stats.defense = commander->m_primaryStats[HERO_PRIMARY_DEFENSE] + m_stats.defense;
+        m_stats.attack += commander->m_primaryStats[HERO_PRIMARY_ATTACK];
+        m_stats.defense += commander->m_primaryStats[HERO_PRIMARY_DEFENSE];
     }
     m_facing = side ^ 1;
     m_walkYStep = 0;
@@ -112,7 +105,7 @@ void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     m_animationFrame = 1;
     m_baseSpeed = m_stats.speed;
     m_quantity = quantity;
-    m_initialQuantity = m_quantity;
+    m_initialQuantity = quantity;
     m_hitPointsLost = 0;
     m_damageMode = ARMY_DAMAGE_RANDOM;
     m_powFrames = ARMY_POW_NONE;
@@ -120,14 +113,14 @@ void army::Init(i8 type, i16 quantity, i8 side, i8 index) {
     m_index = index;
 }
 
-VA(0x00406ae4, 0x237)
+VA(0x00413555, 0x20b)
 void army::LoadResources(void) {
     char sprite[16];
     i32 i;
     char buf[16];
 
     if (m_creatureType != CREATURE_SWORDSMAN)
-        strcpy(sprite, gArmyNames[m_creatureType]);
+        strcpy(sprite, gArmySpriteNames[m_creatureType]);
     else
         strcpy(sprite, "swrdsman");
     sprintf(gText, "%s.std", sprite);
@@ -162,7 +155,7 @@ void army::LoadResources(void) {
 // donor PoL RVA 0x0004b36e; preferred Buka symbol ?FreeResources@army@@QAEXXZ
 // donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
-VA(0x00406d1b, 0xf1)
+VA(0x00413760, 0xd4)
 void army::FreeResources(void) {
     i32 i;
 

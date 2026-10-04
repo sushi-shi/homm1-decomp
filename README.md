@@ -43,8 +43,11 @@ preserve original English, and Buka’s removed network-exit log is reflected
 in the source. The shared VC6 locale guard is now enrolled from compiled
 evidence. All thirteen combat AI functions now have reviewed Buka addresses,
 data dependencies and floating constants, with the measured `/G5` profile.
-Strict delinking reaches the `army` constructor, stopping at data identity
-`0xa74e8`. The old score ledger has been reset.
+Army initialization and resource loading are now reviewed, including separate
+English sprite stems and translated display names, plus the increased sample
+volume. Strict delinking reaches `army::DrawToBuffer`, stopping at data identity
+`0x8ee30`; overlapping inherited data claims also remain. The old score ledger
+has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

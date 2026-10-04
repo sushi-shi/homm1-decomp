@@ -10055,6 +10055,8 @@
       "owner_rva": "0x13330",
       "source_correspondence": "army::army follows the AI startup routines; complete review pending.",
       "evidence": "Reviewed absolute_reference_evidence.tsv and pinned function census. The instruction stores a zero word."
-    }
+    },
+    "checkpoint": "fe60b575",
+    "scope": "Historical AI checkpoint; the next army review migrates the previously unprovided constructor data. Source/object fingerprints describe this checkpoint."
   }
 }

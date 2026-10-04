@@ -16,6 +16,7 @@
 # Travel-spell/route operand/payload review: buka-travel.json.
 # Scroll/network/border operand/payload review: buka-scroll-network.json.
 # Combat-AI operand/payload review: buka-combat-ai.json.
+# Army initialization/resource review: buka-army-resources.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
@@ -133,6 +134,7 @@ rva	kind
 0x00091398	
 0x000913b0	
 0x000913d8	
+0x00091408	
 0x00091638	
 0x00091640	
 0x00091648	
@@ -152,7 +154,7 @@ rva	kind
 0x00091e30	
 0x00091e50	
 0x00091e70	
-0x00091e78	
+0x00092190	
 0x00092198	
 0x000921e0	
 0x00092288	
@@ -162,7 +164,9 @@ rva	kind
 0x000923a8	
 0x000923b0	
 0x00092570	
+0x0009258c	
 0x000925e0	
+0x000925fc	
 0x00092650	
 0x0009266c	
 0x00092760	
@@ -181,7 +185,6 @@ rva	kind
 0x00092b18	
 0x00092b58	
 0x00092b84	
-0x00092c1c	
 0x00092c2c	
 0x00092c30	
 0x00092c34	
@@ -202,7 +205,6 @@ rva	kind
 0x00093028	
 0x00093040	
 0x00093058	
-0x00093068	
 0x00093070	
 0x00093148	
 0x000931c0	
@@ -553,6 +555,7 @@ rva	kind
 0x000a73c8	
 0x000a746c	
 0x000a7474	
+0x000a7478	
 0x000a7480	
 0x000a74a4	
 0x000a74a8	
@@ -560,6 +563,7 @@ rva	kind
 0x000a74c4	
 0x000a74d8	
 0x000a74e4	
+0x000a74e8	
 0x000a74ea	
 0x000a761c	
 0x000a7638	
@@ -574,7 +578,6 @@ rva	kind
 0x000a7b70	
 0x000a7b78	
 0x000a7b84	
-0x000a7b8c	
 0x000a7b90	
 0x000a7b94	
 0x000a7b98	
@@ -593,7 +596,6 @@ rva	kind
 0x000a7bf4	
 0x000a7bfc	
 0x000a7c00	
-0x000a7c08	
 0x000a7c10	
 0x000a7c18	
 0x000a7d48	
@@ -624,6 +626,7 @@ rva	kind
 0x000a86fc	
 0x000a8700	
 0x000a8704	
+0x000a9400	
 0x000a9408	
 0x000a9410	
 0x000a9414	
@@ -643,7 +646,6 @@ rva	kind
 0x000a9930	
 0x000a9940	
 0x000a9944	
-0x000a9b48	
 0x000a9b4c	
 0x000a9b54	
 0x000a9cac	

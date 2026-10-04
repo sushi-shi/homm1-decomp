@@ -60,7 +60,7 @@ H1_ENUM_CONST_END(ArmyPowConstant)
 // buffer (Buka ArmyCombatConstant ARMY_SAMPLE_VOLUME/CHANNEL and
 // ARMY_QUANTITY_TEXT_SIZE).
 H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
-    ARMY_SAMPLE_VOLUME = 0x40,
+    ARMY_SAMPLE_VOLUME = 0x7f,
     ARMY_SAMPLE_CHANNEL = 3,
     ARMY_QUANTITY_TEXT_SIZE = 12,
     // WalkTo/AttackTo when no path reaches the target (Buka ARMY_PATH_BLOCKED).

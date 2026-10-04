@@ -3293,7 +3293,7 @@ DATA(0x00491e50)
 float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
 DATA(0x00491e70)
 i8 gVisRangeTown = 5;
-DATA(0x00491e78)
+DATA(0x00491408)
 tag_monsterInfo gMonsterDatabase[28] = {
     {20, 18, 9, 12, 1, 1, 1, 0, 1, 1, 1, 1, 5, 0, {3, 0, 18, 0, 5, 0}, 0},
     {150, 256, 17, 8, 10, 10, 1, 3, 5, 3, 2, 3, 5, 12, {3, 0, 4, 0, 5, 0}, 4},
@@ -3574,7 +3574,7 @@ u8 gMonoColorMap[256] = {
 };
 DATA(0x004a98cc)
 i32 gLoadingMonoIcon = 0;
-DATA(0x00492c1c)
+DATA(0x00492190)
 i32 gMonoIconSkip = -1;
 DATA(0x004a98d0)
 i32 gScrollX = 0;
@@ -3778,7 +3778,7 @@ char* gClassNames[4] = {
     localization::Tr("table.gClassNames.2"),
     localization::Tr("table.gClassNames.3")
 };
-DATA(0x00493068)
+DATA(0x0049258c)
 char* gArmyNames[28] = {
     localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"),
     localization::Tr("table.gArmyNames.2"),  localization::Tr("table.gArmyNames.3"),
@@ -3794,6 +3794,15 @@ char* gArmyNames[28] = {
     localization::Tr("table.gArmyNames.22"), localization::Tr("table.gArmyNames.23"),
     localization::Tr("table.gArmyNames.24"), localization::Tr("table.gArmyNames.25"),
     localization::Tr("table.gArmyNames.26"), localization::Tr("table.gArmyNames.27"),
+};
+// Buka separates resource stems from translated creature display names.
+DATA(0x004925fc)
+char* gArmySpriteNames[28] = {
+    "peasant", "archer", "pikeman", "swordsman", "cavalry", "paladin",
+    "goblin", "orc", "wolf", "ogre", "troll", "cyclops",
+    "sprite", "dwarf", "elf", "druid", "unicorn", "phoenix",
+    "centaur", "gargoyle", "griffin", "minotaur", "hydra", "dragon",
+    "rogue", "nomad", "ghost", "genie"
 };
 DATA(0x0049266c)
 char* gArmyNamesPlural[28] = {
@@ -4834,7 +4843,7 @@ DATA(0x004a7f58)
 i8 gbRetreatWin;
 DATA(0x004a82d0)
 H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
-DATA(0x004a7c08)
+DATA(0x004a74e8)
 i16 gCurLoadedSpellFileId;
 DATA(0x004a761c)
 i32 giBottomViewOverride;
@@ -4852,7 +4861,7 @@ DATA(0x004a9e98)
 char gcRegCDRomPath[352];
 DATA(0x004a7d50)
 class heroWindow* heroWin;
-DATA(0x004a9b48)
+DATA(0x004a9400)
 class icon* gCurLoadedSpellIcon;
 DATA(0x004a8300)
 void* ppMapExtra[255];
@@ -4870,7 +4879,7 @@ DATA(0x004a9d20)
 i32 iDEMaxLen;
 DATA(0x004a7828)
 class combatManager* gpCombatManager;
-DATA(0x004a7b8c)
+DATA(0x004a7478)
 i16 gSpellEffectFrame;
 DATA(0x004a95c8)
 executive* gpExec;
