@@ -5521,5 +5521,6 @@
       "source_correspondence": "AICheckRetreat in SOURCE/AI follows the adventure-manager startup routines. Full review pending.",
       "evidence": "Reviewed absolute_reference_evidence.tsv and pinned function census; qword fmul operand."
     }
-  }
+  },
+  "checkpoint": "Historical validation at 975b3be8. The combat-AI review supersedes its next-reference blocker; fingerprints identify that earlier state."
 }

@@ -3,10 +3,19 @@
 # TownQuickView unpooled strings: every use site and full payload independently verified; buka-quick-views.json.
 # ViewWorld unpooled strings: every use site and full payload independently verified; buka-map-views.json.
 # VC6 ctype<wchar_t>::id one-byte COMMON guard; full controls: buka-ctype-guard.json.
+# Combat AI doubles: complete operands and payloads in buka-combat-ai.json.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a8	0x8	__real@8@40059400000000000000	SOURCE/ADVMGR	fppool
+0x0008a3b0	0x8	__real@8@3ff9f5c28f5c28f5c000	SOURCE/AI	fppool
+0x0008a3b8	0x8	__real@8@3ff9a3d70a3d70a3d800	SOURCE/AI	fppool
+0x0008a3c0	0x8	__real@8@3ffba3d70a3d70a3d800	SOURCE/AI	fppool
+0x0008a3c8	0x8	__real@8@3ffaa3d70a3d70a3d800	SOURCE/AI	fppool
+0x0008a3d0	0x8	__real@8@3ffaccccccccccccd000	SOURCE/AI	fppool
+0x0008a3d8	0x8	__real@8@3ffaf5c28f5c28f5c000	SOURCE/AI	fppool
+0x0008a3e0	0x8	__real@8@3fff8cccccccccccd000	SOURCE/AI	fppool
+0x0008a3e8	0x8	__real@8@3fff9999999999999800	SOURCE/AI	fppool
 0x0008e9e4	0xb	$SG584164	SOURCE/ADVMGR	string
 0x0008e9f0	0xb	$SG584176	SOURCE/ADVMGR	string
 0x0008e9fc	0x4	$SG584188	SOURCE/ADVMGR	string

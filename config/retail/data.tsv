@@ -15,12 +15,21 @@
 # Ambient-sound operand and payload review: buka-environment-audio.json.
 # Travel-spell/route operand/payload review: buka-travel.json.
 # Scroll/network/border operand/payload review: buka-scroll-network.json.
+# Combat-AI operand/payload review: buka-combat-ai.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
 0x0008a398	fppool
 0x0008a3a0	fppool
 0x0008a3a8	fppool
+0x0008a3b0	fppool
+0x0008a3b8	fppool
+0x0008a3c0	fppool
+0x0008a3c8	fppool
+0x0008a3d0	fppool
+0x0008a3d8	fppool
+0x0008a3e0	fppool
+0x0008a3e8	fppool
 0x0008a758	vtable
 0x0008d070	
 0x0008d074	
@@ -102,6 +111,7 @@ rva	kind
 0x00090a9c	
 0x00090ce0	
 0x00090cec	
+0x00090d98	
 0x00090ddc	
 0x00090e70	
 0x00090e90	
@@ -132,7 +142,6 @@ rva	kind
 0x000918b0	
 0x000918d0	
 0x00091940	
-0x00091960	
 0x0009198c	
 0x000919cc	
 0x000919f4	
@@ -502,6 +511,8 @@ rva	kind
 0x000a6764	
 0x000a6768	
 0x000a676c	
+0x000a6aa8	
+0x000a6aac	
 0x000a6b9c	
 0x000a6ba0	
 0x000a6ba4	
@@ -556,6 +567,7 @@ rva	kind
 0x000a77c4	
 0x000a7824	
 0x000a7826	
+0x000a7828	
 0x000a782c	
 0x000a7834	
 0x000a7868	
@@ -591,7 +603,6 @@ rva	kind
 0x000a7d5c	
 0x000a7d60	
 0x000a7f58	
-0x000a7f64	
 0x000a7f68	
 0x000a7f70	
 0x000a7f78	
@@ -735,8 +746,6 @@ rva	kind
 0x000c2c80	
 0x000c2c88	
 0x000c2c98	
-0x000c2c9c	
-0x000c2ca0	
 0x000c2ca4	
 0x000c2ca8	
 0x000c2ce8	

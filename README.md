@@ -41,8 +41,10 @@ now have reviewed Buka claims. Every explicit function annotation in
 library-header startup emissions remain documented. Five travel dialogs
 preserve original English, and Buka’s removed network-exit log is reflected
 in the source. The shared VC6 locale guard is now enrolled from compiled
-evidence. Strict delinking reaches `AICheckRetreat` in `SOURCE/AI`, stopping at
-data identity `0x8a3e8`. The old score ledger has been reset.
+evidence. All thirteen combat AI functions now have reviewed Buka addresses,
+data dependencies and floating constants, with the measured `/G5` profile.
+Strict delinking reaches the `army` constructor, stopping at data identity
+`0xa74e8`. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

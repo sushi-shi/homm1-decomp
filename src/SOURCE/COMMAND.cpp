@@ -1683,13 +1683,13 @@ DATA(0x004c2ca4)
 i8 iMaxTransferArtifacts;
 DATA(0x004c2c78)
 i32 giNextActionExtra;
-DATA(0x004c2c9c)
+DATA(0x004a6aa8)
 i32 giNextActionGridIndex;
 DATA(0x004c2ca8)
 i32 giSurrenderCost;
 DATA(0x004c2c88)
 i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
-DATA(0x004c2ca0)
+DATA(0x004a6aac)
 i32 giNextAction;
 DATA(0x004c2c80)
 i32 giNextActionGridIndex2;

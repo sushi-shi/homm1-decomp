@@ -1,6 +1,6 @@
-// Buka SOURCE/AI combat helpers. Retail links them as their own object
-// (0x00464520-0x00466487): eight int3 bytes pad WalkTowardArmy up to the
-// 16-byte boundary where army::army starts the SOURCE/ARMY object.
+// HoMM1 Buka combat AI: reviewed game functions occupy RVAs 0x11660..0x132ee.
+// VC6 locale startup follows at 0x132ee/0x13315; INT3 padding ends at 0x13330,
+// where army::army begins. See config/retail/buka-combat-ai.json.
 
 #include <match.h>
 
@@ -26,7 +26,7 @@
 // Buka AI.cpp AICheckRetreat: compares the two sides' fight values,
 // weighting the defender of a town and unspent stacks, against a chance
 // raised by the hero's artifacts and experience.
-VA(0x0043de80, 0x7db)
+VA(0x00411660, 0x728)
 i32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
         return 0;
@@ -82,7 +82,7 @@ i32 combatManager::AICheckRetreat(void) {
             }
         }
     }
-    force[1 - m_currentSide] = static_cast<i32>(force[1 - m_currentSide] * 1.1);
+    force[1 - m_currentSide] *= 1.1;
     treasureValue = artifactTotals[m_currentSide];
     if (artifactTotals[m_currentSide] < COMBAT_AI_MIN_ARTIFACT_VALUE)
         return 0;
@@ -113,7 +113,7 @@ i32 combatManager::AICheckRetreat(void) {
              - gpGame->m_players[m_heroes[m_currentSide]->m_owner].m_difficulty)
             * 0.03;
     retreatRatio = static_cast<float>(force[m_currentSide])
-                   / (force[COMBAT_DEFENDER_SIDE] + force[COMBAT_ATTACKER_SIDE]);
+                   / static_cast<double>(force[COMBAT_DEFENDER_SIDE] + force[COMBAT_ATTACKER_SIDE]);
     if (retreatRatio < prob) {
         giNextAction = ACTION_RETREAT;
         return 1;
@@ -123,9 +123,9 @@ i32 combatManager::AICheckRetreat(void) {
 
 // Buka AI.cpp DoCompAI: shooters shoot (adjacent enemies first), flyers and
 // walkers attack by target class, walkers otherwise close in; a castle
-// defender steps toward the gate. The chosen move is nudged onto a free hex
+// attacker steps toward the gate. The chosen move is nudged onto a free hex
 // next to an enemy.
-VA(0x0043e65b, 0x9ce)
+VA(0x00411d88, 0x872)
 void combatManager::DoCompAI(i8) {
     i8 stronger;
     i16 ranged[COMBAT_SIDE_COUNT];
@@ -300,7 +300,7 @@ finish:
 
 // Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
 // builds word masks (dead flag 0x10, shooter 4, flyer 2).
-VA(0x0043f029, 0xca)
+VA(0x004125fa, 0xb7)
 i16 combatManager::GetShooterMask(i8 side) {
     i16 armyIndex = 0;
     i16 bitMask = 1;
@@ -317,7 +317,7 @@ i16 combatManager::GetShooterMask(i8 side) {
     return armyMask;
 }
 
-VA(0x0043f0f3, 0xbb)
+VA(0x004126b1, 0xa9)
 i16 combatManager::GetFlyerMask(i8 side) {
     i16 armyIndex = 0;
     i16 armyMask;
@@ -335,7 +335,7 @@ i16 combatManager::GetFlyerMask(i8 side) {
     return armyMask;
 }
 
-VA(0x0043f1ae, 0xd7)
+VA(0x0041275a, 0xc4)
 i16 combatManager::GetWalkerMask(i8 side) {
     i16 armyIndex = 0;
     i16 bitMask = 1;
@@ -353,7 +353,7 @@ i16 combatManager::GetWalkerMask(i8 side) {
     return armyMask;
 }
 
-VA(0x0043f285, 0xb3)
+VA(0x0041281e, 0x9f)
 i16 combatManager::GetBestArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
@@ -374,7 +374,7 @@ i16 combatManager::GetBestArmy(i8 side, i16 mask) {
     return best;
 }
 
-VA(0x0043f338, 0xb3)
+VA(0x004128bd, 0x9f)
 i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
@@ -395,7 +395,7 @@ i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
     return worst;
 }
 
-VA(0x0043f3eb, 0x109)
+VA(0x0041295c, 0x102)
 i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
     i32 val;
     i16 armyIndex = 0;
@@ -423,7 +423,7 @@ i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
     return bestArmy;
 }
 
-VA(0x0043f4f4, 0xbb)
+VA(0x00412a5e, 0xb1)
 u32 combatManager::GetStrength(i8 side, i16 mask) {
     i16 index = 0;
     i16 bitMask = 1;
@@ -443,7 +443,7 @@ u32 combatManager::GetStrength(i8 side, i16 mask) {
 
 // Ghosts (26) pick the weakest stack; a missed two-hex target is retried
 // from its rear hex.
-VA(0x0043f5af, 0x1b0)
+VA(0x00412b0f, 0x183)
 i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
     i16 targetArmy;
     i32 targetHex;
@@ -481,7 +481,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
     return 0;
 }
 
-VA(0x0043f75f, 0x2a9)
+VA(0x00412c92, 0x27c)
 i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     i16 otherHex;
     i16 hex;
@@ -532,7 +532,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     }
 }
 
-VA(0x0043fa08, 0x20f)
+VA(0x00412f0e, 0x1ea)
 i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask) {
     i16 frontHex;
     i32 armyIndex;
@@ -550,10 +550,7 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
     frontHex = m_armies[side][armyIndex].m_hex;
     if (m_armies[side][armyIndex].m_stats.attributes & MONSTER_FLAGS_WIDE)
         frontDelta = 2;
-    if (currentArmy->m_facing == ARMY_FACING_RIGHT)
-        frontHex = frontHex + frontDelta;
-    else
-        frontHex = frontHex + -frontDelta;
+    frontHex += currentArmy->m_facing == ARMY_FACING_RIGHT ? frontDelta : -frontDelta;
     if (frontHex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN
         || frontHex % COMBAT_GRID_COLUMNS == 0)
         return WalkTowardArmy(currentArmy, side, mask);
@@ -581,7 +578,7 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
     return WalkTowardArmy(currentArmy, side, mask);
 }
 
-VA(0x0043fc17, 0x229)
+VA(0x004130f8, 0x1f6)
 i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
     i32 armyIndex;
     i8 savedSpeed;
@@ -620,10 +617,10 @@ i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
     if (!routeGot && (targetPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         switch (targetPtr->m_facing) {
             case ARMY_FACING_LEFT:
-                goalHex = goalHex - 1;
+                --goalHex;
                 break;
             case ARMY_FACING_RIGHT:
-                goalHex = goalHex + 1;
+                ++goalHex;
                 break;
         }
         if (goalHex != ARMY_HEX_INVALID)

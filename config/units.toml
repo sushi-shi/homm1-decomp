@@ -367,8 +367,8 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/AI"
 source = "src/SOURCE/AI.cpp"
-# Split from ARMY at retail's int3-padded object boundary; same profile.
-flags = "cpp_buka"
+# Whole-unit controls: /G5 omits the short-argument clears absent from Buka.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/ARMY"

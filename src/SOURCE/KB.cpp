@@ -3269,7 +3269,7 @@ i32 gStartingResources[4][7] = {
 };
 DATA(0x00491940)
 i32 gMineIncome[7] = {2, 1, 2, 1, 1, 1, 1000};
-DATA(0x00491960)
+DATA(0x00490d98)
 i32 gArtifactBaseRV[37] = {
     9000, 22000, 18000, 14000, 6000, 4000, 4000, 5600, 1200, 1200, 1200, 1200, -1200,
     2000, 1800,  1800,  2000,  1000, 3600, 5600, 4000, 5040, 2700, 3900, 4950, 5850,
@@ -4868,7 +4868,7 @@ DATA(0x004a73c8)
 i32 pwSizeOfMapExtra[255];
 DATA(0x004a9d20)
 i32 iDEMaxLen;
-DATA(0x004a7f64)
+DATA(0x004a7828)
 class combatManager* gpCombatManager;
 DATA(0x004a7b8c)
 i16 gSpellEffectFrame;
