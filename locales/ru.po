@@ -3899,3 +3899,11 @@ msgstr "Ошибка загрузки"
 msgctxt "combat.tower.garrison.damage.prefix"
 msgid "Garrison does"
 msgstr "Гарнизон наносит"
+
+msgctxt "combat.spell.no_hero"
+msgid "You have no hero to cast a spell."
+msgstr "У вас нет героя, чтобы направлять заклинания."
+
+msgctxt "combat.spell.already_cast"
+msgid "You have already cast a spell this round."
+msgstr "Вы уже направили заклинание в этом раунде."

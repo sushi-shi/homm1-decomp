@@ -4324,7 +4324,7 @@ char* gHeroLevel[3] = {
     localization::Tr("table.gHeroLevel.1"),
     localization::Tr("table.gHeroLevel.2")
 };
-DATA(0x00493988)
+DATA(0x00492ed8)
 char* gCombatHelp[3] =
     {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
 DATA(0x00493998)

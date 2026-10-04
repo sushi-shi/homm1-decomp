@@ -166,10 +166,15 @@ rva	name	provenance
 0x0001d306	?com_stat@@YAEFG@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001d460	?Main@combatManager@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x0001d6dc	?ValidHexToStandOn@combatManager@@QAECH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001d783	?SetCombatDirections@combatManager@@QAEXH@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
+0x0001de87	?CheckSetMouseDirection@combatManager@@QAEXHHH@Z	Complete mouse-direction instructions, branch destinations, typed constants and local-byte correspondence; buka-combat-direction.json
+0x0001e3eb	?GetPointer@combatManager@@QAEHH@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x0001e408	?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x0001e900	?ResetRound@combatManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001ea22	?CheckWin@combatManager@@QAEHPAUtag_message@@@Z	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
+0x0001eb45	?GetCommand@combatManager@@QAECF@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x0001edae	?RightClick@combatManager@@QAECC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x0001ef1f	?DoCommand@combatManager@@QAEXC@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x0001f389	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020cd1	?CheckChangeSelector@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020d8c	?CheckCastleAttack@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
@@ -183,6 +188,7 @@ rva	name	provenance
 0x00022127	?MoveHero@advManager@@QAEPAVmapCell@@CCPAH00CPAC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x25e1; buka-adventure-commands.json
 0x00023670	?UpdateGrid@combatManager@@QAEXFF@Z	Buka army drawing/movement instruction and CFG review: 0x1400f, 0x14064; buka-army-drawing.json
 0x00023707	?CombatMessage@combatManager@@QAEXPADH@Z	Buka combat message/hydra review: 0x158d6; buka-combat-messages.json
+0x000237b4	?CombatMessage@combatManager@@QAEXF@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x00023a3a	?ResetLimitCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x15500, 0x15906; buka-combat-messages.json
 0x00023acc	?SetGridMode@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x143d4, 0x1407c; buka-army-drawing.json
 0x00023d6c	?DrawFrame@combatManager@@QAEXC@Z	Buka army drawing/movement instruction and CFG review: 0x14024, 0x14435, 0x14654; buka-army-drawing.json
@@ -508,6 +514,8 @@ rva	name	provenance
 0x0006254d	?DrawTown@townManager@@QAEXCH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00064937	?SortStats@townManager@@QAEXQAHQAC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00065bea	?SplitArmyHandler@@YAFAAUtag_message@@@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x00065ef0	?ViewGeneral@combatManager@@QAECHHH@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
+0x00066595	?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x00066710	?DDRestoreDisplayMode@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006674e	?DDQueryNewPalette@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006677b	?CreatePrimary@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json

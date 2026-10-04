@@ -1,0 +1,728 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "functions": [
+    {
+      "unit": "SOURCE/COMMAND",
+      "name": "?GetPointer@combatManager@@QAEHH@Z",
+      "rva": "0x1e3eb",
+      "size": 29,
+      "object_size": 29,
+      "retail_code_size": 29,
+      "object_code_size": 29,
+      "normalized_body_equal": true,
+      "cfg_equal": true,
+      "block_counts": [
+        4,
+        4
+      ],
+      "object_refs": []
+    },
+    {
+      "unit": "SOURCE/COMMAND",
+      "name": "?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z",
+      "rva": "0x1e408",
+      "size": 1272,
+      "object_size": 1272,
+      "retail_code_size": 1207,
+      "object_code_size": 1207,
+      "normalized_body_equal": false,
+      "cfg_equal": true,
+      "block_counts": [
+        61,
+        61
+      ],
+      "switch_table_bytes": 65,
+      "switch_entries": [
+        {
+          "symbol": "self+0x3b6",
+          "kind": 6,
+          "site_rva": "0x1e8bf",
+          "target_rva": "0x1e7be",
+          "object_offset": "0x4b7",
+          "addend": 0
+        },
+        {
+          "symbol": "self+0x36e",
+          "kind": 6,
+          "site_rva": "0x1e8c3",
+          "target_rva": "0x1e776",
+          "object_offset": "0x4bb",
+          "addend": 0
+        },
+        {
+          "symbol": "self+0x40f",
+          "kind": 6,
+          "site_rva": "0x1e8c7",
+          "target_rva": "0x1e817",
+          "object_offset": "0x4bf",
+          "addend": 0
+        },
+        {
+          "symbol": "self+0x35f",
+          "kind": 6,
+          "site_rva": "0x1e8cb",
+          "target_rva": "0x1e767",
+          "object_offset": "0x4c3",
+          "addend": 0
+        },
+        {
+          "symbol": "self+0x350",
+          "kind": 6,
+          "site_rva": "0x1e8cf",
+          "target_rva": "0x1e758",
+          "object_offset": "0x4c7",
+          "addend": 0
+        },
+        {
+          "symbol": "self+0x4ac",
+          "kind": 6,
+          "site_rva": "0x1e8d3",
+          "target_rva": "0x1e8b4",
+          "object_offset": "0x4cb",
+          "addend": 0
+        }
+      ],
+      "switch_reference_count": 2,
+      "local_slot_map": {
+        "-20": -20,
+        "-4": -4,
+        "-8": -8,
+        "-12": -16,
+        "-24": -24,
+        "-28": -28,
+        "-32": -32,
+        "-16": -12,
+        "-36": -36,
+        "-40": -40,
+        "-44": -44
+      },
+      "local_byte_count": 39,
+      "local_displacement_differences": 8,
+      "instruction_count": 331,
+      "verified_branches": 48,
+      "references": [
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e4c4",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0xbc"
+        },
+        {
+          "symbol": "?MouseCoords@mouseManager@@QAEXAAF0@Z",
+          "kind": 20,
+          "site_rva": "0x1e4c9",
+          "target_rva": "0x6c00c",
+          "addend": 0,
+          "object_offset": "0xc1"
+        },
+        {
+          "symbol": "?GetGridIndex@combatManager@@QAEFFF@Z",
+          "kind": 20,
+          "site_rva": "0x1e4db",
+          "target_rva": "0x1a84f",
+          "addend": 0,
+          "object_offset": "0xd3"
+        },
+        {
+          "symbol": "?GetCommand@combatManager@@QAECF@Z",
+          "kind": 20,
+          "site_rva": "0x1e528",
+          "target_rva": "0x1eb45",
+          "addend": 0,
+          "object_offset": "0x120"
+        },
+        {
+          "symbol": "?SetCombatDirections@combatManager@@QAEXH@Z",
+          "kind": 20,
+          "site_rva": "0x1e557",
+          "target_rva": "0x1d783",
+          "addend": 0,
+          "object_offset": "0x14f"
+        },
+        {
+          "symbol": "?CheckSetMouseDirection@combatManager@@QAEXHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e56e",
+          "target_rva": "0x1de87",
+          "addend": 0,
+          "object_offset": "0x166"
+        },
+        {
+          "symbol": "?GetPointer@combatManager@@QAEHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e583",
+          "target_rva": "0x1e3eb",
+          "addend": 0,
+          "object_offset": "0x17b"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e58a",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x182"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e58f",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x187"
+        },
+        {
+          "symbol": "?CheckSetMouseDirection@combatManager@@QAEXHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e5b7",
+          "target_rva": "0x1de87",
+          "addend": 0,
+          "object_offset": "0x1af"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e5f5",
+          "target_rva": "0x237b4",
+          "addend": 0,
+          "object_offset": "0x1ed"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e605",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x1fd"
+        },
+        {
+          "symbol": "?MouseCoords@mouseManager@@QAEXAAF0@Z",
+          "kind": 20,
+          "site_rva": "0x1e60a",
+          "target_rva": "0x6c00c",
+          "addend": 0,
+          "object_offset": "0x202"
+        },
+        {
+          "symbol": "?gCombatHelp@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x1e61b",
+          "target_rva": "0x92ed8",
+          "addend": 0,
+          "object_offset": "0x213"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+          "kind": 20,
+          "site_rva": "0x1e624",
+          "target_rva": "0x23707",
+          "addend": 0,
+          "object_offset": "0x21c"
+        },
+        {
+          "symbol": "?gCombatHelp@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x1e639",
+          "target_rva": "0x92edc",
+          "addend": 4,
+          "object_offset": "0x231"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+          "kind": 20,
+          "site_rva": "0x1e642",
+          "target_rva": "0x23707",
+          "addend": 0,
+          "object_offset": "0x23a"
+        },
+        {
+          "symbol": "?gCombatHelp@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x1e64c",
+          "target_rva": "0x92ee0",
+          "addend": 8,
+          "object_offset": "0x244"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+          "kind": 20,
+          "site_rva": "0x1e655",
+          "target_rva": "0x23707",
+          "addend": 0,
+          "object_offset": "0x24d"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e65d",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x255"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e662",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x25a"
+        },
+        {
+          "symbol": "?RightClick@combatManager@@QAECC@Z",
+          "kind": 20,
+          "site_rva": "0x1e69d",
+          "target_rva": "0x1edae",
+          "addend": 0,
+          "object_offset": "0x295"
+        },
+        {
+          "symbol": "?DoCommand@combatManager@@QAEXC@Z",
+          "kind": 20,
+          "site_rva": "0x1e6c3",
+          "target_rva": "0x1ef1f",
+          "addend": 0,
+          "object_offset": "0x2bb"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e6fe",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x2f6"
+        },
+        {
+          "symbol": "?ReallyHidePointer@mouseManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1e703",
+          "target_rva": "0x6bf87",
+          "addend": 0,
+          "object_offset": "0x2fb"
+        },
+        {
+          "symbol": "?giNextAction@@3HA",
+          "kind": 6,
+          "site_rva": "0x1e71c",
+          "target_rva": "0xa6aac",
+          "addend": 0,
+          "object_offset": "0x314"
+        },
+        {
+          "symbol": "self+0x4cf",
+          "kind": 6,
+          "site_rva": "0x1e74d",
+          "target_rva": "0x1e8d7",
+          "addend": 0,
+          "object_offset": "0x345",
+          "object_symbol": "$L24196"
+        },
+        {
+          "symbol": "self+0x4b7",
+          "kind": 6,
+          "site_rva": "0x1e754",
+          "target_rva": "0x1e8bf",
+          "addend": 0,
+          "object_offset": "0x34c",
+          "object_symbol": "$L24197"
+        },
+        {
+          "symbol": "?PopNetBox@@YAXPAD@Z",
+          "kind": 20,
+          "site_rva": "0x1e75b",
+          "target_rva": "0x411a2",
+          "addend": 0,
+          "object_offset": "0x353"
+        },
+        {
+          "symbol": "?giNextAction@@3HA",
+          "kind": 6,
+          "site_rva": "0x1e769",
+          "target_rva": "0xa6aac",
+          "addend": 0,
+          "object_offset": "0x361"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e791",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x389"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e796",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x38e"
+        },
+        {
+          "symbol": "?ViewGeneral@combatManager@@QAECHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e7ad",
+          "target_rva": "0x65ef0",
+          "addend": 0,
+          "object_offset": "0x3a5"
+        },
+        {
+          "symbol": "?ResetMouse@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1e7b5",
+          "target_rva": "0x21003",
+          "addend": 0,
+          "object_offset": "0x3ad"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e7c2",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x3ba"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e7c7",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x3bf"
+        },
+        {
+          "symbol": "?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z",
+          "kind": 20,
+          "site_rva": "0x1e806",
+          "target_rva": "0x66595",
+          "addend": 0,
+          "object_offset": "0x3fe"
+        },
+        {
+          "symbol": "?ResetMouse@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1e80e",
+          "target_rva": "0x21003",
+          "addend": 0,
+          "object_offset": "0x406"
+        },
+        {
+          "symbol": "$SG23689",
+          "kind": 6,
+          "site_rva": "0x1e83f",
+          "target_rva": "0x8f830",
+          "addend": 0,
+          "object_offset": "0x437"
+        },
+        {
+          "symbol": "?NormalDialog@@YAXPADHHHHHHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e844",
+          "target_rva": "0x3e693",
+          "addend": 0,
+          "object_offset": "0x43c"
+        },
+        {
+          "symbol": "$SG23691",
+          "kind": 6,
+          "site_rva": "0x1e877",
+          "target_rva": "0x8f860",
+          "addend": 0,
+          "object_offset": "0x46f"
+        },
+        {
+          "symbol": "?NormalDialog@@YAXPADHHHHHHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1e87c",
+          "target_rva": "0x3e693",
+          "addend": 0,
+          "object_offset": "0x474"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1e889",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x481"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1e88e",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x486"
+        },
+        {
+          "symbol": "?giCurGeneral@@3HA",
+          "kind": 6,
+          "site_rva": "0x1e89e",
+          "target_rva": "0xa989c",
+          "addend": 0,
+          "object_offset": "0x496"
+        },
+        {
+          "symbol": "?ViewSpells@combatManager@@QAECH@Z",
+          "kind": 20,
+          "site_rva": "0x1e8a8",
+          "target_rva": "0x59e90",
+          "addend": 0,
+          "object_offset": "0x4a0"
+        },
+        {
+          "symbol": "?ResetMouse@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1e8b0",
+          "target_rva": "0x21003",
+          "addend": 0,
+          "object_offset": "0x4a8"
+        }
+      ],
+      "object_sha256": "71083dd863a980f71fa88e45c6a304ad48e2d185d81538426ef427bb66cb4358",
+      "source_sha256": "b92b1d307f80a4e4c9a805f5bd8f5ac354c8f7364447f76a150dfb397a3f3a8d"
+    }
+  ],
+  "compiler_control": {
+    "unit": "SOURCE/COMMAND",
+    "source_sha256": "773862aa6153246380c8b1b2294af754540ced09a21d56b311d6f6e3583b9703",
+    "g6_object_sha256": "d1275ef237126f6edf13479b5a0a0c7544a8a4323cdc51262ffdda77b62e2498",
+    "g5_object_sha256": "be93364a3937dddee827bac4774f220ea4aeba2a32b587cb457f0ca4e02df27c",
+    "unchanged_exact_bodies": [
+      "?Main@combatManager@@UAEFAAUtag_message@@@Z",
+      "?ValidHexToStandOn@combatManager@@QAECH@Z",
+      "?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z",
+      "?GetControl@combatManager@@QAEXXZ"
+    ],
+    "retail_controls": [
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?Main@combatManager@@UAEFAAUtag_message@@@Z",
+        "rva": "0x1d460",
+        "size": 636,
+        "object_size": 636,
+        "retail_code_size": 636,
+        "object_code_size": 636,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          40,
+          40
+        ]
+      },
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?SetCombatDirections@combatManager@@QAEXH@Z",
+        "rva": "0x1d783",
+        "size": 1796,
+        "object_size": 1798,
+        "retail_code_size": 1796,
+        "object_code_size": 1798,
+        "normalized_body_equal": false,
+        "cfg_equal": false,
+        "block_counts": [
+          127,
+          127
+        ]
+      },
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?GetPointer@combatManager@@QAEHH@Z",
+        "rva": "0x1e3eb",
+        "size": 29,
+        "object_size": 29,
+        "retail_code_size": 29,
+        "object_code_size": 29,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          4,
+          4
+        ]
+      },
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z",
+        "rva": "0x1e408",
+        "size": 1272,
+        "object_size": 1272,
+        "retail_code_size": 1207,
+        "object_code_size": 1207,
+        "normalized_body_equal": false,
+        "cfg_equal": true,
+        "block_counts": [
+          61,
+          61
+        ]
+      },
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?CheckWin@combatManager@@QAEHPAUtag_message@@@Z",
+        "rva": "0x1ea22",
+        "size": 291,
+        "object_size": 303,
+        "retail_code_size": 291,
+        "object_code_size": 303,
+        "normalized_body_equal": false,
+        "cfg_equal": false,
+        "block_counts": [
+          15,
+          13
+        ]
+      },
+      {
+        "unit": "SOURCE/COMMAND",
+        "name": "?CheckSetMouseDirection@combatManager@@QAEXHHH@Z",
+        "rva": "0x1de87",
+        "size": 1380,
+        "object_size": 1380,
+        "retail_code_size": 1380,
+        "object_code_size": 1380,
+        "normalized_body_equal": false,
+        "cfg_equal": true,
+        "block_counts": [
+          94,
+          94
+        ]
+      }
+    ],
+    "verdict": "G5 removes four register clears from ProcessCombatMsg and its instruction count and body size agree with retail. Main and all previously exact COMMAND bodies are unchanged. This control does not establish byte-exactness for functions with source or stack-layout differences."
+  },
+  "localized_messages": [
+    {
+      "id": "combat.spell.no_hero",
+      "nwc_string_rva": "0xa1390",
+      "buka_string_rva": "0x8f830",
+      "nwc_pointer_site": "0x4b41c",
+      "buka_pointer_site": "0x1e83f",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ProcessCombatMsg",
+      "russian_sha256": "370d410ab395cb9717a4bae5ab1ffcdc7945be5f39c3592ea56812c605ec91ba",
+      "evidence": "Complete input instructions, switch tables and reference correspondence; original English and exact Buka operands checked; buka-combat-input.json.",
+      "english": "You have no hero to cast a spell.",
+      "russian": "У вас нет героя, чтобы направлять заклинания."
+    },
+    {
+      "id": "combat.spell.already_cast",
+      "nwc_string_rva": "0xa13b4",
+      "buka_string_rva": "0x8f860",
+      "nwc_pointer_site": "0x4b45b",
+      "buka_pointer_site": "0x1e877",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ProcessCombatMsg",
+      "russian_sha256": "22bf795d8a4343910205a86ff2cb66320a84d54014006823e117a9749cf9bc4b",
+      "evidence": "Complete input instructions, switch tables and reference correspondence; original English and exact Buka operands checked; buka-combat-input.json.",
+      "english": "You have already cast a spell this round.",
+      "russian": "Вы уже направили заклинание в этом раунде."
+    }
+  ],
+  "data_migrations": [
+    {
+      "name": "?gCombatHelp@@3PAPADA",
+      "unit": "SOURCE/KB",
+      "old_rva": "0x93988",
+      "rva": "0x92ed8",
+      "size": 12,
+      "slots": [
+        {
+          "offset": "0x0",
+          "target_rva": "0x9a5c0",
+          "size": 17,
+          "text": "Включить автобой",
+          "payload_sha256": "fb870e485174cd5db3f565ecb23d87689f98fc9647f29d772fa1b792fe132b16"
+        },
+        {
+          "offset": "0x4",
+          "target_rva": "0x9a5d4",
+          "size": 22,
+          "text": "Пропустить ход отряда",
+          "payload_sha256": "8d97c9c60b55e6cba162763cb4709a5c674d0ed639cd1da8793f67e4404cccf0"
+        },
+        {
+          "offset": "0x8",
+          "target_rva": "0xa9988",
+          "size": 1,
+          "text": "",
+          "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
+        }
+      ]
+    }
+  ],
+  "callee_identities": [
+    {
+      "rva": "0x0001eb45",
+      "name": "?GetCommand@combatManager@@QAECF@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x0001d783",
+      "name": "?SetCombatDirections@combatManager@@QAEXH@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x0001e3eb",
+      "name": "?GetPointer@combatManager@@QAEHH@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x000237b4",
+      "name": "?CombatMessage@combatManager@@QAEXF@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x0001ef1f",
+      "name": "?DoCommand@combatManager@@QAEXC@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x00065ef0",
+      "name": "?ViewGeneral@combatManager@@QAECHHH@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    },
+    {
+      "rva": "0x00066595",
+      "name": "?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z",
+      "provenance": "Complete combat-input instructions and switch destinations; buka-combat-input.json"
+    }
+  ],
+  "source_migrations": [
+    {
+      "name": "?GetPointer@combatManager@@QAEHH@Z",
+      "old_rva": "0x4af4c",
+      "rva": "0x1e3eb",
+      "size": 29
+    },
+    {
+      "name": "?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z",
+      "old_rva": "0x4af80",
+      "rva": "0x1e408",
+      "size": 1272
+    }
+  ],
+  "source_changes": [
+    "COMMAND uses retail-proven /G5 narrow arguments.",
+    "ProcessCombatMsg tests message.type before m_messageTypeMask, selectedHex before m_selectedHex, and current command before previous command.",
+    "Two spell-dialog literals use the catalog; original English retained."
+  ],
+  "remaining_difference": "ProcessCombatMsg has eight local-displacement differences; strict scoring remains unchanged.",
+  "validation": {
+    "all_references_verified": true,
+    "compiled_literals": [
+      {
+        "site_rva": "0x1e83f",
+        "target_rva": "0x8f830",
+        "size": 46,
+        "payload_sha256": "370d410ab395cb9717a4bae5ab1ffcdc7945be5f39c3592ea56812c605ec91ba"
+      },
+      {
+        "site_rva": "0x1e877",
+        "target_rva": "0x8f860",
+        "size": 43,
+        "payload_sha256": "22bf795d8a4343910205a86ff2cb66320a84d54014006823e117a9749cf9bc4b"
+      }
+    ],
+    "source_sha256": "b92b1d307f80a4e4c9a805f5bd8f5ac354c8f7364447f76a150dfb397a3f3a8d",
+    "object_sha256": "71083dd863a980f71fa88e45c6a304ad48e2d185d81538426ef427bb66cb4358"
+  }
+}

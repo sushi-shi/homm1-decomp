@@ -363,7 +363,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
 
 // Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
 // odd rows shift by 66 pixels.
-VA(0x0044a940, 0x60c)
+VA(0x0041de87, 0x564)
 void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex) {
     i32 hexDir;
     i32 savedDir;
@@ -483,9 +483,9 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
         if ((curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
             && (savedDir == COMBAT_DIRECTION_WIDE_WEST || savedDir == COMBAT_DIRECTION_WIDE_EAST)) {
             if (curArmy->m_facing == ARMY_FACING_RIGHT)
-                m_directionTargetHex += 1;
+                m_directionTargetHex = m_directionTargetHex + 1;
             else
-                m_directionTargetHex -= 1;
+                m_directionTargetHex = m_directionTargetHex - 1;
         } else {
             if (alternate != COMBAT_DIRECTION_INVALID)
                 m_directionTargetHex = gCombatAdjacency[targetHex][alternate];
@@ -496,7 +496,7 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
 
 // Buka GetPointer precedes ProcessCombatMsg. HoMM1's sole caller passes one
 // command and retail maps command 13 to pointer 5, preserving all others.
-VA(0x0044af4c, 0x34)
+VA(0x0041e3eb, 0x1d)
 H1_ENUM_RETURN(CombatPointerCode, i32)
 combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
     if (command == COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS)
@@ -507,14 +507,14 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
 
 // Buka COMMAND.cpp ProcessCombatMsg; HoMM1 hovers the combat field as
 // widget 0x40 and handles F1, space, H, T and C keys.
-VA(0x0044af80, 0x5bc)
+VA(0x0041e408, 0x4f8)
 i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
     i16 mouseX = message.x;
     i16 mouseY = message.y;
     i8 unused = 0;
     i16 selectedHex;
 
-    if (!(m_messageTypeMask & message.type))
+    if (!(message.type & m_messageTypeMask))
         return 0;
     switch (message.type) {
         case MESSAGE_WIDGET:
@@ -526,7 +526,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
                         case COMBAT_CONTROL_FIELD:
                             gpMouseManager->MouseCoords(mouseX, mouseY);
                             selectedHex = GetGridIndex(mouseX, mouseY);
-                            if (m_selectedHex != selectedHex || selectedHex == ARMY_HEX_INVALID) {
+                            if (selectedHex != m_selectedHex || selectedHex == ARMY_HEX_INVALID) {
                                 m_selectedHex = selectedHex;
                                 m_previousCommand = COMBAT_INVALID_COMMAND;
                                 m_currentCommand = GetCommand(m_selectedHex);
@@ -538,7 +538,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
                                     gpMouseManager->SetPointer(GetPointer(m_currentCommand));
                             } else if (m_currentCommand == COMBAT_MESSAGE_COMMAND_ATTACK)
                                 CheckSetMouseDirection(mouseX, mouseY, selectedHex);
-                            if (m_previousCommand != m_currentCommand) {
+                            if (m_currentCommand != m_previousCommand) {
                                 m_previousCommand = m_currentCommand;
                                 CombatMessage(m_currentCommand);
                             }
@@ -607,7 +607,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
                 case INPUT_SCAN_C:
                     if (!m_heroes[m_currentSide]) {
                         NormalDialog(
-                            "You have no hero to cast a spell.",
+                            localization::Tr("combat.spell.no_hero"),
                             NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,
@@ -621,7 +621,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
                     }
                     if (m_heroCastSpell[m_currentSide]) {
                         NormalDialog(
-                            "You have already cast a spell this round.",
+                            localization::Tr("combat.spell.already_cast"),
                             NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,

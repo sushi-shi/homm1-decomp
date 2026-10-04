@@ -34,3 +34,16 @@ This preserves the stored signed-word values for the routine's bounded
 arithmetic. It is evidence about these measured expressions, not a rule to
 rewrite arbitrary arithmetic or to change operand types. Complete controls
 and references are in [`buka-catapult.json`](../../config/retail/buka-catapult.json).
+
+
+The same distinction occurs for a signed-byte member in `SOURCE/COMMAND`
+with pinned VC6 SP5 and the then-current `/G6` profile. Both `hex += 1` and
+`hex++` emit a byte
+load and byte addition. `hex = hex + 1` emits `movsx` and a 32-bit addition,
+then stores the low byte. The corresponding subtraction behaves likewise.
+HoMM1 Buka's mouse-direction fallback uses the promoted form; the HoMM2 donor's
+increment spelling does not reproduce it in this translation unit. These
+controls explain the two-byte size difference without changing the member type.
+The final explicit assignments also reproduce these retail instructions under
+the subsequently established `/G5` unit profile.
+See [`buka-combat-direction.json`](../../config/retail/buka-combat-direction.json).

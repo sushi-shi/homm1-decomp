@@ -194,8 +194,8 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/COMMAND"
 source = "src/SOURCE/COMMAND.cpp"
-# ShowWinLoseArtifact, ShowDeadArmies and DoVictory register fs:[0] frames.
-flags = "cpp_buka"
+# /GX frames; ProcessCombatMsg proves /G5 narrow arguments (buka-combat-input.json).
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/EVENTS"
