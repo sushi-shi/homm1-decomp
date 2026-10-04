@@ -16,12 +16,12 @@ BASE/Icon2b	src/BASE/Icon2b.asm	0x000707de	0xd6	?FlipDimIconToBitmap@@YAXPAVicon
 BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000708b4	0x25f	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
 BASE/Icon2bc	src/BASE/Icon2bc.asm	0x00070b14	0x258	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
 BASE/TILE	src/BASE/TILE.asm	0x00070d6c	0x134	_TileToBitmap	func	buka-bulk-correspondence.json
-BASE/MAKEFILEID	src/BASE/MAKEFILEID.asm	0x0007b450	0x2a	?MAKEFILEID@@YAIPAD@Z	func	Inherited NWC claim; Buka migration pending
+BASE/MAKEFILEID	src/BASE/MAKEFILEID.asm	0x00073610	0x12b	?MAKEFILEID@@YAIPAD@Z	func	buka-reviewed-claims.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007771c	0x4d	_LzhufMemmove	func	buka-bulk-correspondence.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077769	0x85	_GetBit	func	buka-bulk-correspondence.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007f98a	0xc9	_DecodePosition	func	Inherited NWC claim; Buka migration pending
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000778b8	0x119	_UpdateDecoderTree	func	buka-bulk-correspondence.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fb6c	0x153	_ReconstructDecoderTree	func	Inherited NWC claim; Buka migration pending
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000779d1	0x153	_ReconstructDecoderTree	func	buka-reviewed-claims.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fcbf	0x129	_Decode	func	Inherited NWC claim; Buka migration pending
 BASE/BMAP2	src/BASE/BMAP2.asm	0x000a14b8	0x100	_gDimPalette	data	buka-reference-completion.json: BYTE[256] palette-index remap
 BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15b8	0x4	_gBitmapSourceSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration

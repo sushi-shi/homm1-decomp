@@ -859,9 +859,11 @@
           "site": "0xbb1e",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45725",
+          "name": "__ehreg$?ViewPuzzle@advManager@@QAEXXZ",
           "addend": 0,
-          "target": "0x889e6"
+          "target": "0x889e6",
+          "object_symbol": "$L45725",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0xbb24",
@@ -5196,9 +5198,11 @@
           "site": "0xc249",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45766",
+          "name": "__ehreg$?ViewWorld@advManager@@QAEXCCC@Z",
           "addend": 0,
-          "target": "0x889fe"
+          "target": "0x889fe",
+          "object_symbol": "$L45766",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0xc24f",

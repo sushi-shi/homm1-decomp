@@ -20,7 +20,7 @@
 
 #include <string.h>
 
-VA(0x00475c40, 0x199)
+VA(0x0046f870, 0x185)
 void BlitBitmapToScreen(
     bitmap* sourceBitmap,
     i32 sourceX,
@@ -185,7 +185,7 @@ struct PaletteColor {
     u8 blue;
 };
 
-VA(0x00476010, 0x3a)
+VA(0x0046fd8a, 0x39)
 #line 207 "F:\\H1w95src\\Base\\OLDASM.CPP"
 i32 Random(i32 low, i32 high) {
 #line 208
@@ -220,7 +220,7 @@ void PostprocessIcon(icon*) {}
 
 #include <string.h>
 
-VA(0x004760d0, 0x1e6)
+VA(0x0046fe62, 0x214)
 void ClippedMonoIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,
@@ -312,7 +312,7 @@ static u32 sClipRun;
 DATA(0x004cf528)
 static BOOL sClipInside;
 
-VA(0x004762c0, 0x2a8)
+VA(0x00470076, 0x307)
 void ClipIconToBitmap(
     icon* sourceIcon,
     bitmap* destination,

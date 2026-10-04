@@ -60,7 +60,7 @@ heroWindow::heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags) {
 // donor PoL RVA 0x000cecd0; preferred Buka symbol ??0heroWindow@@QAE@HHPAD@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.375549;margin=0.549564;shape=0.254;size=0.606;calls=0.800;alternate=pol20:void heroWindow::constructor(int, int, char *)@0x000cecd0
-VA(0x004772e0, 0x448)
+VA(0x0046d150, 0x5a0)
 heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     i16 jb;
     i16 i;
@@ -189,7 +189,7 @@ void heroWindow::Close(void) {
 // donor PoL RVA 0x000cf3c0; preferred Buka symbol ?AddWidget@heroWindow@@QAEXPAVwidget@@H@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.553676;margin=0.412288;shape=0.475;size=0.789;calls=1.000;alternate=pol20:void heroWindow::AddWidget(class widget *, int)@0x000cf3c0
-VA(0x00477880, 0x145)
+VA(0x0046d817, 0x113)
 void heroWindow::AddWidget(widget* newWidget, i16 zOrder) {
     widget* currentWidget = m_widgetListHead;
     if (zOrder == WINDOW_Z_ORDER_APPEND) {
@@ -224,7 +224,7 @@ void heroWindow::AddWidget(widget* newWidget, i16 zOrder) {
 // donor PoL RVA 0x000cf500; preferred Buka symbol ?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565639;margin=0.542930;shape=0.500;size=0.802;calls=1.000;alternate=pol20:void heroWindow::RemoveWidget(class widget *)@0x000cf500
-VA(0x004779d0, 0x116)
+VA(0x0046d92a, 0xe7)
 void heroWindow::RemoveWidget(widget* w) {
     if (w == NULL)
         return;
@@ -281,7 +281,7 @@ void heroWindow::DrawWindow(void) {
 // donor PoL RVA 0x000cf6e0; preferred Buka symbol ?DrawWindow@heroWindow@@QAEXH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.418036;margin=0.971201;shape=0.250;size=0.729;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int)@0x000cf6e0
-VA(0x00477bb0, 0x2e)
+VA(0x0046da87, 0x24)
 void heroWindow::DrawWindow(i16 flags) {
     DrawWindow(flags, WINDOW_ALL_WIDGETS_LOW, WINDOW_ALL_WIDGETS_HIGH);
 }
@@ -289,7 +289,7 @@ void heroWindow::DrawWindow(i16 flags) {
 // donor PoL RVA 0x000cf710; preferred Buka symbol ?DrawWindow@heroWindow@@QAEXHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.624064;margin=0.444596;shape=0.548;size=0.926;calls=1.000;alternate=pol20:void heroWindow::DrawWindow(int, int, int)@0x000cf710
-VA(0x00477be0, 0xfd)
+VA(0x0046daab, 0xd3)
 void heroWindow::DrawWindow(i16 update, i32 firstId, i32 lastId) {
     tag_message windowWidgetMessage;
     widget* current = m_widgetListTail;
@@ -327,7 +327,7 @@ i16 heroWindow::SaveBackground(void) {
 // donor PoL RVA 0x000cf8b0; preferred Buka symbol ?RestoreBackground@heroWindow@@QAEXXZ
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.579338;margin=0.220950;shape=0.412;size=0.993;calls=1.000;alternate=pol20:void heroWindow::RestoreBackground(void)@0x000cf8b0
-VA(0x00477d70, 0x90)
+VA(0x0046dc28, 0x8a)
 void heroWindow::RestoreBackground(void) {
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
     gpWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
@@ -338,7 +338,7 @@ void heroWindow::RestoreBackground(void) {
 // donor PoL RVA 0x000cf950; preferred Buka symbol ?MoveWindow@heroWindow@@QAEXHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.486346;margin=0.742274;shape=0.333;size=0.777;calls=1.000;alternate=pol20:void heroWindow::MoveWindow(int, int)@0x000cf950
-VA(0x00477e00, 0x1d4)
+VA(0x0046dcb2, 0x1bc)
 void heroWindow::MoveWindow(i16 dx, i16 dy) {
     i16 x = m_posX;
     i16 y = m_posY;

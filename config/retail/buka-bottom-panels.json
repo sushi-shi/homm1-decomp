@@ -527,9 +527,11 @@
           "site": "0x88ed",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45537",
+          "name": "__ehreg$?UpdBottomViewResMsg@advManager@@QAECXZ",
           "addend": 0,
-          "target": "0x8888d"
+          "target": "0x8888d",
+          "object_symbol": "$L45537",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0x88f3",
@@ -1785,9 +1787,11 @@
           "site": "0x8c7c",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45557",
+          "name": "__ehreg$?UpdBottomViewKingdom@advManager@@QAECXZ",
           "addend": 0,
-          "target": "0x888b8"
+          "target": "0x888b8",
+          "object_symbol": "$L45557",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0x8c82",
@@ -3172,9 +3176,11 @@
           "site": "0x8fea",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45597",
+          "name": "__ehreg$?UpdBottomViewHero@advManager@@QAECXZ",
           "addend": 0,
-          "target": "0x888f9"
+          "target": "0x888f9",
+          "object_symbol": "$L45597",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0x8ff0",

@@ -48,7 +48,7 @@ i8 town::HasGarrison(void) {
 // donor PoL RVA 0x00032cb9; preferred Buka symbol ?GiveSpells@town@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430933;margin=0.601053;shape=0.167;size=0.987;calls=0.667;alternate=pol20:void town::GiveSpells(class hero *)@0x00032cb9
-VA(0x0043c3e0, 0xe1)
+VA(0x0045ea63, 0xb9)
 void town::GiveSpells(void) {
     hero* visitingHero;
     i16 i;
@@ -88,7 +88,7 @@ void town::XformToCastle(void) {
 // evidence: graph:4;base=0.510810;margin=0.878787;shape=0.327;size=0.842;calls=1.000;alternate=pol20:void town::View(int)@0x00032e74
 // HoMM1's callee returns with `ret` and always fades; the donor's noFade
 // argument and memory-limit calculation belong to its later revision.
-VA(0x0043c63d, 0xa5)
+VA(0x0045ec84, 0x8c)
 void town::View(void) {
     if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_FULL;

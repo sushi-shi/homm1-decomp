@@ -23,7 +23,7 @@
 #include <string.h>
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
-VA(0x004387b0, 0x5f)
+VA(0x00423670, 0x50)
 void combatManager::UpdateGrid(i16 hex, i16) {
     i16 row;
 
@@ -145,7 +145,7 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
 }
 
 // Marks every live stack for redraw; dead ones stay hidden (-1).
-VA(0x00438c11, 0xd4)
+VA(0x00423a3a, 0x92)
 void combatManager::ResetLimitCreature(void) {
     i32 j;
     i32 side;
@@ -234,7 +234,7 @@ void combatManager::DrawBackground(void) {
 // m_limitCreatureCount when m_computeExtent is set, else the whole area.
 // Rows draw obstacles, then occupants (right to left while m_gridMode is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
-VA(0x00438fbb, 0xe27)
+VA(0x00423d6c, 0xca3)
 void combatManager::DrawFrame(i8 updateScreen) {
     i16 hexCol;
     i32 boxRight;

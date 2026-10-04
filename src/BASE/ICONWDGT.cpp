@@ -24,7 +24,7 @@ iconWidget::~iconWidget(void) {
 }
 
 // Retail reads the frame argument as a signed byte before widening it.
-VA(0x0047bb00, 0x61)
+VA(0x0046dfa0, 0xa1)
 iconWidget::iconWidget(
     i16 x,
     i16 y,

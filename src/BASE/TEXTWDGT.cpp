@@ -23,7 +23,7 @@ textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_kind = WIDGET_KIND_TEXT;
 }
 
-VA(0x0047cee0, 0x61)
+VA(0x004717c8, 0xa5)
 textWidget::textWidget(
     i16 x,
     i16 y,
@@ -70,7 +70,7 @@ textWidget::~textWidget(void) {
     free(m_text);
 }
 
-VA(0x0047d070, 0x1ea)
+VA(0x00471a01, 0x238)
 i16 textWidget::Main(tag_message& message) {
     // PoL 2.0 textWidget::Main caches the flags word in a local; retail
     // keeps it in dx for the enable test and the select/deselect stores.
@@ -122,7 +122,7 @@ i16 textWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047d260, 0x3b)
+VA(0x00471c39, 0x66)
 void textWidget::Draw(void) {
     m_font->DrawBoundedString(
         m_text,

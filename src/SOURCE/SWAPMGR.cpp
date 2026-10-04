@@ -236,7 +236,7 @@ void swapManager::DrawSelector(void) {
 // donor PoL RVA 0x00054be3; preferred Buka symbol ?Main@swapManager@@UAEHAAUtag_message@@@Z
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
-VA(0x0044ffa7, 0x9ac)
+VA(0x0045d515, 0x88c)
 i16 swapManager::Main(struct tag_message& message) {
     i8 closeRequested = 0;
     i8 quickView;

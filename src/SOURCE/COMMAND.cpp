@@ -106,7 +106,7 @@ H1_ENUM_END(CombatControlId)
 
 // Buka COMMAND.cpp Main; HoMM1 polls sound on the 75-tick timer and has no
 // combat screen cycling or no-show mode.
-VA(0x00449d70, 0x311)
+VA(0x0041d460, 0x27c)
 i16 combatManager::Main(struct tag_message& message) {
     i32 result = MESSAGE_DISPATCH_CONSUME;
     army* thisArmy;
@@ -1469,7 +1469,7 @@ i16 combatManager::DoSurrender(void) {
 
 // Buka COMMAND.cpp CheckChangeSelector; HoMM1 redraws the grid from the
 // lower of the old and new selector hexes.
-VA(0x0044dd2d, 0xc2)
+VA(0x00420cd1, 0xbb)
 void combatManager::CheckChangeSelector(void) {
     army* currentArmy;
 
@@ -1539,7 +1539,7 @@ resetMouse:
 }
 
 // Buka COMMAND.cpp ResetMouse; HoMM1 sends a hover over the combat field.
-VA(0x0044e0b1, 0xdb)
+VA(0x00421003, 0xbd)
 void combatManager::ResetMouse(void) {
     tag_message message;
     i16 x;

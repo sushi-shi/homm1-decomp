@@ -561,7 +561,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
 // A ranged attack: turn toward the target, animate the missile hex by hex
 // over a saved screen patch, apply wall and luck modifiers, report the
 // damage; creature 14 shoots twice.
-VA(0x00407f77, 0xc7f)
+VA(0x00414854, 0xc74)
 void army::SpecialAttack(void) {
     DATA(0x004a67d8)
     static i32 gSecondShot = 0;

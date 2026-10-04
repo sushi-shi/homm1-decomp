@@ -843,11 +843,20 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
             # A /Gy TU gives each function's literals their own COMDAT data
             # section; the members are still TU-local `$SG`/`$T` literals.
             storage = ORDINARY_STORAGE.get(sec["name"])
+            # VC6 emits the empty narrow string as a one-byte $SG in .bss.
+            # Its zero value proves the payload, never its address: only a
+            # corroborated relocation pairing may place these members.
+            empty_bss = (literal == "sg" and sec["name"] == ".bss"
+                         and sec["characteristics"] & 0x80
+                         and not c.section_payload(sec["index"]))
+            if empty_bss:
+                storage = "bss"
             if storage is None:
                 continue
             members = c.section_members(sec["index"])
             offsets = sorted(o for o, _n, _s in members)
-            payload = c.section_payload(sec["index"])[:sec["size"]]
+            payload = (bytes(sec["size"]) if empty_bss else
+                       c.section_payload(sec["index"])[:sec["size"]])
             for off, name, _scl in members:
                 if not member_re.fullmatch(name):
                     continue
@@ -868,13 +877,18 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
         votes = _paired_votes(c, member_re, known, fn_extent, data_rva)
 
         def emit(member, rva, storage, size, want, how):
-            at = img.off(rva)
-            if at is None or img.data[at:at + size] != want:
+            if img.pe.read(rva, size) != want:
                 withheld.append((rva, member,
                                  f"retail bytes contradict the candidate {noun}"))
                 return
             start = _classify(rva)
             end = _classify(rva + size - 1)
+            # As for source DATA claims, the candidate section distinguishes
+            # loader-zero storage from PE FileAlignment slack. The address
+            # and the complete zero payload have already been proven above.
+            if storage == "bss":
+                start = "data-loader-zero-tail" if start == "data-unprovable-tail" else start
+                end = "data-loader-zero-tail" if end == "data-unprovable-tail" else end
             if STORAGE.get(start) != storage or start != end:
                 withheld.append((rva, member,
                                  f"{noun} storage {start} is not {storage}"))
@@ -889,6 +903,9 @@ def fp_pool_rows(model: Model, base_dir=BASE_DIR, literal: str = "fp"):
             storage, _off, want, size = pool[member]
             seen = votes.get(member) or Counter()
             ranked = seen.most_common(2)
+            if storage == "bss" and len(seen) != 1:
+                withheld.append((0, member, "empty BSS literal needs one corroborated address"))
+                continue
             if len(seen) == 1:
                 emit(member, next(iter(seen)), storage, size, want,
                      provenance)

@@ -106,14 +106,14 @@ bitmap* resourceManager::GetBitmap(char* name) {
 }
 
 // Retail forwards the 16-bit name ID to the cache overload below.
-VA(0x00479700, 0x34)
+VA(0x0046c3db, 0x2c)
 icon* resourceManager::GetIcon(char* name) {
     i16 fileId = MakeId(name);
     return GetIcon(fileId);
 }
 
 // Same cache/refcount path as the neighboring palette and tileset getters.
-VA(0x00479740, 0x86)
+VA(0x0046c407, 0xb0)
 icon* resourceManager::GetIcon(i16 fileId) {
     icon* iconEntry = static_cast<icon*>(Query(fileId));
     if (iconEntry != NULL) {
@@ -126,7 +126,7 @@ icon* resourceManager::GetIcon(i16 fileId) {
     }
 }
 
-VA(0x004797d0, 0x96)
+VA(0x0046c4b7, 0xc0)
 tileset* resourceManager::GetTileset(char* name) {
     i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
@@ -140,7 +140,7 @@ tileset* resourceManager::GetTileset(char* name) {
     }
 }
 
-VA(0x00479870, 0x96)
+VA(0x0046c586, 0xc0)
 font* resourceManager::GetFont(char* name) {
     i16 resourceId = MakeId(name);
     resource* fontEntry = Query(resourceId);
@@ -202,7 +202,7 @@ void resourceManager::AddResource(class resource* newResource) {
 }
 
 // donor Buka RVA 0x000b8740; PoL 2.0 has the same list walk and deletion order
-VA(0x00479aa0, 0x8b)
+VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
     m_expunging = 1;
     resource* cursor[2];
@@ -229,7 +229,7 @@ class resource* resourceManager::Query(i16 resourceId) {
 }
 
 // donor Buka RVA 0x000b8800; HoMM1 returns its dispatch result through AX
-VA(0x00479b80, 0x1b)
+VA(0x0046c876, 0x10)
 i16 resourceManager::Main(tag_message&) {
     return 0;
 }
@@ -281,7 +281,7 @@ void resourceManager::Close(void) {
 }
 
 // donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
-VA(0x00479d50, 0x100)
+VA(0x0046c9bb, 0xe5)
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
     i32 aggregateFp = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
@@ -304,7 +304,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
 
 // donor Buka uses the same lookup and failure path across multiple aggregates;
 // HoMM1 has one packed directory and a signed 16-bit resource ID.
-VA(0x00479e50, 0xf2)
+VA(0x0046caa0, 0xd2)
 void resourceManager::PointToFile(i16 fileId) {
     i16 entry;
     if (m_aggregateDir == NULL)

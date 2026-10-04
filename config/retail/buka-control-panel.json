@@ -826,9 +826,11 @@
           "site": "0xd2e1",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45786",
+          "name": "__ehreg$?ControlPanel@advManager@@QAEFXZ",
           "addend": 0,
-          "target": "0x88a13"
+          "target": "0x88a13",
+          "object_symbol": "$L45786",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0xd2e7",
@@ -2578,9 +2580,11 @@
           "site": "0xd7d3",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45807",
+          "name": "__ehreg$?SaveGame@@YACXZ",
           "addend": 0,
-          "target": "0x88a28"
+          "target": "0x88a28",
+          "object_symbol": "$L45807",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0xd7d9",

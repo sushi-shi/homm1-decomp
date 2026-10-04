@@ -106,7 +106,7 @@ H1_ENUM_END(SpellPointerFrame)
 
 // Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
 // mouse manager before re-entering for the teleport destination.
-VA(0x0040ddb7, 0x295)
+VA(0x0045a0b0, 0x25d)
 i16 HandleCastSpell(struct tag_message& message) {
     DATA(0x004906b4)
     static i8 indexToCastOn = -1;
@@ -261,7 +261,7 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
 
 // Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
 // per stack and no eagle eye, mirror image or elementals.
-VA(0x0040e464, 0xd69)
+VA(0x0045a668, 0xc5e)
 void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
     army* targetArmy;
     i32 damage;

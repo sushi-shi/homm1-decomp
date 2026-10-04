@@ -34,7 +34,7 @@ icon::~icon(void) {
 
 // Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does; VC4
 // tail-merges the two copies and carries the arm's frame-entry address across the join.
-VA(0x0047a360, 0x22a)
+VA(0x00470f8a, 0x317)
 void icon::DrawToBuffer(
     i16 x,
     i16 y,
@@ -132,7 +132,7 @@ void icon::ClipFillToBuffer(
     );
 }
 
-VA(0x0047a5f0, 0x132)
+VA(0x004712f5, 0x15e)
 void icon::FillToBuffer(
     i16 x,
     i16 y,
@@ -168,7 +168,7 @@ void icon::FillToBuffer(
     }
 }
 
-VA(0x0047a730, 0x1c2)
+VA(0x00471453, 0x2a8)
 void icon::DimToBuffer(
     i16 x,
     i16 y,

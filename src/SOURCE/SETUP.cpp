@@ -175,7 +175,7 @@ i8 game::SetupBaud(void) {
 // donor PoL RVA 0x00011000; preferred Buka symbol ?SetupComPort@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
-VA(0x0040c0d4, 0x222)
+VA(0x00456d56, 0x1ae)
 i8 game::SetupComPort(void) {
     char initStr[40];
 
@@ -537,7 +537,7 @@ i8 game::PickLoadGame(void) {
 }
 
 // Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
-VA(0x0040d13e, 0x112)
+VA(0x00457a60, 0xd7)
 i16 SetupCampaignGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -633,7 +633,7 @@ i16 SetupComPortHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d399, 0x149)
+VA(0x00457c3e, 0x107)
 i16 SetupBaudHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -688,7 +688,7 @@ i16 SetupBaudHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d4e2, 0x102)
+VA(0x00457d45, 0xc8)
 i16 SetupHotSeatGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -778,7 +778,7 @@ i16 SetupModemGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d71d, 0x112)
+VA(0x00457f05, 0xd7)
 i16 SetupMultiPlayerGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -854,7 +854,7 @@ i16 SetupNetworkGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d910, 0x102)
+VA(0x00458089, 0xc8)
 i16 SetupGameHandler(tag_message& message) {
     i32 helpIndex;
 

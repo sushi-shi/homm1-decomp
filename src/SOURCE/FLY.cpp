@@ -76,7 +76,7 @@ i16 army::CanFit(i16* hex) {
 
 // Buka FLY.cpp ValidFlight; HoMM1 passes a flag that takes the destination
 // as the enemy hex, and CanFit moves the landing hex in place.
-VA(0x0041ffd7, 0x468)
+VA(0x0042a8a0, 0x3f0)
 i16 army::ValidFlight(i16 destination, i8 useDestination) {
     i16 directionMask;
     i16 temp;
@@ -191,7 +191,7 @@ i16 army::FlyTo(void) {
 
 // HoMM1 flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
-VA(0x00420466, 0x769)
+VA(0x0042acac, 0x70c)
 i16 army::FlyTo(i16 destination) {
     i16 iFinalY;
     i16 centerY;

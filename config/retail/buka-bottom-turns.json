@@ -822,9 +822,11 @@
           "site": "0x804c",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45495",
+          "name": "__ehreg$?UpdBottomViewEnemyTurn@advManager@@QAECXZ",
           "addend": 0,
-          "target": "0x88821"
+          "target": "0x88821",
+          "object_symbol": "$L45495",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0x8052",
@@ -1966,9 +1968,11 @@
           "site": "0x857b",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45520",
+          "name": "__ehreg$?UpdBottomViewNewTurn@advManager@@QAECXZ",
           "addend": 0,
-          "target": "0x88857"
+          "target": "0x88857",
+          "object_symbol": "$L45520",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0x8581",

@@ -109,7 +109,7 @@ void SetupRecruitWin(
 }
 
 // Buka RECRUIT.cpp:114-178; HoMM1 has no saved recruit menu.
-VA(0x00466b14, 0x282)
+VA(0x00450ef9, 0x25b)
 i16 recruitUnit::Open(i16 priority) {
     i32 resourceMaximum;
     i32 goldMaximum;
@@ -234,7 +234,7 @@ void recruitUnit::Update(void) {
 
 // Buka RECRUIT.cpp:234-378; HoMM1 handles quantity edits on select and
 // the buttons on deselect, redrawing through a zero MoveWindow.
-VA(0x00466f8e, 0x3e5)
+VA(0x00451325, 0x372)
 i16 recruitUnit::Main(struct tag_message& message) {
     i32 done;
     // Buka's unreferenced cost local; retail reserves its frame word.

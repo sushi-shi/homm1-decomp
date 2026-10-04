@@ -36,7 +36,7 @@ i32 ShowThisMap(char*) {
 
 // Buka 2.1 constructor with InitializeFiles folded in: HoMM1 counts and sorts
 // every match of the pattern and reads .MAP headers only for GetMap's list.
-VA(0x00467e1c, 0x825)
+VA(0x00453b7a, 0x7da)
 fileRequester::fileRequester(
     i16 x,
     i16 y,
@@ -197,7 +197,7 @@ void fileRequester::Close(void) {
 
 // Buka 2.1 Open without the map-size filter buttons; HoMM1 selects the save
 // slot whose extension digit matches the human player count.
-VA(0x0046878c, 0x431)
+VA(0x00454459, 0x3cd)
 i16 fileRequester::Open(i16 priority) {
     const i16 scrollId = FILE_REQUESTER_SCROLL_KNOB;
     i32 i;
@@ -300,7 +300,7 @@ void fileRequester::SetOK(i8 enabled) {
 
 // Buka 2.1 Main without the map-size filter; HoMM1 checks a saved game's
 // human count, encoded as its extension digit, before accepting it.
-VA(0x00468c47, 0xa86)
+VA(0x0045488d, 0xa9c)
 i16 fileRequester::Main(tag_message& message) {
     i32 newTop;
     i32 stepSize;
@@ -733,7 +733,7 @@ char* fileRequester::GetFilename(void) {
 
 // Fills GetMap's reqextra.bin window with the selected map's size,
 // difficulty and description.
-VA(0x0046a097, 0x269)
+VA(0x00455c0e, 0x206)
 void fileRequester::ShowMapInfo(void) {
     const i32 sizeId = FILE_REQUESTER_MAP_SIZE;
     const i32 levelId = FILE_REQUESTER_MAP_LEVEL;

@@ -46,7 +46,7 @@ i32 is_netbios_avail(void) {
 // donor PoL RVA 0x000a6c88; preferred Buka symbol _nb_init
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.569810;margin=0.557141;shape=0.568;size=0.810;calls=0.714;alternate=pol20:@nb_init@8@0x000a6c88
-VA(0x00451678, 0x1b2)
+VA(0x00444d24, 0x19b)
 H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     u8* statusBuf;
     NCB ncb;
@@ -96,7 +96,7 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
 
 // Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
 // cancel/delete-name sequence on one stack NCB.
-VA(0x0045182a, 0x1f0)
+VA(0x00444ebf, 0x1ca)
 H1_C_LINKAGE void __cdecl nb_term(i32) {
     NCB ncb;
     tag_Node* node;
@@ -161,7 +161,7 @@ H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
 // donor PoL RVA 0x000a7186; preferred Buka symbol _nb_snd
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.424579;margin=0.396789;shape=0.244;size=0.738;calls=0.875;alternate=pol20:@nb_snd@12@0x000a7186
-VA(0x00451aaa, 0x104)
+VA(0x00445121, 0xee)
 // Retail has an unused leading argument and an explicit queue selection argument.
 // Their stack positions are proven by all four retail call sites.
 H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
@@ -189,7 +189,7 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
 // donor PoL RVA 0x000a726a; preferred Buka symbol _nb_sess
 // donor Buka TU SOURCE/netwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.596373;margin=0.181597;shape=0.465;size=0.963;calls=1.000;alternate=pol20:_nb_sess@0x000a726a
-VA(0x00451bae, 0x4f6)
+VA(0x0044520f, 0x4f0)
 H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
     NCB ncb;
     char* callName;
@@ -460,7 +460,7 @@ u16 nb_recv_any(i32 session) {
 }
 
 // Buka netwin.cpp:538-567.
-VA(0x004526a9, 0x146)
+VA(0x00445c27, 0x122)
 void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
 
@@ -512,7 +512,7 @@ u16 nb_listen(i32 session, void* name) {
 }
 
 // Buka netwin.cpp:598-628.
-VA(0x0045297b, 0x134)
+VA(0x00445eb7, 0xfa)
 void __stdcall nb_call_done(NCB* ncb) {
     i32 i;
 

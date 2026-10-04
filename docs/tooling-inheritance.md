@@ -358,3 +358,23 @@ configuration and assembly label edges explicitly depend on the table. The
 reader rejects contradictory source ownership, duplicate names and invalid
 extents. No new assembly implementation or independent adapter was added.
 Remaining inherited rows are explicitly marked for migration.
+
+
+## VC6 empty string storage
+
+Reviewed the pinned Giten `39384dc6726478357b5efd42c66522781e8310fe`
+and current Giten `d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c`, Gruntz
+`ae5226ce34959b98f1eed2e58e437638273f2f84` literal-pool enrollment,
+and HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/candidate_data_manifest.py`. Retained: the existing relocation-paired
+literal path, exact payload and storage checks, strict identities and addends.
+Adapted: VC6's empty `$SG` string may occupy one byte of `.bss`, whose payload
+comes from PE loader-zero semantics. Its address requires one corroborated
+relocation result; unreferenced neighbors and conflicting addresses remain
+withheld. HoMM2 likewise excludes BSS from payload-occurrence searches.
+Giten/Gruntz's initialized-pool restriction does not cover this VC6 case.
+Deferred: broader BSS placement and the existing whole-image migration gates.
+No parallel exporter or new tooling entry point was introduced. Real-COFF
+controls cover the positive case, absent references, adjacent zeros, nonzero or
+unmapped payloads, incompatible storage, and compiler-proven BSS inside PE
+FileAlignment slack. See [the compiler observation](patterns/vc6-empty-string-bss.md).

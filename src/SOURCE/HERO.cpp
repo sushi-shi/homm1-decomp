@@ -338,7 +338,7 @@ void hero::RedrawHeroScreen(void) {
 // donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
-VA(0x00447aad, 0x6c2)
+VA(0x0043968e, 0x64a)
 i8 hero::HeroView(i8 viewOnly) {
     i32 armyLuckLevel;
     i32 armyMoraleLevel;
@@ -638,7 +638,7 @@ i8 hero::Dismiss(void) {
 // donor PoL RVA 0x0006cee8; preferred Buka symbol ?Deallocate@hero@@QAEXH@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
-VA(0x004486a2, 0x452)
+VA(0x0043a199, 0x400)
 void hero::Deallocate(void) {
     playerData* player;
     i8 heroNum;
@@ -795,7 +795,7 @@ void hero::ApplyBattleLossTemps(void) {
 // donor PoL RVA 0x0006d83f; preferred Buka symbol ?CheckLevel@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
-VA(0x00448e23, 0x2f4)
+VA(0x0043a8b1, 0x2b7)
 void hero::CheckLevel(void) {
     i32 lvl;
     i32 i;

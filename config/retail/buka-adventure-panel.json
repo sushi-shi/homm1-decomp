@@ -398,9 +398,11 @@
           "site": "0xdf0b",
           "offset": "0x6",
           "kind": 6,
-          "name": "$L45835",
+          "name": "__ehreg$?AdvPanel@advManager@@QAEXXZ",
           "addend": 0,
-          "target": "0x88a3d"
+          "target": "0x88a3d",
+          "object_symbol": "$L45835",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site": "0xdf11",

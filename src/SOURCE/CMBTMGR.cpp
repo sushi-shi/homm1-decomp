@@ -184,7 +184,7 @@ void combatManager::SetupCombat(
 
 // Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
 // field, then the fade-in and a random combat theme.
-VA(0x0046a9cb, 0x419)
+VA(0x00419118, 0x401)
 i16 combatManager::Open(i16 priority) {
     i32 song;
     class sample* sample;
@@ -293,7 +293,7 @@ H1_ENUM_END(CombatBackground)
 
 // Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
 // count of the side that held it.
-VA(0x0046ade4, 0x1ea)
+VA(0x00419519, 0x211)
 void combatManager::Close(void) {
     i32 i;
     i32 survivor;
@@ -361,7 +361,7 @@ void combatManager::UpdateArmyGroup(i8 side) {
 
 // Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
 // ground patches and, outside a siege, up to two obstacles.
-VA(0x0046b12f, 0x7be)
+VA(0x00419865, 0x797)
 void combatManager::GenerateMap(void) {
     i16 x;
     i16 i;
@@ -559,7 +559,7 @@ char* combatManager::GetBackgroundName(void) {
 
 // Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
 // within two cells of the battle.
-VA(0x0046ba7b, 0x1e7)
+VA(0x0041a123, 0x1d5)
 i8 combatManager::MoreTreesNear(void) {
     i32 yPos;
     i32 xPos;
@@ -647,7 +647,7 @@ void combatManager::FreeIcons(void) {
 }
 
 // Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
-VA(0x0046beb4, 0x287)
+VA(0x0041a528, 0x25f)
 void combatManager::LoadArmies(void) {
     i16 j;
     i16 i;

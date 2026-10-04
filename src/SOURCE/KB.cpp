@@ -69,7 +69,7 @@ i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 
 // HoMM2 KB.cpp confirms the identity and behavior. HoMM1 differs in the timer
 // comparison and placement of the re-entry guard.
-VA(0x00420bd0, 0x72)
+VA(0x0043c7b0, 0x41)
 void PollSound() {
     if (KBTickCount() < glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT])
         return;
@@ -909,7 +909,7 @@ i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
 // Buka 2.1 NormalDialog without HoMM2's timeout, saved resource globals,
 // primary-skill/monster/secondary-skill slots and centered x; HoMM1 measures
 // the text with a temporary bigfont.fnt and frames heroes with port%04d.icn.
-VA(0x00422fc2, 0xefd)
+VA(0x0043e693, 0xdad)
 void NormalDialog(
     char* text,
     H1_ENUM_PARAM(NormalDialogType, i32) dialogType,
@@ -1586,7 +1586,7 @@ DATA(0x00491638)
 i8 gCastleResources[4] = {0, 2, -1, -1};
 
 // Buka 2.1 HandleRemoteDeadPlayerExit for HoMM1's two-player transport.
-VA(0x0042438b, 0x9a)
+VA(0x0043f7f8, 0x8a)
 void HandleRemoteDeadPlayerExit(i32 position) {
     if (position == giThisGamePos) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
@@ -1645,7 +1645,7 @@ void HandleRemoteSuddenExit(void) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
 
-VA(0x00424516, 0x1ea)
+VA(0x0043f956, 0x238)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
 // elimination and timeout.
 void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
@@ -1723,7 +1723,7 @@ H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
     END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
 H1_ENUM_CONST_END(CheckEndGameConstant)
 
-VA(0x00424700, 0x804)
+VA(0x0043fb8e, 0x936)
 void CheckEndGame(i32 forced) {
     town* goalTown;
     hero* artifactHero;
@@ -1925,7 +1925,7 @@ void CheckEndGame(i32 forced) {
 // donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.435968;margin=0.219505;shape=0.250;size=0.859;calls=0.600;alternate=pol20:void QuickViewWait(void)@0x0009c07c
-VA(0x00424f04, 0x95)
+VA(0x004404c4, 0x7a)
 void QuickViewWait(void) {
     tag_message event;
     i32 done = 0;
@@ -2255,7 +2255,7 @@ i8 NetPosToGamePos(i32 netPos) {
     return GAME_PLAYER_NONE;
 }
 
-VA(0x00425d1c, 0xda)
+VA(0x004410f1, 0xb1)
 i8 WaitForOtherPlayer(void) {
     i32 result = 0;
     RemoteMessage* data;
@@ -2294,7 +2294,7 @@ H1_ENUM_CONST_END(NetBoxConstant)
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
-VA(0x00425df6, 0x6f7)
+VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
     char* data;
     i8 blinkState;
@@ -2494,7 +2494,7 @@ void AddNetBoxLine(char* text) {
 // donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
-VA(0x00426528, 0x14f)
+VA(0x00441824, 0x11f)
 void ShutDown(char* message) {
     DATA(0x0049f280)
     static i32 gInShutDown = 0;
@@ -2542,7 +2542,7 @@ void ShutDown(char* message) {
 // donor PoL RVA 0x0009e306; preferred Buka symbol ?FileError@@YIXPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.316461;margin=0.125092;shape=0.216;size=0.484;calls=0.500;alternate=pol20:void FileError(char *)@0x0009e306
-VA(0x00426677, 0x4a)
+VA(0x00441943, 0x34)
 void FileError(char* filename) {
     char message[200];
     LogStr("File Error");
@@ -2662,7 +2662,7 @@ H1_ENUM_BEGIN(DataEntryControl)
 H1_ENUM_END(DataEntryControl)
 
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
-VA(0x00426b30, 0x1d0)
+VA(0x00441df7, 0x1a0)
 void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText) {
     i16 widgetId = DATA_ENTRY_TEXT;
     tag_message message;
@@ -2739,7 +2739,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
 // donor PoL RVA 0x0009ea7c; preferred Buka symbol ?MemError@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
-VA(0x00426fb4, 0x7b)
+VA(0x00442146, 0x60)
 void MemError(void) {
     DATA(0x0049f34c)
     static i8 gInMemError = 0;
@@ -3153,7 +3153,7 @@ void CleanUpMenus(void) {
     hmnuApp = NULL;
 }
 
-VA(0x00427d42, 0x23)
+VA(0x00442c49, 0x15)
 void UpdateAppSpecificMenus(void* hMenu) {
     if (hmnuAdv == hMenu)
         UpdateSystemOptionsMenu();
@@ -4759,7 +4759,7 @@ DATA(0x004a9408)
 i32 giSeedingValid;
 DATA(0x004a82f0)
 i8 giLimitPlayer;
-DATA(0x004a747c)
+DATA(0x004a7b90)
 inputManager* gpInputManager;
 DATA(0x004a762c)
 i32 iMaxMapExtra;

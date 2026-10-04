@@ -151,7 +151,7 @@ townManager::townManager(void) {
 
 // Buka TOWNMGR.cpp Open/SetupTown; retail vtable slot 0 (0x0048d468).
 // HoMM1 builds the town window, objects, strips and bank box here.
-VA(0x0044021c, 0x7ec)
+VA(0x0045f215, 0x728)
 i16 townManager::Open(i16 id) {
     i16 crest;
     tag_message message;
@@ -306,7 +306,7 @@ void townManager::Close(void) {
 
 // Buka TOWNMGR.cpp:944-1020; HoMM1 matches the dragged creature against
 // every slot of the target army and keeps word-sized flags.
-VA(0x00440bcc, 0x3b6)
+VA(0x0045fb18, 0x77c)
 void townManager::SetArmyCommand(i16 qualifier) {
     i16 lastArmy;
     i16 i;
@@ -519,7 +519,7 @@ void townManager::ShowText(char*) {
 
 // Buka TOWNMGR.cpp Main; HoMM1 opens the castle, mage guild, well and thieves
 // guild over a bottom cover window, sells the spell book and builds boats.
-VA(0x0044145e, 0x131f)
+VA(0x004607db, 0x11da)
 i16 townManager::Main(struct tag_message& message) {
     i32 exitTown;
     i8 rightClick;
@@ -1133,7 +1133,7 @@ void townManager::Toggle(i8 building) {
 
 // Buka TOWNMGR.cpp:2005-2029; HoMM1 draws a bitmap background and folds
 // the mouse pointer into the screen buffer around the viewport blit.
-VA(0x0044340d, 0xf8)
+VA(0x0046254d, 0xe3)
 void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
     i16 index;
     i16 x;

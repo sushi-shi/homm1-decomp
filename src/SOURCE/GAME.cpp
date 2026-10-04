@@ -115,7 +115,7 @@ void playerData::Read(i32 file) {
 // donor PoL RVA 0x00070d1a; preferred Buka symbol ?NextHero@playerData@@QAEHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.473378;margin=0.450383;shape=0.230;size=0.850;calls=1.000;alternate=pol20:int playerData::NextHero(int)@0x00070d1a
-VA(0x004113e0, 0x12c)
+VA(0x0042b7d3, 0x100)
 i8 playerData::NextHero(i32) {
     i32 curHero = -1;
     i32 i;
@@ -139,7 +139,7 @@ i8 playerData::NextHero(i32) {
 }
 
 // Buka 2.1 playerData::HasMobileHero.
-VA(0x0041150c, 0x68)
+VA(0x0042b8d3, 0x56)
 i8 playerData::HasMobileHero(void) {
     for (i16 i = 0; i < m_heroCount; ++i) {
         if (gpGame->IsMobile(m_heroIds[i]))
@@ -198,7 +198,7 @@ i32 playerData::NumOfGivenArtifact(i32 artifact) {
 
 // Buka 2.1 ComputeUALoc: HoMM1 needs eleven obelisks (four percent each over
 // ten) and skips player 0's hint.
-VA(0x0041173d, 0x386)
+VA(0x0042bab9, 0x321)
 void ComputeUALoc(i32 player) {
     i32 tries;
     i32 x;
@@ -292,7 +292,7 @@ void game::VisitObelisk(i8 player) {
 }
 
 // Buka 2.1 game::IsMobile.
-VA(0x00411c73, 0xb3)
+VA(0x0042bf56, 0x98)
 i8 game::IsMobile(i8 heroId) {
     if (heroId == GAME_HERO_NONE)
         return 0;
@@ -343,7 +343,7 @@ i8 game::Scan(i8* array, i8 start, i8 length) {
 }
 
 // Buka 2.1 game::RandomScan; HoMM1 always looks for a free (-1) entry.
-VA(0x00411e7c, 0x74)
+VA(0x0042c11a, 0x64)
 i8 game::RandomScan(i8* array, i8 start, i8 range, i32) {
     i8 index = GAME_TABLE_FREE;
     i32 i;
@@ -450,7 +450,7 @@ inline void game::WriteWorldMap(i32 fd) {
 
 // Buka 2.1 game::SaveGame for HoMM1's single save layout: name, globals,
 // campaign state, map header, players, world map, records and visibility.
-VA(0x0041223d, 0x7b5)
+VA(0x0042c4dd, 0x796)
 i16 game::SaveGame(char* filename, i8 generateName) {
     i32 nHumans;
     i32 saveFlag;
@@ -554,7 +554,7 @@ i16 game::SaveGame(char* filename, i8 generateName) {
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
 // to this session's human players.
-VA(0x004129f2, 0x8d8)
+VA(0x0042cc73, 0x87f)
 i16 game::LoadGame(char* filename, i32 origData, i32) {
     i32 junk2;
     i32 numHumans;
@@ -1217,7 +1217,7 @@ void game::InitEntireCampaign(i32 side) {
 // Buka 2.1 game::InitCampaignMap reduced to HoMM1's CAMP%d.CMP maps: the
 // calendar continues from m_campaignDay and the scenario table seeds the
 // opponents and every player's resources.
-VA(0x0041454b, 0x28c)
+VA(0x0042e595, 0x25b)
 void game::InitCampaignMap(i32 scenario, i32) {
     i32 saveType;
     i32 savedScenario;
@@ -1978,7 +1978,7 @@ void game::ClaimTown(i8 townId, i8 player) {
 
 // Buka 2.1 game::ClaimMine reduced to HoMM1's flag placement: the flag cell
 // sits beside the mine by type and shows the owner's colour frame.
-VA(0x00416df1, 0x2c9)
+VA(0x004309a5, 0x24a)
 void game::ClaimMine(i8 mineId, i8 player) {
     i16 frame;
     mapCell* cell;
@@ -2027,7 +2027,7 @@ void game::ClaimMine(i8 mineId, i8 player) {
 // Buka 2.1 game::ViewSpells for HoMM1's spell book: combat (0) and
 // adventure (1) books each have their own window position; type 2 shows
 // both tabs.
-VA(0x004170ba, 0x297)
+VA(0x00430bef, 0x23b)
 i8 game::ViewSpells(
     class hero* spellHero,
     H1_ENUM_PARAM(HeroSpellType, i8) spellType,
@@ -2635,7 +2635,7 @@ H1_ENUM_END(OverviewControl)
 
 // Kingdom overview: heroes by class, castles and towns by type and mines by
 // resource drawn onto the backdrop, then the date, income and resources.
-VA(0x004186f2, 0xbf5)
+VA(0x00432089, 0xc81)
 void game::Overview(void) {
     i16 unusedGY;
     i16 townTop;
@@ -2973,7 +2973,7 @@ void game::TurnOffAIMusic(void) {}
 // living player (a new day after the last), restores hero movement (none
 // on the campaign's goal town) and hands the turn to the computer or the
 // human.
-VA(0x004195d4, 0x50e)
+VA(0x00432f8c, 0x520)
 void game::NextPlayer(void) {
     hero* currentHero;
     i32 numHumans;
@@ -3807,7 +3807,7 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
 // donor PoL RVA 0x00080b64; preferred Buka symbol ?SetVisibility@game@@QAEXHHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
-VA(0x0041c499, 0x259)
+VA(0x00435a74, 0x22f)
 void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
     i32 i;
     i32 j;
@@ -3890,7 +3890,7 @@ i32 game::ExperienceValueOfStack(armyGroup* group, hero* h) {
 }
 
 // Buka 2.1 MiscRuntime seeded generator; HoMM1 keeps it in this TU.
-VA(0x0041c87a, 0x91)
+VA(0x00435de5, 0x92)
 i32 SGenRand(void) {
     i32 bitMask;
     i32 value = 0;
@@ -3980,7 +3980,7 @@ static i32 s_adjacentMonsterMinY;
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
 // HoMM1 retail returns the found flag in AL (xor al,al / mov al,1).
-VA(0x0041cac9, 0x34e)
+VA(0x00436026, 0x2fa)
 i8 advManager::FindAdjacentMonster(
     i32 originX,
     i32 originY,
@@ -4070,7 +4070,7 @@ void game::SetupAdjacentMons(void) {
 // donor PoL RVA 0x00081210; preferred Buka symbol ?CancelComputerScreen@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526467;margin=0.434153;shape=0.371;size=0.866;calls=1.000;alternate=pol20:void game::CancelComputerScreen(void)@0x00081210
-VA(0x0041cef5, 0x61)
+VA(0x004363dc, 0x55)
 void game::CancelComputerScreen(void) {
     TurnOffAIMusic();
     bShowIt = 1;
@@ -4624,7 +4624,7 @@ cleanup:
 // evidence: graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
 // Collects the remote save in 200-byte segments, acknowledging each block
 // of 100, then decodes it and writes REMOTE.GAM.
-VA(0x0041e48b, 0x59d)
+VA(0x004376cf, 0x4b0)
 i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     i32 unused1;
     i32 okay;
@@ -4763,7 +4763,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
 // donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
-VA(0x0041ea28, 0x42b)
+VA(0x00437b7f, 0x5b5)
 void game::DoNewTurn(void) {
     i32 track;
     char monsterName[52];
@@ -4955,7 +4955,7 @@ i32 game::GetNumThievesGuilds(i32 color) {
 // Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
 // (human seats by handicap, computers by level), King of the Hill, map
 // size and map difficulty.
-VA(0x0041f2df, 0x310)
+VA(0x00438573, 0x2e3)
 i32 game::CalcDifficultyRating(void) {
     i32 i;
     i32 total;
@@ -5049,7 +5049,7 @@ done:
 // Retail loads sceninfo.bin and is called on gpGame with no arguments:
 // Buka's game::ShowScenInfo, not the adventure-map ViewWorld (0x431507).
 
-VA(0x0041f727, 0x44e)
+VA(0x00438934, 0x410)
 void game::ShowScenInfo(void) {
     i16 i;
     const i8 sizeId = 100;
@@ -5163,7 +5163,7 @@ void game::RandomizePlayerCrests(void) {
 // donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.572404;margin=0.482531;shape=0.423;size=0.977;calls=1.000;alternate=pol20:void game::RestoreCell(int, int, int, int, class mapCell *, int)@0x0008480a
-VA(0x0041fcc4, 0xa1)
+VA(0x00438e58, 0x87)
 void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, i32) {
     mapCell* cell;
     if (passedCell)

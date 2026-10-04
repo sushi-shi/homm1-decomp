@@ -97,7 +97,7 @@ void advManager::StopCursor(i8 stopSound) {
 
 // Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
 // counts flag frames with m_updateMaxY.
-VA(0x0043a199, 0x5e4)
+VA(0x00421820, 0x5a4)
 void advManager::DrawCursor(void) {
     i16 drawX;
     i16 screenY;
@@ -336,7 +336,7 @@ i32 advManager::GetMoveShowIt(i8 direction) {
 // Buka CURSOR.cpp MoveHero; HoMM1 recomputes the step cost from the hero
 // type, parks the boat on a coast step and has no deferred object draw.
 
-VA(0x0043ab9c, 0xe1e)
+VA(0x00422127, 0xccd)
 mapCell* advManager::MoveHero(
     i8 direction,
     i8 stopAfterMove,

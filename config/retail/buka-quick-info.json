@@ -1811,9 +1811,11 @@
         "site": "0x727c",
         "offset": "0x6",
         "kind": 6,
-        "name": "$L45414",
+        "name": "__ehreg$?QuickInfo@advManager@@QAEXFF@Z",
         "addend": 0,
-        "target": "0x887e0"
+        "target": "0x887e0",
+        "object_symbol": "$L45414",
+        "identity_review": "buka-eh-reference-review.json"
       },
       {
         "site": "0x7282",

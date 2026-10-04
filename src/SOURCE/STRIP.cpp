@@ -106,7 +106,7 @@ strip::~strip() {
 // donor PoL RVA 0x000325f2; preferred Buka symbol ?Draw@strip@@QAEXXZ
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508282;margin=0.688808;shape=0.381;size=0.803;calls=1.000;alternate=pol20:void strip::Draw(void)@0x000325f2
-VA(0x004382c0, 0x42)
+VA(0x0045ca47, 0x37)
 void strip::Draw(void) {
     DrawIcons(1);
     gpWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);

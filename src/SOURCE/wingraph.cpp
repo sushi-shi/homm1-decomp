@@ -198,7 +198,7 @@ void DDInitGraphics(void) {
 // donor PoL RVA 0x00035601; preferred Buka symbol ?DDAppPaint@@YIHPAX0@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
-VA(0x004352f6, 0x592)
+VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
     i32 ySrc;
@@ -332,7 +332,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 }
 
 // Both donors retain the DirectDraw palette setup and its three locals.
-VA(0x00435888, 0x140)
+VA(0x00466ed3, 0x115)
 #line 315 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDInitializePalette() {
     i32 ddrval;
@@ -369,7 +369,7 @@ void DDInitializePalette() {
 }
 
 // Buka's palette attachment; PoL retains the error line-base source form.
-VA(0x004359c8, 0xb3)
+VA(0x00466fe8, 0x82)
 #line 387 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDSetPalette() {
     i32 result;
@@ -389,7 +389,7 @@ BOOL DDSetPalette() {
 // donor PoL RVA 0x00035d1c; preferred Buka symbol ?DDCreateSurface@@YIPAUIDirectDrawSurface@@KKH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
-VA(0x00435a7b, 0x12a)
+VA(0x0046706a, 0x100)
 #line 417 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
@@ -435,7 +435,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 // donor PoL RVA 0x00035e4f; preferred Buka symbol ?DDSD@@YIXHPADH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.296609;margin=0.202074;shape=0.224;size=0.647;calls=0.194;alternate=pol20:void DDSD(int, char *, int)@0x00035e4f
-VA(0x00435ba5, 0x3ee)
+VA(0x0046716a, 0x3ed)
 void DDSD(i32 error, char* file, i32 line) {
     i32 restoreResult;
     H1_ENUM_STORAGE(DirectDrawReportCode, i32) unused;
@@ -547,7 +547,7 @@ void DDSD(i32 error, char* file, i32 line) {
 // donor PoL RVA 0x00036421; preferred Buka symbol ?DDUpdatePalette@@YAXPAC@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
-VA(0x00435f93, 0x11c)
+VA(0x00467557, 0xf5)
 #line 524 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
@@ -722,7 +722,7 @@ BOOL WGQueryNewPalette() {
 // records; retail uses 10..245 for mutable entries.
 // Donor Buka 2.1 supplies the DIB setup; retail's one-word frame and API
 // call graph confirm this WinG backend initializer.
-VA(0x004365a1, 0x151)
+VA(0x00467aa3, 0x13b)
 void WGInitGraphics() {
     HBITMAP bitmap;
 
@@ -756,7 +756,7 @@ void WGInitGraphics() {
     PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
 
-VA(0x004366f2, 0x1dd)
+VA(0x00467bde, 0x1bd)
 void WGUpdatePalette(i8* paletteData) {
     HDC dc;
     i32 result;
@@ -818,7 +818,7 @@ void WGUpdatePalette(i8* paletteData) {
 
 // Buka 2.1 initializes the system-reserved WinG colors and leaves the
 // mutable interior flagged for palette animation; retail uses the same bands.
-VA(0x004368cf, 0x1d5)
+VA(0x00467d9b, 0x1a2)
 void WGInitializePalette() {
     HDC hdc;
     i32 i;
@@ -861,7 +861,7 @@ void WGInitializePalette() {
 
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
 // client-to-game transform uses its pinned 640x480 viewport.
-VA(0x00436aa4, 0x1c0)
+VA(0x00467f3d, 0x1b7)
 BOOL WGAppPaint(void* window, void* paintDC) {
     i32 srcX;
     i32 iSrcY;

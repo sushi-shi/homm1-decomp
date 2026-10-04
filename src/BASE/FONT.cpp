@@ -58,7 +58,7 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     }
 }
 
-VA(0x0047ab10, 0x2d0)
+VA(0x0047203d, 0x34f)
 void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
     i16 s;
     i8 q;
@@ -132,7 +132,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     }
 }
 
-VA(0x0047ade0, 0x211)
+VA(0x0047238c, 0x25f)
 i32 font::LineLength(char* str, i16 maxW) {
     i16 lw;
     i16 p;
@@ -188,7 +188,7 @@ i32 font::LineLength(char* str, i16 maxW) {
     return z;
 }
 
-VA(0x0047b000, 0x108)
+VA(0x004725eb, 0x133)
 i32 font::LineWidth(char* text) {
     i8 q;
     i32 u;

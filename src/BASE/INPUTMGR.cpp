@@ -189,7 +189,7 @@ afterMouseCoordinates:
     return event->type == MESSAGE_NONE;
 }
 
-VA(0x00478a90, 0x64)
+VA(0x0046ecfe, 0xa0)
 inputManager::inputManager(void) {
     m_active = 0;
     m_mouseMessageActive = 0;
@@ -275,7 +275,7 @@ void inputManager::SetKeyCodeType(i16 keyCodeType) {
     ResetEventQueue(this);
 }
 
-VA(0x00478d00, 0x1cb)
+VA(0x0046f0b9, 0x312)
 void inputManager::AsciiConvert(tag_message& event) {
     if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
          && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)

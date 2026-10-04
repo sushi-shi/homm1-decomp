@@ -1459,7 +1459,7 @@ void advManager::EventSound(i16 eventType, i16 eventData) {
 // donor PoL RVA 0x000aff6c; preferred Buka symbol ?EventWindow@advManager@@QAEXHHPADHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.574046;margin=0.505217;shape=0.246;size=0.761;calls=0.800;strings=Event ID %d;alternate=pol20:void advManager::EventWindow(int, int, char *, int, int, int, int, int)@0x000aff6c
-VA(0x004035e2, 0xdb)
+VA(0x00426dc6, 0xc0)
 void advManager::EventWindow(
     i16 eventId,
     H1_ENUM_PARAM(NormalDialogType, i32) buttons,
@@ -1492,7 +1492,7 @@ void advManager::EventWindow(
     NormalDialog(eventText, buttons, 0x61, -1, type1, value1, type2, value2, showOrText);
 }
 
-VA(0x004036bd, 0xa9)
+VA(0x00426e86, 0x90)
 i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
     i16 slot;
 
@@ -1511,7 +1511,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
 // donor PoL RVA 0x000b00e9; preferred Buka symbol ?GiveRandomArtifact@advManager@@QAEHPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.483471;margin=0.618508;shape=0.306;size=0.821;calls=1.000;alternate=pol20:int advManager::GiveRandomArtifact(class hero *)@0x000b00e9
-VA(0x00403766, 0x5f)
+VA(0x00426f16, 0x4f)
 i32 advManager::GiveRandomArtifact(class hero* eventHero) {
     i8 artifact;
 
@@ -1526,7 +1526,7 @@ i32 advManager::GiveRandomArtifact(class hero* eventHero) {
 // donor PoL RVA 0x000b0147; preferred Buka symbol ?GiveExperience@advManager@@QAEHPAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.329448;margin=0.686602;shape=0.229;size=0.551;calls=0.600;alternate=pol20:int advManager::GiveExperience(class hero *, int, int)@0x000b0147
-VA(0x004037c5, 0xb0)
+VA(0x00426f65, 0x9e)
 #line 1113 "F:\\h1w95src\\source\\EVENTS.CPP"
 i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLevel) {
     i32 prevLevel;
@@ -1758,7 +1758,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     }
 }
 
-VA(0x00403db9, 0x200)
+VA(0x004274db, 0x1e2)
 i8 advManager::CombatMonsterEvent(
     class hero* eventHero,
     i8 monsterType,
@@ -1998,7 +1998,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
 // donor PoL RVA 0x000b1b50; preferred Buka symbol ?HeroLoses@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.567256;margin=0.641527;shape=0.448;size=0.872;calls=1.000;alternate=pol20:void advManager::HeroLoses(class hero *)@0x000b1b50
-VA(0x004043fc, 0x7d)
+VA(0x00427a8e, 0x6b)
 void advManager::HeroLoses(class hero* lostHero) {
     if (!lostHero)
         return;
@@ -2649,7 +2649,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 // donor PoL RVA 0x000b5c40; preferred Buka symbol ?DoNetCombat@advManager@@QAEHPAD@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.634004;margin=0.818203;shape=0.529;size=0.995;calls=1.000;alternate=pol20:int advManager::DoNetCombat(char *)@0x000b5c40
-VA(0x00405af0, 0x18f)
+VA(0x00428f98, 0x16f)
 i32 advManager::DoNetCombat(char* packet) {
     hero* defendingHero;
     i32 cellY;

@@ -98,7 +98,7 @@ void executive::ShutDownSystem(void) {
 }
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
-VA(0x00478130, 0x10c)
+VA(0x00472b98, 0x189)
 i16 executive::DoDialog(baseManager* manager) {
     baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     i32 index;
@@ -135,7 +135,7 @@ i16 executive::DoDialog(baseManager* manager) {
     return dialogExecutive.m_result;
 }
 
-VA(0x00478240, 0xd2)
+VA(0x00472d21, 0x149)
 i16 executive::AddManager(baseManager* manager, i16 priority) {
     if (manager == NULL)
         return BASE_MANAGER_ERROR;
@@ -172,7 +172,7 @@ i16 executive::AddManager(baseManager* manager, i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-VA(0x00478320, 0x76)
+VA(0x00472e6a, 0xc3)
 void executive::RemoveManager(baseManager* manager) {
     if (manager == NULL)
         return;

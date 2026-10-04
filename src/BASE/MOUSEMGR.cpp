@@ -45,7 +45,7 @@ H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_CURSOR_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(MouseManagerStateConstant)
 
-VA(0x00473200, 0xab)
+VA(0x0046b510, 0x102)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorImage = NULL;
@@ -114,7 +114,7 @@ i16 mouseManager::Main(tag_message&) {
 }
 
 // HoMM1 selects the cursor family by name and forwards the requested frame.
-VA(0x00473410, 0x45)
+VA(0x0046b84a, 0x68)
 void mouseManager::SetPointer(char* name, i16 frame) {
     if (*name == 'a' || *name == 'A')
         gMouseCursorType = MOUSE_CURSOR_ADVENTURE;
@@ -128,7 +128,7 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 // donor PoL RVA 0x000c9630; preferred Buka symbol ?SetPointer@mouseManager@@QAEXH@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
-VA(0x00473460, 0x489)
+VA(0x0046b8b2, 0x6bd)
 #line 232 "F:\\H1w95src\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(i16 frame) {
     DATA(0x004a31b8)

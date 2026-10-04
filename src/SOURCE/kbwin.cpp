@@ -506,7 +506,7 @@ void KBChangeMenu(void* menu) {
 // donor PoL RVA 0x0001cce1; preferred Buka symbol ?SetMenuStatus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
-VA(0x00433876, 0x135)
+VA(0x00443bb5, 0x118)
 void SetMenuStatus(i32 showMenu) {
     i32 clientWidth;
     i32 height;
@@ -555,7 +555,7 @@ void SetNoDialogMenus(i32 menusEnabled) {
 
 // PoL 2.0 SetMenus correspondence: recurse into popups, then restore
 // each command from the normal or setup enable table.
-VA(0x00433a24, 0x15a)
+VA(0x00443d1f, 0x12b)
 void SetMenus(void* menu, i32 enabled) {
     i32 itemIndex;
     i32 numItems;
@@ -1175,7 +1175,7 @@ void WritePrefsToRegistry(void) {
     }
 }
 
-VA(0x004348b9, 0x1a)
+VA(0x004443f7, 0x30b)
 void WritePrefs(void) {
     UpdateSystemOptionsMenu();
     WritePrefsToRegistry();
@@ -1296,7 +1296,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
 // donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
-VA(0x00434d9e, 0x7c)
+VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {
     i32 i;
     tag_message message;

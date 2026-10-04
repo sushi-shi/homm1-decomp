@@ -6496,10 +6496,12 @@
         {
           "site_rva": "0x269bb",
           "target_rva": "0x88ba3",
-          "symbol": "$L25035",
+          "symbol": "__ehreg$?HeroSwap@advManager@@QAEXPAVhero@@0@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88ba3"
+          "owner_rva": "0x88ba3",
+          "object_symbol": "$L25035",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x269c1",
@@ -8494,10 +8496,12 @@
         {
           "site_rva": "0x2e2b3",
           "target_rva": "0x88bf0",
-          "symbol": "$L26683",
+          "symbol": "__ehreg$?ShowCampaignInfo@game@@QAEXHHH@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88bf0"
+          "owner_rva": "0x88bf0",
+          "object_symbol": "$L26683",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x2e2b9",
@@ -11108,10 +11112,12 @@
         {
           "site_rva": "0x39f99",
           "target_rva": "0x88cc0",
-          "symbol": "$L22732",
+          "symbol": "__ehreg$?ViewStat@hero@@QAEXCC@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88cc0"
+          "owner_rva": "0x88cc0",
+          "object_symbol": "$L22732",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x39f9f",
@@ -11485,10 +11491,12 @@
         {
           "site_rva": "0x3bdf9",
           "target_rva": "0x88cdb",
-          "symbol": "$L19659",
+          "symbol": "__ehreg$?Open@highScoreManager@@UAEFF@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88cdb"
+          "owner_rva": "0x88cdb",
+          "object_symbol": "$L19659",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x3bdff",
@@ -11770,10 +11778,12 @@
         {
           "site_rva": "0x3c80e",
           "target_rva": "0x88d8a",
-          "symbol": "$L45143",
+          "symbol": "__ehreg$?InitMainClasses@@YAXXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88d8a"
+          "owner_rva": "0x88d8a",
+          "object_symbol": "$L45143",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x3c814",
@@ -22671,10 +22681,12 @@
         {
           "site_rva": "0x56b16",
           "target_rva": "0x88eeb",
-          "symbol": "$L21995",
+          "symbol": "__ehreg$?SetupCampaignGame@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88eeb"
+          "owner_rva": "0x88eeb",
+          "object_symbol": "$L21995",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x56b1c",
@@ -22816,10 +22828,12 @@
         {
           "site_rva": "0x56c23",
           "target_rva": "0x88f00",
-          "symbol": "$L22009",
+          "symbol": "__ehreg$?SetupBaud@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f00"
+          "owner_rva": "0x88f00",
+          "object_symbol": "$L22009",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x56c29",
@@ -22993,10 +23007,12 @@
         {
           "site_rva": "0x56f0a",
           "target_rva": "0x88f2a",
-          "symbol": "$L22033",
+          "symbol": "__ehreg$?SetupHotSeatGame@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f2a"
+          "owner_rva": "0x88f2a",
+          "object_symbol": "$L22033",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x56f10",
@@ -23130,10 +23146,12 @@
         {
           "site_rva": "0x57011",
           "target_rva": "0x88f3f",
-          "symbol": "$L22044",
+          "symbol": "__ehreg$?SetupNetworkGame@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f3f"
+          "owner_rva": "0x88f3f",
+          "object_symbol": "$L22044",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x57017",
@@ -23259,10 +23277,12 @@
         {
           "site_rva": "0x570f8",
           "target_rva": "0x88f75",
-          "symbol": "$L22071",
+          "symbol": "__ehreg$?SetupModemGame@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f75"
+          "owner_rva": "0x88f75",
+          "object_symbol": "$L22071",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x570fe",
@@ -23588,10 +23608,12 @@
         {
           "site_rva": "0x57391",
           "target_rva": "0x88f8a",
-          "symbol": "$L22083",
+          "symbol": "__ehreg$?SetupMultiPlayerGame@game@@QAECXZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f8a"
+          "owner_rva": "0x88f8a",
+          "object_symbol": "$L22083",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x57397",
@@ -23797,10 +23819,12 @@
         {
           "site_rva": "0x57533",
           "target_rva": "0x88f9f",
-          "symbol": "$L22094",
+          "symbol": "__ehreg$?SetupGame@game@@QAECC@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x88f9f"
+          "owner_rva": "0x88f9f",
+          "object_symbol": "$L22094",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x57539",
@@ -25556,10 +25580,12 @@
         {
           "site_rva": "0x5cfb1",
           "target_rva": "0x8902b",
-          "symbol": "$L21804",
+          "symbol": "__ehreg$?Open@swapManager@@UAEFF@Z",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8902b"
+          "owner_rva": "0x8902b",
+          "object_symbol": "$L21804",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x5cfb7",
@@ -30917,10 +30943,12 @@
         {
           "site_rva": "0x7199d",
           "target_rva": "0x8941c",
-          "symbol": "$L2795",
+          "symbol": "__ehreg$??1textWidget@@UAE@XZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8941c"
+          "owner_rva": "0x8941c",
+          "object_symbol": "$L2795",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x719a3",
@@ -31050,10 +31078,12 @@
         {
           "site_rva": "0x71e9d",
           "target_rva": "0x8944c",
-          "symbol": "$L2257",
+          "symbol": "__ehreg$??1font@@UAE@XZ",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8944c"
+          "owner_rva": "0x8944c",
+          "object_symbol": "$L2257",
+          "identity_review": "buka-eh-reference-review.json"
         },
         {
           "site_rva": "0x71ea3",

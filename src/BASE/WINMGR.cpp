@@ -96,7 +96,7 @@ void CycleColors(void) {
 }
 
 // Retail constructor initializes the recovered HoMM1 manager layout.
-VA(0x00476730, 0x46)
+VA(0x0046a14c, 0x9f)
 heroWindowManager::heroWindowManager(void) : baseManager() {
     m_active = 0;
     m_activeWindow = NULL;
@@ -184,7 +184,7 @@ i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16
 // The open flags are a signed char, the type heroWindow::Open takes: the char-typed
 // argument range (no esi/edi/ebp) is what makes /O2 colour cur/window/layer/this as
 // esi/edi/ebx/ebp; an int parameter gives esi/edi/ebx/ebp to window/this/cur/layer.
-VA(0x00476910, 0xce)
+VA(0x0046a4f1, 0x166)
 void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) {
     heroWindow* currentWindow = m_windowListTail;
     if (window->m_winFlags & WINDOW_FLAG_FIXED_LAYER)
@@ -227,7 +227,7 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) 
 // donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.383824;margin=0.385483;shape=0.180;size=0.618;calls=1.000;alternate=pol20:void heroWindowManager::RemoveWindow(class heroWindow *)@0x000cad40
-VA(0x004769e0, 0x87)
+VA(0x0046a657, 0xe9)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
     if (window != NULL) {
         window->Close();
@@ -314,7 +314,7 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
 // HoMM1 hides the software pointer only when it overlaps the updated region.
 // Declaring top before left and bottom before right reproduces retail's VC4
 // colouring: equal-cost ranges are coloured, and spilled, in declaration order.
-VA(0x00476c60, 0xed)
+VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
     i16 top, left, bottom, right;
     i16 pointerHidden;
@@ -343,7 +343,7 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
 }
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
-VA(0x00476d50, 0xbf)
+VA(0x0046aaa3, 0xd3)
 #line 550 "F:\\H1w95src\\Base\\WINMGR.CPP"
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
@@ -380,7 +380,7 @@ void heroWindowManager::ScreenShot(void) {
 }
 
 // Retail omits the later donor coordinate-clamping checks.
-VA(0x00476e60, 0x88)
+VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
     if (bShowIt == 0)
         return;
@@ -393,7 +393,7 @@ void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
 // donor PoL RVA 0x000cb1e0; HoMM1 removes the later palette-fade arguments
 // donor Buka TU BASE/WINMGR; five arguments proven by stack use and ret 0x14
 // evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
-VA(0x00476ef0, 0x320)
+VA(0x0046b11d, 0x36a)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     // Buka keeps C-style function-scope locals; their declaration order sets
     // the retail register colouring of the row pointers.

@@ -27,7 +27,7 @@ H1_ENUM_CONST_END(CombatPathConstant)
 
 // Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
 // two-hex creature from its rear hex.
-VA(0x0046f280, 0x152)
+VA(0x00446450, 0x11e)
 i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
     i16 pathResult;
     i32 savedSpeed;
@@ -57,7 +57,7 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
 }
 
 // Buka PATH.cpp ValidPath.
-VA(0x0046f3d2, 0x9e)
+VA(0x0044656e, 0x86)
 i16 army::ValidPath(i16 targetHex, i8 pathMode) {
     i32 pathResult;
     i32 unusedExtra;
@@ -92,7 +92,7 @@ i16 army::GetMoveMask(i16 sourceHex) {
 }
 
 // Buka PATH.cpp GetAttackMask.
-VA(0x0046f4eb, 0xbf)
+VA(0x00446666, 0xac)
 i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
     i16 direction;
     i16 hex;
@@ -118,7 +118,7 @@ i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
 }
 
 // Buka PATH.cpp ValidMove(direction).
-VA(0x0046f5aa, 0x2d)
+VA(0x00446712, 0x23)
 i16 army::ValidMove(i16 direction) {
     return ValidMove(m_hex, direction);
 }
@@ -174,7 +174,7 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
 }
 
 // Buka PATH.cpp ValidAttack.
-VA(0x0046f7d3, 0x295)
+VA(0x004468bc, 0x216)
 i16 army::ValidAttack(
     i16 sourceHex,
     i16 direction,
@@ -246,7 +246,7 @@ i16 army::ValidAttack(
 }
 
 // Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
-VA(0x0046fa68, 0x11e)
+VA(0x00446ad2, 0xe4)
 i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 #line 311 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
 {
