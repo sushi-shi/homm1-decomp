@@ -1,0 +1,2298 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "functions": [
+    {
+      "unit": "SOURCE/COMMAND",
+      "name": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "rva": "0x1f491",
+      "size": 653,
+      "object_size": 653,
+      "retail_code_size": 653,
+      "object_code_size": 653,
+      "normalized_body_equal": false,
+      "cfg_equal": true,
+      "block_counts": [
+        16,
+        16
+      ],
+      "local_slot_map": {
+        "-72": -72,
+        "-16": -20,
+        "-40": -24,
+        "-32": -40,
+        "-30": -38,
+        "-28": -36,
+        "-20": -28,
+        "-52": -52,
+        "-4": -4,
+        "-76": -76,
+        "-48": -48,
+        "-60": -60,
+        "-80": -80,
+        "-56": -56,
+        "-36": -44,
+        "-68": -68,
+        "-84": -84,
+        "-64": -64,
+        "-44": -16,
+        "-12": -12
+      },
+      "local_byte_count": 70,
+      "local_displacement_differences": 12,
+      "instruction_count": 175,
+      "verified_branches": 9,
+      "references": [
+        {
+          "symbol": "__ehreg$?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+          "kind": 6,
+          "site_rva": "0x1f497",
+          "target_rva": "0x88ae1",
+          "addend": 0,
+          "object_offset": "0x6",
+          "object_symbol": "$L24234"
+        },
+        {
+          "symbol": "$SG23872",
+          "kind": 6,
+          "site_rva": "0x1f4bc",
+          "target_rva": "0x8f8cc",
+          "addend": 0,
+          "object_offset": "0x2b"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x1f4c1",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x30"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1f4c6",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x35"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x1f4e2",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x51"
+        },
+        {
+          "symbol": "?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z",
+          "kind": 20,
+          "site_rva": "0x1f4f4",
+          "target_rva": "0x6da11",
+          "addend": 0,
+          "object_offset": "0x63"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1f4fb",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x6a"
+        },
+        {
+          "symbol": "$SG23877",
+          "kind": 6,
+          "site_rva": "0x1f520",
+          "target_rva": "0x8f8f0",
+          "addend": 0,
+          "object_offset": "0x8f"
+        },
+        {
+          "symbol": "??0iconWidget@@QAE@FFFFPADCCFFF@Z",
+          "kind": 20,
+          "site_rva": "0x1f533",
+          "target_rva": "0x6dfa0",
+          "addend": 0,
+          "object_offset": "0xa2"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1f569",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0xd8"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1f57d",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0xec"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1f584",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0xf3"
+        },
+        {
+          "symbol": "$SG23883",
+          "kind": 6,
+          "site_rva": "0x1f5ab",
+          "target_rva": "0x8f900",
+          "addend": 0,
+          "object_offset": "0x11a"
+        },
+        {
+          "symbol": "??0iconWidget@@QAE@FFFFPADCCFFF@Z",
+          "kind": 20,
+          "site_rva": "0x1f5c1",
+          "target_rva": "0x6dfa0",
+          "addend": 0,
+          "object_offset": "0x130"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1f5f7",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x166"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1f60b",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x17a"
+        },
+        {
+          "symbol": "_malloc",
+          "kind": 20,
+          "site_rva": "0x1f612",
+          "target_rva": "0x7831b",
+          "addend": 0,
+          "object_offset": "0x181"
+        },
+        {
+          "symbol": "?gArtifactNames@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x1f622",
+          "target_rva": "0x9238c",
+          "addend": 0,
+          "object_offset": "0x191"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1f62c",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x19b"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1f636",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x1a5"
+        },
+        {
+          "symbol": "$SG23890",
+          "kind": 6,
+          "site_rva": "0x1f65a",
+          "target_rva": "0x8f910",
+          "addend": 0,
+          "object_offset": "0x1c9"
+        },
+        {
+          "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+          "kind": 20,
+          "site_rva": "0x1f674",
+          "target_rva": "0x717c8",
+          "addend": 0,
+          "object_offset": "0x1e3"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1f6aa",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x219"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1f6be",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x22d"
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "kind": 6,
+          "site_rva": "0x1f6c4",
+          "target_rva": "0xa7828",
+          "addend": 0,
+          "object_offset": "0x233"
+        },
+        {
+          "symbol": "?DrawWindow@heroWindow@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1f6cf",
+          "target_rva": "0x6da72",
+          "addend": 0,
+          "object_offset": "0x23e"
+        },
+        {
+          "symbol": "?SRandom@@YAHHH@Z",
+          "kind": 20,
+          "site_rva": "0x1f6d8",
+          "target_rva": "0x35e77",
+          "addend": 0,
+          "object_offset": "0x247"
+        },
+        {
+          "symbol": "$SG23893",
+          "kind": 6,
+          "site_rva": "0x1f6e1",
+          "target_rva": "0x8f920",
+          "addend": 0,
+          "object_offset": "0x250"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x1f6e6",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x255"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1f6eb",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x25a"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x1f6f3",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x262"
+        },
+        {
+          "symbol": "?LoadPlaySample@@YAPAVsample@@PAD@Z",
+          "kind": 20,
+          "site_rva": "0x1f6f8",
+          "target_rva": "0x68ec4",
+          "addend": 0,
+          "object_offset": "0x267"
+        },
+        {
+          "symbol": "?WaitSample@@YAXPAVsample@@@Z",
+          "kind": 20,
+          "site_rva": "0x1f707",
+          "target_rva": "0x68fb6",
+          "addend": 0,
+          "object_offset": "0x276"
+        }
+      ],
+      "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9",
+      "source_sha256": "d6c61f9838152535bd48f31b8d936f06b1c07e410cf95875e2f4a9f88972fa29"
+    },
+    {
+      "unit": "SOURCE/COMMAND",
+      "name": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "rva": "0x1f71e",
+      "size": 1875,
+      "object_size": 1848,
+      "retail_code_size": 1875,
+      "object_code_size": 1848,
+      "normalized_body_equal": false,
+      "cfg_equal": true,
+      "block_counts": [
+        54,
+        54
+      ],
+      "local_slot_map": {
+        "-192": -192,
+        "-16": -60,
+        "-148": -104,
+        "-76": -112,
+        "-72": -124,
+        "-64": -116,
+        "-140": -56,
+        "-60": -100,
+        "-100": -144,
+        "-156": -156,
+        "-4": -4,
+        "-196": -196,
+        "-152": -152,
+        "-96": -108,
+        "-200": -200,
+        "-164": -164,
+        "-204": -204,
+        "-160": -160,
+        "-172": -172,
+        "-208": -208,
+        "-168": -168,
+        "-20": -16,
+        "-144": -148,
+        "-180": -180,
+        "-212": -212,
+        "-176": -176,
+        "-188": -188,
+        "-216": -216,
+        "-184": -184,
+        "-12": -12
+      },
+      "local_byte_count": 116,
+      "local_displacement_differences": 113,
+      "instruction_count": 447,
+      "verified_branches": 35,
+      "references": [
+        {
+          "symbol": "__ehreg$?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+          "kind": 6,
+          "site_rva": "0x1f724",
+          "target_rva": "0x88b31",
+          "addend": 0,
+          "object_offset": "0x6",
+          "object_symbol": "$L24268"
+        },
+        {
+          "symbol": "_malloc",
+          "kind": 20,
+          "site_rva": "0x1f8f2",
+          "target_rva": "0x7831b",
+          "addend": 0,
+          "object_offset": "0x1da"
+        },
+        {
+          "symbol": "$SG588080",
+          "kind": 6,
+          "site_rva": "0x1f900",
+          "target_rva": "0x8f930",
+          "addend": 0,
+          "object_offset": "0x1e5",
+          "object_symbol": "$SG23921"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1f90c",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x1ee"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1f916",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x1f8"
+        },
+        {
+          "symbol": "$SG588088",
+          "kind": 6,
+          "site_rva": "0x1f940",
+          "target_rva": "0x8f938",
+          "addend": 0,
+          "object_offset": "0x222",
+          "object_symbol": "$SG23926"
+        },
+        {
+          "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+          "kind": 20,
+          "site_rva": "0x1f960",
+          "target_rva": "0x717c8",
+          "addend": 0,
+          "object_offset": "0x23f"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1f9ab",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x28a"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1f9c2",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x2a1"
+        },
+        {
+          "symbol": "_malloc",
+          "kind": 20,
+          "site_rva": "0x1f9fb",
+          "target_rva": "0x7831b",
+          "addend": 0,
+          "object_offset": "0x2da"
+        },
+        {
+          "symbol": "$SG588104",
+          "kind": 6,
+          "site_rva": "0x1fa14",
+          "target_rva": "0x8f948",
+          "addend": 0,
+          "object_offset": "0x2f0",
+          "object_symbol": "$SG23932"
+        },
+        {
+          "symbol": "$SG588116",
+          "kind": 6,
+          "site_rva": "0x1fa20",
+          "target_rva": "0x8f954",
+          "addend": 0,
+          "object_offset": "0x2fc",
+          "object_symbol": "$SG23933"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1fa33",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x30c"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1fa3d",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x316"
+        },
+        {
+          "symbol": "$SG588132",
+          "kind": 6,
+          "site_rva": "0x1fa67",
+          "target_rva": "0x8f964",
+          "addend": 0,
+          "object_offset": "0x340",
+          "object_symbol": "$SG23938"
+        },
+        {
+          "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+          "kind": 20,
+          "site_rva": "0x1fa87",
+          "target_rva": "0x717c8",
+          "addend": 0,
+          "object_offset": "0x35d"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1fada",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x3b0"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1faf5",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x3cb"
+        },
+        {
+          "symbol": "_malloc",
+          "kind": 20,
+          "site_rva": "0x1fb0a",
+          "target_rva": "0x7831b",
+          "addend": 0,
+          "object_offset": "0x3e0"
+        },
+        {
+          "symbol": "$SG588148",
+          "kind": 6,
+          "site_rva": "0x1fb18",
+          "target_rva": "0x8f974",
+          "addend": 0,
+          "object_offset": "0x3eb",
+          "object_symbol": "$SG23942"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1fb24",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x3f4"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1fb2e",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x3fe"
+        },
+        {
+          "symbol": "$SG588152",
+          "kind": 6,
+          "site_rva": "0x1fb5f",
+          "target_rva": "0x8f978",
+          "addend": 0,
+          "object_offset": "0x42f",
+          "object_symbol": "$SG23947"
+        },
+        {
+          "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+          "kind": 20,
+          "site_rva": "0x1fb81",
+          "target_rva": "0x717c8",
+          "addend": 0,
+          "object_offset": "0x44e"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1fbda",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x4a7"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1fbf8",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x4c5"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1fc48",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x515"
+        },
+        {
+          "symbol": "$SG588168",
+          "kind": 6,
+          "site_rva": "0x1fc8e",
+          "target_rva": "0x8f988",
+          "addend": 0,
+          "object_offset": "0x55e",
+          "object_symbol": "$SG23956"
+        },
+        {
+          "symbol": "??0iconWidget@@QAE@FFFFPADCCFFF@Z",
+          "kind": 20,
+          "site_rva": "0x1fcb4",
+          "target_rva": "0x6dfa0",
+          "addend": 0,
+          "object_offset": "0x584"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1fd13",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x5e3"
+        },
+        {
+          "symbol": "_malloc",
+          "kind": 20,
+          "site_rva": "0x1fd1a",
+          "target_rva": "0x7831b",
+          "addend": 0,
+          "object_offset": "0x5ea"
+        },
+        {
+          "symbol": "$SG588180",
+          "kind": 6,
+          "site_rva": "0x1fd39",
+          "target_rva": "0x8f994",
+          "addend": 0,
+          "object_offset": "0x606",
+          "object_symbol": "$SG23959"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x1fd45",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x60f"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x1fd4f",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x619"
+        },
+        {
+          "symbol": "$SG588184",
+          "kind": 6,
+          "site_rva": "0x1fd85",
+          "target_rva": "0x8f998",
+          "addend": 0,
+          "object_offset": "0x64f",
+          "object_symbol": "$SG23964"
+        },
+        {
+          "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+          "kind": 20,
+          "site_rva": "0x1fdb2",
+          "target_rva": "0x717c8",
+          "addend": 0,
+          "object_offset": "0x679"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x1fe11",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x6d8"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1fe32",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x6f9"
+        },
+        {
+          "symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "kind": 20,
+          "site_rva": "0x1fe53",
+          "target_rva": "0x6d817",
+          "addend": 0,
+          "object_offset": "0x71a"
+        }
+      ],
+      "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9",
+      "source_sha256": "d6c61f9838152535bd48f31b8d936f06b1c07e410cf95875e2f4a9f88972fa29"
+    },
+    {
+      "unit": "SOURCE/COMMAND",
+      "name": "?DoVictory@combatManager@@QAEXC@Z",
+      "rva": "0x1fe71",
+      "size": 1841,
+      "object_size": 1877,
+      "retail_code_size": 1841,
+      "object_code_size": 1877,
+      "normalized_body_equal": false,
+      "cfg_equal": true,
+      "block_counts": [
+        61,
+        61
+      ],
+      "local_slot_map": {
+        "-208": -208,
+        "-16": -16,
+        "-212": -212,
+        "-176": -20,
+        "-200": -200,
+        "-4": -4,
+        "-216": -216,
+        "-196": -196,
+        "-172": -192,
+        "-192": -40,
+        "-190": -38,
+        "-188": -36,
+        "-180": -28,
+        "-204": -204,
+        "-12": -12
+      },
+      "local_byte_count": 51,
+      "local_displacement_differences": 15,
+      "instruction_count": 409,
+      "verified_branches": 47,
+      "references": [
+        {
+          "symbol": "__ehreg$?DoVictory@combatManager@@QAEXC@Z",
+          "kind": 6,
+          "site_rva": "0x1fe77",
+          "target_rva": "0x88b49",
+          "addend": 0,
+          "object_offset": "0x6",
+          "object_symbol": "$L24279"
+        },
+        {
+          "symbol": "?iMaxTransferArtifacts@@3CA",
+          "kind": 6,
+          "site_rva": "0x1fe9e",
+          "target_rva": "0xa6ab0",
+          "addend": 0,
+          "object_offset": "0x2d"
+        },
+        {
+          "symbol": "?iCurTransferArtifact@@3HA",
+          "kind": 6,
+          "site_rva": "0x1fea5",
+          "target_rva": "0xa6aa4",
+          "addend": 0,
+          "object_offset": "0x34"
+        },
+        {
+          "symbol": "?FreeArmies@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1feb4",
+          "target_rva": "0x1a787",
+          "addend": 0,
+          "object_offset": "0x43"
+        },
+        {
+          "symbol": "$SG588200",
+          "kind": 6,
+          "site_rva": "0x1febb",
+          "target_rva": "0x8f9a8",
+          "addend": 0,
+          "object_offset": "0x4a",
+          "object_symbol": "$SG23974"
+        },
+        {
+          "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+          "kind": 20,
+          "site_rva": "0x1fec6",
+          "target_rva": "0x23707",
+          "addend": 0,
+          "object_offset": "0x55"
+        },
+        {
+          "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+          "kind": 6,
+          "site_rva": "0x1fecf",
+          "target_rva": "0xa74a8",
+          "addend": 0,
+          "object_offset": "0x5e"
+        },
+        {
+          "symbol": "?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z",
+          "kind": 20,
+          "site_rva": "0x1fed8",
+          "target_rva": "0x6f9f5",
+          "addend": 0,
+          "object_offset": "0x67"
+        },
+        {
+          "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+          "kind": 6,
+          "site_rva": "0x1fee3",
+          "target_rva": "0xa7164",
+          "addend": 0,
+          "object_offset": "0x72"
+        },
+        {
+          "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+          "kind": 20,
+          "site_rva": "0x1fee8",
+          "target_rva": "0x6b8b2",
+          "addend": 0,
+          "object_offset": "0x77"
+        },
+        {
+          "symbol": "?PlayMusic@@YAXH@Z",
+          "kind": 20,
+          "site_rva": "0x1ff1c",
+          "target_rva": "0x692fd",
+          "addend": 0,
+          "object_offset": "0xab"
+        },
+        {
+          "symbol": "?DoLoseWindow@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x1ff2a",
+          "target_rva": "0x205a2",
+          "addend": 0,
+          "object_offset": "0xb9"
+        },
+        {
+          "symbol": "?ExperienceValueOfStack@combatManager@@QAEHC@Z",
+          "kind": 20,
+          "site_rva": "0x1ff5e",
+          "target_rva": "0x1c6b4",
+          "addend": 0,
+          "object_offset": "0xed"
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "kind": 6,
+          "site_rva": "0x1ff7d",
+          "target_rva": "0xa7823",
+          "addend": 0,
+          "object_offset": "0x10c"
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "kind": 6,
+          "site_rva": "0x20020",
+          "target_rva": "0xa7b94",
+          "addend": 0,
+          "object_offset": "0x1af"
+        },
+        {
+          "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+          "kind": 6,
+          "site_rva": "0x20057",
+          "target_rva": "0xa7480",
+          "addend": 0,
+          "object_offset": "0x1e6"
+        },
+        {
+          "symbol": "?GiveExperience@advManager@@QAEHPAVhero@@HC@Z",
+          "kind": 20,
+          "site_rva": "0x2005c",
+          "target_rva": "0x26f65",
+          "addend": 0,
+          "object_offset": "0x1eb"
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "kind": 6,
+          "site_rva": "0x20066",
+          "target_rva": "0xa7823",
+          "addend": 0,
+          "object_offset": "0x1f5"
+        },
+        {
+          "symbol": "?iMaxTransferArtifacts@@3CA",
+          "kind": 6,
+          "site_rva": "0x2011f",
+          "target_rva": "0xa6ab0",
+          "addend": 0,
+          "object_offset": "0x2c0"
+        },
+        {
+          "symbol": "?iTransferArtifacts@@3PACA",
+          "kind": 6,
+          "site_rva": "0x2012f",
+          "target_rva": "0xa6a94",
+          "addend": 0,
+          "object_offset": "0x2d3"
+        },
+        {
+          "symbol": "?iMaxTransferArtifacts@@3CA",
+          "kind": 6,
+          "site_rva": "0x20135",
+          "target_rva": "0xa6ab0",
+          "addend": 0,
+          "object_offset": "0x2d9"
+        },
+        {
+          "symbol": "?iMaxTransferArtifacts@@3CA",
+          "kind": 6,
+          "site_rva": "0x2013e",
+          "target_rva": "0xa6ab0",
+          "addend": 0,
+          "object_offset": "0x2e2"
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "kind": 6,
+          "site_rva": "0x2014a",
+          "target_rva": "0xb4aa4",
+          "addend": 0,
+          "object_offset": "0x2ee"
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "kind": 6,
+          "site_rva": "0x20156",
+          "target_rva": "0xb4aa4",
+          "addend": 0,
+          "object_offset": "0x2fa"
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "kind": 6,
+          "site_rva": "0x2015d",
+          "target_rva": "0xa7b94",
+          "addend": 0,
+          "object_offset": "0x301"
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "kind": 6,
+          "site_rva": "0x2017a",
+          "target_rva": "0xb4aa4",
+          "addend": 0,
+          "object_offset": "0x31e"
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "kind": 6,
+          "site_rva": "0x20189",
+          "target_rva": "0xb4aa4",
+          "addend": 0,
+          "object_offset": "0x32d"
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "kind": 6,
+          "site_rva": "0x201ac",
+          "target_rva": "0xb4aa4",
+          "addend": 0,
+          "object_offset": "0x350"
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "kind": 6,
+          "site_rva": "0x201b3",
+          "target_rva": "0xa7b94",
+          "addend": 0,
+          "object_offset": "0x357"
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "kind": 6,
+          "site_rva": "0x201d0",
+          "target_rva": "0xa7b94",
+          "addend": 0,
+          "object_offset": "0x374"
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "kind": 6,
+          "site_rva": "0x20208",
+          "target_rva": "0xa7b94",
+          "addend": 0,
+          "object_offset": "0x3ac"
+        },
+        {
+          "symbol": "?PlayMusic@@YAXH@Z",
+          "kind": 20,
+          "site_rva": "0x20217",
+          "target_rva": "0x692fd",
+          "addend": 0,
+          "object_offset": "0x3bb"
+        },
+        {
+          "symbol": "??2@YAPAXI@Z",
+          "kind": 20,
+          "site_rva": "0x20221",
+          "target_rva": "0x77d50",
+          "addend": 0,
+          "object_offset": "0x3c5"
+        },
+        {
+          "symbol": "$SG588204",
+          "kind": 6,
+          "site_rva": "0x2023f",
+          "target_rva": "0x8f9ac",
+          "addend": 0,
+          "object_offset": "0x3e3",
+          "object_symbol": "$SG23997"
+        },
+        {
+          "symbol": "??0heroWindow@@QAE@FFPAD@Z",
+          "kind": 20,
+          "site_rva": "0x20251",
+          "target_rva": "0x6d150",
+          "addend": 0,
+          "object_offset": "0x3f5"
+        },
+        {
+          "symbol": "?MemError@@YAXXZ",
+          "kind": 20,
+          "site_rva": "0x2029c",
+          "target_rva": "0x42146",
+          "addend": 0,
+          "object_offset": "0x440"
+        },
+        {
+          "symbol": "?gbCombatSurrender@@3CA",
+          "kind": 6,
+          "site_rva": "0x202bb",
+          "target_rva": "0xa7495",
+          "addend": 0,
+          "object_offset": "0x45f"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x202c5",
+          "target_rva": "0x93188",
+          "addend": 0,
+          "object_offset": "0x469"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x202cb",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x46f"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x202d0",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x474"
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "kind": 6,
+          "site_rva": "0x202dc",
+          "target_rva": "0xa7823",
+          "addend": 0,
+          "object_offset": "0x480"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x202e5",
+          "target_rva": "0x9318c",
+          "addend": 4,
+          "object_offset": "0x489"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x202eb",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x48f"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x202f0",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x494"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x202fb",
+          "target_rva": "0x93190",
+          "addend": 8,
+          "object_offset": "0x49f"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x20301",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x4a5"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x20306",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x4aa"
+        },
+        {
+          "symbol": "?giNumHumanPlayers@@3HA",
+          "kind": 6,
+          "site_rva": "0x2031d",
+          "target_rva": "0xa749c",
+          "addend": 0,
+          "object_offset": "0x4c1"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x20358",
+          "target_rva": "0x931b0",
+          "addend": 40,
+          "object_offset": "0x4fc"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x20365",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x509"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x2039e",
+          "target_rva": "0x93194",
+          "addend": 12,
+          "object_offset": "0x542"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x203ab",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x54f"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x203ba",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x55e"
+        },
+        {
+          "symbol": "_strcat",
+          "kind": 20,
+          "site_rva": "0x203bf",
+          "target_rva": "0x77c70",
+          "addend": 0,
+          "object_offset": "0x563"
+        },
+        {
+          "symbol": "?ApplyBattleWinTemps@hero@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x203d8",
+          "target_rva": "0x3a725",
+          "addend": 0,
+          "object_offset": "0x57c"
+        },
+        {
+          "symbol": "?gbCombatSurrender@@3CA",
+          "kind": 6,
+          "site_rva": "0x203e1",
+          "target_rva": "0xa7495",
+          "addend": 0,
+          "object_offset": "0x585"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x203eb",
+          "target_rva": "0x93188",
+          "addend": 0,
+          "object_offset": "0x58f"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x203f1",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x595"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x203f6",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x59a"
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "kind": 6,
+          "site_rva": "0x20402",
+          "target_rva": "0xa7823",
+          "addend": 0,
+          "object_offset": "0x5a6"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x2040c",
+          "target_rva": "0x9318c",
+          "addend": 4,
+          "object_offset": "0x5b0"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x20412",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x5b6"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x20417",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x5bb"
+        },
+        {
+          "symbol": "?gBattleResults@@3PAPADA",
+          "kind": 6,
+          "site_rva": "0x20422",
+          "target_rva": "0x93190",
+          "addend": 8,
+          "object_offset": "0x5c6"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x20428",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x5cc"
+        },
+        {
+          "symbol": "_sprintf",
+          "kind": 20,
+          "site_rva": "0x2042d",
+          "target_rva": "0x7823f",
+          "addend": 0,
+          "object_offset": "0x5d1"
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "kind": 6,
+          "site_rva": "0x20449",
+          "target_rva": "0xa7168",
+          "addend": 0,
+          "object_offset": "0x5f9"
+        },
+        {
+          "symbol": "?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z",
+          "kind": 20,
+          "site_rva": "0x2045e",
+          "target_rva": "0x6da11",
+          "addend": 0,
+          "object_offset": "0x611"
+        },
+        {
+          "symbol": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+          "kind": 20,
+          "site_rva": "0x20476",
+          "target_rva": "0x1f71e",
+          "addend": 0,
+          "object_offset": "0x629"
+        },
+        {
+          "symbol": "?WinCombatHandler@@YAFAAUtag_message@@@Z",
+          "kind": 6,
+          "site_rva": "0x2047d",
+          "target_rva": "0x1f209",
+          "addend": 0,
+          "object_offset": "0x630"
+        },
+        {
+          "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+          "kind": 6,
+          "site_rva": "0x20490",
+          "target_rva": "0xa74a8",
+          "addend": 0,
+          "object_offset": "0x643"
+        },
+        {
+          "symbol": "?DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z",
+          "kind": 20,
+          "site_rva": "0x20495",
+          "target_rva": "0x6a740",
+          "addend": 0,
+          "object_offset": "0x648"
+        },
+        {
+          "symbol": "??3@YAXPAX@Z",
+          "kind": 20,
+          "site_rva": "0x204b3",
+          "target_rva": "0x77c4d",
+          "addend": 0,
+          "object_offset": "0x666"
+        },
+        {
+          "symbol": "?ApplyBattleLossTemps@hero@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x204ee",
+          "target_rva": "0x3a89e",
+          "addend": 0,
+          "object_offset": "0x6a1"
+        },
+        {
+          "symbol": "?ApplyBattleWinTemps@hero@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x2051a",
+          "target_rva": "0x3a725",
+          "addend": 0,
+          "object_offset": "0x6cd"
+        },
+        {
+          "symbol": "?ApplyBattleLossTemps@hero@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x20552",
+          "target_rva": "0x3a89e",
+          "addend": 0,
+          "object_offset": "0x705"
+        },
+        {
+          "symbol": "?PlayMusic@@YAXH@Z",
+          "kind": 20,
+          "site_rva": "0x20559",
+          "target_rva": "0x692fd",
+          "addend": 0,
+          "object_offset": "0x70c"
+        },
+        {
+          "symbol": "?DoLoseWindow@combatManager@@QAEXXZ",
+          "kind": 20,
+          "site_rva": "0x20567",
+          "target_rva": "0x205a2",
+          "addend": 0,
+          "object_offset": "0x71a"
+        },
+        {
+          "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+          "kind": 6,
+          "site_rva": "0x2056d",
+          "target_rva": "0xa7480",
+          "addend": 0,
+          "object_offset": "0x720"
+        },
+        {
+          "symbol": "?gMapX@@3FA",
+          "kind": 6,
+          "site_rva": "0x2057b",
+          "target_rva": "0xa7824",
+          "addend": 0,
+          "object_offset": "0x72e"
+        },
+        {
+          "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+          "kind": 6,
+          "site_rva": "0x20580",
+          "target_rva": "0xa7480",
+          "addend": 0,
+          "object_offset": "0x733"
+        },
+        {
+          "symbol": "?gMapY@@3FA",
+          "kind": 6,
+          "site_rva": "0x2058e",
+          "target_rva": "0xa7826",
+          "addend": 0,
+          "object_offset": "0x741"
+        }
+      ],
+      "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9",
+      "source_sha256": "d6c61f9838152535bd48f31b8d936f06b1c07e410cf95875e2f4a9f88972fa29"
+    }
+  ],
+  "literals": [
+    {
+      "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "symbol": "$SG23872",
+      "kind": 6,
+      "site_rva": "0x1f4bc",
+      "target_rva": "0x8f8cc",
+      "addend": 0,
+      "object_offset": "0x2b",
+      "compiled": "You have captured an enemy artifact!",
+      "retail": "Вы захватили вражеский артефакт!",
+      "size": 33,
+      "sha256": "9016d3fd6461a552ef201b66d7d44aed186a2bf6e52fe900fbb1859681fbd459"
+    },
+    {
+      "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "symbol": "$SG23877",
+      "kind": 6,
+      "site_rva": "0x1f520",
+      "target_rva": "0x8f8f0",
+      "addend": 0,
+      "object_offset": "0x8f",
+      "compiled": "winloseb.icn",
+      "retail": "winloseb.icn",
+      "size": 13,
+      "sha256": "318144f5cb24e75712625e3c090b1c17a05293ba77a30e9b9bab23338c468eca"
+    },
+    {
+      "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "symbol": "$SG23883",
+      "kind": 6,
+      "site_rva": "0x1f5ab",
+      "target_rva": "0x8f900",
+      "addend": 0,
+      "object_offset": "0x11a",
+      "compiled": "artifact.icn",
+      "retail": "artifact.icn",
+      "size": 13,
+      "sha256": "09168a8e20374e398b372ddcfd5d066cb8ff5f11f4c7ef8ea9d318994e69bd25"
+    },
+    {
+      "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "symbol": "$SG23890",
+      "kind": 6,
+      "site_rva": "0x1f65a",
+      "target_rva": "0x8f910",
+      "addend": 0,
+      "object_offset": "0x1c9",
+      "compiled": "smalfont.fnt",
+      "retail": "smalfont.fnt",
+      "size": 13,
+      "sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+    },
+    {
+      "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "symbol": "$SG23893",
+      "kind": 6,
+      "site_rva": "0x1f6e1",
+      "target_rva": "0x8f920",
+      "addend": 0,
+      "object_offset": "0x250",
+      "compiled": "pickup%02d.82M",
+      "retail": "pickup%02d.82M",
+      "size": 15,
+      "sha256": "5667e3ce4ea2a95faef91c718db06350a59c776dee7d611e9e4abca955dcb964"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588080",
+      "kind": 6,
+      "site_rva": "0x1f900",
+      "target_rva": "0x8f930",
+      "addend": 0,
+      "object_offset": "0x1e5",
+      "compiled": "Battlefield Casualties",
+      "retail": "Потери",
+      "size": 7,
+      "sha256": "ebff8d9659a7076dbc7738100dfffb88f4b1f7cce1943a5a5ce893765a0abe70",
+      "object_symbol": "$SG23921"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588088",
+      "kind": 6,
+      "site_rva": "0x1f940",
+      "target_rva": "0x8f938",
+      "addend": 0,
+      "object_offset": "0x222",
+      "compiled": "smalfont.fnt",
+      "retail": "smalfont.fnt",
+      "size": 13,
+      "sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "object_symbol": "$SG23926"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588104",
+      "kind": 6,
+      "site_rva": "0x1fa14",
+      "target_rva": "0x8f948",
+      "addend": 0,
+      "object_offset": "0x2f0",
+      "compiled": "Attacker",
+      "retail": "Нападающие:",
+      "size": 12,
+      "sha256": "69a856d79090ff4b66e7c1f63e6fcea135a2f3ee8640a8d8c94c13d35560b8f0",
+      "object_symbol": "$SG23932"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588116",
+      "kind": 6,
+      "site_rva": "0x1fa20",
+      "target_rva": "0x8f954",
+      "addend": 0,
+      "object_offset": "0x2fc",
+      "compiled": "Defender",
+      "retail": "Обороняющиеся:",
+      "size": 15,
+      "sha256": "d9fb3871762cff743a74f3cca5e9b6009954f5acada15356065273ca36ca08f1",
+      "object_symbol": "$SG23933"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588132",
+      "kind": 6,
+      "site_rva": "0x1fa67",
+      "target_rva": "0x8f964",
+      "addend": 0,
+      "object_offset": "0x340",
+      "compiled": "smalfont.fnt",
+      "retail": "smalfont.fnt",
+      "size": 13,
+      "sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "object_symbol": "$SG23938"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588148",
+      "kind": 6,
+      "site_rva": "0x1fb18",
+      "target_rva": "0x8f974",
+      "addend": 0,
+      "object_offset": "0x3eb",
+      "compiled": "None",
+      "retail": "Нет",
+      "size": 4,
+      "sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8",
+      "object_symbol": "$SG23942"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588152",
+      "kind": 6,
+      "site_rva": "0x1fb5f",
+      "target_rva": "0x8f978",
+      "addend": 0,
+      "object_offset": "0x42f",
+      "compiled": "smalfont.fnt",
+      "retail": "smalfont.fnt",
+      "size": 13,
+      "sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "object_symbol": "$SG23947"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588168",
+      "kind": 6,
+      "site_rva": "0x1fc8e",
+      "target_rva": "0x8f988",
+      "addend": 0,
+      "object_offset": "0x55e",
+      "compiled": "mons32.icn",
+      "retail": "mons32.icn",
+      "size": 11,
+      "sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e",
+      "object_symbol": "$SG23956"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588180",
+      "kind": 6,
+      "site_rva": "0x1fd39",
+      "target_rva": "0x8f994",
+      "addend": 0,
+      "object_offset": "0x606",
+      "compiled": "%d",
+      "retail": "%d",
+      "size": 3,
+      "sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f",
+      "object_symbol": "$SG23959"
+    },
+    {
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "symbol": "$SG588184",
+      "kind": 6,
+      "site_rva": "0x1fd85",
+      "target_rva": "0x8f998",
+      "addend": 0,
+      "object_offset": "0x64f",
+      "compiled": "smalfont.fnt",
+      "retail": "smalfont.fnt",
+      "size": 13,
+      "sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "object_symbol": "$SG23964"
+    },
+    {
+      "function": "?DoVictory@combatManager@@QAEXC@Z",
+      "symbol": "$SG588200",
+      "kind": 6,
+      "site_rva": "0x1febb",
+      "target_rva": "0x8f9a8",
+      "addend": 0,
+      "object_offset": "0x4a",
+      "compiled": " ",
+      "retail": " ",
+      "size": 2,
+      "sha256": "869f1dfb999a452f497a4cf7f44db2d6ee661f74a9e7e05251bc1420e50672d4",
+      "object_symbol": "$SG23974"
+    },
+    {
+      "function": "?DoVictory@combatManager@@QAEXC@Z",
+      "symbol": "$SG588204",
+      "kind": 6,
+      "site_rva": "0x2023f",
+      "target_rva": "0x8f9ac",
+      "addend": 0,
+      "object_offset": "0x3e3",
+      "compiled": "wincmbt.bin",
+      "retail": "wincmbt.bin",
+      "size": 12,
+      "sha256": "604f81fdf01509f7c6ac79e1ef58ff08da5ea3b5729210d1196e31b3d9944949",
+      "object_symbol": "$SG23997"
+    }
+  ],
+  "eh": {
+    "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+    "method": "Retail prologue installs owner-specific EH frame. VC6 registration stub, FuncInfo scalar fields, unwind state transitions, complete cleanup instructions and destructor identities all match. Compiler local ordinals map to owner-derived EH names.",
+    "references": [
+      {
+        "owner": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "unit": "SOURCE/COMMAND",
+        "owner_rva": "0x1f491",
+        "site_rva": "0x1f497",
+        "target_rva": "0x88ae1",
+        "symbol": "__ehreg$?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "kind": 6,
+        "funcinfo_rva": "0x8bb18",
+        "states": 3,
+        "funcinfo_sha256": "bfcf236994c9852589d1c05d4ccfb10a9d0f23be20b2671572564c72ea955dcb",
+        "unwind": [
+          {
+            "state": 0,
+            "to_state": -1,
+            "cleanup_rva": "0x88ac0",
+            "size": 11,
+            "references": [
+              {
+                "site_rva": "0x88ac5",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "205bd7e36765711ede81edba17c98ca3f78243a8d118c651bc81399539b3cb7c"
+          },
+          {
+            "state": 1,
+            "to_state": -1,
+            "cleanup_rva": "0x88acb",
+            "size": 11,
+            "references": [
+              {
+                "site_rva": "0x88ad0",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "17e10bbb2ed7156fef6aedd250c5f4d7bec0079502a0560626a896fea1b96fa8"
+          },
+          {
+            "state": 2,
+            "to_state": -1,
+            "cleanup_rva": "0x88ad6",
+            "size": 11,
+            "references": [
+              {
+                "site_rva": "0x88adb",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "9f5fb48626e23356e0e87b563e46d8e34c30627eca50bfa385f49f1b10c8e1de"
+          }
+        ],
+        "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9"
+      },
+      {
+        "owner": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "unit": "SOURCE/COMMAND",
+        "owner_rva": "0x1f71e",
+        "site_rva": "0x1f724",
+        "target_rva": "0x88b31",
+        "symbol": "__ehreg$?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "kind": 6,
+        "funcinfo_rva": "0x8bb50",
+        "states": 5,
+        "funcinfo_sha256": "2af7e39f83144b25c9fd275bc6e8329185835c387723f92d0a5c94c6de3f3dc7",
+        "unwind": [
+          {
+            "state": 0,
+            "to_state": -1,
+            "cleanup_rva": "0x88aeb",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88af3",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "74ca914b0b255d40879b9bbd8a986269f8a27601e7edafe14c3099c35813f2c6"
+          },
+          {
+            "state": 1,
+            "to_state": -1,
+            "cleanup_rva": "0x88af9",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88b01",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "08040699f5ad7922e4e018b993f4e80a2fcc8b0647e359cab9b603ad1568c744"
+          },
+          {
+            "state": 2,
+            "to_state": -1,
+            "cleanup_rva": "0x88b07",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88b0f",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "522ac0d13a3a333ddef7113ee564a4702a00fa2b442fdd1506c5d49b8517a6fc"
+          },
+          {
+            "state": 3,
+            "to_state": -1,
+            "cleanup_rva": "0x88b15",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88b1d",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "5341154d29db3664c48edfeb85c1dc0b7e67d62c954c27976e3dcf7a3ea44886"
+          },
+          {
+            "state": 4,
+            "to_state": -1,
+            "cleanup_rva": "0x88b23",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88b2b",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "cb1503607a515c8f4089d16fe19dcd89a96f4f26a99a31e3dbafa3489990a1a8"
+          }
+        ],
+        "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9"
+      },
+      {
+        "owner": "?DoVictory@combatManager@@QAEXC@Z",
+        "unit": "SOURCE/COMMAND",
+        "owner_rva": "0x1fe71",
+        "site_rva": "0x1fe77",
+        "target_rva": "0x88b49",
+        "symbol": "__ehreg$?DoVictory@combatManager@@QAEXC@Z",
+        "kind": 6,
+        "funcinfo_rva": "0x8bb98",
+        "states": 1,
+        "funcinfo_sha256": "97530e2286a48fa04f64eaeb13015057d6a80c5d841a429fd3a4fda276f1f30b",
+        "unwind": [
+          {
+            "state": 0,
+            "to_state": -1,
+            "cleanup_rva": "0x88b3b",
+            "size": 14,
+            "references": [
+              {
+                "site_rva": "0x88b43",
+                "target_rva": "0x77c4d",
+                "symbol": "??3@YAXPAX@Z",
+                "kind": 20
+              }
+            ],
+            "body_sha256": "1c477dae6b30481eebec703d77271b6e1263e0645b3d215ecc7988a434fc0aab"
+          }
+        ],
+        "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9"
+      }
+    ],
+    "held": []
+  },
+  "source_migrations": [
+    {
+      "name": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+      "unit": "SOURCE/COMMAND",
+      "old_rva": "0x4c2aa",
+      "rva": "0x1f491",
+      "size": 653
+    },
+    {
+      "name": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "unit": "SOURCE/COMMAND",
+      "old_rva": "0x4c5a4",
+      "rva": "0x1f71e",
+      "size": 1875
+    },
+    {
+      "name": "?DoVictory@combatManager@@QAEXC@Z",
+      "unit": "SOURCE/COMMAND",
+      "old_rva": "0x4cd7d",
+      "rva": "0x1fe71",
+      "size": 1841
+    }
+  ],
+  "localized_messages": [
+    {
+      "id": "combat.artifact.captured",
+      "nwc_string_rva": "0xa1420",
+      "buka_string_rva": "0x8f8cc",
+      "nwc_pointer_site": "0x4c2d8",
+      "buka_pointer_site": "0x1f4bc",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ShowWinLoseArtifact",
+      "russian_sha256": "9016d3fd6461a552ef201b66d7d44aed186a2bf6e52fe900fbb1859681fbd459",
+      "evidence": "Complete result-window instruction, branch, reference and exception-cleanup correspondence; original English and exact Buka text checked; buka-combat-results.json.",
+      "english": "You have captured an enemy artifact!",
+      "russian": "Вы захватили вражеский артефакт!"
+    },
+    {
+      "id": "combat.casualties.title",
+      "nwc_string_rva": "0xa1488",
+      "buka_string_rva": "0x8f930",
+      "nwc_pointer_site": "0x4c7b3",
+      "buka_pointer_site": "0x1f900",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ShowDeadArmies",
+      "russian_sha256": "ebff8d9659a7076dbc7738100dfffb88f4b1f7cce1943a5a5ce893765a0abe70",
+      "evidence": "Complete result-window instruction, branch, reference and exception-cleanup correspondence; original English and exact Buka text checked; buka-combat-results.json.",
+      "english": "Battlefield Casualties",
+      "russian": "Потери"
+    },
+    {
+      "id": "combat.casualties.attacker",
+      "nwc_string_rva": "0xa14b0",
+      "buka_string_rva": "0x8f948",
+      "nwc_pointer_site": "0x4c8bf",
+      "buka_pointer_site": "0x1fa14",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ShowDeadArmies",
+      "russian_sha256": "69a856d79090ff4b66e7c1f63e6fcea135a2f3ee8640a8d8c94c13d35560b8f0",
+      "evidence": "Complete result-window instruction, branch, reference and exception-cleanup correspondence; original English and exact Buka text checked; buka-combat-results.json.",
+      "english": "Attacker",
+      "russian": "Нападающие:"
+    },
+    {
+      "id": "combat.casualties.defender",
+      "nwc_string_rva": "0xa14bc",
+      "buka_string_rva": "0x8f954",
+      "nwc_pointer_site": "0x4c8c4",
+      "buka_pointer_site": "0x1fa20",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ShowDeadArmies",
+      "russian_sha256": "d9fb3871762cff743a74f3cca5e9b6009954f5acada15356065273ca36ca08f1",
+      "evidence": "Complete result-window instruction, branch, reference and exception-cleanup correspondence; original English and exact Buka text checked; buka-combat-results.json.",
+      "english": "Defender",
+      "russian": "Обороняющиеся:"
+    },
+    {
+      "id": "common.none",
+      "nwc_string_rva": "0xa14d8",
+      "buka_string_rva": "0x8f974",
+      "nwc_pointer_site": "0x4c9c4",
+      "buka_pointer_site": "0x1fb18",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/COMMAND.cpp:ShowDeadArmies",
+      "russian_sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8",
+      "evidence": "Complete result-window instruction, branch, reference and exception-cleanup correspondence; original English and exact Buka text checked; buka-combat-results.json.",
+      "english": "None",
+      "russian": "Нет"
+    }
+  ],
+  "typed_tables": [
+    {
+      "name": "?gBattleResults@@3PAPADA",
+      "unit": "SOURCE/KB",
+      "old_rva": "0x93c60",
+      "rva": "0x93188",
+      "size": 44,
+      "slots": [
+        {
+          "offset": "0x0",
+          "target_rva": "0x9c330",
+          "id": "table.gBattleResults.0",
+          "size": 13,
+          "payload_sha256": "fc2d2d7c210a2b1a2a8cd5d5811e1a3c519def43b5757fa9122fa16c3661a95d"
+        },
+        {
+          "offset": "0x4",
+          "target_rva": "0x9c340",
+          "id": "table.gBattleResults.1",
+          "size": 15,
+          "payload_sha256": "2dbe7d5ff55d997aca8a35670a6de67b1cdbab2f635669f99674869c688d1d58"
+        },
+        {
+          "offset": "0x8",
+          "target_rva": "0x9c350",
+          "id": "table.gBattleResults.2",
+          "size": 16,
+          "payload_sha256": "de1411a425bd824ea991da802d12c8518a488945e2b4995f70152e74227f4853"
+        },
+        {
+          "offset": "0xc",
+          "target_rva": "0x9c360",
+          "id": "table.gBattleResults.3",
+          "size": 60,
+          "payload_sha256": "c55f5f860a8e581962724439da3b5f826b327a4110190f8bbe3e36bc6e9bfe13"
+        },
+        {
+          "offset": "0x10",
+          "target_rva": "0x9c39c",
+          "id": "table.gBattleResults.4",
+          "size": 40,
+          "payload_sha256": "8f3374776a230ae00f99ed0d7dcc0ecb03ecede2968edfbcf1c7c06aee1a2972"
+        },
+        {
+          "offset": "0x14",
+          "target_rva": "0x9c3c4",
+          "id": "table.gBattleResults.5",
+          "size": 30,
+          "payload_sha256": "7377b564dd4605b86b4ce02cca2cbdc553af2ccb7e28e186b59fb38b8ecf6d8e"
+        },
+        {
+          "offset": "0x18",
+          "target_rva": "0x9c3e4",
+          "id": "table.gBattleResults.6",
+          "size": 51,
+          "payload_sha256": "4985eab9437cb553278f4c5d6175b7c98f79837f7e587c23df9195122eb5f7a7"
+        },
+        {
+          "offset": "0x1c",
+          "target_rva": "0x9c418",
+          "id": "table.gBattleResults.7",
+          "size": 47,
+          "payload_sha256": "43e2594a5bf20ec6f9311f0862f75a945f78855cd5fa67087308414480df965b"
+        },
+        {
+          "offset": "0x20",
+          "target_rva": "0x9c448",
+          "id": "table.gBattleResults.8",
+          "size": 41,
+          "payload_sha256": "84bcfd7dd44e56cbb1516f8dddc4fd527f04cdbb5df9401d423b4ab6fce7c254"
+        },
+        {
+          "offset": "0x24",
+          "target_rva": "0x9c474",
+          "id": "table.gBattleResults.9",
+          "size": 33,
+          "payload_sha256": "30e0684392ea262d626667cdb90dcb82489d924070b3e58e93aab1b01ebcc991"
+        },
+        {
+          "offset": "0x28",
+          "target_rva": "0x9c498",
+          "id": "table.gBattleResults.10",
+          "size": 86,
+          "payload_sha256": "865313d27362228c6acb2740542f04c2e2469588ccffebdda7696095df8b2cf3"
+        }
+      ]
+    }
+  ],
+  "callee_identities": [
+    {
+      "rva": "0x000205a2",
+      "name": "?DoLoseWindow@combatManager@@QAEXXZ",
+      "provenance": "Complete result-window instructions and ordered-reference review; buka-combat-results.json"
+    },
+    {
+      "rva": "0x00077c70",
+      "name": "_strcat",
+      "provenance": "Complete result-window instructions and ordered-reference review; buka-combat-results.json"
+    },
+    {
+      "rva": "0x0003a89e",
+      "name": "?ApplyBattleLossTemps@hero@@QAEXXZ",
+      "provenance": "Complete result-window instructions and ordered-reference review; buka-combat-results.json"
+    }
+  ],
+  "source_changes": [
+    "Remove ShowWinLoseArtifact sample null initialization absent from retail.",
+    "ShowDeadArmies computes the row with a conditional value and evaluates spacing before count/index in its centered coordinates.",
+    "DoVictory body is unchanged apart from its Buka address claim.",
+    "Five labels use the Russian catalog; their original English remains in messages.def."
+  ],
+  "donor": {
+    "repo": "homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "path": "src/SOURCE/COMMAND.cpp",
+    "scope": "Casualty coordinate expression order and conditional row selection; HoMM1 retains its own row positions, five-stack layout and victory rules."
+  },
+  "remaining_difference": "Stack-local placement and its addressing/branch widths remain non-exact; strict comparison is unchanged.",
+  "validation": {
+    "references": 154,
+    "compiled_literals": [
+      {
+        "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "site_rva": "0x1f4bc",
+        "target_rva": "0x8f8cc",
+        "size": 33,
+        "payload_sha256": "9016d3fd6461a552ef201b66d7d44aed186a2bf6e52fe900fbb1859681fbd459"
+      },
+      {
+        "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "site_rva": "0x1f520",
+        "target_rva": "0x8f8f0",
+        "size": 13,
+        "payload_sha256": "318144f5cb24e75712625e3c090b1c17a05293ba77a30e9b9bab23338c468eca"
+      },
+      {
+        "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "site_rva": "0x1f5ab",
+        "target_rva": "0x8f900",
+        "size": 13,
+        "payload_sha256": "09168a8e20374e398b372ddcfd5d066cb8ff5f11f4c7ef8ea9d318994e69bd25"
+      },
+      {
+        "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "site_rva": "0x1f65a",
+        "target_rva": "0x8f910",
+        "size": 13,
+        "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+      },
+      {
+        "function": "?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z",
+        "site_rva": "0x1f6e1",
+        "target_rva": "0x8f920",
+        "size": 15,
+        "payload_sha256": "5667e3ce4ea2a95faef91c718db06350a59c776dee7d611e9e4abca955dcb964"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1f900",
+        "target_rva": "0x8f930",
+        "size": 7,
+        "payload_sha256": "ebff8d9659a7076dbc7738100dfffb88f4b1f7cce1943a5a5ce893765a0abe70"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1f940",
+        "target_rva": "0x8f938",
+        "size": 13,
+        "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fa14",
+        "target_rva": "0x8f948",
+        "size": 12,
+        "payload_sha256": "69a856d79090ff4b66e7c1f63e6fcea135a2f3ee8640a8d8c94c13d35560b8f0"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fa20",
+        "target_rva": "0x8f954",
+        "size": 15,
+        "payload_sha256": "d9fb3871762cff743a74f3cca5e9b6009954f5acada15356065273ca36ca08f1"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fa67",
+        "target_rva": "0x8f964",
+        "size": 13,
+        "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fb18",
+        "target_rva": "0x8f974",
+        "size": 4,
+        "payload_sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fb5f",
+        "target_rva": "0x8f978",
+        "size": 13,
+        "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fc8e",
+        "target_rva": "0x8f988",
+        "size": 11,
+        "payload_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fd39",
+        "target_rva": "0x8f994",
+        "size": 3,
+        "payload_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f"
+      },
+      {
+        "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+        "site_rva": "0x1fd85",
+        "target_rva": "0x8f998",
+        "size": 13,
+        "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+      },
+      {
+        "function": "?DoVictory@combatManager@@QAEXC@Z",
+        "site_rva": "0x1febb",
+        "target_rva": "0x8f9a8",
+        "size": 2,
+        "payload_sha256": "869f1dfb999a452f497a4cf7f44db2d6ee661f74a9e7e05251bc1420e50672d4"
+      },
+      {
+        "function": "?DoVictory@combatManager@@QAEXC@Z",
+        "site_rva": "0x2023f",
+        "target_rva": "0x8f9ac",
+        "size": 12,
+        "payload_sha256": "604f81fdf01509f7c6ac79e1ef58ff08da5ea3b5729210d1196e31b3d9944949"
+      }
+    ],
+    "table_slots": 11,
+    "source_sha256": "d6c61f9838152535bd48f31b8d936f06b1c07e410cf95875e2f4a9f88972fa29",
+    "object_sha256": "c8368e6387d01d5bb99ff61b12f176fcc31da6bc8a34c0167afb8accfa71f2b9",
+    "table_object_sha256": "9863548efffa3a90c8cacc992a6c055ec1f319c0759f10a35fe15980fc62cdde"
+  },
+  "explicit_literal_claims": [
+    {
+      "rva": "0x0008f930",
+      "size": "0x7",
+      "name": "$SG588080",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1f900",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "ebff8d9659a7076dbc7738100dfffb88f4b1f7cce1943a5a5ce893765a0abe70",
+      "target_rva": "0x0008f930",
+      "symbol": "$SG588080"
+    },
+    {
+      "rva": "0x0008f938",
+      "size": "0xd",
+      "name": "$SG588088",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1f940",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "target_rva": "0x0008f938",
+      "symbol": "$SG588088"
+    },
+    {
+      "rva": "0x0008f948",
+      "size": "0xc",
+      "name": "$SG588104",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fa14",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "69a856d79090ff4b66e7c1f63e6fcea135a2f3ee8640a8d8c94c13d35560b8f0",
+      "target_rva": "0x0008f948",
+      "symbol": "$SG588104"
+    },
+    {
+      "rva": "0x0008f954",
+      "size": "0xf",
+      "name": "$SG588116",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fa20",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "d9fb3871762cff743a74f3cca5e9b6009954f5acada15356065273ca36ca08f1",
+      "target_rva": "0x0008f954",
+      "symbol": "$SG588116"
+    },
+    {
+      "rva": "0x0008f964",
+      "size": "0xd",
+      "name": "$SG588132",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fa67",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "target_rva": "0x0008f964",
+      "symbol": "$SG588132"
+    },
+    {
+      "rva": "0x0008f974",
+      "size": "0x4",
+      "name": "$SG588148",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fb18",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8",
+      "target_rva": "0x0008f974",
+      "symbol": "$SG588148"
+    },
+    {
+      "rva": "0x0008f978",
+      "size": "0xd",
+      "name": "$SG588152",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fb5f",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "target_rva": "0x0008f978",
+      "symbol": "$SG588152"
+    },
+    {
+      "rva": "0x0008f988",
+      "size": "0xb",
+      "name": "$SG588168",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fc8e",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e",
+      "target_rva": "0x0008f988",
+      "symbol": "$SG588168"
+    },
+    {
+      "rva": "0x0008f994",
+      "size": "0x3",
+      "name": "$SG588180",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fd39",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f",
+      "target_rva": "0x0008f994",
+      "symbol": "$SG588180"
+    },
+    {
+      "rva": "0x0008f998",
+      "size": "0xd",
+      "name": "$SG588184",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1fd85",
+      "function": "?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z",
+      "payload_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+      "target_rva": "0x0008f998",
+      "symbol": "$SG588184"
+    },
+    {
+      "rva": "0x0008f9a8",
+      "size": "0x2",
+      "name": "$SG588200",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x1febb",
+      "function": "?DoVictory@combatManager@@QAEXC@Z",
+      "payload_sha256": "869f1dfb999a452f497a4cf7f44db2d6ee661f74a9e7e05251bc1420e50672d4",
+      "target_rva": "0x0008f9a8",
+      "symbol": "$SG588200"
+    },
+    {
+      "rva": "0x0008f9ac",
+      "size": "0xc",
+      "name": "$SG588204",
+      "owner": "SOURCE/COMMAND",
+      "class": "string",
+      "site_rva": "0x2023f",
+      "function": "?DoVictory@combatManager@@QAEXC@Z",
+      "payload_sha256": "604f81fdf01509f7c6ac79e1ef58ff08da5ea3b5729210d1196e31b3d9944949",
+      "target_rva": "0x0008f9ac",
+      "symbol": "$SG588204"
+    }
+  ],
+  "literal_placement": "Automatic pairing cannot prove literals when candidate/retail extents differ. Twelve site- and payload-verified unpooled literals use the existing data_compgen stable $SG<decimal RVA> names; no raw compiler ordinal is pinned and strict comparison is unchanged.",
+  "literal_identity_review": "The stable delinker $SG<decimal RVA> name is the reference identity. object_symbol retains the checked source-COFF ordinal as provenance, not a second identity."
+}

@@ -989,14 +989,14 @@ void combatManager::ClearWinLoseBottom(class heroWindow* window) {
 }
 
 // Buka COMMAND.cpp ShowWinLoseArtifact.
-VA(0x0044c2aa, 0x2fa)
+VA(0x0041f491, 0x28d)
 void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) {
     char* artifactName;
     i16 boxWidth = 0x140;
     i16 bottom = 0x1ca;
     tag_message message;
 
-    sprintf(gText, "You have captured an enemy artifact!");
+    sprintf(gText, localization::Tr("combat.artifact.captured"));
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
     message.text = gText;
     m_winLoseWindow->BroadcastMessage(message);
@@ -1048,7 +1048,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
     window->AddWidget(m_winLoseBottomTextWidgets[0], WINDOW_Z_ORDER_APPEND);
     gpCombatManager->m_winLoseWindow->DrawWindow();
     {
-        class sample* sample = NULL;
+        class sample* sample;
         sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
         sample = LoadPlaySample(gText);
         WaitSample(sample);
@@ -1057,7 +1057,7 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
 
 // Buka COMMAND.cpp ShowDeadArmies; HoMM1 lays out up to five casualties a
 // side with fixed 40-pixel spacing.
-VA(0x0044c5a4, 0x7d9)
+VA(0x0041f71e, 0x753)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 numLost[COMBAT_SIDE_COUNT];
     char* buffer;
@@ -1090,7 +1090,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         }
     }
     buffer = static_cast<char*>(malloc(0x1e));
-    sprintf(buffer, "Battlefield Casualties");
+    sprintf(buffer, localization::Tr("combat.casualties.title"));
     m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_CASUALTY_TITLE] = new textWidget(
         0,
         0x104,
@@ -1109,12 +1109,9 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         WINDOW_Z_ORDER_APPEND
     );
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
-        if (side == COMBAT_ATTACKER_SIDE)
-            rowY = 0x118;
-        else
-            rowY = 0x159;
+        rowY = side == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
         buffer = static_cast<char*>(malloc(0x1e));
-        sprintf(buffer, side == COMBAT_ATTACKER_SIDE ? "Attacker" : "Defender");
+        sprintf(buffer, side == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker") : localization::Tr("combat.casualties.defender"));
         m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side] = new textWidget(
             0,
             rowY,
@@ -1134,7 +1131,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         );
         if (numLost[side] <= 0) {
             buffer = static_cast<char*>(malloc(10));
-            sprintf(buffer, "None");
+            sprintf(buffer, localization::Tr("common.none"));
             m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT] = new textWidget(
                 0,
                 rowY + 0x12,
@@ -1154,10 +1151,10 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             );
         }
         iconSpacing = 0x28;
-        firstX = (0x140 - numLost[side] * iconSpacing) / 2 + 3;
+        firstX = (0x140 - iconSpacing * numLost[side]) / 2 + 3;
         for (armyIndex = 0; armyIndex < numLost[side]; armyIndex++) {
             m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new iconWidget(
-                armyIndex * iconSpacing + firstX,
+                firstX + iconSpacing * armyIndex,
                 rowY + 0xf,
                 0x20,
                 0x1c,
@@ -1173,7 +1170,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             buffer = static_cast<char*>(malloc(9));
             sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
             m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new textWidget(
-                armyIndex * iconSpacing + firstX,
+                firstX + iconSpacing * armyIndex,
                 rowY + 0x2e,
                 0x20,
                 0xc,
@@ -1199,7 +1196,7 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
 
 // Buka COMMAND.cpp DoVictory; HoMM1 has no necromancy or eagle eye and
 // grabs the screen instead of fading it.
-VA(0x0044cd7d, 0x7a1)
+VA(0x0041fe71, 0x731)
 void combatManager::DoVictory(i8 winningSide) {
     i32 levelsGained;
     tag_message message;

@@ -178,7 +178,9 @@ rva	name	provenance
 0x0001f209	?WinCombatHandler@@YAFAAUtag_message@@@Z	Complete combat-action/result instructions, branch targets and typed references; buka-combat-actions.json
 0x0001f389	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001f491	?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
+0x0001f71e	?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z	Complete result-window instructions, branches, references and EH review; buka-combat-results.json
 0x0001fe71	?DoVictory@combatManager@@QAEXC@Z	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
+0x000205a2	?DoLoseWindow@combatManager@@QAEXXZ	Complete result-window instructions and ordered-reference review; buka-combat-results.json
 0x00020a7e	?DoSurrender@combatManager@@QAEFXZ	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
 0x00020cd1	?CheckChangeSelector@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020d8c	?CheckCastleAttack@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
@@ -293,6 +295,7 @@ rva	name	provenance
 0x0003a199	?Deallocate@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003a599	?GetExperience@hero@@QAEHH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0003a725	?ApplyBattleWinTemps@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0003a89e	?ApplyBattleLossTemps@hero@@QAEXXZ	Complete result-window instructions and ordered-reference review; buka-combat-results.json
 0x0003a8b1	?CheckLevel@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003ab68	?NumArtifacts@hero@@QAEHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003b700	??0hexcell@@QAE@XZ	Buka army drawing/movement instruction and CFG review: 0x1425d, 0x14265; buka-army-drawing.json
@@ -823,6 +826,7 @@ rva	name	provenance
 0x000779d1	_ReconstructDecoderTree	Same-section MASM call in complete-body-proven caller; buka-reviewed-claims.json
 0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
 0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
+0x00077c70	_strcat	Complete result-window instructions and ordered-reference review; buka-combat-results.json
 0x00077d50	??2@YAPAXI@Z	Buka QuickInfo instruction/CFG/EH review: 0x7314; buka-quick-info.json
 0x00077df6	___CxxFrameHandler	Buka QuickInfo instruction/CFG/EH review: complete EH record/instruction review; buka-quick-info.json
 0x00078156	_free	Buka adventure-manager family: 0x205a; buka-advmgr.json

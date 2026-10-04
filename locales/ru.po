@@ -3915,3 +3915,23 @@ msgstr "Вы действительно хотите отступить?"
 msgctxt "resource.gold.insufficient"
 msgid "You don't have enough gold!"
 msgstr "У вас недостаточно золота!"
+
+msgctxt "combat.artifact.captured"
+msgid "You have captured an enemy artifact!"
+msgstr "Вы захватили вражеский артефакт!"
+
+msgctxt "combat.casualties.title"
+msgid "Battlefield Casualties"
+msgstr "Потери"
+
+msgctxt "combat.casualties.attacker"
+msgid "Attacker"
+msgstr "Нападающие:"
+
+msgctxt "combat.casualties.defender"
+msgid "Defender"
+msgstr "Обороняющиеся:"
+
+msgctxt "common.none"
+msgid "None"
+msgstr "Нет"

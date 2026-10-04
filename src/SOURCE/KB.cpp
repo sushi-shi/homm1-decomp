@@ -4498,7 +4498,7 @@ char* gSetupGameHelp[4] = {
     localization::Tr("table.gSetupGameHelp.2"),
     localization::Tr("table.gSetupGameHelp.3"),
 };
-DATA(0x00493c60)
+DATA(0x00493188)
 char* gBattleResults[11] = {
     localization::Tr("table.gBattleResults.0"),
     localization::Tr("table.gBattleResults.1"),
