@@ -806,7 +806,7 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
 
 VA(0x0043e3cf, 0xf)
 char* GetMonsterName(i32 monster) {
-    return gArmyNames[monster];
+    return gArmyNamesPlural[monster];
 }
 
 // donor PoL RVA 0x0009992c; preferred Buka symbol ?GetMonsterCost@@YIXHQAH@Z
@@ -3623,7 +3623,7 @@ DATA(0x00492e48)
 i32 gMinimized = 0;
 DATA(0x004a9904)
 i32 gHeroMoving = 0;
-DATA(0x00492e50)
+DATA(0x004a9908)
 i32 gInSmacker = 0;
 DATA(0x00492e58)
 i32 gRemoteReady = 0;
@@ -4432,13 +4432,13 @@ char* gSetupBaudHelp[5] = {
     localization::Tr("table.gSetupBaudHelp.3"),
     localization::Tr("table.gSetupBaudHelp.4"),
 };
-DATA(0x00493bb0)
+DATA(0x004930ec)
 char* gSetupComPortHelp[5] = {
-    "Use COM Port 1 for the modem connection.",
-    "Use COM Port 2 for the modem connection.",
-    "Use COM Port 3 for the modem connection.",
-    "Use COM Port 4 for the modem connection.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupComPortHelp.0"),
+    localization::Tr("table.gSetupComPortHelp.1"),
+    localization::Tr("table.gSetupComPortHelp.2"),
+    localization::Tr("table.gSetupComPortHelp.3"),
+    localization::Tr("table.gSetupComPortHelp.4"),
 };
 DATA(0x00493100)
 char* gSetupDCBaudHelp[5] = {
@@ -4448,13 +4448,13 @@ char* gSetupDCBaudHelp[5] = {
     localization::Tr("table.gSetupDCBaudHelp.3"),
     localization::Tr("table.gSetupDCBaudHelp.4"),
 };
-DATA(0x00493be0)
+DATA(0x00493114)
 char* gSetupDCComPortHelp[5] = {
-    "Use COM Port 1 for the direct connection.",
-    "Use COM Port 2 for the direct connection.",
-    "Use COM Port 3 for the direct connection.",
-    "Use COM Port 4 for the direct connection.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupDCComPortHelp.0"),
+    localization::Tr("table.gSetupDCComPortHelp.1"),
+    localization::Tr("table.gSetupDCComPortHelp.2"),
+    localization::Tr("table.gSetupDCComPortHelp.3"),
+    localization::Tr("table.gSetupDCComPortHelp.4"),
 };
 DATA(0x00493128)
 char* gSetupHotSeatGameHelp[4] = {
@@ -4537,19 +4537,19 @@ char* gMoraleInfoText[21] = {
     localization::Tr("table.gMoraleInfoText.18"), localization::Tr("table.gMoraleInfoText.19"),
     localization::Tr("table.gMoraleInfoText.20"),
 };
-DATA(0x00493d08)
+DATA(0x00493224)
 char* gMapSizeNames[3] = {
     localization::Tr("table.gMapSizeNames.0"),
     localization::Tr("table.gMapSizeNames.1"),
-    localization::Tr("table.gMapSizeNames.2")
+    localization::Tr("table.gMapSizeNames.2"),
 };
-DATA(0x00493d18)
+DATA(0x00493230)
 char* gMapDifficultyNames[5] = {
     localization::Tr("table.gMapDifficultyNames.0"),
     localization::Tr("table.gMapDifficultyNames.1"),
     localization::Tr("table.gMapDifficultyNames.2"),
     localization::Tr("table.gMapDifficultyNames.3"),
-    localization::Tr("table.gMapDifficultyNames.4")
+    localization::Tr("table.gMapDifficultyNames.4"),
 };
 DATA(0x00493244)
 char* gCampaignScenarioNames[9] = {
@@ -4621,76 +4621,76 @@ char* musicQualityText[3] = {
     localization::Tr("table.musicQualityText.1"),
     localization::Tr("table.musicQualityText.2")
 };
-DATA(0x00493e20)
+DATA(0x00493318)
 char* gWinSetupText[68] = {
-    "Buy Spellbook:",
-    "Resource cost:",
-    "Build improvement:",
-    "Castle Options:  Town Improvements/Recruit Hero",
-    "Mage Guild",
-    "Thieves' Guild",
-    "Tavern",
-    "Shipyard",
-    "Well",
-    "Recruit Hero",
-    "Music",
-    "Effects",
-    "Sound\nQuality",
-    "Speed",
-    "Show Path",
-    "View Enemy\nMovement",
-    "Dimension Door:\nSelect Destination",
-    "Attack Skill",
-    "Defense Skill",
-    "Spell Power",
-    "Knowledge",
-    "The above spells have been added to your book.",
-    "Choose Game Difficulty:",
-    "Easy",
-    "Normal",
-    "Hard",
-    "Expert",
-    "Customize Opponents:",
-    "Normal",
-    "Normal",
-    "Normal",
-    "Choose Color:",
-    "King of the Hill:",
-    "Choose Scenario:",
-    "Heroes",
-    "Castles",
-    "Towns",
-    "Mines",
-    "Treasury",
-    "Total Gold Per Day:",
-    "Attack:",
-    "Defense:",
-    "Spell Power:",
-    "Knowledge:",
-    "Defenders:",
-    "Recruit Hero",
-    "Build a new ship:",
-    "Resource cost:",
-    "Attack Skill",
-    "Defense Skill",
-    "Spell Power",
-    "Knowledge  ",
-    "Tavern",
-    "The tavern increases the morale of all garrisoned troops.",
-    "Thieves' Guild: Player Rankings",
-    "First",
-    "Second",
-    "Third",
-    "Fourth",
-    "Number of Towns:",
-    "Number of Castles:",
-    "Number of Heroes:",
-    "Gold in Treasury:",
-    "Wood, Crystal & Ore:",
-    "Gems, Sulfur & Mercury:",
-    "Number Obelisks Found:",
-    "Total Army Strength:",
-    "World Map",
+    localization::Tr("table.gWinSetupText.0"),
+    localization::Tr("table.gWinSetupText.1"),
+    localization::Tr("table.gWinSetupText.2"),
+    localization::Tr("table.gWinSetupText.3"),
+    localization::Tr("table.gWinSetupText.4"),
+    localization::Tr("table.gWinSetupText.5"),
+    localization::Tr("table.gWinSetupText.6"),
+    localization::Tr("table.gWinSetupText.7"),
+    localization::Tr("table.gWinSetupText.8"),
+    localization::Tr("table.gWinSetupText.9"),
+    localization::Tr("table.gWinSetupText.10"),
+    localization::Tr("table.gWinSetupText.11"),
+    localization::Tr("table.gWinSetupText.12"),
+    localization::Tr("table.gWinSetupText.13"),
+    localization::Tr("table.gWinSetupText.14"),
+    localization::Tr("table.gWinSetupText.15"),
+    localization::Tr("table.gWinSetupText.16"),
+    localization::Tr("table.gWinSetupText.17"),
+    localization::Tr("table.gWinSetupText.18"),
+    localization::Tr("table.gWinSetupText.19"),
+    localization::Tr("table.gWinSetupText.20"),
+    localization::Tr("table.gWinSetupText.21"),
+    localization::Tr("table.gWinSetupText.22"),
+    localization::Tr("table.gWinSetupText.23"),
+    localization::Tr("table.gWinSetupText.24"),
+    localization::Tr("table.gWinSetupText.25"),
+    localization::Tr("table.gWinSetupText.26"),
+    localization::Tr("table.gWinSetupText.27"),
+    localization::Tr("table.gWinSetupText.28"),
+    localization::Tr("table.gWinSetupText.29"),
+    localization::Tr("table.gWinSetupText.30"),
+    localization::Tr("table.gWinSetupText.31"),
+    localization::Tr("table.gWinSetupText.32"),
+    localization::Tr("table.gWinSetupText.33"),
+    localization::Tr("table.gWinSetupText.34"),
+    localization::Tr("table.gWinSetupText.35"),
+    localization::Tr("table.gWinSetupText.36"),
+    localization::Tr("table.gWinSetupText.37"),
+    localization::Tr("table.gWinSetupText.38"),
+    localization::Tr("table.gWinSetupText.39"),
+    localization::Tr("table.gWinSetupText.40"),
+    localization::Tr("table.gWinSetupText.41"),
+    localization::Tr("table.gWinSetupText.42"),
+    localization::Tr("table.gWinSetupText.43"),
+    localization::Tr("table.gWinSetupText.44"),
+    localization::Tr("table.gWinSetupText.45"),
+    localization::Tr("table.gWinSetupText.46"),
+    localization::Tr("table.gWinSetupText.47"),
+    localization::Tr("table.gWinSetupText.48"),
+    localization::Tr("table.gWinSetupText.49"),
+    localization::Tr("table.gWinSetupText.50"),
+    localization::Tr("table.gWinSetupText.51"),
+    localization::Tr("table.gWinSetupText.52"),
+    localization::Tr("table.gWinSetupText.53"),
+    localization::Tr("table.gWinSetupText.54"),
+    localization::Tr("table.gWinSetupText.55"),
+    localization::Tr("table.gWinSetupText.56"),
+    localization::Tr("table.gWinSetupText.57"),
+    localization::Tr("table.gWinSetupText.58"),
+    localization::Tr("table.gWinSetupText.59"),
+    localization::Tr("table.gWinSetupText.60"),
+    localization::Tr("table.gWinSetupText.61"),
+    localization::Tr("table.gWinSetupText.62"),
+    localization::Tr("table.gWinSetupText.63"),
+    localization::Tr("table.gWinSetupText.64"),
+    localization::Tr("table.gWinSetupText.65"),
+    localization::Tr("table.gWinSetupText.66"),
+    localization::Tr("table.gWinSetupText.67"),
 };
 DATA(0x00493f30)
 i32 gRequiredExtendedMemory = 4434;
@@ -4869,7 +4869,7 @@ DATA(0x004a956c)
 char gcBottomViewText[92];
 DATA(0x004a74d4)
 i32 giThisNetPos;
-DATA(0x004a9e98)
+DATA(0x004a973c)
 char gcRegCDRomPath[352];
 DATA(0x004a7628)
 class heroWindow* heroWin;
@@ -4921,7 +4921,7 @@ DATA(0x004a7824)
 i16 gMapX;
 DATA(0x004a7826)
 i16 gMapY;
-DATA(0x004a7c18)
+DATA(0x004a74f0)
 char gcWinText[300];
 DATA(0x004a7493)
 i8 bDataEntryTime;

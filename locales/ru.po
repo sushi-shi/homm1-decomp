@@ -3939,3 +3939,315 @@ msgstr "Нет"
 msgctxt "combat.surrender.offer"
 msgid "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the price of %d gold."
 msgstr "%s говорит:\n\n\"Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых."
+
+msgctxt "table.gSetupDCComPortHelp.0"
+msgid "Use COM Port 1 for the direct connection."
+msgstr "Использовать порт COM 1 для прямого соединения."
+
+msgctxt "table.gSetupDCComPortHelp.1"
+msgid "Use COM Port 2 for the direct connection."
+msgstr "Использовать порт COM 2 для прямого соединения."
+
+msgctxt "table.gSetupDCComPortHelp.2"
+msgid "Use COM Port 3 for the direct connection."
+msgstr "Использовать порт COM 3 для прямого соединения."
+
+msgctxt "table.gSetupDCComPortHelp.3"
+msgid "Use COM Port 4 for the direct connection."
+msgstr "Использовать порт COM 4 для прямого соединения."
+
+msgctxt "table.gSetupDCComPortHelp.4"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
+
+msgctxt "table.gSetupComPortHelp.0"
+msgid "Use COM Port 1 for the modem connection."
+msgstr "Использовать порт COM 1 для модемного соединения."
+
+msgctxt "table.gSetupComPortHelp.1"
+msgid "Use COM Port 2 for the modem connection."
+msgstr "Использовать порт COM 2 для модемного соединения."
+
+msgctxt "table.gSetupComPortHelp.2"
+msgid "Use COM Port 3 for the modem connection."
+msgstr "Использовать порт COM 3 для модемного соединения."
+
+msgctxt "table.gSetupComPortHelp.3"
+msgid "Use COM Port 4 for the modem connection."
+msgstr "Использовать порт COM 4 для модемного соединения."
+
+msgctxt "table.gSetupComPortHelp.4"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
+
+msgctxt "table.gWinSetupText.0"
+msgid "Buy Spellbook:"
+msgstr "Купить книгу:"
+
+msgctxt "table.gWinSetupText.1"
+msgid "Resource cost:"
+msgstr "Ресурсов:"
+
+msgctxt "table.gWinSetupText.2"
+msgid "Build improvement:"
+msgstr "Построить:"
+
+msgctxt "table.gWinSetupText.3"
+msgid "Castle Options:  Town Improvements/Recruit Hero"
+msgstr "Замок:  Улучшить город/Нанять героя"
+
+msgctxt "table.gWinSetupText.4"
+msgid "Mage Guild"
+msgstr "Гильдия магов"
+
+msgctxt "table.gWinSetupText.5"
+msgid "Thieves' Guild"
+msgstr "Гильдия воров"
+
+msgctxt "table.gWinSetupText.6"
+msgid "Tavern"
+msgstr "Таверна"
+
+msgctxt "table.gWinSetupText.7"
+msgid "Shipyard"
+msgstr "Верфь"
+
+msgctxt "table.gWinSetupText.8"
+msgid "Well"
+msgstr "Колодец"
+
+msgctxt "table.gWinSetupText.9"
+msgid "Recruit Hero"
+msgstr "Нанять героя"
+
+msgctxt "table.gWinSetupText.10"
+msgid "Music"
+msgstr "Музыка"
+
+msgctxt "table.gWinSetupText.11"
+msgid "Effects"
+msgstr "Эффекты"
+
+msgctxt "table.gWinSetupText.12"
+msgid "Sound\nQuality"
+msgstr "Качество\nзвука"
+
+msgctxt "table.gWinSetupText.13"
+msgid "Speed"
+msgstr "Скорость"
+
+msgctxt "table.gWinSetupText.14"
+msgid "Show Path"
+msgstr "Путь"
+
+msgctxt "table.gWinSetupText.15"
+msgid "View Enemy\nMovement"
+msgstr "Показывать\nход врагов"
+
+msgctxt "table.gWinSetupText.16"
+msgid "Dimension Door:\nSelect Destination"
+msgstr "Портал:\nВыберите место назначения"
+
+msgctxt "table.gWinSetupText.17"
+msgid "Attack Skill"
+msgstr "Атака"
+
+msgctxt "table.gWinSetupText.18"
+msgid "Defense Skill"
+msgstr "Защита"
+
+msgctxt "table.gWinSetupText.19"
+msgid "Spell Power"
+msgstr "Сила магии"
+
+msgctxt "table.gWinSetupText.20"
+msgid "Knowledge"
+msgstr "Знания"
+
+msgctxt "table.gWinSetupText.21"
+msgid "The above spells have been added to your book."
+msgstr "Указанные заклинания были добавлены в вашу Волшебную книгу."
+
+msgctxt "table.gWinSetupText.22"
+msgid "Choose Game Difficulty:"
+msgstr "Выбрать сложность:"
+
+msgctxt "table.gWinSetupText.23"
+msgid "Easy"
+msgstr "Легкая"
+
+msgctxt "table.gWinSetupText.24"
+msgid "Normal"
+msgstr "Обычная"
+
+msgctxt "table.gWinSetupText.25"
+msgid "Hard"
+msgstr "Тяжелая"
+
+msgctxt "table.gWinSetupText.26"
+msgid "Expert"
+msgstr "Эксперт"
+
+msgctxt "table.gWinSetupText.27"
+msgid "Customize Opponents:"
+msgstr "Уровень противника:"
+
+msgctxt "table.gWinSetupText.28"
+msgid "Normal"
+msgstr "Норма"
+
+msgctxt "table.gWinSetupText.29"
+msgid "Normal"
+msgstr "Норма"
+
+msgctxt "table.gWinSetupText.30"
+msgid "Normal"
+msgstr "Норма"
+
+msgctxt "table.gWinSetupText.31"
+msgid "Choose Color:"
+msgstr "Цвет:"
+
+msgctxt "table.gWinSetupText.32"
+msgid "King of the Hill:"
+msgstr "Царь горы:"
+
+msgctxt "table.gWinSetupText.33"
+msgid "Choose Scenario:"
+msgstr "Сценарий:"
+
+msgctxt "table.gWinSetupText.34"
+msgid "Heroes"
+msgstr "Герои"
+
+msgctxt "table.gWinSetupText.35"
+msgid "Castles"
+msgstr "Замки"
+
+msgctxt "table.gWinSetupText.36"
+msgid "Towns"
+msgstr "Города"
+
+msgctxt "table.gWinSetupText.37"
+msgid "Mines"
+msgstr "Шахты"
+
+msgctxt "table.gWinSetupText.38"
+msgid "Treasury"
+msgstr "Ресурсы"
+
+msgctxt "table.gWinSetupText.39"
+msgid "Total Gold Per Day:"
+msgstr "Золота в день:"
+
+msgctxt "table.gWinSetupText.40"
+msgid "Attack:"
+msgstr "Атака:"
+
+msgctxt "table.gWinSetupText.41"
+msgid "Defense:"
+msgstr "Защита:"
+
+msgctxt "table.gWinSetupText.42"
+msgid "Spell Power:"
+msgstr "Сила магии:"
+
+msgctxt "table.gWinSetupText.43"
+msgid "Knowledge:"
+msgstr "Знания:"
+
+msgctxt "table.gWinSetupText.44"
+msgid "Defenders:"
+msgstr "Защитники:"
+
+msgctxt "table.gWinSetupText.45"
+msgid "Recruit Hero"
+msgstr "Нанять героя"
+
+msgctxt "table.gWinSetupText.46"
+msgid "Build a new ship:"
+msgstr "Строить корабль:"
+
+msgctxt "table.gWinSetupText.47"
+msgid "Resource cost:"
+msgstr "Цена:"
+
+msgctxt "table.gWinSetupText.48"
+msgid "Attack Skill"
+msgstr "Атака"
+
+msgctxt "table.gWinSetupText.49"
+msgid "Defense Skill"
+msgstr "Защита"
+
+msgctxt "table.gWinSetupText.50"
+msgid "Spell Power"
+msgstr "Сила магии"
+
+msgctxt "table.gWinSetupText.51"
+msgid "Knowledge  "
+msgstr "Знания  "
+
+msgctxt "table.gWinSetupText.52"
+msgid "Tavern"
+msgstr "Таверна"
+
+msgctxt "table.gWinSetupText.53"
+msgid "The tavern increases the morale of all garrisoned troops."
+msgstr "Таверна увеличивает мораль воинов гарнизона."
+
+msgctxt "table.gWinSetupText.54"
+msgid "Thieves' Guild: Player Rankings"
+msgstr "Гильдия воров: Достижения игроков"
+
+msgctxt "table.gWinSetupText.55"
+msgid "First"
+msgstr "1-й"
+
+msgctxt "table.gWinSetupText.56"
+msgid "Second"
+msgstr "2-й"
+
+msgctxt "table.gWinSetupText.57"
+msgid "Third"
+msgstr "3-й"
+
+msgctxt "table.gWinSetupText.58"
+msgid "Fourth"
+msgstr "4-й"
+
+msgctxt "table.gWinSetupText.59"
+msgid "Number of Towns:"
+msgstr "Городов:"
+
+msgctxt "table.gWinSetupText.60"
+msgid "Number of Castles:"
+msgstr "Замков:"
+
+msgctxt "table.gWinSetupText.61"
+msgid "Number of Heroes:"
+msgstr "Героев:"
+
+msgctxt "table.gWinSetupText.62"
+msgid "Gold in Treasury:"
+msgstr "Казна:"
+
+msgctxt "table.gWinSetupText.63"
+msgid "Wood, Crystal & Ore:"
+msgstr "Дерево, кристаллы и руда:"
+
+msgctxt "table.gWinSetupText.64"
+msgid "Gems, Sulfur & Mercury:"
+msgstr "Самоцветы, сера и ртуть:"
+
+msgctxt "table.gWinSetupText.65"
+msgid "Number Obelisks Found:"
+msgstr "Найдено обелисков:"
+
+msgctxt "table.gWinSetupText.66"
+msgid "Total Army Strength:"
+msgstr "Общая сила армии:"
+
+msgctxt "table.gWinSetupText.67"
+msgid "World Map"
+msgstr "Карта мира"

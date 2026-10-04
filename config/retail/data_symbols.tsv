@@ -131,3 +131,10 @@ rva	size	symbol	provenance
 0x000d4708	8706	_rson	code-required identity and extent
 0x000d690c	1	_getlen	code-required identity and extent
 0x000d6910	4155	_text_buf	code-required identity and extent
+0x000a973c	352	?gcRegCDRomPath@@3PADA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x000a2aac	64	_positionCode	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x000a2a6c	64	_positionLength	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x000a74f0	300	?gcWinText@@3PADA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x000a9908	4	?gInSmacker@@3HA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x0008fa60	10	?gPixelsPerStep@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x0008fa78	6	?startVals@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json

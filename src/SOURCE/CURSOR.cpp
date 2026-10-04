@@ -847,17 +847,16 @@ void advManager::MoveOrigin(i16 directionX, i16 directionY) {
     m_forceCompleteDraw = 1;
 }
 
-// CURSOR owns retail .data 0x004a0d28-0x0048eb4f (initialized, before the
-// TOWNMGR band) and .bss 0x004c2510-0x004a4b97. Initializers are retail bytes.
+// Buka movement tables and cursor state; typed initializers checked against retail.
 DATA(0x0048fa5c)
 i8 gMoveSoundMade = 1;
-DATA(0x004a0d30)
+DATA(0x0048fa60)
 i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x0048fa6c)
 i16 gStepDelay[5] = {30, 45, 30, 15, 15};
 DATA(0x004a6ac6)
 i8 EveryOther = 0;
-DATA(0x004a0d58)
+DATA(0x0048fa78)
 i16 startVals[3] = {16, 0, -16};
 DATA(0x004a6ac2)
 i16 S1cursorCycle;
