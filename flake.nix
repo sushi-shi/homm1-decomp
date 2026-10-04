@@ -49,6 +49,7 @@
           ./nix/patches/vostok-canonical-alias-owner.patch
           ./nix/patches/vostok-unprovisioned-identity-refusal.patch
           ./nix/patches/vostok-skip-inline-switch-tables.patch
+          ./nix/patches/vostok-fixed-manifest-iat.patch
         ];
       };
 

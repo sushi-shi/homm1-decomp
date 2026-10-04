@@ -1,0 +1,1287 @@
+# Reviewed /FIXED sites and section-independent IAT support.
+# Adapted from HoMM2-pinned vostok-delinker 1393e24b4804cb357fdac147c68013f0aa5a9d95.
+# Keep the existing HoMM1 strict target classifier and retained-directory precedence.
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -6,6 +6,7 @@
+ mod object_files;
+ mod pdb_symbols;
+ mod reloc_alias_manifest;
++mod reloc_manifest;
+ mod relocs;
+ mod symbol_matcher;
+ mod utils;
+@@ -68,6 +69,10 @@
+     #[arg(long, value_hint = clap::ValueHint::FilePath)]
+     pub reloc_alias_manifest: Option<std::path::PathBuf>,
+
++    /// Reviewed absolute sites for images without a PE base-relocation directory.
++    #[arg(long, value_hint = clap::ValueHint::FilePath)]
++    pub reloc_manifest: Option<std::path::PathBuf>,
++
+     /// Compatibility-only storage ranges for legacy PDB fallback. Ignored by
+     /// the canonical candidate-manifest path.
+     #[arg(long, value_hint = clap::ValueHint::FilePath)]
+@@ -95,6 +100,27 @@
+     pub id: u16,
+
+     pub data: &'a [u8],
++}
++
++#[derive(Clone, Debug, Copy)]
++pub struct IatInfo<'a> {
++    pub rva: usize,
++    pub size: usize,
++    pub section: SecInfo<'a>,
++}
++
++impl IatInfo<'_> {
++    pub fn contains_rva(self, rva: usize) -> bool {
++        (self.rva..self.rva + self.size).contains(&rva)
++    }
++
++    pub fn rva_for_offset(self, offset: pdb2::PdbInternalSectionOffset) -> Option<usize> {
++        if offset.section != self.section.id {
++            return None;
++        }
++        let rva = self.section.rva.checked_add(offset.offset.to_usize())?;
++        self.contains_rva(rva).then_some(rva)
++    }
+ }
+
+ // # Notes
+@@ -116,6 +142,7 @@
+         data_section_manifest,
+         contribution_manifest,
+         reloc_alias_manifest,
++        reloc_manifest,
+         unresolved_data_manifest,
+         recover_data_relocs_from_pdb,
+         coalesce_common_functions,
+@@ -146,6 +173,7 @@
+         data_section_manifest.as_deref(),
+         contribution_manifest.as_deref(),
+         reloc_alias_manifest.as_deref(),
++        reloc_manifest.as_deref(),
+         unresolved_data_manifest.as_deref(),
+         recover_data_relocs_from_pdb,
+         coalesce_common_functions,
+@@ -166,11 +194,13 @@
+     data_section_manifest_path: Option<&std::path::Path>,
+     contribution_manifest_path: Option<&std::path::Path>,
+     reloc_alias_manifest_path: Option<&std::path::Path>,
++    reloc_manifest_path: Option<&std::path::Path>,
+     unresolved_data_manifest_path: Option<&std::path::Path>,
+     recover_data_relocs_from_pdb: bool,
+     coalesce_common_functions: bool,
+ ) -> anyhow::Result<()> {
+     let env = Env::build(exe, &mut pdb)?;
++    let reloc_manifest = reloc_manifest::RelocManifest::load(reloc_manifest_path)?;
+
+     let pdb_symbols = PdbSymbols::parse(&env, &mut pdb, coalesce_common_functions)?;
+     let data_manifest = data_manifest::DataManifest::load(data_manifest_path)?;
+@@ -194,6 +224,7 @@
+         &data_manifest,
+         &contribution_manifest,
+         &reloc_alias_manifest,
++        reloc_manifest.as_ref(),
+         &unresolved_data_manifest,
+         recover_data_relocs_from_pdb,
+     )?;
+@@ -256,7 +287,7 @@
+     pub text: SecInfo<'a>,
+     pub rdata: SecInfo<'a>,
+     pub data: SecInfo<'a>,
+-    pub idata: SecInfo<'a>,
++    pub iat: Option<IatInfo<'a>>,
+
+     pub dbi: &'static pdb2::DebugInformation<'static>,
+     pub string_table: &'static pdb2::StringTable<'static>,
+@@ -302,25 +333,105 @@
+         let Some(data_sec) = exe.section_by_name(".data") else {
+             anyhow::bail!("Missing .data section");
+         };
+-        let Some(idata_sec) = exe.section_by_name(".idata") else {
+-            anyhow::bail!("Missing .idata section");
+-        };
+
+         let text = build_sec_info(text_sec)?;
+         let rdata = build_sec_info(rdata_sec)?;
+         let data = build_sec_info(data_sec)?;
+-        let idata = build_sec_info(idata_sec)?;
++        let iat = exe
++            .data_directory(object::pe::IMAGE_DIRECTORY_ENTRY_IAT)
++            .map(|directory| {
++                let rva = directory.virtual_address.get(LittleEndian).to_usize();
++                let size = directory.size.get(LittleEndian).to_usize();
++                let end = rva
++                    .checked_add(size)
++                    .ok_or_else(|| anyhow::anyhow!("IAT extent overflows"))?;
++                let section = exe
++                    .sections()
++                    .find(|section| {
++                        let section_rva = section.address().to_usize() - image_base.to_usize();
++                        let Some(section_end) = section_rva.checked_add(section.size().to_usize())
++                        else {
++                            return false;
++                        };
++                        section_rva <= rva && end <= section_end
++                    })
++                    .ok_or_else(|| anyhow::anyhow!("IAT is not contained in one PE section"))?;
++
++                Ok::<_, anyhow::Error>(IatInfo {
++                    rva,
++                    size,
++                    section: build_sec_info(section)?,
++                })
++            })
++            .transpose()?;
+
+         Ok(Self {
+             image_base,
+             text,
+             rdata,
+             data,
+-            idata,
++            iat,
+
+             dbi,
+             string_table,
+             symbol_table,
+         })
+     }
+-}
++    pub fn iat_rva(&self, offset: pdb2::PdbInternalSectionOffset) -> Option<usize> {
++        self.iat?.rva_for_offset(offset)
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::{IatInfo, SecInfo};
++
++    fn iat() -> IatInfo<'static> {
++        IatInfo {
++            rva: 0x2200,
++            size: 0x20,
++            section: SecInfo {
++                rva: 0x2000,
++                va: 0x402000,
++                size: 0x1000,
++                id: 4,
++                data: &[],
++            },
++        }
++    }
++
++    #[test]
++    fn iat_range_is_half_open() {
++        let iat = iat();
++        assert!(iat.contains_rva(0x2200));
++        assert!(iat.contains_rva(0x221f));
++        assert!(!iat.contains_rva(0x21ff));
++        assert!(!iat.contains_rva(0x2220));
++    }
++
++    #[test]
++    fn pdb_offset_must_resolve_inside_iat_range() {
++        let iat = iat();
++        assert_eq!(
++            iat.rva_for_offset(pdb2::PdbInternalSectionOffset {
++                section: 4,
++                offset: 0x210,
++            }),
++            Some(0x2210)
++        );
++        assert_eq!(
++            iat.rva_for_offset(pdb2::PdbInternalSectionOffset {
++                section: 3,
++                offset: 0x210,
++            }),
++            None
++        );
++        assert_eq!(
++            iat.rva_for_offset(pdb2::PdbInternalSectionOffset {
++                section: 4,
++                offset: 0x220,
++            }),
++            None
++        );
++    }
++}
+--- a/src/pdb_symbols.rs
++++ b/src/pdb_symbols.rs
+@@ -57,9 +57,17 @@
+                 () if offset.section == env.text.id => env.text.rva + offset.offset.to_usize(),
+                 () if offset.section == env.rdata.id => env.rdata.rva + offset.offset.to_usize(),
+                 () if offset.section == env.data.id => env.data.rva + offset.offset.to_usize(),
+-                () if offset.section == env.idata.id => env.idata.rva + offset.offset.to_usize(),
++                () if env.iat_rva(*offset).is_some() => env.iat_rva(*offset).unwrap(),
+                 _ => continue,
+             };
++
++            if env.iat_rva(*offset).is_some() {
++                if !name.as_bytes().starts_with(b"__imp_") {
++                    anyhow::bail!("IAT symbol at {symbol_rva:#x} has no import spelling: {name}");
++                }
++                self.imports.entry(symbol_rva).or_insert(name);
++                continue;
++            }
+
+             match symbol {
+                 // @NOTE: There are more symbols in `.text`, which are not functions.
+@@ -101,13 +109,6 @@
+                     assert_eq!(old_symbol, None, "Static symbols cannot repeat");
+                 }
+
+-                pdb2::SymbolData::Public(pdb2::PublicSymbol { .. })
+-                    if offset.section == env.idata.id =>
+-                {
+-                    let old_symbol = self.imports.insert(symbol_rva, name);
+-                    assert_eq!(old_symbol, None, "Import symbols cannot repeat");
+-                }
+-
+                 // Unmangled data symbols to cover missing spots.
+                 pdb2::SymbolData::Data(pdb2::DataSymbol { .. })
+                     if offset.section == env.rdata.id =>
+@@ -118,11 +119,6 @@
+                     if offset.section == env.data.id =>
+                 {
+                     static_data_symbols.push((symbol_rva, name));
+-                }
+-                pdb2::SymbolData::Data(pdb2::DataSymbol { .. })
+-                    if offset.section == env.idata.id =>
+-                {
+-                    self.imports.entry(symbol_rva).or_insert(name);
+                 }
+                 _ => {}
+             }
+@@ -185,15 +181,21 @@
+                     ),
+
+                     Ok(pdb2::SymbolData::Data(pdb2::DataSymbol { offset, name, .. })) => {
++                        if let Some(rva) = env.iat_rva(offset) {
++                            if !name.as_bytes().starts_with(b"__imp_") {
++                                anyhow::bail!(
++                                    "IAT symbol at {rva:#x} has no import spelling: {name}"
++                                );
++                            }
++                            self.imports.insert(rva, name);
++                            continue;
++                        }
+                         let symbol_rva = match () {
+                             () if offset.section == env.rdata.id => {
+                                 env.rdata.rva + offset.offset.to_usize()
+                             }
+                             () if offset.section == env.data.id => {
+                                 env.data.rva + offset.offset.to_usize()
+-                            }
+-                            () if offset.section == env.idata.id => {
+-                                env.idata.rva + offset.offset.to_usize()
+                             }
+                             _ => continue,
+                         };
+@@ -207,9 +209,6 @@
+                                 // As those are closer to the original symbols.
+                                 // For comparison see: `survarium::damage_zone_cook::damage_zone_cook`.
+                                 let _old_symbol = self.statics.insert(symbol_rva, name);
+-                            }
+-                            () if offset.section == env.idata.id => {
+-                                let _old_symbol = self.imports.insert(symbol_rva, name);
+                             }
+                             _ => continue,
+                         };
+--- a/src/relocs.rs
++++ b/src/relocs.rs
+@@ -3,6 +3,7 @@
+ use crate::data_manifest::{DataManifest, DataStorage};
+ use crate::pdb_symbols;
+ use crate::reloc_alias_manifest::{RelocAliasManifest, RelocAliasObservations};
++use crate::reloc_manifest::RelocManifest;
+ use crate::utils::ToUsize;
+
+ use pdb2::RawString;
+@@ -300,10 +301,51 @@
+     )
+ }
+
+-#[repr(C)]
+-#[derive(bytemuck::AnyBitPattern, bytemuck::NoUninit, Copy, Clone)]
+-struct RelocEntry {
+-    entry: u16,
++fn absolute_sites(
++    directory: Option<&[u8]>,
++    manifest: Option<&RelocManifest>,
++) -> anyhow::Result<Vec<usize>> {
++    let Some(data) = directory else {
++        return manifest.map(|m| m.sites().to_vec()).ok_or_else(|| {
++            anyhow::anyhow!("Missing PE base relocation directory; supply --reloc-manifest")
++        });
++    };
++    // A retained PE directory takes precedence, as in the shared HoMM1 reader.
++    let mut sites = Vec::new();
++    let mut pos = 0;
++    while pos < data.len() {
++        anyhow::ensure!(
++            pos + HEADER_SIZE <= data.len(),
++            "truncated base relocation header"
++        );
++        let RelocHeader {
++            page_rva,
++            block_size,
++        } = bytemuck::pod_read_unaligned(&data[pos..pos + HEADER_SIZE]);
++        if block_size == 0 {
++            break;
++        }
++        let size = block_size.to_usize();
++        anyhow::ensure!(
++            size >= HEADER_SIZE && size % 2 == 0 && size <= data.len() - pos,
++            "invalid base relocation block"
++        );
++        for raw in data[pos + HEADER_SIZE..pos + size].chunks_exact(2) {
++            let entry = u16::from_le_bytes([raw[0], raw[1]]);
++            if entry >> 12 == 3 {
++                sites.push(
++                    page_rva
++                        .checked_add(u32::from(entry & 0xfff))
++                        .ok_or_else(|| anyhow::anyhow!("base relocation site overflows"))?
++                        .to_usize(),
++                );
++            }
++        }
++        pos += size;
++    }
++    sites.sort_unstable();
++    sites.dedup();
++    Ok(sites)
+ }
+
+ pub fn resolve_absolute_relocations<'s>(
+@@ -313,6 +355,7 @@
+     data_manifest: &DataManifest,
+     contributions: &ContributionManifest,
+     reloc_aliases: &RelocAliasManifest,
++    reloc_manifest: Option<&RelocManifest>,
+     unresolved: &ContributionManifest,
+     recover_data_relocs_from_pdb: bool,
+ ) -> anyhow::Result<(
+@@ -320,10 +363,6 @@
+     BTreeMap<usize, RelocKind<'s>>,
+     RelocAliasObservations,
+ )> {
+-    let Some(reloc_sec) = exe.section_by_name(".reloc") else {
+-        anyhow::bail!("Missing .reloc section");
+-    };
+-
+     let exe_data = map_pe_image(exe);
+     let mut coff_data = exe_data.clone();
+     let mut relocs_rva = BTreeMap::<usize, RelocKind>::new();
+@@ -338,283 +377,225 @@
+         );
+     }
+
+-    let mut pos = 0;
+-    let reloc_data = reloc_sec.data()?;
+-    while pos + HEADER_SIZE <= reloc_data.len() {
+-        let RelocHeader {
+-            page_rva,
+-            block_size,
+-        } = bytemuck::pod_read_unaligned::<RelocHeader>(&reloc_data[pos..pos + HEADER_SIZE]);
+-
+-        if block_size == 0 || block_size < 8 {
+-            break;
+-        }
+-
+-        let entries: &[RelocEntry] =
+-            bytemuck::cast_slice(&reloc_data[pos + HEADER_SIZE..pos + block_size.to_usize()]);
+-        pos += block_size.to_usize();
+-
+-        for RelocEntry { entry } in entries {
+-            let reloc_type = entry >> 12;
+-            let reloc_offset = entry & 0x0FFF;
+-
+-            const RELOC_TYP_HIGHLOW: u16 = 3;
+-
+-            if reloc_type != RELOC_TYP_HIGHLOW {
+-                continue;
++    let directory = exe
++        .data_directory(object::pe::IMAGE_DIRECTORY_ENTRY_BASERELOC)
++        .map(|directory| {
++            let rva = directory.virtual_address.get(LittleEndian).to_usize();
++            let size = directory.size.get(LittleEndian).to_usize();
++            let end = rva
++                .checked_add(size)
++                .ok_or_else(|| anyhow::anyhow!("base relocation extent overflows"))?;
++            let stored = exe.sections().any(|section| {
++                let start = section.address().to_usize() - env.image_base.to_usize();
++                section
++                    .data()
++                    .is_ok_and(|data| start <= rva && end <= start + data.len())
++            });
++            anyhow::ensure!(
++                stored,
++                "base relocation directory is outside raw-backed sections"
++            );
++            exe_data
++                .get(rva..end)
++                .ok_or_else(|| anyhow::anyhow!("base relocation directory is outside image"))
++        })
++        .transpose()?;
++    for reloc_rva in absolute_sites(directory, reloc_manifest)? {
++        anyhow::ensure!(
++            reloc_rva
++                .checked_add(4)
++                .is_some_and(|end| end <= exe_data.len()),
++            "reloc manifest site RVA {reloc_rva:#x} is outside the mapped image"
++        );
++        let target_va = bytemuck::pod_read_unaligned::<u32>(&exe_data[reloc_rva..reloc_rva + 4]);
++        let target_rva = target_va
++            .checked_sub(env.image_base)
++            .ok_or_else(|| anyhow::anyhow!("absolute site {reloc_rva:#x} points below image base"))?
++            .to_usize();
++
++        let coff_data_reloc = &mut coff_data[reloc_rva..reloc_rva + 4];
++
++        match () {
++            () if env.iat.is_some_and(|iat| iat.contains_rva(target_rva)) => {
++                let Some(symbol) = symbols.imports.get(&target_rva) else {
++                    anyhow::bail!("IAT relocation target {target_rva:#x} has no exact PDB symbol");
++                };
++                coff_data_reloc.copy_from_slice(&0u32.to_le_bytes());
++                relocs_rva.insert(reloc_rva, RelocKind::Import { symbol: *symbol });
+             }
+
+-            // .reloc        .text/.rdata/.data  .text/.rdata/.data
+-            // [reloc_rva]   [target_va]         [target]
+-            //   |              ^    |              ^
+-            //   |              |    |              |
+-            //   +--------------+    +--------------+
+-            //
+-            // * `target_va` replaced with offset of the closest named symbol
+-            //
+-            let reloc_rva = (page_rva + u32::from(reloc_offset)).to_usize();
+-
+-            let target_va =
+-                bytemuck::pod_read_unaligned::<u32>(&exe_data[reloc_rva..reloc_rva + 4]);
+-            let target_rva = (target_va - env.image_base).to_usize();
+-
+-            let coff_data_reloc = &mut coff_data[reloc_rva..reloc_rva + 4];
+-
+-            match () {
+-                () if (env.text.rva..env.text.rva + env.text.size).contains(&target_rva) => {
+-                    // Undo the /INCREMENTAL thunk indirection: the object's
+-                    // DIR32 named the body, never the link-generated thunk.
+-                    let target_rva =
+-                        resolve_ilt_thunk(ilt, &exe_data, &symbols.functions, target_rva)
+-                            .unwrap_or(target_rva);
+-
+-                    let (function_rva, function_overloads) = symbols
+-                        .functions
+-                        .range(..=target_rva)
+-                        .next_back()
+-                        .expect("all function relocs to be named");
+-
+-                    let diff = u32::try_from(target_rva - *function_rva)?;
++            () if (env.text.rva..env.text.rva + env.text.size).contains(&target_rva) => {
++                // Undo the /INCREMENTAL thunk indirection: the object's
++                // DIR32 named the body, never the link-generated thunk.
++                let target_rva = resolve_ilt_thunk(ilt, &exe_data, &symbols.functions, target_rva)
++                    .unwrap_or(target_rva);
++
++                let (function_rva, function_overloads) = symbols
++                    .functions
++                    .range(..=target_rva)
++                    .next_back()
++                    .expect("all function relocs to be named");
++
++                let diff = u32::try_from(target_rva - *function_rva)?;
++                coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
++
++                let symbol = if diff == 0
++                    && (env.text.rva..env.text.rva + env.text.size).contains(&reloc_rva)
++                {
++                    let Some((owner_function_rva, _)) =
++                        symbols.functions.range(..=reloc_rva).next_back()
++                    else {
++                        anyhow::bail!(
++                            "function relocation site {reloc_rva:#x} has no containing function"
++                        );
++                    };
++                    reloc_aliases.resolve_function_alias(
++                        *owner_function_rva,
++                        target_rva,
++                        reloc_rva,
++                        function_overloads,
++                        &mut observed_aliases,
++                    )?
++                } else {
++                    None
++                };
++
++                relocs_rva.insert(
++                    reloc_rva,
++                    RelocKind::Function {
++                        overloads: function_overloads,
++                        symbol,
++                        // .reloc HIGHLOW entry -> absolute code reference.
++                        relative: false,
++                    },
++                );
++            }
++            () if (env.rdata.rva..env.rdata.rva + env.rdata.size).contains(&target_rva) => {
++                if let Some((addend, owner, _owner_rva)) = resolve_manifest_alias(
++                    reloc_aliases,
++                    &symbols.constants,
++                    &symbols.functions,
++                    &mut observed_aliases,
++                    reloc_rva,
++                    target_rva,
++                )? {
++                    coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
++                    relocs_rva.insert(
++                        reloc_rva,
++                        RelocKind::Constant {
++                            symbol: owner,
++                            target_rva,
++                        },
++                    );
++                    continue;
++                }
++                if let Some((owner, addend)) = data_manifest.owner_and_addend_for_rva(target_rva) {
++                    let diff = u32::try_from(addend)?;
+                     coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-
+-                    let symbol = if diff == 0
+-                        && (env.text.rva..env.text.rva + env.text.size).contains(&reloc_rva)
++                    relocs_rva.insert(
++                        reloc_rva,
++                        RelocKind::Constant {
++                            symbol: owner.name,
++                            target_rva,
++                        },
++                    );
++                    continue;
++                }
++                let object = contributions.owner_for_rva(ContributionStorage::Rdata, target_rva);
++                if let Some((owner, addend)) = data_manifest.hypothesis_owner_and_addend_for_rva(
++                    target_rva,
++                    Some(DataStorage::Rdata),
++                    object,
++                ) {
++                    coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
++                    relocs_rva.insert(
++                        reloc_rva,
++                        RelocKind::Constant {
++                            symbol: owner.name,
++                            target_rva,
++                        },
++                    );
++                    continue;
++                }
++                if !recover_data_relocs_from_pdb {
++                    anyhow::bail!(
++                        "no candidate .rdata identity can represent retail RVA {target_rva:#x}"
++                    );
++                }
++                match symbols
++                    .strings
++                    .range(..=target_rva)
++                    .rev()
++                    .find(|(string_rva, _)| {
++                        contributions.same_owner(
++                            ContributionStorage::Rdata,
++                            **string_rva,
++                            target_rva,
++                        )
++                    }) {
++                    Some((string_rva, (string_mangled_name, string)))
++                        if target_rva - string_rva < string.len() =>
+                     {
+-                        let Some((owner_function_rva, _)) =
+-                            symbols.functions.range(..=reloc_rva).next_back()
+-                        else {
++                        let diff = u32::try_from(target_rva - *string_rva)?;
++                        coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
++
++                        relocs_rva.insert(
++                            reloc_rva,
++                            RelocKind::ConstantString {
++                                symbol: *string_mangled_name,
++                                data: string,
++                            },
++                        );
++                    }
++
++                    Some(_) | None => {
++                        let Some((constant_rva, constant_name)) = closest_data_symbol(
++                            &symbols.constants,
++                            target_rva,
++                            ContributionStorage::Rdata,
++                            contributions,
++                        ) else {
+                             anyhow::bail!(
+-                                "function relocation site {reloc_rva:#x} has no containing function"
++                                "no .rdata symbol in contribution owning RVA {target_rva:#x}"
+                             );
+                         };
+-                        reloc_aliases.resolve_function_alias(
+-                            *owner_function_rva,
++
++                        let (diff, reloc_name) = match resolve_data_alias(
++                            &symbols.constants,
++                            *constant_rva,
+                             target_rva,
+-                            reloc_rva,
+-                            function_overloads,
+-                            &mut observed_aliases,
+-                        )?
+-                    } else {
+-                        None
+-                    };
+-
+-                    relocs_rva.insert(
+-                        reloc_rva,
+-                        RelocKind::Function {
+-                            overloads: function_overloads,
+-                            symbol,
+-                            // .reloc HIGHLOW entry -> absolute code reference.
+-                            relative: false,
+-                        },
+-                    );
+-                }
+-                () if (env.rdata.rva..env.rdata.rva + env.rdata.size).contains(&target_rva) => {
+-                    if let Some((addend, owner, _owner_rva)) = resolve_manifest_alias(
+-                        reloc_aliases,
+-                        &symbols.constants,
+-                        &symbols.functions,
+-                        &mut observed_aliases,
+-                        reloc_rva,
+-                        target_rva,
+-                    )? {
+-                        coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
++                            *constant_name,
++                            ContributionStorage::Rdata,
++                            contributions,
++                        )? {
++                            Some((addend, owner)) => (addend, owner),
++                            None => (u32::try_from(target_rva - *constant_rva)?, *constant_name),
++                        };
++                        refuse_unprovisioned(reloc_name, target_rva)?;
++                        coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
++
+                         relocs_rva.insert(
+                             reloc_rva,
+                             RelocKind::Constant {
+-                                symbol: owner,
++                                symbol: reloc_name,
+                                 target_rva,
+                             },
+                         );
+-                        continue;
+                     }
+-                    if let Some((owner, addend)) =
+-                        data_manifest.owner_and_addend_for_rva(target_rva)
+-                    {
+-                        let diff = u32::try_from(addend)?;
+-                        coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-                        relocs_rva.insert(
+-                            reloc_rva,
+-                            RelocKind::Constant {
+-                                symbol: owner.name,
+-                                target_rva,
+-                            },
+-                        );
+-                        continue;
+-                    }
+-                    let object =
+-                        contributions.owner_for_rva(ContributionStorage::Rdata, target_rva);
+-                    if let Some((owner, addend)) = data_manifest
+-                        .hypothesis_owner_and_addend_for_rva(
+-                            target_rva,
+-                            Some(DataStorage::Rdata),
+-                            object,
+-                        )
+-                    {
+-                        coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
+-                        relocs_rva.insert(
+-                            reloc_rva,
+-                            RelocKind::Constant {
+-                                symbol: owner.name,
+-                                target_rva,
+-                            },
+-                        );
+-                        continue;
+-                    }
+-                    if !recover_data_relocs_from_pdb {
+-                        anyhow::bail!(
+-                            "no candidate .rdata identity can represent retail RVA {target_rva:#x}"
+-                        );
+-                    }
+-                    match symbols
+-                        .strings
+-                        .range(..=target_rva)
+-                        .rev()
+-                        .find(|(string_rva, _)| {
+-                            contributions.same_owner(
+-                                ContributionStorage::Rdata,
+-                                **string_rva,
+-                                target_rva,
+-                            )
+-                        }) {
+-                        Some((string_rva, (string_mangled_name, string)))
+-                            if target_rva - string_rva < string.len() =>
+-                        {
+-                            let diff = u32::try_from(target_rva - *string_rva)?;
+-                            coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-
+-                            relocs_rva.insert(
+-                                reloc_rva,
+-                                RelocKind::ConstantString {
+-                                    symbol: *string_mangled_name,
+-                                    data: string,
+-                                },
+-                            );
+-                        }
+-
+-                        Some(_) | None => {
+-                            let Some((constant_rva, constant_name)) = closest_data_symbol(
+-                                &symbols.constants,
+-                                target_rva,
+-                                ContributionStorage::Rdata,
+-                                contributions,
+-                            ) else {
+-                                anyhow::bail!(
+-                                    "no .rdata symbol in contribution owning RVA {target_rva:#x}"
+-                                );
+-                            };
+-
+-                            let (diff, reloc_name) = match resolve_data_alias(
+-                                &symbols.constants,
+-                                *constant_rva,
+-                                target_rva,
+-                                *constant_name,
+-                                ContributionStorage::Rdata,
+-                                contributions,
+-                            )? {
+-                                Some((addend, owner)) => (addend, owner),
+-                                None => {
+-                                    (u32::try_from(target_rva - *constant_rva)?, *constant_name)
+-                                }
+-                            };
+-                            refuse_unprovisioned(reloc_name, target_rva)?;
+-                            coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-
+-                            relocs_rva.insert(
+-                                reloc_rva,
+-                                RelocKind::Constant {
+-                                    symbol: reloc_name,
+-                                    target_rva,
+-                                },
+-                            );
+-                        }
+-                    };
+-                }
+-                () if (env.data.rva..env.data.rva + env.data.size).contains(&target_rva) => {
+-                    if let Some((addend, owner, owner_rva)) = resolve_manifest_alias(
+-                        reloc_aliases,
+-                        &symbols.statics,
+-                        &symbols.functions,
+-                        &mut observed_aliases,
+-                        reloc_rva,
+-                        target_rva,
+-                    )? {
+-                        let storage = contributions
+-                            .storage_for_rva(owner_rva)
+-                            .or_else(|| retail_storage_for_rva(env, owner_rva))
+-                            .filter(|storage| {
+-                                matches!(
+-                                    storage,
+-                                    ContributionStorage::Data | ContributionStorage::Bss
+-                                )
+-                            })
+-                            .ok_or_else(|| {
+-                                anyhow::anyhow!(
+-                                    "relocation alias owner {owner_rva:#x} has no writable storage"
+-                                )
+-                            })?;
+-                        coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
+-                        relocs_rva.insert(
+-                            reloc_rva,
+-                            RelocKind::Static {
+-                                symbol: owner,
+-                                target_rva,
+-                                storage,
+-                            },
+-                        );
+-                        continue;
+-                    }
+-                    if let Some((owner, addend)) =
+-                        data_manifest.owner_and_addend_for_rva(target_rva)
+-                    {
+-                        let storage = match owner.storage {
+-                            DataStorage::Bss => ContributionStorage::Bss,
+-                            DataStorage::Data => ContributionStorage::Data,
+-                            DataStorage::Rdata => {
+-                                anyhow::bail!(".rdata manifest owner lies in writable PE storage")
+-                            }
+-                        };
+-                        let diff = u32::try_from(addend)?;
+-                        coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-                        relocs_rva.insert(
+-                            reloc_rva,
+-                            RelocKind::Static {
+-                                symbol: owner.name,
+-                                target_rva,
+-                                storage,
+-                            },
+-                        );
+-                        continue;
+-                    }
++                };
++            }
++            () if (env.data.rva..env.data.rva + env.data.size).contains(&target_rva) => {
++                if let Some((addend, owner, owner_rva)) = resolve_manifest_alias(
++                    reloc_aliases,
++                    &symbols.statics,
++                    &symbols.functions,
++                    &mut observed_aliases,
++                    reloc_rva,
++                    target_rva,
++                )? {
+                     let storage = contributions
+-                        .storage_for_rva(target_rva)
+-                        .or_else(|| unresolved.storage_for_rva(target_rva))
+-                        .filter(|storage| {
+-                            matches!(
+-                                storage,
+-                                ContributionStorage::Data | ContributionStorage::Bss
+-                            )
+-                        })
+-                        .or_else(|| retail_storage_for_rva(env, target_rva))
++                        .storage_for_rva(owner_rva)
++                        .or_else(|| retail_storage_for_rva(env, owner_rva))
+                         .filter(|storage| {
+                             matches!(
+                                 storage,
+@@ -623,82 +604,124 @@
+                         })
+                         .ok_or_else(|| {
+                             anyhow::anyhow!(
+-                                "writable relocation target {target_rva:#x} has no storage class"
++                                "relocation alias owner {owner_rva:#x} has no writable storage"
+                             )
+                         })?;
+-                    let manifest_storage = match storage {
+-                        ContributionStorage::Data => DataStorage::Data,
+-                        ContributionStorage::Bss => DataStorage::Bss,
+-                        _ => unreachable!(),
+-                    };
+-                    let object = contributions.owner_for_rva(storage, target_rva);
+-                    if let Some((owner, addend)) = data_manifest
+-                        .hypothesis_owner_and_addend_for_rva(
+-                            target_rva,
+-                            Some(manifest_storage),
+-                            object,
+-                        )
+-                    {
+-                        coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
+-                        relocs_rva.insert(
+-                            reloc_rva,
+-                            RelocKind::Static {
+-                                symbol: owner.name,
+-                                target_rva,
+-                                storage,
+-                            },
+-                        );
+-                        continue;
+-                    }
+-                    if !recover_data_relocs_from_pdb {
+-                        anyhow::bail!(
+-                            "no candidate writable identity can represent retail RVA {target_rva:#x}"
+-                        );
+-                    }
+-                    let Some((static_rva, static_name)) =
+-                        closest_data_symbol(&symbols.statics, target_rva, storage, contributions)
+-                    else {
+-                        // A `continue` here would silently DROP the relocation
+-                        // from the emitted object; refuse instead, exactly as
+-                        // an unprovided fence is refused.
+-                        anyhow::bail!(
+-                            "writable relocation target {target_rva:#x} (site {reloc_rva:#x}) has no data symbol in its contribution - the identity is not provided (claim it, or add its exact spelling to the reloc-alias manifest)"
+-                        );
+-                    };
+-
+-                    let (diff, reloc_name) = match resolve_data_alias(
+-                        &symbols.statics,
+-                        *static_rva,
+-                        target_rva,
+-                        *static_name,
+-                        storage,
+-                        contributions,
+-                    )? {
+-                        Some((addend, owner)) => (addend, owner),
+-                        None => (u32::try_from(target_rva - *static_rva)?, *static_name),
+-                    };
+-                    refuse_unprovisioned(reloc_name, target_rva)?;
+-                    coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+-
++                    coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
+                     relocs_rva.insert(
+                         reloc_rva,
+                         RelocKind::Static {
+-                            symbol: reloc_name,
++                            symbol: owner,
+                             target_rva,
+                             storage,
+                         },
+                     );
++                    continue;
+                 }
+-                () if (env.idata.rva..env.idata.rva + env.idata.size).contains(&target_rva) => {
+-                    let Some(symbol) = symbols.imports.get(&target_rva) else {
+-                        anyhow::bail!(
+-                            "IAT relocation target {target_rva:#x} has no exact PDB symbol"
+-                        );
++                if let Some((owner, addend)) = data_manifest.owner_and_addend_for_rva(target_rva) {
++                    let storage = match owner.storage {
++                        DataStorage::Bss => ContributionStorage::Bss,
++                        DataStorage::Data => ContributionStorage::Data,
++                        DataStorage::Rdata => {
++                            anyhow::bail!(".rdata manifest owner lies in writable PE storage")
++                        }
+                     };
+-                    coff_data_reloc.copy_from_slice(&0u32.to_le_bytes());
+-                    relocs_rva.insert(reloc_rva, RelocKind::Import { symbol: *symbol });
++                    let diff = u32::try_from(addend)?;
++                    coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
++                    relocs_rva.insert(
++                        reloc_rva,
++                        RelocKind::Static {
++                            symbol: owner.name,
++                            target_rva,
++                            storage,
++                        },
++                    );
++                    continue;
+                 }
+-                () => (),
++                let storage = contributions
++                    .storage_for_rva(target_rva)
++                    .or_else(|| unresolved.storage_for_rva(target_rva))
++                    .filter(|storage| {
++                        matches!(
++                            storage,
++                            ContributionStorage::Data | ContributionStorage::Bss
++                        )
++                    })
++                    .or_else(|| retail_storage_for_rva(env, target_rva))
++                    .filter(|storage| {
++                        matches!(
++                            storage,
++                            ContributionStorage::Data | ContributionStorage::Bss
++                        )
++                    })
++                    .ok_or_else(|| {
++                        anyhow::anyhow!(
++                            "writable relocation target {target_rva:#x} has no storage class"
++                        )
++                    })?;
++                let manifest_storage = match storage {
++                    ContributionStorage::Data => DataStorage::Data,
++                    ContributionStorage::Bss => DataStorage::Bss,
++                    _ => unreachable!(),
++                };
++                let object = contributions.owner_for_rva(storage, target_rva);
++                if let Some((owner, addend)) = data_manifest.hypothesis_owner_and_addend_for_rva(
++                    target_rva,
++                    Some(manifest_storage),
++                    object,
++                ) {
++                    coff_data_reloc.copy_from_slice(&addend.to_le_bytes());
++                    relocs_rva.insert(
++                        reloc_rva,
++                        RelocKind::Static {
++                            symbol: owner.name,
++                            target_rva,
++                            storage,
++                        },
++                    );
++                    continue;
++                }
++                if !recover_data_relocs_from_pdb {
++                    anyhow::bail!(
++                        "no candidate writable identity can represent retail RVA {target_rva:#x}"
++                    );
++                }
++                let Some((static_rva, static_name)) =
++                    closest_data_symbol(&symbols.statics, target_rva, storage, contributions)
++                else {
++                    // A `continue` here would silently DROP the relocation
++                    // from the emitted object; refuse instead, exactly as
++                    // an unprovided fence is refused.
++                    anyhow::bail!(
++                        "writable relocation target {target_rva:#x} (site {reloc_rva:#x}) has no data symbol in its contribution - the identity is not provided (claim it, or add its exact spelling to the reloc-alias manifest)"
++                    );
++                };
++
++                let (diff, reloc_name) = match resolve_data_alias(
++                    &symbols.statics,
++                    *static_rva,
++                    target_rva,
++                    *static_name,
++                    storage,
++                    contributions,
++                )? {
++                    Some((addend, owner)) => (addend, owner),
++                    None => (u32::try_from(target_rva - *static_rva)?, *static_name),
++                };
++                refuse_unprovisioned(reloc_name, target_rva)?;
++                coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
++
++                relocs_rva.insert(
++                    reloc_rva,
++                    RelocKind::Static {
++                        symbol: reloc_name,
++                        target_rva,
++                        storage,
++                    },
++                );
++            }
++            () => {
++                anyhow::bail!("absolute site {reloc_rva:#x} has unsupported target {target_rva:#x}")
+             }
+         }
+     }
+@@ -735,6 +758,30 @@
+     use super::*;
+
+     #[test]
++    fn reviewed_manifest_and_retained_directory_precedence() {
++        let manifest = RelocManifest::parse(
++            b"site_rva\tkind\n0x240\tdir32\n",
++            std::path::Path::new("test.tsv"),
++        )
++        .unwrap();
++        assert_eq!(absolute_sites(None, Some(&manifest)).unwrap(), vec![0x240]);
++        let data = [0x00, 0x10, 0, 0, 12, 0, 0, 0, 0x20, 0x30, 0, 0];
++        assert_eq!(
++            absolute_sites(Some(&data), Some(&manifest)).unwrap(),
++            vec![0x1020]
++        );
++    }
++
++    #[test]
++    fn retained_directory_and_missing_recovery() {
++        let data = [0x00, 0x10, 0, 0, 12, 0, 0, 0, 0x20, 0x30, 0, 0];
++        assert_eq!(absolute_sites(Some(&data), None).unwrap(), vec![0x1020]);
++        assert!(absolute_sites(None, None).is_err());
++        assert!(absolute_sites(Some(&data[..11]), None).is_err());
++        assert!(absolute_sites(Some(&data[..4]), None).is_err());
++    }
++
++    #[test]
+     fn retail_storage_distinguishes_readonly_initialized_and_zero_fill() {
+         let classify = |rva| classify_retail_storage(0x100, 0x20, 0x200, 0x40, 0x18, rva);
+         assert_eq!(classify(0x110), Some(ContributionStorage::Rdata));
+@@ -746,7 +793,9 @@
+     #[test]
+     fn unprovisioned_fence_is_refused_but_synthetic_and_real_names_pass() {
+         let fence: RawString<'static> = b"UNPROVISIONED_00653c34".as_slice().into();
+-        let err = refuse_unprovisioned(fence, 0x253c34).unwrap_err().to_string();
++        let err = refuse_unprovisioned(fence, 0x253c34)
++            .unwrap_err()
++            .to_string();
+         assert!(err.contains("0x253c34"), "{err}");
+         assert!(err.contains("UNPROVISIONED_00653c34"), "{err}");
+
+--- /dev/null
++++ b/src/reloc_manifest.rs
+@@ -0,0 +1,188 @@
++use std::collections::HashSet;
++use std::path::Path;
++
++const HEADER: &[u8] = b"site_rva\tkind";
++
++/// Reviewed list of absolute (`dir32`) relocation sites, for an image whose
++/// `.reloc` directory is missing. Each row names the RVA of a 4-byte field that
++/// holds a linked target address; the delinker reads and classifies the target
++/// (see `relocs::resolve_absolute_site`), so the manifest need only locate the
++/// sites the `.reloc` directory would have listed.
++#[derive(Debug)]
++pub struct RelocManifest {
++    sites: Vec<usize>,
++}
++
++impl RelocManifest {
++    pub fn load(path: Option<&Path>) -> anyhow::Result<Option<Self>> {
++        let Some(path) = path else {
++            return Ok(None);
++        };
++        Ok(Some(Self::parse(&std::fs::read(path)?, path)?))
++    }
++
++    pub(crate) fn parse(bytes: &[u8], path: &Path) -> anyhow::Result<Self> {
++        let mut sites = Vec::new();
++        let mut seen = HashSet::new();
++        let mut saw_header = false;
++
++        let text = std::str::from_utf8(bytes)?;
++        let lines = text.lines().map(str::as_bytes);
++
++        for (line_index, line) in lines.enumerate() {
++            let line_number = line_index + 1;
++            if line.is_empty() || line.starts_with(b"#") {
++                continue;
++            }
++            if !saw_header {
++                if line != HEADER {
++                    anyhow::bail!(
++                        "{}:{}: invalid reloc manifest header",
++                        path.display(),
++                        line_number
++                    );
++                }
++                saw_header = true;
++                continue;
++            }
++            if line == HEADER {
++                anyhow::bail!(
++                    "{}:{}: duplicate reloc manifest header",
++                    path.display(),
++                    line_number
++                );
++            }
++
++            let fields: Vec<_> = line.split(|byte| *byte == b'\t').collect();
++            if fields.len() != 2 {
++                anyhow::bail!(
++                    "{}:{}: expected exactly two tab-separated columns",
++                    path.display(),
++                    line_number
++                );
++            }
++            match fields[1] {
++                b"dir32" => {}
++                value => anyhow::bail!(
++                    "{}:{}: unsupported kind {}",
++                    path.display(),
++                    line_number,
++                    String::from_utf8_lossy(value)
++                ),
++            }
++            let site_rva = parse_number(fields[0]).ok_or_else(|| {
++                anyhow::anyhow!("{}:{}: invalid site_rva", path.display(), line_number)
++            })?;
++            if !seen.insert(site_rva) {
++                anyhow::bail!("{}:{}: duplicate site RVA", path.display(), line_number);
++            }
++            sites.push(site_rva);
++        }
++
++        if !saw_header {
++            anyhow::bail!("{}: missing reloc manifest header", path.display());
++        }
++        sites.sort_unstable();
++        Ok(Self { sites })
++    }
++
++    /// The reviewed site RVAs, ascending.
++    pub fn sites(&self) -> &[usize] {
++        &self.sites
++    }
++}
++
++fn parse_number(value: &[u8]) -> Option<usize> {
++    let value = std::str::from_utf8(value).ok()?;
++    match value
++        .strip_prefix("0x")
++        .or_else(|| value.strip_prefix("0X"))
++    {
++        Some(hex) => usize::from_str_radix(hex, 16).ok(),
++        None => value.parse().ok(),
++    }
++}
++
++#[cfg(test)]
++mod tests {
++    use super::*;
++
++    fn parse(body: &str) -> anyhow::Result<RelocManifest> {
++        RelocManifest::parse(body.as_bytes(), Path::new("test.tsv"))
++    }
++
++    #[test]
++    fn absent_manifest_is_none() {
++        assert!(RelocManifest::load(None).unwrap().is_none());
++    }
++
++    #[test]
++    fn parses_comments_crlf_and_sorts() {
++        let text = concat!(
++            "# reviewed relocations\r\n",
++            "site_rva\tkind\r\n",
++            "0x140\tdir32\r\n",
++            "\r\n",
++            "0X100\tdir32\r\n",
++            "288\tdir32\r\n",
++        );
++        assert_eq!(parse(text).unwrap().sites(), &[0x100, 0x120, 0x140]);
++    }
++
++    #[test]
++    fn rejects_missing_and_duplicate_headers() {
++        assert!(
++            parse("0x100\tdir32\n")
++                .unwrap_err()
++                .to_string()
++                .contains("invalid reloc manifest header")
++        );
++        assert!(
++            parse("# only a comment\n")
++                .unwrap_err()
++                .to_string()
++                .contains("missing")
++        );
++        assert!(
++            parse("site_rva\tkind\nsite_rva\tkind\n")
++                .unwrap_err()
++                .to_string()
++                .contains("duplicate reloc manifest header")
++        );
++    }
++
++    #[test]
++    fn rejects_wrong_columns_kind_and_duplicate_site() {
++        let hdr = "site_rva\tkind\n";
++        assert!(
++            parse(&format!("{hdr}0x100\n"))
++                .unwrap_err()
++                .to_string()
++                .contains("exactly two")
++        );
++        assert!(
++            parse(&format!("{hdr}0x100\tdir32\textra\n"))
++                .unwrap_err()
++                .to_string()
++                .contains("exactly two")
++        );
++        assert!(
++            parse(&format!("{hdr}0x100\trel32\n"))
++                .unwrap_err()
++                .to_string()
++                .contains("unsupported kind")
++        );
++        assert!(
++            parse(&format!("{hdr}zz\tdir32\n"))
++                .unwrap_err()
++                .to_string()
++                .contains("invalid site_rva")
++        );
++        assert!(
++            parse(&format!("{hdr}0x100\tdir32\n0x100\tdir32\n"))
++                .unwrap_err()
++                .to_string()
++                .contains("duplicate site RVA")
++        );
++    }
++}

@@ -88,10 +88,10 @@ def whole_tree(donor: Path):
         "scripts/create-toolchain-release.nix": "scripts/toolchain/create-toolchain-release.nix",
     }
     exceptions = {
-        "scripts/giten/delink/reloc_image.py": ("inapplicable", "HoMM1 retains retail relocations; Giten synthesizes .reloc for /FIXED DDS.EXE"),
+        "scripts/giten/delink/reloc_image.py": ("adapted", "Buka /FIXED sites use core/pe.py plus the hash-bound manifest directly; no rewritten retail image"),
         "scripts/giten/tool/cdfs.py": ("inapplicable", "Giten disc extraction; HoMM1 uses hash-pinned local PE inputs"),
         "scripts/giten/verify/placement.py": ("deferred", "Data-claim extent and declaration placement audit needs HoMM1 fixtures; data campaign follows code"),
-        "nix/patches/vostok-iat-in-rdata.patch": ("inapplicable", "HoMM1 imports are modeled from its own .idata; donor IAT-in-rdata layout differs"),
+        "nix/patches/vostok-iat-in-rdata.patch": ("adapted", "vostok-fixed-manifest-iat.patch uses the real containing PE section and IAT directory; pdb_synth emits matching section offsets"),
         "nix/patches/vostok-text-data-symbols.patch": ("deferred", "Require HoMM1 code-section data evidence before changing the pinned delinker"),
         "docs/todos/rule-exceptions.tsv": ("inapplicable", "Donor rule exceptions are not HoMM1 authorizations"),
         **{doc: ("inapplicable", "Redundant documentation trimmed by the user")

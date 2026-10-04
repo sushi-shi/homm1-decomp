@@ -39,10 +39,6 @@ from homm1.model import Model
 PDB_DIR = BUILD / "pdb"
 BASE_DIR = BUILD / "objdiff/base"
 
-# Section -> (1-based PE/object-crate section index). The delinker compares
-# offset.section against object-crate section indices, 1-based in PE order.
-SEG_TEXT, SEG_RDATA, SEG_DATA, SEG_IDATA = 1, 2, 3, 4
-
 #: Functions with no claimed unit fall into address buckets of 2**BUCKET_SHIFT
 #: bytes (the granularity the matched functions were delinked under).
 BUCKET_SHIFT = 16
@@ -318,12 +314,15 @@ def reloc_target_refs() -> dict[int, list[int]]:
     bounds = sections_of()
     rd_lo, rd_hi = bounds[".rdata"]
     da_lo, da_hi = bounds[".data"]
+    iat_lo, iat_size = img.pe.directories[12]
     refs: dict[int, list[int]] = {}
     for site in img.reloc_sites:
         value = img.u32(site)
         if value is None:
             continue
         rva = value - img.image_base
+        if iat_lo <= rva < iat_lo + iat_size:
+            continue  # Exact import identities are emitted separately.
         if rd_lo <= rva < rd_hi or da_lo <= rva < da_hi:
             refs.setdefault(rva, []).append(site)
     return refs
@@ -345,15 +344,20 @@ def band_lookup():
 
 
 def game_site_test(model: Model):
-    """site rva -> True when the site is a GAME reference: inside a game
-    link-band AND not inside a proven library body (functions_static_libs)."""
+    """Code references requiring game identities: known game bands or unknown
+    code, excluding reviewed library bands/bodies (functions_static_libs)."""
     band_of = band_lookup()
+    text_lo, text_hi = retail().pe.text_span()
     lib = sorted((b.rva, b.size) for b in model.functions
                  if b.channel == "functions_static_libs" and b.size)
     lib_starts = [x[0] for x in lib]
 
     def is_game(site: int) -> bool:
-        if band_of(site) not in GAME_BANDS:
+        band = band_of(site)
+        # An incomplete migration band map cannot make game references into
+        # anonymous CRT data. Unknown code is conservatively game-owned until
+        # a reviewed library band/provider proves otherwise.
+        if not text_lo <= site < text_hi or (band and band not in GAME_BANDS):
             return False
         i = bisect.bisect_right(lib_starts, site) - 1
         return not (i >= 0 and site < lib[i][0] + lib[i][1])
@@ -652,7 +656,19 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
     text_base = bounds[".text"][0]
     rdata_base = bounds[".rdata"][0]
     data_base = bounds[".data"][0]
-    idata_base = bounds[".idata"][0]
+    pe = retail().pe
+    sections = {section["name"]: index for index, section in enumerate(pe.sections, 1)}
+    text_segment = sections[".text"]
+    # PDB offsets belong to the actual containing PE section, including an IAT
+    # inside .rdata. Never invent a fourth import segment for a /FIXED image.
+    iat_records = []
+    for rva, name in iat_syms:
+        for segment, section in enumerate(pe.sections, 1):
+            if section["va"] <= rva < section["va"] + section["vsize"]:
+                iat_records.append(([(rva, name)], section["va"], segment))
+                break
+        else:
+            raise ValueError(f"IAT slot {rva:#x} is outside the PE sections")
     w = out.write
 
     per_file: dict[str, list[tuple[int, int, str]]] = {}
@@ -684,7 +700,7 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
             w("          CodeSize:        %d\n" % size)
             w("          Flags:           [  ]\n")
             w("          RelocOffset:     %d\n" % off)
-            w("          RelocSegment:    %d\n" % SEG_TEXT)
+            w("          RelocSegment:    %d\n" % text_segment)
             w("          Blocks:\n")
             w("            - FileName:        '%s'\n" % source)
             w("              Lines:\n")
@@ -705,7 +721,7 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
             w("              DbgEnd:          0\n")
             w("              FunctionType:    0\n")
             w("              Offset:          %d\n" % off)
-            w("              Segment:         %d\n" % SEG_TEXT)
+            w("              Segment:         %d\n" % text_segment)
             w("              Flags:           [  ]\n")
             w("              DisplayName:     '%s'\n" % sanitize_name(name))
             w("          - Kind:            S_END\n")
@@ -745,9 +761,9 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
     for source, records in per_file.items():
         module(source, records)
     module(data_file, (), (
-        (rdata_syms, rdata_base, SEG_RDATA),
-        (data_syms, data_base, SEG_DATA),
-        (iat_syms, idata_base, SEG_IDATA),
+        (rdata_syms, rdata_base, sections[".rdata"]),
+        (data_syms, data_base, sections[".data"]),
+        *iat_records,
     ))
 
     # Top-level PDB string table: the source paths line info references.

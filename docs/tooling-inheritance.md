@@ -147,10 +147,10 @@ translation units, declares include paths explicitly and uses its own Wine
 prefix so a reconstruction prefix cannot replace its library environment.
 
 Adapted for `/FIXED`: one PE reader supplies both sema and delink absolute
-sites; a reviewed TSV must carry the exact image SHA-256. The delinker accepts
-the same explicit manifest. Separate `.idata` is optional. Retained: existing
-PE relocation records take precedence. Deferred until the address review:
-trusted Buka site-manifest enrollment, source claims and comparison activation.
+sites; a reviewed TSV must carry the exact image SHA-256. The Python adapter
+passes the same explicit manifest; the delinker package adaptation and reviewed
+site enrollment are recorded below. Retained: existing PE relocation records
+take precedence. Source claims and comparison activation remain incomplete.
 The relocation sweep was measured against 1.2, not assumed correct from the
 donor's different target.
 
@@ -262,11 +262,46 @@ The delinker hint for a missing executable no longer mislabels a missing
 retail manifest as a PATH problem. No new adapter pipeline was introduced.
 
 All 46 focused tests and the usage audit pass. The candidate links with
-zero unresolved symbols and duplicate warnings. Build/final verification stop
+zero unresolved symbols and duplicate warnings. At that census checkpoint, build/final verification stopped
 at the missing fixed-image manifest; the selected-unit match report also
 remains unavailable. The whole-tree pinned-Giten audit still reports missing
 `sema/exe_map.py` and `verify/selftest.py`, and adaptations needing broader
-review. Deferred: the reviewed `/FIXED` absolute manifest, remaining source,
+review. That checkpoint deferred manifest enrollment (completed below), source,
 data and library identities, unique representation of colliding VC6 internal
 names if encountered, and full runtime/clean validation. The structural census
 and diagnostic instruction agreement do not establish strict matching parity.
+
+## Buka reviewed references and embedded IAT
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b` and its
+delinker pin `1393e24b4804cb357fdac147c68013f0aa5a9d95`, Gruntz
+`d1cdb537caa6142849c7345eedc306dbb5af3763` and its retained
+`81d34b204a0384a92cf3b4c641a8430256b2922e` delinker pin, plus pinned Giten's
+`delink/reloc_image.py` and `vostok-iat-in-rdata.patch`.
+
+Retained: the existing package pin, strict referent classifier, canonical alias
+ownership, unprovided-identity refusal, switch-table handling and usage-logged
+Python entry points. Adapted from HoMM2: the reviewed `site_rva/kind` manifest
+schema/parser and real-section IAT range semantics. The parser uses the pinned
+package's existing dependency set. HoMM1 reads the PE relocation directory
+first; otherwise it uses the explicit hash-validated manifest. No pointer
+rediscovery fallback is enabled. The synthetic PDB now emits imports relative
+to their real PE section and excludes IAT targets from ordinary data fences.
+Unclassified code keeps the game-data identity requirement until reviewed
+library evidence says otherwise.
+
+Inapplicable: Giten's rewritten image and invented IAT segment, because the
+existing HoMM1 reader and manifest-aware delinker consume the pristine image
+directly. Deferred: Buka source/data/alias ownership migration, complete strict
+comparison, clean exports and runtime validation. The archived NWC alias rows
+are historical evidence only. The Buka site manifest records reviewed fields,
+not a claim of donor command parity or source matching.
+
+Validation: 68 Rust tests pass, including manifest parsing/recovery, retained
+directory precedence and IAT bounds. Old/new delinkers produce byte-identical
+sets of 72 NWC 1.2 objects from the same PDB/manifests. All 49 focused Python tests pass, covering separate and embedded IATs and
+conservative unknown-band handling. Usage logging passes. Candidate linking
+has zero unresolved symbols and duplicate warnings.
+The build reaches strict unprovided-data refusal at Buka RVA `0x8a38c`.
+The whole-tree audit dispositions now describe the actual /FIXED and IAT
+adaptations; remaining missing capabilities are still recorded separately.
