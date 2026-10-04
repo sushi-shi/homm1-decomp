@@ -1,6 +1,7 @@
 # Buka census migration in progress: reviewed FINDPATH/SEARCH and adventure-manager dependency starts; remaining rows still inherited NWC evidence.
 # Evidence: buka-pathfinding.json and buka-advmgr.json.
 # Command-handler operand review: buka-adventure-commands.json.
+# Input-handler operand and payload review: buka-adventure-input.json.
 rva	kind
 0x0008a38c	vtable
 0x0008a758	vtable
@@ -105,6 +106,7 @@ rva	kind
 0x00092288	
 0x0009232c	
 0x00092330	
+0x0009238c	
 0x000923a8	
 0x000923b0	
 0x00092410	
@@ -141,7 +143,6 @@ rva	kind
 0x00092e50	
 0x00092e58	
 0x00092e5c	
-0x00092e60	
 0x00092ef8	
 0x00092f90	
 0x00093028	
@@ -546,6 +547,7 @@ rva	kind
 0x000a7f68	
 0x000a7f70	
 0x000a7f78	
+0x000a7fc0	
 0x000a7ff0	
 0x000a8150	
 0x000a82b4	
@@ -558,13 +560,11 @@ rva	kind
 0x000a82ec	
 0x000a82f0	
 0x000a82f4	
-0x000a82f8	
 0x000a82fc	
 0x000a8300	
 0x000a86fc	
 0x000a8700	
 0x000a8704	
-0x000a8708	
 0x000a9408	
 0x000a9414	
 0x000a9428	
@@ -638,7 +638,6 @@ rva	kind
 0x000c0b9c	
 0x000c0ba0	
 0x000c0ba4	
-0x000c0ba8	
 0x000c0bb0	
 0x000c0bf8	
 0x000c2038	
@@ -694,6 +693,7 @@ rva	kind
 0x000c2d28	
 0x000c2d30	
 0x000c2d38	
+0x000c8cd0	
 0x000c9d38	
 0x000c9d50	
 0x000ca188	

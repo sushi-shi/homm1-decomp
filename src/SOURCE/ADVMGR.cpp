@@ -1528,7 +1528,7 @@ void advManager::Reseed(i32, i32) {
 // donor PoL RVA 0x00058d68; preferred Buka symbol ?ProcessSelect@advManager@@QAEHPAUtag_message@@PAPAVmapCell@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
-VA(0x00455920, 0xe39)
+VA(0x00403620, 0xe55)
 i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
     i16 curX;
     i16 cellType;
@@ -1550,12 +1550,12 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         case ADVENTURE_CONTROL_HERO_LOCATOR_4:
             iPage = (message->id - ADVENTURE_CONTROL_HERO_LOCATOR_1)
                     / (ADVENTURE_CONTROL_HERO_LOCATOR_2 - ADVENTURE_CONTROL_HERO_LOCATOR_1);
-            if (gpCurPlayer->m_heroCount <= iPage)
+            if (iPage >= gpCurPlayer->m_heroCount)
                 break;
             cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 HeroQuickView(cellType, iPage, QUICK_VIEW_AT_LOCATOR, QUICK_VIEW_AT_LOCATOR);
-            } else if (gpCurPlayer->CurrentHero() == cellType) {
+            } else if (cellType == gpCurPlayer->CurrentHero()) {
                 m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                 DoAdvCommand();
             } else {
@@ -1579,7 +1579,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 );
             } else {
                 HideRoute(1, 0, 1);
-                if (gpCurPlayer->CurrentTown() == cellType) {
+                if (cellType == gpCurPlayer->CurrentTown()) {
                     m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                     *eventCell = DoAdvCommand();
                 } else {
@@ -1648,10 +1648,10 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             }
             break;
         case ADVENTURE_CONTROL_MAP_VIEW:
-            if (!(gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX][m_hoverCellY + m_mapOriginY]
+            if (!(gpGame->m_mapExtra[m_mapOriginX + m_lastHoverCell][m_mapOriginY + m_hoverCellY]
                   & giCurPlayerBit))
                 isVisible = 0;
-            hoverCell = GetCell(m_lastHoverCell + m_mapOriginX, m_hoverCellY + m_mapOriginY);
+            hoverCell = GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY);
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 if (!isVisible) {
                     QuickInfo(m_lastHoverCell, m_hoverCellY);
@@ -1692,8 +1692,8 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                             TownQuickView(mapIndex, QUICK_VIEW_NO_LOCATOR, curX, curY);
                             break;
                         default:
-                            if (gpGame->m_mapExtra[m_lastHoverCell + m_mapOriginX]
-                                                  [m_hoverCellY + m_mapOriginY]
+                            if (gpGame->m_mapExtra[m_mapOriginX + m_lastHoverCell]
+                                                  [m_mapOriginY + m_hoverCellY]
                                 & giCurPlayerBit)
                                 QuickInfo(m_lastHoverCell, m_hoverCellY);
                             break;
@@ -1728,7 +1728,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     mapIndex = hoverCell->m_objectMetadata;
                     if (cellType == MAP_OBJECT_HERO) {
-                        if (gpCurPlayer->CurrentHero() == mapIndex) {
+                        if (mapIndex == gpCurPlayer->CurrentHero()) {
                             m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                             DoAdvCommand();
                         } else if (gpGame->GetHero(mapIndex)->m_owner == giCurPlayer) {
@@ -1736,7 +1736,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                         }
                     }
                     if (cellType == MAP_OBJECT_TOWN) {
-                        if (gpCurPlayer->CurrentTown() == mapIndex) {
+                        if (mapIndex == gpCurPlayer->CurrentTown()) {
                             m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                             *eventCell = DoAdvCommand();
                         } else if (gpGame->GetTown(mapIndex)->m_owner == giCurPlayer) {
@@ -1749,7 +1749,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         case ADVENTURE_CONTROL_RADAR:
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 NormalDialog(
-                    "World Map (Left click to move viewing area).",
+                    localization::Tr("adventure.world_map_help"),
                     NORMAL_DIALOG_TYPE_QUICK_VIEW
                 );
                 break;
@@ -1819,9 +1819,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         && message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
         && message->id <= BOTTOM_VIEW_DRAW_LAST_WIDGET)
         NormalDialog(
-            "Status Window\n\nThis window provides information on the status of your hero or "
-            "kingdom, "
-            "and shows the date.  Left click here to cycle through these windows.",
+            localization::Tr("adventure.status_help"),
             NORMAL_DIALOG_TYPE_QUICK_VIEW
         );
     return 1;
@@ -1830,7 +1828,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 // donor PoL RVA 0x00059c19; preferred Buka symbol ?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.346709;margin=0.551065;shape=0.313;size=0.541;calls=0.500;alternate=pol20:int advManager::ProcessDeSelect(struct tag_message *, int *, class mapCell * *)@0x00059c19
-VA(0x00456759, 0x1ea)
+VA(0x00404475, 0x1ac)
 i32 advManager::ProcessDeSelect(
     struct tag_message* message,
     i32* result,
@@ -1850,7 +1848,7 @@ i32 advManager::ProcessDeSelect(
         case ADVENTURE_CONTROL_END_TURN:
             if (gpCurPlayer->HasMobileHero()) {
                 NormalDialog(
-                    "One or more Heroes may still move, are you sure you want to end your turn?",
+                    localization::Tr("adventure.confirm_end_turn"),
                     NORMAL_DIALOG_TYPE_YES_NO
                 );
                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
@@ -1887,7 +1885,7 @@ i32 advManager::ProcessDeSelect(
 // donor PoL RVA 0x0005a07c; preferred Buka symbol ?ProcessSearch@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
-VA(0x00456943, 0x49b)
+VA(0x00404621, 0x428)
 i32 advManager::ProcessSearch(i32 x, i32 y) {
     class sample* sampleData = NULL;
     i32 gaveArtifact;
@@ -1896,10 +1894,10 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     tag_message message;
     i32 i;
 
-    myHero = &gpGame->m_heroRecs[gpCurPlayer->CurrentHero()];
-    if (myHero->m_mobility != myHero->m_remainingMobility) {
+    myHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    if (myHero->m_remainingMobility != myHero->m_mobility) {
         NormalDialog(
-            "Digging for artifacts requires a whole day, try again tomorrow.",
+            localization::Tr("adventure.search.requires_full_day"),
             NORMAL_DIALOG_TYPE_OK
         );
         return 1;
@@ -1913,11 +1911,11 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
     }
     pCell = GetCell(x, y);
     if (pCell->m_objectIndex != MAP_CELL_NO_FRAME || pCell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-        NormalDialog("Try searching on clear ground.", NORMAL_DIALOG_TYPE_OK);
+        NormalDialog(localization::Tr("adventure.search.clear_ground"), NORMAL_DIALOG_TYPE_OK);
         return 1;
     }
     if (pCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
-        NormalDialog("Try looking on land!!!", NORMAL_DIALOG_TYPE_OK);
+        NormalDialog(localization::Tr("adventure.search.on_land"), NORMAL_DIALOG_TYPE_OK);
         return 1;
     }
     if (gbHumanPlayer[giCurPlayer])
@@ -1936,7 +1934,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
         gaveArtifact = GiveArtifact(myHero, gpGame->m_ultimateArtifactId);
         if (gaveArtifact == GIVE_ARTIFACT_NO_SLOT) {
             NormalDialog(
-                "You have no room to carry another artifact!",
+                localization::Tr("adventure.search.no_artifact_room"),
                 NORMAL_DIALOG_TYPE_OK,
                 0x61,
                 0x28
@@ -1947,15 +1945,13 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
                 sprintf(
                     gText,
                     "%s%s",
-                    "Congratulations! After spending many hours digging here, you have uncovered "
-                    "the ",
+                    localization::Tr("adventure.search.found_prefix"),
                     gArtifactNames[gpGame->m_ultimateArtifactId]
                 );
                 if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                     sprintf(
                         gText,
-                        "After spending many hours digging here, you have uncovered the Eye of "
-                        "Goros!!!!"
+                        localization::Tr("adventure.search.eye_of_goros_found")
                     );
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                 } else {
@@ -1966,15 +1962,14 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
             } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                 sprintf(
                     gText,
-                    "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon "
-                    "you, all is lost."
+                    localization::Tr("adventure.search.eye_of_goros_enemy")
                 );
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
             }
             gpGame->m_ultimateArtifactId = ARTIFACT_NONE;
         }
     } else if (gbHumanPlayer[giCurPlayer]) {
-        NormalDialog("Nothing here.\nWhere could it be?", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
+        NormalDialog(localization::Tr("adventure.search.nothing_here"), NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
         WaitSample(sampleData);
@@ -1991,7 +1986,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
 // donor PoL RVA 0x0005a644; preferred Buka symbol ?ProcessHover@advManager@@QAEHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.464646;margin=0.430920;shape=0.299;size=0.767;calls=0.971;alternate=pol20:int advManager::ProcessHover(int, int)@0x0005a644
-VA(0x00456dde, 0xc62)
+VA(0x00404a49, 0xae7)
 i32 advManager::ProcessHover(struct tag_message* message) {
     i16 curX;
     i16 curY;

@@ -5544,5 +5544,6 @@
     "final_claim_payload_check": "All ten function claims and sizes, all 22 data claims and complete typed payloads, and all six compiled Russian help literals verified against retail. Final function residues agree with the recorded instruction/CFG review.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit completed: 202 adapted_review_required, two missing modules. No tool implementation changed."
   },
-  "profile": "/Od /Ob1 /GX /MT /G5"
+  "profile": "/Od /Ob1 /GX /MT /G5",
+  "validation_checkpoint": "b53d70b5; historical validation. Subsequent input-handler migration provides 0x8e478; see buka-adventure-input.json."
 }

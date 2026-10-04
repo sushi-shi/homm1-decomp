@@ -71,7 +71,7 @@ DATA(0x004aca68)
 i8 giBuildBoat[GAME_PLAYER_COUNT];
 DATA(0x004aa0cc)
 float fReduceFactor;
-DATA(0x004c0ba8)
+DATA(0x004c8cd0)
 u8 giCurPlayerBit;
 DATA(0x004aa030)
 i8 giBestShipyardDist;

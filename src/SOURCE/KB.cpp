@@ -3630,7 +3630,7 @@ DATA(0x00492e58)
 i32 gRemoteReady = 0;
 DATA(0x00492e5c)
 i32 gHeartbeatSeen = 0;
-DATA(0x00492e60)
+DATA(0x0049238c)
 char* gArtifactNames[38] = {
     localization::Tr("table.gArtifactNames.0"),  localization::Tr("table.gArtifactNames.1"),
     localization::Tr("table.gArtifactNames.2"),  localization::Tr("table.gArtifactNames.3"),
@@ -4717,7 +4717,7 @@ DATA(0x004a82b8)
 i32 giMaxExtentY;
 DATA(0x004a7c00)
 class font* smallFont;
-DATA(0x004a82f8)
+DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
 DATA(0x004aa020)
 i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
@@ -4735,7 +4735,7 @@ DATA(0x004a7834)
 palette* gPalette;
 DATA(0x004a74d8)
 resourceManager* gpResourceManager;
-DATA(0x004a8708)
+DATA(0x004a7fc0)
 u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004a7bec)
 i32 bSpecialHideCursor;

@@ -2954,3 +2954,47 @@ msgstr "Игровые действия\n\nОткрывает окно игро�
 msgctxt "table.gAdvMenuHelp.5"
 msgid "Game Options\n\nBring up the game options menu."
 msgstr "Настройки игры\n\nОткрыть окно настроек игры."
+
+msgctxt "adventure.world_map_help"
+msgid "World Map (Left click to move viewing area)."
+msgstr "Карта мира (Левой кнопкой мыши осматривать районы карты)."
+
+msgctxt "adventure.status_help"
+msgid "Status Window\n\nThis window provides information on the status of your hero or kingdom, and shows the date.  Left click here to cycle through these windows."
+msgstr "Статус\nВ этом окне сообщается информация о статусе вашего героя или королевства, а также показывает календарь. Щелчком левой кнопки мыши вы можете менять эти окна."
+
+msgctxt "adventure.confirm_end_turn"
+msgid "One or more Heroes may still move, are you sure you want to end your turn?"
+msgstr "Один или более героев все еще могут ходить. Окончить ход?"
+
+msgctxt "adventure.search.requires_full_day"
+msgid "Digging for artifacts requires a whole day, try again tomorrow."
+msgstr "Поиски артефакта займут весь день. Попробуйте завтра."
+
+msgctxt "adventure.search.clear_ground"
+msgid "Try searching on clear ground."
+msgstr "Попробуйте искать на чистой земле."
+
+msgctxt "adventure.search.on_land"
+msgid "Try looking on land!!!"
+msgstr "Попробуйте поискать на земле!!!"
+
+msgctxt "adventure.search.no_artifact_room"
+msgid "You have no room to carry another artifact!"
+msgstr "У вас нет места для еще одного артефакта!"
+
+msgctxt "adventure.search.found_prefix"
+msgid "Congratulations! After spending many hours digging here, you have uncovered the "
+msgstr "Поздравляем! Потратив уйму времени, вы таки нашли "
+
+msgctxt "adventure.search.eye_of_goros_found"
+msgid "After spending many hours digging here, you have uncovered the Eye of Goros!!!!"
+msgstr "Проведя многие часы в поисках, вы таки нашли Око Гороса!"
+
+msgctxt "adventure.search.eye_of_goros_enemy"
+msgid "A great tragedy - the enemy has found the Eye of Goros!!!  The people abandon you, all is lost."
+msgstr "О, ужас - враг нашел первым Око Гороса! Воины покинули вас, и вы проиграли."
+
+msgctxt "adventure.search.nothing_here"
+msgid "Nothing here.\nWhere could it be?"
+msgstr "Здесь ничего нет.\nГде же он?"
