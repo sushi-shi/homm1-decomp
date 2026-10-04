@@ -23,3 +23,18 @@ BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007f98a	0xc9	_DecodePosition	f
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000778b8	0x119	_UpdateDecoderTree	func	buka-bulk-correspondence.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fb6c	0x153	_ReconstructDecoderTree	func	Inherited NWC claim; Buka migration pending
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fcbf	0x129	_Decode	func	Inherited NWC claim; Buka migration pending
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a14b8	0x100	_gDimPalette	data	buka-reference-completion.json: BYTE[256] palette-index remap
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15b8	0x4	_gBitmapSourceSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15bc	0x4	_gBitmapRowSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a148c	0x4	_gIconDataBase	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1490	0x4	_gIconWidth	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1494	0x4	_gIconHeight	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1484	0x4	_gIconXAdjust	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1488	0x4	_gIconYAdjust	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a8	0x4	_gClipRowSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14ac	0x4	_gClipColumn	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a0	0x4	_gClipLeftSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a149c	0x4	_gClipRowsLeft	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a4	0x4	_gClipVisibleWidth	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/TILE	src/BASE/TILE.asm	0x000a14b0	0x4	_gTileScratch	data	buka-reference-completion.json: DWORD scalar from MASM declaration
+BASE/TILE	src/BASE/TILE.asm	0x000a14b4	0x2	_gTileRows	data	buka-reference-completion.json: WORD scalar from MASM declaration

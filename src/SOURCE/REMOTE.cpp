@@ -393,7 +393,7 @@ i8 InitNetGuest(void) {
     switch (gInitNetGuestStatus) {
         case 0:
             if (static_cast<i16>(nb_init(6)) == 1) {
-                ShutDown("NETBIOS is not loaded.");
+                ShutDown(localization::Tr("network.netbios.missing"));
             } else {
                 gRemoteOn = 1;
                 giThisNetPos = 1;
@@ -411,7 +411,7 @@ i8 InitNetGuest(void) {
             if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 gInitNetGuestStatus++;
             else
-                ShutDown("Network initialization failed");
+                ShutDown(localization::Tr("network.initialize.failed"));
             break;
         case 3:
             status = nb_stat(0, 6);
@@ -420,7 +420,7 @@ i8 InitNetGuest(void) {
                 if (status & NETBIOS_SESSION_ERROR) {
                     giThisNetPos++;
                     if (giThisNetPos > REMOTE_NET_NAME_LAST) {
-                        sprintf(gText, "Network initialization failed, all game slots used!");
+                        sprintf(gText, localization::Tr("network.initialize.slots_full"));
                         ShutDown(gText);
                     } else {
                         gInitNetGuestStatus--;
@@ -432,7 +432,7 @@ i8 InitNetGuest(void) {
             break;
         case 4:
             if (nb_sess(0, NETBIOS_SESSION_RECEIVE_ANY, 0) != 0) {
-                sprintf(gText, "Network initialization failed");
+                sprintf(gText, localization::Tr("network.initialize.failed"));
                 ShutDown(gText);
             }
             return 1;
@@ -505,7 +505,7 @@ i32 nbnet_init(void) {
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
-            sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
+            sprintf(gText, localization::Tr("network.initialize.wait"));
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -520,7 +520,7 @@ i32 nbnet_init(void) {
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
-            sprintf(gText, "Waiting On Guest.\n\n  Press 'CANCEL' to abort.");
+            sprintf(gText, localization::Tr("network.guest.wait"));
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -540,7 +540,7 @@ i32 nbnet_init(void) {
             break;
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
-            sprintf(gText, "Initializing network.\n\n  Press 'CANCEL' to abort.");
+            sprintf(gText, localization::Tr("network.initialize.wait"));
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -555,7 +555,7 @@ i32 nbnet_init(void) {
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_HOST;
-            sprintf(gText, "Waiting On Host.\n\n  Press 'CANCEL' to abort.");
+            sprintf(gText, localization::Tr("network.host.wait"));
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -609,9 +609,9 @@ i32 Dial(void) {
     char dialCommand[40];
     iLastDialPos = 0;
     sprintf(dialCommand, "ATDT%s", numbuf);
-    sprintf(gText, "%s %s", "Dialing...", numbuf);
+    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), numbuf);
     GUIModemCommand(gText, dialCommand);
-    sprintf(gText, "%s %s", "Dialing...", numbuf);
+    sprintf(gText, "%s %s", localization::Tr("modem.dialing"), numbuf);
     if (GUIModemResponse(gText, "CONNECT"))
         return 1;
     return 0;
@@ -622,9 +622,9 @@ i32 Dial(void) {
 // evidence: graph:3;base=0.520648;margin=0.735557;shape=0.143;size=0.710;calls=1.000;strings=CONNECT|RING;alternate=pol20:long int Wait(void)@0x0000cbdc
 VA(0x004528d3, 0x4b)
 i32 Wait(void) {
-    GUIModemResponse("Waiting for ring...", "RING");
-    GUIModemCommand("Initializing modem...", "ATA");
-    if (GUIModemResponse("Establishing connection...", "CONNECT"))
+    GUIModemResponse(localization::Tr("modem.ring.wait"), "RING");
+    GUIModemCommand(localization::Tr("modem.initializing"), "ATA");
+    if (GUIModemResponse(localization::Tr("modem.connecting"), "CONNECT"))
         return 1;
     return 0;
 }

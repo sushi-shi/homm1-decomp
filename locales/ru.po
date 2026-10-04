@@ -3531,3 +3531,115 @@ msgstr "Неудача! Атака %s наносит меньший урон."
 msgctxt "combat.luck.good.buka"
 msgid "Good luck shines on the %s"
 msgstr "Удача! Отряд %s наносит двойной урон!"
+
+msgctxt "ui.new_game.difficulty_rating"
+msgid "Difficulty Rating:"
+msgstr "Сложность:"
+
+msgctxt "campaign.restart.confirm"
+msgid "Are you sure you want to restart this scenario?"
+msgstr "Вы хотите начать сначала сценарий?"
+
+msgctxt "hero.dismiss.confirm"
+msgid "Are you sure you want to dismiss this Hero?"
+msgstr "Вы действительно хотите уволить героя?"
+
+msgctxt "game.restart.confirm"
+msgid "Are you sure you want to restart?  (Your current game will be lost)"
+msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+
+msgctxt "game.load.confirm"
+msgid "Are you sure you want to load a new game?  (Your current game will be lost)"
+msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
+
+msgctxt "recruitment.garrison.full"
+msgid "There is no room in the garrison for this army."
+msgstr "Нет места в гарнизоне для этой армии."
+
+msgctxt "recruitment.available.label"
+msgid "Available: "
+msgstr "Доступно: "
+
+msgctxt "network.netbios.missing"
+msgid "NETBIOS is not loaded."
+msgstr "НЕТБИОС не загружена."
+
+msgctxt "network.initialize.failed"
+msgid "Network initialization failed"
+msgstr "Не удалось инициировать сетевое соединение"
+
+msgctxt "network.initialize.slots_full"
+msgid "Network initialization failed, all game slots used!"
+msgstr "Не удалось инициировать сетевое соединение, все места заняты!"
+
+msgctxt "network.initialize.wait"
+msgid "Initializing network.\n\n  Press 'CANCEL' to abort."
+msgstr "Инициирование сети.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+msgctxt "network.guest.wait"
+msgid "Waiting On Guest.\n\n  Press 'CANCEL' to abort."
+msgstr "Ожидание гостя.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+msgctxt "network.host.wait"
+msgid "Waiting On Host.\n\n  Press 'CANCEL' to abort."
+msgstr "Ожидание хоста.\n\n Нажмите 'ОТМЕНА', чтобы закончить."
+
+msgctxt "modem.dialing"
+msgid "Dialing..."
+msgstr "Набор номера..."
+
+msgctxt "modem.ring.wait"
+msgid "Waiting for ring..."
+msgstr "Ожидание звонка..."
+
+msgctxt "modem.initializing"
+msgid "Initializing modem..."
+msgstr "Инициирование модема..."
+
+msgctxt "modem.connecting"
+msgid "Establishing connection..."
+msgstr "Налаживаю соединение..."
+
+msgctxt "modem.telephone.required"
+msgid "Please enter the telephone number."
+msgstr "Укажите номер телефона."
+
+msgctxt "combat.spell.cast"
+msgid "Cast %s"
+msgstr "Направить %s"
+
+msgctxt "combat.spell.teleport_here"
+msgid "Teleport Here"
+msgstr "Переместиться сюда"
+
+msgctxt "combat.spell.cast_target"
+msgid "Cast %s on %s"
+msgstr "Направить %s на %s"
+
+msgctxt "hero.meeting.title"
+msgid "%s meets %s"
+msgstr "Встречаются %s и %s"
+
+msgctxt "display.color_mode.required"
+msgid "Heroes requires 256 color mode or higher.\n\nTo change color mode, right click in an open area on the Windows 95 background, choose 'Properties', then the 'Settings' tab, then change the entry in the 'Color Palette Box'."
+msgstr "Для героев требуется режим 256 цветов экрана или более.\n\nЧтобы изменить режим цветности, нажмите правую кнопку мыши на рабочем столе Windows и в открывшемся окне выберите 'Свойства', а затем 'Установки'. Здесь вы и сможете определить цветность экрана."
+
+msgctxt "startup.resources.failed"
+msgid "Unable to initialize resources - possible disk problem."
+msgstr "Ошибка инициации ресурсов. Вероятно, проблемы с диском."
+
+msgctxt "startup.input.failed"
+msgid "Unable to initialize input devices - possible problem with mouse or keyboard."
+msgstr "Ошибка инициации клавиатуры или мышки."
+
+msgctxt "startup.sound.failed"
+msgid "Unable to initialize sound."
+msgstr "Ошибка инициации звука."
+
+msgctxt "startup.mouse.failed"
+msgid "Unable to initialize mouse."
+msgstr "Ошибка инициации мышки."
+
+msgctxt "startup.windows.failed"
+msgid "Unable to initialize windows - possible memory or disk error."
+msgstr "Вероятно, ошибка диска или памяти."

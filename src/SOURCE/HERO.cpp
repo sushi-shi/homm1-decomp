@@ -618,7 +618,7 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
 VA(0x0043a152, 0x47)
 i8 hero::Dismiss(void) {
     NormalDialog(
-        "Are you sure you want to dismiss this Hero?",
+        localization::Tr("hero.dismiss.confirm"),
         NORMAL_DIALOG_TYPE_YES_NO,
         0xb1,
         0x1c,

@@ -43,7 +43,7 @@
 DATA(0x004a2878)
 i32 gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
-DATA(0x004a287c)
+DATA(0x0048f060)
 i32 gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.

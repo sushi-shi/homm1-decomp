@@ -239,17 +239,17 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
         case SPELL_ARMAGEDDON:
         case SPELL_STORM:
         case SPELL_METEOR_SHOWER:
-            sprintf(gText, "Cast %s", gSpellNames[spell]);
+            sprintf(gText, localization::Tr("combat.spell.cast"), gSpellNames[spell]);
             break;
         case SPELL_TELEPORT:
             if (gInTeleportGetDest) {
-                sprintf(gText, "Teleport Here");
+                sprintf(gText, localization::Tr("combat.spell.teleport_here"));
                 break;
             }
         default:
             sprintf(
                 gText,
-                "Cast %s on %s",
+                localization::Tr("combat.spell.cast_target"),
                 gSpellNames[spell],
                 gArmyNames[m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex]
                                .m_creatureType]

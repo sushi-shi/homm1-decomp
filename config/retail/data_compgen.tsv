@@ -6,6 +6,7 @@
 # Combat AI doubles: complete operands and payloads in buka-combat-ai.json.
 # DamageEnemy float/division and double/rounding constants: buka-army-luck.json.
 # DamageGroup percentage and survivor thresholds: buka-army-group.json.
+# Complete-body constant references and exact typed payloads: buka-reference-completion.json.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
@@ -23,6 +24,13 @@ rva	size	name	owner	class
 0x0008a400	0x8	__real@8@3fff8000000000000000	SOURCE/ARMYGRP	fppool
 0x0008a408	0x8	__real@8@3ffeffbe76c8b4395800	SOURCE/ARMYGRP	fppool
 0x0008a410	0x4	__real@4@4005c800000000000000	SOURCE/ARMYGRP	fppool
+0x0008a430	0x4	__real@4@3fff8000000000000000	SOURCE/PHILAI	fppool
+0x0008a480	0x8	__real@8@3ffc8000000000000000	SOURCE/GAME	fppool
+0x0008a488	0x8	__real@8@4004f000000000000000	SOURCE/GAME	fppool
+0x0008a490	0x8	__real@8@3ffd8000000000000000	SOURCE/GAME	fppool
+0x0008a498	0x8	__real@8@4003f000000000000000	SOURCE/GAME	fppool
+0x0008a608	0x8	__real@8@00000000000000000000	SOURCE/PHILAI	fppool
+0x0008a620	0x8	__real@8@3ffefd70a3d70a3d7000	SOURCE/PHILAI	fppool
 0x0008e9e4	0xb	$SG584164	SOURCE/ADVMGR	string
 0x0008e9f0	0xb	$SG584176	SOURCE/ADVMGR	string
 0x0008e9fc	0x4	$SG584188	SOURCE/ADVMGR	string

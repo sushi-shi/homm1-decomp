@@ -45,11 +45,11 @@ rva	size	symbol	provenance
 0x000a3b38	2	?gWindowFadeAssertLine@@3FA	FadeScreen signed word assertion line base
 0x000a3b3c	28	?gWindowFadeAssertFile@@3PADA	FadeScreen WINMGR source assertion path
 0x000a3ba0	18	?gDynamicConstruct@@3PADA	code-required heroWindow constructor name
-0x000a3bb4	56	?gResourceManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000a3bec	80	?gInputManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000a3c3c	28	?gSoundManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000a3c58	28	?gMouseManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
-0x000a3c74	64	?gWindowManagerInitError@@3PADA	executive InitSystem retail distinct error slot; code identity only
+0x000a15cc	56	?gResourceManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
+0x000a1604	39	?gInputManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
+0x000a162c	24	?gSoundManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
+0x000a1644	24	?gMouseManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
+0x000a165c	35	?gWindowManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a3cb4	20	?gDialogManagerError1@@3PADA	retail DoDialog separate manager-add failure slot
 0x000a3cc8	20	?gDialogManagerError2@@3PADA	retail DoDialog separate manager-add failure slot
 0x000a3cdc	20	?gDialogManagerError3@@3PADA	retail DoDialog separate manager-add failure slot
@@ -60,9 +60,9 @@ rva	size	symbol	provenance
 0x000a3dcc	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
 0x000a3de4	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
 0x000a3dfc	30	?gInputManagerAssertFile@@3PADA	code-required assertion source path
-0x000a3e2c	256	_gDimPalette	code-required palette identity and extent
-0x000a3f2c	4	_gBitmapSourceSkip	code-required bitmap source row-skip scratch
-0x000a3f30	4	_gBitmapRowSkip	code-required bitmap row-skip scratch
+0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a15bc	4	_gBitmapRowSkip	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a3f44	16	$anon_str_1ce0c62ab6602cf3ca037b8a224b95bfa06fd3b38eeef85bccb13f647286bce2_0	code-required resourceManager literal identity
 0x000a3f54	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	code-required open-error literal identity
 0x000a3f68	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	code-required invalid-aggregate literal identity
@@ -75,13 +75,13 @@ rva	size	symbol	provenance
 0x000a4074	28	?gReadLongAssertFile@@3PADA	ReadLong assertion source path
 0x000a4090	4	?gReadBlockAssertLine@@3FA	ReadBlock assertion line record
 0x000a4094	28	?gReadBlockAssertFile@@3PADA	ReadBlock assertion source path
-0x000a40bc	4	_gClipRowsLeft	src/BASE/Icon2bc.asm; clipped icon renderer scratch (rows still to draw), code-required identity
-0x000a40c0	4	_gClipLeftSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (left clip skip), code-required identity
-0x000a40c4	4	_gClipVisibleWidth	src/BASE/Icon2bc.asm; clipped icon renderer scratch (visible span width), code-required identity
-0x000a40c8	4	_gClipRowSkip	src/BASE/Icon2bc.asm; clipped icon renderer scratch (destination row skip), code-required identity
-0x000a40cc	4	_gClipColumn	src/BASE/Icon2bc.asm; clipped icon renderer scratch (current column), code-required identity
-0x000a40d0	4	_gTileScratch	code-required identity only
-0x000a40d4	2	_gTileRows	code-required identity only
+0x000a149c	4	_gClipRowsLeft	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14a0	4	_gClipLeftSkip	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14a4	4	_gClipVisibleWidth	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14a8	4	_gClipRowSkip	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14ac	4	_gClipColumn	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14b0	4	_gTileScratch	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a14b4	2	_gTileRows	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a40d8	256	_d_code	code-required identity and extent
 0x000a41d8	256	_d_len	code-required identity and extent
 0x000a42d8	1254	_initialSon	code-required identity and extent
@@ -92,11 +92,11 @@ rva	size	symbol	provenance
 0x000a5488	2	_putbuf	code-required identity and extent
 0x000a548c	1	_putlen	code-required identity and extent
 0x000a5490	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
-0x000a54a0	4	_gIconXAdjust	code-required icon-frame scratch identity
-0x000a54a4	4	_gIconYAdjust	code-required icon-frame scratch identity
-0x000a54a8	4	_gIconDataBase	code-required icon-data base identity
-0x000a54ac	4	_gIconWidth	code-required icon-frame width identity
-0x000a54b0	4	_gIconHeight	code-required icon-frame height identity
+0x000a1484	4	_gIconXAdjust	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a1488	4	_gIconYAdjust	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a148c	4	_gIconDataBase	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a1490	4	_gIconWidth	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
+0x000a1494	4	_gIconHeight	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a54ec	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
 0x000cad50	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
 0x000cd860	1800	?bmpAndMask@@3PAUtagBITMAP@@A	75 cursor mask bitmap descriptors

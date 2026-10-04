@@ -181,7 +181,7 @@ void recruitUnit::Close(void) {
     delete m_window;
     if (m_noRoom)
         NormalDialog(
-            "There is no room in the garrison for this army.",
+            localization::Tr("recruitment.garrison.full"),
             NORMAL_DIALOG_TYPE_OK,
             RECRUIT_NO_ROOM_DIALOG_X,
             RECRUIT_NO_ROOM_DIALOG_Y,
@@ -213,7 +213,7 @@ void recruitUnit::Update(void) {
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
-    sprintf(gText, "%s%d", "Available: ", *m_available);
+    sprintf(gText, "%s%d", localization::Tr("recruitment.available.label"), *m_available);
     message.id = RECRUIT_AVAILABLE_CONTROL;
     message.text = gText;
     m_window->BroadcastMessage(message);

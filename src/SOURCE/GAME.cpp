@@ -934,7 +934,7 @@ void game::UpdateNewGameWindow(void) {
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
     message.id = NEW_GAME_RATING;
-    sprintf(gText, "%s %d%%", "Difficulty Rating:", gpGame->m_difficultyRating);
+    sprintf(gText, "%s %d%%", localization::Tr("ui.new_game.difficulty_rating"), gpGame->m_difficultyRating);
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -1178,7 +1178,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
     delete window;
     if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
         NormalDialog(
-            "Are you sure you want to restart this scenario?",
+            localization::Tr("campaign.restart.confirm"),
             NORMAL_DIALOG_TYPE_YES_NO,
             -1,
             -1,

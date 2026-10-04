@@ -366,7 +366,7 @@ void resourceManager::RestorePosition(void) {
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x0046cc76, 0x48)
-#line 598 "F:\\H1w95src\\Base\\RESMGR.CPP"
+#line 598 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 i8 resourceManager::ReadByte(void) {
 #line 599
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -379,7 +379,7 @@ i8 resourceManager::ReadByte(void) {
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
 VA(0x0046ccbe, 0x4b)
-#line 619 "F:\\H1w95src\\Base\\RESMGR.CPP"
+#line 619 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 i16 resourceManager::ReadWord(void) {
 #line 620
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -390,7 +390,7 @@ i16 resourceManager::ReadWord(void) {
 
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x0046cd09, 0x4b)
-#line 639 "F:\\H1w95src\\Base\\RESMGR.CPP"
+#line 639 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 i32 resourceManager::ReadLong(void) {
 #line 640
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -416,7 +416,7 @@ void resourceManager::Read13(i8* destination) {
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x0046cdb0, 0x52)
-#line 679 "F:\\H1w95src\\Base\\RESMGR.CPP"
+#line 679 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 void resourceManager::ReadBlock(i8* destination, u32 size) {
 #line 680
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);

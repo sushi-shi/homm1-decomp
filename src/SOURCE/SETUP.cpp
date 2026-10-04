@@ -297,7 +297,7 @@ i8 game::SetupModemGame(void) {
                     return 0;
             }
             if (!gDirectConnect)
-                GetDataEntry("Please enter the telephone number.", numbuf, 35, NULL);
+                GetDataEntry(localization::Tr("modem.telephone.required"), numbuf, 35, NULL);
             break;
         case CHOICE_TWO:
             iMPExtendedType = REMOTE_GAME_MODEM_GUEST;

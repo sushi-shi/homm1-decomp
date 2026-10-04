@@ -90,7 +90,7 @@ extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00466710, 0x3e)
-#line 49 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 49 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDRestoreDisplayMode() {
     i32 result;
     if (gDD != NULL) {
@@ -117,7 +117,7 @@ BOOL DDQueryNewPalette() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.466160;margin=0.260025;shape=0.308;size=0.761;calls=1.000;alternate=pol20:void CreatePrimary(void)@0x0003532b
 VA(0x0046677b, 0x7d)
-#line 71 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 71 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void CreatePrimary(void) {
     i32 result;
 
@@ -136,7 +136,7 @@ void CreatePrimary(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462387;margin=0.608484;shape=0.302;size=0.757;calls=1.000;alternate=pol20:void SetupClipper(void)@0x000353bf
 VA(0x004667f8, 0xbe)
-#line 91 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 91 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void SetupClipper(void) {
     i32 result;
 
@@ -160,7 +160,7 @@ void SetupClipper(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.478180;margin=0.785524;shape=0.323;size=0.780;calls=1.000;alternate=pol20:void DDInitGraphics(void)@0x000354a2
 VA(0x004668b6, 0x139)
-#line 114 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 114 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDInitGraphics(void) {
     i32 result;
 
@@ -199,7 +199,7 @@ void DDInitGraphics(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
 VA(0x004352f6, 0x592)
-#line 161 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
     i32 ySrc;
     i32 height;
@@ -333,7 +333,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 
 // Both donors retain the DirectDraw palette setup and its three locals.
 VA(0x00435888, 0x140)
-#line 315 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 315 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDInitializePalette() {
     i32 ddrval;
     HDC hdc;
@@ -370,7 +370,7 @@ void DDInitializePalette() {
 
 // Buka's palette attachment; PoL retains the error line-base source form.
 VA(0x004359c8, 0xb3)
-#line 387 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 387 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDSetPalette() {
     i32 result;
     if (gWinGraphBusy != FALSE)
@@ -390,7 +390,7 @@ BOOL DDSetPalette() {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.607502;margin=0.616633;shape=0.536;size=0.889;calls=1.000;alternate=pol20:struct IDirectDrawSurface * DDCreateSurface(unsigned long int, unsigned long int, int)@0x00035d1c
 VA(0x00435a7b, 0x12a)
-#line 417 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 417 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
@@ -548,7 +548,7 @@ void DDSD(i32 error, char* file, i32 line) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.482125;margin=0.532523;shape=0.296;size=0.838;calls=1.000;alternate=pol20:void DDUpdatePalette(signed char *)@0x00036421
 VA(0x00435f93, 0x11c)
-#line 524 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 524 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
     i32 res;
@@ -586,7 +586,7 @@ void DDUpdatePalette(i8* paletteData) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.511358;margin=0.374406;shape=0.341;size=0.862;calls=1.000;alternate=pol20:void DDCleanUpWinGraphics(void)@0x00036539
 VA(0x004360af, 0x17f)
-#line 550 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 550 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDCleanUpWinGraphics(void) {
     // Both locals survive in Buka591-632 and PoL481-519; restoreVal is written.
     i32 restoreVal;
@@ -629,7 +629,7 @@ void DDCleanUpWinGraphics(void) {
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
 VA(0x0043622e, 0x2ea)
-#line 596 "F:\\h1w95src\\source\\wingraph.cpp"
+#line 596 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDSetFullScreenStatus(i32 fullScreen) {
     i32 w;
     i32 x;
@@ -1001,9 +1001,7 @@ void GetGraphicsInfo(void) {
         ReleaseDC(NULL, screenDC);
         if (gMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
             ShutDown(
-                "Heroes requires 256 color mode or higher.\n\nTo change color mode, right "
-                "click in an open area on the Windows 95 background, choose 'Properties', "
-                "then the 'Settings' tab, then change the entry in the 'Color Palette Box'."
+                localization::Tr("display.color_mode.required")
             );
     }
 }

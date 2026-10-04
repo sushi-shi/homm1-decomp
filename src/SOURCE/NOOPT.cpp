@@ -27,7 +27,7 @@ void DelayTicks(i32 ticks) {
 }
 
 VA(0x0044639e, 0x3b)
-#line 15 "F:\\h1w95src\\source\\NOOPT.CPP"
+#line 15 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\NOOPT.CPP"
 void DelayTil(i32* endTime) {
 #line 16
     H1_ASSERT(*endTime > 10000);

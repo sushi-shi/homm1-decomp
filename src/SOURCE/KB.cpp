@@ -2848,7 +2848,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
         case APP_MENU_NEW_MODEM_GUEST:
         case APP_MENU_NEW_DIRECT_HOST:
         case APP_MENU_NEW_DIRECT_GUEST:
-            strcpy(gText, "Are you sure you want to restart?  (Your current game will be lost)");
+            strcpy(gText, localization::Tr("game.restart.confirm"));
             goto confirmMenuCommand;
         case APP_MENU_LOAD_STANDARD_GAME:
         case APP_MENU_LOAD_CAMPAIGN_GAME:
@@ -2863,7 +2863,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
         case APP_MENU_LOAD_DIRECT_GUEST:
             strcpy(
                 gText,
-                "Are you sure you want to load a new game?  (Your current game will be lost)"
+                localization::Tr("game.load.confirm")
             );
         confirmMenuCommand:
             if (gpAdvManager->m_active == 1) {

@@ -324,8 +324,10 @@ rva	name	provenance
 0x000456ff	_nb_stat	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004592e	?nb_add_name@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00045b79	?nb_recv_any@@YAGH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00045c27	?nb_recv_any_done@@YGXPAU_NCB@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00045d49	?nb_call@@YAGHPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00045e00	?nb_listen@@YAGHPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00045eb7	?nb_call_done@@YGXPAU_NCB@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x000460d7	?nb_close_session@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000462be	?nb_format_name@@YAXPADPAE@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00046370	?DelayTicks@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -414,13 +416,19 @@ rva	name	provenance
 0x000570f2	?SetupModemGame@game@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005738b	?SetupMultiPlayerGame@game@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005752d	?SetupGame@game@@QAECC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00057a60	?SetupCampaignGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
+0x00057c3e	?SetupBaudHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
+0x00057d45	?SetupHotSeatGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00057e0d	?SetupModemGameHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00057f05	?SetupMultiPlayerGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00057fdc	?SetupNetworkGameHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00058089	?SetupGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00058151	?BaseSetupHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005963b	?NextPos@combatManager@@QAEXPAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00059678	?FirstArmy@combatManager@@QAEHHHPAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00059e90	?ViewSpells@combatManager@@QAECH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00059faf	?CombatSpecialHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0005a0b0	?HandleCastSpell@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x0005a572	?SpellMessage@combatManager@@QAEXCC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005a668	?CastSpell@combatManager@@QAEXCCCC@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x1672b, 0x167a5, 0x1682e; buka-melee-attack.json
 0x0005b2c6	?DefaultSpell@combatManager@@QAEXC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json

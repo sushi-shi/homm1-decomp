@@ -248,7 +248,7 @@ i16 army::ValidAttack(
 // Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
 VA(0x0046fa68, 0x11e)
 i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
-#line 311 "F:\\h1w95src\\source\\PATH.CPP"
+#line 311 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;
@@ -272,7 +272,7 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 // Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
 VA(0x00446bb6, 0xbe)
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
-#line 328 "F:\\h1w95src\\source\\PATH.CPP"
+#line 328 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
 {
     if (hex == ARMY_HEX_INVALID)
         return ARMY_HEX_INVALID;

@@ -14,17 +14,17 @@
 #include <SOURCE/kbwin.h>
 
 // Executive start-up and manager-list failure texts (retail .data 0x004a1820..).
-DATA(0x004a3bb4)
-char gResourceManagerInitError[] = "Unable to initialize resources - possible disk problem.";
-DATA(0x004a3bec)
+DATA(0x004a15cc)
+char gResourceManagerInitError[] = localization::Tr("startup.resources.failed");
+DATA(0x004a1604)
 char gInputManagerInitError[] =
-    "Unable to initialize input devices - possible problem with mouse or keyboard.";
-DATA(0x004a3c3c)
-char gSoundManagerInitError[] = "Unable to initialize sound.";
-DATA(0x004a3c58)
-char gMouseManagerInitError[] = "Unable to initialize mouse.";
-DATA(0x004a3c74)
-char gWindowManagerInitError[] = "Unable to initialize windows - possible memory or disk error.";
+    localization::Tr("startup.input.failed");
+DATA(0x004a162c)
+char gSoundManagerInitError[] = localization::Tr("startup.sound.failed");
+DATA(0x004a1644)
+char gMouseManagerInitError[] = localization::Tr("startup.mouse.failed");
+DATA(0x004a165c)
+char gWindowManagerInitError[] = localization::Tr("startup.windows.failed");
 DATA(0x004a3cb4)
 char gDialogManagerError1[] = "Can't add manager!";
 DATA(0x004a3cc8)

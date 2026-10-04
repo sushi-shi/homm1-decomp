@@ -116,7 +116,7 @@ i16 swapManager::Open(i16 id) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     sprintf(
         gText,
-        "%s meets %s",
+        localization::Tr("hero.meeting.title"),
         m_heroes[SWAP_SIDE_LEFT]->m_name,
         m_heroes[SWAP_SIDE_RIGHT]->m_name
     );
