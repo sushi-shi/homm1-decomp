@@ -1,0 +1,1021 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "library_sha256": "28b9f04962378ec4668072f37d7fd2835cd6cacc17b40cf22002c57bd8e76714",
+  "functions": [
+    {
+      "name": "__strcmpi",
+      "rva": "0x7a490",
+      "size": 208,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/14251",
+          "object_sha256": "dad94393bdc306f4b9676ae2bbcdcbd39e489bdecd0b920eb2a67440ef79a7ed",
+          "body_sha256": "37f61b307a04ab04fd46e95dc8d7b9ba530ad796b2a36996b1b9dcbc2f5d929c",
+          "references": [
+            {
+              "offset": "0xe",
+              "kind": 6,
+              "symbol": "___lc_handle",
+              "retail_target": "0xd813c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x56",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x5c",
+              "kind": 6,
+              "symbol": "___setlc_active",
+              "retail_target": "0xd8508",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x6a",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x71",
+              "kind": 20,
+              "symbol": "__lock",
+              "retail_target": "0x7cce8",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x95",
+              "kind": 20,
+              "symbol": "__tolower_lk",
+              "retail_target": "0x8056c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x9f",
+              "kind": 20,
+              "symbol": "__tolower_lk",
+              "retail_target": "0x8056c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xb9",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xc2",
+              "kind": 20,
+              "symbol": "__unlock",
+              "retail_target": "0x7cd49",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?SaveGame@game@@QAEFPADC@Z",
+          "function_rva": "0x2c4dd",
+          "block_instructions": 508,
+          "caller_operand_rva": "0x2c5d8",
+          "callee_rva": "0x7a490",
+          "object_symbol": "_strcmpi"
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "function": "??0fileRequester@@QAE@FFFPBD00@Z",
+          "function_rva": "0x53b7a",
+          "block_instructions": 465,
+          "caller_operand_rva": "0x53fd4",
+          "callee_rva": "0x7a490",
+          "object_symbol": "_strcmpi"
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "function": "?Open@fileRequester@@UAEFF@Z",
+          "function_rva": "0x54459",
+          "block_instructions": 213,
+          "caller_operand_rva": "0x54680",
+          "callee_rva": "0x7a490",
+          "object_symbol": "_strcmpi"
+        }
+      ],
+      "retail_sha256": "d4edf3161efdaacd7feea76cb77da9450b5dc2fcf8d7fc5bf11175efe6d66464"
+    },
+    {
+      "name": "__strnicmp",
+      "rva": "0x7a380",
+      "size": 257,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/14405",
+          "object_sha256": "f8099699c0e3f11f3be889e7113b764d84ae7a94e2e942051b194179790e3bdf",
+          "body_sha256": "19c21035d3c5452f868e301c1a42626b2ddfd900e73cbbedb505a873bf5b1b2d",
+          "references": [
+            {
+              "offset": "0x19",
+              "kind": 6,
+              "symbol": "___lc_handle",
+              "retail_target": "0xd813c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x74",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x7a",
+              "kind": 6,
+              "symbol": "___setlc_active",
+              "retail_target": "0xd8508",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x88",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x91",
+              "kind": 20,
+              "symbol": "__lock",
+              "retail_target": "0x7cce8",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xb6",
+              "kind": 20,
+              "symbol": "__tolower_lk",
+              "retail_target": "0x8056c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xc0",
+              "kind": 20,
+              "symbol": "__tolower_lk",
+              "retail_target": "0x8056c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xe6",
+              "kind": 6,
+              "symbol": "___unguarded_readlc_active",
+              "retail_target": "0xd850c",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xf1",
+              "kind": 20,
+              "symbol": "__unlock",
+              "retail_target": "0x7cd49",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?SaveGame@game@@QAEFPADC@Z",
+          "function_rva": "0x2c4dd",
+          "block_instructions": 508,
+          "caller_operand_rva": "0x2c634",
+          "callee_rva": "0x7a380",
+          "object_symbol": "_strnicmp"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?SaveGame@game@@QAEFPADC@Z",
+          "function_rva": "0x2c4dd",
+          "block_instructions": 508,
+          "caller_operand_rva": "0x2c64e",
+          "callee_rva": "0x7a380",
+          "object_symbol": "_strnicmp"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?NewGame@game@@QAECXZ",
+          "function_rva": "0x2dec4",
+          "block_instructions": 141,
+          "caller_operand_rva": "0x2e07d",
+          "callee_rva": "0x7a380",
+          "object_symbol": "_strnicmp"
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "function": "?Open@fileRequester@@UAEFF@Z",
+          "function_rva": "0x54459",
+          "block_instructions": 213,
+          "caller_operand_rva": "0x54712",
+          "callee_rva": "0x7a380",
+          "object_symbol": "_strnicmp"
+        }
+      ],
+      "retail_sha256": "822e0513d71811b160a6b893dd5a334d34c2553569de5209c857215ab397e3e0"
+    },
+    {
+      "name": "__open",
+      "rva": "0x7a097",
+      "size": 23,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/5144",
+          "object_sha256": "62ced891208954671f419ff67edfe241849913472be7d49a4f6db5375bbfa93e",
+          "body_sha256": "dd330bb81aadadd4054b5724a8da6eda39c7c368159e376a8cd966b5700a250e",
+          "references": [
+            {
+              "offset": "0xf",
+              "kind": 20,
+              "symbol": "__sopen",
+              "retail_target": "0x7a0ae",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?SaveGame@game@@QAEFPADC@Z",
+          "function_rva": "0x2c4dd",
+          "block_instructions": 508,
+          "caller_operand_rva": "0x2c684",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?LoadGame@game@@QAEFPADHH@Z",
+          "function_rva": "0x2cc73",
+          "block_instructions": 292,
+          "caller_operand_rva": "0x2cd04",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?LoadMap@game@@QAEFPAD@Z",
+          "function_rva": "0x30344",
+          "block_instructions": 131,
+          "caller_operand_rva": "0x30373",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?TransmitSaveGame@game@@QAEHHH@Z",
+          "function_rva": "0x370d2",
+          "block_instructions": 154,
+          "caller_operand_rva": "0x37222",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?ReceiveSaveGame@game@@QAEHHH@Z",
+          "function_rva": "0x376cf",
+          "block_instructions": 292,
+          "caller_operand_rva": "0x37a7e",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/HISCORE",
+          "function": "?Update@highScoreManager@@QAEXXZ",
+          "function_rva": "0x3c17f",
+          "block_instructions": 44,
+          "caller_operand_rva": "0x3c1e2",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/KB",
+          "function": "?AddScoreToHighScore@@YAHHHPAD0@Z",
+          "function_rva": "0x40d39",
+          "block_instructions": 198,
+          "caller_operand_rva": "0x40d92",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/KB",
+          "function": "?AddScoreToHighScore@@YAHHHPAD0@Z",
+          "function_rva": "0x40d39",
+          "block_instructions": 198,
+          "caller_operand_rva": "0x40fe2",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "function": "?SetupCDDrive@@YAHXZ",
+          "function_rva": "0x44774",
+          "block_instructions": 236,
+          "caller_operand_rva": "0x4479f",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "function": "?SetupCDDrive@@YAHXZ",
+          "function_rva": "0x44774",
+          "block_instructions": 236,
+          "caller_operand_rva": "0x447d6",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "function": "?SetupCDDrive@@YAHXZ",
+          "function_rva": "0x44774",
+          "block_instructions": 236,
+          "caller_operand_rva": "0x448e3",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/kbwin",
+          "function": "?SetupCDDrive@@YAHXZ",
+          "function_rva": "0x44774",
+          "block_instructions": 236,
+          "caller_operand_rva": "0x449a5",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "SOURCE/REQUEST",
+          "function": "??0fileRequester@@QAE@FFFPBD00@Z",
+          "function_rva": "0x53b7a",
+          "block_instructions": 465,
+          "caller_operand_rva": "0x5419b",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        },
+        {
+          "unit": "BASE/RESMGR",
+          "function": "?LoadAggregateHeader@resourceManager@@QAEFPAD@Z",
+          "function_rva": "0x6c9bb",
+          "block_instructions": 53,
+          "caller_operand_rva": "0x6c9ce",
+          "callee_rva": "0x7a097",
+          "object_symbol": "__open"
+        },
+        {
+          "unit": "BASE/BITMAP",
+          "function": "?Write@bitmap@@QAEXPAD@Z",
+          "function_rva": "0x7345e",
+          "block_instructions": 9,
+          "caller_operand_rva": "0x73476",
+          "callee_rva": "0x7a097",
+          "object_symbol": "_open"
+        }
+      ],
+      "retail_sha256": "81a6f29a9d93c5bea70fdb7a2b1f8970da7d25ee872f61e95693d99d1e489688"
+    },
+    {
+      "name": "_strcmp",
+      "rva": "0x78c90",
+      "size": 132,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/14160",
+          "object_sha256": "3dfeb5c6eaeaa5080f9d6598f8885e20521e729f892a86c98d80d771bc502d57",
+          "body_sha256": "0d2e7ba2802652e4517aec0af8ad2ea5809f9077c7a301a4adb42c2e6d3c789d",
+          "references": []
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?LoadGame@game@@QAEFPADHH@Z",
+          "function_rva": "0x2cc73",
+          "block_instructions": 292,
+          "caller_operand_rva": "0x2ccb0",
+          "callee_rva": "0x78c90",
+          "object_symbol": "_strcmp"
+        },
+        {
+          "unit": "SOURCE/GAME",
+          "function": "?LoadGame@game@@QAEFPADHH@Z",
+          "function_rva": "0x2cc73",
+          "block_instructions": 298,
+          "caller_operand_rva": "0x2d3c1",
+          "callee_rva": "0x78c90",
+          "object_symbol": "_strcmp"
+        }
+      ],
+      "retail_sha256": "0d2e7ba2802652e4517aec0af8ad2ea5809f9077c7a301a4adb42c2e6d3c789d"
+    },
+    {
+      "name": "_exit",
+      "rva": "0x78e48",
+      "size": 17,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/10371",
+          "object_sha256": "8204d0db3006dc9cb4947479de2ff5c6e7a004bbc359c7b66009833728e7f2ab",
+          "body_sha256": "6ddec5eceb7fa9f701758bf34854944eda8296f7b6136bd98fd56ccdf81eedb0",
+          "references": [
+            {
+              "offset": "0x9",
+              "kind": 20,
+              "symbol": "_doexit",
+              "retail_target": "0x78e88",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/KB",
+          "function": "?EarlySetup@@YAHXZ",
+          "function_rva": "0x3cfcb",
+          "block_instructions": 8,
+          "caller_operand_rva": "0x3d063",
+          "callee_rva": "0x78e48",
+          "object_symbol": "_exit"
+        },
+        {
+          "unit": "SOURCE/KB",
+          "function": "?EarlySetup@@YAHXZ",
+          "function_rva": "0x3cfcb",
+          "block_instructions": 8,
+          "caller_operand_rva": "0x3d083",
+          "callee_rva": "0x78e48",
+          "object_symbol": "_exit"
+        },
+        {
+          "unit": "SOURCE/KB",
+          "function": "?EarlySetup@@YAHXZ",
+          "function_rva": "0x3cfcb",
+          "block_instructions": 8,
+          "caller_operand_rva": "0x3d0a2",
+          "callee_rva": "0x78e48",
+          "object_symbol": "_exit"
+        },
+        {
+          "unit": "SOURCE/KB",
+          "function": "?ShutDown@@YAXPAD@Z",
+          "function_rva": "0x41824",
+          "block_instructions": 7,
+          "caller_operand_rva": "0x4193b",
+          "callee_rva": "0x78e48",
+          "object_symbol": "_exit"
+        }
+      ],
+      "retail_sha256": "951d26fa2a645bfa4990b06ee69c44bdc91cf55c52faa9aa7deae09b70543589"
+    },
+    {
+      "name": "__chdir",
+      "rva": "0x79136",
+      "size": 134,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/1152",
+          "object_sha256": "754dc08112dd14340b64a30330e983a58f74a6e26a97a8a41e80e644120d99f2",
+          "body_sha256": "4aee582d5ac3104db0332695f43e9919b2c50cb692330decd78b4d2f4891730d",
+          "references": [
+            {
+              "offset": "0xe",
+              "kind": 6,
+              "symbol": "__imp__SetCurrentDirectoryA@4",
+              "retail_target": "0x8a154",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x24",
+              "kind": 6,
+              "symbol": "__imp__GetCurrentDirectoryA@8",
+              "retail_target": "0x8a1a0",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x4b",
+              "kind": 20,
+              "symbol": "__mbctoupper",
+              "retail_target": "0x7e698",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x68",
+              "kind": 6,
+              "symbol": "__imp__SetEnvironmentVariableA@8",
+              "retail_target": "0x8a1a4",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x76",
+              "kind": 6,
+              "symbol": "__imp__GetLastError@0",
+              "retail_target": "0x8a194",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x7c",
+              "kind": 20,
+              "symbol": "__dosmaperr",
+              "retail_target": "0x7e07b",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/kbwin",
+          "function": "?SetupCDDrive@@YAHXZ",
+          "function_rva": "0x44774",
+          "block_instructions": 236,
+          "caller_operand_rva": "0x447b5",
+          "callee_rva": "0x79136",
+          "object_symbol": "__chdir"
+        }
+      ],
+      "retail_sha256": "d7a5c3456b1107d09660437984b5aeb70049c83d058a07f6d8a7a9b66e66ca1f"
+    },
+    {
+      "name": "_memcmp",
+      "rva": "0x791c0",
+      "size": 172,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/13947",
+          "object_sha256": "e32817b66dd303bb25aea69d89f43be8b8cc27083d992f04d80fdb88f816d4f9",
+          "body_sha256": "7d1229e9a0b0bc4d2d1aefa645125a8758caefe3d483fb80a2a4b04f6e2e314e",
+          "references": []
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/netwin",
+          "function": "?nb_recv_any_done@@YGXPAU_NCB@@@Z",
+          "function_rva": "0x45c27",
+          "block_instructions": 78,
+          "caller_operand_rva": "0x45c9e",
+          "callee_rva": "0x791c0",
+          "object_symbol": "_memcmp"
+        }
+      ],
+      "retail_sha256": "7d1229e9a0b0bc4d2d1aefa645125a8758caefe3d483fb80a2a4b04f6e2e314e"
+    },
+    {
+      "name": "_pow",
+      "rva": "0x79289",
+      "size": 516,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/19409",
+          "object_sha256": "7d1b223bb1d36954d322dd7695c90bcfc95318ea8f0673293a077f55b2bd523e",
+          "body_sha256": "2a4ba59296be41625f379acd92a79229116ad57ccb6530fede68346b9dfeec95",
+          "references": [
+            {
+              "offset": "0x5",
+              "kind": 20,
+              "symbol": "__fload_withFB",
+              "retail_target": "0x7eba5",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x19",
+              "kind": 20,
+              "symbol": "__load_CW",
+              "retail_target": "0x7eb75",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x34",
+              "kind": 20,
+              "symbol": "__fload_withFB",
+              "retail_target": "0x7eba5",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x59",
+              "kind": 20,
+              "symbol": "__twoToTOS",
+              "retail_target": "0x7eb60",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x66",
+              "kind": 6,
+              "symbol": "___fastflag",
+              "retail_target": "0xd7f64",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x6d",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x73",
+              "kind": 6,
+              "symbol": "POW_name",
+              "retail_target": "0xa2b28",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x7d",
+              "kind": 20,
+              "symbol": "__check_range_exit",
+              "retail_target": "0x7ec49",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x83",
+              "kind": 6,
+              "symbol": "___fastflag",
+              "retail_target": "0xd7f64",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x8a",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x90",
+              "kind": 6,
+              "symbol": "POW_name",
+              "retail_target": "0xa2b28",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x9a",
+              "kind": 20,
+              "symbol": "__startTwoArgErrorHandling",
+              "retail_target": "0x7eb00",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xa5",
+              "kind": 20,
+              "symbol": "__fload_withFB",
+              "retail_target": "0x7eba5",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xe2",
+              "kind": 20,
+              "symbol": "__fload_withFB",
+              "retail_target": "0x7eba5",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x11d",
+              "kind": 20,
+              "symbol": "__powhlp",
+              "retail_target": "0x7ecec",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x131",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x177",
+              "kind": 6,
+              "symbol": "__infinity",
+              "retail_target": "0xa4e00",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x191",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x198",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x1ac",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x1b3",
+              "kind": 20,
+              "symbol": "__fast_exit",
+              "retail_target": "0x7ebfe",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x1ce",
+              "kind": 6,
+              "symbol": "__indefinite",
+              "retail_target": "0xa4e60",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x1ec",
+              "kind": 6,
+              "symbol": "__half",
+              "retail_target": "0xa2b20",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/PHILAI",
+          "function": "?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010CCHAAMAAH3333@Z",
+          "function_rva": "0x4a69b",
+          "block_instructions": 267,
+          "caller_operand_rva": "0x4a86c",
+          "callee_rva": "0x79289",
+          "object_symbol": "_pow"
+        },
+        {
+          "unit": "SOURCE/PHILAI",
+          "function": "?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010CCHAAMAAH3333@Z",
+          "function_rva": "0x4a69b",
+          "block_instructions": 267,
+          "caller_operand_rva": "0x4a889",
+          "callee_rva": "0x79289",
+          "object_symbol": "_pow"
+        }
+      ],
+      "retail_sha256": "cf833bf6503bb0fb8b2d05c3b0f399e62687a2207178745d01464baa36d78ab7"
+    },
+    {
+      "name": "_atoi",
+      "rva": "0x79518",
+      "size": 11,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/152",
+          "object_sha256": "1865ec92699ac8b719bd549929efdb08bd54d58879c60f5c8591e4ed4f6d6d3b",
+          "body_sha256": "8251d4c3d717b1dba8e6c7ba14fcff5e8ce53406347f5a02ff23b0348ae10932",
+          "references": [
+            {
+              "offset": "0x5",
+              "kind": 20,
+              "symbol": "_atol",
+              "retail_target": "0x7948d",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/RECRUIT",
+          "function": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+          "function_rva": "0x51325",
+          "block_instructions": 109,
+          "caller_operand_rva": "0x51450",
+          "callee_rva": "0x79518",
+          "object_symbol": "_atoi"
+        },
+        {
+          "unit": "SOURCE/TOWNMGR",
+          "function": "?SplitArmyHandler@@YAFAAUtag_message@@@Z",
+          "function_rva": "0x65bea",
+          "block_instructions": 160,
+          "caller_operand_rva": "0x65d20",
+          "callee_rva": "0x79518",
+          "object_symbol": "_atoi"
+        }
+      ],
+      "retail_sha256": "de8e53f3edb8d03fe276f4726fdf910ba2b7b005346cdbdad94cf3cb7728cff7"
+    },
+    {
+      "name": "_ftell",
+      "rva": "0x7986e",
+      "size": 34,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/12298",
+          "object_sha256": "d3914b7409824c57f1bac47b4bb17be41717cc04fa404c8746ef9248e605c844",
+          "body_sha256": "85fd5e00cd0f7c3ca8fa352c150aea89cf7abcc0838ac7f714bc480a34627681",
+          "references": [
+            {
+              "offset": "0x8",
+              "kind": 20,
+              "symbol": "__lock_file",
+              "retail_target": "0x7eff0",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0xe",
+              "kind": 20,
+              "symbol": "__ftell_lk",
+              "retail_target": "0x79890",
+              "object_addend": "0x0"
+            },
+            {
+              "offset": "0x16",
+              "kind": 20,
+              "symbol": "__unlock_file",
+              "retail_target": "0x7f042",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "SOURCE/REMOTE",
+          "function": "?FileSize@@YAHPAD@Z",
+          "function_rva": "0x51abb",
+          "block_instructions": 31,
+          "caller_operand_rva": "0x51b02",
+          "callee_rva": "0x7986e",
+          "object_symbol": "_ftell"
+        }
+      ],
+      "retail_sha256": "069dc54f2ddfe166d27a274a2a7a367f080eccf7c41d61763f2c8bab307af22f"
+    },
+    {
+      "name": "??1AudiereSampleNode@@QAE@XZ",
+      "rva": "0x69f80",
+      "size": 44,
+      "library": null,
+      "controls": [
+        {
+          "origin": "build/objdiff/base/BASE/AudiereEffects.obj",
+          "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
+          "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150",
+          "references": []
+        }
+      ],
+      "callers": [
+        {
+          "unit": "BASE/AudiereEffects",
+          "function": "?CleanupSamples@@YAXXZ",
+          "function_rva": "0x689a0",
+          "block_instructions": 108,
+          "caller_operand_rva": "0x68a05",
+          "callee_rva": "0x69f80",
+          "object_symbol": "??1AudiereSampleNode@@QAE@XZ"
+        },
+        {
+          "unit": "BASE/AudiereEffects",
+          "function": "?CleanupSamples@@YAXXZ",
+          "function_rva": "0x689a0",
+          "block_instructions": 108,
+          "caller_operand_rva": "0x68ab4",
+          "callee_rva": "0x69f80",
+          "object_symbol": "??1AudiereSampleNode@@QAE@XZ"
+        }
+      ],
+      "retail_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150"
+    },
+    {
+      "name": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z",
+      "rva": "0x69e60",
+      "size": 81,
+      "library": null,
+      "controls": [
+        {
+          "origin": "build/objdiff/base/BASE/AudiereMusic.obj",
+          "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
+          "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
+          "references": []
+        },
+        {
+          "origin": "build/objdiff/base/BASE/AudiereEffects.obj",
+          "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
+          "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
+          "references": []
+        }
+      ],
+      "callers": [
+        {
+          "unit": "BASE/AudiereEffects",
+          "function": "?PlaySample@@YAXPAVsample@@@Z",
+          "function_rva": "0x68b37",
+          "block_instructions": 267,
+          "caller_operand_rva": "0x68c2b",
+          "callee_rva": "0x69e60",
+          "object_symbol": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z"
+        },
+        {
+          "unit": "BASE/AudiereEffects",
+          "function": "?PlaySample@@YAXPAVsample@@@Z",
+          "function_rva": "0x68b37",
+          "block_instructions": 267,
+          "caller_operand_rva": "0x68c39",
+          "callee_rva": "0x69e60",
+          "object_symbol": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z"
+        },
+        {
+          "unit": "BASE/AudiereMusic",
+          "function": "?PlayMusic@@YAXH@Z",
+          "function_rva": "0x692fd",
+          "block_instructions": 310,
+          "caller_operand_rva": "0x694c4",
+          "callee_rva": "0x69e60",
+          "object_symbol": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z"
+        }
+      ],
+      "retail_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655"
+    },
+    {
+      "name": "??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z",
+      "rva": "0x69ef0",
+      "size": 81,
+      "library": null,
+      "controls": [
+        {
+          "origin": "build/objdiff/base/BASE/AudiereMusic.obj",
+          "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
+          "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
+          "references": []
+        }
+      ],
+      "callers": [
+        {
+          "unit": "BASE/AudiereMusic",
+          "function": "?PlayMusic@@YAXH@Z",
+          "function_rva": "0x692fd",
+          "block_instructions": 310,
+          "caller_operand_rva": "0x69459",
+          "callee_rva": "0x69ef0",
+          "object_symbol": "??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z"
+        }
+      ],
+      "retail_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655"
+    },
+    {
+      "name": "_rand",
+      "rva": "0x78df9",
+      "size": 34,
+      "library": "libcmt.lib",
+      "controls": [
+        {
+          "origin": "libcmt.lib:/9363",
+          "object_sha256": "c227b09fe286e8f22982d72183958542ce464a9758cb7edf559f2770057d712e",
+          "body_sha256": "82a11d96726827a0e4767b31c0a21b4c70036f25b7ca010b9e8edcf1f25430fd",
+          "references": [
+            {
+              "offset": "0x1",
+              "kind": 20,
+              "symbol": "__getptd",
+              "retail_target": "0x7af91",
+              "object_addend": "0x0"
+            }
+          ]
+        }
+      ],
+      "callers": [
+        {
+          "unit": "BASE/miscwin",
+          "function": "?Random@@YAHHH@Z",
+          "function_rva": "0x6fd8a",
+          "block_instructions": 18,
+          "caller_operand_rva": "0x6fdac",
+          "callee_rva": "0x78df9",
+          "object_symbol": "_rand"
+        }
+      ],
+      "retail_sha256": "2c6ef651f023240a68af5235ee36d377b2ec79102ea3ed23790b8866876fb69e"
+    }
+  ],
+  "pending": [],
+  "method": "Full current retail instruction bodies agree with pinned VC6 library or current header-emitted object bodies, apart from encoded relocation operands. Relocation sites, object identities, known callees and source caller contexts are recorded separately. No source bodies or matching targets are added for these library/header definitions.",
+  "alias_controls": {
+    "__strcmpi": "VC6 LIBCMT defines __strcmpi and __stricmp as function-typed externals at the same section and offset; OLDNAMES defaults _strcmpi to __strcmpi.",
+    "__open": "The narrow-character source callers disambiguate the otherwise byte-identical __open and __wopen wrappers."
+  }
+}

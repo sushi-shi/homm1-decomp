@@ -10,8 +10,6 @@
 
 #include <string.h>
 
-#pragma intrinsic(strlen)
-
 VA(0x00471dd0, 0xc7)
 font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     i8 name[RESOURCE_NAME_CAPACITY];
@@ -32,18 +30,35 @@ font::~font(void) {
     gpResourceManager->Dispose(m_glyphIcon);
 }
 
+// Map CP1251 codes to Buka's font character order.
+VA(0x00471ef2, 0x4c)
+i32 RemapCyrillicCharacter(i32 character) {
+    if (character == 0xa8)
+        return 0xa0;
+    if (character == 0xb8)
+        return 0xc1;
+    if (character < 0xc0)
+        return 0xa1;
+    if (character < 0xe0)
+        return character - 0x40;
+    return character - 0x3f;
+}
+
 VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     IconEntry* entries = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data
     ); // byte-evidenced: packed frame directory decoded from resource bytes.
-    i8 glyph = 0;
+    i32 glyph = 0;
     i16 drawX = x;
     i16 index = 0;
     while (text[index] != 0) {
-        glyph = text[index] - ' ';
-        if (glyph < 0 || glyph > FONT_GLYPH_INDEX_LAST)
-            glyph = FONT_GLYPH_INDEX_LAST;
+        glyph = static_cast<u8>(text[index]);
+        if (glyph < ' ' || (glyph > 0x7f && glyph < 0xc0 && glyph != 0xb8 && glyph != 0xa8))
+            glyph = 0x7f;
+        else if (glyph > 0x7f)
+            glyph = RemapCyrillicCharacter(glyph);
+        glyph -= ' ';
         if (glyph != 0)
             m_glyphIcon->FillToBuffer(
                 drawX,
@@ -61,7 +76,7 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
 VA(0x0047203d, 0x34f)
 void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
     i16 s;
-    i8 q;
+    i32 q;
     IconEntry* widths;
     char spaceChar;
     // Names place the frame slots; the order gives the operand sort keys of
@@ -87,22 +102,29 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     lineEnd = 0;
     p = 0;
     lw = 0;
-    w = str;
+    w = new char[s + 1];
+    strcpy(w, str);
     drawColor = color;
     while (p < s && w[p] != 0 && m_height + u <= height) {
         while (w[p] != 0 && w[p] != '\n' && lw <= width) {
-            q = w[p] - ' ';
-            if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
-                q = FONT_GLYPH_INDEX_LAST;
+            q = static_cast<u8>(w[p]);
+            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
+                q = 0x7f;
+            else if (q > 0x7f)
+                q = RemapCyrillicCharacter(q);
+            q -= ' ';
             lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > width) {
             p--;
             while (w[p] != ' ' && p >= r) {
-                q = w[p] - ' ';
-                if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
-                    q = FONT_GLYPH_INDEX_LAST;
+                q = static_cast<u8>(w[p]);
+                if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
+                    q = 0x7f;
+                else if (q > 0x7f)
+                    q = RemapCyrillicCharacter(q);
+                q -= ' ';
                 lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
@@ -130,6 +152,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
         p = r;
         lw = 0;
     }
+    delete[] w;
 }
 
 VA(0x0047238c, 0x25f)
@@ -137,7 +160,7 @@ i32 font::LineLength(char* str, i16 maxW) {
     i16 lw;
     i16 p;
     i16 s = strlen(str);
-    i8 q;
+    i32 q;
     IconEntry* widths = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data
     ); // byte-evidenced: packed frame directory decoded from resource bytes.
@@ -158,18 +181,24 @@ i32 font::LineLength(char* str, i16 maxW) {
     w = str;
     while (p < s && w[p] != 0) {
         while (w[p] != 0 && w[p] != '\n' && lw <= maxW) {
-            q = w[p] - ' ';
-            if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
-                q = FONT_GLYPH_INDEX_LAST;
+            q = static_cast<u8>(w[p]);
+            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
+                q = 0x7f;
+            else if (q > 0x7f)
+                q = RemapCyrillicCharacter(q);
+            q -= ' ';
             lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > maxW) {
             p--;
             while (w[p] != ' ' && p >= r) {
-                q = w[p] - ' ';
-                if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
-                    q = FONT_GLYPH_INDEX_LAST;
+                q = static_cast<u8>(w[p]);
+                if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
+                    q = 0x7f;
+                else if (q > 0x7f)
+                    q = RemapCyrillicCharacter(q);
+                q -= ' ';
                 lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
@@ -177,9 +206,6 @@ i32 font::LineLength(char* str, i16 maxW) {
                 lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
         }
         y = p;
-        v = w[y];
-        w[y] = 0;
-        w[y] = v;
         z++;
         r = y + 1;
         p = r;
@@ -190,7 +216,7 @@ i32 font::LineLength(char* str, i16 maxW) {
 
 VA(0x004725eb, 0x133)
 i32 font::LineWidth(char* text) {
-    i8 q;
+    i32 q;
     i32 u;
     IconEntry* table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
@@ -214,9 +240,12 @@ i32 font::LineWidth(char* text) {
     v = text;
     while (p < s && v[p] != 0) {
         while (v[p] != 0 && v[p] != '\n') {
-            q = v[p] - ' ';
-            if (q < 0 || q > FONT_GLYPH_INDEX_LAST)
-                q = FONT_GLYPH_INDEX_LAST;
+            q = static_cast<u8>(v[p]);
+            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
+                q = 0x7f;
+            else if (q > 0x7f)
+                q = RemapCyrillicCharacter(q);
+            q -= ' ';
             w += table[q].w + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }

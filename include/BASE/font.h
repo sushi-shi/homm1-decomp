@@ -7,6 +7,8 @@
 
 class icon;
 
+i32 RemapCyrillicCharacter(i32 character);
+
 H1_ENUM_BEGIN(FontAlignment)
     FONT_ALIGN_LEFT = 0,
     FONT_ALIGN_CENTER = 1,
@@ -14,7 +16,7 @@ H1_ENUM_BEGIN(FontAlignment)
 H1_ENUM_END(FontAlignment)
 
 H1_ENUM_CONST_BEGIN(FontGlyphConstant)
-    FONT_GLYPH_INDEX_LAST = 95,
+    FONT_GLYPH_INDEX_LAST = 161,
     FONT_GLYPH_ADVANCE_SPACING = 1
 H1_ENUM_CONST_END(FontGlyphConstant)
 

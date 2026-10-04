@@ -915,6 +915,9 @@ rva	name	provenance
 0x00069d9d	?SetEffectsVolume@@YAXH@Z	Buka control-panel instruction/CFG/EH review: 0xdcf9; buka-control-panel.json
 0x00069db9	?SetMusicVolume@@YAXH@Z	Buka control-panel instruction/CFG/EH review: 0xdcc4; buka-control-panel.json
 0x00069dd5	?SetVolumes@@YAXHH@Z	Buka adventure-manager family: Open call 0x1fd4; manually reconstructed Audio.cpp and buka-audio.json; buka-advmgr.json
+0x00069e60	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00069ef0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00069f80	??1AudiereSampleNode@@QAE@XZ	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x00069fb0	?CycleColors@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006a14c	??0heroWindowManager@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006a1eb	?Open@heroWindowManager@@UAEFF@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
@@ -1170,18 +1173,29 @@ rva	name	provenance
 0x00078538	_abs	Buka travel-spell/route instruction/CFG/EH review: 0xfb05, 0xfb36; buka-travel.json
 0x00078550	_memcpy	Buka scroll/network/border instruction/CFG/EH review: 0x11415, 0x1145c, 0x11476, 0x114bd, 0x1154b, 0x11591, 0x115ab, 0x115f2; buka-scroll-network.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
+0x00078c90	_strcmp	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x00078d30	_strchr	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00078dec	_srand	Complete follow-up body correspondence; buka-combat-setup.json
+0x00078df9	_rand	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00078e48	_exit	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x00078f60	_strncpy	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0007905e	__lseek	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00079136	__chdir	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x000791c0	_memcmp	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00079289	_pow	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00079518	_atoi	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x000795dd	_fclose	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0007965a	_fread	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00079771	_fseek	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0007985b	_fopen	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0007986e	_ftell	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x00079a00	_strncmp	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00079b89	__write	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00079d79	__read	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00079fb7	__close	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0007a097	__open	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x0007a380	__strnicmp	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x0007a490	__strcmpi	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
 0x0007b09e	_GetCurrentThread@0	Buka FF25 import thunk at 0x7b09e; PE IAT 0x8a124 KERNEL32.dll!GetCurrentThread; decoration from pinned or verified import library, or compiled WinG caller
