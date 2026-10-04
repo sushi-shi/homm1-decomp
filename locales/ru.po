@@ -3315,3 +3315,11 @@ msgstr "Неделя"
 msgctxt "calendar.day.label"
 msgid "Day"
 msgstr "День"
+
+msgctxt "adventure.quick.unknown"
+msgid "Unknown"
+msgstr "Неизвестно"
+
+msgctxt "adventure.quick.none"
+msgid "None"
+msgstr "Нет"

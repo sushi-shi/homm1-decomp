@@ -4138,7 +4138,7 @@ char* gDwellingDescriptions[24] = {
     "The Swamp produces Hydras.",
     "The Black Tower produces Dragons.",
 };
-DATA(0x00493780)
+DATA(0x00492cf4)
 char* gArmySizeNames[6][2] = {
     {localization::Tr("table.gArmySizeNames.0"), localization::Tr("table.gArmySizeNames.1")},
     {localization::Tr("table.gArmySizeNames.2"), localization::Tr("table.gArmySizeNames.3")},

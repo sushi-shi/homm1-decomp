@@ -1,6 +1,19 @@
 # Reviewed VC6 compiler-generated floating constants; stable value-encoded names.
 # Evidence and complete payload/operand checks: buka-radar-locators.json.
+# TownQuickView unpooled strings: every use site and full payload independently verified; buka-quick-views.json.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a8	0x8	__real@8@40059400000000000000	SOURCE/ADVMGR	fppool
+0x0008e9e4	0xb	$SG584164	SOURCE/ADVMGR	string
+0x0008e9f0	0xb	$SG584176	SOURCE/ADVMGR	string
+0x0008e9fc	0x4	$SG584188	SOURCE/ADVMGR	string
+0x0008ea00	0xd	$SG584192	SOURCE/ADVMGR	string
+0x0008ea10	0xb	$SG584208	SOURCE/ADVMGR	string
+0x0008ea1c	0x3	$SG584220	SOURCE/ADVMGR	string
+0x0008ea20	0x4	$SG584224	SOURCE/ADVMGR	string
+0x0008ea24	0xd	$SG584228	SOURCE/ADVMGR	string
+0x0008ea34	0xb	$SG584244	SOURCE/ADVMGR	string
+0x0008ea40	0x3	$SG584256	SOURCE/ADVMGR	string
+0x0008ea44	0x4	$SG584260	SOURCE/ADVMGR	string
+0x0008ea48	0xd	$SG584264	SOURCE/ADVMGR	string

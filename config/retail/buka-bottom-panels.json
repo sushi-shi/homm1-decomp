@@ -4157,5 +4157,6 @@
     "size": 92,
     "end": "0xa95c8",
     "evidence": "Inherited typed char buffer extent retained; all 92 zero-initialized bytes agree. Independent retail pointer reads begin at 0xa95c8 (sites 0x57993, 0x5ecd9, 0x609ea), bounding the region; no padding storage was added."
-  }
+  },
+  "validation_checkpoint": "fdf94d2c; historical validation at that source/object fingerprint. buka-quick-views.json supplies the former 0x8e968 blocker."
 }

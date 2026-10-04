@@ -4042,7 +4042,7 @@ i8 advManager::UpdBottomViewHero(void) {
 // donor PoL RVA 0x0006235b; preferred Buka symbol ?HeroQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:13;base=0.654225;margin=1.910013;shape=0.309;size=0.949;calls=0.880;strings=mons32.icn|qhero0.bin|qhero1.bin;alternate=pol20:void advManager::HeroQuickView(int, int, int, int)@0x0006235b
-VA(0x0045c027, 0xd31)
+VA(0x00409569, 0xc9f)
 void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY) {
     i16 savedOriginX;
     i16 portraitId;
@@ -4136,7 +4136,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                 monster = heroPtr->m_army.m_creatureTypes[curIndex];
                 if (monster != CREATURE_NONE) {
                     monWidgets[j] = new iconWidget(
-                        j * ARMY_QUICK_ICON_SIZE + startPos,
+                        startPos + j * ARMY_QUICK_ICON_SIZE,
                         HERO_QUICK_DETAILED_CREATURE_Y,
                         ARMY_QUICK_ICON_SIZE,
                         ARMY_QUICK_ICON_SIZE,
@@ -4152,7 +4152,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                     labelText[j] = static_cast<char*>(malloc(HERO_QUICK_ARMY_LABEL_CAPACITY));
                     sprintf(labelText[j], "%d", heroPtr->m_army.m_creatureCounts[curIndex]);
                     sizeTexts[j] = new textWidget(
-                        j * ARMY_QUICK_ICON_SIZE + startPos,
+                        startPos + j * ARMY_QUICK_ICON_SIZE,
                         HERO_QUICK_DETAILED_LABEL_Y,
                         ARMY_QUICK_ICON_SIZE,
                         ARMY_QUICK_LABEL_HEIGHT,
@@ -4205,7 +4205,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                 slotIndex++;
             creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
             monWidgets[j] = new iconWidget(
-                j * step + offsetX,
+                offsetX + step * j,
                 rowY,
                 ARMY_QUICK_ICON_SIZE,
                 ARMY_QUICK_ICON_SIZE,
@@ -4224,7 +4224,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                 GetArmySizeName(heroPtr->m_army.m_creatureCounts[slotIndex], ARMY_SIZE_NAME_TITLE)
             );
             sizeTexts[j] = new textWidget(
-                j * step + ARMY_QUICK_AREA_LEFT,
+                step * j + ARMY_QUICK_AREA_LEFT,
                 rowY + ARMY_QUICK_ICON_BASELINE,
                 step,
                 ARMY_QUICK_LABEL_HEIGHT,
@@ -4249,7 +4249,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                     slotIndex++;
                 creatureId = heroPtr->m_army.m_creatureTypes[slotIndex];
                 monWidgets[j] = new iconWidget(
-                    (j - ARMY_QUICK_FIRST_ROW_COUNT) * step + offsetX,
+                    offsetX + step * (j - ARMY_QUICK_FIRST_ROW_COUNT),
                     rowY,
                     ARMY_QUICK_ICON_SIZE,
                     ARMY_QUICK_ICON_SIZE,
@@ -4271,7 +4271,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
                     )
                 );
                 sizeTexts[j] = new textWidget(
-                    (j - ARMY_QUICK_FIRST_ROW_COUNT) * step + ARMY_QUICK_AREA_LEFT,
+                    step * (j - ARMY_QUICK_FIRST_ROW_COUNT) + ARMY_QUICK_AREA_LEFT,
                     rowY + ARMY_QUICK_ICON_BASELINE,
                     step,
                     ARMY_QUICK_LABEL_HEIGHT,
@@ -4314,7 +4314,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
 // donor PoL RVA 0x0006308d; preferred Buka symbol ?GetArmySizeName@advManager@@QAEPADHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.463915;margin=0.489878;shape=0.171;size=0.973;calls=1.000;alternate=pol20:char * advManager::GetArmySizeName(int, int)@0x0006308d
-VA(0x0045cd58, 0xe2)
+VA(0x0040a208, 0xad)
 char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar) {
     if (giDebugLevel > 0) {
         sprintf(cArmySizeName, "%d", armySize);
@@ -4336,7 +4336,7 @@ char* advManager::GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVarian
 // donor PoL RVA 0x000631ad; preferred Buka symbol ?TownQuickView@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:6;base=0.675336;margin=0.051432;shape=0.330;size=0.961;calls=0.941;strings=mons32.icn|qtown1.bin|smalfont.fnt;alternate=pol20:void advManager::TownQuickView(int, int, int, int)@0x000631ad
-VA(0x0045ce3a, 0xc4b)
+VA(0x0040a2b5, 0xb88)
 void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
     i16 portraitId;
     i16 creatureIconHeight;
@@ -4421,9 +4421,9 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
 
         garrisonStr = static_cast<char*>(malloc(TOWN_QUICK_EMPTY_LABEL_CAPACITY));
         if (!detailLevel)
-            sprintf(garrisonStr, "Unknown");
+            sprintf(garrisonStr, localization::Tr("adventure.quick.unknown"));
         else
-            sprintf(garrisonStr, "None");
+            sprintf(garrisonStr, localization::Tr("adventure.quick.none"));
         garrisonWidget = new textWidget(
             TOWN_QUICK_EMPTY_LABEL_X,
             TOWN_QUICK_EMPTY_LABEL_Y,
@@ -4479,16 +4479,14 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
         xAdjust = 0;
         for (i = 0; i < row1; i++) {
             if (numArmies == ARMY_GROUP_SLOT_COUNT) {
-                if (i == 0)
-                    xAdjust = ARMY_QUICK_FIVE_STACK_X_SHIFT;
-                else
-                    xAdjust = -ARMY_QUICK_FIVE_STACK_X_SHIFT;
+                xAdjust = i == 0 ? ARMY_QUICK_FIVE_STACK_X_SHIFT
+                                 : -ARMY_QUICK_FIVE_STACK_X_SHIFT;
             }
             while (townPointer->m_army.m_creatureTypes[slot] == CREATURE_NONE)
                 slot++;
             monster = townPointer->m_army.m_creatureTypes[slot];
             iconWgts[slotIndex] = new iconWidget(
-                step * slotIndex + offsetX + xAdjust,
+                offsetX + step * slotIndex + xAdjust,
                 rowY,
                 ARMY_QUICK_ICON_SIZE,
                 ARMY_QUICK_ICON_SIZE,
@@ -4515,7 +4513,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
             else
                 strcpy(labels[slotIndex], "???");
             texts[slotIndex] = new textWidget(
-                step * slotIndex + offsetX + xAdjust - ARMY_QUICK_TEXT_X_ADJUSTMENT,
+                offsetX + step * slotIndex + xAdjust - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                 rowY + ARMY_QUICK_ICON_BASELINE,
                 ARMY_QUICK_TEXT_WIDTH,
                 ARMY_QUICK_LABEL_HEIGHT,
@@ -4541,7 +4539,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
                     slot++;
                 monster = townPointer->m_army.m_creatureTypes[slot];
                 iconWgts[slotIndex] = new iconWidget(
-                    (slotIndex - row1) * step + offsetX,
+                    offsetX + step * (slotIndex - row1),
                     rowY,
                     ARMY_QUICK_ICON_SIZE,
                     ARMY_QUICK_ICON_SIZE,
@@ -4568,7 +4566,7 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
                 else
                     strcpy(labels[slotIndex], "???");
                 texts[slotIndex] = new textWidget(
-                    (slotIndex - row1) * step + offsetX - ARMY_QUICK_TEXT_X_ADJUSTMENT,
+                    offsetX + step * (slotIndex - row1) - ARMY_QUICK_TEXT_X_ADJUSTMENT,
                     rowY + ARMY_QUICK_ICON_BASELINE,
                     ARMY_QUICK_TEXT_WIDTH,
                     ARMY_QUICK_LABEL_HEIGHT,
@@ -7440,7 +7438,7 @@ DATA(0x004cb168)
 class heroWindow* gPanel;
 DATA(0x004cafe4)
 i32 giFrameStep;
-DATA(0x004cb170)
+DATA(0x004a6730)
 char cArmySizeName[12];
 DATA(0x004a65dc)
 i32 giLimitUpdMaxX;

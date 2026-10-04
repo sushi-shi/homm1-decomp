@@ -8,6 +8,7 @@
 # QuickInfo typed table and operand review: buka-quick-info.json.
 # Turn-panel operand and typed payload review: buka-bottom-turns.json.
 # Panel and resource-message operand/payload review: buka-bottom-panels.json.
+# Quick-view typed data and complete pointer-payload review: buka-quick-views.json.
 rva	kind
 0x0008a38c	vtable
 0x0008a398	fppool
@@ -62,6 +63,18 @@ rva	kind
 0x0008e140	
 0x0008e144	
 0x0008e148	
+0x0008e9e4	string
+0x0008e9f0	string
+0x0008e9fc	string
+0x0008ea00	string
+0x0008ea10	string
+0x0008ea1c	string
+0x0008ea20	string
+0x0008ea24	string
+0x0008ea34	string
+0x0008ea40	string
+0x0008ea44	string
+0x0008ea48	string
 0x00090040	
 0x000901dc	
 0x00090368	
@@ -152,6 +165,7 @@ rva	kind
 0x00092c48	
 0x00092c50	
 0x00092c58	
+0x00092cf4	
 0x00092e44	
 0x00092e48	
 0x00092e4c	
@@ -182,7 +196,6 @@ rva	kind
 0x000936b8	
 0x000936e0	
 0x00093720	
-0x00093780	
 0x000937b0	
 0x00093800	
 0x00093838	
@@ -461,6 +474,7 @@ rva	kind
 0x000a6710	
 0x000a6714	
 0x000a672c	
+0x000a6730	
 0x000a6740	
 0x000a6744	
 0x000a6748	
@@ -726,7 +740,6 @@ rva	kind
 0x000cb01c	
 0x000cb028	
 0x000cb168	
-0x000cb170	
 0x000cb17c	
 0x000cb180	
 0x000cb184	

@@ -86,6 +86,7 @@ rva	name	provenance
 0x00035a74	?SetVisibility@game@@QAEXFFFF@Z	Buka Main complete instruction/CFG correspondence: 0x2eb5, 0x2f8c, 0x2f9f, 0x2fb2, 0x2fc5; buka-adventure-commands.json
 0x00035ca3	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	Buka Main complete instruction/CFG correspondence: 0x2e1c, 0x2e34; buka-adventure-commands.json
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
+0x000384f3	?GetNumThievesGuilds@game@@QAEHH@Z	Buka quick-view instruction/CFG/EH review: 0xa3db; buka-quick-views.json
 0x00038934	?ShowScenInfo@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x3256; buka-adventure-commands.json
 0x0003949f	?AddSpell@hero@@QAEHCCH@Z	Buka Main complete instruction/CFG correspondence: 0x2dd9; buka-adventure-commands.json
 0x0003968e	?HeroView@hero@@QAECC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x287c; buka-adventure-commands.json
@@ -97,7 +98,9 @@ rva	name	provenance
 0x00041066	?BVResMsg@@YAXPADHH@Z	Buka panel instruction/CFG/EH review: complete panel and resource-message review; buka-bottom-panels.json
 0x000411a2	?PopNetBox@@YAXPAD@Z	Buka Main complete instruction/CFG correspondence: 0x2d52; buka-adventure-commands.json
 0x00042146	?MemError@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7380; buka-quick-info.json
+0x000421b7	?GetTownName@@YAPADH@Z	Buka quick-view instruction/CFG/EH review: 0xa4fd; buka-quick-views.json
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
+0x00044ae3	?SetWinText@@YAXPAVheroWindow@@F@Z	Buka quick-view instruction/CFG/EH review: 0x96b9, 0xa3f6; buka-quick-views.json
 0x00044b4e	?KBTickCount@@YAHXZ	Buka Main complete instruction/CFG correspondence: 0x2995, 0x2ad0; buka-adventure-commands.json
 0x00048a6f	?DoAI@philAI@@QAEXH@Z	Buka Main complete instruction/CFG correspondence: 0x2a18; buka-adventure-commands.json
 0x00056080	?BuildPath@searchArray@@QAEHFFFFF@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x24fb; buka-adventure-commands.json
