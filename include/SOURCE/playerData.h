@@ -143,8 +143,8 @@ public:
     i8 CurrentTown(void) {
         return m_currentTown;
     }
-    // Buka Color(); RecruitHero's crest index inlines this byte read.
-    H1_ENUM_RETURN(PlayerColor, i8) Color(void) {
+    // Buka crest reads widen the stored signed byte to a signed short.
+    H1_ENUM_RETURN(PlayerColor, i16) Color(void) {
         return m_color;
     }
     i8 HeroCount(void) {

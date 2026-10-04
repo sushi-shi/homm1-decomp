@@ -2752,5 +2752,6 @@
       "owner": "0x88e7 UpdBottomViewResMsg",
       "evidence": "Reviewed absolute_reference_evidence.tsv and pinned function census."
     }
-  }
+  },
+  "validation_checkpoint": "d6e1cf0e; historical validation at that source/object fingerprint. buka-bottom-panels.json supplies the former 0x8e88c blocker."
 }

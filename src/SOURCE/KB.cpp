@@ -2228,7 +2228,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 // donor PoL RVA 0x0009d2c0; preferred Buka symbol ?BVResMsg@@YIXPADHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
-VA(0x00425c5a, 0x5b)
+VA(0x00441066, 0x51)
 void BVResMsg(char* s, i32 res, i32 qty) {
     giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     giBottomViewOverrideEndTime = KBTickCount() + 5000;
@@ -3382,7 +3382,7 @@ u8 gCloudType[256] = {
     9,   10,  112, 127, 108, 13,  30,  31,  14,  3,   1,   16,  11,  7,   8,   115, 9,   10,  114,
     103, 108, 15,  30,  5,   14,  3,   1,   0,
 };
-DATA(0x00492550)
+DATA(0x00491acc)
 i8 gMons32Width[28] = {
     20, 20, 20, 25, 25, 24, 21, 21, 25, 27, 22, 20, 23, 23,
     21, 22, 25, 23, 27, 22, 29, 28, 32, 27, 21, 26, 21, 29,
@@ -4740,7 +4740,7 @@ DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
 DATA(0x004aa020)
 i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-DATA(0x004a7be4)
+DATA(0x004a74c4)
 i32 giBottomViewResource;
 DATA(0x004a9408)
 i32 giSeedingValid;
@@ -4840,7 +4840,7 @@ DATA(0x004a7b84)
 class icon* gBuyBuildIcons;
 DATA(0x004a74ea)
 i8 gbNoSound;
-DATA(0x004a9cc0)
+DATA(0x004a956c)
 char gcBottomViewText[92];
 DATA(0x004a7bf4)
 i32 giThisNetPos;
@@ -4908,7 +4908,7 @@ DATA(0x004a74a8)
 heroWindowManager* gpWindowManager;
 DATA(0x004a74a4)
 i32 giCurWatchPlayer;
-DATA(0x004a9ca8)
+DATA(0x004a9558)
 i32 giBottomViewResourceQty;
 DATA(0x004a7be8)
 i8 gbWaitForRemoteReceive;

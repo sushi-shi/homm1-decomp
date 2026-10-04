@@ -22,8 +22,9 @@ catalog. Screen updates, full drawing, cloud lookup and cell drawing also have
 reviewed Buka claims and reference identities. Radar, locators and quick info
 are migrated too, including Buka’s mine-name table with original English
 preserved. Enemy-turn and new-turn panels now have reviewed Buka claims,
-including their animation state and calendar labels. Strict delinking currently
-stops at data identity `0x8e88c` in the resource-message panel. The old score
+including their animation state and calendar labels. The resource, kingdom and
+hero panels and resource-message producer are also migrated. Strict delinking
+currently stops at data identity `0x8e968` in hero quick view. The old score
 ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 

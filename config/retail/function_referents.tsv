@@ -94,6 +94,7 @@ rva	name	provenance
 0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	Buka Main complete instruction/CFG correspondence: 0x2c4b, 0x31f1; buka-adventure-commands.json
 0x0003fb8e	?CheckEndGame@@YAXH@Z	Buka Main complete instruction/CFG correspondence: 0x2d87, 0x2da3; buka-adventure-commands.json
 0x000404c4	?QuickViewWait@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ef; buka-quick-info.json
+0x00041066	?BVResMsg@@YAXPADHH@Z	Buka panel instruction/CFG/EH review: complete panel and resource-message review; buka-bottom-panels.json
 0x000411a2	?PopNetBox@@YAXPAD@Z	Buka Main complete instruction/CFG correspondence: 0x2d52; buka-adventure-commands.json
 0x00042146	?MemError@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7380; buka-quick-info.json
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
@@ -243,6 +244,7 @@ rva	name	provenance
 0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	Buka input-handler instruction/CFG review: 0x3878, 0x3923, 0x4058, 0x4a76; buka-adventure-input.json
 0x0006c07c	?HideSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x76ea; buka-quick-info.json
 0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7721; buka-quick-info.json
+0x0006c586	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	Buka panel instruction/CFG/EH review: 0x89df; buka-bottom-panels.json
 0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	Buka adventure-manager family: 0x20bb, 0x20f1, 0x2113, 0x2157, 0x2180, 0x21c4, 0x21f0, 0x2219, 0x223b, 0x225d, 0x22b2, 0x230e; buka-advmgr.json
 0x0006d150	??0heroWindow@@QAE@FFPAD@Z	Buka QuickInfo instruction/CFG/EH review: 0x7347; buka-quick-info.json
@@ -266,6 +268,7 @@ rva	name	provenance
 0x000712a1	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	Buka radar/locator family instruction/CFG review: 0x7178; buka-radar-locators.json
 0x000712f5	?FillToBuffer@icon@@QAEXFFFFCC@Z	Buka radar/locator family instruction/CFG review: 0x6eda, 0x7123; buka-radar-locators.json
 0x000717c8	??0textWidget@@QAE@FFFFPAD0FFF@Z	Buka turn-panel instruction/CFG/EH review: 0x87ca, 0x888c; buka-bottom-turns.json
+0x0007238c	?LineLength@font@@QAEHPADF@Z	Buka panel instruction/CFG/EH review: 0x89f4; buka-bottom-panels.json
 0x00077c4d	??3@YAXPAX@Z	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
 0x00077c60	_strcpy	Buka adventure-manager family: 0x6890c; buka-advmgr.json
 0x00077d50	??2@YAPAXI@Z	Buka QuickInfo instruction/CFG/EH review: 0x7314; buka-quick-info.json
@@ -274,6 +277,7 @@ rva	name	provenance
 0x0007823f	_sprintf	Buka GetCursorSampleSet complete assembly and CFG; buka-advmgr.json
 0x000782f4	__ftol	Buka radar/locator family instruction/CFG review: 0x7b85, 0x7daa; buka-radar-locators.json
 0x0007831b	_malloc	Buka turn-panel instruction/CFG/EH review: 0x8742, 0x8818; buka-bottom-turns.json
+0x00078460	_strlen	Buka panel instruction/CFG/EH review: 0x8a1e, 0x9436, 0x94a7; buka-bottom-panels.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller

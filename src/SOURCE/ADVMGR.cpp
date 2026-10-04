@@ -3670,7 +3670,7 @@ i8 advManager::UpdBottomViewNewTurn(void) {
 // donor PoL RVA 0x00061716; preferred Buka symbol ?UpdBottomViewResMsg@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
-VA(0x0045b233, 0x3fa)
+VA(0x004088e7, 0x38f)
 i8 advManager::UpdBottomViewResMsg(void) {
     i32 iconW;
     i32 iconH;
@@ -3779,7 +3779,7 @@ i8 advManager::UpdBottomViewResMsg(void) {
 // donor PoL RVA 0x00061a75; preferred Buka symbol ?UpdBottomViewKingdom@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.769757;margin=0.069402;shape=0.564;size=0.915;calls=0.850;strings=ressmall.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewKingdom(void)@0x00061a75
-VA(0x0045b62d, 0x3ce)
+VA(0x00408c76, 0x36e)
 i8 advManager::UpdBottomViewKingdom(void) {
     i32 numVillages;
     i32 i;
@@ -3889,7 +3889,7 @@ i8 advManager::UpdBottomViewKingdom(void) {
 // donor PoL RVA 0x00061dd8; preferred Buka symbol ?UpdBottomViewHero@advManager@@QAEHXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
-VA(0x0045b9fb, 0x62c)
+VA(0x00408fe4, 0x585)
 i8 advManager::UpdBottomViewHero(void) {
     i16 slotNum;
     i8 creatureType;
@@ -3979,27 +3979,15 @@ i8 advManager::UpdBottomViewHero(void) {
             if (creatureType != CREATURE_NONE) {
                 countStr[slotNum] = static_cast<char*>(malloc(BOTTOM_HERO_LABEL_BYTES));
                 sprintf(countStr[slotNum], "%d", targetHero->m_army.m_creatureCounts[n]);
-                if (slotNum > 2)
-                    y = 3;
-                else
-                    y = 38;
+                y = slotNum <= 2 ? 38 : 3;
                 if (slotNum == 0) {
-                    if (nStacks > 2)
-                        x = 101;
-                    else
-                        x = 77;
+                    x = nStacks <= 2 ? 77 : 101;
                 } else if (slotNum == 1) {
-                    if (nStacks == 2)
-                        x = 28;
-                    else
-                        x = 52;
+                    x = nStacks == 2 ? 28 : 52;
                 } else if (slotNum == 2) {
                     x = 3;
                 } else if (slotNum == 3) {
-                    if (nStacks == 4)
-                        x = 77;
-                    else
-                        x = 101;
+                    x = nStacks == 4 ? 77 : 101;
                 } else {
                     x = 52;
                 }
@@ -4021,7 +4009,7 @@ i8 advManager::UpdBottomViewHero(void) {
                 if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
                     qtyX = x + 30;
                 else
-                    qtyX = gMons32Width[creatureType] + x + 2;
+                    qtyX = x + gMons32Width[creatureType] + 2;
                 m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST] =
                     new textWidget(
                         qtyX + BOTTOM_VIEW_PANEL_X,
