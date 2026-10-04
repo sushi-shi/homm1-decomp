@@ -3703,98 +3703,85 @@ DATA(0x00492e5c)
 i32 gHeartbeatSeen = 0;
 DATA(0x00492e60)
 char* gArtifactNames[38] = {
-    "Ultimate Book of Knowledge",
-    "Ultimate Sword of Dominion",
-    "Ultimate Cloak of Protection",
-    "Ultimate Wand of Magic",
-    "Arcane Necklace of Magic",
-    "Caster's Bracelet of Magic",
-    "Mage's Ring of Power",
-    "Witch's Broach of Magic",
-    "Medal of Valor",
-    "Medal of Courage",
-    "Medal of Honor",
-    "Medal of Distinction",
-    "Fizbin of Misfortune",
-    "Thunder Mace of Dominion",
-    "Armored Gauntlets of Protection",
-    "Defender Helm of Protection",
-    "Giant Flail of Dominion",
-    "Ballista of Quickness",
-    "Stealth Shield of Protection",
-    "Dragon Sword of Dominion",
-    "Power Axe of Dominion",
-    "Divine Breastplate of Protection",
-    "Minor Scroll of Knowledge",
-    "Major Scroll of Knowledge",
-    "Superior Scroll of Knowledge",
-    "Foremost Scroll of Knowledge",
-    "Endless Sack of Gold",
-    "Endless Bag of Gold",
-    "Endless Purse of Gold",
-    "Nomad Boots of Mobility",
-    "Traveler's Boots of Mobility",
-    "Lucky Rabbit's Foot",
-    "Golden Horseshoe",
-    "Gambler's Lucky Coin",
-    "Four-Leaf Clover",
-    "True Compass of Mobility",
-    "Sailor's Astrolabe of Mobility",
-    "Magic Book",
+    localization::Tr("table.gArtifactNames.0"),
+    localization::Tr("table.gArtifactNames.1"),
+    localization::Tr("table.gArtifactNames.2"),
+    localization::Tr("table.gArtifactNames.3"),
+    localization::Tr("table.gArtifactNames.4"),
+    localization::Tr("table.gArtifactNames.5"),
+    localization::Tr("table.gArtifactNames.6"),
+    localization::Tr("table.gArtifactNames.7"),
+    localization::Tr("table.gArtifactNames.8"),
+    localization::Tr("table.gArtifactNames.9"),
+    localization::Tr("table.gArtifactNames.10"),
+    localization::Tr("table.gArtifactNames.11"),
+    localization::Tr("table.gArtifactNames.12"),
+    localization::Tr("table.gArtifactNames.13"),
+    localization::Tr("table.gArtifactNames.14"),
+    localization::Tr("table.gArtifactNames.15"),
+    localization::Tr("table.gArtifactNames.16"),
+    localization::Tr("table.gArtifactNames.17"),
+    localization::Tr("table.gArtifactNames.18"),
+    localization::Tr("table.gArtifactNames.19"),
+    localization::Tr("table.gArtifactNames.20"),
+    localization::Tr("table.gArtifactNames.21"),
+    localization::Tr("table.gArtifactNames.22"),
+    localization::Tr("table.gArtifactNames.23"),
+    localization::Tr("table.gArtifactNames.24"),
+    localization::Tr("table.gArtifactNames.25"),
+    localization::Tr("table.gArtifactNames.26"),
+    localization::Tr("table.gArtifactNames.27"),
+    localization::Tr("table.gArtifactNames.28"),
+    localization::Tr("table.gArtifactNames.29"),
+    localization::Tr("table.gArtifactNames.30"),
+    localization::Tr("table.gArtifactNames.31"),
+    localization::Tr("table.gArtifactNames.32"),
+    localization::Tr("table.gArtifactNames.33"),
+    localization::Tr("table.gArtifactNames.34"),
+    localization::Tr("table.gArtifactNames.35"),
+    localization::Tr("table.gArtifactNames.36"),
+    localization::Tr("table.gArtifactNames.37"),
 };
 DATA(0x00492ef8)
 char* gArtifactDesc[38] = {
-    "Ultimate Book\n(+12 Knowledge)\n\nThe Ultimate Book of Knowledge increases your knowledge by "
-    "12.",
-    "Ultimate Sword\n(+12 Attack)\n\nThe Ultimate Sword of Dominion increases your attack skill by "
-    "12.",
-    "Ultimate Cloak\n(+12 Defense)\n\nThe Ultimate Cloak of Protection increases your defense "
-    "skill by 12.",
-    "Ultimate Wand\n(+12 Spell Power)\n\nThe Ultimate Wand of Magic increases your spell power by "
-    "12.",
-    "Arcane Necklace\n(+4 Spell Power)\n\nThe Arcane Necklace of Magic increases your spell power "
-    "by 4.",
-    "Caster's Bracelet\n(+2 Spell Power)\n\nThe Caster's Bracelet of Magic increases your spell "
-    "power by 2.",
-    "Mage's Ring\n(+2 Spell Power)\n\nThe Mage's Ring of Power increases your spell power by 2.",
-    "Witches Broach\n(+3 Spell Power)\n\nThe Witch's Broach of Magic increases your spell power by "
-    "3.",
-    "Medal\n\nThe Medal of Valor increases your morale.",
-    "Medal\n\nThe Medal of Courage increases your morale.",
-    "Medal\n\nThe Medal of Honor increases your morale.",
-    "Medal\n\nThe Medal of Distinction increases your morale.",
-    "Fizbin\n\nThe Fizbin of Misfortune greatly decreases your morale.",
-    "Thunder Mace\n(+1 Attack)\n\nThe Thunder Mace of Dominion increases your attack skill by 1.",
-    "Armored Gauntlets\n(+1 Defense)\n\nThe Armored Gauntlets of Protection increase your defense "
-    "skill by 1.",
-    "Defender Helm\n(+1 Defense)\n\nThe Defender Helm of Protection increases your defense skill "
-    "by 1.",
-    "Giant Flail\n(+1 Attack)\n\nThe Giant Flail of Dominion increases your attack skill by 1.",
-    "Ballista\n\nThe Ballista of Quickness lets your catapult fire twice per combat round.",
-    "Stealth Shield\n(+2 Defense)\n\nThe Stealth Shield of Protection increases your defense skill "
-    "by 2.",
-    "Dragon Sword\n(+3 Attack)\n\nThe Dragon Sword of Dominion increases your attack skill by 3.",
-    "Power Axe\n(+2 Attack)\n\nThe Power Axe of Dominion increases your attack skill by 2.",
-    "Divine Breastplate\n(+3 Defense)\n\nThe Divine Breastplate of Protection increases your "
-    "defense skill by 3.",
-    "Minor Scroll\n(+2 Knowledge)\n\nThe Minor Scroll of Knowledge increases your knowledge by 2.",
-    "Major Scroll\n(+3 Knowledge)\n\nThe Major Scroll of Knowledge increases your knowledge by 3.",
-    "Superior Scroll\n(+4 Knowledge)\n\nThe Superior Scroll of Knowledge increases your knowledge "
-    "by 4.",
-    "Foremost Scroll\n(+5 Knowledge)\n\nThe Foremost Scroll of Knowledge increases your knowledge "
-    "by 5.",
-    "Endless Sack\n\nThe Endless Sack of Gold provides you with 1000 gold per day.",
-    "Endless Bag\n\nThe Endless Bag of Gold provides you with 750 gold per day.",
-    "Endless Purse\n\nThe Endless Purse of Gold provides you with 500 gold per day.",
-    "Nomad Boots\n\nThe Nomad Boots of Mobility increase your movement on land.",
-    "Traveler's Boots\n\nThe Traveler's Boots of Mobility increase your movement on land.",
-    "Rabbit's Foot\n\nThe Lucky Rabbit's Foot increases your luck in combat.",
-    "Horseshoe\n\nThe Golden Horseshoe increases your luck in combat.",
-    "Coin\n\nThe Gambler's Lucky Coin increases your luck in combat.",
-    "Clover\n\nThe Four-Leaf Clover increases your luck in combat.",
-    "Compass\n\nThe True Compass of Mobility increases your movement on land and sea.",
-    "Astrolabe\n\nThe Sailors' Astrolabe of Mobility increases your movement on sea.",
-    "Magic Book\n\nThe Magic Book enables you to cast spells.",
+    localization::Tr("table.gArtifactDesc.0"),
+    localization::Tr("table.gArtifactDesc.1"),
+    localization::Tr("table.gArtifactDesc.2"),
+    localization::Tr("table.gArtifactDesc.3"),
+    localization::Tr("table.gArtifactDesc.4"),
+    localization::Tr("table.gArtifactDesc.5"),
+    localization::Tr("table.gArtifactDesc.6"),
+    localization::Tr("table.gArtifactDesc.7"),
+    localization::Tr("table.gArtifactDesc.8"),
+    localization::Tr("table.gArtifactDesc.9"),
+    localization::Tr("table.gArtifactDesc.10"),
+    localization::Tr("table.gArtifactDesc.11"),
+    localization::Tr("table.gArtifactDesc.12"),
+    localization::Tr("table.gArtifactDesc.13"),
+    localization::Tr("table.gArtifactDesc.14"),
+    localization::Tr("table.gArtifactDesc.15"),
+    localization::Tr("table.gArtifactDesc.16"),
+    localization::Tr("table.gArtifactDesc.17"),
+    localization::Tr("table.gArtifactDesc.18"),
+    localization::Tr("table.gArtifactDesc.19"),
+    localization::Tr("table.gArtifactDesc.20"),
+    localization::Tr("table.gArtifactDesc.21"),
+    localization::Tr("table.gArtifactDesc.22"),
+    localization::Tr("table.gArtifactDesc.23"),
+    localization::Tr("table.gArtifactDesc.24"),
+    localization::Tr("table.gArtifactDesc.25"),
+    localization::Tr("table.gArtifactDesc.26"),
+    localization::Tr("table.gArtifactDesc.27"),
+    localization::Tr("table.gArtifactDesc.28"),
+    localization::Tr("table.gArtifactDesc.29"),
+    localization::Tr("table.gArtifactDesc.30"),
+    localization::Tr("table.gArtifactDesc.31"),
+    localization::Tr("table.gArtifactDesc.32"),
+    localization::Tr("table.gArtifactDesc.33"),
+    localization::Tr("table.gArtifactDesc.34"),
+    localization::Tr("table.gArtifactDesc.35"),
+    localization::Tr("table.gArtifactDesc.36"),
+    localization::Tr("table.gArtifactDesc.37"),
 };
 DATA(0x00492f90)
 char* gArtifactEvent[38] = {
@@ -3877,55 +3864,54 @@ char* gArtifactEvent[38] = {
     "The Magic Book  ??????",
 };
 DATA(0x00493028)
-char* gStatNames[5] = {"Attack Skill", "Defense Skill", "Spell Power", "Knowledge", "Siege Skill"};
+char* gStatNames[5] = {localization::Tr("table.gStatNames.0"), localization::Tr("table.gStatNames.1"), localization::Tr("table.gStatNames.2"), localization::Tr("table.gStatNames.3"), localization::Tr("table.gStatNames.4")};
 DATA(0x00493040)
 char* gStatDesc[5] = {
-    "Your attack skill is a bonus added to each creature's attack skill.",
-    "Your defense skill is a bonus added to each creature's defense skill.",
-    "Your spell power determines the length or power of a spell.",
-    "Your knowledge is the number of each spell you are able to memorize.",
-    "Your siege skill is the number of times your hero can shoot the catapult in one turn while "
-    "attempting to siege a castle.",
+    localization::Tr("table.gStatDesc.0"),
+    localization::Tr("table.gStatDesc.1"),
+    localization::Tr("table.gStatDesc.2"),
+    localization::Tr("table.gStatDesc.3"),
+    localization::Tr("table.gStatDesc.4"),
 };
 DATA(0x00493058)
-char* gClassNames[4] = {"Knight", "Barbarian", "Sorceress", "Warlock"};
+char* gClassNames[4] = {localization::Tr("table.gClassNames.0"), localization::Tr("table.gClassNames.1"), localization::Tr("table.gClassNames.2"), localization::Tr("table.gClassNames.3")};
 DATA(0x00493068)
 char* gArmyNames[28] = {
-    "peasant",  "archer", "pikeman", "swordsman", "cavalry", "paladin",  "goblin",
-    "orc",      "wolf",   "ogre",    "troll",     "cyclops", "sprite",   "dwarf",
-    "elf",      "druid",  "unicorn", "phoenix",   "centaur", "gargoyle", "griffin",
-    "minotaur", "hydra",  "dragon",  "rogue",     "nomad",   "ghost",    "genie",
+    localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"), localization::Tr("table.gArmyNames.2"), localization::Tr("table.gArmyNames.3"), localization::Tr("table.gArmyNames.4"), localization::Tr("table.gArmyNames.5"),  localization::Tr("table.gArmyNames.6"),
+    localization::Tr("table.gArmyNames.7"),      localization::Tr("table.gArmyNames.8"),   localization::Tr("table.gArmyNames.9"),    localization::Tr("table.gArmyNames.10"),     localization::Tr("table.gArmyNames.11"), localization::Tr("table.gArmyNames.12"),   localization::Tr("table.gArmyNames.13"),
+    localization::Tr("table.gArmyNames.14"),      localization::Tr("table.gArmyNames.15"),  localization::Tr("table.gArmyNames.16"), localization::Tr("table.gArmyNames.17"),   localization::Tr("table.gArmyNames.18"), localization::Tr("table.gArmyNames.19"), localization::Tr("table.gArmyNames.20"),
+    localization::Tr("table.gArmyNames.21"), localization::Tr("table.gArmyNames.22"),  localization::Tr("table.gArmyNames.23"),  localization::Tr("table.gArmyNames.24"),     localization::Tr("table.gArmyNames.25"),   localization::Tr("table.gArmyNames.26"),    localization::Tr("table.gArmyNames.27"),
 };
 DATA(0x004930d8)
 char* gArmyNamesPlural[28] = {
-    "peasants",  "archers", "pikemen",  "swordsmen", "cavalries", "paladins",  "goblins",
-    "orcs",      "wolves",  "ogres",    "trolls",    "cyclopes",  "sprites",   "dwarves",
-    "elves",     "druids",  "unicorns", "phoenix",   "centaurs",  "gargoyles", "griffins",
-    "minotaurs", "hydras",  "dragons",  "rogues",    "nomads",    "ghosts",    "genies",
+    localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"), localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"), localization::Tr("table.gArmyNamesPlural.4"), localization::Tr("table.gArmyNamesPlural.5"),  localization::Tr("table.gArmyNamesPlural.6"),
+    localization::Tr("table.gArmyNamesPlural.7"),      localization::Tr("table.gArmyNamesPlural.8"),  localization::Tr("table.gArmyNamesPlural.9"),    localization::Tr("table.gArmyNamesPlural.10"),    localization::Tr("table.gArmyNamesPlural.11"),  localization::Tr("table.gArmyNamesPlural.12"),   localization::Tr("table.gArmyNamesPlural.13"),
+    localization::Tr("table.gArmyNamesPlural.14"),     localization::Tr("table.gArmyNamesPlural.15"),  localization::Tr("table.gArmyNamesPlural.16"), localization::Tr("table.gArmyNamesPlural.17"),   localization::Tr("table.gArmyNamesPlural.18"),  localization::Tr("table.gArmyNamesPlural.19"), localization::Tr("table.gArmyNamesPlural.20"),
+    localization::Tr("table.gArmyNamesPlural.21"), localization::Tr("table.gArmyNamesPlural.22"),  localization::Tr("table.gArmyNamesPlural.23"),  localization::Tr("table.gArmyNamesPlural.24"),    localization::Tr("table.gArmyNamesPlural.25"),    localization::Tr("table.gArmyNamesPlural.26"),    localization::Tr("table.gArmyNamesPlural.27"),
 };
 DATA(0x00493148)
 char* gSpellNames[29] = {
-    "Fireball",       "Lightning Bolt", "Teleport",       "Cure",         "Resurrect",
-    "Haste",          "Slow",           "Blind",          "Bless",        "Protection",
-    "Curse",          "Turn Undead",    "Anti-Magic",     "Dispel Magic", "Berzerker",
-    "Armageddon",     "Storm",          "Meteor Shower",  "Paralyze",     "View Mines",
-    "View Resources", "View Artifacts", "View Towns",     "View Heroes",  "View All",
-    "Identify Hero",  "Summon Boat",    "Dimension Door", "Town Gate",
+    localization::Tr("table.gSpellNames.0"),       localization::Tr("table.gSpellNames.1"), localization::Tr("table.gSpellNames.2"),       localization::Tr("table.gSpellNames.3"),         localization::Tr("table.gSpellNames.4"),
+    localization::Tr("table.gSpellNames.5"),          localization::Tr("table.gSpellNames.6"),           localization::Tr("table.gSpellNames.7"),          localization::Tr("table.gSpellNames.8"),        localization::Tr("table.gSpellNames.9"),
+    localization::Tr("table.gSpellNames.10"),          localization::Tr("table.gSpellNames.11"),    localization::Tr("table.gSpellNames.12"),     localization::Tr("table.gSpellNames.13"), localization::Tr("table.gSpellNames.14"),
+    localization::Tr("table.gSpellNames.15"),     localization::Tr("table.gSpellNames.16"),          localization::Tr("table.gSpellNames.17"),  localization::Tr("table.gSpellNames.18"),     localization::Tr("table.gSpellNames.19"),
+    localization::Tr("table.gSpellNames.20"), localization::Tr("table.gSpellNames.21"), localization::Tr("table.gSpellNames.22"),     localization::Tr("table.gSpellNames.23"),  localization::Tr("table.gSpellNames.24"),
+    localization::Tr("table.gSpellNames.25"),  localization::Tr("table.gSpellNames.26"),    localization::Tr("table.gSpellNames.27"), localization::Tr("table.gSpellNames.28"),
 };
 DATA(0x004931c0)
 char* gNeutralBuildingNames[7] =
-    {"Mage Guild", "Thieves' Guild", "Tavern", "Shipyard", "Well", "Tent", "Castle"};
+    {localization::Tr("table.gNeutralBuildingNames.0"), localization::Tr("table.gNeutralBuildingNames.1"), localization::Tr("table.gNeutralBuildingNames.2"), localization::Tr("table.gNeutralBuildingNames.3"), localization::Tr("table.gNeutralBuildingNames.4"), localization::Tr("table.gNeutralBuildingNames.5"), localization::Tr("table.gNeutralBuildingNames.6")};
 DATA(0x004931e0)
 char* gDwellingNames[24] = {
-    "Thatched Hut", "Archery Range", "Blacksmith",    "Armory",     "Jousting Arena", "Cathedral",
-    "Treehouse",    "Cottage",       "Archery Range", "Stonehenge", "Fenced Meadow",  "Red Tower",
-    "Hut",          "Stick Hut",     "Den",           "Adobe",      "Bridge",         "Pyramid",
-    "Cave",         "Crypt",         "Nest",          "Maze",       "Swamp",          "Black Tower",
+    localization::Tr("table.gDwellingNames.0"), localization::Tr("table.gDwellingNames.1"), localization::Tr("table.gDwellingNames.2"),    localization::Tr("table.gDwellingNames.3"),     localization::Tr("table.gDwellingNames.4"), localization::Tr("table.gDwellingNames.5"),
+    localization::Tr("table.gDwellingNames.6"),    localization::Tr("table.gDwellingNames.7"),       localization::Tr("table.gDwellingNames.8"), localization::Tr("table.gDwellingNames.9"), localization::Tr("table.gDwellingNames.10"),  localization::Tr("table.gDwellingNames.11"),
+    localization::Tr("table.gDwellingNames.12"),          localization::Tr("table.gDwellingNames.13"),     localization::Tr("table.gDwellingNames.14"),           localization::Tr("table.gDwellingNames.15"),      localization::Tr("table.gDwellingNames.16"),         localization::Tr("table.gDwellingNames.17"),
+    localization::Tr("table.gDwellingNames.18"),         localization::Tr("table.gDwellingNames.19"),         localization::Tr("table.gDwellingNames.20"),          localization::Tr("table.gDwellingNames.21"),       localization::Tr("table.gDwellingNames.22"),          localization::Tr("table.gDwellingNames.23"),
 };
 DATA(0x00493240)
 char* gTerrainNames[7] = {"Ocean", "Grass", "Snow", "Swamp", "Lava", "Desert", "Dirt"};
 DATA(0x00493260)
-char* gResourceNames[7] = {"Wood", "Mercury", "Ore", "Sulfur", "Crystal", "Gems", "Gold"};
+char* gResourceNames[7] = {localization::Tr("table.gResourceNames.0"), localization::Tr("table.gResourceNames.1"), localization::Tr("table.gResourceNames.2"), localization::Tr("table.gResourceNames.3"), localization::Tr("table.gResourceNames.4"), localization::Tr("table.gResourceNames.5"), localization::Tr("table.gResourceNames.6")};
 DATA(0x00493280)
 char* gObjectNames[63] = {
     "",
@@ -4003,151 +3989,99 @@ char* gTownNames[36] = {
 };
 DATA(0x00493410)
 char* gEventText[77] = {
-    "Alchemist\n\nYou have taken control of the local Alchemist shop. It will provide you with one "
-    "unit of Mercury per day.",
-    "Signpost\n\nA signpost reads:\n\n%s is near.",
-    "Buoy\n\nYour men spot a navigational buoy, confirming that you are on course.",
-    "Buoy\n\nYour men spot a navigational buoy, confirming that you are on course and increasing "
-    "their morale.",
-    "Moisture congeals on the walls and trickles slowly down to the ground.  Except for the "
-    "evidence of a battle, the cave is empty.",
-    "A large daemon emerges from the shadows and you attack. After an exhausting battle, you "
-    "emerge victorious and receive 1000 experience points.",
-    "A large daemon emerges from the shadows and you attack. After an exhausting battle, you "
-    "emerge victorious and receive 1000 experience points and an artifact.",
-    "A large daemon emerges from the shadows and you attack. After an exhausting battle, you "
-    "emerge victorious and receive 1000 experience points and 2500 gold.",
-    "You are captured by a large daemon.  He offers to let you free for 2500 gold, otherwise he "
-    "will devour you.  Do you pay?",
-    "Seeing that you do not have 2500 gold, the daemon slashes you with its claws, and the last "
-    "thing you see is a red haze.",
-    "Daemon Cave\n\nThe cave is dank and musty.  Two large red eyes glow eerily within the "
-    "blackness.  Do you wish to enter?",
-    "Chest\n\nAfter scouring the area, you fall upon a hidden treasure cache.  You may take the "
-    "gold or distribute the gold to the peasants for experience.  Do you wish to keep the gold?",
-    "Faerie Ring\n\nYou enter the faerie ring, but nothing happens.",
-    "Faerie Ring\n\nUpon entering the mystical faerie ring, your army gains luck for its next "
-    "battle.",
-    "Campfire\n\nRansacking an enemy camp, you discover a hidden cache of treasures.",
-    "Fountain\n\nYou drink from the enchanted fountain, but nothing happens.",
-    "Fountain\n\nAs you drink the sweet water, you gain luck for your next battle.",
-    "Gazebo\n\nAn old knight appears on the steps of the gazebo. \"I am sorry, my liege, I have "
-    "taught you all I can.\"",
-    "Gazebo\n\nAn old knight appears on the steps of the gazebo. \"My liege, I will teach you all "
-    "that I know to aid you in your travels.\"",
-    "Genie Lamp\n\nYou stumble upon a dented and tarnished lamp lodged deep in the earth. Do you "
-    "wish to rub the lamp?",
-    "Graveyard\n\nYou tentatively approach the burial ground of ancient warriors.  Do you want to "
-    "search the graves?",
-    "Upon defeating the ghosts you spend several hours searching the graves and find nothing.  "
-    "Such a despicable act reduces your army's morale.",
-    "Upon defeating the ghosts you search the graves and find something!",
-    "Hut\n\nA group of goblins with a desire for greater glory wish to join you. Do you accept?",
-    "You are unable to recruit at this time, your ranks are full.",
-    "Hut\n\nAs you approach the goblin dwelling, you notice that there is no one here.",
-    "Thatched Hut\n\nA group of peasants with a desire for greater glory wish to join you. Do you "
-    "accept? ",
-    "You are unable to recruit at this time, your ranks are full.",
-    "Thatched Hut\n\nAs you approach the peasant dwelling, you notice that there is no one here.",
-    "Cottage\n\nA group of archers with a desire for greater glory wish to join you. Do you "
-    "accept? ",
-    "You are unable to recruit at this time, your ranks are full.",
-    "Cottage\n\nAs you approach the archer dwelling, you notice that there is no one here.",
-    "Cottage\n\nA group of dwarves with a desire for greater glory wish to join you. Do you "
-    "accept? ",
-    "You are unable to recruit at this time, your ranks are full.",
-    "Cottage\n\nAs you approach the dwarves' dwelling, you notice that there is no one here.",
-    "Thatched Hut\n\nA group of peasants with a desire for greater glory wish to join you. Do you "
-    "accept? ",
-    "You are unable to recruit at this time, your ranks are full.",
-    "Thatched Hut\n\nAs you approach the peasant dwelling you notice that there is no one here.",
-    "Dragon City\n\nYou have reached Dragon City, famous for its wealth and danger. Do you wish to "
-    "attack?",
-    "You have conquered the mighty dragons. In homage to you, they offer 1000 gold a day to your "
-    "cause, and will defend the city for you in case of attack.",
-    "Lighthouse\n\nThe lighthouse is now under your control, and all of your ships will now move "
-    "further each turn.",
-    "Mill\n\nThe keeper of the mill announces: \"Milord, I am sorry, there is no gold currently "
-    "available.  Please try again next week.\"",
-    "Mill\n\nThe keeper of the mill announces: \"Milord, I have been working very hard to provide "
-    "you with this gold, come back next week for more.\"",
-    "Ore Mine\n\nYou gain control of an ore mine. It will provide you with two units of ore per "
-    "day.",
-    "Sulfur Mine\n\nYou gain control of a sulfur mine. It will provide you with one unit of sulfur "
-    "per day.",
-    "Crystal Mine\n\nYou gain control of a crystal mine. It will provide you with one unit of "
-    "crystal per day.",
-    "Gem Mine\n\nYou gain control of a gem mine. It will provide you with one unit of gems per "
-    "day.",
-    "Gold Mine\n\nYou gain control of a gold mine. It will provide you with 1000 gold per day.",
-    "Followers\n\nA group of %s with a desire for greater glory wish to join you. Do you accept? ",
-    "Insulted by your refusal of their offer, the monsters attack!",
-    "Obelisk\n\nYou come upon an obelisk made from a type of stone you have never seen before.  "
-    "Staring at it intensely, the smooth surface suddenly changes to an inscription.  The "
-    "inscription is a piece of a lost ancient map.  Quickly you copy down the piece and the "
-    "inscription vanishes as abruptly as it had appeared.",
-    "Obelisk\n\nYou have already been to this obelisk.",
-    "Oasis\n\nYou spot an oasis, but the well is dry and you depart empty-handed.",
-    "Oasis\n\nA nomad merchant, traveling on foot, hails you and says his horse had spooked and "
-    "left him stranded. For safe passage he takes your army to an oasis, raising your morale for "
-    "one battle.",
-    "You find a small quantity of %s.",
-    "Sawmill\n\nYou gain control of a sawmill. It will provide you with two units of wood per day.",
-    "Shrine\n\nWithin the ornate shrine sits a blind seer. After explaining the intent of your "
-    "journey, the seer activates his crystal ball, allowing you to see the strengths and "
-    "weaknesses of your opponents.",
-    "Shrine\n\nNestled in a small hidden shrine is an ancient wooden altar.  Upon the altar, a "
-    "golden plaque bears an inscription with the secret to the ancient magical spell ",
-    "Shipwreck\n\nThe rotting hulk of a great pirate ship creaks eerily as it is pushed against "
-    "the rocks.  Do you wish to search the shipwreck? ",
-    "Upon defeating the ghosts you spend several hours sifting through the debris and find "
-    "nothing.  Such a despicable act reduces your army's morale.",
-    "Upon defeating the ghosts you sift through the debris and find something!",
-    "Statue\n\nA large statue of an angel towers above you. Abruptly, the angel's eyes open and "
-    "your troops celebrate a great increase in their morale.",
-    "Statue\n\nA large statue of an angel towers above you. Your army encircles the statue, but "
-    "there appears to be nothing special about it.",
-    "Tents\n\nA group of tattered tents, billowing in the sandy wind, beckons you.  The tents are "
-    "unoccupied.  Perhaps more nomads will be here later.",
-    "Tents\n\nA group of tattered tents, billowing in the sandy wind, beckons you.  Do you wish to "
-    "have any nomads join you during your travels?",
-    "Wagon\n\nA colorful rogues' wagon stands empty here.  Perhaps more rogues will be here later.",
-    "Wagon\n\nDistant sounds of music and laughter draw you to a colorful wagon housing rogues.  "
-    "Do you wish to have any rogues join your army?",
-    "Whirlpool\n\nA whirlpool engulfs your ship.  Some of your army has fallen overboard.",
-    "Windmill\n\nThe keeper of the mill announces: \"Milord, I am sorry, there are no resources "
-    "currently available. Please try again next week.\"",
-    "Windmill\n\nThe keeper of the mill announces: \"Milord, I have been working very hard to "
-    "provide you with these resources, come back next week for more.\"",
-    "Artifact\n\nYou come upon an ancient artifact.  As you reach for it, a pack of Rogues leap "
-    "out of the brush to guard their stolen loot.",
-    "Artifact\n\nA leprechaun offers you the %s for the small price of 2000 gold.  Do you wish to "
-    "buy this artifact?",
-    "Insulted by your refusal of his generous offer, the leprechaun stamps his foot ferociously "
-    "and vanishes.",
-    "You try to pay the leprechaun, but realize that you don't have 2000 gold.  The leprechaun "
-    "stamps his foot and ignores you.",
-    "Upon defeating the Rogues, you search their corpses and discover the %s.",
-    "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the "
-    "tattered clothing, you find nothing.",
-    "Skeleton\n\nYou come upon the remains of an unfortunate adventurer.  Searching through the "
-    "tattered clothing, you find",
+    localization::Tr("table.gEventText.0"),
+    localization::Tr("table.gEventText.1"),
+    localization::Tr("table.gEventText.2"),
+    localization::Tr("table.gEventText.3"),
+    localization::Tr("table.gEventText.4"),
+    localization::Tr("table.gEventText.5"),
+    localization::Tr("table.gEventText.6"),
+    localization::Tr("table.gEventText.7"),
+    localization::Tr("table.gEventText.8"),
+    localization::Tr("table.gEventText.9"),
+    localization::Tr("table.gEventText.10"),
+    localization::Tr("table.gEventText.11"),
+    localization::Tr("table.gEventText.12"),
+    localization::Tr("table.gEventText.13"),
+    localization::Tr("table.gEventText.14"),
+    localization::Tr("table.gEventText.15"),
+    localization::Tr("table.gEventText.16"),
+    localization::Tr("table.gEventText.17"),
+    localization::Tr("table.gEventText.18"),
+    localization::Tr("table.gEventText.19"),
+    localization::Tr("table.gEventText.20"),
+    localization::Tr("table.gEventText.21"),
+    localization::Tr("table.gEventText.22"),
+    localization::Tr("table.gEventText.23"),
+    localization::Tr("table.gEventText.24"),
+    localization::Tr("table.gEventText.25"),
+    localization::Tr("table.gEventText.26"),
+    localization::Tr("table.gEventText.27"),
+    localization::Tr("table.gEventText.28"),
+    localization::Tr("table.gEventText.29"),
+    localization::Tr("table.gEventText.30"),
+    localization::Tr("table.gEventText.31"),
+    localization::Tr("table.gEventText.32"),
+    localization::Tr("table.gEventText.33"),
+    localization::Tr("table.gEventText.34"),
+    localization::Tr("table.gEventText.35"),
+    localization::Tr("table.gEventText.36"),
+    localization::Tr("table.gEventText.37"),
+    localization::Tr("table.gEventText.38"),
+    localization::Tr("table.gEventText.39"),
+    localization::Tr("table.gEventText.40"),
+    localization::Tr("table.gEventText.41"),
+    localization::Tr("table.gEventText.42"),
+    localization::Tr("table.gEventText.43"),
+    localization::Tr("table.gEventText.44"),
+    localization::Tr("table.gEventText.45"),
+    localization::Tr("table.gEventText.46"),
+    localization::Tr("table.gEventText.47"),
+    localization::Tr("table.gEventText.48"),
+    localization::Tr("table.gEventText.49"),
+    localization::Tr("table.gEventText.50"),
+    localization::Tr("table.gEventText.51"),
+    localization::Tr("table.gEventText.52"),
+    localization::Tr("table.gEventText.53"),
+    localization::Tr("table.gEventText.54"),
+    localization::Tr("table.gEventText.55"),
+    localization::Tr("table.gEventText.56"),
+    localization::Tr("table.gEventText.57"),
+    localization::Tr("table.gEventText.58"),
+    localization::Tr("table.gEventText.59"),
+    localization::Tr("table.gEventText.60"),
+    localization::Tr("table.gEventText.61"),
+    localization::Tr("table.gEventText.62"),
+    localization::Tr("table.gEventText.63"),
+    localization::Tr("table.gEventText.64"),
+    localization::Tr("table.gEventText.65"),
+    localization::Tr("table.gEventText.66"),
+    localization::Tr("table.gEventText.67"),
+    localization::Tr("table.gEventText.68"),
+    localization::Tr("table.gEventText.69"),
+    localization::Tr("table.gEventText.70"),
+    localization::Tr("table.gEventText.71"),
+    localization::Tr("table.gEventText.72"),
+    localization::Tr("table.gEventText.73"),
+    localization::Tr("table.gEventText.74"),
+    localization::Tr("table.gEventText.75"),
+    localization::Tr("table.gEventText.76"),
 };
 DATA(0x00493548)
 char* gAPanelHelp[5] = {
-    "View the entire world.",
-    "View the obelisk puzzle.",
-    "Cast an adventure spell.",
-    "Dig for the Ultimate Artifact.",
-    "Exit this menu without doing anything.",
+    localization::Tr("table.gAPanelHelp.0"),
+    localization::Tr("table.gAPanelHelp.1"),
+    localization::Tr("table.gAPanelHelp.2"),
+    localization::Tr("table.gAPanelHelp.3"),
+    localization::Tr("table.gAPanelHelp.4"),
 };
 DATA(0x00493560)
 char* gInitMenuHelp[5] = {
-    "Start a single or multi-player game.",
-    "Load a previously saved game.",
-    "View the high score screen.",
-    "View the credits screen.",
-    "Quit Heroes of Might and Magic and return to the DOS prompt.",
+    localization::Tr("table.gInitMenuHelp.0"),
+    localization::Tr("table.gInitMenuHelp.1"),
+    localization::Tr("table.gInitMenuHelp.2"),
+    localization::Tr("table.gInitMenuHelp.3"),
+    localization::Tr("table.gInitMenuHelp.4"),
 };
 DATA(0x00493578)
 char* gAdvMenuHelp[6] = {
@@ -4179,43 +4113,40 @@ char* onOffText[11] = {
 DATA(0x00493600)
 char* walkSpeedText[5] = {"Walk", "Trot", "Canter", "Gallop", "Jump"};
 DATA(0x00493618)
-char* gColorNames[4] = {"blue", "green", "red", "yellow"};
+char* gColorNames[4] = {localization::Tr("table.gColorNames.0"), localization::Tr("table.gColorNames.1"), localization::Tr("table.gColorNames.2"), localization::Tr("table.gColorNames.3")};
 DATA(0x00493628)
-char* gAlignmentNames[5] = {"human", "plains", "forest", "mountain", "neutral"};
+char* gAlignmentNames[5] = {localization::Tr("table.gAlignmentNames.0"), localization::Tr("table.gAlignmentNames.1"), localization::Tr("table.gAlignmentNames.2"), localization::Tr("table.gAlignmentNames.3"), localization::Tr("table.gAlignmentNames.4")};
 DATA(0x00493640)
 char* gSpellDesc[29] = {
-    "Fireball\n\nCauses a giant fireball to strike the selected area, damaging all nearby "
-    "creatures.",
-    "Lightning Bolt\n\nCauses a bolt of electrical energy to strike the selected creature.",
-    "Teleport\n\nTeleports the creature you select to any open position on the battlefield.",
-    "Cure\n\nRemoves all negative spells cast upon your forces.",
-    "Resurrect\n\nResurrects creatures from a damaged monster group.",
-    "Haste\n\nIncreases the speed of any creature to 'very fast'.",
-    "Slow\n\nSlows down even the fastest enemy creature.",
-    "Blind\n\nClouds the affected creatures' eyes, preventing them from moving.",
-    "Bless\n\nCauses the selected creatures to inflict maximum damage.",
-    "Protection\n\nMagically increases the defense skill of the selected creatures.",
-    "Curse\n\nCauses the selected creatures to inflict minimum damage.",
-    "Turn Undead\n\nInstantly sends a group of ghosts back to the grave.",
-    "Anti-Magic\n\nPrevents harmful magic against the selected creatures.",
-    "Dispel Magic\n\nRemoves all magic spells from all parties in the battle.",
-    "Berserk\n\nCauses a creature to attack its nearest neighbor.",
-    "Armageddon\n\nHoly terror strikes the battlefield, causing severe damage to all creatures.",
-    "Elemental Storm\n\nMagical elements pour down on the battlefield, damaging all creatures.",
-    "Meteor Shower\n\nA rain of rocks strikes an area of the battlefield, damaging all nearby "
-    "creatures.",
-    "Paralyze\n\nThe targeted creatures are paralyzed, unable to move or retaliate.",
-    "View Mines\n\nCauses all mines across the land to become visible.",
-    "View Resources\n\nCauses all resources across the land to become visible.",
-    "View Artifacts\n\nCauses all artifacts across the land to become visible.",
-    "View Towns\n\nCauses all towns and castles across the land to become visible.",
-    "View Heroes\n\nCauses all Heroes across the land to become visible.",
-    "View All\n\nCauses the entire land to become visible.",
-    "Identify Hero\n\nAllows the caster to view detailed information on enemy Heroes.",
-    "Summon Boat\n\nSummons the nearest unoccupied, friendly boat to an adjacent shore location.  "
-    "A friendly boat is one which you just built or were the most recent player to occupy.",
-    "Dimension Door\n\nAllows the caster to magically transport himself to a nearby location.",
-    "Town Gate\n\nReturns the caster to any town or castle currently owned.",
+    localization::Tr("table.gSpellDesc.0"),
+    localization::Tr("table.gSpellDesc.1"),
+    localization::Tr("table.gSpellDesc.2"),
+    localization::Tr("table.gSpellDesc.3"),
+    localization::Tr("table.gSpellDesc.4"),
+    localization::Tr("table.gSpellDesc.5"),
+    localization::Tr("table.gSpellDesc.6"),
+    localization::Tr("table.gSpellDesc.7"),
+    localization::Tr("table.gSpellDesc.8"),
+    localization::Tr("table.gSpellDesc.9"),
+    localization::Tr("table.gSpellDesc.10"),
+    localization::Tr("table.gSpellDesc.11"),
+    localization::Tr("table.gSpellDesc.12"),
+    localization::Tr("table.gSpellDesc.13"),
+    localization::Tr("table.gSpellDesc.14"),
+    localization::Tr("table.gSpellDesc.15"),
+    localization::Tr("table.gSpellDesc.16"),
+    localization::Tr("table.gSpellDesc.17"),
+    localization::Tr("table.gSpellDesc.18"),
+    localization::Tr("table.gSpellDesc.19"),
+    localization::Tr("table.gSpellDesc.20"),
+    localization::Tr("table.gSpellDesc.21"),
+    localization::Tr("table.gSpellDesc.22"),
+    localization::Tr("table.gSpellDesc.23"),
+    localization::Tr("table.gSpellDesc.24"),
+    localization::Tr("table.gSpellDesc.25"),
+    localization::Tr("table.gSpellDesc.26"),
+    localization::Tr("table.gSpellDesc.27"),
+    localization::Tr("table.gSpellDesc.28"),
 };
 DATA(0x004936b8)
 char* gMonthNames[10] = {
@@ -4232,21 +4163,21 @@ char* gMonthNames[10] = {
 };
 DATA(0x004936e0)
 char* gWeekNames[15] = {
-    "Squirrel",
-    "Rabbit",
-    "Gopher",
-    "Badger",
-    "Rat",
-    "Eagle",
-    "Weasel",
-    "Raven",
-    "Mongoose",
-    "Dog",
-    "Aardvark",
-    "Lizard",
-    "Tortoise",
-    "Hedgehog",
-    "Condor",
+    localization::Tr("table.gWeekNames.0"),
+    localization::Tr("table.gWeekNames.1"),
+    localization::Tr("table.gWeekNames.2"),
+    localization::Tr("table.gWeekNames.3"),
+    localization::Tr("table.gWeekNames.4"),
+    localization::Tr("table.gWeekNames.5"),
+    localization::Tr("table.gWeekNames.6"),
+    localization::Tr("table.gWeekNames.7"),
+    localization::Tr("table.gWeekNames.8"),
+    localization::Tr("table.gWeekNames.9"),
+    localization::Tr("table.gWeekNames.10"),
+    localization::Tr("table.gWeekNames.11"),
+    localization::Tr("table.gWeekNames.12"),
+    localization::Tr("table.gWeekNames.13"),
+    localization::Tr("table.gWeekNames.14"),
 };
 DATA(0x00493720)
 char* gDwellingDescriptions[24] = {
@@ -4277,90 +4208,87 @@ char* gDwellingDescriptions[24] = {
 };
 DATA(0x00493780)
 char* gArmySizeNames[6][2] = {
-    {"Few", "A few"},
-    {"Several", "Several"},
-    {"Pack", "A pack of"},
-    {"Lots", "Lots of"},
-    {"Horde", "A Horde of"},
-    {"Zounds!", "Zounds..."},
+    {localization::Tr("table.gArmySizeNames.0"), localization::Tr("table.gArmySizeNames.1")},
+    {localization::Tr("table.gArmySizeNames.2"), localization::Tr("table.gArmySizeNames.3")},
+    {localization::Tr("table.gArmySizeNames.4"), localization::Tr("table.gArmySizeNames.5")},
+    {localization::Tr("table.gArmySizeNames.6"), localization::Tr("table.gArmySizeNames.7")},
+    {localization::Tr("table.gArmySizeNames.8"), localization::Tr("table.gArmySizeNames.9")},
+    {localization::Tr("table.gArmySizeNames.10"), localization::Tr("table.gArmySizeNames.11")},
 };
 DATA(0x004937b0)
 char* gHeroScreen[19] = {
-    "Kingdom Overview",
-    "View %s Info",
-    "Additional hero characteristics",
-    "View Good Morale Info",
-    "View Neutral Morale Info",
-    "View Bad Morale Info",
-    "View Good Luck Info",
-    "View Neutral Luck Info",
-    "View Bad Luck Info",
-    "View Experience Info",
-    "Select %s",
-    "Empty",
-    "Move %s",
-    "Exchange %s with %s",
-    "View Spells",
-    "View %s Info",
-    "Dismiss %s the %s",
-    "Exit Hero Screen",
-    "Hero Screen",
+    localization::Tr("table.gHeroScreen.0"),
+    localization::Tr("table.gHeroScreen.1"),
+    localization::Tr("table.gHeroScreen.2"),
+    localization::Tr("table.gHeroScreen.3"),
+    localization::Tr("table.gHeroScreen.4"),
+    localization::Tr("table.gHeroScreen.5"),
+    localization::Tr("table.gHeroScreen.6"),
+    localization::Tr("table.gHeroScreen.7"),
+    localization::Tr("table.gHeroScreen.8"),
+    localization::Tr("table.gHeroScreen.9"),
+    localization::Tr("table.gHeroScreen.10"),
+    localization::Tr("table.gHeroScreen.11"),
+    localization::Tr("table.gHeroScreen.12"),
+    localization::Tr("table.gHeroScreen.13"),
+    localization::Tr("table.gHeroScreen.14"),
+    localization::Tr("table.gHeroScreen.15"),
+    localization::Tr("table.gHeroScreen.16"),
+    localization::Tr("table.gHeroScreen.17"),
+    localization::Tr("table.gHeroScreen.18"),
 };
 DATA(0x00493800)
 char* gCastleInfo[14] = {
-    "Build Mage Guild",
-    "Mage Guild is at highest level.",
-    "Cannot afford next level.",
-    "Add another level to Mage Guild",
-    "%s is already built",
-    "Cannot build %s",
-    "Cannot afford %s",
-    "Build %s",
-    "Cannot afford a Hero.",
-    "Cannot recruit - you already have %d Heroes.",
-    "Cannot recruit - you already have a Hero in this town.",
-    "Recruit a new Hero",
-    "Exit Castle",
-    "Castle Options",
+    localization::Tr("table.gCastleInfo.0"),
+    localization::Tr("table.gCastleInfo.1"),
+    localization::Tr("table.gCastleInfo.2"),
+    localization::Tr("table.gCastleInfo.3"),
+    localization::Tr("table.gCastleInfo.4"),
+    localization::Tr("table.gCastleInfo.5"),
+    localization::Tr("table.gCastleInfo.6"),
+    localization::Tr("table.gCastleInfo.7"),
+    localization::Tr("table.gCastleInfo.8"),
+    localization::Tr("table.gCastleInfo.9"),
+    localization::Tr("table.gCastleInfo.10"),
+    localization::Tr("table.gCastleInfo.11"),
+    localization::Tr("table.gCastleInfo.12"),
+    localization::Tr("table.gCastleInfo.13"),
 };
 DATA(0x00493838)
 char* gLuckInfoText[12] = {
-    "Good Luck\n\nGood luck sometimes lets your armies get lucky attacks (double strength) in "
-    "combat.",
-    "Neutral Luck\n\nNeutral luck means your armies will never get lucky or unlucky attacks on the "
-    "enemy.",
-    "Bad Luck\n\nBad luck sometimes falls on your armies in combat, causing their attacks to only "
-    "do half damage.",
-    "%s\n\n\nCurrent Luck Modifiers:",
-    "\nLucky Rabbit's Foot +1",
-    "\nGolden Horseshoe +1",
-    "\nGambler's Lucky Coin +1",
-    "\nFour-Leaf Clover +1",
-    "\nFaerie ring visited +1",
-    "\nFountain visited +1",
-    "\nnone",
+    localization::Tr("table.gLuckInfoText.0"),
+    localization::Tr("table.gLuckInfoText.1"),
+    localization::Tr("table.gLuckInfoText.2"),
+    localization::Tr("table.gLuckInfoText.3"),
+    localization::Tr("table.gLuckInfoText.4"),
+    localization::Tr("table.gLuckInfoText.5"),
+    localization::Tr("table.gLuckInfoText.6"),
+    localization::Tr("table.gLuckInfoText.7"),
+    localization::Tr("table.gLuckInfoText.8"),
+    localization::Tr("table.gLuckInfoText.9"),
+    localization::Tr("table.gLuckInfoText.10"),
     0,
 };
 DATA(0x00493868)
-char* gMemoryErrorTitle = "Out of Memory";
+char* gMemoryErrorTitle = localization::Tr("table.gMemoryErrorTitle.0");
 DATA(0x0049386c)
-char* gMemoryRequirements = "Heroes of Might and Magic requires approximately:";
+char* gMemoryRequirements = localization::Tr("table.gMemoryRequirements.0");
 DATA(0x00493870)
-char* gExtendedMemoryUnits = "K extended or expanded memory (XMS or EMS) and";
+char* gExtendedMemoryUnits = localization::Tr("table.gExtendedMemoryUnits.0");
 DATA(0x00493874)
-char* gConventionalMemoryUnits = "K conventional memory";
+char* gConventionalMemoryUnits = localization::Tr("table.gConventionalMemoryUnits.0");
 DATA(0x00493878)
-char* gPlayerTypeNames[5] = {"None", "Dumb", "Average", "Smart", "Genius"};
+char* gPlayerTypeNames[5] = {localization::Tr("table.gPlayerTypeNames.0"), localization::Tr("table.gPlayerTypeNames.1"), localization::Tr("table.gPlayerTypeNames.2"), localization::Tr("table.gPlayerTypeNames.3"), localization::Tr("table.gPlayerTypeNames.4")};
 DATA(0x00493890)
 char* gSpellHelp[8] = {
-    "View previous page",
-    "View next page",
-    "View adventure spells",
-    "View combat spells",
-    "Close Spellbook",
-    "View Spells",
-    "Select Spell",
-    "View Combat Spells",
+    localization::Tr("table.gSpellHelp.0"),
+    localization::Tr("table.gSpellHelp.1"),
+    localization::Tr("table.gSpellHelp.2"),
+    localization::Tr("table.gSpellHelp.3"),
+    localization::Tr("table.gSpellHelp.4"),
+    localization::Tr("table.gSpellHelp.5"),
+    localization::Tr("table.gSpellHelp.6"),
+    localization::Tr("table.gSpellHelp.7"),
 };
 DATA(0x004938b0)
 char* gSpeedText[5] = {"", "Slow", "Medium", "Fast", "Blazing"};
@@ -4378,9 +4306,9 @@ char* gArmyStatText[9] = {
 };
 DATA(0x004938f0)
 char* gOverviewText[3] = {
-    "Kingdom Overview     Month %d, Week %d, Day %d",
-    "You own Dragon City.",
-    "You own the Lighthouse.",
+    localization::Tr("table.gOverviewText.0"),
+    localization::Tr("table.gOverviewText.1"),
+    localization::Tr("table.gOverviewText.2"),
 };
 DATA(0x00493900)
 char* gNewTurnText[7] = {
@@ -4419,33 +4347,33 @@ char* gCombatMessage[9] = {
     "No shots left!",
 };
 DATA(0x00493978)
-char* gHeroLevel[3] = {"%s has gained", " a level.\n", " %d levels.\n"};
+char* gHeroLevel[3] = {localization::Tr("table.gHeroLevel.0"), localization::Tr("table.gHeroLevel.1"), localization::Tr("table.gHeroLevel.2")};
 DATA(0x00493988)
-char* gCombatHelp[3] = {"Auto Combat", "Skip This Unit", ""};
+char* gCombatHelp[3] = {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
 DATA(0x00493998)
 char* gTownCommand[22] = {
-    "Redistribute %s army",
-    "Cannot combine Hero's last army",
-    "Combine %s armies",
-    "Redistribute %s army",
-    "View %s",
-    "Cannot move last army to garrison.",
-    "Move %s",
-    "Exchange %s with %s",
-    "Exit town",
+    localization::Tr("table.gTownCommand.0"),
+    localization::Tr("table.gTownCommand.1"),
+    localization::Tr("table.gTownCommand.2"),
+    localization::Tr("table.gTownCommand.3"),
+    localization::Tr("table.gTownCommand.4"),
+    localization::Tr("table.gTownCommand.5"),
+    localization::Tr("table.gTownCommand.6"),
+    localization::Tr("table.gTownCommand.7"),
+    localization::Tr("table.gTownCommand.8"),
     "",
-    "Kingdom Overview",
-    "Empty",
-    "Select %s",
-    "View Hero",
-    "Mage Guild",
-    "Thieves' Guild",
-    "Tavern",
-    "Dock",
-    "Well",
-    "Tent",
-    "Castle",
-    "Recruit %s",
+    localization::Tr("table.gTownCommand.10"),
+    localization::Tr("table.gTownCommand.11"),
+    localization::Tr("table.gTownCommand.12"),
+    localization::Tr("table.gTownCommand.13"),
+    localization::Tr("table.gTownCommand.14"),
+    localization::Tr("table.gTownCommand.15"),
+    localization::Tr("table.gTownCommand.16"),
+    localization::Tr("table.gTownCommand.17"),
+    localization::Tr("table.gTownCommand.18"),
+    localization::Tr("table.gTownCommand.19"),
+    localization::Tr("table.gTownCommand.20"),
+    localization::Tr("table.gTownCommand.21"),
 };
 DATA(0x004939f0)
 char* gGameTypeHelp[5] = {
@@ -4518,20 +4446,15 @@ char* gCPanelHelp[12] = {
 };
 DATA(0x00493b58)
 char* gNewGameHelp[9] = {
-    "Accept these settings and start a new game.",
-    "Return to the main menu.",
-    "Challenge all computer players as 'King of the Hill'.  Computer players will be offended by "
-    "your boastfulness, and lay off each other in an attempt to beat you to a pulp.",
-    "Select which scenario to play.",
-    "Change the starting difficulty at which you will play.  Higher difficulty levels start you "
-    "off with fewer resources.",
-    "Change the difficulty of this opponent.  Smarter computer players are more aggressive and "
-    "think longer for each turn.",
-    "Change your banner color.",
-    "The difficulty rating reflects a combination of various settings for your game.  This number "
-    "will be applied to your final score.",
-    "Change the starting difficulty of another human player.  Higher difficulty levels start you "
-    "off with fewer resources.",
+    localization::Tr("table.gNewGameHelp.0"),
+    localization::Tr("table.gNewGameHelp.1"),
+    localization::Tr("table.gNewGameHelp.2"),
+    localization::Tr("table.gNewGameHelp.3"),
+    localization::Tr("table.gNewGameHelp.4"),
+    localization::Tr("table.gNewGameHelp.5"),
+    localization::Tr("table.gNewGameHelp.6"),
+    localization::Tr("table.gNewGameHelp.7"),
+    localization::Tr("table.gNewGameHelp.8"),
 };
 DATA(0x00493b80)
 char* gSetupCampaignGameHelp[5] = {
@@ -4598,57 +4521,52 @@ char* gSetupHotSeatGameHelp[4] = {
 };
 DATA(0x00493c08)
 char* gSetupModemGameHelp[4] = {
-    "The host sets up the game options, chooses the number to dial, and places the call.",
-    "The guest waits for the host to call and set up the game.",
-    "Change your modem configuration.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupModemGameHelp.0"),
+    localization::Tr("table.gSetupModemGameHelp.1"),
+    localization::Tr("table.gSetupModemGameHelp.2"),
+    localization::Tr("table.gSetupModemGameHelp.3"),
 };
 DATA(0x00493c18)
 char* gSetupDCGameHelp[4] = {
-    "The host sets up the game options.",
-    "The guest waits for the host to set up the game.",
-    "Change your direct connect port configuration.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupDCGameHelp.0"),
+    localization::Tr("table.gSetupDCGameHelp.1"),
+    localization::Tr("table.gSetupDCGameHelp.2"),
+    localization::Tr("table.gSetupDCGameHelp.3"),
 };
 DATA(0x00493c28)
 char* gSetupMultiPlayerGameHelp[5] = {
-    "Play a Hot Seat game, where 2 to 4 players play around the same computer, switching into the "
-    "'Hot Seat' when it is their turn.",
-    "Play a network game, where 2 players use their own computers connected through a LAN (Local "
-    "Area Network).",
-    "Play a modem game, where 2 players use ther own computers connected over the phone lines "
-    "using modems.",
-    "Play a direct connect game, where 2 players use ther own computers directly connected through "
-    "their serial port by a null modem.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupMultiPlayerGameHelp.0"),
+    localization::Tr("table.gSetupMultiPlayerGameHelp.1"),
+    localization::Tr("table.gSetupMultiPlayerGameHelp.2"),
+    localization::Tr("table.gSetupMultiPlayerGameHelp.3"),
+    localization::Tr("table.gSetupMultiPlayerGameHelp.4"),
 };
 DATA(0x00493c40)
 char* gSetupNetworkGameHelp[3] = {
-    "The host sets up the game options.  There can only be one host per network game.",
-    "The guest waits for the host to set up the game, then is automatically added in.  There can "
-    "only be one guest per network game.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupNetworkGameHelp.0"),
+    localization::Tr("table.gSetupNetworkGameHelp.1"),
+    localization::Tr("table.gSetupNetworkGameHelp.2"),
 };
 DATA(0x00493c50)
 char* gSetupGameHelp[4] = {
-    "A single player game playing out a single map.",
-    "A single player game playing through a series of maps.",
-    "A multi-player game, with several human players competing against each other on a single map.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupGameHelp.0"),
+    localization::Tr("table.gSetupGameHelp.1"),
+    localization::Tr("table.gSetupGameHelp.2"),
+    localization::Tr("table.gSetupGameHelp.3"),
 };
 DATA(0x00493c60)
 char* gBattleResults[11] = {
-    "The enemy has surrendered!",
-    "The enemy has fled!",
-    "A glorious victory!",
-    "\n\nFor valor in combat, %s receives %d experience",
-    "%s surrenders to the enemy, and departs in shame.",
-    "The cowardly %s flees from battle.",
-    "Your forces suffer a bitter defeat, and %s abandons your cause.",
-    "Your forces surrender to the enemy, and depart in shame.",
-    "Your cowardly forces flee from battle.",
-    "Your forces suffer a bitter defeat.",
-    "\n\nFor valor in combat, %s receives %d experience, and gains %d level(s).",
+    localization::Tr("table.gBattleResults.0"),
+    localization::Tr("table.gBattleResults.1"),
+    localization::Tr("table.gBattleResults.2"),
+    localization::Tr("table.gBattleResults.3"),
+    localization::Tr("table.gBattleResults.4"),
+    localization::Tr("table.gBattleResults.5"),
+    localization::Tr("table.gBattleResults.6"),
+    localization::Tr("table.gBattleResults.7"),
+    localization::Tr("table.gBattleResults.8"),
+    localization::Tr("table.gBattleResults.9"),
+    localization::Tr("table.gBattleResults.10"),
 };
 DATA(0x00493c90)
 char* gNeutralBuildingDescriptions[7] = {
@@ -4663,113 +4581,80 @@ char* gNeutralBuildingDescriptions[7] = {
 };
 DATA(0x00493cb0)
 char* gMoraleInfoText[21] = {
-    "Good Morale\n\nGood morale may give your armies extra attacks in combat.",
-    "Neutral Morale\n\nNeutral morale means your armies will never be blessed with extra attacks "
-    "or freeze in combat.",
-    "Bad Morale\n\nBad morale may cause your armies to freeze in combat.",
-    "%s\n\n\nCurrent Morale Modifiers:",
-    "\nKnight bonus +1",
-    "\nAll %s troops +1",
-    "\nTroops of 3 alignments -1",
-    "\nTroops of 4 alignments -2",
-    "\nMedal of Valor +1",
-    "\nMedal of Courage +1",
-    "\nMedal of Honor +1",
-    "\nMedal of Distinction +1",
-    "\nFizbin of Misfortune -2",
-    "\nBuoy visited +1",
-    "\nOasis visited +1",
-    "\nStatue visited +2",
-    "\nGraveyard robber -1",
-    "\nShipwreck robber -1",
-    "\nBattle cowardice %d",
-    "\nnone",
-    "\nTroops of 5 alignments -3",
+    localization::Tr("table.gMoraleInfoText.0"),
+    localization::Tr("table.gMoraleInfoText.1"),
+    localization::Tr("table.gMoraleInfoText.2"),
+    localization::Tr("table.gMoraleInfoText.3"),
+    localization::Tr("table.gMoraleInfoText.4"),
+    localization::Tr("table.gMoraleInfoText.5"),
+    localization::Tr("table.gMoraleInfoText.6"),
+    localization::Tr("table.gMoraleInfoText.7"),
+    localization::Tr("table.gMoraleInfoText.8"),
+    localization::Tr("table.gMoraleInfoText.9"),
+    localization::Tr("table.gMoraleInfoText.10"),
+    localization::Tr("table.gMoraleInfoText.11"),
+    localization::Tr("table.gMoraleInfoText.12"),
+    localization::Tr("table.gMoraleInfoText.13"),
+    localization::Tr("table.gMoraleInfoText.14"),
+    localization::Tr("table.gMoraleInfoText.15"),
+    localization::Tr("table.gMoraleInfoText.16"),
+    localization::Tr("table.gMoraleInfoText.17"),
+    localization::Tr("table.gMoraleInfoText.18"),
+    localization::Tr("table.gMoraleInfoText.19"),
+    localization::Tr("table.gMoraleInfoText.20"),
 };
 DATA(0x00493d08)
-char* gMapSizeNames[3] = {"Small", "Medium", "Large"};
+char* gMapSizeNames[3] = {localization::Tr("table.gMapSizeNames.0"), localization::Tr("table.gMapSizeNames.1"), localization::Tr("table.gMapSizeNames.2")};
 DATA(0x00493d18)
-char* gMapDifficultyNames[5] = {"Easy", "Normal", "Tough", "Impossible", "Forget It"};
+char* gMapDifficultyNames[5] = {localization::Tr("table.gMapDifficultyNames.0"), localization::Tr("table.gMapDifficultyNames.1"), localization::Tr("table.gMapDifficultyNames.2"), localization::Tr("table.gMapDifficultyNames.3"), localization::Tr("table.gMapDifficultyNames.4")};
 DATA(0x00493d30)
 char* gCampaignScenarioNames[9] = {
-    "You have established a foothold in the new land.  This small island is fiercely contested by "
-    "three other factions, all vying to capture the strategic town - Gateway.  The town is located "
-    "in the center of the island, and so dominates its surroundings that the other factions will "
-    "surrender to the lord that captures it.  Beware the dragon guardian of Gateway!",
-    "Your way to the mainland is blocked by the Archipelago of the Ancients, a series of four "
-    "large islands, each held by a different lord.  The opposition must all be subdued, and they "
-    "are better led this time.  Boats are a necessity - use them wisely!",
-    "Chaos.  A maelstrom of combat plagues the land.  The people suffer, but will rally behind the "
-    "wielder of the Eye of Goros, an artifact that can heal the wounded land.  It was buried and "
-    "lost eons ago.  The first lord to uncover the Eye will unite the people and conquer the land "
-    "- but it lies in a vast territory with only pieces of a puzzle to guide the way.",
-    "With the founding of a homeland, the other lords now take you seriously.  All seek to "
-    "dominate the central continent, and each is suspicious of the others.  The territory is huge, "
-    "the opposition distant.  Resources are scarce and should be fiercely defended.  You must be "
-    "the last lord left to claim victory.",
-    "The land of the knights, led by Lord Ironfist, is divided by the twisting Floodwater River.  "
-    "Ironfist is counting on the river to protect him.  The only town suitable to boat-building "
-    "lies upon the river far to the east.  To defeat Ironfist, you must capture his home castle in "
-    "the far northwest.",
-    "Far to the north, beyond the Trackless Desert, lies the Frozen Wastes.  It is the homeland of "
-    "Lord Slayer and his barbarian followers.  Once the mountain pass has been breached by either "
-    "side, barbarian raiders will stream south.  The desert may harbor unknown allies who can aid "
-    "you.  Slayer's castle lies just northeast of the pass.",
-    "Warned of your approach, the sorceress Queen Lamanda worked on a dreadful magic and sank the "
-    "approach to the only port.  You must find the teleport gate to assault the southwestern land "
-    "and capture the port.  The only landfall is far to the northeast.  From there you must "
-    "struggle through the forest maze to locate her castle in the extreme northwest.",
-    "The warlocks' castle lies shrouded in the smokey volcanic rift.  To reach Lord Alamar's home "
-    "castle in the extreme southeast, you must wander through the Minotaur Maze.  The warlocks are "
-    "overconfident and not expecting an attack, so sure are they that none can navigate the maze.  "
-    "Gargoyles have been set to dissuade invaders from the true path.",
-    "Final victory lies within your grasp - but the defeated warlords have pooled their last "
-    "resources and have banded together against you.  If you can bend the dragons to your will and "
-    "force them to side with you, all the other warlords will submit and the land will be yours to "
-    "rule.  Capture the Dragon Citadel on the central island and victory is yours!",
+    localization::Tr("table.gCampaignScenarioNames.0"),
+    localization::Tr("table.gCampaignScenarioNames.1"),
+    localization::Tr("table.gCampaignScenarioNames.2"),
+    localization::Tr("table.gCampaignScenarioNames.3"),
+    localization::Tr("table.gCampaignScenarioNames.4"),
+    localization::Tr("table.gCampaignScenarioNames.5"),
+    localization::Tr("table.gCampaignScenarioNames.6"),
+    localization::Tr("table.gCampaignScenarioNames.7"),
+    localization::Tr("table.gCampaignScenarioNames.8"),
 };
 DATA(0x00493d58)
 char* gCampaignWinTexts[9] = {
-    "Gateway has fallen!  The other lords have abandoned their castles and fled.  They have "
-    "alerted their homelands and now gather their forces.  Speed is of the essence.",
-    "The Archipelago of the Ancients has been subdued and added to your domain.  On the horizon "
-    "lies a vast, unexplored - and hostile - continent.",
-    "The healing power of the Eye of Goros spreads throughout the land.  The population unites "
-    "behind you and the other lords retreat.  The war for domination begins.",
-    "With your victory, the other lords have made their final retreat.  They must each in turn be "
-    "fought one-on-one in their homelands, and their personal castles must be captured.",
-    "The knights are broken in battle!  You have conquered their homeland.",
-    "The barbarian castle has been overthrown and their army scattered!",
-    "You have burst through the forest maze and destroyed Lamanda's castle.",
-    "You have followed the gargoyles to the castle of Lord Alamar and have shattered the might of "
-    "the warlocks.",
-    "The dragons join your cause and the competing warlords capitulate.  You now rule a vast and "
-    "united land as the one true King!",
+    localization::Tr("table.gCampaignWinTexts.0"),
+    localization::Tr("table.gCampaignWinTexts.1"),
+    localization::Tr("table.gCampaignWinTexts.2"),
+    localization::Tr("table.gCampaignWinTexts.3"),
+    localization::Tr("table.gCampaignWinTexts.4"),
+    localization::Tr("table.gCampaignWinTexts.5"),
+    localization::Tr("table.gCampaignWinTexts.6"),
+    localization::Tr("table.gCampaignWinTexts.7"),
+    localization::Tr("table.gCampaignWinTexts.8"),
 };
 DATA(0x00493d80)
 char* gCampaignScenarioText[9] = {
-    "Gateway",
-    "The Archipelago",
-    "The Wounded Land",
-    "Free-for-All",
-    "Castle Ironfist",
-    "Castle Slayer",
-    "Castle Lamanda",
-    "Castle Alamar",
-    "King-of-the-Hill",
+    localization::Tr("table.gCampaignScenarioText.0"),
+    localization::Tr("table.gCampaignScenarioText.1"),
+    localization::Tr("table.gCampaignScenarioText.2"),
+    localization::Tr("table.gCampaignScenarioText.3"),
+    localization::Tr("table.gCampaignScenarioText.4"),
+    localization::Tr("table.gCampaignScenarioText.5"),
+    localization::Tr("table.gCampaignScenarioText.6"),
+    localization::Tr("table.gCampaignScenarioText.7"),
+    localization::Tr("table.gCampaignScenarioText.8"),
 };
 DATA(0x00493da8)
 char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
 DATA(0x00493db8)
-char* gCampaignSideNames[4] = {"Lord Ironfist", "Lord Slayer", "Queen Lamanda", "Lord Alamar"};
+char* gCampaignSideNames[4] = {localization::Tr("table.gCampaignSideNames.0"), localization::Tr("table.gCampaignSideNames.1"), localization::Tr("table.gCampaignSideNames.2"), localization::Tr("table.gCampaignSideNames.3")};
 DATA(0x00493dc8)
 char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
     {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
 DATA(0x00493de0)
 char* gHumanPlayerTypeNames[5] =
-    {"Human\n", "Human\nEasy", "Human\nNormal", "Human\nHard", "Human\nExpert"};
+    {localization::Tr("table.gHumanPlayerTypeNames.0"), localization::Tr("table.gHumanPlayerTypeNames.1"), localization::Tr("table.gHumanPlayerTypeNames.2"), localization::Tr("table.gHumanPlayerTypeNames.3"), localization::Tr("table.gHumanPlayerTypeNames.4")};
 DATA(0x00493df8)
-char* gHandicapNames[5] = {"Human-", "Human-Easy", "Human-Normal", "Human-Hard", "Human-Expert"};
+char* gHandicapNames[5] = {localization::Tr("table.gHandicapNames.0"), localization::Tr("table.gHandicapNames.1"), localization::Tr("table.gHandicapNames.2"), localization::Tr("table.gHandicapNames.3"), localization::Tr("table.gHandicapNames.4")};
 DATA(0x00493e10)
 char* musicQualityText[3] = {"8 Bit Mono", "8 Bit Stereo", "CD Stereo"};
 DATA(0x00493e20)

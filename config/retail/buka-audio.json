@@ -1,0 +1,328 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "status": "retail evidence; descriptive function names are not recovered symbols; source integration pending",
+  "music": {
+    "play_rva": "0x000692fd",
+    "stop_rva": "0x00069742",
+    "repeat_predicate_rva": "0x000692b6",
+    "track_map_rva": "0x000a0d74",
+    "track_map_type": "int32_t[100]",
+    "saved_positions_rva": "0x000cdf74",
+    "saved_positions_type": "int32_t[100]",
+    "volume_levels_rva": "0x000a0f0c",
+    "volume_levels": [
+      0.0,
+      1.0,
+      0.800000011920929,
+      0.6499999761581421,
+      0.5,
+      0.4000000059604645,
+      0.30000001192092896,
+      0.20000000298023224,
+      0.15000000596046448,
+      0.10000000149011612,
+      0.05000000074505806
+    ],
+    "mapped_tracks": [
+      {
+        "track": 0,
+        "disc_track": 2,
+        "repeat": true
+      },
+      {
+        "track": 1,
+        "disc_track": 3,
+        "repeat": true
+      },
+      {
+        "track": 2,
+        "disc_track": 4,
+        "repeat": true
+      },
+      {
+        "track": 3,
+        "disc_track": 5,
+        "repeat": true
+      },
+      {
+        "track": 4,
+        "disc_track": 6,
+        "repeat": true
+      },
+      {
+        "track": 5,
+        "disc_track": 7,
+        "repeat": true
+      },
+      {
+        "track": 6,
+        "disc_track": 8,
+        "repeat": true
+      },
+      {
+        "track": 7,
+        "disc_track": 9,
+        "repeat": false
+      },
+      {
+        "track": 8,
+        "disc_track": 10,
+        "repeat": false
+      },
+      {
+        "track": 9,
+        "disc_track": 11,
+        "repeat": false
+      },
+      {
+        "track": 10,
+        "disc_track": 12,
+        "repeat": false
+      },
+      {
+        "track": 11,
+        "disc_track": 13,
+        "repeat": false
+      },
+      {
+        "track": 12,
+        "disc_track": 14,
+        "repeat": false
+      },
+      {
+        "track": 13,
+        "disc_track": 15,
+        "repeat": false
+      },
+      {
+        "track": 14,
+        "disc_track": 16,
+        "repeat": false
+      },
+      {
+        "track": 15,
+        "disc_track": 17,
+        "repeat": false
+      },
+      {
+        "track": 16,
+        "disc_track": 18,
+        "repeat": false
+      },
+      {
+        "track": 17,
+        "disc_track": 19,
+        "repeat": false
+      },
+      {
+        "track": 18,
+        "disc_track": 20,
+        "repeat": false
+      },
+      {
+        "track": 19,
+        "disc_track": 21,
+        "repeat": false
+      },
+      {
+        "track": 20,
+        "disc_track": 22,
+        "repeat": false
+      },
+      {
+        "track": 21,
+        "disc_track": 23,
+        "repeat": false
+      },
+      {
+        "track": 22,
+        "disc_track": 24,
+        "repeat": false
+      },
+      {
+        "track": 23,
+        "disc_track": 25,
+        "repeat": false
+      },
+      {
+        "track": 24,
+        "disc_track": 26,
+        "repeat": false
+      },
+      {
+        "track": 25,
+        "disc_track": 27,
+        "repeat": false
+      },
+      {
+        "track": 26,
+        "disc_track": 28,
+        "repeat": false
+      },
+      {
+        "track": 27,
+        "disc_track": 29,
+        "repeat": false
+      },
+      {
+        "track": 28,
+        "disc_track": 30,
+        "repeat": false
+      },
+      {
+        "track": 29,
+        "disc_track": 31,
+        "repeat": true
+      },
+      {
+        "track": 30,
+        "disc_track": 32,
+        "repeat": true
+      },
+      {
+        "track": 31,
+        "disc_track": 33,
+        "repeat": true
+      },
+      {
+        "track": 32,
+        "disc_track": 34,
+        "repeat": true
+      },
+      {
+        "track": 40,
+        "disc_track": 35,
+        "repeat": true
+      },
+      {
+        "track": 41,
+        "disc_track": 36,
+        "repeat": true
+      },
+      {
+        "track": 42,
+        "disc_track": 37,
+        "repeat": true
+      },
+      {
+        "track": 43,
+        "disc_track": 38,
+        "repeat": false
+      },
+      {
+        "track": 44,
+        "disc_track": 39,
+        "repeat": false
+      },
+      {
+        "track": 45,
+        "disc_track": 40,
+        "repeat": false
+      },
+      {
+        "track": 46,
+        "disc_track": 41,
+        "repeat": false
+      },
+      {
+        "track": 47,
+        "disc_track": 42,
+        "repeat": true
+      },
+      {
+        "track": 48,
+        "disc_track": 43,
+        "repeat": true
+      },
+      {
+        "track": 49,
+        "disc_track": 44,
+        "repeat": true
+      },
+      {
+        "track": 50,
+        "disc_track": 45,
+        "repeat": false
+      },
+      {
+        "track": 51,
+        "disc_track": 46,
+        "repeat": false
+      },
+      {
+        "track": 52,
+        "disc_track": 47,
+        "repeat": false
+      },
+      {
+        "track": 53,
+        "disc_track": 48,
+        "repeat": true
+      },
+      {
+        "track": 54,
+        "disc_track": 49,
+        "repeat": true
+      },
+      {
+        "track": 99,
+        "disc_track": 50,
+        "repeat": false
+      }
+    ]
+  },
+  "sample": {
+    "constructor_rva": "0x00075050",
+    "get_sample_rva": "0x0006c646",
+    "size": 42,
+    "fields": [
+      {
+        "offset": 14,
+        "type": "char*",
+        "name": "data"
+      },
+      {
+        "offset": 18,
+        "type": "int32_t",
+        "name": "size"
+      },
+      {
+        "offset": 22,
+        "type": "int32_t",
+        "name": "sampleRate"
+      },
+      {
+        "offset": 26,
+        "type": "int32_t",
+        "name": "volume"
+      },
+      {
+        "offset": 30,
+        "type": "int32_t",
+        "name": "sampleFormat"
+      },
+      {
+        "offset": 34,
+        "type": "int32_t",
+        "name": "stereo"
+      },
+      {
+        "offset": 38,
+        "type": "int32_t",
+        "name": "repeat"
+      }
+    ],
+    "defaults": {
+      "volume": 127,
+      "repeat": 0,
+      "stereo": 1,
+      "sampleFormat": 1,
+      "sampleRate": 44100
+    },
+    "loaded_byte_conversion": "unconditionally add 0x80 modulo 256 to each byte",
+    "play_rva": "0x00068b37",
+    "volume_scale_rva": "0x00069d6e",
+    "volume_divisor_rva": "0x0008a764",
+    "volume_divisor": 127.0
+  }
+}

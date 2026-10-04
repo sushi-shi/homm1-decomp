@@ -120,7 +120,15 @@ def generate(files: dict[str, bytes], *, control: bool = False
         problems += [f"{name}: stranded punctuation: {line}"
                      for line in source.stranded(text, cleaned, **kinds[kind])]
         output[name] = cleaned.encode("utf-8")
+    for name in ("locales/messages.def", "locales/ru.po"):
+        if name in files:
+            output[name] = files[name]
+    if "locales/messages.def" in files:
+        output["catalog.py"] = files["scripts/homm1/graph/catalog.py"]
     if control:
+        import json
+        locale = json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru")
+        output["build.json"] = json.dumps({"locale": locale}).encode()
         # The scaffolding headers keep their declarations and definitions
         # (match.h now also carries the integer aliases), comments blanked.
         output.update({name: source.blank(source.strip_comments(files[name].decode())).encode()

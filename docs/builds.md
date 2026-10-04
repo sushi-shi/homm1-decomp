@@ -1,8 +1,9 @@
 # HoMM1 builds
 
 This page catalogues the known HoMM1 executables, how each was built, and the
-runtime libraries each one ships. The pinned target in this fork is Windows 95 1.1
-`HEROES.EXE` (`config/retail/targets.json`).
+runtime libraries each one ships. This branch is implementing the [1.2 to Buka transition](buka-2003.md).
+The active comparison target remains Windows 95 1.2 until the Buka address
+and reference migration is reviewed (`config/retail/targets.json`).
 
 Local copies are kept outside the repository in `~/Projects/homm1/exe`, listed
 in its `MANIFEST.md5`. Archive.org item ids are given as `item` or
@@ -22,7 +23,7 @@ other image. Relocated fields are masked for this comparison.
 | Build | File | Size | PE stamp (UTC) | Linker | Compiler | `__LINE__` style | Debug data |
 |---|---|---|---|---|---|---|---|
 | Win95 1.0 | `HEROES_win95_1996-02-01.exe` | 713216 | 1996-02-01 05:15:33 | 3.00 | VC 4.0 | /Gi line words | none |
-| Win95 1.1 (target) | `HEROES_win95_1.1_1996-05-07.exe` | 715776 | 1996-05-07 20:09:38 | 3.00 | VC 4.0 | /Gi line words | none |
+| Win95 1.1 | `HEROES_win95_1.1_1996-05-07.exe` | 715776 | 1996-05-07 20:09:38 | 3.00 | VC 4.0 | /Gi line words | none |
 | Win95 1.2 (HEROESW) | `HEROESW_win95_1997-08-29.exe` | 726016 | 1997-08-29 20:36:28 | 3.10 | VC 4.1 | /Gi line words | none |
 | Buka 2003 (Russian) | `HEROES_buka_ru_2003-04-11.exe` | 692297 | 2003-04-11 14:42:15 | 6.00 | VC 6 | immediates | NB10 reference, no PDB |
 | Editor 1.0 | `EDITOR_win95_1996-02-01.exe` | 305152 | 1996-02-01 01:08:14 | 3.00 | VC 4.0 | mixed | none |
@@ -30,8 +31,9 @@ other image. Relocated fields are masked for this comparison.
 | Editor 1.2 (EDITORW) | `EDITORW_win95_1997-07-30.exe` | 314368 | 1997-07-30 19:38:13 | 3.10 | VC 4.1 | mixed | none |
 | Editor Buka 2003 | `EDITOR_buka_ru_2003-02-26.exe` | 340031 | 2003-02-26 15:31:29 | 6.00 | VC 6 | immediates | NB10 reference, no PDB |
 
-The VC 4.1 attribution for linker 3.10 is inferred from the linker version; no
-4.1 media has been compared. Every Win32 build sets OS version 4.0, subsystem
+The original VC 4.1 attribution was inferred from linker 3.10. The 1.2 port
+subsequently verified the compiler against preserved media and retail-backed
+controls; see [the 1.2 migration](win95-1.2.md). Every Win32 build sets OS version 4.0, subsystem
 GUI 4.0 and image version 0.0. Each uses image base 0x400000, section alignment
 0x1000 and file alignment 0x200, and has a zero PE checksum. The DOS builds are
 Watcom C/C++32 with DOS/4GW and are listed briefly at the end.

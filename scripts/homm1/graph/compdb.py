@@ -110,10 +110,12 @@ def base_flags(msvc_inc: Path, msvc_low: Path) -> list[str]:
     for exact-case includes; DX before MSVC in both tiers so the DX6 SDK wins
     over VC5's DirectX 3-era copies.
     """
+    from homm1.manifest import load
+    compatibility = "12.00" if load()["build"]["compiler"] == "vc6" else MSC_COMPAT
     vendor_dirs = [d for _name, d in vendor_include_dirs()]
     return [
         f"--target={TARGET}",
-        f"-fms-compatibility-version={MSC_COMPAT}",
+        f"-fms-compatibility-version={compatibility}",
         "-fms-extensions",
         # `&Temporary()` is MSVC C4238, a nonstandard extension the retail
         # sources use; clang errors on it by default.
@@ -137,6 +139,7 @@ def base_flags(msvc_inc: Path, msvc_low: Path) -> list[str]:
 def generate(quiet: bool = False) -> bool:
     """(Re)write the compdb from config/units.toml. Returns True if changed."""
     from homm1.manifest import flag_profiles, units
+    from homm1.tool.clang import localization_args
     msvc_inc, provenance = resolve_include_dirs()
     msvc_low = build_lowercase_mirror(msvc_inc, MIRROR_DIR / "msvc")
     shared = base_flags(msvc_inc, msvc_low)
@@ -160,7 +163,8 @@ def generate(quiet: bool = False) -> bool:
         "directory": str(REPO),
         "file": u["source"],
         # clang-cl driver form; clangd/clang parse it internally.
-        "arguments": ["clang-cl", "/c", u["source"], *shared, *abi_flags(u)],
+        "arguments": ["clang-cl", "/c", u["source"], *shared, *abi_flags(u),
+                      *localization_args(str(REPO / u["source"]))],
     } for u in cpp_units]
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)

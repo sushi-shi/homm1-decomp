@@ -37,26 +37,48 @@ def repo_include_flags() -> list[str]:
 
 def compile(src: Path | str, out: Path | str, flags: list[str], *,
             extra_includes: list[Path] = (), timeout: float | None = None,
-            retail_name: str | None = None, unit: str | None = None) -> str:
+            retail_name: str | None = None, unit: str | None = None,
+            locale: str | None = None) -> str:
     """Compile one TU; return cl's output. Raises ToolError without an .obj.
 
     /Gi compiles go through homm1.tool.fixedroot: VC4's incremental code depends
     on the path strings of the opened files, so they see one fixed, retail-shaped
     tree (D:\\Heroes\\Source\\X.CPP) whatever the checkout path."""
+    from homm1.core.paths import REPO, BUILD
+    from homm1.graph.localization import matching_locale
+    target_locale = matching_locale(REPO)
+    locale = locale or target_locale
+    if locale not in ("ru", "en"):
+        raise ToolError(f"unsupported locale: {locale}")
+    if locale != target_locale and not Path(out).resolve().is_relative_to(BUILD / "ordinary" / locale):
+        raise ToolError(f"Nonmatching {locale} objects must live under build/ordinary/{locale}")
     if "/Gi" in flags and not extra_includes:
         from homm1.tool import fixedroot
         return fixedroot.compile(src, out, flags, retail_name=retail_name, unit=unit,
-                                 timeout=timeout)
+                                 timeout=timeout, locale=locale)
     src, out = Path(src).resolve(), Path(out).resolve()
     if not src.exists():
         raise ToolError(f"source missing: {src}")
     out.parent.mkdir(parents=True, exist_ok=True)
     out.unlink(missing_ok=True)
 
+    from homm1.graph.localization import prepare
+    authored = src
+    src, header, _overlay, _deps = prepare(REPO, src, locale=locale)
+    if src != authored:
+        from homm1.graph.localization import check_formats
+        errors = check_formats(REPO, authored, locale=locale)
+        if errors:
+            raise ToolError("localized source failed Clang checks:\n" + "\n".join(errors))
+    if header is not None:
+        flags = [*flags, f"/FI{winepath(header)}", f"/I{winepath(authored.parent)}"]
+        # A changed project header uses a generated reachable-header mirror.
+        if header.name == "messages.h":
+            flags = [f"/I{winepath(header.parent / 'include')}", *flags]
     cl_exe = era_tool("cl.exe")
-    argv = ["wine", str(cl_exe), *repo_include_flags(),
+    argv = ["wine", str(cl_exe), *flags, *repo_include_flags(),
             *[f"/I{winepath(d)}" for d in extra_includes],
-            *flags, f"/Fo{winepath(out)}", winepath(src)]
+            f"/Fo{winepath(out)}", winepath(src)]
     output, rc = run(argv, cwd=out.parent, timeout=timeout, success=out)
     if not out.exists():
         tail = "\n".join(output.strip().splitlines()[-12:]) or "(cl said nothing)"
@@ -80,11 +102,12 @@ def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", required=True)
     ap.add_argument("--src", required=True)
+    ap.add_argument("--locale", choices=("ru", "en"))
     ap.add_argument("flags", nargs=argparse.REMAINDER)
     a = ap.parse_args()
     flags = a.flags[1:] if a.flags and a.flags[0] == "--" else a.flags
     try:
-        compile(a.src, a.out, flags)
+        compile(a.src, a.out, flags, locale=a.locale)
     except (ToolError, OSError) as e:
         print(f"[cl] {e}", file=sys.stderr)
         return 1

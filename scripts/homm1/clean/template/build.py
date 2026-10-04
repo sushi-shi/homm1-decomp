@@ -31,14 +31,15 @@ def windows(path: Path) -> str:
 
 
 class Wine:
-    def __init__(self, toolchain: Path):
+    def __init__(self, toolchain: Path, compiler: str):
         self.toolchain = toolchain
-        self.bin = toolchain / "vc41" / "bin"
-        includes = [ROOT / "include", *sorted(p for p in (ROOT / "vendor").iterdir() if p.is_dir()),
+        self.bin = toolchain / compiler / "bin"
+        includes = [OUT / "localized/include", ROOT / "include", *sorted(p for p in (ROOT / "vendor").iterdir() if p.is_dir()),
                     toolchain / "wing10" / "include", toolchain / "dx1" / "include",
-                    toolchain / "vc41" / "include"]
-        libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / "vc41" / "lib"]
-        prefix = Path(os.environ.get("WINEPREFIX") or OUT / "wineprefix")
+                    toolchain / compiler / "include"]
+        libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / compiler / "lib"]
+        self.includes = includes
+        prefix = OUT / "wineprefix"
         self.env = dict(os.environ, WINEPREFIX=str(prefix), WINEPATH=windows(self.bin),
                         INCLUDE=";".join(map(windows, includes)),
                         LIB=";".join(map(windows, libraries)),
@@ -53,6 +54,9 @@ class Wine:
 
     def run(self, tool: str, arguments: list[str], cwd: Path, expect: Path) -> None:
         expect.unlink(missing_ok=True)
+        # The selected bundle and generated headers own this build.
+        if tool == "CL.EXE":
+            arguments = ["/X", *["/I" + windows(p) for p in self.includes], *arguments]
         result = subprocess.run(["wine", str(self.bin / tool), *arguments], cwd=cwd, env=self.env,
                                 stdin=subprocess.DEVNULL, capture_output=True, text=True,
                                 errors="replace")
@@ -62,7 +66,7 @@ class Wine:
 
 
 def compile_unit(wine: Wine, unit: dict) -> Path:
-    source = ROOT / unit["source"]
+    source = OUT / "localized" / unit["source"]
     obj = OUT / "obj" / f"{unit['unit']}.obj"
     obj.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc41.pdb/.idb
@@ -153,22 +157,45 @@ def resources(icon_from: Path | None) -> Path:
     return obj
 
 
+def prepare_sources(locale: str):
+    from catalog import Catalog
+    catalog = Catalog.load(ROOT)
+    for directory in ("src", "include", "vendor"):
+        for source in (ROOT / directory).rglob("*"):
+            if not source.is_file():
+                continue
+            target = OUT / "localized" / source.relative_to(ROOT)
+            target.parent.mkdir(parents=True, exist_ok=True)
+            if source.suffix in (".cpp", ".h", ".c", ".hpp", ".inc"):
+                text = catalog.render(source.read_text(), locale=locale, expanded=True)
+                target.write_text(text)
+            else:
+                shutil.copyfile(source, target)
+
+
 def build() -> int:
+    global OUT
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("HOMM1_TOOLCHAIN"))
     parser.add_argument("--icon-from", type=Path, help="your HEROESW.EXE, for the icon")
     parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1))
+    manifest = json.loads((ROOT / "build.json").read_text())
+    compiler = manifest.get("compiler", "vc41")
+    parser.add_argument("--locale", choices=("ru", "en"), default=manifest.get("locale", "ru"))
     args = parser.parse_args()
-    if args.toolchain is None or not (args.toolchain / "vc41/bin/CL.EXE").is_file():
-        parser.error("--toolchain (or HOMM1_TOOLCHAIN) must hold vc41/bin/CL.EXE; "
+    if args.locale != manifest.get("locale", "ru"):
+        OUT = ROOT / "build/ordinary" / args.locale
+    if args.toolchain is None or not (args.toolchain / compiler / "bin/CL.EXE").is_file():
+        parser.error(f"--toolchain (or HOMM1_TOOLCHAIN) must hold {compiler}/bin/CL.EXE; "
                      "`nix develop` supplies it")
     for tool in ("wine", "wineboot", "llvm-rc", "llvm-cvtres"):
         if shutil.which(tool) is None:
             parser.error(f"{tool} is required; `nix develop` supplies it")
     manifest = json.loads((ROOT / "build.json").read_text())
-    OUT.mkdir(exist_ok=True)
-    wine = Wine(args.toolchain.resolve())
+    OUT.mkdir(parents=True, exist_ok=True)
+    prepare_sources(args.locale)
+    wine = Wine(args.toolchain.resolve(), compiler)
 
     (OUT / "imports").mkdir(exist_ok=True)
     for stub in sorted((ROOT / "imports").glob("*.c")):

@@ -57,6 +57,8 @@ def manifest(files: dict[str, bytes]) -> dict:
         keyed.append((rva, index, unit["unit"]))
     ordered = [(rva, name) for rva, _i, name in sorted(keyed)]
     return {
+        "compiler": config["build"]["compiler"],
+        "locale": json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru"),
         "units": [{"unit": u["unit"], "source": u["source"],
                    "flags": config["flags"][u["flags"]]} for u in units],
         "link": {

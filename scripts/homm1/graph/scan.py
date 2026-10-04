@@ -23,6 +23,7 @@ from __future__ import annotations
 
 import os
 import re
+from pathlib import Path
 
 from homm1.core.paths import REPO
 
@@ -32,7 +33,8 @@ _INCLUDE_RE = re.compile(r'^[ \t]*#[ \t]*include[ \t]*[<"]([^>"]+)[>"]', re.M)
 class Scanner:
     """Memoized include scanner. One instance per configure run."""
 
-    def __init__(self) -> None:
+    def __init__(self, root: Path = REPO) -> None:
+        self.repo = root
         self._direct: dict[str, list[str]] = {}
         self._read: set[str] = set()
 
@@ -56,7 +58,7 @@ class Scanner:
         self._direct[rel] = out          # cycle guard: self-referential includes
         self._read.add(rel)
         try:
-            text = (REPO / rel).read_text(encoding="utf-8", errors="replace")
+            text = (self.repo / rel).read_text(encoding="utf-8", errors="replace")
         except OSError:
             return out
         parent = os.path.dirname(rel)
@@ -65,7 +67,7 @@ class Scanner:
                 hrel = os.path.normpath(os.path.join(base, inc))
                 if hrel.startswith(".."):
                     continue             # outside the repo - not our dep
-                if (REPO / hrel).exists():
+                if (self.repo / hrel).exists():
                     out.append(hrel)
                     break
         return out

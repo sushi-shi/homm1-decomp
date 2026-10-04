@@ -68,6 +68,11 @@ def compdb(path: Path = COMPDB) -> dict[str, list[str]]:
     return out
 
 
+def localization_args(source: str) -> list[str]:
+    from homm1.graph.localization import clang_args
+    return clang_args(REPO, source)
+
+
 def _clang() -> str:
     return os.environ.get("HOMM1_CLANG") or "clang"
 
@@ -83,7 +88,7 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
                 ll = tf.name
             try:
                 cmd = [_clang(), "--driver-mode=cl", "/c", "/DHOMM1_EMIT_META",
-                       *cl_flags, *MS_WARN, *inc_cl(),
+                       *cl_flags, *MS_WARN, *inc_cl(), *localization_args(tu),
                        "-Xclang", "-emit-llvm", "-o", ll, tu]
                 res = subprocess.run(cmd, capture_output=True, text=True)
                 ir = Path(ll).read_text() \
@@ -96,7 +101,7 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
             if ir:
                 return ir
         return None  # caller surfaces this; res.stderr is intentionally short-lived
-    cmd = [_clang(), "-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(),
+    cmd = [_clang(), "-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(), *localization_args(tu),
            "-S", "-emit-llvm", "-o", "-", tu]
     res = subprocess.run(cmd, capture_output=True, text=True)
     return res.stdout or None
@@ -105,9 +110,9 @@ def emit_ir(tu: str, cl_flags: list[str] | None) -> str | None:
 def ast_dump(tu: str, cl_flags: list[str] | None) -> dict | None:
     if cl_flags is not None:
         cmd = [_clang(), "--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags,
-               *inc_cl(), tu, "-fsyntax-only", "-Xclang", "-ast-dump=json"]
+               *inc_cl(), *localization_args(tu), tu, "-fsyntax-only", "-Xclang", "-ast-dump=json"]
     else:
-        cmd = [_clang(), "-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(), tu,
+        cmd = [_clang(), "-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(), *localization_args(tu), tu,
                "-fsyntax-only", "-Xclang", "-ast-dump=json"]
     res = subprocess.run(cmd, capture_output=True, text=True)
     try:
@@ -131,9 +136,9 @@ def var_facts(tu: str, cl_flags: list[str] | None) -> dict[str, dict] | None:
         import clang.cindex as cidx
     except ImportError:
         return None
-    args = (["--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags, *inc_cl()]
+    args = (["--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags, *inc_cl(), *localization_args(tu)]
             if cl_flags is not None
-            else ["-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc()])
+            else ["-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(), *localization_args(tu)])
     try:
         parsed = cidx.Index.create().parse(tu, args=args)
     except cidx.LibclangError:
@@ -176,9 +181,9 @@ def annotated_decls(tu: str, cl_flags: list[str] | None) -> list[dict] | None:
         import clang.cindex as cidx
     except ImportError:
         return None
-    args = (["--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags, *inc_cl()]
+    args = (["--driver-mode=cl", "/DHOMM1_EMIT_META", *cl_flags, *inc_cl(), *localization_args(tu)]
             if cl_flags is not None
-            else ["-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc()])
+            else ["-DHOMM1_EMIT_META", *MS_FLAGS, *inc_gcc(), *localization_args(tu)])
     try:
         parsed = cidx.Index.create().parse(tu, args=args)
     except cidx.LibclangError:

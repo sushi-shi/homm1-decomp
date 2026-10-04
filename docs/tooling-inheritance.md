@@ -120,3 +120,45 @@ requires exact library controls within it: the last vendor import thunk is
 insufficient because 1.2 puts the whole BASE library after those thunks.
 This is a target-fact adaptation within the existing census pipeline.
 Giten remains pinned at `39384dc6726478357b5efd42c66522781e8310fe`.
+
+## Buka 2003 migration infrastructure
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+(`build/catalog.py`, `build/localization.py`, localization tests,
+`build/reloc_owners.py`, `audit/reloc_sweep.py`) and Gruntz
+`ee6365395c443019e3c0b8d82f54642f9621bbd2` (existing graph compiler,
+link and fingerprint contracts). Gruntz has no equivalent localization catalog;
+its single build graph and comparison boundaries remain the integration model.
+
+Retained: HoMM2's contextual IDs, original-English registry, PO validation,
+CP1251 literal generation, source-offset-preserving views, and locale-separated
+generated files. Adapted: HoMM1's existing include scanner, compiler/Clang
+entry points, Ninja dependencies, fingerprint implementation and usage logging.
+The 29 tests cover catalog rejection cases, exact encoding, mirrors,
+source offsets, English/Russian output isolation, actual Clang argument checks,
+retail catalog provenance and relocation-directory/manifest rejection cases.
+The existing clean exporter now carries the portable catalogs/renderer and
+locale-specific standalone outputs. Its line-preserving control passes all 69
+object comparisons and produces an identical candidate apart from timestamps.
+Adapted VC4 support keeps the generated catalog at a stable compiler-visible
+path and declares fixedroot changes as compiler dependencies; this avoids
+host-path-dependent `/Gi` output. The standalone build also localizes vendored
+translation units, declares include paths explicitly and uses its own Wine
+prefix so a reconstruction prefix cannot replace its library environment.
+
+Adapted for `/FIXED`: one PE reader supplies both sema and delink absolute
+sites; a reviewed TSV must carry the exact image SHA-256. The delinker accepts
+the same explicit manifest. Separate `.idata` is optional. Retained: existing
+PE relocation records take precedence. Deferred until the address review:
+trusted Buka site-manifest enrollment, source claims and comparison activation.
+The relocation sweep was measured against 1.2, not assumed correct from the
+donor's different target.
+
+Migrated: 565 verified table entries in authored source, preserving original
+English. Still pending: the remaining text/call-site rewrites, Buka target
+activation, resources and reconstructed runtime integration. The unmodified
+retail executable reaches its Russian menu with the verified Archive.org assets;
+that baseline is not a runtime test of the port.
+Earlier statements that locale rules are inapplicable describe the NWC branches;
+they do not apply to the Buka branch. No command or behavioral parity is claimed
+for these pending features.

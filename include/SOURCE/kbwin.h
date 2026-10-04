@@ -2,6 +2,10 @@
 #define HOMM1_SOURCE_KBWIN_H
 
 #include <Domains.h>
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
 
 H1_ENUM_CONST_BEGIN(WindowTextConstant)
     WINDOW_TEXT_ENTRY_COUNT = 68
@@ -173,7 +177,7 @@ void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);
 char* FindLastToken(char* text, char token);
 void SetMenus(void* menu, i32 enabled);
-extern void* hwndApp;
+extern HWND hwndApp;
 extern i32 iMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);

@@ -73,22 +73,10 @@ class Image:
         that address points at (stored VA minus the image base)."""
         if self._reloc is None:
             out: dict[int, int] = {}
-            sec = self.pe.section(".reloc")
-            blob = self.pe.data[sec["rptr"]:sec["rptr"] + sec["rsize"]]
-            p, end = 0, min(sec["rsize"], sec["vsize"])
-            while p + 8 <= end:
-                page, blk = struct.unpack_from("<II", blob, p)
-                if blk < 8:
-                    break
-                for i in range(8, min(blk, end - p), 2):
-                    ent = struct.unpack_from("<H", blob, p + i)[0]
-                    if ent >> 12 != 3:            # HIGHLOW only
-                        continue
-                    site = page + (ent & 0xFFF)
-                    val = self.u32(site)
-                    if val is not None:
-                        out[site] = val - self.base
-                p += blk
+            for site in self.pe.highlow_sites():
+                val = self.u32(site)
+                if val is not None:
+                    out[site] = val - self.base
             self._reloc = out
         return self._reloc
 

@@ -74,7 +74,7 @@ def disposable_stem(stem: str) -> str:
 
 # --------------------------------------------------------------------------- outer
 def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: str | None = None,
-            unit: str | None = None, repo: Path | None = None, msvc: Path | None = None, timeout: float | None = None) -> str:
+            unit: str | None = None, repo: Path | None = None, msvc: Path | None = None, timeout: float | None = None, locale: str | None = None) -> str:
     """Compile SRC to OUT through the fixed view; return the compiler output."""
     from homm1.core.paths import REPO, VENDOR, msvc_dir, vendor_include_dirs
     from homm1.tool import ToolError
@@ -91,9 +91,14 @@ def compile(src: Path | str, out: Path | str, flags: list[str], *, retail_name: 
         contract_path = REPO / "config/units.toml"
     contract = tomllib.loads(contract_path.read_text())
     source_dir = (unit.split("/", 1)[0] if unit else src.parent.name).upper()
+    from homm1.graph.localization import prepare
+    original_name = retail_name or default_name(src, unit)
+    src, header, _overlay, _deps = prepare(source_repo, src, locale=locale)
+
     source_root = contract.get("build", {}).get("source_roots", {}).get(source_dir)
     job = {"source_root": source_root, "src": str(src), "out": str(out), "flags": flags,
-           "name": retail_name or default_name(src, unit),
+           "localization_header": str(header) if header else None,
+           "name": original_name,
            "repo": str((repo or REPO).resolve()), "msvc": str((msvc or msvc_dir()).resolve()),
            "prefix": str(Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine").resolve()),
            # research knob: put include/ under D:\\Heroes\\<dir> instead of beside the sources
@@ -161,6 +166,25 @@ def _inner(job: dict) -> int:
             elif not (base / d.name).exists():
                 base.mkdir(parents=True, exist_ok=True)
                 (base / d.name).symlink_to(d.resolve())
+    header = job.get("localization_header")
+    if header:
+        header = Path(header)
+        # /Gi includes every opened path in its compiler state. The generated
+        # catalog must have the same name in matching and clean-control builds.
+        (heroes / "__homm1_messages.h").symlink_to(header)
+        job["flags"] = [*job["flags"], "/FI" + project_root + "\\__homm1_messages.h"]
+        if header.name == "messages.h":
+            # prepare() mirrored every reachable header, including unchanged
+            # intermediates needed by quoted sibling includes.
+            for generated in (header.parent / "include").rglob("*"):
+                if not generated.is_file():
+                    continue
+                parts = generated.relative_to(header.parent / "include").parts
+                mapped = (DIR_NAMES.get(parts[0].upper(), parts[0]), *parts[1:]) if len(parts) > 1 else parts
+                target = (heroes / inc if inc else heroes).joinpath(*mapped)
+                target.parent.mkdir(parents=True, exist_ok=True)
+                target.unlink(missing_ok=True)
+                target.symlink_to(generated)
     vendor = [name for name, _d in job["vendor"]]
     (heroes / "Vendor").mkdir(parents=True, exist_ok=True)
     for name, d in job["vendor"]:

@@ -4,7 +4,8 @@
     "size": 726016,
     "sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
     "env_var": "HOMM1_EXE",
-    "option": "--exe"
+    "option": "--exe",
+    "locale": "en"
   },
   "editor": {
     "name": "EDITORW.EXE",

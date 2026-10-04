@@ -8,6 +8,8 @@ process (the image never changes).
 from __future__ import annotations
 
 import struct
+import csv
+import hashlib
 from functools import lru_cache
 from pathlib import Path
 
@@ -24,6 +26,8 @@ class Pe:
         magic = struct.unpack_from("<H", d, pe + 24)[0]
         if magic != 0x10B:
             raise ValueError(f"{self.path}: not a PE32 image (magic 0x{magic:x})")
+        self.directories = [struct.unpack_from("<II", d, pe + 24 + 96 + i * 8)
+                            for i in range(min(16, struct.unpack_from("<I", d, pe + 24 + 92)[0]))]
         self.image_base = struct.unpack_from("<I", d, pe + 24 + 28)[0]
         self.sections: list[dict] = []
         for i in range(nsec):
@@ -50,11 +54,54 @@ class Pe:
         no separate .bss header), and .idata - whose virtual tail the retail
         linker reused for late zero-fill globals."""
         rd, da = self.section(".rdata"), self.section(".data")
-        it = self.section(".idata")
+        it = next((s for s in self.sections if s["name"] == ".idata"), None)
         return {"rdata": (rd["va"], rd["va"] + rd["rsize"]),
                 "data": (da["va"], da["va"] + da["rsize"]),
                 "bss": (da["va"] + da["rsize"], da["va"] + da["vsize"]),
-                "idata": (it["va"], it["va"] + max(it["vsize"], it["rsize"]))}
+                "idata": ((it["va"], it["va"] + max(it["vsize"], it["rsize"]))
+                          if it else (0, 0))}
+
+    def highlow_sites(self, manifest: Path | None = None) -> list[int]:
+        """PE HIGHLOW fields, or hash-bound reviewed fields for a /FIXED image.
+
+        Missing relocation records are not permission to guess address-sized
+        integers. The explicit manifest is shared by sema and delink readers.
+        """
+        rva, size = self.directories[5] if len(self.directories) > 5 else (0, 0)
+        if rva and size:
+            blob = self.read(rva, size)
+            if blob is None:
+                raise ValueError("base relocation directory extends outside the image")
+            sites, pos = [], 0
+            while pos + 8 <= len(blob):
+                page, block = struct.unpack_from("<II", blob, pos)
+                if not block:
+                    break
+                if block < 8 or block % 2 or pos + block > len(blob):
+                    raise ValueError("invalid base relocation block")
+                for offset in range(pos + 8, pos + block, 2):
+                    entry, = struct.unpack_from("<H", blob, offset)
+                    if entry >> 12 == 3:
+                        sites.append(page + (entry & 0xfff))
+                pos += block
+            return sorted(set(sites))
+        if manifest is None:
+            from homm1.core.paths import RETAIL
+            manifest = RETAIL / "absolute_relocations.tsv"
+        lines = manifest.read_text(encoding="utf-8").splitlines()
+        expected = "# image-sha256: " + hashlib.sha256(self.data).hexdigest()
+        if expected not in lines:
+            raise ValueError(f"{manifest}: relocation manifest is not pinned to {self.path}")
+        sites, seen = [], set()
+        for row in csv.DictReader((line for line in lines if not line.startswith("#")), delimiter="\t"):
+            site = int(row["site_rva"], 16)
+            if row["kind"] != "dir32" or self.read(site, 4) is None:
+                raise ValueError(f"{manifest}: invalid absolute relocation at {site:#x}")
+            if site in seen:
+                raise ValueError(f"{manifest}: duplicate relocation at {site:#x}")
+            sites.append(site)
+            seen.add(site)
+        return sorted(sites)
 
     def read(self, rva: int, size: int) -> bytes | None:
         """Bytes at rva; loader zero-fill (past a section's raw size) reads as

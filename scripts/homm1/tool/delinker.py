@@ -30,6 +30,7 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
            data_manifest: Path | str | None = None,
            data_section_manifest: Path | str | None = None,
            reloc_alias_manifest: Path | str | None = None,
+           reloc_manifest: Path | str | None = None,
            recover_data_relocs_from_pdb: bool = True,
            timeout: float | None = 1800) -> str:
     """Run vostok-delinker; returns its output. Raises ToolError on failure."""
@@ -52,7 +53,8 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
             "--engine-path", ENGINE_PATH]
     for flag, value in (("--data-manifest", data_manifest),
                         ("--data-section-manifest", data_section_manifest),
-                        ("--reloc-alias-manifest", reloc_alias_manifest)):
+                        ("--reloc-alias-manifest", reloc_alias_manifest),
+                        ("--reloc-manifest", reloc_manifest)):
         if value is not None:
             if not Path(value).exists():
                 raise ToolError(f"missing manifest: {value}")
@@ -88,12 +90,14 @@ def main() -> int:
     ap.add_argument("--data-manifest")
     ap.add_argument("--data-section-manifest")
     ap.add_argument("--reloc-alias-manifest")
+    ap.add_argument("--reloc-manifest")
     a = ap.parse_args()
     try:
         out = delink(a.pdb, a.exe, a.out,
                      data_manifest=a.data_manifest,
                      data_section_manifest=a.data_section_manifest,
-                     reloc_alias_manifest=a.reloc_alias_manifest)
+                     reloc_alias_manifest=a.reloc_alias_manifest,
+                     reloc_manifest=a.reloc_manifest)
         if out.strip():
             print(out)
     except (ToolError, OSError) as e:

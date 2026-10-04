@@ -83,24 +83,7 @@ class Image:
     def reloc_sites(self) -> list[int]:
         """Sorted RVAs of every IMAGE_REL_BASED_HIGHLOW site (data dir 5)."""
         if self._reloc_sites is None:
-            d = self.data
-            rva = struct.unpack_from("<I", d, self._opt + 96 + 5 * 8)[0]
-            sz = struct.unpack_from("<I", d, self._opt + 96 + 5 * 8 + 4)[0]
-            sites = []
-            if rva:
-                base = self.off(rva)
-                p, end = base, base + sz
-                while p < end:
-                    page, blk = struct.unpack_from("<II", d, p)
-                    if blk == 0:
-                        break
-                    for i in range((blk - 8) // 2):
-                        ent = struct.unpack_from("<H", d, p + 8 + i * 2)[0]
-                        if ent >> 12 == 3:
-                            sites.append(page + (ent & 0xFFF))
-                    p += blk
-            sites.sort()
-            self._reloc_sites = sites
+            self._reloc_sites = self.pe.highlow_sites()
         return self._reloc_sites
 
     def relocs_in(self, lo: int, hi: int) -> list[int]:

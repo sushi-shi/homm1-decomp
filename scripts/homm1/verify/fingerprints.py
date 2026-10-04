@@ -61,11 +61,15 @@ def real_edit(prev_fp: str, cur_fp: str) -> bool:
 def cpp_hash(source: str) -> str:
     """12-hex sha1 of a unit's whole source file (the unit-level fallback)."""
     p = REPO / source
-    return hashlib.sha1(p.read_bytes()).hexdigest()[:12] if p.is_file() \
+    return _sha12(p.read_text(encoding="utf-8")) if p.is_file() \
         else "nosrc"
 
 
 def _sha12(text: str) -> str:
+    from homm1.graph.catalog import Catalog
+    if (REPO / "locales/messages.def").is_file():
+        from homm1.graph.localization import matching_locale
+        text = Catalog.load(REPO).render(text, expanded=True, locale=matching_locale(REPO))
     return hashlib.sha1(text.encode("utf-8", "replace")).hexdigest()[:12]
 
 

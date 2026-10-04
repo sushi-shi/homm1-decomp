@@ -50,11 +50,16 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     # formerly data-only object cannot shadow newly attributed code.
     if delink_dir.exists():
         shutil.rmtree(delink_dir)
+    pe = pdb_synth.retail().pe
+    absolute_manifest = None
+    if not pe.directories[5][0]:
+        absolute_manifest = RELOC_ALIASES.with_name("absolute_relocations.tsv")
+        pe.highlow_sites(absolute_manifest)  # hash and structural validation
     out = delinker.delink(
         synth["pdb"], pdb_synth.retail().pe.path, delink_dir,
         data_manifest=data_manifest.OUTPUT,
         data_section_manifest=data_manifest.SECTION_OUTPUT,
-        reloc_alias_manifest=RELOC_ALIASES)
+        reloc_alias_manifest=RELOC_ALIASES, reloc_manifest=absolute_manifest)
     if out.strip():
         print(out.strip().splitlines()[-1])
 

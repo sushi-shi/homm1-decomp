@@ -72,12 +72,12 @@ def era_tool(name: str) -> Path:
 
 
 def ensure_link_deps() -> None:
-    """Verify the VC4 linker and its local PDB runtime are installed."""
+    """Verify the era linker and its local PDB runtime are installed."""
     root = toolchain_root()
     era_tool("link.exe")
-    if not any(find_ci(root / "bin", name) for name in ("mspdb40.dll", "mspdb41.dll")):
-        raise ToolError(f"VC4 PDB runtime not found under {root}/bin - reinstall "
-                        "the pinned VC4 toolchain")
+    if not any(find_ci(root / "bin", name) for name in ("mspdb40.dll", "mspdb41.dll", "mspdb60.dll")):
+        raise ToolError(f"MSVC PDB runtime not found under {root}/bin - reinstall "
+                        "the pinned MSVC toolchain")
 
 
 def winepath(p: Path | str) -> str:

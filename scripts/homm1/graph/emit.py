@@ -98,11 +98,13 @@ def _mods(*rel: str) -> list[str]:
 #: the labels edge is 311 clang passes, and making it depend on the whole
 #: toolchain would re-run all of them whenever an unrelated module is touched.
 TOOL_MODS = _mods("tool/__init__.py", "tool/wine.py", "core/paths.py")
-CL_MODS = _mods("graph/cc.py", "tool/cl.py") + TOOL_MODS
+LOCALIZATION_MODS = _mods("graph/catalog.py", "graph/localization.py", "graph/scan.py") + [
+    "locales/messages.def", "locales/ru.po", "config/retail/targets.json"]
+CL_MODS = LOCALIZATION_MODS + _mods("graph/cc.py", "tool/cl.py", "tool/fixedroot.py") + TOOL_MODS
 ML_MODS = _mods("graph/fixed_asm.py", "tool/ml.py") + TOOL_MODS
-COMPDB_MODS = _mods("graph/compdb.py", "tool/clang.py", "manifest.py",
+COMPDB_MODS = LOCALIZATION_MODS + _mods("graph/compdb.py", "tool/clang.py", "manifest.py",
                     "core/paths.py")
-LABELS_MODS = _mods("retail_labels/", "tool/clang.py", "core/coff.py",
+LABELS_MODS = LOCALIZATION_MODS + _mods("retail_labels/", "tool/clang.py", "core/coff.py",
                     "core/tsv.py", "manifest.py", "core/paths.py", "core/msvc_names.py")
 MODEL_MODS = _mods("model.py", "retail_labels/", "core/tsv.py", "core/paths.py")
 DELINK_MODS = _mods("delink/", "tool/delinker.py", "core/pe.py",
@@ -172,7 +174,7 @@ def load_units() -> tuple[dict, list[dict]]:
                 "carrying the FULL set instead.")
         u["compiler"] = u.get("compiler", data.get("build", {}).get(
             "compiler", "vc40"))
-        if u["compiler"] not in {"vc40", "vc41"}:
+        if u["compiler"] not in {"vc40", "vc41", "vc6"}:
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' has unsupported "
                              f"compiler '{u['compiler']}'")
         u["cflags"] = list(profiles[u["flags"]])

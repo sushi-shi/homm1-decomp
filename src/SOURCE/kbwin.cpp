@@ -34,7 +34,7 @@
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x00432870, 0x14e)
 H1_C_LINKAGE i32 __stdcall
-WinMain(void* instance, void* previousInstance, char* commandLine, i32 showCommand) {
+WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 showCommand) {
     DWORD error;
     MSG message;
 
@@ -511,7 +511,7 @@ void KBChangeMenu(void* menu) {
     hmnuApp = menu;
     if (gConfig.gfx[gCurExe].showMenu) {
         if (menu != NULL) {
-            SetMenu(hwndApp, menu);
+            SetMenu(hwndApp, static_cast<HMENU>(menu));
             UpdateDfltMenu(menu);
             UpdateAppSpecificMenus(menu);
             DrawMenuBar(hwndApp);
@@ -1420,7 +1420,7 @@ char gAppName[] = "Heroes";
 DATA(0x0049f7b0)
 char gTitle[] = "Heroes of Might and Magic";
 DATA(0x0049f7cc)
-void* hwndApp = NULL;
+HWND hwndApp = NULL;
 DATA(0x0049f7d0)
 i32 gForegroundApp = 0;
 DATA(0x0049f7d4)
