@@ -201,3 +201,20 @@ rva	size	symbol	provenance
 0x000a9954	1	?gInCheckEndGame@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a7484	14	?giTerrainCost@@3PAY01CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9900	4	?gMinimized@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a6bd0	4	?gSavedPlayerTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bd4	4	_s_adjacentMonsterX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bd8	4	_s_adjacentMonsterY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bdc	1	?gSavedCrest@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6be0	4	?gRandomTownTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6be8	4	_s_adjacentMonsterMinX	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
+0x000a6bec	4	_s_adjacentMonsterMinY	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
+0x000a6bf0	1	?gSavedDifficulty@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bf4	14	?gMineTypeCount@@3PAFA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c04	4	_s_adjacentMonsterEndY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c08	4	_s_adjacentMonsterEndX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c0c	1	?gSaveCurPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c0d	1	?gbDismissArmy@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c0e	1	?gSavedKingOfTheHill@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c20	4	?gEndSequence@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c28	1	_?gNewGameSettingsSaved@?1??NewGame@game@@QAECXZ@4CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x00092f50	288	?gHeroNames@@3PAY01PADA	LoadGame full/short hero-name indexing and complete localized pointer table; buka-hero-names.json

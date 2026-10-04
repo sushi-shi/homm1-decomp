@@ -4475,3 +4475,291 @@ msgstr "Ошибка получения информации. Продолжат
 msgctxt "combat.network.canceled"
 msgid "Game canceled."
 msgstr "Игра прервана."
+
+msgctxt "table.gHeroNames.0.0"
+msgid "Lord Kilburn"
+msgstr "Лорд Килбурн"
+
+msgctxt "table.gHeroNames.0.1"
+msgid "Kilburn"
+msgstr "Килбурн"
+
+msgctxt "table.gHeroNames.1.0"
+msgid "Lord Haart"
+msgstr "Лорд Хаарт"
+
+msgctxt "table.gHeroNames.1.1"
+msgid "Haart"
+msgstr "Хаарт"
+
+msgctxt "table.gHeroNames.2.0"
+msgid "Sir Gallant"
+msgstr "Сэр Галлант"
+
+msgctxt "table.gHeroNames.2.1"
+msgid "Gallant"
+msgstr "Галлант"
+
+msgctxt "table.gHeroNames.3.0"
+msgid "Arturius"
+msgstr "Артуриус"
+
+msgctxt "table.gHeroNames.3.1"
+msgid "Arturius"
+msgstr "Артуриус"
+
+msgctxt "table.gHeroNames.4.0"
+msgid "Tyro"
+msgstr "Тиро"
+
+msgctxt "table.gHeroNames.4.1"
+msgid "Tyro"
+msgstr "Тиро"
+
+msgctxt "table.gHeroNames.5.0"
+msgid "Maximus"
+msgstr "Максимус"
+
+msgctxt "table.gHeroNames.5.1"
+msgid "Maximus"
+msgstr "Максимус"
+
+msgctxt "table.gHeroNames.6.0"
+msgid "Ector"
+msgstr "Эктор"
+
+msgctxt "table.gHeroNames.6.1"
+msgid "Ector"
+msgstr "Эктор"
+
+msgctxt "table.gHeroNames.7.0"
+msgid "Dimitri"
+msgstr "Димитрий"
+
+msgctxt "table.gHeroNames.7.1"
+msgid "Dimitri"
+msgstr "Димитрий"
+
+msgctxt "table.gHeroNames.8.0"
+msgid "Ambrose"
+msgstr "Амброзий"
+
+msgctxt "table.gHeroNames.8.1"
+msgid "Ambrose"
+msgstr "Амброзий"
+
+msgctxt "table.gHeroNames.9.0"
+msgid "Thundax"
+msgstr "Сундакс"
+
+msgctxt "table.gHeroNames.9.1"
+msgid "Thundax"
+msgstr "Сундакс"
+
+msgctxt "table.gHeroNames.10.0"
+msgid "Ergon"
+msgstr "Эргон"
+
+msgctxt "table.gHeroNames.10.1"
+msgid "Ergon"
+msgstr "Эргон"
+
+msgctxt "table.gHeroNames.11.0"
+msgid "Kelzen"
+msgstr "Келзен"
+
+msgctxt "table.gHeroNames.11.1"
+msgid "Kelzen"
+msgstr "Келзен"
+
+msgctxt "table.gHeroNames.12.0"
+msgid "Tsabu"
+msgstr "Тсабу"
+
+msgctxt "table.gHeroNames.12.1"
+msgid "Tsabu"
+msgstr "Тсабу"
+
+msgctxt "table.gHeroNames.13.0"
+msgid "Crag Hack"
+msgstr "Крэг Хак"
+
+msgctxt "table.gHeroNames.13.1"
+msgid "Crag"
+msgstr "Крэг"
+
+msgctxt "table.gHeroNames.14.0"
+msgid "Jojosh"
+msgstr "Джоджош"
+
+msgctxt "table.gHeroNames.14.1"
+msgid "Jojosh"
+msgstr "Джоджош"
+
+msgctxt "table.gHeroNames.15.0"
+msgid "Atlas"
+msgstr "Атлас"
+
+msgctxt "table.gHeroNames.15.1"
+msgid "Atlas"
+msgstr "Атлас"
+
+msgctxt "table.gHeroNames.16.0"
+msgid "Yog"
+msgstr "Йог"
+
+msgctxt "table.gHeroNames.16.1"
+msgid "Yog"
+msgstr "Йог"
+
+msgctxt "table.gHeroNames.17.0"
+msgid "Antoine"
+msgstr "Антоний"
+
+msgctxt "table.gHeroNames.17.1"
+msgid "Antoine"
+msgstr "Антоний"
+
+msgctxt "table.gHeroNames.18.0"
+msgid "Ariel"
+msgstr "Ариэль"
+
+msgctxt "table.gHeroNames.18.1"
+msgid "Ariel"
+msgstr "Ариэль"
+
+msgctxt "table.gHeroNames.19.0"
+msgid "Vatawna"
+msgstr "Ватавна"
+
+msgctxt "table.gHeroNames.19.1"
+msgid "Vatawna"
+msgstr "Ватавна"
+
+msgctxt "table.gHeroNames.20.0"
+msgid "Carlawn"
+msgstr "Карлавн"
+
+msgctxt "table.gHeroNames.20.1"
+msgid "Carlawn"
+msgstr "Карлавн"
+
+msgctxt "table.gHeroNames.21.0"
+msgid "Rebecca"
+msgstr "Ребекка"
+
+msgctxt "table.gHeroNames.21.1"
+msgid "Rebecca"
+msgstr "Ребекка"
+
+msgctxt "table.gHeroNames.22.0"
+msgid "Luna"
+msgstr "Луна"
+
+msgctxt "table.gHeroNames.22.1"
+msgid "Luna"
+msgstr "Луна"
+
+msgctxt "table.gHeroNames.23.0"
+msgid "Astra"
+msgstr "Астра"
+
+msgctxt "table.gHeroNames.23.1"
+msgid "Astra"
+msgstr "Астра"
+
+msgctxt "table.gHeroNames.24.0"
+msgid "Natasha"
+msgstr "Наташа"
+
+msgctxt "table.gHeroNames.24.1"
+msgid "Natasha"
+msgstr "Наташа"
+
+msgctxt "table.gHeroNames.25.0"
+msgid "Gem"
+msgstr "Гем"
+
+msgctxt "table.gHeroNames.25.1"
+msgid "Gem"
+msgstr "Гем"
+
+msgctxt "table.gHeroNames.26.0"
+msgid "Troyan"
+msgstr "Троян"
+
+msgctxt "table.gHeroNames.26.1"
+msgid "Troyan"
+msgstr "Троян"
+
+msgctxt "table.gHeroNames.27.0"
+msgid "Agar"
+msgstr "Агар"
+
+msgctxt "table.gHeroNames.27.1"
+msgid "Agar"
+msgstr "Агар"
+
+msgctxt "table.gHeroNames.28.0"
+msgid "Crodo"
+msgstr "Кродо"
+
+msgctxt "table.gHeroNames.28.1"
+msgid "Crodo"
+msgstr "Кродо"
+
+msgctxt "table.gHeroNames.29.0"
+msgid "Falagar"
+msgstr "Фалагар"
+
+msgctxt "table.gHeroNames.29.1"
+msgid "Falagar"
+msgstr "Фалагар"
+
+msgctxt "table.gHeroNames.30.0"
+msgid "Barok"
+msgstr "Барок"
+
+msgctxt "table.gHeroNames.30.1"
+msgid "Barok"
+msgstr "Барок"
+
+msgctxt "table.gHeroNames.31.0"
+msgid "Arie"
+msgstr "Арий"
+
+msgctxt "table.gHeroNames.31.1"
+msgid "Arie"
+msgstr "Арий"
+
+msgctxt "table.gHeroNames.32.0"
+msgid "Kastore"
+msgstr "Кастор"
+
+msgctxt "table.gHeroNames.32.1"
+msgid "Kastore"
+msgstr "Кастор"
+
+msgctxt "table.gHeroNames.33.0"
+msgid "Sandro"
+msgstr "Сандро"
+
+msgctxt "table.gHeroNames.33.1"
+msgid "Sandro"
+msgstr "Сандро"
+
+msgctxt "table.gHeroNames.34.0"
+msgid "Wrathmont"
+msgstr "Расмонт"
+
+msgctxt "table.gHeroNames.34.1"
+msgid "Wrath"
+msgstr "Рас"
+
+msgctxt "table.gHeroNames.35.0"
+msgid "Vesper"
+msgstr "Виспер"
+
+msgctxt "table.gHeroNames.35.1"
+msgid "Vesper"
+msgstr "Виспер"

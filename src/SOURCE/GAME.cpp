@@ -1062,7 +1062,7 @@ void game::GiveTroopsToNeutralTowns(void) {
 // one does not fit the human player count.
 VA(0x0042dec4, 0x3e9)
 i8 game::NewGame(void) {
-    DATA(0x004909e0)
+    DATA(0x004a6c28)
     static i8 gNewGameSettingsSaved = 0;
     i32 player;
     if (!SetupGame(1))
@@ -3963,17 +3963,17 @@ i32 game::GetLuck(hero* h, army*) {
 }
 
 // Buka 2.1 keeps the scan cursor in file statics.
-DATA(0x004a7314)
+DATA(0x004a6c08)
 static i32 s_adjacentMonsterEndX;
-DATA(0x004a7310)
+DATA(0x004a6c04)
 static i32 s_adjacentMonsterEndY;
-DATA(0x004a72dc)
+DATA(0x004a6bd4)
 static i32 s_adjacentMonsterX;
-DATA(0x004a72e0)
+DATA(0x004a6bd8)
 static i32 s_adjacentMonsterY;
-DATA(0x004a72f0)
+DATA(0x004a6be8)
 static i32 s_adjacentMonsterMinX;
-DATA(0x004a72f4)
+DATA(0x004a6bec)
 static i32 s_adjacentMonsterMinY;
 
 // donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
@@ -5180,32 +5180,32 @@ void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, 
     cell->m_objectMetadata = barrier;
 }
 
-// GAME owns retail .data 0x00490920-0x00490b4b and .bss 0x004c50d0-0x004c512f.
-// Retail emits gNewGameSettingsSaved, gMonType and gLastSeed among the
-// literals of their users; gShowMapInfo is defined above GetMap.
+// GAME globals: Buka RVAs recovered from their typed code users.
+// gNewGameSettingsSaved remains local to NewGame; gMonType is local to
+// PerMonth, and gShowMapInfo is defined above GetMap.
 DATA(0x004a6c24)
 i32 gGameOver = 0;
 DATA(0x0048fcc8)
 u32 gLastSeed = 135621123;
-DATA(0x004a7318)
+DATA(0x004a6c0c)
 i8 gSaveCurPlayer;
-DATA(0x004a72e4)
+DATA(0x004a6bdc)
 i8 gSavedCrest;
-DATA(0x004a72f8)
+DATA(0x004a6bf0)
 i8 gSavedDifficulty;
-DATA(0x004a7338)
+DATA(0x004a6c20)
 i32 gEndSequence;
-DATA(0x004a731c)
+DATA(0x004a6c0d)
 i8 gbDismissArmy;
 DATA(0x004a6be4)
 heroWindow* gReqExtraWindow;
-DATA(0x004a72d8)
+DATA(0x004a6bd0)
 i8 gSavedPlayerTypes[4];
-DATA(0x004a7300)
+DATA(0x004a6bf4)
 i16 gMineTypeCount[RESOURCE_COUNT];
 DATA(0x004a6c10)
 char gCurMapName[16];
-DATA(0x004a7320)
+DATA(0x004a6c0e)
 i8 gSavedKingOfTheHill;
-DATA(0x004a72e8)
+DATA(0x004a6be0)
 i8 gRandomTownTypes[4];

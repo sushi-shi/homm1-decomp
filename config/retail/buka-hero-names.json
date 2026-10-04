@@ -1,0 +1,853 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "name": "?gHeroNames@@3PAY01PADA",
+  "rva": "0x92f50",
+  "size": 288,
+  "unit": "SOURCE/KB",
+  "old_rva": "0x93a08",
+  "method": "LoadGame loop compares the index with 36, loads pointers at index*8+base and index*8+base+4, and copies them into the full and short name fields of 0xb6-byte hero records. The next independently known table gCPanelHelp begins at base+288. All 72 English literals equal NWC 1.2; all Russian literals are read from the corresponding Buka pointer slots. No Russian text in C++.",
+  "references": [
+    {
+      "site_rva": "0x2d145",
+      "target_rva": "0x92f50",
+      "symbol": "?gHeroNames@@3PAY01PADA",
+      "addend": 0,
+      "kind": 6
+    },
+    {
+      "site_rva": "0x2d16f",
+      "target_rva": "0x92f54",
+      "symbol": "?gHeroNames@@3PAY01PADA",
+      "addend": 4,
+      "kind": 6
+    }
+  ],
+  "table": [
+    {
+      "id": "table.gHeroNames.0.0",
+      "index": 0,
+      "field": "full",
+      "english": "Lord Kilburn",
+      "nwc_pointer_site": "0x93a08",
+      "nwc_literal": "0x9b224",
+      "buka_pointer_site": "0x92f50",
+      "buka_literal": "0x9a870",
+      "russian_sha256": "e8722c7d0a93aaaa8987330b4382ad98b011f62fb1d324809e46bd4e2e1ad09f"
+    },
+    {
+      "id": "table.gHeroNames.0.1",
+      "index": 0,
+      "field": "short",
+      "english": "Kilburn",
+      "nwc_pointer_site": "0x93a0c",
+      "nwc_literal": "0x9b234",
+      "buka_pointer_site": "0x92f54",
+      "buka_literal": "0x9a880",
+      "russian_sha256": "f75352184286765f8eb5b7894af7e0402e2749426b4319e90dda3059a80cad72"
+    },
+    {
+      "id": "table.gHeroNames.1.0",
+      "index": 1,
+      "field": "full",
+      "english": "Lord Haart",
+      "nwc_pointer_site": "0x93a10",
+      "nwc_literal": "0x9b23c",
+      "buka_pointer_site": "0x92f58",
+      "buka_literal": "0x9a888",
+      "russian_sha256": "44b30563cceed0d9e65f612bf77aa74971bc6b464a2975d41841fea3fb9a4b30"
+    },
+    {
+      "id": "table.gHeroNames.1.1",
+      "index": 1,
+      "field": "short",
+      "english": "Haart",
+      "nwc_pointer_site": "0x93a14",
+      "nwc_literal": "0x9b248",
+      "buka_pointer_site": "0x92f5c",
+      "buka_literal": "0x9a894",
+      "russian_sha256": "a3c93930b6542936e6c96a7eeb400d2bd20dd320121e959b4dd3bd45c774ce1d"
+    },
+    {
+      "id": "table.gHeroNames.2.0",
+      "index": 2,
+      "field": "full",
+      "english": "Sir Gallant",
+      "nwc_pointer_site": "0x93a18",
+      "nwc_literal": "0x9b250",
+      "buka_pointer_site": "0x92f60",
+      "buka_literal": "0x9a89c",
+      "russian_sha256": "b1ec4a1b78e2d182694728857cb41b1a09437ca6cc2e6e9b57c5eaa056f319da"
+    },
+    {
+      "id": "table.gHeroNames.2.1",
+      "index": 2,
+      "field": "short",
+      "english": "Gallant",
+      "nwc_pointer_site": "0x93a1c",
+      "nwc_literal": "0x9b25c",
+      "buka_pointer_site": "0x92f64",
+      "buka_literal": "0x9a8a8",
+      "russian_sha256": "331ba5d7ba7c383cef3cff4336ed70220628a4f6c53a102e51addcb9a2cbf171"
+    },
+    {
+      "id": "table.gHeroNames.3.0",
+      "index": 3,
+      "field": "full",
+      "english": "Arturius",
+      "nwc_pointer_site": "0x93a20",
+      "nwc_literal": "0x9b264",
+      "buka_pointer_site": "0x92f68",
+      "buka_literal": "0x9a8b0",
+      "russian_sha256": "bb44c87cc3f4e73568402671c1f5f02b88659743d5c7b5fa0c115fc195826c41"
+    },
+    {
+      "id": "table.gHeroNames.3.1",
+      "index": 3,
+      "field": "short",
+      "english": "Arturius",
+      "nwc_pointer_site": "0x93a24",
+      "nwc_literal": "0x9b270",
+      "buka_pointer_site": "0x92f6c",
+      "buka_literal": "0x9a8bc",
+      "russian_sha256": "bb44c87cc3f4e73568402671c1f5f02b88659743d5c7b5fa0c115fc195826c41"
+    },
+    {
+      "id": "table.gHeroNames.4.0",
+      "index": 4,
+      "field": "full",
+      "english": "Tyro",
+      "nwc_pointer_site": "0x93a28",
+      "nwc_literal": "0x9b27c",
+      "buka_pointer_site": "0x92f70",
+      "buka_literal": "0x9a8c8",
+      "russian_sha256": "763a9175bf4aafda14eec37e5c0bfe0420936fd462e7c44b62851021c3d56874"
+    },
+    {
+      "id": "table.gHeroNames.4.1",
+      "index": 4,
+      "field": "short",
+      "english": "Tyro",
+      "nwc_pointer_site": "0x93a2c",
+      "nwc_literal": "0x9b284",
+      "buka_pointer_site": "0x92f74",
+      "buka_literal": "0x9a8d0",
+      "russian_sha256": "763a9175bf4aafda14eec37e5c0bfe0420936fd462e7c44b62851021c3d56874"
+    },
+    {
+      "id": "table.gHeroNames.5.0",
+      "index": 5,
+      "field": "full",
+      "english": "Maximus",
+      "nwc_pointer_site": "0x93a30",
+      "nwc_literal": "0x9b28c",
+      "buka_pointer_site": "0x92f78",
+      "buka_literal": "0x9a8d8",
+      "russian_sha256": "02d8a61e214faf75a62de09db824bd01ad959fe2e7f882930bded4150f825b08"
+    },
+    {
+      "id": "table.gHeroNames.5.1",
+      "index": 5,
+      "field": "short",
+      "english": "Maximus",
+      "nwc_pointer_site": "0x93a34",
+      "nwc_literal": "0x9b294",
+      "buka_pointer_site": "0x92f7c",
+      "buka_literal": "0x9a8e4",
+      "russian_sha256": "02d8a61e214faf75a62de09db824bd01ad959fe2e7f882930bded4150f825b08"
+    },
+    {
+      "id": "table.gHeroNames.6.0",
+      "index": 6,
+      "field": "full",
+      "english": "Ector",
+      "nwc_pointer_site": "0x93a38",
+      "nwc_literal": "0x9b29c",
+      "buka_pointer_site": "0x92f80",
+      "buka_literal": "0x9a8f0",
+      "russian_sha256": "b37bf108b1cf6e38ac680bdbe4155a9796fe040350534d7e77846c98f65fd93c"
+    },
+    {
+      "id": "table.gHeroNames.6.1",
+      "index": 6,
+      "field": "short",
+      "english": "Ector",
+      "nwc_pointer_site": "0x93a3c",
+      "nwc_literal": "0x9b2a4",
+      "buka_pointer_site": "0x92f84",
+      "buka_literal": "0x9a8f8",
+      "russian_sha256": "b37bf108b1cf6e38ac680bdbe4155a9796fe040350534d7e77846c98f65fd93c"
+    },
+    {
+      "id": "table.gHeroNames.7.0",
+      "index": 7,
+      "field": "full",
+      "english": "Dimitri",
+      "nwc_pointer_site": "0x93a40",
+      "nwc_literal": "0x9b2ac",
+      "buka_pointer_site": "0x92f88",
+      "buka_literal": "0x9a900",
+      "russian_sha256": "1e1b3aab4e7a04b3b85b035694d886c54b9e837d6db7429e0a940e3a17484d3b"
+    },
+    {
+      "id": "table.gHeroNames.7.1",
+      "index": 7,
+      "field": "short",
+      "english": "Dimitri",
+      "nwc_pointer_site": "0x93a44",
+      "nwc_literal": "0x9b2b4",
+      "buka_pointer_site": "0x92f8c",
+      "buka_literal": "0x9a90c",
+      "russian_sha256": "1e1b3aab4e7a04b3b85b035694d886c54b9e837d6db7429e0a940e3a17484d3b"
+    },
+    {
+      "id": "table.gHeroNames.8.0",
+      "index": 8,
+      "field": "full",
+      "english": "Ambrose",
+      "nwc_pointer_site": "0x93a48",
+      "nwc_literal": "0x9b2bc",
+      "buka_pointer_site": "0x92f90",
+      "buka_literal": "0x9a918",
+      "russian_sha256": "bc796e10b44459892b83e22e1d764d6c3a9c5d8a1b5c6c55c99281eef7bce363"
+    },
+    {
+      "id": "table.gHeroNames.8.1",
+      "index": 8,
+      "field": "short",
+      "english": "Ambrose",
+      "nwc_pointer_site": "0x93a4c",
+      "nwc_literal": "0x9b2c4",
+      "buka_pointer_site": "0x92f94",
+      "buka_literal": "0x9a924",
+      "russian_sha256": "bc796e10b44459892b83e22e1d764d6c3a9c5d8a1b5c6c55c99281eef7bce363"
+    },
+    {
+      "id": "table.gHeroNames.9.0",
+      "index": 9,
+      "field": "full",
+      "english": "Thundax",
+      "nwc_pointer_site": "0x93a50",
+      "nwc_literal": "0x9b2cc",
+      "buka_pointer_site": "0x92f98",
+      "buka_literal": "0x9a930",
+      "russian_sha256": "9955d7d4c04d1b1ce69e619a24a979f0204605bfd8a206639f805490ce6a000f"
+    },
+    {
+      "id": "table.gHeroNames.9.1",
+      "index": 9,
+      "field": "short",
+      "english": "Thundax",
+      "nwc_pointer_site": "0x93a54",
+      "nwc_literal": "0x9b2d4",
+      "buka_pointer_site": "0x92f9c",
+      "buka_literal": "0x9a938",
+      "russian_sha256": "9955d7d4c04d1b1ce69e619a24a979f0204605bfd8a206639f805490ce6a000f"
+    },
+    {
+      "id": "table.gHeroNames.10.0",
+      "index": 10,
+      "field": "full",
+      "english": "Ergon",
+      "nwc_pointer_site": "0x93a58",
+      "nwc_literal": "0x9b2dc",
+      "buka_pointer_site": "0x92fa0",
+      "buka_literal": "0x9a940",
+      "russian_sha256": "098e43fe8e036b596f3fd7c019d9537f1e41df14a90e4863b906e404320cdf3d"
+    },
+    {
+      "id": "table.gHeroNames.10.1",
+      "index": 10,
+      "field": "short",
+      "english": "Ergon",
+      "nwc_pointer_site": "0x93a5c",
+      "nwc_literal": "0x9b2e4",
+      "buka_pointer_site": "0x92fa4",
+      "buka_literal": "0x9a948",
+      "russian_sha256": "098e43fe8e036b596f3fd7c019d9537f1e41df14a90e4863b906e404320cdf3d"
+    },
+    {
+      "id": "table.gHeroNames.11.0",
+      "index": 11,
+      "field": "full",
+      "english": "Kelzen",
+      "nwc_pointer_site": "0x93a60",
+      "nwc_literal": "0x9b2ec",
+      "buka_pointer_site": "0x92fa8",
+      "buka_literal": "0x9a950",
+      "russian_sha256": "52fb7b45d7b7d4be5ff835a143af95bac1bea46be717c5ee19c13541aafeea9c"
+    },
+    {
+      "id": "table.gHeroNames.11.1",
+      "index": 11,
+      "field": "short",
+      "english": "Kelzen",
+      "nwc_pointer_site": "0x93a64",
+      "nwc_literal": "0x9b2f4",
+      "buka_pointer_site": "0x92fac",
+      "buka_literal": "0x9a958",
+      "russian_sha256": "52fb7b45d7b7d4be5ff835a143af95bac1bea46be717c5ee19c13541aafeea9c"
+    },
+    {
+      "id": "table.gHeroNames.12.0",
+      "index": 12,
+      "field": "full",
+      "english": "Tsabu",
+      "nwc_pointer_site": "0x93a68",
+      "nwc_literal": "0x9b2fc",
+      "buka_pointer_site": "0x92fb0",
+      "buka_literal": "0x9a960",
+      "russian_sha256": "708785e3250b8e3bf0cec68fc4d737431715f3c98467c65bac9fe42ad90cc1c3"
+    },
+    {
+      "id": "table.gHeroNames.12.1",
+      "index": 12,
+      "field": "short",
+      "english": "Tsabu",
+      "nwc_pointer_site": "0x93a6c",
+      "nwc_literal": "0x9b304",
+      "buka_pointer_site": "0x92fb4",
+      "buka_literal": "0x9a968",
+      "russian_sha256": "708785e3250b8e3bf0cec68fc4d737431715f3c98467c65bac9fe42ad90cc1c3"
+    },
+    {
+      "id": "table.gHeroNames.13.0",
+      "index": 13,
+      "field": "full",
+      "english": "Crag Hack",
+      "nwc_pointer_site": "0x93a70",
+      "nwc_literal": "0x9b30c",
+      "buka_pointer_site": "0x92fb8",
+      "buka_literal": "0x9a970",
+      "russian_sha256": "45843745a7f5c68f16b4aeebffffde2a8030e7e8f3b4562bd9463be7c0d4c456"
+    },
+    {
+      "id": "table.gHeroNames.13.1",
+      "index": 13,
+      "field": "short",
+      "english": "Crag",
+      "nwc_pointer_site": "0x93a74",
+      "nwc_literal": "0x9b318",
+      "buka_pointer_site": "0x92fbc",
+      "buka_literal": "0x9a97c",
+      "russian_sha256": "ac92f8a2282ff1ed62d3155e04320880a2bc4237c555451c1004a19e03ad4d8c"
+    },
+    {
+      "id": "table.gHeroNames.14.0",
+      "index": 14,
+      "field": "full",
+      "english": "Jojosh",
+      "nwc_pointer_site": "0x93a78",
+      "nwc_literal": "0x9b320",
+      "buka_pointer_site": "0x92fc0",
+      "buka_literal": "0x9a984",
+      "russian_sha256": "81f8df0b3118321d4b16aabe24a12f090a5675e1599d527887b8062440dea276"
+    },
+    {
+      "id": "table.gHeroNames.14.1",
+      "index": 14,
+      "field": "short",
+      "english": "Jojosh",
+      "nwc_pointer_site": "0x93a7c",
+      "nwc_literal": "0x9b328",
+      "buka_pointer_site": "0x92fc4",
+      "buka_literal": "0x9a98c",
+      "russian_sha256": "81f8df0b3118321d4b16aabe24a12f090a5675e1599d527887b8062440dea276"
+    },
+    {
+      "id": "table.gHeroNames.15.0",
+      "index": 15,
+      "field": "full",
+      "english": "Atlas",
+      "nwc_pointer_site": "0x93a80",
+      "nwc_literal": "0x9b330",
+      "buka_pointer_site": "0x92fc8",
+      "buka_literal": "0x9a994",
+      "russian_sha256": "0e35ec6bb608101cad54b0e5ae43862ba42f365876c740257233626488e20b49"
+    },
+    {
+      "id": "table.gHeroNames.15.1",
+      "index": 15,
+      "field": "short",
+      "english": "Atlas",
+      "nwc_pointer_site": "0x93a84",
+      "nwc_literal": "0x9b338",
+      "buka_pointer_site": "0x92fcc",
+      "buka_literal": "0x9a99c",
+      "russian_sha256": "0e35ec6bb608101cad54b0e5ae43862ba42f365876c740257233626488e20b49"
+    },
+    {
+      "id": "table.gHeroNames.16.0",
+      "index": 16,
+      "field": "full",
+      "english": "Yog",
+      "nwc_pointer_site": "0x93a88",
+      "nwc_literal": "0x9b340",
+      "buka_pointer_site": "0x92fd0",
+      "buka_literal": "0x9a9a4",
+      "russian_sha256": "3c68d13b902cd1e1b9bf918a121db3041b2a7c85759f469febaba6656eab625e"
+    },
+    {
+      "id": "table.gHeroNames.16.1",
+      "index": 16,
+      "field": "short",
+      "english": "Yog",
+      "nwc_pointer_site": "0x93a8c",
+      "nwc_literal": "0x9b344",
+      "buka_pointer_site": "0x92fd4",
+      "buka_literal": "0x9a9a8",
+      "russian_sha256": "3c68d13b902cd1e1b9bf918a121db3041b2a7c85759f469febaba6656eab625e"
+    },
+    {
+      "id": "table.gHeroNames.17.0",
+      "index": 17,
+      "field": "full",
+      "english": "Antoine",
+      "nwc_pointer_site": "0x93a90",
+      "nwc_literal": "0x9b348",
+      "buka_pointer_site": "0x92fd8",
+      "buka_literal": "0x9a9ac",
+      "russian_sha256": "7903f85465f6bd23a8cbf486081080fe4eaa01a9edacac1b32a104b0c34f3e7b"
+    },
+    {
+      "id": "table.gHeroNames.17.1",
+      "index": 17,
+      "field": "short",
+      "english": "Antoine",
+      "nwc_pointer_site": "0x93a94",
+      "nwc_literal": "0x9b350",
+      "buka_pointer_site": "0x92fdc",
+      "buka_literal": "0x9a9b4",
+      "russian_sha256": "7903f85465f6bd23a8cbf486081080fe4eaa01a9edacac1b32a104b0c34f3e7b"
+    },
+    {
+      "id": "table.gHeroNames.18.0",
+      "index": 18,
+      "field": "full",
+      "english": "Ariel",
+      "nwc_pointer_site": "0x93a98",
+      "nwc_literal": "0x9b358",
+      "buka_pointer_site": "0x92fe0",
+      "buka_literal": "0x9a9bc",
+      "russian_sha256": "ccb365475c2115267ea4d461e5cd5cb73a2e0a11ce2bb481102d9809794d1f4b"
+    },
+    {
+      "id": "table.gHeroNames.18.1",
+      "index": 18,
+      "field": "short",
+      "english": "Ariel",
+      "nwc_pointer_site": "0x93a9c",
+      "nwc_literal": "0x9b360",
+      "buka_pointer_site": "0x92fe4",
+      "buka_literal": "0x9a9c4",
+      "russian_sha256": "ccb365475c2115267ea4d461e5cd5cb73a2e0a11ce2bb481102d9809794d1f4b"
+    },
+    {
+      "id": "table.gHeroNames.19.0",
+      "index": 19,
+      "field": "full",
+      "english": "Vatawna",
+      "nwc_pointer_site": "0x93aa0",
+      "nwc_literal": "0x9b368",
+      "buka_pointer_site": "0x92fe8",
+      "buka_literal": "0x9a9cc",
+      "russian_sha256": "28cfd44f2473025f8c70fef1140873915845daece79533e3863be3c739748f4c"
+    },
+    {
+      "id": "table.gHeroNames.19.1",
+      "index": 19,
+      "field": "short",
+      "english": "Vatawna",
+      "nwc_pointer_site": "0x93aa4",
+      "nwc_literal": "0x9b370",
+      "buka_pointer_site": "0x92fec",
+      "buka_literal": "0x9a9d4",
+      "russian_sha256": "28cfd44f2473025f8c70fef1140873915845daece79533e3863be3c739748f4c"
+    },
+    {
+      "id": "table.gHeroNames.20.0",
+      "index": 20,
+      "field": "full",
+      "english": "Carlawn",
+      "nwc_pointer_site": "0x93aa8",
+      "nwc_literal": "0x9b378",
+      "buka_pointer_site": "0x92ff0",
+      "buka_literal": "0x9a9dc",
+      "russian_sha256": "f0f1fe3f30be62fad0dd96b8ec3c7457c1518c417b104ba08e79346da29ec6ff"
+    },
+    {
+      "id": "table.gHeroNames.20.1",
+      "index": 20,
+      "field": "short",
+      "english": "Carlawn",
+      "nwc_pointer_site": "0x93aac",
+      "nwc_literal": "0x9b380",
+      "buka_pointer_site": "0x92ff4",
+      "buka_literal": "0x9a9e4",
+      "russian_sha256": "f0f1fe3f30be62fad0dd96b8ec3c7457c1518c417b104ba08e79346da29ec6ff"
+    },
+    {
+      "id": "table.gHeroNames.21.0",
+      "index": 21,
+      "field": "full",
+      "english": "Rebecca",
+      "nwc_pointer_site": "0x93ab0",
+      "nwc_literal": "0x9b388",
+      "buka_pointer_site": "0x92ff8",
+      "buka_literal": "0x9a9ec",
+      "russian_sha256": "39c7d4b62b48668e2014d5b27b41413cbb4da848ed01a76e766176058a1fe594"
+    },
+    {
+      "id": "table.gHeroNames.21.1",
+      "index": 21,
+      "field": "short",
+      "english": "Rebecca",
+      "nwc_pointer_site": "0x93ab4",
+      "nwc_literal": "0x9b390",
+      "buka_pointer_site": "0x92ffc",
+      "buka_literal": "0x9a9f4",
+      "russian_sha256": "39c7d4b62b48668e2014d5b27b41413cbb4da848ed01a76e766176058a1fe594"
+    },
+    {
+      "id": "table.gHeroNames.22.0",
+      "index": 22,
+      "field": "full",
+      "english": "Luna",
+      "nwc_pointer_site": "0x93ab8",
+      "nwc_literal": "0x9b398",
+      "buka_pointer_site": "0x93000",
+      "buka_literal": "0x9a9fc",
+      "russian_sha256": "e0c6ed8423e276c7c512756f6fc8c5ac3ad98c76a21f8a1cdf4756d990ce76a2"
+    },
+    {
+      "id": "table.gHeroNames.22.1",
+      "index": 22,
+      "field": "short",
+      "english": "Luna",
+      "nwc_pointer_site": "0x93abc",
+      "nwc_literal": "0x9b3a0",
+      "buka_pointer_site": "0x93004",
+      "buka_literal": "0x9aa04",
+      "russian_sha256": "e0c6ed8423e276c7c512756f6fc8c5ac3ad98c76a21f8a1cdf4756d990ce76a2"
+    },
+    {
+      "id": "table.gHeroNames.23.0",
+      "index": 23,
+      "field": "full",
+      "english": "Astra",
+      "nwc_pointer_site": "0x93ac0",
+      "nwc_literal": "0x9b3a8",
+      "buka_pointer_site": "0x93008",
+      "buka_literal": "0x9aa0c",
+      "russian_sha256": "1be5fe61bcaeff46e97f77c747ab65044b4f7e2ceee079a0592ed89025b34a3f"
+    },
+    {
+      "id": "table.gHeroNames.23.1",
+      "index": 23,
+      "field": "short",
+      "english": "Astra",
+      "nwc_pointer_site": "0x93ac4",
+      "nwc_literal": "0x9b3b0",
+      "buka_pointer_site": "0x9300c",
+      "buka_literal": "0x9aa14",
+      "russian_sha256": "1be5fe61bcaeff46e97f77c747ab65044b4f7e2ceee079a0592ed89025b34a3f"
+    },
+    {
+      "id": "table.gHeroNames.24.0",
+      "index": 24,
+      "field": "full",
+      "english": "Natasha",
+      "nwc_pointer_site": "0x93ac8",
+      "nwc_literal": "0x9b3b8",
+      "buka_pointer_site": "0x93010",
+      "buka_literal": "0x9aa1c",
+      "russian_sha256": "ffc0441f61ca4da22ab2c82ba7e4c90936fb67a0312eb0c26784bcb339d63474"
+    },
+    {
+      "id": "table.gHeroNames.24.1",
+      "index": 24,
+      "field": "short",
+      "english": "Natasha",
+      "nwc_pointer_site": "0x93acc",
+      "nwc_literal": "0x9b3c0",
+      "buka_pointer_site": "0x93014",
+      "buka_literal": "0x9aa24",
+      "russian_sha256": "ffc0441f61ca4da22ab2c82ba7e4c90936fb67a0312eb0c26784bcb339d63474"
+    },
+    {
+      "id": "table.gHeroNames.25.0",
+      "index": 25,
+      "field": "full",
+      "english": "Gem",
+      "nwc_pointer_site": "0x93ad0",
+      "nwc_literal": "0x9b3c8",
+      "buka_pointer_site": "0x93018",
+      "buka_literal": "0x9aa2c",
+      "russian_sha256": "f3d25ad3aebdce1448c210296b53fbf4976342d8104bef6f002b2239d7828149"
+    },
+    {
+      "id": "table.gHeroNames.25.1",
+      "index": 25,
+      "field": "short",
+      "english": "Gem",
+      "nwc_pointer_site": "0x93ad4",
+      "nwc_literal": "0x9b3cc",
+      "buka_pointer_site": "0x9301c",
+      "buka_literal": "0x9aa30",
+      "russian_sha256": "f3d25ad3aebdce1448c210296b53fbf4976342d8104bef6f002b2239d7828149"
+    },
+    {
+      "id": "table.gHeroNames.26.0",
+      "index": 26,
+      "field": "full",
+      "english": "Troyan",
+      "nwc_pointer_site": "0x93ad8",
+      "nwc_literal": "0x9b3d0",
+      "buka_pointer_site": "0x93020",
+      "buka_literal": "0x9aa34",
+      "russian_sha256": "ea82775b56d537be95c2ea360f73271af39ea4a9afe0ce10b32edd7093dd3b41"
+    },
+    {
+      "id": "table.gHeroNames.26.1",
+      "index": 26,
+      "field": "short",
+      "english": "Troyan",
+      "nwc_pointer_site": "0x93adc",
+      "nwc_literal": "0x9b3d8",
+      "buka_pointer_site": "0x93024",
+      "buka_literal": "0x9aa3c",
+      "russian_sha256": "ea82775b56d537be95c2ea360f73271af39ea4a9afe0ce10b32edd7093dd3b41"
+    },
+    {
+      "id": "table.gHeroNames.27.0",
+      "index": 27,
+      "field": "full",
+      "english": "Agar",
+      "nwc_pointer_site": "0x93ae0",
+      "nwc_literal": "0x9b3e0",
+      "buka_pointer_site": "0x93028",
+      "buka_literal": "0x9aa44",
+      "russian_sha256": "31580ddffc8058ff3bfd38cb45f3717001c2d6647f89626eaebb6a1427355420"
+    },
+    {
+      "id": "table.gHeroNames.27.1",
+      "index": 27,
+      "field": "short",
+      "english": "Agar",
+      "nwc_pointer_site": "0x93ae4",
+      "nwc_literal": "0x9b3e8",
+      "buka_pointer_site": "0x9302c",
+      "buka_literal": "0x9aa4c",
+      "russian_sha256": "31580ddffc8058ff3bfd38cb45f3717001c2d6647f89626eaebb6a1427355420"
+    },
+    {
+      "id": "table.gHeroNames.28.0",
+      "index": 28,
+      "field": "full",
+      "english": "Crodo",
+      "nwc_pointer_site": "0x93ae8",
+      "nwc_literal": "0x9b3f0",
+      "buka_pointer_site": "0x93030",
+      "buka_literal": "0x9aa54",
+      "russian_sha256": "a481932908cf6519668876d7668a2ac8fd9883c86ebfa2ee8ed7efd186cf4dab"
+    },
+    {
+      "id": "table.gHeroNames.28.1",
+      "index": 28,
+      "field": "short",
+      "english": "Crodo",
+      "nwc_pointer_site": "0x93aec",
+      "nwc_literal": "0x9b3f8",
+      "buka_pointer_site": "0x93034",
+      "buka_literal": "0x9aa5c",
+      "russian_sha256": "a481932908cf6519668876d7668a2ac8fd9883c86ebfa2ee8ed7efd186cf4dab"
+    },
+    {
+      "id": "table.gHeroNames.29.0",
+      "index": 29,
+      "field": "full",
+      "english": "Falagar",
+      "nwc_pointer_site": "0x93af0",
+      "nwc_literal": "0x9b400",
+      "buka_pointer_site": "0x93038",
+      "buka_literal": "0x9aa64",
+      "russian_sha256": "da3ec46c17f383998e6e6afde125f1240f57341801a44e57d4357dd1d07bdcde"
+    },
+    {
+      "id": "table.gHeroNames.29.1",
+      "index": 29,
+      "field": "short",
+      "english": "Falagar",
+      "nwc_pointer_site": "0x93af4",
+      "nwc_literal": "0x9b408",
+      "buka_pointer_site": "0x9303c",
+      "buka_literal": "0x9aa6c",
+      "russian_sha256": "da3ec46c17f383998e6e6afde125f1240f57341801a44e57d4357dd1d07bdcde"
+    },
+    {
+      "id": "table.gHeroNames.30.0",
+      "index": 30,
+      "field": "full",
+      "english": "Barok",
+      "nwc_pointer_site": "0x93af8",
+      "nwc_literal": "0x9b410",
+      "buka_pointer_site": "0x93040",
+      "buka_literal": "0x9aa74",
+      "russian_sha256": "21b43536fc36604138ea6741e44c40e599e3656855a92e87fab556530b2cdee9"
+    },
+    {
+      "id": "table.gHeroNames.30.1",
+      "index": 30,
+      "field": "short",
+      "english": "Barok",
+      "nwc_pointer_site": "0x93afc",
+      "nwc_literal": "0x9b418",
+      "buka_pointer_site": "0x93044",
+      "buka_literal": "0x9aa7c",
+      "russian_sha256": "21b43536fc36604138ea6741e44c40e599e3656855a92e87fab556530b2cdee9"
+    },
+    {
+      "id": "table.gHeroNames.31.0",
+      "index": 31,
+      "field": "full",
+      "english": "Arie",
+      "nwc_pointer_site": "0x93b00",
+      "nwc_literal": "0x9b420",
+      "buka_pointer_site": "0x93048",
+      "buka_literal": "0x9aa84",
+      "russian_sha256": "8beab393b9c94b4fff5e9c5f819a7b20f9e84696894d23cb0c3970c99cf6b0a6"
+    },
+    {
+      "id": "table.gHeroNames.31.1",
+      "index": 31,
+      "field": "short",
+      "english": "Arie",
+      "nwc_pointer_site": "0x93b04",
+      "nwc_literal": "0x9b428",
+      "buka_pointer_site": "0x9304c",
+      "buka_literal": "0x9aa8c",
+      "russian_sha256": "8beab393b9c94b4fff5e9c5f819a7b20f9e84696894d23cb0c3970c99cf6b0a6"
+    },
+    {
+      "id": "table.gHeroNames.32.0",
+      "index": 32,
+      "field": "full",
+      "english": "Kastore",
+      "nwc_pointer_site": "0x93b08",
+      "nwc_literal": "0x9b430",
+      "buka_pointer_site": "0x93050",
+      "buka_literal": "0x9aa94",
+      "russian_sha256": "ecd16178d351738dd37ea56f1962a80b549a2b9b9611dabebe4695e88906db14"
+    },
+    {
+      "id": "table.gHeroNames.32.1",
+      "index": 32,
+      "field": "short",
+      "english": "Kastore",
+      "nwc_pointer_site": "0x93b0c",
+      "nwc_literal": "0x9b438",
+      "buka_pointer_site": "0x93054",
+      "buka_literal": "0x9aa9c",
+      "russian_sha256": "ecd16178d351738dd37ea56f1962a80b549a2b9b9611dabebe4695e88906db14"
+    },
+    {
+      "id": "table.gHeroNames.33.0",
+      "index": 33,
+      "field": "full",
+      "english": "Sandro",
+      "nwc_pointer_site": "0x93b10",
+      "nwc_literal": "0x9b440",
+      "buka_pointer_site": "0x93058",
+      "buka_literal": "0x9aaa4",
+      "russian_sha256": "ffbb46897f5bc6d1f01b267cb305a3d67ab4ff81b9dff5baeb9f7478e795fc07"
+    },
+    {
+      "id": "table.gHeroNames.33.1",
+      "index": 33,
+      "field": "short",
+      "english": "Sandro",
+      "nwc_pointer_site": "0x93b14",
+      "nwc_literal": "0x9b448",
+      "buka_pointer_site": "0x9305c",
+      "buka_literal": "0x9aaac",
+      "russian_sha256": "ffbb46897f5bc6d1f01b267cb305a3d67ab4ff81b9dff5baeb9f7478e795fc07"
+    },
+    {
+      "id": "table.gHeroNames.34.0",
+      "index": 34,
+      "field": "full",
+      "english": "Wrathmont",
+      "nwc_pointer_site": "0x93b18",
+      "nwc_literal": "0x9b450",
+      "buka_pointer_site": "0x93060",
+      "buka_literal": "0x9aab4",
+      "russian_sha256": "ce84c432614dfc2d6501e6dc083c44e0f8b7558c03323ada846b4e0984aeceb3"
+    },
+    {
+      "id": "table.gHeroNames.34.1",
+      "index": 34,
+      "field": "short",
+      "english": "Wrath",
+      "nwc_pointer_site": "0x93b1c",
+      "nwc_literal": "0x9b45c",
+      "buka_pointer_site": "0x93064",
+      "buka_literal": "0x9aabc",
+      "russian_sha256": "80340580fe16b4ebdbb8a146fb30c55ba723b35b348e553c8a05c86a5c5e29a4"
+    },
+    {
+      "id": "table.gHeroNames.35.0",
+      "index": 35,
+      "field": "full",
+      "english": "Vesper",
+      "nwc_pointer_site": "0x93b20",
+      "nwc_literal": "0x9b464",
+      "buka_pointer_site": "0x93068",
+      "buka_literal": "0x9aac0",
+      "russian_sha256": "ec13e51c5f177cb921d803a51272a1ffb43dea2e2308e162b3eec6376cc31170"
+    },
+    {
+      "id": "table.gHeroNames.35.1",
+      "index": 35,
+      "field": "short",
+      "english": "Vesper",
+      "nwc_pointer_site": "0x93b24",
+      "nwc_literal": "0x9b46c",
+      "buka_pointer_site": "0x9306c",
+      "buka_literal": "0x9aac8",
+      "russian_sha256": "ec13e51c5f177cb921d803a51272a1ffb43dea2e2308e162b3eec6376cc31170"
+    }
+  ],
+  "removed_interior_census_starts": [
+    {
+      "rva": "0x00092f90",
+      "kind": ""
+    },
+    {
+      "rva": "0x00093028",
+      "kind": ""
+    },
+    {
+      "rva": "0x00093040",
+      "kind": ""
+    },
+    {
+      "rva": "0x00093058",
+      "kind": ""
+    }
+  ],
+  "compiled_controls": [
+    {
+      "locale": "ru",
+      "object_sha256": "6472d863805eb269aa8a07cab8bfa67635a0da1926661dbd1d1d7ae5e0c4c803",
+      "entries": 72,
+      "result": "Every compiled pointer relocation resolves to the complete corresponding retail string payload."
+    },
+    {
+      "locale": "en",
+      "object_sha256": "1c835740aac99d097c2ded384d7e73701953f4535b110cb0686a7e411f6ee34d",
+      "entries": 72,
+      "result": "Every compiled pointer relocation resolves to the complete corresponding retail string payload."
+    }
+  ],
+  "source_sha256": "5d8e3e74efebfb046f2718c214e81c4c9707242172779fd86f5006042fb246d6"
+}
