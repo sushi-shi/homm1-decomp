@@ -50,12 +50,12 @@ rva	size	symbol	provenance
 0x000a162c	24	?gSoundManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a1644	24	?gMouseManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a165c	35	?gWindowManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
-0x000a3cb4	20	?gDialogManagerError1@@3PADA	retail DoDialog separate manager-add failure slot
-0x000a3cc8	20	?gDialogManagerError2@@3PADA	retail DoDialog separate manager-add failure slot
-0x000a3cdc	20	?gDialogManagerError3@@3PADA	retail DoDialog separate manager-add failure slot
-0x000a3cf0	20	?gDialogManagerError4@@3PADA	retail DoDialog separate manager-add failure slot
-0x000a3d94	20	?gCallManagerError1@@3PADA	first 20-byte manager-add failure slot used by CallManager
-0x000a3da8	20	?gCallManagerError2@@3PADA	second distinct 20-byte manager-add failure slot used by CallManager
+0x000a1680	28	?gDialogManagerError1@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
+0x000a169c	28	?gDialogManagerError2@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
+0x000a16b8	28	?gDialogManagerError3@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
+0x000a16d4	28	?gDialogManagerError4@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
+0x000a16f0	28	?gCallManagerError1@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
+0x000a170c	28	?gCallManagerError2@@3PADA	Localized manager error array and ordered retail call use; buka-startup-text.json
 0x000a3dc8	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
 0x000a3dcc	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
 0x000a3de4	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
@@ -244,7 +244,7 @@ rva	size	symbol	provenance
 0x000cd938	16	?gDDSourceRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cd8c0	4	?gDDResult@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cdd88	4	?gPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cd8c8	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cd8c8	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
 0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
@@ -406,7 +406,7 @@ rva	size	symbol	provenance
 0x000a7168	768	?gText@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
 0x000a7838	120	?cNetBoxLine@@3PAY0DM@DA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
 0x000a9e7c	36	?gNbEvents@@3PAPAXA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
-0x000cb2d8	256	?packet@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
+0x000cb2d8	256	?packet@@3PADA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
 0x000a7474	4	?giHostGamePos@@3HA	Host/local identities from NetPosToGamePos arguments and stores in both setup paths; buka-network-positions.json
 0x000a7b70	4	?giThisGamePos@@3HA	Host/local identities from NetPosToGamePos arguments and stores in both setup paths; buka-network-positions.json
 0x00092e18	20	?gSpeedText@@3PAPADA	Army window pointer tables, both-language full slot/payload controls; buka-army-window.json
@@ -426,3 +426,16 @@ rva	size	symbol	provenance
 0x00091408	868	?gMonsterDatabase@@3PAUtag_monsterInfo@@A	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-current-data-references.json
 0x0009192c	96	?gMinExpForLevel@@3PAY0M@FA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-current-data-references.json
 0x000a7a10	352	?gcRegAppPath@@3PADA	ReadPrefs AppPath query/failure clear and SetupCDDrive chdir; 352-byte storage ends at independently reviewed giThisGamePos; buka-preferences.json
+0x00091ae8	112	?gScoreMon@@3PAY01FA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00091b58	112	?gScoreCampaignMon@@3PAY01FA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00090754	16	?gMageBaseResourceValues@@3PAHA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00090764	28	?gNeutralBaseResourceValues@@3PAHA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00090780	96	?gDwellingBaseResourceValues@@3PAHA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x0009176c	164	?gStatPower@@3PAMA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00090cc0	48	?gDwellingRequirements@@3PAGA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x0008a4c4	4	_AI_ATTENTION_IDENTITY	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x0008a4c0	4	_AI_ATTENTION_IDENTITY_FLOAT	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00091810	164	?gBattleStat@@3PAMA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x000918b8	84	?gSpellCastNumMod@@3PAMA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x00092c30	40	?gMonthNames@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-month-score-tables.json
+0x000932d0	20	?gScoreLabels@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-month-score-tables.json

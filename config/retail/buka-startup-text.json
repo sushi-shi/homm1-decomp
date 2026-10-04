@@ -1,0 +1,267 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "method": "Preserve original English from pinned NWC operands/arrays. Buka startup errors retain four ordered CD setup outcomes and MessageBox text/caption arguments; six manager error arrays retain their ordered error-path uses. Exact retail CP1251 bytes provide catalog translations. Compiler controls recorded separately after build; no error branching changes.",
+  "messages": [
+    {
+      "id": "startup.cd.inaccessible",
+      "original_english": "Unable to access CD Drive.",
+      "russian": "\u041d\u0435\u0442 \u0434\u043e\u0441\u0442\u0443\u043f\u0430 \u043a CD \u043f\u0440\u0438\u0432\u043e\u0434\u0443.",
+      "nwc_literal": "0x9e8c8",
+      "buka_literal": "0x9dc7c",
+      "nwc_operand": "0x2163a",
+      "buka_operand": "0x3d030",
+      "payload_sha256": "8ed1bf1263e88fdb768a0c45a74b51529e9bf45e84ea3a555c050fcc2e60fa4c",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.error.title",
+      "original_english": "Startup Error",
+      "russian": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+      "nwc_literal": "0x9e8b8",
+      "buka_literal": "0x9dc6c",
+      "nwc_operand": "0x21635",
+      "buka_operand": "0x3d02b",
+      "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.cd.required",
+      "original_english": "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of Might and Magic.  \n\nPlease insert the CD and try again.",
+      "russian": "\u0423 \u0432\u0430\u0441 \u0434\u043e\u043b\u0436\u0435\u043d \u0431\u044b\u0442\u044c \u043a\u043e\u043c\u043f\u0430\u043a\u0442-\u0434\u0438\u0441\u043a \u0413\u0435\u0440\u043e\u0435\u0432 \u0432 CD \u043f\u0440\u0438\u0432\u043e\u0434\u0435, \u0447\u0442\u043e\u0431\u044b \u0438\u0433\u0440\u0430\u0442\u044c\n\u0432 \u0413\u0435\u0440\u043e\u0435\u0432 \u041c\u0435\u0447\u0430 \u0438 \u041c\u0430\u0433\u0438\u0438. \n\n\u0412\u0441\u0442\u0430\u0432\u044c\u0442\u0435 \u0434\u0438\u0441\u043a \u0438 \u043f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u0435\u0449\u0435 \u0440\u0430\u0437.",
+      "nwc_literal": "0x9e8f4",
+      "buka_literal": "0x9dca8",
+      "nwc_operand": "0x21666",
+      "buka_operand": "0x3d04f",
+      "payload_sha256": "893351146dddba7351a4e57dc766fe3485b91590b9dc4ec2be77d3f97bface32",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.error.title",
+      "original_english": "Startup Error",
+      "russian": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+      "nwc_literal": "0x9e8b8",
+      "buka_literal": "0x9dc98",
+      "nwc_operand": "0x21635",
+      "buka_operand": "0x3d04a",
+      "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.directory.invalid",
+      "original_english": "Unable to change to the Heroes directory.  Please run the installation program.",
+      "russian": "\u041d\u0435\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u0434\u0438\u0440\u0435\u043a\u0442\u043e\u0440\u0438\u044e. \u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u0435\u0440\u0435\u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443.",
+      "nwc_literal": "0x9e988",
+      "buka_literal": "0x9dd38",
+      "nwc_operand": "0x21692",
+      "buka_operand": "0x3d06f",
+      "payload_sha256": "929a37d71401871d78dad3803dab88bf7cbc249158067ada73f6acc0f8c88a08",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.error.title",
+      "original_english": "Startup Error",
+      "russian": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+      "nwc_literal": "0x9e8b8",
+      "buka_literal": "0x9dd28",
+      "nwc_operand": "0x21635",
+      "buka_operand": "0x3d06a",
+      "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.data.missing",
+      "original_english": "Unable to find the Heroes data files.  Please run the installation program.",
+      "russian": "\u041d\u0435\u0432\u043e\u0437\u043c\u043e\u0436\u043d\u043e \u043d\u0430\u0439\u0442\u0438 \u0444\u0430\u0439\u043b\u044b \u0434\u0430\u043d\u043d\u044b\u0445 \u0413\u0435\u0440\u043e\u0435\u0432.  \u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u0435\u0440\u0435\u0443\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443.",
+      "nwc_literal": "0x9e9e8",
+      "buka_literal": "0x9dd90",
+      "nwc_operand": "0x216be",
+      "buka_operand": "0x3d08f",
+      "payload_sha256": "787dc0b1a24ff8bd2e5cbd2a2eb71a4521c61f6fb1d986ea2260bd028792d878",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.error.title",
+      "original_english": "Startup Error",
+      "russian": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0438",
+      "nwc_literal": "0x9e8b8",
+      "buka_literal": "0x9dd80",
+      "nwc_operand": "0x21635",
+      "buka_operand": "0x3d08a",
+      "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+      "source": "src/SOURCE/KB.cpp:EarlySetup"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3cb4",
+      "buka_literal": "0xa1680",
+      "nwc_operand": "0x78189",
+      "buka_operand": "0x72c33",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gDialogManagerError1"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3cc8",
+      "buka_literal": "0xa169c",
+      "nwc_operand": "0x781ac",
+      "buka_operand": "0x72c5a",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gDialogManagerError2"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3cdc",
+      "buka_literal": "0xa16b8",
+      "nwc_operand": "0x781cf",
+      "buka_operand": "0x72c82",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gDialogManagerError3"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3cf0",
+      "buka_literal": "0xa16d4",
+      "nwc_operand": "0x781ed",
+      "buka_operand": "0x72ca7",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gDialogManagerError4"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3d94",
+      "buka_literal": "0xa16f0",
+      "nwc_operand": "0x783c2",
+      "buka_operand": "0x72f64",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gCallManagerError1"
+    },
+    {
+      "id": "startup.manager.failed",
+      "original_english": "Can't add manager!",
+      "russian": "\u041d\u0435 \u043c\u043e\u0433\u0443 \u0434\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u043c\u0435\u043d\u0435\u0434\u0436\u0435\u0440\u0430!",
+      "nwc_literal": "0xa3da8",
+      "buka_literal": "0xa170c",
+      "nwc_operand": "0x783ed",
+      "buka_operand": "0x72f9a",
+      "payload_sha256": "aab9e1377900a095c37dedaada210c11fd42df1f2e60ba17b7d231d0606ffa0d",
+      "source": "src/BASE/EXEC.cpp:gCallManagerError2"
+    }
+  ],
+  "data": [
+    {
+      "name": "?gDialogManagerError1@@3PADA",
+      "rva": "0xa1680",
+      "old_rva": "0xa3cb4",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72c33",
+          "target_rva": "0xa1680",
+          "symbol": "?gDialogManagerError1@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    },
+    {
+      "name": "?gDialogManagerError2@@3PADA",
+      "rva": "0xa169c",
+      "old_rva": "0xa3cc8",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72c5a",
+          "target_rva": "0xa169c",
+          "symbol": "?gDialogManagerError2@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    },
+    {
+      "name": "?gDialogManagerError3@@3PADA",
+      "rva": "0xa16b8",
+      "old_rva": "0xa3cdc",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72c82",
+          "target_rva": "0xa16b8",
+          "symbol": "?gDialogManagerError3@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    },
+    {
+      "name": "?gDialogManagerError4@@3PADA",
+      "rva": "0xa16d4",
+      "old_rva": "0xa3cf0",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72ca7",
+          "target_rva": "0xa16d4",
+          "symbol": "?gDialogManagerError4@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    },
+    {
+      "name": "?gCallManagerError1@@3PADA",
+      "rva": "0xa16f0",
+      "old_rva": "0xa3d94",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72f64",
+          "target_rva": "0xa16f0",
+          "symbol": "?gCallManagerError1@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    },
+    {
+      "name": "?gCallManagerError2@@3PADA",
+      "rva": "0xa170c",
+      "old_rva": "0xa3da8",
+      "size": 28,
+      "unit": "BASE/EXEC",
+      "references": [
+        {
+          "site_rva": "0x72f9a",
+          "target_rva": "0xa170c",
+          "symbol": "?gCallManagerError2@@3PADA",
+          "kind": 6
+        }
+      ],
+      "russian_object_sha256": "b55773a95f7456d8a712153e61fb7ab7dbcb7492d1af8d51528a03d8f0047de3",
+      "english_object_sha256": "d48d1297fb7753b92936bcc5e19b4a4bfcdf93b72f53f9cb08ddffcef9b0a87a"
+    }
+  ],
+  "ru_startup_object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23",
+  "en_startup_object_sha256": "0d0df62e3a81981e6fac87768cd3b75b208239ac6de7251b1d71141433a0f4c1"
+}

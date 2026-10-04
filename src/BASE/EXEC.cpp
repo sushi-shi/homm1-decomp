@@ -25,14 +25,14 @@ DATA(0x004a1644)
 char gMouseManagerInitError[] = localization::Tr("startup.mouse.failed");
 DATA(0x004a165c)
 char gWindowManagerInitError[] = localization::Tr("startup.windows.failed");
-DATA(0x004a3cb4)
-char gDialogManagerError1[] = "Can't add manager!";
-DATA(0x004a3cc8)
-char gDialogManagerError2[] = "Can't add manager!";
-DATA(0x004a3cdc)
-char gDialogManagerError3[] = "Can't add manager!";
-DATA(0x004a3cf0)
-char gDialogManagerError4[] = "Can't add manager!";
+DATA(0x004a1680)
+char gDialogManagerError1[] = localization::Tr("startup.manager.failed");
+DATA(0x004a169c)
+char gDialogManagerError2[] = localization::Tr("startup.manager.failed");
+DATA(0x004a16b8)
+char gDialogManagerError3[] = localization::Tr("startup.manager.failed");
+DATA(0x004a16d4)
+char gDialogManagerError4[] = localization::Tr("startup.manager.failed");
 // Retail keeps the manager-list dump texts (PoL SExecutiveText names) between the
 // dialog and call-manager errors; HoMM1 code no longer references them.
 DATA(0x004a3d04)
@@ -47,10 +47,10 @@ DATA(0x004a3d48)
 char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
 DATA(0x004a3d74)
 char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
-DATA(0x004a3d94)
-char gCallManagerError1[] = "Can't add manager!";
-DATA(0x004a3da8)
-char gCallManagerError2[] = "Can't add manager!";
+DATA(0x004a16f0)
+char gCallManagerError1[] = localization::Tr("startup.manager.failed");
+DATA(0x004a170c)
+char gCallManagerError2[] = localization::Tr("startup.manager.failed");
 
 VA(0x004729f0, 0x35)
 executive::executive(void) {

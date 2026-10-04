@@ -143,9 +143,9 @@ DATA(0x0048a4b8)
 static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
 DATA(0x0048a4bc)
 static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
-DATA(0x0048d084)
+DATA(0x0048a4c0)
 static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
-DATA(0x0048d088)
+DATA(0x0048a4c4)
 static const float AI_ATTENTION_IDENTITY = 1.0f;
 
 // Misc's logging helpers open this object in retail (0x00427da5..0x00419f15),

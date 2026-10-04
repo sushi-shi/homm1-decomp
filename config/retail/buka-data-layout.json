@@ -9702,13 +9702,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG36982",
               "site_rva": "0x66bf5",
               "target_rva": "0xa07a4",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
-              "size": 53
+              "size": 53,
+              "historical_candidate_symbol": "$SG36982",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -10536,13 +10537,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG36982",
               "site_rva": "0x66bf5",
               "target_rva": "0xa07a4",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
-              "size": 53
+              "size": 53,
+              "historical_candidate_symbol": "$SG36982",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -10646,13 +10648,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG36982",
               "site_rva": "0x66bf5",
               "target_rva": "0xa07a4",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
-              "size": 53
+              "size": 53,
+              "historical_candidate_symbol": "$SG36982",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -10756,13 +10759,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG36982",
               "site_rva": "0x66bf5",
               "target_rva": "0xa07a4",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
-              "size": 53
+              "size": 53,
+              "historical_candidate_symbol": "$SG36982",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -22533,5 +22537,34 @@
       "src/BASE/miscwin.cpp": "704b7f7b345e2ee7df8cf478e5dc6c2ca38edf03b8fe672b01e18b419ef49307"
     },
     "check": "Source claim name/RVA/size, complete compiled initializer, no internal relocation, no overlapping source owner."
+  },
+  "literal_identity_schema_correction": {
+    "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
+    "changes": [
+      {
+        "operand": "0x66bf5",
+        "target": "0xa07a4",
+        "old_compiler_spelling": "$SG36982",
+        "current_identity": "$SG657316"
+      },
+      {
+        "operand": "0x66bf5",
+        "target": "0xa07a4",
+        "old_compiler_spelling": "$SG36982",
+        "current_identity": "$SG657316"
+      },
+      {
+        "operand": "0x66bf5",
+        "target": "0xa07a4",
+        "old_compiler_spelling": "$SG36982",
+        "current_identity": "$SG657316"
+      },
+      {
+        "operand": "0x66bf5",
+        "target": "0xa07a4",
+        "old_compiler_spelling": "$SG36982",
+        "current_identity": "$SG657316"
+      }
+    ]
   }
 }

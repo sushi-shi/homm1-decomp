@@ -5203,3 +5203,79 @@ msgstr "Указанные заклинания доступны здесь."
 msgctxt "file.aggregate.open_failed"
 msgid "Can't open file: %s"
 msgstr "Не могу открыть файл: %s"
+
+msgctxt "table.gMonthNames.0"
+msgid "Grasshopper"
+msgstr "Кузнечика"
+
+msgctxt "table.gMonthNames.1"
+msgid "Ant"
+msgstr "Муравья"
+
+msgctxt "table.gMonthNames.2"
+msgid "Dragonfly"
+msgstr "Стрекозы"
+
+msgctxt "table.gMonthNames.3"
+msgid "Spider"
+msgstr "Паука"
+
+msgctxt "table.gMonthNames.4"
+msgid "Butterfly"
+msgstr "Бабочки"
+
+msgctxt "table.gMonthNames.5"
+msgid "Bumblebee"
+msgstr "Шмеля"
+
+msgctxt "table.gMonthNames.6"
+msgid "Locust"
+msgstr "Цикады"
+
+msgctxt "table.gMonthNames.7"
+msgid "Earthworm"
+msgstr "Земляного червя"
+
+msgctxt "table.gMonthNames.8"
+msgid "Hornet"
+msgstr "Шершня"
+
+msgctxt "table.gMonthNames.9"
+msgid "Beetle"
+msgstr "Жука"
+
+msgctxt "table.gScoreLabels.0"
+msgid "Days Spent:"
+msgstr "Дней:"
+
+msgctxt "table.gScoreLabels.1"
+msgid "Base Score:"
+msgstr "Очки:"
+
+msgctxt "table.gScoreLabels.2"
+msgid "Difficulty Rating:"
+msgstr "Сложность:"
+
+msgctxt "table.gScoreLabels.3"
+msgid "Final Score:"
+msgstr "Счет:"
+
+msgctxt "table.gScoreLabels.4"
+msgid "Ranking:"
+msgstr "Ранг:"
+
+msgctxt "startup.cd.inaccessible"
+msgid "Unable to access CD Drive."
+msgstr "Нет доступа к CD приводу."
+
+msgctxt "startup.cd.required"
+msgid "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of Might and Magic.  \n\nPlease insert the CD and try again."
+msgstr "У вас должен быть компакт-диск Героев в CD приводе, чтобы играть\nв Героев Меча и Магии. \n\nВставьте диск и попробуйте еще раз."
+
+msgctxt "startup.directory.invalid"
+msgid "Unable to change to the Heroes directory.  Please run the installation program."
+msgstr "Невозможно изменить директорию. Пожалуйста, переустановите программу."
+
+msgctxt "startup.data.missing"
+msgid "Unable to find the Heroes data files.  Please run the installation program."
+msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."

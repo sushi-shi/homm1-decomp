@@ -5226,11 +5226,12 @@
           "site": "0xc26a",
           "offset": "0x27",
           "kind": 6,
-          "name": "$SG44192",
           "addend": 0,
           "target": "0x8eb04",
           "literal_equal": true,
-          "literal_sha256": "6a2c7177f3531bc062504a698145775ca66ca975302cbb1230d62d0ac8ad6051"
+          "literal_sha256": "6a2c7177f3531bc062504a698145775ca66ca975302cbb1230d62d0ac8ad6051",
+          "historical_candidate_name": "$SG44192",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc270",
@@ -5252,11 +5253,12 @@
           "site": "0xc29d",
           "offset": "0x5a",
           "kind": 6,
-          "name": "$SG44195",
           "addend": 0,
           "target": "0x8eb10",
           "literal_equal": true,
-          "literal_sha256": "cef2a7bbba60d006ca5b9d68402b73357efacee7c85018fa6277c2f094b74cbe"
+          "literal_sha256": "cef2a7bbba60d006ca5b9d68402b73357efacee7c85018fa6277c2f094b74cbe",
+          "historical_candidate_name": "$SG44195",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc2a3",
@@ -5278,11 +5280,12 @@
           "site": "0xc2b0",
           "offset": "0x6d",
           "kind": 6,
-          "name": "$SG44196",
           "addend": 0,
           "target": "0x8eb1c",
           "literal_equal": true,
-          "literal_sha256": "5aaa9bf8fd3d219ffaf766b295a111a76f2a85a0745ad823fb6d160fc47a5d2b"
+          "literal_sha256": "5aaa9bf8fd3d219ffaf766b295a111a76f2a85a0745ad823fb6d160fc47a5d2b",
+          "historical_candidate_name": "$SG44196",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc2b6",
@@ -5304,11 +5307,12 @@
           "site": "0xc2c3",
           "offset": "0x80",
           "kind": 6,
-          "name": "$SG44197",
           "addend": 0,
           "target": "0x8eb28",
           "literal_equal": true,
-          "literal_sha256": "ef864e202311ba321a863c9f05e78f28363e4fa91c0a2efb560a94ba40d9e249"
+          "literal_sha256": "ef864e202311ba321a863c9f05e78f28363e4fa91c0a2efb560a94ba40d9e249",
+          "historical_candidate_name": "$SG44197",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc2c9",
@@ -5330,11 +5334,12 @@
           "site": "0xc2d6",
           "offset": "0x93",
           "kind": 6,
-          "name": "$SG44198",
           "addend": 0,
           "target": "0x8eb34",
           "literal_equal": true,
-          "literal_sha256": "a14219ce97f2f27b706406bcbd3378469fbce38dd372b90cf1cb97c62e9bae87"
+          "literal_sha256": "a14219ce97f2f27b706406bcbd3378469fbce38dd372b90cf1cb97c62e9bae87",
+          "historical_candidate_name": "$SG44198",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc2dc",
@@ -5356,11 +5361,12 @@
           "site": "0xc31e",
           "offset": "0xd8",
           "kind": 6,
-          "name": "$SG44202",
           "addend": 0,
           "target": "0x8eb40",
           "literal_equal": true,
-          "literal_sha256": "19c8761fd0a2895295bf4a8c1be75cbd60bf16fe39627c96acec687e88542418"
+          "literal_sha256": "19c8761fd0a2895295bf4a8c1be75cbd60bf16fe39627c96acec687e88542418",
+          "historical_candidate_name": "$SG44202",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc324",
@@ -5382,11 +5388,12 @@
           "site": "0xc331",
           "offset": "0xeb",
           "kind": 6,
-          "name": "$SG44203",
           "addend": 0,
           "target": "0x8eb4c",
           "literal_equal": true,
-          "literal_sha256": "f066365a89780cdd0aaeeeb1a4fbf18753c797daca2ae4807a0a631d0b00d7bb"
+          "literal_sha256": "f066365a89780cdd0aaeeeb1a4fbf18753c797daca2ae4807a0a631d0b00d7bb",
+          "historical_candidate_name": "$SG44203",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc337",
@@ -5408,11 +5415,12 @@
           "site": "0xc344",
           "offset": "0xfe",
           "kind": 6,
-          "name": "$SG44204",
           "addend": 0,
           "target": "0x8eb58",
           "literal_equal": true,
-          "literal_sha256": "0e3b44eea7977f3bcd0f3c5593c1d6a25e9294bf201eeab55dc7f66c8111db94"
+          "literal_sha256": "0e3b44eea7977f3bcd0f3c5593c1d6a25e9294bf201eeab55dc7f66c8111db94",
+          "historical_candidate_name": "$SG44204",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xc34a",
@@ -6026,11 +6034,12 @@
           "site": "0xd0a0",
           "offset": "0xeab",
           "kind": 6,
-          "name": "$SG44284",
           "addend": 0,
           "target": "0x8eb64",
           "literal_equal": true,
-          "literal_sha256": "3bdc08f6e0cba29b848f1fc16c9984aaac970431a9ba709571cdf0acaf26f981"
+          "literal_sha256": "3bdc08f6e0cba29b848f1fc16c9984aaac970431a9ba709571cdf0acaf26f981",
+          "historical_candidate_name": "$SG44284",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xd0a5",
@@ -6592,5 +6601,64 @@
     "readme": "homm1 verify readme cannot generate scores without the strict comparison report.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit: 202 adaptations awaiting review and 2 missing modules. No tooling implementation changed."
   },
-  "checkpoint": "Historical validation at 296438ba. The control-panel checkpoint supersedes its next-reference blocker; source/object fingerprints identify that earlier state."
+  "checkpoint": "Historical validation at 296438ba. The control-panel checkpoint supersedes its next-reference blocker; source/object fingerprints identify that earlier state.",
+  "literal_identity_schema_correction": {
+    "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
+    "changes": [
+      {
+        "operand": "0xc26a",
+        "target": "0x8eb04",
+        "old_compiler_spelling": "$SG44192",
+        "current_identity": "$SG584452"
+      },
+      {
+        "operand": "0xc29d",
+        "target": "0x8eb10",
+        "old_compiler_spelling": "$SG44195",
+        "current_identity": "$SG584464"
+      },
+      {
+        "operand": "0xc2b0",
+        "target": "0x8eb1c",
+        "old_compiler_spelling": "$SG44196",
+        "current_identity": "$SG584476"
+      },
+      {
+        "operand": "0xc2c3",
+        "target": "0x8eb28",
+        "old_compiler_spelling": "$SG44197",
+        "current_identity": "$SG584488"
+      },
+      {
+        "operand": "0xc2d6",
+        "target": "0x8eb34",
+        "old_compiler_spelling": "$SG44198",
+        "current_identity": "$SG584500"
+      },
+      {
+        "operand": "0xc31e",
+        "target": "0x8eb40",
+        "old_compiler_spelling": "$SG44202",
+        "current_identity": "$SG584512"
+      },
+      {
+        "operand": "0xc331",
+        "target": "0x8eb4c",
+        "old_compiler_spelling": "$SG44203",
+        "current_identity": "$SG584524"
+      },
+      {
+        "operand": "0xc344",
+        "target": "0x8eb58",
+        "old_compiler_spelling": "$SG44204",
+        "current_identity": "$SG584536"
+      },
+      {
+        "operand": "0xd0a0",
+        "target": "0x8eb64",
+        "old_compiler_spelling": "$SG44284",
+        "current_identity": "$SG584548"
+      }
+    ]
+  }
 }

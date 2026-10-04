@@ -21,6 +21,8 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_LOAD_STEREO = 1
 H1_ENUM_CONST_END(SampleLoadConstant)
 
+VA_COMPGEN(0x00475340, 0x2e, "??_Gsample@@UAEPAXI@Z", 0x00475050)
+
 VA(0x00475050, 0x232)
 sample::sample(char* name)
     : resource(

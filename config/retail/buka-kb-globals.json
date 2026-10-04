@@ -12574,22 +12574,24 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG42676",
               "site_rva": "0x3dfb4",
               "target_rva": "0x9e0ec",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "d719aa3062adb119709266058846b72a4be512d2ebd82ed953b798201b186818",
-              "size": 11
+              "size": 11,
+              "historical_candidate_symbol": "$SG42676",
+              "retail_identity_review": "buka-equal-literal-references.json"
             },
             {
-              "symbol": "$SG42677",
               "site_rva": "0x3dfbe",
               "target_rva": "0x9e0f8",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "0c12582270939f383c07b5f8439aa0cbe33fb62008e8bc2f39fd5953e3e7b584",
-              "size": 5
+              "size": 5,
+              "historical_candidate_symbol": "$SG42677",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -13055,13 +13057,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG43305",
               "site_rva": "0x40606",
               "target_rva": "0xa99a8",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
-              "size": 1
+              "size": 1,
+              "historical_candidate_symbol": "$SG43305",
+              "retail_identity_review": "buka-equal-literal-references.json"
             }
           ],
           "local_slot_map": {
@@ -13193,5 +13196,28 @@
     "source_sha256": "ea5c8aa3ffc2c73c625fd8ef839a245346f67d60560cefee0bdf1da980a908f2",
     "typed_data_owners": 26,
     "typed_bytes": 1445
+  },
+  "literal_identity_schema_correction": {
+    "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
+    "changes": [
+      {
+        "operand": "0x3dfb4",
+        "target": "0x9e0ec",
+        "old_compiler_spelling": "$SG42676",
+        "current_identity": "$SG647404"
+      },
+      {
+        "operand": "0x3dfbe",
+        "target": "0x9e0f8",
+        "old_compiler_spelling": "$SG42677",
+        "current_identity": "$SG647416"
+      },
+      {
+        "operand": "0x40606",
+        "target": "0xa99a8",
+        "old_compiler_spelling": "$SG43305",
+        "current_identity": "$SG694696"
+      }
+    ]
   }
 }

@@ -1,0 +1,637 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Additional operands inside independently reviewed typed source owners. Recheck complete current emitted payloads, exact source extents, absence of internal pointer relocations and nonoverlapping owners; then assign each actual retail operand to that owner plus its measured offset. Zero initializers are accepted only with separate current-image owner identity evidence. This identifies storage and does not claim caller equivalence or change comparison.",
+  "owners": [
+    {
+      "name": "?gDwellingRequirements@@3PAGA",
+      "rva": "0x90cc0",
+      "size": 48,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "e35039f5ce043c263cc94aefc97f730f4a93031daefcdd251853168c544b1803",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x62a96",
+          "target": "0x90cc0"
+        },
+        {
+          "operand": "0x3e570",
+          "target": "0x90cc0"
+        }
+      ]
+    },
+    {
+      "name": "?gMageBaseResourceValues@@3PAHA",
+      "rva": "0x90754",
+      "size": 16,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "080cf4569b70cd8a678e8f60a617fdd6493772d799b4caf96e105e793a1cee0c",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x3e66b",
+          "target": "0x90754"
+        }
+      ]
+    },
+    {
+      "name": "?gNeutralBaseResourceValues@@3PAHA",
+      "rva": "0x90764",
+      "size": 28,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "ef223dca9f3d78b395dd08dc5ce7a93238b32fe021f66a03d7e1a315065ea990",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x3e677",
+          "target": "0x90764"
+        }
+      ]
+    },
+    {
+      "name": "?gDwellingBaseResourceValues@@3PAHA",
+      "rva": "0x90780",
+      "size": 96,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "8269765318a987ed825ea5bf01657e1e3423931de4490886b8541a35c23d5b6f",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x3e68d",
+          "target": "0x90780"
+        }
+      ]
+    },
+    {
+      "name": "?gScoreCampaignMon@@3PAY01FA",
+      "rva": "0x91b58",
+      "size": 112,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "1159a64ee0ccbd99c02eef02c82420d00f698847bd1f93e7b22d431eb0b91551",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x40cf8",
+          "target": "0x91b58"
+        },
+        {
+          "operand": "0x40d08",
+          "target": "0x91b5a"
+        }
+      ]
+    },
+    {
+      "name": "?gScoreMon@@3PAY01FA",
+      "rva": "0x91ae8",
+      "size": 112,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "60698088d1ecf36a1d4a38103c92592b133dcd1193419d5542a05e4797bebfcc",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x40d17",
+          "target": "0x91ae8"
+        },
+        {
+          "operand": "0x40d27",
+          "target": "0x91aea"
+        },
+        {
+          "operand": "0x40d31",
+          "target": "0x91aea"
+        }
+      ]
+    },
+    {
+      "name": "_AI_ATTENTION_IDENTITY_FLOAT",
+      "rva": "0x8a4c0",
+      "size": 4,
+      "unit": "SOURCE/PHILAI",
+      "payload_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f",
+      "independent_owner_uses": [
+        {
+          "operand": "0x4ba97",
+          "target": "0x8a4c0"
+        }
+      ]
+    },
+    {
+      "name": "_AI_ATTENTION_IDENTITY",
+      "rva": "0x8a4c4",
+      "size": 4,
+      "unit": "SOURCE/PHILAI",
+      "payload_sha256": "e00e5eb9444182f352323374ef4e08ebcb784725fdd4fd612d7730540b3e0c8c",
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f",
+      "independent_owner_uses": [
+        {
+          "operand": "0x4bab7",
+          "target": "0x8a4c4"
+        },
+        {
+          "operand": "0x4bad6",
+          "target": "0x8a4c4"
+        }
+      ]
+    },
+    {
+      "name": "?gStatPower@@3PAMA",
+      "rva": "0x9176c",
+      "size": 164,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "70b576f1a16d1fb7e535623eb3b00adcff7245322d13759f745b06f8cf7ca05a",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x4d0ac",
+          "target": "0x9176c"
+        },
+        {
+          "operand": "0x4d0c1",
+          "target": "0x9176c"
+        },
+        {
+          "operand": "0x501a7",
+          "target": "0x9176c"
+        },
+        {
+          "operand": "0x501b5",
+          "target": "0x9180c"
+        }
+      ]
+    },
+    {
+      "name": "?gBattleStat@@3PAMA",
+      "rva": "0x91810",
+      "size": 164,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "3a7e27957d54a0a51367bb4376ba7424f5b6d3a5ec3804c72941ee628abe17dc",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x17285",
+          "target": "0x91810"
+        },
+        {
+          "operand": "0x17285",
+          "target": "0x91860"
+        },
+        {
+          "operand": "0x1c534",
+          "target": "0x91860"
+        }
+      ]
+    },
+    {
+      "name": "?gSpellCastNumMod@@3PAMA",
+      "rva": "0x918b8",
+      "size": 84,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "a832439b504b1684a74d92ff1babb39578aab25d226b3ec96dcd3f071b70ceb0",
+      "object_sha256": "69d24f08fcfabdc2d6bc95f4b340811d415e7fe9f32fc68f171aa650966623d1",
+      "independent_owner_uses": [
+        {
+          "operand": "0x4ecc0",
+          "target": "0x91908"
+        },
+        {
+          "operand": "0x4eccf",
+          "target": "0x918b8"
+        },
+        {
+          "operand": "0x4ecdd",
+          "target": "0x91908"
+        },
+        {
+          "operand": "0x4ecec",
+          "target": "0x918b8"
+        }
+      ]
+    },
+    {
+      "name": "?packet@@3PADA",
+      "rva": "0xcb2d8",
+      "size": 256,
+      "unit": "SOURCE/REMOTE",
+      "payload_sha256": "5341e6b2646979a70e57653007a1f310169421ec9bdd9f1a5648f75ade005af1",
+      "object_sha256": "a9018849176c368ffc8906d4886fdf48c9d2c7f24f096a0b6a7cff8959235b58",
+      "independent_owner_uses": [
+        {
+          "operand": "0x520c0",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x531e2",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x51ef0",
+          "target": "0xcb2db"
+        },
+        {
+          "operand": "0x51efa",
+          "target": "0xcb2dc"
+        },
+        {
+          "operand": "0x51f05",
+          "target": "0xcb2dc"
+        },
+        {
+          "operand": "0x51f42",
+          "target": "0xcb2de"
+        },
+        {
+          "operand": "0x52d97",
+          "target": "0xcb2da"
+        },
+        {
+          "operand": "0x52dab",
+          "target": "0xcb2e1"
+        },
+        {
+          "operand": "0x5304a",
+          "target": "0xcb2da"
+        },
+        {
+          "operand": "0x5305e",
+          "target": "0xcb2e1"
+        },
+        {
+          "operand": "0x52d28",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x52d43",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x52d60",
+          "target": "0xcb2da"
+        },
+        {
+          "operand": "0x52fd7",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x52ff4",
+          "target": "0xcb2d8"
+        },
+        {
+          "operand": "0x53013",
+          "target": "0xcb2da"
+        }
+      ]
+    },
+    {
+      "name": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "rva": "0xcd8c8",
+      "size": 108,
+      "unit": "SOURCE/wingraph",
+      "payload_sha256": "77133f431d5e12dd850002c0d3d4e0fecbe3a7a699d604dc8c5eae9976e1d260",
+      "object_sha256": "50cfb7717f12016cc54c3b0ef17248d4d24d2b6b4222d9abde85ac456be0e45f",
+      "independent_owner_uses": [
+        {
+          "operand": "0x66e01",
+          "target": "0xcd8c8"
+        },
+        {
+          "operand": "0x66e0f",
+          "target": "0xcd8c8"
+        },
+        {
+          "operand": "0x66e1c",
+          "target": "0xcd8c8"
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "unit": "SOURCE/KB",
+      "function": "?CanBuild@@YACPAVtown@@F@Z",
+      "site_rva": "0x3e570",
+      "target_rva": "0x90cc0",
+      "symbol": "?gDwellingRequirements@@3PAGA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetBuildingBaseResourceValue@@YAHHHH@Z",
+      "site_rva": "0x3e66b",
+      "target_rva": "0x90754",
+      "symbol": "?gMageBaseResourceValues@@3PAHA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetBuildingBaseResourceValue@@YAHHHH@Z",
+      "site_rva": "0x3e677",
+      "target_rva": "0x90764",
+      "symbol": "?gNeutralBaseResourceValues@@3PAHA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetBuildingBaseResourceValue@@YAHHHH@Z",
+      "site_rva": "0x3e68d",
+      "target_rva": "0x90780",
+      "symbol": "?gDwellingBaseResourceValues@@3PAHA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetMonType@@YAFHH@Z",
+      "site_rva": "0x40cf8",
+      "target_rva": "0x91b58",
+      "symbol": "?gScoreCampaignMon@@3PAY01FA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetMonType@@YAFHH@Z",
+      "site_rva": "0x40d08",
+      "target_rva": "0x91b5a",
+      "symbol": "?gScoreCampaignMon@@3PAY01FA",
+      "kind": 6,
+      "addend": "0x2"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetMonType@@YAFHH@Z",
+      "site_rva": "0x40d17",
+      "target_rva": "0x91ae8",
+      "symbol": "?gScoreMon@@3PAY01FA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetMonType@@YAFHH@Z",
+      "site_rva": "0x40d27",
+      "target_rva": "0x91aea",
+      "symbol": "?gScoreMon@@3PAY01FA",
+      "kind": 6,
+      "addend": "0x2"
+    },
+    {
+      "unit": "SOURCE/KB",
+      "function": "?GetMonType@@YAFHH@Z",
+      "site_rva": "0x40d31",
+      "target_rva": "0x91aea",
+      "symbol": "?gScoreMon@@3PAY01FA",
+      "kind": 6,
+      "addend": "0x2"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?GetGameAttentionValue@philAI@@QAEXH@Z",
+      "site_rva": "0x4ba97",
+      "target_rva": "0x8a4c0",
+      "symbol": "_AI_ATTENTION_IDENTITY_FLOAT",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?GetGameAttentionValue@philAI@@QAEXH@Z",
+      "site_rva": "0x4bab7",
+      "target_rva": "0x8a4c4",
+      "symbol": "_AI_ATTENTION_IDENTITY",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?GetGameAttentionValue@philAI@@QAEXH@Z",
+      "site_rva": "0x4bad6",
+      "target_rva": "0x8a4c4",
+      "symbol": "_AI_ATTENTION_IDENTITY",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z",
+      "site_rva": "0x4d0ac",
+      "target_rva": "0x9176c",
+      "symbol": "?gStatPower@@3PAMA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z",
+      "site_rva": "0x4d0c1",
+      "target_rva": "0x9176c",
+      "symbol": "?gStatPower@@3PAMA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z",
+      "site_rva": "0x4d20d",
+      "target_rva": "0x918b0",
+      "symbol": "?gBattleStat@@3PAMA",
+      "kind": 6,
+      "addend": "0xa0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?StatChangeValue@philAI@@QAEMHH@Z",
+      "site_rva": "0x4ecc0",
+      "target_rva": "0x91908",
+      "symbol": "?gSpellCastNumMod@@3PAMA",
+      "kind": 6,
+      "addend": "0x50"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?StatChangeValue@philAI@@QAEMHH@Z",
+      "site_rva": "0x4ecdd",
+      "target_rva": "0x91908",
+      "symbol": "?gSpellCastNumMod@@3PAMA",
+      "kind": 6,
+      "addend": "0x50"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+      "site_rva": "0x501a7",
+      "target_rva": "0x9176c",
+      "symbol": "?gStatPower@@3PAMA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "function": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+      "site_rva": "0x501b5",
+      "target_rva": "0x9180c",
+      "symbol": "?gStatPower@@3PAMA",
+      "kind": 6,
+      "addend": "0xa0"
+    },
+    {
+      "unit": "SOURCE/REMOTE",
+      "function": "?DecodePacket@@YAHPAEH@Z",
+      "site_rva": "0x51ed1",
+      "target_rva": "0xcb2d9",
+      "symbol": "?packet@@3PADA",
+      "kind": 6,
+      "addend": "0x1"
+    },
+    {
+      "unit": "SOURCE/REMOTE",
+      "function": "?DecodePacket@@YAHPAEH@Z",
+      "site_rva": "0x51ee0",
+      "target_rva": "0xcb2d9",
+      "symbol": "?packet@@3PADA",
+      "kind": 6,
+      "addend": "0x1"
+    },
+    {
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "site_rva": "0x62a96",
+      "target_rva": "0x90cc0",
+      "symbol": "?gDwellingRequirements@@3PAGA",
+      "kind": 6,
+      "addend": "0x0"
+    },
+    {
+      "unit": "SOURCE/wingraph",
+      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "site_rva": "0x66e70",
+      "target_rva": "0xcd8ec",
+      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "kind": 6,
+      "addend": "0x24"
+    },
+    {
+      "unit": "SOURCE/wingraph",
+      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "site_rva": "0x66e79",
+      "target_rva": "0xcd8ec",
+      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "kind": 6,
+      "addend": "0x24"
+    },
+    {
+      "unit": "SOURCE/wingraph",
+      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "site_rva": "0x66e87",
+      "target_rva": "0xcd8ec",
+      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "kind": 6,
+      "addend": "0x24"
+    }
+  ],
+  "removed_census_splits": [
+    {
+      "old_boundary": "0x90ce0",
+      "owner": "?gDwellingRequirements@@3PAGA"
+    },
+    {
+      "old_boundary": "0x90cec",
+      "owner": "?gDwellingRequirements@@3PAGA"
+    },
+    {
+      "old_boundary": "0x91880",
+      "owner": "?gBattleStat@@3PAMA"
+    },
+    {
+      "old_boundary": "0x918b0",
+      "owner": "?gBattleStat@@3PAMA"
+    },
+    {
+      "old_boundary": "0x918d0",
+      "owner": "?gSpellCastNumMod@@3PAMA"
+    }
+  ],
+  "final_compiled_owners": [
+    {
+      "name": "?gDwellingRequirements@@3PAGA",
+      "rva": "0x90cc0",
+      "size": 48,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gMageBaseResourceValues@@3PAHA",
+      "rva": "0x90754",
+      "size": 16,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gNeutralBaseResourceValues@@3PAHA",
+      "rva": "0x90764",
+      "size": 28,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gDwellingBaseResourceValues@@3PAHA",
+      "rva": "0x90780",
+      "size": 96,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gScoreCampaignMon@@3PAY01FA",
+      "rva": "0x91b58",
+      "size": 112,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gScoreMon@@3PAY01FA",
+      "rva": "0x91ae8",
+      "size": 112,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "_AI_ATTENTION_IDENTITY_FLOAT",
+      "rva": "0x8a4c0",
+      "size": 4,
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f"
+    },
+    {
+      "name": "_AI_ATTENTION_IDENTITY",
+      "rva": "0x8a4c4",
+      "size": 4,
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f"
+    },
+    {
+      "name": "?gStatPower@@3PAMA",
+      "rva": "0x9176c",
+      "size": 164,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gBattleStat@@3PAMA",
+      "rva": "0x91810",
+      "size": 164,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?gSpellCastNumMod@@3PAMA",
+      "rva": "0x918b8",
+      "size": 84,
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23"
+    },
+    {
+      "name": "?packet@@3PADA",
+      "rva": "0xcb2d8",
+      "size": 256,
+      "object_sha256": "a9018849176c368ffc8906d4886fdf48c9d2c7f24f096a0b6a7cff8959235b58"
+    },
+    {
+      "name": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "rva": "0xcd8c8",
+      "size": 108,
+      "object_sha256": "50cfb7717f12016cc54c3b0ef17248d4d24d2b6b4222d9abde85ac456be0e45f"
+    }
+  ]
+}

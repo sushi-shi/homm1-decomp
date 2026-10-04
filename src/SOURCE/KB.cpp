@@ -176,8 +176,8 @@ i32 EarlySetup(void) {
     if (iCDRomErr == CD_SETUP_NO_DRIVE) {
         MessageBoxA(
             static_cast<HWND>(hwndApp),
-            "Unable to access CD Drive.",
-            "Startup Error",
+            localization::Tr("startup.cd.inaccessible"),
+            localization::Tr("startup.error.title"),
             MB_ICONHAND
         );
         exit(0);
@@ -185,9 +185,8 @@ i32 EarlySetup(void) {
     if (iCDRomErr == CD_SETUP_NOT_FOUND) {
         MessageBoxA(
             static_cast<HWND>(hwndApp),
-            "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of "
-            "Might and Magic.  \n\nPlease insert the CD and try again.",
-            "Startup Error",
+            localization::Tr("startup.cd.required"),
+            localization::Tr("startup.error.title"),
             MB_ICONHAND
         );
         exit(0);
@@ -195,9 +194,8 @@ i32 EarlySetup(void) {
     if (iCDRomErr == CD_SETUP_NO_APP_PATH) {
         MessageBoxA(
             static_cast<HWND>(hwndApp),
-            "Unable to change to the Heroes directory.  Please run the installation "
-            "program.",
-            "Startup Error",
+            localization::Tr("startup.directory.invalid"),
+            localization::Tr("startup.error.title"),
             MB_ICONHAND
         );
         exit(0);
@@ -205,8 +203,8 @@ i32 EarlySetup(void) {
     if (iCDRomErr == CD_SETUP_NO_DATA) {
         MessageBoxA(
             static_cast<HWND>(hwndApp),
-            "Unable to find the Heroes data files.  Please run the installation program.",
-            "Startup Error",
+            localization::Tr("startup.data.missing"),
+            localization::Tr("startup.error.title"),
             MB_ICONHAND
         );
         exit(0);
@@ -1575,11 +1573,11 @@ i32 gNeutralBuildingCosts[7][7] = {
     {5, 0, 5, 0, 0, 0, 2000},
     {20, 0, 20, 0, 0, 0, 5000},
 };
-DATA(0x00491308)
+DATA(0x00490754)
 i32 gMageBaseResourceValues[4] = {4000, 6500, 8500, 10500};
-DATA(0x00491318)
+DATA(0x00490764)
 i32 gNeutralBaseResourceValues[7] = {5000, 1500, 500, 2000, 3000, 0, 12000};
-DATA(0x00491338)
+DATA(0x00490780)
 i32 gDwellingBaseResourceValues[24] = {
     858,  2225, 2816, 7385, 13754, 29785, 1684, 2256, 3736, 7213, 15181, 27684,
     1802, 2615, 3414, 6967, 12212, 38141, 1956, 2607, 3869, 7510, 16002, 111967,
@@ -3264,7 +3262,7 @@ TownBuildingExtent gTownBuildingExtents[4][16] = {
      {0, 0, 640, 256},
      {0, 0, 640, 256}},
 };
-DATA(0x00491880)
+DATA(0x00490cc0)
 u16 gDwellingRequirements[24] = {
     0, 128, 144, 132, 1536, 1536, 0, 132, 128, 513, 1024, 2048,
     0, 128, 128, 128, 1024, 2048, 0, 128, 128, 256, 512,  3072,
@@ -3335,7 +3333,7 @@ tag_monsterInfo gMonsterDatabase[28] = {
     {250, 1263, 59, 3, 20, 20, 2, 0, 8, 7, 4, 6, 14, 0, {3, 0, 4, 0, 5, 0}, 2},
     {650, 3831, 43, 2, 50, 50, 3, 0, 10, 9, 20, 30, 15, 0, {3, 0, 4, 0, 5, 0}, 2},
 };
-DATA(0x004921e0)
+DATA(0x0049176c)
 float gStatPower[41] = {
     0.63f, 0.63f, 0.63f, 0.63f, 0.63f, 0.63f, 0.64f, 0.65f, 0.67f, 0.68f, 0.7f,
     0.72f, 0.74f, 0.76f, 0.78f, 0.81f, 0.84f, 0.87f, 0.91f, 0.95f, 1.0f,  1.05f,
@@ -3398,14 +3396,14 @@ i8 gMons32Width[28] = {
     20, 20, 20, 25, 25, 24, 21, 21, 25, 27, 22, 20, 23, 23,
     21, 22, 25, 23, 27, 22, 29, 28, 32, 27, 21, 26, 21, 29,
 };
-DATA(0x00492570)
+DATA(0x00491ae8)
 i16 gScoreMon[SCORE_MONSTER_COUNT][2] = {
     {0, 0},    {7, 6},    {14, 12},  {21, 18},  {28, 24},  {35, 7},   {42, 1},
     {49, 19},  {56, 13},  {63, 2},   {70, 8},   {77, 25},  {84, 14},  {91, 20},
     {98, 3},   {105, 9},  {112, 15}, {119, 21}, {126, 4},  {133, 26}, {140, 16},
     {147, 10}, {154, 22}, {161, 5},  {168, 27}, {175, 11}, {182, 17}, {189, 23},
 };
-DATA(0x004925e0)
+DATA(0x00491b58)
 i16 gScoreCampaignMon[SCORE_MONSTER_COUNT][2] = {
     {3600, 0},  {3400, 6},  {3200, 12}, {3000, 18}, {2600, 24}, {2400, 7},  {2200, 1},
     {2000, 19}, {1800, 13}, {1600, 2},  {1500, 8},  {1400, 25}, {1300, 14}, {1200, 20},
@@ -4113,18 +4111,18 @@ char* gSpellDesc[29] = {
     localization::Tr("table.gSpellDesc.26"), localization::Tr("table.gSpellDesc.27"),
     localization::Tr("table.gSpellDesc.28"),
 };
-DATA(0x004936b8)
+DATA(0x00492c30)
 char* gMonthNames[10] = {
-    "Grasshopper",
-    "Ant",
-    "Dragonfly",
-    "Spider",
-    "Butterfly",
-    "Bumblebee",
-    "Locust",
-    "Earthworm",
-    "Hornet",
-    "Beetle",
+    localization::Tr("table.gMonthNames.0"),
+    localization::Tr("table.gMonthNames.1"),
+    localization::Tr("table.gMonthNames.2"),
+    localization::Tr("table.gMonthNames.3"),
+    localization::Tr("table.gMonthNames.4"),
+    localization::Tr("table.gMonthNames.5"),
+    localization::Tr("table.gMonthNames.6"),
+    localization::Tr("table.gMonthNames.7"),
+    localization::Tr("table.gMonthNames.8"),
+    localization::Tr("table.gMonthNames.9"),
 };
 DATA(0x00492c58)
 char* gWeekNames[15] = {
@@ -4600,9 +4598,14 @@ char* gCampaignSideNames[4] = {
     localization::Tr("table.gCampaignSideNames.2"),
     localization::Tr("table.gCampaignSideNames.3")
 };
-DATA(0x00493dc8)
-char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
-    {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
+DATA(0x004932d0)
+char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] = {
+    localization::Tr("table.gScoreLabels.0"),
+    localization::Tr("table.gScoreLabels.1"),
+    localization::Tr("table.gScoreLabels.2"),
+    localization::Tr("table.gScoreLabels.3"),
+    localization::Tr("table.gScoreLabels.4"),
+};
 DATA(0x004932e4)
 char* gHumanPlayerTypeNames[5] = {
     localization::Tr("table.gHumanPlayerTypeNames.0"),

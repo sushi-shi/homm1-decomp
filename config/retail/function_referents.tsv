@@ -1121,6 +1121,7 @@ rva	name	provenance
 0x00075020	??_Gtileset@@UAEPAXI@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x00075050	??0sample@@QAE@PAD@Z	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
 0x00075282	??1sample@@UAE@XZ	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
+0x00075340	??_Gsample@@UAEPAXI@Z	Complete generated deleting-destructor body/calls and sample vtable slot; buka-sample-vtable.json
 0x00075370	??0widget@@QAE@FFFFFF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000753fb	??0widget@@QAE@XZ	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
 0x00075478	??1widget@@UAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json

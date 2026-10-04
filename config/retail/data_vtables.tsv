@@ -21,6 +21,7 @@ rva	size	name	kind	note
 0x0008a7cc	0x4	??_7palette@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
 0x0008a7d0	0xc	??_7border@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
 0x0008a7dc	0x4	??_7tileset@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
+0x0008a7e0	0x4	??_7sample@@6B@	primary	Constructor/destructor vptr stores, one-slot topology and complete scalar deleting destructor; buka-sample-vtable.json
 0x0008a7e4	0xc	??_7widget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
 0x0008a7f0	0xc	??_7textEntryWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
 0x0008a7fc	0xc	??_7dimmerWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
@@ -28,4 +29,3 @@ rva	size	name	kind	note
 0x0008a814	0x4	??_7resource@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
 0x0008d3c8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
 0x0008d5b0	0xc	??_7soundManager@@6B@	primary	Open/Close/Main
-0x0008d690	0x4	??_7sample@@6B@	primary	virtual destructor

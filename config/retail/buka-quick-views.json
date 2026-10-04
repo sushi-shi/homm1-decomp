@@ -6362,11 +6362,12 @@
           "site": "0xa35f",
           "offset": "0xaa",
           "kind": 6,
-          "name": "$SG43848",
           "addend": 0,
           "target": "0x8e9e4",
           "literal_equal": true,
-          "literal_sha256": "5070333a17b3e05d7f413b5101f452818172ce0d54a1fdb7f13c844394e7d180"
+          "literal_sha256": "5070333a17b3e05d7f413b5101f452818172ce0d54a1fdb7f13c844394e7d180",
+          "historical_candidate_name": "$SG43848",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa374",
@@ -6532,11 +6533,12 @@
           "site": "0xa599",
           "offset": "0x2e4",
           "kind": 6,
-          "name": "$SG43866",
           "addend": 0,
           "target": "0x8e9f0",
           "literal_equal": true,
-          "literal_sha256": "6cd07452f43e0aa566262da2ea54a732732d0827acbec64c30f064881d753aac"
+          "literal_sha256": "6cd07452f43e0aa566262da2ea54a732732d0827acbec64c30f064881d753aac",
+          "historical_candidate_name": "$SG43866",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa5a2",
@@ -6550,11 +6552,12 @@
           "site": "0xa5ac",
           "offset": "0x2f7",
           "kind": 6,
-          "name": "$SG43868",
           "addend": 0,
           "target": "0x8e9fc",
           "literal_equal": true,
-          "literal_sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8"
+          "literal_sha256": "efd5530d3cca36fcf334deab0c280510220ff25e857c9c93256cf985f84bdca8",
+          "historical_candidate_name": "$SG43868",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa5b5",
@@ -6576,11 +6579,12 @@
           "site": "0xa5e6",
           "offset": "0x331",
           "kind": 6,
-          "name": "$SG43873",
           "addend": 0,
           "target": "0x8ea00",
           "literal_equal": true,
-          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+          "historical_candidate_name": "$SG43873",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa600",
@@ -6618,11 +6622,12 @@
           "site": "0xa7c7",
           "offset": "0x4f7",
           "kind": 6,
-          "name": "$SG43907",
           "addend": 0,
           "target": "0x8ea10",
           "literal_equal": true,
-          "literal_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e"
+          "literal_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e",
+          "historical_candidate_name": "$SG43907",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa7fe",
@@ -6652,11 +6657,12 @@
           "site": "0xa877",
           "offset": "0x5a1",
           "kind": 6,
-          "name": "$SG43911",
           "addend": 0,
           "target": "0x8ea1c",
           "literal_equal": true,
-          "literal_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f"
+          "literal_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f",
+          "historical_candidate_name": "$SG43911",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa888",
@@ -6686,11 +6692,12 @@
           "site": "0xa8cc",
           "offset": "0x5f0",
           "kind": 6,
-          "name": "$SG43915",
           "addend": 0,
           "target": "0x8ea20",
           "literal_equal": true,
-          "literal_sha256": "8c3f9e43ed2add7412a7129a2cff074c857c07220be4090d0c552244fe5b5743"
+          "literal_sha256": "8c3f9e43ed2add7412a7129a2cff074c857c07220be4090d0c552244fe5b5743",
+          "historical_candidate_name": "$SG43915",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa8dd",
@@ -6712,11 +6719,12 @@
           "site": "0xa90e",
           "offset": "0x62f",
           "kind": 6,
-          "name": "$SG43920",
           "addend": 0,
           "target": "0x8ea24",
           "literal_equal": true,
-          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+          "historical_candidate_name": "$SG43920",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xa956",
@@ -6762,11 +6770,12 @@
           "site": "0xaad4",
           "offset": "0x7ec",
           "kind": 6,
-          "name": "$SG43933",
           "addend": 0,
           "target": "0x8ea34",
           "literal_equal": true,
-          "literal_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e"
+          "literal_sha256": "aefb0117a912a74115f1950576fa3acbe963537cf7935874851827313f98688e",
+          "historical_candidate_name": "$SG43933",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xab0c",
@@ -6796,11 +6805,12 @@
           "site": "0xab85",
           "offset": "0x897",
           "kind": 6,
-          "name": "$SG43937",
           "addend": 0,
           "target": "0x8ea40",
           "literal_equal": true,
-          "literal_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f"
+          "literal_sha256": "0b782fc3030dbdf3756f17e7adf2ce5808dfc513ca7589adeb679c7d25eaef6f",
+          "historical_candidate_name": "$SG43937",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xab96",
@@ -6830,11 +6840,12 @@
           "site": "0xabda",
           "offset": "0x8e6",
           "kind": 6,
-          "name": "$SG43941",
           "addend": 0,
           "target": "0x8ea44",
           "literal_equal": true,
-          "literal_sha256": "8c3f9e43ed2add7412a7129a2cff074c857c07220be4090d0c552244fe5b5743"
+          "literal_sha256": "8c3f9e43ed2add7412a7129a2cff074c857c07220be4090d0c552244fe5b5743",
+          "historical_candidate_name": "$SG43941",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xabeb",
@@ -6856,11 +6867,12 @@
           "site": "0xac1c",
           "offset": "0x925",
           "kind": 6,
-          "name": "$SG43946",
           "addend": 0,
           "target": "0x8ea48",
           "literal_equal": true,
-          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1"
+          "literal_sha256": "9eeeb89367b0024f0420dfee1183d0f515feb90fda3d9c7307d5ac8acfecfdd1",
+          "historical_candidate_name": "$SG43946",
+          "retail_identity_review": "buka-equal-literal-references.json"
         },
         {
           "site": "0xac65",
@@ -7487,5 +7499,82 @@
     "readme": "homm1 verify readme cannot generate scores without the strict comparison report.",
     "tooling_audit": "Pinned Giten 39384dc6726478357b5efd42c66522781e8310fe whole-tree audit: 202 adaptations awaiting review and 2 missing modules. No tooling implementation changed."
   },
-  "validation_checkpoint": "4b6de439; historical validation at that source/object fingerprint. buka-adventure-context.json supplies the former 0x8ea58 blocker."
+  "validation_checkpoint": "4b6de439; historical validation at that source/object fingerprint. buka-adventure-context.json supplies the former 0x8ea58 blocker.",
+  "literal_identity_schema_correction": {
+    "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
+    "changes": [
+      {
+        "operand": "0xa35f",
+        "target": "0x8e9e4",
+        "old_compiler_spelling": "$SG43848",
+        "current_identity": "$SG584164"
+      },
+      {
+        "operand": "0xa599",
+        "target": "0x8e9f0",
+        "old_compiler_spelling": "$SG43866",
+        "current_identity": "$SG584176"
+      },
+      {
+        "operand": "0xa5ac",
+        "target": "0x8e9fc",
+        "old_compiler_spelling": "$SG43868",
+        "current_identity": "$SG584188"
+      },
+      {
+        "operand": "0xa5e6",
+        "target": "0x8ea00",
+        "old_compiler_spelling": "$SG43873",
+        "current_identity": "$SG584192"
+      },
+      {
+        "operand": "0xa7c7",
+        "target": "0x8ea10",
+        "old_compiler_spelling": "$SG43907",
+        "current_identity": "$SG584208"
+      },
+      {
+        "operand": "0xa877",
+        "target": "0x8ea1c",
+        "old_compiler_spelling": "$SG43911",
+        "current_identity": "$SG584220"
+      },
+      {
+        "operand": "0xa8cc",
+        "target": "0x8ea20",
+        "old_compiler_spelling": "$SG43915",
+        "current_identity": "$SG584224"
+      },
+      {
+        "operand": "0xa90e",
+        "target": "0x8ea24",
+        "old_compiler_spelling": "$SG43920",
+        "current_identity": "$SG584228"
+      },
+      {
+        "operand": "0xaad4",
+        "target": "0x8ea34",
+        "old_compiler_spelling": "$SG43933",
+        "current_identity": "$SG584244"
+      },
+      {
+        "operand": "0xab85",
+        "target": "0x8ea40",
+        "old_compiler_spelling": "$SG43937",
+        "current_identity": "$SG584256"
+      },
+      {
+        "operand": "0xabda",
+        "target": "0x8ea44",
+        "old_compiler_spelling": "$SG43941",
+        "current_identity": "$SG584260"
+      },
+      {
+        "operand": "0xac1c",
+        "target": "0x8ea48",
+        "old_compiler_spelling": "$SG43946",
+        "current_identity": "$SG584264"
+      }
+    ]
+  }
 }
