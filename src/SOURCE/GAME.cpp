@@ -52,7 +52,7 @@
 // donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.582104;margin=0.473963;shape=0.500;size=0.883;calls=0.885;alternate=pol20:void playerData::Write(int)@0x000708b0
-VA(0x00411000, 0x1f8)
+VA(0x0042b400, 0x1f2)
 void playerData::Write(i32 file) {
     char unused[52];
 
@@ -84,7 +84,7 @@ void playerData::Write(i32 file) {
 // donor PoL RVA 0x00070aed; preferred Buka symbol ?Read@playerData@@QAEXH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.555449;margin=0.750197;shape=0.444;size=0.878;calls=0.880;alternate=pol20:void playerData::Read(int)@0x00070aed
-VA(0x004111f8, 0x1e8)
+VA(0x0042b5f2, 0x1e1)
 void playerData::Read(i32 file) {
     char unused[52];
 
@@ -160,7 +160,7 @@ i8 playerData::CountVisitedObelisks(void) {
 }
 
 // Buka 2.1 playerData::BuildingsOwned; slot 0 is the mage guild.
-VA(0x004115d3, 0xd1)
+VA(0x0042b97f, 0xb6)
 i32 playerData::BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState) {
     i32 count = 0;
     i32 i;
@@ -311,7 +311,7 @@ VA(0x0042bfee, 0x13)
 mapCell (*game::GetWorldMapData(void)) [MAP_CELL_GRID_SIZE] { return m_map; }
 
 // Buka 2.1 game::CreateBoat without the network map-change notice.
-VA(0x00411d44, 0xd9)
+VA(0x0042c001, 0xce)
 i8 game::CreateBoat(i8 x, i8 y) {
     i8 boatIdx = Scan(m_boatSlots, 0, GAME_BOAT_COUNT);
     if (boatIdx != GAME_TABLE_FREE) {
@@ -332,7 +332,7 @@ i8 game::CreateBoat(i8 x, i8 y) {
 }
 
 // Buka 2.1 game::Scan.
-VA(0x00411e1d, 0x5f)
+VA(0x0042c0cf, 0x4b)
 i8 game::Scan(i8* array, i8 start, i8 length) {
     i8 i;
     for (i = start; i < start + length; ++i) {
@@ -383,7 +383,7 @@ i8 game::GetNewHeroId(i8 heroClass) {
 }
 
 // Buka 2.1 game::GetTownId.
-VA(0x00411ffe, 0x8f)
+VA(0x0042c263, 0x69)
 i8 game::GetTownId(i8 x, i8 y) {
     for (i16 i = 0; i < GAME_TOWN_COUNT; ++i) {
         if (m_castleRecs[i].m_x == x && m_castleRecs[i].m_y == y)
@@ -393,7 +393,7 @@ i8 game::GetTownId(i8 x, i8 y) {
 }
 
 // Buka 2.1 game::GetMineId.
-VA(0x0041208d, 0x87)
+VA(0x0042c2cc, 0x69)
 i8 game::GetMineId(i8 x, i8 y) {
     for (i16 i = 0; i < GAME_MINE_COUNT; ++i) {
         if (m_mines[i].x == x && m_mines[i].y == y)
@@ -892,7 +892,7 @@ i16 NewGameHandler(tag_message& message) {
 
 // Buka 2.1 game::UpdateNewGameWindow for HoMM1's new-game screen: map name,
 // difficulty, opponent types and labels, rating, crest and King of the Hill.
-VA(0x0041384b, 0x2c3)
+VA(0x0042d9e5, 0x293)
 void game::UpdateNewGameWindow(void) {
     tag_message message;
     i16 i;
@@ -1136,7 +1136,7 @@ i8 game::NewGame(void) {
 // HoMM1 identity: advManager::ControlPanel calls it on gpGame with three
 // arguments and the callee returns with `ret 0xc` (Buka game::ShowCampaignInfo).
 
-VA(0x0041421f, 0x2ad)
+VA(0x0042e2ad, 0x274)
 void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
     heroWindow* window;
     tag_message message;
@@ -1202,7 +1202,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
 
 // Buka 2.1 game::InitEntireCampaign; HoMM1 reloads origdata.bin first and
 // starts the campaign calendar on day 1.
-VA(0x004144cc, 0x7f)
+VA(0x0042e521, 0x74)
 void game::InitEntireCampaign(i32 side) {
     LoadGame("origdata.bin", 1, 0);
     strcpy(gFullMapName, "");
@@ -1465,7 +1465,7 @@ void game::NewMap(char* mapName) {
 
 // HoMM1 groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by
 // their first trigger so neighbouring halves can be compared.
-VA(0x004157e0, 0x6f)
+VA(0x0042f621, 0x51)
 i32 GetObjectFamily(i32 trigger) {
     switch (trigger) {
         case MAP_OBJECT_MOUNTAINS:
@@ -1486,7 +1486,7 @@ i32 GetObjectFamily(i32 trigger) {
 
 // HoMM1: once a cell's object frame is gone, its overlay drops into the
 // object slot unless the eastern neighbour continues the same object.
-VA(0x0041584f, 0x1e4)
+VA(0x0042f672, 0x1be)
 void game::SettleOverlay(i32 x, i32 y) {
     mapCell* cell;
     mapCell* cellEast;
@@ -2085,7 +2085,7 @@ i8 game::ViewSpells(
 
 // HoMM1: combat spells fill hero slots 0..18 and adventure spells 19..28;
 // the page ends at the last memorized slot.
-VA(0x00417351, 0xbb)
+VA(0x00430e2a, 0xa0)
 void game::SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, i16) spellType) {
     switch (spellType) {
         case SPELL_TYPE_COMBAT:
@@ -2103,7 +2103,7 @@ void game::SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, i16) spellType) {
 
 // Buka 2.1 game::UpdateSpellWidgets for HoMM1's four-spell page: each slot
 // shows the spell icon and its name with the remaining casts.
-VA(0x0041740c, 0x1e0)
+VA(0x00430eca, 0x1d4)
 void game::UpdateSpellWidgets(void) {
     tag_message message;
     i16 i;
@@ -2308,7 +2308,7 @@ i16 ViewSpellsHandler(tag_message& message) {
 
 // Buka 2.1 ViewSpecialHandler: hovering a spell-book control shows its
 // help line in the hero screen's status bar.
-VA(0x00417ae4, 0x175)
+VA(0x00431532, 0x129)
 i16 ViewSpecialHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -2895,7 +2895,7 @@ void game::Overview(void) {
 }
 
 // Buka 2.1 game::GetRandomNumTroops with HoMM1's 28 creatures.
-VA(0x004192e7, 0x28b)
+VA(0x00432d0a, 0x25d)
 i8 game::GetRandomNumTroops(i8 monsterType) {
     switch (monsterType) {
         case CREATURE_PEASANT:
@@ -3652,7 +3652,7 @@ void game::RandomizeMine(i8 x, i8 y) {
 }
 
 // HoMM1 picks an unused random artifact (ids 4..36), else the first free one.
-VA(0x0041bd71, 0x79)
+VA(0x00435425, 0x5e)
 i8 game::GetRandomArtifactId(void) {
     i8 freeSlot = Scan(
         m_randomArtifacts,
@@ -3844,7 +3844,7 @@ void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
 // donor PoL RVA 0x00080e6c; preferred Buka symbol ?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.542661;margin=0.479075;shape=0.407;size=0.794;calls=1.000;alternate=pol20:void game::GiveArmy(class armyGroup *, int, int, int)@0x00080e6c
-VA(0x0041c6f2, 0xfc)
+VA(0x00435ca3, 0xc8)
 void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
     i32 swap;
     i32 i;
@@ -3875,7 +3875,7 @@ void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
 // donor PoL RVA 0x00080f68; preferred Buka symbol ?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491573;margin=0.501516;shape=0.250;size=0.900;calls=1.000;alternate=pol20:int game::ExperienceValueOfStack(class armyGroup *, class hero *)@0x00080f68
-VA(0x0041c7ee, 0x8c)
+VA(0x00435d6b, 0x7a)
 i32 game::ExperienceValueOfStack(armyGroup* group, hero* h) {
     i32 expValue = 0;
     i32 i;
@@ -3906,7 +3906,7 @@ i32 SGenRand(void) {
     return value;
 }
 
-VA(0x0041c90b, 0x52)
+VA(0x00435e77, 0x55)
 i32 SRandom(i32 low, i32 high) {
     i32 result;
     SIncRandomize(low, high);
@@ -3916,7 +3916,7 @@ i32 SRandom(i32 low, i32 high) {
     return result % (high - low + 1) + low;
 }
 
-VA(0x0041c95d, 0x89)
+VA(0x00435ecc, 0x8a)
 void SIncRandomize(i32 x, i32 y) {
     i32 feedback;
     x *= 13;
@@ -3939,7 +3939,7 @@ void SRand(i32 seed) {
 // donor PoL RVA 0x00080ff9; preferred Buka symbol ?GetLuck@game@@QAEHPAVhero@@PAVarmy@@PAVtown@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
-VA(0x0041ca0a, 0xbf)
+VA(0x00435f6f, 0xb7)
 i32 game::GetLuck(hero* h, army*) {
     i32 luck;
 
@@ -4115,7 +4115,7 @@ void game::ShowComputerScreen(void) {
 }
 
 // Buka 2.1 game::ShowHeroesLogo; HoMM1 draws the logo from a tileset.
-VA(0x0041d06b, 0xa8)
+VA(0x00436536, 0x9c)
 void game::ShowHeroesLogo(void) {
     tileset* logo;
     if (!gpAdvManager->m_openState) {
@@ -4132,7 +4132,7 @@ void game::ShowHeroesLogo(void) {
 // donor PoL RVA 0x000813fe; preferred Buka symbol ?WaitForPlayer@game@@QAEXPADH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
-VA(0x0041d113, 0x155)
+VA(0x004365d2, 0x124)
 void game::WaitForPlayer(char* text, i32 player) {
     if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gRemoteOn) {
         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
@@ -4875,7 +4875,7 @@ void game::DoNewTurn(void) {
 }
 
 // Buka 2.1 game::GetBoatsBuilt.
-VA(0x0041ee53, 0x58)
+VA(0x00438134, 0x4c)
 i32 game::GetBoatsBuilt(void) {
     i32 count = 0;
     i32 i;
@@ -4886,7 +4886,7 @@ i32 game::GetBoatsBuilt(void) {
     return count;
 }
 
-DATA(0x00490ddc)
+DATA(0x004a6c29)
 i8 gShowMapInfo = 0;
 
 // donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
@@ -4940,7 +4940,7 @@ void game::GetMap(void) {
 }
 
 // Buka 2.1 game::GetNumThievesGuilds.
-VA(0x0041f247, 0x98)
+VA(0x004384f3, 0x80)
 i32 game::GetNumThievesGuilds(i32 color) {
     i32 numGuilds = 0;
     i32 i;
@@ -5016,7 +5016,7 @@ i32 game::CalcDifficultyRating(void) {
 
 // ShowCongrats' base score: 200 less a day per day for two months, then a
 // half, a quarter and an eighth per day, never below 20.
-VA(0x0041f5ef, 0x138)
+VA(0x00438856, 0xde)
 i32 GetBaseScore(i32 days) {
     i32 score;
 
@@ -5138,7 +5138,7 @@ void game::ShowScenInfo(void) {
 
 // HoMM1 keeps the human's crest and gives each opponent a free one: the
 // campaign scenario's crest when it names one, else a random draw.
-VA(0x0041fb75, 0x14f)
+VA(0x00438d44, 0x114)
 void game::RandomizePlayerCrests(void) {
     i32 i;
     i8 taken[PLAYER_COLOR_COUNT];
@@ -5185,7 +5185,7 @@ void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, 
 // literals of their users; gShowMapInfo is defined above GetMap.
 DATA(0x004a6c24)
 i32 gGameOver = 0;
-DATA(0x00490cec)
+DATA(0x0048fcc8)
 u32 gLastSeed = 135621123;
 DATA(0x004a7318)
 i8 gSaveCurPlayer;
@@ -5203,7 +5203,7 @@ DATA(0x004a72d8)
 i8 gSavedPlayerTypes[4];
 DATA(0x004a7300)
 i16 gMineTypeCount[RESOURCE_COUNT];
-DATA(0x004a7328)
+DATA(0x004a6c10)
 char gCurMapName[16];
 DATA(0x004a7320)
 i8 gSavedKingOfTheHill;

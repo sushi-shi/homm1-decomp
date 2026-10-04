@@ -85,7 +85,7 @@ i16 border::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047d640, 0x9d)
+VA(0x00474d52, 0xd7)
 void border::Draw(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;

@@ -311,7 +311,7 @@ void combatManager::ClearEffects(void) {
 }
 
 // Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
-VA(0x00465594, 0x40)
+VA(0x0045963b, 0x3d)
 void combatManager::NextPos(i32* hex) {
     if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_GRID_COLUMNS == 0)
         *hex += COMBAT_SPELL_AI_ROW_SKIP;
@@ -321,7 +321,7 @@ void combatManager::NextPos(i32* hex) {
 
 // Buka SPELLAI.cpp:983-995: the next hex at or after startHex holding a
 // stack of the side (2: either side).
-VA(0x004655d4, 0x87)
+VA(0x00459678, 0x66)
 i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
         if (m_hexCells[startHex].m_occupantSide == side

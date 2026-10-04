@@ -265,10 +265,10 @@ void mouseManager::SetPointer(i16 frame) {
 
 // The Windows build leaves the software-pointer hooks empty; these names
 // follow the HoMM2 mouseManager methods with the same call arity.
-VA(0x004738f0, 0x1)
+VA(0x0046bf6f, 0xb)
 void mouseManager::ReallyShowPointer(void) {}
 
-VA(0x00473900, 0x1)
+VA(0x0046bf87, 0xb)
 void mouseManager::ReallyHidePointer(void) {}
 
 VA(0x00473910, 0x1)
@@ -277,12 +277,12 @@ void mouseManager::HideColorPointer(void) {}
 // townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
 // under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
 // RestoreUnderlying pair); retail keeps only the returns.
-VA(0x00473920, 0x1)
+VA(0x0046bf9d, 0xb)
 void mouseManager::RestoreUnderlying(void) {}
 
 // advManager::UpdateScreen pushes the two origin words and a sign-extended
 // cursor flag word.
-VA(0x00473930, 0x3)
+VA(0x0046bfc0, 0xd)
 void mouseManager::SaveAndDraw(bitmap*, i16, i16, i16) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
@@ -298,13 +298,13 @@ void mouseManager::ShowColorPointer(void) {}
 VA(0x00473960, 0x3)
 void mouseManager::NewUpdate(i32) {}
 
-VA(0x00473970, 0x3)
+VA(0x0046bff2, 0xd)
 void mouseManager::WarpPointer(i16, i16) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.387847;margin=0.576156;shape=0.081;size=0.906;calls=1.000;alternate=pol20:void mouseManager::MouseCoords(int &, int &)@0x000c9ec0
-VA(0x00473980, 0x5a)
+VA(0x0046c00c, 0x56)
 void mouseManager::MouseCoords(i16& x, i16& y) {
     POINT point;
 
@@ -314,19 +314,19 @@ void mouseManager::MouseCoords(i16& x, i16& y) {
     y = CLIENT_TO_GAME_Y(point.y);
 }
 
-VA(0x004739e0, 0x3)
+VA(0x0046c062, 0xd)
 void mouseManager::SetCursorShape(i32) {}
 
 // advManager::Open passes the colour-pointer preference; Windows ignores it.
 VA(0x004739f0, 0x3)
 void mouseManager::SetColorMice(i32) {}
 
-VA(0x00473a00, 0x9)
+VA(0x0046c07c, 0x13)
 void mouseManager::HideSystemCursor(void) {
     ShowCursor(FALSE);
 }
 
-VA(0x00473a10, 0x9)
+VA(0x0046c08f, 0x13)
 void mouseManager::ShowSystemCursor(void) {
     ShowCursor(TRUE);
 }

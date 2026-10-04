@@ -9,7 +9,7 @@
 #include <BASE/widget.h>
 #include <SOURCE/KB.h>
 
-VA(0x0047f2d0, 0x5a)
+VA(0x00475370, 0x8b)
 widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
     m_owner = 0;
     m_next = 0;
@@ -24,7 +24,7 @@ widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
     m_kind = kind;
 }
 
-VA(0x0047f330, 0x7)
+VA(0x00475478, 0x14)
 widget::~widget(void) {}
 
 VA(0x0047f340, 0x16)
@@ -103,7 +103,7 @@ i16 widget::Main(tag_message& message) {
     return MESSAGE_DISPATCH_CONTINUE;
 }
 
-VA(0x0047f590, 0x3a)
+VA(0x00475783, 0x67)
 void widget::Dim(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;

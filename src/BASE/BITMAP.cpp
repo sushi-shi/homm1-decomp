@@ -17,8 +17,8 @@
 #include <string.h>
 #include <sys/stat.h>
 
-VA(0x0047b110, 0x2a)
-VA_COMPGEN(0x0047b140, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x0047b110)
+VA(0x00473180, 0x4c)
+VA_COMPGEN(0x0047b140, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x00473180)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = BITMAP_TYPE_NONE;
     m_width = 0;
@@ -26,7 +26,7 @@ bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_
     m_pixels = NULL;
 }
 
-VA(0x0047b180, 0x4d)
+VA(0x004731cc, 0x64)
 bitmap::bitmap(i16 type, i16 width, i16 height)
     : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = type;
@@ -56,7 +56,7 @@ bitmap::~bitmap(void) {
     m_pixels = NULL;
 }
 
-VA(0x0047b280, 0x3e)
+VA(0x00473374, 0x4b)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
     BlitBitmap(this, 0, 0, m_width, m_height, gpWindowManager->m_screen, x, y);
@@ -68,7 +68,7 @@ void bitmap::GrabScreen(i16 x, i16 y) {
     GrabScreenBitmap(this, x, y);
 }
 
-VA(0x0047b2e0, 0x2b)
+VA(0x00473423, 0x3b)
 void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
     BlitBitmap(source, x, y, m_width, m_height, this, 0, 0);
 }
@@ -90,7 +90,7 @@ void bitmap::Write(char* filename) {
     }
 }
 
-VA(0x0047b390, 0xbd)
+VA(0x00473501, 0xa6)
 void bitmap::CopyTo(
     bitmap* destination,
     i32 destinationX,

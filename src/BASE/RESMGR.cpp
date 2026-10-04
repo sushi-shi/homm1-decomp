@@ -24,7 +24,7 @@
 #include <string.h>
 
 // HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
-VA(0x00479400, 0x9b)
+VA(0x0046c0e0, 0x7a)
 resourceManager::resourceManager(void) : baseManager() {
     m_active = 0;
     m_resourceListHead = NULL;
@@ -37,7 +37,7 @@ resourceManager::resourceManager(void) : baseManager() {
 }
 
 // HoMM1 has only the raw-backdrop path of the Buka donor overload.
-VA(0x004794a0, 0x85)
+VA(0x0046c15a, 0x7a)
 void resourceManager::GetBackdrop(char* name, class bitmap* backdrop) {
     PointToFile(MakeId(name));
     ReadWord();
@@ -172,7 +172,7 @@ class sample* resourceManager::GetSample(char* name) {
 // donor PoL RVA 0x000c86b0; preferred Buka symbol ?Dispose@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520865;margin=0.403030;shape=0.400;size=0.812;calls=1.000;alternate=pol20:void resourceManager::Dispose(class resource *)@0x000c86b0
-VA(0x004799b0, 0x87)
+VA(0x0046c705, 0x75)
 void resourceManager::Dispose(class resource* resourceToDispose) {
     if (m_expunging != 0)
         return;
@@ -190,7 +190,7 @@ void resourceManager::Dispose(class resource* resourceToDispose) {
 // donor PoL RVA 0x000c8740; preferred Buka symbol ?AddResource@resourceManager@@QAEXPAVresource@@@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.451638;margin=0.545401;shape=0.346;size=0.698;calls=1.000;alternate=pol20:void resourceManager::AddResource(class resource *)@0x000c8740
-VA(0x00479a40, 0x55)
+VA(0x0046c77a, 0x43)
 void resourceManager::AddResource(class resource* newResource) {
     if (m_resourceListHead == NULL) {
         m_resourceListHead = newResource;
@@ -220,7 +220,7 @@ void resourceManager::Expunge(void) {
 // donor PoL RVA 0x000c8830; preferred Buka symbol ?Query@resourceManager@@QAEPAVresource@@K@Z
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.434784;margin=0.589664;shape=0.276;size=0.688;calls=1.000;alternate=pol20:class resource * resourceManager::Query(unsigned long int)@0x000c8830
-VA(0x00479b30, 0x4f)
+VA(0x0046c83b, 0x3b)
 class resource* resourceManager::Query(i16 resourceId) {
     resource* cursorResource = m_resourceListHead;
     while (cursorResource != NULL && cursorResource->m_id != resourceId)
@@ -235,7 +235,7 @@ i16 resourceManager::Main(tag_message&) {
 }
 
 // donor Buka RVA 0x000b8810; HoMM1 loads only the default aggregate
-VA(0x00479ba0, 0x8e)
+VA(0x0046c886, 0x66)
 i16 resourceManager::Open(i16 priority) {
     if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
         return RESOURCE_MANAGER_LOAD_ERROR;
@@ -248,7 +248,7 @@ i16 resourceManager::Open(i16 priority) {
 }
 
 // donor Buka RVA 0x000b8890; PoL 2.0 is source-identical
-VA(0x00479c30, 0x88)
+VA(0x0046c8ec, 0x61)
 void resourceManager::RemoveResource(class resource* resourceToRemove) {
     if (m_resourceListHead == resourceToRemove) {
         m_resourceListHead = resourceToRemove->m_next;
@@ -265,7 +265,7 @@ void resourceManager::RemoveResource(class resource* resourceToRemove) {
 }
 
 // HoMM1 has one aggregate, while Buka's later Close loops over several.
-VA(0x00479cc0, 0x88)
+VA(0x0046c94d, 0x6e)
 void resourceManager::Close(void) {
     if (m_active != 1)
         return;
@@ -351,7 +351,7 @@ u32 resourceManager::GetFileSize(i16 fileId) {
 // donor PoL RVA 0x000c8e20; preferred Buka symbol ?SavePosition@resourceManager@@QAEXXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.435067;margin=0.395891;shape=0.259;size=0.600;calls=1.000;alternate=pol20:void resourceManager::SavePosition(void)@0x000c8e20
-VA(0x0047a040, 0x2b)
+VA(0x0046cc33, 0x20)
 void resourceManager::SavePosition(void) {
     m_savedPosition = tell(m_aggregateFd);
 }
@@ -359,13 +359,13 @@ void resourceManager::SavePosition(void) {
 // donor PoL RVA 0x000c8e80; preferred Buka symbol ?RestorePosition@resourceManager@@QAEXXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.425713;margin=0.238867;shape=0.231;size=0.593;calls=1.000;alternate=pol20:void resourceManager::RestorePosition(void)@0x000c8e80
-VA(0x0047a070, 0x2e)
+VA(0x0046cc53, 0x23)
 void resourceManager::RestorePosition(void) {
     _lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
 }
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
-VA(0x0047a0a0, 0x55)
+VA(0x0046cc76, 0x48)
 #line 598 "F:\\H1w95src\\Base\\RESMGR.CPP"
 i8 resourceManager::ReadByte(void) {
 #line 599
@@ -378,7 +378,7 @@ i8 resourceManager::ReadByte(void) {
 // donor PoL RVA 0x000c8f70; preferred Buka symbol ?ReadWord@resourceManager@@QAEFXZ
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
-VA(0x0047a100, 0x58)
+VA(0x0046ccbe, 0x4b)
 #line 619 "F:\\H1w95src\\Base\\RESMGR.CPP"
 i16 resourceManager::ReadWord(void) {
 #line 620
@@ -389,7 +389,7 @@ i16 resourceManager::ReadWord(void) {
 }
 
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
-VA(0x0047a160, 0x58)
+VA(0x0046cd09, 0x4b)
 #line 639 "F:\\H1w95src\\Base\\RESMGR.CPP"
 i32 resourceManager::ReadLong(void) {
 #line 640
@@ -400,7 +400,7 @@ i32 resourceManager::ReadLong(void) {
 }
 
 // donor Buka RVA 0x000b8ea0; HoMM1 has no translation argument and uses 16-bit IDs
-VA(0x0047a1c0, 0x5f)
+VA(0x0046cd54, 0x41)
 i16 resourceManager::MakeId(char* name) {
     u32 result = MAKEFILEID(name);
     strcpy(m_lastFileName, name);
@@ -409,13 +409,13 @@ i16 resourceManager::MakeId(char* name) {
 }
 
 // donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
-VA(0x0047a220, 0x26)
+VA(0x0046cd95, 0x1b)
 void resourceManager::Read13(i8* destination) {
     ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
-VA(0x0047a250, 0x5f)
+VA(0x0046cdb0, 0x52)
 #line 679 "F:\\H1w95src\\Base\\RESMGR.CPP"
 void resourceManager::ReadBlock(i8* destination, u32 size) {
 #line 680

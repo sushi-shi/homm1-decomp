@@ -78,7 +78,7 @@ void advManager::StartCursor(i8 direction) {
 }
 
 // Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
-VA(0x0043a049, 0x150)
+VA(0x00421703, 0x11d)
 void advManager::StopCursor(i8 stopSound) {
     if (stopSound) {
         gMoveSoundMade = 1;
@@ -244,7 +244,7 @@ void advManager::DrawCursor(void) {
 // donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
 // donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
-VA(0x0043a77d, 0x88)
+VA(0x00421dc4, 0x51)
 i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
     if (static_cast<i32>(direction) > static_cast<i32>(MAP_DIRECTION_SOUTH)) {
         switch (direction) {
@@ -853,13 +853,13 @@ void advManager::MoveOrigin(i16 directionX, i16 directionY) {
 
 // CURSOR owns retail .data 0x004a0d28-0x0048eb4f (initialized, before the
 // TOWNMGR band) and .bss 0x004c2510-0x004a4b97. Initializers are retail bytes.
-DATA(0x004a0d28)
+DATA(0x0048fa5c)
 i8 gMoveSoundMade = 1;
 DATA(0x004a0d30)
 i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x004a0d40)
 i16 gStepDelay[5] = {30, 45, 30, 15, 15};
-DATA(0x004a0d54)
+DATA(0x004a6ac6)
 i8 EveryOther = 0;
 DATA(0x004a0d58)
 i16 startVals[3] = {16, 0, -16};

@@ -70,7 +70,7 @@ H1_ENUM_CONST_END(SwapManagerConstant)
 // Buka 2.1 swapManager::swapManager(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0044f890, 0x75)
+VA(0x0045cee0, 0x6a)
 swapManager::swapManager(void) {
     m_window = NULL;
     m_selectorIcon = NULL;
@@ -83,18 +83,18 @@ swapManager::swapManager(void) {
     m_heroes[SWAP_SIDE_RIGHT] = NULL;
 }
 
-VA(0x0044f905, 0x3e)
+VA(0x0045cf4a, 0x33)
 swapManager::swapManager(class hero* leftHero, class hero* rightHero) {
     m_heroes[SWAP_SIDE_LEFT] = leftHero;
     m_heroes[SWAP_SIDE_RIGHT] = rightHero;
 }
 
-VA(0x0044f943, 0x4d)
+VA(0x0045cf7d, 0x2e)
 void swapManager::Reset(void) {
     m_selectedSide = m_targetSide = m_itemType = m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE;
 }
 
-VA(0x0044f990, 0x2d5)
+VA(0x0045cfab, 0x2b4)
 i16 swapManager::Open(i16 id) {
     tag_message message;
     i32 i; // Unused; retail still reserves its frame slot.
@@ -158,7 +158,7 @@ i16 swapManager::Open(i16 id) {
 // donor PoL RVA 0x000548be; preferred Buka symbol ?Close@swapManager@@UAEXXZ
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.610218;margin=0.602384;shape=0.500;size=0.986;calls=1.000;alternate=pol20:void swapManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x000548be
-VA(0x0044fc65, 0x123)
+VA(0x0045d25f, 0x114)
 void swapManager::Close(void) {
     tag_message message;
 
@@ -664,7 +664,7 @@ void swapManager::SwapMons(void) {
     sourceTroops->Swap(m_selectedSlot, destTroops, m_targetSlot);
 }
 
-VA(0x00450d98, 0x492)
+VA(0x0045e1ba, 0x46e)
 void swapManager::Update(void) {
     tag_message message;
     i16 i;

@@ -63,11 +63,11 @@ DATA(0x004aca64)
 float gWinChance;
 DATA(0x004aa034)
 i32 gEventLoop;
-DATA(0x004c2040)
+DATA(0x004ca164)
 i8 giBuildShipyard[GAME_PLAYER_COUNT];
 DATA(0x004c2048)
 i32 giMaxHeroesForThisPlayer;
-DATA(0x004aca68)
+DATA(0x004b4ba0)
 i8 giBuildBoat[GAME_PLAYER_COUNT];
 DATA(0x004aa0cc)
 float fReduceFactor;
@@ -75,7 +75,7 @@ DATA(0x004c8cd0)
 u8 giCurPlayerBit;
 DATA(0x004aa030)
 i8 giBestShipyardDist;
-DATA(0x004c0ba0)
+DATA(0x004c8cc8)
 i32 bHeroBuiltThisTurn;
 DATA(0x004c0bb0)
 i16 gaiHeroLiveChance[GAME_HERO_COUNT];
@@ -91,11 +91,11 @@ DATA(0x004b2fd0)
 i32 costTemp[RESOURCE_COUNT];
 DATA(0x004b1b90)
 i8 gaiTurnValueOfMine[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004aa0dc)
+DATA(0x004b221c)
 i32 iDummy;
 DATA(0x004b1b80)
 i8 gbPossibleShipyardFound;
-DATA(0x004b3010)
+DATA(0x004bb13c)
 float gafAITurnCostResource[RESOURCE_COUNT];
 DATA(0x004b7430)
 u8 gCurWatchPlayerHighBit;
@@ -121,7 +121,7 @@ DATA(0x004c2054)
 u8 giCurPlayerHighBit;
 DATA(0x004aca78)
 i16 gaiLiveChanceOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-DATA(0x004b1b84)
+DATA(0x004b9cb8)
 i8 giBuildBoatStuffTurn[GAME_PLAYER_COUNT];
 DATA(0x004ac970)
 i32 iPlacesVisited[ADVMGR_PLACE_VISIT_COUNT][ADVMGR_PLACE_COORDINATE_COUNT];
@@ -139,7 +139,7 @@ DATA(0x0048d074)
 static const float AI_STRATEGIC_POSITION_SCORE_FACTOR = 1.25f;
 DATA(0x0048d078)
 static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
-DATA(0x0048d07c)
+DATA(0x0048a4b8)
 static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
 DATA(0x0048d080)
 static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
@@ -284,7 +284,7 @@ void AiPrint(char* text) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0042812d, 0x4e)
+VA(0x00447914, 0x3d)
 void AbsAiPrint(char* text) {
     i32 saved;
 
@@ -374,7 +374,7 @@ void ShowStatus() {}
 
 // HoMM1-only AI status line drawn with philAI's debug font across the bottom
 // twenty screen rows; retail gates it on the second debug level.
-VA(0x004284f1, 0x8c)
+VA(0x00447c70, 0x7e)
 void philAI::ShowDebugText(char* text) {
     if (giDebugLevel >= 2) {
         FillBitmapArea(gpWindowManager->m_screen, 0, 460, LOGICAL_SCREEN_WIDTH, 20, 0);
@@ -384,7 +384,7 @@ void philAI::ShowDebugText(char* text) {
 }
 
 // Preferred Buka's three build arrays, plus HoMM1's surviving debug-font owner.
-VA(0x0042857d, 0x5e)
+VA(0x00447cee, 0x51)
 philAI::philAI() {
     i32 i;
 
@@ -399,7 +399,7 @@ philAI::philAI() {
 // donor PoL RVA 0x00037bb5; preferred Buka symbol ?DoAllHeroInteractions@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.414032;margin=0.418353;shape=0.188;size=0.773;calls=1.000;alternate=pol20:void philAI::DoAllHeroInteractions(void)@0x00037bb5
-VA(0x004285db, 0xb0)
+VA(0x00447d3f, 0x88)
 void philAI::DoAllHeroInteractions(void) {
     i32 i;
 
@@ -937,7 +937,7 @@ void philAI::DoAI(i32 player) {
 }
 
 // Buka 2.1 GetGameAIVars refreshes every player's game attention value.
-VA(0x00429d6e, 0x4b)
+VA(0x0044919e, 0x3f)
 void philAI::GetGameAIVars(void) {
     i32 i;
 
@@ -1136,7 +1136,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
 
 // Buka 2.1 DetermineHeroToMove: the current player's hero with the most
 // remaining mobility; HoMM1 counts with a byte index.
-VA(0x0042a9dd, 0x11c)
+VA(0x00449d14, 0xea)
 hero* philAI::DetermineHeroToMove(i32 player) {
     i32 bestHero;
     i32 bestMobility;
@@ -1804,14 +1804,14 @@ void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
 }
 
 // Buka's town overload indexes the six dwelling stocks and faction table.
-VA(0x0042c63a, 0x48)
+VA(0x0044b605, 0x3f)
 i32 philAI::CreaturesToBuy(town* townPointer, i32 level) {
     i32 nGarrison = townPointer->m_garrison[level];
     return CreaturesToBuy(gDwellingType[townPointer->m_type][level], nGarrison);
 }
 
 // Buka 2.1 purchase count logic and retail's ordered call/branches agree.
-VA(0x0042c682, 0x5f)
+VA(0x0044b644, 0x47)
 i32 philAI::CreaturesToBuy(i32 creatureType, i32 availableCount) {
     i32 purchaseCount = MaxBuyableCreatures(creatureType);
     if (purchaseCount > 1)
@@ -1950,7 +1950,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
 // donor PoL RVA 0x0003e459; preferred Buka symbol ?LikelihoodOfEnemyAttacking@philAI@@QAEXPAVtown@@PAVhero@@AAM2AAH332@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488198;margin=0.360468;shape=0.323;size=0.832;calls=1.000;alternate=pol20:void philAI::LikelihoodOfEnemyAttacking(class town *, class hero *, float &, float &, int &, int &, int &, float &)@0x0003e459
-VA(0x0042caa8, 0x65)
+VA(0x0044b9bd, 0x54)
 void philAI::LikelihoodOfEnemyAttacking(
     town*,
     hero*,
@@ -2041,7 +2041,7 @@ i32 philAI::RVConversion(i32* const resources) {
 
 // Buka 2.1 TurnsToBuy: the slowest shortfall in turns of income, 99 when a
 // short resource has no income.
-VA(0x0042ce01, 0xca)
+VA(0x0044bca4, 0xc7)
 float philAI::TurnsToBuy(i32* const resources) {
     float maxT = 0;
     i32 resourceIndex;
@@ -2430,7 +2430,7 @@ float philAI::TurnValueOfObelisk(i32 player) {
 // donor PoL RVA 0x0003fe81; preferred Buka symbol ?FutureDeflator@philAI@@QAEMQAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.484127;margin=0.409347;shape=0.286;size=0.877;calls=1.000;alternate=pol20:float philAI::FutureDeflator(int * const)@0x0003fe81
-VA(0x0042dfb8, 0x51)
+VA(0x0044cd10, 0x47)
 float philAI::FutureDeflator(i32* const resources) {
     float turns = TurnsToBuy(resources);
     float value = 1.0f - turns * AI_FUTURE_DEFLATION_RATE;
@@ -3015,7 +3015,7 @@ void philAI::HeroInteractionAtTown(
 
 // Buka 2.1 ChooseGoldOrExperience; HoMM1 weighs the experience by the
 // hero's AI fight value instead of a fixed gold threshold.
-VA(0x0042f82c, 0x61)
+VA(0x0044e236, 0x3f)
 i32 philAI::ChooseGoldOrExperience(hero* thisHero, i32 gold, i32 experience) {
     i32 goldRV;
     i32 expRV;
@@ -3076,7 +3076,7 @@ void philAI::ChooseEvaluateBattle(
 
 // HoMM1 treasure-artifact purchase: affordable gold and an artifact worth
 // more than its gold cost (Buka NetValueOfArtifact's valuation).
-VA(0x0042f954, 0x69)
+VA(0x0044e319, 0x42)
 i32 philAI::ChooseToBuyArtifact(hero*, i32 artifact, i32 goldCost) {
     if (gpCurPlayer->m_resources[RESOURCE_GOLD] >= goldCost
         && gArtifactBaseRV[artifact] > goldCost * gafAITurnCostResource[RESOURCE_GOLD])
@@ -3233,7 +3233,7 @@ i32 philAI::CanBuyBHC(BHC& purchase) {
 // donor PoL RVA 0x00043007; preferred Buka symbol ?CombatMonsterEvent@philAI@@QAEHPAVhero@@HPAHPAVmapCell@@@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.554517;margin=0.429398;shape=0.381;size=0.912;calls=1.000;alternate=pol20:int philAI::CombatMonsterEvent(class hero *, int, int *, class mapCell *)@0x00043007
-VA(0x00430052, 0x177)
+VA(0x0044e8bc, 0x170)
 i8 philAI::CombatMonsterEvent(hero* h, i8 monType, i32* pCount, mapCell*) {
     float casualtyRatio;
     float fLoss;
@@ -3352,7 +3352,7 @@ void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
 // donor PoL RVA 0x00043842; preferred Buka symbol ?DamageGroup@philAI@@QAEHPAVarmyGroup@@PAVhero@@1M@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.548912;margin=0.547381;shape=0.486;size=0.739;calls=1.000;alternate=pol20:int philAI::DamageGroup(class armyGroup *, class hero *, class hero *, float)@0x00043842
-VA(0x00430433, 0x73)
+VA(0x0044ec5b, 0x55)
 i32 philAI::DamageGroup(armyGroup* ag, hero* loser, hero*, float dmg) {
     if (dmg < 0.99) {
         ag->DamageGroup(dmg);
@@ -3386,7 +3386,7 @@ float philAI::StatChangeValue(i32 oldValue, i32 newValue) {
 
 // Buka 2.1 IncrementHourGlass: the AI-turn hourglass advances faster with
 // fewer (prospective) heroes and stops at its last phase.
-VA(0x0043050c, 0xcb)
+VA(0x0044ecff, 0xcc)
 void philAI::IncrementHourGlass(void) {
     i32 heroCount = gpCurPlayer->m_heroCount;
     if (heroCount < 4 && gpCurPlayer->m_resources[RESOURCE_GOLD] >= 2500 && bHeroBuiltThisTurn == 0)

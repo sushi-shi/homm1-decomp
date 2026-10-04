@@ -345,3 +345,16 @@ absolute relocations also withhold the function. Diagnostic reports are rejected
 by the verified score loader; the README baseline is separately generated and
 checks its input fingerprint. Deferred: completing the Buka identity migration
 and the existing full verification gates. No donor command parity is claimed.
+
+
+## Buka assembly claim transport
+
+Reviewed HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/fixed_asm.py` against the existing Giten/Gruntz-derived graph.
+Retained: fixed unit/source ownership checks, period MASM, comparison COFF,
+link OMF, and the ordinary source-claim fragment path. Adapted: assembly retail
+addresses and sizes move from Python literals to `config/retail/asm_claims.tsv`;
+configuration and assembly label edges explicitly depend on the table. The
+reader rejects contradictory source ownership, duplicate names and invalid
+extents. No new assembly implementation or independent adapter was added.
+Remaining inherited rows are explicitly marked for migration.

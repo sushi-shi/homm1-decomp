@@ -18,7 +18,7 @@
 // donor PoL RVA 0x00032c00; preferred Buka symbol ??0town@@QAE@XZ
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.468183;margin=0.431232;shape=0.273;size=0.841;calls=1.000;alternate=pol20:void town::constructor(void)@0x00032c00
-VA(0x0043c320, 0x6b)
+VA(0x0045e9c0, 0x60)
 town::town(void) {
     m_type = 0;
     m_threat = 0;
@@ -36,7 +36,7 @@ town::town(void) {
 // donor Buka TU SOURCE/TOWN; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410733;margin=0.365325;shape=0.175;size=0.741;calls=1.000;alternate=pol20:int town::HasGarrison(void)@0x00032c65
 // HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
-VA(0x0043c38b, 0x55)
+VA(0x0045ea20, 0x43)
 i8 town::HasGarrison(void) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
         if (m_army.m_creatureTypes[slot] != CREATURE_NONE)
@@ -70,7 +70,7 @@ void town::GiveSpells(void) {
     }
 }
 
-VA(0x0043c4c1, 0x17c)
+VA(0x0045eb1c, 0x168)
 void town::XformToCastle(void) {
     i16 i;
 
@@ -104,7 +104,7 @@ void town::View(void) {
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 
-VA(0x0043c6e2, 0x152)
+VA(0x0045ed10, 0x13d)
 void town::Deallocate(void) {
     playerData* ownerData;
     i16 i;

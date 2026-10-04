@@ -34,7 +34,7 @@ H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
 H1_ENUM_CONST_END(WindowFizzleConstant)
 
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
-VA(0x00476580, 0x1b0)
+VA(0x00469fb0, 0x19c)
 void CycleColors(void) {
     i8 savedColor[PALETTE_GRAPHICS_CHANNELS];
 
@@ -170,7 +170,7 @@ i16 heroWindowManager::Main(tag_message& message) {
 // donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
-VA(0x004768d0, 0x3c)
+VA(0x0046a4b4, 0x3d)
 i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
     message.type = type;
@@ -261,9 +261,9 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
     }
 }
 
-VA(0x00476a70, 0x1e9)
+VA(0x0046a740, 0x1a8)
 i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&), i32 fade) {
-    DATA(0x004a3b34)
+    DATA(0x004ce174)
     static i32 gDialogNestCount = 0;
     tag_message message;
     i16 done;
@@ -369,7 +369,7 @@ void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPal
     PollSound();
 }
 
-VA(0x00476e10, 0x4e)
+VA(0x0046ab76, 0x65)
 void heroWindowManager::ScreenShot(void) {
     char filename[SCREENSHOT_FILENAME_CAPACITY];
     sprintf(filename, "shot%04d.raw", m_screenshotIndex);
@@ -458,7 +458,7 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
 }
 
 // Donor WINMGR ownership; seven trailing padding bytes are excluded.
-VA(0x00477210, 0x19)
+VA(0x0046b487, 0x4d)
 void heroWindowManager::ReleaseFizzleSource(void) {
     if (m_fizzleSource != NULL)
         delete m_fizzleSource;
@@ -469,5 +469,5 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 // zero-filled storage (0x004cac20..).
 DATA(0x004cf538)
 i8 gWindowFadeSavedUpdate;
-DATA(0x004cf540)
+DATA(0x004ce114)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];

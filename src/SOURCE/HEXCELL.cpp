@@ -8,7 +8,7 @@
 #include <SOURCE/hexcell.h>
 #include <SOURCE/KB.h>
 
-VA(0x0044f190, 0x4a)
+VA(0x0043b700, 0x3f)
 hexcell::hexcell(void) {
     m_groundIcon = COMBAT_ICON_GROUND;
     m_groundFrame = 0;
@@ -20,7 +20,7 @@ hexcell::hexcell(void) {
 }
 
 // Moves the live occupant from another cell into this one.
-VA(0x0044f1da, 0x4d)
+VA(0x0043b73f, 0x42)
 hexcell* hexcell::TakeOccupant(hexcell* from) {
     m_occupantSide = from->m_occupantSide;
     m_occupantIndex = from->m_occupantIndex;

@@ -58,7 +58,7 @@ H1_ENUM_CONST_END(CombatStatusLineConstant)
 
 // Sets the combat window's text line and redraws it outside the extent
 // bookkeeping.
-VA(0x00438869, 0xb5)
+VA(0x00423707, 0xad)
 // clang-format on
 void combatManager::CombatMessage(char* text, i32 updateScreen) {
     i32 oldCompute;
@@ -162,7 +162,7 @@ void combatManager::ResetLimitCreature(void) {
     }
 }
 
-VA(0x00438ce5, 0x24)
+VA(0x00423acc, 0x19)
 void combatManager::SetGridMode(i8 mode) {
     m_gridMode = mode;
 }

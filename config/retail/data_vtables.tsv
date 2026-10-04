@@ -1,31 +1,31 @@
-# Vtable migration in progress: advManager/baseManager reviewed for Buka; other rows remain inherited NWC evidence.
+# Reviewed Buka rows identify their evidence; other rows remain inherited NWC claims.
 rva	size	name	kind	note
-0x0008a38c	0xc	??_7advManager@@6B@	primary	Buka constructor/destructor vptr stores and complete three-slot COFF layout; buka-advmgr.json
-0x0008a758	0xc	??_7baseManager@@6B@	primary	Buka constructor/destructor vptr stores and complete three-slot COFF layout; buka-advmgr.json
+0x0008a38c	0xc	??_7advManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a414	0xc	??_7combatManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a4a0	0xc	??_7highScoreManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a6a8	0xc	??_7recruitUnit@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a6b4	0xc	??_7fileRequester@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a700	0xc	??_7swapManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a74c	0xc	??_7townManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a758	0xc	??_7baseManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a784	0xc	??_7resourceManager@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a7b8	0xc	??_7textWidget@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a7c4	0x4	??_7font@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a7c8	0x4	??_7bitmap@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a7cc	0x4	??_7palette@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a7e4	0xc	??_7widget@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
+0x0008a814	0x4	??_7resource@@6B@	primary	Buka complete constructor body, COFF vtable slot topology and admitted retail function starts; buka-bulk-correspondence.json
 0x0008d3c8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
-0x0008d468	0xc	??_7townManager@@6B@	primary	Open/Close/Main
-0x0008d4a8	0xc	??_7swapManager@@6B@	primary	Open/Close/Main
-0x0008d538	0xc	??_7highScoreManager@@6B@	primary	Open/Close/Main
-0x0008d548	0xc	??_7recruitUnit@@6B@	primary	Open/Close/Main
-0x0008d570	0xc	??_7fileRequester@@6B@	primary	Open/Close/Main
-0x0008d590	0xc	??_7combatManager@@6B@	primary	Open/Close/Main
 0x0008d5a0	0xc	??_7mouseManager@@6B@	primary	Open/Close/Main
 0x0008d5b0	0xc	??_7soundManager@@6B@	primary	Open/Close/Main
 0x0008d5c0	0xc	??_7heroWindowManager@@6B@	primary	Open/Close/Main
 0x0008d5d0	0xc	??_7inputManager@@6B@	primary	Open/Close/Main
-0x0008d5e0	0xc	??_7resourceManager@@6B@	primary	Open/Close/Main
 0x0008d5ec	0x4	??_7icon@@6B@	primary	virtual destructor; 0x48c600 starts bitmap
-0x0008d5f0	0x4	??_7font@@6B@	primary	virtual destructor
-0x0008d5f4	0x4	??_7bitmap@@6B@	primary	virtual destructor; retail relocates 0x48c600 only (0x48c604 is zero)
-0x0008d5f8	0x4	??_7palette@@6B@	primary	virtual destructor
 0x0008d600	0xc	??_7iconWidget@@6B@	primary	Draw/~iconWidget/Main
-0x0008d610	0xc	??_7textWidget@@6B@	primary	Draw/~textWidget/Main
 0x0008d620	0xc	??_7border@@6B@	primary	Draw/~border/Main
 0x0008d640	0xc	??_7backdropWidget@@6B@	primary	Draw/~backdropWidget/Main
 0x0008d650	0xc	??_7textEntryWidget@@6B@	primary	Draw/~textEntryWidget/Main
 0x0008d660	0xc	??_7dimmerWidget@@6B@	primary	Draw/~dimmerWidget/Main
 0x0008d670	0xc	??_7button@@6B@	primary	Draw/~button/Main
-0x0008d680	0xc	??_7widget@@6B@	primary	three pure slots, each relocated to _purecall (0x483510)
 0x0008d68c	0x4	??_7tileset@@6B@	primary	virtual destructor
 0x0008d690	0x4	??_7sample@@6B@	primary	virtual destructor
-0x0008d694	0x4	??_7resource@@6B@	primary	pure virtual destructor slot (_purecall); 0x48c690 is EH data (-1)

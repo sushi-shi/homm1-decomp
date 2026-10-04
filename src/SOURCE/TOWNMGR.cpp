@@ -93,7 +93,7 @@ townObject::townObject(char* name) {
 // donor PoL RVA 0x00013a6a; preferred Buka symbol ??1townObject@@QAE@XZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.564007;margin=0.293257;shape=0.438;size=0.896;calls=1.000;alternate=pol20:void townObject::~destructor(void)@0x00013a6a
-VA(0x00440031, 0x60)
+VA(0x0045f053, 0x56)
 townObject::~townObject() {
     if (m_border != NULL)
         delete m_border;
@@ -102,7 +102,7 @@ townObject::~townObject() {
 
 // Buka TOWNMGR.cpp:537-625; HoMM1 draws the base frame, then the castle's
 // mage-guild levels and the animation frame.
-VA(0x00440091, 0x117)
+VA(0x0045f0a9, 0x103)
 void townObject::Draw(i8 advanceAnimation) {
     i16 level;
 
@@ -138,7 +138,7 @@ void townObject::Draw(i8 advanceAnimation) {
 
 // Buka TOWNMGR.cpp:627-633; HoMM1 also clears the object count and adds
 // its dispatch mask.
-VA(0x004401a8, 0x74)
+VA(0x0045f1ac, 0x69)
 townManager::townManager(void) {
     m_town = NULL;
     m_townObjectCount = 0;
@@ -283,7 +283,7 @@ i16 townManager::Open(i16 id) {
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
 // Retail vtable slot 1: HoMM1's Close performs Buka's UnloadTown work.
-VA(0x00440a08, 0x1c4)
+VA(0x0045f93d, 0x1db)
 void townManager::Close(void) {
     i16 index;
 
@@ -501,7 +501,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
 // donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
-VA(0x004413ea, 0x74)
+VA(0x00460770, 0x6b)
 void townManager::ShowText(char*) {
     tag_message message;
 
@@ -1014,7 +1014,7 @@ void townManager::DoCommand(i8 command) {
 }
 
 // Buka TOWNMGR.cpp:1905-1921; HoMM1 redraws strips before the status text.
-VA(0x00442ddc, 0xa5)
+VA(0x00461fb6, 0x9d)
 void townManager::RedrawTownScreen(void) {
     tag_message message;
 
@@ -1087,7 +1087,7 @@ void townManager::SplitArmy(void) {
 
 // HoMM1 re-evaluates the pending strip command when the shift qualifier
 // changes, then refreshes the status line.
-VA(0x004431ff, 0xce)
+VA(0x00462387, 0xb6)
 void townManager::ShiftQualChange(void) {
     tag_message message;
 
@@ -1104,7 +1104,7 @@ void townManager::ShiftQualChange(void) {
 // donor PoL RVA 0x00017ab2; preferred Buka symbol ?ResetStrips@townManager@@QAEXXZ
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2
-VA(0x004432cd, 0xab)
+VA(0x0046243d, 0x8b)
 void townManager::ResetStrips(void) {
     if (m_swapStrip)
         m_swapStrip->m_selectedSlot = STRIP_SLOT_NONE;
@@ -1119,7 +1119,7 @@ void townManager::ResetStrips(void) {
 // Buka TOWNMGR.cpp:1993-2003.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00443378, 0x95)
+VA(0x004624c8, 0x85)
 void townManager::Toggle(i8 building) {
     i16 index;
 

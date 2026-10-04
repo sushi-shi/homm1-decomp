@@ -225,7 +225,7 @@ i16 inputManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-VA(0x00478b90, 0x3b)
+VA(0x0046ee42, 0x64)
 void inputManager::Close(void) {
     if (m_active != 1)
         return;
@@ -243,12 +243,12 @@ i16 inputManager::Main(tag_message&) {
 
 // Buka 2.1 and PoL 2.0 both reset the two queue indices in this method.
 // HoMM1's body confirms the same short fields at +0x230 and +0x232.
-VA(0x00478be0, 0x11)
+VA(0x0046eeb6, 0x23)
 void inputManager::Flush(void) {
     ResetEventQueue(this);
 }
 
-VA(0x00478c00, 0xd1)
+VA(0x0046eed9, 0xfe)
 tag_message inputManager::GetEvent(void) {
     tag_message event;
     PollSound();

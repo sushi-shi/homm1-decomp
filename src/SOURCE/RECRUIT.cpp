@@ -175,7 +175,7 @@ i16 recruitUnit::Open(i16 priority) {
 
 // Buka RECRUIT.cpp:180-204; HoMM1 refreshes town strips whenever a town
 // recruit succeeded.
-VA(0x00466d96, 0xd1)
+VA(0x00451154, 0xb7)
 void recruitUnit::Close(void) {
     gpWindowManager->RemoveWindow(m_window);
     delete m_window;
@@ -206,7 +206,7 @@ void recruitUnit::Close(void) {
 
 // Buka RECRUIT.cpp:206-232. Retail reserves an unreferenced 20-byte text
 // buffer above the message; the strings are formatted into gText.
-VA(0x00466e67, 0x127)
+VA(0x0045120b, 0x11a)
 void recruitUnit::Update(void) {
     char text[20];
     tag_message message;
@@ -350,7 +350,7 @@ i16 recruitUnit::Main(struct tag_message& message) {
 
 // Buka RECRUIT.cpp:380-398; HoMM1 stores the creature byte and has no
 // refresh-town argument.
-VA(0x00467373, 0xd6)
+VA(0x00451697, 0xbc)
 recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
     i32 unitCosts[RESOURCE_COUNT];
     i32 i;
@@ -374,7 +374,7 @@ recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
     }
 }
 
-VA(0x00467449, 0xf4)
+VA(0x00451753, 0xd9)
 recruitUnit::recruitUnit(town* townData, i8 dwelling) {
     i32 unitCosts[RESOURCE_COUNT];
     i32 i;

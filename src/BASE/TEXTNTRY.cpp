@@ -305,7 +305,7 @@ void textEntryWidget::Draw(void) {
     }
 }
 
-VA(0x0047e8f0, 0x182)
+VA(0x00476838, 0x23d)
 void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
     i32 changed;
     char display[TEXT_ENTRY_DISPLAY_CAPACITY];

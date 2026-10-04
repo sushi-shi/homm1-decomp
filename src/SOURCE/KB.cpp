@@ -90,7 +90,7 @@ void ForcePollSound() {
 // donor PoL RVA 0x000965be; preferred Buka symbol ?InitMainClasses@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
-VA(0x00420c62, 0x607)
+VA(0x0043c808, 0x518)
 void InitMainClasses(void) {
     gpExec = new executive;
     gpInputManager = new inputManager;
@@ -109,7 +109,7 @@ void InitMainClasses(void) {
 }
 
 // Buka frees the resource manager before the window, mouse and input managers.
-VA(0x00421269, 0x36d)
+VA(0x0043cd20, 0x2ab)
 void DeleteMainClasses(void) {
     if (gpBufferPalette)
         delete gpBufferPalette;
@@ -670,7 +670,7 @@ i32 InterpretCommandLine(void) {
 
 // Buka 2.1 InitMenuHandler reduced to HoMM1's right-click help and button
 // release; the main menu draws its own hover frames.
-VA(0x004227d5, 0x1b6)
+VA(0x0043e05e, 0x154)
 i16 InitMenuHandler(tag_message& message) {
     i32 handled = 0;
     i32 helpIndex;
@@ -718,7 +718,7 @@ i16 InitMenuHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-VA(0x0042298b, 0x14)
+VA(0x0043e1b2, 0x9)
 i16 NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
 }
@@ -812,7 +812,7 @@ char* GetMonsterName(i32 monster) {
 // donor PoL RVA 0x0009992c; preferred Buka symbol ?GetMonsterCost@@YIXHQAH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
-VA(0x00422c6a, 0xe6)
+VA(0x0043e3de, 0xbe)
 void GetMonsterCost(i32 monster, i32* const cost) {
     i32 index;
     for (index = 0; index < RESOURCE_COUNT; index++)
@@ -1302,7 +1302,7 @@ void NormalDialog(
 // evidence: graph:2;base=0.563703;margin=0.348381;shape=0.417;size=0.972;calls=1.000;alternate=pol20:void UpdateNormalDialog(char *)@0x000a2565
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x00423ebf, 0x6b)
+VA(0x0043f440, 0x62)
 void UpdateNormalDialog(char* text) {
     tag_message message;
     {
@@ -1319,7 +1319,7 @@ void UpdateNormalDialog(char* text) {
 // donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
-VA(0x00423f2a, 0x1c5)
+VA(0x0043f4a2, 0x14d)
 i16 WaitHandler(tag_message& message) {
     i8 result = 0;
     gbFunctionComplete = 1;
@@ -1377,7 +1377,7 @@ i16 WaitHandler(tag_message& message) {
 }
 
 // Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
-VA(0x004240ef, 0x114)
+VA(0x0043f5ef, 0xb3)
 i16 EventWindowHandler(tag_message& message) {
     if (!MusicPlaying())
         PlayMusic(gpAdvManager->m_currentTerrain);
@@ -1406,7 +1406,7 @@ i16 EventWindowHandler(tag_message& message) {
 }
 
 // Buka 2.1 TrueFalseDialogHandler.
-VA(0x00424203, 0x1c)
+VA(0x0043f6a2, 0x11)
 i16 TrueFalseDialogHandler(tag_message& message) {
     return EventWindowHandler(message);
 }
@@ -1414,7 +1414,7 @@ i16 TrueFalseDialogHandler(tag_message& message) {
 // donor PoL RVA 0x0009a52f; preferred Buka symbol ?PlayerDead@@YIXH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
-VA(0x0042421f, 0x16c)
+VA(0x0043f6b3, 0x145)
 void PlayerDead(i32 player) {
     playerData* currentPlayer;
     i32 i;
@@ -1503,7 +1503,7 @@ i8 gMageGuildSpellPool[4][8] = {
     {0, 18, 14, 16, 22, 25, 23, 2},
     {27, 4, 15, 17, 28, 24, 28, 27},
 };
-DATA(0x00490fd8)
+DATA(0x0049042c)
 i8 gCombatAdjacency[45][6] = {
     {-1, -1, -1, -1, -1, -1}, {-1, 2, 10, -1, -1, -1},  {-1, 3, 11, 10, 1, -1},
     {-1, 4, 12, 11, 2, -1},   {-1, 5, 13, 12, 3, -1},   {-1, 6, 14, 13, 4, -1},
@@ -1538,7 +1538,7 @@ char* gTownObjectNames[20] = {
     "magegld", "thievesg", "tavern", "dock", "well", "farm", "frst", "plns", "mtn", "tent",
     "cast",    "_d0",      "_d1",    "_d2",  "_d3",  "_d4",  "_d5",  "_e0",  "_e1", "_e2",
 };
-DATA(0x004911b8)
+DATA(0x00490608)
 i8 gDwellingType[4][6] = {
     {0, 1, 2, 3, 4, 5},
     {12, 13, 14, 15, 16, 17},
@@ -2125,7 +2125,7 @@ void game::ShowLuckInfo(hero* h, i32 dialogType) {
     NormalDialog(gText, dialogType);
 }
 
-VA(0x00425781, 0x70)
+VA(0x00440c72, 0x5d)
 void ClearMapExtra(void) {
     i32 i;
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
@@ -2246,7 +2246,7 @@ void GOut(char* text) {
 }
 
 // HoMM1 maps every remote position other than the host to the one opponent slot.
-VA(0x00425ce3, 0x39)
+VA(0x004410d6, 0x1b)
 i8 NetPosToGamePos(i32 netPos) {
     if (netPos == NET_POSITION_HOST)
         return 0;
@@ -2485,7 +2485,7 @@ void PopNetBox(char* notice) {
 }
 
 // Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
-VA(0x004264ed, 0x3b)
+VA(0x004417fc, 0x28)
 void AddNetBoxLine(char* text) {
     strcpy(cNetBoxLine[0], cNetBoxLine[1]);
     strcpy(cNetBoxLine[1], text);
@@ -2691,7 +2691,7 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
     delete DataEntryWin;
 }
 
-VA(0x00426d00, 0x1d9)
+VA(0x00441f97, 0x1af)
 i16 DataEntryWindowHandler(tag_message& message) {
     i16 widgetId = DATA_ENTRY_TEXT;
 
@@ -2776,7 +2776,7 @@ i8 CheckMem(void) {
 
 // Buka 2.1 GetTownName; HoMM1 towns carry a name index, and campaign maps
 // override one town by position.
-VA(0x00427056, 0xdc)
+VA(0x004421b7, 0x9d)
 char* GetTownName(i32 i) {
     town* townPointer = gpGame->GetTown(i);
     if (gpGame->m_campaignType > 0
@@ -2811,11 +2811,11 @@ void UnloadSystemwideIcons(void) {
 }
 
 // Retail empty lifecycle hook; Buka and PoL KB correspondence.
-VA(0x0042723b, 0x10)
+VA(0x00442331, 0x5)
 void EarlyShutDownSystem(void) {}
 
 // Buka 2.1 GameUnsaved.
-VA(0x0042724b, 0x7e)
+VA(0x00442336, 0x55)
 i32 GameUnsaved(void) {
     if ((gpAdvManager && gpAdvManager->m_active == 1)
         || (gpCombatManager && gpCombatManager->m_active == 1)
@@ -2828,7 +2828,7 @@ i32 GameUnsaved(void) {
 // donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.410709;margin=0.595745;shape=0.257;size=0.699;calls=0.542;alternate=pol20:int HandleAppSpecificMenuCommands(int)@0x0009ec05
-VA(0x004272c9, 0x629)
+VA(0x0044238b, 0x523)
 i32 HandleAppSpecificMenuCommands(i32 command) {
     i32 menuChanged;
 
@@ -3010,7 +3010,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
 
 // Checks the music, sound and walk-speed radio groups, then the CD,
 // route and enemy-move toggles.
-VA(0x004278f2, 0x3b7)
+VA(0x004428ae, 0x31e)
 void UpdateSystemOptionsMenu(void) {
     i32 checkedCommand;
     i32 menuCommand;
@@ -3137,7 +3137,7 @@ void UpdateSystemOptionsMenu(void) {
     );
 }
 
-VA(0x00427ca9, 0x99)
+VA(0x00442bcc, 0x7d)
 void CleanUpMenus(void) {
     if (hmnuApp) {
         SetMenu(static_cast<HWND>(hwndApp), NULL);
@@ -3555,7 +3555,7 @@ i8 gHeroSkillBonus[4][9][4] = {
 };
 DATA(0x00492b10)
 i8 gTownHeroClass[8] = {0, 2, 1, 3, 0, 2, 1, 3};
-DATA(0x00492b18)
+DATA(0x00492090)
 u8 gMonoColorMap[256] = {
     10,  11,  12,  12,  13,  14,  14,  15,  16,  16,  17,  18,  18,  19,  20,  20,  21,  22,  22,
     23,  24,  24,  25,  26,  26,  27,  28,  28,  29,  30,  30,  31,  32,  33,  34,  34,  35,  36,
@@ -3584,23 +3584,23 @@ DATA(0x004a98d8)
 i32 gNoBorder = 0;
 DATA(0x00492c2c)
 i32 gEnlargeScreenBlit = 1;
-DATA(0x00492c30)
+DATA(0x004a98dc)
 void* hmnuDflt = NULL;
-DATA(0x00492c34)
+DATA(0x004a98e0)
 void* hmnuCmbt = NULL;
 DATA(0x004a98e4)
 void* hmnuAdv = NULL;
-DATA(0x00492c3c)
+DATA(0x004a98e8)
 void* hmnuTown = NULL;
 DATA(0x00492c40)
 i32 gColorMice = 0;
 DATA(0x00492c44)
 i32 gSpecialMouseMasks = 0;
-DATA(0x00492c48)
+DATA(0x004a98f4)
 i32 gCurExe = 0;
 DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
-DATA(0x00492c50)
+DATA(0x004a98f8)
 i32 gInDialog = 0;
 DATA(0x00492c58)
 SMenuEnableStatus gMenuEnableStatus[70] = {
@@ -3619,7 +3619,7 @@ SMenuEnableStatus gMenuEnableStatus[70] = {
     {40128, 0, 1, 0}, {40129, 0, 1, 0}, {40131, 0, 1, 0}, {40132, 0, 1, 0}, {40134, 0, 1, 0},
     {40135, 0, 1, 0}, {40137, 0, 1, 0}, {40138, 0, 1, 0}, {40139, 0, 0, 0}, {40140, 0, 0, 0},
 };
-DATA(0x00492e44)
+DATA(0x004a98fc)
 i32 gInSetupDialog = 0;
 DATA(0x00492e48)
 i32 gMinimized = 0;
@@ -3653,7 +3653,7 @@ char* gArtifactNames[38] = {
     localization::Tr("table.gArtifactNames.34"), localization::Tr("table.gArtifactNames.35"),
     localization::Tr("table.gArtifactNames.36"), localization::Tr("table.gArtifactNames.37"),
 };
-DATA(0x00492ef8)
+DATA(0x00492424)
 char* gArtifactDesc[38] = {
     localization::Tr("table.gArtifactDesc.0"),  localization::Tr("table.gArtifactDesc.1"),
     localization::Tr("table.gArtifactDesc.2"),  localization::Tr("table.gArtifactDesc.3"),
@@ -3755,7 +3755,7 @@ char* gArtifactEvent[38] = {
     "with a wondrous instrument to measure the distance of a star.",
     "The Magic Book  ??????",
 };
-DATA(0x00493028)
+DATA(0x00492554)
 char* gStatNames[5] = {
     localization::Tr("table.gStatNames.0"),
     localization::Tr("table.gStatNames.1"),
@@ -3763,7 +3763,7 @@ char* gStatNames[5] = {
     localization::Tr("table.gStatNames.3"),
     localization::Tr("table.gStatNames.4")
 };
-DATA(0x00493040)
+DATA(0x00492568)
 char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.0"),
     localization::Tr("table.gStatDesc.1"),
@@ -3821,7 +3821,7 @@ char* gArmyNamesPlural[28] = {
     localization::Tr("table.gArmyNamesPlural.24"), localization::Tr("table.gArmyNamesPlural.25"),
     localization::Tr("table.gArmyNamesPlural.26"), localization::Tr("table.gArmyNamesPlural.27"),
 };
-DATA(0x00493148)
+DATA(0x004926dc)
 char* gSpellNames[29] = {
     localization::Tr("table.gSpellNames.0"),  localization::Tr("table.gSpellNames.1"),
     localization::Tr("table.gSpellNames.2"),  localization::Tr("table.gSpellNames.3"),
@@ -3969,7 +3969,7 @@ char* gTownNames[36] = {
     "Necropolis",  "Burlock",    "Xabran",      "Dragadune",  "Alamar",      "Kalindra",
     "Blackfang",   "Basenji",    "Algary",      "Sorpigal",   "Dusk",        "Erliquin",
 };
-DATA(0x00493410)
+DATA(0x004929ac)
 char* gEventText[77] = {
     localization::Tr("table.gEventText.0"),  localization::Tr("table.gEventText.1"),
     localization::Tr("table.gEventText.2"),  localization::Tr("table.gEventText.3"),
@@ -4019,7 +4019,7 @@ char* gAPanelHelp[5] = {
     localization::Tr("table.gAPanelHelp.3"),
     localization::Tr("table.gAPanelHelp.4"),
 };
-DATA(0x00493560)
+DATA(0x00492af4)
 char* gInitMenuHelp[5] = {
     localization::Tr("table.gInitMenuHelp.0"),
     localization::Tr("table.gInitMenuHelp.1"),
@@ -4215,7 +4215,7 @@ DATA(0x00493870)
 char* gExtendedMemoryUnits = localization::Tr("table.gExtendedMemoryUnits.0");
 DATA(0x00493874)
 char* gConventionalMemoryUnits = localization::Tr("table.gConventionalMemoryUnits.0");
-DATA(0x00493878)
+DATA(0x00492de4)
 char* gPlayerTypeNames[5] = {
     localization::Tr("table.gPlayerTypeNames.0"),
     localization::Tr("table.gPlayerTypeNames.1"),
@@ -4223,7 +4223,7 @@ char* gPlayerTypeNames[5] = {
     localization::Tr("table.gPlayerTypeNames.3"),
     localization::Tr("table.gPlayerTypeNames.4")
 };
-DATA(0x00493890)
+DATA(0x00492df8)
 char* gSpellHelp[8] = {
     localization::Tr("table.gSpellHelp.0"),
     localization::Tr("table.gSpellHelp.1"),
@@ -4451,14 +4451,14 @@ char* gSetupHotSeatGameHelp[4] = {
     "Play with 4 human players.",
     "Cancel back to the main menu.",
 };
-DATA(0x00493c08)
+DATA(0x00493138)
 char* gSetupModemGameHelp[4] = {
     localization::Tr("table.gSetupModemGameHelp.0"),
     localization::Tr("table.gSetupModemGameHelp.1"),
     localization::Tr("table.gSetupModemGameHelp.2"),
     localization::Tr("table.gSetupModemGameHelp.3"),
 };
-DATA(0x00493c18)
+DATA(0x00493148)
 char* gSetupDCGameHelp[4] = {
     localization::Tr("table.gSetupDCGameHelp.0"),
     localization::Tr("table.gSetupDCGameHelp.1"),
@@ -4473,7 +4473,7 @@ char* gSetupMultiPlayerGameHelp[5] = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.3"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.4"),
 };
-DATA(0x00493c40)
+DATA(0x0049316c)
 char* gSetupNetworkGameHelp[3] = {
     localization::Tr("table.gSetupNetworkGameHelp.0"),
     localization::Tr("table.gSetupNetworkGameHelp.1"),
@@ -4539,7 +4539,7 @@ char* gMapDifficultyNames[5] = {
     localization::Tr("table.gMapDifficultyNames.3"),
     localization::Tr("table.gMapDifficultyNames.4")
 };
-DATA(0x00493d30)
+DATA(0x00493244)
 char* gCampaignScenarioNames[9] = {
     localization::Tr("table.gCampaignScenarioNames.0"),
     localization::Tr("table.gCampaignScenarioNames.1"),
@@ -4563,7 +4563,7 @@ char* gCampaignWinTexts[9] = {
     localization::Tr("table.gCampaignWinTexts.7"),
     localization::Tr("table.gCampaignWinTexts.8"),
 };
-DATA(0x00493d80)
+DATA(0x0049328c)
 char* gCampaignScenarioText[9] = {
     localization::Tr("table.gCampaignScenarioText.0"),
     localization::Tr("table.gCampaignScenarioText.1"),
@@ -4587,7 +4587,7 @@ char* gCampaignSideNames[4] = {
 DATA(0x00493dc8)
 char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
     {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
-DATA(0x00493de0)
+DATA(0x004932e4)
 char* gHumanPlayerTypeNames[5] = {
     localization::Tr("table.gHumanPlayerTypeNames.0"),
     localization::Tr("table.gHumanPlayerTypeNames.1"),
@@ -4696,7 +4696,7 @@ DATA(0x00493f48)
 i32 gFullCombatScreenDrawn = 1;
 DATA(0x00493f4c)
 i32 gLimitedCombatUpdatePalette = 0;
-DATA(0x00493f50)
+DATA(0x004a9928)
 i8 gFirstTimeThrough = 0;
 DATA(0x00493f54)
 i8 gSkipIntro = 0;
@@ -4704,7 +4704,7 @@ DATA(0x004a992c)
 i32 gAllBlack = 0;
 DATA(0x004a9930)
 i8 gInCombat = 0;
-DATA(0x00493f60)
+DATA(0x004a9931)
 i8 gDirectConnect = 0;
 DATA(0x00493434)
 i32 gForceSwitchMusic = FORCED_MUSIC_IDLE;
@@ -4759,9 +4759,9 @@ DATA(0x004a9408)
 i32 giSeedingValid;
 DATA(0x004a82f0)
 i8 giLimitPlayer;
-DATA(0x004a7b90)
+DATA(0x004a747c)
 inputManager* gpInputManager;
-DATA(0x004a7d54)
+DATA(0x004a762c)
 i32 iMaxMapExtra;
 DATA(0x004a7834)
 palette* gPalette;
@@ -4773,19 +4773,19 @@ DATA(0x004a7bec)
 i32 bSpecialHideCursor;
 DATA(0x004a74ac)
 class searchArray* gpSearchArray;
-DATA(0x004a82bc)
+DATA(0x004a7b7c)
 i32 gbBlackoutPlayer;
-DATA(0x004a7f78)
+DATA(0x004a7838)
 char cNetBoxLine[2][60];
-DATA(0x004a82dc)
+DATA(0x004a7b98)
 heroWindow* DataEntryWin;
 DATA(0x004a7bf0)
 i8 giWeekTypeExtra;
 DATA(0x004a74e4)
 philAI* gpPhilAI;
-DATA(0x004a82f4)
+DATA(0x004a7bac)
 char* cDEDest;
-DATA(0x004a7c10)
+DATA(0x004a74ec)
 heroWindow* gNormalDialogWindow;
 DATA(0x004a7b70)
 i32 giHostGamePos;
@@ -4803,11 +4803,11 @@ DATA(0x004a9560)
 i32 giMinExtentX;
 DATA(0x004a9564)
 i32 giMinExtentY;
-DATA(0x004a82e0)
+DATA(0x004a7b9c)
 i8 iMPBaseType;
 DATA(0x004a86fc)
 class hero* gHVHero;
-DATA(0x004a7b90)
+DATA(0x004a747c)
 i32 giHeroScreenSrcIndex;
 DATA(0x004a7bb0)
 i8 giWeekType;
@@ -4815,13 +4815,13 @@ DATA(0x004a7168)
 char gText[768];
 DATA(0x004a7bfc)
 i32 gbInNewGameSetup;
-DATA(0x004a7f70)
+DATA(0x004a7830)
 palette* gpBufferPalette;
 DATA(0x004a7ba8)
 i8 giMonthTypeExtra;
-DATA(0x004a7bc0)
+DATA(0x004a74a0)
 i8 iMPExtendedType;
-DATA(0x004a7bd0)
+DATA(0x004a74b0)
 char gFullMapName[20];
 DATA(0x004a7d48)
 i32 giShowIntro;
@@ -4829,7 +4829,7 @@ DATA(0x004a98a0)
 i32 glTimers[GLOBAL_TIMER_COUNT];
 DATA(0x004a8704)
 i32 giScore;
-DATA(0x004a9b4c)
+DATA(0x004a9404)
 armyGroup* gpMonGroup;
 DATA(0x004a9428)
 configStruct gConfig;
@@ -4839,9 +4839,9 @@ DATA(0x004a9410)
 i8 gCampaignChoice;
 DATA(0x004a7ba0)
 class game* gpGame;
-DATA(0x004a7f58)
+DATA(0x004a7823)
 i8 gbRetreatWin;
-DATA(0x004a82d0)
+DATA(0x004a7b8d)
 H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 DATA(0x004a74e8)
 i16 gCurLoadedSpellFileId;
@@ -4855,27 +4855,27 @@ DATA(0x004a74ea)
 i8 gbNoSound;
 DATA(0x004a956c)
 char gcBottomViewText[92];
-DATA(0x004a7bf4)
+DATA(0x004a74d4)
 i32 giThisNetPos;
 DATA(0x004a9e98)
 char gcRegCDRomPath[352];
-DATA(0x004a7d50)
+DATA(0x004a7628)
 class heroWindow* heroWin;
 DATA(0x004a9400)
 class icon* gCurLoadedSpellIcon;
-DATA(0x004a8300)
+DATA(0x004a7bb8)
 void* ppMapExtra[255];
-DATA(0x004a9ff8)
+DATA(0x004a989c)
 i32 giCurGeneral;
 DATA(0x004a7474)
 i32 giThisGamePos;
-DATA(0x004a7bbc)
+DATA(0x004a749c)
 i32 giNumHumanPlayers;
 DATA(0x004a955c)
 i8 gbIconClipOn;
 DATA(0x004a73c8)
 i32 pwSizeOfMapExtra[255];
-DATA(0x004a9d20)
+DATA(0x004a95cc)
 i32 iDEMaxLen;
 DATA(0x004a7828)
 class combatManager* gpCombatManager;
@@ -4893,17 +4893,17 @@ DATA(0x004a9e90)
 i8 giMonthType;
 DATA(0x004a7348)
 char gMapDescription[124];
-DATA(0x004a7bb8)
+DATA(0x004a7498)
 char* DEFAULT_AGGREGATE_NAME;
 DATA(0x004a7b94)
 i8 gbThisNetHumanPlayer[4];
 DATA(0x004a7ff0)
 char cAggPathName[352];
-DATA(0x004a7d60)
+DATA(0x004a7634)
 class highScoreManager* gpHighScoreManager;
-DATA(0x004a77c4)
+DATA(0x004a70c4)
 i8 gbFunctionComplete;
-DATA(0x004a82ec)
+DATA(0x004a7ba8)
 i8 gbIAmGreatest;
 DATA(0x004a7824)
 i16 gMapX;
@@ -4911,7 +4911,7 @@ DATA(0x004a7826)
 i16 gMapY;
 DATA(0x004a7c18)
 char gcWinText[300];
-DATA(0x004a7bac)
+DATA(0x004a7493)
 i8 bDataEntryTime;
 DATA(0x004a98bc)
 i32 bShowIt;
@@ -4923,11 +4923,11 @@ DATA(0x004a74a4)
 i32 giCurWatchPlayer;
 DATA(0x004a9558)
 i32 giBottomViewResourceQty;
-DATA(0x004a7be8)
+DATA(0x004a74c8)
 i8 gbWaitForRemoteReceive;
-DATA(0x004a9d28)
+DATA(0x004a95d0)
 char gLastMapName[352];
-DATA(0x004a9b54)
+DATA(0x004a940c)
 townManager* gpTownManager;
 DATA(0x004a782c)
 i8 giScreenScroll;

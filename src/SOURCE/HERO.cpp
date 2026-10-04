@@ -131,7 +131,7 @@ H1_ENUM_END(HeroLevelText)
 // donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0
-VA(0x00447250, 0x68)
+VA(0x00438f20, 0x5d)
 // clang-format on
 hero::hero(void) {
     m_id = 0;
@@ -151,7 +151,7 @@ hero::hero(void) {
 VA(0x004472b8, 0x18)
 void hero::GetArmyStrengths(u32* const) {}
 
-VA(0x004472d0, 0x5d)
+VA(0x00438f8a, 0x4b)
 i8 hero::HasArtifact(i8 artifact) {
     i16 i;
 
@@ -207,7 +207,7 @@ i16 hero::CalcMobility(void) {
     return result;
 }
 
-VA(0x0044751a, 0x56)
+VA(0x00439192, 0x41)
 i8 hero::HasSpell(i8 spell) {
     i32 i;
 
@@ -243,7 +243,7 @@ i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
     return 0;
 }
 
-VA(0x00447660, 0x217)
+VA(0x0043929b, 0x204)
 void hero::UseSpell(i8 spell) {
     i16 i;
     i32 j;
@@ -286,7 +286,7 @@ void hero::UseSpell(i8 spell) {
     }
 }
 
-VA(0x00447877, 0x1e3)
+VA(0x0043949f, 0x1a7)
 i32 hero::AddSpell(i8 spell, i8 charges, i32 checkOnly) {
     i32 added = 0;
     i16 i;
@@ -328,7 +328,7 @@ done:
 // donor PoL RVA 0x0006f305; preferred Buka symbol ?RedrawHeroScreen@@YIXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.519414;margin=0.462427;shape=0.417;size=0.819;calls=1.000;alternate=pol20:void RedrawHeroScreen(void)@0x0006f305
-VA(0x00447a5a, 0x53)
+VA(0x00439646, 0x48)
 void hero::RedrawHeroScreen(void) {
     gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
     heroWin->DrawWindow();
@@ -479,7 +479,7 @@ i8 hero::HeroView(i8 viewOnly) {
 // donor PoL RVA 0x0006cab1; preferred Buka symbol ?HeroMessageUpdate@@YIXPAD@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.570065;margin=0.065812;shape=0.448;size=0.919;calls=1.000;alternate=pol20:void HeroMessageUpdate(char *)@0x0006cab1
-VA(0x0044816f, 0x7c)
+VA(0x00439cd8, 0x6c)
 void HeroMessageUpdate(char* text) {
     tag_message message;
 
@@ -518,7 +518,7 @@ void hero::HeroScreenUpdate(void) {
 // donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.520009;margin=0.290164;shape=0.295;size=0.980;calls=0.909;alternate=pol20:void hero::UpdateArmies(void)@0x0006cbdb
-VA(0x00448296, 0x1ba)
+VA(0x00439ddd, 0x1b6)
 void hero::UpdateArmies(void) {
     tag_message message;
     i16 i;
@@ -562,7 +562,7 @@ void hero::UpdateArmies(void) {
     }
 }
 
-VA(0x00448450, 0x1af)
+VA(0x00439f93, 0x181)
 void hero::ViewStat(i8 stat, i8 quickView) {
     heroWindow* win;
     tag_message message;
@@ -597,7 +597,7 @@ void hero::ViewStat(i8 stat, i8 quickView) {
     delete win;
 }
 
-VA(0x004485ff, 0x4a)
+VA(0x0043a114, 0x3e)
 void hero::ViewArtifact(i8 artifact, i8 quickView) {
     NormalDialog(
         gArtifactDesc[artifact],
@@ -615,7 +615,7 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
 // donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
-VA(0x00448649, 0x59)
+VA(0x0043a152, 0x47)
 i8 hero::Dismiss(void) {
     NormalDialog(
         "Are you sure you want to dismiss this Hero?",
@@ -755,7 +755,7 @@ i32 hero::GetLevel(i32 experienceValue) {
     return nLevel - 1;
 }
 
-VA(0x00448cb6, 0x14f)
+VA(0x0043a725, 0x179)
 void hero::ApplyBattleWinTemps(void) {
     if (m_eventFlags & HERO_EVENT_GRAVEYARD) {
         m_morale++;
@@ -866,7 +866,7 @@ void hero::CheckLevel(void) {
 }
 
 // Buka 2.1 hero::NumArtifacts.
-VA(0x00449117, 0x57)
+VA(0x0043ab68, 0x4b)
 i32 hero::NumArtifacts(void) {
     i32 count = 0;
     i32 i;
@@ -1209,5 +1209,5 @@ i16 HeroHandler(struct tag_message& message) {
 }
 
 // HERO owns retail .data 0x004a12bc-0x004a0b2b.
-DATA(0x004a12bc)
+DATA(0x004a6c3c)
 class heroWindow* gheroWin = NULL;

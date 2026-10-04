@@ -86,7 +86,7 @@ strip::strip(
 // donor PoL RVA 0x000324ae; preferred Buka symbol ??1strip@@QAE@XZ
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.560366;margin=0.278966;shape=0.418;size=0.916;calls=1.000;alternate=pol20:void strip::~destructor(void)@0x000324ae
-VA(0x004381ae, 0x112)
+VA(0x0045c940, 0x107)
 strip::~strip() {
     i16 i;
 
@@ -115,7 +115,7 @@ void strip::Draw(void) {
 // donor PoL RVA 0x00032632; preferred Buka symbol ?DrawIcons@strip@@QAEXH@Z
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.411442;margin=0.465209;shape=0.280;size=0.697;calls=0.714;alternate=pol20:void strip::DrawIcons(int)@0x00032632
-VA(0x00438302, 0x26e)
+VA(0x0045ca7e, 0x233)
 void strip::DrawIcons(i8 drawWindow) {
     i16 i;
     i8 creatureType;
@@ -213,13 +213,13 @@ bankBox::bankBox(i16 x, i16 y, class playerData* player) {
 // donor PoL RVA 0x00032aea; preferred Buka symbol ??1bankBox@@QAE@XZ
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.486146;margin=0.167932;shape=0.360;size=0.776;calls=1.000;alternate=pol20:void bankBox::~destructor(void)@0x00032aea
-VA(0x004386a5, 0x43)
+VA(0x0045cdb1, 0x34)
 bankBox::~bankBox() {
     gpWindowManager->RemoveWindow(m_window);
     delete m_window;
 }
 
-VA(0x004386e8, 0xc5)
+VA(0x0045cde5, 0xba)
 void bankBox::Update(void) {
     char text[12];
     tag_message message;

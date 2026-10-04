@@ -49,7 +49,7 @@ void add_node(tag_Anchor* anchor, tag_Node* node) {
     }
 }
 
-VA(0x004372db, 0x49)
+VA(0x0041c984, 0x36)
 tag_Node* pop_node(tag_Anchor* anchor) {
     tag_Node* node = anchor->head;
 
@@ -225,7 +225,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     return slot;
 }
 
-VA(0x00437a34, 0x111)
+VA(0x0041d048, 0xde)
 void com_term(i16 port) {
     tag_Node* node;
 
@@ -306,7 +306,7 @@ i16 __cdecl com_sess(i32, i32, ...) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00437d78, 0x66)
+VA(0x0041d306, 0x51)
 u8 com_stat(i16 port, u16) {
     DWORD modemStatus;
 
@@ -350,5 +350,5 @@ void comm_wrt_task(void) {
 }
 
 // comwin owns retail .bss 0x004ca918-0x004cabb7.
-DATA(0x004c29b0)
+DATA(0x004a67e8)
 ComPortState gComPorts[COM_PORT_COUNT];

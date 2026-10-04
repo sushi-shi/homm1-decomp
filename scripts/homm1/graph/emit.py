@@ -134,7 +134,7 @@ VERIFY_BASELINES = [
 ]
 FINGERPRINTS = "build/gen/func_fingerprints.tsv"
 VERIFY_STAMP = "build/objdiff/.verify.stamp"
-CONFIGURE_MODS = _mods("graph/", "manifest.py", "core/paths.py")
+CONFIGURE_MODS = _mods("graph/", "manifest.py", "core/paths.py") + ["config/retail/asm_claims.tsv"]
 
 
 # --------------------------------------------------------------------------- #
@@ -462,7 +462,10 @@ def emit(out: Path | None = None) -> tuple[int, int]:
             w.build(frag, "labels", inputs=u["source"],
                     implicit=[*headers_by_unit[u["unit"]],
                               f"{graph.BASE_DIR}/{u['unit']}.obj", MANIFEST,
-                              COMPDB, *LABELS_MODS],
+                              COMPDB, *LABELS_MODS,
+                              *(["config/retail/asm_claims.tsv",
+                                 f"{SCRIPTS}/graph/fixed_asm.py"]
+                                if fixed_asm_unit(u["unit"]) else [])],
                     variables={"unit": u["unit"]})
         w.newline()
 

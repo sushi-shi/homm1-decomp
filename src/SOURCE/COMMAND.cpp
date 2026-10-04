@@ -174,7 +174,7 @@ processAction:
 
 // Buka COMMAND.cpp ValidHexToStandOn; HoMM1 rows are nine hexes wide and
 // the edge columns are never standable.
-VA(0x0044a081, 0xd6)
+VA(0x0041d6dc, 0xa7)
 i8 combatManager::ValidHexToStandOn(i32 hex) {
     if (hex == COMBAT_REAR_HEX_UNUSED)
         return 1;
@@ -971,7 +971,7 @@ i16 WinCombatHandler(struct tag_message& message) {
 }
 
 // Buka COMMAND.cpp ClearWinLoseBottom (fifteen icon/text widget pairs).
-VA(0x0044c19a, 0x110)
+VA(0x0041f389, 0x108)
 void combatManager::ClearWinLoseBottom(class heroWindow* window) {
     i32 i;
 
@@ -1514,7 +1514,7 @@ void combatManager::CheckGetAIMove(void) {
 
 // Buka COMMAND.cpp GetControl; HoMM1 always resets the pointer and has no
 // small view.
-VA(0x0044df47, 0x16a)
+VA(0x00420ed8, 0x12b)
 void combatManager::GetControl(void) {
     m_selectedHex = ARMY_HEX_INVALID;
     m_previousCommand = COMBAT_INVALID_COMMAND;
@@ -1675,13 +1675,13 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
 }
 
 // COMMAND owns retail .bss 0x004a4b98-0x004a4bc7.
-DATA(0x004c2c7c)
+DATA(0x004a6a8c)
 i8 gbThisNetHasControl;
 DATA(0x004c2c98)
 i32 iCurTransferArtifact;
 DATA(0x004c2ca4)
 i8 iMaxTransferArtifacts;
-DATA(0x004c2c78)
+DATA(0x004a6a88)
 i32 giNextActionExtra;
 DATA(0x004a6aa8)
 i32 giNextActionGridIndex;

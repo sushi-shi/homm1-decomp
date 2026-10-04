@@ -170,7 +170,7 @@ i16 heroWindow::Open(i16 zOrder, i8 flags) {
 // donor PoL RVA 0x000cf310; preferred Buka symbol ?Close@heroWindow@@QAEXXZ
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.586039;margin=0.311864;shape=0.455;size=0.909;calls=1.000;alternate=pol20:void heroWindow::Close(void)@0x000cf310
-VA(0x004777d0, 0xb0)
+VA(0x0046d775, 0xa2)
 void heroWindow::Close(void) {
     widget *current, *next;
     if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0 && (m_winState & WINDOW_STATE_OPEN) != 0)
@@ -256,7 +256,7 @@ void heroWindow::RemoveWidget(widget* w) {
 // donor PoL RVA 0x000cf620; preferred Buka symbol ?BroadcastMessage@heroWindow@@QAEHAAUtag_message@@@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.435923;margin=0.333583;shape=0.340;size=0.588;calls=1.000;alternate=pol20:int heroWindow::BroadcastMessage(struct tag_message &)@0x000cf620
-VA(0x00477af0, 0x98)
+VA(0x0046da11, 0x61)
 i16 heroWindow::BroadcastMessage(tag_message& message) {
     i16 dispatchResult = MESSAGE_DISPATCH_CONTINUE;
     widget* currentWidget = m_widgetListHead;
@@ -273,7 +273,7 @@ i16 heroWindow::BroadcastMessage(tag_message& message) {
     return dispatchResult;
 }
 
-VA(0x00477b90, 0x20)
+VA(0x0046da72, 0x15)
 void heroWindow::DrawWindow(void) {
     DrawWindow(1);
 }

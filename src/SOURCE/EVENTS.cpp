@@ -1304,7 +1304,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
 // donor PoL RVA 0x000aea02; preferred Buka symbol ?HeroSwap@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.621863;margin=0.183841;shape=0.591;size=0.854;calls=1.000;alternate=pol20:void advManager::HeroSwap(class hero *, class hero *)@0x000aea02
-VA(0x00403113, 0xcd)
+VA(0x004269b5, 0xa3)
 void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
     swapManager* swapMgr;
 
@@ -1364,7 +1364,7 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
 
 // Adventure-event music cue; HoMM1 keys the ambient track off the map
 // object type and records that an event track is playing.
-VA(0x0040339f, 0x243)
+VA(0x00426be9, 0x1dd)
 void advManager::EventSound(i16 eventType, i16 eventData) {
     i32 musicTrack = MUSIC_TRACK_NONE;
 
@@ -1548,7 +1548,7 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     return newLevel - prevLevel;
 }
 
-VA(0x00403875, 0x5a)
+VA(0x00427003, 0x6a)
 void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
     if (resource >= 0 && resource <= RESOURCE_LAST)
         gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
@@ -1576,7 +1576,7 @@ void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class map
 // donor PoL RVA 0x000b07e5; preferred Buka symbol ?GhostEvent@advManager@@QAEHPAVhero@@PAVmapCell@@PADHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.581832;margin=0.097486;shape=0.425;size=0.973;calls=1.000;alternate=pol20:int advManager::GhostEvent(class hero *, class mapCell *, char *, int, int)@0x000b07e5
-VA(0x004039bb, 0x2e0)
+VA(0x0042712c, 0x2ac)
 i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId, i32 x, i32 y) {
     i32 artifact;
 
@@ -3296,5 +3296,5 @@ void advManager::ReceiveHeroTownData(
 // assertion line is its /Gi compiler line static (1110, docs/patterns/vc4-gi-line-var.md).
 DATA(0x00490040)
 i32 gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
-DATA(0x004a72d0)
+DATA(0x004a6acc)
 i8 gEventMusicPlaying;

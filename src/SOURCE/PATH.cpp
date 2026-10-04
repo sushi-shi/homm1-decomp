@@ -270,7 +270,7 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 }
 
 // Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
-VA(0x0046fb86, 0xf8)
+VA(0x00446bb6, 0xbe)
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 #line 328 "F:\\h1w95src\\source\\PATH.CPP"
 {
@@ -391,7 +391,7 @@ i16 army::ValidRange(i16 targetHex) {
 // donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order
 // evidence: retail body uses signed WORD loads and returns through AX;
 // alternate=pol20:int OppositeDirection(int)@0x000be9e7
-VA(0x00470140, 0x58)
+VA(0x004470ce, 0x35)
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     if (static_cast<i32>(direction) < COMBAT_DIRECTION_ADJACENT_COUNT)

@@ -171,12 +171,12 @@ fileRequester::fileRequester(
     m_result = FILE_REQUESTER_MAP_INFO_NONE;
 }
 
-VA(0x00468641, 0x1f)
+VA(0x00454354, 0x14)
 fileRequester::~fileRequester() {}
 
 // Buka 2.1 Close with CleanUpData folded in; HoMM1 also remembers the
 // chosen map's title.
-VA(0x00468660, 0x12c)
+VA(0x00454368, 0xf1)
 void fileRequester::Close(void) {
     if (!m_active)
         return;
@@ -282,7 +282,7 @@ i16 fileRequester::Open(i16 priority) {
 }
 
 // Buka 2.1 SetOK with HoMM1's fixed dimming flags.
-VA(0x00468bbd, 0x8a)
+VA(0x00454826, 0x67)
 void fileRequester::SetOK(i8 enabled) {
     tag_message message;
 
@@ -541,7 +541,7 @@ i16 fileRequester::Main(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-VA(0x004696cd, 0x9d)
+VA(0x00455329, 0x7e)
 void fileRequester::UpdateMapInfo(void) {
     if (m_selectedIndex != m_result && gShowMapInfo) {
         if (m_selectedIndex >= 0)
@@ -553,7 +553,7 @@ void fileRequester::UpdateMapInfo(void) {
 }
 
 // GetMapName/GetFilename's no-selection result; data coverage is deferred.
-DATA(0x004a2824)
+DATA(0x0049f4e0)
 char* gFRDummy = "";
 
 // Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
@@ -702,7 +702,7 @@ void fileRequester::Update(i8 drawWindow) {
     gpResourceManager->Dispose(bigFont);
 }
 
-VA(0x00469edb, 0x7d)
+VA(0x00455aa0, 0x59)
 char* fileRequester::GetMapName(void) {
     if (m_selectedIndex >= 0 && m_selectedIndex < m_fileCount && m_mapNames)
         return m_mapNames[m_selectedIndex].text;
@@ -711,7 +711,7 @@ char* fileRequester::GetMapName(void) {
 }
 
 // Buka 2.1 GetFilename for HoMM1's two modes.
-VA(0x00469f58, 0x13f)
+VA(0x00455af9, 0x115)
 char* fileRequester::GetFilename(void) {
     if (m_mode != FILE_REQUESTER_SAVE && (m_selectedIndex < 0 || m_selectedIndex >= m_fileCount))
         return gFRDummy;

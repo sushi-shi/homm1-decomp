@@ -69,7 +69,7 @@ void BlitBitmapToScreen(
         LogStr("UpdateWindow Failed");
 }
 
-VA(0x00475de0, 0x30)
+VA(0x0046f9f5, 0x37)
 void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     BlitBitmap(
         gpWindowManager->m_screen,
@@ -83,7 +83,7 @@ void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     );
 }
 
-VA(0x00475e10, 0x45)
+VA(0x0046fa55, 0x50)
 void SetPalette(i8* paletteData, i32 updateDisplay) {
     memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
     memcpy(
@@ -205,7 +205,7 @@ void PostprocessPalette(i8* data) {
     free(remapped);
 }
 
-VA(0x004760b0, 0x1)
+VA(0x0046fe58, 0x5)
 void PostprocessBitmap(i8*, i32, i32) {}
 
 VA(0x004760c0, 0x1)

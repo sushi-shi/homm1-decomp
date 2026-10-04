@@ -52,7 +52,7 @@ char gCallManagerError1[] = "Can't add manager!";
 DATA(0x004a3da8)
 char gCallManagerError2[] = "Can't add manager!";
 
-VA(0x00477fe0, 0x10)
+VA(0x004729f0, 0x35)
 executive::executive(void) {
     m_managerListHead = NULL;
     m_managerListTail = NULL;
@@ -61,7 +61,7 @@ executive::executive(void) {
 }
 
 // Retail opens sound unconditionally and returns AX.
-VA(0x00477ff0, 0xa9)
+VA(0x00472a25, 0xbd)
 i16 executive::InitSystem(void) {
     if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
@@ -77,7 +77,7 @@ i16 executive::InitSystem(void) {
 }
 
 // Retail preserves next before removing a manager, then closes resources/input.
-VA(0x004780a0, 0x84)
+VA(0x00472ae2, 0xb6)
 void executive::ShutDownSystem(void) {
     EarlyShutDownSystem();
     ShutdownAudio();

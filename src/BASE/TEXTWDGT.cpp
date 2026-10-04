@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-VA(0x0047ce50, 0x3e)
-VA_COMPGEN(0x0047ce90, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x0047ce50)
+VA(0x00471770, 0x58)
+VA_COMPGEN(0x0047ce90, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x00471770)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
@@ -64,7 +64,7 @@ void textWidget::Read(void) {
     m_kind = WIDGET_KIND_TEXT;
 }
 
-VA(0x0047d040, 0x2d)
+VA(0x00471997, 0x6a)
 textWidget::~textWidget(void) {
     gpResourceManager->Dispose(m_font);
     free(m_text);
@@ -135,7 +135,7 @@ void textWidget::Draw(void) {
     );
 }
 
-VA(0x0047d2a0, 0x96)
+VA(0x00471cb7, 0xa1)
 void textWidget::SetText(char* text) {
     if (m_kind == WIDGET_KIND_TEXT || m_kind == WIDGET_KIND_TEXT_ENTRY) {
         u16 newLength = strlen(text);

@@ -36,13 +36,13 @@ highScoreManager::highScoreManager(void) {
 }
 
 // HoMM1 keeps an empty destructor; it only restores this class's vtable.
-VA(0x00465f60, 0x1f)
+VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
 // donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
 // donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
-VA(0x00465f7f, 0x169)
+VA(0x0043bdf3, 0x144)
 i16 highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
@@ -64,7 +64,7 @@ i16 highScoreManager::Open(i16 id) {
 }
 
 // Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
-VA(0x004660e8, 0x5d)
+VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpWindowManager->RemoveWindow(m_window);

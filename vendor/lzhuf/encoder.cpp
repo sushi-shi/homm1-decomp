@@ -27,21 +27,21 @@ inline void ReconstructEncoderTree(void);
 
 extern "C" {
 DATA(0x004d46f8) i16 match_position;
-DATA(0x004d3f98) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
-DATA(0x004d1a98) i16 son[TREE_SIZE];
-DATA(0x004d46fc) u16 getbuf;
-DATA(0x004d690c) u8 getlen;
+DATA(0x004d45ac) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
+DATA(0x004d20ac) i16 son[TREE_SIZE];
+DATA(0x004d4d0e) u16 getbuf;
+DATA(0x004d6f1a) u8 getlen;
 DATA(0x004d6910) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
-DATA(0x004cf5a0) u16 freq[TREE_SIZE + 1];
+DATA(0x004cfbb8) u16 freq[TREE_SIZE + 1];
 DATA(0x004d4704) i16 match_length;
-DATA(0x004d1f88) i16 lson[WINDOW_SIZE + 1];
-DATA(0x004d4708) i16 rson[WINDOW_SIZE + 257];
-DATA(0x004cfa88) i16 dad[WINDOW_SIZE + 1];
+DATA(0x004d259c) i16 lson[WINDOW_SIZE + 1];
+DATA(0x004d4d18) i16 rson[WINDOW_SIZE + 257];
+DATA(0x004d00a0) i16 dad[WINDOW_SIZE + 1];
 DATA(0x004d4700) u32 textsize;
 DATA(0x004d3f90) u32 codesize;
 DATA(0x004a5488) u16 putbuf = 0;
 DATA(0x004a548c) u8 putlen = 0;
-DATA(0x004d1f84) char *codePtr;
+DATA(0x004d2598) char *codePtr;
 DATA(0x004d46f4) char *decodeOutput;
 DATA(0x004d1a90) u32 decodeSize;
 // Classic Okumura StartHuff state, materialized because retail copies it.
@@ -592,7 +592,7 @@ static void InsertNode(i16 node)
     dad[candidate] = NIL;
 }
 
-VA(0x0047cd20, 0x127)
+VA(0x00473fa0, 0x1d2)
 static void DeleteNode(i16 node)
 {
     i16 replacement;

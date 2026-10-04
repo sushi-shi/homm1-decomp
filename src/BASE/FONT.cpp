@@ -27,7 +27,7 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
 }
 
 VA_COMPGEN(0x0047a9b0, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047a900)
-VA(0x0047a9f0, 0x39)
+VA(0x00471e97, 0x5b)
 font::~font(void) {
     gpResourceManager->Dispose(m_glyphIcon);
 }

@@ -313,7 +313,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
 
 // About-dialog callback; 1.2 does not export this function.
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
-extern "C" VA(0x004332dc, 0x90)
+extern "C" VA(0x004436ff, 0x67)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     i32 wmId;
     WORD codeNotify;
@@ -342,9 +342,9 @@ void AppExit(void) {
 // donor PoL RVA 0x0001c7b8; preferred Buka symbol ?Process1WindowsMessage@@YIXXZ
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
-VA(0x00433386, 0xca)
+VA(0x00443775, 0x7f)
 void Process1WindowsMessage(void) {
-    DATA(0x0049f884)
+    DATA(0x004a9e54)
     static i32 gLastGetMessage = 0;
     MSG message;
     i32 currentTick;
@@ -461,7 +461,7 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
 }
 
 // PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
-VA(0x004336fc, 0xd0)
+VA(0x00443a76, 0xae)
 void UpdateDfltMenu(void* menu) {
     i32 result;
     i32 value;
@@ -483,7 +483,7 @@ void UpdateDfltMenu(void* menu) {
 // donor PoL RVA 0x0001cc35; preferred Buka symbol ?KBChangeMenu@@YIXPAX@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.545069;margin=0.304682;shape=0.429;size=0.841;calls=1.000;alternate=pol20:void KBChangeMenu(void *)@0x0001cc35
-VA(0x004337cc, 0xaa)
+VA(0x00443b24, 0x91)
 void KBChangeMenu(void* menu) {
     if (menu == NULL)
         menu = hmnuCurrent;
@@ -539,9 +539,9 @@ void SetMenuStatus(i32 showMenu) {
 // donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
-VA(0x004339ab, 0x79)
+VA(0x00443ccd, 0x52)
 void SetNoDialogMenus(i32 menusEnabled) {
-    DATA(0x0049f8a8)
+    DATA(0x004a9e58)
     static i32 gNoDialogMenusOn = 0;
     if (gNoDialogMenusOn && !menusEnabled)
         return;
@@ -594,7 +594,7 @@ void SetMenus(void* menu, i32 enabled) {
 
 // PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
 // speed unconditionally in Buka; the old processor/slow-video choice is gone.
-VA(0x00433b7e, 0x1a3)
+VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
     i32 i;
 
@@ -1312,7 +1312,7 @@ void SetWinText(heroWindow* window, i16 id) {
 // donor PoL RVA 0x0001d011; preferred Buka symbol ?KBTickCount@@YIJXZ
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
-VA(0x00434e1a, 0x16)
+VA(0x00444b4e, 0xb)
 i32 KBTickCount(void) {
     return GetTickCount();
 }
@@ -1320,7 +1320,7 @@ i32 KBTickCount(void) {
 // donor PoL RVA 0x000c47f0; preferred Buka symbol ?ProcessAssert@@YIXHPADH@Z
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
-VA(0x00434e30, 0x63)
+VA(0x00444b59, 0x55)
 void ProcessAssert(i32 condition, char* file, i32 line) {
     i32 unusedAssertWord;
     if (condition == 0) {
@@ -1346,7 +1346,7 @@ char* FindToken(char* text, char token) {
 }
 
 // PoL 2.0 Misc.cpp FindLastToken correspondence.
-VA(0x00434ef8, 0x63)
+VA(0x00444bfe, 0x50)
 char* FindLastToken(char* text, char token) {
     i32 pos;
     i32 len;
@@ -1364,11 +1364,11 @@ DATA(0x0049f7a8)
 char gAppName[] = "Heroes";
 DATA(0x0049f7b0)
 char gTitle[] = "Heroes of Might and Magic";
-DATA(0x0049f7cc)
+DATA(0x004a9e34)
 HWND hwndApp = NULL;
 DATA(0x004a9e38)
 i32 gForegroundApp = 0;
-DATA(0x0049f7d4)
+DATA(0x004a9e3c)
 void* hmnuApp = NULL;
 DATA(0x0049f7d8)
 void* gEventHandle = NULL;
@@ -1378,9 +1378,9 @@ DATA(0x004c2088)
 void* hInstApp;
 DATA(0x004c2068)
 struct tagRECT rcTemp;
-DATA(0x004c207c)
+DATA(0x004a99dc)
 i32 gMainWinScreenHeight;
-DATA(0x004c2490)
+DATA(0x004a9dec)
 void* hmnuCurrent;
 DATA(0x004c2080)
 i32 gTempX;
@@ -1392,5 +1392,5 @@ DATA(0x004c2090)
 u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004c2498)
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
-DATA(0x004c2494)
+DATA(0x004a9df0)
 i32 iMainWinScreenWidth;

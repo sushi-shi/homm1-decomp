@@ -34,7 +34,7 @@
 
 // Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
 // checks before queueing the cast.
-VA(0x0040db10, 0x147)
+VA(0x00459e90, 0x11f)
 i8 combatManager::ViewSpells(i32) {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != SPELL_NONE) {
@@ -61,7 +61,7 @@ i8 combatManager::ViewSpells(i32) {
 }
 
 // Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
-VA(0x0040dc57, 0x160)
+VA(0x00459faf, 0x101)
 i16 CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -232,7 +232,7 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
 }
 
 // Buka SPELLS.cpp SpellMessage without the resurrection target.
-VA(0x0040e33c, 0x128)
+VA(0x0045a572, 0xf6)
 void combatManager::SpellMessage(i8 spell, i8 hex) {
     switch (spell) {
         case SPELL_FIREBALL:
@@ -566,7 +566,7 @@ done:
 }
 
 // Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
-VA(0x0040f1cd, 0xcb)
+VA(0x0045b2c6, 0xaf)
 void combatManager::DefaultSpell(i8 targetHex) {
     army* target;
 
@@ -955,5 +955,5 @@ void combatManager::Armageddon(void) {
 // SPELLS owns retail .data 0x00490690-0x0048f4d3. HandleCastSpell's
 // indexToCastOn (0x004906b4) is its local static: /Gi emits it at the head
 // of that function's literals.
-DATA(0x00490690)
+DATA(0x004cccb8)
 i8 gInTeleportGetDest = 0;

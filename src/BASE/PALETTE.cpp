@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 
-VA(0x0047b940, 0x2b)
+VA(0x004747d0, 0x3a)
 palette::palette(void) : resource(RESOURCE_CATEGORY_PALETTE, -1, RESOURCE_REFERENCE_INITIAL, NULL) {
     m_data = static_cast<i8*>(malloc(PALETTE_DATA_SIZE));
 }

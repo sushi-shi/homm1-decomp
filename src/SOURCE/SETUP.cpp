@@ -117,7 +117,7 @@ H1_ENUM_END(SetupGameHelp)
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
-VA(0x0040bde0, 0x164)
+VA(0x00456b10, 0x10d)
 i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
@@ -146,7 +146,7 @@ i8 game::SetupCampaignGame(void) {
 // donor PoL RVA 0x00010ebf; preferred Buka symbol ?SetupBaud@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
-VA(0x0040bf44, 0x190)
+VA(0x00456c1d, 0x139)
 i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
@@ -221,7 +221,7 @@ i8 game::SetupComPort(void) {
 // donor PoL RVA 0x00011200; preferred Buka symbol ?SetupHotSeatGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
-VA(0x0040c2f6, 0x15d)
+VA(0x00456f04, 0x107)
 i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
@@ -247,7 +247,7 @@ i8 game::SetupHotSeatGame(void) {
 // donor PoL RVA 0x00011438; preferred Buka symbol ?SetupNetworkGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
-VA(0x0040c453, 0x133)
+VA(0x0045700b, 0xe7)
 i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
@@ -270,7 +270,7 @@ i8 game::SetupNetworkGame(void) {
 // donor PoL RVA 0x00011795; preferred Buka symbol ?SetupModemGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
-VA(0x0040c586, 0x333)
+VA(0x004570f2, 0x299)
 i8 game::SetupModemGame(void) {
     heroWindow* window;
 
@@ -316,7 +316,7 @@ i8 game::SetupModemGame(void) {
 // donor PoL RVA 0x00011aac; preferred Buka symbol ?SetupMultiPlayerGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
-VA(0x0040c8b9, 0x218)
+VA(0x0045738b, 0x1a2)
 i8 game::SetupMultiPlayerGame(void) {
     i32 loop;
 
@@ -366,7 +366,7 @@ i8 game::SetupMultiPlayerGame(void) {
 
 // Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
 // keep separate restart and load command ids.
-VA(0x0040cad1, 0x486)
+VA(0x0045752d, 0x372)
 i8 game::SetupGame(i8 newGame) {
     heroWindow* window;
     i32 result;
@@ -726,7 +726,7 @@ i16 SetupHotSeatGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d5e4, 0x139)
+VA(0x00457e0d, 0xf8)
 i16 SetupModemGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -819,7 +819,7 @@ i16 SetupMultiPlayerGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d82f, 0xe1)
+VA(0x00457fdc, 0xad)
 i16 SetupNetworkGameHandler(tag_message& message) {
     i32 helpIndex;
 
@@ -892,7 +892,7 @@ i16 SetupGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040da12, 0xf1)
+VA(0x00458151, 0xb4)
 i16 BaseSetupHandler(tag_message& message) {
     i32 handled = 0;
 
@@ -916,5 +916,5 @@ i16 BaseSetupHandler(tag_message& message) {
 
 // Retail's SETUP object ends at 0x00458513; RemoteCleanup starts the REMOTE
 // object at 0x00458520.
-DATA(0x00490538)
+DATA(0x004cc8cc)
 i32 gDoModemConfig = 0;

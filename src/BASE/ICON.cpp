@@ -104,7 +104,7 @@ void icon::DrawToBuffer(
     }
 }
 
-VA(0x0047a590, 0x51)
+VA(0x004712a1, 0x54)
 void icon::ClipFillToBuffer(
     i16 x,
     i16 y,

@@ -30,7 +30,7 @@ button::~button(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
-VA(0x0047ebd0, 0xda)
+VA(0x00476e34, 0xfb)
 void button::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);

@@ -1,0 +1,25 @@
+# Assembly source claims; only Buka-proven rows are migrated.
+unit	source	rva	size	name	kind	provenance
+BASE/BMAP2	src/BASE/BMAP2.asm	0x00072800	0x74	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	func	buka-bulk-correspondence.json
+BASE/BMAP2	src/BASE/BMAP2.asm	0x00072874	0xe6	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	func	buka-bulk-correspondence.json
+BASE/BMAP2	src/BASE/BMAP2.asm	0x0007295a	0x4b	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000729a6	0x43	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
+BASE/BITS	src/BASE/BITS.asm	0x00072790	0x2e	_BitTest	func	buka-bulk-correspondence.json
+BASE/BITS	src/BASE/BITS.asm	0x0007ba42	0x20	_BitSet	func	Inherited NWC claim; Buka migration pending
+BASE/BITS	src/BASE/BITS.asm	0x0007ba62	0x22	_BitClear	func	Inherited NWC claim; Buka migration pending
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000703b8	0xd5	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2b	src/BASE/Icon2b.asm	0x0007048e	0xcb	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2b	src/BASE/Icon2b.asm	0x0007055a	0xd5	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2b	src/BASE/Icon2b.asm	0x00070630	0xd3	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2b	src/BASE/Icon2b.asm	0x00070704	0xd9	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000707de	0xd6	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000708b4	0x25f	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x00070b14	0x258	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
+BASE/TILE	src/BASE/TILE.asm	0x00070d6c	0x134	_TileToBitmap	func	buka-bulk-correspondence.json
+BASE/MAKEFILEID	src/BASE/MAKEFILEID.asm	0x0007b450	0x2a	?MAKEFILEID@@YAIPAD@Z	func	Inherited NWC claim; Buka migration pending
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007771c	0x4d	_LzhufMemmove	func	buka-bulk-correspondence.json
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077769	0x85	_GetBit	func	buka-bulk-correspondence.json
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007f98a	0xc9	_DecodePosition	func	Inherited NWC claim; Buka migration pending
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000778b8	0x119	_UpdateDecoderTree	func	buka-bulk-correspondence.json
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fb6c	0x153	_ReconstructDecoderTree	func	Inherited NWC claim; Buka migration pending
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007fcbf	0x129	_Decode	func	Inherited NWC claim; Buka migration pending
