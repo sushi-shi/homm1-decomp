@@ -36,6 +36,12 @@ def find_repo() -> Path:
 
 
 REPO = find_repo()
+sys.path.insert(0, str(REPO / "scripts"))
+from homm1.core.usage import logged
+
+COMPILER = os.environ.get("HOMM1_COMPILER", "vc41")
+if COMPILER not in ("vc41", "vc6"):
+    raise SystemExit("HOMM1_COMPILER must be vc41 or vc6")
 CONFIG = REPO / "config/toolchains.json"
 RELEASE_EPOCH = 1760000000
 MASM_DISK_MD5 = "bb1f36e70d67720fa63356010b07c992"
@@ -70,20 +76,10 @@ def media(variable: str, expected: str) -> Path:
 
 
 def extract_component(name: str, source: Path, destination: Path,
-                      config: dict) -> None:
-    extraction = destination.parent / f".{name}-media"
-    pinned = {**config["files"], **config.get("resource_files", {})}
-    paths = [entry["media_path"] for entry in pinned.values()]
-    run("7z", "x", "-y", f"-o{extraction}", str(source), *paths)
-    for relative, entry in pinned.items():
-        target = destination / relative
-        target.parent.mkdir(parents=True, exist_ok=True)
-        source_file = extraction / entry["media_path"]
-        if entry.get("expand") == "szdd":
-            expanded = extraction / ".expanded" / relative
-            run("7z", "x", "-y", f"-o{expanded}", str(source_file))
-            source_file, = [p for p in expanded.iterdir() if p.is_file()]
-        shutil.copyfile(source_file, target)
+                      config: dict, patch: Path | None = None) -> None:
+    from homm1.toolchain import extract_media_files
+    extract_media_files(config, source, destination,
+                        destination.parent / f".{name}-media", patch)
 
 
 def reconstruct_pcjs_disk(source: Path, output: Path) -> None:
@@ -182,7 +178,7 @@ def entries(config: dict) -> dict:
 
 def verify(root: Path, configs: dict) -> None:
     count = 0
-    for name in ("vc41", "wing10", "dx1"):
+    for name in (COMPILER, "wing10", "dx1"):
         for relative, expected in entries(configs[name]).items():
             path = root / name / relative
             if not path.is_file():
@@ -214,6 +210,7 @@ def package(root: Path, output: Path) -> None:
     log(f"archive SHA-256: {sha256(output)}")
 
 
+@logged
 def main() -> None:
     configs = json.loads(CONFIG.read_text())
     if len(sys.argv) > 1 and sys.argv[1] == "--check":
@@ -223,7 +220,8 @@ def main() -> None:
         return
 
     output = Path(os.environ.get(
-        "OUTPUT", REPO / "build/homm1-toolchain-win95-1.2-v1.tar.xz")).resolve()
+        "OUTPUT", REPO / ("build/homm1-toolchain-buka-2003-v1.tar.xz" if COMPILER == "vc6"
+                         else "build/homm1-toolchain-win95-1.2-v1.tar.xz"))).resolve()
     installed = None
     if len(sys.argv) > 1:
         if len(sys.argv) != 3 or sys.argv[1] != "--from-installed":
@@ -235,7 +233,7 @@ def main() -> None:
                                      dir=REPO / "build") as scratch_name:
         work = Path(scratch_name)
         root = work / "toolchains"
-        for name, variable in (("vc41", "MSVC41_MEDIA"),
+        for name, variable in ((COMPILER, "VC6_DISC1" if COMPILER == "vc6" else "MSVC41_MEDIA"),
                                ("wing10", "WING10_MEDIA"), ("dx1", "DX1_MEDIA")):
             if installed:
                 for relative in entries(configs[name]):
@@ -244,9 +242,11 @@ def main() -> None:
                     shutil.copyfile(installed / name / relative, target)
             else:
                 source = media(variable, configs[name]["media"]["sha256"])
-                extract_component(name, source, root / name, configs[name])
+                patch = (media("VC6_SP5", configs[name]["patch_media"]["sha256"])
+                         if "patch_media" in configs[name] else None)
+                extract_component(name, source, root / name, configs[name], patch)
         if not installed:
-            install_masm(Path(os.environ["MASM611_DISK1"]).resolve(), root / "vc41", work)
+            install_masm(Path(os.environ["MASM611_DISK1"]).resolve(), root / COMPILER, work)
         verify(root, configs)
         package(root, output)
 

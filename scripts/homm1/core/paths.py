@@ -55,10 +55,14 @@ def sdk_lib_dirs() -> list[Path]:
     return [d for d in (BUILD / "toolchains" / n / "lib" for n in sdk_names()) if d.is_dir()]
 
 
+def compiler_id() -> str:
+    """The compiler selected by the target's build contract."""
+    return tomllib.loads((CONFIG / "units.toml").read_text())["build"]["compiler"]
+
+
 def msvc_dir() -> Path:
-    """The installed VC4 tree, overridable for compiler probes."""
-    compiler = tomllib.loads((CONFIG / "units.toml").read_text())["build"]["compiler"]
-    return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains" / compiler)
+    """The selected MSVC tree, overridable for compiler controls."""
+    return Path(os.environ.get("MSVC_DIR") or BUILD / "toolchains" / compiler_id())
 
 
 def dxsdk_dir() -> Path:

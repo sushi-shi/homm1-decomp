@@ -1,13 +1,18 @@
-# Reproduce the HoMM1 VC4 + MASM 6.11 release bundle.
-# Usage: nix-shell scripts/toolchain/create-toolchain-release.nix
+# Reproduce the HoMM1 VC4.1 or Buka VC6 SP5 + MASM 6.11 bundle.
+# Usage: nix-shell scripts/toolchain/create-toolchain-release.nix --argstr compiler vc6
 
-{ pkgs ? import <nixpkgs> {} }:
+{ pkgs ? import <nixpkgs> {}, compiler ? "vc41" }:
 
 let
-  vc41 = pkgs.fetchurl {
-    url = "https://archive.org/download/MSDN_July_1996_Disc_2_Visual_C_4.1/MSDN_July_1996_Disc_2_Visual_C%2B%2B_4.1.iso";
-    hash = "sha256-urvNfc7+wJLGFoMwqbe3FXsFuuog/lxZOZLQ5Q3cHnI=";
+  pins = builtins.fromJSON (builtins.readFile ../../config/toolchains.json);
+  compilerMedia = pkgs.fetchurl {
+    url = pins.${compiler}.media.url;
+    sha256 = pins.${compiler}.media.sha256;
   };
+  compilerPatch = if compiler == "vc6" then pkgs.fetchurl {
+    url = pins.vc6.patch_media.url;
+    sha256 = pins.vc6.patch_media.sha256;
+  } else "";
   wing10 = pkgs.fetchurl {
     url = "https://archive.org/download/Windows_Game_SDK_Developers_Guide_The_Coriolis_Group_1996/Windows%20Game%20SDK%20Developer%27s%20Guide%20-%20The%20Coriolis%20Group%201996.ISO";
     hash = "sha256-oMFm/4M+81Yn6s4NTdiijOdB6nwHbiE/nE0MZS1Lc6U=";
@@ -23,9 +28,12 @@ let
   };
 in
 pkgs.mkShell {
-  packages = [ pkgs.python3 pkgs.p7zip pkgs.libmspack pkgs.gnutar pkgs.xz ];
+  packages = [ pkgs.python3 pkgs.p7zip pkgs.cabextract pkgs.libmspack pkgs.gnutar pkgs.xz ];
   shellHook = ''
-    export MSVC41_MEDIA="${vc41}"
+    export HOMM1_COMPILER="${compiler}"
+    export MSVC41_MEDIA="${compilerMedia}"
+    export VC6_DISC1="${compilerMedia}"
+    export VC6_SP5="${compilerPatch}"
     export WING10_MEDIA="${wing10}"
     export DX1_MEDIA="${dx1}"
     export MASM611_DISK1="${masm611-disk1}"

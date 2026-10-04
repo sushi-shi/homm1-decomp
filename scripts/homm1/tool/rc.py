@@ -30,12 +30,12 @@ import struct
 import tempfile
 from pathlib import Path
 
-from homm1.core.paths import INCLUDE
+from homm1.core.paths import INCLUDE, compiler_id
 from homm1.tool import ToolError
 from homm1.tool.wine import era_tool, run, toolchain_root, winepath
 
 #: The toolchain whose pinned RC/CVTRES compile the candidate resources.
-RESOURCE_TOOLCHAIN = "vc41"
+RESOURCE_TOOLCHAIN = compiler_id()
 #: The file name the resource script gives the retail icon.
 RETAIL_ICON = "heroes.ico"
 

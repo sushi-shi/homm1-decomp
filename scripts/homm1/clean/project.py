@@ -109,11 +109,12 @@ def project_files(files: dict[str, bytes]) -> dict[str, bytes]:
     output["heroes.def"] = source.clean_asm(files["config/heroes.def"].decode()).encode()
     output.update(import_stubs())
     output["flake.lock"], revision = flake_lock(files)
+    contract = toolchain.release(manifest(files)["compiler"])
     url = (f"https://github.com/{toolchain.RELEASE_REPOSITORY}/releases/download/"
-           f"{toolchain.RELEASE_TAG}/{toolchain.RELEASE_ASSET}")
+           f"{contract['tag']}/{contract['asset']}")
     flake = output["flake.nix"].decode()
     for key, value in (("@NIXPKGS_REV@", revision), ("@TOOLCHAIN_URL@", url),
-                       ("@TOOLCHAIN_SHA256@", toolchain.RELEASE_SHA256)):
+                       ("@TOOLCHAIN_SHA256@", contract["sha256"])):
         if key not in flake:
             raise ValueError(f"template flake.nix lacks {key}")
         flake = flake.replace(key, value)

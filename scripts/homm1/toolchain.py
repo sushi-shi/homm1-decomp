@@ -12,17 +12,21 @@ from homm1.core.inputs import REPO
 
 
 RELEASE_REPOSITORY = "sushi-shi/homm1-decomp"
-RELEASE_TAG = "toolchain-win95-1.2-v1"
-RELEASE_ASSET = "homm1-toolchain-win95-1.2-v1.tar.xz"
-RELEASE_SHA256 = "b2430574160559ccfa9df604beb427955e5b641180265a3fc91e562ae87bcd63"
-#: VC4 + MASM, and the vendor SDK files pinned in config/toolchains.json
-#: (each extracted from its original media; `install --id <sdk> --media`
-#: rebuilds any of them from archive.org).
-RELEASE_COMPONENTS = ("vc41", "wing10", "dx1")
 
 
 def pins():
     return json.loads((REPO / 'config/toolchains.json').read_text())
+
+
+def release(compiler=None):
+    from homm1.core.paths import compiler_id
+    compiler = compiler or compiler_id()
+    configs = pins()
+    if 'sdk' in configs[compiler]:
+        compiler = compiler_id()
+    if 'release' not in configs[compiler]:
+        raise ValueError(f'{compiler}: no release bundle is pinned; install from media')
+    return configs[compiler]['release']
 
 
 def digest(path):
@@ -78,41 +82,70 @@ def resources_installed(name, directory=None):
     return True
 
 
-def install(name, media):
-    config = pins()[name]
+def extract_media_files(config, media, staged, scratch, patch=None):
+    """Extract pinned files, optionally overlaying a chained service-pack cabinet.
+
+    VC6 SP5's Enterprise backend is stored as msvcep.dll and the setup media
+    abbreviates six C++ header names. Destination names and media membership
+    are explicit facts in config/toolchains.json, not filename guesses.
+    """
+    media, staged, scratch = Path(media).resolve(), Path(staged), Path(scratch)
     if digest(media) != config['media']['sha256']:
-        raise ValueError(f'{name}: media SHA-256 differs from the pin')
+        raise ValueError('compiler/SDK media SHA-256 differs from the pin')
+    patch_config = config.get('patch_media')
+    if bool(patch_config) != bool(patch):
+        raise ValueError('--patch is required exactly when the toolchain pins patch media')
+    if patch and digest(patch) != patch_config['sha256']:
+        raise ValueError('service-pack media SHA-256 differs from the pin')
     sevenzip = shutil.which('7z') or shutil.which('7zz')
     if not sevenzip:
         raise ValueError('7z is required to extract compiler media; enter nix develop .#build')
+    files = {**config['files'], **config.get('resource_files', {})}
+    extraction = scratch / 'base'
+    base_paths = sorted({entry['media_path'] for entry in files.values()
+                         if entry.get('media_id', 'base') == 'base'})
+    subprocess.run([sevenzip, 'x', '-y', f'-o{extraction}', str(media), *base_paths],
+                   check=True, stdout=subprocess.DEVNULL)
+    sources = {'base': extraction}
+    if patch:
+        cabinet = shutil.which('cabextract')
+        if not cabinet:
+            raise ValueError('cabextract is required for the chained VC6 SP5 cabinets')
+        patch = Path(patch).resolve()
+        cabs, patches = scratch / 'cabs', scratch / 'patch'
+        pattern = patch_config['cabinet_glob']
+        subprocess.run([sevenzip, 'x', '-y', f'-o{cabs}', str(patch), pattern],
+                       check=True, stdout=subprocess.DEVNULL)
+        subprocess.run([cabinet, '-q', '-d', str(patches),
+                        str(cabs / patch_config['cabinet_first'])], check=True)
+        subprocess.run([sevenzip, 'x', '-y', f'-o{patches}', str(patch), '-x!' + pattern],
+                       check=True, stdout=subprocess.DEVNULL)
+        sources['patch'] = patches
+    for relative, entry in files.items():
+        target = staged / relative
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source = sources[entry.get('media_id', 'base')] / entry['media_path']
+        if entry.get('expand') == 'szdd':
+            expanded = scratch / 'expanded' / relative
+            subprocess.run([sevenzip, 'x', '-y', f'-o{expanded}', str(source)],
+                           check=True, stdout=subprocess.DEVNULL)
+            (source,) = [p for p in expanded.iterdir() if p.is_file()]
+        elif 'expand' in entry:
+            raise ValueError(f"unknown expansion {entry['expand']!r} for {relative}")
+        shutil.copyfile(source, target)
+    _verify_entries('media extraction', staged, files)
+
+
+def install(name, media, patch=None):
+    config = pins()[name]
     destination = root(name)
     destination.parent.mkdir(parents=True, exist_ok=True)
     files = {**config['files'], **config.get('resource_files', {})}
-    # Extract only known compiler components; installation media is never executed.
     with tempfile.TemporaryDirectory(prefix=f'.{name}-', dir=destination.parent) as scratch:
         scratch = Path(scratch)
-        extraction = scratch / 'media'
-        subprocess.run([sevenzip, 'x', '-y', f'-o{extraction}', str(media.resolve()),
-                        *[entry['media_path'] for entry in files.values()]],
-                       check=True, stdout=subprocess.DEVNULL)
         staged = scratch / 'toolchain'
-        for relative, entry in files.items():
-            target = staged / relative
-            target.parent.mkdir(parents=True, exist_ok=True)
-            source = extraction / entry['media_path']
-            if entry.get('expand') == 'szdd':
-                # Setup disks ship MS COMPRESS (SZDD) members (`WING.H_`);
-                # 7z expands them to the file the vendor's SETUP installed.
-                expanded = scratch / 'expanded' / relative
-                subprocess.run([sevenzip, 'x', '-y', f'-o{expanded}', str(source)],
-                               check=True, stdout=subprocess.DEVNULL)
-                (source,) = [p for p in expanded.iterdir() if p.is_file()]
-            elif 'expand' in entry:
-                raise ValueError(f"{name}: unknown expansion {entry['expand']!r} for {relative}")
-            shutil.copyfile(source, target)
-        _verify_entries(name, staged, files)
+        extract_media_files(config, media, staged, scratch, patch)
         if destination.exists():
-            # Repair individual files atomically; never remove unrelated files.
             for relative in files:
                 target = destination / relative
                 target.parent.mkdir(parents=True, exist_ok=True)
@@ -125,51 +158,52 @@ def install(name, media):
           f'{destination.relative_to(REPO)}{suffix}')
 
 
-def _release_url():
+def _release_url(contract):
     return (f"https://github.com/{RELEASE_REPOSITORY}/releases/download/"
-            f"{RELEASE_TAG}/{RELEASE_ASSET}")
+            f"{contract['tag']}/{contract['asset']}")
 
 
-def _verify_archive(path):
-    if len(RELEASE_SHA256) != 64:
+def _verify_archive(path, contract):
+    if len(contract['sha256']) != 64:
         raise ValueError('toolchain release hash is not pinned yet')
     actual = digest(path)
-    if actual != RELEASE_SHA256:
+    if actual != contract['sha256']:
         raise ValueError(f'toolchain release SHA-256 {actual} differs from the pin')
 
 
-def _download_release(directory):
-    archive = directory / RELEASE_ASSET
+def _download_release(directory, contract):
+    archive = directory / contract['asset']
     try:
-        with urllib.request.urlopen(_release_url()) as response, archive.open('wb') as output:
+        with urllib.request.urlopen(_release_url(contract)) as response, archive.open('wb') as output:
             shutil.copyfileobj(response, output)
     except Exception as error:
         archive.unlink(missing_ok=True)
-        raise ValueError(f'cannot download {_release_url()}: {error}') from error
-    _verify_archive(archive)
+        raise ValueError(f'cannot download {_release_url(contract)}: {error}') from error
+    _verify_archive(archive, contract)
     return archive
 
 
-def install_release(archive=None):
-    """Install the hash-pinned VC4 + MASM release atomically."""
+def install_release(archive=None, compiler=None):
+    """Install a selected, hash-pinned compiler/SDK release atomically."""
+    contract = release(compiler)
     parent = REPO / 'build/toolchains'
     parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='.release-', dir=parent) as scratch_name:
         scratch = Path(scratch_name)
         if archive is None:
-            archive = _download_release(scratch)
+            archive = _download_release(scratch, contract)
         else:
             archive = Path(archive).resolve()
-            _verify_archive(archive)
+            _verify_archive(archive, contract)
         extraction = scratch / 'extract'
         extraction.mkdir()
         subprocess.run(['tar', 'xf', str(archive), '-C', str(extraction)], check=True)
         staged_root = extraction / 'toolchains'
-        for name in RELEASE_COMPONENTS:
+        for name in contract['components']:
             verify(name, staged_root / name)
             if resource_entries(name):
                 verify_resources(name, staged_root / name)
-        for name in RELEASE_COMPONENTS:
+        for name in contract['components']:
             source = staged_root / name
             destination = root(name)
             previous = parent / f'.{name}.previous'
@@ -180,8 +214,8 @@ def install_release(archive=None):
             os.replace(source, destination)
             if previous.exists():
                 shutil.rmtree(previous)
-    print(f'toolchain release {RELEASE_TAG} verified and installed')
-    for name in RELEASE_COMPONENTS:
+    print(f"toolchain release {contract['tag']} verified and installed")
+    for name in contract['components']:
         if resource_entries(name) and not resources_installed(name):
             print(f'{name}: the release carries no resource compiler; '
                   f'`homm1 toolchain install {name} --media <iso>` adds the '
@@ -191,9 +225,9 @@ def install_release(archive=None):
 def command(args):
     if args.action == 'install':
         if args.media is not None:
-            install(args.id, args.media)
+            install(args.id, args.media, args.patch)
         else:
-            install_release(args.archive)
+            install_release(args.archive, args.id)
     elif args.action == 'symbols':
         index = library_symbols(args.id)
         print(f'{args.id}: indexed {len(index)} external symbols from verified libraries')

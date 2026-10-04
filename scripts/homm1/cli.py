@@ -77,11 +77,15 @@ def _toolchain(argv: list[str]) -> int:
     from homm1 import toolchain
     ap = argparse.ArgumentParser(prog="homm1 toolchain")
     ap.add_argument("action", choices=("install", "check", "symbols"))
-    ap.add_argument("--id", choices=sorted(toolchain.pins()), default="vc41")
+    from homm1.core.paths import compiler_id
+    ap.add_argument("--id", choices=sorted(toolchain.pins()), default=compiler_id())
     ap.add_argument("--media", type=Path)
+    ap.add_argument("--patch", type=Path, help="pinned service pack for the selected compiler")
     ap.add_argument("--archive", type=Path,
                     help="install the pinned combined release from a local archive")
     a = ap.parse_args(argv)
+    if a.patch is not None and a.media is None:
+        ap.error("--patch requires --media")
     if a.media is not None and a.archive is not None:
         ap.error("--media and --archive are mutually exclusive")
     try:

@@ -162,3 +162,23 @@ that baseline is not a runtime test of the port.
 Earlier statements that locale rules are inapplicable describe the NWC branches;
 they do not apply to the Buka branch. No command or behavioral parity is claimed
 for these pending features.
+
+
+## Buka compiler media and release enrollment
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`,
+`scripts/toolchain/create-toolchain-release.py` and `.nix`, alongside the
+existing Gruntz `ee6365395c443019e3c0b8d82f54642f9621bbd2` compiler selection
+and toolchain contracts. Retained: verified original VC6 media, SP5 cabinet
+chaining from volume 1, Enterprise backend alias, six restored standard-header
+names, the separately pinned MASM disk and normalized archive metadata.
+Adapted: per-file media membership and installed names live in HoMM1’s existing
+`config/toolchains.json`; media install and release generation share one
+extractor. The existing compiler contract chooses resource pins, Nix paths,
+release installation and clean-export URLs. There is no second adapter graph.
+
+Validation: all 1,297 bundle files verified, two identical archive hashes,
+local archive installation, `@comp.id = 0x000b2306`, and a real BASEMGR object
+identical to the preceding verified VC6 control. Deferred: selecting the Buka
+compiler in `units.toml` alongside the reviewed source and retail claims;
+matching and runtime validation of the full Buka candidate are still required.

@@ -111,12 +111,13 @@
       '';
       commonTools = with pkgs; [
         homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
-        ripgrep file jq p7zip vostok-delinker objdiff objdiff-cli
+        ripgrep file jq p7zip cabextract vostok-delinker objdiff objdiff-cli
       ];
       commonHook = ''
         export HOMM1_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
         export PYTHONPATH="$HOMM1_DIR/scripts''${PYTHONPATH:+:$PYTHONPATH}"
-        export MSVC_DIR="$HOMM1_DIR/build/toolchains/vc41"
+        homm1_compiler=$(${python}/bin/python3 -c 'import os,pathlib,tomllib; print(tomllib.loads((pathlib.Path(os.environ["HOMM1_DIR"])/"config/units.toml").read_text())["build"]["compiler"])')
+        export MSVC_DIR="$HOMM1_DIR/build/toolchains/$homm1_compiler"
         export PYTHONDONTWRITEBYTECODE=1
       '';
     in {
