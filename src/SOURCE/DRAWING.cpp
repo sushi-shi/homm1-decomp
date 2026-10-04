@@ -24,7 +24,7 @@
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
 VA(0x004387b0, 0x5f)
-void combatManager::UpdateGrid(i16 hex, i32) {
+void combatManager::UpdateGrid(i16 hex, i16) {
     i16 row;
 
     row = hex / COMBAT_GRID_COLUMNS - 1;
@@ -37,7 +37,7 @@ void combatManager::UpdateGrid(i16 hex, i32) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0043880f, 0x5a)
-void combatManager::UpdateGridForMove(i16 hex, i8 direction, i32 attributes) {
+void combatManager::UpdateGridForMove(i16 hex, i8 direction, i16 attributes) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
     else

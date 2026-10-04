@@ -373,8 +373,9 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/ARMY"
 source = "src/SOURCE/ARMY.cpp"
+# /G5 omits narrow-argument clears absent from Buka drawing/walking controls.
 # SpecialAttack's fs:[0] frame around new bitmap proves /GX.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/HEXCELL"

@@ -2358,6 +2358,8 @@
       "source_correspondence": "army::DrawToBuffer",
       "payload": "%d",
       "evidence": "Pinned absolute_reference_evidence.tsv; next function in retail census; complete drawing-function review pending."
-    }
+    },
+    "checkpoint": "95d55980",
+    "scope": "Historical army setup/resource checkpoint under /G6. The drawing review later selects /G5 and independently rechecks all five functions; recorded fingerprints describe this original checkpoint."
   }
 }

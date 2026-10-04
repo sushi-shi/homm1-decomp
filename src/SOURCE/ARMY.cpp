@@ -181,7 +181,7 @@ void army::FreeResources(void) {
 
 // m_animationSequence selects the stand, walk, attack or spell-effect pose and
 // m_animationFrame its frame; m_drawShadow adds the shadow frames.
-VA(0x00406e0c, 0x856)
+VA(0x00413834, 0x7a5)
 void army::DrawToBuffer(i16 x, i16 y) {
     i16 effectX;
     i8 offsetMode;
@@ -200,7 +200,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
                    && (m_hex % COMBAT_GRID_COLUMNS <= 1 || m_hex % COMBAT_GRID_COLUMNS >= 7)))
         gbIconClipOn = 1;
     if (m_walkYStep) {
-        y += m_animationFrame * m_walkYStep;
+        y += m_walkYStep * m_animationFrame;
         if (m_animationFrame > 0 && m_animationFrame <= 5)
             offsetMode = ICON_DRAW_OFFSET_QUARTER;
     }
@@ -342,7 +342,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
     gbIconClipOn = 0;
 }
 
-VA(0x00407662, 0x63)
+VA(0x00413fd9, 0x55)
 void army::Stand(i8 redraw) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 1;
@@ -352,7 +352,7 @@ void army::Stand(i8 redraw) {
         gpCombatManager->DrawFrame(1);
 }
 
-VA(0x004076c5, 0x61)
+VA(0x0041402e, 0x56)
 void army::Wince(void) {
     m_animationSequence = ARMY_ANIMATION_STAND;
     m_animationFrame = 2;
@@ -363,7 +363,7 @@ void army::Wince(void) {
 
 // One hex of walking: six frames redrawn inside the union of the old and
 // new extents; a stack turned away from the step moves before animating.
-VA(0x00407726, 0x851)
+VA(0x00414084, 0x7d0)
 void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     i32 rectMaxX;
     i32 rectMaxY;

@@ -45,8 +45,11 @@ evidence. All thirteen combat AI functions now have reviewed Buka addresses,
 data dependencies and floating constants, with the measured `/G5` profile.
 Army initialization and resource loading are now reviewed, including separate
 English sprite stems and translated display names, plus the increased sample
-volume. Strict delinking reaches `army::DrawToBuffer`, stopping at data identity
-`0x8ee30`; overlapping inherited data claims also remain. The old score ledger
+volume. Army drawing and walking are now migrated with the measured `/G5`
+profile and word-sized grid-update arguments; remaining stack placement and
+`Wince` boolean-conversion differences are documented. Strict delinking reaches
+`SpecialAttack`, stopping at data identity `0xa6770`; overlapping inherited data
+claims also remain. The old score ledger
 has been reset.
 Supply your own game executable and assets; they are not included here.
 

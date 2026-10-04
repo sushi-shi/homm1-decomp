@@ -336,16 +336,16 @@ public:
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army* armyPointer);
-    // HoMM1 retail 0x00470a4f: word hex, byte direction, attributes
+    // Buka RVA 0x236c0: word hex, byte direction, word attributes
     // (ret 0xc); the upward directions also redraw the row above.
-    void UpdateGridForMove(i16 hex, i8 direction, i32 attributes);
-    // HoMM1 retail 0x004709f0: word first hex, redraw flag (ret 8).
-    void UpdateGrid(i16 hex, i32);
+    void UpdateGridForMove(i16 hex, i8 direction, i16 attributes);
+    // Buka RVA 0x23670: word hex and unused word attributes (ret 8).
+    void UpdateGrid(i16 hex, i16);
     void DrawBackground(void);
     void UpdateMouseGrid(i32 hexIndex, i32 forceUpdate);
     // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
     void DrawFrame(i8 updateScreen);
-    // HoMM1 retail 0x00470f25: byte mode (ret 4).
+    // Buka RVA 0x23acc: byte mode (ret 4).
     void SetGridMode(i8 mode);
     void DrawSmallView(i32 viewIndex, i32 updateScreen);
     // HoMM1 retail 0x00438310 returns its result in AL (ret 0xc).

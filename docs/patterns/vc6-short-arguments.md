@@ -40,3 +40,31 @@ unmatched in twelve functions and is not hidden by this compiler correction.
 Use the existing `cpp_buka_g5` unit profile; do not generalize this observation
 to unreviewed units. Full controls, hashes and retail comparisons are in
 [`buka-combat-ai.json`](../../config/retail/buka-combat-ai.json).
+
+
+## Army drawing control
+
+The final-source `SOURCE/ARMY` control confirms the same mechanism in another
+unit. The first five setup/resource functions are unchanged between profiles.
+Drawing adds 74 clears under `/G6`, standing and wincing add one each, and walking
+adds nine. Every retained instruction, reference, branch and switch-table target
+is verified. `/G5` agrees with retail's absence of these clears.
+
+`Walk` also exposes a CPU-dependent equivalent instruction choice:
+
+```asm
+; /G5 and retail
+and al, 0xfe
+add eax, 1
+; /G6
+and eax, 0xfffffffe
+add eax, 1
+```
+
+Both AND forms clear only EAX bit zero. They set different width-dependent
+flags, but the immediately following ADD overwrites all flags before use.
+Two such sites account for two additional bytes under `/G6`. This is an
+explicit control result, not a normalization accepted by strict comparison.
+See [`buka-army-drawing.json`](../../config/retail/buka-army-drawing.json) for
+all nine function controls and hashes. `Wince`'s separate boolean-materialization
+residue remains visible after the profile correction.

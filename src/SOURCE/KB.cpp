@@ -2794,7 +2794,7 @@ bool IsCDDrive(i32 driveIndex) {
     return GetDriveTypeA(gText) == DRIVE_CDROM;
 }
 
-VA(0x00427183, 0x64)
+VA(0x0044228d, 0x59)
 void LoadSystemwideIcons(void) {
     gBuyBuildIcons = gpResourceManager->GetIcon("buybuild.icn");
     gSystemIcons = gpResourceManager->GetIcon("system.icn");
@@ -2802,7 +2802,7 @@ void LoadSystemwideIcons(void) {
     smallFont = gpResourceManager->GetFont("smalfont.fnt");
 }
 
-VA(0x004271e7, 0x54)
+VA(0x004422e6, 0x4b)
 void UnloadSystemwideIcons(void) {
     gpResourceManager->Dispose(gBuyBuildIcons);
     gpResourceManager->Dispose(gSystemIcons);
@@ -4708,13 +4708,13 @@ DATA(0x00493f60)
 i8 gDirectConnect = 0;
 DATA(0x00493434)
 i32 gForceSwitchMusic = FORCED_MUSIC_IDLE;
-DATA(0x00493f68)
+DATA(0x004a9934)
 i32 gComputeExtent = 0;
-DATA(0x00493f6c)
+DATA(0x004a9938)
 i32 gSaveBiggestExtent = 0;
-DATA(0x00493f70)
+DATA(0x004a993c)
 i32 gLimitToExtent = 0;
-DATA(0x00493f74)
+DATA(0x00493438)
 i32 gCurrArmyDrawn = 1;
 DATA(0x004a9940)
 i32 gAdvDisposeLevel = 0;
@@ -4743,11 +4743,11 @@ i8 gInCheckEndGame = 0;
 
 DATA(0x004a9414)
 i32 gbHumanPlayer[4];
-DATA(0x004a82b4)
+DATA(0x004a7b74)
 i32 giMaxExtentX;
-DATA(0x004a82b8)
+DATA(0x004a7b78)
 i32 giMaxExtentY;
-DATA(0x004a7c00)
+DATA(0x004a74e0)
 class font* smallFont;
 DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
@@ -4791,17 +4791,17 @@ DATA(0x004a7b70)
 i32 giHostGamePos;
 DATA(0x004a7164)
 mouseManager* gpMouseManager;
-DATA(0x004a7b78)
+DATA(0x004a7468)
 class font* bigFont;
-DATA(0x004a8700)
+DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7bb4)
 i8 gbCombatSurrender;
 DATA(0x004a82c0)
 char gMapName[16];
-DATA(0x004a9cb0)
+DATA(0x004a9560)
 i32 giMinExtentX;
-DATA(0x004a9cb4)
+DATA(0x004a9564)
 i32 giMinExtentY;
 DATA(0x004a82e0)
 i8 iMPBaseType;
@@ -4849,7 +4849,7 @@ DATA(0x004a761c)
 i32 giBottomViewOverride;
 DATA(0x004a76c4)
 char gLastFilename[352];
-DATA(0x004a7b84)
+DATA(0x004a7470)
 class icon* gBuyBuildIcons;
 DATA(0x004a74ea)
 i8 gbNoSound;
@@ -4871,7 +4871,7 @@ DATA(0x004a7474)
 i32 giThisGamePos;
 DATA(0x004a7bbc)
 i32 giNumHumanPlayers;
-DATA(0x004a9cac)
+DATA(0x004a955c)
 i8 gbIconClipOn;
 DATA(0x004a73c8)
 i32 pwSizeOfMapExtra[255];
