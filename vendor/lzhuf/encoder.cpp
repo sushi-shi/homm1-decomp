@@ -1,6 +1,6 @@
 // Okumura-style LZSS with adaptive Huffman coding, used for HoMM1's
 // multiplayer save transfer.  The tables and stream framing are taken from
-// the parent February 1996 executable (unchanged codec in May 1996).
+// the NWC executable; Buka retains the tables and stream framing.
 
 #include <match.h>
 
@@ -10,6 +10,7 @@
 #include <BASE/Misc.h>
 void InitializeTree(void);
 void ReconstructEncoderTree(void);
+static void EncodeEnd(void);
 #include <SOURCE/KB.h>
 
 #include <stdio.h>
@@ -26,26 +27,26 @@ void ReconstructEncoderTree(void);
 #define MAX_FREQUENCY 0x8000
 
 extern "C" {
-DATA(0x004d46f8) i16 match_position;
+DATA(0x004d4d0c) i16 match_position;
 DATA(0x004d45ac) i16 prnt[TREE_SIZE + CHARACTER_COUNT];
 DATA(0x004d20ac) i16 son[TREE_SIZE];
 DATA(0x004d4d0e) u16 getbuf;
 DATA(0x004d6f1a) u8 getlen;
-DATA(0x004d6910) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
+DATA(0x004d6f1c) u8 text_buf[WINDOW_SIZE + LOOK_AHEAD - 1];
 DATA(0x004cfbb8) u16 freq[TREE_SIZE + 1];
-DATA(0x004d4704) i16 match_length;
+DATA(0x004d4d14) i16 match_length;
 DATA(0x004d259c) i16 lson[WINDOW_SIZE + 1];
 DATA(0x004d4d18) i16 rson[WINDOW_SIZE + 257];
 DATA(0x004d00a0) i16 dad[WINDOW_SIZE + 1];
-DATA(0x004d4700) u32 textsize;
-DATA(0x004d3f90) u32 codesize;
-DATA(0x004a5488) u16 putbuf = 0;
-DATA(0x004a548c) u8 putlen = 0;
+DATA(0x004d4d10) u32 textsize;
+DATA(0x004d45a4) u32 codesize;
+DATA(0x004d7f5c) u16 putbuf;
+DATA(0x004d7f5e) u8 putlen;
 DATA(0x004d2598) char *codePtr;
-DATA(0x004d46f4) char *decodeOutput;
-DATA(0x004d1a90) u32 decodeSize;
+DATA(0x004d4d08) char *decodeOutput;
+DATA(0x004d20a8) u32 decodeSize;
 // Classic Okumura StartHuff state, materialized because retail copies it.
-DATA(0x004a42d8) i16 initialSon[627] = {
+DATA(0x004a1940) i16 initialSon[627] = {
     627, 628, 629, 630, 631, 632, 633, 634, 635, 636, 637, 638,
     639, 640, 641, 642, 643, 644, 645, 646, 647, 648, 649, 650,
     651, 652, 653, 654, 655, 656, 657, 658, 659, 660, 661, 662,
@@ -101,7 +102,7 @@ DATA(0x004a42d8) i16 initialSon[627] = {
     620, 622, 624,
 };
 
-DATA(0x004a4f20) u16 initialFrequency[628] = {
+DATA(0x004a2584) u16 initialFrequency[628] = {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -157,7 +158,7 @@ DATA(0x004a4f20) u16 initialFrequency[628] = {
     128, 186, 314, 65535,
 };
 
-DATA(0x004a47c0) i16 initialParent[941] = {
+DATA(0x004a1e28) i16 initialParent[941] = {
     314, 314, 315, 315, 316, 316, 317, 317, 318, 318, 319, 319,
     320, 320, 321, 321, 322, 322, 323, 323, 324, 324, 325, 325,
     326, 326, 327, 327, 328, 328, 329, 329, 330, 330, 331, 331,
@@ -262,7 +263,7 @@ DATA(0x004a2aac) static u8 positionCode[64] = {
     0xF8, 0xF9, 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF
 };
 
-extern "C" DATA(0x004a40d8) u8 d_code[256] = {
+extern "C" DATA(0x004a1740) u8 d_code[256] = {
     0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
     1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1, 2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,2,
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 4,4,4,4,4,4,4,4,5,5,5,5,5,5,5,5,
@@ -277,7 +278,7 @@ extern "C" DATA(0x004a40d8) u8 d_code[256] = {
     48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63
 };
 
-extern "C" DATA(0x004a41d8) u8 d_len[256] = {
+extern "C" DATA(0x004a1840) u8 d_len[256] = {
     3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3, 3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,3,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
     4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4, 5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,5,
@@ -295,16 +296,11 @@ extern "C" DATA(0x004a41d8) u8 d_len[256] = {
 VA(0x00473c8f, 0x68)
 void InitializeTree(void)
 {
-    i16 i = WINDOW_SIZE + 1;
-    while (i <= WINDOW_SIZE + 256) {
+    i16 i;
+    for (i = WINDOW_SIZE + 1; i <= WINDOW_SIZE + 256; ++i)
         rson[i] = NIL;
-        ++i;
-    }
-    i = 0;
-    while (i < WINDOW_SIZE) {
+    for (i = 0; i < WINDOW_SIZE; ++i)
         dad[i] = NIL;
-        ++i;
-    }
 }
 
 VA(0x004743a9, 0x238)
@@ -322,8 +318,7 @@ void ReconstructEncoderTree(void)
         }
     }
     for (i = 0, j = CHARACTER_COUNT; j < TREE_SIZE; i += 2, ++j) {
-        value = static_cast<u16>(freq[i] + freq[i + 1]);
-        freq[j] = value;
+        value = freq[j] = static_cast<u16>(freq[i] + freq[i + 1]);
         for (k = j - 1; value < freq[k]; --k)
             ;
         ++k;
@@ -345,18 +340,18 @@ void ReconstructEncoderTree(void)
 VA(0x004745e1, 0x10c)
 void PutCode(i16 length, u16 code)
 {
-    putbuf = static_cast<u16>(putbuf | (code >> putlen));
-    putlen = static_cast<u8>(putlen + length);
+    putbuf |= code >> putlen;
+    putlen += length;
     if (putlen >= 8) {
-        *codePtr++ = static_cast<char>(putbuf >> 8);
-        putlen = static_cast<u8>(putlen - 8);
+        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
+        putlen -= 8;
         if (putlen >= 8) {
-            *codePtr++ = static_cast<char>(putbuf);
+            *codePtr++ = static_cast<char>(putbuf) & 0xff;
             codesize += 2;
-            putlen = static_cast<u8>(putlen - 8);
+            putlen -= 8;
             putbuf = static_cast<u16>(code << (length - putlen));
         } else {
-            putbuf = static_cast<u16>(putbuf << 8);
+            putbuf <<= 8;
             ++codesize;
         }
     }
@@ -365,20 +360,25 @@ void PutCode(i16 length, u16 code)
 VA(0x00474172, 0xa4)
 void EncodeCharacter(u16 character)
 {
-    u16 code;
-    i16 length, node;
+    u16 i;
+    i16 j, k;
+    u16 code, len;
 
-    code = 0;
-    length = 0;
-    node = prnt[character + TREE_SIZE];
+    i = 0;
+    j = 0;
+    k = prnt[character + TREE_SIZE];
     do {
-        code >>= 1;
-        if (node & 1)
-            code = static_cast<u16>(code + 0x8000);
-        ++length;
-        node = prnt[node];
-    } while (node != ROOT);
-    PutCode(length, code);
+        i >>= 1;
+        if (k & 1)
+            i += 0x8000;
+        ++j;
+        k = prnt[k];
+    } while (k != ROOT);
+    PutCode(j, i);
+    // The original codec saves these diagnostic values. Buka retains the
+    // assignments in local slots immediately before updating the tree.
+    code = i;
+    len = j;
     UpdateEncoderTree(character);
 }
 
@@ -407,39 +407,33 @@ i32 DecodeData(char *destination, char *source)
     size |= static_cast<u8>(*codePtr++);
     size <<= 8;
     size |= static_cast<u8>(*codePtr++);
-    getbuf = 0;
-    getlen = 0;
+    getbuf = getlen = 0;
     memcpy(son, initialSon, sizeof(son));
     memcpy(freq, initialFrequency, sizeof(freq));
     memcpy(prnt, initialParent, sizeof(prnt));
     decodeSize = size;
     decodeOutput = destination;
     Decode();
-    LogStr("Data decoded", size, size);
-    return static_cast<i32>(size);
+    i32 decodedSize = static_cast<i32>(size);
+    return decodedSize;
 }
 VA(0x004738ab, 0x3e4)
 i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
     register i16 i, c, r, s, last_match_length;
-    register u16 len, currentLength;
-    i16 currentMatchLength;
+    register u16 len;
     u32 consumed;
 
-    getbuf = 0;
-    codesize = 0;
-    putbuf = 0;
-    getlen = 0;
-    putlen = 0;
+    putbuf = putlen = getbuf = getlen = codesize = 0;
     memset(freq, 0, sizeof(freq));
     memset(prnt, 0, sizeof(prnt));
     memset(son, 0, sizeof(son));
 
     codePtr = destination;
-    *codePtr++ = static_cast<char>(sourceLength >> 24);
-    *codePtr++ = static_cast<char>(sourceLength >> 16);
-    *codePtr++ = static_cast<char>(sourceLength >> 8);
-    *codePtr++ = static_cast<char>(sourceLength);
+    *codePtr++ = static_cast<char>((sourceLength & 0xff000000) >> 24);
+    *codePtr++ = static_cast<char>((sourceLength & 0x00ff0000) >> 16);
+    *codePtr++ = static_cast<char>((sourceLength & 0x0000ff00) >> 8);
+    *codePtr++ = static_cast<char>(sourceLength & 0xff);
 
     consumed = 0;
     memcpy(son, initialSon, sizeof(son));
@@ -450,19 +444,16 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     r = WINDOW_SIZE - LOOK_AHEAD;
     for (i = s; i < r; ++i)
         text_buf[i] = ' ';
-    for (len = 0; len < LOOK_AHEAD && consumed < sourceLength; ++len) {
-        text_buf[r + len] = *source++;
-        ++consumed;
-    }
+    for (len = 0; len < LOOK_AHEAD && consumed < sourceLength;
+         ++len, ++source, ++consumed)
+        text_buf[r + len] = *source;
 
     for (i = 1; i <= LOOK_AHEAD; ++i)
         InsertNode(r - i);
     InsertNode(r);
     do {
-        currentLength = len;
-        currentMatchLength = match_length;
-        if (currentMatchLength > currentLength)
-            match_length = static_cast<i16>(currentLength);
+        if (match_length > len)
+            match_length = static_cast<i16>(len);
         if (match_length <= MATCH_THRESHOLD) {
             match_length = 1;
             EncodeCharacter(text_buf[r]);
@@ -471,7 +462,8 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
             EncodePosition(match_position);
         }
         last_match_length = match_length;
-        for (i = 0; i < last_match_length && consumed < sourceLength; ++i) {
+        for (i = 0; i < last_match_length && consumed < sourceLength;
+             ++i, ++consumed, ++source) {
             c = *source;
             DeleteNode(s);
             text_buf[s] = static_cast<u8>(c);
@@ -480,8 +472,6 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
             s = (s + 1) & (WINDOW_SIZE - 1);
             r = (r + 1) & (WINDOW_SIZE - 1);
             InsertNode(r);
-            ++consumed;
-            ++source;
         }
         while (i++ < last_match_length) {
             DeleteNode(s);
@@ -491,12 +481,9 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
                 InsertNode(r);
         }
         PollSound();
-    } while (len != 0);
+    } while (len > 0);
 
-    if (putlen != 0) {
-        *codePtr++ = static_cast<char>(putbuf >> 8);
-        ++codesize;
-    }
+    EncodeEnd();
     return static_cast<i32>(codesize);
 }
 
@@ -504,35 +491,34 @@ VA(0x00474216, 0x193)
 static void UpdateEncoderTree(i16 character)
 {
     i16 value;
-    register i16 node, child, otherChild, next;
+    register i16 child, otherChild, next;
 
     if (freq[ROOT] == MAX_FREQUENCY)
         ReconstructEncoderTree();
-    node = prnt[character + TREE_SIZE];
+    character = prnt[character + TREE_SIZE];
     do {
-        value = ++freq[node];
-        next = node + 1;
-        if (value > freq[next]) {
+        value = ++freq[character];
+        if (value > freq[next = character + 1]) {
             while (value > freq[++next])
                 ;
             --next;
-            freq[node] = freq[next];
+            freq[character] = freq[next];
             freq[next] = value;
 
-            child = son[node];
+            child = son[character];
             prnt[child] = static_cast<i16>(next);
             if (child < TREE_SIZE)
                 prnt[child + 1] = static_cast<i16>(next);
             otherChild = son[next];
             son[next] = static_cast<i16>(child);
-            prnt[otherChild] = static_cast<i16>(node);
+            prnt[otherChild] = static_cast<i16>(character);
             if (otherChild < TREE_SIZE)
-                prnt[otherChild + 1] = static_cast<i16>(node);
-            son[node] = static_cast<i16>(otherChild);
-            node = next;
+                prnt[otherChild + 1] = static_cast<i16>(character);
+            son[character] = static_cast<i16>(otherChild);
+            character = next;
         }
-        node = prnt[node];
-    } while (node != 0);
+        character = prnt[character];
+    } while (character != 0);
 }
 
 VA(0x00473cf7, 0x2a9)
@@ -577,7 +563,7 @@ static void InsertNode(i16 node)
                 if ((match_length = i) >= LOOK_AHEAD)
                     break;
             }
-            if (match_length == i)
+            if (i == match_length)
                 if (static_cast<i32>(position = static_cast<u16>(
                         ((node - candidate) & (WINDOW_SIZE - 1)) - 1)) <
                     match_position)
@@ -627,4 +613,14 @@ static void DeleteNode(i16 node)
     else
         lson[dad[node]] = static_cast<i16>(replacement);
     dad[node] = NIL;
+}
+
+// The original codec's final-byte helper is out of line in Buka.
+VA(0x0047474c, 0x4a)
+static void EncodeEnd(void)
+{
+    if (putlen != 0) {
+        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
+        ++codesize;
+    }
 }

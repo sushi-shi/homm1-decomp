@@ -3236,9 +3236,9 @@ void advManager::ReceiveHeroTownData(
     lastPacketTime = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
-        if (KBTickCount() > lastPacketTime + COMBAT_REMOTE_TIMEOUT) {
+        if (lastPacketTime + COMBAT_REMOTE_TIMEOUT < KBTickCount()) {
             NormalDialog(
-                "Error receiving data.  Keep trying??",
+                localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO,
                 -1,
                 -1,
@@ -3251,7 +3251,7 @@ void advManager::ReceiveHeroTownData(
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTime = KBTickCount();
             else
-                ShutDown("Game canceled.");
+                ShutDown(localization::Tr("combat.network.canceled"));
         }
         packet = GetRemoteData(1);
         if (packet

@@ -1122,7 +1122,7 @@ rva	size	unit	name	status	evidence
 0x000743a9	0x238	BASE/LZHUF	?ReconstructEncoderTree@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000745e1	0x10c	BASE/LZHUF	?PutCode@@YAXFG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000746ed	0x5f	BASE/LZHUF	?EncodePosition@@YAXG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0007474c	0x4a	BASE/LZHUF	Flush final partial encoded byte from putbuf, advance codePtr and increment codesize.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0007474c	0x4a	BASE/LZHUF	?EncodeEnd@@YAXXZ	source-claim	Original codec EncodeEnd helper and complete Buka instruction/reference proof; buka-lzhuf.json
 0x00074796	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
 0x000747bd	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
 0x000747d0	0x3a	BASE/PALETTE	??0palette@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.

@@ -4467,3 +4467,11 @@ msgstr "Герой"
 msgctxt "combat.network.attacked"
 msgid "%s player's %s is under attack!"
 msgstr "%s игрок, ваш герой %s атакован!"
+
+msgctxt "combat.network.receive_error"
+msgid "Error receiving data.  Keep trying??"
+msgstr "Ошибка получения информации. Продолжать?"
+
+msgctxt "combat.network.canceled"
+msgid "Game canceled."
+msgstr "Игра прервана."

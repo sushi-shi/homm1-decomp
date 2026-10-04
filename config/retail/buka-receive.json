@@ -1,0 +1,308 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "messages": [
+    {
+      "id": "combat.network.receive_error",
+      "english": "Error receiving data.  Keep trying??",
+      "nwc_site": "0x676b",
+      "nwc_target": "0x902c8",
+      "retail_site": "0x29b33",
+      "retail_target": "0x8fc80",
+      "size": 41,
+      "payload_sha256": "d21678c7642843caa89b4dce04e1f67b0033fe2fa582b7aa5b2bc479def6c6d3"
+    },
+    {
+      "id": "combat.network.canceled",
+      "english": "Game canceled.",
+      "nwc_site": "0x6797",
+      "nwc_target": "0x902f0",
+      "retail_site": "0x29b59",
+      "retail_target": "0x8fcac",
+      "size": 15,
+      "payload_sha256": "8f3b5fcaf19836caf0b9d4b39be9330cd6374f0ef0c32e737eef05e772345f0e"
+    }
+  ],
+  "behavior_changes": [
+    "Network receive timeout and cancellation use the Russian catalog; both original English strings are preserved."
+  ],
+  "functions": [
+    {
+      "unit": "SOURCE/EVENTS",
+      "name": "?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z",
+      "rva": "0x2990d",
+      "size": 783,
+      "object_size": 783,
+      "object_code_size": 783,
+      "retail_code_size": 783,
+      "object_sha256": "d19e043d614022eb0dd64c43bf60e4335d17c65c928517356972ecdb7abf41fa",
+      "retail_body_sha256": "ed782ad5ce3dbd43693cd3b0124cc380c6d9bc5aee87fc72e39225754e6f9d93",
+      "instruction_count": 249,
+      "local_slot_map": {
+        "-32": -32,
+        "-12": -12,
+        "-24": -20,
+        "-16": -4,
+        "-20": -8,
+        "-28": -24,
+        "-4": -16,
+        "-8": -28
+      },
+      "references": [
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x299f3",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x29a21",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "_malloc",
+          "site_rva": "0x29a35",
+          "target_rva": "0x7831b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29a51",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_malloc",
+          "site_rva": "0x29a5b",
+          "target_rva": "0x7831b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29a77",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_malloc",
+          "site_rva": "0x29a89",
+          "target_rva": "0x7831b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29aa5",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?TransmitRemoteData@@YAHPADHHCCCCC@Z",
+          "site_rva": "0x29ac1",
+          "target_rva": "0x532e8",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?ShutDown@@YAXPAD@Z",
+          "site_rva": "0x29ad4",
+          "target_rva": "0x41824",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?KBTickCount@@YAHXZ",
+          "site_rva": "0x29adc",
+          "target_rva": "0x44b4e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_PollSound",
+          "site_rva": "0x29b0c",
+          "target_rva": "0x3c7b0",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?KBTickCount@@YAHXZ",
+          "site_rva": "0x29b1a",
+          "target_rva": "0x44b4e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?NormalDialog@@YAXPADHHHHHHHH@Z",
+          "site_rva": "0x29b38",
+          "target_rva": "0x3e693",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+          "site_rva": "0x29b41",
+          "target_rva": "0xa74a8",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?KBTickCount@@YAHXZ",
+          "site_rva": "0x29b4f",
+          "target_rva": "0x44b4e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?ShutDown@@YAXPAD@Z",
+          "site_rva": "0x29b5e",
+          "target_rva": "0x41824",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?GetRemoteData@@YAPADC@Z",
+          "site_rva": "0x29b68",
+          "target_rva": "0x534cb",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?KBTickCount@@YAHXZ",
+          "site_rva": "0x29b99",
+          "target_rva": "0x44b4e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_malloc",
+          "site_rva": "0x29bb2",
+          "target_rva": "0x7831b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29bd1",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_malloc",
+          "site_rva": "0x29bea",
+          "target_rva": "0x7831b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29c09",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        }
+      ],
+      "private_literals": [
+        {
+          "operand": "0x29b33",
+          "target": "0x8fc80",
+          "size": 41,
+          "payload_sha256": "d21678c7642843caa89b4dce04e1f67b0033fe2fa582b7aa5b2bc479def6c6d3"
+        },
+        {
+          "operand": "0x29b59",
+          "target": "0x8fcac",
+          "size": 15,
+          "payload_sha256": "8f3b5fcaf19836caf0b9d4b39be9330cd6374f0ef0c32e737eef05e772345f0e"
+        }
+      ],
+      "internal_targets": [],
+      "branches": [
+        {
+          "operand": "0x299e5",
+          "target": "0x29a04"
+        },
+        {
+          "operand": "0x29a13",
+          "target": "0x29a32"
+        },
+        {
+          "operand": "0x29a84",
+          "target": "0x29aac"
+        },
+        {
+          "operand": "0x29acf",
+          "target": "0x29adb"
+        },
+        {
+          "operand": "0x29ae9",
+          "target": "0x29af3"
+        },
+        {
+          "operand": "0x29af1",
+          "target": "0x29b0b"
+        },
+        {
+          "operand": "0x29af9",
+          "target": "0x29c15"
+        },
+        {
+          "operand": "0x29b05",
+          "target": "0x29c15"
+        },
+        {
+          "operand": "0x29b20",
+          "target": "0x29b65"
+        },
+        {
+          "operand": "0x29b4c",
+          "target": "0x29b58"
+        },
+        {
+          "operand": "0x29b56",
+          "target": "0x29b65"
+        },
+        {
+          "operand": "0x29b76",
+          "target": "0x29c10"
+        },
+        {
+          "operand": "0x29b86",
+          "target": "0x29c10"
+        },
+        {
+          "operand": "0x29b96",
+          "target": "0x29c10"
+        },
+        {
+          "operand": "0x29baa",
+          "target": "0x29bd8"
+        },
+        {
+          "operand": "0x29be2",
+          "target": "0x29c10"
+        },
+        {
+          "operand": "0x29c10",
+          "target": "0x29ae3"
+        }
+      ],
+      "method": "Complete ordered instruction operands and registers, branch destinations, public names/addends, literal payloads and packed switch targets checked. Only EBP local-slot mapping and its encoding widths differ. Strict scoring unchanged."
+    }
+  ],
+  "source_form_control": {
+    "before": "KBTickCount() > lastPacketTime + COMBAT_REMOTE_TIMEOUT",
+    "after": "lastPacketTime + COMBAT_REMOTE_TIMEOUT < KBTickCount()",
+    "retail": "The deadline is calculated into ESI before calling KBTickCount, then compared against EAX; ESI is preserved on entry/exit.",
+    "behavior": "Equivalent comparison for the same local deadline; no timeout or packet-layout change."
+  }
+}

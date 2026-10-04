@@ -82,15 +82,15 @@ rva	size	symbol	provenance
 0x000a14ac	4	_gClipColumn	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a14b0	4	_gTileScratch	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a14b4	2	_gTileRows	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
-0x000a40d8	256	_d_code	code-required identity and extent
-0x000a41d8	256	_d_len	code-required identity and extent
-0x000a42d8	1254	_initialSon	code-required identity and extent
-0x000a47c0	1882	_initialParent	code-required identity and extent
-0x000a4f20	1256	_initialFrequency	code-required identity and extent
+0x000a1740	256	_d_code	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000a1840	256	_d_len	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000a1940	1254	_initialSon	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000a1e28	1882	_initialParent	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000a2584	1256	_initialFrequency	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
 0x000a5408	64	_positionLength$S481	code-required position-code table
 0x000a5448	64	_positionCode$S482	code-required position-code table
-0x000a5488	2	_putbuf	code-required identity and extent
-0x000a548c	1	_putlen	code-required identity and extent
+0x000d7f5c	2	_putbuf	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d7f5e	1	_putlen	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
 0x000a5490	13	??_C@_0N@PCJN@Data?5decoded?$AA@	code-required pooled literal identity
 0x000a1484	4	_gIconXAdjust	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a1488	4	_gIconYAdjust	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
@@ -115,25 +115,25 @@ rva	size	symbol	provenance
 0x000cf498	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
 0x000cf538	1	?gWindowFadeSavedUpdate@@3CA	FadeScreen signed byte saved update flags
 0x000cf540	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
-0x000cf5a0	1256	_freq	code-required identity and extent
-0x000cfa88	8194	_dad	code-required identity and extent
-0x000d1a90	4	_decodeSize	code-required identity and extent
-0x000d1a98	1254	_son	code-required identity and extent
-0x000d1f84	4	_codePtr	code-required identity and extent
-0x000d1f88	8194	_lson	code-required identity and extent
-0x000d3f90	4	_codesize	code-required identity and extent
-0x000d3f98	1882	_prnt	code-required identity and extent
-0x000d46f4	4	_decodeOutput	code-required identity and extent
-0x000d46f8	2	_match_position	code-required identity and extent
-0x000d46fc	2	_getbuf	code-required identity and extent
-0x000d4700	4	_textsize	code-required identity and extent
-0x000d4704	2	_match_length	code-required identity and extent
-0x000d4708	8706	_rson	code-required identity and extent
-0x000d690c	1	_getlen	code-required identity and extent
-0x000d6910	4155	_text_buf	code-required identity and extent
+0x000cfbb8	1256	_freq	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d00a0	8194	_dad	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d20a8	4	_decodeSize	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d20ac	1254	_son	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d2598	4	_codePtr	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d259c	8194	_lson	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d45a4	4	_codesize	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d45ac	1882	_prnt	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d08	4	_decodeOutput	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d0c	2	_match_position	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d0e	2	_getbuf	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d10	4	_textsize	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d14	2	_match_length	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d4d18	8706	_rson	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d6f1a	1	_getlen	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000d6f1c	4155	_text_buf	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
 0x000a973c	352	?gcRegCDRomPath@@3PADA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
-0x000a2aac	64	_positionCode	Buka complete typed payload and reference-addend review; buka-data-recovery.json
-0x000a2a6c	64	_positionLength	Buka complete typed payload and reference-addend review; buka-data-recovery.json
+0x000a2aac	64	_positionCode	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
+0x000a2a6c	64	_positionLength	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
 0x000a74f0	300	?gcWinText@@3PADA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x000a9908	4	?gInSmacker@@3HA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x0008fa60	10	?gPixelsPerStep@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
@@ -170,3 +170,8 @@ rva	size	symbol	provenance
 0x00092194	4	?gEnlargeScreenBlit@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
 0x000a9910	4	?gRemoteReady@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
 0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00090e30	352	?gDataPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
+0x00090f90	352	?gAnimPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
+0x000910f0	352	?gSoundPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
+0x000913c4	20	?gMapPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
+0x00091bc8	272	?gWinSetup@@3PAUWindowTextEntry@@A	Buka typed initializer and code users; buka-resource-paths.json

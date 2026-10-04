@@ -3,3 +3,4 @@
 # Ordinary identities must resolve through reviewed owners; missing ones remain errors.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00024a50	0x000926d8	0x00025b25	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	Buka DoEvent shrine: gSpellNames[objectMetadata - 1]; indexed load biases table base by -4; full operand and CFG proof in buka-events.json
+0x000779d1	0x000d20aa	0x000779f0	_son	0xFFFFFFFE	1	Buka adaptive Huffman reconstruction indexes son from one word before its base; complete ordered instruction and addend proof in buka-lzhuf.json

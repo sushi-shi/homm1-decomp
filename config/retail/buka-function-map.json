@@ -17421,13 +17421,6 @@
       "retail_body_sha256": "94dc72f1eb357296c48657b48c8c189d591c0f2ef623fc0d1144cdbf313b8660"
     },
     {
-      "rva": "0x7474c",
-      "size": 74,
-      "unit": "BASE/LZHUF",
-      "role": "Flush final partial encoded byte from putbuf, advance codePtr and increment codesize.",
-      "retail_body_sha256": "86054e183255916116f53318c6d23a3be396148a72262a31acd72f37b22adb91"
-    },
-    {
       "rva": "0x75340",
       "size": 46,
       "unit": "BASE/SAMPLE",
@@ -17560,6 +17553,18 @@
       "size": 100,
       "identity_evidence": "Compiler-emitted body with reviewed identity; source owner selected in its retail contribution. Ordinary destructor identity is backed by the exact scalar wrapper.",
       "retail_body_sha256": "223543cc01239afa309641809d86c695954f566be9f5170a0222e5b057448841"
+    }
+  ],
+  "recovered_body_roles": [
+    {
+      "rva": "0x7474c",
+      "size": 74,
+      "unit": "BASE/LZHUF",
+      "role": "Flush final partial encoded byte from putbuf, advance codePtr and increment codesize.",
+      "retail_body_sha256": "86054e183255916116f53318c6d23a3be396148a72262a31acd72f37b22adb91",
+      "name": "?EncodeEnd@@YAXXZ",
+      "evidence": "buka-lzhuf.json",
+      "status": "source-claim"
     }
   ]
 }

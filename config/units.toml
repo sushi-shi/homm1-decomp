@@ -44,10 +44,12 @@ unit = "BASE/Icon2b"
 source = "src/BASE/Icon2b.asm"
 flags = "cpp_buka"
 
+# Complete C++ instruction/reference controls agree under /G5, including
+# short-argument calls; see config/retail/buka-lzhuf.json.
 [[unit]]
 unit = "BASE/LZHUF"
 source = "vendor/lzhuf/encoder.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/MAKEFILEID"
