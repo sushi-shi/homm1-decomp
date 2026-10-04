@@ -169,7 +169,7 @@ rva	size	symbol	provenance
 0x00091cd8	4	?townTheme@@3PACA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
 0x00092194	4	?gEnlargeScreenBlit@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
 0x000a9910	4	?gRemoteReady@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
-0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
 0x00090e30	352	?gDataPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x00090f90	352	?gAnimPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x000910f0	352	?gSoundPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
@@ -400,3 +400,10 @@ rva	size	symbol	provenance
 0x000cccac	4	_gSmackCompanion	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
 0x0009e700	6	?gAppName@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
 0x0009e708	19	?gTitle@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses in buka-smack-data.json
+0x000cccbc	1024	_s_pendingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls in buka-town-text.json
+0x000cd0bc	1024	_s_armyCommandText	Typed town-message buffers; complete two-function instruction/reference and payload controls in buka-town-text.json
+0x000cd4bc	1024	_s_dwellingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls in buka-town-text.json
+0x000a7168	768	?gText@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
+0x000a7838	120	?cNetBoxLine@@3PAY0DM@DA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
+0x000a9e7c	36	?gNbEvents@@3PAPAXA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json
+0x000cb2d8	256	?packet@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays; buka-existing-data-references.json

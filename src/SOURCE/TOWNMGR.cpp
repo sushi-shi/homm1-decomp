@@ -43,6 +43,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+DATA(0x004cccbc)
+static char s_pendingArmyName[1024];
+DATA(0x004cd0bc)
+static char s_armyCommandText[1024];
+DATA(0x004cd4bc)
+static char s_dwellingArmyName[1024];
+
 // Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
 // function's compiler line static plus an offset; #line restores the original
 // file and lines (docs/patterns/vc4-gi-line-var.md).
@@ -315,41 +322,49 @@ void townManager::SetArmyCommand(i16 qualifier) {
     m_command = TOWN_ARMY_COMMAND_NONE;
     lastArmy = 0;
     if (m_swapStrip->m_army->GetNumArmies() == 1 && m_swapStrip == m_heroStrip
-        && m_swapStrip != m_pendingStrip)
+        && m_pendingStrip != m_swapStrip)
         lastArmy = 1;
 
     if (m_swapStrip != m_pendingStrip) {
         sameType = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]
-                == m_pendingStrip->m_army->m_creatureTypes[i])
+            if (m_pendingStrip->m_army->m_creatureTypes[i]
+                == m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot])
                 sameType = 1;
         }
         if (sameType) {
             if (qualifier) {
+                strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
                 sprintf(
                     m_statusText,
                     gTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
-                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+                    s_armyCommandText
                 );
                 m_command = TOWN_ARMY_COMMAND_SPLIT;
             } else if (lastArmy) {
-                strcpy(m_statusText, gTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
+                strcpy(s_armyCommandText, gTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
+                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
+                strcpy(m_statusText, s_armyCommandText);
                 return;
             } else {
+                strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
                 sprintf(
                     m_statusText,
                     gTownCommand[TOWN_TEXT_COMBINE_ARMIES],
-                    gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+                    s_armyCommandText
                 );
                 m_command = TOWN_ARMY_COMMAND_MERGE;
             }
         } else if (qualifier
                    && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
+            strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
             sprintf(
                 m_statusText,
                 gTownCommand[TOWN_TEXT_REDISTRIBUTE_TO_EMPTY_SLOT],
-                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+                s_armyCommandText
             );
             m_command = TOWN_ARMY_COMMAND_SPLIT;
         }
@@ -357,7 +372,7 @@ void townManager::SetArmyCommand(i16 qualifier) {
         sprintf(
             m_statusText,
             gTownCommand[TOWN_TEXT_VIEW_ARMY],
-            gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+            gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
         );
         m_command = TOWN_ARMY_COMMAND_VIEW;
     }
@@ -369,19 +384,25 @@ void townManager::SetArmyCommand(i16 qualifier) {
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
             return;
         } else {
+            strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
             sprintf(
                 m_statusText,
                 gTownCommand[TOWN_TEXT_MOVE_ARMY],
-                gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+                s_armyCommandText
             );
             m_command = TOWN_ARMY_COMMAND_SWAP;
         }
     } else {
+        strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+        s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
+        strcpy(s_pendingArmyName, gArmyNamesPlural[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]);
+        s_pendingArmyName[0] = CyrillicToLower(s_pendingArmyName[0]);
         sprintf(
             m_statusText,
             gTownCommand[TOWN_TEXT_EXCHANGE_ARMIES],
-            gArmyNames[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
-            gArmyNames[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]
+            s_armyCommandText,
+            s_pendingArmyName
         );
         m_command = TOWN_ARMY_COMMAND_SWAP;
     }
@@ -426,7 +447,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                     sprintf(
                         m_statusText,
                         gTownCommand[TOWN_TEXT_SELECT_ARMY],
-                        gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
+                        gArmyNamesPlural[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
                 }
@@ -455,7 +476,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                     sprintf(
                         m_statusText,
                         gTownCommand[TOWN_TEXT_SELECT_ARMY],
-                        gArmyNames[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
+                        gArmyNamesPlural[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
                 }
@@ -488,10 +509,15 @@ void townManager::SetCommandAndText(struct tag_message& message) {
         case BUILDING_SLOT_DWELLING_4:
         case BUILDING_SLOT_DWELLING_5:
         case BUILDING_SLOT_DWELLING_6:
+            strcpy(
+                s_dwellingArmyName,
+                gArmyNamesPlural[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
+            );
+            s_dwellingArmyName[0] = CyrillicToLower(s_dwellingArmyName[0]);
             sprintf(
                 m_statusText,
                 gTownCommand[TOWN_TEXT_DWELLING],
-                gArmyNames[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
+                s_dwellingArmyName
             );
             break;
     }
