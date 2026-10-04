@@ -212,7 +212,8 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/ARMYGRP"
 source = "src/SOURCE/ARMYGRP.cpp"
-flags = "cpp_buka"
+# /G6 adds a narrow-argument register clear absent from retail CanJoin.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/HERO"

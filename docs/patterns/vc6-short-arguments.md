@@ -85,3 +85,15 @@ callee actually consumes and rejects an artificial 32-bit contract here.
 Explicit signed-byte conversion and logical negation at the `SetGridMode`
 call both retain the non-retail materialization; neither control was kept.
 These observations do not authorize a new CPU profile or comparison mask.
+
+
+## Army-group control
+
+`SOURCE/ARMYGRP` independently confirms the narrow-argument mechanism.
+`CanJoin` is 59 bytes under `/G5` and 61 under `/G6`; `/G6` adds only
+`xor eax, eax` immediately before `mov al, byte ptr [ebp + 8]`. Retail has
+the `/G5` sequence, and `IsMember` consumes the signed byte at its argument
+slot. All ten other explicit routines have identical profile-control bytes
+outside their checked references, and every branch destination agrees.
+The complete eleven-function control and retail review are in
+[`buka-army-group.json`](../../config/retail/buka-army-group.json).

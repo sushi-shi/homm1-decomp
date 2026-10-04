@@ -124,6 +124,16 @@ rva	name	provenance
 0x00017f49	?GoBerserk@army@@QAEXXZ	Buka army effects/movement complete instruction and CFG review: complete function review; buka-army-effects.json
 0x0001811f	?MoveAttack@army@@QAEXHH@Z	Buka army effects/movement complete instruction and CFG review: complete function review; buka-army-effects.json
 0x000184b0	??0armyGroup@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x11708; buka-combat-ai.json
+0x000184e1	?View@armyGroup@@QAEXH@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x000184ee	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x00018609	?Dismiss@armyGroup@@QAEXC@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x0001862f	?IsMember@armyGroup@@QAECC@Z	Buka army-group complete instruction and CFG review: complete function review, 0x187c3, 0x187d8; buka-army-group.json
+0x00018676	?IsHomogeneous@armyGroup@@QAECC@Z	Buka army-group complete instruction and CFG review: 0x18504, complete function review; buka-army-group.json
+0x000187b4	?CanJoin@armyGroup@@QAECC@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x000187ef	?GetNumArmies@armyGroup@@QAEFXZ	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x00018841	?Add@armyGroup@@QAEFCFC@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x0001893f	?Swap@armyGroup@@QAEXCPAV1@C@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
+0x000189b6	?DamageGroup@armyGroup@@QAEXM@Z	Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json
 0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x00021703	?StopCursor@advManager@@QAEXC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2673, 0x2749; buka-adventure-commands.json
@@ -171,6 +181,7 @@ rva	name	provenance
 0x00038934	?ShowScenInfo@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x3256; buka-adventure-commands.json
 0x00038e58	?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z	Buka context/locator instruction/CFG review: 0xb494; buka-adventure-context.json
 0x00038f20	??0hero@@QAE@XZ	Buka combat-AI instruction/CFG/EH review: 0x116fd; buka-combat-ai.json
+0x00038f8a	?HasArtifact@hero@@QAECC@Z	Buka army-group complete instruction and CFG review: 0x1854a, 0x18564, 0x1857e, 0x18598, 0x185b2; buka-army-group.json
 0x0003929b	?UseSpell@hero@@QAEXC@Z	Buka map-view instruction/CFG/EH review: 0xc21f; buka-map-views.json
 0x0003949f	?AddSpell@hero@@QAEHCCH@Z	Buka Main complete instruction/CFG correspondence: 0x2dd9; buka-adventure-commands.json
 0x0003968e	?HeroView@hero@@QAECC@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x287c; buka-adventure-commands.json

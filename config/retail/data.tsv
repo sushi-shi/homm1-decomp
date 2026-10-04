@@ -21,6 +21,7 @@
 # Combat message buffers and flags: buka-combat-messages.json.
 # Army movement/luck/damage review: buka-army-luck.json.
 # Army effects/movement review: buka-army-effects.json.
+# Army-group damage constants: buka-army-group.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
@@ -37,6 +38,9 @@ rva	kind
 0x0008a3e8	fppool
 0x0008a3f0	fppool
 0x0008a3f8	fppool
+0x0008a400	fppool
+0x0008a408	fppool
+0x0008a410	fppool
 0x0008a758	vtable
 0x0008d070	
 0x0008d074	

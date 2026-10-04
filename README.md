@@ -56,9 +56,11 @@ Movement, luck and damage routines now have complete instruction and CFG
 reviews. Luck messages use plural creature names; damage rules and all combat
 multipliers remain unchanged. Effect animation, spell cancellation, berserk
 actions and move/attack dispatch now have complete CFG and data reviews too.
-The effect-name tables preserve all original resource filenames. Strict
-delinking reaches `armyGroup::DamageGroup`, stopping at a floating constant
-(`0x8a410`); inherited data overlaps also remain. The old score ledger
+The effect-name tables preserve all original resource filenames. All eleven
+army-group functions now have reviewed Buka claims and the measured `/G5`
+profile; morale and damage rules remain unchanged. Strict delinking reaches
+the combat-manager constructor, stopping at its vtable (`0x8a414`); inherited
+data overlaps also remain. The old score ledger
 has been reset.
 Supply your own game executable and assets; they are not included here.
 

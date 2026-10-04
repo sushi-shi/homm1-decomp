@@ -1,0 +1,1736 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "parent_checkpoint": "922addb2",
+  "method": "Complete retail instructions, generated CFGs, ordered reference checks and bijective stack-byte mapping; no decompiler output or permutations.",
+  "functions": [
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "??0armyGroup@@QAE@XZ",
+        "rva": "0x184b0",
+        "size": 49,
+        "object_size": 49,
+        "retail_code_size": 49,
+        "object_code_size": 49,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          1,
+          1
+        ],
+        "object_refs": [
+          {
+            "offset": "0x10",
+            "kind": 20,
+            "symbol": "_memset",
+            "addend": "0x0",
+            "site_rva": "0x184c0",
+            "target_rva": "0x784e0"
+          },
+          {
+            "offset": "0x23",
+            "kind": 20,
+            "symbol": "_memset",
+            "addend": "0x0",
+            "site_rva": "0x184d3",
+            "target_rva": "0x784e0"
+          }
+        ],
+        "instruction_count": 21,
+        "old_nwc_rva": "0x67700"
+      },
+      "local_differences": [],
+      "branches": [],
+      "internal_references": [],
+      "references": [
+        {
+          "site": "0x184c0",
+          "offset": "0x10",
+          "kind": 20,
+          "name": "_memset",
+          "addend": 0,
+          "target": "0x784e0"
+        },
+        {
+          "site": "0x184d3",
+          "offset": "0x23",
+          "kind": 20,
+          "name": "_memset",
+          "addend": 0,
+          "target": "0x784e0"
+        }
+      ],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?View@armyGroup@@QAEXH@Z",
+        "rva": "0x184e1",
+        "size": 13,
+        "object_size": 13,
+        "retail_code_size": 13,
+        "object_code_size": 13,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          1,
+          1
+        ],
+        "object_refs": [],
+        "instruction_count": 7,
+        "old_nwc_rva": "0x6773c"
+      },
+      "local_differences": [],
+      "branches": [],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z",
+        "rva": "0x184ee",
+        "size": 283,
+        "object_size": 283,
+        "retail_code_size": 283,
+        "object_code_size": 283,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          21,
+          21
+        ],
+        "object_refs": [
+          {
+            "offset": "0x16",
+            "kind": 20,
+            "symbol": "?IsHomogeneous@armyGroup@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x18504",
+            "target_rva": "0x18676"
+          },
+          {
+            "offset": "0x5c",
+            "kind": 20,
+            "symbol": "?HasArtifact@hero@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x1854a",
+            "target_rva": "0x38f8a"
+          },
+          {
+            "offset": "0x76",
+            "kind": 20,
+            "symbol": "?HasArtifact@hero@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x18564",
+            "target_rva": "0x38f8a"
+          },
+          {
+            "offset": "0x90",
+            "kind": 20,
+            "symbol": "?HasArtifact@hero@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x1857e",
+            "target_rva": "0x38f8a"
+          },
+          {
+            "offset": "0xaa",
+            "kind": 20,
+            "symbol": "?HasArtifact@hero@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x18598",
+            "target_rva": "0x38f8a"
+          },
+          {
+            "offset": "0xc4",
+            "kind": 20,
+            "symbol": "?HasArtifact@hero@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x185b2",
+            "target_rva": "0x38f8a"
+          }
+        ],
+        "instruction_count": 93,
+        "old_nwc_rva": "0x67754"
+      },
+      "local_differences": [],
+      "branches": [
+        {
+          "object": "0x2d",
+          "retail": "0x1851b",
+          "target": "0x185c6"
+        },
+        {
+          "object": "0x3c",
+          "retail": "0x1852a",
+          "target": "0x18535"
+        },
+        {
+          "object": "0x65",
+          "retail": "0x18553",
+          "target": "0x1855e"
+        },
+        {
+          "object": "0x7f",
+          "retail": "0x1856d",
+          "target": "0x18578"
+        },
+        {
+          "object": "0x99",
+          "retail": "0x18587",
+          "target": "0x18592"
+        },
+        {
+          "object": "0xb3",
+          "retail": "0x185a1",
+          "target": "0x185ac"
+        },
+        {
+          "object": "0xcd",
+          "retail": "0x185bb",
+          "target": "0x185c6"
+        },
+        {
+          "object": "0xdc",
+          "retail": "0x185ca",
+          "target": "0x185e3"
+        },
+        {
+          "object": "0xea",
+          "retail": "0x185d8",
+          "target": "0x185e3"
+        },
+        {
+          "object": "0xf9",
+          "retail": "0x185e7",
+          "target": "0x185f2"
+        },
+        {
+          "object": "0x102",
+          "retail": "0x185f0",
+          "target": "0x185ff"
+        },
+        {
+          "object": "0x108",
+          "retail": "0x185f6",
+          "target": "0x185ff"
+        }
+      ],
+      "internal_references": [],
+      "references": [
+        {
+          "site": "0x18504",
+          "offset": "0x16",
+          "kind": 20,
+          "name": "?IsHomogeneous@armyGroup@@QAECC@Z",
+          "addend": 0,
+          "target": "0x18676"
+        },
+        {
+          "site": "0x1854a",
+          "offset": "0x5c",
+          "kind": 20,
+          "name": "?HasArtifact@hero@@QAECC@Z",
+          "addend": 0,
+          "target": "0x38f8a"
+        },
+        {
+          "site": "0x18564",
+          "offset": "0x76",
+          "kind": 20,
+          "name": "?HasArtifact@hero@@QAECC@Z",
+          "addend": 0,
+          "target": "0x38f8a"
+        },
+        {
+          "site": "0x1857e",
+          "offset": "0x90",
+          "kind": 20,
+          "name": "?HasArtifact@hero@@QAECC@Z",
+          "addend": 0,
+          "target": "0x38f8a"
+        },
+        {
+          "site": "0x18598",
+          "offset": "0xaa",
+          "kind": 20,
+          "name": "?HasArtifact@hero@@QAECC@Z",
+          "addend": 0,
+          "target": "0x38f8a"
+        },
+        {
+          "site": "0x185b2",
+          "offset": "0xc4",
+          "kind": 20,
+          "name": "?HasArtifact@hero@@QAECC@Z",
+          "addend": 0,
+          "target": "0x38f8a"
+        }
+      ],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?Dismiss@armyGroup@@QAEXC@Z",
+        "rva": "0x18609",
+        "size": 38,
+        "object_size": 38,
+        "retail_code_size": 38,
+        "object_code_size": 38,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          1,
+          1
+        ],
+        "object_refs": [],
+        "instruction_count": 13,
+        "old_nwc_rva": "0x6786f"
+      },
+      "local_differences": [],
+      "branches": [],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?IsMember@armyGroup@@QAECC@Z",
+        "rva": "0x1862f",
+        "size": 71,
+        "object_size": 71,
+        "retail_code_size": 71,
+        "object_code_size": 71,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          8,
+          8
+        ],
+        "object_refs": [],
+        "instruction_count": 25,
+        "old_nwc_rva": "0x678a0"
+      },
+      "local_differences": [],
+      "branches": [
+        {
+          "object": "0xf",
+          "retail": "0x1863e",
+          "target": "0x1864c"
+        },
+        {
+          "object": "0x24",
+          "retail": "0x18653",
+          "target": "0x1866e"
+        },
+        {
+          "object": "0x37",
+          "retail": "0x18666",
+          "target": "0x1866c"
+        },
+        {
+          "object": "0x3b",
+          "retail": "0x1866a",
+          "target": "0x18670"
+        },
+        {
+          "object": "0x3d",
+          "retail": "0x1866c",
+          "target": "0x18640"
+        }
+      ],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?IsHomogeneous@armyGroup@@QAECC@Z",
+        "rva": "0x18676",
+        "size": 318,
+        "object_size": 318,
+        "retail_code_size": 318,
+        "object_code_size": 318,
+        "normalized_body_equal": false,
+        "cfg_equal": true,
+        "block_counts": [
+          27,
+          27
+        ],
+        "object_refs": [],
+        "instruction_count": 102,
+        "old_nwc_rva": "0x678f9"
+      },
+      "local_differences": [
+        {
+          "site": "0x18680",
+          "object_offset": "0xa",
+          "object": "dword ptr [ebp - 0x10], 0",
+          "retail": "dword ptr [ebp - 8], 0",
+          "object_size": 7,
+          "retail_size": 7
+        },
+        {
+          "site": "0x186a3",
+          "object_offset": "0x2d",
+          "object": "dword ptr [ebp - 8], 0xffffffff",
+          "retail": "dword ptr [ebp - 0x10], 0xffffffff",
+          "object_size": 7,
+          "retail_size": 7
+        },
+        {
+          "site": "0x1871c",
+          "object_offset": "0xa6",
+          "object": "eax, dword ptr [ebp - 8]",
+          "retail": "eax, dword ptr [ebp - 0x10]",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18721",
+          "object_offset": "0xab",
+          "object": "ecx, dword ptr [ebp - 0x10]",
+          "retail": "ecx, dword ptr [ebp - 8]",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18727",
+          "object_offset": "0xb1",
+          "object": "dword ptr [ebp - 0x10], ecx",
+          "retail": "dword ptr [ebp - 8], ecx",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18735",
+          "object_offset": "0xbf",
+          "object": "dword ptr [ebp - 8], ecx",
+          "retail": "dword ptr [ebp - 0x10], ecx",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x1873d",
+          "object_offset": "0xc7",
+          "object": "dword ptr [ebp - 0x10], 1",
+          "retail": "dword ptr [ebp - 8], 1",
+          "object_size": 4,
+          "retail_size": 4
+        }
+      ],
+      "branches": [
+        {
+          "object": "0x3a",
+          "retail": "0x186b0",
+          "target": "0x186be"
+        },
+        {
+          "object": "0x4f",
+          "retail": "0x186c5",
+          "target": "0x1873d"
+        },
+        {
+          "object": "0x5f",
+          "retail": "0x186d5",
+          "target": "0x18738"
+        },
+        {
+          "object": "0x68",
+          "retail": "0x186de",
+          "target": "0x18711"
+        },
+        {
+          "object": "0xa9",
+          "retail": "0x1871f",
+          "target": "0x18738"
+        },
+        {
+          "object": "0xc2",
+          "retail": "0x18738",
+          "target": "0x186b2"
+        },
+        {
+          "object": "0xcb",
+          "retail": "0x18741",
+          "target": "0x18747"
+        },
+        {
+          "object": "0xcf",
+          "retail": "0x18745",
+          "target": "0x187ad"
+        },
+        {
+          "object": "0xde",
+          "retail": "0x18754",
+          "target": "0x18762"
+        },
+        {
+          "object": "0xf3",
+          "retail": "0x18769",
+          "target": "0x18783"
+        },
+        {
+          "object": "0x100",
+          "retail": "0x18776",
+          "target": "0x18781"
+        },
+        {
+          "object": "0x10b",
+          "retail": "0x18781",
+          "target": "0x18756"
+        },
+        {
+          "object": "0x111",
+          "retail": "0x18787",
+          "target": "0x1878d"
+        },
+        {
+          "object": "0x115",
+          "retail": "0x1878b",
+          "target": "0x187ad"
+        },
+        {
+          "object": "0x11b",
+          "retail": "0x18791",
+          "target": "0x18797"
+        },
+        {
+          "object": "0x11f",
+          "retail": "0x18795",
+          "target": "0x187ad"
+        },
+        {
+          "object": "0x125",
+          "retail": "0x1879b",
+          "target": "0x187a1"
+        },
+        {
+          "object": "0x129",
+          "retail": "0x1879f",
+          "target": "0x187ad"
+        },
+        {
+          "object": "0x12f",
+          "retail": "0x187a5",
+          "target": "0x187ab"
+        },
+        {
+          "object": "0x133",
+          "retail": "0x187a9",
+          "target": "0x187ad"
+        }
+      ],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?CanJoin@armyGroup@@QAECC@Z",
+        "rva": "0x187b4",
+        "size": 59,
+        "object_size": 59,
+        "retail_code_size": 59,
+        "object_code_size": 59,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          6,
+          6
+        ],
+        "object_refs": [
+          {
+            "offset": "0xf",
+            "kind": 20,
+            "symbol": "?IsMember@armyGroup@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x187c3",
+            "target_rva": "0x1862f"
+          },
+          {
+            "offset": "0x24",
+            "kind": 20,
+            "symbol": "?IsMember@armyGroup@@QAECC@Z",
+            "addend": "0x0",
+            "site_rva": "0x187d8",
+            "target_rva": "0x1862f"
+          }
+        ],
+        "instruction_count": 25,
+        "old_nwc_rva": "0x67a4c"
+      },
+      "local_differences": [],
+      "branches": [
+        {
+          "object": "0x18",
+          "retail": "0x187cc",
+          "target": "0x187d2"
+        },
+        {
+          "object": "0x1c",
+          "retail": "0x187d0",
+          "target": "0x187e9"
+        },
+        {
+          "object": "0x2d",
+          "retail": "0x187e1",
+          "target": "0x187e7"
+        },
+        {
+          "object": "0x31",
+          "retail": "0x187e5",
+          "target": "0x187e9"
+        }
+      ],
+      "internal_references": [],
+      "references": [
+        {
+          "site": "0x187c3",
+          "offset": "0xf",
+          "kind": 20,
+          "name": "?IsMember@armyGroup@@QAECC@Z",
+          "addend": 0,
+          "target": "0x1862f"
+        },
+        {
+          "site": "0x187d8",
+          "offset": "0x24",
+          "kind": 20,
+          "name": "?IsMember@armyGroup@@QAECC@Z",
+          "addend": 0,
+          "target": "0x1862f"
+        }
+      ],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?GetNumArmies@armyGroup@@QAEFXZ",
+        "rva": "0x187ef",
+        "size": 82,
+        "object_size": 82,
+        "retail_code_size": 82,
+        "object_code_size": 82,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          7,
+          7
+        ],
+        "object_refs": [],
+        "instruction_count": 26,
+        "old_nwc_rva": "0x67aa0"
+      },
+      "local_differences": [],
+      "branches": [
+        {
+          "object": "0x15",
+          "retail": "0x18804",
+          "target": "0x18812"
+        },
+        {
+          "object": "0x2a",
+          "retail": "0x18819",
+          "target": "0x18839"
+        },
+        {
+          "object": "0x3a",
+          "retail": "0x18829",
+          "target": "0x18837"
+        },
+        {
+          "object": "0x48",
+          "retail": "0x18837",
+          "target": "0x18806"
+        }
+      ],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?Add@armyGroup@@QAEFCFC@Z",
+        "rva": "0x18841",
+        "size": 254,
+        "object_size": 254,
+        "retail_code_size": 254,
+        "object_code_size": 254,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          21,
+          21
+        ],
+        "object_refs": [],
+        "instruction_count": 79,
+        "old_nwc_rva": "0x67af9"
+      },
+      "local_differences": [],
+      "branches": [
+        {
+          "object": "0x10",
+          "retail": "0x18851",
+          "target": "0x1888d"
+        },
+        {
+          "object": "0x18",
+          "retail": "0x18859",
+          "target": "0x18867"
+        },
+        {
+          "object": "0x2d",
+          "retail": "0x1886e",
+          "target": "0x1888d"
+        },
+        {
+          "object": "0x40",
+          "retail": "0x18881",
+          "target": "0x1888b"
+        },
+        {
+          "object": "0x48",
+          "retail": "0x18889",
+          "target": "0x1888d"
+        },
+        {
+          "object": "0x4a",
+          "retail": "0x1888b",
+          "target": "0x1885b"
+        },
+        {
+          "object": "0x53",
+          "retail": "0x18894",
+          "target": "0x188e0"
+        },
+        {
+          "object": "0x5b",
+          "retail": "0x1889c",
+          "target": "0x188aa"
+        },
+        {
+          "object": "0x70",
+          "retail": "0x188b1",
+          "target": "0x188e0"
+        },
+        {
+          "object": "0x80",
+          "retail": "0x188c1",
+          "target": "0x188d6"
+        },
+        {
+          "object": "0x93",
+          "retail": "0x188d4",
+          "target": "0x188de"
+        },
+        {
+          "object": "0x9b",
+          "retail": "0x188dc",
+          "target": "0x188e0"
+        },
+        {
+          "object": "0x9d",
+          "retail": "0x188de",
+          "target": "0x1889e"
+        },
+        {
+          "object": "0xa6",
+          "retail": "0x188e7",
+          "target": "0x188ee"
+        },
+        {
+          "object": "0xab",
+          "retail": "0x188ec",
+          "target": "0x18939"
+        },
+        {
+          "object": "0xc8",
+          "retail": "0x18909",
+          "target": "0x18919"
+        }
+      ],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?Swap@armyGroup@@QAEXCPAV1@C@Z",
+        "rva": "0x1893f",
+        "size": 119,
+        "object_size": 119,
+        "retail_code_size": 119,
+        "object_code_size": 119,
+        "normalized_body_equal": true,
+        "cfg_equal": true,
+        "block_counts": [
+          1,
+          1
+        ],
+        "object_refs": [],
+        "instruction_count": 37,
+        "old_nwc_rva": "0x67c2b"
+      },
+      "local_differences": [],
+      "branches": [],
+      "internal_references": [],
+      "references": [],
+      "eh": null
+    },
+    {
+      "function": {
+        "unit": "SOURCE/ARMYGRP",
+        "name": "?DamageGroup@armyGroup@@QAEXM@Z",
+        "rva": "0x189b6",
+        "size": 307,
+        "object_size": 307,
+        "retail_code_size": 307,
+        "object_code_size": 307,
+        "normalized_body_equal": false,
+        "cfg_equal": true,
+        "block_counts": [
+          21,
+          21
+        ],
+        "object_refs": [
+          {
+            "offset": "0xe",
+            "kind": 6,
+            "symbol": "__real@4@4005c800000000000000",
+            "addend": "0x0"
+          },
+          {
+            "offset": "0x13",
+            "kind": 20,
+            "symbol": "__ftol",
+            "addend": "0x0"
+          },
+          {
+            "offset": "0x7d",
+            "kind": 20,
+            "symbol": "?SRandom@@YAHHH@Z",
+            "addend": "0x0"
+          },
+          {
+            "offset": "0xaf",
+            "kind": 6,
+            "symbol": "__real@8@3ffeffbe76c8b4395800",
+            "addend": "0x0"
+          },
+          {
+            "offset": "0xf1",
+            "kind": 6,
+            "symbol": "__real@8@3fff8000000000000000",
+            "addend": "0x0"
+          }
+        ],
+        "instruction_count": 89,
+        "old_nwc_rva": "0x67ca8"
+      },
+      "local_differences": [
+        {
+          "site": "0x189cd",
+          "object_offset": "0x17",
+          "object": "dword ptr [ebp - 4], eax",
+          "retail": "dword ptr [ebp - 0x10], eax",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x189d0",
+          "object_offset": "0x1a",
+          "object": "dword ptr [ebp - 0xc], 1",
+          "retail": "dword ptr [ebp - 4], 1",
+          "object_size": 7,
+          "retail_size": 7
+        },
+        {
+          "site": "0x18a0c",
+          "object_offset": "0x56",
+          "object": "dword ptr [ebp - 0x10], 0",
+          "retail": "dword ptr [ebp - 0xc], 0",
+          "object_size": 7,
+          "retail_size": 7
+        },
+        {
+          "site": "0x18a15",
+          "object_offset": "0x5f",
+          "object": "eax, dword ptr [ebp - 0x10]",
+          "retail": "eax, dword ptr [ebp - 0xc]",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18a1b",
+          "object_offset": "0x65",
+          "object": "dword ptr [ebp - 0x10], eax",
+          "retail": "dword ptr [ebp - 0xc], eax",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18a29",
+          "object_offset": "0x73",
+          "object": "dword ptr [ebp - 0x10], eax",
+          "retail": "dword ptr [ebp - 0xc], eax",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18a3a",
+          "object_offset": "0x84",
+          "object": "eax, dword ptr [ebp - 4]",
+          "retail": "eax, dword ptr [ebp - 0x10]",
+          "object_size": 3,
+          "retail_size": 3
+        },
+        {
+          "site": "0x18a4a",
+          "object_offset": "0x94",
+          "object": "dword ptr [ebp - 0xc], 0",
+          "retail": "dword ptr [ebp - 4], 0",
+          "object_size": 4,
+          "retail_size": 4
+        },
+        {
+          "site": "0x18ac8",
+          "object_offset": "0x112",
+          "object": "dword ptr [ebp - 0xc], 0",
+          "retail": "dword ptr [ebp - 4], 0",
+          "object_size": 7,
+          "retail_size": 7
+        }
+      ],
+      "branches": [
+        {
+          "object": "0x28",
+          "retail": "0x189de",
+          "target": "0x189e9"
+        },
+        {
+          "object": "0x37",
+          "retail": "0x189ed",
+          "target": "0x18ae3"
+        },
+        {
+          "object": "0x49",
+          "retail": "0x189ff",
+          "target": "0x18ad1"
+        },
+        {
+          "object": "0x5d",
+          "retail": "0x18a13",
+          "target": "0x18a1e"
+        },
+        {
+          "object": "0x76",
+          "retail": "0x18a2c",
+          "target": "0x18a4a"
+        },
+        {
+          "object": "0x87",
+          "retail": "0x18a3d",
+          "target": "0x18a48"
+        },
+        {
+          "object": "0x92",
+          "retail": "0x18a48",
+          "target": "0x18a15"
+        },
+        {
+          "object": "0x98",
+          "retail": "0x18a4e",
+          "target": "0x18a79"
+        },
+        {
+          "object": "0xa8",
+          "retail": "0x18a5e",
+          "target": "0x18a79"
+        },
+        {
+          "object": "0xb8",
+          "retail": "0x18a6e",
+          "target": "0x18a79"
+        },
+        {
+          "object": "0xea",
+          "retail": "0x18aa0",
+          "target": "0x18ab2"
+        },
+        {
+          "object": "0xfa",
+          "retail": "0x18ab0",
+          "target": "0x18ac8"
+        },
+        {
+          "object": "0x119",
+          "retail": "0x18acf",
+          "target": "0x18ade"
+        },
+        {
+          "object": "0x128",
+          "retail": "0x18ade",
+          "target": "0x189e0"
+        }
+      ],
+      "internal_references": [],
+      "references": [
+        {
+          "site": "0x189c4",
+          "offset": "0xe",
+          "kind": 6,
+          "name": "__real@4@4005c800000000000000",
+          "addend": 0,
+          "target": "0x8a410"
+        },
+        {
+          "site": "0x189c9",
+          "offset": "0x13",
+          "kind": 20,
+          "name": "__ftol",
+          "addend": 0,
+          "target": "0x782f4"
+        },
+        {
+          "site": "0x18a33",
+          "offset": "0x7d",
+          "kind": 20,
+          "name": "?SRandom@@YAHHH@Z",
+          "addend": 0,
+          "target": "0x35e77"
+        },
+        {
+          "site": "0x18a65",
+          "offset": "0xaf",
+          "kind": 6,
+          "name": "__real@8@3ffeffbe76c8b4395800",
+          "addend": 0,
+          "target": "0x8a408"
+        },
+        {
+          "site": "0x18aa7",
+          "offset": "0xf1",
+          "kind": 6,
+          "name": "__real@8@3fff8000000000000000",
+          "addend": 0,
+          "target": "0x8a400"
+        }
+      ],
+      "eh": null
+    }
+  ],
+  "stack_identity_validation": [
+    {
+      "name": "??0armyGroup@@QAE@XZ",
+      "stack_operands": [
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?View@armyGroup@@QAEXH@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -12,
+          "retail_displacement": -12,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            2,
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 12,
+          "retail_displacement": 12,
+          "access_sizes": [
+            4
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?Dismiss@armyGroup@@QAEXC@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?IsMember@armyGroup@@QAECC@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            2
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?IsHomogeneous@armyGroup@@QAECC@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -28,
+          "retail_displacement": -28,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -24,
+          "retail_displacement": -24,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": -23,
+          "retail_displacement": -23,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": -22,
+          "retail_displacement": -22,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": -21,
+          "retail_displacement": -21,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": -20,
+          "retail_displacement": -20,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": -16,
+          "retail_displacement": -8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -12,
+          "retail_displacement": -12,
+          "access_sizes": [
+            2
+          ]
+        },
+        {
+          "object_displacement": -8,
+          "retail_displacement": -16,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?CanJoin@armyGroup@@QAECC@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?GetNumArmies@armyGroup@@QAEFXZ",
+      "stack_operands": [
+        {
+          "object_displacement": -12,
+          "retail_displacement": -12,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            2
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            2
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?Add@armyGroup@@QAEFCFC@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            1,
+            2
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": 12,
+          "retail_displacement": 12,
+          "access_sizes": [
+            2
+          ]
+        },
+        {
+          "object_displacement": 16,
+          "retail_displacement": 16,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?Swap@armyGroup@@QAEXCPAV1@C@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -4,
+          "access_sizes": [
+            1,
+            2,
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            1
+          ]
+        },
+        {
+          "object_displacement": 12,
+          "retail_displacement": 12,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 16,
+          "retail_displacement": 16,
+          "access_sizes": [
+            1
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    },
+    {
+      "name": "?DamageGroup@armyGroup@@QAEXM@Z",
+      "stack_operands": [
+        {
+          "object_displacement": -24,
+          "retail_displacement": -24,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -20,
+          "retail_displacement": -20,
+          "access_sizes": [
+            2,
+            4
+          ]
+        },
+        {
+          "object_displacement": -16,
+          "retail_displacement": -12,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -12,
+          "retail_displacement": -4,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -8,
+          "retail_displacement": -8,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": -4,
+          "retail_displacement": -16,
+          "access_sizes": [
+            4
+          ]
+        },
+        {
+          "object_displacement": 8,
+          "retail_displacement": 8,
+          "access_sizes": [
+            4
+          ]
+        }
+      ],
+      "result": "All EBP operands, including unchanged accesses and arguments, obey a consistent bijective byte mapping; operand widths agree. No stack identity masking is used by strict comparison."
+    }
+  ],
+  "floating_constants": [
+    {
+      "name": "__real@4@4005c800000000000000",
+      "rva": "0x8a410",
+      "size": 4,
+      "type": "float",
+      "value": 100.0,
+      "hex_bytes": "0000c842",
+      "payload_sha256": "2238f30df488055daf5e8f362cf904e370011a172d20df193c1b7ae8e5db8e01",
+      "role": "Damage percentage to integer chance",
+      "reference": {
+        "site": "0x189c4",
+        "offset": "0xe",
+        "kind": 6,
+        "name": "__real@4@4005c800000000000000",
+        "addend": 0,
+        "target": "0x8a410"
+      }
+    },
+    {
+      "name": "__real@8@3ffeffbe76c8b4395800",
+      "rva": "0x8a408",
+      "size": 8,
+      "type": "double",
+      "value": 0.999,
+      "hex_bytes": "2b8716d9cef7ef3f",
+      "payload_sha256": "e2e8c359c118cf8437459913ad396f3dd134817c36c692d526e78ea5310c2165",
+      "role": "First nonempty troop survivor threshold",
+      "reference": {
+        "site": "0x18a65",
+        "offset": "0xaf",
+        "kind": 6,
+        "name": "__real@8@3ffeffbe76c8b4395800",
+        "addend": 0,
+        "target": "0x8a408"
+      }
+    },
+    {
+      "name": "__real@8@3fff8000000000000000",
+      "rva": "0x8a400",
+      "size": 8,
+      "type": "double",
+      "value": 1.0,
+      "hex_bytes": "000000000000f03f",
+      "payload_sha256": "6c3c396ed6b5c36dcae172271f462051b1266b851e92df3deea8ac65478fd712",
+      "role": "Complete-damage threshold",
+      "reference": {
+        "site": "0x18aa7",
+        "offset": "0xf1",
+        "kind": 6,
+        "name": "__real@8@3fff8000000000000000",
+        "addend": 0,
+        "target": "0x8a400"
+      }
+    }
+  ],
+  "new_function_referents": [
+    {
+      "rva": "0x000184e1",
+      "name": "?View@armyGroup@@QAEXH@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x000184ee",
+      "name": "?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x00018676",
+      "name": "?IsHomogeneous@armyGroup@@QAECC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: 0x18504, complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x00038f8a",
+      "name": "?HasArtifact@hero@@QAECC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: 0x1854a, 0x18564, 0x1857e, 0x18598, 0x185b2; buka-army-group.json"
+    },
+    {
+      "rva": "0x00018609",
+      "name": "?Dismiss@armyGroup@@QAEXC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x0001862f",
+      "name": "?IsMember@armyGroup@@QAECC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review, 0x187c3, 0x187d8; buka-army-group.json"
+    },
+    {
+      "rva": "0x000187b4",
+      "name": "?CanJoin@armyGroup@@QAECC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x000187ef",
+      "name": "?GetNumArmies@armyGroup@@QAEFXZ",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x00018841",
+      "name": "?Add@armyGroup@@QAEFCFC@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x0001893f",
+      "name": "?Swap@armyGroup@@QAEXCPAV1@C@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    },
+    {
+      "rva": "0x000189b6",
+      "name": "?DamageGroup@armyGroup@@QAEXM@Z",
+      "provenance": "Buka army-group complete instruction and CFG review: complete function review; buka-army-group.json"
+    }
+  ],
+  "compiler_control": {
+    "source_sha256": "ab8311ad677ffbcf00e7da4c3894b4852fe95659a1c1af1494304ba95c452108",
+    "functions": [
+      {
+        "name": "??0armyGroup@@QAE@XZ",
+        "g5_bytes": 49,
+        "g6_bytes": 49,
+        "paired_instructions": 21,
+        "verified_branches": 0,
+        "ordered_references": 2,
+        "g6_insertions": []
+      },
+      {
+        "name": "?View@armyGroup@@QAEXH@Z",
+        "g5_bytes": 13,
+        "g6_bytes": 13,
+        "paired_instructions": 7,
+        "verified_branches": 0,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z",
+        "g5_bytes": 283,
+        "g6_bytes": 283,
+        "paired_instructions": 93,
+        "verified_branches": 12,
+        "ordered_references": 6,
+        "g6_insertions": []
+      },
+      {
+        "name": "?Dismiss@armyGroup@@QAEXC@Z",
+        "g5_bytes": 38,
+        "g6_bytes": 38,
+        "paired_instructions": 13,
+        "verified_branches": 0,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?IsMember@armyGroup@@QAECC@Z",
+        "g5_bytes": 71,
+        "g6_bytes": 71,
+        "paired_instructions": 25,
+        "verified_branches": 5,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?IsHomogeneous@armyGroup@@QAECC@Z",
+        "g5_bytes": 318,
+        "g6_bytes": 318,
+        "paired_instructions": 102,
+        "verified_branches": 20,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?CanJoin@armyGroup@@QAECC@Z",
+        "g5_bytes": 59,
+        "g6_bytes": 61,
+        "paired_instructions": 25,
+        "verified_branches": 4,
+        "ordered_references": 2,
+        "g6_insertions": [
+          {
+            "g6_offset": "0x7",
+            "instruction": "xor eax, eax",
+            "following": "mov al, byte ptr [ebp + 8]"
+          }
+        ]
+      },
+      {
+        "name": "?GetNumArmies@armyGroup@@QAEFXZ",
+        "g5_bytes": 82,
+        "g6_bytes": 82,
+        "paired_instructions": 26,
+        "verified_branches": 4,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?Add@armyGroup@@QAEFCFC@Z",
+        "g5_bytes": 254,
+        "g6_bytes": 254,
+        "paired_instructions": 79,
+        "verified_branches": 16,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?Swap@armyGroup@@QAEXCPAV1@C@Z",
+        "g5_bytes": 119,
+        "g6_bytes": 119,
+        "paired_instructions": 37,
+        "verified_branches": 0,
+        "ordered_references": 0,
+        "g6_insertions": []
+      },
+      {
+        "name": "?DamageGroup@armyGroup@@QAEXM@Z",
+        "g5_bytes": 307,
+        "g6_bytes": 307,
+        "paired_instructions": 89,
+        "verified_branches": 14,
+        "ordered_references": 5,
+        "g6_insertions": []
+      }
+    ],
+    "verdict": "Final-source controls: /G6 adds only XOR EAX,EAX before CanJoin loads its byte argument into AL. All other instructions, reference identities/addends and branch destinations agree with /G5. Retail independently agrees with /G5; no comparison masking is introduced."
+  },
+  "compiler_control_scope": "Both CPU profiles compiled after the DamageGroup expression correction and before claim/comment edits. Final production objects are rechecked after those annotation changes.",
+  "profile": "SOURCE/ARMYGRP changes from /Od /Ob1 /GX /MT /G6 to measured /G5.",
+  "source_changes": [
+    "DamageGroup compares killed before m_creatureCounts[i]; this restores retail pure-read operand order without changing its equality test.",
+    "All eleven explicit function claims now carry the independently reviewed Buka addresses.",
+    "Retired stale NWC object-boundary prose and heuristic donor-attribution comments superseded by the full retail review."
+  ],
+  "donor_revision": "HoMM2 Buka e0689d3f71b2942b544fd677cb54085a13503d7b",
+  "donor_evidence": "DamageGroup uses the same killed == count comparison and first-troop survivor rule. HoMM1 retail independently confirms the instructions and threshold payloads; HoMM2-specific morale rules are not transplanted.",
+  "behavior_review": [
+    "No gameplay change found in this unit beyond restoring retail instruction expression order.",
+    "Morale retains the town tavern bonus, five artifact checks and clamp to -3..3.",
+    "Composition counting, member/join tests and Add/Swap semantics remain unchanged.",
+    "View is genuinely empty in retail: its seven-instruction frame and return agree; no dummy implementation was introduced.",
+    "DamageGroup retains SRandom(0,100) < integer(damagePercent*100), first nonempty troop survivor protection below 0.999, and full deletion at damagePercent >= 1.0.",
+    "Existing Add slot handling, including the absence of a separate negative-slot guard, remains unchanged."
+  ],
+  "remaining": "Two routines retain 16 stack displacement differences. Strict comparison is unchanged. Global source/data migration, startup emissions and full gates remain incomplete.",
+  "generated_manifest_review": [
+    {
+      "name": "__real@8@3fff8000000000000000",
+      "object": "SOURCE/ARMYGRP.c",
+      "rva": "0x8a400",
+      "size": "0x8",
+      "storage": "rdata",
+      "alignment": "0x4",
+      "section_ordinal": "-",
+      "section_offset": "-",
+      "scope": "external",
+      "provenance": "src-DATA-sizeof"
+    },
+    {
+      "name": "__real@8@3ffeffbe76c8b4395800",
+      "object": "SOURCE/ARMYGRP.c",
+      "rva": "0x8a408",
+      "size": "0x8",
+      "storage": "rdata",
+      "alignment": "0x4",
+      "section_ordinal": "-",
+      "section_offset": "-",
+      "scope": "external",
+      "provenance": "src-DATA-sizeof"
+    },
+    {
+      "name": "__real@4@4005c800000000000000",
+      "object": "SOURCE/ARMYGRP.c",
+      "rva": "0x8a410",
+      "size": "0x4",
+      "storage": "rdata",
+      "alignment": "0x4",
+      "section_ordinal": "-",
+      "section_offset": "-",
+      "scope": "external",
+      "provenance": "src-DATA-sizeof"
+    }
+  ],
+  "next_reference": {
+    "target": "0x8a414",
+    "site": "0x18bba",
+    "instruction": "0x18bb8",
+    "owner_rva": "0x18b30",
+    "source_correspondence": "combatManager::combatManager",
+    "meaning": "Installed combat-manager vtable; complete constructor and vtable review pending."
+  },
+  "source_sha256": {
+    "src/SOURCE/ARMYGRP.cpp": "40627106287ff075d5f9147d65301fc8797e9c74905de7f477de9077697ae6cc",
+    "config/units.toml": "09bdef6fd665572791082e4b3275ed82de829b1e945068467ef6fe0165260c48"
+  },
+  "validation": {
+    "build": "All production sources compile. Strict delinking advances beyond ARMYGRP to the combat-manager vtable at 0x8a414.",
+    "build_verify": "Same remaining identity 0x8a414; final gates incomplete.",
+    "link": "663552-byte candidate; zero unresolved externals and duplicate-symbol warnings; no /FORCE.",
+    "correspondence": "Final production objects pass all 517 instruction pairs, ordered references, CFG branches and complete bijective stack-byte checks. Nine routines agree outside verified address operands; two retain 16 stack displacement differences.",
+    "compiler_control": "Eleven final-expression /G5 versus /G6 controls show one extra register clear in CanJoin and no other retained-instruction, branch or reference differences.",
+    "catalog": "881 used IDs; zero errors. No catalog entries changed.",
+    "usage": "Pass.",
+    "readme": "No report while strict delinking is incomplete; no generated strict score claimed.",
+    "tooling_audit": {
+      "donor": "giten",
+      "revision": "39384dc6726478357b5efd42c66522781e8310fe",
+      "counts": {
+        "adapted": 3,
+        "adapted_review_required": 202,
+        "deferred": 2,
+        "inapplicable": 25,
+        "missing": 2,
+        "retained": 7,
+        "target_specific": 285
+      },
+      "verdict": "Existing 202 adapted entries need review and two donor paths are missing; not behavioral parity."
+    }
+  }
+}
