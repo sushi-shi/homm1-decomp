@@ -3895,3 +3895,7 @@ msgstr "Только одна копия %s может быть запущена
 msgctxt "startup.error.title"
 msgid "Startup Error"
 msgstr "Ошибка загрузки"
+
+msgctxt "combat.tower.garrison.damage.prefix"
+msgid "Garrison does"
+msgstr "Гарнизон наносит"

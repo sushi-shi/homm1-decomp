@@ -1,0 +1,1507 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "function": {
+    "unit": "SOURCE/CMBTMGR",
+    "name": "?KeepAttack@combatManager@@QAEXXZ",
+    "rva": "0x1bbd1",
+    "size": 2787,
+    "object_size": 2721,
+    "retail_code_size": 2787,
+    "object_code_size": 2721,
+    "normalized_body_equal": false,
+    "cfg_equal": true,
+    "block_counts": [
+      85,
+      85
+    ],
+    "local_slot_map": {
+      "-236": -236,
+      "-168": -128,
+      "-167": -127,
+      "-166": -126,
+      "-165": -125,
+      "-164": -124,
+      "-163": -123,
+      "-162": -122,
+      "-161": -121,
+      "-160": -120,
+      "-159": -119,
+      "-158": -118,
+      "-157": -117,
+      "-156": -116,
+      "-155": -115,
+      "-154": -114,
+      "-153": -113,
+      "-152": -112,
+      "-151": -111,
+      "-150": -110,
+      "-149": -109,
+      "-148": -108,
+      "-147": -107,
+      "-146": -106,
+      "-145": -105,
+      "-144": -104,
+      "-143": -103,
+      "-142": -102,
+      "-141": -101,
+      "-140": -100,
+      "-139": -99,
+      "-138": -98,
+      "-137": -97,
+      "-136": -96,
+      "-135": -95,
+      "-134": -94,
+      "-133": -93,
+      "-132": -92,
+      "-131": -91,
+      "-130": -90,
+      "-129": -89,
+      "-128": -88,
+      "-127": -87,
+      "-126": -86,
+      "-125": -85,
+      "-124": -84,
+      "-88": -212,
+      "-80": -204,
+      "-100": -140,
+      "-84": -156,
+      "-232": -232,
+      "-240": -240,
+      "-212": -132,
+      "-116": -152,
+      "-200": -208,
+      "-172": -44,
+      "-192": -80,
+      "-104": -36,
+      "-92": -40,
+      "-24": -32,
+      "-208": -136,
+      "-36": -188,
+      "-44": -200,
+      "-242": -242,
+      "-48": -184,
+      "-16": -24,
+      "-120": -180,
+      "-176": -196,
+      "-52": -56,
+      "-40": -68,
+      "-248": -248,
+      "-252": -252,
+      "-28": -52,
+      "-256": -256,
+      "-260": -260,
+      "-196": -64,
+      "-264": -264,
+      "-60": -48,
+      "-268": -268,
+      "-64": -60,
+      "-76": -176,
+      "-96": -148,
+      "-180": -192,
+      "-108": -164,
+      "-72": -172,
+      "-188": -76,
+      "-220": -220,
+      "-4": -4,
+      "-272": -272,
+      "-216": -216,
+      "-184": -144,
+      "-20": -20,
+      "-32": -28,
+      "-276": -276,
+      "-228": -228,
+      "-224": -224,
+      "-280": -280,
+      "-112": -72,
+      "-56": -16,
+      "-204": -168,
+      "-68": -160,
+      "-284": -284,
+      "-288": -288,
+      "-12": -12
+    },
+    "local_byte_count": 232,
+    "local_displacement_differences": 247,
+    "instruction_count": 625,
+    "verified_branches": 57,
+    "references": [
+      {
+        "symbol": "__ehreg$?KeepAttack@combatManager@@QAEXXZ",
+        "kind": 6,
+        "site_rva": "0x1bbd7",
+        "target_rva": "0x88aae",
+        "addend": 0,
+        "object_offset": "0x6",
+        "object_symbol": "$L41500"
+      },
+      {
+        "symbol": "?gMonsterDatabase@@3PAUtag_monsterInfo@@A",
+        "kind": 6,
+        "site_rva": "0x1bdc2",
+        "target_rva": "0x9140a",
+        "addend": 2,
+        "object_offset": "0x245"
+      },
+      {
+        "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+        "kind": 6,
+        "site_rva": "0x1be2f",
+        "target_rva": "0xa7164",
+        "addend": 0,
+        "object_offset": "0x291"
+      },
+      {
+        "symbol": "?ReallyHidePointer@mouseManager@@QAEXXZ",
+        "kind": 20,
+        "site_rva": "0x1be34",
+        "target_rva": "0x6bf87",
+        "addend": 0,
+        "object_offset": "0x296"
+      },
+      {
+        "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+        "kind": 6,
+        "site_rva": "0x1be43",
+        "target_rva": "0xa7828",
+        "addend": 0,
+        "object_offset": "0x2a2"
+      },
+      {
+        "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+        "kind": 6,
+        "site_rva": "0x1be8a",
+        "target_rva": "0xa7828",
+        "addend": 0,
+        "object_offset": "0x2ef"
+      },
+      {
+        "symbol": "?SetGridMode@combatManager@@QAEXC@Z",
+        "kind": 20,
+        "site_rva": "0x1be8f",
+        "target_rva": "0x23acc",
+        "addend": 0,
+        "object_offset": "0x2f4"
+      },
+      {
+        "symbol": "$SG41308",
+        "kind": 6,
+        "site_rva": "0x1bebe",
+        "target_rva": "0x8f2ec",
+        "addend": 0,
+        "object_offset": "0x323"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1bec3",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0x328"
+      },
+      {
+        "symbol": "_sprintf",
+        "kind": 20,
+        "site_rva": "0x1bec8",
+        "target_rva": "0x7823f",
+        "addend": 0,
+        "object_offset": "0x32d"
+      },
+      {
+        "symbol": "$SG41310",
+        "kind": 6,
+        "site_rva": "0x1bed2",
+        "target_rva": "0x8f2f8",
+        "addend": 0,
+        "object_offset": "0x337"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1bed7",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0x33c"
+      },
+      {
+        "symbol": "_sprintf",
+        "kind": 20,
+        "site_rva": "0x1bedc",
+        "target_rva": "0x7823f",
+        "addend": 0,
+        "object_offset": "0x341"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1bee4",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0x349"
+      },
+      {
+        "symbol": "?LoadPlaySample@@YAPAVsample@@PAD@Z",
+        "kind": 20,
+        "site_rva": "0x1bee9",
+        "target_rva": "0x68ec4",
+        "addend": 0,
+        "object_offset": "0x34e"
+      },
+      {
+        "symbol": "_abs",
+        "kind": 20,
+        "site_rva": "0x1bf46",
+        "target_rva": "0x78538",
+        "addend": 0,
+        "object_offset": "0x3ae"
+      },
+      {
+        "symbol": "_abs",
+        "kind": 20,
+        "site_rva": "0x1bf60",
+        "target_rva": "0x78538",
+        "addend": 0,
+        "object_offset": "0x3c8"
+      },
+      {
+        "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+        "kind": 6,
+        "site_rva": "0x1bfe4",
+        "target_rva": "0xa7828",
+        "addend": 0,
+        "object_offset": "0x43d"
+      },
+      {
+        "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c006",
+        "target_rva": "0xa7828",
+        "addend": 0,
+        "object_offset": "0x462"
+      },
+      {
+        "symbol": "??2@YAPAXI@Z",
+        "kind": 20,
+        "site_rva": "0x1c10f",
+        "target_rva": "0x77d50",
+        "addend": 0,
+        "object_offset": "0x559"
+      },
+      {
+        "symbol": "??0bitmap@@QAE@FFF@Z",
+        "kind": 20,
+        "site_rva": "0x1c142",
+        "target_rva": "0x731cc",
+        "addend": 0,
+        "object_offset": "0x58c"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c17b",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x5c5"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c184",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x5ce"
+      },
+      {
+        "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c18a",
+        "target_rva": "0xa74a8",
+        "addend": 0,
+        "object_offset": "0x5d4"
+      },
+      {
+        "symbol": "?GrabBitmap@bitmap@@QAEXPAV1@FF@Z",
+        "kind": 20,
+        "site_rva": "0x1c199",
+        "target_rva": "0x73423",
+        "addend": 0,
+        "object_offset": "0x5e3"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c1a1",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x5eb"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c1ad",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x5f7"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c1ea",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x625"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c228",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x65a"
+      },
+      {
+        "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+        "kind": 20,
+        "site_rva": "0x1c244",
+        "target_rva": "0x73374",
+        "addend": 0,
+        "object_offset": "0x676"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c24c",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x67e"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c255",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x687"
+      },
+      {
+        "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c25c",
+        "target_rva": "0xa74a8",
+        "addend": 0,
+        "object_offset": "0x68e"
+      },
+      {
+        "symbol": "?GrabBitmap@bitmap@@QAEXPAV1@FF@Z",
+        "kind": 20,
+        "site_rva": "0x1c26b",
+        "target_rva": "0x73423",
+        "addend": 0,
+        "object_offset": "0x69d"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c27f",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x6b1"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c288",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x6ba"
+      },
+      {
+        "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+        "kind": 20,
+        "site_rva": "0x1c29a",
+        "target_rva": "0x70f8a",
+        "addend": 0,
+        "object_offset": "0x6cc"
+      },
+      {
+        "symbol": "?glTimers@@3PAHA",
+        "kind": 6,
+        "site_rva": "0x1c29f",
+        "target_rva": "0xa98a0",
+        "addend": 0,
+        "object_offset": "0x6d1"
+      },
+      {
+        "symbol": "?DelayTil@@YAXPAH@Z",
+        "kind": 20,
+        "site_rva": "0x1c2a4",
+        "target_rva": "0x4639e",
+        "addend": 0,
+        "object_offset": "0x6d6"
+      },
+      {
+        "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c2e5",
+        "target_rva": "0xa74a8",
+        "addend": 0,
+        "object_offset": "0x708"
+      },
+      {
+        "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+        "kind": 20,
+        "site_rva": "0x1c2ea",
+        "target_rva": "0x6a917",
+        "addend": 0,
+        "object_offset": "0x70d"
+      },
+      {
+        "symbol": "?KBTickCount@@YAHXZ",
+        "kind": 20,
+        "site_rva": "0x1c2ef",
+        "target_rva": "0x44b4e",
+        "addend": 0,
+        "object_offset": "0x712"
+      },
+      {
+        "symbol": "?glTimers@@3PAHA",
+        "kind": 6,
+        "site_rva": "0x1c2f7",
+        "target_rva": "0xa98a0",
+        "addend": 0,
+        "object_offset": "0x71a"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c2ff",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x722"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c30b",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x72e"
+      },
+      {
+        "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+        "kind": 20,
+        "site_rva": "0x1c33b",
+        "target_rva": "0x73374",
+        "addend": 0,
+        "object_offset": "0x761"
+      },
+      {
+        "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c358",
+        "target_rva": "0xa74a8",
+        "addend": 0,
+        "object_offset": "0x77e"
+      },
+      {
+        "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+        "kind": 20,
+        "site_rva": "0x1c35d",
+        "target_rva": "0x6a917",
+        "addend": 0,
+        "object_offset": "0x783"
+      },
+      {
+        "symbol": "?SRandom@@YAHHH@Z",
+        "kind": 20,
+        "site_rva": "0x1c511",
+        "target_rva": "0x35e77",
+        "addend": 0,
+        "object_offset": "0x90d"
+      },
+      {
+        "symbol": "?gBattleStat@@3PAMA",
+        "kind": 6,
+        "site_rva": "0x1c534",
+        "target_rva": "0x91860",
+        "addend": 80,
+        "object_offset": "0x930"
+      },
+      {
+        "symbol": "__ftol",
+        "kind": 20,
+        "site_rva": "0x1c539",
+        "target_rva": "0x782f4",
+        "addend": 0,
+        "object_offset": "0x935"
+      },
+      {
+        "symbol": "?Damage@army@@QAEHH@Z",
+        "kind": 20,
+        "site_rva": "0x1c564",
+        "target_rva": "0x17391",
+        "addend": 0,
+        "object_offset": "0x960"
+      },
+      {
+        "symbol": "$SG41347",
+        "kind": 6,
+        "site_rva": "0x1c58a",
+        "target_rva": "0x8f304",
+        "addend": 0,
+        "object_offset": "0x97d"
+      },
+      {
+        "symbol": "$SG41348",
+        "kind": 6,
+        "site_rva": "0x1c596",
+        "target_rva": "0x8f310",
+        "addend": 0,
+        "object_offset": "0x989"
+      },
+      {
+        "symbol": "?gArmyNames@@3PAPADA",
+        "kind": 6,
+        "site_rva": "0x1c5b0",
+        "target_rva": "0x9258c",
+        "addend": 0,
+        "object_offset": "0x9a0"
+      },
+      {
+        "symbol": "?gArmyNamesPlural@@3PAPADA",
+        "kind": 6,
+        "site_rva": "0x1c5c9",
+        "target_rva": "0x9266c",
+        "addend": 0,
+        "object_offset": "0x9b9"
+      },
+      {
+        "symbol": "$SG41349",
+        "kind": 6,
+        "site_rva": "0x1c5e9",
+        "target_rva": "0x8f31c",
+        "addend": 0,
+        "object_offset": "0x9d6"
+      },
+      {
+        "symbol": "$SG41350",
+        "kind": 6,
+        "site_rva": "0x1c5f5",
+        "target_rva": "0x8f328",
+        "addend": 0,
+        "object_offset": "0x9e2"
+      },
+      {
+        "symbol": "$SG41351",
+        "kind": 6,
+        "site_rva": "0x1c5fa",
+        "target_rva": "0x8f33c",
+        "addend": 0,
+        "object_offset": "0x9e7"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1c5ff",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0x9ec"
+      },
+      {
+        "symbol": "_sprintf",
+        "kind": 20,
+        "site_rva": "0x1c604",
+        "target_rva": "0x7823f",
+        "addend": 0,
+        "object_offset": "0x9f1"
+      },
+      {
+        "symbol": "$SG41353",
+        "kind": 6,
+        "site_rva": "0x1c60e",
+        "target_rva": "0x8f350",
+        "addend": 0,
+        "object_offset": "0x9fb"
+      },
+      {
+        "symbol": "$SG41354",
+        "kind": 6,
+        "site_rva": "0x1c61a",
+        "target_rva": "0x8f35c",
+        "addend": 0,
+        "object_offset": "0xa07"
+      },
+      {
+        "symbol": "$SG41355",
+        "kind": 6,
+        "site_rva": "0x1c61f",
+        "target_rva": "0x8f370",
+        "addend": 0,
+        "object_offset": "0xa0c"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1c624",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0xa11"
+      },
+      {
+        "symbol": "_sprintf",
+        "kind": 20,
+        "site_rva": "0x1c629",
+        "target_rva": "0x7823f",
+        "addend": 0,
+        "object_offset": "0xa16"
+      },
+      {
+        "symbol": "?gText@@3PADA",
+        "kind": 6,
+        "site_rva": "0x1c633",
+        "target_rva": "0xa7168",
+        "addend": 0,
+        "object_offset": "0xa20"
+      },
+      {
+        "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c639",
+        "target_rva": "0xa7828",
+        "addend": 0,
+        "object_offset": "0xa26"
+      },
+      {
+        "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+        "kind": 20,
+        "site_rva": "0x1c63e",
+        "target_rva": "0x23707",
+        "addend": 0,
+        "object_offset": "0xa2b"
+      },
+      {
+        "symbol": "?PowEffect@army@@QAEXC@Z",
+        "kind": 20,
+        "site_rva": "0x1c653",
+        "target_rva": "0x174f1",
+        "addend": 0,
+        "object_offset": "0xa40"
+      },
+      {
+        "symbol": "?Stand@army@@QAEXC@Z",
+        "kind": 20,
+        "site_rva": "0x1c670",
+        "target_rva": "0x13fd9",
+        "addend": 0,
+        "object_offset": "0xa5d"
+      },
+      {
+        "symbol": "?WaitSample@@YAXPAVsample@@@Z",
+        "kind": 20,
+        "site_rva": "0x1c679",
+        "target_rva": "0x68fb6",
+        "addend": 0,
+        "object_offset": "0xa66"
+      },
+      {
+        "symbol": "?Stand@army@@QAEXC@Z",
+        "kind": 20,
+        "site_rva": "0x1c697",
+        "target_rva": "0x13fd9",
+        "addend": 0,
+        "object_offset": "0xa84"
+      },
+      {
+        "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+        "kind": 6,
+        "site_rva": "0x1c69d",
+        "target_rva": "0xa7164",
+        "addend": 0,
+        "object_offset": "0xa8a"
+      },
+      {
+        "symbol": "?ReallyShowPointer@mouseManager@@QAEXXZ",
+        "kind": 20,
+        "site_rva": "0x1c6a2",
+        "target_rva": "0x6bf6f",
+        "addend": 0,
+        "object_offset": "0xa8f"
+      }
+    ],
+    "object_sha256": "06f56fefa3ab5a0346fdbd8e6986d24c0b31995aab414fcb7d07dba40cf8dbba",
+    "source_sha256": "d02f32e44cb0e5ed8fe43188af0ae2bf35750abb9fce5205fe45a95fabbc3ab3"
+  },
+  "literals": [
+    {
+      "symbol": "$SG41308",
+      "kind": 6,
+      "site_rva": "0x1bebe",
+      "target_rva": "0x8f2ec",
+      "addend": 0,
+      "object_offset": "0x323",
+      "english": "shoot15.82M",
+      "retail_text": "shoot15.82M",
+      "size": 12,
+      "sha256": "34ceb30994b84e5db41e165b599065b69e84fec1c98af7b12f416ba27ed0335e"
+    },
+    {
+      "symbol": "$SG41310",
+      "kind": 6,
+      "site_rva": "0x1bed2",
+      "target_rva": "0x8f2f8",
+      "addend": 0,
+      "object_offset": "0x337",
+      "english": "shoot01.82M",
+      "retail_text": "shoot01.82M",
+      "size": 12,
+      "sha256": "3644968183d6d6c160a1edc540fac3d850099656a6cb415d39792896ffa3c1f3"
+    },
+    {
+      "symbol": "$SG41347",
+      "kind": 6,
+      "site_rva": "0x1c58a",
+      "target_rva": "0x8f304",
+      "addend": 0,
+      "object_offset": "0x97d",
+      "english": "perishes",
+      "retail_text": "умирает.",
+      "size": 9,
+      "sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073"
+    },
+    {
+      "symbol": "$SG41348",
+      "kind": 6,
+      "site_rva": "0x1c596",
+      "target_rva": "0x8f310",
+      "addend": 0,
+      "object_offset": "0x989",
+      "english": "perish",
+      "retail_text": "умирает.",
+      "size": 9,
+      "sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073"
+    },
+    {
+      "symbol": "$SG41349",
+      "kind": 6,
+      "site_rva": "0x1c5e9",
+      "target_rva": "0x8f31c",
+      "addend": 0,
+      "object_offset": "0x9d6",
+      "english": "Damage",
+      "retail_text": "ед. урона",
+      "size": 10,
+      "sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a"
+    },
+    {
+      "symbol": "$SG41350",
+      "kind": 6,
+      "site_rva": "0x1c5f5",
+      "target_rva": "0x8f328",
+      "addend": 0,
+      "object_offset": "0x9e2",
+      "english": "Garrison does",
+      "retail_text": "Гарнизон наносит",
+      "size": 17,
+      "sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048"
+    },
+    {
+      "symbol": "$SG41351",
+      "kind": 6,
+      "site_rva": "0x1c5fa",
+      "target_rva": "0x8f33c",
+      "addend": 0,
+      "object_offset": "0x9e7",
+      "english": "%s %d %s. %d %s %s.",
+      "retail_text": "%s %d %s. %d %s %s.",
+      "size": 20,
+      "sha256": "a0482f3257e6631bbb6dd2b434b03ec3bdd83a630f2f12015f309e28c0c8e923"
+    },
+    {
+      "symbol": "$SG41353",
+      "kind": 6,
+      "site_rva": "0x1c60e",
+      "target_rva": "0x8f350",
+      "addend": 0,
+      "object_offset": "0x9fb",
+      "english": "Damage",
+      "retail_text": "ед. урона",
+      "size": 10,
+      "sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a"
+    },
+    {
+      "symbol": "$SG41354",
+      "kind": 6,
+      "site_rva": "0x1c61a",
+      "target_rva": "0x8f35c",
+      "addend": 0,
+      "object_offset": "0xa07",
+      "english": "Garrison does",
+      "retail_text": "Гарнизон наносит",
+      "size": 17,
+      "sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048"
+    },
+    {
+      "symbol": "$SG41355",
+      "kind": 6,
+      "site_rva": "0x1c61f",
+      "target_rva": "0x8f370",
+      "addend": 0,
+      "object_offset": "0xa0c",
+      "english": "%s %d %s.",
+      "retail_text": "%s %d %s.",
+      "size": 10,
+      "sha256": "9ec12144ce8bf631987b5da144d8f09ff208eb2e52da346ae0937d78bef91750"
+    }
+  ],
+  "data": [
+    {
+      "name": "?gMonsterDatabase@@3PAUtag_monsterInfo@@A",
+      "rva": "0x91408",
+      "size": 868
+    },
+    {
+      "name": "?gpMouseManager@@3PAVmouseManager@@A",
+      "rva": "0xa7164",
+      "size": 4
+    },
+    {
+      "name": "?gpCombatManager@@3PAVcombatManager@@A",
+      "rva": "0xa7828",
+      "size": 4
+    },
+    {
+      "name": "?gText@@3PADA",
+      "rva": "0xa7168",
+      "size": 768
+    },
+    {
+      "name": "?gpWindowManager@@3PAVheroWindowManager@@A",
+      "rva": "0xa74a8",
+      "size": 4
+    },
+    {
+      "name": "?glTimers@@3PAHA",
+      "rva": "0xa98a0",
+      "size": 24
+    },
+    {
+      "name": "?gBattleStat@@3PAMA",
+      "rva": "0x91810",
+      "size": 164
+    },
+    {
+      "name": "?gArmyNames@@3PAPADA",
+      "rva": "0x9258c",
+      "size": 112
+    },
+    {
+      "name": "?gArmyNamesPlural@@3PAPADA",
+      "rva": "0x9266c",
+      "size": 112
+    }
+  ],
+  "calls": [
+    {
+      "symbol": "?ReallyHidePointer@mouseManager@@QAEXXZ",
+      "kind": 20,
+      "site_rva": "0x1be34",
+      "target_rva": "0x6bf87",
+      "addend": 0,
+      "object_offset": "0x296"
+    },
+    {
+      "symbol": "?SetGridMode@combatManager@@QAEXC@Z",
+      "kind": 20,
+      "site_rva": "0x1be8f",
+      "target_rva": "0x23acc",
+      "addend": 0,
+      "object_offset": "0x2f4"
+    },
+    {
+      "symbol": "_sprintf",
+      "kind": 20,
+      "site_rva": "0x1bec8",
+      "target_rva": "0x7823f",
+      "addend": 0,
+      "object_offset": "0x32d"
+    },
+    {
+      "symbol": "_sprintf",
+      "kind": 20,
+      "site_rva": "0x1bedc",
+      "target_rva": "0x7823f",
+      "addend": 0,
+      "object_offset": "0x341"
+    },
+    {
+      "symbol": "?LoadPlaySample@@YAPAVsample@@PAD@Z",
+      "kind": 20,
+      "site_rva": "0x1bee9",
+      "target_rva": "0x68ec4",
+      "addend": 0,
+      "object_offset": "0x34e"
+    },
+    {
+      "symbol": "_abs",
+      "kind": 20,
+      "site_rva": "0x1bf46",
+      "target_rva": "0x78538",
+      "addend": 0,
+      "object_offset": "0x3ae"
+    },
+    {
+      "symbol": "_abs",
+      "kind": 20,
+      "site_rva": "0x1bf60",
+      "target_rva": "0x78538",
+      "addend": 0,
+      "object_offset": "0x3c8"
+    },
+    {
+      "symbol": "??2@YAPAXI@Z",
+      "kind": 20,
+      "site_rva": "0x1c10f",
+      "target_rva": "0x77d50",
+      "addend": 0,
+      "object_offset": "0x559"
+    },
+    {
+      "symbol": "??0bitmap@@QAE@FFF@Z",
+      "kind": 20,
+      "site_rva": "0x1c142",
+      "target_rva": "0x731cc",
+      "addend": 0,
+      "object_offset": "0x58c"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c17b",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x5c5"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c184",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x5ce"
+    },
+    {
+      "symbol": "?GrabBitmap@bitmap@@QAEXPAV1@FF@Z",
+      "kind": 20,
+      "site_rva": "0x1c199",
+      "target_rva": "0x73423",
+      "addend": 0,
+      "object_offset": "0x5e3"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c1a1",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x5eb"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c1ad",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x5f7"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c1ea",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x625"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c228",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x65a"
+    },
+    {
+      "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+      "kind": 20,
+      "site_rva": "0x1c244",
+      "target_rva": "0x73374",
+      "addend": 0,
+      "object_offset": "0x676"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c24c",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x67e"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c255",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x687"
+    },
+    {
+      "symbol": "?GrabBitmap@bitmap@@QAEXPAV1@FF@Z",
+      "kind": 20,
+      "site_rva": "0x1c26b",
+      "target_rva": "0x73423",
+      "addend": 0,
+      "object_offset": "0x69d"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c27f",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x6b1"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c288",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x6ba"
+    },
+    {
+      "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+      "kind": 20,
+      "site_rva": "0x1c29a",
+      "target_rva": "0x70f8a",
+      "addend": 0,
+      "object_offset": "0x6cc"
+    },
+    {
+      "symbol": "?DelayTil@@YAXPAH@Z",
+      "kind": 20,
+      "site_rva": "0x1c2a4",
+      "target_rva": "0x4639e",
+      "addend": 0,
+      "object_offset": "0x6d6"
+    },
+    {
+      "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+      "kind": 20,
+      "site_rva": "0x1c2ea",
+      "target_rva": "0x6a917",
+      "addend": 0,
+      "object_offset": "0x70d"
+    },
+    {
+      "symbol": "?KBTickCount@@YAHXZ",
+      "kind": 20,
+      "site_rva": "0x1c2ef",
+      "target_rva": "0x44b4e",
+      "addend": 0,
+      "object_offset": "0x712"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c2ff",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x722"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c30b",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x72e"
+    },
+    {
+      "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+      "kind": 20,
+      "site_rva": "0x1c33b",
+      "target_rva": "0x73374",
+      "addend": 0,
+      "object_offset": "0x761"
+    },
+    {
+      "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+      "kind": 20,
+      "site_rva": "0x1c35d",
+      "target_rva": "0x6a917",
+      "addend": 0,
+      "object_offset": "0x783"
+    },
+    {
+      "symbol": "?SRandom@@YAHHH@Z",
+      "kind": 20,
+      "site_rva": "0x1c511",
+      "target_rva": "0x35e77",
+      "addend": 0,
+      "object_offset": "0x90d"
+    },
+    {
+      "symbol": "__ftol",
+      "kind": 20,
+      "site_rva": "0x1c539",
+      "target_rva": "0x782f4",
+      "addend": 0,
+      "object_offset": "0x935"
+    },
+    {
+      "symbol": "?Damage@army@@QAEHH@Z",
+      "kind": 20,
+      "site_rva": "0x1c564",
+      "target_rva": "0x17391",
+      "addend": 0,
+      "object_offset": "0x960"
+    },
+    {
+      "symbol": "_sprintf",
+      "kind": 20,
+      "site_rva": "0x1c604",
+      "target_rva": "0x7823f",
+      "addend": 0,
+      "object_offset": "0x9f1"
+    },
+    {
+      "symbol": "_sprintf",
+      "kind": 20,
+      "site_rva": "0x1c629",
+      "target_rva": "0x7823f",
+      "addend": 0,
+      "object_offset": "0xa16"
+    },
+    {
+      "symbol": "?CombatMessage@combatManager@@QAEXPADH@Z",
+      "kind": 20,
+      "site_rva": "0x1c63e",
+      "target_rva": "0x23707",
+      "addend": 0,
+      "object_offset": "0xa2b"
+    },
+    {
+      "symbol": "?PowEffect@army@@QAEXC@Z",
+      "kind": 20,
+      "site_rva": "0x1c653",
+      "target_rva": "0x174f1",
+      "addend": 0,
+      "object_offset": "0xa40"
+    },
+    {
+      "symbol": "?Stand@army@@QAEXC@Z",
+      "kind": 20,
+      "site_rva": "0x1c670",
+      "target_rva": "0x13fd9",
+      "addend": 0,
+      "object_offset": "0xa5d"
+    },
+    {
+      "symbol": "?WaitSample@@YAXPAVsample@@@Z",
+      "kind": 20,
+      "site_rva": "0x1c679",
+      "target_rva": "0x68fb6",
+      "addend": 0,
+      "object_offset": "0xa66"
+    },
+    {
+      "symbol": "?Stand@army@@QAEXC@Z",
+      "kind": 20,
+      "site_rva": "0x1c697",
+      "target_rva": "0x13fd9",
+      "addend": 0,
+      "object_offset": "0xa84"
+    },
+    {
+      "symbol": "?ReallyShowPointer@mouseManager@@QAEXXZ",
+      "kind": 20,
+      "site_rva": "0x1c6a2",
+      "target_rva": "0x6bf6f",
+      "addend": 0,
+      "object_offset": "0xa8f"
+    }
+  ],
+  "eh": {
+    "owner": "?KeepAttack@combatManager@@QAEXXZ",
+    "unit": "SOURCE/CMBTMGR",
+    "owner_rva": "0x1bbd1",
+    "site_rva": "0x1bbd7",
+    "target_rva": "0x88aae",
+    "symbol": "__ehreg$?KeepAttack@combatManager@@QAEXXZ",
+    "kind": 6,
+    "funcinfo_rva": "0x8baf0",
+    "states": 1,
+    "funcinfo_sha256": "953b72721609d7c238d774a95f2eeb376217bd219cc6cefef814feb70070dd0b",
+    "unwind": [
+      {
+        "state": 0,
+        "to_state": -1,
+        "cleanup_rva": "0x88aa0",
+        "size": 14,
+        "references": [
+          {
+            "site_rva": "0x88aa8",
+            "target_rva": "0x77c4d",
+            "symbol": "??3@YAXPAX@Z",
+            "kind": 20
+          }
+        ],
+        "body_sha256": "2fa6c6cb1201fc4ac792767f8421994e3549771993f6c82a2fa9d7703745ec5e"
+      }
+    ],
+    "object_sha256": "06f56fefa3ab5a0346fdbd8e6986d24c0b31995aab414fcb7d07dba40cf8dbba"
+  },
+  "localized_messages": [
+    {
+      "id": "combat.fragment.dies",
+      "nwc_string_rva": "0xa2b1c",
+      "buka_string_rva": "0x8f304",
+      "nwc_pointer_site": "0x6e150",
+      "buka_pointer_site": "0x1c58a",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    },
+    {
+      "id": "combat.fragment.killed",
+      "nwc_string_rva": "0xa2b28",
+      "buka_string_rva": "0x8f310",
+      "nwc_pointer_site": "0x6e14b",
+      "buka_pointer_site": "0x1c596",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    },
+    {
+      "id": "combat.fragment.damage_points",
+      "nwc_string_rva": "0xa2b30",
+      "buka_string_rva": "0x8f31c",
+      "nwc_pointer_site": "0x6e177",
+      "buka_pointer_site": "0x1c5e9",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    },
+    {
+      "id": "combat.fragment.damage_points",
+      "nwc_string_rva": "0xa2b5c",
+      "buka_string_rva": "0x8f350",
+      "nwc_pointer_site": "0x6e19f",
+      "buka_pointer_site": "0x1c60e",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    },
+    {
+      "id": "combat.tower.garrison.damage.prefix",
+      "nwc_string_rva": "0xa2b38",
+      "buka_string_rva": "0x8f328",
+      "nwc_pointer_site": "0x6e183",
+      "buka_pointer_site": "0x1c5f5",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    },
+    {
+      "id": "combat.tower.garrison.damage.prefix",
+      "nwc_string_rva": "0xa2b64",
+      "buka_string_rva": "0x8f35c",
+      "nwc_pointer_site": "0x6e1ab",
+      "buka_pointer_site": "0x1c61a",
+      "original_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
+      "original_source": "src/SOURCE/CMBTMGR.cpp:KeepAttack",
+      "russian_sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048",
+      "evidence": "Complete keep-attack instruction/branch correspondence with bijective stack-byte mapping; original English and exact Buka operands checked; buka-keep-attack.json."
+    }
+  ],
+  "new_catalog_entries": [
+    "combat.tower.garrison.damage.prefix"
+  ],
+  "source_migration": {
+    "name": "?KeepAttack@combatManager@@QAEXXZ",
+    "unit": "SOURCE/CMBTMGR",
+    "old_rva": "0x6d70b",
+    "rva": "0x1bbd1",
+    "size": 2787
+  },
+  "source_changes": [
+    "Target power multiplies quantity by fightValue in retail/donor order.",
+    "Remove redundant sample null assignment before LoadPlaySample.",
+    "Wide-creature frontCol uses a signed conditional increment.",
+    "Subtract defense directly; remove the inherited double negation.",
+    "Floating x/y projectile coordinates use compound assignments in retail operand order.",
+    "Singular-first message and CREATURE_DISPLAY_NAME conditions retain the same integer-count behavior.",
+    "Use catalog fragments for exact Buka Russian with original English preserved."
+  ],
+  "remaining_difference": "247 local-reference displacement differences; short/long addressing and branch encodings account for the body-size delta. Strict comparison is unchanged; complete instruction correspondence is not a byte-exact score.",
+  "donor": {
+    "repo": "HoMM2 Buka 2.1",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "source": "src/SOURCE/CMBTMGR.cpp",
+    "header": "include/SOURCE/KBDeclarations.h",
+    "scope": "Target multiplication order, direct defense subtraction and singular-first creature-name macro only. HoMM1 keeps its own projectile/damage rules."
+  },
+  "controls": {
+    "buka-keep-power": {
+      "unit": "SOURCE/CMBTMGR",
+      "name": "?KeepAttack@combatManager@@QAEXXZ",
+      "rva": "0x1bbd1",
+      "size": 2787,
+      "object_size": 2743,
+      "retail_code_size": 2787,
+      "object_code_size": 2743,
+      "normalized_body_equal": false,
+      "cfg_equal": false,
+      "block_counts": [
+        87,
+        85
+      ]
+    },
+    "buka-keep-sample": {
+      "unit": "SOURCE/CMBTMGR",
+      "name": "?KeepAttack@combatManager@@QAEXXZ",
+      "rva": "0x1bbd1",
+      "size": 2787,
+      "object_size": 2736,
+      "retail_code_size": 2787,
+      "object_code_size": 2736,
+      "normalized_body_equal": false,
+      "cfg_equal": false,
+      "block_counts": [
+        87,
+        85
+      ]
+    },
+    "buka-keep-front": {
+      "unit": "SOURCE/CMBTMGR",
+      "name": "?KeepAttack@combatManager@@QAEXXZ",
+      "rva": "0x1bbd1",
+      "size": 2787,
+      "object_size": 2725,
+      "retail_code_size": 2787,
+      "object_code_size": 2725,
+      "normalized_body_equal": false,
+      "cfg_equal": false,
+      "block_counts": [
+        85,
+        85
+      ]
+    },
+    "buka-keep-defense": {
+      "unit": "SOURCE/CMBTMGR",
+      "name": "?KeepAttack@combatManager@@QAEXXZ",
+      "rva": "0x1bbd1",
+      "size": 2787,
+      "object_size": 2721,
+      "retail_code_size": 2787,
+      "object_code_size": 2721,
+      "normalized_body_equal": false,
+      "cfg_equal": true,
+      "block_counts": [
+        85,
+        85
+      ]
+    }
+  },
+  "validation": {
+    "compiled_literals": [
+      {
+        "site_rva": "0x1bebe",
+        "target_rva": "0x8f2ec",
+        "compiled_text": "shoot15.82M",
+        "retail_text": "shoot15.82M",
+        "size": 12,
+        "sha256": "34ceb30994b84e5db41e165b599065b69e84fec1c98af7b12f416ba27ed0335e"
+      },
+      {
+        "site_rva": "0x1bed2",
+        "target_rva": "0x8f2f8",
+        "compiled_text": "shoot01.82M",
+        "retail_text": "shoot01.82M",
+        "size": 12,
+        "sha256": "3644968183d6d6c160a1edc540fac3d850099656a6cb415d39792896ffa3c1f3"
+      },
+      {
+        "site_rva": "0x1c58a",
+        "target_rva": "0x8f304",
+        "compiled_text": "умирает.",
+        "retail_text": "умирает.",
+        "size": 9,
+        "sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073"
+      },
+      {
+        "site_rva": "0x1c596",
+        "target_rva": "0x8f310",
+        "compiled_text": "умирает.",
+        "retail_text": "умирает.",
+        "size": 9,
+        "sha256": "a07fa61c0519c0f8d68ab76c86691f625fe27519c7b95963e7a186c4ce73b073"
+      },
+      {
+        "site_rva": "0x1c5e9",
+        "target_rva": "0x8f31c",
+        "compiled_text": "ед. урона",
+        "retail_text": "ед. урона",
+        "size": 10,
+        "sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a"
+      },
+      {
+        "site_rva": "0x1c5f5",
+        "target_rva": "0x8f328",
+        "compiled_text": "Гарнизон наносит",
+        "retail_text": "Гарнизон наносит",
+        "size": 17,
+        "sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048"
+      },
+      {
+        "site_rva": "0x1c5fa",
+        "target_rva": "0x8f33c",
+        "compiled_text": "%s %d %s. %d %s %s.",
+        "retail_text": "%s %d %s. %d %s %s.",
+        "size": 20,
+        "sha256": "a0482f3257e6631bbb6dd2b434b03ec3bdd83a630f2f12015f309e28c0c8e923"
+      },
+      {
+        "site_rva": "0x1c60e",
+        "target_rva": "0x8f350",
+        "compiled_text": "ед. урона",
+        "retail_text": "ед. урона",
+        "size": 10,
+        "sha256": "cce37adb8675d93255c70dc239cde9a925c625dccdd0829593669be4f11da98a"
+      },
+      {
+        "site_rva": "0x1c61a",
+        "target_rva": "0x8f35c",
+        "compiled_text": "Гарнизон наносит",
+        "retail_text": "Гарнизон наносит",
+        "size": 17,
+        "sha256": "41737cd834e34cff00790cace94b14ed44294ad163427ff9f9b168455e411048"
+      },
+      {
+        "site_rva": "0x1c61f",
+        "target_rva": "0x8f370",
+        "compiled_text": "%s %d %s.",
+        "retail_text": "%s %d %s.",
+        "size": 10,
+        "sha256": "9ec12144ce8bf631987b5da144d8f09ff208eb2e52da346ae0937d78bef91750"
+      }
+    ],
+    "calls": 41,
+    "typed_globals": 9,
+    "unreviewed_references": 0,
+    "exception_control": "Retail prologue installs owner-specific EH frame. VC6 registration stub, FuncInfo scalar fields, unwind state transitions, complete cleanup instructions and destructor identities all match. Compiler local ordinals map to owner-derived EH names."
+  }
+}

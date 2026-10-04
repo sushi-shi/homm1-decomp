@@ -1162,7 +1162,7 @@ void combatManager::RegenerateField(void) {
 
 // HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
-VA(0x0046d70b, 0xb63)
+VA(0x0041bbd1, 0xae3)
 void combatManager::KeepAttack(void) {
     i32 mod;
     i16 minX;
@@ -1217,7 +1217,7 @@ void combatManager::KeepAttack(void) {
                 priority = 1;
             else
                 priority = 0;
-            power = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
+            power = target->m_quantity * gMonsterDatabase[target->m_creatureType].fightValue;
             if (priority > bestRank || (priority == bestRank && power > bestWorth)) {
                 bestWorth = power;
                 bestRank = priority;
@@ -1239,15 +1239,10 @@ void combatManager::KeepAttack(void) {
         sprintf(gText, "shoot15.82M");
     else
         sprintf(gText, "shoot01.82M");
-    sample = NULL;
     sample = LoadPlaySample(gText);
     frontCol = hexCol;
-    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-        if (target->m_facing == ARMY_FACING_LEFT)
-            frontCol = frontCol - 1;
-        else
-            frontCol = frontCol + 1;
-    }
+    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE)
+        frontCol += target->m_facing == ARMY_FACING_LEFT ? -1 : 1;
     gapX = abs(frontCol - srcCol);
     gapY = abs(targetRow - keepY);
     distance = __max(gapX, gapY);
@@ -1292,8 +1287,8 @@ void combatManager::KeepAttack(void) {
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = xRun;
         lastY = yRun;
-        xRun = xAdvance + xRun;
-        yRun = yAdvance + yRun;
+        xRun += xAdvance;
+        yRun += yAdvance;
     }
     behind->DrawToBuffer(lastX, lastY);
     gpWindowManager->UpdateScreenRegion(lastX, lastY, w, height);
@@ -1303,7 +1298,7 @@ void combatManager::KeepAttack(void) {
         mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
-    mod -= -(-target->m_stats.defense);
+    mod -= target->m_stats.defense;
     if (mod > 20)
         mod = 20;
     if (mod < -20)
@@ -1328,15 +1323,15 @@ void combatManager::KeepAttack(void) {
         sprintf(
             gText,
             "%s %d %s. %d %s %s.",
-            "Garrison does",
+            localization::Tr("combat.tower.garrison.damage.prefix"),
             hurt,
-            "Damage",
+            localization::Tr("combat.fragment.damage_points"),
             numLost,
             CREATURE_DISPLAY_NAME(target->m_creatureType, numLost),
-            numLost > 1 ? "perish" : "perishes"
+            numLost <= 1 ? localization::Tr("combat.fragment.dies") : localization::Tr("combat.fragment.killed")
         );
     else
-        sprintf(gText, "%s %d %s.", "Garrison does", hurt, "Damage");
+        sprintf(gText, "%s %d %s.", localization::Tr("combat.tower.garrison.damage.prefix"), hurt, localization::Tr("combat.fragment.damage_points"));
     gpCombatManager->CombatMessage(gText, 1);
     target->PowEffect(target->m_stats.powEffect);
     if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
