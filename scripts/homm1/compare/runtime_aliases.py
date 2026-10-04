@@ -115,12 +115,16 @@ def aliases(lib_dir: Path | None = None) -> dict[str, str]:
     if lib_dir is None:
         from homm1.core.paths import msvc_dir
         lib_dir = msvc_dir() / "lib"
-    oldnames, runtime = Path(lib_dir) / OLDNAMES, Path(lib_dir) / RUNTIME
-    for path in (oldnames, runtime):
-        if not path.is_file():
+    from homm1.tool.wine import find_ci
+    libraries = []
+    for name in (OLDNAMES, RUNTIME):
+        path = find_ci(Path(lib_dir), name)
+        if path is None or not path.is_file():
             raise FileNotFoundError(
-                f"{path}: pinned VC4 runtime library missing "
-                "(install the VC4 toolchain under build/toolchains)")
+                f"{Path(lib_dir) / name}: pinned runtime library missing "
+                "(install the selected toolchain under build/toolchains)")
+        libraries.append(path)
+    oldnames, runtime = libraries
     defaults = oldnames_defaults(oldnames)
     labels = label_functions(runtime, set(defaults.values()))
     resolved = {old: labels.get(default, default)

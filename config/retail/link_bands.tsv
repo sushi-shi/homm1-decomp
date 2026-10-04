@@ -1,4 +1,4 @@
-# VC4.1 LIBCMT starts immediately after the final LZHUF decoder return.
-# Verified against exsup.obj __global_unwind2 and dense independent CRT anchors.
+# Buka CRT code begins with the VC6 strcpy contribution; ends before the final import-thunk run.
+# Game C++ exception funclets follow the import thunks and are not part of this CRT band.
 lo	hi	band
-0x0007fde8	0x0008c5a2	crt
+0x00077c60	0x00088556	crt

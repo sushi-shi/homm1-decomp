@@ -9,9 +9,10 @@ behavior changes, evidence, validation and remaining work.
 The active target is now the Buka `HEROES.EXE`, with VC6 SP5 and Russian
 catalog output. Audiere device, music, sample playback and the Smacker loop
 are implemented and compile. The candidate links without unresolved symbols,
-and all seven Russian resource payloads match retail. Strict comparison is not available yet: the
-inherited NWC address census and claims still need migration, and the Buka
-absolute-reference manifest needs review. The old score ledger has been reset.
+and all seven Russian resource payloads match retail. Strict comparison is
+not available yet: the Buka function boundaries are reviewed, but most
+source/data claims still need migration and the absolute-reference manifest
+needs review. The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches
@@ -38,7 +39,8 @@ source-win95-1.0
 ## Quickstart
 
 With Nix flakes enabled, run from the repository root. The build currently
-compiles the sources, then stops at the unmigrated retail census:
+compiles the sources, then stops because the reviewed `/FIXED` absolute-
+reference manifest is missing; inherited source/data claims also need migration:
 
 ```sh
 nix develop .#build

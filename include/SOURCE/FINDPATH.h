@@ -28,11 +28,4 @@ i16 TerrainStepCost(i8 terrain, i8 diagonal);
 // FindNearestObject seeds this word limit; PushPoint marks costlier nodes.
 extern i16 gCurTempMobility;
 
-// PoL FINDPATH.cpp:32-36 retains this inline approximation helper.
-inline i16 ApproximateGridDistance(i16 xDistance, i16 yDistance) {
-    if (xDistance >= yDistance)
-        return xDistance + yDistance / DISTANCE_MINOR_DIVISOR;
-    return yDistance + xDistance / DISTANCE_MINOR_DIVISOR;
-}
-
 #endif

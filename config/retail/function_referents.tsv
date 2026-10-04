@@ -1,147 +1,215 @@
-# Exact names of unclaimed game functions referenced by admitted base objects.
-# These are symbol identities only: they remain in anonymous delink buckets and
-# do not become source claims or matching-denominator entries.
+# Buka function identities: reviewed PE import thunks and exact pathfinding call referents.
+# These names do not create source claims or matching-denominator entries.
+# Inherited NWC identities are retired; remaining Buka referents still require review.
+# image-sha256: 34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db
 rva	name	provenance
-0x00006e0c	?DrawToBuffer@army@@QAEXFF@Z	hexcell::DrawOccupant calls it on the occupying stack with the cell x/y words (ret 8); HoMM1 army sprite draw, Buka army::DrawToBuffer without the effects flag
-0x0001150c	?HasMobileHero@playerData@@QAECXZ	HoMM2 Buka 2.1 playerData::HasMobileHero; CheckDimNextHeroBut tests the sign-extended AL result
-0x00011574	?CountVisitedObelisks@playerData@@QAECXZ	philAI::TurnValueOfObelisk calls it on &players[p]; counts set bits of the 48-bit obelisk bitmap at player+0x9b
-0x00011c73	?IsMobile@game@@QAECC@Z	HoMM2 Buka 2.1 game::IsMobile; advManager::CheckDimHero passes the signed current-hero byte and tests the AL result
-0x0001584f	?SettleOverlay@game@@QAEXHH@Z	advManager::EraseObj calls it on gpGame with the erased cell x/y (ret 8); body lifts the overlay frame into an emptied object slot
-0x00017ae4	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	HeroHandler passes it to game::ViewSpells for the magic book (Buka HERO correspondence)
-0x000186f2	?Overview@game@@QAEXXZ	HeroHandler crest click calls it on gpGame with no arguments; body loads overmain.bmp, advmice.mse and the fonts
-0x0001beec	?SetRandomHeroArmies@game@@QAEXFH@Z	hero::Deallocate re-arms the freed hero with a word id and 0; Buka game::SetRandomHeroArmies correspondence
-0x00020bd0	_PollSound	ReadBlock call target and donor C linkage
-0x0002298b	?NullHandler@@YAHAAUtag_message@@@Z	HoMM2 Buka 2.1 NullHandler passed to game::ViewSpells by advManager::CheckCastSpell
-0x00022f62	?GetBuildingBaseResourceValue@@YAHHHH@Z	HoMM2 Buka 2.1 GetBuildingBaseResourceValue; cdecl three-int table lookup called by philAI::ValueOfTown
-0x00022fc2	?NormalDialog@@YAXPADHHHHHHHH@Z	GUIModemCommand call at 0x05976F uses nine stack arguments; donor NormalDialog family
-0x0002723b	?EarlyShutDownSystem@@YAXXZ	executive ShutDownSystem call7a235; Buka EXEC/KB EarlyShutDownSystem correspondence
-0x00027d42	?UpdateAppSpecificMenus@@YAXPAX@Z	KBChangeMenu retail call0x0045C6B9; Buka donor app menu updater
-0x00027f38	?LogStr@@YAXPADHH@Z	decoded three-argument logging body
-0x00027fc2	?LogStr@@YAXPADHHHHH@Z	provisional five-value logging family identity from existing two-long overload and retail argument/formatter census, no body coverage
-0x0002ce01	?TurnsToBuy@philAI@@QAEMQAH@Z	FutureDeflator calls this philAI method at 0x01FEEE; HoMM2 Buka 2.1 correspondence
-0x000336fc	?UpdateDfltMenu@@YAXPAX@Z	KBChangeMenu retail call0x0045C6AD; Buka donor default menu updater
-0x00033a24	?SetMenus@@YAXPAXH@Z	SetNoDialogMenus call at 0x05C892 and HoMM2 Buka 2.1/PoL 2.0 correspondence
-0x000348b9	?WritePrefs@@YAXXZ	CDPlay retail call and PoL source family
-0x00034e1a	?KBTickCount@@YAHXZ	base-object relocation and decoded retail target
-0x00034e93	?FindToken@@YAPADPADD@Z	CDPlay retail call and PoL source family
-0x00034f60	?DDRestoreDisplayMode@@YAXXZ	wingraph RestoreDisplayMode direct call; Buka 2.1 graphics family
-0x00035888	?DDInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
-0x000359c8	?DDSetPalette@@YAHXZ	wingraph SetPalette direct call; Buka 2.1 graphics family
-0x000366f2	?WGUpdatePalette@@YAXPAC@Z	wingraph UpdatePalette direct call; Buka 2.1 wingraph backend order
-0x000368cf	?WGInitializePalette@@YAXXZ	wingraph InitializePalette direct call; Buka 2.1 graphics family
-0x00036aa4	?WGAppPaint@@YAHPAX0@Z	wingraph AppPaint direct call; Buka 2.1 wingraph backend order
-0x00037270	?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z	nb_snd queue append retail calls; helper proves prev+0,next+4 and anchor head+0,tail+4
-0x00037324	?init_anchor@@YAXPAUtag_Anchor@@HH@Z	nb_init three queue initialization calls; retail helper clears head/tail pointers+0/+4; Buka comwin signature
-0x00039e84	?DelayMilli@@YAXH@Z	retail tick wrapper, PoL and Buka NOOPT declaration
-0x00039ea7	?DelayTilMilli@@YAXH@Z	FizzleForward frame pacing call with the accumulated tick target
-0x00047660	?UseSpell@hero@@QAEXC@Z	HoMM2 Buka 2.1 hero::UseSpell; advManager::CastSpell passes its signed spell byte unextended and the callee sign-extends byte [ebp+8]
-0x0005236a	?nb_add_name@@YAXXZ	nb_snd registration special case retail call; Buka donor no-argument helper
-0x00052425	?nb_add_name_done@@YGXPAU_NCB@@@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x000525f1	?nb_recv_any@@YAGH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x000527ef	?nb_call@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x000528b5	?nb_listen@@YAGHPAX@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00052aaf	?nb_arm_recv@@YAXH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00052bfd	?nb_close_session@@YAXH@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00052e32	?nb_format_name@@YAXPADPAE@Z	nb_sess retail direct call/callback operand; Buka helper identity and pinned cdecl stack ABI (callback Win32 stdcall NCB)
-0x00067754	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	hero::HeroView reads the army morale with hero and null town (ret 8) and sign-extends AX; body reads town+0x16 buildings
-0x0006e4f0	?FindNearestObject@searchArray@@QAEXFFFHH@Z	advManager::DoEvent signpost case calls it on gpSearchArray with the hero x/y/direction words, -1 and trigger 0xa8 (ret 0x14); body clears the search, seeds and stores the nearest match at +0xc/+0x10
-0x0006e730	?BuildPath@searchArray@@QAEHFFFFF@Z	advManager::DoAdvCommand and philAI::DoAI call it on gpSearchArray with hero x/y, destination x/y and a word mobility limit (ret 0x14), then read m_pathLength; HoMM2 Buka 2.1 searchArray::BuildPath
-0x00071ff6	?write_buffer@@YAHPADH@Z	GUIModemCommandExec calls 0x0599F6 with buffer and byte count; donor names write_buffer
-0x00072021	?read_byte@@YAHXZ	GUIModemResponseExec reads one serial byte from 0x059A21; donor name
-0x00072b7b	?PollRemote@@YAXXZ	base-object relocation and decoded retail target
-0x000731d0	_Netbios@4	is_netbios_avail calls retail import thunk jmp[0x004D65AC]; pinned PE IAT Netbios and VC4 nb30.h stdcall signature
-0x000731d6	_WinGCreateBitmap@12	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall bitmap creation call
-0x000731dc	_WinGCreateDC@0	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DC creation call
-0x000731e2	_WinGRecommendDIBFormat@4	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall DIB format call
-0x000731e8	_WinGSetDIBColorTable@16	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall four-argument palette call
-0x000731ee	_WinGStretchBlt@40	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall ten-argument paint call
-0x000731f4	_WinGBitBlt@32	config/retail/dna_bands.tsv; WING32.dll import thunk and stdcall eight-argument paint call
-0x000738f0	?ReallyShowPointer@mouseManager@@QAEXXZ	paired cursor-show call after drawing
-0x00073900	?ReallyHidePointer@mouseManager@@QAEXXZ	paired cursor-hide call before drawing
-0x000739e0	?SetCursorShape@mouseManager@@QAEXH@Z	Empty Windows-build hook (ret 4); fileRequester::DoKnob and advManager::DoHeroKnob pass 4 on entry and 6 on release
-0x00073a20	?CDStop@soundManager@@QAEXXZ	CDPlay retail call and PoL source family
-0x000747e0	?StartSample@soundManager@@QAEPAU_SAMPLE@@PADPAPADFFHHH@Z	seven arguments with two short homes, SAMPLE pointer result
-0x00074ba0	?ModifySample@soundManager@@QAEXPAU_SAMPLE@@FH@Z	PollSound sample-volume update call shape
-0x00074da0	?DigitalReport@soundManager@@QAEHPAU_SAMPLE@@F@Z	WaitEndSample calls soundManager::DigitalReport at 0x0559C0 with sample handle and mode 4
-0x000750f0	?PlayAmbientMusic@soundManager@@QAEXHHH@Z	PollSound fade-target switch call shape
-0x00075330	?PollSound@soundManager@@QAEXXZ	base-object relocation and decoded retail target
-0x00075970	?MemorySample@soundManager@@QAEPAU_SAMPLE@@PAVsample@@@Z	LoadPlaySample calls soundManager::MemorySample at 0x05596B; PoL 2.0 signature and retail sample playback layout
-0x00075b30	?ServiceSound@soundManager@@QAEXXZ	Process1WindowsMessage calls this method at 0x05C279; HoMM2 Buka 2.1 correspondence
-0x00075de0	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	screen-buffer copy into a bitmap with two integer coordinates
-0x00076010	?Random@@YAHHH@Z	Buka BASE/Misc.h Random(int,int); retail highScore constructor pushes bounds0,17 and consumes eax
-0x000760b0	?PostprocessBitmap@@YAXPACHH@Z	semantic provisional name from three bitmap-load callers and pixel/dimension arguments
-0x000760c0	?PostprocessIcon@@YAXPAVicon@@@Z	paired no-op load hook following PostprocessBitmap, called once after icon data read
-0x00076c60	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	WINDOW draw/move calls and four signed-word region arguments
-0x00076d50	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	retail FadeScreen word arguments and town::View call at 0x06427e
-0x00078410	?MainLoop@executive@@QAEXXZ	CallManager invokes executive event loop between manager switches
-0x00078c00	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	QuickViewWait call at 0x053970 and matching retail GetEvent body; HoMM2 Buka 2.1 correspondence
-0x0007b47c	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument screen-clipped renderer identity only
-0x0007b6dc	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	retail six-argument flipped screen-clipped renderer identity only
-0x0007bac0	??_GiconWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007bc40	?Main@iconWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007be00	?Draw@iconWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007ce90	??_GtextWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007d040	??1textWidget@@UAE@XZ	textEntry deleting destructor calls this nondeleting text destructor body, Dispose font then free text then widget destructor
-0x0007d070	?Main@textWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007d260	?Draw@textWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007d370	??_Gborder@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007d4e0	?Main@border@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007d640	?Draw@border@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007dbe0	??0baseManager@@QAE@XZ	retail highScore constructor base call; shared 0x30-byte base owner initialization
-0x0007dc50	??_GbackdropWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007dd90	??_GtextEntryWidget@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007dfc0	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007e7c0	?Draw@textEntryWidget@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007eb90	??_Gbutton@@UAEPAXI@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007ecb0	?Main@button@@UAEFAAUtag_message@@@Z	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007f280	?Draw@button@@UAEXXZ	retail vtable slot at class-specific rdata address and matching virtual declaration
-0x0007f6c0	??0sample@@QAE@PADHHH@Z	four-argument sample constructor and exact allocation size
-0x0007f8b8	_LzhufMemmove	byte-identical legacy helper in all surveyed DOS releases
-0x0007ffb0	___CxxFrameHandler	config/retail/dna_bands.tsv row 803b0; exact pinned VC4 libc.lib member 1877; inline EH registration REL32 handler identity
-0x000801e0	??3@YAXPAX@Z	VC4 operator delete wrapper calls the reviewed _free body at 0x80880
-0x000801f0	_sprintf	exact VC4 libc member and LoadAggregateHeader call shape
-0x00080260	_abs	absolute coordinate delta used twice by MoveWindow
-0x00080270	_strcpy	donor identity and seven-byte VC4 strcpy entry stub
-0x00080280	_strcat	donor identity and LogStr append call
-0x00080360	??2@YAPAXI@Z	VC4 operator new body and GetSample allocation call
-0x00080440	_free	exact VC4 libc member and LoadAggregateHeader call shape
-0x00080460	_memcpy	nb_snd retail packet copy and pinned VC4 CRT call identity
-0x000805b0	_malloc	exact VC4 libc member and LoadAggregateHeader call shape
-0x00080628	__ftol	LikelihoodOfEnemyAttacking float-to-int conversion; all 39 retail instruction bytes exactly match pinned VC4 libc.lib ftol.obj __ftol
-0x00080650	_strlen	GUIModemCommandExec passes command buffer to 0x0818A0; one-argument C strlen call
-0x000806d0	_strcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15224 _strcmp; game::LoadGame and UpdateNewGameWindow call it cdecl with two strings
-0x00080770	_strchr	config/retail/dna_bands.tsv crt-exact libc.lib:/15194 _strchr; game::UpdateNewGameWindow calls it cdecl
-0x00080830	_srand	MT LIBC srand: _getptd()->_holdrand = seed, ret; SRand 0x044637 tail-calls it with the caller seed
-0x00080840	_rand	MT LIBC rand: _getptd()->_holdrand * 214013 + 2531011, (>>16)&0x7fff; adjacent to srand in the LIBC rand object
-0x000808a0	_exit	LIBC exit: doexit(code, 0, 0) at 0x081db0; EarlySetup calls it on the CD/setup failure exits
-0x000809e0	_strncpy	SetupDisplayString bounded prefix-copy and retail CRT entry
-0x00080ae0	_fclose	donor identity and LogStr stream-close call
-0x00080b80	_fputs	unique VC4 CRT prefix and LogStr stream-write call
-0x00080c30	_fopen	donor identity and LogStr two-argument stream-open call
-0x00080c50	_pow	config/retail/dna_bands.tsv LIBC band stub 0x81ab0 (mov edx,table; jmp two-argument dispatcher); philAI::ProbableOutcomeOfBattle pushes two doubles and stores the float result, Buka pow(attackerStrength, powerCurve)
-0x00080ca0	_fread	four-argument 0x4000-byte stream fill
-0x00080e30	_fwrite	WritePrefsToFile's fwrite call; LIBCMT fwrite body (_lock_file2, _fwrite_lk, _unlock_file2)
-0x00080ff0	__lseek	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES lseek resolves to it)
-0x00081100	__chdir	SetupCDDrive's chdir call; config/retail/dna_bands.tsv crt-exact libc.lib:/1152 __chdir; LIBCMT runtime symbol (OLDNAMES chdir resolves to it)
-0x00081260	_atoi	CDPlay retail call and PoL source family
-0x00081270	_memmove	VC encoder relocation and CRT body
-0x000813c0	_memcmp	config/retail/dna_bands.tsv crt-exact libc.lib:/15011 _memcmp; netwin nb_recv_any_done compares the received name cdecl
-0x00081470	_fseek	pinned retail CRT call and VC4 library identity
-0x00081550	_ftell	saved music-file position query
-0x00081730	_strncmp	GUIModemResponseExec compares received and expected response prefixes at 0x082300
-0x00081940	__write	LIBC write (oldnames write -> _write): fd range check against _nhandle; playerData::Write streams its fields through it; LIBCMT runtime symbol (OLDNAMES write resolves to it)
-0x00081e70	__close	donor identity and LoadAggregateHeader file-descriptor call; LIBCMT runtime symbol (OLDNAMES close resolves to it)
-0x00081f70	__open	donor identity and two-argument binary-open call; LIBCMT runtime symbol (OLDNAMES open resolves to it)
-0x000823f0	__strnicmp	fileRequester::Open and game::NewGame call it with (name, prefix, count) cdecl beside __stricmp at 0x083410; LIBCMT runtime symbol (OLDNAMES strnicmp resolves to it)
-0x000824f0	__stricmp	CDPlay retail call and PoL source family; LIBCMT runtime symbol (OLDNAMES strcmpi resolves to it)
-0x000825c0	__access	pinned retail CRT call and VC4 library identity
-0x00082610	_rewind	one-argument music stream restart
-0x00087e57	__adj_fdiv_r	config/retail/dna_bands.tsv crt-exact __adj_fdiv_r; philAI::TurnCostResource FDIV-safe fdivrp site
-0x0008831c	__adj_fdiv_m32	config/retail/dna_bands.tsv crt-exact __adj_fdiv_m32; philAI float-memory FDIV-safe divide sites
-0x00088368	__adj_fdiv_m64	philAI::GetGameAttentionValue double-memory FDIV-safe divide sites call this LIBC fdiv band member where VC4 emits __adj_fdiv_m64
-0x0008841c	__adj_fdivr_m32	config/retail/dna_bands.tsv crt-exact __adj_fdivr_m32; philAI::CheckReload float-constant fdivr FDIV-safe site calls this LIBC fdiv band member
-0x00088468	__adj_fdivr_m64	advManager::UpdateHeroLocators double-constant fdivr FDIV-safe site calls this LIBC fdiv band member where VC4 emits __adj_fdivr_m64
-0x0008c560	__strrev	pinned retail CRT call and VC4 library identity
-0x0008c590	__tell	donor identity and matching VC4 CRT body; LIBCMT runtime symbol (OLDNAMES tell resolves to it)
-0x00081bc0	__read	VC4.1 LIBCMT read.obj whole body; callers retain read(fd,buffer,count)
-0x00082680	__purecall	VC4.1 purevirt.obj and all three abstract baseManager/widget vtable slots
+0x00006d26	?GetCell@advManager@@QAEPAVmapCell@@FF@Z	Buka exact pathfinding instruction correspondence: 0x2a465, 0x2a4e0, 0x561d5, 0x563b8, 0x564c1, 0x56504, 0x5660c, 0x56909, 0x5695d; config/retail/buka-pathfinding.json
+0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
+0x00029c70	?Clear@searchArray@@QAEXXZ	Buka exact pathfinding instruction correspondence: 0x55e6a, 0x56175; config/retail/buka-pathfinding.json
+0x00029d50	?CalcTerrainCost@@YAHHHHH@Z	Buka exact pathfinding instruction correspondence: 0x55f72, 0x56646, 0x56665, 0x56863, 0x56897, 0x56a18, 0x56a3f; config/retail/buka-pathfinding.json
+0x0002a1a0	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	Buka exact pathfinding instruction correspondence: 0x55e95, 0x55fbf, 0x562b7, 0x567d7, 0x56a97; config/retail/buka-pathfinding.json
+0x0002a440	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	Buka exact pathfinding instruction correspondence: 0x55f47, 0x565ef; config/retail/buka-pathfinding.json
+0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
+0x000685e0	_waveOutGetDevCapsA@12	Buka FF25 import thunk at 0x685e0; PE IAT 0x8a2d8 WINMM.dll!waveOutGetDevCapsA; decoration from pinned or verified import library, or compiled WinG caller
+0x000685e6	_waveOutGetNumDevs@0	Buka FF25 import thunk at 0x685e6; PE IAT 0x8a2d4 WINMM.dll!waveOutGetNumDevs; decoration from pinned or verified import library, or compiled WinG caller
+0x000685ec	_GetLastError@0	Buka FF25 import thunk at 0x685ec; PE IAT 0x8a194 KERNEL32.dll!GetLastError; decoration from pinned or verified import library, or compiled WinG caller
+0x000685f2	_SetCommTimeouts@8	Buka FF25 import thunk at 0x685f2; PE IAT 0x8a190 KERNEL32.dll!SetCommTimeouts; decoration from pinned or verified import library, or compiled WinG caller
+0x000685f8	_SetCommState@8	Buka FF25 import thunk at 0x685f8; PE IAT 0x8a18c KERNEL32.dll!SetCommState; decoration from pinned or verified import library, or compiled WinG caller
+0x000685fe	_SetupComm@12	Buka FF25 import thunk at 0x685fe; PE IAT 0x8a188 KERNEL32.dll!SetupComm; decoration from pinned or verified import library, or compiled WinG caller
+0x00068604	_GetCommTimeouts@8	Buka FF25 import thunk at 0x68604; PE IAT 0x8a184 KERNEL32.dll!GetCommTimeouts; decoration from pinned or verified import library, or compiled WinG caller
+0x0006860a	_GetCommState@8	Buka FF25 import thunk at 0x6860a; PE IAT 0x8a180 KERNEL32.dll!GetCommState; decoration from pinned or verified import library, or compiled WinG caller
+0x00068610	_CreateFileA@28	Buka FF25 import thunk at 0x68610; PE IAT 0x8a17c KERNEL32.dll!CreateFileA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068616	_CloseHandle@4	Buka FF25 import thunk at 0x68616; PE IAT 0x8a178 KERNEL32.dll!CloseHandle; decoration from pinned or verified import library, or compiled WinG caller
+0x0006861c	_ReadFile@20	Buka FF25 import thunk at 0x6861c; PE IAT 0x8a174 KERNEL32.dll!ReadFile; decoration from pinned or verified import library, or compiled WinG caller
+0x00068622	_ClearCommError@12	Buka FF25 import thunk at 0x68622; PE IAT 0x8a16c KERNEL32.dll!ClearCommError; decoration from pinned or verified import library, or compiled WinG caller
+0x00068628	_ClearCommBreak@4	Buka FF25 import thunk at 0x68628; PE IAT 0x8a168 KERNEL32.dll!ClearCommBreak; decoration from pinned or verified import library, or compiled WinG caller
+0x0006862e	_Sleep@4	Buka FF25 import thunk at 0x6862e; PE IAT 0x8a164 KERNEL32.dll!Sleep; decoration from pinned or verified import library, or compiled WinG caller
+0x00068634	_SetCommBreak@4	Buka FF25 import thunk at 0x68634; PE IAT 0x8a160 KERNEL32.dll!SetCommBreak; decoration from pinned or verified import library, or compiled WinG caller
+0x0006863a	_GetCommModemStatus@8	Buka FF25 import thunk at 0x6863a; PE IAT 0x8a15c KERNEL32.dll!GetCommModemStatus; decoration from pinned or verified import library, or compiled WinG caller
+0x00068640	_WriteFile@20	Buka FF25 import thunk at 0x68640; PE IAT 0x8a158 KERNEL32.dll!WriteFile; decoration from pinned or verified import library, or compiled WinG caller
+0x00068646	_GetDriveTypeA@4	Buka FF25 import thunk at 0x68646; PE IAT 0x8a0d4 KERNEL32.dll!GetDriveTypeA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006864c	_CreateEventA@16	Buka FF25 import thunk at 0x6864c; PE IAT 0x8a04c KERNEL32.dll!CreateEventA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068652	_GetDiskFreeSpaceExA@16	Buka FF25 import thunk at 0x68652; PE IAT 0x8a050 KERNEL32.dll!GetDiskFreeSpaceExA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068658	_SetErrorMode@4	Buka FF25 import thunk at 0x68658; PE IAT 0x8a054 KERNEL32.dll!SetErrorMode; decoration from pinned or verified import library, or compiled WinG caller
+0x0006865e	_GetLogicalDrives@0	Buka FF25 import thunk at 0x6865e; PE IAT 0x8a058 KERNEL32.dll!GetLogicalDrives; decoration from pinned or verified import library, or compiled WinG caller
+0x00068664	_GetTickCount@0	Buka FF25 import thunk at 0x68664; PE IAT 0x8a05c KERNEL32.dll!GetTickCount; decoration from pinned or verified import library, or compiled WinG caller
+0x0006866a	_GlobalFree@4	Buka FF25 import thunk at 0x6866a; PE IAT 0x8a060 KERNEL32.dll!GlobalFree; decoration from pinned or verified import library, or compiled WinG caller
+0x00068670	_GlobalAlloc@8	Buka FF25 import thunk at 0x68670; PE IAT 0x8a064 KERNEL32.dll!GlobalAlloc; decoration from pinned or verified import library, or compiled WinG caller
+0x00068676	_InitializeCriticalSection@4	Buka FF25 import thunk at 0x68676; PE IAT 0x8a068 KERNEL32.dll!InitializeCriticalSection; decoration from pinned or verified import library, or compiled WinG caller
+0x0006867c	_SetEvent@4	Buka FF25 import thunk at 0x6867c; PE IAT 0x8a06c KERNEL32.dll!SetEvent; decoration from pinned or verified import library, or compiled WinG caller
+0x00068682	_DeleteCriticalSection@4	Buka FF25 import thunk at 0x68682; PE IAT 0x8a070 KERNEL32.dll!DeleteCriticalSection; decoration from pinned or verified import library, or compiled WinG caller
+0x00068688	_LeaveCriticalSection@4	Buka FF25 import thunk at 0x68688; PE IAT 0x8a074 KERNEL32.dll!LeaveCriticalSection; decoration from pinned or verified import library, or compiled WinG caller
+0x0006868e	_EnterCriticalSection@4	Buka FF25 import thunk at 0x6868e; PE IAT 0x8a078 KERNEL32.dll!EnterCriticalSection; decoration from pinned or verified import library, or compiled WinG caller
+0x00068694	_ResetEvent@4	Buka FF25 import thunk at 0x68694; PE IAT 0x8a07c KERNEL32.dll!ResetEvent; decoration from pinned or verified import library, or compiled WinG caller
+0x0006869a	_WaitForSingleObject@8	Buka FF25 import thunk at 0x6869a; PE IAT 0x8a080 KERNEL32.dll!WaitForSingleObject; decoration from pinned or verified import library, or compiled WinG caller
+0x000686a0	_WaitForMultipleObjects@16	Buka FF25 import thunk at 0x686a0; PE IAT 0x8a084 KERNEL32.dll!WaitForMultipleObjects; decoration from pinned or verified import library, or compiled WinG caller
+0x000686a6	_OutputDebugStringA@4	Buka FF25 import thunk at 0x686a6; PE IAT 0x8a088 KERNEL32.dll!OutputDebugStringA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686ac	_FindClose@4	Buka FF25 import thunk at 0x686ac; PE IAT 0x8a08c KERNEL32.dll!FindClose; decoration from pinned or verified import library, or compiled WinG caller
+0x000686b2	_FindNextFileA@8	Buka FF25 import thunk at 0x686b2; PE IAT 0x8a090 KERNEL32.dll!FindNextFileA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686b8	_FindFirstFileA@8	Buka FF25 import thunk at 0x686b8; PE IAT 0x8a094 KERNEL32.dll!FindFirstFileA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686be	_GetProcAddress@8	Buka FF25 import thunk at 0x686be; PE IAT 0x8a098 KERNEL32.dll!GetProcAddress; decoration from pinned or verified import library, or compiled WinG caller
+0x000686c4	_LoadLibraryA@4	Buka FF25 import thunk at 0x686c4; PE IAT 0x8a09c KERNEL32.dll!LoadLibraryA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686ca	_FreeLibrary@4	Buka FF25 import thunk at 0x686ca; PE IAT 0x8a0a0 KERNEL32.dll!FreeLibrary; decoration from pinned or verified import library, or compiled WinG caller
+0x000686d0	_wsprintfA	Buka FF25 import thunk at 0x686d0; PE IAT 0x8a220 USER32.dll!wsprintfA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686d6	_MessageBoxA@16	Buka FF25 import thunk at 0x686d6; PE IAT 0x8a224 USER32.dll!MessageBoxA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686dc	_LoadMenuA@8	Buka FF25 import thunk at 0x686dc; PE IAT 0x8a228 USER32.dll!LoadMenuA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686e2	_PostMessageA@16	Buka FF25 import thunk at 0x686e2; PE IAT 0x8a2cc USER32.dll!PostMessageA; decoration from pinned or verified import library, or compiled WinG caller
+0x000686e8	_CheckMenuItem@12	Buka FF25 import thunk at 0x686e8; PE IAT 0x8a2c8 USER32.dll!CheckMenuItem; decoration from pinned or verified import library, or compiled WinG caller
+0x000686ee	_DestroyMenu@4	Buka FF25 import thunk at 0x686ee; PE IAT 0x8a2c4 USER32.dll!DestroyMenu; decoration from pinned or verified import library, or compiled WinG caller
+0x000686f4	_SetMenu@8	Buka FF25 import thunk at 0x686f4; PE IAT 0x8a2c0 USER32.dll!SetMenu; decoration from pinned or verified import library, or compiled WinG caller
+0x000686fa	_WaitMessage@0	Buka FF25 import thunk at 0x686fa; PE IAT 0x8a2bc USER32.dll!WaitMessage; decoration from pinned or verified import library, or compiled WinG caller
+0x00068700	_DispatchMessageA@4	Buka FF25 import thunk at 0x68700; PE IAT 0x8a2b8 USER32.dll!DispatchMessageA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068706	_TranslateMessage@4	Buka FF25 import thunk at 0x68706; PE IAT 0x8a2b4 USER32.dll!TranslateMessage; decoration from pinned or verified import library, or compiled WinG caller
+0x0006870c	_PeekMessageA@20	Buka FF25 import thunk at 0x6870c; PE IAT 0x8a2b0 USER32.dll!PeekMessageA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068712	_SetCursor@4	Buka FF25 import thunk at 0x68712; PE IAT 0x8a2ac USER32.dll!SetCursor; decoration from pinned or verified import library, or compiled WinG caller
+0x00068718	_LoadCursorA@8	Buka FF25 import thunk at 0x68718; PE IAT 0x8a2a8 USER32.dll!LoadCursorA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006871e	_SetWindowLongA@12	Buka FF25 import thunk at 0x6871e; PE IAT 0x8a2a4 USER32.dll!SetWindowLongA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068724	_ShowWindow@8	Buka FF25 import thunk at 0x68724; PE IAT 0x8a2a0 USER32.dll!ShowWindow; decoration from pinned or verified import library, or compiled WinG caller
+0x0006872a	_CreateWindowExA@48	Buka FF25 import thunk at 0x6872a; PE IAT 0x8a29c USER32.dll!CreateWindowExA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068730	_AdjustWindowRect@12	Buka FF25 import thunk at 0x68730; PE IAT 0x8a298 USER32.dll!AdjustWindowRect; decoration from pinned or verified import library, or compiled WinG caller
+0x00068736	_RegisterClassA@4	Buka FF25 import thunk at 0x68736; PE IAT 0x8a294 USER32.dll!RegisterClassA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006873c	_LoadIconA@8	Buka FF25 import thunk at 0x6873c; PE IAT 0x8a290 USER32.dll!LoadIconA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068742	_PostQuitMessage@4	Buka FF25 import thunk at 0x68742; PE IAT 0x8a28c USER32.dll!PostQuitMessage; decoration from pinned or verified import library, or compiled WinG caller
+0x00068748	_DestroyWindow@4	Buka FF25 import thunk at 0x68748; PE IAT 0x8a288 USER32.dll!DestroyWindow; decoration from pinned or verified import library, or compiled WinG caller
+0x0006874e	_GetWindowRect@8	Buka FF25 import thunk at 0x6874e; PE IAT 0x8a284 USER32.dll!GetWindowRect; decoration from pinned or verified import library, or compiled WinG caller
+0x00068754	_GetWindowLongA@8	Buka FF25 import thunk at 0x68754; PE IAT 0x8a280 USER32.dll!GetWindowLongA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006875a	_SetTimer@16	Buka FF25 import thunk at 0x6875a; PE IAT 0x8a27c USER32.dll!SetTimer; decoration from pinned or verified import library, or compiled WinG caller
+0x00068760	_DefWindowProcA@16	Buka FF25 import thunk at 0x68760; PE IAT 0x8a278 USER32.dll!DefWindowProcA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068766	_EndDialog@8	Buka FF25 import thunk at 0x68766; PE IAT 0x8a274 USER32.dll!EndDialog; decoration from pinned or verified import library, or compiled WinG caller
+0x0006876c	_GetMessageA@16	Buka FF25 import thunk at 0x6876c; PE IAT 0x8a270 USER32.dll!GetMessageA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068772	_MoveWindow@24	Buka FF25 import thunk at 0x68772; PE IAT 0x8a26c USER32.dll!MoveWindow; decoration from pinned or verified import library, or compiled WinG caller
+0x00068778	_WinHelpA@16	Buka FF25 import thunk at 0x68778; PE IAT 0x8a268 USER32.dll!WinHelpA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006877e	_DialogBoxParamA@20	Buka FF25 import thunk at 0x6877e; PE IAT 0x8a264 USER32.dll!DialogBoxParamA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068784	_EnableMenuItem@12	Buka FF25 import thunk at 0x68784; PE IAT 0x8a260 USER32.dll!EnableMenuItem; decoration from pinned or verified import library, or compiled WinG caller
+0x0006878a	_DrawMenuBar@4	Buka FF25 import thunk at 0x6878a; PE IAT 0x8a25c USER32.dll!DrawMenuBar; decoration from pinned or verified import library, or compiled WinG caller
+0x00068790	_GetSubMenu@8	Buka FF25 import thunk at 0x68790; PE IAT 0x8a258 USER32.dll!GetSubMenu; decoration from pinned or verified import library, or compiled WinG caller
+0x00068796	_GetMenuItemID@8	Buka FF25 import thunk at 0x68796; PE IAT 0x8a254 USER32.dll!GetMenuItemID; decoration from pinned or verified import library, or compiled WinG caller
+0x0006879c	_GetMenuItemCount@4	Buka FF25 import thunk at 0x6879c; PE IAT 0x8a250 USER32.dll!GetMenuItemCount; decoration from pinned or verified import library, or compiled WinG caller
+0x000687a2	_EndPaint@8	Buka FF25 import thunk at 0x687a2; PE IAT 0x8a24c USER32.dll!EndPaint; decoration from pinned or verified import library, or compiled WinG caller
+0x000687a8	_OffsetRect@12	Buka FF25 import thunk at 0x687a8; PE IAT 0x8a248 USER32.dll!OffsetRect; decoration from pinned or verified import library, or compiled WinG caller
+0x000687ae	_ClientToScreen@8	Buka FF25 import thunk at 0x687ae; PE IAT 0x8a244 USER32.dll!ClientToScreen; decoration from pinned or verified import library, or compiled WinG caller
+0x000687b4	_GetClientRect@8	Buka FF25 import thunk at 0x687b4; PE IAT 0x8a240 USER32.dll!GetClientRect; decoration from pinned or verified import library, or compiled WinG caller
+0x000687ba	_BeginPaint@8	Buka FF25 import thunk at 0x687ba; PE IAT 0x8a23c USER32.dll!BeginPaint; decoration from pinned or verified import library, or compiled WinG caller
+0x000687c0	_ReleaseDC@8	Buka FF25 import thunk at 0x687c0; PE IAT 0x8a238 USER32.dll!ReleaseDC; decoration from pinned or verified import library, or compiled WinG caller
+0x000687c6	_GetDC@4	Buka FF25 import thunk at 0x687c6; PE IAT 0x8a234 USER32.dll!GetDC; decoration from pinned or verified import library, or compiled WinG caller
+0x000687cc	_MessageBeep@4	Buka FF25 import thunk at 0x687cc; PE IAT 0x8a230 USER32.dll!MessageBeep; decoration from pinned or verified import library, or compiled WinG caller
+0x000687d2	_InvalidateRect@12	Buka FF25 import thunk at 0x687d2; PE IAT 0x8a22c USER32.dll!InvalidateRect; decoration from pinned or verified import library, or compiled WinG caller
+0x000687d8	_GdiSetBatchLimit@4	Buka FF25 import thunk at 0x687d8; PE IAT 0x8a040 GDI32.dll!GdiSetBatchLimit; decoration from pinned or verified import library, or compiled WinG caller
+0x000687de	_GetSystemPaletteEntries@16	Buka FF25 import thunk at 0x687de; PE IAT 0x8a03c GDI32.dll!GetSystemPaletteEntries; decoration from pinned or verified import library, or compiled WinG caller
+0x000687e4	_RealizePalette@4	Buka FF25 import thunk at 0x687e4; PE IAT 0x8a038 GDI32.dll!RealizePalette; decoration from pinned or verified import library, or compiled WinG caller
+0x000687ea	_SelectPalette@12	Buka FF25 import thunk at 0x687ea; PE IAT 0x8a034 GDI32.dll!SelectPalette; decoration from pinned or verified import library, or compiled WinG caller
+0x000687f0	_PatBlt@24	Buka FF25 import thunk at 0x687f0; PE IAT 0x8a030 GDI32.dll!PatBlt; decoration from pinned or verified import library, or compiled WinG caller
+0x000687f6	_SelectObject@8	Buka FF25 import thunk at 0x687f6; PE IAT 0x8a02c GDI32.dll!SelectObject; decoration from pinned or verified import library, or compiled WinG caller
+0x000687fc	_CreatePalette@4	Buka FF25 import thunk at 0x687fc; PE IAT 0x8a018 GDI32.dll!CreatePalette; decoration from pinned or verified import library, or compiled WinG caller
+0x00068802	_DeleteObject@4	Buka FF25 import thunk at 0x68802; PE IAT 0x8a028 GDI32.dll!DeleteObject; decoration from pinned or verified import library, or compiled WinG caller
+0x00068808	_AnimatePalette@16	Buka FF25 import thunk at 0x68808; PE IAT 0x8a024 GDI32.dll!AnimatePalette; decoration from pinned or verified import library, or compiled WinG caller
+0x0006880e	_DeleteDC@4	Buka FF25 import thunk at 0x6880e; PE IAT 0x8a020 GDI32.dll!DeleteDC; decoration from pinned or verified import library, or compiled WinG caller
+0x00068814	_GetDeviceCaps@8	Buka FF25 import thunk at 0x68814; PE IAT 0x8a01c GDI32.dll!GetDeviceCaps; decoration from pinned or verified import library, or compiled WinG caller
+0x0006881a	_RegCloseKey@4	Buka FF25 import thunk at 0x6881a; PE IAT 0x8a010 ADVAPI32.dll!RegCloseKey; decoration from pinned or verified import library, or compiled WinG caller
+0x00068820	_RegQueryValueExA@24	Buka FF25 import thunk at 0x68820; PE IAT 0x8a00c ADVAPI32.dll!RegQueryValueExA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068826	_RegCreateKeyA@12	Buka FF25 import thunk at 0x68826; PE IAT 0x8a008 ADVAPI32.dll!RegCreateKeyA; decoration from pinned or verified import library, or compiled WinG caller
+0x0006882c	_RegSetValueExA@24	Buka FF25 import thunk at 0x6882c; PE IAT 0x8a004 ADVAPI32.dll!RegSetValueExA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068832	_RegOpenKeyExA@20	Buka FF25 import thunk at 0x68832; PE IAT 0x8a000 ADVAPI32.dll!RegOpenKeyExA; decoration from pinned or verified import library, or compiled WinG caller
+0x00068838	_AIL_waveOutOpen@16	Buka FF25 import thunk at 0x68838; PE IAT 0x8a2ec mss32.dll!_AIL_waveOutOpen@16; decoration from pinned or verified import library, or compiled WinG caller
+0x0006883e	_AIL_startup@0	Buka FF25 import thunk at 0x6883e; PE IAT 0x8a2fc mss32.dll!_AIL_startup@0; decoration from pinned or verified import library, or compiled WinG caller
+0x00068844	_AIL_shutdown@0	Buka FF25 import thunk at 0x68844; PE IAT 0x8a2f8 mss32.dll!_AIL_shutdown@0; decoration from pinned or verified import library, or compiled WinG caller
+0x0006884a	_AIL_waveOutClose@4	Buka FF25 import thunk at 0x6884a; PE IAT 0x8a2f4 mss32.dll!_AIL_waveOutClose@4; decoration from pinned or verified import library, or compiled WinG caller
+0x00068850	_AIL_set_digital_master_volume@8	Buka FF25 import thunk at 0x68850; PE IAT 0x8a2f0 mss32.dll!_AIL_set_digital_master_volume@8; decoration from pinned or verified import library, or compiled WinG caller
+0x00068856	_WinGCreateBitmap@12	Buka FF25 import thunk at 0x68856; PE IAT 0x8a340 WING32.dll!WinGCreateBitmap; decoration from pinned or verified import library, or compiled WinG caller
+0x0006885c	_WinGCreateDC@0	Buka FF25 import thunk at 0x6885c; PE IAT 0x8a32c WING32.dll!WinGCreateDC; decoration from pinned or verified import library, or compiled WinG caller
+0x00068862	_WinGRecommendDIBFormat@4	Buka FF25 import thunk at 0x68862; PE IAT 0x8a330 WING32.dll!WinGRecommendDIBFormat; decoration from pinned or verified import library, or compiled WinG caller
+0x00068868	_WinGSetDIBColorTable@16	Buka FF25 import thunk at 0x68868; PE IAT 0x8a334 WING32.dll!WinGSetDIBColorTable; decoration from pinned or verified import library, or compiled WinG caller
+0x0006886e	_WinGStretchBlt@40	Buka FF25 import thunk at 0x6886e; PE IAT 0x8a338 WING32.dll!WinGStretchBlt; decoration from pinned or verified import library, or compiled WinG caller
+0x00068874	_WinGBitBlt@32	Buka FF25 import thunk at 0x68874; PE IAT 0x8a33c WING32.dll!WinGBitBlt; decoration from pinned or verified import library, or compiled WinG caller
+0x0006887a	_SmackNextFrame@4	Buka FF25 import thunk at 0x6887a; PE IAT 0x8a310 smackw32.DLL!21; decoration from pinned or verified import library, or compiled WinG caller
+0x00068880	_SmackToBufferRect@8	Buka FF25 import thunk at 0x68880; PE IAT 0x8a324 smackw32.DLL!28; decoration from pinned or verified import library, or compiled WinG caller
+0x00068886	_SmackDoFrame@4	Buka FF25 import thunk at 0x68886; PE IAT 0x8a308 smackw32.DLL!19; decoration from pinned or verified import library, or compiled WinG caller
+0x0006888c	_SmackSummary@8	Buka FF25 import thunk at 0x6888c; PE IAT 0x8a304 smackw32.DLL!20; decoration from pinned or verified import library, or compiled WinG caller
+0x00068892	_SmackWait@4	Buka FF25 import thunk at 0x68892; PE IAT 0x8a30c smackw32.DLL!32; decoration from pinned or verified import library, or compiled WinG caller
+0x00068898	_SmackToBuffer@28	Buka FF25 import thunk at 0x68898; PE IAT 0x8a314 smackw32.DLL!23; decoration from pinned or verified import library, or compiled WinG caller
+0x0006889e	_SmackOpen@12	Buka FF25 import thunk at 0x6889e; PE IAT 0x8a318 smackw32.DLL!14; decoration from pinned or verified import library, or compiled WinG caller
+0x000688a4	_SmackSoundUseMSS@4	Buka FF25 import thunk at 0x688a4; PE IAT 0x8a31c smackw32.DLL!33; decoration from pinned or verified import library, or compiled WinG caller
+0x000688aa	_SmackClose@4	Buka FF25 import thunk at 0x688aa; PE IAT 0x8a320 smackw32.DLL!18; decoration from pinned or verified import library, or compiled WinG caller
+0x000688b0	_Netbios@4	Buka FF25 import thunk at 0x688b0; PE IAT 0x8a1f8 NETAPI32.dll!Netbios; decoration from pinned or verified import library, or compiled WinG caller
+0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
+0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
+0x0007b09e	_GetCurrentThread@0	Buka FF25 import thunk at 0x7b09e; PE IAT 0x8a124 KERNEL32.dll!GetCurrentThread; decoration from pinned or verified import library, or compiled WinG caller
+0x00088550	_RtlUnwind@16	Buka FF25 import thunk at 0x88550; PE IAT 0x8a1c4 KERNEL32.dll!RtlUnwind; decoration from pinned or verified import library, or compiled WinG caller
+0x00088556	_HeapFree@12	Buka FF25 import thunk at 0x88556; PE IAT 0x8a1c0 KERNEL32.dll!HeapFree; decoration from pinned or verified import library, or compiled WinG caller
+0x0008855c	_HeapAlloc@12	Buka FF25 import thunk at 0x8855c; PE IAT 0x8a1bc KERNEL32.dll!HeapAlloc; decoration from pinned or verified import library, or compiled WinG caller
+0x00088562	_ExitProcess@4	Buka FF25 import thunk at 0x88562; PE IAT 0x8a1b8 KERNEL32.dll!ExitProcess; decoration from pinned or verified import library, or compiled WinG caller
+0x00088568	_TerminateProcess@8	Buka FF25 import thunk at 0x88568; PE IAT 0x8a1b4 KERNEL32.dll!TerminateProcess; decoration from pinned or verified import library, or compiled WinG caller
+0x0008856e	_GetCurrentProcess@0	Buka FF25 import thunk at 0x8856e; PE IAT 0x8a1b0 KERNEL32.dll!GetCurrentProcess; decoration from pinned or verified import library, or compiled WinG caller
+0x00088574	_SetFilePointer@16	Buka FF25 import thunk at 0x88574; PE IAT 0x8a1a8 KERNEL32.dll!SetFilePointer; decoration from pinned or verified import library, or compiled WinG caller
+0x0008857a	_SetEnvironmentVariableA@8	Buka FF25 import thunk at 0x8857a; PE IAT 0x8a1a4 KERNEL32.dll!SetEnvironmentVariableA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088580	_GetCurrentDirectoryA@8	Buka FF25 import thunk at 0x88580; PE IAT 0x8a1a0 KERNEL32.dll!GetCurrentDirectoryA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088586	_SetCurrentDirectoryA@4	Buka FF25 import thunk at 0x88586; PE IAT 0x8a154 KERNEL32.dll!SetCurrentDirectoryA; decoration from pinned or verified import library, or compiled WinG caller
+0x0008858c	_GetModuleHandleA@4	Buka FF25 import thunk at 0x8858c; PE IAT 0x8a150 KERNEL32.dll!GetModuleHandleA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088592	_GetStartupInfoA@4	Buka FF25 import thunk at 0x88592; PE IAT 0x8a14c KERNEL32.dll!GetStartupInfoA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088598	_GetCommandLineA@0	Buka FF25 import thunk at 0x88598; PE IAT 0x8a148 KERNEL32.dll!GetCommandLineA; decoration from pinned or verified import library, or compiled WinG caller
+0x0008859e	_GetVersion@0	Buka FF25 import thunk at 0x8859e; PE IAT 0x8a144 KERNEL32.dll!GetVersion; decoration from pinned or verified import library, or compiled WinG caller
+0x000885a4	_GetFileType@4	Buka FF25 import thunk at 0x885a4; PE IAT 0x8a140 KERNEL32.dll!GetFileType; decoration from pinned or verified import library, or compiled WinG caller
+0x000885aa	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x885aa; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
+0x000885b0	_TlsSetValue@8	Buka FF25 import thunk at 0x885b0; PE IAT 0x8a138 KERNEL32.dll!TlsSetValue; decoration from pinned or verified import library, or compiled WinG caller
+0x000885b6	_TlsAlloc@0	Buka FF25 import thunk at 0x885b6; PE IAT 0x8a134 KERNEL32.dll!TlsAlloc; decoration from pinned or verified import library, or compiled WinG caller
+0x000885bc	_TlsFree@4	Buka FF25 import thunk at 0x885bc; PE IAT 0x8a130 KERNEL32.dll!TlsFree; decoration from pinned or verified import library, or compiled WinG caller
+0x000885c2	_SetLastError@4	Buka FF25 import thunk at 0x885c2; PE IAT 0x8a12c KERNEL32.dll!SetLastError; decoration from pinned or verified import library, or compiled WinG caller
+0x000885c8	_TlsGetValue@4	Buka FF25 import thunk at 0x885c8; PE IAT 0x8a128 KERNEL32.dll!TlsGetValue; decoration from pinned or verified import library, or compiled WinG caller
+0x000885ce	_GetCurrentThread@0	Buka FF25 import thunk at 0x885ce; PE IAT 0x8a124 KERNEL32.dll!GetCurrentThread; decoration from pinned or verified import library, or compiled WinG caller
+0x000885d4	_GetModuleFileNameA@12	Buka FF25 import thunk at 0x885d4; PE IAT 0x8a120 KERNEL32.dll!GetModuleFileNameA; decoration from pinned or verified import library, or compiled WinG caller
+0x000885da	_GetEnvironmentVariableA@12	Buka FF25 import thunk at 0x885da; PE IAT 0x8a11c KERNEL32.dll!GetEnvironmentVariableA; decoration from pinned or verified import library, or compiled WinG caller
+0x000885e0	_GetVersionExA@4	Buka FF25 import thunk at 0x885e0; PE IAT 0x8a118 KERNEL32.dll!GetVersionExA; decoration from pinned or verified import library, or compiled WinG caller
+0x000885e6	_HeapDestroy@4	Buka FF25 import thunk at 0x885e6; PE IAT 0x8a114 KERNEL32.dll!HeapDestroy; decoration from pinned or verified import library, or compiled WinG caller
+0x000885ec	_HeapCreate@12	Buka FF25 import thunk at 0x885ec; PE IAT 0x8a110 KERNEL32.dll!HeapCreate; decoration from pinned or verified import library, or compiled WinG caller
+0x000885f2	_VirtualFree@12	Buka FF25 import thunk at 0x885f2; PE IAT 0x8a10c KERNEL32.dll!VirtualFree; decoration from pinned or verified import library, or compiled WinG caller
+0x000885f8	_VirtualAlloc@16	Buka FF25 import thunk at 0x885f8; PE IAT 0x8a108 KERNEL32.dll!VirtualAlloc; decoration from pinned or verified import library, or compiled WinG caller
+0x000885fe	_HeapReAlloc@16	Buka FF25 import thunk at 0x885fe; PE IAT 0x8a104 KERNEL32.dll!HeapReAlloc; decoration from pinned or verified import library, or compiled WinG caller
+0x00088604	_IsBadWritePtr@8	Buka FF25 import thunk at 0x88604; PE IAT 0x8a100 KERNEL32.dll!IsBadWritePtr; decoration from pinned or verified import library, or compiled WinG caller
+0x0008860a	_FatalAppExitA@8	Buka FF25 import thunk at 0x8860a; PE IAT 0x8a0fc KERNEL32.dll!FatalAppExitA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088610	_HeapSize@12	Buka FF25 import thunk at 0x88610; PE IAT 0x8a0f8 KERNEL32.dll!HeapSize; decoration from pinned or verified import library, or compiled WinG caller
+0x00088616	_SetStdHandle@8	Buka FF25 import thunk at 0x88616; PE IAT 0x8a0f4 KERNEL32.dll!SetStdHandle; decoration from pinned or verified import library, or compiled WinG caller
+0x0008861c	_SetHandleCount@4	Buka FF25 import thunk at 0x8861c; PE IAT 0x8a0f0 KERNEL32.dll!SetHandleCount; decoration from pinned or verified import library, or compiled WinG caller
+0x00088622	_GetStdHandle@4	Buka FF25 import thunk at 0x88622; PE IAT 0x8a0ec KERNEL32.dll!GetStdHandle; decoration from pinned or verified import library, or compiled WinG caller
+0x00088628	_UnhandledExceptionFilter@4	Buka FF25 import thunk at 0x88628; PE IAT 0x8a0e8 KERNEL32.dll!UnhandledExceptionFilter; decoration from pinned or verified import library, or compiled WinG caller
+0x0008862e	_FreeEnvironmentStringsA@4	Buka FF25 import thunk at 0x8862e; PE IAT 0x8a0e4 KERNEL32.dll!FreeEnvironmentStringsA; decoration from pinned or verified import library, or compiled WinG caller
+0x00088634	_FreeEnvironmentStringsW@4	Buka FF25 import thunk at 0x88634; PE IAT 0x8a0e0 KERNEL32.dll!FreeEnvironmentStringsW; decoration from pinned or verified import library, or compiled WinG caller
+0x0008863a	_WideCharToMultiByte@32	Buka FF25 import thunk at 0x8863a; PE IAT 0x8a0dc KERNEL32.dll!WideCharToMultiByte; decoration from pinned or verified import library, or compiled WinG caller
+0x00088640	_GetEnvironmentStrings@0	Buka FF25 import thunk at 0x88640; PE IAT 0x8a0d8 KERNEL32.dll!GetEnvironmentStrings; decoration from pinned or verified import library, or compiled WinG caller
+0x00088646	_GetEnvironmentStringsW@0	Buka FF25 import thunk at 0x88646; PE IAT 0x8a1ac KERNEL32.dll!GetEnvironmentStringsW; decoration from pinned or verified import library, or compiled WinG caller
+0x0008864c	_SetEndOfFile@4	Buka FF25 import thunk at 0x8864c; PE IAT 0x8a0d0 KERNEL32.dll!SetEndOfFile; decoration from pinned or verified import library, or compiled WinG caller
+0x00088652	_InterlockedDecrement@4	Buka FF25 import thunk at 0x88652; PE IAT 0x8a0cc KERNEL32.dll!InterlockedDecrement; decoration from pinned or verified import library, or compiled WinG caller
+0x00088658	_InterlockedIncrement@4	Buka FF25 import thunk at 0x88658; PE IAT 0x8a0c8 KERNEL32.dll!InterlockedIncrement; decoration from pinned or verified import library, or compiled WinG caller
+0x0008865e	_SetUnhandledExceptionFilter@4	Buka FF25 import thunk at 0x8865e; PE IAT 0x8a0c4 KERNEL32.dll!SetUnhandledExceptionFilter; decoration from pinned or verified import library, or compiled WinG caller
+0x00088664	_IsBadReadPtr@8	Buka FF25 import thunk at 0x88664; PE IAT 0x8a0c0 KERNEL32.dll!IsBadReadPtr; decoration from pinned or verified import library, or compiled WinG caller
+0x0008866a	_IsBadCodePtr@4	Buka FF25 import thunk at 0x8866a; PE IAT 0x8a0bc KERNEL32.dll!IsBadCodePtr; decoration from pinned or verified import library, or compiled WinG caller
+0x00088670	_GetCPInfo@8	Buka FF25 import thunk at 0x88670; PE IAT 0x8a0b8 KERNEL32.dll!GetCPInfo; decoration from pinned or verified import library, or compiled WinG caller
+0x00088676	_GetACP@0	Buka FF25 import thunk at 0x88676; PE IAT 0x8a0b4 KERNEL32.dll!GetACP; decoration from pinned or verified import library, or compiled WinG caller
+0x0008867c	_GetOEMCP@0	Buka FF25 import thunk at 0x8867c; PE IAT 0x8a0b0 KERNEL32.dll!GetOEMCP; decoration from pinned or verified import library, or compiled WinG caller
+0x00088682	_MultiByteToWideChar@24	Buka FF25 import thunk at 0x88682; PE IAT 0x8a0ac KERNEL32.dll!MultiByteToWideChar; decoration from pinned or verified import library, or compiled WinG caller
+0x00088688	_LCMapStringA@24	Buka FF25 import thunk at 0x88688; PE IAT 0x8a0a8 KERNEL32.dll!LCMapStringA; decoration from pinned or verified import library, or compiled WinG caller
+0x0008868e	_LCMapStringW@24	Buka FF25 import thunk at 0x8868e; PE IAT 0x8a0a4 KERNEL32.dll!LCMapStringW; decoration from pinned or verified import library, or compiled WinG caller
+0x00088694	_GetStringTypeA@20	Buka FF25 import thunk at 0x88694; PE IAT 0x8a198 KERNEL32.dll!GetStringTypeA; decoration from pinned or verified import library, or compiled WinG caller
+0x0008869a	_GetStringTypeW@16	Buka FF25 import thunk at 0x8869a; PE IAT 0x8a19c KERNEL32.dll!GetStringTypeW; decoration from pinned or verified import library, or compiled WinG caller
+0x000886a0	_FlushFileBuffers@4	Buka FF25 import thunk at 0x886a0; PE IAT 0x8a170 KERNEL32.dll!FlushFileBuffers; decoration from pinned or verified import library, or compiled WinG caller
+0x000886a6	_IsValidLocale@8	Buka FF25 import thunk at 0x886a6; PE IAT 0x8a1c8 KERNEL32.dll!IsValidLocale; decoration from pinned or verified import library, or compiled WinG caller
+0x000886ac	_IsValidCodePage@4	Buka FF25 import thunk at 0x886ac; PE IAT 0x8a1cc KERNEL32.dll!IsValidCodePage; decoration from pinned or verified import library, or compiled WinG caller
+0x000886b2	_GetLocaleInfoA@16	Buka FF25 import thunk at 0x886b2; PE IAT 0x8a1f0 KERNEL32.dll!GetLocaleInfoA; decoration from pinned or verified import library, or compiled WinG caller
+0x000886b8	_EnumSystemLocalesA@8	Buka FF25 import thunk at 0x886b8; PE IAT 0x8a1ec KERNEL32.dll!EnumSystemLocalesA; decoration from pinned or verified import library, or compiled WinG caller
+0x000886be	_GetUserDefaultLCID@0	Buka FF25 import thunk at 0x886be; PE IAT 0x8a1e8 KERNEL32.dll!GetUserDefaultLCID; decoration from pinned or verified import library, or compiled WinG caller
+0x000886c4	_SetConsoleCtrlHandler@8	Buka FF25 import thunk at 0x886c4; PE IAT 0x8a1e4 KERNEL32.dll!SetConsoleCtrlHandler; decoration from pinned or verified import library, or compiled WinG caller
+0x000886ca	_RaiseException@16	Buka FF25 import thunk at 0x886ca; PE IAT 0x8a1e0 KERNEL32.dll!RaiseException; decoration from pinned or verified import library, or compiled WinG caller
+0x000886d0	_GetTimeZoneInformation@4	Buka FF25 import thunk at 0x886d0; PE IAT 0x8a1dc KERNEL32.dll!GetTimeZoneInformation; decoration from pinned or verified import library, or compiled WinG caller
+0x000886d6	_GetLocaleInfoW@16	Buka FF25 import thunk at 0x886d6; PE IAT 0x8a1d8 KERNEL32.dll!GetLocaleInfoW; decoration from pinned or verified import library, or compiled WinG caller
+0x000886dc	_CompareStringA@24	Buka FF25 import thunk at 0x886dc; PE IAT 0x8a1d4 KERNEL32.dll!CompareStringA; decoration from pinned or verified import library, or compiled WinG caller
+0x000886e2	_CompareStringW@24	Buka FF25 import thunk at 0x886e2; PE IAT 0x8a1d0 KERNEL32.dll!CompareStringW; decoration from pinned or verified import library, or compiled WinG caller
+0x000886e8	_DestroyIcon@4	Buka FF25 import thunk at 0x886e8; PE IAT 0x8a204 USER32.dll!DestroyIcon; decoration from pinned or verified import library, or compiled WinG caller
+0x000886ee	_CreateIconIndirect@4	Buka FF25 import thunk at 0x886ee; PE IAT 0x8a200 USER32.dll!CreateIconIndirect; decoration from pinned or verified import library, or compiled WinG caller
+0x000886f4	_ScreenToClient@8	Buka FF25 import thunk at 0x886f4; PE IAT 0x8a208 USER32.dll!ScreenToClient; decoration from pinned or verified import library, or compiled WinG caller
+0x000886fa	_GetCursorPos@4	Buka FF25 import thunk at 0x886fa; PE IAT 0x8a20c USER32.dll!GetCursorPos; decoration from pinned or verified import library, or compiled WinG caller
+0x00088700	_ShowCursor@4	Buka FF25 import thunk at 0x88700; PE IAT 0x8a210 USER32.dll!ShowCursor; decoration from pinned or verified import library, or compiled WinG caller
+0x00088706	_ReleaseCapture@0	Buka FF25 import thunk at 0x88706; PE IAT 0x8a214 USER32.dll!ReleaseCapture; decoration from pinned or verified import library, or compiled WinG caller
+0x0008870c	_SetCapture@4	Buka FF25 import thunk at 0x8870c; PE IAT 0x8a218 USER32.dll!SetCapture; decoration from pinned or verified import library, or compiled WinG caller
+0x00088712	_UpdateWindow@4	Buka FF25 import thunk at 0x88712; PE IAT 0x8a21c USER32.dll!UpdateWindow; decoration from pinned or verified import library, or compiled WinG caller
+0x00088718	_CreateBitmapIndirect@4	Buka FF25 import thunk at 0x88718; PE IAT 0x8a044 GDI32.dll!CreateBitmapIndirect; decoration from pinned or verified import library, or compiled WinG caller
+0x0008871e	_AdrOpenSampleSource@4	Buka FF25 import thunk at 0x8871e; PE IAT 0x8a2e0 audiere.dll!_AdrOpenSampleSource@4; decoration from pinned or verified import library, or compiled WinG caller
+0x00088724	_AdrOpenDevice@8	Buka FF25 import thunk at 0x88724; PE IAT 0x8a2e4 audiere.dll!_AdrOpenDevice@8; decoration from pinned or verified import library, or compiled WinG caller

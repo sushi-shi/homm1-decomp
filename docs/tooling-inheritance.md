@@ -242,3 +242,31 @@ warnings. Deferred: full clean/runtime validation, strict census and fixed-image
 referents, and complete startup/preferences migration. The build and final
 verification still stop at the inherited NWC census; these results do not
 establish full command or behavioral parity.
+
+## Buka census and VC6 data names
+
+Reviewed Gruntz `d1cdb537caa6142849c7345eedc306dbb5af3763`
+(`graph/implib.py`, `core/msvc_names.py`) and HoMM2 Buka
+`e0689d3f71b2942b544fd677cb54085a13503d7b`
+(`audit/unmatched_census.py`, `audit/data_claims.py`). Retained: the existing
+compiler contract, source-derived identities, scope canonicalization and
+strict referent checks. Adapted: runtime-alias and DNA-band library discovery
+uses the existing case-insensitive lookup for VC6's uppercase archives;
+data-name derivation selects measured VC6 static spelling while retaining
+VC4 rules. The HoMM2 internal/external distinction corroborates the controls;
+Gruntz's historical `$S` rule is not copied into the VC6 ABI.
+
+Import-thunk naming now requires an admitted function entry as well as an IAT
+operand: the VC6 CRT contains interior FF25 jumps that are not functions.
+The delinker hint for a missing executable no longer mislabels a missing
+retail manifest as a PATH problem. No new adapter pipeline was introduced.
+
+All 46 focused tests and the usage audit pass. The candidate links with
+zero unresolved symbols and duplicate warnings. Build/final verification stop
+at the missing fixed-image manifest; the selected-unit match report also
+remains unavailable. The whole-tree pinned-Giten audit still reports missing
+`sema/exe_map.py` and `verify/selftest.py`, and adaptations needing broader
+review. Deferred: the reviewed `/FIXED` absolute manifest, remaining source,
+data and library identities, unique representation of colliding VC6 internal
+names if encountered, and full runtime/clean validation. The structural census
+and diagnostic instruction agreement do not establish strict matching parity.

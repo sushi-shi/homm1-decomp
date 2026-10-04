@@ -124,10 +124,11 @@ def _candidate_index():
         source = "base:" + str(path.relative_to(base).with_suffix(""))
         add(_coff_candidates(path.read_bytes(), source))
 
+    from homm1.tool.wine import find_ci
     libdir = msvc_dir() / "lib"
     for library in RUNTIME_LIBS:
-        path = libdir / library
-        if not path.is_file():
+        path = find_ci(libdir, library)
+        if path is None or not path.is_file():
             continue
         for member, payload in _ar_members(path):
             add(_coff_candidates(payload, f"{library}:{member}"))

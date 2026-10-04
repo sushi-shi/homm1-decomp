@@ -2,7 +2,7 @@
 
 This page catalogues the known HoMM1 executables, how each was built, and the
 runtime libraries each one ships. This branch is implementing the [1.2 to Buka transition](buka-2003.md).
-The active comparison target remains Windows 95 1.2 until the Buka address
+The active target is Buka 2003. Strict comparison remains unavailable while the address
 and reference migration is reviewed (`config/retail/targets.json`).
 
 Local copies are kept outside the repository in `~/Projects/homm1/exe`, listed
@@ -249,6 +249,9 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   - In the sampled assert functions of every unit, locals are addressed
     through `[ebp±x]`. This includes units that 1.0 builds /Ox (MOUSEMGR,
     WINMGR, INPUTMGR), so those functions are unoptimized.
+  - FINDPATH and SEARCH are exceptions: complete-TU controls establish
+    `/O2 /Ob2 /G5`; retail inlines Clear and QuickDistance in FindCombatPath.
+    See [the reviewed pathfinding evidence](../config/retail/buka-pathfinding.json).
   - There is no /GZ fill.
   - /GX: 125 `fs:[0]` frames, 109 FuncInfo records; no /GR.
   - Static VC6 LIBCMT.

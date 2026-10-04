@@ -195,14 +195,17 @@ def ilt_thunk_names(model: Model, names_map: dict) -> dict[int, str]:
     return aliases
 
 
-def import_thunk_names(iat_syms, names_map: dict) -> dict[int, str]:
+def import_thunk_names(iat_syms, names_map: dict,
+                       function_starts: set[int]) -> dict[int, str]:
     """{rva: `_Foo@N`} for every 6-byte `FF 25 <IAT slot>` import thunk.
 
     MSVC 5.0 compiles a non-dllimport Win32 call as `call rel32`; the linker
     plants `jmp DWORD PTR [__imp__Foo@N]` and points the call at it. The base
     obj relocates against `_Foo@N` directly, so the thunk must carry that name
     or the same call compares unequal against an anonymous FUN_<va>. Derived
-    only from IAT slots with a PROVEN `__imp_` decoration.
+    only from IAT slots with a PROVEN `__imp_` decoration and admitted
+    function entries. An interior indirect jump (for example the VC6 CRT
+    code-page dispatcher) must not become a separate function.
     """
     slots = {}
     for slot, dec in iat_syms:
@@ -217,7 +220,7 @@ def import_thunk_names(iat_syms, names_map: dict) -> dict[int, str]:
     while pos != -1 and pos + 6 <= len(blob):
         target = struct.unpack_from("<I", blob, pos + 2)[0] - img.image_base
         rva = text_lo + pos
-        if target in slots and rva not in names_map:
+        if target in slots and rva in function_starts and rva not in names_map:
             out[rva] = slots[target]
         pos = blob.find(b"\xff\x25", pos + 1)
     return out
@@ -903,7 +906,9 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     for slot, label in unresolved:
         log(f".idata SKIP 0x{slot:06x} {label}: no exact __imp_ decoration "
             "(never guessing @N)")
-    import_thunks = import_thunk_names(iat_syms, names_map)
+    import_thunks = import_thunk_names(
+        iat_syms, names_map,
+        {b.rva for b in model.functions if b.kind not in ("pad", "eh")})
 
     funcs = function_records(model, names_map, thunk_names, import_thunks,
                              band_spans, owner_body_ends, log)

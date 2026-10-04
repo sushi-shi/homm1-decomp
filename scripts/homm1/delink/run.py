@@ -97,7 +97,7 @@ _DELINKER_HINTS = (
     ("missing manifest",
      "the manifests are delink's own inputs - run `homm1 build` (or "
      "`python3 -m homm1.delink.data_manifest`) first."),
-    ("No such file or directory",
+    ("No such file or directory: 'vostok-delinker'",
      "vostok-delinker is not on $PATH - run inside `nix develop`."),
 )
 

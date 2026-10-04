@@ -33,3 +33,5 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 
 
 - [VC4.1 controls for the 1997 build](vc41-win95-1997.md).
+
+- [VC6 local-static data names (HoMM1 Buka, measured)](vc6-static-data-names.md).

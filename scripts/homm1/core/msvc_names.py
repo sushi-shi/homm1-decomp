@@ -71,22 +71,32 @@ def func(name: str, *, decorated: bool = False) -> str:
     return mask(out if decorated else decorate(out))
 
 
-def data(name: str, *, internal: bool, decorated: bool = False) -> str:
-    """cl 5.0's spelling for a clang-proposed DATA name.
+def data(name: str, *, internal: bool, decorated: bool = False,
+         compiler: str | None = None) -> str:
+    """The selected target compiler's spelling for a clang-proposed DATA name.
 
     `internal` is the declaration's storage, not its spelling: a file static
     and a namespace-scope `const` reach the object as `_<mangled>$S<n>`,
     whatever their mangling. VC4 keeps a function-local static's own mangled
     name (`?s@?1??fn@...@4HA`, measured on SOURCE/SEARCH), so that form is
-    never wrapped.
+    never wrapped. VC6 prefixes both kinds and does not append `$S`.
     """
     out = ARRAY_ELEMENT_CV.sub(r"\1", ARRAY_STORAGE.sub(r"@@\1P", name))
     if not decorated:
         out = decorate(out)
-    if internal and not LOCAL_STATIC_SCOPE.search(out):
-        if not out.startswith("_"):
-            out = "_" + out
-        out += "$S"
+    if compiler is None:
+        from homm1.core.paths import compiler_id
+        compiler = compiler_id()
+    if internal:
+        if compiler == "vc6":
+            # Measured with /Od, /O2 and /Z7: VC6 prefixes local statics
+            # too, and emits no VC4 per-object $S ordinal.
+            if not out.startswith("_"):
+                out = "_" + out
+        elif not LOCAL_STATIC_SCOPE.search(out):
+            if not out.startswith("_"):
+                out = "_" + out
+            out += "$S"
     return mask(out)
 
 

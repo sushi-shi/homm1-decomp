@@ -15,6 +15,9 @@ cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6"]
 # SAMPLE's full constructor (including switch tables) and destructor agree
 # under /G5; /G6 inserts two extra short-argument register clears.
 cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
+# FINDPATH and SEARCH retain optimization; automatic inlining is proved by
+# FindCombatPath containing the Clear and QuickDistance instruction bodies.
+cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5"]
 
 [[unit]]
 unit = "BASE/BITS"
@@ -244,7 +247,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/FINDPATH"
 source = "src/SOURCE/FINDPATH.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_o2_g5"
 
 [[unit]]
 unit = "SOURCE/PHILAI"
@@ -263,7 +266,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/SEARCH"
 source = "src/SOURCE/SEARCH.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_o2_g5"
 
 [[unit]]
 unit = "SOURCE/REMOTE"
