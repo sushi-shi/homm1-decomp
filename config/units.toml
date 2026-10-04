@@ -200,8 +200,9 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/EVENTS"
 source = "src/SOURCE/EVENTS.cpp"
+# /G5 agrees with DoEvent's narrow arguments and low-byte flag operations.
 # HeroSwap's fs:[0] frame around new swapManager proves /GX.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/GAME"

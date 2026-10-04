@@ -737,8 +737,20 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
         # (a table of literal pointers) in .data/.rdata, whose extent is
         # cl's own member span.
         if code:
-            referrers = [(off, fn_extent.get(msvc_names.mask(name)))
-                         for off, name in c.defined_symbols(sec["index"])]
+            definitions = c.defined_symbols(sec["index"])
+            # Retail and candidate bodies can differ in length (for example,
+            # an EBP displacement can need one byte versus four). Bound each
+            # side in its own image. Include unclaimed and static functions
+            # as candidate boundaries so their operands cannot leak in.
+            starts = {off for off, _name in definitions}
+            for idx, value, section in c.iter_symbols():
+                typ = struct.unpack_from("<H", c.buf, c.symptr + idx * 18 + 14)[0]
+                if section == sec["index"] and (typ & 0x30) == 0x20:
+                    starts.add(value)
+            starts = sorted(starts)
+            ends = dict(zip(starts, starts[1:] + [sec["size"]]))
+            referrers = [(off, fn_extent.get(msvc_names.mask(name)), ends[off])
+                         for off, name in definitions]
         else:
             members = c.section_members(sec["index"])
             starts = sorted({o for o, _n, _s in members})
@@ -747,13 +759,13 @@ def _paired_votes(c, member_re, known, fn_extent, data_rva):
                 rva = data_rva.get(msvc_names.mask(name))
                 if rva is not None:
                     end = next((o for o in starts if o > off), sec["size"])
-                    referrers.append((off, (rva, end - off)))
-        for off, hit in referrers:
+                    referrers.append((off, (rva, end - off), end))
+        for off, hit, candidate_end in referrers:
             if hit is None:
                 continue
             rva, size = hit
             mine = sorted((s, n) for s, n in rel.items()
-                          if off <= s < off + size)
+                          if off <= s < candidate_end)
             lo = bisect.bisect_left(sites, rva)
             hi = bisect.bisect_left(sites, rva + size)
             theirs = sites[lo:hi]

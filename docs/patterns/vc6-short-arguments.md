@@ -117,3 +117,16 @@ reproduces the complete retail body without introducing authored temporaries.
 `Open`'s extra seven-byte null assignment immediately before `LoadPlaySample`
 is also absent from retail. These are source-form corrections, not comparison
 normalizations. See [the full controls](../../config/retail/buka-combat-setup.json).
+
+
+## Adventure-event controls
+
+The complete Buka `DoEvent` operand review establishes `/G5` for EVENTS:
+retail omits the narrow argument clears and uses byte flag operations. Four
+final-source compiler controls isolate the same clear difference without
+source changes: `GiveArtifact` and `GiveRandomArtifact` each omit one clear,
+while `HouseEvent` and `HeroLoses` each omit two. Every retained instruction,
+reference/addend and branch target agrees between these controls. Their `/G5`
+bodies also match retail under strict comparison. The full dispatcher retains
+local-frame placement differences; other EVENTS behavior remains under review.
+See [`buka-events.json`](../../config/retail/buka-events.json).

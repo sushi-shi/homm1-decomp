@@ -3506,13 +3506,13 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
       {30, 10, 30, 10, 10, 10, 10000},
       {30, 10, 30, 10, 10, 10, 10000}}},
 };
-DATA(0x00492a68)
+DATA(0x00491fe0)
 i8 gCampaignSideCrests[4][2] = {{2, 0}, {1, 0}, {3, 0}, {0, 0}};
-DATA(0x00492a70)
+DATA(0x00491fe8)
 i16 gCrestTownTypes[4] = {3, 2, 0, 1};
-DATA(0x00492a78)
+DATA(0x00491ff0)
 i16 gCrestHeroClass[4] = {3, 1, 0, 2};
-DATA(0x00492a80)
+DATA(0x00491ff8)
 i8 gHeroSkillBonus[4][9][4] = {
     {{20, 60, 10, 10},
      {60, 20, 10, 10},
@@ -3673,85 +3673,46 @@ char* gArtifactDesc[38] = {
     localization::Tr("table.gArtifactDesc.34"), localization::Tr("table.gArtifactDesc.35"),
     localization::Tr("table.gArtifactDesc.36"), localization::Tr("table.gArtifactDesc.37"),
 };
-DATA(0x00492f90)
+DATA(0x004924bc)
 char* gArtifactEvent[38] = {
     "",
     "",
     "",
     "",
-    "After rescuing a sorceress from a cursed tomb, she rewards your heroism with an exquisite "
-    "jeweled necklace.",
-    "While searching through the rubble of a caved in mine, you free a group of trapped dwarves.  "
-    "Grateful, the leader gives you a golden bracelet.",
-    "A cry of pain leads you to a centaur, caught in a trap.  Upon setting the creature free, he "
-    "hands you a small pouch.  Emptying the contents, you find a dazzling jeweled ring.",
-    "Alongside the remains of a burnt witch lies a beautiful broach, intricately designed.  "
-    "Approaching the corpse with caution, you add the broach to your inventory.",
-    "Freeing a virtuous maiden from the clutches of an evil overlord, you are granted a Medal of "
-    "Valor by the King's herald.",
-    "After saving a young boy from a vicious pack of wolves, you return him to his father's manor. "
-    " The grateful nobleman awards you with a Medal of Courage.",
-    "After freeing a princess of a neighboring kingdom from the evil clutches of despicable "
-    "slavers, she awards you with a Medal of Honor.",
-    "Ridding the countryside of the hideous minotaur who made a sport of eating noblemen's "
-    "knights, you are honored with the Medal of Distinction.",
-    "You stumble upon a medal lying alongside the empty road.  Adding the medal to your inventory, "
-    "you become aware that you have acquired the undesirable Fizbin of Misfortune, greatly "
-    "decreasing your army's morale.",
-    "During a sudden storm, a bolt of lightning strikes a tree, splitting it.  Inside the tree you "
-    "find a mysterious mace.",
-    "You encounter the infamous Black Knight!  After a grueling duel ending in a draw, the knight, "
-    "out of respect, offers you a pair of armored gauntlets.",
-    "A glint of golden light catches your eye.  Upon further investigation, you find a golden helm "
-    "hidden under a bush.",
-    "A clumsy Giant has killed himself with his own flail.  Knowing your superior skill with this "
-    "weapon, you confidently remove the spectacular flail from the fallen giant.",
-    "Walking through the ruins of an ancient walled city, you find the instrument of the city's "
-    "destruction, an elaborately crafted ballista.",
-    "A stone statue of a warrior holds a silver shield.  As you remove the shield, the statue "
-    "crumbles into dust.",
-    "As you are walking along a narrow path, a nearby bush suddenly bursts into flames.  Before "
-    "your eyes the flames become the image of a beautiful woman.  She holds out a magnificent "
-    "sword to you.",
-    "You see a silver axe embedded deeply in the ground.  After several unsuccessful attempts by "
-    "your army to remove the axe, you tightly grip the handle of the axe and effortlessly pull it "
-    "free.",
-    "A gang of rogues is sifting through the possessions of dead warriors.  Scaring off the "
-    "scavengers, you note the rogues had overlooked a beautiful breastplate.",
-    "Before you appears a levitating glass case with a scroll, perched upon a bed of crimson "
-    "velvet.  At your touch, the lid opens and the scroll floats into your awaiting hands.",
-    "Visiting a local wiseman, you explain the intent of your journey.  He reaches into a sack and "
-    "withdraws a yellowed scroll and hands it to you.",
-    "You come across the remains of an ancient Druid.  Bones, yellowed with age, peer from the "
-    "ragged folds of her robe.  Searching the robe, you discover a scroll hidden in the folds.",
-    "Mangled bones, yellowed with age, peer from the ragged folds of a dead Druid's robe.  "
-    "Searching the robe, you discover a scroll hidden within.",
-    "A little leprechaun dances gleefully around a magic sack.  Seeing you approach, he stops in "
-    "mid-stride.  The little man screams and stamps his foot ferociously, vanishing into thin air. "
-    " Remembering the old leprechaun saying 'Finders Keepers', you grab the sack and leave.",
-    "A noblewoman, separated from her traveling companions, asks for your help.  After escorting "
-    "her home, she rewards you with a bag filled with gold.",
-    "In your travels, you find a leather purse filled with gold that once belonged to a great "
-    "warrior king who had the ability to transform any inanimate object into gold.",
-    "A nomad trader seeks protection from a tribe of goblins.  For your assistance, he gives you a "
-    "finely crafted pair of boots made from the softest leather.  Looking closely, you see "
-    "fascinating ancient carvings engraved on the leather.",
-    "Discovering a pair of beautifully beaded boots made from the finest and softest leather, you "
-    "thank the anonymous donor and add the boots to your inventory.",
-    "A traveling merchant offers you a rabbit's foot, made of gleaming silver fur, for safe "
-    "passage.  The merchant explains the charm will increase your luck in combat.",
-    "An ensnared unicorn whinnies in fright.  Murmuring soothing words, you set her free.  "
-    "Snorting and stamping her front hoof once, she gallops off.  Looking down you see a golden "
-    "horseshoe.",
-    "You have captured a mischievous imp who has been terrorizing the region.  In exchange for his "
-    "release, he rewards you with a magical coin.",
-    "In the middle of a patch of dead and dry vegetation, to your surprise you find a healthy "
-    "green four-leaf clover.",
-    "An old man claiming to be an inventor asks you to try his latest invention.  He then hands "
-    "you a compass.",
-    "An old sea captain is being tortured by ogres.  You save him, and in return he rewards you "
-    "with a wondrous instrument to measure the distance of a star.",
-    "The Magic Book  ??????",
+    localization::Tr("table.gArtifactEvent.4"),
+    localization::Tr("table.gArtifactEvent.5"),
+    localization::Tr("table.gArtifactEvent.6"),
+    localization::Tr("table.gArtifactEvent.7"),
+    localization::Tr("table.gArtifactEvent.8"),
+    localization::Tr("table.gArtifactEvent.9"),
+    localization::Tr("table.gArtifactEvent.10"),
+    localization::Tr("table.gArtifactEvent.11"),
+    localization::Tr("table.gArtifactEvent.12"),
+    localization::Tr("table.gArtifactEvent.13"),
+    localization::Tr("table.gArtifactEvent.14"),
+    localization::Tr("table.gArtifactEvent.15"),
+    localization::Tr("table.gArtifactEvent.16"),
+    localization::Tr("table.gArtifactEvent.17"),
+    localization::Tr("table.gArtifactEvent.18"),
+    localization::Tr("table.gArtifactEvent.19"),
+    localization::Tr("table.gArtifactEvent.20"),
+    localization::Tr("table.gArtifactEvent.21"),
+    localization::Tr("table.gArtifactEvent.22"),
+    localization::Tr("table.gArtifactEvent.23"),
+    localization::Tr("table.gArtifactEvent.24"),
+    localization::Tr("table.gArtifactEvent.25"),
+    localization::Tr("table.gArtifactEvent.26"),
+    localization::Tr("table.gArtifactEvent.27"),
+    localization::Tr("table.gArtifactEvent.28"),
+    localization::Tr("table.gArtifactEvent.29"),
+    localization::Tr("table.gArtifactEvent.30"),
+    localization::Tr("table.gArtifactEvent.31"),
+    localization::Tr("table.gArtifactEvent.32"),
+    localization::Tr("table.gArtifactEvent.33"),
+    localization::Tr("table.gArtifactEvent.34"),
+    localization::Tr("table.gArtifactEvent.35"),
+    localization::Tr("table.gArtifactEvent.36"),
+    localization::Tr("table.gArtifactEvent.37"),
 };
 DATA(0x00492554)
 char* gStatNames[5] = {

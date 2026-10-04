@@ -475,7 +475,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     break;
                 case SKELETON_ARTIFACT:
                     if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
-                        sprintf(gText, "%s.", "Treasure");
+                        sprintf(gText, "%s.", localization::Tr("event.skeleton.treasure"));
                         EventWindow(
                             EVENT_TEXT_CUSTOM,
                             NORMAL_DIALOG_TYPE_OK,
@@ -608,7 +608,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                                          : cell->m_objectMetadata
             );
             strcpy(resourceName, gResourceNames[resType]);
-            resourceName[0] += 'a' - 'A';
+            resourceName[0] = CyrillicToLower(resourceName[0]);
             sprintf(gText, gEventText[EVENT_TEXT_RESOURCE_PICKUP], resourceName);
             BVResMsg(
                 gText,
@@ -774,7 +774,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 MemError();
             SetWinText(win, WINDOW_TEXT_THIEVES_GUILD);
             gpTownManager->SetupThievesGuild(win, THIEVES_CATEGORY_COUNT);
-            strcpy(gText, "Shrine - Player Rankings");
+            strcpy(gText, localization::Tr("event.shrine.rankings"));
             SET_WIDGET_MESSAGE(event, WIDGET_COMMAND_SET_TEXT, 0);
             event.text = gText;
             win->BroadcastMessage(event);
@@ -806,7 +806,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
             } else {
-                strcat(gText, "  Unfortunately, you have no Magic Book to record the spell with.");
+                strcat(gText, localization::Tr("event.shrine.no_spellbook"));
                 EventWindow(
                     EVENT_TEXT_CUSTOM,
                     NORMAL_DIALOG_TYPE_OK,
@@ -820,9 +820,6 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             }
             break;
         case MAP_OBJECT_TOWN:
-            if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-                gConfig.musicVolume = gEventMusicVolume;
-            gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
             TownEvent(cell, x, y);
             break;
         case MAP_OBJECT_WHIRLPOOL:
@@ -862,7 +859,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         case MAP_OBJECT_ARTIFACT:
             if (pHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
                 NormalDialog(
-                    "You cannot pick up this artifact, you already have a full load!",
+                    localization::Tr("event.artifact.full"),
                     NORMAL_DIALOG_TYPE_OK,
                     -1,
                     -1,

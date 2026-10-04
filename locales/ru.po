@@ -4283,3 +4283,155 @@ msgstr "Информация о воине (%s)"
 msgctxt "table.gCombatMessage.8"
 msgid "No shots left!"
 msgstr "Нет стрел!"
+
+msgctxt "event.skeleton.treasure"
+msgid "Treasure"
+msgstr "Сокровище"
+
+msgctxt "event.shrine.rankings"
+msgid "Shrine - Player Rankings"
+msgstr "Оракул - информация об игроках"
+
+msgctxt "event.shrine.no_spellbook"
+msgid "  Unfortunately, you have no Magic Book to record the spell with."
+msgstr "  К сожалению, у вас нет Волшебной книги, чтобы запомнить заклинание."
+
+msgctxt "event.artifact.full"
+msgid "You cannot pick up this artifact, you already have a full load!"
+msgstr "Вы не можете подобрать этот артефакт, у вас нет места для него!"
+
+msgctxt "table.gArtifactEvent.4"
+msgid "After rescuing a sorceress from a cursed tomb, she rewards your heroism with an exquisite jeweled necklace."
+msgstr "Вы вызволяете волшебницу, заточенную в проклятой гробнице, и в награду она вручает вам изысканное алмазное ожерелье."
+
+msgctxt "table.gArtifactEvent.5"
+msgid "While searching through the rubble of a caved in mine, you free a group of trapped dwarves.  Grateful, the leader gives you a golden bracelet."
+msgstr "Изучая завалы в заброшенной шахте, вы спасаете артель гномов-старателей. В знак благодарности их старшина дарит вам золотой браслет."
+
+msgctxt "table.gArtifactEvent.6"
+msgid "A cry of pain leads you to a centaur, caught in a trap.  Upon setting the creature free, he hands you a small pouch.  Emptying the contents, you find a dazzling jeweled ring."
+msgstr "Вы спешите на звук отчаянного вопля боли и видите кентавра, попавшего в западню. Вы помогаете ему освободиться, и он вручает вам кожаный мешочек. Заглянув внутрь, вы видите ослепительное бриллиантовое кольцо."
+
+msgctxt "table.gArtifactEvent.7"
+msgid "Alongside the remains of a burnt witch lies a beautiful broach, intricately designed.  Approaching the corpse with caution, you add the broach to your inventory."
+msgstr "Рядом с останками сожженной колдуньи лежит изящная брошь прекрасной работы. Осторожно приблизившись к обугленному трупу, вы забираете брошь себе."
+
+msgctxt "table.gArtifactEvent.8"
+msgid "Freeing a virtuous maiden from the clutches of an evil overlord, you are granted a Medal of Valor by the King's herald."
+msgstr "В награду за спасение прекрасной девы от посягательств ненавистного барона королевский герольд вручает вам Медаль отваги."
+
+msgctxt "table.gArtifactEvent.9"
+msgid "After saving a young boy from a vicious pack of wolves, you return him to his father's manor.  The grateful nobleman awards you with a Medal of Courage."
+msgstr "Вы спасаете маленького мальчика от стаи кровожадных волков и провожаете в имение родителей. Счастливый отец награждает вас Медалью мужества."
+
+msgctxt "table.gArtifactEvent.10"
+msgid "After freeing a princess of a neighboring kingdom from the evil clutches of despicable slavers, she awards you with a Medal of Honor."
+msgstr "Вы вырываете принцессу соседнего королевства из мерзких лап презренных работорговцев и в награду за подвиг получаете Медаль доблести."
+
+msgctxt "table.gArtifactEvent.11"
+msgid "Ridding the countryside of the hideous minotaur who made a sport of eating noblemen's knights, you are honored with the Medal of Distinction."
+msgstr "Вы избавляете округу от ужасного минотавра, добычей которому служили благородные рыцари, и становитесь кавалером Медали почета."
+
+msgctxt "table.gArtifactEvent.12"
+msgid "You stumble upon a medal lying alongside the empty road.  Adding the medal to your inventory, you become aware that you have acquired the undesirable Fizbin of Misfortune, greatly decreasing your army's morale."
+msgstr "На обочине пустынной дороги вы находите медаль. Вы подобрали ее и обнаружили, что стали несчастным обладателем Символа неудачи, который понижает мораль вашей армии."
+
+msgctxt "table.gArtifactEvent.13"
+msgid "During a sudden storm, a bolt of lightning strikes a tree, splitting it.  Inside the tree you find a mysterious mace."
+msgstr "Во время жуткой грозы молния бьет в дерево, разнося его на мелкие щепки. Среди обломков вы обнаруживаете таинственную палицу."
+
+msgctxt "table.gArtifactEvent.14"
+msgid "You encounter the infamous Black Knight!  After a grueling duel ending in a draw, the knight, out of respect, offers you a pair of armored gauntlets."
+msgstr "Вы повстречали печально известного Черного Рыцаря! Ваш поединок заканчивается вничью, и рыцарь в знак уважения дарит вам пару латных перчаток."
+
+msgctxt "table.gArtifactEvent.15"
+msgid "A glint of golden light catches your eye.  Upon further investigation, you find a golden helm hidden under a bush."
+msgstr "Краем глаза вы замечаете золотистый блеск среди пышной зелени. Приглядевшись внимательнее, вы находите под кустами великолепный золотой шлем."
+
+msgctxt "table.gArtifactEvent.16"
+msgid "A clumsy Giant has killed himself with his own flail.  Knowing your superior skill with this weapon, you confidently remove the spectacular flail from the fallen giant."
+msgstr "Неуклюжий гигант нанес себе смертельную рану собственным боевым цепом. Вы прекрасно владеете этим оружием и с уверенностью вынимаете цеп из мертвых рук гиганта."
+
+msgctxt "table.gArtifactEvent.17"
+msgid "Walking through the ruins of an ancient walled city, you find the instrument of the city's destruction, an elaborately crafted ballista."
+msgstr "Пробираясь через развалины древней крепости, вы находите орудие, которое превратило ее в руины, удивительную баллисту замысловатой конструкции."
+
+msgctxt "table.gArtifactEvent.18"
+msgid "A stone statue of a warrior holds a silver shield.  As you remove the shield, the statue crumbles into dust."
+msgstr "В руках у каменной статуи воина - великолепный серебряный щит. Как только вы забираете щит себе, статуя рассыпается в прах."
+
+msgctxt "table.gArtifactEvent.19"
+msgid "As you are walking along a narrow path, a nearby bush suddenly bursts into flames.  Before your eyes the flames become the image of a beautiful woman.  She holds out a magnificent sword to you."
+msgstr "Вы пробираетесь узкой тропой, как вдруг ближайший куст загорается ярким пламенем. Постепенно в огненном смерче проступают очертания прекрасной дамы, которая протягивает вам меч чудесной работы."
+
+msgctxt "table.gArtifactEvent.20"
+msgid "You see a silver axe embedded deeply in the ground.  After several unsuccessful attempts by your army to remove the axe, you tightly grip the handle of the axe and effortlessly pull it free."
+msgstr "Вы видите серебряный топор, вогнанный в землю по самую рукоять. Ваши воины пытаются выдернуть его, но усилия их тщетны. Вам же хватило одного усилия и топор у вас в руках!"
+
+msgctxt "table.gArtifactEvent.21"
+msgid "A gang of rogues is sifting through the possessions of dead warriors.  Scaring off the scavengers, you note the rogues had overlooked a beautiful breastplate."
+msgstr "Шайка разбойников обыскивает тела мертвых воинов. Вы разгоняете мародеров и вдруг замечаете, что в спешке они потеряли великолепный доспех."
+
+msgctxt "table.gArtifactEvent.22"
+msgid "Before you appears a levitating glass case with a scroll, perched upon a bed of crimson velvet.  At your touch, the lid opens and the scroll floats into your awaiting hands."
+msgstr " Перед вами возникает парящий в воздухе стеклянный ларец со свитком внутри, лежащем на подушке из пурпурного бархата. Повинуясь вашему прикосновению, крышка ларца открывается, и свиток оказывается у вас в руках."
+
+msgctxt "table.gArtifactEvent.23"
+msgid "Visiting a local wiseman, you explain the intent of your journey.  He reaches into a sack and withdraws a yellowed scroll and hands it to you."
+msgstr "Вы навещаете местного мудреца и рассказываете о цели вашего путешествия. Он достает из мешка пожелтевший свиток и передает его вам."
+
+msgctxt "table.gArtifactEvent.24"
+msgid "You come across the remains of an ancient Druid.  Bones, yellowed with age, peer from the ragged folds of her robe.  Searching the robe, you discover a scroll hidden in the folds."
+msgstr "Вы стоите перед останками давно умершей жрицы друидов. Пожелтевшие от времени кости проглядывают через прорехи истлевшего одеяния. Пошевелив груду ветоши, вы находите древний свиток."
+
+msgctxt "table.gArtifactEvent.25"
+msgid "Mangled bones, yellowed with age, peer from the ragged folds of a dead Druid's robe.  Searching the robe, you discover a scroll hidden within."
+msgstr "Груда пожелтевших костей и обрывки истлевшей материи - вот все, что осталось от жрицы друидов. Среди этих останков вы замечаете таинственный свиток."
+
+msgctxt "table.gArtifactEvent.26"
+msgid "A little leprechaun dances gleefully around a magic sack.  Seeing you approach, he stops in mid-stride.  The little man screams and stamps his foot ferociously, vanishing into thin air.  Remembering the old leprechaun saying 'Finders Keepers', you grab the sack and leave."
+msgstr "Маленький лепрекон пританцовывает у волшебного мешка. Завидев вас, он замирает на месте, затем издает возмущенный возглас, топает ножкой и растворяется в воздухе. Следуя старинной поговорке, \"Кто успел - тот и съел\", вы забираете мешок себе."
+
+msgctxt "table.gArtifactEvent.27"
+msgid "A noblewoman, separated from her traveling companions, asks for your help.  After escorting her home, she rewards you with a bag filled with gold."
+msgstr "Благородная путешественница, отбившаяся от спутников, просит вас о помощи. Проводив ее до дома, вы получаете в награду суму, полную золота."
+
+msgctxt "table.gArtifactEvent.28"
+msgid "In your travels, you find a leather purse filled with gold that once belonged to a great warrior king who had the ability to transform any inanimate object into gold."
+msgstr "Однажды вам в руки попадает наполненный золотом кожаный кошель, принадлежавший великому королю, который умел превращать любой предмет в золото."
+
+msgctxt "table.gArtifactEvent.29"
+msgid "A nomad trader seeks protection from a tribe of goblins.  For your assistance, he gives you a finely crafted pair of boots made from the softest leather.  Looking closely, you see fascinating ancient carvings engraved on the leather."
+msgstr "Бродячий торговец просит вас защитить его от банды гоблинов. В награду он дарит вам пару изящных башмаков, испещеренных загадочными древними письменами."
+
+msgctxt "table.gArtifactEvent.30"
+msgid "Discovering a pair of beautifully beaded boots made from the finest and softest leather, you thank the anonymous donor and add the boots to your inventory."
+msgstr "Обнаружив пару замечательных башмаков украшенных бисером, вы благодарите загадочного благодетеля и оставляете их себе."
+
+msgctxt "table.gArtifactEvent.31"
+msgid "A traveling merchant offers you a rabbit's foot, made of gleaming silver fur, for safe passage.  The merchant explains the charm will increase your luck in combat."
+msgstr "В уплату за охрану в пути странствующий торговец предлагает вам лапку кролика. По его словам, она принесет вам удачу в бою."
+
+msgctxt "table.gArtifactEvent.32"
+msgid "An ensnared unicorn whinnies in fright.  Murmuring soothing words, you set her free.  Snorting and stamping her front hoof once, she gallops off.  Looking down you see a golden horseshoe."
+msgstr "Попавший в ловушку единорог испуганно кричит. Вы успокаиваете его и освобождаете от пут. Всхрапнув и ударив копытом, он уносится прочь. Там, где он только что стоял, осталась лежать золотая подкова."
+
+msgctxt "table.gArtifactEvent.33"
+msgid "You have captured a mischievous imp who has been terrorizing the region.  In exchange for his release, he rewards you with a magical coin."
+msgstr "Вы поймали озорного бесенка, который не давал покоя всей округе. В обмен на свободу он предлагает вам волшебную монету."
+
+msgctxt "table.gArtifactEvent.34"
+msgid "In the middle of a patch of dead and dry vegetation, to your surprise you find a healthy green four-leaf clover."
+msgstr "Посреди мертвой лощины, заполненной иссохшей растительностью, вы, к своему удивлению, замечете веселый зеленый побег четырехлистного клевера."
+
+msgctxt "table.gArtifactEvent.35"
+msgid "An old man claiming to be an inventor asks you to try his latest invention.  He then hands you a compass."
+msgstr "Странноватый старикашка утверждает, что он - великий изобретатель, и просит вас испытать его новое творение. Надувшись от важности, он вручает вам компас."
+
+msgctxt "table.gArtifactEvent.36"
+msgid "An old sea captain is being tortured by ogres.  You save him, and in return he rewards you with a wondrous instrument to measure the distance of a star."
+msgstr "Старый мореход стал добычей людоедов. Вы спасаете его, и в знак благодарности он дарит вам чудесный инструмент, позволяющий измерять расстояния по звездам."
+
+msgctxt "table.gArtifactEvent.37"
+msgid "The Magic Book  ??????"
+msgstr "Волшебная книга?!"

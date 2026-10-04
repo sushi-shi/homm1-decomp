@@ -434,3 +434,23 @@ render from it. The final ordinary English DRAWING and KB objects compile with
 the pinned VC6 compiler; the table's complete strings equal NWC retail. The
 Russian build retains its literal, call and jump-table controls. Full clean
 executable equivalence is not claimed by these focused controls.
+
+
+## Candidate and retail literal-referrer extents
+
+Reviewed HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/candidate_data_manifest.py::_function_dir32`, Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4`
+`delink/data_manifest.py`, and Giten
+`d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` at the same module path, alongside
+the pinned Giten ancestry already recorded above. Retained: the existing
+literal enrollment path, equal relocation-sequence length, public-anchor
+corroboration and complete payload checks. Adapted: HoMM2's independent COFF
+function boundary and retail claimed extent. Gruntz caps candidate operands
+at the smaller of its next external symbol and the retail size; Giten's
+version uses the retail size. Neither covers a larger candidate like Buka's
+`DoEvent`. HoMM1 now stops at the next candidate definition or typed static
+function, even when that next function has no retail claim. A real-COFF
+positive control covers a longer candidate; negative controls reject consuming
+references from following external and static functions. Comparison byte and
+reference rules are unchanged. No new tooling entry point or adapter is added.

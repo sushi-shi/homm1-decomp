@@ -1,4 +1,5 @@
-# Buka relocation aliases: none reviewed yet.
+# Reviewed Buka relocation referents requiring more than containment.
 # NWC 1.2 rows are archived in nwc-1.2-reloc-referents.tsv, not applied to Buka.
 # Ordinary identities must resolve through reviewed owners; missing ones remain errors.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
+0x00024a50	0x000926d8	0x00025b25	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	Buka DoEvent shrine: gSpellNames[objectMetadata - 1]; indexed load biases table base by -4; full operand and CFG proof in buka-events.json

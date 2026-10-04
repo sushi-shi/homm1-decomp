@@ -139,3 +139,8 @@ rva	size	symbol	provenance
 0x0008fa60	10	?gPixelsPerStep@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x0008fa78	6	?startVals@@3PAFA	Buka complete typed payload and reference-addend review; buka-data-recovery.json
 0x00092ea8	36	?gCombatMessage@@3PAPADA	Both retail pointer tables and command formatter; buka-command-messages.json
+0x000924bc	152	?gArtifactEvent@@3PAPADA	Buka DoEvent operand, typed array and both-locale pointer-slot review; buka-events.json
+0x00091fe0	8	?gCampaignSideCrests@@3PAY01CA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
+0x00091fe8	8	?gCrestTownTypes@@3PAFA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
+0x00091ff0	8	?gCrestHeroClass@@3PAFA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
+0x00091ff8	144	?gHeroSkillBonus@@3PAY183CA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
