@@ -230,7 +230,7 @@ def command(args):
             install_release(args.archive, args.id)
     elif args.action == 'symbols':
         index = library_symbols(args.id)
-        print(f'{args.id}: indexed {len(index)} external symbols from verified libraries')
+        print(f'{args.id}: indexed {len(index)} external COFF symbols from verified libraries')
     else:
         verify(args.id)
         print(f'{args.id}: all pinned files verified')
@@ -244,7 +244,7 @@ def library_symbols(name):
     """Library membership is evidence of provenance, never a guessed retail RVA."""
     directory = verify(name)
     libraries = {key: value for key, value in pins()[name]['files'].items()
-                 if key.startswith('lib/') and key.endswith('.lib') and key.count('/') == 1}
+                 if key.startswith('lib/') and key.lower().endswith('.lib') and key.count('/') == 1}
     identity = hashlib.sha256(json.dumps(libraries, sort_keys=True).encode()).hexdigest()
     output = REPO / f'build/analysis/{name}-library-symbols.json'
     if output.exists():
@@ -253,11 +253,16 @@ def library_symbols(name):
             return cached['symbols']
     if not shutil.which('llvm-nm'):
         raise ValueError('llvm-nm required to classify verified SDK/CRT symbols')
-    symbols = {}
+    symbols, unindexed = {}, {}
     for relative in sorted(libraries):
         # Some VC4 ar headers NUL-pad numeric fields. Modern LLVM requires
         # spaces; normalize that metadata in an ignored analysis copy only.
         archive = bytearray((directory / relative).read_bytes())
+        if libraries[relative].get('format') == 'omf':
+            if not archive or archive[0] != 0xf0:
+                raise ValueError(f'invalid pinned OMF library: {relative}')
+            unindexed[relative] = 'OMF library; not a COFF symbol provider'
+            continue
         if not archive.startswith(b'!<arch>\n'):
             raise ValueError(f'unsupported pinned library container: {relative}')
         position = 8
@@ -283,5 +288,6 @@ def library_symbols(name):
                 if len(fields) >= 2 and len(fields[1]) == 1:
                     symbols.setdefault(fields[0], []).append(dict(library=relative, member=member))
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(dict(fingerprint=identity, symbols=symbols), indent=2) + '\n')
+    output.write_text(json.dumps(dict(fingerprint=identity, symbols=symbols,
+                                      unindexed_libraries=unindexed), indent=2) + '\n')
     return symbols

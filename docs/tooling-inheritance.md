@@ -182,3 +182,9 @@ local archive installation, `@comp.id = 0x000b2306`, and a real BASEMGR object
 identical to the preceding verified VC6 control. Deferred: selecting the Buka
 compiler in `units.toml` alongside the reviewed source and retail claims;
 matching and runtime validation of the full Buka candidate are still required.
+
+VC6 library indexing accepts uppercase `.LIB` names. Its separately shipped
+legacy `MAPI.LIB` is a pinned OMF archive, not a Win32 COFF provider; the index
+records that explicit format exclusion instead of treating it as corrupt COFF.
+The Win32 `MAPI32.LIB` remains indexed. No retail identity is inferred from a
+library name alone.

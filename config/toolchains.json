@@ -7567,7 +7567,8 @@
       },
       "lib/MAPI.LIB": {
         "media_path": "VC98/LIB/MAPI.LIB",
-        "sha256": "fb8b9268fe0cc030588450d4478c5ba9621ca72b64d0e649122789b689813859"
+        "sha256": "fb8b9268fe0cc030588450d4478c5ba9621ca72b64d0e649122789b689813859",
+        "format": "omf"
       },
       "lib/MAPI32.LIB": {
         "media_path": "VC98/LIB/MAPI32.LIB",
