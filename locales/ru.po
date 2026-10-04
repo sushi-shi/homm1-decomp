@@ -3907,3 +3907,11 @@ msgstr "У вас нет героя, чтобы направлять закли�
 msgctxt "combat.spell.already_cast"
 msgid "You have already cast a spell this round."
 msgstr "Вы уже направили заклинание в этом раунде."
+
+msgctxt "combat.confirm.retreat"
+msgid "Are you sure you want to retreat?"
+msgstr "Вы действительно хотите отступить?"
+
+msgctxt "resource.gold.insufficient"
+msgid "You don't have enough gold!"
+msgstr "У вас недостаточно золота!"

@@ -678,7 +678,7 @@ void combatManager::ResetRound(void) {
 
 // Buka COMMAND.cpp CheckWin; HoMM1 returns the byte flag and names the
 // winning side directly (-1 for a draw).
-VA(0x0044b675, 0x15d)
+VA(0x0041ea22, 0x123)
 i32 combatManager::CheckWin(struct tag_message* message) {
     i32 armyIndex;
     i8 combatEnded;
@@ -697,10 +697,9 @@ i32 combatManager::CheckWin(struct tag_message* message) {
     } else if (m_sideRetreated[COMBAT_ATTACKER_SIDE] || m_sideRetreated[COMBAT_DEFENDER_SIDE]) {
         combatEnded = 1;
         gbRetreatWin = 1;
-        if (m_sideRetreated[COMBAT_ATTACKER_SIDE])
-            m_combatResult = COMBAT_RESULT_DEFENDER;
-        else
-            m_combatResult = COMBAT_RESULT_ATTACKER;
+        m_combatResult = m_sideRetreated[COMBAT_ATTACKER_SIDE]
+            ? static_cast<i8>(COMBAT_RESULT_DEFENDER)
+            : static_cast<i8>(COMBAT_RESULT_ATTACKER);
     }
     if (combatEnded) {
         DoVictory(m_combatResult);
@@ -712,7 +711,7 @@ i32 combatManager::CheckWin(struct tag_message* message) {
 
 // Buka COMMAND.cpp GetCommand; HoMM1 returns each command directly, has no
 // small view or ballista and clears the target through the current stack.
-VA(0x0044b7d2, 0x316)
+VA(0x0041eb45, 0x269)
 i8 combatManager::GetCommand(i16 hex) {
     i8 unusedCol = hex % COMBAT_GRID_COLUMNS;
     i8 rowIndex = hex / COMBAT_GRID_COLUMNS;
@@ -752,7 +751,7 @@ i8 combatManager::GetCommand(i16 hex) {
                 switch (enemySide) {
                     case COMBAT_DEFENDER_SIDE:
                     case COMBAT_ATTACKER_SIDE:
-                        if (m_currentSide == enemySide)
+                        if (enemySide == m_currentSide)
                             return COMBAT_MESSAGE_COMMAND_VIEW_INFO;
                         else {
                             currentArmy->m_targetSide = enemySide;
@@ -778,8 +777,8 @@ i8 combatManager::GetCommand(i16 hex) {
                     == 1)
                     return (m_armies[m_currentSide][m_currentArmyIndex].m_stats.attributes
                             & MONSTER_FLAGS_FLYING)
-                               ? COMBAT_MESSAGE_COMMAND_FLY
-                               : COMBAT_MESSAGE_COMMAND_MOVE;
+                               ? static_cast<i8>(COMBAT_MESSAGE_COMMAND_FLY)
+                               : static_cast<i8>(COMBAT_MESSAGE_COMMAND_MOVE);
             }
             break;
     }
@@ -837,7 +836,7 @@ i8 combatManager::RightClick(i8 hex) {
 
 // Buka COMMAND.cpp DoCommand; HoMM1 has no ballista or negation sphere and
 // views the army at the selected hex on the current side.
-VA(0x0044bcc4, 0x333)
+VA(0x0041ef1f, 0x2ea)
 void combatManager::DoCommand(i8 command) {
     i32 unusedValue1;
     i32 unusedValue2;
@@ -888,7 +887,7 @@ void combatManager::DoCommand(i8 command) {
             break;
         case COMBAT_MESSAGE_COMMAND_RETREAT:
             NormalDialog(
-                "Are you sure you want to retreat?",
+                localization::Tr("combat.confirm.retreat"),
                 NORMAL_DIALOG_TYPE_YES_NO,
                 0xc3,
                 0x3c,
@@ -907,7 +906,7 @@ void combatManager::DoCommand(i8 command) {
                 if (gpGame->m_players[m_playerId[m_currentSide]].m_resources[RESOURCE_GOLD]
                     < giSurrenderCost)
                     NormalDialog(
-                        "You don't have enough gold!",
+                        localization::Tr("resource.gold.insufficient"),
                         NORMAL_DIALOG_TYPE_OK,
                         -1,
                         -1,
@@ -929,7 +928,7 @@ void combatManager::DoCommand(i8 command) {
 
 // Buka COMMAND.cpp WinCombatHandler; HoMM1 pages captured artifacts and
 // cycles a single six-frame animation.
-VA(0x0044bff7, 0x1a3)
+VA(0x0041f209, 0x180)
 i16 WinCombatHandler(struct tag_message& message) {
     i32 finalDelay = 0x5a;
     i16 frame = 1;
@@ -939,7 +938,7 @@ i16 WinCombatHandler(struct tag_message& message) {
             case WIDGET_NOTIFY_DESELECT:
                 switch (message.id) {
                     case DIALOG_BUTTON_0:
-                        if (iMaxTransferArtifacts > iCurTransferArtifact + 1) {
+                        if (iCurTransferArtifact + 1 < iMaxTransferArtifacts) {
                             gpCombatManager->ClearWinLoseBottom(gpCombatManager->m_winLoseWindow);
                             iCurTransferArtifact++;
                             gpCombatManager->ShowWinLoseArtifact(
@@ -959,7 +958,7 @@ i16 WinCombatHandler(struct tag_message& message) {
                 break;
         }
     }
-    if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
+    if (glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, WIN_LOSE_ANIMATION);
         gpGame->m_viewArmyResult++;
         message.value = gpGame->m_viewArmyResult % 6 + 1;
@@ -1677,17 +1676,17 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
 // COMMAND globals; unmigrated NWC addresses remain pending Buka review.
 DATA(0x004a6a8c)
 i8 gbThisNetHasControl;
-DATA(0x004c2c98)
+DATA(0x004a6aa4)
 i32 iCurTransferArtifact;
-DATA(0x004c2ca4)
+DATA(0x004a6ab0)
 i8 iMaxTransferArtifacts;
 DATA(0x004a6a88)
 i32 giNextActionExtra;
 DATA(0x004a6aa8)
 i32 giNextActionGridIndex;
-DATA(0x004c2ca8)
+DATA(0x004a6ab4)
 i32 giSurrenderCost;
-DATA(0x004c2c88)
+DATA(0x004a6a94)
 i8 iTransferArtifacts[HERO_ARTIFACT_SLOT_COUNT];
 DATA(0x004a6aac)
 i32 giNextAction;

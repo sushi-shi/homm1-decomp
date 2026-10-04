@@ -175,7 +175,11 @@ rva	name	provenance
 0x0001eb45	?GetCommand@combatManager@@QAECF@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
 0x0001edae	?RightClick@combatManager@@QAECC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001ef1f	?DoCommand@combatManager@@QAEXC@Z	Complete combat-input instructions and switch destinations; buka-combat-input.json
+0x0001f209	?WinCombatHandler@@YAFAAUtag_message@@@Z	Complete combat-action/result instructions, branch targets and typed references; buka-combat-actions.json
 0x0001f389	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001f491	?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
+0x0001fe71	?DoVictory@combatManager@@QAEXC@Z	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
+0x00020a7e	?DoSurrender@combatManager@@QAEFXZ	Complete combat-action or result-callback instructions and references; buka-combat-actions.json
 0x00020cd1	?CheckChangeSelector@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020d8c	?CheckCastleAttack@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
 0x00020e7c	?CheckGetAIMove@combatManager@@QAEXXZ	Buka complete combat-loop instruction and ordered-reference correspondence; buka-combat-command.json
