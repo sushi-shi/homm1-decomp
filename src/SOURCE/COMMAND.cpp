@@ -1312,7 +1312,7 @@ void combatManager::DoVictory(i8 winningSide) {
 
 // Buka COMMAND.cpp DoLoseWindow; HoMM1 walks the defeated hero across a
 // scrolling backdrop until the window's button is released.
-VA(0x0044d51e, 0x549)
+VA(0x004205a2, 0x4dc)
 void combatManager::DoLoseWindow(void) {
     i16 walkFrame;
     i16 lAnimY;
@@ -1344,10 +1344,10 @@ void combatManager::DoLoseWindow(void) {
     walkFrame = 0;
     offset = 0;
     stop = 0;
-    if (m_playerId[COMBAT_ATTACKER_SIDE] == giCurPlayer
+    if (giCurPlayer == m_playerId[COMBAT_ATTACKER_SIDE]
         && gbThisNetHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
         losingSide = COMBAT_ATTACKER_SIDE;
-    else if (m_playerId[COMBAT_DEFENDER_SIDE] == giCurPlayer
+    else if (giCurPlayer == m_playerId[COMBAT_DEFENDER_SIDE]
              && gbThisNetHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]])
         losingSide = COMBAT_DEFENDER_SIDE;
     else if (m_playerId[COMBAT_ATTACKER_SIDE] != GAME_PLAYER_NONE
@@ -1395,14 +1395,14 @@ void combatManager::DoLoseWindow(void) {
     gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
     glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
     do {
-        if (KBTickCount() > glTimers[COMBAT_FRAME_TIMER_SLOT]) {
+        if (glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
             BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
             walkIcon
                 ->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
             gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
             walkFrame++;
             walkFrame = walkFrame % 8;
-            offset = offset + 2;
+            offset += 2;
             if (offset > 0x1a0)
                 offset = 0;
             glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
@@ -1423,7 +1423,7 @@ void combatManager::DoLoseWindow(void) {
 
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
 // no quill or diplomacy discount.
-VA(0x0044da67, 0x2c6)
+VA(0x00420a7e, 0x253)
 i16 combatManager::DoSurrender(void) {
     heroWindow* win;
     i16 unusedResult;
@@ -1435,8 +1435,8 @@ i16 combatManager::DoSurrender(void) {
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (m_armies[m_currentSide][armyIndex].IsAlive())
             giSurrenderCost +=
-                gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2
-                * m_armies[m_currentSide][armyIndex].m_quantity;
+                m_armies[m_currentSide][armyIndex].m_quantity
+                * (gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2);
     }
     unusedType = 1;
     unusedResult = 2;
@@ -1451,9 +1451,7 @@ i16 combatManager::DoSurrender(void) {
     message.id = SURRENDER_TEXT;
     sprintf(
         gText,
-        "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage "
-        "for the "
-        "price of %d gold.",
+        localization::Tr("combat.surrender.offer"),
         m_heroes[1 - m_currentSide]->m_name,
         giSurrenderCost
     );
@@ -1482,7 +1480,7 @@ void combatManager::CheckChangeSelector(void) {
 }
 
 // Buka COMMAND.cpp CheckCastleAttack; HoMM1 keys both on the castle side.
-VA(0x0044ddef, 0xdf)
+VA(0x00420d8c, 0xf0)
 void combatManager::CheckCastleAttack(void) {
     if (m_castleSide[1 - m_currentSide]) {
         while (m_catapultAttacksRemaining[m_currentSide] > 0) {
@@ -1499,7 +1497,7 @@ void combatManager::CheckCastleAttack(void) {
 }
 
 // Buka COMMAND.cpp CheckGetAIMove; HoMM1 tries the retreat first.
-VA(0x0044dece, 0x79)
+VA(0x00420e7c, 0x5c)
 void combatManager::CheckGetAIMove(void) {
     if (AICheckRetreat())
         return;

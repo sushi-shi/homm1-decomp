@@ -3935,3 +3935,7 @@ msgstr "Обороняющиеся:"
 msgctxt "common.none"
 msgid "None"
 msgstr "Нет"
+
+msgctxt "combat.surrender.offer"
+msgid "%s states:\n\n\"I will accept your surrender and grant you and your troops safe passage for the price of %d gold."
+msgstr "%s говорит:\n\n\"Я приму вашу капитуляцию и пропущу вас и ваших воинов за %d золотых."

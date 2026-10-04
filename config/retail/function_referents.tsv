@@ -719,6 +719,7 @@ rva	name	provenance
 0x0006c15a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	Buka context/locator instruction/CFG review: 0xae67; buka-adventure-context.json
 0x0006c1d4	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0006c25b	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	Complete combat setup instruction and CFG correspondence; buka-combat-setup.json
+0x0006c31b	?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z	Complete loss-window instructions and ordered-reference review; buka-combat-loss.json
 0x0006c3db	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	Buka map-view instruction/CFG/EH review: 0xbb62, 0xc2a8, 0xc2bb, 0xc2ce, 0xc2e1, 0xc329, 0xc33c, 0xc34f; buka-map-views.json
 0x0006c407	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	Buka army effects/movement complete instruction and CFG review: 0x17deb; buka-army-effects.json
 0x0006c4b7	?GetTileset@resourceManager@@QAEPAVtileset@@PAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
