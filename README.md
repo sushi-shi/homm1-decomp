@@ -32,9 +32,11 @@ spell dispatch now have reviewed claims, switch tables and exception cleanup;
 the two spell dialogs preserve English through the catalog. Control-panel and
 save-dialog claims are now migrated, including sample cleanup, boolean music
 source, localized option/help tables and the smaller Buka configuration. The
-removed slow-video mode is reflected in defaults and AI callers. Strict
-delinking currently stops at data identity `0x8ec74` in `AdvPanel`. The old
-score ledger has been reset.
+removed slow-video mode is reflected in defaults and AI callers. Adventure
+options, Dimension Door input, incremental drawing and ambient sound are also
+reviewed, including corrected Close help and Buka’s distance-volume table.
+Strict delinking currently stops at data identity `0xb7430` in the next
+function (`TeleportTo`). The old score ledger has been reset.
 Supply your own game executable and assets; they are not included here.
 
 ## Branches

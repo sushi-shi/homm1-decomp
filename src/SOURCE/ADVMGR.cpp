@@ -556,6 +556,7 @@ H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_VIEW_PUZZLE_HELP = 1,
     PANEL_CAST_SPELL_HELP = 2,
     PANEL_SEARCH_HELP = 3,
+    PANEL_CLOSE_HELP = 4,
     PANEL_VIEW_WORLD = 1,
     PANEL_VIEW_PUZZLE = 2,
     PANEL_CAST_SPELL = 3,
@@ -5936,7 +5937,7 @@ void advManager::CheckCastSpell(void) {
 // donor PoL RVA 0x0006a724; preferred Buka symbol ?AdvPanel@advManager@@QAEXXZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.644374;margin=0.446733;shape=0.427;size=0.786;calls=0.720;strings=advmice.mse|apanel.bin;alternate=pol20:void advManager::AdvPanel(void)@0x0006a724
-VA(0x00460fa6, 0x213)
+VA(0x0040df05, 0x1ce)
 void advManager::AdvPanel(void) {
     heroWindow* adventurePanel;
     struct tag_message message;
@@ -5987,9 +5988,8 @@ void advManager::AdvPanel(void) {
         MobilizeCurrHero(0);
 }
 
-// Buka 2.1 APanelHandler; HoMM1 shares the search help text with Close and
-// chains the dialog-select stores.
-VA(0x004611b9, 0x1d3)
+// Buka gives Close its own help entry; the dialog-select stores are chained.
+VA(0x0040e0d3, 0x150)
 i16 APanelHandler(struct tag_message& message) {
     i8 handled = 0;
     if (message.type == MESSAGE_WIDGET) {
@@ -6010,7 +6010,7 @@ i16 APanelHandler(struct tag_message& message) {
                         helpIndex = PANEL_SEARCH_HELP;
                         break;
                     case PANEL_CLOSE_WIDGET:
-                        helpIndex = PANEL_SEARCH_HELP;
+                        helpIndex = PANEL_CLOSE_HELP;
                         break;
                 }
                 if (helpIndex >= 0)
@@ -6055,14 +6055,14 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     TOWN_PORTAL_DISTANCE_LIMIT = 1000
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
-VA(0x0046138c, 0x34b)
+VA(0x0040e223, 0x29e)
 i16 DimensionDoorHandler(struct tag_message& message) {
     i8 result;
     i16 mouseX;
     i16 mouseY;
     mapCell* cell;
 
-    if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT]) {
+    if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount()) {
         gpAdvManager->CompleteDraw(gpAdvManager->m_mapOriginX, gpAdvManager->m_mapOriginY, 0);
         gpAdvManager->UpdateScreen(0, 0);
     }
@@ -6145,9 +6145,9 @@ i16 DimensionDoorHandler(struct tag_message& message) {
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.384237;margin=0.212683;shape=0.299;size=0.586;calls=0.778;alternate=pol20:int advManager::ComboDraw(int, int, int)@0x000654ad
 // HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
-VA(0x004616d7, 0xaf7)
+VA(0x0040e4c1, 0xb48)
 i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
-    DATA(0x004a2430)
+    DATA(0x004a676c)
     static i32 gFrameCount = 0;
     i32 updateCount;
     i32 drawY;
@@ -6165,7 +6165,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
         gFrameCount += giFrameStep;
         if (gFrameCount < COMBO_FRAME_LIMIT) {
             Process1WindowsMessage();
-            if (KBTickCount() > glTimers[ADVENTURE_FRAME_TIMER_SLOT])
+            if (glTimers[ADVENTURE_FRAME_TIMER_SLOT] < KBTickCount())
                 glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
             PollSound();
             return 0;
@@ -6188,7 +6188,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                     ++bComboDraw[drawX][drawY];
                 if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
-                    if (GetCloudLookup(originX + drawX, originY + drawY)) {
+                    if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
                         if (drawY >= 1) {
                             bComboDraw[drawX][drawY - 1] += COMBO_CLOUD_MARK;
@@ -6205,7 +6205,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                 if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                     || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
-                    if (GetCloudLookup(originX + drawX, originY + drawY)) {
+                    if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
                         bComboDraw[drawX][drawY + 1] += COMBO_CLOUD_MARK;
                         if (drawY >= 1)
@@ -6232,7 +6232,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                     || originY + drawY < 0 || originY + drawY >= MAP_CELL_GRID_SIZE)
                     bComboDraw[drawX][drawY] = 0;
                 else if (bComboDraw[drawX][drawY] < COMBO_CLOUD_MARK
-                         && !GetCloudLookup(originX + drawX, originY + drawY))
+                         && !GetCloudLookup(drawX + originX, drawY + originY))
                     bComboDraw[drawX][drawY] = 0;
             }
         }
@@ -6349,7 +6349,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
         giLimitUpdMinY = COMBO_UPDATE_MIN;
     if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
         giLimitUpdMaxY = COMBO_UPDATE_MAX;
-    if (giLimitUpdMaxX < gLimitUpdMinX || giLimitUpdMaxY < giLimitUpdMinY) {
+    if (gLimitUpdMinX > giLimitUpdMaxX || giLimitUpdMinY > giLimitUpdMaxY) {
         gLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
         return 0;
@@ -6366,15 +6366,13 @@ i8 advManager::ComboDraw(i32 update) {
 // donor PoL RVA 0x0006668e; preferred Buka symbol ?SetEnvironmentOrigin@advManager@@QAEXHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.577153;margin=0.265756;shape=0.425;size=0.947;calls=1.000;alternate=pol20:void advManager::SetEnvironmentOrigin(int, int, int)@0x0006668e
-VA(0x00462208, 0x2dd)
+VA(0x0040f038, 0x2bb)
 void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) {
     i32 soundRadius;
     i32 edgeOffset;
     i32 maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
     i32 layer;
 
-    if (SamplesSuspended())
-        return;
     for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
         if (m_activeSounds[edgeOffset].soundId != MAP_SOUND_NONE) {
             if (stopSounds) {
@@ -6440,7 +6438,7 @@ void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) 
 // donor PoL RVA 0x000669c6; preferred Buka symbol ?CheckLoadSample@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.741786;margin=0.490066;shape=0.533;size=0.857;calls=1.000;strings=loop%04d.82M;alternate=pol20:void advManager::CheckLoadSample(int)@0x000669c6
-VA(0x004624e5, 0x69)
+VA(0x0040f2f3, 0x5a)
 void advManager::CheckLoadSample(i32 index) {
     if (m_loopingSamples[index] == NULL) {
         TrimLoopingSounds(ADVMGR_ACTIVE_SOUND_COUNT);
@@ -6452,7 +6450,7 @@ void advManager::CheckLoadSample(i32 index) {
 // donor PoL RVA 0x00066ef0; preferred Buka symbol ?InsertSound@advManager@@QAEXHHHH@Z
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.476286;margin=0.526376;shape=0.266;size=0.902;calls=0.750;alternate=pol20:void advManager::InsertSound(int, int, int, int)@0x00066ef0
-VA(0x0046254e, 0x251)
+VA(0x0040f34d, 0x20f)
 void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     i32 slot;
     i32 distanceLimit;
@@ -7439,7 +7437,7 @@ DATA(0x004a6758)
 i32 gForceUpdate = 0;
 DATA(0x004a6728)
 class heroWindow* gPanel;
-DATA(0x004cafe4)
+DATA(0x004a65ac)
 i32 giFrameStep;
 DATA(0x004a6730)
 char cArmySizeName[12];
@@ -7451,12 +7449,12 @@ DATA(0x004a65e4)
 i8 bPrefsChanged;
 DATA(0x004a6710)
 i32 giLimitUpdMinY;
-DATA(0x004cb028)
+DATA(0x004a65ec)
 i8 bComboDraw[17][17];
 DATA(0x004a65cc)
 i8 gFreshSave;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;
-// ADVMGR's .rdata: ambient-sound volume by distance (0x0048d4b8).
-DATA(0x0048d4b8)
-const i32 gEnvironmentVolume[5] = {64, 48, 32, 16, 10};
+// ADVMGR's ambient-sound volume by distance; Buka's 0..127 scale.
+DATA(0x0048a36c)
+const i32 gEnvironmentVolume[5] = {127, 96, 63, 31, 21};

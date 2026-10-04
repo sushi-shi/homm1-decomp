@@ -9119,5 +9119,6 @@
       "missing": 2,
       "implementation_changed": false
     }
-  }
+  },
+  "checkpoint": "Historical validation at bb009960. The adventure-panel and ambient-audio reviews supersede its next-reference blocker; fingerprints identify that earlier state."
 }

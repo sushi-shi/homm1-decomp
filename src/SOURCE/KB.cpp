@@ -4002,7 +4002,7 @@ char* gEventText[77] = {
     localization::Tr("table.gEventText.74"), localization::Tr("table.gEventText.75"),
     localization::Tr("table.gEventText.76"),
 };
-DATA(0x00493548)
+DATA(0x00492ae0)
 char* gAPanelHelp[5] = {
     localization::Tr("table.gAPanelHelp.0"),
     localization::Tr("table.gAPanelHelp.1"),

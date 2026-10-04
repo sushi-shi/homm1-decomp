@@ -305,3 +305,26 @@ has zero unresolved symbols and duplicate warnings.
 The build reaches strict unprovided-data refusal at Buka RVA `0x8a38c`.
 The whole-tree audit dispositions now describe the actual /FIXED and IAT
 adaptations; remaining missing capabilities are still recorded separately.
+
+
+## Buka VC6 array identities
+
+Reviewed Giten's pinned `39384dc6726478357b5efd42c66522781e8310fe`
+`core/msvc_names.py`, Gruntz `7d7e44b78aa15b543d92bfc4876b84cded474002`
+`core/msvc_names.py`, and HoMM2 Buka
+`e0689d3f71b2942b544fd677cb54085a13503d7b` `audit/data_claims.py`.
+Retained: the shared source-derived claim path, linkage/scope handling, unit
+ownership, and strict reference identities. Adapted: array spelling now uses
+the measured selected-compiler ABI; VC6-compatible Clang already agrees with
+VC6 on all eleven controlled declarations. Giten/Gruntz's earlier-compiler
+array rewrites remain available to VC4 and are inapplicable to VC6. HoMM2's
+unit-aware object-symbol checks corroborate the validation approach; its
+majority address-voting mechanism was not imported. No adapter pipeline,
+aliases, masks or entry points were added.
+
+The whole generated claim corpus now has 698 data names resolving to their
+own objects, repairing the two constant-array joins without regressions.
+This is naming coverage, not address or behavior parity. The remaining Buka
+source/claim migration and the donor-wide missing/deferred capabilities are
+still unfinished. See the measured
+[array-name pattern](patterns/vc6-array-data-names.md).

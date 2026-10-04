@@ -54,9 +54,13 @@ rva	name	provenance
 0x0000d9d2	?CPanelHandler@@YAFAAUtag_message@@@Z	Buka control-panel instruction/CFG/EH review: 0xd451, complete control-panel review; buka-control-panel.json
 0x0000de70	?CheckCastSpell@advManager@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x3140; buka-adventure-commands.json
 0x0000df05	?AdvPanel@advManager@@QAEXXZ	Buka input-handler instruction/CFG review: 0x44c2; buka-adventure-input.json
+0x0000e0d3	?APanelHandler@@YAFAAUtag_message@@@Z	Buka adventure-panel instruction/CFG/EH review: 0xe02b, complete adventure-panel review; buka-adventure-panel.json
+0x0000e223	?DimensionDoorHandler@@YAFAAUtag_message@@@Z	Buka adventure-panel instruction/CFG/EH review: complete adventure-panel review; buka-adventure-panel.json
 0x0000e4c1	?ComboDraw@advManager@@QAECFFC@Z	Buka command helper family: 0xf02e; buka-adventure-commands.json
 0x0000f009	?ComboDraw@advManager@@QAECH@Z	Buka Main complete instruction/CFG correspondence: 0x29a7; buka-adventure-commands.json
 0x0000f038	?SetEnvironmentOrigin@advManager@@QAEXFFF@Z	Buka context/locator instruction/CFG review: 0xb273, 0xb60f; buka-adventure-context.json
+0x0000f2f3	?CheckLoadSample@advManager@@QAEXH@Z	Buka environment-audio instruction/CFG/EH review: complete environment-audio review, 0xf4e5; buka-environment-audio.json
+0x0000f34d	?InsertSound@advManager@@QAEXFFFC@Z	Buka environment-audio instruction/CFG/EH review: 0xf11a, 0xf17a, 0xf19e, 0xf1c2, 0xf1e6, complete environment-audio review; buka-environment-audio.json
 0x0000f853	?DimensionDoor@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc1de; buka-map-views.json
 0x0000fa50	?TownGate@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc1e8; buka-map-views.json
 0x0000fc90	?SummonBoat@advManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xc167; buka-map-views.json
@@ -252,7 +256,10 @@ rva	name	provenance
 0x000688aa	_SmackClose@4	Buka FF25 import thunk at 0x688aa; PE IAT 0x8a320 smackw32.DLL!18; decoration from pinned or verified import library, or compiled WinG caller
 0x000688b0	_Netbios@4	Buka FF25 import thunk at 0x688b0; PE IAT 0x8a1f8 NETAPI32.dll!Netbios; decoration from pinned or verified import library, or compiled WinG caller
 0x000688c0	??0baseManager@@QAE@XZ	Buka adventure-manager family: 0x100d, reviewed source family; buka-advmgr.json
+0x00068b37	?PlaySample@@YAXPAVsample@@@Z	Buka environment-audio instruction/CFG/EH review: 0xf527; buka-environment-audio.json
 0x00068ec4	?LoadPlaySample@@YAPAVsample@@PAD@Z	Buka input-handler instruction/CFG review: 0x4774; buka-adventure-input.json
+0x00068eed	?StopSample@@YAXPAVsample@@@Z	Buka environment-audio instruction/CFG/EH review: 0xf092, 0xf24e, 0xf4b5; buka-environment-audio.json
+0x00068f5e	?UpdateSampleVolume@@YAXPAVsample@@@Z	Buka environment-audio instruction/CFG/EH review: 0xf2e0; buka-environment-audio.json
 0x00068fb6	?WaitSample@@YAXPAVsample@@@Z	Buka input-handler instruction/CFG review: 0x49d0; buka-adventure-input.json
 0x000692fd	?PlayMusic@@YAXH@Z	Buka Main complete instruction/CFG correspondence: 0x2b01; buka-adventure-commands.json
 0x00069738	?GetCurrentTrack@@YAHXZ	Buka Main complete instruction/CFG correspondence: 0x2ae2; buka-adventure-commands.json
@@ -323,6 +330,7 @@ rva	name	provenance
 0x000782f4	__ftol	Buka radar/locator family instruction/CFG review: 0x7b85, 0x7daa; buka-radar-locators.json
 0x0007831b	_malloc	Buka turn-panel instruction/CFG/EH review: 0x8742, 0x8818; buka-bottom-turns.json
 0x00078460	_strlen	Buka panel instruction/CFG/EH review: 0x8a1e, 0x9436, 0x94a7; buka-bottom-panels.json
+0x000784e0	_memset	Buka adventure-panel instruction/CFG/EH review: 0xe595; buka-adventure-panel.json
 0x00078950	_memmove	Buka exact pathfinding instruction correspondence: 0x2a130, 0x2a2de; config/retail/buka-pathfinding.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller

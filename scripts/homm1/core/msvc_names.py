@@ -75,18 +75,25 @@ def data(name: str, *, internal: bool, decorated: bool = False,
          compiler: str | None = None) -> str:
     """The selected target compiler's spelling for a clang-proposed DATA name.
 
+    VC6 keeps the array qualifiers emitted by the VC6-compatible front end.
+    The earlier compiler profiles retain the measured VC4 array rewrites.
+
     `internal` is the declaration's storage, not its spelling: a file static
     and a namespace-scope `const` reach the object as `_<mangled>$S<n>`,
     whatever their mangling. VC4 keeps a function-local static's own mangled
     name (`?s@?1??fn@...@4HA`, measured on SOURCE/SEARCH), so that form is
     never wrapped. VC6 prefixes both kinds and does not append `$S`.
     """
-    out = ARRAY_ELEMENT_CV.sub(r"\1", ARRAY_STORAGE.sub(r"@@\1P", name))
-    if not decorated:
-        out = decorate(out)
     if compiler is None:
         from homm1.core.paths import compiler_id
         compiler = compiler_id()
+    # Clang in the selected VC6 compatibility mode already agrees with VC6
+    # for array storage and element qualifiers. The VC4 rewrite would turn
+    # constant-array QB into PB and discard multidimensional const elements.
+    out = name if compiler == "vc6" else ARRAY_ELEMENT_CV.sub(
+        r"\1", ARRAY_STORAGE.sub(r"@@\1P", name))
+    if not decorated:
+        out = decorate(out)
     if internal:
         if compiler == "vc6":
             # Measured with /Od, /O2 and /Z7: VC6 prefixes local statics

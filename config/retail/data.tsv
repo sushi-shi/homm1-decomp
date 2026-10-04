@@ -11,7 +11,10 @@
 # Quick-view typed data and complete pointer-payload review: buka-quick-views.json.
 # Context/locator operand/payload review: buka-adventure-context.json.
 # Control-panel operand/payload review: buka-control-panel.json.
+# Adventure-panel/drawing operand and payload review: buka-adventure-panel.json.
+# Ambient-sound operand and payload review: buka-environment-audio.json.
 rva	kind
+0x0008a36c	
 0x0008a38c	vtable
 0x0008a398	fppool
 0x0008a3a0	fppool
@@ -28,7 +31,6 @@ rva	kind
 0x0008d428	
 0x0008d468	vtable
 0x0008d4a8	vtable
-0x0008d4b8	
 0x0008d500	
 0x0008d504	
 0x0008d508	
@@ -162,6 +164,7 @@ rva	kind
 0x00092a70	
 0x00092a78	
 0x00092a80	
+0x00092ae0	
 0x00092b08	
 0x00092b10	
 0x00092b18	
@@ -198,7 +201,6 @@ rva	kind
 0x00093380	
 0x00093410	
 0x00093434	
-0x00093548	
 0x00093560	
 0x00093590	
 0x000935b0	
@@ -355,7 +357,6 @@ rva	kind
 0x000a1754	
 0x000a1790	
 0x000a17b8	
-0x000a2430	
 0x000a2824	
 0x000a2878	
 0x000a287c	
@@ -476,6 +477,7 @@ rva	kind
 0x000a54c0	
 0x000a65a4	
 0x000a65a8	
+0x000a65ac	
 0x000a65c8	
 0x000a65cc	
 0x000a65d4	
@@ -483,6 +485,7 @@ rva	kind
 0x000a65e0	
 0x000a65e4	
 0x000a65e8	
+0x000a65ec	
 0x000a6710	
 0x000a6714	
 0x000a6728	
@@ -498,6 +501,7 @@ rva	kind
 0x000a6760	
 0x000a6764	
 0x000a6768	
+0x000a676c	
 0x000a6b9c	
 0x000a6ba0	
 0x000a6ba4	
@@ -749,8 +753,6 @@ rva	kind
 0x000caf10	
 0x000caf50	
 0x000cafc0	
-0x000cafe4	
-0x000cb028	
 0x000cb17c	
 0x000cb180	
 0x000cb184	
