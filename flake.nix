@@ -50,6 +50,7 @@
           ./nix/patches/vostok-unprovisioned-identity-refusal.patch
           ./nix/patches/vostok-skip-inline-switch-tables.patch
           ./nix/patches/vostok-fixed-manifest-iat.patch
+          ./nix/patches/vostok-report-unprovided.patch
         ];
       };
 

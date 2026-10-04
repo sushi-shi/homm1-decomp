@@ -1,0 +1,154 @@
+--- a/src/main.rs
++++ b/src/main.rs
+@@ -72,6 +72,11 @@
+     /// Reviewed absolute sites for images without a PE base-relocation directory.
+     #[arg(long, value_hint = clap::ValueHint::FilePath)]
+     pub reloc_manifest: Option<std::path::PathBuf>,
++
++    /// Diagnostic output only: preserve UNPROVISIONED referents and record
++    /// their sites here. This does not provide identities or relax comparison.
++    #[arg(long, value_hint = clap::ValueHint::FilePath)]
++    pub report_unprovided: Option<std::path::PathBuf>,
+
+     /// Compatibility-only storage ranges for legacy PDB fallback. Ignored by
+     /// the canonical candidate-manifest path.
+@@ -143,6 +148,7 @@
+         contribution_manifest,
+         reloc_alias_manifest,
+         reloc_manifest,
++        report_unprovided,
+         unresolved_data_manifest,
+         recover_data_relocs_from_pdb,
+         coalesce_common_functions,
+@@ -174,6 +180,7 @@
+         contribution_manifest.as_deref(),
+         reloc_alias_manifest.as_deref(),
+         reloc_manifest.as_deref(),
++        report_unprovided.as_deref(),
+         unresolved_data_manifest.as_deref(),
+         recover_data_relocs_from_pdb,
+         coalesce_common_functions,
+@@ -195,6 +202,7 @@
+     contribution_manifest_path: Option<&std::path::Path>,
+     reloc_alias_manifest_path: Option<&std::path::Path>,
+     reloc_manifest_path: Option<&std::path::Path>,
++    report_unprovided_path: Option<&std::path::Path>,
+     unresolved_data_manifest_path: Option<&std::path::Path>,
+     recover_data_relocs_from_pdb: bool,
+     coalesce_common_functions: bool,
+@@ -217,6 +225,7 @@
+         contribution_manifest::ContributionManifest::default()
+     };
+
++    let mut identity_report = relocs::IdentityReport::new(report_unprovided_path.is_some());
+     let (coff_data, relocs_rva, mut observed_reloc_aliases) = relocs::resolve_absolute_relocations(
+         &env,
+         exe,
+@@ -225,6 +234,7 @@
+         &contribution_manifest,
+         &reloc_alias_manifest,
+         reloc_manifest.as_ref(),
++        &mut identity_report,
+         &unresolved_data_manifest,
+         recover_data_relocs_from_pdb,
+     )?;
+@@ -259,6 +269,11 @@
+     )?;
+     reloc_alias_manifest.validate_occurrences(&observed_reloc_aliases)?;
+     object_files.write(output_path)?;
++    if let Some(path) = report_unprovided_path {
++        std::fs::write(path, identity_report.tsv())?;
++        eprintln!("[delink] diagnostic objects: {} unresolved reference(s), recorded in {}",
++                  identity_report.len(), path.display());
++    }
+
+     // Target side: record the choices base will later try to reproduce.
+     if let Some(path) = write_symbol_map {
+--- a/src/relocs.rs
++++ b/src/relocs.rs
+@@ -257,6 +257,40 @@
+     Ok(())
+ }
+
++/// Unknown names are retained verbatim only for diagnostic objects. Every
++/// occurrence is recorded so callers can withhold the owning function from
++/// verified coverage. The default still rejects the first missing identity.
++pub struct IdentityReport {
++    diagnostic: bool,
++    rows: BTreeMap<usize, (usize, String)>,
++}
++
++impl IdentityReport {
++    pub fn new(diagnostic: bool) -> Self {
++        Self { diagnostic, rows: BTreeMap::new() }
++    }
++
++    fn check(&mut self, name: RawString<'_>, target: usize, site: usize) -> anyhow::Result<()> {
++        if !self.diagnostic {
++            return refuse_unprovisioned(name, target);
++        }
++        if name.as_bytes().starts_with(UNPROVISIONED_DATA_PREFIX) {
++            self.rows.insert(site, (target, name.to_string().into_owned()));
++        }
++        Ok(())
++    }
++
++    pub fn len(&self) -> usize { self.rows.len() }
++
++    pub fn tsv(&self) -> String {
++        let mut out = String::from("site_rva\ttarget_rva\tname\n");
++        for (site, (target, name)) in &self.rows {
++            out.push_str(&format!("0x{site:08x}\t0x{target:08x}\t{name}\n"));
++        }
++        out
++    }
++}
++
+ fn closest_data_symbol<'a>(
+     symbols: &'a BTreeMap<usize, RawString<'static>>,
+     target_rva: usize,
+@@ -356,6 +390,7 @@
+     contributions: &ContributionManifest,
+     reloc_aliases: &RelocAliasManifest,
+     reloc_manifest: Option<&RelocManifest>,
++    identity_report: &mut IdentityReport,
+     unresolved: &ContributionManifest,
+     recover_data_relocs_from_pdb: bool,
+ ) -> anyhow::Result<(
+@@ -571,7 +606,7 @@
+                             Some((addend, owner)) => (addend, owner),
+                             None => (u32::try_from(target_rva - *constant_rva)?, *constant_name),
+                         };
+-                        refuse_unprovisioned(reloc_name, target_rva)?;
++                        identity_report.check(reloc_name, target_rva, reloc_rva)?;
+                         coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+
+                         relocs_rva.insert(
+@@ -708,7 +743,7 @@
+                     Some((addend, owner)) => (addend, owner),
+                     None => (u32::try_from(target_rva - *static_rva)?, *static_name),
+                 };
+-                refuse_unprovisioned(reloc_name, target_rva)?;
++                identity_report.check(reloc_name, target_rva, reloc_rva)?;
+                 coff_data_reloc.copy_from_slice(&diff.to_le_bytes());
+
+                 relocs_rva.insert(
+@@ -791,6 +826,18 @@
+     }
+
+     #[test]
++    fn diagnostic_reports_unknowns_without_renaming_or_relaxing_default() {
++        let name: RawString<'static> = b"UNPROVISIONED_0048a414".as_slice().into();
++        assert!(IdentityReport::new(false).check(name, 0x8a414, 0x18bba).is_err());
++        let mut report = IdentityReport::new(true);
++        report.check(name, 0x8a414, 0x18bba).unwrap();
++        let known: RawString<'static> = b"?known@@3HA".as_slice().into();
++        report.check(known, 0x90000, 0x18bc0).unwrap();
++        assert_eq!(report.len(), 1);
++        assert_eq!(report.tsv(), "site_rva\ttarget_rva\tname\n0x00018bba\t0x0008a414\tUNPROVISIONED_0048a414\n");
++    }
++
++    #[test]
+     fn unprovisioned_fence_is_refused_but_synthetic_and_real_names_pass() {
+         let fence: RawString<'static> = b"UNPROVISIONED_00653c34".as_slice().into();
+         let err = refuse_unprovisioned(fence, 0x253c34)

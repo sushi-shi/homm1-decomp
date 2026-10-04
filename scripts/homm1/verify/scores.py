@@ -75,6 +75,9 @@ def load(path: Path | None = None) -> dict:
         raise SystemExit(f"{path} is JSON but not an objdiff report (no "
                          f"`units` key) - point --report at "
                          f"build/objdiff/compare-new/report.json")
+    if doc.get("homm1_diagnostic"):
+        raise SystemExit("diagnostic comparison cannot be banked or treated as verified; "
+                         "use homm1 verify readme --baseline for conservative coverage")
     split_eh_band(doc)
     return doc
 

@@ -139,6 +139,12 @@ def run(base_dir: Path = BASE_DIR, target_dir: Path = TARGET_DIR,
 
     report_path = objdiff.report(out_dir, out_dir / "report.json")
     report = objdiff.load(report_path)
+    if (target_dir / ".unprovided-identities.tsv").is_file():
+        import json
+        report["homm1_diagnostic"] = True
+        report_path.write_text(json.dumps(report, indent=2) + "\n")
+        if not quiet:
+            print("[compare] diagnostic subset only; not whole-game coverage or bankable scores")
 
     if not quiet:
         no_target = sorted(set(unit_names) - units_with_a_target(target_dir))
@@ -173,11 +179,17 @@ def main() -> int:
                     help="re-normalize every object, ignoring the stale check")
     ap.add_argument("--all-units", action="store_true",
                     help="list every unit, not only those below 100%%")
+    ap.add_argument("--baseline", action="store_true",
+                    help="report a conservative whole-game baseline while identities are incomplete")
     a = ap.parse_args()
     try:
+        if a.baseline:
+            from homm1.compare.baseline import run as baseline
+            baseline(a.base_dir)
+            return 0
         run(a.base_dir, a.target_dir, a.out_dir, reference=a.reference,
             force=a.force, all_units=a.all_units)
-    except ToolError as e:
+    except (ToolError, ValueError) as e:
         print(f"[compare] {e}", file=sys.stderr)
         return 1
     return 0

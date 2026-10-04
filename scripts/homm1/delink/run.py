@@ -37,7 +37,8 @@ def units(model: Model) -> list[str]:
 
 
 def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
-        delink_dir: Path = DELINK_DIR, only: list[str] | None = None) -> dict:
+        delink_dir: Path = DELINK_DIR, only: list[str] | None = None,
+        report_unprovided: Path | None = None) -> dict:
     import shutil
     model = model or resolve()
 
@@ -59,7 +60,8 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
         synth["pdb"], pdb_synth.retail().pe.path, delink_dir,
         data_manifest=data_manifest.OUTPUT,
         data_section_manifest=data_manifest.SECTION_OUTPUT,
-        reloc_alias_manifest=RELOC_ALIASES, reloc_manifest=absolute_manifest)
+        reloc_alias_manifest=RELOC_ALIASES, reloc_manifest=absolute_manifest,
+        report_unprovided=report_unprovided)
     if out.strip():
         print(out.strip().splitlines()[-1])
 
@@ -67,6 +69,8 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     if only is None and target_dir.exists():
         shutil.rmtree(target_dir)
     target_dir.mkdir(parents=True, exist_ok=True)
+    if report_unprovided is not None:
+        shutil.copy2(report_unprovided, target_dir / ".unprovided-identities.tsv")
     collected, missing = [], []
     for unit in wanted:
         src = delink_dir / f"{unit}.c.obj"

@@ -31,6 +31,7 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
            data_section_manifest: Path | str | None = None,
            reloc_alias_manifest: Path | str | None = None,
            reloc_manifest: Path | str | None = None,
+           report_unprovided: Path | str | None = None,
            recover_data_relocs_from_pdb: bool = True,
            timeout: float | None = 1800) -> str:
     """Run vostok-delinker; returns its output. Raises ToolError on failure."""
@@ -59,6 +60,8 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
             if not Path(value).exists():
                 raise ToolError(f"missing manifest: {value}")
             argv += [flag, str(value)]
+    if report_unprovided is not None:
+        argv += ["--report-unprovided", str(report_unprovided)]
     if recover_data_relocs_from_pdb:
         # Safety net only: keeps the permissive nearest-PDB-symbol recovery for
         # any writable RVA the manifest does not enroll, instead of a hard
@@ -73,6 +76,10 @@ def delink(pdb: Path | str, exe: Path | str, out_dir: Path | str, *,
     if r.returncode != 0:
         tail = "\n".join((r.stderr or r.stdout).strip().splitlines()[-15:])
         raise ToolError(f"{DELINKER} failed (rc={r.returncode}):\n{tail}")
+    if report_unprovided is not None:
+        # Keep diagnostic provenance next to the objects. Consumers must not
+        # accidentally bank this as a successful whole-image delink.
+        shutil.copy2(report_unprovided, out_dir / ".unprovided-identities.tsv")
     return (r.stdout or "") + (r.stderr or "")
 
 
@@ -91,13 +98,15 @@ def main() -> int:
     ap.add_argument("--data-section-manifest")
     ap.add_argument("--reloc-alias-manifest")
     ap.add_argument("--reloc-manifest")
+    ap.add_argument("--report-unprovided", type=Path)
     a = ap.parse_args()
     try:
         out = delink(a.pdb, a.exe, a.out,
                      data_manifest=a.data_manifest,
                      data_section_manifest=a.data_section_manifest,
                      reloc_alias_manifest=a.reloc_alias_manifest,
-                     reloc_manifest=a.reloc_manifest)
+                     reloc_manifest=a.reloc_manifest,
+                     report_unprovided=a.report_unprovided)
         if out.strip():
             print(out)
     except (ToolError, OSError) as e:

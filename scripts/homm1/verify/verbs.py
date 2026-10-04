@@ -290,7 +290,19 @@ def cmd_readme(argv) -> int:
     ap = argparse.ArgumentParser(prog="homm1 verify readme",
                                  description="refresh derived README status without banking")
     ap.add_argument("--report", type=Path)
+    ap.add_argument("--baseline", action="store_true",
+                    help="write the conservative, unbanked whole-game baseline")
     args = ap.parse_args(argv)
+    if args.baseline:
+        if args.report is not None:
+            ap.error("--baseline does not accept --report")
+        from homm1.compare.baseline import readme
+        try:
+            changed = readme()
+        except (OSError, ValueError) as exc:
+            raise SystemExit(str(exc)) from exc
+        print(f"README baseline {'refreshed' if changed else 'unchanged'}")
+        return 0
     if bl.mode_mismatch():
         raise SystemExit(bl.mode_mismatch())
     changed = refresh_readme_block(args.report)

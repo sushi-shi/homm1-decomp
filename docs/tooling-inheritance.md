@@ -328,3 +328,20 @@ This is naming coverage, not address or behavior parity. The remaining Buka
 source/claim migration and the donor-wide missing/deferred capabilities are
 still unfinished. See the measured
 [array-name pattern](patterns/vc6-array-data-names.md).
+
+
+## Reporting during the Buka identity migration
+
+Reviewed Giten `39384dc6726478357b5efd42c66522781e8310fe` and Gruntz
+`7d7e44b78aa15b543d92bfc4876b84cded474002` unprovisioned-identity refusal patches,
+and HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b` `redelink.py`.
+Retained: whole-image delinking, strict default refusal, candidate normalization,
+objdiff name/addend checks, and the separate manual score bank. Adapted:
+`--report-unprovided` preserves unresolved names only in marked diagnostic
+objects and writes every unresolved reference site. `homm1 compare --baseline`
+uses those objects with the existing comparison pipeline and counts unreviewed
+functions/references as zero over the current-image game census. Missing
+absolute relocations also withhold the function. Diagnostic reports are rejected
+by the verified score loader; the README baseline is separately generated and
+checks its input fingerprint. Deferred: completing the Buka identity migration
+and the existing full verification gates. No donor command parity is claimed.
