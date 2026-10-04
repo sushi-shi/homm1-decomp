@@ -1438,8 +1438,8 @@ void PlayerDead(i32 player) {
         HandleRemoteDeadPlayerExit(player);
 }
 
-DATA(0x00490e70)
-char* gCombatGroundNames[8] = {
+DATA(0x004902d0)
+char* gCombatGroundNames[7] = {
     "boat.xtl",
     "grass.xtl",
     "snow.xtl",
@@ -1447,10 +1447,9 @@ char* gCombatGroundNames[8] = {
     "lava.xtl",
     "desert.xtl",
     "dgrass.xtl",
-    0,
 };
-DATA(0x00490e90)
-char* gCombatObstacleNames[8] = {
+DATA(0x004902ec)
+char* gCombatObstacleNames[7] = {
     "boat.obj",
     "grass.obj",
     "snow.obj",
@@ -1458,7 +1457,6 @@ char* gCombatObstacleNames[8] = {
     "lava.obj",
     "desert.obj",
     "dgrass.obj",
-    0,
 };
 DATA(0x00490308)
 char* gPowEffectNames[16] = {

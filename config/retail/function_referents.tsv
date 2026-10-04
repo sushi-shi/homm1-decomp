@@ -148,6 +148,8 @@ rva	name	provenance
 0x0001a528	?LoadArmies@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001a787	?FreeArmies@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001a84f	?GetGridIndex@combatManager@@QAEFFF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001a8f6	?CheckApplyGoodMorale@combatManager@@QAEXHH@Z	Complete combat morale instructions, CFG and bijective local-slot correspondence; buka-combat-morale.json
+0x0001aa9b	?CheckApplyBadMorale@combatManager@@QAEHHH@Z	Complete combat morale instructions, CFG and bijective local-slot correspondence; buka-combat-morale.json
 0x0001ade7	?IsWinner@combatManager@@QAECC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001bb8e	?RegenerateField@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json

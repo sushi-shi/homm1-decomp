@@ -972,3 +972,5 @@ HOMM1_MESSAGE("table.gSetupHotSeatGameHelp.0", "Play with 2 human players, and o
 HOMM1_MESSAGE("table.gSetupHotSeatGameHelp.1", "Play with 3 human players, and optionally 1 computer player.")
 HOMM1_MESSAGE("table.gSetupHotSeatGameHelp.2", "Play with 4 human players.")
 HOMM1_MESSAGE("table.gSetupHotSeatGameHelp.3", "Cancel back to the main menu.")
+HOMM1_MESSAGE("combat.morale.good", "High morale enables the %s to attack again.")
+HOMM1_MESSAGE("combat.morale.bad", "Low morale causes the %s to freeze in panic.")

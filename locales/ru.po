@@ -3863,3 +3863,11 @@ msgstr "Играть с 4 людьми."
 msgctxt "table.gSetupHotSeatGameHelp.3"
 msgid "Cancel back to the main menu."
 msgstr "Отменить и вернуться в главное меню."
+
+msgctxt "combat.morale.good"
+msgid "High morale enables the %s to attack again."
+msgstr "Высокая мораль дает отряду %s еще одну атаку."
+
+msgctxt "combat.morale.bad"
+msgid "Low morale causes the %s to freeze in panic."
+msgstr "Низкая мораль заставляет %s замереть в панике."

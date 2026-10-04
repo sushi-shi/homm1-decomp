@@ -40,7 +40,7 @@
 #include <string.h>
 
 // CheckApplyGoodMorale grants one extra turn at a time.
-DATA(0x004a2878)
+DATA(0x004a67dc)
 i32 gInHighMoraleBonus = 0;
 // SetupCombat saves the adventure random seed here; GenerateMap restores it.
 DATA(0x0048f060)
@@ -723,7 +723,7 @@ i16 combatManager::GetGridIndex(i16 x, i16 y) {
 }
 
 // Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
-VA(0x0046c2ed, 0x1d9)
+VA(0x0041a8f6, 0x1a5)
 void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
@@ -750,13 +750,13 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     if (activeArmy->m_quantity <= 1)
         sprintf(
             gText,
-            "High morale enables the %s to attack again.",
+            localization::Tr("combat.morale.good"),
             gArmyNames[activeArmy->m_creatureType]
         );
     else
         sprintf(
             gText,
-            "High morale enables the %s to attack again.",
+            localization::Tr("combat.morale.good"),
             gArmyNamesPlural[activeArmy->m_creatureType]
         );
     CombatMessage(gText, 1);
@@ -770,7 +770,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
 
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
 // in four.
-VA(0x0046c4c6, 0x1c6)
+VA(0x0041aa9b, 0x173)
 i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
@@ -786,18 +786,17 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
         return 0;
     if (!m_humanSide[side] && SRandom(1, 4) == 1)
         return 0;
-    sample = NULL;
     sample = LoadPlaySample("BADMRLE.82M");
     if (activeArmy->m_quantity <= 1)
         sprintf(
             gText,
-            "Low morale causes the %s to freeze in panic.",
+            localization::Tr("combat.morale.bad"),
             gArmyNames[activeArmy->m_creatureType]
         );
     else
         sprintf(
             gText,
-            "Low morale causes the %s to freeze in panic.",
+            localization::Tr("combat.morale.bad"),
             gArmyNamesPlural[activeArmy->m_creatureType]
         );
     CombatMessage(gText, 1);
