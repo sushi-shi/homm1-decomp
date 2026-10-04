@@ -19,6 +19,7 @@
 # Army initialization/resource review: buka-army-resources.json.
 # Army drawing/movement review: buka-army-drawing.json.
 # Combat message buffers and flags: buka-combat-messages.json.
+# Army movement/luck/damage review: buka-army-luck.json.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable
@@ -33,6 +34,8 @@ rva	kind
 0x0008a3d8	fppool
 0x0008a3e0	fppool
 0x0008a3e8	fppool
+0x0008a3f0	fppool
+0x0008a3f8	fppool
 0x0008a758	vtable
 0x0008d070	
 0x0008d074	
@@ -141,6 +144,7 @@ rva	kind
 0x00091648	
 0x00091650	
 0x00091680	
+0x00091810	
 0x00091880	
 0x000918b0	
 0x000918d0	
@@ -158,7 +162,6 @@ rva	kind
 0x00092190	
 0x00092198	
 0x000921e0	
-0x00092288	
 0x0009232c	
 0x00092330	
 0x0009238c	

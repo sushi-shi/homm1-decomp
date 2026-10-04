@@ -7113,7 +7113,7 @@
     "instruction": "0x17089",
     "owner_rva": "0x16fdc",
     "source_correspondence": "army::CheckLuck",
-    "meaning": "Localized bad-luck combat message; the next function requiring message and complete source correspondence review."
+    "meaning": "Unchanged badluck.82m resource filename; corrected during the subsequent complete CheckLuck review (buka-army-luck.json)."
   },
   "diagnostic_scope": "The temporary proof is an independent correspondence review, not a production comparer or matching mask. Incorrect entry-register, member-field, branch and argument mutations, and an incorrect 32-bit byte-argument contract are all rejected. Strict byte comparison remains unchanged.",
   "case_fold_recheck": [
@@ -7383,8 +7383,8 @@
     }
   ],
   "validation": {
-    "build": "All production sources compile. Strict delinking advances from DoAttack to the CheckLuck message at 0x8eff4.",
-    "build_verify": "Same unprovided CheckLuck message identity 0x8eff4.",
+    "build": "All production sources compile. Strict delinking advances from DoAttack to the CheckLuck sound filename at 0x8eff4.",
+    "build_verify": "Same unprovided CheckLuck sound filename identity 0x8eff4.",
     "link": "663552-byte candidate; zero unresolved externals or duplicate-symbol warnings; no /FORCE.",
     "correspondence": "Final object passes all 1139 paired steps accounting for 1141 retail instructions, all 173 reachable blocks and 285 edges, seven retail-confirmed narrow argument contracts, 195 ordered references and bijective stack identity checks. Two boolean sequences are checked exhaustively for every signed-byte input. Five deliberate-invalid controls are rejected.",
     "messages": "All thirteen DoAttack literal identities are now emitted at the verified retail addresses with full payload extents. All five existing combat case folds rechecked for every possible input byte.",

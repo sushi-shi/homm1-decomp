@@ -886,3 +886,6 @@ HOMM1_MESSAGE("combat.fragment.destroy_singular", "destroys")
 HOMM1_MESSAGE("combat.fragment.destroy_plural", "destroy")
 HOMM1_MESSAGE("combat.genie.half_army.buka", "%s %s half the enemy troops!")
 HOMM1_MESSAGE("combat.fragment.does_damage_singular", "does")
+
+HOMM1_MESSAGE("combat.luck.bad.buka", "Bad luck descends on the %s")
+HOMM1_MESSAGE("combat.luck.good.buka", "Good luck shines on the %s")

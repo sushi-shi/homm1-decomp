@@ -3523,3 +3523,11 @@ msgstr "%s %s уничтожил вражеских воинов!"
 msgctxt "combat.fragment.does_damage_singular"
 msgid "does"
 msgstr "наносит"
+
+msgctxt "combat.luck.bad.buka"
+msgid "Bad luck descends on the %s"
+msgstr "Неудача! Атака %s наносит меньший урон."
+
+msgctxt "combat.luck.good.buka"
+msgid "Good luck shines on the %s"
+msgstr "Удача! Отряд %s наносит двойной урон!"

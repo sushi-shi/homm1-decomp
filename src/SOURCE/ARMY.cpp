@@ -1296,7 +1296,7 @@ secondStrike:
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0040a415, 0x49)
+VA(0x00416cdf, 0x3d)
 void army::ResetPath(void) {
     i16 i;
 
@@ -1306,13 +1306,13 @@ void army::ResetPath(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0040a45e, 0x27)
+VA(0x00416d1c, 0x1c)
 i16 army::WalkTo(void) {
     return WalkTo(m_moveTargetHex);
 }
 
 // Walks the found path one hex at a time, at most the stack's speed.
-VA(0x0040a485, 0xfc)
+VA(0x00416d38, 0xe6)
 i16 army::WalkTo(i16 destHex) {
     i8 step;
     i32 moved;
@@ -1322,7 +1322,7 @@ i16 army::WalkTo(i16 destHex) {
         return ARMY_PATH_BLOCKED;
     moved = 0;
     for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
-        Walk(gpSearchArray->m_directions[step], 0, gpSearchArray->m_pathLength - 1 != step);
+        Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
         moved++;
         if (moved >= m_stats.speed)
             step = -1;
@@ -1333,13 +1333,13 @@ i16 army::WalkTo(i16 destHex) {
     return 0;
 }
 
-VA(0x0040a581, 0x27)
+VA(0x00416e1e, 0x1c)
 i16 army::AttackTo(void) {
     return AttackTo(m_moveTargetHex);
 }
 
 // Flyers jump next to the target; walkers stop short when out of moves.
-VA(0x0040a5a8, 0x1c9)
+VA(0x00416e3a, 0x1a2)
 i16 army::AttackTo(i16 destHex) {
     i8 step;
     i32 moved;
@@ -1350,7 +1350,7 @@ i16 army::AttackTo(i16 destHex) {
         DoAttack(0);
         return 0;
     }
-    if ((m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) && m_hex == m_moveTargetHex) {
+    if ((m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) && m_moveTargetHex == m_hex) {
         DoAttack(0);
         return 0;
     }
@@ -1362,7 +1362,7 @@ i16 army::AttackTo(i16 destHex) {
             step = 0;
             moved = 0;
             for (step = gpSearchArray->m_pathLength - 1; step; step--) {
-                Walk(gpSearchArray->m_directions[step], 0, gpSearchArray->m_pathLength - 1 != step);
+                Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
                 moved++;
                 if (moved >= m_stats.speed && step != 1) {
                     Stand(1);
@@ -1379,10 +1379,7 @@ i16 army::AttackTo(i16 destHex) {
     return ARMY_PATH_BLOCKED;
 }
 
-// donor PoL RVA 0x0004f93e; preferred Buka symbol ?CheckLuck@army@@QAEXXZ
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:1;base=0.723107;margin=0.234495;shape=0.473;size=0.925;calls=0.875;strings=badluck.82m|goodluck.82m;alternate=pol20:void army::CheckLuck(void)@0x0004f93e
-VA(0x0040a771, 0x249)
+VA(0x00416fdc, 0x1a0)
 void army::CheckLuck(void) {
     i32 luck;
 
@@ -1395,7 +1392,7 @@ void army::CheckLuck(void) {
     if (luck < 0 && SRandom(1, 12) < -luck)
         m_luck = ARMY_LUCK_BAD;
     if (m_luck) {
-        class sample* sample = NULL;
+        class sample* sample;
         if (m_luck < 0)
             sprintf(gText, "badluck.82m");
         else
@@ -1404,8 +1401,8 @@ void army::CheckLuck(void) {
         if (m_luck < 0) {
             sprintf(
                 gText,
-                "Bad luck descends on the %s",
-                CREATURE_DISPLAY_NAME(m_creatureType, m_quantity)
+                localization::Tr("combat.luck.bad.buka"),
+                gArmyNamesPlural[m_creatureType]
             );
             gpCombatManager->CombatMessage(gText, 1);
             Wince();
@@ -1413,8 +1410,8 @@ void army::CheckLuck(void) {
         } else {
             sprintf(
                 gText,
-                "Good luck shines on the %s",
-                CREATURE_DISPLAY_NAME(m_creatureType, m_quantity)
+                localization::Tr("combat.luck.good.buka"),
+                gArmyNamesPlural[m_creatureType]
             );
             gpCombatManager->CombatMessage(gText, 1);
             Stand(1);
@@ -1425,10 +1422,7 @@ void army::CheckLuck(void) {
     }
 }
 
-// donor PoL RVA 0x0004fbc0; preferred Buka symbol ?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.387284;margin=0.228483;shape=0.296;size=0.628;calls=0.714;alternate=pol20:void army::DamageEnemy(class army *, int *, int *, int, int)@0x0004fbc0
-VA(0x0040a9ba, 0x26c)
+VA(0x0041717c, 0x215)
 void army::DamageEnemy(
     class army* target,
     i32* damageResult,
@@ -1480,8 +1474,8 @@ void army::DamageEnemy(
         total /= 2;
     damage = static_cast<i32>(total + 0.5);
     if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
-        halfDamage = target->m_stats.hitPoints * ((target->m_quantity + 1) / 2);
-        if (damage < halfDamage) {
+        halfDamage = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
+        if (halfDamage > damage) {
             gGenieHalf = 1;
             damage = halfDamage;
         }
@@ -1494,11 +1488,8 @@ void army::DamageEnemy(
     *killedResult = target->Damage(damage);
 }
 
-// donor PoL RVA 0x0005012e; preferred Buka symbol ?Damage@army@@QAEHJH@Z
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:6;base=0.419408;margin=1.157007;shape=0.216;size=0.693;calls=1.000;alternate=pol20:int army::Damage(long int, int)@0x0005012e
 // A stack whose spell (2) breaks on damage loses it.
-VA(0x0040ac26, 0x176)
+VA(0x00417391, 0x160)
 i32 army::Damage(i32 damage) {
     i8 facing;
     i32 minKilled;
@@ -1514,9 +1505,9 @@ i32 army::Damage(i32 damage) {
         m_powFrames = ARMY_POW_FRAMES_HIT;
     else
         m_powFrames = ARMY_POW_NONE;
-    if (m_quantity < kills)
+    if (kills > m_quantity)
         kills = m_quantity;
-    m_quantity = m_quantity - kills;
+    m_quantity -= kills;
     if (m_quantity <= 0)
         m_powFrames = ARMY_POW_FRAMES_KILLED;
     facing = m_facing;

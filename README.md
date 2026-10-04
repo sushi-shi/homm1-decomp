@@ -52,8 +52,10 @@ CP1251 case helpers and catalog fragments with original English preserved.
 The hydra attack, directional wrapper and melee attack are migrated. The melee
 attack has complete CFG and register-dataflow correspondence, with its remaining
 byte differences documented; the ranged attack still needs full review.
-Strict delinking reaches `CheckLuck`, stopping at its bad-luck message
-(`0x8eff4`); overlapping inherited data claims also remain. The old score ledger
+Movement, luck and damage routines now have complete instruction and CFG
+reviews. Luck messages use plural creature names; damage rules and all combat
+multipliers remain unchanged. Strict delinking reaches `PowEffect`, stopping
+at its effect-name table (`0x90308`); inherited data overlaps also remain. The old score ledger
 has been reset.
 Supply your own game executable and assets; they are not included here.
 
