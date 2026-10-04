@@ -347,6 +347,17 @@ checks its input fingerprint. Deferred: completing the Buka identity migration
 and the existing full verification gates. No donor command parity is claimed.
 
 
+The Buka baseline README rollup reuses HoMM1's module classifier and Markdown
+table formatter. Reviewed Gruntz `5287280c97453c356a8ec835676ece8b498ca953`
+`verify/readme.py` and HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`match/status.py`: retained generated blocks, module ownership and byte-weighted
+fuzzy reporting; adapted the rollup to the complete Buka census, counting
+unscored rows as zero and retaining unknown owners in an explicit unmapped row.
+MAX/HIST banking remains deferred until strict verification is complete; no
+score policy or normalization changed. Existing logged command entry points
+are retained.
+
+
 ## Buka assembly claim transport
 
 Reviewed HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
@@ -378,3 +389,23 @@ No parallel exporter or new tooling entry point was introduced. Real-COFF
 controls cover the positive case, absent references, adjacent zeros, nonzero or
 unmapped payloads, incompatible storage, and compiler-proven BSS inside PE
 FileAlignment slack. See [the compiler observation](patterns/vc6-empty-string-bss.md).
+
+The Buka RVA pass also exercises Clang extraction of the Audiere units for
+which VA annotations were previously absent. The Giten/Gruntz lowercase SDK
+mirror and HoMM2 `init/clangd.py` at the revisions recorded above have no VC6
+STL syntax repair. The existing compdb generator now adds a generated,
+Clang-only overlay: explicit template specializations, defaults retained at
+first declarations, and qualified iterator/ios flag names. `/EHsc` permits
+parsing SDK throw expressions. The original VC6 headers, compiler profiles,
+matching objects and source bodies are unchanged. This adapts metadata
+extraction without substituting a different STL or bypassing failed units.
+
+The full RVA pass exposed one baseline eligibility omission: the ordinary
+Giten-derived model materializes both `src` and `src_compgen` from real COFF
+bodies, while the temporary lower-bound reporter admitted only `src`.
+`VA_COMPGEN` bodies now pass through the same reviewed-identity, report-body,
+reference-site and absolute-relocation checks. Declarations and unbound
+initializers remain ineligible. No byte normalization, reference rule,
+denominator or MAX policy changes. The previously reviewed complete scalar
+destructor controls provide the end-to-end positive controls; the existing
+unknown/conflicting-reference tests remain negative controls.

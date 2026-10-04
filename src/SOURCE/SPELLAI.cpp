@@ -98,7 +98,7 @@ H1_ENUM_END(CombatSpellAITargetMode)
 
 // Buka SPELLAI.cpp:141-733 reduced to HoMM1's nineteen combat spells: each
 // spell is scored once, across the area grid, or over one side's stacks.
-VA(0x00464d9d, 0x4b4)
+VA(0x00458f76, 0x42d)
 void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 spellEffect;
     i32 durMax;
@@ -238,7 +238,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
 
 // Buka SPELLAI.cpp:802-960: a spell's value as a share of the stack's
 // fight value.
-VA(0x00465251, 0x2e0)
+VA(0x004593a3, 0x246)
 i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
     i32 stackValue;
     i32 effect;
@@ -337,7 +337,7 @@ i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
 
 // Buka SPELLAI.cpp:1022-1136: the value of cancelling a side's (2: both
 // sides') spell effects; HoMM1 stacks carry a single effect.
-VA(0x0046565b, 0x273)
+VA(0x004596de, 0x20c)
 void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
     i32 curSide;
     i32 negEffect;
@@ -396,7 +396,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
 
 // Buka SPELLAI.cpp:1147-1166: the fight value Resurrect would restore to
 // the stack on hex.
-VA(0x004658ce, 0xf9)
+VA(0x004598ea, 0xd4)
 void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     army* targetArmy;
     i32 resurrectPower;
@@ -417,7 +417,7 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
 
 // Buka SPELLAI.cpp:1183-1525: the net fight value a damage spell destroys,
 // or a decisive value when it wipes out a side.
-VA(0x004659c7, 0x4ed)
+VA(0x004599be, 0x491)
 void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex) {
     i32 partValue[COMBAT_SIDE_COUNT];
     i32 killed;

@@ -585,7 +585,7 @@ void DDUpdatePalette(i8* paletteData) {
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.511358;margin=0.374406;shape=0.341;size=0.862;calls=1.000;alternate=pol20:void DDCleanUpWinGraphics(void)@0x00036539
-VA(0x004360af, 0x17f)
+VA(0x0046764c, 0x154)
 #line 550 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDCleanUpWinGraphics(void) {
     // Both locals survive in Buka591-632 and PoL481-519; restoreVal is written.
@@ -628,7 +628,7 @@ void DDCleanUpWinGraphics(void) {
 // donor PoL RVA 0x000366b0; preferred Buka symbol ?DDSetFullScreenStatus@@YIXH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.474854;margin=0.471351;shape=0.269;size=0.849;calls=1.000;alternate=pol20:void DDSetFullScreenStatus(int)@0x000366b0
-VA(0x0043622e, 0x2ea)
+VA(0x004677a0, 0x291)
 #line 596 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDSetFullScreenStatus(i32 fullScreen) {
     i32 w;
@@ -962,7 +962,7 @@ void ConnectToDLLs() {
 }
 
 // Buka's DLL teardown checks the Win32 module handle before release.
-VA(0x00436d48, 0x29)
+VA(0x004681b1, 0x1a)
 void DisconnectDLLs() {
     if (reinterpret_cast<u32>(gDDrawLibrary)
         >= HINSTANCE_ERROR) // API-forced: LoadLibrary returns an error code below HINSTANCE_ERROR
@@ -971,7 +971,7 @@ void DisconnectDLLs() {
 
 // @dead-code
 // Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
-VA(0x00436d71, 0x2c)
+VA(0x004681cb, 0x15)
 void RestoreDisplayMode() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return;
@@ -1046,7 +1046,7 @@ void UpdatePalette(i8* paletteData) {
         DDUpdatePalette(paletteData);
 }
 
-VA(0x00436f59, 0x31)
+VA(0x0046831d, 0x1f)
 void CleanUpWinGraphics() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         WGCleanUpWinGraphics();
@@ -1058,7 +1058,7 @@ void CleanUpWinGraphics() {
 // donor PoL RVA 0x00037483; preferred Buka symbol ?SetFullScreenStatus@@YIXH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.430220;margin=0.650390;shape=0.175;size=0.870;calls=0.800;alternate=pol20:void SetFullScreenStatus(int)@0x00037483
-VA(0x00436f8a, 0xb9)
+VA(0x0046833c, 0x84)
 void SetFullScreenStatus(i32 fullScreen) {
     if (gInSmacker != 0)
         return;
@@ -1078,7 +1078,7 @@ void SetFullScreenStatus(i32 fullScreen) {
     }
 }
 
-VA(0x00437043, 0x31)
+VA(0x004683c0, 0x1a)
 BOOL QueryNewPalette() {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGQueryNewPalette();
@@ -1089,7 +1089,7 @@ BOOL QueryNewPalette() {
 // donor PoL RVA 0x00037595; preferred Buka symbol ?SetGraphicsType@@YIHH@Z
 // donor Buka TU SOURCE/wingraph; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.565182;margin=0.258783;shape=0.434;size=0.909;calls=1.000;alternate=pol20:int SetGraphicsType(int)@0x00037595
-VA(0x00437074, 0x1f3)
+VA(0x004683da, 0x1c6)
 BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     void* screenBuffer;
     i32 w;

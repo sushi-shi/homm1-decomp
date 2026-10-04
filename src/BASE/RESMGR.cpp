@@ -91,7 +91,7 @@ palette* resourceManager::GetPalette(char* name) {
     }
 }
 
-VA(0x00479660, 0x96)
+VA(0x0046c31b, 0xc0)
 bitmap* resourceManager::GetBitmap(char* name) {
     i16 id = MakeId(name);
     resource* resourceEntry = Query(id);
@@ -155,7 +155,7 @@ font* resourceManager::GetFont(char* name) {
 }
 
 // Buka keeps the cached resource references and uses the filename-only loader.
-// Buka retail VA 0x0046c646, size 0xbd.
+VA(0x0046c646, 0xbf)
 class sample* resourceManager::GetSample(char* name) {
     i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
@@ -326,7 +326,7 @@ void resourceManager::PointToFile(i16 fileId) {
 }
 
 // Single-aggregate variant of the Buka 2.1 directory lookup.
-VA(0x00479f50, 0xe4)
+VA(0x0046cb72, 0xc1)
 u32 resourceManager::GetFileSize(i16 fileId) {
     if (m_aggregateDir == NULL)
         return 0;

@@ -14,7 +14,8 @@
 
 #include <stdlib.h>
 
-VA(0x0047a2b0, 0x6d)
+VA_COMPGEN(0x00470f5f, 0x2b, "??1icon@@UAE@XZ", 0x00470ea0)
+VA(0x00470ea0, 0xbf)
 icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_frameCount = gpResourceManager->ReadWord();
@@ -27,7 +28,7 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     PostprocessIcon(this);
 }
 
-VA_COMPGEN(0x0047a320, 0x33, "??_Gicon@@UAEPAXI@Z", 0x0047a2b0)
+VA_COMPGEN(0x00471740, 0x2e, "??_Gicon@@UAEPAXI@Z", 0x00470ea0)
 icon::~icon(void) {
     free(m_data);
 }

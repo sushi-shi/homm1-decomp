@@ -125,7 +125,7 @@ H1_ENUM_CONST_END(HouseEventConstant)
 // donor PoL RVA 0x000a8530; preferred Buka symbol ?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.400929;margin=0.083641;shape=0.269;size=0.325;calls=0.342;strings=%s %s|thiefwin.bin;alternate=pol20:void advManager::DoEvent(class mapCell *, int, int)@0x000a8530
-// NWC 1.2: VA 0x00401000, size 0x1f1a; Buka identity awaits review.
+VA(0x00424a50, 0x1d9d)
 void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* pHero;
     tag_message unused;
@@ -1265,7 +1265,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
 // Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
 // falls back to the trigger kept in the low seven bits of byte 7 and borrows
 // the metadata of a neighbouring cell with that trigger.
-VA(0x00402f1a, 0x1f9)
+VA(0x004267ed, 0x1c8)
 void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     i8 erased = 0;
     i32 j;
@@ -1318,7 +1318,7 @@ void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
 // donor PoL RVA 0x000af87c; preferred Buka symbol ?TownEvent@advManager@@QAEXPAVmapCell@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.530630;margin=0.268223;shape=0.333;size=0.946;calls=1.000;alternate=pol20:void advManager::TownEvent(class mapCell *, int, int)@0x000af87c
-VA(0x004031e0, 0x1bf)
+VA(0x00426a58, 0x191)
 void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
     hero* curHero;
     i32 result;
@@ -1557,7 +1557,7 @@ void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
 // donor PoL RVA 0x000b022e; preferred Buka symbol ?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
-VA(0x004038cf, 0xec)
+VA(0x0042706d, 0xbf)
 void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class mapCell* cell) {
     tag_message message;
     i16 availableCount;
@@ -1707,7 +1707,7 @@ i8 advManager::GhostEvent(class hero* eventHero, class mapCell* cell, i32 textId
 // donor PoL RVA 0x000b0add; preferred Buka symbol ?HouseEvent@advManager@@QAEXPAVhero@@PAVmapCell@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.402651;margin=0.176834;shape=0.333;size=0.492;calls=1.000;alternate=pol20:void advManager::HouseEvent(class hero *, class mapCell *)@0x000b0add
-VA(0x00403c9b, 0x11e)
+VA(0x004273d8, 0x103)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     i16 houseIndex;
 
@@ -1833,7 +1833,7 @@ i8 advManager::CombatMonsterEvent(
 
 // Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
 // bonuses here and is called through gpAdvManager.
-VA(0x00403fb9, 0x243)
+VA(0x004276bd, 0x1e4)
 void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
     i8 stat = HERO_PRIMARY_NONE;
     i8 amount = 0;
@@ -1940,7 +1940,7 @@ void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 ta
 // donor PoL RVA 0x000b1973; preferred Buka symbol ?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.505054;margin=0.383531;shape=0.360;size=0.848;calls=0.800;alternate=pol20:void advManager::TransferArtifacts(class hero *, class hero *)@0x000b1973
-VA(0x004041fc, 0x200)
+VA(0x004278a1, 0x1ed)
 void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero) {
     i16 i;
     i16 j;
@@ -2013,7 +2013,7 @@ void advManager::HeroLoses(class hero* lostHero) {
 // donor PoL RVA 0x000b1bcf; preferred Buka symbol ?DoWhirlpool@advManager@@QAEXPAVhero@@@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
-VA(0x00404479, 0x137)
+VA(0x00427af9, 0x122)
 void advManager::DoWhirlpool(class hero* eventHero) {
     i32 weakest;
     i16 slotNo;
@@ -2050,7 +2050,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 // donor PoL RVA 0x000b1d01; preferred Buka symbol ?FizzleCenter@advManager@@QAEXH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
-VA(0x004045b0, 0x113)
+VA(0x00427c1b, 0xc2)
 void advManager::FizzleCenter(i32 fizzleType) {
     class sample* fizzleSample;
 
@@ -2084,7 +2084,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
 // donor PoL RVA 0x000b1e43; preferred Buka symbol ?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
-VA(0x004046c3, 0x1141)
+VA(0x00427cdd, 0x1005)
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
     i32 troopType;
     i32 available;
@@ -2532,7 +2532,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
 // donor PoL RVA 0x000b4fd5; preferred Buka symbol ?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PAHHHHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.214069;margin=0.493239;shape=0.272;size=0.223;calls=0.212;alternate=pol20:void advManager::PlayerMonsterInteract(class mapCell *, class mapCell *, class hero *, int *, int, int, int, int, int)@0x000b4fd5
-VA(0x00405804, 0x19a)
+VA(0x00428ce2, 0x17d)
 void advManager::PlayerMonsterInteract(
     class mapCell* cell,
     class mapCell* combatCell,
@@ -2607,7 +2607,7 @@ void advManager::PlayerMonsterInteract(
 
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
-VA(0x0040599e, 0x152)
+VA(0x00428e5f, 0x139)
 void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled) {
     i32 numToBuy;
     i32 purchaseValue;
@@ -2799,7 +2799,7 @@ struct heroRemoteMessage {
 // donor PoL RVA 0x000b5e10; preferred Buka symbol ?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.590184;margin=0.564001;shape=0.455;size=0.978;calls=0.927;alternate=pol20:int advManager::DoCombat(int, int, class hero *, class armyGroup *, class town *, class hero *, class armyGroup *, int, int, int, int)@0x000b5e10
-VA(0x00405c7f, 0x5c6)
+VA(0x00429107, 0x584)
 i32 advManager::DoCombat(
     i32 x,
     i32 y,
@@ -3112,7 +3112,7 @@ void advManager::SendHeroTownData(
 // donor PoL RVA 0x000b67cd; preferred Buka symbol ?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.493176;margin=0.152223;shape=0.314;size=0.857;calls=0.909;alternate=pol20:void advManager::ReceiveHeroTownData(char *, int *, int *, int *, class hero * *, class armyGroup * *, class town * *, class hero * *, class armyGroup * *, int *, int *, int *, signed char *, signed char *, signed char *)@0x000b67cd
-VA(0x0040651f, 0x34c)
+VA(0x0042990d, 0x30f)
 void advManager::ReceiveHeroTownData(
     char* packet,
     i32* remotePlayer,

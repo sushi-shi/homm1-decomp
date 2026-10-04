@@ -1,0 +1,1207 @@
+# Buka function identity inventory. All existing 1,203 baseline entries retained.
+# Image SHA256: 34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db
+# semantic-only names are behavior descriptions, not original symbols; no score is inferred.
+rva	size	unit	name	status	evidence
+0x00001000	0x2af	SOURCE/ADVMGR	??0advManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000012af	0x14	SOURCE/ADVMGR	??1advManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000012c3	0xd5d	SOURCE/ADVMGR	?Open@advManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00002020	0x388	SOURCE/ADVMGR	?Close@advManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000023a8	0xa2	SOURCE/ADVMGR	?GetCursorSampleSet@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000244a	0x541	SOURCE/ADVMGR	?DoAdvCommand@advManager@@QAEPAVmapCell@@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000298b	0xc7e	SOURCE/ADVMGR	?Main@advManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00003609	0x17	SOURCE/ADVMGR	?Reseed@advManager@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00003620	0xe55	SOURCE/ADVMGR	?ProcessSelect@advManager@@QAEHPAUtag_message@@PAPAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00004475	0x1ac	SOURCE/ADVMGR	?ProcessDeSelect@advManager@@QAEHPAUtag_message@@PAHPAPAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00004621	0x428	SOURCE/ADVMGR	?ProcessSearch@advManager@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00004a49	0xae7	SOURCE/ADVMGR	?ProcessHover@advManager@@QAEHPAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00005530	0x279	SOURCE/ADVMGR	?UpdateScreen@advManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000057a9	0x325	SOURCE/ADVMGR	?CompleteDraw@advManager@@QAEXFFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00005ace	0x2f	SOURCE/ADVMGR	?CompleteDraw@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00005afd	0x3fe	SOURCE/ADVMGR	?GetCloudLookup@advManager@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00005efb	0xe2b	SOURCE/ADVMGR	?DrawCell@advManager@@QAEXFFFFCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00006d26	0x58	SOURCE/ADVMGR	?GetCell@advManager@@QAEPAVmapCell@@FF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00006d7e	0x4f8	SOURCE/ADVMGR	?UpdateRadar@advManager@@QAEXCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007276	0x50f	SOURCE/ADVMGR	?QuickInfo@advManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007785	0x360	SOURCE/ADVMGR	?UpdateHeroLocator@advManager@@QAEXHCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007ae5	0xd3	SOURCE/ADVMGR	?UpdateHeroLocators@advManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007bb8	0x225	SOURCE/ADVMGR	?UpdateTownLocators@advManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007ddd	0x143	SOURCE/ADVMGR	?UpdBottomView@advManager@@QAEXCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00007f20	0x126	SOURCE/ADVMGR	?ClearBottomView@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00008046	0x52f	SOURCE/ADVMGR	?UpdBottomViewEnemyTurn@advManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00008575	0x372	SOURCE/ADVMGR	?UpdBottomViewNewTurn@advManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000088e7	0x38f	SOURCE/ADVMGR	?UpdBottomViewResMsg@advManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00008c76	0x36e	SOURCE/ADVMGR	?UpdBottomViewKingdom@advManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00008fe4	0x585	SOURCE/ADVMGR	?UpdBottomViewHero@advManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00009569	0xc9f	SOURCE/ADVMGR	?HeroQuickView@advManager@@QAEXCCFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000a208	0xad	SOURCE/ADVMGR	?GetArmySizeName@advManager@@QAEPADFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000a2b5	0xb88	SOURCE/ADVMGR	?TownQuickView@advManager@@QAEXCCFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000ae3d	0xd1	SOURCE/ADVMGR	?RedrawAdvScreen@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000af0e	0x14	SOURCE/ADVMGR	?DeactivateCurrTown@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000af22	0x1c	SOURCE/ADVMGR	?DeactivateCurrHero@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000af3e	0x41	SOURCE/ADVMGR	?MobilizeCurrHero@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000af7f	0x15e	SOURCE/ADVMGR	?DemobilizeCurrHero@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000b0dd	0x224	SOURCE/ADVMGR	?SetTownContext@advManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000b301	0x38d	SOURCE/ADVMGR	?SetHeroContext@advManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000b68e	0x245	SOURCE/ADVMGR	?DoHeroKnob@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000b8d3	0x245	SOURCE/ADVMGR	?DoTownKnob@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000bb18	0x3a6	SOURCE/ADVMGR	?ViewPuzzle@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000bebe	0x1e5	SOURCE/ADVMGR	?PuzzleDraw@advManager@@QAEXHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000c0a3	0x1a0	SOURCE/ADVMGR	?CastSpell@advManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000c243	0x1062	SOURCE/ADVMGR	?ViewWorld@advManager@@QAEXCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000d2a5	0x36	SOURCE/ADVMGR	?GrabScreen@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000d2db	0x2eb	SOURCE/ADVMGR	?ControlPanel@advManager@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000d5c6	0x207	SOURCE/ADVMGR	?UpdateCPanel@@YAXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000d7cd	0x205	SOURCE/ADVMGR	?SaveGame@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000d9d2	0x49e	SOURCE/ADVMGR	?CPanelHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000de70	0x95	SOURCE/ADVMGR	?CheckCastSpell@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000df05	0x1ce	SOURCE/ADVMGR	?AdvPanel@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000e0d3	0x150	SOURCE/ADVMGR	?APanelHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000e223	0x29e	SOURCE/ADVMGR	?DimensionDoorHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000e4c1	0xb48	SOURCE/ADVMGR	?ComboDraw@advManager@@QAECFFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f009	0x2f	SOURCE/ADVMGR	?ComboDraw@advManager@@QAECH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f038	0x2bb	SOURCE/ADVMGR	?SetEnvironmentOrigin@advManager@@QAEXFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f2f3	0x5a	SOURCE/ADVMGR	?CheckLoadSample@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f34d	0x20f	SOURCE/ADVMGR	?InsertSound@advManager@@QAEXFFFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f55c	0x2f7	SOURCE/ADVMGR	?TeleportTo@advManager@@QAEXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000f853	0x1fd	SOURCE/ADVMGR	?DimensionDoor@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000fa50	0x240	SOURCE/ADVMGR	?TownGate@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0000fc90	0x4bb	SOURCE/ADVMGR	?SummonBoat@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001014b	0x2de	SOURCE/ADVMGR	?ShowRoute@advManager@@QAEXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010429	0xd1	SOURCE/ADVMGR	?HideRoute@advManager@@QAEXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000104fa	0x7d	SOURCE/ADVMGR	?CheckDimHero@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010577	0x63	SOURCE/ADVMGR	?CheckDimNextHeroBut@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000105da	0x12d	SOURCE/ADVMGR	?SeedTo@advManager@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010707	0x3f	SOURCE/ADVMGR	?ForceNewHover@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010746	0x1d0	SOURCE/ADVMGR	?ScreenScroll@advManager@@QAEXCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010916	0x197	SOURCE/ADVMGR	?CheckScreenScroll@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010aad	0x79	SOURCE/ADVMGR	?MouseInScrollZone@advManager@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010b26	0x248	SOURCE/ADVMGR	?SetInitialMapOrigin@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010d6e	0x131	SOURCE/ADVMGR	?LoadRemote@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010e9f	0x13b	SOURCE/ADVMGR	?CheckHandleNet@advManager@@QAEPADXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00010fda	0xa2	SOURCE/ADVMGR	?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001107c	0x1a2	SOURCE/ADVMGR	?TrimLoopingSounds@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001121e	0xc3	SOURCE/ADVMGR	?DisableButtons@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000112e1	0xc3	SOURCE/ADVMGR	?EnableButtons@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000113a4	0x13e	SOURCE/ADVMGR	?SaveAdventureBorder@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000114e2	0x134	SOURCE/ADVMGR	?DrawAdventureBorder@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00011616	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0001163d	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00011650	0x5		std::ctype<wchar_t>::id cleanup	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00011660	0x728	SOURCE/AI	?AICheckRetreat@combatManager@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00011d88	0x872	SOURCE/AI	?DoCompAI@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000125fa	0xb7	SOURCE/AI	?GetShooterMask@combatManager@@QAEFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000126b1	0xa9	SOURCE/AI	?GetFlyerMask@combatManager@@QAEFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001275a	0xc4	SOURCE/AI	?GetWalkerMask@combatManager@@QAEFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001281e	0x9f	SOURCE/AI	?GetBestArmy@combatManager@@QAEFCF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000128bd	0x9f	SOURCE/AI	?GetWorstArmy@combatManager@@QAEFCF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001295c	0x102	SOURCE/AI	?GetClosestArmy@combatManager@@QAEFPAVarmy@@CF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00012a5e	0xb1	SOURCE/AI	?GetStrength@combatManager@@QAEICF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00012b0f	0x183	SOURCE/AI	?AttemptAttack@combatManager@@QAECPAVarmy@@CF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00012c92	0x27c	SOURCE/AI	?AttemptAdjacentAttack@combatManager@@QAECPAVarmy@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00012f0e	0x1ea	SOURCE/AI	?WalkTowardArmyFront@combatManager@@QAECPAVarmy@@CF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000130f8	0x1f6	SOURCE/AI	?WalkTowardArmy@combatManager@@QAECPAVarmy@@CF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000132ee	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00013315	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00013330	0xbc	SOURCE/ARMY	??0army@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000133ec	0x64	SOURCE/ARMY	?InitClean@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00013450	0x105	SOURCE/ARMY	?Init@army@@QAEXCFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00013555	0x20b	SOURCE/ARMY	?LoadResources@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00013760	0xd4	SOURCE/ARMY	?FreeResources@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00013834	0x7a5	SOURCE/ARMY	?DrawToBuffer@army@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00013fd9	0x55	SOURCE/ARMY	?Stand@army@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001402e	0x56	SOURCE/ARMY	?Wince@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00014084	0x7d0	SOURCE/ARMY	?Walk@army@@QAEXFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00014854	0xc74	SOURCE/ARMY	?SpecialAttack@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000154c8	0x763	SOURCE/ARMY	?DoHydraAttack@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00015c2b	0x22	SOURCE/ARMY	?DirDoAttack@army@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00015c4d	0x1092	SOURCE/ARMY	?DoAttack@army@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016cdf	0x3d	SOURCE/ARMY	?ResetPath@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016d1c	0x1c	SOURCE/ARMY	?WalkTo@army@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016d38	0xe6	SOURCE/ARMY	?WalkTo@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016e1e	0x1c	SOURCE/ARMY	?AttackTo@army@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016e3a	0x1a2	SOURCE/ARMY	?AttackTo@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00016fdc	0x1a0	SOURCE/ARMY	?CheckLuck@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001717c	0x215	SOURCE/ARMY	?DamageEnemy@army@@QAEXPAV1@PAH1HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00017391	0x160	SOURCE/ARMY	?Damage@army@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000174f1	0x87e	SOURCE/ARMY	?PowEffect@army@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00017d6f	0x25	SOURCE/ARMY	?Strength@army@@QAEIXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00017d94	0x11b	SOURCE/ARMY	?SpellEffect@army@@QAEXFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00017eaf	0x9a	SOURCE/ARMY	?CancelSpell@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00017f49	0x1d6	SOURCE/ARMY	?GoBerserk@army@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001811f	0x34a	SOURCE/ARMY	?MoveAttack@army@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018469	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00018490	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000184b0	0x31	SOURCE/ARMYGRP	??0armyGroup@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000184e1	0xd	SOURCE/ARMYGRP	?View@armyGroup@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000184ee	0x11b	SOURCE/ARMYGRP	?GetMorale@armyGroup@@QAEFPAVhero@@PAVtown@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018609	0x26	SOURCE/ARMYGRP	?Dismiss@armyGroup@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001862f	0x47	SOURCE/ARMYGRP	?IsMember@armyGroup@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018676	0x13e	SOURCE/ARMYGRP	?IsHomogeneous@armyGroup@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000187b4	0x3b	SOURCE/ARMYGRP	?CanJoin@armyGroup@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000187ef	0x52	SOURCE/ARMYGRP	?GetNumArmies@armyGroup@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018841	0xfe	SOURCE/ARMYGRP	?Add@armyGroup@@QAEFCFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001893f	0x77	SOURCE/ARMYGRP	?Swap@armyGroup@@QAEXCPAV1@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000189b6	0x133	SOURCE/ARMYGRP	?DamageGroup@armyGroup@@QAEXM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018ae9	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00018b10	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00018b30	0x18b	SOURCE/CMBTMGR	??0combatManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018cbb	0x118	SOURCE/CMBTMGR	?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00018dd3	0x345	SOURCE/CMBTMGR	?SetupCombat@combatManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00019118	0x401	SOURCE/CMBTMGR	?Open@combatManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00019519	0x211	SOURCE/CMBTMGR	?Close@combatManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001972a	0x13b	SOURCE/CMBTMGR	?UpdateArmyGroup@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00019865	0x797	SOURCE/CMBTMGR	?GenerateMap@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00019ffc	0x127	SOURCE/CMBTMGR	?GetBackgroundName@combatManager@@QAEPADXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a123	0x1d5	SOURCE/CMBTMGR	?MoreTreesNear@combatManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a2f8	0x1c4	SOURCE/CMBTMGR	?LoadIcons@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a4bc	0x6c	SOURCE/CMBTMGR	?FreeIcons@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a528	0x25f	SOURCE/CMBTMGR	?LoadArmies@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a787	0xbb	SOURCE/CMBTMGR	?FreeArmies@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a842	0xd	SOURCE/CMBTMGR	?NoShowCombatLog@combatManager@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a84f	0xa7	SOURCE/CMBTMGR	?GetGridIndex@combatManager@@QAEFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001a8f6	0x1a5	SOURCE/CMBTMGR	?CheckApplyGoodMorale@combatManager@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001aa9b	0x173	SOURCE/CMBTMGR	?CheckApplyBadMorale@combatManager@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001ac0e	0x1d9	SOURCE/CMBTMGR	?GetNextArmy@combatManager@@QAECH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001ade7	0xb5	SOURCE/CMBTMGR	?IsWinner@combatManager@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001ae9c	0xcf2	SOURCE/CMBTMGR	?CatAttack@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001bb8e	0x43	SOURCE/CMBTMGR	?RegenerateField@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001bbd1	0xae3	SOURCE/CMBTMGR	?KeepAttack@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c6b4	0xec	SOURCE/CMBTMGR	?ExperienceValueOfStack@combatManager@@QAEHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c7a0	0x5f	SOURCE/CMBTMGR	?ResetHitByCreature@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c7ff	0x27	SOURCE/CMBTMGR	?ValidHex@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c826	0x57	SOURCE/CMBTMGR	?SaveCombatBorder@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c87d	0x42	SOURCE/CMBTMGR	?DrawCombatBorder@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c8bf	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0001c8e6	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0001c900	0x27	SOURCE/CMBTMGR	??_H@YGXPAXIHP6EX0@Z@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c930	0x54	SOURCE/comwin	?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c984	0x36	SOURCE/comwin	?pop_node@@YAPAUtag_Node@@PAUtag_Anchor@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c9ba	0x18	SOURCE/comwin	?init_anchor@@YAXPAUtag_Anchor@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001c9d2	0x374	SOURCE/comwin	?ShutdownComError@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001cd46	0x302	SOURCE/comwin	?com_init@@YAFEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d048	0xde	SOURCE/comwin	?com_term@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d126	0xbe	SOURCE/comwin	?com_rcv@@YAFFGPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d1e4	0x11a	SOURCE/comwin	?com_snd@@YAFFGGPAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d2fe	0x8	SOURCE/comwin	?com_sess@@YAFHHZZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d306	0x51	SOURCE/comwin	?com_stat@@YAEFG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d357	0xc8	SOURCE/comwin	?comm_wrt_task@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d41f	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0001d446	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0001d460	0x27c	SOURCE/COMMAND	?Main@combatManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d6dc	0xa7	SOURCE/COMMAND	?ValidHexToStandOn@combatManager@@QAECH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001d783	0x704	SOURCE/COMMAND	?SetCombatDirections@combatManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001de87	0x564	SOURCE/COMMAND	?CheckSetMouseDirection@combatManager@@QAEXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001e3eb	0x1d	SOURCE/COMMAND	?GetPointer@combatManager@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001e408	0x4f8	SOURCE/COMMAND	?ProcessCombatMsg@combatManager@@QAEHAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001e900	0x122	SOURCE/COMMAND	?ResetRound@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001ea22	0x123	SOURCE/COMMAND	?CheckWin@combatManager@@QAEHPAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001eb45	0x269	SOURCE/COMMAND	?GetCommand@combatManager@@QAECF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001edae	0x171	SOURCE/COMMAND	?RightClick@combatManager@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001ef1f	0x2ea	SOURCE/COMMAND	?DoCommand@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001f209	0x180	SOURCE/COMMAND	?WinCombatHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001f389	0x108	SOURCE/COMMAND	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001f491	0x28d	SOURCE/COMMAND	?ShowWinLoseArtifact@combatManager@@QAEXPAVheroWindow@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001f71e	0x753	SOURCE/COMMAND	?ShowDeadArmies@combatManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0001fe71	0x731	SOURCE/COMMAND	?DoVictory@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000205a2	0x4dc	SOURCE/COMMAND	?DoLoseWindow@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00020a7e	0x253	SOURCE/COMMAND	?DoSurrender@combatManager@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00020cd1	0xbb	SOURCE/COMMAND	?CheckChangeSelector@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00020d8c	0xf0	SOURCE/COMMAND	?CheckCastleAttack@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00020e7c	0x5c	SOURCE/COMMAND	?CheckGetAIMove@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00020ed8	0x12b	SOURCE/COMMAND	?GetControl@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021003	0xbd	SOURCE/COMMAND	?ResetMouse@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000210c0	0x4c6	SOURCE/COMMAND	?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021586	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000215ad	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000215c0	0x143	SOURCE/CURSOR	?StartCursor@advManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021703	0x11d	SOURCE/CURSOR	?StopCursor@advManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021820	0x5a4	SOURCE/CURSOR	?DrawCursor@advManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021dc4	0x51	SOURCE/CURSOR	?GetCursorBaseFrame@advManager@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00021e15	0x20e	SOURCE/CURSOR	?TurnTo@advManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00022023	0x104	SOURCE/CURSOR	?GetMoveShowIt@advManager@@QAEHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00022127	0xccd	SOURCE/CURSOR	?MoveHero@advManager@@QAEPAVmapCell@@CCPAH00CPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00022df4	0x161	SOURCE/CURSOR	?CheckAdjacentMon@advManager@@QAEXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00022f55	0x1a3	SOURCE/CURSOR	?ValidMoveWithEvent@advManager@@QAEFPAVhero@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000230f8	0x24c	SOURCE/CURSOR	?ValidMove@advManager@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023344	0x2e8	SOURCE/CURSOR	?MoveOrigin@advManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002362c	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00023653	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00023670	0x50	SOURCE/DRAWING	?UpdateGrid@combatManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000236c0	0x47	SOURCE/DRAWING	?UpdateGridForMove@combatManager@@QAEXFCF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023707	0xad	SOURCE/DRAWING	?CombatMessage@combatManager@@QAEXPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000237b4	0x286	SOURCE/DRAWING	?CombatMessage@combatManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023a3a	0x92	SOURCE/DRAWING	?ResetLimitCreature@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023acc	0x19	SOURCE/DRAWING	?SetGridMode@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023ae5	0xc6	SOURCE/DRAWING	?UpdateCombatArea@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023bab	0x1c1	SOURCE/DRAWING	?DrawBackground@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00023d6c	0xca3	SOURCE/DRAWING	?DrawFrame@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00024a0f	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00024a36	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00024a50	0x1d9d	SOURCE/EVENTS	?DoEvent@advManager@@QAEXPAVmapCell@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000267ed	0x1c8	SOURCE/EVENTS	?EraseObj@advManager@@QAEXPAVmapCell@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000269b5	0xa3	SOURCE/EVENTS	?HeroSwap@advManager@@QAEXPAVhero@@0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026a58	0x191	SOURCE/EVENTS	?TownEvent@advManager@@QAEXPAVmapCell@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026be9	0x1dd	SOURCE/EVENTS	?EventSound@advManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026dc6	0xc0	SOURCE/EVENTS	?EventWindow@advManager@@QAEXFHPADHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026e86	0x90	SOURCE/EVENTS	?GiveArtifact@advManager@@QAEFPAVhero@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026f16	0x4f	SOURCE/EVENTS	?GiveRandomArtifact@advManager@@QAEHPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00026f65	0x9e	SOURCE/EVENTS	?GiveExperience@advManager@@QAEHPAVhero@@HC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00027003	0x6a	SOURCE/EVENTS	?GiveResource@advManager@@QAEXPAVhero@@CF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002706d	0xbf	SOURCE/EVENTS	?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002712c	0x2ac	SOURCE/EVENTS	?GhostEvent@advManager@@QAECPAVhero@@PAVmapCell@@HHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000273d8	0x103	SOURCE/EVENTS	?HouseEvent@advManager@@QAEXPAVhero@@PAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000274db	0x1e2	SOURCE/EVENTS	?CombatMonsterEvent@advManager@@QAECPAVhero@@CFPAVmapCell@@HHCHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000276bd	0x1e4	SOURCE/EVENTS	?GiveTakeArtifactStat@advManager@@QAEXPAVhero@@CC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000278a1	0x1ed	SOURCE/EVENTS	?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00027a8e	0x6b	SOURCE/EVENTS	?HeroLoses@advManager@@QAEXPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00027af9	0x122	SOURCE/EVENTS	?DoWhirlpool@advManager@@QAEXPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00027c1b	0xc2	SOURCE/EVENTS	?FizzleCenter@advManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00027cdd	0x1005	SOURCE/EVENTS	?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00028ce2	0x17d	SOURCE/EVENTS	?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PACHHCHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00028e5f	0x139	SOURCE/EVENTS	?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00028f98	0x16f	SOURCE/EVENTS	?DoNetCombat@advManager@@QAEHPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029107	0x584	SOURCE/EVENTS	?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002968b	0x282	SOURCE/EVENTS	?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHCCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002990d	0x30f	SOURCE/EVENTS	?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029c1c	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00029c43	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00029c60	0xa	SOURCE/FINDPATH	??0searchArray@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029c70	0x23	SOURCE/FINDPATH	?Clear@searchArray@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029ca0	0x4e	SOURCE/FINDPATH	?QuickDistance@searchArray@@QAEFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029cf0	0x60	SOURCE/FINDPATH	?TerrainStepCost@@YAFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029d50	0x4e	SOURCE/FINDPATH	?CalcTerrainCost@@YAHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00029da0	0x2cb	SOURCE/FINDPATH	?FindCombatPath@searchArray@@QAEFFFPAVarmy@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002a070	0x124	SOURCE/FINDPATH	?PushCombatPoint@searchArray@@QAEXFFGG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002a1a0	0x299	SOURCE/FINDPATH	?PushPoint@searchArray@@QAEXFFGGGCCCCCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002a440	0x234	SOURCE/FINDPATH	?TestPossibleDirections@searchArray@@QAEXFFQAC0FH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002a680	0x20		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0002a6a0	0x200	SOURCE/FLY	?CanFit@army@@QAEFPAF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002a8a0	0x3f0	SOURCE/FLY	?ValidFlight@army@@QAEFFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002ac90	0x1c	SOURCE/FLY	?FlyTo@army@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002acac	0x70c	SOURCE/FLY	?FlyTo@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b3b8	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0002b3df	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0002b400	0x1f2	SOURCE/GAME	?Write@playerData@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b5f2	0x1e1	SOURCE/GAME	?Read@playerData@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b7d3	0x100	SOURCE/GAME	?NextHero@playerData@@QAECH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b8d3	0x56	SOURCE/GAME	?HasMobileHero@playerData@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b929	0x56	SOURCE/GAME	?CountVisitedObelisks@playerData@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002b97f	0xb6	SOURCE/GAME	?BuildingsOwned@playerData@@QAEHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002ba35	0x84	SOURCE/GAME	?NumOfGivenArtifact@playerData@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002bab9	0x321	SOURCE/GAME	?ComputeUALoc@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002bdda	0x17c	SOURCE/GAME	?VisitObelisk@game@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002bf56	0x98	SOURCE/GAME	?IsMobile@game@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002bfee	0x13	SOURCE/GAME	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c001	0xce	SOURCE/GAME	?CreateBoat@game@@QAECCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c0cf	0x4b	SOURCE/GAME	?Scan@game@@QAECPACCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c11a	0x64	SOURCE/GAME	?RandomScan@game@@QAECPACCCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c17e	0xe5	SOURCE/GAME	?GetNewHeroId@game@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c263	0x69	SOURCE/GAME	?GetTownId@game@@QAECCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c2cc	0x69	SOURCE/GAME	?GetMineId@game@@QAECCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c335	0x1a8	SOURCE/GAME	?GenerateStandardFileName@@YAXPAD0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002c4dd	0x796	SOURCE/GAME	?SaveGame@game@@QAEFPADC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002cc73	0x87f	SOURCE/GAME	?LoadGame@game@@QAEFPADHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002d4f2	0x4f3	SOURCE/GAME	?NewGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002d9e5	0x293	SOURCE/GAME	?UpdateNewGameWindow@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002dc78	0x24c	SOURCE/GAME	?GiveTroopsToNeutralTowns@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002dec4	0x3e9	SOURCE/GAME	?NewGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002e2ad	0x274	SOURCE/GAME	?ShowCampaignInfo@game@@QAEXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002e521	0x74	SOURCE/GAME	?InitEntireCampaign@game@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002e595	0x25b	SOURCE/GAME	?InitCampaignMap@game@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002e7f0	0xe31	SOURCE/GAME	?NewMap@game@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002f621	0x51	SOURCE/GAME	?GetObjectFamily@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002f672	0x1be	SOURCE/GAME	?SettleOverlay@game@@QAEXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0002f830	0xb14	SOURCE/GAME	?RandomizeEvents@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00030344	0x3c6	SOURCE/GAME	?LoadMap@game@@QAEFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003070a	0x29b	SOURCE/GAME	?ClaimTown@game@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000309a5	0x24a	SOURCE/GAME	?ClaimMine@game@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00030bef	0x23b	SOURCE/GAME	?ViewSpells@game@@QAECPAVhero@@CP6AFAAUtag_message@@@ZC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00030e2a	0xa0	SOURCE/GAME	?SetupSpellRange@game@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00030eca	0x1d4	SOURCE/GAME	?UpdateSpellWidgets@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003109e	0x494	SOURCE/GAME	?ViewSpellsHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00031532	0x129	SOURCE/GAME	?ViewSpecialHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003165b	0x8af	SOURCE/GAME	?ViewArmy@game@@QAEXFFCFPAVtown@@CCCPAVhero@@PAVarmy@@PAVarmyGroup@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00031f0a	0x17f	SOURCE/GAME	?ViewArmyHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00032089	0xc81	SOURCE/GAME	?Overview@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00032d0a	0x25d	SOURCE/GAME	?GetRandomNumTroops@game@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00032f67	0x1a	SOURCE/GAME	?TurnOnAIMusic@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00032f81	0xb	SOURCE/GAME	?TurnOffAIMusic@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00032f8c	0x520	SOURCE/GAME	?NextPlayer@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000334ac	0x222	SOURCE/GAME	?ComputeDailyGold@game@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000336ce	0x4ce	SOURCE/GAME	?PerDay@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00033b9c	0x7c2	SOURCE/GAME	?PerWeek@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003435e	0x2c0	SOURCE/GAME	?PerMonth@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003461e	0x569	SOURCE/GAME	?RandomizeTown@game@@QAEXCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00034b87	0x318	SOURCE/GAME	?SetupTown@game@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00034e9f	0x586	SOURCE/GAME	?RandomizeMine@game@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035425	0x5e	SOURCE/GAME	?GetRandomArtifactId@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035483	0xe3	SOURCE/GAME	?RandomizeHeroPool@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035566	0x28f	SOURCE/GAME	?SetRandomHeroArmies@game@@QAEXFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000357f5	0x27f	SOURCE/GAME	?ProcessRandomObjects@game@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035a74	0x22f	SOURCE/GAME	?SetVisibility@game@@QAEXFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035ca3	0xc8	SOURCE/GAME	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035d6b	0x7a	SOURCE/GAME	?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035de5	0x92	SOURCE/GAME	?SGenRand@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035e77	0x55	SOURCE/GAME	?SRandom@@YAHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035ecc	0x8a	SOURCE/GAME	?SIncRandomize@@YAXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035f56	0x19	SOURCE/GAME	?SRand@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00035f6f	0xb7	SOURCE/GAME	?GetLuck@game@@QAEHPAVhero@@PAVarmy@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036026	0x2fa	SOURCE/GAME	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036320	0xbc	SOURCE/GAME	?SetupAdjacentMons@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000363dc	0x55	SOURCE/GAME	?CancelComputerScreen@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036431	0x105	SOURCE/GAME	?ShowComputerScreen@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036536	0x9c	SOURCE/GAME	?ShowHeroesLogo@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000365d2	0x124	SOURCE/GAME	?WaitForPlayer@game@@QAEXPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000366f6	0xa0	SOURCE/GAME	?RandomizeTerrainTiles@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036796	0x107	SOURCE/GAME	?ProcessMapExtra@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003689d	0x1cf	SOURCE/GAME	?SetupTowns@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036a6c	0x325	SOURCE/GAME	?ProcessOnMapHeroes@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00036d91	0x341	SOURCE/GAME	?CheckHeroConsistency@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000370d2	0x5fd	SOURCE/GAME	?TransmitSaveGame@game@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000376cf	0x4b0	SOURCE/GAME	?ReceiveSaveGame@game@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00037b7f	0x5b5	SOURCE/GAME	?DoNewTurn@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038134	0x4c	SOURCE/GAME	?GetBoatsBuilt@game@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038180	0x373	SOURCE/GAME	?GetMap@game@@SAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000384f3	0x80	SOURCE/GAME	?GetNumThievesGuilds@game@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038573	0x2e3	SOURCE/GAME	?CalcDifficultyRating@game@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038856	0xde	SOURCE/GAME	?GetBaseScore@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038934	0x410	SOURCE/GAME	?ShowScenInfo@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038d44	0x114	SOURCE/GAME	?RandomizePlayerCrests@game@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038e58	0x87	SOURCE/GAME	?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038edf	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00038f06	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00038f20	0x5d	SOURCE/HERO	??0hero@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038f7d	0xd	SOURCE/HERO	?GetArmyStrengths@hero@@QAEXQAI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038f8a	0x4b	SOURCE/HERO	?HasArtifact@hero@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00038fd5	0x1bd	SOURCE/HERO	?CalcMobility@hero@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039192	0x41	SOURCE/HERO	?HasSpell@hero@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000391d3	0xc8	SOURCE/HERO	?GetNumSpells@hero@@QAEFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003929b	0x204	SOURCE/HERO	?UseSpell@hero@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003949f	0x1a7	SOURCE/HERO	?AddSpell@hero@@QAEHCCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039646	0x48	SOURCE/HERO	?RedrawHeroScreen@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003968e	0x64a	SOURCE/HERO	?HeroView@hero@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039cd8	0x6c	SOURCE/HERO	?HeroMessageUpdate@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039d44	0x99	SOURCE/HERO	?HeroScreenUpdate@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039ddd	0x1b6	SOURCE/HERO	?UpdateArmies@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00039f93	0x181	SOURCE/HERO	?ViewStat@hero@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a114	0x3e	SOURCE/HERO	?ViewArtifact@hero@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a152	0x47	SOURCE/HERO	?Dismiss@hero@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a199	0x400	SOURCE/HERO	?Deallocate@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a599	0xb5	SOURCE/HERO	?GetExperience@hero@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a64e	0xd7	SOURCE/HERO	?GetLevel@hero@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a725	0x179	SOURCE/HERO	?ApplyBattleWinTemps@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a89e	0x13	SOURCE/HERO	?ApplyBattleLossTemps@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003a8b1	0x2b7	SOURCE/HERO	?CheckLevel@hero@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003ab68	0x4b	SOURCE/HERO	?NumArtifacts@hero@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003abb3	0x502	SOURCE/HERO	?UpdateHeroScreenStatusBar@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b0b5	0x610	SOURCE/HERO	?HeroHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b6c5	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003b6ec	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003b700	0x3f	SOURCE/HEXCELL	??0hexcell@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b73f	0x42	SOURCE/HEXCELL	?TakeOccupant@hexcell@@QAEPAV1@PAV1@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b781	0x40	SOURCE/HEXCELL	?DrawGround@hexcell@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b7c1	0x71	SOURCE/HEXCELL	?DrawOccupant@hexcell@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b832	0x124	SOURCE/HEXCELL	?DrawTower@hexcell@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003b956	0x279	SOURCE/HEXCELL	?DrawWall@hexcell@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bbcf	0x151	SOURCE/HEXCELL	?DrawObstacle@hexcell@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bd20	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003bd47	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003bd60	0x7f	SOURCE/HISCORE	??0highScoreManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bddf	0x14	SOURCE/HISCORE	??1highScoreManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bdf3	0x144	SOURCE/HISCORE	?Open@highScoreManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bf37	0x4e	SOURCE/HISCORE	?Close@highScoreManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003bf85	0x1fa	SOURCE/HISCORE	?Main@highScoreManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003c17f	0x5ec	SOURCE/HISCORE	?Update@highScoreManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003c76b	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003c792	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0003c7b0	0x41	SOURCE/KB	_PollSound	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003c7f1	0x17	SOURCE/KB	?ForcePollSound@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003c808	0x518	SOURCE/KB	?InitMainClasses@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003cd20	0x2ab	SOURCE/KB	?DeleteMainClasses@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003cfcb	0xf9	SOURCE/KB	?EarlySetup@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003d0c4	0xccb	SOURCE/KB	?oldmain@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003dd8f	0x83	SOURCE/KB	?toupper@@YADD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003de12	0x24c	SOURCE/KB	?InterpretCommandLine@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e05e	0x154	SOURCE/KB	?InitMenuHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e1b2	0x9	SOURCE/KB	?NullHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e1bb	0x15e	SOURCE/KB	?RecruitHeroHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e319	0x30	SOURCE/KB	?GetBuildingName@@YAPADHF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e349	0x77	SOURCE/KB	?GetBuildingCost@@YAXHFQAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e3c0	0xf	SOURCE/KB	Singular creature display name lookup through gArmyNames at RVA 0x9258c. Following GetMonsterName uses plural table 0x9266c.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0003e3cf	0xf	SOURCE/KB	?GetMonsterName@@YAPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e3de	0xbe	SOURCE/KB	?GetMonsterCost@@YAXHQAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e49c	0x104	SOURCE/KB	?CanBuild@@YACPAVtown@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e5a0	0xb6	SOURCE/KB	?CanBuy@@YACPAVtown@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e656	0x3d	SOURCE/KB	?GetBuildingBaseResourceValue@@YAHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003e693	0xdad	SOURCE/KB	?NormalDialog@@YAXPADHHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f440	0x62	SOURCE/KB	?UpdateNormalDialog@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f4a2	0x14d	SOURCE/KB	?WaitHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f5ef	0xb3	SOURCE/KB	?EventWindowHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f6a2	0x11	SOURCE/KB	?TrueFalseDialogHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f6b3	0x145	SOURCE/KB	?PlayerDead@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f7f8	0x8a	SOURCE/KB	?HandleRemoteDeadPlayerExit@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f882	0xd4	SOURCE/KB	?HandleRemoteSuddenExit@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003f956	0x238	SOURCE/KB	?ReceiveRemotePlayerExit@@YAXCCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0003fb8e	0x936	SOURCE/KB	?CheckEndGame@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000404c4	0x7a	SOURCE/KB	?QuickViewWait@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004053e	0x175	SOURCE/KB	?InitVars@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000406b3	0x3f2	SOURCE/KB	?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00040aa5	0x1cd	SOURCE/KB	?ShowLuckInfo@game@@QAEXPAVhero@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00040c72	0x5d	SOURCE/KB	?ClearMapExtra@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00040ccf	0x6a	SOURCE/KB	?GetMonType@@YAFHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00040d39	0x32d	SOURCE/KB	?AddScoreToHighScore@@YAHHHPAD0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041066	0x51	SOURCE/KB	?BVResMsg@@YAXPADHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000410b7	0x1f	SOURCE/KB	?GOut@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000410d6	0x1b	SOURCE/KB	?NetPosToGamePos@@YACH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000410f1	0xb1	SOURCE/KB	?WaitForOtherPlayer@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000411a2	0x65a	SOURCE/KB	?PopNetBox@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000417fc	0x28	SOURCE/KB	?AddNetBoxLine@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041824	0x11f	SOURCE/KB	?ShutDown@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041943	0x34	SOURCE/KB	?FileError@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041977	0x3f5	SOURCE/KB	?ShowCongrats@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041d6c	0x8b	SOURCE/KB	?CongratsWait@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041df7	0x1a0	SOURCE/KB	?GetDataEntry@@YAXPAD0H0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00041f97	0x1af	SOURCE/KB	?DataEntryWindowHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042146	0x60	SOURCE/KB	?MemError@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000421a6	0xa	SOURCE/KB	?MemSize@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000421b0	0x7	SOURCE/KB	?CheckMem@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000421b7	0x9d	SOURCE/KB	?GetTownName@@YAPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042254	0x39	SOURCE/KB	?IsCDDrive@@YA_NH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004228d	0x59	SOURCE/KB	?LoadSystemwideIcons@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000422e6	0x4b	SOURCE/KB	?UnloadSystemwideIcons@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042331	0x5	SOURCE/KB	?EarlyShutDownSystem@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042336	0x55	SOURCE/KB	?GameUnsaved@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004238b	0x523	SOURCE/KB	?HandleAppSpecificMenuCommands@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000428ae	0x31e	SOURCE/KB	?UpdateSystemOptionsMenu@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042bcc	0x7d	SOURCE/KB	?CleanUpMenus@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042c49	0x15	SOURCE/KB	?UpdateAppSpecificMenus@@YAXPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042c5e	0x5	SOURCE/KB	?EarlyResizeWindow@@YAXHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042c63	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00042c8a	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00042ca0	0x11a	SOURCE/kbwin	_WinMain@16	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042dba	0x28e	SOURCE/kbwin	?AppInit@@YAHPAX0HPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043048	0xa	SOURCE/kbwin	?AppIdle@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043052	0x6ad	SOURCE/kbwin	?AppWndProc@@YGJPAXIIJ@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000436ff	0x67	SOURCE/kbwin	_AppAbout@16	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043766	0xf	SOURCE/kbwin	?AppExit@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043775	0x7f	SOURCE/kbwin	?Process1WindowsMessage@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000437f4	0x11d	SOURCE/kbwin	?ResizeWindow@@YAXHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043911	0x165	SOURCE/kbwin	?AppCommand@@YAHPAXIIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043a76	0xae	SOURCE/kbwin	?UpdateDfltMenu@@YAXPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043b24	0x91	SOURCE/kbwin	?KBChangeMenu@@YAXPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043bb5	0x118	SOURCE/kbwin	?SetMenuStatus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043ccd	0x52	SOURCE/kbwin	?SetNoDialogMenus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043d1f	0x12b	SOURCE/kbwin	?SetMenus@@YAXPAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043e4a	0x145	SOURCE/kbwin	?SetGameDefaults@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043f8f	0x468	SOURCE/kbwin	?ReadPrefs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000443f7	0x30b	SOURCE/kbwin	?WritePrefs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044702	0x72	SOURCE/kbwin	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044774	0x36f	SOURCE/kbwin	?SetupCDDrive@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044ae3	0x6b	SOURCE/kbwin	?SetWinText@@YAXPAVheroWindow@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044b4e	0xb	SOURCE/kbwin	?KBTickCount@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044b59	0x55	SOURCE/kbwin	?ProcessAssert@@YAXHPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044bae	0x50	SOURCE/kbwin	?FindToken@@YAPADPADD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044bfe	0x50	SOURCE/kbwin	?FindLastToken@@YAPADPADD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044c4e	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00044c75	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00044c90	0x94	SOURCE/netwin	?is_netbios_avail@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044d24	0x19b	SOURCE/netwin	_nb_init	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00044ebf	0x1ca	SOURCE/netwin	_nb_term	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045089	0x98	SOURCE/netwin	_nb_rcv	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045121	0xee	SOURCE/netwin	_nb_snd	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004520f	0x4f0	SOURCE/netwin	_nb_sess	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000456ff	0x13	SOURCE/netwin	_nb_stat	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045712	0x21c	SOURCE/netwin	?nb_thr_ctl@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004592e	0xb5	SOURCE/netwin	?nb_add_name@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000459e3	0x196	SOURCE/netwin	?nb_add_name_done@@YGXPAU_NCB@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045b79	0xae	SOURCE/netwin	?nb_recv_any@@YAGH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045c27	0x122	SOURCE/netwin	?nb_recv_any_done@@YGXPAU_NCB@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045d49	0xb7	SOURCE/netwin	?nb_call@@YAGHPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045e00	0xb7	SOURCE/netwin	?nb_listen@@YAGHPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045eb7	0xfa	SOURCE/netwin	?nb_call_done@@YGXPAU_NCB@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00045fb1	0x126	SOURCE/netwin	?nb_arm_recv@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000460d7	0xae	SOURCE/netwin	?nb_close_session@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046185	0x139	SOURCE/netwin	?nb_recv_complete@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000462be	0x6e	SOURCE/netwin	?nb_format_name@@YAXPADPAE@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004632c	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00046353	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00046370	0x2e	SOURCE/NOOPT	?DelayTicks@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004639e	0x3b	SOURCE/NOOPT	?DelayTil@@YAXPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000463d9	0x16	SOURCE/NOOPT	?DelayMilli@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000463ef	0x1b	SOURCE/NOOPT	?DelayTilMilli@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004640a	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00046431	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00046450	0x11e	SOURCE/PATH	?FindPath@army@@QAEFFFCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004656e	0x86	SOURCE/PATH	?ValidPath@army@@QAEFFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000465f4	0x72	SOURCE/PATH	?GetMoveMask@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046666	0xac	SOURCE/PATH	?GetAttackMask@army@@QAEFFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046712	0x23	SOURCE/PATH	?ValidMove@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046735	0x187	SOURCE/PATH	?ValidMove@army@@QAEFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000468bc	0x216	SOURCE/PATH	?ValidAttack@army@@QAEFFFFFPAF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046ad2	0xe4	SOURCE/PATH	?GetAdjacentCellIndex@army@@QAEFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046bb6	0xbe	SOURCE/PATH	?GetAdjacentCellIndexNoArmy@@YAFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00046c74	0x45a	SOURCE/PATH	?ValidRange@army@@QAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000470ce	0x35	SOURCE/PATH	?OppositeDirection@@YAFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047103	0x7b7	SOURCE/PATH	?GetBestDirection@army@@QAEFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000478ba	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000478e1	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00047900	0x14	SOURCE/PHILAI	?AiPrint@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047914	0x3d	SOURCE/PHILAI	?AbsAiPrint@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047951	0x150	SOURCE/PHILAI	?ResetHeroRVs@@YAXHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047aa1	0x1ca	SOURCE/PHILAI	?CheckDoMain@@YAXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047c6b	0x5	SOURCE/PHILAI	?ShowStatus@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047c70	0x7e	SOURCE/PHILAI	?ShowDebugText@philAI@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047cee	0x51	SOURCE/PHILAI	??0philAI@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047d3f	0x88	SOURCE/PHILAI	?DoAllHeroInteractions@philAI@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00047dc7	0x3ef	SOURCE/PHILAI	?CheckBuyStuff@philAI@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000481b6	0x194	SOURCE/PHILAI	?GoodAdjacent@philAI@@QAEHPAVhero@@PAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004834a	0x384	SOURCE/PHILAI	?CheckReload@philAI@@QAEXPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000486ce	0x216	SOURCE/PHILAI	?CheckBerserk@philAI@@QAEXPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000488e4	0x18b	SOURCE/PHILAI	?DoDimensionDoor@philAI@@QAECPAVhero@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00048a6f	0x72f	SOURCE/PHILAI	?DoAI@philAI@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004919e	0x3f	SOURCE/PHILAI	?GetGameAIVars@philAI@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000491dd	0x5eb	SOURCE/PHILAI	?GetTurnAIVars@philAI@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000497c8	0x54c	SOURCE/PHILAI	?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00049d14	0xea	SOURCE/PHILAI	?DetermineHeroToMove@philAI@@QAEPAVhero@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00049dfe	0x89d	SOURCE/PHILAI	?DetermineTargetPosition@philAI@@QAEXPAVhero@@AAC1F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004a69b	0x55f	SOURCE/PHILAI	?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010CCHAAMAAH3333@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004abfa	0x13	SOURCE/PHILAI	?GetOddsOfWinning@philAI@@QAEMH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ac0d	0x507	SOURCE/PHILAI	?ValueOfBuyingBuilding@philAI@@QAEXPAVtown@@HAAHAAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b114	0x101	SOURCE/PHILAI	?GetBestBuilding@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b215	0x268	SOURCE/PHILAI	?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b47d	0x188	SOURCE/PHILAI	?GetBestCreature@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b605	0x3f	SOURCE/PHILAI	?CreaturesToBuy@philAI@@QAEHPAVtown@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b644	0x47	SOURCE/PHILAI	?CreaturesToBuy@philAI@@QAEHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b68b	0x82	SOURCE/PHILAI	?MaxBuyableCreatures@philAI@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b70d	0x184	SOURCE/PHILAI	?ValueOfBuyingHero@philAI@@QAEXPAVtown@@PAVhero@@AAHAAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b891	0x12c	SOURCE/PHILAI	?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004b9bd	0x54	SOURCE/PHILAI	?LikelihoodOfEnemyAttacking@philAI@@QAEXPAVtown@@PAVhero@@AAM2AAH332@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ba11	0xf	SOURCE/PHILAI	?MeanRVOfUnexploredTerritory@philAI@@QAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ba20	0x14d	SOURCE/PHILAI	?GetGameAttentionValue@philAI@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004bb6d	0xc6	SOURCE/PHILAI	?GetTurnAttentionValue@philAI@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004bc33	0x71	SOURCE/PHILAI	?RVConversion@philAI@@QAEHQAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004bca4	0xc7	SOURCE/PHILAI	?TurnsToBuy@philAI@@QAEMQAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004bd6b	0x493	SOURCE/PHILAI	?RVOfPosition@philAI@@QAEHPAVhero@@FFCFFCFFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004c1fe	0xa	SOURCE/PHILAI	SVSearchArray	generated	Compiler-generated initializer owned by SVSearchArray
+0x0004c208	0xf	SOURCE/PHILAI	SVSearchArray	generated	Compiler-generated initializer owned by SVSearchArray
+0x0004c217	0x83a	SOURCE/PHILAI	?StrategicValueOfPosition@philAI@@QAEHPAVhero@@FFCPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ca51	0xb9	SOURCE/PHILAI	?ValueOfTown@philAI@@QAEHPAVtown@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004cb0a	0x10b	SOURCE/PHILAI	?TurnCostResource@philAI@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004cc15	0xfb	SOURCE/PHILAI	?TurnValueOfObelisk@philAI@@QAEMH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004cd10	0x47	SOURCE/PHILAI	?FutureDeflator@philAI@@QAEMQAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004cd57	0x638	SOURCE/PHILAI	?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004d38f	0x192	SOURCE/PHILAI	?EvaluateOneTimeCreaturePurchase@philAI@@QAEXPAVhero@@HHHAAH11@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004d521	0x300	SOURCE/PHILAI	?QuickCombat@philAI@@QAEHPAVarmyGroup@@PAVhero@@01CCAAM2@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004d821	0xa15	SOURCE/PHILAI	?HeroInteractionAtTown@philAI@@QAEXPAVhero@@PAVtown@@HPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e236	0x3f	SOURCE/PHILAI	?ChooseGoldOrExperience@philAI@@QAEHPAVhero@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e275	0xa4	SOURCE/PHILAI	?ChooseEvaluateBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@01HHHAAH2@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e319	0x42	SOURCE/PHILAI	?ChooseToBuyArtifact@philAI@@QAEHPAVhero@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e35b	0x12	SOURCE/PHILAI	?ChooseToPayRansomOnHero@philAI@@QAEHPAVhero@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e36d	0x140	SOURCE/PHILAI	?BuildBuilding@philAI@@QAEXPAVtown@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e4ad	0x223	SOURCE/PHILAI	?BuildHero@philAI@@QAEXPAVtown@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e6d0	0xad	SOURCE/PHILAI	?BuildCreature@philAI@@QAEXPAVtown@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e77d	0x13f	SOURCE/PHILAI	?CanBuyBHC@philAI@@QAEHAAUBHC@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004e8bc	0x170	SOURCE/PHILAI	?CombatMonsterEvent@philAI@@QAECPAVhero@@CPAHPAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ea2c	0x22f	SOURCE/PHILAI	?FightEvent@philAI@@QAEXPAVhero@@PAVmapCell@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ec5b	0x55	SOURCE/PHILAI	?DamageGroup@philAI@@QAEHPAVarmyGroup@@PAVhero@@1M@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ecb0	0x4f	SOURCE/PHILAI	?StatChangeValue@philAI@@QAEMHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004ecff	0xcc	SOURCE/PHILAI	?IncrementHourGlass@philAI@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004edcb	0x1e9	SOURCE/PHILAI	?TownEvent@philAI@@QAEXPAVmapCell@@PAVhero@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0004efb4	0x1d37	SOURCE/PHILAI	?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00050ceb	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00050d12	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00050d30	0x1c9	SOURCE/RECRUIT	?SetupRecruitWin@@YAXPAVheroWindow@@HHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00050ef9	0x25b	SOURCE/RECRUIT	?Open@recruitUnit@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051154	0xb7	SOURCE/RECRUIT	?Close@recruitUnit@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005120b	0x11a	SOURCE/RECRUIT	?Update@recruitUnit@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051325	0x372	SOURCE/RECRUIT	?Main@recruitUnit@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051697	0xbc	SOURCE/RECRUIT	??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051753	0xd9	SOURCE/RECRUIT	??0recruitUnit@@QAE@PAVtown@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005182c	0x17d	SOURCE/RECRUIT	?QuickViewRecruit@@YAXPAVtown@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000519a9	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000519d0	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000519f0	0x66	SOURCE/REMOTE	?RemoteCleanup@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051a56	0x65	SOURCE/REMOTE	?ReadFileBlock@@YAPAXPADPAXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051abb	0x74	SOURCE/REMOTE	?FileSize@@YAHPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051b2f	0x221	SOURCE/REMOTE	?RemoteMain@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051d50	0x33	SOURCE/REMOTE	?UnloadRemoteDriver@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051d83	0xab	SOURCE/REMOTE	?calc_crc@@YAXPAGPAEH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051e2e	0x7b	SOURCE/REMOTE	?EncodePacket@@YAHPAECCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051ea9	0xb2	SOURCE/REMOTE	?DecodePacket@@YAHPAEH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051f5b	0x10f	SOURCE/REMOTE	?SendRemoteData@@YAHPAE0HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005206a	0xcd	SOURCE/REMOTE	?ReceiveRemoteData@@YAHPAE0H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052137	0x16d	SOURCE/REMOTE	?InitNetHost@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000522a4	0x1d9	SOURCE/REMOTE	?InitNetGuest@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005247d	0x75	SOURCE/REMOTE	?WaitForHost@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000524f2	0xd6	SOURCE/REMOTE	?WaitForGuest@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000525c8	0x196	SOURCE/REMOTE	?nbnet_init@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005275e	0xe0	SOURCE/REMOTE	?ModemSetup@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005283e	0x95	SOURCE/REMOTE	?Dial@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000528d3	0x4b	SOURCE/REMOTE	?Wait@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005291e	0x62	SOURCE/REMOTE	?GUIModemCommand@@YAXPAD0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052980	0x7f	SOURCE/REMOTE	?GUIModemCommandExec@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000529ff	0x5f	SOURCE/REMOTE	?ModemCommand@@YAXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052a5e	0x6b	SOURCE/REMOTE	?GUIModemResponse@@YACPAD0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052ac9	0xb3	SOURCE/REMOTE	?GUIModemResponseExec@@YACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052b7c	0x21	SOURCE/REMOTE	?write_buffer@@YAHPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052b9d	0x33	SOURCE/REMOTE	?read_byte@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052bd0	0x19	SOURCE/REMOTE	?write_byte@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052be9	0x276	SOURCE/REMOTE	?Connect@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00052e5f	0x2c3	SOURCE/REMOTE	?WaitForDirectConnect@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00053122	0xe4	SOURCE/REMOTE	?ReadPacket@@YADXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00053206	0xe2	SOURCE/REMOTE	?WriteModemPacket@@YAXPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000532e8	0x1e3	SOURCE/REMOTE	?TransmitRemoteData@@YAHPADHHCCCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000534cb	0xe4	SOURCE/REMOTE	?GetRemoteData@@YAPADC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000535af	0x46c	SOURCE/REMOTE	?PollRemote@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00053a1b	0x114	SOURCE/REMOTE	?TransmitAndWait@@YAHPADHHCCPAPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00053b2f	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00053b56	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00053b70	0xa	SOURCE/REQUEST	?ShowThisMap@@YAHPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00053b7a	0x7da	SOURCE/REQUEST	??0fileRequester@@QAE@FFFPBD00@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00054354	0x14	SOURCE/REQUEST	??1fileRequester@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00054368	0xf1	SOURCE/REQUEST	?Close@fileRequester@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00054459	0x3cd	SOURCE/REQUEST	?Open@fileRequester@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00054826	0x67	SOURCE/REQUEST	?SetOK@fileRequester@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005488d	0xa9c	SOURCE/REQUEST	?Main@fileRequester@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055329	0x7e	SOURCE/REQUEST	?UpdateMapInfo@fileRequester@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000553a7	0x25b	SOURCE/REQUEST	?DoKnob@fileRequester@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055602	0x49e	SOURCE/REQUEST	?Update@fileRequester@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055aa0	0x59	SOURCE/REQUEST	?GetMapName@fileRequester@@QAEPADXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055af9	0x115	SOURCE/REQUEST	?GetFilename@fileRequester@@QAEPADXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055c0e	0x206	SOURCE/REQUEST	?ShowMapInfo@fileRequester@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00055e14	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00055e3b	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00055e50	0x22b	SOURCE/SEARCH	?FindNearestObject@searchArray@@QAEFFFFFE@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056080	0xc1	SOURCE/SEARCH	?BuildPath@searchArray@@QAEHFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056150	0x99c	SOURCE/SEARCH	?SeedPosition@searchArray@@QAEXFFFFHHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056af0	0x20		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00056b10	0x10d	SOURCE/SETUP	?SetupCampaignGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056c1d	0x139	SOURCE/SETUP	?SetupBaud@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056d56	0x1ae	SOURCE/SETUP	?SetupComPort@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00056f04	0x107	SOURCE/SETUP	?SetupHotSeatGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005700b	0xe7	SOURCE/SETUP	?SetupNetworkGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000570f2	0x299	SOURCE/SETUP	?SetupModemGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005738b	0x1a2	SOURCE/SETUP	?SetupMultiPlayerGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005752d	0x372	SOURCE/SETUP	?SetupGame@game@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005789f	0x1c1	SOURCE/SETUP	?PickLoadGame@game@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057a60	0xd7	SOURCE/SETUP	?SetupCampaignGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057b37	0x107	SOURCE/SETUP	?SetupComPortHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057c3e	0x107	SOURCE/SETUP	?SetupBaudHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057d45	0xc8	SOURCE/SETUP	?SetupHotSeatGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057e0d	0xf8	SOURCE/SETUP	?SetupModemGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057f05	0xd7	SOURCE/SETUP	?SetupMultiPlayerGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00057fdc	0xad	SOURCE/SETUP	?SetupNetworkGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058089	0xc8	SOURCE/SETUP	?SetupGameHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058151	0xb4	SOURCE/SETUP	?BaseSetupHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058205	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005822c	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00058240	0x18f	SOURCE/SMACKMGR	?InitSmackSound@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000583cf	0x2a	SOURCE/SMACKMGR	?ShutdownSmackSound@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000583f9	0x3a	SOURCE/SMACKMGR	?ConvertSmackerPalette@@YAXPAE@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058433	0x13c	SOURCE/SMACKMGR	?DoAdvance@@YAXPAUSmack@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005856f	0x73c	SOURCE/SMACKMGR	?SmackMain@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058cab	0x49	SOURCE/SMACKMGR	?CloseSmackers@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058cf4	0xa9	SOURCE/SMACKMGR	?PlaySmacker@@YAHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058d9d	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00058dc4	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00058de0	0x196	SOURCE/SPELLAI	?DoSpellAI@combatManager@@QAEHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058f76	0x42d	SOURCE/SPELLAI	?DetermineEffectOfSpell@combatManager@@QAEXHPAH0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000593a3	0x246	SOURCE/SPELLAI	?RawEffectSpellInfluence@combatManager@@QAEHPAVarmy@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000595e9	0x52	SOURCE/SPELLAI	?ClearEffects@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005963b	0x3d	SOURCE/SPELLAI	?NextPos@combatManager@@QAEXPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00059678	0x66	SOURCE/SPELLAI	?FirstArmy@combatManager@@QAEHHHPAH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000596de	0x20c	SOURCE/SPELLAI	?EffectSpellCure@combatManager@@QAEXPAHHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000598ea	0xd4	SOURCE/SPELLAI	?EffectSpellResurrect@combatManager@@QAEXPAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000599be	0x491	SOURCE/SPELLAI	?EffectSpellDamage@combatManager@@QAEXPAHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00059e4f	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00059e76	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00059e90	0x11f	SOURCE/SPELLS	?ViewSpells@combatManager@@QAECH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00059faf	0x101	SOURCE/SPELLS	?CombatSpecialHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005a0b0	0x25d	SOURCE/SPELLS	?HandleCastSpell@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005a30d	0x265	SOURCE/SPELLS	?ValidSpellTarget@combatManager@@QAECCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005a572	0xf6	SOURCE/SPELLS	?SpellMessage@combatManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005a668	0xc5e	SOURCE/SPELLS	?CastSpell@combatManager@@QAEXCCCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005b2c6	0xaf	SOURCE/SPELLS	?DefaultSpell@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005b375	0x383	SOURCE/SPELLS	?CastMassSpell@combatManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005b6f8	0xf0	SOURCE/SPELLS	?CancelSideSpells@combatManager@@QAEXCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005b7e8	0x403	SOURCE/SPELLS	?Fireball@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005bbeb	0x402	SOURCE/SPELLS	?MeteorShower@combatManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005bfed	0x2d0	SOURCE/SPELLS	?ElementalStorm@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005c2bd	0x3b6	SOURCE/SPELLS	?Armageddon@combatManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005c673	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005c69a	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005c6b0	0x290	SOURCE/STRIP	??0strip@@QAE@FFCFCPAVarmyGroup@@FH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005c940	0x107	SOURCE/STRIP	??1strip@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ca47	0x37	SOURCE/STRIP	?Draw@strip@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ca7e	0x233	SOURCE/STRIP	?DrawIcons@strip@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ccb1	0x2c	SOURCE/STRIP	?DrawFrame@strip@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ccdd	0xd4	SOURCE/STRIP	??0bankBox@@QAE@FFPAVplayerData@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005cdb1	0x34	SOURCE/STRIP	??1bankBox@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005cde5	0xba	SOURCE/STRIP	?Update@bankBox@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ce9f	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005cec6	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005cee0	0x6a	SOURCE/SWAPMGR	??0swapManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005cf4a	0x33	SOURCE/SWAPMGR	??0swapManager@@QAE@PAVhero@@0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005cf7d	0x2e	SOURCE/SWAPMGR	?Reset@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005cfab	0x2b4	SOURCE/SWAPMGR	?Open@swapManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005d25f	0x114	SOURCE/SWAPMGR	?Close@swapManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005d373	0x1a2	SOURCE/SWAPMGR	?DrawSelector@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005d515	0x88c	SOURCE/SWAPMGR	?Main@swapManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005dda1	0x9a	SOURCE/SWAPMGR	?ViewMon@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005de3b	0x126	SOURCE/SWAPMGR	?SwapArtifacts@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005df61	0x259	SOURCE/SWAPMGR	?SwapMons@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005e1ba	0x46e	SOURCE/SWAPMGR	?Update@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005e628	0x352	SOURCE/SWAPMGR	?SplitMons@swapManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005e97a	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005e9a1	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005e9c0	0x60	SOURCE/TOWN	??0town@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ea20	0x43	SOURCE/TOWN	?HasGarrison@town@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ea63	0xb9	SOURCE/TOWN	?GiveSpells@town@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005eb1c	0x168	SOURCE/TOWN	?XformToCastle@town@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ec84	0x8c	SOURCE/TOWN	?View@town@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ed10	0x13d	SOURCE/TOWN	?Deallocate@town@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005ee4d	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005ee74	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0005ee90	0x1c3	SOURCE/TOWNMGR	??0townObject@@QAE@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005f053	0x56	SOURCE/TOWNMGR	??1townObject@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005f0a9	0x103	SOURCE/TOWNMGR	?Draw@townObject@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005f1ac	0x69	SOURCE/TOWNMGR	??0townManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005f215	0x728	SOURCE/TOWNMGR	?Open@townManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005f93d	0x1db	SOURCE/TOWNMGR	?Close@townManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0005fb18	0x77c	SOURCE/TOWNMGR	?SetArmyCommand@townManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00060294	0x4dc	SOURCE/TOWNMGR	?SetCommandAndText@townManager@@QAEXAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00060770	0x6b	SOURCE/TOWNMGR	?ShowText@townManager@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000607db	0x11da	SOURCE/TOWNMGR	?Main@townManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000619b5	0x601	SOURCE/TOWNMGR	?DoCommand@townManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00061fb6	0x9d	SOURCE/TOWNMGR	?RedrawTownScreen@townManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00062053	0x334	SOURCE/TOWNMGR	?SplitArmy@townManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00062387	0xb6	SOURCE/TOWNMGR	?ShiftQualChange@townManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006243d	0x8b	SOURCE/TOWNMGR	?ResetStrips@townManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000624c8	0x85	SOURCE/TOWNMGR	?Toggle@townManager@@QAEXC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006254d	0xe3	SOURCE/TOWNMGR	?DrawTown@townManager@@QAEXCH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00062630	0xdd2	SOURCE/TOWNMGR	?BuyBuild@townManager@@QAEFFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00063402	0x35f	SOURCE/TOWNMGR	?BuildObj@townManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00063761	0x45a	SOURCE/TOWNMGR	?SetupCastle@townManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00063bbb	0x2b5	SOURCE/TOWNMGR	?SetupWell@townManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00063e70	0x2bc	SOURCE/TOWNMGR	?SetupMage@townManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006412c	0x14b	SOURCE/TOWNMGR	?MageGuildHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00064277	0x2b5	SOURCE/TOWNMGR	?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006452c	0x40b	SOURCE/TOWNMGR	?GetCategoryStats@townManager@@QAEXCQAHQAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00064937	0xeb	SOURCE/TOWNMGR	?SortStats@townManager@@QAEXQAHQAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00064a22	0x25	SOURCE/TOWNMGR	?GetBuildingName@townManager@@QAEPADF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00064a47	0x92f	SOURCE/TOWNMGR	?RecruitHero@townManager@@QAECC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00065376	0x125	SOURCE/TOWNMGR	?TavernHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006549b	0xff	SOURCE/TOWNMGR	?DoTavern@townManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006559a	0x650	SOURCE/TOWNMGR	?CastleHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00065bea	0x2cc	SOURCE/TOWNMGR	?SplitArmyHandler@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00065eb6	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00065edd	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00065ef0	0x4fe	SOURCE/VIEW	?ViewGeneral@combatManager@@QAECHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000663ee	0x1a7	SOURCE/VIEW	?HandleViewGeneral@@YAFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00066595	0x135	SOURCE/VIEW	?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000666ca	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000666f1	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00066710	0x3e	SOURCE/wingraph	?DDRestoreDisplayMode@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006674e	0x2d	SOURCE/wingraph	?DDQueryNewPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006677b	0x7d	SOURCE/wingraph	?CreatePrimary@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000667f8	0xbe	SOURCE/wingraph	?SetupClipper@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000668b6	0x139	SOURCE/wingraph	?DDInitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000669ef	0x4e4	SOURCE/wingraph	?DDAppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00066ed3	0x115	SOURCE/wingraph	?DDInitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00066fe8	0x82	SOURCE/wingraph	?DDSetPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006706a	0x100	SOURCE/wingraph	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006716a	0x3ed	SOURCE/wingraph	?DDSD@@YAXHPADH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067557	0xf5	SOURCE/wingraph	?DDUpdatePalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006764c	0x154	SOURCE/wingraph	?DDCleanUpWinGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000677a0	0x291	SOURCE/wingraph	?DDSetFullScreenStatus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067a31	0x72	SOURCE/wingraph	?WGQueryNewPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067aa3	0x13b	SOURCE/wingraph	?WGInitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067bde	0x1bd	SOURCE/wingraph	?WGUpdatePalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067d9b	0x1a2	SOURCE/wingraph	?WGInitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067f3d	0x1b7	SOURCE/wingraph	?WGAppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000680f4	0x67	SOURCE/wingraph	?WGCleanUpWinGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006815b	0x56	SOURCE/wingraph	?ConnectToDLLs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000681b1	0x1a	SOURCE/wingraph	?DisconnectDLLs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000681cb	0x15	SOURCE/wingraph	?RestoreDisplayMode@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000681e0	0x17	SOURCE/wingraph	?SetPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000681f7	0x6e	SOURCE/wingraph	?GetGraphicsInfo@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068265	0x46	SOURCE/wingraph	?InitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000682ab	0x30	SOURCE/wingraph	?AppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000682db	0x1a	SOURCE/wingraph	?InitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000682f5	0x28	SOURCE/wingraph	?UpdatePalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006831d	0x1f	SOURCE/wingraph	?CleanUpWinGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006833c	0x84	SOURCE/wingraph	?SetFullScreenStatus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000683c0	0x1a	SOURCE/wingraph	?QueryNewPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000683da	0x1c6	SOURCE/wingraph	?SetGraphicsType@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000685a0	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000685c7	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000688c0	0x5a	BASE/BASEMGR	??0baseManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006891a	0x48	BASE/BASEMGR	Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00068962	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00068989	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000689a0	0x162	BASE/AudiereEffects	?CleanupSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068b02	0x35	BASE/AudiereEffects	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068b37	0x38d	BASE/AudiereEffects	?PlaySample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068ec4	0x29	BASE/AudiereEffects	?LoadPlaySample@@YAPAVsample@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068eed	0x71	BASE/AudiereEffects	?StopSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068f5e	0x58	BASE/AudiereEffects	?UpdateSampleVolume@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068fb6	0x63	BASE/AudiereEffects	?WaitSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069019	0x77	BASE/AudiereEffects	?StopAllSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069090	0x61	BASE/AudiereEffects	?UpdateAllSampleVolumes@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000690f1	0x12	BASE/AudiereEffects	?SuspendSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069103	0x12	BASE/AudiereEffects	?ResumeSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069115	0x11	BASE/AudiereEffects	?SamplesSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069126	0xf	BASE/AudiereMusic	AudiereMusic::stream initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069135	0x61	BASE/AudiereMusic	AudiereMusic::stream RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069196	0x12	BASE/AudiereMusic	AudiereMusic::stream atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691a8	0x46	BASE/AudiereMusic	AudiereMusic::stream guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691ee	0xf	BASE/AudiereMusic	AudiereMusic::source initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691fd	0x61	BASE/AudiereMusic	AudiereMusic::source RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006925e	0x12	BASE/AudiereMusic	AudiereMusic::source atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069270	0x46	BASE/AudiereMusic	AudiereMusic::source guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000692b6	0x47	BASE/AudiereMusic	?ShouldRepeatMusic@@YA_NH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000692fd	0x43b	BASE/AudiereMusic	?PlayMusic@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069738	0xa	BASE/AudiereMusic	?GetCurrentTrack@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069742	0x164	BASE/AudiereMusic	?StopMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000698a6	0x55	BASE/AudiereMusic	?UpdateMusicVolume@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000698fb	0x128	BASE/AudiereMusic	?SetMusicSource@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a23	0x36	BASE/AudiereMusic	?MusicPlaying@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a59	0x12	BASE/AudiereMusic	?SuspendMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a6b	0x12	BASE/AudiereMusic	?ResumeMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a7d	0x11	BASE/AudiereMusic	?MusicSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a8e	0xf	BASE/Audio	AudiereDevice::device initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069a9d	0x61	BASE/Audio	AudiereDevice::device RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069afe	0x12	BASE/Audio	AudiereDevice::device atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069b10	0x46	BASE/Audio	AudiereDevice::device guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069b56	0xf	BASE/Audio	?VolumeLevel@@YAMH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069b65	0x70	BASE/Audio	?GetAudioDevice@@YA?AV?$RefPtr@VAudioDevice@audiere@@@audiere@@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069bd5	0x132	BASE/Audio	?InitAudio@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d07	0x5c	BASE/Audio	?ShutdownAudio@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d63	0xb	BASE/Audio	?GetEffectsVolume@@YAMXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d6e	0x15	BASE/Audio	?ScaleSampleVolume@@YAMH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d83	0xb	BASE/Audio	?GetMusicVolume@@YAMXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d8e	0xf	BASE/Audio	?StopAllAudio@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069d9d	0x1c	BASE/Audio	?SetEffectsVolume@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069db9	0x1c	BASE/Audio	?SetMusicVolume@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069dd5	0x1d	BASE/Audio	?SetVolumes@@YAXHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069df2	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00069e19	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00069e30	0x2c	BASE/Audio	RefPtr destructor; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069e60	0x51	BASE/Audio	RefPtr assignment; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069ec0	0x2c	BASE/Audio	RefPtr destructor; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069ef0	0x51	BASE/Audio	RefPtr assignment; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069f50	0x2c	BASE/Audio	RefPtr destructor; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069f80	0x2c	BASE/Audio	RefPtr destructor; template argument identity still needs caller/EH binding because bodies are identical.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069fb0	0x19c	BASE/WINMGR	?CycleColors@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a14c	0x9f	BASE/WINMGR	??0heroWindowManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a1eb	0x10a	BASE/WINMGR	?Open@heroWindowManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a2f5	0x9e	BASE/WINMGR	?Close@heroWindowManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a393	0xc3	BASE/WINMGR	Hit-test windows at two short coordinates; update current/previous hover windows and return whether selection changed.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006a456	0x5e	BASE/WINMGR	?Main@heroWindowManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a4b4	0x3d	BASE/WINMGR	?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a4f1	0x166	BASE/WINMGR	?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a657	0xe9	BASE/WINMGR	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a740	0x1a8	BASE/WINMGR	?DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006a8e8	0x2f	BASE/WINMGR	?UpdateScreen@heroWindowManager@@QAEXXZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x0006a917	0x15d	BASE/WINMGR	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006aa74	0x2f	BASE/WINMGR	?RedrawScreen@heroWindowManager@@QAEXXZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x0006aaa3	0xd3	BASE/WINMGR	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ab76	0x65	BASE/WINMGR	?ScreenShot@heroWindowManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006abdb	0xb	BASE/WINMGR	Unused no-argument window-manager method, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006abe6	0xf3	BASE/WINMGR	?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006acd9	0x444	BASE/WINMGR	Palette lookup-table generator: 64-cubed nearest-color search and derived color tables; original function name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006b11d	0x36a	BASE/WINMGR	?FizzleForward@heroWindowManager@@QAEXFFFFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b487	0x4d	BASE/WINMGR	?ReleaseFizzleSource@heroWindowManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b4d4	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006b4fb	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006b510	0x102	BASE/MOUSEMGR	??0mouseManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b612	0x98	BASE/MOUSEMGR	?Open@mouseManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b6aa	0x190	BASE/MOUSEMGR	?Close@mouseManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b83a	0x10	BASE/MOUSEMGR	?Main@mouseManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b84a	0x68	BASE/MOUSEMGR	?SetPointer@mouseManager@@QAEXPADF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006b8b2	0x6bd	BASE/MOUSEMGR	?SetPointer@mouseManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bf6f	0xb	BASE/MOUSEMGR	?ReallyShowPointer@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bf7a	0xd	BASE/MOUSEMGR	Unused mouse-manager method, two stack arguments, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006bf87	0xb	BASE/MOUSEMGR	?ReallyHidePointer@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bf92	0xb	BASE/MOUSEMGR	?HideColorPointer@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bf9d	0xb	BASE/MOUSEMGR	?RestoreUnderlying@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bfa8	0xb	BASE/MOUSEMGR	Unused mouse-manager method, no stack arguments, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006bfb3	0xd	BASE/MOUSEMGR	Unused mouse-manager method, two stack arguments, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006bfc0	0xd	BASE/MOUSEMGR	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bfcd	0xd	BASE/MOUSEMGR	?MovePointer@mouseManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bfda	0xb	BASE/MOUSEMGR	?ShowColorPointer@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bfe5	0xd	BASE/MOUSEMGR	?NewUpdate@mouseManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bff2	0xd	BASE/MOUSEMGR	?WarpPointer@mouseManager@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006bfff	0xd	BASE/MOUSEMGR	Unused mouse-manager method, one stack argument, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006c00c	0x56	BASE/MOUSEMGR	?MouseCoords@mouseManager@@QAEXAAF0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c062	0xd	BASE/MOUSEMGR	?SetCursorShape@mouseManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c06f	0xd	BASE/MOUSEMGR	?SetColorMice@mouseManager@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c07c	0x13	BASE/MOUSEMGR	?HideSystemCursor@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c08f	0x13	BASE/MOUSEMGR	?ShowSystemCursor@mouseManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c0a2	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006c0c9	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006c0e0	0x7a	BASE/RESMGR	??0resourceManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c15a	0x7a	BASE/RESMGR	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c1d4	0x87	BASE/RESMGR	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c25b	0xc0	BASE/RESMGR	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c31b	0xc0	BASE/RESMGR	?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c3db	0x2c	BASE/RESMGR	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c407	0xb0	BASE/RESMGR	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c4b7	0xc0	BASE/RESMGR	?GetTileset@resourceManager@@QAEPAVtileset@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c577	0xf	BASE/RESMGR	?GetMouse@resourceManager@@QAEPAVmouse@@PAD@Z	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x0006c586	0xc0	BASE/RESMGR	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c646	0xbf	BASE/RESMGR	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c705	0x75	BASE/RESMGR	?Dispose@resourceManager@@QAEXPAVresource@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c77a	0x43	BASE/RESMGR	?AddResource@resourceManager@@QAEXPAVresource@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c7bd	0x7e	BASE/RESMGR	?Expunge@resourceManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c83b	0x3b	BASE/RESMGR	?Query@resourceManager@@QAEPAVresource@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c876	0x10	BASE/RESMGR	?Main@resourceManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c886	0x66	BASE/RESMGR	?Open@resourceManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c8ec	0x61	BASE/RESMGR	?RemoveResource@resourceManager@@QAEXPAVresource@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c94d	0x6e	BASE/RESMGR	?Close@resourceManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006c9bb	0xe5	BASE/RESMGR	?LoadAggregateHeader@resourceManager@@QAEFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006caa0	0xd2	BASE/RESMGR	?PointToFile@resourceManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cb72	0xc1	BASE/RESMGR	?GetFileSize@resourceManager@@QAEIF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cc33	0x20	BASE/RESMGR	?SavePosition@resourceManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cc53	0x23	BASE/RESMGR	?RestorePosition@resourceManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cc76	0x48	BASE/RESMGR	?ReadByte@resourceManager@@QAECXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ccbe	0x4b	BASE/RESMGR	?ReadWord@resourceManager@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cd09	0x4b	BASE/RESMGR	?ReadLong@resourceManager@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cd54	0x41	BASE/RESMGR	?MakeId@resourceManager@@QAEFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cd95	0x1b	BASE/RESMGR	?Read13@resourceManager@@QAEXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cdb0	0x52	BASE/RESMGR	?ReadBlock@resourceManager@@QAEXPACI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ce02	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006ce29	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006ce40	0x2b	BASE/BACKDROP	??0backdropWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ce6b	0x3f	BASE/BACKDROP	??0backdropWidget@@QAE@FFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ceaa	0x77	BASE/BACKDROP	?Read@backdropWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cf21	0x19	BASE/BACKDROP	?Main@backdropWidget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cf3a	0x4e	BASE/BACKDROP	?Draw@backdropWidget@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cf88	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006cfaf	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006cfd0	0x2e	BASE/BACKDROP	??_GbackdropWidget@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d000	0x1c	BASE/BACKDROP	??1backdropWidget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d020	0x92	BASE/WINDOW	??0heroWindow@@QAE@XZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x0006d0b2	0x9e	BASE/WINDOW	??0heroWindow@@QAE@FFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d150	0x5a0	BASE/WINDOW	??0heroWindow@@QAE@FFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d6f0	0x85	BASE/WINDOW	?Open@heroWindow@@QAEFFC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d775	0xa2	BASE/WINDOW	?Close@heroWindow@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d817	0x113	BASE/WINDOW	?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006d92a	0xe7	BASE/WINDOW	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006da11	0x61	BASE/WINDOW	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006da72	0x15	BASE/WINDOW	?DrawWindow@heroWindow@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006da87	0x24	BASE/WINDOW	?DrawWindow@heroWindow@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006daab	0xd3	BASE/WINDOW	?DrawWindow@heroWindow@@QAEXFHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006db7e	0xaa	BASE/WINDOW	?SaveBackground@heroWindow@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006dc28	0x8a	BASE/WINDOW	?RestoreBackground@heroWindow@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006dcb2	0x1bc	BASE/WINDOW	?MoveWindow@heroWindow@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006de6e	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006de95	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006deb0	0x4e	BASE/ICONWDGT	??0iconWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006defe	0xa2	BASE/ICONWDGT	iconWidget constructor overload: resource id, signed-byte frame and flags, geometry/id/kind/fillColor; invokes GetIcon(short).	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006dfa0	0xa1	BASE/ICONWDGT	??0iconWidget@@QAE@FFFFPADCCFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e041	0xf9	BASE/ICONWDGT	?Read@iconWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e13a	0x5b	BASE/ICONWDGT	??1iconWidget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e195	0x2a4	BASE/ICONWDGT	?Main@iconWidget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e439	0xb1	BASE/ICONWDGT	?Draw@iconWidget@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e4ea	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006e511	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006e530	0x2e	BASE/ICONWDGT	??_GiconWidget@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e560	0x464	BASE/INPUTMGR	?KeyboardMessageHandler@@YAHPAXIIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006e9c4	0x33a	BASE/INPUTMGR	?MouseMessageHandler@@YAHPAXIIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ecfe	0xa0	BASE/INPUTMGR	??0inputManager@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ed9e	0xa4	BASE/INPUTMGR	?Open@inputManager@@UAEFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ee42	0x64	BASE/INPUTMGR	?Close@inputManager@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006eea6	0x10	BASE/INPUTMGR	?Main@inputManager@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006eeb6	0x23	BASE/INPUTMGR	?Flush@inputManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006eed9	0xfe	BASE/INPUTMGR	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006efd7	0x31	BASE/INPUTMGR	Normalize short flag to 0/1 in member +0x238.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f008	0x31	BASE/INPUTMGR	Set short member +0x23a to positive argument, otherwise one.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f039	0x29	BASE/INPUTMGR	Store two short arguments into members +0x346 and +0x348.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f062	0x23	BASE/INPUTMGR	?SetKeyCodeType@inputManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006f085	0x34	BASE/INPUTMGR	Translate event code [argument+2] through 128-entry table at 0xa1388 when code is in range.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f0b9	0x312	BASE/INPUTMGR	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006f3cb	0x46a	BASE/INPUTMGR	?MakeScanCodeTable@inputManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006f835	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006f85c	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0006f870	0x185	BASE/miscwin	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006f9f5	0x37	BASE/miscwin	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fa2c	0x29	BASE/miscwin	Full-bitmap screen blit wrapper: source/destination origin zero, width/height from bitmap.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006fa55	0x50	BASE/miscwin	?SetPalette@@YAXPACH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006faa5	0x16d	BASE/miscwin	?FadeIn@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fc12	0x170	BASE/miscwin	?FadeOut@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fd82	0x8	BASE/miscwin	Unused free function returning short zero; original name/signature unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006fd8a	0x39	BASE/miscwin	?Random@@YAHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fdc3	0x95	BASE/miscwin	?PostprocessPalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fe58	0x5	BASE/miscwin	?PostprocessBitmap@@YAXPACHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fe5d	0x5	BASE/miscwin	?PostprocessIcon@@YAXPAVicon@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fe62	0x214	BASE/miscwin	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070076	0x307	BASE/miscwin	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007037d	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000703a4	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000703b8	0xd5	BASE/Icon2b	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007048e	0xcb	BASE/Icon2b	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007055a	0xd5	BASE/Icon2b	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070630	0xd3	BASE/Icon2b	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070704	0xd9	BASE/Icon2b	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000707de	0xd6	BASE/Icon2b	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000708b4	0x25f	BASE/Icon2bc	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070b14	0x258	BASE/Icon2bc	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070d6c	0x134	BASE/TILE	_TileToBitmap	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070ea0	0xbf	BASE/ICON	??0icon@@QAE@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070f5f	0x2b	BASE/ICON	??1icon@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00070f8a	0x317	BASE/ICON	?DrawToBuffer@icon@@QAEXFFFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000712a1	0x54	BASE/ICON	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000712f5	0x15e	BASE/ICON	?FillToBuffer@icon@@QAEXFFFFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071453	0x2a8	BASE/ICON	?DimToBuffer@icon@@QAEXFFFCC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000716fb	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00071722	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00071740	0x2e	BASE/ICON	??_Gicon@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071770	0x58	BASE/TEXTWDGT	??0textWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000717c8	0xa5	BASE/TEXTWDGT	??0textWidget@@QAE@FFFFPAD0FFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007186d	0x12a	BASE/TEXTWDGT	?Read@textWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071997	0x6a	BASE/TEXTWDGT	??1textWidget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071a01	0x238	BASE/TEXTWDGT	?Main@textWidget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071c39	0x66	BASE/TEXTWDGT	?Draw@textWidget@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071c9f	0x18	BASE/TEXTWDGT	?SetColorIndex@textWidget@@QAEXF@Z	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x00071cb7	0xa1	BASE/TEXTWDGT	?SetText@textWidget@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071d58	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00071d7f	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00071da0	0x2e	BASE/TEXTWDGT	??_GtextWidget@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071dd0	0xc7	BASE/FONT	??0font@@QAE@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071e97	0x5b	BASE/FONT	??1font@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00071ef2	0x4c	BASE/FONT	CP1251 font glyph mapping: A8->A0, B8->C1, below C0->A1, C0..DF subtract40, E0..FF subtract3F.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00071f3e	0xff	BASE/FONT	?DrawString@font@@QAEXPADFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007203d	0x34f	BASE/FONT	?DrawBoundedString@font@@QAEXPADFFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007238c	0x25f	BASE/FONT	?LineLength@font@@QAEHPADF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000725eb	0x133	BASE/FONT	?LineWidth@font@@QAEHPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007271e	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00072745	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00072760	0x2e	BASE/FONT	??_Gfont@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072790	0x2e	BASE/BITS	_BitTest	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000727be	0x20	BASE/BITS	_BitSet	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000727de	0x22	BASE/BITS	_BitClear	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072800	0x74	BASE/BMAP2	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072874	0xe6	BASE/BMAP2	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007295a	0x4b	BASE/BMAP2	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000729a6	0x43	BASE/BMAP2	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000729f0	0x35	BASE/EXEC	??0executive@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072a25	0xbd	BASE/EXEC	?InitSystem@executive@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072ae2	0xb6	BASE/EXEC	?ShutDownSystem@executive@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072b98	0x189	BASE/EXEC	?DoDialog@executive@@QAEFPAVbaseManager@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072d21	0x149	BASE/EXEC	?AddManager@executive@@QAEFPAVbaseManager@@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072e6a	0xc3	BASE/EXEC	?RemoveManager@executive@@QAEXPAVbaseManager@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072f2d	0x88	BASE/EXEC	?CallManager@executive@@QAEXPAVbaseManager@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00072fb5	0x16b	BASE/EXEC	?MainLoop@executive@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073120	0x18	BASE/EXEC	Executive diagnostic method calling ShutDown with string at 0xa1728.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00073138	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0007315f	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00073180	0x4c	BASE/BITMAP	??0bitmap@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000731cc	0x64	BASE/BITMAP	??0bitmap@@QAE@FFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073230	0x106	BASE/BITMAP	??0bitmap@@QAE@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073336	0x3e	BASE/BITMAP	??1bitmap@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073374	0x4b	BASE/BITMAP	?DrawToBuffer@bitmap@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000733bf	0x41	BASE/BITMAP	?DrawToScreen@bitmap@@QAEXFF@Z	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x00073400	0x23	BASE/BITMAP	?GrabScreen@bitmap@@QAEXFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073423	0x3b	BASE/BITMAP	?GrabBitmap@bitmap@@QAEXPAV1@FF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007345e	0xa3	BASE/BITMAP	?Write@bitmap@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073501	0xa6	BASE/BITMAP	?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000735a7	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000735ce	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000735e0	0x2e	BASE/BITMAP	??_Gbitmap@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073610	0x12b	BASE/MAKEFILEID	?MAKEFILEID@@YAIPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007373b	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00073762	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00073780	0x12b	BASE/LZHUF	?DecodeData@@YAHPAD0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000738ab	0x3e4	BASE/LZHUF	?EncodeData@@YAHPAD0I@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073c8f	0x68	BASE/LZHUF	?InitializeTree@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073cf7	0x2a9	BASE/LZHUF	?InsertNode@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00073fa0	0x1d2	BASE/LZHUF	?DeleteNode@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074172	0xa4	BASE/LZHUF	?EncodeCharacter@@YAXG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074216	0x193	BASE/LZHUF	?UpdateEncoderTree@@YAXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000743a9	0x238	BASE/LZHUF	?ReconstructEncoderTree@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000745e1	0x10c	BASE/LZHUF	?PutCode@@YAXFG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000746ed	0x5f	BASE/LZHUF	?EncodePosition@@YAXG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007474c	0x4a	BASE/LZHUF	Flush final partial encoded byte from putbuf, advance codePtr and increment codesize.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00074796	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000747bd	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x000747d0	0x3a	BASE/PALETTE	??0palette@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007480a	0x93	BASE/PALETTE	??0palette@@QAE@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007489d	0x2b	BASE/PALETTE	??1palette@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000748c8	0x11	BASE/PALETTE	?Data@palette@@QAEPACXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000748d9	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00074900	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00074920	0x2e	BASE/PALETTE	??_Gpalette@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074950	0x3e	BASE/BORDER	??0border@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007498e	0x9e	BASE/BORDER	??0border@@QAE@FFFFFFFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074a2c	0x64	BASE/BORDER	??1border@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074a90	0xe9	BASE/BORDER	?Read@border@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074b79	0x1d9	BASE/BORDER	?Main@border@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074d52	0xd7	BASE/BORDER	?Draw@border@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074e29	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00074e50	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00074e70	0x2e	BASE/BORDER	??_Gborder@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074ea0	0x11c	BASE/TILESET	??0tileset@@QAE@F@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074fbc	0x2b	BASE/TILESET	??1tileset@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00074fe7	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0007500e	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00075020	0x2e	BASE/TILESET	??_Gtileset@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075050	0x232	BASE/SAMPLE	??0sample@@QAE@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075282	0x7f	BASE/SAMPLE	??1sample@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075301	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00075328	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00075340	0x2e	BASE/SAMPLE	sample scalar deleting destructor; calls sample::~sample then conditional operator delete.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00075370	0x8b	BASE/WIDGET	??0widget@@QAE@FFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000753fb	0x7d	BASE/WIDGET	??0widget@@QAE@XZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x00075478	0x14	BASE/WIDGET	??1widget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007548c	0x24	BASE/WIDGET	?Open@widget@@QAEFFPAVheroWindow@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000754b0	0xb	BASE/WIDGET	?Close@widget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000754bb	0x2c8	BASE/WIDGET	?Main@widget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075783	0x67	BASE/WIDGET	?Dim@widget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000757ea	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00075811	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00075830	0x56	BASE/TEXTNTRY	??0textEntryWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075886	0xbf	BASE/TEXTNTRY	textEntryWidget parameterized constructor, 12 arguments; textWidget base, max-length, icon resource/frame, selection state.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00075945	0x5b	BASE/TEXTNTRY	??1textEntryWidget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000759a0	0x261	BASE/TEXTNTRY	?Read@textEntryWidget@@QAEXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00075c01	0xa70	BASE/TEXTNTRY	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076671	0x1c7	BASE/TEXTNTRY	?Draw@textEntryWidget@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076838	0x23d	BASE/TEXTNTRY	?SetupDisplayString@textEntryWidget@@QAEXPADG@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076a75	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00076a9c	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00076ab0	0x2e	BASE/TEXTNTRY	??_GtextEntryWidget@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076ae0	0x2b	BASE/DIMMER	??0dimmerWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076b0b	0x3f	BASE/DIMMER	??0dimmerWidget@@QAE@FFFFFF@Z	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x00076b4a	0x77	BASE/DIMMER	?Read@dimmerWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076bc1	0x19	BASE/DIMMER	?Main@dimmerWidget@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076bda	0x13	BASE/DIMMER	?Draw@dimmerWidget@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076bed	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00076c14	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00076c30	0x2e	BASE/DIMMER	??_GdimmerWidget@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076c60	0x1c	BASE/DIMMER	??1dimmerWidget@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076c80	0x59	BASE/BUTTON	??0button@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076cd9	0xae	BASE/BUTTON	button constructor overload with short resource id; 11 arguments, GetIcon(short).	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00076d87	0xad	BASE/BUTTON	button constructor overload with resource name; 11 arguments, GetIcon(char*).	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00076e34	0xfb	BASE/BUTTON	?Read@button@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076f2f	0x5b	BASE/BUTTON	??1button@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00076f8a	0x415	BASE/BUTTON	?Main@button@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007739f	0xec	BASE/BUTTON	?Select@button@@QAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0007748b	0xba	BASE/BUTTON	?Deselect@button@@QAEFAAUtag_message@@@Z	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x00077545	0x99	BASE/BUTTON	?Draw@button@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000775de	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00077605	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x00077620	0x2e	BASE/BUTTON	??_Gbutton@@UAEPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00077650	0x3c	BASE/RESOURCE	??0resource@@QAE@XZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
+0x0007768c	0x43	BASE/RESOURCE	??0resource@@QAE@FFFPAV0@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000776cf	0x14	BASE/RESOURCE	??1resource@@UAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000776e3	0x27		std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0007770a	0x12		std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks.
+0x0007771c	0x4d	BASE/LZHUFDEC	_LzhufMemmove	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00077769	0x85	BASE/LZHUFDEC	_GetBit	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000777ee	0xca	BASE/LZHUFDEC	_DecodePosition	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000778b8	0x119	BASE/LZHUFDEC	_UpdateDecoderTree	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000779d1	0x153	BASE/LZHUFDEC	_ReconstructDecoderTree	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00077b24	0x129	BASE/LZHUFDEC	_Decode	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00077c4d	0xb		??3@YAXPAX@Z	referent	Buka adventure-manager family: 0x234c, 0x237d; buka-advmgr.json
+0x0008872a	0x11		__tell	referent	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00088740	0x30	CRT	__strrev	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities

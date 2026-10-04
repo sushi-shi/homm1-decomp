@@ -317,7 +317,7 @@ H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session) {
 }
 
 // Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
-VA(0x004520c2, 0x2a8)
+VA(0x00445712, 0x21c)
 void nb_thr_ctl(void)
 #line 414 "F:\\h1w95src\\source\\netlo.cpp"
 {
@@ -407,7 +407,7 @@ void nb_add_name(void) {
 
 // Buka netwin.cpp:477-518; HoMM1 reports failures with wsprintf and
 // OutputDebugString instead of ShutDown.
-VA(0x00452425, 0x1cc)
+VA(0x004459e3, 0x196)
 void __stdcall nb_add_name_done(NCB* ncb)
 #line 538 "F:\\h1w95src\\source\\netlo.cpp"
 {
@@ -543,7 +543,7 @@ void __stdcall nb_call_done(NCB* ncb) {
 }
 
 // Buka netwin.cpp:630-659.
-VA(0x00452aaf, 0x14e)
+VA(0x00445fb1, 0x126)
 void nb_arm_recv(i32 session)
 #line 742 "F:\\h1w95src\\source\\netlo.cpp"
 {
@@ -599,7 +599,7 @@ void nb_close_session(i32 session) {
 }
 
 // Buka netwin.cpp:681-711.
-VA(0x00452cbc, 0x176)
+VA(0x00446185, 0x139)
 void nb_recv_complete(i32 session) {
     tag_Node* node;
 

@@ -30,13 +30,13 @@ hexcell* hexcell::TakeOccupant(hexcell* from) {
     return this;
 }
 
-VA(0x0044f227, 0x4b)
+VA(0x0043b781, 0x40)
 void hexcell::DrawGround(void) {
     gpCombatManager->m_combatIcons[m_groundIcon]
         ->DrawToBuffer(m_x, m_y, m_groundFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
-VA(0x0044f272, 0x8a)
+VA(0x0043b7c1, 0x71)
 void hexcell::DrawOccupant(void) {
     i8 frame;
     army* occupant;
@@ -49,7 +49,7 @@ void hexcell::DrawOccupant(void) {
     }
 }
 
-VA(0x0044f2fc, 0x151)
+VA(0x0043b832, 0x124)
 void hexcell::DrawTower(i8 frame) {
     i8 flip;
     i16 row;
@@ -68,7 +68,7 @@ void hexcell::DrawTower(i8 frame) {
             ->DrawToBuffer(flip ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
-VA(0x0044f44d, 0x2b3)
+VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {
     i8 flip;
     i16 row;
@@ -131,7 +131,7 @@ void hexcell::DrawWall(void) {
     }
 }
 
-VA(0x0044f700, 0x181)
+VA(0x0043bbcf, 0x151)
 void hexcell::DrawObstacle(void) {
     if (m_obstacleType == COMBAT_ICON_CASTLE) {
         switch (m_obstacleIndex) {

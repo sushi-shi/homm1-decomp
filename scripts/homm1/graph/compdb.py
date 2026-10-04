@@ -95,6 +95,40 @@ def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
     return mirror
 
 
+def vc6_stl_overlay(mirror: Path) -> Path:
+    """Syntax repairs for Clang only; CL.EXE always reads the original SDK.
+
+    Retain VC6 declarations, layouts and bodies. Clang requires explicit
+    specializations, a single template default and qualified dependent names.
+    """
+    overlay = mirror.parent / "vc6-stl"
+    overlay.mkdir(parents=True, exist_ok=True)
+    for name in ("utility", "streambuf", "ios", "ostream", "istream",
+                 "xlocale", "vector"):
+        text = (mirror / name).read_text()
+        if name in ("utility", "streambuf", "ios", "ostream", "istream"):
+            # iosfwd already supplies this default at the first declaration.
+            text = text.replace("class _Tr = char_traits<_E>", "class _Tr")
+        if name == "xlocale":
+            for specialization in ("codecvt<wchar_t, char, mbstate_t>", "ctype<char>"):
+                old = "class _CRTIMP " + specialization
+                text = text.replace(old, "template<> " + old)
+        if name == "vector":
+            text = text.replace("class vector<_Bool, _Bool_allocator> {",
+                                "template<> class vector<_Bool, _Bool_allocator> {")
+            # The inherited std::iterator name hides vector::iterator.
+            text = text.replace("const_iterator(const iterator& _X)",
+                                "const_iterator(const vector<_Bool, _Bool_allocator>::iterator& _X)")
+        if name == "ostream":
+            text = text.replace("flags() & unitbuf", "flags() & ios_base::unitbuf")
+        if name == "istream":
+            text = text.replace("flags() & skipws", "flags() & ios_base::skipws")
+        target = overlay / name
+        if not target.exists() or target.read_text() != text:
+            target.write_text(text)
+    return overlay
+
+
 def layout_flags(profile: list[str]) -> list[str]:
     """The profile flags that change a struct layout clang must reproduce.
     clang-cl implements /Zp[n] as cl does; code-generation flags stay cl's."""
@@ -143,6 +177,12 @@ def generate(quiet: bool = False) -> bool:
     msvc_inc, provenance = resolve_include_dirs()
     msvc_low = build_lowercase_mirror(msvc_inc, MIRROR_DIR / "msvc")
     shared = base_flags(msvc_inc, msvc_low)
+    from homm1.manifest import load
+    if load()["build"]["compiler"] == "vc6":
+        overlay = vc6_stl_overlay(msvc_low)
+        # Parse STL exception expressions even in units compiled without /GX.
+        # This flag belongs only to the native metadata/navigation front-end.
+        shared = ["/imsvc", str(overlay), "/EHsc", *shared]
 
     # Most cl profiles differ only in optimisation/code-generation switches,
     # which the source probes deliberately do not inherit.  ABI switches are

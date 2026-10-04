@@ -356,7 +356,7 @@ i8 game::RandomScan(i8* array, i8 start, i8 range, i32) {
 }
 
 // HoMM1 nine heroes per class; a 0x40 entry is the fallback pick.
-VA(0x00411ef0, 0x10e)
+VA(0x0042c17e, 0xe5)
 i8 game::GetNewHeroId(i8 heroClass) {
     i8 freeSlot = GAME_TABLE_FREE;
     i8 id = GAME_HERO_NONE;
@@ -405,7 +405,7 @@ i8 game::GetMineId(i8 x, i8 y) {
 // donor PoL RVA 0x00071d89; preferred Buka symbol ?GenerateStandardFileName@@YIXPAD0@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.427111;margin=0.052277;shape=0.267;size=0.694;calls=1.000;alternate=pol20:void GenerateStandardFileName(char *, char *)@0x00071d89
-VA(0x00412114, 0x129)
+VA(0x0042c335, 0x1a8)
 void GenerateStandardFileName(char* source, char* destination) {
     char* extension;
     i32 indexOut;
@@ -729,7 +729,7 @@ H1_ENUM_END(NewGameHelp)
 // Buka 2.1 NewGameHandler without HoMM2's remote chat and player races:
 // right clicks show help, the player toggles cycle the opponents and OK
 // packs the chosen opponents before closing the dialog.
-VA(0x004132ca, 0x581)
+VA(0x0042d4f2, 0x4f3)
 i16 NewGameHandler(tag_message& message) {
     i32 iPlayer;
     i32 i;
@@ -975,7 +975,7 @@ H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
 
 // Buka 2.1 game::GiveTroopsToNeutralTown inlined over every town: an
 // unowned town on the map gains a random tier of its own creatures.
-VA(0x00413b0e, 0x2c3)
+VA(0x0042dc78, 0x24c)
 void game::GiveTroopsToNeutralTowns(void) {
     i32 howMany;
     i32 die;
@@ -1060,7 +1060,7 @@ void game::GiveTroopsToNeutralTowns(void) {
 // Buka 2.1 game::NewGame: HoMM1 starts campaigns directly, restores the
 // previous setup choices and falls back to a default map when the remembered
 // one does not fit the human player count.
-VA(0x00413dd1, 0x44e)
+VA(0x0042dec4, 0x3e9)
 i8 game::NewGame(void) {
     DATA(0x004909e0)
     static i8 gNewGameSettingsSaved = 0;
@@ -1264,7 +1264,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
 // hero per player (campaign crests pick them), two tavern heroes, the
 // ultimate artifact site, starting resources, town threat ranks and the
 // first neutral garrisons.
-VA(0x004147d7, 0x1009)
+VA(0x0042e7f0, 0xe31)
 void game::NewMap(char* mapName) {
     i32 nextThreat;
     i32 anyFree;
@@ -1532,7 +1532,7 @@ void game::SettleOverlay(i32 x, i32 y) {
 // Buka 2.1 game::RandomizeEvents for HoMM1's map objects: numbers sites
 // and obelisks, rolls each event's contents, files town and mine ids into
 // their footprints, then settles overlays and the passive trigger bits.
-VA(0x00415a33, 0xc63)
+VA(0x0042f830, 0xb14)
 void game::RandomizeEvents(void) {
     u8 overlayTileset;
     u8 objTileset;
@@ -1866,7 +1866,7 @@ void game::RandomizeEvents(void) {
 // Buka 2.1 game::LoadMap for HoMM1's .MAP files: an optional old header,
 // the world map, town and mine records, artifacts, obelisks, sounds and
 // (from version 1112) the map extras.
-VA(0x00416696, 0x43a)
+VA(0x00430344, 0x3c6)
 i16 game::LoadMap(char* filename) {
     void* buf;
     i16 width;
@@ -2148,7 +2148,7 @@ void game::UpdateSpellWidgets(void) {
 
 // Buka 2.1 ViewSpellsHandler: right clicks describe a spell or control,
 // left clicks page, switch books or pick the spell to cast.
-VA(0x004175ec, 0x4f8)
+VA(0x0043109e, 0x494)
 i16 ViewSpellsHandler(tag_message& message) {
     i32 spell;
     if (message.type == MESSAGE_WIDGET) {
@@ -2367,7 +2367,7 @@ H1_ENUM_CONST_END(ViewArmyConstant)
 // donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
-VA(0x00417c59, 0x8e1)
+VA(0x0043165b, 0x8af)
 void game::ViewArmy(
     i16 x,
     i16 y,
@@ -2575,7 +2575,7 @@ void game::ViewArmy(
 // donor PoL RVA 0x0007b2cf; preferred Buka symbol ?ViewArmyHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
-VA(0x0041853a, 0x1b8)
+VA(0x00431f0a, 0x17f)
 i16 ViewArmyHandler(tag_message& message) {
     i16 frameDelay;
     i16 offset;
@@ -2959,13 +2959,13 @@ i8 game::GetRandomNumTroops(i8 monsterType) {
     }
 }
 
-// Buka retail VA 0x00432f67, size 0x1a.
+VA(0x00432f67, 0x1a)
 void game::TurnOnAIMusic(void) {
     StopAllAudio();
     PlayMusic(MUSIC_TRACK_AI_TURN);
 }
 
-// Buka retail VA 0x00432f81, size 0xb.
+VA(0x00432f81, 0xb)
 // Retail retains only the ordinary empty member-function prologue/epilogue.
 void game::TurnOffAIMusic(void) {}
 
@@ -3063,7 +3063,7 @@ void game::NextPlayer(void) {
 // Buka 2.1 game::ComputeDailyGold for HoMM1: the first mine and gold mines
 // pay 1000, towns 250 (castles 1000), three treasure artifacts add more,
 // and computer players' gold scales with their level.
-VA(0x00419ae2, 0x280)
+VA(0x004334ac, 0x222)
 i32 game::ComputeDailyGold(i32 player) {
     i32 gold;
     i32 i;
@@ -3103,7 +3103,7 @@ i32 game::ComputeDailyGold(i32 player) {
 
 // Buka 2.1 game::PerDay for HoMM1: records each player's income, pays the
 // mines, towns and computer bonuses, then advances the calendar.
-VA(0x00419d62, 0x457)
+VA(0x004336ce, 0x4ce)
 void game::PerDay(void) {
     i16 i;
     i16 production;
@@ -3182,7 +3182,7 @@ H1_ENUM_CONST_END(CalendarConstant)
 // Buka 2.1 game::PerWeek for HoMM1: rolls the week, grows every dwelling
 // (computer towns grow faster), refreshes the tavern heroes and restocks the
 // map's renewable sites.
-VA(0x0041a1b9, 0x84b)
+VA(0x00433b9c, 0x7c2)
 void game::PerWeek(void) {
     i16 posY;
     i16 posX;
@@ -3298,7 +3298,7 @@ void game::PerWeek(void) {
 
 // Buka 2.1 game::PerMonth for HoMM1's six dwellings: a normal, creature or
 // plague month, the creature month also seeding wandering monsters.
-VA(0x0041aa04, 0x2e1)
+VA(0x0043435e, 0x2c0)
 void game::PerMonth(void) {
     DATA(0x00490ce0)
     static i8 gMonType[12] = {0, 6, 13, 14, 9, 15, 7, 8, 18, 19, 16, 20};
@@ -3366,7 +3366,7 @@ void game::PerMonth(void) {
 // Buka 2.1 game::RandomizeTown for HoMM1's 4x3 town footprint: the town
 // type comes from the campaign crest, a distinct roll for the first four
 // towns or a plain roll, and shifts every town frame to that type.
-VA(0x0041ace5, 0x67f)
+VA(0x0043461e, 0x569)
 void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     i8 j;
     i8 unique;
@@ -3451,7 +3451,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
 // Buka 2.1 game::SetupTowns' per-town tail: default dwellings for towns the
 // map leaves uncustomized, then nine distinct mage-guild spells; computer
 // owners favour the stronger spells.
-VA(0x0041b364, 0x3b4)
+VA(0x00434b87, 0x318)
 void game::SetupTown(i8 townId, i8 aiOwned) {
     i16 dwellingCount;
     char dwellingRoll[10];
@@ -3522,7 +3522,7 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
 
 // Buka 2.1 game::RandomizeMine for HoMM1's 2x2 mines: the terrain picks
 // the mine type (unused types first) and the object and shadow frames.
-VA(0x0041b718, 0x659)
+VA(0x00434e9f, 0x586)
 void game::RandomizeMine(i8 x, i8 y) {
     u8 bits;
     u8 upFrame;
@@ -3674,7 +3674,7 @@ i8 game::GetRandomArtifactId(void) {
 }
 
 // Buka 2.1 game::RandomizeHeroPool without HoMM2's starting spells.
-VA(0x0041bdea, 0x102)
+VA(0x00435483, 0xe3)
 void game::RandomizeHeroPool(void) {
     i16 heroId;
     for (heroId = 0; heroId < GAME_HERO_COUNT; heroId++) {
@@ -3734,7 +3734,7 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
 // Buka 2.1 game::ProcessRandomObjects for HoMM1's random towns, castles,
 // monsters by strength band, resources, artifacts and mines; NewMap runs
 // the castles-only pass first.
-VA(0x0041c1cc, 0x2cd)
+VA(0x004357f5, 0x27f)
 void game::ProcessRandomObjects(i32 castlesOnly) {
     mapCell* cellPtr;
     i32 lowFV;
@@ -4087,7 +4087,7 @@ void game::CancelComputerScreen(void) {
 // donor PoL RVA 0x00081271; preferred Buka symbol ?ShowComputerScreen@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.481260;margin=0.673888;shape=0.345;size=0.812;calls=0.778;alternate=pol20:void game::ShowComputerScreen(void)@0x00081271
-VA(0x0041cf56, 0x115)
+VA(0x00436431, 0x105)
 void game::ShowComputerScreen(void) {
     if (gConfig.blackoutComputer || gRemoteOn) {
         i32 saved = gbThisNetHumanPlayer[giCurPlayer];
@@ -4194,7 +4194,7 @@ void game::RandomizeTerrainTiles(void) {
 
 // Buka 2.1 game::ProcessMapExtra reduced to HoMM1's town extras; HoMM1 has
 // no late overlays.
-VA(0x0041d31a, 0x129)
+VA(0x00436796, 0x107)
 void game::ProcessMapExtra(void) {
     i32 y;
     mapCell* cellPtr;
@@ -4221,7 +4221,7 @@ void game::ProcessMapExtra(void) {
 
 // Buka 2.1 game::SetupTowns reduced to HoMM1's owners, garrisons and
 // buildings; a map whose towns all lack owners leaves the placeholder -2.
-VA(0x0041d443, 0x214)
+VA(0x0043689d, 0x1cf)
 i8 game::SetupTowns(void) {
     mapTownExtra* extra;
     i32 own;
@@ -4274,7 +4274,7 @@ i8 game::SetupTowns(void) {
 // Buka 2.1 game::ProcessOnMapHeroes for HoMM1: each placed hero takes its
 // map-extra garrison, artifacts, experience and owner; a hero standing at a
 // town gate occupies the town.
-VA(0x0041d657, 0x348)
+VA(0x00436a6c, 0x325)
 void game::ProcessOnMapHeroes(void) {
     i32 mapY;
     mapHeroExtra* extra;
@@ -4350,7 +4350,7 @@ void game::ProcessOnMapHeroes(void) {
 // Buka 2.1 game::CheckHeroConsistency for HoMM1: replaces tavern heroes
 // some player already owns, clears map heroes that lost their owner and
 // zeroes the counts of empty or negative stacks.
-VA(0x0041d99f, 0x3b5)
+VA(0x00436d91, 0x341)
 void game::CheckHeroConsistency(void) {
     town* town;
     i32 j;
@@ -4439,7 +4439,7 @@ H1_ENUM_CONST_END(RemoteSaveConstant)
 
 // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
 // segments, 100 segments per acknowledged block.
-VA(0x0041dd54, 0x737)
+VA(0x004370d2, 0x5fd)
 i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 okay;
     char pathname[456];
@@ -4894,7 +4894,7 @@ i8 gShowMapInfo = 0;
 // evidence: graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
 // Buka 2.1 GetMap with HoMM1's player-count file masks and the reqextra.bin
 // map-info window; a cancelled pick restores the previous map's texts.
-VA(0x0041eeab, 0x39c)
+VA(0x00438180, 0x373)
 void game::GetMap(void) {
     char saveFullName[20];
     char oldDescription[124];

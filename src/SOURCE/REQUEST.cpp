@@ -28,7 +28,7 @@
 #include <string.h>
 
 // Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
-VA(0x00467e00, 0x1c)
+VA(0x00453b70, 0xa)
 i32 ShowThisMap(char*) {
     return 1;
     return 0;
@@ -557,7 +557,7 @@ DATA(0x0049f4e0)
 char* gFRDummy = "";
 
 // Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
-VA(0x0046976a, 0x280)
+VA(0x004553a7, 0x25b)
 void fileRequester::DoKnob(void) {
     i32 lastTop;
     i16 index;
@@ -611,7 +611,7 @@ void fileRequester::DoKnob(void) {
 
 // Buka 2.1 Update for HoMM1's ten text rows; saved games append their human
 // count and map lists show the header title.
-VA(0x004699ea, 0x4f1)
+VA(0x00455602, 0x49e)
 void fileRequester::Update(i8 drawWindow) {
     double gutterFactor;
     i32 nHumans;

@@ -199,7 +199,7 @@ void executive::RemoveManager(baseManager* manager) {
     manager->m_next = NULL;
 }
 
-VA(0x004783a0, 0x62)
+VA(0x00472f2d, 0x88)
 void executive::CallManager(baseManager* manager) {
     baseManager* saved = m_activeManager;
     RemoveManager(saved);
@@ -213,7 +213,7 @@ void executive::CallManager(baseManager* manager) {
 }
 
 // Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
-VA(0x00478410, 0x108)
+VA(0x00472fb5, 0x16b)
 void executive::MainLoop(void) {
     i8 done = 0;
     tag_message message;

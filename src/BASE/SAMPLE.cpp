@@ -21,7 +21,7 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_LOAD_STEREO = 1
 H1_ENUM_CONST_END(SampleLoadConstant)
 
-// Buka retail VA 0x00475050, size 0x1d9.
+VA(0x00475050, 0x232)
 sample::sample(char* name)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,
@@ -70,7 +70,7 @@ sample::sample(char* name)
         m_playbackData.data[i] += 0x80;
 }
 
-// Buka retail VA 0x00475282, size 0x7f.
+VA(0x00475282, 0x7f)
 sample::~sample() {
     StopSample(this);
     delete[] m_playbackData.data;

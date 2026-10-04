@@ -81,7 +81,7 @@ void PollSound() {
     gInPollSound = 0;
 }
 
-VA(0x00420c42, 0x20)
+VA(0x0043c7f1, 0x17)
 void ForcePollSound() {
     glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() - 1;
     PollSound();
@@ -158,7 +158,7 @@ void DeleteMainClasses(void) {
 // donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
-VA(0x004215d6, 0x116)
+VA(0x0043cfcb, 0xf9)
 i32 EarlySetup(void) {
     DATA(0x0049e8b0)
     static i8 gEarlySetupDone = 0;
@@ -246,7 +246,7 @@ H1_ENUM_CONST_END(NetPositionConstant)
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
-VA(0x004216ec, 0xe23)
+VA(0x0043d0c4, 0xccb)
 i32 oldmain(void) {
     char saveBuf[20];
     H1_ENUM_STORAGE(SmackVideo, char) endVideos[GAME_END_SEQUENCE_COUNT];
@@ -603,7 +603,7 @@ i32 oldmain(void) {
 }
 
 // Buka 2.1 toupper; HoMM1 keeps the narrow character form.
-VA(0x0042250f, 0x3e)
+VA(0x0043dd8f, 0x83)
 char toupper(char character) {
     if (character >= 'a' && character <= 'z')
         return character - 32;
@@ -612,7 +612,7 @@ char toupper(char character) {
 }
 
 // Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
-VA(0x0042254d, 0x288)
+VA(0x0043de12, 0x24c)
 i32 InterpretCommandLine(void) {
     i32 size;
     i32 i;
@@ -778,7 +778,7 @@ i16 RecruitHeroHandler(tag_message& message) {
 }
 
 // HoMM1 has seven neutral building slots before six per-faction dwellings.
-VA(0x00422b6a, 0x47)
+VA(0x0043e319, 0x30)
 char* GetBuildingName(i32 race, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return gNeutralBuildingNames[building];
@@ -787,7 +787,7 @@ char* GetBuildingName(i32 race, i16 building) {
             [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
 }
 
-VA(0x00422bb1, 0x9f)
+VA(0x0043e349, 0x77)
 void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
@@ -804,7 +804,7 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
     }
 }
 
-VA(0x00422c50, 0x1a)
+VA(0x0043e3cf, 0xf)
 char* GetMonsterName(i32 monster) {
     return gArmyNames[monster];
 }
@@ -838,7 +838,7 @@ void GetMonsterCost(i32 monster, i32* const cost) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
 // HoMM1 retail returns the result in AL (xor al,al / mov al,1).
-VA(0x00422d50, 0x144)
+VA(0x0043e49c, 0x104)
 i8 CanBuild(town* t, i16 building) {
     mapCell* cell;
     u16 required;
@@ -870,7 +870,7 @@ i8 CanBuild(town* t, i16 building) {
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
 // Retail returns a byte flag (xor al,al / mov al,1); philAI::CanBuyBHC tests al.
-VA(0x00422e94, 0xce)
+VA(0x0043e5a0, 0xb6)
 i8 CanBuy(town* t, i16 type) {
     i32 cost[RESOURCE_COUNT];
     playerData* rec;
@@ -893,7 +893,7 @@ i8 CanBuy(town* t, i16 type) {
 }
 
 // HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
-VA(0x00422f62, 0x60)
+VA(0x0043e656, 0x3d)
 i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
         if (building == BUILDING_SLOT_MAGE_GUILD)
@@ -1610,7 +1610,7 @@ void HandleRemoteDeadPlayerExit(i32 position) {
 }
 
 // Buka 2.1 HandleRemoteSuddenExit; HoMM1 names the next human player itself.
-VA(0x00424425, 0xf1)
+VA(0x0043f882, 0xd4)
 void HandleRemoteSuddenExit(void) {
     i32 next;
     if (!gGameInitialized)
@@ -1942,7 +1942,7 @@ void QuickViewWait(void) {
 // donor PoL RVA 0x0009c111; preferred Buka symbol ?InitVars@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
-VA(0x00424f99, 0x1cb)
+VA(0x0044053e, 0x175)
 void InitVars(void) {
     i32 i;
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
@@ -2004,7 +2004,7 @@ H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_FIVE_ALIGNMENTS = 20
 H1_ENUM_END(MoraleInfoText)
 
-VA(0x00425164, 0x42c)
+VA(0x004406b3, 0x3f2)
 void game::ShowMoraleInfo(hero* h, i32 dialogType) {
     i32 faction;
     i32 i;
@@ -2092,7 +2092,7 @@ H1_ENUM_END(LuckInfoText)
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
-VA(0x00425590, 0x1f1)
+VA(0x00440aa5, 0x1cd)
 void game::ShowLuckInfo(hero* h, i32 dialogType) {
     i32 alignments;
     i32 baseLen;
@@ -2141,7 +2141,7 @@ H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
     SCORE_MONSTER_THRESHOLD = 0,
     SCORE_MONSTER_TYPE = 1
 H1_ENUM_CONST_END(ScoreMonsterConstant)
-VA(0x004257f1, 0x8e)
+VA(0x00440ccf, 0x6a)
 i16 GetMonType(i32 score, i32 highScoreType) {
     i32 index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
@@ -2159,7 +2159,7 @@ i16 GetMonType(i32 score, i32 highScoreType) {
 // donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
-VA(0x0042587f, 0x3db)
+VA(0x00440d39, 0x32d)
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
@@ -2237,7 +2237,7 @@ void BVResMsg(char* s, i32 res, i32 qty) {
 }
 
 // Buka 2.1 GOut.
-VA(0x00425cb5, 0x2e)
+VA(0x004410b7, 0x1f)
 void GOut(char* text) {
     if (gpAdvManager->m_active == 1)
         AiPrint(text);
@@ -2568,7 +2568,7 @@ H1_ENUM_CONST_END(CongratsConstant)
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
 // as a creature and file it with the high scores.
-VA(0x004266c1, 0x3be)
+VA(0x00441977, 0x3f5)
 void ShowCongrats(void) {
     char name[32];
     i32 i;
@@ -2761,13 +2761,13 @@ void MemError(void) {
 // Buka 2.1 MiscRuntime MemSize: a fixed reported memory size.
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
-VA(0x0042702f, 0x15)
+VA(0x004421a6, 0xa)
 i32 MemSize(i32) {
     return 16034;
 }
 
 // Buka 2.1 CheckMem without HoMM2's memory globals.
-VA(0x00427044, 0x12)
+VA(0x004421b0, 0x7)
 i8 CheckMem(void) {
     return 1;
 }
@@ -2785,7 +2785,7 @@ char* GetTownName(i32 i) {
     return gTownNames[townPointer->m_threat];
 }
 
-// Buka retail VA 0x00442254, size 0x39; returns bool in AL.
+VA(0x00442254, 0x39)
 bool IsCDDrive(i32 driveIndex) {
     sprintf(gText, "A:\\");
     gText[0] += driveIndex;
@@ -3157,7 +3157,7 @@ void UpdateAppSpecificMenus(void* hMenu) {
         UpdateSystemOptionsMenu();
 }
 
-VA(0x00427d65, 0x22)
+VA(0x00442c5e, 0x5)
 void EarlyResizeWindow(i32, i32, i32, i32) {
     if (gClosingApp)
         return;

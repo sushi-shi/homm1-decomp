@@ -95,7 +95,7 @@ void SetPalette(i8* paletteData, i32 updateDisplay) {
         UpdatePalette(gpBufferPalette->m_data);
 }
 
-VA(0x00475e60, 0xdd)
+VA(0x0046faa5, 0x16d)
 void FadeIn(i32 increment) {
     i8 done;
     i32 i, j, threshold;
@@ -128,7 +128,7 @@ void FadeIn(i32 increment) {
     delete currentPalette;
 }
 
-VA(0x00475f40, 0xcd)
+VA(0x0046fc12, 0x170)
 void FadeOut(i32 increment) {
     i8 done;
     i32 i, j;
@@ -194,7 +194,7 @@ i32 Random(i32 low, i32 high) {
 }
 
 // Called on the loaded kb.pal data before SetPalette.
-VA(0x00476050, 0x60)
+VA(0x0046fdc3, 0x95)
 void PostprocessPalette(i8* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
@@ -208,7 +208,7 @@ void PostprocessPalette(i8* data) {
 VA(0x0046fe58, 0x5)
 void PostprocessBitmap(i8*, i32, i32) {}
 
-VA(0x004760c0, 0x1)
+VA(0x0046fe5d, 0x5)
 void PostprocessIcon(icon*) {}
 
 // HoMM1's C++ mono clipping path, corresponding to donor Iconm2b.cpp.
@@ -378,5 +378,5 @@ void ClipIconToBitmap(
 // ShutDown calls it. Buka keeps a debug-heap report here; HoMM1 retail ships
 // the empty release body.
 
-VA(0x00476570, 0x1)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void PrintMemoryLeaks(void) {}

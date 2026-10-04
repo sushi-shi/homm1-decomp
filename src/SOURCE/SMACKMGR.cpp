@@ -87,7 +87,7 @@ static Smack* gSmackPrimary;
 // Buka retail VA 0x004cccac.
 static Smack* gSmackCompanion;
 
-// Buka retail VA 0x00458240, size 0x18f.
+VA(0x00458240, 0x18f)
 void InitSmackSound() {
     if (gSmackDriver)
         return;
@@ -124,7 +124,7 @@ void InitSmackSound() {
         gSmackDriver = NULL;
 }
 
-// Buka retail VA 0x004583cf, size 0x2a.
+VA(0x004583cf, 0x2a)
 void ShutdownSmackSound() {
     if (gSmackDriver) {
         AIL_waveOutClose(gSmackDriver);
@@ -133,13 +133,13 @@ void ShutdownSmackSound() {
     }
 }
 
-// Buka retail VA 0x004583f9, size 0x3a.
+VA(0x004583f9, 0x3a)
 void ConvertSmackerPalette(u8* paletteData) {
     for (i32 i = 0; i < PALETTE_DATA_SIZE; ++i)
         paletteData[i] = paletteData[i] >> WINGRAPH_PALETTE_VALUE_SHIFT;
 }
 
-// Buka retail VA 0x00458433, size 0x13c.
+VA(0x00458433, 0x13c)
 void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette, i32 skipPalette) {
     if (drawFrame && smack->NewPalette && !skipPalette) {
         memcpy(gPalette->m_data, smack->Palette, PALETTE_DATA_SIZE);
@@ -170,7 +170,7 @@ void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette,
         SmackNextFrame(smack);
 }
 
-// Buka retail VA 0x0045856f, size 0x73c.
+VA(0x0045856f, 0x73c)
 void SmackMain() {
     i32 soundFlags;
     i32 preloadFlags;
@@ -352,7 +352,7 @@ void SmackMain() {
     }
 }
 
-// Buka retail VA 0x00458cab, size 0x49.
+VA(0x00458cab, 0x49)
 void CloseSmackers() {
     if (gSmackPrimary)
         SmackClose(gSmackPrimary);
@@ -363,7 +363,7 @@ void CloseSmackers() {
     ShutdownSmackSound();
 }
 
-// Buka retail VA 0x00458cf4, size 0xa9.
+VA(0x00458cf4, 0xa9)
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedUpdateFlags;

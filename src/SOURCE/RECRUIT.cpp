@@ -60,7 +60,7 @@ H1_ENUM_END(RecruitControl)
 
 // Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
 // sets the creature portrait by frame rather than by icon name.
-VA(0x004669b0, 0x164)
+VA(0x00450d30, 0x1c9)
 void SetupRecruitWin(
     heroWindow* window,
     i32 creatureType,

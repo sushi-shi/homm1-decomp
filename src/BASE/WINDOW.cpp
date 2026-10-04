@@ -40,7 +40,7 @@ H1_ENUM_END(WindowWidgetRecordType)
 // donor PoL RVA 0x000cec20; preferred Buka symbol ??0heroWindow@@QAE@HHHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651321;margin=0.357646;shape=0.346;size=0.852;calls=1.000;strings=Dynamic Construct;alternate=pol20:void heroWindow::constructor(int, int, int, int, int)@0x000cec20
-VA(0x00477230, 0xad)
+VA(0x0046d0b2, 0x9e)
 heroWindow::heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags) {
     strcpy(m_name, gDynamicConstruct);
     m_prevWindow = NULL;
@@ -153,7 +153,7 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
 // donor PoL RVA 0x000cf200; preferred Buka symbol ?Open@heroWindow@@QAEHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.353009;margin=0.367120;shape=0.216;size=0.638;calls=0.500;alternate=pol20:int heroWindow::Open(int, int)@0x000cf200
-VA(0x00477730, 0x9d)
+VA(0x0046d6f0, 0x85)
 i16 heroWindow::Open(i16 zOrder, i8 flags) {
     if ((m_winState & WINDOW_STATE_OPEN) != 0)
         return WINDOW_OPEN_FAILURE;
@@ -315,7 +315,7 @@ void heroWindow::DrawWindow(i16 update, i32 firstId, i32 lastId) {
 // donor PoL RVA 0x000cf830; preferred Buka symbol ?SaveBackground@heroWindow@@QAEHXZ
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.570741;margin=0.294707;shape=0.467;size=0.852;calls=1.000;alternate=pol20:int heroWindow::SaveBackground(void)@0x000cf830
-VA(0x00477ce0, 0x84)
+VA(0x0046db7e, 0xaa)
 i16 heroWindow::SaveBackground(void) {
     m_savedBackground = new bitmap(BITMAP_TYPE_MEMORY, m_winWidth, m_winHeight);
     PollSound();

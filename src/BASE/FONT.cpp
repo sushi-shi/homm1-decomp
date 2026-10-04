@@ -12,7 +12,7 @@
 
 #pragma intrinsic(strlen)
 
-VA(0x0047a900, 0xa1)
+VA(0x00471dd0, 0xc7)
 font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     i8 name[RESOURCE_NAME_CAPACITY];
     gpResourceManager->PointToFile(id);
@@ -26,13 +26,13 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
     gLoadingMonoIcon = 0;
 }
 
-VA_COMPGEN(0x0047a9b0, 0x39, "??_Gfont@@UAEPAXI@Z", 0x0047a900)
+VA_COMPGEN(0x00472760, 0x2e, "??_Gfont@@UAEPAXI@Z", 0x00471dd0)
 VA(0x00471e97, 0x5b)
 font::~font(void) {
     gpResourceManager->Dispose(m_glyphIcon);
 }
 
-VA(0x0047aa30, 0xd1)
+VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     IconEntry* entries = reinterpret_cast<IconEntry*>(
         m_glyphIcon->m_data

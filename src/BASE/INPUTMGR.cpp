@@ -24,7 +24,7 @@ static inline void ResetEventQueue(inputManager* manager) {
     manager->m_readIndex = 0;
 }
 
-VA(0x00478520, 0x2e4)
+VA(0x0046e560, 0x464)
 i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
     if (gpInputManager == NULL)
         return 1;
@@ -107,7 +107,7 @@ i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
 // donor PoL RVA 0x000cde60; preferred Buka symbol ?MouseMessageHandler@@YIHPAXIIJ@Z
 // donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
-VA(0x00478810, 0x27c)
+VA(0x0046e9c4, 0x33a)
 #line 137 "F:\\H1w95src\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
     DATA(0x004a3dcc)
@@ -210,7 +210,7 @@ inputManager::inputManager(void) {
 // retail). Probes: `return 1` moves it to ebp; an int priority, or swapping the
 // two stores of 1, keeps edx. Retail's heroWindowManager::Open also uses edx,
 // mouseManager's constructor eax.
-VA(0x00478b00, 0x85)
+VA(0x0046ed9e, 0xa4)
 i16 inputManager::Open(i16 priority) {
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
@@ -236,7 +236,7 @@ void inputManager::Close(void) {
     m_active = 0;
 }
 
-VA(0x00478bd0, 0x6)
+VA(0x0046eea6, 0x10)
 i16 inputManager::Main(tag_message&) {
     return 0;
 }
@@ -269,7 +269,7 @@ tag_message inputManager::GetEvent(void) {
 
 // The donor assigns the key-code mode and then flushes the event queue.
 // HoMM1 inlines Flush here and stores the mode as a short at +0x340.
-VA(0x00478ce0, 0x1f)
+VA(0x0046f062, 0x23)
 void inputManager::SetKeyCodeType(i16 keyCodeType) {
     m_keyCodeType = keyCodeType;
     ResetEventQueue(this);
@@ -354,7 +354,7 @@ void inputManager::AsciiConvert(tag_message& event) {
     }
 }
 
-VA(0x00478ed0, 0x33c)
+VA(0x0046f3cb, 0x46a)
 void inputManager::MakeScanCodeTable(void) {
     for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
         m_keyState[scanCode] = scanCode << INPUT_KEY_SCAN_SHIFT;

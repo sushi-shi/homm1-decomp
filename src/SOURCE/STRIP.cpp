@@ -22,7 +22,7 @@
 // donor PoL RVA 0x00032230; preferred Buka symbol ??0strip@@QAE@HHHKHPAVarmyGroup@@HHH@Z
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
-VA(0x00437ed0, 0x2de)
+VA(0x0045c6b0, 0x290)
 strip::strip(
     i16 x,
     i16 y,
@@ -189,7 +189,7 @@ void strip::DrawIcons(i8 drawWindow) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00438570, 0x37)
+VA(0x0045ccb1, 0x2c)
 void strip::DrawFrame(void) {
     m_stripIcon
         ->DrawToBuffer(m_x, m_y, STRIP_BACKGROUND_FRAME, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -198,7 +198,7 @@ void strip::DrawFrame(void) {
 // donor PoL RVA 0x00032a38; preferred Buka symbol ??0bankBox@@QAE@HHPAVplayerData@@@Z
 // donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.721149;margin=0.159729;shape=0.520;size=0.843;calls=0.833;strings=bankbox.bin;alternate=pol20:void bankBox::constructor(int, int, class playerData *)@0x00032a38
-VA(0x004385a7, 0xfe)
+VA(0x0045ccdd, 0xd4)
 bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     m_player = player;
     m_x = x;

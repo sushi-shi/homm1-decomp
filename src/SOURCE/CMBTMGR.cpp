@@ -47,6 +47,7 @@ DATA(0x0048f060)
 i32 gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
+VA_COMPGEN(0x0041c900, 0x27, "??_H@YGXPAXIHP6EX0@Z@Z", 0x00418b30)
 VA(0x00418b30, 0x18b)
 combatManager::combatManager(void) {
     m_gridMode = 0;
@@ -695,7 +696,7 @@ void combatManager::FreeArmies(void) {
 // for unshown battles is the nearest one-argument fit.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046c217, 0x18)
+VA(0x0041a842, 0xd)
 void combatManager::NoShowCombatLog(char*) {}
 
 // Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high

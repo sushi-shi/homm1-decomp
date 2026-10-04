@@ -168,7 +168,7 @@ i16 HandleCastSpell(struct tag_message& message) {
 
 // Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
 // anti-magic, dispel and green dragons stop every spell but the area ones.
-VA(0x0040e04c, 0x2f0)
+VA(0x0045a30d, 0x265)
 i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
     i32 unused;
     army* target = NULL;
@@ -582,7 +582,7 @@ void combatManager::DefaultSpell(i8 targetHex) {
 
 // HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
-VA(0x0040f298, 0x407)
+VA(0x0045b375, 0x383)
 void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     i32 last;
     i32 unused;
@@ -644,7 +644,7 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
 
 // HoMM1: lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
-VA(0x0040f69f, 0x12e)
+VA(0x0045b6f8, 0xf0)
 void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
     army* curArmy;
     i16 i;
@@ -676,7 +676,7 @@ void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
 
 // Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
 // always hits the target hex and its six neighbours.
-VA(0x0040f7cd, 0x432)
+VA(0x0045b7e8, 0x403)
 void combatManager::Fireball(i8 targetHex) {
     i32 damage;
     icon* fireballIcon;
@@ -747,7 +747,7 @@ void combatManager::Fireball(i8 targetHex) {
 
 // Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
 // hexes in turn.
-VA(0x0040fbff, 0x439)
+VA(0x0045bbeb, 0x402)
 void combatManager::MeteorShower(i8 targetHex) {
     i16 i;
     i32 damage;
@@ -822,7 +822,7 @@ void combatManager::MeteorShower(i8 targetHex) {
 }
 
 // Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
-VA(0x00410038, 0x2f3)
+VA(0x0045bfed, 0x2d0)
 void combatManager::ElementalStorm(void) {
     i32 damage;
     i16 index;

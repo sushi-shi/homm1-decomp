@@ -67,7 +67,7 @@ mouseManager::mouseManager(void) {
     memset(hMouseCursor, 0, sizeof(hMouseCursor));
 }
 
-VA(0x004732b0, 0x46)
+VA(0x0046b612, 0x98)
 i16 mouseManager::Open(i16 priority) {
     m_savedUnderlying =
         new bitmap(BITMAP_TYPE_MEMORY, MOUSE_SAVED_BITMAP_SIZE, MOUSE_SAVED_BITMAP_SIZE);
@@ -78,7 +78,7 @@ i16 mouseManager::Open(i16 priority) {
 }
 
 // Retail releases both monochrome/color masks and pauses around cursor teardown.
-VA(0x00473300, 0xf2)
+VA(0x0046b6aa, 0x190)
 void mouseManager::Close(void) {
     i32 cursorIndex;
     if (m_active == 1) {
@@ -108,7 +108,7 @@ void mouseManager::Close(void) {
     }
 }
 
-VA(0x00473400, 0x6)
+VA(0x0046b83a, 0x10)
 i16 mouseManager::Main(tag_message&) {
     return 0;
 }
@@ -271,7 +271,7 @@ void mouseManager::ReallyShowPointer(void) {}
 VA(0x0046bf87, 0xb)
 void mouseManager::ReallyHidePointer(void) {}
 
-VA(0x00473910, 0x1)
+VA(0x0046bf92, 0xb)
 void mouseManager::HideColorPointer(void) {}
 
 // townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
@@ -287,10 +287,10 @@ void mouseManager::SaveAndDraw(bitmap*, i16, i16, i16) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
 // build ignores it (`ret 8`).
-VA(0x00473940, 0x3)
+VA(0x0046bfcd, 0xd)
 void mouseManager::MovePointer(i16, i16) {}
 
-VA(0x00473950, 0x1)
+VA(0x0046bfda, 0xb)
 void mouseManager::ShowColorPointer(void) {}
 
 // townManager::Open forces a pointer refresh here; the Windows build keeps
@@ -318,7 +318,7 @@ VA(0x0046c062, 0xd)
 void mouseManager::SetCursorShape(i32) {}
 
 // advManager::Open passes the colour-pointer preference; Windows ignores it.
-VA(0x004739f0, 0x3)
+VA(0x0046c06f, 0xd)
 void mouseManager::SetColorMice(i32) {}
 
 VA(0x0046c07c, 0x13)

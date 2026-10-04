@@ -190,7 +190,7 @@ i8 combatManager::ValidHexToStandOn(i32 hex) {
 
 // Buka COMMAND.cpp SetCombatDirections; HoMM1 reads the global adjacency
 // table and keeps the 24-sector map as bytes.
-VA(0x0044a157, 0x7e9)
+VA(0x0041d783, 0x704)
 void combatManager::SetCombatDirections(i32 targetHex) {
     i32 mapped;
     i32 targetSide;
@@ -1557,7 +1557,7 @@ void combatManager::ResetMouse(void) {
 
 // Buka COMMAND.cpp ProcessNextAction; HoMM1 hides the pointer around the
 // action, broadcasts it to a human net opponent and has no door or cycling.
-VA(0x0044e18c, 0x552)
+VA(0x004210c0, 0x4c6)
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
     army* actingArmy;
     i8 advance;

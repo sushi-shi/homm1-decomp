@@ -151,7 +151,7 @@ static const float AI_ATTENTION_IDENTITY = 1.0f;
 // Misc's logging helpers open this object in retail (0x00427da5..0x00419f15),
 // directly after the SVSearchArray initializer wrapper _$E2 at 0x00427d90.
 // HoMM1's retained logging path opens KB.LOG afresh and writes its banner.
-VA(0x00427da5, 0x70)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogTruncate() {
     char logText[MISC_LOG_TEXT_CAPACITY];
     FILE* out;
@@ -167,7 +167,7 @@ void LogTruncate() {
 // donor PoL RVA 0x000c6120; preferred Buka symbol ?LogStr@@YIXPAD@Z
 // donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.724628;margin=0.262043;shape=0.429;size=0.928;calls=1.000;strings=KB.LOG;alternate=pol20:void LogStr(char *)@0x000c6120
-VA(0x00427e15, 0x9d)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogStr(char* text) {
     char logText[MISC_LOG_TEXT_CAPACITY];
     FILE* out;
@@ -184,7 +184,7 @@ void LogStr(char* text) {
 }
 
 // HoMM1 keeps the two-value logging form used by its AI call sites.
-VA(0x00427eb2, 0x86)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogInt(char* label, i32 value) {
     char logText[MISC_LOG_VALUE_TEXT_CAPACITY];
     FILE* out;
@@ -200,7 +200,7 @@ void LogInt(char* label, i32 value) {
 }
 
 // Prior LZHUF source uses this two-long LogStr overload.
-VA(0x00427f38, 0x8a)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogStr(char* label, i32 value1, i32 value2) {
     char logText[MISC_LOG_VALUE_TEXT_CAPACITY];
     FILE* out;
@@ -216,7 +216,7 @@ void LogStr(char* label, i32 value1, i32 value2) {
 }
 
 // HoMM1's five-value logging form; DDAppPaint logs its blit rectangles here.
-VA(0x00427fc2, 0xa2)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogStr(char* label, i32 value1, i32 value2, i32 value3, i32 value4, i32 value5) {
     char logText[MISC_LOG_VALUES_TEXT_CAPACITY];
     FILE* out;
@@ -241,7 +241,7 @@ void LogStr(char* label, i32 value1, i32 value2, i32 value3, i32 value4, i32 val
 }
 
 // Seven-value form used by combat's action trace.
-VA(0x00428064, 0xaa)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void LogStr(
     char* label,
     i32 value1,
@@ -277,7 +277,7 @@ void LogStr(
 }
 
 // HoMM1 routes the status-line print through the AI object's debug font.
-VA(0x0042810e, 0x1f)
+VA(0x00447900, 0x14)
 void AiPrint(char* text) {
     gpPhilAI->ShowDebugText(text);
 }
@@ -299,7 +299,7 @@ void AbsAiPrint(char* text) {
 // philAI.h: the AI strategic-value maps philAI::DoAI resets through ResetHeroRVs.
 
 // Buka ResetHeroRVs; HoMM1 has no off-map guard and indexes [x][y].
-VA(0x0042817b, 0x177)
+VA(0x00447951, 0x150)
 void ResetHeroRVs(i32 resetAll, i32 x, i32 y) {
     i32 i;
     i32 j;
@@ -369,7 +369,7 @@ void CheckDoMain(i32, i32 doMain) {
 }
 
 // Both donors retain this intentionally empty status hook; retail has no side effects.
-VA(0x004284e1, 0x10)
+VA(0x00447c6b, 0x5)
 void ShowStatus() {}
 
 // HoMM1-only AI status line drawn with philAI's debug font across the bottom
@@ -413,7 +413,7 @@ void philAI::DoAllHeroInteractions(void) {
 // donor PoL RVA 0x00037fdf; preferred Buka symbol ?CheckBuyStuff@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.641449;margin=0.572995;shape=0.312;size=0.907;calls=0.824;strings=CheckBuy End  |CheckBuy Start;alternate=pol20:void philAI::CheckBuyStuff(void)@0x00037fdf
-VA(0x0042868b, 0x445)
+VA(0x00447dc7, 0x3ef)
 void philAI::CheckBuyStuff(void) {
     i32 done = 0;
     i32 boughtSomething = 0;
@@ -496,7 +496,7 @@ void philAI::CheckBuyStuff(void) {
 // donor PoL RVA 0x0003849d; preferred Buka symbol ?GoodAdjacent@philAI@@QAEHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.410367;margin=0.413392;shape=0.366;size=0.596;calls=0.600;alternate=pol20:int philAI::GoodAdjacent(int *)@0x0003849d
-VA(0x00428ad0, 0x1a9)
+VA(0x004481b6, 0x194)
 i32 philAI::GoodAdjacent(hero* pHero, i32* direction) {
     i32 bestDirection;
     i32 dirIndex;
@@ -539,7 +539,7 @@ i32 philAI::GoodAdjacent(hero* pHero, i32* direction) {
 // donor PoL RVA 0x00038785; preferred Buka symbol ?CheckReload@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.433109;margin=0.377228;shape=0.310;size=0.859;calls=0.417;alternate=pol20:void philAI::CheckReload(void)@0x00038785
-VA(0x00428c79, 0x3e5)
+VA(0x0044834a, 0x384)
 void philAI::CheckReload(hero* pHero) {
     i32 mapY;
     mapCell* visitedCell;
@@ -625,7 +625,7 @@ void philAI::CheckReload(hero* pHero) {
 // donor PoL RVA 0x00038c3d; preferred Buka symbol ?CheckBerserk@philAI@@QAEXXZ
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.559466;margin=0.357720;shape=0.362;size=0.984;calls=1.000;alternate=pol20:void philAI::CheckBerserk(void)@0x00038c3d
-VA(0x0042905e, 0x280)
+VA(0x004486ce, 0x216)
 void philAI::CheckBerserk(hero* pHero) {
     i32 enemy;
     i32 x;
@@ -690,7 +690,7 @@ void philAI::CheckBerserk(hero* pHero) {
 
 // Buka 2.1 DoDimensionDoor with DimensionDoorTo inlined for the given hero:
 // HoMM1 teleports with three arguments and returns a byte flag.
-VA(0x004292de, 0x1a0)
+VA(0x004488e4, 0x18b)
 i8 philAI::DoDimensionDoor(hero* pHero) {
     i32 x;
     i32 i;
@@ -948,7 +948,7 @@ void philAI::GetGameAIVars(void) {
 // donor PoL RVA 0x0003a329; preferred Buka symbol ?GetTurnAIVars@philAI@@QAEXH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
-VA(0x00429db9, 0x654)
+VA(0x004491dd, 0x5eb)
 void philAI::GetTurnAIVars(i32 player) {
     i32 totalFightValue;
     playerData* pPlayer;
@@ -1053,7 +1053,7 @@ void philAI::GetTurnAIVars(i32 player) {
 // donor PoL RVA 0x0003b154; preferred Buka symbol ?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.679791;margin=0.499826;shape=0.401;size=0.937;calls=0.722;strings=BestBHC |Turns Owned;alternate=pol20:void philAI::GetBestBHC(int, struct BHC &)@0x0003b154
-VA(0x0042a40d, 0x5d0)
+VA(0x004497c8, 0x54c)
 void philAI::GetBestBHC(i32, BHC& best) {
     float fValue = 1.0f;
     float bestBHCValue = -99.0f;
@@ -1164,7 +1164,7 @@ hero* philAI::DetermineHeroToMove(i32 player) {
 // donor PoL RVA 0x0003b865; preferred Buka symbol ?DetermineTargetPosition@philAI@@QAEHAAH0H0@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
-VA(0x0042aaf9, 0x932)
+VA(0x00449dfe, 0x89d)
 void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 mobility) {
     i32 bestRV;
     i32 cellValue;
@@ -1335,7 +1335,7 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
 // donor PoL RVA 0x0003c6e2; preferred Buka symbol ?ProbableOutcomeOfBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@010HHHAAMAAH3333@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.549946;margin=0.581641;shape=0.449;size=0.953;calls=0.724;alternate=pol20:void philAI::ProbableOutcomeOfBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, class armyGroup *, int, int, int, float &, int &, int &, int &, int &, int &)@0x0003c6e2
-VA(0x0042b42b, 0x63a)
+VA(0x0044a69b, 0x55f)
 void philAI::ProbableOutcomeOfBattle(
     armyGroup* attacker,
     hero* attackerHero,
@@ -1461,7 +1461,7 @@ void philAI::ProbableOutcomeOfBattle(
 // Buka 2.1 GetOddsOfWinning returns the exact constant seen in retail's fld.
 // @dead-code
 // Zero-ref: pinned retail has no incoming direct call/jump or relocated reference.
-VA(0x0042ba65, 0x1e)
+VA(0x0044abfa, 0x13)
 float philAI::GetOddsOfWinning(i32) {
     return 1.0f;
 }
@@ -1469,7 +1469,7 @@ float philAI::GetOddsOfWinning(i32) {
 // Buka 2.1 ValueOfBuyingBuilding without the HoMM2 special buildings: the
 // base value, scaled per slot by attention weights and dwelling counts, the
 // enemy threat and the purchase deflator.
-VA(0x0042ba83, 0x572)
+VA(0x0044ac0d, 0x507)
 void philAI::ValueOfBuyingBuilding(
     town* townPointer,
     i32 building,
@@ -1611,7 +1611,7 @@ void philAI::ValueOfBuyingBuilding(
 // donor PoL RVA 0x0003d6b7; preferred Buka symbol ?GetBestBuilding@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.526596;margin=0.075083;shape=0.323;size=0.949;calls=1.000;alternate=pol20:void philAI::GetBestBuilding(class town *, struct BHC &, float &)@0x0003d6b7
-VA(0x0042bff5, 0x16f)
+VA(0x0044b114, 0x101)
 void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCost) {
     float buildingValue;
     i32 bestBuilding;
@@ -1660,7 +1660,7 @@ void philAI::GetBestBuilding(town* townPointer, BHC& purchase, float& benefitCos
 // donor PoL RVA 0x0003d852; preferred Buka symbol ?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.431663;margin=0.517459;shape=0.208;size=0.811;calls=0.923;alternate=pol20:void philAI::ValueOfBuyingCreature(class town *, int, int &, int, float &)@0x0003d852
-VA(0x0042c164, 0x2e1)
+VA(0x0044b215, 0x268)
 void philAI::ValueOfBuyingCreature(
     town* townPointer,
     i32 creature,
@@ -1741,7 +1741,7 @@ void philAI::ValueOfBuyingCreature(
 // donor PoL RVA 0x0003db58; preferred Buka symbol ?GetBestCreature@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.467416;margin=0.566378;shape=0.359;size=0.696;calls=1.000;alternate=pol20:void philAI::GetBestCreature(class town *, struct BHC &, float &)@0x0003db58
-VA(0x0042c445, 0x1f5)
+VA(0x0044b47d, 0x188)
 void philAI::GetBestCreature(town* townPointer, BHC& best, float& bestValue) {
     float bestCost;
     float rand;
@@ -1903,7 +1903,7 @@ i32 gArtifactChoice1;
 // donor PoL RVA 0x0003e2a8; preferred Buka symbol ?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.649528;margin=0.194728;shape=0.311;size=0.925;calls=0.800;strings=Town:%2d  Hero    : % 15i   Raw BC = %8.2f,  RandBC = %8.2f.;alternate=pol20:void philAI::GetBestHero(class town *, struct BHC &, float &)@0x0003e2a8
-VA(0x0042c924, 0x184)
+VA(0x0044b891, 0x12c)
 void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     i32 bestHero;
     float worth;
@@ -1970,7 +1970,7 @@ void philAI::LikelihoodOfEnemyAttacking(
 }
 
 // This zero result is the Buka 2.1 body and the pinned retail instruction.
-VA(0x0042cb0d, 0x1a)
+VA(0x0044ba11, 0xf)
 i32 philAI::MeanRVOfUnexploredTerritory(i32) {
     return 0;
 }
@@ -2019,7 +2019,7 @@ void philAI::GetTurnAttentionValue(i32 player) {
 // donor PoL RVA 0x0003e7a2; preferred Buka symbol ?RVConversion@philAI@@QAEHQAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.411394;margin=0.429857;shape=0.250;size=0.681;calls=1.000;alternate=pol20:int philAI::RVConversion(int * const)@0x0003e7a2
-VA(0x0042cd5b, 0xa6)
+VA(0x0044bc33, 0x71)
 i32 philAI::RVConversion(i32* const resources) {
     return static_cast<i32>(
         ((((((static_cast<float>(resources[static_cast<i32>(RESOURCE_ORE)])
@@ -2065,7 +2065,7 @@ float philAI::TurnsToBuy(i32* const resources) {
 // donor PoL RVA 0x0003e918; preferred Buka symbol ?RVOfPosition@philAI@@QAEHHHHHHHHHHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513260;margin=0.500427;shape=0.306;size=0.971;calls=0.812;alternate=pol20:int philAI::RVOfPosition(int, int, int, int, int, int, int, int, int, int)@0x0003e918
-VA(0x0042cecb, 0x522)
+VA(0x0044bd6b, 0x493)
 i32 philAI::RVOfPosition(
     hero* pHero,
     i16 x,
@@ -2201,15 +2201,15 @@ i32 philAI::RVOfPosition(
 // by its dynamic initializer between RVOfPosition and its first user.
 DATA(0x004b3038)
 searchArray SVSearchArray;
-RVA_DYNINIT(0x0002d3ed, 0x1a, SVSearchArray)
+RVA_DYNINIT(0x0004c208, 0xf, SVSearchArray)
 // Its .CRT$XCU thunk (0x0048e008 -> 0x00427d90) opens this retail object:
 // int3 padding precedes it and LogTruncate follows without a gap.
-RVA_DYNINIT(0x00027d90, 0x15, SVSearchArray)
+RVA_DYNINIT(0x0004c1fe, 0xa, SVSearchArray)
 
 // donor PoL RVA 0x0003ef45; preferred Buka symbol ?StrategicValueOfPosition@philAI@@QAEHHHHHPAHH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.499321;margin=0.324582;shape=0.341;size=0.829;calls=0.957;alternate=pol20:int philAI::StrategicValueOfPosition(int, int, int, int, int *, int)@0x0003ef45
-VA(0x0042d407, 0x8a9)
+VA(0x0044c217, 0x83a)
 i32 philAI::StrategicValueOfPosition(
     hero* pHero,
     i16 targetX,
@@ -2364,7 +2364,7 @@ i32 gArtifactChoice2;
 
 // Buka 2.1 ValueOfTown without the later scenario-town bonuses: built
 // structures' base values plus a fixed gold-turn allowance.
-VA(0x0042dcb0, 0xb1)
+VA(0x0044ca51, 0xb9)
 i32 philAI::ValueOfTown(town* townPointer) {
     i32 sum = 0;
     i32 building;
@@ -2594,7 +2594,7 @@ i32 philAI::FightValueOfStack(
 // donor PoL RVA 0x00040aca; preferred Buka symbol ?EvaluateOneTimeCreaturePurchase@philAI@@QAEXHHHAAH00@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.513526;margin=0.703256;shape=0.342;size=0.854;calls=1.000;alternate=pol20:void philAI::EvaluateOneTimeCreaturePurchase(int, int, int, int &, int &, int &)@0x00040aca
-VA(0x0042e76d, 0x1da)
+VA(0x0044d38f, 0x192)
 void philAI::EvaluateOneTimeCreaturePurchase(
     hero* pHero,
     i32 creature,
@@ -3028,7 +3028,7 @@ i32 philAI::ChooseGoldOrExperience(hero* thisHero, i32 gold, i32 experience) {
 // donor PoL RVA 0x000425b0; preferred Buka symbol ?ChooseEvaluateBattle@philAI@@QAEXPAVarmyGroup@@PAVhero@@01HHHAAH2@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.572029;margin=0.742196;shape=0.490;size=0.824;calls=1.000;alternate=pol20:void philAI::ChooseEvaluateBattle(class armyGroup *, class hero *, class armyGroup *, class hero *, int, int, int, int &, int &)@0x000425b0
-VA(0x0042f88d, 0xc7)
+VA(0x0044e275, 0xa4)
 void philAI::ChooseEvaluateBattle(
     armyGroup* attackerArmy,
     hero* attackerHero,
@@ -3087,14 +3087,14 @@ i32 philAI::ChooseToBuyArtifact(hero*, i32 artifact, i32 goldCost) {
 
 // Buka 2.1 returns one for the ransom choice. HoMM1's daemon-cave caller
 // passes a hero and the gold amount; the retail body returns the same one.
-VA(0x0042f9bd, 0x1d)
+VA(0x0044e35b, 0x12)
 i32 philAI::ChooseToPayRansomOnHero(hero*, i32) {
     return 1;
 }
 
 // Buka 2.1 BuildBuilding with HoMM1's town update written in place: the mage
 // guild level, castle conversion and new dwelling stock.
-VA(0x0042f9da, 0x194)
+VA(0x0044e36d, 0x140)
 void philAI::BuildBuilding(town* townPointer, i16 building) {
     i32 i;
     i32 cost[RESOURCE_COUNT];
@@ -3132,7 +3132,7 @@ void philAI::BuildBuilding(town* townPointer, i16 building) {
 
 // Buka 2.1 BuildHero without the later network/army bookkeeping: the hero
 // stands on the town cell and a random faction refills the tavern slot.
-VA(0x0042fb6e, 0x25c)
+VA(0x0044e4ad, 0x223)
 void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     hero* newHero;
     i16 townX;
@@ -3172,7 +3172,7 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
 
 // Buka 2.1 BuildCreature without the full-army eviction: pay, take the stock
 // and add the stack to the garrison.
-VA(0x0042fdca, 0x100)
+VA(0x0044e6d0, 0xad)
 void philAI::BuildCreature(town* townPointer, i32 dwelling, i32 purchaseCount) {
     i32 cost[RESOURCE_COUNT];
     i32 creature;
@@ -3199,7 +3199,7 @@ void philAI::BuildCreature(town* townPointer, i32 dwelling, i32 purchaseCount) {
 // donor PoL RVA 0x00042ead; preferred Buka symbol ?CanBuyBHC@philAI@@QAEHAAUBHC@@@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.453882;margin=0.780446;shape=0.369;size=0.712;calls=0.667;alternate=pol20:int philAI::CanBuyBHC(struct BHC &)@0x00042ead
-VA(0x0042feca, 0x188)
+VA(0x0044e77d, 0x13f)
 i32 philAI::CanBuyBHC(BHC& purchase) {
     i32 index;
     i32 j;
@@ -3265,7 +3265,7 @@ i8 philAI::CombatMonsterEvent(hero* h, i8 monType, i32* pCount, mapCell*) {
 // donor PoL RVA 0x0004316b; preferred Buka symbol ?FightEvent@philAI@@QAEHPAVhero@@PAVmapCell@@H@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.277616;margin=0.834782;shape=0.262;size=0.393;calls=0.393;alternate=pol20:int philAI::FightEvent(class hero *, class mapCell *, int)@0x0004316b
-VA(0x004301c9, 0x26a)
+VA(0x0044ea2c, 0x22f)
 void philAI::FightEvent(hero* heroPointer, mapCell* cell) {
     float attackerLoss;
     i32 rewardValue;
@@ -3407,7 +3407,7 @@ void philAI::IncrementHourGlass(void) {
 // donor PoL RVA 0x00043980; preferred Buka symbol ?TownEvent@philAI@@QAEXPAVmapCell@@PAVhero@@HH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.582749;margin=0.601748;shape=0.455;size=0.921;calls=1.000;alternate=pol20:void philAI::TownEvent(class mapCell *, class hero *, int, int)@0x00043980
-VA(0x004305d7, 0x221)
+VA(0x0044edcb, 0x1e9)
 void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     float attackerLoss;
     float defenderLoss;
@@ -3513,7 +3513,7 @@ hero* gEventHero;
 // donor PoL RVA 0x00043fc4; preferred Buka symbol ?ValueOfEventAtPosition@philAI@@QAEHHHHPAH@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.465517;margin=0.659381;shape=0.256;size=0.790;calls=0.952;alternate=pol20:int philAI::ValueOfEventAtPosition(int, int, int, int *)@0x00043fc4
-VA(0x004307f8, 0x206d)
+VA(0x0044efb4, 0x1d37)
 i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32* liveChance) {
     DATA(0x0049f7a0)
     static i32 gEvaluatingTravelGates = 1;

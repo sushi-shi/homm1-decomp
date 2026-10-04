@@ -16,7 +16,8 @@
 DATA(0x004a54c0)
 i32 gLeftRightSave = 0;
 
-VA(0x0047eb50, 0x31)
+VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
+VA(0x00476c80, 0x59)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_normalFrame = 0;
     m_pressedFrame = 0;
@@ -25,7 +26,7 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
-VA_COMPGEN(0x0047eb90, 0x36, "??_Gbutton@@UAEPAXI@Z", 0x0047eb50)
+VA_COMPGEN(0x00477620, 0x2e, "??_Gbutton@@UAEPAXI@Z", 0x00476c80)
 button::~button(void) {
     gpResourceManager->Dispose(m_icon);
 }
@@ -63,7 +64,7 @@ inline i16 button::Deselect(tag_message& message) {
     return MESSAGE_DISPATCH_FORWARD;
 }
 
-VA(0x0047ecb0, 0x528)
+VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
         && KBTickCount() > glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT])
@@ -126,7 +127,7 @@ i16 button::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047f1e0, 0x92)
+VA(0x0047739f, 0xec)
 i16 button::Select(tag_message& message) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;
@@ -144,7 +145,7 @@ i16 button::Select(tag_message& message) {
     return MESSAGE_DISPATCH_FORWARD;
 }
 
-VA(0x0047f280, 0x4d)
+VA(0x00477545, 0x99)
 void button::Draw(void) {
     if (m_flags & WIDGET_FLAG_SELECTED) {
         m_icon->DrawToBuffer(

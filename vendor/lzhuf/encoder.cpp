@@ -8,8 +8,8 @@
 
 #include <BASE/LZHUF_internal.h>
 #include <BASE/Misc.h>
-inline void InitializeTree(void);
-inline void ReconstructEncoderTree(void);
+void InitializeTree(void);
+void ReconstructEncoderTree(void);
 #include <SOURCE/KB.h>
 
 #include <stdio.h>
@@ -292,7 +292,8 @@ extern "C" DATA(0x004a41d8) u8 d_len[256] = {
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 };
 
-inline void InitializeTree(void)
+VA(0x00473c8f, 0x68)
+void InitializeTree(void)
 {
     i16 i = WINDOW_SIZE + 1;
     while (i <= WINDOW_SIZE + 256) {
@@ -306,8 +307,8 @@ inline void InitializeTree(void)
     }
 }
 
-VA(0x0047c7b0, 0x14f)
-inline void ReconstructEncoderTree(void)
+VA(0x004743a9, 0x238)
+void ReconstructEncoderTree(void)
 {
     i16 k, i, j;
     u16 value, length;
@@ -341,7 +342,8 @@ inline void ReconstructEncoderTree(void)
     }
 }
 
-inline void PutCode(i16 length, u16 code)
+VA(0x004745e1, 0x10c)
+void PutCode(i16 length, u16 code)
 {
     putbuf = static_cast<u16>(putbuf | (code >> putlen));
     putlen = static_cast<u8>(putlen + length);
@@ -360,7 +362,8 @@ inline void PutCode(i16 length, u16 code)
     }
 }
 
-inline void EncodeCharacter(u16 character)
+VA(0x00474172, 0xa4)
+void EncodeCharacter(u16 character)
 {
     u16 code;
     i16 length, node;
@@ -379,7 +382,8 @@ inline void EncodeCharacter(u16 character)
     UpdateEncoderTree(character);
 }
 
-inline void EncodePosition(u16 position)
+VA(0x004746ed, 0x5f)
+void EncodePosition(u16 position)
 {
     u16 upper;
 
@@ -389,7 +393,7 @@ inline void EncodePosition(u16 position)
     PutCode(6, static_cast<u16>((position & 0x3F) << 10));
 }
 
-VA(0x0047bfa0, 0xb9)
+VA(0x00473780, 0x12b)
 i32 DecodeData(char *destination, char *source)
 {
     register u32 size;
@@ -414,7 +418,7 @@ i32 DecodeData(char *destination, char *source)
     LogStr("Data decoded", size, size);
     return static_cast<i32>(size);
 }
-VA(0x0047c060, 0x743)
+VA(0x004738ab, 0x3e4)
 i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
     register i16 i, c, r, s, last_match_length;
@@ -496,7 +500,7 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     return static_cast<i32>(codesize);
 }
 
-VA(0x0047c900, 0x23d)
+VA(0x00474216, 0x193)
 static void UpdateEncoderTree(i16 character)
 {
     i16 value;
@@ -531,7 +535,7 @@ static void UpdateEncoderTree(i16 character)
     } while (node != 0);
 }
 
-VA(0x0047cb40, 0x1d9)
+VA(0x00473cf7, 0x2a9)
 static void InsertNode(i16 node)
 {
     register u8 *key;

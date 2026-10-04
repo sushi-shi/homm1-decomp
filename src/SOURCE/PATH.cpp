@@ -75,7 +75,7 @@ i16 army::ValidPath(i16 targetHex, i8 pathMode) {
 }
 
 // Buka PATH.cpp GetMoveMask.
-VA(0x0046f470, 0x7b)
+VA(0x004465f4, 0x72)
 i16 army::GetMoveMask(i16 sourceHex) {
     i16 blockedMask;
     i16 mask;
@@ -124,7 +124,7 @@ i16 army::ValidMove(i16 direction) {
 }
 
 // Buka PATH.cpp ValidMove; HoMM1 has no castle gate exception.
-VA(0x0046f5d7, 0x1fc)
+VA(0x00446735, 0x187)
 i16 army::ValidMove(i16 sourceHex, i16 direction) {
     i8 frontValid;
     i16 dest;
@@ -292,7 +292,7 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 // Buka PATH.cpp ValidRange.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0046fc7e, 0x4c2)
+VA(0x00446c74, 0x45a)
 i16 army::ValidRange(i16 targetHex) {
     i16 adjacentHex;
     i16 directionResult;
@@ -411,7 +411,7 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
 
 // Buka PATH.cpp GetBestDirection with HoMM1's nine-hex rows and byte
 // row/column flags.
-VA(0x00470198, 0x984)
+VA(0x00447103, 0x7b7)
 i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
     i8 targetCol;
     i8 targetRowVal;

@@ -586,7 +586,7 @@ i16 swapManager::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-VA(0x00450953, 0xa5)
+VA(0x0045dda1, 0x9a)
 void swapManager::ViewMon(void) {
     gpGame->ViewArmy(
         TOWN_ARMY_VIEW_X,
@@ -604,7 +604,7 @@ void swapManager::ViewMon(void) {
 }
 
 // Buka 2.1 swapManager::SwapArtifacts.
-VA(0x004509f8, 0x112)
+VA(0x0045de3b, 0x126)
 void swapManager::SwapArtifacts(void) {
     i8 dstArt;
     i8 srcArt;
@@ -619,7 +619,7 @@ void swapManager::SwapArtifacts(void) {
     gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], srcArt, 0);
 }
 
-VA(0x00450b0a, 0x28e)
+VA(0x0045df61, 0x259)
 void swapManager::SwapMons(void) {
     armyGroup* destTroops;
     armyGroup* sourceTroops;
@@ -771,7 +771,7 @@ void swapManager::Update(void) {
 // donor PoL RVA 0x00055fbd; preferred Buka symbol ?SplitMons@swapManager@@QAEXXZ
 // donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
-VA(0x0045122a, 0x39f)
+VA(0x0045e628, 0x352)
 void swapManager::SplitMons(void) {
     i16 textId;
     armyGroup* dstTroops;

@@ -27,17 +27,17 @@ widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
 VA(0x00475478, 0x14)
 widget::~widget(void) {}
 
-VA(0x0047f340, 0x16)
+VA(0x0047548c, 0x24)
 i16 widget::Open(i16 zOrder, heroWindow* owner) {
     m_zOrder = zOrder;
     m_owner = owner;
     return 0;
 }
 
-VA(0x0047f360, 0x1)
+VA(0x004754b0, 0xb)
 void widget::Close(void) {}
 
-VA(0x0047f370, 0x216)
+VA(0x004754bb, 0x2c8)
 i16 widget::Main(tag_message& message) {
     i16 x;
     i16 y;

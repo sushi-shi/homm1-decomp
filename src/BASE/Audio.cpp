@@ -15,17 +15,17 @@ static float gMusicVolume = 1.0f;
 static float gVolumeLevels[11] =
     {0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f, 0.05f};
 
-// Buka retail VA 0x00469b56, size 0xf.
+VA(0x00469b56, 0xf)
 float VolumeLevel(int level) {
     return gVolumeLevels[level];
 }
 
-// Buka retail VA 0x00469b65, size 0x70.
+VA(0x00469b65, 0x70)
 audiere::AudioDevicePtr GetAudioDevice() {
     return AudiereDevice::device;
 }
 
-// Buka retail VA 0x00469bd5, size 0x132.
+VA(0x00469bd5, 0x132)
 bool InitAudio() {
     audiere::AudioDevice* device = audiere::OpenDevice("winmm", NULL);
     if (device) {
@@ -41,46 +41,46 @@ bool InitAudio() {
     return true;
 }
 
-// Buka retail VA 0x00469d07, size 0x5c.
+VA(0x00469d07, 0x5c)
 void ShutdownAudio() {
     StopAllAudio();
     AudiereDevice::device = NULL;
 }
 
-// Buka retail VA 0x00469d63, size 0xb.
+VA(0x00469d63, 0xb)
 float GetEffectsVolume() {
     return gEffectsVolume;
 }
 
-// Buka retail VA 0x00469d6e, size 0x15.
+VA(0x00469d6e, 0x15)
 float ScaleSampleVolume(int volume) {
     return GetEffectsVolume() * volume / 127.0f;
 }
 
-// Buka retail VA 0x00469d83, size 0xb.
+VA(0x00469d83, 0xb)
 float GetMusicVolume() {
     return gMusicVolume;
 }
 
-// Buka retail VA 0x00469d8e, size 0xf.
+VA(0x00469d8e, 0xf)
 void StopAllAudio() {
     StopAllSamples();
     StopMusic();
 }
 
-// Buka retail VA 0x00469d9d, size 0x1c.
+VA(0x00469d9d, 0x1c)
 void SetEffectsVolume(int level) {
     gEffectsVolume = VolumeLevel(level);
     UpdateAllSampleVolumes();
 }
 
-// Buka retail VA 0x00469db9, size 0x1c.
+VA(0x00469db9, 0x1c)
 void SetMusicVolume(int level) {
     gMusicVolume = VolumeLevel(level);
     UpdateMusicVolume();
 }
 
-// Buka retail VA 0x00469dd5, size 0x1d.
+VA(0x00469dd5, 0x1d)
 void SetVolumes(int effects, int music) {
     SetEffectsVolume(effects);
     SetMusicVolume(music);

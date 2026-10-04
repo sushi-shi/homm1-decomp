@@ -114,7 +114,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_dialogResult = WINDOW_MANAGER_NO_DIALOG_RESULT;
 }
 
-VA(0x00476780, 0xba)
+VA(0x0046a1eb, 0x10a)
 i16 heroWindowManager::Open(i16 managerOrder) {
     FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
@@ -134,7 +134,7 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     return WINDOW_MANAGER_OPEN_FAILURE;
 }
 
-VA(0x00476840, 0x43)
+VA(0x0046a2f5, 0x9e)
 void heroWindowManager::Close(void) {
     if (m_active != 1)
         return;

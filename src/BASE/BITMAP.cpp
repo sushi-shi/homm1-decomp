@@ -17,8 +17,9 @@
 #include <string.h>
 #include <sys/stat.h>
 
+VA_COMPGEN(0x00473336, 0x3e, "??1bitmap@@UAE@XZ", 0x00473180)
 VA(0x00473180, 0x4c)
-VA_COMPGEN(0x0047b140, 0x3e, "??_Gbitmap@@UAEPAXI@Z", 0x00473180)
+VA_COMPGEN(0x004735e0, 0x2e, "??_Gbitmap@@UAEPAXI@Z", 0x00473180)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = BITMAP_TYPE_NONE;
     m_width = 0;
@@ -36,7 +37,7 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 }
 
 // Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
-VA(0x0047b1d0, 0xa1)
+VA(0x00473230, 0x106)
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
     m_bitmapType = gpResourceManager->ReadWord();
@@ -63,7 +64,7 @@ void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
 }
 
-VA(0x0047b2c0, 0x18)
+VA(0x00473400, 0x23)
 void bitmap::GrabScreen(i16 x, i16 y) {
     GrabScreenBitmap(this, x, y);
 }

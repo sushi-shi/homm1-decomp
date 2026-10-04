@@ -36,7 +36,7 @@ enum ComConstant {
 
 extern ComPortState gComPorts[];
 
-VA(0x00437270, 0x6b)
+VA(0x0041c930, 0x54)
 void add_node(tag_Anchor* anchor, tag_Node* node) {
     node->prev = node->next = NULL;
     if (anchor->tail) {
@@ -60,14 +60,14 @@ tag_Node* pop_node(tag_Anchor* anchor) {
     return node;
 }
 
-VA(0x00437324, 0x23)
+VA(0x0041c9ba, 0x18)
 void init_anchor(tag_Anchor* anchor, i32, i32) {
     anchor->head = NULL;
     anchor->tail = NULL;
 }
 
 // HoMM2 Buka 2.1 ShutdownComError; literals and error cases verified in 1.1.
-VA(0x00437347, 0x395)
+VA(0x0041c9d2, 0x374)
 void ShutdownComError(char* function) {
     DWORD error;
     char errorName[COM_ERROR_NAME_SIZE];
@@ -144,7 +144,7 @@ void ShutdownComError(char* function) {
     ShutDown(message);
 }
 
-VA(0x004376dc, 0x358)
+VA(0x0041cd46, 0x302)
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     i32 error; // Unused, as in Buka; retail still reserves its slot.
     i32 slot;
@@ -241,7 +241,7 @@ void com_term(i16 port) {
     }
 }
 
-VA(0x00437b45, 0xd9)
+VA(0x0041d126, 0xbe)
 i16 com_rcv(i16 port, u16 requested, void* buffer) {
     DWORD currentError;
     COMSTAT status;
@@ -299,7 +299,7 @@ i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00437d65, 0x13)
+VA(0x0041d2fe, 0x8)
 i16 __cdecl com_sess(i32, i32, ...) {
     return 0;
 }
@@ -317,7 +317,7 @@ u8 com_stat(i16 port, u16) {
     return 0;
 }
 
-VA(0x00437dde, 0xe7)
+VA(0x0041d357, 0xc8)
 void comm_wrt_task(void) {
     ComPortState* portState;
     tag_Node* node;

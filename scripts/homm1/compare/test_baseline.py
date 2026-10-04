@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-from homm1.compare.baseline import evidence, reference_reason, totals
+from homm1.compare.baseline import evidence, module_table, reference_reason, totals
 from homm1.verify.scores import load
 
 
@@ -19,6 +19,23 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(result["exact_percent"], 50.)
         self.assertEqual(result["fuzzy_percent"], 20.)
         self.assertEqual(result["unscored_reasons"], {"unmapped": 1})
+
+    def test_module_table_keeps_unscored_and_unknown_owners(self):
+        rows = [dict(unit="SOURCE/A", census_size=100, size=100,
+                     score=100., status="scored"),
+                dict(unit="SOURCE/A", census_size=300, size=300,
+                     score=100., status="unprovided reference"),
+                dict(unit="BASE/LZHUF", census_size=40, size=40,
+                     score=100., status="scored"),
+                dict(unit="", census_size=60, size=60,
+                     score=0., status="unmapped function")]
+        lines = module_table(rows, {"SOURCE/A": "src/SOURCE/A.cpp",
+                                   "BASE/LZHUF": "vendor/lzhuf/lzhuf.asm"})
+        cells = [[c.strip() for c in line.strip("|").split("|")]
+                 for line in lines[2:]]
+        self.assertIn(["`SOURCE`", "1", "1 / 2 (50.0%)", "25.0%"], cells)
+        self.assertIn(["`lzhuf`", "1", "1 / 1 (100.0%)", "100.0%"], cells)
+        self.assertIn(["`(unmapped)`", "—", "0 / 1 (0.0%)", "0.0%"], cells)
 
     def test_unknown_name_never_becomes_proven_even_if_listed(self):
         for name in ("UNPROVISIONED_00412345", "DAT_00412345", "FUN_00412345"):

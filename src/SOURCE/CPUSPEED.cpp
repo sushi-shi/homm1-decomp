@@ -21,7 +21,7 @@
 // by the measured ticks to MHz.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0043c840, 0x145)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 i32 CPUSpeed(u8 cpuType) {
     double tickPeriod = 838.0965152;
     double divs = 800.0;
@@ -52,7 +52,7 @@ i32 CPUSpeed(u8 cpuType) {
 }
 
 // Win95 1.2 asks Windows for the processor family; unknown types return zero.
-VA(0x0043c985, 0x87)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 i16 GetCPUType(void) {
     SYSTEM_INFO info;
     memset(&info, 0, sizeof(info));
@@ -81,7 +81,7 @@ i16 GetCPUType(void) {
 //   outp(0x43, 0x80);                    // latch channel 2
 //   unsigned short left = inp(0x42); left |= inp(0x42) << 8;
 //   return (short)~left;                 // ticks elapsed from 0xffff
-VA(0x0043ca0c, 0x9d9)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 i16 TimeProcessor(void) {
     i16 ticks;
 

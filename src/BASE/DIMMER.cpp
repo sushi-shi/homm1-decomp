@@ -6,25 +6,26 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA(0x0047ea80, 0x1e)
+VA_COMPGEN(0x00476c60, 0x1c, "??1dimmerWidget@@UAE@XZ", 0x00476ae0)
+VA(0x00476ae0, 0x2b)
 dimmerWidget::dimmerWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 
-VA_COMPGEN(0x0047eaa0, 0x25, "??_GdimmerWidget@@UAEPAXI@Z", 0x0047ea80)
+VA_COMPGEN(0x00476c30, 0x2e, "??_GdimmerWidget@@UAEPAXI@Z", 0x00476ae0)
 dimmerWidget::~dimmerWidget(void) {}
 
-VA(0x0047ead0, 0x5f)
+VA(0x00476b4a, 0x77)
 void dimmerWidget::Read(void) {
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
 }
 
-VA(0x0047eb30, 0xd)
+VA(0x00476bc1, 0x19)
 i16 dimmerWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047eb40, 0x5)
+VA(0x00476bda, 0x13)
 void dimmerWidget::Draw(void) {
     Dim();
 }

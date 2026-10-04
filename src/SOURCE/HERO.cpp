@@ -148,7 +148,7 @@ hero::hero(void) {
 // Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x004472b8, 0x18)
+VA(0x00438f7d, 0xd)
 void hero::GetArmyStrengths(u32* const) {}
 
 VA(0x00438f8a, 0x4b)
@@ -165,7 +165,7 @@ i8 hero::HasArtifact(i8 artifact) {
 // donor PoL RVA 0x0006c526; preferred Buka symbol ?CalcMobility@hero@@QAEHXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
-VA(0x0044732d, 0x1ed)
+VA(0x00438fd5, 0x1bd)
 i16 hero::CalcMobility(void) {
     i16 mobility[3] = {40, 50, 60};
     const i16 seaMobility = 60;
@@ -218,7 +218,7 @@ i8 hero::HasSpell(i8 spell) {
     return 0;
 }
 
-VA(0x00447570, 0xf0)
+VA(0x004391d3, 0xc8)
 i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
     i16 combat = 0;
     i16 adventure = 0;
@@ -495,7 +495,7 @@ void HeroMessageUpdate(char* text) {
 // donor PoL RVA 0x0006cb33; preferred Buka symbol ?HeroScreenUpdate@hero@@QAEXXZ
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.542456;margin=0.317795;shape=0.400;size=0.865;calls=1.000;alternate=pol20:void hero::HeroScreenUpdate(void)@0x0006cb33
-VA(0x004481eb, 0xab)
+VA(0x00439d44, 0x99)
 void hero::HeroScreenUpdate(void) {
     tag_message message;
     i16 i;
@@ -730,7 +730,7 @@ i32 hero::GetExperience(i32 level) {
     return experience;
 }
 
-VA(0x00448bc4, 0xf2)
+VA(0x0043a64e, 0xd7)
 i32 hero::GetLevel(i32 experienceValue) {
     i32 experience;
     i32 nLevel;
@@ -787,7 +787,7 @@ void hero::ApplyBattleWinTemps(void) {
     }
 }
 
-VA(0x00448e05, 0x1e)
+VA(0x0043a89e, 0x13)
 void hero::ApplyBattleLossTemps(void) {
     ApplyBattleWinTemps();
 }
@@ -878,7 +878,7 @@ i32 hero::NumArtifacts(void) {
     return count;
 }
 
-VA(0x0044916e, 0x52e)
+VA(0x0043abb3, 0x502)
 void UpdateHeroScreenStatusBar(i16 widgetId) {
     tag_message message; // Unused; retail keeps the donor's message frame.
     i16 slot;
@@ -1016,7 +1016,7 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
 // donor PoL RVA 0x0006e816; preferred Buka symbol ?HeroHandler@@YIHAAUtag_message@@@Z
 // donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
-VA(0x0044969c, 0x6c8)
+VA(0x0043b0b5, 0x610)
 i16 HeroHandler(struct tag_message& message) {
     tag_message newEvent;
     i32 unusedValue15;

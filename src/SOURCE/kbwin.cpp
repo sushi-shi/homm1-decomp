@@ -72,7 +72,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
 // donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
-VA(0x004329be, 0x2d6)
+VA(0x00442dba, 0x28e)
 BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
     HMENU windowMenu;
@@ -163,7 +163,7 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
 }
 
 // PoL 2.0 AppIdle correspondence: both foreground states report idle work.
-VA(0x00432c94, 0x31)
+VA(0x00443048, 0xa)
 BOOL AppIdle(void) {
     if (gForegroundApp != 0)
         return TRUE;
@@ -174,7 +174,7 @@ BOOL AppIdle(void) {
 // donor PoL RVA 0x0001c190; preferred Buka symbol ?AppWndProc@@YGJPAXIIJ@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
-VA(0x00432cc5, 0x617)
+VA(0x00443052, 0x6ad)
 long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
     DATA(0x0049f850)
     static i32 gLastCycleTickCount = 0;
@@ -333,7 +333,7 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     return FALSE;
 }
 
-VA(0x0043336c, 0x1a)
+VA(0x00443766, 0xf)
 void AppExit(void) {
     CleanUpWinGraphics();
     CleanUpMenus();
@@ -366,7 +366,7 @@ void Process1WindowsMessage(void) {
 // donor PoL RVA 0x0001c880; preferred Buka symbol ?ResizeWindow@@YIXHHHH@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
-VA(0x00433450, 0x127)
+VA(0x004437f4, 0x11d)
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     i32 xpos;
     RECT rect;
@@ -398,7 +398,7 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 // donor PoL RVA 0x0001c9c7; preferred Buka symbol ?AppCommand@@YIJPAXIIJ@Z
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
-VA(0x00433577, 0x185)
+VA(0x00443911, 0x165)
 i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC appDialogProc;
     i32 command;
@@ -627,7 +627,7 @@ void SetGameDefaults(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00433d21, 0x20d)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void ReadPrefsFromFile(void) {
     FILE* fp;
     i32 result;
@@ -665,7 +665,7 @@ void ReadPrefsFromFile(void) {
     strcpy(gcRegAppPath, "");
 }
 
-VA(0x00433f2e, 0x525)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void ReadPrefsFromRegistry(void) {
     HKEY key;
     DWORD cbData;
@@ -930,14 +930,14 @@ void ReadPrefsFromRegistry(void) {
     }
 }
 
-VA(0x00434453, 0x15)
+VA(0x00443f8f, 0x468)
 void ReadPrefs(void) {
     ReadPrefsFromRegistry();
 }
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00434468, 0x8a)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void WritePrefsToFile(void) {
     FILE* file;
     char buffer[100];
@@ -951,7 +951,7 @@ void WritePrefsToFile(void) {
     fclose(file);
 }
 
-VA(0x004344f2, 0x3c7)
+// NWC-only: no standalone Buka body; see buka-function-map.json.
 void WritePrefsToRegistry(void) {
     HKEY key;
     char szTemp[REGISTRY_TEXT_BUFFER_SIZE];
@@ -1184,7 +1184,7 @@ void WritePrefs(void) {
 // Buka retail data VA 0x0049e720. This path deliberately has no leading slash.
 static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
 
-// Buka retail VA 0x00444702, size 0x72.
+VA(0x00444702, 0x72)
 // Suppress the system's critical-error dialog while probing an empty drive.
 static bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     UINT oldMode;
@@ -1204,7 +1204,7 @@ static bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     }
 }
 
-// Buka retail VA 0x00444774, size 0x36f.
+VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     u32 logicalDrives;
@@ -1332,7 +1332,7 @@ void ProcessAssert(i32 condition, char* file, i32 line) {
 }
 
 // PoL 2.0 Misc.cpp FindToken correspondence.
-VA(0x00434e93, 0x65)
+VA(0x00444bae, 0x50)
 char* FindToken(char* text, char token) {
     i32 pos;
     i32 len;

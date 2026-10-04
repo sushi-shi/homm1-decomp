@@ -32,7 +32,7 @@ static int gMusicPositions[100];
 // Buka retail VA 0x004ce10c.
 static int gMusicSource;
 
-// Buka retail VA 0x004692b6, size 0x47.
+VA(0x004692b6, 0x47)
 bool ShouldRepeatMusic(int track) {
     if (track < 7 || (track >= 40 && track <= 42) || track == 53 || track == 54 || track == 47
         || track == 48 || track == 49 || (track >= 29 && track <= 32))
@@ -40,7 +40,7 @@ bool ShouldRepeatMusic(int track) {
     return false;
 }
 
-// Buka retail VA 0x004692fd, size 0x43b.
+VA(0x004692fd, 0x43b)
 void PlayMusic(int track) {
     if (!GetAudioDevice())
         return;
@@ -99,12 +99,12 @@ void PlayMusic(int track) {
     }
 }
 
-// Buka retail VA 0x00469738, size 0xa.
+VA(0x00469738, 0xa)
 int GetCurrentTrack() {
     return gCurrentTrack;
 }
 
-// Buka retail VA 0x00469742, size 0x164.
+VA(0x00469742, 0x164)
 void StopMusic() {
     if (MusicSuspended())
         return;
@@ -122,7 +122,7 @@ void StopMusic() {
     gCurrentTrack = -1;
 }
 
-// Buka retail VA 0x004698a6, size 0x55.
+VA(0x004698a6, 0x55)
 void UpdateMusicVolume() {
     if (MusicSuspended())
         return;
@@ -131,7 +131,7 @@ void UpdateMusicVolume() {
     AudiereMusic::stream->setVolume(GetMusicVolume());
 }
 
-// Buka retail VA 0x004698fb, size 0x128.
+VA(0x004698fb, 0x128)
 void SetMusicSource(int source) {
     if (AudiereMusic::stream) {
         AudiereMusic::stream->stop();
@@ -148,24 +148,24 @@ void SetMusicSource(int source) {
     }
 }
 
-// Buka retail VA 0x00469a23, size 0x36.
+VA(0x00469a23, 0x36)
 bool MusicPlaying() {
     if (!AudiereMusic::stream)
         return false;
     return AudiereMusic::stream->isPlaying();
 }
 
-// Buka retail VA 0x00469a59, size 0x12.
+VA(0x00469a59, 0x12)
 void SuspendMusic() {
     ++gMusicSuspensions;
 }
 
-// Buka retail VA 0x00469a6b, size 0x12.
+VA(0x00469a6b, 0x12)
 void ResumeMusic() {
     --gMusicSuspensions;
 }
 
-// Buka retail VA 0x00469a7d, size 0x11.
+VA(0x00469a7d, 0x11)
 bool MusicSuspended() {
     return gMusicSuspensions > 0;
 }

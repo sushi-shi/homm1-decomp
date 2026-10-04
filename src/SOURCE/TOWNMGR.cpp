@@ -52,7 +52,7 @@
 // evidence: graph:2;base=0.615649;margin=0.314990;shape=0.431;size=0.799;calls=0.333;strings=%s.icn;alternate=pol20:void townObject::constructor(int, int, char *)@0x00013900
 // Buka TOWNMGR.cpp townObject ctor; HoMM1 reads frame count, rectangle and
 // building id from the .tod resource instead of sBuildingInfo.
-VA(0x0043fe40, 0x1f1)
+VA(0x0045ee90, 0x1c3)
 townObject::townObject(char* name) {
     char fileName[16];
     i16 w;
@@ -389,7 +389,7 @@ void townManager::SetArmyCommand(i16 qualifier) {
 
 // Buka TOWNMGR.cpp:1022-1176; HoMM1 has no calendar entry and names the
 // six dwellings through gDwellingType.
-VA(0x00440f82, 0x468)
+VA(0x00460294, 0x4dc)
 void townManager::SetCommandAndText(struct tag_message& message) {
     i16 id;
 
@@ -907,7 +907,7 @@ i16 townManager::Main(struct tag_message& message) {
 
 // Buka TOWNMGR.cpp:1817-1902; HoMM1 merges duplicate stacks after a swap
 // and opens the kingdom overview from the town.
-VA(0x0044277d, 0x65f)
+VA(0x004619b5, 0x601)
 void townManager::DoCommand(i8 command) {
     hero* visitor;
     i32 temp;
@@ -1034,7 +1034,7 @@ void townManager::RedrawTownScreen(void) {
 // evidence: graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
 // Buka TOWNMGR.cpp:1923-1970; HoMM1 always names both armies and merges
 // into the first matching slot of the target army.
-VA(0x00442e81, 0x37e)
+VA(0x00462053, 0x334)
 void townManager::SplitArmy(void) {
     i16 messageId = 1;
     tag_message message;
@@ -1163,7 +1163,7 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
 // Buka TOWNMGR.cpp BuyBuild; HoMM1 reads the mage/neutral/dwelling cost
 // tables with asserts, sizes resource slots by the gold-icon width and
 // draws the building through the castle frame of buybuil%d.bin.
-VA(0x00443505, 0xefd)
+VA(0x00462630, 0xdd2)
 #line 1483 "F:\\h1w95src\\source\\TOWNMGR.CPP"
 i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     u16 requirements;
@@ -1496,7 +1496,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
 // evidence: graph:2;base=0.630156;margin=0.342681;shape=0.206;size=0.999;calls=0.933;strings=buildtwn.82M;alternate=pol20:void townManager::BuildObj(int)@0x00018bd2
 // Buka TOWNMGR.cpp:2475; HoMM1 fizzles a fixed per-building rectangle
 // instead of computing the drawn extent.
-VA(0x00444402, 0x3a0)
+VA(0x00463402, 0x35f)
 void townManager::BuildObj(i16 building) {
     i16 i;
     class sample* sample;
@@ -1562,7 +1562,7 @@ void townManager::BuildObj(i16 building) {
 
 // Buka Castle.cpp SetupCastle; HoMM1 lays out five special buildings and
 // six dwellings plus the hero-recruit slot with fixed frames.
-VA(0x004447a2, 0x4b5)
+VA(0x00463761, 0x45a)
 void townManager::SetupCastle(class heroWindow* window) {
     i16 builtIcon = TOWN_CASTLE_FRAME_BUILT;
     i16 cannotBuild = TOWN_CASTLE_FRAME_CANNOT_BUILD;
@@ -1663,7 +1663,7 @@ void townManager::SetupCastle(class heroWindow* window) {
 
 // Buka TOWNMGR.cpp:3131 SetupWell; HoMM1 has six fixed dwellings and
 // capitalises the creature name in gText.
-VA(0x00444c57, 0x24d)
+VA(0x00463bbb, 0x2b5)
 void townManager::SetupWell(class heroWindow* window) {
     i16 iconBase = TOWN_WELL_FIRST_ICON_CONTROL;
     i16 buildingName = TOWN_WELL_FIRST_NAME_CONTROL;
@@ -1717,7 +1717,7 @@ void townManager::SetupWell(class heroWindow* window) {
 
 // Buka TOWNMGR.cpp:2597 SetupMage; HoMM1 shows nine guild spells, hiding
 // the levels above the guild and stacking tower frames by level.
-VA(0x00444ea4, 0x331)
+VA(0x00463e70, 0x2bc)
 void townManager::SetupMage(class heroWindow* window) {
     i16 off = 0;
     i16 shown = 1;
@@ -1813,7 +1813,7 @@ void townManager::SetupMage(class heroWindow* window) {
 
 // Buka TOWNMGR.cpp:2735 MageGuildHandler; HoMM1 numbers spells 1-9 and
 // icons 10-18 and bounds them by the guild level.
-VA(0x004451d5, 0x186)
+VA(0x0046412c, 0x14b)
 i16 MageGuildHandler(struct tag_message& message) {
     i16 firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
     i16 iconBase = TOWN_MAGE_FIRST_ICON_CONTROL;
@@ -1881,7 +1881,7 @@ i16 MageGuildHandler(struct tag_message& message) {
 // evidence: graph:5;base=0.350822;margin=0.362412;shape=0.263;size=0.210;calls=0.163;strings=townwind.icn;alternate=pol20:void townManager::SetupThievesGuild(class heroWindow *, int)@0x0001a783
 // Buka TOWNMGR.cpp:3328 SetupThievesGuild; HoMM1 only draws the ranking
 // flags, with the category count taken from the number of guilds owned.
-VA(0x0044535b, 0x2ec)
+VA(0x00464277, 0x2b5)
 void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     iconWidget* marker;
     i16 firstPlayer;
@@ -1956,7 +1956,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
 
 // Buka TOWNMGR.cpp:3727-3833; HoMM1 has eight categories, sums three
 // resources per row and counts obelisks through playerData.
-VA(0x00445647, 0x484)
+VA(0x0046452c, 0x40b)
 void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const order) {
     i16 townIndex;
     i16 index;
@@ -2055,14 +2055,14 @@ void townManager::SortStats(i32* const stats, i8* const order) {
 }
 
 // HoMM1 town-type wrapper over the global building-name table lookup.
-VA(0x00445bb5, 0x2f)
+VA(0x00464a22, 0x25)
 char* townManager::GetBuildingName(i16 building) {
     return ::GetBuildingName(m_town->m_type, building);
 }
 
 // Buka TOWNMGR.cpp RecruitHero; HoMM1's tavern shows both candidate heroes,
 // a cannot-recruit view is a timed quick view, and the town strips are rebuilt.
-VA(0x00445be4, 0x981)
+VA(0x00464a47, 0x92f)
 i8 townManager::RecruitHero(i8 cannotRecruit) {
     tag_message message;
     i16 unusedButtonText = 1;
@@ -2208,7 +2208,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
 // donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
 // Buka TOWNMGR.cpp:2968-3000; HoMM1 animates frames 1-8 of control 2.
-VA(0x00446565, 0x155)
+VA(0x00465376, 0x125)
 i16 TavernHandler(struct tag_message& message) {
     i32 unusedDelay = TOWN_TAVERN_ANIMATION_DELAY;
     i16 unusedFrame = TOWN_TAVERN_UNUSED_FRAME;
@@ -2247,7 +2247,7 @@ i16 TavernHandler(struct tag_message& message) {
 // evidence: graph:2;base=0.728216;margin=0.164549;shape=0.467;size=0.965;calls=0.889;strings=tavwin.bin;alternate=pol20:void townManager::DoTavern(void)@0x00019d7c
 // Buka TOWNMGR.cpp:3003-3032; HoMM1 plays the tavern theme instead of a
 // rumour and restores the town theme afterwards.
-VA(0x004466ba, 0x136)
+VA(0x0046549b, 0xff)
 void townManager::DoTavern(void) {
     i32 unusedValue = 0;
 
@@ -2263,7 +2263,7 @@ void townManager::DoTavern(void) {
 
 // Buka Castle.cpp CastleHandler; HoMM1 hovers by widget id, has no
 // captain or formation controls and recruits a single hero (control 0x30).
-VA(0x004467f0, 0x726)
+VA(0x0046559a, 0x650)
 i16 CastleHandler(struct tag_message& message) {
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
     i32 result = 0;

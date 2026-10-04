@@ -665,7 +665,7 @@ adjacentDone:
 // evidence: graph:4;base=0.530646;margin=0.751795;shape=0.360;size=0.888;calls=1.000;alternate=pol20:void advManager::CheckAdjacentMon(int *)@0x0000f753
 // Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
 // three-argument CompleteDraw.
-VA(0x0043b9ba, 0x181)
+VA(0x00422df4, 0x161)
 void advManager::CheckAdjacentMon(i8* adjacentMonster) {
     i32 monX;
     i32 monY;
@@ -715,7 +715,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
 // Buka CURSOR.cpp:962 ValidMoveWithEvent; HoMM1 lets a boat meet another
 // boat, forbids landing a boat on most objects and defers the rest to
 // ValidMove.
-VA(0x0043bb3b, 0x20a)
+VA(0x00422f55, 0x1a3)
 i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
     i16 deltaY;
     i16 newY;
@@ -766,7 +766,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
 
 // Buka CURSOR.cpp:1006 ValidMove; HoMM1 indexes from the cursor's map
 // position and tests the north/south object masks directly.
-VA(0x0043bd45, 0x2a3)
+VA(0x004230f8, 0x24c)
 i16 advManager::ValidMove(i16 direction) {
     i16 directionX;
     i16 downMask;
@@ -813,7 +813,7 @@ i16 advManager::ValidMove(i16 direction) {
 }
 
 // Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
-VA(0x0043bfe8, 0x329)
+VA(0x00423344, 0x2e8)
 void advManager::MoveOrigin(i16 directionX, i16 directionY) {
     i16 cellY;
     i16 cellX;

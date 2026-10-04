@@ -37,7 +37,7 @@ static AudiereSampleNode* gSamples;
 // Buka retail VA 0x004ce108.
 static int gSampleSuspensions;
 
-// Buka retail VA 0x004689a0, size 0x162.
+VA(0x004689a0, 0x162)
 void CleanupSamples() {
     if (gSamples == NULL)
         return;
@@ -67,7 +67,7 @@ void CleanupSamples() {
     }
 }
 
-// Buka retail VA 0x00468b02, size 0x35.
+VA(0x00468b02, 0x35)
 AudiereSampleNode* FindSampleNode(sample* resource) {
     for (AudiereSampleNode* node = gSamples; node != NULL; node = node->next) {
         if (node->resource == resource)
@@ -76,7 +76,7 @@ AudiereSampleNode* FindSampleNode(sample* resource) {
     return NULL;
 }
 
-// Buka retail VA 0x00468b37, size 0x38d.
+VA(0x00468b37, 0x38d)
 void PlaySample(sample* resource) {
     if (!GetAudioDevice())
         return;
@@ -119,14 +119,14 @@ void PlaySample(sample* resource) {
     CleanupSamples();
 }
 
-// Buka retail VA 0x00468ec4, size 0x29.
+VA(0x00468ec4, 0x29)
 sample* LoadPlaySample(char* name) {
     sample* resource = gpResourceManager->GetSample(name);
     PlaySample(resource);
     return resource;
 }
 
-// Buka retail VA 0x00468eed, size 0x71.
+VA(0x00468eed, 0x71)
 void StopSample(sample* resource) {
     if (SamplesSuspended())
         return;
@@ -138,7 +138,7 @@ void StopSample(sample* resource) {
     }
 }
 
-// Buka retail VA 0x00468f5e, size 0x58.
+VA(0x00468f5e, 0x58)
 void UpdateSampleVolume(sample* resource) {
     if (SamplesSuspended())
         return;
@@ -147,7 +147,7 @@ void UpdateSampleVolume(sample* resource) {
         node->stream->setVolume(ScaleSampleVolume(resource->m_playbackData.volume));
 }
 
-// Buka retail VA 0x00468fb6, size 0x63.
+VA(0x00468fb6, 0x63)
 void WaitSample(sample* resource) {
     if (SamplesSuspended())
         return;
@@ -159,7 +159,7 @@ void WaitSample(sample* resource) {
     }
 }
 
-// Buka retail VA 0x00469019, size 0x77.
+VA(0x00469019, 0x77)
 void StopAllSamples() {
     if (SamplesSuspended())
         return;
@@ -170,7 +170,7 @@ void StopAllSamples() {
     CleanupSamples();
 }
 
-// Buka retail VA 0x00469090, size 0x61.
+VA(0x00469090, 0x61)
 void UpdateAllSampleVolumes() {
     if (SamplesSuspended())
         return;
@@ -178,17 +178,17 @@ void UpdateAllSampleVolumes() {
         node->stream->setVolume(ScaleSampleVolume(node->resource->m_playbackData.volume));
 }
 
-// Buka retail VA 0x004690f1, size 0x12.
+VA(0x004690f1, 0x12)
 void SuspendSamples() {
     ++gSampleSuspensions;
 }
 
-// Buka retail VA 0x00469103, size 0x12.
+VA(0x00469103, 0x12)
 void ResumeSamples() {
     --gSampleSuspensions;
 }
 
-// Buka retail VA 0x00469115, size 0x11.
+VA(0x00469115, 0x11)
 bool SamplesSuspended() {
     return gSampleSuspensions > 0;
 }

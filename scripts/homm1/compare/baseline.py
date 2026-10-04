@@ -130,7 +130,11 @@ def summarize(report, target_dir, out_dir):
         row = {"rva": hex(b.rva), "name": b.name, "unit": b.unit,
                "census_size": c["size"], "size": b.size, "score": 0.0}
         reason = "unmapped function"
-        if (b.rva, b.name) in reviewed and b.channel == "src" and key in cur:
+        # Both channels bind a body emitted by the candidate compiler. A
+        # VA_COMPGEN identity still passes every reference check below; a
+        # declaration or an unbound dynamic initializer cannot earn credit.
+        if ((b.rva, b.name) in reviewed
+                and b.channel in ("src", "src_compgen") and key in cur):
             path = target_dir / (b.unit + ".c.obj")
             if path not in objs:
                 objs[path] = CoffObject(path.read_bytes())
@@ -209,7 +213,31 @@ def input_digest():
     return h.hexdigest()
 
 
+def module_table(rows, sources):
+    """Roll up the full census; unidentified owners remain an explicit row."""
+    from homm1.verify import readme as rm
+    groups = {}
+    for row in rows:
+        source = sources.get(row["unit"])
+        module = rm.module_of(source) if source else "(unmapped)"
+        groups.setdefault(module, []).append(row)
+    table_rows = []
+    for module in sorted(groups, key=lambda k: (k == "(unmapped)", -len(groups[k]))):
+        group = groups[module]
+        total = totals(group)
+        units = str(len({r["unit"] for r in group})) if module != "(unmapped)" else "—"
+        table_rows.append([
+            f"`{module}`", units,
+            f"{total['exact_functions']:,} / {total['functions']:,} "
+            f"({total['exact_percent']:.1f}%)",
+            f"{total['fuzzy_percent']:.1f}%",
+        ])
+    return rm._md_table(["Module", "Units", "Functions exact", "Fuzzy"],
+                        "lrrr", table_rows)
+
+
 def readme():
+    from homm1 import manifest
     from homm1.verify import readme as rm
     path = ROOT / "baseline.json"
     summary = json.loads(path.read_text())
@@ -220,6 +248,8 @@ def readme():
         f"**Matching lower bound: {summary['exact_percent']:.2f}% exact "
         f"({summary['exact_functions']:,}/{summary['functions']:,} functions); "
         f"{summary['fuzzy_percent']:.2f}% fuzzy.**",
+        "",
+        *module_table(summary["rows"], {u["unit"]: u["source"] for u in manifest.units()}),
         "",
         f"{summary['scored_functions']:,} functions scored with strict references; "
         f"{summary['functions']-summary['scored_functions']:,} unscored, counted as zero. "

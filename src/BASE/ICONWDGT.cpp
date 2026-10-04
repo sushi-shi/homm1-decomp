@@ -10,7 +10,8 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA(0x0047ba90, 0x2a)
+VA_COMPGEN(0x0046e13a, 0x5b, "??1iconWidget@@UAE@XZ", 0x0046deb0)
+VA(0x0046deb0, 0x4e)
 iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_frame = 0;
     m_icon = 0;
@@ -18,7 +19,7 @@ iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_orientation = ICON_DRAW_NORMAL;
 }
 
-VA_COMPGEN(0x0047bac0, 0x36, "??_GiconWidget@@UAEPAXI@Z", 0x0047ba90)
+VA_COMPGEN(0x0046e530, 0x2e, "??_GiconWidget@@UAEPAXI@Z", 0x0046deb0)
 iconWidget::~iconWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
@@ -44,7 +45,7 @@ iconWidget::iconWidget(
     m_orientation = orientation;
 }
 
-VA(0x0047bb70, 0xce)
+VA(0x0046e041, 0xf9)
 void iconWidget::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
@@ -61,7 +62,7 @@ void iconWidget::Read(void) {
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
-VA(0x0047bc40, 0x1bc)
+VA(0x0046e195, 0x2a4)
 i16 iconWidget::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -119,7 +120,7 @@ i16 iconWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 
-VA(0x0047be00, 0x68)
+VA(0x0046e439, 0xb1)
 void iconWidget::Draw(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;

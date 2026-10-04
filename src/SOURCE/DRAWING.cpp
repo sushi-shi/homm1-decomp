@@ -36,7 +36,7 @@ void combatManager::UpdateGrid(i16 hex, i16) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x0043880f, 0x5a)
+VA(0x004236c0, 0x47)
 void combatManager::UpdateGridForMove(i16 hex, i8 direction, i16 attributes) {
     if (direction == COMBAT_DIRECTION_NORTHEAST || direction == COMBAT_DIRECTION_NORTHWEST)
         UpdateGrid(hex - COMBAT_GRID_COLUMNS, attributes);
@@ -85,7 +85,7 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
 }
 
 // The help line for the current mouse command.
-VA(0x0043891e, 0x2f3)
+VA(0x004237b4, 0x286)
 void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
     army* target;
     army* currentArmy;
@@ -169,7 +169,7 @@ void combatManager::SetGridMode(i8 mode) {
 
 // Blits the rows from m_gridUpdateRow down (the first row also takes the
 // 60-pixel top margin).
-VA(0x00438d09, 0xde)
+VA(0x00423ae5, 0xc6)
 void combatManager::UpdateCombatArea(void) {
     i16 y;
     i16 height;
@@ -192,7 +192,7 @@ void combatManager::UpdateCombatArea(void) {
 
 // Draws the hex ground, the castle wall strip and the moat ends, then keeps
 // the clean screen as the combat background.
-VA(0x00438de7, 0x1d4)
+VA(0x00423bab, 0x1c1)
 void combatManager::DrawBackground(void) {
     i16 x;
     i16 y;

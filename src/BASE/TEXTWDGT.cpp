@@ -14,7 +14,7 @@
 #include <string.h>
 
 VA(0x00471770, 0x58)
-VA_COMPGEN(0x0047ce90, 0x42, "??_GtextWidget@@UAEPAXI@Z", 0x00471770)
+VA_COMPGEN(0x00471da0, 0x2e, "??_GtextWidget@@UAEPAXI@Z", 0x00471770)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
@@ -43,7 +43,7 @@ textWidget::textWidget(
     m_color = color;
 }
 
-VA(0x0047cf50, 0xeb)
+VA(0x0047186d, 0x12a)
 void textWidget::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);

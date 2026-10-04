@@ -61,7 +61,7 @@ void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
 }
 
 // Buka 2.1 MiscRuntime FileSize.
-VA(0x00470c21, 0x7b)
+VA(0x00451abb, 0x74)
 i32 FileSize(char* filename) {
     i32 length;
     FILE* f;
@@ -262,7 +262,7 @@ i32 DecodePacket(u8* data, i32 source) {
 // donor PoL RVA 0x000a3be1; preferred Buka symbol ?SendRemoteData@@YIHPAE0HH@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.468075;margin=0.614352;shape=0.312;size=0.933;calls=0.500;alternate=pol20:int SendRemoteData(unsigned char *, unsigned char *, int, int)@0x000a3be1
-VA(0x0047120f, 0x141)
+VA(0x00451f5b, 0x10f)
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length) {
     i32 len;
     i32 result;
@@ -575,7 +575,7 @@ i32 nbnet_init(void) {
 }
 
 // Buka 2.1 ModemSetup reset loop: open the port and reset a dial-up modem.
-VA(0x00471b30, 0xf7)
+VA(0x0045275e, 0xe0)
 void ModemSetup(void) {
     char command[104];
     i32 resetAttempt;
@@ -758,7 +758,7 @@ i32 read_byte(void) {
 
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
-VA(0x00472068, 0x24)
+VA(0x00452bd0, 0x19)
 void write_byte(i32 value) {
     com_snd(0, 0, 1, &value, 0);
 }
@@ -766,7 +766,7 @@ void write_byte(i32 value) {
 // donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
-VA(0x0047208c, 0x2c0)
+VA(0x00452be9, 0x276)
 void Connect(void) {
     i32 result;
     char msg[20];
@@ -923,7 +923,7 @@ readPacketStart:
 // donor PoL RVA 0x0000d4df; preferred Buka symbol ?WriteModemPacket@@YIXPADH@Z
 // donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
-VA(0x0047276b, 0xdc)
+VA(0x00453206, 0xe2)
 void WriteModemPacket(char* buffer, i32 length) {
     char buf[544];
     i32 pos = 0;
@@ -954,7 +954,7 @@ void WriteModemPacket(char* buffer, i32 length) {
 // donor PoL RVA 0x000a3ec7; preferred Buka symbol ?TransmitRemoteData@@YIHPADHHCCCC@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
-VA(0x00472847, 0x228)
+VA(0x004532e8, 0x1e3)
 // HoMM1 callers pass an eighth flag that maps a game position to its net position.
 i32 TransmitRemoteData(
     char* data,
@@ -1066,7 +1066,7 @@ char* GetRemoteData(i8 remove) {
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
 
-VA(0x00472b7b, 0x4fe)
+VA(0x004535af, 0x46c)
 void PollRemote(void) {
     DATA(0x004a3078)
     static i8 gInTimeoutFail = 0;
@@ -1203,7 +1203,7 @@ done:;
 // donor PoL RVA 0x000a48e0; preferred Buka symbol ?TransmitAndWait@@YIHPADHHCCPAPAD@Z
 // donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
-VA(0x00473079, 0x14f)
+VA(0x00453a1b, 0x114)
 i32 TransmitAndWait(
     char* bytes,
     i32 destination,
