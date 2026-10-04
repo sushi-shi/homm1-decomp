@@ -3930,7 +3930,7 @@ void SIncRandomize(i32 x, i32 y) {
     gLastSeed += feedback << 8;
 }
 
-VA(0x0041c9e6, 0x24)
+VA(0x00435f56, 0x19)
 void SRand(i32 seed) {
     gLastSeed = seed;
     srand(seed);

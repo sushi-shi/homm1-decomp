@@ -295,7 +295,7 @@ void mouseManager::ShowColorPointer(void) {}
 
 // townManager::Open forces a pointer refresh here; the Windows build keeps
 // only the one-argument return.
-VA(0x00473960, 0x3)
+VA(0x0046bfe5, 0xd)
 void mouseManager::NewUpdate(i32) {}
 
 VA(0x0046bff2, 0xd)

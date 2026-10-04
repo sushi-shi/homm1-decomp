@@ -71,7 +71,7 @@ combatManager::combatManager(void) {
 // donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
 // donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
-VA(0x0046a4b8, 0x138)
+VA(0x00418cbb, 0x118)
 void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
     i16 i;
     i16 j;
@@ -97,7 +97,7 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
 }
 
 // Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
-VA(0x0046a5f0, 0x3db)
+VA(0x00418dd3, 0x345)
 void combatManager::SetupCombat(
     i32 mapX,
     i32 mapY,
@@ -141,18 +141,9 @@ void combatManager::SetupCombat(
             m_humanSide[i] = gbHumanPlayer[m_playerId[i]];
         else
             m_humanSide[i] = 0;
-        if (i == COMBAT_ATTACKER_SIDE)
-            m_heroes[i] = attackerHero;
-        else
-            m_heroes[i] = defenderHero;
-        if (m_heroes[i])
-            m_heroType[i] = m_heroes[i]->m_heroClass;
-        else
-            m_heroType[i] = COMBAT_HERO_TYPE_NONE;
-        if (i == COMBAT_ATTACKER_SIDE)
-            m_armyGroups[i] = attackerGroup;
-        else
-            m_armyGroups[i] = defenderGroup;
+        m_heroes[i] = i == COMBAT_ATTACKER_SIDE ? attackerHero : defenderHero;
+        m_heroType[i] = m_heroes[i] ? m_heroes[i]->m_heroClass : COMBAT_HERO_TYPE_NONE;
+        m_armyGroups[i] = i == COMBAT_ATTACKER_SIDE ? attackerGroup : defenderGroup;
         m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 1;
         if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
@@ -169,12 +160,10 @@ void combatManager::SetupCombat(
         } else {
             m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
         }
-        if (defenderTown->m_buildings & (1 << BUILDING_SLOT_CASTLE))
-            m_castleSide[COMBAT_DEFENDER_SIDE] = 1;
-        else
-            m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
+        m_castleSide[COMBAT_DEFENDER_SIDE] =
+            (defenderTown->m_buildings & (1 << BUILDING_SLOT_CASTLE)) ? 1 : 0;
         m_combatTowns[COMBAT_DEFENDER_SIDE] = defenderTown;
-        m_originalCombatTown = m_combatTowns[COMBAT_DEFENDER_SIDE];
+        m_originalCombatTown = defenderTown;
     } else {
         m_castleSide[COMBAT_DEFENDER_SIDE] = 0;
         m_combatTowns[COMBAT_DEFENDER_SIDE] = NULL;
@@ -208,7 +197,6 @@ i16 combatManager::Open(i16 priority) {
     StopMusic();
     m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 0;
-    sample = NULL;
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -606,7 +594,7 @@ i8 combatManager::MoreTreesNear(void) {
 }
 
 // Buka CMBTMGR.cpp LoadIcons.
-VA(0x0046bc62, 0x1d7)
+VA(0x0041a2f8, 0x1c4)
 void combatManager::LoadIcons(void) {
     i32 i;
 

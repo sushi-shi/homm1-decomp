@@ -77,7 +77,7 @@ void resourceManager::GetBackdropAtLoc(
 
 // The resource cache and its miss path follow Buka 2.1 RESMGR. Retail's
 // 16-bit MakeId/Query pair and the derived constructors identify each member.
-VA(0x004795c0, 0x96)
+VA(0x0046c25b, 0xc0)
 palette* resourceManager::GetPalette(char* name) {
     i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);

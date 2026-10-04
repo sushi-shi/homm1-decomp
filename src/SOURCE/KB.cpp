@@ -3960,14 +3960,44 @@ char* gObjectNames[63] = {
     "",
     localization::Tr("table.gObjectNames.62")
 };
-DATA(0x00493380)
+DATA(0x0049291c)
 char* gTownNames[36] = {
-    "Blackridge",  "Pinehurst",  "Woodhaven",   "Hillstone",  "Whiteshield", "Bloodreign",
-    "Dragontooth", "Greywind",   "Blackwind",   "Portsmith",  "Middle Gate", "Tundara",
-    "Vulcania",    "Sansobar",   "Atlantium",   "Baywatch",   "Wildabar",    "Fountainhead",
-    "Vertigo",     "Winterkill", "Nightshadow", "Sandcaster", "Lakeside",    "Olympus",
-    "Necropolis",  "Burlock",    "Xabran",      "Dragadune",  "Alamar",      "Kalindra",
-    "Blackfang",   "Basenji",    "Algary",      "Sorpigal",   "Dusk",        "Erliquin",
+    localization::Tr("table.gTownNames.0"),
+    localization::Tr("table.gTownNames.1"),
+    localization::Tr("table.gTownNames.2"),
+    localization::Tr("table.gTownNames.3"),
+    localization::Tr("table.gTownNames.4"),
+    localization::Tr("table.gTownNames.5"),
+    localization::Tr("table.gTownNames.6"),
+    localization::Tr("table.gTownNames.7"),
+    localization::Tr("table.gTownNames.8"),
+    localization::Tr("table.gTownNames.9"),
+    localization::Tr("table.gTownNames.10"),
+    localization::Tr("table.gTownNames.11"),
+    localization::Tr("table.gTownNames.12"),
+    localization::Tr("table.gTownNames.13"),
+    localization::Tr("table.gTownNames.14"),
+    localization::Tr("table.gTownNames.15"),
+    localization::Tr("table.gTownNames.16"),
+    localization::Tr("table.gTownNames.17"),
+    localization::Tr("table.gTownNames.18"),
+    localization::Tr("table.gTownNames.19"),
+    localization::Tr("table.gTownNames.20"),
+    localization::Tr("table.gTownNames.21"),
+    localization::Tr("table.gTownNames.22"),
+    localization::Tr("table.gTownNames.23"),
+    localization::Tr("table.gTownNames.24"),
+    localization::Tr("table.gTownNames.25"),
+    localization::Tr("table.gTownNames.26"),
+    localization::Tr("table.gTownNames.27"),
+    localization::Tr("table.gTownNames.28"),
+    localization::Tr("table.gTownNames.29"),
+    localization::Tr("table.gTownNames.30"),
+    localization::Tr("table.gTownNames.31"),
+    localization::Tr("table.gTownNames.32"),
+    localization::Tr("table.gTownNames.33"),
+    localization::Tr("table.gTownNames.34"),
+    localization::Tr("table.gTownNames.35"),
 };
 DATA(0x004929ac)
 char* gEventText[77] = {
@@ -4388,25 +4418,21 @@ char* gNewGameHelp[9] = {
     localization::Tr("table.gNewGameHelp.7"),
     localization::Tr("table.gNewGameHelp.8"),
 };
-DATA(0x00493b80)
+DATA(0x004930c4)
 char* gSetupCampaignGameHelp[5] = {
-    "Play the role of Lord Ironfist.",
-    "Play the role of Lord Slayer.",
-    "Play the role of Queen Lamanda.",
-    "Play the role of Lord Alamar.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupCampaignGameHelp.0"),
+    localization::Tr("table.gSetupCampaignGameHelp.1"),
+    localization::Tr("table.gSetupCampaignGameHelp.2"),
+    localization::Tr("table.gSetupCampaignGameHelp.3"),
+    localization::Tr("table.gSetupCampaignGameHelp.4"),
 };
-DATA(0x00493b98)
+DATA(0x004930d8)
 char* gSetupBaudHelp[5] = {
-    "Use a 2400 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed. "
-    " For a 28800 baud modem, use the 38400 baud speed.",
-    "Use a 9600 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed. "
-    " For a 28800 baud modem, use the 38400 baud speed.",
-    "Use a 19200 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed. "
-    " For a 28800 baud modem, use the 38400 baud speed.",
-    "Use a 38400 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed. "
-    " For a 28800 baud modem, use the 38400 baud speed.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupBaudHelp.0"),
+    localization::Tr("table.gSetupBaudHelp.1"),
+    localization::Tr("table.gSetupBaudHelp.2"),
+    localization::Tr("table.gSetupBaudHelp.3"),
+    localization::Tr("table.gSetupBaudHelp.4"),
 };
 DATA(0x00493bb0)
 char* gSetupComPortHelp[5] = {
@@ -4416,25 +4442,13 @@ char* gSetupComPortHelp[5] = {
     "Use COM Port 4 for the modem connection.",
     "Cancel back to the main menu.",
 };
-DATA(0x00493bc8)
+DATA(0x00493100)
 char* gSetupDCBaudHelp[5] = {
-    "Use a 2400 baud connection speed. \n\nNote: In general, computers with the older UART 8250 "
-    "chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 "
-    "baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  "
-    "Most computers made in 1994 or later have a UART 16550 chip.",
-    "Use a 9600 baud connection speed. \n\nNote: In general, computers with the older UART 8250 "
-    "chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 "
-    "baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  "
-    "Most computers made in 1994 or later have a UART 16550 chip.",
-    "Use a 19200 baud connection speed.\n\nNote: In general, computers with the older UART 8250 "
-    "chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 "
-    "baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  "
-    "Most computers made in 1994 or later have a UART 16550 chip.",
-    "Use a 38400 baud connection speed.\n\nNote: In general, computers with the older UART 8250 "
-    "chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 "
-    "baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  "
-    "Most computers made in 1994 or later have a UART 16550 chip.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupDCBaudHelp.0"),
+    localization::Tr("table.gSetupDCBaudHelp.1"),
+    localization::Tr("table.gSetupDCBaudHelp.2"),
+    localization::Tr("table.gSetupDCBaudHelp.3"),
+    localization::Tr("table.gSetupDCBaudHelp.4"),
 };
 DATA(0x00493be0)
 char* gSetupDCComPortHelp[5] = {
@@ -4444,12 +4458,12 @@ char* gSetupDCComPortHelp[5] = {
     "Use COM Port 4 for the direct connection.",
     "Cancel back to the main menu.",
 };
-DATA(0x00493bf8)
+DATA(0x00493128)
 char* gSetupHotSeatGameHelp[4] = {
-    "Play with 2 human players, and optionally, up to 2 additional computer players.",
-    "Play with 3 human players, and optionally 1 computer player.",
-    "Play with 4 human players.",
-    "Cancel back to the main menu.",
+    localization::Tr("table.gSetupHotSeatGameHelp.0"),
+    localization::Tr("table.gSetupHotSeatGameHelp.1"),
+    localization::Tr("table.gSetupHotSeatGameHelp.2"),
+    localization::Tr("table.gSetupHotSeatGameHelp.3"),
 };
 DATA(0x00493138)
 char* gSetupModemGameHelp[4] = {
@@ -4465,7 +4479,7 @@ char* gSetupDCGameHelp[4] = {
     localization::Tr("table.gSetupDCGameHelp.2"),
     localization::Tr("table.gSetupDCGameHelp.3"),
 };
-DATA(0x00493c28)
+DATA(0x00493158)
 char* gSetupMultiPlayerGameHelp[5] = {
     localization::Tr("table.gSetupMultiPlayerGameHelp.0"),
     localization::Tr("table.gSetupMultiPlayerGameHelp.1"),
@@ -4479,7 +4493,7 @@ char* gSetupNetworkGameHelp[3] = {
     localization::Tr("table.gSetupNetworkGameHelp.1"),
     localization::Tr("table.gSetupNetworkGameHelp.2"),
 };
-DATA(0x00493c50)
+DATA(0x00493178)
 char* gSetupGameHelp[4] = {
     localization::Tr("table.gSetupGameHelp.0"),
     localization::Tr("table.gSetupGameHelp.1"),
@@ -4694,7 +4708,7 @@ DATA(0x00493f44)
 i8 gOverviewShowing = 0;
 DATA(0x00493f48)
 i32 gFullCombatScreenDrawn = 1;
-DATA(0x00493f4c)
+DATA(0x004a9924)
 i32 gLimitedCombatUpdatePalette = 0;
 DATA(0x004a9928)
 i8 gFirstTimeThrough = 0;
@@ -4795,7 +4809,7 @@ DATA(0x004a7468)
 class font* bigFont;
 DATA(0x004a7fb8)
 class icon* gSystemIcons;
-DATA(0x004a7bb4)
+DATA(0x004a7495)
 i8 gbCombatSurrender;
 DATA(0x004a82c0)
 char gMapName[16];

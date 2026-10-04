@@ -97,3 +97,23 @@ slot. All ten other explicit routines have identical profile-control bytes
 outside their checked references, and every branch destination agrees.
 The complete eleven-function control and retail review are in
 [`buka-army-group.json`](../../config/retail/buka-army-group.json).
+
+
+## Combat-manager control
+
+An unchanged-source `/G5` versus `/G6` control of `SOURCE/CMBTMGR` gives the
+same narrow-argument result. `CombineGroups` is 280 bytes under `/G5`, matching
+retail, versus 296 under `/G6`. `LoadArmies` is 607 bytes under `/G5`, matching
+retail, versus 615 under `/G6`. The check covers every currently identified
+body in the unit and loses none of the previously matching instruction bodies.
+References remain subject to strict identity/addend comparison.
+
+Separately, `SetupCombat`'s three conditional-value assignments account for
+three four-byte compiler temporaries. The retail frame is 20 bytes; expanded
+branch assignments produce an eight-byte frame and different stores. The
+hero/group choices and original-town assignment are corroborated by HoMM2
+Buka 2.1. Restoring those expressions and the castle-flag value expression
+reproduces the complete retail body without introducing authored temporaries.
+`Open`'s extra seven-byte null assignment immediately before `LoadPlaySample`
+is also absent from retail. These are source-form corrections, not comparison
+normalizations. See [the full controls](../../config/retail/buka-combat-setup.json).

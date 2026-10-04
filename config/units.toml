@@ -188,8 +188,8 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
-# Open and KeepAttack register fs:[0] frames.
-flags = "cpp_buka"
+# /GX frames; CombineGroups proves /G5 narrow arguments (buka-combat-setup.json).
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/COMMAND"

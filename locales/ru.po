@@ -3643,3 +3643,223 @@ msgstr "Ошибка инициации мышки."
 msgctxt "startup.windows.failed"
 msgid "Unable to initialize windows - possible memory or disk error."
 msgstr "Вероятно, ошибка диска или памяти."
+
+msgctxt "table.gTownNames.0"
+msgid "Blackridge"
+msgstr "Блэкбридж"
+
+msgctxt "table.gTownNames.1"
+msgid "Pinehurst"
+msgstr "Сосновый холм"
+
+msgctxt "table.gTownNames.2"
+msgid "Woodhaven"
+msgstr "Вудхавен"
+
+msgctxt "table.gTownNames.3"
+msgid "Hillstone"
+msgstr "Хилстон"
+
+msgctxt "table.gTownNames.4"
+msgid "Whiteshield"
+msgstr "Вайтшилд"
+
+msgctxt "table.gTownNames.5"
+msgid "Bloodreign"
+msgstr "Бладрейн"
+
+msgctxt "table.gTownNames.6"
+msgid "Dragontooth"
+msgstr "Клык дракона"
+
+msgctxt "table.gTownNames.7"
+msgid "Greywind"
+msgstr "Грейвинд"
+
+msgctxt "table.gTownNames.8"
+msgid "Blackwind"
+msgstr "Блэквинд"
+
+msgctxt "table.gTownNames.9"
+msgid "Portsmith"
+msgstr "Портсмис"
+
+msgctxt "table.gTownNames.10"
+msgid "Middle Gate"
+msgstr "Мидлгейт"
+
+msgctxt "table.gTownNames.11"
+msgid "Tundara"
+msgstr "Тундара"
+
+msgctxt "table.gTownNames.12"
+msgid "Vulcania"
+msgstr "Вулкания"
+
+msgctxt "table.gTownNames.13"
+msgid "Sansobar"
+msgstr "Занзобар"
+
+msgctxt "table.gTownNames.14"
+msgid "Atlantium"
+msgstr "Атлантиум"
+
+msgctxt "table.gTownNames.15"
+msgid "Baywatch"
+msgstr "Байвоч"
+
+msgctxt "table.gTownNames.16"
+msgid "Wildabar"
+msgstr "Вилдабар"
+
+msgctxt "table.gTownNames.17"
+msgid "Fountainhead"
+msgstr "Фонтанхед"
+
+msgctxt "table.gTownNames.18"
+msgid "Vertigo"
+msgstr "Вертиго"
+
+msgctxt "table.gTownNames.19"
+msgid "Winterkill"
+msgstr "Винтеркил"
+
+msgctxt "table.gTownNames.20"
+msgid "Nightshadow"
+msgstr "Найтшэдоу"
+
+msgctxt "table.gTownNames.21"
+msgid "Sandcaster"
+msgstr "Сэндкастер"
+
+msgctxt "table.gTownNames.22"
+msgid "Lakeside"
+msgstr "Лайксайд"
+
+msgctxt "table.gTownNames.23"
+msgid "Olympus"
+msgstr "Олимпус"
+
+msgctxt "table.gTownNames.24"
+msgid "Necropolis"
+msgstr "Некрополис"
+
+msgctxt "table.gTownNames.25"
+msgid "Burlock"
+msgstr "Бурлок"
+
+msgctxt "table.gTownNames.26"
+msgid "Xabran"
+msgstr "Ксабран"
+
+msgctxt "table.gTownNames.27"
+msgid "Dragadune"
+msgstr "Драгадун"
+
+msgctxt "table.gTownNames.28"
+msgid "Alamar"
+msgstr "Аламар"
+
+msgctxt "table.gTownNames.29"
+msgid "Kalindra"
+msgstr "Калиндра"
+
+msgctxt "table.gTownNames.30"
+msgid "Blackfang"
+msgstr "Блэкфанг"
+
+msgctxt "table.gTownNames.31"
+msgid "Basenji"
+msgstr "Бесенжи"
+
+msgctxt "table.gTownNames.32"
+msgid "Algary"
+msgstr "Алгари"
+
+msgctxt "table.gTownNames.33"
+msgid "Sorpigal"
+msgstr "Сорпигал"
+
+msgctxt "table.gTownNames.34"
+msgid "Dusk"
+msgstr "Даск"
+
+msgctxt "table.gTownNames.35"
+msgid "Erliquin"
+msgstr "Эрликиум"
+
+msgctxt "table.gSetupCampaignGameHelp.0"
+msgid "Play the role of Lord Ironfist."
+msgstr "Играть за Лорда Айронфиста."
+
+msgctxt "table.gSetupCampaignGameHelp.1"
+msgid "Play the role of Lord Slayer."
+msgstr "Играть за Вождя Слэйера."
+
+msgctxt "table.gSetupCampaignGameHelp.2"
+msgid "Play the role of Queen Lamanda."
+msgstr "Играть за Царицу Ламанду."
+
+msgctxt "table.gSetupCampaignGameHelp.3"
+msgid "Play the role of Lord Alamar."
+msgstr "Играть за Колдуна Аламара."
+
+msgctxt "table.gSetupCampaignGameHelp.4"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
+
+msgctxt "table.gSetupDCBaudHelp.0"
+msgid "Use a 2400 baud connection speed. \n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+msgstr "Скорость соединения 2400 бод. \n\nДля компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+msgctxt "table.gSetupDCBaudHelp.1"
+msgid "Use a 9600 baud connection speed. \n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+msgstr "Скорость соединения 9600 бод. \n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+msgctxt "table.gSetupDCBaudHelp.2"
+msgid "Use a 19200 baud connection speed.\n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+msgstr "Скорость соединения 19200 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+msgctxt "table.gSetupDCBaudHelp.3"
+msgid "Use a 38400 baud connection speed.\n\nNote: In general, computers with the older UART 8250 chip should use 19200 baud, and computers with the newer UART 16550 chip should use 38400 baud.  When in doubt, try slower speeds first, and if they work, then try faster speeds.  Most computers made in 1994 or later have a UART 16550 chip."
+msgstr "Скорость соединения 38400 бод.\n\n Для компьютеров с устаревшим чипом UART 8250 следует использовать скорость 19200 бод, а для компьютеров с более современным чипом UART 16550 - скорость 38400 бод. Если вы не уверены, какой у вас чип, начните с более низких скоростей. В большинстве компьютеров, произведенных в 1994 году и позднее, используется чип UART 16550."
+
+msgctxt "table.gSetupDCBaudHelp.4"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню. "
+
+msgctxt "table.gSetupBaudHelp.0"
+msgid "Use a 2400 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+msgstr "Скорость соединения 2400 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+msgctxt "table.gSetupBaudHelp.1"
+msgid "Use a 9600 baud connection speed. \n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+msgstr "Скорость соединения 9600 бод. \n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+msgctxt "table.gSetupBaudHelp.2"
+msgid "Use a 19200 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+msgstr "Скорость соединения 19200 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+msgctxt "table.gSetupBaudHelp.3"
+msgid "Use a 38400 baud connection speed.\n\nNote: For a 14400 baud modem, use the 19200 baud speed.  For a 28800 baud modem, use the 38400 baud speed."
+msgstr "Скорость соединения 38400 бод.\n\nДля модемов со скоростью 14400 бод используйте скорость 19200 бод. Для модемов со скоростью 28800 бод используйте скорость 38400 бод."
+
+msgctxt "table.gSetupBaudHelp.4"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
+
+msgctxt "table.gSetupHotSeatGameHelp.0"
+msgid "Play with 2 human players, and optionally, up to 2 additional computer players."
+msgstr "Играть с 2 людьми и, опционально, до 2 дополнительных компьютерных игроков."
+
+msgctxt "table.gSetupHotSeatGameHelp.1"
+msgid "Play with 3 human players, and optionally 1 computer player."
+msgstr "Играть с 3 людьми и, опционально, с 1 компьютерным игроком."
+
+msgctxt "table.gSetupHotSeatGameHelp.2"
+msgid "Play with 4 human players."
+msgstr "Играть с 4 людьми."
+
+msgctxt "table.gSetupHotSeatGameHelp.3"
+msgid "Cancel back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
