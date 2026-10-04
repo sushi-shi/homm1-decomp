@@ -48,7 +48,7 @@ void resourceManager::GetBackdrop(char* name, class bitmap* backdrop) {
 }
 
 // HoMM1 likewise omits Buka's useIcon branch and keeps its row-copy loop.
-VA(0x00479530, 0x90)
+VA(0x0046c1d4, 0x87)
 void resourceManager::GetBackdropAtLoc(
     char* filename,
     class bitmap* destination,

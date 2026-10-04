@@ -2033,7 +2033,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
 }
 
 // Buka TOWNMGR.cpp:3843-3862 SortStats, a townManager member in HoMM1.
-VA(0x00445acb, 0xea)
+VA(0x00464937, 0xeb)
 void townManager::SortStats(i32* const stats, i8* const order) {
     i32 temp;
     i16 firstPlayer;
@@ -2442,7 +2442,7 @@ i16 CastleHandler(struct tag_message& message) {
 
 // Buka TOWNMGR.cpp:3034 SplitArmyHandler; HoMM1 handles the amount
 // buttons on selection and redraws the whole split window.
-VA(0x00446f16, 0x32d)
+VA(0x00465bea, 0x2cc)
 i16 SplitArmyHandler(struct tag_message& message) {
     i16 plusControl = TOWN_SPLIT_INCREASE_CONTROL;
     i32 unusedAction;

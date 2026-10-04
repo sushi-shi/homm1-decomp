@@ -3871,3 +3871,27 @@ msgstr "Высокая мораль дает отряду %s еще одну а�
 msgctxt "combat.morale.bad"
 msgid "Low morale causes the %s to freeze in panic."
 msgstr "Низкая мораль заставляет %s замереть в панике."
+
+msgctxt "setup.modem.initialization_prompt"
+msgid "Please enter any special initialization string required by your modem, or hit 'ENTER' to accept the default."
+msgstr "Пожалуйста, укажите значения строки инициализации модема или нажмите 'ENTER'."
+
+msgctxt "combat.armageddon.damage"
+msgid "The armaggedon does %d damage."
+msgstr "Армагеддон наносит %d ед. урона."
+
+msgctxt "startup.instance.event_name"
+msgid "Heroes"
+msgstr "Герои"
+
+msgctxt "startup.instance.game_title"
+msgid "Heroes of Might and Magic"
+msgstr "Герои Меча и Магии"
+
+msgctxt "startup.instance.already_running"
+msgid "Only one copy of %s may run at a time"
+msgstr "Только одна копия %s может быть запущена одновременно"
+
+msgctxt "startup.error.title"
+msgid "Startup Error"
+msgstr "Ошибка загрузки"

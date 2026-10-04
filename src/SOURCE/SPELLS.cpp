@@ -887,7 +887,7 @@ void combatManager::ElementalStorm(void) {
 
 // Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
 // shaking the screen.
-VA(0x0041032b, 0x3dc)
+VA(0x0045c2bd, 0x3b6)
 void combatManager::Armageddon(void) {
     i16 sideIdx;
     i32 damage;
@@ -915,7 +915,7 @@ void combatManager::Armageddon(void) {
         }
     }
     if (hit) {
-        sprintf(gText, "The armaggedon does %d damage.", damage);
+        sprintf(gText, localization::Tr("combat.armageddon.damage"), damage);
         CombatMessage(gText, 1);
     }
     gpWindowManager->m_updateFlags = 0;

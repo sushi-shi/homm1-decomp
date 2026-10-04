@@ -810,7 +810,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
 
 // Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
 // sides, high-morale stacks first.
-VA(0x0046c68c, 0x209)
+VA(0x0041ac0e, 0x1d9)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* pArmy;
     i8 iSpeed;
@@ -839,7 +839,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
                 if (!bSkip)
                     break;
             }
-            if (m_numArmies[stackSide] != stackCounter) {
+            if (stackCounter != m_numArmies[stackSide]) {
                 m_currentSide = stackSide;
                 m_currentArmyIndex = stackCounter;
                 GetControl();
@@ -879,7 +879,7 @@ i8 combatManager::IsWinner(i8 side) {
 // HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
-VA(0x0046c968, 0xd55)
+VA(0x0041ae9c, 0xcf2)
 void combatManager::CatAttack(i8 side) {
     i16 dx;
     icon* boulder;
@@ -902,10 +902,9 @@ void combatManager::CatAttack(i8 side) {
     if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
     catSample = NULL;
-    if (side == COMBAT_ATTACKER_SIDE)
-        col = COMBAT_CASTLE_WALL_COLUMN;
-    else
-        col = COMBAT_GRID_LAST_COLUMN - COMBAT_CASTLE_WALL_COLUMN;
+    col = side == COMBAT_ATTACKER_SIDE
+              ? COMBAT_CASTLE_WALL_COLUMN
+              : COMBAT_GRID_LAST_COLUMN - COMBAT_CASTLE_WALL_COLUMN;
     wallsLeft = 0;
     for (i = 0; i < COMBAT_GRID_ROWS; i++) {
         if (m_hexCells[i * COMBAT_GRID_COLUMNS + col].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
@@ -945,10 +944,7 @@ void combatManager::CatAttack(i8 side) {
         m_catapultTarget = 1;
     } else {
         m_catapultTarget = SRandom(0, 1);
-        if (!m_catapultTarget)
-            m_catapultTarget = 1;
-        else
-            m_catapultTarget = 3;
+        m_catapultTarget = m_catapultTarget ? 3 : 1;
     }
     startX = 0x75;
     startY = 0x104;
@@ -986,8 +982,8 @@ void combatManager::CatAttack(i8 side) {
                 giMaxExtentX - giMinExtentX + 1,
                 giMaxExtentY - giMinExtentY + 1
             );
-            x = dx + x;
-            y = y + dy;
+            x += dx;
+            y += dy;
             frm++;
             frm %= 3;
             if (i < 2)
@@ -1030,8 +1026,8 @@ void combatManager::CatAttack(i8 side) {
                 giMaxExtentX - giMinExtentX + 1,
                 giMaxExtentY - giMinExtentY + 1
             );
-            x = dx + x;
-            y = (12 - i) * dy + y;
+            x += dx;
+            y += (12 - i) * dy;
             frm++;
             frm %= 3;
             if (i < 2)
@@ -1061,8 +1057,8 @@ void combatManager::CatAttack(i8 side) {
                 giMaxExtentX - giMinExtentX + 1,
                 giMaxExtentY - giMinExtentY + 1
             );
-            x = dx + x;
-            y = dy * i + y;
+            x += dx;
+            y += i * dy;
             frm++;
             frm %= 3;
         }
@@ -1353,7 +1349,7 @@ void combatManager::KeepAttack(void) {
 
 // Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
 // losses, plus 500 for a defeated hero.
-VA(0x0046e26e, 0x114)
+VA(0x0041c6b4, 0xec)
 i32 combatManager::ExperienceValueOfStack(i8 side) {
     i32 i;
     i32 value;

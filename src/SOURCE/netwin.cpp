@@ -649,7 +649,7 @@ DATA(0x004b2160)
 u8 gNbCallRetries = 0;
 DATA(0x004b2161)
 u8 gNetbiosAvail = 0;
-DATA(0x004a16cc)
+DATA(0x004b2162)
 u8 gNbShutdown = 0;
 DATA(0x0049eda4)
 u8 gNbMaxSess = 255;
@@ -660,7 +660,7 @@ char* gNbGroupName = "Empire Too ";
 DATA(0x004a16e0)
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
-DATA(0x004c2ce8)
+DATA(0x004a9e70)
 tag_Anchor gNbFreeQueue;
 DATA(0x004a9eb0)
 u8 gNbSessLsn[7];
@@ -678,13 +678,13 @@ DATA(0x004a9e78)
 u8 gNbLocalNum;
 DATA(0x004a9ea8)
 tag_Anchor gNbRcvQueue;
-DATA(0x004c2d30)
+DATA(0x004a9eb8)
 tag_Anchor gNbSndQueue;
 DATA(0x004b0ec0)
 CRITICAL_SECTION gNbRcvLock;
-DATA(0x004c2cf8)
+DATA(0x004a9e7c)
 HANDLE gNbEvents[9];
-DATA(0x004cafc0)
+DATA(0x004b2148)
 CRITICAL_SECTION gNbSndLock;
 DATA(0x004a9ea0)
 u8 gNetbiosLana;

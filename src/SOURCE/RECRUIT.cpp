@@ -399,7 +399,7 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
 }
 
 // Buka RECRUIT.cpp:414-451; HoMM1 hides the pointer around the quick view.
-VA(0x0046753d, 0x1b4)
+VA(0x0045182c, 0x17d)
 void QuickViewRecruit(town* townData, i8 dwelling) {
     i32 iGoldCost;
     i32 avail;

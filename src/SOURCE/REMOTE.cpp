@@ -675,7 +675,7 @@ i8 GUIModemCommandExec(void) {
 }
 
 // Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
-VA(0x00471e2e, 0x6c)
+VA(0x004529ff, 0x5f)
 void ModemCommand(char* command) {
     i32 pos;
     i32 len = strlen(command);
@@ -1264,11 +1264,11 @@ DATA(0x004a2c04)
 i32 gIDCtr = 0;
 DATA(0x004a2c1c)
 i32 gBaudBits = 8;
-DATA(0x004a2c20)
+DATA(0x004cc800)
 i32 packetlen = 0;
-DATA(0x004a2c24)
+DATA(0x004cc804)
 i32 inescape = 0;
-DATA(0x004a2c28)
+DATA(0x004cc808)
 i32 newpacket = 0;
 DATA(0x004a2c2c)
 i32 gInOrderCtr = 0;
@@ -1284,7 +1284,7 @@ DATA(0x004a2c40)
 i32 gLastHeartbeatSend = 0;
 DATA(0x004a2c44)
 i32 gLastHeartbeatReceive = 1999999999;
-DATA(0x004a2c48)
+DATA(0x004cc81c)
 i8 gInNetSetup = 0;
 DATA(0x004cc81e)
 i8 gInitNetGuestStatus = 0;
@@ -1292,7 +1292,7 @@ DATA(0x004cc81f)
 i8 gWaitForHostStatus = 0;
 DATA(0x004cd858)
 char idstr[8];
-DATA(0x004cd758)
+DATA(0x004cc6e8)
 char rcvBufOut[REMOTE_MESSAGE_SIZE];
 DATA(0x004cb40c)
 i32 GUIMRc;
@@ -1314,7 +1314,7 @@ DATA(0x004cb564)
 char PacketSend[256];
 DATA(0x004cb30c)
 i32 stime;
-DATA(0x004cc460)
+DATA(0x004cb3f0)
 i32 iInOrder[REMOTE_QUEUE_CAPACITY];
 DATA(0x004cc480)
 RemoteMessage sndBuf;
@@ -1330,7 +1330,7 @@ DATA(0x004cb2b0)
 char GUIMRresp[40];
 DATA(0x004cb304)
 i32 oldsec;
-DATA(0x004cb318)
+DATA(0x004ca2a8)
 inque_t inque;
 DATA(0x004cb2d8)
 char packet[256];
@@ -1340,7 +1340,7 @@ DATA(0x004cc6d8)
 RemoteMessage rcvBufIn;
 DATA(0x004cb514)
 char GUIMRresponse[80];
-DATA(0x004ccfe0)
+DATA(0x004cbf70)
 RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
 DATA(0x004cc7d8)
 outque_t outque;

@@ -85,7 +85,7 @@ DATA(0x004b2ff0)
 i32 gDefenderLoss;
 DATA(0x004aa0d8)
 i32 giHumanTownConquered;
-DATA(0x004c0b9c)
+DATA(0x004c8cc4)
 i32 giCurTurn;
 DATA(0x004b2fd0)
 i32 costTemp[RESOURCE_COUNT];
@@ -141,7 +141,7 @@ DATA(0x0048d078)
 static const float AI_CREATURE_SAME_RACE_FACTOR = 1.1f;
 DATA(0x0048a4b8)
 static const float AI_FUTURE_DEFLATION_RATE = 0.15f;
-DATA(0x0048d080)
+DATA(0x0048a4bc)
 static const float AI_HERO_PURCHASE_SAME_RACE_FACTOR = 1.12f;
 DATA(0x0048d084)
 static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
@@ -1849,7 +1849,7 @@ i32 philAI::MaxBuyableCreatures(i32 creatureType) {
 // donor PoL RVA 0x0003dff6; preferred Buka symbol ?ValueOfBuyingHero@philAI@@QAEXPAVtown@@PAVhero@@AAHAAM@Z
 // donor Buka TU SOURCE/PHILAI; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.452634;margin=0.608146;shape=0.221;size=0.851;calls=1.000;alternate=pol20:void philAI::ValueOfBuyingHero(class town *, class hero *, int &, float &)@0x0003dff6
-VA(0x0042c77c, 0x1a8)
+VA(0x0044b70d, 0x184)
 void philAI::ValueOfBuyingHero(
     town* townPointer,
     hero* heroPointer,
@@ -1992,7 +1992,7 @@ void philAI::GetGameAttentionValue(i32 player) {
 
 // Buka 2.1 GetTurnAttentionValue: reset the game weights and scale the hero
 // weight down as the game ages.
-VA(0x0042cc6e, 0xed)
+VA(0x0044bb6d, 0xc6)
 void philAI::GetTurnAttentionValue(i32 player) {
     playerAttentionWeights* attentionWeights =
         &gpGame->m_players[player].m_aiData.m_attentionWeights;
@@ -2383,7 +2383,7 @@ i32 philAI::ValueOfTown(town* townPointer) {
 
 // Buka 2.1 TurnCostResource: each resource's turn cost scales its base
 // value against the player's relative stock-plus-income share.
-VA(0x0042dd61, 0x139)
+VA(0x0044cb0a, 0x10b)
 void philAI::TurnCostResource(i32 player) {
     playerAIData* playerAI;
     float ratio[RESOURCE_COUNT];
@@ -2408,7 +2408,7 @@ void philAI::TurnCostResource(i32 player) {
 }
 
 // Buka 2.1 TurnValueOfObelisk without the later victory/explorer terms.
-VA(0x0042de9a, 0x11e)
+VA(0x0044cc15, 0xfb)
 float philAI::TurnValueOfObelisk(i32 player) {
     playerAIData* playerAI;
     i32 each;
@@ -3368,7 +3368,7 @@ i32 philAI::DamageGroup(armyGroup* ag, hero* loser, hero*, float dmg) {
 
 // HoMM1 primary-stat valuation: the table worth of the new level (capped at
 // twenty) less that of the old one; used for hero stat gains.
-VA(0x004304a6, 0x66)
+VA(0x0044ecb0, 0x4f)
 float philAI::StatChangeValue(i32 oldValue, i32 newValue) {
     float newRV;
     float oldRV;

@@ -707,7 +707,7 @@ void hero::Deallocate(void) {
 }
 
 // Buka 2.1 hero::GetExperience.
-VA(0x00448af4, 0xd0)
+VA(0x0043a599, 0xb5)
 i32 hero::GetExperience(i32 level) {
     i32 experience;
     i32 stage;

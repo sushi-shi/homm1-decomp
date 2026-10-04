@@ -184,7 +184,7 @@ void swapManager::Close(void) {
     gpAdvManager->m_adventureWindow->BroadcastMessage(message);
 }
 
-VA(0x0044fd88, 0x21f)
+VA(0x0045d373, 0x1a2)
 void swapManager::DrawSelector(void) {
     const i16 frameColor = 232;
     const i16 leftArmyBase = 24;

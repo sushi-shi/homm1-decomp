@@ -38,14 +38,14 @@ DATA(0x0048d520)
 static const float SPELL_AI_SHIELD_MODIFIER = 0.15f;
 
 // The weaker side's hero halves (or quarters) a spell's raw effect.
-DATA(0x004cb180)
+DATA(0x004cccb4)
 i32 gSpellAIEffectShift;
 // Side of the stack standing on the hex DetermineEffectOfSpell evaluates.
 DATA(0x004cb17c)
 i32 gSpellAITargetSide;
 
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
-VA(0x00464be0, 0x1bd)
+VA(0x00458de0, 0x196)
 i32 combatManager::DoSpellAI(i8 side) {
     i32 selectedSpell;
     i32 bestEffect;
@@ -300,7 +300,7 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
 }
 
 // Buka SPELLAI.cpp:962-973.
-VA(0x00465531, 0x63)
+VA(0x004595e9, 0x52)
 void combatManager::ClearEffects(void) {
     i32 side;
     i32 index;

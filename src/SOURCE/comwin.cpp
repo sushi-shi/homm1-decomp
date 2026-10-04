@@ -267,7 +267,7 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
     return 0;
 }
 
-VA(0x00437c1e, 0x147)
+VA(0x0041d1e4, 0x11a)
 i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
     tag_Node* node;
     BOOL result;

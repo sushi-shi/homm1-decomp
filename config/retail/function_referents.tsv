@@ -150,17 +150,23 @@ rva	name	provenance
 0x0001a84f	?GetGridIndex@combatManager@@QAEFFF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001a8f6	?CheckApplyGoodMorale@combatManager@@QAEXHH@Z	Complete combat morale instructions, CFG and bijective local-slot correspondence; buka-combat-morale.json
 0x0001aa9b	?CheckApplyBadMorale@combatManager@@QAEHHH@Z	Complete combat morale instructions, CFG and bijective local-slot correspondence; buka-combat-morale.json
+0x0001ac0e	?GetNextArmy@combatManager@@QAECH@Z	Complete catapult/turn-selection instructions, branches, typed references and local-slot bijection; buka-catapult.json
 0x0001ade7	?IsWinner@combatManager@@QAECC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001ae9c	?CatAttack@combatManager@@QAEXC@Z	Complete catapult/turn-selection instructions, branches, typed references and local-slot bijection; buka-catapult.json
 0x0001bb8e	?RegenerateField@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001c6b4	?ExperienceValueOfStack@combatManager@@QAEHC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001c7a0	?ResetHitByCreature@combatManager@@QAEXXZ	Buka combat message/hydra review: 0x155d7; buka-combat-messages.json
 0x0001c7ff	?ValidHex@@YAHH@Z	Buka exact pathfinding instruction correspondence: 0x2a07d; config/retail/buka-pathfinding.json
 0x0001c826	?SaveCombatBorder@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001c87d	?DrawCombatBorder@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001c984	?pop_node@@YAPAUtag_Node@@PAUtag_Anchor@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001d048	?com_term@@YAXF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001d1e4	?com_snd@@YAFFGGPAXH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001d306	?com_stat@@YAEFG@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0001d460	?Main@combatManager@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x0001d6dc	?ValidHexToStandOn@combatManager@@QAECH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0001e900	?ResetRound@combatManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x0001edae	?RightClick@combatManager@@QAECC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0001f389	?ClearWinLoseBottom@combatManager@@QAEXPAVheroWindow@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020cd1	?CheckChangeSelector@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00020ed8	?GetControl@combatManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -186,6 +192,7 @@ rva	name	provenance
 0x000274db	?CombatMonsterEvent@advManager@@QAECPAVhero@@CFPAVmapCell@@HHCHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00027a8e	?HeroLoses@advManager@@QAEXPAVhero@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00028f98	?DoNetCombat@advManager@@QAEHPAD@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f7b; buka-scroll-network.json
+0x0002968b	?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHCCCC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00029c60	??0searchArray@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00029c70	?Clear@searchArray@@QAEXXZ	Buka exact pathfinding instruction correspondence: 0x55e6a, 0x56175; config/retail/buka-pathfinding.json
 0x00029ca0	?QuickDistance@searchArray@@QAEFFFFF@Z	Buka combat-AI instruction/CFG/EH review: 0x12a24; buka-combat-ai.json
@@ -201,8 +208,11 @@ rva	name	provenance
 0x0002b5f2	?Read@playerData@@QAEXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0002b7d3	?NextHero@playerData@@QAECH@Z	Buka Main complete instruction/CFG correspondence: 0x3327; buka-adventure-commands.json
 0x0002b8d3	?HasMobileHero@playerData@@QAECXZ	Buka input-handler instruction/CFG review: 0x44e7; buka-adventure-input.json
+0x0002b929	?CountVisitedObelisks@playerData@@QAECXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0002b97f	?BuildingsOwned@playerData@@QAEHHHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0002ba35	?NumOfGivenArtifact@playerData@@QAEHH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0002bab9	?ComputeUALoc@@YAXH@Z	Buka input-handler instruction/CFG review: 0x4a00; buka-adventure-input.json
+0x0002bdda	?VisitObelisk@game@@QAEXC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0002bf56	?IsMobile@game@@QAECC@Z	Buka command helper family: 0x10543; buka-adventure-commands.json
 0x0002bfee	?GetWorldMapData@game@@QAEPAY0EI@VmapCell@@XZ	Buka adventure-manager family: 0x1265, reviewed source family; buka-advmgr.json
 0x0002c001	?CreateBoat@game@@QAECCC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -218,6 +228,7 @@ rva	name	provenance
 0x0002e595	?InitCampaignMap@game@@QAEXHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0002f621	?GetObjectFamily@@YAHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0002f672	?SettleOverlay@game@@QAEXHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0003070a	?ClaimTown@game@@QAEXCC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000309a5	?ClaimMine@game@@QAEXCC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00030bef	?ViewSpells@game@@QAECPAVhero@@CP6AFAAUtag_message@@@ZC@Z	Buka control-panel instruction/CFG/EH review: 0xdef4; buka-control-panel.json
 0x00030e2a	?SetupSpellRange@game@@QAEXF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -227,6 +238,7 @@ rva	name	provenance
 0x00032d0a	?GetRandomNumTroops@game@@QAECC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00032f8c	?NextPlayer@game@@QAEXXZ	Buka Main complete instruction/CFG correspondence: 0x2a23; buka-adventure-commands.json
 0x00035425	?GetRandomArtifactId@game@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00035566	?SetRandomHeroArmies@game@@QAEXFH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00035a74	?SetVisibility@game@@QAEXFFFF@Z	Buka Main complete instruction/CFG correspondence: 0x2eb5, 0x2f8c, 0x2f9f, 0x2fb2, 0x2fc5; buka-adventure-commands.json
 0x00035ca3	?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z	Buka Main complete instruction/CFG correspondence: 0x2e1c, 0x2e34; buka-adventure-commands.json
 0x00035d6b	?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -236,9 +248,11 @@ rva	name	provenance
 0x00035f56	?SRand@@YAXH@Z	Complete combat setup instruction and CFG correspondence; buka-combat-setup.json
 0x00035f6f	?GetLuck@game@@QAEHPAVhero@@PAVarmy@@@Z	Buka army movement/luck/damage complete instruction and CFG review: 0x17028; buka-army-luck.json
 0x00036026	?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z	Buka exact pathfinding instruction correspondence: 0x56595, 0x565ba, 0x56738; config/retail/buka-pathfinding.json
+0x00036320	?SetupAdjacentMons@game@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000363dc	?CancelComputerScreen@game@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: 0x10dd1; buka-scroll-network.json
 0x00036536	?ShowHeroesLogo@game@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000365d2	?WaitForPlayer@game@@QAEXPADH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x000366f6	?RandomizeTerrainTiles@game@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000376cf	?ReceiveSaveGame@game@@QAEHHH@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f1c; buka-scroll-network.json
 0x00037b7f	?DoNewTurn@game@@QAEXXZ	Buka scroll/network/border instruction/CFG/EH review: 0x10ddc; buka-scroll-network.json
 0x00038134	?GetBoatsBuilt@game@@QAEHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -261,6 +275,7 @@ rva	name	provenance
 0x0003a114	?ViewArtifact@hero@@QAEXCC@Z	Buka input-handler instruction/CFG review: 0x491b; buka-adventure-input.json
 0x0003a152	?Dismiss@hero@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003a199	?Deallocate@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0003a599	?GetExperience@hero@@QAEHH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0003a725	?ApplyBattleWinTemps@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003a8b1	?CheckLevel@hero@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003ab68	?NumArtifacts@hero@@QAEHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -277,6 +292,7 @@ rva	name	provenance
 0x0003cd20	?DeleteMainClasses@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003e05e	?InitMenuHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003e1b2	?NullHandler@@YAFAAUtag_message@@@Z	Buka control-panel instruction/CFG/EH review: 0xdeca; buka-control-panel.json
+0x0003e1bb	?RecruitHeroHandler@@YAFAAUtag_message@@@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0003e3de	?GetMonsterCost@@YAXHQAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0003e693	?NormalDialog@@YAXPADHHHHHHHH@Z	Buka Main complete instruction/CFG correspondence: 0x2c4b, 0x31f1; buka-adventure-commands.json
 0x0003f440	?UpdateNormalDialog@@YAXPAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -296,6 +312,7 @@ rva	name	provenance
 0x000417fc	?AddNetBoxLine@@YAXPAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00041824	?ShutDown@@YAXPAD@Z	Buka scroll/network/border instruction/CFG/EH review: 0x10f27; buka-scroll-network.json
 0x00041943	?FileError@@YAXPAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00041d6c	?CongratsWait@@YAXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00041df7	?GetDataEntry@@YAXPAD0H0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00041f97	?DataEntryWindowHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00042146	?MemError@@YAXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7380; buka-quick-info.json
@@ -308,6 +325,7 @@ rva	name	provenance
 0x000428ae	?UpdateSystemOptionsMenu@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00042bcc	?CleanUpMenus@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00042c49	?UpdateAppSpecificMenus@@YAXPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00042ca0	_WinMain@16	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000436ff	_AppAbout@16	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
 0x00043a76	?UpdateDfltMenu@@YAXPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -359,9 +377,13 @@ rva	name	provenance
 0x0004b605	?CreaturesToBuy@philAI@@QAEHPAVtown@@H@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004b644	?CreaturesToBuy@philAI@@QAEHHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004b68b	?MaxBuyableCreatures@philAI@@QAEHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0004b70d	?ValueOfBuyingHero@philAI@@QAEXPAVtown@@PAVhero@@AAHAAM@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0004b9bd	?LikelihoodOfEnemyAttacking@philAI@@QAEXPAVtown@@PAVhero@@AAM2AAH332@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004ba20	?GetGameAttentionValue@philAI@@QAEXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0004bb6d	?GetTurnAttentionValue@philAI@@QAEXH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0004bca4	?TurnsToBuy@philAI@@QAEMQAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0004cb0a	?TurnCostResource@philAI@@QAEXH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x0004cc15	?TurnValueOfObelisk@philAI@@QAEMH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0004cd10	?FutureDeflator@philAI@@QAEMQAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004cd57	?FightValueOfStack@philAI@@QAEHPAVarmyGroup@@PAVhero@@HCC@Z	Buka combat-AI instruction/CFG/EH review: 0x11961; buka-combat-ai.json
 0x0004d521	?QuickCombat@philAI@@QAEHPAVarmyGroup@@PAVhero@@01CCAAM2@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -370,6 +392,7 @@ rva	name	provenance
 0x0004e319	?ChooseToBuyArtifact@philAI@@QAEHPAVhero@@HH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004e8bc	?CombatMonsterEvent@philAI@@QAECPAVhero@@CPAHPAVmapCell@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0004ec5b	?DamageGroup@philAI@@QAEHPAVarmyGroup@@PAVhero@@1M@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0004ecb0	?StatChangeValue@philAI@@QAEMHH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0004ecff	?IncrementHourGlass@philAI@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00050ef9	?Open@recruitUnit@@UAEFF@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x00051154	?Close@recruitUnit@@UAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -377,6 +400,7 @@ rva	name	provenance
 0x00051325	?Main@recruitUnit@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x00051697	??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00051753	??0recruitUnit@@QAE@PAVtown@@C@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0005182c	?QuickViewRecruit@@YAXPAVtown@@C@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000519f0	?RemoteCleanup@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00051a56	?ReadFileBlock@@YAPAXPADPAXHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00051b2f	?RemoteMain@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -394,6 +418,7 @@ rva	name	provenance
 0x000528d3	?Wait@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005291e	?GUIModemCommand@@YAXPAD0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00052980	?GUIModemCommandExec@@YACXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x000529ff	?ModemCommand@@YAXPAD@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00052a5e	?GUIModemResponse@@YACPAD0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00052ac9	?GUIModemResponseExec@@YACXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00052b7c	?write_buffer@@YAHPADH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -422,7 +447,9 @@ rva	name	provenance
 0x000570f2	?SetupModemGame@game@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005738b	?SetupMultiPlayerGame@game@@QAECXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005752d	?SetupGame@game@@QAECC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0005789f	?PickLoadGame@game@@QAECXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00057a60	?SetupCampaignGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
+0x00057b37	?SetupComPortHandler@@YAFAAUtag_message@@@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00057c3e	?SetupBaudHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00057d45	?SetupHotSeatGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00057e0d	?SetupModemGameHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -430,6 +457,8 @@ rva	name	provenance
 0x00057fdc	?SetupNetworkGameHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00058089	?SetupGameHandler@@YAFAAUtag_message@@@Z	Buka address-taken callback in complete-body-proven caller; buka-reference-completion.json
 0x00058151	?BaseSetupHandler@@YAFAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00058de0	?DoSpellAI@combatManager@@QAEHC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x000595e9	?ClearEffects@combatManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0005963b	?NextPos@combatManager@@QAEXPAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00059678	?FirstArmy@combatManager@@QAEHHHPAH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00059e90	?ViewSpells@combatManager@@QAECH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -438,6 +467,7 @@ rva	name	provenance
 0x0005a572	?SpellMessage@combatManager@@QAEXCC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005a668	?CastSpell@combatManager@@QAEXCCCC@Z	Buka complete melee CFG, typed register dataflow and ordered-reference review: 0x1672b, 0x167a5, 0x1682e; buka-melee-attack.json
 0x0005b2c6	?DefaultSpell@combatManager@@QAEXC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0005c2bd	?Armageddon@combatManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0005c940	??1strip@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005ca47	?Draw@strip@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005ca7e	?DrawIcons@strip@@QAEXC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -448,6 +478,7 @@ rva	name	provenance
 0x0005cf7d	?Reset@swapManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005cfab	?Open@swapManager@@UAEFF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005d25f	?Close@swapManager@@UAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0005d373	?DrawSelector@swapManager@@QAEXXZ	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0005d515	?Main@swapManager@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
 0x0005e1ba	?Update@swapManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005e9c0	??0town@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -469,6 +500,8 @@ rva	name	provenance
 0x0006243d	?ResetStrips@townManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000624c8	?Toggle@townManager@@QAEXC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006254d	?DrawTown@townManager@@QAEXCH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00064937	?SortStats@townManager@@QAEXQAHQAC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
+0x00065bea	?SplitArmyHandler@@YAFAAUtag_message@@@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00066710	?DDRestoreDisplayMode@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006674e	?DDQueryNewPalette@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006677b	?CreatePrimary@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -637,6 +670,7 @@ rva	name	provenance
 0x00069dd5	?SetVolumes@@YAXHH@Z	Buka adventure-manager family: Open call 0x1fd4; manually reconstructed Audio.cpp and buka-audio.json; buka-advmgr.json
 0x00069fb0	?CycleColors@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006a14c	??0heroWindowManager@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0006a456	?Main@heroWindowManager@@UAEFAAUtag_message@@@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0006a4b4	?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z	Buka command helper family: 0x10478; buka-adventure-commands.json
 0x0006a4f1	?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z	Buka QuickInfo instruction/CFG/EH review: 0x76df; buka-quick-info.json
 0x0006a657	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	Buka adventure-manager family: 0x2337; buka-advmgr.json
@@ -662,6 +696,7 @@ rva	name	provenance
 0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	Buka QuickInfo instruction/CFG/EH review: 0x7721; buka-quick-info.json
 0x0006c0e0	??0resourceManager@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006c15a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	Buka context/locator instruction/CFG review: 0xae67; buka-adventure-context.json
+0x0006c1d4	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HH@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x0006c25b	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	Complete combat setup instruction and CFG correspondence; buka-combat-setup.json
 0x0006c3db	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	Buka map-view instruction/CFG/EH review: 0xbb62, 0xc2a8, 0xc2bb, 0xc2ce, 0xc2e1, 0xc329, 0xc33c, 0xc34f; buka-map-views.json
 0x0006c407	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	Buka army effects/movement complete instruction and CFG review: 0x17deb; buka-army-effects.json

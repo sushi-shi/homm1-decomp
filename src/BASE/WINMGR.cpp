@@ -150,7 +150,7 @@ void heroWindowManager::Close(void) {
     m_active = 0;
 }
 
-VA(0x00476890, 0x31)
+VA(0x0046a456, 0x5e)
 i16 heroWindowManager::Main(tag_message& message) {
     i16 result = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* window = m_windowListTail;

@@ -32,18 +32,18 @@
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
-VA(0x00432870, 0x14e)
+VA(0x00442ca0, 0x11a)
 H1_C_LINKAGE i32 __stdcall
 WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 showCommand) {
     DWORD error;
     MSG message;
 
     hInstApp = instance;
-    gEventHandle = CreateEventA(NULL, FALSE, FALSE, "Heroes");
+    gEventHandle = CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
     error = GetLastError();
     if (gEventHandle == NULL || error == ERROR_ALREADY_EXISTS) {
-        sprintf(gText, "Only one copy of %s may run at a time", "Heroes of Might and Magic");
-        MessageBoxA(NULL, gText, "Startup Error", MB_ICONHAND);
+        sprintf(gText, localization::Tr("startup.instance.already_running"), localization::Tr("startup.instance.game_title"));
+        MessageBoxA(NULL, gText, localization::Tr("startup.error.title"), MB_ICONHAND);
         return 0;
     }
 
@@ -1370,11 +1370,11 @@ DATA(0x004a9e38)
 i32 gForegroundApp = 0;
 DATA(0x004a9e3c)
 void* hmnuApp = NULL;
-DATA(0x0049f7d8)
+DATA(0x004a9e40)
 void* gEventHandle = NULL;
 DATA(0x0049f854)
 i32 gClosingApp = 0;
-DATA(0x004c2088)
+DATA(0x004a99e8)
 void* hInstApp;
 DATA(0x004c2068)
 struct tagRECT rcTemp;
@@ -1390,7 +1390,7 @@ DATA(0x004c2078)
 i32 lTemp;
 DATA(0x004c2090)
 u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
-DATA(0x004c2498)
+DATA(0x004a9df4)
 char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 DATA(0x004a9df0)
 i32 iMainWinScreenWidth;

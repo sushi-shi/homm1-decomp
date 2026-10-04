@@ -646,7 +646,7 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
 
 // Buka COMMAND.cpp ResetRound; HoMM1 has five stacks a side, one keep and
 // a byte spell-round counter.
-VA(0x0044b53c, 0x139)
+VA(0x0041e900, 0x122)
 void combatManager::ResetRound(void) {
     i32 unusedRoundWord;
     i32 index;
@@ -788,7 +788,7 @@ i8 combatManager::GetCommand(i16 hex) {
 
 // Buka COMMAND.cpp RightClick; HoMM1 hero hexes are 26 and 9 and the
 // army view also takes the side.
-VA(0x0044bae8, 0x1dc)
+VA(0x0041edae, 0x171)
 i8 combatManager::RightClick(i8 hex) {
     i8 unusedColumn = hex % COMBAT_GRID_COLUMNS;
     i8 row = hex / COMBAT_GRID_COLUMNS;

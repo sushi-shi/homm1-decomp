@@ -149,7 +149,7 @@ i8 playerData::HasMobileHero(void) {
 }
 
 // HoMM1 counts this player's visited-obelisk bits.
-VA(0x00411574, 0x5f)
+VA(0x0042b929, 0x56)
 i8 playerData::CountVisitedObelisks(void) {
     i8 count = 0;
     for (i16 i = 0; i < PLAYER_PUZZLE_PIECE_COUNT; ++i) {
@@ -182,7 +182,7 @@ i32 playerData::BuildingsOwned(i32 townType, i32 buildingIndex, i32 buildState) 
 }
 
 // Buka 2.1 playerData::NumOfGivenArtifact over HoMM1's fourteen hero slots.
-VA(0x004116a4, 0x99)
+VA(0x0042ba35, 0x84)
 i32 playerData::NumOfGivenArtifact(i32 artifact) {
     i32 count = 0;
     i32 i;
@@ -258,7 +258,7 @@ void ComputeUALoc(i32 player) {
 
 // DoEvent's obelisk visit: remove this player's share of the 48 puzzle
 // pieces (Buka 2.1 SetupPuzzlePieces' picker), then re-roll the hint.
-VA(0x00411ac3, 0x1b0)
+VA(0x0042bdda, 0x17c)
 void game::VisitObelisk(i8 player) {
     i16 attempts;
     i8 visited;
@@ -1940,7 +1940,7 @@ i16 game::LoadMap(char* filename) {
 // donor PoL RVA 0x00078fea; preferred Buka symbol ?ClaimTown@game@@QAEXHHH@Z
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
-VA(0x00416ad0, 0x321)
+VA(0x0043070a, 0x29b)
 void game::ClaimTown(i8 townId, i8 player) {
     i32 i;
     town* townRec;
@@ -3688,7 +3688,7 @@ void game::RandomizeHeroPool(void) {
 
 // Buka 2.1 game::SetRandomHeroArmies: HoMM1 has four classes and draws
 // only from the first two stacks of each class table.
-VA(0x0041beec, 0x2e0)
+VA(0x00435566, 0x28f)
 void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
     armyGroup* army = &m_heroRecs[heroId].m_army;
     i16 slot = 0;
@@ -4049,7 +4049,7 @@ foundAdjacentMonster:
 // donor PoL RVA 0x0008111f; preferred Buka symbol ?SetupAdjacentMons@game@@QAEXXZ
 // donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
-VA(0x0041ce17, 0xde)
+VA(0x00436320, 0xbc)
 void game::SetupAdjacentMons(void) {
     i32 x;
     i32 y;
@@ -4174,7 +4174,7 @@ H1_ENUM_CONST_END(TerrainTileConstant)
 
 // HoMM1 rerolls the variant within each four-tile group, past the first
 // four tiles of every twenty-tile terrain block.
-VA(0x0041d268, 0xb2)
+VA(0x004366f6, 0xa0)
 void game::RandomizeTerrainTiles(void) {
     mapCell* cellPtr;
     // Retail reserves an unused slot above the loop counters.
@@ -5197,7 +5197,7 @@ DATA(0x004a7338)
 i32 gEndSequence;
 DATA(0x004a731c)
 i8 gbDismissArmy;
-DATA(0x004a72ec)
+DATA(0x004a6be4)
 heroWindow* gReqExtraWindow;
 DATA(0x004a72d8)
 i8 gSavedPlayerTypes[4];

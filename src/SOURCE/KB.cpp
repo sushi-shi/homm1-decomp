@@ -725,7 +725,7 @@ i16 NullHandler(tag_message&) {
 
 // Buka 2.1 RecruitHeroHandler: HoMM1 offers two heroes, each with its own
 // view (its portrait, rcrthero.bin ids 2-3) and recruit (ids 8-9) button.
-VA(0x0042299f, 0x1cb)
+VA(0x0043e1bb, 0x15e)
 i16 RecruitHeroHandler(tag_message& message) {
     // Retail keeps these four ids as stored locals.
     const i16 viewButton1 = RECRUIT_HERO_PORTRAIT_FIRST;
@@ -1490,7 +1490,7 @@ i16 gSpellAIValue[29] = {
     500,  350,  300, 400, 550, 900, 400, 500, 300, 350, 250, 0, 100,  150, 1000,
     2000, 1700, 700, 700, 0,   0,   0,   0,   0,   0,   0,   0, 1200, 0,
 };
-DATA(0x00490f98)
+DATA(0x004903ec)
 i8 gSpellAIFlags[29] = {
     3, 3, 2, 2, 3, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3, 3, 3, 2, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4,
 };
@@ -2636,7 +2636,7 @@ void ShowCongrats(void) {
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
-VA(0x00426a7f, 0xb1)
+VA(0x00441d6c, 0x8b)
 void CongratsWait(void) {
     i32 cmd = 0;
     i8 finished = 0;
@@ -3256,7 +3256,7 @@ u16 gDwellingRequirements[24] = {
     0, 128, 144, 132, 1536, 1536, 0, 132, 128, 513, 1024, 2048,
     0, 128, 128, 128, 1024, 2048, 0, 128, 128, 256, 512,  3072,
 };
-DATA(0x004918b0)
+DATA(0x00490cf0)
 i32 gResourceBaseValue[7] = {250, 250, 200, 250, 250, 250, 1};
 DATA(0x004918d0)
 i32 gStartingResources[4][7] = {
@@ -3289,7 +3289,7 @@ DATA(0x004913d8)
 i8 gHeroScoutRadius[8] = {4, 4, 4, 6, 4, 0, 0, 0};
 DATA(0x00491e50)
 float gClassNavigationMod[8] = {1.0f, 1.0f, 2.0f, 1.0f, 1.0f, 1.3f, 1.0f, 1.0f};
-DATA(0x00491e70)
+DATA(0x00491400)
 i8 gVisRangeTown = 5;
 DATA(0x00491408)
 tag_monsterInfo gMonsterDatabase[28] = {
@@ -3338,14 +3338,14 @@ float gBattleStat[41] = {
 };
 DATA(0x0049232c)
 i8 gMageGuildSpellCount[4] = {3, 5, 7, 9};
-DATA(0x00492330)
+DATA(0x004918b8)
 float gSpellCastNumMod[21] = {
     0.0f,  1.0f,  1.7f,  2.2f,  2.6f,  2.95f, 3.27f, 3.56f, 3.81f, 4.04f, 4.25f,
     4.45f, 4.64f, 4.83f, 5.01f, 5.19f, 5.36f, 5.53f, 5.68f, 5.82f, 5.96f,
 };
 DATA(0x004923a8)
 i8 gDrawSavedCursor = 0;
-DATA(0x004923b0)
+DATA(0x0049192c)
 i16 gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -3551,7 +3551,7 @@ i8 gHeroSkillBonus[4][9][4] = {
      {10, 10, 50, 30},
      {20, 20, 30, 30}},
 };
-DATA(0x00492b10)
+DATA(0x00492088)
 i8 gTownHeroClass[8] = {0, 2, 1, 3, 0, 2, 1, 3};
 DATA(0x00492090)
 u8 gMonoColorMap[256] = {
@@ -3600,7 +3600,7 @@ DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
 DATA(0x004a98f8)
 i32 gInDialog = 0;
-DATA(0x00492c58)
+DATA(0x004921a0)
 SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
     {40009, 1, 1, 0}, {40012, 0, 0, 0}, {40013, 0, 0, 0}, {40014, 0, 0, 0}, {40015, 0, 0, 0},
@@ -4696,9 +4696,9 @@ DATA(0x00493f30)
 i32 gRequiredExtendedMemory = 4434;
 DATA(0x00493f34)
 i32 gRequiredConventionalMemory = 374;
-DATA(0x00493f38)
+DATA(0x004a9918)
 i32 gMapSize = 0;
-DATA(0x00493f3c)
+DATA(0x004a991c)
 i32 gMapDifficulty = 0;
 DATA(0x00493f40)
 i8 gHeroWindShowing = 0;
@@ -4763,7 +4763,7 @@ DATA(0x004a74e0)
 class font* smallFont;
 DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
-DATA(0x004aa020)
+DATA(0x004a98c0)
 i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 DATA(0x004a74c4)
 i32 giBottomViewResource;
@@ -4897,13 +4897,13 @@ DATA(0x004a95c8)
 executive* gpExec;
 DATA(0x004a7638)
 i8 giGroundToTerrain[140];
-DATA(0x004a9e8c)
+DATA(0x004a9734)
 i32 giCurWindowsStyleFlags;
 DATA(0x004a746c)
 H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 DATA(0x004a9e90)
 i8 giMonthType;
-DATA(0x004a7348)
+DATA(0x004a6c4c)
 char gMapDescription[124];
 DATA(0x004a7498)
 char* DEFAULT_AGGREGATE_NAME;

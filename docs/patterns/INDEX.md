@@ -40,3 +40,4 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 CPU profile and narrow arguments (HoMM1 Buka, measured)](vc6-short-arguments.md).
 - [VC6 inline CP1251 case folding (HoMM1 Buka, measured)](vc6-cp1251-fold.md).
 - [VC6 empty strings in BSS (HoMM1 Buka, measured)](vc6-empty-string-bss.md).
+- [VC6 word-sized compound assignments (HoMM1 Buka, measured)](vc6-short-compound-assignments.md).

@@ -206,8 +206,7 @@ i8 game::SetupComPort(void) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
         GetDataEntry(
-            "Please enter any special initialization string required by your modem, or "
-            "hit 'ENTER' to accept the default.",
+            localization::Tr("setup.modem.initialization_prompt"),
             initStr,
             40,
             gText
@@ -503,7 +502,7 @@ done:
 // donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
 // donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
-VA(0x0040cf57, 0x1e7)
+VA(0x0045789f, 0x1c1)
 i8 game::PickLoadGame(void) {
     fileRequester* request;
     i16 result;
@@ -578,7 +577,7 @@ i16 SetupCampaignGameHandler(tag_message& message) {
     return BaseSetupHandler(message);
 }
 
-VA(0x0040d250, 0x149)
+VA(0x00457b37, 0x107)
 i16 SetupComPortHandler(tag_message& message) {
     i32 helpIndex;
 
