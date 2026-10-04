@@ -2925,19 +2925,16 @@ i32 advManager::DoCombat(
             gpGame->TurnOffAIMusic();
             sprintf(
                 gText,
-                "%s player\'s %s is under attack!",
+                localization::Tr("combat.network.attacked"),
                 gColorNames[gpGame->m_players[defendPlayer].m_color],
-                combatTown ? "Town" : "Hero"
+                combatTown ? localization::Tr("combat.network.town") : localization::Tr("combat.network.hero")
             );
-            gText[0] -= 'a' - 'A';
+            gText[0] = CyrillicToUpper(gText[0]);
             gpGame->WaitForPlayer(gText, defendPlayer);
         }
     }
 
     bShowIt = 1;
-    if (gEventMusicVolume != EVENT_MUSIC_VOLUME_NONE)
-        gConfig.musicVolume = gEventMusicVolume;
-    gEventMusicVolume = EVENT_MUSIC_VOLUME_NONE;
     gpCombatManager->SetupCombat(
         x,
         y,

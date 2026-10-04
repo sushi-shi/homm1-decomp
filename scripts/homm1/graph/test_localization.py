@@ -69,6 +69,50 @@ class LocalizationTests(unittest.TestCase):
         value = ''.join(ast.literal_eval(t.group()) for t in loc.tokens(rendered))
         self.assertEqual(value.encode('latin1'), 'Золото\0\0Золото'.encode('cp1251'))
 
+    def test_fixed_array_has_exact_characters_without_added_terminator(self):
+        self.write_catalog("A'\\ Z", "Я'\\ Ю")
+        catalog = loc.Catalog.load(self.root)
+        source = self.root / 'src/test.cpp'
+        text = ('struct Record { char name[5]; };\n'
+                'Record value = { localization::Chars("resource.gold") };\n')
+        source.write_text(text)
+        for locale in ('en', 'ru'):
+            expanded = catalog.render(text, expanded=True, locale=locale)
+            chars = [ast.literal_eval(t.group()) for t in loc.tokens(expanded)
+                     if t.lastgroup == 'char']
+            self.assertEqual(''.join(chars).encode('latin1'),
+                             catalog.messages(locale)['resource.gold'].encode('cp1251'))
+            self.assertEqual(len(chars), 5)
+            compiled, header, _, _ = loc.prepare(self.root, source, locale=locale)
+            self.assertIn(catalog.macro('resource.gold', chars=True),
+                          compiled.read_text())
+            self.assertIn('#define ' + catalog.macro('resource.gold', chars=True),
+                          header.read_text())
+            self.assertEqual(loc.check_formats(self.root, source, locale=locale), [])
+        self.assertEqual(list(catalog.calls(text))[0][2], 'resource.gold')
+        self.assertNotIn('H1C', catalog.header())
+
+    def test_fixed_array_preserves_offsets_and_compiler_checks_its_extent(self):
+        self.write_catalog('ABCD', 'АБВГ')
+        catalog = loc.Catalog.load(self.root)
+        text = ('char value[3] = localization :: Chars(\n "resource.gold"\n);\n'
+                'int following;\n')
+        generated = catalog.render(text)
+        self.assertEqual(len(text.encode()), len(generated.encode()))
+        self.assertEqual(text.index('following'), generated.index('following'))
+        self.assertEqual([i for i, c in enumerate(text) if c == '\n'],
+                         [i for i, c in enumerate(generated) if c == '\n'])
+        source = self.root / 'src/test.cpp'
+        source.write_text(text)
+        for locale in ('en', 'ru'):
+            self.assertTrue(loc.check_formats(self.root, source, locale=locale))
+        with self.assertRaisesRegex(ValueError, 'one literal'):
+            catalog.render('localization::Chars(dynamic_id)')
+        with self.assertRaisesRegex(ValueError, 'resource strings'):
+            catalog.render_resource('localization::Chars("resource.gold")')
+        quoted = '// localization::Chars(dynamic_id)\n"localization::Chars(dynamic_id)"'
+        self.assertEqual(catalog.render(quoted), quoted)
+
     def test_stale_po_source_is_fatal(self):
         path = self.root / 'locales/ru.po'
         path.write_text(path.read_text().replace('Gold: %s %d', 'Changed: %s %d'))
@@ -271,13 +315,21 @@ class LocalizationTests(unittest.TestCase):
         with (root / 'config/retail/buka-localization.tsv').open() as stream:
             rows = list(csv.DictReader(stream, delimiter='\t'))
         resource_rows = json.loads((root / 'config/retail/buka-resource-localization.json').read_text())['messages']
+        fixed_rows = json.loads((root / 'config/retail/buka-localized-tables.json').read_text())['campaign_scenarios']['fixed_width_names']
         self.assertEqual(set(catalog.english),
-                         {row['id'] for row in rows} | {row['id'] for row in resource_rows})
+                         {row['id'] for row in rows} | {row['id'] for row in resource_rows}
+                         | {row['id'] for row in fixed_rows})
         self.assertEqual(catalog.english['table.gResourceNames.0'], 'Wood')
         import hashlib
         for row in rows:
             payload = catalog.russian[row['id']].encode('cp1251') + b'\0'
             self.assertEqual(hashlib.sha256(payload).hexdigest(), row['russian_sha256'])
+
+        for row in fixed_rows:
+            self.assertEqual(catalog.english[row['id']], row['english'])
+            payload = catalog.russian[row['id']].encode('cp1251')
+            self.assertEqual(len(payload), row['size'])
+            self.assertEqual(hashlib.sha256(payload).hexdigest(), row['payload_sha256'])
 
         for row in resource_rows:
             for name, messages in [('english', catalog.english), ('russian', catalog.russian)]:

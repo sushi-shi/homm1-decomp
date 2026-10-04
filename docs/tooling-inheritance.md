@@ -454,3 +454,26 @@ function, even when that next function has no retail claim. A real-COFF
 positive control covers a longer candidate; negative controls reject consuming
 references from following external and static functions. Comparison byte and
 reference rules are unchanged. No new tooling entry point or adapter is added.
+
+
+## Fixed-width localized character fields
+
+Reviewed HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`build/catalog.py` and `build/localization.py`, with Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` and Giten
+`d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` export/tooling trees.
+Retained: HoMM2's ID/PO catalog, exact CP1251 compiler literals, preserved
+source offsets, reachable-header mirrors, and isolated English objects.
+Adapted: `localization::Chars` supplies ordinary character-array initializers
+for non-terminated fixed-width fields. Only character macros used by the
+translation unit or its headers enter its generated header. The existing
+portable renderer also carries this form through clean exports. Both methods
+participate in the same catalog usage check. Gruntz and Giten have no bilingual
+catalog or fixed-field renderer to inherit; those donor capabilities are
+inapplicable here. No additional entry point, adapter or runtime layer is added.
+
+Controls check quotes/backslashes, exact byte counts, source offsets, both
+compiler locales, too-small array rejection, and rejection in RC strings.
+Whole-table VC6 controls verify both the Russian and original English campaign
+initializers. Clean-export controls verify that the copied renderer handles
+these fields and retains both catalog versions. Matching rules are unchanged.

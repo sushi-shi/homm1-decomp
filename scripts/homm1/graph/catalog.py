@@ -40,6 +40,24 @@ def literal(value: str) -> str:
     return '"' + ''.join(out) + '"'
 
 
+def character_initializer(value: str) -> str:
+    """A fixed-width char-array initializer, without an implicit terminator."""
+    result = []
+    for byte in value.encode('cp1251'):
+        if byte == 39:
+            escaped = "\\'"
+        elif byte == 92:
+            escaped = "\\\\"
+        elif 32 <= byte < 127:
+            escaped = chr(byte)
+        else:
+            escaped = '\\%03o' % byte
+        result.append("'" + escaped + "'")
+    if not result:
+        raise ValueError('character initializer cannot be empty')
+    return '{' + ', '.join(result) + '}'
+
+
 def resource_literal(value: str) -> str:
     """RC wide literal: numeric narrow escapes are not code-page decoded."""
     data = value.encode('utf-16le')
@@ -159,22 +177,27 @@ class Catalog:
             raise ValueError('missing Russian translations: ' + ', '.join(english.keys() - russian.keys()))
         return cls(english, russian)
 
-    def macro(self, key):
+    def macro(self, key, *, chars=False):
         if key not in self.russian:
             raise ValueError(f'unknown localization ID: {key}')
-        return 'H1L' + hashlib.sha256(key.encode('ascii')).hexdigest()[:8]
+        return ('H1C' if chars else 'H1L') + hashlib.sha256(key.encode('ascii')).hexdigest()[:8]
 
     def messages(self, locale='ru'):
         if locale not in ('ru', 'en'):
             raise ValueError(f'unsupported locale: {locale}')
         return self.russian if locale == 'ru' else self.english
 
-    def header(self, locale='ru'):
+    def header(self, locale='ru', *, character_keys=()):
         macros = [self.macro(key) for key in self.russian]
         if len(set(macros)) != len(macros):
             raise ValueError('localization macro hash collision')
-        return ''.join(f'#define {self.macro(key)} {literal(value)}\n'
-                       for key, value in sorted(self.messages(locale).items()))
+        messages = self.messages(locale)
+        text = ''.join(f'#define {self.macro(key)} {literal(value)}\n'
+                       for key, value in sorted(messages.items()))
+        for key in sorted(set(character_keys)):
+            text += (f'#define {self.macro(key, chars=True)} '
+                     f'{character_initializer(messages[key])}\n')
+        return text
 
     def render_resource(self, text, *, locale='ru'):
         """RC input with Unicode literals and the selected Windows language.
@@ -185,25 +208,32 @@ class Catalog:
         """
         messages = self.messages(locale)
         rendered = text
-        for start, end, key in reversed(list(self.calls(text))):
+        for start, end, key, method in reversed(list(self.typed_calls(text))):
+            if method != 'Tr':
+                raise ValueError('character arrays are not resource strings')
             rendered = rendered[:start] + resource_literal(messages[key]) + rendered[end:]
         language = 0x19 if locale == 'ru' else 0x09
         return f'#define HOMM1_RESOURCE_LANGUAGE 0x{language:02x}\n' + rendered
 
     def calls(self, text):
+        for start, end, key, _method in self.typed_calls(text):
+            yield start, end, key
+
+    def typed_calls(self, text):
         ts = tokens(text)
         for i, token in enumerate(ts):
             if token.group() != 'localization':
                 continue
             tail = ts[i:i + 6]
-            if len(tail) < 3 or [t.group() for t in tail[:3]] != ['localization', '::', 'Tr']:
+            if (len(tail) < 3 or tail[1].group() != '::'
+                    or tail[2].group() not in ('Tr', 'Chars')):
                 continue
             if (len(tail) != 6 or tail[3].group() != '(' or
                     tail[4].lastgroup != 'string' or tail[5].group() != ')'):
-                raise ValueError('localization::Tr requires one literal semantic ID')
+                raise ValueError('localization::' + tail[2].group() + ' requires one literal semantic ID')
             key = ast.literal_eval(tail[4].group())
             self.macro(key)
-            yield token.start(), tail[5].end(), key
+            yield token.start(), tail[5].end(), key, tail[2].group()
 
     def render(self, text, *, expanded=False, locale='ru'):
         messages = self.messages(locale)
@@ -211,13 +241,15 @@ class Catalog:
         replacements = [(t.start(), t.end(), '1' if locale == 'ru' else '0')
                         for t in tokens(text)
                         if t.lastgroup == 'identifier' and t.group() == 'HOMM1_RUSSIAN']
-        for start, end, key in self.calls(text):
+        for start, end, key, method in self.typed_calls(text):
+            chars = method == 'Chars'
             if expanded:
-                replacement = literal(messages[key])
+                replacement = (character_initializer(messages[key]) if chars
+                               else literal(messages[key]))
             else:
                 # Macro names are shorter than "localization". Padding retains
                 # original UTF-8 byte positions, even for multiline calls.
-                replacement = self.macro(key)
+                replacement = self.macro(key, chars=chars)
             replacements.append((start, end, replacement))
         for start, end, replacement in sorted(replacements, reverse=True):
             if not expanded:

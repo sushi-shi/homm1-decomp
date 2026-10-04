@@ -2068,7 +2068,7 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
         sprintf(buffer, gMoraleInfoText[MORALE_INFO_COWARDICE], h->m_cowardice);
         strcat(gText, buffer);
     }
-    if (strlen(gText) == baseLen)
+    if (baseLen == strlen(gText))
         strcat(gText, gMoraleInfoText[MORALE_INFO_NONE]);
     NormalDialog(gText, dialogType);
 }
@@ -2118,7 +2118,7 @@ void game::ShowLuckInfo(hero* h, i32 dialogType) {
         strcat(gText, gLuckInfoText[LUCK_INFO_FAERIE_RING]);
     if (h->m_eventFlags & HERO_EVENT_FOUNTAIN)
         strcat(gText, gLuckInfoText[LUCK_INFO_FOUNTAIN]);
-    if (strlen(gText) == baseLen)
+    if (baseLen == strlen(gText))
         strcat(gText, gLuckInfoText[LUCK_INFO_NONE]);
     NormalDialog(gText, dialogType);
 }
@@ -3411,14 +3411,14 @@ WindowTextEntry gWinSetup[68] = {
     {601, 15}, {602, 15}, {603, 15}, {604, 15}, {605, 15}, {606, 15}, {607, 15}, {608, 15},
     {609, 15}, {610, 15}, {611, 15}, {1, 16},
 };
-DATA(0x00492760)
+DATA(0x00491cd8)
 i8 townTheme[4] = {3, 0, 2, 1};
-DATA(0x00492768)
+DATA(0x00491ce0)
 campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      36,
      35,
-     {' ', ' ', ' ', ' ', 'G', 'a', 't', 'e', 'w', 'a', 'y', ' ', ' ', ' ', ' ', ' '},
+     localization::Chars("campaign.town_name.0"),
      {0, 1, 1, 1},
      {4, 4, 4},
      {{30, 10, 30, 10, 10, 10, 10000},
@@ -3458,7 +3458,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      13,
      10,
-     {'C', 'a', 's', 't', 'l', 'e', ' ', 'I', 'r', 'o', 'n', 'f', 'i', 's', 't', ' '},
+     localization::Chars("campaign.town_name.4"),
      {0, 3, 0, 0},
      {2, 4, 4},
      {{30, 10, 30, 10, 10, 10, 10000},
@@ -3468,7 +3468,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      62,
      20,
-     {' ', 'C', 'a', 's', 't', 'l', 'e', ' ', 'S', 'l', 'a', 'y', 'e', 'r', ' ', ' '},
+     localization::Chars("campaign.town_name.5"),
      {0, 3, 0, 0},
      {1, 4, 4},
      {{30, 10, 30, 10, 10, 10, 10000},
@@ -3478,7 +3478,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      8,
      8,
-     {'C', 'a', 's', 't', 'l', 'e', ' ', 'L', 'a', 'm', 'a', 'n', 'd', 'a', ' ', ' '},
+     localization::Chars("campaign.town_name.6"),
      {0, 3, 0, 0},
      {3, 4, 4},
      {{30, 10, 30, 10, 10, 10, 10000},
@@ -3488,7 +3488,7 @@ campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
      66,
      69,
-     {' ', 'C', 'a', 's', 't', 'l', 'e', ' ', 'A', 'l', 'a', 'm', 'a', 'r', ' ', ' '},
+     localization::Chars("campaign.town_name.7"),
      {0, 3, 0, 0},
      {0, 4, 4},
      {{30, 10, 30, 10, 10, 10, 10000},
@@ -3580,7 +3580,7 @@ DATA(0x004a98d4)
 i32 gScrollY = 0;
 DATA(0x004a98d8)
 i32 gNoBorder = 0;
-DATA(0x00492c2c)
+DATA(0x00492194)
 i32 gEnlargeScreenBlit = 1;
 DATA(0x004a98dc)
 void* hmnuDflt = NULL;
@@ -3625,7 +3625,7 @@ DATA(0x004a9904)
 i32 gHeroMoving = 0;
 DATA(0x004a9908)
 i32 gInSmacker = 0;
-DATA(0x00492e58)
+DATA(0x004a9910)
 i32 gRemoteReady = 0;
 DATA(0x00492e5c)
 i32 gHeartbeatSeen = 0;
@@ -3730,7 +3730,7 @@ char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.3"),
     localization::Tr("table.gStatDesc.4"),
 };
-DATA(0x00493058)
+DATA(0x0049257c)
 char* gClassNames[4] = {
     localization::Tr("table.gClassNames.0"),
     localization::Tr("table.gClassNames.1"),
@@ -3798,7 +3798,7 @@ char* gSpellNames[29] = {
     localization::Tr("table.gSpellNames.26"), localization::Tr("table.gSpellNames.27"),
     localization::Tr("table.gSpellNames.28"),
 };
-DATA(0x004931c0)
+DATA(0x00492750)
 char* gNeutralBuildingNames[7] = {
     localization::Tr("table.gNeutralBuildingNames.0"),
     localization::Tr("table.gNeutralBuildingNames.1"),
@@ -3808,7 +3808,7 @@ char* gNeutralBuildingNames[7] = {
     localization::Tr("table.gNeutralBuildingNames.5"),
     localization::Tr("table.gNeutralBuildingNames.6")
 };
-DATA(0x004931e0)
+DATA(0x0049276c)
 char* gDwellingNames[24] = {
     localization::Tr("table.gDwellingNames.0"),  localization::Tr("table.gDwellingNames.1"),
     localization::Tr("table.gDwellingNames.2"),  localization::Tr("table.gDwellingNames.3"),
@@ -4051,14 +4051,14 @@ char* walkSpeedText[5] = {
     localization::Tr("table.walkSpeedText.3"),
     localization::Tr("table.walkSpeedText.4")
 };
-DATA(0x00493618)
+DATA(0x00492b98)
 char* gColorNames[4] = {
     localization::Tr("table.gColorNames.0"),
     localization::Tr("table.gColorNames.1"),
     localization::Tr("table.gColorNames.2"),
     localization::Tr("table.gColorNames.3")
 };
-DATA(0x00493628)
+DATA(0x00492ba8)
 char* gAlignmentNames[5] = {
     localization::Tr("table.gAlignmentNames.0"),
     localization::Tr("table.gAlignmentNames.1"),
@@ -4066,7 +4066,7 @@ char* gAlignmentNames[5] = {
     localization::Tr("table.gAlignmentNames.3"),
     localization::Tr("table.gAlignmentNames.4")
 };
-DATA(0x00493640)
+DATA(0x00492bbc)
 char* gSpellDesc[29] = {
     localization::Tr("table.gSpellDesc.0"),  localization::Tr("table.gSpellDesc.1"),
     localization::Tr("table.gSpellDesc.2"),  localization::Tr("table.gSpellDesc.3"),
@@ -4097,7 +4097,7 @@ char* gMonthNames[10] = {
     "Hornet",
     "Beetle",
 };
-DATA(0x004936e0)
+DATA(0x00492c58)
 char* gWeekNames[15] = {
     localization::Tr("table.gWeekNames.0"),
     localization::Tr("table.gWeekNames.1"),
@@ -4151,7 +4151,7 @@ char* gArmySizeNames[6][2] = {
     {localization::Tr("table.gArmySizeNames.8"), localization::Tr("table.gArmySizeNames.9")},
     {localization::Tr("table.gArmySizeNames.10"), localization::Tr("table.gArmySizeNames.11")},
 };
-DATA(0x004937b0)
+DATA(0x00492d24)
 char* gHeroScreen[19] = {
     localization::Tr("table.gHeroScreen.0"),  localization::Tr("table.gHeroScreen.1"),
     localization::Tr("table.gHeroScreen.2"),  localization::Tr("table.gHeroScreen.3"),
@@ -4164,7 +4164,7 @@ char* gHeroScreen[19] = {
     localization::Tr("table.gHeroScreen.16"), localization::Tr("table.gHeroScreen.17"),
     localization::Tr("table.gHeroScreen.18"),
 };
-DATA(0x00493800)
+DATA(0x00492d70)
 char* gCastleInfo[14] = {
     localization::Tr("table.gCastleInfo.0"),
     localization::Tr("table.gCastleInfo.1"),
@@ -4181,8 +4181,8 @@ char* gCastleInfo[14] = {
     localization::Tr("table.gCastleInfo.12"),
     localization::Tr("table.gCastleInfo.13"),
 };
-DATA(0x00493838)
-char* gLuckInfoText[12] = {
+DATA(0x00492da8)
+char* gLuckInfoText[11] = {
     localization::Tr("table.gLuckInfoText.0"),
     localization::Tr("table.gLuckInfoText.1"),
     localization::Tr("table.gLuckInfoText.2"),
@@ -4194,15 +4194,14 @@ char* gLuckInfoText[12] = {
     localization::Tr("table.gLuckInfoText.8"),
     localization::Tr("table.gLuckInfoText.9"),
     localization::Tr("table.gLuckInfoText.10"),
-    0,
 };
-DATA(0x00493868)
+DATA(0x00492dd4)
 char* gMemoryErrorTitle = localization::Tr("table.gMemoryErrorTitle.0");
-DATA(0x0049386c)
+DATA(0x00492dd8)
 char* gMemoryRequirements = localization::Tr("table.gMemoryRequirements.0");
-DATA(0x00493870)
+DATA(0x00492ddc)
 char* gExtendedMemoryUnits = localization::Tr("table.gExtendedMemoryUnits.0");
-DATA(0x00493874)
+DATA(0x00492de0)
 char* gConventionalMemoryUnits = localization::Tr("table.gConventionalMemoryUnits.0");
 DATA(0x00492de4)
 char* gPlayerTypeNames[5] = {
@@ -4237,7 +4236,7 @@ char* gArmyStatText[9] = {
     "Luck: ",
     "Shots: ",
 };
-DATA(0x004938f0)
+DATA(0x00492e50)
 char* gOverviewText[3] = {
     localization::Tr("table.gOverviewText.0"),
     localization::Tr("table.gOverviewText.1"),
@@ -4279,7 +4278,7 @@ char* gCombatMessage[9] = {
     localization::Tr("table.gCombatMessage.7"),
     localization::Tr("table.gCombatMessage.8"),
 };
-DATA(0x00493978)
+DATA(0x00492ecc)
 char* gHeroLevel[3] = {
     localization::Tr("table.gHeroLevel.0"),
     localization::Tr("table.gHeroLevel.1"),
@@ -4288,7 +4287,7 @@ char* gHeroLevel[3] = {
 DATA(0x00492ed8)
 char* gCombatHelp[3] =
     {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
-DATA(0x00493998)
+DATA(0x00492ee4)
 char* gTownCommand[22] = {
     localization::Tr("table.gTownCommand.0"),  localization::Tr("table.gTownCommand.1"),
     localization::Tr("table.gTownCommand.2"),  localization::Tr("table.gTownCommand.3"),
@@ -4365,7 +4364,7 @@ char* gCPanelHelp[12] = {
     localization::Tr("table.gCPanelHelp.10"),
     localization::Tr("table.gCPanelHelp.11")
 };
-DATA(0x00493b58)
+DATA(0x004930a0)
 char* gNewGameHelp[9] = {
     localization::Tr("table.gNewGameHelp.0"),
     localization::Tr("table.gNewGameHelp.1"),
@@ -4484,7 +4483,7 @@ char* gNeutralBuildingDescriptions[7] = {
     "The Tent provides workers to build a castle.",
     "The Castle improves town defense and income.",
 };
-DATA(0x00493cb0)
+DATA(0x004931d0)
 char* gMoraleInfoText[21] = {
     localization::Tr("table.gMoraleInfoText.0"),  localization::Tr("table.gMoraleInfoText.1"),
     localization::Tr("table.gMoraleInfoText.2"),  localization::Tr("table.gMoraleInfoText.3"),
@@ -4524,7 +4523,7 @@ char* gCampaignScenarioNames[9] = {
     localization::Tr("table.gCampaignScenarioNames.7"),
     localization::Tr("table.gCampaignScenarioNames.8"),
 };
-DATA(0x00493d58)
+DATA(0x00493268)
 char* gCampaignWinTexts[9] = {
     localization::Tr("table.gCampaignWinTexts.0"),
     localization::Tr("table.gCampaignWinTexts.1"),
@@ -4550,7 +4549,7 @@ char* gCampaignScenarioText[9] = {
 };
 DATA(0x00493da8)
 char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
-DATA(0x00493db8)
+DATA(0x004932c0)
 char* gCampaignSideNames[4] = {
     localization::Tr("table.gCampaignSideNames.0"),
     localization::Tr("table.gCampaignSideNames.1"),
@@ -4568,7 +4567,7 @@ char* gHumanPlayerTypeNames[5] = {
     localization::Tr("table.gHumanPlayerTypeNames.3"),
     localization::Tr("table.gHumanPlayerTypeNames.4")
 };
-DATA(0x00493df8)
+DATA(0x004932f8)
 char* gHandicapNames[5] = {
     localization::Tr("table.gHandicapNames.0"),
     localization::Tr("table.gHandicapNames.1"),

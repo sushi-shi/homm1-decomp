@@ -1,0 +1,930 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "messages": [
+    {
+      "id": "combat.network.town",
+      "english": "Town",
+      "nwc_site": "0x5f95",
+      "nwc_target": "0x90298",
+      "retail_site": "0x293f3",
+      "retail_target": "0x8fc4c",
+      "size": 6,
+      "payload_sha256": "89f93553995639771784ad50362d72ad9bc96f9688f64aa433b90adc8f744eb8"
+    },
+    {
+      "id": "combat.network.hero",
+      "english": "Hero",
+      "nwc_site": "0x5f9a",
+      "nwc_target": "0x902a0",
+      "retail_site": "0x293fc",
+      "retail_target": "0x8fc54",
+      "size": 6,
+      "payload_sha256": "58b3c62a82cf2fe56edf5961341a688964076ee9576a4218c7aae4de4d913650"
+    },
+    {
+      "id": "combat.network.attacked",
+      "english": "%s player's %s is under attack!",
+      "nwc_site": "0x5fd3",
+      "nwc_target": "0x902a8",
+      "retail_site": "0x29424",
+      "retail_target": "0x8fc5c",
+      "size": 33,
+      "payload_sha256": "593ca21180d02fb914603b80956b7e09ff5cc93999ca653ad88324e7c1f2844a"
+    }
+  ],
+  "behavior_changes": [
+    "Network attack notifications use the Russian catalog and CyrillicToUpper for ASCII, CP1251 and Yo case conversion. Original English literals remain in the catalog.",
+    "Combat setup no longer restores or resets the NWC event-music volume. Retail directly passes the setup arguments after bShowIt = 1."
+  ],
+  "functions": [
+    {
+      "unit": "SOURCE/EVENTS",
+      "name": "?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHC@Z",
+      "rva": "0x29107",
+      "size": 1412,
+      "object_size": 1412,
+      "object_code_size": 1412,
+      "retail_code_size": 1412,
+      "object_sha256": "c55a82ec244be8c65df1759ecf121984bd9739d9c1e246e5669da67548051f9d",
+      "retail_body_sha256": "7a26e971e5177107a2a1d98b135e07e90ad2a710dc5d7e05b2883c0386c0c4e6",
+      "instruction_count": 415,
+      "local_slot_map": {
+        "-92": -92,
+        "-96": -96,
+        "-4": -4,
+        "-60": -16,
+        "-48": -12,
+        "-56": -20,
+        "-32": -48,
+        "-100": -100,
+        "-64": -24,
+        "-40": -68,
+        "-68": -60,
+        "-12": -52,
+        "-44": -64,
+        "-52": -56,
+        "-36": -44,
+        "-84": -84,
+        "-28": -40,
+        "-24": -36,
+        "-20": -32,
+        "-16": -28,
+        "-104": -104,
+        "-88": -88,
+        "-108": -108
+      },
+      "references": [
+        {
+          "symbol": "?gInCombat@@3CA",
+          "site_rva": "0x29112",
+          "target_rva": "0xa9930",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?Random@@YAHHH@Z",
+          "site_rva": "0x2916f",
+          "target_rva": "0x6fd8a",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?DemobilizeCurrHero@advManager@@QAEXXZ",
+          "site_rva": "0x2917d",
+          "target_rva": "0xaf7f",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "site_rva": "0x29184",
+          "target_rva": "0xb4aa4",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?bShowIt@@3HA",
+          "site_rva": "0x2918d",
+          "target_rva": "0xa98bc",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gbHumanPlayer@@3PAHA",
+          "site_rva": "0x291ae",
+          "target_rva": "0xa9414",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "site_rva": "0x291bf",
+          "target_rva": "0xa7b94",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?SendHeroTownData@advManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHCCCC@Z",
+          "site_rva": "0x29201",
+          "target_rva": "0x2968b",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gbHumanPlayer@@3PAHA",
+          "site_rva": "0x2920b",
+          "target_rva": "0xa9414",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "_PollSound",
+          "site_rva": "0x29224",
+          "target_rva": "0x3c7b0",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+          "site_rva": "0x29234",
+          "target_rva": "0xa74a8",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z",
+          "site_rva": "0x2923d",
+          "target_rva": "0x729a6",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?CheckHandleNet@advManager@@QAEPADXZ",
+          "site_rva": "0x29248",
+          "target_rva": "0x10e9f",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gbCombatSurrender@@3CA",
+          "site_rva": "0x2926e",
+          "target_rva": "0xa7495",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "site_rva": "0x29273",
+          "target_rva": "0xa7823",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?ReceiveHeroTownData@advManager@@QAEXPADPAH11PAPAVhero@@PAPAVarmyGroup@@PAPAVtown@@23111PAC55@Z",
+          "site_rva": "0x292af",
+          "target_rva": "0x2990d",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x292c4",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_free",
+          "site_rva": "0x292d0",
+          "target_rva": "0x78156",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x292e8",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_free",
+          "site_rva": "0x292f4",
+          "target_rva": "0x78156",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x2930c",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_free",
+          "site_rva": "0x29318",
+          "target_rva": "0x78156",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x29333",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_free",
+          "site_rva": "0x2933f",
+          "target_rva": "0x78156",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_memcpy",
+          "site_rva": "0x2935a",
+          "target_rva": "0x78550",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "_free",
+          "site_rva": "0x29366",
+          "target_rva": "0x78156",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "site_rva": "0x2936e",
+          "target_rva": "0xa7828",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?Process1WindowsMessage@@YAXXZ",
+          "site_rva": "0x29381",
+          "target_rva": "0x43775",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpInputManager@@3PAVinputManager@@A",
+          "site_rva": "0x2938b",
+          "target_rva": "0xa7b90",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?GetEvent@inputManager@@QAE?AUtag_message@@XZ",
+          "site_rva": "0x29390",
+          "target_rva": "0x6eed9",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?CheckHandleNetPlayerWait@advManager@@QAEFAAUtag_message@@C@Z",
+          "site_rva": "0x293b5",
+          "target_rva": "0x10fda",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gbThisNetHumanPlayer@@3PACA",
+          "site_rva": "0x293c9",
+          "target_rva": "0xa7b94",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?bShowIt@@3HA",
+          "site_rva": "0x293d7",
+          "target_rva": "0xa98bc",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x293e1",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?TurnOffAIMusic@game@@QAEXXZ",
+          "site_rva": "0x293e6",
+          "target_rva": "0x32f81",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x2940f",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gColorNames@@3PAPADA",
+          "site_rva": "0x2941e",
+          "target_rva": "0x92b98",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29429",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "_sprintf",
+          "site_rva": "0x2942e",
+          "target_rva": "0x7823f",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29439",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29445",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29452",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29462",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29471",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29480",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x29490",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x294a3",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x294af",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gText@@3PADA",
+          "site_rva": "0x294b8",
+          "target_rva": "0xa7168",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x294be",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?WaitForPlayer@game@@QAEXPADH@Z",
+          "site_rva": "0x294c3",
+          "target_rva": "0x365d2",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?bShowIt@@3HA",
+          "site_rva": "0x294c9",
+          "target_rva": "0xa98bc",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "site_rva": "0x294fb",
+          "target_rva": "0xa7828",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?SetupCombat@combatManager@@QAEXHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHH@Z",
+          "site_rva": "0x29500",
+          "target_rva": "0x18dd3",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gHighMemBuffer@@3HA",
+          "site_rva": "0x29506",
+          "target_rva": "0x93440",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gAdvDisposeLevel@@3HA",
+          "site_rva": "0x29512",
+          "target_rva": "0xa9940",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gHighMemBuffer@@3HA",
+          "site_rva": "0x2951e",
+          "target_rva": "0x93440",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gAdvDisposeLevel@@3HA",
+          "site_rva": "0x2952a",
+          "target_rva": "0xa9940",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "site_rva": "0x29534",
+          "target_rva": "0xa7828",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpExec@@3PAVexecutive@@A",
+          "site_rva": "0x2953b",
+          "target_rva": "0xa95c8",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?CallManager@executive@@QAEXPAVbaseManager@@@Z",
+          "site_rva": "0x29540",
+          "target_rva": "0x72f2d",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gAdvDisposeLevel@@3HA",
+          "site_rva": "0x29546",
+          "target_rva": "0xa9940",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?CheckLevel@hero@@QAEXXZ",
+          "site_rva": "0x29558",
+          "target_rva": "0x3a8b1",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?CheckLevel@hero@@QAEXXZ",
+          "site_rva": "0x29566",
+          "target_rva": "0x3a8b1",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "site_rva": "0x29577",
+          "target_rva": "0xa7828",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "site_rva": "0x2959b",
+          "target_rva": "0xa7823",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z",
+          "site_rva": "0x295af",
+          "target_rva": "0x278a1",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?HeroLoses@advManager@@QAEXPAVhero@@@Z",
+          "site_rva": "0x295bb",
+          "target_rva": "0x27a8e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "site_rva": "0x295c4",
+          "target_rva": "0xa7823",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?TransferArtifacts@advManager@@QAEXPAVhero@@0@Z",
+          "site_rva": "0x295d8",
+          "target_rva": "0x278a1",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?HeroLoses@advManager@@QAEXPAVhero@@@Z",
+          "site_rva": "0x295e4",
+          "target_rva": "0x27a8e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?HeroLoses@advManager@@QAEXPAVhero@@@Z",
+          "site_rva": "0x295f2",
+          "target_rva": "0x27a8e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?HeroLoses@advManager@@QAEXPAVhero@@@Z",
+          "site_rva": "0x295fe",
+          "target_rva": "0x27a8e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?bShowIt@@3HA",
+          "site_rva": "0x29607",
+          "target_rva": "0xa98bc",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "site_rva": "0x29610",
+          "target_rva": "0xb4aa4",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?giCurPlayer@@3CA",
+          "site_rva": "0x29617",
+          "target_rva": "0xb4aa4",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gbHumanPlayer@@3PAHA",
+          "site_rva": "0x2961e",
+          "target_rva": "0xa9414",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x29627",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?ShowComputerScreen@game@@QAEXXZ",
+          "site_rva": "0x2962c",
+          "target_rva": "0x36431",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gpGame@@3PAVgame@@A",
+          "site_rva": "0x29632",
+          "target_rva": "0xa7ba0",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?TurnOnAIMusic@game@@QAEXXZ",
+          "site_rva": "0x29637",
+          "target_rva": "0x32f67",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?SetNoDialogMenus@@YAXH@Z",
+          "site_rva": "0x2963e",
+          "target_rva": "0x43ccd",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?SetNoDialogMenus@@YAXH@Z",
+          "site_rva": "0x2964a",
+          "target_rva": "0x43ccd",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?MobilizeCurrHero@advManager@@QAEXH@Z",
+          "site_rva": "0x29657",
+          "target_rva": "0xaf3e",
+          "addend": "0x0",
+          "kind": 20
+        },
+        {
+          "symbol": "?gbRetreatWin@@3CA",
+          "site_rva": "0x29665",
+          "target_rva": "0xa7823",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gInCombat@@3CA",
+          "site_rva": "0x2966c",
+          "target_rva": "0xa9930",
+          "addend": "0x0",
+          "kind": 6
+        },
+        {
+          "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+          "site_rva": "0x29673",
+          "target_rva": "0xa7828",
+          "addend": "0x0",
+          "kind": 6
+        }
+      ],
+      "private_literals": [
+        {
+          "operand": "0x293f3",
+          "target": "0x8fc4c",
+          "size": 6,
+          "payload_sha256": "89f93553995639771784ad50362d72ad9bc96f9688f64aa433b90adc8f744eb8"
+        },
+        {
+          "operand": "0x293fc",
+          "target": "0x8fc54",
+          "size": 6,
+          "payload_sha256": "58b3c62a82cf2fe56edf5961341a688964076ee9576a4218c7aae4de4d913650"
+        },
+        {
+          "operand": "0x29424",
+          "target": "0x8fc5c",
+          "size": 33,
+          "payload_sha256": "593ca21180d02fb914603b80956b7e09ff5cc93999ca653ad88324e7c1f2844a"
+        }
+      ],
+      "internal_targets": [],
+      "branches": [
+        {
+          "operand": "0x2911b",
+          "target": "0x29129"
+        },
+        {
+          "operand": "0x29127",
+          "target": "0x29130"
+        },
+        {
+          "operand": "0x2913a",
+          "target": "0x29148"
+        },
+        {
+          "operand": "0x29146",
+          "target": "0x29161"
+        },
+        {
+          "operand": "0x2914c",
+          "target": "0x2915a"
+        },
+        {
+          "operand": "0x29158",
+          "target": "0x29161"
+        },
+        {
+          "operand": "0x29165",
+          "target": "0x29179"
+        },
+        {
+          "operand": "0x29198",
+          "target": "0x294c7"
+        },
+        {
+          "operand": "0x291a2",
+          "target": "0x294c7"
+        },
+        {
+          "operand": "0x291b3",
+          "target": "0x294c7"
+        },
+        {
+          "operand": "0x291c5",
+          "target": "0x293c3"
+        },
+        {
+          "operand": "0x29210",
+          "target": "0x293be"
+        },
+        {
+          "operand": "0x2921d",
+          "target": "0x293be"
+        },
+        {
+          "operand": "0x29253",
+          "target": "0x29380"
+        },
+        {
+          "operand": "0x29266",
+          "target": "0x2926d"
+        },
+        {
+          "operand": "0x29268",
+          "target": "0x29380"
+        },
+        {
+          "operand": "0x292b7",
+          "target": "0x292d7"
+        },
+        {
+          "operand": "0x292db",
+          "target": "0x292fb"
+        },
+        {
+          "operand": "0x292ff",
+          "target": "0x2931f"
+        },
+        {
+          "operand": "0x29323",
+          "target": "0x29346"
+        },
+        {
+          "operand": "0x2934a",
+          "target": "0x2936d"
+        },
+        {
+          "operand": "0x2937b",
+          "target": "0x29680"
+        },
+        {
+          "operand": "0x293b9",
+          "target": "0x29216"
+        },
+        {
+          "operand": "0x293be",
+          "target": "0x294c7"
+        },
+        {
+          "operand": "0x293cf",
+          "target": "0x294c7"
+        },
+        {
+          "operand": "0x293ee",
+          "target": "0x293f9"
+        },
+        {
+          "operand": "0x293f7",
+          "target": "0x29400"
+        },
+        {
+          "operand": "0x29440",
+          "target": "0x2945e"
+        },
+        {
+          "operand": "0x2944c",
+          "target": "0x2945e"
+        },
+        {
+          "operand": "0x2945c",
+          "target": "0x294aa"
+        },
+        {
+          "operand": "0x2946c",
+          "target": "0x2948c"
+        },
+        {
+          "operand": "0x2947a",
+          "target": "0x2948c"
+        },
+        {
+          "operand": "0x2948a",
+          "target": "0x294aa"
+        },
+        {
+          "operand": "0x2949a",
+          "target": "0x294a2"
+        },
+        {
+          "operand": "0x294a0",
+          "target": "0x294aa"
+        },
+        {
+          "operand": "0x2950e",
+          "target": "0x2951c"
+        },
+        {
+          "operand": "0x2951a",
+          "target": "0x29532"
+        },
+        {
+          "operand": "0x29526",
+          "target": "0x29532"
+        },
+        {
+          "operand": "0x29552",
+          "target": "0x2955c"
+        },
+        {
+          "operand": "0x29560",
+          "target": "0x2956a"
+        },
+        {
+          "operand": "0x29570",
+          "target": "0x29602"
+        },
+        {
+          "operand": "0x29588",
+          "target": "0x295ea"
+        },
+        {
+          "operand": "0x2958e",
+          "target": "0x295c1"
+        },
+        {
+          "operand": "0x29594",
+          "target": "0x29598"
+        },
+        {
+          "operand": "0x29596",
+          "target": "0x29602"
+        },
+        {
+          "operand": "0x295a1",
+          "target": "0x295b3"
+        },
+        {
+          "operand": "0x295bf",
+          "target": "0x29602"
+        },
+        {
+          "operand": "0x295ca",
+          "target": "0x295dc"
+        },
+        {
+          "operand": "0x295e8",
+          "target": "0x29602"
+        },
+        {
+          "operand": "0x29623",
+          "target": "0x29647"
+        },
+        {
+          "operand": "0x29645",
+          "target": "0x29651"
+        },
+        {
+          "operand": "0x29661",
+          "target": "0x2966a"
+        },
+        {
+          "operand": "0x2967e",
+          "target": "0x29685"
+        },
+        {
+          "operand": "0x29680",
+          "target": "0x2954e"
+        }
+      ],
+      "method": "Complete ordered instruction operands and registers, branch destinations, public names/addends, literal payloads and packed switch targets checked. Only EBP local-slot mapping and its encoding widths differ. Strict scoring unchanged."
+    }
+  ]
+}

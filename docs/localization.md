@@ -12,6 +12,14 @@ Windows-1251 bytes as fixed-width octal escapes. Unknown or stale IDs, missing
 translations, fuzzy entries, mismatched printf arguments and unencodable text
 fail validation.
 
+Fixed-width character fields use `localization::Chars("semantic.id")`.
+It produces an ordinary character-array initializer with exactly the catalog's
+bytes and no implicit NUL. The declared C++ array still controls storage size;
+both compilers reject excess characters. Original padding spaces belong in the
+catalog entry. Only the character macros used by a unit or its headers are
+emitted. Campaign town names use this form; their fixed-width provenance and
+whole-table controls are in `config/retail/buka-localized-tables.json`.
+
 When retail changes a format argument list, `locales/format-variants.json`
 records the exact English and Russian signatures for that ID. Unknown IDs,
 stale signatures and unnecessary variants fail validation. `HOMM1_RUSSIAN`

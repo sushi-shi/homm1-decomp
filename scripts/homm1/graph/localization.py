@@ -57,7 +57,12 @@ def prepare(repo, source, *, locale=None):
     locale = locale or matching_locale(repo)
     catalog = Catalog.load(repo)
     generated = repo / ('build/localization' if locale == 'ru' else 'build/ordinary/en/localization')
-    header_text = catalog.header(locale)
+    texts = {path: path.read_text(encoding='utf-8')
+             for path in [source, *(repo / p for p in scanner.headers(str(source)))]}
+    character_keys = {key for text in texts.values()
+                      for _, _, key, method in catalog.typed_calls(text)
+                      if method == 'Chars'}
+    header_text = catalog.header(locale, character_keys=character_keys)
     digest = hashlib.sha256(header_text.encode()).hexdigest()
     header = generated / (digest + '.h')
     _write_generated(header, header_text)
@@ -67,8 +72,7 @@ def prepare(repo, source, *, locale=None):
         dependencies.append(repo / 'locales/format-variants.json')
     roots, compiled = [], source
     views = {}
-    for path in [source, *(repo / p for p in scanner.headers(str(source)))]:
-        text = path.read_text(encoding='utf-8')
+    for path, text in texts.items():
         rendered = catalog.render(text, locale=locale)
         views[path] = rendered
         if rendered == text:

@@ -144,3 +144,29 @@ rva	size	symbol	provenance
 0x00091fe8	8	?gCrestTownTypes@@3PAFA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
 0x00091ff0	8	?gCrestHeroClass@@3PAFA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
 0x00091ff8	144	?gHeroSkillBonus@@3PAY183CA	Buka contiguous typed 168-byte block, table users and following gTownHeroClass anchor; buka-events.json
+0x00092ecc	12	?gHeroLevel@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092e50	12	?gOverviewText@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092de0	4	?gConventionalMemoryUnits@@3PADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092ddc	4	?gExtendedMemoryUnits@@3PADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092dd8	4	?gMemoryRequirements@@3PADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092dd4	4	?gMemoryErrorTitle@@3PADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x000932f8	20	?gHandicapNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092ee4	88	?gTownCommand@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092c58	60	?gWeekNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092b98	16	?gColorNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x0009257c	16	?gClassNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x000932c0	16	?gCampaignSideNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x000931d0	84	?gMoraleInfoText@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x000930a0	36	?gNewGameHelp@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092da8	44	?gLuckInfoText@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092d70	56	?gCastleInfo@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092d24	76	?gHeroScreen@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092bbc	116	?gSpellDesc@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092ba8	20	?gAlignmentNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x0009276c	96	?gDwellingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092750	28	?gNeutralBuildingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00093268	36	?gCampaignWinTexts@@3PAPADA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00091cd8	4	?townTheme@@3PACA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00092194	4	?gEnlargeScreenBlit@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x000a9910	4	?gRemoteReady@@3HA	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json
+0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Buka typed initializer and reviewed code/pointer users; buka-localized-tables.json

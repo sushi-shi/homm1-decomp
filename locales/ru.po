@@ -4435,3 +4435,35 @@ msgstr "Старый мореход стал добычей людоедов. В
 msgctxt "table.gArtifactEvent.37"
 msgid "The Magic Book  ??????"
 msgstr "Волшебная книга?!"
+
+msgctxt "campaign.town_name.7"
+msgid " Castle Alamar  "
+msgstr " Замок Аламара  "
+
+msgctxt "campaign.town_name.6"
+msgid "Castle Lamanda  "
+msgstr " Замок Ламанды  "
+
+msgctxt "campaign.town_name.5"
+msgid " Castle Slayer  "
+msgstr " Замок Слэйера  "
+
+msgctxt "campaign.town_name.4"
+msgid "Castle Ironfist "
+msgstr "Замок Айронфиста"
+
+msgctxt "campaign.town_name.0"
+msgid "    Gateway     "
+msgstr "   Предвратье   "
+
+msgctxt "combat.network.town"
+msgid "Town"
+msgstr "Город"
+
+msgctxt "combat.network.hero"
+msgid "Hero"
+msgstr "Герой"
+
+msgctxt "combat.network.attacked"
+msgid "%s player's %s is under attack!"
+msgstr "%s игрок, ваш герой %s атакован!"
