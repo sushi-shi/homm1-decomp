@@ -23,7 +23,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/soundmgr.h>
 #include <BASE/textWidget.h>
 #include <BASE/TILE.h>
@@ -905,7 +905,7 @@ i16 advManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
     giBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
-    gpSoundManager->AdjustSoundVolumes();
+    SetEffectsVolume(gConfig.soundVolume);
     m_messageMask = BASE_MANAGER_ACCEPT_ADVENTURE;
     m_priority = id;
     m_active = 1;
@@ -922,8 +922,8 @@ void advManager::Close(void) {
 
     ClearBottomView();
     gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
-    gpSoundManager->StopAllSamples();
+    StopMusic();
+    StopAllSamples();
     if (m_adventureBorder) {
         free(m_adventureBorder);
         m_adventureBorder = NULL;
@@ -990,7 +990,6 @@ void advManager::GetCursorSampleSet(i32 sampleSet) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
         m_cursorSamples[index]->m_playbackData.volume = CURSOR_SAMPLE_VOLUME;
-        m_cursorSamples[index]->m_playbackData.channelType = SAMPLE_PLAYBACK_CHANNEL_GROUP;
     }
 }
 
@@ -1174,9 +1173,9 @@ i16 advManager::Main(struct tag_message& message) {
     }
     if (!gbNoSound && gConfig.musicVolume && gForceSwitchMusic > 0
         && KBTickCount() - gForceSwitchMusic > FORCED_MUSIC_DELAY
-        && gpSoundManager->m_currentTrack == MUSIC_TRACK_NETWORK_TURN) {
+        && GetCurrentTrack() == MUSIC_TRACK_NETWORK_TURN) {
         gForceSwitchMusic = FORCED_MUSIC_IDLE;
-        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        PlayMusic(m_currentTerrain);
     }
     retVal = MESSAGE_DISPATCH_CONSUME;
     bQuit = 0;
@@ -1892,7 +1891,7 @@ i32 advManager::ProcessDeSelect(
 // evidence: graph:2;base=0.676641;margin=0.529889;shape=0.365;size=0.904;calls=0.935;strings=%s%s|DIGSOUND.82M;alternate=pol20:int advManager::ProcessSearch(int, int)@0x0005a07c
 VA(0x00456943, 0x49b)
 i32 advManager::ProcessSearch(i32 x, i32 y) {
-    SAMPLE2 sampleData = NULL_SAMPLE2;
+    class sample* sampleData = NULL;
     i32 gaveArtifact;
     hero* myHero;
     mapCell* pCell;
@@ -1965,7 +1964,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                     myHero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
                 }
-                gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+                PlayMusic(m_currentTerrain);
             } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
                 sprintf(
                     gText,
@@ -1980,7 +1979,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
         NormalDialog("Nothing here.\nWhere could it be?", NORMAL_DIALOG_TYPE_OK, 0x61, 0x28);
     }
     if (gbHumanPlayer[giCurPlayer])
-        WaitEndSample(sampleData, SAMPLE_WAIT_DEFAULT);
+        WaitSample(sampleData);
     for (i = 0; i < gpGame->m_playerCount; i++)
         ComputeUALoc(i);
     myHero->m_remainingMobility = 0;
@@ -2068,13 +2067,19 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                             if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
                                 && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
                                 && ((GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType
-                                     & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
-                                    || (GetCell(m_commandTargetX, m_commandTargetY - 1)->m_secondaryTrigger
-                                        & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)
+                                     & MAP_TRIGGER_TYPE_MASK)
+                                        == MAP_OBJECT_TOWN
+                                    || (GetCell(m_commandTargetX, m_commandTargetY - 1)
+                                            ->m_secondaryTrigger
+                                        & MAP_TRIGGER_TYPE_MASK)
+                                           == MAP_OBJECT_TOWN)
                                 && ((GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType
-                                     & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
-                                    || (GetCell(m_commandTargetX, m_commandTargetY + 1)->m_secondaryTrigger
-                                        & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)) {
+                                     & MAP_TRIGGER_TYPE_MASK)
+                                        == MAP_OBJECT_TOWN
+                                    || (GetCell(m_commandTargetX, m_commandTargetY + 1)
+                                            ->m_secondaryTrigger
+                                        & MAP_TRIGGER_TYPE_MASK)
+                                           == MAP_OBJECT_TOWN)) {
                                 gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                                 m_selectedCell = ADVMGR_COMMAND_SELECT_TOWN;
                                 return 1;
@@ -4727,7 +4732,7 @@ void advManager::SetTownContext(i8 townId) {
     townNo = CELL_TERRAIN(GetCell(townPointer->m_x, townPointer->m_y));
     if (m_currentTerrain != townNo) {
         m_currentTerrain = townNo;
-        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        PlayMusic(m_currentTerrain);
     }
     if (wasVisible)
         gpMouseManager->ReallyShowPointer();
@@ -4801,7 +4806,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     heroSlot = CELL_TERRAIN(cellPtr);
     if (m_currentTerrain != heroSlot) {
         m_currentTerrain = heroSlot;
-        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        PlayMusic(m_currentTerrain);
     }
     if (!gHeroMoving) {
         if (wasVisible)
@@ -4928,7 +4933,7 @@ void advManager::ViewPuzzle(void) {
     i16 j;
 
     visibleCount = 0;
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_PUZZLE);
+    PlayMusic(MUSIC_TRACK_PUZZLE);
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     puzzlePieces = gpResourceManager->GetIcon("puzzle.icn");
     for (j = 0; j < PUZZLE_PIECE_COUNT; j++)
@@ -5002,7 +5007,7 @@ void advManager::ViewPuzzle(void) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
     UpdateScreen(0, 0);
     UpdateRadar(1, 0);
-    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    PlayMusic(m_currentTerrain);
 }
 
 // HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
@@ -5867,14 +5872,14 @@ i16 CPanelHandler(struct tag_message& message) {
                         case CONTROL_MUSIC_VOLUME:
                             gConfig.musicVolume =
                                 (gConfig.musicVolume + 1) % (SOUND_VOLUME_LAST + 1);
-                            gpSoundManager->AdjustMusicVolumes();
+                            SetMusicVolume(gConfig.musicVolume);
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
                         case CONTROL_SOUND_VOLUME:
                             gConfig.soundVolume =
                                 (gConfig.soundVolume + 1) % (SOUND_VOLUME_LAST + 1);
-                            gpSoundManager->AdjustSoundVolumes();
+                            SetEffectsVolume(gConfig.soundVolume);
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
@@ -5888,19 +5893,9 @@ i16 CPanelHandler(struct tag_message& message) {
                             if (gConfig.musicSource == SOUND_MUSIC_SOURCE_CD) {
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
                             } else {
-                                if (gpSoundManager->m_cdStarted == 0) {
-                                    NormalDialog(
-                                        "Unable to set up CD stereo music.  Your CD player might "
-                                        "be in use by another "
-                                        "program, or your sound driver might not support CD "
-                                        "stereo.",
-                                        NORMAL_DIALOG_TYPE_OK
-                                    );
-                                    break;
-                                }
                                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
                             }
-                            gpSoundManager->SetMusicQuality(gConfig.musicSource);
+                            SetMusicSource(gConfig.musicSource);
                             changed = 1;
                             bPrefsChanged = 1;
                             break;
@@ -6390,15 +6385,12 @@ void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) 
     i32 maxCells = ADVMGR_ACTIVE_SOUND_COUNT / 2;
     i32 layer;
 
-    if (gpSoundManager->m_musicReady == 0)
+    if (SamplesSuspended())
         return;
     for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
         if (m_activeSounds[edgeOffset].soundId != MAP_SOUND_NONE) {
             if (stopSounds) {
-                gpSoundManager->StopSample(
-                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]
-                        ->m_playbackData.activeSample
-                );
+                StopSample(m_loopingSamples[m_activeSounds[edgeOffset].soundId]);
                 m_activeSounds[edgeOffset].soundId = MAP_SOUND_NONE;
                 m_activeSounds[edgeOffset].volume = ENVIRONMENT_SOUND_DEFAULT_VOLUME;
             } else {
@@ -6444,20 +6436,14 @@ void advManager::SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds) 
         for (edgeOffset = 0; edgeOffset < ADVMGR_ACTIVE_SOUND_COUNT; ++edgeOffset) {
             if (m_activeSounds[edgeOffset].soundId != MAP_SOUND_NONE
                 && m_activeSounds[edgeOffset].volume > ENVIRONMENT_SOUND_MAX_DISTANCE) {
-                gpSoundManager->StopSample(
-                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]
-                        ->m_playbackData.activeSample
-                );
+                StopSample(m_loopingSamples[m_activeSounds[edgeOffset].soundId]);
                 m_activeSounds[edgeOffset].soundId = MAP_SOUND_NONE;
             }
             if (m_activeSounds[edgeOffset].soundId != MAP_SOUND_NONE
                 && (m_activeSoundMask & (1 << m_activeSounds[edgeOffset].soundId)) != 0) {
-                gpSoundManager->ModifySample(
-                    m_loopingSamples[m_activeSounds[edgeOffset].soundId]
-                        ->m_playbackData.activeSample,
-                    100,
-                    gEnvironmentVolume[m_activeSounds[edgeOffset].volume]
-                );
+                m_loopingSamples[m_activeSounds[edgeOffset].soundId]->m_playbackData.volume =
+                    gEnvironmentVolume[m_activeSounds[edgeOffset].volume];
+                UpdateSampleVolume(m_loopingSamples[m_activeSounds[edgeOffset].soundId]);
             }
         }
     }
@@ -6511,16 +6497,13 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
     if (slot != ENVIRONMENT_SOUND_NO_SLOT) {
         if (m_activeSounds[slot].soundId != MAP_SOUND_NONE)
-            gpSoundManager->StopSample(
-                m_loopingSamples[m_activeSounds[slot].soundId]->m_playbackData.activeSample
-            );
+            StopSample(m_loopingSamples[m_activeSounds[slot].soundId]);
         m_activeSounds[slot].soundId = soundId;
         m_activeSounds[slot].volume = distance;
         CheckLoadSample(soundId);
         m_loopingSamples[soundId]->m_playbackData.volume = gEnvironmentVolume[distance];
-        m_loopingSamples[soundId]->m_playbackData.loopCount = 0;
-        m_loopingSamples[soundId]->m_playbackData.channelType = ENVIRONMENT_SOUND_CHANNEL_TYPE;
-        gpSoundManager->MemorySample(m_loopingSamples[soundId]);
+        m_loopingSamples[soundId]->m_playbackData.repeat = 1;
+        PlaySample(m_loopingSamples[soundId]);
         m_activeSoundMask ^= 1 << m_activeSounds[slot].soundId;
     }
 }
@@ -6614,7 +6597,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     newTerrain = CELL_TERRAIN(destinationCell);
     if (m_currentTerrain != newTerrain) {
         m_currentTerrain = newTerrain;
-        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        PlayMusic(m_currentTerrain);
     }
     Reseed(0, 0);
     UpdateRadar(1, 0);
@@ -6651,9 +6634,9 @@ void advManager::DimensionDoor(void) {
             NormalDialog("Dimension Door failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61, 0x91);
             UpdateRadar(1, 0);
         } else {
-            gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
+            PlayMusic(MUSIC_TRACK_TELEPORT);
             TeleportTo(x, y, 0);
-            gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+            PlayMusic(m_currentTerrain);
         }
         gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(SPELL_DIMENSION_DOOR);
     } else {
@@ -6702,7 +6685,7 @@ void advManager::TownGate(void) {
         NormalDialog("Nearest town occupied.  Town Gate Failed!!!", NORMAL_DIALOG_TYPE_OK, 0x61);
         return;
     }
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_TELEPORT);
+    PlayMusic(MUSIC_TRACK_TELEPORT);
     TeleportTo(
         gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_x,
         gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].m_y,
@@ -6713,7 +6696,7 @@ void advManager::TownGate(void) {
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[bestTown]].GiveSpells();
     heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
     heroPointer->m_occupiedTown = gpCurPlayer->m_townIds[bestTown];
-    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    PlayMusic(m_currentTerrain);
 }
 
 // donor PoL RVA 0x00067c9b; preferred Buka symbol ?SummonBoat@advManager@@QAEXXZ
@@ -7202,7 +7185,7 @@ void advManager::SetInitialMapOrigin(void) {
     m_currentTerrain = giGroundToTerrain
         [GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)
              ->m_tileIndex];
-    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    PlayMusic(m_currentTerrain);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 1);
     gpMouseManager->MouseCoords(x, y);
     gpMouseManager->WarpPointer(x - 20, y - 20);
@@ -7229,7 +7212,7 @@ void advManager::LoadRemote(void) {
     UpdBottomView(1, 1, 1);
     if ((gpGame->m_day != 1 || (gpGame->m_week == 1 && gpGame->m_month == 1)) && gRemoteOn
         && gbThisNetHumanPlayer[giCurPlayer] && gForceSwitchMusic == FORCED_MUSIC_IDLE) {
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
+        PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gForceSwitchMusic = KBTickCount();
     }
     gpAdvManager->ForceNewHover();

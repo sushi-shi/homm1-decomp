@@ -15,7 +15,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
@@ -1049,10 +1049,10 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
     window->AddWidget(m_winLoseBottomTextWidgets[0], WINDOW_Z_ORDER_APPEND);
     gpCombatManager->m_winLoseWindow->DrawWindow();
     {
-        SAMPLE2 sample = NULL_SAMPLE2;
+        class sample* sample = NULL;
         sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
         sample = LoadPlaySample(gText);
-        WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+        WaitSample(sample);
     }
 }
 
@@ -1216,7 +1216,7 @@ void combatManager::DoVictory(i8 winningSide) {
     gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
     switch (winningSide) {
         case COMBAT_SIDE_NONE:
-            gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_LOST);
+            PlayMusic(MUSIC_TRACK_BATTLE_LOST);
             DoLoseWindow();
             break;
         case COMBAT_DEFENDER_SIDE:
@@ -1255,7 +1255,7 @@ void combatManager::DoVictory(i8 winningSide) {
                     m_playerId[winningSide] == GAME_PLAYER_NONE
                     || !gbThisNetHumanPlayer[m_playerId[winningSide]]
                 )) {
-                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_WON);
+                PlayMusic(MUSIC_TRACK_BATTLE_WON);
                 m_winLoseWindow = new heroWindow(0x9f, 2, "wincmbt.bin");
                 if (m_winLoseWindow == NULL)
                     MemError();
@@ -1305,7 +1305,7 @@ void combatManager::DoVictory(i8 winningSide) {
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 if (m_heroes[1 - winningSide])
                     m_heroes[1 - winningSide]->ApplyBattleLossTemps();
-                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_BATTLE_LOST);
+                PlayMusic(MUSIC_TRACK_BATTLE_LOST);
                 DoLoseWindow();
             }
             break;

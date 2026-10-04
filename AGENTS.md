@@ -1,8 +1,10 @@
 # HoMM1 reconstruction
 
-Use the pinned August 1997 (Windows 95 1.2) Windows `HEROESW.EXE` from
-`config/retail/targets.json`. Retail bytes, RVAs and relocations are the
-authority. The editor and other releases are secondary evidence.
+Use the pinned Buka 2003 Windows `HEROES.EXE` from
+`config/retail/targets.json`. Retail bytes and RVAs are the authority. This
+image is linked /FIXED: absolute referents require a reviewed manifest.
+The editor and NWC releases are secondary evidence. The Buka source/claim
+migration is in progress; inherited NWC address tables are not Buka evidence.
 
 - Enter `nix develop .#build` and run `homm1 build` after source, claim,
   compiler, delinker or comparison changes, including tooling changes.
@@ -12,6 +14,8 @@ authority. The editor and other releases are secondary evidence.
   together with calls, imports and EH identities.
 - Keep candidate linking working through `homm1 link`; unresolved definitions
   are reconstruction findings. Never add `/FORCE` to hide them.
+- Do not use decompiler output. Reconstruct control flow from retail assembly
+  and generated CFGs; use source donors only as corroborating evidence.
 - Recover ordinary C++ and real types. Do not use byte arrays, naked assembly,
   dummy bodies or address masking to manufacture a score.
 - Keep retail facts under `config/retail`, build contracts under `config`,
@@ -22,7 +26,7 @@ authority. The editor and other releases are secondary evidence.
   artifacts belong in ignored `build/`.
 - Data identities, types and initializers come from retail bytes and their code
   users; never model data as untyped byte blobs.
-- Use the pinned VC4.1 profiles in `config/units.toml`; compiler claims require
+- Use the pinned Buka VC6 profiles in `config/units.toml`; compiler claims require
   retail-backed controls. Do not reuse HoMM3
   VC6 flags. HoMM2 Buka 2.1 is the preferred source-correspondence donor, with
   2.0 as secondary evidence.
@@ -47,7 +51,7 @@ The skills do not authorize unrelated commits, gate exceptions or fake source.
 Pick work with `homm1 walls inventory --todo --limit N` or recover rows where
 HIST exceeds MAX. Read `homm1 walls priors <rva>`, then diagnose in order:
 code referent, call set, control flow, register/schedule. Keep donor compiler
-observations separate from measured VC4 behavior.
+observations separate from measured target-compiler behavior.
 
 `homm1 match BASE/MOUSEMGR` is the selected-unit loop. Run `homm1 build` for
 cross-unit edits; run `homm1 build verify` for required final gate verification.

@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
 #include <SOURCE/KB.h>
@@ -17,11 +18,11 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_LOAD_RATE_44100 = 44100,
     SAMPLE_LOAD_FORMAT_8_BIT = 0,
     SAMPLE_LOAD_FORMAT_16_BIT = 1,
-    SAMPLE_LOAD_STEREO = 2
+    SAMPLE_LOAD_STEREO = 1
 H1_ENUM_CONST_END(SampleLoadConstant)
 
-VA(0x0047f6c0, 0x17d)
-sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
+// Buka retail VA 0x00475050, size 0x1d9.
+sample::sample(char* name)
     : resource(
           RESOURCE_CATEGORY_SAMPLE,
           gpResourceManager->MakeId(name),
@@ -29,14 +30,22 @@ sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
           NULL
       ) {
     char fileName[SAMPLE_FILENAME_CAPACITY];
-    m_playbackData.channelType = channelType;
-    m_playbackData.volume = volume;
-    m_playbackData.loopCount = loopCount;
-    i32 stereo = SAMPLE_LOAD_STEREO;
+    m_playbackData.volume = SAMPLE_VOLUME_FULL;
+    m_playbackData.repeat = 0;
+    m_playbackData.stereo = SAMPLE_LOAD_STEREO;
+    m_playbackData.sampleFormat = SAMPLE_LOAD_FORMAT_16_BIT;
+    m_playbackData.sampleRate = SAMPLE_LOAD_RATE_44100;
     strcpy(fileName, name);
     strrev(fileName);
-    for (i32 i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
+    i32 i;
+    for (i = 0; i < SAMPLE_FORMAT_SUFFIX_LENGTH; i++) {
         switch (fileName[i]) {
+            case '8':
+                m_playbackData.sampleFormat = SAMPLE_LOAD_FORMAT_8_BIT;
+                break;
+            case '6':
+                m_playbackData.sampleFormat = SAMPLE_LOAD_FORMAT_16_BIT;
+                break;
             case '1':
                 m_playbackData.sampleRate = SAMPLE_LOAD_RATE_11025;
                 break;
@@ -46,31 +55,24 @@ sample::sample(char* name, i32 channelType, i32 volume, i32 loopCount)
             case '4':
                 m_playbackData.sampleRate = SAMPLE_LOAD_RATE_44100;
                 break;
-            case '6':
-                m_playbackData.format = SAMPLE_LOAD_FORMAT_16_BIT;
-                break;
-            case '8':
-                m_playbackData.format = SAMPLE_LOAD_FORMAT_8_BIT;
-                break;
             case 'M':
             case 'm':
-                stereo = 0;
+                m_playbackData.stereo = 0;
                 break;
         }
     }
-    m_playbackData.format += stereo;
     u32 size = gpResourceManager->GetFileSize(m_id);
-    m_playbackData.data = static_cast<i8*>(malloc(size));
+    m_playbackData.data = new i8[size];
     m_playbackData.size = size;
     gpResourceManager->PointToFile(m_id);
     gpResourceManager->ReadBlock(m_playbackData.data, size);
+    for (i = 0; i < size; ++i)
+        m_playbackData.data[i] += 0x80;
 }
 
-// Retail has no out-of-line ~sample: the scalar deleting destructor at
-// 0x0047fbe0 expands this body between the vptr reset and ~resource.
-VA_COMPGEN(0x0047f840, 0x3b, "??_Gsample@@UAEPAXI@Z", 0x0047f6c0)
-inline sample::~sample() {
-    free(m_playbackData.data);
-    m_playbackData.size = 0;
-    m_playbackData.volume = 0;
+// Buka retail VA 0x00475282, size 0x7f.
+sample::~sample() {
+    StopSample(this);
+    delete[] m_playbackData.data;
+    memset(&m_playbackData, 0, sizeof(m_playbackData));
 }

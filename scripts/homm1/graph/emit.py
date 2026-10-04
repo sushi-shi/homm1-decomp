@@ -60,12 +60,13 @@ from pathlib import Path
 
 from homm1 import graph
 from homm1.core.paths import REPO, msvc_dir
+from homm1.core.inputs import targets
 from homm1.graph import ninja_syntax
 from homm1.graph.scan import Scanner
 
 SCRIPTS = "scripts/homm1"
 MANIFEST = "config/units.toml"
-RETAIL_EXE = "build/orig/HEROESW.EXE"
+RETAIL_EXE = targets(REPO)["game"].destination.relative_to(REPO).as_posix()
 COMPDB = "build/clangd/compile_commands.json"
 RELOC_REFERENTS = "config/retail/reloc_referents.tsv"
 FUNCTION_REFERENTS = "config/retail/function_referents.tsv"

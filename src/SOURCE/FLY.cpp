@@ -6,7 +6,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatManager.h>
@@ -285,7 +285,7 @@ i16 army::FlyTo(i16 destination) {
     gpCombatManager->m_backgroundDrawn = 0;
     for (i = 0; i < steps * 6; i++) {
         if (i % 6 == 1)
-            gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_MOVE]);
+            PlaySample(m_samples[ARMY_SAMPLE_MOVE]);
         if (i) {
             gpCombatManager->m_backgroundBuffer->CopyTo(
                 gpWindowManager->m_screen,

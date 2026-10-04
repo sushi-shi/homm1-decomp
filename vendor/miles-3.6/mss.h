@@ -74,6 +74,8 @@ DXDEC S32       AILCALL AIL_waveOutOpen             (HDIGDRIVER FAR* drvr,
                                                      LPHWAVEOUT FAR* lphWaveOut,
                                                      S32             dwDeviceID,
                                                      LPWAVEFORMAT    lpFormat);
+DXDEC void      AILCALL AIL_waveOutClose            (HDIGDRIVER drvr);
+DXDEC void      AILCALL AIL_set_digital_master_volume(HDIGDRIVER drvr, S32 volume);
 DXDEC S32       AILCALL AIL_digital_handle_release  (HDIGDRIVER dig);
 DXDEC S32       AILCALL AIL_digital_handle_reacquire(HDIGDRIVER dig);
 DXDEC void      AILCALL AIL_serve                   (void);

@@ -9,7 +9,7 @@
 #include <BASE/Icond2b.h>
 #include <BASE/inputManager.h>
 #include <BASE/mouseManager.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/game.h>
@@ -85,8 +85,6 @@ void advManager::StopCursor(i8 stopSound) {
         m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
         m_cursorFrameCount = 0;
         EveryOther = 0;
-        gPrevMoveSound = NULL;
-        gLastMoveSound = NULL;
     }
     m_cursorCycle = 0;
     if (m_previousCursorMapX != CURSOR_CELL_NONE) {
@@ -222,13 +220,11 @@ void advManager::DrawCursor(void) {
     if (m_cursorFrameCount >= CURSOR_LAST_FRAME_COUNT)
         m_cursorFrameCount = 0;
     if (!m_cursorTurning) {
-        if (m_cursorFrameCount == 0)
-            gPrevMoveSound = gLastMoveSound;
         if (m_cursorFrameCount == FOOTSTEP_ANIMATION_FRAME
             || (gConfig.walkSpeed == WALK_SPEED_JUMP && !gMoveSoundMade)) {
             gMoveSoundMade = 1;
             if (!EveryOther)
-                gLastMoveSound = gpSoundManager->MemorySample(
+                PlaySample(
                     m_cursorSamples[CELL_TERRAIN(GetCell(
                         m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
                         m_mapOriginY + CURSOR_MAP_DRAW_OFFSET
@@ -614,7 +610,7 @@ mapCell* advManager::MoveHero(
                ->m_tileIndex;
     if (giGroundToTerrain[step] != m_currentTerrain && step % MAP_CELL_TILES_PER_TERRAIN < 4) {
         m_currentTerrain = giGroundToTerrain[step];
-        gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+        PlayMusic(m_currentTerrain);
     }
     m_updateMinX = m_updateMinY = 0;
     pCursorCell = GetCell(m_cursorMapX + m_mapOriginX, m_cursorMapY + m_mapOriginY);
@@ -863,10 +859,6 @@ DATA(0x004a0d30)
 i16 gPixelsPerStep[5] = {1, 4, 6, 8, 16};
 DATA(0x004a0d40)
 i16 gStepDelay[5] = {30, 45, 30, 15, 15};
-DATA(0x004a0d4c)
-struct _SAMPLE* gPrevMoveSound = NULL;
-DATA(0x004a0d50)
-struct _SAMPLE* gLastMoveSound = NULL;
 DATA(0x004a0d54)
 i8 EveryOther = 0;
 DATA(0x004a0d58)

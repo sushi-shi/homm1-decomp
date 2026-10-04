@@ -73,4 +73,6 @@ def dxsdk_dir() -> Path:
 
 
 def retail_exe() -> Path:
-    return Path(os.environ.get("HOMM1_EXE") or BUILD / "orig/HEROESW.EXE")
+    from homm1.core.inputs import targets
+    game = targets(REPO)["game"]
+    return Path(os.environ.get(game.env_var) or game.destination)

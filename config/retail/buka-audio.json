@@ -1,6 +1,6 @@
 {
   "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
-  "status": "retail evidence; device and music sources reconstructed and compiler-checked; sample/caller and strict-target integration pending; descriptive names are not recovered symbols",
+  "status": "Buka target and VC6 selected; device, music, sample and caller sources integrated and compiler-checked; strict census, claims and fixed-image referents pending; descriptive names are not recovered symbols",
   "music": {
     "play_rva": "0x000692fd",
     "stop_rva": "0x00069742",
@@ -325,7 +325,14 @@
     "volume_divisor_rva": "0x0008a764",
     "volume_divisor": 127.0,
     "destructor_rva": "0x00075282",
-    "destructor_behavior": "StopSample(this), delete sample data, zero the complete 28-byte playback data subobject, then destroy resource base"
+    "destructor_behavior": "StopSample(this), delete sample data, zero the complete 28-byte playback data subobject, then destroy resource base",
+    "compiler_control": {
+      "profile": "/Od /Ob1 /GX /MT /G5",
+      "constructor_code_size": "0x1d9",
+      "constructor_with_switch_tables_size": "0x232",
+      "destructor_size": "0x7f",
+      "result": "Instruction bodies and embedded switch-table bytes agree after COFF operand masking; referents and EH still require strict enrollment. /G6 adds two xor register clears before 16-bit file-ID arguments."
+    }
   },
   "source_identities": {
     "src/BASE/Audio.cpp": {
@@ -490,6 +497,100 @@
         {
           "declaration": "static int gMusicSource;",
           "rva": "0x000ce10c"
+        }
+      ]
+    },
+    "src/BASE/AudiereEffects.cpp": {
+      "functions": [
+        {
+          "name": "CleanupSamples",
+          "rva": "0x000689a0",
+          "size": "0x162"
+        },
+        {
+          "name": "FindSampleNode",
+          "rva": "0x00068b02",
+          "size": "0x35"
+        },
+        {
+          "name": "PlaySample",
+          "rva": "0x00068b37",
+          "size": "0x38d"
+        },
+        {
+          "name": "LoadPlaySample",
+          "rva": "0x00068ec4",
+          "size": "0x29"
+        },
+        {
+          "name": "StopSample",
+          "rva": "0x00068eed",
+          "size": "0x71"
+        },
+        {
+          "name": "UpdateSampleVolume",
+          "rva": "0x00068f5e",
+          "size": "0x58"
+        },
+        {
+          "name": "WaitSample",
+          "rva": "0x00068fb6",
+          "size": "0x63"
+        },
+        {
+          "name": "StopAllSamples",
+          "rva": "0x00069019",
+          "size": "0x77"
+        },
+        {
+          "name": "UpdateAllSampleVolumes",
+          "rva": "0x00069090",
+          "size": "0x61"
+        },
+        {
+          "name": "SuspendSamples",
+          "rva": "0x000690f1",
+          "size": "0x12"
+        },
+        {
+          "name": "ResumeSamples",
+          "rva": "0x00069103",
+          "size": "0x12"
+        },
+        {
+          "name": "SamplesSuspended",
+          "rva": "0x00069115",
+          "size": "0x11"
+        }
+      ],
+      "data": [
+        {
+          "declaration": "static void* gSampleBuffer;",
+          "rva": "0x000cdf58"
+        },
+        {
+          "declaration": "static int gSampleFrames;",
+          "rva": "0x000cdf5c"
+        },
+        {
+          "declaration": "static int gSampleChannels;",
+          "rva": "0x000cdf60"
+        },
+        {
+          "declaration": "static int gSampleRate;",
+          "rva": "0x000cdf64"
+        },
+        {
+          "declaration": "static audiere::SampleFormat gSampleFormat;",
+          "rva": "0x000cdf68"
+        },
+        {
+          "declaration": "static AudiereSampleNode* gSamples;",
+          "rva": "0x000ce104"
+        },
+        {
+          "declaration": "static int gSampleSuspensions;",
+          "rva": "0x000ce108"
         }
       ]
     }

@@ -1,9 +1,9 @@
 #ifndef HOMM1_SOURCE_SMACK_H
 #define HOMM1_SOURCE_SMACK_H
 
-// Smacker 3.0r: named stdcall imports from SMACKW32.DLL. The retail
-// playback accesses NewPalette +0x68, Palette +0x6c and LastRectx +0x380.
-// Field names correspond to the 3.x SDK; those offsets are verified in 1.2.
+// Buka imports nine Smacker 3.0g entries by ordinal from its shipped DLL.
+// Retail accesses NewPalette +0x68, Palette +0x6c, FrameNum +0x374 and
+// LastRectx +0x380. The summary layout follows the HoMM2 3.0g SDK donor.
 
 #include <Domains.h>
 
@@ -42,14 +42,35 @@ struct Smack {
     long LastRectw;
     long LastRecth;
 };
+typedef struct SmackSumTag {
+    u32 TotalTime;         /* total time                                      */
+    u32 MS100PerFrame;     /* MS*100 per frame (100000/x = Frames/Sec)        */
+    u32 TotalOpenTime;     /* Time to open and prepare for decompression      */
+    u32 TotalFrames;       /* Total Frames displayed                          */
+    u32 SkippedFrames;     /* Total number of skipped frames                  */
+    u32 SoundSkips;        /* Total number of sound skips                     */
+    u32 TotalBlitTime;     /* Total time spent blitting                       */
+    u32 TotalReadTime;     /* Total time spent reading                        */
+    u32 TotalDecompTime;   /* Total time spent decompressing                  */
+    u32 TotalBackReadTime; /* Total time spent reading in background          */
+    u32 TotalReadSpeed;    /* Total io speed (bytes/second)                   */
+    u32 SlowestFrameTime;  /* Slowest single frame time                       */
+    u32 Slowest2FrameTime; /* Second slowest single frame time                */
+    u32 SlowestFrameNum;   /* Slowest single frame number                     */
+    u32 Slowest2FrameNum;  /* Second slowest single frame number              */
+    u32 AverageFrameSize;  /* Average size of the frame                       */
+    u32 HighestMemAmount;  /* Highest amount of memory allocated              */
+    u32 TotalExtraMemory;  /* Total extra memory allocated                    */
+    u32 HighestExtraUsed;  /* Highest extra memory actually used              */
+    u32 BitmapHandle;      /* GDI bitmap handle retained by this 3.0g build   */
+    u32 SoundWindowProc;   /* previous sound-window procedure                 */
+} SmackSum;
 #pragma pack(pop)
 
 extern "C" __declspec(dllimport) Smack* __stdcall SmackOpen(char*, unsigned long, long);
 extern "C" __declspec(dllimport) void __stdcall SmackClose(Smack*);
 extern "C" __declspec(dllimport) unsigned long __stdcall SmackDoFrame(Smack*);
 extern "C" __declspec(dllimport) void __stdcall SmackNextFrame(Smack*);
-extern "C" __declspec(dllimport) void __stdcall SmackGoto(Smack*, unsigned long);
-extern "C" __declspec(dllimport) unsigned long __stdcall SmackSoundOnOff(Smack*, unsigned long);
 extern "C" __declspec(dllimport) void __stdcall SmackToBuffer(
     Smack*,
     unsigned long,
@@ -61,6 +82,8 @@ extern "C" __declspec(dllimport) void __stdcall SmackToBuffer(
 );
 extern "C" __declspec(dllimport) unsigned long __stdcall SmackToBufferRect(Smack*, unsigned long);
 extern "C" __declspec(dllimport) unsigned long __stdcall SmackWait(Smack*);
-extern "C" __declspec(dllimport) unsigned long __stdcall SmackSoundUseMSS(void*);
+extern "C" __declspec(dllimport) unsigned char __stdcall SmackSoundUseMSS(void*);
+
+extern "C" __declspec(dllimport) void __stdcall SmackSummary(Smack*, SmackSum*);
 
 #endif

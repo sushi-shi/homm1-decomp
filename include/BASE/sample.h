@@ -3,44 +3,29 @@
 
 #include <BASE/resource.h>
 
-H1_ENUM_BEGIN(SamplePlaybackChannel)
-    SAMPLE_PLAYBACK_CHANNEL_MUSIC = 0,
-    SAMPLE_PLAYBACK_CHANNEL_GROUP = 2,
-    SAMPLE_PLAYBACK_CHANNEL_NONE = 4
-H1_ENUM_END(SamplePlaybackChannel)
-
-// Miles sample settings a resource sample is created with: full AIL sample
-// volume (0..127, MSS.H DEFAULT_DDV) and a loop count of one pass (0 loops forever).
 H1_ENUM_CONST_BEGIN(SampleDefaultConstant)
-    SAMPLE_VOLUME_FULL = 127,
-    SAMPLE_LOOP_ONCE = 1
+    SAMPLE_VOLUME_FULL = 127
 H1_ENUM_CONST_END(SampleDefaultConstant)
 
 #pragma pack(push, 1)
-// MemorySample addresses these fields through one sub-object pointer.
+// Buka's Audiere buffer description; the resource base occupies 0x0e bytes.
 struct SamplePlaybackData {
-    struct _SAMPLE* activeSample;
     i8* data;
     i32 size;
-    H1_ENUM_STORAGE(SamplePlaybackChannel, i32) channelType;
     i32 sampleRate;
-    i32 format;
     i32 volume;
-    i32 loopCount;
+    i32 sampleFormat;
+    i32 stereo;
+    i32 repeat;
 };
 
 class sample : public resource {
 public:
     SamplePlaybackData m_playbackData;
 
-    sample(char* name, i32 channelType, i32 volume, i32 loopCount);
+    sample(char* name);
     virtual ~sample();
 };
 #pragma pack(pop)
 
-struct SAMPLE2 {
-    class sample* pSample;
-    struct _SAMPLE* pMem;
-};
-
-#endif // HOMM1_BASE_SAMPLE_H
+#endif

@@ -65,7 +65,6 @@ extern struct configStruct gConfig;
 extern struct tag_tilePoint normalDirTable[];
 extern char* DEFAULT_AGGREGATE_NAME;
 extern class resourceManager* gpResourceManager;
-extern class soundManager* gpSoundManager;
 extern class heroWindowManager* gpWindowManager;
 extern class mouseManager* gpMouseManager;
 extern class heroWindow* gNormalDialogWindow;
@@ -132,10 +131,7 @@ extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterName(i32 monster);
-struct SAMPLE2 LoadPlaySample(char* name);
-void WaitEndSample(struct SAMPLE2 s, i32 waitTime);
-// Empty sample pair copied into locals before LoadPlaySample (0x004c5180).
-extern struct SAMPLE2 NULL_SAMPLE2;
+class sample* LoadPlaySample(char* name);
 extern i32 glTimers[];
 // Shared glTimers slots (Buka KBDeclarations.h numbers the same ones); the
 // table ends at giScore (0x004c6a98), six slots. Units keep slots 0 and 1.
@@ -425,7 +421,6 @@ extern i32 giSeedingValid;
 extern i8 gDirectConnect;
 extern i8 iMPExtendedType;
 extern i32 gInSmacker;
-extern class smackManager* gpSmackManager;
 // Spells taught per mage-guild level (retail 0x492514).
 extern i8 gMageGuildSpellCount[];
 extern char* gCastleInfo[];

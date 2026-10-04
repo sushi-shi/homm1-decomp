@@ -2,6 +2,8 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
+
 #include <BASE/display.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
@@ -267,12 +269,12 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
     i32 side;
     i32 result;
     i32 armyIndex;
-    SAMPLE2 sample;
+    class sample* sample;
     i32 quantity;
     i16 newHex;
     army* teleportArmy;
 
-    sample = NULL_SAMPLE2;
+    sample = NULL;
     if (m_limitCreature) {
         ResetLimitCreature();
         if (ValidHex(m_limitCreatureHex) && m_hexCells[m_limitCreatureHex].m_occupantSide >= 0)
@@ -321,7 +323,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                     CombatMessage("Dragons are not affected by magic!", 1);
                 else
                     CombatMessage("The Dwarves' magic resistance canceled the spell!", 1);
-                WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+                WaitSample(sample);
                 goto done;
             }
             break;
@@ -343,7 +345,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                 m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             }
             teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
-            WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+            WaitSample(sample);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
             if (teleportArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -558,7 +560,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             targetArmy->m_spellRounds =
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER];
     }
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
 done:
     CheckChangeSelector();
 }

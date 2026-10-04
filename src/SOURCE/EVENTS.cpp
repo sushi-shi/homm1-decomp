@@ -15,7 +15,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resource.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatManager.h>
@@ -1246,7 +1246,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         CompleteDraw(0);
     }
     UpdateScreen(0, 0);
-    gpSoundManager->SwitchAmbientMusic(m_currentTerrain);
+    PlayMusic(m_currentTerrain);
     gpMouseManager->ReallyShowPointer();
     CheckEndGame(0);
 }
@@ -1449,7 +1449,7 @@ void advManager::EventSound(i16 eventType, i16 eventData) {
             break;
     }
     if (musicTrack != MUSIC_TRACK_NONE) {
-        gpSoundManager->SwitchAmbientMusic(musicTrack);
+        PlayMusic(musicTrack);
         gEventMusicPlaying = 1;
     } else {
         gEventMusicPlaying = 0;
@@ -2052,7 +2052,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
 // evidence: graph:2;base=0.628535;margin=0.385528;shape=0.317;size=0.884;calls=0.800;strings=killfade.82M|pickup%02d.82M;alternate=pol20:void advManager::FizzleCenter(int)@0x000b1d01
 VA(0x004045b0, 0x113)
 void advManager::FizzleCenter(i32 fizzleType) {
-    SAMPLE2 fizzleSample;
+    class sample* fizzleSample;
 
     if (!bShowIt)
         return;
@@ -2066,7 +2066,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
         default:
             return;
     }
-    fizzleSample = NULL_SAMPLE2;
+    fizzleSample = NULL;
     fizzleSample = LoadPlaySample(gText);
     gpWindowManager
         ->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
@@ -2078,7 +2078,7 @@ void advManager::FizzleCenter(i32 fizzleType) {
         EVENT_FIZZLE_HEIGHT,
         EVENT_FIZZLE_STEPS
     );
-    WaitEndSample(fizzleSample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(fizzleSample);
 }
 
 // donor PoL RVA 0x000b1e43; preferred Buka symbol ?DoAIEvent@advManager@@QAEXPAVmapCell@@PAVhero@@HH@Z

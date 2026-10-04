@@ -2,6 +2,8 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
+
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
@@ -770,11 +772,16 @@ void philAI::DoAI(i32 player) {
     }
     CheckBuyStuff();
     IncrementHourGlass();
+    SuspendSamples();
+    SuspendMusic();
     while ((aiHero = DetermineHeroToMove(player)) != NULL) {
         giHumanTownConquered = GAME_TOWN_NONE;
         iCurPlaceToVisit = 0;
-        if (gGameOver)
+        if (gGameOver) {
+            ResumeSamples();
+            ResumeMusic();
             return;
+        }
         LogStr("\n\n\n\n");
         LogStr("===================================");
         LogInt("Player with HeroTOMOVE", player);
@@ -810,8 +817,11 @@ void philAI::DoAI(i32 player) {
                 minRV * ((gpCurPlayer->m_difficulty - PLAYER_TYPE_DUMB) * 0.06 + 0.8)
             );
         while (!moveDone && aiHero->m_remainingMobility >= 4) {
-            if (gGameOver)
+            if (gGameOver) {
+                ResumeSamples();
+                ResumeMusic();
                 return;
+            }
             if (aiHero->m_remainingMobility == aiHero->m_mobility
                 && gpCurPlayer->m_ultimateArtifactHintChance > 15
                 && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
@@ -929,6 +939,8 @@ void philAI::DoAI(i32 player) {
         if (aiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
             CheckBuyStuff();
     }
+    ResumeSamples();
+    ResumeMusic();
 }
 
 // Buka 2.1 GetGameAIVars refreshes every player's game attention value.

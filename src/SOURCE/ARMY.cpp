@@ -14,7 +14,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>
@@ -68,12 +68,6 @@ army::army(void) {
     m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
     m_moveTargetHex = 0;
-}
-
-// The Windows build waits on no sample channel.
-VA(0x00406939, 0x18)
-void army::WaitSample(i32) {
-    return;
 }
 
 VA(0x00406951, 0x71)
@@ -159,9 +153,8 @@ void army::LoadResources(void) {
     }
     for (i = 0; i < ARMY_SAMPLE_COUNT; i++) {
         if (m_samples[i]) {
+            m_samples[i]->m_playbackData.repeat = 0;
             m_samples[i]->m_playbackData.volume = ARMY_SAMPLE_VOLUME;
-            m_samples[i]->m_playbackData.channelType = ARMY_SAMPLE_CHANNEL;
-            m_samples[i]->m_playbackData.loopCount = 1;
         }
     }
 }
@@ -469,7 +462,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
     }
     m_animationSequence = ARMY_ANIMATION_WALK;
     m_animationFrame = startFrame;
-    gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_MOVE]);
+    PlaySample(m_samples[ARMY_SAMPLE_MOVE]);
     if (!continued) {
         if (ValidHex(m_hex))
             gpCombatManager->m_hexCells[m_hex].m_occupantSide = COMBAT_SIDE_NONE;
@@ -631,7 +624,7 @@ void army::SpecialAttack(void) {
     gpCombatManager->SetGridMode(m_facing == ARMY_FACING_RIGHT);
     CheckLuck();
     m_animationSequence = ARMY_ANIMATION_ATTACK;
-    gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_SHOOT]);
+    PlaySample(m_samples[ARMY_SAMPLE_SHOOT]);
     for (i = 0; i < 4; i++) {
         m_animationFrame = i + 1;
         gpCombatManager->UpdateGrid(m_hex, m_stats.attributes);
@@ -819,7 +812,7 @@ void army::SpecialAttack(void) {
         target->Stand(0);
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_ATTACK)
         CancelSpell();
-    WaitSample(ARMY_SAMPLE_SHOOT);
+    WaitSample(m_samples[ARMY_SAMPLE_SHOOT]);
     m_facing = facing;
     Stand(1);
     if (target->m_quantity > 0)
@@ -849,7 +842,7 @@ void army::DoHydraAttack(void) {
 
     m_walkYStep = 0;
     CheckLuck();
-    gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_ATTACK]);
+    PlaySample(m_samples[ARMY_SAMPLE_ATTACK]);
     m_animationSequence = ARMY_ANIMATION_STAND;
     gpCombatManager->ResetLimitCreature();
     gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
@@ -919,7 +912,7 @@ void army::DoHydraAttack(void) {
     gText[0] -= 32;
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
-    WaitSample(ARMY_SAMPLE_ATTACK);
+    WaitSample(m_samples[ARMY_SAMPLE_ATTACK]);
     m_animationSequence = ARMY_ANIMATION_STAND;
     gpCombatManager->ResetLimitCreature();
     gpCombatManager->m_limitCreatureCount[m_side][m_index]++;
@@ -1066,7 +1059,7 @@ void army::DoAttack(i32 retaliation) {
     m_animationFrame = 3;
     gpCombatManager->DrawFrame(1);
     glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 105;
-    gpSoundManager->MemorySample(m_samples[ARMY_SAMPLE_ATTACK]);
+    PlaySample(m_samples[ARMY_SAMPLE_ATTACK]);
     m_animationFrame = 4;
     gpCombatManager->m_computeExtent = 1;
     gpCombatManager->DrawFrame(1);
@@ -1203,7 +1196,7 @@ void army::DoAttack(i32 retaliation) {
         if (!(target2->m_stats.attributes & MONSTER_FLAGS_DEAD))
             target2->Stand(0);
     }
-    WaitSample(ARMY_SAMPLE_ATTACK);
+    WaitSample(m_samples[ARMY_SAMPLE_ATTACK]);
     if (m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK) {
         if (target2) {
             m_animationFrame = frameBase + 6;
@@ -1386,7 +1379,7 @@ void army::CheckLuck(void) {
     if (luck < 0 && SRandom(1, 12) < -luck)
         m_luck = ARMY_LUCK_BAD;
     if (m_luck) {
-        SAMPLE2 sample = NULL_SAMPLE2;
+        class sample* sample = NULL;
         if (m_luck < 0)
             sprintf(gText, "badluck.82m");
         else
@@ -1412,7 +1405,7 @@ void army::CheckLuck(void) {
             SpellEffect(COMBAT_EFFECT_GOOD_LUCK, 180);
         }
         Stand(1);
-        WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+        WaitSample(sample);
     }
 }
 
@@ -1559,7 +1552,7 @@ void army::PowEffect(i8 effect) {
     for (side = 0; side < COMBAT_SIDE_COUNT; side++)
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
             if (gpCombatManager->m_armies[side][stackIndex].m_powFrames > 0)
-                gpSoundManager->MemorySample(
+                PlaySample(
                     gpCombatManager->m_armies[side][stackIndex].m_samples[ARMY_SAMPLE_WINCE]
                 );
     step = 0;
@@ -1639,7 +1632,7 @@ void army::PowEffect(i8 effect) {
     gpCombatManager->DrawFrame(1);
     for (side = 0; side < COMBAT_SIDE_COUNT; side++)
         for (stackIndex = 0; stackIndex < gpCombatManager->m_numArmies[side]; stackIndex++)
-            gpCombatManager->m_armies[side][stackIndex].WaitSample(ARMY_SAMPLE_WINCE);
+            WaitSample(gpCombatManager->m_armies[side][stackIndex].m_samples[ARMY_SAMPLE_WINCE]);
 }
 
 VA(0x0040b645, 0x34)

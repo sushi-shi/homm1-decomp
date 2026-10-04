@@ -18,7 +18,7 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
@@ -77,8 +77,6 @@ void PollSound() {
         return;
     gInPollSound = 1;
     glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] = KBTickCount() + 30;
-    if (gForegroundApp)
-        gpSoundManager->PollSound();
     PollRemote();
     gInPollSound = 0;
 }
@@ -99,8 +97,6 @@ void InitMainClasses(void) {
     gpMouseManager = new mouseManager;
     gpWindowManager = new heroWindowManager;
     gpResourceManager = new resourceManager;
-    gpSoundManager = new soundManager;
-    gpSmackManager = new smackManager;
     gpHighScoreManager = new highScoreManager;
     gpGame = new game;
     gpAdvManager = new advManager;
@@ -112,8 +108,7 @@ void InitMainClasses(void) {
     gpBufferPalette = new palette;
 }
 
-// Buka 2.1 DeleteMainClasses; HoMM1 also owns the smacker manager and frees the
-// resource manager before the window, mouse and input managers.
+// Buka frees the resource manager before the window, mouse and input managers.
 VA(0x00421269, 0x36d)
 void DeleteMainClasses(void) {
     if (gpBufferPalette)
@@ -143,12 +138,6 @@ void DeleteMainClasses(void) {
     if (gpHighScoreManager)
         delete gpHighScoreManager;
     gpHighScoreManager = NULL;
-    if (gpSmackManager)
-        delete gpSmackManager;
-    gpSmackManager = NULL;
-    if (gpSoundManager)
-        delete gpSoundManager;
-    gpSoundManager = NULL;
     if (gpResourceManager)
         delete gpResourceManager;
     gpResourceManager = NULL;
@@ -238,7 +227,7 @@ H1_ENUM_END(MainMenuHelp)
 
 // gEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
 // after the last campaign scenario; oldmain plays the matching video (the
-// value indexes lowResVideos/hiResVideos), offers a replay after LOST and
+// value indexes endVideos), offers a replay after LOST and
 // advances the campaign after WON.
 H1_ENUM_BEGIN(GameEndSequence)
     GAME_END_LOST = 0,
@@ -260,8 +249,7 @@ H1_ENUM_CONST_END(NetPositionConstant)
 VA(0x004216ec, 0xe23)
 i32 oldmain(void) {
     char saveBuf[20];
-    H1_ENUM_STORAGE(SmackVideo, char) hiResVideos[GAME_END_SEQUENCE_COUNT];
-    H1_ENUM_STORAGE(SmackVideo, char) lowResVideos[GAME_END_SEQUENCE_COUNT];
+    H1_ENUM_STORAGE(SmackVideo, char) endVideos[GAME_END_SEQUENCE_COUNT];
     i32 n;
     heroWindow* mainWin;
     font* font;
@@ -313,16 +301,8 @@ i32 oldmain(void) {
         );
         gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
         gpResourceManager->Dispose(font);
-        if (!gSkipIntro) {
-            if (gConfig.slowVideo)
-                PlaySmacker(SMACK_NWCLOGO1);
-            else
-                PlaySmacker(SMACK_NWCLOGO);
-        }
-        if (gConfig.slowVideo)
-            PlaySmacker(SMACK_INTRO02C);
-        else
-            PlaySmacker(SMACK_INTRO02U);
+        if (!gSkipIntro && PlaySmacker(SMACK_BUKA) && PlaySmacker(SMACK_NWCLOGO))
+            PlaySmacker(SMACK_INTRO);
     }
     LoadSystemwideIcons();
     memset(gbThisNetHumanPlayer, 0, GAME_PLAYER_COUNT);
@@ -332,7 +312,7 @@ i32 oldmain(void) {
 
     while (!leave) {
     mainMenu:
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
+        PlayMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
             if (gGameCommand != MAIN_MENU_QUIT) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
@@ -515,7 +495,7 @@ i32 oldmain(void) {
             }
             gGameInitialized = 1;
             backdropLoaded = 0;
-            gpSoundManager->StopAllSamples();
+            StopAllSamples();
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
@@ -542,20 +522,15 @@ i32 oldmain(void) {
                 "High King!\n\nOur victory was achieved in %d days!",
                 giCurTurn
             );
-            lowResVideos[GAME_END_LOST] = SMACK_LOSE1;
-            lowResVideos[GAME_END_WON] = SMACK_WIN01U;
-            lowResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
-            hiResVideos[GAME_END_LOST] = SMACK_LOSE1;
-            hiResVideos[GAME_END_WON] = SMACK_WIN01C;
-            hiResVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN02;
+            endVideos[GAME_END_LOST] = SMACK_LOSE;
+            endVideos[GAME_END_WON] = SMACK_WIN1;
+            endVideos[GAME_END_CAMPAIGN_COMPLETE] = SMACK_WIN2;
             if (gEndSequence != GAME_END_WON) {
                 if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
-                    PlaySmacker(SMACK_WIN01C);
-                    PlaySmacker(SMACK_WIN02);
+                    PlaySmacker(SMACK_WIN1);
+                    PlaySmacker(SMACK_WIN2);
                 } else {
-                    PlaySmacker(
-                        gConfig.slowVideo ? hiResVideos[gEndSequence] : lowResVideos[gEndSequence]
-                    );
+                    PlaySmacker(endVideos[gEndSequence]);
                 }
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
@@ -568,7 +543,7 @@ i32 oldmain(void) {
             }
             gGameOver = 0;
             if (gEndSequence == GAME_END_CAMPAIGN_COMPLETE) {
-                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
+                PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
                 AddScoreToHighScore(
                     giCurTurn,
                     HIGH_SCORE_TYPE_CAMPAIGN,
@@ -583,7 +558,7 @@ i32 oldmain(void) {
                 gpExec->MainLoop();
                 gpExec->RemoveManager(gpHighScoreManager);
                 gHighScoreRank = HIGH_SCORE_EMPTY;
-                gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
+                PlayMusic(MUSIC_TRACK_MAIN_MENU);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
@@ -1349,8 +1324,8 @@ i16 WaitHandler(tag_message& message) {
     i8 result = 0;
     gbFunctionComplete = 1;
     PollSound();
-    if (!gpSoundManager->MusicPlaying())
-        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (!MusicPlaying())
+        PlayMusic(gpAdvManager->m_currentTerrain);
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -1404,8 +1379,8 @@ i16 WaitHandler(tag_message& message) {
 // Buka 2.1 EventWindowHandler without HoMM2's dialog timeout and resource help.
 VA(0x004240ef, 0x114)
 i16 EventWindowHandler(tag_message& message) {
-    if (!gpSoundManager->MusicPlaying())
-        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    if (!MusicPlaying())
+        PlayMusic(gpAdvManager->m_currentTerrain);
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -1971,10 +1946,6 @@ void QuickViewWait(void) {
 VA(0x00424f99, 0x1cb)
 void InitVars(void) {
     i32 i;
-    NULL_SAMPLE2.pSample = NULL;
-    NULL_SAMPLE2.pMem = reinterpret_cast<struct _SAMPLE*>(
-        NULL_SAMPLE2.pSample
-    ); // faithful: SAMPLE2 stores the MSS sample handle as a sample*
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
     gGameCommand = MAIN_MENU_NO_COMMAND;
     gPalette = NULL;
@@ -2609,7 +2580,7 @@ void ShowCongrats(void) {
 
     daysScore = GetBaseScore(giCurTurn);
     result = gpGame->m_difficultyRating * daysScore / 100;
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_CONGRATULATIONS);
+    PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
     gpMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
@@ -2762,39 +2733,6 @@ i16 DataEntryWindowHandler(tag_message& message) {
         }
     }
     return EventWindowHandler(message);
-}
-
-// donor PoL RVA 0x0009e999; preferred Buka symbol ?LoadPlaySample@@YIPAVsample@@PAD@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:6;base=0.524829;margin=1.189024;shape=0.423;size=0.802;calls=1.000;alternate=pol20:struct SAMPLE2 LoadPlaySample(char *)@0x0009e999
-VA(0x00426ed9, 0x51)
-SAMPLE2 LoadPlaySample(char* name) {
-    SAMPLE2 s;
-    s.pSample = gpResourceManager->GetSample(name);
-    if (s.pSample) {
-        s.pSample->m_playbackData.channelType = SAMPLE_PLAYBACK_CHANNEL_GROUP;
-        s.pMem = gpSoundManager->MemorySample(s.pSample);
-    }
-    return s;
-}
-
-// donor PoL RVA 0x0009e9ed; preferred Buka symbol ?WaitEndSample@@YIXPAPAVsample@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.479563;margin=0.490944;shape=0.207;size=0.957;calls=1.000;alternate=pol20:void WaitEndSample(struct SAMPLE2, int)@0x0009e9ed
-VA(0x00426f2a, 0x8a)
-void WaitEndSample(SAMPLE2 s, i32 waitTime) {
-    if (waitTime < 0)
-        waitTime = 4000;
-    i32 endTime = KBTickCount() + waitTime;
-    if (s.pMem) {
-        while (gpSoundManager->DigitalReport(s.pMem, SAMPLE_REPORT_PLAYING)
-               && KBTickCount() < endTime) {
-            Process1WindowsMessage();
-            PollSound();
-        }
-    }
-    if (s.pSample)
-        gpResourceManager->Dispose(s.pSample);
 }
 
 // donor PoL RVA 0x0009ea7c; preferred Buka symbol ?MemError@@YIXXZ
@@ -2975,7 +2913,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             gConfig.musicVolume = SOUND_VOLUME_LAST;
             goto adjustMusic;
         adjustMusic:
-            gpSoundManager->AdjustMusicVolumes();
+            SetMusicVolume(gConfig.musicVolume);
             menuChanged = 1;
             break;
         case APP_MENU_SOUND_OFF:
@@ -3012,7 +2950,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             gConfig.soundVolume = SOUND_VOLUME_LAST;
             goto adjustSound;
         adjustSound:
-            gpSoundManager->AdjustSoundVolumes();
+            SetEffectsVolume(gConfig.soundVolume);
             menuChanged = 1;
             break;
         case APP_MENU_SPEED_JUMP:
@@ -3037,17 +2975,9 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             if (gConfig.musicSource) {
                 gConfig.musicSource = SOUND_MUSIC_SOURCE_DIGITAL;
             } else {
-                if (!gpSoundManager->m_cdStarted) {
-                    NormalDialog(
-                        "Unable to set up CD stereo music.  Your CD player might be in use by "
-                        "another program, or your sound driver might not support CD stereo.",
-                        NORMAL_DIALOG_TYPE_OK
-                    );
-                    break;
-                }
                 gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
             }
-            gpSoundManager->SetMusicQuality(gConfig.musicSource);
+            SetMusicSource(gConfig.musicSource);
             menuChanged = 1;
             break;
         case APP_MENU_SHOW_PATH:
@@ -3703,85 +3633,47 @@ DATA(0x00492e5c)
 i32 gHeartbeatSeen = 0;
 DATA(0x00492e60)
 char* gArtifactNames[38] = {
-    localization::Tr("table.gArtifactNames.0"),
-    localization::Tr("table.gArtifactNames.1"),
-    localization::Tr("table.gArtifactNames.2"),
-    localization::Tr("table.gArtifactNames.3"),
-    localization::Tr("table.gArtifactNames.4"),
-    localization::Tr("table.gArtifactNames.5"),
-    localization::Tr("table.gArtifactNames.6"),
-    localization::Tr("table.gArtifactNames.7"),
-    localization::Tr("table.gArtifactNames.8"),
-    localization::Tr("table.gArtifactNames.9"),
-    localization::Tr("table.gArtifactNames.10"),
-    localization::Tr("table.gArtifactNames.11"),
-    localization::Tr("table.gArtifactNames.12"),
-    localization::Tr("table.gArtifactNames.13"),
-    localization::Tr("table.gArtifactNames.14"),
-    localization::Tr("table.gArtifactNames.15"),
-    localization::Tr("table.gArtifactNames.16"),
-    localization::Tr("table.gArtifactNames.17"),
-    localization::Tr("table.gArtifactNames.18"),
-    localization::Tr("table.gArtifactNames.19"),
-    localization::Tr("table.gArtifactNames.20"),
-    localization::Tr("table.gArtifactNames.21"),
-    localization::Tr("table.gArtifactNames.22"),
-    localization::Tr("table.gArtifactNames.23"),
-    localization::Tr("table.gArtifactNames.24"),
-    localization::Tr("table.gArtifactNames.25"),
-    localization::Tr("table.gArtifactNames.26"),
-    localization::Tr("table.gArtifactNames.27"),
-    localization::Tr("table.gArtifactNames.28"),
-    localization::Tr("table.gArtifactNames.29"),
-    localization::Tr("table.gArtifactNames.30"),
-    localization::Tr("table.gArtifactNames.31"),
-    localization::Tr("table.gArtifactNames.32"),
-    localization::Tr("table.gArtifactNames.33"),
-    localization::Tr("table.gArtifactNames.34"),
-    localization::Tr("table.gArtifactNames.35"),
-    localization::Tr("table.gArtifactNames.36"),
-    localization::Tr("table.gArtifactNames.37"),
+    localization::Tr("table.gArtifactNames.0"),  localization::Tr("table.gArtifactNames.1"),
+    localization::Tr("table.gArtifactNames.2"),  localization::Tr("table.gArtifactNames.3"),
+    localization::Tr("table.gArtifactNames.4"),  localization::Tr("table.gArtifactNames.5"),
+    localization::Tr("table.gArtifactNames.6"),  localization::Tr("table.gArtifactNames.7"),
+    localization::Tr("table.gArtifactNames.8"),  localization::Tr("table.gArtifactNames.9"),
+    localization::Tr("table.gArtifactNames.10"), localization::Tr("table.gArtifactNames.11"),
+    localization::Tr("table.gArtifactNames.12"), localization::Tr("table.gArtifactNames.13"),
+    localization::Tr("table.gArtifactNames.14"), localization::Tr("table.gArtifactNames.15"),
+    localization::Tr("table.gArtifactNames.16"), localization::Tr("table.gArtifactNames.17"),
+    localization::Tr("table.gArtifactNames.18"), localization::Tr("table.gArtifactNames.19"),
+    localization::Tr("table.gArtifactNames.20"), localization::Tr("table.gArtifactNames.21"),
+    localization::Tr("table.gArtifactNames.22"), localization::Tr("table.gArtifactNames.23"),
+    localization::Tr("table.gArtifactNames.24"), localization::Tr("table.gArtifactNames.25"),
+    localization::Tr("table.gArtifactNames.26"), localization::Tr("table.gArtifactNames.27"),
+    localization::Tr("table.gArtifactNames.28"), localization::Tr("table.gArtifactNames.29"),
+    localization::Tr("table.gArtifactNames.30"), localization::Tr("table.gArtifactNames.31"),
+    localization::Tr("table.gArtifactNames.32"), localization::Tr("table.gArtifactNames.33"),
+    localization::Tr("table.gArtifactNames.34"), localization::Tr("table.gArtifactNames.35"),
+    localization::Tr("table.gArtifactNames.36"), localization::Tr("table.gArtifactNames.37"),
 };
 DATA(0x00492ef8)
 char* gArtifactDesc[38] = {
-    localization::Tr("table.gArtifactDesc.0"),
-    localization::Tr("table.gArtifactDesc.1"),
-    localization::Tr("table.gArtifactDesc.2"),
-    localization::Tr("table.gArtifactDesc.3"),
-    localization::Tr("table.gArtifactDesc.4"),
-    localization::Tr("table.gArtifactDesc.5"),
-    localization::Tr("table.gArtifactDesc.6"),
-    localization::Tr("table.gArtifactDesc.7"),
-    localization::Tr("table.gArtifactDesc.8"),
-    localization::Tr("table.gArtifactDesc.9"),
-    localization::Tr("table.gArtifactDesc.10"),
-    localization::Tr("table.gArtifactDesc.11"),
-    localization::Tr("table.gArtifactDesc.12"),
-    localization::Tr("table.gArtifactDesc.13"),
-    localization::Tr("table.gArtifactDesc.14"),
-    localization::Tr("table.gArtifactDesc.15"),
-    localization::Tr("table.gArtifactDesc.16"),
-    localization::Tr("table.gArtifactDesc.17"),
-    localization::Tr("table.gArtifactDesc.18"),
-    localization::Tr("table.gArtifactDesc.19"),
-    localization::Tr("table.gArtifactDesc.20"),
-    localization::Tr("table.gArtifactDesc.21"),
-    localization::Tr("table.gArtifactDesc.22"),
-    localization::Tr("table.gArtifactDesc.23"),
-    localization::Tr("table.gArtifactDesc.24"),
-    localization::Tr("table.gArtifactDesc.25"),
-    localization::Tr("table.gArtifactDesc.26"),
-    localization::Tr("table.gArtifactDesc.27"),
-    localization::Tr("table.gArtifactDesc.28"),
-    localization::Tr("table.gArtifactDesc.29"),
-    localization::Tr("table.gArtifactDesc.30"),
-    localization::Tr("table.gArtifactDesc.31"),
-    localization::Tr("table.gArtifactDesc.32"),
-    localization::Tr("table.gArtifactDesc.33"),
-    localization::Tr("table.gArtifactDesc.34"),
-    localization::Tr("table.gArtifactDesc.35"),
-    localization::Tr("table.gArtifactDesc.36"),
-    localization::Tr("table.gArtifactDesc.37"),
+    localization::Tr("table.gArtifactDesc.0"),  localization::Tr("table.gArtifactDesc.1"),
+    localization::Tr("table.gArtifactDesc.2"),  localization::Tr("table.gArtifactDesc.3"),
+    localization::Tr("table.gArtifactDesc.4"),  localization::Tr("table.gArtifactDesc.5"),
+    localization::Tr("table.gArtifactDesc.6"),  localization::Tr("table.gArtifactDesc.7"),
+    localization::Tr("table.gArtifactDesc.8"),  localization::Tr("table.gArtifactDesc.9"),
+    localization::Tr("table.gArtifactDesc.10"), localization::Tr("table.gArtifactDesc.11"),
+    localization::Tr("table.gArtifactDesc.12"), localization::Tr("table.gArtifactDesc.13"),
+    localization::Tr("table.gArtifactDesc.14"), localization::Tr("table.gArtifactDesc.15"),
+    localization::Tr("table.gArtifactDesc.16"), localization::Tr("table.gArtifactDesc.17"),
+    localization::Tr("table.gArtifactDesc.18"), localization::Tr("table.gArtifactDesc.19"),
+    localization::Tr("table.gArtifactDesc.20"), localization::Tr("table.gArtifactDesc.21"),
+    localization::Tr("table.gArtifactDesc.22"), localization::Tr("table.gArtifactDesc.23"),
+    localization::Tr("table.gArtifactDesc.24"), localization::Tr("table.gArtifactDesc.25"),
+    localization::Tr("table.gArtifactDesc.26"), localization::Tr("table.gArtifactDesc.27"),
+    localization::Tr("table.gArtifactDesc.28"), localization::Tr("table.gArtifactDesc.29"),
+    localization::Tr("table.gArtifactDesc.30"), localization::Tr("table.gArtifactDesc.31"),
+    localization::Tr("table.gArtifactDesc.32"), localization::Tr("table.gArtifactDesc.33"),
+    localization::Tr("table.gArtifactDesc.34"), localization::Tr("table.gArtifactDesc.35"),
+    localization::Tr("table.gArtifactDesc.36"), localization::Tr("table.gArtifactDesc.37"),
 };
 DATA(0x00492f90)
 char* gArtifactEvent[38] = {
@@ -3864,7 +3756,13 @@ char* gArtifactEvent[38] = {
     "The Magic Book  ??????",
 };
 DATA(0x00493028)
-char* gStatNames[5] = {localization::Tr("table.gStatNames.0"), localization::Tr("table.gStatNames.1"), localization::Tr("table.gStatNames.2"), localization::Tr("table.gStatNames.3"), localization::Tr("table.gStatNames.4")};
+char* gStatNames[5] = {
+    localization::Tr("table.gStatNames.0"),
+    localization::Tr("table.gStatNames.1"),
+    localization::Tr("table.gStatNames.2"),
+    localization::Tr("table.gStatNames.3"),
+    localization::Tr("table.gStatNames.4")
+};
 DATA(0x00493040)
 char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.0"),
@@ -3874,44 +3772,101 @@ char* gStatDesc[5] = {
     localization::Tr("table.gStatDesc.4"),
 };
 DATA(0x00493058)
-char* gClassNames[4] = {localization::Tr("table.gClassNames.0"), localization::Tr("table.gClassNames.1"), localization::Tr("table.gClassNames.2"), localization::Tr("table.gClassNames.3")};
+char* gClassNames[4] = {
+    localization::Tr("table.gClassNames.0"),
+    localization::Tr("table.gClassNames.1"),
+    localization::Tr("table.gClassNames.2"),
+    localization::Tr("table.gClassNames.3")
+};
 DATA(0x00493068)
 char* gArmyNames[28] = {
-    localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"), localization::Tr("table.gArmyNames.2"), localization::Tr("table.gArmyNames.3"), localization::Tr("table.gArmyNames.4"), localization::Tr("table.gArmyNames.5"),  localization::Tr("table.gArmyNames.6"),
-    localization::Tr("table.gArmyNames.7"),      localization::Tr("table.gArmyNames.8"),   localization::Tr("table.gArmyNames.9"),    localization::Tr("table.gArmyNames.10"),     localization::Tr("table.gArmyNames.11"), localization::Tr("table.gArmyNames.12"),   localization::Tr("table.gArmyNames.13"),
-    localization::Tr("table.gArmyNames.14"),      localization::Tr("table.gArmyNames.15"),  localization::Tr("table.gArmyNames.16"), localization::Tr("table.gArmyNames.17"),   localization::Tr("table.gArmyNames.18"), localization::Tr("table.gArmyNames.19"), localization::Tr("table.gArmyNames.20"),
-    localization::Tr("table.gArmyNames.21"), localization::Tr("table.gArmyNames.22"),  localization::Tr("table.gArmyNames.23"),  localization::Tr("table.gArmyNames.24"),     localization::Tr("table.gArmyNames.25"),   localization::Tr("table.gArmyNames.26"),    localization::Tr("table.gArmyNames.27"),
+    localization::Tr("table.gArmyNames.0"),  localization::Tr("table.gArmyNames.1"),
+    localization::Tr("table.gArmyNames.2"),  localization::Tr("table.gArmyNames.3"),
+    localization::Tr("table.gArmyNames.4"),  localization::Tr("table.gArmyNames.5"),
+    localization::Tr("table.gArmyNames.6"),  localization::Tr("table.gArmyNames.7"),
+    localization::Tr("table.gArmyNames.8"),  localization::Tr("table.gArmyNames.9"),
+    localization::Tr("table.gArmyNames.10"), localization::Tr("table.gArmyNames.11"),
+    localization::Tr("table.gArmyNames.12"), localization::Tr("table.gArmyNames.13"),
+    localization::Tr("table.gArmyNames.14"), localization::Tr("table.gArmyNames.15"),
+    localization::Tr("table.gArmyNames.16"), localization::Tr("table.gArmyNames.17"),
+    localization::Tr("table.gArmyNames.18"), localization::Tr("table.gArmyNames.19"),
+    localization::Tr("table.gArmyNames.20"), localization::Tr("table.gArmyNames.21"),
+    localization::Tr("table.gArmyNames.22"), localization::Tr("table.gArmyNames.23"),
+    localization::Tr("table.gArmyNames.24"), localization::Tr("table.gArmyNames.25"),
+    localization::Tr("table.gArmyNames.26"), localization::Tr("table.gArmyNames.27"),
 };
 DATA(0x004930d8)
 char* gArmyNamesPlural[28] = {
-    localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"), localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"), localization::Tr("table.gArmyNamesPlural.4"), localization::Tr("table.gArmyNamesPlural.5"),  localization::Tr("table.gArmyNamesPlural.6"),
-    localization::Tr("table.gArmyNamesPlural.7"),      localization::Tr("table.gArmyNamesPlural.8"),  localization::Tr("table.gArmyNamesPlural.9"),    localization::Tr("table.gArmyNamesPlural.10"),    localization::Tr("table.gArmyNamesPlural.11"),  localization::Tr("table.gArmyNamesPlural.12"),   localization::Tr("table.gArmyNamesPlural.13"),
-    localization::Tr("table.gArmyNamesPlural.14"),     localization::Tr("table.gArmyNamesPlural.15"),  localization::Tr("table.gArmyNamesPlural.16"), localization::Tr("table.gArmyNamesPlural.17"),   localization::Tr("table.gArmyNamesPlural.18"),  localization::Tr("table.gArmyNamesPlural.19"), localization::Tr("table.gArmyNamesPlural.20"),
-    localization::Tr("table.gArmyNamesPlural.21"), localization::Tr("table.gArmyNamesPlural.22"),  localization::Tr("table.gArmyNamesPlural.23"),  localization::Tr("table.gArmyNamesPlural.24"),    localization::Tr("table.gArmyNamesPlural.25"),    localization::Tr("table.gArmyNamesPlural.26"),    localization::Tr("table.gArmyNamesPlural.27"),
+    localization::Tr("table.gArmyNamesPlural.0"),  localization::Tr("table.gArmyNamesPlural.1"),
+    localization::Tr("table.gArmyNamesPlural.2"),  localization::Tr("table.gArmyNamesPlural.3"),
+    localization::Tr("table.gArmyNamesPlural.4"),  localization::Tr("table.gArmyNamesPlural.5"),
+    localization::Tr("table.gArmyNamesPlural.6"),  localization::Tr("table.gArmyNamesPlural.7"),
+    localization::Tr("table.gArmyNamesPlural.8"),  localization::Tr("table.gArmyNamesPlural.9"),
+    localization::Tr("table.gArmyNamesPlural.10"), localization::Tr("table.gArmyNamesPlural.11"),
+    localization::Tr("table.gArmyNamesPlural.12"), localization::Tr("table.gArmyNamesPlural.13"),
+    localization::Tr("table.gArmyNamesPlural.14"), localization::Tr("table.gArmyNamesPlural.15"),
+    localization::Tr("table.gArmyNamesPlural.16"), localization::Tr("table.gArmyNamesPlural.17"),
+    localization::Tr("table.gArmyNamesPlural.18"), localization::Tr("table.gArmyNamesPlural.19"),
+    localization::Tr("table.gArmyNamesPlural.20"), localization::Tr("table.gArmyNamesPlural.21"),
+    localization::Tr("table.gArmyNamesPlural.22"), localization::Tr("table.gArmyNamesPlural.23"),
+    localization::Tr("table.gArmyNamesPlural.24"), localization::Tr("table.gArmyNamesPlural.25"),
+    localization::Tr("table.gArmyNamesPlural.26"), localization::Tr("table.gArmyNamesPlural.27"),
 };
 DATA(0x00493148)
 char* gSpellNames[29] = {
-    localization::Tr("table.gSpellNames.0"),       localization::Tr("table.gSpellNames.1"), localization::Tr("table.gSpellNames.2"),       localization::Tr("table.gSpellNames.3"),         localization::Tr("table.gSpellNames.4"),
-    localization::Tr("table.gSpellNames.5"),          localization::Tr("table.gSpellNames.6"),           localization::Tr("table.gSpellNames.7"),          localization::Tr("table.gSpellNames.8"),        localization::Tr("table.gSpellNames.9"),
-    localization::Tr("table.gSpellNames.10"),          localization::Tr("table.gSpellNames.11"),    localization::Tr("table.gSpellNames.12"),     localization::Tr("table.gSpellNames.13"), localization::Tr("table.gSpellNames.14"),
-    localization::Tr("table.gSpellNames.15"),     localization::Tr("table.gSpellNames.16"),          localization::Tr("table.gSpellNames.17"),  localization::Tr("table.gSpellNames.18"),     localization::Tr("table.gSpellNames.19"),
-    localization::Tr("table.gSpellNames.20"), localization::Tr("table.gSpellNames.21"), localization::Tr("table.gSpellNames.22"),     localization::Tr("table.gSpellNames.23"),  localization::Tr("table.gSpellNames.24"),
-    localization::Tr("table.gSpellNames.25"),  localization::Tr("table.gSpellNames.26"),    localization::Tr("table.gSpellNames.27"), localization::Tr("table.gSpellNames.28"),
+    localization::Tr("table.gSpellNames.0"),  localization::Tr("table.gSpellNames.1"),
+    localization::Tr("table.gSpellNames.2"),  localization::Tr("table.gSpellNames.3"),
+    localization::Tr("table.gSpellNames.4"),  localization::Tr("table.gSpellNames.5"),
+    localization::Tr("table.gSpellNames.6"),  localization::Tr("table.gSpellNames.7"),
+    localization::Tr("table.gSpellNames.8"),  localization::Tr("table.gSpellNames.9"),
+    localization::Tr("table.gSpellNames.10"), localization::Tr("table.gSpellNames.11"),
+    localization::Tr("table.gSpellNames.12"), localization::Tr("table.gSpellNames.13"),
+    localization::Tr("table.gSpellNames.14"), localization::Tr("table.gSpellNames.15"),
+    localization::Tr("table.gSpellNames.16"), localization::Tr("table.gSpellNames.17"),
+    localization::Tr("table.gSpellNames.18"), localization::Tr("table.gSpellNames.19"),
+    localization::Tr("table.gSpellNames.20"), localization::Tr("table.gSpellNames.21"),
+    localization::Tr("table.gSpellNames.22"), localization::Tr("table.gSpellNames.23"),
+    localization::Tr("table.gSpellNames.24"), localization::Tr("table.gSpellNames.25"),
+    localization::Tr("table.gSpellNames.26"), localization::Tr("table.gSpellNames.27"),
+    localization::Tr("table.gSpellNames.28"),
 };
 DATA(0x004931c0)
-char* gNeutralBuildingNames[7] =
-    {localization::Tr("table.gNeutralBuildingNames.0"), localization::Tr("table.gNeutralBuildingNames.1"), localization::Tr("table.gNeutralBuildingNames.2"), localization::Tr("table.gNeutralBuildingNames.3"), localization::Tr("table.gNeutralBuildingNames.4"), localization::Tr("table.gNeutralBuildingNames.5"), localization::Tr("table.gNeutralBuildingNames.6")};
+char* gNeutralBuildingNames[7] = {
+    localization::Tr("table.gNeutralBuildingNames.0"),
+    localization::Tr("table.gNeutralBuildingNames.1"),
+    localization::Tr("table.gNeutralBuildingNames.2"),
+    localization::Tr("table.gNeutralBuildingNames.3"),
+    localization::Tr("table.gNeutralBuildingNames.4"),
+    localization::Tr("table.gNeutralBuildingNames.5"),
+    localization::Tr("table.gNeutralBuildingNames.6")
+};
 DATA(0x004931e0)
 char* gDwellingNames[24] = {
-    localization::Tr("table.gDwellingNames.0"), localization::Tr("table.gDwellingNames.1"), localization::Tr("table.gDwellingNames.2"),    localization::Tr("table.gDwellingNames.3"),     localization::Tr("table.gDwellingNames.4"), localization::Tr("table.gDwellingNames.5"),
-    localization::Tr("table.gDwellingNames.6"),    localization::Tr("table.gDwellingNames.7"),       localization::Tr("table.gDwellingNames.8"), localization::Tr("table.gDwellingNames.9"), localization::Tr("table.gDwellingNames.10"),  localization::Tr("table.gDwellingNames.11"),
-    localization::Tr("table.gDwellingNames.12"),          localization::Tr("table.gDwellingNames.13"),     localization::Tr("table.gDwellingNames.14"),           localization::Tr("table.gDwellingNames.15"),      localization::Tr("table.gDwellingNames.16"),         localization::Tr("table.gDwellingNames.17"),
-    localization::Tr("table.gDwellingNames.18"),         localization::Tr("table.gDwellingNames.19"),         localization::Tr("table.gDwellingNames.20"),          localization::Tr("table.gDwellingNames.21"),       localization::Tr("table.gDwellingNames.22"),          localization::Tr("table.gDwellingNames.23"),
+    localization::Tr("table.gDwellingNames.0"),  localization::Tr("table.gDwellingNames.1"),
+    localization::Tr("table.gDwellingNames.2"),  localization::Tr("table.gDwellingNames.3"),
+    localization::Tr("table.gDwellingNames.4"),  localization::Tr("table.gDwellingNames.5"),
+    localization::Tr("table.gDwellingNames.6"),  localization::Tr("table.gDwellingNames.7"),
+    localization::Tr("table.gDwellingNames.8"),  localization::Tr("table.gDwellingNames.9"),
+    localization::Tr("table.gDwellingNames.10"), localization::Tr("table.gDwellingNames.11"),
+    localization::Tr("table.gDwellingNames.12"), localization::Tr("table.gDwellingNames.13"),
+    localization::Tr("table.gDwellingNames.14"), localization::Tr("table.gDwellingNames.15"),
+    localization::Tr("table.gDwellingNames.16"), localization::Tr("table.gDwellingNames.17"),
+    localization::Tr("table.gDwellingNames.18"), localization::Tr("table.gDwellingNames.19"),
+    localization::Tr("table.gDwellingNames.20"), localization::Tr("table.gDwellingNames.21"),
+    localization::Tr("table.gDwellingNames.22"), localization::Tr("table.gDwellingNames.23"),
 };
 DATA(0x00493240)
 char* gTerrainNames[7] = {"Ocean", "Grass", "Snow", "Swamp", "Lava", "Desert", "Dirt"};
 DATA(0x00493260)
-char* gResourceNames[7] = {localization::Tr("table.gResourceNames.0"), localization::Tr("table.gResourceNames.1"), localization::Tr("table.gResourceNames.2"), localization::Tr("table.gResourceNames.3"), localization::Tr("table.gResourceNames.4"), localization::Tr("table.gResourceNames.5"), localization::Tr("table.gResourceNames.6")};
+char* gResourceNames[7] = {
+    localization::Tr("table.gResourceNames.0"),
+    localization::Tr("table.gResourceNames.1"),
+    localization::Tr("table.gResourceNames.2"),
+    localization::Tr("table.gResourceNames.3"),
+    localization::Tr("table.gResourceNames.4"),
+    localization::Tr("table.gResourceNames.5"),
+    localization::Tr("table.gResourceNames.6")
+};
 DATA(0x00493280)
 char* gObjectNames[63] = {
     "",
@@ -3989,82 +3944,44 @@ char* gTownNames[36] = {
 };
 DATA(0x00493410)
 char* gEventText[77] = {
-    localization::Tr("table.gEventText.0"),
-    localization::Tr("table.gEventText.1"),
-    localization::Tr("table.gEventText.2"),
-    localization::Tr("table.gEventText.3"),
-    localization::Tr("table.gEventText.4"),
-    localization::Tr("table.gEventText.5"),
-    localization::Tr("table.gEventText.6"),
-    localization::Tr("table.gEventText.7"),
-    localization::Tr("table.gEventText.8"),
-    localization::Tr("table.gEventText.9"),
-    localization::Tr("table.gEventText.10"),
-    localization::Tr("table.gEventText.11"),
-    localization::Tr("table.gEventText.12"),
-    localization::Tr("table.gEventText.13"),
-    localization::Tr("table.gEventText.14"),
-    localization::Tr("table.gEventText.15"),
-    localization::Tr("table.gEventText.16"),
-    localization::Tr("table.gEventText.17"),
-    localization::Tr("table.gEventText.18"),
-    localization::Tr("table.gEventText.19"),
-    localization::Tr("table.gEventText.20"),
-    localization::Tr("table.gEventText.21"),
-    localization::Tr("table.gEventText.22"),
-    localization::Tr("table.gEventText.23"),
-    localization::Tr("table.gEventText.24"),
-    localization::Tr("table.gEventText.25"),
-    localization::Tr("table.gEventText.26"),
-    localization::Tr("table.gEventText.27"),
-    localization::Tr("table.gEventText.28"),
-    localization::Tr("table.gEventText.29"),
-    localization::Tr("table.gEventText.30"),
-    localization::Tr("table.gEventText.31"),
-    localization::Tr("table.gEventText.32"),
-    localization::Tr("table.gEventText.33"),
-    localization::Tr("table.gEventText.34"),
-    localization::Tr("table.gEventText.35"),
-    localization::Tr("table.gEventText.36"),
-    localization::Tr("table.gEventText.37"),
-    localization::Tr("table.gEventText.38"),
-    localization::Tr("table.gEventText.39"),
-    localization::Tr("table.gEventText.40"),
-    localization::Tr("table.gEventText.41"),
-    localization::Tr("table.gEventText.42"),
-    localization::Tr("table.gEventText.43"),
-    localization::Tr("table.gEventText.44"),
-    localization::Tr("table.gEventText.45"),
-    localization::Tr("table.gEventText.46"),
-    localization::Tr("table.gEventText.47"),
-    localization::Tr("table.gEventText.48"),
-    localization::Tr("table.gEventText.49"),
-    localization::Tr("table.gEventText.50"),
-    localization::Tr("table.gEventText.51"),
-    localization::Tr("table.gEventText.52"),
-    localization::Tr("table.gEventText.53"),
-    localization::Tr("table.gEventText.54"),
-    localization::Tr("table.gEventText.55"),
-    localization::Tr("table.gEventText.56"),
-    localization::Tr("table.gEventText.57"),
-    localization::Tr("table.gEventText.58"),
-    localization::Tr("table.gEventText.59"),
-    localization::Tr("table.gEventText.60"),
-    localization::Tr("table.gEventText.61"),
-    localization::Tr("table.gEventText.62"),
-    localization::Tr("table.gEventText.63"),
-    localization::Tr("table.gEventText.64"),
-    localization::Tr("table.gEventText.65"),
-    localization::Tr("table.gEventText.66"),
-    localization::Tr("table.gEventText.67"),
-    localization::Tr("table.gEventText.68"),
-    localization::Tr("table.gEventText.69"),
-    localization::Tr("table.gEventText.70"),
-    localization::Tr("table.gEventText.71"),
-    localization::Tr("table.gEventText.72"),
-    localization::Tr("table.gEventText.73"),
-    localization::Tr("table.gEventText.74"),
-    localization::Tr("table.gEventText.75"),
+    localization::Tr("table.gEventText.0"),  localization::Tr("table.gEventText.1"),
+    localization::Tr("table.gEventText.2"),  localization::Tr("table.gEventText.3"),
+    localization::Tr("table.gEventText.4"),  localization::Tr("table.gEventText.5"),
+    localization::Tr("table.gEventText.6"),  localization::Tr("table.gEventText.7"),
+    localization::Tr("table.gEventText.8"),  localization::Tr("table.gEventText.9"),
+    localization::Tr("table.gEventText.10"), localization::Tr("table.gEventText.11"),
+    localization::Tr("table.gEventText.12"), localization::Tr("table.gEventText.13"),
+    localization::Tr("table.gEventText.14"), localization::Tr("table.gEventText.15"),
+    localization::Tr("table.gEventText.16"), localization::Tr("table.gEventText.17"),
+    localization::Tr("table.gEventText.18"), localization::Tr("table.gEventText.19"),
+    localization::Tr("table.gEventText.20"), localization::Tr("table.gEventText.21"),
+    localization::Tr("table.gEventText.22"), localization::Tr("table.gEventText.23"),
+    localization::Tr("table.gEventText.24"), localization::Tr("table.gEventText.25"),
+    localization::Tr("table.gEventText.26"), localization::Tr("table.gEventText.27"),
+    localization::Tr("table.gEventText.28"), localization::Tr("table.gEventText.29"),
+    localization::Tr("table.gEventText.30"), localization::Tr("table.gEventText.31"),
+    localization::Tr("table.gEventText.32"), localization::Tr("table.gEventText.33"),
+    localization::Tr("table.gEventText.34"), localization::Tr("table.gEventText.35"),
+    localization::Tr("table.gEventText.36"), localization::Tr("table.gEventText.37"),
+    localization::Tr("table.gEventText.38"), localization::Tr("table.gEventText.39"),
+    localization::Tr("table.gEventText.40"), localization::Tr("table.gEventText.41"),
+    localization::Tr("table.gEventText.42"), localization::Tr("table.gEventText.43"),
+    localization::Tr("table.gEventText.44"), localization::Tr("table.gEventText.45"),
+    localization::Tr("table.gEventText.46"), localization::Tr("table.gEventText.47"),
+    localization::Tr("table.gEventText.48"), localization::Tr("table.gEventText.49"),
+    localization::Tr("table.gEventText.50"), localization::Tr("table.gEventText.51"),
+    localization::Tr("table.gEventText.52"), localization::Tr("table.gEventText.53"),
+    localization::Tr("table.gEventText.54"), localization::Tr("table.gEventText.55"),
+    localization::Tr("table.gEventText.56"), localization::Tr("table.gEventText.57"),
+    localization::Tr("table.gEventText.58"), localization::Tr("table.gEventText.59"),
+    localization::Tr("table.gEventText.60"), localization::Tr("table.gEventText.61"),
+    localization::Tr("table.gEventText.62"), localization::Tr("table.gEventText.63"),
+    localization::Tr("table.gEventText.64"), localization::Tr("table.gEventText.65"),
+    localization::Tr("table.gEventText.66"), localization::Tr("table.gEventText.67"),
+    localization::Tr("table.gEventText.68"), localization::Tr("table.gEventText.69"),
+    localization::Tr("table.gEventText.70"), localization::Tr("table.gEventText.71"),
+    localization::Tr("table.gEventText.72"), localization::Tr("table.gEventText.73"),
+    localization::Tr("table.gEventText.74"), localization::Tr("table.gEventText.75"),
     localization::Tr("table.gEventText.76"),
 };
 DATA(0x00493548)
@@ -4113,39 +4030,36 @@ char* onOffText[11] = {
 DATA(0x00493600)
 char* walkSpeedText[5] = {"Walk", "Trot", "Canter", "Gallop", "Jump"};
 DATA(0x00493618)
-char* gColorNames[4] = {localization::Tr("table.gColorNames.0"), localization::Tr("table.gColorNames.1"), localization::Tr("table.gColorNames.2"), localization::Tr("table.gColorNames.3")};
+char* gColorNames[4] = {
+    localization::Tr("table.gColorNames.0"),
+    localization::Tr("table.gColorNames.1"),
+    localization::Tr("table.gColorNames.2"),
+    localization::Tr("table.gColorNames.3")
+};
 DATA(0x00493628)
-char* gAlignmentNames[5] = {localization::Tr("table.gAlignmentNames.0"), localization::Tr("table.gAlignmentNames.1"), localization::Tr("table.gAlignmentNames.2"), localization::Tr("table.gAlignmentNames.3"), localization::Tr("table.gAlignmentNames.4")};
+char* gAlignmentNames[5] = {
+    localization::Tr("table.gAlignmentNames.0"),
+    localization::Tr("table.gAlignmentNames.1"),
+    localization::Tr("table.gAlignmentNames.2"),
+    localization::Tr("table.gAlignmentNames.3"),
+    localization::Tr("table.gAlignmentNames.4")
+};
 DATA(0x00493640)
 char* gSpellDesc[29] = {
-    localization::Tr("table.gSpellDesc.0"),
-    localization::Tr("table.gSpellDesc.1"),
-    localization::Tr("table.gSpellDesc.2"),
-    localization::Tr("table.gSpellDesc.3"),
-    localization::Tr("table.gSpellDesc.4"),
-    localization::Tr("table.gSpellDesc.5"),
-    localization::Tr("table.gSpellDesc.6"),
-    localization::Tr("table.gSpellDesc.7"),
-    localization::Tr("table.gSpellDesc.8"),
-    localization::Tr("table.gSpellDesc.9"),
-    localization::Tr("table.gSpellDesc.10"),
-    localization::Tr("table.gSpellDesc.11"),
-    localization::Tr("table.gSpellDesc.12"),
-    localization::Tr("table.gSpellDesc.13"),
-    localization::Tr("table.gSpellDesc.14"),
-    localization::Tr("table.gSpellDesc.15"),
-    localization::Tr("table.gSpellDesc.16"),
-    localization::Tr("table.gSpellDesc.17"),
-    localization::Tr("table.gSpellDesc.18"),
-    localization::Tr("table.gSpellDesc.19"),
-    localization::Tr("table.gSpellDesc.20"),
-    localization::Tr("table.gSpellDesc.21"),
-    localization::Tr("table.gSpellDesc.22"),
-    localization::Tr("table.gSpellDesc.23"),
-    localization::Tr("table.gSpellDesc.24"),
-    localization::Tr("table.gSpellDesc.25"),
-    localization::Tr("table.gSpellDesc.26"),
-    localization::Tr("table.gSpellDesc.27"),
+    localization::Tr("table.gSpellDesc.0"),  localization::Tr("table.gSpellDesc.1"),
+    localization::Tr("table.gSpellDesc.2"),  localization::Tr("table.gSpellDesc.3"),
+    localization::Tr("table.gSpellDesc.4"),  localization::Tr("table.gSpellDesc.5"),
+    localization::Tr("table.gSpellDesc.6"),  localization::Tr("table.gSpellDesc.7"),
+    localization::Tr("table.gSpellDesc.8"),  localization::Tr("table.gSpellDesc.9"),
+    localization::Tr("table.gSpellDesc.10"), localization::Tr("table.gSpellDesc.11"),
+    localization::Tr("table.gSpellDesc.12"), localization::Tr("table.gSpellDesc.13"),
+    localization::Tr("table.gSpellDesc.14"), localization::Tr("table.gSpellDesc.15"),
+    localization::Tr("table.gSpellDesc.16"), localization::Tr("table.gSpellDesc.17"),
+    localization::Tr("table.gSpellDesc.18"), localization::Tr("table.gSpellDesc.19"),
+    localization::Tr("table.gSpellDesc.20"), localization::Tr("table.gSpellDesc.21"),
+    localization::Tr("table.gSpellDesc.22"), localization::Tr("table.gSpellDesc.23"),
+    localization::Tr("table.gSpellDesc.24"), localization::Tr("table.gSpellDesc.25"),
+    localization::Tr("table.gSpellDesc.26"), localization::Tr("table.gSpellDesc.27"),
     localization::Tr("table.gSpellDesc.28"),
 };
 DATA(0x004936b8)
@@ -4217,24 +4131,15 @@ char* gArmySizeNames[6][2] = {
 };
 DATA(0x004937b0)
 char* gHeroScreen[19] = {
-    localization::Tr("table.gHeroScreen.0"),
-    localization::Tr("table.gHeroScreen.1"),
-    localization::Tr("table.gHeroScreen.2"),
-    localization::Tr("table.gHeroScreen.3"),
-    localization::Tr("table.gHeroScreen.4"),
-    localization::Tr("table.gHeroScreen.5"),
-    localization::Tr("table.gHeroScreen.6"),
-    localization::Tr("table.gHeroScreen.7"),
-    localization::Tr("table.gHeroScreen.8"),
-    localization::Tr("table.gHeroScreen.9"),
-    localization::Tr("table.gHeroScreen.10"),
-    localization::Tr("table.gHeroScreen.11"),
-    localization::Tr("table.gHeroScreen.12"),
-    localization::Tr("table.gHeroScreen.13"),
-    localization::Tr("table.gHeroScreen.14"),
-    localization::Tr("table.gHeroScreen.15"),
-    localization::Tr("table.gHeroScreen.16"),
-    localization::Tr("table.gHeroScreen.17"),
+    localization::Tr("table.gHeroScreen.0"),  localization::Tr("table.gHeroScreen.1"),
+    localization::Tr("table.gHeroScreen.2"),  localization::Tr("table.gHeroScreen.3"),
+    localization::Tr("table.gHeroScreen.4"),  localization::Tr("table.gHeroScreen.5"),
+    localization::Tr("table.gHeroScreen.6"),  localization::Tr("table.gHeroScreen.7"),
+    localization::Tr("table.gHeroScreen.8"),  localization::Tr("table.gHeroScreen.9"),
+    localization::Tr("table.gHeroScreen.10"), localization::Tr("table.gHeroScreen.11"),
+    localization::Tr("table.gHeroScreen.12"), localization::Tr("table.gHeroScreen.13"),
+    localization::Tr("table.gHeroScreen.14"), localization::Tr("table.gHeroScreen.15"),
+    localization::Tr("table.gHeroScreen.16"), localization::Tr("table.gHeroScreen.17"),
     localization::Tr("table.gHeroScreen.18"),
 };
 DATA(0x00493800)
@@ -4278,7 +4183,13 @@ char* gExtendedMemoryUnits = localization::Tr("table.gExtendedMemoryUnits.0");
 DATA(0x00493874)
 char* gConventionalMemoryUnits = localization::Tr("table.gConventionalMemoryUnits.0");
 DATA(0x00493878)
-char* gPlayerTypeNames[5] = {localization::Tr("table.gPlayerTypeNames.0"), localization::Tr("table.gPlayerTypeNames.1"), localization::Tr("table.gPlayerTypeNames.2"), localization::Tr("table.gPlayerTypeNames.3"), localization::Tr("table.gPlayerTypeNames.4")};
+char* gPlayerTypeNames[5] = {
+    localization::Tr("table.gPlayerTypeNames.0"),
+    localization::Tr("table.gPlayerTypeNames.1"),
+    localization::Tr("table.gPlayerTypeNames.2"),
+    localization::Tr("table.gPlayerTypeNames.3"),
+    localization::Tr("table.gPlayerTypeNames.4")
+};
 DATA(0x00493890)
 char* gSpellHelp[8] = {
     localization::Tr("table.gSpellHelp.0"),
@@ -4347,33 +4258,27 @@ char* gCombatMessage[9] = {
     "No shots left!",
 };
 DATA(0x00493978)
-char* gHeroLevel[3] = {localization::Tr("table.gHeroLevel.0"), localization::Tr("table.gHeroLevel.1"), localization::Tr("table.gHeroLevel.2")};
+char* gHeroLevel[3] = {
+    localization::Tr("table.gHeroLevel.0"),
+    localization::Tr("table.gHeroLevel.1"),
+    localization::Tr("table.gHeroLevel.2")
+};
 DATA(0x00493988)
-char* gCombatHelp[3] = {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
+char* gCombatHelp[3] =
+    {localization::Tr("table.gCombatHelp.0"), localization::Tr("table.gCombatHelp.1"), ""};
 DATA(0x00493998)
 char* gTownCommand[22] = {
-    localization::Tr("table.gTownCommand.0"),
-    localization::Tr("table.gTownCommand.1"),
-    localization::Tr("table.gTownCommand.2"),
-    localization::Tr("table.gTownCommand.3"),
-    localization::Tr("table.gTownCommand.4"),
-    localization::Tr("table.gTownCommand.5"),
-    localization::Tr("table.gTownCommand.6"),
-    localization::Tr("table.gTownCommand.7"),
-    localization::Tr("table.gTownCommand.8"),
-    "",
-    localization::Tr("table.gTownCommand.10"),
-    localization::Tr("table.gTownCommand.11"),
-    localization::Tr("table.gTownCommand.12"),
-    localization::Tr("table.gTownCommand.13"),
-    localization::Tr("table.gTownCommand.14"),
-    localization::Tr("table.gTownCommand.15"),
-    localization::Tr("table.gTownCommand.16"),
-    localization::Tr("table.gTownCommand.17"),
-    localization::Tr("table.gTownCommand.18"),
-    localization::Tr("table.gTownCommand.19"),
-    localization::Tr("table.gTownCommand.20"),
-    localization::Tr("table.gTownCommand.21"),
+    localization::Tr("table.gTownCommand.0"),  localization::Tr("table.gTownCommand.1"),
+    localization::Tr("table.gTownCommand.2"),  localization::Tr("table.gTownCommand.3"),
+    localization::Tr("table.gTownCommand.4"),  localization::Tr("table.gTownCommand.5"),
+    localization::Tr("table.gTownCommand.6"),  localization::Tr("table.gTownCommand.7"),
+    localization::Tr("table.gTownCommand.8"),  "",
+    localization::Tr("table.gTownCommand.10"), localization::Tr("table.gTownCommand.11"),
+    localization::Tr("table.gTownCommand.12"), localization::Tr("table.gTownCommand.13"),
+    localization::Tr("table.gTownCommand.14"), localization::Tr("table.gTownCommand.15"),
+    localization::Tr("table.gTownCommand.16"), localization::Tr("table.gTownCommand.17"),
+    localization::Tr("table.gTownCommand.18"), localization::Tr("table.gTownCommand.19"),
+    localization::Tr("table.gTownCommand.20"), localization::Tr("table.gTownCommand.21"),
 };
 DATA(0x004939f0)
 char* gGameTypeHelp[5] = {
@@ -4581,32 +4486,32 @@ char* gNeutralBuildingDescriptions[7] = {
 };
 DATA(0x00493cb0)
 char* gMoraleInfoText[21] = {
-    localization::Tr("table.gMoraleInfoText.0"),
-    localization::Tr("table.gMoraleInfoText.1"),
-    localization::Tr("table.gMoraleInfoText.2"),
-    localization::Tr("table.gMoraleInfoText.3"),
-    localization::Tr("table.gMoraleInfoText.4"),
-    localization::Tr("table.gMoraleInfoText.5"),
-    localization::Tr("table.gMoraleInfoText.6"),
-    localization::Tr("table.gMoraleInfoText.7"),
-    localization::Tr("table.gMoraleInfoText.8"),
-    localization::Tr("table.gMoraleInfoText.9"),
-    localization::Tr("table.gMoraleInfoText.10"),
-    localization::Tr("table.gMoraleInfoText.11"),
-    localization::Tr("table.gMoraleInfoText.12"),
-    localization::Tr("table.gMoraleInfoText.13"),
-    localization::Tr("table.gMoraleInfoText.14"),
-    localization::Tr("table.gMoraleInfoText.15"),
-    localization::Tr("table.gMoraleInfoText.16"),
-    localization::Tr("table.gMoraleInfoText.17"),
-    localization::Tr("table.gMoraleInfoText.18"),
-    localization::Tr("table.gMoraleInfoText.19"),
+    localization::Tr("table.gMoraleInfoText.0"),  localization::Tr("table.gMoraleInfoText.1"),
+    localization::Tr("table.gMoraleInfoText.2"),  localization::Tr("table.gMoraleInfoText.3"),
+    localization::Tr("table.gMoraleInfoText.4"),  localization::Tr("table.gMoraleInfoText.5"),
+    localization::Tr("table.gMoraleInfoText.6"),  localization::Tr("table.gMoraleInfoText.7"),
+    localization::Tr("table.gMoraleInfoText.8"),  localization::Tr("table.gMoraleInfoText.9"),
+    localization::Tr("table.gMoraleInfoText.10"), localization::Tr("table.gMoraleInfoText.11"),
+    localization::Tr("table.gMoraleInfoText.12"), localization::Tr("table.gMoraleInfoText.13"),
+    localization::Tr("table.gMoraleInfoText.14"), localization::Tr("table.gMoraleInfoText.15"),
+    localization::Tr("table.gMoraleInfoText.16"), localization::Tr("table.gMoraleInfoText.17"),
+    localization::Tr("table.gMoraleInfoText.18"), localization::Tr("table.gMoraleInfoText.19"),
     localization::Tr("table.gMoraleInfoText.20"),
 };
 DATA(0x00493d08)
-char* gMapSizeNames[3] = {localization::Tr("table.gMapSizeNames.0"), localization::Tr("table.gMapSizeNames.1"), localization::Tr("table.gMapSizeNames.2")};
+char* gMapSizeNames[3] = {
+    localization::Tr("table.gMapSizeNames.0"),
+    localization::Tr("table.gMapSizeNames.1"),
+    localization::Tr("table.gMapSizeNames.2")
+};
 DATA(0x00493d18)
-char* gMapDifficultyNames[5] = {localization::Tr("table.gMapDifficultyNames.0"), localization::Tr("table.gMapDifficultyNames.1"), localization::Tr("table.gMapDifficultyNames.2"), localization::Tr("table.gMapDifficultyNames.3"), localization::Tr("table.gMapDifficultyNames.4")};
+char* gMapDifficultyNames[5] = {
+    localization::Tr("table.gMapDifficultyNames.0"),
+    localization::Tr("table.gMapDifficultyNames.1"),
+    localization::Tr("table.gMapDifficultyNames.2"),
+    localization::Tr("table.gMapDifficultyNames.3"),
+    localization::Tr("table.gMapDifficultyNames.4")
+};
 DATA(0x00493d30)
 char* gCampaignScenarioNames[9] = {
     localization::Tr("table.gCampaignScenarioNames.0"),
@@ -4646,15 +4551,31 @@ char* gCampaignScenarioText[9] = {
 DATA(0x00493da8)
 char* gDifficultyNames[4] = {"Easy", "Normal", "Hard", "Expert"};
 DATA(0x00493db8)
-char* gCampaignSideNames[4] = {localization::Tr("table.gCampaignSideNames.0"), localization::Tr("table.gCampaignSideNames.1"), localization::Tr("table.gCampaignSideNames.2"), localization::Tr("table.gCampaignSideNames.3")};
+char* gCampaignSideNames[4] = {
+    localization::Tr("table.gCampaignSideNames.0"),
+    localization::Tr("table.gCampaignSideNames.1"),
+    localization::Tr("table.gCampaignSideNames.2"),
+    localization::Tr("table.gCampaignSideNames.3")
+};
 DATA(0x00493dc8)
 char* gScoreLabels[CONGRATS_SCORE_LABEL_COUNT] =
     {"Days Spent:", "Base Score:", "Difficulty Rating:", "Final Score:", "Ranking:"};
 DATA(0x00493de0)
-char* gHumanPlayerTypeNames[5] =
-    {localization::Tr("table.gHumanPlayerTypeNames.0"), localization::Tr("table.gHumanPlayerTypeNames.1"), localization::Tr("table.gHumanPlayerTypeNames.2"), localization::Tr("table.gHumanPlayerTypeNames.3"), localization::Tr("table.gHumanPlayerTypeNames.4")};
+char* gHumanPlayerTypeNames[5] = {
+    localization::Tr("table.gHumanPlayerTypeNames.0"),
+    localization::Tr("table.gHumanPlayerTypeNames.1"),
+    localization::Tr("table.gHumanPlayerTypeNames.2"),
+    localization::Tr("table.gHumanPlayerTypeNames.3"),
+    localization::Tr("table.gHumanPlayerTypeNames.4")
+};
 DATA(0x00493df8)
-char* gHandicapNames[5] = {localization::Tr("table.gHandicapNames.0"), localization::Tr("table.gHandicapNames.1"), localization::Tr("table.gHandicapNames.2"), localization::Tr("table.gHandicapNames.3"), localization::Tr("table.gHandicapNames.4")};
+char* gHandicapNames[5] = {
+    localization::Tr("table.gHandicapNames.0"),
+    localization::Tr("table.gHandicapNames.1"),
+    localization::Tr("table.gHandicapNames.2"),
+    localization::Tr("table.gHandicapNames.3"),
+    localization::Tr("table.gHandicapNames.4")
+};
 DATA(0x00493e10)
 char* musicQualityText[3] = {"8 Bit Mono", "8 Bit Stereo", "CD Stereo"};
 DATA(0x00493e20)
@@ -4809,8 +4730,6 @@ DATA(0x004a82f0)
 i8 giLimitPlayer;
 DATA(0x004a82d4)
 inputManager* gpInputManager;
-DATA(0x004a7868)
-SAMPLE2 NULL_SAMPLE2;
 DATA(0x004a7d54)
 i32 iMaxMapExtra;
 DATA(0x004a7f74)
@@ -4871,8 +4790,6 @@ DATA(0x004a7ba8)
 i8 giMonthTypeExtra;
 DATA(0x004a7bc0)
 i8 iMPExtendedType;
-DATA(0x004a7f68)
-smackManager* gpSmackManager;
 DATA(0x004a7bd0)
 char gFullMapName[20];
 DATA(0x004a7d48)
@@ -4975,8 +4892,6 @@ DATA(0x004a7bc4)
 i32 giCurWatchPlayer;
 DATA(0x004a9ca8)
 i32 giBottomViewResourceQty;
-DATA(0x004a7d5c)
-soundManager* gpSoundManager;
 DATA(0x004a7be8)
 i8 gbWaitForRemoteReceive;
 DATA(0x004a9d28)

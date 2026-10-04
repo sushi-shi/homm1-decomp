@@ -1,0 +1,363 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "status": "Manually reconstructed from retail assembly and generated CFGs; compiler-checked, strict source claims and referents not yet enrolled. Names are descriptive, not recovered symbols.",
+  "source": "src/SOURCE/SMACKMGR.cpp",
+  "donor_revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+  "source_identities": {
+    "functions": [
+      {
+        "name": "InitSmackSound",
+        "rva": "0x00058240",
+        "size": "0x18f"
+      },
+      {
+        "name": "ShutdownSmackSound",
+        "rva": "0x000583cf",
+        "size": "0x2a"
+      },
+      {
+        "name": "ConvertSmackerPalette",
+        "rva": "0x000583f9",
+        "size": "0x3a"
+      },
+      {
+        "name": "DoAdvance",
+        "rva": "0x00058433",
+        "size": "0x13c"
+      },
+      {
+        "name": "SmackMain",
+        "rva": "0x0005856f",
+        "size": "0x73c"
+      },
+      {
+        "name": "CloseSmackers",
+        "rva": "0x00058cab",
+        "size": "0x49"
+      },
+      {
+        "name": "PlaySmacker",
+        "rva": "0x00058cf4",
+        "size": "0xa9"
+      }
+    ],
+    "data": [
+      {
+        "rva": "0x0009f7c0",
+        "declaration": "static SmackSoundFormat gSmackSoundFormats[12] = {"
+      },
+      {
+        "rva": "0x0009f850",
+        "declaration": "SSmackOptions SmackOptions[6] = {"
+      },
+      {
+        "rva": "0x0009f8f4",
+        "declaration": "static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};"
+      },
+      {
+        "rva": "0x000cc8d0",
+        "declaration": "i8 gSmackNum;"
+      },
+      {
+        "rva": "0x000cc8d4",
+        "declaration": "static i32 gSmackCompleted;"
+      },
+      {
+        "rva": "0x000cc8d8",
+        "declaration": "static WAVEOUTCAPS gSmackWaveCaps;"
+      },
+      {
+        "rva": "0x000cc910",
+        "declaration": "static SmackSum gSmackSummary;"
+      },
+      {
+        "rva": "0x000cc964",
+        "declaration": "static i8 gSmackSavedPalette[PALETTE_DATA_SIZE];"
+      },
+      {
+        "rva": "0x000ccc68",
+        "declaration": "static i8 gSmackMainDone;"
+      },
+      {
+        "rva": "0x000ccc70",
+        "declaration": "static SmackSoundFormat gSmackSoundFormat;"
+      },
+      {
+        "rva": "0x000ccc80",
+        "declaration": "static PCMWAVEFORMAT gSmackWaveFormat;"
+      },
+      {
+        "rva": "0x000ccc90",
+        "declaration": "static i32 gSmackLastFramePlayed;"
+      },
+      {
+        "rva": "0x000ccc94",
+        "declaration": "static i32 gSmackSound;"
+      },
+      {
+        "rva": "0x000ccc98",
+        "declaration": "static resource* gSmackResource;"
+      },
+      {
+        "rva": "0x000ccc9c",
+        "declaration": "static font* gSmackFont;"
+      },
+      {
+        "rva": "0x000ccca0",
+        "declaration": "static HDIGDRIVER gSmackDriver;"
+      },
+      {
+        "rva": "0x000ccca4",
+        "declaration": "static i32 gSmackCollectSummary;"
+      },
+      {
+        "rva": "0x000ccca8",
+        "declaration": "static Smack* gSmackPrimary;"
+      },
+      {
+        "rva": "0x000cccac",
+        "declaration": "static Smack* gSmackCompanion;"
+      }
+    ]
+  },
+  "movie_options": {
+    "rva": "0x0009f850",
+    "row_size": "0x1b",
+    "rows": [
+      {
+        "index": 0,
+        "file_name": "BUKA",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 1,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      },
+      {
+        "index": 1,
+        "file_name": "NWCLOGO",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 1,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      },
+      {
+        "index": 2,
+        "file_name": "INTRO",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 1,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      },
+      {
+        "index": 3,
+        "file_name": "LOSE",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 0,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      },
+      {
+        "index": 4,
+        "file_name": "WIN1",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 0,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      },
+      {
+        "index": 5,
+        "file_name": "WIN2",
+        "companion_file_name": "",
+        "fade_in": 1,
+        "fade_out": 1,
+        "preload": 0,
+        "wait_for_input": 0,
+        "draw_companion": 0,
+        "companion_x": 0,
+        "companion_y": 0
+      }
+    ]
+  },
+  "sound_formats": {
+    "rva": "0x0009f7c0",
+    "row_size": "0xc",
+    "rows": [
+      {
+        "capability": 2048,
+        "channels": 2,
+        "sample_rate": 44100,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 512,
+        "channels": 2,
+        "sample_rate": 44100,
+        "bits_per_sample": 8
+      },
+      {
+        "capability": 1024,
+        "channels": 1,
+        "sample_rate": 44100,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 256,
+        "channels": 1,
+        "sample_rate": 44100,
+        "bits_per_sample": 8
+      },
+      {
+        "capability": 128,
+        "channels": 2,
+        "sample_rate": 22050,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 32,
+        "channels": 2,
+        "sample_rate": 22050,
+        "bits_per_sample": 8
+      },
+      {
+        "capability": 64,
+        "channels": 1,
+        "sample_rate": 22050,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 16,
+        "channels": 1,
+        "sample_rate": 22050,
+        "bits_per_sample": 8
+      },
+      {
+        "capability": 8,
+        "channels": 2,
+        "sample_rate": 11025,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 2,
+        "channels": 2,
+        "sample_rate": 11025,
+        "bits_per_sample": 8
+      },
+      {
+        "capability": 4,
+        "channels": 1,
+        "sample_rate": 11025,
+        "bits_per_sample": 16
+      },
+      {
+        "capability": 1,
+        "channels": 1,
+        "sample_rate": 11025,
+        "bits_per_sample": 8
+      }
+    ]
+  },
+  "volume_levels": {
+    "rva": "0x0009f8f4",
+    "values": [
+      0,
+      127,
+      97,
+      75,
+      52,
+      40,
+      30,
+      20,
+      15,
+      10,
+      5
+    ]
+  },
+  "smacker_imports": [
+    {
+      "ordinal": 20,
+      "name": "SmackSummary",
+      "iat_rva": "0x0008a304"
+    },
+    {
+      "ordinal": 19,
+      "name": "SmackDoFrame",
+      "iat_rva": "0x0008a308"
+    },
+    {
+      "ordinal": 32,
+      "name": "SmackWait",
+      "iat_rva": "0x0008a30c"
+    },
+    {
+      "ordinal": 21,
+      "name": "SmackNextFrame",
+      "iat_rva": "0x0008a310"
+    },
+    {
+      "ordinal": 23,
+      "name": "SmackToBuffer",
+      "iat_rva": "0x0008a314"
+    },
+    {
+      "ordinal": 14,
+      "name": "SmackOpen",
+      "iat_rva": "0x0008a318"
+    },
+    {
+      "ordinal": 33,
+      "name": "SmackSoundUseMSS",
+      "iat_rva": "0x0008a31c"
+    },
+    {
+      "ordinal": 18,
+      "name": "SmackClose",
+      "iat_rva": "0x0008a320"
+    },
+    {
+      "ordinal": 28,
+      "name": "SmackToBufferRect",
+      "iat_rva": "0x0008a324"
+    }
+  ],
+  "behavior": {
+    "completion": "PlaySmacker returns 1 on natural end, 0 on input cancellation. F4 does not cancel.",
+    "startup": "If not skipping the introduction, play BUKA, NWCLOGO and INTRO, advancing only after natural completion.",
+    "sound": "ShutdownAudio before a temporary Miles WinMM driver; CloseSmackers closes the driver, then InitAudio restores Audiere. The movie volume table is indexed by gConfig.soundVolume.",
+    "palette": "PlaySmacker saves/restores gpBufferPalette and update flags; SmackMain separately saves/restores gPalette and color cursor visibility.",
+    "caption": {
+      "movie": 5,
+      "first_frame": 22,
+      "x": 32,
+      "y": 342,
+      "width": 320,
+      "height": 106,
+      "color": 4,
+      "alignment": 1
+    }
+  },
+  "compiler_review": {
+    "flags": "/Od /Ob1 /GX /MT /G6",
+    "SmackMain": "72 CFG blocks, branch targets and instruction lengths agree. Differences remain in local stack slots/frame size; no padding or permutations applied.",
+    "remaining": "Ordered helper/data/import/EH identities, full census, fixed-image reference manifest, linking and runtime validation."
+  }
+}

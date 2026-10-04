@@ -8,7 +8,7 @@
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
@@ -849,7 +849,7 @@ void hero::CheckLevel(void) {
     }
     m_level = lvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_LEVEL_UP);
+        PlayMusic(MUSIC_TRACK_LEVEL_UP);
         NormalDialog(
             gText,
             NORMAL_DIALOG_TYPE_OK,
@@ -861,7 +861,7 @@ void hero::CheckLevel(void) {
             0,
             NORMAL_DIALOG_NO_OR_TEXT
         );
-        gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+        PlayMusic(gpAdvManager->m_currentTerrain);
     }
 }
 

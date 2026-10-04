@@ -196,7 +196,9 @@ struct CombatRemotePacket {
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
-    char m_unknown30[0xc];
+    bool m_restoreMusicSuspension;
+    bool m_restoreSampleSuspension;
+    i32 m_savedMusicTrack;
     // Open loads kb.pal here and fades the screen in with it.
     class palette* m_combatPalette;
     hexcell m_hexCells[COMBAT_HEX_COUNT];
@@ -215,7 +217,6 @@ public:
     class town* m_originalCombatTown;
     // Open's small font; army::DrawToBuffer prints stack quantities with it.
     class font* m_smallFont;
-    char m_unknown269[4];
     // SaveCombatBorder's copy of the twenty screen rows below the field.
     char* m_savedBorder;
     // Nine combat icons (retail loops 0..8 from +0x271): hexcell draws

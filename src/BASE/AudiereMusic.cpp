@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/audio.h>
+#include <BASE/audiereBackend.h>
 #include <SOURCE/KB.h>
 
 #include <stdio.h>
@@ -17,16 +18,11 @@ static int gMusicSuspensions;
 static int gCurrentTrack = -1;
 // Buka retail VA 0x004a0d74.
 static int gCDTrackMap[100] = {
-    2, 3, 4, 5, 6, 7, 8, 9, 10, 11,
-    12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25, 26, 27, 28, 29, 30, 31,
-    32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
-    35, 36, 37, 38, 39, 40, 41, 42, 43, 44,
-    45, 46, 47, 48, 49, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-    -1, -1, -1, -1, -1, -1, -1, -1, -1, 50,
+    2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+    22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, -1, -1, -1, -1, -1, -1, -1,
+    35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
+    -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 50,
 };
 
 // Buka retail VA 0x004cddf0.
@@ -38,9 +34,8 @@ static int gMusicSource;
 
 // Buka retail VA 0x004692b6, size 0x47.
 bool ShouldRepeatMusic(int track) {
-    if (track < 7 || (track >= 40 && track <= 42) || track == 53 ||
-        track == 54 || track == 47 || track == 48 || track == 49 ||
-        (track >= 29 && track <= 32))
+    if (track < 7 || (track >= 40 && track <= 42) || track == 53 || track == 54 || track == 47
+        || track == 48 || track == 49 || (track >= 29 && track <= 32))
         return true;
     return false;
 }
@@ -66,8 +61,14 @@ void PlayMusic(int track) {
         sprintf(gMusicFilename, "%sHeroes%02d.ogg", gSoundPath, track);
     } else {
         int discTrack = gCDTrackMap[track];
-        sprintf(gMusicFilename, "%s%s%02d-AudioTrack %02d.ogg",
-                gcRegCDRomPath, "\\TRACKS\\", discTrack, discTrack);
+        sprintf(
+            gMusicFilename,
+            "%s%s%02d-AudioTrack %02d.ogg",
+            gcRegCDRomPath,
+            "\\TRACKS\\",
+            discTrack,
+            discTrack
+        );
     }
     audiere::SampleSourcePtr source = audiere::OpenSampleSource(gMusicFilename);
     if (source) {

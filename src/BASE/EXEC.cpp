@@ -9,7 +9,7 @@
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
@@ -67,7 +67,7 @@ i16 executive::InitSystem(void) {
         ShutDown(gResourceManagerInitError);
     if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gInputManagerInitError);
-    if (gpSoundManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (!InitAudio())
         ShutDown(gSoundManagerInitError);
     if (AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gMouseManagerInitError);
@@ -80,7 +80,7 @@ i16 executive::InitSystem(void) {
 VA(0x004780a0, 0x84)
 void executive::ShutDownSystem(void) {
     EarlyShutDownSystem();
-    gpSoundManager->Close();
+    ShutdownAudio();
     baseManager* next;
     baseManager* manager = m_managerListHead;
     while (manager != NULL) {

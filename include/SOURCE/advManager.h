@@ -26,7 +26,6 @@ class sample;
 class tileset;
 class town;
 class widget;
-struct SAMPLE2;
 struct SMapChange;
 struct tag_message;
 
@@ -595,8 +594,6 @@ extern i32 TrigY;
 // flags and the last two footstep sample handles (0x004a0d4c/0x004a0d50).
 extern i8 gMoveSoundMade;
 extern i8 EveryOther;
-extern struct _SAMPLE* gPrevMoveSound;
-extern struct _SAMPLE* gLastMoveSound;
 extern i8 S1cursorDirection;
 extern i16 S1cursorBaseFrame;
 extern i16 S1cursorFrameCount;

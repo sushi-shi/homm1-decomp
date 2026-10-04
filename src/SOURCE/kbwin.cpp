@@ -23,7 +23,7 @@
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
 #include <BASE/miscwin.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <H1/Macros.h>
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
@@ -176,8 +176,6 @@ BOOL AppIdle(void) {
 // evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x00432cc5, 0x617)
 long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
-    DATA(0x0049f84c)
-    static i32 gLastGTimerTickCount = 0;
     DATA(0x0049f850)
     static i32 gLastCycleTickCount = 0;
     if (giDebugLevel == KBWIN_TRACE_DEBUG_LEVEL)
@@ -215,10 +213,6 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
             break;
         case WM_TIMER:
             lTemp = KBTickCount();
-            if (gLastGTimerTickCount + KBWIN_POLL_INTERVAL < lTemp) {
-                gLastGTimerTickCount = lTemp;
-                SetReady2Poll();
-            }
             if (gLastCycleTickCount + KBWIN_CYCLE_INTERVAL < lTemp) {
                 gLastCycleTickCount = lTemp;
                 if (gGraphicsType == WINGRAPH_GRAPHICS_WING
@@ -230,11 +224,6 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
                 CycleColors();
             }
             return 0;
-        case MM_MCINOTIFY:
-            if (messageParam == MCI_NOTIFY_SUCCESSFUL)
-                gpSoundManager
-                    ->CDPlay(gpSoundManager->m_cdTrack, 0, gpSoundManager->m_cdPlayFrame, 1);
-            break;
         case WM_ACTIVATEAPP:
             gForegroundApp = messageParam;
             return 0;
@@ -357,8 +346,6 @@ VA(0x00433386, 0xca)
 void Process1WindowsMessage(void) {
     DATA(0x0049f884)
     static i32 gLastGetMessage = 0;
-    DATA(0x0049f888)
-    static i32 gLastAilServe = 0;
     MSG message;
     i32 currentTick;
 
@@ -367,11 +354,6 @@ void Process1WindowsMessage(void) {
         DispatchMessageA(&message);
     }
     currentTick = KBTickCount();
-    if (currentTick - gLastAilServe > 20) {
-        gLastAilServe = currentTick;
-        if (gbNoSound == 0)
-            gpSoundManager->ServiceSound();
-    }
     if (currentTick - gLastGetMessage > 150) {
         gLastGetMessage = currentTick;
         if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
@@ -424,9 +406,8 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     command = LOWORD(messageParam);
     switch (command) {
         case KBWIN_MENU_ABOUT:
-            appDialogProc = reinterpret_cast<DLGPROC>(
-                AppAbout
-            ); // AppAbout is the BOOL dialog procedure.
+            appDialogProc =
+                reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the BOOL dialog procedure.
             DialogBoxParamA(
                 static_cast<HINSTANCE>(hInstApp),
                 "HEROES",

@@ -17,7 +17,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resource.h>
 #include <BASE/resourceManager.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/TILE.h>
 #include <BASE/tileset.h>
 #include <BASE/widget.h>
@@ -1173,7 +1173,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
         window->BroadcastMessage(message);
     }
     if (!fromMenu)
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_MAIN_MENU);
+        PlayMusic(MUSIC_TRACK_MAIN_MENU);
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
@@ -2959,19 +2959,15 @@ i8 game::GetRandomNumTroops(i8 monsterType) {
     }
 }
 
-// Buka 2.1 game::TurnOnAIMusic.
-VA(0x00419572, 0x3d)
+// Buka retail VA 0x00432f67, size 0x1a.
 void game::TurnOnAIMusic(void) {
-    gpSoundManager->StopAllSamples();
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_AI_TURN);
-    gpSoundManager->m_musicReady = 0;
+    StopAllAudio();
+    PlayMusic(MUSIC_TRACK_AI_TURN);
 }
 
-// Buka 2.1 game::TurnOffAIMusic.
-VA(0x004195af, 0x25)
-void game::TurnOffAIMusic(void) {
-    gpSoundManager->m_musicReady = 1;
-}
+// Buka retail VA 0x00432f81, size 0xb.
+// Retail retains only the ordinary empty member-function prologue/epilogue.
+void game::TurnOffAIMusic(void) {}
 
 // Buka 2.1 game::NextPlayer for HoMM1: autosaves, advances to the next
 // living player (a new day after the last), restores hero movement (none
@@ -3057,7 +3053,7 @@ void game::NextPlayer(void) {
     gpMouseManager->ReallyShowPointer();
     CheckEndGame(0);
     if (gbThisNetHumanPlayer[giCurPlayer] && gRemoteOn && m_day != 1 && gForceSwitchMusic == -1) {
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
+        PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gForceSwitchMusic = KBTickCount();
     }
     if (gbThisNetHumanPlayer[giCurPlayer])
@@ -4146,8 +4142,7 @@ void game::WaitForPlayer(char* text, i32 player) {
             giBottomViewOverride = BOTTOM_VIEW_NEW_TURN;
         else
             giBottomViewOverride = BOTTOM_VIEW_NONE;
-        gpSoundManager->m_musicReady = 1;
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NETWORK_TURN);
+        PlayMusic(MUSIC_TRACK_NETWORK_TURN);
         gpMouseManager->ReallyHidePointer();
         gpAdvManager->CompleteDraw(1);
         gpAdvManager->UpdateHeroLocators(1, 1);
@@ -4167,7 +4162,7 @@ void game::WaitForPlayer(char* text, i32 player) {
             0,
             NORMAL_DIALOG_NO_OR_TEXT
         );
-        gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
+        StopMusic();
     }
 }
 
@@ -4450,7 +4445,6 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     char pathname[456];
     char* outData;
     i32 block;
-    i32 prevReady;
     i32 numBlocks;
     i32 junk3;
     i32 oldTrack;
@@ -4474,11 +4468,8 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     okay = 0;
     status = 0;
     oldTrack = MUSIC_TRACK_NONE;
-    prevReady = gpSoundManager->m_musicReady;
-    gpSoundManager->m_musicReady = 1;
-    oldTrack = gpSoundManager->m_currentTrack;
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
-    gpSoundManager->m_musicReady = prevReady;
+    oldTrack = GetCurrentTrack();
+    StopMusic();
 
     LogStr("Transmit Game Start");
     if (gpAdvManager->m_active == 1)
@@ -4623,10 +4614,7 @@ cleanup:
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
     if (oldTrack != MUSIC_TRACK_NONE) {
-        prevReady = gpSoundManager->m_musicReady;
-        gpSoundManager->m_musicReady = 1;
-        gpSoundManager->SwitchAmbientMusic(oldTrack);
-        gpSoundManager->m_musicReady = prevReady;
+        PlayMusic(oldTrack);
     }
     return okay;
 }
@@ -4640,7 +4628,6 @@ VA(0x0041e48b, 0x59d)
 i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     i32 unused1;
     i32 okay;
-    i32 prevReady;
     char pathname[452];
     char* inData;
     i32 k;
@@ -4663,11 +4650,8 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     oldTrack = MUSIC_TRACK_NONE;
     if (gpAdvManager->m_active == 1)
         BVResMsg("Receiving Data", RESOURCE_NONE, 0);
-    prevReady = gpSoundManager->m_musicReady;
-    oldTrack = gpSoundManager->m_currentTrack;
-    gpSoundManager->m_musicReady = 1;
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
-    gpSoundManager->m_musicReady = prevReady;
+    oldTrack = GetCurrentTrack();
+    StopMusic();
     while (!gHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
@@ -4771,10 +4755,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
     if (oldTrack != MUSIC_TRACK_NONE) {
-        prevReady = gpSoundManager->m_musicReady;
-        gpSoundManager->m_musicReady = 1;
-        gpSoundManager->SwitchAmbientMusic(oldTrack);
-        gpSoundManager->m_musicReady = prevReady;
+        PlayMusic(oldTrack);
     }
     return okay;
 }
@@ -4832,7 +4813,7 @@ void game::DoNewTurn(void) {
     else if (gpCurPlayer->m_townCount > 0)
         gpAdvManager->SetTownContext(gpCurPlayer->m_townIds[0]);
     gpAdvManager->CheckDimNextHeroBut();
-    gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+    PlayMusic(gpAdvManager->m_currentTerrain);
     if (m_day == 1) {
         if ((m_month != 1 || m_week != 1 || m_day != 1) && giWeekType != CALENDAR_PERIOD_NONE) {
             track = MUSIC_TRACK_NONE;
@@ -4875,7 +4856,7 @@ void game::DoNewTurn(void) {
                     );
                 }
             }
-            gpSoundManager->SwitchAmbientMusic(track);
+            PlayMusic(track);
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             NormalDialog(
                 gText,
@@ -4888,7 +4869,7 @@ void game::DoNewTurn(void) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            gpSoundManager->SwitchAmbientMusic(gpAdvManager->m_currentTerrain);
+            PlayMusic(gpAdvManager->m_currentTerrain);
         }
     }
 }

@@ -154,7 +154,6 @@ public:
         return m_creatureType >= 0 && m_quantity > 0;
     }
     // --- methods ---
-    void WaitSample(i32);
     void InitClean(void);
     // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
     void Init(i8 type, i16 quantity, i8 side, i8 index);

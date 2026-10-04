@@ -154,8 +154,8 @@ font* resourceManager::GetFont(char* name) {
     }
 }
 
-// The Buka cache path is source-identical; HoMM1 passes its three playback defaults.
-VA(0x00479910, 0x9c)
+// Buka keeps the cached resource references and uses the filename-only loader.
+// Buka retail VA 0x0046c646, size 0xbd.
 class sample* resourceManager::GetSample(char* name) {
     i16 fileId = MakeId(name);
     resource* resourceEntry = Query(fileId);
@@ -163,8 +163,7 @@ class sample* resourceManager::GetSample(char* name) {
         resourceEntry->m_refCount++;
         return static_cast<sample*>(resourceEntry);
     } else {
-        resourceEntry =
-            new sample(name, SAMPLE_PLAYBACK_CHANNEL_MUSIC, SAMPLE_VOLUME_FULL, SAMPLE_LOOP_ONCE);
+        resourceEntry = new sample(name);
         AddResource(resourceEntry);
         return static_cast<sample*>(resourceEntry);
     }

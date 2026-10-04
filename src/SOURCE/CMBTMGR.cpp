@@ -15,7 +15,7 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
@@ -187,7 +187,7 @@ void combatManager::SetupCombat(
 VA(0x0046a9cb, 0x419)
 i16 combatManager::Open(i16 priority) {
     i32 song;
-    SAMPLE2 sample;
+    class sample* sample;
     i32 musicList[4];
 
     m_messageTypeMask = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
@@ -195,10 +195,20 @@ i16 combatManager::Open(i16 priority) {
                         | MESSAGE_WIDGET;
     m_combatWindowOpen = 0;
     m_savedBorder = NULL;
-    gpSoundManager->PlayAmbientMusic(MUSIC_TRACK_NONE, 0, SOUND_VOLUME_FROM_CONFIG);
+    m_restoreMusicSuspension = MusicSuspended();
+    m_restoreSampleSuspension = SamplesSuspended();
+    if (m_restoreSampleSuspension)
+        ResumeSamples();
+    if (m_restoreMusicSuspension) {
+        ResumeMusic();
+        m_savedMusicTrack = GetCurrentTrack();
+    } else {
+        m_savedMusicTrack = MUSIC_TRACK_NONE;
+    }
+    StopMusic();
     m_backgroundBuffer = new bitmap(BITMAP_TYPE_NONE, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 0;
-    sample = NULL_SAMPLE2;
+    sample = NULL;
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -244,13 +254,13 @@ i16 combatManager::Open(i16 priority) {
     );
     gpMouseManager->ReallyShowPointer();
     m_gridSelectionDisabled = 0;
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
     musicList[0] = MUSIC_TRACK_BATTLE_2;
     musicList[1] = MUSIC_TRACK_BATTLE_3;
     musicList[2] = MUSIC_TRACK_BATTLE_1;
     musicList[3] = MUSIC_TRACK_BATTLE_4;
     song = musicList[SRandom(0, 3)];
-    gpSoundManager->SwitchAmbientMusic(song);
+    PlayMusic(song);
     gpInputManager->Flush();
     ResetMouse();
     m_messageMask = MESSAGE_WIDGET;
@@ -288,7 +298,18 @@ void combatManager::Close(void) {
     i32 i;
     i32 survivor;
 
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
+    StopMusic();
+    if (m_restoreSampleSuspension) {
+        m_restoreSampleSuspension = false;
+        SuspendSamples();
+    }
+    if (m_restoreMusicSuspension) {
+        m_restoreMusicSuspension = false;
+        if (m_savedMusicTrack >= 0)
+            PlayMusic(m_savedMusicTrack);
+        SuspendMusic();
+        m_savedMusicTrack = MUSIC_TRACK_NONE;
+    }
     DrawCombatBorder();
     gLimitedCombatUpdatePalette = 0;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -671,7 +692,7 @@ VA(0x0046c13b, 0xdc)
 void combatManager::FreeArmies(void) {
     i16 i;
 
-    gpSoundManager->StopAllSamples();
+    StopAllSamples();
     for (i = 0; i < m_numArmies[COMBAT_ATTACKER_SIDE]; i++)
         m_armies[COMBAT_ATTACKER_SIDE][i].FreeResources();
     for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)
@@ -718,7 +739,7 @@ VA(0x0046c2ed, 0x1d9)
 void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
-    SAMPLE2 sample;
+    class sample* sample;
     i32 morale;
 
     if (side < 0 || index < 0)
@@ -756,7 +777,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     if (activeArmy->m_stats.attributes & MONSTER_FLAGS_TURN_SPENT)
         activeArmy->m_stats.attributes -= MONSTER_FLAGS_TURN_SPENT;
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_HIGH_MORALE;
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
 }
 
 // Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
@@ -765,7 +786,7 @@ VA(0x0046c4c6, 0x1c6)
 i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* theGroup;
     army* activeArmy;
-    SAMPLE2 sample;
+    class sample* sample;
     i32 morale;
 
     if (side < 0 || index < 0)
@@ -777,7 +798,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
         return 0;
     if (!m_humanSide[side] && SRandom(1, 4) == 1)
         return 0;
-    sample = NULL_SAMPLE2;
+    sample = NULL;
     sample = LoadPlaySample("BADMRLE.82M");
     if (activeArmy->m_quantity <= 1)
         sprintf(
@@ -796,7 +817,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     activeArmy->SpellEffect(COMBAT_EFFECT_BAD_MORALE, 180);
     activeArmy->Stand(1);
     activeArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
     return 1;
 }
 
@@ -886,14 +907,14 @@ void combatManager::CatAttack(i8 side) {
     i16 tgtX;
     i16 force;
     i16 startX;
-    SAMPLE2 catSample;
+    class sample* catSample;
     i8 wallsLeft;
     i16 startY;
     i16 summitY;
 
     if (!m_castleSide[COMBAT_DEFENDER_SIDE])
         return;
-    catSample = NULL_SAMPLE2;
+    catSample = NULL;
     if (side == COMBAT_ATTACKER_SIDE)
         col = COMBAT_CASTLE_WALL_COLUMN;
     else
@@ -1059,7 +1080,7 @@ void combatManager::CatAttack(i8 side) {
             frm %= 3;
         }
     }
-    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(catSample);
     sprintf(gText, "catsnd%02d.82M", 2);
     catSample = LoadPlaySample(gText);
     if (m_hexCells[m_catapultTarget * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
@@ -1139,7 +1160,7 @@ void combatManager::CatAttack(i8 side) {
     DrawFrame(1);
     gpResourceManager->Dispose(boulder);
     gpMouseManager->ReallyShowPointer();
-    WaitEndSample(catSample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(catSample);
 }
 
 // HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
@@ -1178,7 +1199,7 @@ void combatManager::KeepAttack(void) {
     i16 distance;
     float xAdvance;
     i32 targetIndex;
-    SAMPLE2 sample;
+    class sample* sample;
     i16 updRight;
     i16 gapY;
     i16 w;
@@ -1235,7 +1256,7 @@ void combatManager::KeepAttack(void) {
         sprintf(gText, "shoot15.82M");
     else
         sprintf(gText, "shoot01.82M");
-    sample = NULL_SAMPLE2;
+    sample = NULL;
     sample = LoadPlaySample(gText);
     frontCol = hexCol;
     if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -1337,7 +1358,7 @@ void combatManager::KeepAttack(void) {
     target->PowEffect(target->m_stats.powEffect);
     if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
         target->Stand(0);
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
     if (target->m_quantity > 0)
         target->Stand(1);
     gpMouseManager->ReallyShowPointer();

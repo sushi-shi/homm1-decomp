@@ -19,7 +19,7 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/soundManager.h>
+#include <BASE/audio.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
@@ -39,6 +39,7 @@
 #include <SOURCE/townManager.h>
 #include <SOURCE/townObject.h>
 
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -158,7 +159,7 @@ i16 townManager::Open(i16 id) {
     i8 buildingType;
 
     gpGame->CheckHeroConsistency();
-    gpSoundManager->PlayAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE, 0, -1);
+    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
     if (m_townWindow == NULL)
@@ -297,7 +298,7 @@ void townManager::Close(void) {
     gpResourceManager->Dispose(m_backgroundBitmap);
     gpWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
-    gpSoundManager->SwitchAmbientMusic(MUSIC_TRACK_NONE);
+    StopMusic();
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
@@ -522,7 +523,7 @@ VA(0x0044145e, 0x131f)
 i16 townManager::Main(struct tag_message& message) {
     i32 exitTown;
     i8 rightClick;
-    SAMPLE2 res;
+    class sample* res;
     recruitUnit* recruitMgr;
 
     exitTown = 0;
@@ -697,7 +698,7 @@ i16 townManager::Main(struct tag_message& message) {
                                 i32 width;
 
                                 gpMouseManager->ReallyHidePointer();
-                                res = NULL_SAMPLE2;
+                                res = NULL;
                                 res = LoadPlaySample("buildtwn.82M");
                                 theHero = gpGame->GetHero(m_town->m_occupyingHeroId);
                                 width = 0;
@@ -714,7 +715,7 @@ i16 townManager::Main(struct tag_message& message) {
                                     0xcc,
                                     FIZZLE_USE_DEFAULT_DELAY
                                 );
-                                WaitEndSample(res, SAMPLE_WAIT_DEFAULT);
+                                WaitSample(res);
                                 m_recruitResult = 0;
                                 gpMouseManager->ReallyShowPointer();
                             }
@@ -782,14 +783,14 @@ i16 townManager::Main(struct tag_message& message) {
                                 if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
                                     if (gpGame->CreateBoat(m_town->m_x - 1, m_town->m_y + 1)
                                         != GAME_TABLE_FREE) {
-                                        res = NULL_SAMPLE2;
+                                        res = NULL;
                                         res = LoadPlaySample("buildtwn.82M");
                                         gpGame->m_players[giCurPlayer].m_resources[RESOURCE_GOLD] -=
                                             TOWN_BOAT_GOLD_COST;
                                         gpGame->m_players[giCurPlayer].m_resources[RESOURCE_WOOD] -=
                                             TOWN_BOAT_WOOD_COST;
                                         m_bankBox->Update();
-                                        WaitEndSample(res, SAMPLE_WAIT_DEFAULT);
+                                        WaitSample(res);
                                     } else
                                         LogStr("Can't create boat!");
                                 }
@@ -1498,7 +1499,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
 VA(0x00444402, 0x3a0)
 void townManager::BuildObj(i16 building) {
     i16 i;
-    SAMPLE2 sample;
+    class sample* sample;
 
     gpMouseManager->ReallyHidePointer();
     DrawTown(1, 1);
@@ -1535,7 +1536,7 @@ void townManager::BuildObj(i16 building) {
         gTownBuildingExtents[m_town->m_type][building].height
     );
     DrawTown(0, 1);
-    sample = NULL_SAMPLE2;
+    sample = NULL;
     sample = LoadPlaySample("buildtwn.82M");
     gpWindowManager->FizzleForward(
         gTownBuildingExtents[m_town->m_type][building].x,
@@ -1544,7 +1545,7 @@ void townManager::BuildObj(i16 building) {
         gTownBuildingExtents[m_town->m_type][building].height,
         FIZZLE_USE_DEFAULT_DELAY
     );
-    WaitEndSample(sample, SAMPLE_WAIT_DEFAULT);
+    WaitSample(sample);
     m_selectedBuilding = TOWN_BUILDING_NONE;
     m_bankBox->Update();
     m_townWindow->DrawWindow();
@@ -2254,10 +2255,10 @@ void townManager::DoTavern(void) {
     if (m_heroWindow0 == NULL)
         MemError();
     SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
-    gpSoundManager->SwitchAmbientMusic(TOWN_TAVERN_MUSIC);
+    PlayMusic(TOWN_TAVERN_MUSIC);
     gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;
-    gpSoundManager->SwitchAmbientMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
 }
 
 // Buka Castle.cpp CastleHandler; HoMM1 hovers by widget id, has no

@@ -1,19 +1,9 @@
 #ifndef HOMM1_BASE_AUDIO_H
 #define HOMM1_BASE_AUDIO_H
 
-#include <audiere.h>
+#include <BASE/audioTypes.h>
 
-// Buka replaces soundManager with free functions. These names describe the
-// recovered behavior; the executable has no surviving C++ symbols.
-struct AudiereDevice {
-    static audiere::AudioDevicePtr device;
-};
-struct AudiereMusic {
-    static audiere::OutputStreamPtr stream;
-    static audiere::SampleSourcePtr source;
-};
-
-audiere::AudioDevicePtr GetAudioDevice();
+// Buka replaces soundManager with free functions.
 bool InitAudio();
 void ShutdownAudio();
 float VolumeLevel(int level);
@@ -38,6 +28,7 @@ bool MusicSuspended();
 
 class sample;
 void PlaySample(sample* resource);
+sample* LoadPlaySample(char* name);
 void StopSample(sample* resource);
 void WaitSample(sample* resource);
 void UpdateSampleVolume(sample* resource);

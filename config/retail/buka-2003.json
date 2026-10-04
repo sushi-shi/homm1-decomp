@@ -2,7 +2,7 @@
   "parent_branch": "decomp-win95-1.2",
   "parent_commit": "43cf275fee2f181375d208f58b101536bc34fc7c",
   "candidate_branch": "decomp-buka-2003",
-  "status": "preflight; active build target remains 1.2 until reviewed remapping",
+  "status": "Buka target and VC6 selected; source integration, retail claims/censuses and reviewed fixed-image relocation manifest incomplete",
   "donor_localization_revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
   "inputs": {
     "HEROESW_win95_1997-08-29.exe": {

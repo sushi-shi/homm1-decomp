@@ -188,3 +188,30 @@ legacy `MAPI.LIB` is a pinned OMF archive, not a Win32 COFF provider; the index
 records that explicit format exclusion instead of treating it as corrupt COFF.
 The Win32 `MAPI32.LIB` remains indexed. No retail identity is inferred from a
 library name alone.
+
+## Buka target activation and CFG review
+
+Reviewed Gruntz `d1cdb537caa6142849c7345eedc306dbb5af3763`
+(`core/paths.py`, `graph/compdb.py`) and HoMM2 Buka
+`e0689d3f71b2942b544fd677cb54085a13503d7b`
+(`core/paths.py`, `init/clangd.py`, `analysis/disasm.py`). Retained: the single
+repository/path resolver, existing target-input contract, lowercase SDK mirror
+and assembly-only CFG analysis. Adapted: HoMM1's `core.paths.retail_exe` and
+Ninja retail input now read the selected game destination instead of assuming
+HEROESW. The Buka target, locale and VC6 profile are selected together; stale
+NWC reports and scores were retired.
+
+The existing donor CFG generator is used in temporary review scripts; this
+adds no parallel pipeline or decompiler dependency. No decompiler output is
+permitted. Deferred: migration of the address census, fixed-image references,
+Clang parsing of the backend SDK's legacy STL and candidate/runtime/clean
+validation. The small path adaptation does not establish those capabilities.
+Earlier references above to Buka compiler activation being deferred describe
+the previous migration stage; compiler/target activation has now happened.
+
+Validation for this stage: `homm1 audit usage` passes; the catalog/PE suite
+passes all 29 existing tests. The pinned-Giten whole-tree audit completed and
+still reports missing `sema/exe_map.py` and `verify/selftest.py`, plus adaptations
+requiring broader review. These are recorded limitations, not silently treated
+as parity. `homm1 build verify` stops at the unmigrated census; `homm1 link`
+rejects inherited resource identities before linking.

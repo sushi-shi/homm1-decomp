@@ -3,6 +3,7 @@
 #include <match.h>
 
 #include <BASE/audio.h>
+#include <BASE/audiereBackend.h>
 
 // Buka retail VA 0x004cdf50.
 audiere::AudioDevicePtr AudiereDevice::device;
@@ -11,10 +12,8 @@ static float gEffectsVolume = 1.0f;
 // Buka retail VA 0x004a0f08.
 static float gMusicVolume = 1.0f;
 // Buka retail VA 0x004a0f0c.
-static float gVolumeLevels[11] = {
-    0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f,
-    0.3f, 0.2f, 0.15f, 0.1f, 0.05f
-};
+static float gVolumeLevels[11] =
+    {0.0f, 1.0f, 0.8f, 0.65f, 0.5f, 0.4f, 0.3f, 0.2f, 0.15f, 0.1f, 0.05f};
 
 // Buka retail VA 0x00469b56, size 0xf.
 float VolumeLevel(int level) {

@@ -1,251 +1,241 @@
-# Per-TU build contract, following Gruntz. See config/README.md.
+# Buka 2003 build contract. Source/retail claim migration is in progress.
 [build]
 platform = "win32"
-compiler = "vc41"
-# Literal __FILE__ roots recovered from the August 1997 retail image.
+compiler = "vc6"
+
+# Literal assertion paths recovered from the Buka executable.
 [build.source_roots]
-BASE = 'F:\H1w95src\Base'
-SOURCE = 'F:\h1w95src\source'
+BASE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Base'
+SOURCE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Game'
 
 [flags]
-# Retail was compiled incrementally (/Zi /Gi; VC4 /Gi needs /Zi): its __LINE__
-# words (movsx [per-function static] + offset), 4-aligned unpooled per-function
-# literals and Misc+PHILAI's _$E2-first dynamic initializer are /Gi output
-# (docs/patterns/vc4-gi-incremental-compilation.md, docs/patterns/vc4-gi-line-var.md).
-# /Gi code depends on the opened files' path strings, so /Gi compiles run through
-# homm1.tool.fixedroot (the source_roots above, independent of checkout).
-# SOURCE objects are packed and keep unreferenced functions: no /Gy, and a
-# listing switch (/Fa) makes the pinned C2 emit one .text section
-# (docs/patterns/vc4-gi-listing-packs-functions.md). BASE C++ is /Gy
-# (16-byte CC-filled functions, dead COMDATs stripped) and never /Gf (soundmgr's
-# duplicate unpooled literals), so its optimized units are /Ox /Gy, not /O2.
-# HoMM1's exact PollSound family proves the free-function convention is the
-# compiler default (/Gd), unlike HoMM2's /Gr build.
-cpp_carcass = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/Fa", "/G5", "/Ob1"]
-# HISCORE::Open retail fs:[0] registration and new-window delete unwind prove /GX.
-cpp_carcass_eh = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/Fa", "/G5", "/Ob1", "/GX"]
-# The unoptimized BASE units (FONT, WINDOW, RESMGR) start every function on a
-# 16-byte boundary with int3 fill, exactly like the optimized BASE units.
-cpp_carcass_gy = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1", "/Gy"]
-cpp_carcass_oi_gy = ["/nologo", "/c", "/Od", "/Zi", "/Gi", "/G5", "/Ob1", "/Oi", "/Gy"]
-cpp_o2 = ["/nologo", "/c", "/Ox", "/Gy", "/Zi", "/Gi", "/G5"]
-# Standalone DigitalReport/FadeScreen and expanded callers jointly require
-# automatic inlining (retail expands them in their callers).
-cpp_o2_inline = ["/nologo", "/c", "/Ox", "/Ob2", "/Gy", "/Zi", "/Gi", "/G5"]
-cpp_codec = ["/nologo", "/c", "/Ox", "/Ob2", "/Gy", "/Zi", "/Gi", "/G5"]
+# Unoptimized VC6 SP5 baseline. /Ob1 is directly measured in the Audiere
+# routines; the remaining units still require individual retail comparison.
+cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6"]
+# SAMPLE's full constructor (including switch tables) and destructor agree
+# under /G5; /G6 inserts two extra short-argument register clears.
+cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
 
 [[unit]]
 unit = "BASE/BITS"
 source = "src/BASE/BITS.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BMAP2"
 source = "src/BASE/BMAP2.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BASEMGR"
 source = "src/BASE/BASEMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BITMAP"
 source = "src/BASE/BITMAP.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/Icon2b"
 source = "src/BASE/Icon2b.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/LZHUF"
 source = "vendor/lzhuf/encoder.cpp"
-flags = "cpp_codec"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/MAKEFILEID"
 source = "src/BASE/MAKEFILEID.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/LZHUFDEC"
 source = "vendor/lzhuf/decoder/Decoder.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BACKDROP"
 source = "src/BASE/BACKDROP.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BORDER"
 source = "src/BASE/BORDER.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BUTTON"
 source = "src/BASE/BUTTON.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/DIMMER"
 source = "src/BASE/DIMMER.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/ICONWDGT"
 source = "src/BASE/ICONWDGT.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/EXEC"
 source = "src/BASE/EXEC.cpp"
 # DoDialog expands executive::executive inline while retail keeps the
 # out-of-line 0x0047a170 body for InitMainClasses: automatic inlining.
-flags = "cpp_o2_inline"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"
 source = "src/BASE/MOUSEMGR.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/RESMGR"
 source = "src/BASE/RESMGR.cpp"
-flags = "cpp_carcass_oi_gy"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/RESOURCE"
 source = "src/BASE/RESOURCE.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/PALETTE"
 source = "src/BASE/PALETTE.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/TILESET"
 source = "src/BASE/TILESET.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/TEXTWDGT"
 source = "src/BASE/TEXTWDGT.cpp"
 # Retail keeps standalone ~textWidget and SetText while expanding both in
 # the deleting destructor and Main; that pair requires automatic inlining.
-flags = "cpp_o2_inline"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/TEXTNTRY"
 source = "src/BASE/TEXTNTRY.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/FONT"
 source = "src/BASE/FONT.cpp"
-flags = "cpp_carcass_gy"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/ICON"
 source = "src/BASE/ICON.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/WINDOW"
 source = "src/BASE/WINDOW.cpp"
-flags = "cpp_carcass_gy"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/WIDGET"
 source = "src/BASE/WIDGET.cpp"
 # Main expands widget::Dim twice (DimBitmapArea calls) while retail keeps the
 # out-of-line 0x0047f930 body: automatic inlining.
-flags = "cpp_o2_inline"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/WINMGR"
 source = "src/BASE/WINMGR.cpp"
-flags = "cpp_o2_inline"
+flags = "cpp_buka"
 
 [[unit]]
-unit = "BASE/soundmgr"
-source = "src/BASE/soundmgr.cpp"
-flags = "cpp_o2_inline"
-# retail __FILE__ "D:\\Heroes\\Base\\Soundmgr.cpp"
-retail_file = "Base\\Soundmgr.cpp"
+unit = "BASE/Audio"
+source = "src/BASE/Audio.cpp"
+flags = "cpp_buka"
+
+[[unit]]
+unit = "BASE/AudiereEffects"
+source = "src/BASE/AudiereEffects.cpp"
+flags = "cpp_buka"
+
+[[unit]]
+unit = "BASE/AudiereMusic"
+source = "src/BASE/AudiereMusic.cpp"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/TILE"
 source = "src/BASE/TILE.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/ADVMGR"
 source = "src/SOURCE/ADVMGR.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
 # Open and KeepAttack register fs:[0] frames.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
 source = "src/SOURCE/COMMAND.cpp"
 # ShowWinLoseArtifact, ShowDeadArmies and DoVictory register fs:[0] frames.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/EVENTS"
 source = "src/SOURCE/EVENTS.cpp"
 # HeroSwap's fs:[0] frame around new swapManager proves /GX.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/GAME"
 source = "src/SOURCE/GAME.cpp"
 # GetMap registers fs:[0] around its heroWindow/fileRequester news.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/ARMYGRP"
 source = "src/SOURCE/ARMYGRP.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
 # ViewStat's fs:[0] frame around new heroWindow proves /GX.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/HISCORE"
 source = "src/SOURCE/HISCORE.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/KB"
 source = "src/SOURCE/KB.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/NOOPT"
 source = "src/SOURCE/NOOPT.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/PATH"
 source = "src/SOURCE/PATH.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 # Retail FINDPATH's aligned24820..24950 controls use optimized VC4 code.
 # FindCombatPath (0x424950) expands the out-of-line Clear and QuickDistance
@@ -254,18 +244,18 @@ flags = "cpp_carcass"
 [[unit]]
 unit = "SOURCE/FINDPATH"
 source = "src/SOURCE/FINDPATH.cpp"
-flags = "cpp_o2_inline"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/PHILAI"
 source = "src/SOURCE/PHILAI.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/RECRUIT"
 source = "src/SOURCE/RECRUIT.cpp"
 # recruitUnit::Open and QuickViewRecruit register fs:[0] frames for new heroWindow.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 # Retail SEARCH (0x4028b0..0x403631) is int3-separated from RECRUIT and
 # aligned like FINDPATH: register-allocated /O2 code with no frames.
@@ -273,23 +263,23 @@ flags = "cpp_carcass_eh"
 [[unit]]
 unit = "SOURCE/SEARCH"
 source = "src/SOURCE/SEARCH.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/REMOTE"
 source = "src/SOURCE/REMOTE.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/REQUEST"
 source = "src/SOURCE/REQUEST.cpp"
 # fileRequester::Open registers fs:[0] around its heroWindow/iconWidget news.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/SETUP"
 source = "src/SOURCE/SETUP.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 # Retail int3 padding opens the combat spell-AI object at 0x00437010.
 
@@ -297,120 +287,120 @@ flags = "cpp_carcass_eh"
 unit = "SOURCE/SPELLS"
 source = "src/SOURCE/SPELLS.cpp"
 # Armageddon registers an fs:[0] frame to delete its work palette.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/STRIP"
 source = "src/SOURCE/STRIP.cpp"
 # strip and bankBox constructors register fs:[0] frames around new.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/SWAPMGR"
 source = "src/SOURCE/SWAPMGR.cpp"
 # Open's fs:[0] frame around new heroWindow proves /GX.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/TOWN"
 source = "src/SOURCE/TOWN.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/TOWNMGR"
 source = "src/SOURCE/TOWNMGR.cpp"
 # DoTavern registers an fs:[0] frame around new heroWindow.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/netwin"
 source = "src/SOURCE/netwin.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 # retail __FILE__ "D:\\Heroes\\Source\\wingraph.cpp"
 retail_file = "Source\\wingraph.cpp"
 
 [[unit]]
 unit = "BASE/miscwin"
 source = "src/BASE/miscwin.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/SAMPLE"
 source = "src/BASE/SAMPLE.cpp"
-flags = "cpp_o2"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/SMACKMGR"
 source = "src/SOURCE/SMACKMGR.cpp"
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/CURSOR"
 source = "src/SOURCE/CURSOR.cpp"
 # 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
 # no fs:[0] frame appears in the band.
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/comwin"
 source = "src/SOURCE/comwin.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/Icon2bc"
 source = "src/BASE/Icon2bc.asm"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/AI"
 source = "src/SOURCE/AI.cpp"
 # Split from ARMY at retail's int3-padded object boundary; same profile.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/ARMY"
 source = "src/SOURCE/ARMY.cpp"
 # SpecialAttack's fs:[0] frame around new bitmap proves /GX.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/HEXCELL"
 source = "src/SOURCE/HEXCELL.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/CPUSPEED"
 source = "src/SOURCE/CPUSPEED.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/SPELLAI"
 source = "src/SOURCE/SPELLAI.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/DRAWING"
 source = "src/SOURCE/DRAWING.cpp"
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/FLY"
 source = "src/SOURCE/FLY.cpp"
 # int3 padding brackets CanFit..FlyTo (0x0044a5e0..0x0044b434) as one object.
-flags = "cpp_carcass"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "SOURCE/VIEW"
 source = "src/SOURCE/VIEW.cpp"
 # ViewGeneral registers fs:[0] around its new heroWindow.
-flags = "cpp_carcass_eh"
+flags = "cpp_buka"
