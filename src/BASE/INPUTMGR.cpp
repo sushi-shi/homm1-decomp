@@ -277,6 +277,21 @@ tag_message inputManager::GetEvent(void) {
     return event;
 }
 
+// Descriptive name: the 0/1 counterpart of SetPositiveOption; retail's
+// original method name is not available.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046efd7, 0x31)
+void inputManager::SetBooleanOption(i16 enabled) {
+    // Retail reserves 16 unaddressed frame bytes, a tag_message's size.
+    tag_message unusedMessage;
+
+    if (enabled)
+        m_field_0x238 = 1;
+    else
+        m_field_0x238 = 0;
+}
+
 // Descriptive name: retail's original method name is not available.
 VA(0x0046f008, 0x31)
 void inputManager::SetPositiveOption(i16 value) {
@@ -288,6 +303,15 @@ void inputManager::SetPositiveOption(i16 value) {
 
 // The donor assigns the key-code mode and then flushes the event queue.
 // Buka calls Flush and stores the mode as a short at +0x340.
+// HoMM2 Buka keeps SetMouseCoords empty; HoMM1 records the coordinates.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046f039, 0x29)
+void inputManager::SetMouseCoords(i16 x, i16 y) {
+    m_mouseX = x;
+    m_mouseY = y;
+}
+
 VA(0x0046f062, 0x23)
 void inputManager::SetKeyCodeType(i16 keyCodeType) {
     m_keyCodeType = keyCodeType;

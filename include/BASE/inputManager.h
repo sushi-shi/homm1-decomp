@@ -143,7 +143,8 @@ public:
     i16 m_keyCodeType;
     i16 m_field_0x342;
     H1_ENUM_STORAGE(MessageModifier, i16) m_modifiers;
-    char m_unknownAfterModifiers[4];
+    i16 m_mouseX;
+    i16 m_mouseY;
     i8 m_field_0x34a;
     i32 m_recordFile;
     i32 m_field_0x34f;
@@ -155,7 +156,8 @@ public:
     void Flush(void);
     tag_message GetEvent(void);
     tag_message PeekEvent(void);
-    void SetMouseCoords(i32, i32);
+    void SetBooleanOption(i16 enabled);
+    void SetMouseCoords(i16 x, i16 y);
     void SetPositiveOption(i16 value);
     void SetKeyCodeType(i16 keyCodeType);
     void AsciiConvert(tag_message& event);

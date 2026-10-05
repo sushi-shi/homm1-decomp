@@ -75,6 +75,10 @@ public:
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
     void WarpPointer(i16, i16);
     void SetColorMice(i32);
+    // Empty unreferenced Windows-build hooks; original names unavailable.
+    void UnusedTwoArgumentHook1(i16, i16);
+    void UnusedTwoArgumentHook2(i16, i16);
+    void UnusedOneArgumentHook(i32);
     // The quick views hide (retail 0x00476ee0, ShowCursor(0)) and restore
     // (0x00476ef0, ShowCursor(1)) the Windows cursor around QuickViewWait.
     void HideSystemCursor(void);
