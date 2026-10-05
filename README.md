@@ -30,7 +30,7 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [ ] Review game-type `reinterpret_cast`: **36 sites** (12 network packet
+- [x] Review game-type `reinterpret_cast`: **36 sites** (12 network packet
   views at the `char*` record APIs and the `EVENTS.h` view macros, 24 other
   byte/word/integer views). The icon frame directory, the combat and save
   transfer buffers, resource reads and pixel buffers are typed. 69 further
@@ -56,7 +56,7 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Review dead locals: **116** never-read locals. The 75 without an
   initializer were removed together as a control, and every affected function
   lost its exact frame. The 41 with an initializer emit retail stores.
-- [ ] Review `static_cast`: **401 sites**. Casts that only hid a wrong declared
+- [x] Review `static_cast`: **400 sites**. Casts that only hid a wrong declared
   type are gone, including the `void*` Win32 handles, which are now `STRICT`; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
 - [x] Review unions: **9 definitions**, each one shared storage with typed

@@ -206,7 +206,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
             gNbSessNcb[gNbMaxSess].ncb_post = nb_add_name_done;
             gNbSessNcb[gNbMaxSess].ncb_cmd_cplt = NRC_PENDING;
             gNbSessNcb[gNbMaxSess].ncb_lana_num = gNetbiosLana;
-            returnCodeValue = static_cast<i16>(Netbios(&gNbSessNcb[gNbMaxSess]));
+            returnCodeValue = Netbios(&gNbSessNcb[gNbMaxSess]);
             break;
 
         case NETBIOS_SESSION_RECEIVE_ANY: {

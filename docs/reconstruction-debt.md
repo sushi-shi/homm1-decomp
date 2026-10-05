@@ -154,6 +154,11 @@ The remaining casts are:
 - `char` to `u8` code-page comparisons.
 - Casts of strict-domain values, which are `enum class` in the Clang view.
 
+Retyping the owner was measured for the remaining narrowing casts on locals
+and failed. For example, declaring `CheckEndGame`'s player index `i8` instead
+of casting its seven `m_players` subscripts loses the function's exact match,
+because the loop and the other subscripts use the full `int`.
+
 **Verify-board text debt.** `homm1 verify board` ratchets several textual
 metrics, and their committed floors are 0:
 
