@@ -3684,43 +3684,43 @@ void game::RandomizeHeroPool(void) {
 // only from the first two stacks of each class table.
 VA(0x00435566, 0x28f)
 void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
-    armyGroup* army = &m_heroRecs[heroId].m_army;
-    i16 slot = 0;
-    i16 armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
+    armyGroup* curArmy = &m_heroRecs[heroId].m_army;
+    i16 curSlot = 0;
+    i16 armies[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
         {{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
         {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
         {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
         {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}
     };
-    i32 present[RANDOM_HERO_ARMY_OPTION_COUNT];
+    i32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
-    i32 max;
+    i32 curMax;
     i32 minNum;
 
-    present[0] = 1;
-    present[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
-                                     + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
-    present[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
-                                     + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
-    if (!present[2])
-        present[1] = 1;
+    curPresent[0] = 1;
+    curPresent[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
+                                        + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
+    curPresent[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
+                                        + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
+    if (!curPresent[2])
+        curPresent[1] = 1;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        army->m_creatureTypes[i] = CREATURE_NONE;
-        army->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
+        curArmy->m_creatureTypes[i] = CREATURE_NONE;
+        curArmy->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
     }
     for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
-        if (present[i]) {
-            army->m_creatureTypes[slot] =
-                armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
-            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
+        if (curPresent[i]) {
+            curArmy->m_creatureTypes[curSlot] =
+                armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
+            minNum = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
                      * RANDOM_HERO_COUNT_SCALE;
-            max = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
-                      * RANDOM_HERO_COUNT_SCALE
-                  + RANDOM_HERO_COUNT_ROUNDING;
+            curMax = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
+                         * RANDOM_HERO_COUNT_SCALE
+                     + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
-                minNum = (minNum + max) / 2;
-            army->m_creatureCounts[slot] = Random(minNum, max) / RANDOM_HERO_COUNT_SCALE;
-            slot++;
+                minNum = (minNum + curMax) / 2;
+            curArmy->m_creatureCounts[curSlot] = Random(minNum, curMax) / RANDOM_HERO_COUNT_SCALE;
+            curSlot++;
         }
     }
 }
@@ -4278,70 +4278,70 @@ i8 game::SetupTowns(void) {
 // town gate occupies the town.
 VA(0x00436a6c, 0x325)
 void game::ProcessOnMapHeroes(void) {
-    i32 mapY;
+    i32 posY;
     mapHeroExtra* extra;
-    town* town;
+    town* curTown;
     i32 townId;
     i32 iPlayer;
-    i32 k;
-    i32 j;
-    i32 mapX;
+    i32 i;
+    i32 jx;
+    i32 posX;
     mapCell* north;
-    mapCell* cell;
-    hero* theHero;
+    mapCell* loc;
+    hero* theHeroEntry;
 
-    for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
-        for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
-            cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
+    for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
+        for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
+            loc = &m_map[posX][posY];
+            if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 extra =
-                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(cell->m_objectMetadata)]);
-                theHero = GetHero(extra->heroId);
-                for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
-                    theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
-                    if (theHero->m_army.m_creatureCounts[k] > 0)
-                        theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
+                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(loc->m_objectMetadata)]);
+                theHeroEntry = GetHero(extra->heroId);
+                for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+                    theHeroEntry->m_army.m_creatureCounts[i] = extra->troopCounts[i];
+                    if (theHeroEntry->m_army.m_creatureCounts[i] > 0)
+                        theHeroEntry->m_army.m_creatureTypes[i] = extra->troopTypes[i];
                     else
-                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
+                        theHeroEntry->m_army.m_creatureTypes[i] = CREATURE_NONE;
                 }
-                for (j = 0; j < MAP_HERO_EXTRA_ARTIFACT_COUNT; j++) {
-                    if (extra->artifacts[j] >= 0)
-                        gpAdvManager->GiveArtifact(theHero, extra->artifacts[j]);
+                for (jx = 0; jx < MAP_HERO_EXTRA_ARTIFACT_COUNT; jx++) {
+                    if (extra->artifacts[jx] >= 0)
+                        gpAdvManager->GiveArtifact(theHeroEntry, extra->artifacts[jx]);
                 }
-                theHero->m_experience = 0;
-                gpAdvManager->GiveExperience(theHero, extra->experience, 1);
-                theHero->CheckLevel();
-                theHero->m_x = mapX;
-                theHero->m_y = mapY;
+                theHeroEntry->m_experience = 0;
+                gpAdvManager->GiveExperience(theHeroEntry, extra->experience, 1);
+                theHeroEntry->CheckLevel();
+                theHeroEntry->m_x = posX;
+                theHeroEntry->m_y = posY;
                 if (extra->owner >= gpGame->m_playerCount)
                     iPlayer = gpGame->m_playerCount - 1;
                 else
                     iPlayer = extra->owner;
-                theHero->m_owner = iPlayer;
+                theHeroEntry->m_owner = iPlayer;
                 m_availableHeroes[extra->heroId] = iPlayer;
-                m_players[theHero->m_owner].m_heroIds[m_players[theHero->m_owner].m_heroCount] =
-                    theHero->m_id;
-                m_players[theHero->m_owner].m_heroCount++;
-                if (mapY > 0) {
-                    north = &m_map[mapX][mapY - 1];
+                m_players[theHeroEntry->m_owner]
+                    .m_heroIds[m_players[theHeroEntry->m_owner].m_heroCount] = theHeroEntry->m_id;
+                m_players[theHeroEntry->m_owner].m_heroCount++;
+                if (posY > 0) {
+                    north = &m_map[posX][posY - 1];
                     if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
-                        theHero->m_y--;
-                        townId = GetTownId(mapX, mapY - 1);
-                        town = GetTown(townId);
-                        town->m_occupyingHeroId = theHero->m_id;
+                        theHeroEntry->m_y--;
+                        townId = GetTownId(posX, posY - 1);
+                        curTown = GetTown(townId);
+                        curTown->m_occupyingHeroId = theHeroEntry->m_id;
                     }
                 }
-                cell->m_objectTileset = 0;
-                cell->m_objectIndex = MAP_CELL_NO_FRAME;
-                cell->m_overlayTileset = 0;
-                cell->m_overlayIndex = MAP_CELL_NO_FRAME;
-                cell->m_objectMetadata = 0;
-                cell->m_triggerType = MAP_OBJECT_NONE;
+                loc->m_objectTileset = 0;
+                loc->m_objectIndex = MAP_CELL_NO_FRAME;
+                loc->m_overlayTileset = 0;
+                loc->m_overlayIndex = MAP_CELL_NO_FRAME;
+                loc->m_objectMetadata = 0;
+                loc->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(
-                    theHero->m_x,
-                    theHero->m_y,
-                    theHero->m_owner,
-                    gHeroScoutRadius[theHero->m_heroClass]
+                    theHeroEntry->m_x,
+                    theHeroEntry->m_y,
+                    theHeroEntry->m_owner,
+                    gHeroScoutRadius[theHeroEntry->m_heroClass]
                 );
             }
         }

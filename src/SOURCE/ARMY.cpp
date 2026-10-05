@@ -124,7 +124,7 @@ VA(0x00413555, 0x20b)
 void army::LoadResources(void) {
     char sprite[16];
     i32 idx;
-    char buf[16];
+    char buffer[16];
 
     if (m_creatureType != CREATURE_SWORDSMAN)
         strcpy(sprite, gArmySpriteNames[m_creatureType]);

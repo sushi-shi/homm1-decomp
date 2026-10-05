@@ -590,7 +590,7 @@ i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
     i16 left;
     army* targetPtr;
     i16 savedHex;
-    i32 dest;
+    i32 destVal;
 
     slot = GetClosestArmy(currentArmy, side, mask);
     if (slot == COMBAT_ARMY_INDEX_NONE)

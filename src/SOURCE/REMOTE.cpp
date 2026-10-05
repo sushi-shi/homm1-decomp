@@ -949,7 +949,7 @@ i32 TransmitRemoteData(
     i8 messageType,
     i8 gamePosDestination
 ) {
-    i32 k;
+    i32 i;
     i32 result;
     i32 j;
     RemoteMessage msg;
@@ -982,14 +982,14 @@ i32 TransmitRemoteData(
         if (!reliable && result) {
             return 1;
         } else if (result) {
-            k = 0;
-            while (k < REMOTE_CONFIRM_POLL_COUNT) {
+            i = 0;
+            while (i < REMOTE_CONFIRM_POLL_COUNT) {
                 ForcePollSound();
                 if (gLastConfirm == gIDCtr)
                     return 1;
                 result = 0;
                 DelayMilli(10);
-                k++;
+                i++;
             }
         } else {
             DelayMilli(1000);
