@@ -891,24 +891,24 @@ void ReadPrefs(void) {
 VA(0x004443f7, 0x30b)
 void WritePrefs(void) {
     HKEY key;
-    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    char subKey[REGISTRY_TEXT_BUFFER_SIZE];
     i32 rc;
-    DWORD musicVolume;
-    DWORD soundVolume;
+    DWORD savedMusic;
+    DWORD effectsVolume;
 
     UpdateSystemOptionsMenu();
-    strcpy(szSubKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
+    strcpy(subKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
     key = NULL;
-    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_ALL_ACCESS, &key);
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, KEY_ALL_ACCESS, &key);
     if (rc == ERROR_SUCCESS) {
-        soundVolume = gConfig.soundVolume;
-        musicVolume = gConfig.musicVolume;
+        effectsVolume = gConfig.soundVolume;
+        savedMusic = gConfig.musicVolume;
         RegSetValueExA(
             key,
             "HMM1 MusicVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&musicVolume),
+            reinterpret_cast<LPBYTE>(&savedMusic),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
@@ -916,7 +916,7 @@ void WritePrefs(void) {
             "HMM1 FXVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&soundVolume),
+            reinterpret_cast<LPBYTE>(&effectsVolume),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
