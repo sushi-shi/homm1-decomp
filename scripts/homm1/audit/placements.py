@@ -107,6 +107,8 @@ class Placer:
         self.bindings = [dict(r, rva=int(r["rva"], 16), size=int(r["size"], 16))
                          for r in rows]
         self.functions: dict[int, tuple[int, str]] = {}   # game rva -> (rva, evidence)
+        self.image_sizes: dict[int, int] = {}             # game rva -> this image's size
+        self.image_callees: dict[int, set[str]] = {}      # rva -> callee symbol(s)
         self.data: dict[int, tuple[int, str]] = {}
         self.problems: list[str] = []
 
@@ -170,6 +172,58 @@ class Placer:
                                         f"{block[predicted[0] - grva]} bodies "
                                         f"({len(hits)} identical occurrence(s))")
 
+    def place_from_image_objects(self) -> None:
+        """Shared-unit functions this image compiles differently (another
+        profile): this image's own compile of the claimed body, relocations
+        masked, must occur once at a census start."""
+        from homm1.compare.canonicalize import CoffObject, RELOCATION_WIDTHS
+        from homm1.core.msvc_names import mask
+        from homm1.core.paths import image_build
+        placed = {erva for erva, _w in self.functions.values()}
+        want = defaultdict(dict)
+        for b in self.bindings:
+            if b["space"] == "text" and b["name"] and b["unit"] in self.shared \
+                    and b["channel"] in SRC_CHANNELS and b["rva"] not in self.functions:
+                want[b["unit"]][mask(b["name"])] = b
+        spans = defaultdict(list)
+        order = retail_dir(self.image) / "link_order.tsv"
+        if order.is_file():
+            for r in read_tsv(order)[2]:
+                spans[r["unit"]].append((int(r["lo"], 16), int(r["hi"], 16)))
+        for unit, wanted in sorted(want.items()):
+            obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
+            if not obj.is_file():
+                continue
+            c = CoffObject(obj.read_bytes())
+            for sec in c.sections:
+                syms = sorted((y for y in c.symbols.values()
+                               if y.section == sec.index and y.typ == 0x20),
+                              key=lambda y: y.value)
+                if not syms:
+                    continue
+                body = c.section_bytes(sec)
+                relocs = [r for r in c.relocations if r.section == sec.index]
+                for i, y in enumerate(syms):
+                    b = wanted.get(mask(y.name))
+                    if b is None:
+                        continue
+                    end = syms[i + 1].value if i + 1 < len(syms) else len(body)
+                    raw = body[y.value:end]
+                    sites = [r.site - y.value for r in relocs
+                             if y.value <= r.site < end and RELOCATION_WIDTHS.get(r.typ) == 4]
+                    hits = [self.eva + m.start()
+                            for m in _pattern(raw, sites).finditer(self.etext)]
+                    hits = [h for h in hits if h in self.starts and h not in placed]
+                    inside = [h for h in hits if any(lo <= h < hi for lo, hi in spans.get(unit, ()))]
+                    if len(hits) > 1 or len(raw) < 16:
+                        hits = inside       # the unit's reviewed span decides
+                    if len(hits) == 1:
+                        self.image_sizes[b["rva"]] = len(raw)
+                        self.functions[b["rva"]] = (hits[0], f"this image's compile of the "
+                                                    f"shared {unit} body ({len(raw)} bytes, "
+                                                    f"{len(sites)} fields masked) unique")
+                        placed.add(hits[0])
+
     def drop_collisions(self) -> None:
         """Two game bodies proven at one image address are byte-identical
         (fread/fwrite wrappers): the bytes cannot name either."""
@@ -204,7 +258,9 @@ class Placer:
         md = Cs(CS_ARCH_X86, CS_MODE_32)
         size = {b["rva"]: b["size"] for b in self.bindings if b["space"] == "text"}
         bad = []
-        for grva, (erva, _why) in sorted(self.functions.items()):
+        for grva, (erva, why) in sorted(self.functions.items()):
+            if not why.startswith("masked game body"):
+                continue                # another compile: offsets do not correspond
             raw = self.gtext[grva - self.gva:grva - self.gva + size.get(grva, 0)]
             for insn in md.disasm(raw, 0x400000 + grva):
                 if insn.mnemonic != "call" or insn.bytes[0] != 0xE8:
@@ -264,7 +320,9 @@ class Placer:
         import bisect
         pairs: list[tuple[int, int]] = []          # (game target, image target)
         size = {b["rva"]: b["size"] for b in self.bindings if b["space"] == "text"}
-        for grva, (erva, _why) in self.functions.items():
+        for grva, (erva, why) in self.functions.items():
+            if not why.startswith("masked game body"):
+                continue                # another compile: offsets do not correspond
             i = bisect.bisect_left(self.gsites, grva)
             j = bisect.bisect_left(self.gsites, grva + size.get(grva, 0))
             for site in self.gsites[i:j]:
@@ -395,7 +453,8 @@ class Placer:
         from homm1.core.msvc_names import mask
         from homm1.core.paths import image_build
         names = {mask(b["name"]): b for b in self.bindings
-                 if b["space"] != "text" and b["name"] and b["channel"] in SRC_CHANNELS}
+                 if b["space"] != "text" and b["name"]
+                 and b["channel"] in (*SRC_CHANNELS, "data_vtables")}
         claims_dir = image_build(self.image) / "gen/claims"
         found: dict[int, set[int]] = defaultdict(set)
         for unit in sorted(self.shared):
@@ -403,17 +462,23 @@ class Placer:
             obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
             if not frag.is_file() or not obj.is_file():
                 continue
-            own = {r["name"]: (int(r["rva"], 16), int(r["size"], 16))
-                   for r in read_tsv(frag)[2]
-                   if r.get("space") == self.image and r["kind"] == "func" and r["size"]}
+            own = {mask(r["name"]): int(r["rva"], 16) for r in read_tsv(frag)[2]
+                   if r.get("space") == self.image and r["kind"] == "func"}
+            own.update({mask(b["name"]): self.functions[b["rva"]][0] for b in self.bindings
+                        if b["unit"] == unit and b["rva"] in self.functions
+                        and self.functions[b["rva"]][1].startswith("this image's compile")})
             if not own:
                 continue
             c = CoffObject(obj.read_bytes())
             for sym in c.symbols.values():
-                if sym.typ != 0x20 or sym.section <= 0 or sym.name not in own:
+                if sym.typ != 0x20 or sym.section <= 0 or mask(sym.name) not in own:
                     continue
-                erva, size = own[sym.name]
+                erva = own[mask(sym.name)]
+                later = sorted(y.value for y in c.symbols.values()
+                               if y.section == sym.section and y.typ == 0x20
+                               and y.value > sym.value)
                 sec = c.sections[sym.section - 1]
+                size = (later[0] if later else sec.raw_size) - sym.value
                 body = c.section_bytes(sec)[sym.value:sym.value + size]
                 relocs = [r for r in c.relocations
                           if r.section == sym.section and sym.value <= r.site < sym.value + size]
@@ -426,6 +491,12 @@ class Placer:
                 if masked[0] != masked[1]:
                     continue
                 for r in relocs:
+                    if r.typ == 0x14:            # REL32: the call names its callee
+                        callee = c.symbols[r.symbol_index].name
+                        off = r.site - sym.value
+                        target = erva + off + 4 + struct.unpack_from("<i", retail, off)[0]
+                        if target in self.starts:
+                            self.image_callees.setdefault(target, set()).add(callee)
                     if r.typ != 0x6:
                         continue
                     b = names.get(mask(c.symbols[r.symbol_index].name))
@@ -446,6 +517,7 @@ class Placer:
 
     def run(self) -> None:
         self.place_functions()
+        self.place_from_image_objects()
         self.drop_collisions()
         self.check_calls()
         self.place_data()
@@ -464,16 +536,22 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     for grva, (erva, why) in sorted(p.functions.items(), key=lambda kv: kv[1][0]):
         b = by_rva[grva]
         if b["channel"] in SRC_CHANNELS and b["unit"] in p.shared:
-            placements.append([f"0x{erva:08x}", f"0x{b['size']:x}", "func", b["name"],
+            size = p.image_sizes.get(grva, b["size"])
+            placements.append([f"0x{erva:08x}", f"0x{size:x}", "func", b["name"],
                                b["unit"], b["channel"], f"0x{grva:08x}", why])
         else:
             referents.append([f"0x{erva:08x}", b["name"], f"game 0x{grva:x}: {why}"])
     for erva, name, why in p.thunks():
         referents.append([f"0x{erva:08x}", name, why])
-    taken = {int(r[0], 16) for r in referents}
+    taken = {int(r[0], 16) for r in referents} | {int(r[0], 16) for r in placements}
     for erva, (name, why) in sorted(p.callee_names().items()):
         if erva not in taken:
             referents.append([f"0x{erva:08x}", name, why])
+            taken.add(erva)
+    for erva, callees in sorted(p.image_callees.items()):
+        if erva not in taken and len(callees) == 1:
+            referents.append([f"0x{erva:08x}", next(iter(callees)),
+                              "callee of a body compiled for this image from shared source"])
     # LIBCMT bodies the DNA census matches exactly (masked) to one member
     named = {int(r[0], 16) for r in referents} | {int(r[0], 16) for r in placements}
     dna = retail_dir(p.image) / "dna_bands.tsv"

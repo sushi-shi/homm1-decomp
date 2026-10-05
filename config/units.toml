@@ -26,6 +26,7 @@ cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5"]
 # EDITOR.EXE's own objects expand string/memory intrinsics inline (/Oi): the
 # editor's wingraph bodies equal this profile's compile of the game source.
 cpp_editor_oi_g5 = ["/nologo", "/c", "/Od", "/Oi", "/Ob1", "/GX", "/MT", "/G5"]
+cpp_editor_oi_ob2_g5 = ["/nologo", "/c", "/Od", "/Oi", "/Ob2", "/GX", "/MT", "/G5"]
 
 # EDITOR.EXE (config/retail/targets.json `editor`) links the BASE library objects
 # marked `images = ["game", "editor"]`: each of their bodies occurs byte-identically
@@ -324,6 +325,8 @@ source = "src/SOURCE/REQUEST.cpp"
 # Retail Open/Main narrow arguments omit G6 register clears. Its .bss literal
 # order requires /Ob2 (see docs/patterns/vc6-ob2-literal-order.md).
 flags = "cpp_buka_ob2_g5"
+images = ["game", "editor"]
+image_flags = { editor = "cpp_editor_oi_ob2_g5" }
 
 [[unit]]
 unit = "SOURCE/SETUP"
@@ -366,6 +369,8 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
 flags = "cpp_buka_g5"
+images = ["game", "editor"]
+image_flags = { editor = "cpp_editor_oi_g5" }
 
 [[unit]]
 unit = "SOURCE/netwin"

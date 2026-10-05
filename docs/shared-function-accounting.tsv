@@ -1,5 +1,5 @@
 # editor reconstruction targets against the game: `homm1 --image editor audit placements --accounting docs/shared-function-accounting.tsv`.
-# call-site-named 7, identical-body 23, image-specific 147, shared-unit 311
+# call-site-named 5, identical-body 6, image-specific 131, shared-unit 346
 image	rva	name	unit	counterpart_image	counterpart_rva	counterpart	counterpart_unit	verdict	reason
 editor	0x00001000		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
 editor	0x00001044		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
@@ -65,7 +65,7 @@ editor	0x000085ff		EDITOR/EDITOR					image-specific	no game body or call site co
 editor	0x0000863a	?DelayMilli@@YAXH@Z	EDITOR/EDITOR	game	0x000463d9	?DelayMilli@@YAXH@Z	SOURCE/NOOPT	identical-body	retail body identical (fields masked) to SOURCE/NOOPT ?DelayMilli@@YAXH@Z; separate translation unit
 editor	0x00008650	?DelayTilMilli@@YAXH@Z	EDITOR/EDITOR	game	0x000463ef	?DelayTilMilli@@YAXH@Z	SOURCE/NOOPT	identical-body	retail body identical (fields masked) to SOURCE/NOOPT ?DelayTilMilli@@YAXH@Z; separate translation unit
 editor	0x0000866b	?FileError@@YAXPAD@Z	EDITOR/EDITOR	game	0x00041943	?FileError@@YAXPAD@Z	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?FileError@@YAXPAD@Z; separate translation unit
-editor	0x0000869f	?ShutDown@@YAXPAD@Z	EDITOR/EDITOR	game		?ShutDown@@YAXPAD@Z		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1a233; game callee 0x41824
+editor	0x0000869f	?ShutDown@@YAXPAD@Z	EDITOR/EDITOR	game		?ShutDown@@YAXPAD@Z		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xe91e; game callee 0x41824
 editor	0x00008746		EDITOR/EDITOR					image-specific	no game body or call site corresponds
 editor	0x0000881f		EDITOR/EDITOR					image-specific	no game body or call site corresponds
 editor	0x00008995	?IsCDDrive@@YA_NH@Z	EDITOR/EDITOR	game	0x00042254	?IsCDDrive@@YA_NH@Z	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?IsCDDrive@@YA_NH@Z; separate translation unit
@@ -76,10 +76,10 @@ editor	0x00008fc5		EDITOR/EDITOR					image-specific	no game body or call site co
 editor	0x00009056	?QuickViewWait@@YAXXZ	EDITOR/EDITOR	game	0x000404c4	?QuickViewWait@@YAXXZ	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?QuickViewWait@@YAXXZ; separate translation unit
 editor	0x000090d0		EDITOR/EDITOR					image-specific	no game body or call site corresponds
 editor	0x0000918e		EDITOR/EDITOR					image-specific	no game body or call site corresponds
-editor	0x000091e0		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x000091e0	?CleanUpMenus@@YAXXZ	EDITOR/EDITOR	game		?CleanUpMenus@@YAXXZ		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xd47f; game callee 0x42bcc
 editor	0x0000921c	?EarlyShutDownSystem@@YAXXZ	EDITOR/EDITOR	game		?EarlyShutDownSystem@@YAXXZ		call-site-named	body not identical; callee of placed BASE/EXEC body at site 0x23d8b; game callee 0x42331
 editor	0x00009237		EDITOR/EDITOR					image-specific	no game body or call site corresponds
-editor	0x00009241		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	EDITOR/EDITOR	game		?HandleAppSpecificMenuCommands@@YAHH@Z		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
 editor	0x000092c0		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
 editor	0x000092f2		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
 editor	0x00009415		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
@@ -105,30 +105,30 @@ editor	0x0000c05e		EDITOR/EVENTMGR					image-specific	no game body or call site 
 editor	0x0000c17a		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
 editor	0x0000c30d		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
 editor	0x0000c705		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
-editor	0x0000c9a0		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000caba		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000cd44		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000cd4e		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000d410	_AppAbout@16	EDITOR/kbwin	game	0x000436ff	_AppAbout@16	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin _AppAbout@16; separate translation unit
-editor	0x0000d477	?AppExit@@YAXXZ	EDITOR/kbwin	game	0x00043766	?AppExit@@YAXXZ	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?AppExit@@YAXXZ; separate translation unit
-editor	0x0000d486	?Process1WindowsMessage@@YAXXZ	EDITOR/kbwin	game	0x00043775	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?Process1WindowsMessage@@YAXXZ; separate translation unit
-editor	0x0000d505	?ResizeWindow@@YAXHHHH@Z	EDITOR/kbwin	game	0x000437f4	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?ResizeWindow@@YAXHHHH@Z; separate translation unit
-editor	0x0000d622	?AppCommand@@YAHPAUHWND__@@IIH@Z	EDITOR/kbwin	game	0x00043911	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?AppCommand@@YAHPAUHWND__@@IIH@Z; separate translation unit
-editor	0x0000d787	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	EDITOR/kbwin	game	0x00043a76	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?UpdateDfltMenu@@YAXPAUHMENU__@@@Z; separate translation unit
-editor	0x0000d835	?KBChangeMenu@@YAXPAUHMENU__@@@Z	EDITOR/kbwin	game	0x00043b24	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?KBChangeMenu@@YAXPAUHMENU__@@@Z; separate translation unit
-editor	0x0000d8c6	?SetMenuStatus@@YAXH@Z	EDITOR/kbwin	game	0x00043bb5	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?SetMenuStatus@@YAXH@Z; separate translation unit
-editor	0x0000d9de	?SetNoDialogMenus@@YAXH@Z	EDITOR/kbwin	game	0x00043ccd	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?SetNoDialogMenus@@YAXH@Z; separate translation unit
-editor	0x0000da30	?SetMenus@@YAXPAUHMENU__@@H@Z	EDITOR/kbwin	game	0x00043d1f	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?SetMenus@@YAXPAUHMENU__@@H@Z; separate translation unit
-editor	0x0000db5b	?SetGameDefaults@@YAXXZ	EDITOR/kbwin	game	0x00043e4a	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?SetGameDefaults@@YAXXZ; separate translation unit
-editor	0x0000dca0		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000e143	?WritePrefs@@YAXXZ	EDITOR/kbwin	game		?WritePrefs@@YAXXZ		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1a71a; game callee 0x443f7
-editor	0x0000e466	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	EDITOR/kbwin	game	0x00044702	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?DriveSupportsFreeSpaceQuery@@YA_ND@Z; separate translation unit
-editor	0x0000e4d8		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000e85f		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000e8ca	?KBTickCount@@YAHXZ	EDITOR/kbwin	game	0x00044b4e	?KBTickCount@@YAHXZ	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?KBTickCount@@YAHXZ; separate translation unit
-editor	0x0000e8d5	?ProcessAssert@@YAXHPADH@Z	EDITOR/kbwin	game	0x00044b59	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	identical-body	retail body identical (fields masked) to SOURCE/kbwin ?ProcessAssert@@YAXHPADH@Z; separate translation unit
-editor	0x0000e92a		EDITOR/kbwin					image-specific	no game body or call site corresponds
-editor	0x0000e97f		EDITOR/kbwin					image-specific	no game body or call site corresponds
+editor	0x0000c9a0	_WinMain@16	SOURCE/kbwin	game	0x00042ca0	_WinMain@16	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000caba	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	game	0x00042dba	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000cd44	?AppIdle@@YAHXZ	SOURCE/kbwin	game	0x00043048	?AppIdle@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000cd4e		SOURCE/kbwin					image-specific	no game body or call site corresponds
+editor	0x0000d410	_AppAbout@16	SOURCE/kbwin	game	0x000436ff	_AppAbout@16	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d477	?AppExit@@YAXXZ	SOURCE/kbwin	game	0x00043766	?AppExit@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d486	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	game	0x00043775	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d505	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	game	0x000437f4	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d622	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	game	0x00043911	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d787	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	game	0x00043a76	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d835	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	game	0x00043b24	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d8c6	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	game	0x00043bb5	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d9de	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	game	0x00043ccd	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000da30	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	game	0x00043d1f	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000db5b	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	game	0x00043e4a	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000dca0	?ReadPrefs@@YAXXZ	SOURCE/kbwin	game	0x00043f8f	?ReadPrefs@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e143	?WritePrefs@@YAXXZ	SOURCE/kbwin	game	0x000443f7	?WritePrefs@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e466	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	game	0x00044702	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e4d8	?SetupCDDrive@@YAHXZ	SOURCE/kbwin	game	0x00044774	?SetupCDDrive@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e85f	?SetWinText@@YAXPAVheroWindow@@F@Z	SOURCE/kbwin	game	0x00044ae3	?SetWinText@@YAXPAVheroWindow@@F@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e8ca	?KBTickCount@@YAHXZ	SOURCE/kbwin	game	0x00044b4e	?KBTickCount@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e8d5	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	game	0x00044b59	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e92a	?FindToken@@YAPADPADD@Z	SOURCE/kbwin	game	0x00044bae	?FindToken@@YAPADPADD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e97f	?FindLastToken@@YAPADPADD@Z	SOURCE/kbwin	game	0x00044bfe	?FindLastToken@@YAPADPADD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
 editor	0x0000ea10		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
 editor	0x0000ea3b		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
 editor	0x0000edad		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
@@ -155,19 +155,19 @@ editor	0x00014576		EDITOR/MAPOBJ					image-specific	no game body or call site co
 editor	0x00014795		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
 editor	0x0001536b		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
 editor	0x0001609d		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
-editor	0x00016290		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x000164d8		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00016dcb		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00016ddf		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00016f00		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00017166	?SetOK@fileRequester@@QAEXC@Z	EDITOR/REQUEST	game	0x00054826	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	identical-body	retail body identical (fields masked) to SOURCE/REQUEST ?SetOK@fileRequester@@QAEXC@Z; separate translation unit
-editor	0x000171cd		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00017b50		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x00017c01	?DoKnob@fileRequester@@QAEXXZ	EDITOR/REQUEST	game	0x000553a7	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	identical-body	retail body identical (fields masked) to SOURCE/REQUEST ?DoKnob@fileRequester@@QAEXXZ; separate translation unit
-editor	0x00017e5c		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x000182d2	?GetMapName@fileRequester@@QAEPADXZ	EDITOR/REQUEST	game	0x00055aa0	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	identical-body	retail body identical (fields masked) to SOURCE/REQUEST ?GetMapName@fileRequester@@QAEPADXZ; separate translation unit
-editor	0x0001832b		EDITOR/REQUEST					image-specific	no game body or call site corresponds
-editor	0x0001845a		EDITOR/REQUEST					image-specific	no game body or call site corresponds
+editor	0x00016290		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x000164d8	??0fileRequester@@QAE@FFFPBD00@Z	SOURCE/REQUEST	game	0x00053b7a	??0fileRequester@@QAE@FFFPBD00@Z	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016dcb	??1fileRequester@@QAE@XZ	SOURCE/REQUEST	game	0x00054354	??1fileRequester@@QAE@XZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016ddf	?Close@fileRequester@@UAEXXZ	SOURCE/REQUEST	game	0x00054368	?Close@fileRequester@@UAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016f00		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x00017166	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	game	0x00054826	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x000171cd		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x00017b50	?UpdateMapInfo@fileRequester@@QAEXXZ	SOURCE/REQUEST	game	0x00055329	?UpdateMapInfo@fileRequester@@QAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00017c01	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	game	0x000553a7	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00017e5c	?Update@fileRequester@@QAEXC@Z	SOURCE/REQUEST	game		?Update@fileRequester@@QAEXC@Z		call-site-named	body not identical; callee of placed SOURCE/REQUEST body at site 0x17dad; game callee 0x55602
+editor	0x000182d2	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	game	0x00055aa0	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x0001832b	?GetFilename@fileRequester@@QAEPADXZ	SOURCE/REQUEST	game	0x00055af9	?GetFilename@fileRequester@@QAEPADXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x0001845a		SOURCE/REQUEST					image-specific	no game body or call site corresponds
 editor	0x000184a0		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
 editor	0x000184e1		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
 editor	0x00018a0d		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
@@ -179,17 +179,17 @@ editor	0x000194ce	?DDQueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x0006674e	?DDQ
 editor	0x000194fb	?CreatePrimary@@YAXXZ	SOURCE/wingraph	game	0x0006677b	?CreatePrimary@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x00019578	?SetupClipper@@YAXXZ	SOURCE/wingraph	game	0x000667f8	?SetupClipper@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x00019636	?DDInitGraphics@@YAXXZ	SOURCE/wingraph	game	0x000668b6	?DDInitGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
-editor	0x0001976f	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game		?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1b017; game callee 0x669ef
+editor	0x0001976f	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game	0x000669ef	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x00019c52	?DDInitializePalette@@YAXXZ	SOURCE/wingraph	game	0x00066ed3	?DDInitializePalette@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x00019d67	?DDSetPalette@@YAHXZ	SOURCE/wingraph	game	0x00066fe8	?DDSetPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
-editor	0x00019de9	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	game		?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1950b; game callee 0x6706a
+editor	0x00019de9	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	game	0x0006706a	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x00019ee7	?DDSD@@YAXHPADH@Z	SOURCE/wingraph	game	0x0006716a	?DDSD@@YAXHPADH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001a2d4	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x00067557	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001a3c9	?DDCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x0006764c	?DDCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001a51d	?DDSetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	game	0x000677a0	?DDSetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001a7ae	?WGQueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x00067a31	?WGQueryNewPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001a820	?WGInitGraphics@@YAXXZ	SOURCE/wingraph	game	0x00067aa3	?WGInitGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
-editor	0x0001a95b	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game		?WGUpdatePalette@@YAXPAC@Z		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1b04b; game callee 0x67bde
+editor	0x0001a95b	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x00067bde	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001aae1	?WGInitializePalette@@YAXXZ	SOURCE/wingraph	game	0x00067d9b	?WGInitializePalette@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001ac83	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game	0x00067f3d	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001ae3a	?WGCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x000680f4	?WGCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
@@ -205,7 +205,7 @@ editor	0x0001b03b	?UpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x000682f5	?Upda
 editor	0x0001b063	?CleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x0006831d	?CleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001b082	?SetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	game	0x0006833c	?SetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001b106	?QueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x000683c0	?QueryNewPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
-editor	0x0001b120	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	game		?SetGraphicsType@@YAHH@Z		call-site-named	body not identical; callee of placed SOURCE/wingraph body at site 0x1b0c3; game callee 0x683da
+editor	0x0001b120	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	game	0x000683da	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
 editor	0x0001b500	??0baseManager@@QAE@XZ	BASE/BASEMGR	game	0x000688c0	??0baseManager@@QAE@XZ	BASE/BASEMGR	shared-unit	compiled from the shared BASE/BASEMGR source
 editor	0x0001b55a	?GetInfo@baseManager@@QAEFF@Z	BASE/BASEMGR	game	0x0006891a	?GetInfo@baseManager@@QAEFF@Z	BASE/BASEMGR	shared-unit	compiled from the shared BASE/BASEMGR source
 editor	0x0001b5e0	??0heroWindow@@QAE@XZ	BASE/WINDOW	game	0x0006d020	??0heroWindow@@QAE@XZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source

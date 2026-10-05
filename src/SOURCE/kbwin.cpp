@@ -160,6 +160,7 @@ BOOL AppIdle(void) {
 }
 
 VA(0x00443052, 0x6ad)
+VA_AT(editor, 0x0040cd4e, 0x6c2)
 long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData) {
     DATA(0x004a9e44)
     static i32 gLastGTimerTickCount = 0;

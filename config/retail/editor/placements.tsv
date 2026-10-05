@@ -2,19 +2,53 @@
 # Source claims of shared units, placed by retail byte correspondence;
 # game_rva/name join the game binding the shared source spells.
 rva	size	kind	name	unit	channel	game_rva	evidence
+0x0000c9a0	0x11a	func	_WinMain@16	SOURCE/kbwin	src	0x00042ca0	this image's compile of the shared SOURCE/kbwin body (282 bytes, 24 fields masked) unique
+0x0000caba	0x28a	func	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	src	0x00042dba	this image's compile of the shared SOURCE/kbwin body (650 bytes, 65 fields masked) unique
+0x0000cd44	0xa	func	?AppIdle@@YAHXZ	SOURCE/kbwin	src	0x00043048	this image's compile of the shared SOURCE/kbwin body (10 bytes, 0 fields masked) unique
+0x0000d410	0x67	func	_AppAbout@16	SOURCE/kbwin	src	0x000436ff	masked game body 0x436ff (103 bytes, 2 fields masked) unique at a census start
+0x0000d477	0xf	func	?AppExit@@YAXXZ	SOURCE/kbwin	src	0x00043766	masked game body 0x43766 (15 bytes) at its unit's block offset, shared by 11 bodies (5 identical occurrence(s))
+0x0000d486	0x7f	func	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	src	0x00043775	masked game body 0x43775 (127 bytes, 9 fields masked) unique at a census start
+0x0000d505	0x11d	func	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	src	0x000437f4	masked game body 0x437f4 (285 bytes, 20 fields masked) unique at a census start
+0x0000d622	0x165	func	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	src	0x00043911	masked game body 0x43911 (357 bytes, 28 fields masked) unique at a census start
+0x0000d787	0xae	func	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	src	0x00043a76	masked game body 0x43a76 (174 bytes, 13 fields masked) unique at a census start
+0x0000d835	0x91	func	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	src	0x00043b24	masked game body 0x43b24 (145 bytes, 15 fields masked) unique at a census start
+0x0000d8c6	0x118	func	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	src	0x00043bb5	masked game body 0x43bb5 (280 bytes, 31 fields masked) unique at a census start
+0x0000d9de	0x52	func	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	src	0x00043ccd	masked game body 0x43ccd (82 bytes, 6 fields masked) unique at a census start
+0x0000da30	0x12b	func	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	src	0x00043d1f	masked game body 0x43d1f (299 bytes, 13 fields masked) unique at a census start
+0x0000db5b	0x145	func	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	src	0x00043e4a	masked game body 0x43e4a (325 bytes, 25 fields masked) unique at a census start
+0x0000dca0	0x4a3	func	?ReadPrefs@@YAXXZ	SOURCE/kbwin	src	0x00043f8f	this image's compile of the shared SOURCE/kbwin body (1187 bytes, 102 fields masked) unique
+0x0000e143	0x323	func	?WritePrefs@@YAXXZ	SOURCE/kbwin	src	0x000443f7	this image's compile of the shared SOURCE/kbwin body (803 bytes, 82 fields masked) unique
+0x0000e466	0x72	func	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	src	0x00044702	masked game body 0x44702 (114 bytes, 6 fields masked) unique at a census start
+0x0000e4d8	0x387	func	?SetupCDDrive@@YAHXZ	SOURCE/kbwin	src	0x00044774	this image's compile of the shared SOURCE/kbwin body (903 bytes, 48 fields masked) unique
+0x0000e85f	0x6b	func	?SetWinText@@YAXPAVheroWindow@@F@Z	SOURCE/kbwin	src	0x00044ae3	this image's compile of the shared SOURCE/kbwin body (107 bytes, 4 fields masked) unique
+0x0000e8ca	0xb	func	?KBTickCount@@YAHXZ	SOURCE/kbwin	src	0x00044b4e	masked game body 0x44b4e (11 bytes) at its unit's block offset, shared by 2 bodies (1 identical occurrence(s))
+0x0000e8d5	0x55	func	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	src	0x00044b59	masked game body 0x44b59 (85 bytes, 9 fields masked) unique at a census start
+0x0000e92a	0x55	func	?FindToken@@YAPADPADD@Z	SOURCE/kbwin	src	0x00044bae	this image's compile of the shared SOURCE/kbwin body (85 bytes, 0 fields masked) unique
+0x0000e97f	0x55	func	?FindLastToken@@YAPADPADD@Z	SOURCE/kbwin	src	0x00044bfe	this image's compile of the shared SOURCE/kbwin body (85 bytes, 0 fields masked) unique
+0x000164d8	0x8f3	func	??0fileRequester@@QAE@FFFPBD00@Z	SOURCE/REQUEST	src	0x00053b7a	this image's compile of the shared SOURCE/REQUEST body (2291 bytes, 44 fields masked) unique
+0x00016dcb	0x14	func	??1fileRequester@@QAE@XZ	SOURCE/REQUEST	src	0x00054354	this image's compile of the shared SOURCE/REQUEST body (20 bytes, 1 fields masked) unique
+0x00016ddf	0x121	func	?Close@fileRequester@@UAEXXZ	SOURCE/REQUEST	src	0x00054368	this image's compile of the shared SOURCE/REQUEST body (289 bytes, 11 fields masked) unique
+0x00017166	0x67	func	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	src	0x00054826	masked game body 0x54826 (103 bytes, 2 fields masked) unique at a census start
+0x00017b50	0xb1	func	?UpdateMapInfo@fileRequester@@QAEXXZ	SOURCE/REQUEST	src	0x00055329	this image's compile of the shared SOURCE/REQUEST body (177 bytes, 5 fields masked) unique
+0x00017c01	0x25b	func	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	src	0x000553a7	masked game body 0x553a7 (603 bytes, 27 fields masked) unique at a census start
+0x000182d2	0x59	func	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	src	0x00055aa0	masked game body 0x55aa0 (89 bytes, 1 fields masked) unique at a census start
+0x0001832b	0x12f	func	?GetFilename@fileRequester@@QAEPADXZ	SOURCE/REQUEST	src	0x00055af9	this image's compile of the shared SOURCE/REQUEST body (303 bytes, 11 fields masked) unique
 0x00019490	0x3e	func	?DDRestoreDisplayMode@@YAXXZ	SOURCE/wingraph	src	0x00066710	masked game body 0x66710 (62 bytes, 5 fields masked) unique at a census start
 0x000194ce	0x2d	func	?DDQueryNewPalette@@YAHXZ	SOURCE/wingraph	src	0x0006674e	masked game body 0x6674e (45 bytes, 3 fields masked) unique at a census start
 0x000194fb	0x7d	func	?CreatePrimary@@YAXXZ	SOURCE/wingraph	src	0x0006677b	masked game body 0x6677b (125 bytes, 10 fields masked) unique at a census start
 0x00019578	0xbe	func	?SetupClipper@@YAXXZ	SOURCE/wingraph	src	0x000667f8	masked game body 0x667f8 (190 bytes, 18 fields masked) unique at a census start
 0x00019636	0x139	func	?DDInitGraphics@@YAXXZ	SOURCE/wingraph	src	0x000668b6	masked game body 0x668b6 (313 bytes, 29 fields masked) unique at a census start
+0x0001976f	0x4e3	func	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	src	0x000669ef	this image's compile of the shared SOURCE/wingraph body (1251 bytes, 123 fields masked) unique
 0x00019c52	0x115	func	?DDInitializePalette@@YAXXZ	SOURCE/wingraph	src	0x00066ed3	masked game body 0x66ed3 (277 bytes, 21 fields masked) unique at a census start
 0x00019d67	0x82	func	?DDSetPalette@@YAHXZ	SOURCE/wingraph	src	0x00066fe8	masked game body 0x66fe8 (130 bytes, 10 fields masked) unique at a census start
+0x00019de9	0xfe	func	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	src	0x0006706a	this image's compile of the shared SOURCE/wingraph body (254 bytes, 10 fields masked) unique
 0x00019ee7	0x3ed	func	?DDSD@@YAXHPADH@Z	SOURCE/wingraph	src	0x0006716a	masked game body 0x6716a (1005 bytes, 66 fields masked) unique at a census start
 0x0001a2d4	0xf5	func	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	src	0x00067557	masked game body 0x67557 (245 bytes, 16 fields masked) unique at a census start
 0x0001a3c9	0x154	func	?DDCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	src	0x0006764c	masked game body 0x6764c (340 bytes, 33 fields masked) unique at a census start
 0x0001a51d	0x291	func	?DDSetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	src	0x000677a0	masked game body 0x677a0 (657 bytes, 64 fields masked) unique at a census start
 0x0001a7ae	0x72	func	?WGQueryNewPalette@@YAHXZ	SOURCE/wingraph	src	0x00067a31	masked game body 0x67a31 (114 bytes, 10 fields masked) unique at a census start
 0x0001a820	0x13b	func	?WGInitGraphics@@YAXXZ	SOURCE/wingraph	src	0x00067aa3	masked game body 0x67aa3 (315 bytes, 41 fields masked) unique at a census start
+0x0001a95b	0x186	func	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	src	0x00067bde	this image's compile of the shared SOURCE/wingraph body (390 bytes, 32 fields masked) unique
 0x0001aae1	0x1a2	func	?WGInitializePalette@@YAXXZ	SOURCE/wingraph	src	0x00067d9b	masked game body 0x67d9b (418 bytes, 37 fields masked) unique at a census start
 0x0001ac83	0x1b7	func	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	src	0x00067f3d	masked game body 0x67f3d (439 bytes, 26 fields masked) unique at a census start
 0x0001ae3a	0x67	func	?WGCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	src	0x000680f4	masked game body 0x680f4 (103 bytes, 12 fields masked) unique at a census start
@@ -30,6 +64,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001b063	0x1f	func	?CleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	src	0x0006831d	masked game body 0x6831d (31 bytes, 4 fields masked) unique at a census start
 0x0001b082	0x84	func	?SetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	src	0x0006833c	masked game body 0x6833c (132 bytes, 11 fields masked) unique at a census start
 0x0001b106	0x1a	func	?QueryNewPalette@@YAHXZ	SOURCE/wingraph	src	0x000683c0	masked game body 0x683c0 (26 bytes) at its unit's block offset, shared by 15 bodies (2 identical occurrence(s))
+0x0001b120	0x1bd	func	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	src	0x000683da	this image's compile of the shared SOURCE/wingraph body (445 bytes, 35 fields masked) unique
 0x0001b500	0x5a	func	??0baseManager@@QAE@XZ	BASE/BASEMGR	src	0x000688c0	masked game body 0x688c0 (90 bytes, 3 fields masked) unique at a census start
 0x0001b55a	0x48	func	?GetInfo@baseManager@@QAEFF@Z	BASE/BASEMGR	src	0x0006891a	masked game body 0x6891a (72 bytes, 0 fields masked) unique at a census start
 0x0001b5e0	0x92	func	??0heroWindow@@QAE@XZ	BASE/WINDOW	src	0x0006d020	masked game body 0x6d020 (146 bytes, 2 fields masked) unique at a census start
@@ -307,6 +342,10 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00028d9f	0x14	func	??1resource@@UAE@XZ	BASE/RESOURCE	src	0x000776cf	masked game body 0x776cf (20 bytes) at its unit's block offset, shared by 3 bodies (3 identical occurrence(s))
 0x00028dec	0x25f	func	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	src	0x000708b4	masked game body 0x708b4 (607 bytes, 53 fields masked) unique at a census start
 0x0002904c	0x258	func	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	src	0x00070b14	masked game body 0x70b14 (600 bytes, 53 fields masked) unique at a census start
+0x00043920	0x6	data	?gAppName@@3PADA	SOURCE/kbwin	src	0x0009e700	complete initialized bytes (6) unique in the image; no code user
+0x0004b808	0x13	data	?gTitle@@3PADA	SOURCE/kbwin	src	0x0009e708	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0004b81c	0x4	data	_gcCDTrackName	SOURCE/kbwin	src	0x0009e720	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0004c4a8	0x4	data	?gFRDummy@@3PADA	SOURCE/REQUEST	src	0x0009f4e0	1 code reference(s) from placed bodies
 0x0004c6c0	0x4	data	?gWinGAttached@@3HA	SOURCE/wingraph	src	0x000a0190	1 code reference(s) from placed bodies
 0x0004c6c4	0x4	data	?gGraphicsType@@3HA	SOURCE/wingraph	src	0x000a0194	11 code reference(s) from placed bodies
 0x0004c6c8	0x4	data	?gMainVideoModeColorDepth@@3HA	SOURCE/wingraph	src	0x000a0198	2 code reference(s) from placed bodies
@@ -360,6 +399,19 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004da90	0x4	data	_gClipVisibleWidth	BASE/Icon2bc	src	0x000a14a4	12 code reference(s) from placed bodies
 0x0004da94	0x4	data	_gClipRowSkip	BASE/Icon2bc	src	0x000a14a8	20 code reference(s) from placed bodies
 0x0004da98	0x4	data	_gClipColumn	BASE/Icon2bc	src	0x000a14ac	20 code reference(s) from placed bodies
+0x00052a6c	0x4	data	?gMainWinScreenHeight@@3HA	SOURCE/kbwin	src	0x000a99dc	10 code reference(s) from placed bodies
+0x00052a78	0x4	data	?hInstApp@@3PAUHINSTANCE__@@A	SOURCE/kbwin	src	0x000a99e8	1 code reference(s) from placed bodies
+0x00052a7c	0x400	data	?bProcessMessage@@3PAEA	SOURCE/kbwin	src	0x000a99ec	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052e7c	0x4	data	?hmnuCurrent@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9dec	2 code reference(s) from placed bodies
+0x00052e80	0x4	data	?iMainWinScreenWidth@@3HA	SOURCE/kbwin	src	0x000a9df0	10 code reference(s) from placed bodies
+0x00052e84	0x3d	data	?gCommandLine@@3PADA	SOURCE/kbwin	src	0x000a9df4	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052ec4	0x4	data	?hwndApp@@3PAUHWND__@@A	SOURCE/kbwin	src	0x000a9e34	26 code reference(s) from placed bodies
+0x00052ec8	0x4	data	?gForegroundApp@@3HA	SOURCE/kbwin	src	0x000a9e38	3 code reference(s) from placed bodies
+0x00052ecc	0x4	data	?hmnuApp@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9e3c	3 code reference(s) from placed bodies
+0x00052ed0	0x4	data	?gEventHandle@@3PAXA	SOURCE/kbwin	src	0x000a9e40	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052ee4	0x4	data	_?gLastGetMessage@?1??Process1WindowsMessage@@YAXXZ@4HA	SOURCE/kbwin	src	0x000a9e54	2 code reference(s) from placed bodies
+0x00052ee8	0x4	data	_?gNoDialogMenusOn@?1??SetNoDialogMenus@@YAXH@Z@4HA	SOURCE/kbwin	src	0x000a9e58	3 code reference(s) from placed bodies
+0x00052efc	0x1	data	?gRequestingGames@@3CA	SOURCE/REQUEST	src	0x000cc82c	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052f20	0x4	data	?gDDResult@@3HA	SOURCE/wingraph	src	0x000cd8c0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052f28	0x6c	data	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	SOURCE/wingraph	src	0x000cd8c8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052f98	0x10	data	?gDDSourceRect@@3UtagRECT@@A	SOURCE/wingraph	src	0x000cd938	fields of this image's own compile of the shared source (VA_AT body, masked-identical)

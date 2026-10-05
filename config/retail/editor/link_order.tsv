@@ -11,10 +11,10 @@
 # image-only: EDITOR/EDITMGR 0x000017e0..0x00008495: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\EDITMGR.CPP
 # image-only: EDITOR/EDITOR 0x000084a0..0x000092bb: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\EDITOR.CPP
 # image-only: EDITOR/EVENTMGR 0x000092c0..0x0000c99c: descriptive: Open stores the class name "eventsManager"
-# image-only: EDITOR/kbwin 0x0000c9a0..0x0000ea0d: descriptive: the editor's window, menu and preference code (13 bodies identical to the game's kbwin)
+# image-only: SOURCE/kbwin 0x0000c9a0..0x0000ea0d: the shared kbwin source compiled with the editor profile
 # image-only: EDITOR/OVERLAY 0x0000ea10..0x00010fa0: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\OVERLAY.CPP
 # image-only: EDITOR/MAPOBJ 0x00010fa0..0x00016282: descriptive: editManager methods placing named map objects
-# image-only: EDITOR/REQUEST 0x00016290..0x0001849e: descriptive: fileRequester (3 bodies identical to the game's REQUEST)
+# image-only: SOURCE/REQUEST 0x00016290..0x0001849e: the shared REQUEST source compiled with the editor profile
 # image-only: EDITOR/TERRMGR 0x000184a0..0x00019484: descriptive: Open stores the class name "terrainManager"
 # image-only: SOURCE/wingraph 0x00019490..0x0001b316: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\wingraph.cpp; the shared source compiled with the editor profile
 # Exact body spans only; padding gaps are not assigned.
@@ -24,10 +24,10 @@ index	unit	lo	hi	class
 2	EDITOR/EDITMGR	0x000017e0	0x00008495	code
 3	EDITOR/EDITOR	0x000084a0	0x000092bb	code
 4	EDITOR/EVENTMGR	0x000092c0	0x0000c99c	code
-5	EDITOR/kbwin	0x0000c9a0	0x0000ea0d	code
+5	SOURCE/kbwin	0x0000c9a0	0x0000ea0d	code
 6	EDITOR/OVERLAY	0x0000ea10	0x00010fa0	code
 7	EDITOR/MAPOBJ	0x00010fa0	0x00016282	code
-8	EDITOR/REQUEST	0x00016290	0x0001849e	code
+8	SOURCE/REQUEST	0x00016290	0x0001849e	code
 9	EDITOR/TERRMGR	0x000184a0	0x00019484	code
 10	SOURCE/wingraph	0x00019490	0x0001b316	code
 11	BASE/BASEMGR	0x0001b500	0x0001b5db	code

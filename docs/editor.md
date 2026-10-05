@@ -59,6 +59,10 @@ retail images:
   names derived from a game address (`$SG<rva>`, `$T<rva>`) never carry over.
 - An unplaced callee of a placed shared body takes the game callee's name: one
   source call site names one function (`PollSound`, `operator delete`).
+- A shared function the editor compiles with another profile is placed where
+  the editor's own compile of it, relocations masked, occurs once at a census
+  start (inside the unit's reviewed span when it occurs more than once); its
+  calls name their callees.
 - Import thunks pair by their IAT import.
 - Data referenced only by a `VA_AT` body is named from the editor's own compile
   of that body, where it equals the retail body with relocations masked.
@@ -118,11 +122,18 @@ C objects and 9 MASM 6.13 objects. Each C++ object ends with the
   source for both programs (unit `SOURCE/wingraph`, `image_flags`), with the
   editor's path strings and that branch selected by `HOMM1_EDITOR`; all 33
   editor bodies are exact.
-- The editor's window/menu unit has 13 bodies identical to the game's `kbwin`,
-  `EDITOR.CPP` carries copies of six `KB`/`NOOPT` bodies, and the editor's
-  file requester three of `REQUEST`'s. Their units differ from the game's
-  (other functions, data and `/Oi`), so they are reconstructed as editor
-  units.
+- `kbwin.cpp` and `REQUEST.cpp` are shared the same way (`REQUEST` with
+  `/Ob2`, as in the game). Under the editor profile 21 of the 23 `kbwin`
+  bodies and 9 of the 14 `REQUEST` bodies place; the editor's `AppWndProc`
+  calls editor dialog helpers and one more function, and `ShowThisMap`,
+  `Open`, `Main`, `Update` and `ShowMapInfo` of the requester are editor
+  variants still to reconstruct. `SetWinText` scans a 70-row table in the
+  editor (`WINDOW_TEXT_ENTRY_COUNT`). The editor's window class, title and
+  instance strings are its own localized text; no catalog entries exist for
+  them yet, so `WinMain`, `AppInit` and `AppCommand` miss only those
+  literals.
+- `EDITOR.CPP` carries copies of six `KB`/`NOOPT` bodies inside an editor
+  unit with its own functions and data; it stays an editor unit.
 
 [`shared-function-accounting.tsv`](shared-function-accounting.tsv) lists every
 editor reconstruction target with its shared unit, its identical game body or

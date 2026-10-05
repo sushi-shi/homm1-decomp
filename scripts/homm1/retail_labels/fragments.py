@@ -60,7 +60,7 @@ def unit_claims(unit: str) -> list[Claim]:
             if placed is None:
                 continue
             meta["game_rva"] = rva
-            rva = placed[0]
+            rva, size = placed[0], placed[1] or size   # the image's own extent
         out.append(Claim(rva, r["name"], r["kind"], r["channel"], size, unit, meta))
     return out
 
