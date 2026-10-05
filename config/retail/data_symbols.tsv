@@ -48,8 +48,6 @@ rva	size	symbol	provenance
 0x000a16f0	28	?gCallManagerError1@@3PADA	Localized manager error array and ordered retail call use
 0x000a170c	28	?gCallManagerError2@@3PADA	Localized manager error array and ordered retail call use
 0x000a3dc8	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
-0x000a3dcc	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
-0x000a3de4	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
 0x000a3dfc	30	?gInputManagerAssertFile@@3PADA	code-required assertion source path
 0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked
 0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked
