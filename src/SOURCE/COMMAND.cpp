@@ -1567,38 +1567,37 @@ void combatManager::ResetMouse(void) {
 // action, broadcasts it to a human net opponent and has no door or cycling.
 VA(0x004210c0, 0x4c6)
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
+    i32 actionData[4];
+    i32 transmitResult;
+    i32 remoteIndex;
+    i8 doAdvance;
     army* actingArmy;
-    i8 advance;
-    i32 result;
-    i32 data[4];
 
     if (gbThisNetHasControl && gRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
         && m_playerId[COMBAT_DEFENDER_SIDE] >= 0 && gbHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]]
         && gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]) {
-        i32 netPos;
-
-        netPos = m_playerId[1 - m_currentSide];
-        if (netPos < 0 || !gbHumanPlayer[netPos])
-            netPos = giHostGamePos;
-        data[0] = giNextAction;
-        data[1] = giNextActionExtra;
-        data[2] = giNextActionGridIndex;
-        data[3] = giNextActionGridIndex2;
-        result = TransmitRemoteData(
-            reinterpret_cast<char*>(data),
-            netPos,
-            sizeof(data),
+        remoteIndex = m_playerId[1 - m_currentSide];
+        if (remoteIndex < 0 || !gbHumanPlayer[remoteIndex])
+            remoteIndex = giHostGamePos;
+        actionData[0] = giNextAction;
+        actionData[1] = giNextActionExtra;
+        actionData[2] = giNextActionGridIndex;
+        actionData[3] = giNextActionGridIndex2;
+        transmitResult = TransmitRemoteData(
+            reinterpret_cast<char*>(actionData),
+            remoteIndex,
+            sizeof(actionData),
             REMOTE_COMMAND_COMBAT_ACTION,
             1,
             1,
             REMOTE_MESSAGE_DEFAULT,
             1
         ); // API-forced: char* payload.
-        if (!result)
+        if (!transmitResult)
             ShutDown(NULL);
     }
     actingArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    advance = 0;
+    doAdvance = 0;
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
     switch (giNextAction) {
@@ -1608,7 +1607,7 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             gpMouseManager->ReallyHidePointer();
             CastSpell(giNextActionExtra, giNextActionGridIndex, 0, giNextActionGridIndex2);
             if (m_armies[m_currentSide][m_currentArmyIndex].m_quantity <= 0)
-                advance = 1;
+                doAdvance = 1;
             break;
         case ACTION_MOVE:
             gpMouseManager->ReallyHidePointer();
@@ -1617,7 +1616,7 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
-            advance = 1;
+            doAdvance = 1;
             break;
         case ACTION_ATTACK:
             gpMouseManager->ReallyHidePointer();
@@ -1628,7 +1627,7 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             if (CheckWin(&message))
                 return MESSAGE_DISPATCH_FORWARD;
             CheckApplyGoodMorale(m_currentSide, m_currentArmyIndex);
-            advance = 1;
+            doAdvance = 1;
             break;
         case ACTION_RETREAT:
             m_sideRetreated[m_currentSide] = 1;
@@ -1645,13 +1644,13 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             break;
         case ACTION_SKIP_TURN:
             actingArmy->m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
-            advance = 1;
+            doAdvance = 1;
             break;
     }
     giNextAction = ACTION_NONE;
     if (CheckWin(&message))
         return MESSAGE_DISPATCH_FORWARD;
-    if (advance && !GetNextArmy(1)) {
+    if (doAdvance && !GetNextArmy(1)) {
         ResetRound();
         GetNextArmy(1);
     }
