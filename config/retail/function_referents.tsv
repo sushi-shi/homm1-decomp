@@ -987,8 +987,8 @@ rva	name	provenance
 0x0006ccbe	?ReadWord@resourceManager@@QAEFXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006cd09	?ReadLong@resourceManager@@QAEHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006cd54	?MakeId@resourceManager@@QAEFPAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x0006cd95	?Read13@resourceManager@@QAEXPAC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x0006cdb0	?ReadBlock@resourceManager@@QAEXPACI@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0006cd95	?Read13@resourceManager@@QAEXPAD@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0006cdb0	?ReadBlock@resourceManager@@QAEXPAXI@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006ce40	??0backdropWidget@@QAE@XZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006ce6b	??0backdropWidget@@QAE@FFFFFF@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006ceaa	?Read@backdropWidget@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
@@ -1037,7 +1037,7 @@ rva	name	provenance
 0x0006fc12	?FadeOut@@YAXH@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006fd8a	?Random@@YAHHH@Z	Buka army effects/movement complete instruction and CFG review: 0x17f9f, 0x18012, 0x180af; buka-army-effects.json
 0x0006fdc3	?PostprocessPalette@@YAXPAC@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
-0x0006fe58	?PostprocessBitmap@@YAXPACHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0006fe58	?PostprocessBitmap@@YAXPAEHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006fe5d	?PostprocessIcon@@YAXPAVicon@@@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006fe62	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00070076	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	Buka DrawCell instruction/CFG review: 0x6771; buka-adventure-cell.json

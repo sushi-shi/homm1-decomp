@@ -47,7 +47,16 @@ not yet modelled:
   because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
   `char[]` data identity. `TransmitSaveGame` builds its packets in a named
   `RemotePayload`, the `RemoteMessage` payload union;
-- remaining byte, word and integer views.
+- resource reads and pixel buffers (resolved): `resourceManager::ReadBlock`
+  takes `void*` and `Read13` takes `char*`, both the HoMM2 donor's types. The
+  widget and font name buffers are `char`. `bitmap::m_pixels` and
+  `tileset::m_data` are `u8*`, like the donor's bitmap (palette indices).
+  This removed 15 casts, including the fizzle loop's byte views, and the code is
+  unchanged;
+- remaining byte, word and integer views. Each one is a different typed read of
+  the same storage. Examples are the palette RGB triples, the search occupancy
+  bytes (filled signed, read zero-extended), handle-to-integer assertions and
+  CRC byte walks.
 
 The fix is the real type at its owner (a typed member, a packet struct or
 union), not an inline accessor: under `/Od /Ob1` an inlined accessor adds frame
@@ -178,4 +187,23 @@ in full: [function checklist](common-code-combat-functions.tsv),
 [candidate catalogue](common-code-combat.tsv).
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
-where retail evidence requires them.
+where retail evidence requires them. Nine unions remain; the tenth `rg` hit is
+a comment in `ARMY.cpp`. Each one gives two or more readers of the same storage
+their own types:
+
+| Union | Readers |
+| --- | --- |
+| `tag_message`, three anonymous words | Each message type reads the same word under its own name and type (command or key code or x, id or y, value or text). Retail reads every word directly off the message, so a named payload level would change the operand order. |
+| `icon` resource data | Raw bytes, the `IconEntry` directory and Buka's font word reads. |
+| `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. The HoMM2 donor has the same union. |
+| `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. The HoMM2 donor has the same union. |
+| `CombatRemotePacket` payload | Combat actions or a chat line. |
+| `RemotePayload` | The remote message payload layouts. |
+| `advManager::SendHeroTownData` buffer (`EVENTS.cpp`) | The single allocation is filled as the combat record, then as each hero fragment. |
+
+`nb_sess` is the only `va_start` user. It is a standard variadic function:
+the `REMOTE.cpp` callers pass between one and three trailing arguments
+depending on the operation, and the HoMM2 donor declares the same variadic
+`nb_sess`. Its leading unused `i32` keeps the `com_sess(i32, i32, ...)`
+calling shape, because retail pushes a zero in front of the operation. No
+function walks its arguments by address.

@@ -58,7 +58,7 @@
         {
           "site_rva": "0x6c24f",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"

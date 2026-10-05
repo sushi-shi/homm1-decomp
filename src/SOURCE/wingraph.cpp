@@ -294,7 +294,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
 #line 276
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gDDSurfaceDesc.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gDDSurfaceDesc.lpSurface);
             gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
             gInitWin = gDDSurfaceDesc.lpSurface;
@@ -400,7 +400,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 #line 435
             DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(ddsd.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(ddsd.lpSurface);
             gInitWin = ddsd.lpSurface;
         } else {
             gInitWin = ddsd.lpSurface;
@@ -1091,12 +1091,12 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
         DDCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     } else {
         WGCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
         DDInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     }
     memcpy(gpWindowManager->m_screen->m_pixels, buffer, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     free(buffer);

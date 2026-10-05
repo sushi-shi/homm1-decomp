@@ -20,7 +20,7 @@ public:
     H1_ENUM_STORAGE(BitmapType, i16) m_bitmapType;
     i16 m_width;
     i16 m_height;
-    i8* m_pixels;
+    u8* m_pixels;
 
     // --- constructors ---
     bitmap(void);

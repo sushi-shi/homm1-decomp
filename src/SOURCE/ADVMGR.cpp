@@ -6732,7 +6732,7 @@ void advManager::SaveAdventureBorder(void) {
 
     m_adventureBorder = static_cast<u8*>(malloc(BORDER_BUFFER_SIZE));
     u8* savedPixels = m_adventureBorder;
-    i8* screen = gpWindowManager->m_screen->m_pixels;
+    u8* screen = gpWindowManager->m_screen->m_pixels;
     i32 row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, screen, ADVENTURE_VIEWPORT_EXTENT);
@@ -6758,7 +6758,7 @@ void advManager::SaveAdventureBorder(void) {
 VA(0x004114e2, 0x134)
 void advManager::DrawAdventureBorder(void) {
     u8* savedPixels;
-    i8* screen;
+    u8* screen;
     i32 row;
 
     if (m_adventureBorder == NULL)

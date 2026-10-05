@@ -4580,7 +4580,7 @@
         {
           "site_rva": "0x76e90",
           "target_rva": "0x6cd95",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cd95"
@@ -7678,7 +7678,7 @@
         {
           "site_rva": "0x6c1ab",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -7686,7 +7686,7 @@
         {
           "site_rva": "0x6c1c7",
           "target_rva": "0x6fe58",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6fe58"
@@ -7751,7 +7751,7 @@
         {
           "site_rva": "0x6c24f",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -8122,7 +8122,7 @@
     },
     {
       "unit": "BASE/RESMGR",
-      "name": "?Read13@resourceManager@@QAEXPAC@Z",
+      "name": "?Read13@resourceManager@@QAEXPAD@Z",
       "rva": "0x6cd95",
       "size": 27,
       "old_rva": "0x0006cd95",
@@ -8133,7 +8133,7 @@
         {
           "site_rva": "0x6cda6",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -8144,7 +8144,7 @@
     },
     {
       "unit": "BASE/RESMGR",
-      "name": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "name": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
       "rva": "0x6cdb0",
       "size": 82,
       "old_rva": "0x0006cdb0",
@@ -9781,7 +9781,7 @@
     },
     {
       "unit": "BASE/miscwin",
-      "name": "?PostprocessBitmap@@YAXPACHH@Z",
+      "name": "?PostprocessBitmap@@YAXPAEHH@Z",
       "rva": "0x6fe58",
       "size": 5,
       "old_rva": "0x0006fe58",

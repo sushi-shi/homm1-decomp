@@ -18,7 +18,7 @@ tileset::tileset(i16 id)
     m_tileWidth = gpResourceManager->ReadWord();
     m_tileHeight = gpResourceManager->ReadWord();
     i32 size = m_tileCount * m_tileWidth * m_tileHeight;
-    m_data = static_cast<i8*>(malloc(size));
+    m_data = static_cast<u8*>(malloc(size));
     gpResourceManager->ReadBlock(m_data, size);
     PostprocessBitmap(m_data, m_tileWidth, m_tileHeight * m_tileCount);
 }

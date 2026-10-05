@@ -2003,7 +2003,7 @@
           },
           {
             "offset": "0x185",
-            "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+            "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
             "addend": 0,
             "coff_type": 20
           },

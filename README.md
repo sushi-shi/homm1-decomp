@@ -30,10 +30,11 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [ ] Review game-type `reinterpret_cast`: **51 sites** (12 network packet
-  views at the `char*` record APIs and donor view macros, 39 other
-  byte/word/integer views; the icon frame directory and the combat and save
-  transfer buffers are typed); 69 further casts are Win32 API boundaries.
+- [ ] Review game-type `reinterpret_cast`: **36 sites** (12 network packet
+  views at the `char*` record APIs and donor view macros, 24 other
+  byte/word/integer views). The icon frame directory, the combat and save
+  transfer buffers, resource reads and pixel buffers are typed. 69 further
+  casts are Win32 API boundaries.
   Every remaining cast carries its reason (cast ledger OPEN = 0).
 - [x] Replace manual byte layouts with named types: the font reads
   `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
@@ -58,7 +59,9 @@ review inputs, not defect totals. Preserve banked matches.
 - [ ] Review `static_cast`: **400 sites**. Casts that only hid a wrong declared
   type are gone, including the Win32 handles now built `NO_STRICT`; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
-- [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
+- [x] Review unions: **9 definitions**, each one shared storage with typed
+  readers; varargs: **1 function** (`nb_sess`), standard `va_arg` as in the
+  donor, with no argument-address walking.
 - [ ] Common-code review (helpers, accessors, macros): the 15 combat and AI
   units are read (**233 functions**, [ledger](docs/common-code-combat.tsv));
   **11 families** retained at **54 sites**, 4 rejected by measurement, 25 kept

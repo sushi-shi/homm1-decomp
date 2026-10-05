@@ -75600,7 +75600,7 @@
         },
         {
           "offset": "0x151",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -75752,7 +75752,7 @@
         },
         {
           "offset": "0x151",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76375,7 +76375,7 @@
         },
         {
           "offset": "0x214",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76390,7 +76390,7 @@
         },
         {
           "offset": "0x22f",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76917,7 +76917,7 @@
         },
         {
           "offset": "0x214",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76932,7 +76932,7 @@
         },
         {
           "offset": "0x22f",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -77300,7 +77300,7 @@
         },
         {
           "offset": "0x7b",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         }
       ],
@@ -77332,7 +77332,7 @@
         },
         {
           "offset": "0x7b",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         }
       ],
@@ -78585,7 +78585,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -78717,7 +78717,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -83699,7 +83699,7 @@
         },
         {
           "offset": "0x8f",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -83811,7 +83811,7 @@
         },
         {
           "offset": "0x8f",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -83934,12 +83934,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],
@@ -84011,12 +84011,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],
