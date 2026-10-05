@@ -15,6 +15,8 @@ H1_ENUM_END(SoundMusicSource)
 // level-up and congratulations screens.
 H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_NONE = -1,
+    // One past the seven terrain themes.
+    MUSIC_TRACK_TERRAIN_END = 7,
     MUSIC_TRACK_DAEMON_CAVE = 7,
     MUSIC_TRACK_FAERIE_RING = 8,
     MUSIC_TRACK_GAZEBO = 9,
@@ -39,12 +41,20 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_LIGHTHOUSE = 0x1a,
     MUSIC_TRACK_SPELL_SHRINE = 0x1b,
     MUSIC_TRACK_TREASURE = 0x1c,
+    // The four town themes (TOWN_THEME_MUSIC_BASE + town type).
+    MUSIC_TRACK_TOWN_FIRST = 0x1d,
+    MUSIC_TRACK_TOWN_LAST = 0x20,
+    // combatManager::Open picks one of the first three battle themes.
+    MUSIC_TRACK_BATTLE_FIRST = 0x28,
+    MUSIC_TRACK_BATTLE_LAST = 0x2a,
     MUSIC_TRACK_BATTLE_1 = 0x28,
     MUSIC_TRACK_BATTLE_2 = 0x29,
     MUSIC_TRACK_BATTLE_3 = 0x2a,
     MUSIC_TRACK_BATTLE_LOST = 0x2b,
     MUSIC_TRACK_BATTLE_WON = 0x2c,
     MUSIC_TRACK_ULTIMATE_ARTIFACT = 0x2e,
+    // The tavern window's music (TOWN_TAVERN_MUSIC).
+    MUSIC_TRACK_TAVERN = 0x2f,
     MUSIC_TRACK_MAIN_MENU = 0x30,
     MUSIC_TRACK_AI_TURN = 0x31,
     // game::NewDay's new-week and new-month announcements.

@@ -284,4 +284,11 @@ H1_ENUM_BEGIN(HeroLevelText)
     HERO_LEVEL_TEXT_LEVELS = 2
 H1_ENUM_END(HeroLevelText)
 
+// Spell-power levels the AI weighs specially (philAI army worth, combat
+// spell effect shift).
+H1_ENUM_CONST_BEGIN(HeroSpellPowerLevel)
+    HERO_SPELL_POWER_ONE = 1,
+    HERO_SPELL_POWER_TWO = 2
+H1_ENUM_CONST_END(HeroSpellPowerLevel)
+
 #endif // HOMM1_SOURCE_HERO_H

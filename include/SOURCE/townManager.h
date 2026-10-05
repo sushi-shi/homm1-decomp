@@ -374,4 +374,14 @@ i16 TavernHandler(struct tag_message& message);
 i16 MageGuildHandler(struct tag_message& message);
 i16 SplitArmyHandler(struct tag_message& message);
 i16 CastleHandler(struct tag_message& message);
+// BuyBuild's cost-row layouts by resource count, and the thieves'-guild
+// counts SetupThievesGuild reveals more categories for.
+H1_ENUM_CONST_BEGIN(TownCountConstant)
+    BUILD_RESOURCES_FIVE = 5,
+    BUILD_RESOURCES_SIX = 6,
+    BUILD_RESOURCES_SEVEN = 7,
+    THIEVES_GUILDS_TWO = 2,
+    THIEVES_GUILDS_THREE = 3
+H1_ENUM_CONST_END(TownCountConstant)
+
 #endif // HOMM1_SOURCE_TOWNMANAGER_H

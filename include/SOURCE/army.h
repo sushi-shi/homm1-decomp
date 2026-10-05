@@ -276,4 +276,15 @@ H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
     TARGET_NAME_SIZE = 100
 H1_ENUM_CONST_END(ArmyMessageConstant)
 
+// Creature specials fire on one outcome of SRandom(1, ROLL_MAX): the
+// cyclops' paralysis and the unicorn's blindness on HIT, the genie's
+// halving on GENIE_HIT. DrawToBuffer clips edge stacks from EDGE_CLIP_FRAME.
+H1_ENUM_CONST_BEGIN(ArmySpecialConstant)
+    ARMY_SPECIAL_ROLL_MAX = 5,
+    ARMY_SPECIAL_ROLL_HIT = 3,
+    ARMY_GENIE_ROLL_HIT = 2,
+    ARMY_EDGE_CLIP_FRAME = 2,
+    ARMY_EDGE_CLIP_LATER_FRAME = 3
+H1_ENUM_CONST_END(ArmySpecialConstant)
+
 #endif // HOMM1_SOURCE_ARMY_H

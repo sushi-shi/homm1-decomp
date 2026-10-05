@@ -1310,13 +1310,13 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
     }
     if (requiredCount <= 4)
         topResources = requiredCount;
-    else if (requiredCount == 5) {
+    else if (requiredCount == BUILD_RESOURCES_FIVE) {
         topResources = 2;
         lowerResources = 3;
-    } else if (requiredCount == 6) {
+    } else if (requiredCount == BUILD_RESOURCES_SIX) {
         topResources = 3;
         lowerResources = 3;
-    } else if (requiredCount == 7) {
+    } else if (requiredCount == BUILD_RESOURCES_SEVEN) {
         topResources = 3;
         lowerResources = 4;
     }
@@ -1912,9 +1912,9 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
         numThieves = gpGame->GetNumThievesGuilds(giCurPlayer);
         if (numThieves >= 4)
             categories = THIEVES_CATEGORY_COUNT;
-        else if (numThieves == 3)
+        else if (numThieves == THIEVES_GUILDS_THREE)
             categories = THIEVES_CATEGORY_ARMY_STRENGTH;
-        else if (numThieves == 2)
+        else if (numThieves == THIEVES_GUILDS_TWO)
             categories = THIEVES_CATEGORY_RARE_RESOURCES;
         else
             categories = THIEVES_CATEGORY_GOLD;

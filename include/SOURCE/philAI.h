@@ -313,4 +313,25 @@ extern playerData* gpCurPlayer;
 extern i8 giCurPlayer;
 extern i32 giCurTurn;
 
+// The AI's hourglass: phases 0..LAST, advanced faster with fewer heroes
+// (PHASE_1/3/6 are the steps a two- or three-hero turn skips).
+H1_ENUM_CONST_BEGIN(AIHourGlassConstant)
+    AI_HOUR_GLASS_PHASE_1 = 1,
+    AI_HOUR_GLASS_PHASE_3 = 3,
+    AI_HOUR_GLASS_PHASE_6 = 6,
+    AI_HOUR_GLASS_PHASE_LAST = 9,
+    AI_HOUR_GLASS_TWO_HEROES = 2,
+    AI_HOUR_GLASS_THREE_HEROES = 3
+H1_ENUM_CONST_END(AIHourGlassConstant)
+
+// ValueOfEventAtPosition's battle odds: CERTAIN is a 100% chance; debug
+// level EVENT traces events and turns into BATTLE tracing for column
+// TRACE_COLUMN.
+H1_ENUM_CONST_BEGIN(AIEventValueConstant)
+    AI_CHANCE_CERTAIN = 100,
+    AI_DEBUG_LEVEL_EVENT = 5,
+    AI_DEBUG_LEVEL_BATTLE = 9,
+    AI_DEBUG_TRACE_COLUMN = 15
+H1_ENUM_CONST_END(AIEventValueConstant)
+
 #endif // HOMM1_SOURCE_PHILAI_H

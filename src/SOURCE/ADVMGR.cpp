@@ -32,6 +32,7 @@
 #include <SOURCE/advManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/fileRequester.h>
@@ -1393,7 +1394,8 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
                     localization::Tr("adventure.search.found_prefix"),
                     gArtifactNames[gpGame->m_ultimateArtifactId]
                 );
-                if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
+                if (gpGame->m_campaignType > 0
+                    && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_EYE_OF_GOROS) {
                     sprintf(gText, localization::Tr("adventure.search.eye_of_goros_found"));
                     NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
                 } else {
@@ -1401,7 +1403,8 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
                     hero->ViewArtifact(gpGame->m_ultimateArtifactId, 0);
                 }
                 PlayMusic(m_currentTerrain);
-            } else if (gpGame->m_campaignType > 0 && gpGame->m_campaignScenario == 2) {
+            } else if (gpGame->m_campaignType > 0
+                       && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_EYE_OF_GOROS) {
                 sprintf(gText, localization::Tr("adventure.search.eye_of_goros_enemy"));
                 NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0xb1, 0x1c);
             }
@@ -1765,7 +1768,8 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
         if (m_updateMaxX >= UPDATE_FRAME_CYCLE)
             m_updateMaxX = 0;
         glTimers[ADVENTURE_FRAME_TIMER_SLOT] = KBTickCount() + TIMER_DELAY;
-        if (m_updateMaxX == 1 || m_updateMaxX == 3 || m_updateMaxX == 5) {
+        if (m_updateMaxX == UPDATE_FRAME_STEP_1 || m_updateMaxX == UPDATE_FRAME_STEP_3
+            || m_updateMaxX == UPDATE_FRAME_STEP_5) {
             ++m_animationPhases[ANIMATION_PHASE_COLUMN_1];
             m_animationPhases[ANIMATION_PHASE_COLUMN_1] %= UPDATE_ANIMATION_PHASES;
             ++m_animationPhases[ANIMATION_PHASE_COLUMN_3];
@@ -3431,11 +3435,11 @@ i8 advManager::UpdBottomViewHero(void) {
                 if (slotNumPos == 0) {
                     nextX = nStacks <= 2 ? 77 : 101;
                 } else if (slotNumPos == 1) {
-                    nextX = nStacks == 2 ? 28 : 52;
-                } else if (slotNumPos == 2) {
+                    nextX = nStacks == BOTTOM_HERO_TWO_STACKS ? 28 : 52;
+                } else if (slotNumPos == BOTTOM_HERO_SLOT_THIRD) {
                     nextX = 3;
-                } else if (slotNumPos == 3) {
-                    nextX = nStacks == 4 ? 77 : 101;
+                } else if (slotNumPos == BOTTOM_HERO_SLOT_FOURTH) {
+                    nextX = nStacks == BOTTOM_HERO_FOUR_STACKS ? 77 : 101;
                 } else {
                     nextX = 52;
                 }

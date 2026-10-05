@@ -892,9 +892,9 @@ void philAI::GetTurnAIVars(i32 player) {
     if (gbIAmGreatest)
         gAttackComputerBonus = 0.1f;
     giMaxHeroesForThisPlayer = 3;
-    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 2)
+    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == GAME_PLAYERS_TWO)
         giMaxHeroesForThisPlayer++;
-    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == 3)
+    if (gpGame->m_playerCount - gpGame->m_deadPlayerCount == GAME_PLAYERS_THREE)
         giMaxHeroesForThisPlayer++;
     if (gpCurPlayer->m_townCount >= 5)
         giMaxHeroesForThisPlayer++;
@@ -1950,7 +1950,7 @@ i32 philAI::RVOfPosition(
                 oldVal = ValueOfEventAtPosition(pHero, xPos, posY, 1, &iMonsterChance);
                 if (oldVal < 0)
                     totalValue += oldVal;
-                if (oldChance == 100)
+                if (oldChance == AI_CHANCE_CERTAIN)
                     oldChance = iMonsterChance;
                 else
                     oldChance = oldChance * iMonsterChance / 100;
@@ -1997,7 +1997,7 @@ i32 philAI::RVOfPosition(
         estTurnsVal = estTurnsVal * 1.2;
     totalValue = static_cast<i32>(totalValue / (estTurnsVal + 0.2));
     oldDelta = static_cast<i32>(oldDelta * 2 / (1.0f + estTurnsVal));
-    if (oldChance == 100)
+    if (oldChance == AI_CHANCE_CERTAIN)
         totalValue += oldDelta;
     if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && newCurTriggerType == MAP_OBJECT_COAST)
         totalValue += 40;
@@ -2354,9 +2354,9 @@ i32 philAI::FightValueOfStack(
         newLuck = gpGame->GetLuck(heroPointer, NULL);
         if (newLuck)
             theArmyWorth = theArmyWorth * (newLuck + 16) / 16;
-        if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
+        if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
             savedMod = 0.25f;
-        else if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
+        else if (heroPointer->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_TWO)
             savedMod = 0.5f;
         else
             savedMod = 1.0f;
@@ -3185,9 +3185,11 @@ void philAI::IncrementHourGlass(void) {
         gCurHourGlassPhase++;
         gCurHourGlassPhase++;
     }
-    if (heroCount == 2 && gCurHourGlassPhase != 1)
+    if (heroCount == AI_HOUR_GLASS_TWO_HEROES && gCurHourGlassPhase != AI_HOUR_GLASS_PHASE_1)
         gCurHourGlassPhase++;
-    if (heroCount == 3 && (gCurHourGlassPhase == 3 || gCurHourGlassPhase == 6))
+    if (heroCount == AI_HOUR_GLASS_THREE_HEROES
+        && (gCurHourGlassPhase == AI_HOUR_GLASS_PHASE_3
+            || gCurHourGlassPhase == AI_HOUR_GLASS_PHASE_6))
         gCurHourGlassPhase++;
     if (gCurHourGlassPhase > 9)
         gCurHourGlassPhase = 9;
@@ -3493,8 +3495,8 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                                + 1.0)
                         );
                 }
-                if (immediate && giDebugLevel == 5 && x == 15)
-                    giDebugLevel = 9;
+                if (immediate && giDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
+                    giDebugLevel = AI_DEBUG_LEVEL_BATTLE;
                 ProbableOutcomeOfBattle(
                     &pHero->m_army,
                     pHero,
@@ -3511,8 +3513,8 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                     gDefenderRemaining,
                     gEventRV
                 );
-                if (immediate && giDebugLevel == 9)
-                    giDebugLevel = 5;
+                if (immediate && giDebugLevel == AI_DEBUG_LEVEL_BATTLE)
+                    giDebugLevel = AI_DEBUG_LEVEL_EVENT;
                 *liveChance = static_cast<i32>(gWinChance * 100.0f);
                 if (gTownValue > 0)
                     gEventRV = static_cast<i32>(gEventRV + gTownValue * gWinChance);
@@ -3562,8 +3564,8 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 gEventRV = 0;
             } else {
                 gTownValue = ValueOfTown(gEventTown);
-                if (immediate && giDebugLevel == 5 && x == 15)
-                    giDebugLevel = 9;
+                if (immediate && giDebugLevel == AI_DEBUG_LEVEL_EVENT && x == AI_DEBUG_TRACE_COLUMN)
+                    giDebugLevel = AI_DEBUG_LEVEL_BATTLE;
                 if (gpGame->GetTown(gEventCell->m_objectMetadata)->m_occupyingHeroId
                     != TOWN_OCCUPYING_HERO_NONE)
                     ProbableOutcomeOfBattle(
@@ -3604,8 +3606,8 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                     gOutcome = 0;
                 }
                 *liveChance = static_cast<i32>(gWinChance * 100.0f);
-                if (immediate && giDebugLevel == 9)
-                    giDebugLevel = 5;
+                if (immediate && giDebugLevel == AI_DEBUG_LEVEL_BATTLE)
+                    giDebugLevel = AI_DEBUG_LEVEL_EVENT;
                 if (gEventTown->m_owner >= 0)
                     gTownValue = static_cast<i32>(
                         gTownValue

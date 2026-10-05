@@ -374,7 +374,8 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_CATAPULT]->DimToBuffer(
                     0x1b,
                     0x17b,
-                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == 7 ? 16 : 15,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == COMBAT_CATAPULT_RELEASE_FRAME ? 16
+                                                                                           : 15,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -459,7 +460,8 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_CATAPULT]->DimToBuffer(
                     0x1b,
                     0x17b,
-                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == 7 ? 16 : 15,
+                    m_catapultFrame[COMBAT_ATTACKER_SIDE] == COMBAT_CATAPULT_RELEASE_FRAME ? 16
+                                                                                           : 15,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );

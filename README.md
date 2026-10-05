@@ -30,19 +30,27 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [ ] Review game-type `reinterpret_cast`: **115 sites** (26 icon frame
-  directory, 40 network packet views, 49 other byte/word/integer views); 69
-  further casts are Win32 API boundaries.
-- [ ] Replace manual byte layouts with named types: font glyph word view
-  (**6 sites**) and literal-index packet bytes.
+- [ ] Review game-type `reinterpret_cast`: **51 sites** (12 network packet
+  views at the `char*` record APIs and donor view macros, 39 other
+  byte/word/integer views; the icon frame directory and the combat and save
+  transfer buffers are typed); 69 further casts are Win32 API boundaries.
+  Every remaining cast carries its reason (cast ledger OPEN = 0).
+- [x] Replace manual byte layouts with named types: the font reads
+  `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
+  only an `i16` index yields retail's `imul 6`. No literal-index packet stores
+  remain.
 - [x] Negative offsets: **0 sites** (no negative indexing, `this` arithmetic or
   container-of recovery).
+- [x] Verify-board text debt at **0**: magic case labels, unnamed domain
+  compares, `.cpp`-local enums and views, `.cpp` extern declarations, C-style
+  casts and unexplained casts.
 - [ ] Recover unknown members: **41** `m_unknown*`/`m_field_0x*` placeholders.
 - [ ] Review gotos: **206 statements**; keep those retail's block layout requires.
-- [ ] Review dead locals: **59** never-referenced locals, each to be tied to an
-  unreferenced retail frame slot.
-- [ ] Review `static_cast`: **499 sites**.
-- [ ] Review unions: **8 definitions**; manual varargs: **1 function** (netwin).
+- [x] Review dead locals: **116** never-read locals. The 75 without an
+  initializer were removed together as a control, and every affected function
+  lost its exact frame. The 41 with an initializer emit retail stores.
+- [ ] Review `static_cast`: **508 sites**.
+- [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
 
 ## Branches
 

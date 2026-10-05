@@ -824,7 +824,11 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
     UPDATE_VIEWPORT_ORIGIN = 16,
     UPDATE_VIEWPORT_SIZE = 448,
     UPDATE_ANIMATION_PHASES = 6,
-    UPDATE_FRAME_CYCLE = 6
+    UPDATE_FRAME_CYCLE = 6,
+    // The odd steps, which advance columns 1 and 3.
+    UPDATE_FRAME_STEP_1 = 1,
+    UPDATE_FRAME_STEP_3 = 3,
+    UPDATE_FRAME_STEP_5 = 5
 H1_ENUM_CONST_END(AdventureUpdateScreenConstant)
 
 H1_ENUM_CONST_BEGIN(AdventureAnimationPhaseIndex)
@@ -1072,6 +1076,11 @@ H1_ENUM_CONST_END(AdventureKingdomViewConstant)
 // AdventureBottomHeroViewConstant names).
 H1_ENUM_CONST_BEGIN(AdventureBottomHeroViewConstant)
     BOTTOM_HERO_LABEL_BYTES = 6,
+    // Count-label positions and stack counts the label layout distinguishes.
+    BOTTOM_HERO_SLOT_THIRD = 2,
+    BOTTOM_HERO_SLOT_FOURTH = 3,
+    BOTTOM_HERO_TWO_STACKS = 2,
+    BOTTOM_HERO_FOUR_STACKS = 4,
     BOTTOM_HERO_ICON_WIDTH = 32,
     BOTTOM_HERO_ICON_HEIGHT = 28,
     BOTTOM_HERO_LABEL_HEIGHT = 12,

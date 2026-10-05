@@ -102,11 +102,11 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRa
 
     if (numRaces == 1)
         return ARMY_GROUP_ALIGNMENT_SAME;
-    if (numRaces == 3)
+    if (numRaces == ARMY_GROUP_RACES_THREE)
         return ARMY_GROUP_ALIGNMENT_THREE;
-    if (numRaces == 4)
+    if (numRaces == ARMY_GROUP_RACES_FOUR)
         return ARMY_GROUP_ALIGNMENT_FOUR;
-    if (numRaces == 5)
+    if (numRaces == ARMY_GROUP_RACES_FIVE)
         return ARMY_GROUP_ALIGNMENT_FIVE_OR_MORE;
     return ARMY_GROUP_ALIGNMENT_NO_MODIFIER;
 }

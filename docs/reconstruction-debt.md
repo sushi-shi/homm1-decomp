@@ -45,7 +45,8 @@ not yet modelled:
   donor-derived symbols (`?GetRemoteData@@YIPADC@Z`) fix that type, and the
   donor casts at the same call sites. A union cannot hold the combat payload
   because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
-  `char[]` data identity;
+  `char[]` data identity. `TransmitSaveGame` builds its packets in a named
+  `RemotePayload`, the `RemoteMessage` payload union;
 - remaining byte, word and integer views.
 
 The fix is the real type at its owner (a typed member, a packet struct or
@@ -86,6 +87,21 @@ unread slot in retail's frame.
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
 declared type.
+
+**Verify-board text debt.** `homm1 verify board` ratchets several textual
+metrics, and their committed floors are 0:
+
+- Switch case labels and equality tests use named values: domain members,
+  `_FIRST`/`_LAST` range markers, or `CONST` groups in the owning header
+  (stage machines, campaign scenario rows, volume levels, ten-way rolls,
+  layout counts).
+- File-scope enums, views and `extern` declarations live in their owning
+  headers.
+- Each remaining `reinterpret_cast` states its reason within the ledger's
+  window.
+
+These are renames and moves, so the generated code is unchanged. Comments
+next to an assertion must not move its `#line` source line.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
 where retail evidence requires them.

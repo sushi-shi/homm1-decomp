@@ -213,8 +213,12 @@ static int gMusicSource;
 
 VA(0x004692b6, 0x47)
 bool ShouldRepeatMusic(int track) {
-    if (track < 7 || (track >= 40 && track <= 42) || track == 53 || track == 54 || track == 47
-        || track == 48 || track == 49 || (track >= 29 && track <= 32))
+    if (track < MUSIC_TRACK_TERRAIN_END
+        || (track >= MUSIC_TRACK_BATTLE_FIRST && track <= MUSIC_TRACK_BATTLE_LAST)
+        || track == MUSIC_TRACK_BATTLE_4 || track == MUSIC_TRACK_CONGRATULATIONS
+        || track == MUSIC_TRACK_TAVERN || track == MUSIC_TRACK_MAIN_MENU
+        || track == MUSIC_TRACK_AI_TURN
+        || (track >= MUSIC_TRACK_TOWN_FIRST && track <= MUSIC_TRACK_TOWN_LAST))
         return true;
     return false;
 }

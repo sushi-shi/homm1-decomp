@@ -321,19 +321,19 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
     slot = 0;
     if (xPos < 0) {
         if (myDistY < 0)
-            slot += 18;
+            slot += COMBAT_CURSOR_SECTOR_LEFT_UP;
         else
-            slot += 12;
+            slot += COMBAT_CURSOR_SECTOR_LEFT_DOWN;
     } else {
         if (myDistY < 0)
-            slot += 0;
+            slot += COMBAT_CURSOR_SECTOR_RIGHT_UP;
         else
-            slot += 6;
+            slot += COMBAT_CURSOR_SECTOR_RIGHT_DOWN;
     }
     xPos = abs(xPos);
     myDistY = abs(myDistY);
     endRatio = static_cast<float>(xPos) / (static_cast<float>(myDistY));
-    if (slot == 0 || slot == 12) {
+    if (slot == COMBAT_CURSOR_SECTOR_RIGHT_UP || slot == COMBAT_CURSOR_SECTOR_LEFT_DOWN) {
         if (endRatio > 3.73)
             slot += 5;
         else if (endRatio > 1.73)

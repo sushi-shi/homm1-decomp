@@ -31,11 +31,11 @@ font::~font(void) {
 // Map CP1251 codes to Buka's font character order.
 VA(0x00471ef2, 0x4c)
 i32 RemapCyrillicCharacter(i32 character) {
-    if (character == 0xa8)
+    if (character == CYRILLIC_CAPITAL_YO)
         return 0xa0;
-    if (character == 0xb8)
+    if (character == CYRILLIC_SMALL_YO)
         return 0xc1;
-    if (character < 0xc0)
+    if (character < CYRILLIC_CAPITAL_A)
         return 0xa1;
     if (character < 0xe0)
         return character - 0x40;
@@ -50,7 +50,9 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
     i16 index = 0;
     while (text[index] != 0) {
         glyph = static_cast<u8>(text[index]);
-        if (glyph < ' ' || (glyph > 0x7f && glyph < 0xc0 && glyph != 0xb8 && glyph != 0xa8))
+        if (glyph < ' '
+            || (glyph > 0x7f && glyph < CYRILLIC_CAPITAL_A && glyph != CYRILLIC_SMALL_YO
+                && glyph != CYRILLIC_CAPITAL_YO))
             glyph = 0x7f;
         else if (glyph > 0x7f)
             glyph = RemapCyrillicCharacter(glyph);
@@ -103,7 +105,8 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
         while (myText[curPosIdx] != 0 && myText[curPosIdx] != '\n' && tempWidth <= width) {
             baseGlyph = static_cast<u8>(myText[curPosIdx]);
             if (baseGlyph < ' '
-                || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8 && baseGlyph != 0xa8))
+                || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                    && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
                 baseGlyph = 0x7f;
             else if (baseGlyph > 0x7f)
                 baseGlyph = RemapCyrillicCharacter(baseGlyph);
@@ -117,8 +120,8 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
             while (myText[curPosIdx] != ' ' && curPosIdx >= startIdx) {
                 baseGlyph = static_cast<u8>(myText[curPosIdx]);
                 if (baseGlyph < ' '
-                    || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8
-                        && baseGlyph != 0xa8))
+                    || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                        && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
                     baseGlyph = 0x7f;
                 else if (baseGlyph > 0x7f)
                     baseGlyph = RemapCyrillicCharacter(baseGlyph);
@@ -179,7 +182,8 @@ i32 font::LineLength(char* str, i16 maxW) {
         while (cursor[thePos] != 0 && cursor[thePos] != '\n' && lw <= maxW) {
             baseGlyph = static_cast<u8>(cursor[thePos]);
             if (baseGlyph < ' '
-                || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8 && baseGlyph != 0xa8))
+                || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                    && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
                 baseGlyph = 0x7f;
             else if (baseGlyph > 0x7f)
                 baseGlyph = RemapCyrillicCharacter(baseGlyph);
@@ -193,8 +197,8 @@ i32 font::LineLength(char* str, i16 maxW) {
             while (cursor[thePos] != ' ' && thePos >= mainStart) {
                 baseGlyph = static_cast<u8>(cursor[thePos]);
                 if (baseGlyph < ' '
-                    || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8
-                        && baseGlyph != 0xa8))
+                    || (baseGlyph > 0x7f && baseGlyph < CYRILLIC_CAPITAL_A
+                        && baseGlyph != CYRILLIC_SMALL_YO && baseGlyph != CYRILLIC_CAPITAL_YO))
                     baseGlyph = 0x7f;
                 else if (baseGlyph > 0x7f)
                     baseGlyph = RemapCyrillicCharacter(baseGlyph);
@@ -240,7 +244,9 @@ i32 font::LineWidth(char* text) {
     while (position < theLen && p[position] != 0) {
         while (p[position] != 0 && p[position] != '\n') {
             curCh = static_cast<u8>(p[position]);
-            if (curCh < ' ' || (curCh > 0x7f && curCh < 0xc0 && curCh != 0xb8 && curCh != 0xa8))
+            if (curCh < ' '
+                || (curCh > 0x7f && curCh < CYRILLIC_CAPITAL_A && curCh != CYRILLIC_SMALL_YO
+                    && curCh != CYRILLIC_CAPITAL_YO))
                 curCh = 0x7f;
             else if (curCh > 0x7f)
                 curCh = RemapCyrillicCharacter(curCh);

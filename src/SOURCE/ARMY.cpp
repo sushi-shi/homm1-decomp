@@ -180,7 +180,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
 
     offsetMode = ICON_DRAW_OFFSET_FULL;
     outlined = 0;
-    if ((m_animationFrame == 2 || m_animationFrame >= 3)
+    if ((m_animationFrame == ARMY_EDGE_CLIP_FRAME || m_animationFrame >= ARMY_EDGE_CLIP_LATER_FRAME)
         && ((m_stats.attributes & MONSTER_FLAGS_WIDE)
                 && (m_hex % COMBAT_GRID_COLUMNS <= 2 || m_hex % COMBAT_GRID_COLUMNS >= 6)
             || !(m_stats.attributes & MONSTER_FLAGS_WIDE)
@@ -744,7 +744,9 @@ void army::SpecialAttack(void) {
             hitRow -= (aimRow - archerRow) / 2;
         if (abs(aimRow - archerRow) % 2 == 1) {
             if (pastWall < wallDistance
-                || pastWall == wallDistance && (archerRow == 1 || archerRow == 3)) {
+                || pastWall == wallDistance
+                       && (archerRow == COMBAT_UPPER_WALL_ROW
+                           || archerRow == COMBAT_LOWER_WALL_ROW)) {
                 if (archerRow < aimRow)
                     hitRow--;
                 else
@@ -1154,7 +1156,7 @@ void army::DoAttack(i32 retaliation) {
     gpCombatManager->m_extendLimitDown = oldMode;
     switch (m_creatureType) {
         case CREATURE_CYCLOPS:
-            if (SRandom(1, 5) == 3) {
+            if (SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_SPECIAL_ROLL_HIT) {
                 if (targetPtr && targetPtr->m_spellEffect != SPELL_ANTI_MAGIC
                     && targetPtr->m_creatureType != CREATURE_DRAGON
                     && (targetPtr->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
@@ -1163,7 +1165,7 @@ void army::DoAttack(i32 retaliation) {
                         ->CastSpell(SPELL_PARALYZE, targetPtr->m_hex, 1, ARMY_HEX_INVALID);
                     castOk = 1;
                 }
-            } else if (SRandom(1, 5) == 3 && target2Info
+            } else if (SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_SPECIAL_ROLL_HIT && target2Info
                        && target2Info->m_spellEffect != SPELL_ANTI_MAGIC
                        && target2Info->m_creatureType != CREATURE_DRAGON
                        && (target2Info->m_creatureType != CREATURE_DWARF || SRandom(0, 4) != 1)
@@ -1173,7 +1175,8 @@ void army::DoAttack(i32 retaliation) {
             }
             break;
         case CREATURE_UNICORN:
-            if (SRandom(1, 5) == 3 && targetPtr && targetPtr->m_spellEffect != SPELL_ANTI_MAGIC
+            if (SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_SPECIAL_ROLL_HIT && targetPtr
+                && targetPtr->m_spellEffect != SPELL_ANTI_MAGIC
                 && targetPtr->m_creatureType != CREATURE_DRAGON
                 && (targetPtr->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(targetPtr->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
@@ -1311,7 +1314,11 @@ i16 army::WalkTo(i16 destHex) {
         return ARMY_PATH_BLOCKED;
     stepCount = 0;
     for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
-        Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+        Walk(
+            gpSearchArray->m_directions[pathIndex],
+            0,
+            pathIndex != gpSearchArray->m_pathLength - 1
+        );
         stepCount++;
         if (stepCount >= m_stats.speed)
             pathIndex = -1;
@@ -1351,7 +1358,11 @@ i16 army::AttackTo(i16 destHex) {
             pathIndex = 0;
             stepCount = 0;
             for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex; pathIndex--) {
-                Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+                Walk(
+                    gpSearchArray->m_directions[pathIndex],
+                    0,
+                    pathIndex != gpSearchArray->m_pathLength - 1
+                );
                 stepCount++;
                 if (stepCount >= m_stats.speed && pathIndex != 1) {
                     Stand(1);
@@ -1463,7 +1474,8 @@ void army::DamageEnemy(
     if (m_damageMode == ARMY_DAMAGE_HALF)
         theTotal /= 2;
     damage = static_cast<i32>(theTotal + 0.5);
-    if (m_creatureType == CREATURE_GENIE && SRandom(1, 5) == 2) {
+    if (m_creatureType == CREATURE_GENIE
+        && SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_GENIE_ROLL_HIT) {
         hurt = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
         if (hurt > damage) {
             gGenieHalf = 1;

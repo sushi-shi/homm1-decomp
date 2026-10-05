@@ -59,9 +59,10 @@ i32 combatManager::DoSpellAI(i8 side) {
     bestHexWork = -1;
     if (m_heroes[side] == NULL)
         return 0;
-    if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 1)
+    if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == HERO_SPELL_POWER_ONE)
         gSpellAIEffectShift = 2;
-    else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] == 2)
+    else if (m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER]
+             == HERO_SPELL_POWER_TWO)
         gSpellAIEffectShift = 1;
     else
         gSpellAIEffectShift = 0;
@@ -455,15 +456,12 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                     hex = targetHex;
                 break;
         }
-        if (!done && m_hexCells[hex].m_occupantIndex >= 0
-            && m_hexCells[hex].m_occupantSide >= 0) {
-            targetArmy =
-                &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
+        if (!done && m_hexCells[hex].m_occupantIndex >= 0 && m_hexCells[hex].m_occupantSide >= 0) {
+            targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
             if (targetArmy->m_stats.hitPoints > 0
                 && !gArmyEffected[m_hexCells[hex].m_occupantSide]
                                  [m_hexCells[hex].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] =
-                    1;
+                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
                 if (targetArmy->m_creatureType != CREATURE_DRAGON
                     && targetArmy->m_spellEffect != SPELL_ANTI_MAGIC) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
@@ -475,8 +473,7 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                     if (unusedTotal + targetArmy->m_hitPointsLost
                         >= targetArmy->m_stats.hitPoints) {
                         killedCount++;
-                        unusedTotal -=
-                            targetArmy->m_stats.hitPoints - targetArmy->m_hitPointsLost;
+                        unusedTotal -= targetArmy->m_stats.hitPoints - targetArmy->m_hitPointsLost;
                     }
                     if (killedCount >= targetArmy->m_quantity) {
                         killedCount = targetArmy->m_quantity;

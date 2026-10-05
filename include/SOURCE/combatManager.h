@@ -725,11 +725,30 @@ H1_ENUM_BEGIN(CombatSpellAITargetMode)
     SPELL_AI_ENEMY = 3
 H1_ENUM_END(CombatSpellAITargetMode)
 
-// CatAttack's targets, as grid rows of the castle wall column: the two wall
-// sections either side of the gate.
-H1_ENUM_CONST_BEGIN(CatapultTargetRow)
-    COMBAT_CATAPULT_UPPER_WALL_ROW = 1,
-    COMBAT_CATAPULT_LOWER_WALL_ROW = 3
-H1_ENUM_CONST_END(CatapultTargetRow)
+// Grid rows of the castle wall's two sections either side of the gate:
+// CatAttack's targets, and the rows from which an archer's shot can pass
+// the wall on even terms (army::SpecialAttack).
+H1_ENUM_CONST_BEGIN(CastleWallRow)
+    COMBAT_UPPER_WALL_ROW = 1,
+    COMBAT_LOWER_WALL_ROW = 3
+H1_ENUM_CONST_END(CastleWallRow)
+
+// Combat drawing frames: CatAttack's wall collapses at COLLAPSE_FRAME; the
+// attacker's catapult arm shows its released image at RELEASE_FRAME;
+// RandomizeObstacles redraws obstacle frame LAND_ONLY as 0 on water and lava.
+H1_ENUM_CONST_BEGIN(CombatDrawFrameConstant)
+    COMBAT_WALL_COLLAPSE_FRAME = 5,
+    COMBAT_CATAPULT_RELEASE_FRAME = 7,
+    COMBAT_OBSTACLE_LAND_ONLY_FRAME = 2
+H1_ENUM_CONST_END(CombatDrawFrameConstant)
+
+// CheckSetMouseDirection's cursor sectors around the target hex; each adds
+// the steepness band to pick one of the 24 direction cursors.
+H1_ENUM_CONST_BEGIN(CombatCursorSector)
+    COMBAT_CURSOR_SECTOR_RIGHT_UP = 0,
+    COMBAT_CURSOR_SECTOR_RIGHT_DOWN = 6,
+    COMBAT_CURSOR_SECTOR_LEFT_DOWN = 12,
+    COMBAT_CURSOR_SECTOR_LEFT_UP = 18
+H1_ENUM_CONST_END(CombatCursorSector)
 
 #endif // HOMM1_SOURCE_COMBATMANAGER_H
