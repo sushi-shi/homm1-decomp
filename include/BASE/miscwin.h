@@ -32,7 +32,6 @@ void ClipIconToBitmap(
 i32 Random(i32 low, i32 high);
 void FadeIn(i32 increment) throw();
 void FadeOut(i32 increment) throw();
-void PrintMemoryLeaks(void);
 void PostprocessPalette(i8* data);
 void BlitBitmapToScreen(
     class bitmap* sourceBitmap,

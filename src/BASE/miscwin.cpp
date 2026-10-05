@@ -167,7 +167,7 @@ void FadeOut(i32 increment) throw() {
 
 // ---------------------------------------------------------------------------
 // The rest of this object. Retail places OLDASM's helpers, the clipped icon
-// renderers and PrintMemoryLeaks in the same object as the blitters: VC4
+// renderers in the same object as the blitters: VC4
 // LINK pulls a library member once per object in first-reference order, and
 // only a shared object reproduces retail's BASE order (this group first,
 // although the first symbol SOURCE references is Random). The OLDASM assert
@@ -390,10 +390,3 @@ void ClipIconToBitmap(
         }
     }
 }
-
-// int3-delimited single-function TU between Iconm2bClip and BASEMGR; KB's
-// ShutDown calls it. Buka keeps a debug-heap report here; HoMM1 retail ships
-// the empty release body.
-
-// NWC-only: no standalone Buka body; see buka-function-map.json.
-void PrintMemoryLeaks(void) {}
