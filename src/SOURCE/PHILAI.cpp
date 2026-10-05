@@ -1387,7 +1387,7 @@ void philAI::ProbableOutcomeOfBattle(
         factor = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
         if (gbHumanPlayer[enemyPlayer])
             outcomeValue = static_cast<i32>(
-                outcomeValue + (defenderRemaining * factor * factor) * gAttackHumanBonus
+                outcomeValue + defenderRemaining * gAttackHumanBonus * factor * factor
             );
         else
             outcomeValue = static_cast<i32>(
@@ -1404,7 +1404,7 @@ void philAI::ProbableOutcomeOfBattle(
         outcomeValue = static_cast<i32>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
         exp = gpGame->ExperienceValueOfStack(defender, defenderHero);
         outcomeValue =
-            static_cast<i32>(outcomeValue + exp * attackerHero->m_aiFightValue * winChance * 0.8);
+            static_cast<i32>(outcomeValue + exp * 0.8 * winChance * attackerHero->m_aiFightValue);
     }
     if (defenderHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
