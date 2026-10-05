@@ -269,17 +269,17 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
 // per stack and no eagle eye, mirror image or elementals.
 VA(0x0045a668, 0xc5e)
 void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
-    army* targetArmy;
-    i32 damage;
-    i32 targetIndex;
-    i32 side;
-    i32 result;
-    i32 armyIndex;
+    army* targetCreature;
+    i32 unusedStack;
+    i32 occupantIndex;
+    i32 unusedSlot;
+    i32 armySide;
+    i32 unusedValue;
     class sample* sample;
-    class sample* resistSample;
     i32 quantity;
-    i16 newHex;
-    army* teleportArmy;
+    class sample* immuneSample;
+    i16 destination;
+    army* teleported;
 
     sample = NULL;
     if (m_limitCreature) {
@@ -294,17 +294,17 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
     gpMouseManager->ReallyHidePointer();
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
-    targetArmy = NULL;
+    targetCreature = NULL;
     if (spell == SPELL_FIREBALL || spell == SPELL_METEOR_SHOWER || spell == SPELL_STORM
         || spell == SPELL_ARMAGEDDON || spell == SPELL_CURE || spell == SPELL_DISPEL_MAGIC)
-        targetArmy = NULL;
+        targetCreature = NULL;
     else if (ValidHex(targetHex) && m_hexCells[targetHex].m_occupantSide >= 0) {
-        targetArmy =
+        targetCreature =
             &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
-        side = m_hexCells[targetHex].m_occupantSide;
-        targetIndex = m_hexCells[targetHex].m_occupantIndex;
+        armySide = m_hexCells[targetHex].m_occupantSide;
+        occupantIndex = m_hexCells[targetHex].m_occupantIndex;
     } else
-        targetArmy = NULL;
+        targetCreature = NULL;
     if (!castByCreature)
         m_heroCastSpell[m_currentSide] = 1;
     switch (spell) {
@@ -322,15 +322,15 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
         case SPELL_METEOR_SHOWER:
             break;
         default:
-            if (targetArmy
-                && (targetArmy->m_creatureType == CREATURE_DRAGON
-                    || (targetArmy->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
-                resistSample = LoadPlaySample("RSBRYFZL.82M");
-                if (targetArmy->m_creatureType == CREATURE_DRAGON)
+            if (targetCreature
+                && (targetCreature->m_creatureType == CREATURE_DRAGON
+                    || (targetCreature->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
+                immuneSample = LoadPlaySample("RSBRYFZL.82M");
+                if (targetCreature->m_creatureType == CREATURE_DRAGON)
                     CombatMessage(localization::Tr("spell.dragon.immune"), 1);
                 else
                     CombatMessage(localization::Tr("spell.dwarf.resisted"), 1);
-                WaitSample(resistSample);
+                WaitSample(immuneSample);
                 goto done;
             }
             break;
@@ -339,210 +339,210 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
     sample = LoadPlaySample(gText);
     switch (spell) {
         case SPELL_TELEPORT:
-            teleportArmy = targetArmy;
+            teleported = targetCreature;
             targetHex = teleportDest;
-            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
-            m_hexCells[teleportArmy->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
-            m_hexCells[teleportArmy->m_hex].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
-            if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == ARMY_FACING_LEFT) {
-                m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
-                m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
-            } else if (m_hexCells[teleportArmy->m_hex].m_occupantFrame == ARMY_FACING_RIGHT) {
-                m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
-                m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
+            teleported->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+            m_hexCells[teleported->m_hex].m_occupantSide = COMBAT_SIDE_NONE;
+            m_hexCells[teleported->m_hex].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
+            if (m_hexCells[teleported->m_hex].m_occupantFrame == ARMY_FACING_LEFT) {
+                m_hexCells[teleported->m_hex + 1].m_occupantSide = COMBAT_SIDE_NONE;
+                m_hexCells[teleported->m_hex + 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
+            } else if (m_hexCells[teleported->m_hex].m_occupantFrame == ARMY_FACING_RIGHT) {
+                m_hexCells[teleported->m_hex - 1].m_occupantSide = COMBAT_SIDE_NONE;
+                m_hexCells[teleported->m_hex - 1].m_occupantIndex = COMBAT_ARMY_INDEX_NONE;
             }
-            teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+            teleported->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             WaitSample(sample);
             sprintf(gText, "telein.82m");
             sample = LoadPlaySample(gText);
-            if (teleportArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                newHex = targetHex;
-                if (teleportArmy->m_facing == ARMY_FACING_RIGHT) {
-                    newHex = teleportArmy->GetAdjacentCellIndex(newHex, COMBAT_DIRECTION_EAST);
-                    if (newHex == ARMY_HEX_INVALID
-                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
-                            && (m_hexCells[newHex].m_occupantSide != side
-                                || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
+            if (teleported->m_stats.attributes & MONSTER_FLAGS_WIDE) {
+                destination = targetHex;
+                if (teleported->m_facing == ARMY_FACING_RIGHT) {
+                    destination = teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_EAST);
+                    if (destination == ARMY_HEX_INVALID
+                        || (m_hexCells[destination].m_occupantSide != COMBAT_SIDE_NONE
+                            && (m_hexCells[destination].m_occupantSide != armySide
+                                || m_hexCells[destination].m_occupantIndex != occupantIndex))
+                        || m_hexCells[destination].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex--;
                 }
-                if (teleportArmy->m_facing == ARMY_FACING_LEFT) {
-                    newHex = teleportArmy->GetAdjacentCellIndex(newHex, COMBAT_DIRECTION_WEST);
-                    if (newHex == ARMY_HEX_INVALID
-                        || (m_hexCells[newHex].m_occupantSide != COMBAT_SIDE_NONE
-                            && (m_hexCells[newHex].m_occupantSide != side
-                                || m_hexCells[newHex].m_occupantIndex != targetIndex))
-                        || m_hexCells[newHex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
+                if (teleported->m_facing == ARMY_FACING_LEFT) {
+                    destination = teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_WEST);
+                    if (destination == ARMY_HEX_INVALID
+                        || (m_hexCells[destination].m_occupantSide != COMBAT_SIDE_NONE
+                            && (m_hexCells[destination].m_occupantSide != armySide
+                                || m_hexCells[destination].m_occupantIndex != occupantIndex))
+                        || m_hexCells[destination].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                         targetHex++;
                 }
-                teleportArmy->m_hex = targetHex;
-                switch (teleportArmy->m_facing) {
+                teleported->m_hex = targetHex;
+                switch (teleported->m_facing) {
                     case ARMY_FACING_RIGHT:
-                        m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
-                        m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = ARMY_FACING_LEFT;
-                        m_hexCells[teleportArmy->m_hex + 1].m_occupantSide = side;
-                        m_hexCells[teleportArmy->m_hex + 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex + 1].m_occupantFrame = ARMY_FACING_RIGHT;
+                        m_hexCells[teleported->m_hex].m_occupantSide = armySide;
+                        m_hexCells[teleported->m_hex].m_occupantIndex = occupantIndex;
+                        m_hexCells[teleported->m_hex].m_occupantFrame = ARMY_FACING_LEFT;
+                        m_hexCells[teleported->m_hex + 1].m_occupantSide = armySide;
+                        m_hexCells[teleported->m_hex + 1].m_occupantIndex = occupantIndex;
+                        m_hexCells[teleported->m_hex + 1].m_occupantFrame = ARMY_FACING_RIGHT;
                         break;
                     case ARMY_FACING_LEFT:
-                        m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
-                        m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex].m_occupantFrame = ARMY_FACING_RIGHT;
-                        m_hexCells[teleportArmy->m_hex - 1].m_occupantSide = side;
-                        m_hexCells[teleportArmy->m_hex - 1].m_occupantIndex = targetIndex;
-                        m_hexCells[teleportArmy->m_hex - 1].m_occupantFrame = ARMY_FACING_LEFT;
+                        m_hexCells[teleported->m_hex].m_occupantSide = armySide;
+                        m_hexCells[teleported->m_hex].m_occupantIndex = occupantIndex;
+                        m_hexCells[teleported->m_hex].m_occupantFrame = ARMY_FACING_RIGHT;
+                        m_hexCells[teleported->m_hex - 1].m_occupantSide = armySide;
+                        m_hexCells[teleported->m_hex - 1].m_occupantIndex = occupantIndex;
+                        m_hexCells[teleported->m_hex - 1].m_occupantFrame = ARMY_FACING_LEFT;
                         break;
                 }
-                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+                teleported->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             } else {
-                teleportArmy->m_hex = targetHex;
-                m_hexCells[teleportArmy->m_hex].m_occupantSide = side;
-                m_hexCells[teleportArmy->m_hex].m_occupantIndex = targetIndex;
-                m_hexCells[teleportArmy->m_hex].m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
-                teleportArmy->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
+                teleported->m_hex = targetHex;
+                m_hexCells[teleported->m_hex].m_occupantSide = armySide;
+                m_hexCells[teleported->m_hex].m_occupantIndex = occupantIndex;
+                m_hexCells[teleported->m_hex].m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+                teleported->SpellEffect(COMBAT_EFFECT_TELEPORT, 0);
             }
-            teleportArmy->Stand(1);
+            teleported->Stand(1);
             break;
         case SPELL_LIGHTNING_BOLT:
             sprintf(
                 gText,
                 localization::Tr("spell.lightning.damage"),
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25,
-                CREATURE_DISPLAY_NAME(targetArmy->m_creatureType, targetArmy->m_quantity)
+                CREATURE_DISPLAY_NAME(targetCreature->m_creatureType, targetCreature->m_quantity)
             );
             CombatMessage(gText, 1);
-            targetArmy->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
-            targetArmy->Damage(
+            targetCreature->SpellEffect(COMBAT_EFFECT_LIGHTNING_BOLT, 0);
+            targetCreature->Damage(
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25
             );
-            targetArmy->PowEffect(COMBAT_POW_RED_FIRE);
-            if (!(targetArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                targetArmy->Stand(1);
+            targetCreature->PowEffect(COMBAT_POW_RED_FIRE);
+            if (!(targetCreature->m_stats.attributes & MONSTER_FLAGS_DEAD))
+                targetCreature->Stand(1);
             break;
         case SPELL_CURE:
             CastMassSpell(m_currentSide, 1);
             break;
         case SPELL_RESURRECT:
-            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
-            quantity = targetArmy->m_quantity;
-            targetArmy->m_quantity +=
+            targetCreature->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_RESURRECT, 0);
+            quantity = targetCreature->m_quantity;
+            targetCreature->m_quantity +=
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
-                / targetArmy->m_stats.hitPoints;
-            if (targetArmy->m_quantity > targetArmy->m_initialQuantity)
-                targetArmy->m_quantity = targetArmy->m_initialQuantity;
-            if (targetArmy->m_quantity - quantity > 1)
+                / targetCreature->m_stats.hitPoints;
+            if (targetCreature->m_quantity > targetCreature->m_initialQuantity)
+                targetCreature->m_quantity = targetCreature->m_initialQuantity;
+            if (targetCreature->m_quantity - quantity > 1)
                 sprintf(
                     gText,
                     localization::Tr("spell.resurrect.plural"),
-                    targetArmy->m_quantity - quantity,
-                    gArmyNamesPlural[targetArmy->m_creatureType]
+                    targetCreature->m_quantity - quantity,
+                    gArmyNamesPlural[targetCreature->m_creatureType]
                 );
             else
                 sprintf(
                     gText,
                     localization::Tr("spell.resurrect.singular"),
-                    targetArmy->m_quantity - quantity,
-                    gArmyNames[targetArmy->m_creatureType]
+                    targetCreature->m_quantity - quantity,
+                    gArmyNames[targetCreature->m_creatureType]
                 );
             CombatMessage(gText, 1);
-            targetArmy->Stand(1);
+            targetCreature->Stand(1);
             break;
         case SPELL_SLOW:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = CREATURE_SPEED_SLOW;
-            if (targetArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
-                targetArmy->m_stats.attributes -= MONSTER_FLAGS_FLYING;
-            targetArmy->m_spellEffect = SPELL_SLOW;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->m_stats.speed = CREATURE_SPEED_SLOW;
+            if (targetCreature->m_stats.attributes & MONSTER_FLAGS_FLYING)
+                targetCreature->m_stats.attributes -= MONSTER_FLAGS_FLYING;
+            targetCreature->m_spellEffect = SPELL_SLOW;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->Stand(1);
             break;
         case SPELL_HASTE:
             gpCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = CREATURE_SPEED_BLAZING;
-            targetArmy->m_spellEffect = SPELL_HASTE;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->m_stats.speed = CREATURE_SPEED_BLAZING;
+            targetCreature->m_spellEffect = SPELL_HASTE;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->Stand(1);
             break;
         case SPELL_BLESS:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_BLESS, 0);
-            targetArmy->m_damageMode = ARMY_DAMAGE_MAXIMUM;
-            targetArmy->m_spellEffect = SPELL_BLESS;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_BLESS, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_BLESS, 0);
+            targetCreature->m_damageMode = ARMY_DAMAGE_MAXIMUM;
+            targetCreature->m_spellEffect = SPELL_BLESS;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->Stand(1);
             break;
         case SPELL_PROTECTION:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
-            targetArmy->m_spellEffect = SPELL_PROTECTION;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->m_stats.defense += ARMY_PROTECTION_DEFENSE_BONUS;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_PROTECTION, 0);
+            targetCreature->m_spellEffect = SPELL_PROTECTION;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->m_stats.defense += ARMY_PROTECTION_DEFENSE_BONUS;
+            targetCreature->Stand(1);
             break;
         case SPELL_CURSE:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
-            targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(COMBAT_EFFECT_CURSE, 0);
-            targetArmy->m_damageMode = ARMY_DAMAGE_MINIMUM;
-            targetArmy->m_spellEffect = SPELL_CURSE;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_CURSE, 0);
+            targetCreature->m_animationFrame = 2;
+            targetCreature->SpellEffect(COMBAT_EFFECT_CURSE, 0);
+            targetCreature->m_damageMode = ARMY_DAMAGE_MINIMUM;
+            targetCreature->m_spellEffect = SPELL_CURSE;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->Stand(1);
             break;
         case SPELL_BERZERKER:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
-            targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
-            targetArmy->m_spellEffect = SPELL_BERZERKER;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_ATTACK;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
+            targetCreature->m_animationFrame = 2;
+            targetCreature->SpellEffect(COMBAT_EFFECT_BERZERKER, 0);
+            targetCreature->m_spellEffect = SPELL_BERZERKER;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_ATTACK;
+            targetCreature->Stand(1);
             break;
         case SPELL_PARALYZE:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
-            targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
-            targetArmy->m_damageMode = ARMY_DAMAGE_MINIMUM;
-            targetArmy->m_spellEffect = SPELL_PARALYZE;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
+            targetCreature->m_animationFrame = 2;
+            targetCreature->SpellEffect(COMBAT_EFFECT_PARALYZE, 0);
+            targetCreature->m_damageMode = ARMY_DAMAGE_MINIMUM;
+            targetCreature->m_spellEffect = SPELL_PARALYZE;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
+            targetCreature->Stand(1);
             break;
         case SPELL_BLIND:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->SpellEffect(COMBAT_EFFECT_SLOW, 0);
-            targetArmy->m_stats.speed = CREATURE_SPEED_NONE;
-            targetArmy->m_damageMode = ARMY_DAMAGE_MINIMUM;
-            targetArmy->m_spellEffect = SPELL_BLIND;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
+            targetCreature->m_stats.speed = CREATURE_SPEED_NONE;
+            targetCreature->m_damageMode = ARMY_DAMAGE_MINIMUM;
+            targetCreature->m_spellEffect = SPELL_BLIND;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_AFTER_DAMAGE;
+            targetCreature->Stand(1);
             break;
         case SPELL_TURN_UNDEAD:
-            targetArmy->m_animationFrame = 2;
-            targetArmy->SpellEffect(COMBAT_EFFECT_TURN_UNDEAD, 0);
-            targetArmy->m_powFrames = ARMY_POW_FRAMES_KILLED;
-            targetArmy->PowEffect(COMBAT_POW_CLOUD);
-            targetArmy->m_quantity = 0;
+            targetCreature->m_animationFrame = 2;
+            targetCreature->SpellEffect(COMBAT_EFFECT_TURN_UNDEAD, 0);
+            targetCreature->m_powFrames = ARMY_POW_FRAMES_KILLED;
+            targetCreature->PowEffect(COMBAT_POW_CLOUD);
+            targetCreature->m_quantity = 0;
             break;
         case SPELL_DISPEL_MAGIC:
             CastMassSpell(COMBAT_SIDE_ANY, 0);
             break;
         case SPELL_ANTI_MAGIC:
-            targetArmy->CancelSpell();
-            targetArmy->SpellEffect(COMBAT_EFFECT_ANTI_MAGIC, 0);
-            targetArmy->m_spellEffect = SPELL_ANTI_MAGIC;
-            targetArmy->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
-            targetArmy->Stand(1);
+            targetCreature->CancelSpell();
+            targetCreature->SpellEffect(COMBAT_EFFECT_ANTI_MAGIC, 0);
+            targetCreature->m_spellEffect = SPELL_ANTI_MAGIC;
+            targetCreature->m_spellEndCondition = ARMY_CANCEL_SPELLS_ROUNDS_ONLY;
+            targetCreature->Stand(1);
             break;
         case SPELL_FIREBALL:
             Fireball(targetHex);
@@ -560,11 +560,11 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             DefaultSpell(targetHex);
             break;
     }
-    if (targetArmy && targetArmy->m_spellEndCondition >= 0) {
+    if (targetCreature && targetCreature->m_spellEndCondition >= 0) {
         if (castByCreature)
-            targetArmy->m_spellRounds = 3;
+            targetCreature->m_spellRounds = 3;
         else
-            targetArmy->m_spellRounds =
+            targetCreature->m_spellRounds =
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER];
     }
     WaitSample(sample);
