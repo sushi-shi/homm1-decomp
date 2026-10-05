@@ -99,10 +99,10 @@ VA(0x00444ebf, 0x1ca)
 H1_C_LINKAGE void __cdecl nb_term(i32) {
     NCB ncb;
     tag_Node* node;
-    i32 i;
+    i32 idx;
 
-    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++)
-        nb_close_session(i);
+    for (idx = 0; idx < static_cast<i32>(NETBIOS_SESSION_COUNT); idx++)
+        nb_close_session(idx);
     if (gNbCtlNcb.ncb_cmd_cplt == NRC_PENDING) {
         memset(&ncb, 0, sizeof(ncb));
         ncb.ncb_command = NCBCANCEL;
@@ -126,9 +126,9 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
         free(node);
     LeaveCriticalSection(&gNbSndLock);
     DeleteCriticalSection(&gNbSndLock);
-    for (i = 0; i < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); i++) {
-        CloseHandle(gNbEvents[i]);
-        gNbEvents[i] = NULL;
+    for (idx = 0; idx < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); idx++) {
+        CloseHandle(gNbEvents[idx]);
+        gNbEvents[idx] = NULL;
     }
     gNbShutdown |= 1;
     SetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);

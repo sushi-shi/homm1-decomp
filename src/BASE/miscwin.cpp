@@ -236,57 +236,56 @@ void ClippedMonoIconToBitmap(
     i32 clipH
 ) {
     i32 clipRight = clipX + clipW - 1;
-    i32 clipBottom = clipY + clipH - 1;
+    i32 clipLast = clipY + clipH - 1;
     IconEntry* entry =
         reinterpret_cast<IconEntry*>(sourceIcon->m_data)
         + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
     u8* source = sourceIcon->m_data + entry->srcOffset;
-    i32 position = x + entry->x;
-    i32 row = y + entry->y;
-    BOOL drawing = TRUE;
-    while (drawing) {
+    i32 curX = x + entry->x;
+    i32 curY = y + entry->y;
+    BOOL decoding = TRUE;
+    while (decoding) {
         if (static_cast<i8>(*source) < 0) {
             if ((*source & ICON_MONO_SKIP_MASK) != 0) {
-                position += *source & ICON_MONO_SKIP_MASK;
+                curX += *source & ICON_MONO_SKIP_MASK;
                 source++;
             } else
-                drawing = FALSE;
+                decoding = FALSE;
         } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
-            if (row >= clipY && row <= clipBottom && position + *source >= clipX
-                && position <= clipRight) {
-                if (position >= clipX) {
-                    if (position + *source <= clipRight)
+            if (curY >= clipY && curY <= clipLast && curX + *source >= clipX && curX <= clipRight) {
+                if (curX >= clipX) {
+                    if (curX + *source <= clipRight)
                         memset(
-                            destination->m_pixels + position + row * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + curX + curY * ICON_SCREEN_ROW_BYTES,
                             color,
                             *source
                         );
                     else
                         memset(
-                            destination->m_pixels + position + row * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + curX + curY * ICON_SCREEN_ROW_BYTES,
                             color,
-                            clipRight - position + 1
+                            clipRight - curX + 1
                         );
                 } else {
-                    if (position + *source <= clipRight)
+                    if (curX + *source <= clipRight)
                         memset(
-                            destination->m_pixels + clipX + row * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + clipX + curY * ICON_SCREEN_ROW_BYTES,
                             color,
-                            position + *source - clipX
+                            curX + *source - clipX
                         );
                     else
                         memset(
-                            destination->m_pixels + clipX + row * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + clipX + curY * ICON_SCREEN_ROW_BYTES,
                             color,
                             clipW
                         );
                 }
             }
-            position += *source;
+            curX += *source;
             source++;
         } else {
-            position = x + entry->x;
-            row++;
+            curX = x + entry->x;
+            curY++;
             source++;
         }
     }

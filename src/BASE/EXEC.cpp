@@ -217,6 +217,7 @@ VA(0x00472fb5, 0x16b)
 void executive::MainLoop(void) {
     i8 done = 0;
     tag_message message;
+    i32 unusedMode; // dead local: retail's /Od frame holds its unreferenced slot
     i8 dispatch = 1;
     if (m_managerListHead == NULL)
         return;

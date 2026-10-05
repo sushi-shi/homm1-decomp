@@ -2522,14 +2522,14 @@ H1_ENUM_CONST_END(CongratsConstant)
 VA(0x00441977, 0x3f5)
 void ShowCongrats(void) {
     char name[32];
-    i32 i;
-    i32 result;
+    i32 ii;
+    i32 res;
     tag_message message;
-    i32 daysScore;
+    i32 scoreAmount;
     heroWindow* win;
 
-    daysScore = GetBaseScore(giCurTurn);
-    result = daysScore * gpGame->m_difficultyRating / 100;
+    scoreAmount = GetBaseScore(giCurTurn);
+    res = scoreAmount * gpGame->m_difficultyRating / 100;
     PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
     gpMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
@@ -2548,26 +2548,26 @@ void ShowCongrats(void) {
         win = new heroWindow(0, 0, "congspre.bin");
         if (!win)
             MemError();
-        sprintf(name, gArmyNames[GetMonType(result, HIGH_SCORE_TYPE_STANDARD)]);
+        sprintf(name, gArmyNames[GetMonType(res, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] = CyrillicToUpper(name[0]);
         sprintf(gText, localization::Tr("congratulations.victory.title"));
         message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
-        for (i = 0; i < CONGRATS_SCORE_LABEL_COUNT; i++) {
-            sprintf(gText, gScoreLabels[i]);
-            message.id = i + CONGRATS_SCORE_LABEL_FIRST;
+        for (ii = 0; ii < CONGRATS_SCORE_LABEL_COUNT; ii++) {
+            sprintf(gText, gScoreLabels[ii]);
+            message.id = ii + CONGRATS_SCORE_LABEL_FIRST;
             win->BroadcastMessage(message);
         }
         sprintf(gText, "%d", giCurTurn);
         message.id = CONGRATS_DAYS;
         win->BroadcastMessage(message);
-        sprintf(gText, "%d", daysScore);
+        sprintf(gText, "%d", scoreAmount);
         message.id = CONGRATS_BASE_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%d%%", gpGame->m_difficultyRating);
         message.id = CONGRATS_DIFFICULTY;
         win->BroadcastMessage(message);
-        sprintf(gText, "%d", result);
+        sprintf(gText, "%d", res);
         message.id = CONGRATS_FINAL_SCORE;
         win->BroadcastMessage(message);
         sprintf(gText, "%s", name);
@@ -2581,7 +2581,7 @@ void ShowCongrats(void) {
     gpWindowManager->RemoveWindow(win);
     delete win;
     if (gpGame->m_campaignType <= 0)
-        AddScoreToHighScore(result, HIGH_SCORE_TYPE_STANDARD, "", gpGame->m_mapName);
+        AddScoreToHighScore(res, HIGH_SCORE_TYPE_STANDARD, "", gpGame->m_mapName);
 }
 
 // donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ

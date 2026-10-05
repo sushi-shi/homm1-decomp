@@ -729,23 +729,23 @@ i8 philAI::DoDimensionDoor(hero* pHero) {
 VA(0x00448a6f, 0x72f)
 void philAI::DoAI(i32 player) {
     i32 pathIndex;
-    i32 moveDone;
+    i32 allMoveDone;
     i32 bestDirection;
-    i32 stepMax;
-    i32 steps;
+    i32 origStep;
+    i32 baseSteps;
     mapCell* eventCell;
-    i32 dummy;
-    i8 stopAfterStep;
-    i32 oldShowIt;
+    i32 newDummyValue;
+    i8 nextStopAfterStep;
+    i32 nextOldShowIt;
     i8 halfShown;
-    i32 x;
-    i32 y;
+    i32 oldX;
+    i32 ourY;
     i16 minRV;
     i8 moveInterrupt;
-    hero* aiHero;
-    i32 flag;
-    i32 moveResult;
-    i32 tempArray[4];
+    hero* savedAiHero;
+    i32 flagsState;
+    i32 code;
+    i32 tempArrayData[4];
 
     halfShown = 0;
     if (gGameOver)
@@ -758,7 +758,7 @@ void philAI::DoAI(i32 player) {
     IncrementHourGlass();
     SuspendSamples();
     SuspendMusic();
-    while ((aiHero = DetermineHeroToMove(player)) != NULL) {
+    while ((savedAiHero = DetermineHeroToMove(player)) != NULL) {
         giHumanTownConquered = GAME_TOWN_NONE;
         iCurPlaceToVisit = 0;
         if (gGameOver) {
@@ -766,145 +766,152 @@ void philAI::DoAI(i32 player) {
             ResumeMusic();
             return;
         }
-        CheckReload(aiHero);
-        CheckBerserk(aiHero);
+        CheckReload(savedAiHero);
+        CheckBerserk(savedAiHero);
         gShowComputerRoute = 0;
         if (gConfig.blackoutComputer == 0 && gRemoteOn == 0
-            && (gpGame->m_mapExtra[aiHero->m_x][aiHero->m_y] & gCurWatchPlayerHighBit)) {
+            && (gpGame->m_mapExtra[savedAiHero->m_x][savedAiHero->m_y] & gCurWatchPlayerHighBit)) {
             bShowIt = 1;
-            gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+            gpAdvManager->SetHeroContext(savedAiHero->m_id, 0);
         } else {
             bShowIt = 0;
-            gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+            gpAdvManager->SetHeroContext(savedAiHero->m_id, 0);
         }
-        moveDone = 0;
+        allMoveDone = 0;
         ResetHeroRVs(0, 0, 0);
-        stepMax = (aiHero->m_eventFlags & HERO_EVENT_EMBARKED) ? 15 : 5;
-        minRV = aiHero->m_mobility + 42;
-        stepMax = static_cast<i32>(stepMax * (1.7 - gpCurPlayer->m_difficulty * 0.1));
+        origStep = (savedAiHero->m_eventFlags & HERO_EVENT_EMBARKED) ? 15 : 5;
+        minRV = savedAiHero->m_mobility + 42;
+        origStep = static_cast<i32>(origStep * (1.7 - gpCurPlayer->m_difficulty * 0.1));
         minRV =
             static_cast<i16>(minRV * ((gpCurPlayer->m_difficulty - PLAYER_TYPE_DUMB) * 0.06 + 0.8));
-        while (!moveDone && aiHero->m_remainingMobility >= 4) {
+        while (!allMoveDone && savedAiHero->m_remainingMobility >= 4) {
             if (gGameOver) {
                 ResumeSamples();
                 ResumeMusic();
                 return;
             }
-            if (aiHero->m_remainingMobility == aiHero->m_mobility
+            if (savedAiHero->m_remainingMobility == savedAiHero->m_mobility
                 && gpCurPlayer->m_ultimateArtifactHintChance > 15
-                && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
-                && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y)
-                gpAdvManager->ProcessSearch(aiHero->m_x, aiHero->m_y);
+                && gpCurPlayer->m_ultimateArtifactHintX == savedAiHero->m_x
+                && gpCurPlayer->m_ultimateArtifactHintY == savedAiHero->m_y)
+                gpAdvManager->ProcessSearch(savedAiHero->m_x, savedAiHero->m_y);
         retarget:
-            DetermineTargetPosition(aiHero, aiHero->m_destinationX, aiHero->m_destinationY, minRV);
+            DetermineTargetPosition(
+                savedAiHero,
+                savedAiHero->m_destinationX,
+                savedAiHero->m_destinationY,
+                minRV
+            );
             for (pathIndex = 0; pathIndex < iCurPlaceToVisit; pathIndex++) {
-                if (iPlacesVisited[pathIndex][0] == aiHero->m_destinationX
-                    && iPlacesVisited[pathIndex][1] == aiHero->m_destinationY
-                    && gpAdvManager->GetCell(aiHero->m_destinationX, aiHero->m_destinationY)
+                if (iPlacesVisited[pathIndex][0] == savedAiHero->m_destinationX
+                    && iPlacesVisited[pathIndex][1] == savedAiHero->m_destinationY
+                    && gpAdvManager
+                               ->GetCell(savedAiHero->m_destinationX, savedAiHero->m_destinationY)
                                ->m_triggerType
                            != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
-                    aiHero->m_remainingMobility = 0;
+                    savedAiHero->m_remainingMobility = 0;
             }
             if (iCurPlaceToVisit < ADVMGR_PLACE_VISIT_COUNT) {
-                iPlacesVisited[iCurPlaceToVisit][0] = aiHero->m_x;
-                iPlacesVisited[iCurPlaceToVisit][1] = aiHero->m_y;
+                iPlacesVisited[iCurPlaceToVisit][0] = savedAiHero->m_x;
+                iPlacesVisited[iCurPlaceToVisit][1] = savedAiHero->m_y;
                 iCurPlaceToVisit++;
             }
             gShowComputerRoute = 1;
-            if (aiHero->m_mobility == aiHero->m_remainingMobility) {
+            if (savedAiHero->m_mobility == savedAiHero->m_remainingMobility) {
                 halfShown = 0;
                 IncrementHourGlass();
             }
-            if (aiHero->m_destinationX != HERO_DESTINATION_NONE
-                && aiHero->m_destinationY != HERO_DESTINATION_NONE) {
+            if (savedAiHero->m_destinationX != HERO_DESTINATION_NONE
+                && savedAiHero->m_destinationY != HERO_DESTINATION_NONE) {
                 eventCell = NULL;
-                gpAdvManager->SetHeroContext(aiHero->m_id, 0);
+                gpAdvManager->SetHeroContext(savedAiHero->m_id, 0);
                 gpSearchArray->BuildPath(
-                    aiHero->m_x,
-                    aiHero->m_y,
-                    aiHero->m_destinationX,
-                    aiHero->m_destinationY,
-                    aiHero->m_remainingMobility
+                    savedAiHero->m_x,
+                    savedAiHero->m_y,
+                    savedAiHero->m_destinationX,
+                    savedAiHero->m_destinationY,
+                    savedAiHero->m_remainingMobility
                 );
                 if (gpSearchArray->m_pathLength > 0) {
                     gpAdvManager->UpdateScreen(0, 0);
-                    if (aiHero->HasSpell(SPELL_DIMENSION_DOOR) && DoDimensionDoor(aiHero))
+                    if (savedAiHero->HasSpell(SPELL_DIMENSION_DOOR) && DoDimensionDoor(savedAiHero))
                         goto retarget;
-                    steps = 0;
+                    baseSteps = 0;
                     pathIndex = gpSearchArray->m_pathLength - 1;
-                    moveResult = 0;
+                    code = 0;
                     moveInterrupt = 0;
-                    while (pathIndex >= 0 && steps < stepMax) {
-                        stopAfterStep = (steps + 1 == stepMax || pathIndex == 0) ? 1 : 0;
-                        if (pathIndex > 0 && GoodAdjacent(aiHero, &bestDirection)) {
+                    while (pathIndex >= 0 && baseSteps < origStep) {
+                        nextStopAfterStep = (baseSteps + 1 == origStep || pathIndex == 0) ? 1 : 0;
+                        if (pathIndex > 0 && GoodAdjacent(savedAiHero, &bestDirection)) {
                             gpSearchArray->m_directions[pathIndex] = bestDirection;
-                            stopAfterStep = 1;
+                            nextStopAfterStep = 1;
                         }
                         if (gpAdvManager->GetMoveShowIt(gpSearchArray->m_directions[pathIndex])) {
-                            oldShowIt = bShowIt;
+                            nextOldShowIt = bShowIt;
                             bShowIt = 1;
                             gpMouseManager->ReallyHidePointer();
-                            bShowIt = oldShowIt;
+                            bShowIt = nextOldShowIt;
                         }
                         eventCell = gpAdvManager->MoveHero(
                             gpSearchArray->m_directions[pathIndex],
-                            stopAfterStep,
-                            &x,
-                            &y,
-                            &moveResult,
+                            nextStopAfterStep,
+                            &oldX,
+                            &ourY,
+                            &code,
                             1,
                             &moveInterrupt
                         );
-                        steps++;
-                        if (eventCell || moveResult || moveInterrupt)
+                        baseSteps++;
+                        if (eventCell || code || moveInterrupt)
                             break;
                         pathIndex--;
                     }
-                    if (aiHero->m_owner == HERO_OWNER_NONE)
+                    if (savedAiHero->m_owner == HERO_OWNER_NONE)
                         goto nextHero;
-                    if (aiHero->m_remainingMobility <= aiHero->m_mobility >> 1 && !halfShown) {
+                    if (savedAiHero->m_remainingMobility <= savedAiHero->m_mobility >> 1
+                        && !halfShown) {
                         halfShown = 1;
                         IncrementHourGlass();
                     }
                     if (pathIndex < 0 && gpCurPlayer->m_ultimateArtifactHintChance > 15
-                        && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
-                        && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y) {
-                        if (aiHero->m_remainingMobility == aiHero->m_mobility)
+                        && gpCurPlayer->m_ultimateArtifactHintX == savedAiHero->m_x
+                        && gpCurPlayer->m_ultimateArtifactHintY == savedAiHero->m_y) {
+                        if (savedAiHero->m_remainingMobility == savedAiHero->m_mobility)
                             gpAdvManager->ProcessSearch(
                                 ADVMGR_SEARCH_VIEW_CENTER,
                                 ADVMGR_SEARCH_VIEW_CENTER
                             );
                         else
-                            aiHero->m_remainingMobility = 0;
+                            savedAiHero->m_remainingMobility = 0;
                     }
                     if (pathIndex < 0
-                        && (((aiHero->m_x != aiHero->m_destinationX
-                              || aiHero->m_y != aiHero->m_destinationY)
+                        && (((savedAiHero->m_x != savedAiHero->m_destinationX
+                              || savedAiHero->m_y != savedAiHero->m_destinationY)
                              && !eventCell)
-                            || aiHero->m_remainingMobility < 4 || (moveResult && !eventCell)))
-                        moveDone = 1;
-                    oldShowIt = bShowIt;
+                            || savedAiHero->m_remainingMobility < 4 || (code && !eventCell)))
+                        allMoveDone = 1;
+                    nextOldShowIt = bShowIt;
                     bShowIt = 1;
                     gpMouseManager->ReallyShowPointer();
-                    bShowIt = oldShowIt;
+                    bShowIt = nextOldShowIt;
                     gpAdvManager->UpdateRadar(1, 0);
                 } else {
-                    moveDone = 1;
+                    allMoveDone = 1;
                 }
                 if (eventCell) {
-                    gpAdvManager->DoAIEvent(eventCell, aiHero, x, y);
+                    gpAdvManager->DoAIEvent(eventCell, savedAiHero, oldX, ourY);
                     if (gpCurPlayer->m_currentHero == INVALID_HERO)
                         goto nextHero;
-                    ResetHeroRVs(1, aiHero->m_destinationX, aiHero->m_destinationY);
+                    ResetHeroRVs(1, savedAiHero->m_destinationX, savedAiHero->m_destinationY);
                 }
             } else {
-                moveDone = 1;
+                allMoveDone = 1;
             }
         }
-        aiHero->m_remainingMobility = 0;
+        savedAiHero->m_remainingMobility = 0;
         gpAdvManager->DeactivateCurrHero();
     nextHero:
-        if (aiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+        if (savedAiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
             CheckBuyStuff();
     }
     ResumeSamples();
@@ -925,21 +932,21 @@ void philAI::GetGameAIVars(void) {
 // evidence: graph:3;base=0.345425;margin=0.144973;shape=0.282;size=0.515;calls=0.667;alternate=pol20:void philAI::GetTurnAIVars(int)@0x0003a329
 VA(0x004491dd, 0x5eb)
 void philAI::GetTurnAIVars(i32 player) {
-    i32 totalFightValue;
-    playerData* pPlayer;
-    i32 yPos;
-    i32 mineValue;
-    i32 xPos;
+    i32 fightTotalSum;
+    playerData* basePlayer;
+    i32 theYPos;
+    i32 mineTotal;
+    i32 xPosVal;
     i32 i;
-    float fFightVal;
+    float fightVal;
     i32 y;
-    i32 otherIndex;
+    i32 indexNum;
     hero* heroPointer;
     i32 unusedFightValue;
     i32 artTotal;
-    i32 hIndex;
-    i32 x;
-    town* townPointer;
+    i32 entry;
+    i32 oldX;
+    town* townPtr;
 
     giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * CALENDAR_DAYS_PER_WEEK
                 + (gpGame->m_month - 1) * CALENDAR_DAYS_PER_MONTH;
@@ -955,24 +962,24 @@ void philAI::GetTurnAIVars(i32 player) {
         giBuildBoat[player] = GAME_TOWN_NONE;
     }
     unusedFightValue = 0;
-    fFightVal = 0.0f;
-    totalFightValue = 0;
+    fightVal = 0.0f;
+    fightTotalSum = 0;
     for (i = 0; i < gpCurPlayer->m_heroCount; i++) {
         heroPointer = gpGame->GetHero(gpCurPlayer->m_heroIds[i]);
-        fFightVal =
+        fightVal =
             static_cast<float>(FightValueOfStack(&heroPointer->m_army, heroPointer, 0, 0, 0));
-        totalFightValue = static_cast<i32>(totalFightValue + fFightVal);
-        heroPointer->m_aiFightValue = fFightVal * 4e-05 + 0.4;
+        fightTotalSum = static_cast<i32>(fightTotalSum + fightVal);
+        heroPointer->m_aiFightValue = fightVal * 4e-05 + 0.4;
     }
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        townPointer = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
-        fFightVal = static_cast<float>(FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0));
-        totalFightValue = static_cast<i32>(totalFightValue + fFightVal);
+        townPtr = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
+        fightVal = static_cast<float>(FightValueOfStack(&townPtr->m_army, NULL, 0, 0, 0));
+        fightTotalSum = static_cast<i32>(fightTotalSum + fightVal);
     }
     gpCurPlayer->m_aiData.m_upgradeValueWeight =
         static_cast<float>(
             gpCurPlayer->m_resources[RESOURCE_GOLD] + gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD]
-        ) / (totalFightValue + 1000)
+        ) / (fightTotalSum + 1000)
         + gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
     artTotal = 0;
     for (i = ARTIFACT_REGULAR_FIRST; i < ARTIFACT_REGULAR_END; i++)
@@ -982,18 +989,19 @@ void philAI::GetTurnAIVars(i32 player) {
             1.0 / (gpGame->m_playerCount + gpGame->m_deadPlayerCount);
     gpCurPlayer->m_aiData.m_artifactValue = artTotal / 33.0;
     memset(gaiTurnValueOfMine, 7, sizeof(gaiTurnValueOfMine));
-    for (otherIndex = 0; otherIndex < gpGame->m_playerCount; otherIndex++) {
-        if (otherIndex != giCurPlayer) {
-            pPlayer = &gpGame->m_players[otherIndex];
-            for (hIndex = 0; hIndex < pPlayer->m_heroCount; hIndex++) {
-                xPos = gpGame->GetHero(pPlayer->m_heroIds[hIndex])->m_x;
-                yPos = gpGame->GetHero(pPlayer->m_heroIds[hIndex])->m_y;
-                for (x = xPos - 10; x <= xPos + 10; x++) {
-                    for (y = yPos - 10; y <= yPos + 10; y++) {
-                        if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
-                            mineValue = abs(MANHATTAN_LENGTH(x - xPos, y - yPos) - 4) >> 2;
-                            if (mineValue < gaiTurnValueOfMine[x][y])
-                                gaiTurnValueOfMine[x][y] = mineValue;
+    for (indexNum = 0; indexNum < gpGame->m_playerCount; indexNum++) {
+        if (indexNum != giCurPlayer) {
+            basePlayer = &gpGame->m_players[indexNum];
+            for (entry = 0; entry < basePlayer->m_heroCount; entry++) {
+                xPosVal = gpGame->GetHero(basePlayer->m_heroIds[entry])->m_x;
+                theYPos = gpGame->GetHero(basePlayer->m_heroIds[entry])->m_y;
+                for (oldX = xPosVal - 10; oldX <= xPosVal + 10; oldX++) {
+                    for (y = theYPos - 10; y <= theYPos + 10; y++) {
+                        if (oldX >= 0 && oldX < MAP_CELL_GRID_SIZE && y >= 0
+                            && y < MAP_CELL_GRID_SIZE) {
+                            mineTotal = abs(MANHATTAN_LENGTH(oldX - xPosVal, y - theYPos) - 4) >> 2;
+                            if (mineTotal < gaiTurnValueOfMine[oldX][y])
+                                gaiTurnValueOfMine[oldX][y] = mineTotal;
                         }
                     }
                 }
@@ -1030,21 +1038,21 @@ void philAI::GetTurnAIVars(i32 player) {
 // evidence: graph:2;base=0.679791;margin=0.499826;shape=0.401;size=0.937;calls=0.722;strings=BestBHC |Turns Owned;alternate=pol20:void philAI::GetBestBHC(int, struct BHC &)@0x0003b154
 VA(0x004497c8, 0x54c)
 void philAI::GetBestBHC(i32, BHC& best) {
-    float fValue = 1.0f;
-    float bestBHCValue = -99.0f;
+    float newFValue = 1.0f;
+    float newValue = -99.0f;
     i32 total = 0;
     i32 totalWeights = 0;
     i32 ideal[GAME_TOWN_COUNT];
-    i32 strengths[GAME_TOWN_COUNT];
+    i32 thisStrengths[GAME_TOWN_COUNT];
     BHC choice;
     i32 townNo;
     town* townPointer;
-    i32 meanStrength;
+    i32 curMeanStrength;
 
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
-        strengths[townNo] = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) + 400;
-        total += strengths[townNo];
+        thisStrengths[townNo] = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) + 400;
+        total += thisStrengths[townNo];
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
             totalWeights += 10;
         else
@@ -1052,11 +1060,11 @@ void philAI::GetBestBHC(i32, BHC& best) {
     }
     if (totalWeights < 1)
         totalWeights = 1;
-    meanStrength = total / totalWeights;
+    curMeanStrength = total / totalWeights;
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
         ideal[townNo] =
-            meanStrength * ((townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE)) ? 10 : 7)
+            curMeanStrength * ((townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE)) ? 10 : 7)
             + 400;
     }
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
@@ -1065,45 +1073,46 @@ void philAI::GetBestBHC(i32, BHC& best) {
         if (giCurTurn > 3 && (!gRemoteOn || gRemoteReady) && townPointer->m_turnsOwned < 3)
             continue;
         CheckDoMain(0, 0);
-        GetBestBuilding(townPointer, choice, fValue);
-        fValue = fValue * ((100 - Random(0, 10)) / 100.0);
-        if (fValue > bestBHCValue) {
-            bestBHCValue = fValue;
+        GetBestBuilding(townPointer, choice, newFValue);
+        newFValue = newFValue * ((100 - Random(0, 10)) / 100.0);
+        if (newFValue > newValue) {
+            newValue = newFValue;
             best = choice;
         }
         CheckDoMain(0, 0);
-        GetBestCreature(townPointer, choice, fValue);
-        fValue = fValue
-                 * (static_cast<float>(ideal[townNo]) / (static_cast<float>(strengths[townNo])) / 3.0f
-                    + 0.66);
-        fValue = fValue * ((100 - Random(0, 10)) / 100.0);
-        if (fValue > bestBHCValue) {
-            bestBHCValue = fValue;
+        GetBestCreature(townPointer, choice, newFValue);
+        newFValue = newFValue
+                    * (static_cast<float>(ideal[townNo])
+                           / (static_cast<float>(thisStrengths[townNo])) / 3.0f
+                       + 0.66);
+        newFValue = newFValue * ((100 - Random(0, 10)) / 100.0);
+        if (newFValue > newValue) {
+            newValue = newFValue;
             best = choice;
         }
         CheckDoMain(0, 0);
         if (gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer
             && (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))) {
-            GetBestHero(townPointer, choice, fValue);
-            fValue = fValue * ((100 - Random(0, 10)) / 100.0);
-            if (!bHeroBuiltThisTurn && giCurTurn > 5 && fValue > 0.0f) {
+            GetBestHero(townPointer, choice, newFValue);
+            newFValue = newFValue * ((100 - Random(0, 10)) / 100.0);
+            if (!bHeroBuiltThisTurn && giCurTurn > 5 && newFValue > 0.0f) {
                 if ((gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD] >= 1250
                      && gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer - 2)
                     || gpCurPlayer->m_heroCount <= 1)
-                    fValue += 500.0f;
+                    newFValue += 500.0f;
                 else if (gpCurPlayer->m_aiData.m_income[RESOURCE_GOLD] >= 1500
                          && gpCurPlayer->m_heroCount < giMaxHeroesForThisPlayer - 1)
-                    fValue = fValue * 1.3;
+                    newFValue = newFValue * 1.3;
             } else if (gpCurPlayer->m_heroCount == 0) {
-                fValue += 500.0f;
+                newFValue += 500.0f;
             }
-            if (fValue > bestBHCValue) {
-                bestBHCValue = fValue;
+            if (newFValue > newValue) {
+                newValue = newFValue;
                 best = choice;
             }
         }
     }
-    if (bestBHCValue < 0.02)
+    if (newValue < 0.02)
         best.type = PURCHASE_NONE;
 }
 
@@ -1139,41 +1148,41 @@ hero* philAI::DetermineHeroToMove(i32 player) {
 // evidence: graph:2;base=0.393525;margin=0.196143;shape=0.308;size=0.686;calls=0.529;alternate=pol20:int philAI::DetermineTargetPosition(int &, int &, int, int &)@0x0003b865
 VA(0x00449dfe, 0x89d)
 void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 mobility) {
-    i32 bestRV;
-    i32 cellValue;
-    i32 spacing;
-    i32 heroTerrainType;
+    i32 theBestRV;
+    i32 mainValue;
+    i32 curSpacing;
+    i32 lastType;
     town* portTown;
-    i32 rowCnt;
-    i32 valid;
+    i32 selCnt;
+    i32 validFlag;
     i32 colPhase;
-    i32 heroIndex;
-    i16 x;
+    i32 entry;
+    i16 oldX;
     i16 bestY;
-    mapCell* thisCell;
+    mapCell* thisCellRec;
     i16 bestX;
     i16 y;
 
     bestX = -1;
     bestY = -1;
-    bestRV = -999999;
+    theBestRV = -999999;
     giBestShipyardId = GAME_TOWN_NONE;
     gbPossibleShipyardFound = 0;
     gbActualShipyardFound = 0;
     gbActualBoatFound = 0;
-    spacing = pHero->m_mobility / 6;
-    thisCell = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
-    heroTerrainType = CELL_TERRAIN(thisCell);
-    if (heroTerrainType == TERRAIN_SNOW || heroTerrainType == TERRAIN_SWAMP) {
-        spacing--;
+    curSpacing = pHero->m_mobility / 6;
+    thisCellRec = gpAdvManager->GetCell(pHero->m_x, pHero->m_y);
+    lastType = CELL_TERRAIN(thisCellRec);
+    if (lastType == TERRAIN_SNOW || lastType == TERRAIN_SWAMP) {
+        curSpacing--;
         mobility = static_cast<i16>(mobility * 1.25);
     }
-    if (heroTerrainType == TERRAIN_DESERT) {
-        spacing -= 2;
+    if (lastType == TERRAIN_DESERT) {
+        curSpacing -= 2;
         mobility = static_cast<i16>(mobility * 1.5);
     }
-    if (spacing < 3)
-        spacing = 3;
+    if (curSpacing < 3)
+        curSpacing = 3;
     gpSearchArray->SeedPosition(
         pHero->m_x,
         pHero->m_y,
@@ -1190,89 +1199,90 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
     );
     gpSearchArray->m_cells[pHero->m_x][pHero->m_y].visited = 0;
     colPhase = -1;
-    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-        rowCnt = -1;
+    for (oldX = 0; oldX < MAP_CELL_GRID_SIZE; oldX++) {
+        selCnt = -1;
         colPhase++;
-        if (colPhase >= spacing)
+        if (colPhase >= curSpacing)
             colPhase = 0;
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
-            rowCnt++;
-            if (rowCnt >= spacing)
-                rowCnt = 0;
-            if (gpSearchArray->m_cells[x][y].visited) {
-                thisCell = gpAdvManager->GetCell(x, y);
-                if (gpSearchArray->m_cells[x][y].distance > mobility) {
-                    if (gpSearchArray->m_cells[x][y].distance > mobility * 2)
-                        valid = 0;
+            selCnt++;
+            if (selCnt >= curSpacing)
+                selCnt = 0;
+            if (gpSearchArray->m_cells[oldX][y].visited) {
+                thisCellRec = gpAdvManager->GetCell(oldX, y);
+                if (gpSearchArray->m_cells[oldX][y].distance > mobility) {
+                    if (gpSearchArray->m_cells[oldX][y].distance > mobility * 2)
+                        validFlag = 0;
                     else
-                        valid = thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                                || thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                                || (thisCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                                    && !(pHero->m_eventFlags & HERO_EVENT_EMBARKED));
+                        validFlag =
+                            thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                            || thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                            || (thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                                && !(pHero->m_eventFlags & HERO_EVENT_EMBARKED));
                 } else {
-                    valid = (thisCell->m_triggerType & MAP_TRIGGER_EVENT)
-                            || (thisCell->m_triggerType == MAP_OBJECT_COAST
-                                && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
-                            || (x % spacing == 0 && y % spacing == 0
-                                && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                     && CELL_TERRAIN(thisCell) == TERRAIN_WATER)
-                                    || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                        && CELL_TERRAIN(thisCell) != TERRAIN_WATER)))
-                            || (x == gpCurPlayer->m_ultimateArtifactHintX
-                                && y == gpCurPlayer->m_ultimateArtifactHintY);
+                    validFlag = (thisCellRec->m_triggerType & MAP_TRIGGER_EVENT)
+                                || (thisCellRec->m_triggerType == MAP_OBJECT_COAST
+                                    && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
+                                || (oldX % curSpacing == 0 && y % curSpacing == 0
+                                    && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                         && CELL_TERRAIN(thisCellRec) == TERRAIN_WATER)
+                                        || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                                            && CELL_TERRAIN(thisCellRec) != TERRAIN_WATER)))
+                                || (oldX == gpCurPlayer->m_ultimateArtifactHintX
+                                    && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
-                if (valid) {
-                    for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
-                        if (thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                            && thisCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                            && gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id
-                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX
-                                   == x
-                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY
+                if (validFlag) {
+                    for (entry = 0; entry < gpCurPlayer->m_heroCount; entry++) {
+                        if (thisCellRec->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                            && thisCellRec->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                            && gpCurPlayer->m_heroIds[entry] != pHero->m_id
+                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[entry]].m_destinationX
+                                   == oldX
+                            && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[entry]].m_destinationY
                                    == y) {
-                            cellValue = -2000;
+                            mainValue = -2000;
                             goto scored;
                         }
                     }
                     CheckDoMain(0, 0);
-                    cellValue = RVOfPosition(
+                    mainValue = RVOfPosition(
                         pHero,
-                        x,
+                        oldX,
                         y,
-                        gpSearchArray->m_cells[x][y].rvFlag1,
-                        gpSearchArray->m_cells[x][y].valueX,
-                        gpSearchArray->m_cells[x][y].valueY,
-                        gpSearchArray->m_cells[x][y].rvFlag2,
-                        gpSearchArray->m_cells[x][y].previousX,
-                        gpSearchArray->m_cells[x][y].previousY,
+                        gpSearchArray->m_cells[oldX][y].rvFlag1,
+                        gpSearchArray->m_cells[oldX][y].valueX,
+                        gpSearchArray->m_cells[oldX][y].valueY,
+                        gpSearchArray->m_cells[oldX][y].rvFlag2,
+                        gpSearchArray->m_cells[oldX][y].previousX,
+                        gpSearchArray->m_cells[oldX][y].previousY,
                         2
                     );
-                    cellValue = cellValue * (Random(1, 50) + 75);
-                    cellValue /= 100;
+                    mainValue = mainValue * (Random(1, 50) + 75);
+                    mainValue /= 100;
                 } else {
-                    cellValue = -100;
+                    mainValue = -100;
                 }
-                if (x == targetX && y == targetY) {
-                    cellValue = static_cast<i32>(cellValue * AI_TARGET_HUMAN_VALUE_FACTOR);
-                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y) > 3)
-                        cellValue++;
+                if (oldX == targetX && y == targetY) {
+                    mainValue = static_cast<i32>(mainValue * AI_TARGET_HUMAN_VALUE_FACTOR);
+                    if (MANHATTAN_LENGTH(oldX - pHero->m_x, y - pHero->m_y) > 3)
+                        mainValue++;
                 }
             scored:
-                if (cellValue > bestRV) {
-                    bestX = x;
+                if (mainValue > theBestRV) {
+                    bestX = oldX;
                     bestY = y;
-                    bestRV = cellValue;
-                } else if (cellValue == bestRV && cellValue == 0) {
-                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)
+                    theBestRV = mainValue;
+                } else if (mainValue == theBestRV && mainValue == 0) {
+                    if (MANHATTAN_LENGTH(oldX - pHero->m_x, y - pHero->m_y)
                         > MANHATTAN_LENGTH(bestX - pHero->m_x, bestY - pHero->m_y)) {
-                        bestX = x;
+                        bestX = oldX;
                         bestY = y;
                     }
                 }
             }
         }
     }
-    if (bestRV < 75 && (gbPossibleShipyardFound || gbActualShipyardFound) && !gbActualBoatFound
+    if (theBestRV < 75 && (gbPossibleShipyardFound || gbActualShipyardFound) && !gbActualBoatFound
         && giCurTurn > 3) {
         if ((gbActualShipyardFound || giBuildShipyard[giCurPlayer] < 0
              || giBuildShipyard[giCurPlayer] == giBestShipyardId)
@@ -1284,7 +1294,7 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
             giBuildBoat[giCurPlayer] = giBestShipyardId;
             giBuildBoatStuffTurn[giCurPlayer] = giCurTurn;
             portTown = gpGame->GetTown(giBestShipyardId);
-            bestRV = 123;
+            theBestRV = 123;
             bestX = portTown->m_x;
             bestY = portTown->m_y;
             if (pHero->m_x == bestX && pHero->m_y == bestY)
@@ -1317,53 +1327,53 @@ void philAI::ProbableOutcomeOfBattle(
     i32& outcomeValue
 ) {
     float attArmy;
-    i32 artSlot;
-    float defendingArmy;
+    i32 slotNum;
+    float defendingArmyValue;
     i32 artsD;
     i32 notUsed;
-    i32 exp;
-    float attackStrength;
+    i32 theExp;
+    float attackStrengthValue;
     float defP;
-    float defStr;
-    float rawFight[2];
+    float curDefStr;
+    float rawFightArray[2];
     float attackerPower;
     float power;
-    float factor;
+    float curFactorValue;
     i32 attArts;
 
     attArts = 0;
     artsD = 0;
     attArmy = static_cast<float>(FightValueOfStack(attacker, attackerHero, 1, 0, 0));
-    defendingArmy =
+    defendingArmyValue =
         static_cast<float>(FightValueOfStack(defender, defenderHero, 1, useTown, townId));
     if (townArmy)
-        defendingArmy += static_cast<float>(FightValueOfStack(townArmy, NULL, 1, 0, 0));
-    rawFight[0] = static_cast<float>(FightValueOfStack(attacker, attackerHero, 0, 0, 0));
-    rawFight[1] = static_cast<float>(FightValueOfStack(defender, defenderHero, 0, 0, 0));
+        defendingArmyValue += static_cast<float>(FightValueOfStack(townArmy, NULL, 1, 0, 0));
+    rawFightArray[0] = static_cast<float>(FightValueOfStack(attacker, attackerHero, 0, 0, 0));
+    rawFightArray[1] = static_cast<float>(FightValueOfStack(defender, defenderHero, 0, 0, 0));
     if (townArmy)
-        rawFight[1] += static_cast<float>(FightValueOfStack(townArmy, NULL, 0, 0, 0));
+        rawFightArray[1] += static_cast<float>(FightValueOfStack(townArmy, NULL, 0, 0, 0));
     if (useTown)
-        defendingArmy = defendingArmy * 1.11;
-    defStr = defendingArmy;
+        defendingArmyValue = defendingArmyValue * 1.11;
+    curDefStr = defendingArmyValue;
     if (enemyPlayer == GAME_PLAYER_NONE) {
-        attackStrength = attArmy * (gpCurPlayer->m_difficulty * 0.15 + 0.7);
+        attackStrengthValue = attArmy * (gpCurPlayer->m_difficulty * 0.15 + 0.7);
     } else {
-        attackStrength = attArmy;
+        attackStrengthValue = attArmy;
         if (gbHumanPlayer[enemyPlayer]) {
-            defStr = defStr * 1.14;
+            curDefStr = curDefStr * 1.14;
             if (gpCurPlayer->m_difficulty == 1)
-                attackStrength = attackStrength * 1.5;
+                attackStrengthValue = attackStrengthValue * 1.5;
         }
     }
-    if (attackStrength < 1.0f)
-        attackStrength = 1.0f;
-    if (defStr < 1.0f)
-        defStr = 1.0f;
+    if (attackStrengthValue < 1.0f)
+        attackStrengthValue = 1.0f;
+    if (curDefStr < 1.0f)
+        curDefStr = 1.0f;
     power = 2.75f;
-    if (attackStrength > 1000000.0f || defStr > 1000000.0f)
+    if (attackStrengthValue > 1000000.0f || curDefStr > 1000000.0f)
         power = 2.0f;
-    attackerPower = pow(attackStrength, power);
-    defP = pow(defStr, power);
+    attackerPower = pow(attackStrengthValue, power);
+    defP = pow(curDefStr, power);
     winChance = attackerPower / (attackerPower + defP);
     if (winChance < 0.08)
         winChance = 0.0f;
@@ -1375,42 +1385,45 @@ void philAI::ProbableOutcomeOfBattle(
         winChance = winChance - 0.04;
     else if (winChance < 0.4)
         winChance = winChance - 0.02;
-    attackerLoss = static_cast<i32>((1.0 - winChance) * rawFight[0]);
-    defenderLoss = static_cast<i32>(rawFight[1] * winChance);
+    attackerLoss = static_cast<i32>((1.0 - winChance) * rawFightArray[0]);
+    defenderLoss = static_cast<i32>(rawFightArray[1] * winChance);
     attackerRemaining =
-        static_cast<i32>(attackerLoss * winChance + (1.0f - winChance) * rawFight[0]);
+        static_cast<i32>(attackerLoss * winChance + (1.0f - winChance) * rawFightArray[0]);
     defenderRemaining =
-        static_cast<i32>(defenderLoss * (1.0f - winChance) + rawFight[1] * winChance);
-    factor = 1.33 - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
-    outcomeValue = static_cast<i32>(-attackerRemaining * factor * factor);
+        static_cast<i32>(defenderLoss * (1.0f - winChance) + rawFightArray[1] * winChance);
+    curFactorValue = 1.33 - gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase;
+    outcomeValue = static_cast<i32>(-attackerRemaining * curFactorValue * curFactorValue);
     if (enemyPlayer >= 0) {
-        factor = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
+        curFactorValue = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
         if (gbHumanPlayer[enemyPlayer])
             outcomeValue = static_cast<i32>(
-                outcomeValue + defenderRemaining * gAttackHumanBonus * factor * factor
+                outcomeValue
+                + defenderRemaining * gAttackHumanBonus * curFactorValue * curFactorValue
             );
         else
             outcomeValue = static_cast<i32>(
-                outcomeValue + defenderRemaining * gAttackComputerBonus * factor * factor
+                outcomeValue
+                + defenderRemaining * gAttackComputerBonus * curFactorValue * curFactorValue
             );
     }
     outcomeValue = static_cast<i32>(outcomeValue * gpCurPlayer->m_aiData.m_upgradeValueWeight);
     if (attackerHero) {
-        for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (attackerHero->m_artifacts[artSlot] >= 0
-                && attackerHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
-                attArts += gArtifactBaseRV[attackerHero->m_artifacts[artSlot]];
+        for (slotNum = 0; slotNum < HERO_ARTIFACT_SLOT_COUNT; slotNum++) {
+            if (attackerHero->m_artifacts[slotNum] >= 0
+                && attackerHero->m_artifacts[slotNum] < ARTIFACT_REGULAR_END)
+                attArts += gArtifactBaseRV[attackerHero->m_artifacts[slotNum]];
         }
         outcomeValue = static_cast<i32>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
-        exp = gpGame->ExperienceValueOfStack(defender, defenderHero);
-        outcomeValue =
-            static_cast<i32>(outcomeValue + exp * 0.8 * winChance * attackerHero->m_aiFightValue);
+        theExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
+        outcomeValue = static_cast<i32>(
+            outcomeValue + theExp * 0.8 * winChance * attackerHero->m_aiFightValue
+        );
     }
     if (defenderHero) {
-        for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
-            if (defenderHero->m_artifacts[artSlot] >= 0
-                && defenderHero->m_artifacts[artSlot] < ARTIFACT_REGULAR_END)
-                artsD += gArtifactBaseRV[defenderHero->m_artifacts[artSlot]];
+        for (slotNum = 0; slotNum < HERO_ARTIFACT_SLOT_COUNT; slotNum++) {
+            if (defenderHero->m_artifacts[slotNum] >= 0
+                && defenderHero->m_artifacts[slotNum] < ARTIFACT_REGULAR_END)
+                artsD += gArtifactBaseRV[defenderHero->m_artifacts[slotNum]];
         }
         outcomeValue = static_cast<i32>(
             outcomeValue
@@ -2007,47 +2020,47 @@ i32 philAI::RVOfPosition(
 ) {
     i32 iMonsterChance;
     i32 totalValue;
-    i32 estLiveChance;
-    i32 delta;
+    i32 oldChance;
+    i32 oldDelta;
     i32 curLocType;
-    i32 curEventVal;
-    float estTurns;
-    i32 heroLiveChance;
-    i32 theTargetLiveChance;
-    i32 curEventChance;
+    i32 oldVal;
+    float estTurnsVal;
+    i32 newHeroLiveChance;
+    i32 activeChance;
+    i32 chanceVal;
     i32 adjacentEventChance;
-    i32 strategicEventValue;
-    i32 curStrategicValue;
-    i32 adjacentX;
-    i32 curTriggerType;
-    i32 adjacentY;
+    i32 savedValue;
+    i32 num;
+    i32 xPos;
+    i32 newCurTriggerType;
+    i32 posY;
 
-    strategicEventValue = 0;
-    theTargetLiveChance = 100;
+    savedValue = 0;
+    activeChance = 100;
     adjacentEventChance = 100;
-    curTriggerType = gpAdvManager->GetCell(x, y)->m_triggerType;
-    curLocType = curTriggerType & MAP_TRIGGER_TYPE_MASK;
-    curEventChance = 100;
-    estLiveChance = 100;
+    newCurTriggerType = gpAdvManager->GetCell(x, y)->m_triggerType;
+    curLocType = newCurTriggerType & MAP_TRIGGER_TYPE_MASK;
+    chanceVal = 100;
+    oldChance = 100;
     iMonsterChance = 100;
-    curStrategicValue = StrategicValueOfPosition(pHero, pHero->m_x, pHero->m_y, 0, &heroLiveChance);
-    delta = StrategicValueOfPosition(pHero, x, y, 0, &theTargetLiveChance);
-    if (curLocType == MAP_OBJECT_SHIP && delta < 0)
-        delta = 0;
+    num = StrategicValueOfPosition(pHero, pHero->m_x, pHero->m_y, 0, &newHeroLiveChance);
+    oldDelta = StrategicValueOfPosition(pHero, x, y, 0, &activeChance);
+    if (curLocType == MAP_OBJECT_SHIP && oldDelta < 0)
+        oldDelta = 0;
     totalValue = 0;
     if (hasEvent)
-        totalValue += ValueOfEventAtPosition(pHero, eventX, eventY, 1, &estLiveChance);
+        totalValue += ValueOfEventAtPosition(pHero, eventX, eventY, 1, &oldChance);
     if (hasStrategicEvent) {
-        strategicEventValue =
+        savedValue =
             StrategicValueOfPosition(pHero, strategicX, strategicY, 1, &adjacentEventChance);
-        if (strategicEventValue < 0)
-            totalValue += strategicEventValue;
+        if (savedValue < 0)
+            totalValue += savedValue;
     }
     if (gpAdvManager->FindAdjacentMonster(
             x,
             y,
-            &adjacentX,
-            &adjacentY,
+            &xPos,
+            &posY,
             SEARCH_INVALID_COORDINATE,
             SEARCH_INVALID_COORDINATE
         )) {
@@ -2066,60 +2079,59 @@ i32 philAI::RVOfPosition(
             case MAP_OBJECT_ARTIFACT:
                 break;
             default:
-                curEventVal =
-                    ValueOfEventAtPosition(pHero, adjacentX, adjacentY, 1, &iMonsterChance);
-                if (curEventVal < 0)
-                    totalValue += curEventVal;
-                if (estLiveChance == 100)
-                    estLiveChance = iMonsterChance;
+                oldVal = ValueOfEventAtPosition(pHero, xPos, posY, 1, &iMonsterChance);
+                if (oldVal < 0)
+                    totalValue += oldVal;
+                if (oldChance == 100)
+                    oldChance = iMonsterChance;
                 else
-                    estLiveChance = estLiveChance * iMonsterChance / 100;
+                    oldChance = oldChance * iMonsterChance / 100;
                 break;
         }
     }
-    if ((curTriggerType & MAP_TRIGGER_EVENT)
+    if ((newCurTriggerType & MAP_TRIGGER_EVENT)
         || (x == gpCurPlayer->m_ultimateArtifactHintX && y == gpCurPlayer->m_ultimateArtifactHintY))
-        curEventVal = ValueOfEventAtPosition(pHero, x, y, eventMode, &curEventChance);
+        oldVal = ValueOfEventAtPosition(pHero, x, y, eventMode, &chanceVal);
     else
-        curEventVal = 0;
-    if (curEventChance < 100)
-        delta = delta * curEventChance / 100;
-    if (theTargetLiveChance < 100) {
-        curEventVal = curEventVal * theTargetLiveChance / 100;
-        delta = delta * theTargetLiveChance / 100;
+        oldVal = 0;
+    if (chanceVal < 100)
+        oldDelta = oldDelta * chanceVal / 100;
+    if (activeChance < 100) {
+        oldVal = oldVal * activeChance / 100;
+        oldDelta = oldDelta * activeChance / 100;
     }
     if (adjacentEventChance < 100) {
-        curEventVal = curEventVal * adjacentEventChance / 100;
-        delta = delta * adjacentEventChance / 100;
+        oldVal = oldVal * adjacentEventChance / 100;
+        oldDelta = oldDelta * adjacentEventChance / 100;
     }
-    if (estLiveChance < 100) {
+    if (oldChance < 100) {
         if (totalValue > 0)
-            totalValue = (totalValue + curEventVal + delta) * estLiveChance / 100;
+            totalValue = (totalValue + oldVal + oldDelta) * oldChance / 100;
         else
-            totalValue += (curEventVal + delta) * estLiveChance / 100;
+            totalValue += (oldVal + oldDelta) * oldChance / 100;
     } else {
-        totalValue += curEventVal;
+        totalValue += oldVal;
     }
-    estTurns = static_cast<float>(gpSearchArray->m_cells[x][y].distance) / pHero->m_mobility;
+    estTurnsVal = static_cast<float>(gpSearchArray->m_cells[x][y].distance) / pHero->m_mobility;
     if (pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-        estTurns = estTurns * 0.5 + 0.5;
-    else if (estTurns > 5.0f)
-        estTurns *= 3.0f;
-    else if (estTurns > 4.0f)
-        estTurns = estTurns * 2.5;
-    else if (estTurns > 3.0f)
-        estTurns = estTurns * 2.0;
-    else if (estTurns > 2.0f)
-        estTurns = estTurns * 1.7;
-    else if (estTurns > 1.5)
-        estTurns = estTurns * 1.4;
-    else if (estTurns > 1.0f)
-        estTurns = estTurns * 1.2;
-    totalValue = static_cast<i32>(totalValue / (estTurns + 0.2));
-    delta = static_cast<i32>(delta * 2 / (1.0f + estTurns));
-    if (estLiveChance == 100)
-        totalValue += delta;
-    if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && curTriggerType == MAP_OBJECT_COAST)
+        estTurnsVal = estTurnsVal * 0.5 + 0.5;
+    else if (estTurnsVal > 5.0f)
+        estTurnsVal *= 3.0f;
+    else if (estTurnsVal > 4.0f)
+        estTurnsVal = estTurnsVal * 2.5;
+    else if (estTurnsVal > 3.0f)
+        estTurnsVal = estTurnsVal * 2.0;
+    else if (estTurnsVal > 2.0f)
+        estTurnsVal = estTurnsVal * 1.7;
+    else if (estTurnsVal > 1.5)
+        estTurnsVal = estTurnsVal * 1.4;
+    else if (estTurnsVal > 1.0f)
+        estTurnsVal = estTurnsVal * 1.2;
+    totalValue = static_cast<i32>(totalValue / (estTurnsVal + 0.2));
+    oldDelta = static_cast<i32>(oldDelta * 2 / (1.0f + estTurnsVal));
+    if (oldChance == 100)
+        totalValue += oldDelta;
+    if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && newCurTriggerType == MAP_OBJECT_COAST)
         totalValue += 40;
     return totalValue;
 }
@@ -2597,27 +2609,27 @@ i32 philAI::QuickCombat(
     float& attackerDamage,
     float& defenderDamage
 ) {
-    i32 aDead;
-    float fracLost;
+    i32 aDeadNum;
+    float fracLostVal;
     i32 win;
-    float rnd;
-    i32 unused;
+    float newRnd;
+    i32 ignored;
     i32 dLeft;
     i32 dDead;
-    armyGroup* winner;
+    armyGroup* newWinner;
     float diff;
-    float winChance;
+    float curWinChance;
     i32 atkExp;
     i32 tmp;
-    i32 defenderExp;
-    float wChance;
-    i32 res;
-    i32 aLeft;
+    i32 theDefenderExp;
+    float curWChance;
+    i32 resValue;
+    i32 aLeftNum;
 
     atkExp = gpGame->ExperienceValueOfStack(attacker, attackerHero);
-    defenderExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
+    theDefenderExp = gpGame->ExperienceValueOfStack(defender, defenderHero);
     win = 0;
-    winner = NULL;
+    newWinner = NULL;
     ProbableOutcomeOfBattle(
         attacker,
         attackerHero,
@@ -2627,39 +2639,39 @@ i32 philAI::QuickCombat(
         townBattle,
         townId,
         defenderHero != NULL ? defenderHero->m_owner : -1,
-        winChance,
-        aDead,
+        curWinChance,
+        aDeadNum,
         dDead,
-        aLeft,
+        aLeftNum,
         dLeft,
-        res
+        resValue
     );
-    rnd = Random(0, 100) / 100.0;
-    if (rnd < winChance) {
+    newRnd = Random(0, 100) / 100.0;
+    if (newRnd < curWinChance) {
         win = 1;
-        wChance = winChance;
-        winner = attacker;
+        curWChance = curWinChance;
+        newWinner = attacker;
     } else {
-        wChance = 1.0f - winChance;
-        winner = defender;
+        curWChance = 1.0f - curWinChance;
+        newWinner = defender;
     }
     // VC4 narrows this double through a stack temporary only for the C-style
     // cast (retail frame 0x50); static_cast<float> drops the slot.
-    diff = (float)(rnd > winChance ? rnd - winChance : winChance - rnd);
-    if (win != 0 && winChance > 0.6)
-        diff *= winChance + 0.65;
-    fracLost = (1.0 - diff) * (1.0 - diff);
-    if (wChance > 0.8 && fracLost > 0.2)
-        fracLost *= fracLost;
-    if (wChance > 0.96 && fracLost > (1.0f - wChance) / 2.0f)
-        fracLost = (1.0f - wChance) / 2.0f;
+    diff = (float)(newRnd > curWinChance ? newRnd - curWinChance : curWinChance - newRnd);
+    if (win != 0 && curWinChance > 0.6)
+        diff *= curWinChance + 0.65;
+    fracLostVal = (1.0 - diff) * (1.0 - diff);
+    if (curWChance > 0.8 && fracLostVal > 0.2)
+        fracLostVal *= fracLostVal;
+    if (curWChance > 0.96 && fracLostVal > (1.0f - curWChance) / 2.0f)
+        fracLostVal = (1.0f - curWChance) / 2.0f;
     if (win != 0) {
         if (attackerHero != NULL) {
-            gpAdvManager->GiveExperience(attackerHero, defenderExp, 1);
+            gpAdvManager->GiveExperience(attackerHero, theDefenderExp, 1);
             attackerHero->ApplyBattleWinTemps();
         }
         defenderDamage = 1.0f;
-        attackerDamage = fracLost;
+        attackerDamage = fracLostVal;
     } else {
         if (attackerHero != NULL) {
             attackerHero->m_remainingMobility = 0;
@@ -2667,10 +2679,10 @@ i32 philAI::QuickCombat(
         }
         if (defenderHero != NULL)
             attackerHero->ApplyBattleWinTemps();
-        defenderDamage = fracLost * diff;
+        defenderDamage = fracLostVal * diff;
         attackerDamage = 1.0f;
         if (attackerDamage >= 0.99 && defenderHero != NULL)
-            gpAdvManager->GiveExperience(defenderHero, defenderExp, 1);
+            gpAdvManager->GiveExperience(defenderHero, theDefenderExp, 1);
     }
     if (attackerDamage > 0.99)
         gpAdvManager->TransferArtifacts(attackerHero, defenderHero);
