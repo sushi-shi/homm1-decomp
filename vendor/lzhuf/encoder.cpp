@@ -422,7 +422,7 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
     register i16 i, c, r, s, last_match_length;
     register u16 len;
-    u32 consumed;
+    u32 stillConsumed;
 
     putbuf = putlen = getbuf = getlen = codesize = 0;
     memset(freq, 0, sizeof(freq));
@@ -435,7 +435,7 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     *codePtr++ = static_cast<char>((sourceLength & 0x0000ff00) >> 8);
     *codePtr++ = static_cast<char>(sourceLength & 0xff);
 
-    consumed = 0;
+    stillConsumed = 0;
     memcpy(son, initialSon, sizeof(son));
     memcpy(freq, initialFrequency, sizeof(freq));
     memcpy(prnt, initialParent, sizeof(prnt));
@@ -444,8 +444,8 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     r = WINDOW_SIZE - LOOK_AHEAD;
     for (i = s; i < r; ++i)
         text_buf[i] = ' ';
-    for (len = 0; len < LOOK_AHEAD && consumed < sourceLength;
-         ++len, ++source, ++consumed)
+    for (len = 0; len < LOOK_AHEAD && stillConsumed < sourceLength;
+         ++len, ++source, ++stillConsumed)
         text_buf[r + len] = *source;
 
     for (i = 1; i <= LOOK_AHEAD; ++i)
@@ -462,8 +462,8 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
             EncodePosition(match_position);
         }
         last_match_length = match_length;
-        for (i = 0; i < last_match_length && consumed < sourceLength;
-             ++i, ++consumed, ++source) {
+        for (i = 0; i < last_match_length && stillConsumed < sourceLength;
+             ++i, ++stillConsumed, ++source) {
             c = *source;
             DeleteNode(s);
             text_buf[s] = static_cast<u8>(c);

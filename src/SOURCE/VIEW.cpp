@@ -111,7 +111,12 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     message.id = GENERAL_COLOR_WIDGET;
     message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
     wnd->BroadcastMessage(message);
-    sprintf(gText, localization::Tr("hero.title"), m_heroes[side]->m_name, gClassNames[m_heroes[side]->m_heroClass]);
+    sprintf(
+        gText,
+        localization::Tr("hero.title"),
+        m_heroes[side]->m_name,
+        gClassNames[m_heroes[side]->m_heroClass]
+    );
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = GENERAL_NAME_WIDGET;
     message.text = gText;
@@ -190,38 +195,38 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 // Surrender and Close end the dialog; hovering shows their help line.
 VA(0x004663ee, 0x1a7)
 i16 HandleViewGeneral(tag_message& message) {
-    i32 hintIndex;
-    i16 pictureCtrl;
+    i32 pos;
+    i16 prevCtrl;
     i16 borderId;
-    i16 barId;
-    i16 castSpellControl;
-    i16 surrenderBtn;
-    i8 retVal;
-    i16 colorControl;
+    i16 theBarId;
+    i16 oldControl;
+    i16 curSurrenderBtn;
+    i8 result;
+    i16 colorControlVal;
     i16 nameCtrl;
-    i16 frameWidgetId;
-    i16 statBoxId;
-    i16 cornerCtrl;
+    i16 oldFrameWidgetId;
+    i16 statBoxIdPos;
+    i16 activeCornerCtrl;
     i16 captionCtrl;
-    i16 edgeCtrl;
-    i16 retreatId;
-    i16 baseCtrl;
+    i16 nextCtrl;
+    i16 retreatIdIndex;
+    i16 activeCtrl;
 
     nameCtrl = GENERAL_NAME_WIDGET;
-    pictureCtrl = GENERAL_PORTRAIT_WIDGET;
-    colorControl = GENERAL_COLOR_WIDGET;
-    statBoxId = GENERAL_STATS_WIDGET;
+    prevCtrl = GENERAL_PORTRAIT_WIDGET;
+    colorControlVal = GENERAL_COLOR_WIDGET;
+    statBoxIdPos = GENERAL_STATS_WIDGET;
     borderId = GENERAL_CONTROL_NONE;
     captionCtrl = GENERAL_NAME_WIDGET;
-    cornerCtrl = GENERAL_CONTROL_SEVEN;
-    barId = GENERAL_CONTROL_EIGHT;
-    edgeCtrl = GENERAL_CONTROL_NINE;
-    castSpellControl = GENERAL_CAST_SPELL;
-    retreatId = GENERAL_RETREAT;
-    surrenderBtn = GENERAL_SURRENDER;
-    baseCtrl = GENERAL_CONTROL_THIRTEEN;
-    frameWidgetId = GENERAL_CONTROL_FOURTEEN;
-    retVal = 0;
+    activeCornerCtrl = GENERAL_CONTROL_SEVEN;
+    theBarId = GENERAL_CONTROL_EIGHT;
+    nextCtrl = GENERAL_CONTROL_NINE;
+    oldControl = GENERAL_CAST_SPELL;
+    retreatIdIndex = GENERAL_RETREAT;
+    curSurrenderBtn = GENERAL_SURRENDER;
+    activeCtrl = GENERAL_CONTROL_THIRTEEN;
+    oldFrameWidgetId = GENERAL_CONTROL_FOURTEEN;
+    result = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -232,7 +237,7 @@ i16 HandleViewGeneral(tag_message& message) {
                     case DIALOG_BUTTON_0:
                         if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                             gpWindowManager->m_dialogResult = message.id;
-                            retVal = 1;
+                            result = 1;
                             break;
                         }
                 }
@@ -243,27 +248,27 @@ i16 HandleViewGeneral(tag_message& message) {
                 gpWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case GENERAL_CAST_SPELL:
-                        hintIndex = GENERAL_HOVER_HELP_CAST_SPELL;
+                        pos = GENERAL_HOVER_HELP_CAST_SPELL;
                         break;
                     case GENERAL_RETREAT:
-                        hintIndex = GENERAL_HOVER_HELP_RETREAT;
+                        pos = GENERAL_HOVER_HELP_RETREAT;
                         break;
                     case GENERAL_SURRENDER:
-                        hintIndex = GENERAL_HOVER_HELP_SURRENDER;
+                        pos = GENERAL_HOVER_HELP_SURRENDER;
                         break;
                     case DIALOG_BUTTON_0:
-                        hintIndex = GENERAL_HOVER_HELP_CLOSE;
+                        pos = GENERAL_HOVER_HELP_CLOSE;
                         break;
                     default:
-                        hintIndex = GENERAL_HOVER_HELP_HERO;
+                        pos = GENERAL_HOVER_HELP_HERO;
                         break;
                 }
-                gpCombatManager->CombatMessage(gViewGeneralHelp[hintIndex], 1);
+                gpCombatManager->CombatMessage(gViewGeneralHelp[pos], 1);
                 return MESSAGE_DISPATCH_CONSUME;
                 break;
         }
     }
-    if (retVal) {
+    if (result) {
         message.id = WIDGET_COMMAND_DIALOG_SELECT;
         message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;

@@ -7,12 +7,12 @@ VA(0x00473610, 0x12b)
 u32 MAKEFILEID(char* text) {
     u16 fileId = 0;
     u16 highByte = 0;
-    i32 size = strlen(text);
-    char* buffer = new char[size + 1];
-    strcpy(buffer, text);
-    for (i32 i = 0; i < size; i++) {
-        if (buffer[i] >= 'a' && buffer[i] <= 'z')
-            buffer[i] &= ~('a' - 'A');
+    i32 activeSize = strlen(text);
+    char* line = new char[activeSize + 1];
+    strcpy(line, text);
+    for (i32 i = 0; i < activeSize; i++) {
+        if (line[i] >= 'a' && line[i] <= 'z')
+            line[i] &= ~('a' - 'A');
         highByte = fileId >> 8;
         fileId <<= 8;
         fileId |= highByte;
@@ -22,8 +22,8 @@ u32 MAKEFILEID(char* text) {
         } else {
             fileId <<= 1;
         }
-        fileId -= buffer[i];
+        fileId -= line[i];
     }
-    delete[] buffer;
+    delete[] line;
     return fileId;
 }

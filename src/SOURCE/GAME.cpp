@@ -260,31 +260,31 @@ void ComputeUALoc(i32 player) {
 // pieces (Buka 2.1 SetupPuzzlePieces' picker), then re-roll the hint.
 VA(0x0042bdda, 0x17c)
 void game::VisitObelisk(i8 player) {
-    i16 attempts;
-    i8 visited;
+    i16 curAttempts;
+    i8 visitedFlag;
     i8 fallback;
-    i8 piece;
-    i32 pieces;
-    i16 numRemoved;
+    i8 thePiece;
+    i32 newPieces;
+    i16 myRemovedNo;
     i32 removeCount;
 
-    pieces = PLAYER_PUZZLE_PIECE_COUNT;
-    removeCount = pieces / m_obeliskCount;
+    newPieces = PLAYER_PUZZLE_PIECE_COUNT;
+    removeCount = newPieces / m_obeliskCount;
     if (removeCount < 1)
         removeCount = 1;
-    for (numRemoved = 0; numRemoved < removeCount; numRemoved++) {
-        visited = m_players[player].CountVisitedObelisks();
-        for (piece = 0; piece < pieces; piece += Random(1, 5)) {
-            if (!BitTest(m_players[player].m_obelisksVisited, piece))
+    for (myRemovedNo = 0; myRemovedNo < removeCount; myRemovedNo++) {
+        visitedFlag = m_players[player].CountVisitedObelisks();
+        for (thePiece = 0; thePiece < newPieces; thePiece += Random(1, 5)) {
+            if (!BitTest(m_players[player].m_obelisksVisited, thePiece))
                 break;
         }
-        for (attempts = 0; attempts < OBELISK_PIECE_PICK_TRIES; attempts++) {
-            fallback = Random(0, pieces - 1);
+        for (curAttempts = 0; curAttempts < OBELISK_PIECE_PICK_TRIES; curAttempts++) {
+            fallback = Random(0, newPieces - 1);
             if (!BitTest(m_players[player].m_obelisksVisited, fallback))
                 break;
         }
-        if (piece < pieces)
-            BitSet(m_players[player].m_obelisksVisited, piece);
+        if (thePiece < newPieces)
+            BitSet(m_players[player].m_obelisksVisited, thePiece);
         else
             BitSet(m_players[player].m_obelisksVisited, fallback);
     }
@@ -297,9 +297,9 @@ i8 game::IsMobile(i8 heroId) {
     if (heroId == GAME_HERO_NONE)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
-    i32 terrain = CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
+    i32 terrainValue = CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
     return mobileHero->m_remainingMobility >= CalcTerrainCost(
-               terrain,
+               terrainValue,
                mobileHero->m_direction & MAP_DIRECTION_DIAGONAL_BIT,
                mobileHero->m_remainingMobility,
                mobileHero->m_heroClass
@@ -359,25 +359,25 @@ i8 game::RandomScan(i8* array, i8 start, i8 range, i32) {
 VA(0x0042c17e, 0xe5)
 i8 game::GetNewHeroId(i8 heroClass) {
     i8 freeSlot = GAME_TABLE_FREE;
-    i8 id = GAME_HERO_NONE;
+    i8 idx = GAME_HERO_NONE;
     i16 first = heroClass * HERO_PER_CLASS_COUNT;
-    i32 i;
+    i32 ix;
     freeSlot = Scan(m_availableHeroes, first, HERO_PER_CLASS_COUNT);
     if (freeSlot != GAME_TABLE_FREE) {
-        id = RandomScan(m_availableHeroes, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
+        idx = RandomScan(m_availableHeroes, first, HERO_PER_CLASS_COUNT, HERO_PER_CLASS_COUNT);
     } else {
         freeSlot = Scan(m_availableHeroes, 0, GAME_HERO_COUNT);
         if (freeSlot != GAME_TABLE_FREE) {
-            id = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
+            idx = RandomScan(m_availableHeroes, 0, GAME_HERO_COUNT, GAME_HERO_COUNT);
         } else {
-            for (i = 0; i < GAME_HERO_COUNT; ++i) {
-                if (m_availableHeroes[i] == HERO_AVAILABILITY_RETREATED)
-                    id = i;
+            for (ix = 0; ix < GAME_HERO_COUNT; ++ix) {
+                if (m_availableHeroes[ix] == HERO_AVAILABILITY_RETREATED)
+                    idx = ix;
             }
         }
     }
-    if (id != GAME_HERO_NONE)
-        return id;
+    if (idx != GAME_HERO_NONE)
+        return idx;
     else
         return 0;
 }
@@ -431,10 +431,8 @@ void GenerateStandardFileName(char* source, char* destination) {
             chr = CYRILLIC_CAPITAL_YO;
         else
             chr = chr;
-        if ((chr >= 'A' && chr <= 'Z')
-            || (chr >= CYRILLIC_CAPITAL_A && chr <= CYRILLIC_CAPITAL_YA)
-            || (chr >= '0' && chr <= '9') || chr == CYRILLIC_CAPITAL_YO
-            || chr == '_') {
+        if ((chr >= 'A' && chr <= 'Z') || (chr >= CYRILLIC_CAPITAL_A && chr <= CYRILLIC_CAPITAL_YA)
+            || (chr >= '0' && chr <= '9') || chr == CYRILLIC_CAPITAL_YO || chr == '_') {
             destination[indexOut] = chr;
             indexOut++;
         }
@@ -492,7 +490,11 @@ i16 game::SaveGame(char* filename, i8 generateName) {
         extern char gGamePath[];
         sprintf(filePath, "%s%s", gGamePath, fileName);
         if (strnicmp(fileName, localization::Tr("save.name.autosave"), SAVE_FILE_BASE_NAME_LENGTH)
-            && strnicmp(fileName, localization::Tr("save.name.player_exit"), SAVE_FILE_BASE_NAME_LENGTH))
+            && strnicmp(
+                fileName,
+                localization::Tr("save.name.player_exit"),
+                SAVE_FILE_BASE_NAME_LENGTH
+            ))
             strcpy(gpGame->m_saveName, filename);
     }
     file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
@@ -942,7 +944,12 @@ void game::UpdateNewGameWindow(void) {
     }
     gpGame->m_difficultyRating = CalcDifficultyRating();
     message.id = NEW_GAME_RATING;
-    sprintf(gText, "%s %d%%", localization::Tr("ui.new_game.difficulty_rating"), gpGame->m_difficultyRating);
+    sprintf(
+        gText,
+        "%s %d%%",
+        localization::Tr("ui.new_game.difficulty_rating"),
+        gpGame->m_difficultyRating
+    );
     message.text = gText;
     m_newGameWindow->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_FRAME;
@@ -988,29 +995,29 @@ void game::GiveTroopsToNeutralTowns(void) {
     i32 howMany;
     i32 die;
     i32 i;
-    i32 tier;
+    i32 tierValue;
     i32 monster;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         if ((m_castleRecs[i].m_x > 0 || m_castleRecs[i].m_y > 0) && m_castleRecs[i].m_owner < 0) {
             die = Random(REINFORCEMENT_ROLL_MIN, REINFORCEMENT_ROLL_MAX);
             if (die <= REINFORCEMENT_TIER_ONE_THRESHOLD) {
-                tier = REINFORCEMENT_TIER_ONE_KEY;
+                tierValue = REINFORCEMENT_TIER_ONE_KEY;
                 howMany =
                     Random(REINFORCEMENT_TIER_ONE_COUNT_MIN, REINFORCEMENT_TIER_ONE_COUNT_MAX);
             } else if (die <= REINFORCEMENT_TIER_TWO_THRESHOLD) {
-                tier = REINFORCEMENT_TIER_TWO_KEY;
+                tierValue = REINFORCEMENT_TIER_TWO_KEY;
                 howMany =
                     Random(REINFORCEMENT_TIER_TWO_COUNT_MIN, REINFORCEMENT_TIER_TWO_COUNT_MAX);
             } else if (die <= REINFORCEMENT_TIER_THREE_THRESHOLD) {
-                tier = REINFORCEMENT_TIER_THREE_KEY;
+                tierValue = REINFORCEMENT_TIER_THREE_KEY;
                 howMany =
                     Random(REINFORCEMENT_TIER_THREE_COUNT_MIN, REINFORCEMENT_TIER_THREE_COUNT_MAX);
             } else {
-                tier = REINFORCEMENT_TIER_FOUR_KEY;
+                tierValue = REINFORCEMENT_TIER_FOUR_KEY;
                 howMany =
                     Random(REINFORCEMENT_TIER_FOUR_COUNT_MIN, REINFORCEMENT_TIER_FOUR_COUNT_MAX);
             }
-            switch (tier + m_castleRecs[i].m_type) {
+            switch (tierValue + m_castleRecs[i].m_type) {
                 case REINFORCEMENT_TIER_ONE_KEY + TOWN_TYPE_KNIGHT:
                     monster = CREATURE_PEASANT;
                     break;
@@ -1105,10 +1112,7 @@ i8 game::NewGame(void) {
         if (giNumHumanPlayers == 1) {
             strcpy(gMapName, "AES31000.map");
             strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
-            strcpy(
-                gMapDescription,
-                localization::Tr("scenario.claw.description")
-            );
+            strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
             gMapSize = MAP_SIZE_SMALL;
             gMapDifficulty = MAP_DIFFICULTY_EASY;
         } else {
@@ -1227,20 +1231,20 @@ void game::InitEntireCampaign(i32 side) {
 // opponents and every player's resources.
 VA(0x0042e595, 0x25b)
 void game::InitCampaignMap(i32 scenario, i32) {
-    i32 saveType;
-    i32 savedScenario;
+    i32 saveTypeValue;
+    i32 firstSavedScenario;
     i32 i;
-    i32 j;
+    i32 jId;
     i32 savedState;
     i32 savedDay;
 
-    saveType = m_campaignType;
-    savedScenario = m_campaignScenario;
+    saveTypeValue = m_campaignType;
+    firstSavedScenario = m_campaignScenario;
     savedState = m_campaignScenariosWon;
     savedDay = m_campaignDay;
     LoadGame("origdata.bin", 1, 0);
-    m_campaignType = saveType;
-    m_campaignScenario = savedScenario;
+    m_campaignType = saveTypeValue;
+    m_campaignScenario = firstSavedScenario;
     m_campaignScenariosWon = savedState;
     m_campaignDay = savedDay;
     m_month = (m_campaignDay - 1) / CALENDAR_DAYS_PER_MONTH + 1;
@@ -1263,8 +1267,8 @@ void game::InitCampaignMap(i32 scenario, i32) {
     sprintf(gMapName, "CAMP%d.CMP", scenario + 1);
     NewMap(gMapName);
     for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        for (j = 0; j < RESOURCE_COUNT; j++)
-            m_players[i].m_resources[j] = gCampaignScenarios[scenario].resources[i][j];
+        for (jId = 0; jId < RESOURCE_COUNT; jId++)
+            m_players[i].m_resources[jId] = gCampaignScenarios[scenario].resources[i][jId];
     }
 }
 
@@ -1274,21 +1278,21 @@ void game::InitCampaignMap(i32 scenario, i32) {
 // first neutral garrisons.
 VA(0x0042e7f0, 0xe31)
 void game::NewMap(char* mapName) {
-    i32 nextThreat;
-    i32 anyFree;
-    i8 heroY;
-    i8 heroX;
+    i32 nextThreatVal;
+    i32 anyFreeValue;
+    i8 savedHeroY;
+    i8 myPosX;
     i8 yTown;
-    i8 xTown;
-    i32 heroIdx;
+    i8 xTownVal;
+    i32 prevHeroNo;
     i32 i;
     i32 j;
-    i8 townId;
-    i8 used[GAME_TOWN_COUNT];
+    i8 theTownId;
+    i8 theUsed[GAME_TOWN_COUNT];
     i32 k;
     i32 ultimateSpread;
-    i8 allNeutral;
-    i32 difficulty;
+    i8 allNeutralVal;
+    i32 curDifficulty;
 
     gbInNewGameSetup = 1;
     giCurPlayer = 0;
@@ -1314,7 +1318,7 @@ void game::NewMap(char* mapName) {
     RandomizeTerrainTiles();
     RandomizePlayerCrests();
     ProcessMapExtra();
-    allNeutral = SetupTowns();
+    allNeutralVal = SetupTowns();
     ProcessRandomObjects(1);
     ProcessRandomObjects(0);
     RandomizeEvents();
@@ -1325,8 +1329,8 @@ void game::NewMap(char* mapName) {
         m_players[i].m_ultimateArtifactHintChance = 0;
         m_players[i].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
         m_players[i].m_ultimateArtifactHintY = PLAYER_ULTIMATE_HINT_NONE;
-        heroIdx = 0;
-        if (allNeutral) {
+        prevHeroNo = 0;
+        if (allNeutralVal) {
             if (m_campaignType <= 0 || m_campaignScenario < CAMPAIGN_SCENARIO_LORD_FIRST
                 || m_campaignScenario > CAMPAIGN_SCENARIO_LORD_LAST) {
                 if (m_campaignType > 0) {
@@ -1337,11 +1341,11 @@ void game::NewMap(char* mapName) {
                         }
                     }
                 } else {
-                    townId = RandomScan(m_townOwners, 0, GAME_PLAYER_COUNT, 8);
-                    if (townId == GAME_TABLE_FREE)
-                        townId = Scan(m_townOwners, 0, GAME_PLAYER_COUNT);
-                    SetupTown(townId, !gbHumanPlayer[i]);
-                    ClaimTown(townId, i);
+                    theTownId = RandomScan(m_townOwners, 0, GAME_PLAYER_COUNT, 8);
+                    if (theTownId == GAME_TABLE_FREE)
+                        theTownId = Scan(m_townOwners, 0, GAME_PLAYER_COUNT);
+                    SetupTown(theTownId, !gbHumanPlayer[i]);
+                    ClaimTown(theTownId, i);
                 }
             }
         } else {
@@ -1385,15 +1389,15 @@ void game::NewMap(char* mapName) {
         ProcessOnMapHeroes();
     if (m_campaignType <= 0) {
         for (k = 0; k < GAME_PLAYER_COUNT; k++) {
-            if (allNeutral && m_townOwners[k] == GAME_PLAYER_NONE) {
-                xTown = m_castleRecs[k].m_x;
+            if (allNeutralVal && m_townOwners[k] == GAME_PLAYER_NONE) {
+                xTownVal = m_castleRecs[k].m_x;
                 yTown = m_castleRecs[k].m_y;
                 for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-                    m_map[xTown - TOWN_FOOTPRINT_LEFT + i][yTown - TOWN_FOOTPRINT_TOP]
+                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - TOWN_FOOTPRINT_TOP]
                         .m_overlayIndex -= TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTown - TOWN_FOOTPRINT_LEFT + i][yTown - 1].m_objectIndex -=
+                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown - 1].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
-                    m_map[xTown - TOWN_FOOTPRINT_LEFT + i][yTown].m_objectIndex -=
+                    m_map[xTownVal - TOWN_FOOTPRINT_LEFT + i][yTown].m_objectIndex -=
                         TOWN_CASTLE_FRAME_OFFSET;
                 }
                 m_castleRecs[k].m_buildings = 1 << BUILDING_SLOT_TENT;
@@ -1405,14 +1409,14 @@ void game::NewMap(char* mapName) {
     }
     for (i = 0; i < m_playerCount; i++) {
         for (j = 0; j < m_players[i].m_heroCount; j++) {
-            heroX = m_heroRecs[m_players[i].m_heroIds[j]].m_x;
-            heroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
+            myPosX = m_heroRecs[m_players[i].m_heroIds[j]].m_x;
+            savedHeroY = m_heroRecs[m_players[i].m_heroIds[j]].m_y;
             m_heroRecs[m_players[i].m_heroIds[j]].m_locationType =
-                m_map[heroX][heroY].m_triggerType;
+                m_map[myPosX][savedHeroY].m_triggerType;
             m_heroRecs[m_players[i].m_heroIds[j]].m_occupiedTown =
-                m_map[heroX][heroY].m_objectMetadata;
-            m_map[heroX][heroY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
-            m_map[heroX][heroY].m_objectMetadata = m_players[i].m_heroIds[j];
+                m_map[myPosX][savedHeroY].m_objectMetadata;
+            m_map[myPosX][savedHeroY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+            m_map[myPosX][savedHeroY].m_objectMetadata = m_players[i].m_heroIds[j];
         }
         if (m_players[i].m_heroCount > 0)
             m_players[i].m_currentHero = m_players[i].m_heroIds[0];
@@ -1427,7 +1431,7 @@ void game::NewMap(char* mapName) {
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
            || (giNumHumanPlayers == 1
                && ultimateSpread >= abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
-                          + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y))) {
+                                        + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y))) {
         ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
         i = Random(9, 62);
         j = Random(9, 62);
@@ -1438,27 +1442,27 @@ void game::NewMap(char* mapName) {
     for (i = 0; i < m_playerCount; i++) {
         if (gbHumanPlayer[i]) {
             if (i == 0)
-                difficulty = m_difficulty;
+                curDifficulty = m_difficulty;
             else
-                difficulty = m_players[i].m_difficulty - 1;
+                curDifficulty = m_players[i].m_difficulty - 1;
         } else {
-            difficulty = 0;
+            curDifficulty = 0;
         }
         memcpy(
             m_players[i].m_resources,
-            gStartingResources[difficulty],
+            gStartingResources[curDifficulty],
             sizeof(m_players[i].m_resources)
         );
     }
-    memset(used, -1, sizeof(used));
+    memset(theUsed, -1, sizeof(theUsed));
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
-        nextThreat = 0;
-        anyFree = Scan(used, 0, GAME_TOWN_COUNT);
-        if (anyFree != GAME_TABLE_FREE)
-            nextThreat = RandomScan(used, 0, GAME_TOWN_COUNT, GAME_TOWN_COUNT);
-        anyFree = nextThreat;
-        m_castleRecs[i].m_threat = anyFree;
-        used[anyFree] = 0;
+        nextThreatVal = 0;
+        anyFreeValue = Scan(theUsed, 0, GAME_TOWN_COUNT);
+        if (anyFreeValue != GAME_TABLE_FREE)
+            nextThreatVal = RandomScan(theUsed, 0, GAME_TOWN_COUNT, GAME_TOWN_COUNT);
+        anyFreeValue = nextThreatVal;
+        m_castleRecs[i].m_threat = anyFreeValue;
+        theUsed[anyFreeValue] = 0;
     }
     for (i = 0; i < 4; i++)
         GiveTroopsToNeutralTowns();
@@ -1538,39 +1542,39 @@ void game::SettleOverlay(i32 x, i32 y) {
 // their footprints, then settles overlays and the passive trigger bits.
 VA(0x0042f830, 0xb14)
 void game::RandomizeEvents(void) {
-    u8 overlayTileset;
-    u8 objTileset;
+    u8 theTileset;
+    u8 nextObjTileset;
     i16 y;
     i16 i;
     i16 j;
     i8 id;
-    i32 siteNum;
+    i32 siteNumIdx;
     i16 x;
-    mapCell* cell;
-    i8 obeliskId;
+    mapCell* nextCell;
+    i8 obeliskIdNum;
 
-    obeliskId = 1;
-    siteNum = 1;
+    obeliskIdNum = 1;
+    siteNumIdx = 1;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            cell = &m_map[x][y];
-            switch (cell->m_triggerType) {
+            nextCell = &m_map[x][y];
+            switch (nextCell->m_triggerType) {
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_GAZEBO:
-                    cell->m_objectMetadata = siteNum;
-                    siteNum++;
+                    nextCell->m_objectMetadata = siteNumIdx;
+                    siteNumIdx++;
                     break;
                 case MAP_OBJECT_WHIRLPOOL:
-                    cell->m_triggerType |= MAP_TRIGGER_EVENT;
+                    nextCell->m_triggerType |= MAP_TRIGGER_EVENT;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_OBELISK:
-                    cell->m_objectMetadata = obeliskId;
-                    obeliskId++;
+                    nextCell->m_objectMetadata = obeliskIdNum;
+                    obeliskIdNum++;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STATUE:
-                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
+                    nextCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
-                    cell->m_objectMetadata =
+                    nextCell->m_objectMetadata =
                         Random(0, 9) == 3 ? SKELETON_ARTIFACT : SKELETON_EMPTY;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
@@ -1578,38 +1582,38 @@ void game::RandomizeEvents(void) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE;
+                            nextCell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE;
                             break;
                         case 3:
-                            cell->m_objectMetadata = DAEMON_REWARD_ARTIFACT;
+                            nextCell->m_objectMetadata = DAEMON_REWARD_ARTIFACT;
                             break;
                         case 4:
                         case 5:
                         case 6:
-                            cell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE_GOLD;
+                            nextCell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE_GOLD;
                             break;
                         case 7:
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = DAEMON_REWARD_RANSOM;
+                            nextCell->m_objectMetadata = DAEMON_REWARD_RANSOM;
                             break;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_TREASURE_CHEST:
-                    cell->m_objectMetadata = Random(2, 4);
+                    nextCell->m_objectMetadata = Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CAMPFIRE:
-                    cell->m_objectMetadata = Random(4, 6) << CAMPFIRE_AMOUNT_SHIFT;
-                    cell->m_objectMetadata |= static_cast<i8>(Random(0, 5));
+                    nextCell->m_objectMetadata = Random(4, 6) << CAMPFIRE_AMOUNT_SHIFT;
+                    nextCell->m_objectMetadata |= static_cast<i8>(Random(0, 5));
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_ANCIENT_LAMP:
-                    cell->m_objectMetadata = Random(0, 3) + 2;
+                    nextCell->m_objectMetadata = Random(0, 3) + 2;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK:
                     if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1
                         || (m_map[x - 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                != MAP_OBJECT_SHIPWRECK) {
-                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
+                        nextCell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
                     goto treasure;
@@ -1619,62 +1623,62 @@ void game::RandomizeEvents(void) {
                         case 0:
                         case 1:
                         case 2:
-                            cell->m_objectMetadata = GHOST_SITE_SMALL;
+                            nextCell->m_objectMetadata = GHOST_SITE_SMALL;
                             break;
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = GHOST_SITE_MEDIUM;
+                            nextCell->m_objectMetadata = GHOST_SITE_MEDIUM;
                             break;
                         case 6:
                         case 7:
                         case 8:
-                            cell->m_objectMetadata = GHOST_SITE_LARGE;
+                            nextCell->m_objectMetadata = GHOST_SITE_LARGE;
                             break;
                         case 9:
-                            cell->m_objectMetadata = GHOST_SITE_HUGE;
+                            nextCell->m_objectMetadata = GHOST_SITE_HUGE;
                             break;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
-                    cell->m_objectMetadata = Random(10, 30);
+                    nextCell->m_objectMetadata = Random(10, 30);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
-                    cell->m_objectMetadata = Random(20, 50);
+                    nextCell->m_objectMetadata = Random(20, 50);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
-                    cell->m_objectMetadata = Random(0, 127) % 4 + 1;
+                    nextCell->m_objectMetadata = Random(0, 127) % 4 + 1;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
-                    cell->m_objectMetadata = Random(0, 98) % 3 + 1;
+                    nextCell->m_objectMetadata = Random(0, 98) % 3 + 1;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
-                    cell->m_objectMetadata = Random(20, 50);
+                    nextCell->m_objectMetadata = Random(20, 50);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
-                    cell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
+                    nextCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
-                    if (!static_cast<u8>(cell->m_objectMetadata)) {
-                        cell->m_objectMetadata = GetRandomNumTroops(cell->m_objectIndex);
-                        if (Random(0, 99) <= 25 && cell->m_objectIndex != CREATURE_GHOST)
-                            cell->m_objectMetadata |= MONSTER_WILLING_FLAG;
+                    if (!static_cast<u8>(nextCell->m_objectMetadata)) {
+                        nextCell->m_objectMetadata = GetRandomNumTroops(nextCell->m_objectIndex);
+                        if (Random(0, 99) <= 25 && nextCell->m_objectIndex != CREATURE_GHOST)
+                            nextCell->m_objectMetadata |= MONSTER_WILLING_FLAG;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE:
-                    cell->m_objectMetadata = cell->m_objectIndex;
-                    if (cell->m_objectIndex > 4)
-                        cell->m_objectMetadata -= RESOURCE_PILE_OBJECT_BASE;
-                    switch (static_cast<u8>(cell->m_objectMetadata)) {
+                    nextCell->m_objectMetadata = nextCell->m_objectIndex;
+                    if (nextCell->m_objectIndex > 4)
+                        nextCell->m_objectMetadata -= RESOURCE_PILE_OBJECT_BASE;
+                    switch (static_cast<u8>(nextCell->m_objectMetadata)) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
-                            cell->m_objectMetadata = Random(8, 16);
+                            nextCell->m_objectMetadata = Random(8, 16);
                             break;
                         case RESOURCE_GOLD:
-                            cell->m_objectMetadata = Random(5, 10);
+                            nextCell->m_objectMetadata = Random(5, 10);
                             break;
                         default:
-                            cell->m_objectMetadata = Random(3, 7);
+                            nextCell->m_objectMetadata = Random(3, 7);
                             break;
                     }
                     break;
@@ -1684,24 +1688,24 @@ void game::RandomizeEvents(void) {
                         case 1:
                         case 2:
                         case 3:
-                            cell->m_objectMetadata =
+                            nextCell->m_objectMetadata =
                                 gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)] + 1;
                             break;
                         case 4:
                         case 5:
                         case 6:
                         case 7:
-                            cell->m_objectMetadata =
+                            nextCell->m_objectMetadata =
                                 gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)] + 1;
                             break;
                         default:
-                            cell->m_objectMetadata =
+                            nextCell->m_objectMetadata =
                                 gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_3][Random(0, 7)] + 1;
                             break;
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
-                    cell->m_objectMetadata = Random(10, 20);
+                    nextCell->m_objectMetadata = Random(10, 20);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
                     if (x <= 0 || x >= MAP_CELL_GRID_SIZE - 1
@@ -1709,10 +1713,10 @@ void game::RandomizeEvents(void) {
                                != MAP_OBJECT_WAGON_CAMP
                         || (m_map[x + 1][y].m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                != MAP_OBJECT_WAGON_CAMP) {
-                        cell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
+                        nextCell->m_triggerType &= MAP_TRIGGER_TYPE_MASK;
                         break;
                     }
-                    cell->m_objectMetadata = Random(30, 50);
+                    nextCell->m_objectMetadata = Random(30, 50);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT:
                     switch (Random(0, 99) % 10) {
@@ -1722,15 +1726,15 @@ void game::RandomizeEvents(void) {
                         case 3:
                         case 4:
                         case 5:
-                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
+                            nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
                             break;
                         case 6:
                         case 7:
-                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GUARDED;
+                            nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_GUARDED;
                             break;
                         case 8:
                         case 9:
-                            cell->m_objectMetadata = ARTIFACT_EVENT_MODE_GOLD;
+                            nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_GOLD;
                             break;
                     }
                     break;
@@ -1756,31 +1760,31 @@ void game::RandomizeEvents(void) {
                         for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
                             if (!static_cast<u8>(m_map[x + i][y - j].m_objectMetadata)
                                 || (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK)
-                                       == (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
+                                       == (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
                                 m_map[x + i][y - j].m_objectMetadata = id;
                         }
                     }
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
-                    cell->m_objectMetadata = Random(1, 5);
+                    nextCell->m_objectMetadata = Random(1, 5);
                     break;
             }
         }
     }
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            cell = &m_map[x][y];
-            if (cell->m_objectIndex != MAP_CELL_NO_FRAME
-                && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
-                objTileset = cell->m_objectTileset & MAP_CELL_TILESET_MASK;
-                overlayTileset = cell->m_overlayTileset & MAP_CELL_TILESET_MASK;
-                if ((objTileset == TILESET_MTN32 || objTileset == TILESET_TREE32)
-                    && (overlayTileset == TILESET_MTN32 || overlayTileset == TILESET_TREE32))
-                    cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
+            nextCell = &m_map[x][y];
+            if (nextCell->m_objectIndex != MAP_CELL_NO_FRAME
+                && nextCell->m_overlayIndex != MAP_CELL_NO_FRAME) {
+                nextObjTileset = nextCell->m_objectTileset & MAP_CELL_TILESET_MASK;
+                theTileset = nextCell->m_overlayTileset & MAP_CELL_TILESET_MASK;
+                if ((nextObjTileset == TILESET_MTN32 || nextObjTileset == TILESET_TREE32)
+                    && (theTileset == TILESET_MTN32 || theTileset == TILESET_TREE32))
+                    nextCell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
             }
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
-                switch (cell->m_triggerType) {
+                switch (nextCell->m_triggerType) {
                     case MAP_OBJECT_MOUNTAINS:
                     case MAP_OBJECT_MOUNTAINS_2:
                     case MAP_OBJECT_MOUNTAINS_3:
@@ -1790,7 +1794,7 @@ void game::RandomizeEvents(void) {
                     case MAP_OBJECT_TREES_3:
                     case MAP_OBJECT_TREES_4:
                     case MAP_OBJECT_TREES_5:
-                        cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
+                        nextCell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                         break;
                 }
             }
@@ -1798,11 +1802,11 @@ void game::RandomizeEvents(void) {
     }
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            cell = &m_map[x][y];
-            if (cell->m_triggerType == MAP_OBJECT_SHADOW)
-                cell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
-            if (cell->m_triggerType & MAP_TRIGGER_EVENT) {
-                switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            nextCell = &m_map[x][y];
+            if (nextCell->m_triggerType == MAP_OBJECT_SHADOW)
+                nextCell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
+            if (nextCell->m_triggerType & MAP_TRIGGER_EVENT) {
+                switch (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
                     case MAP_OBJECT_ALCHEMIST_LAB:
                     case MAP_OBJECT_SIGNPOST:
                     case MAP_OBJECT_BUOY:
@@ -1854,7 +1858,7 @@ void game::RandomizeEvents(void) {
                     case MAP_OBJECT_ULTIMATE_ARTIFACT:
                         break;
                     default:
-                        cell->m_triggerType -= MAP_TRIGGER_EVENT;
+                        nextCell->m_triggerType -= MAP_TRIGGER_EVENT;
                         break;
                 }
             }
@@ -1867,7 +1871,7 @@ void game::RandomizeEvents(void) {
 // (from version 1112) the map extras.
 VA(0x00430344, 0x3c6)
 i16 game::LoadMap(char* filename) {
-    void* buf;
+    void* msg;
     i16 width;
     i8 y;
     i16 height;
@@ -1875,20 +1879,20 @@ i16 game::LoadMap(char* filename) {
     i32 handle;
     i8 x;
     i8 type;
-    i32 unused;
-    i16 version;
+    i32 reserved;
+    i16 theVersion;
 
     extern char gMapPath[];
     sprintf(gText, "%s%s", gMapPath, filename);
     handle = open(gText, O_BINARY);
     if (handle == -1)
         FileError(gText);
-    read(handle, &version, 2);
-    if (version == MAP_HEADER_ID) {
-        buf = malloc(sizeof(SMapHeader));
-        read(handle, buf, sizeof(SMapHeader) - sizeof(version));
-        read(handle, &version, 2);
-        free(buf);
+    read(handle, &theVersion, 2);
+    if (theVersion == MAP_HEADER_ID) {
+        msg = malloc(sizeof(SMapHeader));
+        read(handle, msg, sizeof(SMapHeader) - sizeof(theVersion));
+        read(handle, &theVersion, 2);
+        free(msg);
     }
     read(handle, &width, 2);
     read(handle, &height, 2);
@@ -1922,7 +1926,7 @@ i16 game::LoadMap(char* filename) {
     read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
     read(handle, &m_obeliskCount, 1);
     read(handle, m_mapSounds, sizeof(m_mapSounds));
-    if (version >= MAP_EXTRA_VERSION) {
+    if (theVersion >= MAP_EXTRA_VERSION) {
         read(handle, &iMaxMapExtra, 4);
         for (i = 1; i < iMaxMapExtra; i++) {
             read(handle, &pwSizeOfMapExtra[i], 4);
@@ -1941,7 +1945,7 @@ i16 game::LoadMap(char* filename) {
 // evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
 VA(0x0043070a, 0x29b)
 void game::ClaimTown(i8 townId, i8 player) {
-    i32 i;
+    i32 j;
     town* townRec;
     mapCell* cell;
 
@@ -1950,9 +1954,9 @@ void game::ClaimTown(i8 townId, i8 player) {
         return;
     if (m_townOwners[townId] != GAME_PLAYER_NONE)
         gpGame->GetTown(townId)->Deallocate();
-    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
-        townRec->m_army.m_creatureTypes[i] = CREATURE_NONE;
-        townRec->m_army.m_creatureCounts[i] = 0;
+    for (j = 0; j < ARMY_GROUP_SLOT_COUNT; ++j) {
+        townRec->m_army.m_creatureTypes[j] = CREATURE_NONE;
+        townRec->m_army.m_creatureCounts[j] = 0;
     }
     if (m_castleRecs[townId].m_owner == GAME_PLAYER_NONE)
         m_castleRecs[townId].m_turnsOwned = 2;
@@ -1980,7 +1984,7 @@ void game::ClaimTown(i8 townId, i8 player) {
 VA(0x004309a5, 0x24a)
 void game::ClaimMine(i8 mineId, i8 player) {
     i16 frame;
-    mapCell* cell;
+    mapCell* cellPtr;
     m_mines[mineId].owner = player;
     m_mineOwners[mineId] = player;
     switch (m_mines[mineId].type) {
@@ -2002,24 +2006,24 @@ void game::ClaimMine(i8 mineId, i8 player) {
     }
     switch (m_mines[mineId].type) {
         case RESOURCE_MERCURY:
-            cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
+            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 2];
             break;
         case MAP_OBJECT_DRAGON_CITY:
-            cell = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
+            cellPtr = &m_map[m_mines[mineId].x - 1][m_mines[mineId].y - 3];
             break;
         case MAP_OBJECT_LIGHTHOUSE:
-            cell = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
+            cellPtr = &m_map[m_mines[mineId].x - 2][m_mines[mineId].y];
             break;
         default:
-            cell = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
+            cellPtr = &m_map[m_mines[mineId].x][m_mines[mineId].y - 1];
             break;
     }
     if (player == GAME_PLAYER_NONE) {
-        cell->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
+        cellPtr->m_flags ^= MAP_CELL_OVERLAY_EXTRA;
     } else {
-        cell->m_flags |= MAP_CELL_OVERLAY_EXTRA;
-        cell->m_overlayTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
-        cell->m_extraFrame = frame + m_players[player].Color();
+        cellPtr->m_flags |= MAP_CELL_OVERLAY_EXTRA;
+        cellPtr->m_overlayTileset |= TILESET_FLAG32 << MAP_CELL_EXTRA_TILESET_SHIFT;
+        cellPtr->m_extraFrame = frame + m_players[player].Color();
     }
 }
 
@@ -2068,8 +2072,8 @@ i8 game::ViewSpells(
         if (spellType != SPELL_TYPE_ALL) {
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = spellType == SPELL_TYPE_COMBAT
-                             ? SPELL_BOOK_ADVENTURE_SPELLS : SPELL_BOOK_COMBAT_SPELLS;
+            message.id = spellType == SPELL_TYPE_COMBAT ? SPELL_BOOK_ADVENTURE_SPELLS
+                                                        : SPELL_BOOK_COMBAT_SPELLS;
             message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(message);
         }
@@ -2159,9 +2163,9 @@ i16 ViewSpellsHandler(tag_message& message) {
                         case SPELL_BOOK_ENTRY_FIRST + 1:
                         case SPELL_BOOK_ENTRY_FIRST + 2:
                         case SPELL_BOOK_ENTRY_LAST:
-                            spell =
-                                gpGame->m_viewSpellsHero->m_spells
-                                    [gpGame->m_viewSpellsTop + (message.id - SPELL_BOOK_ENTRY_FIRST)];
+                            spell = gpGame->m_viewSpellsHero->m_spells
+                                        [gpGame->m_viewSpellsTop
+                                         + (message.id - SPELL_BOOK_ENTRY_FIRST)];
                             NormalDialog(
                                 gSpellDesc[spell],
                                 NORMAL_DIALOG_TYPE_QUICK_VIEW,
@@ -2250,9 +2254,9 @@ i16 ViewSpellsHandler(tag_message& message) {
                                 );
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
-                            gpGame->m_viewSpell =
-                                gpGame->m_viewSpellsHero->m_spells
-                                    [gpGame->m_viewSpellsTop + (message.id - SPELL_BOOK_ENTRY_FIRST)];
+                            gpGame->m_viewSpell = gpGame->m_viewSpellsHero->m_spells
+                                                      [gpGame->m_viewSpellsTop
+                                                       + (message.id - SPELL_BOOK_ENTRY_FIRST)];
                             message.command = WIDGET_COMMAND_DIALOG_SELECT;
                             return MESSAGE_DISPATCH_FORWARD;
                         case SPELL_BOOK_PREVIOUS_PAGE:
@@ -2972,16 +2976,16 @@ VA(0x00432f8c, 0x520)
 void game::NextPlayer(void) {
     hero* currentHero;
     i32 numHumans;
-    i32 i;
-    i32 remote;
+    i32 ii;
+    i32 remoteVal;
     // Retail reserves 0x14 unused bytes above the named locals.
     char unused[20];
 
     gCurHourGlassPhase = 0;
     if (gbThisNetHumanPlayer[giCurPlayer] && gConfig.autosave) {
         numHumans = 0;
-        for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-            if (!m_playerDead[i] && gbHumanPlayer[i])
+        for (ii = 0; ii < GAME_PLAYER_COUNT; ii++) {
+            if (!m_playerDead[ii] && gbHumanPlayer[ii])
                 numHumans++;
         }
         SaveGame(localization::Tr("save.name.autosave"), 1);
@@ -3002,8 +3006,8 @@ void game::NextPlayer(void) {
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     giCurPlayerBit = 1 << giCurPlayer;
     giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
-    for (i = 0; i < m_players[giCurPlayer].m_heroCount; i++) {
-        currentHero = &m_heroRecs[m_players[giCurPlayer].m_heroIds[i]];
+    for (ii = 0; ii < m_players[giCurPlayer].m_heroCount; ii++) {
+        currentHero = &m_heroRecs[m_players[giCurPlayer].m_heroIds[ii]];
         currentHero->m_mobility = currentHero->CalcMobility();
         if (m_campaignType > 0
             && currentHero->m_x == gCampaignScenarios[m_campaignScenario].victoryTownX
@@ -3022,10 +3026,10 @@ void game::NextPlayer(void) {
         bShowIt = 0;
         if (gRemoteOn && (gbHumanPlayer[giCurPlayer] || giThisGamePos != giHostGamePos)) {
             if (!gbHumanPlayer[giCurPlayer])
-                remote = giHostGamePos;
+                remoteVal = giHostGamePos;
             else
-                remote = giCurPlayer;
-            if (!gpGame->TransmitSaveGame(remote, 0))
+                remoteVal = giCurPlayer;
+            if (!gpGame->TransmitSaveGame(remoteVal, 0))
                 ShutDown(NULL);
         }
         if (giBottomViewOverride == BOTTOM_VIEW_OVERRIDE_DISABLED)
@@ -3034,7 +3038,11 @@ void game::NextPlayer(void) {
         SetNoDialogMenus(1);
         gpInputManager->Flush();
         if (gbBlackoutPlayer && giNumHumanPlayers > 1) {
-            sprintf(gText, localization::Tr("turn.player.prompt"), gColorNames[gpGame->m_players[giCurPlayer].m_color]);
+            sprintf(
+                gText,
+                localization::Tr("turn.player.prompt"),
+                gColorNames[gpGame->m_players[giCurPlayer].m_color]
+            );
             gText[0] = CyrillicToUpper(gText[0]);
             WaitForPlayer(gText, giCurPlayer);
         }
@@ -3072,17 +3080,17 @@ i32 game::ComputeDailyGold(i32 player) {
     for (index = 0; index < GAME_TOWN_COUNT; index++) {
         if (m_castleRecs[index].m_owner == player) {
             dailyGold += static_cast<i16>(
-                (m_castleRecs[index].m_buildings & (1 << BUILDING_SLOT_TENT))
-                    ? DAILY_GOLD_TOWN : DAILY_GOLD_CASTLE
+                (m_castleRecs[index].m_buildings & (1 << BUILDING_SLOT_TENT)) ? DAILY_GOLD_TOWN
+                                                                              : DAILY_GOLD_CASTLE
             );
         }
     }
     dailyGold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_SACK_OF_GOLD)
-            * DAILY_GOLD_ENDLESS_SACK;
+                 * DAILY_GOLD_ENDLESS_SACK;
     dailyGold +=
         m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_BAG_OF_GOLD) * DAILY_GOLD_ENDLESS_BAG;
     dailyGold += m_players[player].NumOfGivenArtifact(ARTIFACT_ENDLESS_PURSE_OF_GOLD)
-            * DAILY_GOLD_ENDLESS_PURSE;
+                 * DAILY_GOLD_ENDLESS_PURSE;
     if (!gbHumanPlayer[player]) {
         if (gpGame->m_players[player].m_difficulty == PLAYER_TYPE_DUMB)
             dailyGold = dailyGold * 0.75;
@@ -3200,8 +3208,8 @@ void game::PerWeek(void) {
         for (j = BUILDING_SLOT_DWELLING_FIRST; j <= BUILDING_SLOT_DWELLING_LAST; j++) {
             if (townPointer->m_buildings & (1 << j)) {
                 i16 gain = gMonsterDatabase[gDwellingType[townPointer->m_type]
-                                                     [j - BUILDING_SLOT_DWELLING_FIRST]]
-                           .growth;
+                                                         [j - BUILDING_SLOT_DWELLING_FIRST]]
+                               .growth;
                 if (townPointer->m_buildings & (1 << BUILDING_SLOT_WELL))
                     gain += WEEKLY_WELL_GROWTH_BONUS;
                 if (townPointer->m_owner >= 0 && !gbHumanPlayer[townPointer->m_owner]) {
@@ -3356,10 +3364,10 @@ void game::PerMonth(void) {
 VA(0x0043461e, 0x569)
 void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     i8 j;
-    i8 unique;
+    i8 curUnique;
     town* town;
     i8 i;
-    u8 frameShift;
+    u8 activeFrameShift;
     i8 townNum;
     i8 race;
     i8 plain;
@@ -3390,25 +3398,26 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
         && m_campaignScenario <= CAMPAIGN_SCENARIO_LORD_LAST && town->m_owner == 0) {
         race = gCrestTownTypes[m_players[0].m_color];
     } else if (townNum < GAME_PLAYER_COUNT) {
-        unique = 0;
+        curUnique = 0;
         race = 0;
-        while (!unique) {
+        while (!curUnique) {
             race = Random(0, 3);
-            unique = 1;
+            curUnique = 1;
             for (i = 0; i < GAME_PLAYER_COUNT; i++) {
                 if (gRandomTownTypes[i] == race)
-                    unique = 0;
+                    curUnique = 0;
             }
         }
         gRandomTownTypes[townNum] = race;
     } else {
         race = Random(0, 3);
     }
-    frameShift = (TOWN_TYPE_COUNT - race) * TOWN_RACE_FRAME_STRIDE;
+    activeFrameShift = (TOWN_TYPE_COUNT - race) * TOWN_RACE_FRAME_STRIDE;
     for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-        m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP].m_overlayIndex -= frameShift;
-        m_map[x - TOWN_FOOTPRINT_LEFT + i][y - 1].m_objectIndex -= frameShift;
-        m_map[x - TOWN_FOOTPRINT_LEFT + i][y].m_objectIndex -= frameShift;
+        m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP].m_overlayIndex -=
+            activeFrameShift;
+        m_map[x - TOWN_FOOTPRINT_LEFT + i][y - 1].m_objectIndex -= activeFrameShift;
+        m_map[x - TOWN_FOOTPRINT_LEFT + i][y].m_objectIndex -= activeFrameShift;
     }
     m_castleRecs[townNum].m_type = race;
     plain = 1;
@@ -3439,52 +3448,52 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
 VA(0x00434b87, 0x318)
 void game::SetupTown(i8 townId, i8 aiOwned) {
     i16 dwellingCount;
-    char dwellingRoll[10];
-    i32 k;
-    i8 used[29];
-    i8 townType;
+    char rollList[10];
+    i32 n;
+    i8 nextUsed[29];
+    i8 curTownType;
     i16 newSpell;
     i16 spellValue;
     i32 spellLevel;
 
-    dwellingRoll[0] = 1;
-    dwellingRoll[1] = 1;
-    dwellingRoll[2] = 1;
-    dwellingRoll[3] = 2;
-    dwellingRoll[4] = 1;
-    dwellingRoll[5] = 1;
-    dwellingRoll[6] = 1;
-    dwellingRoll[7] = 2;
-    dwellingRoll[8] = 1;
-    dwellingRoll[9] = 3;
-    dwellingCount = dwellingRoll[Random(0, 99) / 10];
-    townType = m_castleRecs[townId].m_type;
+    rollList[0] = 1;
+    rollList[1] = 1;
+    rollList[2] = 1;
+    rollList[3] = 2;
+    rollList[4] = 1;
+    rollList[5] = 1;
+    rollList[6] = 1;
+    rollList[7] = 2;
+    rollList[8] = 1;
+    rollList[9] = 3;
+    dwellingCount = rollList[Random(0, 99) / 10];
+    curTownType = m_castleRecs[townId].m_type;
     if (m_castleRecs[townId].m_customized) {
-        for (k = 0; k < BUILDING_SLOT_DWELLING_COUNT; k++) {
-            if (m_castleRecs[townId].m_buildings & (1 << (k + BUILDING_SLOT_DWELLING_FIRST)))
-                m_castleRecs[townId].m_garrison[k] =
-                    gMonsterDatabase[gDwellingType[townType][k]].growth;
+        for (n = 0; n < BUILDING_SLOT_DWELLING_COUNT; n++) {
+            if (m_castleRecs[townId].m_buildings & (1 << (n + BUILDING_SLOT_DWELLING_FIRST)))
+                m_castleRecs[townId].m_garrison[n] =
+                    gMonsterDatabase[gDwellingType[curTownType][n]].growth;
         }
     }
     if (!m_castleRecs[townId].m_customized) {
         m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_1);
-        m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[townType][0]].growth;
+        m_castleRecs[townId].m_garrison[0] = gMonsterDatabase[gDwellingType[curTownType][0]].growth;
         if (aiOwned && dwellingCount == 1 && Random(1, 10) < 4)
             dwellingCount++;
         if (--dwellingCount) {
             m_castleRecs[townId].m_buildings |= (1 << BUILDING_SLOT_DWELLING_2);
             m_castleRecs[townId].m_garrison[1] =
-                gMonsterDatabase[gDwellingType[townType][1]].growth;
+                gMonsterDatabase[gDwellingType[curTownType][1]].growth;
             dwellingCount--;
         }
     }
-    memset(used, 0, 29);
-    for (k = 0; k < TOWN_MAGE_GUILD_SPELL_COUNT; k++) {
-        if (k <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
+    memset(nextUsed, 0, 29);
+    for (n = 0; n < TOWN_MAGE_GUILD_SPELL_COUNT; n++) {
+        if (n <= MAGE_GUILD_LEVEL_1_LAST_SLOT)
             spellLevel = MAGE_GUILD_STATE_LEVEL_1;
-        else if (k <= MAGE_GUILD_LEVEL_2_LAST_SLOT)
+        else if (n <= MAGE_GUILD_LEVEL_2_LAST_SLOT)
             spellLevel = MAGE_GUILD_STATE_LEVEL_2;
-        else if (k <= MAGE_GUILD_LEVEL_3_LAST_SLOT)
+        else if (n <= MAGE_GUILD_LEVEL_3_LAST_SLOT)
             spellLevel = MAGE_GUILD_STATE_LEVEL_3;
         else
             spellLevel = MAGE_GUILD_STATE_LEVEL_4;
@@ -3499,9 +3508,9 @@ void game::SetupTown(i8 townId, i8 aiOwned) {
                 spellValue = 1500;
             if (newSpell == SPELL_DIMENSION_DOOR)
                 spellValue = 1500;
-        } while (used[newSpell] || Random(1, 1500) >= spellValue);
-        m_castleRecs[townId].m_mageGuildSpells[k] = newSpell;
-        used[newSpell] = 1;
+        } while (nextUsed[newSpell] || Random(1, 1500) >= spellValue);
+        m_castleRecs[townId].m_mageGuildSpells[n] = newSpell;
+        nextUsed[newSpell] = 1;
     }
 }
 
@@ -3721,12 +3730,12 @@ void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
 // the castles-only pass first.
 VA(0x004357f5, 0x27f)
 void game::ProcessRandomObjects(i32 castlesOnly) {
-    mapCell* cellPtr;
-    i32 lowFV;
+    mapCell* cellPtrItem;
+    i32 lowFVVal;
     i32 y;
     i32 x;
     i32 i;
-    i32 highFV;
+    i32 highFVNum;
 
     for (i = 0; i < RESOURCE_COUNT; i++)
         gMineTypeCount[i] = 0;
@@ -3734,10 +3743,11 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
         gRandomTownTypes[i] = TOWN_TYPE_NONE;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
-            cellPtr = &m_map[x][y];
+            cellPtrItem = &m_map[x][y];
             if (!castlesOnly
-                || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
-                switch (cellPtr->m_triggerType) {
+                || cellPtrItem->m_triggerType
+                       == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)) {
+                switch (cellPtrItem->m_triggerType) {
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN:
                         RandomizeTown(x, y, 0);
                         break;
@@ -3745,40 +3755,41 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
                         RandomizeTown(x, y, 1);
                         break;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER:
-                        lowFV = 80;
-                        highFV = 2000;
+                        lowFVVal = 80;
+                        highFVNum = 2000;
                         goto pickMonster;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK:
-                        lowFV = 0;
-                        highFV = 400;
+                        lowFVVal = 0;
+                        highFVNum = 400;
                         goto pickMonster;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM:
-                        lowFV = 80;
-                        highFV = 1000;
+                        lowFVVal = 80;
+                        highFVNum = 1000;
                         goto pickMonster;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG:
-                        lowFV = 500;
-                        highFV = 2500;
+                        lowFVVal = 500;
+                        highFVNum = 2500;
                         goto pickMonster;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG:
-                        lowFV = 2000;
-                        highFV = 100000;
+                        lowFVVal = 2000;
+                        highFVNum = 100000;
                         goto pickMonster;
                     pickMonster:
-                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
-                        cellPtr->m_objectIndex = Random(0, 27);
-                        while (gMonsterDatabase[cellPtr->m_objectIndex].fightValue <= lowFV
-                               || gMonsterDatabase[cellPtr->m_objectIndex].fightValue >= highFV)
-                            cellPtr->m_objectIndex = Random(0, 27);
+                        cellPtrItem->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
+                        cellPtrItem->m_objectIndex = Random(0, 27);
+                        while (gMonsterDatabase[cellPtrItem->m_objectIndex].fightValue <= lowFVVal
+                               || gMonsterDatabase[cellPtrItem->m_objectIndex].fightValue
+                                      >= highFVNum)
+                            cellPtrItem->m_objectIndex = Random(0, 27);
                         break;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_RESOURCE:
-                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE);
-                        cellPtr->m_objectIndex = Random(61, 67);
+                        cellPtrItem->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE);
+                        cellPtrItem->m_objectIndex = Random(61, 67);
                         break;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_ARTIFACT:
-                        cellPtr->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT);
-                        cellPtr->m_objectIndex = GetRandomArtifactId();
-                        m_randomArtifacts[cellPtr->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
+                        cellPtrItem->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT);
+                        cellPtrItem->m_objectIndex = GetRandomArtifactId();
+                        m_randomArtifacts[cellPtrItem->m_objectIndex] = GAME_ARTIFACT_ON_MAP;
                         break;
                     case MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MINE:
                         RandomizeMine(x, y);
@@ -3799,7 +3810,7 @@ void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
     i32 rangeLeft;
     i32 cutoff;
     u8 viewMask = 1 << player;
-    u8 outerMask = 1 << (player + GAME_PLAYER_HIGH_BIT_SHIFT);
+    u8 outerMaskVal = 1 << (player + GAME_PLAYER_HIGH_BIT_SHIFT);
 
     if (radius >= 5)
         cutoff = 3;
@@ -3820,7 +3831,7 @@ void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
                 rangeLeft = radius - abs(y - j) + radius - abs(x - i);
                 if (rangeLeft + 1 >= cutoff && i >= 0 && j >= 0 && i < MAP_CELL_GRID_SIZE
                     && j < MAP_CELL_GRID_SIZE)
-                    gpGame->m_mapExtra[i][j] |= outerMask;
+                    gpGame->m_mapExtra[i][j] |= outerMaskVal;
             }
         }
     }
@@ -4044,7 +4055,7 @@ VA(0x00436320, 0xbc)
 void game::SetupAdjacentMons(void) {
     i32 x;
     i32 y;
-    i32 mask = 0x7f;
+    i32 oldMask = 0x7f;
     i32 monY;
     i32 monX;
 
@@ -4053,7 +4064,7 @@ void game::SetupAdjacentMons(void) {
             if (gpAdvManager->FindAdjacentMonster(x, y, &monX, &monY, -1, -1))
                 mapExtra[x][y] |= MAP_EXTRA_MONSTER_ADJACENT;
             else
-                mapExtra[x][y] &= mask;
+                mapExtra[x][y] &= oldMask;
         }
     }
 }
@@ -4214,52 +4225,52 @@ void game::ProcessMapExtra(void) {
 // buildings; a map whose towns all lack owners leaves the placeholder -2.
 VA(0x0043689d, 0x1cf)
 i8 game::SetupTowns(void) {
-    mapTownExtra* extra;
-    i32 own;
-    i8 noOwners;
+    mapTownExtra* newExtra;
+    i32 curOwn;
+    i8 isUnowned;
     town* town;
     i32 j;
     i32 i;
     i32 mask;
-    noOwners = 1;
+    isUnowned = 1;
     mask = MAP_TOWN_EXTRA_BUILDING_MASK;
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
         town = GetTown(i);
         town->m_customized = 0;
         if (town->m_extraIndex >= 1) {
-            extra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
-            if (extra->customized && extra->owner != MAP_TOWN_OWNER_UNSET) {
-                if (extra->owner >= gpGame->m_playerCount)
-                    own = gpGame->m_playerCount - 1;
+            newExtra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
+            if (newExtra->customized && newExtra->owner != MAP_TOWN_OWNER_UNSET) {
+                if (newExtra->owner >= gpGame->m_playerCount)
+                    curOwn = gpGame->m_playerCount - 1;
                 else
-                    own = extra->owner;
-                noOwners = 0;
-                if (own != GAME_PLAYER_NONE)
-                    ClaimTown(i, own);
+                    curOwn = newExtra->owner;
+                isUnowned = 0;
+                if (curOwn != GAME_PLAYER_NONE)
+                    ClaimTown(i, curOwn);
             }
-            if (extra->customized) {
+            if (newExtra->customized) {
                 town->m_customized = 1;
                 for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-                    town->m_army.m_creatureCounts[j] = extra->troopCounts[j];
+                    town->m_army.m_creatureCounts[j] = newExtra->troopCounts[j];
                     if (town->m_army.m_creatureCounts[j] > 0)
-                        town->m_army.m_creatureTypes[j] = extra->troopTypes[j];
+                        town->m_army.m_creatureTypes[j] = newExtra->troopTypes[j];
                     else
                         town->m_army.m_creatureTypes[j] = CREATURE_NONE;
                 }
-                town->m_buildState = extra->buildState;
+                town->m_buildState = newExtra->buildState;
                 town->m_buildings =
-                    town->m_buildings - (town->m_buildings & mask) + (extra->buildings & mask);
+                    town->m_buildings - (town->m_buildings & mask) + (newExtra->buildings & mask);
             }
         }
     }
-    if (!noOwners) {
+    if (!isUnowned) {
         for (i = 0; i < GAME_TOWN_COUNT; i++) {
             town = GetTown(i);
             if (town->m_owner == MAP_TOWN_OWNER_UNSET)
                 town->m_owner = GAME_PLAYER_NONE;
         }
     }
-    return noOwners;
+    return isUnowned;
 }
 
 // Buka 2.1 game::ProcessOnMapHeroes for HoMM1: each placed hero takes its
@@ -4433,33 +4444,33 @@ H1_ENUM_CONST_END(RemoteSaveConstant)
 VA(0x004370d2, 0x5fd)
 i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 okay;
-    char pathname[456];
-    char* outData;
+    char curPathname[456];
+    char* theOutData;
     i32 block;
-    i32 numBlocks;
-    i32 junk3;
-    i32 oldTrack;
+    i32 localBlocks;
+    i32 localJunk3;
+    i32 oldTrackVal;
     char* sendPacket;
-    i32 blockSize;
-    i32 sendPacketIndex;
-    i32 segCount;
-    i32 fileHandle;
-    i32 junk2;
-    char* incoming;
-    char acked[500];
-    i32 junk1;
-    i32 status;
-    i32 unk;
-    i32 fileSize;
-    i32 len;
-    char* fileData;
-    i8 finished;
+    i32 sizeVal;
+    i32 entry;
+    i32 segCountPos;
+    i32 handleValue;
+    i32 baseJunk2;
+    char* theIncoming;
+    char ackedArray[500];
+    i32 junk1Val;
+    i32 firstStatus;
+    i32 oldUnk;
+    i32 prevSize;
+    i32 length;
+    char* dataObj;
+    i8 wasFinished;
 
     gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     okay = 0;
-    status = 0;
-    oldTrack = MUSIC_TRACK_NONE;
-    oldTrack = GetCurrentTrack();
+    firstStatus = 0;
+    oldTrackVal = MUSIC_TRACK_NONE;
+    oldTrackVal = GetCurrentTrack();
     StopMusic();
 
     if (gpAdvManager->m_active == 1)
@@ -4469,113 +4480,113 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
         Process1WindowsMessage();
     }
     AiPrint("Transmit Start");
-    memset(acked, 0, sizeof(acked));
+    memset(ackedArray, 0, sizeof(ackedArray));
     SaveGame("REMOTE.GAM", 0);
     extern char gDataPath[];
-    sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
-    fileSize = FileSize(pathname);
+    sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
+    prevSize = FileSize(curPathname);
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-        outData = static_cast<char*>(malloc(fileSize));
-    fileData = static_cast<char*>(malloc(fileSize));
-    fileHandle = open(pathname, O_BINARY);
-    if (fileHandle == -1)
-        FileError(pathname);
-    if (fileHandle == -1) {
+        theOutData = static_cast<char*>(malloc(prevSize));
+    dataObj = static_cast<char*>(malloc(prevSize));
+    handleValue = open(curPathname, O_BINARY);
+    if (handleValue == -1)
+        FileError(curPathname);
+    if (handleValue == -1) {
         goto cleanup;
     }
     {
-        read(fileHandle, fileData, fileSize);
-        close(fileHandle);
+        read(handleValue, dataObj, prevSize);
+        close(handleValue);
         if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-            fileSize = EncodeData(outData, fileData, fileSize);
+            prevSize = EncodeData(theOutData, dataObj, prevSize);
         else
-            outData = fileData;
+            theOutData = dataObj;
 
         reinterpret_cast<i32*>(sendPacket)[0] =
-            fileSize; // byte-evidenced: the save-transfer packet header words
+            prevSize; // byte-evidenced: the save-transfer packet header words
         reinterpret_cast<i32*>(sendPacket)[1] =
             playerExited; // byte-evidenced: the save-transfer packet header words
-        status = TransmitAndWait(
+        firstStatus = TransmitAndWait(
             sendPacket,
             remotePlayer,
             REMOTE_SAVE_HEADER_SIZE,
             BOX_REMOTE_SAVE,
             REMOTE_COMMAND_SAVE_INIT_RESPONSE,
-            &incoming
+            &theIncoming
         );
-        if (!status)
+        if (!firstStatus)
             ShutDown(NULL);
 
-        segCount = (fileSize - 1) / REMOTE_SAVE_SEGMENT_SIZE + 1;
-        numBlocks = (segCount - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
-        for (block = 0; block < numBlocks; block++) {
-            if (block + 1 == numBlocks)
-                blockSize = segCount - block * REMOTE_SAVE_BATCH_SIZE;
+        segCountPos = (prevSize - 1) / REMOTE_SAVE_SEGMENT_SIZE + 1;
+        localBlocks = (segCountPos - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
+        for (block = 0; block < localBlocks; block++) {
+            if (block + 1 == localBlocks)
+                sizeVal = segCountPos - block * REMOTE_SAVE_BATCH_SIZE;
             else
-                blockSize = REMOTE_SAVE_BATCH_SIZE;
-            finished = 0;
-            while (!finished) {
-                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE;
-                     sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize;
-                     sendPacketIndex++) {
+                sizeVal = REMOTE_SAVE_BATCH_SIZE;
+            wasFinished = 0;
+            while (!wasFinished) {
+                for (entry = block * REMOTE_SAVE_BATCH_SIZE;
+                     entry < block * REMOTE_SAVE_BATCH_SIZE + sizeVal;
+                     entry++) {
                     PollSound();
                     CheckDoMain(0, 1);
-                    if (!acked[sendPacketIndex]) {
-                        if (sendPacketIndex + 1 == segCount)
-                            len = fileSize - sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE;
+                    if (!ackedArray[entry]) {
+                        if (entry + 1 == segCountPos)
+                            length = prevSize - entry * REMOTE_SAVE_SEGMENT_SIZE;
                         else
-                            len = REMOTE_SAVE_SEGMENT_SIZE;
+                            length = REMOTE_SAVE_SEGMENT_SIZE;
                         *reinterpret_cast<i16*>(sendPacket) = static_cast<i16>(
-                            sendPacketIndex
+                            entry
                         ); // byte-evidenced: the save-transfer packet header words
                         memcpy(
                             sendPacket + REMOTE_SAVE_INDEX_SIZE,
-                            outData + sendPacketIndex * REMOTE_SAVE_SEGMENT_SIZE,
-                            len
+                            theOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
+                            length
                         );
-                        status = TransmitRemoteData(
+                        firstStatus = TransmitRemoteData(
                             sendPacket,
                             remotePlayer,
-                            len + REMOTE_SAVE_INDEX_SIZE,
+                            length + REMOTE_SAVE_INDEX_SIZE,
                             REMOTE_COMMAND_SAVE_DATA,
                             0,
                             1,
                             REMOTE_MESSAGE_DEFAULT,
                             1
                         );
-                        if (!status)
+                        if (!firstStatus)
                             ShutDown(NULL);
                     }
                 }
                 *reinterpret_cast<i16*>(sendPacket) = static_cast<i16>(
                     block * REMOTE_SAVE_BATCH_SIZE
                 ); // byte-evidenced: the save-transfer packet header words
-                status = TransmitAndWait(
+                firstStatus = TransmitAndWait(
                     sendPacket,
                     remotePlayer,
                     REMOTE_SAVE_INDEX_SIZE,
                     REMOTE_COMMAND_SAVE_ACK_REQUEST,
                     REMOTE_COMMAND_SAVE_ACK_RESPONSE,
-                    &incoming
+                    &theIncoming
                 );
-                if (!status)
+                if (!firstStatus)
                     ShutDown(NULL);
-                for (sendPacketIndex = 0; sendPacketIndex < blockSize; sendPacketIndex++) {
-                    if (reinterpret_cast<RemoteMessage*>(incoming)->payload.data[sendPacketIndex]
+                for (entry = 0; entry < sizeVal; entry++) {
+                    if (reinterpret_cast<RemoteMessage*>(theIncoming)->payload.data[entry]
                         > 0) // API-forced: char* record.
-                        acked[sendPacketIndex + block * REMOTE_SAVE_BATCH_SIZE] = 1;
+                        ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
-                finished = 1;
-                for (sendPacketIndex = block * REMOTE_SAVE_BATCH_SIZE;
-                     sendPacketIndex < block * REMOTE_SAVE_BATCH_SIZE + blockSize;
-                     sendPacketIndex++) {
-                    if (!acked[sendPacketIndex])
-                        finished = 0;
+                wasFinished = 1;
+                for (entry = block * REMOTE_SAVE_BATCH_SIZE;
+                     entry < block * REMOTE_SAVE_BATCH_SIZE + sizeVal;
+                     entry++) {
+                    if (!ackedArray[entry])
+                        wasFinished = 0;
                 }
             }
         }
-        status = TransmitRemoteData(
+        firstStatus = TransmitRemoteData(
             NULL,
             remotePlayer,
             0,
@@ -4585,7 +4596,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
             REMOTE_MESSAGE_DEFAULT,
             1
         );
-        if (!status)
+        if (!firstStatus)
             ShutDown(NULL);
         okay = 1;
     }
@@ -4593,15 +4604,15 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 cleanup:
     free(sendPacket);
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-        free(outData);
-    free(fileData);
+        free(theOutData);
+    free(dataObj);
     AiPrint("Transmit End");
     if (gpAdvManager->m_active == 1) {
         giBottomViewOverride = BOTTOM_VIEW_NONE;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
-    if (oldTrack != MUSIC_TRACK_NONE) {
-        PlayMusic(oldTrack);
+    if (oldTrackVal != MUSIC_TRACK_NONE) {
+        PlayMusic(oldTrackVal);
     }
     return okay;
 }
@@ -4613,37 +4624,37 @@ cleanup:
 // of 100, then decodes it and writes REMOTE.GAM.
 VA(0x004376cf, 0x4b0)
 i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
-    i32 unused1;
+    i32 oldUnused1;
     i32 okay;
     char pathname[452];
-    char* inData;
-    i32 k;
-    i32 oldTrack;
-    i32 fileHandle;
+    char* curInData;
+    i32 i;
+    i32 trackOld;
+    i32 handleValue;
     i8 done;
     char* sendPacket;
-    RemoteMessage* receivedPacket;
-    i32 result;
-    i32 lastPacketTime;
-    char gotIt[500];
-    i32 packetStart;
+    RemoteMessage* receivedPacketObj;
+    i32 curRet;
+    i32 lastPacketTimeNum;
+    char myGotIt[500];
+    i32 packetStartValue;
     char* decodedData;
 
     gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
-    fileHandle = 0;
+    handleValue = 0;
     done = 0;
-    unused1 = 0;
+    oldUnused1 = 0;
     okay = 0;
-    oldTrack = MUSIC_TRACK_NONE;
+    trackOld = MUSIC_TRACK_NONE;
     if (gpAdvManager->m_active == 1)
         BVResMsg(localization::Tr("network.receive.title"), RESOURCE_NONE, 0);
-    oldTrack = GetCurrentTrack();
+    trackOld = GetCurrentTrack();
     StopMusic();
     while (!gHeartbeatSeen) {
         PollSound();
         Process1WindowsMessage();
     }
-    result = TransmitRemoteData(
+    curRet = TransmitRemoteData(
         NULL,
         remotePlayer,
         0,
@@ -4653,18 +4664,18 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         REMOTE_MESSAGE_DEFAULT,
         1
     );
-    if (!result)
+    if (!curRet)
         ShutDown(NULL);
-    memset(gotIt, 0, sizeof(gotIt));
+    memset(myGotIt, 0, sizeof(myGotIt));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
-    inData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
-    lastPacketTime = KBTickCount();
+    curInData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
+    lastPacketTimeNum = KBTickCount();
     while (!done) {
         PollSound();
         CheckDoMain(0, 1);
-        if (lastPacketTime + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
+        if (lastPacketTimeNum + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO,
@@ -4677,31 +4688,31 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                 NORMAL_DIALOG_NO_OR_TEXT
             );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                lastPacketTime = KBTickCount();
+                lastPacketTimeNum = KBTickCount();
             else
                 ShutDown(NULL);
         }
-        receivedPacket =
+        receivedPacketObj =
             reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
-        if (receivedPacket
-            && (receivedPacket->type == REMOTE_MESSAGE_RELIABLE
-                || receivedPacket->type == REMOTE_MESSAGE_UNRELIABLE)) {
-            lastPacketTime = KBTickCount();
-            switch (receivedPacket->command) {
+        if (receivedPacketObj
+            && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
+                || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
+            lastPacketTimeNum = KBTickCount();
+            switch (receivedPacketObj->command) {
                 case REMOTE_COMMAND_SAVE_DATA:
-                    packetStart = receivedPacket->payload.segment.index;
-                    gotIt[packetStart] = 1;
+                    packetStartValue = receivedPacketObj->payload.segment.index;
+                    myGotIt[packetStartValue] = 1;
                     memcpy(
-                        inData + packetStart * REMOTE_SAVE_SEGMENT_SIZE,
-                        receivedPacket->payload.segment.data,
-                        receivedPacket->payloadSize - REMOTE_SAVE_INDEX_SIZE
+                        curInData + packetStartValue * REMOTE_SAVE_SEGMENT_SIZE,
+                        receivedPacketObj->payload.segment.data,
+                        receivedPacketObj->payloadSize - REMOTE_SAVE_INDEX_SIZE
                     );
                     break;
                 case REMOTE_COMMAND_SAVE_ACK_REQUEST:
-                    packetStart = receivedPacket->payload.segment.index;
-                    for (k = packetStart; k < packetStart + REMOTE_SAVE_BATCH_SIZE; k++)
-                        *(sendPacket + k - packetStart) = gotIt[k];
-                    result = TransmitRemoteData(
+                    packetStartValue = receivedPacketObj->payload.segment.index;
+                    for (i = packetStartValue; i < packetStartValue + REMOTE_SAVE_BATCH_SIZE; i++)
+                        *(sendPacket + i - packetStartValue) = myGotIt[i];
+                    curRet = TransmitRemoteData(
                         sendPacket,
                         remotePlayer,
                         REMOTE_SAVE_ACK_MAP_SIZE,
@@ -4711,7 +4722,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                         REMOTE_MESSAGE_DEFAULT,
                         1
                     );
-                    if (!result)
+                    if (!curRet)
                         ShutDown(NULL);
                     break;
                 case REMOTE_COMMAND_SAVE_FINISH:
@@ -4721,19 +4732,19 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         }
     }
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-        dataSize = DecodeData(decodedData, inData);
+        dataSize = DecodeData(decodedData, curInData);
     else
-        decodedData = inData;
+        decodedData = curInData;
     extern char gDataPath[];
     sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
-    fileHandle = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (fileHandle == -1)
+    handleValue = open(pathname, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    if (handleValue == -1)
         FileError(pathname);
-    write(fileHandle, decodedData, dataSize);
-    close(fileHandle);
+    write(handleValue, decodedData, dataSize);
+    close(handleValue);
     okay = 1;
     free(sendPacket);
-    free(inData);
+    free(curInData);
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         free(decodedData);
     AiPrint("Receive End");
@@ -4741,8 +4752,8 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         giBottomViewOverride = BOTTOM_VIEW_NONE;
         gpAdvManager->UpdBottomView(1, 1, 1);
     }
-    if (oldTrack != MUSIC_TRACK_NONE) {
-        PlayMusic(oldTrack);
+    if (trackOld != MUSIC_TRACK_NONE) {
+        PlayMusic(trackOld);
     }
     return okay;
 }
@@ -5096,7 +5107,10 @@ void game::ShowScenInfo(void) {
     scenWindow->BroadcastMessage(message);
     message.id = kingOfHillId;
     message.text = gText;
-    sprintf(gText, gbIAmGreatest ? localization::Tr("scenario.info.yes") : localization::Tr("scenario.info.no"));
+    sprintf(
+        gText,
+        gbIAmGreatest ? localization::Tr("scenario.info.yes") : localization::Tr("scenario.info.no")
+    );
     scenWindow->BroadcastMessage(message);
     message.id = ratingId;
     sprintf(gText, "%d%%", gpGame->m_difficultyRating);

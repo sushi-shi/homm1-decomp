@@ -134,10 +134,7 @@ void RemoteMain(i32 gameMode) {
             if (gDirectConnect) {
                 WFDCStage = 0;
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
-                strcpy(
-                    directConnectMessage,
-                    localization::Tr("network.direct.wait")
-                );
+                strcpy(directConnectMessage, localization::Tr("network.direct.wait"));
                 NormalDialog(
                     directConnectMessage,
                     NORMAL_DIALOG_TYPE_WAIT_CANCEL,
@@ -184,14 +181,14 @@ H1_ENUM_CONST_END(RemoteCrcConstant)
 VA(0x00451d83, 0xab)
 void calc_crc(u16* crc, u8* data, i32 length) {
     i32 unused = 0;
-    i16 carry;
+    i16 theCarry;
     i16 mask;
     while (length--) {
         for (mask = REMOTE_CRC_BYTE_TOP_BIT; mask; mask >>= 1) {
-            carry = *crc & REMOTE_CRC_TOP_BIT;
+            theCarry = *crc & REMOTE_CRC_TOP_BIT;
             *crc <<= 1;
             *crc |= (mask & *data) != 0;
-            if (carry)
+            if (theCarry)
                 *crc ^= REMOTE_CRC_POLYNOMIAL;
         }
         data++;
@@ -222,8 +219,8 @@ VA(0x00451ea9, 0xb2)
 i32 DecodePacket(u8* data, i32 source) {
     u16 computedCrc;
     u16 crc;
-    i32 rv;
-    u32 size;
+    i32 k;
+    u32 theSize;
 
     computedCrc = 0;
     if (REMOTE_PACKET(packet)->source != source && source != REMOTE_BROADCAST_PLAYER) {
@@ -233,15 +230,15 @@ i32 DecodePacket(u8* data, i32 source) {
         && REMOTE_PACKET(packet)->destination != REMOTE_BROADCAST_PLAYER) {
         return 0;
     }
-    size = REMOTE_PACKET(packet)->payloadSize;
+    theSize = REMOTE_PACKET(packet)->payloadSize;
     crc = REMOTE_PACKET(packet)->crc;
     REMOTE_PACKET(packet)->crc = 0;
     // API-forced: calc_crc takes unsigned bytes; the wire buffer is char[].
-    calc_crc(&computedCrc, reinterpret_cast<u8*>(packet), size + sizeof(RemotePacketHeader));
+    calc_crc(&computedCrc, reinterpret_cast<u8*>(packet), theSize + sizeof(RemotePacketHeader));
     if (crc != computedCrc) {
         return 0;
     }
-    memcpy(data, packet + sizeof(RemotePacketHeader), size);
+    memcpy(data, packet + sizeof(RemotePacketHeader), theSize);
     return 1;
 }
 
@@ -663,10 +660,10 @@ i8 GUIModemCommandExec(void) {
 // Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
 VA(0x004529ff, 0x5f)
 void ModemCommand(char* command) {
-    i32 pos;
+    i32 curPos;
     i32 len = strlen(command);
-    for (pos = 0; pos < len; ++pos) {
-        write_buffer(command + pos, 1);
+    for (curPos = 0; curPos < len; ++curPos) {
+        write_buffer(command + curPos, 1);
         DelayMilli(100);
     }
     write_buffer("\r", 1);
@@ -756,19 +753,19 @@ VA(0x00452be9, 0x276)
 void Connect(void) {
     i32 result;
     char msg[20];
-    u32 seed = KBTickCount();
-    seed %= 1000000;
-    idstr[0] = seed / 100000 + '0';
-    seed -= (idstr[0] - '0') * 100000;
-    idstr[1] = seed / 10000 + '0';
-    seed -= (idstr[1] - '0') * 10000;
-    idstr[2] = seed / 1000 + '0';
-    seed -= (idstr[2] - '0') * 1000;
-    idstr[3] = seed / 100 + '0';
-    seed -= (idstr[3] - '0') * 100;
-    idstr[4] = seed / 10 + '0';
-    seed -= (idstr[4] - '0') * 10;
-    idstr[5] = seed + '0';
+    u32 randSeed = KBTickCount();
+    randSeed %= 1000000;
+    idstr[0] = randSeed / 100000 + '0';
+    randSeed -= (idstr[0] - '0') * 100000;
+    idstr[1] = randSeed / 10000 + '0';
+    randSeed -= (idstr[1] - '0') * 10000;
+    idstr[2] = randSeed / 1000 + '0';
+    randSeed -= (idstr[2] - '0') * 1000;
+    idstr[3] = randSeed / 100 + '0';
+    randSeed -= (idstr[3] - '0') * 100;
+    idstr[4] = randSeed / 10 + '0';
+    randSeed -= (idstr[4] - '0') * 10;
+    idstr[5] = randSeed + '0';
     idstr[6] = 0;
     oldsec = -1;
     remotestage = 0;
@@ -808,22 +805,22 @@ void Connect(void) {
 VA(0x00452e5f, 0x2c3)
 i32 WaitForDirectConnect(void) {
     char idMessage[20];
-    u32 seed;
+    u32 rng;
     switch (WFDCStage) {
         case 0:
-            seed = KBTickCount();
-            seed %= 1000000;
-            idstr[0] = seed / 100000 + '0';
-            seed -= (idstr[0] - '0') * 100000;
-            idstr[1] = seed / 10000 + '0';
-            seed -= (idstr[1] - '0') * 10000;
-            idstr[2] = seed / 1000 + '0';
-            seed -= (idstr[2] - '0') * 1000;
-            idstr[3] = seed / 100 + '0';
-            seed -= (idstr[3] - '0') * 100;
-            idstr[4] = seed / 10 + '0';
-            seed -= (idstr[4] - '0') * 10;
-            idstr[5] = seed + '0';
+            rng = KBTickCount();
+            rng %= 1000000;
+            idstr[0] = rng / 100000 + '0';
+            rng -= (idstr[0] - '0') * 100000;
+            idstr[1] = rng / 10000 + '0';
+            rng -= (idstr[1] - '0') * 10000;
+            idstr[2] = rng / 1000 + '0';
+            rng -= (idstr[2] - '0') * 1000;
+            idstr[3] = rng / 100 + '0';
+            rng -= (idstr[3] - '0') * 100;
+            idstr[4] = rng / 10 + '0';
+            rng -= (idstr[4] - '0') * 10;
+            idstr[5] = rng + '0';
             idstr[6] = 0;
             oldsec = -1;
             remotestage = 0;
@@ -912,28 +909,28 @@ readPacketStart:
 VA(0x00453206, 0xe2)
 void WriteModemPacket(char* buffer, i32 length) {
     char buf[544];
-    i32 pos = 0;
+    i32 curPos = 0;
     if (length > MODEM_PACKET_MAX_LENGTH)
         return;
 
-    buf[pos] = MODEM_PACKET_ESCAPE;
-    ++pos;
-    buf[pos] = MODEM_PACKET_START;
-    ++pos;
+    buf[curPos] = MODEM_PACKET_ESCAPE;
+    ++curPos;
+    buf[curPos] = MODEM_PACKET_START;
+    ++curPos;
     while (length--) {
         if (*buffer == MODEM_PACKET_ESCAPE) {
-            buf[pos] = MODEM_PACKET_ESCAPE;
-            ++pos;
+            buf[curPos] = MODEM_PACKET_ESCAPE;
+            ++curPos;
         }
-        buf[pos] = *buffer;
-        ++pos;
+        buf[curPos] = *buffer;
+        ++curPos;
         ++buffer;
     }
-    buf[pos] = MODEM_PACKET_ESCAPE;
-    ++pos;
-    buf[pos] = MODEM_PACKET_END;
-    ++pos;
-    while (write_buffer(buf, pos) == 0)
+    buf[curPos] = MODEM_PACKET_ESCAPE;
+    ++curPos;
+    buf[curPos] = MODEM_PACKET_END;
+    ++curPos;
+    while (write_buffer(buf, curPos) == 0)
         ForcePollSound();
 }
 
@@ -953,7 +950,7 @@ i32 TransmitRemoteData(
     i8 gamePosDestination
 ) {
     i32 k;
-    i32 retval;
+    i32 result;
     i32 j;
     RemoteMessage msg;
     i32 tries;
@@ -962,7 +959,7 @@ i32 TransmitRemoteData(
         return 1;
     if (gamePosDestination && destination != REMOTE_BROADCAST_PLAYER)
         destination = gbGamePosToNetPos[destination];
-    retval = 0;
+    result = 0;
     tries = 0;
     gIDCtr++;
     msg.sender = giThisNetPos;
@@ -975,29 +972,29 @@ i32 TransmitRemoteData(
     msg.command = command;
     if (length > 0)
         memcpy(msg.payload.data, data, length);
-    while (retval == 0 && tries <= REMOTE_RETRY_COUNT) {
-        retval = SendRemoteData(
+    while (result == 0 && tries <= REMOTE_RETRY_COUNT) {
+        result = SendRemoteData(
             reinterpret_cast<u8*>(&msg), // API-forced: SendRemoteData takes wire bytes.
             NULL,
             destination,
             length + REMOTE_MESSAGE_HEADER_SIZE
         );
-        if (!reliable && retval) {
+        if (!reliable && result) {
             return 1;
-        } else if (retval) {
+        } else if (result) {
             k = 0;
             while (k < REMOTE_CONFIRM_POLL_COUNT) {
                 ForcePollSound();
                 if (gLastConfirm == gIDCtr)
                     return 1;
-                retval = 0;
+                result = 0;
                 DelayMilli(10);
                 k++;
             }
         } else {
             DelayMilli(1000);
         }
-        if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && retval == 0) {
+        if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && result == 0) {
             NormalDialog(
                 localization::Tr("network.send.retry"),
                 NORMAL_DIALOG_TYPE_YES_NO,
@@ -1014,7 +1011,7 @@ i32 TransmitRemoteData(
         }
         tries++;
     }
-    return retval;
+    return result;
 }
 
 // donor PoL RVA 0x000a40e1; preferred Buka symbol ?GetRemoteData@@YIPADC@Z
@@ -1055,7 +1052,7 @@ void PollRemote(void) {
     DATA(0x004cc828)
     static i8 gInTimeoutFail = 0;
     i8 newControl;
-    i8 queueFull;
+    i8 newFull;
     i32 i;
     i32 numQueued;
     i32 result;
@@ -1069,7 +1066,7 @@ void PollRemote(void) {
     if (gInNetSetup)
         return;
     numQueued = 0;
-    queueFull = 0;
+    newFull = 0;
     if (KBTickCount() - gLastHeartbeatSend > 5000) {
         sndBuf.sender = giThisNetPos;
         sndBuf.type = REMOTE_MESSAGE_HEARTBEAT;
@@ -1119,7 +1116,7 @@ void PollRemote(void) {
             numQueued++;
     }
     if (numQueued == REMOTE_QUEUE_CAPACITY)
-        queueFull = 1;
+        newFull = 1;
     result = 1;
     while (result) {
     nextIncoming:
@@ -1143,7 +1140,7 @@ void PollRemote(void) {
                     gCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;
                 }
                 goto done;
-            } else if (queueFull) {
+            } else if (newFull) {
                 goto done;
             }
             if (rcvBufIn.type == REMOTE_MESSAGE_RELIABLE) {
@@ -1230,7 +1227,8 @@ i32 TransmitAndWait(
             }
         }
         ForcePollSound();
-        receivedData = reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
+        receivedData =
+            reinterpret_cast<RemoteMessage*>(GetRemoteData(1)); // API-forced: char* record.
         if (receivedData && receivedData->type == REMOTE_MESSAGE_RELIABLE
             && receivedData->command == responseCommand)
             complete = 1;
