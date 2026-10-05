@@ -48,7 +48,6 @@ H1_ENUM_CONST_BEGIN(MapEventRewardConstant)
     DRAGON_CITY_GOLD_INCOME = 1000,
     DRAGON_CITY_DRAGON_COUNT = 5,
     DRAGON_CITY_CAMPAIGN_DRAGON_COUNT = 20,
-    DRAGON_CITY_CAMPAIGN_SCENARIO = 8,
     CHEST_GOLD_MULTIPLIER = 500,
     CHEST_EXPERIENCE_MULTIPLIER = 500,
     CHEST_EXPERIENCE_LEVEL_OFFSET = 1,
@@ -100,7 +99,6 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_FIZZLE_STEPS = 65,
     STONE_LITHS_MIN_DISTANCE = 1,
     WHIRLPOOL_MIN_DISTANCE = 3,
-    ENVIRONMENT_BORDER = 7,
     EVENT_WHIRLPOOL_TRIGGER_ROLL = 1,
     EVENT_WHIRLPOOL_TRIGGER_MAX = 3,
     EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT = 99999999,
@@ -201,17 +199,14 @@ H1_ENUM_CONST_BEGIN(HouseEventConstant)
     EVENT_HOUSE_COUNT = 5
 H1_ENUM_CONST_END(HouseEventConstant)
 
-// Remote combat hand-off:
-// SendHeroTownData sends the combat record as COMMAND (answered by
-// CONFIRM), then each hero in its own fragment.
+// Remote combat hand-off: SendHeroTownData sends the combat record as
+// REMOTE_COMMAND_HERO_TOWN_DATA (answered by REMOTE_COMMAND_HERO_TOWN_CONFIRM),
+// then each hero in its own fragment.
 H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
-    COMBAT_REMOTE_COMMAND = 0x15,
-    COMBAT_REMOTE_CONFIRM_COMMAND = 0x16,
     COMBAT_REMOTE_FRAGMENT_COMBAT = 0,
     COMBAT_REMOTE_FRAGMENT_FIRST_HERO = 1,
     COMBAT_REMOTE_FRAGMENT_SECOND_HERO = 2,
-    COMBAT_REMOTE_BUFFER_SIZE = 0xff,
-    COMBAT_REMOTE_TIMEOUT = 20000
+    COMBAT_REMOTE_BUFFER_SIZE = 0xff
 H1_ENUM_CONST_END(CombatRemoteConstant)
 
 // SendHeroTownData's payload after the remote-message header; hero records

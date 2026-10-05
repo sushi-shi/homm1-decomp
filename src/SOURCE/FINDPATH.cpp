@@ -380,12 +380,12 @@ void searchArray::TestPossibleDirections(
             goto storeDirection;
         }
 
-        if ((1 << gSearchHeading) & SEARCH_DIRECTION_EDGE_OBJECT_MASK) {
+        if ((1 << gSearchHeading) & MAP_DIRECTION_NORTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gSearchCurrentCell)) {
                 gSearchTerrainType = TERRAIN_INVALID;
                 goto storeDirection;
             }
-        } else if ((1 << gSearchHeading) & SEARCH_DIRECTION_OBJECT_MASK) {
+        } else if ((1 << gSearchHeading) & MAP_DIRECTION_SOUTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gScanNeighborCell)) {
                 if (gScanNeighborCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchObjectType = gScanNeighborCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;

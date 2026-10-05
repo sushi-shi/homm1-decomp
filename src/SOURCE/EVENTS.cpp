@@ -16,6 +16,7 @@
 #include <BASE/sample.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/game.h>
@@ -189,7 +190,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 if (gpGame->m_campaignType > 0
-                    && gpGame->m_campaignScenario == DRAGON_CITY_CAMPAIGN_SCENARIO)
+                    && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_DRAGON_CITY)
                     numTroops = DRAGON_CITY_CAMPAIGN_DRAGON_COUNT;
                 else
                     numTroops = DRAGON_CITY_DRAGON_COUNT;
@@ -458,11 +459,11 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             removeObj = 1;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
-                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             SetEnvironmentOrigin(
-                m_mapOriginX + ENVIRONMENT_BORDER,
-                m_mapOriginY + ENVIRONMENT_BORDER,
+                m_mapOriginX + ADVMGR_VIEW_CENTER,
+                m_mapOriginY + ADVMGR_VIEW_CENTER,
                 1
             );
             break;
@@ -1201,8 +1202,8 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
         gpGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
         if (bShowIt)
             SetEnvironmentOrigin(
-                m_mapOriginX + ENVIRONMENT_BORDER,
-                m_mapOriginY + ENVIRONMENT_BORDER,
+                m_mapOriginX + ADVMGR_VIEW_CENTER,
+                m_mapOriginY + ADVMGR_VIEW_CENTER,
                 1
             );
     }
@@ -1846,7 +1847,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 sourceHero->m_artifacts[j]
                             );
                         }
-                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = GAME_HERO_NONE;
+                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,
@@ -2120,8 +2121,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeEvent = 1;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
-                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
@@ -2667,7 +2668,7 @@ i32 advManager::DoCombat(
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
                         switch (EVENTS_REMOTE_MESSAGE(receivedPacket)->command) {
-                            case COMBAT_REMOTE_COMMAND:
+                            case REMOTE_COMMAND_HERO_TOWN_DATA:
                                 ReceiveHeroTownData(
                                     receivedPacket,
                                     &senderNum,
@@ -2847,8 +2848,8 @@ void advManager::SendHeroTownData(
         buffer.bytes,
         remotePlayer,
         sizeof(combatRemoteData),
-        COMBAT_REMOTE_COMMAND,
-        COMBAT_REMOTE_CONFIRM_COMMAND,
+        REMOTE_COMMAND_HERO_TOWN_DATA,
+        REMOTE_COMMAND_HERO_TOWN_CONFIRM,
         &reply
     );
     if (!result)
@@ -2862,7 +2863,7 @@ void advManager::SendHeroTownData(
             buffer.bytes,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
-            COMBAT_REMOTE_COMMAND,
+            REMOTE_COMMAND_HERO_TOWN_DATA,
             1
         );
         if (!result)
@@ -2876,7 +2877,7 @@ void advManager::SendHeroTownData(
             buffer.bytes,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
-            COMBAT_REMOTE_COMMAND,
+            REMOTE_COMMAND_HERO_TOWN_DATA,
             1
         );
         if (!result)
@@ -2947,14 +2948,14 @@ void advManager::ReceiveHeroTownData(
         memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
     }
 
-    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, COMBAT_REMOTE_CONFIRM_COMMAND, 1);
+    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, 1);
     if (!mainResult)
         ShutDown(NULL);
 
     lastPacketTimeNum = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
-        if (lastPacketTimeNum + COMBAT_REMOTE_TIMEOUT < KBTickCount()) {
+        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO
@@ -2966,7 +2967,7 @@ void advManager::ReceiveHeroTownData(
         }
         packet = GetRemoteData(1);
         if (packet && EVENTS_REMOTE_MESSAGE(packet)->type == REMOTE_MESSAGE_RELIABLE
-            && EVENTS_REMOTE_MESSAGE(packet)->command == COMBAT_REMOTE_COMMAND) {
+            && EVENTS_REMOTE_MESSAGE(packet)->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
             lastPacketTimeNum = KBTickCount();
             if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
                 == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {

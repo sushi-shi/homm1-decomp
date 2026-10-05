@@ -55,11 +55,9 @@ H1_ENUM_CONST_BEGIN(ArmyPowConstant)
     ARMY_POW_FRAMES_KILLED = 5
 H1_ENUM_CONST_END(ArmyPowConstant)
 
-// LoadResources' sample playback settings and DrawToBuffer's quantity text
-// buffer.
+// DrawToBuffer's quantity text buffer and the attack/spell defense modifiers
+// (LoadResources plays its samples at sample.h SAMPLE_VOLUME_FULL).
 H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
-    ARMY_SAMPLE_VOLUME = 0x7f,
-    ARMY_SAMPLE_CHANNEL = 3,
     ARMY_QUANTITY_TEXT_SIZE = 12,
     // WalkTo/AttackTo when no path reaches the target.
     ARMY_PATH_BLOCKED = 3,

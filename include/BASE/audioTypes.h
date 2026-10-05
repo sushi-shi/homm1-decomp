@@ -41,7 +41,7 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_LIGHTHOUSE = 0x1a,
     MUSIC_TRACK_SPELL_SHRINE = 0x1b,
     MUSIC_TRACK_TREASURE = 0x1c,
-    // The four town themes (TOWN_THEME_MUSIC_BASE + town type).
+    // The four town themes (MUSIC_TRACK_TOWN_FIRST + townTheme[town type]).
     MUSIC_TRACK_TOWN_FIRST = 0x1d,
     MUSIC_TRACK_TOWN_LAST = 0x20,
     // combatManager::Open picks one of the first three battle themes.
@@ -53,7 +53,7 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_BATTLE_LOST = 0x2b,
     MUSIC_TRACK_BATTLE_WON = 0x2c,
     MUSIC_TRACK_ULTIMATE_ARTIFACT = 0x2e,
-    // The tavern window's music (TOWN_TAVERN_MUSIC).
+    // The tavern window's music.
     MUSIC_TRACK_TAVERN = 0x2f,
     MUSIC_TRACK_MAIN_MENU = 0x30,
     MUSIC_TRACK_AI_TURN = 0x31,

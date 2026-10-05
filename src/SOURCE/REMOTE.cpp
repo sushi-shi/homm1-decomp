@@ -1062,7 +1062,7 @@ i32 TransmitAndWait(
     clock = KBTickCount();
     complete = 0;
     while (!complete) {
-        if (clock + 20000 < KBTickCount()) {
+        if (clock + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 clock = KBTickCount();

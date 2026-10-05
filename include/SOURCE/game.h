@@ -209,6 +209,13 @@ struct boatRecord {
 };
 #pragma pack(pop)
 
+// boatRecord::heroId: when a hero lands, the cursor walk ORs OCCUPIED_FLAG
+// into the boat's hero id; SummonBoat looks for the current
+// hero's flagged boat, then any flagged boat of the player.
+H1_ENUM_CONST_BEGIN(BoatRecordConstant)
+    BOAT_OCCUPIED_FLAG = 0x80
+H1_ENUM_CONST_END(BoatRecordConstant)
+
 // The map file's town records (LoadMap): a type byte whose low seven bits
 // are the TownType and whose sign bit marks a castle. A customized
 // mapTownExtra's owner is UNSET (-2) when the map leaves it open; SetupTowns
@@ -650,9 +657,7 @@ H1_ENUM_END(ViewArmyControl)
 H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     VIEW_ARMY_ANIMATION_FRAMES = 6,
     VIEW_ARMY_FRAME_DELAY = 90,
-    VIEW_ARMY_STAT_TEXT_SIZE = 550,
-    // glTimers slot the army window's animation runs on.
-    VIEW_ARMY_TIMER_SLOT = 0
+    VIEW_ARMY_STAT_TEXT_SIZE = 550
 H1_ENUM_CONST_END(ViewArmyConstant)
 
 // overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
@@ -695,7 +700,6 @@ H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
     REMOTE_SAVE_HEADER_SIZE = 8,
     REMOTE_SAVE_ACK_MAP_SIZE = 200,
     REMOTE_SAVE_INDEX_SIZE = 2,
-    REMOTE_SAVE_RECEIVE_TIMEOUT = 20000,
     REMOTE_SAVE_BUFFER_EXTRA = 500,
     REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
     REMOTE_SAVE_TRANSFER_SOUNDS = 8

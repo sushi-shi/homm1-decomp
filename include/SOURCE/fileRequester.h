@@ -28,13 +28,13 @@ H1_ENUM_BEGIN(FileRequesterMode)
 H1_ENUM_END(FileRequesterMode)
 
 // m_selectedIndex with no list row picked; m_result's "no map info shown
-// yet" start value; the player-count digit of a ".GM4" extension and the
-// debug level that lets a game load with another player count.
+// yet" start value and the player-count digit of a ".GM4" extension (the
+// debug level that lets a game load with another player count is KB.h
+// DebugLevel).
 H1_ENUM_CONST_BEGIN(FileRequesterSelectionConstant)
     FILE_REQUESTER_SELECTION_NONE = -1,
     FILE_REQUESTER_MAP_INFO_NONE = -2,
-    FILE_REQUESTER_EXTENSION_PLAYER_DIGIT = 3,
-    FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH = 2
+    FILE_REQUESTER_EXTENSION_PLAYER_DIGIT = 3
 H1_ENUM_CONST_END(FileRequesterSelectionConstant)
 
 // The list rows' text width, the gutter the scroll knob travels (56..212

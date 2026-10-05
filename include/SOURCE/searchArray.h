@@ -3,27 +3,25 @@
 
 #include <Domains.h>
 #include <H1/Macros.h>
+#include <SOURCE/cursorTypes.h>
+#include <SOURCE/mapCell.h>
 
 // forward declarations:
 class army;
 
 H1_ENUM_CONST_BEGIN(SearchStorageConstant)
     SEARCH_QUEUE_CAPACITY = 1024,
-    SEARCH_CELL_CAPACITY = 5184,
-    SEARCH_GRID_SIZE = 72,
+    SEARCH_CELL_CAPACITY = MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE,
     SEARCH_FLAG_BIT_COUNT = 1,
     SEARCH_DIRECTION_BIT_COUNT = 4,
     SEARCH_PATH_CAPACITY = 256
 H1_ENUM_CONST_END(SearchStorageConstant)
 
-// Direction bit masks over MapDirection (1 << direction): north, north-east
-// and north-west steps test the current cell's object, south-east, south and
-// south-west the next cell's (TestPossibleDirections, SeedPosition). A step
-// is diagonal when bit 0 of its direction kind is set (TerrainStepCost).
+// A step is diagonal when bit 0 of its direction kind is set
+// (TerrainStepCost); which cell's object blocks a step is cursorTypes.h
+// MapDirectionMask (TestPossibleDirections, SeedPosition).
 H1_ENUM_CONST_BEGIN(SearchDirectionConstant)
-    SEARCH_DIAGONAL_COST_MASK = 1,
-    SEARCH_DIRECTION_EDGE_OBJECT_MASK = 0x83,
-    SEARCH_DIRECTION_OBJECT_MASK = 0x38
+    SEARCH_DIAGONAL_COST_MASK = 1
 H1_ENUM_CONST_END(SearchDirectionConstant)
 
 // SeedPosition's cost bookkeeping (on the 4/6/8 step-cost scale): MAX_COST
@@ -92,7 +90,7 @@ public:
     i32 m_specialTargetY;
     searchNode m_queue[SEARCH_QUEUE_CAPACITY];
     // Retail indexes the [x][y] grid with a 648-byte row stride.
-    searchNode m_cells[SEARCH_GRID_SIZE][SEARCH_GRID_SIZE];
+    searchNode m_cells[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
     // Retail DoDimensionDoor reads the path directions at +0xda54.
     u8 m_directions[SEARCH_PATH_CAPACITY];
     // --- constructors ---

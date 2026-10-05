@@ -245,7 +245,7 @@ i16 combatManager::Open(i16 priority) {
     PlayMusic(song);
     gpInputManager->Flush();
     ResetMouse();
-    m_messageMask = MESSAGE_WIDGET;
+    m_messageMask = BASE_MANAGER_ACCEPT_WIDGET;
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "combatManager");
@@ -1244,7 +1244,7 @@ void combatManager::KeepAttack(void) {
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = inFlightX;
