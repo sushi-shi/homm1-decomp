@@ -46,7 +46,7 @@ static char s_pendingArmyName[1024];
 DATA(0x004cd0bc)
 static char s_armyCommandText[1024];
 DATA(0x004cd4bc)
-static char s_dwellingArmyName[1024];
+static char s_dwellingArmyLabel[1024];
 
 // #line restores the original source file and line numbers of the asserts.
 
@@ -502,11 +502,11 @@ void townManager::SetCommandAndText(struct tag_message& message) {
         case BUILDING_SLOT_DWELLING_5:
         case BUILDING_SLOT_DWELLING_6:
             strcpy(
-                s_dwellingArmyName,
+                s_dwellingArmyLabel,
                 gArmyNamesPlural[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
             );
-            s_dwellingArmyName[0] = CyrillicToLower(s_dwellingArmyName[0]);
-            sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyName);
+            s_dwellingArmyLabel[0] = CyrillicToLower(s_dwellingArmyLabel[0]);
+            sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyLabel);
             break;
     }
     ShowText(m_statusText);

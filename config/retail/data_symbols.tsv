@@ -253,14 +253,14 @@ rva	size	symbol	provenance
 0x000cf0b4	300	?hbmpAndMask@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cf30c	300	?hbmpColor@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfbb4	4	_sClipRowStart	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb68	4	_sClipFrameEntry	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb5c	4	_sClipSrcPtr	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfbb4	4	_sClipLeft	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb60	4	_sClipX	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb50	4	_sClipY	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb50	4	_sClipPosY	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfbb0	4	_sClipInside	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb54	4	_sClipRight	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cfb58	4	_sClipBottom	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb54	4	_sClipLimitX	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000cfb58	4	_sClipLimitY	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -382,27 +382,27 @@ rva	size	symbol	provenance
 0x0009f7c0	144	_gSmackSoundFormats	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f850	162	?SmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f8f4	44	_gSmackVolumes	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cc8d0	1	?gSmackNum@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cc8d4	4	_gSmackCompleted	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cc8d0	1	?gMovieId@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cc8d4	4	_gSmackEnded	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d8	52	_gSmackWaveCaps	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc910	84	_gSmackSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc964	768	_gSmackSavedPalette	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc68	1	_gSmackMainDone	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc70	12	_gSmackSoundFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc80	16	_gSmackWaveFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc90	4	_gSmackLastFramePlayed	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc94	4	_gSmackSound	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccc98	4	_gSmackResource	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc68	1	_gSmackStop	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc70	12	_gSmackAudioFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc80	16	_gSmackPcmFormat	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc90	4	_gSmackPrevFrame	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc94	4	_gSmkSounds	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccc98	4	_gSmkResource	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000ccc9c	4	_gSmackFont	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccca0	4	_gSmackDriver	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000ccca4	4	_gSmackCollectSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccca0	4	_gSmackDigDriver	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000ccca4	4	_gSmackTrackSummary	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000ccca8	4	_gSmackPrimary	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x000cccac	4	_gSmackCompanion	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x000cccac	4	_gSmackSecond	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009e700	6	?gAppName@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009e708	19	?gTitle@@3PADA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cccbc	1024	_s_pendingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls
 0x000cd0bc	1024	_s_armyCommandText	Typed town-message buffers; complete two-function instruction/reference and payload controls
-0x000cd4bc	1024	_s_dwellingArmyName	Typed town-message buffers; complete two-function instruction/reference and payload controls
+0x000cd4bc	1024	_s_dwellingArmyLabel	Typed town-message buffers; complete two-function instruction/reference and payload controls
 0x000a7168	768	?gText@@3PADA	Complete typed array payload and independently verified references; remove census splits inside source arrays
 0x000a7838	120	?cNetBoxLine@@3PAY0DM@DA	Complete typed array payload and independently verified references; remove census splits inside source arrays
 0x000a9e7c	36	?gNbEvents@@3PAPAXA	Complete typed array payload and independently verified references; remove census splits inside source arrays

@@ -148,6 +148,81 @@ void DeleteMainClasses(void) {
     gpExec = NULL;
 }
 
+DATA(0x004a98ca)
+i8 gDrawSavedCursor = 0;
+DATA(0x004a98cc)
+i32 gLoadingMonoIcon = 0;
+DATA(0x004a98d0)
+i32 gScrollX = 0;
+DATA(0x004a98d4)
+i32 gScrollY = 0;
+DATA(0x004a98d8)
+i32 gNoBorder = 0;
+DATA(0x004a98dc)
+HMENU hmnuDflt = NULL;
+DATA(0x004a98e0)
+HMENU hmnuCmbt = NULL;
+DATA(0x004a98e4)
+HMENU hmnuAdv = NULL;
+DATA(0x004a98e8)
+HMENU hmnuTown = NULL;
+DATA(0x004a98ec)
+i32 gColorMice = 0;
+DATA(0x004a98f0)
+i32 gSpecialMouseMasks = 0;
+DATA(0x004a98f4)
+i32 gCurExe = 0;
+DATA(0x004a98f8)
+i32 gInDialog = 0;
+DATA(0x004a98fc)
+i32 gInSetupDialog = 0;
+DATA(0x004a9900)
+i32 gMinimized = 0;
+DATA(0x004a9904)
+i32 gHeroMoving = 0;
+DATA(0x004a9908)
+i32 gInSmacker = 0;
+DATA(0x004a9910)
+i32 gRemoteReady = 0;
+DATA(0x004a9914)
+i32 gHeartbeatSeen = 0;
+DATA(0x004a9918)
+i32 gMapSize = 0;
+DATA(0x004a991c)
+i32 gMapDifficulty = 0;
+DATA(0x004a9920)
+i8 gHeroWindShowing = 0;
+DATA(0x004a9921)
+i8 gOverviewShowing = 0;
+DATA(0x004a9924)
+i32 gLimitedCombatUpdatePalette = 0;
+DATA(0x004a9928)
+i8 gFirstTimeThrough = 0;
+DATA(0x004a9929)
+i8 gSkipIntro = 0;
+DATA(0x004a992c)
+i32 gAllBlack = 0;
+DATA(0x004a9930)
+i8 gInCombat = 0;
+DATA(0x004a9931)
+i8 gDirectConnect = 0;
+DATA(0x004a9934)
+i32 gComputeExtent = 0;
+DATA(0x004a9938)
+i32 gSaveBiggestExtent = 0;
+DATA(0x004a993c)
+i32 gLimitToExtent = 0;
+DATA(0x004a9940)
+i32 gAdvDisposeLevel = 0;
+DATA(0x004a9944)
+i32 gRemoteOn = 0;
+DATA(0x004a9948)
+i8 gGameInitialized = 0;
+DATA(0x004a9949)
+i8 gShowHighScore = 0;
+DATA(0x004a9951)
+i8 gInPollSound = 0;
+
 VA(0x0043cfcb, 0xf9)
 i32 EarlySetup(void) {
     DATA(0x004a9952)
@@ -2281,6 +2356,11 @@ void AddNetBoxLine(char* text) {
     strcpy(cNetBoxLine[1], text);
 }
 
+DATA(0x004a9953)
+i8 gKBDone = 0;
+DATA(0x004a9954)
+i8 gInCheckEndGame = 0;
+
 VA(0x00441824, 0x11f)
 void ShutDown(char* message) {
     DATA(0x004a9958)
@@ -3087,8 +3167,6 @@ float gSpellCastNumMod[21] = {
     0.0f,  1.0f,  1.7f,  2.2f,  2.6f,  2.95f, 3.27f, 3.56f, 3.81f, 4.04f, 4.25f,
     4.45f, 4.64f, 4.83f, 5.01f, 5.19f, 5.36f, 5.53f, 5.68f, 5.82f, 5.96f,
 };
-DATA(0x004a98ca)
-i8 gDrawSavedCursor = 0;
 DATA(0x0049192c)
 i16 gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -3314,36 +3392,12 @@ u8 gMonoColorMap[256] = {
     218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236,
     237, 238, 239, 240, 241, 242, 243, 244, 245,
 };
-DATA(0x004a98cc)
-i32 gLoadingMonoIcon = 0;
 DATA(0x00492190)
 i32 gMonoIconSkip = -1;
-DATA(0x004a98d0)
-i32 gScrollX = 0;
-DATA(0x004a98d4)
-i32 gScrollY = 0;
-DATA(0x004a98d8)
-i32 gNoBorder = 0;
 DATA(0x00492194)
 i32 gEnlargeScreenBlit = 1;
-DATA(0x004a98dc)
-HMENU hmnuDflt = NULL;
-DATA(0x004a98e0)
-HMENU hmnuCmbt = NULL;
-DATA(0x004a98e4)
-HMENU hmnuAdv = NULL;
-DATA(0x004a98e8)
-HMENU hmnuTown = NULL;
-DATA(0x004a98ec)
-i32 gColorMice = 0;
-DATA(0x004a98f0)
-i32 gSpecialMouseMasks = 0;
-DATA(0x004a98f4)
-i32 gCurExe = 0;
 DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
-DATA(0x004a98f8)
-i32 gInDialog = 0;
 DATA(0x004921a0)
 SMenuEnableStatus gMenuEnableStatus[70] = {
     {0, 0, 0, 0},     {40005, 1, 1, 0}, {40006, 1, 1, 0}, {40007, 1, 1, 0}, {40008, 1, 1, 0},
@@ -3361,18 +3415,6 @@ SMenuEnableStatus gMenuEnableStatus[70] = {
     {40128, 0, 1, 0}, {40129, 0, 1, 0}, {40131, 0, 1, 0}, {40132, 0, 1, 0}, {40134, 0, 1, 0},
     {40135, 0, 1, 0}, {40137, 0, 1, 0}, {40138, 0, 1, 0}, {40139, 0, 0, 0}, {40140, 0, 0, 0},
 };
-DATA(0x004a98fc)
-i32 gInSetupDialog = 0;
-DATA(0x004a9900)
-i32 gMinimized = 0;
-DATA(0x004a9904)
-i32 gHeroMoving = 0;
-DATA(0x004a9908)
-i32 gInSmacker = 0;
-DATA(0x004a9910)
-i32 gRemoteReady = 0;
-DATA(0x004a9914)
-i32 gHeartbeatSeen = 0;
 DATA(0x0049238c)
 char* gArtifactNames[38] = {
     localization::Tr("table.gArtifactNames.0"),  localization::Tr("table.gArtifactNames.1"),
@@ -4381,58 +4423,18 @@ DATA(0x00493428)
 i32 gRequiredExtendedMemory = 4434;
 DATA(0x0049342c)
 i32 gRequiredConventionalMemory = 374;
-DATA(0x004a9918)
-i32 gMapSize = 0;
-DATA(0x004a991c)
-i32 gMapDifficulty = 0;
-DATA(0x004a9920)
-i8 gHeroWindShowing = 0;
-DATA(0x004a9921)
-i8 gOverviewShowing = 0;
 DATA(0x00493430)
 i32 gFullCombatScreenDrawn = 1;
-DATA(0x004a9924)
-i32 gLimitedCombatUpdatePalette = 0;
-DATA(0x004a9928)
-i8 gFirstTimeThrough = 0;
-DATA(0x004a9929)
-i8 gSkipIntro = 0;
-DATA(0x004a992c)
-i32 gAllBlack = 0;
-DATA(0x004a9930)
-i8 gInCombat = 0;
-DATA(0x004a9931)
-i8 gDirectConnect = 0;
 DATA(0x00493434)
 i32 gForceSwitchMusic = FORCED_MUSIC_IDLE;
-DATA(0x004a9934)
-i32 gComputeExtent = 0;
-DATA(0x004a9938)
-i32 gSaveBiggestExtent = 0;
-DATA(0x004a993c)
-i32 gLimitToExtent = 0;
 DATA(0x00493438)
 i32 gCurrArmyDrawn = 1;
-DATA(0x004a9940)
-i32 gAdvDisposeLevel = 0;
-DATA(0x004a9944)
-i32 gRemoteOn = 0;
-DATA(0x004a9948)
-i8 gGameInitialized = 0;
 DATA(0x0049343c)
 i8 gHighScoreRank = -1;
-DATA(0x004a9949)
-i8 gShowHighScore = 0;
 DATA(0x00493440)
 i32 gHighMemBuffer = 4000;
-DATA(0x004a9951)
-i8 gInPollSound = 0;
 // Retail places these zero-initialized flags among KB's function literals
 // (0x0049e8b0-0x0049f537), each next to the literals of its only user.
-DATA(0x004a9953)
-i8 gKBDone = 0;
-DATA(0x004a9954)
-i8 gInCheckEndGame = 0;
 // KB owns retail .bss 0x004c5138-0x004c7e6f (allocation order is the compiler's
 // symbol-hash walk, not definition order).
 #include <SOURCE/combatTypes.h>
@@ -4470,8 +4472,6 @@ DATA(0x004a74cc)
 i32 bSpecialHideCursor;
 DATA(0x004a74ac)
 class searchArray* gpSearchArray;
-DATA(0x004a7b7c)
-i32 gbBlackoutPlayer;
 DATA(0x004a7838)
 char cNetBoxLine[2][60];
 DATA(0x004a7b98)
@@ -4494,6 +4494,8 @@ DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7495)
 i8 gbCombatSurrender;
+DATA(0x004a7b7c)
+i32 gbBlackoutPlayer;
 DATA(0x004a7b80)
 char gMapName[13];
 DATA(0x004a9560)

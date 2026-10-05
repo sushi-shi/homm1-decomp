@@ -41,8 +41,6 @@ extern i8 gHeroWindShowing;
 extern i8 gOverviewShowing;
 extern i8 giHighScoreType;
 extern i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
-// Cell tile index -> terrain type; IsMobile reads it zero-extended.
-extern H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[];
 // The terrain type under a map cell.
 #define CELL_TERRAIN(cell) (giGroundToTerrain[(cell)->m_tileIndex])
 extern i32 bShowIt;
@@ -188,8 +186,8 @@ void AddNetBoxLine(char* text);
 void GOut(char* text);
 extern i32 giShowIntro;
 extern i8 giScreenScroll;
-extern i32 gbBlackoutPlayer;
 extern char gMapName[];
+extern i32 gbBlackoutPlayer;
 extern char gFullMapName[];
 extern char gMapDesc[];
 extern char cAggPathName[];
@@ -393,6 +391,8 @@ H1_ENUM_CONST_BEGIN(LastFilenameConstant)
     GLOBAL_LAST_FILENAME_SIZE = 0x15f
 H1_ENUM_CONST_END(LastFilenameConstant)
 extern char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
+// Cell tile index -> terrain type; IsMobile reads it zero-extended.
+extern H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[];
 extern char gPrevGameFile[];
 extern char* gMapSizeNames[];
 extern char* gHeroScreen[];

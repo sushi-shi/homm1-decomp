@@ -297,19 +297,19 @@ void ClippedMonoIconToBitmap(
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.
 DATA(0x004cfb50)
-static i32 sClipY;
+static i32 sClipPosY;
 DATA(0x004cfb58)
-static i32 sClipBottom;
+static i32 sClipLimitY;
 DATA(0x004cfbb4)
-static i32 sClipRowStart;
+static i32 sClipLeft;
 DATA(0x004cfb64)
 static u8* sClipRow;
 DATA(0x004cfb68)
-static IconEntry* sClipEntry;
+static IconEntry* sClipFrameEntry;
 DATA(0x004cfb5c)
-static u8* sClipSource;
+static u8* sClipSrcPtr;
 DATA(0x004cfb54)
-static i32 sClipRight;
+static i32 sClipLimitX;
 DATA(0x004cfb60)
 static i32 sClipX;
 DATA(0x004cfb6c)
@@ -330,15 +330,15 @@ void ClipIconToBitmap(
     i32 clipW,
     i32 clipH
 ) {
-    sClipEntry = sourceIcon->m_frames + frame;
-    sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
-    sClipX = sClipRowStart = x + sClipEntry->x;
-    sClipY = y + sClipEntry->y;
+    sClipFrameEntry = sourceIcon->m_frames + frame;
+    sClipSrcPtr = sourceIcon->m_data + sClipFrameEntry->srcOffset;
+    sClipX = sClipLeft = x + sClipFrameEntry->x;
+    sClipPosY = y + sClipFrameEntry->y;
     if (ICON_FITS_CLIP(
-            sClipRowStart,
-            sClipY,
-            sClipEntry->w,
-            sClipEntry->h,
+            sClipLeft,
+            sClipPosY,
+            sClipFrameEntry->w,
+            sClipFrameEntry->h,
             clipX,
             clipY,
             clipW,
@@ -347,12 +347,12 @@ void ClipIconToBitmap(
         sClipInside = TRUE;
     } else {
         sClipInside = FALSE;
-        sClipRight = clipX + clipW - 1;
-        sClipBottom = clipY + clipH - 1;
+        sClipLimitX = clipX + clipW - 1;
+        sClipLimitY = clipY + clipH - 1;
     }
-    sClipRow = destination->m_pixels + sClipY * destination->m_width;
+    sClipRow = destination->m_pixels + sClipPosY * destination->m_width;
     for (;;) {
-        sClipRun = *sClipSource++;
+        sClipRun = *sClipSrcPtr++;
         if (static_cast<i8>(sClipRun) < 0) {
             if (sClipRun & ICON_MONO_SKIP_MASK)
                 sClipX += sClipRun & ICON_MONO_SKIP_MASK;
@@ -360,26 +360,26 @@ void ClipIconToBitmap(
                 break;
         } else if (sClipRun != 0) {
             if (sClipInside) {
-                memcpy(sClipRow + sClipX, sClipSource, sClipRun);
-            } else if (sClipY >= clipY && sClipY <= sClipBottom && sClipX + sClipRun >= clipX
-                       && sClipX <= sClipRight) {
+                memcpy(sClipRow + sClipX, sClipSrcPtr, sClipRun);
+            } else if (sClipPosY >= clipY && sClipPosY <= sClipLimitY && sClipX + sClipRun >= clipX
+                       && sClipX <= sClipLimitX) {
                 if (sClipX >= clipX) {
-                    if (sClipX + sClipRun <= sClipRight)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRun);
+                    if (sClipX + sClipRun <= sClipLimitX)
+                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipRun);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRight - sClipX + 1);
+                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipLimitX - sClipX + 1);
                 } else {
-                    if (sClipX + *sClipSource <= sClipRight)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
+                    if (sClipX + *sClipSrcPtr <= sClipLimitX)
+                        memcpy(sClipRow + sClipX, sClipSrcPtr, sClipX + sClipRun - clipX);
                     else
-                        memcpy(sClipRow + sClipX, sClipSource, clipW);
+                        memcpy(sClipRow + sClipX, sClipSrcPtr, clipW);
                 }
             }
             sClipX += sClipRun;
-            sClipSource += sClipRun;
+            sClipSrcPtr += sClipRun;
         } else {
-            sClipX = sClipRowStart;
-            sClipY++;
+            sClipX = sClipLeft;
+            sClipPosY++;
             sClipRow += destination->m_width;
         }
     }

@@ -31,7 +31,7 @@ struct SSmackOptions {
 #pragma pack(pop)
 
 extern SSmackOptions SmackOptions[6];
-extern i8 gSmackNum;
+extern i8 gMovieId;
 void InitSmackSound();
 void ShutdownSmackSound();
 void ConvertSmackerPalette(u8* paletteData);
