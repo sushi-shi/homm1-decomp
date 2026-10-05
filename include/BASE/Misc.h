@@ -5,6 +5,11 @@
 
 class bitmap;
 
+// Read or write one whole value of the file's record (Buka 2.1 Misc.h); the
+// value's own size is the transfer size.
+#define READ_FILE_VALUE(fd, value) read((fd), &(value), sizeof(value))
+#define WRITE_FILE_VALUE(fd, value) write((fd), &(value), sizeof(value))
+
 // Map-grid (taxicab) distance of an offset (Buka 2.1 Misc.h).
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 

@@ -108,7 +108,7 @@ void FadeIn(i32 increment) throw() {
         MemError();
     done = false;
     memset(pal->m_data, 0, PALETTE_GRAPHICS_BYTES);
-    if (gConfig.gfx[gCurExe].fullScreen == 0)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
@@ -140,7 +140,7 @@ void FadeOut(i32 increment) throw() {
     if (pal == NULL)
         MemError();
     done = false;
-    if (gConfig.gfx[gCurExe].fullScreen == 0)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     memcpy(pal->m_data, gpBufferPalette->m_data, PALETTE_GRAPHICS_BYTES);
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
@@ -339,8 +339,16 @@ void ClipIconToBitmap(
     sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
     sClipX = sClipRowStart = x + sClipEntry->x;
     sClipY = y + sClipEntry->y;
-    if (sClipRowStart >= clipX && sClipRowStart + sClipEntry->w <= clipX + clipW && sClipY >= clipY
-        && sClipY + sClipEntry->h <= clipY + clipH) {
+    if (ICON_FITS_CLIP(
+            sClipRowStart,
+            sClipY,
+            sClipEntry->w,
+            sClipEntry->h,
+            clipX,
+            clipY,
+            clipW,
+            clipH
+        )) {
         sClipInside = TRUE;
     } else {
         sClipInside = FALSE;

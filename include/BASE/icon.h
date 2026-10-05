@@ -16,6 +16,12 @@ H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
     ICON_SCREEN_ROW_BYTES = 640
 H1_ENUM_CONST_END(IconMonoRleConstant)
 
+// A frame at (left, top), width x height, lies wholly inside the clip
+// rectangle (Buka 2.1 IconRle.h): left, right, top, then bottom edge.
+#define ICON_FITS_CLIP(left, top, width, height, clipX, clipY, clipW, clipH)                       \
+    ((left) >= (clipX) && (left) + (width) <= (clipX) + (clipW) && (top) >= (clipY)                \
+     && (top) + (height) <= (clipY) + (clipH))
+
 // The orientation argument of the icon blitters: FLIPPED selects the
 // mirrored Flip*IconToBitmap path (Buka IconDraw.h IconDrawOrientation).
 H1_ENUM_BEGIN(IconDrawOrientation)

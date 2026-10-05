@@ -531,6 +531,12 @@ public:
 };
 #pragma pack(pop)
 
+// The one-based day number of game g's calendar, day first (Buka 2.1
+// game.h); the u16 fields promote to int.
+#define GAME_DAY_NUMBER(g)                                                                         \
+    ((g).m_day + ((g).m_week - 1) * CALENDAR_DAYS_PER_WEEK                                         \
+     + ((g).m_month - 1) * CALENDAR_DAYS_PER_MONTH)
+
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(i32 player);
 // GAME's dialog handlers and the standard-game day score ShowCongrats files.

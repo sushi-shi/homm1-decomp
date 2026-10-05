@@ -218,9 +218,9 @@ i16 textEntryWidget::Main(tag_message& message) {
                                     strcpy(copy, edit);
                                     typed = 0;
                                     if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        i32 key = (event.keyCode
-                                                   & (INPUT_SCAN_CODE_MASK << INPUT_KEY_SCAN_SHIFT))
-                                                  >> INPUT_KEY_SCAN_SHIFT;
+                                        i32 key =
+                                            (event.keyCode & EncodeScanCode(INPUT_SCAN_CODE_MASK))
+                                            >> INPUT_KEY_SCAN_SHIFT;
                                         switch (key) {
                                             case TEXT_ENTRY_KEYPAD_0:
                                                 typed = '0';

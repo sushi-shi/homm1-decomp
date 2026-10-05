@@ -306,6 +306,9 @@ struct configStruct {
     i32 baudRate[2];
     char modemInitString[100];
 };
+// The running executable's display row of gConfig.gfx (Buka 2.1
+// KBDeclarations.h): a live lvalue, re-read at every use.
+#define CURRENT_GRAPHICS_CONFIG (gConfig.gfx[gCurExe])
 struct tag_tilePoint {
     i8 x;
     i8 y;

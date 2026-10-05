@@ -121,10 +121,8 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
         Netbios(&ncb);
     }
     EnterCriticalSection(&gNbSndLock);
-    while ((node = pop_node(&gNbSndQueue)) != NULL)
-        free(node);
-    while ((node = pop_node(&gNbFreeQueue)) != NULL)
-        free(node);
+    FREE_NODE_QUEUE(node, &gNbSndQueue);
+    FREE_NODE_QUEUE(node, &gNbFreeQueue);
     LeaveCriticalSection(&gNbSndLock);
     DeleteCriticalSection(&gNbSndLock);
     for (idx = 0; idx < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); idx++) {
@@ -134,8 +132,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
     gNbShutdown |= 1;
     SetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
     EnterCriticalSection(&gNbRcvLock);
-    while ((node = pop_node(&gNbRcvQueue)) != NULL)
-        free(node);
+    FREE_NODE_QUEUE(node, &gNbRcvQueue);
     LeaveCriticalSection(&gNbRcvLock);
     DeleteCriticalSection(&gNbRcvLock);
 }

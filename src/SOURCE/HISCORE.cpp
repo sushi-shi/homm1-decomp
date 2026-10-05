@@ -198,7 +198,7 @@ void highScoreManager::Update(void) {
         if (noScoreFile)
             highScore.score = HIGH_SCORE_EMPTY;
         else
-            read(inputFile, &highScore, sizeof(highScore));
+            READ_FILE_VALUE(inputFile, highScore);
 
         if (highScore.score == HIGH_SCORE_EMPTY) {
             m_monsterTypes[rank] = 0;

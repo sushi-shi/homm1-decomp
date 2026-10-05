@@ -218,10 +218,8 @@ void com_term(i16 port) {
         SetCommTimeouts(gComPorts[port].handle, &gComPorts[port].savedTimeouts);
         CloseHandle(gComPorts[port].handle);
         gComPorts[port].handle = INVALID_HANDLE_VALUE;
-        while ((node = pop_node(&gComPorts[port].normalQueue)) != NULL)
-            free(node);
-        while ((node = pop_node(&gComPorts[port].priorityQueue)) != NULL)
-            free(node);
+        FREE_NODE_QUEUE(node, &gComPorts[port].normalQueue);
+        FREE_NODE_QUEUE(node, &gComPorts[port].priorityQueue);
     }
 }
 

@@ -134,7 +134,7 @@ VA(0x004667f8, 0xbe)
 void SetupClipper(void) {
     i32 result;
 
-    if (gConfig.gfx[gCurExe].fullScreen == 0) {
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
         result = gDD->CreateClipper(0, &gClipper, NULL);
         if (result != DD_OK)
 #line 99
@@ -164,7 +164,7 @@ void DDInitGraphics(void) {
     if (result != DD_OK)
 #line 122
         DDSD(result, __FILE__, __LINE__);
-    if (gConfig.gfx[gCurExe].fullScreen != 0) {
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0) {
         SetMenuStatus(0);
         result = gDD->SetCooperativeLevel(
             hwndApp,
@@ -615,16 +615,16 @@ void DDSetFullScreenStatus(i32 fullScreen) {
 
     if (gWinGraphBusy != FALSE)
         return;
-    if (gConfig.gfx[gCurExe].fullScreen == fullScreen)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == fullScreen)
         return;
     {
-        x = gConfig.gfx[gCurExe].x;
-        y = gConfig.gfx[gCurExe].y;
-        width = gConfig.gfx[gCurExe].width;
-        windowHeight = gConfig.gfx[gCurExe].height;
+        x = CURRENT_GRAPHICS_CONFIG.x;
+        y = CURRENT_GRAPHICS_CONFIG.y;
+        width = CURRENT_GRAPHICS_CONFIG.width;
+        windowHeight = CURRENT_GRAPHICS_CONFIG.height;
         gWinGraphBusy = TRUE;
-        gConfig.gfx[gCurExe].fullScreen = fullScreen;
-        if (gConfig.gfx[gCurExe].fullScreen != 0)
+        CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
             SetMenuStatus(0);
 
         hres = gDD->SetCooperativeLevel(
@@ -634,7 +634,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         if (hres != DD_OK)
 #line 596
             DDSD(hres, __FILE__, __LINE__);
-        if (gConfig.gfx[gCurExe].fullScreen != 0) {
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0) {
             hres = gDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
             if (hres != DD_OK)
 #line 602
@@ -660,14 +660,14 @@ void DDSetFullScreenStatus(i32 fullScreen) {
             DDSD(hres, __FILE__, __LINE__);
         WritePrefs();
         gWinGraphBusy = FALSE;
-        if (gConfig.gfx[gCurExe].fullScreen == 0) {
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
             SetMenuStatus(1);
             ResizeWindow(x, y, width, windowHeight);
         } else {
-            gConfig.gfx[gCurExe].x = x;
-            gConfig.gfx[gCurExe].y = y;
-            gConfig.gfx[gCurExe].width = width;
-            gConfig.gfx[gCurExe].height = windowHeight;
+            CURRENT_GRAPHICS_CONFIG.x = x;
+            CURRENT_GRAPHICS_CONFIG.y = y;
+            CURRENT_GRAPHICS_CONFIG.width = width;
+            CURRENT_GRAPHICS_CONFIG.height = windowHeight;
         }
         SetupClipper();
     }
@@ -984,7 +984,7 @@ void GetGraphicsInfo(void) {
 VA(0x00468265, 0x46)
 void InitGraphics() {
     ConnectToDLLs();
-    if (gConfig.gfx[gCurExe].fullScreen != 0)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
     else
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
@@ -1036,11 +1036,11 @@ VA(0x0046833c, 0x84)
 void SetFullScreenStatus(i32 fullScreen) {
     if (gInSmacker != 0)
         return;
-    if (fullScreen == gConfig.gfx[gCurExe].fullScreen)
+    if (fullScreen == CURRENT_GRAPHICS_CONFIG.fullScreen)
         return;
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING) {
         // HoMM1 has no DirectDraw-attached guard or cursor refresh here.
-        gConfig.gfx[gCurExe].fullScreen = 1;
+        CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
         if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
             DDSetFullScreenStatus(fullScreen);
         return;
@@ -1079,15 +1079,15 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gDDrawAttached == FALSE)
         return FALSE;
 
-    fullState = gConfig.gfx[gCurExe].fullScreen;
-    x = gConfig.gfx[gCurExe].x;
-    y = gConfig.gfx[gCurExe].y;
-    width = gConfig.gfx[gCurExe].width;
-    hgt = gConfig.gfx[gCurExe].height;
+    fullState = CURRENT_GRAPHICS_CONFIG.fullScreen;
+    x = CURRENT_GRAPHICS_CONFIG.x;
+    y = CURRENT_GRAPHICS_CONFIG.y;
+    width = CURRENT_GRAPHICS_CONFIG.width;
+    hgt = CURRENT_GRAPHICS_CONFIG.height;
     buffer = malloc(WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     memcpy(buffer, gpWindowManager->m_screen->m_pixels, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     if (graphicsType == WINGRAPH_GRAPHICS_WING) {
-        gConfig.gfx[gCurExe].fullScreen = 0;
+        CURRENT_GRAPHICS_CONFIG.fullScreen = 0;
         DDCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();

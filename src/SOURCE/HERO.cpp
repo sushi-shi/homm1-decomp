@@ -79,7 +79,7 @@ i16 hero::CalcMobility(void) {
     i16 slowestSpeedValue;
     i32 creatureIndex;
 
-    if (m_eventFlags & HERO_EVENT_EMBARKED) {
+    if (IsEmbarked()) {
         if (gpGame->m_mines[MINE_SLOT_LIGHTHOUSE].owner == m_owner)
             movePoints = seaBaseMobility + lighthousePoints;
         else
@@ -472,17 +472,7 @@ void hero::ViewStat(i8 stat, i8 quickView) {
 
     if (quickView) {
         sprintf(gText, "%s\n\n%s", gStatNames[stat], gStatDesc[stat]);
-        NormalDialog(
-            gText,
-            NORMAL_DIALOG_TYPE_QUICK_VIEW,
-            0xb1,
-            0x19,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_QUICK_VIEW, 0xb1, 0x19);
         return;
     }
     win = new heroWindow(0xb1, 0x19, "vstat.bin");
@@ -506,12 +496,7 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
         gArtifactDesc[artifact],
         quickView == 0 ? NORMAL_DIALOG_TYPE_OK : NORMAL_DIALOG_TYPE_QUICK_VIEW,
         -1,
-        0x1c,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
+        0x1c
     );
 }
 
@@ -520,17 +505,7 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
 // evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0043a152, 0x47)
 i8 hero::Dismiss(void) {
-    NormalDialog(
-        localization::Tr("hero.dismiss.confirm"),
-        NORMAL_DIALOG_TYPE_YES_NO,
-        0xb1,
-        0x1c,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(localization::Tr("hero.dismiss.confirm"), NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c);
     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         Deallocate();
         return 1;
@@ -554,7 +529,7 @@ void hero::Deallocate(void) {
     playerPtr = &gpGame->m_players[m_owner];
     gpAdvManager->MobilizeCurrHero(0);
     gpAdvManager->HideRoute(0, 0, 0);
-    if (m_eventFlags & HERO_EVENT_EMBARKED) {
+    if (IsEmbarked()) {
         for (i = 0; i < GAME_BOAT_COUNT; i++) {
             if (gpGame->m_boats[i].heroId == m_id) {
                 gpGame->m_boats[i].heroId = HERO_ID_NONE;
@@ -753,17 +728,7 @@ void hero::CheckLevel(void) {
     m_level = oldLvl;
     if (!gbInNewGameSetup && m_owner >= 0 && gbThisNetHumanPlayer[m_owner]) {
         PlayMusic(MUSIC_TRACK_LEVEL_UP);
-        NormalDialog(
-            gText,
-            NORMAL_DIALOG_TYPE_OK,
-            -1,
-            -1,
-            NORMAL_DIALOG_HERO,
-            m_id,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, -1, -1, NORMAL_DIALOG_HERO, m_id);
         PlayMusic(gpAdvManager->m_currentTerrain);
     }
 }
@@ -1009,14 +974,7 @@ i16 HeroHandler(struct tag_message& message) {
                         NormalDialog(
                             gText,
                             quickViewVal == 0 ? NORMAL_DIALOG_TYPE_OK
-                                              : NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                            -1,
-                            -1,
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_OR_TEXT
+                                              : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                         break;
                     case HERO_SCREEN_ARMY_SLOT_FIRST:

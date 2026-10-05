@@ -630,8 +630,7 @@ i16 InitMenuHandler(tag_message& message) {
 
     PollSound();
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-        if (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK) {
+        if (IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
             helpIndex = MAIN_MENU_HELP_NONE;
             switch (message.id) {
                 case MAIN_MENU_NEW_GAME:
@@ -1560,8 +1559,7 @@ void HandleRemoteDeadPlayerExit(i32 position) {
             REMOTE_COMMAND_PLAYER_EXIT,
             0,
             0,
-            REMOTE_MESSAGE_RELIABLE,
-            1
+            REMOTE_MESSAGE_RELIABLE
         );
         RemoteCleanup();
         gbHumanPlayer[position] = 0;
@@ -1593,8 +1591,7 @@ void HandleRemoteSuddenExit(void) {
         REMOTE_COMMAND_PLAYER_EXIT,
         0,
         0,
-        REMOTE_MESSAGE_RELIABLE,
-        1
+        REMOTE_MESSAGE_RELIABLE
     );
 }
 
@@ -2090,7 +2087,7 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
         if (nextFile == -1)
             FileError(savedName);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            write(nextFile, &curScores[entry], sizeof(HighScoreEntry));
+            WRITE_FILE_VALUE(nextFile, curScores[entry]);
         close(nextFile);
     }
     return 0;
@@ -2246,7 +2243,7 @@ void PopNetBox(char* notice) {
                 oldMsgTime = 0;
                 switch (nextIncoming.keyCode) {
                     case INPUT_ASCII_ESCAPE:
-                    case INPUT_SCAN_F1 << INPUT_KEY_SCAN_SHIFT:
+                    case EncodeScanCode(INPUT_SCAN_F1):
                         bClose = 1;
                         break;
                     case INPUT_ASCII_DELETE:
@@ -2285,9 +2282,6 @@ void PopNetBox(char* notice) {
                 REMOTE_BROADCAST_PLAYER,
                 strlen(text) + 1,
                 REMOTE_COMMAND_CHAT,
-                1,
-                1,
-                REMOTE_MESSAGE_DEFAULT,
                 1
             );
             if (!lastSuccess)
@@ -2842,7 +2836,7 @@ void UpdateSystemOptionsMenu(void) {
     i32 checkedCommand;
     i32 menuCommand;
 
-    if (!gConfig.gfx[gCurExe].showMenu)
+    if (!CURRENT_GRAPHICS_CONFIG.showMenu)
         return;
     if (!hmnuApp)
         return;
