@@ -1,13 +1,17 @@
 #!/usr/bin/env python3
-"""Build HEROESW.EXE with the Visual C++ 4.1 toolchain under Wine.
+"""Build HEROES.EXE with the Visual C++ 6.0 SP5 toolchain under Wine.
 
-    python3 build.py [--toolchain DIR] [--icon-from HEROESW.EXE] [--jobs N]
+    python3 build.py [--locale ru|en] [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
 
-DIR holds vc41/ (CL, ML, LINK and the VC4 headers and libraries), wing10/ and
+DIR holds vc6/ (CL, ML, LINK and the VC6 headers and libraries), wing10/ and
 dx1/ (the WinG and DirectX 1 SDK files), as in the hash-pinned release the
-flake fetches. Resources compile with llvm-rc and llvm-cvtres. The icon is a
-retail asset: `--icon-from` extracts it from your HEROESW.EXE; without it the
-executable carries the menus and About box but no icon.
+flake fetches. `--locale` selects the text compiled into the program: the
+catalog in locales/ resolves every `localization::Tr("id")` to Russian (the
+retail program, the default) or the original English as Windows-1251 literals
+under build/<locale>/localized/, and the program is build/<locale>/HEROES.EXE;
+the source files are never rewritten. Resources compile with llvm-rc and llvm-cvtres. The
+icon is a retail asset: `--icon-from` extracts it from your HEROES.EXE;
+without it the executable carries the menus and About box but no icon.
 """
 
 from __future__ import annotations
@@ -39,7 +43,7 @@ class Wine:
                     toolchain / compiler / "include"]
         libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / compiler / "lib"]
         self.includes = includes
-        prefix = OUT / "wineprefix"
+        prefix = ROOT / "build" / "wineprefix"
         self.env = dict(os.environ, WINEPREFIX=str(prefix), WINEPATH=windows(self.bin),
                         INCLUDE=";".join(map(windows, includes)),
                         LIB=";".join(map(windows, libraries)),
@@ -69,7 +73,7 @@ def compile_unit(wine: Wine, unit: dict) -> Path:
     source = OUT / "localized" / unit["source"]
     obj = OUT / "obj" / f"{unit['unit']}.obj"
     obj.parent.mkdir(parents=True, exist_ok=True)
-    with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc41.pdb/.idb
+    with tempfile.TemporaryDirectory(dir=OUT) as scratch:   # fresh vc60.pdb/.idb
         if source.suffix.lower() == ".asm":
             wine.run("ML.EXE", ["/nologo", "/c", f"/Fo{windows(obj)}", windows(source)],
                      Path(scratch), obj)
@@ -180,14 +184,13 @@ def build() -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("HOMM1_TOOLCHAIN"))
-    parser.add_argument("--icon-from", type=Path, help="your HEROESW.EXE, for the icon")
+    parser.add_argument("--icon-from", type=Path, help="your HEROES.EXE, for the icon")
     parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1))
     manifest = json.loads((ROOT / "build.json").read_text())
-    compiler = manifest.get("compiler", "vc41")
+    compiler = manifest["compiler"]
     parser.add_argument("--locale", choices=("ru", "en"), default=manifest.get("locale", "ru"))
     args = parser.parse_args()
-    if args.locale != manifest.get("locale", "ru"):
-        OUT = ROOT / "build/ordinary" / args.locale
+    OUT = ROOT / "build" / args.locale
     if args.toolchain is None or not (args.toolchain / compiler / "bin/CL.EXE").is_file():
         parser.error(f"--toolchain (or HOMM1_TOOLCHAIN) must hold {compiler}/bin/CL.EXE; "
                      "`nix develop` supplies it")
@@ -216,7 +219,7 @@ def build() -> int:
     wine.run("LINK.EXE", ["-lib", f"@{windows(response)}"], OUT, library)
     libraries = list(link["libraries"])
     libraries.insert(libraries.index(link["library_after"]) + 1, windows(library))
-    executable = OUT / "HEROESW.EXE"
+    executable = OUT / manifest["executable"]
     response = OUT / "link.rsp"
     response.write_text("\n".join([
         f"/OUT:{windows(executable)}", f"/MAP:{windows(OUT / 'HEROES.map')}", "/NOLOGO",

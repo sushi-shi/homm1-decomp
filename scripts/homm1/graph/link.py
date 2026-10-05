@@ -91,6 +91,12 @@ MODULE_DEF = REPO / "config/heroes.def"
 BASE_LIBRARY_FROM = 0x000688c0
 BASE_LIBRARY = "base.lib"
 BASE_LIBRARY_AFTER = "audiere.lib"
+#: Linker options of the retail build beyond the library line (the generated
+#: source tree's build.json carries them too). Buka retail was linked
+#: /OPT:NOREF: it keeps the unreferenced COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR,
+#: 0x1c900) and a jump thunk for each of its 200 import slots. (The NWC builds
+#: used /OPT:REF.)
+LINK_RETAIL_FLAGS = ["/OPT:NOREF"]
 
 def retail_pdb_drive() -> Path:
     """Map wine's drive E: to build/pdb-drive and return the host path of
@@ -282,10 +288,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         "/STACK:0x10240,0x1000",
     ]
     if keep_all:
-        # Buka retail was linked /OPT:NOREF: it keeps the unreferenced
-        # COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR, 0x1c900) and a jump thunk
-        # for each of its 200 import slots. (The NWC builds used /OPT:REF.)
-        rsp_lines.append("/OPT:NOREF")
+        rsp_lines += LINK_RETAIL_FLAGS
     if not dry_run:
         pdb = retail_pdb_drive() / RETAIL_PDB.rsplit("\\", 1)[1]
         pdb.unlink(missing_ok=True)       # a fresh PDB, as for the image

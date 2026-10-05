@@ -139,15 +139,21 @@ class Catalog:
     @classmethod
     def load(cls, repo):
         root = Path(repo) / 'locales'
-        registry_text = (root / 'messages.def').read_text(encoding='utf-8')
-        po_text = (root / 'ru.po').read_text(encoding='utf-8')
+        variants_path = root / 'format-variants.json'
+        return cls.parse((root / 'messages.def').read_text(encoding='utf-8'),
+                         (root / 'ru.po').read_text(encoding='utf-8'),
+                         variants_path.read_text() if variants_path.is_file() else None)
+
+    @classmethod
+    def parse(cls, registry_text, po_text, variants_text=None):
+        """The catalog from the texts of messages.def, ru.po and the optional
+        format-variants.json (a snapshot that is not a checkout)."""
         for name, text in (('messages.def', registry_text), ('ru.po', po_text)):
             errors = hidden_text_errors(text, allow_unicode=True)
             if errors:
                 raise ValueError(f'{name}:{errors[0][0]}: {errors[0][1]}')
         english = parse_registry(registry_text)
-        variants_path = root / 'format-variants.json'
-        variants = json.loads(variants_path.read_text()) if variants_path.is_file() else {}
+        variants = json.loads(variants_text) if variants_text is not None else {}
         if not isinstance(variants, dict) or variants.keys() - english.keys():
             raise ValueError('unknown format variant ID')
         for key, signatures in variants.items():

@@ -1,6 +1,6 @@
 """Source transforms for the generated clean tree.
 
-Every rule reproduces the production expansion that the pinned VC4 compiler
+Every rule reproduces the production expansion that the pinned VC6 compiler
 already sees when it builds the matching objects; nothing here changes what
 the game does. The lexer never reaches inside string or character literals,
 removes comments without joining tokens, and expands macro arguments
