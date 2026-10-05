@@ -3670,7 +3670,7 @@
         "?InitSystem@executive@@QAEFXZ",
         "?ShutDown@@YAXPAD@Z",
         "?CheckMem@@YACXZ",
-        "?KBChangeMenu@@YAXPAX@Z",
+        "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
         "?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z",
         "?PostprocessPalette@@YAXPAC@Z",
         "?SetPalette@@YAXPACH@Z",
@@ -3777,7 +3777,7 @@
         "?InitSystem@executive@@QAEFXZ",
         "?ShutDown@@YAXPAD@Z",
         "0x421b0",
-        "?KBChangeMenu@@YAXPAX@Z",
+        "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
         "?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z",
         "0x6fdc3",
         "?SetPalette@@YAXPACH@Z",
@@ -3883,7 +3883,7 @@
       "known_call_agreements": [
         "?InitSystem@executive@@QAEFXZ",
         "?ShutDown@@YAXPAD@Z",
-        "?KBChangeMenu@@YAXPAX@Z",
+        "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
         "?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z",
         "?SetPalette@@YAXPACH@Z",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
@@ -4802,7 +4802,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppInit@@YAHPAX0HPAD@Z",
+      "name": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
       "rva": "0x42dba",
       "size": 654,
       "source_rva": "0x329be",
@@ -4857,7 +4857,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppWndProc@@YGJPAXIIJ@Z",
+      "name": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "rva": "0x43052",
       "size": 1709,
       "source_rva": "0x32cc5",
@@ -4879,9 +4879,9 @@
         "?EarlyResizeWindow@@YAXHHHH@Z",
         "?ResizeWindow@@YAXHHHH@Z",
         "?WritePrefs@@YAXXZ",
-        "?AppCommand@@YAHPAXIIH@Z",
+        "?AppCommand@@YAHPAUHWND__@@IIH@Z",
         "?QueryNewPalette@@YAHXZ",
-        "?AppPaint@@YAHPAX0@Z",
+        "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
         "?GameUnsaved@@YAHXZ",
         "?NormalDialog@@YAXPADHHHHHHHH@Z",
         "?ShutDown@@YAXPAD@Z"
@@ -4899,7 +4899,7 @@
         "?WritePrefs@@YAXXZ",
         "0x43911",
         "0x683c0",
-        "?AppPaint@@YAHPAX0@Z",
+        "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
         "?GameUnsaved@@YAHXZ",
         "?NormalDialog@@YAXPADHHHHHHHH@Z",
         "?ShutDown@@YAXPAD@Z"
@@ -4912,7 +4912,7 @@
         "?CycleColors@@YAXXZ",
         "?WritePrefs@@YAXXZ",
         "?WritePrefs@@YAXXZ",
-        "?AppPaint@@YAHPAX0@Z",
+        "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
         "?GameUnsaved@@YAHXZ",
         "?NormalDialog@@YAXPADHHHHHHHH@Z",
         "?ShutDown@@YAXPAD@Z"
@@ -4987,7 +4987,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppCommand@@YAHPAXIIH@Z",
+      "name": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
       "rva": "0x43911",
       "size": 357,
       "source_rva": "0x33577",
@@ -14710,7 +14710,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppInit@@YAHPAX0HPAD@Z",
+      "name": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
       "old_rva": "0x329be",
       "rva": "0x42dba",
       "size": 654,
@@ -14726,7 +14726,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppWndProc@@YGJPAXIIJ@Z",
+      "name": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "old_rva": "0x32cc5",
       "rva": "0x43052",
       "size": 1709,
@@ -14750,7 +14750,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?AppCommand@@YAHPAXIIH@Z",
+      "name": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
       "old_rva": "0x33577",
       "rva": "0x43911",
       "size": 357,

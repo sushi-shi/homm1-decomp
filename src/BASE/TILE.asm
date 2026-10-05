@@ -1,5 +1,4 @@
-; HoMM1 retail tile renderer.  HoMM2 retained the same MASM unit, but changed
-; the bitmap/tileset layouts and unrolled the forward path.
+; HoMM1 retail tile renderer.
 
 .386
 .model flat, C

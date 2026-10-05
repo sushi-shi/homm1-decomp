@@ -49,4 +49,5 @@ Migration tables identify both their source and destination versions.
   changes delinker ownership.
 - `dna_bands.tsv`: executable DNA census against VC4 LIBCMT/OLDNAMES
   (`homm1 audit dna-bands`, `verify.universe`).
-- `homm2_tu_segments.tsv`: HoMM2 TU segment correspondence read by the DNA census.
+- `homm2_tu_segments.tsv`: retail RVA ranges assigned to source units, read by
+  the DNA census.

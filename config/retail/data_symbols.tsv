@@ -265,6 +265,25 @@ rva	size	symbol	provenance
 0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cddac	4	?gTtlBlts@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cef88	300	?hMouseCursor@@3PAPAUHICON__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf0b4	300	?hbmpAndMask@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf30c	300	?hbmpColor@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfbb4	4	_sClipRowStart	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb60	4	_sClipX	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb50	4	_sClipY	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfbb0	4	_sClipInside	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb54	4	_sClipRight	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb58	4	_sClipBottom	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cdf58	4	_gSampleBuffer	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000cdf5c	4	_gSampleFrames	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000cdf60	4	_gSampleChannels	Buka audio: complete typed payload and retail code users; buka-audio-data.json
@@ -328,7 +347,7 @@ rva	size	symbol	provenance
 0x0009343c	1	?gHighScoreRank@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a9e4c	4	?gClosingApp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a99d8	4	?lTemp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000ca160	4	?gbBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000b4bac	4	?fBerserkFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000b9cc0	5184	?gaiTurnValueOfMine@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
@@ -445,6 +464,6 @@ rva	size	symbol	provenance
 0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
 0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
 0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use; buka-input-timer-helpers.json
-0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Complete payload and compiled/retail use; buka-input-timer-helpers.json
+0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Complete payload and compiled/retail use; buka-input-timer-helpers.json
 0x00092c94	96	?gDwellingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json
 0x000931b4	28	?gNeutralBuildingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json

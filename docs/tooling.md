@@ -1,7 +1,6 @@
 # Matching tooling
 
-The [Giten-derived pipeline](tooling-inheritance.md) uses HoMM1's pinned retail
-image and VC4 profiles:
+The matching pipeline uses HoMM1's pinned retail image and VC4 profiles:
 
 ```text
 C++ + VA claims -> VC4 objects + retail model -> PDB/Vostok delinking

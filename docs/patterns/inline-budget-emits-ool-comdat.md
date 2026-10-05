@@ -1,6 +1,5 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # An inline can have expanded and out-of-line uses
 
@@ -8,12 +7,9 @@ A caller may contain both an expanded helper body and calls to its out-of-line
 copy. That is compatible with an ordinary inline definition; it does not by
 itself require separate APIs or manually expanded source.
 
-The [recorded VC5 probes](https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/inline-budget-emits-ool-comdat.md)
-vary caller content and repeated eligible call sites, observing different
-expansion counts. Caller context and nested expansion matter. The repository's
-`inline model` (historical donor reference) is a conditional
-predictor derived from a sibling compiler and calibrated on selected VC5 probes,
-not a proof of every VC5 inlining decision.
+MSVC 5.0 probes that varied caller content and repeated eligible call sites
+observed different expansion counts. Caller context and nested expansion
+matter.
 
 Check resolved call targets and ordered sites, including tail jumps. Confirm
 eligibility separately; [template members](vc5-template-members-inline-without-inline-keyword.md)
@@ -31,9 +27,9 @@ can also be tail merging or dead-code elimination.
 
 Member construction spends the same budget. Giving a member type a user-declared
 constructor, even an empty inline `T() {}`, adds a construction site for every
-such member of the enclosing class. Observed: with ctors on `Coord` and
-`DoubleVector3`, `CMotionState::InitBounds` stopped expanding into the
-`CProjectile` constructor, and `walls diagnose` reported an inline/call-set gap.
+such member of the enclosing class. Observed with MSVC 5.0: after two member
+types gained constructors, a member helper stopped expanding into the enclosing
+class's constructor, leaving an inline/call-set gap.
 When an exact constructor degrades that way right after a member type gains a
 constructor, suspect that retail's type is an aggregate. That is a clue for the
 type model, not proof that no constructor exists anywhere.

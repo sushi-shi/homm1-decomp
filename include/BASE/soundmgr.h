@@ -45,8 +45,7 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SAMPLE_RATE_HIGH = 44100,
     SAMPLE_FORMAT_16_BIT = 1,
     SAMPLE_FORMAT_STEREO = 2,
-    // gConfig.musicVolume/soundVolume level that silences the channel
-    // (Buka CONFIG_VOLUME_MUTED).
+    // gConfig.musicVolume/soundVolume level that silences the channel.
     SOUND_VOLUME_OFF = 0,
     SOUND_VOLUME_FIRST = 1,
     SOUND_VOLUME_LAST = 10,

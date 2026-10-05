@@ -1,15 +1,14 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # Emitted stores need not follow source order
 
 The optimizer can move independent loads and stores. Transcribing a retail
 store sequence into C++ and recompiling need not reproduce that sequence.
 
-The [recorded ActionOptionsMenuBar::Init A/B](https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/emitted-store-order-is-not-the-source-order.md)
-compares two six-member assignment orders. Assigning in member declaration
-order reproduced a different, retail store order.
+An MSVC 5.0 A/B of a six-member initializer compared two assignment orders.
+Assigning in member declaration order reproduced the retail store order, which
+differs from that declaration order.
 
 Use data flow to identify each stored value, especially stores interleaved with
 the next call's argument setup. Check helper expansion and real aggregate-copy

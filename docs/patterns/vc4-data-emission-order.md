@@ -35,8 +35,8 @@ source is constrained by layout at all.
 
   The rule runs backwards too. Within one retail object, ascending `.bss`
   address must be ascending key, so each object's original name hashes into
-  the window between its neighbours' keys. Checking a donor or invented name
-  against that window is naming evidence.
+  the window between its neighbours' keys. Checking a candidate name against
+  that window is naming evidence.
 - **Dynamic initializers.** The compiler-generated initializer functions
   (`_$E<n>`) for a file-scope object with a constructor are emitted in `.text`
   at the definition's position, between the functions before and after it.
@@ -48,14 +48,13 @@ source is constrained by layout at all.
   folded is emitted as a named `.rdata` object in definition order, ahead of
   the anonymous float/double literals. Equal values are not merged. PHILAI's
   pool at 0x48c0a8 (1.5, 1.25, 1.1, 0.15, 1.12, 1.0, 1.0, then the literals)
-  is reproduced byte for byte only with Buka's named block declared in that
+  is reproduced byte for byte only with a named block declared in that
   order.
 
 ## Open
 
 Retail's interleaving of variables with literals is the `/Gi` per-function
 section layout: see [incremental compilation](vc4-gi-incremental-compilation.md).
-
 
 Retail PHILAI `.data` interleaves two variables with string literals:
 `gSVSearchArrayInUse` (0x48f7b8) sits after `GetBestHero`'s literals, and

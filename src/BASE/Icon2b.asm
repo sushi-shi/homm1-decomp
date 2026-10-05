@@ -48,7 +48,6 @@ _gIconHeight DWORD 0
 ;   b & 0x80        skip (b & 0x7f) pixels; b == 0x80 ends the frame
 ;   otherwise       b pixels (colour icons: b literal bytes follow in src;
 ;                   Mono/Dim: no payload, the count alone is the shape)
-; Buka BASE/Icon2b.cpp etc. are the C++ successors, with HoMM2's richer RLE.
 
 ; Draw one unscaled icon frame into a bitmap.
 ;

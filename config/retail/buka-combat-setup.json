@@ -584,7 +584,7 @@
         {
           "offset": "0x2cb",
           "kind": 6,
-          "symbol": "?hmnuCmbt@@3PAXA",
+          "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
           "addend": "0x0",
           "site_rva": "0x193e3",
           "target_rva": "0xa98e0",
@@ -593,7 +593,7 @@
         {
           "offset": "0x2d1",
           "kind": 20,
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": "0x0",
           "site_rva": "0x193e9",
           "target_rva": "0x43b24"
@@ -1176,7 +1176,7 @@
       ]
     },
     {
-      "name": "?hmnuCmbt@@3PAXA",
+      "name": "?hmnuCmbt@@3PAUHMENU__@@A",
       "rva": "0xa98e0",
       "size": 4,
       "units": [
@@ -1191,7 +1191,7 @@
           "function": "?Open@combatManager@@UAEFF@Z",
           "offset": "0x2cb",
           "kind": 6,
-          "symbol": "?hmnuCmbt@@3PAXA",
+          "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
           "addend": "0x0",
           "site_rva": "0x193e3",
           "target_rva": "0xa98e0",
@@ -1696,7 +1696,7 @@
       "function": "?Open@combatManager@@UAEFF@Z",
       "offset": "0x2d1",
       "kind": 20,
-      "symbol": "?KBChangeMenu@@YAXPAX@Z",
+      "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
       "addend": "0x0",
       "site_rva": "0x193e9",
       "target_rva": "0x43b24"

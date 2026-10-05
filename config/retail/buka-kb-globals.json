@@ -13087,7 +13087,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66a0a",
           "target_rva": "0xa9900",

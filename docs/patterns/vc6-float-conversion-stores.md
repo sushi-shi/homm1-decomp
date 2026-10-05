@@ -16,6 +16,6 @@ account for the additional eight bytes of compiler temporary storage. The
 stores do not pop the x87 value, so their presence alone does not establish
 that subsequent arithmetic reloads a rounded value.
 
-The corresponding HoMM2 Buka source contains the same conversions. Restoring
-them gives a complete byte/reference match without adding source locals.
+Restoring the conversions gives a complete byte/reference match without
+adding source locals.
 See [`buka-seed-attention-controls.json`](../../config/retail/buka-seed-attention-controls.json).

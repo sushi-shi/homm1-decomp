@@ -1,5 +1,4 @@
-// Combat stacks. Buka starts this object at army::army (RVA 0x13330),
-// after the SOURCE/AI locale startup and INT3 fill.
+// Combat stacks.
 
 #include <match.h>
 
@@ -139,9 +138,6 @@ void army::LoadResources(void) {
     }
 }
 
-// donor PoL RVA 0x0004b36e; preferred Buka symbol ?FreeResources@army@@QAEXXZ
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
 VA(0x00413760, 0xd4)
 void army::FreeResources(void) {
     i32 i;

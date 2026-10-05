@@ -1,4 +1,4 @@
-// Retail-backed text widget resource reader.
+// Text widget resource reader.
 
 #include <match.h>
 

@@ -443,19 +443,19 @@ rva	name	provenance
 0x00042c49	?UpdateAppSpecificMenus@@YAXPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00042c5e	?EarlyResizeWindow@@YAXHHHH@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x00042ca0	_WinMain@16	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
-0x00042dba	?AppInit@@YAHPAX0HPAD@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
+0x00042dba	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x00043048	?AppIdle@@YAHXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
-0x00043052	?AppWndProc@@YGJPAXIIJ@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
+0x00043052	?AppWndProc@@YGJPAUHWND__@@IIJ@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x000436ff	_AppAbout@16	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043766	?AppExit@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x00043775	?Process1WindowsMessage@@YAXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x267d; buka-adventure-commands.json
 0x000437f4	?ResizeWindow@@YAXHHHH@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
-0x00043911	?AppCommand@@YAHPAXIIH@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
-0x00043a76	?UpdateDfltMenu@@YAXPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x00043b24	?KBChangeMenu@@YAXPAX@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00043911	?AppCommand@@YAHPAUHWND__@@IIH@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
+0x00043a76	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00043b24	?KBChangeMenu@@YAXPAUHMENU__@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043bb5	?SetMenuStatus@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043ccd	?SetNoDialogMenus@@YAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x00043d1f	?SetMenus@@YAXPAXH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00043d1f	?SetMenus@@YAXPAUHMENU__@@H@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043e4a	?SetGameDefaults@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00043f8f	?ReadPrefs@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x000443f7	?WritePrefs@@YAXXZ	Buka control-panel instruction/CFG/EH review: 0xd569; buka-control-panel.json
@@ -733,7 +733,7 @@ rva	name	provenance
 0x0006677b	?CreatePrimary@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000667f8	?SetupClipper@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000668b6	?DDInitGraphics@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x000669ef	?DDAppPaint@@YAHPAX0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x000669ef	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00066ed3	?DDInitializePalette@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00066fe8	?DDSetPalette@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006706a	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -745,7 +745,7 @@ rva	name	provenance
 0x00067aa3	?WGInitGraphics@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00067bde	?WGUpdatePalette@@YAXPAC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00067d9b	?WGInitializePalette@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x00067f3d	?WGAppPaint@@YAHPAX0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00067f3d	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000680f4	?WGCleanUpWinGraphics@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006815b	?ConnectToDLLs@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000681b1	?DisconnectDLLs@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
@@ -753,7 +753,7 @@ rva	name	provenance
 0x000681e0	?SetPalette@@YAHXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000681f7	?GetGraphicsInfo@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00068265	?InitGraphics@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
-0x000682ab	?AppPaint@@YAHPAX0@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x000682ab	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000682db	?InitializePalette@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x000682f5	?UpdatePalette@@YAXPAC@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006831d	?CleanUpWinGraphics@@YAXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).

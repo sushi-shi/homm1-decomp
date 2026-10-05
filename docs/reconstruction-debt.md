@@ -39,13 +39,12 @@ not yet modelled:
   fragments. It is now a local union of the three typed pointers (combat
   record, hero fragment, wire bytes), so the frame slot is unchanged.
   `ReceiveHeroTownData` and `DoCombat` read received records through
-  `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO`, the view macros in
-  `EVENTS.h`. The remaining nine casts convert the `char*` that
-  `GetRemoteData`, `CheckHandleNet` and the transmit functions use for queue
-  records. That type is fixed by the claimed names
-  (`?GetRemoteData@@YIPADC@Z`). A union cannot hold the combat payload
-  because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
-  `char[]` data identity. `TransmitSaveGame` builds its packets in a named
+  the `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` view macros. The remaining
+  nine casts convert the `char*` that `GetRemoteData`, `CheckHandleNet` and the
+  transmit functions use for queue records; the `char* GetRemoteData(char)`
+  signature fixes that type, so the casts sit at those call sites. A union
+  cannot hold the combat payload because `armyGroup`/`town` members have
+  constructors. `PacketSend` keeps its `char[]` data identity. `TransmitSaveGame` builds its packets in a named
   `RemotePayload`, the `RemoteMessage` payload union;
 - resource reads and pixel buffers (resolved): `resourceManager::ReadBlock`
   takes `void*` (it only forwards to `_read`) and `Read13` takes `char*`. The
@@ -116,8 +115,7 @@ Every goto is kept because retail's block layout requires it.
 
 **Dead locals.** Every never-referenced local must correspond to an
 unreferenced slot in retail's `/Od` frame (a hole between referenced slots or a
-larger frame). Names chosen only to fill frames are reviewed against donor
-spellings.
+larger frame).
 
 The audit lists locals with `clang-cl /Zs -Wunused-variable` after replacing
 each `#line` with an empty line, so diagnostics keep the file's own numbering.
@@ -134,13 +132,12 @@ type. The review removed 108 lines of casts, and each removal kept all 1057
 bodies exact:
 
 - Win32 handles. The menu, instance, window and DC handles were declared
-  `void*`, so every API call cast them back. All units now build with
-  `/DNO_STRICT` (`config/units.toml`), which makes VC6's handles `void*`. The
-  owners are typed `HMENU`, `HINSTANCE`, `HWND`, `HDC` and `HANDLE`, and the
-  61 casts are gone. Mangled names keep the `PAX` handles the claims already
-  used. The retail
-  data identities that had recorded the STRICT spelling (`hwndApp`, `hpalApp`,
-  `hdcImage`, the mouse cursor and bitmap tables) were renamed to match.
+  `void*`, so every API call cast them back. The owners are now typed `HMENU`,
+  `HINSTANCE`, `HWND`, `HDC` and `HANDLE` under VC6's default `STRICT` handle
+  types, and 60 casts are gone. Handle types only change mangling, so the
+  claimed names of the retyped globals and of the functions that take them
+  (`AppInit`, `AppWndProc`, `AppCommand`, the menu and paint functions) now use
+  the `STRICT` spelling, matching `hwndApp` and the other handle globals.
 - Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
   a `float` difference.
 - `CONST` enum values converted to `int` or a narrower integer. These enums are
@@ -154,6 +151,11 @@ The remaining casts are:
 - Narrowing stores and `i8` ternary arms whose byte width retail shows.
 - `char` to `u8` code-page comparisons.
 - Casts of strict-domain values, which are `enum class` in the Clang view.
+
+Retyping the owner was measured for the remaining narrowing casts on locals
+and failed. For example, declaring `CheckEndGame`'s player index `i8` instead
+of casting its seven `m_players` subscripts loses the function's exact match,
+because the loop and the other subscripts use the full `int`.
 
 **Verify-board text debt.** `homm1 verify board` ratchets several textual
 metrics, and their committed floors are 0:

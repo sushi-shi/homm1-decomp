@@ -1,6 +1,5 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # A guarded initializer may be a function-local static
 
@@ -14,9 +13,8 @@ int Next() {
 }
 ```
 
-The [recorded VC5 examples](https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/function-local-static-dynamic-init-guard.md)
-include multiple local statics using distinct bits of a shared guard.
-The `game RNG` (historical donor reference) is a concrete source example.
+Observed MSVC 5.0 examples include multiple local statics using distinct bits
+of a shared guard.
 
 Follow control flow and references to the initialized object. A read/OR/store
 without the conditional initialization path can simply update ordinary flags.

@@ -2,8 +2,7 @@
 #define HOMM1_BASE_LZHUF_INTERNAL_H
 
 // Bridge between the VC4 wrapper/encoder and the linked legacy decoder
-// members. Keep private declarations out of the implementation file so the
-// source-order annotations can follow retail layout.
+// members.
 extern "C" {
     void Decode();
     extern u8 d_code[256];

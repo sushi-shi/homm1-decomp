@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_ARMYGROUP_H
 #define HOMM1_SOURCE_ARMYGROUP_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 13 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -11,7 +9,7 @@
 class hero;
 class town;
 
-// Buka ArmyGroupConstant: Add's "any slot" argument, the five troop slots,
+// Add's "any slot" argument, the five troop slots,
 // IsHomogeneous' race table (creature / CREATURE_FACTION_SIZE: four town
 // races and the neutrals) and GetMorale's clamp.
 H1_ENUM_CONST_BEGIN(ArmyGroupConstant)
@@ -22,8 +20,8 @@ H1_ENUM_CONST_BEGIN(ArmyGroupConstant)
     ARMY_GROUP_MORALE_MAX = 3
 H1_ENUM_CONST_END(ArmyGroupConstant)
 
-// IsHomogeneous' morale modifier by the number of races in the group (Buka
-// ArmyGroupAlignmentResult, same numbering); two races give no modifier.
+// IsHomogeneous' morale modifier by the number of races in the group; two
+// races give no modifier.
 // Results above NO_BONUS_LAST are the one-race bonus (KB's morale help).
 H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_FIVE_OR_MORE = -3,
@@ -34,7 +32,7 @@ H1_ENUM_BEGIN(ArmyGroupAlignmentResult)
     ARMY_GROUP_ALIGNMENT_SAME = 1
 H1_ENUM_END(ArmyGroupAlignmentResult)
 
-// Empty every slot of an army group (Buka 2.1 armyGroup.h).
+// Empty every slot of an army group.
 #define CLEAR_ARMY_GROUP(group)                                                                    \
     (memset((group).m_creatureTypes, CREATURE_NONE, sizeof((group).m_creatureTypes)),              \
      memset((group).m_creatureCounts, 0, sizeof((group).m_creatureCounts)))
