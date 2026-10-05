@@ -385,7 +385,12 @@ extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;
-extern char gLastFilename[];
+// The last save name (Buka X_GLOBAL GLOBAL_LAST_FILENAME_SIZE): retail places
+// gbRetreatWin at its 0x15f-byte end.
+H1_ENUM_CONST_BEGIN(LastFilenameConstant)
+    GLOBAL_LAST_FILENAME_SIZE = 0x15f
+H1_ENUM_CONST_END(LastFilenameConstant)
+extern char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
 extern char gLastMapName[];
 extern char* gMapSizeNames[];
 extern char* gHeroScreen[];
