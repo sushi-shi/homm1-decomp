@@ -1,0 +1,135 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donors": [
+    {
+      "repository": "homm2/homm2-buka",
+      "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+      "use": "Artifact/army local names, direct ViewArmy Boolean argument, selected-strip-first comparisons, timer-first checks, compound weekday income."
+    },
+    {
+      "repository": "homm2/homm2-pol",
+      "revision": "09f089bed0d4f36b81d108162c8bf56393639d73",
+      "use": "NextPlayer scratch local inspected as secondary evidence; no donor local renaming retained there."
+    }
+  ],
+  "changes": {
+    "swapManager::SwapArtifacts": "Restore retail return when both selectedSide and targetSide equal SWAP_SIDE_NONE. The caller can reset both after showing an already-selected artifact, then still call SwapArtifacts. The early return avoids indexing the hero array with an unset side in that path. Recover donor selectedArtifact/targetArtifact names while retaining HoMM1 signed-byte artifacts and its six side-effect operations. Complete bytes and references are exact.",
+    "townManager::DoCommand": "Pass the no-dismissal condition directly to ViewArmy instead of storing it in single. Restore selected-strip-first and indexed-creature-first comparisons, index-first slot comparisons, and the donor oldValue local. Keep all HoMM1 merge/coalescing behavior. Complete bytes, switch table and references are exact.",
+    "CheckDoMain": "Read timer state before KBTickCount in comparisons; compare drawn cursor coordinates before current coordinates minus hotspots. Retain cursor refresh, PollSound, message processing, and drawing operations. Complete bytes and references are exact.",
+    "game::PerDay": "Restore compound weekday resource increment and day + elapsed weeks + elapsed months order for giCurTurn. Instructions and ordered references correspond; local placement remains non-exact.",
+    "game::NextPlayer": "Restore hero-coordinate-first campaign comparisons and this-player-first network-host comparison. Instructions and ordered references correspond; local placement remains non-exact."
+  },
+  "functions": [
+    {
+      "symbol": "?NextPlayer@game@@QAEXXZ",
+      "rva": "0x32f8c",
+      "candidate_instructions": 302,
+      "retail_instructions": 302,
+      "candidate_extent": 1312,
+      "retail_extent": 1312,
+      "slot_map": {
+        "-44": -44,
+        "-4": -8,
+        "-32": -12,
+        "-36": -36,
+        "-28": -4,
+        "-40": -40
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.94371,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "7d412972d6bbd717e1b8d6195f8485678f7fe3ab442d2a307cabfe1171b05683",
+      "retail_sha256": "89c85fad037e374445f08d3efd1220299c8d746c93e320c43847601199a792fd"
+    },
+    {
+      "symbol": "?PerDay@game@@QAEXXZ",
+      "rva": "0x336ce",
+      "candidate_instructions": 297,
+      "retail_instructions": 297,
+      "candidate_extent": 1230,
+      "retail_extent": 1230,
+      "slot_map": {
+        "-24": -24,
+        "-12": -8,
+        "-16": -12,
+        "-4": -20,
+        "-8": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.757576,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "8b5e59feb5311d68262f2e26e2a5003413c5cc2896e4dc2c622d52e1c794192a",
+      "retail_sha256": "0198901bc317050710b049054ea3c6684df4352cb554a708688c404b01224aa3"
+    },
+    {
+      "symbol": "?CheckDoMain@@YAXHH@Z",
+      "rva": "0x47aa1",
+      "candidate_instructions": 106,
+      "retail_instructions": 106,
+      "candidate_extent": 458,
+      "retail_extent": 458,
+      "slot_map": {
+        "-12": -12,
+        "-4": -4,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "cf6666fcc83464ef819cc148da748c539b47a4e9ee526e69b6247fb022ef1d1a",
+      "retail_sha256": "cf6666fcc83464ef819cc148da748c539b47a4e9ee526e69b6247fb022ef1d1a"
+    },
+    {
+      "symbol": "?SwapArtifacts@swapManager@@QAEXXZ",
+      "rva": "0x5de3b",
+      "candidate_instructions": 88,
+      "retail_instructions": 88,
+      "candidate_extent": 294,
+      "retail_extent": 294,
+      "slot_map": {
+        "-12": -12,
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "e4b5407bc4908b6e8c93a547ceedf4182f48c6ea5499d3fbd07bd612c58210a7",
+      "retail_sha256": "e4b5407bc4908b6e8c93a547ceedf4182f48c6ea5499d3fbd07bd612c58210a7"
+    },
+    {
+      "symbol": "?DoCommand@townManager@@QAEXC@Z",
+      "rva": "0x619b5",
+      "candidate_instructions": 371,
+      "retail_instructions": 371,
+      "candidate_extent": 1537,
+      "retail_extent": 1537,
+      "slot_map": {
+        "-20": -20,
+        "-24": -24,
+        "-28": -28,
+        "-12": -12,
+        "-32": -32,
+        "-16": -16,
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "2a5053f92bb16d8c2a2e8e9bfbad106c5f5bda979ee56a1365fdb5dc9f96b75c",
+      "retail_sha256": "2a5053f92bb16d8c2a2e8e9bfbad106c5f5bda979ee56a1365fdb5dc9f96b75c"
+    }
+  ],
+  "unretained_investigations": {
+    "CalcDifficultyRating": "Source unchanged. Retail contains local load/store operations on zero-bonus paths that the inherited empty branches omit; source reconstruction remains open. No zero-value additions or self assignments were inserted.",
+    "NextPlayer local names": "Preferred and secondary donor names were inspected; their predicted local placement does not reproduce the HoMM1 frame. No replacement was retained.",
+    "PerDay local names": "Preferred donor local names do not reproduce the HoMM1 frame. Numeric donor suffixes were not imported."
+  },
+  "source_sha256": {
+    "src/SOURCE/SWAPMGR.cpp": "819ce0adda27d7b22f430a72186c2bc7f4ad9e7b5a99280ab54bf5fcda884fe9",
+    "src/SOURCE/TOWNMGR.cpp": "ec790625f5e9d0079dfbfc91104945ea616b54bf8e1977194cc3d33434f5d80b",
+    "src/SOURCE/PHILAI.cpp": "51c3866cb20379d74b12a2cb27c171b9ac6f6920f73af2bb45ab6d08eb08a8b0",
+    "src/SOURCE/GAME.cpp": "6d7deccdbd6fc5e160e7e4ff60bf924ab53c7d36b399c92d51a397bfa0cf6419"
+  }
+}

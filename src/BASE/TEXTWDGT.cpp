@@ -38,9 +38,9 @@ textWidget::textWidget(
     : widget(x, y, width, height, id, kind) {
     m_font = gpResourceManager->GetFont(fontName);
     m_text = text;
+    m_color = color;
     m_alignment = FONT_ALIGN_CENTER;
     m_kind = WIDGET_KIND_TEXT;
-    m_color = color;
 }
 
 VA(0x0047186d, 0x12a)
@@ -58,9 +58,9 @@ void textWidget::Read(void) {
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_alignment = static_cast<char>(gpResourceManager->ReadWord());
+    m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
     m_id = gpResourceManager->ReadWord();
-    gpResourceManager->ReadWord();
+    m_kind = gpResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT;
 }
 
@@ -72,36 +72,14 @@ textWidget::~textWidget(void) {
 
 VA(0x00471a01, 0x238)
 i16 textWidget::Main(tag_message& message) {
-    // PoL 2.0 textWidget::Main caches the flags word in a local; retail
-    // keeps it in dx for the enable test and the select/deselect stores.
-    i16 flags = m_flags;
     i16 y;
     i16 x;
-    if (!(flags & WIDGET_FLAG_ENABLED)) {
+    if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
         return MESSAGE_DISPATCH_CONTINUE;
     }
     switch (message.type) {
-        case MESSAGE_LEFT_BUTTON_DOWN:
-        case MESSAGE_RIGHT_BUTTON_DOWN: {
-            x = message.x - m_owner->m_posX;
-            y = message.y - m_owner->m_posY;
-            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
-                m_flags |= WIDGET_FLAG_SELECTED;
-                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
-                return MESSAGE_DISPATCH_FORWARD;
-            }
-            return MESSAGE_DISPATCH_CONTINUE;
-        }
-        case MESSAGE_LEFT_BUTTON_UP:
-        case MESSAGE_RIGHT_BUTTON_UP:
-            if (m_flags & WIDGET_FLAG_SELECTED) {
-                m_flags &= ~WIDGET_FLAG_SELECTED;
-                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
-                return MESSAGE_DISPATCH_FORWARD;
-            }
-            return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_WIDGET:
             switch (message.command) {
                 case WIDGET_COMMAND_SET_TEXT:
@@ -112,12 +90,37 @@ i16 textWidget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_SET_COLOR:
                     if (message.id == m_id) {
-                        m_color = message.value;
+                        SetColorIndex(message.value);
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                     break;
             }
             break;
+        case MESSAGE_LEFT_BUTTON_DOWN:
+        case MESSAGE_RIGHT_BUTTON_DOWN: {
+            x = message.x - m_owner->m_posX;
+            y = message.y - m_owner->m_posY;
+            if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
+                m_flags |= WIDGET_FLAG_SELECTED;
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
+                // Retail tests the type after SET_WIDGET_MESSAGE replaces it.
+                if (message.type == MESSAGE_RIGHT_BUTTON_DOWN)
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
+        }
+        case MESSAGE_LEFT_BUTTON_UP:
+        case MESSAGE_RIGHT_BUTTON_UP:
+            if (m_flags & WIDGET_FLAG_SELECTED) {
+                m_flags &= ~WIDGET_FLAG_SELECTED;
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
+                // Retail tests the type after SET_WIDGET_MESSAGE replaces it.
+                if (message.type == MESSAGE_RIGHT_BUTTON_UP)
+                    message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
+                return MESSAGE_DISPATCH_FORWARD;
+            }
+            return MESSAGE_DISPATCH_CONTINUE;
     }
     return widget::Main(message);
 }
@@ -126,13 +129,18 @@ VA(0x00471c39, 0x66)
 void textWidget::Draw(void) {
     m_font->DrawBoundedString(
         m_text,
-        m_x + m_owner->m_posX,
-        m_y + m_owner->m_posY,
+        m_owner->m_posX + m_x,
+        m_owner->m_posY + m_y,
         m_width,
         m_height,
         m_color,
         m_alignment
     );
+}
+
+VA(0x00471c9f, 0x18)
+void textWidget::SetColorIndex(i16 color) {
+    m_color = color;
 }
 
 VA(0x00471cb7, 0xa1)

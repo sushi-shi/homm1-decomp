@@ -264,7 +264,8 @@ i16 HandleViewGeneral(tag_message& message) {
         }
     }
     if (retVal) {
-        message.command = message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.id = WIDGET_COMMAND_DIALOG_SELECT;
+        message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;
@@ -274,36 +275,36 @@ i16 HandleViewGeneral(tag_message& message) {
 // and clamped to the screen.
 VA(0x00466595, 0x135)
 void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
-    i16 xPos;
-    i16 yPos;
-    i16 wndWidth;
-    i16 viewXOffset;
-    i16 xAdjust;
-    i16 viewYOffset;
-    i16 height;
+    i16 xWnd;
+    i16 viewYOffsetConst;
+    i16 yWindow;
+    i16 xDelta;
+    i16 viewXOffsetFixed;
+    i16 viewWidthConstant;
+    i16 viewHeightConstant;
 
     if (viewedArmy == NULL)
         return;
-    wndWidth = 488 - 86;
-    height = 229;
-    viewXOffset = 86;
-    viewYOffset = 164;
-    xPos = m_hexCells[viewedArmy->m_hex].m_x;
-    yPos = m_hexCells[viewedArmy->m_hex].m_y;
-    xAdjust = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
-    xPos -= xAdjust;
-    if (xPos < 0)
-        xPos = 0;
-    if (xPos + 488 > LOGICAL_SCREEN_WIDTH)
-        xPos = 151;
-    yPos -= 164;
-    if (yPos < 0)
-        yPos = 0;
-    if (yPos + 229 > COMBAT_VIEW_HEIGHT)
-        yPos = 230;
+    viewWidthConstant = 488 - 86;
+    viewHeightConstant = 229;
+    viewXOffsetFixed = 86;
+    viewYOffsetConst = 164;
+    xWnd = m_hexCells[viewedArmy->m_hex].m_x;
+    yWindow = m_hexCells[viewedArmy->m_hex].m_y;
+    xDelta = (viewedArmy->m_facing == ARMY_FACING_LEFT ? 43 : 0) + 80;
+    xWnd -= xDelta;
+    if (xWnd < 0)
+        xWnd = 0;
+    if (xWnd + 488 > LOGICAL_SCREEN_WIDTH)
+        xWnd = 151;
+    yWindow -= 164;
+    if (yWindow < 0)
+        yWindow = 0;
+    if (yWindow + 229 > COMBAT_VIEW_HEIGHT)
+        yWindow = 230;
     gpGame->ViewArmy(
-        xPos,
-        yPos,
+        xWnd,
+        yWindow,
         viewedArmy->m_creatureType,
         viewedArmy->m_quantity,
         m_combatTowns[side],

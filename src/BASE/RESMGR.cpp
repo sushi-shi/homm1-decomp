@@ -56,22 +56,18 @@ void resourceManager::GetBackdropAtLoc(
     i32 destinationY
 ) {
     i32 curRow;
-    {
-        i16 imageHeight;
-        {
-            i16 width;
-            PointToFile(MakeId(filename));
-            ReadWord();
-            width = ReadWord();
-            imageHeight = ReadWord();
-            for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
-                ReadBlock(
-                    destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
-                        + destinationX,
-                    width
-                );
-            }
-        }
+    i16 imageHeight;
+    i16 width;
+    PointToFile(MakeId(filename));
+    ReadWord();
+    width = ReadWord();
+    imageHeight = ReadWord();
+    for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
+        ReadBlock(
+            destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
+                + destinationX,
+            width
+        );
     }
 }
 
@@ -79,13 +75,13 @@ void resourceManager::GetBackdropAtLoc(
 // 16-bit MakeId/Query pair and the derived constructors identify each member.
 VA(0x0046c25b, 0xc0)
 palette* resourceManager::GetPalette(char* name) {
-    i16 fileId = MakeId(name);
-    resource* resourceEntry = Query(fileId);
+    i16 id = MakeId(name);
+    resource* resourceEntry = Query(id);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<palette*>(resourceEntry);
     } else {
-        resourceEntry = new palette(fileId);
+        resourceEntry = new palette(id);
         AddResource(resourceEntry);
         return static_cast<palette*>(resourceEntry);
     }
@@ -128,13 +124,13 @@ icon* resourceManager::GetIcon(i16 fileId) {
 
 VA(0x0046c4b7, 0xc0)
 tileset* resourceManager::GetTileset(char* name) {
-    i16 fileId = MakeId(name);
-    resource* resourceEntry = Query(fileId);
+    i16 id = MakeId(name);
+    resource* resourceEntry = Query(id);
     if (resourceEntry != NULL) {
         resourceEntry->m_refCount++;
         return static_cast<tileset*>(resourceEntry);
     } else {
-        resourceEntry = new tileset(fileId);
+        resourceEntry = new tileset(id);
         AddResource(resourceEntry);
         return static_cast<tileset*>(resourceEntry);
     }
@@ -205,14 +201,13 @@ void resourceManager::AddResource(class resource* newResource) {
 VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
     m_expunging = 1;
-    resource* cursor[2];
-    cursor[1] = m_resourceListHead;
-    cursor[0] = NULL;
-    while (cursor[1] != NULL) {
-        cursor[0] = cursor[1]->m_next;
-        RemoveResource(cursor[1]);
-        delete cursor[1];
-        cursor[1] = cursor[0];
+    resource* cur = m_resourceListHead;
+    resource* next = NULL;
+    while (cur != NULL) {
+        next = cur->m_next;
+        RemoveResource(cur);
+        delete cur;
+        cur = next;
     }
     m_expunging = 0;
 }

@@ -207,7 +207,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
             case SPELL_TURN_UNDEAD:
                 if (target->m_creatureType == CREATURE_GHOST)
                     spellEffect =
-                        gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
+                        target->m_quantity * gMonsterDatabase[target->m_creatureType].fightValue;
                 else
                     spellEffect = 0;
                 break;
@@ -215,7 +215,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
                 *bestEffect = 0;
                 return;
         }
-        if (*bestEffect < spellEffect) {
+        if (spellEffect > *bestEffect) {
             *bestEffect = spellEffect;
             *bestHex = curHex;
         }
@@ -240,32 +240,31 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
 // fight value.
 VA(0x004593a3, 0x246)
 i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
-    i32 stackValue;
+    i32 worth;
     i32 effect;
 
     effect = 0;
-    stackValue = gMonsterDatabase[target->m_creatureType].fightValue * target->m_quantity;
+    worth = target->m_quantity * gMonsterDatabase[target->m_creatureType].fightValue;
     switch (spell) {
         case SPELL_SLOW:
             if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 effect = 0;
             else if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
-                effect = stackValue * SPELL_AI_SLOW_MODIFIER * 3.0f;
+                effect = worth * SPELL_AI_SLOW_MODIFIER * 3.0f;
             else
-                effect = (target->m_stats.speed - 1) * static_cast<float>(stackValue)
-                         * SPELL_AI_SLOW_MODIFIER;
+                effect = worth * SPELL_AI_SLOW_MODIFIER * (target->m_stats.speed - 1);
             break;
         case SPELL_BLIND:
-            effect = stackValue * SPELL_AI_BLIND_MODIFIER;
+            effect = worth * SPELL_AI_BLIND_MODIFIER;
             break;
         case SPELL_CURSE:
-            effect = stackValue * SPELL_AI_CURSE_MODIFIER;
+            effect = worth * SPELL_AI_CURSE_MODIFIER;
             break;
         case SPELL_BERZERKER:
-            effect = stackValue * SPELL_AI_PARALYZE_MODIFIER;
+            effect = worth * SPELL_AI_PARALYZE_MODIFIER;
             break;
         case SPELL_PARALYZE:
-            effect = stackValue * SPELL_AI_BERSERK_MODIFIER;
+            effect = worth * SPELL_AI_BERSERK_MODIFIER;
             break;
         case SPELL_HASTE:
             if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
@@ -273,20 +272,20 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
             else if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 effect = 0;
             else if (target->m_stats.speed < CREATURE_SPEED_SLOW_END)
-                effect = stackValue * SPELL_AI_HASTE_MODIFIER;
+                effect = worth * SPELL_AI_HASTE_MODIFIER;
             else if (target->m_stats.speed < CREATURE_SPEED_MEDIUM_END)
-                effect = stackValue * SPELL_AI_HASTE_MODIFIER / 2.0f;
+                effect = worth * SPELL_AI_HASTE_MODIFIER / 2.0f;
             else
                 effect = 0;
             break;
         case SPELL_BLESS:
-            effect = stackValue * SPELL_AI_BLESS_MODIFIER;
+            effect = worth * SPELL_AI_BLESS_MODIFIER;
             break;
         case SPELL_PROTECTION:
-            effect = stackValue * SPELL_AI_STONESKIN_MODIFIER;
+            effect = worth * SPELL_AI_STONESKIN_MODIFIER;
             break;
         case SPELL_ANTI_MAGIC:
-            effect = stackValue * SPELL_AI_SHIELD_MODIFIER;
+            effect = worth * SPELL_AI_SHIELD_MODIFIER;
             break;
         default:
             effect = 0;
@@ -303,10 +302,10 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
 VA(0x004595e9, 0x52)
 void combatManager::ClearEffects(void) {
     i32 side;
-    i32 index;
+    i32 idx;
     for (side = 0; side < COMBAT_SIDE_COUNT; ++side) {
-        for (index = 0; index < ARMY_GROUP_SLOT_COUNT; ++index)
-            gArmyEffected[side][index] = 0;
+        for (idx = 0; idx < ARMY_GROUP_SLOT_COUNT; ++idx)
+            gArmyEffected[side][idx] = 0;
     }
 }
 
@@ -360,7 +359,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
             if (m_armies[curSide][index].IsAlive()) {
                 armyPtr = &m_armies[curSide][index];
                 fightValue =
-                    gMonsterDatabase[armyPtr->m_creatureType].fightValue * armyPtr->m_quantity;
+                    armyPtr->m_quantity * gMonsterDatabase[armyPtr->m_creatureType].fightValue;
                 switch (armyPtr->m_spellEffect) {
                     case SPELL_SLOW:
                     case SPELL_BLIND:
@@ -381,13 +380,13 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
         if (cure == 1)
             posEffect = 0;
         if (targetSide == COMBAT_SIDE_ANY) {
-            if (m_currentSide == curSide)
+            if (curSide == m_currentSide)
                 *effect += negEffect - posEffect;
             else
                 *effect += posEffect - negEffect;
         } else
             *effect += negEffect;
-        if (targetSide == COMBAT_SIDE_ANY && m_currentSide == curSide)
+        if (targetSide == COMBAT_SIDE_ANY && curSide == m_currentSide)
             curSide = 1 - m_currentSide;
         else
             finished = 1;
@@ -398,21 +397,21 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
 // the stack on hex.
 VA(0x004598ea, 0xd4)
 void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
-    army* targetArmy;
+    army* target;
     i32 resurrectPower;
-    i32 num;
+    i32 count;
 
-    targetArmy = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (targetArmy->m_creatureType == CREATURE_DRAGON
-        || targetArmy->m_spellEffect == SPELL_ANTI_MAGIC) {
+    target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
+    if (target->m_creatureType == CREATURE_DRAGON
+        || target->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }
-    num = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
-          / targetArmy->m_stats.hitPoints;
-    if (targetArmy->m_quantity + num > targetArmy->m_initialQuantity)
-        num = targetArmy->m_initialQuantity - targetArmy->m_quantity;
-    *effect = gMonsterDatabase[targetArmy->m_creatureType].fightValue * num;
+    count = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
+          / target->m_stats.hitPoints;
+    if (count + target->m_quantity > target->m_initialQuantity)
+        count = target->m_initialQuantity - target->m_quantity;
+    *effect = count * gMonsterDatabase[target->m_creatureType].fightValue;
 }
 
 // Buka SPELLAI.cpp:1183-1525: the net fight value a damage spell destroys,
@@ -490,7 +489,7 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                         extra -=
                             targetCreature->m_stats.hitPoints - targetCreature->m_hitPointsLost;
                     }
-                    if (targetCreature->m_quantity <= killed) {
+                    if (killed >= targetCreature->m_quantity) {
                         killed = targetCreature->m_quantity;
                         extra = 0;
                         stacksKilled[m_hexCells[cell].m_occupantSide]++;
@@ -500,8 +499,8 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                         * gMonsterDatabase[targetCreature->m_creatureType].fightValue
                         / targetCreature->m_stats.hitPoints;
                     combatValue[m_hexCells[cell].m_occupantSide] +=
-                        gMonsterDatabase[targetCreature->m_creatureType].fightValue
-                        * targetCreature->m_stats.hitPoints * killed
+                        killed * targetCreature->m_stats.hitPoints
+                        * gMonsterDatabase[targetCreature->m_creatureType].fightValue
                         / targetCreature->m_stats.hitPoints;
                 }
             }

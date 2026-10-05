@@ -74,29 +74,29 @@ i8 armyGroup::IsMember(i8 creatureType) {
 // Buka 2.1 IsHomogeneous; HoMM1 races are six consecutive creature ids.
 VA(0x00418676, 0x13e)
 H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
-    i32 numTypes = 0;
-    i8 raceSeen[ARMY_GROUP_RACE_COUNT];
-    raceSeen[0] = raceSeen[1] = raceSeen[2] = raceSeen[3] = raceSeen[4] = 0;
-    i32 previous = -1;
+    i32 numCreatureTypes = 0;
+    i8 raceUsed[ARMY_GROUP_RACE_COUNT];
+    raceUsed[0] = raceUsed[1] = raceUsed[2] = raceUsed[3] = raceUsed[4] = 0;
+    i32 prev = -1;
     i32 numRaces;
     i16 i;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
             if (countRaces == ARMY_GROUP_EMPTY_SLOT)
-                ++raceSeen[m_creatureTypes[i] / CREATURE_FACTION_SIZE];
-            if (m_creatureTypes[i] != previous) {
-                ++numTypes;
-                previous = m_creatureTypes[i];
+                ++raceUsed[m_creatureTypes[i] / CREATURE_FACTION_SIZE];
+            if (m_creatureTypes[i] != prev) {
+                ++numCreatureTypes;
+                prev = m_creatureTypes[i];
             }
         }
     }
 
-    if (numTypes <= 1)
+    if (numCreatureTypes <= 1)
         return ARMY_GROUP_ALIGNMENT_NO_MODIFIER;
 
     numRaces = 0;
     for (i = 0; i < ARMY_GROUP_RACE_COUNT; ++i) {
-        if (raceSeen[i])
+        if (raceUsed[i])
             ++numRaces;
     }
 
@@ -175,16 +175,16 @@ void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
 VA(0x004189b6, 0x133)
 void armyGroup::DamageGroup(float damagePercent) {
     i32 killed;
-    i32 chance = static_cast<i32>(damagePercent * 100.0f);
-    i32 isFirstTroop = 1;
+    i32 killChance = static_cast<i32>(damagePercent * 100.0f);
     i32 i;
+    i32 isFirstTroop = 1;
     i32 j;
 
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
             killed = 0;
             for (j = 0; j < m_creatureCounts[i]; ++j) {
-                if (SRandom(0, 100) < chance)
+                if (SRandom(0, 100) < killChance)
                     ++killed;
             }
             if (isFirstTroop && killed == m_creatureCounts[i] && damagePercent < 0.999)

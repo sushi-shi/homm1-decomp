@@ -100,39 +100,39 @@ void executive::ShutDownSystem(void) {
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
 VA(0x00472b98, 0x189)
 i16 executive::DoDialog(baseManager* manager) {
-    baseManager* savedPreviousManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    i32 index;
-    baseManager* savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    baseManager* savedNextManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    baseManager* currentManager;
-    executive dialogExecutive;
+    baseManager* savePrev[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    i32 idx;
+    baseManager* p;
+    baseManager* saveMgr[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    baseManager* saveNext[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    executive ex;
     i32 count = 0;
-    currentManager = m_managerListHead;
-    while (currentManager != NULL) {
-        savedManagers[count] = currentManager;
-        savedPreviousManagers[count] = currentManager->m_prev;
-        savedNextManagers[count] = currentManager->m_next;
-        currentManager = currentManager->m_next;
+    p = m_managerListHead;
+    while (p != NULL) {
+        saveMgr[count] = p;
+        savePrev[count] = p->m_prev;
+        saveNext[count] = p->m_next;
+        p = p->m_next;
         count++;
     }
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (dialogExecutive.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+    if (ex.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (dialogExecutive.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+    if (ex.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (dialogExecutive.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
         != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
-    dialogExecutive.MainLoop();
+    ex.MainLoop();
     RemoveManager(manager);
-    for (index = 0; index < count; index++) {
-        savedManagers[index]->m_prev = savedPreviousManagers[index];
-        savedManagers[index]->m_next = savedNextManagers[index];
+    for (idx = 0; idx < count; idx++) {
+        saveMgr[idx]->m_prev = savePrev[idx];
+        saveMgr[idx]->m_next = saveNext[idx];
     }
-    return dialogExecutive.m_result;
+    return ex.m_result;
 }
 
 VA(0x00472d21, 0x149)
@@ -179,7 +179,7 @@ void executive::RemoveManager(baseManager* manager) {
     manager->Close();
     baseManager* previous = manager->m_prev;
     if (previous == NULL) {
-        if (m_managerListTail == m_managerListHead) {
+        if (m_managerListHead == m_managerListTail) {
             m_managerListTail = NULL;
             m_managerListHead = NULL;
         } else {
@@ -202,7 +202,7 @@ void executive::RemoveManager(baseManager* manager) {
 VA(0x00472f2d, 0x88)
 void executive::CallManager(baseManager* manager) {
     baseManager* saved = m_activeManager;
-    RemoveManager(saved);
+    RemoveManager(m_activeManager);
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gCallManagerError1);
     MainLoop();

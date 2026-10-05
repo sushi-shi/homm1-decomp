@@ -364,7 +364,9 @@ void army::Wince(void) {
     m_animationFrame = 2;
     m_walkYStep = 0;
     gpCombatManager->UpdateGrid(m_hex, m_stats.attributes);
-    gpCombatManager->SetGridMode(m_facing != ARMY_FACING_RIGHT);
+    gpCombatManager->SetGridMode(
+        m_facing != ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
+    );
 }
 
 // One hex of walking: six frames redrawn inside the union of the old and
@@ -620,7 +622,9 @@ void army::SpecialAttack(void) {
         m_facing = ARMY_FACING_RIGHT;
     else
         m_facing = ARMY_FACING_LEFT;
-    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_RIGHT);
+    gpCombatManager->SetGridMode(
+        m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
+    );
     CheckLuck();
     m_animationSequence = ARMY_ANIMATION_ATTACK;
     PlaySample(m_samples[ARMY_SAMPLE_SHOOT]);
@@ -631,10 +635,7 @@ void army::SpecialAttack(void) {
     }
     targetHexCol = tgtCol;
     if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-        if (target->m_facing == ARMY_FACING_LEFT)
-            targetHexCol--;
-        else
-            targetHexCol++;
+        targetHexCol += target->m_facing == ARMY_FACING_LEFT ? -1 : 1;
     }
     dx = targetHexCol - srcCol;
     faceLeft = ICON_DRAW_NORMAL;
@@ -645,12 +646,12 @@ void army::SpecialAttack(void) {
     dy = targetRow - myRow;
     if (dy < 0)
         dy = -dy;
-    steps = __max(dy, dx);
+    steps = __max(dx, dy);
     arrowFrame = 7;
     pitchSign = 0;
-    if (targetRow < myRow)
+    if (myRow > targetRow)
         pitchSign = -1;
-    else if (targetRow > myRow)
+    else if (myRow < targetRow)
         pitchSign = 1;
     if (dy > 1)
         arrowFrame += pitchSign;
@@ -677,14 +678,14 @@ void army::SpecialAttack(void) {
         yStep = 0;
     else
         yStep = (destY - startY) / (steps * 2);
-    firstX = xStep + startX;
-    xEnd = destX - xStep * steps * 2;
+    firstX = startX + xStep;
+    xEnd = destX - steps * 2 * xStep;
     offX = (firstX + xEnd) / 2 - firstX;
-    y0 = yStep + startY;
-    y2 = destY - steps * yStep * 2;
+    y0 = startY + yStep;
+    y2 = destY - steps * 2 * yStep;
     offY = (y0 + y2) / 2 - y0;
-    posX = offX + startX;
-    posY = offY + startY;
+    posX = startX + offX;
+    posY = startY + offY;
     iMaxX = 0;
     minX = LOGICAL_SCREEN_WIDTH - 1;
     maxY = 0;
@@ -759,7 +760,7 @@ void army::SpecialAttack(void) {
         wallDist = COMBAT_CASTLE_WALL_COLUMN - sCol;
         hitRow = targetR;
         if (abs(targetR - myR) >= 2)
-            hitRow -= -(-((targetR - myR) / 2));
+            hitRow -= (targetR - myR) / 2;
         if (abs(targetR - myR) % 2 == 1) {
             if (colDist < wallDist || colDist == wallDist && (myR == 1 || myR == 3)) {
                 if (myR < targetR)
@@ -772,15 +773,11 @@ void army::SpecialAttack(void) {
             hitRow = COMBAT_GRID_LAST_ROW;
         if (hitRow < 0)
             hitRow = 0;
-        if (gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
-                    .m_obstacleIndex
-                == COMBAT_WALL_DAMAGED
+        inCastle =
+            gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
+                    .m_obstacleIndex == COMBAT_WALL_DAMAGED
             || gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
-                       .m_obstacleIndex
-                   == COMBAT_WALL_INTACT)
-            inCastle = 1;
-        else
-            inCastle = 0;
+                    .m_obstacleIndex == COMBAT_WALL_INTACT;
     }
     DamageEnemy(target, &dmg, &killCount, 1, inCastle ? ARMY_CASTLE_WALL_DEFENSE_BONUS : 0);
     if (killCount > 0) {
@@ -1027,7 +1024,9 @@ void army::DoAttack(i32 retaliation) {
         frameBase = 8;
     else
         frameBase = 7;
-    gpCombatManager->SetGridMode(m_facing == ARMY_FACING_RIGHT);
+    gpCombatManager->SetGridMode(
+        m_facing == ARMY_FACING_RIGHT ? static_cast<i8>(1) : static_cast<i8>(0)
+    );
     CheckLuck();
     newHex = m_hex;
     if ((m_stats.attributes & MONSTER_FLAGS_WIDE)
@@ -1257,17 +1256,15 @@ void army::DoAttack(i32 retaliation) {
 
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
-                    static_cast<i8>(
-                        target->m_facing ? COMBAT_DIRECTION_NORTHWEST : COMBAT_DIRECTION_NORTHEAST
-                    )
+                    target->m_facing ? static_cast<i8>(COMBAT_DIRECTION_NORTHWEST)
+                                     : static_cast<i8>(COMBAT_DIRECTION_NORTHEAST)
                 );
                 if (checkHex == m_hex)
                     target->m_attackDirection = COMBAT_DIRECTION_WIDE_WEST;
                 checkHex = GetAdjacentCellIndex(
                     target->m_hex,
-                    static_cast<i8>(
-                        target->m_facing ? COMBAT_DIRECTION_SOUTHWEST : COMBAT_DIRECTION_SOUTHEAST
-                    )
+                    target->m_facing ? static_cast<i8>(COMBAT_DIRECTION_SOUTHWEST)
+                                     : static_cast<i8>(COMBAT_DIRECTION_SOUTHEAST)
                 );
                 if (checkHex == m_hex)
                     target->m_attackDirection = COMBAT_DIRECTION_WIDE_EAST;
@@ -1491,32 +1488,32 @@ void army::DamageEnemy(
 // A stack whose spell (2) breaks on damage loses it.
 VA(0x00417391, 0x160)
 i32 army::Damage(i32 damage) {
-    i8 facing;
-    i32 minKilled;
-    i32 kills;
+    i8 oldFacing;
+    i32 quantityFifth;
+    i32 killed;
 
     damage += m_hitPointsLost;
-    kills = damage / m_stats.hitPoints;
+    killed = damage / m_stats.hitPoints;
     m_hitPointsLost = damage % m_stats.hitPoints;
-    minKilled = m_quantity / 5;
-    if (minKilled == 0)
-        minKilled = 1;
-    if (kills > 0)
+    quantityFifth = m_quantity / 5;
+    if (quantityFifth == 0)
+        quantityFifth = 1;
+    if (killed > 0)
         m_powFrames = ARMY_POW_FRAMES_HIT;
     else
         m_powFrames = ARMY_POW_NONE;
-    if (kills > m_quantity)
-        kills = m_quantity;
-    m_quantity -= kills;
+    if (killed > m_quantity)
+        killed = m_quantity;
+    m_quantity -= killed;
     if (m_quantity <= 0)
         m_powFrames = ARMY_POW_FRAMES_KILLED;
-    facing = m_facing;
+    oldFacing = m_facing;
     m_facing = gpCombatManager
                    ->m_armies[gpCombatManager->m_currentSide][gpCombatManager->m_currentArmyIndex]
                    .m_facing
                ^ 1;
     Wince();
-    m_facing = facing;
+    m_facing = oldFacing;
     gpCombatManager->DrawFrame(1);
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_DAMAGE) {
         m_stats.attributes |= MONSTER_FLAGS_TURN_SPENT;
@@ -1524,7 +1521,7 @@ i32 army::Damage(i32 damage) {
             m_stats.attributes |= MONSTER_FLAGS_RETALIATED;
         CancelSpell();
     }
-    return kills;
+    return killed;
 }
 
 // Plays the impact effect on every stack hit this attack (m_powFrames),

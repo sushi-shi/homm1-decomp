@@ -1,0 +1,326 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "use": "Separate wide-direction bits, absent redundant fizzle-sample initialization, compound window-state OR, text-widget member order, orientation mask, head-first manager comparison, and current-hero-first comparison. HoMM1-specific flow and data widths remain authoritative."
+  },
+  "changes": {
+    "combatManager::CheckChangeSelector": "Restore the less-than form of the minimum-hex conditional and its corresponding arms. Complete body and references are exact.",
+    "advManager::FizzleCenter": "Remove the redundant NULL store immediately overwritten by LoadPlaySample. Sound loading and waiting remain intact; complete body and references are exact.",
+    "playerData::NextHero": "Compare current hero before the indexed hero ID. Complete body and references are exact.",
+    "townManager::DoTavern": "Remove unusedValue and its zero initialization: neither the store nor its local slot exists in retail. Keep window, dialog and music operations intact. Complete body and references are exact.",
+    "heroWindow::Open": "Use compound OR for the narrow state member, removing the inherited promoted load and cast-back assignment. Complete body and references are exact.",
+    "heroWindow::RemoveWidget": "Clear the list tail directly after clearing the head, instead of reloading the head to copy it. The existing HoMM1 unlink behavior is preserved; complete body and references are exact.",
+    "iconWidget::Read": "Restore the explicit 0xff orientation mask before byte storage, using the donor ORIENTATION_MASK name. Complete body and references are exact.",
+    "textWidget constructor": "Store color before alignment and widget kind. All initialization values remain unchanged; complete body and references are exact.",
+    "executive::RemoveManager": "Compare manager-list head before tail. Complete body and references are exact.",
+    "army::GetMoveMask": "Restore the separate west/east wide-direction bit expressions instead of a combined constant. Complete instructions and ordered references correspond; local placement remains non-exact.",
+    "philAI::BuildCreature": "Restore purchase-count-first resource multiplication. Complete instructions and ordered references correspond; local placement remains non-exact."
+  },
+  "functions": [
+    {
+      "symbol": "?CheckChangeSelector@combatManager@@QAEXXZ",
+      "rva": "0x20cd1",
+      "candidate_instructions": 54,
+      "retail_instructions": 54,
+      "candidate_extent": 187,
+      "retail_extent": 187,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4,
+        "-9": -9
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "b39a9aebcbe3483186e64a784d33c8eb677de0d73805ec82a89f17ce00b746ac",
+      "retail_sha256": "b39a9aebcbe3483186e64a784d33c8eb677de0d73805ec82a89f17ce00b746ac"
+    },
+    {
+      "symbol": "?FizzleCenter@advManager@@QAEXH@Z",
+      "rva": "0x27c1b",
+      "candidate_instructions": 57,
+      "retail_instructions": 57,
+      "candidate_extent": 194,
+      "retail_extent": 194,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "437b104c1614fd12572e84207414f07787c00d0acb7d0d618fa585374e9a8814",
+      "retail_sha256": "437b104c1614fd12572e84207414f07787c00d0acb7d0d618fa585374e9a8814"
+    },
+    {
+      "symbol": "?NextHero@playerData@@QAECH@Z",
+      "rva": "0x2b7d3",
+      "candidate_instructions": 80,
+      "retail_instructions": 80,
+      "candidate_extent": 256,
+      "retail_extent": 256,
+      "slot_map": {
+        "-12": -12,
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "2c1414303d243ef9238e39bd5d4619f5b465afdd8fe5bc4bea41165cac6dfcb4",
+      "retail_sha256": "2c1414303d243ef9238e39bd5d4619f5b465afdd8fe5bc4bea41165cac6dfcb4"
+    },
+    {
+      "symbol": "?GetMoveMask@army@@QAEFF@Z",
+      "rva": "0x465f4",
+      "candidate_instructions": 36,
+      "retail_instructions": 36,
+      "candidate_extent": 114,
+      "retail_extent": 114,
+      "slot_map": {
+        "-16": -16,
+        "-12": -4,
+        "-8": -12,
+        "-4": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.638885,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "e6e6c9c1c30e2ee2355501c986a7c8c410be209c6ed472bcdef1e33d63406f4e",
+      "retail_sha256": "8d4838c9664727f4df55d8803a35fa4ae781770bb2b1c0c99d5cce642e53acc7"
+    },
+    {
+      "symbol": "?BuildCreature@philAI@@QAEXPAVtown@@HH@Z",
+      "rva": "0x4e6d0",
+      "candidate_instructions": 53,
+      "retail_instructions": 53,
+      "candidate_extent": 173,
+      "retail_extent": 173,
+      "slot_map": {
+        "-40": -40,
+        "-36": -32,
+        "-32": -28,
+        "-4": -36
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.77358,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "0e3c2d0ec45feb5e0cc3be396d6d8463922aedcb8ff93b215c77b4598f67cb14",
+      "retail_sha256": "26fd67f965f403e2f0160d9893df1f06f8e1dc9395d5f8adb11bfce5c5973003"
+    },
+    {
+      "symbol": "?DoTavern@townManager@@QAEXXZ",
+      "rva": "0x6549b",
+      "candidate_instructions": 70,
+      "retail_instructions": 70,
+      "candidate_extent": 255,
+      "retail_extent": 255,
+      "slot_map": {
+        "-28": -28,
+        "-20": -20,
+        "-4": -4,
+        "-32": -32,
+        "-16": -16,
+        "-24": -24,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "2b73061dbb4158c69ce2f12f5f8125f5cccfec29a95eb239efaf370e6a6271cc",
+      "retail_sha256": "2b73061dbb4158c69ce2f12f5f8125f5cccfec29a95eb239efaf370e6a6271cc"
+    },
+    {
+      "symbol": "?Open@heroWindow@@QAEFFC@Z",
+      "rva": "0x6d6f0",
+      "candidate_instructions": 43,
+      "retail_instructions": 43,
+      "candidate_extent": 133,
+      "retail_extent": 133,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "765b4d91be4177cb623674c2a0d0474711ae8e27828d170a25f2cca8e9bd212e",
+      "retail_sha256": "765b4d91be4177cb623674c2a0d0474711ae8e27828d170a25f2cca8e9bd212e"
+    },
+    {
+      "symbol": "?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z",
+      "rva": "0x6d92a",
+      "candidate_instructions": 73,
+      "retail_instructions": 73,
+      "candidate_extent": 231,
+      "retail_extent": 231,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "93d68ceddfe0de1dea9a7ddcfe65cb35f5982444e7ed40efe504b4b5fab79412",
+      "retail_sha256": "93d68ceddfe0de1dea9a7ddcfe65cb35f5982444e7ed40efe504b4b5fab79412"
+    },
+    {
+      "symbol": "?Read@iconWidget@@QAEXXZ",
+      "rva": "0x6e041",
+      "candidate_instructions": 61,
+      "retail_instructions": 61,
+      "candidate_extent": 249,
+      "retail_extent": 249,
+      "slot_map": {
+        "-20": -20,
+        "-16": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "f240db3e7a88daa904d0db80e522cdc1ef9b4c8b726a499fa3b38f34bf8e73e3",
+      "retail_sha256": "f240db3e7a88daa904d0db80e522cdc1ef9b4c8b726a499fa3b38f34bf8e73e3"
+    },
+    {
+      "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+      "rva": "0x717c8",
+      "candidate_instructions": 49,
+      "retail_instructions": 49,
+      "candidate_extent": 165,
+      "retail_extent": 165,
+      "slot_map": {
+        "-16": -16,
+        "-4": -4,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "de6b1c005680fd45309e71321c27ae598329f77d935d3a2a28744725f320063e",
+      "retail_sha256": "de6b1c005680fd45309e71321c27ae598329f77d935d3a2a28744725f320063e"
+    },
+    {
+      "symbol": "?RemoveManager@executive@@QAEXPAVbaseManager@@@Z",
+      "rva": "0x72e6a",
+      "candidate_instructions": 60,
+      "retail_instructions": 60,
+      "candidate_extent": 195,
+      "retail_extent": 195,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "595f5f368a9ccf4097b8005915ed54bb312e8bfc9327755b86b92913709a25e6",
+      "retail_sha256": "595f5f368a9ccf4097b8005915ed54bb312e8bfc9327755b86b92913709a25e6"
+    }
+  ],
+  "whole_project_score_changes": [
+    {
+      "rva": "0x20cd1",
+      "symbol": "?CheckChangeSelector@combatManager@@QAEXXZ",
+      "before": 98.81481,
+      "after": 100.0
+    },
+    {
+      "rva": "0x23ae5",
+      "symbol": "?UpdateCombatArea@combatManager@@QAEXXZ",
+      "before": 99.82353,
+      "after": 99.78432
+    },
+    {
+      "rva": "0x2706d",
+      "symbol": "?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z",
+      "before": 99.8421,
+      "after": 100.0
+    },
+    {
+      "rva": "0x27c1b",
+      "symbol": "?FizzleCenter@advManager@@QAEXH@Z",
+      "before": 98.24561,
+      "after": 100.0
+    },
+    {
+      "rva": "0x2b7d3",
+      "symbol": "?NextHero@playerData@@QAECH@Z",
+      "before": 97.475,
+      "after": 100.0
+    },
+    {
+      "rva": "0x391d3",
+      "symbol": "?GetNumSpells@hero@@QAEFC@Z",
+      "before": 99.7377,
+      "after": 99.7541
+    },
+    {
+      "rva": "0x465f4",
+      "symbol": "?GetMoveMask@army@@QAEFF@Z",
+      "before": 96.833336,
+      "after": 99.638885
+    },
+    {
+      "rva": "0x4e6d0",
+      "symbol": "?BuildCreature@philAI@@QAEXPAVtown@@HH@Z",
+      "before": 97.528305,
+      "after": 99.77358
+    },
+    {
+      "rva": "0x6549b",
+      "symbol": "?DoTavern@townManager@@QAEXXZ",
+      "before": 98.314285,
+      "after": 100.0
+    },
+    {
+      "rva": "0x6d6f0",
+      "symbol": "?Open@heroWindow@@QAEFFC@Z",
+      "before": 98.60465,
+      "after": 100.0
+    },
+    {
+      "rva": "0x6d92a",
+      "symbol": "?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z",
+      "before": 95.479454,
+      "after": 100.0
+    },
+    {
+      "rva": "0x6e041",
+      "symbol": "?Read@iconWidget@@QAEXXZ",
+      "before": 96.47541,
+      "after": 100.0
+    },
+    {
+      "rva": "0x717c8",
+      "symbol": "??0textWidget@@QAE@FFFFPAD0FFF@Z",
+      "before": 94.55102,
+      "after": 100.0
+    },
+    {
+      "rva": "0x72e6a",
+      "symbol": "?RemoveManager@executive@@QAEXPAVbaseManager@@@Z",
+      "before": 98.0,
+      "after": 100.0
+    }
+  ],
+  "remaining_investigations": {
+    "GetMoveMask and BuildCreature locals": "Plain corresponding donor names were inspected but do not predict the HoMM1 retail frame. No name replacement or suffix search was retained.",
+    "FileSize": "Retail contains a second file-null guard; helper/source origin still needs evidence. No redundant guard was inserted.",
+    "SGenRand": "Retail arithmetic right shift differs from the inherited unsigned seed expression. Shared seed typing and all users need review before changing it.",
+    "bitmap::Write": "Retail early return and additional frame storage require further source/lifetime review. No dummy local was added."
+  },
+  "source_sha256": {
+    "src/SOURCE/COMMAND.cpp": "82cc289c79429c5d06a04f80f8db0b4b8be72451adc644cd2e1be736ae8cdfba",
+    "src/SOURCE/EVENTS.cpp": "5a9a4152449e596590d990d26ba94ca3fdfe8c433dd81e319b4c7d05ec616246",
+    "src/SOURCE/GAME.cpp": "3d3eb931ce537a30dac58aea06a8caa7f748d4a6c2afaebd041eccdb8b926c73",
+    "src/SOURCE/PATH.cpp": "ea0efa4f70499ebb74d0963beb7a49ab172ed817dd9cb9bd0365f1241e9a5f56",
+    "src/SOURCE/PHILAI.cpp": "cf057c7ee467ccc6abcdd7ee03d2c7a48abe2858751e7b6c021b4360f0cd77ac",
+    "src/SOURCE/TOWNMGR.cpp": "f43d76be7746edca2565b91b257a2b16d7f5f65ca4ebd9c81e4e91d64d6d1ea0",
+    "src/BASE/WINDOW.cpp": "84c11b0780085bc49a91988b71daea3f6aad542ae83915caaa28baa28a3733b8",
+    "src/BASE/ICONWDGT.cpp": "40a1169f9aebb4132ab3e3e96bf781ac518d011c8104df210ac4afaf11293b27",
+    "src/BASE/TEXTWDGT.cpp": "76d348aaf04c1fb62ca0e7100a9a5486a6d4063a23fb92861e54dfbbb47a5233",
+    "src/BASE/EXEC.cpp": "a7a278f52c81fefb2015df9e63d5abda418c92c7a3daa3693b2cc86d2b04582c"
+  }
+}

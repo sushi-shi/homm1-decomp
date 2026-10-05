@@ -31,7 +31,7 @@ bool InitAudio() {
     if (device) {
         AudiereDevice::device = device;
     } else {
-        AudiereDevice::device = audiere::OpenDevice("", NULL);
+        AudiereDevice::device = audiere::OpenDevice("null", NULL);
         if (!AudiereDevice::device)
             return false;
         // Retail releases even a successful fallback device (RVA 0x69caf).

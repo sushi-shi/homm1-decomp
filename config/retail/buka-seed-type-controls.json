@@ -1,0 +1,256 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "rva": "0x8fcc8",
+  "size": 4,
+  "name": "?gLastSeed@@3HA",
+  "source_type": "i32",
+  "previous_source_type": "u32",
+  "previous_symbol": "?gLastSeed@@3IA",
+  "initializer": 135621123,
+  "retail_evidence": "SGenRand+0x37 uses SAR EDX,4 after AND 0xff0. Other users perform signed-int seed mixing; the HoMM2 Buka iLastSeed declaration is i32. All four consumers are checked as complete bodies.",
+  "source": "include/SOURCE/game.h and src/SOURCE/GAME.cpp",
+  "reviewed_reference_updates": [
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35e95",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35e9e",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35ea7",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35eb0",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f01",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f09",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f18",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f20",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f26",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f2f",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f34",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f46",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-bulk-correspondence.json",
+      "site_rva": "0x35f4e",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-combat-setup.json",
+      "site_rva": "0x35f5d",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35e95",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35e9e",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35ea7",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35eb0",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f01",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f09",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f18",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f20",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f26",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f2f",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f34",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f46",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f4e",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    },
+    {
+      "file": "config/retail/buka-data-recovery.json",
+      "site_rva": "0x35f5d",
+      "target_rva": "0x8fcc8",
+      "symbol": "?gLastSeed@@3HA"
+    }
+  ],
+  "policy": "Correct the type spelling of the same four-byte object and verified absolute operands. The previous spelling is retained as provenance. No data-address or addend normalization is changed.",
+  "complete_consumer_controls": [
+    {
+      "symbol": "?SGenRand@@YAHXZ",
+      "rva": "0x35de5",
+      "candidate_instructions": 42,
+      "retail_instructions": 42,
+      "candidate_extent": 146,
+      "retail_extent": 146,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "4b50d36375ed592193d20057a60dcc14744c0246c8f40f267de06b7f8596c807",
+      "retail_sha256": "4b50d36375ed592193d20057a60dcc14744c0246c8f40f267de06b7f8596c807"
+    },
+    {
+      "symbol": "?SRandom@@YAHHH@Z",
+      "rva": "0x35e77",
+      "candidate_instructions": 29,
+      "retail_instructions": 29,
+      "candidate_extent": 85,
+      "retail_extent": 85,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "d3de2d5f29a200c24be9fc92e3b230b2a1993856ba5cfa7fa2a2999d5b3a6d77",
+      "retail_sha256": "d3de2d5f29a200c24be9fc92e3b230b2a1993856ba5cfa7fa2a2999d5b3a6d77"
+    },
+    {
+      "symbol": "?SIncRandomize@@YAXHH@Z",
+      "rva": "0x35ecc",
+      "candidate_instructions": 39,
+      "retail_instructions": 39,
+      "candidate_extent": 138,
+      "retail_extent": 138,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "d9d3aebf99031945a8ed78e9c0850015f02741c07ae37e94c51a691352cae64e",
+      "retail_sha256": "d9d3aebf99031945a8ed78e9c0850015f02741c07ae37e94c51a691352cae64e"
+    },
+    {
+      "symbol": "?SRand@@YAXH@Z",
+      "rva": "0x35f56",
+      "candidate_instructions": 10,
+      "retail_instructions": 10,
+      "candidate_extent": 25,
+      "retail_extent": 25,
+      "slot_map": {},
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "df41495ddb45493efd06d5aa3dc236f5df5dda820867035336dd73c255f48b2b",
+      "retail_sha256": "df41495ddb45493efd06d5aa3dc236f5df5dda820867035336dd73c255f48b2b"
+    }
+  ],
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  }
+}

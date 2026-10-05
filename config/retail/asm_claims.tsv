@@ -16,7 +16,6 @@ BASE/Icon2b	src/BASE/Icon2b.asm	0x000707de	0xd6	?FlipDimIconToBitmap@@YAXPAVicon
 BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000708b4	0x25f	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
 BASE/Icon2bc	src/BASE/Icon2bc.asm	0x00070b14	0x258	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
 BASE/TILE	src/BASE/TILE.asm	0x00070d6c	0x134	_TileToBitmap	func	buka-bulk-correspondence.json
-BASE/MAKEFILEID	src/BASE/MAKEFILEID.asm	0x00073610	0x12b	?MAKEFILEID@@YAIPAD@Z	func	buka-reviewed-claims.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007771c	0x4d	_LzhufMemmove	func	buka-bulk-correspondence.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077769	0x85	_GetBit	func	buka-bulk-correspondence.json
 BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000777ee	0xca	_DecodePosition	func	buka-function-map.json

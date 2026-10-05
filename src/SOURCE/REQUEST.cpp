@@ -390,20 +390,30 @@ i16 fileRequester::Main(tag_message& message) {
                             strcpy(fileName, msg.text);
                             len = strlen(fileName);
                             for (ch = 0; ch < len; ch++) {
-                                if ((fileName[ch] < 'A' || fileName[ch] > 'Z')
-                                    && (fileName[ch] < 'a' || fileName[ch] > 'z')
-                                    && (fileName[ch] < '0' || fileName[ch] > '9')
-                                    && fileName[ch] != '_' && fileName[ch] != ' '
+                                if ((static_cast<u8>(fileName[ch]) < 'A'
+                                        || static_cast<u8>(fileName[ch]) > 'Z')
+                                    && (static_cast<u8>(fileName[ch]) < 'a'
+                                        || static_cast<u8>(fileName[ch]) > 'z')
+                                    && (static_cast<u8>(fileName[ch]) < '0'
+                                        || static_cast<u8>(fileName[ch]) > '9')
+                                    && (static_cast<u8>(fileName[ch]) < CYRILLIC_CAPITAL_A
+                                        || static_cast<u8>(fileName[ch]) > CYRILLIC_CAPITAL_YA)
+                                    && (static_cast<u8>(fileName[ch]) < CYRILLIC_SMALL_A
+                                        || static_cast<u8>(fileName[ch]) > CYRILLIC_SMALL_YA)
+                                    && static_cast<u8>(fileName[ch]) != CYRILLIC_CAPITAL_YO
+                                    && static_cast<u8>(fileName[ch]) != CYRILLIC_SMALL_YO
+                                    && static_cast<u8>(fileName[ch]) != '_'
+                                    && static_cast<u8>(fileName[ch]) != ' '
                                     && !FindToken("$%'-_@~`!(){}^#&+,;=[].", fileName[ch]))
                                     fileName[ch] = 0;
                             }
                             for (ch = strlen(fileName) - 1; ch >= 0; ch--) {
-                                if (fileName[ch] == ' ')
+                                if (static_cast<u8>(fileName[ch]) == ' ')
                                     fileName[ch] = 0;
                                 else
                                     ch = -1;
                             }
-                            if (strlen(fileName) && fileName[0] > ' ') {
+                            if (strlen(fileName) > 0 && static_cast<u8>(fileName[0]) > ' ') {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
                                 strcpy(m_filename, fileName);
                                 SetOK(1);
@@ -574,9 +584,9 @@ void fileRequester::DoKnob(void) {
     event = gpInputManager->GetEvent();
     while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
-            if (offset + FILE_REQUESTER_GUTTER_TOP > event.y)
+            if (event.y < offset + FILE_REQUESTER_GUTTER_TOP)
                 event.y = offset + FILE_REQUESTER_GUTTER_TOP;
-            if (offset + FILE_REQUESTER_GUTTER_BOTTOM < event.y)
+            if (event.y > offset + FILE_REQUESTER_GUTTER_BOTTOM)
                 event.y = offset + FILE_REQUESTER_GUTTER_BOTTOM;
             gpMouseManager->Main(event);
             m_scrollKnob->m_y = event.y - offset;
@@ -664,7 +674,7 @@ void fileRequester::Update(i8 drawWindow) {
         }
         m_window->BroadcastMessage(event);
         event.command = WIDGET_COMMAND_SET_COLOR;
-        if (m_topIndex + row == m_selectedIndex)
+        if (m_selectedIndex == m_topIndex + row)
             event.value = hiliteColor;
         else
             event.value = textColor;

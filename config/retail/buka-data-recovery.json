@@ -38525,34 +38525,42 @@
         {
           "site_rva": "0x35e95",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35e9e",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35ea7",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35eb0",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         }
       ],
       "object_sha256": "4d992cb6f42e0aa5f8e8b55fe7e773cae0e0dfe11d1ce2bd18ba800182b29416",
@@ -38571,74 +38579,92 @@
         {
           "site_rva": "0x35f01",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f09",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f18",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f20",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f26",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f2f",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f34",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f46",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f4e",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         }
       ],
       "object_sha256": "4d992cb6f42e0aa5f8e8b55fe7e773cae0e0dfe11d1ce2bd18ba800182b29416",
@@ -38655,10 +38681,12 @@
         {
           "site_rva": "0x35f5d",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f66",

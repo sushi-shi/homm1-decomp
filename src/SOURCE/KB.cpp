@@ -71,7 +71,7 @@ i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // comparison and placement of the re-entry guard.
 VA(0x0043c7b0, 0x41)
 void PollSound() {
-    if (KBTickCount() < glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT])
+    if (glTimers[GLOBAL_POLL_SOUND_TIMER_SLOT] > KBTickCount())
         return;
     if (gInPollSound)
         return;
@@ -162,7 +162,6 @@ VA(0x0043cfcb, 0xf9)
 i32 EarlySetup(void) {
     DATA(0x004a9952)
     static i8 gEarlySetupDone = 0;
-    i32 iCDRomErr;
 
     if (gEarlySetupDone)
         return 0;
@@ -171,43 +170,43 @@ i32 EarlySetup(void) {
     ReadPrefs();
     if (!InterpretCommandLine())
         return 1;
-    LogTruncate();
-    iCDRomErr = SetupCDDrive();
-    if (iCDRomErr == CD_SETUP_NO_DRIVE) {
-        MessageBoxA(
-            static_cast<HWND>(hwndApp),
-            localization::Tr("startup.cd.inaccessible"),
-            localization::Tr("startup.error.title"),
-            MB_ICONHAND
-        );
-        exit(0);
-    }
-    if (iCDRomErr == CD_SETUP_NOT_FOUND) {
-        MessageBoxA(
-            static_cast<HWND>(hwndApp),
-            localization::Tr("startup.cd.required"),
-            localization::Tr("startup.error.title"),
-            MB_ICONHAND
-        );
-        exit(0);
-    }
-    if (iCDRomErr == CD_SETUP_NO_APP_PATH) {
-        MessageBoxA(
-            static_cast<HWND>(hwndApp),
-            localization::Tr("startup.directory.invalid"),
-            localization::Tr("startup.error.title"),
-            MB_ICONHAND
-        );
-        exit(0);
-    }
-    if (iCDRomErr == CD_SETUP_NO_DATA) {
-        MessageBoxA(
-            static_cast<HWND>(hwndApp),
-            localization::Tr("startup.data.missing"),
-            localization::Tr("startup.error.title"),
-            MB_ICONHAND
-        );
-        exit(0);
+    switch (SetupCDDrive()) {
+        case CD_SETUP_NO_DRIVE:
+            MessageBoxA(
+                static_cast<HWND>(hwndApp),
+                localization::Tr("startup.cd.inaccessible"),
+                localization::Tr("startup.error.title"),
+                MB_ICONHAND
+            );
+            exit(0);
+            break;
+        case CD_SETUP_NOT_FOUND:
+            MessageBoxA(
+                static_cast<HWND>(hwndApp),
+                localization::Tr("startup.cd.required"),
+                localization::Tr("startup.error.title"),
+                MB_ICONHAND
+            );
+            exit(0);
+            break;
+        case CD_SETUP_NO_APP_PATH:
+            MessageBoxA(
+                static_cast<HWND>(hwndApp),
+                localization::Tr("startup.directory.invalid"),
+                localization::Tr("startup.error.title"),
+                MB_ICONHAND
+            );
+            exit(0);
+            break;
+        case CD_SETUP_NO_DATA:
+            MessageBoxA(
+                static_cast<HWND>(hwndApp),
+                localization::Tr("startup.data.missing"),
+                localization::Tr("startup.error.title"),
+                MB_ICONHAND
+            );
+            exit(0);
+            break;
     }
     InitVars();
     return 1;
@@ -493,7 +492,7 @@ i32 oldmain(void) {
             }
             gGameInitialized = 1;
             backdropLoaded = 0;
-            StopAllSamples();
+            StopAllAudio();
             gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
@@ -600,10 +599,7 @@ i32 oldmain(void) {
 // Buka 2.1 toupper; HoMM1 keeps the narrow character form.
 VA(0x0043dd8f, 0x83)
 char toupper(char character) {
-    if (character >= 'a' && character <= 'z')
-        return character - 32;
-    else
-        return character;
+    return CyrillicToUpper(character);
 }
 
 // Buka 2.1 InterpretCommandLine reduced to HoMM1's /I, /C, /S and /B switches.
@@ -621,8 +617,8 @@ i32 InterpretCommandLine(void) {
     giLimitPlayer = 0;
     gbBlackoutPlayer = 1;
     strcpy(gMapName, "AES31000.map");
-    strcpy(gFullMapName, "Claw ( Easy )");
-    strcpy(gMapDescription, "The Griffons will protect you until you are ready to make your move.");
+    strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
+    strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
 
     size = strlen(gCommandLine);
     for (i = 0; i < size; i++) {
@@ -648,15 +644,13 @@ i32 InterpretCommandLine(void) {
         }
     }
 
+    // Buka enables sound after parsing the legacy /S option.
+    gbNoSound = 0;
     sprintf(cAggPathName, "%s%s", gDataPath, "heroes.agg");
     DEFAULT_AGGREGATE_NAME = cAggPathName;
     giFrameStep = 6;
-    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if (giNumHumanPlayers > i)
-            gbHumanPlayer[i] = 1;
-        else
-            gbHumanPlayer[i] = 0;
-    }
+    for (i = 0; i < GAME_PLAYER_COUNT; i++)
+        gbHumanPlayer[i] = i < giNumHumanPlayers;
     if (giNumHumanPlayers == 1)
         gbBlackoutPlayer = 0;
     helpRequested = 0;
@@ -779,7 +773,7 @@ char* GetBuildingName(i32 race, i16 building) {
         return gNeutralBuildingNames[building];
     else
         return gDwellingNames
-            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
+            [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
 }
 
 VA(0x0043e349, 0x77)
@@ -793,7 +787,7 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
         memcpy(
             destination,
             gDwellingCosts
-                [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT],
+                [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)],
             RESOURCE_COUNT * sizeof(i32)
         );
     }
@@ -855,8 +849,8 @@ i8 CanBuild(town* t, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
     required = gDwellingRequirements
-        [building - BUILDING_SLOT_DWELLING_FIRST + t->m_type * BUILDING_SLOT_DWELLING_COUNT];
-    if ((t->m_buildings & required) == required)
+        [t->m_type * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
+    if ((required & t->m_buildings) == required)
         return 1;
     return 0;
 }
@@ -875,8 +869,8 @@ i8 CanBuy(town* t, i16 type) {
         type,
         cost,
         (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST ? TOWN_MAGE_GUILD_COST_LEVEL_LAST
-                                                                  : t->m_buildState + 1)
+            ? (t->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST ? t->m_buildState + 1
+                                                                 : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : 0
     );
     rec = &gpGame->m_players[giCurPlayer];
@@ -897,7 +891,7 @@ i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
             return gNeutralBaseResourceValues[building];
     } else {
         return gDwellingBaseResourceValues
-            [building - BUILDING_SLOT_DWELLING_FIRST + race * BUILDING_SLOT_DWELLING_COUNT];
+            [race * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
     }
 }
 
@@ -1630,7 +1624,7 @@ void HandleRemoteSuddenExit(void) {
         return;
     gText[0] = giThisGamePos;
     if (gbThisNetHumanPlayer[giCurPlayer]
-        || (!gbHumanPlayer[giCurPlayer] && giHostGamePos == giThisGamePos)) {
+        || (!gbHumanPlayer[giCurPlayer] && giThisGamePos == giHostGamePos)) {
         gText[1] = 1;
         next = giCurPlayer;
         next = (next + 1) % gpGame->m_playerCount;
@@ -1676,7 +1670,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
                 localization::Tr("player.vanquished"),
                 gColorNames[gpGame->m_players[position].Color()]
             );
-            gText[0] -= 32;
+            gText[0] = CyrillicToUpper(gText[0]);
             NormalDialog(
                 gText,
                 NORMAL_DIALOG_TYPE_OK,
@@ -1690,11 +1684,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
             if (timedOut)
                 sprintf(
                     gText,
-                    "Player %d has been logged out of the game.  The current game has been saved "
-                    "as "
-                    "'PLYREXIT'.  Do you wish to continue playing with a computer player filling "
-                    "in for "
-                    "player %d?",
+                    localization::Tr("network.player.timeout.computer"),
                     position + 1,
                     position + 1
                 );
@@ -1767,7 +1757,7 @@ void CheckEndGame(i32 forced) {
                     localization::Tr("player.vanquished"),
                     gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
                 );
-                gText[0] -= 32;
+                gText[0] = CyrillicToUpper(gText[0]);
                 NormalDialog(
                     gText,
                     NORMAL_DIALOG_TYPE_OK,
@@ -1781,11 +1771,10 @@ void CheckEndGame(i32 forced) {
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
-                            "%s player, you have lost your last town.  If you do not conquer "
-                            "another town in the next week, you will be eliminated.",
+                            localization::Tr("endgame.last_town.lost"),
                             gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
                         );
-                        gText[0] -= 32;
+                        gText[0] = CyrillicToUpper(gText[0]);
                         NormalDialog(
                             gText,
                             NORMAL_DIALOG_TYPE_OK,
@@ -1801,19 +1790,17 @@ void CheckEndGame(i32 forced) {
                     if (gbThisNetHumanPlayer[player]) {
                         sprintf(
                             gText,
-                            "%s player, your heroes abandon you, and you are banished from this "
-                            "land.",
+                            localization::Tr("endgame.heroes.abandon_you"),
                             gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
                         );
-                        gText[0] -= 32;
+                        gText[0] = CyrillicToUpper(gText[0]);
                     } else {
                         sprintf(
                             gText,
-                            "%s player's Heroes have abandoned him, and he is banished from this "
-                            "land.",
+                            localization::Tr("endgame.heroes.abandon_player"),
                             gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
                         );
-                        gText[0] -= 32;
+                        gText[0] = CyrillicToUpper(gText[0]);
                     }
                     NormalDialog(
                         gText,
@@ -1864,7 +1851,7 @@ void CheckEndGame(i32 forced) {
                     win = 1;
                 if (gpGame->m_campaignScenario == 0 && goalTown->m_owner > 0) {
                     lost = 1;
-                    strcpy(text, "The enemy has captured the town of XX!!");
+                    strcpy(text, localization::Tr("endgame.enemy.captured_town"));
                 }
                 break;
             case 2:
@@ -1887,7 +1874,7 @@ void CheckEndGame(i32 forced) {
                     win = 1;
                 if (ultimateOwner > 0) {
                     lost = 1;
-                    strcpy(text, "The enemy has captured the ultimate artifact!!");
+                    strcpy(text, localization::Tr("endgame.enemy.captured_artifact"));
                 }
                 break;
             case 8:
@@ -1896,7 +1883,7 @@ void CheckEndGame(i32 forced) {
                     win = 1;
                 if (gpGame->m_mineOwners[0] > 0) {
                     lost = 1;
-                    strcpy(text, "The enemy has captured the dragon city!!");
+                    strcpy(text, localization::Tr("endgame.enemy.captured_dragon_city"));
                 }
         }
     }
@@ -1942,11 +1929,8 @@ void QuickViewWait(void) {
         PollSound();
         Process1WindowsMessage();
         event = gpInputManager->GetEvent();
-        if (event.type == MESSAGE_RIGHT_BUTTON_UP || event.type == MESSAGE_LEFT_BUTTON_DOWN
-            || event.type == MESSAGE_LEFT_BUTTON_UP)
-            done = 1;
-        else
-            done = 0;
+        done = event.type == MESSAGE_RIGHT_BUTTON_UP || event.type == MESSAGE_LEFT_BUTTON_DOWN
+               || event.type == MESSAGE_LEFT_BUTTON_UP;
     }
 }
 
@@ -1977,14 +1961,6 @@ void InitVars(void) {
     hmnuCmbt = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuCmbt");
     hmnuAdv = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuAdv");
     hmnuTown = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuTown");
-    LogStr(
-        "LoadMenus",
-        reinterpret_cast<i32>(hmnuDflt),
-        reinterpret_cast<i32>(hmnuCmbt),
-        reinterpret_cast<i32>(hmnuAdv),
-        reinterpret_cast<i32>(hmnuTown),
-        reinterpret_cast<i32>(hInstApp)
-    ); // API-forced: LogStr logs handles as long.
 }
 
 // donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
@@ -2157,10 +2133,10 @@ i16 GetMonType(i32 score, i32 highScoreType) {
     i32 index;
     for (index = SCORE_MONSTER_COUNT - 1; index >= 0; index--) {
         if (highScoreType == HIGH_SCORE_TYPE_CAMPAIGN) {
-            if (gScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD] >= score)
+            if (score <= gScoreCampaignMon[index][SCORE_MONSTER_THRESHOLD])
                 return gScoreCampaignMon[index][SCORE_MONSTER_TYPE];
         } else {
-            if (gScoreMon[index][SCORE_MONSTER_THRESHOLD] <= score)
+            if (score >= gScoreMon[index][SCORE_MONSTER_THRESHOLD])
                 return gScoreMon[index][SCORE_MONSTER_TYPE];
         }
     }
@@ -2416,7 +2392,7 @@ void PopNetBox(char* notice) {
                             text[len] = 0;
                             textWidth = font->LineWidth(text);
                             if (textWidth + 30 < 610) {
-                                text[len] = incoming.keyCode;
+                                text[len] = incoming.keyCode & 0xff;
                                 len++;
                                 updateInput = 1;
                                 blinkState = 0;
@@ -2425,7 +2401,7 @@ void PopNetBox(char* notice) {
                 }
         }
 
-        if (!updateInput && KBTickCount() > glTimers[NET_BOX_BLINK_TIMER_SLOT]) {
+        if (!updateInput && glTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
             blinkState = 1 - blinkState;
             updateInput = 1;
         }
@@ -2475,7 +2451,7 @@ void PopNetBox(char* notice) {
             netWin->DrawWindow();
             gpWindowManager->UpdateScreenRegion(0, 460, 639, 16);
         }
-        if (msgTime && KBTickCount() > msgTime + 6000)
+        if (msgTime && msgTime + 6000 < KBTickCount())
             bClose = 1;
         if (exitForIncomingData) {
             for (pause = 0; pause < 30; pause++) {
@@ -2516,14 +2492,14 @@ void ShutDown(char* message) {
     if (message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
-        LogStr(buffer);
         MessageBoxA(
             static_cast<HWND>(hwndApp),
             buffer,
-            "Unexpected Program Termination",
+            localization::Tr("shutdown.unexpected.title"),
             MB_ICONHAND
         );
     }
+    CloseSmackers();
     ClearMapExtra();
     UnloadSystemwideIcons();
     if (gRemoteOn)
@@ -2544,7 +2520,6 @@ void ShutDown(char* message) {
     }
     DeleteMainClasses();
     AppExit();
-    PrintMemoryLeaks();
     exit(0);
 }
 
@@ -2554,7 +2529,6 @@ void ShutDown(char* message) {
 VA(0x00441943, 0x34)
 void FileError(char* filename) {
     char message[200];
-    LogStr("File Error");
     sprintf(message, localization::Tr("file.open.failed"), filename);
     ShutDown(message);
 }
@@ -2609,8 +2583,8 @@ void ShowCongrats(void) {
         if (!win)
             MemError();
         sprintf(name, gArmyNames[GetMonType(result, HIGH_SCORE_TYPE_STANDARD)]);
-        name[0] -= 32;
-        sprintf(gText, "A Glorious Victory!");
+        name[0] = CyrillicToUpper(name[0]);
+        sprintf(gText, localization::Tr("congratulations.victory.title"));
         message.id = CONGRATS_TITLE;
         win->BroadcastMessage(message);
         for (i = 0; i < CONGRATS_SCORE_LABEL_COUNT; i++) {
@@ -2649,18 +2623,18 @@ void ShowCongrats(void) {
 // evidence: graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
 VA(0x00441d6c, 0x8b)
 void CongratsWait(void) {
-    i32 cmd = 0;
-    i8 finished = 0;
-    tag_message message;
+    i32 command = 0;
+    i8 done = 0;
+    tag_message msg;
     gpInputManager->Flush();
-    while (!finished) {
+    while (!done) {
         PollSound();
         Process1WindowsMessage();
-        message = gpInputManager->GetEvent();
-        if (message.type == MESSAGE_KEY_DOWN || message.type == MESSAGE_LEFT_BUTTON_DOWN
-            || message.type == MESSAGE_LEFT_BUTTON_UP || message.type == MESSAGE_RIGHT_BUTTON_DOWN
-            || message.type == MESSAGE_RIGHT_BUTTON_UP)
-            finished = 1;
+        msg = gpInputManager->GetEvent();
+        if (msg.type == MESSAGE_KEY_DOWN || msg.type == MESSAGE_LEFT_BUTTON_DOWN
+            || msg.type == MESSAGE_LEFT_BUTTON_UP || msg.type == MESSAGE_RIGHT_BUTTON_DOWN
+            || msg.type == MESSAGE_RIGHT_BUTTON_UP)
+            done = 1;
     }
 }
 
@@ -2750,12 +2724,11 @@ i16 DataEntryWindowHandler(tag_message& message) {
 // evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
 VA(0x00442146, 0x60)
 void MemError(void) {
-    DATA(0x0049f34c)
+    DATA(0x004a995c)
     static i8 gInMemError = 0;
     if (gInMemError)
         return;
     gInMemError = 1;
-    LogStr("Out of Memory");
     sprintf(
         gText,
         "\n\n%s\n%s\n%d%s\n%d%s\n\n",
@@ -3164,7 +3137,7 @@ void CleanUpMenus(void) {
 
 VA(0x00442c49, 0x15)
 void UpdateAppSpecificMenus(void* hMenu) {
-    if (hmnuAdv == hMenu)
+    if (hMenu == hmnuAdv)
         UpdateSystemOptionsMenu();
 }
 
@@ -4142,32 +4115,32 @@ char* gWeekNames[15] = {
     localization::Tr("table.gWeekNames.13"),
     localization::Tr("table.gWeekNames.14"),
 };
-DATA(0x00493720)
+DATA(0x00492c94)
 char* gDwellingDescriptions[24] = {
-    "The Thatched Hut produces Peasants.",
-    "The Archery Range produces Archers.",
-    "The Blacksmith produces Pikemen.",
-    "The Armory produces Swordsmen.",
-    "The Jousting Arena produces Cavalries.",
-    "The Cathedral produces Paladins.",
-    "The Treehouse produces Sprites.",
-    "The Cottage produces Dwarves.",
-    "The Archery Range produces Elves.",
-    "Stonehenge produces Druids.",
-    "The Fenced Meadow produces Unicorns.",
-    "The Red Tower produces Phoenix.",
-    "The Hut produces Goblins.",
-    "The Stick Hut produces Orcs.",
-    "The Den produces Wolves.",
-    "The Adobe produces Ogres.",
-    "The Bridge produces Trolls.",
-    "The Pyramid produces Cyclopes.",
-    "The Cave produces Centaurs.",
-    "The Crypt produces Gargoyles.",
-    "The Nest produces Griffins.",
-    "The Maze produces Minotaurs.",
-    "The Swamp produces Hydras.",
-    "The Black Tower produces Dragons.",
+    localization::Tr("table.gDwellingDescriptions.0"),
+    localization::Tr("table.gDwellingDescriptions.1"),
+    localization::Tr("table.gDwellingDescriptions.2"),
+    localization::Tr("table.gDwellingDescriptions.3"),
+    localization::Tr("table.gDwellingDescriptions.4"),
+    localization::Tr("table.gDwellingDescriptions.5"),
+    localization::Tr("table.gDwellingDescriptions.6"),
+    localization::Tr("table.gDwellingDescriptions.7"),
+    localization::Tr("table.gDwellingDescriptions.8"),
+    localization::Tr("table.gDwellingDescriptions.9"),
+    localization::Tr("table.gDwellingDescriptions.10"),
+    localization::Tr("table.gDwellingDescriptions.11"),
+    localization::Tr("table.gDwellingDescriptions.12"),
+    localization::Tr("table.gDwellingDescriptions.13"),
+    localization::Tr("table.gDwellingDescriptions.14"),
+    localization::Tr("table.gDwellingDescriptions.15"),
+    localization::Tr("table.gDwellingDescriptions.16"),
+    localization::Tr("table.gDwellingDescriptions.17"),
+    localization::Tr("table.gDwellingDescriptions.18"),
+    localization::Tr("table.gDwellingDescriptions.19"),
+    localization::Tr("table.gDwellingDescriptions.20"),
+    localization::Tr("table.gDwellingDescriptions.21"),
+    localization::Tr("table.gDwellingDescriptions.22"),
+    localization::Tr("table.gDwellingDescriptions.23"),
 };
 DATA(0x00492cf4)
 char* gArmySizeNames[6][2] = {
@@ -4509,16 +4482,15 @@ char* gBattleResults[11] = {
     localization::Tr("table.gBattleResults.9"),
     localization::Tr("table.gBattleResults.10"),
 };
-DATA(0x00493c90)
+DATA(0x004931b4)
 char* gNeutralBuildingDescriptions[7] = {
-    "The Mage Guild allows heroes to learn and replenish spells.",
-    "The Thieves' Guild provides information on enemy players.  Thieves' Guilds can also provide "
-    "scouting information on enemy towns.  Additional Guilds provide more information.",
-    "The Tavern increases morale for troops defending the castle.",
-    "The Shipyard allows ships to be built.",
-    "The Well increases the growth rate of all dwellings by 2 creatures per week.",
-    "The Tent provides workers to build a castle.",
-    "The Castle improves town defense and income.",
+    localization::Tr("table.gNeutralBuildingDescriptions.0"),
+    localization::Tr("table.gNeutralBuildingDescriptions.1"),
+    localization::Tr("table.gNeutralBuildingDescriptions.2"),
+    localization::Tr("table.gNeutralBuildingDescriptions.3"),
+    localization::Tr("table.gNeutralBuildingDescriptions.4"),
+    localization::Tr("table.gNeutralBuildingDescriptions.5"),
+    localization::Tr("table.gNeutralBuildingDescriptions.6"),
 };
 DATA(0x004931d0)
 char* gMoraleInfoText[21] = {

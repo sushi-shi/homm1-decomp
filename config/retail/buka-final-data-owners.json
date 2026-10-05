@@ -1,0 +1,501 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Typed source storage identified from actual callers and member/index dataflow, independently checked complete emitted initializers (including pointer pointees) and nonoverlap. Caller excerpts establish owner identity only, not whole-function equivalence. No types, values or caller logic are changed.",
+  "data": [
+    {
+      "name": "_?gInMemError@?1??MemError@@YAXXZ@4CA",
+      "rva": "0xa995c",
+      "old_rva": "0x9f34c",
+      "size": 1,
+      "unit": "SOURCE/KB",
+      "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
+      "object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23",
+      "pointer": null,
+      "identity_evidence": "The signed byte guard is read at entry, branches directly to the epilogue when nonzero, and is set to one before displaying the memory error.",
+      "retail_context": [
+        {
+          "rva": "0x42146",
+          "instruction": "push ebp"
+        },
+        {
+          "rva": "0x42147",
+          "instruction": "mov ebp, esp"
+        },
+        {
+          "rva": "0x42149",
+          "instruction": "movsx eax, byte ptr [0x4a995c]"
+        },
+        {
+          "rva": "0x42150",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x42152",
+          "instruction": "je 0x42156"
+        },
+        {
+          "rva": "0x42154",
+          "instruction": "jmp 0x421a4"
+        },
+        {
+          "rva": "0x42156",
+          "instruction": "mov byte ptr [0x4a995c], 1"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x4214c",
+          "target_rva": "0xa995c",
+          "symbol": "_?gInMemError@?1??MemError@@YAXXZ@4CA",
+          "kind": 6,
+          "addend": 0
+        },
+        {
+          "site_rva": "0x42158",
+          "target_rva": "0xa995c",
+          "symbol": "_?gInMemError@?1??MemError@@YAXXZ@4CA",
+          "kind": 6,
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "_gcCDTrackName",
+      "rva": "0x9e720",
+      "old_rva": null,
+      "size": 4,
+      "unit": "SOURCE/kbwin",
+      "payload_sha256": "19981c984381c21745ab4044c8df28f2bd588eb3ae69aaf04f639bed57b8aa6d",
+      "object_sha256": "cedff07e2e2b8d25f0b91e7d6e897e5d938792eb033a483366c4bb83f35d9767",
+      "pointer": {
+        "pointee_rva": "0x9ecd4",
+        "text": "Tracks\\02-AudioTrack 02.ogg",
+        "size": 28,
+        "payload_sha256": "34c73c161e3a2dcb3423983d9f4648fcf165eede1030f5c568aab3d380f72258"
+      },
+      "identity_evidence": "Both SetupCDDrive sprintf calls load this pointer as the track-path argument; the first combines it with gcRegCDRomPath and writes gText.",
+      "retail_context": [
+        {
+          "rva": "0x448a3",
+          "instruction": "mov al, byte ptr [0x4a973c]"
+        },
+        {
+          "rva": "0x448a8",
+          "instruction": "push eax"
+        },
+        {
+          "rva": "0x448a9",
+          "instruction": "call 0x44702"
+        },
+        {
+          "rva": "0x448ae",
+          "instruction": "add esp, 4"
+        },
+        {
+          "rva": "0x448b1",
+          "instruction": "and eax, 0xff"
+        },
+        {
+          "rva": "0x448b6",
+          "instruction": "test eax, eax"
+        },
+        {
+          "rva": "0x448b8",
+          "instruction": "je 0x44906"
+        },
+        {
+          "rva": "0x448ba",
+          "instruction": "mov ecx, dword ptr [0x49e720]"
+        },
+        {
+          "rva": "0x448c0",
+          "instruction": "push ecx"
+        },
+        {
+          "rva": "0x448c1",
+          "instruction": "push 0x4a973c"
+        },
+        {
+          "rva": "0x448c6",
+          "instruction": "push 0x49ed04"
+        },
+        {
+          "rva": "0x448cb",
+          "instruction": "push 0x4a7168"
+        },
+        {
+          "rva": "0x448d0",
+          "instruction": "call 0x7823f"
+        },
+        {
+          "rva": "0x448d5",
+          "instruction": "add esp, 0x10"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x448bc",
+          "target_rva": "0x9e720",
+          "symbol": "_gcCDTrackName",
+          "kind": 6,
+          "addend": 0
+        },
+        {
+          "site_rva": "0x44978",
+          "target_rva": "0x9e720",
+          "symbol": "_gcCDTrackName",
+          "kind": 6,
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "?gNbListenName@@3PAEA",
+      "rva": "0x9edac",
+      "old_rva": "0xa16e0",
+      "size": 4,
+      "unit": "SOURCE/netwin",
+      "payload_sha256": "03b24f587f2ada1d9748cfe42b8a8fd22c5dabc015e0b4cfe8a596feb81b7d01",
+      "object_sha256": "caffa58375a266afb1714fdb08b03a647e75a71711a83400aa4d8f4aead3f46d",
+      "pointer": {
+        "pointee_rva": "0x9edbc",
+        "text": "*",
+        "size": 2,
+        "payload_sha256": "17d5f5a33ab5f6aed0395d2bc0a4e5df61d92441ea8d77b0952c01bc8aa8bde0"
+      },
+      "identity_evidence": "The nb_sess listen case loads the wildcard pointer and passes it to the independently identified nb_listen with the destination-session argument.",
+      "retail_context": [
+        {
+          "rva": "0x4544e",
+          "instruction": "movzx cx, byte ptr [0x49eda4]"
+        },
+        {
+          "rva": "0x45456",
+          "instruction": "push ecx"
+        },
+        {
+          "rva": "0x45457",
+          "instruction": "push 0"
+        },
+        {
+          "rva": "0x45459",
+          "instruction": "call 0x45121"
+        },
+        {
+          "rva": "0x4545e",
+          "instruction": "add esp, 0x14"
+        },
+        {
+          "rva": "0x45461",
+          "instruction": "mov edx, dword ptr [0x49edac]"
+        },
+        {
+          "rva": "0x45467",
+          "instruction": "push edx"
+        },
+        {
+          "rva": "0x45468",
+          "instruction": "mov eax, dword ptr [ebp - 0x54]"
+        },
+        {
+          "rva": "0x4546b",
+          "instruction": "push eax"
+        },
+        {
+          "rva": "0x4546c",
+          "instruction": "call 0x45e00"
+        },
+        {
+          "rva": "0x45471",
+          "instruction": "add esp, 8"
+        },
+        {
+          "rva": "0x45474",
+          "instruction": "mov word ptr [ebp - 8], ax"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x45463",
+          "target_rva": "0x9edac",
+          "symbol": "?gNbListenName@@3PAEA",
+          "kind": 6,
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "?gDynamicConstruct@@3PADA",
+      "rva": "0xa1374",
+      "old_rva": null,
+      "size": 18,
+      "unit": "BASE/WINDOW",
+      "payload_sha256": "507a68778c2f493eca94c0129d90f01b4906d9f66a5f5a50c4c8ad91eab51677",
+      "object_sha256": "6a0f320fe99d4104690568215f6a6ed9cc47a28e9eea31b2f2faf054ebb3a312",
+      "pointer": null,
+      "identity_evidence": "The heroWindow constructor copies the complete label to this->m_name at offset 10 using strcpy.",
+      "retail_context": [
+        {
+          "rva": "0x6d0b2",
+          "instruction": "push ebp"
+        },
+        {
+          "rva": "0x6d0b3",
+          "instruction": "mov ebp, esp"
+        },
+        {
+          "rva": "0x6d0b5",
+          "instruction": "push ecx"
+        },
+        {
+          "rva": "0x6d0b6",
+          "instruction": "mov dword ptr [ebp - 4], ecx"
+        },
+        {
+          "rva": "0x6d0b9",
+          "instruction": "push 0x4a1374"
+        },
+        {
+          "rva": "0x6d0be",
+          "instruction": "mov eax, dword ptr [ebp - 4]"
+        },
+        {
+          "rva": "0x6d0c1",
+          "instruction": "add eax, 0xa"
+        },
+        {
+          "rva": "0x6d0c4",
+          "instruction": "push eax"
+        },
+        {
+          "rva": "0x6d0c5",
+          "instruction": "call 0x77c60"
+        },
+        {
+          "rva": "0x6d0ca",
+          "instruction": "add esp, 8"
+        },
+        {
+          "rva": "0x6d0cd",
+          "instruction": "mov ecx, dword ptr [ebp - 4]"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x6d0ba",
+          "target_rva": "0xa1374",
+          "symbol": "?gDynamicConstruct@@3PADA",
+          "kind": 6,
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "name": "?iPlacesVisited@@3PAY01HA",
+      "rva": "0xb4aa8",
+      "old_rva": "0xac970",
+      "size": 240,
+      "unit": "SOURCE/PHILAI",
+      "payload_sha256": "2dfba633817046c7f559ed4b93076048435f7e1a90f14eb8035c04b9ebae2537",
+      "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f",
+      "pointer": null,
+      "identity_evidence": "DoAI scans visited coordinates against hero destination bytes at offsets 0x20/0x21, then appends hero position bytes 0x1e/0x1f. Both columns are dwords with row stride 8. The independently identified iCurPlaceToVisit bounds append at 30 and is incremented afterwards: 30 rows of two i32 coordinates.",
+      "retail_context": [
+        {
+          "rva": "0x48d18",
+          "instruction": "mov edx, dword ptr [ebp - 0x2c]"
+        },
+        {
+          "rva": "0x48d1b",
+          "instruction": "cmp edx, dword ptr [0x4ca168]"
+        },
+        {
+          "rva": "0x48d21",
+          "instruction": "jge 0x48d7e"
+        },
+        {
+          "rva": "0x48d23",
+          "instruction": "mov eax, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d26",
+          "instruction": "movsx ecx, byte ptr [eax + 0x20]"
+        },
+        {
+          "rva": "0x48d2a",
+          "instruction": "mov edx, dword ptr [ebp - 0x2c]"
+        },
+        {
+          "rva": "0x48d2d",
+          "instruction": "cmp dword ptr [edx*8 + 0x4b4aa8], ecx"
+        },
+        {
+          "rva": "0x48d34",
+          "instruction": "jne 0x48d7c"
+        },
+        {
+          "rva": "0x48d36",
+          "instruction": "mov eax, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d39",
+          "instruction": "movsx ecx, byte ptr [eax + 0x21]"
+        },
+        {
+          "rva": "0x48d3d",
+          "instruction": "mov edx, dword ptr [ebp - 0x2c]"
+        },
+        {
+          "rva": "0x48d40",
+          "instruction": "cmp dword ptr [edx*8 + 0x4b4aac], ecx"
+        },
+        {
+          "rva": "0x48d47",
+          "instruction": "jne 0x48d7c"
+        },
+        {
+          "rva": "0x48d49",
+          "instruction": "mov eax, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d4c",
+          "instruction": "movsx cx, byte ptr [eax + 0x21]"
+        },
+        {
+          "rva": "0x48d51",
+          "instruction": "push ecx"
+        },
+        {
+          "rva": "0x48d52",
+          "instruction": "mov edx, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d55",
+          "instruction": "movsx ax, byte ptr [edx + 0x20]"
+        },
+        {
+          "rva": "0x48d5a",
+          "instruction": "push eax"
+        },
+        {
+          "rva": "0x48d5b",
+          "instruction": "mov ecx, dword ptr [0x4a7480]"
+        },
+        {
+          "rva": "0x48d61",
+          "instruction": "call 0x6d26"
+        },
+        {
+          "rva": "0x48d66",
+          "instruction": "xor ecx, ecx"
+        },
+        {
+          "rva": "0x48d68",
+          "instruction": "mov cl, byte ptr [eax + 8]"
+        },
+        {
+          "rva": "0x48d6b",
+          "instruction": "cmp ecx, 0xa8"
+        },
+        {
+          "rva": "0x48d71",
+          "instruction": "je 0x48d7c"
+        },
+        {
+          "rva": "0x48d73",
+          "instruction": "mov edx, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d76",
+          "instruction": "mov word ptr [edx + 0x27], 0"
+        },
+        {
+          "rva": "0x48d7c",
+          "instruction": "jmp 0x48d0f"
+        },
+        {
+          "rva": "0x48d7e",
+          "instruction": "cmp dword ptr [0x4ca168], 0x1e"
+        },
+        {
+          "rva": "0x48d85",
+          "instruction": "jge 0x48dbc"
+        },
+        {
+          "rva": "0x48d87",
+          "instruction": "mov eax, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d8a",
+          "instruction": "movsx ecx, byte ptr [eax + 0x1e]"
+        },
+        {
+          "rva": "0x48d8e",
+          "instruction": "mov edx, dword ptr [0x4ca168]"
+        },
+        {
+          "rva": "0x48d94",
+          "instruction": "mov dword ptr [edx*8 + 0x4b4aa8], ecx"
+        },
+        {
+          "rva": "0x48d9b",
+          "instruction": "mov eax, dword ptr [ebp - 0x20]"
+        },
+        {
+          "rva": "0x48d9e",
+          "instruction": "movsx ecx, byte ptr [eax + 0x1f]"
+        },
+        {
+          "rva": "0x48da2",
+          "instruction": "mov edx, dword ptr [0x4ca168]"
+        },
+        {
+          "rva": "0x48da8",
+          "instruction": "mov dword ptr [edx*8 + 0x4b4aac], ecx"
+        },
+        {
+          "rva": "0x48daf",
+          "instruction": "mov eax, dword ptr [0x4ca168]"
+        },
+        {
+          "rva": "0x48db4",
+          "instruction": "add eax, 1"
+        },
+        {
+          "rva": "0x48db7",
+          "instruction": "mov dword ptr [0x4ca168], eax"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x48d30",
+          "target_rva": "0xb4aa8",
+          "symbol": "?iPlacesVisited@@3PAY01HA",
+          "kind": 6,
+          "addend": 0
+        },
+        {
+          "site_rva": "0x48d43",
+          "target_rva": "0xb4aac",
+          "symbol": "?iPlacesVisited@@3PAY01HA",
+          "kind": 6,
+          "addend": 4
+        },
+        {
+          "site_rva": "0x48d97",
+          "target_rva": "0xb4aa8",
+          "symbol": "?iPlacesVisited@@3PAY01HA",
+          "kind": 6,
+          "addend": 0
+        },
+        {
+          "site_rva": "0x48dab",
+          "target_rva": "0xb4aac",
+          "symbol": "?iPlacesVisited@@3PAY01HA",
+          "kind": 6,
+          "addend": 4
+        }
+      ]
+    }
+  ]
+}

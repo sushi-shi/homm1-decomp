@@ -12197,13 +12197,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG42657",
               "site_rva": "0x3de60",
               "target_rva": "0x9e084",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "ab6dd6792abd416428ed57234fd4ee05feb140c90be8b169ade34d6b445716c8",
-              "size": 13
+              "size": 13,
+              "historical_candidate_symbol": "$SG42657",
+              "retail_identity_review": "buka-final-inline-text.json, buka-startup-text.json, buka-final-equal-literal-references.json"
             }
           ],
           "local_slot_map": {
@@ -12444,13 +12445,14 @@
           ],
           "private_literals": [
             {
-              "symbol": "$SG42657",
               "site_rva": "0x3de60",
               "target_rva": "0x9e084",
               "addend": "0x0",
               "kind": 6,
               "payload_sha256": "ab6dd6792abd416428ed57234fd4ee05feb140c90be8b169ade34d6b445716c8",
-              "size": 13
+              "size": 13,
+              "historical_candidate_symbol": "$SG42657",
+              "retail_identity_review": "buka-final-inline-text.json, buka-startup-text.json, buka-final-equal-literal-references.json"
             }
           ],
           "local_slot_map": {}
@@ -13201,22 +13203,16 @@
     "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
     "changes": [
       {
-        "operand": "0x3dfb4",
-        "target": "0x9e0ec",
-        "old_compiler_spelling": "$SG42676",
-        "current_identity": "$SG647404"
+        "operand": "0x3de60",
+        "target": "0x9e084",
+        "old_compiler_spelling": "$SG42657",
+        "current_identity": "$SG647300"
       },
       {
-        "operand": "0x3dfbe",
-        "target": "0x9e0f8",
-        "old_compiler_spelling": "$SG42677",
-        "current_identity": "$SG647416"
-      },
-      {
-        "operand": "0x40606",
-        "target": "0xa99a8",
-        "old_compiler_spelling": "$SG43305",
-        "current_identity": "$SG694696"
+        "operand": "0x3de60",
+        "target": "0x9e084",
+        "old_compiler_spelling": "$SG42657",
+        "current_identity": "$SG647300"
       }
     ]
   }

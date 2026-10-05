@@ -1,0 +1,360 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "nwc_image_sha256": "2de85b097b2f7fd538b053619cf7c60ad21394c86b89ffe7587eb252430f45fe",
+  "method": "Caller instruction contexts identify the tables; full original and Russian pointer/string payloads checked. Resource stems remain untranslated ordinary literals.",
+  "tables": [
+    {
+      "name": "?gDwellingDescriptions@@3PAPADA",
+      "rva": "0x92c94",
+      "old_rva": "0x93720",
+      "size": 96,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": "table.gDwellingDescriptions.0",
+          "offset": 0,
+          "nwc_pointer_site": "0x93720",
+          "nwc_string_rva": "0x9a180",
+          "buka_pointer_site": "0x92c94",
+          "buka_string_rva": "0x996a4",
+          "size": 29,
+          "payload_sha256": "988edd574b37143f5c4d1bd4f80129d05d6bb3c7c44ef7cb75ee98257ebff5c1"
+        },
+        {
+          "id": "table.gDwellingDescriptions.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x93724",
+          "nwc_string_rva": "0x9a1a4",
+          "buka_pointer_site": "0x92c98",
+          "buka_string_rva": "0x996c4",
+          "size": 33,
+          "payload_sha256": "ba05680ce17f20c8ff9769e1e35e0632ca6987baa7b06ffd7ee51c5b9ba7d01a"
+        },
+        {
+          "id": "table.gDwellingDescriptions.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x93728",
+          "nwc_string_rva": "0x9a1c8",
+          "buka_pointer_site": "0x92c9c",
+          "buka_string_rva": "0x996e8",
+          "size": 31,
+          "payload_sha256": "bf7cbeab94b4b0f0cd0349de647bfc2f6793e24eef6c4d2fce6630654c4498a0"
+        },
+        {
+          "id": "table.gDwellingDescriptions.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x9372c",
+          "nwc_string_rva": "0x9a1ec",
+          "buka_pointer_site": "0x92ca0",
+          "buka_string_rva": "0x99708",
+          "size": 39,
+          "payload_sha256": "2edbf86385dad6563645990636286642ff47f1edb6647f3ac2c08591d6ff41fb"
+        },
+        {
+          "id": "table.gDwellingDescriptions.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x93730",
+          "nwc_string_rva": "0x9a20c",
+          "buka_pointer_site": "0x92ca4",
+          "buka_string_rva": "0x99730",
+          "size": 33,
+          "payload_sha256": "983db162120391ac21d26eb12cb42b762b0908950cc95078f08547522c072f99"
+        },
+        {
+          "id": "table.gDwellingDescriptions.5",
+          "offset": 20,
+          "nwc_pointer_site": "0x93734",
+          "nwc_string_rva": "0x9a234",
+          "buka_pointer_site": "0x92ca8",
+          "buka_string_rva": "0x99754",
+          "size": 29,
+          "payload_sha256": "4d8ecfcf332c7366cc7785a37dc8a301618a349a8538b8e35eeafeb790f63e77"
+        },
+        {
+          "id": "table.gDwellingDescriptions.6",
+          "offset": 24,
+          "nwc_pointer_site": "0x93738",
+          "nwc_string_rva": "0x9a258",
+          "buka_pointer_site": "0x92cac",
+          "buka_string_rva": "0x99774",
+          "size": 27,
+          "payload_sha256": "c31cbb706da83491646c36be1d2f93d900beda705aa1309ac61412946d401876"
+        },
+        {
+          "id": "table.gDwellingDescriptions.7",
+          "offset": 28,
+          "nwc_pointer_site": "0x9373c",
+          "nwc_string_rva": "0x9a278",
+          "buka_pointer_site": "0x92cb0",
+          "buka_string_rva": "0x99790",
+          "size": 29,
+          "payload_sha256": "8a8bc01e9ff07f71cc14b0a647414c626f6fdbb2b64585a6668c2d8e70a5f8a2"
+        },
+        {
+          "id": "table.gDwellingDescriptions.8",
+          "offset": 32,
+          "nwc_pointer_site": "0x93740",
+          "nwc_string_rva": "0x9a298",
+          "buka_pointer_site": "0x92cb4",
+          "buka_string_rva": "0x997b0",
+          "size": 31,
+          "payload_sha256": "260779b10f69e4f12c8db74cec99c5ee196735f670ad822ebad9623360953025"
+        },
+        {
+          "id": "table.gDwellingDescriptions.9",
+          "offset": 36,
+          "nwc_pointer_site": "0x93744",
+          "nwc_string_rva": "0x9a2bc",
+          "buka_pointer_site": "0x92cb8",
+          "buka_string_rva": "0x997d0",
+          "size": 32,
+          "payload_sha256": "55b52c535ae7b83e44ae05964d0703f7ebac30ef228887c9aba265abc1a63a76"
+        },
+        {
+          "id": "table.gDwellingDescriptions.10",
+          "offset": 40,
+          "nwc_pointer_site": "0x93748",
+          "nwc_string_rva": "0x9a2d8",
+          "buka_pointer_site": "0x92cbc",
+          "buka_string_rva": "0x997f0",
+          "size": 30,
+          "payload_sha256": "4854ddb09f3d623c4c7cf3327689c5c1c675a344b632f5835a1511a2c11c1559"
+        },
+        {
+          "id": "table.gDwellingDescriptions.11",
+          "offset": 44,
+          "nwc_pointer_site": "0x9374c",
+          "nwc_string_rva": "0x9a300",
+          "buka_pointer_site": "0x92cc0",
+          "buka_string_rva": "0x99810",
+          "size": 32,
+          "payload_sha256": "1a96dab76a25c55d2c4775664e6ab474115a4577d3d0b2ef99c2655f05ab5fad"
+        },
+        {
+          "id": "table.gDwellingDescriptions.12",
+          "offset": 48,
+          "nwc_pointer_site": "0x93750",
+          "nwc_string_rva": "0x9a320",
+          "buka_pointer_site": "0x92cc4",
+          "buka_string_rva": "0x99830",
+          "size": 28,
+          "payload_sha256": "255c31c498ab5fe768d6d885cb54aa87a9a552ebfe9c95131e9dd8cf45a96cfc"
+        },
+        {
+          "id": "table.gDwellingDescriptions.13",
+          "offset": 52,
+          "nwc_pointer_site": "0x93754",
+          "nwc_string_rva": "0x9a33c",
+          "buka_pointer_site": "0x92cc8",
+          "buka_string_rva": "0x9984c",
+          "size": 25,
+          "payload_sha256": "5894a806244b0781160a71b23f53401a0beeee05065ffbeb0d4c06ece80aa582"
+        },
+        {
+          "id": "table.gDwellingDescriptions.14",
+          "offset": 56,
+          "nwc_pointer_site": "0x93758",
+          "nwc_string_rva": "0x9a35c",
+          "buka_pointer_site": "0x92ccc",
+          "buka_string_rva": "0x99868",
+          "size": 26,
+          "payload_sha256": "a24afe13f8af83957aaa4d118ffdd9d2e86fee20cc1f812a8765c0e14fbe783f"
+        },
+        {
+          "id": "table.gDwellingDescriptions.15",
+          "offset": 60,
+          "nwc_pointer_site": "0x9375c",
+          "nwc_string_rva": "0x9a378",
+          "buka_pointer_site": "0x92cd0",
+          "buka_string_rva": "0x99884",
+          "size": 29,
+          "payload_sha256": "0f00457dfd87a379615fe54b2ba128f29f853c30b2a363b5e81d8712ad929a3f"
+        },
+        {
+          "id": "table.gDwellingDescriptions.16",
+          "offset": 64,
+          "nwc_pointer_site": "0x93760",
+          "nwc_string_rva": "0x9a394",
+          "buka_pointer_site": "0x92cd4",
+          "buka_string_rva": "0x998a4",
+          "size": 29,
+          "payload_sha256": "c8fe4d873a1d5096eb79493c013b44e851c5fdc2810583bf5950e7287d9437c1"
+        },
+        {
+          "id": "table.gDwellingDescriptions.17",
+          "offset": 68,
+          "nwc_pointer_site": "0x93764",
+          "nwc_string_rva": "0x9a3b0",
+          "buka_pointer_site": "0x92cd8",
+          "buka_string_rva": "0x998c4",
+          "size": 30,
+          "payload_sha256": "8510735c296eace030c2388876147b9b9ac1556669cc2843a648cf722cb55ef8"
+        },
+        {
+          "id": "table.gDwellingDescriptions.18",
+          "offset": 72,
+          "nwc_pointer_site": "0x93768",
+          "nwc_string_rva": "0x9a3d0",
+          "buka_pointer_site": "0x92cdc",
+          "buka_string_rva": "0x998e4",
+          "size": 29,
+          "payload_sha256": "e286e918bbd2fddeba3a739fb551a511d6c3e225d032d4cf9c976528b7f3d6d9"
+        },
+        {
+          "id": "table.gDwellingDescriptions.19",
+          "offset": 76,
+          "nwc_pointer_site": "0x9376c",
+          "nwc_string_rva": "0x9a3ec",
+          "buka_pointer_site": "0x92ce0",
+          "buka_string_rva": "0x99904",
+          "size": 28,
+          "payload_sha256": "42c4f7e1c740c1faecfdd96004dbd61a5707218f4702aadbcd16ebfba4850d8e"
+        },
+        {
+          "id": "table.gDwellingDescriptions.20",
+          "offset": 80,
+          "nwc_pointer_site": "0x93770",
+          "nwc_string_rva": "0x9a40c",
+          "buka_pointer_site": "0x92ce4",
+          "buka_string_rva": "0x99920",
+          "size": 28,
+          "payload_sha256": "a19d9d4025cfcbff09ea63021b77be398b8065c1a4577e337512f1635e6a73de"
+        },
+        {
+          "id": "table.gDwellingDescriptions.21",
+          "offset": 84,
+          "nwc_pointer_site": "0x93774",
+          "nwc_string_rva": "0x9a428",
+          "buka_pointer_site": "0x92ce8",
+          "buka_string_rva": "0x9993c",
+          "size": 33,
+          "payload_sha256": "4048188952c70b9520dea10ba71e26f7b4e313a6b3d8fa646e8ae1c530750573"
+        },
+        {
+          "id": "table.gDwellingDescriptions.22",
+          "offset": 88,
+          "nwc_pointer_site": "0x93778",
+          "nwc_string_rva": "0x9a448",
+          "buka_pointer_site": "0x92cec",
+          "buka_string_rva": "0x99960",
+          "size": 24,
+          "payload_sha256": "4094da1e99744da36027b2ea4555d7dc33031cba00b2175f22ae361039dfc1b4"
+        },
+        {
+          "id": "table.gDwellingDescriptions.23",
+          "offset": 92,
+          "nwc_pointer_site": "0x9377c",
+          "nwc_string_rva": "0x9a464",
+          "buka_pointer_site": "0x92cf0",
+          "buka_string_rva": "0x99978",
+          "size": 34,
+          "payload_sha256": "9483d39e07356ae2c537041d2ddac603cff6f1b17cf76c06d72149bb70eaea24"
+        }
+      ],
+      "russian_object_sha256": "484c13338e9ba032ee6b853f48f83978f73c0ed8de683955f91b4ee55aae2dd8",
+      "english_object_sha256": "ffcc44fdda1ecde8c7c8f2c355a04e00a68aa3683ae0c6c41a6c1b13a6d7f5a6"
+    },
+    {
+      "name": "?gNeutralBuildingDescriptions@@3PAPADA",
+      "rva": "0x931b4",
+      "old_rva": "0x93c90",
+      "size": 28,
+      "unit": "SOURCE/KB",
+      "source": "src/SOURCE/KB.cpp",
+      "slots": [
+        {
+          "id": "table.gNeutralBuildingDescriptions.0",
+          "offset": 0,
+          "nwc_pointer_site": "0x93c90",
+          "nwc_string_rva": "0x9cdb8",
+          "buka_pointer_site": "0x931b4",
+          "buka_string_rva": "0x9c4f0",
+          "size": 53,
+          "payload_sha256": "190c3a7e979348ead30f546a6cbaff899d8bec431b14464052dc8d73bf5976d8"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.1",
+          "offset": 4,
+          "nwc_pointer_site": "0x93c94",
+          "nwc_string_rva": "0x9cdf4",
+          "buka_pointer_site": "0x931b8",
+          "buka_string_rva": "0x9c528",
+          "size": 171,
+          "payload_sha256": "c901f20ad6e453f632bdd92c9b37ff02c1410d974fa8d64c6cf88110b6fea000"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.2",
+          "offset": 8,
+          "nwc_pointer_site": "0x93c98",
+          "nwc_string_rva": "0x9cea4",
+          "buka_pointer_site": "0x931bc",
+          "buka_string_rva": "0x9c5d4",
+          "size": 53,
+          "payload_sha256": "98feb57ee3d821bfa3816d2ea73b73e36c47a1e550c21f5e9d3ca322864e76a3"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.3",
+          "offset": 12,
+          "nwc_pointer_site": "0x93c9c",
+          "nwc_string_rva": "0x9cee4",
+          "buka_pointer_site": "0x931c0",
+          "buka_string_rva": "0x9c60c",
+          "size": 33,
+          "payload_sha256": "6ad618ecd52ea1f91b16530f12ff13533d081a25bc1400910ad2747f266ffc07"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.4",
+          "offset": 16,
+          "nwc_pointer_site": "0x93ca0",
+          "nwc_string_rva": "0x9cf0c",
+          "buka_pointer_site": "0x931c4",
+          "buka_string_rva": "0x9c630",
+          "size": 55,
+          "payload_sha256": "05ed4df21b5290b2ea96111528a37b6d1f105770146810a3808bec7f6f95ecdc"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.5",
+          "offset": 20,
+          "nwc_pointer_site": "0x93ca4",
+          "nwc_string_rva": "0x9cf5c",
+          "buka_pointer_site": "0x931c8",
+          "buka_string_rva": "0x9c668",
+          "size": 50,
+          "payload_sha256": "d5b7c7f10d3e0b11d23b93678914489f27858cf4935b676aa08d09316db2e126"
+        },
+        {
+          "id": "table.gNeutralBuildingDescriptions.6",
+          "offset": 24,
+          "nwc_pointer_site": "0x93ca8",
+          "nwc_string_rva": "0x9cf8c",
+          "buka_pointer_site": "0x931cc",
+          "buka_string_rva": "0x9c69c",
+          "size": 50,
+          "payload_sha256": "0db7f0976d2ce4a0ea517606e6fa9f0b1a94d21e97b22722cfdeab1d37735dca"
+        }
+      ],
+      "russian_object_sha256": "484c13338e9ba032ee6b853f48f83978f73c0ed8de683955f91b4ee55aae2dd8",
+      "english_object_sha256": "ffcc44fdda1ecde8c7c8f2c355a04e00a68aa3683ae0c6c41a6c1b13a6d7f5a6"
+    }
+  ],
+  "removed_interior_census_starts": [
+    "0x931c0"
+  ],
+  "compiled_reference_controls": [
+    {
+      "site_rva": "0x62a36",
+      "target_rva": "0x931b4",
+      "symbol": "?gNeutralBuildingDescriptions@@3PAPADA",
+      "kind": 6,
+      "method": "BuyBuild selects neutral descriptions for building <= 6, otherwise the faction/dwelling index; indexed pointer loads use scale four. Complete current table slots match both languages."
+    },
+    {
+      "site_rva": "0x62a52",
+      "target_rva": "0x92c94",
+      "symbol": "?gDwellingDescriptions@@3PAPADA",
+      "kind": 6,
+      "method": "BuyBuild selects neutral descriptions for building <= 6, otherwise the faction/dwelling index; indexed pointer loads use scale four. Complete current table slots match both languages."
+    }
+  ]
+}

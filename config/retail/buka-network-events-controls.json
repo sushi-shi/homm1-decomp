@@ -1,0 +1,2067 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "use": "Corresponding source structure, floating-point expression forms, ordinary timeout-local names and declaration order. HoMM1 game rules and diagnostic calls remain retail-backed."
+  },
+  "changes": {
+    "army::Wince": "Byte-valued grid-mode conditional arms produce retail SETNE instead of the inherited full-width arithmetic Boolean.",
+    "advManager::EraseObj": "Compound secondary-trigger subtraction keeps retail byte-width arithmetic.",
+    "advManager::CombatMonsterEvent": "Direct hero-coordinate comparison assignment to guardian-facing flag.",
+    "advManager::PlayerMonsterInteract": "Monster-count-first fight-value product; the HoMM1 1.75 joining threshold is retained.",
+    "advManager::ComputerMonsterInteract": "Monster-count-first fight-value product; physical local placement remains unresolved.",
+    "nb_snd": "Session argument precedes maximum-session global in the initial equality check.",
+    "nb_add_name_done": "Incremented control-block name precedes saved name in the comparison. This accounts for retail saved EBX. Physical buffer/index placement remains unresolved.",
+    "army::ValidAttack": "Signed-byte arms for both wide-creature adjacent-direction conditionals, and occupant-first side comparisons.",
+    "TransmitAndWait": "Timeout expression precedes KBTickCount; corresponding donor clock/receivedData names and result,clock,complete,receivedData declaration order restore retail frame placement.",
+    "fileRequester::DoKnob": "Mouse-event coordinate precedes gutter bounds in comparisons; physical local placement remains unresolved.",
+    "combatManager::EffectSpellCure": "Quantity-first fight-value product and local-side-first comparisons; physical local placement remains unresolved.",
+    "game::GiveTroopsToNeutralTowns": "Tier-first creature selection sum; physical local placement remains unresolved.",
+    "game::InitCampaignMap": "Day, week, month order for current-turn sum; physical local placement remains unresolved.",
+    "nb_recv_complete": "Retain the original command & ~ASYNCH expression and recover NETWIN /G5. The compiler emits retail AND CL,0x7f followed by integer-width switch storage/comparison. Narrowing-cast probes were removed; complete body and references agree, but the ordinary objdiff symbol-span score remains non-exact.",
+    "philAI::ValueOfBuyingCreature": "Creature-faction division precedes hero-class read; donor parenthesized divisor cast preserves FILD/FILD/FDIVP instead of FILD/FIDIV. Physical local placement remains unresolved.",
+    "philAI::GetBestHero": "Read worth before Random when weighting the hero; compiler spills the double-promoted value across the call. Physical local placement remains unresolved.",
+    "TransmitRemoteData": "Conditional reliable/unreliable message-type assignment; physical local placement remains unresolved."
+  },
+  "functions": [
+    {
+      "symbol": "?Wince@army@@QAEXXZ",
+      "rva": "0x1402e",
+      "candidate_instructions": 28,
+      "retail_instructions": 28,
+      "candidate_extent": 86,
+      "retail_extent": 86,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "e8a7273a5302ff6b6856e7f68cf0435605a3446c708fbaabb4519c92ba37d43b",
+      "retail_sha256": "e8a7273a5302ff6b6856e7f68cf0435605a3446c708fbaabb4519c92ba37d43b"
+    },
+    {
+      "symbol": "?EraseObj@advManager@@QAEXPAVmapCell@@HH@Z",
+      "rva": "0x267ed",
+      "candidate_instructions": 137,
+      "retail_instructions": 137,
+      "candidate_extent": 456,
+      "retail_extent": 456,
+      "slot_map": {
+        "-16": -16,
+        "-4": -4,
+        "-8": -8,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "559ae6d903dcee4ca2309de87c7cda3c4c3c6c076ea1ff10c76b2aaf01e1add1",
+      "retail_sha256": "559ae6d903dcee4ca2309de87c7cda3c4c3c6c076ea1ff10c76b2aaf01e1add1"
+    },
+    {
+      "symbol": "?CombatMonsterEvent@advManager@@QAECPAVhero@@CFPAVmapCell@@HHCHH@Z",
+      "rva": "0x274db",
+      "candidate_instructions": 157,
+      "retail_instructions": 157,
+      "candidate_extent": 482,
+      "retail_extent": 482,
+      "slot_map": {
+        "-12": -12,
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "3a028789484dc9ea569a7a1530c57429755cc54c876a6ea126b58638747731b3",
+      "retail_sha256": "3a028789484dc9ea569a7a1530c57429755cc54c876a6ea126b58638747731b3"
+    },
+    {
+      "symbol": "?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PACHHCHH@Z",
+      "rva": "0x28ce2",
+      "candidate_instructions": 131,
+      "retail_instructions": 131,
+      "candidate_extent": 381,
+      "retail_extent": 381,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-16": -16,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "0cc6859f73229e849b224101ac526477477d4903dd672070c0960da8071d6edf",
+      "retail_sha256": "0cc6859f73229e849b224101ac526477477d4903dd672070c0960da8071d6edf"
+    },
+    {
+      "symbol": "?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAC@Z",
+      "rva": "0x28e5f",
+      "candidate_instructions": 111,
+      "retail_instructions": 111,
+      "candidate_extent": 313,
+      "retail_extent": 313,
+      "slot_map": {
+        "-24": -24,
+        "-28": -28,
+        "-32": -32,
+        "-16": -4,
+        "-12": -12,
+        "-20": -8,
+        "-4": -20,
+        "-8": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.91892,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "27063c7f909b83640d0112d4a40b7eb8d955c14b9c6c64aae72c671986c9557c",
+      "retail_sha256": "bd6ef665aae9cee6233cc92f5ebe6016680ab5ce5c3065295558c479440280d5"
+    },
+    {
+      "symbol": "?GiveTroopsToNeutralTowns@game@@QAEXXZ",
+      "rva": "0x2dc78",
+      "candidate_instructions": 130,
+      "retail_instructions": 130,
+      "candidate_extent": 588,
+      "retail_extent": 588,
+      "slot_map": {
+        "-24": -24,
+        "-12": -12,
+        "-4": -4,
+        "-20": -16,
+        "-16": -20,
+        "-28": -28,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.94475,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "828d9651dac0032deea2cfefb18c11ef9c583fa268e55f0794bd20a6985b4549",
+      "retail_sha256": "5410750caba0873c6530d902ccd980290eec205092577a0382d22b4e7dac41c6"
+    },
+    {
+      "symbol": "?InitCampaignMap@game@@QAEXHH@Z",
+      "rva": "0x2e595",
+      "candidate_instructions": 169,
+      "retail_instructions": 169,
+      "candidate_extent": 603,
+      "retail_extent": 603,
+      "slot_map": {
+        "-28": -28,
+        "-20": -4,
+        "-8": -24,
+        "-24": -16,
+        "-4": -8,
+        "-12": -12,
+        "-16": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.91716,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "b9f1da9aeda5e8ca8f9a0bd1b853754f816f643ca1527d053a44f4a8f77e7f5f",
+      "retail_sha256": "097984244a711db7ecd1effc66c855e7e1918f9eb72e1e8d09234a7c607aa7f3"
+    },
+    {
+      "symbol": "_nb_snd",
+      "rva": "0x45121",
+      "candidate_instructions": 72,
+      "retail_instructions": 72,
+      "candidate_extent": 238,
+      "retail_extent": 238,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "ffb565bc72cab12e56f70ec9ff5b81d1ed4b5a78e9354e95e203631f5271ef48",
+      "retail_sha256": "ffb565bc72cab12e56f70ec9ff5b81d1ed4b5a78e9354e95e203631f5271ef48"
+    },
+    {
+      "symbol": "?nb_add_name_done@@YGXPAU_NCB@@@Z",
+      "rva": "0x459e3",
+      "candidate_instructions": 104,
+      "retail_instructions": 104,
+      "candidate_extent": 406,
+      "retail_extent": 406,
+      "slot_map": {
+        "-88": -88,
+        "-84": -4,
+        "-80": -84
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 98.679245,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "0bc388430cd021650d478b24cbd3c92500a6a61232cba8ab10b62cd3d430dc13",
+      "retail_sha256": "618fa5897b48d919db601bc3a86256caac08696d0d8b7ba87aa5841659ab8542"
+    },
+    {
+      "symbol": "?nb_recv_complete@@YAXH@Z",
+      "rva": "0x46185",
+      "candidate_instructions": 82,
+      "retail_instructions": 82,
+      "candidate_extent": 313,
+      "retail_extent": 313,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 97.34513,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "645b3ec7d43a55463b3951f85b0499fd177e504b7fc42da0f6d185cc59c0ad53",
+      "retail_sha256": "645b3ec7d43a55463b3951f85b0499fd177e504b7fc42da0f6d185cc59c0ad53"
+    },
+    {
+      "symbol": "?ValidAttack@army@@QAEFFFFFPAF@Z",
+      "rva": "0x468bc",
+      "candidate_instructions": 175,
+      "retail_instructions": 175,
+      "candidate_extent": 534,
+      "retail_extent": 534,
+      "slot_map": {
+        "-12": -12,
+        "-4": -4,
+        "-16": -16,
+        "-8": -8,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "3144bf6e4cbf849b05ac8d394ada1cc72742f019ff8f8140445cf20565d3695c",
+      "retail_sha256": "3144bf6e4cbf849b05ac8d394ada1cc72742f019ff8f8140445cf20565d3695c"
+    },
+    {
+      "symbol": "?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z",
+      "rva": "0x4b215",
+      "candidate_instructions": 186,
+      "retail_instructions": 186,
+      "candidate_extent": 616,
+      "retail_extent": 616,
+      "slot_map": {
+        "-84": -84,
+        "-40": -68,
+        "-68": -36,
+        "-20": -44,
+        "-88": -88,
+        "-28": -4,
+        "-76": -72,
+        "-80": -76,
+        "-32": -80,
+        "-4": -8,
+        "-24": -64,
+        "-72": -60,
+        "-8": -52,
+        "-16": -48,
+        "-36": -40,
+        "-12": -56,
+        "-92": -92
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.7043,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "cc1f26ec47a4e2b452a71be8b13975a1777495f81924862bfc261b0a603d4602",
+      "retail_sha256": "21502198cd9cf8ee4e49b45e04bea1781ef9a6023c6f02599db03487daa22d02"
+    },
+    {
+      "symbol": "?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z",
+      "rva": "0x4b891",
+      "candidate_instructions": 86,
+      "retail_instructions": 86,
+      "candidate_extent": 300,
+      "retail_extent": 300,
+      "slot_map": {
+        "-36": -36,
+        "-8": -8,
+        "-12": -4,
+        "-16": -20,
+        "-24": -12,
+        "-32": -28,
+        "-4": -16,
+        "-20": -32,
+        "-44": -44,
+        "-48": -48,
+        "-28": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.75581,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "fc467cbbe7db6fe49a4849b4dea218603ad83b43a6b5b6097bc8a35cc31513ae",
+      "retail_sha256": "e8855b15efb37a4b45acbeffb2919cf140c4cb4ad78795dc18af080a1c16b2db"
+    },
+    {
+      "symbol": "?TransmitRemoteData@@YAHPADHHCCCCC@Z",
+      "rva": "0x532e8",
+      "candidate_instructions": 127,
+      "retail_instructions": 127,
+      "candidate_extent": 483,
+      "retail_extent": 483,
+      "slot_map": {
+        "-12": -4,
+        "-272": -272,
+        "-268": -268,
+        "-267": -267,
+        "-263": -263,
+        "-261": -261,
+        "-262": -262,
+        "-259": -259,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.937004,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "67dfb28264898bf34de1a070b1101fb41474a05a0e627df963c1e183632cf603",
+      "retail_sha256": "4bdb3c5568e1309f8efec35f61baf1a33a3bb44a79cc0d23641d1fc5a1e64275"
+    },
+    {
+      "symbol": "?TransmitAndWait@@YAHPADHHCCPAPAD@Z",
+      "rva": "0x53a1b",
+      "candidate_instructions": 89,
+      "retail_instructions": 89,
+      "candidate_extent": 276,
+      "retail_extent": 276,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4,
+        "-16": -16,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "659e6cef5a8ef11911b1ad30f196753a824fe64e55bab43b03954e834132fb06",
+      "retail_sha256": "659e6cef5a8ef11911b1ad30f196753a824fe64e55bab43b03954e834132fb06"
+    },
+    {
+      "symbol": "?DoKnob@fileRequester@@QAEXXZ",
+      "rva": "0x553a7",
+      "candidate_instructions": 165,
+      "retail_instructions": 165,
+      "candidate_extent": 603,
+      "retail_extent": 603,
+      "slot_map": {
+        "-80": -80,
+        "-12": -12,
+        "-84": -84,
+        "-8": -8,
+        "-16": -40,
+        "-24": -20,
+        "-20": -16,
+        "-60": -60,
+        "-44": -36,
+        "-40": -32,
+        "-36": -28,
+        "-32": -24,
+        "-88": -88,
+        "-28": -44,
+        "-76": -76
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.781815,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "6dbb3bb5199626c0b8c9d2c8a93bb76b5fad4f8199219829b0cfcf277a71106a",
+      "retail_sha256": "242f19ebce90d78db26ea7778d05c2cbed11e3cd93348a99ec79a0e6d6399593"
+    },
+    {
+      "symbol": "?EffectSpellCure@combatManager@@QAEXPAHHC@Z",
+      "rva": "0x596de",
+      "candidate_instructions": 145,
+      "retail_instructions": 145,
+      "candidate_extent": 524,
+      "retail_extent": 524,
+      "slot_map": {
+        "-36": -36,
+        "-4": -8,
+        "-24": -28,
+        "-28": -12,
+        "-12": -4,
+        "-20": -20,
+        "-32": -32,
+        "-40": -40,
+        "-16": -24,
+        "-8": -16,
+        "-44": -44
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.80864,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "3f8e76711c8e3ab36767537a8df529070c3de29a693c41339a1052d6f02e0ba3",
+      "retail_sha256": "48e71ecab767922eb66247547692d88ba372f87555e247e1a6d17b687b009cbc"
+    }
+  ],
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "netwin_profile_control": {
+    "orientation": "before=/G5 retained; after=/G6 isolated control; identical final source",
+    "result": [
+      {
+        "unit": "SOURCE/netwin",
+        "source_sha256": "a79a064b6fbc4cf5500ab53e5c5c7cbeeb21be911ca5481b41c806731178c1bf",
+        "object_sha256": "fc324c7984efe7abbe6226baff072924fa5a7f85424d08636791c123e7486cb2",
+        "before_exact": 12,
+        "after_exact": 12,
+        "improved": 0,
+        "regressed": 2,
+        "functions": [
+          {
+            "name": "?is_netbios_avail@@YAHXZ",
+            "rva": "0x44c90",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 148
+          },
+          {
+            "name": "_nb_init",
+            "rva": "0x44d24",
+            "before": 99.87395,
+            "after": 99.87395,
+            "size": 411
+          },
+          {
+            "name": "_nb_term",
+            "rva": "0x44ebf",
+            "before": 99.76744,
+            "after": 99.76744,
+            "size": 458
+          },
+          {
+            "name": "_nb_rcv",
+            "rva": "0x45089",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 152
+          },
+          {
+            "name": "_nb_snd",
+            "rva": "0x45121",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 238
+          },
+          {
+            "name": "_nb_sess",
+            "rva": "0x4520f",
+            "before": 99.71967,
+            "after": 99.70351,
+            "size": 1264
+          },
+          {
+            "name": "_nb_stat",
+            "rva": "0x456ff",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 19
+          },
+          {
+            "name": "?nb_thr_ctl@@YAXXZ",
+            "rva": "0x45712",
+            "before": 99.833336,
+            "after": 99.833336,
+            "size": 540
+          },
+          {
+            "name": "?nb_add_name@@YAXXZ",
+            "rva": "0x4592e",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 181
+          },
+          {
+            "name": "?nb_add_name_done@@YGXPAU_NCB@@@Z",
+            "rva": "0x459e3",
+            "before": 98.679245,
+            "after": 98.679245,
+            "size": 406
+          },
+          {
+            "name": "?nb_recv_any@@YAGH@Z",
+            "rva": "0x45b79",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 174
+          },
+          {
+            "name": "?nb_recv_any_done@@YGXPAU_NCB@@@Z",
+            "rva": "0x45c27",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 290
+          },
+          {
+            "name": "?nb_call@@YAGHPAX@Z",
+            "rva": "0x45d49",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 183
+          },
+          {
+            "name": "?nb_listen@@YAGHPAX@Z",
+            "rva": "0x45e00",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 183
+          },
+          {
+            "name": "?nb_call_done@@YGXPAU_NCB@@@Z",
+            "rva": "0x45eb7",
+            "before": 99.78667,
+            "after": 99.78667,
+            "size": 250
+          },
+          {
+            "name": "?nb_arm_recv@@YAXH@Z",
+            "rva": "0x45fb1",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 294
+          },
+          {
+            "name": "?nb_close_session@@YAXH@Z",
+            "rva": "0x460d7",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 174
+          },
+          {
+            "name": "?nb_recv_complete@@YAXH@Z",
+            "rva": "0x46185",
+            "before": 97.34513,
+            "after": 97.29204,
+            "size": 313
+          },
+          {
+            "name": "?nb_format_name@@YAXPADPAE@Z",
+            "rva": "0x462be",
+            "before": 100.0,
+            "after": 100.0,
+            "size": 110
+          }
+        ]
+      }
+    ],
+    "build_contract_sha256": "8e9a45de21f240181b25ebb4254343f1c960a3179268cdcacc826a412d8d769a"
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0x1402e",
+      "symbol": "?Wince@army@@QAEXXZ",
+      "before": 91.96429,
+      "after": 100.0
+    },
+    {
+      "rva": "0x267ed",
+      "symbol": "?EraseObj@advManager@@QAEXPAVmapCell@@HH@Z",
+      "before": 94.08029,
+      "after": 100.0
+    },
+    {
+      "rva": "0x274db",
+      "symbol": "?CombatMonsterEvent@advManager@@QAECPAVhero@@CFPAVmapCell@@HHCHH@Z",
+      "before": 96.6879,
+      "after": 100.0
+    },
+    {
+      "rva": "0x28ce2",
+      "symbol": "?PlayerMonsterInteract@advManager@@QAEXPAVmapCell@@0PAVhero@@PACHHCHH@Z",
+      "before": 95.51908,
+      "after": 100.0
+    },
+    {
+      "rva": "0x28e5f",
+      "symbol": "?ComputerMonsterInteract@advManager@@QAEXPAVmapCell@@PAVhero@@PAC@Z",
+      "before": 94.13513,
+      "after": 99.91892
+    },
+    {
+      "rva": "0x2dc78",
+      "symbol": "?GiveTroopsToNeutralTowns@game@@QAEXXZ",
+      "before": 98.48619,
+      "after": 99.94475
+    },
+    {
+      "rva": "0x2e595",
+      "symbol": "?InitCampaignMap@game@@QAEXHH@Z",
+      "before": 97.53846,
+      "after": 99.91716
+    },
+    {
+      "rva": "0x45121",
+      "symbol": "_nb_snd",
+      "before": 94.30556,
+      "after": 100.0
+    },
+    {
+      "rva": "0x4520f",
+      "symbol": "_nb_sess",
+      "before": 99.70351,
+      "after": 99.71967
+    },
+    {
+      "rva": "0x459e3",
+      "symbol": "?nb_add_name_done@@YGXPAU_NCB@@@Z",
+      "before": 92.383644,
+      "after": 98.679245
+    },
+    {
+      "rva": "0x46185",
+      "symbol": "?nb_recv_complete@@YAXH@Z",
+      "before": 97.29204,
+      "after": 97.34513
+    },
+    {
+      "rva": "0x468bc",
+      "symbol": "?ValidAttack@army@@QAEFFFFFPAF@Z",
+      "before": 96.57143,
+      "after": 100.0
+    },
+    {
+      "rva": "0x4b215",
+      "symbol": "?ValueOfBuyingCreature@philAI@@QAEXPAVtown@@HAAHHAAM@Z",
+      "before": 95.462364,
+      "after": 99.7043
+    },
+    {
+      "rva": "0x4b891",
+      "symbol": "?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z",
+      "before": 97.33721,
+      "after": 99.75581
+    },
+    {
+      "rva": "0x532e8",
+      "symbol": "?TransmitRemoteData@@YAHPADHHCCCCC@Z",
+      "before": 97.25984,
+      "after": 99.937004
+    },
+    {
+      "rva": "0x53a1b",
+      "symbol": "?TransmitAndWait@@YAHPADHHCCPAPAD@Z",
+      "before": 93.55056,
+      "after": 100.0
+    },
+    {
+      "rva": "0x553a7",
+      "symbol": "?DoKnob@fileRequester@@QAEXXZ",
+      "before": 96.6303,
+      "after": 99.781815
+    },
+    {
+      "rva": "0x596de",
+      "symbol": "?EffectSpellCure@combatManager@@QAEXPAHHC@Z",
+      "before": 95.93827,
+      "after": 99.80864
+    }
+  ],
+  "equal_body_score_discrepancies": {
+    "status": "Read-only evidence; no comparison, normalization, boundary, enrollment or score changes. These remain non-exact in README. GetObjectFamily reports 84 bytes for its independently equal 81-byte body; all measured spans and tails are preserved here for follow-up.",
+    "functions": [
+      {
+        "rva": "0x2f621",
+        "symbol": "?GetObjectFamily@@YAHH@Z",
+        "unit": "SOURCE/GAME",
+        "objdiff_score": 91.666664,
+        "reported_size": "84",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 81,
+            "symbol_span": 81,
+            "trailing_bytes": "",
+            "body_sha256": "7b8de65246f7b0441dd19e1c444357e55cbff48bcec81f488c62131f894231aa"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 81,
+            "symbol_span": 84,
+            "trailing_bytes": "909090",
+            "body_sha256": "7b8de65246f7b0441dd19e1c444357e55cbff48bcec81f488c62131f894231aa"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x20",
+            "symbol": "?GetObjectFamily@@YAHH@Z",
+            "addend": 72,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x27",
+            "symbol": "?GetObjectFamily@@YAHH@Z",
+            "addend": 64,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x40",
+            "symbol": "?GetObjectFamily@@YAHH@Z",
+            "addend": 43,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x44",
+            "symbol": "?GetObjectFamily@@YAHH@Z",
+            "addend": 50,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x33b9c",
+        "symbol": "?PerWeek@game@@QAEXXZ",
+        "unit": "SOURCE/GAME",
+        "objdiff_score": 99.61759,
+        "reported_size": "1988",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 1986,
+            "symbol_span": 1986,
+            "trailing_bytes": "",
+            "body_sha256": "e0a8d0116eeb41377f3067cd86e12f1df9a967d859911e422eb7eb44d57f70f5"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 1986,
+            "symbol_span": 1988,
+            "trailing_bytes": "9090",
+            "body_sha256": "e0a8d0116eeb41377f3067cd86e12f1df9a967d859911e422eb7eb44d57f70f5"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x14",
+            "symbol": "?giWeekType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1e",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x26",
+            "symbol": "?giWeekTypeExtra@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x40",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x56",
+            "symbol": "?giWeekType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x60",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x68",
+            "symbol": "?giWeekTypeExtra@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xf0",
+            "symbol": "?gDwellingType@@3PAY05CA",
+            "addend": 4294967289,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xfb",
+            "symbol": "?gMonsterDatabase@@3PAUtag_monsterInfo@@A",
+            "addend": 7,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x136",
+            "symbol": "?gbHumanPlayer@@3PAHA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x14b",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x168",
+            "symbol": "__real@8@3fff9eb851eb851eb800",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x16d",
+            "symbol": "__ftol",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x184",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1a1",
+            "symbol": "__real@8@3fffae147ae147ae1800",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1a6",
+            "symbol": "__ftol",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x1b1",
+            "symbol": "?giWeekType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1cc",
+            "symbol": "?gDwellingType@@3PAY05CA",
+            "addend": 4294967289,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1d3",
+            "symbol": "?giWeekTypeExtra@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x254",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x279",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x28f",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2ac",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2c1",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2d3",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2d8",
+            "symbol": "?GetNewHeroId@game@@QAECC@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x2e8",
+            "symbol": "?gpGame@@3PAVgame@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x388",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1953,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x38f",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1913,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x3e5",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x456",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x4cd",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x544",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x5bb",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x632",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x6a9",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x71d",
+            "symbol": "?Random@@YAHHH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x76f",
+            "symbol": "?GiveTroopsToNeutralTowns@game@@QAEXXZ",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x779",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1040,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x77d",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1159,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x781",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1278,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x785",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1397,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x789",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1516,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x78d",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 915,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x791",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1635,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x795",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1751,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x799",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 992,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x79d",
+            "symbol": "?PerWeek@game@@QAEXXZ",
+            "addend": 1865,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x46185",
+        "symbol": "?nb_recv_complete@@YAXH@Z",
+        "unit": "SOURCE/netwin",
+        "objdiff_score": 97.34513,
+        "reported_size": "316",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 313,
+            "symbol_span": 313,
+            "trailing_bytes": "",
+            "body_sha256": "645b3ec7d43a55463b3951f85b0499fd177e504b7fc42da0f6d185cc59c0ad53"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 313,
+            "symbol_span": 316,
+            "trailing_bytes": "909090",
+            "body_sha256": "645b3ec7d43a55463b3951f85b0499fd177e504b7fc42da0f6d185cc59c0ad53"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x10",
+            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2f",
+            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "addend": 1,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x47",
+            "symbol": "?nb_recv_complete@@YAXH@Z",
+            "addend": 288,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x4e",
+            "symbol": "?nb_recv_complete@@YAXH@Z",
+            "addend": 276,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x5d",
+            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "addend": 8,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x66",
+            "symbol": "_malloc",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x82",
+            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "addend": 8,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xa4",
+            "symbol": "?gNbRcvData@@3PAY0BAAA@EA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xb1",
+            "symbol": "_memcpy",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0xb9",
+            "symbol": "?gNbRcvLock@@3U_RTL_CRITICAL_SECTION@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xbf",
+            "symbol": "__imp__EnterCriticalSection@4",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xc8",
+            "symbol": "?gNbRcvQueue@@3Utag_Anchor@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xcd",
+            "symbol": "?add_node@@YAXPAUtag_Anchor@@PAUtag_Node@@@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0xd5",
+            "symbol": "?gNbRcvLock@@3U_RTL_CRITICAL_SECTION@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xdb",
+            "symbol": "__imp__LeaveCriticalSection@4",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xe4",
+            "symbol": "?nb_arm_recv@@YAXH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0xf2",
+            "symbol": "?gNetStatus@@3PAEA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xfe",
+            "symbol": "?gNetStatus@@3PAEA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x109",
+            "symbol": "?nb_arm_recv@@YAXH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x114",
+            "symbol": "?nb_recv_complete@@YAXH@Z",
+            "addend": 82,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x118",
+            "symbol": "?nb_recv_complete@@YAXH@Z",
+            "addend": 237,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x11c",
+            "symbol": "?nb_recv_complete@@YAXH@Z",
+            "addend": 260,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x5752d",
+        "symbol": "?SetupGame@game@@QAECC@Z",
+        "unit": "SOURCE/SETUP",
+        "objdiff_score": 99.55157,
+        "reported_size": "883",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 882,
+            "symbol_span": 882,
+            "trailing_bytes": "",
+            "body_sha256": "60a3823bd11a3ecf7a5e868e5fe16e4f492d505a3c74b27aaf0875d7e8c82254"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 882,
+            "symbol_span": 884,
+            "trailing_bytes": "9090",
+            "body_sha256": "60a3823bd11a3ecf7a5e868e5fe16e4f492d505a3c74b27aaf0875d7e8c82254"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x6",
+            "symbol": "__ehreg$?SetupGame@game@@QAECC@Z",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x27",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2e",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x35",
+            "symbol": "?giNumHumanPlayers@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x3f",
+            "symbol": "?gbWaitForRemoteReceive@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x46",
+            "symbol": "?gDirectConnect@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x4d",
+            "symbol": "?gInSetupDialog@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x57",
+            "symbol": "?gMenuCommand@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x63",
+            "symbol": "?gMenuCommand@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x87",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 847,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x8e",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 787,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x94",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xa0",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xac",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xb8",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xc4",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xd0",
+            "symbol": "?giNumHumanPlayers@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xda",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xe6",
+            "symbol": "?giNumHumanPlayers@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xf0",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xfc",
+            "symbol": "?giNumHumanPlayers@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x106",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x112",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x119",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x122",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x129",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x132",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x139",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x142",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x149",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x152",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x159",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x160",
+            "symbol": "?gDirectConnect@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x169",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x170",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x177",
+            "symbol": "?gDirectConnect@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x17f",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x185",
+            "symbol": "?RemoteMain@@YAXH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x18f",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x19b",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1a6",
+            "symbol": "?gbWaitForRemoteReceive@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1ad",
+            "symbol": "?gMenuCommand@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1c4",
+            "symbol": "??2@YAPAXI@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x1dc",
+            "symbol": "$anon_str_2b5f97fab6abbf5273bc7be408c48dffeeb0520533c0f48c049afcdf03e4e1a8_0",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1eb",
+            "symbol": "??0heroWindow@@QAE@FFPAD@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x215",
+            "symbol": "?MemError@@YAXXZ",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x21c",
+            "symbol": "?SetupGameHandler@@YAFAAUtag_message@@@Z",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x226",
+            "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x22b",
+            "symbol": "?DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x23a",
+            "symbol": "??3@YAXPAX@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x242",
+            "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x266",
+            "symbol": "?gCampaignChoice@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x277",
+            "symbol": "?SetupCampaignGame@game@@QAECXZ",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x291",
+            "symbol": "?SetupMultiPlayerGame@game@@QAECXZ",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x2b3",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2bf",
+            "symbol": "?iMPBaseType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2ca",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2d0",
+            "symbol": "?RemoteMain@@YAXH@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x2da",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2e6",
+            "symbol": "?iMPExtendedType@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2f1",
+            "symbol": "?gbWaitForRemoteReceive@@3CA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2f8",
+            "symbol": "?gInSetupDialog@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x313",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 146,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x317",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 158,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x31b",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 170,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x31f",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 182,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x323",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 206,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x327",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 228,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x32b",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 250,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x32f",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 272,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x333",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 288,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x337",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 304,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x33b",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 320,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x33f",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 336,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x343",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 359,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x347",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 194,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x34b",
+            "symbol": "?SetupGame@game@@QAECC@Z",
+            "addend": 427,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x6716a",
+        "symbol": "?DDSD@@YAXHPADH@Z",
+        "unit": "SOURCE/wingraph",
+        "objdiff_score": 99.0,
+        "reported_size": "1008",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 1005,
+            "symbol_span": 1005,
+            "trailing_bytes": "",
+            "body_sha256": "6bbda1e0fb423e2866d541a8164f9f054f287eb4a3cf371394f5b35213c66d4f"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 1005,
+            "symbol_span": 1008,
+            "trailing_bytes": "909090",
+            "body_sha256": "6bbda1e0fb423e2866d541a8164f9f054f287eb4a3cf371394f5b35213c66d4f"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x8",
+            "symbol": "?gInDDSD@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x16",
+            "symbol": "?gInDDSD@@3HA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1f",
+            "symbol": "?gDD@@3PAUIDirectDraw@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x27",
+            "symbol": "?gDD@@3PAUIDirectDraw@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xfa",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 884,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x101",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 856,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x315",
+            "symbol": "__imp__MessageBeep@4",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x31d",
+            "symbol": "__imp__MessageBeep@4",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x325",
+            "symbol": "__imp__MessageBeep@4",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x336",
+            "symbol": "$anon_str_0174774b6bff56fe6f97be7389678e3b237b47f687664f5386da51231cfde3ab_0",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x33b",
+            "symbol": "?gText@@3PADA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x340",
+            "symbol": "_sprintf",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x348",
+            "symbol": "?gText@@3PADA",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x34d",
+            "symbol": "?ShutDown@@YAXPAD@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x358",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 733,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x35c",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 544,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x360",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 568,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x364",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 697,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x368",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 616,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x36c",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 628,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x370",
+            "symbol": "?DDSD@@YAXHPADH@Z",
+            "addend": 778,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x74b79",
+        "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+        "unit": "BASE/BORDER",
+        "objdiff_score": 98.39572,
+        "reported_size": "476",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 473,
+            "symbol_span": 473,
+            "trailing_bytes": "",
+            "body_sha256": "647d10e42a3a84820e01494b4510bb0c4db2334ad712a39a0f965f5c6a25e1c2"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 473,
+            "symbol_span": 476,
+            "trailing_bytes": "909090",
+            "body_sha256": "647d10e42a3a84820e01494b4510bb0c4db2334ad712a39a0f965f5c6a25e1c2"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x2c",
+            "symbol": "?Main@widget@@UAEFAAUtag_message@@@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x60",
+            "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+            "addend": 416,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x67",
+            "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+            "addend": 404,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x18a",
+            "symbol": "?Main@widget@@UAEFAAUtag_message@@@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x194",
+            "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+            "addend": 107,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x198",
+            "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+            "addend": 313,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x19c",
+            "symbol": "?Main@border@@UAEFAAUtag_message@@@Z",
+            "addend": 386,
+            "coff_type": 6
+          }
+        ]
+      },
+      {
+        "rva": "0x75050",
+        "symbol": "??0sample@@QAE@PAD@Z",
+        "unit": "BASE/SAMPLE",
+        "objdiff_score": 99.01478,
+        "reported_size": "564",
+        "spans": [
+          {
+            "side": "base",
+            "function_body_extent": 562,
+            "symbol_span": 562,
+            "trailing_bytes": "",
+            "body_sha256": "87e2a74c6550f343a1e35696ce4cb271440481c116f3376ee6550503c9b4a445"
+          },
+          {
+            "side": "target",
+            "function_body_extent": 562,
+            "symbol_span": 564,
+            "trailing_bytes": "9090",
+            "body_sha256": "87e2a74c6550f343a1e35696ce4cb271440481c116f3376ee6550503c9b4a445"
+          }
+        ],
+        "ordered_references": [
+          {
+            "offset": "0x6",
+            "symbol": "__ehreg$??0sample@@QAE@PAD@Z",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x28",
+            "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x2d",
+            "symbol": "?MakeId@resourceManager@@QAEFPAD@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x38",
+            "symbol": "??0resource@@QAE@FFFPAV0@@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x48",
+            "symbol": "??_7sample@@6B@",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x87",
+            "symbol": "_strcpy",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x93",
+            "symbol": "__strrev",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0xd3",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 501,
+            "coff_type": 6
+          },
+          {
+            "offset": "0xda",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 473,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x133",
+            "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x138",
+            "symbol": "?GetFileSize@resourceManager@@QAEIF@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x144",
+            "symbol": "??2@YAPAXI@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x16a",
+            "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x16f",
+            "symbol": "?PointToFile@resourceManager@@QAEXF@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x180",
+            "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+            "addend": 0,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x185",
+            "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+            "addend": 0,
+            "coff_type": 20
+          },
+          {
+            "offset": "0x1d9",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 246,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1dd",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 258,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1e1",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 270,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1e5",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 234,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1e9",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 222,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1ed",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 282,
+            "coff_type": 6
+          },
+          {
+            "offset": "0x1f1",
+            "symbol": "??0sample@@QAE@PAD@Z",
+            "addend": 292,
+            "coff_type": 6
+          }
+        ]
+      }
+    ]
+  },
+  "source_sha256": {
+    "src/SOURCE/ARMY.cpp": "31ad13d7de8277747f00217543ac7e198ec9feef051d18a6f332aa0d4a76c9bb",
+    "src/SOURCE/EVENTS.cpp": "d741b12773a72f08d09649fe023b343b08e7e6a02848eb4d4e2146d057bc9243",
+    "src/SOURCE/netwin.cpp": "a79a064b6fbc4cf5500ab53e5c5c7cbeeb21be911ca5481b41c806731178c1bf",
+    "src/SOURCE/PATH.cpp": "cbbbca60cc682e8fb7868faf7c1a6569051b49efe0a69cf5bd78c974a95d267e",
+    "src/SOURCE/REMOTE.cpp": "30b7e761416acb8902794f4d8ed75a95e9395e231cacdcf6c5668fc3d1e236d4",
+    "src/SOURCE/REQUEST.cpp": "155a5c284de78d92a5a88fbb9761aaa01c55d3be4b6ed2dd69a56625ce4a8a0a",
+    "src/SOURCE/SPELLAI.cpp": "24c603dbf80ef338cc8f100436fe298195eaf853b4a0231ba4587af079bd155b",
+    "src/SOURCE/GAME.cpp": "73f0347a38e4faf2093944578cb029c04a1d08a4b2c75a26fb00bb8519ff0fd1",
+    "src/SOURCE/PHILAI.cpp": "9a5d3db87ab35c2e947936a2a9085ee624b2ea11eaf96bbc71a56de719dfb044"
+  }
+}

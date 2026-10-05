@@ -14188,7 +14188,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7a7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -14428,7 +14428,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6bcb3",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -14573,7 +14573,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6bcb3",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -15397,7 +15397,7 @@
       "declaration_line": "u8* cAndBits[MOUSE_CURSOR_COUNT];"
     },
     {
-      "name": "?gColorBits@@3PAPACA",
+      "name": "?gColorBits@@3PAPAEA",
       "old_rva": "0xce8d0",
       "rva": "0xcf1e0",
       "size": 300,
@@ -15408,7 +15408,7 @@
           "function_rva": "0x6b6aa",
           "site_rva": "0x6b7a7",
           "target_rva": "0xcf1e0",
-          "symbol": "?gColorBits@@3PAPACA",
+          "symbol": "?gColorBits@@3PAPAEA",
           "addend": "0x0",
           "object_sha256": "395338d8fea39c85ac21c698e0f6aba7c936d35b40c8af312130be1e8a30cf14",
           "instruction_context": [
@@ -15547,21 +15547,21 @@
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7a7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7b4",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7c7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -15579,7 +15579,7 @@
           "function_rva": "0x6b6aa",
           "site_rva": "0x6b7b4",
           "target_rva": "0xcf1e0",
-          "symbol": "?gColorBits@@3PAPACA",
+          "symbol": "?gColorBits@@3PAPAEA",
           "addend": "0x0",
           "object_sha256": "395338d8fea39c85ac21c698e0f6aba7c936d35b40c8af312130be1e8a30cf14",
           "instruction_context": [
@@ -15649,14 +15649,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7a7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7b4",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -15674,7 +15674,7 @@
           "function_rva": "0x6b6aa",
           "site_rva": "0x6b7c7",
           "target_rva": "0xcf1e0",
-          "symbol": "?gColorBits@@3PAPACA",
+          "symbol": "?gColorBits@@3PAPAEA",
           "addend": "0x0",
           "object_sha256": "395338d8fea39c85ac21c698e0f6aba7c936d35b40c8af312130be1e8a30cf14",
           "instruction_context": [
@@ -15744,7 +15744,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7c7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -15769,7 +15769,7 @@
           "function_rva": "0x6b8b2",
           "site_rva": "0x6bcb3",
           "target_rva": "0xcf1e0",
-          "symbol": "?gColorBits@@3PAPACA",
+          "symbol": "?gColorBits@@3PAPAEA",
           "addend": "0x0",
           "object_sha256": "395338d8fea39c85ac21c698e0f6aba7c936d35b40c8af312130be1e8a30cf14",
           "instruction_context": [
@@ -15833,7 +15833,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6bcb3",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -15852,7 +15852,7 @@
       "source": "src/BASE/MOUSEMGR.cpp",
       "storage": ".bss",
       "payload_sha256": "d13d4a8b3b8add19b5970157f09d00c12cbda4fed4d74d8493156523f7069b66",
-      "declaration_line": "i8* gColorBits[MOUSE_CURSOR_COUNT];"
+      "declaration_line": "u8* gColorBits[MOUSE_CURSOR_COUNT];"
     },
     {
       "name": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
@@ -15936,14 +15936,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7b4",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7c7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -16038,7 +16038,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6b7c7",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -19956,7 +19956,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gColorBits@@3PAPACA",
+              "symbol": "?gColorBits@@3PAPAEA",
               "site_rva": "0x6be67",
               "target_rva": "0xcf1e0",
               "addend": "0x0",
@@ -22337,13 +22337,13 @@
     },
     {
       "rva": "0xcf240",
-      "owner": "?gColorBits@@3PAPACA",
+      "owner": "?gColorBits@@3PAPAEA",
       "owner_rva": "0xcf1e0",
       "owner_size": 300
     },
     {
       "rva": "0xcf248",
-      "owner": "?gColorBits@@3PAPACA",
+      "owner": "?gColorBits@@3PAPAEA",
       "owner_rva": "0xcf1e0",
       "owner_size": 300
     },

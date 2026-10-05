@@ -56,7 +56,7 @@ i16 widget::Main(tag_message& message) {
                             m_flags |= WIDGET_FLAG_DIMMED;
                             return MESSAGE_DISPATCH_CONSUME;
                         }
-                        m_flags |= message.value;
+                        m_flags |= message.value & WIDGET_FLAG_MASK;
                         if (m_flags & WIDGET_FLAG_DIMMED) {
                             Draw();
                             Dim();
@@ -75,7 +75,7 @@ i16 widget::Main(tag_message& message) {
                     break;
                 case WIDGET_COMMAND_CLEAR_FLAGS:
                     if (message.id == m_id) {
-                        i16 flags = message.value;
+                        i16 flags = message.value & WIDGET_FLAG_MASK;
                         m_flags &= ~flags;
                         if (flags & WIDGET_FLAG_DIMMED)
                             Draw();

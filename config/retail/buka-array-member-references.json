@@ -1121,10 +1121,11 @@
       "unit": "SOURCE/PHILAI",
       "site_rva": "0x50135",
       "target_rva": "0x903ae",
-      "symbol": "?gCombatFxNames@@3PAPADA",
+      "symbol": "?gSpellAIValue@@3PAFA",
       "kind": 6,
-      "addend": "0x66",
-      "owner_rva": "0x90348"
+      "addend": "0xfffffffe",
+      "owner_rva": "0x903b0",
+      "correction": "Instruction reads a signed word with one-based spell metadata scaled by two; preceding pointer-array containment was wrong. Reviewed negative addend in reloc_referents.tsv; buka-event-value-controls.json."
     },
     {
       "function": "?BuildObj@townManager@@QAEXF@Z",

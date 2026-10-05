@@ -649,9 +649,9 @@ i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
 VA(0x0041e900, 0x122)
 void combatManager::ResetRound(void) {
     i32 unusedRoundWord;
-    i32 index;
+    i32 armyIndex;
     i32 side;
-    army* curArmy;
+    army* currentArmy;
 
     m_catapultAttacksRemaining[COMBAT_ATTACKER_SIDE] = m_catapultAttackCount[COMBAT_ATTACKER_SIDE];
     m_catapultAttacksRemaining[COMBAT_DEFENDER_SIDE] = m_catapultAttackCount[COMBAT_DEFENDER_SIDE];
@@ -659,16 +659,16 @@ void combatManager::ResetRound(void) {
     m_keepAttacksRemaining[COMBAT_DEFENDER_SIDE] = 1;
     m_heroCastSpell[COMBAT_ATTACKER_SIDE] = m_heroCastSpell[COMBAT_DEFENDER_SIDE] = 0;
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
-        for (index = 0; index < ARMY_GROUP_SLOT_COUNT; index++) {
-            curArmy = &m_armies[side][index];
-            if (curArmy->m_quantity > 0) {
-                curArmy->m_stats.attributes &= MONSTER_FLAGS_ROUND_PERSISTENT_MASK;
-                if (curArmy->m_creatureType == CREATURE_TROLL)
-                    curArmy->m_hitPointsLost = 0;
-                if (curArmy->m_spellRounds > 0) {
-                    curArmy->m_spellRounds--;
-                    if (curArmy->m_spellRounds == 0)
-                        curArmy->CancelSpell();
+        for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
+            currentArmy = &m_armies[side][armyIndex];
+            if (currentArmy->m_quantity > 0) {
+                currentArmy->m_stats.attributes &= MONSTER_FLAGS_ROUND_PERSISTENT_MASK;
+                if (currentArmy->m_creatureType == CREATURE_TROLL)
+                    currentArmy->m_hitPointsLost = 0;
+                if (currentArmy->m_spellRounds > 0) {
+                    currentArmy->m_spellRounds--;
+                    if (currentArmy->m_spellRounds == 0)
+                        currentArmy->CancelSpell();
                 }
             }
         }
@@ -789,7 +789,7 @@ i8 combatManager::GetCommand(i16 hex) {
 // army view also takes the side.
 VA(0x0041edae, 0x171)
 i8 combatManager::RightClick(i8 hex) {
-    i8 unusedColumn = hex % COMBAT_GRID_COLUMNS;
+    i8 col = hex % COMBAT_GRID_COLUMNS;
     i8 row = hex / COMBAT_GRID_COLUMNS;
 
     if (hex == ARMY_HEX_INVALID)
@@ -811,7 +811,7 @@ i8 combatManager::RightClick(i8 hex) {
             if (hex % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_COLUMN)
                 return 0;
             i8 side = m_hexCells[hex].m_occupantSide;
-            i8 armyIndex = m_hexCells[hex].m_occupantIndex;
+            i8 armyIdx = m_hexCells[hex].m_occupantIndex;
             if (m_hexCells[hex].m_obstacleIndex != COMBAT_OBSTACLE_NONE)
                 return 0;
             else if (side != COMBAT_SIDE_NONE) {
@@ -1470,7 +1470,7 @@ void combatManager::CheckChangeSelector(void) {
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     if (!m_limitCreature || m_limitCreatureHex != currentArmy->m_hex) {
         UpdateGrid(
-            m_limitCreatureHex > currentArmy->m_hex ? currentArmy->m_hex : m_limitCreatureHex,
+            m_limitCreatureHex < currentArmy->m_hex ? m_limitCreatureHex : currentArmy->m_hex,
             1
         );
         m_limitCreatureHex = currentArmy->m_hex;
@@ -1546,10 +1546,7 @@ void combatManager::ResetMouse(void) {
         gpMouseManager->MouseCoords(x, y);
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_HOVER;
-        if (y > 0x1ca)
-            message.id = 0;
-        else
-            message.id = COMBAT_CONTROL_FIELD;
+        message.id = y <= 0x1ca ? COMBAT_CONTROL_FIELD : 0;
         ProcessCombatMsg(message);
     } else
         gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
@@ -1564,17 +1561,6 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
     i32 result;
     i32 data[4];
 
-    if (giNextAction)
-        LogStr(
-            "Process Act",
-            giNextAction,
-            giNextActionGridIndex,
-            giNextActionGridIndex2,
-            giNextActionExtra,
-            m_currentSide,
-            m_currentArmyIndex,
-            m_armies[m_currentSide][m_currentArmyIndex].m_hex
-        );
     if (gbThisNetHasControl && gRemoteOn && m_playerId[COMBAT_ATTACKER_SIDE] >= 0
         && m_playerId[COMBAT_DEFENDER_SIDE] >= 0 && gbHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]]
         && gbHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]]) {

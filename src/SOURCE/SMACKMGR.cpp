@@ -182,7 +182,7 @@ void SmackMain() {
     i32 unusedPlaybackState = 0;
     gSmackFont = gpResourceManager->GetFont("bigfont.fnt");
     KBChangeMenu(hmnuDflt);
-    gpMouseManager->HideColorPointer();
+    gpMouseManager->ReallyHidePointer();
     gSmackMainDone = 1;
     memcpy(gSmackSavedPalette, gPalette->m_data, PALETTE_DATA_SIZE);
     ShutdownAudio();
@@ -342,7 +342,7 @@ void SmackMain() {
     InitAudio();
     memcpy(gPalette->m_data, gSmackSavedPalette, PALETTE_DATA_SIZE);
     UpdatePalette(gPalette->m_data);
-    gpMouseManager->ShowColorPointer();
+    gpMouseManager->ReallyShowPointer();
     if (gSmackResource)
         gpResourceManager->Dispose(gSmackResource);
     gSmackResource = NULL;

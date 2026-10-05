@@ -177,13 +177,13 @@ i8 game::SetupBaud(void) {
 // evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456d56, 0x1ae)
 i8 game::SetupComPort(void) {
-    char initStr[40];
+    char initString[40];
 
-    heroWindow* window = new heroWindow(400, 35, "stpcom.bin");
-    if (!window)
+    heroWindow* setupWindow = new heroWindow(400, 35, "stpcom.bin");
+    if (!setupWindow)
         MemError();
-    gpWindowManager->DoDialog(window, SetupComPortHandler, 0);
-    delete window;
+    gpWindowManager->DoDialog(setupWindow, SetupComPortHandler, 0);
+    delete setupWindow;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
             gConfig.comPort[gDirectConnect] = 1;
@@ -207,11 +207,11 @@ i8 game::SetupComPort(void) {
         sprintf(gText, "%s", gConfig.modemInitString);
         GetDataEntry(
             localization::Tr("setup.modem.initialization_prompt"),
-            initStr,
+            initString,
             40,
             gText
         );
-        strcpy(gConfig.modemInitString, initStr);
+        strcpy(gConfig.modemInitString, initString);
     }
     WritePrefs();
     return 1;
@@ -504,15 +504,15 @@ done:
 // evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x0045789f, 0x1c1)
 i8 game::PickLoadGame(void) {
-    fileRequester* request;
-    i16 result;
+    fileRequester* fileReq;
+    i16 dialogResult;
 
     if (!SetupGame(0))
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
     extern char gGamePath[];
-    request = new fileRequester(
+    fileReq = new fileRequester(
         0x136,
         0xe,
         FILE_REQUESTER_LOAD,
@@ -520,17 +520,17 @@ i8 game::PickLoadGame(void) {
         gGamePath,
         gCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
-    if (!request)
+    if (!fileReq)
         MemError();
     gpMouseManager->ReallyShowPointer();
-    result = gpExec->DoDialog(request);
+    dialogResult = gpExec->DoDialog(fileReq);
     gpMouseManager->ReallyHidePointer();
-    if (result == DIALOG_BUTTON_2) {
+    if (dialogResult == DIALOG_BUTTON_2) {
         gpGame->LoadGame(gLastFilename, 0, 0);
-        delete request;
+        delete fileReq;
         return 1;
     } else {
-        delete request;
+        delete fileReq;
         return 0;
     }
 }

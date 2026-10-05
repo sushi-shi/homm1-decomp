@@ -96,7 +96,7 @@ public:
     town(void);
     // --- methods ---
     i8 HasGarrison(void);
-    // Buka town::OccupyingHero inline; townManager::Open emits its jmp $+0.
+    // Win95 1.2 uses this inline accessor; Buka Open reads the member directly.
     i8 OccupyingHero(void) {
         return m_occupyingHeroId;
     }

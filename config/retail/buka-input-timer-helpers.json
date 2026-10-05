@@ -1,0 +1,210 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Complete helper bytes, encoding table and caller regions checked against current compiled objects. The positive-option setter and empty cleanup hook names are descriptive recovered names, not claims to original symbols. Retail Open passes the constant one through a local; current source passes one directly. Whole Open/Close and timer callers are not claimed equivalent.",
+  "functions": [
+    {
+      "unit": "BASE/INPUTMGR",
+      "name": "?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z",
+      "rva": "0x6f085",
+      "size": 52,
+      "method": "Complete freshly compiled body equals retail after resolving its verified relocation; no byte, instruction or stack differences.",
+      "object_sha256": "f1bbf7f9ef63ed632f8678916a52a88d1efe02dd64d9ba448a3424936489bc4c",
+      "body_sha256": "483adc798401b729271e1e6ec635d703b0011c11a259759327489923d483904c",
+      "references": [
+        {
+          "site_rva": "0x6f0ac",
+          "target_rva": "0xa1388",
+          "symbol": "_gInputCharacterMapCp1251",
+          "kind": 6
+        }
+      ]
+    },
+    {
+      "unit": "BASE/INPUTMGR",
+      "name": "?SetPositiveOption@inputManager@@QAEXF@Z",
+      "rva": "0x6f008",
+      "size": 49,
+      "method": "Complete freshly compiled body equals retail after resolving its verified relocation; no byte, instruction or stack differences.",
+      "object_sha256": "f1bbf7f9ef63ed632f8678916a52a88d1efe02dd64d9ba448a3424936489bc4c",
+      "body_sha256": "d802bda21125dbcb8ffd66f8c320ae66bf9bf77d9a97a0396f0b6fc66dfbbc83",
+      "references": []
+    },
+    {
+      "unit": "BASE/WINMGR",
+      "name": "?Cleanup@heroWindowManager@@QAEXXZ",
+      "rva": "0x6abdb",
+      "size": 11,
+      "method": "Complete freshly compiled body equals retail after resolving its verified relocation; no byte, instruction or stack differences.",
+      "object_sha256": "09f7c32b42ce1a173731b6762780971fc411bd1c5037852c8fe1779136961388",
+      "body_sha256": "012a7b6ce927f083ba98a546e3d3f750b2a1d82f350ca27efbd30a9c3c7718a5",
+      "references": []
+    }
+  ],
+  "data": [
+    {
+      "name": "_gInputCharacterMapCp1251",
+      "rva": "0xa1388",
+      "size": 128,
+      "unit": "BASE/INPUTMGR",
+      "payload_sha256": "0612a2e539f1b58659f27311164e62eba05724097d6a504342f5551955c7caa2",
+      "meaning": "128-entry character encoding map; every numeric byte equals the HoMM2 donor and Buka retail."
+    },
+    {
+      "name": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "rva": "0xa9e44",
+      "size": 4,
+      "unit": "SOURCE/kbwin",
+      "meaning": "Signed i32 WM_TIMER timestamp, updated exactly when lTemp is greater than the previous timestamp plus five.",
+      "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
+    }
+  ],
+  "regions": [
+    {
+      "unit": "BASE/INPUTMGR",
+      "function": "?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z",
+      "retail_start": "0x6f320",
+      "retail_end": "0x6f33a",
+      "object_offset": "0x1de",
+      "object_sha256": "f1bbf7f9ef63ed632f8678916a52a88d1efe02dd64d9ba448a3424936489bc4c",
+      "retail_sha256": "23a4f0166793058e6a58133e8ef44f621dbe5244794694a2f738eb182a95ccd6",
+      "references": [
+        {
+          "site_rva": "0x6f333",
+          "target_rva": "0x6f085",
+          "symbol": "?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z",
+          "kind": 20,
+          "addend": 0
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/kbwin",
+      "function": "?AppWndProc@@YGJPAXIIJ@Z",
+      "retail_start": "0x431ce",
+      "retail_end": "0x431eb",
+      "object_offset": "0x1ba",
+      "register_map": {
+        "eax": "ecx",
+        "ecx": "edx"
+      },
+      "method": "All six instructions, typed operands, constants, reference identities and branch destination agree under the stated register mapping. Both temporaries are defined before use within the region; only the timestamp memory store is the observable result. No whole-caller equivalence claimed.",
+      "instructions": [
+        {
+          "object": "mov eax, dword ptr [0]",
+          "retail": "mov ecx, dword ptr [0x4a9e44]"
+        },
+        {
+          "object": "add eax, 5",
+          "retail": "add ecx, 5"
+        },
+        {
+          "object": "cmp dword ptr [0], eax",
+          "retail": "cmp dword ptr [0x4a99d8], ecx"
+        },
+        {
+          "object": "jle 0x1d6",
+          "retail": "jle 0x431eb"
+        },
+        {
+          "object": "mov ecx, dword ptr [0]",
+          "retail": "mov edx, dword ptr [0x4a99d8]"
+        },
+        {
+          "object": "mov dword ptr [0], ecx",
+          "retail": "mov dword ptr [0x4a9e44], edx"
+        }
+      ],
+      "references": [
+        {
+          "site_rva": "0x431d0",
+          "target_rva": "0xa9e44",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "kind": 6
+        },
+        {
+          "site_rva": "0x431d9",
+          "target_rva": "0xa99d8",
+          "symbol": "?lTemp@@3HA",
+          "kind": 6
+        },
+        {
+          "site_rva": "0x431e1",
+          "target_rva": "0xa99d8",
+          "symbol": "?lTemp@@3HA",
+          "kind": 6
+        },
+        {
+          "site_rva": "0x431e7",
+          "target_rva": "0xa9e44",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "kind": 6
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "site_rva": "0x6f0ac",
+      "target_rva": "0xa1388",
+      "symbol": "_gInputCharacterMapCp1251",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x6f333",
+      "target_rva": "0x6f085",
+      "symbol": "?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z",
+      "kind": 20,
+      "addend": 0
+    },
+    {
+      "site_rva": "0x431d0",
+      "target_rva": "0xa9e44",
+      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x431d9",
+      "target_rva": "0xa99d8",
+      "symbol": "?lTemp@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x431e1",
+      "target_rva": "0xa99d8",
+      "symbol": "?lTemp@@3HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x431e7",
+      "target_rva": "0xa9e44",
+      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "kind": 6
+    },
+    {
+      "site_rva": "0x6a2a7",
+      "target_rva": "0x6abdb",
+      "symbol": "?Cleanup@heroWindowManager@@QAEXXZ",
+      "kind": 20
+    },
+    {
+      "site_rva": "0x6a33f",
+      "target_rva": "0x6abdb",
+      "symbol": "?Cleanup@heroWindowManager@@QAEXXZ",
+      "kind": 20
+    },
+    {
+      "site_rva": "0x6ee06",
+      "target_rva": "0x6f008",
+      "symbol": "?SetPositiveOption@inputManager@@QAEXF@Z",
+      "kind": 20
+    }
+  ],
+  "donor": {
+    "repository": "homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "sources": [
+      "src/BASE/INPUTMGR.cpp",
+      "src/SOURCE/kbwin.cpp"
+    ]
+  }
+}

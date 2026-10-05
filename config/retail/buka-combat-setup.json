@@ -2857,10 +2857,12 @@
         {
           "site_rva": "0x35f5d",
           "target_rva": "0x8fcc8",
-          "symbol": "?gLastSeed@@3IA",
+          "symbol": "?gLastSeed@@3HA",
           "kind": 6,
           "addend": "0x0",
-          "owner_rva": "0x8fcc8"
+          "owner_rva": "0x8fcc8",
+          "previous_symbol": "?gLastSeed@@3IA",
+          "type_correction_evidence": "buka-seed-type-controls.json"
         },
         {
           "site_rva": "0x35f66",

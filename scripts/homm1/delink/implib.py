@@ -206,6 +206,15 @@ def resolve_iat(slots, base_dir: Path | None) -> tuple[list, list]:
     `slots` is Image.import_slots(). Unresolvable slots are skipped and
     reported - never guessed.
     """
+    from homm1.core.paths import RETAIL
+    from homm1.core.pe import image
+    from homm1.graph.implib import _reviewed_import_symbols
+
+    slots = list(slots)
+    reviewed = _reviewed_import_symbols(
+        image(), {slot: (dll, ordinal if name is None else name)
+                  for slot, name, dll, ordinal in slots},
+        RETAIL / "import_symbols.json")
     libs = era_import_libs()
     exact, by_norm = collect_imp_decorations(base_dir, libs)
     by_ordinal = collect_ordinal_decorations(libs)
@@ -227,6 +236,16 @@ def resolve_iat(slots, base_dir: Path | None) -> tuple[list, list]:
             elif name in by_norm:          # win32: undecorated export -> @N
                 dec = by_norm[name]
             label = f"{dll}!{name}"
+        # Reuse the linker's image- and slot-validated direct-IAT facts. The
+        # selected vendor DLL can supply an ordinal decoration absent from
+        # the compiler SDK libraries; never keep an anonymous ordinal in its
+        # place, or silently choose between conflicting identities.
+        proof = reviewed.get(dll, {}).get(ordinal if name is None else name)
+        if proof:
+            expected = "__imp_" + proof
+            if dec is not None and dec != expected:
+                raise ValueError(f"{label}: import library names {dec}, reviewed as {expected}")
+            dec = expected
         # HoMM1's retail media currently provides neither the smkwai32 import
         # library (ordinal imports) nor a WinG import library (named exports
         # without x86 calling decoration).  Preserve the exact PE identity so

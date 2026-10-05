@@ -1,0 +1,81 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "files": [
+      "src/SOURCE/ARMY.cpp",
+      "src/SOURCE/COMMAND.cpp"
+    ]
+  },
+  "corrections": {
+    "army::Damage": "Use corresponding HoMM2 oldFacing, quantityFifth and killed names. HoMM1 types, declaration order and all operations retained. Forecast and compiled slots: quantityFifth -4, killed -8, oldFacing -12; this -16.",
+    "combatManager::ResetRound": "Use corresponding HoMM2 armyIndex and currentArmy names. Preserve existing HoMM1 types, scope, unusedRoundWord and declaration order. Forecast and compiled slots: unusedRoundWord -4, armyIndex -8, side -12, currentArmy -16; this -20."
+  },
+  "functions": [
+    {
+      "symbol": "?Damage@army@@QAEHH@Z",
+      "rva": "0x17391",
+      "candidate_instructions": 106,
+      "retail_instructions": 106,
+      "candidate_extent": 352,
+      "retail_extent": 352,
+      "slot_map": {
+        "-16": -16,
+        "-8": -8,
+        "-4": -4,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "2afa798b33c38667d18aa0dea3af6320df88000a921168dd87596ddc8e90f568",
+      "retail_sha256": "2afa798b33c38667d18aa0dea3af6320df88000a921168dd87596ddc8e90f568"
+    },
+    {
+      "symbol": "?ResetRound@combatManager@@QAEXXZ",
+      "rva": "0x1e900",
+      "candidate_instructions": 79,
+      "retail_instructions": 79,
+      "candidate_extent": 290,
+      "retail_extent": 290,
+      "slot_map": {
+        "-20": -20,
+        "-12": -12,
+        "-8": -8,
+        "-16": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "7e0252d6d9a4597ee801387406c06ad5eebb28b91a8bc52f0d93dd104c684c81",
+      "retail_sha256": "7e0252d6d9a4597ee801387406c06ad5eebb28b91a8bc52f0d93dd104c684c81"
+    }
+  ],
+  "comparison_contract": "Unmodified ordinary strict objdiff and complete body/reference checks. No permutations, invented local names, scope changes, new storage, padding or normalization.",
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0x17391",
+      "symbol": "?Damage@army@@QAEHH@Z",
+      "before": 99.92453,
+      "after": 100.0
+    },
+    {
+      "rva": "0x1e900",
+      "symbol": "?ResetRound@combatManager@@QAEXXZ",
+      "before": 99.79747,
+      "after": 100.0
+    }
+  ],
+  "source_sha256": {
+    "src/SOURCE/ARMY.cpp": "1a37f55f09ebf4e57ae280b498c59607d834289a89b6fa29caf6079b50b6f2d3",
+    "src/SOURCE/COMMAND.cpp": "b6b60128f4b7cf99bb65cd03f14b8921d59ce12ac91982b91b740d4eada9c245"
+  }
+}

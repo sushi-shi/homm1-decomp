@@ -1,10 +1,8 @@
-"""Conservative progress reporting while strict whole-image delinking is blocked.
+"""Diagnostic progress reporting while whole-image verification is incomplete.
 
-Uses the ordinary delinker, normalizer and objdiff comparison. Diagnostic
-objects retain unknown relocation names; only functions whose identity and
-reference sites have current-image evidence contribute to this lower bound.
-Only source-annotated bodies enter the denominator; unscored annotated bodies
-still count as zero. The retail census remains intact. This never updates MAX.
+Uses ordinary strict objdiff scores for source-annotated bodies. Reference
+review is reported separately and never replaces a measured score with zero.
+Missing comparisons remain zero in the denominator. This never updates MAX.
 """
 from __future__ import annotations
 
@@ -81,24 +79,11 @@ def reconstruction_census(census, bindings):
     return [row for row in census if not row["kind"] and row["rva"] in bodies]
 
 
-def summarize(report, target_dir, out_dir):
-    from homm1.core.inputs import read_verified, targets
-    from homm1.core.pe import image
+def audit_references(census, model, target_dir, pe, image_hash):
+    """Check every reference independently of score reporting, without early exit."""
     from homm1.delink import pdb_synth
-    from homm1.model import resolve
-    from homm1.retail_labels import censuses
-    from homm1.verify.scores import functions, split_eh_band
 
-    pin = targets()["game"]
-    read_verified(pin, pin.destination)
-    pe = image()
-    model = resolve()
-    # The census supplies current-image boundaries, not reconstruction targets.
-    banners, _, _ = read_tsv(RETAIL / "functions.tsv")
-    if f"# image-sha256: {pin.sha256}" not in banners:
-        raise ValueError("baseline requires an image-pinned structural census")
-    census = reconstruction_census(censuses.functions(), model.functions)
-    reviewed, proofs = evidence(sorted(RETAIL.glob("buka-*.json")), pin.sha256)
+    reviewed, proofs = evidence(sorted(RETAIL.glob("buka-*.json")), image_hash)
     reviewed.update((rva, value[0]) for rva, value in
                     pdb_synth.referent_function_names().items())
     known_referents = {}
@@ -126,67 +111,103 @@ def summarize(report, target_dir, out_dir):
     for rva, name in pdb_synth.import_thunk_names(
             iat, named, {b.rva for b in model.functions}).items():
         known_referents.setdefault(rva, set()).add(name)
-    split_eh_band(report)
-    cur = functions(report)
     absolute_sites = pe.highlow_sites(RETAIL / "absolute_relocations.tsv")
     by_rva = {b.rva: b for b in model.functions}
     objs, rows = {}, []
     for c in census:
         b = by_rva[c["rva"]]
-        key = (b.unit.rsplit("/", 1)[-1], b.name)
         row = {"rva": hex(b.rva), "name": b.name, "unit": b.unit,
-               "census_size": c["size"], "size": b.size, "score": 0.0}
-        reason = "unreviewed or missing source comparison"
-        # Both channels bind a body emitted by the candidate compiler. A
-        # VA_COMPGEN identity still passes every reference check below; a
-        # declaration or an unbound dynamic initializer cannot earn credit.
-        if ((b.rva, b.name) in reviewed
-                and b.channel in ("src", "src_compgen") and key in cur):
-            path = target_dir / (b.unit + ".c.obj")
-            if path not in objs:
-                objs[path] = CoffObject(path.read_bytes())
-            obj = objs[path]
-            syms = [s for s in obj.symbols.values() if s.name == b.name and s.section > 0]
-            reason = "missing or ambiguous target body"
-            if len(syms) == 1:
-                sym = syms[0]
-                reason = ""
-                seen_absolute = set()
-                for reloc in obj.relocations:
-                    if reloc.section != sym.section or not sym.value <= reloc.site < sym.value + b.size:
-                        continue
-                    site = b.rva + reloc.site - sym.value
-                    if reloc.typ == 6:
-                        seen_absolute.add(site)
-                    payload = pe.read(site, 4)
-                    if payload is None or reloc.typ not in (6, 20):
-                        reason = "unsupported reference"
-                        break
-                    value = struct.unpack("<I", payload)[0]
-                    target = ((site + 4 + value) & 0xffffffff) if reloc.typ == 20 else value - pe.image_base
-                    name = obj.symbols[reloc.symbol_index].name
-                    reason = reference_reason(name, site, target, b.rva, b.size, proofs, known_referents)
-                    if reason:
-                        row["blocked_site"] = hex(site)
-                        row["blocked_name"] = name
-                        break
-                if not reason and any(b.rva <= site < b.rva + b.size
-                                      and site not in seen_absolute for site in absolute_sites):
-                    reason = "missing absolute relocation"
-                if not reason:
-                    row["score"] = cur[key]
-        row["status"] = reason or "scored"
+               "size": b.size, "references": [], "issues": []}
+        if (b.rva, b.name) not in reviewed:
+            row["issues"].append({"reason": "unreviewed function identity"})
+        path = target_dir / (b.unit + ".c.obj")
+        if path not in objs:
+            objs[path] = CoffObject(path.read_bytes())
+        obj = objs[path]
+        syms = [s for s in obj.symbols.values() if s.name == b.name and s.section > 0]
+        if len(syms) != 1:
+            row["issues"].append({"reason": "missing or ambiguous target body"})
+        else:
+            sym = syms[0]
+            seen_absolute = set()
+            for reloc in obj.relocations:
+                if reloc.section != sym.section or not sym.value <= reloc.site < sym.value + b.size:
+                    continue
+                site = b.rva + reloc.site - sym.value
+                if reloc.typ == 6:
+                    seen_absolute.add(site)
+                payload = pe.read(site, 4)
+                if payload is None or reloc.typ not in (6, 20):
+                    row["issues"].append({"site_rva": hex(site),
+                                          "reason": "unsupported reference"})
+                    continue
+                value = struct.unpack("<I", payload)[0]
+                target = ((site + 4 + value) & 0xffffffff) if reloc.typ == 20 else value - pe.image_base
+                name = obj.symbols[reloc.symbol_index].name
+                ref = {"site_rva": hex(site), "target_rva": hex(target),
+                       "name": name, "kind": reloc.typ}
+                row["references"].append(ref)
+                reason = reference_reason(name, site, target, b.rva, b.size, proofs, known_referents)
+                if reason:
+                    row["issues"].append(dict(ref, reason=reason))
+            for site in absolute_sites:
+                if b.rva <= site < b.rva + b.size and site not in seen_absolute:
+                    row["issues"].append({"site_rva": hex(site),
+                                          "reason": "missing absolute relocation"})
         rows.append(row)
+    issues = [i for r in rows for i in r["issues"]]
+    return {"image_sha256": image_hash, "summary": {
+        "functions": len(rows),
+        "functions_with_issues": sum(bool(r["issues"]) for r in rows),
+        "reference_sites": sum(len(r["references"]) for r in rows),
+        "issue_sites": len(issues),
+        "reasons": dict(Counter(i["reason"] for i in issues)),
+    }, "functions": rows}
+
+
+def comparison_rows(census, bindings, cur):
+    """Use measured objdiff scores directly; only absent comparisons are unscored."""
+    by_rva = {b.rva: b for b in bindings}
+    rows = []
+    for c in census:
+        b = by_rva[c["rva"]]
+        key = (b.unit.rsplit("/", 1)[-1], b.name)
+        rows.append({"rva": hex(b.rva), "name": b.name, "unit": b.unit,
+                     "census_size": c["size"], "size": b.size,
+                     "score": cur.get(key, 0.0),
+                     "status": "scored" if key in cur else "missing source comparison"})
+    return rows
+
+
+def summarize(report, target_dir, out_dir):
+    from homm1.core.inputs import read_verified, targets
+    from homm1.core.pe import image
+    from homm1.model import resolve
+    from homm1.retail_labels import censuses
+    from homm1.verify.scores import functions, split_eh_band
+
+    pin = targets()["game"]
+    read_verified(pin, pin.destination)
+    model = resolve()
+    banners, _, _ = read_tsv(RETAIL / "functions.tsv")
+    if f"# image-sha256: {pin.sha256}" not in banners:
+        raise ValueError("baseline requires an image-pinned structural census")
+    census = reconstruction_census(censuses.functions(), model.functions)
+    audit = audit_references(census, model, target_dir, image(), pin.sha256)
+    audit["input_digest"] = input_digest()
+    (out_dir / "reference-audit.json").write_text(json.dumps(audit, indent=2) + "\n")
+    split_eh_band(report)
+    rows = comparison_rows(census, model.functions, functions(report))
     summary = totals(rows)
-    summary.update(kind="strict-comparison-lower-bound", image_sha256=pin.sha256,
-                   input_digest=input_digest(), rows=rows)
-    scored = [r for r in rows if r["status"] == "scored"]
-    exact = summary["exact_functions"]
-    path = out_dir / "baseline.json"
-    path.write_text(json.dumps(summary, indent=2) + "\n")
-    print(f"Baseline: {exact}/{len(rows)} exact ({summary['exact_percent']:.2f}%); "
-          f"{summary['fuzzy_percent']:.2f}% fuzzy across source-annotated bodies. "
-          f"{len(scored)} scored; {len(rows)-len(scored)} unscored (counted as zero).")
+    summary.update(kind="strict-diagnostic-comparison", image_sha256=pin.sha256,
+                   input_digest=audit["input_digest"], rows=rows)
+    (out_dir / "baseline.json").write_text(json.dumps(summary, indent=2) + "\n")
+    print(f"Baseline: {summary['exact_functions']}/{len(rows)} exact "
+          f"({summary['exact_percent']:.2f}%); {summary['fuzzy_percent']:.2f}% fuzzy "
+          f"across source-annotated bodies. {summary['scored_functions']} scored; "
+          f"{len(rows)-summary['scored_functions']} missing comparisons (counted as zero).")
+    print(f"Reference audit: {audit['summary']['reference_sites']} sites; "
+          f"{audit['summary']['issue_sites']} issues (reported separately from scores).")
     return summary
 
 
@@ -252,14 +273,14 @@ def readme():
         raise ValueError("baseline is stale; run homm1 compare --baseline")
     return rm.write_block("\n".join([
         rm.RM_START,
-        f"**Matching lower bound: {summary['exact_percent']:.2f}% exact "
+        f"**Matching: {summary['exact_percent']:.2f}% exact "
         f"({summary['exact_functions']:,}/{summary['functions']:,} annotated functions); "
         f"{summary['fuzzy_percent']:.2f}% fuzzy.**",
         "",
         *module_table(summary["rows"], {u["unit"]: u["source"] for u in manifest.units()}),
         "",
-        f"{summary['scored_functions']:,} functions scored with strict references; "
-        f"{summary['functions']-summary['scored_functions']:,} unscored, counted as zero. "
+        f"{summary['scored_functions']:,} functions compared with strict objdiff; "
+        f"{summary['functions']-summary['scored_functions']:,} missing comparisons, counted as zero. "
         "Full build verification remains incomplete.",
         "Generated by `homm1 compare --baseline` and `homm1 verify readme --baseline`.",
         rm.RM_END,

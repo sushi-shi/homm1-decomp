@@ -438,22 +438,24 @@
             ],
             "private_literals": [
               {
-                "symbol": "$SG23380",
                 "site_rva": "0x62ae7",
                 "target_rva": "0x9fff0",
                 "addend": "0x0",
                 "kind": 6,
                 "payload_sha256": "c3b22fea02421702d238af4f0e7ab47093ed9fc702ea3520cc6964120d9fa0ba",
-                "size": 8
+                "size": 8,
+                "historical_candidate_symbol": "$SG23380",
+                "retail_identity_review": "buka-final-inline-text.json, buka-startup-text.json, buka-final-equal-literal-references.json"
               },
               {
-                "symbol": "$SG23381",
                 "site_rva": "0x62b0a",
                 "target_rva": "0x9fff8",
                 "addend": "0x0",
                 "kind": 6,
                 "payload_sha256": "102b51b9765a56a3e899f7cf0ee38e5251f9c503b357b330a49183eb7b155604",
-                "size": 2
+                "size": 2,
+                "historical_candidate_symbol": "$SG23381",
+                "retail_identity_review": "buka-final-inline-text.json, buka-startup-text.json, buka-final-equal-literal-references.json"
               }
             ],
             "local_slot_map": {
@@ -892,5 +894,22 @@
       "size": 4,
       "object_sha256": "97840d0b58d84c1fe4ad657bacac989235c710c6c9cf508c0ba78a52f1caad5f"
     }
-  ]
+  ],
+  "literal_identity_schema_correction": {
+    "reason": "Historical candidate $SG ordinals describe old object members, not active retail identities. Current complete-payload/use reviews provide stable retail-RVA names.",
+    "changes": [
+      {
+        "operand": "0x62ae7",
+        "target": "0x9fff0",
+        "old_compiler_spelling": "$SG23380",
+        "current_identity": "$SG655344"
+      },
+      {
+        "operand": "0x62b0a",
+        "target": "0x9fff8",
+        "old_compiler_spelling": "$SG23381",
+        "current_identity": "$SG655352"
+      }
+    ]
+  }
 }

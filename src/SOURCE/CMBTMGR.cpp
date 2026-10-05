@@ -306,7 +306,8 @@ void combatManager::Close(void) {
     for (i = 0; i < COMBAT_SIDE_COUNT; i++)
         UpdateArmyGroup(i);
     if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-        survivor = static_cast<i8>(m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE);
+        survivor = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE
+                       ? static_cast<i8>(1) : static_cast<i8>(0);
         m_battlefieldCell->m_objectMetadata = 0;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
             if (m_armyGroups[survivor]->m_creatureTypes[i] != CREATURE_NONE)
@@ -356,24 +357,18 @@ void combatManager::GenerateMap(void) {
     i16 i;
     i16 y;
     i16 count;
-    i32 randomRow;
-    i32 randomCol;
     i16 armyCount;
 
-    if (m_castleSide[COMBAT_DEFENDER_SIDE] == 1)
-        m_catapultFrame[COMBAT_ATTACKER_SIDE] = 0;
-    else
-        m_catapultFrame[COMBAT_ATTACKER_SIDE] = COMBAT_CATAPULT_FRAME_NONE;
-    if (m_castleSide[COMBAT_ATTACKER_SIDE] == 1)
-        m_catapultFrame[COMBAT_DEFENDER_SIDE] = 0;
-    else
-        m_catapultFrame[COMBAT_DEFENDER_SIDE] = COMBAT_CATAPULT_FRAME_NONE;
+    m_catapultFrame[COMBAT_ATTACKER_SIDE] =
+        m_castleSide[COMBAT_DEFENDER_SIDE] == 1 ? 0 : COMBAT_CATAPULT_FRAME_NONE;
+    m_catapultFrame[COMBAT_DEFENDER_SIDE] =
+        m_castleSide[COMBAT_ATTACKER_SIDE] == 1 ? 0 : COMBAT_CATAPULT_FRAME_NONE;
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y =
                 y * COMBAT_HEX_HEIGHT + COMBAT_HEX_ORIGIN_Y;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_x =
-                ((y & 1) ? 27 : -12) + x * COMBAT_HEX_WIDTH;
+                x * COMBAT_HEX_WIDTH + static_cast<i16>((y & 1) ? 27 : -12);
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundIcon = COMBAT_ICON_GROUND;
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_groundFrame =
                 static_cast<i8>(SRandom(0, 3)) + 4;
@@ -401,9 +396,7 @@ void combatManager::GenerateMap(void) {
     }
     count = SRandom(8, 15);
     for (i = 0; i < count; i++) {
-        randomRow = SRandom(0, 4);
-        randomCol = SRandom(1, 7);
-        m_hexCells[randomRow * COMBAT_GRID_COLUMNS + randomCol].m_groundFrame =
+        m_hexCells[SRandom(0, 4) * COMBAT_GRID_COLUMNS + SRandom(1, 7)].m_groundFrame =
             static_cast<i8>(SRandom(0, 2)) + 8;
     }
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
@@ -567,8 +560,8 @@ i8 combatManager::MoreTreesNear(void) {
     homeY = m_combatY;
     for (step = 0; step < 3; step++) {
         for (k = 0; k < MAP_DIRECTION_COUNT; k++) {
-            xPos = normalDirTable[k].x * step + homeX;
-            yPos = normalDirTable[k].y * step + homeY;
+            xPos = homeX + normalDirTable[k].x * step;
+            yPos = homeY + normalDirTable[k].y * step;
             if (xPos >= 0 && xPos < MAP_CELL_GRID_SIZE && yPos >= 0 && yPos < MAP_CELL_GRID_SIZE) {
                 nearCell = gpAdvManager->GetCell(xPos, yPos);
                 nearbyTileset = nearCell->m_objectTileset & MAP_CELL_TILESET_MASK;
@@ -615,7 +608,9 @@ void combatManager::LoadIcons(void) {
         sprintf(
             gText,
             "castle%02d.icn",
-            m_combatTowns[static_cast<i8>(m_castleSide[COMBAT_ATTACKER_SIDE] == 1)]->m_type
+            m_combatTowns[m_castleSide[COMBAT_ATTACKER_SIDE] == 1
+                             ? static_cast<i8>(COMBAT_ATTACKER_SIDE)
+                             : static_cast<i8>(COMBAT_DEFENDER_SIDE)]->m_type
         );
         m_combatIcons[COMBAT_ICON_CASTLE] = gpResourceManager->GetIcon(gText);
         sprintf(gText, "keep%02d.icn", m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type);
@@ -676,12 +671,12 @@ void combatManager::LoadArmies(void) {
     }
 }
 
-// Buka CMBTMGR.cpp FreeArmies; HoMM1 frees the defenders first.
+// Buka stops both music and samples before freeing the armies.
 VA(0x0041a787, 0xbb)
 void combatManager::FreeArmies(void) {
     i16 i;
 
-    StopAllSamples();
+    StopAllAudio();
     for (i = 0; i < m_numArmies[COMBAT_ATTACKER_SIDE]; i++)
         m_armies[COMBAT_ATTACKER_SIDE][i].FreeResources();
     for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)

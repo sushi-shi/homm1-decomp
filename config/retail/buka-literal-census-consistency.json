@@ -1,0 +1,96 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Synchronize empty census-kind fields with the existing separately reviewed data_compgen literal claims. No address, extent, identity, payload, source or comparison change.",
+  "changes": [
+    {
+      "rva": "0x8a420",
+      "name": "__real@8@3ffd8a3d70a3d70a4000",
+      "kind": "fppool"
+    },
+    {
+      "rva": "0x8a428",
+      "name": "__real@8@3ffe947ae147ae147800",
+      "kind": "fppool"
+    },
+    {
+      "rva": "0x8a438",
+      "name": "__real@8@3fffdd70a3d70a3d7000",
+      "kind": "fppool"
+    },
+    {
+      "rva": "0x8a440",
+      "name": "__real@8@4000eeb851eb851eb800",
+      "kind": "fppool"
+    },
+    {
+      "rva": "0x8a448",
+      "name": "__real@8@3fffc000000000000000",
+      "kind": "fppool"
+    },
+    {
+      "rva": "0x8f930",
+      "name": "$SG588080",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f938",
+      "name": "$SG588088",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f948",
+      "name": "$SG588104",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f954",
+      "name": "$SG588116",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f964",
+      "name": "$SG588132",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f974",
+      "name": "$SG588148",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f978",
+      "name": "$SG588152",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f988",
+      "name": "$SG588168",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f994",
+      "name": "$SG588180",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f998",
+      "name": "$SG588184",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f9a8",
+      "name": "$SG588200",
+      "kind": "string"
+    },
+    {
+      "rva": "0x8f9ac",
+      "name": "$SG588204",
+      "kind": "string"
+    },
+    {
+      "rva": "0x9fe78",
+      "name": "$SG654968",
+      "kind": "string"
+    }
+  ]
+}

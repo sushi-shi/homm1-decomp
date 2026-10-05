@@ -1,0 +1,259 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "files": [
+      "src/SOURCE/REMOTE.cpp",
+      "src/SOURCE/Netbios.cpp",
+      "src/SOURCE/SETUP.cpp",
+      "src/SOURCE/GAME.cpp"
+    ]
+  },
+  "corrections": {
+    "SendRemoteData": "Use corresponding donor size/out/retry/remotePacket local names, retaining sendStatus, the 256-byte unused packet array, and every HoMM1 routing and send operation. Predicted slots size -4, sendStatus -8, retry -12, out -16, remotePacket -272. Shorter displacements restore the retail switch-table locations without changing table identities or addends. Complete compiled bytes/references and ordinary comparison exact.",
+    "InitNetHost": "Rename the existing unused local to corresponding donor reserved. Keep HoMM1 static state, host naming and initialization behavior; do not add the donor local-name array or its different network API arguments. Predicted slots needName -4, reserved -8. Complete compiled and ordinary comparison exact.",
+    "SetupComPort": "Use corresponding donor initString/setupWindow names. Preserve the 40-byte modem string, window coordinates, original dialog sequence and localization; omit donor logging calls. Predicted EH frame slots initString -52 and setupWindow -56. Complete compiled and ordinary comparison exact.",
+    "GenerateStandardFileName": "Use corresponding ext/indexOut/length/i/chr declarations, with ext/chr plain donor aliases. Preserve all Cyrillic and ASCII conversion conditions, underscore/digit handling, base-name limit, extension restoration and original unsigned-byte character. Predicted slots length -4, indexOut -8, chr -12, i -16, ext -20. Complete compiled and ordinary comparison exact."
+  },
+  "before_functions": [
+    {
+      "symbol": "?SendRemoteData@@YAHPAE0HH@Z",
+      "rva": "0x51f5b",
+      "candidate_instructions": 73,
+      "retail_instructions": 73,
+      "candidate_extent": 289,
+      "retail_extent": 271,
+      "slot_map": {
+        "-4": -16,
+        "-268": -4,
+        "-276": -276,
+        "-264": -8
+      },
+      "instruction_and_reference_differences": [
+        [
+          "referents",
+          "0xa0",
+          [
+            [
+              3,
+              [
+                "?SendRemoteData@@YAHPAE0HH@Z",
+                273
+              ]
+            ]
+          ],
+          [
+            [
+              3,
+              [
+                "?SendRemoteData@@YAHPAE0HH@Z",
+                255
+              ]
+            ]
+          ]
+        ],
+        [
+          "displacement",
+          "0xa0",
+          273,
+          255
+        ],
+        [
+          "trailing function tables/bytes"
+        ],
+        [
+          "trailing references"
+        ]
+      ],
+      "objdiff_score": 99.87013,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "fcd6abf69a1f4da9262d5c8950cfc661913a7c0e6c8f746a30d83cb7eddefa30",
+      "retail_sha256": "5c84fbef0f820f0ee1c147243d7635d1e955ce7c9e2b0b22b5bc5ad23925080c"
+    },
+    {
+      "symbol": "?InitNetHost@@YACXZ",
+      "rva": "0x52137",
+      "candidate_instructions": 95,
+      "retail_instructions": 95,
+      "candidate_extent": 365,
+      "retail_extent": 365,
+      "slot_map": {
+        "-12": -12,
+        "-8": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.94949,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "c0735235bb5be7b84bd45e0b82e828754502c36b3d93405f962d106834a951e5",
+      "retail_sha256": "ff5eeee6db19e8644d9b7d6b88f147f59ffcaf22ed0a26dce0d4316a5505dd10"
+    },
+    {
+      "symbol": "?SetupComPort@game@@QAECXZ",
+      "rva": "0x56d56",
+      "candidate_instructions": 113,
+      "retail_instructions": 113,
+      "candidate_extent": 430,
+      "retail_extent": 430,
+      "slot_map": {
+        "-72": -72,
+        "-64": -64,
+        "-4": -4,
+        "-76": -76,
+        "-60": -60,
+        "-16": -56,
+        "-68": -68,
+        "-80": -80,
+        "-56": -52,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.9469,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "aaf200236beabecae86422283f4bf5476b60ce361493f95b78d95f5db05f024f",
+      "retail_sha256": "6e04a929cd43f595186053bb02712338962191e28a4c81f41594b3e9d8d92c50"
+    },
+    {
+      "symbol": "?GenerateStandardFileName@@YAXPAD0@Z",
+      "rva": "0x2c335",
+      "candidate_instructions": 127,
+      "retail_instructions": 127,
+      "candidate_extent": 424,
+      "retail_extent": 424,
+      "slot_map": {
+        "-16": -20,
+        "-20": -8,
+        "-8": -4,
+        "-4": -16,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.850395,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "20fb8e1140302a2e31e9956d1b26d8b68df8d651f30ce9306ce3a51826c3cece",
+      "retail_sha256": "7267e9b0d5b3efd12560f9009b724b28744536f50d889504f70ee534bca652e7"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "?GenerateStandardFileName@@YAXPAD0@Z",
+      "rva": "0x2c335",
+      "candidate_instructions": 127,
+      "retail_instructions": 127,
+      "candidate_extent": 424,
+      "retail_extent": 424,
+      "slot_map": {
+        "-20": -20,
+        "-8": -8,
+        "-4": -4,
+        "-16": -16,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "7267e9b0d5b3efd12560f9009b724b28744536f50d889504f70ee534bca652e7",
+      "retail_sha256": "7267e9b0d5b3efd12560f9009b724b28744536f50d889504f70ee534bca652e7"
+    },
+    {
+      "symbol": "?SendRemoteData@@YAHPAE0HH@Z",
+      "rva": "0x51f5b",
+      "candidate_instructions": 73,
+      "retail_instructions": 73,
+      "candidate_extent": 271,
+      "retail_extent": 271,
+      "slot_map": {
+        "-16": -16,
+        "-4": -4,
+        "-276": -276,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "5c84fbef0f820f0ee1c147243d7635d1e955ce7c9e2b0b22b5bc5ad23925080c",
+      "retail_sha256": "5c84fbef0f820f0ee1c147243d7635d1e955ce7c9e2b0b22b5bc5ad23925080c"
+    },
+    {
+      "symbol": "?InitNetHost@@YACXZ",
+      "rva": "0x52137",
+      "candidate_instructions": 95,
+      "retail_instructions": 95,
+      "candidate_extent": 365,
+      "retail_extent": 365,
+      "slot_map": {
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "ff5eeee6db19e8644d9b7d6b88f147f59ffcaf22ed0a26dce0d4316a5505dd10",
+      "retail_sha256": "ff5eeee6db19e8644d9b7d6b88f147f59ffcaf22ed0a26dce0d4316a5505dd10"
+    },
+    {
+      "symbol": "?SetupComPort@game@@QAECXZ",
+      "rva": "0x56d56",
+      "candidate_instructions": 113,
+      "retail_instructions": 113,
+      "candidate_extent": 430,
+      "retail_extent": 430,
+      "slot_map": {
+        "-72": -72,
+        "-64": -64,
+        "-4": -4,
+        "-76": -76,
+        "-60": -60,
+        "-56": -56,
+        "-68": -68,
+        "-80": -80,
+        "-52": -52,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "6e04a929cd43f595186053bb02712338962191e28a4c81f41594b3e9d8d92c50",
+      "retail_sha256": "6e04a929cd43f595186053bb02712338962191e28a4c81f41594b3e9d8d92c50"
+    }
+  ],
+  "comparison_contract": "Unmodified ordinary strict objdiff and complete body/reference checks. Corresponding donor names and declaration order only. No identifier search, suffixed aliases, permutations, added storage, padding, type changes or normalization.",
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0x2c335",
+      "symbol": "?GenerateStandardFileName@@YAXPAD0@Z",
+      "before": 99.850395,
+      "after": 100.0
+    },
+    {
+      "rva": "0x51f5b",
+      "symbol": "?SendRemoteData@@YAHPAE0HH@Z",
+      "before": 99.87013,
+      "after": 100.0
+    },
+    {
+      "rva": "0x52137",
+      "symbol": "?InitNetHost@@YACXZ",
+      "before": 99.94949,
+      "after": 100.0
+    },
+    {
+      "rva": "0x56d56",
+      "symbol": "?SetupComPort@game@@QAECXZ",
+      "before": 99.9469,
+      "after": 100.0
+    }
+  ],
+  "source_sha256": {
+    "src/SOURCE/REMOTE.cpp": "382dead4f26075106fbc9bb8d94a253b856dece9937fa5e122544392c089dd29",
+    "src/SOURCE/SETUP.cpp": "a9417d984e454e7e706f80a21639f6195c621705f39ccb1e7229383d048b5d3b",
+    "src/SOURCE/GAME.cpp": "be023d4b08fdbc340665cc16d5afc8087d3398140eb69bab5b6a2a7cd082da77"
+  }
+}

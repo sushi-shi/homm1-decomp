@@ -31,3 +31,6 @@ function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
 0x00007276	0x000926f4	0x00007557	?gResourceNames@@3PAPADA	0xFFFFFF0C	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
 0x0003a599	0x0009192a	0x0003a5b9	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
 0x0003abb3	0x00092410	0x0003ac62	?gStatNames@@3PAPADA	0xFFFFFEBC	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
+0x0003a64e	0x0009192a	0x0003a680	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Reviewed typed owner and signed index dataflow; buka-final-negative-references.json
+0x0004efb4	0x000903eb	0x00050186	?gSpellAIFlags@@3PACA	0xFFFFFFFF	1	Reviewed typed owner and signed index dataflow; buka-final-negative-references.json
+0x0004efb4	0x000903ae	0x00050135	?gSpellAIValue@@3PAFA	0xFFFFFFFE	1	Buka spell shrine: one-based metadata indexes the signed-word gSpellAIValue table at 0x903b0 with base -2; surrounding AddSpell and gSpellAIFlags accesses prove the index. Supersedes preceding pointer-array containment; buka-event-value-controls.json

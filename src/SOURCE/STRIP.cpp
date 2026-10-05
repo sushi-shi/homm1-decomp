@@ -69,7 +69,7 @@ strip::strip(
                 STRIP_CONTENT_Y,
                 STRIP_ARMY_BORDER_WIDTH,
                 STRIP_BORDER_HEIGHT,
-                i + firstBorderId + 1,
+                firstBorderId + i + 1,
                 WIDGET_KIND_TRANSPARENT,
                 0,
                 NULL

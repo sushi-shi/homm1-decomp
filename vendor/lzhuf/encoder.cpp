@@ -307,7 +307,7 @@ VA(0x004743a9, 0x238)
 void ReconstructEncoderTree(void)
 {
     i16 k, i, j;
-    u16 value, length;
+    u16 f, l;
 
     j = 0;
     for (i = 0; i < TREE_SIZE; ++i) {
@@ -318,14 +318,14 @@ void ReconstructEncoderTree(void)
         }
     }
     for (i = 0, j = CHARACTER_COUNT; j < TREE_SIZE; i += 2, ++j) {
-        value = freq[j] = static_cast<u16>(freq[i] + freq[i + 1]);
-        for (k = j - 1; value < freq[k]; --k)
+        f = freq[j] = static_cast<u16>(freq[i] + freq[i + 1]);
+        for (k = j - 1; f < freq[k]; --k)
             ;
         ++k;
-        length = static_cast<u16>((j - k) * 2);
-        memmove(&freq[k + 1], &freq[k], length);
-        freq[k] = value;
-        memmove(&son[k + 1], &son[k], length);
+        l = static_cast<u16>((j - k) * 2);
+        memmove(&freq[k + 1], &freq[k], l);
+        freq[k] = f;
+        memmove(&son[k + 1], &son[k], l);
         son[k] = static_cast<i16>(i);
     }
     for (i = 0; i < TREE_SIZE; ++i) {
@@ -360,9 +360,9 @@ void PutCode(i16 length, u16 code)
 VA(0x00474172, 0xa4)
 void EncodeCharacter(u16 character)
 {
+    u16 code, len;
     u16 i;
     i16 j, k;
-    u16 code, len;
 
     i = 0;
     j = 0;
@@ -490,32 +490,32 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
 VA(0x00474216, 0x193)
 static void UpdateEncoderTree(i16 character)
 {
-    i16 value;
-    register i16 child, otherChild, next;
+    i16 k;
+    register i16 i, j, l;
 
     if (freq[ROOT] == MAX_FREQUENCY)
         ReconstructEncoderTree();
     character = prnt[character + TREE_SIZE];
     do {
-        value = ++freq[character];
-        if (value > freq[next = character + 1]) {
-            while (value > freq[++next])
+        k = ++freq[character];
+        if (k > freq[l = character + 1]) {
+            while (k > freq[++l])
                 ;
-            --next;
-            freq[character] = freq[next];
-            freq[next] = value;
+            --l;
+            freq[character] = freq[l];
+            freq[l] = k;
 
-            child = son[character];
-            prnt[child] = static_cast<i16>(next);
-            if (child < TREE_SIZE)
-                prnt[child + 1] = static_cast<i16>(next);
-            otherChild = son[next];
-            son[next] = static_cast<i16>(child);
-            prnt[otherChild] = static_cast<i16>(character);
-            if (otherChild < TREE_SIZE)
-                prnt[otherChild + 1] = static_cast<i16>(character);
-            son[character] = static_cast<i16>(otherChild);
-            character = next;
+            i = son[character];
+            prnt[i] = static_cast<i16>(l);
+            if (i < TREE_SIZE)
+                prnt[i + 1] = static_cast<i16>(l);
+            j = son[l];
+            son[l] = static_cast<i16>(i);
+            prnt[j] = static_cast<i16>(character);
+            if (j < TREE_SIZE)
+                prnt[j + 1] = static_cast<i16>(character);
+            son[character] = static_cast<i16>(j);
+            character = l;
         }
         character = prnt[character];
     } while (character != 0);
@@ -525,61 +525,61 @@ VA(0x00473cf7, 0x2a9)
 static void InsertNode(i16 node)
 {
     register u8 *key;
-    register i16 compare, i, candidate;
-    u16 position;
+    register i16 cmp, i, p;
+    u16 c;
 
-    compare = 1;
+    cmp = 1;
     key = &text_buf[node];
-    candidate = WINDOW_SIZE + 1 + key[0];
+    p = WINDOW_SIZE + 1 + key[0];
     rson[node] = lson[node] = NIL;
     match_length = 0;
     for (;;) {
-        if (compare >= 0) {
-            if (rson[candidate] != NIL)
-                candidate = rson[candidate];
+        if (cmp >= 0) {
+            if (rson[p] != NIL)
+                p = rson[p];
             else {
-                rson[candidate] = static_cast<i16>(node);
-                dad[node] = static_cast<i16>(candidate);
+                rson[p] = static_cast<i16>(node);
+                dad[node] = static_cast<i16>(p);
                 return;
             }
         } else {
-            if (lson[candidate] != NIL)
-                candidate = lson[candidate];
+            if (lson[p] != NIL)
+                p = lson[p];
             else {
-                lson[candidate] = static_cast<i16>(node);
-                dad[node] = static_cast<i16>(candidate);
+                lson[p] = static_cast<i16>(node);
+                dad[node] = static_cast<i16>(p);
                 return;
             }
         }
         for (i = 1; i < LOOK_AHEAD; ++i) {
-            compare = *(reinterpret_cast<u8 *>(reinterpret_cast<u32>(key) + static_cast<i32>(i))) - text_buf[candidate + i]; // faithful: LZHUF addresses the key bytes through an integer sum
-            if (compare != 0)
+            cmp = *(reinterpret_cast<u8 *>(reinterpret_cast<u32>(key) + static_cast<i32>(i))) - text_buf[p + i]; // faithful: LZHUF addresses the key bytes through an integer sum
+            if (cmp != 0)
                 break;
         }
         if (i > MATCH_THRESHOLD) {
             if (i > match_length) {
                 match_position = static_cast<i16>(
-                    ((node - candidate) & (WINDOW_SIZE - 1)) - 1);
+                    ((node - p) & (WINDOW_SIZE - 1)) - 1);
                 if ((match_length = i) >= LOOK_AHEAD)
                     break;
             }
             if (i == match_length)
-                if (static_cast<i32>(position = static_cast<u16>(
-                        ((node - candidate) & (WINDOW_SIZE - 1)) - 1)) <
+                if (static_cast<i32>(c = static_cast<u16>(
+                        ((node - p) & (WINDOW_SIZE - 1)) - 1)) <
                     match_position)
-                    match_position = static_cast<i16>(position);
+                    match_position = static_cast<i16>(c);
         }
     }
-    dad[node] = dad[candidate];
-    lson[node] = lson[candidate];
-    rson[node] = rson[candidate];
-    dad[lson[candidate]] = static_cast<i16>(node);
-    dad[rson[candidate]] = static_cast<i16>(node);
-    if (rson[dad[candidate]] == candidate)
-        rson[dad[candidate]] = static_cast<i16>(node);
+    dad[node] = dad[p];
+    lson[node] = lson[p];
+    rson[node] = rson[p];
+    dad[lson[p]] = static_cast<i16>(node);
+    dad[rson[p]] = static_cast<i16>(node);
+    if (rson[dad[p]] == p)
+        rson[dad[p]] = static_cast<i16>(node);
     else
-        lson[dad[candidate]] = static_cast<i16>(node);
-    dad[candidate] = NIL;
+        lson[dad[p]] = static_cast<i16>(node);
+    dad[p] = NIL;
 }
 
 VA(0x00473fa0, 0x1d2)

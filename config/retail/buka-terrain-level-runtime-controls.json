@@ -1,0 +1,653 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "use": "Corresponding source expressions, ordinary local names and declaration order. No generated numeric aliases or identifier searches."
+  },
+  "changes": {
+    "hero::CheckLevel": "Level-first equality and roll-first skill threshold comparisons; physical local placement remains unresolved.",
+    "game::SetupTowns": "Map-extra owner precedes player count in the clamp comparison; physical local placement remains unresolved.",
+    "game::ClaimMine": "Flag frame precedes player color in the sum; physical local placement remains unresolved.",
+    "combatManager::MoreTreesNear": "Origin-first coordinate sums; physical local placement remains unresolved.",
+    "advManager::ValidMove": "New-coordinate and origin-first cell index sums; physical local placement remains unresolved.",
+    "ComputeUALoc": "Random call precedes hint-chance field read; corresponding plain donor triesCount local restores retail stack placement.",
+    "game::RandomizeTown": "Conditional special-building assignment; physical local placement remains unresolved.",
+    "advManager::FindAdjacentMonster": "Separate edge-bound assignments instead of conditional expressions; removes the two compiler temporary slots absent from retail.",
+    "game::ShowScenInfo": "Conditional player-index assignment with index-minus-one branch first; restores the compiler temporary. Physical local placement remains unresolved.",
+    "philAI::CheckBuyStuff": "Direct GAME_TOWN_NONE store into boat choice instead of reloading the shipyard choice; corresponding donor bought/bestBuy local names.",
+    "combatManager::RawEffectSpellInfluence": "Quantity-first stack value product, corresponding donor worth local, and worth * slow modifier * (speed - 1) floating-point order.",
+    "CanBuy": "Less-than mage-guild clamp arm first; preserves the original level limit.",
+    "CanBuild": "Town-type-first dwelling requirement index with grouped building offset; required mask precedes building bits in the AND.",
+    "QuickViewWait": "Direct Boolean assignment of the three event comparisons; compiler supplies the retail temporary slot.",
+    "ResizeWindow": "Conditional coordinate assignments; corresponding donor windowX/windowRect/targetY locals. windowRect is the donor plain compiler macro spelling.",
+    "com_rcv": "Requested-count-first conditional minimum; corresponding donor err/bytesRead/success/n locals. err and n are donor plain compiler macro spellings.",
+    "combatManager::ResetMouse": "Conditional field ID assignment with y <= boundary arm first, producing SETG/DEC/AND in retail.",
+    "army::GetAttackMask": "Conditional blocked-mask and direction-count assignments; physical local placement remains unresolved.",
+    "calc_crc": "Direct Boolean low-bit OR with mask-first operand order; CRC polynomial and all loop bounds retained. Physical local placement remains unresolved.",
+    "advManager::DoWhirlpool": "Count-first stack worth product and value-first minimum comparison; corresponding donor selectedSlot/creatureValue names and lowestValue-before-creatureValue declaration order.",
+    "combatManager::EffectSpellResurrect": "Count-first clamp sum and fight-value product, corresponding donor target/count locals; HoMM1 resurrection rules retained."
+  },
+  "functions": [
+    {
+      "symbol": "?MoreTreesNear@combatManager@@QAECXZ",
+      "rva": "0x1a123",
+      "candidate_instructions": 133,
+      "retail_instructions": 133,
+      "candidate_extent": 469,
+      "retail_extent": 469,
+      "slot_map": {
+        "-68": -68,
+        "-36": -60,
+        "-52": -16,
+        "-56": -28,
+        "-60": -24,
+        "-48": -32,
+        "-4": -8,
+        "-8": -12,
+        "-12": -36,
+        "-64": -64,
+        "-40": -20,
+        "-44": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.586464,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "3a699e81dce985af0f018b8db08ee40339b9bc242925d1c5780a1231ee6f0a1a",
+      "retail_sha256": "03f08c4455cda7bdfc39ac7d37f0cf0f8551027ea81888b7951ae602fd4790d1"
+    },
+    {
+      "symbol": "?com_rcv@@YAFFGPAX@Z",
+      "rva": "0x1d126",
+      "candidate_instructions": 60,
+      "retail_instructions": 60,
+      "candidate_extent": 190,
+      "retail_extent": 190,
+      "slot_map": {
+        "-20": -20,
+        "-4": -4,
+        "-24": -24,
+        "-16": -16,
+        "-32": -32,
+        "-28": -28,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "89d25ebb3d39893d5160f854465d0a2b659d3707dc4c4513f80f8a658c132b9e",
+      "retail_sha256": "89d25ebb3d39893d5160f854465d0a2b659d3707dc4c4513f80f8a658c132b9e"
+    },
+    {
+      "symbol": "?ResetMouse@combatManager@@QAEXXZ",
+      "rva": "0x21003",
+      "candidate_instructions": 51,
+      "retail_instructions": 51,
+      "candidate_extent": 189,
+      "retail_extent": 189,
+      "slot_map": {
+        "-28": -28,
+        "-8": -8,
+        "-4": -4,
+        "-24": -24,
+        "-22": -22,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "75e249bba6b82e605b5afd95e17e1e08db7c6a5ab55970e9300f8fb8550908af",
+      "retail_sha256": "75e249bba6b82e605b5afd95e17e1e08db7c6a5ab55970e9300f8fb8550908af"
+    },
+    {
+      "symbol": "?ValidMove@advManager@@QAEFF@Z",
+      "rva": "0x230f8",
+      "candidate_instructions": 173,
+      "retail_instructions": 173,
+      "candidate_extent": 588,
+      "retail_extent": 588,
+      "slot_map": {
+        "-36": -36,
+        "-20": -20,
+        "-12": -24,
+        "-28": -28,
+        "-32": -32,
+        "-4": -4,
+        "-8": -16,
+        "-24": -12,
+        "-16": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.9422,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "dabf7e6e23f0e168eefaaf666a78109fe41af93ca1aa7afb5533b214e0fa8dd1",
+      "retail_sha256": "8f19bd825b202f31e491a735e8782f41906e9480f9eee21242f9345a3d6e5ab6"
+    },
+    {
+      "symbol": "?DoWhirlpool@advManager@@QAEXPAVhero@@@Z",
+      "rva": "0x27af9",
+      "candidate_instructions": 85,
+      "retail_instructions": 85,
+      "candidate_extent": 290,
+      "retail_extent": 290,
+      "slot_map": {
+        "-40": -40,
+        "-36": -36,
+        "-4": -4,
+        "-28": -28,
+        "-32": -32
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "d6aefa3df6ebc170fcc8eacc5ce4a778b840174495791930b6460e466a5f3795",
+      "retail_sha256": "d6aefa3df6ebc170fcc8eacc5ce4a778b840174495791930b6460e466a5f3795"
+    },
+    {
+      "symbol": "?ComputeUALoc@@YAXH@Z",
+      "rva": "0x2bab9",
+      "candidate_instructions": 192,
+      "retail_instructions": 192,
+      "candidate_extent": 801,
+      "retail_extent": 801,
+      "slot_map": {
+        "-4": -4,
+        "-16": -16,
+        "-20": -20,
+        "-8": -8,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "95523cb47ed87733035f77c7d71b3a88618349aa54a8a96388d6f292f3806c2a",
+      "retail_sha256": "95523cb47ed87733035f77c7d71b3a88618349aa54a8a96388d6f292f3806c2a"
+    },
+    {
+      "symbol": "?ClaimMine@game@@QAEXCC@Z",
+      "rva": "0x309a5",
+      "candidate_instructions": 140,
+      "retail_instructions": 140,
+      "candidate_extent": 586,
+      "retail_extent": 586,
+      "slot_map": {
+        "-12": -12,
+        "-16": -16,
+        "-4": -8,
+        "-20": -20,
+        "-8": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.89941,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "45c1fc6a029db380b1a6fbe487c635264966ebe66f4df68179c1bdcdfdfdf2ae",
+      "retail_sha256": "d801fc61fda5fc37235639bd578da31f4949a9ebc628da6d962eb1a95f62db44"
+    },
+    {
+      "symbol": "?RandomizeTown@game@@QAEXCCC@Z",
+      "rva": "0x3461e",
+      "candidate_instructions": 365,
+      "retail_instructions": 365,
+      "candidate_extent": 1385,
+      "retail_extent": 1385,
+      "slot_map": {
+        "-36": -36,
+        "-32": -28,
+        "-28": -20,
+        "-24": -16,
+        "-12": -8,
+        "-4": -4,
+        "-8": -32,
+        "-20": -24,
+        "-16": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.80822,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "3a92a8634848c8b0d11a2d18aee4706362fa9a5a52247031739598338ba10f40",
+      "retail_sha256": "f72d7cef85ea70e9fde9def0d3cb4ad85de6d0104d80ffa62c7a9e4cd7dbf68f"
+    },
+    {
+      "symbol": "?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z",
+      "rva": "0x36026",
+      "candidate_instructions": 202,
+      "retail_instructions": 202,
+      "candidate_extent": 762,
+      "retail_extent": 762,
+      "slot_map": {
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "4fea5b3eb044f143ba1908ef9d0f07d0db1366bc009deac9abeb7989d363c42d",
+      "retail_sha256": "4fea5b3eb044f143ba1908ef9d0f07d0db1366bc009deac9abeb7989d363c42d"
+    },
+    {
+      "symbol": "?SetupTowns@game@@QAECXZ",
+      "rva": "0x3689d",
+      "candidate_instructions": 141,
+      "retail_instructions": 141,
+      "candidate_extent": 463,
+      "retail_extent": 463,
+      "slot_map": {
+        "-32": -32,
+        "-24": -4,
+        "-28": -20,
+        "-16": -12,
+        "-8": -8,
+        "-4": -24,
+        "-12": -28,
+        "-20": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.702126,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "71aa195ca289a56429a939f32ddac4d0f1e319d74996709fdbd877087becbfb1",
+      "retail_sha256": "5f891c0eb9e34e92d4541554d6b9386881cac1753b7358ad2e1057e1f43d1a77"
+    },
+    {
+      "symbol": "?ShowScenInfo@game@@QAEXXZ",
+      "rva": "0x38934",
+      "candidate_instructions": 257,
+      "retail_instructions": 257,
+      "candidate_extent": 1040,
+      "retail_extent": 1040,
+      "slot_map": {
+        "-116": -116,
+        "-104": -32,
+        "-24": -40,
+        "-96": -28,
+        "-56": -36,
+        "-100": -56,
+        "-88": -104,
+        "-32": -64,
+        "-92": -60,
+        "-76": -48,
+        "-112": -112,
+        "-4": -4,
+        "-120": -120,
+        "-108": -108,
+        "-20": -16,
+        "-72": -100,
+        "-70": -98,
+        "-68": -96,
+        "-60": -88,
+        "-84": -24,
+        "-80": -44,
+        "-124": -124,
+        "-52": -84,
+        "-128": -128,
+        "-16": -52,
+        "-132": -132,
+        "-136": -136,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.71595,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "31234bd8aae30c8dc0549c13296f2eb2419c877ce02a121414a906f51599c13e",
+      "retail_sha256": "7bc3e54266e9e3ba243a4eda0b55396209e30bcfd018b1ed9699fd3f8328a195"
+    },
+    {
+      "symbol": "?CheckLevel@hero@@QAEXXZ",
+      "rva": "0x3a8b1",
+      "candidate_instructions": 210,
+      "retail_instructions": 210,
+      "candidate_extent": 695,
+      "retail_extent": 695,
+      "slot_map": {
+        "-92": -92,
+        "-88": -24,
+        "-80": -20,
+        "-76": -84,
+        "-24": -16,
+        "-20": -12,
+        "-16": -8,
+        "-12": -4,
+        "-84": -28,
+        "-8": -32,
+        "-4": -88
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.71429,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "aeffc91426bfd2a77ce693a0a07f00cd5be63d4f2d7deba3b677bec60337f7e3",
+      "retail_sha256": "75105b997333398afd42204538f2b18fb025b3a002dc8313779733f2a4403275"
+    },
+    {
+      "symbol": "?CanBuild@@YACPAVtown@@F@Z",
+      "rva": "0x3e49c",
+      "candidate_instructions": 89,
+      "retail_instructions": 89,
+      "candidate_extent": 260,
+      "retail_extent": 260,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "468a86982eb0360f506051b31644d0eec9686719b76147878699893a75b482c0",
+      "retail_sha256": "468a86982eb0360f506051b31644d0eec9686719b76147878699893a75b482c0"
+    },
+    {
+      "symbol": "?CanBuy@@YACPAVtown@@F@Z",
+      "rva": "0x3e5a0",
+      "candidate_instructions": 58,
+      "retail_instructions": 58,
+      "candidate_extent": 182,
+      "retail_extent": 182,
+      "slot_map": {
+        "-40": -40,
+        "-44": -44,
+        "-36": -36,
+        "-4": -4,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "5f287c15b993ad85f7d74bf838cbb5c11a89ddde9702cb0d2f9599d5696f1c14",
+      "retail_sha256": "5f287c15b993ad85f7d74bf838cbb5c11a89ddde9702cb0d2f9599d5696f1c14"
+    },
+    {
+      "symbol": "?QuickViewWait@@YAXXZ",
+      "rva": "0x404c4",
+      "candidate_instructions": 38,
+      "retail_instructions": 38,
+      "candidate_extent": 122,
+      "retail_extent": 122,
+      "slot_map": {
+        "-4": -4,
+        "-36": -36,
+        "-20": -20,
+        "-16": -16,
+        "-12": -12,
+        "-8": -8,
+        "-40": -40
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "3e2f43118d1c80134c47215caffb7afd38b9c7db6d10ca1c4de8820886aed679",
+      "retail_sha256": "3e2f43118d1c80134c47215caffb7afd38b9c7db6d10ca1c4de8820886aed679"
+    },
+    {
+      "symbol": "?ResizeWindow@@YAXHHHH@Z",
+      "rva": "0x437f4",
+      "candidate_instructions": 84,
+      "retail_instructions": 84,
+      "candidate_extent": 285,
+      "retail_extent": 285,
+      "slot_map": {
+        "-20": -20,
+        "-28": -28,
+        "-24": -24,
+        "-16": -16,
+        "-32": -32,
+        "-4": -4,
+        "-12": -12,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "5ef25505a0c247a5bdcd2274946339bbd96a8923d9b6a7d0f4abf36b031444ff",
+      "retail_sha256": "5ef25505a0c247a5bdcd2274946339bbd96a8923d9b6a7d0f4abf36b031444ff"
+    },
+    {
+      "symbol": "?GetAttackMask@army@@QAEFFCC@Z",
+      "rva": "0x46666",
+      "candidate_instructions": 56,
+      "retail_instructions": 56,
+      "candidate_extent": 172,
+      "retail_extent": 172,
+      "slot_map": {
+        "-24": -24,
+        "-16": -4,
+        "-20": -12,
+        "-4": -16,
+        "-12": -8,
+        "-8": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.71429,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "b678866a9456d3c77baeb877b1968c941e370d06d1d9f56ac22d3ad38adf7d09",
+      "retail_sha256": "802b5b6d901f8f3caf96ee5780e96d9763e5b390a417a6cb43686a477dd850ac"
+    },
+    {
+      "symbol": "?CheckBuyStuff@philAI@@QAEXXZ",
+      "rva": "0x47dc7",
+      "candidate_instructions": 242,
+      "retail_instructions": 242,
+      "candidate_extent": 1007,
+      "retail_extent": 1007,
+      "slot_map": {
+        "-32": -32,
+        "-8": -8,
+        "-4": -4,
+        "-12": -12,
+        "-28": -28,
+        "-24": -24,
+        "-36": -36,
+        "-20": -20,
+        "-16": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "5acbe3458d4d5aaee7dadd56c223af04d7f871fa9765e70dc7737acc53573a64",
+      "retail_sha256": "5acbe3458d4d5aaee7dadd56c223af04d7f871fa9765e70dc7737acc53573a64"
+    },
+    {
+      "symbol": "?calc_crc@@YAXPAGPAEH@Z",
+      "rva": "0x51d83",
+      "candidate_instructions": 57,
+      "retail_instructions": 57,
+      "candidate_extent": 171,
+      "retail_extent": 171,
+      "slot_map": {
+        "-4": -8,
+        "-8": -12,
+        "-12": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.85965,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "e9e77f43a97d3116b3aa8db9129bdc5e23ed2ef8d854e48635f9818e2e9c5be3",
+      "retail_sha256": "e5bef740f34755a2111cb9f29c26926b5f3c9100c3f932d4dc044c80d908455a"
+    },
+    {
+      "symbol": "?RawEffectSpellInfluence@combatManager@@QAEHPAVarmy@@H@Z",
+      "rva": "0x593a3",
+      "candidate_instructions": 144,
+      "retail_instructions": 144,
+      "candidate_extent": 582,
+      "retail_extent": 582,
+      "slot_map": {
+        "-12": -12,
+        "-8": -8,
+        "-4": -4,
+        "-16": -16,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "8eb0b8cea7704662003a77858ccc95a7f78d11f14088c9b324aacc39cfbdf02b",
+      "retail_sha256": "8eb0b8cea7704662003a77858ccc95a7f78d11f14088c9b324aacc39cfbdf02b"
+    },
+    {
+      "symbol": "?EffectSpellResurrect@combatManager@@QAEXPAHH@Z",
+      "rva": "0x598ea",
+      "candidate_instructions": 66,
+      "retail_instructions": 66,
+      "candidate_extent": 212,
+      "retail_extent": 212,
+      "slot_map": {
+        "-16": -16,
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "e000b552d841150a2fa902bb8dbfaeb8b5c733736df7885ac19d7254fa61c594",
+      "retail_sha256": "e000b552d841150a2fa902bb8dbfaeb8b5c733736df7885ac19d7254fa61c594"
+    }
+  ],
+  "whole_project_score_changes": [
+    {
+      "rva": "0x1a123",
+      "symbol": "?MoreTreesNear@combatManager@@QAECXZ",
+      "before": 92.08271,
+      "after": 99.586464
+    },
+    {
+      "rva": "0x1d126",
+      "symbol": "?com_rcv@@YAFFGPAX@Z",
+      "before": 90.48333,
+      "after": 100.0
+    },
+    {
+      "rva": "0x21003",
+      "symbol": "?ResetMouse@combatManager@@QAEXXZ",
+      "before": 93.13725,
+      "after": 100.0
+    },
+    {
+      "rva": "0x230f8",
+      "symbol": "?ValidMove@advManager@@QAEFF@Z",
+      "before": 94.72254,
+      "after": 99.9422
+    },
+    {
+      "rva": "0x27af9",
+      "symbol": "?DoWhirlpool@advManager@@QAEXPAVhero@@@Z",
+      "before": 92.38824,
+      "after": 100.0
+    },
+    {
+      "rva": "0x2bab9",
+      "symbol": "?ComputeUALoc@@YAXH@Z",
+      "before": 95.34375,
+      "after": 100.0
+    },
+    {
+      "rva": "0x309a5",
+      "symbol": "?ClaimMine@game@@QAEXCC@Z",
+      "before": 98.36095,
+      "after": 99.89941
+    },
+    {
+      "rva": "0x3461e",
+      "symbol": "?RandomizeTown@game@@QAEXCCC@Z",
+      "before": 97.0274,
+      "after": 99.80822
+    },
+    {
+      "rva": "0x36026",
+      "symbol": "?FindAdjacentMonster@advManager@@QAECHHPAH0HH@Z",
+      "before": 94.57921,
+      "after": 100.0
+    },
+    {
+      "rva": "0x3689d",
+      "symbol": "?SetupTowns@game@@QAECXZ",
+      "before": 98.41844,
+      "after": 99.702126
+    },
+    {
+      "rva": "0x38934",
+      "symbol": "?ShowScenInfo@game@@QAEXXZ",
+      "before": 96.536964,
+      "after": 99.71595
+    },
+    {
+      "rva": "0x3a8b1",
+      "symbol": "?CheckLevel@hero@@QAEXXZ",
+      "before": 98.57143,
+      "after": 99.71429
+    },
+    {
+      "rva": "0x3e49c",
+      "symbol": "?CanBuild@@YACPAVtown@@F@Z",
+      "before": 92.57304,
+      "after": 100.0
+    },
+    {
+      "rva": "0x3e5a0",
+      "symbol": "?CanBuy@@YACPAVtown@@F@Z",
+      "before": 91.034485,
+      "after": 100.0
+    },
+    {
+      "rva": "0x404c4",
+      "symbol": "?QuickViewWait@@YAXXZ",
+      "before": 91.23684,
+      "after": 100.0
+    },
+    {
+      "rva": "0x437f4",
+      "symbol": "?ResizeWindow@@YAXHHHH@Z",
+      "before": 91.7619,
+      "after": 100.0
+    },
+    {
+      "rva": "0x46666",
+      "symbol": "?GetAttackMask@army@@QAEFFCC@Z",
+      "before": 89.03571,
+      "after": 99.71429
+    },
+    {
+      "rva": "0x47dc7",
+      "symbol": "?CheckBuyStuff@philAI@@QAEXXZ",
+      "before": 95.74793,
+      "after": 100.0
+    },
+    {
+      "rva": "0x51d83",
+      "symbol": "?calc_crc@@YAXPAGPAEH@Z",
+      "before": 90.14035,
+      "after": 99.85965
+    },
+    {
+      "rva": "0x593a3",
+      "symbol": "?RawEffectSpellInfluence@combatManager@@QAEHPAVarmy@@H@Z",
+      "before": 94.01266,
+      "after": 100.0
+    },
+    {
+      "rva": "0x598ea",
+      "symbol": "?EffectSpellResurrect@combatManager@@QAEXPAHH@Z",
+      "before": 95.40909,
+      "after": 100.0
+    }
+  ],
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "validation": "Every listed body has matching complete instruction sequence, CFG and ordered reference identities/addends under a consistent local-displacement correspondence. Only complete byte/reference equality counts as exact; remaining local differences are not normalized in objdiff.",
+  "source_sha256": {
+    "src/SOURCE/HERO.cpp": "6fd298f970d1ee5937590231718232b27dbd00b0cbd5a91b7839d24ed5552c23",
+    "src/SOURCE/GAME.cpp": "59041ac1a308a2c3912b904d3146b3c7177247ae3cefd6f6988e1163f93e85eb",
+    "src/SOURCE/CMBTMGR.cpp": "fb0d5d67fc681194a8250d789041636a075e19f9b22e426210d48563d3116c4e",
+    "src/SOURCE/CURSOR.cpp": "75456c464451a89ed043cee04a726b863f1645ce90e4ba14f4e1d9016f015550",
+    "src/SOURCE/PHILAI.cpp": "dfa107ebd7125dd2e576da8799b8cc5d486fdc8407c113befb5081d0f0cf6476",
+    "src/SOURCE/SPELLAI.cpp": "109fd1ddc48896379263b0cf11c0fd52e5c3b43d488b62df3b7a144b8d8cad11",
+    "src/SOURCE/KB.cpp": "d63b1d3288d3c30bfc7b34898143cb11b2d204b3e1169ae2d0c002b0b0e213dc",
+    "src/SOURCE/kbwin.cpp": "e09d75ef960bc71a723fd73ff14a2a063e4d09e63d8a2d0afede68624683f27e",
+    "src/SOURCE/comwin.cpp": "bbf8b4bd5955d209867d6e138d716a714e268153f879214723c57c01c2fe5da8",
+    "src/SOURCE/COMMAND.cpp": "903fcbb3a3499b00c29c61e102ca815735ed0101ff601f93ae7841adbc124a29",
+    "src/SOURCE/PATH.cpp": "6d65334fe0c88c451a21b56f03ddc4ca1aad2d7a7dba7d2eb6d35207694f2ab0",
+    "src/SOURCE/REMOTE.cpp": "785072ba4ca7acc679cc448f3229f98dccdf077fb25f275ff45a9f7a442053af",
+    "src/SOURCE/EVENTS.cpp": "bd7ac23d1b8fefd1e453a45bdde34c476601a402a1cf57a3ee59af582b0cec3c"
+  }
+}

@@ -22,11 +22,11 @@ VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
 VA(0x00475830, 0x56)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
-    m_icon = NULL;
-    m_kind = WIDGET_KIND_TEXT_ENTRY;
     m_maxLength = 0;
+    m_icon = NULL;
     m_iconFrame = 0;
     m_displayOffset = 0;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
 VA_COMPGEN(0x00476ab0, 0x2e, "??_GtextEntryWidget@@UAEPAXI@Z", 0x00475830)
@@ -49,7 +49,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_alignment = static_cast<char>(gpResourceManager->ReadWord());
+    m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_icon = gpResourceManager->GetIcon(
@@ -77,27 +77,51 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     }
     m_iconFrame = gpResourceManager->ReadWord();
     m_id = gpResourceManager->ReadWord();
-    gpResourceManager->ReadWord();
+    m_kind = gpResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
 VA(0x00475c01, 0xa70)
 i16 textEntryWidget::Main(tag_message& message) {
+    i16 done;
+    i16 x;
+    i16 y;
+    tag_message event;
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);
         return MESSAGE_DISPATCH_CONTINUE;
     }
     switch (message.type) {
+        case MESSAGE_WIDGET:
+            switch (message.command) {
+                case WIDGET_COMMAND_SET_MAX_LENGTH:
+                    if (message.id == m_id) {
+                        m_maxLength = message.value;
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+                case WIDGET_COMMAND_SET_TEXT:
+                    if (message.id == m_id) {
+                        SetText(message.text);
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+                case WIDGET_COMMAND_GET_TEXT:
+                    if (message.id == m_id) {
+                        message.text = m_text;
+                        return MESSAGE_DISPATCH_CONSUME;
+                    }
+                    break;
+            }
+            break;
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            i16 x = message.x - m_owner->m_posX;
-            i16 y = message.y - m_owner->m_posY;
+            x = message.x - m_owner->m_posX;
+            y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
-                    message.command = WIDGET_NOTIFY_RIGHT_CLICK;
-                    message.type = MESSAGE_WIDGET;
-                    message.id = m_id;
+                    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_RIGHT_CLICK, m_id);
                     message.modifiers = MESSAGE_MODIFIER_RIGHT_BUTTON;
                     return MESSAGE_DISPATCH_FORWARD;
                 }
@@ -108,8 +132,6 @@ i16 textEntryWidget::Main(tag_message& message) {
                 char swap[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char copy[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char original[TEXT_ENTRY_DISPLAY_CAPACITY];
-                tag_message event;
-                i16 done;
 
                 gpMouseManager->ReallyHidePointer();
                 x = m_owner->m_posX + m_x;
@@ -135,22 +157,22 @@ i16 textEntryWidget::Main(tag_message& message) {
                                 strcpy(edit, original);
                                 done++;
                                 break;
+                            case TEXT_ENTRY_KEY_DELETE:
+                                if (m_cursorPosition < strlen(edit)) {
+                                    strcpy(swap, edit + m_cursorPosition + 1);
+                                    strcpy(edit + m_cursorPosition, swap);
+                                }
+                                break;
                             case TEXT_ENTRY_KEY_LEFT:
                                 if (m_cursorPosition > 0) {
                                     m_cursorPosition--;
-                                    if (m_displayOffset > m_cursorPosition)
+                                    if (m_cursorPosition < m_displayOffset)
                                         m_displayOffset = m_cursorPosition;
                                 }
                                 break;
                             case TEXT_ENTRY_KEY_RIGHT:
                                 if (m_cursorPosition < strlen(edit))
                                     m_cursorPosition++;
-                                break;
-                            case TEXT_ENTRY_KEY_DELETE:
-                                if (m_cursorPosition < strlen(edit)) {
-                                    strcpy(swap, edit + m_cursorPosition + 1);
-                                    strcpy(edit + m_cursorPosition, swap);
-                                }
                                 break;
                             default:
                                 gpInputManager->AsciiConvert(event);
@@ -161,7 +183,7 @@ i16 textEntryWidget::Main(tag_message& message) {
                                         strcpy(swap, edit + m_cursorPosition);
                                         strcpy(edit + m_cursorPosition - 1, swap);
                                         m_cursorPosition--;
-                                        if (m_displayOffset > m_cursorPosition)
+                                        if (m_cursorPosition < m_displayOffset)
                                             m_displayOffset = m_cursorPosition;
                                     }
                                 } else if (strlen(edit) + 1 < m_maxLength && event.keyCode != 0) {
@@ -169,25 +191,12 @@ i16 textEntryWidget::Main(tag_message& message) {
                                     strcpy(copy, edit);
                                     typed = 0;
                                     if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        switch ((event.keyCode >> INPUT_KEY_SCAN_SHIFT)
-                                                & INPUT_SCAN_CODE_MASK) {
-                                            case TEXT_ENTRY_KEYPAD_7:
-                                                typed = '7';
-                                                break;
-                                            case TEXT_ENTRY_KEYPAD_8:
-                                                typed = '8';
-                                                break;
-                                            case TEXT_ENTRY_KEYPAD_9:
-                                                typed = '9';
-                                                break;
-                                            case TEXT_ENTRY_KEYPAD_4:
-                                                typed = '4';
-                                                break;
-                                            case TEXT_ENTRY_KEYPAD_5:
-                                                typed = '5';
-                                                break;
-                                            case TEXT_ENTRY_KEYPAD_6:
-                                                typed = '6';
+                                        i32 key = (event.keyCode
+                                                   & (INPUT_SCAN_CODE_MASK << INPUT_KEY_SCAN_SHIFT))
+                                                  >> INPUT_KEY_SCAN_SHIFT;
+                                        switch (key) {
+                                            case TEXT_ENTRY_KEYPAD_0:
+                                                typed = '0';
                                                 break;
                                             case TEXT_ENTRY_KEYPAD_1:
                                                 typed = '1';
@@ -198,12 +207,27 @@ i16 textEntryWidget::Main(tag_message& message) {
                                             case TEXT_ENTRY_KEYPAD_3:
                                                 typed = '3';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_0:
-                                                typed = '0';
+                                            case TEXT_ENTRY_KEYPAD_4:
+                                                typed = '4';
+                                                break;
+                                            case TEXT_ENTRY_KEYPAD_5:
+                                                typed = '5';
+                                                break;
+                                            case TEXT_ENTRY_KEYPAD_6:
+                                                typed = '6';
+                                                break;
+                                            case TEXT_ENTRY_KEYPAD_7:
+                                                typed = '7';
+                                                break;
+                                            case TEXT_ENTRY_KEYPAD_8:
+                                                typed = '8';
+                                                break;
+                                            case TEXT_ENTRY_KEYPAD_9:
+                                                typed = '9';
                                                 break;
                                         }
                                     } else {
-                                        typed = static_cast<char>(event.keyCode);
+                                        typed = event.keyCode & INPUT_SCAN_CODE_MASK;
                                     }
                                     if (typed != 0) {
                                         strcpy(swap, m_text);
@@ -218,10 +242,12 @@ i16 textEntryWidget::Main(tag_message& message) {
                                         strcpy(edit, swap);
                                         m_cursorPosition++;
                                         SetupDisplayString(edit, m_cursorPosition);
-                                        if (m_entryType != TEXT_ENTRY_READ_MULTILINE
-                                            && m_font->LineLength(m_text, m_width) > m_maxLines) {
-                                            strcpy(edit, copy);
-                                            m_cursorPosition--;
+                                        if (m_entryType != TEXT_ENTRY_READ_MULTILINE) {
+                                            i32 lineLength = m_font->LineLength(m_text, m_width);
+                                            if (lineLength > m_maxLines) {
+                                                strcpy(edit, copy);
+                                                m_cursorPosition--;
+                                            }
                                         }
                                     }
                                 }
@@ -237,35 +263,11 @@ i16 textEntryWidget::Main(tag_message& message) {
                 Draw();
                 gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
                 gpMouseManager->ReallyShowPointer();
-                message.command = WIDGET_NOTIFY_SELECT;
-                message.type = MESSAGE_WIDGET;
-                message.id = m_id;
+                SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
                 return MESSAGE_DISPATCH_FORWARD;
             }
             return MESSAGE_DISPATCH_CONTINUE;
         }
-        case MESSAGE_WIDGET:
-            switch (message.command) {
-                case WIDGET_COMMAND_SET_TEXT:
-                    if (message.id == m_id) {
-                        SetText(message.text);
-                        return MESSAGE_DISPATCH_CONSUME;
-                    }
-                    break;
-                case WIDGET_COMMAND_GET_TEXT:
-                    if (message.id == m_id) {
-                        message.text = m_text;
-                        return MESSAGE_DISPATCH_CONSUME;
-                    }
-                    break;
-                case WIDGET_COMMAND_SET_MAX_LENGTH:
-                    if (message.id == m_id) {
-                        m_maxLength = message.value;
-                        return MESSAGE_DISPATCH_CONSUME;
-                    }
-                    break;
-            }
-            break;
     }
     return widget::Main(message);
 }
@@ -275,11 +277,11 @@ void textEntryWidget::Draw(void) {
     if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
         char display[TEXT_ENTRY_DISPLAY_CAPACITY];
         strcpy(display, m_text + m_displayOffset);
-        u32 length = strlen(display);
+        u32 len = strlen(display);
         while (m_font->LineWidth(display) > m_width)
-            display[--length] = 0;
+            display[--len] = 0;
         m_icon->DrawToBuffer(
-            m_rectX + m_owner->m_posX,
+            m_owner->m_posX + m_rectX,
             m_owner->m_posY + m_rectY,
             m_iconFrame,
             ICON_DRAW_NORMAL,
@@ -287,7 +289,7 @@ void textEntryWidget::Draw(void) {
         );
         m_font->DrawBoundedString(
             display,
-            m_x + m_owner->m_posX,
+            m_owner->m_posX + m_x,
             m_owner->m_posY + m_y,
             m_width,
             m_height,
@@ -296,7 +298,7 @@ void textEntryWidget::Draw(void) {
         );
     } else {
         m_icon->DrawToBuffer(
-            m_rectX + m_owner->m_posX,
+            m_owner->m_posX + m_rectX,
             m_owner->m_posY + m_rectY,
             m_iconFrame,
             ICON_DRAW_NORMAL,

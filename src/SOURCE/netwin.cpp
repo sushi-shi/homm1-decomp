@@ -166,7 +166,7 @@ VA(0x00445121, 0xee)
 // Their stack positions are proven by all four retail call sites.
 H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
     tag_Node* node;
-    if (gNbMaxSess == session && len == 0) {
+    if (session == gNbMaxSess && len == 0) {
         nb_add_name();
         return NRC_GOODRET;
     }
@@ -339,9 +339,7 @@ void nb_thr_ctl(void)
             nb_recv_complete(i);
         }
     }
-    LogInt("In SendSection Start", KBTickCount());
     while (keepRunning) {
-        LogInt("In SendSection", KBTickCount());
         EnterCriticalSection(&gNbSndLock);
         pkt = pop_node(&gNbFreeQueue);
         if (pkt == NULL)
@@ -366,7 +364,7 @@ void nb_thr_ctl(void)
                             sendComplete = 1;
                             break;
                         case NRC_PENDING:
-#line 496
+#line 475
                             H1_ASSERT(0);
                             break;
                         case NRC_SNUMOUT:
@@ -383,7 +381,6 @@ void nb_thr_ctl(void)
             free(pkt);
         }
     }
-    LogInt("Leaving SendSection", KBTickCount());
 }
 
 // Buka netwin.cpp:455-475.
@@ -414,7 +411,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
     char buf[80];
     i32 j;
 
-#line 541
+#line 516
     H1_ASSERT(ncb == &gNbSessNcb[gNbMaxSess]);
     switch (ncb->ncb_retcode) {
         case NRC_GOODRET:
@@ -429,7 +426,7 @@ void __stdcall nb_add_name_done(NCB* ncb)
         case NRC_DUPENV:
             for (j = NCBNAMSZ - 1; j >= 0; j--) {
                 ncb->ncb_name[j]++;
-                if (gNbNameBuf[gNbMaxSess].bytes[j] != ncb->ncb_name[j])
+                if (ncb->ncb_name[j] != gNbNameBuf[gNbMaxSess].bytes[j])
                     break;
             }
             Netbios(ncb);
@@ -465,7 +462,7 @@ void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
 
     for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
-        if (&gNbSessNcb[i] == ncb)
+        if (ncb == &gNbSessNcb[i])
             break;
     }
     if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
@@ -517,7 +514,7 @@ void __stdcall nb_call_done(NCB* ncb) {
     i32 i;
 
     for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
-        if (&gNbSessNcb[i] == ncb)
+        if (ncb == &gNbSessNcb[i])
             break;
     }
     if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
@@ -550,7 +547,7 @@ void nb_arm_recv(i32 session)
     u8 result;
 
     while (1) {
-#line 747
+#line 722
         H1_ASSERT(gNbSessNcb[session].ncb_retcode != NRC_PENDING);
         memset(&gNbSessNcb[session], 0, sizeof(NCB));
         gNbSessNcb[session].ncb_command = NCBRECV | ASYNCH;
@@ -657,7 +654,7 @@ DATA(0x004b2164)
 u8 gNetStatus[7] = {0, 0, 0, 0, 0, 0, 0};
 DATA(0x0049eda8)
 char* gNbGroupName = "Empire Too ";
-DATA(0x004a16e0)
+DATA(0x0049edac)
 u8* gNbListenName =
     reinterpret_cast<u8*>(const_cast<char*>("*")); // API-forced: NetBIOS names are unsigned bytes
 DATA(0x004a9e70)

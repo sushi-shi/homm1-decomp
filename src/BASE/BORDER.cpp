@@ -15,7 +15,10 @@
 
 VA_COMPGEN(0x00474a2c, 0x64, "??1border@@UAE@XZ", 0x00474950)
 VA(0x00474950, 0x3e)
-border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE), m_background(0), m_fillColor(0) {}
+border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
+    m_fillColor = 0;
+    m_background = 0;
+}
 
 VA_COMPGEN(0x00474e70, 0x2e, "??_Gborder@@UAEPAXI@Z", 0x00474950)
 border::~border(void) {
@@ -48,9 +51,8 @@ void border::Read(void) {
         gpResourceManager->RestorePosition();
         return;
     }
-    i16 color = gpResourceManager->ReadWord();
+    m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_background = 0;
-    m_fillColor = color & COLOR_INDEX_MASK;
 }
 
 VA(0x00474b79, 0x1d9)

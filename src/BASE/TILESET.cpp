@@ -21,7 +21,7 @@ tileset::tileset(i16 id)
     i32 size = m_tileCount * m_tileWidth * m_tileHeight;
     m_data = static_cast<i8*>(malloc(size));
     gpResourceManager->ReadBlock(m_data, size);
-    PostprocessBitmap(m_data, m_tileWidth, m_tileCount * m_tileHeight);
+    PostprocessBitmap(m_data, m_tileWidth, m_tileHeight * m_tileCount);
 }
 
 VA_COMPGEN(0x00475020, 0x2e, "??_Gtileset@@UAEPAXI@Z", 0x00474ea0)

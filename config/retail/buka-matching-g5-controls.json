@@ -1,0 +1,2593 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Whole-TU /G5 versus /G6 control with unchanged source. Enroll only units with new full exact instruction/reference controls and no per-function strict objdiff regressions. All other options remain /Od /Ob1 /GX /MT. No masking or source permutations.",
+  "units": [
+    {
+      "unit": "BASE/BITMAP",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "37215c6267569df20bb24bc8e1f0a611c34a59645518e0ae26b25cd406d99114",
+      "object_sha256": "e6da7cf3cceb3f7deda05809d3fce7c21c65fa856c6e3bb8c0cfa151ecc43f58",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0bitmap@@QAE@F@Z",
+          "function_rva": "0x73230",
+          "size": 262,
+          "normalized_body_sha256": "ec08c9281071830420468202ec9f9ff790c4992f4b6fa0076fd955b033265d99",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0bitmap@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2d",
+              "symbol": "??0resource@@QAE@FFFPAV0@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3d",
+              "symbol": "??_7bitmap@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x48",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x4d",
+              "symbol": "?PointToFile@resourceManager@@QAEXF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x53",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x58",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x65",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x6a",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x77",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x7c",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xa0",
+              "symbol": "_malloc",
+              "addend": 0
+            },
+            {
+              "offset": "0xae",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0xbf",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xc4",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xe0",
+              "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xe8",
+              "symbol": "_PollSound",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/BACKDROP",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "b915374f35682a1f702e66d039a5c27ca3365945949936c19c466ae748c5400e",
+      "object_sha256": "ddec5f09f3d2ea8717a0e4c1f8cdc595331439445cbdf5667b0aec30a9570752",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0backdropWidget@@QAE@FFFFFF@Z",
+          "function_rva": "0x6ce6b",
+          "size": 63,
+          "normalized_body_sha256": "85b49aa6e9dd4a8d717eef13bb7501860f1d290f54b06e1f1ba1c11e53e61bdd",
+          "ordered_references": [
+            {
+              "offset": "0x29",
+              "symbol": "??0widget@@QAE@FFFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x32",
+              "symbol": "??_7backdropWidget@@6B@",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?Draw@backdropWidget@@UAEXXZ",
+          "function_rva": "0x6cf3a",
+          "size": 78,
+          "normalized_body_sha256": "7621a47ac99493e83c58baf85e77546f13540cd97c2566f7e66f41b4be6ddb88",
+          "ordered_references": [
+            {
+              "offset": "0x41",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x46",
+              "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/BORDER",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "3332e468eb85fd27907bd0f22a9690b5634c09cf5620b6c596637e05b8c5f154",
+      "object_sha256": "a3fa404fc910878bc21f752bdaf8f0e15ef0f3ce629d01837f73f3791ea9168d",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0border@@QAE@FFFFFFFPAD@Z",
+          "function_rva": "0x7498e",
+          "size": 158,
+          "normalized_body_sha256": "bfc77a4b37e5b67beeb49faf939983e8ccce05cdd1c4c4612bee1cd5eb13e35e",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0border@@QAE@FFFFFFFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3e",
+              "symbol": "??0widget@@QAE@FFFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4e",
+              "symbol": "??_7border@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x63",
+              "symbol": "?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/BUTTON",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "45a6c66ab5a3713dbdfa6ec556d15c956c6aff9e4b4a8ff6dd814ef3f79b0054",
+      "object_sha256": "a1a4f861c1d5db4fa6c2b0c76f5f67c95cbc54109e4b0a554d83a5a4d3f191fd",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?Select@button@@QAEFAAUtag_message@@@Z",
+          "function_rva": "0x7739f",
+          "size": 236,
+          "normalized_body_sha256": "9cd972d9835e4e0dae3710714935e5dcce616dfe6369e61950e617fc99e3eedd",
+          "ordered_references": [
+            {
+              "offset": "0x54",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x74",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x79",
+              "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xc5",
+              "symbol": "?KBTickCount@@YAHXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xcd",
+              "symbol": "?glTimers@@3PAHA",
+              "addend": 8
+            },
+            {
+              "offset": "0xde",
+              "symbol": "?gLeftRightSave@@3HA",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?Draw@button@@UAEXXZ",
+          "function_rva": "0x77545",
+          "size": 153,
+          "normalized_body_sha256": "e57b89bc4f6025ac8621f7deb7781cd75ffa0b848b08653faeb3a3d6273384b8",
+          "ordered_references": [
+            {
+              "offset": "0x50",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x91",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/ICONWDGT",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "954714dbba5c015bf4f90fd0b414541768462f359ade37b8efb4767c60b85848",
+      "object_sha256": "9e27d314d58229d099dc739f24c7e439e4f2c33515fd6df3f6f2e22abc488615",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0iconWidget@@QAE@FFFFPADCCFFF@Z",
+          "function_rva": "0x6dfa0",
+          "size": 161,
+          "normalized_body_sha256": "0e96d1f0888190f55d3d39fee8d8512b6465aebe431663158cfa222ed8fb6909",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0iconWidget@@QAE@FFFFPADCCFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3e",
+              "symbol": "??0widget@@QAE@FFFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4e",
+              "symbol": "??_7iconWidget@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x58",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x5d",
+              "symbol": "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?Draw@iconWidget@@UAEXXZ",
+          "function_rva": "0x6e439",
+          "size": 177,
+          "normalized_body_sha256": "6ecb9321fa98aba5e5d1c2ac845d21a38121066852aba3c6858f30e89c9ae58a",
+          "ordered_references": [
+            {
+              "offset": "0x53",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0x79",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xa9",
+              "symbol": "?FillToBuffer@icon@@QAEXFFFFCC@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/EXEC",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "73bff5d639b52c9b806b893991d9a9e51aecdabbaffad7a7b5ed504714275af3",
+      "object_sha256": "3c63543d94412e45d7951ea6302858042a22c698cc2bd2a96bf633e54a5e1039",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?AddManager@executive@@QAEFPAVbaseManager@@F@Z",
+          "function_rva": "0x72d21",
+          "size": 329,
+          "normalized_body_sha256": "2e524cd6a4b438ede78f103de9f4724e438039a89fdc11b83ddaba7d41c57b20",
+          "ordered_references": []
+        }
+      ]
+    },
+    {
+      "unit": "BASE/MOUSEMGR",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "70a881a6265c95b50c80b31b383ae71b04e954c0138134668192a51d8e8d4daa",
+      "object_sha256": "99e80b82b64aaead5b64a1e0a829492da5b7943672fff09ee21c82cad4aa25d8",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?SetPointer@mouseManager@@QAEXPADF@Z",
+          "function_rva": "0x6b84a",
+          "size": 104,
+          "normalized_body_sha256": "1859a1772266d62ca0c93d5fb4e3e90f6152eb650bd98a04cd5764bf792c6c16",
+          "ordered_references": [
+            {
+              "offset": "0x1f",
+              "symbol": "?gMouseCursorType@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x41",
+              "symbol": "?gMouseCursorType@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x4d",
+              "symbol": "?gMouseCursorType@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/RESMGR",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "a3e5e8b2bce19eea1126a0c5610e09926492fc80129dd0b94d96db01a793759a",
+      "object_sha256": "e04d8fc2d3310bd9362a5659abc1edf9385ade5f89873bea54210a90f3c76df0",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
+          "function_rva": "0x6c31b",
+          "size": 192,
+          "normalized_body_sha256": "69bdbed83e2fea1cc79afcb500216043e8fb28d41f939fca047266dc6ba7a252",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x26",
+              "symbol": "?MakeId@resourceManager@@QAEFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x37",
+              "symbol": "?Query@resourceManager@@QAEPAVresource@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x7e",
+              "symbol": "??0bitmap@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xa9",
+              "symbol": "?AddResource@resourceManager@@QAEXPAVresource@@@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
+          "function_rva": "0x6c3db",
+          "size": 44,
+          "normalized_body_sha256": "628f2a01db0d7b2db64029e6ec0a9a48919cfa9804ea868fc1428cf74a9f78e6",
+          "ordered_references": [
+            {
+              "offset": "0x11",
+              "symbol": "?MakeId@resourceManager@@QAEFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x22",
+              "symbol": "?GetIcon@resourceManager@@QAEPAVicon@@F@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?GetIcon@resourceManager@@QAEPAVicon@@F@Z",
+          "function_rva": "0x6c407",
+          "size": 176,
+          "normalized_body_sha256": "d9087878d812d9fecfd107583931d0368f06d5d33295a635117f50e7c69a4ac6",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?GetIcon@resourceManager@@QAEPAVicon@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x27",
+              "symbol": "?Query@resourceManager@@QAEPAVresource@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4e",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x6e",
+              "symbol": "??0icon@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x99",
+              "symbol": "?AddResource@resourceManager@@QAEXPAVresource@@@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
+          "function_rva": "0x6c586",
+          "size": 192,
+          "normalized_body_sha256": "77c3a4af6960cdc65d9a306e877b0ab981a0303483a8a440e650cda06ba86432",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x26",
+              "symbol": "?MakeId@resourceManager@@QAEFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x37",
+              "symbol": "?Query@resourceManager@@QAEPAVresource@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x7e",
+              "symbol": "??0font@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xa9",
+              "symbol": "?AddResource@resourceManager@@QAEXPAVresource@@@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?GetSample@resourceManager@@QAEPAVsample@@PAD@Z",
+          "function_rva": "0x6c646",
+          "size": 191,
+          "normalized_body_sha256": "bc54da63b3c765d1877833b609475347b7aa12fee8b7170232715f6104445f3e",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?GetSample@resourceManager@@QAEPAVsample@@PAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x26",
+              "symbol": "?MakeId@resourceManager@@QAEFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x37",
+              "symbol": "?Query@resourceManager@@QAEPAVresource@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x7d",
+              "symbol": "??0sample@@QAE@PAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xa8",
+              "symbol": "?AddResource@resourceManager@@QAEXPAVresource@@@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/PALETTE",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "00e52e095ed11197eb83400778b2c8a1ab15eb2785216065ce59f3049c2c1d7c",
+      "object_sha256": "9beebfb85325c7debb291688020ed5ccbda593195a1361cc4e81d661554a0c25",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0palette@@QAE@F@Z",
+          "function_rva": "0x7480a",
+          "size": 147,
+          "normalized_body_sha256": "a728fd7e7786010232ddf5e3c92eb56b958c863bf031d7dd9768690c4541a95f",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0palette@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2b",
+              "symbol": "??0resource@@QAE@FFFPAV0@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3b",
+              "symbol": "??_7palette@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x45",
+              "symbol": "_malloc",
+              "addend": 0
+            },
+            {
+              "offset": "0x59",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?PointToFile@resourceManager@@QAEXF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x70",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x75",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/FONT",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "c717cf62df396f22390c184bec8bd6e19c95083ce9c317d523c66d0416dfb82a",
+      "object_sha256": "2c0f98d3054b0a0a438506f819dc9af83100839530404523d9e5184781ec930f",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0font@@QAE@F@Z",
+          "function_rva": "0x71dd0",
+          "size": 199,
+          "normalized_body_sha256": "a6b3b6417f4c130ca65928a6782af6f42ff770543ad3b2030a9f4fc2cc4e6126",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0font@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2d",
+              "symbol": "??0resource@@QAE@FFFPAV0@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3d",
+              "symbol": "??_7font@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x48",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x4d",
+              "symbol": "?PointToFile@resourceManager@@QAEXF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x53",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x58",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x65",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x6a",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x7b",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x80",
+              "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x86",
+              "symbol": "?gLoadingMonoIcon@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x94",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x99",
+              "symbol": "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xa5",
+              "symbol": "?gLoadingMonoIcon@@3HA",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/ICON",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "1c793e468fa6e7a0b2194153b5c137f0aede08cfeb94da07e990aad8851dd479",
+      "object_sha256": "350eb9adcac6bbee7948f5c08f3e1fa3bf1cad0a8a89b0e352a2530d5250fe85",
+      "exact_body_controls": [
+        {
+          "function_symbol": "??0icon@@QAE@F@Z",
+          "function_rva": "0x70ea0",
+          "size": 191,
+          "normalized_body_sha256": "067d121b97d5f28c6151fa30b71f70d3ebca773fac224fd29b3e55af1c436eae",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0icon@@QAE@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2d",
+              "symbol": "??0resource@@QAE@FFFPAV0@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3d",
+              "symbol": "??_7icon@@6B@",
+              "addend": 0
+            },
+            {
+              "offset": "0x48",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x4d",
+              "symbol": "?PointToFile@resourceManager@@QAEXF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x53",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x58",
+              "symbol": "?ReadWord@resourceManager@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x65",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x6a",
+              "symbol": "?ReadLong@resourceManager@@QAEHXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x76",
+              "symbol": "_malloc",
+              "addend": 0
+            },
+            {
+              "offset": "0x90",
+              "symbol": "?gpResourceManager@@3PAVresourceManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x95",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x9e",
+              "symbol": "?PostprocessIcon@@YAXPAVicon@@@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/WINDOW",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "94467b0363086dacabd76bf259caabf2b79c71f28824cf05ae3bea1bd37b0641",
+      "object_sha256": "e79c6bc12f3975454eed068eec3085797e57f972b9e2b1422687fe21a9476aa2",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z",
+          "function_rva": "0x6d817",
+          "size": 275,
+          "normalized_body_sha256": "16190e92cc8521ca6cc5b256567ddf52c9fbf87a8e6350d6666a0fade1d445f7",
+          "ordered_references": [
+            {
+              "offset": "0x44",
+              "symbol": "?Open@widget@@QAEFFPAVheroWindow@@@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DrawWindow@heroWindow@@QAEXF@Z",
+          "function_rva": "0x6da87",
+          "size": 36,
+          "normalized_body_sha256": "c1079734ee198e784ccbf07aefa278a48f5a0aa6082bf2cea0e7a1b0ec49b67c",
+          "ordered_references": [
+            {
+              "offset": "0x1a",
+              "symbol": "?DrawWindow@heroWindow@@QAEXFHH@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DrawWindow@heroWindow@@QAEXFHH@Z",
+          "function_rva": "0x6daab",
+          "size": 211,
+          "normalized_body_sha256": "8b15bb9443f70f000a08e4b63dccc8917d556bc166680357403fa7f4624eb47d",
+          "ordered_references": [
+            {
+              "offset": "0x25",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0x7f",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0xbf",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xc4",
+              "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xc9",
+              "symbol": "_PollSound",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?SaveBackground@heroWindow@@QAEFXZ",
+          "function_rva": "0x6db7e",
+          "size": 170,
+          "normalized_body_sha256": "06eb121cc3fa13dc08616c04376020334ec7b678a30b0d34b3467deece5f7e17",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?SaveBackground@heroWindow@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x21",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4e",
+              "symbol": "??0bitmap@@QAE@FFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x75",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0x90",
+              "symbol": "?GrabScreen@bitmap@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x95",
+              "symbol": "_PollSound",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?RestoreBackground@heroWindow@@QAEXXZ",
+          "function_rva": "0x6dc28",
+          "size": 138,
+          "normalized_body_sha256": "fdbb2b4a11f71532741241627606078b0192e3b82f349fc5150a0a17fc1042cd",
+          "ordered_references": [
+            {
+              "offset": "0x20",
+              "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x46",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x4b",
+              "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "BASE/WINMGR",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "1e3eb1bf59b46c84ceecd7e70d0e047f9328162920dc9f27a0af29b3824df98a",
+      "object_sha256": "26e956bb99a27276523db5da04b10ac4d02313b305c4ac56d128e091ca0449f9",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z",
+          "function_rva": "0x6a4f1",
+          "size": 358,
+          "normalized_body_sha256": "4713dfc4d5cd0578555e0d025751c98f8e8adc31e7f85c8dca035204243a70f1",
+          "ordered_references": [
+            {
+              "offset": "0x83",
+              "symbol": "?Open@heroWindow@@QAEFFC@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z",
+          "function_rva": "0x6abe6",
+          "size": 243,
+          "normalized_body_sha256": "6278f03c0158eb36d3966a26d40b3cb6182984fb14fb9ec66727e614b9f2f98e",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x20",
+              "symbol": "?bShowIt@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x65",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x8c",
+              "symbol": "??0bitmap@@QAE@FFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xd3",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xdc",
+              "symbol": "?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/GAME",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "160bc465355cfd4527b8d5898e1203bf68baabf454c55e12d266d914004f5d6c",
+      "object_sha256": "a8d414013ca6e73a7dbeb836b2dbc44aed4aacc85d96ade127c38d653ee98f6e",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?HasMobileHero@playerData@@QAECXZ",
+          "function_rva": "0x2b8d3",
+          "size": 86,
+          "normalized_body_sha256": "60e1c33932691aaf806f33d501d075b805baf9ec0c1d63192fceefb56fb5befb",
+          "ordered_references": [
+            {
+              "offset": "0x3a",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x3f",
+              "symbol": "?IsMobile@game@@QAECC@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?RandomizeHeroPool@game@@QAEXXZ",
+          "function_rva": "0x35483",
+          "size": 227,
+          "normalized_body_sha256": "b679fb0a2a1d02f7fbda894229792a6d2e229ad616fe0b00d8cd436ccddbf388",
+          "ordered_references": [
+            {
+              "offset": "0x30",
+              "symbol": "?Random@@YAHHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x59",
+              "symbol": "?SetRandomHeroArmies@game@@QAEXFH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x72",
+              "symbol": "?CalcMobility@hero@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xbd",
+              "symbol": "?Random@@YAHHH@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?CancelComputerScreen@game@@QAEXXZ",
+          "function_rva": "0x363dc",
+          "size": 85,
+          "normalized_body_sha256": "2507d15cefca5bf7b2e6fc9e79a51f148f0b96a4c36e1770b91fd3ebce6fc94c",
+          "ordered_references": [
+            {
+              "offset": "0xd",
+              "symbol": "?TurnOffAIMusic@game@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x13",
+              "symbol": "?bShowIt@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x46",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x4b",
+              "symbol": "?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?ShowComputerScreen@game@@QAEXXZ",
+          "function_rva": "0x36431",
+          "size": 261,
+          "normalized_body_sha256": "5c6ec143a7a7b81b02e614341ca840c1c65ebd43186dd3fd3a34f8d3fd488e30",
+          "ordered_references": [
+            {
+              "offset": "0xb",
+              "symbol": "?gConfig@@3UconfigStruct@@A",
+              "addend": 20
+            },
+            {
+              "offset": "0x14",
+              "symbol": "?gRemoteOn@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x22",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x29",
+              "symbol": "?gbThisNetHumanPlayer@@3PACA",
+              "addend": 0
+            },
+            {
+              "offset": "0x33",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x39",
+              "symbol": "?gbThisNetHumanPlayer@@3PACA",
+              "addend": 0
+            },
+            {
+              "offset": "0x69",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x6e",
+              "symbol": "?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x76",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x7b",
+              "symbol": "?ReallyHidePointer@mouseManager@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x81",
+              "symbol": "?gAllBlack@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x8d",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x92",
+              "symbol": "?CompleteDraw@advManager@@QAEXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x9c",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xa1",
+              "symbol": "?UpdateHeroLocators@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xab",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xb0",
+              "symbol": "?UpdateTownLocators@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xbc",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xc1",
+              "symbol": "?UpdBottomView@advManager@@QAEXCCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xcb",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xd0",
+              "symbol": "?UpdateScreen@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xd6",
+              "symbol": "?gAllBlack@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0xe1",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0xea",
+              "symbol": "?gbThisNetHumanPlayer@@3PACA",
+              "addend": 0
+            },
+            {
+              "offset": "0xf0",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xf5",
+              "symbol": "?ReallyShowPointer@mouseManager@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xfd",
+              "symbol": "?ShowHeroesLogo@game@@QAEXXZ",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DoNewTurn@game@@QAEXXZ",
+          "function_rva": "0x37b7f",
+          "size": 1461,
+          "normalized_body_sha256": "026b5d415266e11fda3fea29de86bf4f55960f5ee3ef053c92b01add198c4f8d",
+          "ordered_references": [
+            {
+              "offset": "0xc",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x13",
+              "symbol": "?gbThisNetHumanPlayer@@3PACA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1e",
+              "symbol": "?CheckEndGame@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2b",
+              "symbol": "?KBTickCount@@YAHXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x35",
+              "symbol": "?giBottomViewOverrideEndTime@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x3b",
+              "symbol": "?giBottomViewOverride@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x4b",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x50",
+              "symbol": "?UpdBottomView@advManager@@QAEXCCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x56",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x5b",
+              "symbol": "?SetInitialMapOrigin@advManager@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x63",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x68",
+              "symbol": "?CompleteDraw@advManager@@QAEXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x72",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x77",
+              "symbol": "?UpdateScreen@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x7e",
+              "symbol": "?CheckEndGame@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x87",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x99",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xad",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0xb9",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xcc",
+              "symbol": "?gColorNames@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0xd3",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 4
+            },
+            {
+              "offset": "0xd9",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0xde",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0xe8",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0xf5",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x102",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x111",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x120",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x130",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x13f",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x152",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x15e",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x168",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x174",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x17f",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x192",
+              "symbol": "?gColorNames@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x199",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x19f",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1a4",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x1af",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1bb",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1c8",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1d8",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1e7",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x1f6",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x206",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x219",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x225",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x232",
+              "symbol": "?giCurPlayer@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x23d",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x257",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x25c",
+              "symbol": "?NormalDialog@@YAXPADHHHHHHHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x264",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x276",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x27b",
+              "symbol": "?NextHero@playerData@@QAECH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x282",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x287",
+              "symbol": "?SetHeroContext@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x28f",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x29d",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2a7",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2ac",
+              "symbol": "?SetTownContext@advManager@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2b2",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2b7",
+              "symbol": "?CheckDimNextHeroBut@advManager@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x2bc",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2c9",
+              "symbol": "?PlayMusic@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x31f",
+              "symbol": "?giWeekType@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x352",
+              "symbol": "?giMonthType@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x35d",
+              "symbol": "?giMonthTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x364",
+              "symbol": "?gMonthNames@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x36b",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 8
+            },
+            {
+              "offset": "0x371",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x376",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x385",
+              "symbol": "?giMonthType@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x395",
+              "symbol": "?giMonthTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x39c",
+              "symbol": "?gArmyNamesPlural@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x3a6",
+              "symbol": "_strcpy",
+              "addend": 0
+            },
+            {
+              "offset": "0x432",
+              "symbol": "?giMonthTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x439",
+              "symbol": "?gArmyNamesPlural@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x43f",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 12
+            },
+            {
+              "offset": "0x445",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x44a",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x455",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 16
+            },
+            {
+              "offset": "0x45b",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x460",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x476",
+              "symbol": "?giWeekType@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x481",
+              "symbol": "?giWeekTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x488",
+              "symbol": "?gWeekNames@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x48f",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 20
+            },
+            {
+              "offset": "0x495",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x49a",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x4a9",
+              "symbol": "?giWeekTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x4b0",
+              "symbol": "?gArmyNamesPlural@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x4ba",
+              "symbol": "_strcpy",
+              "addend": 0
+            },
+            {
+              "offset": "0x546",
+              "symbol": "?giWeekTypeExtra@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x54d",
+              "symbol": "?gArmyNamesPlural@@3PAPADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x553",
+              "symbol": "?gNewTurnText@@3PAPADA",
+              "addend": 24
+            },
+            {
+              "offset": "0x559",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x55e",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x56a",
+              "symbol": "?PlayMusic@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x575",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x57a",
+              "symbol": "?SetPointer@mouseManager@@QAEXF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x58f",
+              "symbol": "?gText@@3PADA",
+              "addend": 0
+            },
+            {
+              "offset": "0x594",
+              "symbol": "?NormalDialog@@YAXPADHHHHHHHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x59d",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x5aa",
+              "symbol": "?PlayMusic@@YAXH@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z",
+          "function_rva": "0x38e58",
+          "size": 135,
+          "normalized_body_sha256": "cab27db71ac1d7c9946dd7ea73fa1f95a9c1b5265ce13019c0c1be2daf1ea938",
+          "ordered_references": [
+            {
+              "offset": "0x23",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x28",
+              "symbol": "?GetCell@advManager@@QAEPAVmapCell@@FF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4c",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x51",
+              "symbol": "?GetCell@advManager@@QAEPAVmapCell@@FF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/PATH",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "fff725b8c3c21cba0f287bb3291f8e7df7612f283a426c3befe1aa92b6acab82",
+      "object_sha256": "b634901e81da2bc8a6116c34ec73830eeb9148581454e7c5282d448579c08ba6",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?ValidPath@army@@QAEFFC@Z",
+          "function_rva": "0x4656e",
+          "size": 134,
+          "normalized_body_sha256": "d7cd435bbee9e24ae4606f9e9c13ad7c78fb4f67fc2b73f84d6f193687f658d3",
+          "ordered_references": [
+            {
+              "offset": "0xf",
+              "symbol": "?ValidHex@@YAHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x39",
+              "symbol": "?ValidFlight@army@@QAEFFC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?FindPath@army@@QAEFFFCCC@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?ValidMove@army@@QAEFF@Z",
+          "function_rva": "0x46712",
+          "size": 35,
+          "normalized_body_sha256": "46d4c92fbdfc11bea58f5cc4693b691570e4a2958dcd91e2eb08c2c6251da722",
+          "ordered_references": [
+            {
+              "offset": "0x19",
+              "symbol": "?ValidMove@army@@QAEFFF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/PHILAI",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "ef179bead9469c47079515898baea9fc1817ec2fcfa99fb7d171eecc664ea169",
+      "object_sha256": "13b5a2207f25f5a601b7a714514a55527a9a3cf56eaeaf9307b8b323ceb7635e",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?CanBuyBHC@philAI@@QAEHAAUBHC@@@Z",
+          "function_rva": "0x4e77d",
+          "size": 319,
+          "normalized_body_sha256": "4fc5054391ba670429245f0a3c70dff8059f944cccd2ca75ab8824095cadb89e",
+          "ordered_references": [
+            {
+              "offset": "0x38",
+              "symbol": "?CanBuy@@YACPAVtown@@F@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x58",
+              "symbol": "?gHeroGoldCost@@3FA",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x7a",
+              "symbol": "?bHeroBuiltThisTurn@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0xa6",
+              "symbol": "?gDwellingType@@3PAY05CA",
+              "addend": 0
+            },
+            {
+              "offset": "0xd6",
+              "symbol": "?CanJoin@armyGroup@@QAECC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xee",
+              "symbol": "?GetMonsterCost@@YAXHQAH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x120",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/RECRUIT",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "d02965af76ec2dc17519f3d5046c6930c90b89f27d17cf9b4393ed410b06bc17",
+      "object_sha256": "e5c990956f910ad356007cb2ac8935b60da1543d5838fec3d842c5b309911e01",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+          "function_rva": "0x51325",
+          "size": 882,
+          "normalized_body_sha256": "0727f68d0e18af116a2d1a489866a31a4dd0bb956b7acf8ebbb832a02e11306c",
+          "ordered_references": [
+            {
+              "offset": "0x7e",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 862
+            },
+            {
+              "offset": "0x11f",
+              "symbol": "?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x12b",
+              "symbol": "_atoi",
+              "addend": 0
+            },
+            {
+              "offset": "0x18e",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x193",
+              "symbol": "?ViewArmy@game@@QAEXFFCFPAVtown@@CCCPAVhero@@PAVarmy@@PAVarmyGroup@@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x19b",
+              "symbol": "?Update@recruitUnit@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x1aa",
+              "symbol": "?MoveWindow@heroWindow@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x1f9",
+              "symbol": "?Update@recruitUnit@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x208",
+              "symbol": "?MoveWindow@heroWindow@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x265",
+              "symbol": "?CanJoin@armyGroup@@QAECC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x288",
+              "symbol": "?Add@armyGroup@@QAEFCFC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2b1",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2bf",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2ef",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x302",
+              "symbol": "?gpCurPlayer@@3PAVplayerData@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x35e",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 367
+            },
+            {
+              "offset": "0x362",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 407
+            },
+            {
+              "offset": "0x366",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 254
+            },
+            {
+              "offset": "0x36a",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 130
+            },
+            {
+              "offset": "0x36e",
+              "symbol": "?Main@recruitUnit@@UAEFAAUtag_message@@@Z",
+              "addend": 198
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/REMOTE",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "c32e35ebb49657440859e1374bdf285a04f6b3d15c708d39d690496d20807b75",
+      "object_sha256": "aeca78159ee126e8f86f59583c8a51f2512cec9c08fe3e5f009cfe185dad4537",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?ModemSetup@@YAXXZ",
+          "function_rva": "0x5275e",
+          "size": 224,
+          "normalized_body_sha256": "b31bd611aa9a8a10a821390ff2a25843ae90387c7d99a22601be7d7025a8e65c",
+          "ordered_references": [
+            {
+              "offset": "0xd",
+              "symbol": "?gDirectConnect@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x14",
+              "symbol": "?gConfig@@3UconfigStruct@@A",
+              "addend": 184
+            },
+            {
+              "offset": "0x1a",
+              "symbol": "?com_init@@YAFEHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x24",
+              "symbol": "?gDirectConnect@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x4f",
+              "symbol": "?gDirectConnect@@3CA",
+              "addend": 0
+            },
+            {
+              "offset": "0x56",
+              "symbol": "?gConfig@@3UconfigStruct@@A",
+              "addend": 184
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?gConfig@@3UconfigStruct@@A",
+              "addend": 200
+            },
+            {
+              "offset": "0x67",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x71",
+              "symbol": "$anon_str_eb543fe8acf88c4c6ee0d909c6075aa3076ae4c9c1f8973ff5dcea442bfa4841_0",
+              "addend": 0
+            },
+            {
+              "offset": "0x7a",
+              "symbol": "_sprintf",
+              "addend": 0
+            },
+            {
+              "offset": "0x82",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0x8b",
+              "symbol": "?ModemCommand@@YAXPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xad",
+              "symbol": "?DelayMilli@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xb5",
+              "symbol": "_PollSound",
+              "addend": 0
+            },
+            {
+              "offset": "0xbc",
+              "symbol": "$anon_str_f566cc6fccc657365c0197accf3a7d6f80f85209ff666ff774f4dcbc524aa842_0",
+              "addend": 0
+            },
+            {
+              "offset": "0xc1",
+              "symbol": "?ModemCommand@@YAXPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xcb",
+              "symbol": "?DelayMilli@@YAXH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xd3",
+              "symbol": "_PollSound",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?write_buffer@@YAHPADH@Z",
+          "function_rva": "0x52b7c",
+          "size": 33,
+          "normalized_body_sha256": "01b0be8ca8c99caf0be017e3d006e29cb604708da18bc14af96cb8b278047ef6",
+          "ordered_references": [
+            {
+              "offset": "0x13",
+              "symbol": "?com_snd@@YAFFGGPAXH@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/STRIP",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "1709dae8fc7d4e2720727cf47ce010e8766f7fa39731fd119770de1cd25b59e3",
+      "object_sha256": "6afae90df2932d433499a8a4df894de2e0412328d4ba67b5026b67c852fb6db9",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?Draw@strip@@QAEXXZ",
+          "function_rva": "0x5ca47",
+          "size": 55,
+          "normalized_body_sha256": "3b65a64808499dd24adda989091f29f3ca2474ec44d0ebd22a1e9d5f031736c9",
+          "ordered_references": [
+            {
+              "offset": "0xd",
+              "symbol": "?DrawIcons@strip@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x2a",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x2f",
+              "symbol": "?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DrawFrame@strip@@QAEXXZ",
+          "function_rva": "0x5ccb1",
+          "size": 44,
+          "normalized_body_sha256": "4d9322f45add744acf8a28177f18e576a6899fccaa8c46b506780e15d12d995b",
+          "ordered_references": [
+            {
+              "offset": "0x24",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "??0bankBox@@QAE@FFPAVplayerData@@@Z",
+          "function_rva": "0x5ccdd",
+          "size": 212,
+          "normalized_body_sha256": "ddbcc91b62e21f5fd74c444c64c72fb0aabcdd21524a75dbb6e9fba0579db46a",
+          "ordered_references": [
+            {
+              "offset": "0x6",
+              "symbol": "__ehreg$??0bankBox@@QAE@FFPAVplayerData@@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3f",
+              "symbol": "??2@YAPAXI@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x57",
+              "symbol": "$anon_str_fee7a9a46aaa7c181372fe8489f7f80f32946659c99f76b0bfd1f15778465471_0",
+              "addend": 0
+            },
+            {
+              "offset": "0x6f",
+              "symbol": "??0heroWindow@@QAE@FFPAD@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x9f",
+              "symbol": "?MemError@@YAXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xb0",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xb5",
+              "symbol": "?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xbd",
+              "symbol": "?Update@bankBox@@QAEXXZ",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/SWAPMGR",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "5d612d5d8e74eadf58f1d31d56b3780a2e80a578292da940af4056ffe30cd333",
+      "object_sha256": "806c0f46d4880bc92f9f9e58531c49041ca1cf1c660e77e57fb94f4777e97043",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?ViewMon@swapManager@@QAEXXZ",
+          "function_rva": "0x5dda1",
+          "size": 154,
+          "normalized_body_sha256": "51a4d1e9bad19fbd5c5661d7f17ddb81b86a86ea256bd4094968139a1be22c7e",
+          "ordered_references": [
+            {
+              "offset": "0x40",
+              "symbol": "?GetNumArmies@armyGroup@@QAEFXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x8d",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x92",
+              "symbol": "?ViewArmy@game@@QAEXFFCFPAVtown@@CCCPAVhero@@PAVarmy@@PAVarmyGroup@@@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/TOWN",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "2b312488096f64fd13e3dd7f087a10cf4a47dea2971f340cdf4075f9bd4c3d27",
+      "object_sha256": "6099e30d6dee1d1a1c9a59580d449fa41708d661ab2c5fcdc4ed3c5cde8df8e3",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?GiveSpells@town@@QAEXXZ",
+          "function_rva": "0x5ea63",
+          "size": 185,
+          "normalized_body_sha256": "9897cdf85aec62273c1b66be6f53b4b9704b82525b8c9c2857e9b2deeb16e11b",
+          "ordered_references": [
+            {
+              "offset": "0x29",
+              "symbol": "?gpGame@@3PAVgame@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x3d",
+              "symbol": "?HasArtifact@hero@@QAECC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x8e",
+              "symbol": "?gMageGuildSpellCount@@3PACA",
+              "addend": 0
+            },
+            {
+              "offset": "0xaf",
+              "symbol": "?AddSpell@hero@@QAEHCCH@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?View@town@@QAEXXZ",
+          "function_rva": "0x5ec84",
+          "size": 140,
+          "normalized_body_sha256": "35b887c8a2ef30c04d0252659fa31faa4c3a05bc532605913ba6d67909553dc6",
+          "ordered_references": [
+            {
+              "offset": "0xb",
+              "symbol": "?gHighMemBuffer@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x17",
+              "symbol": "?gAdvDisposeLevel@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x23",
+              "symbol": "?gAdvDisposeLevel@@3HA",
+              "addend": 0
+            },
+            {
+              "offset": "0x2c",
+              "symbol": "?gpTownManager@@3PAVtownManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x44",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x49",
+              "symbol": "?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4e",
+              "symbol": "?gpTownManager@@3PAVtownManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x55",
+              "symbol": "?gpExec@@3PAVexecutive@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x5a",
+              "symbol": "?CallManager@executive@@QAEXPAVbaseManager@@@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x75",
+              "symbol": "?gpAdvManager@@3PAVadvManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x7a",
+              "symbol": "?SetHeroContext@advManager@@QAEXCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x80",
+              "symbol": "?gAdvDisposeLevel@@3HA",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/TOWNMGR",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "7ea4ee57584c6fbc8df49fe0b1cc07098041fef1818941a8e48fe82414cff042",
+      "object_sha256": "39a52a4594b2c9816271af05a31782772d615edb07a75baf9d9f94430b926beb",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?DrawTown@townManager@@QAEXCH@Z",
+          "function_rva": "0x6254d",
+          "size": 227,
+          "normalized_body_sha256": "d0b7a77a3be5611e57182b973966fb60e83f9a5e9a547ca3c8c8a96a5fb9ad75",
+          "ordered_references": [
+            {
+              "offset": "0x14",
+              "symbol": "?DrawToBuffer@bitmap@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x4b",
+              "symbol": "?Draw@townObject@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5e",
+              "symbol": "?DrawWindow@heroWindow@@QAEXFHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x6c",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x71",
+              "symbol": "?MouseCoords@mouseManager@@QAEXAAF0@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x88",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x92",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x97",
+              "symbol": "?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xb6",
+              "symbol": "?gpWindowManager@@3PAVheroWindowManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xbf",
+              "symbol": "?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xd4",
+              "symbol": "?gpMouseManager@@3PAVmouseManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xd9",
+              "symbol": "?RestoreUnderlying@mouseManager@@QAEXXZ",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?GetBuildingName@townManager@@QAEPADF@Z",
+          "function_rva": "0x64a22",
+          "size": 37,
+          "normalized_body_sha256": "3d4e07c69b171a1ade63fef8a71c68b2592faa0a53ef69ae34cbd75117eb6127",
+          "ordered_references": [
+            {
+              "offset": "0x18",
+              "symbol": "?GetBuildingName@@YAPADHF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/HEXCELL",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "9df98ba1927048154f311dd5d238032a03501394dee2a16c6511c66d6295b63a",
+      "object_sha256": "fd9726f6fdd4a488ba8758345e0aefe2b1916d5734ca5b382f7ea9b18e14c0a0",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?DrawGround@hexcell@@QAEXXZ",
+          "function_rva": "0x3b781",
+          "size": 64,
+          "normalized_body_sha256": "67c0f5453c0de56687522ade4f698904addd40b6ec243e405a91bd7a6785aed4",
+          "ordered_references": [
+            {
+              "offset": "0x2c",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x38",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DrawOccupant@hexcell@@QAEXXZ",
+          "function_rva": "0x3b7c1",
+          "size": 113,
+          "normalized_body_sha256": "668eb63a963ea67cbd58b22ede2ece5009e1728727500b0859f2e81ff80b404a",
+          "ordered_references": [
+            {
+              "offset": "0x24",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x69",
+              "symbol": "?DrawToBuffer@army@@QAEXFF@Z",
+              "addend": 0
+            }
+          ]
+        },
+        {
+          "function_symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+          "function_rva": "0x3bbcf",
+          "size": 337,
+          "normalized_body_sha256": "ff8a3dde6ac76426652bf3a7287693536d990c455b4c9b28d5ac4e7954857ed5",
+          "ordered_references": [
+            {
+              "offset": "0x3d",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 278
+            },
+            {
+              "offset": "0x44",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 258
+            },
+            {
+              "offset": "0x53",
+              "symbol": "?DrawTower@hexcell@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x5a",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x6c",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0x82",
+              "symbol": "?DrawTower@hexcell@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x8a",
+              "symbol": "?DrawWall@hexcell@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0x92",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xa3",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xb9",
+              "symbol": "?DrawTower@hexcell@@QAEXC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0xc1",
+              "symbol": "?DrawWall@hexcell@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xcb",
+              "symbol": "?DrawWall@hexcell@@QAEXXZ",
+              "addend": 0
+            },
+            {
+              "offset": "0xef",
+              "symbol": "?gpCombatManager@@3PAVcombatManager@@A",
+              "addend": 0
+            },
+            {
+              "offset": "0xfa",
+              "symbol": "?DrawToBuffer@icon@@QAEXFFFCC@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x102",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 72
+            },
+            {
+              "offset": "0x106",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 89
+            },
+            {
+              "offset": "0x10a",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 144
+            },
+            {
+              "offset": "0x10e",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 199
+            },
+            {
+              "offset": "0x112",
+              "symbol": "?DrawObstacle@hexcell@@QAEXXZ",
+              "addend": 207
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "unit": "SOURCE/DRAWING",
+      "profile_before": "cpp_buka",
+      "profile_after": "cpp_buka_g5",
+      "source_sha256": "4cf36643fa3a9ca6afa7ebdc31d4d0ec4b15c0e5639ee4a40be6b437a4f1c1f8",
+      "object_sha256": "e11eac9f385c4753e1b90c513efe98cd3cd2321b49723030e0ebbb2dda4952c6",
+      "exact_body_controls": [
+        {
+          "function_symbol": "?UpdateGridForMove@combatManager@@QAEXFCF@Z",
+          "function_rva": "0x236c0",
+          "size": 71,
+          "normalized_body_sha256": "f9777a28a65b0ada808b96b7274f40edd10cc6c555b23be7e7b2c416936dfd90",
+          "ordered_references": [
+            {
+              "offset": "0x29",
+              "symbol": "?UpdateGrid@combatManager@@QAEXFF@Z",
+              "addend": 0
+            },
+            {
+              "offset": "0x3d",
+              "symbol": "?UpdateGrid@combatManager@@QAEXFF@Z",
+              "addend": 0
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -30,7 +30,7 @@ void combatManager::UpdateGrid(i16 hex, i16) {
     row = hex / COMBAT_GRID_COLUMNS - 1;
     if (row < 0)
         row = 0;
-    if (m_gridUpdateRow > row)
+    if (row < m_gridUpdateRow)
         m_gridUpdateRow = row;
 }
 
@@ -87,38 +87,38 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
 // The help line for the current mouse command.
 VA(0x004237b4, 0x286)
 void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType) {
-    army* target;
     army* currentArmy;
-    i16 targetMonster;
-    i16 actingType;
+    army* targetArmy;
+    i16 actingMonsterType;
+    i16 targetMonsterType;
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    actingType = currentArmy->m_creatureType;
-    target = NULL;
-    targetMonster = 0;
+    actingMonsterType = currentArmy->m_creatureType;
+    targetArmy = NULL;
+    targetMonsterType = 0;
     if (currentArmy->m_targetSide >= 0 && currentArmy->m_targetIndex >= 0) {
-        target = &m_armies[currentArmy->m_targetSide][currentArmy->m_targetIndex];
-        targetMonster = target->m_creatureType;
+        targetArmy = &m_armies[currentArmy->m_targetSide][currentArmy->m_targetIndex];
+        targetMonsterType = targetArmy->m_creatureType;
     }
     switch (messageType) {
         case COMBAT_MESSAGE_COMMAND_DEFAULT:
             if ((currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
-                && currentArmy->m_stats.shots == 0 && target)
+                && currentArmy->m_stats.shots == 0 && targetArmy)
                 strcpy(gText, gCombatMessage[COMBAT_TEXT_NO_SHOTS]);
             else
                 strcpy(gText, gCombatMessage[COMBAT_TEXT_NONE]);
             break;
         case COMBAT_MESSAGE_COMMAND_MOVE:
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_MOVE], gArmyNames[actingMonsterType]);
             break;
         case COMBAT_MESSAGE_COMMAND_FLY:
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingType]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingMonsterType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
 #if HOMM1_RUSSIAN
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNamesPlural[targetMonster]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNamesPlural[targetMonsterType]);
 #else
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonster]);
+            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonsterType]);
 #endif
             break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
@@ -126,14 +126,14 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
             sprintf(
                 gText,
                 gCombatMessage[COMBAT_TEXT_SHOOT],
-                gArmyNamesPlural[targetMonster],
+                gArmyNamesPlural[targetMonsterType],
                 currentArmy->m_stats.shots
             );
 #else
             sprintf(
                 gText,
                 gCombatMessage[COMBAT_TEXT_SHOOT],
-                gArmyNames[targetMonster],
+                gArmyNames[targetMonsterType],
                 currentArmy->m_stats.shots,
                 currentArmy->m_stats.shots > 1 ? "s" : ""
             );
@@ -146,10 +146,10 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
             strcpy(gText, gCombatMessage[COMBAT_TEXT_VIEW_OPPOSING_GENERAL]);
             break;
         case COMBAT_MESSAGE_COMMAND_VIEW_INFO:
-            actingType =
+            actingMonsterType =
                 m_armies[m_currentSide][m_hexCells[m_selectedHex].m_occupantIndex].m_creatureType;
-            if (actingType >= 0)
-                sprintf(gText, gCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingType]);
+            if (actingMonsterType >= 0)
+                sprintf(gText, gCombatMessage[COMBAT_TEXT_VIEW_INFO], gArmyNames[actingMonsterType]);
             else
                 sprintf(gText, "");
             break;
@@ -167,10 +167,9 @@ void combatManager::ResetLimitCreature(void) {
     m_extendLimitDown = 0;
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
-                m_limitCreatureCount[side][j] = COMBAT_LIMIT_CREATURE_HIDDEN;
-            else
-                m_limitCreatureCount[side][j] = 0;
+            m_limitCreatureCount[side][j] =
+                (m_armies[side][j].m_stats.attributes & MONSTER_FLAGS_DEAD)
+                    ? COMBAT_LIMIT_CREATURE_HIDDEN : 0;
         }
     }
 }
@@ -195,7 +194,7 @@ void combatManager::UpdateCombatArea(void) {
         y = 0;
         height += COMBAT_FIELD_TOP;
     }
-    if (y + height > COMBAT_VIEW_HEIGHT)
+    if (height + y > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - y;
     gEnlargeScreenBlit = 0;
     gpWindowManager->UpdateScreenRegion(0, y, LOGICAL_SCREEN_WIDTH, height);
@@ -218,7 +217,7 @@ void combatManager::DrawBackground(void) {
             m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_x,
                 m_hexCells[y * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN].m_y,
-                static_cast<i8>((y & 1) ? 5 : 6),
+                (y & 1) ? static_cast<i8>(5) : static_cast<i8>(6),
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -301,17 +300,14 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     }
                     if (boxTop < giMinExtentY)
                         giMinExtentY = boxTop;
-                    if (giMaxExtentY < boxBottom)
+                    if (boxBottom > giMaxExtentY)
                         giMaxExtentY = boxBottom;
                     if (boxLeft < giMinExtentX)
                         giMinExtentX = boxLeft;
                     if (boxRight > giMaxExtentX)
                         giMaxExtentX = boxRight;
                     if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                        if (side == COMBAT_DEFENDER_SIDE)
-                            sideDelta = -1;
-                        else
-                            sideDelta = 1;
+                        sideDelta = side == COMBAT_DEFENDER_SIDE ? -1 : 1;
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
                             boxLeft = (hexCol + sideDelta) * COMBAT_HEX_WIDTH - 110;
                             boxRight = (hexCol + sideDelta + 1) * COMBAT_HEX_WIDTH + 70;

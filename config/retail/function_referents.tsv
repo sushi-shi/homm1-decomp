@@ -567,7 +567,7 @@ rva	name	provenance
 0x00051154	?Close@recruitUnit@@UAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005120b	?Update@recruitUnit@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x00051325	?Main@recruitUnit@@UAEFAAUtag_message@@@Z	Buka constructor-backed vtable slot identity; buka-bulk-correspondence.json
-0x00051697	??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x00051697	??0recruitUnit@@QAE@PAVarmyGroup@@CPAF@Z	Buka byte argument read at RecruitEvent+0x48 and constructor+0x2d; complete controls in buka-recruit-byte-controls.json.
 0x00051753	??0recruitUnit@@QAE@PAVtown@@C@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0005182c	?QuickViewRecruit@@YAXPAVtown@@C@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x000519f0	?RemoteCleanup@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
@@ -932,6 +932,7 @@ rva	name	provenance
 0x0006aa74	?RedrawScreen@heroWindowManager@@QAEXXZ	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
 0x0006aaa3	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	Buka DoAdvCommand instruction/CFG correspondence: 0x2897; buka-adventure-commands.json
 0x0006ab76	?ScreenShot@heroWindowManager@@QAEXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
+0x0006abdb	?Cleanup@heroWindowManager@@QAEXXZ	Complete compiled/retail body and actual caller review; buka-input-timer-helpers.json; descriptive names where originals unavailable
 0x0006abe6	?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z	Buka map-view instruction/CFG/EH review: 0xbbcb; buka-map-views.json
 0x0006b11d	?FizzleForward@heroWindowManager@@QAEXFFFFH@Z	Buka map-view instruction/CFG/EH review: 0xbe21; buka-map-views.json
 0x0006b487	?ReleaseFizzleSource@heroWindowManager@@QAEXXZ	Buka map-view instruction/CFG/EH review: 0xbe39; buka-map-views.json
@@ -1021,7 +1022,9 @@ rva	name	provenance
 0x0006eea6	?Main@inputManager@@UAEFAAUtag_message@@@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006eeb6	?Flush@inputManager@@QAEXXZ	Buka DoAdvCommand instruction/CFG correspondence: 0x257f; buka-adventure-commands.json
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	Buka DoAdvCommand instruction/CFG correspondence: 0x261f, 0x268c; buka-adventure-commands.json
+0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z	Complete compiled/retail body and actual caller review; buka-input-timer-helpers.json; descriptive names where originals unavailable
 0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
+0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	Complete compiled/retail body and actual caller review; buka-input-timer-helpers.json; descriptive names where originals unavailable
 0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	Buka drawing-family instruction/CFG review: 0x55e0, 0x5628; buka-adventure-drawing.json

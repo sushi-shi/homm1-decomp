@@ -30,7 +30,7 @@ void BlitBitmapToScreen(
     i32 destinationX,
     i32 destinationY
 ) {
-    if (gpWindowManager->m_screen != sourceBitmap) {
+    if (sourceBitmap != gpWindowManager->m_screen) {
         for (i32 row = 0; row < height; row++)
             memcpy(
                 gpWindowManager->m_screen->m_pixels + (destinationY + row) * SCREEN_BLIT_WIDTH
@@ -63,10 +63,8 @@ void BlitBitmapToScreen(
     invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
     invalidRectangle.bottom =
         (destinationY + height) * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
-    if (InvalidateRect(hwndApp, &invalidRectangle, FALSE) == FALSE)
-        LogStr("InvalidateRect Failed");
-    if (UpdateWindow(hwndApp) == FALSE)
-        LogStr("UpdateWindow Failed");
+    InvalidateRect(hwndApp, &invalidRectangle, FALSE);
+    UpdateWindow(hwndApp);
 }
 
 VA(0x0046f9f5, 0x37)
@@ -97,68 +95,68 @@ void SetPalette(i8* paletteData, i32 updateDisplay) {
 
 VA(0x0046faa5, 0x16d)
 void FadeIn(i32 increment) {
-    i8 done;
+    bool done;
     i32 i, j, threshold;
-    palette* currentPalette = new palette;
-    if (currentPalette == NULL)
+    palette* pal = new palette;
+    if (pal == NULL)
         MemError();
-    done = 0;
-    memset(currentPalette->m_data, 0, PALETTE_GRAPHICS_BYTES);
+    done = false;
+    memset(pal->m_data, 0, PALETTE_GRAPHICS_BYTES);
     if (gConfig.gfx[gCurExe].fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
         PollSound();
         if (i == PALETTE_FADE_LEVEL_LAST) {
-            done = 1;
+            done = true;
             UpdatePalette(gpBufferPalette->m_data);
         } else {
             threshold = PALETTE_FADE_LEVEL_LAST - i;
             for (j = 0; j < PALETTE_GRAPHICS_END; j++) {
                 if (gpBufferPalette->m_data[j] > threshold)
-                    currentPalette->m_data[j] = gpBufferPalette->m_data[j] - threshold;
+                    pal->m_data[j] = gpBufferPalette->m_data[j] - threshold;
             }
-            UpdatePalette(currentPalette->m_data);
+            UpdatePalette(pal->m_data);
         }
     }
     if (done == 0) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
-    delete currentPalette;
+    delete pal;
 }
 
 VA(0x0046fc12, 0x170)
 void FadeOut(i32 increment) {
-    i8 done;
+    bool done;
     i32 i, j;
-    palette* currentPalette = new palette;
-    if (currentPalette == NULL)
+    palette* pal = new palette;
+    if (pal == NULL)
         MemError();
-    done = 0;
+    done = false;
     if (gConfig.gfx[gCurExe].fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
-    memcpy(currentPalette->m_data, gpBufferPalette->m_data, PALETTE_GRAPHICS_BYTES);
+    memcpy(pal->m_data, gpBufferPalette->m_data, PALETTE_GRAPHICS_BYTES);
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
         PollSound();
         if (i == PALETTE_FADE_LEVEL_LAST)
-            done = 1;
+            done = true;
         for (j = 0; j < PALETTE_GRAPHICS_END; j++) {
-            if (currentPalette->m_data[j] > 0) {
-                if (currentPalette->m_data[j] > increment)
-                    currentPalette->m_data[j] -= increment;
+            if (pal->m_data[j] > 0) {
+                if (pal->m_data[j] > increment)
+                    pal->m_data[j] -= increment;
                 else
-                    currentPalette->m_data[j] = 0;
+                    pal->m_data[j] = 0;
             }
         }
-        UpdatePalette(currentPalette->m_data);
+        UpdatePalette(pal->m_data);
     }
     if (done == 0) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
-    delete currentPalette;
+    delete pal;
 }
 
 // ---------------------------------------------------------------------------
@@ -188,7 +186,7 @@ struct PaletteColor {
 VA(0x0046fd8a, 0x39)
 #line 207 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\OLDASM.CPP"
 i32 Random(i32 low, i32 high) {
-#line 208
+#line 191
     H1_ASSERT(high > low);
     return rand() % (high - low + 1) + low;
 }
@@ -199,8 +197,11 @@ void PostprocessPalette(i8* data) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
     memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
     for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
-        remapped[gMonoColorMap[index]] =
-            reinterpret_cast<PaletteColor*>(data)[index]; // byte-evidenced: 3-byte colour copies
+        memcpy(
+            &remapped[gMonoColorMap[index]],
+            &reinterpret_cast<PaletteColor*>(data)[index],
+            sizeof(PaletteColor)
+        );
     memcpy(data, remapped, PALETTE_GRAPHICS_BYTES);
     free(remapped);
 }
@@ -241,46 +242,50 @@ void ClippedMonoIconToBitmap(
         + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 position = x + entry->x;
-    BOOL drawing = TRUE;
     i32 row = y + entry->y;
-    i32 rowOffset = row * ICON_SCREEN_ROW_BYTES;
+    BOOL drawing = TRUE;
     while (drawing) {
-        u8 run = *source;
-        if (static_cast<i8>(run) < 0) {
-            run &= ICON_MONO_SKIP_MASK;
-            if (run != 0) {
-                position += run;
+        if (static_cast<i8>(*source) < 0) {
+            if ((*source & ICON_MONO_SKIP_MASK) != 0) {
+                position += *source & ICON_MONO_SKIP_MASK;
                 source++;
             } else
                 drawing = FALSE;
-        } else if (run != ICON_MONO_NEWLINE_COMMAND) {
-            if (row >= clipY && row <= clipBottom && position + run >= clipX
+        } else if (*source != ICON_MONO_NEWLINE_COMMAND) {
+            if (row >= clipY && row <= clipBottom && position + *source >= clipX
                 && position <= clipRight) {
                 if (position >= clipX) {
-                    if (position + run <= clipRight)
-                        memset(destination->m_pixels + rowOffset + position, color, run);
+                    if (position + *source <= clipRight)
+                        memset(
+                            destination->m_pixels + position + row * ICON_SCREEN_ROW_BYTES,
+                            color,
+                            *source
+                        );
                     else
                         memset(
-                            destination->m_pixels + rowOffset + position,
+                            destination->m_pixels + position + row * ICON_SCREEN_ROW_BYTES,
                             color,
                             clipRight - position + 1
                         );
                 } else {
-                    if (position + run <= clipRight)
+                    if (position + *source <= clipRight)
                         memset(
-                            destination->m_pixels + rowOffset + clipX,
+                            destination->m_pixels + clipX + row * ICON_SCREEN_ROW_BYTES,
                             color,
-                            position + run - clipX
+                            position + *source - clipX
                         );
                     else
-                        memset(destination->m_pixels + rowOffset + clipX, color, clipW);
+                        memset(
+                            destination->m_pixels + clipX + row * ICON_SCREEN_ROW_BYTES,
+                            color,
+                            clipW
+                        );
                 }
             }
             position += *source;
             source++;
         } else {
             position = x + entry->x;
-            rowOffset += ICON_SCREEN_ROW_BYTES;
             row++;
             source++;
         }
@@ -330,36 +335,35 @@ void ClipIconToBitmap(
     sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
     sClipX = sClipRowStart = x + sClipEntry->x;
     sClipY = y + sClipEntry->y;
-    if (sClipRowStart < clipX || sClipRowStart + sClipEntry->w > clipX + clipW || sClipY < clipY
-        || sClipY + sClipEntry->h > clipY + clipH) {
+    if (sClipRowStart >= clipX && sClipRowStart + sClipEntry->w <= clipX + clipW && sClipY >= clipY
+        && sClipY + sClipEntry->h <= clipY + clipH) {
+        sClipInside = TRUE;
+    } else {
         sClipInside = FALSE;
         sClipRight = clipX + clipW - 1;
         sClipBottom = clipY + clipH - 1;
-    } else {
-        sClipInside = TRUE;
     }
-    sClipRow = destination->m_pixels + destination->m_width * sClipY;
+    sClipRow = destination->m_pixels + sClipY * destination->m_width;
     for (;;) {
         sClipRun = *sClipSource++;
         if (static_cast<i8>(sClipRun) < 0) {
-            if ((sClipRun & ICON_MONO_SKIP_MASK) == 0)
-                return;
-            sClipX += sClipRun & ICON_MONO_SKIP_MASK;
-            continue;
-        }
-        if (sClipRun != 0) {
+            if (sClipRun & ICON_MONO_SKIP_MASK)
+                sClipX += sClipRun & ICON_MONO_SKIP_MASK;
+            else
+                break;
+        } else if (sClipRun != 0) {
             if (sClipInside) {
                 memcpy(sClipRow + sClipX, sClipSource, sClipRun);
-            } else if (sClipY >= clipY && sClipBottom >= sClipY && sClipRun + sClipX >= clipX
+            } else if (sClipY >= clipY && sClipY <= sClipBottom && sClipX + sClipRun >= clipX
                        && sClipX <= sClipRight) {
                 if (sClipX >= clipX) {
-                    if (sClipRight >= sClipX + sClipRun)
+                    if (sClipX + sClipRun <= sClipRight)
                         memcpy(sClipRow + sClipX, sClipSource, sClipRun);
                     else
                         memcpy(sClipRow + sClipX, sClipSource, sClipRight - sClipX + 1);
                 } else {
-                    if (*sClipSource + sClipX <= sClipRight)
-                        memcpy(sClipRow + sClipX, sClipSource, sClipRun - clipX + sClipX);
+                    if (sClipX + *sClipSource <= sClipRight)
+                        memcpy(sClipRow + sClipX, sClipSource, sClipX + sClipRun - clipX);
                     else
                         memcpy(sClipRow + sClipX, sClipSource, clipW);
                 }

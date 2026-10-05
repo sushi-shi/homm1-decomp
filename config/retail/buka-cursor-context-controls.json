@@ -1,0 +1,282 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "files": [
+      "src/SOURCE/kbwin.cpp",
+      "src/SOURCE/CURSOR.cpp",
+      "src/SOURCE/ADVMGR.cpp",
+      "src/SOURCE/PHILAI.cpp",
+      "src/SOURCE/COMMAND.cpp"
+    ]
+  },
+  "corrections": {
+    "WinMain": "error -> corresponding errorLast. The DWORD becomes -4 and the 28-byte MSG becomes -32, as predicted and measured in retail.",
+    "advManager::TurnTo": "frameStep -> donor plain alias inc; curFrame -> corresponding frameIndex. Slots: frameIndex -4, inc -8, directionDifference -12, delayTime -16. HoMM1 i16 widths retained.",
+    "advManager::SetTownContext": "k -> corresponding index, retaining the other local names. Slots: wasVisible -4, townPointer -8, index -12, townNo -16.",
+    "philAI::DoDimensionDoor": "length -> corresponding donor plain alias len. Slots: bestX -4, bestY -8, x -12, y -16, i -20, len -24, cell -28.",
+    "combatManager::RightClick": "unusedColumn -> donor plain alias col, armyIndex -> donor plain alias armyIdx. Preserve nested scope: col -4, row -8; side -12, armyIdx -16. HoMM1 byte-width variables retained."
+  },
+  "before_functions": [
+    {
+      "symbol": "?SetTownContext@advManager@@QAEXC@Z",
+      "rva": "0xb0dd",
+      "candidate_instructions": 153,
+      "retail_instructions": 153,
+      "candidate_extent": 548,
+      "retail_extent": 548,
+      "slot_map": {
+        "-20": -20,
+        "-4": -4,
+        "-12": -8,
+        "-16": -16,
+        "-8": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.92811,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "acedf8e10008bb00caee3068e88dbfafbf7ad8eeb194b265c47dea9ecb87c868",
+      "retail_sha256": "ad4d4ea56a133fed1b8622447d10bf81104321377fc36a73d9db6836bb789ebd"
+    },
+    {
+      "symbol": "?RightClick@combatManager@@QAECC@Z",
+      "rva": "0x1edae",
+      "candidate_instructions": 117,
+      "retail_instructions": 117,
+      "candidate_extent": 369,
+      "retail_extent": 369,
+      "slot_map": {
+        "-20": -20,
+        "-8": -4,
+        "-4": -8,
+        "-24": -24,
+        "-16": -12,
+        "-12": -16,
+        "-28": -28
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.931625,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "894713aabfd9e41ad2d23dc77b15afbd2cf0d4526dd11ae6c2dd44eda345781e",
+      "retail_sha256": "e1d6e6eb43db1c03d70bcf80f5e1c5bc5ea7a04bdb6d3c1fd7899cc80c170527"
+    },
+    {
+      "symbol": "?TurnTo@advManager@@QAEXC@Z",
+      "rva": "0x21e15",
+      "candidate_instructions": 141,
+      "retail_instructions": 141,
+      "candidate_extent": 526,
+      "retail_extent": 526,
+      "slot_map": {
+        "-20": -20,
+        "-12": -8,
+        "-8": -12,
+        "-4": -4,
+        "-16": -16,
+        "-22": -22
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.93617,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "eed683f03b4a00fddf59d812b7d1bf3d1d6833ce5b8b4e7737f31285072320af",
+      "retail_sha256": "0429f9175a8aa673038d067eb843ac0cc2ca35402342df50316b2e900b206e88"
+    },
+    {
+      "symbol": "_WinMain@16",
+      "rva": "0x42ca0",
+      "candidate_instructions": 90,
+      "retail_instructions": 90,
+      "candidate_extent": 282,
+      "retail_extent": 282,
+      "slot_map": {
+        "-32": -4,
+        "-28": -32,
+        "-24": -28,
+        "-20": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.922226,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "6daa26800f5c55dea5f5efa125f94a8751a47e38a333eb61da8f4ab7e37a0c7f",
+      "retail_sha256": "c6c0ad5c64f21bd558329287098a258e5615614c1bd0f4b308732685096a6f07"
+    },
+    {
+      "symbol": "?DoDimensionDoor@philAI@@QAECPAVhero@@@Z",
+      "rva": "0x488e4",
+      "candidate_instructions": 121,
+      "retail_instructions": 121,
+      "candidate_extent": 395,
+      "retail_extent": 395,
+      "slot_map": {
+        "-32": -32,
+        "-4": -4,
+        "-16": -12,
+        "-20": -16,
+        "-24": -20,
+        "-28": -28,
+        "-8": -8,
+        "-12": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.82645,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "3e2af2fbbd4618fe830947c1c436cdb0763a8bb942048a30a0b84a06c6c30bbe",
+      "retail_sha256": "bac805c30d6f3744bd1433d12e6b997936775aeb2323fb72e5b4aa6888e9c813"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "?SetTownContext@advManager@@QAEXC@Z",
+      "rva": "0xb0dd",
+      "candidate_instructions": 153,
+      "retail_instructions": 153,
+      "candidate_extent": 548,
+      "retail_extent": 548,
+      "slot_map": {
+        "-20": -20,
+        "-4": -4,
+        "-8": -8,
+        "-16": -16,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "ad4d4ea56a133fed1b8622447d10bf81104321377fc36a73d9db6836bb789ebd",
+      "retail_sha256": "ad4d4ea56a133fed1b8622447d10bf81104321377fc36a73d9db6836bb789ebd"
+    },
+    {
+      "symbol": "?RightClick@combatManager@@QAECC@Z",
+      "rva": "0x1edae",
+      "candidate_instructions": 117,
+      "retail_instructions": 117,
+      "candidate_extent": 369,
+      "retail_extent": 369,
+      "slot_map": {
+        "-20": -20,
+        "-4": -4,
+        "-8": -8,
+        "-24": -24,
+        "-12": -12,
+        "-16": -16,
+        "-28": -28
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "e1d6e6eb43db1c03d70bcf80f5e1c5bc5ea7a04bdb6d3c1fd7899cc80c170527",
+      "retail_sha256": "e1d6e6eb43db1c03d70bcf80f5e1c5bc5ea7a04bdb6d3c1fd7899cc80c170527"
+    },
+    {
+      "symbol": "?TurnTo@advManager@@QAEXC@Z",
+      "rva": "0x21e15",
+      "candidate_instructions": 141,
+      "retail_instructions": 141,
+      "candidate_extent": 526,
+      "retail_extent": 526,
+      "slot_map": {
+        "-20": -20,
+        "-8": -8,
+        "-12": -12,
+        "-4": -4,
+        "-16": -16,
+        "-22": -22
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "0429f9175a8aa673038d067eb843ac0cc2ca35402342df50316b2e900b206e88",
+      "retail_sha256": "0429f9175a8aa673038d067eb843ac0cc2ca35402342df50316b2e900b206e88"
+    },
+    {
+      "symbol": "_WinMain@16",
+      "rva": "0x42ca0",
+      "candidate_instructions": 90,
+      "retail_instructions": 90,
+      "candidate_extent": 282,
+      "retail_extent": 282,
+      "slot_map": {
+        "-4": -4,
+        "-32": -32,
+        "-28": -28,
+        "-24": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "c6c0ad5c64f21bd558329287098a258e5615614c1bd0f4b308732685096a6f07",
+      "retail_sha256": "c6c0ad5c64f21bd558329287098a258e5615614c1bd0f4b308732685096a6f07"
+    },
+    {
+      "symbol": "?DoDimensionDoor@philAI@@QAECPAVhero@@@Z",
+      "rva": "0x488e4",
+      "candidate_instructions": 121,
+      "retail_instructions": 121,
+      "candidate_extent": 395,
+      "retail_extent": 395,
+      "slot_map": {
+        "-32": -32,
+        "-4": -4,
+        "-12": -12,
+        "-16": -16,
+        "-20": -20,
+        "-28": -28,
+        "-8": -8,
+        "-24": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "bac805c30d6f3744bd1433d12e6b997936775aeb2323fb72e5b4aa6888e9c813",
+      "retail_sha256": "bac805c30d6f3744bd1433d12e6b997936775aeb2323fb72e5b4aa6888e9c813"
+    }
+  ],
+  "comparison_contract": "Unmodified ordinary strict objdiff and complete body/reference checks. Only corresponding donor names and plain semantic aliases. No search for identifier hashes, suffixed aliases, permutation, new storage, padding, type/scope changes or normalization.",
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0xb0dd",
+      "symbol": "?SetTownContext@advManager@@QAEXC@Z",
+      "before": 99.92811,
+      "after": 100.0
+    },
+    {
+      "rva": "0x1edae",
+      "symbol": "?RightClick@combatManager@@QAECC@Z",
+      "before": 99.931625,
+      "after": 100.0
+    },
+    {
+      "rva": "0x21e15",
+      "symbol": "?TurnTo@advManager@@QAEXC@Z",
+      "before": 99.93617,
+      "after": 100.0
+    },
+    {
+      "rva": "0x42ca0",
+      "symbol": "_WinMain@16",
+      "before": 99.922226,
+      "after": 100.0
+    },
+    {
+      "rva": "0x488e4",
+      "symbol": "?DoDimensionDoor@philAI@@QAECPAVhero@@@Z",
+      "before": 99.82645,
+      "after": 100.0
+    }
+  ],
+  "source_sha256": {
+    "src/SOURCE/kbwin.cpp": "eebcf8d9349f9982d2c83e22cbb5d2f8b48738ef5216daa1b9229085f0ad1760",
+    "src/SOURCE/CURSOR.cpp": "85c122ca8a72b997f8ea9a3d355dfab68ad944dcd606001cc3312b6a3075bee0",
+    "src/SOURCE/ADVMGR.cpp": "a55dfec7e847596471bc8a9865894e3db37c43df9be365338a5f2cc69e66e2e0",
+    "src/SOURCE/PHILAI.cpp": "f8d1c7c479ae03cecd997eee4abcc5679307a83c8c0df7d120a1d6a0ecc22cf8",
+    "src/SOURCE/COMMAND.cpp": "3764077d7f0a274fbcb05b4552a5c7021d1165129521e613f13cdcdb6ae629ea"
+  }
+}

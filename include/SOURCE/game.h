@@ -549,7 +549,7 @@ extern i8 gSavedKingOfTheHill;
 extern i8 gSavedCrest;
 extern i8 gRandomTownTypes[4];
 extern i16 gMineTypeCount[];
-extern u32 gLastSeed;
+extern i32 gLastSeed;
 i32 SGenRand(void);
 i32 SRandom(i32 low, i32 high);
 void SIncRandomize(i32 x, i32 y);

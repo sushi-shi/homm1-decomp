@@ -1,0 +1,507 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "function_symbol": "?MAKEFILEID@@YAIPAD@Z",
+  "function_rva": "0x73610",
+  "size": 299,
+  "source": "src/BASE/MAKEFILEID.cpp",
+  "source_sha256": "3469e95ce529348a478a150499e703fc075c8085624b50039f4233db0a091bd4",
+  "method": "Complete instruction sequence, branch destinations, constants and ordered calls agree under an injective local-stack mapping. Stack placement remains a strict matching difference. The inherited NWC assembler was a different implementation and could not cover this body extent.",
+  "slot_map": {
+    "-8": -12,
+    "-12": -16,
+    "-4": -4,
+    "-24": -24,
+    "-20": -8,
+    "-16": -20,
+    "-28": -28
+  },
+  "instructions": [
+    {
+      "offset": "0x0",
+      "candidate": "push ebp",
+      "retail": "push ebp"
+    },
+    {
+      "offset": "0x1",
+      "candidate": "mov ebp, esp",
+      "retail": "mov ebp, esp"
+    },
+    {
+      "offset": "0x3",
+      "candidate": "sub esp, 0x1c",
+      "retail": "sub esp, 0x1c"
+    },
+    {
+      "offset": "0x6",
+      "candidate": "mov word ptr [ebp - 8], 0",
+      "retail": "mov word ptr [ebp - 0xc], 0"
+    },
+    {
+      "offset": "0xc",
+      "candidate": "mov word ptr [ebp - 0xc], 0",
+      "retail": "mov word ptr [ebp - 0x10], 0"
+    },
+    {
+      "offset": "0x12",
+      "candidate": "mov eax, dword ptr [ebp + 8]",
+      "retail": "mov eax, dword ptr [ebp + 8]"
+    },
+    {
+      "offset": "0x15",
+      "candidate": "push eax",
+      "retail": "push eax"
+    },
+    {
+      "offset": "0x16",
+      "candidate": "call 0x1b",
+      "retail": "call 0x1b"
+    },
+    {
+      "offset": "0x1b",
+      "candidate": "add esp, 4",
+      "retail": "add esp, 4"
+    },
+    {
+      "offset": "0x1e",
+      "candidate": "mov dword ptr [ebp - 4], eax",
+      "retail": "mov dword ptr [ebp - 4], eax"
+    },
+    {
+      "offset": "0x21",
+      "candidate": "mov ecx, dword ptr [ebp - 4]",
+      "retail": "mov ecx, dword ptr [ebp - 4]"
+    },
+    {
+      "offset": "0x24",
+      "candidate": "add ecx, 1",
+      "retail": "add ecx, 1"
+    },
+    {
+      "offset": "0x27",
+      "candidate": "push ecx",
+      "retail": "push ecx"
+    },
+    {
+      "offset": "0x28",
+      "candidate": "call 0x2d",
+      "retail": "call 0x2d"
+    },
+    {
+      "offset": "0x2d",
+      "candidate": "add esp, 4",
+      "retail": "add esp, 4"
+    },
+    {
+      "offset": "0x30",
+      "candidate": "mov dword ptr [ebp - 0x18], eax",
+      "retail": "mov dword ptr [ebp - 0x18], eax"
+    },
+    {
+      "offset": "0x33",
+      "candidate": "mov edx, dword ptr [ebp - 0x18]",
+      "retail": "mov edx, dword ptr [ebp - 0x18]"
+    },
+    {
+      "offset": "0x36",
+      "candidate": "mov dword ptr [ebp - 0x14], edx",
+      "retail": "mov dword ptr [ebp - 8], edx"
+    },
+    {
+      "offset": "0x39",
+      "candidate": "mov eax, dword ptr [ebp + 8]",
+      "retail": "mov eax, dword ptr [ebp + 8]"
+    },
+    {
+      "offset": "0x3c",
+      "candidate": "push eax",
+      "retail": "push eax"
+    },
+    {
+      "offset": "0x3d",
+      "candidate": "mov ecx, dword ptr [ebp - 0x14]",
+      "retail": "mov ecx, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x40",
+      "candidate": "push ecx",
+      "retail": "push ecx"
+    },
+    {
+      "offset": "0x41",
+      "candidate": "call 0x46",
+      "retail": "call 0x46"
+    },
+    {
+      "offset": "0x46",
+      "candidate": "add esp, 8",
+      "retail": "add esp, 8"
+    },
+    {
+      "offset": "0x49",
+      "candidate": "mov dword ptr [ebp - 0x10], 0",
+      "retail": "mov dword ptr [ebp - 0x14], 0"
+    },
+    {
+      "offset": "0x50",
+      "candidate": "jmp 0x5b",
+      "retail": "jmp 0x5b"
+    },
+    {
+      "offset": "0x52",
+      "candidate": "mov edx, dword ptr [ebp - 0x10]",
+      "retail": "mov edx, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x55",
+      "candidate": "add edx, 1",
+      "retail": "add edx, 1"
+    },
+    {
+      "offset": "0x58",
+      "candidate": "mov dword ptr [ebp - 0x10], edx",
+      "retail": "mov dword ptr [ebp - 0x14], edx"
+    },
+    {
+      "offset": "0x5b",
+      "candidate": "mov eax, dword ptr [ebp - 0x10]",
+      "retail": "mov eax, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x5e",
+      "candidate": "cmp eax, dword ptr [ebp - 4]",
+      "retail": "cmp eax, dword ptr [ebp - 4]"
+    },
+    {
+      "offset": "0x61",
+      "candidate": "jge 0x10d",
+      "retail": "jge 0x10d"
+    },
+    {
+      "offset": "0x67",
+      "candidate": "mov ecx, dword ptr [ebp - 0x14]",
+      "retail": "mov ecx, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x6a",
+      "candidate": "add ecx, dword ptr [ebp - 0x10]",
+      "retail": "add ecx, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x6d",
+      "candidate": "movsx edx, byte ptr [ecx]",
+      "retail": "movsx edx, byte ptr [ecx]"
+    },
+    {
+      "offset": "0x70",
+      "candidate": "cmp edx, 0x61",
+      "retail": "cmp edx, 0x61"
+    },
+    {
+      "offset": "0x73",
+      "candidate": "jl 0x95",
+      "retail": "jl 0x95"
+    },
+    {
+      "offset": "0x75",
+      "candidate": "mov eax, dword ptr [ebp - 0x14]",
+      "retail": "mov eax, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x78",
+      "candidate": "add eax, dword ptr [ebp - 0x10]",
+      "retail": "add eax, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x7b",
+      "candidate": "movsx ecx, byte ptr [eax]",
+      "retail": "movsx ecx, byte ptr [eax]"
+    },
+    {
+      "offset": "0x7e",
+      "candidate": "cmp ecx, 0x7a",
+      "retail": "cmp ecx, 0x7a"
+    },
+    {
+      "offset": "0x81",
+      "candidate": "jg 0x95",
+      "retail": "jg 0x95"
+    },
+    {
+      "offset": "0x83",
+      "candidate": "mov edx, dword ptr [ebp - 0x14]",
+      "retail": "mov edx, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x86",
+      "candidate": "add edx, dword ptr [ebp - 0x10]",
+      "retail": "add edx, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x89",
+      "candidate": "mov al, byte ptr [edx]",
+      "retail": "mov al, byte ptr [edx]"
+    },
+    {
+      "offset": "0x8b",
+      "candidate": "and al, 0xdf",
+      "retail": "and al, 0xdf"
+    },
+    {
+      "offset": "0x8d",
+      "candidate": "mov ecx, dword ptr [ebp - 0x14]",
+      "retail": "mov ecx, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x90",
+      "candidate": "add ecx, dword ptr [ebp - 0x10]",
+      "retail": "add ecx, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0x93",
+      "candidate": "mov byte ptr [ecx], al",
+      "retail": "mov byte ptr [ecx], al"
+    },
+    {
+      "offset": "0x95",
+      "candidate": "mov edx, dword ptr [ebp - 8]",
+      "retail": "mov edx, dword ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0x98",
+      "candidate": "and edx, 0xffff",
+      "retail": "and edx, 0xffff"
+    },
+    {
+      "offset": "0x9e",
+      "candidate": "sar edx, 8",
+      "retail": "sar edx, 8"
+    },
+    {
+      "offset": "0xa1",
+      "candidate": "mov word ptr [ebp - 0xc], dx",
+      "retail": "mov word ptr [ebp - 0x10], dx"
+    },
+    {
+      "offset": "0xa5",
+      "candidate": "mov ax, word ptr [ebp - 8]",
+      "retail": "mov ax, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xa9",
+      "candidate": "shl ax, 8",
+      "retail": "shl ax, 8"
+    },
+    {
+      "offset": "0xad",
+      "candidate": "mov word ptr [ebp - 8], ax",
+      "retail": "mov word ptr [ebp - 0xc], ax"
+    },
+    {
+      "offset": "0xb1",
+      "candidate": "mov cx, word ptr [ebp - 8]",
+      "retail": "mov cx, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xb5",
+      "candidate": "or cx, word ptr [ebp - 0xc]",
+      "retail": "or cx, word ptr [ebp - 0x10]"
+    },
+    {
+      "offset": "0xb9",
+      "candidate": "mov word ptr [ebp - 8], cx",
+      "retail": "mov word ptr [ebp - 0xc], cx"
+    },
+    {
+      "offset": "0xbd",
+      "candidate": "mov edx, dword ptr [ebp - 8]",
+      "retail": "mov edx, dword ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xc0",
+      "candidate": "and edx, 0xffff",
+      "retail": "and edx, 0xffff"
+    },
+    {
+      "offset": "0xc6",
+      "candidate": "and edx, 0x8000",
+      "retail": "and edx, 0x8000"
+    },
+    {
+      "offset": "0xcc",
+      "candidate": "test edx, edx",
+      "retail": "test edx, edx"
+    },
+    {
+      "offset": "0xce",
+      "candidate": "je 0xe8",
+      "retail": "je 0xe8"
+    },
+    {
+      "offset": "0xd0",
+      "candidate": "mov ax, word ptr [ebp - 8]",
+      "retail": "mov ax, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xd4",
+      "candidate": "shl ax, 1",
+      "retail": "shl ax, 1"
+    },
+    {
+      "offset": "0xd7",
+      "candidate": "mov word ptr [ebp - 8], ax",
+      "retail": "mov word ptr [ebp - 0xc], ax"
+    },
+    {
+      "offset": "0xdb",
+      "candidate": "mov cx, word ptr [ebp - 8]",
+      "retail": "mov cx, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xdf",
+      "candidate": "or cl, 1",
+      "retail": "or cl, 1"
+    },
+    {
+      "offset": "0xe2",
+      "candidate": "mov word ptr [ebp - 8], cx",
+      "retail": "mov word ptr [ebp - 0xc], cx"
+    },
+    {
+      "offset": "0xe6",
+      "candidate": "jmp 0xf3",
+      "retail": "jmp 0xf3"
+    },
+    {
+      "offset": "0xe8",
+      "candidate": "mov dx, word ptr [ebp - 8]",
+      "retail": "mov dx, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0xec",
+      "candidate": "shl dx, 1",
+      "retail": "shl dx, 1"
+    },
+    {
+      "offset": "0xef",
+      "candidate": "mov word ptr [ebp - 8], dx",
+      "retail": "mov word ptr [ebp - 0xc], dx"
+    },
+    {
+      "offset": "0xf3",
+      "candidate": "mov eax, dword ptr [ebp - 0x14]",
+      "retail": "mov eax, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0xf6",
+      "candidate": "add eax, dword ptr [ebp - 0x10]",
+      "retail": "add eax, dword ptr [ebp - 0x14]"
+    },
+    {
+      "offset": "0xf9",
+      "candidate": "movsx cx, byte ptr [eax]",
+      "retail": "movsx cx, byte ptr [eax]"
+    },
+    {
+      "offset": "0xfd",
+      "candidate": "mov dx, word ptr [ebp - 8]",
+      "retail": "mov dx, word ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0x101",
+      "candidate": "sub dx, cx",
+      "retail": "sub dx, cx"
+    },
+    {
+      "offset": "0x104",
+      "candidate": "mov word ptr [ebp - 8], dx",
+      "retail": "mov word ptr [ebp - 0xc], dx"
+    },
+    {
+      "offset": "0x108",
+      "candidate": "jmp 0x52",
+      "retail": "jmp 0x52"
+    },
+    {
+      "offset": "0x10d",
+      "candidate": "mov eax, dword ptr [ebp - 0x14]",
+      "retail": "mov eax, dword ptr [ebp - 8]"
+    },
+    {
+      "offset": "0x110",
+      "candidate": "mov dword ptr [ebp - 0x1c], eax",
+      "retail": "mov dword ptr [ebp - 0x1c], eax"
+    },
+    {
+      "offset": "0x113",
+      "candidate": "mov ecx, dword ptr [ebp - 0x1c]",
+      "retail": "mov ecx, dword ptr [ebp - 0x1c]"
+    },
+    {
+      "offset": "0x116",
+      "candidate": "push ecx",
+      "retail": "push ecx"
+    },
+    {
+      "offset": "0x117",
+      "candidate": "call 0x11c",
+      "retail": "call 0x11c"
+    },
+    {
+      "offset": "0x11c",
+      "candidate": "add esp, 4",
+      "retail": "add esp, 4"
+    },
+    {
+      "offset": "0x11f",
+      "candidate": "mov eax, dword ptr [ebp - 8]",
+      "retail": "mov eax, dword ptr [ebp - 0xc]"
+    },
+    {
+      "offset": "0x122",
+      "candidate": "and eax, 0xffff",
+      "retail": "and eax, 0xffff"
+    },
+    {
+      "offset": "0x127",
+      "candidate": "mov esp, ebp",
+      "retail": "mov esp, ebp"
+    },
+    {
+      "offset": "0x129",
+      "candidate": "pop ebp",
+      "retail": "pop ebp"
+    },
+    {
+      "offset": "0x12a",
+      "candidate": "ret ",
+      "retail": "ret "
+    }
+  ],
+  "ordered_references": [
+    {
+      "offset": "0x17",
+      "symbol": "_strlen",
+      "addend": 0
+    },
+    {
+      "offset": "0x29",
+      "symbol": "??2@YAPAXI@Z",
+      "addend": 0
+    },
+    {
+      "offset": "0x42",
+      "symbol": "_strcpy",
+      "addend": 0
+    },
+    {
+      "offset": "0x118",
+      "symbol": "??3@YAXPAX@Z",
+      "addend": 0
+    }
+  ],
+  "behavior_changes": [
+    "Allocate and copy the input string before hashing, then delete the copy.",
+    "Fold only ASCII a-z. The old assembly masked every byte to 7 bits and folded every value >= 0x60.",
+    "Subtract signed char values into the 16-bit hash; high-bit bytes are no longer stripped."
+  ]
+}

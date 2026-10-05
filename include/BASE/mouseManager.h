@@ -111,7 +111,7 @@ extern i32 gMouseCursorType;
 extern i32 gMouseOffset[3];
 extern u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
 extern HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
-extern i8* gColorBits[MOUSE_CURSOR_COUNT];
+extern u8* gColorBits[MOUSE_CURSOR_COUNT];
 extern u8* cAndBits[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];

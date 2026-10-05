@@ -12,6 +12,8 @@ SOURCE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Game'
 # Unoptimized VC6 SP5 baseline. /Ob1 is directly measured in the Audiere
 # routines; the remaining units still require individual retail comparison.
 cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6"]
+# miscwin FadeIn/FadeOut call constructors without retail EH frames.
+cpp_buka_noeh = ["/nologo", "/c", "/Od", "/Ob1", "/GX-", "/MT", "/G6"]
 # SAMPLE's full constructor (including switch tables) and destructor agree
 # under /G5; /G6 inserts two extra short-argument register clears.
 cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
@@ -37,7 +39,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "BASE/BITMAP"
 source = "src/BASE/BITMAP.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Icon2b"
@@ -53,8 +55,8 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/MAKEFILEID"
-source = "src/BASE/MAKEFILEID.asm"
-flags = "cpp_buka"
+source = "src/BASE/MAKEFILEID.cpp"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/LZHUFDEC"
@@ -64,17 +66,17 @@ flags = "cpp_buka"
 [[unit]]
 unit = "BASE/BACKDROP"
 source = "src/BASE/BACKDROP.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/BORDER"
 source = "src/BASE/BORDER.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/BUTTON"
 source = "src/BASE/BUTTON.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/DIMMER"
@@ -84,29 +86,29 @@ flags = "cpp_buka"
 [[unit]]
 unit = "BASE/ICONWDGT"
 source = "src/BASE/ICONWDGT.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/EXEC"
 source = "src/BASE/EXEC.cpp"
 # DoDialog expands executive::executive inline while retail keeps the
 # out-of-line 0x0047a170 body for InitMainClasses: automatic inlining.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
 source = "src/BASE/INPUTMGR.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"
 source = "src/BASE/MOUSEMGR.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/RESMGR"
 source = "src/BASE/RESMGR.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/RESOURCE"
@@ -116,51 +118,53 @@ flags = "cpp_buka"
 [[unit]]
 unit = "BASE/PALETTE"
 source = "src/BASE/PALETTE.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TILESET"
 source = "src/BASE/TILESET.cpp"
-flags = "cpp_buka"
+# G5 retail controls: buka-g5-surface-tileset-controls.json.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TEXTWDGT"
 source = "src/BASE/TEXTWDGT.cpp"
 # Retail keeps standalone ~textWidget and SetText while expanding both in
 # the deleting destructor and Main; that pair requires automatic inlining.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TEXTNTRY"
 source = "src/BASE/TEXTNTRY.cpp"
-flags = "cpp_buka"
+# Retail Main omits the /G6 clears before narrow-argument calls.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/FONT"
 source = "src/BASE/FONT.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/ICON"
 source = "src/BASE/ICON.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WINDOW"
 source = "src/BASE/WINDOW.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WIDGET"
 source = "src/BASE/WIDGET.cpp"
 # Main expands widget::Dim twice (DimBitmapArea calls) while retail keeps the
 # out-of-line 0x0047f930 body: automatic inlining.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WINMGR"
 source = "src/BASE/WINMGR.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Audio"
@@ -210,7 +214,7 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/GAME"
 source = "src/SOURCE/GAME.cpp"
 # GetMap registers fs:[0] around its heroWindow/fileRequester news.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/ARMYGRP"
@@ -222,7 +226,7 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/HERO"
 source = "src/SOURCE/HERO.cpp"
 # ViewStat's fs:[0] frame around new heroWindow proves /GX.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/HISCORE"
@@ -242,7 +246,7 @@ flags = "cpp_buka"
 [[unit]]
 unit = "SOURCE/PATH"
 source = "src/SOURCE/PATH.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 # Retail FINDPATH's aligned24820..24950 controls use optimized VC4 code.
 # FindCombatPath (0x424950) expands the out-of-line Clear and QuickDistance
@@ -256,13 +260,13 @@ flags = "cpp_buka_o2_g5"
 [[unit]]
 unit = "SOURCE/PHILAI"
 source = "src/SOURCE/PHILAI.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/RECRUIT"
 source = "src/SOURCE/RECRUIT.cpp"
 # recruitUnit::Open and QuickViewRecruit register fs:[0] frames for new heroWindow.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 # Retail SEARCH (0x4028b0..0x403631) is int3-separated from RECRUIT and
 # aligned like FINDPATH: register-allocated /O2 code with no frames.
@@ -275,13 +279,14 @@ flags = "cpp_buka_o2_g5"
 [[unit]]
 unit = "SOURCE/REMOTE"
 source = "src/SOURCE/REMOTE.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/REQUEST"
 source = "src/SOURCE/REQUEST.cpp"
 # fileRequester::Open registers fs:[0] around its heroWindow/iconWidget news.
-flags = "cpp_buka"
+# Retail Open/Main narrow arguments omit G6 register clears.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/SETUP"
@@ -294,30 +299,31 @@ flags = "cpp_buka"
 unit = "SOURCE/SPELLS"
 source = "src/SOURCE/SPELLS.cpp"
 # Armageddon registers an fs:[0] frame to delete its work palette.
-flags = "cpp_buka"
+# Complete retail instruction/call controls leave only local-stack placement.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/STRIP"
 source = "src/SOURCE/STRIP.cpp"
 # strip and bankBox constructors register fs:[0] frames around new.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/SWAPMGR"
 source = "src/SOURCE/SWAPMGR.cpp"
 # Open's fs:[0] frame around new heroWindow proves /GX.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/TOWN"
 source = "src/SOURCE/TOWN.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/TOWNMGR"
 source = "src/SOURCE/TOWNMGR.cpp"
 # DoTavern registers an fs:[0] frame around new heroWindow.
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/kbwin"
@@ -327,19 +333,22 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/netwin"
 source = "src/SOURCE/netwin.cpp"
-flags = "cpp_buka"
+# /G5 matches byte-mask/integer-dispatch controls; same-source /G6 is worse.
+# See config/retail/buka-network-events-controls.json.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
-flags = "cpp_buka"
+# G5 retail controls: buka-g5-surface-tileset-controls.json.
+flags = "cpp_buka_g5"
 # retail __FILE__ "D:\\Heroes\\Source\\wingraph.cpp"
 retail_file = "Source\\wingraph.cpp"
 
 [[unit]]
 unit = "BASE/miscwin"
 source = "src/BASE/miscwin.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_noeh"
 
 [[unit]]
 unit = "BASE/SAMPLE"
@@ -362,7 +371,8 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/comwin"
 source = "src/SOURCE/comwin.cpp"
-flags = "cpp_buka"
+# Retail byte-bitfield operations and narrow calls; whole-unit /G5 controls.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Icon2bc"
@@ -385,26 +395,29 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/HEXCELL"
 source = "src/SOURCE/HEXCELL.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/SPELLAI"
 source = "src/SOURCE/SPELLAI.cpp"
-flags = "cpp_buka"
+# Retail byte-bitfield operations and narrow calls; whole-unit /G5 controls.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/DRAWING"
 source = "src/SOURCE/DRAWING.cpp"
-flags = "cpp_buka"
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/FLY"
 source = "src/SOURCE/FLY.cpp"
 # int3 padding brackets CanFit..FlyTo (0x0044a5e0..0x0044b434) as one object.
-flags = "cpp_buka"
+# Retail FLY narrow-argument calls omit G6 register clears.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/VIEW"
 source = "src/SOURCE/VIEW.cpp"
 # ViewGeneral registers fs:[0] around its new heroWindow.
-flags = "cpp_buka"
+# Complete retail instruction/call controls leave only local-stack placement.
+flags = "cpp_buka_g5"

@@ -1,0 +1,125 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "use": "Corresponding plain recruitMessage/eventResult declarations in RecruitEvent; combat-first spell-count sum in hero::GetNumSpells. HoMM1 types, local census and spell-array loops are preserved."
+  },
+  "signature_correction": {
+    "rva": "0x51697",
+    "previous_symbol": "??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z",
+    "corrected_symbol": "??0recruitUnit@@QAE@PAVarmyGroup@@CPAF@Z",
+    "evidence": "buka-recruit-byte-controls.json; byte-only argument provision at RecruitEvent+0x48 and byte consumption at constructor+0x2d. Constructor remains byte-exact; caller is now byte-exact. Prior discovery records retain their historical inferred names."
+  },
+  "caller_evidence": {
+    "rva": "0x2706d",
+    "offset": "0x48",
+    "instruction": "mov al, byte ptr [ebp+0xc]; push eax",
+    "meaning": "The callee receives a byte value; upper argument bytes are not defined by this load."
+  },
+  "callee_evidence": {
+    "rva": "0x51697",
+    "offset": "0x2d",
+    "instruction": "mov dl, byte ptr [ebp+0xc]",
+    "member_store_offset": "0x30",
+    "member_store": "mov byte ptr [ecx+0x31], dl",
+    "cleanup": "ret 0xc",
+    "meaning": "Three stack argument slots remain; creatureType is consumed and stored as a byte."
+  },
+  "changes": {
+    "recruitUnit constructor": "Correct creatureType from i32 to i8 in the owner header and definition. Update the reviewed function identity at the same RVA; the complete constructor bytes and references remain exact.",
+    "advManager::RecruitEvent": "The corrected declaration emits the retail low-byte argument load. Restore corresponding donor recruitMessage and eventResult local names; no unused local is added. Complete body, EH identity and ordered references are exact.",
+    "combatManager::UpdateCombatArea": "Restore height-first sum in the clipping check. All instructions and ordered references correspond apart from local placement. Its fuzzy score decreases slightly because the previous wrong operand order accidentally coincided with the wrong local offsets; retain the retail operation order, not that accidental agreement.",
+    "hero::GetNumSpells": "Restore combat-first total, matching the donor and retail register operands. The two HoMM1 spell arrays and signed-short counters remain intact. Local placement remains non-exact."
+  },
+  "functions": [
+    {
+      "symbol": "?UpdateCombatArea@combatManager@@QAEXXZ",
+      "rva": "0x23ae5",
+      "candidate_instructions": 51,
+      "retail_instructions": 51,
+      "candidate_extent": 198,
+      "retail_extent": 198,
+      "slot_map": {
+        "-12": -12,
+        "-4": -8,
+        "-8": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.78432,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "5b132dc683cbe499ba08550fe9d5de5b15ee796b1851ad2e09b4e87e5e41ac27",
+      "retail_sha256": "81afb1bdcd15122a6c6eadc8c69102e0cb3de524dc5e8102668c68b5852bfa95"
+    },
+    {
+      "symbol": "?RecruitEvent@advManager@@QAEXPAVhero@@HPAVmapCell@@@Z",
+      "rva": "0x2706d",
+      "candidate_instructions": 57,
+      "retail_instructions": 57,
+      "candidate_extent": 191,
+      "retail_extent": 191,
+      "slot_map": {
+        "-56": -56,
+        "-24": -24,
+        "-48": -48,
+        "-4": -4,
+        "-60": -60,
+        "-44": -44,
+        "-16": -16,
+        "-52": -52,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "6d50675a4d8b94db598adc6179d9962b6c03ba0aae8e56497920137e4c5f394c",
+      "retail_sha256": "6d50675a4d8b94db598adc6179d9962b6c03ba0aae8e56497920137e4c5f394c"
+    },
+    {
+      "symbol": "?GetNumSpells@hero@@QAEFC@Z",
+      "rva": "0x391d3",
+      "candidate_instructions": 61,
+      "retail_instructions": 61,
+      "candidate_extent": 200,
+      "retail_extent": 200,
+      "slot_map": {
+        "-16": -16,
+        "-8": -12,
+        "-4": -4,
+        "-12": -8,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.7541,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "ea710bb67ba42907699e8e681095dd0d25878ba7c42d7989514563b7e9b87a8a",
+      "retail_sha256": "8ac43856955a42848a7c56b41b28063eebf49e49bfc64ecd1f776f7f28a9fde6"
+    },
+    {
+      "symbol": "??0recruitUnit@@QAE@PAVarmyGroup@@CPAF@Z",
+      "rva": "0x51697",
+      "candidate_instructions": 60,
+      "retail_instructions": 60,
+      "candidate_extent": 188,
+      "retail_extent": 188,
+      "slot_map": {
+        "-36": -36,
+        "-28": -28,
+        "-4": -4,
+        "-32": -32
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "020caccf4903b7277d97cc7cac094204e2cce0c651f9aad972d66b60d0a954e8",
+      "retail_sha256": "020caccf4903b7277d97cc7cac094204e2cce0c651f9aad972d66b60d0a954e8"
+    }
+  ],
+  "source_sha256": {
+    "include/SOURCE/recruitUnit.h": "0dfd3959d341e21c7f04980232164d51db1550836db0ea97198d27b02b5a2398",
+    "src/SOURCE/RECRUIT.cpp": "0a43fc0eb0b13efdca311df5b331af77ed7ff13d03ffc47718a73660084bbebe",
+    "src/SOURCE/EVENTS.cpp": "5a9a4152449e596590d990d26ba94ca3fdfe8c433dd81e319b4c7d05ec616246",
+    "src/SOURCE/DRAWING.cpp": "5ee9f30d2dfc596a2fe98ad7f1ac9fce25213da2e9ab28fb6b7e47e7a47f2a2e",
+    "src/SOURCE/HERO.cpp": "dc41c976766596e9bb39f8ff0e11cd25ebb0d495786473f3227670885984395f"
+  }
+}

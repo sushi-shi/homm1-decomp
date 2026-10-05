@@ -1,0 +1,82 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Identity-only recovery of immutable VC6 floating literal pools. Each complete float/double payload is read by a typed x87 operand in retail read-only storage; the corresponding current source function emits a typed x87 use of a unique value-encoded compiler constant with identical width and bits. Constant identities encode their values, independent of caller instruction scheduling or the choice of an initial load versus an arithmetic memory operand. No source owner overlaps, no duplicate pool address for a symbol, and named 1.0f source constants are withheld. This does not establish caller equivalence or mask different candidate references/addends.",
+  "constants": [
+    {
+      "name": "__real@4@4006fa00000000000000",
+      "rva": "0x8a600",
+      "size": 4,
+      "value": 250.0,
+      "payload_sha256": "790ae12c34496bfe41c52a4786035ab076ce6771b936c6adf4608fd641420958",
+      "references": [
+        {
+          "site_rva": "0x4cad5",
+          "target_rva": "0x8a600",
+          "symbol": "__real@4@4006fa00000000000000",
+          "kind": 6,
+          "unit": "SOURCE/PHILAI",
+          "function": "?ValueOfTown@philAI@@QAEHPAVtown@@@Z",
+          "retail_instruction": "fld dword ptr [0x48a600]",
+          "candidate_operand_offsets": [
+            "0x84"
+          ],
+          "object_sha256": "ce42bb77486280a6678dbd6d54bb5fd2ca867c8a1f5384e67f8ca91a9bd38a2f"
+        }
+      ]
+    },
+    {
+      "name": "__real@8@4008fa00000000000000",
+      "rva": "0x8a688",
+      "size": 8,
+      "value": 1000.0,
+      "payload_sha256": "139107fd63d004e94cb64abb75361dd8490810c6709a9311896ca17496f5ecde",
+      "references": [
+        {
+          "site_rva": "0x4fef9",
+          "target_rva": "0x8a688",
+          "symbol": "__real@8@4008fa00000000000000",
+          "kind": 6,
+          "unit": "SOURCE/PHILAI",
+          "function": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+          "retail_instruction": "fmul qword ptr [0x48a688]",
+          "candidate_operand_offsets": [
+            "0xf68",
+            "0xf7d",
+            "0xfa0"
+          ],
+          "object_sha256": "ce42bb77486280a6678dbd6d54bb5fd2ca867c8a1f5384e67f8ca91a9bd38a2f"
+        },
+        {
+          "site_rva": "0x4ff0e",
+          "target_rva": "0x8a688",
+          "symbol": "__real@8@4008fa00000000000000",
+          "kind": 6,
+          "unit": "SOURCE/PHILAI",
+          "function": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+          "retail_instruction": "fmul qword ptr [0x48a688]",
+          "candidate_operand_offsets": [
+            "0xf68",
+            "0xf7d",
+            "0xfa0"
+          ],
+          "object_sha256": "ce42bb77486280a6678dbd6d54bb5fd2ca867c8a1f5384e67f8ca91a9bd38a2f"
+        },
+        {
+          "site_rva": "0x4ff31",
+          "target_rva": "0x8a688",
+          "symbol": "__real@8@4008fa00000000000000",
+          "kind": 6,
+          "unit": "SOURCE/PHILAI",
+          "function": "?ValueOfEventAtPosition@philAI@@QAEHPAVhero@@FFHPAH@Z",
+          "retail_instruction": "fmul qword ptr [0x48a688]",
+          "candidate_operand_offsets": [
+            "0xf68",
+            "0xf7d",
+            "0xfa0"
+          ],
+          "object_sha256": "ce42bb77486280a6678dbd6d54bb5fd2ca867c8a1f5384e67f8ca91a9bd38a2f"
+        }
+      ]
+    }
+  ]
+}

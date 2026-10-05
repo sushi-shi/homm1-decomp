@@ -1,0 +1,690 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "references": [
+    {
+      "site_rva": "0x60e6b",
+      "target_rva": "0x9fe38",
+      "symbol": "$SG654904",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?Main@townManager@@UAEFAAUtag_message@@@Z",
+      "size": 13,
+      "payload_sha256": "5c0f2bb34f3f72836208c258434d6f3c4360854d7571bf2c2dcc87efcd539798",
+      "text": "magewind.bin",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x678",
+        "candidate_consumer": "0x683",
+        "retail_consumer": "0x60e76",
+        "callee_rva": "0x6d150",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x60e68",
+            "instruction": "je 0x60e83"
+          },
+          {
+            "rva": "0x60e6a",
+            "instruction": "push 0x49fe38"
+          },
+          {
+            "rva": "0x60e6f",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60e71",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60e73",
+            "instruction": "mov ecx, dword ptr [ebp - 0x5c]"
+          },
+          {
+            "rva": "0x60e76",
+            "instruction": "call 0x6d150"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x675",
+            "instruction": "je 0x690"
+          },
+          {
+            "offset": "0x677",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x67c",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x67e",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x680",
+            "instruction": "mov ecx, dword ptr [ebp - 0x5c]"
+          },
+          {
+            "offset": "0x683",
+            "instruction": "call 0x688"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x60f3c",
+      "target_rva": "0x9fe48",
+      "symbol": "$SG654920",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?Main@townManager@@UAEFAAUtag_message@@@Z",
+      "size": 13,
+      "payload_sha256": "fb48ed92f1e8c145c363389ab19916b9d767c32e0827ed1279550bc821abf2a8",
+      "text": "wellwind.bin",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x749",
+        "candidate_consumer": "0x754",
+        "retail_consumer": "0x60f47",
+        "callee_rva": "0x6d150",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x60f39",
+            "instruction": "je 0x60f54"
+          },
+          {
+            "rva": "0x60f3b",
+            "instruction": "push 0x49fe48"
+          },
+          {
+            "rva": "0x60f40",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60f42",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60f44",
+            "instruction": "mov ecx, dword ptr [ebp - 0x64]"
+          },
+          {
+            "rva": "0x60f47",
+            "instruction": "call 0x6d150"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x746",
+            "instruction": "je 0x761"
+          },
+          {
+            "offset": "0x748",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x74d",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x74f",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x751",
+            "instruction": "mov ecx, dword ptr [ebp - 0x64]"
+          },
+          {
+            "offset": "0x754",
+            "instruction": "call 0x759"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x60fe8",
+      "target_rva": "0x9fe58",
+      "symbol": "$SG654936",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?Main@townManager@@UAEFAAUtag_message@@@Z",
+      "size": 13,
+      "payload_sha256": "b3875140e8dcbc440c882dbb2d117c7eb65e6b9867460c74dd188f97c27b55e7",
+      "text": "thiefwin.bin",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x7f5",
+        "candidate_consumer": "0x800",
+        "retail_consumer": "0x60ff3",
+        "callee_rva": "0x6d150",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x60fe5",
+            "instruction": "je 0x61000"
+          },
+          {
+            "rva": "0x60fe7",
+            "instruction": "push 0x49fe58"
+          },
+          {
+            "rva": "0x60fec",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60fee",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x60ff0",
+            "instruction": "mov ecx, dword ptr [ebp - 0x6c]"
+          },
+          {
+            "rva": "0x60ff3",
+            "instruction": "call 0x6d150"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x7f2",
+            "instruction": "je 0x80d"
+          },
+          {
+            "offset": "0x7f4",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x7f9",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x7fb",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x7fd",
+            "instruction": "mov ecx, dword ptr [ebp - 0x6c]"
+          },
+          {
+            "offset": "0x800",
+            "instruction": "call 0x805"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x61130",
+      "target_rva": "0x9fe68",
+      "symbol": "$SG654952",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?Main@townManager@@UAEFAAUtag_message@@@Z",
+      "size": 13,
+      "payload_sha256": "ac0dae6fa0e9723907360ccb54ea0ff972cd2cb9a50ca790794178678e1a435e",
+      "text": "buildtwn.82M",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x937",
+        "candidate_consumer": "0x93b",
+        "retail_consumer": "0x61134",
+        "callee_rva": "0x68ec4",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x6112a",
+            "instruction": "call 0x6bf87"
+          },
+          {
+            "rva": "0x6112f",
+            "instruction": "push 0x49fe68"
+          },
+          {
+            "rva": "0x61134",
+            "instruction": "call 0x68ec4"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x92f",
+            "instruction": "mov dword ptr [ebp - 0x18], 0"
+          },
+          {
+            "offset": "0x936",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x93b",
+            "instruction": "call 0x940"
+          }
+        ],
+        "preceding_callee_rva": "0x6bf87"
+      }
+    },
+    {
+      "site_rva": "0x627d0",
+      "target_rva": "0x9ff20",
+      "symbol": "$SG655136",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "size": 52,
+      "payload_sha256": "f396d7ab945296d697ecbc2f5fc8b3c4c5b5608ddd28fa54c0208c30549898b6",
+      "text": "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x1e8",
+        "candidate_consumer": "0x1f3",
+        "retail_consumer": "0x627db",
+        "callee_rva": "0x44b59",
+        "diagnostic_line": 1555,
+        "retail_context": [
+          {
+            "rva": "0x627ca",
+            "instruction": "push 0x613"
+          },
+          {
+            "rva": "0x627cf",
+            "instruction": "push 0x49ff20"
+          },
+          {
+            "rva": "0x627d4",
+            "instruction": "mov ecx, dword ptr [ebp - 0x148]"
+          },
+          {
+            "rva": "0x627da",
+            "instruction": "push ecx"
+          },
+          {
+            "rva": "0x627db",
+            "instruction": "call 0x44b59"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x1e2",
+            "instruction": "push 0x613"
+          },
+          {
+            "offset": "0x1e7",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x1ec",
+            "instruction": "mov ecx, dword ptr [ebp - 0x148]"
+          },
+          {
+            "offset": "0x1f2",
+            "instruction": "push ecx"
+          },
+          {
+            "offset": "0x1f3",
+            "instruction": "call 0x1f8"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x628ad",
+      "target_rva": "0x9ff88",
+      "symbol": "$SG655240",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "size": 52,
+      "payload_sha256": "f396d7ab945296d697ecbc2f5fc8b3c4c5b5608ddd28fa54c0208c30549898b6",
+      "text": "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x2ef",
+        "candidate_consumer": "0x2fa",
+        "retail_consumer": "0x628b8",
+        "callee_rva": "0x44b59",
+        "diagnostic_line": 1570,
+        "retail_context": [
+          {
+            "rva": "0x628a7",
+            "instruction": "push 0x622"
+          },
+          {
+            "rva": "0x628ac",
+            "instruction": "push 0x49ff88"
+          },
+          {
+            "rva": "0x628b1",
+            "instruction": "mov ecx, dword ptr [ebp - 0x150]"
+          },
+          {
+            "rva": "0x628b7",
+            "instruction": "push ecx"
+          },
+          {
+            "rva": "0x628b8",
+            "instruction": "call 0x44b59"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x2e9",
+            "instruction": "push 0x622"
+          },
+          {
+            "offset": "0x2ee",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x2f3",
+            "instruction": "mov ecx, dword ptr [ebp - 0x150]"
+          },
+          {
+            "offset": "0x2f9",
+            "instruction": "push ecx"
+          },
+          {
+            "offset": "0x2fa",
+            "instruction": "call 0x2ff"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x628e8",
+      "target_rva": "0x9ffbc",
+      "symbol": "$SG655292",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "size": 52,
+      "payload_sha256": "f396d7ab945296d697ecbc2f5fc8b3c4c5b5608ddd28fa54c0208c30549898b6",
+      "text": "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0x330",
+        "candidate_consumer": "0x33b",
+        "retail_consumer": "0x628f3",
+        "callee_rva": "0x44b59",
+        "diagnostic_line": 1571,
+        "retail_context": [
+          {
+            "rva": "0x628e2",
+            "instruction": "push 0x623"
+          },
+          {
+            "rva": "0x628e7",
+            "instruction": "push 0x49ffbc"
+          },
+          {
+            "rva": "0x628ec",
+            "instruction": "mov edx, dword ptr [ebp - 0x154]"
+          },
+          {
+            "rva": "0x628f2",
+            "instruction": "push edx"
+          },
+          {
+            "rva": "0x628f3",
+            "instruction": "call 0x44b59"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x32a",
+            "instruction": "push 0x623"
+          },
+          {
+            "offset": "0x32f",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x334",
+            "instruction": "mov edx, dword ptr [ebp - 0x154]"
+          },
+          {
+            "offset": "0x33a",
+            "instruction": "push edx"
+          },
+          {
+            "offset": "0x33b",
+            "instruction": "call 0x340"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x630ef",
+      "target_rva": "0xa0054",
+      "symbol": "$SG655444",
+      "kind": 6,
+      "unit": "SOURCE/TOWNMGR",
+      "function": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "size": 13,
+      "payload_sha256": "bb3426b31498cf4f29682a656e48633142cd9578bc4fe307f2a46bbd888977ec",
+      "text": "resource.icn",
+      "object_sha256": "fc1f9131cd87c520cfc303600e446bda4a1e346f71a86e5c6cf9726f9bf9be72",
+      "control": {
+        "candidate_operand": "0xba9",
+        "candidate_consumer": "0xbcd",
+        "retail_consumer": "0x6310a",
+        "callee_rva": "0x6dfa0",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x630ed",
+            "instruction": "push ecx"
+          },
+          {
+            "rva": "0x630ee",
+            "instruction": "push 0x4a0054"
+          },
+          {
+            "rva": "0x630f3",
+            "instruction": "push 0xc"
+          },
+          {
+            "rva": "0x630f5",
+            "instruction": "mov dx, word ptr [ebp - 0x24]"
+          },
+          {
+            "rva": "0x630f9",
+            "instruction": "push edx"
+          },
+          {
+            "rva": "0x630fa",
+            "instruction": "mov ax, word ptr [ebp - 0x7c]"
+          },
+          {
+            "rva": "0x630fe",
+            "instruction": "push eax"
+          },
+          {
+            "rva": "0x630ff",
+            "instruction": "mov cx, word ptr [ebp - 0x34]"
+          },
+          {
+            "rva": "0x63103",
+            "instruction": "push ecx"
+          },
+          {
+            "rva": "0x63104",
+            "instruction": "mov ecx, dword ptr [ebp - 0x13c]"
+          },
+          {
+            "rva": "0x6310a",
+            "instruction": "call 0x6dfa0"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0xba7",
+            "instruction": "push ecx"
+          },
+          {
+            "offset": "0xba8",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0xbad",
+            "instruction": "push 0xc"
+          },
+          {
+            "offset": "0xbaf",
+            "instruction": "xor edx, edx"
+          },
+          {
+            "offset": "0xbb1",
+            "instruction": "mov dx, word ptr [ebp - 0x90]"
+          },
+          {
+            "offset": "0xbb8",
+            "instruction": "push edx"
+          },
+          {
+            "offset": "0xbb9",
+            "instruction": "xor eax, eax"
+          },
+          {
+            "offset": "0xbbb",
+            "instruction": "mov ax, word ptr [ebp - 0x34]"
+          },
+          {
+            "offset": "0xbbf",
+            "instruction": "push eax"
+          },
+          {
+            "offset": "0xbc0",
+            "instruction": "xor ecx, ecx"
+          },
+          {
+            "offset": "0xbc2",
+            "instruction": "mov cx, word ptr [ebp - 0x40]"
+          },
+          {
+            "offset": "0xbc6",
+            "instruction": "push ecx"
+          },
+          {
+            "offset": "0xbc7",
+            "instruction": "mov ecx, dword ptr [ebp - 0x13c]"
+          },
+          {
+            "offset": "0xbcd",
+            "instruction": "call 0xbd2"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x69c41",
+      "target_rva": "0xa0f74",
+      "symbol": "$SG659316",
+      "kind": 6,
+      "unit": "BASE/Audio",
+      "function": "?InitAudio@@YA_NXZ",
+      "size": 5,
+      "payload_sha256": "97cccb1b1197f11c6edbb0d93975220592ef8faf618c8770a131e4f7dfe567cc",
+      "text": "null",
+      "object_sha256": "77a86d99a99e1e6e69655b77cb93b0faa2a709b2c72f441aa1330164f662faf0",
+      "control": {
+        "candidate_operand": "0x6c",
+        "candidate_consumer": "0x70",
+        "retail_consumer": "0x69c45",
+        "callee_rva": "0x8a2e4",
+        "diagnostic_line": null,
+        "retail_context": [
+          {
+            "rva": "0x69c3e",
+            "instruction": "push 0"
+          },
+          {
+            "rva": "0x69c40",
+            "instruction": "push 0x4a0f74"
+          },
+          {
+            "rva": "0x69c45",
+            "instruction": "call dword ptr [0x48a2e4]"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0x69",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x6b",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0x70",
+            "instruction": "call dword ptr [0]"
+          }
+        ]
+      }
+    },
+    {
+      "site_rva": "0x6b96e",
+      "target_rva": "0xa10ac",
+      "symbol": "$SG659628",
+      "kind": 6,
+      "unit": "BASE/MOUSEMGR",
+      "function": "?SetPointer@mouseManager@@QAEXF@Z",
+      "size": 53,
+      "payload_sha256": "af98aa2df3ab4079743feac020a7bebab344531b72151554e252e755e5830cd8",
+      "text": "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\MOUSEMGR.CPP",
+      "object_sha256": "c99d92b2d8ad57598a77d67453f10ac7025678c757268480551b5d3c0c6b4469",
+      "control": {
+        "candidate_operand": "0xb9",
+        "candidate_consumer": "0xc1",
+        "retail_consumer": "0x6b976",
+        "callee_rva": "0x44b59",
+        "diagnostic_line": 266,
+        "retail_context": [
+          {
+            "rva": "0x6b968",
+            "instruction": "push 0x10a"
+          },
+          {
+            "rva": "0x6b96d",
+            "instruction": "push 0x4a10ac"
+          },
+          {
+            "rva": "0x6b972",
+            "instruction": "mov edx, dword ptr [ebp - 0x24]"
+          },
+          {
+            "rva": "0x6b975",
+            "instruction": "push edx"
+          },
+          {
+            "rva": "0x6b976",
+            "instruction": "call 0x44b59"
+          }
+        ],
+        "candidate_context": [
+          {
+            "offset": "0xb3",
+            "instruction": "push 0x10a"
+          },
+          {
+            "offset": "0xb8",
+            "instruction": "push 0"
+          },
+          {
+            "offset": "0xbd",
+            "instruction": "mov eax, dword ptr [ebp - 0x24]"
+          },
+          {
+            "offset": "0xc0",
+            "instruction": "push eax"
+          },
+          {
+            "offset": "0xc1",
+            "instruction": "call 0xc6"
+          }
+        ]
+      }
+    }
+  ],
+  "held": [],
+  "method": "Each actual retail literal operand has the complete current compiled payload and a unique matching use in the same function with the same following consumer. Diagnostic filenames additionally have the same line argument; the repeated town-building sound has the same preceding mouse-hide call. Existing provider placement rules remain unchanged. These establish literal identity and argument role, not whole-caller equivalence."
+}

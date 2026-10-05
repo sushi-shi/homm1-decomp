@@ -105,8 +105,8 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
     m_windowListHead = NULL;
     m_unknown40 = 0;
     m_unknown41 = 0;
-    m_screenshotIndex = 0;
     m_screen = NULL;
+    m_screenshotIndex = 0;
     m_updateFlags = 0;
     m_fizzleSource = NULL;
     m_fizzleWork = NULL;
@@ -124,14 +124,15 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
     m_screen->m_pixels = static_cast<i8*>(gInitWin);
-    if (m_screen != NULL) {
-        m_priority = managerOrder;
-        m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
-        m_active = 1;
-        strcpy(m_name, "heroWindowManager");
-        return BASE_MANAGER_SUCCESS;
+    if (m_screen == NULL) {
+        Cleanup();
+        return WINDOW_MANAGER_OPEN_FAILURE;
     }
-    return WINDOW_MANAGER_OPEN_FAILURE;
+    m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_DOWN;
+    m_priority = managerOrder;
+    m_active = 1;
+    strcpy(m_name, "heroWindowManager");
+    return BASE_MANAGER_SUCCESS;
 }
 
 VA(0x0046a2f5, 0x9e)
@@ -144,6 +145,7 @@ void heroWindowManager::Close(void) {
         RemoveWindow(window);
         window = previous;
     }
+    Cleanup();
     m_screen->m_pixels = NULL;
     if (m_screen != NULL)
         delete m_screen;
@@ -152,19 +154,19 @@ void heroWindowManager::Close(void) {
 
 VA(0x0046a456, 0x5e)
 i16 heroWindowManager::Main(tag_message& message) {
-    i16 result = MESSAGE_DISPATCH_CONTINUE;
-    heroWindow* window = m_windowListTail;
-    while (window != NULL) {
-        switch (result = window->BroadcastMessage(message)) {
+    i16 ret = MESSAGE_DISPATCH_CONTINUE;
+    heroWindow* w = m_windowListTail;
+    while (w != NULL) {
+        switch (ret = w->BroadcastMessage(message)) {
             case MESSAGE_DISPATCH_CONTINUE:
                 break;
             case MESSAGE_DISPATCH_CONSUME:
             case MESSAGE_DISPATCH_FORWARD:
-                return result;
+                return ret;
         }
-        window = window->m_prevWindow;
+        w = w->m_prevWindow;
     }
-    return result;
+    return ret;
 }
 
 // donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
@@ -226,39 +228,35 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) 
 
 // donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
 // donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.383824;margin=0.385483;shape=0.180;size=0.618;calls=1.000;alternate=pol20:void heroWindowManager::RemoveWindow(class heroWindow *)@0x000cad40
 VA(0x0046a657, 0xe9)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
-    if (window != NULL) {
-        window->Close();
-        if (m_windowListHead == window) {
-            heroWindow* next = window->m_nextWindow;
-            m_windowListHead = next;
-            if (next == NULL)
-                m_windowListTail = NULL;
-            else
-                next->m_prevWindow = NULL;
+    if (window == NULL)
+        return;
+    window->Close();
+    if (window == m_windowListHead) {
+        m_windowListHead = window->m_nextWindow;
+        if (m_windowListHead == NULL)
+            m_windowListTail = NULL;
+        else
+            m_windowListHead->m_prevWindow = NULL;
+    } else {
+        if (window == m_windowListTail) {
+            m_windowListTail = window->m_prevWindow;
+            m_windowListTail->m_nextWindow = NULL;
         } else {
-            if (m_windowListTail == window) {
-                heroWindow* previous = window->m_prevWindow;
-                m_windowListTail = previous;
-                previous->m_nextWindow = NULL;
-            } else {
-                heroWindow* previous = window->m_prevWindow;
-                if (previous != NULL)
-                    previous->m_nextWindow = window->m_nextWindow;
-                if (window->m_nextWindow != NULL)
-                    window->m_nextWindow->m_prevWindow = window->m_prevWindow;
-            }
+            if (window->m_prevWindow != NULL)
+                window->m_prevWindow->m_nextWindow = window->m_nextWindow;
+            if (window->m_nextWindow != NULL)
+                window->m_nextWindow->m_prevWindow = window->m_prevWindow;
         }
-        if (m_activeWindow == window)
-            m_activeWindow = NULL;
-        if (m_activeWindow == NULL) {
-            m_focusWindow = m_windowListTail;
-            return;
-        }
-        m_focusWindow = m_activeWindow;
     }
+    if (m_activeWindow == window)
+        m_activeWindow = NULL;
+    if (m_activeWindow == NULL) {
+        m_focusWindow = m_windowListTail;
+        return;
+    }
+    m_focusWindow = m_activeWindow;
 }
 
 VA(0x0046a740, 0x1a8)
@@ -312,8 +310,6 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
 }
 
 // HoMM1 hides the software pointer only when it overlaps the updated region.
-// Declaring top before left and bottom before right reproduces retail's VC4
-// colouring: equal-cost ranges are coloured, and spilled, in declaration order.
 VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
     i16 top, left, bottom, right;
@@ -324,13 +320,15 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
     top = y - gpMouseManager->m_savedUnderlying->m_height;
     right = x + width;
     bottom = y + height;
-    pointerHidden = 0;
     mouseX = gpMouseManager->m_mouseX;
     mouseY = gpMouseManager->m_mouseY;
+    pointerHidden = 0;
     if (gpMouseManager->IsVis()) {
-        if (left > mouseX || right < mouseX || top > mouseY || bottom < mouseY)
+        if (mouseX < left || mouseX > right)
             pointerHidden = 0;
-        else if (left <= mouseX && top <= mouseY && right >= mouseX && bottom >= mouseY)
+        else if (mouseY < top || mouseY > bottom)
+            pointerHidden = 0;
+        else if (mouseX >= left && mouseY >= top && mouseX <= right && mouseY <= bottom)
             pointerHidden = 1;
     }
     PollSound();
@@ -356,8 +354,7 @@ void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPal
             i8 saved = m_updateFlags;
             m_updateFlags = 0;
             FadeIn(steps);
-            saved |= gWindowFadeSavedUpdate;
-            m_updateFlags = saved;
+            m_updateFlags = saved | gWindowFadeSavedUpdate;
             break;
         }
         case WINDOW_FADE_OUT:
@@ -380,6 +377,12 @@ void heroWindowManager::ScreenShot(void) {
 }
 
 // Retail omits the later donor coordinate-clamping checks.
+// Descriptive name: this retail hook is empty and is called on Open failure
+// and before Close releases the screen. Its original name is unavailable.
+VA(0x0046abdb, 0xb)
+void heroWindowManager::Cleanup(void) {
+}
+
 VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
     if (bShowIt == 0)
@@ -395,66 +398,64 @@ void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
 // evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
 VA(0x0046b11d, 0x36a)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
-    // Buka keeps C-style function-scope locals; their declaration order sets
-    // the retail register colouring of the row pointers.
-    i32 sourceX;
-    i32 sourceY;
-    i32 tickStart;
-    u8* screenPixel;
     u8* workPixel;
-    i32 frame;
-    i32 saveFlags;
+    u8* screenPixel;
     u8* savePixel;
+    i32 tickStart;
+    i32 frame;
+    i32 sourceY;
+    i32 sourceX;
     i8* ccycleBuf;
-    if (bShowIt != 0) {
-        gEnlargeScreenBlit = 0;
-        tickStart = 0;
-        saveFlags = gpWindowManager->m_updateFlags;
-        gpWindowManager->m_updateFlags = 0;
-        if (delay == FIZZLE_USE_DEFAULT_DELAY)
-            delay = FIZZLE_DEFAULT_DELAY;
-        m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
-        ccycleBuf = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
-        BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
+    i32 saveFlags;
+    if (bShowIt == 0)
+        return;
+    gEnlargeScreenBlit = 0;
+    tickStart = 0;
+    saveFlags = gpWindowManager->m_updateFlags;
+    gpWindowManager->m_updateFlags = 0;
+    if (delay == FIZZLE_USE_DEFAULT_DELAY)
+        delay = FIZZLE_DEFAULT_DELAY;
+    m_fizzleWork = new bitmap(BITMAP_TYPE_NONE, width, height);
+    ccycleBuf = static_cast<i8*>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
+    BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleWork, 0, 0);
 
-        for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
-            sprintf(gText, "CCYCLE%02d.BIN", frame);
-            gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
-            gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
-            // Buka's row arithmetic: retail strength-reduces sourceY * 640 and
-            // (sourceY - y) * width into the frame's induction slots.
-            for (sourceY = y; sourceY < y + height; sourceY++) {
-                // Byte access is proven by the retail load/shift sequence.
-                savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
-                            + m_fizzleSource->m_width * (sourceY - y);
-                workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
-                            + (sourceY - y) * width;
-                // Byte access is proven by the retail framebuffer stores.
-                screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
-                              + sourceY * LOGICAL_SCREEN_WIDTH + x;
-                for (sourceX = x; sourceX < x + width; sourceX++) {
-                    u16 lookup = *workPixel++ | (*savePixel++ << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT);
-                    *screenPixel++ = ccycleBuf[lookup];
-                }
+    for (frame = 0; frame < CYCLE_FRAME_COUNT; frame++) {
+        sprintf(gText, "CCYCLE%02d.BIN", frame);
+        gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
+        gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
+        for (sourceY = y; sourceY < y + height; sourceY++) {
+            // Byte access is proven by the retail load/shift sequence.
+            savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
+                        + (sourceY - y) * m_fizzleSource->m_width;
+            workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
+                        + (sourceY - y) * width;
+            // Byte access is proven by the retail framebuffer stores.
+            screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
+                          + sourceY * LOGICAL_SCREEN_WIDTH + x;
+            for (sourceX = x; sourceX < x + width; sourceX++) {
+                *screenPixel = ccycleBuf[static_cast<u16>(
+                    *workPixel | (*savePixel << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT)
+                )];
+                savePixel++;
+                workPixel++;
+                screenPixel++;
             }
-            PollSound();
-            DelayTilMilli(delay + tickStart);
-            tickStart = KBTickCount();
-            BlitBitmapToScreen(m_screen, x, y, width, height, x, y);
-            PollSound();
         }
-        DelayTilMilli(delay + tickStart);
-        BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
-        gEnlargeScreenBlit = 1;
-        gpWindowManager->m_updateFlags = saveFlags;
-        if (m_fizzleSource != NULL)
-            delete m_fizzleSource;
-        m_fizzleSource = NULL;
-        if (m_fizzleWork != NULL)
-            delete m_fizzleWork;
-        m_fizzleWork = NULL;
-        free(ccycleBuf);
+        PollSound();
+        DelayTilMilli(tickStart + delay);
+        tickStart = KBTickCount();
+        BlitBitmapToScreen(m_screen, x, y, width, height, x, y);
+        PollSound();
     }
+    DelayTilMilli(tickStart + delay);
+    BlitBitmapToScreen(m_fizzleWork, 0, 0, width, height, x, y);
+    gEnlargeScreenBlit = 1;
+    gpWindowManager->m_updateFlags = saveFlags;
+    delete m_fizzleSource;
+    m_fizzleSource = NULL;
+    delete m_fizzleWork;
+    m_fizzleWork = NULL;
+    free(ccycleBuf);
 }
 
 // Donor WINMGR ownership; seven trailing padding bytes are excluded.

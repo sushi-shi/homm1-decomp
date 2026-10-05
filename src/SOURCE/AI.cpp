@@ -303,54 +303,54 @@ finish:
 VA(0x004125fa, 0xb7)
 i16 combatManager::GetShooterMask(i8 side) {
     i16 armyIndex = 0;
-    i16 bitMask = 1;
-    class army* army;
-    i16 armyMask = 0;
+    i16 armyBit = 1;
+    class army* currentArmy;
+    i16 bits = 0;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-        army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
-            && (army->m_stats.attributes & MONSTER_FLAGS_SHOOTER) && army->m_stats.shots > 0)
-            armyMask |= bitMask;
-        bitMask <<= 1;
+        currentArmy = &m_armies[side][armyIndex];
+        if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && (currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) && currentArmy->m_stats.shots > 0)
+            bits |= armyBit;
+        armyBit <<= 1;
     }
-    return armyMask;
+    return bits;
 }
 
 VA(0x004126b1, 0xa9)
 i16 combatManager::GetFlyerMask(i8 side) {
     i16 armyIndex = 0;
-    i16 armyMask;
-    i16 bitMask = 1;
-    class army* army;
+    i16 bits;
+    i16 armyBit = 1;
+    class army* currentArmy;
 
-    armyMask = 0;
+    bits = 0;
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-        army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
-            && (army->m_stats.attributes & MONSTER_FLAGS_FLYING))
-            armyMask |= bitMask;
-        bitMask <<= 1;
+        currentArmy = &m_armies[side][armyIndex];
+        if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && (currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING))
+            bits |= armyBit;
+        armyBit <<= 1;
     }
-    return armyMask;
+    return bits;
 }
 
 VA(0x0041275a, 0xc4)
 i16 combatManager::GetWalkerMask(i8 side) {
     i16 armyIndex = 0;
-    i16 bitMask = 1;
-    i16 armyMask = 0;
-    class army* army;
+    i16 armyBit = 1;
+    i16 bits = 0;
+    class army* currentArmy;
 
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
-        army = &m_armies[side][armyIndex];
-        if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD)
-            && !(army->m_stats.attributes & MONSTER_FLAGS_FLYING)
-            && (!(army->m_stats.attributes & MONSTER_FLAGS_SHOOTER) || army->m_stats.shots <= 0))
-            armyMask |= bitMask;
-        bitMask <<= 1;
+        currentArmy = &m_armies[side][armyIndex];
+        if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)
+            && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
+            && (!(currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) || currentArmy->m_stats.shots <= 0))
+            bits |= armyBit;
+        armyBit <<= 1;
     }
-    return armyMask;
+    return bits;
 }
 
 VA(0x0041281e, 0x9f)
@@ -377,32 +377,32 @@ i16 combatManager::GetBestArmy(i8 side, i16 mask) {
 VA(0x004128bd, 0x9f)
 i16 combatManager::GetWorstArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
-    i16 bitFlag = 1;
-    u32 strength;
-    u32 worstStrength = COMBAT_AI_WORST_STRENGTH_LIMIT;
-    i16 worst = COMBAT_ARMY_INDEX_NONE;
+    i16 bit = 1;
+    u32 force;
+    u32 weakestStrength = COMBAT_AI_WORST_STRENGTH_LIMIT;
+    i16 weakestArmy = COMBAT_ARMY_INDEX_NONE;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
-        if (mask & bitFlag) {
-            strength = m_armies[side][armyIndex].Strength();
-            if (strength < worstStrength) {
-                worst = armyIndex;
-                worstStrength = strength;
+        if (mask & bit) {
+            force = m_armies[side][armyIndex].Strength();
+            if (force < weakestStrength) {
+                weakestArmy = armyIndex;
+                weakestStrength = force;
             }
         }
-        bitFlag <<= 1;
+        bit <<= 1;
     }
-    return worst;
+    return weakestArmy;
 }
 
 VA(0x0041295c, 0x102)
 i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
-    i32 val;
     i16 armyIndex = 0;
     army* target;
     i16 bitFlag = 1;
-    i32 closestDist = FINDPATH_INITIAL_BEST_DISTANCE;
-    i16 bestArmy = COMBAT_ARMY_INDEX_NONE;
+    i32 bestValue = FINDPATH_INITIAL_BEST_DISTANCE;
+    i16 armyFound = COMBAT_ARMY_INDEX_NONE;
+    i32 val;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
@@ -413,32 +413,32 @@ i16 combatManager::GetClosestArmy(class army* currentArmy, i8 side, i16 mask) {
                 m_hexCells[target->m_hex].m_x,
                 m_hexCells[target->m_hex].m_y
             );
-            if (val < closestDist) {
-                bestArmy = armyIndex;
-                closestDist = val;
+            if (val < bestValue) {
+                armyFound = armyIndex;
+                bestValue = val;
             }
         }
         bitFlag <<= 1;
     }
-    return bestArmy;
+    return armyFound;
 }
 
 VA(0x00412a5e, 0xb1)
 u32 combatManager::GetStrength(i8 side, i16 mask) {
-    i16 index = 0;
+    i16 idx = 0;
     i16 bitMask = 1;
-    u32 total = 0;
-    class army* army;
+    u32 totalStrength = 0;
+    class army* currentArmy;
 
-    for (index = 0; index < m_numArmies[side]; index++) {
+    for (idx = 0; idx < m_numArmies[side]; idx++) {
         if (mask & bitMask) {
-            army = &m_armies[side][index];
-            if (army && !(army->m_stats.attributes & MONSTER_FLAGS_DEAD))
-                total += army->Strength();
+            currentArmy = &m_armies[side][idx];
+            if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
+                totalStrength += currentArmy->Strength();
         }
         bitMask <<= 1;
     }
-    return total;
+    return totalStrength;
 }
 
 // Ghosts (26) pick the weakest stack; a missed two-hex target is retried

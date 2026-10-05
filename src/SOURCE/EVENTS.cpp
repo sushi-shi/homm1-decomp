@@ -1276,7 +1276,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) > 0
         && (cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) < 0x7f) {
         cell->m_triggerType = cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK;
-        cell->m_secondaryTrigger = cell->m_secondaryTrigger - cell->m_triggerType;
+        cell->m_secondaryTrigger -= cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
                 if (i >= 0 && i < MAP_CELL_GRID_SIZE && j >= 0 && j < MAP_CELL_GRID_SIZE
@@ -1535,9 +1535,9 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
     eventHero->m_level = prevLevel;
     eventHero->m_experience += experience;
-#line 1121
+#line 1093
     H1_ASSERT(experience >= 0);
-#line 1122
+#line 1094
     H1_ASSERT(eventHero->m_experience >= 0);
     newLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
@@ -1556,10 +1556,10 @@ void advManager::GiveResource(class hero* eventHero, i8 resource, i16 amount) {
 // evidence: graph:2;base=0.608108;margin=0.082972;shape=0.542;size=0.949;calls=0.833;alternate=pol20:void advManager::RecruitEvent(class hero *, int, class mapCell *)@0x000b022e
 VA(0x0042706d, 0xbf)
 void advManager::RecruitEvent(class hero* eventHero, i32 creatureType, class mapCell* cell) {
-    tag_message message;
+    tag_message recruitMessage;
     i16 availableCount;
     recruitUnit* recruitWindow;
-    i32 result;
+    i32 eventResult;
 
     availableCount = cell->m_objectMetadata;
     recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
@@ -1777,10 +1777,7 @@ i8 advManager::CombatMonsterEvent(
     } else {
         m_lastQuickViewX = fromX;
         m_lastQuickViewY = fromY;
-        if (eventHero->m_x >= fromX)
-            m_mineGuardianFacingLeft = 0;
-        else
-            m_mineGuardianFacingLeft = 1;
+        m_mineGuardianFacingLeft = eventHero->m_x < fromX;
         if (ComboDraw(0))
             UpdateScreen(0, 0);
         m_lastQuickViewX = QUICK_VIEW_CLEARED;
@@ -2012,11 +2009,11 @@ void advManager::HeroLoses(class hero* lostHero) {
 // evidence: graph:2;base=0.515247;margin=0.370456;shape=0.302;size=0.900;calls=1.000;alternate=pol20:void advManager::DoWhirlpool(class hero *)@0x000b1bcf
 VA(0x00427af9, 0x122)
 void advManager::DoWhirlpool(class hero* eventHero) {
-    i32 weakest;
+    i32 selectedSlot;
     i16 slotNo;
     i32 groupValues[ARMY_GROUP_SLOT_COUNT];
-    i32 worth;
     i32 lowestValue;
+    i32 creatureValue;
 
     if (!gbHumanPlayer[eventHero->m_owner])
         return;
@@ -2024,23 +2021,23 @@ void advManager::DoWhirlpool(class hero* eventHero) {
         != EVENT_WHIRLPOOL_TRIGGER_ROLL)
         return;
     lowestValue = EVENT_WHIRLPOOL_ARMY_VALUE_LIMIT;
-    weakest = -1;
+    selectedSlot = -1;
     for (slotNo = 0; slotNo < ARMY_GROUP_SLOT_COUNT; slotNo++) {
         if (eventHero->m_army.m_creatureCounts[slotNo] > 0) {
-            worth = gMonsterDatabase[eventHero->m_army.m_creatureTypes[slotNo]].fightValue
-                    * eventHero->m_army.m_creatureCounts[slotNo];
-            if (lowestValue > worth) {
-                lowestValue = worth;
-                weakest = slotNo;
+            creatureValue = eventHero->m_army.m_creatureCounts[slotNo]
+                    * gMonsterDatabase[eventHero->m_army.m_creatureTypes[slotNo]].fightValue;
+            if (creatureValue < lowestValue) {
+                lowestValue = creatureValue;
+                selectedSlot = slotNo;
             }
         }
     }
     if (eventHero->m_army.GetNumArmies() > 1) {
-        eventHero->m_army.m_creatureCounts[weakest] >>= 1;
-        if (!eventHero->m_army.m_creatureCounts[weakest])
-            eventHero->m_army.m_creatureTypes[weakest] = CREATURE_NONE;
-    } else if (eventHero->m_army.m_creatureCounts[weakest] > 1) {
-        eventHero->m_army.m_creatureCounts[weakest] >>= 1;
+        eventHero->m_army.m_creatureCounts[selectedSlot] >>= 1;
+        if (!eventHero->m_army.m_creatureCounts[selectedSlot])
+            eventHero->m_army.m_creatureTypes[selectedSlot] = CREATURE_NONE;
+    } else if (eventHero->m_army.m_creatureCounts[selectedSlot] > 1) {
+        eventHero->m_army.m_creatureCounts[selectedSlot] >>= 1;
     }
 }
 
@@ -2063,7 +2060,6 @@ void advManager::FizzleCenter(i32 fizzleType) {
         default:
             return;
     }
-    fizzleSample = NULL;
     fizzleSample = LoadPlaySample(gText);
     gpWindowManager
         ->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
@@ -2546,8 +2542,8 @@ void advManager::PlayerMonsterInteract(
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
         if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
-            > gMonsterDatabase[cell->m_objectIndex].fightValue
-                  * (cell->m_objectMetadata & MONSTER_COUNT_MASK) * 1.75) {
+            > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
+                  * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
                 sprintf(
                     gText,
@@ -2614,8 +2610,8 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
         && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
-               > gMonsterDatabase[cell->m_objectIndex].fightValue
-                     * (cell->m_objectMetadata & MONSTER_COUNT_MASK) * 1.75) {
+               > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
+                     * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
         gpPhilAI->EvaluateOneTimeCreaturePurchase(
             eventHero,
             cell->m_objectIndex,

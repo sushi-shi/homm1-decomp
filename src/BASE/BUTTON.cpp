@@ -19,10 +19,10 @@ i32 gLeftRightSave = 0;
 VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
 VA(0x00476c80, 0x59)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
+    m_icon = NULL;
     m_normalFrame = 0;
     m_pressedFrame = 0;
     m_selectMode = 0;
-    m_icon = NULL;
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
@@ -49,16 +49,15 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
-inline i16 button::Deselect(tag_message& message) {
+VA(0x0047748b, 0xba)
+i16 button::Deselect(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_SELECTED))
         return MESSAGE_DISPATCH_CONTINUE;
     m_flags &= ~WIDGET_FLAG_SELECTED;
     Draw();
     gpWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
-    message.command = WIDGET_NOTIFY_DESELECT;
-    message.type = MESSAGE_WIDGET;
-    message.id = m_id;
+    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
     message.modifiers = gLeftRightSave;
     gLeftRightSave = MESSAGE_MODIFIER_NONE;
     return MESSAGE_DISPATCH_FORWARD;
@@ -66,8 +65,10 @@ inline i16 button::Deselect(tag_message& message) {
 
 VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
+    i16 x;
+    i16 y;
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
-        && KBTickCount() > glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT])
+        && glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] < KBTickCount())
         return Deselect(message);
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
@@ -76,17 +77,17 @@ i16 button::Main(tag_message& message) {
     }
     switch (message.type) {
         case MESSAGE_KEY_DOWN:
-            if (m_hotkey != BUTTON_NO_HOTKEY && message.keyCode == m_hotkey)
+            if (m_hotkey != BUTTON_NO_HOTKEY && m_hotkey == message.keyCode)
                 return Select(message);
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_KEY_UP:
-            if (m_hotkey != BUTTON_NO_HOTKEY && message.keyCode == m_hotkey)
+            if (m_hotkey != BUTTON_NO_HOTKEY && m_hotkey == message.keyCode)
                 return Deselect(message);
             return MESSAGE_DISPATCH_CONTINUE;
         case MESSAGE_LEFT_BUTTON_DOWN:
         case MESSAGE_RIGHT_BUTTON_DOWN: {
-            i16 x = message.x - m_owner->m_posX;
-            i16 y = message.y - m_owner->m_posY;
+            x = message.x - m_owner->m_posX;
+            y = message.y - m_owner->m_posY;
             if (message.type == MESSAGE_RIGHT_BUTTON_DOWN) {
                 if (WIDGET_CONTAINS_LOCAL_POINT(*this, x, y)) {
                     SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_RIGHT_CLICK, m_id);
@@ -123,8 +124,11 @@ i16 button::Main(tag_message& message) {
             if (m_flags & WIDGET_FLAG_SELECTED)
                 return Deselect(message);
             break;
+        default:
+        normalEvent:
+            return widget::Main(message);
     }
-    return widget::Main(message);
+    goto normalEvent;
 }
 
 VA(0x0047739f, 0xec)

@@ -1,0 +1,60 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "The existing strict relocation-pairing provider now proves full current compiled and retail 13-byte strings after trace removal. Six unnamed, unreferenced census starts lie inside those strings; they are inherited boundaries, not separate objects. Remove only those starts and retain complete payloads and all reference identities/addends.",
+  "strings": [
+    {
+      "rva": "0x9fe58",
+      "size": 13,
+      "symbol": "$SG654936",
+      "candidate_member": "$SG23118",
+      "payload_hex": "746869656677696e2e62696e00",
+      "payload_sha256": "b3875140e8dcbc440c882dbb2d117c7eb65e6b9867460c74dd188f97c27b55e7",
+      "removed_census_rows": [
+        {
+          "rva": "0x0009fe60",
+          "kind": ""
+        },
+        {
+          "rva": "0x0009fe64",
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "rva": "0x9fe68",
+      "size": 13,
+      "symbol": "$SG654952",
+      "candidate_member": "$SG23127",
+      "payload_hex": "6275696c6474776e2e38324d00",
+      "payload_sha256": "ac0dae6fa0e9723907360ccb54ea0ff972cd2cb9a50ca790794178678e1a435e",
+      "removed_census_rows": [
+        {
+          "rva": "0x0009fe6c",
+          "kind": ""
+        },
+        {
+          "rva": "0x0009fe70",
+          "kind": ""
+        },
+        {
+          "rva": "0x0009fe74",
+          "kind": ""
+        }
+      ]
+    },
+    {
+      "rva": "0x9fe78",
+      "size": 13,
+      "symbol": "$SG654968",
+      "candidate_member": "$SG23144",
+      "payload_hex": "7368697077696e642e62696e00",
+      "payload_sha256": "4f4801d8ac2f2896058c3ab56b4852092faed1b816a2cc0de9548d01605562a5",
+      "removed_census_rows": [
+        {
+          "rva": "0x0009fe80",
+          "kind": ""
+        }
+      ]
+    }
+  ]
+}

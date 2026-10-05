@@ -29,3 +29,19 @@ Full-body checks cover the surrounding instructions, branch destinations and
 reference identities. Stack-local placement remains non-exact; no comparison
 normalization was added. See
 [`buka-combat-actions.json`](../../config/retail/buka-combat-actions.json).
+
+The Buka `SOURCE/ARMY` callers provide signed-byte argument controls as well.
+`SetGridMode(i8)` receives a conditional with both arms cast to `i8`; this emits
+the retail byte Boolean sequence in `DoAttack` and `SpecialAttack`. Casting the
+completed integer comparison to `i8` was byte-flat and did not recover it.
+The two retaliation calls to `GetAdjacentCellIndex` likewise require each
+direction arm to retain its signed-byte type. Full-body evidence and remaining
+stack-placement differences are in
+[`buka-combat-movement-controls.json`](../../config/retail/buka-combat-movement-controls.json).
+
+`combatManager::LoadIcons` is an exact array-index control: the castle-side
+conditional has signed-byte arms (`COMBAT_ATTACKER_SIDE` and
+`COMBAT_DEFENDER_SIDE`). It emits retail's `CMP; SETE CL; MOVSX EDX,CL`.
+Casting the completed integer comparison instead emits the arithmetic Boolean
+sequence. The complete body and references are exact; see
+[`buka-seed-attention-controls.json`](../../config/retail/buka-seed-attention-controls.json).

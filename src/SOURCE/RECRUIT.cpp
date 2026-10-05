@@ -74,8 +74,8 @@ void SetupRecruitWin(
     tag_message message;
 
     strcpy(monsterName, GetMonsterName(creatureType));
-    monsterName[0] -= 'a' - 'A';
-    sprintf(label, "%s %s", "Recruit", monsterName);
+    monsterName[0] = CyrillicToLower(monsterName[0]);
+    sprintf(label, "%s %s", localization::Tr("recruitment.title.prefix"), monsterName);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, RECRUIT_TITLE_CONTROL);
     message.text = label;
     window->BroadcastMessage(message);
@@ -147,7 +147,7 @@ i16 recruitUnit::Open(i16 priority) {
         m_maximum = __min(goldMaximum, resourceMaximum);
     } else
         m_maximum = goldMaximum;
-    if (*m_available < m_maximum)
+    if (m_maximum > *m_available)
         m_maximum = *m_available;
     m_recruited = 0;
     m_noRoom = 0;
@@ -351,7 +351,7 @@ i16 recruitUnit::Main(struct tag_message& message) {
 // Buka RECRUIT.cpp:380-398; HoMM1 stores the creature byte and has no
 // refresh-town argument.
 VA(0x00451697, 0xbc)
-recruitUnit::recruitUnit(armyGroup* army, i32 creatureType, i16* available) {
+recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
     i32 unitCosts[RESOURCE_COUNT];
     i32 i;
 
@@ -401,42 +401,42 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
 // Buka RECRUIT.cpp:414-451; HoMM1 hides the pointer around the quick view.
 VA(0x0045182c, 0x17d)
 void QuickViewRecruit(town* townData, i8 dwelling) {
-    i32 iGoldCost;
-    i32 avail;
-    i32 resourcePrice;
-    i32 resourceIndex;
-    heroWindow* win;
+    i32 monsterType;
     i32 resourceType;
-    i32 iMonsterType;
+    heroWindow* recruitWindow;
     i32 unitCosts[RESOURCE_COUNT];
+    i32 resourceCost;
+    i32 goldCost;
+    i32 resourceIndex;
+    i32 avail;
 
-    iMonsterType = gDwellingType[townData->m_type][dwelling];
+    monsterType = gDwellingType[townData->m_type][dwelling];
     avail = townData->m_garrison[dwelling];
-    GetMonsterCost(iMonsterType, unitCosts);
-    iGoldCost = unitCosts[RESOURCE_GOLD];
+    GetMonsterCost(monsterType, unitCosts);
+    goldCost = unitCosts[RESOURCE_GOLD];
     for (resourceIndex = 0; resourceIndex < RESOURCE_NON_GOLD_END; resourceIndex++) {
         if (unitCosts[resourceIndex])
             break;
     }
     if (resourceIndex < RESOURCE_NON_GOLD_END) {
         resourceType = resourceIndex;
-        resourcePrice = unitCosts[resourceType];
+        resourceCost = unitCosts[resourceType];
     } else {
         resourceType = RESOURCE_NONE;
-        resourcePrice = 0;
+        resourceCost = 0;
     }
 
-    win = new heroWindow(
+    recruitWindow = new heroWindow(
         RECRUIT_WINDOW_X,
         RECRUIT_WINDOW_Y,
         const_cast<char*>(resourceType == RESOURCE_NONE ? "recruiq0.bin" : "recruiq1.bin")
     );
-    if (win == NULL)
+    if (recruitWindow == NULL)
         MemError();
-    SetupRecruitWin(win, iMonsterType, iGoldCost, resourceType, resourcePrice, avail);
+    SetupRecruitWin(recruitWindow, monsterType, goldCost, resourceType, resourceCost, avail);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
+    gpWindowManager->AddWindow(recruitWindow, WINDOW_Z_ORDER_APPEND, 1);
     QuickViewWait();
-    gpWindowManager->RemoveWindow(win);
+    gpWindowManager->RemoveWindow(recruitWindow);
     gpMouseManager->ReallyShowPointer();
 }

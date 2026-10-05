@@ -1,0 +1,329 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b"
+  },
+  "changes": {
+    "MouseMessageHandler": "Restore donor case order and the shared coordinate tail inside the switch. Retain the ReleaseCapture result assignment at both release sites, as retail stores EAX into the captureReleased local; the old tracing calls remain absent. HoMM1 coordinate scaling, assertion identity and cursor checks remain intact.",
+    "widget::Main": "Explicitly mask incoming flag values with 0xffff before setting flags or storing the clear-mask local. Apply the whole-unit G5 control; all annotated widget bodies are now exact.",
+    "GetMoveShowIt": "Use the donor dx local spelling; all narrow HoMM1 types and visibility conditions are unchanged.",
+    "highScoreManager constructor": "Assign the logical-not result directly to the campaign flag instead of branching to separate constant stores.",
+    "highScoreManager::Main": "Read the message type before the dispatch mask; recover donor result/entry local names.",
+    "highScoreManager::Update": "Restore conditional expressions for the title/subtitle frames, selected buttons and record visibility command. Recover donor highScore/rank/inputFile/noScoreFile/hsMessage/scorePath names and declaration order, while retaining HoMM1 byte flag, file record layout, drawing operations and localization. The original signed-byte score-type conversion is retained; the function is not exact."
+  },
+  "functions": [
+    {
+      "symbol": "?GetMoveShowIt@advManager@@QAEHC@Z",
+      "rva": "0x22023",
+      "candidate_instructions": 70,
+      "retail_instructions": 70,
+      "candidate_extent": 260,
+      "retail_extent": 260,
+      "slot_map": {
+        "-20": -20,
+        "-16": -16,
+        "-4": -4,
+        "-8": -8,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "8a8ca6b9025e67d8624b53c9ba10c2d8b198ca9c363af6afbf66b7982d3545c8",
+      "retail_sha256": "8a8ca6b9025e67d8624b53c9ba10c2d8b198ca9c363af6afbf66b7982d3545c8"
+    },
+    {
+      "symbol": "??0highScoreManager@@QAE@XZ",
+      "rva": "0x3bd60",
+      "candidate_instructions": 40,
+      "retail_instructions": 40,
+      "candidate_extent": 127,
+      "retail_extent": 127,
+      "slot_map": {
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "8e9ed20caec7cf11e6a0b3277cd94197571b0d84f635980854651880afc0fc75",
+      "retail_sha256": "8e9ed20caec7cf11e6a0b3277cd94197571b0d84f635980854651880afc0fc75"
+    },
+    {
+      "symbol": "?Main@highScoreManager@@UAEFAAUtag_message@@@Z",
+      "rva": "0x3bf85",
+      "candidate_instructions": 145,
+      "retail_instructions": 145,
+      "candidate_extent": 506,
+      "retail_extent": 506,
+      "slot_map": {
+        "-28": -28,
+        "-4": -4,
+        "-8": -8,
+        "-24": -24,
+        "-20": -20,
+        "-22": -22,
+        "-12": -12,
+        "-32": -32,
+        "-36": -36,
+        "-40": -40
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "8e4b6630c2c9f34175c51260d968c5f9ee89f103583aa2919d5520b59ef610bd",
+      "retail_sha256": "8e4b6630c2c9f34175c51260d968c5f9ee89f103583aa2919d5520b59ef610bd"
+    },
+    {
+      "symbol": "?Update@highScoreManager@@QAEXXZ",
+      "rva": "0x3c17f",
+      "candidate_instructions": 357,
+      "retail_instructions": 356,
+      "candidate_extent": 1516,
+      "retail_extent": 1516,
+      "slot_map": {
+        "-476": -476,
+        "-100": -100,
+        "-452": -452,
+        "-96": -96,
+        "-468": -468,
+        "-464": -464,
+        "-466": -466,
+        "-456": -456,
+        "-92": -92,
+        "-56": -56,
+        "-88": -88
+      },
+      "instruction_and_reference_differences": [
+        [
+          "instruction count",
+          357,
+          356
+        ],
+        [
+          "branch",
+          "0x1ca"
+        ],
+        [
+          "branch",
+          "0x21b"
+        ],
+        [
+          "instruction",
+          "0x227",
+          "0x227"
+        ]
+      ],
+      "objdiff_score": 99.3118,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "c2464dc958cec2aa14168246de0958dbdbcdbe4a474f2aae09caaa79fb3aa9ab",
+      "retail_sha256": "163fef769e8f00deba14579882129b42fee1b2407d83bd76dd904e42403af76c"
+    },
+    {
+      "symbol": "?MouseMessageHandler@@YAHPAXIIH@Z",
+      "rva": "0x6e9c4",
+      "candidate_instructions": 187,
+      "retail_instructions": 187,
+      "candidate_extent": 826,
+      "retail_extent": 826,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-4": -4,
+        "-16": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "5933115ba7313a065388042e79a460701cd2e93096842cf24eb21d705918920a",
+      "retail_sha256": "5933115ba7313a065388042e79a460701cd2e93096842cf24eb21d705918920a"
+    },
+    {
+      "symbol": "?Main@widget@@UAEFAAUtag_message@@@Z",
+      "rva": "0x754bb",
+      "candidate_instructions": 217,
+      "retail_instructions": 217,
+      "candidate_extent": 712,
+      "retail_extent": 712,
+      "slot_map": {
+        "-16": -16,
+        "-20": -20,
+        "-24": -24,
+        "-12": -12,
+        "-4": -4,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "c199cd28b37e0d9baefcd2db94da21bbd127a9bca7c05a761a45a53403e50c38",
+      "retail_sha256": "c199cd28b37e0d9baefcd2db94da21bbd127a9bca7c05a761a45a53403e50c38"
+    }
+  ],
+  "widget_compiler_control": {
+    "before_flags": [
+      "/nologo",
+      "/c",
+      "/Od",
+      "/Ob1",
+      "/GX",
+      "/MT",
+      "/G6"
+    ],
+    "after_flags": [
+      "/nologo",
+      "/c",
+      "/Od",
+      "/Ob1",
+      "/GX",
+      "/MT",
+      "/G5"
+    ],
+    "prior_whole_unit_control": {
+      "unit": "BASE/WIDGET",
+      "source_sha256": "86cb7acbc8d96e894fea17456098712983b00d30486980c067cac3d776323ab2",
+      "object_sha256": "d3cf84eace27d0b22a9fff3d48d01dc0739a139cc1a46d3edbe65062e8f02e90",
+      "before_exact": 5,
+      "after_exact": 5,
+      "improved": 1,
+      "regressed": 0,
+      "functions": [
+        {
+          "name": "??0widget@@QAE@FFFFFF@Z",
+          "rva": "0x75370",
+          "before": 100.0,
+          "after": 100.0,
+          "size": 139
+        },
+        {
+          "name": "??1widget@@UAE@XZ",
+          "rva": "0x75478",
+          "before": 100.0,
+          "after": 100.0,
+          "size": 20
+        },
+        {
+          "name": "?Open@widget@@QAEFFPAVheroWindow@@@Z",
+          "rva": "0x7548c",
+          "before": 100.0,
+          "after": 100.0,
+          "size": 36
+        },
+        {
+          "name": "?Close@widget@@QAEXXZ",
+          "rva": "0x754b0",
+          "before": 100.0,
+          "after": 100.0,
+          "size": 11
+        },
+        {
+          "name": "?Main@widget@@UAEFAAUtag_message@@@Z",
+          "rva": "0x754bb",
+          "before": 94.43318,
+          "after": 96.304146,
+          "size": 712
+        },
+        {
+          "name": "?Dim@widget@@QAEXXZ",
+          "rva": "0x75783",
+          "before": 100.0,
+          "after": 100.0,
+          "size": 103
+        }
+      ]
+    },
+    "final_whole_unit": [
+      {
+        "rva": "0x75370",
+        "name": "??0widget@@QAE@FFFFFF@Z",
+        "unit": "BASE/WIDGET",
+        "census_size": 139,
+        "size": 139,
+        "score": 100.0,
+        "status": "scored"
+      },
+      {
+        "rva": "0x75478",
+        "name": "??1widget@@UAE@XZ",
+        "unit": "BASE/WIDGET",
+        "census_size": 20,
+        "size": 20,
+        "score": 100.0,
+        "status": "scored"
+      },
+      {
+        "rva": "0x7548c",
+        "name": "?Open@widget@@QAEFFPAVheroWindow@@@Z",
+        "unit": "BASE/WIDGET",
+        "census_size": 36,
+        "size": 36,
+        "score": 100.0,
+        "status": "scored"
+      },
+      {
+        "rva": "0x754b0",
+        "name": "?Close@widget@@QAEXXZ",
+        "unit": "BASE/WIDGET",
+        "census_size": 11,
+        "size": 11,
+        "score": 100.0,
+        "status": "scored"
+      },
+      {
+        "rva": "0x754bb",
+        "name": "?Main@widget@@UAEFAAUtag_message@@@Z",
+        "unit": "BASE/WIDGET",
+        "census_size": 712,
+        "size": 712,
+        "score": 100.0,
+        "status": "scored"
+      },
+      {
+        "rva": "0x75783",
+        "name": "?Dim@widget@@QAEXXZ",
+        "unit": "BASE/WIDGET",
+        "census_size": 103,
+        "size": 103,
+        "score": 100.0,
+        "status": "scored"
+      }
+    ]
+  },
+  "remaining_update_difference": {
+    "retail_offset": "0x227",
+    "retail": [
+      "test eax,eax",
+      "sete cl",
+      "movsx edx,cl",
+      "push edx"
+    ],
+    "candidate": [
+      "neg eax",
+      "sbb eax,eax",
+      "inc eax",
+      "movsx ecx,al",
+      "push ecx"
+    ],
+    "not_retained": [
+      "Explicit comparison with zero: same integer Boolean lowering.",
+      "Signed-byte conditional arms: same integer Boolean lowering.",
+      "Removing the cast: integer argument, no byte extension.",
+      "Plain-char cast: same lowering as signed-char cast.",
+      "Native bool conditional: byte SBB/INC and zero extension, still not retail."
+    ],
+    "status": "Open source/type/compiler lowering difference. No helper, dummy local, byte mask or relaxed comparison was introduced."
+  },
+  "other_open_checks": {
+    "StartCursor": "Donor direction declaration order does not change the two swapped coordinate locals. Original declarations restored.",
+    "com_snd/GiveExperience/morale/GetNextArmy": "Plain donor names inspected; predicted layouts do not recover the target. No source changes retained."
+  },
+  "source_sha256": {
+    "src/BASE/INPUTMGR.cpp": "5d9de707854ab1f4c82f3d4dbcac41ed5df152de00a84b0984e0662551818097",
+    "src/BASE/WIDGET.cpp": "5a7cc2c785da09cef92f6c78e70f4b07fc104814fc520ec5fd1dc7b931b38ec6",
+    "src/SOURCE/CURSOR.cpp": "27f40a6fe5cfed8b1b853ea87f32e6f833b61722c9a546e5debb2da8907f8bc3",
+    "src/SOURCE/HISCORE.cpp": "3afc372e94862eb2b914bf21f4245c6f2dfe80c3834a8f09fb2e4b3955f1c8b0",
+    "include/BASE/widget.h": "034e0868e80953532afe9c3b8833ade2b88a0aa81eaa70eb0952b57b10d4a95a",
+    "config/units.toml": "9fce12e75df918feb51c9fa7d271d93d87a64280733be8c3829ad361798e0ed4"
+  }
+}

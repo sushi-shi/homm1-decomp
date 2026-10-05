@@ -263,5 +263,186 @@
     }
   ],
   "ru_startup_object_sha256": "97681d0b1a06b952b7116293424618e3e88aee9f7d8b5204fd5afc45abcb0d23",
-  "en_startup_object_sha256": "0d0df62e3a81981e6fac87768cd3b75b208239ac6de7251b1d71141433a0f4c1"
+  "en_startup_object_sha256": "0d0df62e3a81981e6fac87768cd3b75b208239ac6de7251b1d71141433a0f4c1",
+  "compiled_reference_controls": {
+    "method": "Complete Russian and original English payloads are referenced by each corresponding compiled function. Retail operand and logical message roles are recorded above. Stable retail string identities use the existing provider; ambiguous candidate placement is not guessed. This establishes literal identity and payload presence, not whole-function or argument-order equivalence.",
+    "references": [
+      {
+        "site_rva": "0x3d030",
+        "target_rva": "0x9dc7c",
+        "symbol": "$SG646268",
+        "kind": 6,
+        "id": "startup.cd.inaccessible",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 26,
+        "payload_sha256": "8ed1bf1263e88fdb768a0c45a74b51529e9bf45e84ea3a555c050fcc2e60fa4c",
+        "russian_object_operands": [
+          "0x53"
+        ],
+        "english_object_operands": [
+          "0x53"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d02b",
+        "target_rva": "0x9dc6c",
+        "symbol": "$SG646252",
+        "kind": 6,
+        "id": "startup.error.title",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 16,
+        "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+        "russian_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "english_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d04f",
+        "target_rva": "0x9dca8",
+        "symbol": "$SG646312",
+        "kind": 6,
+        "id": "startup.cd.required",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 126,
+        "payload_sha256": "893351146dddba7351a4e57dc766fe3485b91590b9dc4ec2be77d3f97bface32",
+        "russian_object_operands": [
+          "0x79"
+        ],
+        "english_object_operands": [
+          "0x79"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d04a",
+        "target_rva": "0x9dc98",
+        "symbol": "$SG646296",
+        "kind": 6,
+        "id": "startup.error.title",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 16,
+        "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+        "russian_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "english_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d06f",
+        "target_rva": "0x9dd38",
+        "symbol": "$SG646456",
+        "kind": 6,
+        "id": "startup.directory.invalid",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 70,
+        "payload_sha256": "929a37d71401871d78dad3803dab88bf7cbc249158067ada73f6acc0f8c88a08",
+        "russian_object_operands": [
+          "0x9f"
+        ],
+        "english_object_operands": [
+          "0x9f"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d06a",
+        "target_rva": "0x9dd28",
+        "symbol": "$SG646440",
+        "kind": 6,
+        "id": "startup.error.title",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 16,
+        "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+        "russian_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "english_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d08f",
+        "target_rva": "0x9dd90",
+        "symbol": "$SG646544",
+        "kind": 6,
+        "id": "startup.data.missing",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 77,
+        "payload_sha256": "787dc0b1a24ff8bd2e5cbd2a2eb71a4521c61f6fb1d986ea2260bd028792d878",
+        "russian_object_operands": [
+          "0xc4"
+        ],
+        "english_object_operands": [
+          "0xc4"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      },
+      {
+        "site_rva": "0x3d08a",
+        "target_rva": "0x9dd80",
+        "symbol": "$SG646528",
+        "kind": 6,
+        "id": "startup.error.title",
+        "unit": "SOURCE/KB",
+        "function": "?EarlySetup@@YAHXZ",
+        "size": 16,
+        "payload_sha256": "ea92999cbaa78e9f2668df4e51161867c170b674eb7b9140a85c0b016f58635f",
+        "russian_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "english_object_operands": [
+          "0x4e",
+          "0x74",
+          "0x9a",
+          "0xbf"
+        ],
+        "russian_object_sha256": "a9542ccccaf821c426969f6476133f84bf114da8be74e0d2357ce3edab2d5d54",
+        "english_object_sha256": "09cf2475d877b1eb63fd7a3fc5e463e1443a4bc464b583c2b3343c0964153c03"
+      }
+    ]
+  }
 }

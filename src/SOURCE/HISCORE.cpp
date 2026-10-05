@@ -27,12 +27,8 @@ highScoreManager::highScoreManager(void) {
     for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++)
         m_animationFrames[rank] = Random(0, HIGH_SCORE_ANIMATION_FRAME_COUNT - 1);
     m_showCampaignScores = 0;
-    if (gShowHighScore) {
-        if (!giHighScoreType)
-            m_showCampaignScores = 1;
-        else
-            m_showCampaignScores = 0;
-    }
+    if (gShowHighScore)
+        m_showCampaignScores = !giHighScoreType;
 }
 
 // HoMM1 keeps an empty destructor; it only restores this class's vtable.
@@ -77,26 +73,26 @@ void highScoreManager::Close(void) {
 // evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
 VA(0x0043bf85, 0x1fa)
 i16 highScoreManager::Main(struct tag_message& message) {
-    i32 retVal;
-    i32 rank;
+    i32 result;
+    i32 entry;
     tag_message windowMessage;
 
-    retVal = 0;
+    result = 0;
     if (gShowHighScore != 0)
         gShowHighScore = 0;
 
     if (glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
         glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
             KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
-        for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
-            m_animationFrames[rank] =
-                (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
+            m_animationFrames[entry] =
+                (m_animationFrames[entry] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             windowMessage.type = MESSAGE_WIDGET;
-            windowMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+            windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
             windowMessage.value =
-                m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                + m_animationFrames[rank] / static_cast<i32>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
+                m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                + m_animationFrames[entry] / static_cast<i32>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
@@ -108,7 +104,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
         );
     }
 
-    if (!(m_dispatchMask & message.type)) {
+    if (!(message.type & m_dispatchMask)) {
         if (message.type) {
             message.type = MESSAGE_NONE;
             return MESSAGE_DISPATCH_FORWARD;
@@ -131,7 +127,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
                             break;
                         case HIGH_SCORE_CLOSE_BUTTON:
                             message.value = message.id;
-                            retVal = 1;
+                            result = 1;
                             break;
                     }
                     break;
@@ -141,7 +137,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
             break;
     }
 
-    if (retVal == 1) {
+    if (result == 1) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
         return MESSAGE_DISPATCH_FORWARD;
@@ -156,138 +152,125 @@ i16 highScoreManager::Main(struct tag_message& message) {
 // rating creature directly and highlights the new entry by fill colour.
 VA(0x0043c17f, 0x5ec)
 void highScoreManager::Update(void) {
-    i8 bNoFile;
-    char fileName[HIGH_SCORE_FILENAME_LENGTH];
-    tag_message message;
-    HighScoreEntry record;
-    i32 handle;
-    i32 i;
+    HighScoreEntry highScore;
+    i32 rank;
+    i32 inputFile;
+    i8 noScoreFile;
+    tag_message hsMessage;
+    char scorePath[HIGH_SCORE_FILENAME_LENGTH];
     extern char gDataPath[];
 
-    bNoFile = 0;
+    noScoreFile = 0;
     if (m_showCampaignScores)
-        sprintf(fileName, "%sCAMPAIGN.HS", gDataPath);
+        sprintf(scorePath, "%sCAMPAIGN.HS", gDataPath);
     else
-        sprintf(fileName, "%sSTANDARD.HS", gDataPath);
-    handle = open(fileName, _O_BINARY);
-    if (handle == -1)
-        bNoFile = 1;
+        sprintf(scorePath, "%sSTANDARD.HS", gDataPath);
+    inputFile = open(scorePath, _O_BINARY);
+    if (inputFile == -1)
+        noScoreFile = 1;
 
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
 
-    message.type = MESSAGE_WIDGET;
-    message.id = HIGH_SCORE_TITLE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_showCampaignScores)
-        message.value = HIGH_SCORE_CAMPAIGN_TITLE_FRAME;
-    else
-        message.value = HIGH_SCORE_STANDARD_TITLE_FRAME;
-    m_window->BroadcastMessage(message);
+    hsMessage.type = MESSAGE_WIDGET;
+    hsMessage.id = HIGH_SCORE_TITLE_WIDGET;
+    hsMessage.command = WIDGET_COMMAND_SET_FRAME;
+    hsMessage.value =
+        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_TITLE_FRAME : HIGH_SCORE_STANDARD_TITLE_FRAME;
+    m_window->BroadcastMessage(hsMessage);
 
-    message.id = HIGH_SCORE_SUBTITLE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    if (m_showCampaignScores)
-        message.value = HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME;
-    else
-        message.value = HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
-    m_window->BroadcastMessage(message);
+    hsMessage.id = HIGH_SCORE_SUBTITLE_WIDGET;
+    hsMessage.command = WIDGET_COMMAND_SET_FRAME;
+    hsMessage.value =
+        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME : HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
+    m_window->BroadcastMessage(hsMessage);
 
-    if (m_showCampaignScores)
-        message.id = HIGH_SCORE_CAMPAIGN_BUTTON;
-    else
-        message.id = HIGH_SCORE_STANDARD_BUTTON;
-    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-    m_window->BroadcastMessage(message);
+    hsMessage.id = m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_BUTTON : HIGH_SCORE_STANDARD_BUTTON;
+    hsMessage.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    hsMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+    m_window->BroadcastMessage(hsMessage);
 
-    if (m_showCampaignScores)
-        message.id = HIGH_SCORE_STANDARD_BUTTON;
-    else
-        message.id = HIGH_SCORE_CAMPAIGN_BUTTON;
-    message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-    m_window->BroadcastMessage(message);
+    hsMessage.id = m_showCampaignScores ? HIGH_SCORE_STANDARD_BUTTON : HIGH_SCORE_CAMPAIGN_BUTTON;
+    hsMessage.command = WIDGET_COMMAND_SET_FLAGS;
+    hsMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+    m_window->BroadcastMessage(hsMessage);
 
-    for (i = 0; i < HIGH_SCORE_DISPLAY_ENTRY_COUNT; i++) {
-        if (bNoFile)
-            record.score = HIGH_SCORE_EMPTY;
+    for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
+        if (noScoreFile)
+            highScore.score = HIGH_SCORE_EMPTY;
         else
-            read(handle, &record, sizeof(record));
+            read(inputFile, &highScore, sizeof(highScore));
 
-        if (record.score == HIGH_SCORE_EMPTY) {
-            m_monsterTypes[i] = 0;
+        if (highScore.score == HIGH_SCORE_EMPTY) {
+            m_monsterTypes[rank] = 0;
             sprintf(gText, "");
         } else {
-            m_monsterTypes[i] = GetMonType(record.score, static_cast<i8>(!m_showCampaignScores));
+            m_monsterTypes[rank] = GetMonType(highScore.score, static_cast<i8>(!m_showCampaignScores));
         }
 
-        message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
-        if (record.score == HIGH_SCORE_EMPTY)
-            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        else
-            message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        m_window->BroadcastMessage(message);
+        hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+        hsMessage.command = highScore.score == HIGH_SCORE_EMPTY ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
+        hsMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        m_window->BroadcastMessage(hsMessage);
 
-        if (record.score != HIGH_SCORE_EMPTY) {
-            m_animationFrames[i] = (m_animationFrames[i] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
-            message.id = i + HIGH_SCORE_FIRST_MONSTER_WIDGET;
-            message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = m_monsterTypes[i] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                            + m_animationFrames[i] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
-            m_window->BroadcastMessage(message);
+        if (highScore.score != HIGH_SCORE_EMPTY) {
+            m_animationFrames[rank] = (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+            hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+            hsMessage.command = WIDGET_COMMAND_SET_FRAME;
+            hsMessage.value = m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                            + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+            m_window->BroadcastMessage(hsMessage);
         }
 
-        message.command = WIDGET_COMMAND_SET_TEXT;
-        message.text = gText;
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
-        if (record.score != HIGH_SCORE_EMPTY)
-            sprintf(gText, record.playerName);
-        m_window->BroadcastMessage(message);
+        hsMessage.command = WIDGET_COMMAND_SET_TEXT;
+        hsMessage.text = gText;
+        hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
+        if (highScore.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, highScore.playerName);
+        m_window->BroadcastMessage(hsMessage);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+        hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                      + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
-        if (record.score != HIGH_SCORE_EMPTY)
-            sprintf(gText, record.scenarioName);
-        m_window->BroadcastMessage(message);
+        if (highScore.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, highScore.scenarioName);
+        m_window->BroadcastMessage(hsMessage);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+        hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                      + HIGH_SCORE_TEXT_SCORE_OFFSET;
-        if (record.score != HIGH_SCORE_EMPTY)
-            sprintf(gText, "%d", record.score);
-        m_window->BroadcastMessage(message);
+        if (highScore.score != HIGH_SCORE_EMPTY)
+            sprintf(gText, "%d", highScore.score);
+        m_window->BroadcastMessage(hsMessage);
 
-        message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+        hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                      + HIGH_SCORE_TEXT_RATING_OFFSET;
-        if (record.score != HIGH_SCORE_EMPTY) {
-            sprintf(gText, "%s", gArmyNames[m_monsterTypes[i]]);
-            gText[0] -= 'a' - 'A';
+        if (highScore.score != HIGH_SCORE_EMPTY) {
+            sprintf(gText, "%s", gArmyNames[m_monsterTypes[rank]]);
+            gText[0] = CyrillicToUpper(gText[0]);
         }
-        m_window->BroadcastMessage(message);
+        m_window->BroadcastMessage(hsMessage);
 
-        if (gHighScoreRank == i) {
+        if (gHighScoreRank == rank) {
             if ((m_showCampaignScores && !giHighScoreType)
                 || (!m_showCampaignScores && giHighScoreType)) {
-                message.command = WIDGET_COMMAND_SET_COLOR;
-                message.value = HIGH_SCORE_HIGHLIGHT_COLOR;
+                hsMessage.command = WIDGET_COMMAND_SET_COLOR;
+                hsMessage.value = HIGH_SCORE_HIGHLIGHT_COLOR;
             } else {
-                message.command = WIDGET_COMMAND_SET_COLOR;
-                message.value = HIGH_SCORE_NORMAL_COLOR;
+                hsMessage.command = WIDGET_COMMAND_SET_COLOR;
+                hsMessage.value = HIGH_SCORE_NORMAL_COLOR;
             }
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
-            m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+            hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
+            m_window->BroadcastMessage(hsMessage);
+            hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                          + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
-            m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+            m_window->BroadcastMessage(hsMessage);
+            hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                          + HIGH_SCORE_TEXT_SCORE_OFFSET;
-            m_window->BroadcastMessage(message);
-            message.id = i * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
+            m_window->BroadcastMessage(hsMessage);
+            hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
                          + HIGH_SCORE_TEXT_RATING_OFFSET;
-            m_window->BroadcastMessage(message);
+            m_window->BroadcastMessage(hsMessage);
         }
     }
-    if (!bNoFile)
-        close(handle);
+    if (!noScoreFile)
+        close(inputFile);
 }

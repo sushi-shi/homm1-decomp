@@ -156,6 +156,7 @@ public:
     tag_message GetEvent(void);
     tag_message PeekEvent(void);
     void SetMouseCoords(i32, i32);
+    void SetPositiveOption(i16 value);
     void SetKeyCodeType(i16 keyCodeType);
     void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);

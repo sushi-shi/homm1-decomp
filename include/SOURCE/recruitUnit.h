@@ -44,7 +44,7 @@ public:
     // RecruitEvent allocates 0x5c bytes.
     char m_unknown5a[2];
     // --- constructors ---
-    recruitUnit(class armyGroup* army, i32 creatureType, i16* available);
+    recruitUnit(class armyGroup* army, i8 creatureType, i16* available);
     // HoMM1 has no refresh-town argument (retail ret 8).
     recruitUnit(class town* townData, i8 dwelling);
     // --- virtual methods (vtable order) ---

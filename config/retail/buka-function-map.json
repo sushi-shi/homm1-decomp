@@ -17319,8 +17319,10 @@
       "rva": "0x6abdb",
       "size": 11,
       "unit": "BASE/WINMGR",
-      "role": "Unused no-argument window-manager method, empty body; original method name unresolved.",
-      "retail_body_sha256": "012a7b6ce927f083ba98a546e3d3f750b2a1d82f350ca27efbd30a9c3c7718a5"
+      "role": "Empty no-argument window-manager cleanup hook, called on Open failure and by Close; original method name unresolved.",
+      "retail_body_sha256": "012a7b6ce927f083ba98a546e3d3f750b2a1d82f350ca27efbd30a9c3c7718a5",
+      "recovered_name": "?Cleanup@heroWindowManager@@QAEXXZ",
+      "recovery_evidence": "buka-input-timer-helpers.json"
     },
     {
       "rva": "0x6acd9",
@@ -17376,7 +17378,9 @@
       "size": 49,
       "unit": "BASE/INPUTMGR",
       "role": "Set short member +0x23a to positive argument, otherwise one.",
-      "retail_body_sha256": "d802bda21125dbcb8ffd66f8c320ae66bf9bf77d9a97a0396f0b6fc66dfbbc83"
+      "retail_body_sha256": "d802bda21125dbcb8ffd66f8c320ae66bf9bf77d9a97a0396f0b6fc66dfbbc83",
+      "recovered_name": "?SetPositiveOption@inputManager@@QAEXF@Z",
+      "recovery_evidence": "buka-input-timer-helpers.json"
     },
     {
       "rva": "0x6f039",
@@ -17390,7 +17394,9 @@
       "size": 52,
       "unit": "BASE/INPUTMGR",
       "role": "Translate event code [argument+2] through 128-entry table at 0xa1388 when code is in range.",
-      "retail_body_sha256": "483adc798401b729271e1e6ec635d703b0011c11a259759327489923d483904c"
+      "retail_body_sha256": "483adc798401b729271e1e6ec635d703b0011c11a259759327489923d483904c",
+      "recovered_name": "?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z",
+      "recovery_evidence": "buka-input-timer-helpers.json"
     },
     {
       "rva": "0x6fa2c",
@@ -17567,5 +17573,13 @@
       "status": "source-claim"
     }
   ],
-  "structure_followup": "buka-function-structure.json and the current TSV recover all TU ownership, including compiler-generated startup bodies, and refine Audiere cleanup roles. Original symbols/signatures still unresolved are explicitly semantic-only."
+  "structure_followup": "buka-function-structure.json and the current TSV recover all TU ownership, including compiler-generated startup bodies, and refine Audiere cleanup roles. Original symbols/signatures still unresolved are explicitly semantic-only.",
+  "signature_corrections": [
+    {
+      "rva": "0x51697",
+      "previous_symbol": "??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z",
+      "corrected_symbol": "??0recruitUnit@@QAE@PAVarmyGroup@@CPAF@Z",
+      "evidence": "buka-recruit-byte-controls.json; byte-only argument provision at RecruitEvent+0x48 and byte consumption at constructor+0x2d. Constructor remains byte-exact; caller is now byte-exact. Prior discovery records retain their historical inferred names."
+    }
+  ]
 }

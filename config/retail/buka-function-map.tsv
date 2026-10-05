@@ -615,7 +615,7 @@ rva	size	unit	name	status	evidence
 0x00051154	0xb7	SOURCE/RECRUIT	?Close@recruitUnit@@UAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0005120b	0x11a	SOURCE/RECRUIT	?Update@recruitUnit@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00051325	0x372	SOURCE/RECRUIT	?Main@recruitUnit@@UAEFAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00051697	0xbc	SOURCE/RECRUIT	??0recruitUnit@@QAE@PAVarmyGroup@@HPAF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00051697	0xbc	SOURCE/RECRUIT	??0recruitUnit@@QAE@PAVarmyGroup@@CPAF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00051753	0xd9	SOURCE/RECRUIT	??0recruitUnit@@QAE@PAVtown@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0005182c	0x17d	SOURCE/RECRUIT	?QuickViewRecruit@@YAXPAVtown@@C@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000519a9	0x27	SOURCE/RECRUIT	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?QuickViewRecruit@@YAXPAVtown@@C@Z; buka-function-structure.json.
@@ -907,7 +907,7 @@ rva	size	unit	name	status	evidence
 0x0006aa74	0x2f	BASE/WINMGR	?RedrawScreen@heroWindowManager@@QAEXXZ	referent	Complete assembly and declared ABI / compiler control; buka-function-map.json additional_identities
 0x0006aaa3	0xd3	BASE/WINMGR	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006ab76	0x65	BASE/WINMGR	?ScreenShot@heroWindowManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006abdb	0xb	BASE/WINMGR	Unused no-argument window-manager method, empty body; original method name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006abdb	0xb	BASE/WINMGR	?Cleanup@heroWindowManager@@QAEXXZ	source	Complete source body and calls recovered; buka-input-timer-helpers.json
 0x0006abe6	0xf3	BASE/WINMGR	?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006acd9	0x444	BASE/WINMGR	Palette lookup-table generator: 64-cubed nearest-color search and derived color tables; original function name unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x0006b11d	0x36a	BASE/WINMGR	?FizzleForward@heroWindowManager@@QAEXFFFFH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -1016,10 +1016,10 @@ rva	size	unit	name	status	evidence
 0x0006eeb6	0x23	BASE/INPUTMGR	?Flush@inputManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006eed9	0xfe	BASE/INPUTMGR	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006efd7	0x31	BASE/INPUTMGR	Normalize short flag to 0/1 in member +0x238.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x0006f008	0x31	BASE/INPUTMGR	Set short member +0x23a to positive argument, otherwise one.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f008	0x31	BASE/INPUTMGR	?SetPositiveOption@inputManager@@QAEXF@Z	source	Complete source body and calls recovered; buka-input-timer-helpers.json
 0x0006f039	0x29	BASE/INPUTMGR	Store two short arguments into members +0x346 and +0x348.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x0006f062	0x23	BASE/INPUTMGR	?SetKeyCodeType@inputManager@@QAEXF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006f085	0x34	BASE/INPUTMGR	Translate event code [argument+2] through 128-entry table at 0xa1388 when code is in range.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006f085	0x34	BASE/INPUTMGR	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	source	Complete source body and calls recovered; buka-input-timer-helpers.json
 0x0006f0b9	0x312	BASE/INPUTMGR	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006f3cb	0x46a	BASE/INPUTMGR	?MakeScanCodeTable@inputManager@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006f835	0x27	BASE/INPUTMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?MakeScanCodeTable@inputManager@@QAEXXZ; buka-function-structure.json.

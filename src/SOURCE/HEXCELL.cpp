@@ -51,21 +51,21 @@ void hexcell::DrawOccupant(void) {
 
 VA(0x0043b832, 0x124)
 void hexcell::DrawTower(i8 frame) {
-    i8 flip;
+    i8 level;
     i16 row;
 
-    flip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    level = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-        ->DrawToBuffer(flip ? m_x : m_x + 28, m_y, frame, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
+        ->DrawToBuffer(level ? m_x : m_x + 28, m_y, frame, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
     if (row == COMBAT_GRID_LAST_ROW)
         return;
     if (row & 1)
         gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(flip ? m_x : m_x + 28, m_y, 9, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
+            ->DrawToBuffer(level ? m_x : m_x + 28, m_y, 9, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
     else
         gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(flip ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            ->DrawToBuffer(level ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
 VA(0x0043b956, 0x279)

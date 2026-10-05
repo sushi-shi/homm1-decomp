@@ -5279,3 +5279,207 @@ msgstr "Невозможно изменить директорию. Пожалу
 msgctxt "startup.data.missing"
 msgid "Unable to find the Heroes data files.  Please run the installation program."
 msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."
+
+msgctxt "scenario.claw.name"
+msgid "Claw ( Easy )"
+msgstr "Когти (Легкая)"
+
+msgctxt "scenario.claw.description"
+msgid "The Griffons will protect you until you are ready to make your move."
+msgstr "Грифоны будут защищать вас пока вы не будете готовы сделать ваш ход."
+
+msgctxt "scenario.bay.name"
+msgid "Around the Bay"
+msgstr "Вблизи залива"
+
+msgctxt "scenario.bay.description"
+msgid "A large island of tight passes with a circular feel."
+msgstr "Большая земля, полная ущелий, идущих по кругу."
+
+msgctxt "scenario.info.yes"
+msgid "Yes"
+msgstr "Да"
+
+msgctxt "scenario.info.no"
+msgid "No"
+msgstr "Нет"
+
+msgctxt "network.player.timeout.computer"
+msgid "Player %d has been logged out of the game.  The current game has been saved as 'PLYREXIT'.  Do you wish to continue playing with a computer player filling in for player %d?"
+msgstr "%d игрок был выкинут из игры. Данная игра была сохранена как 'ИГРОК ВЫШЕЛ'. Желаете ли вы продолжить игру и заместить выбывшего %d игрока компьютером?"
+
+msgctxt "endgame.last_town.lost"
+msgid "%s player, you have lost your last town.  If you do not conquer another town in the next week, you will be eliminated."
+msgstr "%s игрок, вы потеряли ваш последний город. Если вы не захватите новый город до следующей недели, вы будете уничтожены."
+
+msgctxt "endgame.heroes.abandon_you"
+msgid "%s player, your heroes abandon you, and you are banished from this land."
+msgstr "%s игрок, ваши герои покинули вас, а вы были изгнаны из этих земель."
+
+msgctxt "endgame.heroes.abandon_player"
+msgid "%s player's Heroes have abandoned him, and he is banished from this land."
+msgstr "%s игрок был брошен своими героями, а сам изгнан из этих земель."
+
+msgctxt "endgame.enemy.captured_town"
+msgid "The enemy has captured the town of XX!!"
+msgstr "Враг захватил город XX!!"
+
+msgctxt "endgame.enemy.captured_artifact"
+msgid "The enemy has captured the ultimate artifact!!"
+msgstr "Враг захватил Могущественный артефакт!"
+
+msgctxt "endgame.enemy.captured_dragon_city"
+msgid "The enemy has captured the dragon city!!"
+msgstr "Враг захватил Драконий город!"
+
+msgctxt "shutdown.unexpected.title"
+msgid "Unexpected Program Termination"
+msgstr "Неожиданное прерывание программы"
+
+msgctxt "congratulations.victory.title"
+msgid "A Glorious Victory!"
+msgstr "Великая победа!"
+
+msgctxt "town.split.hero_army"
+msgid "Hero's Army"
+msgstr "героя"
+
+msgctxt "town.split.garrison"
+msgid "Garrison"
+msgstr "гарнизона"
+
+msgctxt "town.split.prompt"
+msgid "Move how many %s troops from %s to %s?"
+msgstr "Перенести %s из армии %s в армию %s?"
+
+msgctxt "town.build.mage_guild_level"
+msgid "Mage Guild, Level %d"
+msgstr "Гильдия магов, %d этаж"
+
+msgctxt "table.gDwellingDescriptions.0"
+msgid "The Thatched Hut produces Peasants."
+msgstr "В Мазанке покупают крестьян."
+
+msgctxt "table.gDwellingDescriptions.1"
+msgid "The Archery Range produces Archers."
+msgstr "На Стрельбище покупают лучников."
+
+msgctxt "table.gDwellingDescriptions.2"
+msgid "The Blacksmith produces Pikemen."
+msgstr "В Кузнице покупают копейщиков."
+
+msgctxt "table.gDwellingDescriptions.3"
+msgid "The Armory produces Swordsmen."
+msgstr "Оружейная позволяет покупать мечников."
+
+msgctxt "table.gDwellingDescriptions.4"
+msgid "The Jousting Arena produces Cavalries."
+msgstr "На Ристалище покупают всадников."
+
+msgctxt "table.gDwellingDescriptions.5"
+msgid "The Cathedral produces Paladins."
+msgstr "В Соборе покупают паладинов."
+
+msgctxt "table.gDwellingDescriptions.6"
+msgid "The Treehouse produces Sprites."
+msgstr "В Древо-доме покупают фей."
+
+msgctxt "table.gDwellingDescriptions.7"
+msgid "The Cottage produces Dwarves."
+msgstr "В Коттеджах покупают гномов."
+
+msgctxt "table.gDwellingDescriptions.8"
+msgid "The Archery Range produces Elves."
+msgstr "На Стрельбище покупают эльфов."
+
+msgctxt "table.gDwellingDescriptions.9"
+msgid "Stonehenge produces Druids."
+msgstr "В Стоунхендже покупают друидов."
+
+msgctxt "table.gDwellingDescriptions.10"
+msgid "The Fenced Meadow produces Unicorns."
+msgstr "В Загоне покупают единорогов."
+
+msgctxt "table.gDwellingDescriptions.11"
+msgid "The Red Tower produces Phoenix."
+msgstr "В Алой башне покупают фениксов."
+
+msgctxt "table.gDwellingDescriptions.12"
+msgid "The Hut produces Goblins."
+msgstr "В Хижине покупают гоблинов."
+
+msgctxt "table.gDwellingDescriptions.13"
+msgid "The Stick Hut produces Orcs."
+msgstr "В Хибаре покупают орков."
+
+msgctxt "table.gDwellingDescriptions.14"
+msgid "The Den produces Wolves."
+msgstr "В Логове покупают волков."
+
+msgctxt "table.gDwellingDescriptions.15"
+msgid "The Adobe produces Ogres."
+msgstr "В Доме огров покупают огров."
+
+msgctxt "table.gDwellingDescriptions.16"
+msgid "The Bridge produces Trolls."
+msgstr "Под Мостом покупают троллей."
+
+msgctxt "table.gDwellingDescriptions.17"
+msgid "The Pyramid produces Cyclopes."
+msgstr "В Пирамиде покупают циклопов."
+
+msgctxt "table.gDwellingDescriptions.18"
+msgid "The Cave produces Centaurs."
+msgstr "В Пещере покупают кентавров."
+
+msgctxt "table.gDwellingDescriptions.19"
+msgid "The Crypt produces Gargoyles."
+msgstr "В Крипте покупают горгулий."
+
+msgctxt "table.gDwellingDescriptions.20"
+msgid "The Nest produces Griffins."
+msgstr "В Гнезде покупают грифонов."
+
+msgctxt "table.gDwellingDescriptions.21"
+msgid "The Maze produces Minotaurs."
+msgstr "В Лабиринте покупают Минотавров."
+
+msgctxt "table.gDwellingDescriptions.22"
+msgid "The Swamp produces Hydras."
+msgstr "В Болоте покупают гидр."
+
+msgctxt "table.gDwellingDescriptions.23"
+msgid "The Black Tower produces Dragons."
+msgstr "В Черной башне покупают драконов."
+
+msgctxt "table.gNeutralBuildingDescriptions.0"
+msgid "The Mage Guild allows heroes to learn and replenish spells."
+msgstr "Гильдия магов позволяет разучивать новые заклинания."
+
+msgctxt "table.gNeutralBuildingDescriptions.1"
+msgid "The Thieves' Guild provides information on enemy players.  Thieves' Guilds can also provide scouting information on enemy towns.  Additional Guilds provide more information."
+msgstr "Гильдия воров дает информацию о врагах. Также, Гильдия воров дает разведывательную информацию о вражеских городах.  Дополнительные гильдии дают дополнительную информацию."
+
+msgctxt "table.gNeutralBuildingDescriptions.2"
+msgid "The Tavern increases morale for troops defending the castle."
+msgstr "Таверна увеличивает мораль бойцов, защищающих замок."
+
+msgctxt "table.gNeutralBuildingDescriptions.3"
+msgid "The Shipyard allows ships to be built."
+msgstr "Верфь позволяет строить корабли."
+
+msgctxt "table.gNeutralBuildingDescriptions.4"
+msgid "The Well increases the growth rate of all dwellings by 2 creatures per week."
+msgstr "Колодец увеличивает прирост всех воинов на 2 в неделю."
+
+msgctxt "table.gNeutralBuildingDescriptions.5"
+msgid "The Tent provides workers to build a castle."
+msgstr "Шатры дают рабочих, которые могут возвести замок."
+
+msgctxt "table.gNeutralBuildingDescriptions.6"
+msgid "The Castle improves town defense and income."
+msgstr "Замок улучшает защиту города и увеличивает доход."
+
+msgctxt "recruitment.title.prefix"
+msgid "Recruit"
+msgstr "Нанять "

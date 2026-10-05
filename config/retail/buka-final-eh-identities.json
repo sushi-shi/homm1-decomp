@@ -1,0 +1,73 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Retail prologue installs owner-specific EH frame. VC6 registration stub, FuncInfo scalar fields, unwind state transitions, cleanup instruction shapes and destructor identities agree with an explicit consistent injective mapping of negative EBP local offsets. These differing offsets remain visible to strict comparison; this review establishes owner-specific EH identity, not byte matching. Compiler local ordinals map to owner-derived EH names.",
+  "references": [
+    {
+      "owner": "?DoTavern@townManager@@QAEXXZ",
+      "unit": "SOURCE/TOWNMGR",
+      "owner_rva": "0x6549b",
+      "site_rva": "0x654a1",
+      "target_rva": "0x891b5",
+      "symbol": "__ehreg$?DoTavern@townManager@@QAEXXZ",
+      "kind": 6,
+      "funcinfo_rva": "0x8c460",
+      "states": 1,
+      "cleanup_frame_slot_map": {
+        "-24": -20
+      },
+      "funcinfo_sha256": "f745d1afb0c5e6d1a2bd3c96d919bbb6ecf5c963146f8cf79b7411a5075efca4",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x891aa",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x891af",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "6882550b370f5c3bea2b0ee39c952226ca649e007a9601a5cf01770a3052f263"
+        }
+      ],
+      "object_sha256": "8590f9bcd8e5a63317bde239e8360a8f980c87abb5c1d6f2cd911665c6b50cba"
+    },
+    {
+      "owner": "?FizzleForward@heroWindowManager@@QAEXFFFFH@Z",
+      "unit": "BASE/WINMGR",
+      "owner_rva": "0x6b11d",
+      "site_rva": "0x6b123",
+      "target_rva": "0x89265",
+      "symbol": "__ehreg$?FizzleForward@heroWindowManager@@QAEXFFFFH@Z",
+      "kind": 6,
+      "funcinfo_rva": "0x8c578",
+      "states": 1,
+      "cleanup_frame_slot_map": {
+        "-60": -56
+      },
+      "funcinfo_sha256": "f73d7902ac52b752d2488a721c267d68097e5a140f387e8df6228328158b3437",
+      "unwind": [
+        {
+          "state": 0,
+          "to_state": -1,
+          "cleanup_rva": "0x8925a",
+          "size": 11,
+          "references": [
+            {
+              "site_rva": "0x8925f",
+              "target_rva": "0x77c4d",
+              "symbol": "??3@YAXPAX@Z",
+              "kind": 20
+            }
+          ],
+          "body_sha256": "09661c497faee835d8769a09c2e5525970b3caf323242095b37bc11278a8fe1b"
+        }
+      ],
+      "object_sha256": "09f7c32b42ce1a173731b6762780971fc411bd1c5037852c8fe1779136961388"
+    }
+  ],
+  "held": []
+}

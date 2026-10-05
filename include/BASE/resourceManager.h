@@ -28,7 +28,6 @@ struct aggEntry {
     i16 id;
     i32 offset;
     u32 size;
-    u32 unpackedSize;
 };
 
 class resourceManager : public baseManager {

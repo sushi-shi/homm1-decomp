@@ -606,17 +606,20 @@ void swapManager::ViewMon(void) {
 // Buka 2.1 swapManager::SwapArtifacts.
 VA(0x0045de3b, 0x126)
 void swapManager::SwapArtifacts(void) {
-    i8 dstArt;
-    i8 srcArt;
+    i8 targetArtifact;
+    i8 selectedArtifact;
 
-    srcArt = m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot];
-    dstArt = m_heroes[m_targetSide]->m_artifacts[m_targetSlot];
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], srcArt, 1);
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], dstArt, 1);
-    m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot] = dstArt;
-    m_heroes[m_targetSide]->m_artifacts[m_targetSlot] = srcArt;
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], dstArt, 0);
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], srcArt, 0);
+    if (m_selectedSide == SWAP_SIDE_NONE && m_targetSide == SWAP_SIDE_NONE)
+        return;
+
+    selectedArtifact = m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot];
+    targetArtifact = m_heroes[m_targetSide]->m_artifacts[m_targetSlot];
+    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], selectedArtifact, 1);
+    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], targetArtifact, 1);
+    m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot] = targetArtifact;
+    m_heroes[m_targetSide]->m_artifacts[m_targetSlot] = selectedArtifact;
+    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_selectedSide], targetArtifact, 0);
+    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], selectedArtifact, 0);
 }
 
 VA(0x0045df61, 0x259)
@@ -635,7 +638,7 @@ void swapManager::SwapMons(void) {
             return;
         if (destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                if (sourceTroops->m_creatureTypes[m_selectedSlot] == destTroops->m_creatureTypes[i])
+                if (destTroops->m_creatureTypes[i] == sourceTroops->m_creatureTypes[m_selectedSlot])
                     break;
             }
             destTroops->m_creatureCounts[i] += sourceTroops->m_creatureCounts[m_selectedSlot];
@@ -644,13 +647,13 @@ void swapManager::SwapMons(void) {
             return;
         } else if (sourceTroops->IsMember(destTroops->m_creatureTypes[m_targetSlot])) {
             for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-                if (destTroops->m_creatureTypes[m_targetSlot] == sourceTroops->m_creatureTypes[j])
+                if (sourceTroops->m_creatureTypes[j] == destTroops->m_creatureTypes[m_targetSlot])
                     break;
             }
             sourceTroops->m_creatureCounts[j] += destTroops->m_creatureCounts[m_targetSlot];
             destTroops->m_creatureTypes[m_targetSlot] = CREATURE_NONE;
             destTroops->m_creatureCounts[m_targetSlot] = 0;
-            if (m_selectedSlot != j) {
+            if (j != m_selectedSlot) {
                 destTroops->m_creatureTypes[m_targetSlot] =
                     sourceTroops->m_creatureTypes[m_selectedSlot];
                 destTroops->m_creatureCounts[m_targetSlot] =
@@ -813,7 +816,7 @@ void swapManager::SplitMons(void) {
     delete gpTownManager->m_heroWindow1;
     if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (selectedArmy->m_creatureTypes[m_selectedSlot] == dstTroops->m_creatureTypes[i]) {
+            if (dstTroops->m_creatureTypes[i] == selectedArmy->m_creatureTypes[m_selectedSlot]) {
                 found = 1;
                 break;
             }

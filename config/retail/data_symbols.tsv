@@ -4,7 +4,7 @@ rva	size	symbol	provenance
 0x0009f50c	4	$SG16676	VC4 literal `at+` including terminator
 0x0009f510	8	$SG16677	VC4 literal `KB.LOG` plus alignment byte
 0x0009f518	2	$SG16678	VC4 newline literal including terminator
-0x000a3100	12	?gMouseOffset@@3PAHA	three cursor-family base offsets
+0x000a0ff8	12	?gMouseOffset@@3PAHA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
 0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
@@ -12,13 +12,13 @@ rva	size	symbol	provenance
 0x000a31c0	30	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
 0x000a10e4	3	?gAdventureColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a10e8	3	?gAdventureMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a31e8	15	?gAdventureBitmapFormat@@3PADA	adventure cursor bitmap format
+0x000a10ec	15	?gAdventureBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
 0x000a10fc	3	?gSpellColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a1100	3	?gSpellMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a3200	15	?gSpellBitmapFormat@@3PADA	spell cursor bitmap format
+0x000a1104	15	?gSpellBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
 0x000a1114	3	?gCombatColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a1118	3	?gCombatMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a3218	15	?gCombatBitmapFormat@@3PADA	combat cursor bitmap format
+0x000a111c	15	?gCombatBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
 0x000a3228	30	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
 0x000a3248	30	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
 0x000a3298	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
@@ -44,7 +44,7 @@ rva	size	symbol	provenance
 0x000a3b34	4	?gDialogNestCount@@3HA	dialog nesting counter
 0x000a3b38	2	?gWindowFadeAssertLine@@3FA	FadeScreen signed word assertion line base
 0x000a3b3c	28	?gWindowFadeAssertFile@@3PADA	FadeScreen WINMGR source assertion path
-0x000a3ba0	18	?gDynamicConstruct@@3PADA	code-required heroWindow constructor name
+0x000a1374	18	?gDynamicConstruct@@3PADA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
 0x000a15cc	56	?gResourceManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a1604	39	?gInputManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a162c	24	?gSoundManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
@@ -103,7 +103,7 @@ rva	size	symbol	provenance
 0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000ce670	300	?hMouseCursor@@3PAPAXA	75 cursor handles
 0x000ce7a0	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
-0x000cf1e0	300	?gColorBits@@3PAPACA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf1e0	300	?gColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
 0x000cf438	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
@@ -439,3 +439,11 @@ rva	size	symbol	provenance
 0x000918b8	84	?gSpellCastNumMod@@3PAMA	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
 0x00092c30	40	?gMonthNames@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-month-score-tables.json
 0x000932d0	20	?gScoreLabels@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-month-score-tables.json
+0x000a995c	1	_?gInMemError@?1??MemError@@YAXXZ@4CA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
+0x0009e720	4	_gcCDTrackName	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
+0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
+0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
+0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use; buka-input-timer-helpers.json
+0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Complete payload and compiled/retail use; buka-input-timer-helpers.json
+0x00092c94	96	?gDwellingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json
+0x000931b4	28	?gNeutralBuildingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json

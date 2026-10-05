@@ -105,7 +105,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     w = new char[s + 1];
     strcpy(w, str);
     drawColor = color;
-    while (p < s && w[p] != 0 && m_height + u <= height) {
+    while (p < s && w[p] != 0 && u + m_height <= height) {
         while (w[p] != 0 && w[p] != '\n' && lw <= width) {
             q = static_cast<u8>(w[p]);
             if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
@@ -113,7 +113,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
             else if (q > 0x7f)
                 q = RemapCyrillicCharacter(q);
             q -= ' ';
-            lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
+            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > width) {
@@ -145,7 +145,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
                 t = width - lw;
                 break;
         }
-        DrawString(w + r, x + t, y + u, drawColor);
+        DrawString(w + r, t + x, u + y, drawColor);
         w[lineEnd] = v;
         u += m_height;
         r = lineEnd + 1;
@@ -187,7 +187,7 @@ i32 font::LineLength(char* str, i16 maxW) {
             else if (q > 0x7f)
                 q = RemapCyrillicCharacter(q);
             q -= ' ';
-            lw = widths[q].w + lw + FONT_GLYPH_ADVANCE_SPACING;
+            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > maxW) {

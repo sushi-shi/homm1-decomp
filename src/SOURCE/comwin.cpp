@@ -45,7 +45,7 @@ void add_node(tag_Anchor* anchor, tag_Node* node) {
         anchor->tail = node;
     } else {
         anchor->tail = node;
-        anchor->head = anchor->tail;
+        anchor->head = node;
     }
 }
 
@@ -146,12 +146,12 @@ void ShutdownComError(char* function) {
 
 VA(0x0041cd46, 0x302)
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
-    i32 error; // Unused, as in Buka; retail still reserves its slot.
+    i32 err; // Unused, as in Buka; retail still reserves its slot.
     i32 slot;
-    BOOL commStatus;
+    BOOL rv;
     DCB state;
     char portName[12];
-    COMMTIMEOUTS commTimeouts;
+    COMMTIMEOUTS portTimeouts;
 
     for (slot = 0; slot < COM_PORT_COUNT; slot++)
         gComPorts[slot].handle = INVALID_HANDLE_VALUE;
@@ -195,10 +195,7 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     }
     state.fParity = FALSE;
     state.fOutxCtsFlow = TRUE;
-    if (useDtr)
-        state.fOutxDsrFlow = TRUE;
-    else
-        state.fOutxDsrFlow = FALSE;
+    state.fOutxDsrFlow = useDtr != 0;
     state.fDtrControl = DTR_CONTROL_ENABLE;
     state.fInX = FALSE;
     state.fOutX = FALSE;
@@ -208,17 +205,17 @@ i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
     state.ByteSize = 8;
     state.Parity = NOPARITY;
     state.StopBits = ONESTOPBIT;
-    commStatus = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
-    if (!commStatus)
+    rv = SetupComm(gComPorts[slot].handle, COM_RECEIVE_BUFFER_SIZE, COM_TRANSMIT_BUFFER_SIZE);
+    if (!rv)
         ShutdownComError("Initialize communications paramaters");
-    commStatus = SetCommState(gComPorts[slot].handle, &state);
-    if (!commStatus)
+    rv = SetCommState(gComPorts[slot].handle, &state);
+    if (!rv)
         ShutdownComError("Configure communications device");
-    commTimeouts.ReadIntervalTimeout = MAXDWORD;
-    commTimeouts.ReadTotalTimeoutMultiplier = commTimeouts.ReadTotalTimeoutConstant = 0;
-    commTimeouts.WriteTotalTimeoutMultiplier = commTimeouts.WriteTotalTimeoutConstant = 0;
-    commStatus = SetCommTimeouts(gComPorts[slot].handle, &commTimeouts);
-    if (!commStatus)
+    portTimeouts.ReadIntervalTimeout = MAXDWORD;
+    portTimeouts.ReadTotalTimeoutMultiplier = portTimeouts.ReadTotalTimeoutConstant = 0;
+    portTimeouts.WriteTotalTimeoutMultiplier = portTimeouts.WriteTotalTimeoutConstant = 0;
+    rv = SetCommTimeouts(gComPorts[slot].handle, &portTimeouts);
+    if (!rv)
         ShutdownComError("Set communications timeouts");
     init_anchor(&gComPorts[slot].normalQueue, 1, 0);
     init_anchor(&gComPorts[slot].priorityQueue, 1, 0);
@@ -243,25 +240,22 @@ void com_term(i16 port) {
 
 VA(0x0041d126, 0xbe)
 i16 com_rcv(i16 port, u16 requested, void* buffer) {
-    DWORD currentError;
+    DWORD err;
     COMSTAT status;
-    u32 currentBytesRead;
-    DWORD nRead;
-    BOOL ioResult;
+    u32 n;
+    DWORD bytesRead;
+    BOOL success;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
-        ioResult = ClearCommError(gComPorts[port].handle, &currentError, &status);
-        if (!ioResult)
+        success = ClearCommError(gComPorts[port].handle, &err, &status);
+        if (!success)
             ShutdownComError("Clear communications error queue");
-        if (status.cbInQue <= requested)
-            currentBytesRead = status.cbInQue;
-        else
-            currentBytesRead = requested;
-        if (currentBytesRead) {
-            ioResult = ReadFile(gComPorts[port].handle, buffer, currentBytesRead, &nRead, NULL);
-            if (!ioResult)
+        n = requested < status.cbInQue ? requested : status.cbInQue;
+        if (n) {
+            success = ReadFile(gComPorts[port].handle, buffer, n, &bytesRead, NULL);
+            if (!success)
                 ShutdownComError("Read communications data");
-            return static_cast<i16>(nRead);
+            return static_cast<i16>(bytesRead);
         }
     }
     return 0;
@@ -319,33 +313,33 @@ u8 com_stat(i16 port, u16) {
 
 VA(0x0041d357, 0xc8)
 void comm_wrt_task(void) {
-    ComPortState* portState;
-    tag_Node* node;
-    BOOL result;
+    ComPortState* comPort;
+    tag_Node* packetNode;
+    BOOL callRv;
     u32 totalWritten;
     DWORD sizeWritten;
 
-    portState = gComPorts;
-    while (portState->handle != INVALID_HANDLE_VALUE) {
-        node = pop_node(&portState->priorityQueue);
-        if (!node)
-            node = pop_node(&portState->normalQueue);
-        if (!node)
+    comPort = gComPorts;
+    while (comPort->handle != INVALID_HANDLE_VALUE) {
+        packetNode = pop_node(&comPort->priorityQueue);
+        if (!packetNode)
+            packetNode = pop_node(&comPort->normalQueue);
+        if (!packetNode)
             return;
         totalWritten = 0;
-        while (portState->handle != INVALID_HANDLE_VALUE && node->len > totalWritten) {
-            result = WriteFile(
-                    portState->handle,
-                    &node->comData[totalWritten],
-                    node->len - totalWritten,
+        while (comPort->handle != INVALID_HANDLE_VALUE && totalWritten < packetNode->len) {
+            callRv = WriteFile(
+                    comPort->handle,
+                    &packetNode->comData[totalWritten],
+                    packetNode->len - totalWritten,
                     &sizeWritten,
                     NULL
                 );
-            if (!result)
+            if (!callRv)
                 ShutdownComError("Write communications data");
             totalWritten += sizeWritten;
         }
-        free(node);
+        free(packetNode);
     }
 }
 

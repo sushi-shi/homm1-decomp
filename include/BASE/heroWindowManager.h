@@ -54,6 +54,7 @@ public:
     void UpdateScreen(void);
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);
+    void Cleanup(void);
     void FadeScreen(i16 direction, i16 steps, class palette* currentPalette);
     void ScreenShot(void);
     void SaveFizzleSource(i16 x, i16 y, i16 width, i16 height);

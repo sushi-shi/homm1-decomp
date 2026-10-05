@@ -58,7 +58,7 @@ H1_ENUM_BEGIN(ConfigConnection)
     CONFIG_CONNECTION_DIRECT = 1
 H1_ENUM_END(ConfigConnection)
 
-// SetupCDDrive's result, which KB keeps in iCDRomErr: READY when the CD is
+// SetupCDDrive's result, dispatched by EarlySetup: READY when the CD is
 // found by its Ogg probe, else why not (no CD-ROM drive, no matching disc, no
 // registered application path, no data directory).
 H1_ENUM_BEGIN(CdSetupResult)
@@ -95,6 +95,7 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_COMMAND_LINE_CLEAR_SIZE = 61,
     KBWIN_COMMAND_LINE_LIMIT = 60,
     KBWIN_MESSAGE_FILTER_SIZE = 0x400,
+    KBWIN_APPLICATION_ICON = 109,
     KBWIN_CLASS_STYLE = 0x100b,
     KBWIN_WINDOWED_STYLE = 0x14cf0000,
     KBWIN_FULLSCREEN_STYLE = 0x14000000,
@@ -104,6 +105,7 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_PROCESS_MESSAGE_MAX = 0x3ff,
     KBWIN_TIMER_ID = 1,
     KBWIN_TIMER_INTERVAL = 10,
+    KBWIN_TIMER_UPDATE_MIN_INTERVAL = 5,
     KBWIN_POLL_INTERVAL = 5,
     KBWIN_CYCLE_INTERVAL = 150,
     KBWIN_CYCLE_WING_DELAY = 300,

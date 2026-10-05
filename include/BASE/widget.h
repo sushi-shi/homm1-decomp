@@ -22,6 +22,10 @@ H1_ENUM_FLAGS_BEGIN(WidgetFlag, i16)
     WIDGET_FLAG_UPDATE = 0x4000
 H1_ENUM_FLAGS_END(WidgetFlag)
 
+H1_ENUM_CONST_BEGIN(WidgetFlagConstant)
+    WIDGET_FLAG_MASK = 0xffff
+H1_ENUM_CONST_END(WidgetFlagConstant)
+
 H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_NONE = 0,
     // border kind 1: drawn without its background (Buka widgetKind.h).

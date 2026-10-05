@@ -1,0 +1,241 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+    "files": [
+      "src/SOURCE/ADVMGR.cpp"
+    ]
+  },
+  "corrections": {
+    "CheckScreenScroll": "oldX/oldY -> corresponding donor oldMapX/oldMapY, preserving i16 mouse coordinates and all scroll guards. Predicted slots: mouseX -4, mouseY -8, oldMapY -12, oldMapX -16.",
+    "ViewPuzzle": "puzzlePieces/biasX/biasY -> corresponding puzzleIcn/xOff/yOff. Preserve HoMM1 piece order, signed-byte visible count, word loop counter and all draw operations. Predicted EH-frame slots: xOff -16, yOff -20, pWin -24, puzzleX -28, puzzleIcn -32, puzzleY -36, visibleCount -40, j -44.",
+    "TownGate": "Use corresponding targetHero/dist/selectedTown/i/nearestDistance names and declaration order. Keep the five HoMM1 locals and all original conditions, text and calls; do not add the HoMM2 Town Portal message or UI. Predicted slots: targetHero -4, dist -8, selectedTown -12, i -16, nearestDistance -20.",
+    "ProcessSearch": "Use corresponding sample/hero/pl/cellPtr/evt/gaveArtifact declaration order, with pl/cellPtr/evt plain donor aliases. Keep HoMM1 sample pointer type, message size, artifact result and initialization point. Do not add HoMM2 special-artifact logic or new locals. Predicted slots: sample -4, hero -8, pl -12, cellPtr -16, evt -32, gaveArtifact -36."
+  },
+  "before_functions": [
+    {
+      "symbol": "?ProcessSearch@advManager@@QAEHHH@Z",
+      "rva": "0x4621",
+      "candidate_instructions": 303,
+      "retail_instructions": 303,
+      "candidate_extent": 1064,
+      "retail_extent": 1064,
+      "slot_map": {
+        "-40": -40,
+        "-4": -4,
+        "-36": -8,
+        "-32": -16,
+        "-28": -36,
+        "-8": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.92739,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "350b88a131e262f8f9ab142bad605fa6499a22913d8f924ed2696f98b48989f4",
+      "retail_sha256": "edf897ea9400c8d5761d62b8bff3224d70597cf04ead3e6a5df8a7aebe0cd63d"
+    },
+    {
+      "symbol": "?ViewPuzzle@advManager@@QAEXXZ",
+      "rva": "0xbb18",
+      "candidate_instructions": 258,
+      "retail_instructions": 258,
+      "candidate_extent": 934,
+      "retail_extent": 934,
+      "slot_map": {
+        "-60": -60,
+        "-32": -40,
+        "-20": -32,
+        "-36": -44,
+        "-52": -52,
+        "-4": -4,
+        "-64": -64,
+        "-48": -48,
+        "-16": -24,
+        "-24": -28,
+        "-28": -36,
+        "-40": -16,
+        "-44": -20,
+        "-56": -56,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.810074,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "f45c4db3e5d01e58dfadf4fb6b6340396c354aa0a9e5b98e73de60f17f0fc105",
+      "retail_sha256": "517ea9f2ee1a38bf9548310573237c09d18530098f57bc1e01c42e60478c13ee"
+    },
+    {
+      "symbol": "?TownGate@advManager@@QAEXXZ",
+      "rva": "0xfa50",
+      "candidate_instructions": 161,
+      "retail_instructions": 161,
+      "candidate_extent": 576,
+      "retail_extent": 576,
+      "slot_map": {
+        "-24": -24,
+        "-12": -20,
+        "-16": -12,
+        "-8": -4,
+        "-20": -16,
+        "-4": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.81367,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "279c2d5e58323461a0db044b4113ad1cb89bb40a36d9ea008e216e93243c4479",
+      "retail_sha256": "baa56058a3ff4d66b06ebc9e6e092442096646ee534dc4eda876f8483ab24cd6"
+    },
+    {
+      "symbol": "?CheckScreenScroll@advManager@@QAEXXZ",
+      "rva": "0x10916",
+      "candidate_instructions": 119,
+      "retail_instructions": 119,
+      "candidate_extent": 407,
+      "retail_extent": 407,
+      "slot_map": {
+        "-20": -20,
+        "-8": -16,
+        "-16": -12,
+        "-12": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.890755,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "7df00abff735430c62570bf7deb020503cb93f9ff32d91e1561c661fe9dafd26",
+      "retail_sha256": "966af2531a32984d06db5f7f4482a79d1b8a479bb16628b9416195b21b836bb9"
+    }
+  ],
+  "functions": [
+    {
+      "symbol": "?ProcessSearch@advManager@@QAEHHH@Z",
+      "rva": "0x4621",
+      "candidate_instructions": 303,
+      "retail_instructions": 303,
+      "candidate_extent": 1064,
+      "retail_extent": 1064,
+      "slot_map": {
+        "-40": -40,
+        "-4": -4,
+        "-8": -8,
+        "-16": -16,
+        "-36": -36,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "edf897ea9400c8d5761d62b8bff3224d70597cf04ead3e6a5df8a7aebe0cd63d",
+      "retail_sha256": "edf897ea9400c8d5761d62b8bff3224d70597cf04ead3e6a5df8a7aebe0cd63d"
+    },
+    {
+      "symbol": "?ViewPuzzle@advManager@@QAEXXZ",
+      "rva": "0xbb18",
+      "candidate_instructions": 258,
+      "retail_instructions": 258,
+      "candidate_extent": 934,
+      "retail_extent": 934,
+      "slot_map": {
+        "-60": -60,
+        "-40": -40,
+        "-32": -32,
+        "-44": -44,
+        "-52": -52,
+        "-4": -4,
+        "-64": -64,
+        "-48": -48,
+        "-24": -24,
+        "-28": -28,
+        "-36": -36,
+        "-16": -16,
+        "-20": -20,
+        "-56": -56,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "517ea9f2ee1a38bf9548310573237c09d18530098f57bc1e01c42e60478c13ee",
+      "retail_sha256": "517ea9f2ee1a38bf9548310573237c09d18530098f57bc1e01c42e60478c13ee"
+    },
+    {
+      "symbol": "?TownGate@advManager@@QAEXXZ",
+      "rva": "0xfa50",
+      "candidate_instructions": 161,
+      "retail_instructions": 161,
+      "candidate_extent": 576,
+      "retail_extent": 576,
+      "slot_map": {
+        "-24": -24,
+        "-20": -20,
+        "-12": -12,
+        "-4": -4,
+        "-16": -16,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "baa56058a3ff4d66b06ebc9e6e092442096646ee534dc4eda876f8483ab24cd6",
+      "retail_sha256": "baa56058a3ff4d66b06ebc9e6e092442096646ee534dc4eda876f8483ab24cd6"
+    },
+    {
+      "symbol": "?CheckScreenScroll@advManager@@QAEXXZ",
+      "rva": "0x10916",
+      "candidate_instructions": 119,
+      "retail_instructions": 119,
+      "candidate_extent": 407,
+      "retail_extent": 407,
+      "slot_map": {
+        "-20": -20,
+        "-16": -16,
+        "-12": -12,
+        "-8": -8,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "966af2531a32984d06db5f7f4482a79d1b8a479bb16628b9416195b21b836bb9",
+      "retail_sha256": "966af2531a32984d06db5f7f4482a79d1b8a479bb16628b9416195b21b836bb9"
+    }
+  ],
+  "comparison_contract": "Unmodified ordinary strict objdiff and complete body/reference checks. Corresponding donor names and declaration order only. No identifier search, suffixed aliases, permutations, added storage, padding, type changes or normalization.",
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0x4621",
+      "symbol": "?ProcessSearch@advManager@@QAEHHH@Z",
+      "before": 99.92739,
+      "after": 100.0
+    },
+    {
+      "rva": "0xbb18",
+      "symbol": "?ViewPuzzle@advManager@@QAEXXZ",
+      "before": 99.810074,
+      "after": 100.0
+    },
+    {
+      "rva": "0xfa50",
+      "symbol": "?TownGate@advManager@@QAEXXZ",
+      "before": 99.81367,
+      "after": 100.0
+    },
+    {
+      "rva": "0x10916",
+      "symbol": "?CheckScreenScroll@advManager@@QAEXXZ",
+      "before": 99.890755,
+      "after": 100.0
+    }
+  ],
+  "source_sha256": {
+    "src/SOURCE/ADVMGR.cpp": "437581ff2049a3df474087d0923c15432cc9c408f8348b26f04f258c3a330639"
+  }
+}

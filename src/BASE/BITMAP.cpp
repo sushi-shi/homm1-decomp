@@ -75,20 +75,19 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 }
 
 // Raw screenshot writer: combat palette followed by the pixel plane.
-// Retail colours palette/file/this in that order (esi/edi/ebx); VC4 ties follow
-// symbol order, so the palette pointer is declared before the file handle.
+// Buka returns immediately when the output file cannot be opened.
 VA(0x0047345e, 0xa3)
 void bitmap::Write(char* filename) {
     palette* combatPalette;
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
-    if (file != -1) {
-        combatPalette = gpResourceManager->GetPalette("combat.pal");
-        i8* paletteData = combatPalette->Data();
-        write(file, paletteData, PALETTE_DATA_SIZE);
-        write(file, m_pixels, m_width * m_height);
-        close(file);
-        gpResourceManager->Dispose(combatPalette);
-    }
+    if (file == -1)
+        return;
+    combatPalette = gpResourceManager->GetPalette("combat.pal");
+    i8* paletteData = combatPalette->Data();
+    write(file, paletteData, PALETTE_DATA_SIZE);
+    write(file, m_pixels, m_width * m_height);
+    close(file);
+    gpResourceManager->Dispose(combatPalette);
 }
 
 VA(0x00473501, 0xa6)

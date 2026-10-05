@@ -1,0 +1,227 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donors": [
+    {
+      "repository": "homm2/homm2-buka",
+      "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b",
+      "files": [
+        "src/BASE/EXEC.cpp",
+        "src/SOURCE/kbwin.cpp"
+      ],
+      "use": "Corresponding local names, plain aliases and declaration order; retain HoMM1 types, array capacities and operations."
+    },
+    {
+      "file": "vendor/lzhuf/reference/paul-edwards-1990-lzhuf.c",
+      "sha256": "ab580116f1b7d5510f9f5ca65e7cdc4ee93f6ed156c31365166bb67225f74379",
+      "revision": "cca43442b667aef1a139119c72095f71a86ad42a",
+      "use": "Unmodified Paul Edwards 1990 LZHUF source provides original local names and diagnostic declaration ordering. Buka operand widths and function-local diagnostic storage are established by retail, not imported from the historical C int widths."
+    }
+  ],
+  "corrections": {
+    "executive::DoDialog": "Use donor savePrev/idx/p/saveMgr/saveNext/ex names, declaring p before saveMgr and saveNext as in the donor. This recovers the complete frame including all three twenty-pointer arrays.",
+    "AppCommand": "Use corresponding donor lpfnDlgProc name for the About dialog procedure. The complete 357-byte body and its references become exact; ordinary objdiff retains its non-exact score because the target symbol span adds three NOP bytes.",
+    "ReconstructEncoderTree": "Restore original f and l local names for frequency sum and moved byte count. Retain Buka i16/u16 widths and every operation.",
+    "UpdateEncoderTree": "Restore original i/j/k/l locals for child, other child, frequency and next node. Retain the existing typed operations and register declarations.",
+    "InsertNode": "Restore original cmp/p/c locals for comparison, candidate node and candidate match position. Retain Buka signedness, widths and operations.",
+    "EncodeCharacter": "The historical code/len diagnostic declarations precede EncodeChar and its i/j/k working declarations. Retail keeps both diagnostic assignments in local slots. Preserve that declaration order in the localized Buka form; no locals or stores were added or removed."
+  },
+  "functions": [
+    {
+      "symbol": "?AppCommand@@YAHPAXIIH@Z",
+      "rva": "0x43911",
+      "candidate_instructions": 80,
+      "retail_instructions": 80,
+      "candidate_extent": 357,
+      "retail_extent": 357,
+      "slot_map": {
+        "-8": -8,
+        "-12": -12,
+        "-4": -4
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 97.85714,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "e0ef12827ba1e685e4ccfa6c62400885d5c30047dd36d469d07b1dcde65d37a6",
+      "retail_sha256": "e0ef12827ba1e685e4ccfa6c62400885d5c30047dd36d469d07b1dcde65d37a6"
+    },
+    {
+      "symbol": "?DoDialog@executive@@QAEFPAVbaseManager@@@Z",
+      "rva": "0x72b98",
+      "candidate_instructions": 103,
+      "retail_instructions": 103,
+      "candidate_extent": 393,
+      "retail_extent": 393,
+      "slot_map": {
+        "-272": -272,
+        "-184": -184,
+        "-268": -268,
+        "-84": -84,
+        "-80": -80,
+        "-168": -168,
+        "-264": -264,
+        "-88": -88,
+        "-172": -172
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "6ca6ea0ad4696358f67ff30b213eab8038cd02d404bf92f61371b872f0c6ad97",
+      "retail_sha256": "6ca6ea0ad4696358f67ff30b213eab8038cd02d404bf92f61371b872f0c6ad97"
+    },
+    {
+      "symbol": "?InsertNode@@YAXF@Z",
+      "rva": "0x73cf7",
+      "candidate_instructions": 153,
+      "retail_instructions": 153,
+      "candidate_extent": 681,
+      "retail_extent": 681,
+      "slot_map": {
+        "-20": -20,
+        "-12": -12,
+        "-4": -4,
+        "-16": -16,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "eb8ec94de3dacd43eb1e4e9a180bec98f3a790ccd1ded3ecdc6386dd7766a9fe",
+      "retail_sha256": "eb8ec94de3dacd43eb1e4e9a180bec98f3a790ccd1ded3ecdc6386dd7766a9fe"
+    },
+    {
+      "symbol": "?EncodeCharacter@@YAXG@Z",
+      "rva": "0x74172",
+      "candidate_instructions": 45,
+      "retail_instructions": 45,
+      "candidate_extent": 164,
+      "retail_extent": 164,
+      "slot_map": {
+        "-4": -4,
+        "-8": -8,
+        "-12": -12,
+        "-20": -20,
+        "-16": -16
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "76f0bdaeb94bec500558fd5f3c60934dd009752b87262c0d619ca0dae0cc3377",
+      "retail_sha256": "76f0bdaeb94bec500558fd5f3c60934dd009752b87262c0d619ca0dae0cc3377"
+    },
+    {
+      "symbol": "?UpdateEncoderTree@@YAXF@Z",
+      "rva": "0x74216",
+      "candidate_instructions": 89,
+      "retail_instructions": 89,
+      "candidate_extent": 403,
+      "retail_extent": 403,
+      "slot_map": {
+        "-12": -12,
+        "-16": -16,
+        "-4": -4,
+        "-8": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "f17cdbc8439aa7807e728fcc5d5cafe1770d4aaf69f3372e7a6547424f67338b",
+      "retail_sha256": "f17cdbc8439aa7807e728fcc5d5cafe1770d4aaf69f3372e7a6547424f67338b"
+    },
+    {
+      "symbol": "?ReconstructEncoderTree@@YAXXZ",
+      "rva": "0x743a9",
+      "candidate_instructions": 138,
+      "retail_instructions": 138,
+      "candidate_extent": 568,
+      "retail_extent": 568,
+      "slot_map": {
+        "-12": -12,
+        "-8": -8,
+        "-4": -4,
+        "-16": -16,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "0a2365b1ee4bea338180f38fa90f3ee9a7d1ae8038f613a70df483dcc15b3cb7",
+      "retail_sha256": "0a2365b1ee4bea338180f38fa90f3ee9a7d1ae8038f613a70df483dcc15b3cb7"
+    }
+  ],
+  "residuals": {
+    "AppCommand": [
+      {
+        "side": "base",
+        "symbol_span": 357,
+        "body_extent": 357,
+        "bytes_after_body": ""
+      },
+      {
+        "side": "target",
+        "symbol_span": 360,
+        "body_extent": 357,
+        "bytes_after_body": "909090"
+      }
+    ],
+    "MainLoop": {
+      "retail_frame_bytes": 56,
+      "candidate_frame_bytes": 52,
+      "message_local": -20,
+      "candidate_dispatch": -24,
+      "retail_dispatch": -28,
+      "unexplained_retail_slot": -24,
+      "disposition": "No extra local or padding added. Full retail message copy is sixteen bytes on both sides; the extra four-byte frame allocation lacks corroborating source evidence."
+    }
+  },
+  "comparison_contract": "Ordinary strict objdiff scores are unchanged. Complete-body equality is reported separately from symbol-span equality. No comparator changes, padding source, boundary edits, normalization or permutations.",
+  "reference_audit": {
+    "functions": 1032,
+    "functions_with_issues": 0,
+    "reference_sites": 20609,
+    "issue_sites": 0,
+    "reasons": {}
+  },
+  "whole_project_score_changes": [
+    {
+      "rva": "0x43911",
+      "symbol": "?AppCommand@@YAHPAXIIH@Z",
+      "before": 97.82143,
+      "after": 97.85714
+    },
+    {
+      "rva": "0x72b98",
+      "symbol": "?DoDialog@executive@@QAEFPAVbaseManager@@@Z",
+      "before": 99.660194,
+      "after": 100.0
+    },
+    {
+      "rva": "0x73cf7",
+      "symbol": "?InsertNode@@YAXF@Z",
+      "before": 99.71242,
+      "after": 100.0
+    },
+    {
+      "rva": "0x74172",
+      "symbol": "?EncodeCharacter@@YAXG@Z",
+      "before": 99.86667,
+      "after": 100.0
+    },
+    {
+      "rva": "0x74216",
+      "symbol": "?UpdateEncoderTree@@YAXF@Z",
+      "before": 99.685394,
+      "after": 100.0
+    },
+    {
+      "rva": "0x743a9",
+      "symbol": "?ReconstructEncoderTree@@YAXXZ",
+      "before": 99.60145,
+      "after": 100.0
+    }
+  ],
+  "source_sha256": {
+    "src/BASE/EXEC.cpp": "569d5f7b4885db8c211a4f22d2a6870b92f2757e02c43d4ddc1a8a26c7bfeff5",
+    "src/SOURCE/kbwin.cpp": "cea823bbe999b5ffff78c595546d2ab341de91836707783b649c7311ad710555",
+    "vendor/lzhuf/encoder.cpp": "daaf2d56c2b450262ccc78474bdc26336b7faa7256b0fd513098b3012a72d84b"
+  }
+}

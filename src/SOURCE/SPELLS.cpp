@@ -115,7 +115,7 @@ i16 HandleCastSpell(struct tag_message& message) {
     switch (message.type) {
         case MESSAGE_MOUSE_MOVE:
             hex = gpCombatManager->GetGridIndex(message.x, message.y);
-            if (indexToCastOn != hex) {
+            if (hex != indexToCastOn) {
                 if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = ARMY_HEX_INVALID;
                     gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
@@ -593,7 +593,7 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
 
     m_computeExtent = m_redrawExtent = 0;
     fileId = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
-    if (fileId != gCurLoadedSpellFileId) {
+    if (gCurLoadedSpellFileId != fileId) {
         gpResourceManager->Dispose(gCurLoadedSpellIcon);
         gCurLoadedSpellIcon = gpResourceManager->GetIcon(fileId);
         gCurLoadedSpellFileId = fileId;

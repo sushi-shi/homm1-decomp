@@ -167,44 +167,44 @@ i8 hero::HasArtifact(i8 artifact) {
 // evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
 VA(0x00438fd5, 0x1bd)
 i16 hero::CalcMobility(void) {
-    i16 mobility[3] = {40, 50, 60};
-    const i16 seaMobility = 60;
-    const i16 lighthouseExtra = 20;
-    const i16 astrolabe = 40;
-    const i16 compass = 20;
-    const i16 nomadBonus = 24;
+    i16 mobilityTable[3] = {40, 50, 60};
+    const i16 seaBaseMobility = 60;
+    const i16 lighthousePoints = 20;
+    const i16 astrolabeMobility = 40;
+    const i16 compassMobility = 20;
+    const i16 nomadBootsBonus = 24;
     const i16 travelerBonus = 12;
-    i32 result;
-    i16 speed;
-    i32 j;
+    i32 movePoints;
+    i16 slowestSpeedValue;
+    i32 creatureIndex;
 
     if (m_eventFlags & HERO_EVENT_EMBARKED) {
         if (gpGame->m_mines[MINE_SLOT_LIGHTHOUSE].owner == m_owner)
-            result = seaMobility + lighthouseExtra;
+            movePoints = seaBaseMobility + lighthousePoints;
         else
-            result = seaMobility;
+            movePoints = seaBaseMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
-            result += astrolabe;
-        result = static_cast<i32>(result * gClassNavigationMod[m_heroClass]);
+            movePoints += astrolabeMobility;
+        movePoints = static_cast<i32>(movePoints * gClassNavigationMod[m_heroClass]);
     } else {
-        speed = CREATURE_SPEED_FAST;
-        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-            if (m_army.m_creatureTypes[j] != CREATURE_NONE
-                && gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed < speed)
-                speed = gMonsterDatabase[m_army.m_creatureTypes[j]].stats.speed;
+        slowestSpeedValue = CREATURE_SPEED_FAST;
+        for (creatureIndex = 0; creatureIndex < ARMY_GROUP_SLOT_COUNT; creatureIndex++) {
+            if (m_army.m_creatureTypes[creatureIndex] != CREATURE_NONE
+                && gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed < slowestSpeedValue)
+                slowestSpeedValue = gMonsterDatabase[m_army.m_creatureTypes[creatureIndex]].stats.speed;
         }
-        result = mobility[speed - 1];
+        movePoints = mobilityTable[slowestSpeedValue - 1];
         if (HasArtifact(ARTIFACT_NOMAD_BOOTS))
-            result += nomadBonus;
+            movePoints += nomadBootsBonus;
         if (HasArtifact(ARTIFACT_TRAVELER_BOOTS))
-            result += travelerBonus;
+            movePoints += travelerBonus;
     }
     if (HasArtifact(ARTIFACT_TRUE_COMPASS))
-        result += compass;
+        movePoints += compassMobility;
     if (m_owner >= 0 && !gbHumanPlayer[m_owner]
         && gpGame->m_players[m_owner].m_difficulty >= DIFFICULTY_COUNT - 1)
-        result += 3;
-    return result;
+        movePoints += 3;
+    return movePoints;
 }
 
 VA(0x00439192, 0x41)
@@ -238,7 +238,7 @@ i16 hero::GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type) {
         case SPELL_TYPE_ADVENTURE:
             return adventure;
         case SPELL_TYPE_ALL:
-            return adventure + combat;
+            return combat + adventure;
     }
     return 0;
 }
@@ -340,11 +340,11 @@ void hero::RedrawHeroScreen(void) {
 // evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
 VA(0x0043968e, 0x64a)
 i8 hero::HeroView(i8 viewOnly) {
-    i32 armyLuckLevel;
-    i32 armyMoraleLevel;
+    i32 heroLuck;
+    i32 moraleValue;
     tag_message message;
     i16 i;
-    i32 shown;
+    i32 magnitude;
 
     gpAdvManager->TrimLoopingSounds(8);
     gHeroWindShowing = 1;
@@ -386,43 +386,43 @@ i8 hero::HeroView(i8 viewOnly) {
         message.text = gText;
         heroWin->BroadcastMessage(message);
     }
-    armyLuckLevel = gpGame->GetLuck(this, NULL);
+    heroLuck = gpGame->GetLuck(this, NULL);
     for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + HERO_SCREEN_LUCK_FIRST;
-        if (armyLuckLevel < 0)
+        if (heroLuck < 0)
             message.value = HERO_LUCK_FRAME_BAD;
-        else if (armyLuckLevel == 0)
+        else if (heroLuck == 0)
             message.value = HERO_LUCK_FRAME_NEUTRAL;
         else
             message.value = HERO_LUCK_FRAME_GOOD;
         heroWin->BroadcastMessage(message);
     }
-    shown = abs(armyLuckLevel);
-    if (shown <= 0)
-        shown = 1;
-    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > shown; i--) {
+    magnitude = abs(heroLuck);
+    if (magnitude <= 0)
+        magnitude = 1;
+    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > magnitude; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_LUCK_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         heroWin->BroadcastMessage(message);
     }
-    armyMoraleLevel = m_army.GetMorale(this, NULL);
+    moraleValue = m_army.GetMorale(this, NULL);
     for (i = 0; i < HERO_SCREEN_MOOD_ICON_COUNT; i++) {
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.id = i + HERO_SCREEN_MORALE_FIRST;
-        if (armyMoraleLevel < 0)
+        if (moraleValue < 0)
             message.value = HERO_MORALE_FRAME_BAD;
-        else if (armyMoraleLevel == 0)
+        else if (moraleValue == 0)
             message.value = HERO_MORALE_FRAME_NEUTRAL;
         else
             message.value = HERO_MORALE_FRAME_GOOD;
         heroWin->BroadcastMessage(message);
     }
-    shown = abs(armyMoraleLevel);
-    if (shown <= 0)
-        shown = 1;
-    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > shown; i--) {
+    magnitude = abs(moraleValue);
+    if (magnitude <= 0)
+        magnitude = 1;
+    for (i = HERO_SCREEN_MOOD_ICON_COUNT; i > magnitude; i--) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = i + (HERO_SCREEN_MORALE_FIRST - 1);
         message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
@@ -433,7 +433,7 @@ i8 hero::HeroView(i8 viewOnly) {
     message.id = HERO_SCREEN_EXPERIENCE;
     message.text = gText;
     heroWin->BroadcastMessage(message);
-    sprintf(gText, "crst%04d.icn", m_heroClass + gpCurPlayer->Color() * 4);
+    sprintf(gText, "crst%04d.icn", gpCurPlayer->Color() * 4 + m_heroClass);
     message.command = WIDGET_COMMAND_SET_ICON;
     message.id = HERO_SCREEN_CREST;
     heroWin->BroadcastMessage(message);
@@ -469,7 +469,7 @@ i8 hero::HeroView(i8 viewOnly) {
         return 1;
     } else {
         m_mobility = CalcMobility();
-        if (m_mobility < m_remainingMobility)
+        if (m_remainingMobility > m_mobility)
             m_remainingMobility = m_mobility;
     }
     gHeroWindShowing = 0;
@@ -503,7 +503,7 @@ void hero::HeroScreenUpdate(void) {
     message.type = MESSAGE_WIDGET;
     UpdateArmies();
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        if (i == giHeroScreenSrcIndex)
+        if (giHeroScreenSrcIndex == i)
             message.command = WIDGET_COMMAND_SET_FLAGS;
         else
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -640,15 +640,15 @@ i8 hero::Dismiss(void) {
 // evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
 VA(0x0043a199, 0x400)
 void hero::Deallocate(void) {
-    playerData* player;
-    i8 heroNum;
+    i32 oldOwner;
     i16 i;
-    i32 owner;
-    town* townRec;
-    i32 slotNum;
+    playerData* playerPtr;
+    i8 heroNum;
+    town* curTown;
+    i32 availSlot;
 
-    owner = m_owner;
-    player = &gpGame->m_players[m_owner];
+    oldOwner = m_owner;
+    playerPtr = &gpGame->m_players[m_owner];
     gpAdvManager->MobilizeCurrHero(0);
     gpAdvManager->HideRoute(0, 0, 0);
     if (m_eventFlags & HERO_EVENT_EMBARKED) {
@@ -660,10 +660,10 @@ void hero::Deallocate(void) {
         }
     }
     if (m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
-        townRec = gpGame->GetTown(m_occupiedTown);
-        townRec->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
+        curTown = gpGame->GetTown(m_occupiedTown);
+        curTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
-    if (m_owner != giCurPlayer || gpGame->m_players[m_owner].m_currentHero != m_id
+    if (giCurPlayer != m_owner || gpGame->m_players[m_owner].m_currentHero != m_id
         || !gpAdvManager->m_heroContextLocked)
         gpGame->RestoreCell(m_x, m_y, m_locationType, m_occupiedTown, NULL, 1);
     if (!gbCombatSurrender) {
@@ -671,32 +671,32 @@ void hero::Deallocate(void) {
             m_army.Dismiss(i);
     }
     heroNum = -1;
-    for (i = 0; i < player->m_heroCount; i++) {
-        if (player->m_heroIds[i] == m_id)
+    for (i = 0; i < playerPtr->m_heroCount; i++) {
+        if (playerPtr->m_heroIds[i] == m_id)
             heroNum = i;
     }
-    for (i = heroNum; i < player->m_heroCount - 1; i++)
-        player->m_heroIds[i] = player->m_heroIds[i + 1];
-    player->m_heroIds[player->m_heroCount - 1] = HERO_ID_NONE;
-    if (player->m_currentHero == m_id) {
-        player->m_currentHero = HERO_ID_NONE;
-        if (m_owner == giCurPlayer) {
+    for (i = heroNum; i < playerPtr->m_heroCount - 1; i++)
+        playerPtr->m_heroIds[i] = playerPtr->m_heroIds[i + 1];
+    playerPtr->m_heroIds[playerPtr->m_heroCount - 1] = HERO_ID_NONE;
+    if (playerPtr->m_currentHero == m_id) {
+        playerPtr->m_currentHero = HERO_ID_NONE;
+        if (giCurPlayer == m_owner) {
             gpAdvManager->m_cursorActive = 0;
             gpGame->m_map[m_x][m_y].m_flags &= ~MAP_CELL_HERO_CURSOR;
         }
-        if (giCurPlayer == owner)
+        if (oldOwner == giCurPlayer)
             gpAdvManager->m_heroContextLocked = 0;
     }
-    player->m_heroCount--;
-    player->m_heroLocatorPage = 0;
+    playerPtr->m_heroCount--;
+    playerPtr->m_heroLocatorPage = 0;
     gpGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_UNAVAILABLE;
     if (gbRetreatWin) {
-        slotNum = Random(0, HERO_AVAILABLE_SLOT_COUNT - 1);
-        if (gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[slotNum]]
+        availSlot = Random(0, HERO_AVAILABLE_SLOT_COUNT - 1);
+        if (gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[availSlot]]
             == HERO_AVAILABILITY_RETREATED)
-            gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[slotNum]] =
+            gpGame->m_availableHeroes[gpGame->m_players[m_owner].m_availableHeroIds[availSlot]] =
                 HERO_AVAILABILITY_UNAVAILABLE;
-        gpGame->m_players[m_owner].m_availableHeroIds[slotNum] = m_id;
+        gpGame->m_players[m_owner].m_availableHeroIds[availSlot] = m_id;
         gpGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_RETREATED;
     }
     m_owner = HERO_OWNER_NONE;
@@ -733,12 +733,12 @@ i32 hero::GetExperience(i32 level) {
 VA(0x0043a64e, 0xd7)
 i32 hero::GetLevel(i32 experienceValue) {
     i32 experience;
-    i32 nLevel;
+    i32 levelCounter;
     i32 growth;
 
-    for (nLevel = 1; nLevel <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; nLevel++) {
-        if (gMinExpForLevel[m_heroClass][nLevel - 1] > experienceValue)
-            return nLevel - 1;
+    for (levelCounter = 1; levelCounter <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT; levelCounter++) {
+        if (experienceValue < gMinExpForLevel[m_heroClass][levelCounter - 1])
+            return levelCounter - 1;
     }
     growth = static_cast<i32>(
         (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
@@ -746,13 +746,13 @@ i32 hero::GetLevel(i32 experienceValue) {
         * 1.2
     );
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
-    nLevel = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    while (experience < experienceValue) {
+    levelCounter = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
+    while (experienceValue > experience) {
         growth = static_cast<i32>(growth * 1.2);
         experience += growth;
-        nLevel++;
+        levelCounter++;
     }
-    return nLevel - 1;
+    return levelCounter - 1;
 }
 
 VA(0x0043a725, 0x179)
@@ -806,7 +806,7 @@ void hero::CheckLevel(void) {
     i32 roll;
 
     lvl = GetLevel(m_experience);
-    if (m_level == lvl)
+    if (lvl == m_level)
         return;
     levelCount = lvl - m_level;
     sprintf(gText, gHeroLevel[HERO_LEVEL_TEXT_GAINED], m_name);
@@ -825,15 +825,15 @@ void hero::CheckLevel(void) {
             highIndex = HERO_SKILL_BONUS_ROW_LAST;
         SRand(m_randomSeed + i * HERO_LEVEL_RANDOM_SEED_FACTOR);
         roll = SRandom(1, 100);
-        if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_ATTACK] > roll) {
+        if (roll < gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_ATTACK]) {
             stats[HERO_PRIMARY_ATTACK]++;
         } else {
             roll -= gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_ATTACK];
-            if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_DEFENSE] > roll) {
+            if (roll < gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_DEFENSE]) {
                 stats[HERO_PRIMARY_DEFENSE]++;
             } else {
                 roll -= gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_DEFENSE];
-                if (gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_SPELL_POWER] > roll)
+                if (roll < gHeroSkillBonus[m_heroClass][highIndex][HERO_PRIMARY_SPELL_POWER])
                     stats[HERO_PRIMARY_SPELL_POWER]++;
                 else
                     stats[HERO_PRIMARY_KNOWLEDGE]++;
@@ -1038,7 +1038,7 @@ i16 HeroHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (message.id == gpWindowManager->m_lastHoverId)
+                if (gpWindowManager->m_lastHoverId == message.id)
                     break;
                 gpWindowManager->m_lastHoverId = message.id;
                 UpdateHeroScreenStatusBar(message.id);
@@ -1126,8 +1126,8 @@ i16 HeroHandler(struct tag_message& message) {
                         } else if ((quickView
                                     && gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                                    || (!quickView
-                                       && message.id - HERO_SCREEN_ARMY_SLOT_FIRST
-                                              == giHeroScreenSrcIndex)) {
+                                       && giHeroScreenSrcIndex
+                                              == message.id - HERO_SCREEN_ARMY_SLOT_FIRST)) {
                             gpGame->ViewArmy(
                                 119,
                                 20,

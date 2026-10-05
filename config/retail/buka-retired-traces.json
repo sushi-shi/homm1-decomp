@@ -1,0 +1,293 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Per-function complete retail call sequences lack the inherited logging calls and their diagnostic-only producers. Keep API side effects and non-diagnostic work. This records source recovery, not exact-function credit; final compile and strict comparison are separate.",
+  "functions": [
+    {
+      "function_symbol": "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z",
+      "function_rva": "0x210c0",
+      "unit": "SOURCE/COMMAND",
+      "before_sha256": "48aec4e80b2a7f1cd1a4c3cb670f2a9e1c5bdcfad040760d24043f016d1a209b",
+      "after_sha256": "f557131a346036fcb54f8adc06e0446b42de953b21c616d40ca895e715b9b552",
+      "extra_calls": {
+        "?LogStr@@YAXPADHHHHHHH@Z": 1,
+        "?ProcessNextAction@combatManager@@QAEFAAUtag_message@@@Z": 2
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?TransmitSaveGame@game@@QAEHHH@Z",
+      "function_rva": "0x370d2",
+      "unit": "SOURCE/GAME",
+      "before_sha256": "c6a70e6b42c9bb4ff954b0b92ee3649ab139c260032111ce140a569dc31ac8c5",
+      "after_sha256": "bf15b450180349508bf56db4fa751372b3d663677eb6ec7ce85206de689608c4",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 3,
+        "?LogInt@@YAXPADH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?EarlySetup@@YAHXZ",
+      "function_rva": "0x3cfcb",
+      "unit": "SOURCE/KB",
+      "before_sha256": "8183bc2fcd66c00cea4af9e0cc42bbea376c6d821d670e33ff309a280e7451f8",
+      "after_sha256": "0470073cb80f23c3d96f8ffc8d6844841893819f8831f5fd3794e1245d22a743",
+      "extra_calls": {
+        "?LogTruncate@@YAXXZ": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?InitVars@@YAXXZ",
+      "function_rva": "0x4053e",
+      "unit": "SOURCE/KB",
+      "before_sha256": "2a27b8f1b8adbf87b586470fb7a6f3fd0c26670521a989d754060a49eebe24f2",
+      "after_sha256": "2f0b5c538b1a4b623bcddeb7f0af1a6aeaf6199f242716e302e12679ac027dfd",
+      "extra_calls": {
+        "?LogStr@@YAXPADHHHHH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?ShutDown@@YAXPAD@Z",
+      "function_rva": "0x41824",
+      "unit": "SOURCE/KB",
+      "before_sha256": "34fd6411e8617ef0712a6b3c3198fabb482e2dc81c35a63457a54542a07fca30",
+      "after_sha256": "8f8aae49ffc12fca6c1ed592d9938fc50a0d06c205c199adb56f00f0a36a01ae",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 1,
+        "?PrintMemoryLeaks@@YAXXZ": 1
+      },
+      "missing_calls": {
+        "?CloseSmackers@@YAXXZ": 1
+      }
+    },
+    {
+      "function_symbol": "?AppInit@@YAHPAX0HPAD@Z",
+      "function_rva": "0x42dba",
+      "unit": "SOURCE/kbwin",
+      "before_sha256": "45f5a2a36f130a99437c7bd0e200ed56d23126955a0b35069a54cffd67101794",
+      "after_sha256": "d71f16d31dfd47c9afede6bda0a0f494560fae643c13bbef220a12392222dd05",
+      "extra_calls": {
+        "?LogInt@@YAXPADH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function_rva": "0x43052",
+      "unit": "SOURCE/kbwin",
+      "before_sha256": "82ac0eb20d2bf268ccf78ae01a1e4193d3cd226e31dba0c648ea7fa56edf5340",
+      "after_sha256": "00018fb035dae08de6e7918279e804dd4cd6495a317ac6e43cf6451ab2966d68",
+      "extra_calls": {
+        "?KBTickCount@@YAHXZ": 1,
+        "?LogStr@@YAXPADHHHHH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?nb_thr_ctl@@YAXXZ",
+      "function_rva": "0x45712",
+      "unit": "SOURCE/netwin",
+      "before_sha256": "ca175353d881474861d9daef2938955e72c483907d08f834cc8e02f70e21ad7d",
+      "after_sha256": "aa12af825e6c906b6c2c5014fc4944fe7a3f5653ba24e414e22c593d871c9f82",
+      "extra_calls": {
+        "?KBTickCount@@YAHXZ": 3,
+        "?LogInt@@YAXPADH@Z": 3
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?CheckBuyStuff@philAI@@QAEXXZ",
+      "function_rva": "0x47dc7",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "8e2715d1f4db24760c85655ddcf6075ef595f452857bf26bf16fd6b5f0df4337",
+      "after_sha256": "236f9386f03ca5034082d1e19049fb328eac0f12604e5c2f6fcecfb314184720",
+      "extra_calls": {
+        "?LogInt@@YAXPADH@Z": 2
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?DoAI@philAI@@QAEXH@Z",
+      "function_rva": "0x48a6f",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "6b0ca6d885d2010fea9f4ea7916aa21edd8a0d075ba02fed182d58bb55e4941a",
+      "after_sha256": "dcbf0efb8bec6d36e7b8fc8edb0bb8e772bb9b52781134d958c710009b9a8587",
+      "extra_calls": {
+        "?LogInt@@YAXPADH@Z": 3,
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 5
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?GetBestBHC@philAI@@QAEXHAAUBHC@@@Z",
+      "function_rva": "0x497c8",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "a0a8d8475e14c5593012bb7e21112d50dd7d511cad1fecd37d14388a53ec9280",
+      "after_sha256": "5662fb73502ffca165145d0c7e8a3ee9c64c7c8f2ff5e2146e6a3ce9c5fb4b5c",
+      "extra_calls": {
+        "?LogInt@@YAXPADH@Z": 1,
+        "__ftol": 1,
+        "?LogStr@@YAXPADHHHHH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?DetermineTargetPosition@philAI@@QAEXPAVhero@@AAC1F@Z",
+      "function_rva": "0x49dfe",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "1c190b1b7244b4a1ca6e4b2bf7949432212ac125fae8cef6841b3a4a74084cfc",
+      "after_sha256": "c7bc539fcd2eb629cdec5f2178ffdba139934edc91d8226fb503e540bb6255f2",
+      "extra_calls": {
+        "?LogStr@@YAXPADHHHHH@Z": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?GetBestBuilding@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z",
+      "function_rva": "0x4b114",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "d41bc82961d821b18b9efa8d5cd654e19232e1e8e34c05af016f0a623572043c",
+      "after_sha256": "0020b8b75943e6b1047c4b9d981a12a4c6702915982d1e84a62b371c7d5fdd89",
+      "extra_calls": {
+        "?GetBuildingName@@YAPADHF@Z": 1,
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?GetBestCreature@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z",
+      "function_rva": "0x4b47d",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "519e6501a50e332fb23a88a12c4856b5a7213096722e3cf95e171f3d85c9853c",
+      "after_sha256": "3e9b5cba629c7382166c3a1d77f8d3e720b975aa1872df6ce9efad8253f77156",
+      "extra_calls": {
+        "?GetMonsterName@@YAPADH@Z": 1,
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?GetBestHero@philAI@@QAEXPAVtown@@AAUBHC@@AAM@Z",
+      "function_rva": "0x4b891",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "a1a76ecc642b0cb130c3f13f3b9b90aa5e4324094d7d59855c46039f27f2b550",
+      "after_sha256": "6375df0bce313e71d8935468244346c85ed994292ab5670c0f0cd0144d188532",
+      "extra_calls": {
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?BuildBuilding@philAI@@QAEXPAVtown@@F@Z",
+      "function_rva": "0x4e36d",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "44fa1f83ca80f4fe8ff07ea0d6e7570193cc1fd7294cf34cdef264eb3991f8f6",
+      "after_sha256": "568d9fe572a73242d11ebdc97f6c2f6f75abdcaa8ea949004f016c269b7aadd8",
+      "extra_calls": {
+        "?GetBuildingName@@YAPADHF@Z": 1,
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?BuildHero@philAI@@QAEXPAVtown@@F@Z",
+      "function_rva": "0x4e4ad",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "e8d64fb58bfa75bbc38927d4e5e69d7adab1b3bd11c4328c5f43b9a57d1c98fa",
+      "after_sha256": "d8e75f7e282b5b9e699ae9098a0603fe3fd2ee9ef691eb990b454a20b4fa6dcc",
+      "extra_calls": {
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?BuildCreature@philAI@@QAEXPAVtown@@HH@Z",
+      "function_rva": "0x4e6d0",
+      "unit": "SOURCE/PHILAI",
+      "before_sha256": "75b956bf582dca617fe9bad8717bf0b8eccf2a09a0ff32d8f11f6e88ca25140e",
+      "after_sha256": "36a5e04275164aa8bb2d1fcbb0c898f270db4303aa4e2f17fad14a74543f73a3",
+      "extra_calls": {
+        "?GetMonsterName@@YAPADH@Z": 1,
+        "_sprintf": 1,
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?DecodePacket@@YAHPAEH@Z",
+      "function_rva": "0x51ea9",
+      "unit": "SOURCE/REMOTE",
+      "before_sha256": "0f179d406babbcc8933eba813ae6eaee754193ae59633d332c05babe609b4c15",
+      "after_sha256": "94aa4533f9dc121c8fd34ced28f4a7f688fa5cd77daf5f532101accf9e9ca0c7",
+      "extra_calls": {
+        "_sprintf": 3,
+        "?LogStr@@YAXPAD@Z": 3
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?Main@townManager@@UAEFAAUtag_message@@@Z",
+      "function_rva": "0x607db",
+      "unit": "SOURCE/TOWNMGR",
+      "before_sha256": "2fdb716171fe2a18e5758a44da34bd7d7a338ec7d3f4e2405ece50e87b51522e",
+      "after_sha256": "6163e0db3ecd15ae3421f4dde13c7d96fb314b8e66d738afd59a4ee482b2f419",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?BuyBuild@townManager@@QAEFFCC@Z",
+      "function_rva": "0x62630",
+      "unit": "SOURCE/TOWNMGR",
+      "before_sha256": "0c4a6fa3c21e6f4169f49f0f9fdc15a9a1a26d4d146f56dc1fc85d4011c1eccf",
+      "after_sha256": "ec3b6cd6a9794dd1ebe3589a2a6de2fdb74d740a1286eb51f554e36470e0d8ed",
+      "extra_calls": {
+        "?LogStr@@YAXPADHHHHH@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?DDSD@@YAXHPADH@Z",
+      "function_rva": "0x6716a",
+      "unit": "SOURCE/wingraph",
+      "before_sha256": "c4c88656d76f4bea1a21c2ab927ce969a3d6643b8b90bc66c2040f8b70fb9b57",
+      "after_sha256": "71ff9f335b4c470ed547593562f2d40cf0de9fd87cc1858eb16ae2b5303cee7f",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 1
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?MouseMessageHandler@@YAHPAXIIH@Z",
+      "function_rva": "0x6e9c4",
+      "unit": "BASE/INPUTMGR",
+      "before_sha256": "eb18e564c169f9394398d571008f4dd3b670ad7ab1c57a6297c43bca7af18dac",
+      "after_sha256": "f062f29b5997c2ba801a1d17bed1f5ce315f0b381b66caaaf0eadcb1b97794ad",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 2
+      },
+      "missing_calls": {}
+    },
+    {
+      "function_symbol": "?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z",
+      "function_rva": "0x6f870",
+      "unit": "BASE/miscwin",
+      "before_sha256": "774ff8eadfaf45188807a182b5959ab5bce7a09cb07f30c8465416f210e036af",
+      "after_sha256": "5011c8afd417b34440ad1e1423a38f9dccfe0ba51a0ac8828bd746cd897ea0e2",
+      "extra_calls": {
+        "?LogStr@@YAXPAD@Z": 2
+      },
+      "missing_calls": {}
+    }
+  ]
+}

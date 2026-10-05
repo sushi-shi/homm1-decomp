@@ -5,7 +5,7 @@ locations:
 
 | Path | Build role |
 | --- | --- |
-| `encoder.cpp` | Compiled as the single `BASE/LZHUF` object with the optimized VC4 codec profile. It contains the game-facing wrappers, encoder, shared globals, and initialized Huffman tables. |
+| `encoder.cpp` | Compiled as the single `BASE/LZHUF` object with the pinned Buka VC6 `/Od /G5` profile. It contains the game-facing wrappers, encoder, shared globals, and initialized Huffman tables. |
 | `decoder/Decoder.asm` | Assembled as the single `BASE/LZHUFDEC` object: one private memory-move helper and five decoder routines, in retail order. |
 | `reference/decoder_correspondence.c` | Readable ordinary-C reconstruction used for type and compiler experiments. It is not a build input. |
 | `reference/paul-edwards-1990-lzhuf.c` | Unmodified historical source snapshot used only as provenance evidence. It is not a build input. |

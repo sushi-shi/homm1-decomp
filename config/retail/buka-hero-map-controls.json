@@ -1,0 +1,409 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "donor": {
+    "repository": "homm2/homm2-buka",
+    "revision": "e0689d3f71b2942b544fd677cb54085a13503d7b"
+  },
+  "changes": {
+    "combatManager::GenerateMap": "Restore conditional catapult frames, x-first horizontal coordinate arithmetic with a signed-word parity result, and direct random ground-frame assignment. Retail draws frame, row, column; the inherited cached coordinates consumed row, column, frame. Complete body and ordered references are exact.",
+    "game::NewMap": "Restore ultimate-artifact random rolls in the retail order 20,20,30 at both initial and retry sites. Restore town-type-first comparison, existing-class-first rotation sum and spread-first distance comparison. Instructions and ordered reference identities correspond; local stack placement remains non-exact.",
+    "game::Overview": "Restore left + spacing * i evaluation at each icon/text coordinate. Local placement remains non-exact; the gText immediate has a different encoded offset within the instruction because the destination stack displacement uses a different width.",
+    "hero::Deallocate": "Apply the measured SOURCE/HERO G5 profile and restore current-player-first owner comparisons and old-owner-first cleanup comparison. Complete instruction and reference correspondence except local stack placement.",
+    "HeroHandler": "Apply G5 and restore last-hover-first and selected-army-index-first comparisons. Complete instruction and reference correspondence except local stack placement."
+  },
+  "functions": [
+    {
+      "symbol": "?GenerateMap@combatManager@@QAEXXZ",
+      "rva": "0x19865",
+      "candidate_instructions": 553,
+      "retail_instructions": 553,
+      "candidate_extent": 1943,
+      "retail_extent": 1943,
+      "slot_map": {
+        "-24": -24,
+        "-12": -12,
+        "-8": -8,
+        "-4": -4,
+        "-16": -16,
+        "-20": -20
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 100.0,
+      "complete_bytes_and_references_exact": true,
+      "candidate_sha256": "41e50b27fcb1f6362ada5e51400edaf88f3a3ba74127eaadf93a6d204ae87796",
+      "retail_sha256": "41e50b27fcb1f6362ada5e51400edaf88f3a3ba74127eaadf93a6d204ae87796"
+    },
+    {
+      "symbol": "?NewMap@game@@QAEXPAD@Z",
+      "rva": "0x2e7f0",
+      "candidate_instructions": 911,
+      "retail_instructions": 911,
+      "candidate_extent": 3633,
+      "retail_extent": 3633,
+      "slot_map": {
+        "-96": -96,
+        "-64": -16,
+        "-4": -8,
+        "-16": -64,
+        "-72": -20,
+        "-88": -68,
+        "-76": -24,
+        "-60": -72,
+        "-84": -76,
+        "-92": -80,
+        "-12": -84,
+        "-8": -4,
+        "-68": -12,
+        "-56": -60,
+        "-20": -88,
+        "-80": -92
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.77717,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "6b0f8967267f691786b31a50557e4cbcd7ea8ef40109b6a8ac09c43a284c41ec",
+      "retail_sha256": "09714ffcd425b7850bdf664c9dfd4e93b4520d697b8fd0981e09fcb4f7ea94f5"
+    },
+    {
+      "symbol": "?Overview@game@@QAEXXZ",
+      "rva": "0x32089",
+      "candidate_instructions": 774,
+      "retail_instructions": 774,
+      "candidate_extent": 3329,
+      "retail_extent": 3201,
+      "slot_map": {
+        "-216": -216,
+        "-132": -140,
+        "-168": -40,
+        "-40": -52,
+        "-16": -128,
+        "-72": -108,
+        "-120": -200,
+        "-184": -16,
+        "-56": -84,
+        "-148": -72,
+        "-52": -164,
+        "-64": -136,
+        "-192": -180,
+        "-24": -48,
+        "-80": -24,
+        "-152": -104,
+        "-68": -196,
+        "-28": -176,
+        "-108": -28,
+        "-136": -172,
+        "-44": -124,
+        "-128": -120,
+        "-180": -116,
+        "-188": -44,
+        "-116": -192,
+        "-76": -68,
+        "-36": -80,
+        "-144": -188,
+        "-60": -64,
+        "-84": -96,
+        "-112": -112,
+        "-176": -92,
+        "-104": -100,
+        "-48": -36,
+        "-124": -76,
+        "-200": -168,
+        "-164": -32,
+        "-140": -132,
+        "-196": -184,
+        "-160": -60,
+        "-20": -20,
+        "-220": -220,
+        "-208": -208,
+        "-4": -4,
+        "-224": -224,
+        "-204": -204,
+        "-32": -160,
+        "-100": -156,
+        "-98": -154,
+        "-96": -152,
+        "-88": -144,
+        "-212": -212,
+        "-12": -12
+      },
+      "instruction_and_reference_differences": [
+        [
+          "referents",
+          "0xae3",
+          [
+            [
+              3,
+              [
+                "?gText@@3PADA",
+                0
+              ]
+            ]
+          ],
+          [
+            [
+              6,
+              [
+                "?gText@@3PADA",
+                0
+              ]
+            ]
+          ]
+        ]
+      ],
+      "objdiff_score": 99.540054,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "5a11588164eedc0a8a5e1d98f6db872dd3a0e75fa8cf0fb4e5e962f0b08505f4",
+      "retail_sha256": "38c12047f7dbd13aeabd4ba8e0890d498f8bb8d04f13e35abb665c24da433d99"
+    },
+    {
+      "symbol": "?Deallocate@hero@@QAEXXZ",
+      "rva": "0x3a199",
+      "candidate_instructions": 271,
+      "retail_instructions": 271,
+      "candidate_extent": 1024,
+      "retail_extent": 1024,
+      "slot_map": {
+        "-28": -28,
+        "-24": -4,
+        "-4": -16,
+        "-8": -8,
+        "-16": -20,
+        "-20": -12,
+        "-12": -24
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.91144,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "4455facf8e5b513db0fd0fd35dda64bb2120e30decbc0a111aea51a14e23453a",
+      "retail_sha256": "165286e4f9440d2b693d380723722be4db78301fa2432fe2b47a60c0087aeadd"
+    },
+    {
+      "symbol": "?HeroHandler@@YAFAAUtag_message@@@Z",
+      "rva": "0x3b0b5",
+      "candidate_instructions": 355,
+      "retail_instructions": 355,
+      "candidate_extent": 1552,
+      "retail_extent": 1552,
+      "slot_map": {
+        "-4": -12,
+        "-12": -4,
+        "-64": -64,
+        "-68": -68,
+        "-72": -72,
+        "-44": -24,
+        "-56": -60,
+        "-8": -20,
+        "-76": -76,
+        "-60": -8
+      },
+      "instruction_and_reference_differences": [],
+      "objdiff_score": 99.92014,
+      "complete_bytes_and_references_exact": false,
+      "candidate_sha256": "c9f2096561f2ec2020bd03599dffd1b42424a07af86a8c3720d4634f8701118e",
+      "retail_sha256": "0d6b6d0ed301a089fda842ffa2755d5fccf7b6c63f338a4e6320e4c664d1dc82"
+    }
+  ],
+  "hero_compiler_control": {
+    "unit": "SOURCE/HERO",
+    "source_sha256": "2105ea34e62b5734d5a6a04a35cd1fe772e76dd41eebcf4accd1d1a9dc9d8a3b",
+    "object_sha256": "c781cea2ae644baad473fed0620b633bcb4cdf0d1f7b3838f880de054b265f56",
+    "before_exact": 17,
+    "after_exact": 17,
+    "improved": 2,
+    "regressed": 0,
+    "functions": [
+      {
+        "name": "??0hero@@QAE@XZ",
+        "rva": "0x38f20",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 93
+      },
+      {
+        "name": "?GetArmyStrengths@hero@@QAEXQAI@Z",
+        "rva": "0x38f7d",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 13
+      },
+      {
+        "name": "?HasArtifact@hero@@QAECC@Z",
+        "rva": "0x38f8a",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 75
+      },
+      {
+        "name": "?CalcMobility@hero@@QAEFXZ",
+        "rva": "0x38fd5",
+        "before": 99.70731,
+        "after": 99.70731,
+        "size": 445
+      },
+      {
+        "name": "?HasSpell@hero@@QAECC@Z",
+        "rva": "0x39192",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 65
+      },
+      {
+        "name": "?GetNumSpells@hero@@QAEFC@Z",
+        "rva": "0x391d3",
+        "before": 99.7377,
+        "after": 99.7377,
+        "size": 200
+      },
+      {
+        "name": "?UseSpell@hero@@QAEXC@Z",
+        "rva": "0x3929b",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 516
+      },
+      {
+        "name": "?AddSpell@hero@@QAEHCCH@Z",
+        "rva": "0x3949f",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 423
+      },
+      {
+        "name": "?RedrawHeroScreen@hero@@QAEXXZ",
+        "rva": "0x39646",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 72
+      },
+      {
+        "name": "?HeroView@hero@@QAECC@Z",
+        "rva": "0x3968e",
+        "before": 98.21411,
+        "after": 98.21411,
+        "size": 1610
+      },
+      {
+        "name": "?HeroMessageUpdate@@YAXPAD@Z",
+        "rva": "0x39cd8",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 108
+      },
+      {
+        "name": "?HeroScreenUpdate@hero@@QAEXXZ",
+        "rva": "0x39d44",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 153
+      },
+      {
+        "name": "?UpdateArmies@hero@@QAEXXZ",
+        "rva": "0x39ddd",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 438
+      },
+      {
+        "name": "?ViewStat@hero@@QAEXCC@Z",
+        "rva": "0x39f93",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 385
+      },
+      {
+        "name": "?ViewArtifact@hero@@QAEXCC@Z",
+        "rva": "0x3a114",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 62
+      },
+      {
+        "name": "?Dismiss@hero@@QAECXZ",
+        "rva": "0x3a152",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 71
+      },
+      {
+        "name": "?Deallocate@hero@@QAEXXZ",
+        "rva": "0x3a199",
+        "before": 97.08856,
+        "after": 97.457565,
+        "size": 1024
+      },
+      {
+        "name": "?GetExperience@hero@@QAEHH@Z",
+        "rva": "0x3a599",
+        "before": 99.84314,
+        "after": 99.84314,
+        "size": 181
+      },
+      {
+        "name": "?GetLevel@hero@@QAEHH@Z",
+        "rva": "0x3a64e",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 215
+      },
+      {
+        "name": "?ApplyBattleWinTemps@hero@@QAEXXZ",
+        "rva": "0x3a725",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 377
+      },
+      {
+        "name": "?ApplyBattleLossTemps@hero@@QAEXXZ",
+        "rva": "0x3a89e",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 19
+      },
+      {
+        "name": "?CheckLevel@hero@@QAEXXZ",
+        "rva": "0x3a8b1",
+        "before": 98.57143,
+        "after": 98.57143,
+        "size": 695
+      },
+      {
+        "name": "?NumArtifacts@hero@@QAEHXZ",
+        "rva": "0x3ab68",
+        "before": 100.0,
+        "after": 100.0,
+        "size": 75
+      },
+      {
+        "name": "?UpdateHeroScreenStatusBar@@YAXF@Z",
+        "rva": "0x3abb3",
+        "before": 99.896645,
+        "after": 99.896645,
+        "size": 1282
+      },
+      {
+        "name": "?HeroHandler@@YAFAAUtag_message@@@Z",
+        "rva": "0x3b0b5",
+        "before": 97.91107,
+        "after": 99.66243,
+        "size": 1552
+      }
+    ]
+  },
+  "overview_reference_encoding": {
+    "candidate_offset": "0xae3",
+    "retail_offset": "0xa3c",
+    "candidate": "mov dword ptr [ebp-0x58], &gText",
+    "retail": "mov dword ptr [ebp-0x90], &gText",
+    "candidate_immediate_offset": 3,
+    "retail_immediate_offset": 6,
+    "identity": "?gText@@3PADA",
+    "addend": 0,
+    "status": "Recorded diagnostic discrepancy; comparison remains strict and the function remains non-exact."
+  },
+  "source_sha256": {
+    "src/SOURCE/CMBTMGR.cpp": "4840e854a888bdecd01b18c1337c3d7d100a6894677da13dd582370b2944a917",
+    "src/SOURCE/GAME.cpp": "821715c6c3d74c607d788e91d1ee63144520b9f3962c4b8254069226458ecec7",
+    "src/SOURCE/HERO.cpp": "a67a177efbb48879bb5964fc12fc22f425396e8ee004f2e8dbcd4d36070730c0",
+    "config/units.toml": "de6239fdd4b3a5a83820c1bd0fe81e5a8dc6c6d20c72d95d41665f2291b18342"
+  }
+}

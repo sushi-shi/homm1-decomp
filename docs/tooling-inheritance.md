@@ -339,9 +339,10 @@ Retained: whole-image delinking, strict default refusal, candidate normalization
 objdiff name/addend checks, and the separate manual score bank. Adapted:
 `--report-unprovided` preserves unresolved names only in marked diagnostic
 objects and writes every unresolved reference site. `homm1 compare --baseline`
-uses those objects with the existing comparison pipeline and counts unreviewed
-annotated bodies/references as zero over the current-image source-body claims. Missing
-absolute relocations also withhold the function. Diagnostic reports are rejected
+uses those objects with the existing comparison pipeline. Initially, unreviewed
+annotated bodies/references and missing absolute relocations withheld the whole
+function score; that temporary rule was retired after the annotated-body sweep
+(see below). Diagnostic reports are rejected
 by the verified score loader; the README baseline is separately generated and
 checks its input fingerprint. Deferred: completing the Buka identity migration
 and the existing full verification gates. No donor command parity is claimed.
@@ -491,9 +492,9 @@ names to HoMM1's canonical model, with an explicit build dependency. Reviewed
 link-order contribution spans also attribute unnamed bodies to their TU.
 Generated ordinals and unresolved original names remain unnamed. The ordinary
 delinker keeps its existing referent validation and anonymous address buckets;
-no separate mapping pipeline or source body is introduced. Baseline scoring
-still requires an emitted source or source-compiler-generated body with strict
-reference evidence. Referent-only identities do not enroll matching targets.
+no separate mapping pipeline or source body is introduced. Baseline enrollment
+requires an emitted source or source-compiler-generated body; reference evidence
+is checked separately after retirement of the temporary score rule. Referent-only identities do not enroll matching targets.
 Tests cover source precedence, unknown gaps, missing census starts, label-only
 extent handling, and annotation-based matching eligibility. HoMM2's unrelated import
 provider mechanisms are inapplicable to this function-ownership change.
@@ -513,3 +514,47 @@ remain available for structural recovery and reference checks. Annotated bodies
 without usable comparisons still count as zero. Deferred: full strict build
 verification. Donor-specific report schemas and carve-out tables are inapplicable;
 no new command or logging path is introduced.
+
+
+## Retirement of the temporary Buka reference score rule
+
+Reviewed Giten `d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` and Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` `verify/scores.py::functions`,
+and HoMM2 `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`match/status.py::_fn_fuzzy`: each reads measured per-function fuzzy scores
+without a separate reference-review penalty.
+
+Retained: strict objdiff reference/addend comparison, source-body enrollment,
+missing-comparison accounting, diagnostic report isolation, stale-input refusal,
+and separate MAX/HIST banking. Adapted: removed the temporary rule that replaced
+an entire function's measured score with zero after one unreviewed reference.
+The all-function reference sweep passed before this change. The same review
+logic now emits a separate complete `reference-audit.json` on every baseline
+comparison, including all failures and omitted absolute relocations rather than
+stopping at the first. No comparison identities, bytes, or addends are masked.
+Regression controls retain partial scores and distinguish a measured zero from
+an absent comparison. Existing logged command entry points are unchanged.
+
+Deferred: whole-image provision, placement/initializer gates and full build
+verification, including dependencies outside annotated bodies. Inapplicable:
+donor-specific report schemas and target carve-out tables. This scoped change
+does not establish donor-wide command or behavioral parity.
+
+
+## Shared reviewed ordinal-import identities
+
+Reviewed Giten `d675d472ff0f350a7e27bcf3b9a2c7548e2bb77c` and Gruntz
+`0e590d1189058c534523ba0c4324c08122ab2ee4` `delink/implib.py::resolve_iat`,
+and HoMM2 Buka `e0689d3f71b2942b544fd677cb54085a13503d7b`
+`imports/smackw32.def`. Retained: SDK import-library decorations, exact named
+DLL exports, distinct unknown-ordinal identities, strict reference/addend checks,
+and the existing logged commands. Adapted: the delinker reuses HoMM1's existing
+linker validator for the selected image's reviewed DLL/slot/ordinal facts before
+falling back to an anonymous ordinal. Conflicting SDK and reviewed spellings are
+rejected. HoMM2's Smacker ordinal/name pairs corroborate the existing facts; no
+unreviewed ordinal inference or comparison alias is added.
+
+Controls cover an unknown ordinal, agreeing evidence, conflicting identities,
+and the existing malformed/archive/image validation cases. Deferred: full-image
+provisioning and final build verification. Inapplicable: donor-specific target
+layouts and unrelated ABI rules. This does not establish donor-wide parity.

@@ -19,13 +19,26 @@
 #include <io.h>
 #include <string.h>
 
+DATA(0x004a1388) static u8 gInputCharacterMapCp1251[0x80] = {
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
+    0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
+    0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0xdd, 0x23, 0x24, 0x25, 0x26,
+    0xfd, 0x28, 0x29, 0x2a, 0x2b, 0xe1, 0x2d, 0xfe, 0xb8, 0x30, 0x31, 0x32, 0x33,
+    0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0xc6, 0xe6, 0xc1, 0x3d, 0xde, 0xa8, 0x40,
+    0xd4, 0xc8, 0xd1, 0xc2, 0xd3, 0xc0, 0xcf, 0xd0, 0xd8, 0xce, 0xcb, 0xc4, 0xdc,
+    0xd2, 0xd9, 0xc7, 0xc9, 0xca, 0xdb, 0xc5, 0xc3, 0xcc, 0xd6, 0xd7, 0xcd, 0xdf,
+    0xf5, 0x5c, 0xfa, 0x5e, 0x5f, 0x60, 0xf4, 0xe8, 0xf1, 0xe2, 0xf3, 0xe0, 0xef,
+    0xf0, 0xf8, 0xee, 0xeb, 0xe4, 0xfc, 0xf2, 0xf9, 0xe7, 0xe9, 0xea, 0xfb, 0xe5,
+    0xe3, 0xec, 0xf6, 0xf7, 0xed, 0xff, 0xd5, 0x7c, 0xda, 0x7e, 0x7f
+};
+
 static inline void ResetEventQueue(inputManager* manager) {
     manager->m_writeIndex = 0;
     manager->m_readIndex = 0;
 }
 
 VA(0x0046e560, 0x464)
-i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
+i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) {
     if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)
@@ -40,12 +53,18 @@ i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
     switch (message) {
         case WM_KEYDOWN:
             event->type = MESSAGE_KEY_DOWN;
-            event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+            if (virtualKey == VK_RETURN)
+                event->keyCode = INPUT_SCAN_ENTER;
+            else
+                event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
             event->y = 0;
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
                     gpInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
+                    break;
+                case INPUT_SCAN_ALT:
+                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
                     break;
                 case INPUT_SCAN_LEFT_SHIFT:
                     gpInputManager->m_modifiers |= MESSAGE_MODIFIER_LEFT_SHIFT;
@@ -53,28 +72,28 @@ i32 KeyboardMessageHandler(void*, u32 message, u32, i32 messageData) {
                 case INPUT_SCAN_RIGHT_SHIFT:
                     gpInputManager->m_modifiers |= MESSAGE_MODIFIER_RIGHT_SHIFT;
                     break;
-                case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
-                    break;
             }
             break;
         case WM_KEYUP:
             event->type = MESSAGE_KEY_UP;
-            event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
+            if (virtualKey == VK_RETURN)
+                event->keyCode = INPUT_SCAN_ENTER;
+            else
+                event->keyCode = HIWORD(messageData) & INPUT_SCAN_CODE_MASK;
             event->y = 0;
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
                     gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
                     break;
+                case INPUT_SCAN_ALT:
+                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
+                    break;
                 case INPUT_SCAN_LEFT_SHIFT:
                     gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_LEFT_SHIFT;
                     break;
                 case INPUT_SCAN_RIGHT_SHIFT:
                     gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_RIGHT_SHIFT;
-                    break;
-                case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
                     break;
             }
             break;
@@ -122,6 +141,7 @@ i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
         return 1;
     gpInputManager->m_mouseMessageActive = 1;
 
+    i32 captureReleased;
     tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
@@ -132,39 +152,34 @@ i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
         case WM_MOUSEMOVE:
             event->type = MESSAGE_MOUSE_MOVE;
             goto mouseCoordinates;
+        case WM_LBUTTONDBLCLK:
+            event->type = MESSAGE_LEFT_BUTTON_DOWN;
+            goto mouseCoordinates;
         case WM_LBUTTONDOWN:
             event->type = MESSAGE_LEFT_BUTTON_DOWN;
             SetCapture(hwndApp);
-            goto mouseCoordinates;
-        case WM_LBUTTONUP:
-            event->type = MESSAGE_LEFT_BUTTON_UP;
-            if (ReleaseCapture() == FALSE)
-                LogStr(gLeftReleaseCaptureFailure);
-            goto mouseCoordinates;
-        case WM_LBUTTONDBLCLK:
-            event->type = MESSAGE_LEFT_BUTTON_DOWN;
             goto mouseCoordinates;
         case WM_RBUTTONDOWN:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
             SetCapture(hwndApp);
             goto mouseCoordinates;
-        case WM_RBUTTONUP:
-            event->type = MESSAGE_RIGHT_BUTTON_UP;
-            if (ReleaseCapture() == FALSE)
-                LogStr(gRightReleaseCaptureFailure);
-            goto mouseCoordinates;
         case WM_RBUTTONDBLCLK:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
             goto mouseCoordinates;
-        default:
-            goto mouseMoveCursorCheck;
-    }
+        case WM_LBUTTONUP:
+            event->type = MESSAGE_LEFT_BUTTON_UP;
+            captureReleased = ReleaseCapture();
+            goto mouseCoordinates;
+        case WM_RBUTTONUP:
+            event->type = MESSAGE_RIGHT_BUTTON_UP;
+            captureReleased = ReleaseCapture();
 
 mouseCoordinates:
-#line 187
-    H1_ASSERT(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
-    event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
-    event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
+#line 191
+        H1_ASSERT(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
+        event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
+        event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
+    }
 
 mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
@@ -192,8 +207,8 @@ afterMouseCoordinates:
 VA(0x0046ecfe, 0xa0)
 inputManager::inputManager(void) {
     m_active = 0;
-    m_mouseMessageActive = 0;
     m_field_0x34a = 0;
+    m_mouseMessageActive = 0;
     m_requestedPriority = 1;
     m_field_0x33c = 0;
     m_field_0x236 = 0;
@@ -204,22 +219,17 @@ inputManager::inputManager(void) {
     m_field_0x34f = 0;
 }
 
-// @early-stop 99.75: the inline strcpy saves its length in edx where retail
-// uses eax; nothing else differs. /O2 RA trace: the length is not a colouring
-// node (priority, this, the 0/1 constants and the scan temporary colour as in
-// retail). Probes: `return 1` moves it to ebp; an int priority, or swapping the
-// two stores of 1, keeps edx. Retail's heroWindowManager::Open also uses edx,
-// mouseManager's constructor eax.
 VA(0x0046ed9e, 0xa4)
 i16 inputManager::Open(i16 priority) {
+    i16 positiveOption = 1;
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
     m_requestedPriority = priority;
     m_modifiers = MESSAGE_MODIFIER_NONE;
     MakeScanCodeTable();
+    SetPositiveOption(positiveOption);
     m_messageMask = BASE_MANAGER_ACCEPT_MOUSE_MOVE;
     m_priority = BASE_MANAGER_PRIORITY_UNASSIGNED;
-    m_field_0x23a = 1;
     m_active = 1;
     strcpy(m_name, "inputManager");
     return BASE_MANAGER_SUCCESS;
@@ -267,12 +277,28 @@ tag_message inputManager::GetEvent(void) {
     return event;
 }
 
+// Descriptive name: retail's original method name is not available.
+VA(0x0046f008, 0x31)
+void inputManager::SetPositiveOption(i16 value) {
+    if (value > 0)
+        m_field_0x23a = value;
+    else
+        m_field_0x23a = 1;
+}
+
 // The donor assigns the key-code mode and then flushes the event queue.
-// HoMM1 inlines Flush here and stores the mode as a short at +0x340.
+// Buka calls Flush and stores the mode as a short at +0x340.
 VA(0x0046f062, 0x23)
 void inputManager::SetKeyCodeType(i16 keyCodeType) {
     m_keyCodeType = keyCodeType;
-    ResetEventQueue(this);
+    Flush();
+}
+
+VA(0x0046f085, 0x34)
+void TranslateInputCharacterCp1251(tag_message& event) {
+    if (event.keyCode >= 0
+        && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMapCp1251)))
+        event.keyCode = static_cast<i8>(gInputCharacterMapCp1251[event.keyCode]);
 }
 
 VA(0x0046f0b9, 0x312)
@@ -286,7 +312,7 @@ void inputManager::AsciiConvert(tag_message& event) {
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == 0 && event.keyCode > 'A' - 1
         && event.keyCode < 'Z' + 1)
-        event.keyCode += 'a' - 'A';
+        event.keyCode = static_cast<u8>(CyrillicToLower(static_cast<char>(event.keyCode)));
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) != 0) {
         switch (event.keyCode) {
@@ -352,6 +378,8 @@ void inputManager::AsciiConvert(tag_message& event) {
                 break;
         }
     }
+    if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == 0)
+        TranslateInputCharacterCp1251(event);
 }
 
 VA(0x0046f3cb, 0x46a)
@@ -397,7 +425,7 @@ void inputManager::MakeScanCodeTable(void) {
     m_keyState[INPUT_SCAN_J] = 'J';
     m_keyState[INPUT_SCAN_K] = 'K';
     m_keyState[INPUT_SCAN_L] = 'L';
-    m_keyState[INPUT_SCAN_SEMICOLON] = '\'';
+    m_keyState[INPUT_SCAN_SEMICOLON] = ';';
     m_keyState[INPUT_SCAN_APOSTROPHE] = '\'';
     m_keyState[INPUT_SCAN_GRAVE] = INPUT_SCAN_GRAVE << INPUT_KEY_SCAN_SHIFT;
     m_keyState[INPUT_SCAN_LEFT_SHIFT] = INPUT_SCAN_LEFT_SHIFT << INPUT_KEY_SCAN_SHIFT;

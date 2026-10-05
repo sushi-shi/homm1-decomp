@@ -1,0 +1,11 @@
+{
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db",
+  "method": "Remove an unclaimed inherited NWC census start inside the complete reviewed Buka assertion filename. No payload or source change.",
+  "owner_rva": "0xa10ac",
+  "size": 53,
+  "payload_sha256": "af98aa2df3ab4079743feac020a7bebab344531b72151554e252e755e5830cd8",
+  "removed_interior_rva": "0xa10c4",
+  "interior_offset": 24,
+  "consumer_evidence": "buka-final-literal-consumers.json",
+  "legacy_origin": "win95-1.1-to-1.2.tsv"
+}

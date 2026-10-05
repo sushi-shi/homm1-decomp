@@ -1,0 +1,149 @@
+{
+  "method": "Existing /G5 profile: complete instruction IDs, prefixes, operand widths, registers, immediates, branch destination instruction indices and ordered relocation identities/addends agree. A consistent local EBP displacement correspondence remains non-exact; no scoring normalization is applied. Original G6/G5 whole-unit comparison is in buka-matching-g5-controls.json and build/preflight/g5-sweep/results.json.",
+  "functions": [
+    {
+      "rva": "0x5a30d",
+      "name": "?ValidSpellTarget@combatManager@@QAECCC@Z",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 613,
+      "size": 613,
+      "score": 99.94972,
+      "status": "scored",
+      "slot_map": {
+        "-16": -16,
+        "-12": -4,
+        "-20": -20,
+        "-8": -12
+      }
+    },
+    {
+      "rva": "0x5b6f8",
+      "name": "?CancelSideSpells@combatManager@@QAEXCC@Z",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 240,
+      "size": 240,
+      "score": 99.82051,
+      "status": "scored",
+      "slot_map": {
+        "-12": -12,
+        "-8": -4,
+        "-4": -8,
+        "-16": -16
+      }
+    },
+    {
+      "rva": "0x5b7e8",
+      "name": "?Fireball@combatManager@@QAEXC@Z",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 1027,
+      "size": 1027,
+      "score": 99.52688,
+      "status": "scored",
+      "slot_map": {
+        "-48": -48,
+        "-8": -8,
+        "-32": -12,
+        "-40": -40,
+        "-36": -36,
+        "-28": -44,
+        "-24": -32,
+        "-22": -30,
+        "-44": -16,
+        "-4": -4
+      }
+    },
+    {
+      "rva": "0x5bbeb",
+      "name": "?MeteorShower@combatManager@@QAEXC@Z",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 1026,
+      "size": 1026,
+      "score": 98.28467,
+      "status": "scored",
+      "slot_map": {
+        "-44": -44,
+        "-8": -8,
+        "-28": -40,
+        "-24": -28,
+        "-36": -32,
+        "-22": -26,
+        "-40": -36,
+        "-48": -48,
+        "-32": -12,
+        "-4": -4
+      }
+    },
+    {
+      "rva": "0x5bfed",
+      "name": "?ElementalStorm@combatManager@@QAEXXZ",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 720,
+      "size": 720,
+      "score": 99.262375,
+      "status": "scored",
+      "slot_map": {
+        "-44": -44,
+        "-20": -20,
+        "-12": -36,
+        "-36": -28,
+        "-24": -24,
+        "-16": -12,
+        "-4": -4,
+        "-28": -16,
+        "-40": -8,
+        "-32": -40,
+        "-8": -32
+      }
+    },
+    {
+      "rva": "0x5c2bd",
+      "name": "?Armageddon@combatManager@@QAEXXZ",
+      "unit": "SOURCE/SPELLS",
+      "census_size": 950,
+      "size": 950,
+      "score": 99.75188,
+      "status": "scored",
+      "slot_map": {
+        "-72": -72,
+        "-40": -36,
+        "-16": -16,
+        "-52": -24,
+        "-44": -48,
+        "-32": -44,
+        "-48": -20,
+        "-60": -60,
+        "-4": -4,
+        "-76": -76,
+        "-56": -56,
+        "-28": -52,
+        "-20": -28,
+        "-24": -32,
+        "-36": -40,
+        "-68": -68,
+        "-64": -64,
+        "-80": -80,
+        "-12": -12
+      }
+    },
+    {
+      "rva": "0x66595",
+      "name": "?ViewArmy@combatManager@@QAEXPAVarmy@@HH@Z",
+      "unit": "SOURCE/VIEW",
+      "census_size": 309,
+      "size": 309,
+      "score": 93.111115,
+      "status": "scored",
+      "slot_map": {
+        "-32": -32,
+        "-24": -28,
+        "-28": -24,
+        "-12": -20,
+        "-20": -12,
+        "-4": -4,
+        "-16": -8,
+        "-8": -16
+      }
+    }
+  ],
+  "image_sha256": "34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db"
+}
