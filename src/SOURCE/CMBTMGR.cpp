@@ -1165,75 +1165,75 @@ void combatManager::RegenerateField(void) {
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0041bbd1, 0xae3)
 void combatManager::KeepAttack(void) {
-    i32 mod;
-    i16 minX;
-    i16 minY;
-    i16 lastX;
-    i16 gapX;
-    i8 hexCol;
-    i8 keepY;
-    float yAdvance;
-    i16 lastY;
-    i8 targetRow;
-    i8 shotShape[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1,
-                        1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
-    i32 bestRank;
-    i8 srcCol;
-    float yRun;
-    i16 distance;
-    float xAdvance;
-    i32 targetIndex;
-    class sample* sample;
-    i16 updRight;
-    i16 gapY;
-    i16 w;
-    i16 height;
-    bitmap* behind;
-    i32 i;
-    i32 bestWorth;
-    i32 power;
-    i16 startX;
-    float xRun;
-    i16 maxY;
-    i16 startY;
-    i16 destX;
-    i32 numLost;
-    army* target;
-    i32 priority;
-    i16 frontCol;
-    i32 hurt;
     i8 arrowFrame;
-    i32 dice;
-    i16 targetY;
+    i16 lastX;
+    i32 numRolls;
+    class sample* sample;
+    i16 lastY;
+    i8 originalColumn;
+    i8 hisCol;
+    i8 originalRow;
+    float gainX;
+    float inFlightX;
+    float gainY;
+    float inFlightY;
+    i16 landX;
+    i8 shotTable[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1,
+                        1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    i8 hisRow;
+    i16 projectileSizeY;
+    i32 mod;
+    i16 landY;
+    i16 projectileSizeX;
+    i32 arrowDamage;
+    i16 clipTop;
+    i32 stackKilled;
+    i32 k;
+    i32 priority;
+    i16 clipLeft;
+    bitmap* backing;
+    i32 pickIndex;
+    i16 aimColumn;
+    army* hisStack;
+    i16 fullXLen;
+    i16 flightSteps;
+    i16 startX;
+    i16 maxX;
+    i16 fullYLen;
+    i16 startY;
+    i16 maxY;
+    i32 bestClass;
+    i32 power;
+    i32 bestStrength;
 
-    bestRank = -1;
-    bestWorth = 0;
-    targetIndex = COMBAT_ARMY_INDEX_NONE;
-    for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        if (m_armies[COMBAT_ATTACKER_SIDE][i].IsAlive()) {
-            target = &m_armies[COMBAT_ATTACKER_SIDE][i];
-            if (target->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
+    bestClass = -1;
+    bestStrength = 0;
+    pickIndex = COMBAT_ARMY_INDEX_NONE;
+    for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
+        if (m_armies[COMBAT_ATTACKER_SIDE][k].IsAlive()) {
+            hisStack = &m_armies[COMBAT_ATTACKER_SIDE][k];
+            if (hisStack->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
                 priority = 2;
-            else if (target->m_stats.attributes & MONSTER_FLAGS_FLYING)
+            else if (hisStack->m_stats.attributes & MONSTER_FLAGS_FLYING)
                 priority = 1;
             else
                 priority = 0;
-            power = target->m_quantity * gMonsterDatabase[target->m_creatureType].fightValue;
-            if (priority > bestRank || (priority == bestRank && power > bestWorth)) {
-                bestWorth = power;
-                bestRank = priority;
-                targetIndex = i;
+            power = hisStack->m_quantity * gMonsterDatabase[hisStack->m_creatureType].fightValue;
+            if (priority > bestClass || (priority == bestClass && power > bestStrength)) {
+                bestStrength = power;
+                bestClass = priority;
+                pickIndex = k;
             }
         }
     }
-    if (targetIndex == COMBAT_ARMY_INDEX_NONE)
+    if (pickIndex == COMBAT_ARMY_INDEX_NONE)
         return;
     gpMouseManager->ReallyHidePointer();
-    target = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][targetIndex];
-    hexCol = target->m_hex % COMBAT_GRID_COLUMNS;
-    targetRow = target->m_hex / COMBAT_GRID_COLUMNS;
-    srcCol = COMBAT_GRID_LAST_COLUMN;
-    keepY = 0;
+    hisStack = &gpCombatManager->m_armies[COMBAT_ATTACKER_SIDE][pickIndex];
+    hisCol = hisStack->m_hex % COMBAT_GRID_COLUMNS;
+    hisRow = hisStack->m_hex / COMBAT_GRID_COLUMNS;
+    originalColumn = COMBAT_GRID_LAST_COLUMN;
+    originalRow = 0;
     gpCombatManager->SetGridMode(0);
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_WARLOCK
         || m_combatTowns[COMBAT_DEFENDER_SIDE]->m_type == TOWN_TYPE_SORCERESS)
@@ -1241,112 +1241,117 @@ void combatManager::KeepAttack(void) {
     else
         sprintf(gText, "shoot01.82M");
     sample = LoadPlaySample(gText);
-    frontCol = hexCol;
-    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE)
-        frontCol += target->m_facing == ARMY_FACING_LEFT ? -1 : 1;
-    gapX = abs(frontCol - srcCol);
-    gapY = abs(targetRow - keepY);
-    distance = __max(gapX, gapY);
-    arrowFrame = shotShape[target->m_hex];
+    aimColumn = hisCol;
+    if (hisStack->m_stats.attributes & MONSTER_FLAGS_WIDE)
+        aimColumn += hisStack->m_facing == ARMY_FACING_LEFT ? -1 : 1;
+    fullXLen = abs(aimColumn - originalColumn);
+    fullYLen = abs(hisRow - originalRow);
+    flightSteps = __max(fullXLen, fullYLen);
+    arrowFrame = shotTable[hisStack->m_hex];
     startX = 0x24d;
     startY = 0x19;
-    destX = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + frontCol].m_x;
-    targetY = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + frontCol].m_y - 75;
-    xAdvance = static_cast<float>(destX - startX) / static_cast<float>(distance * 3);
-    yAdvance = static_cast<float>(targetY - startY) / static_cast<float>(distance * 3);
-    xRun = startX;
-    yRun = startY;
-    updRight = 0;
-    minX = LOGICAL_SCREEN_WIDTH - 1;
+    landX = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_x;
+    landY = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_y - 75;
+    gainX = static_cast<float>(landX - startX) / static_cast<float>(flightSteps * 3);
+    gainY = static_cast<float>(landY - startY) / static_cast<float>(flightSteps * 3);
+    inFlightX = startX;
+    inFlightY = startY;
+    maxX = 0;
+    clipLeft = LOGICAL_SCREEN_WIDTH - 1;
     maxY = 0;
-    minY = LOGICAL_SCREEN_HEIGHT - 1;
+    clipTop = LOGICAL_SCREEN_HEIGHT - 1;
     if (arrowFrame == 0) {
-        w = 0x43;
-        height = 0x12;
+        projectileSizeX = 0x43;
+        projectileSizeY = 0x12;
     } else if (arrowFrame == 1) {
-        w = 0x37;
-        height = 0x2b;
+        projectileSizeX = 0x37;
+        projectileSizeY = 0x2b;
     } else {
-        w = 0x12;
-        height = 0x43;
+        projectileSizeX = 0x12;
+        projectileSizeY = 0x43;
     }
-    behind = new bitmap(BITMAP_TYPE_MEMORY, w, height);
-    behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-    lastX = xRun;
-    lastY = yRun;
-    for (i = 0; i < distance * 3; i++) {
-        minX = xRun;
-        minY = lastY;
-        updRight = lastX + w;
-        maxY = height + yRun;
-        behind->DrawToBuffer(lastX, lastY);
-        behind->GrabBitmap(gpWindowManager->m_screen, xRun, yRun);
-        m_combatIcons[COMBAT_ICON_KEEP]
-            ->DrawToBuffer(xRun, yRun, arrowFrame + 1, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+    backing = new bitmap(BITMAP_TYPE_MEMORY, projectileSizeX, projectileSizeY);
+    backing->GrabBitmap(gpWindowManager->m_screen, inFlightX, inFlightY);
+    lastX = inFlightX;
+    lastY = inFlightY;
+    for (k = 0; k < flightSteps * 3; k++) {
+        clipLeft = inFlightX;
+        clipTop = lastY;
+        maxX = lastX + projectileSizeX;
+        maxY = projectileSizeY + inFlightY;
+        backing->DrawToBuffer(lastX, lastY);
+        backing->GrabBitmap(gpWindowManager->m_screen, inFlightX, inFlightY);
+        m_combatIcons[COMBAT_ICON_KEEP]->DrawToBuffer(
+            inFlightX,
+            inFlightY,
+            arrowFrame + 1,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
         DelayTil(glTimers);
-        UPDATE_INCLUSIVE_REGION(minX, minY, updRight, maxY);
+        UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
-        lastX = xRun;
-        lastY = yRun;
-        xRun += xAdvance;
-        yRun += yAdvance;
+        lastX = inFlightX;
+        lastY = inFlightY;
+        inFlightX += gainX;
+        inFlightY += gainY;
     }
-    behind->DrawToBuffer(lastX, lastY);
-    gpWindowManager->UpdateScreenRegion(lastX, lastY, w, height);
-    delete behind;
+    backing->DrawToBuffer(lastX, lastY);
+    gpWindowManager->UpdateScreenRegion(lastX, lastY, projectileSizeX, projectileSizeY);
+    delete backing;
     mod = 2;
     if (m_heroes[COMBAT_DEFENDER_SIDE])
         mod += m_heroes[COMBAT_DEFENDER_SIDE]->m_primaryStats[HERO_PRIMARY_ATTACK];
     if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & 1)
         mod += m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildState + 1;
-    mod -= target->m_stats.defense;
+    mod -= hisStack->m_stats.defense;
     if (mod > 20)
         mod = 20;
     if (mod < -20)
         mod = -20;
-    dice = 5;
-    for (i = 7; i <= 12; i++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
-            dice += 4;
+    numRolls = 5;
+    for (k = 7; k <= 12; k++) {
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+            numRolls += 4;
     }
-    for (i = 0; i <= 4; i++) {
-        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << i))
-            dice++;
+    for (k = 0; k <= 4; k++) {
+        if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
+            numRolls++;
     }
-    hurt = 0;
-    for (i = 0; i < dice; i++)
-        hurt += SRandom(2, 3);
-    hurt = static_cast<i32>(hurt * gBattleStat[mod + 20]);
-    if (hurt <= 0)
-        hurt = 1;
-    numLost = target->Damage(hurt);
-    if (numLost > 0)
+    arrowDamage = 0;
+    for (k = 0; k < numRolls; k++)
+        arrowDamage += SRandom(2, 3);
+    arrowDamage = static_cast<i32>(arrowDamage * gBattleStat[mod + 20]);
+    if (arrowDamage <= 0)
+        arrowDamage = 1;
+    stackKilled = hisStack->Damage(arrowDamage);
+    if (stackKilled > 0)
         sprintf(
             gText,
             "%s %d %s. %d %s %s.",
             localization::Tr("combat.tower.garrison.damage.prefix"),
-            hurt,
+            arrowDamage,
             localization::Tr("combat.fragment.damage_points"),
-            numLost,
-            CREATURE_DISPLAY_NAME(target->m_creatureType, numLost),
-            numLost <= 1 ? localization::Tr("combat.fragment.dies")
-                         : localization::Tr("combat.fragment.killed")
+            stackKilled,
+            CREATURE_DISPLAY_NAME(hisStack->m_creatureType, stackKilled),
+            stackKilled <= 1 ? localization::Tr("combat.fragment.dies")
+                             : localization::Tr("combat.fragment.killed")
         );
     else
         sprintf(
             gText,
             "%s %d %s.",
             localization::Tr("combat.tower.garrison.damage.prefix"),
-            hurt,
+            arrowDamage,
             localization::Tr("combat.fragment.damage_points")
         );
     gpCombatManager->CombatMessage(gText, 1);
-    target->PowEffect(target->m_stats.powEffect);
-    if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-        target->Stand(0);
+    hisStack->PowEffect(hisStack->m_stats.powEffect);
+    if (!(hisStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
+        hisStack->Stand(0);
     WaitSample(sample);
-    if (target->m_quantity > 0)
-        target->Stand(1);
+    if (hisStack->m_quantity > 0)
+        hisStack->Stand(1);
     gpMouseManager->ReallyShowPointer();
 }
 

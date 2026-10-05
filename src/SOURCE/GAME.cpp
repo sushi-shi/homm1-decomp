@@ -458,103 +458,105 @@ inline void game::WriteWorldMap(i32 fd) {
 // campaign state, map header, players, world map, records and visibility.
 VA(0x0042c4dd, 0x796)
 i16 game::SaveGame(char* filename, i8 generateName) {
-    i32 nHumans;
-    i32 saveFlag;
-    char human[GAME_PLAYER_COUNT];
+    i32 unusedIndex; // dead locals: retail's /Od frame holds their unreferenced slots
+    i32 nHuman;
+    i32 unusedName;
+    i32 mySaveFlag;
+    char humans[GAME_PLAYER_COUNT];
     i32 iFile;
-    i32 file;
-    i32 junk[4];
-    char filePath[452];
-    char fileName[460];
+    i32 outFile;
+    i32 scratchVals[4];
+    char savePath[452];
+    char genName[452];
     char buffer[100];
 
     gpAdvManager->DemobilizeCurrHero();
     if (generateName) {
         if (m_campaignType > 0) {
-            sprintf(fileName, "%s.%s", filename, "CGM");
+            sprintf(genName, "%s.%s", filename, "CGM");
         } else {
-            nHumans = 0;
+            nHuman = 0;
             for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
                 if (!m_playerDead[iFile] && gbHumanPlayer[iFile])
-                    nHumans++;
+                    nHuman++;
             }
-            sprintf(fileName, "%s.GM%d", filename, nHumans);
+            sprintf(genName, "%s.GM%d", filename, nHuman);
         }
     } else {
-        sprintf(fileName, filename);
+        sprintf(genName, filename);
     }
-    if (!strcmpi(fileName, "REMOTE.GAM")) {
+    if (!strcmpi(genName, "REMOTE.GAM")) {
         extern char gDataPath[];
-        sprintf(filePath, "%s%s", gDataPath, fileName);
+        sprintf(savePath, "%s%s", gDataPath, genName);
     } else {
         extern char gGamePath[];
-        sprintf(filePath, "%s%s", gGamePath, fileName);
-        if (strnicmp(fileName, localization::Tr("save.name.autosave"), SAVE_FILE_BASE_NAME_LENGTH)
+        sprintf(savePath, "%s%s", gGamePath, genName);
+        if (strnicmp(genName, localization::Tr("save.name.autosave"), SAVE_FILE_BASE_NAME_LENGTH)
             && strnicmp(
-                fileName,
+                genName,
                 localization::Tr("save.name.player_exit"),
                 SAVE_FILE_BASE_NAME_LENGTH
             ))
             strcpy(gpGame->m_saveName, filename);
     }
-    file = open(filePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
-    if (file == -1)
-        FileError(filePath);
-    write(file, &gbIAmGreatest, 1);
-    write(file, this, 2);
-    write(file, &giMonthType, 1);
-    write(file, &giMonthTypeExtra, 1);
-    write(file, &giWeekType, 1);
-    write(file, &giWeekTypeExtra, 1);
-    write(file, &m_campaignType, 4);
-    write(file, &m_campaignScenario, 4);
-    write(file, &m_campaignDay, 4);
-    write(file, &m_campaignScenariosWon, 4);
+    outFile = open(savePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
+    if (outFile == -1)
+        FileError(savePath);
+    write(outFile, &gbIAmGreatest, 1);
+    write(outFile, this, 2);
+    write(outFile, &giMonthType, 1);
+    write(outFile, &giMonthTypeExtra, 1);
+    write(outFile, &giWeekType, 1);
+    write(outFile, &giWeekTypeExtra, 1);
+    write(outFile, &m_campaignType, 4);
+    write(outFile, &m_campaignScenario, 4);
+    write(outFile, &m_campaignDay, 4);
+    write(outFile, &m_campaignScenariosWon, 4);
     memset(buffer, 0, 0x2c);
-    write(file, buffer, 0x2c);
-    write(file, m_mapDescription, sizeof(m_mapDescription));
-    write(file, &m_mapSize, 1);
-    write(file, &m_mapDifficulty, 1);
-    write(file, m_mapName, sizeof(m_mapName));
+    write(outFile, buffer, 0x2c);
+    write(outFile, m_mapDescription, sizeof(m_mapDescription));
+    write(outFile, &m_mapSize, 1);
+    write(outFile, &m_mapDifficulty, 1);
+    write(outFile, m_mapName, sizeof(m_mapName));
     GenerateStandardFileName(m_saveName, buffer);
-    write(file, buffer, 0x11);
-    write(file, &m_difficulty, 1);
-    write(file, &m_playerCount, 1);
+    write(outFile, buffer, 0x11);
+    write(outFile, &m_difficulty, 1);
+    write(outFile, &m_playerCount, 1);
     gSaveCurPlayer = giCurPlayer;
-    write(file, &gSaveCurPlayer, 1);
-    write(file, &m_deadPlayerCount, 1);
-    write(file, m_playerDead, sizeof(m_playerDead));
+    write(outFile, &gSaveCurPlayer, 1);
+    write(outFile, &m_deadPlayerCount, 1);
+    write(outFile, m_playerDead, sizeof(m_playerDead));
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
-        human[iFile] = gbHumanPlayer[iFile];
+        humans[iFile] = gbHumanPlayer[iFile];
         if (m_playerDead[iFile])
-            human[iFile] = 0;
+            humans[iFile] = 0;
     }
-    write(file, human, GAME_PLAYER_COUNT);
-    write(file, &m_day, 2);
-    write(file, &m_week, 2);
-    write(file, &m_month, 2);
+    write(outFile, humans, GAME_PLAYER_COUNT);
+    write(outFile, &m_day, 2);
+    write(outFile, &m_week, 2);
+    write(outFile, &m_month, 2);
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++)
-        m_players[iFile].Write(file);
-    WriteWorldMap(file);
-    write(file, &m_obeliskCount, 1);
-    write(file, m_heroRecs, sizeof(m_heroRecs));
-    write(file, m_availableHeroes, sizeof(m_availableHeroes));
-    write(file, m_castleRecs, sizeof(m_castleRecs));
-    write(file, m_townOwners, sizeof(m_townOwners));
-    write(file, m_townBuiltToday, sizeof(m_townBuiltToday));
-    write(file, m_mines, sizeof(m_mines));
-    write(file, m_mineOwners, sizeof(m_mineOwners));
-    write(file, m_randomArtifacts, sizeof(m_randomArtifacts));
-    write(file, m_boats, sizeof(m_boats));
-    write(file, m_boatSlots, sizeof(m_boatSlots));
-    write(file, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    write(file, &m_ultimateArtifactX, 1);
-    write(file, &m_ultimateArtifactY, 1);
-    write(file, &m_ultimateArtifactId, 1);
-    write(file, m_mapSounds, sizeof(m_mapSounds));
-    write(file, m_mapExtra, sizeof(m_mapExtra));
-    write(file, mapVisited, sizeof(mapVisited));
-    close(file);
+        m_players[iFile].Write(outFile);
+    WriteWorldMap(outFile);
+    write(outFile, &m_obeliskCount, 1);
+    write(outFile, m_heroRecs, sizeof(m_heroRecs));
+    write(outFile, m_availableHeroes, sizeof(m_availableHeroes));
+    write(outFile, m_castleRecs, sizeof(m_castleRecs));
+    write(outFile, m_townOwners, sizeof(m_townOwners));
+    write(outFile, m_townBuiltToday, sizeof(m_townBuiltToday));
+    write(outFile, m_mines, sizeof(m_mines));
+    write(outFile, m_mineOwners, sizeof(m_mineOwners));
+    write(outFile, m_randomArtifacts, sizeof(m_randomArtifacts));
+    write(outFile, m_boats, sizeof(m_boats));
+    write(outFile, m_boatSlots, sizeof(m_boatSlots));
+    write(outFile, m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    write(outFile, &m_ultimateArtifactX, 1);
+    write(outFile, &m_ultimateArtifactY, 1);
+    write(outFile, &m_ultimateArtifactId, 1);
+    write(outFile, m_mapSounds, sizeof(m_mapSounds));
+    write(outFile, m_mapExtra, sizeof(m_mapExtra));
+    write(outFile, mapVisited, sizeof(mapVisited));
+    close(outFile);
     return 1;
 }
 
@@ -4444,23 +4446,24 @@ H1_ENUM_CONST_END(RemoteSaveConstant)
 VA(0x004370d2, 0x5fd)
 i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 okay;
-    char curPathname[456];
-    char* theOutData;
+    char curPathname[452];
+    i32 unusedSum; // dead locals: retail's /Od frame holds their unreferenced slots
+    char* mainOutData;
     i32 block;
-    i32 localBlocks;
-    i32 localJunk3;
+    i32 blocksCount;
+    i32 unusedData;
     i32 oldTrackVal;
     char* sendPacket;
     i32 sizeVal;
     i32 entry;
     i32 segCountPos;
-    i32 handleValue;
-    i32 baseJunk2;
-    char* theIncoming;
+    i32 mainFile;
+    i32 unusedOffset;
+    char* incomingNow;
     char ackedArray[500];
-    i32 junk1Val;
-    i32 firstStatus;
-    i32 oldUnk;
+    i32 unusedY;
+    i32 replyState;
+    i32 unusedSeq;
     i32 prevSize;
     i32 length;
     char* dataObj;
@@ -4468,7 +4471,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 
     gpAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
     okay = 0;
-    firstStatus = 0;
+    replyState = 0;
     oldTrackVal = MUSIC_TRACK_NONE;
     oldTrackVal = GetCurrentTrack();
     StopMusic();
@@ -4487,41 +4490,41 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     prevSize = FileSize(curPathname);
     sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-        theOutData = static_cast<char*>(malloc(prevSize));
+        mainOutData = static_cast<char*>(malloc(prevSize));
     dataObj = static_cast<char*>(malloc(prevSize));
-    handleValue = open(curPathname, O_BINARY);
-    if (handleValue == -1)
+    mainFile = open(curPathname, O_BINARY);
+    if (mainFile == -1)
         FileError(curPathname);
-    if (handleValue == -1) {
+    if (mainFile == -1) {
         goto cleanup;
     }
     {
-        read(handleValue, dataObj, prevSize);
-        close(handleValue);
+        read(mainFile, dataObj, prevSize);
+        close(mainFile);
         if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-            prevSize = EncodeData(theOutData, dataObj, prevSize);
+            prevSize = EncodeData(mainOutData, dataObj, prevSize);
         else
-            theOutData = dataObj;
+            mainOutData = dataObj;
 
         reinterpret_cast<i32*>(sendPacket)[0] =
             prevSize; // byte-evidenced: the save-transfer packet header words
         reinterpret_cast<i32*>(sendPacket)[1] =
             playerExited; // byte-evidenced: the save-transfer packet header words
-        firstStatus = TransmitAndWait(
+        replyState = TransmitAndWait(
             sendPacket,
             remotePlayer,
             REMOTE_SAVE_HEADER_SIZE,
             BOX_REMOTE_SAVE,
             REMOTE_COMMAND_SAVE_INIT_RESPONSE,
-            &theIncoming
+            &incomingNow
         );
-        if (!firstStatus)
+        if (!replyState)
             ShutDown(NULL);
 
         segCountPos = (prevSize - 1) / REMOTE_SAVE_SEGMENT_SIZE + 1;
-        localBlocks = (segCountPos - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
-        for (block = 0; block < localBlocks; block++) {
-            if (block + 1 == localBlocks)
+        blocksCount = (segCountPos - 1) / REMOTE_SAVE_BATCH_SIZE + 1;
+        for (block = 0; block < blocksCount; block++) {
+            if (block + 1 == blocksCount)
                 sizeVal = segCountPos - block * REMOTE_SAVE_BATCH_SIZE;
             else
                 sizeVal = REMOTE_SAVE_BATCH_SIZE;
@@ -4542,10 +4545,10 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                         ); // byte-evidenced: the save-transfer packet header words
                         memcpy(
                             sendPacket + REMOTE_SAVE_INDEX_SIZE,
-                            theOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
+                            mainOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
                             length
                         );
-                        firstStatus = TransmitRemoteData(
+                        replyState = TransmitRemoteData(
                             sendPacket,
                             remotePlayer,
                             length + REMOTE_SAVE_INDEX_SIZE,
@@ -4555,25 +4558,25 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             REMOTE_MESSAGE_DEFAULT,
                             1
                         );
-                        if (!firstStatus)
+                        if (!replyState)
                             ShutDown(NULL);
                     }
                 }
                 *reinterpret_cast<i16*>(sendPacket) = static_cast<i16>(
                     block * REMOTE_SAVE_BATCH_SIZE
                 ); // byte-evidenced: the save-transfer packet header words
-                firstStatus = TransmitAndWait(
+                replyState = TransmitAndWait(
                     sendPacket,
                     remotePlayer,
                     REMOTE_SAVE_INDEX_SIZE,
                     REMOTE_COMMAND_SAVE_ACK_REQUEST,
                     REMOTE_COMMAND_SAVE_ACK_RESPONSE,
-                    &theIncoming
+                    &incomingNow
                 );
-                if (!firstStatus)
+                if (!replyState)
                     ShutDown(NULL);
                 for (entry = 0; entry < sizeVal; entry++) {
-                    if (reinterpret_cast<RemoteMessage*>(theIncoming)->payload.data[entry]
+                    if (reinterpret_cast<RemoteMessage*>(incomingNow)->payload.data[entry]
                         > 0) // API-forced: char* record.
                         ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
@@ -4586,7 +4589,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                 }
             }
         }
-        firstStatus = TransmitRemoteData(
+        replyState = TransmitRemoteData(
             NULL,
             remotePlayer,
             0,
@@ -4596,7 +4599,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
             REMOTE_MESSAGE_DEFAULT,
             1
         );
-        if (!firstStatus)
+        if (!replyState)
             ShutDown(NULL);
         okay = 1;
     }
@@ -4604,7 +4607,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
 cleanup:
     free(sendPacket);
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
-        free(theOutData);
+        free(mainOutData);
     free(dataObj);
     AiPrint("Transmit End");
     if (gpAdvManager->m_active == 1) {

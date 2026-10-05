@@ -174,12 +174,14 @@ VA(0x0045856f, 0x73c)
 void SmackMain() {
     i32 soundFlags;
     i32 preloadFlags;
-    i32 playing;
-    i32 primaryStarted;
-    i32 companionStarted;
-    i32 unusedOne = 1;
+    i32 active;
+    i32 primaryOn;
+    i32 companionOn;
+    i32 unusedTrue = 1;
     gSmackLastFramePlayed = 0;
     i32 unusedPlaybackState = 0;
+    i32 unusedTimer; // dead locals: retail's /Od frame holds their unreferenced slots
+    i32 unusedKey;
     gSmackFont = gpResourceManager->GetFont("bigfont.fnt");
     KBChangeMenu(hmnuDflt);
     gpMouseManager->ReallyHidePointer();
@@ -233,29 +235,23 @@ void SmackMain() {
     );
     if (SmackOptions[gSmackNum].fadeIn)
         gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, NULL);
-    playing = 1;
-    primaryStarted = 0;
-    companionStarted = 0;
-    while (playing) {
+    active = 1;
+    primaryOn = 0;
+    companionOn = 0;
+    while (active) {
         if (!SmackWait(gSmackPrimary)) {
-            if (!primaryStarted || gSmackPrimary->Frames > 1)
-                DoAdvance(
-                    gSmackPrimary,
-                    1,
-                    1,
-                    primaryStarted || !SmackOptions[gSmackNum].fadeIn,
-                    0
-                );
+            if (!primaryOn || gSmackPrimary->Frames > 1)
+                DoAdvance(gSmackPrimary, 1, 1, primaryOn || !SmackOptions[gSmackNum].fadeIn, 0);
             if (gSmackPrimary->FrameNum > 0 || gSmackPrimary->Frames <= 1) {
-                if (!primaryStarted && SmackOptions[gSmackNum].fadeIn) {
+                if (!primaryOn && SmackOptions[gSmackNum].fadeIn) {
                     memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
                     gpWindowManager->FadeScreen(WINDOW_FADE_IN, 4, NULL);
                 }
-                primaryStarted = 1;
+                primaryOn = 1;
             }
         }
-        if (gSmackCompanion && primaryStarted && !SmackWait(gSmackCompanion)) {
-            if (companionStarted && gSmackCompanion->FrameNum == gSmackCompanion->Frames - 1) {
+        if (gSmackCompanion && primaryOn && !SmackWait(gSmackCompanion)) {
+            if (companionOn && gSmackCompanion->FrameNum == gSmackCompanion->Frames - 1) {
                 i32 drawLastFrame;
                 if (SmackOptions[gSmackNum].drawCompanion)
                     drawLastFrame = 1;
@@ -269,7 +265,7 @@ void SmackMain() {
                 DoAdvance(gSmackCompanion, SmackOptions[gSmackNum].drawCompanion, 1, 0, 1);
             }
             if (gSmackCompanion && gSmackCompanion->FrameNum > 0)
-                companionStarted = 1;
+                companionOn = 1;
         }
         Process1WindowsMessage();
         tag_message message;
@@ -280,18 +276,18 @@ void SmackMain() {
                     break;
             case MESSAGE_LEFT_BUTTON_DOWN:
             case MESSAGE_RIGHT_BUTTON_DOWN:
-                playing = 0;
+                active = 0;
                 continue;
         }
         if (!SmackOptions[gSmackNum].waitForInput
             && (gSmackLastFramePlayed
                 || (gSmackCompanion
                     && (gSmackCompanion->FrameNum >= gSmackCompanion->Frames
-                        || (gSmackCompanion->FrameNum <= 0 && companionStarted)))
+                        || (gSmackCompanion->FrameNum <= 0 && companionOn)))
                 || (!gSmackCompanion
                     && (gSmackPrimary->FrameNum >= gSmackPrimary->Frames
-                        || (gSmackPrimary->FrameNum <= 0 && primaryStarted))))) {
-            playing = 0;
+                        || (gSmackPrimary->FrameNum <= 0 && primaryOn))))) {
+            active = 0;
             gSmackCompleted = 1;
         }
     }

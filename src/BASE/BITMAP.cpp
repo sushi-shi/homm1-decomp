@@ -79,6 +79,7 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 VA(0x0047345e, 0xa3)
 void bitmap::Write(char* filename) {
     palette* combatPaletteData;
+    i32 unusedData; // dead local: retail's /Od frame holds its unreferenced slot
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
     if (file == -1)
         return;

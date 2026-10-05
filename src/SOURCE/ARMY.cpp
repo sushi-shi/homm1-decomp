@@ -564,58 +564,58 @@ VA(0x00414854, 0xc74)
 void army::SpecialAttack(void) {
     DATA(0x004a67d8)
     static i32 gSecondShot = 0;
-    i32 targetHexCol;
-    i32 dmg;
-    i32 xEnd;
-    i8 arrowFrame;
-    i32 firstX;
-    i32 destY;
-    i32 killCount;
-    army* target;
-    i32 startY;
-    i32 destX;
-    i32 startX;
-    i32 maxY;
-    bitmap* saved;
-    i32 iMaxX;
-    i8 faceLeft;
-    i32 facing;
-    i32 dx;
-    i32 dy;
-    i32 yStep;
-    i32 posY;
-    i32 steps;
-    i32 j;
-    i32 yOffset[5];
+    i8 frameIndex;
+    i32 oldTipX;
+    i8 originalColumn;
+    i8 drawFlipped;
+    i32 oldTipY;
+    i8 hisCol;
+    i8 originalRow;
+    i32 gainX;
+    i32 inFlightX;
+    i32 gainY;
+    i32 inFlightY;
     i32 i;
+    i32 landX;
+    i8 hisRow;
+    i8 slopeDirection;
+    i32 landY;
+    i32 adjustX;
+    i32 clipTop;
+    i32 clipLeft;
+    i32 k;
+    bitmap* backing;
+    i32 aimColumn;
+    i32 wasFacing;
+    army* hisStack;
+    i32 fullXLen;
+    i32 flightSteps;
+    i32 startX;
+    i32 launchX;
+    i32 y1;
+    i32 maxX;
+    i32 adjustY;
+    i32 killed;
+    i32 fullYLen;
+    i32 liftOffsets[5];
+    i32 startY;
+    i32 landPosX;
     i32 y2;
-    i8 myRow;
-    i32 y0;
-    i32 prevY;
-    i8 targetRow;
-    i8 srcCol;
-    i8 pitchSign;
-    i32 offY;
-    i32 minY;
-    i32 prevX;
-    i8 tgtCol;
-    i32 offX;
-    i32 minX;
-    i32 xStep;
-    i32 posX;
-    i8 inCastle;
+    i32 maxY;
+    i8 wallPenalty;
+    i32 damageDone;
 
-    facing = m_facing;
+    wasFacing = m_facing;
     m_walkYStep = 0;
     if (m_targetSide < 0 || m_targetIndex < 0)
         return;
-    target = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
-    tgtCol = target->m_hex % COMBAT_GRID_COLUMNS;
-    targetRow = target->m_hex / COMBAT_GRID_COLUMNS;
-    srcCol = m_hex % COMBAT_GRID_COLUMNS;
-    myRow = m_hex / COMBAT_GRID_COLUMNS;
-    facing = m_facing;
-    if (tgtCol > srcCol || !(myRow & 1) && tgtCol == srcCol)
+    hisStack = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
+    hisCol = hisStack->m_hex % COMBAT_GRID_COLUMNS;
+    hisRow = hisStack->m_hex / COMBAT_GRID_COLUMNS;
+    originalColumn = m_hex % COMBAT_GRID_COLUMNS;
+    originalRow = m_hex / COMBAT_GRID_COLUMNS;
+    wasFacing = m_facing;
+    if (hisCol > originalColumn || !(originalRow & 1) && hisCol == originalColumn)
         m_facing = ARMY_FACING_RIGHT;
     else
         m_facing = ARMY_FACING_LEFT;
@@ -630,137 +630,142 @@ void army::SpecialAttack(void) {
         gpCombatManager->UpdateGrid(m_hex, m_stats.attributes);
         gpCombatManager->DrawFrame(1);
     }
-    targetHexCol = tgtCol;
-    if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-        targetHexCol += target->m_facing == ARMY_FACING_LEFT ? -1 : 1;
+    aimColumn = hisCol;
+    if (hisStack->m_stats.attributes & MONSTER_FLAGS_WIDE) {
+        aimColumn += hisStack->m_facing == ARMY_FACING_LEFT ? -1 : 1;
     }
-    dx = targetHexCol - srcCol;
-    faceLeft = ICON_DRAW_NORMAL;
-    if (dx < 0) {
-        faceLeft = ICON_DRAW_FLIPPED;
-        dx = -dx;
+    fullXLen = aimColumn - originalColumn;
+    drawFlipped = ICON_DRAW_NORMAL;
+    if (fullXLen < 0) {
+        drawFlipped = ICON_DRAW_FLIPPED;
+        fullXLen = -fullXLen;
     }
-    dy = targetRow - myRow;
-    if (dy < 0)
-        dy = -dy;
-    steps = __max(dx, dy);
-    arrowFrame = 7;
-    pitchSign = 0;
-    if (myRow > targetRow)
-        pitchSign = -1;
-    else if (myRow < targetRow)
-        pitchSign = 1;
-    if (dy > 1)
-        arrowFrame += pitchSign;
-    if (dx <= 3) {
-        if (dy > 2)
-            arrowFrame += pitchSign;
-        if (dy == 1)
-            arrowFrame += pitchSign;
+    fullYLen = hisRow - originalRow;
+    if (fullYLen < 0)
+        fullYLen = -fullYLen;
+    flightSteps = __max(fullXLen, fullYLen);
+    frameIndex = 7;
+    slopeDirection = 0;
+    if (originalRow > hisRow)
+        slopeDirection = -1;
+    else if (originalRow < hisRow)
+        slopeDirection = 1;
+    if (fullYLen > 1)
+        frameIndex += slopeDirection;
+    if (fullXLen <= 3) {
+        if (fullYLen > 2)
+            frameIndex += slopeDirection;
+        if (fullYLen == 1)
+            frameIndex += slopeDirection;
     }
-    yOffset[0] = -20;
-    yOffset[1] = -15;
-    yOffset[2] = 0;
-    yOffset[3] = 15;
-    yOffset[4] = 20;
+    liftOffsets[0] = -20;
+    liftOffsets[1] = -15;
+    liftOffsets[2] = 0;
+    liftOffsets[3] = 15;
+    liftOffsets[4] = 20;
     startX = gpCombatManager->m_hexCells[m_hex].m_x + (m_facing == ARMY_FACING_RIGHT ? 80 : -80);
-    startY = gpCombatManager->m_hexCells[m_hex].m_y - 90 + yOffset[arrowFrame - 5];
-    destX = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS + targetHexCol].m_x;
-    destY = gpCombatManager->m_hexCells[targetRow * COMBAT_GRID_COLUMNS].m_y - 90;
-    if (dx == 0)
-        xStep = 0;
+    startY = gpCombatManager->m_hexCells[m_hex].m_y - 90 + liftOffsets[frameIndex - 5];
+    landX = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS + aimColumn].m_x;
+    landY = gpCombatManager->m_hexCells[hisRow * COMBAT_GRID_COLUMNS].m_y - 90;
+    if (fullXLen == 0)
+        gainX = 0;
     else
-        xStep = (destX - startX) / (steps * 2);
-    if (dy == 0)
-        yStep = 0;
+        gainX = (landX - startX) / (flightSteps * 2);
+    if (fullYLen == 0)
+        gainY = 0;
     else
-        yStep = (destY - startY) / (steps * 2);
-    firstX = startX + xStep;
-    xEnd = destX - steps * 2 * xStep;
-    offX = (firstX + xEnd) / 2 - firstX;
-    y0 = startY + yStep;
-    y2 = destY - steps * 2 * yStep;
-    offY = (y0 + y2) / 2 - y0;
-    posX = startX + offX;
-    posY = startY + offY;
-    iMaxX = 0;
-    minX = LOGICAL_SCREEN_WIDTH - 1;
+        gainY = (landY - startY) / (flightSteps * 2);
+    launchX = startX + gainX;
+    landPosX = landX - flightSteps * 2 * gainX;
+    adjustX = (launchX + landPosX) / 2 - launchX;
+    y1 = startY + gainY;
+    y2 = landY - flightSteps * 2 * gainY;
+    adjustY = (y1 + y2) / 2 - y1;
+    inFlightX = startX + adjustX;
+    inFlightY = startY + adjustY;
+    maxX = 0;
+    clipLeft = LOGICAL_SCREEN_WIDTH - 1;
     maxY = 0;
-    minY = LOGICAL_SCREEN_HEIGHT - 1;
-    saved = new bitmap(BITMAP_TYPE_MEMORY, ARMY_MISSILE_PATCH_WIDTH, ARMY_MISSILE_PATCH_HEIGHT);
-    saved->GrabBitmap(
+    clipTop = LOGICAL_SCREEN_HEIGHT - 1;
+    backing = new bitmap(BITMAP_TYPE_MEMORY, ARMY_MISSILE_PATCH_WIDTH, ARMY_MISSILE_PATCH_HEIGHT);
+    backing->GrabBitmap(
         gpWindowManager->m_screen,
-        posX - ARMY_MISSILE_HALF_WIDTH,
-        posY - ARMY_MISSILE_HALF_HEIGHT
+        inFlightX - ARMY_MISSILE_HALF_WIDTH,
+        inFlightY - ARMY_MISSILE_HALF_HEIGHT
     );
-    prevX = posX;
-    prevY = posY;
-    for (j = 0; j < steps * 2; j++) {
-        saved->DrawToBuffer(prevX - ARMY_MISSILE_HALF_WIDTH, prevY - ARMY_MISSILE_HALF_HEIGHT);
-        if (prevX - ARMY_MISSILE_HALF_WIDTH < minX)
-            minX = prevX - ARMY_MISSILE_HALF_WIDTH;
-        if (prevX + ARMY_MISSILE_HALF_WIDTH > iMaxX)
-            iMaxX = prevX + ARMY_MISSILE_HALF_WIDTH;
-        if (prevY - ARMY_MISSILE_HALF_HEIGHT < minY)
-            minY = prevY - ARMY_MISSILE_HALF_HEIGHT;
-        if (prevY + ARMY_MISSILE_HALF_HEIGHT > maxY)
-            maxY = prevY + ARMY_MISSILE_HALF_HEIGHT;
-        saved->GrabBitmap(
-            gpWindowManager->m_screen,
-            posX - ARMY_MISSILE_HALF_WIDTH,
-            posY - ARMY_MISSILE_HALF_HEIGHT
+    oldTipX = inFlightX;
+    oldTipY = inFlightY;
+    for (k = 0; k < flightSteps * 2; k++) {
+        backing->DrawToBuffer(
+            oldTipX - ARMY_MISSILE_HALF_WIDTH,
+            oldTipY - ARMY_MISSILE_HALF_HEIGHT
         );
-        m_attackIcon->DrawToBuffer(posX, posY, arrowFrame, faceLeft, ICON_DRAW_OFFSET_FULL);
-        if (posX - ARMY_MISSILE_HALF_WIDTH < minX)
-            minX = posX - ARMY_MISSILE_HALF_WIDTH;
-        if (posX + ARMY_MISSILE_HALF_WIDTH > iMaxX)
-            iMaxX = posX + ARMY_MISSILE_HALF_WIDTH;
-        if (posY - ARMY_MISSILE_HALF_HEIGHT < minY)
-            minY = posY - ARMY_MISSILE_HALF_HEIGHT;
-        if (posY + ARMY_MISSILE_HALF_HEIGHT > maxY)
-            maxY = posY + ARMY_MISSILE_HALF_HEIGHT;
+        if (oldTipX - ARMY_MISSILE_HALF_WIDTH < clipLeft)
+            clipLeft = oldTipX - ARMY_MISSILE_HALF_WIDTH;
+        if (oldTipX + ARMY_MISSILE_HALF_WIDTH > maxX)
+            maxX = oldTipX + ARMY_MISSILE_HALF_WIDTH;
+        if (oldTipY - ARMY_MISSILE_HALF_HEIGHT < clipTop)
+            clipTop = oldTipY - ARMY_MISSILE_HALF_HEIGHT;
+        if (oldTipY + ARMY_MISSILE_HALF_HEIGHT > maxY)
+            maxY = oldTipY + ARMY_MISSILE_HALF_HEIGHT;
+        backing->GrabBitmap(
+            gpWindowManager->m_screen,
+            inFlightX - ARMY_MISSILE_HALF_WIDTH,
+            inFlightY - ARMY_MISSILE_HALF_HEIGHT
+        );
+        m_attackIcon
+            ->DrawToBuffer(inFlightX, inFlightY, frameIndex, drawFlipped, ICON_DRAW_OFFSET_FULL);
+        if (inFlightX - ARMY_MISSILE_HALF_WIDTH < clipLeft)
+            clipLeft = inFlightX - ARMY_MISSILE_HALF_WIDTH;
+        if (inFlightX + ARMY_MISSILE_HALF_WIDTH > maxX)
+            maxX = inFlightX + ARMY_MISSILE_HALF_WIDTH;
+        if (inFlightY - ARMY_MISSILE_HALF_HEIGHT < clipTop)
+            clipTop = inFlightY - ARMY_MISSILE_HALF_HEIGHT;
+        if (inFlightY + ARMY_MISSILE_HALF_HEIGHT > maxY)
+            maxY = inFlightY + ARMY_MISSILE_HALF_HEIGHT;
         DelayTil(glTimers);
-        UPDATE_INCLUSIVE_REGION(minX, minY, iMaxX, maxY);
+        UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 15;
-        prevX = posX;
-        prevY = posY;
-        posX += xStep;
-        posY += yStep;
+        oldTipX = inFlightX;
+        oldTipY = inFlightY;
+        inFlightX += gainX;
+        inFlightY += gainY;
     }
-    saved->DrawToBuffer(prevX - ARMY_MISSILE_HALF_WIDTH, prevY - ARMY_MISSILE_HALF_HEIGHT);
+    backing->DrawToBuffer(oldTipX - ARMY_MISSILE_HALF_WIDTH, oldTipY - ARMY_MISSILE_HALF_HEIGHT);
     gpWindowManager->UpdateScreenRegion(
-        prevX - ARMY_MISSILE_HALF_WIDTH,
-        prevY - ARMY_MISSILE_HALF_HEIGHT,
+        oldTipX - ARMY_MISSILE_HALF_WIDTH,
+        oldTipY - ARMY_MISSILE_HALF_HEIGHT,
         ARMY_MISSILE_PATCH_WIDTH,
         ARMY_MISSILE_PATCH_HEIGHT
     );
-    delete saved;
+    delete backing;
     m_stats.shots--;
-    inCastle = 0;
+    wallPenalty = 0;
     if (gpCombatManager->m_castleSide[COMBAT_DEFENDER_SIDE]
         && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
-        && target->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
-        i32 targetR;
-        i32 wallDist;
-        i32 gateHex;
+        && hisStack->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
+        i32 wallDistance;
+        i32 aimRow;
+        i32 targetCol;
+        i32 srcCol;
+        i32 unusedHex;
         i32 hitRow;
-        i32 colDist;
-        i32 myR;
-        i32 sCol;
-        i32 tgtC;
+        i32 archerRow;
+        i32 pastWall;
 
-        sCol = m_hex % COMBAT_GRID_COLUMNS;
-        myR = m_hex / COMBAT_GRID_COLUMNS;
-        colDist = sCol - COMBAT_CASTLE_WALL_COLUMN;
-        tgtC = target->m_hex % COMBAT_GRID_COLUMNS;
-        targetR = target->m_hex / COMBAT_GRID_COLUMNS;
-        wallDist = COMBAT_CASTLE_WALL_COLUMN - sCol;
-        hitRow = targetR;
-        if (abs(targetR - myR) >= 2)
-            hitRow -= (targetR - myR) / 2;
-        if (abs(targetR - myR) % 2 == 1) {
-            if (colDist < wallDist || colDist == wallDist && (myR == 1 || myR == 3)) {
-                if (myR < targetR)
+        srcCol = m_hex % COMBAT_GRID_COLUMNS;
+        archerRow = m_hex / COMBAT_GRID_COLUMNS;
+        pastWall = srcCol - COMBAT_CASTLE_WALL_COLUMN;
+        targetCol = hisStack->m_hex % COMBAT_GRID_COLUMNS;
+        aimRow = hisStack->m_hex / COMBAT_GRID_COLUMNS;
+        wallDistance = COMBAT_CASTLE_WALL_COLUMN - srcCol;
+        hitRow = aimRow;
+        if (abs(aimRow - archerRow) >= 2)
+            hitRow -= (aimRow - archerRow) / 2;
+        if (abs(aimRow - archerRow) % 2 == 1) {
+            if (pastWall < wallDistance
+                || pastWall == wallDistance && (archerRow == 1 || archerRow == 3)) {
+                if (archerRow < aimRow)
                     hitRow--;
                 else
                     hitRow++;
@@ -770,7 +775,7 @@ void army::SpecialAttack(void) {
             hitRow = COMBAT_GRID_LAST_ROW;
         if (hitRow < 0)
             hitRow = 0;
-        inCastle =
+        wallPenalty =
             gpCombatManager->m_hexCells[hitRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
                     .m_obstacleIndex
                 == COMBAT_WALL_DAMAGED
@@ -778,9 +783,15 @@ void army::SpecialAttack(void) {
                        .m_obstacleIndex
                    == COMBAT_WALL_INTACT;
     }
-    DamageEnemy(target, &dmg, &killCount, 1, inCastle ? ARMY_CASTLE_WALL_DEFENSE_BONUS : 0);
-    if (killCount > 0) {
-        strcpy(gTargetName, gArmyNames[target->m_creatureType]);
+    DamageEnemy(
+        hisStack,
+        &damageDone,
+        &killed,
+        1,
+        wallPenalty ? ARMY_CASTLE_WALL_DEFENSE_BONUS : 0
+    );
+    if (killed > 0) {
+        strcpy(gTargetName, gArmyNames[hisStack->m_creatureType]);
         gTargetName[0] = CyrillicToLower(gTargetName[0]);
         sprintf(
             gText,
@@ -788,12 +799,12 @@ void army::SpecialAttack(void) {
             localization::Tr("combat.fragment.attack"),
             gArmyNamesPlural[m_creatureType],
             localization::Tr("combat.fragment.does_damage"),
-            dmg,
+            damageDone,
             localization::Tr("combat.fragment.damage_points"),
-            killCount,
-            killCount <= 1 ? gTargetName : gArmyNamesPlural[target->m_creatureType],
-            killCount <= 1 ? localization::Tr("combat.fragment.dies")
-                           : localization::Tr("combat.fragment.killed")
+            killed,
+            killed <= 1 ? gTargetName : gArmyNamesPlural[hisStack->m_creatureType],
+            killed <= 1 ? localization::Tr("combat.fragment.dies")
+                        : localization::Tr("combat.fragment.killed")
         );
     } else
         sprintf(
@@ -802,22 +813,22 @@ void army::SpecialAttack(void) {
             localization::Tr("combat.fragment.attack"),
             gArmyNamesPlural[m_creatureType],
             localization::Tr("combat.fragment.does_damage"),
-            dmg,
+            damageDone,
             localization::Tr("combat.fragment.damage_points")
         );
     gText[0] = CyrillicToUpper(gText[0]);
     gpCombatManager->CombatMessage(gText, 1);
     PowEffect(m_stats.powEffect);
-    if (!(target->m_stats.attributes & MONSTER_FLAGS_DEAD))
-        target->Stand(0);
+    if (!(hisStack->m_stats.attributes & MONSTER_FLAGS_DEAD))
+        hisStack->Stand(0);
     if (m_spellEndCondition == ARMY_CANCEL_SPELLS_AFTER_ATTACK)
         CancelSpell();
     WaitSample(m_samples[ARMY_SAMPLE_SHOOT]);
-    m_facing = facing;
+    m_facing = wasFacing;
     Stand(1);
-    if (target->m_quantity > 0)
-        target->Stand(1);
-    if (!gSecondShot && m_creatureType == CREATURE_ELF && target->m_quantity > 0) {
+    if (hisStack->m_quantity > 0)
+        hisStack->Stand(1);
+    if (!gSecondShot && m_creatureType == CREATURE_ELF && hisStack->m_quantity > 0) {
         gSecondShot = 1;
         SpecialAttack();
         gSecondShot = 0;
@@ -1312,18 +1323,18 @@ i16 army::WalkTo(void) {
 // Walks the found path one hex at a time, at most the stack's speed.
 VA(0x00416d38, 0xe6)
 i16 army::WalkTo(i16 destHex) {
-    i8 step;
-    i32 moved;
+    i32 stepCount;
+    i8 pathIndex;
 
     m_targetSide = m_targetIndex = COMBAT_ARMY_INDEX_NONE;
     if (!FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
         return ARMY_PATH_BLOCKED;
-    moved = 0;
-    for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
-        Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
-        moved++;
-        if (moved >= m_stats.speed)
-            step = -1;
+    stepCount = 0;
+    for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
+        Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+        stepCount++;
+        if (stepCount >= m_stats.speed)
+            pathIndex = -1;
     }
     if (!m_spellEndCondition)
         CancelSpell();
@@ -1339,8 +1350,8 @@ i16 army::AttackTo(void) {
 // Flyers jump next to the target; walkers stop short when out of moves.
 VA(0x00416e3a, 0x1a2)
 i16 army::AttackTo(i16 destHex) {
-    i8 step;
-    i32 moved;
+    i32 stepCount;
+    i8 pathIndex;
 
     if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         if (m_hex != destHex)
@@ -1357,12 +1368,12 @@ i16 army::AttackTo(i16 destHex) {
             m_attackDirection = gpSearchArray->m_directions[0];
             DoAttack(0);
         } else {
-            step = 0;
-            moved = 0;
-            for (step = gpSearchArray->m_pathLength - 1; step; step--) {
-                Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
-                moved++;
-                if (moved >= m_stats.speed && step != 1) {
+            pathIndex = 0;
+            stepCount = 0;
+            for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex; pathIndex--) {
+                Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+                stepCount++;
+                if (stepCount >= m_stats.speed && pathIndex != 1) {
                     Stand(1);
                     return ARMY_PATH_BLOCKED;
                 }

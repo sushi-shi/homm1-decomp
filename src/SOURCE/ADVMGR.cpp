@@ -1525,19 +1525,19 @@ void advManager::Reseed(i32, i32) {
 // evidence: graph:2;base=0.526004;margin=0.306176;shape=0.329;size=0.923;calls=0.956;alternate=pol20:int advManager::ProcessSelect(struct tag_message *, class mapCell * *)@0x00058d68
 VA(0x00403620, 0xe55)
 i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
-    i16 curX;
-    i16 cellType;
-    i16 mapIndex;
-    i16 curY;
-    mapCell* hoverCell;
     i32 iPage;
-    i32 isVisible;
+    i16 mouseX;
+    i16 objectTypeState;
+    i16 mouseY;
+    i16 objectIdIndex;
+    i32 visible;
+    mapCell* theCell;
     tag_message mouseMsg;
     tag_message inputMessage;
-    hero* hero;
     i8 mobileResult;
+    hero* currentHero;
 
-    isVisible = 1;
+    visible = 1;
     switch (message->id) {
         case ADVENTURE_CONTROL_HERO_LOCATOR_1:
         case ADVENTURE_CONTROL_HERO_LOCATOR_2:
@@ -1547,38 +1547,38 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     / (ADVENTURE_CONTROL_HERO_LOCATOR_2 - ADVENTURE_CONTROL_HERO_LOCATOR_1);
             if (iPage >= gpCurPlayer->m_heroCount)
                 break;
-            cellType = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
+            objectTypeState = gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + iPage];
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-                HeroQuickView(cellType, iPage, QUICK_VIEW_AT_LOCATOR, QUICK_VIEW_AT_LOCATOR);
-            } else if (cellType == gpCurPlayer->CurrentHero()) {
+                HeroQuickView(objectTypeState, iPage, QUICK_VIEW_AT_LOCATOR, QUICK_VIEW_AT_LOCATOR);
+            } else if (objectTypeState == gpCurPlayer->CurrentHero()) {
                 m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                 DoAdvCommand();
             } else {
                 HideRoute(1, 0, 1);
-                SetHeroContext(cellType, 0);
+                SetHeroContext(objectTypeState, 0);
             }
             break;
         case ADVENTURE_CONTROL_TOWN_LOCATOR_1:
         case ADVENTURE_CONTROL_TOWN_LOCATOR_2:
         case ADVENTURE_CONTROL_TOWN_LOCATOR_3:
         case ADVENTURE_CONTROL_TOWN_LOCATOR_4:
-            cellType = gpCurPlayer->m_townIds
+            objectTypeState = gpCurPlayer->m_townIds
                            [gpCurPlayer->m_townLocatorPage + message->id
                             - ADVENTURE_CONTROL_TOWN_LOCATOR_1];
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 TownQuickView(
-                    cellType,
+                    objectTypeState,
                     message->id - ADVENTURE_CONTROL_TOWN_LOCATOR_1,
                     QUICK_VIEW_AT_LOCATOR,
                     QUICK_VIEW_AT_LOCATOR
                 );
             } else {
                 HideRoute(1, 0, 1);
-                if (cellType == gpCurPlayer->CurrentTown()) {
+                if (objectTypeState == gpCurPlayer->CurrentTown()) {
                     m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                     *eventCell = DoAdvCommand();
                 } else {
-                    SetTownContext(cellType);
+                    SetTownContext(objectTypeState);
                 }
             }
             break;
@@ -1598,10 +1598,10 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             DoHeroKnob();
             break;
         case ADVENTURE_CONTROL_HERO_SCROLL:
-            gpMouseManager->MouseCoords(curX, curY);
-            curY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
+            gpMouseManager->MouseCoords(mouseX, mouseY);
+            mouseY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
             if (gpCurPlayer->m_heroCount > LOCATOR_VISIBLE_COUNT) {
-                iPage = curY
+                iPage = mouseY
                         / (LOCATOR_SCROLL_MOUSE_SPAN
                            / (gpCurPlayer->m_heroCount - (LOCATOR_VISIBLE_COUNT - 1)));
                 if (iPage > gpCurPlayer->m_heroCount - LOCATOR_VISIBLE_COUNT)
@@ -1616,10 +1616,10 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             DoTownKnob();
             break;
         case ADVENTURE_CONTROL_TOWN_SCROLL:
-            gpMouseManager->MouseCoords(curX, curY);
-            curY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
+            gpMouseManager->MouseCoords(mouseX, mouseY);
+            mouseY -= LOCATOR_SCROLL_MOUSE_BASE_Y;
             if (gpCurPlayer->m_townCount > LOCATOR_VISIBLE_COUNT) {
-                iPage = curY
+                iPage = mouseY
                         / (LOCATOR_SCROLL_MOUSE_SPAN
                            / (gpCurPlayer->m_townCount - (LOCATOR_VISIBLE_COUNT - 1)));
                 if (iPage > gpCurPlayer->m_townCount - LOCATOR_VISIBLE_COUNT)
@@ -1645,46 +1645,46 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         case ADVENTURE_CONTROL_MAP_VIEW:
             if (!(gpGame->m_mapExtra[m_mapOriginX + m_lastHoverCell][m_mapOriginY + m_hoverCellY]
                   & giCurPlayerBit))
-                isVisible = 0;
-            hoverCell = GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY);
+                visible = 0;
+            theCell = GetCell(m_mapOriginX + m_lastHoverCell, m_mapOriginY + m_hoverCellY);
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
-                if (!isVisible) {
+                if (!visible) {
                     QuickInfo(m_lastHoverCell, m_hoverCellY);
                 } else {
                     if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER
                         && gpCurPlayer->CurrentHero() != INVALID_HERO && m_heroContextLocked) {
-                        cellType = MAP_OBJECT_HERO;
-                        mapIndex = gpCurPlayer->CurrentHero();
+                        objectTypeState = MAP_OBJECT_HERO;
+                        objectIdIndex = gpCurPlayer->CurrentHero();
                     } else {
-                        cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                        mapIndex = hoverCell->m_objectMetadata;
+                        objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                        objectIdIndex = theCell->m_objectMetadata;
                     }
-                    switch (cellType) {
+                    switch (objectTypeState) {
                         case MAP_OBJECT_HERO:
-                            curX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
-                            if (curX < QUICK_VIEW_MIN_X)
-                                curX = QUICK_VIEW_MIN_X;
-                            if (curX + HERO_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
-                                curX = HERO_QUICK_VIEW_RIGHT_X;
-                            curY = m_hoverCellY * CELL_PIXELS - HERO_QUICK_VIEW_Y_OFFSET;
-                            if (curY < QUICK_VIEW_MIN_Y)
-                                curY = QUICK_VIEW_MIN_Y;
-                            if (curY + HERO_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
-                                curY = HERO_QUICK_VIEW_BOTTOM_Y;
-                            HeroQuickView(mapIndex, QUICK_VIEW_NO_LOCATOR, curX, curY);
+                            mouseX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
+                            if (mouseX < QUICK_VIEW_MIN_X)
+                                mouseX = QUICK_VIEW_MIN_X;
+                            if (mouseX + HERO_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                                mouseX = HERO_QUICK_VIEW_RIGHT_X;
+                            mouseY = m_hoverCellY * CELL_PIXELS - HERO_QUICK_VIEW_Y_OFFSET;
+                            if (mouseY < QUICK_VIEW_MIN_Y)
+                                mouseY = QUICK_VIEW_MIN_Y;
+                            if (mouseY + HERO_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                                mouseY = HERO_QUICK_VIEW_BOTTOM_Y;
+                            HeroQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
                         case MAP_OBJECT_TOWN:
-                            curX = m_lastHoverCell * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
-                            if (curX < QUICK_VIEW_MIN_X)
-                                curX = QUICK_VIEW_MIN_X;
-                            if (curX + TOWN_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
-                                curX = TOWN_QUICK_VIEW_RIGHT_X;
-                            curY = m_hoverCellY * CELL_PIXELS - TOWN_QUICK_VIEW_Y_OFFSET;
-                            if (curY < QUICK_VIEW_MIN_Y)
-                                curY = QUICK_VIEW_MIN_Y;
-                            if (curY + TOWN_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
-                                curY = TOWN_QUICK_VIEW_BOTTOM_Y;
-                            TownQuickView(mapIndex, QUICK_VIEW_NO_LOCATOR, curX, curY);
+                            mouseX = m_lastHoverCell * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
+                            if (mouseX < QUICK_VIEW_MIN_X)
+                                mouseX = QUICK_VIEW_MIN_X;
+                            if (mouseX + TOWN_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                                mouseX = TOWN_QUICK_VIEW_RIGHT_X;
+                            mouseY = m_hoverCellY * CELL_PIXELS - TOWN_QUICK_VIEW_Y_OFFSET;
+                            if (mouseY < QUICK_VIEW_MIN_Y)
+                                mouseY = QUICK_VIEW_MIN_Y;
+                            if (mouseY + TOWN_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                                mouseY = TOWN_QUICK_VIEW_BOTTOM_Y;
+                            TownQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
                         default:
                             if (gpGame->m_mapExtra[m_mapOriginX + m_lastHoverCell]
@@ -1694,14 +1694,14 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                             break;
                     }
                 }
-            } else if (isVisible) {
-                hero = NULL;
+            } else if (visible) {
+                currentHero = NULL;
                 mobileResult = 0;
                 if (gpCurPlayer->m_currentHero != INVALID_HERO) {
-                    hero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-                    mobileResult = gpGame->IsMobile(hero->m_id);
+                    currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+                    mobileResult = gpGame->IsMobile(currentHero->m_id);
                 }
-                if (hero) {
+                if (currentHero) {
                     if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER
                         && gpCurPlayer->CurrentHero() != INVALID_HERO && m_heroContextLocked) {
                         m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
@@ -1709,33 +1709,33 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     } else if ((!mobileResult
                                 || (message->modifiers & MESSAGE_MODIFIER_CONTROL_KEYS)
                                 || (gConfig.showRoute
-                                    && (hero->m_destinationX != m_commandTargetX
-                                        || hero->m_destinationY != m_commandTargetY)))
+                                    && (currentHero->m_destinationX != m_commandTargetX
+                                        || currentHero->m_destinationY != m_commandTargetY)))
                                && gpSearchArray->m_cells[m_commandTargetX][m_commandTargetY]
                                       .visited) {
-                        hero->m_destinationX = m_commandTargetX;
-                        hero->m_destinationY = m_commandTargetY;
+                        currentHero->m_destinationX = m_commandTargetX;
+                        currentHero->m_destinationY = m_commandTargetY;
                         ShowRoute(1, 1, 1);
                     } else {
                         *eventCell = DoAdvCommand();
                     }
                 } else {
-                    cellType = hoverCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-                    mapIndex = hoverCell->m_objectMetadata;
-                    if (cellType == MAP_OBJECT_HERO) {
-                        if (mapIndex == gpCurPlayer->CurrentHero()) {
+                    objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                    objectIdIndex = theCell->m_objectMetadata;
+                    if (objectTypeState == MAP_OBJECT_HERO) {
+                        if (objectIdIndex == gpCurPlayer->CurrentHero()) {
                             m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                             DoAdvCommand();
-                        } else if (gpGame->GetHero(mapIndex)->m_owner == giCurPlayer) {
-                            SetHeroContext(mapIndex, 0);
+                        } else if (gpGame->GetHero(objectIdIndex)->m_owner == giCurPlayer) {
+                            SetHeroContext(objectIdIndex, 0);
                         }
                     }
-                    if (cellType == MAP_OBJECT_TOWN) {
-                        if (mapIndex == gpCurPlayer->CurrentTown()) {
+                    if (objectTypeState == MAP_OBJECT_TOWN) {
+                        if (objectIdIndex == gpCurPlayer->CurrentTown()) {
                             m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                             *eventCell = DoAdvCommand();
-                        } else if (gpGame->GetTown(mapIndex)->m_owner == giCurPlayer) {
-                            SetTownContext(mapIndex);
+                        } else if (gpGame->GetTown(objectIdIndex)->m_owner == giCurPlayer) {
+                            SetTownContext(objectIdIndex);
                         }
                     }
                 }
@@ -1750,11 +1750,11 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                 break;
             }
             DemobilizeCurrHero();
-            gpMouseManager->MouseCoords(curX, curY);
-            curX = (curX - RADAR_LEFT) / RADAR_CELL_PIXELS;
-            curY = (curY - RADAR_TOP) / RADAR_CELL_PIXELS;
-            m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
-            m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
+            gpMouseManager->MouseCoords(mouseX, mouseY);
+            mouseX = (mouseX - RADAR_LEFT) / RADAR_CELL_PIXELS;
+            mouseY = (mouseY - RADAR_TOP) / RADAR_CELL_PIXELS;
+            m_mapOriginX = mouseX - ADVMGR_VIEW_CENTER;
+            m_mapOriginY = mouseY - ADVMGR_VIEW_CENTER;
             if (m_mapOriginX < SCROLL_MIN_ORIGIN)
                 m_mapOriginX = SCROLL_MIN_ORIGIN;
             if (m_mapOriginY < SCROLL_MIN_ORIGIN)
@@ -1788,10 +1788,10 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     if (mouseMsg.y >= RADAR_BOTTOM)
                         mouseMsg.y = RADAR_BOTTOM - 1;
                     gpMouseManager->Main(mouseMsg);
-                    curX = (mouseMsg.x - RADAR_LEFT) / RADAR_CELL_PIXELS;
-                    curY = (mouseMsg.y - RADAR_TOP) / RADAR_CELL_PIXELS;
-                    m_mapOriginX = curX - ADVMGR_VIEW_CENTER;
-                    m_mapOriginY = curY - ADVMGR_VIEW_CENTER;
+                    mouseX = (mouseMsg.x - RADAR_LEFT) / RADAR_CELL_PIXELS;
+                    mouseY = (mouseMsg.y - RADAR_TOP) / RADAR_CELL_PIXELS;
+                    m_mapOriginX = mouseX - ADVMGR_VIEW_CENTER;
+                    m_mapOriginY = mouseY - ADVMGR_VIEW_CENTER;
                     if (m_mapOriginX < SCROLL_MIN_ORIGIN)
                         m_mapOriginX = SCROLL_MIN_ORIGIN;
                     if (m_mapOriginY < SCROLL_MIN_ORIGIN)
@@ -6139,7 +6139,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     i32 updateCount;
     i32 drawY;
     i32 drawX;
-    mapCell* cellPtr;
+    mapCell* cell;
 
     PollSound();
     if (!bShowIt)
@@ -6170,10 +6170,10 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
         for (drawY = 0; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
             if (originX + drawX >= 0 && originX + drawX < MAP_CELL_GRID_SIZE && originY + drawY >= 0
                 && originY + drawY < MAP_CELL_GRID_SIZE) {
-                cellPtr = GetCell(originX + drawX, originY + drawY);
-                if (cellPtr->m_flags & (MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OVERLAY_ANIMATED))
+                cell = GetCell(originX + drawX, originY + drawY);
+                if (cell->m_flags & (MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OVERLAY_ANIMATED))
                     ++bComboDraw[drawX][drawY];
-                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
@@ -6189,8 +6189,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                         }
                     }
                 }
-                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                    || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
