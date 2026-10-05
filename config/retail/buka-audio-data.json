@@ -3,8 +3,8 @@
   "method": "Replace provisional address comments with typed DATA claims. Complete initializer bytes, compiler symbol sizes, unambiguous code users and absence of overlapping owners checked. No source function or initializer changed.",
   "data": [
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleBuffer",
       "short_name": "gSampleBuffer",
       "rva": "0xcdf58",
@@ -14,7 +14,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68c7f",
@@ -319,7 +319,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d39",
@@ -823,8 +823,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleFrames",
       "short_name": "gSampleFrames",
       "rva": "0xcdf5c",
@@ -834,7 +834,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68c97",
@@ -1134,7 +1134,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68caf",
@@ -1445,7 +1445,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68cb6",
@@ -1755,7 +1755,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68cdb",
@@ -1926,7 +1926,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68ce3",
@@ -2091,7 +2091,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d33",
@@ -2602,8 +2602,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleChannels",
       "short_name": "gSampleChannels",
       "rva": "0xcdf60",
@@ -2613,7 +2613,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68ca6",
@@ -2920,7 +2920,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68cbe",
@@ -3224,7 +3224,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d2c",
@@ -3500,8 +3500,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleRate",
       "short_name": "gSampleRate",
       "rva": "0xcdf64",
@@ -3511,7 +3511,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68c8b",
@@ -3811,7 +3811,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d25",
@@ -4095,8 +4095,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleFormat",
       "short_name": "gSampleFormat",
       "rva": "0xcdf68",
@@ -4106,7 +4106,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68cd1",
@@ -4284,7 +4284,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68ceb",
@@ -4386,7 +4386,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d1f",
@@ -4676,8 +4676,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSamples",
       "short_name": "gSamples",
       "rva": "0xce104",
@@ -4687,7 +4687,7 @@
       "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
       "controls": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?CleanupSamples@@YAXXZ",
           "function_rva": "0x689a0",
           "site_rva": "0x68a35",
@@ -4839,7 +4839,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?CleanupSamples@@YAXXZ",
           "function_rva": "0x689a0",
           "site_rva": "0x68a3b",
@@ -4992,7 +4992,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?CleanupSamples@@YAXXZ",
           "function_rva": "0x689a0",
           "site_rva": "0x68a52",
@@ -5251,7 +5251,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68c15",
@@ -5347,7 +5347,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68c74",
@@ -5657,7 +5657,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68d4f",
@@ -6137,7 +6137,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68db9",
@@ -7044,7 +7044,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68dd0",
@@ -7496,7 +7496,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68dd9",
@@ -7948,7 +7948,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68de1",
@@ -8401,7 +8401,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68e48",
@@ -8540,7 +8540,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68e74",
@@ -8790,7 +8790,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "site_rva": "0x68e9c",
@@ -8928,7 +8928,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?StopAllSamples@@YAXXZ",
           "function_rva": "0x69019",
           "site_rva": "0x69030",
@@ -9065,7 +9065,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?UpdateAllSampleVolumes@@YAXXZ",
           "function_rva": "0x69090",
           "site_rva": "0x690a7",
@@ -9205,8 +9205,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereEffects",
-      "source": "src/BASE/AudiereEffects.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gSampleSuspensions",
       "short_name": "gSampleSuspensions",
       "rva": "0xce108",
@@ -9366,8 +9366,8 @@
       "meaning": "Signed nesting counter: increment on suspend, decrement on resume, suspended iff greater than zero."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "?stream@AudiereMusic@@2V?$RefPtr@VOutputStream@audiere@@@audiere@@A",
       "short_name": "AudiereMusic::stream",
       "rva": "0xcddec",
@@ -9377,7 +9377,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6938c",
@@ -9633,7 +9633,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6939f",
@@ -9887,7 +9887,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x693bd",
@@ -10148,7 +10148,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6959d",
@@ -10633,7 +10633,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x695be",
@@ -10888,7 +10888,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x695f3",
@@ -11045,7 +11045,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69627",
@@ -11594,7 +11594,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69645",
@@ -12163,7 +12163,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6964d",
@@ -12739,7 +12739,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69656",
@@ -13315,7 +13315,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6965c",
@@ -13891,7 +13891,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6966b",
@@ -14474,7 +14474,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69671",
@@ -15051,7 +15051,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6967a",
@@ -15628,7 +15628,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6967f",
@@ -16205,7 +16205,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6975f",
@@ -16355,7 +16355,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6977f",
@@ -16615,7 +16615,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697b4",
@@ -16772,7 +16772,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697e8",
@@ -17326,7 +17326,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69807",
@@ -17893,7 +17893,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6980f",
@@ -18474,7 +18474,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69818",
@@ -19055,7 +19055,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6981d",
@@ -19629,7 +19629,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6982c",
@@ -20432,7 +20432,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69832",
@@ -21229,7 +21229,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6983a",
@@ -22014,7 +22014,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69840",
@@ -22786,7 +22786,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?UpdateMusicVolume@@YAXXZ",
           "function_rva": "0x698a6",
           "site_rva": "0x698c0",
@@ -22930,7 +22930,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?UpdateMusicVolume@@YAXXZ",
           "function_rva": "0x698a6",
           "site_rva": "0x698db",
@@ -23019,7 +23019,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69905",
@@ -23691,7 +23691,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69918",
@@ -24363,7 +24363,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69937",
@@ -25035,7 +25035,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6993f",
@@ -25707,7 +25707,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69947",
@@ -26379,7 +26379,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6994d",
@@ -27051,7 +27051,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6995b",
@@ -27723,7 +27723,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69961",
@@ -28395,7 +28395,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6996a",
@@ -29067,7 +29067,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69970",
@@ -29742,8 +29742,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "?source@AudiereMusic@@2V?$RefPtr@VSampleSource@audiere@@@audiere@@A",
       "short_name": "AudiereMusic::source",
       "rva": "0xcdf6c",
@@ -29753,7 +29753,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69693",
@@ -30315,7 +30315,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6969b",
@@ -30863,7 +30863,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696a4",
@@ -31411,7 +31411,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696aa",
@@ -31728,7 +31728,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696b9",
@@ -32019,7 +32019,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696bf",
@@ -32310,7 +32310,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696c8",
@@ -32481,7 +32481,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696cd",
@@ -32646,7 +32646,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69855",
@@ -33375,7 +33375,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6985d",
@@ -34092,7 +34092,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69866",
@@ -34797,7 +34797,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6986c",
@@ -35489,7 +35489,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6987b",
@@ -36144,7 +36144,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69881",
@@ -36792,7 +36792,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6988a",
@@ -37428,7 +37428,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6988f",
@@ -38058,7 +38058,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69985",
@@ -38730,7 +38730,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6998d",
@@ -39402,7 +39402,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69996",
@@ -40074,7 +40074,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x6999b",
@@ -40642,7 +40642,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699aa",
@@ -41203,7 +41203,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699b0",
@@ -41758,7 +41758,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699b8",
@@ -42294,7 +42294,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699be",
@@ -42827,8 +42827,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gMusicSuspensions",
       "short_name": "gMusicSuspensions",
       "rva": "0xcdde8",
@@ -42988,8 +42988,8 @@
       "meaning": "Signed nesting counter: increment on suspend, decrement on resume, suspended iff greater than zero."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gCurrentTrack",
       "short_name": "gCurrentTrack",
       "rva": "0xa0d70",
@@ -42999,7 +42999,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69382",
@@ -43147,7 +43147,7 @@
           "local_slot_map": {}
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x695b5",
@@ -43403,7 +43403,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x695db",
@@ -43489,7 +43489,7 @@
           "local_slot_map": {}
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69608",
@@ -43773,7 +43773,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69616",
@@ -44064,7 +44064,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x696db",
@@ -44153,7 +44153,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x69776",
@@ -44401,7 +44401,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6979d",
@@ -44487,7 +44487,7 @@
           "local_slot_map": {}
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697c9",
@@ -44777,7 +44777,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697d8",
@@ -45074,7 +45074,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x6989a",
@@ -45673,7 +45673,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699fa",
@@ -45838,7 +45838,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69a02",
@@ -46003,7 +46003,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x69a0b",
@@ -46108,8 +46108,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gCDTrackMap",
       "short_name": "gCDTrackMap",
       "rva": "0xa0d74",
@@ -46119,7 +46119,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69411",
@@ -46210,8 +46210,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gMusicFilename",
       "short_name": "gMusicFilename",
       "rva": "0xcddf0",
@@ -46221,7 +46221,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x693fd",
@@ -46324,7 +46324,7 @@
           "local_slot_map": {}
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69430",
@@ -46431,7 +46431,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6943d",
@@ -46555,8 +46555,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gMusicPositions",
       "short_name": "gMusicPositions",
       "rva": "0xcdf74",
@@ -46566,7 +46566,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69548",
@@ -46809,7 +46809,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x69570",
@@ -47268,7 +47268,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6960f",
@@ -47559,7 +47559,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x6961d",
@@ -47857,7 +47857,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697d0",
@@ -48147,7 +48147,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?StopMusic@@YAXXZ",
           "function_rva": "0x69742",
           "site_rva": "0x697df",
@@ -48444,7 +48444,7 @@
           }
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699e5",
@@ -48730,8 +48730,8 @@
       "meaning": "Typed source declaration and unique retail instruction contexts."
     },
     {
-      "unit": "BASE/AudiereMusic",
-      "source": "src/BASE/AudiereMusic.cpp",
+      "unit": "BASE/Audio",
+      "source": "src/BASE/Audio.cpp",
       "name": "_gMusicSource",
       "short_name": "gMusicSource",
       "rva": "0xce10c",
@@ -48741,7 +48741,7 @@
       "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
       "controls": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "site_rva": "0x693e7",
@@ -48834,7 +48834,7 @@
           "local_slot_map": {}
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?SetMusicSource@@YAXH@Z",
           "function_rva": "0x698fb",
           "site_rva": "0x699f4",

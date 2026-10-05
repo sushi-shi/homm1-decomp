@@ -16749,7 +16749,7 @@
       "name": "?SetVolumes@@YAXHH@Z"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x692b6",
       "size": 71,
       "retail_body_sha256": "19999012fec940701773ad411540317fbf0eb660128832cac6766085407d0644",
@@ -16757,7 +16757,7 @@
       "name": "?ShouldRepeatMusic@@YA_NH@Z"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x692fd",
       "size": 1083,
       "retail_body_sha256": "e6904a60997a6fad7398a6a32712b920a1340f7a7e431113111f2f409d965781",
@@ -16765,7 +16765,7 @@
       "name": "?PlayMusic@@YAXH@Z"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69738",
       "size": 10,
       "retail_body_sha256": "9e31306dc9b110fcfd81d812a2edac4b099e8e2e71ae55c7ab3aaf9522e0be1b",
@@ -16773,7 +16773,7 @@
       "name": "?GetCurrentTrack@@YAHXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69742",
       "size": 356,
       "retail_body_sha256": "7fa1a2b5bd501fdfecc24d6cc378700092dc5a3d7c85dd6becce11bb2d808244",
@@ -16781,7 +16781,7 @@
       "name": "?StopMusic@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x698a6",
       "size": 85,
       "retail_body_sha256": "3f8a4763506b967d07bd07947f6adafa5b326a15a028e4d0a28d6e8c5dc81b61",
@@ -16789,7 +16789,7 @@
       "name": "?UpdateMusicVolume@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x698fb",
       "size": 296,
       "retail_body_sha256": "cbe3c7164114bb1c45377a4e4a0156aca8c5facc7fde6d954c6300f2c173a0a4",
@@ -16797,7 +16797,7 @@
       "name": "?SetMusicSource@@YAXH@Z"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69a23",
       "size": 54,
       "retail_body_sha256": "d5504b4efb3bf8b7ee557215289379ab6c46caf87c32abaab3496644c4fbbf59",
@@ -16805,7 +16805,7 @@
       "name": "?MusicPlaying@@YA_NXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69a59",
       "size": 18,
       "retail_body_sha256": "e8dd72ace78b87eeed6b31ed3ab565eac0417b6637ba22e051b18b08d2eae3d9",
@@ -16813,7 +16813,7 @@
       "name": "?SuspendMusic@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69a6b",
       "size": 18,
       "retail_body_sha256": "a1fe99b8fa7daf7b5b165ab2d56826553d6029cc10c7a418488545cc896a3219",
@@ -16821,7 +16821,7 @@
       "name": "?ResumeMusic@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "rva": "0x69a7d",
       "size": 17,
       "retail_body_sha256": "8a1f5cce8e18a855731e9422c86d263407293c479125e1d91c9c8c88cdd5d07e",
@@ -16829,7 +16829,7 @@
       "name": "?MusicSuspended@@YA_NXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x689a0",
       "size": 354,
       "retail_body_sha256": "4b6f04a7589fbc5d3531ae828f8da98b1ca31d1e566840d5ee7120324a0a58d3",
@@ -16837,7 +16837,7 @@
       "name": "?CleanupSamples@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68b02",
       "size": 53,
       "retail_body_sha256": "164c4bc306df1935319365976094a3f922d1c01a2f29252366d47805fb104877",
@@ -16845,7 +16845,7 @@
       "name": "?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68b37",
       "size": 909,
       "retail_body_sha256": "755730af4766d23df75c9eda4ce34a87883dcd5cf4a507ae755450735da8dd73",
@@ -16853,7 +16853,7 @@
       "name": "?PlaySample@@YAXPAVsample@@@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68ec4",
       "size": 41,
       "retail_body_sha256": "0bf7f1df3987c92cd9a29285e9ac58d84917ea7e6277beb4b0a8c58a817602d9",
@@ -16861,7 +16861,7 @@
       "name": "?LoadPlaySample@@YAPAVsample@@PAD@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68eed",
       "size": 113,
       "retail_body_sha256": "8d83447483299e2f069d4ade336c76a0ccce09c29e27e433ab8bca8b982a84be",
@@ -16869,7 +16869,7 @@
       "name": "?StopSample@@YAXPAVsample@@@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68f5e",
       "size": 88,
       "retail_body_sha256": "67468f73bf080c8c77acba0632c36490cb8e0ad86f5901306a038fbbba31acae",
@@ -16877,7 +16877,7 @@
       "name": "?UpdateSampleVolume@@YAXPAVsample@@@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x68fb6",
       "size": 99,
       "retail_body_sha256": "fb166c81785c5cd3ce221640544d9d61ac1349e97e0ac5aa7d12cc21c63ff6c1",
@@ -16885,7 +16885,7 @@
       "name": "?WaitSample@@YAXPAVsample@@@Z"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x69019",
       "size": 119,
       "retail_body_sha256": "79214e57e8bc76181bea19d34827ba335f073853fd12ec38c2f58d281451ff4d",
@@ -16893,7 +16893,7 @@
       "name": "?StopAllSamples@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x69090",
       "size": 97,
       "retail_body_sha256": "31bcf459dcf75e2a978ac5a4df585adcc4f29ef4829469518ab81d6ac0925114",
@@ -16901,7 +16901,7 @@
       "name": "?UpdateAllSampleVolumes@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x690f1",
       "size": 18,
       "retail_body_sha256": "951ec4c5c454e06218dbd6e66b186fc489327a7d2b18686ab77d0649ac4ea592",
@@ -16909,7 +16909,7 @@
       "name": "?SuspendSamples@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x69103",
       "size": 18,
       "retail_body_sha256": "f2f93d66f22e6a634dec807fe611b4f17d341eec7a4da07e80b782a51bfa5c3d",
@@ -16917,7 +16917,7 @@
       "name": "?ResumeSamples@@YAXXZ"
     },
     {
-      "unit": "BASE/AudiereEffects",
+      "unit": "BASE/Audio",
       "rva": "0x69115",
       "size": 17,
       "retail_body_sha256": "9b80810a09fc6b9365e081dd3d5839a529f34d217c5defdf4a9a75e9b2356f61",
@@ -17185,56 +17185,56 @@
     {
       "rva": "0x69126",
       "size": 15,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::stream initializer wrapper",
       "retail_body_sha256": "62b4a757f271e2bfa6683bf65f65a44a735954b8c400d1a6ac83b3645ebc3e99"
     },
     {
       "rva": "0x69135",
       "size": 97,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::stream RefPtr null initialization",
       "retail_body_sha256": "e624589e2c247c9b6bfe7a5f2140a2004af264312db7922e2aefe5696538ba0a"
     },
     {
       "rva": "0x69196",
       "size": 18,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::stream atexit registration",
       "retail_body_sha256": "bb93c921ef3f138227bfb93bc76c17ac9fbfd172f20bdc24e25535f60acb5ef8"
     },
     {
       "rva": "0x691a8",
       "size": 70,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::stream guarded RefPtr cleanup",
       "retail_body_sha256": "1987defc8d18888383bc7f42a875fb65882f35012f473b04d9020a6a382723c3"
     },
     {
       "rva": "0x691ee",
       "size": 15,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::source initializer wrapper",
       "retail_body_sha256": "62b4a757f271e2bfa6683bf65f65a44a735954b8c400d1a6ac83b3645ebc3e99"
     },
     {
       "rva": "0x691fd",
       "size": 97,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::source RefPtr null initialization",
       "retail_body_sha256": "88845fe0ab9714e3a34f8ed5e90a4667f3e0be4a32db3066d3a024fc94f20cba"
     },
     {
       "rva": "0x6925e",
       "size": 18,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::source atexit registration",
       "retail_body_sha256": "28cfadd451c678a5dfd35a98227510ddd0ec100ae9319d1efb37f1fcb2d703f9"
     },
     {
       "rva": "0x69270",
       "size": 70,
-      "unit": "BASE/AudiereMusic",
+      "unit": "BASE/Audio",
       "role": "AudiereMusic::source guarded RefPtr cleanup",
       "retail_body_sha256": "4db0aeedade2c41ed4cf253864fd58b825084293233dc803a97e8cbca3984258"
     },

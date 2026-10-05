@@ -1271,6 +1271,21 @@ def _eh_funclet_owners(
         stubs = []
     out: dict[int, str] = {}
     inline_groups = _inline_eh_groups(coff)
+    # Every registration stub a prologue pushes, per funclet section.
+    stub_values: dict[int, set[int]] = {}
+    for relocation in coff.relocations:
+        if relocation.typ != DIR32:
+            continue
+        site_section = coff.sections[relocation.section - 1]
+        if not site_section.characteristics & MEM_EXECUTE:
+            continue
+        if _byte_at(coff.data, site_section.raw_offset + relocation.site - 1) != PUSH_IMM32:
+            continue
+        stub = coff.symbols[relocation.symbol_index]
+        if (stub.section > 0 and stub.storage_class == LABEL_STORAGE
+                and stub.name.startswith("$L")
+                and stub.section != relocation.section):
+            stub_values.setdefault(stub.section, set()).add(stub.value)
     for relocation in coff.relocations:
         if relocation.typ != DIR32:
             continue
@@ -1305,9 +1320,16 @@ def _eh_funclet_owners(
         if base_side:
             index = 0
             group_labels = inline_groups[target.index][1] if target.index in inline_groups else labels[target.section]
+            # A `.text$x` section can hold several owners' groups; this
+            # group's funclets are the labels after the previous owner's
+            # registration stub.
+            floor = max((value for value in stub_values.get(target.section, ())
+                         if value < target.value), default=-1)
             for symbol in group_labels:
                 if symbol.value >= target.value:
                     break
+                if symbol.value <= floor:
+                    continue
                 out.setdefault(symbol.index, eh_band.unwind_symbol(owner, index))
                 index += 1
             stubs.append((owner, target))

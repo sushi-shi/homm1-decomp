@@ -15,6 +15,7 @@
 # Typed immutable value-encoded constants: buka-restored-ai-literal-pools.json.
 # Complete unchanged literals and unique use contexts: buka-final-equal-literal-references.json.
 # Complete unchanged literals and unique use contexts: buka-final-display-literal-references.json.
+# Audio TU static-destructor guards: AudiereMusic stream/source (0xcdf70) and AudiereDevice::device (0xcdf71); users 0x691ae/0x69276 and 0x69b16.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool
 0x0008a3a0	0x8	__real@8@40059200000000000000	SOURCE/ADVMGR	fppool
@@ -263,4 +264,6 @@ rva	size	name	owner	class
 0x000a6c40	0x1	$SG683072	SOURCE/HISCORE	string
 0x000a99a8	0x1	$SG694696	SOURCE/KB	string
 0x000a99ac	0x1	$SG694700	SOURCE/KB	string
+0x000cdf70	0x1	_$S19	BASE/Audio	guard
+0x000cdf71	0x1	_$S30	BASE/Audio	guard
 0x000d82d8	0x1	??_B?1???id@?$ctype@G@std@@$D@@9@51	std::ctype<wchar_t>::id	common

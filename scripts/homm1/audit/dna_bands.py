@@ -211,8 +211,13 @@ def run_census():
     # A source-claimed body is a reconstruction target even when its bytes
     # equal a compiler-private body (an empty function and a synthesized
     # cleanup are both `push ebp; mov ebp,esp; pop ebp; ret`).
-    source_rvas = {b.rva for b in resolve().functions
+    model = resolve()
+    source_rvas = {b.rva for b in model.functions
                    if b.channel in ("src", "src_compgen")}
+    # A reviewed referent name disambiguates byte-identical library bodies
+    # (operator delete and vector delete, `_tell` and its OLDNAMES alias).
+    referent_names = {b.rva: b.name for b in model.functions
+                      if b.channel == "functions_referents" and b.name}
 
     for item in image_by_rva.values():
         rva, body = item["rva"], item["body"]
@@ -252,8 +257,12 @@ def run_census():
         private = [m for m in matches if m.source.startswith("base:")
                    and PRIVATE.match(m.symbol) and rva not in source_rvas]
         chosen = None
+        named = [m for m in library if m.symbol == referent_names.get(rva)]
         if library and len({m.symbol for m in library}) == 1:
             chosen = library[0]
+            row["class"] = "crt-exact"
+        elif named:
+            chosen = named[0]
             row["class"] = "crt-exact"
         elif private and (len({m.symbol for m in private}) == 1
                           or (len({m.body for m in private}) == 1
@@ -263,6 +272,17 @@ def run_census():
             # identical masked bytes.
             chosen = private[0]
             row["class"] = "helper-exact"
+        if chosen is None:
+            # A template instance or implicit member the compiler emits from
+            # a header: our own object holds the same COMDAT under the
+            # reviewed referent name.
+            instances = [m for m in matches if m.source.startswith("base:")
+                         and m.symbol == referent_names.get(rva)
+                         and rva not in source_rvas]
+            if instances:
+                chosen = instances[0]
+                row["class"] = "helper-exact"
+                row["detail"] = "compiler-instantiated COMDAT"
         if chosen:
             row["source"], row["symbol"] = chosen.source, chosen.symbol
             same_source = [m for m in matches if m.source == chosen.source]

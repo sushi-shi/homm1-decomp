@@ -174,16 +174,8 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "BASE/Audio"
 source = "src/BASE/Audio.cpp"
-flags = "cpp_buka"
-
-[[unit]]
-unit = "BASE/AudiereEffects"
-source = "src/BASE/AudiereEffects.cpp"
-flags = "cpp_buka"
-
-[[unit]]
-unit = "BASE/AudiereMusic"
-source = "src/BASE/AudiereMusic.cpp"
+# One retail TU: AudiereEffects, AudiereMusic and the device/volume code
+# (unaligned contiguous code, a single <string> ctype pair, shared COMDATs).
 flags = "cpp_buka"
 
 [[unit]]

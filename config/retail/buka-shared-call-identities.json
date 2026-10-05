@@ -873,7 +873,7 @@
       "library": null,
       "controls": [
         {
-          "origin": "build/objdiff/base/BASE/AudiereEffects.obj",
+          "origin": "build/objdiff/base/BASE/Audio.obj",
           "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
           "body_sha256": "4e59698146271d05d36728df5a7be5e31f6434e6058318c493991d1014fff150",
           "references": []
@@ -881,7 +881,7 @@
       ],
       "callers": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?CleanupSamples@@YAXXZ",
           "function_rva": "0x689a0",
           "block_instructions": 108,
@@ -890,7 +890,7 @@
           "object_symbol": "??1AudiereSampleNode@@QAE@XZ"
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?CleanupSamples@@YAXXZ",
           "function_rva": "0x689a0",
           "block_instructions": 108,
@@ -908,13 +908,13 @@
       "library": null,
       "controls": [
         {
-          "origin": "build/objdiff/base/BASE/AudiereMusic.obj",
+          "origin": "build/objdiff/base/BASE/Audio.obj",
           "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
           "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
           "references": []
         },
         {
-          "origin": "build/objdiff/base/BASE/AudiereEffects.obj",
+          "origin": "build/objdiff/base/BASE/Audio.obj",
           "object_sha256": "291dbcb18688d2bc3586550011969a97bd431710a9f05863bd3c90ad97011ae6",
           "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
           "references": []
@@ -922,7 +922,7 @@
       ],
       "callers": [
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "block_instructions": 267,
@@ -931,7 +931,7 @@
           "object_symbol": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z"
         },
         {
-          "unit": "BASE/AudiereEffects",
+          "unit": "BASE/Audio",
           "function": "?PlaySample@@YAXPAVsample@@@Z",
           "function_rva": "0x68b37",
           "block_instructions": 267,
@@ -940,7 +940,7 @@
           "object_symbol": "??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z"
         },
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "block_instructions": 310,
@@ -958,7 +958,7 @@
       "library": null,
       "controls": [
         {
-          "origin": "build/objdiff/base/BASE/AudiereMusic.obj",
+          "origin": "build/objdiff/base/BASE/Audio.obj",
           "object_sha256": "ec9fd88adf6fea31fbc7c9f5d033febe5f3dcad59797c084dfe9dcd14813e598",
           "body_sha256": "9e36e5f2574d86071e1cfd9ae2ca1b74708929fae9b83356b53d081b6d132655",
           "references": []
@@ -966,7 +966,7 @@
       ],
       "callers": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "function_rva": "0x692fd",
           "block_instructions": 310,

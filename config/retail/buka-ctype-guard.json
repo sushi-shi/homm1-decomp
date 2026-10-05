@@ -24,42 +24,6 @@
       "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
       "registration_hex": "558bec6800000000e80000000083c4045dc3",
       "cleanup_hex": "558bec5dc3"
-    },
-    {
-      "unit": "BASE/AudiereMusic",
-      "object_sha256": "b4f6455bbb02c9aac649e5247963037c299db4f4f4c9998e97fad6f1acdbd997",
-      "initializer": "_$E33",
-      "registration": "_$E32",
-      "cleanup": "?id@?$ctype@G@std@@$E",
-      "common_symbol": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
-      "common_size": 1,
-      "guard_reference_offsets": [
-        6,
-        19,
-        28
-      ],
-      "registration_call_offset": 33,
-      "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
-      "registration_hex": "558bec6800000000e80000000083c4045dc3",
-      "cleanup_hex": "558bec5dc3"
-    },
-    {
-      "unit": "BASE/AudiereEffects",
-      "object_sha256": "b0b76f40dfc9c70dafc09c26bb215c400761f166ad34f3b93cd01be5366f2d3c",
-      "initializer": "_$E22",
-      "registration": "_$E21",
-      "cleanup": "?id@?$ctype@G@std@@$E",
-      "common_symbol": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
-      "common_size": 1,
-      "guard_reference_offsets": [
-        6,
-        19,
-        28
-      ],
-      "registration_call_offset": 33,
-      "initializer_normalized_hex": "558bec33c0a00000000083e00185c0750f8a0d0000000080c901880d00000000e8000000005dc3",
-      "registration_hex": "558bec6800000000e80000000083c4045dc3",
-      "cleanup_hex": "558bec5dc3"
     }
   ],
   "retail_occurrences": [
@@ -1096,7 +1060,7 @@
   },
   "enrolled_manifest_row": {
     "name": "??_B?1???id@?$ctype@G@std@@$D@@9@51",
-    "object": "BASE/AudiereEffects.c",
+    "object": "BASE/Audio.c",
     "rva": "0xd82d8",
     "size": "0x1",
     "storage": "bss",
