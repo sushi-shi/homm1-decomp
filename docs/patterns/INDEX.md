@@ -46,4 +46,5 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 deferred internal-linkage functions (HoMM1 Buka, measured)](vc6-static-function-deferral.md).
 - [VC6 `throw()` functions keep new-expression temporaries without an EH frame (HoMM1 Buka, measured)](vc6-throw-spec-eh-frame.md).
 - [VC6 /Od frame slots follow the folded name hash (HoMM1 Buka, measured)](vc6-od-frame-slots.md).
+- [VC6 /Ob2 emits file-scope initializer literals in source order (HoMM1 Buka, measured)](vc6-ob2-literal-order.md).
 - [VC6 parenthesized cast operands keep a separate fild (HoMM1 Buka, measured)](vc6-parenthesized-cast-operand.md).

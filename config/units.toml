@@ -18,6 +18,11 @@ cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
 # FINDPATH and SEARCH retain optimization; automatic inlining is proved by
 # FindCombatPath containing the Clear and QuickDistance instruction bodies.
 cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5"]
+# REQUEST: retail places gFRDummy's "" between UpdateMapInfo's and ShowMapInfo's
+# .bss literals (source order). /Ob1 emits file-scope initializer literals before
+# every function literal; /Ob2 emits them in source order. Code is unchanged and
+# all 13 REQUEST bodies are exact; KB regresses under /Ob2 (data-first order).
+cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5"]
 
 [[unit]]
 unit = "BASE/BITS"
@@ -285,8 +290,9 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/REQUEST"
 source = "src/SOURCE/REQUEST.cpp"
 # fileRequester::Open registers fs:[0] around its heroWindow/iconWidget news.
-# Retail Open/Main narrow arguments omit G6 register clears.
-flags = "cpp_buka_g5"
+# Retail Open/Main narrow arguments omit G6 register clears. Its .bss literal
+# order requires /Ob2 (see docs/patterns/vc6-ob2-literal-order.md).
+flags = "cpp_buka_ob2_g5"
 
 [[unit]]
 unit = "SOURCE/SETUP"
