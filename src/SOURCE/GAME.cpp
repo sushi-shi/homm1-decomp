@@ -4952,7 +4952,7 @@ i32 game::GetNumThievesGuilds(i32 color) {
 
 // Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
 // (human seats by handicap, computers by level), King of the Hill, map
-// size and map difficulty.
+// size and map difficulty. Zero bonuses are still added (/Od load/store).
 VA(0x00438573, 0x2e3)
 i32 game::CalcDifficultyRating(void) {
     i32 i;
@@ -4960,6 +4960,7 @@ i32 game::CalcDifficultyRating(void) {
 
     total = 0;
     if (m_difficulty == DIFFICULTY_EASY) {
+        total += 0;
     } else if (m_difficulty == DIFFICULTY_NORMAL) {
         total += 10;
     } else if (m_difficulty == DIFFICULTY_HARD) {
@@ -4988,7 +4989,9 @@ i32 game::CalcDifficultyRating(void) {
     }
     if (gbIAmGreatest) {
         if (m_playerCount - giNumHumanPlayers == 0) {
+            total += 0;
         } else if (m_playerCount - giNumHumanPlayers == 1) {
+            total += 0;
         } else if (m_playerCount - giNumHumanPlayers == 2) {
             total += 5;
         } else if (m_playerCount - giNumHumanPlayers == 3) {
@@ -4996,6 +4999,7 @@ i32 game::CalcDifficultyRating(void) {
         }
     }
     if (gMapSize == MAP_SIZE_SMALL) {
+        total += 0;
     } else if (gMapSize == MAP_SIZE_MEDIUM) {
         total += 10;
     } else if (gMapSize == MAP_SIZE_LARGE) {
