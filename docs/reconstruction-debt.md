@@ -67,6 +67,27 @@ against new ones.
 **Unknown members.** `m_unknownNN` and `m_field_0xNNN` placeholders keep a
 class layout without a recovered name or type.
 
+Names come from a code user or the Buka 2.1 donor:
+
+- mouseManager's `m_savedLeft`/`m_savedTop` are the cursor area ComboDraw
+  marks; Buka never updates them after the constructor.
+- playerData's `m_unusedSaveData` is the span Write zeroes and Read skips.
+
+Spans that no code reads or writes take the donor's spelling for such
+members: `m_unused<offset>`, or `m_padding<offset>` in recruitUnit. Nineteen
+placeholders remain:
+
+- inputManager (seven): written by its constructor, the event queue, the two
+  option setters and advManager's context changes; nothing reads them.
+- army (two), combatManager (four), heroWindowManager (two), town (one) and
+  mouseManager (one): set only by constructors or Init.
+- playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read. Like
+  HoMM2's `m_barrierTents`, `m_unknown99[1]` is written twice.
+
+The HoMM2 donor leaves the corresponding fields unnamed as well
+(`field_0x742`, `m_unknownF373`, ...). Inventing a meaning for them is not
+evidence, so they stay placeholders until a reader is found.
+
 **`goto`.** The HoMM2 Buka donor contains several hundred, so the original code
 used them. A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.

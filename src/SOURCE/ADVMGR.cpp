@@ -5613,8 +5613,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     }
 
     if (gpMouseManager->IsVis()) {
-        drawX = gpMouseManager->m_unknown49 >> CELL_PIXEL_SHIFT;
-        drawY = gpMouseManager->m_unknown4d >> CELL_PIXEL_SHIFT;
+        drawX = gpMouseManager->m_savedLeft >> CELL_PIXEL_SHIFT;
+        drawY = gpMouseManager->m_savedTop >> CELL_PIXEL_SHIFT;
         ++bComboDraw[drawX][drawY];
         ++bComboDraw[drawX + 1][drawY];
         ++bComboDraw[drawX][drawY + 1];

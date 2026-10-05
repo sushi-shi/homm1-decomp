@@ -44,7 +44,10 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Verify-board text debt at **0**: magic case labels, unnamed domain
   compares, `.cpp`-local enums and views, `.cpp` extern declarations, C-style
   casts and unexplained casts.
-- [ ] Recover unknown members: **41** `m_unknown*`/`m_field_0x*` placeholders.
+- [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
+  remain; each is only ever cleared, initialized or saved, so no code user
+  names it. The mouse's saved area and the player's unused save span carry
+  Buka names, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
 - [ ] Review gotos: **206 statements**; keep those retail's block layout requires.
 - [x] Review dead locals: **116** never-read locals. The 75 without an
   initializer were removed together as a control, and every affected function

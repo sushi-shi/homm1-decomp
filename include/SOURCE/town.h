@@ -99,7 +99,7 @@ public:
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;
     i8 m_customized;
-    char m_unknown28[4];
+    char m_unused28[4];
     i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
