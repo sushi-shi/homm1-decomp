@@ -358,15 +358,6 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004d16c	0x80	data	_gInputCharacterMapCp1251	BASE/INPUTMGR	src	0x000a1388	1 code reference(s) from placed bodies
 0x0004d228	0xc	data	?gMouseOffset@@3PAHA	BASE/MOUSEMGR	src	0x000a0ff8	1 code reference(s) from placed bodies
 0x0004d234	0x96	data	?gHotSpot@@3PAY01EA	BASE/MOUSEMGR	src	0x000a1004	2 code reference(s) from placed bodies
-0x0004d308	0x3	data	?gAdventureColor@@3PADA	BASE/MOUSEMGR	src	0x000a10e4	1 code reference(s) from placed bodies
-0x0004d30c	0x3	data	?gAdventureMonochrome@@3PADA	BASE/MOUSEMGR	src	0x000a10e8	1 code reference(s) from placed bodies
-0x0004d310	0xf	data	?gAdventureBitmapFormat@@3PADA	BASE/MOUSEMGR	src	0x000a10ec	1 code reference(s) from placed bodies
-0x0004d320	0x3	data	?gSpellColor@@3PADA	BASE/MOUSEMGR	src	0x000a10fc	1 code reference(s) from placed bodies
-0x0004d324	0x3	data	?gSpellMonochrome@@3PADA	BASE/MOUSEMGR	src	0x000a1100	1 code reference(s) from placed bodies
-0x0004d328	0xf	data	?gSpellBitmapFormat@@3PADA	BASE/MOUSEMGR	src	0x000a1104	1 code reference(s) from placed bodies
-0x0004d338	0x3	data	?gCombatColor@@3PADA	BASE/MOUSEMGR	src	0x000a1114	1 code reference(s) from placed bodies
-0x0004d33c	0x3	data	?gCombatMonochrome@@3PADA	BASE/MOUSEMGR	src	0x000a1118	1 code reference(s) from placed bodies
-0x0004d340	0xf	data	?gCombatBitmapFormat@@3PADA	BASE/MOUSEMGR	src	0x000a111c	1 code reference(s) from placed bodies
 0x0004d5d4	0x100	data	_gDimPalette	BASE/BMAP2	src	0x000a14b8	3 code reference(s) from placed bodies
 0x0004d6d4	0x4	data	_gBitmapSourceSkip	BASE/BMAP2	src	0x000a15b8	5 code reference(s) from placed bodies
 0x0004d6d8	0x4	data	_gBitmapRowSkip	BASE/BMAP2	src	0x000a15bc	6 code reference(s) from placed bodies

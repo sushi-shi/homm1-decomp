@@ -6,6 +6,7 @@ rva	size	symbol	provenance
 0x0003edec	352	?gDataPath@@3PADA	game 0x90e30: complete initialized bytes (352) unique in the image; no code user
 0x0003ef4c	352	?gAnimPath@@3PADA	game 0x90f90: complete initialized bytes (352) unique in the image; no code user
 0x0003f0ac	352	?gSoundPath@@3PADA	game 0x910f0: 1 code reference(s) from placed bodies
+0x0003f20c	352	?gTracksPath@@3PADA	game 0x91250: 1 code reference(s) from placed bodies
 0x0003f380	20	?gMapPath@@3PADA	game 0x913c4: complete initialized bytes (20) unique in the image; no code user
 0x00043920	6	?gAppName@@3PADA	game 0x9e700: complete initialized bytes (6) unique in the image; no code user
 0x0004c6c0	4	?gWinGAttached@@3HA	game 0xa0190: 1 code reference(s) from placed bodies
@@ -15,15 +16,6 @@ rva	size	symbol	provenance
 0x0004d16c	128	_gInputCharacterMapCp1251	game 0xa1388: 1 code reference(s) from placed bodies
 0x0004d228	12	?gMouseOffset@@3PAHA	game 0xa0ff8: 1 code reference(s) from placed bodies
 0x0004d234	150	?gHotSpot@@3PAY01EA	game 0xa1004: 2 code reference(s) from placed bodies
-0x0004d308	3	?gAdventureColor@@3PADA	game 0xa10e4: 1 code reference(s) from placed bodies
-0x0004d30c	3	?gAdventureMonochrome@@3PADA	game 0xa10e8: 1 code reference(s) from placed bodies
-0x0004d310	15	?gAdventureBitmapFormat@@3PADA	game 0xa10ec: 1 code reference(s) from placed bodies
-0x0004d320	3	?gSpellColor@@3PADA	game 0xa10fc: 1 code reference(s) from placed bodies
-0x0004d324	3	?gSpellMonochrome@@3PADA	game 0xa1100: 1 code reference(s) from placed bodies
-0x0004d328	15	?gSpellBitmapFormat@@3PADA	game 0xa1104: 1 code reference(s) from placed bodies
-0x0004d338	3	?gCombatColor@@3PADA	game 0xa1114: 1 code reference(s) from placed bodies
-0x0004d33c	3	?gCombatMonochrome@@3PADA	game 0xa1118: 1 code reference(s) from placed bodies
-0x0004d340	15	?gCombatBitmapFormat@@3PADA	game 0xa111c: 1 code reference(s) from placed bodies
 0x0004d5d4	256	_gDimPalette	game 0xa14b8: 3 code reference(s) from placed bodies
 0x0004d6d4	4	_gBitmapSourceSkip	game 0xa15b8: 5 code reference(s) from placed bodies
 0x0004d6d8	4	_gBitmapRowSkip	game 0xa15bc: 6 code reference(s) from placed bodies
@@ -110,7 +102,6 @@ rva	size	symbol	provenance
 0x0003f410	490	?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A	game 0x921a0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x0003f5fc	272	?gWinSetup@@3PAUWindowTextEntry@@A	game 0x91bc8 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0003f7d4	272	?gWinSetupText@@3PAPADA	game 0x93318 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
-0x0004142c	20	?gGameTypeHelp@@3PAPADA	game 0x939f0 (SOURCE/KB): complete initialized bytes (20) unique in the image; no code user
 0x00051b8c	4	?gpMouseManager@@3PAVmouseManager@@A	game 0xa7164 (SOURCE/KB): 28 code reference(s) from placed bodies
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00051ea0	4	?gpWindowManager@@3PAVheroWindowManager@@A	game 0xa74a8 (SOURCE/KB): 44 code reference(s) from placed bodies

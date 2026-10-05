@@ -8,12 +8,9 @@
 #include <windows.h>
 
 H1_ENUM_CONST_BEGIN(WindowTextConstant)
-#ifdef HOMM1_EDITOR
+    WINDOW_TEXT_ENTRY_COUNT = 68,
     // EDITOR.EXE's SetWinText scans a 70-row table.
-    WINDOW_TEXT_ENTRY_COUNT = 70
-#else
-    WINDOW_TEXT_ENTRY_COUNT = 68
-#endif
+    WINDOW_TEXT_EDITOR_ENTRY_COUNT = 70
 H1_ENUM_CONST_END(WindowTextConstant)
 
 // SetWinText's window id: which gWinSetup rows (widget, gWinSetupText) fill a

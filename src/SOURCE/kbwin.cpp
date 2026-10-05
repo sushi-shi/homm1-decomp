@@ -1197,7 +1197,11 @@ VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {
     i32 i;
     tag_message msg;
+#ifdef HOMM1_EDITOR
+    for (i = 0; i < WINDOW_TEXT_EDITOR_ENTRY_COUNT; i++) {
+#else
     for (i = 0; i < WINDOW_TEXT_ENTRY_COUNT; i++) {
+#endif
         if (gWinSetup[i].windowId == id) {
             SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
             msg.text = gWinSetupText[i];
