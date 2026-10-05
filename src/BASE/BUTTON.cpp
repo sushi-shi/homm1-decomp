@@ -31,6 +31,55 @@ button::~button(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
+// The icon-file-id and icon-name overloads; no retail caller survives.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00476cd9, 0xae)
+button::button(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    i16 iconId,
+    i16 normalFrame,
+    i16 pressedFrame,
+    i16 selectMode,
+    i16 hotkey,
+    i16 id,
+    i16 kind
+)
+    : widget(x, y, width, height, id, kind) {
+    m_icon = gpResourceManager->GetIcon(iconId);
+    m_normalFrame = normalFrame;
+    m_pressedFrame = pressedFrame;
+    m_selectMode = selectMode;
+    m_hotkey = hotkey;
+}
+
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00476d87, 0xad)
+button::button(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    char* iconId,
+    i16 normalFrame,
+    i16 pressedFrame,
+    i16 selectMode,
+    i16 hotkey,
+    i16 id,
+    i16 kind
+)
+    : widget(x, y, width, height, id, kind) {
+    m_icon = gpResourceManager->GetIcon(iconId);
+    m_normalFrame = normalFrame;
+    m_pressedFrame = pressedFrame;
+    m_selectMode = selectMode;
+    m_hotkey = hotkey;
+}
+
 VA(0x00476e34, 0xfb)
 void button::Read(void) {
     i8 name[RESOURCE_NAME_CAPACITY];

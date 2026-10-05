@@ -34,6 +34,34 @@ textEntryWidget::~textEntryWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
+// The parameterized constructor; no retail caller survives (HoMM1 has no
+// inset layout arguments).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00475886, 0xbf)
+textEntryWidget::textEntryWidget(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    i16 maxLength,
+    char* text,
+    char* fontName,
+    i16 color,
+    char* iconName,
+    i16 iconFrame,
+    i16 id,
+    i16 kind
+)
+    : textWidget(x, y, width, height, text, fontName, color, id, kind) {
+    m_cursorPosition = 0;
+    m_maxLength = maxLength;
+    m_icon = gpResourceManager->GetIcon(iconName);
+    m_iconFrame = iconFrame;
+    m_displayOffset = 0;
+    m_kind = WIDGET_KIND_TEXT_ENTRY;
+}
+
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     i8 name[RESOURCE_NAME_CAPACITY];

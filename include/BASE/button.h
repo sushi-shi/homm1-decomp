@@ -31,7 +31,7 @@ public:
         i16 y,
         i16 width,
         i16 height,
-        u32 iconId,
+        i16 iconId,
         i16 normalFrame,
         i16 pressedFrame,
         i16 selectMode,

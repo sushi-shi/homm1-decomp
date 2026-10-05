@@ -69,10 +69,7 @@ public:
         char* iconName,
         i16 iconFrame,
         i16 id,
-        i16 kind,
-        i16 layout,
-        i32 horizontalInset,
-        i32 verticalInset
+        i16 kind
     );
     virtual inline ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
