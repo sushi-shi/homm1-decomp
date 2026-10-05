@@ -66,6 +66,16 @@ LINK_LIBS = ["oldnames.lib", "winmm.lib", "kernel32.lib", "user32.lib",
 CRT_LIBRARY = "libcmt.lib"
 CRT_REPLACES = "libc.lib"
 
+#: Buka retail was linked /DEBUG: its .rdata starts with the IAT and then a
+#: 0x1c-byte CodeView debug directory (0x0048a350), and its last 73 bytes are
+#: the NB10 record naming this PDB. The candidate writes its PDB at the same
+#: path, on a wine drive E: that maps to build/pdb-drive, so the record and
+#: the image size equal retail's. The record's signature and age (retail
+#: 0x3e5cda55, age 2: a PDB first written on 2003-02-26 and reused by the
+#: 2003-04-11 link) and the image timestamps remain link-time values.
+RETAIL_PDB = r"E:\Users\igorl\VSS\HMM\HMM1\temp\release\game\heroes.pdb"
+PDB_DRIVE = "e:"
+
 #: 1.2 has no export directory. Passing even an empty /DEF to VC4 LINK
 #: creates an export directory, so stack sizes are explicit linker flags.
 MODULE_DEF = REPO / "config/heroes.def"
@@ -81,6 +91,24 @@ MODULE_DEF = REPO / "config/heroes.def"
 BASE_LIBRARY_FROM = 0x000688c0
 BASE_LIBRARY = "base.lib"
 BASE_LIBRARY_AFTER = "audiere.lib"
+
+def retail_pdb_drive() -> Path:
+    """Map wine's drive E: to build/pdb-drive and return the host path of
+    RETAIL_PDB's directory (created)."""
+    import os
+    from homm1.core.paths import BUILD
+    root = BUILD / "pdb-drive"
+    prefix = Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine")
+    link = prefix / "dosdevices" / PDB_DRIVE
+    if not (link.is_symlink() and link.resolve() == root.resolve()):
+        link.parent.mkdir(parents=True, exist_ok=True)
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(root)
+    folder = root.joinpath(*RETAIL_PDB.split("\\")[1:-1])
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
@@ -258,6 +286,10 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         # COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR, 0x1c900) and a jump thunk
         # for each of its 200 import slots. (The NWC builds used /OPT:REF.)
         rsp_lines.append("/OPT:NOREF")
+    if not dry_run:
+        pdb = retail_pdb_drive() / RETAIL_PDB.rsplit("\\", 1)[1]
+        pdb.unlink(missing_ok=True)       # a fresh PDB, as for the image
+    rsp_lines += ["/DEBUG", f"/PDB:{RETAIL_PDB}"]
     rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 

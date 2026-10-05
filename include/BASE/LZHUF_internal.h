@@ -13,6 +13,9 @@ extern "C" {
     extern i16 initialParent[941];
 }
 
+void PutCode(i16 length, u16 code);
+void EncodeCharacter(u16 character);
+void EncodePosition(u16 position);
 static void UpdateEncoderTree(i16 character);
 static void InsertNode(i16 node);
 static void DeleteNode(i16 node);
