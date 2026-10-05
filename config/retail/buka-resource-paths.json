@@ -543,7 +543,7 @@
       "payload_sha256": "eedb5a4eae95001f97166c6f0fb78bcd61d03f1ac749c642bc3bfba6958e5611",
       "references": [
         {
-          "unit": "BASE/AudiereMusic",
+          "unit": "BASE/Audio",
           "function": "?PlayMusic@@YAXH@Z",
           "symbol": "?gSoundPath@@3PADA",
           "site_rva": "0x693f3",

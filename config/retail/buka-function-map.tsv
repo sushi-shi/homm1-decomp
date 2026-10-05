@@ -839,36 +839,36 @@ rva	size	unit	name	status	evidence
 0x0006891a	0x48	BASE/BASEMGR	Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x00068962	0x27	BASE/BASEMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero.; buka-function-structure.json.
 0x00068989	0x12	BASE/BASEMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after Base-manager short-property accessor: selector 0/1/2 returns message mask, priority, active; others return zero.; buka-function-structure.json.
-0x000689a0	0x162	BASE/AudiereEffects	?CleanupSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068b02	0x35	BASE/AudiereEffects	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068b37	0x38d	BASE/AudiereEffects	?PlaySample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068ec4	0x29	BASE/AudiereEffects	?LoadPlaySample@@YAPAVsample@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068eed	0x71	BASE/AudiereEffects	?StopSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068f5e	0x58	BASE/AudiereEffects	?UpdateSampleVolume@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00068fb6	0x63	BASE/AudiereEffects	?WaitSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069019	0x77	BASE/AudiereEffects	?StopAllSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069090	0x61	BASE/AudiereEffects	?UpdateAllSampleVolumes@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000690f1	0x12	BASE/AudiereEffects	?SuspendSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069103	0x12	BASE/AudiereEffects	?ResumeSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069115	0x11	BASE/AudiereEffects	?SamplesSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069126	0xf	BASE/AudiereMusic	AudiereMusic::stream initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x00069135	0x61	BASE/AudiereMusic	AudiereMusic::stream RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x00069196	0x12	BASE/AudiereMusic	AudiereMusic::stream atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x000691a8	0x46	BASE/AudiereMusic	AudiereMusic::stream guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x000691ee	0xf	BASE/AudiereMusic	AudiereMusic::source initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x000691fd	0x61	BASE/AudiereMusic	AudiereMusic::source RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x0006925e	0x12	BASE/AudiereMusic	AudiereMusic::source atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x00069270	0x46	BASE/AudiereMusic	AudiereMusic::source guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
-0x000692b6	0x47	BASE/AudiereMusic	?ShouldRepeatMusic@@YA_NH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000692fd	0x43b	BASE/AudiereMusic	?PlayMusic@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069738	0xa	BASE/AudiereMusic	?GetCurrentTrack@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069742	0x164	BASE/AudiereMusic	?StopMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000698a6	0x55	BASE/AudiereMusic	?UpdateMusicVolume@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000698fb	0x128	BASE/AudiereMusic	?SetMusicSource@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069a23	0x36	BASE/AudiereMusic	?MusicPlaying@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069a59	0x12	BASE/AudiereMusic	?SuspendMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069a6b	0x12	BASE/AudiereMusic	?ResumeMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00069a7d	0x11	BASE/AudiereMusic	?MusicSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000689a0	0x162	BASE/Audio	?CleanupSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068b02	0x35	BASE/Audio	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068b37	0x38d	BASE/Audio	?PlaySample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068ec4	0x29	BASE/Audio	?LoadPlaySample@@YAPAVsample@@PAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068eed	0x71	BASE/Audio	?StopSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068f5e	0x58	BASE/Audio	?UpdateSampleVolume@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00068fb6	0x63	BASE/Audio	?WaitSample@@YAXPAVsample@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069019	0x77	BASE/Audio	?StopAllSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069090	0x61	BASE/Audio	?UpdateAllSampleVolumes@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000690f1	0x12	BASE/Audio	?SuspendSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069103	0x12	BASE/Audio	?ResumeSamples@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069115	0x11	BASE/Audio	?SamplesSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069126	0xf	BASE/Audio	AudiereMusic::stream initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069135	0x61	BASE/Audio	AudiereMusic::stream RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069196	0x12	BASE/Audio	AudiereMusic::stream atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691a8	0x46	BASE/Audio	AudiereMusic::stream guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691ee	0xf	BASE/Audio	AudiereMusic::source initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000691fd	0x61	BASE/Audio	AudiereMusic::source RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x0006925e	0x12	BASE/Audio	AudiereMusic::source atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x00069270	0x46	BASE/Audio	AudiereMusic::source guarded RefPtr cleanup	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
+0x000692b6	0x47	BASE/Audio	?ShouldRepeatMusic@@YA_NH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000692fd	0x43b	BASE/Audio	?PlayMusic@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069738	0xa	BASE/Audio	?GetCurrentTrack@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069742	0x164	BASE/Audio	?StopMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000698a6	0x55	BASE/Audio	?UpdateMusicVolume@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000698fb	0x128	BASE/Audio	?SetMusicSource@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a23	0x36	BASE/Audio	?MusicPlaying@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a59	0x12	BASE/Audio	?SuspendMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a6b	0x12	BASE/Audio	?ResumeMusic@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00069a7d	0x11	BASE/Audio	?MusicSuspended@@YA_NXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00069a8e	0xf	BASE/Audio	AudiereDevice::device initializer wrapper	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x00069a9d	0x61	BASE/Audio	AudiereDevice::device RefPtr null initialization	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x00069afe	0x12	BASE/Audio	AudiereDevice::device atexit registration	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.

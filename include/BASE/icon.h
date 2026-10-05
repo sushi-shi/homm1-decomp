@@ -3,8 +3,8 @@
 // Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 8 methods, 0 own-virtual, 0 static data.
 
-#include <BASE/resource.h>
 #include <BASE/IconEntry.h>
+#include <BASE/resource.h>
 
 // forward declarations:
 struct SLimitData;

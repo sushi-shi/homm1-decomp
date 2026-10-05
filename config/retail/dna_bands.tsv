@@ -83,10 +83,10 @@ rva	size	name	class	source	symbol	detail
 0x000112e1	0xc3	FUN_004112E1	unknown			-
 0x000113a4	0x13e	FUN_004113A4	unknown			-
 0x000114e2	0x134	FUN_004114E2	unknown			-
-0x00011616	0x27	FUN_00411616	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0001163d	0x12	FUN_0041163D	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00011616	0x27	FUN_00411616	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0001163d	0x12	FUN_0041163D	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0001164f	0x1	FUN_0041164F	linker-pad			-
-0x00011650	0x5	FUN_00411650	helper-exact	base:BASE/AudiereEffects	?id@?$ctype@G@std@@$E	67 byte-identical candidates
+0x00011650	0x5	FUN_00411650	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	67 byte-identical candidates
 0x00011655	0xb	FUN_00411655	linker-pad			-
 0x00011660	0x728	FUN_00411660	unknown			-
 0x00011d88	0x872	FUN_00411D88	unknown			-
@@ -101,8 +101,8 @@ rva	size	name	class	source	symbol	detail
 0x00012c92	0x27c	FUN_00412C92	unknown			-
 0x00012f0e	0x1ea	FUN_00412F0E	unknown			-
 0x000130f8	0x1f6	FUN_004130F8	unknown			-
-0x000132ee	0x27	FUN_004132EE	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00013315	0x12	FUN_00413315	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000132ee	0x27	FUN_004132EE	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00013315	0x12	FUN_00413315	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00013327	0x9	FUN_00413327	linker-pad			-
 0x00013330	0xbc	FUN_00413330	unknown			-
 0x000133ec	0x64	FUN_004133EC	unknown			-
@@ -131,8 +131,8 @@ rva	size	name	class	source	symbol	detail
 0x00017eaf	0x9a	FUN_00417EAF	unknown			-
 0x00017f49	0x1d6	FUN_00417F49	unknown			-
 0x0001811f	0x34a	FUN_0041811F	unknown			-
-0x00018469	0x27	FUN_00418469	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00018490	0x12	FUN_00418490	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00018469	0x27	FUN_00418469	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00018490	0x12	FUN_00418490	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000184a2	0xe	FUN_004184A2	linker-pad			-
 0x000184b0	0x31	FUN_004184B0	unknown			-
 0x000184e1	0xd	FUN_004184E1	unknown			-
@@ -145,8 +145,8 @@ rva	size	name	class	source	symbol	detail
 0x00018841	0xfe	FUN_00418841	unknown			-
 0x0001893f	0x77	FUN_0041893F	unknown			-
 0x000189b6	0x133	FUN_004189B6	unknown			-
-0x00018ae9	0x27	FUN_00418AE9	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00018b10	0x12	FUN_00418B10	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00018ae9	0x27	FUN_00418AE9	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00018b10	0x12	FUN_00418B10	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00018b22	0xe	FUN_00418B22	linker-pad			-
 0x00018b30	0x18b	FUN_00418B30	unknown			-
 0x00018cbb	0x118	FUN_00418CBB	unknown			-
@@ -175,8 +175,8 @@ rva	size	name	class	source	symbol	detail
 0x0001c7ff	0x27	FUN_0041C7FF	unknown			-
 0x0001c826	0x57	FUN_0041C826	unknown			-
 0x0001c87d	0x42	FUN_0041C87D	unknown			-
-0x0001c8bf	0x27	FUN_0041C8BF	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0001c8e6	0x12	FUN_0041C8E6	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0001c8bf	0x27	FUN_0041C8BF	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0001c8e6	0x12	FUN_0041C8E6	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0001c8f8	0x8	FUN_0041C8F8	linker-pad			-
 0x0001c900	0x27	FUN_0041C900	unknown			-
 0x0001c927	0x9	FUN_0041C927	linker-pad			-
@@ -191,8 +191,8 @@ rva	size	name	class	source	symbol	detail
 0x0001d2fe	0x8	FUN_0041D2FE	unknown			-
 0x0001d306	0x51	FUN_0041D306	unknown			-
 0x0001d357	0xc8	FUN_0041D357	unknown			-
-0x0001d41f	0x27	FUN_0041D41F	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0001d446	0x12	FUN_0041D446	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0001d41f	0x27	FUN_0041D41F	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0001d446	0x12	FUN_0041D446	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0001d458	0x8	FUN_0041D458	linker-pad			-
 0x0001d460	0x27c	FUN_0041D460	unknown			-
 0x0001d6dc	0xa7	FUN_0041D6DC	unknown			-
@@ -218,8 +218,8 @@ rva	size	name	class	source	symbol	detail
 0x00020ed8	0x12b	FUN_00420ED8	unknown			-
 0x00021003	0xbd	FUN_00421003	unknown			-
 0x000210c0	0x4c6	FUN_004210C0	unknown			-
-0x00021586	0x27	FUN_00421586	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000215ad	0x12	FUN_004215AD	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00021586	0x27	FUN_00421586	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000215ad	0x12	FUN_004215AD	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000215bf	0x1	FUN_004215BF	linker-pad			-
 0x000215c0	0x143	FUN_004215C0	unknown			-
 0x00021703	0x11d	FUN_00421703	unknown			-
@@ -232,8 +232,8 @@ rva	size	name	class	source	symbol	detail
 0x00022f55	0x1a3	FUN_00422F55	unknown			-
 0x000230f8	0x24c	FUN_004230F8	unknown			-
 0x00023344	0x2e8	FUN_00423344	unknown			-
-0x0002362c	0x27	FUN_0042362C	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00023653	0x12	FUN_00423653	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0002362c	0x27	FUN_0042362C	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00023653	0x12	FUN_00423653	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00023665	0xb	FUN_00423665	linker-pad			-
 0x00023670	0x50	FUN_00423670	unknown			-
 0x000236c0	0x47	FUN_004236C0	unknown			-
@@ -244,8 +244,8 @@ rva	size	name	class	source	symbol	detail
 0x00023ae5	0xc6	FUN_00423AE5	unknown			-
 0x00023bab	0x1c1	FUN_00423BAB	unknown			-
 0x00023d6c	0xca3	FUN_00423D6C	unknown			-
-0x00024a0f	0x27	FUN_00424A0F	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00024a36	0x12	FUN_00424A36	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00024a0f	0x27	FUN_00424A0F	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00024a36	0x12	FUN_00424A36	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00024a48	0x8	FUN_00424A48	linker-pad			-
 0x00024a50	0x1d9d	FUN_00424A50	unknown			-
 0x000267ed	0x1c8	FUN_004267ED	unknown			-
@@ -273,8 +273,8 @@ rva	size	name	class	source	symbol	detail
 0x00029107	0x584	FUN_00429107	unknown			-
 0x0002968b	0x282	FUN_0042968B	unknown			-
 0x0002990d	0x30f	FUN_0042990D	unknown			-
-0x00029c1c	0x27	FUN_00429C1C	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00029c43	0x12	FUN_00429C43	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00029c1c	0x27	FUN_00429C1C	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00029c43	0x12	FUN_00429C43	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00029c55	0xb	FUN_00429C55	linker-pad			-
 0x00029c60	0xa	FUN_00429C60	unknown			-
 0x00029c6a	0x6	FUN_00429C6A	linker-pad			-
@@ -299,8 +299,8 @@ rva	size	name	class	source	symbol	detail
 0x0002a8a0	0x3f0	FUN_0042A8A0	unknown			-
 0x0002ac90	0x1c	FUN_0042AC90	unknown			-
 0x0002acac	0x70c	FUN_0042ACAC	unknown			-
-0x0002b3b8	0x27	FUN_0042B3B8	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0002b3df	0x12	FUN_0042B3DF	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0002b3b8	0x27	FUN_0042B3B8	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0002b3df	0x12	FUN_0042B3DF	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0002b3f1	0xf	FUN_0042B3F1	linker-pad			-
 0x0002b400	0x1f2	FUN_0042B400	unknown			-
 0x0002b5f2	0x1e1	FUN_0042B5F2	unknown			-
@@ -389,8 +389,8 @@ rva	size	name	class	source	symbol	detail
 0x00038934	0x410	FUN_00438934	unknown			-
 0x00038d44	0x114	FUN_00438D44	unknown			-
 0x00038e58	0x87	FUN_00438E58	unknown			-
-0x00038edf	0x27	FUN_00438EDF	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00038f06	0x12	FUN_00438F06	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00038edf	0x27	FUN_00438EDF	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00038f06	0x12	FUN_00438F06	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00038f18	0x8	FUN_00438F18	linker-pad			-
 0x00038f20	0x5d	FUN_00438F20	unknown			-
 0x00038f7d	0xd	FUN_00438F7D	unknown			-
@@ -417,8 +417,8 @@ rva	size	name	class	source	symbol	detail
 0x0003ab68	0x4b	FUN_0043AB68	unknown			-
 0x0003abb3	0x502	FUN_0043ABB3	unknown			-
 0x0003b0b5	0x610	FUN_0043B0B5	unknown			-
-0x0003b6c5	0x27	FUN_0043B6C5	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0003b6ec	0x12	FUN_0043B6EC	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0003b6c5	0x27	FUN_0043B6C5	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0003b6ec	0x12	FUN_0043B6EC	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0003b6fe	0x2	FUN_0043B6FE	linker-pad			-
 0x0003b700	0x3f	FUN_0043B700	unknown			-
 0x0003b73f	0x42	FUN_0043B73F	unknown			-
@@ -427,8 +427,8 @@ rva	size	name	class	source	symbol	detail
 0x0003b832	0x124	FUN_0043B832	unknown			-
 0x0003b956	0x279	FUN_0043B956	unknown			-
 0x0003bbcf	0x151	FUN_0043BBCF	unknown			-
-0x0003bd20	0x27	FUN_0043BD20	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0003bd47	0x12	FUN_0043BD47	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0003bd20	0x27	FUN_0043BD20	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0003bd47	0x12	FUN_0043BD47	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0003bd59	0x7	FUN_0043BD59	linker-pad			-
 0x0003bd60	0x7f	FUN_0043BD60	unknown			-
 0x0003bddf	0x14	FUN_0043BDDF	unknown			-
@@ -436,8 +436,8 @@ rva	size	name	class	source	symbol	detail
 0x0003bf37	0x4e	FUN_0043BF37	unknown			-
 0x0003bf85	0x1fa	FUN_0043BF85	unknown			-
 0x0003c17f	0x5ec	FUN_0043C17F	unknown			-
-0x0003c76b	0x27	FUN_0043C76B	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0003c792	0x12	FUN_0043C792	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0003c76b	0x27	FUN_0043C76B	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0003c792	0x12	FUN_0043C792	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0003c7a4	0xc	FUN_0043C7A4	linker-pad			-
 0x0003c7b0	0x41	FUN_0043C7B0	unknown			-
 0x0003c7f1	0x17	FUN_0043C7F1	unknown			-
@@ -501,8 +501,8 @@ rva	size	name	class	source	symbol	detail
 0x00042bcc	0x7d	FUN_00442BCC	unknown			-
 0x00042c49	0x15	FUN_00442C49	unknown			-
 0x00042c5e	0x5	FUN_00442C5E	unknown			-
-0x00042c63	0x27	FUN_00442C63	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00042c8a	0x12	FUN_00442C8A	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00042c63	0x27	FUN_00442C63	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00042c8a	0x12	FUN_00442C8A	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00042c9c	0x4	FUN_00442C9C	linker-pad			-
 0x00042ca0	0x11a	FUN_00442CA0	unknown			-
 0x00042dba	0x28e	FUN_00442DBA	unknown			-
@@ -528,8 +528,8 @@ rva	size	name	class	source	symbol	detail
 0x00044b59	0x55	FUN_00444B59	unknown			-
 0x00044bae	0x50	FUN_00444BAE	unknown			-
 0x00044bfe	0x50	FUN_00444BFE	unknown			-
-0x00044c4e	0x27	FUN_00444C4E	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00044c75	0x12	FUN_00444C75	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00044c4e	0x27	FUN_00444C4E	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00044c75	0x12	FUN_00444C75	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00044c87	0x9	FUN_00444C87	linker-pad			-
 0x00044c90	0x94	FUN_00444C90	unknown			-
 0x00044d24	0x19b	FUN_00444D24	unknown			-
@@ -550,15 +550,15 @@ rva	size	name	class	source	symbol	detail
 0x000460d7	0xae	FUN_004460D7	unknown			-
 0x00046185	0x139	FUN_00446185	unknown			-
 0x000462be	0x6e	FUN_004462BE	unknown			-
-0x0004632c	0x27	FUN_0044632C	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00046353	0x12	FUN_00446353	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0004632c	0x27	FUN_0044632C	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00046353	0x12	FUN_00446353	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00046365	0xb	FUN_00446365	linker-pad			-
 0x00046370	0x2e	FUN_00446370	unknown			-
 0x0004639e	0x3b	FUN_0044639E	unknown			-
 0x000463d9	0x16	FUN_004463D9	unknown			-
 0x000463ef	0x1b	FUN_004463EF	unknown			-
-0x0004640a	0x27	FUN_0044640A	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00046431	0x12	FUN_00446431	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0004640a	0x27	FUN_0044640A	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00046431	0x12	FUN_00446431	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00046443	0xd	FUN_00446443	linker-pad			-
 0x00046450	0x11e	FUN_00446450	unknown			-
 0x0004656e	0x86	FUN_0044656E	unknown			-
@@ -572,8 +572,8 @@ rva	size	name	class	source	symbol	detail
 0x00046c74	0x45a	FUN_00446C74	unknown			-
 0x000470ce	0x35	FUN_004470CE	unknown			-
 0x00047103	0x7b7	FUN_00447103	unknown			-
-0x000478ba	0x27	FUN_004478BA	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000478e1	0x12	FUN_004478E1	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000478ba	0x27	FUN_004478BA	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000478e1	0x12	FUN_004478E1	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000478f3	0xd	FUN_004478F3	linker-pad			-
 0x00047900	0x14	FUN_00447900	unknown			-
 0x00047914	0x3d	FUN_00447914	unknown			-
@@ -638,8 +638,8 @@ rva	size	name	class	source	symbol	detail
 0x0004ecff	0xcc	FUN_0044ECFF	unknown			-
 0x0004edcb	0x1e9	FUN_0044EDCB	unknown			-
 0x0004efb4	0x1d37	FUN_0044EFB4	unknown			-
-0x00050ceb	0x27	FUN_00450CEB	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00050d12	0x12	FUN_00450D12	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00050ceb	0x27	FUN_00450CEB	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00050d12	0x12	FUN_00450D12	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00050d24	0xc	FUN_00450D24	linker-pad			-
 0x00050d30	0x1c9	FUN_00450D30	unknown			-
 0x00050ef9	0x25b	FUN_00450EF9	unknown			-
@@ -649,8 +649,8 @@ rva	size	name	class	source	symbol	detail
 0x00051697	0xbc	FUN_00451697	unknown			-
 0x00051753	0xd9	FUN_00451753	unknown			-
 0x0005182c	0x17d	FUN_0045182C	unknown			-
-0x000519a9	0x27	FUN_004519A9	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000519d0	0x12	FUN_004519D0	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000519a9	0x27	FUN_004519A9	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000519d0	0x12	FUN_004519D0	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000519e2	0xe	FUN_004519E2	linker-pad			-
 0x000519f0	0x66	FUN_004519F0	unknown			-
 0x00051a56	0x65	FUN_00451A56	unknown			-
@@ -686,8 +686,8 @@ rva	size	name	class	source	symbol	detail
 0x000534cb	0xe4	FUN_004534CB	unknown			-
 0x000535af	0x46c	FUN_004535AF	unknown			-
 0x00053a1b	0x114	FUN_00453A1B	unknown			-
-0x00053b2f	0x27	FUN_00453B2F	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00053b56	0x12	FUN_00453B56	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00053b2f	0x27	FUN_00453B2F	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00053b56	0x12	FUN_00453B56	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00053b68	0x8	FUN_00453B68	linker-pad			-
 0x00053b70	0xa	FUN_00453B70	unknown			-
 0x00053b7a	0x7da	FUN_00453B7A	unknown			-
@@ -702,8 +702,8 @@ rva	size	name	class	source	symbol	detail
 0x00055aa0	0x59	FUN_00455AA0	unknown			-
 0x00055af9	0x115	FUN_00455AF9	unknown			-
 0x00055c0e	0x206	FUN_00455C0E	unknown			-
-0x00055e14	0x27	FUN_00455E14	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00055e3b	0x12	FUN_00455E3B	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00055e14	0x27	FUN_00455E14	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00055e3b	0x12	FUN_00455E3B	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00055e4d	0x3	FUN_00455E4D	linker-pad			-
 0x00055e50	0x22b	FUN_00455E50	unknown			-
 0x0005607b	0x5	FUN_0045607B	linker-pad			-
@@ -730,8 +730,8 @@ rva	size	name	class	source	symbol	detail
 0x00057fdc	0xad	FUN_00457FDC	unknown			-
 0x00058089	0xc8	FUN_00458089	unknown			-
 0x00058151	0xb4	FUN_00458151	unknown			-
-0x00058205	0x27	FUN_00458205	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0005822c	0x12	FUN_0045822C	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00058205	0x27	FUN_00458205	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0005822c	0x12	FUN_0045822C	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0005823e	0x2	FUN_0045823E	linker-pad			-
 0x00058240	0x18f	FUN_00458240	unknown			-
 0x000583cf	0x2a	FUN_004583CF	unknown			-
@@ -740,8 +740,8 @@ rva	size	name	class	source	symbol	detail
 0x0005856f	0x73c	FUN_0045856F	unknown			-
 0x00058cab	0x49	FUN_00458CAB	unknown			-
 0x00058cf4	0xa9	FUN_00458CF4	unknown			-
-0x00058d9d	0x27	FUN_00458D9D	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00058dc4	0x12	FUN_00458DC4	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00058d9d	0x27	FUN_00458D9D	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00058dc4	0x12	FUN_00458DC4	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00058dd6	0xa	FUN_00458DD6	linker-pad			-
 0x00058de0	0x196	FUN_00458DE0	unknown			-
 0x00058f76	0x42d	FUN_00458F76	unknown			-
@@ -752,8 +752,8 @@ rva	size	name	class	source	symbol	detail
 0x000596de	0x20c	FUN_004596DE	unknown			-
 0x000598ea	0xd4	FUN_004598EA	unknown			-
 0x000599be	0x491	FUN_004599BE	unknown			-
-0x00059e4f	0x27	FUN_00459E4F	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00059e76	0x12	FUN_00459E76	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00059e4f	0x27	FUN_00459E4F	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00059e76	0x12	FUN_00459E76	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00059e88	0x8	FUN_00459E88	linker-pad			-
 0x00059e90	0x11f	FUN_00459E90	unknown			-
 0x00059faf	0x101	FUN_00459FAF	unknown			-
@@ -768,8 +768,8 @@ rva	size	name	class	source	symbol	detail
 0x0005bbeb	0x402	FUN_0045BBEB	unknown			-
 0x0005bfed	0x2d0	FUN_0045BFED	unknown			-
 0x0005c2bd	0x3b6	FUN_0045C2BD	unknown			-
-0x0005c673	0x27	FUN_0045C673	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0005c69a	0x12	FUN_0045C69A	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0005c673	0x27	FUN_0045C673	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0005c69a	0x12	FUN_0045C69A	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0005c6ac	0x4	FUN_0045C6AC	linker-pad			-
 0x0005c6b0	0x290	FUN_0045C6B0	unknown			-
 0x0005c940	0x107	FUN_0045C940	unknown			-
@@ -779,8 +779,8 @@ rva	size	name	class	source	symbol	detail
 0x0005ccdd	0xd4	FUN_0045CCDD	unknown			-
 0x0005cdb1	0x34	FUN_0045CDB1	unknown			-
 0x0005cde5	0xba	FUN_0045CDE5	unknown			-
-0x0005ce9f	0x27	FUN_0045CE9F	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0005cec6	0x12	FUN_0045CEC6	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0005ce9f	0x27	FUN_0045CE9F	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0005cec6	0x12	FUN_0045CEC6	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0005ced8	0x8	FUN_0045CED8	linker-pad			-
 0x0005cee0	0x6a	FUN_0045CEE0	unknown			-
 0x0005cf4a	0x33	FUN_0045CF4A	unknown			-
@@ -794,8 +794,8 @@ rva	size	name	class	source	symbol	detail
 0x0005df61	0x259	FUN_0045DF61	unknown			-
 0x0005e1ba	0x46e	FUN_0045E1BA	unknown			-
 0x0005e628	0x352	FUN_0045E628	unknown			-
-0x0005e97a	0x27	FUN_0045E97A	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0005e9a1	0x12	FUN_0045E9A1	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0005e97a	0x27	FUN_0045E97A	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0005e9a1	0x12	FUN_0045E9A1	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0005e9b3	0xd	FUN_0045E9B3	linker-pad			-
 0x0005e9c0	0x60	FUN_0045E9C0	unknown			-
 0x0005ea20	0x43	FUN_0045EA20	unknown			-
@@ -803,8 +803,8 @@ rva	size	name	class	source	symbol	detail
 0x0005eb1c	0x168	FUN_0045EB1C	unknown			-
 0x0005ec84	0x8c	FUN_0045EC84	unknown			-
 0x0005ed10	0x13d	FUN_0045ED10	unknown			-
-0x0005ee4d	0x27	FUN_0045EE4D	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0005ee74	0x12	FUN_0045EE74	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0005ee4d	0x27	FUN_0045EE4D	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0005ee74	0x12	FUN_0045EE74	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0005ee86	0xa	FUN_0045EE86	linker-pad			-
 0x0005ee90	0x1c3	FUN_0045EE90	unknown			-
 0x0005f053	0x56	FUN_0045F053	unknown			-
@@ -838,14 +838,14 @@ rva	size	name	class	source	symbol	detail
 0x0006549b	0xff	FUN_0046549B	unknown			-
 0x0006559a	0x650	FUN_0046559A	unknown			-
 0x00065bea	0x2cc	FUN_00465BEA	unknown			-
-0x00065eb6	0x27	FUN_00465EB6	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00065edd	0x12	FUN_00465EDD	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00065eb6	0x27	FUN_00465EB6	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00065edd	0x12	FUN_00465EDD	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00065eef	0x1	FUN_00465EEF	linker-pad			-
 0x00065ef0	0x4fe	FUN_00465EF0	unknown			-
 0x000663ee	0x1a7	FUN_004663EE	unknown			-
 0x00066595	0x135	FUN_00466595	unknown			-
-0x000666ca	0x27	FUN_004666CA	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000666f1	0x12	FUN_004666F1	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000666ca	0x27	FUN_004666CA	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000666f1	0x12	FUN_004666F1	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00066703	0xd	FUN_00466703	linker-pad			-
 0x00066710	0x3e	FUN_00466710	unknown			-
 0x0006674e	0x2d	FUN_0046674E	unknown			-
@@ -879,8 +879,8 @@ rva	size	name	class	source	symbol	detail
 0x0006833c	0x84	FUN_0046833C	unknown			-
 0x000683c0	0x1a	FUN_004683C0	unknown			-
 0x000683da	0x1c6	FUN_004683DA	unknown			-
-0x000685a0	0x27	FUN_004685A0	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000685c7	0x12	FUN_004685C7	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000685a0	0x27	FUN_004685A0	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000685c7	0x12	FUN_004685C7	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000685d9	0x7	FUN_004685D9	linker-pad			-
 0x000685e0	0x6	FUN_004685E0	import-thunk	WINMM.dll	waveOutGetDevCapsA	IAT RVA 0x8a2d8
 0x000685e6	0x6	FUN_004685E6	import-thunk	WINMM.dll	waveOutGetNumDevs	IAT RVA 0x8a2d4
@@ -1006,8 +1006,8 @@ rva	size	name	class	source	symbol	detail
 0x000688b6	0xa	FUN_004688B6	linker-pad			-
 0x000688c0	0x5a	FUN_004688C0	unknown			-
 0x0006891a	0x48	FUN_0046891A	unknown			-
-0x00068962	0x27	FUN_00468962	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00068989	0x12	FUN_00468989	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00068962	0x27	FUN_00468962	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00068989	0x12	FUN_00468989	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006899b	0x5	FUN_0046899B	linker-pad			-
 0x000689a0	0x162	FUN_004689A0	unknown			-
 0x00068b02	0x35	FUN_00468B02	unknown			-
@@ -1021,14 +1021,14 @@ rva	size	name	class	source	symbol	detail
 0x000690f1	0x12	FUN_004690F1	unknown			-
 0x00069103	0x12	FUN_00469103	unknown			-
 0x00069115	0x11	FUN_00469115	unknown			-
-0x00069126	0xf	FUN_00469126	helper-exact	base:BASE/AudiereMusic	_$E21	5 byte-identical candidates
-0x00069135	0x61	FUN_00469135	helper-exact	base:BASE/AudiereMusic	_$E17	3 byte-identical candidates
-0x00069196	0x12	FUN_00469196	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
-0x000691a8	0x46	FUN_004691A8	helper-exact	base:BASE/AudiereMusic	_$E18	2 byte-identical candidates
-0x000691ee	0xf	FUN_004691EE	helper-exact	base:BASE/AudiereMusic	_$E21	5 byte-identical candidates
-0x000691fd	0x61	FUN_004691FD	helper-exact	base:BASE/AudiereMusic	_$E17	3 byte-identical candidates
-0x0006925e	0x12	FUN_0046925E	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
-0x00069270	0x46	FUN_00469270	helper-exact	base:BASE/AudiereMusic	_$E24	-
+0x00069126	0xf	FUN_00469126	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
+0x00069135	0x61	FUN_00469135	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x00069196	0x12	FUN_00469196	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
+0x000691a8	0x46	FUN_004691A8	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
+0x000691ee	0xf	FUN_004691EE	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
+0x000691fd	0x61	FUN_004691FD	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x0006925e	0x12	FUN_0046925E	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
+0x00069270	0x46	FUN_00469270	helper-exact	base:BASE/Audio	_$E24	-
 0x000692b6	0x47	FUN_004692B6	unknown			-
 0x000692fd	0x43b	FUN_004692FD	unknown			-
 0x00069738	0xa	FUN_00469738	unknown			-
@@ -1039,10 +1039,10 @@ rva	size	name	class	source	symbol	detail
 0x00069a59	0x12	FUN_00469A59	unknown			-
 0x00069a6b	0x12	FUN_00469A6B	unknown			-
 0x00069a7d	0x11	FUN_00469A7D	unknown			-
-0x00069a8e	0xf	FUN_00469A8E	helper-exact	base:BASE/AudiereMusic	_$E21	5 byte-identical candidates
-0x00069a9d	0x61	FUN_00469A9D	helper-exact	base:BASE/AudiereMusic	_$E17	3 byte-identical candidates
-0x00069afe	0x12	FUN_00469AFE	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
-0x00069b10	0x46	FUN_00469B10	helper-exact	base:BASE/AudiereMusic	_$E18	2 byte-identical candidates
+0x00069a8e	0xf	FUN_00469A8E	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
+0x00069a9d	0x61	FUN_00469A9D	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x00069afe	0x12	FUN_00469AFE	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
+0x00069b10	0x46	FUN_00469B10	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
 0x00069b56	0xf	FUN_00469B56	unknown			-
 0x00069b65	0x70	FUN_00469B65	unknown			-
 0x00069bd5	0x132	FUN_00469BD5	unknown			-
@@ -1054,20 +1054,20 @@ rva	size	name	class	source	symbol	detail
 0x00069d9d	0x1c	FUN_00469D9D	unknown			-
 0x00069db9	0x1c	FUN_00469DB9	unknown			-
 0x00069dd5	0x1d	FUN_00469DD5	unknown			-
-0x00069df2	0x27	FUN_00469DF2	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00069e19	0x12	FUN_00469E19	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00069df2	0x27	FUN_00469DF2	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00069e19	0x12	FUN_00469E19	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00069e2b	0x5	FUN_00469E2B	linker-pad			-
-0x00069e30	0x2c	FUN_00469E30	helper-exact	base:BASE/AudiereEffects	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
+0x00069e30	0x2c	FUN_00469E30	helper-exact	base:BASE/Audio	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
 0x00069e5c	0x4	FUN_00469E5C	linker-pad			-
-0x00069e60	0x51	FUN_00469E60	helper-exact	base:BASE/AudiereEffects	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	3 byte-identical candidates
+0x00069e60	0x51	FUN_00469E60	helper-exact	base:BASE/Audio	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	3 byte-identical candidates
 0x00069eb1	0xf	FUN_00469EB1	linker-pad			-
-0x00069ec0	0x2c	FUN_00469EC0	helper-exact	base:BASE/AudiereMusic	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
+0x00069ec0	0x2c	FUN_00469EC0	helper-exact	base:BASE/Audio	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
 0x00069eec	0x4	FUN_00469EEC	linker-pad			-
-0x00069ef0	0x51	FUN_00469EF0	helper-exact	base:BASE/AudiereMusic	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	3 byte-identical candidates
+0x00069ef0	0x51	FUN_00469EF0	helper-exact	base:BASE/Audio	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	3 byte-identical candidates
 0x00069f41	0xf	FUN_00469F41	linker-pad			-
-0x00069f50	0x2c	FUN_00469F50	helper-exact	base:BASE/AudiereEffects	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
+0x00069f50	0x2c	FUN_00469F50	helper-exact	base:BASE/Audio	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	6 byte-identical candidates
 0x00069f7c	0x4	FUN_00469F7C	linker-pad			-
-0x00069f80	0x2c	FUN_00469F80	helper-exact	base:BASE/AudiereEffects	??1AudiereSampleNode@@QAE@XZ	6 byte-identical candidates
+0x00069f80	0x2c	FUN_00469F80	helper-exact	base:BASE/Audio	??1AudiereSampleNode@@QAE@XZ	6 byte-identical candidates
 0x00069fac	0x4	FUN_00469FAC	linker-pad			-
 0x00069fb0	0x19c	FUN_00469FB0	unknown			-
 0x0006a14c	0x9f	FUN_0046A14C	unknown			-
@@ -1089,8 +1089,8 @@ rva	size	name	class	source	symbol	detail
 0x0006acd9	0x444	FUN_0046ACD9	unknown			-
 0x0006b11d	0x36a	FUN_0046B11D	unknown			-
 0x0006b487	0x4d	FUN_0046B487	unknown			-
-0x0006b4d4	0x27	FUN_0046B4D4	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006b4fb	0x12	FUN_0046B4FB	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006b4d4	0x27	FUN_0046B4D4	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006b4fb	0x12	FUN_0046B4FB	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006b50d	0x3	FUN_0046B50D	linker-pad			-
 0x0006b510	0x102	FUN_0046B510	unknown			-
 0x0006b612	0x98	FUN_0046B612	unknown			-
@@ -1116,8 +1116,8 @@ rva	size	name	class	source	symbol	detail
 0x0006c06f	0xd	FUN_0046C06F	unknown			-
 0x0006c07c	0x13	FUN_0046C07C	unknown			-
 0x0006c08f	0x13	FUN_0046C08F	unknown			-
-0x0006c0a2	0x27	FUN_0046C0A2	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006c0c9	0x12	FUN_0046C0C9	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006c0a2	0x27	FUN_0046C0A2	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006c0c9	0x12	FUN_0046C0C9	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006c0db	0x5	FUN_0046C0DB	linker-pad			-
 0x0006c0e0	0x7a	FUN_0046C0E0	unknown			-
 0x0006c15a	0x7a	FUN_0046C15A	unknown			-
@@ -1149,16 +1149,16 @@ rva	size	name	class	source	symbol	detail
 0x0006cd54	0x41	FUN_0046CD54	unknown			-
 0x0006cd95	0x1b	FUN_0046CD95	unknown			-
 0x0006cdb0	0x52	FUN_0046CDB0	unknown			-
-0x0006ce02	0x27	FUN_0046CE02	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006ce29	0x12	FUN_0046CE29	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006ce02	0x27	FUN_0046CE02	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006ce29	0x12	FUN_0046CE29	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006ce3b	0x5	FUN_0046CE3B	linker-pad			-
 0x0006ce40	0x2b	FUN_0046CE40	unknown			-
 0x0006ce6b	0x3f	FUN_0046CE6B	unknown			-
 0x0006ceaa	0x77	FUN_0046CEAA	unknown			-
 0x0006cf21	0x19	FUN_0046CF21	unknown			-
 0x0006cf3a	0x4e	FUN_0046CF3A	unknown			-
-0x0006cf88	0x27	FUN_0046CF88	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006cfaf	0x12	FUN_0046CFAF	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006cf88	0x27	FUN_0046CF88	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006cfaf	0x12	FUN_0046CFAF	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006cfc1	0xf	FUN_0046CFC1	linker-pad			-
 0x0006cfd0	0x2e	FUN_0046CFD0	unknown			-
 0x0006cffe	0x2	FUN_0046CFFE	linker-pad			-
@@ -1178,8 +1178,8 @@ rva	size	name	class	source	symbol	detail
 0x0006db7e	0xaa	FUN_0046DB7E	unknown			-
 0x0006dc28	0x8a	FUN_0046DC28	unknown			-
 0x0006dcb2	0x1bc	FUN_0046DCB2	unknown			-
-0x0006de6e	0x27	FUN_0046DE6E	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006de95	0x12	FUN_0046DE95	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006de6e	0x27	FUN_0046DE6E	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006de95	0x12	FUN_0046DE95	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006dea7	0x9	FUN_0046DEA7	linker-pad			-
 0x0006deb0	0x4e	FUN_0046DEB0	unknown			-
 0x0006defe	0xa2	FUN_0046DEFE	unknown			-
@@ -1188,8 +1188,8 @@ rva	size	name	class	source	symbol	detail
 0x0006e13a	0x5b	FUN_0046E13A	unknown			-
 0x0006e195	0x2a4	FUN_0046E195	unknown			-
 0x0006e439	0xb1	FUN_0046E439	unknown			-
-0x0006e4ea	0x27	FUN_0046E4EA	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006e511	0x12	FUN_0046E511	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006e4ea	0x27	FUN_0046E4EA	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006e511	0x12	FUN_0046E511	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006e523	0xd	FUN_0046E523	linker-pad			-
 0x0006e530	0x2e	FUN_0046E530	unknown			-
 0x0006e55e	0x2	FUN_0046E55E	linker-pad			-
@@ -1208,8 +1208,8 @@ rva	size	name	class	source	symbol	detail
 0x0006f085	0x34	FUN_0046F085	unknown			-
 0x0006f0b9	0x312	FUN_0046F0B9	unknown			-
 0x0006f3cb	0x46a	FUN_0046F3CB	unknown			-
-0x0006f835	0x27	FUN_0046F835	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0006f85c	0x12	FUN_0046F85C	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0006f835	0x27	FUN_0046F835	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0006f85c	0x12	FUN_0046F85C	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0006f86e	0x2	FUN_0046F86E	linker-pad			-
 0x0006f870	0x185	FUN_0046F870	unknown			-
 0x0006f9f5	0x37	FUN_0046F9F5	unknown			-
@@ -1224,8 +1224,8 @@ rva	size	name	class	source	symbol	detail
 0x0006fe5d	0x5	FUN_0046FE5D	unknown			-
 0x0006fe62	0x214	FUN_0046FE62	unknown			-
 0x00070076	0x307	FUN_00470076	unknown			-
-0x0007037d	0x27	FUN_0047037D	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000703a4	0x12	FUN_004703A4	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0007037d	0x27	FUN_0047037D	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000703a4	0x12	FUN_004703A4	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000703b6	0x2	FUN_004703B6	linker-pad			-
 0x000703b8	0xd5	FUN_004703B8	unknown			-
 0x0007048d	0x1	FUN_0047048D	linker-pad			-
@@ -1248,8 +1248,8 @@ rva	size	name	class	source	symbol	detail
 0x000712a1	0x54	FUN_004712A1	unknown			-
 0x000712f5	0x15e	FUN_004712F5	unknown			-
 0x00071453	0x2a8	FUN_00471453	unknown			-
-0x000716fb	0x27	FUN_004716FB	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00071722	0x12	FUN_00471722	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000716fb	0x27	FUN_004716FB	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00071722	0x12	FUN_00471722	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00071734	0xc	FUN_00471734	linker-pad			-
 0x00071740	0x2e	FUN_00471740	unknown			-
 0x0007176e	0x2	FUN_0047176E	linker-pad			-
@@ -1261,8 +1261,8 @@ rva	size	name	class	source	symbol	detail
 0x00071c39	0x66	FUN_00471C39	unknown			-
 0x00071c9f	0x18	FUN_00471C9F	unknown			-
 0x00071cb7	0xa1	FUN_00471CB7	unknown			-
-0x00071d58	0x27	FUN_00471D58	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00071d7f	0x12	FUN_00471D7F	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00071d58	0x27	FUN_00471D58	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00071d7f	0x12	FUN_00471D7F	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00071d91	0xf	FUN_00471D91	linker-pad			-
 0x00071da0	0x2e	FUN_00471DA0	unknown			-
 0x00071dce	0x2	FUN_00471DCE	linker-pad			-
@@ -1273,8 +1273,8 @@ rva	size	name	class	source	symbol	detail
 0x0007203d	0x34f	FUN_0047203D	unknown			-
 0x0007238c	0x25f	FUN_0047238C	unknown			-
 0x000725eb	0x133	FUN_004725EB	unknown			-
-0x0007271e	0x27	FUN_0047271E	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00072745	0x12	FUN_00472745	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0007271e	0x27	FUN_0047271E	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00072745	0x12	FUN_00472745	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00072757	0x9	FUN_00472757	linker-pad			-
 0x00072760	0x2e	FUN_00472760	unknown			-
 0x0007278e	0x2	FUN_0047278E	linker-pad			-
@@ -1296,8 +1296,8 @@ rva	size	name	class	source	symbol	detail
 0x00072f2d	0x88	FUN_00472F2D	unknown			-
 0x00072fb5	0x16b	FUN_00472FB5	unknown			-
 0x00073120	0x18	FUN_00473120	unknown			-
-0x00073138	0x27	FUN_00473138	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0007315f	0x12	FUN_0047315F	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00073138	0x27	FUN_00473138	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0007315f	0x12	FUN_0047315F	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00073171	0xf	FUN_00473171	linker-pad			-
 0x00073180	0x4c	FUN_00473180	unknown			-
 0x000731cc	0x64	FUN_004731CC	unknown			-
@@ -1309,13 +1309,13 @@ rva	size	name	class	source	symbol	detail
 0x00073423	0x3b	FUN_00473423	unknown			-
 0x0007345e	0xa3	FUN_0047345E	unknown			-
 0x00073501	0xa6	FUN_00473501	unknown			-
-0x000735a7	0x27	FUN_004735A7	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000735ce	0x12	FUN_004735CE	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000735a7	0x27	FUN_004735A7	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000735ce	0x12	FUN_004735CE	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000735e0	0x2e	FUN_004735E0	unknown			-
 0x0007360e	0x2	FUN_0047360E	linker-pad			-
 0x00073610	0x12b	FUN_00473610	unknown			-
-0x0007373b	0x27	FUN_0047373B	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00073762	0x12	FUN_00473762	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x0007373b	0x27	FUN_0047373B	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00073762	0x12	FUN_00473762	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00073774	0xc	FUN_00473774	linker-pad			-
 0x00073780	0x12b	FUN_00473780	unknown			-
 0x000738ab	0x3e4	FUN_004738AB	unknown			-
@@ -1328,15 +1328,15 @@ rva	size	name	class	source	symbol	detail
 0x000745e1	0x10c	FUN_004745E1	unknown			-
 0x000746ed	0x5f	FUN_004746ED	unknown			-
 0x0007474c	0x4a	FUN_0047474C	unknown			-
-0x00074796	0x27	FUN_00474796	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x000747bd	0x12	FUN_004747BD	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00074796	0x27	FUN_00474796	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x000747bd	0x12	FUN_004747BD	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x000747cf	0x1	FUN_004747CF	linker-pad			-
 0x000747d0	0x3a	FUN_004747D0	unknown			-
 0x0007480a	0x93	FUN_0047480A	unknown			-
 0x0007489d	0x2b	FUN_0047489D	unknown			-
 0x000748c8	0x11	FUN_004748C8	unknown			-
-0x000748d9	0x27	FUN_004748D9	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00074900	0x12	FUN_00474900	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000748d9	0x27	FUN_004748D9	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00074900	0x12	FUN_00474900	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00074912	0xe	FUN_00474912	linker-pad			-
 0x00074920	0x2e	FUN_00474920	unknown			-
 0x0007494e	0x2	FUN_0047494E	linker-pad			-
@@ -1346,21 +1346,21 @@ rva	size	name	class	source	symbol	detail
 0x00074a90	0xe9	FUN_00474A90	unknown			-
 0x00074b79	0x1d9	FUN_00474B79	unknown			-
 0x00074d52	0xd7	FUN_00474D52	unknown			-
-0x00074e29	0x27	FUN_00474E29	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00074e50	0x12	FUN_00474E50	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00074e29	0x27	FUN_00474E29	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00074e50	0x12	FUN_00474E50	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00074e62	0xe	FUN_00474E62	linker-pad			-
 0x00074e70	0x2e	FUN_00474E70	unknown			-
 0x00074e9e	0x2	FUN_00474E9E	linker-pad			-
 0x00074ea0	0x11c	FUN_00474EA0	unknown			-
 0x00074fbc	0x2b	FUN_00474FBC	unknown			-
-0x00074fe7	0x27	FUN_00474FE7	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0007500e	0x12	FUN_0047500E	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00074fe7	0x27	FUN_00474FE7	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0007500e	0x12	FUN_0047500E	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00075020	0x2e	FUN_00475020	unknown			-
 0x0007504e	0x2	FUN_0047504E	linker-pad			-
 0x00075050	0x232	FUN_00475050	unknown			-
 0x00075282	0x7f	FUN_00475282	unknown			-
-0x00075301	0x27	FUN_00475301	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00075328	0x12	FUN_00475328	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00075301	0x27	FUN_00475301	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00075328	0x12	FUN_00475328	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0007533a	0x6	FUN_0047533A	linker-pad			-
 0x00075340	0x2e	FUN_00475340	unknown			-
 0x0007536e	0x2	FUN_0047536E	linker-pad			-
@@ -1371,8 +1371,8 @@ rva	size	name	class	source	symbol	detail
 0x000754b0	0xb	FUN_004754B0	unknown			-
 0x000754bb	0x2c8	FUN_004754BB	unknown			-
 0x00075783	0x67	FUN_00475783	unknown			-
-0x000757ea	0x27	FUN_004757EA	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00075811	0x12	FUN_00475811	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000757ea	0x27	FUN_004757EA	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00075811	0x12	FUN_00475811	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00075823	0xd	FUN_00475823	linker-pad			-
 0x00075830	0x56	FUN_00475830	unknown			-
 0x00075886	0xbf	FUN_00475886	unknown			-
@@ -1381,8 +1381,8 @@ rva	size	name	class	source	symbol	detail
 0x00075c01	0xa70	FUN_00475C01	unknown			-
 0x00076671	0x1c7	FUN_00476671	unknown			-
 0x00076838	0x23d	FUN_00476838	unknown			-
-0x00076a75	0x27	FUN_00476A75	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00076a9c	0x12	FUN_00476A9C	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00076a75	0x27	FUN_00476A75	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00076a9c	0x12	FUN_00476A9C	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00076aae	0x2	FUN_00476AAE	linker-pad			-
 0x00076ab0	0x2e	FUN_00476AB0	unknown			-
 0x00076ade	0x2	FUN_00476ADE	linker-pad			-
@@ -1391,8 +1391,8 @@ rva	size	name	class	source	symbol	detail
 0x00076b4a	0x77	FUN_00476B4A	unknown			-
 0x00076bc1	0x19	FUN_00476BC1	unknown			-
 0x00076bda	0x13	FUN_00476BDA	unknown			-
-0x00076bed	0x27	FUN_00476BED	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00076c14	0x12	FUN_00476C14	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x00076bed	0x27	FUN_00476BED	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00076c14	0x12	FUN_00476C14	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00076c26	0xa	FUN_00476C26	linker-pad			-
 0x00076c30	0x2e	FUN_00476C30	unknown			-
 0x00076c5e	0x2	FUN_00476C5E	linker-pad			-
@@ -1407,16 +1407,16 @@ rva	size	name	class	source	symbol	detail
 0x0007739f	0xec	FUN_0047739F	unknown			-
 0x0007748b	0xba	FUN_0047748B	unknown			-
 0x00077545	0x99	FUN_00477545	unknown			-
-0x000775de	0x27	FUN_004775DE	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x00077605	0x12	FUN_00477605	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000775de	0x27	FUN_004775DE	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x00077605	0x12	FUN_00477605	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x00077617	0x9	FUN_00477617	linker-pad			-
 0x00077620	0x2e	FUN_00477620	unknown			-
 0x0007764e	0x2	FUN_0047764E	linker-pad			-
 0x00077650	0x3c	FUN_00477650	unknown			-
 0x0007768c	0x43	FUN_0047768C	unknown			-
 0x000776cf	0x14	FUN_004776CF	unknown			-
-0x000776e3	0x27	FUN_004776E3	helper-exact	base:BASE/AudiereEffects	_$E22	62 byte-identical candidates
-0x0007770a	0x12	FUN_0047770A	helper-exact	base:BASE/AudiereEffects	_$E21	65 byte-identical candidates
+0x000776e3	0x27	FUN_004776E3	helper-exact	base:BASE/Audio	_$E22	62 byte-identical candidates
+0x0007770a	0x12	FUN_0047770A	helper-exact	base:BASE/Audio	_$E21	65 byte-identical candidates
 0x0007771c	0x4d	FUN_0047771C	unknown			-
 0x00077769	0x85	FUN_00477769	unknown			-
 0x000777ee	0xca	FUN_004777EE	unknown			-
