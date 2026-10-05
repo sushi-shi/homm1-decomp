@@ -2080,42 +2080,42 @@ void advManager::FizzleCenter(i32 fizzleType) {
 // evidence: graph:7;base=0.283401;margin=1.483201;shape=0.274;size=0.397;calls=0.409;alternate=pol20:void advManager::DoAIEvent(class mapCell *, class hero *, int, int)@0x000b1e43
 VA(0x00427cdd, 0x1005)
 void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y) {
-    i32 troopType;
-    i32 available;
+    i32 freeSlot;
+    town* heroTown;
+    playerData* ownerPlayerData;
     i32 purchaseValue;
-    i32 bestSlot;
-    playerData* origPlayerData;
-    i8 eventType;
-    i32 numHired;
-    i32 counter;
-    town* theCastle;
-    i32 junk[4];
-    i32 savedPlayer;
-    i8 erase;
     i32 handled;
-    i32 battleResult;
-    i32 win;
-    boatRecord* ship;
-    i8 oldShowIt;
-    i32 strength;
-    i32 resType;
-    i8 ty;
-    i8 tx;
-    i8 teleportCount;
+    i32 c;
+    i32 recruited;
+    i32 recruitType;
+    i32 isFree;
+    i32 oldPlayer;
+    i32 eventWork[4];
+    i8 removeEvent;
+    hero* opponent;
     i32 res;
-    i32 cost[RESOURCE_COUNT];
-    i32 victory;
-    i8 adjacentMonster;
-    hero* enemyHero;
-    float heroLosses;
+    i32 battleResult;
+    i8 eventType;
+    i8 teleX;
+    i32 canWin;
+    i8 teleY;
+    i32 armyStrength;
+    i8 portalCount;
+    i32 eventResource;
+    i8 priorShowIt;
+    boatRecord* boat;
+    i32 success;
+    i8 guardMonster;
     float theirLosses;
+    float ourLosses;
+    i32 troopCost[RESOURCE_COUNT];
 
-    theCastle = NULL;
+    heroTown = NULL;
     eventType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
-    erase = 0;
+    removeEvent = 0;
     handled = 0;
-    savedPlayer = giCurPlayer;
-    origPlayerData = gpCurPlayer;
+    oldPlayer = giCurPlayer;
+    ownerPlayerData = gpCurPlayer;
     --eventHero->m_remainingMobility;
     mapVisited[x][y] |= giCurPlayerBit;
     switch (eventType) {
@@ -2127,18 +2127,18 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 m_cursorType = eventHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
-                CheckAdjacentMon(&adjacentMonster);
+                CheckAdjacentMon(&guardMonster);
             }
             break;
         case MAP_OBJECT_SHIP:
-            ship = &gpGame->m_boats[cell->m_objectMetadata];
-            gpGame->RestoreCell(-1, -1, ship->savedTriggerType, ship->savedEventData, cell, 3);
+            boat = &gpGame->m_boats[cell->m_objectMetadata];
+            gpGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 3);
             eventHero->m_eventFlags |= HERO_EVENT_EMBARKED;
             eventHero->m_remainingMobility = 0;
-            ship->heroId = eventHero->m_id;
-            ship->owner = eventHero->m_owner;
+            boat->heroId = eventHero->m_id;
+            boat->owner = eventHero->m_owner;
             m_cursorType = ADVMGR_HERO_ICON_BOAT;
-            m_cursorDirection = ship->direction;
+            m_cursorDirection = boat->direction;
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = 1;
             break;
@@ -2157,9 +2157,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_DRAGON_CITY:
             if (gpGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == giCurPlayer)
                 break;
-            for (counter = 0; counter < ARMY_GROUP_SLOT_COUNT; counter++) {
-                gpMonGroup->m_creatureTypes[counter] = CREATURE_DRAGON;
-                gpMonGroup->m_creatureCounts[counter] = 1;
+            for (c = 0; c < ARMY_GROUP_SLOT_COUNT; c++) {
+                gpMonGroup->m_creatureTypes[c] = CREATURE_DRAGON;
+                gpMonGroup->m_creatureCounts[c] = 1;
             }
             gpPhilAI->ChooseEvaluateBattle(
                 &eventHero->m_army,
@@ -2169,13 +2169,13 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 0,
                 0,
                 500,
-                win,
-                strength
+                canWin,
+                armyStrength
             );
-            if (win) {
-                counter = DRAGON_CITY_DRAGON_COUNT;
-                victory = gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &counter, cell);
-                if (victory)
+            if (canWin) {
+                c = DRAGON_CITY_DRAGON_COUNT;
+                success = gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &c, cell);
+                if (success)
                     gpGame->ClaimMine(MINE_SLOT_DRAGON_CITY, giCurPlayer);
             }
             break;
@@ -2198,7 +2198,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                         * CHEST_EXPERIENCE_MULTIPLIER,
                     1
                 );
-            erase = 1;
+            removeEvent = 1;
             break;
         case MAP_OBJECT_BUOY:
             if (!(eventHero->m_eventFlags & HERO_EVENT_BUOY)) {
@@ -2251,7 +2251,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK,
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
-            erase = 1;
+            removeEvent = 1;
             gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
                                [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
             break;
@@ -2272,14 +2272,15 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_RESOURCE:
-            resType = cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE;
+            eventResource = cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE;
             GiveResource(
                 eventHero,
-                resType,
-                resType == RESOURCE_GOLD ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
-                                         : cell->m_objectMetadata
+                eventResource,
+                eventResource == RESOURCE_GOLD
+                    ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
+                    : cell->m_objectMetadata
             );
-            erase = 1;
+            removeEvent = 1;
             break;
         case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata != WINDMILL_EMPTY) {
@@ -2288,63 +2289,63 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_ANCIENT_LAMP:
-            troopType = CREATURE_GENIE;
-            available = 0;
+            recruitType = CREATURE_GENIE;
+            isFree = 0;
             goto recruit;
         case MAP_OBJECT_WAGON_CAMP:
-            troopType = CREATURE_ROGUE;
-            available = 0;
+            recruitType = CREATURE_ROGUE;
+            isFree = 0;
             goto recruit;
         case MAP_OBJECT_DESERT_TENT:
-            troopType = CREATURE_NOMAD;
-            available = 0;
+            recruitType = CREATURE_NOMAD;
+            isFree = 0;
             goto recruit;
         case MAP_OBJECT_STRAW_HUT:
-            troopType = CREATURE_GOBLIN;
-            available = 1;
+            recruitType = CREATURE_GOBLIN;
+            isFree = 1;
             goto recruit;
         case MAP_OBJECT_HOUSE:
-            troopType = CREATURE_PEASANT;
-            available = 1;
+            recruitType = CREATURE_PEASANT;
+            isFree = 1;
             goto recruit;
         case MAP_OBJECT_CABIN:
-            troopType = CREATURE_ARCHER;
-            available = 1;
+            recruitType = CREATURE_ARCHER;
+            isFree = 1;
             goto recruit;
         case MAP_OBJECT_DWARF_LOG_CABIN:
-            troopType = CREATURE_DWARF;
-            available = 1;
+            recruitType = CREATURE_DWARF;
+            isFree = 1;
             goto recruit;
         case MAP_OBJECT_PEASANT_LOG_CABIN:
-            troopType = CREATURE_PEASANT;
-            available = 1;
+            recruitType = CREATURE_PEASANT;
+            isFree = 1;
             goto recruit;
         recruit:
             if (cell->m_objectMetadata) {
                 gpPhilAI->EvaluateOneTimeCreaturePurchase(
                     eventHero,
-                    troopType,
+                    recruitType,
                     cell->m_objectMetadata,
-                    available,
-                    numHired,
+                    isFree,
+                    recruited,
                     purchaseValue,
-                    bestSlot
+                    freeSlot
                 );
-                if (numHired > 0) {
-                    gpGame->GiveArmy(&eventHero->m_army, troopType, numHired, bestSlot);
-                    cell->m_objectMetadata -= numHired;
-                    if (!available) {
-                        GetMonsterCost(troopType, cost);
-                        for (counter = 0; counter < RESOURCE_COUNT; counter++)
-                            gpCurPlayer->m_resources[counter] -= numHired * cost[counter];
+                if (recruited > 0) {
+                    gpGame->GiveArmy(&eventHero->m_army, recruitType, recruited, freeSlot);
+                    cell->m_objectMetadata -= recruited;
+                    if (!isFree) {
+                        GetMonsterCost(recruitType, troopCost);
+                        for (c = 0; c < RESOURCE_COUNT; c++)
+                            gpCurPlayer->m_resources[c] -= recruited * troopCost[c];
                     }
                 }
             }
             if (!cell->m_objectMetadata && eventType == MAP_OBJECT_ANCIENT_LAMP)
-                erase = 1;
+                removeEvent = 1;
             break;
         case MAP_OBJECT_MONSTER:
-            ComputerMonsterInteract(cell, eventHero, &erase);
+            ComputerMonsterInteract(cell, eventHero, &removeEvent);
             break;
         case MAP_OBJECT_OBELISK:
             if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & giCurPlayerBit)) {
@@ -2368,36 +2369,36 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(eventHero);
         case MAP_OBJECT_STONE_LITHS:
-            teleportCount = 0;
-            for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
-                for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
-                    if (gpGame->m_map[tx][ty].m_triggerType
+            portalCount = 0;
+            for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
+                for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
+                    if (gpGame->m_map[teleX][teleY].m_triggerType
                             == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
-                        && MANHATTAN_LENGTH(tx - x, ty - y)
+                        && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
-                        teleportCount++;
+                        portalCount++;
                 }
             }
-            if (teleportCount >= 1) {
-                if (teleportCount > 1)
-                    teleportCount = Random(1, teleportCount);
-                for (ty = 0; ty < MAP_CELL_GRID_SIZE; ty++) {
-                    for (tx = 0; tx < MAP_CELL_GRID_SIZE; tx++) {
-                        if (gpGame->m_map[tx][ty].m_triggerType
+            if (portalCount >= 1) {
+                if (portalCount > 1)
+                    portalCount = Random(1, portalCount);
+                for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
+                    for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
+                        if (gpGame->m_map[teleX][teleY].m_triggerType
                                 == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
-                            && MANHATTAN_LENGTH(tx - x, ty - y)
+                            && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
                                           : WHIRLPOOL_MIN_DISTANCE)) {
-                            if (--teleportCount <= 0)
+                            if (--portalCount <= 0)
                                 goto teleport;
                         }
                     }
                 }
             teleport:
                 StopCursor(1);
-                gpAdvManager->TeleportTo(tx, ty, 0);
+                gpAdvManager->TeleportTo(teleX, teleY, 0);
             }
             break;
         case MAP_OBJECT_ARTIFACT:
@@ -2405,11 +2406,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 case ARTIFACT_EVENT_MODE_PICKUP:
                 giveArtifact:
                     GiveArtifact(eventHero, cell->m_objectIndex);
-                    erase = 1;
+                    removeEvent = 1;
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
-                    counter = ARTIFACT_EVENT_GUARD_ROGUE_COUNT;
-                    if (gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_ROGUE, &counter, cell))
+                    c = ARTIFACT_EVENT_GUARD_ROGUE_COUNT;
+                    if (gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_ROGUE, &c, cell))
                         goto giveArtifact;
                     break;
                 case ARTIFACT_EVENT_MODE_GOLD:
@@ -2422,58 +2423,58 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                             ARTIFACT_EVENT_GOLD_COST;
                         goto giveArtifact;
                     } else {
-                        erase = 1;
+                        removeEvent = 1;
                     }
                     break;
             }
             break;
         case MAP_OBJECT_HERO:
-            enemyHero = gpGame->GetHero(cell->m_objectMetadata);
-            oldShowIt = bShowIt;
-            if (enemyHero->m_owner == giCurPlayer)
+            opponent = gpGame->GetHero(cell->m_objectMetadata);
+            priorShowIt = bShowIt;
+            if (opponent->m_owner == giCurPlayer)
                 return;
-            if (enemyHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
-                theCastle = gpGame->GetTown(enemyHero->m_occupiedTown);
-            if (!gbHumanPlayer[enemyHero->m_owner]) {
+            if (opponent->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+                heroTown = gpGame->GetTown(opponent->m_occupiedTown);
+            if (!gbHumanPlayer[opponent->m_owner]) {
                 battleResult = gpPhilAI->QuickCombat(
                     &eventHero->m_army,
                     eventHero,
-                    &enemyHero->m_army,
-                    enemyHero,
+                    &opponent->m_army,
+                    opponent,
                     0,
                     0,
-                    heroLosses,
+                    ourLosses,
                     theirLosses
                 );
-                if (battleResult && theCastle)
+                if (battleResult && heroTown)
                     battleResult = gpPhilAI->QuickCombat(
                         &eventHero->m_army,
                         eventHero,
-                        &theCastle->m_army,
+                        &heroTown->m_army,
                         NULL,
                         1,
-                        theCastle->m_id,
-                        heroLosses,
+                        heroTown->m_id,
+                        ourLosses,
                         theirLosses
                     );
             } else {
-                if (theCastle)
-                    theCastle->m_occupyingHeroId = enemyHero->m_id;
+                if (heroTown)
+                    heroTown->m_occupyingHeroId = opponent->m_id;
                 res = DoCombat(
                     x,
                     y,
                     eventHero,
                     &eventHero->m_army,
-                    theCastle,
-                    enemyHero,
-                    &enemyHero->m_army,
+                    heroTown,
+                    opponent,
+                    &opponent->m_army,
                     x,
                     y,
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == COMBAT_RESULT_ATTACKER && theCastle)
-                    gpGame->ClaimTown(theCastle->m_id, giCurPlayer);
+                if (res == COMBAT_RESULT_ATTACKER && heroTown)
+                    gpGame->ClaimTown(heroTown->m_id, giCurPlayer);
             }
             CompleteDraw(0);
             break;
@@ -2516,10 +2517,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         default:
             break;
     }
-    if (erase)
+    if (removeEvent)
         EraseObj(cell, x, y);
-    giCurPlayer = savedPlayer;
-    gpCurPlayer = origPlayerData;
+    giCurPlayer = oldPlayer;
+    gpCurPlayer = ownerPlayerData;
     CheckEndGame(0);
 }
 
