@@ -1,7 +1,21 @@
-# Vendor import libraries whose archive shape differs from what the pinned VC4
-# LINK /IMPLIB emits. `format` vc2 = the VC 2.0 LINK 2.50 import format:
-# descriptor `<DLL>_IMPORT_DESCRIPTOR` and its own `NULL_IMPORT_DESCRIPTOR`,
-# which VC4's `__NULL_IMPORT_DESCRIPTOR` does not satisfy, so the image gets a
-# second 20-byte .idata$3 terminator. `member` is the archive member name;
-# LINK 3.00 orders the .idata$4/$5 (ILT/IAT) groups by it.
+# Import libraries whose archive shape differs from what the pinned LINK
+# /IMPLIB (VC6 LINK 6.00, short import members) emits. `format` names the
+# pinned toolchain whose LINK produced the shape:
+#   vc2  = VC 2.0 LINK 2.50: descriptor `<DLL>_IMPORT_DESCRIPTOR` and its own
+#          `NULL_IMPORT_DESCRIPTOR`, so the image gets a second .idata$3
+#          terminator;
+#   vc41 = VC4.1 LINK 3.10: the pre-VC5 long import format, one full COFF
+#          member per import, with no @comp.id (Rich prodid 0). When the vc41
+#          toolchain ships `<stem>.lib` itself, that SDK library is linked;
+#          otherwise the library is synthesised with LINK 3.10.
+# `member` is the archive member name. Buka's Rich header counts 179 short
+# imports (prodid 1), 30 unmarked objects, 11 LINK 5.12.8034 objects (the VC6
+# Platform SDK descriptors: five libraries x 2 + __NULL_IMPORT_DESCRIPTOR)
+# and 2 LINK 6.00.8447 objects (audiere.lib's descriptor pair). Of the 200
+# imports, 21 are therefore long members: WING32's 6 (WinG SDK) plus 15 from
+# exactly three libraries, and with these three rows the candidate's Rich
+# counts, IAT slot order and .idata$6 hints equal retail's.
 dll	format	member	evidence
+mss32.dll	vc41	mss32.dll	Rich: 5 long imports + 2 unmarked descriptors; with VC6 short members the mss32 IAT order reverses
+smackw32.DLL	vc41	smackw32.DLL	Rich: 9 long ordinal imports + 2 unmarked descriptors; the smackw32 IAT order matches only in the long format
+NETAPI32.dll	vc41	NETAPI32.dll	retail Netbios hint 180 is VC4.1 netapi32.lib's (VC6 NETAPI32.LIB gives 211)

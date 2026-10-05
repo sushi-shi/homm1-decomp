@@ -244,6 +244,19 @@ referents, and complete startup/preferences migration. The build and final
 verification still stop at the inherited NWC census; these results do not
 establish full command or behavioral parity.
 
+## Buka import-library shapes
+
+No donor change: Gruntz `d1cdb537caa6142849c7345eedc306dbb5af3763` and HoMM2
+Buka `e0689d3f71b2942b544fd677cb54085a13503d7b` link every vendor import
+library in the selected toolchain's format. Adapted: `graph/implib.py` keeps
+its `import_libraries.tsv` shape table and adds `vc41` (LINK 3.10 long
+members); a shaped DLL whose pinned shape toolchain ships `<stem>.lib`
+(Buka's NETAPI32) links that SDK library instead of the selected one. The
+evidence is retail's Rich header, IAT slot order and `.idata$6` hints, in
+`docs/buka-2003.md`. Measured: implib tests pass (10); with the shapes the
+candidate's Rich counts other than AliasObj, its IAT and its hints equal
+retail's.
+
 ## Buka census and VC6 data names
 
 Reviewed Gruntz `d1cdb537caa6142849c7345eedc306dbb5af3763`

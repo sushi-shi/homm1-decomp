@@ -53,7 +53,7 @@ public:
     i16 m_drawBottom;
     // --- constructors ---
     icon(i16 id);
-    virtual inline ~icon();
+    virtual ~icon();
     // --- methods ---
     void DrawToBuffer(
         i16 x,

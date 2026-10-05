@@ -14,7 +14,7 @@ public:
     i8* m_data;
     // --- constructors ---
     tileset(i16 id);
-    virtual inline ~tileset();
+    virtual ~tileset();
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TILESET_H

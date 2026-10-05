@@ -132,3 +132,25 @@ class ImportVerificationTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class ShapedLibraryTests(unittest.TestCase):
+    def test_shape_toolchain_library_preferred(self):
+        import tempfile
+        from homm1 import toolchain
+        with tempfile.TemporaryDirectory() as tmp:
+            lib = Path(tmp) / 'vc41' / 'lib'
+            lib.mkdir(parents=True)
+            (lib / 'NETAPI32.LIB').write_bytes(b'!<arch>\n')
+            shapes = {'NETAPI32.dll': {'format': 'vc41', 'member': 'NETAPI32.dll'},
+                      'mss32.dll': {'format': 'vc41', 'member': 'mss32.dll'}}
+            with mock.patch.object(toolchain, 'verify'), \
+                    mock.patch.object(toolchain, 'root',
+                                      side_effect=lambda name: Path(tmp) / name):
+                self.assertEqual(implib.shaped_lib('NETAPI32.dll', shapes).name.lower(),
+                                 'netapi32.lib')
+                # no SDK copy in the shape toolchain: synthesised instead
+                self.assertIsNone(implib.shaped_lib('mss32.dll', shapes))
+                self.assertIsNone(implib.shaped_lib('KERNEL32.dll', shapes))
+            with mock.patch.object(toolchain, 'verify', side_effect=ValueError('absent')):
+                self.assertIsNone(implib.shaped_lib('NETAPI32.dll', shapes))

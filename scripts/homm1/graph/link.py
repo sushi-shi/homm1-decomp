@@ -39,12 +39,21 @@ from homm1.tool.wine import winepath
 #: thunk run reads WINMM, KERNEL32, USER32, GDI32, ADVAPI32, mss32, WING32,
 #: smackw32, NETAPI32 (0x004685e0..0x004688b6, before the BASE library);
 #: USER32/GDI32/audiere thunks pulled only by BASE follow the CRT
-#: (0x004886e8..). The vendor libraries are synthesized by
-#: `homm1.graph.implib` from the retail import table plus the reviewed
-#: import-thunk names in function_referents.tsv.
-LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
-             "advapi32.lib", "mss32.lib", "wing32.lib", "smackw32.lib",
-             "netapi32.lib", "audiere.lib"]
+#: (0x004886e8..), audiere's last: audiere.lib is searched before the BASE
+#: library, so its imports resolve only in LINK's second pass.
+#: OLDNAMES.LIB heads the line. Each OLDNAMES alias member carries an empty
+#: `.text` with the default 16-byte alignment; the six old names the SOURCE
+#: objects call (open, read, close, write, strcmpi, strnicmp) are pulled
+#: before WINMM's thunks, which is why retail's first thunk sits at the
+#: 16-byte boundary 0x004685e0 after seven CC bytes (the default-library
+#: position would leave it 2-byte aligned at 0x004685da).
+#: The vendor libraries are synthesized by `homm1.graph.implib` from the
+#: retail import table plus the reviewed import-thunk names in
+#: function_referents.tsv, in the formats config/retail/import_libraries.tsv
+#: records.
+LINK_LIBS = ["oldnames.lib", "winmm.lib", "kernel32.lib", "user32.lib",
+             "gdi32.lib", "advapi32.lib", "mss32.lib", "wing32.lib",
+             "smackw32.lib", "netapi32.lib", "audiere.lib"]
 
 #: Retail's C runtime is the VC4.1 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
@@ -67,11 +76,11 @@ MODULE_DEF = REPO / "config/heroes.def"
 #: BASEMGR at 0x004688c0. A thunk is an import-library member, and LINK places
 #: library members after every object on the line, in the order it pulls
 #: them; so every BASE unit was itself pulled from a library searched after
-#: netapi32.lib - the BASE library. Its member order is LINK's pull order,
+#: audiere.lib - the BASE library. Its member order is LINK's pull order,
 #: not a list we choose.
 BASE_LIBRARY_FROM = 0x000688c0
 BASE_LIBRARY = "base.lib"
-BASE_LIBRARY_AFTER = "netapi32.lib"
+BASE_LIBRARY_AFTER = "audiere.lib"
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
