@@ -1511,11 +1511,8 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
             remoteIndex,
             sizeof(actionData),
             REMOTE_COMMAND_COMBAT_ACTION,
-            1,
-            1,
-            REMOTE_MESSAGE_DEFAULT,
             1
-        ); // API-forced: char* payload.
+        );
         if (!transmitResult)
             ShutDown(NULL);
     }

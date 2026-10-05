@@ -420,7 +420,7 @@ void philAI::CheckReload(hero* pHero) {
     fReduceFactor = 1.0f;
     isAlly = 0.0f;
     enemyPressure = 0.0f;
-    heroFightValue = FightValueOfStack(&pHero->m_army, pHero, 0, 0, 0);
+    heroFightValue = FightValueOfStack(&pHero->m_army, pHero, 0);
     if (heroFightValue < 100)
         heroFightValue = 100;
     gpSearchArray->SeedPosition(
@@ -446,8 +446,6 @@ void philAI::CheckReload(hero* pHero) {
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(tile->m_objectMetadata)->m_army,
                             NULL,
-                            0,
-                            0,
                             0
                         );
                         if (gpGame->m_townOwners[tile->m_objectMetadata] == pHero->m_owner) {
@@ -467,8 +465,6 @@ void philAI::CheckReload(hero* pHero) {
                             enemy = FightValueOfStack(
                                 &gpGame->GetHero(tile->m_objectMetadata)->m_army,
                                 NULL,
-                                0,
-                                0,
                                 0
                             );
                             if (enemy > heroFightValue >> 1)
@@ -502,7 +498,7 @@ void philAI::CheckBerserk(hero* pHero) {
 
     gbBerserk = 0;
     fBerserkFactor = 1.0f;
-    val = FightValueOfStack(&pHero->m_army, pHero, 1, 0, 0);
+    val = FightValueOfStack(&pHero->m_army, pHero, 1);
     if (val < 100)
         val = 100;
     if (val < 30000)
@@ -817,8 +813,7 @@ void philAI::GetTurnAIVars(i32 player) {
     i32 oldX;
     town* townPtr;
 
-    giCurTurn = gpGame->m_day + (gpGame->m_week - 1) * CALENDAR_DAYS_PER_WEEK
-                + (gpGame->m_month - 1) * CALENDAR_DAYS_PER_MONTH;
+    giCurTurn = GAME_DAY_NUMBER(*gpGame);
     GetTurnAttentionValue(player);
     TurnCostResource(player);
     gCurHourGlassPhase = 0;
@@ -835,14 +830,13 @@ void philAI::GetTurnAIVars(i32 player) {
     fightTotalSum = 0;
     for (i = 0; i < gpCurPlayer->m_heroCount; i++) {
         heroPointer = gpGame->GetHero(gpCurPlayer->m_heroIds[i]);
-        fightVal =
-            static_cast<float>(FightValueOfStack(&heroPointer->m_army, heroPointer, 0, 0, 0));
+        fightVal = static_cast<float>(FightValueOfStack(&heroPointer->m_army, heroPointer, 0));
         fightTotalSum = static_cast<i32>(fightTotalSum + fightVal);
         heroPointer->m_aiFightValue = fightVal * 4e-05 + 0.4;
     }
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
         townPtr = gpGame->GetTown(gpCurPlayer->m_townIds[i]);
-        fightVal = static_cast<float>(FightValueOfStack(&townPtr->m_army, NULL, 0, 0, 0));
+        fightVal = static_cast<float>(FightValueOfStack(&townPtr->m_army, NULL, 0));
         fightTotalSum = static_cast<i32>(fightTotalSum + fightVal);
     }
     gpCurPlayer->m_aiData.m_upgradeValueWeight =
@@ -920,7 +914,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
 
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
-        thisStrengths[townNo] = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) + 400;
+        thisStrengths[townNo] = FightValueOfStack(&townPointer->m_army, NULL, 0) + 400;
         total += thisStrengths[townNo];
         if (townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE))
             totalWeights += 10;
@@ -1210,15 +1204,15 @@ void philAI::ProbableOutcomeOfBattle(
 
     attArts = 0;
     artsD = 0;
-    attArmy = static_cast<float>(FightValueOfStack(attacker, attackerHero, 1, 0, 0));
+    attArmy = static_cast<float>(FightValueOfStack(attacker, attackerHero, 1));
     defendingArmyValue =
         static_cast<float>(FightValueOfStack(defender, defenderHero, 1, useTown, townId));
     if (townArmy)
-        defendingArmyValue += static_cast<float>(FightValueOfStack(townArmy, NULL, 1, 0, 0));
-    rawFightArray[0] = static_cast<float>(FightValueOfStack(attacker, attackerHero, 0, 0, 0));
-    rawFightArray[1] = static_cast<float>(FightValueOfStack(defender, defenderHero, 0, 0, 0));
+        defendingArmyValue += static_cast<float>(FightValueOfStack(townArmy, NULL, 1));
+    rawFightArray[0] = static_cast<float>(FightValueOfStack(attacker, attackerHero, 0));
+    rawFightArray[1] = static_cast<float>(FightValueOfStack(defender, defenderHero, 0));
     if (townArmy)
-        rawFightArray[1] += static_cast<float>(FightValueOfStack(townArmy, NULL, 0, 0, 0));
+        rawFightArray[1] += static_cast<float>(FightValueOfStack(townArmy, NULL, 0));
     if (useTown)
         defendingArmyValue = defendingArmyValue * 1.11;
     curDefStr = defendingArmyValue;
@@ -1386,8 +1380,7 @@ void philAI::ValueOfBuyingBuilding(
             nextBenefit = nextBenefit * (dwellingsOwned * 0.33 + 0.66);
             break;
         case BUILDING_SLOT_TAVERN:
-            nextBenefit =
-                FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0) / 3000.0f * nextBenefit;
+            nextBenefit = FightValueOfStack(&townPointer->m_army, NULL, 0) / 3000.0f * nextBenefit;
             break;
         case BUILDING_SLOT_DWELLING_1:
         case BUILDING_SLOT_DWELLING_2:
@@ -2658,8 +2651,8 @@ void philAI::HeroInteractionAtTown(
                              : 1);
         }
     }
-    battlePower = FightValueOfStack(&heroPointer->m_army, NULL, 0, 0, 0);
-    townFV = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0);
+    battlePower = FightValueOfStack(&heroPointer->m_army, NULL, 0);
+    townFV = FightValueOfStack(&townPointer->m_army, NULL, 0);
     garrisonShare = static_cast<double>(townFV) / (townFV + battlePower);
     statSum = 0;
     statSum = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK]
@@ -3441,7 +3434,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 theArmySlot2
             );
             if ((gEventCell->m_objectMetadata & MONSTER_WILLING_FLAG)
-                && gpPhilAI->FightValueOfStack(&pHero->m_army, pHero, 0, 0, 0)
+                && gpPhilAI->FightValueOfStack(&pHero->m_army, pHero, 0)
                        > (gEventCell->m_objectMetadata & MONSTER_COUNT_MASK)
                              * gMonsterDatabase[gEventCell->m_objectIndex].fightValue * 1.75) {
                 *liveChance = 100;

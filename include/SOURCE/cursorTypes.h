@@ -40,7 +40,8 @@ H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_DIAGONAL_BIT = 1
 H1_ENUM_CONST_END(MapDirectionConstant)
 
-// The step that walks a map direction back (Buka 2.1 KB_TYPES.h).
+// The step that walks a map direction back (SEARCH's path walk-back and
+// monster back-push).
 inline i32 OppositeMapDirection(i32 direction) {
     return (direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
 }

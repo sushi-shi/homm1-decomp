@@ -21,8 +21,8 @@ or effect before creature type, are different source and stay explicit.
 ## Statement macros are not
 
 `do { ... } while (0)` costs code under `/Od`: wrapping army::Walk's four-if
-extent clamp grows `.text` from 20850 to 20859 bytes (Walk 95.62%). HoMM2 Buka
-measured the same cost on the same compiler. Multi-statement operations (the
+extent clamp grows `.text` from 20850 to 20859 bytes (Walk 95.62%).
+Multi-statement operations (the
 extent clamps, the spell-icon cache reload) therefore stay written out.
 
 ## Inline accessors: value versus reference
@@ -38,8 +38,7 @@ Reference-returning accessors change the function:
 | `game::GetPlayerHero(player, i)` | `philAI::DetermineHeroToMove` | 93.39% |
 | `searchNode& searchArray::GetNode(x, y)` | `philAI::CheckReload` | 90.81% |
 
-This agrees with HoMM2's inline-accessor return-temporary observation: the
-expanded call is materialized before use. Retail read those members directly.
+The expanded call's result is materialized in a frame temporary before use. Retail read those members directly.
 
 ## Header inlines move counters, not bytes
 
@@ -62,8 +61,7 @@ Measured while recovering the [adventure common-code ledger](../common-code-adve
 
 - `hero::IsEmbarked()` returning `i32` is byte-identical at all 22 adventure
   sites. Declaring it `i8` drops ten functions (1047/1057): the byte return is
-  stored to a frame temporary before the test, as Buka 2.1 measured for
-  playerData's accessors (inline-accessor-return-width). The int-valued
+  stored to a frame temporary before the test. The int-valued
   accessor is the evidenced form.
 - `game::GetPlayerHero`/`GetPlayerTown` are byte-identical where the pointer is
   stored straight into a local (townManager::GetCategoryStats,

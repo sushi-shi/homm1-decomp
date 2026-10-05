@@ -70,7 +70,7 @@ i32 combatManager::AICheckRetreat(void) {
                 thatArmy->m_creatureCounts[armyIndex] = 0;
             }
         }
-        theForces[owner] = gpPhilAI->FightValueOfStack(thatArmy, curLeader, 1, 0, 0);
+        theForces[owner] = gpPhilAI->FightValueOfStack(thatArmy, curLeader, 1);
         if (m_combatTowns[owner])
             theForces[owner] = static_cast<i32>(theForces[owner] * 1.1);
         artifactTotals[owner] = 0;

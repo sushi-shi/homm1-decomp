@@ -44,11 +44,10 @@ public:
 #pragma pack(pop)
 
 // The cell holds the given stack: side first, then index, without narrowing
-// the requested identity (Buka 2.1 hexcell.h).
+// the requested identity.
 #define HEX_HAS_OCCUPANT(cell, side, index)                                                        \
     ((cell).m_occupantSide == (side) && (cell).m_occupantIndex == (index))
-// Forget the live occupant, side then index; the frame stays (Buka 2.1
-// hexcell.h).
+// Forget the live occupant, side then index; the frame stays.
 #define CLEAR_HEX_OCCUPANT(cell)                                                                   \
     ((cell).m_occupantSide = COMBAT_SIDE_NONE, (cell).m_occupantIndex = COMBAT_ARMY_INDEX_NONE)
 #endif // HOMM1_SOURCE_HEXCELL_H

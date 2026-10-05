@@ -2006,19 +2006,14 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     strengthValue = 0;
                     for (index = 0; index < gpGame->m_players[player].m_heroCount; index++) {
                         playerHeroData = gpGame->GetPlayerHero(player, index);
-                        strengthValue += gpPhilAI->FightValueOfStack(
-                            &playerHeroData->m_army,
-                            playerHeroData,
-                            0,
-                            0,
-                            0
-                        );
+                        strengthValue +=
+                            gpPhilAI->FightValueOfStack(&playerHeroData->m_army, playerHeroData, 0);
                     }
                     for (index = 0; index < gpGame->m_players[player].m_townCount; index++) {
                         townItem = gpGame->GetPlayerTown(player, index);
                         if (townItem->HasGarrison())
                             strengthValue +=
-                                gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0, 0, 0);
+                                gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0);
                     }
                     stats[player] = strengthValue;
                     break;

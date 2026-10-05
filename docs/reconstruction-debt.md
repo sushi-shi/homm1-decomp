@@ -173,11 +173,10 @@ next to an assertion must not move its `#line` source line.
 **Helpers, accessors and macros.** A reconstruction transcribes the expanded
 body of a helper the developers called. The common-code review reads each
 function, records its candidate families with a verdict, and restores a helper
-only where every affected object stays identical. Buka 2.1's helper audit is
-the donor; its spellings are hypotheses until the HoMM1 objects agree. Which
-forms survive VC6 is recorded in [VC6 helper forms](patterns/vc6-helper-forms.md).
-Helpers that hide an enum-to-index cast (Buka's `IDX`, `HAS`, `BIT`) are not
-introduced; typed indexing belongs to the enum domains.
+only where every affected object stays identical. Which forms survive VC6 is
+recorded in [VC6 helper forms](patterns/vc6-helper-forms.md). Helpers whose
+only purpose is to hide an enum-to-index or flag conversion are not introduced;
+typed indexing belongs to the enum domains.
 
 The combat and AI units (AI, ARMY, ARMYGRP, CMBTMGR, COMMAND, DRAWING,
 FINDPATH, FLY, HEXCELL, PATH, PHILAI, SEARCH, SPELLAI, SPELLS, VIEW) are read

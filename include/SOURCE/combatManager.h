@@ -578,7 +578,7 @@ extern H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
 extern i32 giNextActionGridIndex;
 extern i32 giNextActionExtra;
 extern i32 giNextActionGridIndex2;
-// Queue a move (or attack) toward a hex (Buka 2.1 combatManager.h): the
+// Queue a move (or attack) toward a hex: the
 // action is stored before the hex expression is evaluated; other action
 // fields stay with the caller.
 #define SET_NEXT_COMBAT_MOVE(hex) (giNextAction = ACTION_MOVE, giNextActionGridIndex = (hex))
