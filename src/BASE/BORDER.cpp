@@ -53,7 +53,7 @@ void border::Read(void) {
 }
 
 VA(0x00474b79, 0x1d9)
-i16 border::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) border::Main(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {
         if (message.type == MESSAGE_WIDGET)
             return widget::Main(message);

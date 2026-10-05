@@ -169,7 +169,7 @@ void swapManager::DrawSelector(void) {
 }
 
 VA(0x0045d515, 0x88c)
-i16 swapManager::Main(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message& message) {
     i8 nowCloseRequested = 0;
     i8 quickView;
     i32 artIndex;

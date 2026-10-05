@@ -319,7 +319,7 @@ METRICS = (
      re.compile(r"[=!]=[ \t]*(?:0[xX](?!0\b|1\b)[0-9a-fA-F]+"
                 r"|(?!0\b|1\b)[0-9]+)\b"), False),
     (".cpp-local enums",
-     re.compile(r"\bH1_ENUM_(?:BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN)\b"
+     re.compile(r"\bH1_ENUM_(?:BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN|ID_BEGIN)\b"
                 r"|^[ \t]*(?:typedef[ \t]+)?enum[ \t]+\w*[ \t]*\{", re.M), True),
     ("C-style casts", _count_c_style_casts, False),
     ("reinterpret_casts", _REINTERPRET_CAST, False),

@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_LISTBOXWIDGET_H
 #define HOMM1_BASE_LISTBOXWIDGET_H
 
+#include <BASE/message.h>
 #include <BASE/widget.h>
 #include <H1/Macros.h>
 
@@ -14,7 +15,7 @@ public:
     virtual ~listBoxWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
     void DeleteItem(i32 index);

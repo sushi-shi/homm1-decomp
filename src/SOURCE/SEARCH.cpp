@@ -209,13 +209,13 @@ void searchArray::SeedPosition(
             return;
         if (!CELL_TERRAIN(s_targetCell)) {
             if (waterMode) {
-                if (s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
-                    || s_targetCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP))
+                if (s_targetCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK)
+                    || s_targetCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP))
                     return;
             } else {
-                if (s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    && s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                    && s_targetCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+                if (s_targetCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
+                    && s_targetCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
+                    && s_targetCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
                     return;
             }
         }
@@ -396,7 +396,7 @@ void searchArray::SeedPosition(
     if (scanMap) {
         for (s_mapX = 0; s_mapX < MAP_CELL_GRID_SIZE; s_mapX++) {
             for (s_mapY = 0; s_mapY < MAP_CELL_GRID_SIZE; s_mapY++) {
-                if ((gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                if (MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(s_mapX, s_mapY)->m_triggerType)
                     == MAP_OBJECT_MONSTER) {
                     for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
                         s_adjacentX = s_mapX + normalDirTable[s_direction].x;

@@ -67,7 +67,7 @@ textWidget::~textWidget(void) {
 }
 
 VA(0x00471a01, 0x238)
-i16 textWidget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) textWidget::Main(tag_message& message) {
     i16 y;
     i16 x;
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {

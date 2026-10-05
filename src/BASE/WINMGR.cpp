@@ -165,8 +165,8 @@ i16 heroWindowManager::UpdateHoverWindow(i16 x, i16 y) {
 }
 
 VA(0x0046a456, 0x5e)
-i16 heroWindowManager::Main(tag_message& message) {
-    i16 ret = MESSAGE_DISPATCH_CONTINUE;
+H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindowManager::Main(tag_message& message) {
+    H1_ENUM_LOCAL(MessageDispatchResult, i16) ret = MESSAGE_DISPATCH_CONTINUE;
     heroWindow* w = m_windowListTail;
     while (w != NULL) {
         switch (ret = w->BroadcastMessage(message)) {
@@ -182,7 +182,7 @@ i16 heroWindowManager::Main(tag_message& message) {
 }
 
 VA(0x0046a4b4, 0x3d)
-i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
     message.type = type;
     message.command = command;
@@ -264,12 +264,12 @@ void heroWindowManager::RemoveWindow(heroWindow* window) {
 }
 
 VA(0x0046a740, 0x1a8)
-i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&), i32 fade) {
+i16 heroWindowManager::DoDialog(heroWindow* window, H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(tag_message&), i32 fade) {
     DATA(0x004ce174)
     static i32 gDialogNestCount = 0;
     tag_message message;
     i16 done;
-    i32 result;
+    H1_ENUM_LOCAL(MessageDispatchResult, i32) result;
 
     gInDialog = 1;
     if (gDialogNestCount == 0)

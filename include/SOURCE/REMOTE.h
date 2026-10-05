@@ -13,17 +13,17 @@ H1_ENUM_BEGIN(RemoteMessageType)
     REMOTE_MESSAGE_HEARTBEAT = 4
 H1_ENUM_END(RemoteMessageType)
 
-H1_ENUM_BEGIN(RemoteBoxCommand)
+H1_ENUM_ID_BEGIN(RemoteBoxCommand)
     BOX_REMOTE_SAVE = 1,
     BOX_REMOTE_SETUP = 0x1f
-H1_ENUM_END(RemoteBoxCommand)
+H1_ENUM_ID_END(RemoteBoxCommand)
 
 // RemoteMessage::command values (TransmitRemoteData's command argument and
 // the receivers' switches): the save-game transfer (TransmitSaveGame /
 // ReceiveSaveGame), the hero/town exchange before a networked battle, chat
 // text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
 // (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
-H1_ENUM_BEGIN(RemoteCommand)
+H1_ENUM_ID_BEGIN(RemoteCommand)
     REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
     REMOTE_COMMAND_SAVE_DATA = 3,
     REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
@@ -34,7 +34,7 @@ H1_ENUM_BEGIN(RemoteCommand)
     REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
     REMOTE_COMMAND_COMBAT_ACTION = 0x17,
     REMOTE_COMMAND_PLAYER_EXIT = 30
-H1_ENUM_END(RemoteCommand)
+H1_ENUM_ID_END(RemoteCommand)
 
 H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_BROADCAST_PLAYER = 0x7f,
@@ -117,7 +117,7 @@ union RemotePayload {
 struct RemoteMessage {
     i8 sender;
     i32 id;
-    i8 type;
+    H1_ENUM_STORAGE(RemoteMessageType, i8) type;
     i8 command;
     i16 payloadSize;
     RemotePayload payload;
@@ -146,7 +146,7 @@ i32 TransmitRemoteData(
     i8 command,
     i8 reliable,
     i8 allowRetryDialog = 1,
-    i8 messageType = REMOTE_MESSAGE_DEFAULT,
+    H1_ENUM_PARAM(RemoteMessageType, i8) messageType = REMOTE_MESSAGE_DEFAULT,
     i8 gamePosDestination = 1
 );
 char* GetRemoteData(i8 remove);

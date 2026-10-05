@@ -550,12 +550,12 @@ class mapCell* advManager::DoAdvCommand(void) {
 }
 
 VA(0x0040298b, 0xc7e)
-i16 advManager::Main(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& message) {
     DATA(0x004a6760)
     static i32 gCheatSeq = 0;
     i32 yPos;
     i32 xPos;
-    i32 result;
+    H1_ENUM_LOCAL(MessageDispatchResult, i32) result;
     mapCell* location;
     hero* curHero;
     i32 townIndex;
@@ -937,7 +937,7 @@ void advManager::Reseed(i32, i32) {
 }
 
 VA(0x00403620, 0xe55)
-i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
+H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessSelect(struct tag_message* message, class mapCell** eventCell) {
     i32 iPage;
     i16 mouseX;
     i16 objectTypeState;
@@ -1231,7 +1231,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
 }
 
 VA(0x00404475, 0x1ac)
-i32 advManager::ProcessDeSelect(
+H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessDeSelect(
     struct tag_message* message,
     i32* result,
     class mapCell** eventCell
@@ -1382,7 +1382,7 @@ i32 advManager::ProcessSearch(i32 x, i32 y) {
 }
 
 VA(0x00404a49, 0xae7)
-i32 advManager::ProcessHover(struct tag_message* message) {
+H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_message* message) {
     i16 xPos;
     i16 yPos;
     town* pTown;
@@ -1426,12 +1426,12 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                 }
                 location = GetCell(m_commandTargetX, m_commandTargetY);
                 if (gpCurPlayer->m_currentHero == HERO_ID_NONE) {
-                    if ((location->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
+                    if (MAP_TRIGGER_OBJECT(location->m_triggerType) == MAP_OBJECT_TOWN
                         && gpGame->GetTown(location->m_objectMetadata)->m_owner == giCurPlayer) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                         m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                         return 1;
-                    } else if ((location->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
+                    } else if (MAP_TRIGGER_OBJECT(location->m_triggerType) == MAP_OBJECT_HERO
                                && gpGame->GetHero(location->m_objectMetadata)->m_owner
                                       == giCurPlayer) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_HERO);
@@ -1451,19 +1451,17 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                         return 1;
                     }
                     if (location->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
-                        if ((location->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN) {
+                        if (MAP_TRIGGER_OBJECT(location->m_triggerType) == MAP_OBJECT_TOWN) {
                             pTown = gpGame->GetTown(location->m_objectMetadata);
                             if (pTown->m_owner == giCurPlayer && m_commandTargetY >= 1
                                 && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
-                                && ((GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType
-                                     & MAP_TRIGGER_TYPE_MASK)
+                                && (MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType)
                                         == MAP_OBJECT_TOWN
                                     || (GetCell(m_commandTargetX, m_commandTargetY - 1)
                                             ->m_secondaryTrigger
                                         & MAP_TRIGGER_TYPE_MASK)
                                            == MAP_OBJECT_TOWN)
-                                && ((GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType
-                                     & MAP_TRIGGER_TYPE_MASK)
+                                && (MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType)
                                         == MAP_OBJECT_TOWN
                                     || (GetCell(m_commandTargetX, m_commandTargetY + 1)
                                             ->m_secondaryTrigger
@@ -1480,9 +1478,9 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                     }
                     if (!((m_cursorType == ADVMGR_HERO_ICON_BOAT
                            || location->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN
-                           || location->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                           || location->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                           || location->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+                           || location->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
+                           || location->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
+                           || location->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
                           && (m_cursorType != ADVMGR_HERO_ICON_BOAT
                               || location->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
                               || location->m_triggerType == MAP_OBJECT_COAST))) {
@@ -1505,7 +1503,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                 nDays = ADVENTURE_POINTER_DAY_LAST;
                         }
                         baseFrame = nDays * ADVENTURE_POINTER_DAY_STRIDE;
-                        switch (location->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                        switch (MAP_TRIGGER_OBJECT(location->m_triggerType)) {
                             case MAP_OBJECT_SHIP:
                                 if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
                                     gpMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_SAIL);
@@ -1574,7 +1572,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                     );
                                 } else if (location->m_triggerType & MAP_TRIGGER_EVENT) {
                                     if (m_cursorType != ADVMGR_HERO_ICON_BOAT) {
-                                        switch (location->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                                        switch (MAP_TRIGGER_OBJECT(location->m_triggerType)) {
                                             case MAP_OBJECT_ALCHEMIST_LAB:
                                             case MAP_OBJECT_SIGNPOST:
                                             case MAP_OBJECT_SKELETON:
@@ -1634,7 +1632,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                                                 break;
                                         }
                                     } else {
-                                        switch (location->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                                        switch (MAP_TRIGGER_OBJECT(location->m_triggerType)) {
                                             case MAP_OBJECT_BUOY:
                                             case MAP_OBJECT_WHIRLPOOL:
                                                 gpMouseManager->SetPointer(
@@ -1910,7 +1908,7 @@ void advManager::DrawCell(
     i16 mapY,
     i16 screenX,
     i16 screenY,
-    i8 drawMask,
+    H1_ENUM_PARAM(AdventureDrawMask, i8) drawMask,
     i8 drawingPuzzle,
     i8 forceDraw
 ) {
@@ -2138,7 +2136,7 @@ void advManager::DrawCell(
                 }
             }
         }
-        if (newCell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+        if (newCell0->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)) {
             flagColorValue = PLAYER_COLOR_NONE;
             position = ADVMGR_HERO_ICON_BOAT;
             savedFrame = GetCursorBaseFrame(gpGame->m_boats[newCell0->m_objectMetadata].direction);
@@ -2146,7 +2144,7 @@ void advManager::DrawCell(
             heroYOffset6 = HERO_BOAT_Y_OFFSET;
         } else {
             heroYOffset6 = 0;
-            if (newCell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
+            if (newCell0->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                 savedShowHero = gpGame->GetHero(newCell0->m_objectMetadata);
                 flagColorValue = savedShowHero->IsEmbarked()
                                      ? PLAYER_COLOR_NONE
@@ -2355,7 +2353,7 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                 continue;
             }
             cellPtrItem = &m_mapData[x][y];
-            if ((cellPtrItem->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO) {
+            if (MAP_TRIGGER_OBJECT(cellPtrItem->m_triggerType) == MAP_OBJECT_HERO) {
                 theOwner = gpGame->m_availableHeroes[cellPtrItem->m_objectMetadata];
                 if (theOwner == giCurPlayer)
                     color =
@@ -2374,9 +2372,9 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                             case MAP_OBJECT_ALCHEMIST_LAB:
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
-                            case MAP_TRIGGER_EVENT | MAP_OBJECT_ALCHEMIST_LAB:
-                            case MAP_TRIGGER_EVENT | MAP_OBJECT_MINE:
-                            case MAP_TRIGGER_EVENT | MAP_OBJECT_SAWMILL:
+                            case MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB):
+                            case MAP_EVENT_TRIGGER(MAP_OBJECT_MINE):
+                            case MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL):
                                 theOwner = gpGame->m_mineOwners[cellPtrItem->m_objectMetadata];
                                 color = gRadarOwnerColor
                                     [theOwner < 0 ? 4 : gpGame->m_players[theOwner].m_color];
@@ -2461,7 +2459,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
         if (!(gpGame->m_mapExtra[m_mapOriginX + cellX][m_mapOriginY + cellY] & giCurPlayerBit)) {
             sprintf(gText, "\n\n%s", localization::Tr("adventure.quick_info.uncharted"));
         } else {
-            switch (currentCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+            switch (MAP_TRIGGER_OBJECT(currentCell->m_triggerType)) {
                 case MAP_OBJECT_ARTIFACT:
                     sprintf(gText, "\n\n%s", localization::Tr("adventure.quick_info.artifact"));
                     break;
@@ -4010,7 +4008,7 @@ void advManager::DemobilizeCurrHero(void) {
     heroPointer->m_direction = m_cursorDirection;
     if (m_cursorType == ADVMGR_HERO_ICON_BOAT)
         heroPointer->m_eventFlags |= HERO_EVENT_EMBARKED;
-    cell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+    cell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
     cell->m_objectMetadata = heroPointer->m_id;
     cell->m_flags &= ~MAP_CELL_HERO_CURSOR;
     m_cursorActive = 0;
@@ -4496,7 +4494,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
                 || (spellType == SPELL_VIEW_TOWNS
-                    && (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN)) {
+                    && MAP_TRIGGER_OBJECT(cell->m_triggerType) == MAP_OBJECT_TOWN)) {
                 flip = 0;
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 workPosY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
@@ -4533,7 +4531,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                 && (cell->m_triggerType & MAP_TRIGGER_EVENT)) {
                 switch (spellType) {
                     case SPELL_VIEW_ALL:
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT))
                             flags->DrawToBuffer(
                                 screenX,
                                 workPosY,
@@ -4541,7 +4539,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 ICON_DRAW_NORMAL,
                                 ICON_DRAW_OFFSET_FULL
                             );
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index = gpGame->m_players[owner].m_color;
@@ -4560,9 +4558,9 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                     ICON_DRAW_OFFSET_FULL
                                 );
                             }
-                        } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                        } else if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
                                    && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType
-                                          == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                                          == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata]
                                                              .m_occupiedTown];
                             if (owner >= 0) {
@@ -4583,7 +4581,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 );
                             }
                         }
-                        switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                        switch (MAP_TRIGGER_OBJECT(cell->m_triggerType)) {
                             case MAP_OBJECT_ALCHEMIST_LAB:
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
@@ -4635,7 +4633,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                         break;
                                 }
                         }
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                             owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index = gpGame->m_players[owner].m_color;
@@ -4650,7 +4648,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         }
                         break;
                     case SPELL_VIEW_MINES:
-                        switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+                        switch (MAP_TRIGGER_OBJECT(cell->m_triggerType)) {
                             case MAP_OBJECT_ALCHEMIST_LAB:
                             case MAP_OBJECT_MINE:
                             case MAP_OBJECT_SAWMILL:
@@ -4707,7 +4705,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         }
                         break;
                     case SPELL_VIEW_RESOURCES:
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_RESOURCE)) {
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_RESOURCE)) {
                             spheres->DrawToBuffer(
                                 screenX - VIEW_WORLD_RESOURCE_X_SHIFT,
                                 workPosY,
@@ -4725,7 +4723,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         }
                         break;
                     case SPELL_VIEW_ARTIFACTS:
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT))
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT))
                             flags->DrawToBuffer(
                                 screenX,
                                 workPosY,
@@ -4735,7 +4733,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                             );
                         break;
                     case SPELL_VIEW_TOWNS:
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index = gpGame->m_players[owner].m_color;
@@ -4754,9 +4752,9 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                     ICON_DRAW_OFFSET_FULL
                                 );
                             }
-                        } else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                        } else if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
                                    && gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType
-                                          == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                                          == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                             owner = gpGame->m_townOwners[gpGame->m_heroRecs[cell->m_objectMetadata]
                                                              .m_occupiedTown];
                             if (owner >= 0) {
@@ -4779,7 +4777,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                         }
                         break;
                     case SPELL_VIEW_HEROES:
-                        if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
+                        if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                             owner = gpGame->m_availableHeroes[cell->m_objectMetadata];
                             if (owner >= 0) {
                                 index = gpGame->m_players[owner].m_color;
@@ -5031,7 +5029,7 @@ i8 SaveGame(void) {
 
 // The control-panel handler, including option cycling.
 VA(0x0040d9d2, 0x49e)
-i16 CPanelHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& message) {
     i8 anyChanged = 0;
     char question[120];
     i8 handled = 0;
@@ -5237,7 +5235,7 @@ void advManager::AdvPanel(void) {
 }
 
 VA(0x0040e0d3, 0x150)
-i16 APanelHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) APanelHandler(struct tag_message& message) {
     i8 handled = 0;
     if (message.type == MESSAGE_WIDGET) {
         if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
@@ -5290,7 +5288,7 @@ i16 APanelHandler(struct tag_message& message) {
 }
 
 VA(0x0040e223, 0x29e)
-i16 DimensionDoorHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) DimensionDoorHandler(struct tag_message& message) {
     i8 result;
     i16 mouseX;
     i16 mouseY;
@@ -5417,7 +5415,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                 cell = GetCell(originX + drawX, originY + drawY);
                 if (cell->m_flags & (MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OVERLAY_ANIMATED))
                     ++bComboDraw[drawX][drawY];
-                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+                if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
@@ -5433,8 +5431,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                         }
                     }
                 }
-                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
+                    || cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
@@ -5736,7 +5734,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     mapHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     location = GetCell(x, y);
     savedOldCell = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER);
-    if (mapHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+    if (mapHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
         occupiedTown = gpGame->GetTown(mapHero->m_occupiedTown);
         occupiedTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
@@ -5885,7 +5883,7 @@ void advManager::TownGate(void) {
     targetHero->UseSpell(SPELL_TOWN_GATE);
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[selectedTown]].m_occupyingHeroId = targetHero->m_id;
     gpGame->m_castleRecs[gpCurPlayer->m_townIds[selectedTown]].GiveSpells();
-    targetHero->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
+    targetHero->m_locationType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
     targetHero->m_occupiedTown = gpCurPlayer->m_townIds[selectedTown];
     PlayMusic(m_currentTerrain);
 }
@@ -5977,7 +5975,7 @@ void advManager::SummonBoat(void) {
             boatRec->y = m_mapOriginY + normalDirTable[iDir].y + ADVMGR_VIEW_CENTER;
             boatRec->savedTriggerType = destinationCell->m_triggerType;
             boatRec->savedEventData = destinationCell->m_objectMetadata;
-            destinationCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
+            destinationCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
             destinationCell->m_objectMetadata = slotIndex;
             gpWindowManager->SaveFizzleSource(176, 192, 128, 96);
             CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
@@ -6427,7 +6425,7 @@ char* advManager::CheckHandleNet(void) {
 }
 
 VA(0x00410fda, 0xa2)
-i16 advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain) {
     if (message.type == MESSAGE_MOUSE_MOVE)
         gpMouseManager->Main(message);
 

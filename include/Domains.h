@@ -20,7 +20,16 @@
 // domain stays a plain array. STEPPED(Domain) gives a stepped domain (a loop
 // variable or a `+ 1` to the next member) its increment and offset operators
 // in the strict view; the retail view has none.
+//
+// ID_BEGIN declares a set of codes carried by a shared integer transport (a
+// window's widget ids in tag_message::id and m_dialogResult, Win32 command
+// ids). The strict view is an unscoped `enum name : int`: an id converts to
+// the transport's integer, but no integer or other set converts to an id.
+// A FLAGS set keeps its type through `|`, `&`, `^` and `~` in the strict view.
+// H1_STRICT_DOMAINS is 1 in the strict view: a header that packs a domain
+// into a raw byte spells its encode/decode helpers once per view.
 #if defined(__cplusplus) && __cplusplus >= 202002L
+#define H1_STRICT_DOMAINS 1
 template<typename Domain, typename Storage> class H1EnumStorage {
 public:
     H1EnumStorage() = default;
@@ -31,6 +40,60 @@ public:
     H1EnumStorage& operator=(Domain value) {
         value_ = static_cast<Storage>(value);
         return *this;
+    }
+    // A flag set (an unscoped FLAGS domain) combines in place.
+    H1EnumStorage& operator|=(Domain value)
+        requires(__is_convertible_to(Domain, int))
+    {
+        value_ = static_cast<Storage>(value_ | static_cast<int>(value));
+        return *this;
+    }
+    H1EnumStorage& operator&=(Domain value)
+        requires(__is_convertible_to(Domain, int))
+    {
+        value_ = static_cast<Storage>(value_ & static_cast<int>(value));
+        return *this;
+    }
+    H1EnumStorage& operator^=(Domain value)
+        requires(__is_convertible_to(Domain, int))
+    {
+        value_ = static_cast<Storage>(value_ ^ static_cast<int>(value));
+        return *this;
+    }
+    // A STEPPED domain steps in place.
+    H1EnumStorage& operator+=(int amount)
+        requires requires(Domain d) { d + 1; }
+    {
+        return *this = static_cast<Domain>(*this) + amount;
+    }
+    H1EnumStorage& operator-=(int amount)
+        requires requires(Domain d) { d - 1; }
+    {
+        return *this = static_cast<Domain>(*this) - amount;
+    }
+    H1EnumStorage& operator++()
+        requires requires(Domain d) { d + 1; }
+    {
+        return *this += 1;
+    }
+    Domain operator++(int postfix)
+        requires requires(Domain d) { d + 1; }
+    {
+        Domain old = *this;
+        *this += 1;
+        return old;
+    }
+    H1EnumStorage& operator--()
+        requires requires(Domain d) { d - 1; }
+    {
+        return *this -= 1;
+    }
+    Domain operator--(int postfix)
+        requires requires(Domain d) { d - 1; }
+    {
+        Domain old = *this;
+        *this -= 1;
+        return old;
     }
 
 private:
@@ -81,6 +144,9 @@ public:
     inline constexpr name operator+(name a, int amount) {                                          \
         return static_cast<name>(static_cast<int>(a) + amount);                                    \
     }                                                                                              \
+    inline constexpr name operator+(int amount, name a) {                                          \
+        return static_cast<name>(amount + static_cast<int>(a));                                    \
+    }                                                                                              \
     inline constexpr name operator-(name a, int amount) {                                          \
         return static_cast<name>(static_cast<int>(a) - amount);                                    \
     }                                                                                              \
@@ -126,6 +192,22 @@ public:
 #define H1_ENUM_FLAGS_BEGIN(name, storage) enum name : int {
 #define H1_ENUM_FLAGS_END(name)                                                                    \
     }                                                                                              \
+    ;                                                                                              \
+    inline constexpr name operator|(name a, name b) {                                              \
+        return static_cast<name>(static_cast<int>(a) | static_cast<int>(b));                       \
+    }                                                                                              \
+    inline constexpr name operator&(name a, name b) {                                              \
+        return static_cast<name>(static_cast<int>(a) & static_cast<int>(b));                       \
+    }                                                                                              \
+    inline constexpr name operator^(name a, name b) {                                              \
+        return static_cast<name>(static_cast<int>(a) ^ static_cast<int>(b));                       \
+    }                                                                                              \
+    inline constexpr name operator~(name a) {                                                      \
+        return static_cast<name>(~static_cast<int>(a));                                            \
+    }
+#define H1_ENUM_ID_BEGIN(name) enum name : int {
+#define H1_ENUM_ID_END(name)                                                                       \
+    }                                                                                              \
     ;
 #define H1_ENUM_CONST_BEGIN(name) enum name : int {
 #define H1_ENUM_CONST_END(name)                                                                    \
@@ -133,6 +215,7 @@ public:
     ;
 #define H1_ENUM_LOCAL(name, storage) name
 #else
+#define H1_STRICT_DOMAINS 0
 #define H1_ENUM_BEGIN(name) enum name {
 #define H1_ENUM_END(name)                                                                          \
     }                                                                                              \
@@ -147,6 +230,10 @@ public:
     ;
 #define H1_ENUM_FLAGS_BEGIN(name, storage) enum name {
 #define H1_ENUM_FLAGS_END(name)                                                                    \
+    }                                                                                              \
+    ;
+#define H1_ENUM_ID_BEGIN(name) enum name {
+#define H1_ENUM_ID_END(name)                                                                       \
     }                                                                                              \
     ;
 #define H1_ENUM_CONST_BEGIN(name) enum name {

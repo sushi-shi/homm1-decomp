@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_BUTTON_H
 #define HOMM1_BASE_BUTTON_H
 
+#include <BASE/message.h>
 #include <BASE/widget.h>
 #include <H1/Macros.h>
 
@@ -53,11 +54,11 @@ public:
     virtual ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(void);
-    i16 Select(struct tag_message& message);
-    i16 Deselect(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) Select(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) Deselect(struct tag_message& message);
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_BUTTON_H

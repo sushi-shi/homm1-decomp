@@ -366,7 +366,7 @@ mapCell* advManager::MoveHero(
         boat->savedEventData = boatCell->m_objectMetadata;
         boat->direction = m_cursorDirection;
         boat->heroId |= BOAT_OCCUPIED_FLAG;
-        boatCell->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP);
+        boatCell->m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP);
         boatCell->m_objectMetadata = inc;
         boat->x = champion->m_x;
         boat->y = champion->m_y;
@@ -376,7 +376,7 @@ mapCell* advManager::MoveHero(
         m_cursorActive = 0;
     }
     if (nextCellItem->m_triggerType & MAP_TRIGGER_EVENT) {
-        switch (nextCellItem->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+        switch (MAP_TRIGGER_OBJECT(nextCellItem->m_triggerType)) {
             case MAP_OBJECT_SHIP:
                 if (champion->IsEmbarked())
                     goto movementDone;
@@ -476,7 +476,7 @@ mapCell* advManager::MoveHero(
     }
     if (!ValidMove(direction))
         goto movementDone;
-    if (champion->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+    if (champion->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
         town* occupiedTown;
 
         occupiedTown = gpGame->GetTown(champion->m_occupiedTown);
@@ -575,7 +575,7 @@ mapCell* advManager::MoveHero(
     if ((cellPtr->m_triggerType & MAP_TRIGGER_EVENT)
         || (champion->IsEmbarked() && cellPtr->m_triggerType == MAP_OBJECT_COAST)) {
         retCell = cellPtr;
-        switch (cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+        switch (MAP_TRIGGER_OBJECT(cellPtr->m_triggerType)) {
             case MAP_OBJECT_ROSEBUSH:
             case MAP_OBJECT_TREE_STUMP:
             case MAP_OBJECT_OAK_TREE:
@@ -604,7 +604,7 @@ movementDone:
         if (mapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (champion->IsEmbarked())
                 goto adjacentDone;
-            if (retCell && (retCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_SHIP)
+            if (retCell && MAP_TRIGGER_OBJECT(retCell->m_triggerType) == MAP_OBJECT_SHIP)
                 goto adjacentDone;
             CheckAdjacentMon(adjacentMonster);
             if (champion->m_owner == GAME_PLAYER_NONE)
@@ -682,7 +682,7 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
         return 0;
     cellPtr = &m_mapData[newX][newY];
-    switch (cellPtr->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+    switch (MAP_TRIGGER_OBJECT(cellPtr->m_triggerType)) {
         case MAP_OBJECT_BUOY:
             if (!movingHero->IsEmbarked())
                 return 1;
@@ -742,22 +742,22 @@ i16 advManager::ValidMove(i16 direction) {
         return 0;
     if (CELL_TERRAIN(destCell) == TERRAIN_WATER) {
         if (m_cursorType != ADVMGR_HERO_ICON_BOAT
-            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK))
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
         if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_COAST
-            && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
+            && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
             return 0;
     }
     hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
     north = (1 << direction) & MAP_DIRECTION_NORTH_MASK;
     downMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
     if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
-        && hereCellItem->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
+        && hereCellItem->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
         return 0;
     if (downMask && CELL_HAS_NON_SHADOW_OBJECT(destCell)
-        && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
+        && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;
 }

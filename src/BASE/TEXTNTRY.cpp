@@ -103,7 +103,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
 }
 
 VA(0x00475c01, 0xa70)
-i16 textEntryWidget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& message) {
     i16 done;
     i16 x;
     i16 y;

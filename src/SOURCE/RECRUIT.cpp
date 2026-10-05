@@ -192,7 +192,7 @@ void recruitUnit::Update(void) {
 // Handles quantity edits on select and the buttons on deselect, redrawing
 // through a zero MoveWindow.
 VA(0x00451325, 0x372)
-i16 recruitUnit::Main(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) recruitUnit::Main(struct tag_message& message) {
     i32 done;
     i32 cost;
     i8 quickView;

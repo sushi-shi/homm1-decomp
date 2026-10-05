@@ -2,6 +2,7 @@
 #define HOMM1_SOURCE_HERO_H
 
 #include <BASE/dialog.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/armyGroup.h>
@@ -174,14 +175,14 @@ void HeroMessageUpdate(char* text);
 void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
 extern i8 gbHeroScreenActive;
-i16 HeroHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& message);
 // Moved from HERO.cpp.
 // clang-format off
 // herowind.bin widget ids. Names follow UpdateHeroScreenStatusBar's
 // gHeroScreen texts (0x004937b0) and what HeroView, UpdateArmies and
 // HeroHandler send to or do with each id; artifact and army slots are
 // indexed from their first id, primary stats by HeroPrimaryStat.
-H1_ENUM_BEGIN(HeroScreenControl)
+H1_ENUM_ID_BEGIN(HeroScreenControl)
     HERO_SCREEN_TITLE = 2,
     HERO_SCREEN_ARTIFACT_BACKGROUND_FIRST = 6,
     HERO_SCREEN_ARTIFACT_FIRST = 20,
@@ -208,7 +209,7 @@ H1_ENUM_BEGIN(HeroScreenControl)
     HERO_SCREEN_STATUS_TEXT = 302,
     HERO_SCREEN_EXIT = DIALOG_BUTTON_0,
     HERO_SCREEN_DISMISS = DIALOG_BUTTON_3
-H1_ENUM_END(HeroScreenControl)
+H1_ENUM_ID_END(HeroScreenControl)
 
 // gHeroScreen (0x004937b0) status-bar texts, as UpdateHeroScreenStatusBar
 // picks them: "Kingdom Overview", "View %s Info", "Additional hero
@@ -263,10 +264,10 @@ H1_ENUM_CONST_BEGIN(HeroScreenArmyConstant)
 H1_ENUM_CONST_END(HeroScreenArmyConstant)
 
 // vstat.bin, ViewStat's primary-stat window: title and description texts.
-H1_ENUM_BEGIN(HeroStatViewControl)
+H1_ENUM_ID_BEGIN(HeroStatViewControl)
     HERO_STAT_VIEW_TITLE = 1,
     HERO_STAT_VIEW_DESCRIPTION = 2
-H1_ENUM_END(HeroStatViewControl)
+H1_ENUM_ID_END(HeroStatViewControl)
 
 // gHeroLevel: CheckLevel's "%s has gained" lead, then one level or %d levels.
 H1_ENUM_BEGIN(HeroLevelText)

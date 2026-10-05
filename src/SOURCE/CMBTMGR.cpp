@@ -281,7 +281,7 @@ void combatManager::Close(void) {
     delete m_backgroundBuffer;
     for (ii = 0; ii < COMBAT_SIDE_COUNT; ii++)
         UpdateArmyGroup(ii);
-    if (m_battlefieldCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+    if (m_battlefieldCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_MONSTER)) {
         survivor = m_playerId[COMBAT_DEFENDER_SIDE] != GAME_PLAYER_NONE ? static_cast<i8>(1)
                                                                         : static_cast<i8>(0);
         m_battlefieldCell->m_objectMetadata = 0;
@@ -479,8 +479,8 @@ char* combatManager::GetBackgroundName(void) {
         "boat.bkg",
         "gravyard.bkg",
     };
-    if ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_GRAVEYARD
-        || ((m_battlefieldCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_HERO
+    if (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_GRAVEYARD
+        || (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_HERO
             && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
                 & MAP_TRIGGER_TYPE_MASK)
                    == MAP_OBJECT_GRAVEYARD)) {

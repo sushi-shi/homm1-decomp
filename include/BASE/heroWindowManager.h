@@ -4,6 +4,7 @@
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
 #include <BASE/display.h>
+#include <BASE/message.h>
 #include <BASE/palette.h>
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -42,14 +43,14 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 managerOrder) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 UpdateHoverWindow(i16 x, i16 y);
-    i16 ConvertToHover(struct tag_message& message);
-    i16 BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) ConvertToHover(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
     void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
     void RemoveWindow(class heroWindow* window);
-    i16 DoDialog(class heroWindow* window, i16 (*handler)(struct tag_message&), i32 fade);
+    i16 DoDialog(class heroWindow* window, H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(struct tag_message&), i32 fade);
     void UpdateScreen(void);
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);

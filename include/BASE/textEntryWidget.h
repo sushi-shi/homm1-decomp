@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_TEXTENTRYWIDGET_H
 #define HOMM1_BASE_TEXTENTRYWIDGET_H
 
+#include <BASE/message.h>
 #include <BASE/textWidget.h>
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -58,7 +59,7 @@ public:
     virtual ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type);
     void SetupDisplayString(char* source, u16 cursor);

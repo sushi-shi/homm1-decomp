@@ -25,7 +25,7 @@ import re
 from homm1.core.paths import REPO
 from homm1.verify.srcscan import blank_comments, source_files
 
-DECL = re.compile(r"\bH1_ENUM_BEGIN\(\s*(\w+)\s*\)")
+DECL = re.compile(r"\bH1_ENUM_(?:BEGIN|ID_BEGIN)\(\s*(\w+)\s*\)")
 DECL_SPLIT = re.compile(r"\bH1_ENUM_BEGIN_SPLIT\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 DECL_FLAGS = re.compile(r"\bH1_ENUM_FLAGS_BEGIN\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 DECL_CONST = re.compile(r"\bH1_ENUM_CONST_BEGIN\(\s*(\w+)\s*\)")
@@ -53,9 +53,9 @@ def is_tag_type(body: str) -> bool:
 
 def domain_blocks(text: str):
     pat = re.compile(
-        r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN)"
+        r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|CONST_BEGIN|FLAGS_BEGIN|ID_BEGIN)"
         r"\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)(?P<body>.*?)"
-        r"\bH1_ENUM_(?:END|END_SPLIT|CONST_END|FLAGS_END)\(", re.S)
+        r"\bH1_ENUM_(?:END|END_SPLIT|CONST_END|FLAGS_END|ID_END)\(", re.S)
     for m in pat.finditer(text):
         yield m.group(2), m.group(1), m.group(3), m.group("body")
 

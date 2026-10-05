@@ -2,6 +2,7 @@
 #define HOMM1_SOURCE_RECRUITUNIT_H
 
 #include <BASE/baseManager.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -46,7 +47,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Update(void);
 };
@@ -74,7 +75,7 @@ H1_ENUM_CONST_BEGIN(RecruitConstant)
 H1_ENUM_CONST_END(RecruitConstant)
 
 // recruit0/1.bin and recruiq0/1.bin control ids.
-H1_ENUM_BEGIN(RecruitControl)
+H1_ENUM_ID_BEGIN(RecruitControl)
     RECRUIT_CLOSE_CONTROL = DIALOG_BUTTON_0,
     RECRUIT_CANCEL_CONTROL = DIALOG_BUTTON_1,
     RECRUIT_CONFIRM_CONTROL = DIALOG_BUTTON_2,
@@ -91,6 +92,6 @@ H1_ENUM_BEGIN(RecruitControl)
     RECRUIT_GOLD_TOTAL_CONTROL = 0x4d,
     RECRUIT_RESOURCE_IMAGE_CONTROL = 0x4e,
     RECRUIT_RESOURCE_TOTAL_CONTROL = 0x4f
-H1_ENUM_END(RecruitControl)
+H1_ENUM_ID_END(RecruitControl)
 
 #endif // HOMM1_SOURCE_RECRUITUNIT_H

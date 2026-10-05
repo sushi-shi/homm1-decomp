@@ -908,7 +908,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 HeroSwap(visitingHero, opponent);
             } else {
                 theirTown = NULL;
-                if (opponent->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                     theirTown = gpGame->GetTown(opponent->m_occupiedTown);
                     theirTown->m_occupyingHeroId = opponent->m_id;
                 }
@@ -939,7 +939,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)
                     ->m_triggerType
-                == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                 sprintf(
                     gText,
                     gEventText[EVENT_TEXT_SIGNPOST],
@@ -2302,7 +2302,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             priorShowIt = bShowIt;
             if (opponent->m_owner == giCurPlayer)
                 return;
-            if (opponent->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+            if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
                 heroTown = gpGame->GetTown(opponent->m_occupiedTown);
             if (!gbHumanPlayer[opponent->m_owner]) {
                 battleResult = gpPhilAI->QuickCombat(

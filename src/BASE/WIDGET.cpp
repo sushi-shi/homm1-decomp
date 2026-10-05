@@ -54,7 +54,7 @@ VA(0x004754b0, 0xb)
 void widget::Close(void) {}
 
 VA(0x004754bb, 0x2c8)
-i16 widget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) widget::Main(tag_message& message) {
     i16 x;
     i16 y;
     switch (message.type) {

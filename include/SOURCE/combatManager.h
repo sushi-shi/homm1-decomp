@@ -2,6 +2,7 @@
 #define HOMM1_SOURCE_COMBATMANAGER_H
 
 #include <BASE/baseManager.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/army.h>
@@ -317,7 +318,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void NoShowCombatLog(char*);
     void ClearCombatMessages(i32 force);
@@ -412,7 +413,7 @@ public:
     void SetCombatDirections(i32 targetHex);
     void CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex);
     H1_ENUM_RETURN(CombatPointerCode, i32) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command);
-    i32 ProcessCombatMsg(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessCombatMsg(struct tag_message& message);
     i32 IsNegationSphereInEffect(void);
     void ResetRound(void);
     i32 CheckWin(struct tag_message* message);
@@ -432,7 +433,7 @@ public:
     void CheckGetAIMove(void);
     void GetControl(void);
     void ResetMouse(void);
-    i16 ProcessNextAction(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) ProcessNextAction(struct tag_message& message);
     void ResetCyclingCreatures(void);
     void ResetCycleTimers(void);
     void CycleCombatScreen(void);
@@ -530,9 +531,9 @@ public:
 #pragma pack(pop)
 
 i32 ValidHex(i32 hex);
-i16 WinCombatHandler(struct tag_message& message);
-i16 CombatSpecialHandler(struct tag_message& message);
-i16 HandleCastSpell(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) WinCombatHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message);
 // HandleCastSpell: the hex under the spell pointer (0x004906b4) and the
 // teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
@@ -600,7 +601,7 @@ H1_ENUM_END(BattleResultText)
 // bottom panel ShowWinLoseArtifact (captured artifact) or ShowDeadArmies
 // (casualties: icon/count ids are FIRST + side * ARMY_GROUP_SLOT_COUNT + slot,
 // with the count id doubling as the side's "None" line) fills in.
-H1_ENUM_BEGIN(CombatWinLoseControl)
+H1_ENUM_ID_BEGIN(CombatWinLoseControl)
     WIN_LOSE_ANIMATION = 1,
     WIN_LOSE_RESULT_TEXT = 0x65,
     WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
@@ -609,7 +610,7 @@ H1_ENUM_BEGIN(CombatWinLoseControl)
     WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834,
     WIN_LOSE_ARTIFACT_NAME = 0x835,
     WIN_LOSE_CASUALTY_HEADING = 0x83e
-H1_ENUM_END(CombatWinLoseControl)
+H1_ENUM_ID_END(CombatWinLoseControl)
 
 // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
 // the casualty counts, then the two side headings and the casualty title.
@@ -625,10 +626,10 @@ H1_ENUM_CONST_BEGIN(CombatWinLoseSlot)
 H1_ENUM_CONST_END(CombatWinLoseSlot)
 
 // surrendr.bin widget ids DoSurrender fills (the victor's portrait, the offer).
-H1_ENUM_BEGIN(SurrenderControl)
+H1_ENUM_ID_BEGIN(SurrenderControl)
     SURRENDER_PORTRAIT = 1,
     SURRENDER_TEXT = 2
-H1_ENUM_END(SurrenderControl)
+H1_ENUM_ID_END(SurrenderControl)
 
 // SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
 // (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
@@ -640,11 +641,11 @@ H1_ENUM_CONST_END(CombatRearHexConstant)
 // ResetMouse hovers it), the button
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
-H1_ENUM_BEGIN(CombatControlId)
+H1_ENUM_ID_BEGIN(CombatControlId)
     COMBAT_CONTROL_DISABLE_SELECTION = 2,
     COMBAT_CONTROL_SKIP_TURN = 8,
     COMBAT_CONTROL_FIELD = 0x40
-H1_ENUM_END(CombatControlId)
+H1_ENUM_ID_END(CombatControlId)
 
 // clang-format off
 // cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),

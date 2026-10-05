@@ -361,16 +361,16 @@ void searchArray::TestPossibleDirections(
         gSearchTerrain = CELL_TERRAIN(gSearchNextCell);
         if (gSearchTerrain == TERRAIN_WATER) {
             if (waterMode) {
-                if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
-                    || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (gSearchNextCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK)
+                    || gSearchNextCell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)) {
                     gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             } else {
-                if (gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                if (gSearchNextCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
+                    && gSearchNextCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
                     && gSearchNextCell->m_triggerType
-                           != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
+                           != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK)) {
                     gSearchTerrain = TERRAIN_INVALID;
                     goto storeDirection;
                 }

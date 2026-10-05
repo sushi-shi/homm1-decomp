@@ -2,34 +2,35 @@
 #define HOMM1_SOURCE_SETUP_H
 
 #include <BASE/dialog.h>
+#include <BASE/message.h>
 #include <Domains.h>
 
 struct tag_message;
 
 // SETUP's dialog handlers.
-i16 BaseSetupHandler(struct tag_message& message);
-i16 SetupCampaignGameHandler(struct tag_message& message);
-i16 SetupBaudHandler(struct tag_message& message);
-i16 SetupComPortHandler(struct tag_message& message);
-i16 SetupHotSeatGameHandler(struct tag_message& message);
-i16 SetupModemGameHandler(struct tag_message& message);
-i16 SetupMultiPlayerGameHandler(struct tag_message& message);
-i16 SetupNetworkGameHandler(struct tag_message& message);
-i16 SetupGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) BaseSetupHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupCampaignGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupBaudHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupComPortHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupHotSeatGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupModemGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupMultiPlayerGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupNetworkGameHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupGameHandler(struct tag_message& message);
 
 extern i32 gDoModemConfig;
 
 // The setup dialogs' results: the numbered choice buttons (BaseSetupHandler
 // accepts ids 1..1000; each game::Setup* maps CHOICE_n to its option and the
 // handlers show help row n - 1) or the cancel slot.
-H1_ENUM_BEGIN(SetupDialogChoice)
+H1_ENUM_ID_BEGIN(SetupDialogChoice)
     DIALOG_CANCEL = DIALOG_BUTTON_1,
     CHOICE_ONE = 1,
     CHOICE_TWO = 2,
     CHOICE_THREE = 3,
     CHOICE_FOUR = 4,
     CHOICE_ID_LAST = 1000
-H1_ENUM_END(SetupDialogChoice)
+H1_ENUM_ID_END(SetupDialogChoice)
 
 H1_ENUM_BEGIN(SetupHelpIndex)
     NO_HELP = -1,

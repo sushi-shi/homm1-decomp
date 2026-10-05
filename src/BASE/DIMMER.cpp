@@ -25,7 +25,7 @@ void dimmerWidget::Read(void) {
 }
 
 VA(0x00476bc1, 0x19)
-i16 dimmerWidget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) dimmerWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 

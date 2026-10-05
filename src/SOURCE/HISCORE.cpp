@@ -62,7 +62,7 @@ void highScoreManager::Close(void) {
 }
 
 VA(0x0043bf85, 0x1fa)
-i16 highScoreManager::Main(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_message& message) {
     i32 result;
     i32 entry;
     tag_message windowMessage;

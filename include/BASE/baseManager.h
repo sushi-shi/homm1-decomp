@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_BASEMANAGER_H
 #define HOMM1_BASE_BASEMANAGER_H
 
+#include <BASE/message.h>
 #include <Domains.h>
 
 struct tag_message;
@@ -17,7 +18,7 @@ H1_ENUM_BEGIN(BaseManagerStatus)
     BASE_MANAGER_ERROR = 3
 H1_ENUM_END(BaseManagerStatus)
 
-H1_ENUM_BEGIN(BaseManagerMessageMask)
+H1_ENUM_FLAGS_BEGIN(BaseManagerMessageMask, i16)
     BASE_MANAGER_MESSAGE_MASK_ALL = -1,
     BASE_MANAGER_ACCEPT_MOUSE_MOVE = 4,
     BASE_MANAGER_ACCEPT_LEFT_BUTTON_UP = 0x10,
@@ -29,7 +30,7 @@ H1_ENUM_BEGIN(BaseManagerMessageMask)
     BASE_MANAGER_ACCEPT_ADVENTURE = 0x400,
     BASE_MANAGER_ACCEPT_TOWN_EVENT = 0x800,
     BASE_MANAGER_ACCEPT_EXECUTIVE = 0x4000
-H1_ENUM_END(BaseManagerMessageMask)
+H1_ENUM_FLAGS_END(BaseManagerMessageMask)
 
 H1_ENUM_CONST_BEGIN(BaseManagerConstant)
     BASE_MANAGER_NAME_CAPACITY = 30
@@ -60,7 +61,7 @@ public:
     i16 GetInfo(H1_ENUM_PARAM(BaseManagerInfoField, i16) field);
     virtual i16 Open(i16 priority) = 0;
     virtual void Close() = 0;
-    virtual i16 Main(tag_message& message) = 0;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) = 0;
 };
 #pragma pack(pop)
 

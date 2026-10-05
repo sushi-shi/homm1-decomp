@@ -5,6 +5,7 @@
 // pure virtual with bodies. Derived classes (border, iconWidget, textWidget,
 // dimmerWidget, ...) override these three slots.
 
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -25,7 +26,7 @@ H1_ENUM_CONST_BEGIN(WidgetFlagConstant)
     WIDGET_DEFAULT_EXTENT = 16
 H1_ENUM_CONST_END(WidgetFlagConstant)
 
-H1_ENUM_BEGIN(WidgetKind)
+H1_ENUM_FLAGS_BEGIN(WidgetKind, i16)
     WIDGET_KIND_NONE = 0,
     // border kind 1: drawn without its background.
     WIDGET_KIND_TRANSPARENT = 1,
@@ -35,7 +36,7 @@ H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_AUTO_REPEAT = 0x1000,
     WIDGET_KIND_TRACK_PRESS = 0x2000,
     WIDGET_KIND_TEXT_ENTRY = 0x4000
-H1_ENUM_END(WidgetKind)
+H1_ENUM_FLAGS_END(WidgetKind)
 
 // widget::m_id of a widget that issues no command (decorative icons and text
 // built into a window).
@@ -77,7 +78,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) = 0;
     virtual ~widget(void) = 0;
-    virtual i16 Main(struct tag_message& message) = 0;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) = 0;
     // --- methods ---
     i16 Open(i16 zOrder, class heroWindow* owner);
     void Close(void);

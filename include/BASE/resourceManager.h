@@ -3,6 +3,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/icon.h>
+#include <BASE/message.h>
 #include <BASE/resource.h>
 
 class MIDIWrap;
@@ -43,7 +44,7 @@ public:
     resourceManager();
     virtual i16 Open(i16 priority);
     virtual void Close();
-    virtual i16 Main(tag_message&);
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message&);
     void GetBackdrop(char* name, bitmap* backdrop);
     void GetBackdropAtLoc(char* filename, bitmap* destination, i32 destinationX, i32 destinationY);
     palette* GetPalette(char* name);

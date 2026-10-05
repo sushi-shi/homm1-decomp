@@ -1,4 +1,5 @@
-"""include/Domains.h: typed enum arrays are strict-only; retail stays plain."""
+"""include/Domains.h and H1/Ints.h: typed domains, arrays and flags are
+strict-only; the retail view stays plain."""
 
 import os
 import shutil
@@ -20,10 +21,20 @@ H1_ENUM_STEPPED(Slot)
 H1_ENUM_BEGIN(Other)
     OTHER_A = 0
 H1_ENUM_END(Other)
+H1_ENUM_ID_BEGIN(Control)
+    CONTROL_OK = 1
+H1_ENUM_ID_END(Control)
+H1_ENUM_FLAGS_BEGIN(Bits, short)
+    BIT_A = 1,
+    BIT_B = 2
+H1_ENUM_FLAGS_END(Bits)
+#include <H1/Ints.h>
 H1_ENUM_ARRAY(int, gTable, Slot, SLOT_COUNT) = {1, 2};
 H1_ENUM_ARRAY2(short, gGrid, Slot, SLOT_COUNT, Slot, SLOT_COUNT);
 struct Record {
     H1_ENUM_STORAGE(Slot, char) slot;
+    H1_ENUM_STORAGE(Bits, short) bits;
+    b8 flag;
 };
 void Use(int*);
 int Read(Record& record) {
@@ -33,13 +44,24 @@ int Read(Record& record) {
     for (H1_ENUM_LOCAL(Slot, int) i = SLOT_A; i < SLOT_COUNT; i++)
         gTable[i] = 0;
     gGrid[SLOT_A][SLOT_B] = 3;
+    record.bits = BIT_A | BIT_B;
+    record.bits |= BIT_A;
+    record.slot++;
+    record.flag = true;
+    if (record.flag == false || !record.flag)
+        return CONTROL_OK;
     return gTable[record.slot];
 #elif PROBE == 1
     return gTable[1];
 #elif PROBE == 2
     return gTable[OTHER_A];
-#else
+#elif PROBE == 3
     return *(gTable + 1);
+#elif PROBE == 4
+    record.flag = 1;
+    return 0;
+#else
+    return record.flag == 1;
 #endif
 }
 """
@@ -55,9 +77,13 @@ class EnumArrayTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "probe.cpp"
             source.write_text(_SOURCE)
+            # H1/Ints.h opens the toolchain's <string>; an empty stand-in
+            # keeps the probe independent of the VC6 headers.
+            (Path(tmp) / "string").write_text("")
             return subprocess.run(
-                [_clang(), "-x", "c++", f"-std={std}", "-fsyntax-only",
-                 f"-I{REPO / 'include'}", f"-DPROBE={probe}", *extra, str(source)],
+                [_clang(), "-x", "c++", f"-std={std}", "-fsyntax-only", "-fms-extensions",
+                 f"-I{tmp}", f"-I{REPO / 'include'}", f"-DPROBE={probe}", *extra,
+                 str(source)],
                 capture_output=True, text=True)
 
     def test_strict_view_accepts_the_domain_and_its_storage(self):
@@ -65,7 +91,7 @@ class EnumArrayTest(unittest.TestCase):
         self.assertEqual(result.returncode, 0, result.stderr)
 
     def test_strict_view_rejects_other_indices(self):
-        for probe in (1, 2, 3):
+        for probe in (1, 2, 3, 4, 5):
             result = self._compile("c++20", probe)
             self.assertNotEqual(result.returncode, 0, f"probe {probe} compiled")
             self.assertIn("deleted", result.stderr)
@@ -74,14 +100,17 @@ class EnumArrayTest(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             source = Path(tmp) / "probe.cpp"
             source.write_text(_SOURCE)
+            (Path(tmp) / "string").write_text("")
             result = subprocess.run(
-                [_clang(), "-x", "c++", "-std=c++98", "-E", "-P",
-                 f"-I{REPO / 'include'}", "-DPROBE=1", str(source)],
+                [_clang(), "-x", "c++", "-std=c++98", "-E", "-P", "-fms-extensions",
+                 f"-I{tmp}", f"-I{REPO / 'include'}", "-DPROBE=1", str(source)],
                 capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
         self.assertIn("int gTable[SLOT_COUNT] = {1, 2};", result.stdout)
         self.assertIn("short gGrid[SLOT_COUNT][SLOT_COUNT];", result.stdout)
         self.assertNotIn("H1EnumArray", result.stdout)
+        self.assertNotIn("H1Bool", result.stdout)
+        self.assertIn("typedef i8 b8;", result.stdout)
 
 
 if __name__ == "__main__":

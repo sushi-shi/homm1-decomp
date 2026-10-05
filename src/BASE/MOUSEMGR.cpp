@@ -82,8 +82,8 @@ void mouseManager::Close(void) {
 }
 
 VA(0x0046b83a, 0x10)
-i16 mouseManager::Main(tag_message&) {
-    return 0;
+H1_ENUM_RETURN(MessageDispatchResult, i16) mouseManager::Main(tag_message&) {
+    return MESSAGE_DISPATCH_CONTINUE;
 }
 
 // HoMM1 selects the cursor family by name and forwards the requested frame.

@@ -806,7 +806,7 @@ i32 TransmitRemoteData(
     i8 command,
     i8 reliable,
     i8 allowRetryDialog,
-    i8 messageType,
+    H1_ENUM_PARAM(RemoteMessageType, i8) messageType,
     i8 gamePosDestination
 ) {
     i32 i;

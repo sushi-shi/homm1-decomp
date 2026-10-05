@@ -161,7 +161,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 // Cast Spell, Retreat, Surrender and Close end the dialog; hovering shows
 // their help line.
 VA(0x004663ee, 0x1a7)
-i16 HandleViewGeneral(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(tag_message& message) {
     i32 pos;
     i16 prevCtrl;
     i16 borderId;

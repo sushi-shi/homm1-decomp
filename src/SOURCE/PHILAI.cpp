@@ -356,7 +356,7 @@ i32 philAI::GoodAdjacent(hero* pHero, i32* direction) {
 
     bestDirection = -1;
     maxValueVal = 100;
-    if ((gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+    if (MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(pHero->m_x, pHero->m_y)->m_triggerType)
         == MAP_OBJECT_STONE_LITHS)
         return 0;
     for (idx = 0; idx < MAP_DIRECTION_COUNT; idx++) {
@@ -365,9 +365,9 @@ i32 philAI::GoodAdjacent(hero* pHero, i32* direction) {
             y = pHero->m_y + normalDirTable[idx].y;
             if ((gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_EVENT)
                 && !(mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                && MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(x, y)->m_triggerType)
                        != MAP_OBJECT_STONE_LITHS
-                && (gpAdvManager->GetCell(x, y)->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                && MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(x, y)->m_triggerType)
                        != MAP_OBJECT_WHIRLPOOL) {
                 num = ValueOfEventAtPosition(pHero, x, y, 2, &iChance);
                 if (iChance > 80 && num > maxValueVal) {
@@ -420,7 +420,7 @@ void philAI::CheckReload(hero* pHero) {
             if (gpSearchArray->m_cells[mapX][mapY].visited) {
                 tile = gpAdvManager->GetCell(mapX, mapY);
                 switch (tile->m_triggerType) {
-                    case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                    case MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN):
                         enemy = FightValueOfStack(
                             &gpGame->GetTown(tile->m_objectMetadata)->m_army,
                             NULL,
@@ -438,7 +438,7 @@ void philAI::CheckReload(hero* pHero) {
                                 / (gpSearchArray->m_cells[mapX][mapY].distance + 30);
                         }
                         break;
-                    case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
+                    case MAP_EVENT_TRIGGER(MAP_OBJECT_HERO):
                         if (gpGame->m_availableHeroes[tile->m_objectMetadata] != pHero->m_owner) {
                             enemy = FightValueOfStack(
                                 &gpGame->GetHero(tile->m_objectMetadata)->m_army,
@@ -482,7 +482,7 @@ void philAI::CheckBerserk(hero* pHero) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             switch (cell->m_triggerType) {
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN:
+                case MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN):
                     if (gpGame->m_townOwners[cell->m_objectMetadata] != pHero->m_owner) {
                         if (gpGame->m_townOwners[cell->m_objectMetadata] != GAME_PLAYER_NONE) {
                             enemy = FightValueOfStack(
@@ -499,14 +499,14 @@ void philAI::CheckBerserk(hero* pHero) {
                         }
                     }
                     break;
-                case MAP_TRIGGER_EVENT | MAP_OBJECT_HERO:
+                case MAP_EVENT_TRIGGER(MAP_OBJECT_HERO):
                     if (gpGame->m_availableHeroes[cell->m_objectMetadata] != pHero->m_owner) {
                         theHero = gpGame->GetHero(cell->m_objectMetadata);
                         enemy = FightValueOfStack(
                             &theHero->m_army,
                             NULL,
                             1,
-                            theHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN),
+                            theHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN),
                             theHero->m_occupiedTown
                         );
                         if (enemy * 2 > val)
@@ -645,7 +645,7 @@ void philAI::DoAI(i32 player) {
                     && gpAdvManager
                                ->GetCell(savedAiHero->m_destinationX, savedAiHero->m_destinationY)
                                ->m_triggerType
-                           != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+                           != MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
                     savedAiHero->m_remainingMobility = 0;
             }
             if (iCurPlaceToVisit < ADVMGR_PLACE_VISIT_COUNT) {
@@ -748,7 +748,7 @@ void philAI::DoAI(i32 player) {
         savedAiHero->m_remainingMobility = 0;
         gpAdvManager->DeactivateCurrHero();
     nextHero:
-        if (savedAiHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN))
+        if (savedAiHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
             CheckBuyStuff();
     }
     ResumeSamples();
@@ -1040,9 +1040,9 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                         validFlag = 0;
                     else
                         validFlag =
-                            thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                            || thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                            || (thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                            thisCellRec->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
+                            || thisCellRec->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
+                            || (thisCellRec->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIP)
                                 && !pHero->IsEmbarked());
                 } else {
                     validFlag =
@@ -1057,8 +1057,8 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                 }
                 if (validFlag) {
                     for (entry = 0; entry < gpCurPlayer->m_heroCount; entry++) {
-                        if (thisCellRec->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                            && thisCellRec->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                        if (thisCellRec->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
+                            && thisCellRec->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
                             && gpCurPlayer->m_heroIds[entry] != pHero->m_id
                             && gpGame->m_heroRecs[gpCurPlayer->m_heroIds[entry]].m_destinationX
                                    == oldX
@@ -1688,7 +1688,7 @@ void philAI::GetBestHero(town* townPointer, BHC& best, float& bestValue) {
     best.what = bestHero;
     bestValue = bestCostVal;
     if (gpGame->m_map[townPointer->m_x][townPointer->m_y].m_triggerType
-        == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))
+        == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO))
         bestValue -= 200.0f;
 }
 
@@ -2002,12 +2002,12 @@ i32 philAI::StrategicValueOfPosition(
                 cell = gpAdvManager->GetCell(oldX, thisY);
                 if ((!immediate && (cell->m_triggerType & MAP_TRIGGER_EVENT))
                     || (immediate
-                        && cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))) {
+                        && cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO))) {
                     CheckDoMain(0, 0);
                     myValue += ValueOfEventAtPosition(pHero, oldX, thisY, 0, &iDummy)
                                / (searchData->m_cells[oldX][thisY].distance + 2.0);
                 }
-                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
+                if (cell->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)) {
                     if (gaiHeroLiveChance[cell->m_objectMetadata] == RV_UNSET)
                         ValueOfEventAtPosition(pHero, oldX, thisY, 0, &iDummy);
                     if (gaiHeroLiveChance[cell->m_objectMetadata] != RV_UNSET
@@ -2037,7 +2037,7 @@ i32 philAI::StrategicValueOfPosition(
                 }
                 if (searchData->m_cells[oldX][thisY].distance < 32
                     && gpAdvManager->GetCell(oldX, thisY)->m_triggerType
-                           == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                           == MAP_EVENT_TRIGGER(MAP_OBJECT_HERO)
                     && gpAdvManager->GetCell(oldX, thisY)->m_objectMetadata != pHero->m_id
                     && gpGame->m_availableHeroes[gpAdvManager->GetCell(oldX, thisY)
                                                      ->m_objectMetadata]
@@ -2854,7 +2854,7 @@ void philAI::BuildHero(town* townPointer, i16 availableHeroIndex) {
     newHero->m_mobility = newHero->m_remainingMobility;
     newHero->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
     newHero->m_occupiedTown = gpGame->m_map[townX][townY].m_objectMetadata;
-    gpGame->m_map[townX][townY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+    gpGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
     gpGame->m_map[townX][townY].m_objectMetadata =
         gpCurPlayer->m_availableHeroIds[availableHeroIndex];
     gpGame->m_availableHeroes[newHero->m_id] = townPointer->m_owner;
@@ -3125,7 +3125,7 @@ void philAI::TownEvent(mapCell* cell, hero* heroPointer, i32 x, i32 y) {
     }
     if (townPointerPtr->m_owner == giCurPlayer && heroPointer->m_x == x && heroPointer->m_y == y) {
         townPointerPtr->m_occupyingHeroId = gpCurPlayer->CurrentHero();
-        heroPointer->m_locationType = (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN);
+        heroPointer->m_locationType = MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN);
         heroPointer->m_occupiedTown = townPointerPtr->m_id;
         HeroInteractionAtTown(heroPointer, townPointerPtr, 0, &iDummy);
     }
@@ -3195,7 +3195,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
     gEventRV = 0;
     gEventCell = gpAdvManager->GetCell(x, y);
     gEventSeen = mapVisited[x][y] && giCurPlayerBit;
-    switch (gEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+    switch (MAP_TRIGGER_OBJECT(gEventCell->m_triggerType)) {
         case MAP_OBJECT_ARTIFACT:
             gArtifactChoice1 = gArtifactBaseRV[gEventCell->m_objectIndex];
             for (gEventLoop = 0; gEventLoop < ARMY_GROUP_SLOT_COUNT; gEventLoop++) {
@@ -3349,7 +3349,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 gEventTown = NULL;
                 gEventTownArmy = NULL;
                 gEventHero = gpGame->GetHero(gEventCell->m_objectMetadata);
-                if (gEventHero->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+                if (gEventHero->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                     gEventTown = gpGame->GetTown(gEventHero->m_occupiedTown);
                     gEventTownArmy = &gEventTown->m_army;
                     gTownValue = ValueOfTown(gEventTown);
@@ -3812,7 +3812,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 for (gateX1Val = 0; gateX1Val < MAP_CELL_GRID_SIZE; gateX1Val++) {
                     loc = gpAdvManager->GetCell(gateX1Val, gateY28Val);
                     if (MANHATTAN_LENGTH(gateX1Val - x, gateY28Val - y)
-                            > ((gEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK)
+                            > (MAP_TRIGGER_OBJECT(gEventCell->m_triggerType)
                                        == MAP_OBJECT_STONE_LITHS
                                    ? 1
                                    : 3)
@@ -3877,9 +3877,9 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
         gEventRV = static_cast<i32>(gEventRV * fBerserkFactor);
     if (!immediate) {
         if (gEventRV > 0 && (mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
-            && (gEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_MONSTER)
+            && MAP_TRIGGER_OBJECT(gEventCell->m_triggerType) != MAP_OBJECT_MONSTER)
             gEventRV = 0;
-        if (gEventRV < 0 && (gEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK) != MAP_OBJECT_HERO)
+        if (gEventRV < 0 && MAP_TRIGGER_OBJECT(gEventCell->m_triggerType) != MAP_OBJECT_HERO)
             gEventRV = 0;
         else if (gEventRV > 32000)
             gEventRV = 32000;

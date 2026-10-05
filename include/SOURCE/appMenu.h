@@ -8,7 +8,7 @@
 // keep their kbwin.h names (KbwinMenuConstant). gMenuCommand holds
 // APP_MENU_NONE until HandleAppSpecificMenuCommands defers a new/load item;
 // oldmain, SETUP and advManager::Main test it before running the command.
-H1_ENUM_BEGIN(AppMenuCommand)
+H1_ENUM_ID_BEGIN(AppMenuCommand)
 // gMenuCommand when no menu command is queued (SETUP/KB/ADVMGR reset
 // and test it).
     APP_MENU_NONE = -1,
@@ -79,6 +79,6 @@ H1_ENUM_BEGIN(AppMenuCommand)
     APP_MENU_LOAD_DIRECT_GUEST = 0x9cca,
     APP_MENU_SAVE_GAME = 0x9ccb,
     APP_MENU_QUIT = 0x9ccc
-H1_ENUM_END(AppMenuCommand)
+H1_ENUM_ID_END(AppMenuCommand)
 
 #endif // HOMM1_SOURCE_APPMENU_H

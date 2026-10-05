@@ -506,7 +506,7 @@ void hero::Deallocate(void) {
             }
         }
     }
-    if (m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
+    if (m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
         curTown = gpGame->GetTown(m_occupiedTown);
         curTown->m_occupyingHeroId = TOWN_OCCUPYING_HERO_NONE;
     }
@@ -847,7 +847,7 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
 }
 
 VA(0x0043b0b5, 0x610)
-i16 HeroHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& message) {
     tag_message newEvent;
     i32 unusedValue15;
     i32 unusedValue21;

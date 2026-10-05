@@ -300,7 +300,7 @@ void fileRequester::SetOK(i8 enabled) {
 // Checks a saved game's human count, encoded as its extension digit, before
 // accepting it.
 VA(0x0045488d, 0xa9c)
-i16 fileRequester::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& message) {
     i32 firstShown;
     i32 stepSize;
     i32 pageCount;

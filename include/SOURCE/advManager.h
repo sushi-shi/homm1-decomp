@@ -2,6 +2,7 @@
 #define HOMM1_SOURCE_ADVMANAGER_H
 
 #include <BASE/baseManager.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/armySizeNames.h>
@@ -143,7 +144,7 @@ H1_ENUM_CONST_END(AdventureLocatorConstant)
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns.
-H1_ENUM_BEGIN(AdventureControl)
+H1_ENUM_ID_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_NEXT_HERO = 1,
     ADVENTURE_CONTROL_CONTINUE_ROUTE = 2,
     ADVENTURE_CONTROL_OVERVIEW = 3,
@@ -168,7 +169,7 @@ H1_ENUM_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_HERO_LOCATOR_2 = 112,
     ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
     ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
-H1_ENUM_END(AdventureControl)
+H1_ENUM_ID_END(AdventureControl)
 
 // The six panel buttons (ADVENTURE_CONTROL_NEXT_HERO..GAME_OPTIONS) that
 // DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim.
@@ -200,6 +201,15 @@ struct adventureSoundCell {
     i32 soundId;
     i32 volume;
 };
+
+// DrawCell's layers.
+H1_ENUM_FLAGS_BEGIN(AdventureDrawMask, i8)
+    ADVMGR_DRAW_GROUND = 0x01,
+    ADVMGR_DRAW_OBJECT = 0x02,
+    ADVMGR_DRAW_OVERLAY = 0x04,
+    ADVMGR_DRAW_HERO = 0x08,
+    ADVMGR_DRAW_CLOUD = 0x20
+H1_ENUM_FLAGS_END(AdventureDrawMask)
 
 // Retail constructor, Open and InitMainClasses' 0x260-byte allocation fix
 // this packed layout after the 0x30-byte baseManager prefix.
@@ -278,7 +288,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void StartCursor(i8 direction);
     void StopCursor(i8 stopSound);
@@ -320,10 +330,10 @@ public:
     }
     void CheckSetEvilInterface(i32 redraw, i32 player);
     void Reseed(i32, i32);
-    i32 ProcessSelect(struct tag_message* message, class mapCell** eventCell);
-    i32 ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
+    H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessSelect(struct tag_message* message, class mapCell** eventCell);
+    H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
     i32 ProcessSearch(i32 x, i32 y);
-    i32 ProcessHover(struct tag_message* message);
+    H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessHover(struct tag_message* message);
     void UpdateScreen(i8 cursorUpdate, i8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
     void CompleteDraw(i32 update);
@@ -333,7 +343,7 @@ public:
         i16 mapY,
         i16 screenX,
         i16 screenY,
-        i8 drawMask,
+        H1_ENUM_PARAM(AdventureDrawMask, i8) drawMask,
         i8 drawingPuzzle,
         i8 forceDraw
     );
@@ -388,7 +398,7 @@ public:
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
     char* CheckHandleNet(void);
-    i16 CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
     void DisableButtons(void);
     void EnableButtons(void);
@@ -541,10 +551,10 @@ public:
 };
 #pragma pack(pop)
 
-i16 APanelHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) APanelHandler(struct tag_message& message);
 void UpdateCPanel(i8 initialDraw);
 i8 SaveGame(void);
-i16 CPanelHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) CPanelHandler(struct tag_message& message);
 
 // gForceSwitchMusic: the tick a network turn hand-over forced a music
 // switch, or IDLE when none is pending (advManager::Main, game::NewDay).
@@ -1091,18 +1101,11 @@ H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_SEARCH = 4
 H1_ENUM_CONST_END(AdventurePanelDialogConstant)
 
-H1_ENUM_BEGIN(AdventureDrawMask)
-    ADVMGR_DRAW_GROUND = 0x01,
-    ADVMGR_DRAW_OBJECT = 0x02,
-    ADVMGR_DRAW_OVERLAY = 0x04,
-    ADVMGR_DRAW_HERO = 0x08,
-    ADVMGR_DRAW_CLOUD = 0x20
-H1_ENUM_END(AdventureDrawMask)
 
 // GetCloudLookup's unseen-neighbour bits (index into gCloudType): the four
 // edge neighbours, then the diagonals clockwise from north-east; off-map
 // columns/rows set their three neighbours at once.
-H1_ENUM_BEGIN(CloudNeighborMask)
+H1_ENUM_FLAGS_BEGIN(CloudNeighborMask, i32)
     CLOUD_NORTH = 0x01,
     CLOUD_EAST = 0x02,
     CLOUD_SOUTH = 0x04,
@@ -1115,7 +1118,7 @@ H1_ENUM_BEGIN(CloudNeighborMask)
     CLOUD_SOUTH_EDGE = 0x64,
     CLOUD_NORTH_EDGE = 0x91,
     CLOUD_WEST_EDGE = 0xc8
-H1_ENUM_END(CloudNeighborMask)
+H1_ENUM_FLAGS_END(CloudNeighborMask)
 
 // advManager::Main's right-click help on the six panel buttons: the
 // gAdvMenuHelp row (texts: next hero, continue movement, kingdom summary,

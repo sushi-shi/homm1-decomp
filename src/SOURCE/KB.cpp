@@ -613,7 +613,7 @@ i32 InterpretCommandLine(void) {
 // Right-click help and button release; the main menu draws its own hover
 // frames.
 VA(0x0043e05e, 0x154)
-i16 InitMenuHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) InitMenuHandler(tag_message& message) {
     i32 handled = 0;
     i32 helpIndex;
 
@@ -660,14 +660,14 @@ i16 InitMenuHandler(tag_message& message) {
 }
 
 VA(0x0043e1b2, 0x9)
-i16 NullHandler(tag_message&) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) NullHandler(tag_message&) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
 // Two heroes are offered, each with its own view (its portrait, rcrthero.bin
 // ids 2-3) and recruit (ids 8-9) button.
 VA(0x0043e1bb, 0x15e)
-i16 RecruitHeroHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(tag_message& message) {
     const i16 viewButton1Value = RECRUIT_HERO_PORTRAIT_FIRST;
     const i16 viewButton2Value = RECRUIT_HERO_PORTRAIT_SECOND;
     const i16 recruitButton1 = RECRUIT_HERO_SELECT_FIRST;
@@ -1248,7 +1248,7 @@ void UpdateNormalDialog(char* text) {
 }
 
 VA(0x0043f4a2, 0x14d)
-i16 WaitHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(tag_message& message) {
     i8 result = 0;
     gbFunctionComplete = 1;
     PollSound();
@@ -1305,7 +1305,7 @@ i16 WaitHandler(tag_message& message) {
 }
 
 VA(0x0043f5ef, 0xb3)
-i16 EventWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& message) {
     if (!MusicPlaying())
         PlayMusic(gpAdvManager->m_currentTerrain);
     if (message.type == MESSAGE_WIDGET) {
@@ -1333,7 +1333,7 @@ i16 EventWindowHandler(tag_message& message) {
 }
 
 VA(0x0043f6a2, 0x11)
-i16 TrueFalseDialogHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) TrueFalseDialogHandler(tag_message& message) {
     return EventWindowHandler(message);
 }
 
@@ -2447,7 +2447,7 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
 }
 
 VA(0x00441f97, 0x1af)
-i16 DataEntryWindowHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) DataEntryWindowHandler(tag_message& message) {
     i16 widgetId = DATA_ENTRY_TEXT;
 
     if (bDataEntryTime == 0) {

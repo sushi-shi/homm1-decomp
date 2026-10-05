@@ -67,9 +67,9 @@ RETIRED = "-"
 _IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
 
 _MACRO_BLOCK = re.compile(
-    r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN)"
+    r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN|ID_BEGIN)"
     r"\(\s*(\w+)\s*(?:,\s*(\w+)\s*)?\)(?P<body>.*?)"
-    r"\bH1_ENUM_(?:END|END_SPLIT|FLAGS_END|CONST_END)\(",
+    r"\bH1_ENUM_(?:END|END_SPLIT|FLAGS_END|CONST_END|ID_END)\(",
     re.S,
 )
 _RAW_ENUM = re.compile(

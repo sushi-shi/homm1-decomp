@@ -238,8 +238,8 @@ void heroWindow::RemoveWidget(widget* w) {
 }
 
 VA(0x0046da11, 0x61)
-i16 heroWindow::BroadcastMessage(tag_message& message) {
-    i16 dispatchResult = MESSAGE_DISPATCH_CONTINUE;
+H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindow::BroadcastMessage(tag_message& message) {
+    H1_ENUM_LOCAL(MessageDispatchResult, i16) dispatchResult = MESSAGE_DISPATCH_CONTINUE;
     widget* currentWidget = m_widgetListHead;
     while (currentWidget != NULL) {
         switch (dispatchResult = currentWidget->Main(message)) {

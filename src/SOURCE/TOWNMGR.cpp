@@ -299,7 +299,7 @@ void townManager::Close(void) {
 // Matches the dragged creature against every slot of the target army and
 // keeps word-sized flags.
 VA(0x0045fb18, 0x77c)
-void townManager::SetArmyCommand(i16 qualifier) {
+void townManager::SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier) {
     i16 lastArmy;
     i16 i;
     i16 sameType;
@@ -427,7 +427,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
             if (m_swapArmySlot != STRIP_SLOT_NONE) {
                 m_pendingStrip = m_garrisonStrip;
                 m_pendingArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
-                SetArmyCommand(message.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+                SetArmyCommand(message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS);
             } else {
                 m_selectedStrip = m_garrisonStrip;
                 m_selectedArmySlot = id - TOWN_GARRISON_SLOT_FIRST;
@@ -456,7 +456,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
             if (m_swapArmySlot != STRIP_SLOT_NONE) {
                 m_pendingStrip = m_heroStrip;
                 m_pendingArmySlot = id - TOWN_HERO_SLOT_FIRST;
-                SetArmyCommand(message.modifiers & TOWN_SHIFT_QUALIFIER_MASK);
+                SetArmyCommand(message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS);
             } else {
                 m_selectedStrip = m_heroStrip;
                 m_selectedArmySlot = id - TOWN_HERO_SLOT_FIRST;
@@ -531,7 +531,7 @@ void townManager::ShowText(char*) {
 // Opens the castle, mage guild, well and thieves guild over a bottom cover
 // window, sells the spell book and builds boats.
 VA(0x004607db, 0x11da)
-i16 townManager::Main(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message& message) {
     i32 done;
     i8 rightButton;
     class sample* res;
@@ -1094,7 +1094,7 @@ void townManager::ShiftQualChange(void) {
     if (m_swapStrip != m_pendingStrip
         && (m_command == TOWN_ARMY_COMMAND_NONE || m_command == TOWN_ARMY_COMMAND_SPLIT
             || m_command == TOWN_ARMY_COMMAND_MERGE || m_command == TOWN_ARMY_COMMAND_SWAP))
-        SetArmyCommand(gpInputManager->GetModifiers() & TOWN_SHIFT_QUALIFIER_MASK);
+        SetArmyCommand(gpInputManager->GetModifiers() & MESSAGE_MODIFIER_SHIFT_KEYS);
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, TOWN_STATUS_TEXT_CONTROL);
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
@@ -1773,7 +1773,7 @@ void townManager::SetupMage(class heroWindow* window) {
 
 // Numbers spells 1-9 and icons 10-18 and bounds them by the guild level.
 VA(0x0046412c, 0x14b)
-i16 MageGuildHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& message) {
     i16 firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
     i16 iconBaseVal = TOWN_MAGE_FIRST_ICON_CONTROL;
     i32 quickViewVal;
@@ -2092,7 +2092,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
         m_recruitHeroes[m_recruitState]->m_locationType = gpGame->m_map[townX][townY].m_triggerType;
         m_recruitHeroes[m_recruitState]->m_occupiedTown =
             gpGame->m_map[townX][townY].m_objectMetadata;
-        gpGame->m_map[townX][townY].m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO);
+        gpGame->m_map[townX][townY].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_HERO);
         gpGame->m_map[townX][townY].m_objectMetadata =
             gpCurPlayer->m_availableHeroIds[m_recruitState];
         m_recruitResult = 1;
@@ -2160,7 +2160,7 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
 
 // Animates frames 1-8 of control 2.
 VA(0x00465376, 0x125)
-i16 TavernHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) TavernHandler(struct tag_message& message) {
     i32 unusedDelay = TOWN_TAVERN_ANIMATION_DELAY;
     i16 unusedFrame = TOWN_TAVERN_UNUSED_FRAME;
 
@@ -2208,7 +2208,7 @@ void townManager::DoTavern(void) {
 
 // Hovers by widget id and recruits a single hero (control 0x30).
 VA(0x0046559a, 0x650)
-i16 CastleHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& message) {
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
     i32 result = 0;
     i32 baseQuick;
@@ -2384,7 +2384,7 @@ i16 CastleHandler(struct tag_message& message) {
 // Handles the amount buttons on selection and redraws the whole split
 // window.
 VA(0x00465bea, 0x2cc)
-i16 SplitArmyHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& message) {
     i16 plusControlNum = TOWN_SPLIT_INCREASE_CONTROL;
     i32 unusedActionVal;
     i16 minusButton = TOWN_SPLIT_DECREASE_CONTROL;

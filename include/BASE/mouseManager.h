@@ -6,6 +6,7 @@
 #include <BASE/baseManager.h>
 #include <BASE/display.h>
 #include <H1/Macros.h>
+#include <BASE/message.h>
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
@@ -50,7 +51,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message&) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message&) OVERRIDE;
     // --- methods ---
     // CombatManager::ViewSpells passes a sign-extended word frame.
     void SetPointer(char* name, i16 frame);

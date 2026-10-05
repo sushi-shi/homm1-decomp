@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_HEROWINDOW_H
 #define HOMM1_BASE_HEROWINDOW_H
 
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -9,14 +10,14 @@ class widget;
 class bitmap;
 struct tag_message;
 
-H1_ENUM_BEGIN(WindowFlag)
+H1_ENUM_FLAGS_BEGIN(WindowFlag, i16)
     WINDOW_FLAG_NONE = 0,
     WINDOW_FLAG_FIXED_LAYER = 1,
     WINDOW_FLAG_SAVE_BACKGROUND = 2,
     WINDOW_FLAG_STRIP_WINDOW = 8,
     WINDOW_FLAG_OWNS_WIDGETS = 0x4000,
     WINDOW_UPDATE_SUPPRESS_MASK = 0x7fff
-H1_ENUM_END(WindowFlag)
+H1_ENUM_FLAGS_END(WindowFlag)
 
 H1_ENUM_BEGIN(WindowState)
     WINDOW_STATE_CLOSED = 0,
@@ -65,7 +66,7 @@ public:
     void Close(void);
     void AddWidget(class widget* newWidget, i16 zOrder);
     void RemoveWidget(class widget* w);
-    i16 BroadcastMessage(struct tag_message& message);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) BroadcastMessage(struct tag_message& message);
     void DrawWindow(void);
     void DrawWindow(i16 flags);
     void DrawWindow(i16 update, i32 firstId, i32 lastId);

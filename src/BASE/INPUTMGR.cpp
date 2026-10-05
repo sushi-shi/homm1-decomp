@@ -238,8 +238,8 @@ void inputManager::Close(void) {
 }
 
 VA(0x0046eea6, 0x10)
-i16 inputManager::Main(tag_message&) {
-    return 0;
+H1_ENUM_RETURN(MessageDispatchResult, i16) inputManager::Main(tag_message&) {
+    return MESSAGE_DISPATCH_CONTINUE;
 }
 
 VA(0x0046eeb6, 0x23)

@@ -83,7 +83,7 @@ iconWidget::~iconWidget(void) {
 }
 
 VA(0x0046e195, 0x2a4)
-i16 iconWidget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) iconWidget::Main(tag_message& message) {
     i16 x;
     i16 y;
     if (!(m_flags & WIDGET_FLAG_ENABLED)) {

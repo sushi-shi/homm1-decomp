@@ -424,7 +424,7 @@ i8 game::PickLoadGame(void) {
 
 // SETUP help handlers: each help text shows as a type-4 dialog.
 VA(0x00457a60, 0xd7)
-i16 SetupCampaignGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupCampaignGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -454,7 +454,7 @@ i16 SetupCampaignGameHandler(tag_message& message) {
 }
 
 VA(0x00457b37, 0x107)
-i16 SetupComPortHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupComPortHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -488,7 +488,7 @@ i16 SetupComPortHandler(tag_message& message) {
 }
 
 VA(0x00457c3e, 0x107)
-i16 SetupBaudHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupBaudHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -522,7 +522,7 @@ i16 SetupBaudHandler(tag_message& message) {
 }
 
 VA(0x00457d45, 0xc8)
-i16 SetupHotSeatGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupHotSeatGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -549,7 +549,7 @@ i16 SetupHotSeatGameHandler(tag_message& message) {
 }
 
 VA(0x00457e0d, 0xf8)
-i16 SetupModemGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupModemGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -580,7 +580,7 @@ i16 SetupModemGameHandler(tag_message& message) {
 }
 
 VA(0x00457f05, 0xd7)
-i16 SetupMultiPlayerGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupMultiPlayerGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -610,7 +610,7 @@ i16 SetupMultiPlayerGameHandler(tag_message& message) {
 }
 
 VA(0x00457fdc, 0xad)
-i16 SetupNetworkGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupNetworkGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -634,7 +634,7 @@ i16 SetupNetworkGameHandler(tag_message& message) {
 }
 
 VA(0x00458089, 0xc8)
-i16 SetupGameHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) SetupGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
@@ -661,7 +661,7 @@ i16 SetupGameHandler(tag_message& message) {
 }
 
 VA(0x00458151, 0xb4)
-i16 BaseSetupHandler(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) BaseSetupHandler(tag_message& message) {
     i32 handled = 0;
 
     PollSound();

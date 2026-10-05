@@ -3,6 +3,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
+#include <BASE/message.h>
 #include <H1/Macros.h>
 
 // forward declarations:
@@ -80,7 +81,7 @@ H1_ENUM_END(MapDifficulty)
 // rows from LIST_FIRST, the filename entry and its prompt, and the map-info
 // window's size, level and description fields; OK/CANCEL are the dialog role
 // buttons.
-H1_ENUM_BEGIN(FileRequesterControlId)
+H1_ENUM_ID_BEGIN(FileRequesterControlId)
     FILE_REQUESTER_OK = DIALOG_BUTTON_2,
     FILE_REQUESTER_CANCEL = DIALOG_BUTTON_1,
     FILE_REQUESTER_SCROLL_UP = 1,
@@ -93,7 +94,7 @@ H1_ENUM_BEGIN(FileRequesterControlId)
     FILE_REQUESTER_MAP_SIZE = 100,
     FILE_REQUESTER_MAP_LEVEL = 101,
     FILE_REQUESTER_MAP_DESCRIPTION = 102
-H1_ENUM_END(FileRequesterControlId)
+H1_ENUM_ID_END(FileRequesterControlId)
 
 H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
     FILE_REQUESTER_VISIBLE_ROWS = 10,
@@ -163,7 +164,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void SetOK(i8 enabled);
     void UpdateMapInfo(void);

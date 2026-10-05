@@ -96,7 +96,7 @@ button::~button(void) {
 }
 
 VA(0x00476f8a, 0x415)
-i16 button::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) button::Main(tag_message& message) {
     i16 x;
     i16 y;
     if (m_kind == WIDGET_KIND_AUTO_REPEAT && (m_flags & WIDGET_FLAG_SELECTED)
@@ -164,7 +164,7 @@ i16 button::Main(tag_message& message) {
 }
 
 VA(0x0047739f, 0xec)
-i16 button::Select(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) button::Select(tag_message& message) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;
     m_icon->DrawToBuffer(x, y, m_pressedFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -182,7 +182,7 @@ i16 button::Select(tag_message& message) {
 }
 
 VA(0x0047748b, 0xba)
-i16 button::Deselect(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) button::Deselect(tag_message& message) {
     if (!(m_flags & WIDGET_FLAG_SELECTED))
         return MESSAGE_DISPATCH_CONTINUE;
     m_flags &= ~WIDGET_FLAG_SELECTED;

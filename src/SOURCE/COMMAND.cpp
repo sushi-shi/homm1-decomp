@@ -35,8 +35,8 @@
 
 // Polls sound on the 75-tick timer.
 VA(0x0041d460, 0x27c)
-i16 combatManager::Main(struct tag_message& message) {
-    i32 result = MESSAGE_DISPATCH_CONSUME;
+H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::Main(struct tag_message& message) {
+    H1_ENUM_LOCAL(MessageDispatchResult, i32) result = MESSAGE_DISPATCH_CONSUME;
     army* thisArmy;
     CombatRemotePacket* packet;
 
@@ -432,7 +432,7 @@ combatManager::GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command) {
 // Hovers the combat field as widget 0x40 and handles F1, space, H, T and C
 // keys.
 VA(0x0041e408, 0x4f8)
-i32 combatManager::ProcessCombatMsg(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i32) combatManager::ProcessCombatMsg(struct tag_message& message) {
     i16 mouseX = message.x;
     i16 mouseY = message.y;
     i8 unused = 0;
@@ -850,7 +850,7 @@ void combatManager::DoCommand(i8 command) {
 
 // Pages captured artifacts and cycles a single six-frame animation.
 VA(0x0041f209, 0x180)
-i16 WinCombatHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) WinCombatHandler(struct tag_message& message) {
     i32 finalDelay = 0x5a;
     i16 curFrame = 1;
 
@@ -1242,7 +1242,7 @@ void combatManager::DoLoseWindow(void) {
     tag_message packet;
     heroWindow* loseWindow;
     bitmap* newBmp;
-    i16 res;
+    H1_ENUM_LOCAL(MessageDispatchResult, i16) res;
     i32 delayVal;
     i16 bestOffset;
     i32 party;
@@ -1471,7 +1471,7 @@ void combatManager::ResetMouse(void) {
 // Hides the pointer around the action and broadcasts it to a human net
 // opponent.
 VA(0x004210c0, 0x4c6)
-i16 combatManager::ProcessNextAction(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) combatManager::ProcessNextAction(struct tag_message& message) {
     i32 actionData[4];
     i32 transmitResult;
     i32 remoteIndex;

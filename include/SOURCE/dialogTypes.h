@@ -52,14 +52,14 @@ H1_ENUM_END(NormalDialogOrText)
 
 // NormalDialog's buttons, shown by slot; the caller reads the pressed one
 // from m_dialogResult (CONFIRM is the yes button, CANCEL the no button).
-H1_ENUM_BEGIN(NormalDialogButton)
+H1_ENUM_ID_BEGIN(NormalDialogButton)
     NORMAL_DIALOG_BUTTON_OK = DIALOG_BUTTON_1,
     NORMAL_DIALOG_BUTTON_CANCEL = DIALOG_BUTTON_2,
     NORMAL_DIALOG_BUTTON_YES = DIALOG_BUTTON_5,
     NORMAL_DIALOG_BUTTON_NO = DIALOG_BUTTON_6,
     NORMAL_DIALOG_CONFIRM = NORMAL_DIALOG_BUTTON_YES,
     NORMAL_DIALOG_CANCEL = NORMAL_DIALOG_BUTTON_NO
-H1_ENUM_END(NormalDialogButton)
+H1_ENUM_ID_END(NormalDialogButton)
 
 H1_ENUM_CONST_BEGIN(NormalDialogLayout)
     NORMAL_DIALOG_RESOURCE_COUNT = 2,

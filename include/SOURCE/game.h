@@ -1,6 +1,7 @@
 #ifndef HOMM1_SOURCE_GAME_H
 #define HOMM1_SOURCE_GAME_H
 
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 #include <SOURCE/gameTypes.h>
@@ -88,7 +89,7 @@ H1_ENUM_CONST_END(GameWeeklyConstant)
 // spellwin.bin widget ids shared by ViewSpellsHandler, ViewSpecialHandler
 // and CombatSpecialHandler (gSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).
-H1_ENUM_BEGIN(SpellBookControl)
+H1_ENUM_ID_BEGIN(SpellBookControl)
     SPELL_BOOK_PREVIOUS_PAGE = 2,
     SPELL_BOOK_NEXT_PAGE = 3,
     SPELL_BOOK_ADVENTURE_SPELLS = 4,
@@ -96,17 +97,17 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_ENTRY_FIRST = 6,
     SPELL_BOOK_ENTRY_LAST = 9,
     SPELL_BOOK_LABEL_FIRST = 10
-H1_ENUM_END(SpellBookControl)
+H1_ENUM_ID_END(SpellBookControl)
 
 // campaign.bin widget ids; the progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
 // fills them; KB's EventWindowHandler restarts the scenario on RESTART.
-H1_ENUM_BEGIN(CampaignInfoControl)
+H1_ENUM_ID_BEGIN(CampaignInfoControl)
     CAMPAIGN_INFO_NAME = 1,
     CAMPAIGN_INFO_TEXT = 2,
     CAMPAIGN_INFO_PROGRESS = 3,
     CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
     CAMPAIGN_INFO_RESTART = 0x385
-H1_ENUM_END(CampaignInfoControl)
+H1_ENUM_ID_END(CampaignInfoControl)
 
 // game::m_campaignScenario: scenarios LORD_FIRST..LORD_LAST are the four
 // rival-lord scenarios, one per CampaignChoice in order; KB's scenario
@@ -333,7 +334,7 @@ public:
     i16 m_spellLast;
     i16 m_viewSpell;
     i16 m_viewSpellsTop;
-    i16 (*m_viewSpellsCallback)(struct tag_message&);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) (*m_viewSpellsCallback)(struct tag_message&);
     i8 m_viewSpellsReadOnly;
     // LoadGame sets it; ProcessMapExtra clears it for a 0xc7 (map hero)
     // trigger cell. While set, every player starts with a town hero;
@@ -408,7 +409,7 @@ public:
     i8 ViewSpells(
         class hero* spellHero,
         H1_ENUM_PARAM(HeroSpellType, i8) spellType,
-        i16 (*callback)(struct tag_message&),
+        H1_ENUM_RETURN(MessageDispatchResult, i16) (*callback)(struct tag_message&),
         i8 readOnly
     );
     // HoMM1: limits the spell page to the combat or adventure slots.
@@ -543,9 +544,9 @@ public:
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(i32 player);
 // GAME's dialog handlers and the standard-game day score ShowCongrats files.
-i16 ViewSpellsHandler(struct tag_message& message);
-i16 ViewSpecialHandler(struct tag_message& message);
-i16 ViewArmyHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpellsHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) ViewSpecialHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(struct tag_message& message);
 i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
 extern i32 gEndSequence;
@@ -575,7 +576,7 @@ extern i8 gbDismissArmy;
 // difficulty buttons are FIRST + game::m_difficulty. OK and CANCEL are role
 // names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
 // returns to the main menu).
-H1_ENUM_BEGIN(NewGameControl)
+H1_ENUM_ID_BEGIN(NewGameControl)
     NEW_GAME_OPPONENT_FIRST = 2,
     NEW_GAME_OPPONENT_LAST = 4,
     NEW_GAME_COLOR = 8,
@@ -592,7 +593,7 @@ H1_ENUM_BEGIN(NewGameControl)
     // p + LABEL_BASE (ids 5..7).
     NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
     NEW_GAME_OPPONENT_LABEL_BASE = 4
-H1_ENUM_END(NewGameControl)
+H1_ENUM_ID_END(NewGameControl)
 
 // newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
 // the computer-type faces (type + base), the crests (two per color) and
@@ -644,7 +645,7 @@ H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
 // armywin.bin widget ids; dismiss is DIALOG_BUTTON_3 and close
 // DIALOG_BUTTON_0. The animation icon cycles
 // VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
-H1_ENUM_BEGIN(ViewArmyControl)
+H1_ENUM_ID_BEGIN(ViewArmyControl)
     VIEW_ARMY_COUNT_FRAME = 1,
     VIEW_ARMY_COUNT_TEXT = 2,
     VIEW_ARMY_TITLE = 3,
@@ -652,7 +653,7 @@ H1_ENUM_BEGIN(ViewArmyControl)
     VIEW_ARMY_ANIMATION = 5,
     VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
     VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
-H1_ENUM_END(ViewArmyControl)
+H1_ENUM_ID_END(ViewArmyControl)
 
 H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     VIEW_ARMY_ANIMATION_FRAMES = 6,
@@ -661,11 +662,11 @@ H1_ENUM_CONST_BEGIN(ViewArmyConstant)
 H1_ENUM_CONST_END(ViewArmyConstant)
 
 // overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
-H1_ENUM_BEGIN(OverviewControl)
+H1_ENUM_ID_BEGIN(OverviewControl)
     OVERVIEW_RESOURCE_BASE = 1,
     OVERVIEW_DATE = 64,
     OVERVIEW_DAILY_GOLD = 65
-H1_ENUM_END(OverviewControl)
+H1_ENUM_ID_END(OverviewControl)
 
 // Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
 // creature week or month picks from, and gNewTurnText's announcement rows.

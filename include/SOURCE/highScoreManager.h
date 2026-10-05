@@ -3,6 +3,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -13,7 +14,7 @@ class heroWindow;
 
 // hiscore.bin control ids: the title pair 0x67/0x68, ten animated monsters
 // 201..210 and four text columns per row (name, scenario, score, rating).
-H1_ENUM_BEGIN(HighScoreControlId)
+H1_ENUM_ID_BEGIN(HighScoreControlId)
     HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
     HIGH_SCORE_STANDARD_BUTTON = 100,
     HIGH_SCORE_TITLE_WIDGET = 0x67,
@@ -23,7 +24,7 @@ H1_ENUM_BEGIN(HighScoreControlId)
     HIGH_SCORE_ANIMATED_WIDGET_FIRST = 200,
     HIGH_SCORE_FIRST_MONSTER_WIDGET = 0xc9,
     HIGH_SCORE_ANIMATED_WIDGET_LAST = 210
-H1_ENUM_END(HighScoreControlId)
+H1_ENUM_ID_END(HighScoreControlId)
 
 // Text widget columns of one score row (Update's id stride and offsets).
 H1_ENUM_CONST_BEGIN(HighScoreTextColumn)
@@ -87,7 +88,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Update(void);
 };

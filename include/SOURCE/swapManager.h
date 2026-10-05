@@ -3,6 +3,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/icon.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -34,7 +35,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void Reset(void);
     i32 DrawSwapWin(void);
@@ -48,7 +49,7 @@ public:
 #pragma pack(pop)
 // swapwin.bin widget ids. LEFT is the constructor's first hero,
 // m_heroes[SWAP_SIDE_LEFT].
-H1_ENUM_BEGIN(SwapManagerControl)
+H1_ENUM_ID_BEGIN(SwapManagerControl)
     CONTROL_LEFT_HERO = 65,
     CONTROL_RIGHT_HERO = 66,
     CONTROL_LEFT_PRIMARY_SKILL_FIRST = 67,
@@ -64,7 +65,7 @@ H1_ENUM_BEGIN(SwapManagerControl)
     CONTROL_RIGHT_ARTIFACT_LAST = 115,
     CONTROL_LEFT_ARMY_COUNT_FIRST = 116,
     CONTROL_RIGHT_ARMY_COUNT_FIRST = 121
-H1_ENUM_END(SwapManagerControl)
+H1_ENUM_ID_END(SwapManagerControl)
 
 // m_selectedSide/m_targetSide: the m_heroes index. DrawSelector draws side 1
 // at the left army/artifact columns, so the left hero is index 1.

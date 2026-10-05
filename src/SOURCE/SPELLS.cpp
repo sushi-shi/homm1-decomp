@@ -57,7 +57,7 @@ i8 combatManager::ViewSpells(i32) {
 
 // Spell-book hover help.
 VA(0x00459faf, 0x101)
-i16 CombatSpecialHandler(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
@@ -96,7 +96,7 @@ i16 CombatSpecialHandler(struct tag_message& message) {
 // HandleCastSpell refreshes the coordinates from the mouse manager before
 // re-entering for the teleport destination.
 VA(0x0045a0b0, 0x25d)
-i16 HandleCastSpell(struct tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& message) {
     DATA(0x0049f97c)
     static i8 indexToCastOn = -1;
     i16 hex;

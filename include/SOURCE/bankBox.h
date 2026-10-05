@@ -5,10 +5,10 @@
 #include <H1/Macros.h>
 
 // bankbox.bin text ids: resource r's count at RESOURCE_FIRST + r, gold last.
-H1_ENUM_BEGIN(BankBoxControl)
+H1_ENUM_ID_BEGIN(BankBoxControl)
     BANK_BOX_RESOURCE_FIRST = 30,
     BANK_BOX_GOLD = 36
-H1_ENUM_END(BankBoxControl)
+H1_ENUM_ID_END(BankBoxControl)
 
 // forward declarations:
 class playerData;

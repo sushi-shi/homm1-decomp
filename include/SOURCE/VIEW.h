@@ -1,18 +1,19 @@
 #ifndef HOMM1_SOURCE_VIEW_H
 #define HOMM1_SOURCE_VIEW_H
 
+#include <BASE/message.h>
 #include <Domains.h>
 
 struct tag_message;
 
 // The combat general's stats window handler.
-i16 HandleViewGeneral(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) HandleViewGeneral(struct tag_message& message);
 
 // vgenwin.bin widget ids: name, portrait, colour and stats boxes, the Cast
 // Spell / Retreat / Surrender buttons ViewGeneral disables and
 // HandleViewGeneral returns, and the frame widgets the retail block names
 // without using.
-H1_ENUM_BEGIN(ViewGeneralControl)
+H1_ENUM_ID_BEGIN(ViewGeneralControl)
     GENERAL_CONTROL_NONE = 0,
     GENERAL_NAME_WIDGET = 1,
     GENERAL_PORTRAIT_WIDGET = 2,
@@ -26,7 +27,7 @@ H1_ENUM_BEGIN(ViewGeneralControl)
     GENERAL_SURRENDER = 12,
     GENERAL_CONTROL_THIRTEEN = 13,
     GENERAL_CONTROL_FOURTEEN = 14
-H1_ENUM_END(ViewGeneralControl)
+H1_ENUM_ID_END(ViewGeneralControl)
 
 // HandleViewGeneral's hover line: the gViewGeneralHelp row.
 H1_ENUM_BEGIN(ViewGeneralHoverHelp)

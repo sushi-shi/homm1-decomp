@@ -1,6 +1,7 @@
 #ifndef HOMM1_SOURCE_KB_H
 #define HOMM1_SOURCE_KB_H
 
+#include <BASE/message.h>
 #include <Domains.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatTypes.h>
@@ -23,7 +24,7 @@ H1_ENUM_CONST_END(SampleWaitConstant)
 // cpanel.bin ids and the N/L/Q hotkeys in advManager::Main), which share
 // these values; MAIN_MENU_NO_COMMAND is the idle value. InitMenuHandler
 // accepts ids 1..MAIN_MENU_LAST.
-H1_ENUM_BEGIN(MainMenuControl)
+H1_ENUM_ID_BEGIN(MainMenuControl)
     MAIN_MENU_NO_COMMAND = -1,
     MAIN_MENU_NEW_GAME = 1,
     MAIN_MENU_LOAD_GAME = 2,
@@ -31,7 +32,7 @@ H1_ENUM_BEGIN(MainMenuControl)
     MAIN_MENU_HIGH_SCORES = 5,
     MAIN_MENU_CREDITS = 6,
     MAIN_MENU_LAST = MAIN_MENU_CREDITS
-H1_ENUM_END(MainMenuControl)
+H1_ENUM_ID_END(MainMenuControl)
 
 extern i8 gInPollSound;
 extern i8 gbNoSound;
@@ -192,7 +193,7 @@ inline char CyrillicToLower(char c) {
         return static_cast<char>(CYRILLIC_SMALL_YO);
     return c;
 }
-i16 NullHandler(struct tag_message&);
+H1_ENUM_RETURN(MessageDispatchResult, i16) NullHandler(struct tag_message&);
 char* GetBuildingName(i32 race, i16 building);
 void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLevel);
 char* GetMonsterName(i32 monster);
@@ -222,9 +223,9 @@ void UpdateSystemOptionsMenu(void);
 void CleanUpMenus(void);
 void EarlyResizeWindow(i32, i32, i32, i32);
 void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText);
-i16 DataEntryWindowHandler(struct tag_message& message);
-i16 EventWindowHandler(struct tag_message& message);
-i16 TrueFalseDialogHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) DataEntryWindowHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) TrueFalseDialogHandler(struct tag_message& message);
 // Town-name lookup by town id (retail 0x00455aaf); the inline game::GetTown
 // narrows the id.
 char* GetTownName(i32 i);
@@ -279,8 +280,8 @@ extern i32 pwSizeOfMapExtra[];
 // KB's adventure status-bar resource message and its menu, wait and victory
 // screens.
 void BVResMsg(char* s, i32 res, i32 qty);
-i16 InitMenuHandler(struct tag_message& message);
-i16 WaitHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) InitMenuHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) WaitHandler(struct tag_message& message);
 void ShowCongrats(void);
 void CongratsWait(void);
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName);
@@ -492,7 +493,7 @@ extern char* gCastleInfo[];
 extern char* gTownCommand[];
 extern struct TownBuildingExtent gTownBuildingExtents[4][16];
 // KB's tavern recruit dialog handler (retail 0x0045140e).
-i16 RecruitHeroHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) RecruitHeroHandler(struct tag_message& message);
 extern i8 townTheme[];
 extern i32 gFullCombatScreenDrawn;
 extern i32 gLimitedCombatUpdatePalette;
@@ -711,11 +712,11 @@ H1_ENUM_CONST_END(ScoreMonsterConstant)
 
 // netbox.bin text widgets: the two scrolled chat lines (cNetBoxLine) and the
 // line being typed.
-H1_ENUM_BEGIN(NetBoxControl)
+H1_ENUM_ID_BEGIN(NetBoxControl)
     NET_BOX_LINE_PREVIOUS = 1,
     NET_BOX_LINE_LATEST = 2,
     NET_BOX_INPUT = 3
-H1_ENUM_END(NetBoxControl)
+H1_ENUM_ID_END(NetBoxControl)
 
 // PopNetBox blinks the input cursor on NET_BOX_BLINK_TIMER_SLOT every
 // BLINK_DELAY ms.
@@ -726,7 +727,7 @@ H1_ENUM_CONST_END(NetBoxConstant)
 // congspre.bin / congrats.bin text widgets: the title (or the campaign's win
 // text), the five gScoreLabels captions, and the standard game's days, base
 // score, difficulty, final score and creature rating.
-H1_ENUM_BEGIN(CongratsControl)
+H1_ENUM_ID_BEGIN(CongratsControl)
     CONGRATS_TITLE = 100,
     CONGRATS_SCORE_LABEL_FIRST = 101,
     CONGRATS_DAYS = 106,
@@ -734,16 +735,16 @@ H1_ENUM_BEGIN(CongratsControl)
     CONGRATS_DIFFICULTY = 108,
     CONGRATS_FINAL_SCORE = 109,
     CONGRATS_RATING = 110
-H1_ENUM_END(CongratsControl)
+H1_ENUM_ID_END(CongratsControl)
 
 H1_ENUM_CONST_BEGIN(CongratsConstant)
     CONGRATS_SCORE_LABEL_COUNT = 5
 H1_ENUM_CONST_END(CongratsConstant)
 
 // dataentr.bin widgets: the prompt text and the edit field.
-H1_ENUM_BEGIN(DataEntryControl)
+H1_ENUM_ID_BEGIN(DataEntryControl)
     DATA_ENTRY_PROMPT = 1,
     DATA_ENTRY_TEXT = 10
-H1_ENUM_END(DataEntryControl)
+H1_ENUM_ID_END(DataEntryControl)
 
 #endif

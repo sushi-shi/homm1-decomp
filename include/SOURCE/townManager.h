@@ -3,6 +3,7 @@
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
+#include <BASE/message.h>
 #include <Domains.h>
 #include <H1/Macros.h>
 
@@ -43,8 +44,7 @@ H1_ENUM_BEGIN(TownArmyCommand)
     TOWN_ARMY_COMMAND_SWAP = 3,
     TOWN_ARMY_COMMAND_VIEW_HERO = 4,
     TOWN_ARMY_COMMAND_SPLIT = 5,
-    TOWN_ARMY_COMMAND_GARRISON = 6,
-    TOWN_SHIFT_QUALIFIER_MASK = 3
+    TOWN_ARMY_COMMAND_GARRISON = 6
 H1_ENUM_END(TownArmyCommand)
 
 H1_ENUM_BEGIN(TownCommandText)
@@ -66,7 +66,7 @@ H1_ENUM_BEGIN(TownCommandText)
     TOWN_TEXT_DWELLING = 21
 H1_ENUM_END(TownCommandText)
 
-H1_ENUM_BEGIN(TownControl)
+H1_ENUM_ID_BEGIN(TownControl)
     TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
     TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
     TOWN_GARRISON_FIRST_CONTROL = 0x10,
@@ -77,7 +77,7 @@ H1_ENUM_BEGIN(TownControl)
     TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_HERO_SLOT_LAST = 0x1b,
     TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
-H1_ENUM_END(TownControl)
+H1_ENUM_ID_END(TownControl)
 
 // Town objects: gTownObjectType's empty entry and a .tod without a border
 // widget are NONE, as is townManager::m_selectedBuilding with no building
@@ -187,10 +187,10 @@ H1_ENUM_CONST_BEGIN(TownRecruitHeroConstant)
 H1_ENUM_CONST_END(TownRecruitHeroConstant)
 
 // buybuil%d.bin controls BuyBuild fills: the building's picture and name.
-H1_ENUM_BEGIN(TownBuyBuildControl)
+H1_ENUM_ID_BEGIN(TownBuyBuildControl)
     BUY_BUILD_ICON_CONTROL = 2,
     BUY_BUILD_NAME_CONTROL = 3
-H1_ENUM_END(TownBuyBuildControl)
+H1_ENUM_ID_END(TownBuyBuildControl)
 
 // castle.bin state frames over a building's icon.
 H1_ENUM_BEGIN(TownCastleFrame)
@@ -265,14 +265,14 @@ H1_ENUM_CONST_END(TownScreenConstant)
 
 // rcrthero.bin widget ids: the two candidates' portraits, class labels and
 // select buttons (dimmed for the cannot-recruit quick view).
-H1_ENUM_BEGIN(TownRecruitHeroControl)
+H1_ENUM_ID_BEGIN(TownRecruitHeroControl)
     RECRUIT_HERO_PORTRAIT_FIRST = 2,
     RECRUIT_HERO_PORTRAIT_SECOND = 3,
     RECRUIT_HERO_CLASS_FIRST = 6,
     RECRUIT_HERO_CLASS_SECOND = 7,
     RECRUIT_HERO_SELECT_FIRST = 8,
     RECRUIT_HERO_SELECT_SECOND = 9
-H1_ENUM_END(TownRecruitHeroControl)
+H1_ENUM_ID_END(TownRecruitHeroControl)
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
 // fix these packed offsets.
@@ -318,7 +318,7 @@ public:
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(struct tag_message& message) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     void SetupExtraStuff(void);
     void SetTown(town* value) {
@@ -327,7 +327,7 @@ public:
     void ChangeTown(void);
     void SetupTown(void);
     void UnloadTown(void);
-    void SetArmyCommand(i16 qualifier);
+    void SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier);
     void SetCommandAndText(struct tag_message& message);
     void ShowText(char*);
     void DoCommand(i8 command);
@@ -362,10 +362,10 @@ struct TownBuildingExtent {
 
 // Open's per-type town-object layout (0x0048d428).
 extern const i8 gTownObjectType[4][TOWN_MANAGER_OBJECT_CAPACITY];
-i16 TavernHandler(struct tag_message& message);
-i16 MageGuildHandler(struct tag_message& message);
-i16 SplitArmyHandler(struct tag_message& message);
-i16 CastleHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) TavernHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& message);
+H1_ENUM_RETURN(MessageDispatchResult, i16) CastleHandler(struct tag_message& message);
 // BuyBuild's cost-row layouts by resource count, and the thieves'-guild
 // counts SetupThievesGuild reveals more categories for.
 H1_ENUM_CONST_BEGIN(TownCountConstant)

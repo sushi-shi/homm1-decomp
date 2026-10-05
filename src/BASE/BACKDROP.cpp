@@ -25,7 +25,7 @@ void backdropWidget::Read(void) {
 }
 
 VA(0x0046cf21, 0x19)
-i16 backdropWidget::Main(tag_message& message) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) backdropWidget::Main(tag_message& message) {
     return widget::Main(message);
 }
 

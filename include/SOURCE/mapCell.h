@@ -35,7 +35,7 @@ H1_ENUM_CONST_END(MapCellConstant)
 // extra sprite (owner flags, a mine's resource), bit 6 marks the hero cursor
 // cell and bit 7 draws the object with the ground (the shadow-only bit;
 // pathing ignores such objects).
-H1_ENUM_BEGIN(MapCellFlag)
+H1_ENUM_FLAGS_BEGIN(MapCellFlag, u8)
     MAP_CELL_GROUND_FLIP_VERTICAL = 0x01,
     MAP_CELL_GROUND_FLIP_HORIZONTAL = 0x02,
     MAP_CELL_OBJECT_ANIMATED = 0x04,
@@ -44,7 +44,7 @@ H1_ENUM_BEGIN(MapCellFlag)
     MAP_CELL_OVERLAY_EXTRA = 0x20,
     MAP_CELL_HERO_CURSOR = 0x40,
     MAP_CELL_OBJECT_SHADOW_ONLY = 0x80
-H1_ENUM_END(MapCellFlag)
+H1_ENUM_FLAGS_END(MapCellFlag)
 
 // Adventure object tilesets: advManager's m_objectIcons slots, loaded from
 // these ICN files in the constructor.
@@ -87,7 +87,7 @@ public:
     // town and mine owner flags (flags 0x10/0x20) and a mine's resource icon.
     u8 m_extraFrame;
     // Bit 6 marks the hero cursor's cell; DemobilizeCurrHero clears it.
-    u8 m_flags;
+    H1_ENUM_STORAGE(MapCellFlag, u8) m_flags;
     // A second trigger sharing the cell (low seven bits): EraseObj promotes it
     // when the primary object goes. Bit 7 blocks pathing; map setup sets it
     // where an object continues into the next cell.

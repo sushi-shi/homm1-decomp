@@ -19,7 +19,7 @@ H1_ENUM_CONST_END(InputManagerConstant)
 // PC set-1 scan codes: KeyboardMessageHandler stores bits 16..23 of the
 // WM_KEYDOWN lParam, and MakeScanCodeTable maps every code 0x00..0x58 to
 // its character or to the code shifted into the high byte.
-H1_ENUM_BEGIN(InputScanCode)
+H1_ENUM_ID_BEGIN(InputScanCode)
     INPUT_SCAN_NONE = 0x00,
     INPUT_SCAN_ESCAPE = 0x01,
     INPUT_SCAN_1 = 0x02,
@@ -113,7 +113,7 @@ H1_ENUM_BEGIN(InputScanCode)
     INPUT_SCAN_F11 = 0x57,
     INPUT_SCAN_F12 = 0x58,
     INPUT_SCAN_CODE_MASK = 0xff
-H1_ENUM_END(InputScanCode)
+H1_ENUM_ID_END(InputScanCode)
 
 // MakeScanCodeTable's encodings: the scan code in the high byte for keys
 // without a character, and the control characters of Escape and Backspace.
@@ -151,7 +151,7 @@ public:
     inputManager(void);
     virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual i16 Main(tag_message&) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message&) OVERRIDE;
     void Flush(void);
     tag_message GetEvent(void);
     tag_message PeekEvent(void);

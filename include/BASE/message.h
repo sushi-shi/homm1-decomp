@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-H1_ENUM_BEGIN(MessageType)
+H1_ENUM_FLAGS_BEGIN(MessageType, i16)
     MESSAGE_NONE = 0,
     MESSAGE_KEY_DOWN = 1,
     MESSAGE_KEY_UP = 2,
@@ -14,7 +14,7 @@ H1_ENUM_BEGIN(MessageType)
     MESSAGE_RIGHT_BUTTON_UP = 0x40,
     MESSAGE_WIDGET = 0x200,
     MESSAGE_EXECUTIVE = 0x4000
-H1_ENUM_END(MessageType)
+H1_ENUM_FLAGS_END(MessageType)
 
 H1_ENUM_BEGIN(ExecutiveCommand)
     EXECUTIVE_COMMAND_TERMINATE_LOOP = 1,
@@ -46,7 +46,7 @@ H1_ENUM_BEGIN(BaseWidgetCommand)
     WIDGET_NOTIFY_RIGHT_CLICK = 14
 H1_ENUM_END(BaseWidgetCommand)
 
-H1_ENUM_BEGIN(MessageModifier)
+H1_ENUM_FLAGS_BEGIN(MessageModifier, i16)
     MESSAGE_MODIFIER_NONE = 0,
     MESSAGE_MODIFIER_RIGHT_SHIFT = 1,
     MESSAGE_MODIFIER_LEFT_SHIFT = 2,
@@ -57,7 +57,7 @@ H1_ENUM_BEGIN(MessageModifier)
     MESSAGE_MODIFIER_ALT = 0x20,
     MESSAGE_MODIFIER_RIGHT_BUTTON = 0x200,
     MESSAGE_MODIFIER_BUTTON_MASK = 0x300
-H1_ENUM_END(MessageModifier)
+H1_ENUM_FLAGS_END(MessageModifier)
 
 #pragma pack(push, 1)
 // The anonymous unions name the per-message-type views of each word.
@@ -73,7 +73,7 @@ struct tag_message {
         i16 id;
         i16 y;
     };
-    i16 modifiers;
+    H1_ENUM_STORAGE(MessageModifier, i16) modifiers;
     char unknown8[4];
     union {
         i32 value;
