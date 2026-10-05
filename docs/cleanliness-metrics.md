@@ -63,8 +63,6 @@ asks and the facts that bound it.
 - **Unknown identifiers and slot-tuned names**: a rename must keep the name's
   `/Od` identifier-hash bucket (`h = (h << 2) + (h >> 7) + c`, bucket `h & 15`)
   so stack slots and C1 handles do not move.
-- **Source markers**: `verify dead-code` does not read `BMAP2.asm`
-  `MoveBitmapArea`'s decorated MASM `PROC` name.
 - **include-order**: `Misc`, `KB`, `REQUEST`, `comwin` and `kbwin` define
   `WIN32_LEAN_AND_MEAN` inside the include block and stay manual.
 - **Board structural rows**: externs and prototypes live in the owner unit's
