@@ -53,9 +53,9 @@ review inputs, not defect totals. Preserve banked matches.
 - [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
 - [ ] Common-code review (helpers, accessors, macros): the 15 combat and AI
   units are read (**233 functions**, [ledger](docs/common-code-combat.tsv));
-  **11 families** retained at **54 sites**, 4 rejected by measurement, 5
-  deferred to typed enum domains or another unit's helper. Adventure, town,
-  hero and BASE units pending.
+  **11 families** retained at **54 sites**, 4 rejected by measurement, 25 kept
+  explicit, 5 deferred to typed enum domains or another unit's helper.
+  Adventure, town, hero and BASE units pending.
 
 ## Branches
 
