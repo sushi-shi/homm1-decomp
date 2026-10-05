@@ -1140,10 +1140,7 @@ void NormalDialog(
         if (strlen(amountText[i]) > 0)
             sizingHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
         if (i == 0) {
-            if (kind[1] == NORMAL_DIALOG_NO_RESOURCE)
-                resCenterX = width / 2;
-            else
-                resCenterX = width / 3;
+            resCenterX = kind[1] == NORMAL_DIALOG_NO_RESOURCE ? width / 2 : width / 3;
         } else {
             resCenterX = width * 2 / 3;
         }
