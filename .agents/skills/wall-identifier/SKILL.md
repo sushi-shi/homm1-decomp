@@ -3,7 +3,6 @@ name: wall-identifier
 description: Classify a HoMM1 matching WALL before spending effort on it. When a reconstruction plateaus below 100% and no spelling obviously closes it, name WHICH VC4 decision diverged - inline/call-set, control flow, register/schedule, or masked/referent - and route to the lever for that class. Start with `homm1 walls diagnose ADDRESS`. Use when a function is stuck, when triaging plateaus, when asked "why won't this match" or "what kind of wall is this". Complements `matcher` (reconstructs) and `permute` (breaks proven codegen residue); this one DIAGNOSES.
 ---
 
-Adapted from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
@@ -42,8 +41,8 @@ Do not call a wall class N while class N-1 still diverges.
 
 ### inline / call-set
 
-Read the unit's VC4 flags from `config/units.toml`. Giten's VC5 inline
-thresholds and template behavior are donor hypotheses, not HoMM1 facts.
+Read the unit's flags from `config/units.toml`. Inline thresholds and template
+behavior observed with other compilers are hypotheses, not HoMM1 facts.
 Prove each missing expansion with the complete caller and a real VC4 control.
 
 - The class is **inline / call-set**, not "inline budget". A call-count delta
@@ -99,11 +98,11 @@ are relaxed. Function, import and EH identities still matter. Inspect raw
 objects when investigating deferred data identities; a normalized equality
 does not prove those identities. Fix wrong code referents before permutation.
 
-## What does NOT transfer from HoMM3
+## What does NOT transfer from other compilers
 
 Do not transfer VC5 or VC6 allocator models, inline thresholds, `/Ob2`
 semantics, template quirks or IL capture switches without real VC4 controls.
-The imported pattern reference labels its donor observations explicitly.
+The pattern reference labels its unmeasured hypotheses explicitly.
 
 A reproducibly bounded residue stays visible through the derived inventory,
 the MAX ledger, and a valid `@early-stop` marker; never a hand-kept wall

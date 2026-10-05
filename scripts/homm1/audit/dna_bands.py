@@ -1,7 +1,6 @@
-"""Recover executable ownership with the HoMM2 masked-byte/DNA census.
+"""Recover executable ownership with a masked-byte/DNA census.
 
-This is the HoMM1 port of HoMM2's ``audit unmatched-census`` pass.  It
-compares retail function bytes with functions in the exact VC4 libraries used
+This pass compares retail function bytes with functions in the exact VC4 libraries used
 by the link, masking relocation operands on both sides.  Exact matches anchor
 an object's definition order; functions bracketed by two anchors are then
 identified from that order (the executable's "DNA bands").
@@ -155,7 +154,7 @@ def _matches(image_body: bytes, candidates: list[Candidate]) -> list[Candidate]:
     for candidate in candidates:
         # Candidate REL32/DIR32 positions are authoritative even where the PE
         # base-relocation table cannot record them.  Apply their mask to both
-        # sides, exactly as HoMM2's union-mask fallback does.
+        # sides (union mask).
         if mask_bytes(image_body, list(candidate.sites)) == candidate.body:
             out.append(candidate)
     return out
@@ -178,15 +177,15 @@ def _thunks() -> dict[int, tuple[str, str, int]]:
     return out
 
 
-def _donor_helper_hints() -> dict[int, tuple[str, str]]:
-    """Private identities exposed only by the donor-order segmentation.
+def _unit_span_helper_hints() -> dict[int, tuple[str, str]]:
+    """Private identities exposed only by the unit-span segmentation.
 
     These cannot be source names (the ``$E`` ordinal is compiler-private), but
-    a segment whose first ordered donor identity is ``$E<n>`` proves that its
+    a segment whose first ordered identity is ``$E<n>`` proves that its
     first retail row is a lifecycle helper.  Keep the ordinal as evidence and
-    classify the row by kind, exactly as HoMM2's compgen census does.
+    classify the row by kind.
     """
-    path = RETAIL / "homm2_tu_segments.tsv"
+    path = RETAIL / "unit_spans.tsv"
     if not path.is_file():
         return {}
     _body, _header, rows = read_tsv(path)
@@ -204,7 +203,7 @@ def run_census():
                           for candidate in rows
                           if candidate.source.split(":", 1)[0] in RUNTIME_LIBS]
     thunks = _thunks()
-    helper_hints = _donor_helper_hints()
+    helper_hints = _unit_span_helper_hints()
     rows = []
     anchors: dict[str, list[tuple[int, int]]] = defaultdict(list)
     image_by_rva = {r["rva"]: r for r in _image_rows()}
@@ -235,7 +234,7 @@ def run_census():
             symbol, unit = helper_hints.get(rva, ("", ""))
             row.update(**{"class": "compiler-helper", "source": unit,
                           "symbol": symbol,
-                          "detail": ("HoMM2 donor definition-order segment"
+                          "detail": ("unit-span definition-order segment"
                                      if symbol else "committed helper-kind row")})
             rows.append(row)
             continue
@@ -243,7 +242,7 @@ def run_census():
             symbol, unit = helper_hints[rva]
             row.update(**{"class": "helper-order", "source": unit,
                           "symbol": symbol,
-                          "detail": "HoMM2 donor definition-order segment"})
+                          "detail": "unit-span definition-order segment"})
             rows.append(row)
             continue
         if rva in thunks:
@@ -292,7 +291,7 @@ def run_census():
                 row["detail"] = f"{len(matches)} byte-identical candidates"
         rows.append(row)
 
-    # HoMM2's 24-byte prefix pass.  This recovers names where object/image
+    # 24-byte prefix pass.  This recovers names where object/image
     # extents differ while keeping collisions visible and unclaimed.
     for row in rows:
         if row["class"] != "unknown":

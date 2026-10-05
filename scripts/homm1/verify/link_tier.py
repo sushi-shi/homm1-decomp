@@ -31,8 +31,7 @@ import sys
 
 from homm1.core.paths import BUILD, IMAGE_BUILD
 
-# The paths `homm1 link` writes (homm1.graph.CANDIDATE_EXE/_MAP); the port
-# kept the donor's HOMM1.* spelling and so never found a candidate.
+# The paths `homm1 link` writes (homm1.graph.CANDIDATE_EXE/_MAP).
 CAND = IMAGE_BUILD / "exe/HEROES.candidate.EXE"
 CMAP = IMAGE_BUILD / "exe/HEROES.candidate.map"
 UNRESOLVED = IMAGE_BUILD / "exe/HEROES.candidate.unresolved.txt"

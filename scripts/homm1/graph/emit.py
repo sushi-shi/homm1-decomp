@@ -313,10 +313,10 @@ def write_toolchain_id(out: Path | None = None) -> bool:
 
 
 def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
-    """Emit Gruntz's opt-in candidate link phase.
+    """Emit the opt-in candidate link phase.
 
     MASM's COFF output belongs to objdiff.  The period linker consumes the
-    ordinary OMF output, exactly as the donor build does, so replace only the
+    ordinary OMF output, so replace only the
     fixed assembly objects on this edge.
     """
     w.comment("=== PHASE 2: link -> candidate HEROESW.EXE + .map (opt-in) ===")
@@ -677,7 +677,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                 # the universe's carve-out classes (library/compiler/thunk)
                 implicit=[MANIFEST, "config/retail/dna_bands.tsv",
                           *VERIFY_BASELINES, *VERIFY_MODS])
-        # Giten matching-loop behavior: build refreshes scores and README.
+        # The build refreshes scores and README.
         # Merge preparation explicitly runs `homm1 build verify`; all gates
         # remain fatal there, including MAX and the fast+normal tiers.
         w.rule("verify_check",

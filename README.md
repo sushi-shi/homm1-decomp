@@ -3,7 +3,8 @@
 C++ reconstruction of **Heroes of Might and Magic — Buka 2003**, using VC6 SP5.
 Original English is preserved alongside the Russian translation catalog.
 
-See [port changes and evidence](docs/buka-2003.md). Supply your own executable
+See [Buka 2003 changes](docs/versions/buka-2003.md) and the [version lineage](docs/versions/README.md)
+(Win95 1.0 → 1.1 → 1.2 → Buka 2003). Supply your own executable
 and game assets.
 
 <!-- match-score:start -->

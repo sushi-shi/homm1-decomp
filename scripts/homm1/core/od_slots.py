@@ -6,7 +6,7 @@ names affect frame layout even though the names never reach machine code.
 Each inner block scope is its own table, laid out after the function scope in
 block source order.
 
-The Buka compiler is VC6 SP5, which uses the HoMM2-measured rule: shift by
+The Buka compiler is VC6 SP5, which uses this rule: shift by
 four and fold the 32-bit hash to sixteen bits before taking the bucket
 (docs/patterns/vc6-od-frame-slots.md).  The NWC branches' VC4.0 variant
 (shift by seven, unfolded) does not apply here.  It lives in ``core`` because

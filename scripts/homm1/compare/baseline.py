@@ -18,40 +18,19 @@ from homm1.core.tsv import read as read_tsv
 ROOT = IMAGE_BUILD / "objdiff/baseline"
 
 
-def walk(value):
-    if isinstance(value, dict):
-        yield value
-        for child in value.values():
-            yield from walk(child)
-    elif isinstance(value, list):
-        for child in value:
-            yield from walk(child)
-
-
-def evidence(paths, image_hash):
+def evidence(identities=None, proofs=None):
     """Read explicit reviewed identities/sites, never infer correspondence.
 
-    The two reference schemas are existing retail-fact schemas. Conflicting
-    spellings at a site are withheld. No archived NWC evidence is admitted.
+    `function_identities.tsv` lists reviewed (rva, name) function identities;
+    `reference_proofs.tsv` lists reviewed (site, target, symbol) references.
+    A site with several spellings is withheld by `reference_reason`.
     """
     functions, references = set(), {}
-    for path in paths:
-        doc = json.loads(path.read_text())
-        if doc.get("image_sha256") != image_hash:
-            continue
-        for row in walk(doc):
-            if all(k in row for k in ("name", "rva", "size")):
-                functions.add((int(row["rva"], 16), row["name"]))
-            if all(k in row for k in ("site_rva", "target_rva", "symbol")):
-                site, target, name = row["site_rva"], row["target_rva"], row["symbol"]
-            elif all(k in row for k in ("site", "target", "name", "kind")):
-                site, target, name = row["site"], row["target"], row["name"]
-            else:
-                continue
-            if not all(isinstance(v, str) for v in (site, target, name)):
-                continue
-            key = (int(site, 16), int(target, 16))
-            references.setdefault(key, set()).add(name)
+    for row in read_tsv(identities or RETAIL / "function_identities.tsv")[2]:
+        functions.add((int(row["rva"], 16), row["name"]))
+    for row in read_tsv(proofs or RETAIL / "reference_proofs.tsv")[2]:
+        key = (int(row["site_rva"], 16), int(row["target_rva"], 16))
+        references.setdefault(key, set()).add(row["symbol"])
     return functions, references
 
 
@@ -83,7 +62,7 @@ def audit_references(census, model, target_dir, pe, image_hash):
     """Check every reference independently of score reporting, without early exit."""
     from homm1.delink import pdb_synth
 
-    reviewed, proofs = evidence(sorted(RETAIL.glob("buka-*.json")), image_hash)
+    reviewed, proofs = evidence()
     reviewed.update((rva, value[0]) for rva, value in
                     pdb_synth.referent_function_names().items())
     known_referents = {}

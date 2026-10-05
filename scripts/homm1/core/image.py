@@ -1,7 +1,6 @@
-"""PE32 inspection, using HoMM3's separate readable/mapped section extents.
+"""PE32 inspection with separate readable/mapped section extents.
 
-HoMM1 has base relocations and a separate .idata section. Never inherit HoMM3's
-fixed-image assumptions or treat the zero-filled .data tail as file bytes.
+Never treat the zero-filled .data tail as file bytes.
 """
 from __future__ import annotations
 

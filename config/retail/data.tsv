@@ -1,28 +1,28 @@
 # Buka census migration in progress: reviewed FINDPATH/SEARCH and adventure-manager dependency starts; remaining rows still inherited NWC evidence.
-# Evidence: buka-pathfinding.json and buka-advmgr.json.
-# Command-handler operand review: buka-adventure-commands.json.
-# Input-handler operand and payload review: buka-adventure-input.json.
-# Drawing-family operand and typed payload review: buka-adventure-drawing.json.
-# Drawing-family operand and typed payload review: buka-adventure-cell.json.
-# Drawing-family operand and typed payload review: buka-radar-locators.json.
-# QuickInfo typed table and operand review: buka-quick-info.json.
-# Turn-panel operand and typed payload review: buka-bottom-turns.json.
-# Panel and resource-message operand/payload review: buka-bottom-panels.json.
-# Quick-view typed data and complete pointer-payload review: buka-quick-views.json.
-# Context/locator operand/payload review: buka-adventure-context.json.
-# Control-panel operand/payload review: buka-control-panel.json.
-# Adventure-panel/drawing operand and payload review: buka-adventure-panel.json.
-# Ambient-sound operand and payload review: buka-environment-audio.json.
-# Travel-spell/route operand/payload review: buka-travel.json.
-# Scroll/network/border operand/payload review: buka-scroll-network.json.
-# Combat-AI operand/payload review: buka-combat-ai.json.
-# Army initialization/resource review: buka-army-resources.json.
-# Army drawing/movement review: buka-army-drawing.json.
-# Combat message buffers and flags: buka-combat-messages.json.
-# Army movement/luck/damage review: buka-army-luck.json.
-# Army effects/movement review: buka-army-effects.json.
-# Army-group damage constants: buka-army-group.json.
-# Bulk compiled-body and complete typed-initializer checks: buka-bulk-correspondence.json.
+# Evidence.
+# Command-handler operand review.
+# Input-handler operand and payload review.
+# Drawing-family operand and typed payload review.
+# Drawing-family operand and typed payload review.
+# Drawing-family operand and typed payload review.
+# QuickInfo typed table and operand review.
+# Turn-panel operand and typed payload review.
+# Panel and resource-message operand/payload review.
+# Quick-view typed data and complete pointer-payload review.
+# Context/locator operand/payload review.
+# Control-panel operand/payload review.
+# Adventure-panel/drawing operand and payload review.
+# Ambient-sound operand and payload review.
+# Travel-spell/route operand/payload review.
+# Scroll/network/border operand/payload review.
+# Combat-AI operand/payload review.
+# Army initialization/resource review.
+# Army drawing/movement review.
+# Combat message buffers and flags.
+# Army movement/luck/damage review.
+# Army effects/movement review.
+# Army-group damage constants.
+# Bulk compiled-body and complete typed-initializer checks.
 rva	kind
 0x0008a36c	
 0x0008a38c	vtable

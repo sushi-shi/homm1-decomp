@@ -62,7 +62,7 @@ source = "src/BASE/Icon2b.asm"
 flags = "cpp_buka"
 
 # Complete C++ instruction/reference controls agree under /G5, including
-# short-argument calls; see config/retail/buka-lzhuf.json.
+# short-argument calls.
 [[unit]]
 unit = "BASE/LZHUF"
 source = "vendor/lzhuf/encoder.cpp"
@@ -153,7 +153,7 @@ flags = "cpp_buka_g5"
 unit = "BASE/TILESET"
 images = ["game", "editor"]
 source = "src/BASE/TILESET.cpp"
-# G5 retail controls: buka-g5-surface-tileset-controls.json.
+# G5 retail controls agree.
 flags = "cpp_buka_g5"
 
 [[unit]]
@@ -225,13 +225,13 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
-# /GX frames; CombineGroups proves /G5 narrow arguments (buka-combat-setup.json).
+# /GX frames; CombineGroups proves /G5 narrow arguments.
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
 source = "src/SOURCE/COMMAND.cpp"
-# /GX frames; ProcessCombatMsg proves /G5 narrow arguments (buka-combat-input.json).
+# /GX frames; ProcessCombatMsg proves /G5 narrow arguments.
 flags = "cpp_buka_g5"
 
 [[unit]]
@@ -368,13 +368,12 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/netwin"
 source = "src/SOURCE/netwin.cpp"
 # /G5 matches byte-mask/integer-dispatch controls; same-source /G6 is worse.
-# See config/retail/buka-network-events-controls.json.
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
-# G5 retail controls: buka-g5-surface-tileset-controls.json.
+# G5 retail controls agree.
 flags = "cpp_buka_g5"
 # retail __FILE__ "D:\\Heroes\\Source\\wingraph.cpp"
 retail_file = "Source\\wingraph.cpp"
@@ -401,7 +400,7 @@ unit = "SOURCE/CURSOR"
 source = "src/SOURCE/CURSOR.cpp"
 # 0x00405950..0x00407d8f sits between int3-aligned wingraph and TOWNMGR objects;
 # no fs:[0] frame appears in the band.
-# Retail argument loads omit /G6 clears; unchanged-body controls in buka-cursor-state.json.
+# Retail argument loads omit /G6 clears; unchanged-body controls.
 flags = "cpp_buka_g5"
 
 [[unit]]

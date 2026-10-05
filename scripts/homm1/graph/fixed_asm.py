@@ -1,6 +1,6 @@
 """Reviewed MASM units and their fixed retail claims.
 
-Ported directly from HoMM2 Buka's fixed_asm module.  Assembly has no C++ VA
+Assembly has no C++ VA
 annotations; target facts are loaded from config/retail/asm_claims.tsv.
 """
 

@@ -3,7 +3,6 @@ name: holista
 description: Recover the inline helpers, accessors, and macros hidden inside HoMM1 functions. Read one function at a time, mark where its statements drop below the abstraction level of the code around them (raw member arrays, container internals, repeated expressions, scoped blocks), restore the helper the original developers called, and apply it across every site. Use for helper-recovery passes over random functions, for hard walls that may be an open-coded helper, and whenever a function mixes domain operations with the internals of another class.
 ---
 
-Adapted from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
@@ -77,8 +76,8 @@ A helper needs evidence, not taste:
   strongest signal. Count the sites.
 - **Existing helpers:** check the owning class and its headers first; the
   helper may already exist unused, or exist for a sibling field.
-- **Source correspondence:** inspect HoMM2 Buka 2.1 first and PoL 2.0
-  second. Similar source is a hypothesis until HoMM1 retail confirms it.
+- **Sibling code:** similar code elsewhere in the tree is a hypothesis until
+  HoMM1 retail confirms it.
 - **Retail shape:** a repeated load instead of a reused register, a reload
   after a call, or scope-shaped stack homes corroborate a call per use.
 

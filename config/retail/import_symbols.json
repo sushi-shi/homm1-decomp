@@ -3,7 +3,7 @@
   "evidence": {
     "file": "SMACKW32_buka_2003.dll",
     "sha256": "0d9973230fd4eff0632c01954a49bd43a372828be5b932c3f84da08896431e68",
-    "record": "buka-2003.json inputs/SMACKW32_buka_2003.dll/exports",
+    "record": "versions/images.json SMACKW32_buka_2003.dll exports",
     "review": "Direct IAT calls in SMACKMGR retail assembly/CFGs; ordinal decorations verified against the shipped DLL export table."
   },
   "imports": [

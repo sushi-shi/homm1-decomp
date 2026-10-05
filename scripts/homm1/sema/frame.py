@@ -5,8 +5,8 @@
     homm1 sema frame BASE/LZHUF --function Decode
 
 The names and offsets come from S_BPREL32 records in the candidate object's
-``.debug$S`` section.  HoMM1 uses the older CV4 record IDs while the HoMM2
-donor tool used CV5; this reader accepts both.  Retail has no local-name debug
+``.debug$S`` section.  The reader accepts both the CV4 and the CV5
+record IDs.  Retail has no local-name debug
 records, so the output names candidate declarations and supplies the proven
 MSVC /Od identifier bucket needed to steer their retail stack order.
 """

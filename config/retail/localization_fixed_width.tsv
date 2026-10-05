@@ -1,0 +1,6 @@
+id	offset	english	nwc_rva	rva	size	payload_sha256
+campaign.town_name.0	0x3	    Gateway     	0x9276b	0x91ce3	16	e287f6e83724734c57cd56f50c0b14a11715bbb8241ee18f9fe8143d50348a31
+campaign.town_name.4	0x157	Castle Ironfist 	0x928bf	0x91e37	16	f6af6e9227efd1180a38b9b2a99b653d9fc875798454db52e3f0d93d537b3bfa
+campaign.town_name.5	0x1ac	 Castle Slayer  	0x92914	0x91e8c	16	c31ff74e88c6c502d79fe34c39cd66dec05aa6e131715028bbece52f71002bdd
+campaign.town_name.6	0x201	Castle Lamanda  	0x92969	0x91ee1	16	69e2dfa44493249e031373db32de155d4913380012930d4e0045e0748bee10e2
+campaign.town_name.7	0x256	 Castle Alamar  	0x929be	0x91f36	16	57a3ebe7443f8dd484c5fb2461f2428d07fb3f53cf9757abc7ae6ef12a3400e8

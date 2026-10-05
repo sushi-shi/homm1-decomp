@@ -214,7 +214,7 @@ def target_identifiers(text: str, target: Target) -> set[str]:
 
 
 def source_marker(rva: int):
-    """HoMM1 VA pins, with RVA support for donor fixtures."""
+    """HoMM1 VA pins, with RVA support for test fixtures."""
     return re.compile(rf'^[ \t]*((?:extern[ \t]+"C"[ \t]+)?(?:VA\(0x{rva + IMAGE_BASE:08x}|RVA\(0x{rva:08x}),)', re.M | re.I)
 
 

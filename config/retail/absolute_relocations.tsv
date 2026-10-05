@@ -1,6 +1,6 @@
 # image-sha256: 34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db
 # Reviewed instruction operands, dispatch slots and typed pointer fields.
-# Evidence: absolute_reference_evidence.tsv and buka-absolute-references.json
+# Evidence: absolute_reference_evidence.tsv
 site_rva	kind
 0x00001016	dir32
 0x0000121a	dir32
