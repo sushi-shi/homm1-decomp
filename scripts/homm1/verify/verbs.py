@@ -268,6 +268,23 @@ def cmd_status(argv) -> int:
 
 
 
+def _refresh_from_game() -> bool:
+    """README's block is rendered by the game process, which embeds every
+    other image's section; another image's command delegates to it."""
+    import os
+    from homm1.core.paths import DEFAULT_IMAGE, IMAGE_ENV
+    before = rm.README.read_text()
+    subprocess.run([sys.executable, "-m", "homm1.verify", "readme"], check=True,
+                   cwd=REPO, env=dict(os.environ, **{IMAGE_ENV: DEFAULT_IMAGE}),
+                   stdout=subprocess.DEVNULL)
+    return rm.README.read_text() != before
+
+
+def _other_image() -> bool:
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    return image_key() != DEFAULT_IMAGE
+
+
 def refresh_readme_block(report=None) -> bool:
     """Re-render README's score block from the CURRENT report + banked ledger.
 
@@ -279,6 +296,8 @@ def refresh_readme_block(report=None) -> bool:
     deliberately outside BANK_INPUT_PATHS, so writing it can never block
     banking.
     """
+    if _other_image():
+        return _refresh_from_game()
     from homm1.model import resolve
     from homm1.verify.universe import engine_universe
     _doc, cur, base, fp, _stale, rvas = load_state(report)
@@ -605,7 +624,8 @@ def cmd_bank(argv) -> int:
     if not a.baseline_only:
         # `Fuzzy Max` reads the JUST-banked baseline, so the block and the
         # ledger describe the same tree state.
-        changed_r = rm.write_block(rm.render_block(cur, bl.load(), eng))
+        changed_r = (_refresh_from_game() if _other_image()
+                     else rm.write_block(rm.render_block(cur, bl.load(), eng)))
         print(f"README score block "
               f"{'UPDATED' if changed_r else 'unchanged'} "
               f"({rm.README.relative_to(REPO)})")
