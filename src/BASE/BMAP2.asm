@@ -32,6 +32,8 @@ _gDimPalette BYTE 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 00
              BYTE 04Dh, 0F4h, 0F4h, 0F4h, 0F4h, 0F5h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h, 000h
 _gBitmapSourceSkip DWORD 0
 _gBitmapRowSkip DWORD 0
+; Twelve zero bytes that no retail code reads (0x004a15c0..0x004a15cb).
+_gBitmapUnused DWORD 3 DUP (0)
 
 .code
 

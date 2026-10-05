@@ -10,15 +10,6 @@ rva	size	symbol	provenance
 0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
 0x000a31bc	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
 0x000a31c0	30	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
-0x000a10e4	3	?gAdventureColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a10e8	3	?gAdventureMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a10ec	15	?gAdventureBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
-0x000a10fc	3	?gSpellColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a1100	3	?gSpellMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a1104	15	?gSpellBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
-0x000a1114	3	?gCombatColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a1118	3	?gCombatMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a111c	15	?gCombatBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
 0x000a3228	30	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
 0x000a3248	30	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
 0x000a3298	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
