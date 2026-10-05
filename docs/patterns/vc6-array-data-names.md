@@ -51,6 +51,4 @@ two repaired joins, zero regressions and no remaining name-join failures.
 This checks spelling, not the still-incomplete retail address migration.
 
 The controls are captured by `core/test_msvc_names.py`; legacy VC4 rewrite
-expectations remain separate. The retail operands, complete table bytes,
-control hashes and corpus result are in
-[`buka-environment-audio.json`](../../config/retail/buka-environment-audio.json).
+expectations remain separate.

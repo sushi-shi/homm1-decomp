@@ -18,4 +18,3 @@ that subsequent arithmetic reloads a rounded value.
 
 Restoring the conversions gives a complete byte/reference match without
 adding source locals.
-See [`buka-seed-attention-controls.json`](../../config/retail/buka-seed-attention-controls.json).

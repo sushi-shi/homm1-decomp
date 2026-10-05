@@ -16,9 +16,7 @@ HoMM1's retail assembly is the authority: all five emitted folds were executed
 for every input byte and checked against both the candidate and an independent
 ASCII/Russian Unicode oracle. The complete hydra routine also has the same
 instruction sequence and CFG after separately verified stack placement and
-references. Ranged and melee whole-function matching remains open.
+references.
 
-See [combat evidence](../../config/retail/buka-combat-messages.json) for
-addresses, sizes, case-table hashes and source/object fingerprints. The
-per-callsite byte stack slot is a compiler-generated return temporary, not
+The per-callsite byte stack slot is a compiler-generated return temporary, not
 an invitation to add a source local to fit a frame.
