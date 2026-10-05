@@ -1,6 +1,5 @@
-// Combat screen drawing; Buka 2.1 SOURCE/DRAWING correspondence. HoMM1
-// keeps one text line in the combat window and redraws the battlefield
-// from the grid row UpdateGrid records.
+// Combat screen drawing. HoMM1 keeps one text line in the combat window and
+// redraws the battlefield from the grid row UpdateGrid records.
 
 #include <match.h>
 
@@ -540,12 +539,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
                 giMaxExtentY = COMBAT_VIEW_HEIGHT;
             gEnlargeScreenBlit = 0;
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
             gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }

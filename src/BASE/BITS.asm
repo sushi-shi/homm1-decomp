@@ -1,5 +1,3 @@
-; Retail HoMM1 and both HoMM2 donor builds use this MASM translation unit.
-
 .386
 .model flat, C
 option casemap:none
@@ -61,7 +59,7 @@ BitSet PROC C
 BitSet ENDP
 
 ; @dead-code
-; Zero-ref: no effective incoming retail reference; both HoMM2 donors retain it.
+; Zero-ref: no effective incoming retail reference.
 ; extern "C" void __cdecl BitClear(void* bits, unsigned int bit) {
 ;     ((unsigned char*)bits)[bit >> 3] &= ~(1 << (bit & 7));
 ; }

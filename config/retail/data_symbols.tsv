@@ -327,7 +327,7 @@ rva	size	symbol	provenance
 0x0009343c	1	?gHighScoreRank@@3CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a9e4c	4	?gClosingApp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a99d8	4	?lTemp@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
-0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
+0x000a9e48	4	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000ca160	4	?gbBerserk@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000b4bac	4	?fBerserkFactor@@3MA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000b9cc0	5184	?gaiTurnValueOfMine@@3PAY0EI@CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
@@ -444,6 +444,6 @@ rva	size	symbol	provenance
 0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
 0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow; buka-final-data-owners.json
 0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use; buka-input-timer-helpers.json
-0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA	Complete payload and compiled/retail use; buka-input-timer-helpers.json
+0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Complete payload and compiled/retail use; buka-input-timer-helpers.json
 0x00092c94	96	?gDwellingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json
 0x000931b4	28	?gNeutralBuildingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls; buka-building-description-tables.json

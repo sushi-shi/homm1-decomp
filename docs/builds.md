@@ -281,8 +281,8 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   (`Tracks\NN-AudioTrack NN.ogg`, `HeroesNN.ogg`), replacing CD audio and the AIL
   sample path. The binary contains Russian (cp1251) text and the Buka splash
   `buka.smk`.
-- **Usefulness:** not a VC4 matching target. It is a non-incremental donor for
-  source correspondence and absolute assert line numbers.
+- **Usefulness:** not a VC4 matching target. It is a non-incremental
+  reference for source correspondence and absolute assert line numbers.
 
 ## Editors
 
@@ -365,20 +365,15 @@ No PDB, DBG, MAP or symbol file for any HoMM1 build was found.
   `E:\Users\igorl\VSS\HMM\HMM1\temp\release\game\heroes.pdb` and
   `U:\HMM\VSS\HMM1\temp\release\editor\editor.pdb`.
 - **Disc and archive file lists checked:** the Buka Platinum ISO, all three
-  setup cabs (HoMM1, HoMM2, HoMM3), the Buka New Year ISO and HoMM1 cab, the
+  of its setup cabs, the Buka New Year ISO and HoMM1 cab, the
   NWC 1.0, 1.1 and 1.2 discs, `HEROES.Z`, and the "12 в 1" disc. None contains
   `*.pdb`, `*.dbg`, `*.sym`, `*.idb`, `*.obj` or a linker map. `_SETUP.LIB` is an
   InstallShield script library, and the `*.MAP` files are game maps.
-- **Other Buka products from the same rebuild:**
-  - HoMM2 `HMM2PL.exe` and `EDT2PL.exe`, 2003-04-04, VC6: NB10
-    `e:\Users\igorl\VSS\HMM\HMM2\temp\release\...` only, and no PDB on the
-    disc.
-  - HoMM3 `Heroes3.exe`, `h3maped.exe` and `h3ccmped.exe`, 2003-04: no PDB path.
 - **Magazine discs:** 116 Russian magazine and collection items on archive.org
   were listed: Игромания, Game.EXE, Навигатор игрового мира and Страна Игр
   2002–2005, plus the HoMM-titled Russian collections. None contains HoMM1
-  executables or debug files. Their "HEROES" paths are HoMM3/4 maps, guides and
-  images.
+  executables or debug files. Their "HEROES" paths are maps, guides and images
+  for later games in the series.
 - **Third-party libraries:** the only shipped PE with debug records is
   `WAIL32.DLL` (Miles). Its NB10 record names a PDB that is not present.
 

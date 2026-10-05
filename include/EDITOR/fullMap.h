@@ -1,7 +1,5 @@
 #ifndef HOMM1_EDITOR_FULLMAP_H
 #define HOMM1_EDITOR_FULLMAP_H
-// Reconstructed class (EDITOR) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 11 methods, 0 own-virtual, 0 static data.
 
 #include <EDITOR/mapcell.h>
 
@@ -32,10 +30,7 @@ public:
     void Read(i32, i32);
     void ChangeTilesetIndex(class mapCell*, i32, i32, i32, i32, i32, i32);
 
-    // Inline accessors. The retail build is /Od /Ob1 (unoptimized but inline
-    // expansion ON), so these splice into each call site - reproducing the per-call
-    // `jmp $+0` and the deferred `Row(y)[x]` indexing seen in the retail .text. Fully
-    // inlined -> they emit no out-of-line symbol, which is why CodeView lists none.
+    // Inline accessors.
     mapCell* Row(i32 y) {
         return cells + width * y;
     } // row base ptr; caller does [x]

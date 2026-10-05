@@ -41,8 +41,8 @@ with pinned VC6 SP5 and the then-current `/G6` profile. Both `hex += 1` and
 `hex++` emit a byte
 load and byte addition. `hex = hex + 1` emits `movsx` and a 32-bit addition,
 then stores the low byte. The corresponding subtraction behaves likewise.
-HoMM1 Buka's mouse-direction fallback uses the promoted form; the HoMM2 donor's
-increment spelling does not reproduce it in this translation unit. These
+HoMM1 Buka's mouse-direction fallback uses the promoted form; an increment
+spelling does not reproduce it in this translation unit. These
 controls explain the two-byte size difference without changing the member type.
 The final explicit assignments also reproduce these retail instructions under
 the subsequently established `/G5` unit profile.

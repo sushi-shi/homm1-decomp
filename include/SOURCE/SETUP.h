@@ -5,7 +5,7 @@
 
 struct tag_message;
 
-// SETUP's dialog handlers (Buka SETUP.h).
+// SETUP's dialog handlers.
 i16 BaseSetupHandler(struct tag_message& message);
 i16 SetupCampaignGameHandler(struct tag_message& message);
 i16 SetupBaudHandler(struct tag_message& message);
@@ -18,14 +18,13 @@ i16 SetupGameHandler(struct tag_message& message);
 
 extern i32 gDoModemConfig;
 
-// Moved from SETUP.cpp.
 H1_ENUM_BEGIN(SetupDialogResult)
     DIALOG_CANCEL = 0x7801
 H1_ENUM_END(SetupDialogResult)
 
 // The setup dialogs' numbered choice buttons (BaseSetupHandler accepts ids
 // 1..1000): each game::Setup* maps CHOICE_n to its option and the handlers
-// show help row n - 1 (Buka 2.1 SETUP.cpp SetupDialogChoice/SetupHelpIndex).
+// show help row n - 1.
 H1_ENUM_BEGIN(SetupDialogChoice)
     CHOICE_ONE = 1,
     CHOICE_TWO = 2,

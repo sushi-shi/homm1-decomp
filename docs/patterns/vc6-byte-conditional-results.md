@@ -14,9 +14,8 @@ return flying
     : static_cast<i8>(COMBAT_MESSAGE_COMMAND_MOVE);
 ```
 
-The HoMM2 Buka donor uses the same branch casts for this operation. The casts
-preserve the byte-valued command result while retaining the named domain values;
-they do not change the monster flags or the underlying field types.
+The casts preserve the byte-valued command result while retaining the named
+domain values; they do not change the monster flags or the underlying field types.
 
 `CheckWin` provides a second control. Its retreat outcome is stored in a byte.
 An int-valued `condition ? 0 : 1` emits `NEG; SBB; INC`; logical-not and an

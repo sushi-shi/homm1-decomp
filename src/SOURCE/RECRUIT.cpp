@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -25,8 +23,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Buka RECRUIT.cpp:58-112; HoMM1 capitalizes the plural name in place and
-// sets the creature portrait by frame rather than by icon name.
+// Capitalizes the plural name in place and sets the creature portrait by
+// frame.
 VA(0x00450d30, 0x1c9)
 void SetupRecruitWin(
     heroWindow* window,
@@ -75,7 +73,6 @@ void SetupRecruitWin(
     }
 }
 
-// Buka RECRUIT.cpp:114-178; HoMM1 has no saved recruit menu.
 VA(0x00450ef9, 0x25b)
 i16 recruitUnit::Open(i16 priority) {
     i32 resourceMaximum;
@@ -140,8 +137,7 @@ i16 recruitUnit::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// Buka RECRUIT.cpp:180-204; HoMM1 refreshes town strips whenever a town
-// recruit succeeded.
+// Refreshes town strips whenever a town recruit succeeded.
 VA(0x00451154, 0xb7)
 void recruitUnit::Close(void) {
     gpWindowManager->RemoveWindow(m_window);
@@ -151,12 +147,7 @@ void recruitUnit::Close(void) {
             localization::Tr("recruitment.garrison.full"),
             NORMAL_DIALOG_TYPE_OK,
             RECRUIT_NO_ROOM_DIALOG_X,
-            RECRUIT_NO_ROOM_DIALOG_Y,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
+            RECRUIT_NO_ROOM_DIALOG_Y
         );
     gpWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,
@@ -171,8 +162,7 @@ void recruitUnit::Close(void) {
     m_active = 0;
 }
 
-// Buka RECRUIT.cpp:206-232. Retail reserves an unreferenced 20-byte text
-// buffer above the message; the strings are formatted into gText.
+// The strings are formatted into gText.
 VA(0x0045120b, 0x11a)
 void recruitUnit::Update(void) {
     char text[20];
@@ -199,12 +189,11 @@ void recruitUnit::Update(void) {
     }
 }
 
-// Buka RECRUIT.cpp:234-378; HoMM1 handles quantity edits on select and
-// the buttons on deselect, redrawing through a zero MoveWindow.
+// Handles quantity edits on select and the buttons on deselect, redrawing
+// through a zero MoveWindow.
 VA(0x00451325, 0x372)
 i16 recruitUnit::Main(struct tag_message& message) {
     i32 done;
-    // Buka's unreferenced cost local; retail reserves its frame word.
     i32 cost;
     i8 quickView;
 
@@ -315,8 +304,6 @@ i16 recruitUnit::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Buka RECRUIT.cpp:380-398; HoMM1 stores the creature byte and has no
-// refresh-town argument.
 VA(0x00451697, 0xbc)
 recruitUnit::recruitUnit(armyGroup* army, i8 creatureType, i16* available) {
     i32 unitCosts[RESOURCE_COUNT];
@@ -365,7 +352,7 @@ recruitUnit::recruitUnit(town* townData, i8 dwelling) {
     }
 }
 
-// Buka RECRUIT.cpp:414-451; HoMM1 hides the pointer around the quick view.
+// Hides the pointer around the quick view.
 VA(0x0045182c, 0x17d)
 void QuickViewRecruit(town* townData, i8 dwelling) {
     i32 monsterType;

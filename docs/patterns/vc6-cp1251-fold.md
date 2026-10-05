@@ -12,9 +12,7 @@ separate Yo pair. Other CP1251 characters pass unchanged; this is not a full
 Unicode or locale-aware case converter. Ordinary C++ helpers recover the
 shared operation without open-coded blocks or artificial frame padding.
 
-HoMM2's corresponding helpers at revision
-`e0689d3f71b2942b544fd677cb54085a13503d7b` supplied corroboration. HoMM1's
-retail assembly remains the authority: all five emitted folds were executed
+HoMM1's retail assembly is the authority: all five emitted folds were executed
 for every input byte and checked against both the candidate and an independent
 ASCII/Russian Unicode oracle. The complete hydra routine also has the same
 instruction sequence and CFG after separately verified stack placement and

@@ -1,4 +1,4 @@
-// HoMM1 Buka combat AI: reviewed game functions occupy RVAs 0x11660..0x132ee.
+// HoMM1 Buka combat AI: game functions occupy RVAs 0x11660..0x132ee.
 // VC6 locale startup follows at 0x132ee/0x13315; INT3 padding ends at 0x13330,
 // where army::army begins. See config/retail/buka-combat-ai.json.
 
@@ -23,9 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Buka AI.cpp AICheckRetreat: compares the two sides' fight values,
-// weighting the defender of a town and unspent stacks, against a chance
-// raised by the hero's artifacts and experience.
+// Compares the two sides' fight values, weighting the defender of a town
+// and unspent stacks, against a chance raised by the hero's artifacts and
+// experience.
 VA(0x00411660, 0x728)
 i32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
@@ -70,7 +70,7 @@ i32 combatManager::AICheckRetreat(void) {
                 thatArmy->m_creatureCounts[armyIndex] = 0;
             }
         }
-        theForces[owner] = gpPhilAI->FightValueOfStack(thatArmy, curLeader, 1, 0, 0);
+        theForces[owner] = gpPhilAI->FightValueOfStack(thatArmy, curLeader, 1);
         if (m_combatTowns[owner])
             theForces[owner] = static_cast<i32>(theForces[owner] * 1.1);
         artifactTotals[owner] = 0;
@@ -122,10 +122,9 @@ i32 combatManager::AICheckRetreat(void) {
     return 0;
 }
 
-// Buka AI.cpp DoCompAI: shooters shoot (adjacent enemies first), flyers and
-// walkers attack by target class, walkers otherwise close in; a castle
-// attacker steps toward the gate. The chosen move is nudged onto a free hex
-// next to an enemy.
+// Shooters shoot (adjacent enemies first), flyers and walkers attack by
+// target class, walkers otherwise close in; a castle attacker steps toward
+// the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
 void combatManager::DoCompAI(i8) {
     i8 strongerVal;
@@ -209,21 +208,18 @@ void combatManager::DoCompAI(i8) {
             } else {
                 ndx = GetBestArmy(sideEnemy, mainShooters[sideEnemy]);
                 if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                    giNextAction = ACTION_MOVE;
-                    giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                    SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
                 }
                 ndx = GetBestArmy(sideEnemy, origMasks[sideEnemy]);
                 if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                    giNextAction = ACTION_MOVE;
-                    giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                    SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
                 }
                 if (walkerMask[sideEnemy]) {
                     ndx = GetClosestArmy(curArmy, sideEnemy, walkerMask[sideEnemy]);
                     if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                        giNextAction = ACTION_MOVE;
-                        giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                        SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                         goto finish;
                     }
                 }
@@ -274,8 +270,7 @@ void combatManager::DoCompAI(i8) {
                     tile = &gpCombatManager->m_hexCells[targetHexValue];
                     if (ValidHex(targetHexValue) && tile->m_occupantSide == COMBAT_SIDE_NONE
                         && tile->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
-                        giNextAction = ACTION_MOVE;
-                        giNextActionGridIndex = targetHexValue;
+                        SET_NEXT_COMBAT_MOVE(targetHexValue);
                         goto finish;
                     }
                 }
@@ -297,8 +292,8 @@ finish:
     }
 }
 
-// Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
-// builds word masks (dead flag 0x10, shooter 4, flyer 2).
+// Mask helpers: loop word indices over m_numArmies and build word masks
+// (dead flag 0x10, shooter 4, flyer 2).
 VA(0x004125fa, 0xb7)
 i16 combatManager::GetShooterMask(i8 side) {
     i16 armyIndex = 0;
@@ -461,8 +456,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
         if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
-            giNextAction = ACTION_MOVE;
-            giNextActionGridIndex = targetHex;
+            SET_NEXT_COMBAT_MOVE(targetHex);
             return 1;
         }
         if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -472,8 +466,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
                 targetHex++;
             currentArmy->m_moveTargetHex = targetHex;
             if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
-                giNextAction = ACTION_MOVE;
-                giNextActionGridIndex = targetHex;
+                SET_NEXT_COMBAT_MOVE(targetHex);
                 return 1;
             }
         }
@@ -525,8 +518,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     else
         victim = GetBestArmy(1 - m_currentSide, enemyMask);
     if (victim != COMBAT_ARMY_INDEX_NONE) {
-        giNextAction = ACTION_MOVE;
-        giNextActionGridIndex = m_armies[1 - m_currentSide][victim].m_hex;
+        SET_NEXT_COMBAT_MOVE(m_armies[1 - m_currentSide][victim].m_hex);
         return 1;
     } else {
         return 0;

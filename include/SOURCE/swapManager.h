@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_SWAPMANAGER_H
 #define HOMM1_SOURCE_SWAPMANAGER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 13 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <BASE/icon.h>
@@ -48,9 +46,8 @@ public:
     void SplitMons(void);
 };
 #pragma pack(pop)
-// Moved from SWAPMGR.cpp.
-// swapwin.bin widget ids (Buka 2.1 SWAPMGR.cpp SwapManagerControl; HoMM1 has
-// no secondary skills). LEFT is the constructor's first hero, m_heroes[SWAP_SIDE_LEFT].
+// swapwin.bin widget ids. LEFT is the constructor's first hero,
+// m_heroes[SWAP_SIDE_LEFT].
 H1_ENUM_BEGIN(SwapManagerControl)
     CONTROL_LEFT_HERO = 65,
     CONTROL_RIGHT_HERO = 66,
@@ -70,15 +67,14 @@ H1_ENUM_BEGIN(SwapManagerControl)
 H1_ENUM_END(SwapManagerControl)
 
 // m_selectedSide/m_targetSide: the m_heroes index. DrawSelector draws side 1
-// at the left army/artifact columns, so HoMM1's left hero is index 1 (Buka
-// numbers its sides the other way round).
+// at the left army/artifact columns, so the left hero is index 1.
 H1_ENUM_BEGIN(SwapManagerSide)
     SWAP_SIDE_NONE = -1,
     SWAP_SIDE_RIGHT = 0,
     SWAP_SIDE_LEFT = 1
 H1_ENUM_END(SwapManagerSide)
 
-// m_itemType: what the selection holds (Buka SwapManagerItemType).
+// m_itemType: what the selection holds.
 H1_ENUM_BEGIN(SwapManagerItemType)
     SWAP_ITEM_NONE = -1,
     SWAP_ITEM_ARMY = 0,

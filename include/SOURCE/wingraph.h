@@ -34,8 +34,7 @@ H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
 H1_ENUM_CONST_END(WingraphPaintConstant)
 
 // gGraphicsType: the WinG window backend or the DirectDraw full-screen one
-// (InitGraphics picks DirectDraw for full screen; Buka WingraphGraphicsType,
-// same numbering).
+// (InitGraphics picks DirectDraw for full screen).
 H1_ENUM_BEGIN(WingraphGraphicsType)
     WINGRAPH_GRAPHICS_WING = 1,
     WINGRAPH_GRAPHICS_DIRECT_DRAW = 2
@@ -139,8 +138,8 @@ void DDInitializePalette();
 void WGInitializePalette();
 void WGInitGraphics();
 void WGCleanUpWinGraphics();
-BOOL DDAppPaint(void* window, void* paintDC);
-BOOL WGAppPaint(void* window, void* paintDC);
+BOOL DDAppPaint(HWND window, HDC paintDC);
+BOOL WGAppPaint(HWND window, HDC paintDC);
 void DDUpdatePalette(i8* paletteData);
 void WGUpdatePalette(i8* paletteData);
 BOOL DDQueryNewPalette();
@@ -154,7 +153,7 @@ void SetupClipper();
 IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary);
 void RestoreDisplayMode();
 void InitializePalette();
-BOOL AppPaint(void* window, void* paintDC);
+BOOL AppPaint(HWND window, HDC paintDC);
 void UpdatePalette(i8* paletteData);
 void CleanUpWinGraphics();
 BOOL QueryNewPalette();

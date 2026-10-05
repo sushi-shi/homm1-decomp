@@ -537,9 +537,9 @@
     {
       "unit": "BASE/RESMGR",
       "source_anchor_rva": "0x6cdb0",
-      "source_anchor_name": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "source_anchor_name": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
       "preceding_body_rva": "0x6cdb0",
-      "preceding_body_role": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "preceding_body_role": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
       "initializer_rva": "0x6ce02",
       "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
       "registration_rva": "0x6ce29",

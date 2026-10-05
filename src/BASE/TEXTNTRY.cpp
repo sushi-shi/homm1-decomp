@@ -1,4 +1,4 @@
-// Retail-backed text-entry widget resource reader.
+// Text-entry widget resource reader.
 
 #include <match.h>
 
@@ -28,12 +28,7 @@ textEntryWidget::textEntryWidget(void) : textWidget() {
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-textEntryWidget::~textEntryWidget(void) {
-    gpResourceManager->Dispose(m_icon);
-}
-
-// The parameterized constructor; no retail caller survives (HoMM1 has no
-// inset layout arguments).
+// The parameterized constructor; no retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00475886, 0xbf)
@@ -60,28 +55,27 @@ textEntryWidget::textEntryWidget(
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
+VA(0x00475945, 0x5b)
+textEntryWidget::~textEntryWidget(void) {
+    gpResourceManager->Dispose(m_icon);
+}
+
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
-    // byte-evidenced: ReadBlock accepts signed bytes for text storage.
-    gpResourceManager->ReadBlock(reinterpret_cast<i8*>(m_text), m_maxLength);
+    gpResourceManager->ReadBlock(m_text, m_maxLength);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_font = gpResourceManager->GetFont(name);
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_entryType = type;
     if (type == TEXT_ENTRY_READ_RECT) {
@@ -218,9 +212,9 @@ i16 textEntryWidget::Main(tag_message& message) {
                                     strcpy(copy, edit);
                                     typed = 0;
                                     if (event.keyCode >= TEXT_ENTRY_EXTENDED_KEY_BASE) {
-                                        i32 key = (event.keyCode
-                                                   & (INPUT_SCAN_CODE_MASK << INPUT_KEY_SCAN_SHIFT))
-                                                  >> INPUT_KEY_SCAN_SHIFT;
+                                        i32 key =
+                                            (event.keyCode & EncodeScanCode(INPUT_SCAN_CODE_MASK))
+                                            >> INPUT_KEY_SCAN_SHIFT;
                                         switch (key) {
                                             case TEXT_ENTRY_KEYPAD_0:
                                                 typed = '0';

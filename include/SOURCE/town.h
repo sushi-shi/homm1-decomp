@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_TOWN_H
 #define HOMM1_SOURCE_TOWN_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 9 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -12,7 +10,7 @@ class hero;
 
 H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_MAGE_GUILD_SPELL_COUNT = 9,
-    // town::m_occupyingHeroId when no hero stands in the town (Buka's name).
+    // town::m_occupyingHeroId when no hero stands in the town.
     TOWN_OCCUPYING_HERO_NONE = -1
 H1_ENUM_CONST_END(TownConstant)
 
@@ -61,7 +59,7 @@ H1_ENUM_CONST_END(TownMageGuildConstant)
 // (RandomizeTown, NewMap). Its frames run per race in blocks of 24 before
 // the random town's (block TOWN_TYPE_COUNT); a town without a castle uses
 // the frames 12 before the castle's. RandomizeTown ages a placed town ten
-// turns (Buka RANDOM_TOWN_AGE).
+// turns.
 H1_ENUM_CONST_BEGIN(TownFootprintConstant)
     TOWN_FOOTPRINT_LEFT = 2,
     TOWN_FOOTPRINT_TOP = 2,
@@ -99,7 +97,7 @@ public:
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;
     i8 m_customized;
-    char m_unknown28[4];
+    char m_unused28[4];
     i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
@@ -108,11 +106,9 @@ public:
     town(void);
     // --- methods ---
     i8 HasGarrison(void);
-    // Win95 1.2 uses this inline accessor; Buka Open reads the member directly.
     i8 OccupyingHero(void) {
         return m_occupyingHeroId;
     }
-    // HoMM1 retail 0x00463fd0 takes no argument (plain ret).
     void GiveSpells(void);
     void XformToCastle(void);
     void View(void);
@@ -158,11 +154,16 @@ H1_ENUM_BEGIN(BuildingSlotType)
     // m_type * DWELLING_COUNT + dwelling (TOWNMGR).
     BUILDING_SLOT_DWELLING_COUNT = 6,
     BUILDING_SLOT_COUNT = 13,
-    // Past the buildable slots: the race special building's bit (bit 13, as
-    // in Buka's TOWN_BUILDING_COLISEUM/FORTIFICATIONS 0x2000, whose tent and
-    // castle bits 5 and 6 match HoMM1's). LoadMap, NewMap and RandomizeTown
-    // give it to barbarian towns only; no HoMM1 reader tests it.
+    // Past the buildable slots: the race special building's bit (bit 13).
+    // LoadMap, NewMap and RandomizeTown give it to barbarian towns only; no
+    // reader tests it.
     BUILDING_SLOT_SPECIAL = 13
 H1_ENUM_END(BuildingSlotType)
+
+// Building slot is built in town t, the mage guild only at its last level:
+// mask first, then the guild level.
+#define TOWN_BUILDING_COMPLETE(t, slot)                                                            \
+    (((t).m_buildings & (1 << (slot)))                                                             \
+     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_buildState == MAGE_GUILD_STATE_LEVEL_4))
 
 #endif // HOMM1_SOURCE_TOWN_H

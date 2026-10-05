@@ -1,5 +1,4 @@
-// Combat stacks. Buka starts this object at army::army (RVA 0x13330),
-// after the SOURCE/AI locale startup and INT3 fill.
+// Combat stacks.
 
 #include <match.h>
 
@@ -139,9 +138,6 @@ void army::LoadResources(void) {
     }
 }
 
-// donor PoL RVA 0x0004b36e; preferred Buka symbol ?FreeResources@army@@QAEXXZ
-// donor Buka TU SOURCE/ARMY; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.463954;margin=0.140795;shape=0.318;size=0.842;calls=0.750;alternate=pol20:void army::FreeResources(void)@0x0004b36e
 VA(0x00413760, 0xd4)
 void army::FreeResources(void) {
     i32 i;
@@ -515,8 +511,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
             ourMaxY = giMaxExtentY;
         DelayTil(glTimers);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-        gpWindowManager
-            ->UpdateScreenRegion(col, ourMinY, rectMaxX - col + 1, ourMaxY - ourMinY + 1);
+        UPDATE_INCLUSIVE_REGION(col, ourMinY, rectMaxX, ourMaxY);
         m_animationFrame += stepCount;
     }
     if (!newReverse) {
@@ -1120,7 +1115,7 @@ void army::DoAttack(i32 retaliation) {
         sprintf(
             gText,
             localization::Tr("combat.genie.half_army.buka"),
-            m_quantity <= 1 ? gArmyNames[m_creatureType] : gArmyNamesPlural[m_creatureType],
+            CREATURE_DISPLAY_NAME(m_creatureType, m_quantity),
             m_quantity <= 1 ? localization::Tr("combat.fragment.destroy_singular")
                             : localization::Tr("combat.fragment.destroy_plural")
         );
@@ -1735,19 +1730,16 @@ void army::GoBerserk(void) {
                 m_targetSide = gpCombatManager->m_hexCells[target].m_occupantSide;
                 m_targetIndex = gpCombatManager->m_hexCells[target].m_occupantIndex;
                 if (ValidFlight(target, ARMY_PATH_ANY_TARGET_HEX)) {
-                    giNextAction = ACTION_MOVE;
-                    giNextActionGridIndex = target;
+                    SET_NEXT_COMBAT_MOVE(target);
                     isFound++;
                 }
             } else {
-                giNextAction = ACTION_MOVE;
-                giNextActionGridIndex = target;
+                SET_NEXT_COMBAT_MOVE(target);
             }
         } else {
             heading = Random(COMBAT_DIRECTION_NORTHEAST, COMBAT_DIRECTION_NORTHWEST);
             if (ValidMove(heading)) {
-                giNextAction = ACTION_MOVE;
-                giNextActionGridIndex = m_hex;
+                SET_NEXT_COMBAT_MOVE(m_hex);
                 giNextActionGridIndex = GetAdjacentCellIndex(giNextActionGridIndex, heading);
             }
             isFound++;
@@ -1811,8 +1803,7 @@ void army::MoveAttack(i32 hex, i32 moveOnly) {
                     adjHex = GetAdjacentCellIndex(baseHexVal, dirNo);
                     if (ValidHex(adjHex)) {
                         cellItem = &gpCombatManager->m_hexCells[adjHex];
-                        if (cellItem->m_occupantSide == m_targetSide
-                            && cellItem->m_occupantIndex == m_targetIndex)
+                        if (HEX_HAS_OCCUPANT(*cellItem, m_targetSide, m_targetIndex))
                             m_attackDirection = dirNo;
                     }
                 }

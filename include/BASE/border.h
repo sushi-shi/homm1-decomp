@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_BORDER_H
 #define HOMM1_BASE_BORDER_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 7 methods, 2 own-virtual, 0 static data.
 
 #include <BASE/widget.h>
 #include <Domains.h>
@@ -24,7 +22,7 @@ public:
     // --- constructors ---
     border(void);
     border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name);
-    virtual inline ~border() OVERRIDE;
+    virtual ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;

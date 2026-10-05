@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/bitmap.h>
@@ -31,7 +29,6 @@
 #define WINMGR_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\WINMGR.CPP"
 #endif
 
-// Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
 VA(0x00469fb0, 0x19c)
 void CycleColors(void) {
     i8 savedColor[PALETTE_GRAPHICS_CHANNELS];
@@ -93,7 +90,6 @@ void CycleColors(void) {
     UpdatePalette(gpBufferPalette->m_data);
 }
 
-// Retail constructor initializes the recovered HoMM1 manager layout.
 VA(0x0046a14c, 0x9f)
 heroWindowManager::heroWindowManager(void) : baseManager() {
     m_active = 0;
@@ -121,7 +117,7 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = SCREEN_BLIT_WIDTH;
     m_screen->m_height = SCREEN_BLIT_HEIGHT;
-    m_screen->m_pixels = static_cast<i8*>(gInitWin);
+    m_screen->m_pixels = static_cast<u8*>(gInitWin);
     if (m_screen == NULL) {
         Cleanup();
         return WINDOW_MANAGER_OPEN_FAILURE;
@@ -193,9 +189,6 @@ i16 heroWindowManager::Main(tag_message& message) {
     return ret;
 }
 
-// donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
-// donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
 VA(0x0046a4b4, 0x3d)
 i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
@@ -206,10 +199,7 @@ i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16
     return Main(message);
 }
 
-// Buka list insertion correspondence; retail keeps the requested layer as a short.
-// The open flags are a signed char, the type heroWindow::Open takes: the char-typed
-// argument range (no esi/edi/ebp) is what makes /O2 colour cur/window/layer/this as
-// esi/edi/ebx/ebp; an int parameter gives esi/edi/ebx/ebp to window/this/cur/layer.
+// The open flags are a signed char, the type heroWindow::Open takes.
 VA(0x0046a4f1, 0x166)
 void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) {
     heroWindow* currentWindow = m_windowListTail;
@@ -250,8 +240,6 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) 
     m_focusWindow = window;
 }
 
-// donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
-// donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 VA(0x0046a657, 0xe9)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
     if (window == NULL)
@@ -333,7 +321,7 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
     return 0;
 }
 
-// HoMM2 Buka UpdateScreen plus HoMM1's final software-pointer redraw.
+// Updates the screen, then redraws the software pointer.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a8e8, 0x2f)
@@ -344,7 +332,7 @@ void heroWindowManager::UpdateScreen(void) {
     gpMouseManager->ShowColorPointer();
 }
 
-// HoMM1 hides the software pointer only when it overlaps the updated region.
+// Hides the software pointer only when it overlaps the updated region.
 VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
     i16 topVal, left, curBottom, right;
@@ -387,7 +375,6 @@ void heroWindowManager::RedrawScreen(void) {
     }
 }
 
-// Retail byte saved-update state and word arguments precede the later donor widening.
 VA(0x0046aaa3, 0xd3)
 #line 550 WINMGR_CPP_PATH
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
@@ -423,7 +410,6 @@ void heroWindowManager::ScreenShot(void) {
     gpInputManager->Flush();
 }
 
-// Retail omits the later donor coordinate-clamping checks.
 // Descriptive name: this retail hook is empty and is called on Open failure
 // and before Close releases the screen. Its original name is unavailable.
 VA(0x0046abdb, 0xb)
@@ -444,8 +430,7 @@ void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
     ((values) + (from) * PALETTE_COLOR_COUNT * PALETTE_GRAPHICS_CHANNELS                           \
      + (to) * PALETTE_GRAPHICS_CHANNELS)
 
-// Offline generator for FizzleForward's CCYCLE tables (HoMM2 Buka keeps only
-// an empty CreateFizzleTables at the same position). For every pair of
+// Offline generator for FizzleForward's CCYCLE tables. For every pair of
 // palette colours it interpolates eight steps toward the second colour and
 // stores the nearest palette entry of each step, found through a 64-level
 // RGB cube. No retail caller survives.
@@ -523,9 +508,6 @@ void CreateFizzleTables(void) {
     free(blend);
 }
 
-// donor PoL RVA 0x000cb1e0; HoMM1 removes the later palette-fade arguments
-// donor Buka TU BASE/WINMGR; five arguments proven by stack use and ret 0x14
-// evidence: same cycle-table loop and CCYCLE%02d.BIN resource sequence in both donors
 VA(0x0046b11d, 0x36a)
 void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay) {
     u8* workPixel;
@@ -554,14 +536,9 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
         gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
         gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
         for (sourceY = y; sourceY < y + height; sourceY++) {
-            // Byte access is proven by the retail load/shift sequence.
-            savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
-                        + (sourceY - y) * m_fizzleSource->m_width;
-            workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
-                        + (sourceY - y) * width;
-            // Byte access is proven by the retail framebuffer stores.
-            screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
-                          + sourceY * LOGICAL_SCREEN_WIDTH + x;
+            savePixel = m_fizzleSource->m_pixels + (sourceY - y) * m_fizzleSource->m_width;
+            workPixel = m_fizzleWork->m_pixels + (sourceY - y) * width;
+            screenPixel = m_screen->m_pixels + sourceY * LOGICAL_SCREEN_WIDTH + x;
             for (sourceX = x; sourceX < x + width; sourceX++) {
                 *screenPixel = ccycleBuf[static_cast<u16>(
                     *workPixel | (*savePixel << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT)
@@ -588,7 +565,6 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
     free(ccycleBuf);
 }
 
-// Donor WINMGR ownership; seven trailing padding bytes are excluded.
 VA(0x0046b487, 0x4d)
 void heroWindowManager::ReleaseFizzleSource(void) {
     if (m_fizzleSource != NULL)

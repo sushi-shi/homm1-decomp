@@ -4580,7 +4580,7 @@
         {
           "site_rva": "0x76e90",
           "target_rva": "0x6cd95",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cd95"
@@ -7678,7 +7678,7 @@
         {
           "site_rva": "0x6c1ab",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -7686,7 +7686,7 @@
         {
           "site_rva": "0x6c1c7",
           "target_rva": "0x6fe58",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6fe58"
@@ -7751,7 +7751,7 @@
         {
           "site_rva": "0x6c24f",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -8122,7 +8122,7 @@
     },
     {
       "unit": "BASE/RESMGR",
-      "name": "?Read13@resourceManager@@QAEXPAC@Z",
+      "name": "?Read13@resourceManager@@QAEXPAD@Z",
       "rva": "0x6cd95",
       "size": 27,
       "old_rva": "0x0006cd95",
@@ -8133,7 +8133,7 @@
         {
           "site_rva": "0x6cda6",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -8144,7 +8144,7 @@
     },
     {
       "unit": "BASE/RESMGR",
-      "name": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "name": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
       "rva": "0x6cdb0",
       "size": 82,
       "old_rva": "0x0006cdb0",
@@ -9781,7 +9781,7 @@
     },
     {
       "unit": "BASE/miscwin",
-      "name": "?PostprocessBitmap@@YAXPACHH@Z",
+      "name": "?PostprocessBitmap@@YAXPAEHH@Z",
       "rva": "0x6fe58",
       "size": 5,
       "old_rva": "0x0006fe58",
@@ -11620,7 +11620,7 @@
         {
           "site_rva": "0x1f91",
           "target_rva": "0xa98e4",
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e4"
@@ -11628,7 +11628,7 @@
         {
           "site_rva": "0x1f97",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -30372,7 +30372,7 @@
         {
           "site_rva": "0x193e3",
           "target_rva": "0xa98e0",
-          "symbol": "?hmnuCmbt@@3PAXA",
+          "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e0"
@@ -30380,7 +30380,7 @@
         {
           "site_rva": "0x193e9",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -40532,7 +40532,7 @@
         {
           "site_rva": "0x3bef9",
           "target_rva": "0xa98dc",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98dc"
@@ -40540,7 +40540,7 @@
         {
           "site_rva": "0x3beff",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -43295,7 +43295,7 @@
         {
           "site_rva": "0x42bd1",
           "target_rva": "0xa9e3c",
-          "symbol": "?hmnuApp@@3PAXA",
+          "symbol": "?hmnuApp@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e3c"
@@ -43319,7 +43319,7 @@
         {
           "site_rva": "0x42be8",
           "target_rva": "0xa98e4",
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e4"
@@ -43327,7 +43327,7 @@
         {
           "site_rva": "0x42bf1",
           "target_rva": "0xa98e4",
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e4"
@@ -43343,7 +43343,7 @@
         {
           "site_rva": "0x42bfe",
           "target_rva": "0xa98dc",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98dc"
@@ -43351,7 +43351,7 @@
         {
           "site_rva": "0x42c07",
           "target_rva": "0xa98dc",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98dc"
@@ -43367,7 +43367,7 @@
         {
           "site_rva": "0x42c14",
           "target_rva": "0xa98e0",
-          "symbol": "?hmnuCmbt@@3PAXA",
+          "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e0"
@@ -43375,7 +43375,7 @@
         {
           "site_rva": "0x42c1c",
           "target_rva": "0xa98e0",
-          "symbol": "?hmnuCmbt@@3PAXA",
+          "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e0"
@@ -43391,7 +43391,7 @@
         {
           "site_rva": "0x42c29",
           "target_rva": "0xa98e8",
-          "symbol": "?hmnuTown@@3PAXA",
+          "symbol": "?hmnuTown@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e8"
@@ -43399,7 +43399,7 @@
         {
           "site_rva": "0x42c32",
           "target_rva": "0xa98e8",
-          "symbol": "?hmnuTown@@3PAXA",
+          "symbol": "?hmnuTown@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e8"
@@ -43415,7 +43415,7 @@
         {
           "site_rva": "0x42c3f",
           "target_rva": "0xa9e3c",
-          "symbol": "?hmnuApp@@3PAXA",
+          "symbol": "?hmnuApp@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e3c"
@@ -53901,7 +53901,7 @@
         {
           "site_rva": "0x5d1ce",
           "target_rva": "0xa98e4",
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e4"
@@ -53909,7 +53909,7 @@
         {
           "site_rva": "0x5d1d4",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -55822,7 +55822,7 @@
         {
           "site_rva": "0x42caa",
           "target_rva": "0xa99e8",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa99e8"
@@ -55966,7 +55966,7 @@
         {
           "site_rva": "0x42d53",
           "target_rva": "0x42dba",
-          "symbol": "?AppInit@@YAHPAX0HPAD@Z",
+          "symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x42dba"
@@ -56173,7 +56173,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?UpdateDfltMenu@@YAXPAX@Z",
+      "name": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
       "rva": "0x43a76",
       "size": 174,
       "old_rva": "0x00043a76",
@@ -56281,7 +56281,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?KBChangeMenu@@YAXPAX@Z",
+      "name": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
       "rva": "0x43b24",
       "size": 145,
       "old_rva": "0x00043b24",
@@ -56290,7 +56290,7 @@
         {
           "site_rva": "0x43b2e",
           "target_rva": "0xa9dec",
-          "symbol": "?hmnuCurrent@@3PAXA",
+          "symbol": "?hmnuCurrent@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9dec"
@@ -56298,7 +56298,7 @@
         {
           "site_rva": "0x43b3c",
           "target_rva": "0xa9dec",
-          "symbol": "?hmnuCurrent@@3PAXA",
+          "symbol": "?hmnuCurrent@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9dec"
@@ -56306,7 +56306,7 @@
         {
           "site_rva": "0x43b45",
           "target_rva": "0xa9e3c",
-          "symbol": "?hmnuApp@@3PAXA",
+          "symbol": "?hmnuApp@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e3c"
@@ -56346,7 +56346,7 @@
         {
           "site_rva": "0x43b76",
           "target_rva": "0x43a76",
-          "symbol": "?UpdateDfltMenu@@YAXPAX@Z",
+          "symbol": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43a76"
@@ -56491,7 +56491,7 @@
         {
           "site_rva": "0x43c0f",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -56695,7 +56695,7 @@
         {
           "site_rva": "0x43cf4",
           "target_rva": "0xa9e3c",
-          "symbol": "?hmnuApp@@3PAXA",
+          "symbol": "?hmnuApp@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e3c"
@@ -56711,7 +56711,7 @@
         {
           "site_rva": "0x43d10",
           "target_rva": "0xa9e3c",
-          "symbol": "?hmnuApp@@3PAXA",
+          "symbol": "?hmnuApp@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e3c"
@@ -56719,7 +56719,7 @@
         {
           "site_rva": "0x43d16",
           "target_rva": "0x43d1f",
-          "symbol": "?SetMenus@@YAXPAXH@Z",
+          "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43d1f"
@@ -56730,7 +56730,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?SetMenus@@YAXPAXH@Z",
+      "name": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "rva": "0x43d1f",
       "size": 299,
       "old_rva": "0x00043d1f",
@@ -56770,7 +56770,7 @@
         {
           "site_rva": "0x43d7b",
           "target_rva": "0x43d1f",
-          "symbol": "?SetMenus@@YAXPAXH@Z",
+          "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43d1f"
@@ -56818,7 +56818,7 @@
         {
           "site_rva": "0x43e3f",
           "target_rva": "0x43a76",
-          "symbol": "?UpdateDfltMenu@@YAXPAX@Z",
+          "symbol": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43a76"
@@ -59923,7 +59923,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "name": "?AppPaint@@YAHPAX0@Z",
+      "name": "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "rva": "0x682ab",
       "size": 48,
       "old_rva": "0x000682ab",
@@ -59940,7 +59940,7 @@
         {
           "site_rva": "0x682c0",
           "target_rva": "0x67f3d",
-          "symbol": "?WGAppPaint@@YAHPAX0@Z",
+          "symbol": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x67f3d"
@@ -59948,7 +59948,7 @@
         {
           "site_rva": "0x682d2",
           "target_rva": "0x669ef",
-          "symbol": "?DDAppPaint@@YAHPAX0@Z",
+          "symbol": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x669ef"
@@ -60178,7 +60178,7 @@
       ]
     },
     {
-      "function": "?WGAppPaint@@YAHPAX0@Z",
+      "function": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "rva": "0x67f3d",
       "reasons": [
         "conflicting referent ?screenImage@@3UWingImage@@A"

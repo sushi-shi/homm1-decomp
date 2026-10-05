@@ -50,7 +50,7 @@
       "meaning": "128-entry character encoding map; every numeric byte equals the HoMM2 donor and Buka retail."
     },
     {
-      "name": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "name": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
       "rva": "0xa9e44",
       "size": 4,
       "unit": "SOURCE/kbwin",
@@ -79,7 +79,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "function": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "retail_start": "0x431ce",
       "retail_end": "0x431eb",
       "object_offset": "0x1ba",
@@ -118,7 +118,7 @@
         {
           "site_rva": "0x431d0",
           "target_rva": "0xa9e44",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "kind": 6
         },
         {
@@ -136,7 +136,7 @@
         {
           "site_rva": "0x431e7",
           "target_rva": "0xa9e44",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "kind": 6
         }
       ]
@@ -159,7 +159,7 @@
     {
       "site_rva": "0x431d0",
       "target_rva": "0xa9e44",
-      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
       "kind": 6
     },
     {
@@ -177,7 +177,7 @@
     {
       "site_rva": "0x431e7",
       "target_rva": "0xa9e44",
-      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+      "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
       "kind": 6
     },
     {

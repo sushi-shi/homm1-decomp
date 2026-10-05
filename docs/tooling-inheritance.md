@@ -10,6 +10,7 @@
 | HoMM2 Buka | `299514f88900c0cf30ba03422c72830a38fc1cb7` | Initial capability review |
 | HoMM2 Buka | `e0689d3f71b2942b544fd677cb54085a13503d7b` | Exact-overload fingerprint review; `homm2 clean` |
 | kf1 | `62870641`, `1a1e594e`, `904687dd`, `5ad5875f`, `655774b2`, `53cc73af` | `kf clean` export, verification and snapshot branches |
+| kf1 | `5a3469b3` (`tools/` at `2da5b5c8`, flake at `6f96b768`) | `tools/` Cargo workspace, `codecTests` flake check, retail codec oracles |
 
 These are implementation reviews, not a claim of complete behavioral parity.
 The executable, source ownership, types, VC4 profiles and data policy stay
@@ -29,7 +30,8 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
 | Source/identity gates | Retained normal source gates, review-claims and contradictory-data-identity checks even in code mode. Data coverage/placement checks remain in the explicit later data tier. |
 | Constants/enum review | Ported from giten-enums into the existing `verify` modules: `constants` gains the `config/constants.tsv` glob work list (first match wins, stale rows fail), committed floor (`--update-floor`), `--list`, `build/gen/constants_open.tsv`, strict-domain parse with retail fallback, switch-subject/store-target review details and float literals; `enum-reuse` gains the role-pair report and the `config/reviews/enum-reuse.tsv` ledger; `enum-domains` gains constant groups as non-storage and LOCAL/PARAM/RETURN width exemption; `board` reads `H1_ENUM_*` blocks and declarators. Adapted: `H1_ENUM_*`/`include/Domains.h` instead of `GZ_ENUM_*`/`EnumDomain.h`, strict view via `/std:c++20 /Zc:__cplusplus` instead of `GZ_STRICT_ENUMS`, and VC4 booleans: only Win32 `BOOL` is a boolean domain, its proven spelling is `TRUE`/`FALSE`, and `true`/`false` spellings fail (C2065; Giten's TRUE->true check is inverted). See [constants](constants.md) and [enum reuse](enum-reuse.md). Deferred: Giten's handoff evidence notes are game-specific. |
 | Skills/workflow | Adapted all four skills, canonical instruction symlinks, safe staged formatting and unit-block merge driver. See [workflow](workflow.md). |
-| Negative controls | Inapplicable: HoMM1 keeps no test suite or self-test verb; `homm1 audit usage` checks entry-point logging and the build graph runs the gates. |
+| Negative controls | Inapplicable: HoMM1 keeps no test suite or self-test verb; `homm1 audit usage` checks entry-point logging and the build graph runs the gates. The Rust `tools/` workspace has its own `cargo test` suite. |
+| Rust codec tools | Adapted from kf1 `tools/` (`kf-codec`) and its `codecTests` check as `tools/homm1-lzhuf` and the flake's `checks.tools` (`cargo fmt --check`, `cargo check --offline`, `cargo test --offline`). Retained: one dependency-free workspace with shared `version`/`edition`/`publish`, safe code, a thin `std` CLI, and an oracle that feeds the same inputs to the retail functions and to Rust and compares the bytes they produce. Adapted: kf1's Unicorn MIPS runner becomes `homm1 verify lzhuf-oracle`, which loads the hash-verified `HEROES.EXE` sections at their fixed base under Wine (a `/FIXED` VC6 stub reserves the range) and calls the game's own `EncodeData`/`DecodeData`; addresses come from the source claims; build output goes to ignored `build/cargo`; retail results are pinned in `cargo test` as digests of generated inputs. Inapplicable: kf1's `no_std`/no-allocator constraint and its separately relocated C candidates (the reconstruction is byte-identical to retail, so the oracle runs the retail bytes). See [tools](../tools/README.md). |
 | Gruntz-only scanners | Deferred: `walls/calibrate`, `ehactions`, `escapescan`, `framescan`, `jccscan`, `loopscan`, `offsetscan`, `reloadscan`, `residue`, `retscan`, `signscan`, `storescan`, `thisscan`, `uninitscan`, `vptrscan` need separate applicability review and VC4 controls; the Giten diagnostic port does not establish their parity. |
 | Inline-budget prediction | Deferred: VC5 thresholds need measured VC4 controls. The local gap command reports definitions/calls only. |
 | Executable-section data/placement | Deferred: requires HoMM1 fixtures and the later data campaign. No initializer coverage is admitted. |
@@ -243,6 +245,19 @@ warnings. Deferred: full clean/runtime validation, strict census and fixed-image
 referents, and complete startup/preferences migration. The build and final
 verification still stop at the inherited NWC census; these results do not
 establish full command or behavioral parity.
+
+## Buka import-library shapes
+
+No donor change: Gruntz `d1cdb537caa6142849c7345eedc306dbb5af3763` and HoMM2
+Buka `e0689d3f71b2942b544fd677cb54085a13503d7b` link every vendor import
+library in the selected toolchain's format. Adapted: `graph/implib.py` keeps
+its `import_libraries.tsv` shape table and adds `vc41` (LINK 3.10 long
+members); a shaped DLL whose pinned shape toolchain ships `<stem>.lib`
+(Buka's NETAPI32) links that SDK library instead of the selected one. The
+evidence is retail's Rich header, IAT slot order and `.idata$6` hints, in
+`docs/buka-2003.md`. Measured: implib tests pass (10); with the shapes the
+candidate's Rich counts other than AliasObj, its IAT and its hints equal
+retail's.
 
 ## Buka census and VC6 data names
 

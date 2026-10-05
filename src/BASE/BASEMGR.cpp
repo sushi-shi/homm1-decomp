@@ -1,4 +1,4 @@
-// Base manager construction; Buka BASEMGR correspondence, retail authority.
+// Base manager construction.
 
 #include <match.h>
 

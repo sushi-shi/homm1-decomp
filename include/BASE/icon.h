@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_ICON_H
 #define HOMM1_BASE_ICON_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 8 methods, 0 own-virtual, 0 static data.
 
 #include <BASE/IconEntry.h>
 #include <BASE/resource.h>
@@ -16,8 +14,14 @@ H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
     ICON_SCREEN_ROW_BYTES = 640
 H1_ENUM_CONST_END(IconMonoRleConstant)
 
+// A frame at (left, top), width x height, lies wholly inside the clip
+// rectangle: left, right, top, then bottom edge.
+#define ICON_FITS_CLIP(left, top, width, height, clipX, clipY, clipW, clipH)                       \
+    ((left) >= (clipX) && (left) + (width) <= (clipX) + (clipW) && (top) >= (clipY)                \
+     && (top) + (height) <= (clipY) + (clipH))
+
 // The orientation argument of the icon blitters: FLIPPED selects the
-// mirrored Flip*IconToBitmap path (Buka IconDraw.h IconDrawOrientation).
+// mirrored Flip*IconToBitmap path.
 H1_ENUM_BEGIN(IconDrawOrientation)
     ICON_DRAW_NORMAL = 0,
     ICON_DRAW_FLIPPED = 1
@@ -53,7 +57,7 @@ public:
     i16 m_drawBottom;
     // --- constructors ---
     icon(i16 id);
-    virtual inline ~icon();
+    virtual ~icon();
     // --- methods ---
     void DrawToBuffer(
         i16 x,

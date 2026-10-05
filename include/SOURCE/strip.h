@@ -1,13 +1,11 @@
 #ifndef HOMM1_SOURCE_STRIP_H
 #define HOMM1_SOURCE_STRIP_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 5 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
 
-// strip window layout and strip.icn frames (Buka strip.h StripConstant
-// names and values; HoMM1 picks the faction background as type / 6 + 3).
+// strip window layout and strip.icn frames; the faction background is
+// type / 6 + 3.
 H1_ENUM_CONST_BEGIN(StripConstant)
     STRIP_WINDOW_WIDTH = 0x228,
     STRIP_WINDOW_HEIGHT = 0x69,
@@ -40,12 +38,11 @@ class font;
 class heroWindow;
 class icon;
 
-// strip's constructor, destructor and DrawIcons fix this packed layout.
 #pragma pack(push, 1)
 class strip {
 public:
     heroWindow* m_window;
-    char m_unknown04[0x12];
+    char m_unused04[0x12];
     i16 m_x;
     i16 m_y;
     i8 m_stripType;
@@ -58,7 +55,6 @@ public:
     i8 m_portraitFrame;
     armyGroup* m_army;
     // --- constructors ---
-    // HoMM1 retail: eight arguments (ret 0x20).
     strip(
         i16 x,
         i16 y,

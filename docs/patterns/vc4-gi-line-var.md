@@ -28,8 +28,8 @@ gives `?__LINE__Var@?1??f@@YAXH@Z@4FA` (a function-local static short, value 605
 and `movsx eax, [__LINE__Var]; add eax, 0x25`. Without `/Gi` the line is the
 immediate `push 0x282`. The static belongs to the function that contains the
 `__LINE__` token: soundmgr's line 52 static is read by both CDStop and CDPlay,
-because PoL's ordinary member `ValidatePreviousPosition` (at original line 52) is
-expanded into both by `/Ob2`; an `inline` definition instead folds the line to a
+because the ordinary (non-`inline`) member `ValidatePreviousPosition` (at
+original line 52) is expanded into both by `/Ob2`; an `inline` definition instead folds the line to a
 constant.
 
 Retail values (`.data`, Soundmgr.cpp): 52 (ValidatePreviousPosition), 605
@@ -42,7 +42,7 @@ Other units with the same pattern (currently modelled as explicit `...AssertLine
 NOOPT, PATH, TOWNMGR, wingraph, netwin (`netlo.cpp`). Each is a `/Gi` candidate;
 the explicit globals and their header externs are not retail declarations.
 
-Converting BASE/soundmgr (flags `cpp_o2_inline_gi`, `#line` directives, PoL's
-non-inline helpers, header externs removed) moved CUR exact 17/23 -> 17/23 in the
-unit (+WAVE_init_driver, MemorySample; -MusicPlaying, StopAllSamples) and, through
-the 12 removed soundmgr.h externs, CMBTMGR 24 -> 26 and REQUEST 10 -> 12.
+Converting BASE/soundmgr to this form (flags `cpp_o2_inline_gi`, `#line`
+directives, non-inline helpers, header externs removed) also changes code in
+units that include `soundmgr.h` (CMBTMGR, REQUEST): removing its 12 line-global
+externs shifts their C1 symbol handles.

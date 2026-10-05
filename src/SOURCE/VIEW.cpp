@@ -1,7 +1,5 @@
 // HoMM1 VIEW: the combat hero (general) and creature quick views.
-// Retail int3 padding bounds this object at 0x00438310-0x00438bf1; Buka 2.1
-// SOURCE/VIEW.cpp supplies the family (ViewGeneral, HandleViewGeneral,
-// ViewArmy) in the same order.
+// Retail int3 padding bounds this object at 0x00438310-0x00438bf1.
 
 #include <match.h>
 
@@ -24,8 +22,7 @@
 
 #include <stdio.h>
 
-// Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
-// combat hero window, with Cast Spell, Retreat and Surrender dimmed when
+// The combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.
 VA(0x00465ef0, 0x4fe)
 i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
@@ -51,8 +48,8 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 
     if (m_heroes[side] == NULL)
         return 0;
-    // vgenwin.bin widget ids: retail stores the whole block (as Buka does)
-    // though nothing reads it; their slots and the unused spare fix the frame.
+    // vgenwin.bin widget ids: retail stores the whole block though nothing
+    // reads it.
     savedNameCtrl = GENERAL_NAME_WIDGET;
     pictureCtrlVal = GENERAL_PORTRAIT_WIDGET;
     activeColorControl = GENERAL_COLOR_WIDGET;
@@ -161,8 +158,8 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     return 0;
 }
 
-// Buka VIEW.cpp:290-390 without the right-click help: Cast Spell, Retreat,
-// Surrender and Close end the dialog; hovering shows their help line.
+// Cast Spell, Retreat, Surrender and Close end the dialog; hovering shows
+// their help line.
 VA(0x004663ee, 0x1a7)
 i16 HandleViewGeneral(tag_message& message) {
     i32 pos;
@@ -246,8 +243,7 @@ i16 HandleViewGeneral(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Buka VIEW.cpp:442-488: the creature quick view, placed beside the stack
-// and clamped to the screen.
+// The creature quick view, placed beside the stack and clamped to the screen.
 VA(0x00466595, 0x135)
 void combatManager::ViewArmy(army* viewedArmy, i32 side, i32 quickView) {
     i16 xWnd;

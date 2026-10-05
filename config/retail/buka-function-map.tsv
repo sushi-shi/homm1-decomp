@@ -479,19 +479,19 @@ rva	size	unit	name	status	evidence
 0x00042c63	0x27	SOURCE/KB	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?EarlyResizeWindow@@YAXHHHH@Z; buka-function-structure.json.
 0x00042c8a	0x12	SOURCE/KB	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?EarlyResizeWindow@@YAXHHHH@Z; buka-function-structure.json.
 0x00042ca0	0x11a	SOURCE/kbwin	_WinMain@16	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00042dba	0x28e	SOURCE/kbwin	?AppInit@@YAHPAX0HPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00042dba	0x28e	SOURCE/kbwin	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043048	0xa	SOURCE/kbwin	?AppIdle@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00043052	0x6ad	SOURCE/kbwin	?AppWndProc@@YGJPAXIIJ@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043052	0x6ad	SOURCE/kbwin	?AppWndProc@@YGJPAUHWND__@@IIJ@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000436ff	0x67	SOURCE/kbwin	_AppAbout@16	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043766	0xf	SOURCE/kbwin	?AppExit@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043775	0x7f	SOURCE/kbwin	?Process1WindowsMessage@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000437f4	0x11d	SOURCE/kbwin	?ResizeWindow@@YAXHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00043911	0x165	SOURCE/kbwin	?AppCommand@@YAHPAXIIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00043a76	0xae	SOURCE/kbwin	?UpdateDfltMenu@@YAXPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00043b24	0x91	SOURCE/kbwin	?KBChangeMenu@@YAXPAX@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043911	0x165	SOURCE/kbwin	?AppCommand@@YAHPAUHWND__@@IIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043a76	0xae	SOURCE/kbwin	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043b24	0x91	SOURCE/kbwin	?KBChangeMenu@@YAXPAUHMENU__@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043bb5	0x118	SOURCE/kbwin	?SetMenuStatus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043ccd	0x52	SOURCE/kbwin	?SetNoDialogMenus@@YAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00043d1f	0x12b	SOURCE/kbwin	?SetMenus@@YAXPAXH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00043d1f	0x12b	SOURCE/kbwin	?SetMenus@@YAXPAUHMENU__@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043e4a	0x145	SOURCE/kbwin	?SetGameDefaults@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00043f8f	0x468	SOURCE/kbwin	?ReadPrefs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000443f7	0x30b	SOURCE/kbwin	?WritePrefs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -806,7 +806,7 @@ rva	size	unit	name	status	evidence
 0x0006677b	0x7d	SOURCE/wingraph	?CreatePrimary@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000667f8	0xbe	SOURCE/wingraph	?SetupClipper@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000668b6	0x139	SOURCE/wingraph	?DDInitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000669ef	0x4e4	SOURCE/wingraph	?DDAppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000669ef	0x4e4	SOURCE/wingraph	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00066ed3	0x115	SOURCE/wingraph	?DDInitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00066fe8	0x82	SOURCE/wingraph	?DDSetPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006706a	0x100	SOURCE/wingraph	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -818,7 +818,7 @@ rva	size	unit	name	status	evidence
 0x00067aa3	0x13b	SOURCE/wingraph	?WGInitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00067bde	0x1bd	SOURCE/wingraph	?WGUpdatePalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00067d9b	0x1a2	SOURCE/wingraph	?WGInitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00067f3d	0x1b7	SOURCE/wingraph	?WGAppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00067f3d	0x1b7	SOURCE/wingraph	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000680f4	0x67	SOURCE/wingraph	?WGCleanUpWinGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006815b	0x56	SOURCE/wingraph	?ConnectToDLLs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000681b1	0x1a	SOURCE/wingraph	?DisconnectDLLs@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -826,7 +826,7 @@ rva	size	unit	name	status	evidence
 0x000681e0	0x17	SOURCE/wingraph	?SetPalette@@YAHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000681f7	0x6e	SOURCE/wingraph	?GetGraphicsInfo@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00068265	0x46	SOURCE/wingraph	?InitGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x000682ab	0x30	SOURCE/wingraph	?AppPaint@@YAHPAX0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x000682ab	0x30	SOURCE/wingraph	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000682db	0x1a	SOURCE/wingraph	?InitializePalette@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000682f5	0x28	SOURCE/wingraph	?UpdatePalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006831d	0x1f	SOURCE/wingraph	?CleanUpWinGraphics@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -968,10 +968,10 @@ rva	size	unit	name	status	evidence
 0x0006ccbe	0x4b	BASE/RESMGR	?ReadWord@resourceManager@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006cd09	0x4b	BASE/RESMGR	?ReadLong@resourceManager@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006cd54	0x41	BASE/RESMGR	?MakeId@resourceManager@@QAEFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006cd95	0x1b	BASE/RESMGR	?Read13@resourceManager@@QAEXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006cdb0	0x52	BASE/RESMGR	?ReadBlock@resourceManager@@QAEXPACI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006ce02	0x27	BASE/RESMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPACI@Z; buka-function-structure.json.
-0x0006ce29	0x12	BASE/RESMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPACI@Z; buka-function-structure.json.
+0x0006cd95	0x1b	BASE/RESMGR	?Read13@resourceManager@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cdb0	0x52	BASE/RESMGR	?ReadBlock@resourceManager@@QAEXPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ce02	0x27	BASE/RESMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPAXI@Z; buka-function-structure.json.
+0x0006ce29	0x12	BASE/RESMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPAXI@Z; buka-function-structure.json.
 0x0006ce40	0x2b	BASE/BACKDROP	??0backdropWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006ce6b	0x3f	BASE/BACKDROP	??0backdropWidget@@QAE@FFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006ceaa	0x77	BASE/BACKDROP	?Read@backdropWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -1033,7 +1033,7 @@ rva	size	unit	name	status	evidence
 0x0006fd82	0x8	BASE/miscwin	Unused free function returning short zero; original name/signature unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x0006fd8a	0x39	BASE/miscwin	?Random@@YAHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fdc3	0x95	BASE/miscwin	?PostprocessPalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006fe58	0x5	BASE/miscwin	?PostprocessBitmap@@YAXPACHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fe58	0x5	BASE/miscwin	?PostprocessBitmap@@YAXPAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fe5d	0x5	BASE/miscwin	?PostprocessIcon@@YAXPAVicon@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fe62	0x214	BASE/miscwin	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00070076	0x307	BASE/miscwin	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.

@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -19,7 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka HISCORE.cpp:22-29; HoMM1 adds the dispatch mask and score-type selection.
 VA(0x0043bd60, 0x7f)
 highScoreManager::highScoreManager(void) {
     i32 rank;
@@ -35,9 +32,6 @@ highScoreManager::highScoreManager(void) {
 VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
-// donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x0043bdf3, 0x144)
 i16 highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -54,12 +48,11 @@ i16 highScoreManager::Open(i16 id) {
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
-        KBTickCount() + static_cast<i32>(HIGH_SCORE_ANIMATION_DELAY);
+    glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
 
-// Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
+// The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -68,9 +61,6 @@ void highScoreManager::Close(void) {
     m_active = 0;
 }
 
-// donor PoL RVA 0x00089c40; preferred Buka symbol ?Main@highScoreManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
 VA(0x0043bf85, 0x1fa)
 i16 highScoreManager::Main(struct tag_message& message) {
     i32 result;
@@ -81,18 +71,16 @@ i16 highScoreManager::Main(struct tag_message& message) {
     if (gShowHighScore != 0)
         gShowHighScore = 0;
 
-    if (glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
-        glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
-            KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+    if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
+        glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
             m_animationFrames[entry] =
                 (m_animationFrames[entry] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             windowMessage.type = MESSAGE_WIDGET;
             windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
-            windowMessage.value =
-                m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                + m_animationFrames[entry] / static_cast<i32>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
+            windowMessage.value = m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                                  + m_animationFrames[entry] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
@@ -145,11 +133,8 @@ i16 highScoreManager::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x00089e6a; preferred Buka symbol ?Update@highScoreManager@@QAEXXZ
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.683474;margin=0.421632;shape=0.404;size=0.957;calls=0.730;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:void highScoreManager::Update(void)@0x00089e6a
-// Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
-// rating creature directly and highlights the new entry by fill colour.
+// Update reads 0x57-byte records, names the rating creature directly and
+// highlights the new entry by fill colour.
 VA(0x0043c17f, 0x5ec)
 void highScoreManager::Update(void) {
     HighScoreEntry highScore;
@@ -198,7 +183,7 @@ void highScoreManager::Update(void) {
         if (noScoreFile)
             highScore.score = HIGH_SCORE_EMPTY;
         else
-            read(inputFile, &highScore, sizeof(highScore));
+            READ_FILE_VALUE(inputFile, highScore);
 
         if (highScore.score == HIGH_SCORE_EMPTY) {
             m_monsterTypes[rank] = 0;

@@ -8,7 +8,6 @@ void DelayTil(i32* endTime);
 void DelayMilli(i32 delay);
 void DelayTilMilli(i32 endTime);
 
-// Moved from NOOPT.cpp.
 // DelayTicks waits on its own glTimers slot, in ticks of 15 milliseconds.
 H1_ENUM_CONST_BEGIN(DelayTicksConstant)
     DELAY_TICKS_TIMER_SLOT = 1,

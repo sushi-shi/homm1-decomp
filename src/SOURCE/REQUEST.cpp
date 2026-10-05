@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -10,6 +8,7 @@
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/Misc.h>
 #include <BASE/widget.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
@@ -27,15 +26,15 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka 2.1 ShowThisMap; HoMM1 keeps an unreachable rejecting return.
+// An unreachable rejecting return follows the accepting one.
 VA(0x00453b70, 0xa)
 i32 ShowThisMap(char*) {
     return 1;
     return 0;
 }
 
-// Buka 2.1 constructor with InitializeFiles folded in: HoMM1 counts and sorts
-// every match of the pattern and reads .MAP headers only for GetMap's list.
+// Counts and sorts every match of the pattern and reads .MAP headers only
+// for GetMap's list.
 VA(0x00453b7a, 0x7da)
 fileRequester::fileRequester(
     i16 x,
@@ -151,7 +150,7 @@ fileRequester::fileRequester(
             file = open(fullFileName, O_BINARY);
             if (file == -1)
                 FileError(fullFileName);
-            read(file, &headerData, sizeof(headerData));
+            READ_FILE_VALUE(file, headerData);
             if (headerData.id == MAP_HEADER_ID) {
                 strcpy(m_mapNames[entryIndex].text, headerData.name);
                 strcpy(m_mapInfo[entryIndex].description, headerData.description);
@@ -175,8 +174,7 @@ fileRequester::fileRequester(
 VA(0x00454354, 0x14)
 fileRequester::~fileRequester() {}
 
-// Buka 2.1 Close with CleanUpData folded in; HoMM1 also remembers the
-// chosen map's title.
+// Also remembers the chosen map's title.
 VA(0x00454368, 0xf1)
 void fileRequester::Close(void) {
     if (!m_active)
@@ -196,8 +194,8 @@ void fileRequester::Close(void) {
     m_active = 0;
 }
 
-// Buka 2.1 Open without the map-size filter buttons; HoMM1 selects the save
-// slot whose extension digit matches the human player count.
+// Selects the save slot whose extension digit matches the human player
+// count.
 VA(0x00454459, 0x3cd)
 i16 fileRequester::Open(i16 priority) {
     const i16 scrollKnobId = FILE_REQUESTER_SCROLL_KNOB;
@@ -282,7 +280,7 @@ i16 fileRequester::Open(i16 priority) {
     return 0;
 }
 
-// Buka 2.1 SetOK with HoMM1's fixed dimming flags.
+// Uses fixed dimming flags.
 VA(0x00454826, 0x67)
 void fileRequester::SetOK(i8 enabled) {
     tag_message message;
@@ -299,8 +297,8 @@ void fileRequester::SetOK(i8 enabled) {
     m_window->BroadcastMessage(message);
 }
 
-// Buka 2.1 Main without the map-size filter; HoMM1 checks a saved game's
-// human count, encoded as its extension digit, before accepting it.
+// Checks a saved game's human count, encoded as its extension digit, before
+// accepting it.
 VA(0x0045488d, 0xa9c)
 i16 fileRequester::Main(tag_message& message) {
     i32 firstShown;
@@ -361,14 +359,7 @@ i16 fileRequester::Main(tag_message& message) {
                                 && !m_filename[0]) {
                                 NormalDialog(
                                     localization::Tr("file.selection.required"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             } else {
@@ -500,17 +491,7 @@ i16 fileRequester::Main(tag_message& message) {
             if (key < giNumHumanPlayers
                 && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
                 sprintf(gText, localization::Tr("file.humans.minimum"), key, giNumHumanPlayers);
-                NormalDialog(
-                    gText,
-                    NORMAL_DIALOG_TYPE_OK,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                 handled = 0;
             }
             if (key > giNumHumanPlayers) {
@@ -520,17 +501,7 @@ i16 fileRequester::Main(tag_message& message) {
                     key,
                     key - giNumHumanPlayers
                 );
-                NormalDialog(
-                    gText,
-                    NORMAL_DIALOG_TYPE_YES_NO,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     handled = 0;
             }
@@ -556,11 +527,11 @@ void fileRequester::UpdateMapInfo(void) {
     }
 }
 
-// GetMapName/GetFilename's no-selection result; data coverage is deferred.
+// GetMapName/GetFilename's no-selection result.
 DATA(0x0049f4e0)
 char* gFRDummy = "";
 
-// Buka 2.1 DoKnob with HoMM1's ten-row list and 156-pixel gutter.
+// A ten-row list with a 156-pixel gutter.
 VA(0x004553a7, 0x25b)
 void fileRequester::DoKnob(void) {
     i32 lastTop;
@@ -613,8 +584,8 @@ void fileRequester::DoKnob(void) {
     Update(1);
 }
 
-// Buka 2.1 Update for HoMM1's ten text rows; saved games append their human
-// count and map lists show the header title.
+// Ten text rows; saved games append their human count and map lists show
+// the header title.
 VA(0x00455602, 0x49e)
 void fileRequester::Update(i8 drawWindow) {
     double gutterFactor;
@@ -714,7 +685,6 @@ char* fileRequester::GetMapName(void) {
         return gFRDummy;
 }
 
-// Buka 2.1 GetFilename for HoMM1's two modes.
 VA(0x00455af9, 0x115)
 char* fileRequester::GetFilename(void) {
     if (m_mode != FILE_REQUESTER_SAVE && (m_selectedIndex < 0 || m_selectedIndex >= m_fileCount))

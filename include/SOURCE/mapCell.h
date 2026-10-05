@@ -33,7 +33,7 @@ H1_ENUM_CONST_END(MapCellConstant)
 // mirrors bit 1 and switches to the pre-flipped row for bit 0. Bits 2/3
 // animate the object/overlay frame, bits 4/5 add the high-nibble tileset's
 // extra sprite (owner flags, a mine's resource), bit 6 marks the hero cursor
-// cell and bit 7 draws the object with the ground (Buka's shadow-only bit;
+// cell and bit 7 draws the object with the ground (the shadow-only bit;
 // pathing ignores such objects).
 H1_ENUM_BEGIN(MapCellFlag)
     MAP_CELL_GROUND_FLIP_VERTICAL = 0x01,
@@ -47,7 +47,7 @@ H1_ENUM_BEGIN(MapCellFlag)
 H1_ENUM_END(MapCellFlag)
 
 // Adventure object tilesets: advManager's m_objectIcons slots, loaded from
-// these ICN files in the constructor (Buka's TilesetId keeps 12..17, 19, 20).
+// these ICN files in the constructor.
 H1_ENUM_BEGIN(MapTileset)
     TILESET_OBJ32_00 = 0,
     TILESET_OBJ32_01 = 1,
@@ -100,5 +100,11 @@ public:
     u8 m_objectMetadata;
 };
 #pragma pack(pop)
+
+// The cell carries an object that is more than a shadow: index first, then
+// the shadow-only flag. Pathing treats such an
+// object as an obstacle; the draw paths test the flag first and stay explicit.
+#define CELL_HAS_NON_SHADOW_OBJECT(cell)                                                           \
+    ((cell)->m_objectIndex != MAP_CELL_NO_FRAME && !((cell)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
 
 #endif // HOMM1_SOURCE_MAPCELL_H

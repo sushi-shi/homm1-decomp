@@ -1,10 +1,9 @@
 // Remote play: the network and modem transports and their packet layer.
-// Buka 2.1 REMOTE, Netbios and Modem correspondence. Retail compiled these as
-// one object: RemoteCleanup starts it at 0x00458520 after SETUP's int3 fill,
-// Dial (0x00459627) and WriteModemPacket (0x0045a16b) start at odd addresses
-// directly after their predecessors, and the object's .data
-// (0x004a2c00-0x0049fdb7) and .bss (0x004c7e70-0x004ca487) interleave the
-// network, modem and packet-layer variables.
+// Retail compiled these as one object: RemoteCleanup starts it at 0x00458520
+// after SETUP's int3 fill, Dial (0x00459627) and WriteModemPacket (0x0045a16b)
+// start at odd addresses directly after their predecessors, and the object's
+// .data (0x004a2c00-0x0049fdb7) and .bss (0x004c7e70-0x004ca487) interleave
+// the network, modem and packet-layer variables.
 
 #include <match.h>
 
@@ -26,7 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
 VA(0x004519f0, 0x66)
 void RemoteCleanup(void) {
     if (!gRemoteOn)
@@ -60,7 +58,6 @@ void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
     return buffer;
 }
 
-// Buka 2.1 MiscRuntime FileSize.
 VA(0x00451abb, 0x74)
 i32 FileSize(char* filename) {
     i32 length;
@@ -77,8 +74,6 @@ i32 FileSize(char* filename) {
     return length;
 }
 
-// Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
-// keeps the modem reset sequence in ModemSetup (0x459530).
 VA(0x00451b2f, 0x221)
 void RemoteMain(i32 gameMode) {
     char directConnectMessage[164];
@@ -128,17 +123,7 @@ void RemoteMain(i32 gameMode) {
                 WFDCStage = 0;
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage, localization::Tr("network.direct.wait"));
-                NormalDialog(
-                    directConnectMessage,
-                    NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
             } else {
@@ -198,9 +183,6 @@ i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length) {
     return length + sizeof(RemotePacketHeader);
 }
 
-// donor PoL RVA 0x000a3aa7; preferred Buka symbol ?DecodePacket@@YIHPAEH@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.496845;margin=0.356674;shape=0.447;size=0.760;calls=0.750;alternate=pol20:int DecodePacket(unsigned char *, int)@0x000a3aa7
 VA(0x00451ea9, 0xb2)
 i32 DecodePacket(u8* data, i32 source) {
     u16 computedCrc;
@@ -228,9 +210,6 @@ i32 DecodePacket(u8* data, i32 source) {
     return 1;
 }
 
-// donor PoL RVA 0x000a3be1; preferred Buka symbol ?SendRemoteData@@YIHPAE0HH@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.468075;margin=0.614352;shape=0.312;size=0.933;calls=0.500;alternate=pol20:int SendRemoteData(unsigned char *, unsigned char *, int, int)@0x000a3be1
 VA(0x00451f5b, 0x10f)
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length) {
     i32 size;
@@ -270,9 +249,6 @@ finished:
     return out;
 }
 
-// donor PoL RVA 0x000a3d6f; preferred Buka symbol ?ReceiveRemoteData@@YIHPAE0H@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.404111;margin=0.668725;shape=0.214;size=0.850;calls=0.500;alternate=pol20:int ReceiveRemoteData(unsigned char *, unsigned char *, int)@0x000a3d6f
 VA(0x0045206a, 0xcd)
 i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
     i32 receiveResult;
@@ -302,9 +278,6 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
     return result;
 }
 
-// donor PoL RVA 0x000132f0; preferred Buka symbol ?InitNetHost@@YICXZ
-// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
 VA(0x00452137, 0x16d)
 i8 InitNetHost(void) {
     DATA(0x004cc81d)
@@ -351,9 +324,6 @@ i8 InitNetHost(void) {
     return 0;
 }
 
-// donor PoL RVA 0x00013445; preferred Buka symbol ?InitNetGuest@@YICXZ
-// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.423322;margin=0.095753;shape=0.173;size=0.829;calls=0.833;alternate=pol20:signed char InitNetGuest(void)@0x00013445
 VA(0x004522a4, 0x1d9)
 i8 InitNetGuest(void) {
     i32 status;
@@ -430,9 +400,6 @@ i8 WaitForHost(void) {
     return 0;
 }
 
-// donor PoL RVA 0x0001364f; preferred Buka symbol ?WaitForGuest@@YICXZ
-// donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.465490;margin=0.416814;shape=0.321;size=0.696;calls=1.000;alternate=pol20:signed char WaitForGuest(void)@0x0001364f
 VA(0x004524f2, 0xd6)
 i8 WaitForGuest(void) {
     DATA(0x004cc820)
@@ -464,7 +431,7 @@ i8 WaitForGuest(void) {
     return 0;
 }
 
-// Buka 2.1 Netbios nbnet_init; the host also sends the guest count.
+// The host also sends the guest count.
 VA(0x004525c8, 0x196)
 i32 nbnet_init(void) {
     char buffer[80];
@@ -475,32 +442,12 @@ i32 nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
             sprintf(gText, localization::Tr("network.guest.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = gNumNetGuests;
@@ -510,32 +457,12 @@ i32 nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_HOST;
             sprintf(gText, localization::Tr("network.host.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             break;
@@ -543,7 +470,7 @@ i32 nbnet_init(void) {
     return 0;
 }
 
-// Buka 2.1 ModemSetup reset loop: open the port and reset a dial-up modem.
+// Open the port and reset a dial-up modem.
 VA(0x0045275e, 0xe0)
 void ModemSetup(void) {
     char command[104];
@@ -570,9 +497,6 @@ void ModemSetup(void) {
     }
 }
 
-// donor PoL RVA 0x0000cb3e; preferred Buka symbol ?Dial@@YIJXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.658408;margin=0.279474;shape=0.349;size=0.861;calls=1.000;strings=%s %s|ATDT%s|CONNECT;alternate=pol20:long int Dial(void)@0x0000cb3e
 VA(0x0045283e, 0x95)
 i32 Dial(void) {
     char dialCommand[40];
@@ -586,9 +510,6 @@ i32 Dial(void) {
     return 0;
 }
 
-// donor PoL RVA 0x0000cbdc; preferred Buka symbol ?Wait@@YIJXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.520648;margin=0.735557;shape=0.143;size=0.710;calls=1.000;strings=CONNECT|RING;alternate=pol20:long int Wait(void)@0x0000cbdc
 VA(0x004528d3, 0x4b)
 i32 Wait(void) {
     GUIModemResponse(localization::Tr("modem.ring.wait"), "RING");
@@ -598,33 +519,17 @@ i32 Wait(void) {
     return 0;
 }
 
-// donor PoL RVA 0x0000cc30; preferred Buka symbol ?GUIModemCommand@@YIXPAD0@Z
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.504929;margin=0.542655;shape=0.294;size=0.956;calls=1.000;alternate=pol20:void GUIModemCommand(char *, char *)@0x0000cc30
 VA(0x0045291e, 0x62)
 void GUIModemCommand(char* message, char* command) {
     iLastActionTime = 0;
     iModemCommandPos = 0;
     giWaitType = DIALOG_WAIT_MODEM_COMMAND;
     strcpy(cModemCommand, command);
-    NormalDialog(
-        message,
-        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
     if (!gbFunctionComplete)
         ShutDown(NULL);
 }
 
-// donor PoL RVA 0x0000cca9; preferred Buka symbol ?GUIModemCommandExec@@YICXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.478276;margin=0.078716;shape=0.283;size=0.851;calls=1.000;alternate=pol20:signed char GUIModemCommandExec(void)@0x0000cca9
 VA(0x00452980, 0x7f)
 i8 GUIModemCommandExec(void) {
     i32 commandLength;
@@ -643,7 +548,7 @@ i8 GUIModemCommandExec(void) {
     }
 }
 
-// Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
+// Writes one command byte at a time.
 VA(0x004529ff, 0x5f)
 void ModemCommand(char* command) {
     i32 curPos;
@@ -655,34 +560,18 @@ void ModemCommand(char* command) {
     write_buffer("\r", 1);
 }
 
-// donor PoL RVA 0x0000cdcc; preferred Buka symbol ?GUIModemResponse@@YICPAD0@Z
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.487980;margin=0.528115;shape=0.250;size=0.959;calls=1.000;alternate=pol20:signed char GUIModemResponse(char *, char *)@0x0000cdcc
 VA(0x00452a5e, 0x6b)
 i8 GUIModemResponse(char* message, char* response) {
     memset(GUIMRresponse, 0, 80);
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = DIALOG_WAIT_MODEM_RESPONSE;
-    NormalDialog(
-        message,
-        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
     if (!gbFunctionComplete)
         ShutDown(NULL);
     return 0;
 }
 
-// donor PoL RVA 0x0000ce4e; preferred Buka symbol ?GUIModemResponseExec@@YICXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.623720;margin=0.638042;shape=0.611;size=0.792;calls=1.000;alternate=pol20:signed char GUIModemResponseExec(void)@0x0000ce4e
 VA(0x00452ac9, 0xb3)
 i8 GUIModemResponseExec(void) {
     GUIMRc = read_byte();
@@ -708,7 +597,7 @@ compareResponse:
     }
 }
 
-// Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
+// Serial queue helpers.
 VA(0x00452b7c, 0x21)
 i32 write_buffer(char* buffer, i32 length) {
     com_snd(0, 0, length, buffer, 0);
@@ -732,9 +621,6 @@ void write_byte(i32 value) {
     com_snd(0, 0, 1, &value, 0);
 }
 
-// donor PoL RVA 0x0000cfec; preferred Buka symbol ?Connect@@YIXXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00452be9, 0x276)
 void Connect(void) {
     i32 code;
@@ -785,9 +671,6 @@ void Connect(void) {
     }
 }
 
-// donor PoL RVA 0x0000d1a7; preferred Buka symbol ?WaitForDirectConnect@@YIHXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.592752;margin=0.888123;shape=0.373;size=0.613;calls=0.929;strings=ID%s_%i;alternate=pol20:int WaitForDirectConnect(void)@0x0000d1a7
 VA(0x00452e5f, 0x2c3)
 i32 WaitForDirectConnect(void) {
     char idMessage[20];
@@ -847,13 +730,9 @@ i32 WaitForDirectConnect(void) {
     return 0;
 }
 
-// donor PoL RVA 0x0000d3b8; preferred Buka symbol ?ReadPacket@@YIDXZ
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.530036;margin=0.483413;shape=0.466;size=0.966;calls=0.333;alternate=pol20:char ReadPacket(void)@0x0000d3b8
 VA(0x00453122, 0xe4)
 char ReadPacket(void) {
     i32 input;
-    // Unused; retail reserves 0x20 bytes with the input below it.
     char scratch[28];
     if (inque.writePosition > 4092) {
         inque.writePosition = 0;
@@ -889,12 +768,9 @@ readPacketStart:
     } while (1);
 }
 
-// donor PoL RVA 0x0000d4df; preferred Buka symbol ?WriteModemPacket@@YIXPADH@Z
-// donor Buka TU SOURCE/Modem; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
 VA(0x00453206, 0xe2)
 void WriteModemPacket(char* buffer, i32 length) {
-    char unusedText[28]; // dead local: retail's /Od frame holds its unreferenced bytes
+    char unusedText[28];
     char encoded[MODEM_ENCODED_PACKET_SIZE];
     i32 encodedPosition = 0;
     if (length > MODEM_PACKET_MAX_LENGTH)
@@ -921,9 +797,6 @@ void WriteModemPacket(char* buffer, i32 length) {
         ForcePollSound();
 }
 
-// donor PoL RVA 0x000a3ec7; preferred Buka symbol ?TransmitRemoteData@@YIHPADHHCCCC@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.560856;margin=1.192457;shape=0.450;size=0.831;calls=1.000;alternate=pol20:int TransmitRemoteData(char *, int, int, signed char, signed char, signed char, signed char)@0x000a3ec7
 VA(0x004532e8, 0x1e3)
 // HoMM1 callers pass an eighth flag that maps a game position to its net position.
 i32 TransmitRemoteData(
@@ -982,17 +855,7 @@ i32 TransmitRemoteData(
             DelayMilli(1000);
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && result == 0) {
-            NormalDialog(
-                localization::Tr("network.send.retry"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
@@ -1001,9 +864,6 @@ i32 TransmitRemoteData(
     return result;
 }
 
-// donor PoL RVA 0x000a40e1; preferred Buka symbol ?GetRemoteData@@YIPADC@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.517569;margin=0.974708;shape=0.366;size=0.825;calls=1.000;alternate=pol20:char * GetRemoteData(signed char)@0x000a40e1
 VA(0x004534cb, 0xe4)
 char* GetRemoteData(i8 remove) {
     i32 oldestOrder;
@@ -1029,10 +889,6 @@ char* GetRemoteData(i8 remove) {
     }
     return NULL;
 }
-
-// donor PoL RVA 0x000a41ec; preferred Buka symbol ?PollRemote@@YIXXZ
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: reviewed-anchor;alternate=pol20:void PollRemote(void)@0x000a41ec
 
 VA(0x004535af, 0x46c)
 void PollRemote(void) {
@@ -1069,17 +925,7 @@ void PollRemote(void) {
         gLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
-        NormalDialog(
-            localization::Tr("network.peer.wait"),
-            NORMAL_DIALOG_TYPE_YES_NO,
-            -1,
-            -1,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(localization::Tr("network.peer.wait"), NORMAL_DIALOG_TYPE_YES_NO);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             gLastHeartbeatReceive = KBTickCount();
         } else {
@@ -1167,9 +1013,6 @@ void PollRemote(void) {
 done:;
 }
 
-// donor PoL RVA 0x000a48e0; preferred Buka symbol ?TransmitAndWait@@YIHPADHHCCPAPAD@Z
-// donor Buka TU SOURCE/REMOTE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.561659;margin=0.362301;shape=0.477;size=0.829;calls=1.000;alternate=pol20:int TransmitAndWait(char *, int, int, signed char, signed char, char * *)@0x000a48e0
 VA(0x00453a1b, 0x114)
 i32 TransmitAndWait(
     char* bytes,
@@ -1187,25 +1030,14 @@ i32 TransmitAndWait(
     if (!gRemoteOn || gInNetSetup)
         return 1;
     receivedData = NULL;
-    result =
-        TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+    result = TransmitRemoteData(bytes, destination, length, command, 1);
     if (result == 0)
         goto transmitComplete;
     clock = KBTickCount();
     complete = 0;
     while (!complete) {
         if (clock + 20000 < KBTickCount()) {
-            NormalDialog(
-                localization::Tr("network.send.retry"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 clock = KBTickCount();
             } else {

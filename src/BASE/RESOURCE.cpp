@@ -1,5 +1,4 @@
-// Located from HoMM2 Buka 2.1; HoMM1 stores all resource identifiers as
-// signed words.
+// Resource identifiers are stored as signed words.
 
 #include <match.h>
 
@@ -7,7 +6,7 @@
 
 #include <stddef.h>
 
-// HoMM2 Buka's default resource: an empty, unlisted bitmap record.
+// The default resource: an empty, unlisted bitmap record.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00477650, 0x3c)

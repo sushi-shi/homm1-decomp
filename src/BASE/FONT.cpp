@@ -1,4 +1,4 @@
-// HoMM1 font loading, source-correspondent to the Buka 2.1 resource family.
+// HoMM1 font loading.
 
 #include <match.h>
 
@@ -11,15 +11,13 @@
 
 VA(0x00471dd0, 0xc7)
 font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INITIAL, NULL) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     gpResourceManager->PointToFile(id);
     m_height = gpResourceManager->ReadWord();
     m_headerWord = gpResourceManager->ReadWord();
     gpResourceManager->Read13(name);
     gLoadingMonoIcon = 1;
-    m_glyphIcon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: Read13 and GetIcon use differently signed byte names.
+    m_glyphIcon = gpResourceManager->GetIcon(name);
     gLoadingMonoIcon = 0;
 }
 
@@ -78,7 +76,6 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     i32 baseGlyph;
     i16* theWidths;
     char spaceCharValue;
-    // Names place the /Od frame slots (docs/patterns/vc6-od-frame-slots.md).
     i16 startIdx;
     i16 lineEnd;
     i16 drawColor;
@@ -172,7 +169,6 @@ i32 font::LineLength(char* str, i16 maxW) {
     char* cursor;
     char v;
 
-    // The spellings place the /Od frame slots; stores keep retail order.
     mainStart = 0;
     curLineEnd = 0;
     thePos = 0;
@@ -224,9 +220,6 @@ i32 font::LineWidth(char* text) {
     i32 curCh;
     i32 spare;
     i16* table;
-    // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
-    // retail frame keeps its unused dword and word slots. The spellings place
-    // the slots (docs/patterns/vc6-od-frame-slots.md).
     i32 oldSpare;
     i16 theLen;
     i16 newSpare, mySpare, savedSpare, position, thisWidth;

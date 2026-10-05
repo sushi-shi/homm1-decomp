@@ -1,5 +1,5 @@
-// Located from HoMM2 Buka 2.1 FLY.cpp; HoMM1 flies in whole-pixel steps,
-// six frames per hex, and CanFit always tries the other side of a wide hex.
+// Flight moves in whole-pixel steps, six frames per hex, and CanFit always
+// tries the other side of a wide hex.
 
 #include <match.h>
 
@@ -43,8 +43,11 @@ i16 army::CanFit(i16* hex) {
             mapCell = &gpCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
             && (mapCell->m_occupantSide == COMBAT_SIDE_NONE
-                || (mapCell->m_occupantSide == gpCombatManager->m_currentSide
-                    && mapCell->m_occupantIndex == gpCombatManager->m_currentArmyIndex))
+                || HEX_HAS_OCCUPANT(
+                    *mapCell,
+                    gpCombatManager->m_currentSide,
+                    gpCombatManager->m_currentArmyIndex
+                ))
             && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
             return 1;
         } else {
@@ -58,8 +61,11 @@ i16 army::CanFit(i16* hex) {
             else
                 return 0;
             if ((mapCell->m_occupantSide == COMBAT_SIDE_NONE
-                 || (mapCell->m_occupantSide == gpCombatManager->m_currentSide
-                     && mapCell->m_occupantIndex == gpCombatManager->m_currentArmyIndex))
+                 || HEX_HAS_OCCUPANT(
+                     *mapCell,
+                     gpCombatManager->m_currentSide,
+                     gpCombatManager->m_currentArmyIndex
+                 ))
                 && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
                 *hex = candidateHex;
                 return 1;
@@ -72,8 +78,8 @@ i16 army::CanFit(i16* hex) {
     }
 }
 
-// Buka FLY.cpp ValidFlight; HoMM1 passes a flag that takes the destination
-// as the enemy hex, and CanFit moves the landing hex in place.
+// A flag takes the destination as the enemy hex, and CanFit moves the
+// landing hex in place.
 VA(0x0042a8a0, 0x3f0)
 i16 army::ValidFlight(i16 destination, i8 useDestination) {
     i16 directionMask;
@@ -169,7 +175,6 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
     return 0;
 }
 
-// Buka FLY.cpp FlyTo(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0042ac90, 0x1c)

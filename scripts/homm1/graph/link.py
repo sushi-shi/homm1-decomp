@@ -39,12 +39,21 @@ from homm1.tool.wine import winepath
 #: thunk run reads WINMM, KERNEL32, USER32, GDI32, ADVAPI32, mss32, WING32,
 #: smackw32, NETAPI32 (0x004685e0..0x004688b6, before the BASE library);
 #: USER32/GDI32/audiere thunks pulled only by BASE follow the CRT
-#: (0x004886e8..). The vendor libraries are synthesized by
-#: `homm1.graph.implib` from the retail import table plus the reviewed
-#: import-thunk names in function_referents.tsv.
-LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
-             "advapi32.lib", "mss32.lib", "wing32.lib", "smackw32.lib",
-             "netapi32.lib", "audiere.lib"]
+#: (0x004886e8..), audiere's last: audiere.lib is searched before the BASE
+#: library, so its imports resolve only in LINK's second pass.
+#: OLDNAMES.LIB heads the line. Each OLDNAMES alias member carries an empty
+#: `.text` with the default 16-byte alignment; the six old names the SOURCE
+#: objects call (open, read, close, write, strcmpi, strnicmp) are pulled
+#: before WINMM's thunks, which is why retail's first thunk sits at the
+#: 16-byte boundary 0x004685e0 after seven CC bytes (the default-library
+#: position would leave it 2-byte aligned at 0x004685da).
+#: The vendor libraries are synthesized by `homm1.graph.implib` from the
+#: retail import table plus the reviewed import-thunk names in
+#: function_referents.tsv, in the formats config/retail/import_libraries.tsv
+#: records.
+LINK_LIBS = ["oldnames.lib", "winmm.lib", "kernel32.lib", "user32.lib",
+             "gdi32.lib", "advapi32.lib", "mss32.lib", "wing32.lib",
+             "smackw32.lib", "netapi32.lib", "audiere.lib"]
 
 #: Retail's C runtime is the VC4.1 multithreaded LIBCMT.LIB, not the
 #: single-threaded LIBC.LIB the objects request: retail carries LIBCMT's
@@ -57,6 +66,16 @@ LINK_LIBS = ["winmm.lib", "kernel32.lib", "user32.lib", "gdi32.lib",
 CRT_LIBRARY = "libcmt.lib"
 CRT_REPLACES = "libc.lib"
 
+#: Buka retail was linked /DEBUG: its .rdata starts with the IAT and then a
+#: 0x1c-byte CodeView debug directory (0x0048a350), and its last 73 bytes are
+#: the NB10 record naming this PDB. The candidate writes its PDB at the same
+#: path, on a wine drive E: that maps to build/pdb-drive, so the record and
+#: the image size equal retail's. The record's signature and age (retail
+#: 0x3e5cda55, age 2: a PDB first written on 2003-02-26 and reused by the
+#: 2003-04-11 link) and the image timestamps remain link-time values.
+RETAIL_PDB = r"E:\Users\igorl\VSS\HMM\HMM1\temp\release\game\heroes.pdb"
+PDB_DRIVE = "e:"
+
 #: 1.2 has no export directory. Passing even an empty /DEF to VC4 LINK
 #: creates an export directory, so stack sizes are explicit linker flags.
 MODULE_DEF = REPO / "config/heroes.def"
@@ -67,11 +86,29 @@ MODULE_DEF = REPO / "config/heroes.def"
 #: BASEMGR at 0x004688c0. A thunk is an import-library member, and LINK places
 #: library members after every object on the line, in the order it pulls
 #: them; so every BASE unit was itself pulled from a library searched after
-#: netapi32.lib - the BASE library. Its member order is LINK's pull order,
+#: audiere.lib - the BASE library. Its member order is LINK's pull order,
 #: not a list we choose.
 BASE_LIBRARY_FROM = 0x000688c0
 BASE_LIBRARY = "base.lib"
-BASE_LIBRARY_AFTER = "netapi32.lib"
+BASE_LIBRARY_AFTER = "audiere.lib"
+
+def retail_pdb_drive() -> Path:
+    """Map wine's drive E: to build/pdb-drive and return the host path of
+    RETAIL_PDB's directory (created)."""
+    import os
+    from homm1.core.paths import BUILD
+    root = BUILD / "pdb-drive"
+    prefix = Path(os.environ.get("WINEPREFIX") or Path.home() / ".wine")
+    link = prefix / "dosdevices" / PDB_DRIVE
+    if not (link.is_symlink() and link.resolve() == root.resolve()):
+        link.parent.mkdir(parents=True, exist_ok=True)
+        if link.is_symlink() or link.exists():
+            link.unlink()
+        link.symlink_to(root)
+    folder = root.joinpath(*RETAIL_PDB.split("\\")[1:-1])
+    folder.mkdir(parents=True, exist_ok=True)
+    return folder
+
 
 def unresolved(output: str) -> set[str]:
     """The DECORATED unresolved-external names in a link log.
@@ -249,6 +286,10 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         # COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR, 0x1c900) and a jump thunk
         # for each of its 200 import slots. (The NWC builds used /OPT:REF.)
         rsp_lines.append("/OPT:NOREF")
+    if not dry_run:
+        pdb = retail_pdb_drive() / RETAIL_PDB.rsplit("\\", 1)[1]
+        pdb.unlink(missing_ok=True)       # a fresh PDB, as for the image
+    rsp_lines += ["/DEBUG", f"/PDB:{RETAIL_PDB}"]
     rsp_lines.append(f"/NODEFAULTLIB:{CRT_REPLACES}")
     rsp_lines += list(extra_flags)
 

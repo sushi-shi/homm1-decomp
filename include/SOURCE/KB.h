@@ -43,7 +43,7 @@ extern i8 giHighScoreType;
 extern i8 giTerrainCost[FINDPATH_TERRAIN_COUNT][FINDPATH_STEP_COST_COUNT];
 // Cell tile index -> terrain type; IsMobile reads it zero-extended.
 extern H1_ENUM_STORAGE(TerrainType, i8) giGroundToTerrain[];
-// The terrain type under a map cell (Buka 2.1 KBDeclarations.h).
+// The terrain type under a map cell.
 #define CELL_TERRAIN(cell) (giGroundToTerrain[(cell)->m_tileIndex])
 extern i32 bShowIt;
 extern char gText[];
@@ -51,9 +51,9 @@ extern char* gArmyNames[];
 // Locale-independent resource stems; display names stay in the catalog.
 extern char* gArmySpriteNames[28];
 extern char* gArmyNamesPlural[];
-// A creature's name, singular for counts at most one (HoMM1 Buka retail and
-// HoMM2 Buka 2.1 KBDeclarations.h).
-#define CREATURE_DISPLAY_NAME(type, count) ((count) <= 1 ? gArmyNames[type] : gArmyNamesPlural[type])
+// A creature's name, singular for counts at most one.
+#define CREATURE_DISPLAY_NAME(type, count)                                                         \
+    ((count) <= 1 ? gArmyNames[type] : gArmyNamesPlural[type])
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern i32 gMinimized;
 extern char* gMemoryErrorTitle;
@@ -83,10 +83,6 @@ extern i32 giBottomViewOverrideEndTime;
 extern i32 giBottomViewResource;
 extern i32 giBottomViewResourceQty;
 extern char gcBottomViewText[];
-extern void* hmnuAdv;
-extern void* hmnuDflt;
-extern void* hmnuCmbt;
-extern void* hmnuTown;
 extern i32 gHeroMoving;
 extern i32 gRemoteOn;
 extern class heroWindow* DataEntryWin;
@@ -137,8 +133,8 @@ char* GetMonsterSingularName(i32 monster);
 char* GetMonsterName(i32 monster);
 class sample* LoadPlaySample(char* name);
 extern i32 glTimers[];
-// Shared glTimers slots (Buka KBDeclarations.h numbers the same ones); the
-// table ends at giScore (0x004c6a98), six slots. Units keep slots 0 and 1.
+// Shared glTimers slots; the table ends at giScore (0x004c6a98), six slots.
+// Units keep slots 0 and 1.
 H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
     GLOBAL_TIMER_COUNT = 6,
     GLOBAL_BUTTON_REPEAT_TIMER_SLOT = 2,
@@ -216,8 +212,8 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
 i16 DataEntryWindowHandler(struct tag_message& message);
 i16 EventWindowHandler(struct tag_message& message);
 i16 TrueFalseDialogHandler(struct tag_message& message);
-// HoMM1 town-name lookup by town id (retail 0x00455aaf); the inline
-// game::GetTown narrows the id, hence retail's movsx after jmp $+5.
+// Town-name lookup by town id (retail 0x00455aaf); the inline game::GetTown
+// narrows the id.
 char* GetTownName(i32 i);
 void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut);
 void ShutDown(char* message);
@@ -245,8 +241,6 @@ H1_ENUM_CONST_BEGIN(NormalDialogPosition)
     NORMAL_DIALOG_AUTO_POSITION = -1
 H1_ENUM_CONST_END(NormalDialogPosition)
 
-// Buka 2.1 KBDeclarations.h declares the same trailing defaults (HoMM1 has no
-// timeout argument).
 void NormalDialog(
     char* text,
     H1_ENUM_PARAM(NormalDialogType, i32) dialogType,
@@ -266,7 +260,7 @@ extern char* gTerrainNames[];
 extern char* gResourceNames[];
 extern char* gMineNames[];
 extern char* gObjectNames[];
-// KB's map-extra record count and sizes (Buka KBDeclarations).
+// KB's map-extra record count and sizes.
 extern i32 iMaxMapExtra;
 extern i32 pwSizeOfMapExtra[];
 // KB's adventure status-bar resource message and its menu, wait and victory
@@ -278,7 +272,7 @@ void ShowCongrats(void);
 void CongratsWait(void);
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName);
 
-// HoMM1 uses six-word graphics records; HoMM2 adds colorMouseCursor.
+// Graphics records are six words.
 struct exeGfxConfig {
     i32 showMenu;
     i32 x;
@@ -306,6 +300,9 @@ struct configStruct {
     i32 baudRate[2];
     char modemInitString[100];
 };
+// The running executable's display row of gConfig.gfx: a live lvalue,
+// re-read at every use.
+#define CURRENT_GRAPHICS_CONFIG (gConfig.gfx[gCurExe])
 struct tag_tilePoint {
     i8 x;
     i8 y;
@@ -391,8 +388,7 @@ extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;
-// The last save name (Buka X_GLOBAL GLOBAL_LAST_FILENAME_SIZE): retail places
-// gbRetreatWin at its 0x15f-byte end.
+// The last save name: retail places gbRetreatWin at its 0x15f-byte end.
 H1_ENUM_CONST_BEGIN(LastFilenameConstant)
     GLOBAL_LAST_FILENAME_SIZE = 0x15f
 H1_ENUM_CONST_END(LastFilenameConstant)
@@ -449,9 +445,7 @@ extern i32 gUltArtifactAvgValue;
 extern u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern i8 gbGamePosToNetPos[];
 // WaitForOtherPlayer stores the game position of net position zero here
-// (0x004c6710). Declared ahead of giThisGamePos (0x004c74a0): only this order
-// gives the host/this compares in advManager::Main, game::NextPlayer,
-// PollRemote and HandleRemoteSuddenExit retail's load order.
+// (0x004c6710).
 extern i32 giHostGamePos;
 extern i32 giThisGamePos;
 extern i32 giThisNetPos;
@@ -460,8 +454,7 @@ i8 NetPosToGamePos(i32 netPos);
 i8 WaitForOtherPlayer(void);
 // SeedPosition's seeding state.
 extern i32 giSeedingValid;
-// KB-band setup state (Buka X_GLOBAL.h): the direct-connect flag and the
-// multiplayer game type.
+// KB-band setup state: the direct-connect flag and the multiplayer game type.
 extern i8 gDirectConnect;
 extern i8 iMPExtendedType;
 extern i32 gInSmacker;
@@ -588,7 +581,7 @@ extern char* onOffText[];
 extern char* walkSpeedText[];
 
 // gAdvDisposeLevel while combat runs: how much adventure-screen art the
-// resource manager may release (Buka X_GLOBAL.h).
+// resource manager may release.
 H1_ENUM_BEGIN(AdvDisposeLevel)
     ADV_DISPOSE_NONE = 0,
     ADV_DISPOSE_PARTIAL = 1,
@@ -604,7 +597,6 @@ H1_ENUM_BEGIN(ConfigExecutable)
     CONFIG_EXECUTABLE_COUNT = 2
 H1_ENUM_END(ConfigExecutable)
 
-// Moved from KB.cpp.
 // InitMenuHandler's right-click help: the gInitMenuHelp row.
 H1_ENUM_BEGIN(MainMenuHelp)
     MAIN_MENU_HELP_NONE = -1,
@@ -633,20 +625,14 @@ H1_ENUM_CONST_BEGIN(NetPositionConstant)
     NET_POSITION_HOST = 0
 H1_ENUM_CONST_END(NetPositionConstant)
 
-// donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
 // playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
-// losing the last town starts a GRACE_DAYS countdown (Buka
-// END_GAME_GRACE_DAYS) that game::NewDay runs down to elimination.
+// losing the last town starts a GRACE_DAYS countdown that game::NewDay runs
+// down to elimination.
 H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
     END_GAME_NO_GRACE_PERIOD = -1,
     END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
 H1_ENUM_CONST_END(CheckEndGameConstant)
 
-// donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
 // KB's morale-screen text table; the five-alignment line was appended last.
 H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_GOOD = 0,

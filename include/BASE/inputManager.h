@@ -21,8 +21,7 @@ H1_ENUM_CONST_END(InputManagerConstant)
 
 // PC set-1 scan codes: KeyboardMessageHandler stores bits 16..23 of the
 // WM_KEYDOWN lParam, and MakeScanCodeTable maps every code 0x00..0x58 to
-// its character or to the code shifted into the high byte. Names follow
-// HoMM2 Buka's InputManagerScanCode.
+// its character or to the code shifted into the high byte.
 H1_ENUM_BEGIN(InputScanCode)
     INPUT_SCAN_NONE = 0x00,
     INPUT_SCAN_ESCAPE = 0x01,
@@ -127,6 +126,9 @@ H1_ENUM_CONST_BEGIN(InputKeyCodeConstant)
     INPUT_ASCII_DELETE = 0x7f
 H1_ENUM_CONST_END(InputKeyCodeConstant)
 
+// A key without a character: its scan code moved into the high byte.
+#define EncodeScanCode(scanCode) ((scanCode) << INPUT_KEY_SCAN_SHIFT)
+
 #pragma pack(push, 1)
 class inputManager : public baseManager {
 public:
@@ -163,7 +165,7 @@ public:
     void AsciiConvert(tag_message& event);
     void MakeScanCodeTable(void);
     void ForceMouseMove(void);
-    // Inline qualifier accessor; townManager::ShiftQualChange retains its jmp.
+    // Inline qualifier accessor.
     i16 GetModifiers(void) {
         return m_modifiers;
     }

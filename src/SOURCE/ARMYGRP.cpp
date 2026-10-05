@@ -71,7 +71,7 @@ i8 armyGroup::IsMember(i8 creatureType) {
     return 0;
 }
 
-// Buka 2.1 IsHomogeneous; HoMM1 races are six consecutive creature ids.
+// Races are six consecutive creature ids.
 VA(0x00418676, 0x13e)
 H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
     i32 numCreatureTypes = 0;

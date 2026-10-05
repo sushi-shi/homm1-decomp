@@ -1,4 +1,4 @@
-// Retail-backed text widget resource reader.
+// Text widget resource reader.
 
 #include <match.h>
 
@@ -44,17 +44,14 @@ textWidget::textWidget(
 
 VA(0x0047186d, 0x12a)
 void textWidget::Read(void) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     i16 length = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
-    // byte-evidenced: ReadBlock accepts signed bytes for stored text.
-    gpResourceManager->ReadBlock(reinterpret_cast<i8*>(m_text), length);
+    gpResourceManager->ReadBlock(m_text, length);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_font = gpResourceManager->GetFont(name);
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);

@@ -35,8 +35,9 @@ This holds with and without a listing switch. Retail's parse-order variables
 fit this. PHILAI's `gSVSearchArrayInUse` (0x0048f7b8) comes at the start of
 `StrategicValueOfPosition`'s data and `gEvaluatingTravelGates` (0x0048f824) at
 the start of `ValueOfEventAtPosition`'s. Each is referenced only by that
-function (0x0041f2c3 and 0x0042278b respectively). Buka models both at file
-scope, but the order evidence supports function-local statics under `/Gi`.
+function (0x0041f2c3 and 0x0042278b respectively). Both read naturally as
+file-scope globals, but the order evidence supports function-local statics
+under `/Gi`.
 
 ## `__LINE__Var` always goes to `init`
 
@@ -61,7 +62,7 @@ these words can't both come from `__LINE__`:
   (`movsx eax, word [word]` / `add eax, N`), but puts the word at the top.
 - A function-local `static short` holding the line base, used as
   `base + N`, gives the same code and retail's placement. But it is not the
-  `__LINE__Var` symbol, and no source or donor shows such a spelling.
+  `__LINE__Var` symbol, and no source evidence shows such a spelling.
 
 Which one to use is a reconstruction-policy decision. The retail evidence
 alone doesn't decide whether the original C1XX build emitted `__LINE__Var`

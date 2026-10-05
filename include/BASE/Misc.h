@@ -5,7 +5,12 @@
 
 class bitmap;
 
-// Map-grid (taxicab) distance of an offset (Buka 2.1 Misc.h).
+// Read or write one whole value of the file's record; the value's
+// own size is the transfer size.
+#define READ_FILE_VALUE(fd, value) read((fd), &(value), sizeof(value))
+#define WRITE_FILE_VALUE(fd, value) write((fd), &(value), sizeof(value))
+
+// Map-grid (taxicab) distance of an offset.
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 
 void SetPalette(i8* paletteData, i32 updateDisplay);

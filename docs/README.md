@@ -14,7 +14,8 @@
 - [Cleanliness](cleanliness-metrics.md), [source markers](comment-markers.md),
   [constants](constants.md), [enum reuse](enum-reuse.md), [clangd](clangd.md).
 - [Tooling inheritance](tooling-inheritance.md),
-  [script maintenance](../scripts/README.md).
+  [script maintenance](../scripts/README.md),
+  [Rust tools and the LZHUF port](../tools/README.md).
 
 Retail facts live in `config/retail`, build contracts in `config`, generated
 state in `build`, and reusable compiler mechanisms in `docs/patterns`.

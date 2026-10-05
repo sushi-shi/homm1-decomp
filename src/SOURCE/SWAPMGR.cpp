@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -24,7 +22,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka 2.1 swapManager::swapManager(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045cee0, 0x6a)
@@ -54,7 +51,7 @@ void swapManager::Reset(void) {
 VA(0x0045cfab, 0x2b4)
 i16 swapManager::Open(i16 id) {
     tag_message message;
-    i32 i; // Unused; retail still reserves its frame slot.
+    i32 i;
 
     Reset();
     m_window = new heroWindow(16, 16, "swapwin.bin");
@@ -80,21 +77,11 @@ i16 swapManager::Open(i16 id) {
     message.text = gText;
     message.id = CONTROL_TITLE;
     m_window->BroadcastMessage(message);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED;
-    message.id = ADVENTURE_CONTROL_NEXT_HERO;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_OVERVIEW;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_END_TURN;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
+    SET_ADVENTURE_BUTTON_FLAGS(
+        message,
+        gpAdvManager->m_adventureWindow,
+        WIDGET_COMMAND_CLEAR_FLAGS
+    );
     Update();
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     KBChangeMenu(hmnuAdv);
@@ -112,9 +99,6 @@ i16 swapManager::Open(i16 id) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// donor PoL RVA 0x000548be; preferred Buka symbol ?Close@swapManager@@UAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.610218;margin=0.602384;shape=0.500;size=0.986;calls=1.000;alternate=pol20:void swapManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x000548be
 VA(0x0045d25f, 0x114)
 void swapManager::Close(void) {
     tag_message message;
@@ -124,21 +108,7 @@ void swapManager::Close(void) {
     delete m_window;
     m_active = 0;
     gpAdvManager->Activate();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED;
-    message.id = ADVENTURE_CONTROL_NEXT_HERO;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_OVERVIEW;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_END_TURN;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
+    SET_ADVENTURE_BUTTON_FLAGS(message, gpAdvManager->m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
 }
 
 VA(0x0045d373, 0x1a2)
@@ -198,9 +168,6 @@ void swapManager::DrawSelector(void) {
     }
 }
 
-// donor PoL RVA 0x00054be3; preferred Buka symbol ?Main@swapManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
 VA(0x0045d515, 0x88c)
 i16 swapManager::Main(struct tag_message& message) {
     i8 nowCloseRequested = 0;
@@ -280,14 +247,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
                                     localization::Tr("artifact.trade.forbidden"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             }
@@ -349,14 +309,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
                                     localization::Tr("artifact.trade.forbidden"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             }
@@ -568,7 +521,6 @@ void swapManager::ViewMon(void) {
     );
 }
 
-// Buka 2.1 swapManager::SwapArtifacts.
 VA(0x0045de3b, 0x126)
 void swapManager::SwapArtifacts(void) {
     i8 targetArtifact;
@@ -736,9 +688,6 @@ void swapManager::Update(void) {
     }
 }
 
-// donor PoL RVA 0x00055fbd; preferred Buka symbol ?SplitMons@swapManager@@QAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
 VA(0x0045e628, 0x352)
 void swapManager::SplitMons(void) {
     i16 idPos;

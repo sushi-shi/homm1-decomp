@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_TEXTENTRYWIDGET_H
 #define HOMM1_BASE_TEXTENTRYWIDGET_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 8 methods, 2 own-virtual, 0 static data.
 
 #include <BASE/textWidget.h>
 #include <Domains.h>
@@ -71,7 +69,7 @@ public:
         i16 id,
         i16 kind
     );
-    virtual inline ~textEntryWidget() OVERRIDE;
+    virtual ~textEntryWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;
