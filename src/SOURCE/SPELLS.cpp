@@ -276,6 +276,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
     i32 result;
     i32 armyIndex;
     class sample* sample;
+    class sample* resistSample;
     i32 quantity;
     i16 newHex;
     army* teleportArmy;
@@ -324,12 +325,12 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             if (targetArmy
                 && (targetArmy->m_creatureType == CREATURE_DRAGON
                     || (targetArmy->m_creatureType == CREATURE_DWARF && SRandom(0, 4) == 1))) {
-                sample = LoadPlaySample("RSBRYFZL.82M");
+                resistSample = LoadPlaySample("RSBRYFZL.82M");
                 if (targetArmy->m_creatureType == CREATURE_DRAGON)
                     CombatMessage(localization::Tr("spell.dragon.immune"), 1);
                 else
                     CombatMessage(localization::Tr("spell.dwarf.resisted"), 1);
-                WaitSample(sample);
+                WaitSample(resistSample);
                 goto done;
             }
             break;
@@ -429,7 +430,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             targetArmy->m_quantity +=
                 m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
                 / targetArmy->m_stats.hitPoints;
-            if (targetArmy->m_initialQuantity < targetArmy->m_quantity)
+            if (targetArmy->m_quantity > targetArmy->m_initialQuantity)
                 targetArmy->m_quantity = targetArmy->m_initialQuantity;
             if (targetArmy->m_quantity - quantity > 1)
                 sprintf(
