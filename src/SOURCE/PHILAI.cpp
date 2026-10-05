@@ -998,7 +998,7 @@ void philAI::GetTurnAIVars(i32 player) {
                     for (y = yPos - 10; y <= yPos + 10; y++) {
                         if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
                             mineValue = abs(MANHATTAN_LENGTH(x - xPos, y - yPos) - 4) >> 2;
-                            if (gaiTurnValueOfMine[x][y] > mineValue)
+                            if (mineValue < gaiTurnValueOfMine[x][y])
                                 gaiTurnValueOfMine[x][y] = mineValue;
                         }
                     }
