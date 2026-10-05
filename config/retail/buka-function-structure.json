@@ -355,9 +355,9 @@
     {
       "unit": "SOURCE/SMACKMGR",
       "source_anchor_rva": "0x58cf4",
-      "source_anchor_name": "?PlaySmacker@@YAHC@Z",
+      "source_anchor_name": "?PlaySmacker@@YAHH@Z",
       "preceding_body_rva": "0x58cf4",
-      "preceding_body_role": "?PlaySmacker@@YAHC@Z",
+      "preceding_body_role": "?PlaySmacker@@YAHH@Z",
       "initializer_rva": "0x58d9d",
       "initializer_sha256": "b905cc42d1ad59530a3ca7df108390abb7fcff5a4c1062a46d77b97fca3c5ae7",
       "registration_rva": "0x58dc4",

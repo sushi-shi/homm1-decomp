@@ -364,7 +364,7 @@ void CloseSmackers() {
 }
 
 VA(0x00458cf4, 0xa9)
-i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber) {
+i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber) {
     i8 savedPalette[PALETTE_DATA_SIZE];
     i32 savedUpdateFlags;
     gInSmacker = 1;

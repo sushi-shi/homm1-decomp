@@ -1026,7 +1026,7 @@
       "references": [
         {
           "unit": "SOURCE/SMACKMGR",
-          "function": "?PlaySmacker@@YAHC@Z",
+          "function": "?PlaySmacker@@YAHH@Z",
           "site_rva": "0x58cff",
           "target_rva": "0xa9908",
           "symbol": "?gInSmacker@@3HA",
@@ -1036,7 +1036,7 @@
         },
         {
           "unit": "SOURCE/SMACKMGR",
-          "function": "?PlaySmacker@@YAHC@Z",
+          "function": "?PlaySmacker@@YAHH@Z",
           "site_rva": "0x58d8c",
           "target_rva": "0xa9908",
           "symbol": "?gInSmacker@@3HA",
@@ -52401,7 +52401,7 @@
     },
     {
       "unit": "SOURCE/SMACKMGR",
-      "name": "?PlaySmacker@@YAHC@Z",
+      "name": "?PlaySmacker@@YAHH@Z",
       "rva": "0x58cf4",
       "size": 169,
       "old_rva": "0x00058cf4",

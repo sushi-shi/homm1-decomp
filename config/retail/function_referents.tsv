@@ -644,7 +644,7 @@ rva	name	provenance
 0x00058433	?DoAdvance@@YAXPAUSmack@@HHHH@Z	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
 0x0005856f	?SmackMain@@YAXXZ	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
 0x00058cab	?CloseSmackers@@YAXXZ	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
-0x00058cf4	?PlaySmacker@@YAHC@Z	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
+0x00058cf4	?PlaySmacker@@YAHH@Z	Buka audio/video assembly reconstruction; active VA identity checked against census; buka-function-map.json
 0x00058de0	?DoSpellAI@combatManager@@QAEHC@Z	Complete instruction body, reference-site shape and injective stack-byte correspondence; buka-local-correspondence.json
 0x00058f76	?DetermineEffectOfSpell@combatManager@@QAEXHPAH0@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
 0x000593a3	?RawEffectSpellInfluence@combatManager@@QAEHPAVarmy@@H@Z	Buka TU-order, instruction/call or constructor-vtable identity review; buka-function-map.json (identity only, strict body/reference comparison unchanged).
