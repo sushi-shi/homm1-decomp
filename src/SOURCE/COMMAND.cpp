@@ -1001,7 +1001,7 @@ VA(0x0041f491, 0x28d)
 void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) {
     char* artifactName;
     i16 boxWidth = 0x140;
-    i16 bottom = 0x1ca;
+    i16 bottomEdge = 0x1ca;
     tag_message message;
 
     sprintf(gText, localization::Tr("combat.artifact.captured"));
@@ -1055,12 +1055,12 @@ void combatManager::ShowWinLoseArtifact(class heroWindow* window, i32 artifact) 
         MemError();
     window->AddWidget(m_winLoseBottomTextWidgets[0], WINDOW_Z_ORDER_APPEND);
     gpCombatManager->m_winLoseWindow->DrawWindow();
-    {
-        class sample* sample;
-        sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
-        sample = LoadPlaySample(gText);
-        WaitSample(sample);
-    }
+    // Function-scope, declared here as the Buka 2.1 donor's playSample is:
+    // retail gives it the first local slot.
+    class sample* sample;
+    sprintf(gText, "pickup%02d.82M", SRandom(1, 5));
+    sample = LoadPlaySample(gText);
+    WaitSample(sample);
 }
 
 // Buka COMMAND.cpp ShowDeadArmies; HoMM1 lays out up to five casualties a
