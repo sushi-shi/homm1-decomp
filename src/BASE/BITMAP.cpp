@@ -30,7 +30,7 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
     m_bitmapType = type;
     m_width = width;
     m_height = height;
-    m_pixels = static_cast<i8*>(malloc(width * height));
+    m_pixels = static_cast<u8*>(malloc(width * height));
 }
 
 // Retail's ID constructor reads the packed bitmap and postprocesses its pixels.
@@ -41,20 +41,20 @@ bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFEREN
     m_width = gpResourceManager->ReadWord();
     m_height = gpResourceManager->ReadWord();
     i32 size = m_width * m_height;
-    m_pixels = static_cast<i8*>(malloc(size));
+    m_pixels = static_cast<u8*>(malloc(size));
     PollSound();
     gpResourceManager->ReadBlock(m_pixels, size);
     PostprocessBitmap(m_pixels, m_width, m_height);
     PollSound();
 }
 
+VA(0x00473336, 0x3e)
 bitmap::~bitmap(void) {
     if (m_pixels != NULL)
         free(m_pixels);
     m_pixels = NULL;
 }
 
-VA_COMPGEN(0x00473336, 0x3e, "??1bitmap@@UAE@XZ", 0x00473180)
 VA(0x00473374, 0x4b)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();

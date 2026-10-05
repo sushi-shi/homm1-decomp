@@ -60,8 +60,7 @@ void resourceManager::GetBackdropAtLoc(
     imageHeight = ReadWord();
     for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
         ReadBlock(
-            destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES
-                + destinationX,
+            destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES + destinationX,
             width
         );
     }
@@ -381,13 +380,13 @@ i16 resourceManager::MakeId(char* name) {
 }
 
 VA(0x0046cd95, 0x1b)
-void resourceManager::Read13(i8* destination) {
+void resourceManager::Read13(char* destination) {
     ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 VA(0x0046cdb0, 0x52)
 #line 679 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
-void resourceManager::ReadBlock(i8* destination, u32 size) {
+void resourceManager::ReadBlock(void* destination, u32 size) {
 #line 680
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     PollSound();

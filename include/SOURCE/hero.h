@@ -104,7 +104,7 @@ public:
     i16 m_mobility;
     i16 m_remainingMobility;
     i32 m_experience;
-    i8 m_unknown2d;
+    i8 m_unused2d;
     i16 m_level;
     // GiveTakeArtifactStat raises a fifth stat byte for artifact 17.
     i8 m_primaryStats[HERO_STARTING_STAT_COUNT];
@@ -112,11 +112,11 @@ public:
     i8 m_luck;
     // ShowMoraleInfo reports the cowardice byte separately.
     i8 m_cowardice;
-    i8 m_unknown38;
+    i8 m_unused38;
     // DoAIEvent tests and sets one bit per visited site index.
     i32 m_visitedSites;
     i16 m_randomSeed;
-    char m_unknown3f[0x18];
+    char m_unused3f[0x18];
     armyGroup m_army;
     // Combat spells fill the first 19 slots, adventure spells the last 10;
     // each memorized spell keeps its remaining casts in the parallel array.

@@ -1927,14 +1927,14 @@
               "kind": 20
             },
             {
-              "symbol": "?hmnuDflt@@3PAXA",
+              "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
               "site_rva": "0x585a3",
               "target_rva": "0xa98dc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?KBChangeMenu@@YAXPAX@Z",
+              "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
               "site_rva": "0x585a9",
               "target_rva": "0x43b24",
               "addend": "0x0",
@@ -2408,14 +2408,14 @@
               "kind": 20
             },
             {
-              "symbol": "?hmnuDflt@@3PAXA",
+              "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
               "site_rva": "0x585a3",
               "target_rva": "0xa98dc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?KBChangeMenu@@YAXPAX@Z",
+              "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
               "site_rva": "0x585a9",
               "target_rva": "0x43b24",
               "addend": "0x0",
@@ -4142,14 +4142,14 @@
       "kind": 20
     },
     {
-      "symbol": "?hmnuDflt@@3PAXA",
+      "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
       "site_rva": "0x585a3",
       "target_rva": "0xa98dc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?KBChangeMenu@@YAXPAX@Z",
+      "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
       "site_rva": "0x585a9",
       "target_rva": "0x43b24",
       "addend": "0x0",

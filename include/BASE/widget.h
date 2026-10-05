@@ -48,9 +48,8 @@ H1_ENUM_CONST_END(WidgetIdConstant)
     ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width                               \
      && (y) < (w).m_y + (w).m_height)
 
-// A widget record's four geometry words, read in order from the open resource.
-// VC4 rejects an assignment through (*this).member, so the widget is passed by
-// pointer.
+// A widget record's four geometry words, read in order from the open resource
+// into the widget pointed to by w.
 #define READ_WIDGET_GEOMETRY(w, resources)                                                         \
     ((w)->m_x = (resources)->ReadWord(),                                                           \
      (w)->m_y = (resources)->ReadWord(),                                                           \

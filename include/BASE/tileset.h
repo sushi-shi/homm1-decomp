@@ -9,10 +9,10 @@ public:
     u16 m_tileCount;
     u16 m_tileWidth;
     u16 m_tileHeight;
-    i8* m_data;
+    u8* m_data;
     // --- constructors ---
     tileset(i16 id);
-    virtual inline ~tileset();
+    virtual ~tileset();
 };
 #pragma pack(pop)
 #endif // HOMM1_BASE_TILESET_H

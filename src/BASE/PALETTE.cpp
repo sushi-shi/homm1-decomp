@@ -21,11 +21,11 @@ palette::palette(i16 id)
     gpResourceManager->ReadBlock(m_data, PALETTE_DATA_SIZE);
 }
 
+VA(0x0047489d, 0x2b)
 palette::~palette(void) {
     free(m_data);
 }
 
-VA_COMPGEN(0x0047489d, 0x2b, "??1palette@@UAE@XZ", 0x004747d0)
 VA(0x004748c8, 0x11)
 i8* palette::Data(void) {
     return m_data;

@@ -25,10 +25,6 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
-button::~button(void) {
-    gpResourceManager->Dispose(m_icon);
-}
-
 // The icon-file-id and icon-name overloads; no retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
@@ -80,13 +76,11 @@ button::button(
 
 VA(0x00476e34, 0xfb)
 void button::Read(void) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_normalFrame = gpResourceManager->ReadWord();
     m_pressedFrame = gpResourceManager->ReadWord();
@@ -96,7 +90,11 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
-VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
+VA(0x00476f2f, 0x5b)
+button::~button(void) {
+    gpResourceManager->Dispose(m_icon);
+}
+
 VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
     i16 x;

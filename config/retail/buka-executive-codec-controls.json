@@ -27,7 +27,7 @@
   },
   "functions": [
     {
-      "symbol": "?AppCommand@@YAHPAXIIH@Z",
+      "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
       "rva": "0x43911",
       "candidate_instructions": 80,
       "retail_instructions": 80,
@@ -184,7 +184,7 @@
   "whole_project_score_changes": [
     {
       "rva": "0x43911",
-      "symbol": "?AppCommand@@YAHPAXIIH@Z",
+      "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
       "before": 97.82143,
       "after": 97.85714
     },

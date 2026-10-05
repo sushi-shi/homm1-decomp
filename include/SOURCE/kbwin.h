@@ -113,8 +113,8 @@ H1_ENUM_CONST_BEGIN(PrefsConstant)
     KBWIN_MIN_HEIGHT = 160
 H1_ENUM_CONST_END(PrefsConstant)
 
-extern void* hInstApp;
-extern void* gEventHandle;
+extern HINSTANCE hInstApp;
+extern HANDLE gEventHandle;
 extern char gCommandLine[];
 extern u8 bProcessMessage[];
 extern char gAppName[];
@@ -140,27 +140,32 @@ struct WindowTextEntry {
 };
 #pragma pack(pop)
 
-extern void* hmnuCurrent;
-i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData);
+extern HMENU hmnuCurrent;
+i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
 i32 AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
 void ReadPrefs(void);
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
-i32 AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine);
+i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
 // WNDPROC: LRESULT and LPARAM are the SDK's long.
-long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData);
+long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData);
 // The About dialog procedure has C linkage (_AppAbout@16).
 extern "C" BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
-void KBChangeMenu(void* menu);
+void KBChangeMenu(HMENU menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void SetMenuStatus(i32 showMenu);
 // HoMM1 window caption helper (retail 0x0045dc1f, cdecl).
 void SetWinText(class heroWindow* window, i16 id);
-void UpdateDfltMenu(void* menu);
+void UpdateDfltMenu(HMENU menu);
 extern i32 gForegroundApp;
 extern i32 gNoDialogMenusOn;
-extern void* hmnuApp;
+extern HMENU hmnuApp;
+// KB.cpp owns the per-screen menus and loads them in InitVars.
+extern HMENU hmnuAdv;
+extern HMENU hmnuDflt;
+extern HMENU hmnuCmbt;
+extern HMENU hmnuTown;
 extern i32 gClosingApp;
 extern i32 gLastGetMessage;
 extern i32 gLastAilServe;
@@ -168,7 +173,7 @@ i32 KBTickCount();
 void Process1WindowsMessage();
 void SetNoDialogMenus(i32 menusEnabled);
 char* FindLastToken(char* text, char token);
-void SetMenus(void* menu, i32 enabled);
+void SetMenus(HMENU menu, i32 enabled);
 extern HWND hwndApp;
 extern i32 iMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;

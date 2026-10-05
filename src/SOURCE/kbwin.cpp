@@ -70,7 +70,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
 }
 
 VA(0x00442dba, 0x28e)
-BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine) {
+BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
     RECT windowRectangle;
 
@@ -101,13 +101,12 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
 
     if (previousInstance == NULL) {
         appClass.hCursor = NULL;
-        appClass.hIcon =
-            LoadIconA(static_cast<HINSTANCE>(instance), MAKEINTRESOURCEA(KBWIN_APPLICATION_ICON));
+        appClass.hIcon = LoadIconA(instance, MAKEINTRESOURCEA(KBWIN_APPLICATION_ICON));
         appClass.lpszMenuName = NULL;
         appClass.lpszClassName = gAppName;
         appClass.hbrBackground =
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
-        appClass.hInstance = static_cast<HINSTANCE>(instance);
+        appClass.hInstance = instance;
         appClass.style = KBWIN_CLASS_STYLE;
         appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(
             AppWndProc
@@ -136,13 +135,13 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
         windowRectangle.right - windowRectangle.left + 1,
         windowRectangle.bottom - windowRectangle.top + 1,
         NULL,
-        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? static_cast<HMENU>(hmnuDflt) : NULL,
-        static_cast<HINSTANCE>(instance),
+        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? hmnuDflt : NULL,
+        instance,
         NULL
     );
     if (hwndApp != NULL) {
-        ShowWindow(static_cast<HWND>(hwndApp), showCommand);
-        SetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE, giCurWindowsStyleFlags);
+        ShowWindow(hwndApp, showCommand);
+        SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
         if (CURRENT_GRAPHICS_CONFIG.showMenu == 0)
             SetMenuStatus(0);
         InitGraphics();
@@ -161,18 +160,18 @@ BOOL AppIdle(void) {
 }
 
 VA(0x00443052, 0x6ad)
-long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData) {
+long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData) {
     DATA(0x004a9e44)
     static i32 gLastGTimerTickCount = 0;
     DATA(0x004a9e48)
     static i32 gLastCycleTickCount = 0;
     if (message > KBWIN_PROCESS_MESSAGE_MAX || bProcessMessage[message] == 0)
-        return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
+        return DefWindowProcA(window, message, messageParam, messageData);
 
     switch (message) {
         case WM_CREATE:
             srand(KBTickCount());
-            SetTimer(static_cast<HWND>(window), KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
+            SetTimer(window, KBWIN_TIMER_ID, KBWIN_TIMER_INTERVAL, NULL);
             GdiSetBatchLimit(1);
             return 0;
         case WM_KEYDOWN:
@@ -213,10 +212,10 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
         case WM_MOVE:
             if (hwndApp == NULL)
                 return 0;
-            lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+            lTemp = GetWindowLongA(hwndApp, GWL_STYLE);
             if ((lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0 && gClosingApp == 0
                 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
-                GetWindowRect(static_cast<HWND>(window), &rcTemp);
+                GetWindowRect(window, &rcTemp);
                 CURRENT_GRAPHICS_CONFIG.x = rcTemp.left;
                 CURRENT_GRAPHICS_CONFIG.y = rcTemp.top;
                 WritePrefs();
@@ -224,7 +223,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
             return 0;
         case WM_SIZE:
             if (hwndApp != NULL) {
-                lTemp = GetWindowLongA(static_cast<HWND>(hwndApp), GWL_STYLE);
+                lTemp = GetWindowLongA(hwndApp, GWL_STYLE);
                 gMinimized = lTemp & WS_MINIMIZE;
                 if ((lTemp & WS_MINIMIZE) == 0)
                     EarlyResizeWindow(0, 0, 0, 0);
@@ -271,7 +270,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
                         NORMAL_DIALOG_TYPE_YES_NO
                     );
                     if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                        DestroyWindow(static_cast<HWND>(window));
+                        DestroyWindow(window);
                     return 0;
                 }
             }
@@ -282,7 +281,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
             ShutDown(NULL);
             break;
     }
-    return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
+    return DefWindowProcA(window, message, messageParam, messageData);
 }
 
 // About-dialog callback.
@@ -364,7 +363,7 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 }
 
 VA(0x00443911, 0x165)
-i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
+i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC lpfnDlgProc;
     i32 command;
 
@@ -373,16 +372,10 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
         case KBWIN_MENU_ABOUT:
             lpfnDlgProc =
                 reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the BOOL dialog procedure.
-            DialogBoxParamA(
-                static_cast<HINSTANCE>(hInstApp),
-                "HEROES",
-                static_cast<HWND>(window),
-                lpfnDlgProc,
-                0
-            );
+            DialogBoxParamA(hInstApp, "HEROES", window, lpfnDlgProc, 0);
             break;
         case KBWIN_MENU_HELP:
-            WinHelpA(static_cast<HWND>(hwndApp), ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
+            WinHelpA(hwndApp, ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
             break;
         case KBWIN_MENU_SIZE_640_480:
             ResizeWindow(
@@ -427,26 +420,26 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
 
 // Disables unsupported window sizes.
 VA(0x00443a76, 0xae)
-void UpdateDfltMenu(void* menu) {
+void UpdateDfltMenu(HMENU menu) {
     i32 result;
     i32 value;
 
     if (CURRENT_GRAPHICS_CONFIG.showMenu == 0)
         return;
     if (gMainVideoModeWidth <= KBWIN_WIDTH_640)
-        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_640_480, MF_GRAYED);
+        EnableMenuItem(menu, KBWIN_MENU_SIZE_640_480, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_800)
-        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_800_600, MF_GRAYED);
+        EnableMenuItem(menu, KBWIN_MENU_SIZE_800_600, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_1024)
-        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
+        EnableMenuItem(menu, KBWIN_MENU_SIZE_1024_768, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_1280)
-        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
+        EnableMenuItem(menu, KBWIN_MENU_SIZE_1280_1024, MF_GRAYED);
     if (gDDrawAttached == FALSE)
-        EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_FULLSCREEN, MF_GRAYED);
+        EnableMenuItem(menu, KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
 VA(0x00443b24, 0x91)
-void KBChangeMenu(void* menu) {
+void KBChangeMenu(HMENU menu) {
     if (menu == NULL)
         menu = hmnuCurrent;
     else
@@ -454,7 +447,7 @@ void KBChangeMenu(void* menu) {
     hmnuApp = menu;
     if (CURRENT_GRAPHICS_CONFIG.showMenu) {
         if (menu != NULL) {
-            SetMenu(hwndApp, static_cast<HMENU>(menu));
+            SetMenu(hwndApp, menu);
             UpdateDfltMenu(menu);
             UpdateAppSpecificMenus(menu);
             DrawMenuBar(hwndApp);
@@ -512,7 +505,7 @@ void SetNoDialogMenus(i32 menusEnabled) {
 // Recurse into popups, then restore each command from the normal or setup
 // enable table.
 VA(0x00443d1f, 0x12b)
-void SetMenus(void* menu, i32 enabled) {
+void SetMenus(HMENU menu, i32 enabled) {
     i32 index;
     i32 count;
     u32 id;
@@ -520,11 +513,11 @@ void SetMenus(void* menu, i32 enabled) {
     i32 pos;
     i32 disabled;
 
-    count = GetMenuItemCount(static_cast<HMENU>(menu));
+    count = GetMenuItemCount(menu);
     for (index = 0; index < count; index++) {
-        id = GetMenuItemID(static_cast<HMENU>(menu), index);
+        id = GetMenuItemID(menu, index);
         if (id == static_cast<u32>(-1)) {
-            SetMenus(GetSubMenu(static_cast<HMENU>(menu), index), enabled);
+            SetMenus(GetSubMenu(menu, index), enabled);
             disabled = 0;
         } else {
             disabled = 0;
@@ -543,7 +536,7 @@ void SetMenus(void* menu, i32 enabled) {
             }
         }
         if (disabled != 0)
-            EnableMenuItem(static_cast<HMENU>(menu), id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
+            EnableMenuItem(menu, id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
     }
     UpdateDfltMenu(menu);
 }
@@ -1196,7 +1189,7 @@ VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {
     i32 i;
     tag_message msg;
-    for (i = 0; i < static_cast<i32>(WINDOW_TEXT_ENTRY_COUNT); i++) {
+    for (i = 0; i < WINDOW_TEXT_ENTRY_COUNT; i++) {
         if (gWinSetup[i].windowId == id) {
             SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, gWinSetup[i].widgetId);
             msg.text = gWinSetupText[i];
@@ -1257,19 +1250,19 @@ HWND hwndApp = NULL;
 DATA(0x004a9e38)
 i32 gForegroundApp = 0;
 DATA(0x004a9e3c)
-void* hmnuApp = NULL;
+HMENU hmnuApp = NULL;
 DATA(0x004a9e40)
-void* gEventHandle = NULL;
+HANDLE gEventHandle = NULL;
 DATA(0x004a9e4c)
 i32 gClosingApp = 0;
 DATA(0x004a99e8)
-void* hInstApp;
+HINSTANCE hInstApp;
 DATA(0x004a99c8)
 struct tagRECT rcTemp;
 DATA(0x004a99dc)
 i32 gMainWinScreenHeight;
 DATA(0x004a9dec)
-void* hmnuCurrent;
+HMENU hmnuCurrent;
 DATA(0x004a99e0)
 i32 gTempX;
 DATA(0x004a99e4)

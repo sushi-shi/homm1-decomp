@@ -18,14 +18,14 @@ tileset::tileset(i16 id)
     m_tileWidth = gpResourceManager->ReadWord();
     m_tileHeight = gpResourceManager->ReadWord();
     i32 size = m_tileCount * m_tileWidth * m_tileHeight;
-    m_data = static_cast<i8*>(malloc(size));
+    m_data = static_cast<u8*>(malloc(size));
     gpResourceManager->ReadBlock(m_data, size);
     PostprocessBitmap(m_data, m_tileWidth, m_tileHeight * m_tileCount);
 }
 
+VA(0x00474fbc, 0x2b)
 tileset::~tileset(void) {
     free(m_data);
 }
 
-VA_COMPGEN(0x00474fbc, 0x2b, "??1tileset@@UAE@XZ", 0x00474ea0)
 VA_COMPGEN(0x00475020, 0x2e, "??_Gtileset@@UAEPAXI@Z", 0x00474ea0)

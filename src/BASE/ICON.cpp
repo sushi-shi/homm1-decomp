@@ -19,18 +19,15 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     m_frameCount = gpResourceManager->ReadWord();
     u32 length = gpResourceManager->ReadLong();
     m_data = static_cast<u8*>(malloc(length));
-    gpResourceManager->ReadBlock(
-        reinterpret_cast<i8*>(m_data), // API-forced: ReadBlock takes i8*.
-        length
-    ); // byte-evidenced: ReadBlock accepts signed bytes for icon pixel storage.
+    gpResourceManager->ReadBlock(m_data, length);
     PostprocessIcon(this);
 }
 
+VA(0x00470f5f, 0x2b)
 icon::~icon(void) {
     free(m_data);
 }
 
-VA_COMPGEN(0x00470f5f, 0x2b, "??1icon@@UAE@XZ", 0x00470ea0)
 // Each orientation arm sets its own top/bottom.
 VA(0x00470f8a, 0x317)
 void icon::DrawToBuffer(

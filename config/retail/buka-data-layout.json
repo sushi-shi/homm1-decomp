@@ -6013,7 +6013,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66a65",
           "target_rva": "0xcdd78",
@@ -6312,7 +6312,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66a6e",
           "target_rva": "0xcdd7c",
@@ -6618,7 +6618,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66a77",
           "target_rva": "0xcdd80",
@@ -6917,7 +6917,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66a7f",
           "target_rva": "0xcdd84",
@@ -7229,7 +7229,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66aae",
           "target_rva": "0xcdd90",
@@ -7528,7 +7528,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66ab7",
           "target_rva": "0xcdd94",
@@ -7820,7 +7820,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66ac0",
           "target_rva": "0xcdd98",
@@ -7994,7 +7994,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66ac8",
           "target_rva": "0xcdd9c",
@@ -8176,7 +8176,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66acd",
           "target_rva": "0xcdd98",
@@ -8365,7 +8365,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66ad3",
           "target_rva": "0xcdd90",
@@ -8474,7 +8474,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66aeb",
           "target_rva": "0xcdd9c",
@@ -8569,7 +8569,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66af1",
           "target_rva": "0xcdd94",
@@ -8671,7 +8671,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66b09",
           "target_rva": "0xcdd90",
@@ -8767,7 +8767,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66b1e",
           "target_rva": "0xcdd94",
@@ -8876,7 +8876,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66b6e",
           "target_rva": "0xcd938",
@@ -8974,7 +8974,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66b7d",
           "target_rva": "0xcd940",
@@ -9134,7 +9134,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66b86",
           "target_rva": "0xcd93c",
@@ -9294,7 +9294,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c0a",
           "target_rva": "0xcd938",
@@ -9401,7 +9401,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c13",
           "target_rva": "0xcd938",
@@ -9515,7 +9515,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c1d",
           "target_rva": "0xcd93c",
@@ -9716,7 +9716,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c26",
           "target_rva": "0xcd93c",
@@ -9913,7 +9913,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c30",
           "target_rva": "0xcd940",
@@ -10104,7 +10104,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c3c",
           "target_rva": "0xcd940",
@@ -10218,7 +10218,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c46",
           "target_rva": "0xcd944",
@@ -10339,7 +10339,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c52",
           "target_rva": "0xcd944",
@@ -10447,7 +10447,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66be2",
           "target_rva": "0xcd8c0",
@@ -10551,7 +10551,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66be8",
           "target_rva": "0xcd8c0",
@@ -10662,7 +10662,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66bfb",
           "target_rva": "0xcd8c0",
@@ -10786,7 +10786,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66c60",
           "target_rva": "0xcdd88",
@@ -10920,7 +10920,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66e01",
           "target_rva": "0xcd8c8",
@@ -11013,7 +11013,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66e0f",
           "target_rva": "0xcd8c8",
@@ -11113,7 +11113,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?DDAppPaint@@YAHPAX0@Z",
+          "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x669ef",
           "site_rva": "0x66e1c",
           "target_rva": "0xcd8c8",
@@ -13571,7 +13571,7 @@
       "controls": [
         {
           "unit": "SOURCE/wingraph",
-          "function": "?WGAppPaint@@YAHPAX0@Z",
+          "function": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x67f3d",
           "site_rva": "0x6800e",
           "target_rva": "0xcddac",
@@ -13673,7 +13673,7 @@
         },
         {
           "unit": "SOURCE/wingraph",
-          "function": "?WGAppPaint@@YAHPAX0@Z",
+          "function": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "function_rva": "0x67f3d",
           "site_rva": "0x68017",
           "target_rva": "0xcddac",

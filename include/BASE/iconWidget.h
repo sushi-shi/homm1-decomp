@@ -51,7 +51,7 @@ public:
         i16 kind,
         i16 fillColor
     );
-    virtual inline ~iconWidget() OVERRIDE;
+    virtual ~iconWidget() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;

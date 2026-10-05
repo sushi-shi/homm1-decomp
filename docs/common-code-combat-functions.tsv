@@ -1,5 +1,5 @@
 source	rva	function	read_status	helper_candidates	decision	retained_helpers	verdict	max_before	max_after
-src/SOURCE/AI.cpp	0x11660	combatManager::AICheckRetreat	read	artifact-value-sum;opposite-combat-side	Side strength snapshot through IsAlive and a copied hero; artifact sum loop and the 1 - side scaling stay explicit.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x11660	combatManager::AICheckRetreat	read	artifact-value-sum;opposite-combat-side;fight-value-defaults	Side strength snapshot through IsAlive and a copied hero; artifact sum loop and the 1 - side scaling stay explicit; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/AI.cpp	0x11d88	combatManager::DoCompAI	read	set-next-combat-move;town-building-bit;hex-free;opposite-combat-side	Four action/hex pairs queue a move; castle archer count tests building bits (town domain).	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
 src/SOURCE/AI.cpp	0x125fa	combatManager::GetShooterMask	read	monster-flag-test	Per-side mask loop; flag tests are plain.		kept-existing-source	100	100
 src/SOURCE/AI.cpp	0x126b1	combatManager::GetFlyerMask	read	monster-flag-test	Same loop shape as the shooter mask, different flags and local order; no shared helper.		kept-existing-source	100	100
@@ -101,7 +101,7 @@ src/SOURCE/COMMAND.cpp	0x20d8c	combatManager::CheckCastleAttack	read	opposite-co
 src/SOURCE/COMMAND.cpp	0x20e7c	combatManager::CheckGetAIMove	read	none	AI dispatch.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x20ed8	combatManager::GetControl	read	none	Net control decision.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x21003	combatManager::ResetMouse	read	none	Hover replay.		kept-existing-source	100	100
-src/SOURCE/COMMAND.cpp	0x210c0	combatManager::ProcessNextAction	read	current-army;opposite-combat-side	Action execution.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x210c0	combatManager::ProcessNextAction	read	current-army;opposite-combat-side;transmit-defaults	Action execution; the broadcast uses TransmitRemoteData's defaults.	TransmitRemoteData defaults	retained-exact	100	100
 src/SOURCE/DRAWING.cpp	0x23670	combatManager::UpdateGrid	read	none	Dirty row update.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x236c0	combatManager::UpdateGridForMove	read	none	Direction-aware dirty row.		kept-existing-source	100	100
 src/SOURCE/DRAWING.cpp	0x23707	combatManager::CombatMessage(text)	read	none	Uses SET_WIDGET_MESSAGE already.		kept-existing-source	100	100
@@ -153,18 +153,18 @@ src/SOURCE/PHILAI.cpp	0x47cee	philAI::philAI	read	none	Constructor.		kept-existi
 src/SOURCE/PHILAI.cpp	0x47d3f	philAI::DoAllHeroInteractions	read	none	Town interaction loop.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x47dc7	philAI::CheckBuyStuff	read	town-building-bit;player-hero-accessor	Raw castle record and GetTown both evaluated (retail); kept.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x481b6	philAI::GoodAdjacent	read	trigger-object	Adjacent event choice.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x4834a	philAI::CheckReload	read	hero-embarked;search-node-accessor	Embarked argument is IsEmbarked; GetNode trial 90.81%.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/PHILAI.cpp	0x486ce	philAI::CheckBerserk	read	none	Threat census.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4834a	philAI::CheckReload	read	hero-embarked;search-node-accessor;fight-value-defaults	Embarked argument is IsEmbarked; GetNode trial 90.81%; FightValueOfStack calls use the declared defaults.	hero::IsEmbarked;FightValueOfStack defaults	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x486ce	philAI::CheckBerserk	read	fight-value-defaults	Threat census; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x488e4	philAI::DoDimensionDoor	read	none	Teleport search.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x48a6f	philAI::DoAI	read	hero-embarked	Embarked step limit is IsEmbarked.	hero::IsEmbarked	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x4919e	philAI::GetGameAIVars	read	none	Loop.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x491dd	philAI::GetTurnAIVars	read	calendar-turn	Day-first turn number awaits worker A's GAME_DAY_NUMBER.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x497c8	philAI::GetBestBHC	read	town-building-bit	Purchase choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x491dd	philAI::GetTurnAIVars	read	calendar-turn;fight-value-defaults	Day-first turn number is GAME_DAY_NUMBER; stack values use the declared defaults.	GAME_DAY_NUMBER;FightValueOfStack defaults	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x497c8	philAI::GetBestBHC	read	town-building-bit;fight-value-defaults	Purchase choice; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x49d14	philAI::DetermineHeroToMove	read	player-hero-accessor	GetPlayerHero trial 93.39%; raw records stay.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x49dfe	philAI::DetermineTargetPosition	read	hero-embarked;search-node-accessor	Five embarked tests are IsEmbarked.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/PHILAI.cpp	0x4a69b	philAI::ProbableOutcomeOfBattle	read	artifact-value-sum;attack-bonus	Battle odds formula.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4a69b	philAI::ProbableOutcomeOfBattle	read	artifact-value-sum;attack-bonus;fight-value-defaults	Battle odds formula; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x4abfa	philAI::GetOddsOfWinning	read	none	Constant.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x4ac0d	philAI::ValueOfBuyingBuilding	read	town-building-bit	Building valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ac0d	philAI::ValueOfBuyingBuilding	read	town-building-bit;fight-value-defaults	Building valuation; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x4b114	philAI::GetBestBuilding	read	town-building-bit	Building choice.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4b215	philAI::ValueOfBuyingCreature	read	monster-flag-test	Creature valuation.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4b47d	philAI::GetBestCreature	read	town-building-bit	Creature choice.		kept-existing-source	100	100
@@ -188,7 +188,7 @@ src/SOURCE/PHILAI.cpp	0x4cd10	philAI::FutureDeflator	read	none	Deflator.		kept-e
 src/SOURCE/PHILAI.cpp	0x4cd57	philAI::FightValueOfStack	read	town-building-bit;spell-power-read;stack-fight-value	Stack valuation.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4d38f	philAI::EvaluateOneTimeCreaturePurchase	read	stack-fight-value	Purchase valuation.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4d521	philAI::QuickCombat	read	none	Auto-resolve.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x4d821	philAI::HeroInteractionAtTown	read	town-building-bit	Uses MANHATTAN_LENGTH already; troop transfer policy.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4d821	philAI::HeroInteractionAtTown	read	town-building-bit;fight-value-defaults	Uses MANHATTAN_LENGTH already; troop transfer policy; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/PHILAI.cpp	0x4e236	philAI::ChooseGoldOrExperience	read	none	Choice.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4e275	philAI::ChooseEvaluateBattle	read	none	Battle choice.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4e319	philAI::ChooseToBuyArtifact	read	none	Choice.		kept-existing-source	100	100
@@ -203,7 +203,7 @@ src/SOURCE/PHILAI.cpp	0x4ec5b	philAI::DamageGroup	read	none	Loss application.		k
 src/SOURCE/PHILAI.cpp	0x4ecb0	philAI::StatChangeValue	read	none	Table difference.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4ecff	philAI::IncrementHourGlass	read	none	Hourglass phase.		kept-existing-source	100	100
 src/SOURCE/PHILAI.cpp	0x4edcb	philAI::TownEvent	read	none	Town capture.		kept-existing-source	100	100
-src/SOURCE/PHILAI.cpp	0x4efb4	philAI::ValueOfEventAtPosition	read	monster-group-fill;attack-bonus;trigger-object	Per-object valuation; uses CLEAR_ARMY_GROUP and MANHATTAN_LENGTH already.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4efb4	philAI::ValueOfEventAtPosition	read	monster-group-fill;attack-bonus;trigger-object;fight-value-defaults	Per-object valuation; uses CLEAR_ARMY_GROUP and MANHATTAN_LENGTH already; FightValueOfStack calls use the declared defaults.	FightValueOfStack defaults	retained-exact	100	100
 src/SOURCE/SEARCH.cpp	0x55e50	searchArray::FindNearestObject	read	opposite-map-direction	Walk-back direction is OppositeMapDirection.	OppositeMapDirection	retained-exact	100	100
 src/SOURCE/SEARCH.cpp	0x56080	searchArray::BuildPath	read	opposite-map-direction	Walk-back direction is OppositeMapDirection.	OppositeMapDirection	retained-exact	100	100
 src/SOURCE/SEARCH.cpp	0x56150	searchArray::SeedPosition	read	opposite-map-direction;non-shadow-object	Monster back-push direction is OppositeMapDirection; object test is CELL_HAS_NON_SHADOW_OBJECT.	OppositeMapDirection;CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100

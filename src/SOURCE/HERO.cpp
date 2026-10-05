@@ -28,7 +28,6 @@
 #include <string.h>
 
 VA(0x00438f20, 0x5d)
-// clang-format on
 hero::hero(void) {
     m_id = 0;
     m_owner = 0;

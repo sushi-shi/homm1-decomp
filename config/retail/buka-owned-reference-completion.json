@@ -506,7 +506,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e70",
       "target_rva": "0xcd8ec",
       "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
@@ -515,7 +515,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e79",
       "target_rva": "0xcd8ec",
       "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
@@ -524,7 +524,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e87",
       "target_rva": "0xcd8ec",
       "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",

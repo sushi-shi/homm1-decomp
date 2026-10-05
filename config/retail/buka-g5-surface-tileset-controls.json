@@ -79,7 +79,7 @@
           "size": 313
         },
         {
-          "name": "?DDAppPaint@@YAHPAX0@Z",
+          "name": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "rva": "0x669ef",
           "before": 99.88176,
           "after": 99.88176,
@@ -163,7 +163,7 @@
           "size": 418
         },
         {
-          "name": "?WGAppPaint@@YAHPAX0@Z",
+          "name": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "rva": "0x67f3d",
           "before": 99.64179,
           "after": 99.64179,
@@ -219,7 +219,7 @@
           "size": 70
         },
         {
-          "name": "?AppPaint@@YAHPAX0@Z",
+          "name": "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "rva": "0x682ab",
           "before": 100.0,
           "after": 100.0,
@@ -473,12 +473,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],
@@ -550,12 +550,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],

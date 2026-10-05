@@ -63,7 +63,7 @@
       }
     },
     {
-      "function_symbol": "?AppInit@@YAHPAX0HPAD@Z",
+      "function_symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
       "function_rva": "0x42dba",
       "unit": "SOURCE/kbwin",
       "before_sha256": "45f5a2a36f130a99437c7bd0e200ed56d23126955a0b35069a54cffd67101794",
@@ -74,7 +74,7 @@
       "missing_calls": {}
     },
     {
-      "function_symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function_symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "function_rva": "0x43052",
       "unit": "SOURCE/kbwin",
       "before_sha256": "82ac0eb20d2bf268ccf78ae01a1e4193d3cd226e31dba0c648ea7fa56edf5340",

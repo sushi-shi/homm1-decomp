@@ -87,12 +87,12 @@
             },
             {
               "offset": "0xc4",
-              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
               "addend": 0
             },
             {
               "offset": "0xe0",
-              "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+              "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
               "addend": 0
             },
             {
@@ -598,7 +598,7 @@
             },
             {
               "offset": "0x75",
-              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
               "addend": 0
             }
           ]
@@ -670,7 +670,7 @@
             },
             {
               "offset": "0x80",
-              "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+              "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
               "addend": 0
             },
             {
@@ -767,7 +767,7 @@
             },
             {
               "offset": "0x95",
-              "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+              "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
               "addend": 0
             },
             {

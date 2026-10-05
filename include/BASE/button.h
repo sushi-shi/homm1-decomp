@@ -50,7 +50,7 @@ public:
         i16 id,
         i16 kind
     );
-    virtual inline ~button() OVERRIDE;
+    virtual ~button() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;

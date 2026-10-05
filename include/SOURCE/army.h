@@ -80,8 +80,7 @@ H1_ENUM_END(ArmyLuck)
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
-// Forget an army's attack target. VC4 rejects an assignment through
-// (*this).member, so the army is passed by pointer.
+// Forget an army's attack target; takes a pointer to the army.
 #define CLEAR_ARMY_TARGET(a)                                                                       \
     ((a)->m_targetSide = COMBAT_SIDE_NONE, (a)->m_targetIndex = COMBAT_ARMY_INDEX_NONE)
 

@@ -177,7 +177,7 @@ void DDInitGraphics(void) {
 
 VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
-BOOL DDAppPaint(void* window, void* paintDC) {
+BOOL DDAppPaint(HWND window, HDC paintDC) {
     i32 srcWidth;
     i32 srcHeight;
     i32 srcTop;
@@ -193,8 +193,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         return TRUE;
     {
         gWinGraphBusy = TRUE;
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        GetClientRect(static_cast<HWND>(window), &gDDClientRect);
+        paintDC = BeginPaint(window, &ps);
+        GetClientRect(window, &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
             ps.rcPaint = gDDClientRect;
         if (ps.rcPaint.right < WINGRAPH_PAINT_X_END)
@@ -277,7 +277,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 #line 276
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gDDSurfaceDesc.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gDDSurfaceDesc.lpSurface);
             gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
             gInitWin = gDDSurfaceDesc.lpSurface;
@@ -285,7 +285,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         if (gDDResult != DD_OK)
 #line 287
             DDSD(gDDResult, __FILE__, __LINE__);
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
         gWinGraphBusy = FALSE;
     }
     return TRUE;
@@ -376,7 +376,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 #line 435
             DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(ddsd.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(ddsd.lpSurface);
             gInitWin = ddsd.lpSurface;
         } else {
             gInitWin = ddsd.lpSurface;
@@ -798,7 +798,7 @@ void WGInitializePalette() {
 
 // The client-to-game transform uses the pinned 640x480 viewport.
 VA(0x00467f3d, 0x1b7)
-BOOL WGAppPaint(void* window, void* paintDC) {
+BOOL WGAppPaint(HWND window, HDC paintDC) {
     RECT rect;
     i8 unusedChar;
     i32 spareDword;
@@ -812,10 +812,10 @@ BOOL WGAppPaint(void* window, void* paintDC) {
 
     unusedChar = 0;
     if (screenImage.bits != NULL) {
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        SelectPalette(static_cast<HDC>(paintDC), hpalApp, FALSE);
-        RealizePalette(static_cast<HDC>(paintDC));
-        GetClientRect(static_cast<HWND>(window), &rect);
+        paintDC = BeginPaint(window, &ps);
+        SelectPalette(paintDC, hpalApp, FALSE);
+        RealizePalette(paintDC);
+        GetClientRect(window, &rect);
         blitX = 0;
         srcLeft = blitX;
         destTop = 0;
@@ -835,7 +835,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             destTop = ps.rcPaint.top;
             destHeight = ps.rcPaint.bottom - destTop + 1;
             WinGBitBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -846,7 +846,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             );
         } else {
             WinGStretchBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -858,7 +858,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
                 CLIENT_TO_GAME_Y(destHeight)
             );
         }
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
     }
     return TRUE;
 }
@@ -951,7 +951,7 @@ void InitGraphics() {
 
 // Returns the selected backend's paint result.
 VA(0x004682ab, 0x30)
-BOOL AppPaint(void* window, void* paintDC) {
+BOOL AppPaint(HWND window, HDC paintDC) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGAppPaint(window, paintDC);
     else
@@ -1039,12 +1039,12 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
         DDCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     } else {
         WGCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
         DDInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     }
     memcpy(gpWindowManager->m_screen->m_pixels, buffer, WINGRAPH_WIDTH * WINGRAPH_HEIGHT);
     free(buffer);

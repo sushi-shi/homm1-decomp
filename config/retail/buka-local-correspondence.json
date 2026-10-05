@@ -58,7 +58,7 @@
         {
           "site_rva": "0x6c24f",
           "target_rva": "0x6cdb0",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x6cdb0"
@@ -1845,7 +1845,7 @@
         {
           "site_rva": "0x1f91",
           "target_rva": "0xa98e4",
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa98e4"
@@ -1853,7 +1853,7 @@
         {
           "site_rva": "0x1f97",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -20736,7 +20736,7 @@
         {
           "site_rva": "0x42caa",
           "target_rva": "0xa99e8",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa99e8"
@@ -20880,7 +20880,7 @@
         {
           "site_rva": "0x42d53",
           "target_rva": "0x42dba",
-          "symbol": "?AppInit@@YAHPAX0HPAD@Z",
+          "symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x42dba"
@@ -21017,7 +21017,7 @@
         {
           "site_rva": "0x43c0f",
           "target_rva": "0x43b24",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43b24"
@@ -21196,7 +21196,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?SetMenus@@YAXPAXH@Z",
+      "name": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "rva": "0x43d1f",
       "size": 299,
       "old_rva": "0x00043d1f",
@@ -21236,7 +21236,7 @@
         {
           "site_rva": "0x43d7b",
           "target_rva": "0x43d1f",
-          "symbol": "?SetMenus@@YAXPAXH@Z",
+          "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43d1f"
@@ -21284,7 +21284,7 @@
         {
           "site_rva": "0x43e3f",
           "target_rva": "0x43a76",
-          "symbol": "?UpdateDfltMenu@@YAXPAX@Z",
+          "symbol": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
           "kind": 20,
           "addend": "0x0",
           "owner_rva": "0x43a76"
@@ -23065,7 +23065,7 @@
       "definition_object_sha256": "25dfc44b5582cb4b98f507227928bf963ba8f759f60df638093953ebcf6e880f"
     },
     {
-      "name": "?hInstApp@@3PAXA",
+      "name": "?hInstApp@@3PAUHINSTANCE__@@A",
       "rva": "0xa99e8",
       "size": 4,
       "unit": "SOURCE/kbwin",
@@ -23081,7 +23081,7 @@
           "function": "_WinMain@16",
           "site_rva": "0x42caa",
           "target_rva": "0xa99e8",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa99e8"
@@ -23218,7 +23218,7 @@
       "references": [
         {
           "unit": "SOURCE/kbwin",
-          "function": "?SetMenus@@YAXPAXH@Z",
+          "function": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "site_rva": "0x43dcb",
           "target_rva": "0x921a0",
           "symbol": "?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A",
@@ -23228,7 +23228,7 @@
         },
         {
           "unit": "SOURCE/kbwin",
-          "function": "?SetMenus@@YAXPAXH@Z",
+          "function": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "site_rva": "0x43def",
           "target_rva": "0x921a5",
           "symbol": "?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A",
@@ -23238,7 +23238,7 @@
         },
         {
           "unit": "SOURCE/kbwin",
-          "function": "?SetMenus@@YAXPAXH@Z",
+          "function": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "site_rva": "0x43e09",
           "target_rva": "0x921a4",
           "symbol": "?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A",
@@ -23539,7 +23539,7 @@
       ]
     },
     {
-      "function": "?WGAppPaint@@YAHPAX0@Z",
+      "function": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "rva": "0x67f3d",
       "reasons": [
         "conflicting referent ?screenImage@@3UWingImage@@A"

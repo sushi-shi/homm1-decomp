@@ -2408,7 +2408,7 @@ void advManager::PlayerMonsterInteract(
 
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
-        if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
+        if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
             > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
                   * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
             if (eventHero->m_army.CanJoin(cell->m_objectIndex)) {
@@ -2476,7 +2476,7 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
     i32 creatureCountIdx;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
-        && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0, 0, 0)
+        && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
                > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
                      * gMonsterDatabase[cell->m_objectIndex].fightValue * 1.75) {
         gpPhilAI->EvaluateOneTimeCreaturePurchase(

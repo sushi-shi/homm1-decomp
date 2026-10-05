@@ -4897,7 +4897,7 @@
             "kind": 6
           },
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x4065b",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -4911,7 +4911,7 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuDflt@@3PAXA",
+            "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
             "operand": "0x40667",
             "target": "0xa98dc",
             "addend": "0x0",
@@ -4992,7 +4992,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x4065b",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5006,14 +5006,14 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuDflt@@3PAXA",
+            "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
             "operand": "0x40667",
             "target": "0xa98dc",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x40672",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5027,7 +5027,7 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuCmbt@@3PAXA",
+            "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
             "operand": "0x4067e",
             "target": "0xa98e0",
             "addend": "0x0",
@@ -5106,7 +5106,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x40672",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5120,14 +5120,14 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuCmbt@@3PAXA",
+            "symbol": "?hmnuCmbt@@3PAUHMENU__@@A",
             "operand": "0x4067e",
             "target": "0xa98e0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x40688",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5141,7 +5141,7 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuAdv@@3PAXA",
+            "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
             "operand": "0x40694",
             "target": "0xa98e4",
             "addend": "0x0",
@@ -5220,7 +5220,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x40688",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5234,14 +5234,14 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuAdv@@3PAXA",
+            "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
             "operand": "0x40694",
             "target": "0xa98e4",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?hInstApp@@3PAXA",
+            "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
             "operand": "0x4069f",
             "target": "0xa99e8",
             "addend": "0x0",
@@ -5255,7 +5255,7 @@
             "kind": 6
           },
           {
-            "symbol": "?hmnuTown@@3PAXA",
+            "symbol": "?hmnuTown@@3PAUHMENU__@@A",
             "operand": "0x406ab",
             "target": "0xa98e8",
             "addend": "0x0",
@@ -5817,7 +5817,7 @@
       "size": 25,
       "payload_sha256": "f55688a59d4e3bba1216c48bbf59adb8a3ae4a47a1b56e565b26639265fae669",
       "unit": "SOURCE/kbwin",
-      "function": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "object_sha256": "cedff07e2e2b8d25f0b91e7d6e897e5d938792eb033a483366c4bb83f35d9767",
       "context": {
         "instructions": [
@@ -7904,7 +7904,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "50cfb7717f12016cc54c3b0ef17248d4d24d2b6b4222d9abde85ac456be0e45f",
       "context": {
         "instructions": [

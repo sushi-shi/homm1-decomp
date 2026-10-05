@@ -5470,8 +5470,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     }
 
     if (gpMouseManager->IsVis()) {
-        drawX = gpMouseManager->m_unknown49 >> CELL_PIXEL_SHIFT;
-        drawY = gpMouseManager->m_unknown4d >> CELL_PIXEL_SHIFT;
+        drawX = gpMouseManager->m_savedLeft >> CELL_PIXEL_SHIFT;
+        drawY = gpMouseManager->m_savedTop >> CELL_PIXEL_SHIFT;
         ++bComboDraw[drawX][drawY];
         ++bComboDraw[drawX + 1][drawY];
         ++bComboDraw[drawX][drawY + 1];
@@ -6521,7 +6521,7 @@ void advManager::SaveAdventureBorder(void) {
 
     m_adventureBorder = static_cast<u8*>(malloc(BORDER_BUFFER_SIZE));
     u8* savedPixels = m_adventureBorder;
-    i8* screen = gpWindowManager->m_screen->m_pixels;
+    u8* screen = gpWindowManager->m_screen->m_pixels;
     i32 row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, screen, ADVENTURE_VIEWPORT_EXTENT);
@@ -6544,7 +6544,7 @@ void advManager::SaveAdventureBorder(void) {
 VA(0x004114e2, 0x134)
 void advManager::DrawAdventureBorder(void) {
     u8* savedPixels;
-    i8* screen;
+    u8* screen;
     i32 row;
 
     if (m_adventureBorder == NULL)
@@ -6615,6 +6615,8 @@ DATA(0x004a65cc)
 i8 gFreshSave;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;
-// ADVMGR's ambient-sound volume by distance, on a 0..127 scale.
+// ADVMGR's ambient-sound volume by distance, on a 0..127 scale. Eight
+// slots, five initialized: the zero tail is 0x0048a380..0x0048a38b, before
+// advManager's vtable.
 DATA(0x0048a36c)
-const i32 gEnvironmentVolume[5] = {127, 96, 63, 31, 21};
+const i32 gEnvironmentVolume[8] = {127, 96, 63, 31, 21};

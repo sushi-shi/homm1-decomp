@@ -47,9 +47,9 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
         return 1;
     if (gNetbiosAvail != 0) {
         gNbMaxSess = static_cast<u8>(maxSessions);
-        for (jj = 0; jj < static_cast<i32>(NETBIOS_SESSION_COUNT); jj++) {
+        for (jj = 0; jj < NETBIOS_SESSION_COUNT; jj++) {
             gNetStatus[jj] = 0;
-            gNbSessLsn[jj] = static_cast<u8>(NETBIOS_INVALID_ID);
+            gNbSessLsn[jj] = NETBIOS_INVALID_ID;
             memset(&gNbSessNcb[jj], 0, sizeof(gNbSessNcb[jj]));
         }
         memset(gNbNameBuf, 0, sizeof(gNbNameBuf));
@@ -58,22 +58,20 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
         init_anchor(&gNbRcvQueue, 1, 0);
         init_anchor(&gNbSndQueue, 1, 0);
         init_anchor(&gNbFreeQueue, 1, 0);
-        for (jj = 0; jj < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); jj++)
+        for (jj = 0; jj < NETBIOS_THREAD_EVENT_COUNT; jj++)
             gNbEvents[jj] = CreateEventA(NULL, TRUE, FALSE, NULL);
         memset(&ncb, 0, sizeof(ncb));
-        buffer = static_cast<u8*>(GlobalAlloc(GPTR, static_cast<i32>(NETBIOS_ADAPTER_STATUS_SIZE)));
+        buffer = static_cast<u8*>(GlobalAlloc(GPTR, NETBIOS_ADAPTER_STATUS_SIZE));
         ncb.ncb_command = NCBASTAT;
-        ncb.ncb_length = static_cast<u16>(NETBIOS_ADAPTER_STATUS_SIZE);
+        ncb.ncb_length = NETBIOS_ADAPTER_STATUS_SIZE;
         ncb.ncb_buffer = buffer;
         ncb.ncb_lana_num = gNetbiosLana;
         if (Netbios(&ncb) == NRC_ENVNOTDEF) {
             memset(&ncb, 0, sizeof(ncb));
             ncb.ncb_command = NCBRESET;
             ncb.ncb_lana_num = gNetbiosLana;
-            ncb.ncb_callname[static_cast<i32>(NETBIOS_RESET_SESSION_LIMIT_INDEX)] =
-                static_cast<u8>(NETBIOS_RESET_SESSION_LIMIT);
-            ncb.ncb_callname[static_cast<i32>(NETBIOS_RESET_NAME_LIMIT_INDEX)] =
-                static_cast<u8>(NETBIOS_RESET_NAME_LIMIT);
+            ncb.ncb_callname[NETBIOS_RESET_SESSION_LIMIT_INDEX] = NETBIOS_RESET_SESSION_LIMIT;
+            ncb.ncb_callname[NETBIOS_RESET_NAME_LIMIT_INDEX] = NETBIOS_RESET_NAME_LIMIT;
             Netbios(&ncb);
         }
         GlobalFree(buffer);
@@ -91,7 +89,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
     tag_Node* node;
     i32 idx;
 
-    for (idx = 0; idx < static_cast<i32>(NETBIOS_SESSION_COUNT); idx++)
+    for (idx = 0; idx < NETBIOS_SESSION_COUNT; idx++)
         nb_close_session(idx);
     if (gNbCtlNcb.ncb_cmd_cplt == NRC_PENDING) {
         memset(&ncb, 0, sizeof(ncb));
@@ -103,7 +101,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
             ); // API-forced: NCBCANCEL names the NCB in ncb_buffer.
         Netbios(&ncb);
     }
-    if (gNetStatus[gNbMaxSess] & static_cast<i32>(NETBIOS_SESSION_NAME_REGISTERED)) {
+    if (gNetStatus[gNbMaxSess] & NETBIOS_SESSION_NAME_REGISTERED) {
         memset(&ncb, 0, sizeof(ncb));
         memcpy(ncb.ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
         ncb.ncb_command = NCBDELNAME;
@@ -115,7 +113,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
     FREE_NODE_QUEUE(node, &gNbFreeQueue);
     LeaveCriticalSection(&gNbSndLock);
     DeleteCriticalSection(&gNbSndLock);
-    for (idx = 0; idx < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); idx++) {
+    for (idx = 0; idx < NETBIOS_THREAD_EVENT_COUNT; idx++) {
         CloseHandle(gNbEvents[idx]);
         gNbEvents[idx] = NULL;
     }
@@ -153,9 +151,9 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
         nb_add_name();
         return NRC_GOODRET;
     }
-    if (!(gNetStatus[session] & static_cast<i32>(NETBIOS_SESSION_ACTIVE)))
+    if (!(gNetStatus[session] & NETBIOS_SESSION_ACTIVE))
         return NRC_SNUMOUT;
-    node = static_cast<tag_Node*>(malloc(len + static_cast<i32>(NETBIOS_PACKET_HEADER_SIZE)));
+    node = static_cast<tag_Node*>(malloc(len + NETBIOS_PACKET_HEADER_SIZE));
     node->len = len;
     node->sessionIndex = static_cast<u8>(session);
     memcpy(node->data, data, len);
@@ -183,7 +181,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
     switch (operation) {
         case NETBIOS_SESSION_REGISTER:
             callNameEntry = va_arg(nextList, char*);
-            gNetStatus[gNbMaxSess] &= ~static_cast<i32>(NETBIOS_SESSION_ERROR);
+            gNetStatus[gNbMaxSess] &= ~NETBIOS_SESSION_ERROR;
             nb_format_name(callNameEntry, gNbNameBuf[gNbMaxSess].bytes);
             memset(&gNbSessNcb[gNbMaxSess], 0, sizeof(NCB));
             memcpy(gNbSessNcb[gNbMaxSess].ncb_name, gNbNameBuf[gNbMaxSess].bytes, NCBNAMSZ);
@@ -191,7 +189,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
             gNbSessNcb[gNbMaxSess].ncb_post = nb_add_name_done;
             gNbSessNcb[gNbMaxSess].ncb_cmd_cplt = NRC_PENDING;
             gNbSessNcb[gNbMaxSess].ncb_lana_num = gNetbiosLana;
-            returnCodeValue = static_cast<i16>(Netbios(&gNbSessNcb[gNbMaxSess]));
+            returnCodeValue = Netbios(&gNbSessNcb[gNbMaxSess]);
             break;
 
         case NETBIOS_SESSION_RECEIVE_ANY: {
@@ -241,14 +239,14 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
             anyIsFree = va_arg(nextList, i32);
             if (savedSession == gNbMaxSess)
                 gNbMaxSess = static_cast<u8>(destinationSession);
-            if (gNbSessLsn[savedSession] == static_cast<i32>(NETBIOS_INVALID_ID))
+            if (gNbSessLsn[savedSession] == NETBIOS_INVALID_ID)
                 return NRC_GOODRET;
             gNbSessLsn[destinationSession] = gNbSessLsn[savedSession];
             gNetStatus[destinationSession] = gNetStatus[savedSession];
             memcpy(gNbNameBuf[destinationSession].bytes, gNbNameBuf[savedSession].bytes, NCBNAMSZ);
             nb_arm_recv(destinationSession);
             if (anyIsFree != 0) {
-                gNbSessLsn[savedSession] = static_cast<i32>(NETBIOS_INVALID_ID);
+                gNbSessLsn[savedSession] = NETBIOS_INVALID_ID;
                 gNetStatus[savedSession] = 0;
                 memset(gNbNameBuf[savedSession].bytes, 0, NCBNAMSZ);
             }
@@ -271,7 +269,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
 
         case NETBIOS_SESSION_CLEAR_CONNECTED:
             destinationSession = va_arg(nextList, i32);
-            gNetStatus[destinationSession] &= ~static_cast<i32>(NETBIOS_SESSION_CONNECTED);
+            gNetStatus[destinationSession] &= ~NETBIOS_SESSION_CONNECTED;
             returnCodeValue = NRC_GOODRET;
             break;
 
@@ -311,7 +309,7 @@ void nb_thr_ctl(void)
         return;
     if (WaitForSingleObject(gNbEvents[NETBIOS_WAKE_EVENT], 0) == WAIT_OBJECT_0)
         ResetEvent(gNbEvents[NETBIOS_WAKE_EVENT]);
-    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < NETBIOS_SESSION_COUNT; i++) {
         if (WaitForSingleObject(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST], 0) == WAIT_OBJECT_0) {
             ResetEvent(gNbEvents[i + NETBIOS_RECEIVE_EVENT_FIRST]);
             nb_recv_complete(i);
@@ -348,8 +346,7 @@ void nb_thr_ctl(void)
                         case NRC_SNUMOUT:
                         case NRC_SCLOSED:
                         case NRC_SABORT:
-                            gNetStatus[pktPtr->sessionIndex] &=
-                                ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
+                            gNetStatus[pktPtr->sessionIndex] &= ~NETBIOS_SESSION_ACTIVE;
                             break;
                         default:
                             break;
@@ -435,11 +432,11 @@ VA(0x00445c27, 0x122)
 void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
 
-    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < NETBIOS_SESSION_COUNT; i++) {
         if (ncb == &gNbSessNcb[i])
             break;
     }
-    if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
+    if (i >= NETBIOS_SESSION_COUNT)
         return;
     if (gNbSessNcb[i].ncb_retcode == NRC_GOODRET) {
         if (memcmp(gNbRcvData[i], gNbGroupName, strlen(gNbGroupName)) == 0) {
@@ -484,11 +481,11 @@ VA(0x00445eb7, 0xfa)
 void __stdcall nb_call_done(NCB* ncb) {
     i32 i;
 
-    for (i = 0; i < static_cast<i32>(NETBIOS_SESSION_COUNT); i++) {
+    for (i = 0; i < NETBIOS_SESSION_COUNT; i++) {
         if (ncb == &gNbSessNcb[i])
             break;
     }
-    if (i >= static_cast<i32>(NETBIOS_SESSION_COUNT))
+    if (i >= NETBIOS_SESSION_COUNT)
         return;
     switch (gNbSessNcb[i].ncb_retcode) {
         case NRC_GOODRET:
@@ -560,7 +557,7 @@ void nb_close_session(i32 session) {
         ncb.ncb_command = NCBHANGUP;
         ncb.ncb_lana_num = gNetbiosLana;
         Netbios(&ncb);
-        gNetStatus[session] &= ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
+        gNetStatus[session] &= ~NETBIOS_SESSION_ACTIVE;
     }
 }
 
@@ -588,7 +585,7 @@ void nb_recv_complete(i32 session) {
                 case NRC_SNUMOUT:
                 case NRC_SCLOSED:
                 case NRC_SABORT:
-                    gNetStatus[session] &= ~static_cast<i32>(NETBIOS_SESSION_ACTIVE);
+                    gNetStatus[session] &= ~NETBIOS_SESSION_ACTIVE;
                     break;
                 default:
                     nb_arm_recv(session);

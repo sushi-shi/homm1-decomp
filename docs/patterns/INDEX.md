@@ -30,6 +30,7 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 CPU profile and narrow arguments (HoMM1 Buka, measured)](vc6-short-arguments.md).
 - [VC6 inline CP1251 case folding (HoMM1 Buka, measured)](vc6-cp1251-fold.md).
 - [VC6 empty strings in BSS (HoMM1 Buka, measured)](vc6-empty-string-bss.md).
+- [VC6 `.bss` emission order (HoMM1 Buka, measured)](vc6-bss-emission-order.md) — uninitialized definitions by `key16(name) & 0x3ff` (later definition first on ties), zero initializers after them in definition order.
 - [VC6 word-sized compound assignments (HoMM1 Buka, measured)](vc6-short-compound-assignments.md).
 - [VC6 byte-valued conditional results (HoMM1 Buka, measured)](vc6-byte-conditional-results.md).
 - [VC6 explicit float-conversion stores (HoMM1 Buka, measured)](vc6-float-conversion-stores.md).
