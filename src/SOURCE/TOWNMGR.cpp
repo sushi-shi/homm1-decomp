@@ -1938,7 +1938,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
                        - (tied - 1) * THIEVES_TIE_CENTERING_STEP;
             for (pos = firstPlayer; !(pos > hi); pos++) {
                 marker = new iconWidget(
-                    (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH + startPos,
+                    startPos + (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH,
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH,
                     THIEVES_RANK_ICON_HEIGHT,
