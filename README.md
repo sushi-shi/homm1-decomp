@@ -7,11 +7,11 @@ See [port changes and evidence](docs/buka-2003.md). Supply your own executable
 and game assets.
 
 <!-- match-score:start -->
-**Matching: 94.38% exact (974/1,032 annotated functions); 99.93% fuzzy.**
+**Matching: 96.12% exact (992/1,032 annotated functions); 99.97% fuzzy.**
 
 | Module   | Units |   Functions exact |  Fuzzy |
 | :------- | ----: | ----------------: | -----: |
-| `SOURCE` |    36 | 706 / 759 (93.0%) |  99.9% |
+| `SOURCE` |    36 | 724 / 759 (95.4%) | 100.0% |
 | `BASE`   |    32 | 252 / 256 (98.4%) | 100.0% |
 | `lzhuf`  |     2 |   16 / 17 (94.1%) | 100.0% |
 
