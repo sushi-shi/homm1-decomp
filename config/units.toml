@@ -12,8 +12,6 @@ SOURCE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Game'
 # Unoptimized VC6 SP5 baseline. /Ob1 is directly measured in the Audiere
 # routines; the remaining units still require individual retail comparison.
 cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6"]
-# miscwin FadeIn/FadeOut call constructors without retail EH frames.
-cpp_buka_noeh = ["/nologo", "/c", "/Od", "/Ob1", "/GX-", "/MT", "/G6"]
 # SAMPLE's full constructor (including switch tables) and destructor agree
 # under /G5; /G6 inserts two extra short-argument register clears.
 cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
@@ -348,7 +346,7 @@ retail_file = "Source\\wingraph.cpp"
 [[unit]]
 unit = "BASE/miscwin"
 source = "src/BASE/miscwin.cpp"
-flags = "cpp_buka_noeh"
+flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/SAMPLE"
