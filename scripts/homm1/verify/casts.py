@@ -61,8 +61,10 @@ _SELF = re.compile(
 
 
 def _arity(items: str) -> int:
-    """Count top-level comma-separated items in the matched short form."""
-    if not items.strip():
+    """Count top-level comma-separated items in the matched short form.
+
+    A `(void)` parameter list declares no parameters."""
+    if not items.strip() or items.strip() == "void":
         return 0
     depth = 0
     count = 1
