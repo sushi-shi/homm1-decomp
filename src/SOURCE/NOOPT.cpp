@@ -9,12 +9,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-// DelayTicks waits on its own glTimers slot, in ticks of 15 milliseconds.
-H1_ENUM_CONST_BEGIN(DelayTicksConstant)
-    DELAY_TICKS_TIMER_SLOT = 1,
-    DELAY_TICK_MILLISECONDS = 15
-H1_ENUM_CONST_END(DelayTicksConstant)
-
 // No direct caller survives in retail; the HoMM2 timer slot names glTimers.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.

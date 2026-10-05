@@ -76,4 +76,18 @@ public:
     void MoveWindow(i16 dx, i16 dy);
 };
 #pragma pack(pop)
+// Moved from WINDOW.cpp.
+H1_ENUM_BEGIN(WindowWidgetRecordType)
+    WIDGET_RECORD_END = 0,
+    WIDGET_RECORD_BORDER = 1,
+    WIDGET_RECORD_BUTTON = 2,
+    WIDGET_RECORD_TEXT = 8,
+    WIDGET_RECORD_ICON = 0x10,
+    WIDGET_RECORD_BACKDROP = 0x20,
+    WIDGET_RECORD_DIMMER = 0x40,
+    WIDGET_RECORD_TEXT_ENTRY = 0x100,
+    WIDGET_RECORD_TEXT_ENTRY_RECT = 0x201,
+    WIDGET_RECORD_TEXT_ENTRY_MULTILINE = 0x202
+H1_ENUM_END(WindowWidgetRecordType)
+
 #endif // HOMM1_BASE_HEROWINDOW_H

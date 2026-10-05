@@ -1,6 +1,7 @@
 #ifndef HOMM1_SOURCE_PATH_H
 #define HOMM1_SOURCE_PATH_H
 
+#include <Domains.h>
 #include <SOURCE/combatTypes.h>
 
 // army::ValidAttack / GetAttackMask targetMode: the assigned target stack
@@ -33,5 +34,15 @@ H1_ENUM_CONST_END(ArmyHexConstant)
 
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction);
+
+// Moved from PATH.cpp.
+// Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
+// wide-creature directions, the speed FindPath grants when speed is ignored,
+// and the second hex of a wide creature.
+H1_ENUM_CONST_BEGIN(CombatPathConstant)
+    SPECIAL_DIRECTION_MASK = 0xc0,
+    IGNORE_SPEED = 99,
+    WIDE_HEX_OFFSET = 1
+H1_ENUM_CONST_END(CombatPathConstant)
 
 #endif

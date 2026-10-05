@@ -212,34 +212,6 @@ i32 EarlySetup(void) {
     return 1;
 }
 
-// InitMenuHandler's right-click help: the gInitMenuHelp row.
-H1_ENUM_BEGIN(MainMenuHelp)
-    MAIN_MENU_HELP_NONE = -1,
-    MAIN_MENU_HELP_NEW_GAME = 0,
-    MAIN_MENU_HELP_LOAD_GAME = 1,
-    MAIN_MENU_HELP_HIGH_SCORES = 2,
-    MAIN_MENU_HELP_CREDITS = 3,
-    MAIN_MENU_HELP_QUIT = 4
-H1_ENUM_END(MainMenuHelp)
-
-// gEndSequence: CheckEndGame sets LOST/WON, and WON becomes CAMPAIGN_COMPLETE
-// after the last campaign scenario; oldmain plays the matching video (the
-// value indexes endVideos), offers a replay after LOST and
-// advances the campaign after WON.
-H1_ENUM_BEGIN(GameEndSequence)
-    GAME_END_LOST = 0,
-    GAME_END_WON = 1,
-    GAME_END_CAMPAIGN_COMPLETE = 2,
-    GAME_END_SEQUENCE_COUNT = 3
-H1_ENUM_END(GameEndSequence)
-
-// Network positions (gbGamePosToNetPos, giThisNetPos): the host is
-// position HOST; a game position with no network player maps to NONE.
-H1_ENUM_CONST_BEGIN(NetPositionConstant)
-    NET_POSITION_NONE = -1,
-    NET_POSITION_HOST = 0
-H1_ENUM_CONST_END(NetPositionConstant)
-
 // Buka 2.1 oldmain reduced to HoMM1: two intro videos, the stpmain.bin
 // menu (new, load, campaign, high scores, credits, quit), one network
 // handshake and the campaign replay/next-scenario loop.
@@ -1691,17 +1663,6 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
     }
 }
 
-// donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
-// playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
-// losing the last town starts a GRACE_DAYS countdown (Buka
-// END_GAME_GRACE_DAYS) that game::NewDay runs down to elimination.
-H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
-    END_GAME_NO_GRACE_PERIOD = -1,
-    END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
-H1_ENUM_CONST_END(CheckEndGameConstant)
-
 VA(0x0043fb8e, 0x936)
 void CheckEndGame(i32 forced) {
     town* objectiveTown;
@@ -1943,34 +1904,6 @@ void InitVars(void) {
     hmnuTown = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuTown");
 }
 
-// donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
-// KB's morale-screen text table; the five-alignment line was appended last.
-H1_ENUM_BEGIN(MoraleInfoText)
-    MORALE_INFO_GOOD = 0,
-    MORALE_INFO_NEUTRAL = 1,
-    MORALE_INFO_BAD = 2,
-    MORALE_INFO_HEADER = 3,
-    MORALE_INFO_KNIGHT = 4,
-    MORALE_INFO_ALL_TROOPS = 5,
-    MORALE_INFO_THREE_ALIGNMENTS = 6,
-    MORALE_INFO_FOUR_ALIGNMENTS = 7,
-    MORALE_INFO_MEDAL_OF_VALOR = 8,
-    MORALE_INFO_MEDAL_OF_COURAGE = 9,
-    MORALE_INFO_MEDAL_OF_HONOR = 10,
-    MORALE_INFO_MEDAL_OF_DISTINCTION = 11,
-    MORALE_INFO_FIZBIN = 12,
-    MORALE_INFO_BUOY = 13,
-    MORALE_INFO_OASIS = 14,
-    MORALE_INFO_STATUE = 15,
-    MORALE_INFO_GRAVEYARD = 16,
-    MORALE_INFO_SHIPWRECK = 17,
-    MORALE_INFO_COWARDICE = 18,
-    MORALE_INFO_NONE = 19,
-    MORALE_INFO_FIVE_ALIGNMENTS = 20
-H1_ENUM_END(MoraleInfoText)
-
 VA(0x004406b3, 0x3f2)
 void game::ShowMoraleInfo(hero* h, i32 dialogType) {
     i32 newFaction;
@@ -2040,22 +1973,6 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
     NormalDialog(gText, dialogType);
 }
 
-// KB's luck-screen text table: three verdicts, a header, then one line per
-// luck source in the order ShowLuckInfo appends them.
-H1_ENUM_BEGIN(LuckInfoText)
-    LUCK_INFO_GOOD = 0,
-    LUCK_INFO_NEUTRAL = 1,
-    LUCK_INFO_BAD = 2,
-    LUCK_INFO_HEADER = 3,
-    LUCK_INFO_RABBITS_FOOT = 4,
-    LUCK_INFO_HORSESHOE = 5,
-    LUCK_INFO_LUCKY_COIN = 6,
-    LUCK_INFO_CLOVER = 7,
-    LUCK_INFO_FAERIE_RING = 8,
-    LUCK_INFO_FOUNTAIN = 9,
-    LUCK_INFO_NONE = 10
-H1_ENUM_END(LuckInfoText)
-
 // donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
@@ -2102,12 +2019,6 @@ void ClearMapExtra(void) {
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
 }
 
-// HoMM1 score-to-monster tables pair a threshold word with a monster word.
-H1_ENUM_CONST_BEGIN(ScoreMonsterConstant)
-    SCORE_MONSTER_COUNT = 28,
-    SCORE_MONSTER_THRESHOLD = 0,
-    SCORE_MONSTER_TYPE = 1
-H1_ENUM_CONST_END(ScoreMonsterConstant)
 VA(0x00440ccf, 0x6a)
 i16 GetMonType(i32 score, i32 highScoreType) {
     i32 index;
@@ -2235,21 +2146,6 @@ i8 WaitForOtherPlayer(void) {
     }
     return result;
 }
-
-// netbox.bin text widgets: the two scrolled chat lines (cNetBoxLine) and the
-// line being typed.
-H1_ENUM_BEGIN(NetBoxControl)
-    NET_BOX_LINE_PREVIOUS = 1,
-    NET_BOX_LINE_LATEST = 2,
-    NET_BOX_INPUT = 3
-H1_ENUM_END(NetBoxControl)
-
-// PopNetBox blinks the input cursor on glTimers slot BLINK_TIMER_SLOT every
-// BLINK_DELAY ms.
-H1_ENUM_CONST_BEGIN(NetBoxConstant)
-    NET_BOX_BLINK_TIMER_SLOT = 0,
-    NET_BOX_BLINK_DELAY = 360
-H1_ENUM_CONST_END(NetBoxConstant)
 
 // donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
 // donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
@@ -2508,23 +2404,6 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// congspre.bin / congrats.bin text widgets: the title (or the campaign's win
-// text), the five gScoreLabels captions, and the standard game's days, base
-// score, difficulty, final score and creature rating.
-H1_ENUM_BEGIN(CongratsControl)
-    CONGRATS_TITLE = 100,
-    CONGRATS_SCORE_LABEL_FIRST = 101,
-    CONGRATS_DAYS = 106,
-    CONGRATS_BASE_SCORE = 107,
-    CONGRATS_DIFFICULTY = 108,
-    CONGRATS_FINAL_SCORE = 109,
-    CONGRATS_RATING = 110
-H1_ENUM_END(CongratsControl)
-
-H1_ENUM_CONST_BEGIN(CongratsConstant)
-    CONGRATS_SCORE_LABEL_COUNT = 5
-H1_ENUM_CONST_END(CongratsConstant)
-
 // HoMM1's victory screen (Buka 2.1 ShowCongrats): campaigns show the
 // scenario's win text; standard games score the days played, rank the result
 // as a creature and file it with the high scores.
@@ -2612,12 +2491,6 @@ void CongratsWait(void) {
             done = 1;
     }
 }
-
-// dataentr.bin widgets: the prompt text and the edit field.
-H1_ENUM_BEGIN(DataEntryControl)
-    DATA_ENTRY_PROMPT = 1,
-    DATA_ENTRY_TEXT = 10
-H1_ENUM_END(DataEntryControl)
 
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
 VA(0x00441df7, 0x1a0)

@@ -11,6 +11,11 @@ H1_ENUM_BEGIN(IconWidgetKind)
     ICON_WIDGET_FILL = 0x80
 H1_ENUM_END(IconWidgetKind)
 
+// Read keeps the low byte of the resource's orientation word.
+H1_ENUM_CONST_BEGIN(IconWidgetConstant)
+    ICON_WIDGET_ORIENTATION_MASK = 0xff
+H1_ENUM_CONST_END(IconWidgetConstant)
+
 // forward declarations:
 class icon;
 struct tag_message;

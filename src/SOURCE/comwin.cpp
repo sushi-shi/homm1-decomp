@@ -12,30 +12,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// com_init strides ports by 0x60 bytes: handle, saved DCB at +8, saved
-// timeouts at +0x24 and the two send queues at +0x50/+0x58.
-struct ComPortState {
-    HANDLE handle;
-    char reserved04[4];
-    DCB savedState;
-    COMMTIMEOUTS savedTimeouts;
-    char reserved38[0x18];
-    tag_Anchor normalQueue;
-    tag_Anchor priorityQueue;
-};
-
-enum ComConstant {
-    COM_PORT_COUNT = 7,
-    COM_ERROR_NAME_SIZE = 100,
-    COM_ERROR_MESSAGE_SIZE = 500,
-    COM_RECEIVE_BUFFER_SIZE = 0x2000,
-    COM_TRANSMIT_BUFFER_SIZE = 0x1000,
-    COM_BREAK_DELAY = 500,
-    COM_NODE_HEADER_SIZE = 10
-};
-
-extern ComPortState gComPorts[];
-
 VA(0x0041c930, 0x54)
 void add_node(tag_Anchor* anchor, tag_Node* node) {
     node->prev = node->next = NULL;

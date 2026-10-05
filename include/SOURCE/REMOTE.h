@@ -248,4 +248,19 @@ i8 GUIModemCommandExec(void);
 i8 GUIModemResponseExec(void);
 i32 WaitForDirectConnect(void);
 
+// Moved from REMOTE.cpp.
+// CRC-16/CCITT over the packet bytes, most significant bit first.
+H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
+    REMOTE_CRC_BYTE_TOP_BIT = 0x80,
+    REMOTE_CRC_TOP_BIT = 0x8000,
+    REMOTE_CRC_POLYNOMIAL = 0x1021
+H1_ENUM_CONST_END(RemoteCrcConstant)
+
+// Modem's 2K transmit queue (retail 0x004c9c80-0x004ca487), defined below.
+struct outque_t {
+    i32 readPosition;
+    i32 writePosition;
+    char data[2048];
+};
+
 #endif

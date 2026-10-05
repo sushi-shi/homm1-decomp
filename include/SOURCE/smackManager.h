@@ -1,6 +1,8 @@
 #ifndef HOMM1_SOURCE_SMACKMANAGER_H
 #define HOMM1_SOURCE_SMACKMANAGER_H
 
+#include <windows.h>
+
 #include <Domains.h>
 #include <SOURCE/smack.h>
 
@@ -37,5 +39,14 @@ void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette,
 void SmackMain();
 void CloseSmackers();
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);
+
+#pragma pack(push, 1)
+struct SmackSoundFormat {
+    DWORD format;
+    WORD channels;
+    DWORD samplesPerSecond;
+    WORD bitsPerSample;
+};
+#pragma pack(pop)
 
 #endif

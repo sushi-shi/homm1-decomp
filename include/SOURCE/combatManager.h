@@ -600,4 +600,129 @@ extern i32 giRemoteDefaultPlayer;
 extern i8 iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern i8 gbThisNetHasControl;
+// Moved from COMMAND.cpp.
+// gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
+// over the auto-combat strip (left), the skip strip (right), or neither.
+H1_ENUM_BEGIN(CombatHelpText)
+    COMBAT_HELP_AUTO_COMBAT = 0,
+    COMBAT_HELP_SKIP_UNIT = 1,
+    COMBAT_HELP_NONE = 2
+H1_ENUM_END(CombatHelpText)
+
+// gBattleResults rows (DoVictory's win texts and DoLoseWindow's loss texts):
+// the outcome lines, then the experience award with or without level-ups.
+H1_ENUM_BEGIN(BattleResultText)
+    BATTLE_RESULT_ENEMY_SURRENDERED = 0,
+    BATTLE_RESULT_ENEMY_FLED = 1,
+    BATTLE_RESULT_VICTORY = 2,
+    BATTLE_RESULT_EXPERIENCE = 3,
+    BATTLE_RESULT_HERO_SURRENDERS = 4,
+    BATTLE_RESULT_HERO_FLEES = 5,
+    BATTLE_RESULT_HERO_DEFEATED = 6,
+    BATTLE_RESULT_FORCES_SURRENDER = 7,
+    BATTLE_RESULT_FORCES_FLEE = 8,
+    BATTLE_RESULT_FORCES_DEFEATED = 9,
+    BATTLE_RESULT_EXPERIENCE_AND_LEVELS = 10
+H1_ENUM_END(BattleResultText)
+
+// win/losecmbt.bin widget ids: the animation, the result text, and the
+// bottom panel ShowWinLoseArtifact (captured artifact) or ShowDeadArmies
+// (casualties: icon/count ids are FIRST + side * ARMY_GROUP_SLOT_COUNT + slot,
+// with the count id doubling as the side's "None" line) fills in.
+H1_ENUM_BEGIN(CombatWinLoseControl)
+    WIN_LOSE_ANIMATION = 1,
+    WIN_LOSE_RESULT_TEXT = 0x65,
+    WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
+    WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1,
+    WIN_LOSE_ARTIFACT_ICON = 0x7d2,
+    WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834,
+    WIN_LOSE_ARTIFACT_NAME = 0x835,
+    WIN_LOSE_CASUALTY_HEADING = 0x83e
+H1_ENUM_END(CombatWinLoseControl)
+
+// m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
+// the casualty counts, then the two side headings and the casualty title.
+// DoVictory's experience line buffer (Buka 2.1 VICTORY_EXPERIENCE_TEXT_SIZE;
+// retail's frame places message directly above a 152-byte array).
+H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
+    COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
+H1_ENUM_CONST_END(CombatVictoryConstant)
+
+H1_ENUM_CONST_BEGIN(CombatWinLoseSlot)
+    WIN_LOSE_SLOT_SIDE_HEADING_FIRST = 10,
+    WIN_LOSE_SLOT_CASUALTY_TITLE = 12,
+    WIN_LOSE_SLOT_COUNT = 15
+H1_ENUM_CONST_END(CombatWinLoseSlot)
+
+// surrendr.bin widget ids DoSurrender fills (the victor's portrait, the offer).
+H1_ENUM_BEGIN(SurrenderControl)
+    SURRENDER_PORTRAIT = 1,
+    SURRENDER_TEXT = 2
+H1_ENUM_END(SurrenderControl)
+
+// SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
+// (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
+H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
+    COMBAT_REAR_HEX_UNUSED = -2
+H1_ENUM_CONST_END(CombatRearHexConstant)
+
+// Combat-window widget ids ProcessCombatMsg handles: the battlefield (0x40,
+// Buka CombatControlId CONTROL_MAIN_BUTTON; ResetMouse hovers it), the button
+// that stops grid selection and hides the pointer, and the skip-turn button
+// that queues ACTION_SKIP_TURN.
+H1_ENUM_BEGIN(CombatControlId)
+    COMBAT_CONTROL_DISABLE_SELECTION = 2,
+    COMBAT_CONTROL_SKIP_TURN = 8,
+    COMBAT_CONTROL_FIELD = 0x40
+H1_ENUM_END(CombatControlId)
+
+// Moved from DRAWING.cpp.
+// clang-format off
+// cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
+// redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
+H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)
+    COMBAT_STATUS_FIRST_CONTROL = 2,
+    COMBAT_STATUS_TEXT_CONTROL = 0xc,
+    COMBAT_STATUS_X = 0x30,
+    COMBAT_STATUS_Y = 0x1cc,
+    COMBAT_STATUS_WIDTH = 0x21f,
+    COMBAT_STATUS_HEIGHT = 0x14
+H1_ENUM_CONST_END(CombatStatusLineConstant)
+
+// Moved from CMBTMGR.cpp.
+// gCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
+// mountain variant by MoreTreesNear), the boat for water and the graveyard.
+H1_ENUM_BEGIN(CombatBackground)
+    COMBAT_BACKGROUND_GRASS_FOREST = 0,
+    COMBAT_BACKGROUND_GRASS_MOUNTAIN = 1,
+    COMBAT_BACKGROUND_SNOW_FOREST = 2,
+    COMBAT_BACKGROUND_SNOW_MOUNTAIN = 3,
+    COMBAT_BACKGROUND_SWAMP = 4,
+    COMBAT_BACKGROUND_LAVA = 5,
+    COMBAT_BACKGROUND_DESERT = 6,
+    COMBAT_BACKGROUND_DIRT_FOREST = 7,
+    COMBAT_BACKGROUND_DIRT_MOUNTAIN = 8,
+    COMBAT_BACKGROUND_BOAT = 9,
+    COMBAT_BACKGROUND_GRAVEYARD = 10,
+    COMBAT_BACKGROUND_COUNT = 11
+H1_ENUM_END(CombatBackground)
+
+// Moved from SPELLS.cpp.
+// spelmous.mse frames: HandleCastSpell shows the selected SpellType's own
+// frame over a valid target and frame 19, after the combat spells, otherwise.
+H1_ENUM_BEGIN(SpellPointerFrame)
+    SPELL_POINTER_NO_TARGET = 19
+H1_ENUM_END(SpellPointerFrame)
+
+// Moved from SPELLAI.cpp.
+// DetermineEffectOfSpell's target walk (Buka 2.1 SPELLAI.cpp
+// CombatSpellAITargetMode; HoMM1 numbers its four modes in this order): one
+// global evaluation, every area position, or each friendly / enemy stack.
+H1_ENUM_BEGIN(CombatSpellAITargetMode)
+    SPELL_AI_GLOBAL = 0,
+    SPELL_AI_AREA = 1,
+    SPELL_AI_FRIENDLY = 2,
+    SPELL_AI_ENEMY = 3
+H1_ENUM_END(CombatSpellAITargetMode)
+
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

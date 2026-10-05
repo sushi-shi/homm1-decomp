@@ -258,23 +258,6 @@ i16 combatManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// gCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
-// mountain variant by MoreTreesNear), the boat for water and the graveyard.
-H1_ENUM_BEGIN(CombatBackground)
-    COMBAT_BACKGROUND_GRASS_FOREST = 0,
-    COMBAT_BACKGROUND_GRASS_MOUNTAIN = 1,
-    COMBAT_BACKGROUND_SNOW_FOREST = 2,
-    COMBAT_BACKGROUND_SNOW_MOUNTAIN = 3,
-    COMBAT_BACKGROUND_SWAMP = 4,
-    COMBAT_BACKGROUND_LAVA = 5,
-    COMBAT_BACKGROUND_DESERT = 6,
-    COMBAT_BACKGROUND_DIRT_FOREST = 7,
-    COMBAT_BACKGROUND_DIRT_MOUNTAIN = 8,
-    COMBAT_BACKGROUND_BOAT = 9,
-    COMBAT_BACKGROUND_GRAVEYARD = 10,
-    COMBAT_BACKGROUND_COUNT = 11
-H1_ENUM_END(CombatBackground)
-
 // CMBTMGR owns retail .data 0x004a2878-0x00491057. The backdrop table is
 // GetBackgroundName's local static: /Gi emits it after Open's literals,
 // followed by its own.

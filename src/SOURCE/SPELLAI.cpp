@@ -86,16 +86,6 @@ i32 combatManager::DoSpellAI(i8 side) {
     return 0;
 }
 
-// DetermineEffectOfSpell's target walk (Buka 2.1 SPELLAI.cpp
-// CombatSpellAITargetMode; HoMM1 numbers its four modes in this order): one
-// global evaluation, every area position, or each friendly / enemy stack.
-H1_ENUM_BEGIN(CombatSpellAITargetMode)
-    SPELL_AI_GLOBAL = 0,
-    SPELL_AI_AREA = 1,
-    SPELL_AI_FRIENDLY = 2,
-    SPELL_AI_ENEMY = 3
-H1_ENUM_END(CombatSpellAITargetMode)
-
 // Buka SPELLAI.cpp:141-733 reduced to HoMM1's nineteen combat spells: each
 // spell is scored once, across the area grid, or over one side's stacks.
 VA(0x00458f76, 0x42d)

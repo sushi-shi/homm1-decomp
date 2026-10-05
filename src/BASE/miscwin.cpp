@@ -183,12 +183,6 @@ void FadeOut(i32 increment) throw() {
 #include <stdlib.h>
 #include <string.h>
 
-struct PaletteColor {
-    u8 red;
-    u8 green;
-    u8 blue;
-};
-
 // HoMM2 Buka AutoInitSVGA: the Windows build has no SVGA mode to set up.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.

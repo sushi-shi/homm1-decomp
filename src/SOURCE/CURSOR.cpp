@@ -24,33 +24,6 @@
 #include <SOURCE/searchArray.h>
 #include <SOURCE/town.h>
 
-// Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
-// and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
-H1_ENUM_CONST_BEGIN(CursorConstant)
-    CURSOR_DRAW_X = 0xe0,
-    CURSOR_DRAW_Y = 0xff,
-    CURSOR_BOAT_DRAW_Y_ADJUST = 10,
-    CURSOR_SHADOW_FLIP_X_ADJUST = 0x20,
-    CURSOR_FLAG_FRAME_BASE = 0x38,
-    CURSOR_FLAG_FRAME_CYCLE_MASK = 3,
-    CURSOR_LAST_FRAME_COUNT = 8,
-    CURSOR_TURN_FRAME_COUNT = 16,
-    CURSOR_SLOW_TURN_MULTIPLIER = 3,
-    CURSOR_MAP_DRAW_OFFSET = 7,
-    CURSOR_MOVE_HALF_TILE_PIXELS = 16,
-    CURSOR_NORTH_DIRECTION_MASK = 0x83,
-    CURSOR_SOUTH_DIRECTION_MASK = 0x38,
-    CURSOR_DIAGONAL_DIRECTION_BIT = 1,
-    CURSOR_TURN_TIMER_SLOT = 1,
-    BOAT_OCCUPIED_FLAG = 0x80,
-    SLOW_CURSOR_CYCLE_START = 2,
-    SKIPPED_ANIMATION_FRAME = 4,
-    FOOTSTEP_ANIMATION_FRAME = 3,
-    DIRECTION_HALF_COUNT = 4,
-    TURN_FRAME_MULTIPLIER = 2,
-    MOVE_TILE_HALF_COUNT = 2
-H1_ENUM_CONST_END(CursorConstant)
-
 // Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
 // walk speed and indexes the map directly.
 VA(0x004215c0, 0x143)

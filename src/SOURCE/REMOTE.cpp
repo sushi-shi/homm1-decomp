@@ -77,13 +77,6 @@ i32 FileSize(char* filename) {
     return length;
 }
 
-// Modem's 2K transmit queue (retail 0x004c9c80-0x004ca487), defined below.
-struct outque_t {
-    i32 readPosition;
-    i32 writePosition;
-    char data[2048];
-};
-
 // Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
 // keeps the modem reset sequence in ModemSetup (0x459530).
 VA(0x00451b2f, 0x221)
@@ -170,13 +163,6 @@ void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver) {
             break;
     }
 }
-
-// CRC-16/CCITT over the packet bytes, most significant bit first.
-H1_ENUM_CONST_BEGIN(RemoteCrcConstant)
-    REMOTE_CRC_BYTE_TOP_BIT = 0x80,
-    REMOTE_CRC_TOP_BIT = 0x8000,
-    REMOTE_CRC_POLYNOMIAL = 0x1021
-H1_ENUM_CONST_END(RemoteCrcConstant)
 
 VA(0x00451d83, 0xab)
 void calc_crc(u16* crc, u8* data, i32 length) {

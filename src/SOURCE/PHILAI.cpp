@@ -39,9 +39,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// KB owns gDwellingType (retail KB .data band).
-extern i8 gDwellingType[4][6];
-
 // PHILAI's module state in retail address order: .data 0x0049f4c8-0x0048f827
 // (shared with its logging helpers' literals), then .bss 0x004acec0-0x004c4eef
 // (VC4 orders .bss by name hash, not by definition).
@@ -941,7 +938,6 @@ void philAI::GetBestBHC(i32, BHC& best) {
     }
     for (townNo = 0; townNo < gpCurPlayer->m_townCount; townNo++) {
         townPointer = &gpGame->m_castleRecs[gpCurPlayer->m_townIds[townNo]];
-        extern i32 gRemoteReady;
         if (giCurTurn > 3 && (!gRemoteOn || gRemoteReady) && townPointer->m_turnsOwned < 3)
             continue;
         CheckDoMain(0, 0);

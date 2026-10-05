@@ -44,18 +44,6 @@ void combatManager::UpdateGridForMove(i16 hex, i8 direction, i16 attributes) {
         UpdateGrid(hex, attributes);
 }
 
-// clang-format off
-// cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
-// redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
-H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)
-    COMBAT_STATUS_FIRST_CONTROL = 2,
-    COMBAT_STATUS_TEXT_CONTROL = 0xc,
-    COMBAT_STATUS_X = 0x30,
-    COMBAT_STATUS_Y = 0x1cc,
-    COMBAT_STATUS_WIDTH = 0x21f,
-    COMBAT_STATUS_HEIGHT = 0x14
-H1_ENUM_CONST_END(CombatStatusLineConstant)
-
 // Sets the combat window's text line and redraws it outside the extent
 // bookkeeping.
 VA(0x00423707, 0xad)

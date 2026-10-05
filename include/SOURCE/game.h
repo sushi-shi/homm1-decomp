@@ -561,4 +561,143 @@ extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
 extern i8 gbDismissArmy;
 
+// Moved from GAME.cpp.
+// newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);
+// difficulty buttons are FIRST + game::m_difficulty. OK and CANCEL are role
+// names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
+// returns to the main menu).
+H1_ENUM_BEGIN(NewGameControl)
+    NEW_GAME_OPPONENT_FIRST = 2,
+    NEW_GAME_OPPONENT_LAST = 4,
+    NEW_GAME_COLOR = 8,
+    NEW_GAME_SCENARIO_SELECT = 0xc,
+    NEW_GAME_DIFFICULTY_FIRST = 0xd,
+    NEW_GAME_DIFFICULTY_LAST = 0x10,
+    NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_SCENARIO_PANEL = 0x12,
+    NEW_GAME_KING_OF_THE_HILL = 0x13,
+    NEW_GAME_RATING = 0x14,
+    NEW_GAME_CANCEL = DIALOG_BUTTON_1,
+    NEW_GAME_OK = DIALOG_BUTTON_2,
+    // Player p's type toggle is p + TOGGLE_BASE (ids 2..4) and its type label
+    // p + LABEL_BASE (ids 5..7).
+    NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
+    NEW_GAME_OPPONENT_LABEL_BASE = 4
+H1_ENUM_END(NewGameControl)
+
+// newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
+// the computer-type faces (type + base), the crests (two per color) and
+// the King of the Hill toggle (flag + base).
+H1_ENUM_CONST_BEGIN(NewGameFrame)
+    NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
+    NEW_GAME_FRAME_CREST_BASE = 11,
+    NEW_GAME_FRAME_CREST_STRIDE = 2,
+    NEW_GAME_FRAME_HUMAN_OPPONENT = 0x1a,
+    NEW_GAME_FRAME_KING_OF_THE_HILL_BASE = 27
+H1_ENUM_CONST_END(NewGameFrame)
+
+// NewGameHandler's right-click help: the gNewGameHelp row shown.
+H1_ENUM_BEGIN(NewGameHelp)
+    NEW_GAME_HELP_NONE = -1,
+    NEW_GAME_HELP_ACCEPT = 0,
+    NEW_GAME_HELP_MAIN_MENU = 1,
+    NEW_GAME_HELP_KING_OF_THE_HILL = 2,
+    NEW_GAME_HELP_SCENARIO = 3,
+    NEW_GAME_HELP_DIFFICULTY = 4,
+    NEW_GAME_HELP_OPPONENT = 5,
+    NEW_GAME_HELP_COLOR = 6,
+    NEW_GAME_HELP_RATING = 7,
+    NEW_GAME_HELP_HUMAN_OPPONENT = 8
+H1_ENUM_END(NewGameHelp)
+
+// GiveTroopsToNeutralTowns (Buka NeutralTownReinforcementConstant names): a
+// 1..15 roll picks the tier, whose key plus the town type selects the
+// recruit and whose range the count.
+H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
+    REINFORCEMENT_ROLL_MIN = 1,
+    REINFORCEMENT_ROLL_MAX = 15,
+    REINFORCEMENT_TIER_ONE_THRESHOLD = 5,
+    REINFORCEMENT_TIER_TWO_THRESHOLD = 10,
+    REINFORCEMENT_TIER_THREE_THRESHOLD = 13,
+    REINFORCEMENT_TIER_ONE_KEY = 10,
+    REINFORCEMENT_TIER_TWO_KEY = 20,
+    REINFORCEMENT_TIER_THREE_KEY = 30,
+    REINFORCEMENT_TIER_FOUR_KEY = 40,
+    REINFORCEMENT_TIER_ONE_COUNT_MIN = 8,
+    REINFORCEMENT_TIER_ONE_COUNT_MAX = 15,
+    REINFORCEMENT_TIER_TWO_COUNT_MIN = 5,
+    REINFORCEMENT_TIER_TWO_COUNT_MAX = 7,
+    REINFORCEMENT_TIER_THREE_COUNT_MIN = 3,
+    REINFORCEMENT_TIER_THREE_COUNT_MAX = 5,
+    REINFORCEMENT_TIER_FOUR_COUNT_MIN = 1,
+    REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
+H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
+
+// armywin.bin widget ids; Buka ViewArmyControlId names the dismiss (DIALOG_BUTTON_3)
+// and close (DIALOG_BUTTON_0) buttons. The animation icon cycles
+// VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
+H1_ENUM_BEGIN(ViewArmyControl)
+    VIEW_ARMY_COUNT_FRAME = 1,
+    VIEW_ARMY_COUNT_TEXT = 2,
+    VIEW_ARMY_TITLE = 3,
+    VIEW_ARMY_STATS = 4,
+    VIEW_ARMY_ANIMATION = 5,
+    VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
+    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
+H1_ENUM_END(ViewArmyControl)
+
+H1_ENUM_CONST_BEGIN(ViewArmyConstant)
+    VIEW_ARMY_ANIMATION_FRAMES = 6,
+    VIEW_ARMY_FRAME_DELAY = 90,
+    VIEW_ARMY_STAT_TEXT_SIZE = 550,
+    // glTimers slot the army window's animation runs on.
+    VIEW_ARMY_TIMER_SLOT = 0
+H1_ENUM_CONST_END(ViewArmyConstant)
+
+// overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
+H1_ENUM_BEGIN(OverviewControl)
+    OVERVIEW_RESOURCE_BASE = 1,
+    OVERVIEW_DATE = 64,
+    OVERVIEW_DAILY_GOLD = 65
+H1_ENUM_END(OverviewControl)
+
+// Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
+// creature week or month picks from, and gNewTurnText's announcement rows.
+H1_ENUM_CONST_BEGIN(CalendarConstant)
+    CALENDAR_WEEK_NAME_COUNT = 15,
+    CALENDAR_WEEK_CREATURE_COUNT = 24,
+    CALENDAR_MONTH_NAME_COUNT = 10,
+    CALENDAR_MONTH_CREATURE_COUNT = 12,
+    NEW_TURN_TEXT_DAYS_LEFT = 0,
+    NEW_TURN_TEXT_LAST_DAY = 1,
+    NEW_TURN_TEXT_MONTH_NORMAL = 2,
+    NEW_TURN_TEXT_MONTH_CREATURE = 3,
+    NEW_TURN_TEXT_MONTH_PLAGUE = 4,
+    NEW_TURN_TEXT_WEEK_NORMAL = 5,
+    NEW_TURN_TEXT_WEEK_CREATURE = 6
+H1_ENUM_CONST_END(CalendarConstant)
+
+// Ground tiles come in groups of four interchangeable variants;
+// RandomizeTerrainTiles rerolls the variant within its group.
+H1_ENUM_CONST_BEGIN(TerrainTileConstant)
+    TERRAIN_TILE_VARIANT_COUNT = 4
+H1_ENUM_CONST_END(TerrainTileConstant)
+
+// REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
+// size (BOX_REMOTE_SAVE, answered by REMOTE_COMMAND_SAVE_INIT_RESPONSE),
+// streams SEGMENT_SIZE-byte segments (SAVE_DATA), asks for each
+// BATCH_SIZE-segment block's acknowledgement map (SAVE_ACK_REQUEST /
+// SAVE_ACK_RESPONSE) and closes with SAVE_FINISH (RemoteCommand).
+H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
+    REMOTE_SAVE_SEGMENT_SIZE = 200,
+    REMOTE_SAVE_BATCH_SIZE = 100,
+    REMOTE_SAVE_HEADER_SIZE = 8,
+    REMOTE_SAVE_ACK_MAP_SIZE = 200,
+    REMOTE_SAVE_INDEX_SIZE = 2,
+    REMOTE_SAVE_RECEIVE_TIMEOUT = 20000,
+    REMOTE_SAVE_BUFFER_EXTRA = 500,
+    REMOTE_SAVE_DECODE_BUFFER_SIZE = 0x130b0,
+    REMOTE_SAVE_TRANSFER_SOUNDS = 8
+H1_ENUM_CONST_END(RemoteSaveConstant)
+
 #endif // HOMM1_SOURCE_GAME_H

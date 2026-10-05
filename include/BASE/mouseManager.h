@@ -1,5 +1,7 @@
 #ifndef HOMM1_BASE_MOUSEMANAGER_H
 #define HOMM1_BASE_MOUSEMANAGER_H
+
+#include <Domains.h>
 // Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 17 methods, 3 own-virtual, 0 static data.
 
@@ -122,5 +124,15 @@ extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
 extern ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+
+// Moved from MOUSEMGR.cpp.
+H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
+    MOUSE_INITIAL_POINTER_FLAGS = 6,
+    MOUSE_INITIAL_X = 320,
+    MOUSE_INITIAL_Y = 240,
+    MOUSE_SAVED_BITMAP_SIZE = 0x40,
+    MOUSE_MANAGER_MESSAGE_MASK = 0x40,
+    MOUSE_CURSOR_FILENAME_CAPACITY = 16
+H1_ENUM_CONST_END(MouseManagerStateConstant)
 
 #endif // HOMM1_BASE_MOUSEMANAGER_H

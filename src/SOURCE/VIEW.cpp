@@ -24,36 +24,6 @@
 
 #include <stdio.h>
 
-// vgenwin.bin widget ids (Buka 2.1 VIEW.cpp ViewGeneralControl): name,
-// portrait, colour and stats boxes, the Cast Spell / Retreat / Surrender
-// buttons ViewGeneral disables and HandleViewGeneral returns, and the
-// frame widgets the retail block names without using.
-H1_ENUM_BEGIN(ViewGeneralControl)
-    GENERAL_CONTROL_NONE = 0,
-    GENERAL_NAME_WIDGET = 1,
-    GENERAL_PORTRAIT_WIDGET = 2,
-    GENERAL_COLOR_WIDGET = 3,
-    GENERAL_STATS_WIDGET = 4,
-    GENERAL_CONTROL_SEVEN = 7,
-    GENERAL_CONTROL_EIGHT = 8,
-    GENERAL_CONTROL_NINE = 9,
-    GENERAL_CAST_SPELL = 10,
-    GENERAL_RETREAT = 11,
-    GENERAL_SURRENDER = 12,
-    GENERAL_CONTROL_THIRTEEN = 13,
-    GENERAL_CONTROL_FOURTEEN = 14
-H1_ENUM_END(ViewGeneralControl)
-
-// HandleViewGeneral's hover line: the gViewGeneralHelp row (Buka
-// ViewGeneralHoverHelp).
-H1_ENUM_BEGIN(ViewGeneralHoverHelp)
-    GENERAL_HOVER_HELP_CAST_SPELL = 1,
-    GENERAL_HOVER_HELP_RETREAT = 2,
-    GENERAL_HOVER_HELP_SURRENDER = 3,
-    GENERAL_HOVER_HELP_CLOSE = 4,
-    GENERAL_HOVER_HELP_HERO = 5
-H1_ENUM_END(ViewGeneralHoverHelp)
-
 // Buka VIEW.cpp:101-260 without the captain and spell-point lines: the
 // combat hero window, with Cast Spell, Retreat and Surrender dimmed when
 // the side cannot use them.

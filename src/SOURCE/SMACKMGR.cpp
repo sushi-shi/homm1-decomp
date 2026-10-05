@@ -23,15 +23,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#pragma pack(push, 1)
-struct SmackSoundFormat {
-    DWORD format;
-    WORD channels;
-    DWORD samplesPerSecond;
-    WORD bitsPerSample;
-};
-#pragma pack(pop)
-
 DATA(0x0049f7c0)
 static SmackSoundFormat gSmackSoundFormats[12] = {
     {WAVE_FORMAT_4S16, 2, 44100, 16},

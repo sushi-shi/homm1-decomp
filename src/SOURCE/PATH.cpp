@@ -12,15 +12,6 @@
 #include <SOURCE/kbwin.h>
 #include <SOURCE/searchArray.h>
 
-// Buka 2.1 PATH.cpp CombatPathConstant: the blocked-mask bits for the two
-// wide-creature directions, the speed FindPath grants when speed is ignored,
-// and the second hex of a wide creature.
-H1_ENUM_CONST_BEGIN(CombatPathConstant)
-    SPECIAL_DIRECTION_MASK = 0xc0,
-    IGNORE_SPEED = 99,
-    WIDE_HEX_OFFSET = 1
-H1_ENUM_CONST_END(CombatPathConstant)
-
 // Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
 // function's compiler line static plus an offset; #line restores the original
 // file and lines (docs/patterns/vc4-gi-line-var.md).

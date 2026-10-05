@@ -31,26 +31,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// DrawToBuffer's outline colours (palette indices FillToBuffer paints the
-// sprite with): the stack m_limitCreature highlights, a beneficial spell
-// (haste, bless, protection, anti-magic) and any other spell. SpecialAttack
-// saves a MISSILE_PATCH_WIDTH x MISSILE_PATCH_HEIGHT screen patch centred on
-// the missile (half sizes either side) and restores it each step (Buka
-// ArmyDrawingConstant / CombatMissileAnimationConstant roles).
-H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
-    ARMY_LIMIT_OUTLINE_COLOR = 0xe4,
-    ARMY_GOOD_SPELL_OUTLINE_COLOR = 0xf7,
-    ARMY_BAD_SPELL_OUTLINE_COLOR = 0xe0,
-    ARMY_MISSILE_PATCH_WIDTH = 70,
-    ARMY_MISSILE_PATCH_HEIGHT = 60,
-    ARMY_MISSILE_HALF_WIDTH = 35,
-    ARMY_MISSILE_HALF_HEIGHT = 30
-H1_ENUM_CONST_END(ArmyDrawingConstant)
-
-H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
-    TARGET_NAME_SIZE = 100
-H1_ENUM_CONST_END(ArmyMessageConstant)
-
 DATA(0x004a6770)
 static char gTargetName[TARGET_NAME_SIZE];
 

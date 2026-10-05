@@ -36,15 +36,6 @@ char gCombatMonochrome[] = "BW";
 DATA(0x004a111c)
 char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
 
-H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
-    MOUSE_INITIAL_POINTER_FLAGS = 6,
-    MOUSE_INITIAL_X = 320,
-    MOUSE_INITIAL_Y = 240,
-    MOUSE_SAVED_BITMAP_SIZE = 0x40,
-    MOUSE_MANAGER_MESSAGE_MASK = 0x40,
-    MOUSE_CURSOR_FILENAME_CAPACITY = 16
-H1_ENUM_CONST_END(MouseManagerStateConstant)
-
 VA(0x0046b510, 0x102)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;

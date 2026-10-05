@@ -150,6 +150,8 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void);
 i32 AppInit(void* instance, void* previousInstance, i32 showCommand, char* commandLine);
 // WNDPROC: LRESULT and LPARAM are the SDK's long.
 long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long messageData);
+// The About dialog procedure has C linkage (_AppAbout@16).
+extern "C" BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam);
 void KBChangeMenu(void* menu);
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height);
 void SetMenuStatus(i32 showMenu);

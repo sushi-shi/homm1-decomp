@@ -56,4 +56,10 @@ H1_ENUM_CONST_BEGIN(ScreenBlitConstant)
     SCREEN_BLIT_ENLARGE_PIXELS = 4
 H1_ENUM_CONST_END(ScreenBlitConstant)
 
+struct PaletteColor {
+    u8 red;
+    u8 green;
+    u8 blue;
+};
+
 #endif // HOMM1_BASE_MISCWIN_H

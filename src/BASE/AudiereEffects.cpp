@@ -9,19 +9,6 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/NOOPT.h>
 
-struct AudiereSampleNode {
-    audiere::OutputStreamPtr stream;
-    sample* resource;
-    AudiereSampleNode* next;
-
-    AudiereSampleNode(sample* sampleResource, AudiereSampleNode* nextNode) {
-        stream = NULL;
-        resource = sampleResource;
-        next = nextNode;
-    }
-    inline ~AudiereSampleNode();
-};
-
 DATA(0x004cdf58)
 static void* gSampleBuffer;
 DATA(0x004cdf5c)

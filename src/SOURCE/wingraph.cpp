@@ -81,12 +81,6 @@ DATA(0x004cdd88)
 i32 gPaintStart;
 DATA(0x004cd948)
 WingImage screenImage;
-// KB owns these scroll, combat-palette and configuration globals.
-extern i32 gScrollX;
-extern i32 gScrollY;
-extern i32 gFullCombatScreenDrawn;
-extern i32 gLimitedCombatUpdatePalette;
-extern configStruct gConfig;
 
 // PoL retains the source-line-base expression, matching HoMM1's word load.
 VA(0x00466710, 0x3e)

@@ -68,7 +68,6 @@ iconWidget::iconWidget(
 
 VA(0x0046e041, 0xf9)
 void iconWidget::Read(void) {
-    enum { ORIENTATION_MASK = 0xff };
     i8 name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
@@ -78,7 +77,7 @@ void iconWidget::Read(void) {
     ); // byte-evidenced: resource name APIs use differently signed bytes.
     gpResourceManager->RestorePosition();
     m_frame = gpResourceManager->ReadWord();
-    m_orientation = gpResourceManager->ReadWord() & ORIENTATION_MASK;
+    m_orientation = gpResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;

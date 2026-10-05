@@ -23,19 +23,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// FizzleForward's colour-cycle transition (Buka WINMGR.cpp WindowFizzleConstant,
-// CYCLE_FRAME_COUNT): eight CCYCLE tables of 64K word-indexed lookups.
-H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
-    CYCLE_FRAME_COUNT = 8,
-    FIZZLE_DEFAULT_DELAY = 150,
-    FIZZLE_CYCLE_TABLE_BYTES = 0x10000,
-    FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8,
-    PALETTE_CUBE_LEVELS = 64,
-    PALETTE_NEAREST_DISTANCE_LIMIT = 1000,
-    FIZZLE_COLOR_PAIR_FLOATS = 256 * 256 * 3,
-    SCREENSHOT_FILENAME_CAPACITY = 16
-H1_ENUM_CONST_END(WindowFizzleConstant)
-
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
 VA(0x00469fb0, 0x19c)
 void CycleColors(void) {

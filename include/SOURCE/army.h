@@ -1,8 +1,9 @@
 #ifndef HOMM1_SOURCE_ARMY_H
 #define HOMM1_SOURCE_ARMY_H
+
+#include <Domains.h>
 // Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
 // 57 methods, 0 own-virtual, 0 static data.
-
 #include <H1/Macros.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/creatureTypes.h>
@@ -254,4 +255,25 @@ extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
 extern i8 gGenieHalf;
 // Set while SpecialAttack fires the second shot of a double shooter.
+// Moved from ARMY.cpp.
+// DrawToBuffer's outline colours (palette indices FillToBuffer paints the
+// sprite with): the stack m_limitCreature highlights, a beneficial spell
+// (haste, bless, protection, anti-magic) and any other spell. SpecialAttack
+// saves a MISSILE_PATCH_WIDTH x MISSILE_PATCH_HEIGHT screen patch centred on
+// the missile (half sizes either side) and restores it each step (Buka
+// ArmyDrawingConstant / CombatMissileAnimationConstant roles).
+H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
+    ARMY_LIMIT_OUTLINE_COLOR = 0xe4,
+    ARMY_GOOD_SPELL_OUTLINE_COLOR = 0xf7,
+    ARMY_BAD_SPELL_OUTLINE_COLOR = 0xe0,
+    ARMY_MISSILE_PATCH_WIDTH = 70,
+    ARMY_MISSILE_PATCH_HEIGHT = 60,
+    ARMY_MISSILE_HALF_WIDTH = 35,
+    ARMY_MISSILE_HALF_HEIGHT = 30
+H1_ENUM_CONST_END(ArmyDrawingConstant)
+
+H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
+    TARGET_NAME_SIZE = 100
+H1_ENUM_CONST_END(ArmyMessageConstant)
+
 #endif // HOMM1_SOURCE_ARMY_H

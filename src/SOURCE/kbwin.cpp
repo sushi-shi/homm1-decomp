@@ -305,7 +305,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
 
 // About-dialog callback; 1.2 does not export this function.
 // Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
-extern "C" VA(0x004436ff, 0x67)
+VA(0x004436ff, 0x67)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     i32 wmId;
     WORD codeNotify;

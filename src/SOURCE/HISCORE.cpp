@@ -158,7 +158,6 @@ void highScoreManager::Update(void) {
     i8 noScoreFile;
     tag_message hsMessage;
     char scorePath[HIGH_SCORE_FILENAME_LENGTH];
-    extern char gDataPath[];
 
     noScoreFile = 0;
     if (m_showCampaignScores)

@@ -12,9 +12,6 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
-// SeedPosition's working mobility, read back by PushPoint (FINDPATH storage).
-extern i16 gCurTempMobility;
-
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
 VA(0x00455e50, 0x22b)

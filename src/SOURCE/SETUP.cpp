@@ -25,95 +25,8 @@
 #include <stdio.h>
 #include <string.h>
 
-H1_ENUM_BEGIN(SetupDialogResult)
-    DIALOG_CANCEL = 0x7801
-H1_ENUM_END(SetupDialogResult)
-
-// The setup dialogs' numbered choice buttons (BaseSetupHandler accepts ids
-// 1..1000): each game::Setup* maps CHOICE_n to its option and the handlers
-// show help row n - 1 (Buka 2.1 SETUP.cpp SetupDialogChoice/SetupHelpIndex).
-H1_ENUM_BEGIN(SetupDialogChoice)
-    CHOICE_ONE = 1,
-    CHOICE_TWO = 2,
-    CHOICE_THREE = 3,
-    CHOICE_FOUR = 4,
-    CHOICE_ID_LAST = 1000
-H1_ENUM_END(SetupDialogChoice)
-
-H1_ENUM_BEGIN(SetupHelpIndex)
-    NO_HELP = -1,
-    HELP_FIRST = 0
-H1_ENUM_END(SetupHelpIndex)
-
     // Each setup handler's help row (the gSetup*Help table texts name them); the
     // rows follow CHOICE_ONE.. and end with the cancel row.
-
-// gSetupCampaignGameHelp: the four campaign heroes.
-H1_ENUM_BEGIN(SetupCampaignHelp)
-    SETUP_CAMPAIGN_HELP_IRONFIST = 0,
-    SETUP_CAMPAIGN_HELP_SLAYER = 1,
-    SETUP_CAMPAIGN_HELP_LAMANDA = 2,
-    SETUP_CAMPAIGN_HELP_ALAMAR = 3,
-    SETUP_CAMPAIGN_HELP_CANCEL = 4
-H1_ENUM_END(SetupCampaignHelp)
-
-// gSetupBaudHelp / gSetupDCBaudHelp: the four connection speeds.
-H1_ENUM_BEGIN(SetupBaudHelp)
-    SETUP_BAUD_HELP_2400 = 0,
-    SETUP_BAUD_HELP_9600 = 1,
-    SETUP_BAUD_HELP_19200 = 2,
-    SETUP_BAUD_HELP_38400 = 3,
-    SETUP_BAUD_HELP_CANCEL = 4
-H1_ENUM_END(SetupBaudHelp)
-
-// gSetupComPortHelp / gSetupDCComPortHelp: COM ports 1..4.
-H1_ENUM_BEGIN(SetupComPortHelp)
-    SETUP_COM_PORT_HELP_COM1 = 0,
-    SETUP_COM_PORT_HELP_COM2 = 1,
-    SETUP_COM_PORT_HELP_COM3 = 2,
-    SETUP_COM_PORT_HELP_COM4 = 3,
-    SETUP_COM_PORT_HELP_CANCEL = 4
-H1_ENUM_END(SetupComPortHelp)
-
-// gSetupHotSeatGameHelp: 2..4 human players.
-H1_ENUM_BEGIN(SetupHotSeatHelp)
-    SETUP_HOT_SEAT_HELP_TWO_PLAYERS = 0,
-    SETUP_HOT_SEAT_HELP_THREE_PLAYERS = 1,
-    SETUP_HOT_SEAT_HELP_FOUR_PLAYERS = 2,
-    SETUP_HOT_SEAT_HELP_CANCEL = 3
-H1_ENUM_END(SetupHotSeatHelp)
-
-// gSetupModemGameHelp / gSetupDCGameHelp: host, guest, port configuration.
-H1_ENUM_BEGIN(SetupModemHelp)
-    SETUP_MODEM_HELP_HOST = 0,
-    SETUP_MODEM_HELP_GUEST = 1,
-    SETUP_MODEM_HELP_CONFIGURE = 2,
-    SETUP_MODEM_HELP_CANCEL = 3
-H1_ENUM_END(SetupModemHelp)
-
-// gSetupMultiPlayerGameHelp: the four link kinds.
-H1_ENUM_BEGIN(SetupMultiPlayerHelp)
-    SETUP_MULTIPLAYER_HELP_HOT_SEAT = 0,
-    SETUP_MULTIPLAYER_HELP_NETWORK = 1,
-    SETUP_MULTIPLAYER_HELP_MODEM = 2,
-    SETUP_MULTIPLAYER_HELP_DIRECT_CONNECT = 3,
-    SETUP_MULTIPLAYER_HELP_CANCEL = 4
-H1_ENUM_END(SetupMultiPlayerHelp)
-
-// gSetupNetworkGameHelp: host or guest.
-H1_ENUM_BEGIN(SetupNetworkHelp)
-    SETUP_NETWORK_HELP_HOST = 0,
-    SETUP_NETWORK_HELP_GUEST = 1,
-    SETUP_NETWORK_HELP_CANCEL = 2
-H1_ENUM_END(SetupNetworkHelp)
-
-// gSetupGameHelp: standard, campaign or multi-player game.
-H1_ENUM_BEGIN(SetupGameHelp)
-    SETUP_GAME_HELP_STANDARD = 0,
-    SETUP_GAME_HELP_CAMPAIGN = 1,
-    SETUP_GAME_HELP_MULTIPLAYER = 2,
-    SETUP_GAME_HELP_CANCEL = 3
-H1_ENUM_END(SetupGameHelp)
 
 // Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
 // game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
@@ -511,7 +424,6 @@ i8 game::PickLoadGame(void) {
         return 0;
     if (gbWaitForRemoteReceive)
         return 1;
-    extern char gGamePath[];
     fileReq = new fileRequester(
         0x136,
         0xe,

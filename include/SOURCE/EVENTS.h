@@ -2,6 +2,9 @@
 #define HOMM1_SOURCE_EVENTS_H
 
 #include <Domains.h>
+#include <SOURCE/armyGroup.h>
+#include <SOURCE/hero.h>
+#include <SOURCE/town.h>
 
 // mapCell::m_objectMetadata payloads DoEvent/DoAIEvent decode per object
 // (Buka EVENTS.h MapObjectEncodingConstant, HoMM1 numbering): campfire
@@ -127,5 +130,151 @@ H1_ENUM_CONST_END(CombatFlowConstant)
 
 // Event-music flag used by the Buka event/audio flow.
 extern i8 gEventMusicPlaying;
+
+// Moved from EVENTS.cpp.
+// advManager::EventWindow's eventId: the gEventText row it prints, or
+// EVENT_TEXT_CUSTOM for caller text (Buka 2.1 EVENTS.h MapEventTextId; HoMM1
+// numbers its own rows). The five houses use RECRUIT/RANKS_FULL/EMPTY of the
+// first house plus three rows per house.
+H1_ENUM_BEGIN(MapEventTextId)
+    EVENT_TEXT_CUSTOM = -1,
+    EVENT_TEXT_ALCHEMIST_CAPTURED = 0,
+    EVENT_TEXT_SIGNPOST = 1,
+    EVENT_TEXT_BUOY_VISITED = 2,
+    EVENT_TEXT_BUOY_REWARD = 3,
+    EVENT_TEXT_DAEMON_CAVE_EMPTY = 4,
+    EVENT_TEXT_DAEMON_CAVE_EXPERIENCE = 5,
+    EVENT_TEXT_DAEMON_CAVE_ARTIFACT = 6,
+    EVENT_TEXT_DAEMON_CAVE_GOLD = 7,
+    EVENT_TEXT_DAEMON_CAVE_RANSOM = 8,
+    EVENT_TEXT_DAEMON_CAVE_DEATH = 9,
+    EVENT_TEXT_DAEMON_CAVE_PROMPT = 10,
+    EVENT_TEXT_TREASURE_CHEST = 11,
+    EVENT_TEXT_FAERIE_RING_VISITED = 12,
+    EVENT_TEXT_FAERIE_RING_REWARD = 13,
+    EVENT_TEXT_CAMPFIRE = 14,
+    EVENT_TEXT_FOUNTAIN_VISITED = 15,
+    EVENT_TEXT_FOUNTAIN_REWARD = 16,
+    EVENT_TEXT_GAZEBO_VISITED = 17,
+    EVENT_TEXT_GAZEBO_REWARD = 18,
+    EVENT_TEXT_GENIE_LAMP = 19,
+    EVENT_TEXT_GRAVEYARD_PROMPT = 20,
+    EVENT_TEXT_GRAVEYARD_EMPTY = 21,
+    EVENT_TEXT_GRAVEYARD_REWARD = 22,
+    EVENT_TEXT_HOUSE_RECRUIT = 23,
+    EVENT_TEXT_HOUSE_RANKS_FULL = 24,
+    EVENT_TEXT_HOUSE_EMPTY = 25,
+    EVENT_TEXT_DRAGON_CITY_PROMPT = 38,
+    EVENT_TEXT_DRAGON_CITY_CONQUERED = 39,
+    EVENT_TEXT_LIGHTHOUSE_CAPTURED = 40,
+    EVENT_TEXT_WATERWHEEL_EMPTY = 41,
+    // Mine of resource r: MINE_CAPTURED_BASE + r (ore 43 .. gold 47).
+    EVENT_TEXT_MINE_CAPTURED_BASE = 41,
+    EVENT_TEXT_WATERWHEEL_REWARD = 42,
+    EVENT_TEXT_FOLLOWERS = 48,
+    EVENT_TEXT_MONSTER_REFUSAL = 49,
+    EVENT_TEXT_OBELISK_REWARD = 50,
+    EVENT_TEXT_OBELISK_VISITED = 51,
+    EVENT_TEXT_OASIS_VISITED = 52,
+    EVENT_TEXT_OASIS_REWARD = 53,
+    EVENT_TEXT_RESOURCE_PICKUP = 54,
+    EVENT_TEXT_SAWMILL_CAPTURED = 55,
+    EVENT_TEXT_RANKING_SHRINE = 56,
+    EVENT_TEXT_SPELL_SHRINE = 57,
+    EVENT_TEXT_SHIPWRECK_PROMPT = 58,
+    EVENT_TEXT_SHIPWRECK_EMPTY = 59,
+    EVENT_TEXT_SHIPWRECK_REWARD = 60,
+    EVENT_TEXT_STATUE_REWARD = 61,
+    EVENT_TEXT_STATUE_VISITED = 62,
+    EVENT_TEXT_DESERT_TENT_EMPTY = 63,
+    EVENT_TEXT_DESERT_TENT_RECRUIT = 64,
+    EVENT_TEXT_WAGON_EMPTY = 65,
+    EVENT_TEXT_WAGON_RECRUIT = 66,
+    EVENT_TEXT_WINDMILL_EMPTY = 68,
+    EVENT_TEXT_WINDMILL_REWARD = 69,
+    EVENT_TEXT_ARTIFACT_GUARDED = 70,
+    EVENT_TEXT_LEPRECHAUN_OFFER = 71,
+    EVENT_TEXT_LEPRECHAUN_REFUSAL = 72,
+    EVENT_TEXT_LEPRECHAUN_NO_GOLD = 73,
+    EVENT_TEXT_ARTIFACT_RECOVERED = 74,
+    EVENT_TEXT_SKELETON_EMPTY = 75,
+    EVENT_TEXT_SKELETON_ARTIFACT = 76
+H1_ENUM_END(MapEventTextId)
+
+// HouseEvent's five recruiting houses (straw hut .. ): three gEventText rows
+// each and one creature each.
+H1_ENUM_CONST_BEGIN(HouseEventConstant)
+    EVENT_TEXT_HOUSE_STRIDE = 3,
+    EVENT_HOUSE_COUNT = 5
+H1_ENUM_CONST_END(HouseEventConstant)
+
+// Remote combat hand-off (Buka CombatRemoteCommand / CombatRemoteFragment):
+// SendHeroTownData sends the combat record as COMMAND (answered by
+// CONFIRM), then each hero in its own fragment.
+H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
+    COMBAT_REMOTE_COMMAND = 0x15,
+    COMBAT_REMOTE_CONFIRM_COMMAND = 0x16,
+    COMBAT_REMOTE_FRAGMENT_COMBAT = 0,
+    COMBAT_REMOTE_FRAGMENT_FIRST_HERO = 1,
+    COMBAT_REMOTE_FRAGMENT_SECOND_HERO = 2,
+    COMBAT_REMOTE_BUFFER_SIZE = 0xff,
+    COMBAT_REMOTE_TIMEOUT = 20000
+H1_ENUM_CONST_END(CombatRemoteConstant)
+
+// SendHeroTownData's payload after the remote-message header, as in Buka's
+// combatRemoteData; hero records follow one fragment byte.
+#pragma pack(push, 1)
+struct combatRemoteData {
+    i8 fragment;
+    i8 x;
+    i8 y;
+    i8 hasFirstHero;
+    i8 hasTown;
+    i8 hasSecondHero;
+    i8 setupCombatX;
+    i8 setupCombatY;
+    i32 randomSeed;
+    i8 combatResult;
+    i8 retreatWin;
+    i8 combatSurrender;
+    i8 firstOwner;
+    i32 firstGold;
+    i8 secondOwner;
+    i32 secondGold;
+    armyGroup firstArmy;
+    armyGroup secondArmy;
+    town combatTown;
+};
+
+struct combatRemoteHeroFragment {
+    i8 fragment;
+    char data[sizeof(hero)];
+};
+
+struct combatRemoteMessage {
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
+    combatRemoteData combat;
+};
+
+struct heroRemoteMessage {
+    i8 sender;
+    i32 id;
+    i8 type;
+    i8 command;
+    i16 payloadSize;
+    combatRemoteHeroFragment heroFragment;
+};
+#pragma pack(pop)
+
+// CheckHandleNet, GetRemoteData and ReceiveHeroTownData pass received records
+// as char*; the Buka 2.1 donor reads them through these views.
+#define EVENTS_REMOTE_MESSAGE(buffer)                                                              \
+    (reinterpret_cast<combatRemoteMessage*>(buffer)) // API-forced: char* records.
+#define EVENTS_REMOTE_HERO(buffer)                                                                 \
+    (reinterpret_cast<heroRemoteMessage*>(buffer)) // API-forced: char* records.
 
 #endif // HOMM1_SOURCE_EVENTS_H
