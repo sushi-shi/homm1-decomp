@@ -352,7 +352,7 @@ mapCell* advManager::MoveHero(
     if (m_cursorDirection != direction)
         TurnTo(direction);
     champion->m_direction = direction;
-    if (champion->IsEmbarked() && nextCellItem->m_triggerType == MAP_OBJECT_COAST) {
+    if (champion->IsEmbarked() && nextCellItem->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)) {
         boatRecord* boat;
         mapCell* boatCell;
 
@@ -573,7 +573,7 @@ mapCell* advManager::MoveHero(
     *eventX = m_mapOriginX + m_cursorMapX;
     *eventY = m_mapOriginY + m_cursorMapY;
     if ((cellPtr->m_triggerType & MAP_TRIGGER_EVENT)
-        || (champion->IsEmbarked() && cellPtr->m_triggerType == MAP_OBJECT_COAST)) {
+        || (champion->IsEmbarked() && cellPtr->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))) {
         retCell = cellPtr;
         switch (MAP_TRIGGER_OBJECT(cellPtr->m_triggerType)) {
             case MAP_OBJECT_ROSEBUSH:
@@ -746,7 +746,7 @@ i16 advManager::ValidMove(i16 direction) {
             && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
             return 0;
     } else {
-        if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_COAST
+        if (m_cursorType == ADVMGR_HERO_ICON_BOAT && destCell->m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)
             && destCell->m_triggerType != MAP_EVENT_TRIGGER(MAP_OBJECT_WHIRLPOOL))
             return 0;
     }

@@ -11,6 +11,7 @@
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/spellTypes.h>
 
@@ -429,7 +430,7 @@ public:
     void ExpansionRecruitEvent(class hero* eventHero, i32 creatureType, i16* availableCount);
     void JailEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     void TownEvent(class mapCell* cell, i32 x, i32 y);
-    void EventSound(i16 eventType, i16 eventData);
+    void EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eventData);
     void EventWindow(
         i16 eventId,
         H1_ENUM_PARAM(NormalDialogType, i32) buttons,

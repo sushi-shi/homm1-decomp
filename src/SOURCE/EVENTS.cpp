@@ -42,7 +42,7 @@ VA(0x00424a50, 0x1d9d)
 void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* visitingHero;
     tag_message widgetEvent;
-    i8 eventKind;
+    H1_ENUM_LOCAL(MapObjectType, i8) eventKind;
     tag_message unusedMessage;
     i8 removeObj;
     i32 fizzleEffect;
@@ -63,7 +63,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     i32 numTroops;
 
     visitingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    eventKind = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+    eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeObj = 0;
     fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
     gEventMusicPlaying = 1;
@@ -759,7 +759,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                 for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
                     if (gpGame->m_map[teleX][teleY].m_triggerType
-                            == static_cast<u8>(eventKind | MAP_TRIGGER_EVENT)
+                            == static_cast<u8>(MAP_EVENT_TRIGGER(eventKind))
                         && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                > (eventKind == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
@@ -772,7 +772,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                     for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
                         if (gpGame->m_map[teleX][teleY].m_triggerType
-                                == static_cast<u8>(eventKind | MAP_TRIGGER_EVENT)
+                                == static_cast<u8>(MAP_EVENT_TRIGGER(eventKind))
                             && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                    > (eventKind == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE
@@ -935,7 +935,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 visitingHero->m_y,
                 visitingHero->m_direction,
                 SEARCH_NO_COST_LIMIT,
-                MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN
+                MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
             );
             if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)
                     ->m_triggerType
@@ -1181,7 +1181,7 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     i32 i;
 
     erased = 1;
-    cell->m_triggerType = MAP_OBJECT_NONE;
+    cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
     cell->m_objectIndex = MAP_CELL_NO_FRAME;
     if (cell->m_flags & MAP_CELL_OBJECT_ANIMATED)
         cell->m_flags -= MAP_CELL_OBJECT_ANIMATED;
@@ -1268,7 +1268,7 @@ void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
 // Adventure-event music cue; HoMM1 keys the ambient track off the map
 // object type and records that an event track is playing.
 VA(0x00426be9, 0x1dd)
-void advManager::EventSound(i16 eventType, i16 eventData) {
+void advManager::EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eventData) {
     i32 musicTrack = MUSIC_TRACK_NONE;
 
     switch (eventType) {
@@ -1596,7 +1596,7 @@ VA(0x004273d8, 0x103)
 void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
     i16 houseIndex;
 
-    houseIndex = (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) - MAP_OBJECT_HOUSE_FIRST;
+    houseIndex = MAP_TRIGGER_OBJECT(cell->m_triggerType) - MAP_OBJECT_HOUSE_FIRST;
     if (!cell->m_objectMetadata) {
         EventWindow(
             houseIndex * EVENT_TEXT_HOUSE_STRIDE + EVENT_TEXT_HOUSE_EMPTY,
@@ -1964,7 +1964,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     hero* opponent;
     i32 res;
     i32 battleResult;
-    i8 eventType;
+    H1_ENUM_LOCAL(MapObjectType, i8) eventType;
     i8 teleX;
     i32 canWin;
     i8 teleY;
@@ -1980,7 +1980,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 troopCost[RESOURCE_COUNT];
 
     heroTown = NULL;
-    eventType = cell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+    eventType = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeEvent = 0;
     handled = 0;
     oldPlayer = giCurPlayer;
@@ -2242,7 +2242,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                 for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
                     if (gpGame->m_map[teleX][teleY].m_triggerType
-                            == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
+                            == static_cast<u8>(MAP_EVENT_TRIGGER(eventType))
                         && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
                                                                       : WHIRLPOOL_MIN_DISTANCE))
@@ -2255,7 +2255,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                     for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
                         if (gpGame->m_map[teleX][teleY].m_triggerType
-                                == static_cast<u8>(eventType | MAP_TRIGGER_EVENT)
+                                == static_cast<u8>(MAP_EVENT_TRIGGER(eventType))
                             && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
                                           ? STONE_LITHS_MIN_DISTANCE

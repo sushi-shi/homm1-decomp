@@ -481,8 +481,7 @@ char* combatManager::GetBackgroundName(void) {
     };
     if (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_GRAVEYARD
         || (MAP_TRIGGER_OBJECT(m_battlefieldCell->m_triggerType) == MAP_OBJECT_HERO
-            && (gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType
-                & MAP_TRIGGER_TYPE_MASK)
+            && MAP_TRIGGER_OBJECT(gpGame->GetHero(m_battlefieldCell->m_objectMetadata)->m_locationType)
                    == MAP_OBJECT_GRAVEYARD)) {
         m_terrainType = TERRAIN_DIRT;
         return gCombatBkgNames[COMBAT_BACKGROUND_GRAVEYARD];

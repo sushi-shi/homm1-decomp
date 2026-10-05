@@ -214,7 +214,7 @@ void ComputeUALoc(i32 player) {
                 triesCount = 0;
                 while (
                     !(x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE
-                      && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_NONE
+                      && gpGame->m_map[x][y].m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE)
                       && gpGame->m_map[x][y].m_objectIndex == MAP_CELL_NO_FRAME
                       && gpGame->m_map[x][y].m_overlayIndex == MAP_CELL_NO_FRAME
                       && gpGame->m_map[x][y].m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
@@ -1340,7 +1340,7 @@ void game::NewMap(char* mapName) {
 // Groups the multi-cell object triggers 0x34-0x37 and 0x38-0x3c by their
 // first trigger so neighbouring halves can be compared.
 VA(0x0042f621, 0x51)
-i32 GetObjectFamily(i32 trigger) {
+H1_ENUM_RETURN(MapObjectType, i32) GetObjectFamily(H1_ENUM_PARAM(MapObjectType, i32) trigger) {
     switch (trigger) {
         case MAP_OBJECT_MOUNTAINS:
         case MAP_OBJECT_MOUNTAINS_2:
@@ -1367,12 +1367,12 @@ void game::SettleOverlay(i32 x, i32 y) {
     cell = &m_map[x][y];
     if (cell->m_objectIndex == MAP_CELL_NO_FRAME && cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
         switch (cell->m_triggerType) {
-            case MAP_OBJECT_MOUNTAINS_2:
-            case MAP_OBJECT_TREES_2:
+            case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2):
+            case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2):
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
-                    if (GetObjectFamily(cellEast->m_triggerType)
-                        == GetObjectFamily(cell->m_triggerType)) {
+                    if (GetObjectFamily(MAP_PASSIVE_OBJECT(cellEast->m_triggerType))
+                        == GetObjectFamily(MAP_PASSIVE_OBJECT(cell->m_triggerType))) {
                         cell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                     } else {
                         cell->m_objectIndex = cell->m_overlayIndex;
@@ -1382,12 +1382,12 @@ void game::SettleOverlay(i32 x, i32 y) {
                     }
                 }
                 break;
-            case MAP_OBJECT_MOUNTAINS_4:
-            case MAP_OBJECT_TREES_4:
+            case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4):
+            case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4):
                 if (x + 1 < MAP_CELL_GRID_SIZE) {
                     cellEast = &m_map[x + 1][y];
-                    if (GetObjectFamily(cellEast->m_triggerType)
-                        == GetObjectFamily(cell->m_triggerType)) {
+                    if (GetObjectFamily(MAP_PASSIVE_OBJECT(cellEast->m_triggerType))
+                        == GetObjectFamily(MAP_PASSIVE_OBJECT(cell->m_triggerType))) {
                         cell->m_objectIndex = cell->m_overlayIndex;
                         cell->m_objectTileset = cell->m_overlayTileset;
                         cell->m_overlayTileset = 0;
@@ -1429,7 +1429,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = siteNumIdx;
                     siteNumIdx++;
                     break;
-                case MAP_OBJECT_WHIRLPOOL:
+                case MAP_OBJECT_TRIGGER(MAP_OBJECT_WHIRLPOOL):
                     nextCell->m_triggerType |= MAP_TRIGGER_EVENT;
                     break;
                 case MAP_EVENT_TRIGGER(MAP_OBJECT_OBELISK):
@@ -1649,15 +1649,15 @@ void game::RandomizeEvents(void) {
             SettleOverlay(x, y);
             if (x == 0 || y == 0 || x == MAP_CELL_GRID_SIZE - 1 || y == MAP_CELL_GRID_SIZE - 1) {
                 switch (nextCell->m_triggerType) {
-                    case MAP_OBJECT_MOUNTAINS:
-                    case MAP_OBJECT_MOUNTAINS_2:
-                    case MAP_OBJECT_MOUNTAINS_3:
-                    case MAP_OBJECT_MOUNTAINS_4:
-                    case MAP_OBJECT_TREES:
-                    case MAP_OBJECT_TREES_2:
-                    case MAP_OBJECT_TREES_3:
-                    case MAP_OBJECT_TREES_4:
-                    case MAP_OBJECT_TREES_5:
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_2):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_3):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_MOUNTAINS_4):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_2):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_3):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_4):
+                    case MAP_OBJECT_TRIGGER(MAP_OBJECT_TREES_5):
                         nextCell->m_secondaryTrigger |= MAP_CELL_SECONDARY_BLOCKED;
                         break;
                 }
@@ -1667,7 +1667,7 @@ void game::RandomizeEvents(void) {
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             nextCell = &m_map[x][y];
-            if (nextCell->m_triggerType == MAP_OBJECT_SHADOW)
+            if (nextCell->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_SHADOW))
                 nextCell->m_flags |= MAP_CELL_OBJECT_SHADOW_ONLY;
             if (nextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                 switch (MAP_TRIGGER_OBJECT(nextCell->m_triggerType)) {
@@ -3123,17 +3123,15 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     townNum = GetTownId(x, y);
     for (j = 0; j < TOWN_FOOTPRINT_HEIGHT; j++) {
         for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-            if ((m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType
-                 & MAP_TRIGGER_TYPE_MASK)
-                    > 0
-                && (m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType
-                    & MAP_TRIGGER_TYPE_MASK)
+            if (MAP_TRIGGER_OBJECT(m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType)
+                    > MAP_OBJECT_NONE
+                && MAP_TRIGGER_OBJECT(m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType)
                        <= MAP_OBJECT_EVENT_LAST) {
                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_secondaryTrigger |=
-                    MAP_OBJECT_TOWN;
+                    MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN);
             } else {
                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_triggerType =
-                    MAP_OBJECT_TOWN;
+                    MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN);
                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j].m_objectMetadata =
                     townNum;
             }
@@ -3367,20 +3365,20 @@ void game::RandomizeMine(i8 x, i8 y) {
     m_map[x + 1][y - 1].m_overlayIndex = mineFrame + 1;
     if (resType == RESOURCE_MERCURY) {
         m_map[x + 1][y].m_flags |= MAP_CELL_OBJECT_ANIMATED;
-        trigger = MAP_OBJECT_ALCHEMIST_LAB;
+        trigger = MAP_OBJECT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB);
     } else if (resType == RESOURCE_WOOD) {
-        trigger = MAP_OBJECT_SAWMILL;
+        trigger = MAP_OBJECT_TRIGGER(MAP_OBJECT_SAWMILL);
     } else {
         m_map[x + 1][y].m_flags |= MAP_CELL_OBJECT_EXTRA;
         m_map[x + 1][y].m_objectTileset |= TILESET_RSRC32 << MAP_CELL_EXTRA_TILESET_SHIFT;
         m_map[x + 1][y].m_extraFrame = resType - RESOURCE_ORE;
-        trigger = MAP_OBJECT_MINE;
+        trigger = MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE);
     }
     mineIdx = GetMineId(x, y);
     for (iRow = 0; iRow < MINE_FOOTPRINT_HEIGHT; iRow++) {
         for (iCol = 0; iCol < MINE_FOOTPRINT_WIDTH; iCol++) {
-            if ((m_map[x + iCol][y - iRow].m_triggerType & MAP_TRIGGER_TYPE_MASK) > 0
-                && (m_map[x + iCol][y - iRow].m_triggerType & MAP_TRIGGER_TYPE_MASK)
+            if (MAP_TRIGGER_OBJECT(m_map[x + iCol][y - iRow].m_triggerType) > MAP_OBJECT_NONE
+                && MAP_TRIGGER_OBJECT(m_map[x + iCol][y - iRow].m_triggerType)
                        <= MAP_OBJECT_EVENT_LAST) {
                 m_map[x + iCol][y - iRow].m_secondaryTrigger |= trigger;
             } else {
@@ -3998,7 +3996,7 @@ void game::ProcessOnMapHeroes(void) {
     for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             loc = &m_map[posX][posY];
-            if (MAP_TRIGGER_OBJECT(loc->m_triggerType) == MAP_FILE_OBJECT_HERO) {
+            if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TRIGGER(MAP_FILE_OBJECT_HERO)) {
                 extra = static_cast<mapHeroExtra*>(ppMapExtra[loc->m_objectMetadata]);
                 theHeroEntry = GetHero(extra->heroId);
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
@@ -4040,7 +4038,7 @@ void game::ProcessOnMapHeroes(void) {
                 loc->m_overlayTileset = 0;
                 loc->m_overlayIndex = MAP_CELL_NO_FRAME;
                 loc->m_objectMetadata = 0;
-                loc->m_triggerType = MAP_OBJECT_NONE;
+                loc->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                 SetVisibility(
                     theHeroEntry->m_x,
                     theHeroEntry->m_y,
@@ -4099,7 +4097,7 @@ void game::CheckHeroConsistency(void) {
                         );
                     }
                 } else {
-                    cell->m_triggerType = MAP_OBJECT_NONE;
+                    cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
                 }
             }
         }
@@ -4783,8 +4781,8 @@ void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, 
     else
         cell = gpAdvManager->GetCell(x, y);
     if (y > 0 && obj == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
-        && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TOWN) {
-        cell->m_triggerType = MAP_OBJECT_NONE;
+        && gpAdvManager->GetCell(x, y - 1)->m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN)) {
+        cell->m_triggerType = MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE);
         cell->m_objectMetadata = 0;
         return;
     }

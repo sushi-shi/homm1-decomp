@@ -180,7 +180,7 @@ void searchArray::SeedPosition(
     DATA(0x004cc87c)
     static i8 s_hasAdjacentMonster;
     DATA(0x004cc874)
-    static i32 s_triggerType;
+    static H1_ENUM_STORAGE(MapObjectType, i32) s_triggerType;
     DATA(0x004cc89c)
     static i32 s_adjacentX;
     DATA(0x004cc8a0)
@@ -250,8 +250,8 @@ void searchArray::SeedPosition(
         } else
             s_hasAdjacentMonster = 0;
         if (s_currentNode.occupied) {
-            s_triggerType = gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType
-                            & MAP_TRIGGER_TYPE_MASK;
+            s_triggerType =
+                MAP_TRIGGER_OBJECT(gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_triggerType);
             if (s_triggerType == MAP_OBJECT_MONSTER || s_triggerType == MAP_OBJECT_STONE_LITHS
                 || s_triggerType == MAP_OBJECT_HERO || s_triggerType == MAP_OBJECT_SHIP) {
                 if (!findAdjacentMonster || s_currentNode.rvFlag1)

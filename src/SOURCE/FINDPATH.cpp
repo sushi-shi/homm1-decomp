@@ -34,7 +34,7 @@ static i16 gSearchLow;
 DATA(0x004a6ba4)
 static searchNode* gSearchCell;
 DATA(0x004a6bb0)
-static i32 gSearchTriggerType;
+static H1_ENUM_STORAGE(MapObjectType, i32) gSearchTriggerType;
 DATA(0x004a6bc4)
 static i32 gSearchTerrain;
 DATA(0x004a6ba0)
@@ -375,7 +375,7 @@ void searchArray::TestPossibleDirections(
                     goto storeDirection;
                 }
             }
-        } else if (waterMode && gSearchNextCell->m_triggerType != MAP_OBJECT_COAST) {
+        } else if (waterMode && gSearchNextCell->m_triggerType != MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)) {
             gSearchTerrain = TERRAIN_INVALID;
             goto storeDirection;
         }
@@ -388,7 +388,7 @@ void searchArray::TestPossibleDirections(
         } else if ((1 << gSearchDirection) & MAP_DIRECTION_SOUTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gSearchNextCell)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
-                    gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                    gSearchTriggerType = MAP_TRIGGER_OBJECT(gSearchNextCell->m_triggerType);
                     if (gSearchTriggerType != MAP_OBJECT_MONSTER
                         && gSearchTriggerType != MAP_OBJECT_RESOURCE
                         && gSearchTriggerType != MAP_OBJECT_TREASURE_CHEST

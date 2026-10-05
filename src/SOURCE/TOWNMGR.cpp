@@ -758,7 +758,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) townManager::Main(struct tag_message&
                             if (gpGame->GetBoatsBuilt() < GAME_BOAT_COUNT
                                 && gpAdvManager->GetCell(m_town->m_x - 1, m_town->m_y + 1)
                                            ->m_triggerType
-                                       == MAP_OBJECT_NONE
+                                       == MAP_OBJECT_TRIGGER(MAP_OBJECT_NONE)
                                 && gpAdvManager->m_cursorMapX != m_town->m_x - 1
                                 && gpAdvManager->m_cursorMapY != m_town->m_y + 1) {
                                 m_heroWindow0 = new heroWindow(0xb1, 0x14, "shipwind.bin");

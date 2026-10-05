@@ -13,15 +13,18 @@ H1_ENUM_CONST_BEGIN(MapTriggerEncoding)
 H1_ENUM_CONST_END(MapTriggerEncoding)
 
 // The trigger byte of an object whose entry runs its event, of a passive
-// object, and the object type a trigger byte holds.
+// object, the object type a trigger byte holds, and the type of a trigger
+// byte read whole (a passive object's, without the event bit).
 #if H1_STRICT_DOMAINS
 #define MAP_EVENT_TRIGGER(type) (MAP_TRIGGER_EVENT | static_cast<int>(type))
 #define MAP_OBJECT_TRIGGER(type) static_cast<int>(type)
 #define MAP_TRIGGER_OBJECT(trigger) static_cast<MapObjectType>((trigger) & MAP_TRIGGER_TYPE_MASK)
+#define MAP_PASSIVE_OBJECT(trigger) static_cast<MapObjectType>(trigger)
 #else
 #define MAP_EVENT_TRIGGER(type) (MAP_TRIGGER_EVENT | (type))
 #define MAP_OBJECT_TRIGGER(type) (type)
 #define MAP_TRIGGER_OBJECT(trigger) ((trigger) & MAP_TRIGGER_TYPE_MASK)
+#define MAP_PASSIVE_OBJECT(trigger) (trigger)
 #endif
 
 // Adventure-map object types. Names follow retail gObjectNames (0x00493280),
@@ -120,6 +123,7 @@ H1_ENUM_BEGIN(MapObjectType)
     // MUSIC_TRACK_ULTIMATE_ARTIFACT for it; game keeps its event bit).
     MAP_OBJECT_ULTIMATE_ARTIFACT = 63
 H1_ENUM_END(MapObjectType)
+H1_ENUM_STEPPED(MapObjectType)
 
 // Map-file object codes that game::ProcessRandomObjects and the hero setup
 // replace before play: random towns and castles (RandomizeTown 0/1), monster

@@ -1047,7 +1047,7 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                 } else {
                     validFlag =
                         (thisCellRec->m_triggerType & MAP_TRIGGER_EVENT)
-                        || (thisCellRec->m_triggerType == MAP_OBJECT_COAST && pHero->IsEmbarked())
+                        || (thisCellRec->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST) && pHero->IsEmbarked())
                         || (oldX % curSpacing == 0 && y % curSpacing == 0
                             && ((pHero->IsEmbarked() && CELL_TERRAIN(thisCellRec) == TERRAIN_WATER)
                                 || (!pHero->IsEmbarked()
@@ -1808,7 +1808,7 @@ i32 philAI::RVOfPosition(
     i32 totalValue;
     i32 oldChance;
     i32 oldDelta;
-    i32 curLocType;
+    H1_ENUM_LOCAL(MapObjectType, i32) curLocType;
     i32 oldVal;
     float estTurnsVal;
     i32 newHeroLiveChance;
@@ -1825,7 +1825,7 @@ i32 philAI::RVOfPosition(
     activeChance = 100;
     adjacentEventChance = 100;
     newCurTriggerType = gpAdvManager->GetCell(x, y)->m_triggerType;
-    curLocType = newCurTriggerType & MAP_TRIGGER_TYPE_MASK;
+    curLocType = MAP_TRIGGER_OBJECT(newCurTriggerType);
     chanceVal = 100;
     oldChance = 100;
     iMonsterChance = 100;
@@ -1917,7 +1917,7 @@ i32 philAI::RVOfPosition(
     oldDelta = static_cast<i32>(oldDelta * 2 / (1.0f + estTurnsVal));
     if (oldChance == AI_CHANCE_CERTAIN)
         totalValue += oldDelta;
-    if (pHero->IsEmbarked() && newCurTriggerType == MAP_OBJECT_COAST)
+    if (pHero->IsEmbarked() && newCurTriggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))
         totalValue += 40;
     return totalValue;
 }
@@ -1974,7 +1974,7 @@ i32 philAI::StrategicValueOfPosition(
         searchData = &SVSearchArray;
     }
     wasInBoat = pHero->IsEmbarked();
-    if (wasInBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
+    if (wasInBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST))
         wasInBoat = 0;
     if (immediate) {
         newSeedRange = 60;
@@ -3147,7 +3147,7 @@ i32 gPurchaseSlot;
 DATA(0x004ca17c)
 armyGroup* gEventTownArmy;
 DATA(0x004bb158)
-i32 gDefaultEventType;
+H1_ENUM_STORAGE(MapObjectType, i32) gDefaultEventType;
 DATA(0x004c8cbc)
 mapCell* gEventCell;
 DATA(0x004b4b98)
@@ -3864,7 +3864,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 gEventRV =
                     gUltArtifactAvgValue * (gpCurPlayer->m_ultimateArtifactHintChance - 15) / 100;
             } else {
-                gDefaultEventType = gEventCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                gDefaultEventType = MAP_TRIGGER_OBJECT(gEventCell->m_triggerType);
                 if (gDefaultEventType >= MAP_OBJECT_NON_EVENT_FIRST
                     && gDefaultEventType <= MAP_OBJECT_TREES_LAST)
                     gEventRV = 0;

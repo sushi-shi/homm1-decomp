@@ -1066,13 +1066,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessSelect(struct tag_
                 } else {
                     if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER
                         && gpCurPlayer->CurrentHero() != HERO_ID_NONE && m_heroContextLocked) {
-                        objectTypeState = MAP_OBJECT_HERO;
+                        objectTypeState = MAP_OBJECT_TRIGGER(MAP_OBJECT_HERO);
                         objectIdIndex = gpCurPlayer->CurrentHero();
                     } else {
                         objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                         objectIdIndex = theCell->m_objectMetadata;
                     }
-                    switch (objectTypeState) {
+                    switch (MAP_PASSIVE_OBJECT(objectTypeState)) {
                         case MAP_OBJECT_HERO:
                             mouseX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
                             if (mouseX < BORDER_EDGE_SIZE)
@@ -1135,7 +1135,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessSelect(struct tag_
                 } else {
                     objectTypeState = theCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     objectIdIndex = theCell->m_objectMetadata;
-                    if (objectTypeState == MAP_OBJECT_HERO) {
+                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_HERO) {
                         if (objectIdIndex == gpCurPlayer->CurrentHero()) {
                             m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                             DoAdvCommand();
@@ -1143,7 +1143,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessSelect(struct tag_
                             SetHeroContext(objectIdIndex, 0);
                         }
                     }
-                    if (objectTypeState == MAP_OBJECT_TOWN) {
+                    if (MAP_PASSIVE_OBJECT(objectTypeState) == MAP_OBJECT_TOWN) {
                         if (objectIdIndex == gpCurPlayer->CurrentTown()) {
                             m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                             *eventCell = DoAdvCommand();
@@ -1389,7 +1389,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
     hero* prevHero;
     mapCell* location;
     i32 nDays;
-    i8 trigType;
+    H1_ENUM_LOCAL(MapObjectType, i8) trigType;
     i16 heroPosX;
     i16 heroPosY;
     i32 baseFrame;
@@ -1457,15 +1457,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                 && m_commandTargetY < MAP_CELL_GRID_SIZE - 1
                                 && (MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY - 1)->m_triggerType)
                                         == MAP_OBJECT_TOWN
-                                    || (GetCell(m_commandTargetX, m_commandTargetY - 1)
-                                            ->m_secondaryTrigger
-                                        & MAP_TRIGGER_TYPE_MASK)
+                                    || MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY - 1)
+                                            ->m_secondaryTrigger)
                                            == MAP_OBJECT_TOWN)
                                 && (MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY + 1)->m_triggerType)
                                         == MAP_OBJECT_TOWN
-                                    || (GetCell(m_commandTargetX, m_commandTargetY + 1)
-                                            ->m_secondaryTrigger
-                                        & MAP_TRIGGER_TYPE_MASK)
+                                    || MAP_TRIGGER_OBJECT(GetCell(m_commandTargetX, m_commandTargetY + 1)
+                                            ->m_secondaryTrigger)
                                            == MAP_OBJECT_TOWN)) {
                                 gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
                                 m_selectedCell = ADVMGR_COMMAND_SELECT_TOWN;
@@ -1483,7 +1481,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                            || location->m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_SHIPWRECK))
                           && (m_cursorType != ADVMGR_HERO_ICON_BOAT
                               || location->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
-                              || location->m_triggerType == MAP_OBJECT_COAST))) {
+                              || location->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_COAST)))) {
                         gpSearchArray->m_pathLength = 0;
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
                         return 1;
@@ -1557,7 +1555,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                 goto defaultHover;
                             default:
                             defaultHover:
-                                trigType = location->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+                                trigType = MAP_TRIGGER_OBJECT(location->m_triggerType);
                                 if ((mapExtra[m_commandTargetX][m_commandTargetY]
                                      & MAP_EXTRA_MONSTER_ADJACENT)
                                     && m_cursorType != ADVMGR_HERO_ICON_BOAT
@@ -2369,9 +2367,9 @@ void advManager::UpdateRadar(i8 updateScreen, i32 partial) {
                         break;
                     case TILESET_RSRC32:
                         switch (cellPtrItem->m_triggerType) {
-                            case MAP_OBJECT_ALCHEMIST_LAB:
-                            case MAP_OBJECT_MINE:
-                            case MAP_OBJECT_SAWMILL:
+                            case MAP_OBJECT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB):
+                            case MAP_OBJECT_TRIGGER(MAP_OBJECT_MINE):
+                            case MAP_OBJECT_TRIGGER(MAP_OBJECT_SAWMILL):
                             case MAP_EVENT_TRIGGER(MAP_OBJECT_ALCHEMIST_LAB):
                             case MAP_EVENT_TRIGGER(MAP_OBJECT_MINE):
                             case MAP_EVENT_TRIGGER(MAP_OBJECT_SAWMILL):
@@ -4604,8 +4602,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 );
                                 break;
                             case MAP_OBJECT_HERO:
-                                switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType
-                                        & MAP_TRIGGER_TYPE_MASK) {
+                                switch (MAP_TRIGGER_OBJECT(gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType)) {
                                     case MAP_OBJECT_ALCHEMIST_LAB:
                                     case MAP_OBJECT_MINE:
                                     case MAP_OBJECT_SAWMILL:
@@ -4671,8 +4668,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
                                 );
                                 break;
                             case MAP_OBJECT_HERO:
-                                switch (gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType
-                                        & MAP_TRIGGER_TYPE_MASK) {
+                                switch (MAP_TRIGGER_OBJECT(gpGame->m_heroRecs[cell->m_objectMetadata].m_locationType)) {
                                     case MAP_OBJECT_ALCHEMIST_LAB:
                                     case MAP_OBJECT_MINE:
                                     case MAP_OBJECT_SAWMILL:
@@ -4807,7 +4803,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
         for (x = MAP_CELL_GRID_SIZE - 1; x >= 0; x--) {
             cell = GetCell(x, y);
             if ((gpGame->m_mapExtra[x][y] & giCurPlayerBit) || drawAllTerrains
-                || (cell->m_triggerType == MAP_OBJECT_TOWN && spellType == SPELL_VIEW_TOWNS)) {
+                || (cell->m_triggerType == MAP_OBJECT_TRIGGER(MAP_OBJECT_TOWN) && spellType == SPELL_VIEW_TOWNS)) {
                 screenX = x * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 workPosY = y * VIEW_WORLD_CELL_PIXELS + VIEW_WORLD_ORIGIN;
                 if (cell->m_overlayIndex != MAP_CELL_NO_FRAME) {
