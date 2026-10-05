@@ -68,6 +68,10 @@ CALL_RULES = {
     "H1_ENUM_LOCAL": (2, _arg(1)),
     "H1_ENUM_STORAGE": (2, _arg(1)),
     "H1_ENUM_CAST": (3, lambda args: f"static_cast<{args[1]}>({args[2]})"),
+    # Domain-indexed arrays: the plain array of the retail storage type.
+    "H1_ENUM_ARRAY": (4, lambda args: f"{args[0]} {args[1]}[{args[3]}]"),
+    "H1_ENUM_ARRAY2": (6, lambda args: f"{args[0]} {args[1]}[{args[3]}][{args[5]}]"),
+    "H1_ENUM_STEPPED": (1, _drop),
 }
 
 #: Bare identifiers.
