@@ -2638,259 +2638,259 @@ H1_ENUM_END(OverviewControl)
 // resource drawn onto the backdrop, then the date, income and resources.
 VA(0x00432089, 0xc81)
 void game::Overview(void) {
-    i16 unusedGY;
-    i16 townTop;
-    i16 unusedFVal;
-    i16 heroNumYW;
-    i16 incomeWidgetY;
-    font* smallFont;
-    i16 heroTextH;
-    i16 townTextWPos;
-    i16 spacing;
-    i16 heroTextW;
-    i16 castleFrameY;
-    i16 limitYOff;
-    i16 dayIdY;
-    i16 left;
-    i16 castleIconY;
-    i8 mineNums[RESOURCE_COUNT];
-    i16 fieldH;
-    font* bigFont;
-    i16 textW;
-    i16 mineRowY;
-    i16 i;
-    i16 badgeY;
-    i16 lineH;
-    i16 mineW;
-    i8 redraw;
-    tag_message message;
-    i16 totals[TOWN_TYPE_COUNT];
-    i16 numMines;
-    i16 numCastles;
+    i16 activeTextW;
+    i16 mineRowYVal;
+    i8 redrawRequested;
+    i16 firstIncomeWidget;
     i16 numTowns;
-    heroWindow* win;
-    i16 firstTown;
-    i16 classCountY;
-    icon* ovIcon;
-    i16 heroFrame;
-    i16 mineBase;
-    i16 badge;
-    i16 spare1;
     i16 heroRowY;
-    i16 shieldDXX;
+    i16 theFrame;
+    i16 localFirstTown;
+    i16 left;
+    i16 nextMineW;
+    heroWindow* baseWin;
+    tag_message activeMessage;
+    i16 oldGy;
+    i16 oldBadgeY;
+    i16 numCastlesVal;
+    i16 curHeroTextW;
+    i16 mineBaseValue;
+    i16 activeBadge;
+    i16 lineH;
+    icon* ovIconRef;
+    i16 newHeroTextH;
+    i16 townTop;
+    i16 j;
+    font* smallFontItem;
+    i16 theTotals[TOWN_TYPE_COUNT];
+    i16 activeTownTextWPos;
+    i16 dayIdYValue;
+    i16 spacing;
+    i16 theVal;
     i16 one;
-    i16 nextType;
+    font* bigFont;
+    i8 mineNumsBuffer[RESOURCE_COUNT];
+    i16 spare1;
+    i16 newHeroNumYW;
+    i16 allLimitYOff;
+    i16 shieldDXXVal;
+    i16 classCountYVal;
+    i16 oldNextType;
+    i16 selCastleFrameY;
+    i16 nextCastleIconY;
+    i16 numMines;
+    i16 savedFieldH;
 
     gpAdvManager->TrimLoopingSounds(8);
     gOverviewShowing = 1;
-    unusedGY = 82;
-    shieldDXX = 49;
+    oldGy = 82;
+    shieldDXXVal = 49;
     spare1 = 73;
-    heroTextW = 33;
-    heroTextH = 38;
-    textW = 132;
-    fieldH = 80;
-    townTextWPos = 132;
-    unusedFVal = 80;
-    mineW = 72;
-    badgeY = 66;
+    curHeroTextW = 33;
+    newHeroTextH = 38;
+    activeTextW = 132;
+    savedFieldH = 80;
+    activeTownTextWPos = 132;
+    theVal = 80;
+    nextMineW = 72;
+    oldBadgeY = 66;
     heroRowY = 32;
-    heroNumYW = 67;
-    castleIconY = 113;
+    newHeroNumYW = 67;
+    nextCastleIconY = 113;
     townTop = 201;
-    mineRowY = 289;
-    heroFrame = 0;
-    castleFrameY = 4;
-    firstTown = 8;
-    mineBase = 12;
-    badge = 15;
+    mineRowYVal = 289;
+    theFrame = 0;
+    selCastleFrameY = 4;
+    localFirstTown = 8;
+    mineBaseValue = 12;
+    activeBadge = 15;
     lineH = 16;
-    limitYOff = 544;
-    redraw = 1;
+    allLimitYOff = 544;
+    redrawRequested = 1;
     one = 1;
-    dayIdY = 64;
-    incomeWidgetY = 65;
+    dayIdYValue = 64;
+    firstIncomeWidget = 65;
 
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
-    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+    smallFontItem = gpResourceManager->GetFont("smalfont.fnt");
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
-    ovIcon = gpResourceManager->GetIcon("overview.icn");
+    ovIconRef = gpResourceManager->GetIcon("overview.icn");
 
-    memset(totals, 0, sizeof(totals));
-    for (i = 0; i < gpCurPlayer->m_heroCount; i++)
-        totals[m_heroRecs[gpCurPlayer->m_heroIds[i]].m_heroClass]++;
-    classCountY = 0;
-    for (i = 0; i < HERO_CLASS_COUNT; i++) {
-        if (totals[i])
-            classCountY++;
+    memset(theTotals, 0, sizeof(theTotals));
+    for (j = 0; j < gpCurPlayer->m_heroCount; j++)
+        theTotals[m_heroRecs[gpCurPlayer->m_heroIds[j]].m_heroClass]++;
+    classCountYVal = 0;
+    for (j = 0; j < HERO_CLASS_COUNT; j++) {
+        if (theTotals[j])
+            classCountYVal++;
     }
     spacing = 136;
     left = 121;
-    nextType = 0;
-    for (i = 0; i < classCountY; i++) {
-        while (!totals[nextType])
-            nextType++;
-        ovIcon->DrawToBuffer(
-            left + spacing * i,
+    oldNextType = 0;
+    for (j = 0; j < classCountYVal; j++) {
+        while (!theTotals[oldNextType])
+            oldNextType++;
+        ovIconRef->DrawToBuffer(
+            left + spacing * j,
             32,
-            nextType,
+            oldNextType,
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        ovIcon->DrawToBuffer(
-            left + spacing * i + 49,
+        ovIconRef->DrawToBuffer(
+            left + spacing * j + 49,
             67,
             15,
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        sprintf(gText, "%d", totals[nextType]);
+        sprintf(gText, "%d", theTotals[oldNextType]);
         bigFont
-            ->DrawBoundedString(gText, left + spacing * i + 48, 77, 33, 16, 1, FONT_ALIGN_CENTER);
-        nextType++;
+            ->DrawBoundedString(gText, left + spacing * j + 48, 77, 33, 16, 1, FONT_ALIGN_CENTER);
+        oldNextType++;
     }
 
-    memset(totals, 0, sizeof(totals));
-    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        if (m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
-            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    memset(theTotals, 0, sizeof(theTotals));
+    for (j = 0; j < gpCurPlayer->m_townCount; j++) {
+        if (m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & (1 << BUILDING_SLOT_CASTLE))
+            theTotals[m_castleRecs[gpCurPlayer->m_townIds[j]].m_type]++;
     }
-    numCastles = 0;
-    for (i = 0; i < TOWN_TYPE_COUNT; i++) {
-        if (totals[i])
-            numCastles++;
+    numCastlesVal = 0;
+    for (j = 0; j < TOWN_TYPE_COUNT; j++) {
+        if (theTotals[j])
+            numCastlesVal++;
     }
-    if (numCastles) {
+    if (numCastlesVal) {
         spacing = 136;
         left = 100;
-        nextType = 0;
-        for (i = 0; i < numCastles; i++) {
-            while (!totals[nextType])
-                nextType++;
-            ovIcon->DrawToBuffer(
-                left + spacing * i,
+        oldNextType = 0;
+        for (j = 0; j < numCastlesVal; j++) {
+            while (!theTotals[oldNextType])
+                oldNextType++;
+            ovIconRef->DrawToBuffer(
+                left + spacing * j,
                 113,
-                nextType + 4,
+                oldNextType + 4,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            sprintf(gText, "%d", totals[nextType]);
+            sprintf(gText, "%d", theTotals[oldNextType]);
             bigFont
-                ->DrawBoundedString(gText, left + spacing * i, 173, 132, 16, 1, FONT_ALIGN_CENTER);
-            nextType++;
+                ->DrawBoundedString(gText, left + spacing * j, 173, 132, 16, 1, FONT_ALIGN_CENTER);
+            oldNextType++;
         }
     }
 
-    memset(totals, 0, sizeof(totals));
-    for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        if (!(m_castleRecs[gpCurPlayer->m_townIds[i]].m_buildings & (1 << BUILDING_SLOT_CASTLE)))
-            totals[m_castleRecs[gpCurPlayer->m_townIds[i]].m_type]++;
+    memset(theTotals, 0, sizeof(theTotals));
+    for (j = 0; j < gpCurPlayer->m_townCount; j++) {
+        if (!(m_castleRecs[gpCurPlayer->m_townIds[j]].m_buildings & (1 << BUILDING_SLOT_CASTLE)))
+            theTotals[m_castleRecs[gpCurPlayer->m_townIds[j]].m_type]++;
     }
     numTowns = 0;
-    for (i = 0; i < TOWN_TYPE_COUNT; i++) {
-        if (totals[i])
+    for (j = 0; j < TOWN_TYPE_COUNT; j++) {
+        if (theTotals[j])
             numTowns++;
     }
     if (numTowns) {
         spacing = 136;
         left = 100;
-        nextType = 0;
-        for (i = 0; i < numTowns; i++) {
-            while (!totals[nextType])
-                nextType++;
-            ovIcon->DrawToBuffer(
-                left + spacing * i,
+        oldNextType = 0;
+        for (j = 0; j < numTowns; j++) {
+            while (!theTotals[oldNextType])
+                oldNextType++;
+            ovIconRef->DrawToBuffer(
+                left + spacing * j,
                 201,
-                nextType + 8,
+                oldNextType + 8,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            sprintf(gText, "%d", totals[nextType]);
+            sprintf(gText, "%d", theTotals[oldNextType]);
             bigFont
-                ->DrawBoundedString(gText, left + spacing * i, 261, 132, 16, 1, FONT_ALIGN_CENTER);
-            nextType++;
+                ->DrawBoundedString(gText, left + spacing * j, 261, 132, 16, 1, FONT_ALIGN_CENTER);
+            oldNextType++;
         }
     }
 
-    memset(mineNums, 0, sizeof(mineNums));
-    for (i = MINE_SLOT_STANDARD_FIRST; i < GAME_MINE_COUNT; i++) {
-        if (m_mineOwners[i] == giCurPlayer)
-            mineNums[m_mines[i].type]++;
+    memset(mineNumsBuffer, 0, sizeof(mineNumsBuffer));
+    for (j = MINE_SLOT_STANDARD_FIRST; j < GAME_MINE_COUNT; j++) {
+        if (m_mineOwners[j] == giCurPlayer)
+            mineNumsBuffer[m_mines[j].type]++;
     }
     numMines = 0;
-    for (i = 0; i < RESOURCE_COUNT; i++) {
-        if (mineNums[i])
+    for (j = 0; j < RESOURCE_COUNT; j++) {
+        if (mineNumsBuffer[j])
             numMines++;
     }
     if (numMines) {
         spacing = 77;
         left = 100;
-        nextType = 0;
-        for (i = 0; i < numMines; i++) {
-            while (!mineNums[nextType])
-                nextType++;
-            ovIcon->DrawToBuffer(
-                left + spacing * i,
+        oldNextType = 0;
+        for (j = 0; j < numMines; j++) {
+            while (!mineNumsBuffer[oldNextType])
+                oldNextType++;
+            ovIconRef->DrawToBuffer(
+                left + spacing * j,
                 289,
-                __min(nextType, 2) + 12,
+                __min(oldNextType, 2) + 12,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (nextType >= 2)
-                ovIcon->DrawToBuffer(
-                    left + spacing * i,
+            if (oldNextType >= 2)
+                ovIconRef->DrawToBuffer(
+                    left + spacing * j,
                     289,
-                    nextType + 14,
+                    oldNextType + 14,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
-            sprintf(gText, "%d", mineNums[nextType]);
+            sprintf(gText, "%d", mineNumsBuffer[oldNextType]);
             bigFont
-                ->DrawBoundedString(gText, left + spacing * i, 355, 72, 16, 1, FONT_ALIGN_CENTER);
-            nextType++;
+                ->DrawBoundedString(gText, left + spacing * j, 355, 72, 16, 1, FONT_ALIGN_CENTER);
+            oldNextType++;
         }
     }
 
     gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
-    win = new heroWindow(0, 0, "overwind.bin");
-    if (!win)
+    baseWin = new heroWindow(0, 0, "overwind.bin");
+    if (!baseWin)
         MemError();
-    SetWinText(win, WINDOW_TEXT_OVERVIEW);
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, OVERVIEW_DATE);
+    SetWinText(baseWin, WINDOW_TEXT_OVERVIEW);
+    SET_WIDGET_MESSAGE(activeMessage, WIDGET_COMMAND_SET_TEXT, OVERVIEW_DATE);
     sprintf(gText, gOverviewText[0], m_month, m_week, m_day);
-    message.text = gText;
-    win->BroadcastMessage(message);
-    message.id = OVERVIEW_DAILY_GOLD;
+    activeMessage.text = gText;
+    baseWin->BroadcastMessage(activeMessage);
+    activeMessage.id = OVERVIEW_DAILY_GOLD;
     sprintf(gText, "%d", ComputeDailyGold(giCurPlayer));
-    win->BroadcastMessage(message);
-    for (i = 0; i < RESOURCE_COUNT; i++) {
-        sprintf(gText, "%d", gpCurPlayer->m_resources[i]);
-        message.id = i + OVERVIEW_RESOURCE_BASE;
-        win->BroadcastMessage(message);
+    baseWin->BroadcastMessage(activeMessage);
+    for (j = 0; j < RESOURCE_COUNT; j++) {
+        sprintf(gText, "%d", gpCurPlayer->m_resources[j]);
+        activeMessage.id = j + OVERVIEW_RESOURCE_BASE;
+        baseWin->BroadcastMessage(activeMessage);
     }
-    gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
-    win->DrawWindow();
+    gpWindowManager->AddWindow(baseWin, WINDOW_Z_ORDER_APPEND, 1);
+    baseWin->DrawWindow();
     gText[0] = 0;
     if (m_mineOwners[MINE_SLOT_DRAGON_CITY] == giCurPlayer) {
         strcpy(gText, gOverviewText[1]);
-        smallFont->DrawBoundedString(gText, 100, 450, 400, 12, 1, FONT_ALIGN_LEFT);
+        smallFontItem->DrawBoundedString(gText, 100, 450, 400, 12, 1, FONT_ALIGN_LEFT);
         gpWindowManager->UpdateScreenRegion(100, 450, 400, 12);
     }
     if (m_mineOwners[MINE_SLOT_LIGHTHOUSE] == giCurPlayer) {
         strcpy(gText, gOverviewText[2]);
-        smallFont->DrawBoundedString(gText, 100, 465, 400, 12, 1, FONT_ALIGN_LEFT);
+        smallFontItem->DrawBoundedString(gText, 100, 465, 400, 12, 1, FONT_ALIGN_LEFT);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
-    delete win;
+    gpWindowManager->DoDialog(baseWin, TrueFalseDialogHandler, 0);
+    delete baseWin;
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
-    gpResourceManager->Dispose(ovIcon);
-    gpResourceManager->Dispose(smallFont);
+    gpResourceManager->Dispose(ovIconRef);
+    gpResourceManager->Dispose(smallFontItem);
     gpResourceManager->Dispose(bigFont);
     gOverviewShowing = 0;
 }
