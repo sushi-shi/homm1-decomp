@@ -61,6 +61,10 @@ LEDGER_FIELDS = (
     "reason",
 )
 LEDGER_DECISIONS = frozenset(("pending", "retain", "canonical", "reuse"))
+#: member_reuse target of a member removed because no code names it: the
+#: check requires the identifier to be absent from every project file.
+RETIRED = "-"
+_IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
 
 _MACRO_BLOCK = re.compile(
     r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN)"
@@ -699,6 +703,11 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
             findings.append(f"{source_enum}: malformed member_reuse {item!r}")
             continue
         old, target = item.split("=", 1)
+        if target == RETIRED:
+            if old in reuse:
+                findings.append(f"{source_enum}: duplicate member_reuse for {old}")
+            reuse[old] = target
+            continue
         if "::" not in target:
             findings.append(
                 f"{source_enum}: member_reuse target needs source-enum::member: {item!r}")
@@ -709,8 +718,16 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
     return reuse, findings
 
 
-def check_ledger(path: Path, constants: list[Constant]) -> list[str]:
+def _project_identifiers(repo: Path) -> set[str]:
+    names: set[str] = set()
+    for path in _project_files(repo):
+        names.update(_IDENTIFIER.findall(blank_comments(path.read_text(errors="replace"))))
+    return names
+
+
+def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) -> list[str]:
     """Prove that every starting member has a reviewed, value-preserving home."""
+    identifiers = None
     if not path.is_file():
         return [f"{path}: missing review ledger (run --init-ledger once)"]
     current = {
@@ -761,6 +778,13 @@ def check_ledger(path: Path, constants: list[Constant]) -> list[str]:
             target_enums = set()
             for name, value in members.items():
                 target = reuse.get(name, f"{source_enum}::{name}")
+                if target == RETIRED:
+                    if identifiers is None:
+                        identifiers = _project_identifiers(repo)
+                    if name in identifiers:
+                        findings.append(
+                            f"{source_enum}: retired member {name} is still named in the project")
+                    continue
                 target_enum, separator, target_name = target.rpartition("::")
                 if not separator or not target_enum or not target_name:
                     findings.append(

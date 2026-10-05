@@ -42,6 +42,9 @@ evaluated `name=value` members and one decision:
 - `canonical`: this enum owns values that another reviewed block reuses.
 - `reuse`: the members moved to the canonical enum; `member_reuse` maps every
   moved member to `source-enum::MEMBER`.
+  A member that no code names any more maps to `-` (retired); the check
+  requires its identifier to be absent from every file under `include/` and
+  `src/`.
 - `pending`: the producers, consumers and encodings still need review, or the
   reuse is decided but the source move has not landed. Pending rows keep the
   command nonzero.

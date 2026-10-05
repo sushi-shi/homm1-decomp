@@ -932,14 +932,13 @@ H1_ENUM_CONST_END(AdventureStateConstant)
 
 // SetEnvironmentOrigin/InsertSound's looping map sounds: slots reset to the
 // far volume index, two passes (refresh known sounds, then insert new ones)
-// over rings whose edges span radius * 2 cells, sounds beyond MAX_DISTANCE
-// stop, and the loops play on channel type 3.
+// over rings whose edges span radius * 2 cells, and sounds beyond
+// MAX_DISTANCE stop.
 H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
     ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
     ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
     ENVIRONMENT_SOUND_FIRST_LAYER = 1,
     ENVIRONMENT_SOUND_LAYER_COUNT = 2,
-    ENVIRONMENT_SOUND_CHANNEL_TYPE = 3,
     ENVIRONMENT_SOUND_EDGE_SPAN = 2,
     // SetEnvironmentOrigin's rings around the origin (radius 0..COUNT-1).
     ENVIRONMENT_SOUND_RADIUS_COUNT = 4,

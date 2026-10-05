@@ -153,7 +153,7 @@ i16 townManager::Open(i16 id) {
     i8 buildId;
 
     gpGame->CheckHeroConsistency();
-    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
     if (m_townWindow == NULL)
@@ -2200,10 +2200,10 @@ void townManager::DoTavern(void) {
     if (m_heroWindow0 == NULL)
         MemError();
     SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
-    PlayMusic(TOWN_TAVERN_MUSIC);
+    PlayMusic(MUSIC_TRACK_TAVERN);
     gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;
-    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
 
 // Hovers by widget id and recruits a single hero (control 0x30).
