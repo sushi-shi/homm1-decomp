@@ -23,6 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Retail assertion paths: each program's BASE objects were compiled in its own
+// checkout (HEROES.EXE and EDITOR.EXE assertion strings).
+#ifdef HOMM1_EDITOR
+#define WINMGR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Base\\WINMGR.CPP"
+#else
+#define WINMGR_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\WINMGR.CPP"
+#endif
+
 // Buka WINMGR correspondence; retail has no force-update argument or later cycle masks.
 VA(0x00469fb0, 0x19c)
 void CycleColors(void) {
@@ -381,7 +389,7 @@ void heroWindowManager::RedrawScreen(void) {
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
 VA(0x0046aaa3, 0xd3)
-#line 550 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\WINMGR.CPP"
+#line 550 WINMGR_CPP_PATH
 void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
 #line 551
     H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);

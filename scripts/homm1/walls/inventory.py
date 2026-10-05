@@ -56,12 +56,12 @@ from homm1.core.usage import logged
 
 import json
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 from homm1.verify.scores import is_eh_band
 
 BASELINE = REPO / "config/match_baseline.tsv"
-REPORTS = (BUILD / "objdiff/compare-new/report.json",
-           BUILD / "objdiff/report.json")
+REPORTS = (IMAGE_BUILD / "objdiff/compare-new/report.json",
+           IMAGE_BUILD / "objdiff/report.json")
 
 
 def report_scores() -> tuple[str, dict[tuple[str, str], float]]:

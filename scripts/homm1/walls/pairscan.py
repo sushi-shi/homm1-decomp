@@ -16,11 +16,11 @@ import re
 import struct
 from pathlib import Path
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.core.msvc_names import anonymous_namespaces
 from homm1.delink.coffx import Obj
 
-NORM = BUILD / "objdiff/compare-new"
+NORM = IMAGE_BUILD / "objdiff/compare-new"
 
 MEM_EXECUTE = 0x20000000
 DIR32, REL32 = 0x06, 0x14

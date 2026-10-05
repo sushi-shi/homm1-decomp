@@ -26,14 +26,14 @@ import struct
 import sys
 from collections import Counter
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink.coffx import Obj
 from homm1.walls import pairscan
 from homm1.walls.pairscan import DIR32, REL32, canon
 
 THRESHOLD = 99.5
-BASE_DIR = BUILD / "objdiff/base"
-TARGET_DIR = BUILD / "objdiff/target-new"
+BASE_DIR = IMAGE_BUILD / "objdiff/base"
+TARGET_DIR = IMAGE_BUILD / "objdiff/target-new"
 
 _IMAGE_SYM_CLASS_EXTERNAL = 2
 _IMAGE_SYM_CLASS_WEAK_EXTERNAL = 105

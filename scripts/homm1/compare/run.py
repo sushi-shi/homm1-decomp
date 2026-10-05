@@ -27,12 +27,12 @@ from pathlib import Path
 
 from homm1.compare import project as project_mod
 from homm1.compare.normalize import normalize, units_with_a_target
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.tool import ToolError, objdiff
 
-BASE_DIR = BUILD / "objdiff/base"
-TARGET_DIR = BUILD / "objdiff/target-new"
-OUT_DIR = BUILD / "objdiff/compare-new"
+BASE_DIR = IMAGE_BUILD / "objdiff/base"
+TARGET_DIR = IMAGE_BUILD / "objdiff/target-new"
+OUT_DIR = IMAGE_BUILD / "objdiff/compare-new"
 
 
 def _pct(measures: dict, key: str = "fuzzy_match_percent") -> float:
@@ -122,9 +122,9 @@ def run(base_dir: Path = BASE_DIR, target_dir: Path = TARGET_DIR,
         if not path.is_dir():
             raise ToolError(f"{label} object directory missing: {path}")
 
-    from homm1.manifest import load as load_manifest
+    from homm1.manifest import load as load_manifest, units as image_units
     manifest = load_manifest()
-    census = manifest.get("unit", [])
+    census = image_units()
     unit_names = units if units is not None else [u["unit"] for u in census]
 
     normalize(base_dir, target_dir, out_dir, unit_names, force=force, quiet=quiet)

@@ -15,12 +15,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from homm1.core.paths import BUILD, RETAIL
+from homm1.core.paths import BUILD, IMAGE_BUILD, RETAIL
 from homm1.delink import data_manifest, pdb_synth
 from homm1.model import Model, resolve
 
-DELINK_DIR = BUILD / "delink/named"
-TARGET_DIR = BUILD / "objdiff/target-new"
+DELINK_DIR = IMAGE_BUILD / "delink/named"
+TARGET_DIR = IMAGE_BUILD / "objdiff/target-new"
 RELOC_ALIASES = RETAIL / "reloc_referents.tsv"
 
 

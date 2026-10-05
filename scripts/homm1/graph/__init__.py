@@ -31,16 +31,47 @@ from __future__ import annotations
 #: The emitted manifest, and ninja's build root (the repo root).
 NINJA = "build/build.ninja"
 
-#: Compile outputs and the two object trees the comparison pairs.
-BASE_DIR = "build/objdiff/base"
-TARGET_DIR = "build/objdiff/target-new"
-COMPARE_DIR = "build/objdiff/compare-new"
-DELINK_RAW = "build/delink/named"
+#: Per-image artifact paths, repo-relative. The game keeps the historical
+#: build/ layout; another image's tree is build/<image>/ (homm1.core.paths).
+
+
+def image_paths(image: str) -> dict[str, str]:
+    """The per-image artifact paths of `image` (repo-relative strings)."""
+    from homm1.core.paths import REPO, image_build
+    root = image_build(image).relative_to(REPO).as_posix()
+    compare = f"{root}/objdiff/compare-new"
+    return {
+        "BASE_DIR": f"{root}/objdiff/base",
+        "TARGET_DIR": f"{root}/objdiff/target-new",
+        "COMPARE_DIR": compare,
+        "DELINK_RAW": f"{root}/delink/named",
+        "CLAIMS_DIR": f"{root}/gen/claims",
+        "BINDINGS": f"{root}/gen/bindings.tsv",
+        "VIOLATIONS": f"{root}/gen/violations.tsv",
+        "DELINK_STAMP": f"{root}/objdiff/.delink.stamp",
+        "NORMALIZE_STAMP": f"{root}/objdiff/.normalize.stamp",
+        "OBJDIFF_JSON": f"{compare}/objdiff.json",
+        "REPORT_JSON": f"{compare}/report.json",
+        "COMPDB": f"{root}/clangd/compile_commands.json",
+    }
+
+
+def _selected() -> dict[str, str]:
+    from homm1.core.paths import image_key
+    return image_paths(image_key())
+
+
+_P = _selected()
+#: Compile outputs and the two object trees the comparison pairs (selected image).
+BASE_DIR = _P["BASE_DIR"]
+TARGET_DIR = _P["TARGET_DIR"]
+COMPARE_DIR = _P["COMPARE_DIR"]
+DELINK_RAW = _P["DELINK_RAW"]
 
 #: Generated model state.
-CLAIMS_DIR = "build/gen/claims"
-BINDINGS = "build/gen/bindings.tsv"
-VIOLATIONS = "build/gen/violations.tsv"
+CLAIMS_DIR = _P["CLAIMS_DIR"]
+BINDINGS = _P["BINDINGS"]
+VIOLATIONS = _P["VIOLATIONS"]
 
 #: The pinned toolchain's identity, as a DECLARED input. $MSVC_DIR, $DXSDK_DIR
 #: and the vostok-delinker binary used to be pure environment, which ninja
@@ -53,11 +84,11 @@ TOOLCHAIN_ID = "build/gen/toolchain.id"
 
 #: Stamps for the two edges whose real outputs are a directory the graph
 #: cannot enumerate at configure time.
-DELINK_STAMP = "build/objdiff/.delink.stamp"
-NORMALIZE_STAMP = "build/objdiff/.normalize.stamp"
+DELINK_STAMP = _P["DELINK_STAMP"]
+NORMALIZE_STAMP = _P["NORMALIZE_STAMP"]
 
-OBJDIFF_JSON = f"{COMPARE_DIR}/objdiff.json"
-REPORT_JSON = f"{COMPARE_DIR}/report.json"
+OBJDIFF_JSON = _P["OBJDIFF_JSON"]
+REPORT_JSON = _P["REPORT_JSON"]
 
 #: Phase 2 (opt-in): candidate image and link map.
 CANDIDATE_EXE = "build/exe/HEROESW.candidate.EXE"

@@ -63,6 +63,11 @@ from homm1.core.paths import REPO, msvc_dir
 from homm1.core.inputs import targets
 from homm1.graph import ninja_syntax
 from homm1.graph.scan import Scanner
+from types import SimpleNamespace
+
+#: The game's artifact paths. Configure emits every image's edges, whatever
+#: image the invoking command selected.
+G = SimpleNamespace(**graph.image_paths("game"))
 
 SCRIPTS = "scripts/homm1"
 MANIFEST = "config/units.toml"
@@ -142,7 +147,7 @@ CONFIGURE_MODS = _mods("graph/", "manifest.py", "core/paths.py") + ["config/reta
 # --------------------------------------------------------------------------- #
 # manifest
 # --------------------------------------------------------------------------- #
-def load_units() -> tuple[dict, list[dict]]:
+def load_units(image: str = "game") -> tuple[dict, list[dict]]:
     """(manifest, units) with each unit's `cflags` resolved from its profile.
 
     Every [[unit]] names ONE [flags] profile and the profile is the FULL flag
@@ -150,13 +155,20 @@ def load_units() -> tuple[dict, list[dict]]:
     unit's flag choice stays one explicit, greppable name. A stray `extra` key
     is a hard error rather than a silent bolt-on.
     """
-    from homm1.manifest import load
+    from homm1.manifest import image_defines, load, unit_images
     data = load()
     profiles = data.get("flags", {})
     if not profiles:
         raise SystemExit(f"{MANIFEST}: [flags] must define at least one profile")
-    units = data.get("unit", [])
-    if not units:
+    from homm1.core.paths import images
+    for u in data.get("unit", []):
+        unknown = [i for i in unit_images(u) if i not in images()]
+        if unknown:
+            raise SystemExit(f"{MANIFEST}: unit '{u.get('unit')}' names unknown "
+                             f"image(s) {unknown} (pinned: {images()})")
+    units = [u for u in data.get("unit", []) if image in unit_images(u)]
+    defines = image_defines(image)
+    if not units and image == "game":
         raise SystemExit(f"{MANIFEST}: no [[unit]] entries")
     seen: set[str] = set()
     for u in units:
@@ -180,7 +192,7 @@ def load_units() -> tuple[dict, list[dict]]:
         if u["compiler"] not in {"vc40", "vc41", "vc6"}:
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' has unsupported "
                              f"compiler '{u['compiler']}'")
-        u["cflags"] = list(profiles[u["flags"]])
+        u["cflags"] = list(profiles[u["flags"]]) + defines
     return data, units
 
 
@@ -191,12 +203,12 @@ def load_units() -> tuple[dict, list[dict]]:
 #: build/objdiff/target-new and build/delink/named are NOT listed: their
 #: producers rmtree them, so they cannot hold an orphan.
 _ORPHAN_PATTERNS = [
-    (graph.BASE_DIR, "{}.obj"),
-    (f"{graph.COMPARE_DIR}/base", "{}.obj"),
-    (f"{graph.COMPARE_DIR}/base", "{}.symbols.tsv"),
-    (f"{graph.COMPARE_DIR}/target", "{}.c.obj"),
-    (f"{graph.COMPARE_DIR}/target", "{}.symbols.tsv"),
-    (graph.CLAIMS_DIR, "{}.tsv"),
+    (G.BASE_DIR, "{}.obj"),
+    (f"{G.COMPARE_DIR}/base", "{}.obj"),
+    (f"{G.COMPARE_DIR}/base", "{}.symbols.tsv"),
+    (f"{G.COMPARE_DIR}/target", "{}.c.obj"),
+    (f"{G.COMPARE_DIR}/target", "{}.symbols.tsv"),
+    (G.CLAIMS_DIR, "{}.tsv"),
 ]
 
 
@@ -240,7 +252,7 @@ def prune_orphan_artifacts(units: list[dict]) -> int:
             if p.exists():
                 p.unlink()
                 n += 1
-    stamp = REPO / graph.DELINK_STAMP
+    stamp = REPO / G.DELINK_STAMP
     if stamp.exists():
         stamp.unlink()
         n += 1
@@ -338,7 +350,7 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
     res_flag = f" --res {graph.RESOURCE_RES}" if with_res else ""
     w.rule("link",
            command=(f"$py -m homm1.graph.link --out {graph.CANDIDATE_EXE} "
-                    f"--objs-dir {graph.BASE_DIR}{res_flag} $objects"),
+                    f"--objs-dir {G.BASE_DIR}{res_flag} $objects"),
            description="link candidate HEROESW.EXE + map")
     w.build([graph.CANDIDATE_EXE, graph.CANDIDATE_MAP], "link",
             inputs=link_objs,
@@ -348,6 +360,94 @@ def emit_link_phase(w: ninja_syntax.Writer, cl_edges: list[tuple]) -> None:
     w.build("candidate", "phony",
             inputs=[graph.CANDIDATE_EXE, graph.CANDIDATE_MAP])
     w.newline()
+
+
+#: Per-image retail tables a non-game image's model reads (under
+#: config/retail/<image>/); absent tables are simply not declared.
+IMAGE_MODEL_TABLES = ["functions.tsv", "data.tsv", "link_order.tsv", "link_bands.tsv",
+                      "functions_static_libs.tsv", "data_vtables.tsv",
+                      "data_static_libs.tsv", "data_compgen.tsv",
+                      "function_referents.tsv", "placements.tsv"]
+IMAGE_DELINK_TABLES = ["reloc_referents.tsv", "function_referents.tsv",
+                       "absolute_relocations.tsv", "data_symbols.tsv"]
+
+
+def emit_image_pipeline(w: ninja_syntax.Writer, image: str, scan: Scanner) -> list[str]:
+    """Edges of one non-game image: its own compile of every unit it links,
+    claims, model, delink, comparison and report under build/<image>/.
+
+    The rules are the game's (`$py` is rebound per edge to select the image);
+    only the directory-valued edges get image-suffixed rules. Returns the
+    image's default outputs."""
+    from homm1.core.paths import retail_dir, retail_exe
+    from homm1.graph.fixed_asm import unit as fixed_asm_unit
+    P = SimpleNamespace(**graph.image_paths(image))
+    _manifest, units = load_units(image)
+    retail = retail_dir(image).relative_to(REPO).as_posix()
+    exe = retail_exe(image)
+    exe = exe.relative_to(REPO).as_posix() if exe.is_relative_to(REPO) else str(exe)
+    py = f"PYTHONPATH={REPO / 'scripts'} HOMM1_DIR={REPO} HOMM1_IMAGE={image} python3"
+    tables = [f"{retail}/{t}" for t in IMAGE_MODEL_TABLES if (REPO / retail / t).is_file()]
+    delink_tables = [f"{retail}/{t}" for t in IMAGE_DELINK_TABLES
+                     if (REPO / retail / t).is_file()]
+
+    w.comment(f"=== image {image}: {len(units)} unit(s) under {P.BASE_DIR} ===")
+    objs, fragments = [], []
+    for u in units:
+        obj = f"{P.BASE_DIR}/{u['unit']}.obj"
+        objs.append(obj)
+        headers = scan.headers(u["source"])
+        assembly = fixed_asm_unit(u["unit"], u["source"])
+        if assembly is not None:
+            w.build(obj, "ml_coff", inputs=u["source"],
+                    implicit=ML_MODS + [graph.TOOLCHAIN_ID],
+                    variables={"unit": u["unit"], "py": py})
+        else:
+            w.build(obj, "cl", inputs=u["source"],
+                    implicit=headers + CL_MODS + [graph.TOOLCHAIN_ID],
+                    variables={"unit": u["unit"], "py": py,
+                               "cflags": " ".join(u["cflags"])})
+        frag = f"{P.CLAIMS_DIR}/{u['unit']}.tsv"
+        fragments.append(frag)
+        w.build(frag, "labels", inputs=u["source"],
+                implicit=[*headers, obj, MANIFEST, P.COMPDB, *LABELS_MODS,
+                          *(["config/retail/asm_claims.tsv",
+                             f"{SCRIPTS}/graph/fixed_asm.py"]
+                            if assembly is not None else [])],
+                variables={"unit": u["unit"], "py": py})
+    w.build(P.COMPDB, "compdb", inputs=MANIFEST,
+            implicit=COMPDB_MODS + [graph.TOOLCHAIN_ID], variables={"py": py})
+    w.build([P.BINDINGS, P.VIOLATIONS], "model", inputs=fragments,
+            implicit=tables + MODEL_MODS, variables={"py": py})
+
+    w.rule(f"delink_{image}",
+           command=(f"{py} -m homm1.delink.run --target-dir {P.TARGET_DIR} "
+                    f"--delink-dir {P.DELINK_RAW} && touch $out"),
+           description=f"delink {image} -> target objs")
+    w.build(P.DELINK_STAMP, f"delink_{image}", inputs=[P.BINDINGS, exe],
+            implicit=[*delink_tables, *DELINK_MODS, graph.TOOLCHAIN_ID])
+    w.rule(f"normalize_{image}",
+           command=(f"{py} -m homm1.compare.normalize --base-dir {P.BASE_DIR} "
+                    f"--target-dir {P.TARGET_DIR} --out-dir {P.COMPARE_DIR} "
+                    f"--stamp $out"),
+           description=f"normalize {image} base/target objs")
+    w.build(P.NORMALIZE_STAMP, f"normalize_{image}", inputs=objs + [P.DELINK_STAMP],
+            implicit=[MANIFEST, *NORMALIZE_MODS, graph.TOOLCHAIN_ID])
+    w.rule(f"project_{image}",
+           command=(f"{py} -m homm1.compare.project --target-dir {P.TARGET_DIR} "
+                    f"--out-dir {P.COMPARE_DIR}"),
+           description=f"project {image} (pairing -> objdiff.json)", restat=True)
+    w.build(P.OBJDIFF_JSON, f"project_{image}", inputs=[P.DELINK_STAMP],
+            implicit=[MANIFEST, *PROJECT_MODS])
+    w.rule(f"report_{image}",
+           command=f"{py} -m homm1.tool.objdiff --project {P.COMPARE_DIR} --out $out",
+           description=f"objdiff report {image}")
+    w.build(P.REPORT_JSON, f"report_{image}", inputs=[P.NORMALIZE_STAMP, P.OBJDIFF_JSON],
+            implicit=REPORT_MODS)
+    outputs = objs + [P.BINDINGS, P.DELINK_STAMP, P.OBJDIFF_JSON, P.REPORT_JSON]
+    w.build(image, "phony", inputs=outputs)
+    w.newline()
+    return outputs
 
 
 def emit(out: Path | None = None) -> tuple[int, int]:
@@ -365,11 +465,17 @@ def emit(out: Path | None = None) -> tuple[int, int]:
     # Resolved BEFORE the writer opens, so `scan.scanned()` is complete by the
     # time the generator edge is emitted (ninja does not care about edge order).
     from homm1.graph.fixed_asm import unit as fixed_asm_unit
-    cl_edges = [(f"{graph.BASE_DIR}/{u['unit']}.obj", u["source"],
+    cl_edges = [(f"{G.BASE_DIR}/{u['unit']}.obj", u["source"],
                  scan.headers(u["source"]), u["cflags"], u["unit"],
                  fixed_asm_unit(u["unit"], u["source"]))
                 for u in units]
     base_objs = [e[0] for e in cl_edges]
+    # Other images' sources join the generator edge's scanned set too.
+    from homm1.core.paths import images as pinned_images
+    for image in pinned_images():
+        if image != "game":
+            for u in load_units(image)[1]:
+                scan.headers(u["source"])
     headers_by_unit = {e[4]: e[2] for e in cl_edges}
 
     with out.open("w", encoding="utf-8") as f:
@@ -405,8 +511,13 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # stale list, and a later edit to a newly-included header does not
         # rebuild its TU. That is silent, and it is exactly the failure a
         # byte-neutrality claim from a header edit depends on not happening.
+        # Another image's table set decides which tables its edges declare,
+        # so a table appearing in config/retail/<image>/ re-emits the graph.
+        from homm1.core.paths import retail_dir
+        image_dirs = [retail_dir(i).relative_to(REPO).as_posix()
+                      for i in pinned_images() if i != "game" and retail_dir(i).is_dir()]
         w.build(graph.NINJA, "configure",
-                implicit=[MANIFEST, *CONFIGURE_MODS, *sorted(scan.scanned())])
+                implicit=[MANIFEST, *CONFIGURE_MODS, *sorted(scan.scanned()), *image_dirs])
         w.newline()
 
         w.comment("=== cl: source -> base .obj (VC4 /Od under wine) ===")
@@ -459,11 +570,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="labels $unit", restat=True)
         fragments = []
         for u in units:
-            frag = f"{graph.CLAIMS_DIR}/{u['unit']}.tsv"
+            frag = f"{G.CLAIMS_DIR}/{u['unit']}.tsv"
             fragments.append(frag)
             w.build(frag, "labels", inputs=u["source"],
                     implicit=[*headers_by_unit[u["unit"]],
-                              f"{graph.BASE_DIR}/{u['unit']}.obj", MANIFEST,
+                              f"{G.BASE_DIR}/{u['unit']}.obj", MANIFEST,
                               COMPDB, *LABELS_MODS,
                               *(["config/retail/asm_claims.tsv",
                                  f"{SCRIPTS}/graph/fixed_asm.py"]
@@ -474,7 +585,7 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         w.comment("=== model: claims x censuses/providers -> bindings.tsv ===")
         w.rule("model", command="$py -m homm1.model", description="model",
                restat=True)
-        w.build([graph.BINDINGS, graph.VIOLATIONS], "model", inputs=fragments,
+        w.build([G.BINDINGS, G.VIOLATIONS], "model", inputs=fragments,
                 implicit=MODEL_TABLES + MODEL_MODS)
         w.newline()
 
@@ -490,11 +601,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # so a code edit that moves those without moving a CLAIM does not
         # re-delink; and vostok-delinker itself is environment, not a file.
         w.rule("delink",
-               command=(f"$py -m homm1.delink.run --target-dir {graph.TARGET_DIR} "
-                        f"--delink-dir {graph.DELINK_RAW} && touch $out"),
+               command=(f"$py -m homm1.delink.run --target-dir {G.TARGET_DIR} "
+                        f"--delink-dir {G.DELINK_RAW} && touch $out"),
                description="delink HEROESW.EXE -> target objs")
-        w.build(graph.DELINK_STAMP, "delink",
-                inputs=[graph.BINDINGS, RETAIL_EXE],
+        w.build(G.DELINK_STAMP, "delink",
+                inputs=[G.BINDINGS, RETAIL_EXE],
                 implicit=[RELOC_REFERENTS, FUNCTION_REFERENTS, *DELINK_MODS,
                           graph.TOOLCHAIN_ID])
         w.newline()
@@ -507,12 +618,12 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # the driver mtime-skips unchanged objects, so a single recompile
         # re-normalizes exactly one pair.
         w.rule("normalize",
-               command=(f"$py -m homm1.compare.normalize --base-dir {graph.BASE_DIR} "
-                        f"--target-dir {graph.TARGET_DIR} --out-dir {graph.COMPARE_DIR} "
+               command=(f"$py -m homm1.compare.normalize --base-dir {G.BASE_DIR} "
+                        f"--target-dir {G.TARGET_DIR} --out-dir {G.COMPARE_DIR} "
                         f"--stamp $out"),
                description="normalize base/target objs")
-        w.build(graph.NORMALIZE_STAMP, "normalize",
-                inputs=base_objs + [graph.DELINK_STAMP],
+        w.build(G.NORMALIZE_STAMP, "normalize",
+                inputs=base_objs + [G.DELINK_STAMP],
                 # OLDNAMES/LIBCMT alias records come from the pinned toolchain.
                 implicit=[MANIFEST, *NORMALIZE_MODS, graph.TOOLCHAIN_ID])
         w.newline()
@@ -524,10 +635,10 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # it is what once left two data-only units on the dummy - a pairing
         # objdiff scores 100.00% on every measure with zero totals.
         w.rule("project",
-               command=(f"$py -m homm1.compare.project --target-dir {graph.TARGET_DIR} "
-                        f"--out-dir {graph.COMPARE_DIR}"),
+               command=(f"$py -m homm1.compare.project --target-dir {G.TARGET_DIR} "
+                        f"--out-dir {G.COMPARE_DIR}"),
                description="project (pairing -> objdiff.json)", restat=True)
-        w.build(graph.OBJDIFF_JSON, "project", inputs=[graph.DELINK_STAMP],
+        w.build(G.OBJDIFF_JSON, "project", inputs=[G.DELINK_STAMP],
                 implicit=[MANIFEST, *PROJECT_MODS])
         w.newline()
 
@@ -536,11 +647,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # which is what lets `homm1 match` say "nothing rebuilt, nothing to
         # report" instead of re-scoring 311 units for a no-op build.
         w.rule("report",
-               command=(f"$py -m homm1.tool.objdiff --project {graph.COMPARE_DIR} "
+               command=(f"$py -m homm1.tool.objdiff --project {G.COMPARE_DIR} "
                         f"--out $out"),
                description="objdiff report")
-        w.build(graph.REPORT_JSON, "report",
-                inputs=[graph.NORMALIZE_STAMP, graph.OBJDIFF_JSON],
+        w.build(G.REPORT_JSON, "report",
+                inputs=[G.NORMALIZE_STAMP, G.OBJDIFF_JSON],
                 implicit=REPORT_MODS)
         w.newline()
 
@@ -555,11 +666,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="verify fingerprints", restat=True)
         w.build(FINGERPRINTS, "verify_fp",
                 inputs=[u["source"] for u in units],
-                implicit=[graph.BINDINGS, MANIFEST, COMPDB, *VERIFY_MODS])
+                implicit=[G.BINDINGS, MANIFEST, COMPDB, *VERIFY_MODS])
         w.rule("verify_readme", command="$py -m homm1.verify readme && touch $out",
                description="refresh README score block")
         w.build("build/objdiff/.readme.stamp", "verify_readme",
-                inputs=[graph.REPORT_JSON, FINGERPRINTS, "README.md"],
+                inputs=[G.REPORT_JSON, FINGERPRINTS, "README.md"],
                 # the universe's carve-out classes (library/compiler/thunk)
                 implicit=[MANIFEST, "config/retail/dna_bands.tsv",
                           *VERIFY_BASELINES, *VERIFY_MODS])
@@ -570,20 +681,28 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                command="$py -m homm1.verify check --no-readme && touch $out",
                description="verify check (MAX gate + fast+normal tiers)")
         w.build(VERIFY_STAMP, "verify_check",
-                inputs=[graph.REPORT_JSON, FINGERPRINTS],
+                inputs=[G.REPORT_JSON, FINGERPRINTS],
                 implicit=[MANIFEST, *VERIFY_BASELINES, *VERIFY_MODS])
         w.newline()
+
+        image_outputs = []
+        from homm1.core.paths import images as pinned_images
+        from homm1.manifest import all_units, unit_images
+        for image in pinned_images():
+            if image != "game" and any(image in unit_images(u) for u in all_units()):
+                image_outputs += emit_image_pipeline(w, image, scan)
 
         w.comment("=== aliases ===")
         w.build("base", "phony", inputs=base_objs)
         w.build("claims", "phony", inputs=fragments)
-        w.build("target", "phony", inputs=[graph.DELINK_STAMP])
-        w.build("compare", "phony", inputs=[graph.REPORT_JSON])
+        w.build("target", "phony", inputs=[G.DELINK_STAMP])
+        w.build("compare", "phony", inputs=[G.REPORT_JSON])
         w.build("verify", "phony", inputs=[VERIFY_STAMP])
         w.build("all", "phony",
-                inputs=base_objs + [graph.BINDINGS, graph.DELINK_STAMP,
-                                    graph.OBJDIFF_JSON, graph.REPORT_JSON,
-                                    FINGERPRINTS, "build/objdiff/.readme.stamp"])
+                inputs=base_objs + [G.BINDINGS, G.DELINK_STAMP,
+                                    G.OBJDIFF_JSON, G.REPORT_JSON,
+                                    FINGERPRINTS, "build/objdiff/.readme.stamp",
+                                    *image_outputs])
         w.default(["all"])
         w.newline()
 

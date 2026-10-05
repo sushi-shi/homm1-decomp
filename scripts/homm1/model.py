@@ -31,12 +31,12 @@ from __future__ import annotations
 
 from typing import NamedTuple
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.core.tsv import write as write_tsv
 from homm1.retail_labels import Claim, censuses, fragments as src_claims, providers
 
-BINDINGS = BUILD / "gen/bindings.tsv"
-VIOLATIONS = BUILD / "gen/violations.tsv"
+BINDINGS = IMAGE_BUILD / "gen/bindings.tsv"
+VIOLATIONS = IMAGE_BUILD / "gen/violations.tsv"
 
 _PRECEDENCE = ["src", "src_compgen", "src_dyninit", "src_data_compgen",
                "data_vtables", "data_compgen",
@@ -105,13 +105,12 @@ def _emitted():
     counter onto a TU-local symbol and our names never carry one."""
     from homm1.core.coff import Coff
     from homm1.core.msvc_names import mask
-    from homm1.core.paths import BUILD as _B
 
     objs: dict[str, set[str] | None] = {}
 
     def defines(unit: str, name: str) -> bool | None:
         if unit not in objs:
-            obj = _B / "objdiff/base" / f"{unit}.obj"
+            obj = IMAGE_BUILD / "objdiff/base" / f"{unit}.obj"
             try:
                 objs[unit] = {mask(n) for n in Coff(obj).code_names()} \
                     if obj.is_file() else None

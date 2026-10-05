@@ -102,8 +102,19 @@ from homm1.core.usage import logged
 @logged
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    # `homm1 --image editor <command>` selects the retail image for this
+    # process and every child it starts (homm1.core.paths, $HOMM1_IMAGE).
+    while argv and (argv[0] == "--image" or argv[0].startswith("--image=")):
+        key = argv[0].partition("=")[2] if "=" in argv[0] else (argv[1] if len(argv) > 1 else "")
+        argv = argv[1:] if "=" in argv[0] else argv[2:]
+        from homm1.core.paths import IMAGE_ENV, images
+        if key not in images():
+            print(f"homm1: --image expects one of {images()}", file=sys.stderr)
+            return 2
+        os.environ[IMAGE_ENV] = key
     if not argv or argv[0] in ("-h", "--help"):
         print(__doc__.strip())
+        print("\noptions: --image {game,editor} selects the retail image (default game)")
         print("\ncommands: init inspect toolchain configure build link match play labels "
               "model delink compare audit sema walls permute lsp ghidra verify workflow clean tool")
         return 0 if argv else 2
@@ -130,7 +141,8 @@ def main(argv: list[str] | None = None) -> int:
         from homm1.clean.run import main as clean_main
         return clean_main(rest)
     if cmd == "audit":
-        audits = {"dna-bands": "dna_bands", "tooling": "tooling", "usage": "usage"}
+        audits = {"dna-bands": "dna_bands", "tooling": "tooling", "usage": "usage",
+                  "census": "census", "placements": "placements"}
         if not rest or rest[0] not in audits:
             print("homm1 audit: expected " + ", ".join(audits), file=sys.stderr)
             return 2

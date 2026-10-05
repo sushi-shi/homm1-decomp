@@ -40,15 +40,15 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from homm1.core import msvc_names
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink import coffx, eh_band
 from homm1.delink.image import retail
 from homm1.model import Model
 from homm1.retail_labels import fragments
 
-BASE_DIR = BUILD / "objdiff/base"
-OUTPUT = BUILD / "gen/delink_data_manifest.tsv"
-SECTION_OUTPUT = BUILD / "gen/delink_data_section_manifest.tsv"
+BASE_DIR = IMAGE_BUILD / "objdiff/base"
+OUTPUT = IMAGE_BUILD / "gen/delink_data_manifest.tsv"
+SECTION_OUTPUT = IMAGE_BUILD / "gen/delink_data_section_manifest.tsv"
 
 HEADER = ("name", "object", "rva", "size", "storage", "alignment",
           "section_ordinal", "section_offset", "scope", "provenance")

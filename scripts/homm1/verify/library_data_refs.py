@@ -23,13 +23,13 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from homm1.compare.canonicalize import CoffObject, DIR32, Symbol
-from homm1.core.paths import BUILD, RETAIL, msvc_dir
+from homm1.core.paths import BUILD, IMAGE_BUILD, RETAIL, msvc_dir
 from homm1.core.tsv import read as read_tsv
 from homm1.delink.implib import _ar_members
 
 
-ACCESS_TSV = BUILD / "gen/data_access_map.tsv"
-GAPS_TSV = BUILD / "gen/data_coverage_gaps.tsv"
+ACCESS_TSV = IMAGE_BUILD / "gen/data_access_map.tsv"
+GAPS_TSV = IMAGE_BUILD / "gen/data_coverage_gaps.tsv"
 FUNCTIONS_TSV = RETAIL / "functions_static_libs.tsv"
 
 LIB_FILES = {

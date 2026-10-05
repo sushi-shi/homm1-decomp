@@ -29,14 +29,14 @@ import json
 import sys
 from collections import Counter
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink.coffx import Obj
 from homm1.walls import pairscan
 from homm1.walls.pairscan import DIR32, canon
 
-NORM = BUILD / "objdiff/compare-new"
+NORM = IMAGE_BUILD / "objdiff/compare-new"
 OBJDIFF_JSON = NORM / "objdiff.json"
-DATA_MANIFEST = BUILD / "gen/delink_data_manifest.tsv"
+DATA_MANIFEST = IMAGE_BUILD / "gen/delink_data_manifest.tsv"
 
 MEM_EXECUTE = 0x20000000
 MEM_DISCARDABLE = 0x02000000

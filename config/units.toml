@@ -24,6 +24,14 @@ cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5"]
 # all 13 REQUEST bodies are exact; KB regresses under /Ob2 (data-first order).
 cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5"]
 
+# EDITOR.EXE (config/retail/targets.json `editor`) links the BASE library objects
+# marked `images = ["game", "editor"]`: each of their bodies occurs byte-identically
+# (relocations masked) in the editor (config/retail/editor/placements.tsv). The
+# editor's objects were built from another checkout root, so its assertion paths
+# differ and every shared unit compiles once per image.
+[images.editor]
+defines = ["HOMM1_EDITOR"]
+
 [[unit]]
 unit = "BASE/BITS"
 source = "src/BASE/BITS.asm"
@@ -31,21 +39,25 @@ flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BMAP2"
+images = ["game", "editor"]
 source = "src/BASE/BMAP2.asm"
 flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BASEMGR"
+images = ["game", "editor"]
 source = "src/BASE/BASEMGR.cpp"
 flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BITMAP"
+images = ["game", "editor"]
 source = "src/BASE/BITMAP.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Icon2b"
+images = ["game", "editor"]
 source = "src/BASE/Icon2b.asm"
 flags = "cpp_buka"
 
@@ -58,6 +70,7 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/MAKEFILEID"
+images = ["game", "editor"]
 source = "src/BASE/MAKEFILEID.cpp"
 flags = "cpp_buka_g5"
 
@@ -68,21 +81,25 @@ flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/BACKDROP"
+images = ["game", "editor"]
 source = "src/BASE/BACKDROP.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/BORDER"
+images = ["game", "editor"]
 source = "src/BASE/BORDER.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/BUTTON"
+images = ["game", "editor"]
 source = "src/BASE/BUTTON.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/DIMMER"
+images = ["game", "editor"]
 source = "src/BASE/DIMMER.cpp"
 # The six-short dimmerWidget constructor pushes its arguments without /G6
 # register clears.
@@ -90,11 +107,13 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/ICONWDGT"
+images = ["game", "editor"]
 source = "src/BASE/ICONWDGT.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/EXEC"
+images = ["game", "editor"]
 source = "src/BASE/EXEC.cpp"
 # DoDialog expands executive::executive inline while retail keeps the
 # out-of-line 0x0047a170 body for InitMainClasses: automatic inlining.
@@ -102,37 +121,44 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/INPUTMGR"
+images = ["game", "editor"]
 source = "src/BASE/INPUTMGR.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/MOUSEMGR"
+images = ["game", "editor"]
 source = "src/BASE/MOUSEMGR.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/RESMGR"
+images = ["game", "editor"]
 source = "src/BASE/RESMGR.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/RESOURCE"
+images = ["game", "editor"]
 source = "src/BASE/RESOURCE.cpp"
 flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/PALETTE"
+images = ["game", "editor"]
 source = "src/BASE/PALETTE.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TILESET"
+images = ["game", "editor"]
 source = "src/BASE/TILESET.cpp"
 # G5 retail controls: buka-g5-surface-tileset-controls.json.
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TEXTWDGT"
+images = ["game", "editor"]
 source = "src/BASE/TEXTWDGT.cpp"
 # Retail keeps standalone ~textWidget and SetText while expanding both in
 # the deleting destructor and Main; that pair requires automatic inlining.
@@ -140,27 +166,32 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/TEXTNTRY"
+images = ["game", "editor"]
 source = "src/BASE/TEXTNTRY.cpp"
 # Retail Main omits the /G6 clears before narrow-argument calls.
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/FONT"
+images = ["game", "editor"]
 source = "src/BASE/FONT.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/ICON"
+images = ["game", "editor"]
 source = "src/BASE/ICON.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WINDOW"
+images = ["game", "editor"]
 source = "src/BASE/WINDOW.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WIDGET"
+images = ["game", "editor"]
 source = "src/BASE/WIDGET.cpp"
 # Main expands widget::Dim twice (DimBitmapArea calls) while retail keeps the
 # out-of-line 0x0047f930 body: automatic inlining.
@@ -168,11 +199,13 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/WINMGR"
+images = ["game", "editor"]
 source = "src/BASE/WINMGR.cpp"
 flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Audio"
+images = ["game", "editor"]
 source = "src/BASE/Audio.cpp"
 # One retail TU: AudiereEffects, AudiereMusic and the device/volume code
 # (unaligned contiguous code, a single <string> ctype pair, shared COMDATs).
@@ -180,6 +213,7 @@ flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/TILE"
+images = ["game", "editor"]
 source = "src/BASE/TILE.asm"
 flags = "cpp_buka"
 
@@ -347,11 +381,13 @@ retail_file = "Source\\wingraph.cpp"
 
 [[unit]]
 unit = "BASE/miscwin"
+images = ["game", "editor"]
 source = "src/BASE/miscwin.cpp"
 flags = "cpp_buka"
 
 [[unit]]
 unit = "BASE/SAMPLE"
+images = ["game", "editor"]
 source = "src/BASE/SAMPLE.cpp"
 flags = "cpp_buka_g5"
 
@@ -376,6 +412,7 @@ flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/Icon2bc"
+images = ["game", "editor"]
 source = "src/BASE/Icon2bc.asm"
 flags = "cpp_buka"
 

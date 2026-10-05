@@ -36,17 +36,17 @@ from dataclasses import asdict, dataclass
 from itertools import combinations
 from pathlib import Path
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 from homm1.verify.constants import _flags, _require_cl_mode, _source_path
 from homm1.verify.srcscan import blank_comments
 
 
-CDB = BUILD / "clangd/compile_commands.json"
-REPORT = BUILD / "gen/enum_reuse.tsv"
-COLLISION_REPORT = BUILD / "gen/enum_value_collisions.tsv"
-PAIR_REPORT = BUILD / "gen/enum_domain_pairs.tsv"
-ROLE_PAIR_REPORT = BUILD / "gen/enum_role_pairs.tsv"
-BARE_CONSTANTS = BUILD / "gen/bare_constants.tsv"
+CDB = IMAGE_BUILD / "clangd/compile_commands.json"
+REPORT = IMAGE_BUILD / "gen/enum_reuse.tsv"
+COLLISION_REPORT = IMAGE_BUILD / "gen/enum_value_collisions.tsv"
+PAIR_REPORT = IMAGE_BUILD / "gen/enum_domain_pairs.tsv"
+ROLE_PAIR_REPORT = IMAGE_BUILD / "gen/enum_role_pairs.tsv"
+BARE_CONSTANTS = IMAGE_BUILD / "gen/bare_constants.tsv"
 LEDGER = REPO / "config/reviews/enum-reuse.tsv"
 
 LEDGER_FIELDS = (

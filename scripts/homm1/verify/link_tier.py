@@ -29,13 +29,13 @@ import re
 import struct
 import sys
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 
 # The paths `homm1 link` writes (homm1.graph.CANDIDATE_EXE/_MAP); the port
 # kept the donor's HOMM1.* spelling and so never found a candidate.
-CAND = BUILD / "exe/HEROES.candidate.EXE"
-CMAP = BUILD / "exe/HEROES.candidate.map"
-UNRESOLVED = BUILD / "exe/HEROES.candidate.unresolved.txt"
+CAND = IMAGE_BUILD / "exe/HEROES.candidate.EXE"
+CMAP = IMAGE_BUILD / "exe/HEROES.candidate.map"
+UNRESOLVED = IMAGE_BUILD / "exe/HEROES.candidate.unresolved.txt"
 
 _MAP_ROW = re.compile(r"^ (\d{4}):([0-9a-f]{8})\s+(\S+)\s+([0-9a-f]{8})")
 
@@ -187,7 +187,7 @@ def image_diff_findings(limit: int = 25) -> list[str]:
     # a candidate older than the newest base obj was linked from OTHER
     # bytes: a divergence would be stale-image noise, not a link fact
     newest = max((p.stat().st_mtime
-                  for p in (BUILD / "objdiff/base").rglob("*.obj")),
+                  for p in (IMAGE_BUILD / "objdiff/base").rglob("*.obj")),
                  default=0.0)
     if newest > CAND.stat().st_mtime:
         return ["image-diff: candidate EXE is STALE (a base obj is newer) - "

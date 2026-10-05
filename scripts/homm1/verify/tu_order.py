@@ -24,13 +24,13 @@ import argparse
 import re
 import sys
 
-from homm1.core.paths import BUILD, CONFIG, REPO, SRC
+from homm1.core.paths import BUILD, IMAGE_BUILD, CONFIG, REPO, SRC
 from homm1.core.tsv import read as read_tsv
 from homm1.verify.srcscan import VA_RE, claim_rva
 
 EXILES_TSV = CONFIG / "cleanliness/kept-comdat-exiles.tsv"
 BASELINE = CONFIG / "cleanliness/tu-order-baseline.tsv"
-CLAIMS = BUILD / "gen/claims"
+CLAIMS = IMAGE_BUILD / "gen/claims"
 
 SIG_RE = re.compile(r"([A-Za-z_]\w*)::(~?[A-Za-z_]\w*|operator[^\(]*)")
 #: shared special-member pool bands (ctors/dtors linker-pooled across classes)

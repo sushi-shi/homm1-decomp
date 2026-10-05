@@ -49,10 +49,10 @@ from collections import Counter
 import re
 import struct
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink.coffx import Obj
 
-NORM = BUILD / "objdiff/compare-new"
+NORM = IMAGE_BUILD / "objdiff/compare-new"
 
 _CALL = re.compile(r"\b(?:call)\s")
 _RET = re.compile(r"\bret\b")

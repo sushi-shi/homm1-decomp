@@ -23,6 +23,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Retail assertion paths: each program's BASE objects were compiled in its own
+// checkout (HEROES.EXE and EDITOR.EXE assertion strings).
+#ifdef HOMM1_EDITOR
+#define RESMGR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Base\\RESMGR.CPP"
+#else
+#define RESMGR_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
+#endif
+
 // HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
 VA(0x0046c0e0, 0x7a)
 resourceManager::resourceManager(void) : baseManager() {
@@ -369,7 +377,7 @@ void resourceManager::RestorePosition(void) {
 
 // donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x0046cc76, 0x48)
-#line 598 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
+#line 598 RESMGR_CPP_PATH
 i8 resourceManager::ReadByte(void) {
 #line 599
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -382,7 +390,7 @@ i8 resourceManager::ReadByte(void) {
 // donor Buka TU BASE/RESMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:5;base=0.481320;margin=0.600000;shape=0.261;size=0.958;calls=1.000;alternate=pol20:short int resourceManager::ReadWord(void)@0x000c8f70
 VA(0x0046ccbe, 0x4b)
-#line 619 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
+#line 619 RESMGR_CPP_PATH
 i16 resourceManager::ReadWord(void) {
 #line 620
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -393,7 +401,7 @@ i16 resourceManager::ReadWord(void) {
 
 // donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x0046cd09, 0x4b)
-#line 639 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
+#line 639 RESMGR_CPP_PATH
 i32 resourceManager::ReadLong(void) {
 #line 640
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
@@ -419,7 +427,7 @@ void resourceManager::Read13(i8* destination) {
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x0046cdb0, 0x52)
-#line 679 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
+#line 679 RESMGR_CPP_PATH
 void resourceManager::ReadBlock(i8* destination, u32 size) {
 #line 680
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
