@@ -2116,7 +2116,7 @@ i32 philAI::RVOfPosition(
     else if (estTurns > 1.0f)
         estTurns = estTurns * 1.2;
     totalValue = static_cast<i32>(totalValue / (estTurns + 0.2));
-    delta = static_cast<i32>(delta * 2 / (estTurns + 1.0f));
+    delta = static_cast<i32>(delta * 2 / (1.0f + estTurns));
     if (estLiveChance == 100)
         totalValue += delta;
     if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && curTriggerType == MAP_OBJECT_COAST)
