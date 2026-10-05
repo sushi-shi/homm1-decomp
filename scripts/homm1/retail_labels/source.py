@@ -104,12 +104,27 @@ def claim_space(path: str | os.PathLike | None) -> str:
     the game's (homm1.core.paths). Shared source therefore always names its
     game identity; another image reaches it through its placements."""
     from homm1.core.paths import images
-    if path is None:
+    if path is None or not os.path.isabs(path):
         return "game"
     try:
         rel = Path(os.path.realpath(path)).relative_to(os.path.realpath(REPO)).parts
     except ValueError:
         return "game"
+    return _space_of_parts(rel)
+
+
+def _in_repo(path: str) -> bool:
+    if not os.path.isabs(path):
+        return False            # a #line retail path such as U:\\HMM\\...
+    try:
+        Path(os.path.realpath(path)).relative_to(os.path.realpath(REPO))
+        return True
+    except ValueError:
+        return False
+
+
+def _space_of_parts(rel) -> str:
+    from homm1.core.paths import images
     if len(rel) > 1 and rel[0] in ("src", "include"):
         for image in images():
             if image != "game" and rel[1] == image.upper():
@@ -179,7 +194,10 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
             ann = strings.get(str_ref)
             if ann is None:
                 continue
-            space = claim_space(strings.get(file_ref))
+            # A #line directive renames the file to a retail path outside
+            # the repository; such a claim takes its TU's space (None here).
+            located = strings.get(file_ref)
+            space = (claim_space(located) if located and _in_repo(located) else None)
             name, decorated = _ir_symbol_name(sym_ref)
             m = ANN_VA_RE.match(ann)
             if m:

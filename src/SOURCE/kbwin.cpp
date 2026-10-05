@@ -26,6 +26,9 @@
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
+#ifdef HOMM1_EDITOR
+#include <EDITOR/EDITOR.h>
+#endif
 
 VA(0x00442ca0, 0x11a)
 H1_C_LINKAGE i32 __stdcall
@@ -34,15 +37,28 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     MSG message;
 
     hInstApp = instance;
+#ifdef HOMM1_EDITOR
+    gEventHandle =
+        CreateEventA(NULL, FALSE, FALSE, localization::Tr("editor.instance.event_name"));
+#else
     gEventHandle =
         CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
+#endif
     errorLast = GetLastError();
     if (gEventHandle == NULL || errorLast == ERROR_ALREADY_EXISTS) {
+#ifdef HOMM1_EDITOR
+        sprintf(
+            gText,
+            localization::Tr("startup.instance.already_running"),
+            localization::Tr("editor.instance.title")
+        );
+#else
         sprintf(
             gText,
             localization::Tr("startup.instance.already_running"),
             localization::Tr("startup.instance.game_title")
         );
+#endif
         MessageBoxA(NULL, gText, localization::Tr("startup.error.title"), MB_ICONHAND);
         return 0;
     }
@@ -204,6 +220,10 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
                 }
                 CycleColors();
             }
+#ifdef HOMM1_EDITOR
+            if (gStatusTextClearTime && lTemp > gStatusTextClearTime)
+                ClearStatusText();
+#endif
             return 0;
         case WM_ACTIVATEAPP:
             gForegroundApp = messageParam;
@@ -373,7 +393,11 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
         case KBWIN_MENU_ABOUT:
             lpfnDlgProc =
                 reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the BOOL dialog procedure.
+#ifdef HOMM1_EDITOR
+            DialogBoxParamA(hInstApp, "EDITOR", window, lpfnDlgProc, 0);
+#else
             DialogBoxParamA(hInstApp, "HEROES", window, lpfnDlgProc, 0);
+#endif
             break;
         case KBWIN_MENU_HELP:
             WinHelpA(hwndApp, ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
@@ -1073,9 +1097,17 @@ void WritePrefs(void) {
 }
 
 DATA(0x0049e700)
+#ifdef HOMM1_EDITOR
+char gAppName[] = localization::Tr("editor.window.app_name");
+#else
 char gAppName[] = localization::Tr("window.gAppName");
+#endif
 DATA(0x0049e708)
+#ifdef HOMM1_EDITOR
+char gTitle[] = localization::Tr("editor.window.title");
+#else
 char gTitle[] = localization::Tr("window.gTitle");
+#endif
 // No retail code reads this value; it sits between gTitle and gcCDTrackName.
 DATA(0x0049e71c)
 i32 gUnusedWindowValue = -1;

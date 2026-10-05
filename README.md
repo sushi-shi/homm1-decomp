@@ -26,13 +26,14 @@ _CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.
 
 ### EDITOR.EXE
 
-**342 / 481 functions exact (71.10%) &middot; 48.98% fuzzy.** A separate image with its own link graph and scores; shared units compile once per image.
+**367 / 481 functions exact (76.30%) &middot; 49.90% fuzzy.** A separate image with its own link graph and scores; shared units compile once per image.
 
 | Module            | Units |    Functions exact |  Fuzzy |
 | :---------------- | ----: | -----------------: | -----: |
 | `BASE`            |    29 | 277 / 277 (100.0%) | 100.0% |
-| `SOURCE`          |     3 |    65 / 69 (94.2%) |  99.8% |
-| `(no source yet)` |     — |     0 / 135 (0.0%) |   0.0% |
+| `SOURCE`          |     3 |   69 / 69 (100.0%) | 100.0% |
+| `EDITOR`          |     1 |   21 / 21 (100.0%) | 100.0% |
+| `(no source yet)` |     — |     0 / 114 (0.0%) |   0.0% |
 <!-- match-score:end -->
 
 ## Reconstruction debt

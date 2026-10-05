@@ -5,10 +5,10 @@ rva	size	name	class	source	symbol	detail
 0x00001044	0x188	FUN_00401044	unknown			-
 0x000011cc	0xc5	FUN_004011CC	unknown			-
 0x00001291	0x501	FUN_00401291	unknown			-
-0x00001792	0x27	FUN_00401792	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x000017b9	0x12	FUN_004017B9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00001792	0x27	FUN_00401792	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x000017b9	0x12	FUN_004017B9	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x000017cb	0x5	FUN_004017CB	linker-pad			-
-0x000017d0	0x5	FUN_004017D0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000017d0	0x5	FUN_004017D0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	35 byte-identical candidates
 0x000017d5	0xb	FUN_004017D5	linker-pad			-
 0x000017e0	0xfb	FUN_004017E0	unknown			-
 0x000018db	0x41	FUN_004018DB	unknown			-
@@ -62,14 +62,14 @@ rva	size	name	class	source	symbol	detail
 0x000080fc	0x12f	FUN_004080FC	unknown			-
 0x0000822b	0x28	FUN_0040822B	unknown			-
 0x00008253	0x209	FUN_00408253	unknown			-
-0x0000845c	0x27	FUN_0040845C	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00008483	0x12	FUN_00408483	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0000845c	0x27	FUN_0040845C	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00008483	0x12	FUN_00408483	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00008495	0xb	FUN_00408495	linker-pad			-
-0x000084a0	0x5	FUN_004084A0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
-0x000084a5	0x5	FUN_004084A5	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000084a0	0x5	FUN_004084A0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	35 byte-identical candidates
+0x000084a5	0x5	FUN_004084A5	unknown			-
 0x000084aa	0x106	FUN_004084AA	unknown			-
 0x000085b0	0xe	FUN_004085B0	unknown			-
-0x000085be	0x5	FUN_004085BE	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000085be	0x5	FUN_004085BE	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	35 byte-identical candidates
 0x000085c3	0xe	FUN_004085C3	unknown			-
 0x000085d1	0x2e	FUN_004085D1	unknown			-
 0x000085ff	0x3b	FUN_004085FF	unknown			-
@@ -79,7 +79,7 @@ rva	size	name	class	source	symbol	detail
 0x0000869f	0xa7	FUN_0040869F	unknown			-
 0x00008746	0xd9	FUN_00408746	unknown			-
 0x0000881f	0x164	FUN_0040881F	unknown			-
-0x00008983	0x12	FUN_00408983	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00008983	0x12	FUN_00408983	unknown			-
 0x00008995	0x39	FUN_00408995	unknown			-
 0x000089ce	0x20c	FUN_004089CE	unknown			-
 0x00008bda	0x137	FUN_00408BDA	unknown			-
@@ -88,15 +88,15 @@ rva	size	name	class	source	symbol	detail
 0x00009056	0x7a	FUN_00409056	unknown			-
 0x000090d0	0xbe	FUN_004090D0	unknown			-
 0x0000918e	0x4d	FUN_0040918E	unknown			-
-0x000091db	0x5	FUN_004091DB	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000091db	0x5	FUN_004091DB	unknown			-
 0x000091e0	0x3c	FUN_004091E0	unknown			-
 0x0000921c	0x1b	FUN_0040921C	unknown			-
 0x00009237	0xa	FUN_00409237	unknown			-
 0x00009241	0x37	FUN_00409241	unknown			-
-0x00009278	0x5	FUN_00409278	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
-0x0000927d	0x5	FUN_0040927D	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
-0x00009282	0x27	FUN_00409282	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x000092a9	0x12	FUN_004092A9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00009278	0x5	FUN_00409278	unknown			-
+0x0000927d	0x5	FUN_0040927D	unknown			-
+0x00009282	0x27	FUN_00409282	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x000092a9	0x12	FUN_004092A9	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x000092bb	0x5	FUN_004092BB	linker-pad			-
 0x000092c0	0x32	FUN_004092C0	unknown			-
 0x000092f2	0x123	FUN_004092F2	unknown			-
@@ -123,15 +123,15 @@ rva	size	name	class	source	symbol	detail
 0x0000c17a	0x193	FUN_0040C17A	unknown			-
 0x0000c30d	0x3f8	FUN_0040C30D	unknown			-
 0x0000c705	0x25e	FUN_0040C705	unknown			-
-0x0000c963	0x27	FUN_0040C963	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0000c98a	0x12	FUN_0040C98A	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0000c963	0x27	FUN_0040C963	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0000c98a	0x12	FUN_0040C98A	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0000c99c	0x4	FUN_0040C99C	linker-pad			-
 0x0000c9a0	0x11a	FUN_0040C9A0	unknown			-
 0x0000caba	0x28a	FUN_0040CABA	unknown			-
 0x0000cd44	0xa	FUN_0040CD44	unknown			-
 0x0000cd4e	0x6c2	FUN_0040CD4E	unknown			-
 0x0000d410	0x67	FUN_0040D410	unknown			-
-0x0000d477	0xf	FUN_0040D477	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x0000d477	0xf	FUN_0040D477	unknown			-
 0x0000d486	0x7f	FUN_0040D486	unknown			-
 0x0000d505	0x11d	FUN_0040D505	unknown			-
 0x0000d622	0x165	FUN_0040D622	unknown			-
@@ -150,8 +150,8 @@ rva	size	name	class	source	symbol	detail
 0x0000e8d5	0x55	FUN_0040E8D5	unknown			-
 0x0000e92a	0x55	FUN_0040E92A	unknown			-
 0x0000e97f	0x55	FUN_0040E97F	unknown			-
-0x0000e9d4	0x27	FUN_0040E9D4	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0000e9fb	0x12	FUN_0040E9FB	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0000e9d4	0x27	FUN_0040E9D4	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0000e9fb	0x12	FUN_0040E9FB	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0000ea0d	0x3	FUN_0040EA0D	linker-pad			-
 0x0000ea10	0x2b	FUN_0040EA10	unknown			-
 0x0000ea3b	0x372	FUN_0040EA3B	unknown			-
@@ -167,8 +167,8 @@ rva	size	name	class	source	symbol	detail
 0x00010c92	0x132	FUN_00410C92	unknown			-
 0x00010dc4	0x6f	FUN_00410DC4	unknown			-
 0x00010e33	0x134	FUN_00410E33	unknown			-
-0x00010f67	0x27	FUN_00410F67	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00010f8e	0x12	FUN_00410F8E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00010f67	0x27	FUN_00410F67	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00010f8e	0x12	FUN_00410F8E	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00010fa0	0x3c5	FUN_00410FA0	unknown			-
 0x00011365	0xd5	FUN_00411365	unknown			-
 0x0001143a	0x601	FUN_0041143A	unknown			-
@@ -181,8 +181,8 @@ rva	size	name	class	source	symbol	detail
 0x00014795	0xbd6	FUN_00414795	unknown			-
 0x0001536b	0xd32	FUN_0041536B	unknown			-
 0x0001609d	0x1ac	FUN_0041609D	unknown			-
-0x00016249	0x27	FUN_00416249	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00016270	0x12	FUN_00416270	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00016249	0x27	FUN_00416249	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00016270	0x12	FUN_00416270	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00016282	0xe	FUN_00416282	linker-pad			-
 0x00016290	0x248	FUN_00416290	unknown			-
 0x000164d8	0x8f3	FUN_004164D8	unknown			-
@@ -197,8 +197,8 @@ rva	size	name	class	source	symbol	detail
 0x000182d2	0x59	FUN_004182D2	unknown			-
 0x0001832b	0x12f	FUN_0041832B	unknown			-
 0x0001845a	0xb	FUN_0041845A	unknown			-
-0x00018465	0x27	FUN_00418465	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001848c	0x12	FUN_0041848C	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00018465	0x27	FUN_00418465	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001848c	0x12	FUN_0041848C	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001849e	0x2	FUN_0041849E	linker-pad			-
 0x000184a0	0x41	FUN_004184A0	unknown			-
 0x000184e1	0x52c	FUN_004184E1	unknown			-
@@ -206,8 +206,8 @@ rva	size	name	class	source	symbol	detail
 0x00018b73	0x741	FUN_00418B73	unknown			-
 0x000192b4	0x150	FUN_004192B4	unknown			-
 0x00019404	0x47	FUN_00419404	unknown			-
-0x0001944b	0x27	FUN_0041944B	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00019472	0x12	FUN_00419472	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001944b	0x27	FUN_0041944B	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00019472	0x12	FUN_00419472	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00019484	0xc	FUN_00419484	linker-pad			-
 0x00019490	0x3e	FUN_00419490	unknown			-
 0x000194ce	0x2d	FUN_004194CE	unknown			-
@@ -241,8 +241,8 @@ rva	size	name	class	source	symbol	detail
 0x0001b082	0x84	FUN_0041B082	unknown			-
 0x0001b106	0x1a	FUN_0041B106	unknown			-
 0x0001b120	0x1bd	FUN_0041B120	unknown			-
-0x0001b2dd	0x27	FUN_0041B2DD	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001b304	0x12	FUN_0041B304	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001b2dd	0x27	FUN_0041B2DD	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001b304	0x12	FUN_0041B304	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001b316	0xa	FUN_0041B316	linker-pad			-
 0x0001b320	0x6	FUN_0041B320	import-thunk	KERNEL32.dll	CloseHandle	IAT RVA 0x38150
 0x0001b326	0x6	FUN_0041B326	import-thunk	KERNEL32.dll	GetDriveTypeA	IAT RVA 0x3805c
@@ -326,8 +326,8 @@ rva	size	name	class	source	symbol	detail
 0x0001b4fa	0x6	FUN_0041B4FA	import-thunk	WING32.dll	WinGBitBlt	IAT RVA 0x382a4
 0x0001b500	0x5a	FUN_0041B500	unknown			-
 0x0001b55a	0x48	FUN_0041B55A	unknown			-
-0x0001b5a2	0x27	FUN_0041B5A2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001b5c9	0x12	FUN_0041B5C9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001b5a2	0x27	FUN_0041B5A2	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001b5c9	0x12	FUN_0041B5C9	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001b5db	0x5	FUN_0041B5DB	linker-pad			-
 0x0001b5e0	0x92	FUN_0041B5E0	unknown			-
 0x0001b672	0x9e	FUN_0041B672	unknown			-
@@ -343,8 +343,8 @@ rva	size	name	class	source	symbol	detail
 0x0001c13e	0xaa	FUN_0041C13E	unknown			-
 0x0001c1e8	0x8a	FUN_0041C1E8	unknown			-
 0x0001c272	0x1bc	FUN_0041C272	unknown			-
-0x0001c42e	0x27	FUN_0041C42E	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001c455	0x12	FUN_0041C455	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001c42e	0x27	FUN_0041C42E	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001c455	0x12	FUN_0041C455	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001c467	0x9	FUN_0041C467	linker-pad			-
 0x0001c470	0x59	FUN_0041C470	unknown			-
 0x0001c4c9	0xae	FUN_0041C4C9	unknown			-
@@ -355,8 +355,8 @@ rva	size	name	class	source	symbol	detail
 0x0001cb8f	0xec	FUN_0041CB8F	unknown			-
 0x0001cc7b	0xba	FUN_0041CC7B	unknown			-
 0x0001cd35	0x99	FUN_0041CD35	unknown			-
-0x0001cdce	0x27	FUN_0041CDCE	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001cdf5	0x12	FUN_0041CDF5	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001cdce	0x27	FUN_0041CDCE	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001cdf5	0x12	FUN_0041CDF5	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001ce07	0x9	FUN_0041CE07	linker-pad			-
 0x0001ce10	0x2e	FUN_0041CE10	unknown			-
 0x0001ce3e	0x2	FUN_0041CE3E	linker-pad			-
@@ -367,8 +367,8 @@ rva	size	name	class	source	symbol	detail
 0x0001d0ca	0x5b	FUN_0041D0CA	unknown			-
 0x0001d125	0x2a4	FUN_0041D125	unknown			-
 0x0001d3c9	0xb1	FUN_0041D3C9	unknown			-
-0x0001d47a	0x27	FUN_0041D47A	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001d4a1	0x12	FUN_0041D4A1	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001d47a	0x27	FUN_0041D47A	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001d4a1	0x12	FUN_0041D4A1	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001d4b3	0xd	FUN_0041D4B3	linker-pad			-
 0x0001d4c0	0x2e	FUN_0041D4C0	unknown			-
 0x0001d4ee	0x2	FUN_0041D4EE	linker-pad			-
@@ -387,8 +387,8 @@ rva	size	name	class	source	symbol	detail
 0x0001e015	0x34	FUN_0041E015	unknown			-
 0x0001e049	0x312	FUN_0041E049	unknown			-
 0x0001e35b	0x46a	FUN_0041E35B	unknown			-
-0x0001e7c5	0x27	FUN_0041E7C5	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001e7ec	0x12	FUN_0041E7EC	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001e7c5	0x27	FUN_0041E7C5	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001e7ec	0x12	FUN_0041E7EC	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001e7fe	0x2	FUN_0041E7FE	linker-pad			-
 0x0001e800	0x102	FUN_0041E800	unknown			-
 0x0001e902	0x98	FUN_0041E902	unknown			-
@@ -414,8 +414,8 @@ rva	size	name	class	source	symbol	detail
 0x0001f35f	0xd	FUN_0041F35F	unknown			-
 0x0001f36c	0x13	FUN_0041F36C	unknown			-
 0x0001f37f	0x13	FUN_0041F37F	unknown			-
-0x0001f392	0x27	FUN_0041F392	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0001f3b9	0x12	FUN_0041F3B9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001f392	0x27	FUN_0041F392	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0001f3b9	0x12	FUN_0041F3B9	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0001f3cb	0x5	FUN_0041F3CB	linker-pad			-
 0x0001f3d0	0x7a	FUN_0041F3D0	unknown			-
 0x0001f44a	0x7a	FUN_0041F44A	unknown			-
@@ -447,8 +447,8 @@ rva	size	name	class	source	symbol	detail
 0x00020044	0x41	FUN_00420044	unknown			-
 0x00020085	0x1b	FUN_00420085	unknown			-
 0x000200a0	0x52	FUN_004200A0	unknown			-
-0x000200f2	0x27	FUN_004200F2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00020119	0x12	FUN_00420119	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000200f2	0x27	FUN_004200F2	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00020119	0x12	FUN_00420119	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0002012b	0x5	FUN_0042012B	linker-pad			-
 0x00020130	0x19c	FUN_00420130	unknown			-
 0x000202cc	0x9f	FUN_004202CC	unknown			-
@@ -470,8 +470,8 @@ rva	size	name	class	source	symbol	detail
 0x00020e59	0x444	FUN_00420E59	unknown			-
 0x0002129d	0x36a	FUN_0042129D	unknown			-
 0x00021607	0x4d	FUN_00421607	unknown			-
-0x00021654	0x27	FUN_00421654	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0002167b	0x12	FUN_0042167B	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00021654	0x27	FUN_00421654	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0002167b	0x12	FUN_0042167B	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0002168d	0x3	FUN_0042168D	linker-pad			-
 0x00021690	0x185	FUN_00421690	unknown			-
 0x00021815	0x37	FUN_00421815	unknown			-
@@ -486,8 +486,8 @@ rva	size	name	class	source	symbol	detail
 0x00021c7d	0x5	FUN_00421C7D	unknown			-
 0x00021c82	0x214	FUN_00421C82	unknown			-
 0x00021e96	0x307	FUN_00421E96	unknown			-
-0x0002219d	0x27	FUN_0042219D	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x000221c4	0x12	FUN_004221C4	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0002219d	0x27	FUN_0042219D	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x000221c4	0x12	FUN_004221C4	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x000221d6	0xa	FUN_004221D6	linker-pad			-
 0x000221e0	0xc7	FUN_004221E0	unknown			-
 0x000222a7	0x5b	FUN_004222A7	unknown			-
@@ -496,8 +496,8 @@ rva	size	name	class	source	symbol	detail
 0x0002244d	0x34f	FUN_0042244D	unknown			-
 0x0002279c	0x25f	FUN_0042279C	unknown			-
 0x000229fb	0x133	FUN_004229FB	unknown			-
-0x00022b2e	0x27	FUN_00422B2E	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00022b55	0x12	FUN_00422B55	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00022b2e	0x27	FUN_00422B2E	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00022b55	0x12	FUN_00422B55	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00022b67	0x9	FUN_00422B67	linker-pad			-
 0x00022b70	0x2e	FUN_00422B70	unknown			-
 0x00022b9e	0x2	FUN_00422B9E	linker-pad			-
@@ -507,8 +507,8 @@ rva	size	name	class	source	symbol	detail
 0x00022fa1	0x54	FUN_00422FA1	unknown			-
 0x00022ff5	0x15e	FUN_00422FF5	unknown			-
 0x00023153	0x2a8	FUN_00423153	unknown			-
-0x000233fb	0x27	FUN_004233FB	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00023422	0x12	FUN_00423422	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000233fb	0x27	FUN_004233FB	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00023422	0x12	FUN_00423422	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00023434	0xc	FUN_00423434	linker-pad			-
 0x00023440	0x2e	FUN_00423440	unknown			-
 0x0002346e	0x2	FUN_0042346E	linker-pad			-
@@ -540,15 +540,15 @@ rva	size	name	class	source	symbol	detail
 0x000241cd	0x88	FUN_004241CD	unknown			-
 0x00024255	0x16b	FUN_00424255	unknown			-
 0x000243c0	0x18	FUN_004243C0	unknown			-
-0x000243d8	0x27	FUN_004243D8	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x000243ff	0x12	FUN_004243FF	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000243d8	0x27	FUN_004243D8	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x000243ff	0x12	FUN_004243FF	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00024411	0xf	FUN_00424411	linker-pad			-
 0x00024420	0x3a	FUN_00424420	unknown			-
 0x0002445a	0x93	FUN_0042445A	unknown			-
 0x000244ed	0x2b	FUN_004244ED	unknown			-
 0x00024518	0x11	FUN_00424518	unknown			-
-0x00024529	0x27	FUN_00424529	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00024550	0x12	FUN_00424550	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024529	0x27	FUN_00424529	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00024550	0x12	FUN_00424550	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00024562	0xe	FUN_00424562	linker-pad			-
 0x00024570	0x2e	FUN_00424570	unknown			-
 0x0002459e	0x2	FUN_0042459E	linker-pad			-
@@ -564,13 +564,13 @@ rva	size	name	class	source	symbol	detail
 0x00024cf1	0x12	FUN_00424CF1	unknown			-
 0x00024d03	0x12	FUN_00424D03	unknown			-
 0x00024d15	0x11	FUN_00424D15	unknown			-
-0x00024d26	0xf	FUN_00424D26	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x00024d26	0xf	FUN_00424D26	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
 0x00024d35	0x61	FUN_00424D35	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
-0x00024d96	0x12	FUN_00424D96	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024d96	0x12	FUN_00424D96	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00024da8	0x46	FUN_00424DA8	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
-0x00024dee	0xf	FUN_00424DEE	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x00024dee	0xf	FUN_00424DEE	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
 0x00024dfd	0x61	FUN_00424DFD	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
-0x00024e5e	0x12	FUN_00424E5E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024e5e	0x12	FUN_00424E5E	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00024e70	0x46	FUN_00424E70	helper-exact	base:BASE/Audio	_$E24	-
 0x00024eb6	0x47	FUN_00424EB6	unknown			-
 0x00024efd	0x43b	FUN_00424EFD	unknown			-
@@ -582,9 +582,9 @@ rva	size	name	class	source	symbol	detail
 0x00025659	0x12	FUN_00425659	unknown			-
 0x0002566b	0x12	FUN_0042566B	unknown			-
 0x0002567d	0x11	FUN_0042567D	unknown			-
-0x0002568e	0xf	FUN_0042568E	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x0002568e	0xf	FUN_0042568E	helper-exact	base:BASE/Audio	_$E21	5 byte-identical candidates
 0x0002569d	0x61	FUN_0042569D	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
-0x000256fe	0x12	FUN_004256FE	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000256fe	0x12	FUN_004256FE	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00025710	0x46	FUN_00425710	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
 0x00025756	0xf	FUN_00425756	unknown			-
 0x00025765	0x70	FUN_00425765	unknown			-
@@ -597,8 +597,8 @@ rva	size	name	class	source	symbol	detail
 0x0002599d	0x1c	FUN_0042599D	unknown			-
 0x000259b9	0x1c	FUN_004259B9	unknown			-
 0x000259d5	0x1d	FUN_004259D5	unknown			-
-0x000259f2	0x27	FUN_004259F2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00025a19	0x12	FUN_00425A19	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000259f2	0x27	FUN_004259F2	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00025a19	0x12	FUN_00425A19	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00025a2b	0x5	FUN_00425A2B	linker-pad			-
 0x00025a30	0x2c	FUN_00425A30	helper-exact	base:BASE/Audio	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	4 byte-identical candidates
 0x00025a5c	0x4	FUN_00425A5C	linker-pad			-
@@ -618,8 +618,8 @@ rva	size	name	class	source	symbol	detail
 0x00025cf0	0xe9	FUN_00425CF0	unknown			-
 0x00025dd9	0x1d9	FUN_00425DD9	unknown			-
 0x00025fb2	0xd7	FUN_00425FB2	unknown			-
-0x00026089	0x27	FUN_00426089	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x000260b0	0x12	FUN_004260B0	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00026089	0x27	FUN_00426089	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x000260b0	0x12	FUN_004260B0	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x000260c2	0xe	FUN_004260C2	linker-pad			-
 0x000260d0	0x2e	FUN_004260D0	unknown			-
 0x000260fe	0x2	FUN_004260FE	linker-pad			-
@@ -628,8 +628,8 @@ rva	size	name	class	source	symbol	detail
 0x0002616a	0x77	FUN_0042616A	unknown			-
 0x000261e1	0x19	FUN_004261E1	unknown			-
 0x000261fa	0x4e	FUN_004261FA	unknown			-
-0x00026248	0x27	FUN_00426248	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0002626f	0x12	FUN_0042626F	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00026248	0x27	FUN_00426248	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0002626f	0x12	FUN_0042626F	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00026281	0xf	FUN_00426281	linker-pad			-
 0x00026290	0x2e	FUN_00426290	unknown			-
 0x000262be	0x2	FUN_004262BE	linker-pad			-
@@ -642,8 +642,8 @@ rva	size	name	class	source	symbol	detail
 0x000266b1	0xa70	FUN_004266B1	unknown			-
 0x00027121	0x1c7	FUN_00427121	unknown			-
 0x000272e8	0x23d	FUN_004272E8	unknown			-
-0x00027525	0x27	FUN_00427525	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0002754c	0x12	FUN_0042754C	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00027525	0x27	FUN_00427525	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0002754c	0x12	FUN_0042754C	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x0002755e	0x2	FUN_0042755E	linker-pad			-
 0x00027560	0x2e	FUN_00427560	unknown			-
 0x0002758e	0x2	FUN_0042758E	linker-pad			-
@@ -655,8 +655,8 @@ rva	size	name	class	source	symbol	detail
 0x00027a59	0x66	FUN_00427A59	unknown			-
 0x00027abf	0x18	FUN_00427ABF	unknown			-
 0x00027ad7	0xa1	FUN_00427AD7	unknown			-
-0x00027b78	0x27	FUN_00427B78	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00027b9f	0x12	FUN_00427B9F	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00027b78	0x27	FUN_00427B78	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00027b9f	0x12	FUN_00427B9F	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00027bb1	0xf	FUN_00427BB1	linker-pad			-
 0x00027bc0	0x2e	FUN_00427BC0	unknown			-
 0x00027bee	0x2	FUN_00427BEE	linker-pad			-
@@ -665,8 +665,8 @@ rva	size	name	class	source	symbol	detail
 0x00027c5a	0x77	FUN_00427C5A	unknown			-
 0x00027cd1	0x19	FUN_00427CD1	unknown			-
 0x00027cea	0x13	FUN_00427CEA	unknown			-
-0x00027cfd	0x27	FUN_00427CFD	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00027d24	0x12	FUN_00427D24	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00027cfd	0x27	FUN_00427CFD	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00027d24	0x12	FUN_00427D24	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00027d36	0xa	FUN_00427D36	linker-pad			-
 0x00027d40	0x2e	FUN_00427D40	unknown			-
 0x00027d6e	0x2	FUN_00427D6E	linker-pad			-
@@ -679,8 +679,8 @@ rva	size	name	class	source	symbol	detail
 0x00027ed0	0xb	FUN_00427ED0	unknown			-
 0x00027edb	0x2c8	FUN_00427EDB	unknown			-
 0x000281a3	0x67	FUN_004281A3	unknown			-
-0x0002820a	0x27	FUN_0042820A	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00028231	0x12	FUN_00428231	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0002820a	0x27	FUN_0042820A	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00028231	0x12	FUN_00428231	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00028243	0xd	FUN_00428243	linker-pad			-
 0x00028250	0x4c	FUN_00428250	unknown			-
 0x0002829c	0x64	FUN_0042829C	unknown			-
@@ -692,32 +692,32 @@ rva	size	name	class	source	symbol	detail
 0x000284f3	0x3b	FUN_004284F3	unknown			-
 0x0002852e	0xa3	FUN_0042852E	unknown			-
 0x000285d1	0xa6	FUN_004285D1	unknown			-
-0x00028677	0x27	FUN_00428677	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0002869e	0x12	FUN_0042869E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028677	0x27	FUN_00428677	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0002869e	0x12	FUN_0042869E	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x000286b0	0x2e	FUN_004286B0	unknown			-
 0x000286de	0x2	FUN_004286DE	linker-pad			-
 0x000286e0	0x11c	FUN_004286E0	unknown			-
 0x000287fc	0x2b	FUN_004287FC	unknown			-
-0x00028827	0x27	FUN_00428827	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x0002884e	0x12	FUN_0042884E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028827	0x27	FUN_00428827	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x0002884e	0x12	FUN_0042884E	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00028860	0x2e	FUN_00428860	unknown			-
 0x0002888e	0x2	FUN_0042888E	linker-pad			-
 0x00028890	0x232	FUN_00428890	unknown			-
 0x00028ac2	0x7f	FUN_00428AC2	unknown			-
-0x00028b41	0x27	FUN_00428B41	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00028b68	0x12	FUN_00428B68	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028b41	0x27	FUN_00428B41	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00028b68	0x12	FUN_00428B68	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00028b7a	0x6	FUN_00428B7A	linker-pad			-
 0x00028b80	0x2e	FUN_00428B80	unknown			-
 0x00028bae	0x2	FUN_00428BAE	linker-pad			-
 0x00028bb0	0x12b	FUN_00428BB0	unknown			-
-0x00028cdb	0x27	FUN_00428CDB	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00028d02	0x12	FUN_00428D02	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028cdb	0x27	FUN_00428CDB	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00028d02	0x12	FUN_00428D02	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00028d14	0xc	FUN_00428D14	linker-pad			-
 0x00028d20	0x3c	FUN_00428D20	unknown			-
 0x00028d5c	0x43	FUN_00428D5C	unknown			-
 0x00028d9f	0x14	FUN_00428D9F	unknown			-
-0x00028db3	0x27	FUN_00428DB3	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
-0x00028dda	0x12	FUN_00428DDA	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028db3	0x27	FUN_00428DB3	helper-exact	base:BASE/Audio	_$E39	29 byte-identical candidates
+0x00028dda	0x12	FUN_00428DDA	helper-exact	base:BASE/Audio	_$E20	33 byte-identical candidates
 0x00028dec	0x25f	FUN_00428DEC	unknown			-
 0x0002904b	0x1	FUN_0042904B	linker-pad			-
 0x0002904c	0x258	FUN_0042904C	unknown			-
@@ -1256,9 +1256,9 @@ rva	size	name	class	source	symbol	detail
 0x00037266	0xb	FUN_00437266	eh-funclet			-
 0x00037271	0xa	FUN_00437271	eh-funclet			-
 0x0003727b	0x5	FUN_0043727B	linker-pad			-
-0x00037280	0xb	FUN_00437280	eh-funclet			-
-0x0003728b	0xb	FUN_0043728B	eh-funclet			-
-0x00037296	0xa	FUN_00437296	eh-funclet			-
+0x00037280	0xb	FUN_00437280	eh-funclet			FuncInfo/unwind-map child record
+0x0003728b	0xb	FUN_0043728B	eh-funclet			FuncInfo/unwind-map child record
+0x00037296	0xa	FUN_00437296	eh-funclet			FuncInfo/unwind-map child record
 0x000372a0	0xb	FUN_004372A0	eh-funclet			-
 0x000372ab	0xb	FUN_004372AB	eh-funclet			-
 0x000372b6	0xb	FUN_004372B6	eh-funclet			-

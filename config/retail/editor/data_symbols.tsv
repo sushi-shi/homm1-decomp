@@ -8,7 +8,6 @@ rva	size	symbol	provenance
 0x0003f0ac	352	?gSoundPath@@3PADA	game 0x910f0: 1 code reference(s) from placed bodies
 0x0003f20c	352	?gTracksPath@@3PADA	game 0x91250: 1 code reference(s) from placed bodies
 0x0003f380	20	?gMapPath@@3PADA	game 0x913c4: complete initialized bytes (20) unique in the image; no code user
-0x00043920	6	?gAppName@@3PADA	game 0x9e700: complete initialized bytes (6) unique in the image; no code user
 0x0004c6c0	4	?gWinGAttached@@3HA	game 0xa0190: 1 code reference(s) from placed bodies
 0x0004c6d4	4	?Orientation@@3HA	game 0xa01a4: 2 code reference(s) from placed bodies
 0x0004c6d8	1028	?LogicalPalette@@3UWingPalette@@A	game 0xa01a8: 29 code reference(s) from placed bodies
@@ -102,11 +101,14 @@ rva	size	symbol	provenance
 0x0003f410	490	?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A	game 0x921a0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x0003f5fc	272	?gWinSetup@@3PAUWindowTextEntry@@A	game 0x91bc8 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0003f7d4	272	?gWinSetupText@@3PAPADA	game 0x93318 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00051b88	4	?giDebugLevel@@3HA	game 0xa6c48 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00051b8c	4	?gpMouseManager@@3PAVmouseManager@@A	game 0xa7164 (SOURCE/KB): 28 code reference(s) from placed bodies
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00051ea0	4	?gpWindowManager@@3PAVheroWindowManager@@A	game 0xa74a8 (SOURCE/KB): 44 code reference(s) from placed bodies
 0x00051f74	4	?gpResourceManager@@3PAVresourceManager@@A	game 0xa74d8 (SOURCE/KB): 149 code reference(s) from placed bodies
 0x00052014	351	?gLastFilename@@3PADA	game 0xa76c4 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052178	2	?gMapX@@3FA	game 0xa7824 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x0005217a	2	?gMapY@@3FA	game 0xa7826 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052180	4	?gpBufferPalette@@3PAVpalette@@A	game 0xa7830 (SOURCE/KB): 10 code reference(s) from placed bodies
 0x00052184	4	?gPalette@@3PAVpalette@@A	game 0xa7834 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x000522e8	352	?gcRegAppPath@@3PADA	game 0xa7a10 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
@@ -116,6 +118,7 @@ rva	size	symbol	provenance
 0x00052460	300	?gConfig@@3UconfigStruct@@A	game 0xa9428 (SOURCE/KB): 58 code reference(s) from placed bodies
 0x00052590	4	?giMinExtentX@@3HA	game 0xa9560 (SOURCE/KB): 7 code reference(s) from placed bodies
 0x00052594	4	?giMinExtentY@@3HA	game 0xa9564 (SOURCE/KB): 7 code reference(s) from placed bodies
+0x00052598	4	?gpExec@@3PAVexecutive@@A	game 0xa95c8 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000525a0	352	?gLastMapName@@3PADA	game 0xa95d0 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052700	4	?giCurWindowsStyleFlags@@3HA	game 0xa9734 (SOURCE/KB): 4 code reference(s) from placed bodies
 0x00052864	24	?glTimers@@3PAHA	game 0xa98a0 (SOURCE/KB): 4 code reference(s) from placed bodies
@@ -132,4 +135,5 @@ rva	size	symbol	provenance
 0x000528d4	4	?gInDialog@@3HA	game 0xa98f8 (SOURCE/KB): 2 code reference(s) from placed bodies
 0x000528d8	4	?gMinimized@@3HA	game 0xa9900 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000528dc	4	?gInSetupDialog@@3HA	game 0xa98fc (SOURCE/KB): 1 code reference(s) from placed bodies
+0x000528e8	4	?gHeroMoving@@3HA	game 0xa9904 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000528f4	1	?gFirstTimeThrough@@3CA	game 0xa9928 (SOURCE/KB): 1 code reference(s) from placed bodies

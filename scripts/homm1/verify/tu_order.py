@@ -91,8 +91,12 @@ def load_emitted_claims() -> dict[int, set[str]]:
 
 
 def load_in_file_order(exclude_pools: bool = False) -> dict[str, list[Entry]]:
+    from homm1.core.paths import image_key
+    from homm1.retail_labels.source import claim_space
     tus: dict[str, list[Entry]] = {}
     for path in sorted(SRC.rglob("*.cpp")):
+        if claim_space(path) != image_key():
+            continue        # another program's addresses: another layout
         tu = path.stem
         rel = path.relative_to(REPO)
         lines = path.read_text(errors="replace").splitlines()

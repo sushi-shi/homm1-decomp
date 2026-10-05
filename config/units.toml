@@ -471,3 +471,10 @@ source = "src/SOURCE/VIEW.cpp"
 # ViewGeneral registers fs:[0] around its new heroWindow.
 # Complete retail instruction/call controls leave only local-stack placement.
 flags = "cpp_buka_g5"
+
+# EDITOR.EXE's program unit (Editor\EDITOR.CPP), linked by the editor only.
+[[unit]]
+unit = "EDITOR/EDITOR"
+source = "src/EDITOR/EDITOR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]

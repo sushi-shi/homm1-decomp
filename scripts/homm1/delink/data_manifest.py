@@ -1379,6 +1379,16 @@ def gap_rows(enrolled, secs):
         starts[w["rva"]].append(w)
         ends[w["rva"] + w["size"]].append(w)
         intervals.add((w["rva"], w["size"]))
+    # Another image is enrolled incrementally: its reviewed data names
+    # (data_symbols.tsv, placed by code users) bound the holes between one
+    # unit's claims, so a gap carve never shadows a known identity.
+    from homm1.core.paths import DEFAULT_IMAGE, RETAIL, image_key
+    if image_key() != DEFAULT_IMAGE and (RETAIL / "data_symbols.tsv").is_file():
+        from homm1.core.tsv import read as read_tsv
+        for r in read_tsv(RETAIL / "data_symbols.tsv")[2]:
+            size = int(r["size"], 0)
+            if size:
+                intervals.add((int(r["rva"], 16), size))
 
     merged = []
     for a, sz in sorted(intervals):

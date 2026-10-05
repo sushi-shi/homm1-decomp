@@ -393,7 +393,7 @@ class Placer:
                 self.problems.append(f"data {name} at 0x{lo:x}: code users disagree "
                                      f"({sorted(hex(x) for x in found)[:4]})")
             return None
-        if space not in ("data", "rdata") or size < 6:
+        if space not in ("data", "rdata") or size < 8:
             return None
         # No code user: the datum's complete initialized bytes, free of
         # absolute fields, must occur exactly once in the image.
@@ -445,8 +445,8 @@ class Placer:
         return out
 
     def place_data_from_image_claims(self) -> None:
-        """Data of shared units referenced only by bodies the shared source
-        compiles differently for this image (`VA_AT(<image>, ...)`): where the
+        """Game data referenced by bodies this image compiles itself (its own
+        units, and `VA_AT(<image>, ...)` bodies of shared source): where the
         image's compiled body equals the retail body with relocations masked,
         each DIR32 field names its symbol at the retail value less the addend."""
         from homm1.compare.canonicalize import CoffObject, RELOCATION_WIDTHS
@@ -457,7 +457,8 @@ class Placer:
                  and b["channel"] in (*SRC_CHANNELS, "data_vtables", "data_compgen")}
         claims_dir = image_build(self.image) / "gen/claims"
         found: dict[int, set[int]] = defaultdict(set)
-        for unit in sorted(self.shared):
+        from homm1.manifest import units as image_units
+        for unit in sorted(u["unit"] for u in image_units(image=self.image)):
             frag = claims_dir / f"{unit}.tsv"
             obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
             if not frag.is_file() or not obj.is_file():
@@ -507,7 +508,8 @@ class Placer:
                     value = struct.unpack_from("<I", retail, off)[0] - 0x400000
                     found[b["rva"]].add(value - addend)
         for grva, eaddrs in found.items():
-            if grva in self.data:
+            # code users outrank an initializer-bytes match
+            if grva in self.data and not self.data[grva][1].startswith("complete initialized"):
                 continue
             if len(eaddrs) == 1:
                 self.data[grva] = (eaddrs.pop(), "fields of this image's own compile of the "
@@ -626,6 +628,12 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     starts.update({erva: game_kinds.get(grva, "") for grva, (erva, _w) in p.data.items()})
     for grva, (erva, _n, _w, _s) in p.symbols.items():
         starts.setdefault(erva, game_kinds.get(grva, ""))
+    # the image's own source data claims (src/<IMAGE>) are starts too
+    from homm1.core.paths import image_build
+    for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv")):
+        for r in read_tsv(frag)[2]:
+            if r.get("space") == p.image and r["kind"] == "data":
+                starts.setdefault(int(r["rva"], 16), "")
     data_rows = sorted(starts.items())
     write_tsv(out / "data.tsv", [
         digest_line,

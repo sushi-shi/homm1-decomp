@@ -5,6 +5,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0000c9a0	0x11a	func	_WinMain@16	SOURCE/kbwin	src	0x00042ca0	this image's compile of the shared SOURCE/kbwin body (282 bytes, 24 fields masked) unique
 0x0000caba	0x28a	func	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	src	0x00042dba	this image's compile of the shared SOURCE/kbwin body (650 bytes, 65 fields masked) unique
 0x0000cd44	0xa	func	?AppIdle@@YAHXZ	SOURCE/kbwin	src	0x00043048	this image's compile of the shared SOURCE/kbwin body (10 bytes, 0 fields masked) unique
+0x0000cd4e	0x6c2	func	?AppWndProc@@YGJPAUHWND__@@IIJ@Z	SOURCE/kbwin	src	0x00043052	this image's compile of the shared SOURCE/kbwin body (1730 bytes, 110 fields masked) unique
 0x0000d410	0x67	func	_AppAbout@16	SOURCE/kbwin	src	0x000436ff	masked game body 0x436ff (103 bytes, 2 fields masked) unique at a census start
 0x0000d477	0xf	func	?AppExit@@YAXXZ	SOURCE/kbwin	src	0x00043766	masked game body 0x43766 (15 bytes) at its unit's block offset, shared by 11 bodies (5 identical occurrence(s))
 0x0000d486	0x7f	func	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	src	0x00043775	masked game body 0x43775 (127 bytes, 9 fields masked) unique at a census start
@@ -347,7 +348,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00028d9f	0x14	func	??1resource@@UAE@XZ	BASE/RESOURCE	src	0x000776cf	masked game body 0x776cf (20 bytes) at its unit's block offset, shared by 3 bodies (3 identical occurrence(s))
 0x00028dec	0x25f	func	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	src	0x000708b4	masked game body 0x708b4 (607 bytes, 53 fields masked) unique at a census start
 0x0002904c	0x258	func	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	src	0x00070b14	masked game body 0x70b14 (600 bytes, 53 fields masked) unique at a census start
-0x00043920	0x6	data	?gAppName@@3PADA	SOURCE/kbwin	src	0x0009e700	complete initialized bytes (6) unique in the image; no code user
+0x0004b7f8	0x6	data	?gAppName@@3PADA	SOURCE/kbwin	src	0x0009e700	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0004b808	0x13	data	?gTitle@@3PADA	SOURCE/kbwin	src	0x0009e708	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0004b81c	0x4	data	_gcCDTrackName	SOURCE/kbwin	src	0x0009e720	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x0004c4a8	0x4	data	?gFRDummy@@3PADA	SOURCE/REQUEST	src	0x0009f4e0	1 code reference(s) from placed bodies
@@ -395,7 +396,11 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004da90	0x4	data	_gClipVisibleWidth	BASE/Icon2bc	src	0x000a14a4	12 code reference(s) from placed bodies
 0x0004da94	0x4	data	_gClipRowSkip	BASE/Icon2bc	src	0x000a14a8	20 code reference(s) from placed bodies
 0x0004da98	0x4	data	_gClipColumn	BASE/Icon2bc	src	0x000a14ac	20 code reference(s) from placed bodies
+0x00052a58	0x10	data	?rcTemp@@3UtagRECT@@A	SOURCE/kbwin	src	0x000a99c8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052a68	0x4	data	?lTemp@@3HA	SOURCE/kbwin	src	0x000a99d8	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052a6c	0x4	data	?gMainWinScreenHeight@@3HA	SOURCE/kbwin	src	0x000a99dc	10 code reference(s) from placed bodies
+0x00052a70	0x4	data	?gTempX@@3HA	SOURCE/kbwin	src	0x000a99e0	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052a74	0x4	data	?iTempY@@3HA	SOURCE/kbwin	src	0x000a99e4	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052a78	0x4	data	?hInstApp@@3PAUHINSTANCE__@@A	SOURCE/kbwin	src	0x000a99e8	1 code reference(s) from placed bodies
 0x00052a7c	0x400	data	?bProcessMessage@@3PAEA	SOURCE/kbwin	src	0x000a99ec	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052e7c	0x4	data	?hmnuCurrent@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9dec	2 code reference(s) from placed bodies
@@ -405,6 +410,9 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00052ec8	0x4	data	?gForegroundApp@@3HA	SOURCE/kbwin	src	0x000a9e38	3 code reference(s) from placed bodies
 0x00052ecc	0x4	data	?hmnuApp@@3PAUHMENU__@@A	SOURCE/kbwin	src	0x000a9e3c	3 code reference(s) from placed bodies
 0x00052ed0	0x4	data	?gEventHandle@@3PAXA	SOURCE/kbwin	src	0x000a9e40	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052ed4	0x4	data	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	SOURCE/kbwin	src	0x000a9e44	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052ed8	0x4	data	_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	SOURCE/kbwin	src	0x000a9e48	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
+0x00052edc	0x4	data	?gClosingApp@@3HA	SOURCE/kbwin	src	0x000a9e4c	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x00052ee4	0x4	data	_?gLastGetMessage@?1??Process1WindowsMessage@@YAXXZ@4HA	SOURCE/kbwin	src	0x000a9e54	2 code reference(s) from placed bodies
 0x00052ee8	0x4	data	_?gNoDialogMenusOn@?1??SetNoDialogMenus@@YAXH@Z@4HA	SOURCE/kbwin	src	0x000a9e58	3 code reference(s) from placed bodies
 0x00052efc	0x1	data	?gRequestingGames@@3CA	SOURCE/REQUEST	src	0x000cc82c	fields of this image's own compile of the shared source (VA_AT body, masked-identical)
