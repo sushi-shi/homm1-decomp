@@ -160,8 +160,8 @@ public:
         class armyGroup* group,
         class hero* heroPointer,
         i32 useHero,
-        i8 useTown,
-        i8 townId
+        i8 useTown = 0,
+        i8 townId = 0
     );
     void EvaluateOneTimeCreaturePurchase(
         class hero* pHero,
