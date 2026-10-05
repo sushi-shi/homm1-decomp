@@ -2332,11 +2332,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 );
                 if (numHired > 0) {
                     gpGame->GiveArmy(&eventHero->m_army, troopType, numHired, bestSlot);
-                    cell->m_objectMetadata = cell->m_objectMetadata - numHired;
+                    cell->m_objectMetadata -= numHired;
                     if (!available) {
                         GetMonsterCost(troopType, cost);
                         for (counter = 0; counter < RESOURCE_COUNT; counter++)
-                            gpCurPlayer->m_resources[counter] -= -(-(cost[counter] * numHired));
+                            gpCurPlayer->m_resources[counter] -= numHired * cost[counter];
                     }
                 }
             }
