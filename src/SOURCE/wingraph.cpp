@@ -201,10 +201,10 @@ void DDInitGraphics(void) {
 VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
-    i32 ySrc;
-    i32 height;
-    i32 x;
-    i32 width;
+    i32 srcWidth;
+    i32 srcHeight;
+    i32 srcTop;
+    i32 srcLeft;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -226,22 +226,22 @@ BOOL DDAppPaint(void* window, void* paintDC) {
             ps.rcPaint.bottom++;
 
         gDDDestinationRect = ps.rcPaint;
-        width = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
-        height = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
-        x = CLIENT_TO_GAME_X(gDDDestinationRect.left);
-        ySrc = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
+        srcWidth = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
+        srcHeight = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
+        srcLeft = CLIENT_TO_GAME_X(gDDDestinationRect.left);
+        srcTop = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
         if (gScrollX != 0) {
-            x = gScrollX + WINGRAPH_SCROLL_MARGIN;
-            width = WINGRAPH_SCROLL_SIZE;
+            srcLeft = gScrollX + WINGRAPH_SCROLL_MARGIN;
+            srcWidth = WINGRAPH_SCROLL_SIZE;
         }
         if (gScrollY != 0) {
-            ySrc = gScrollY + WINGRAPH_SCROLL_MARGIN;
-            height = WINGRAPH_SCROLL_SIZE;
+            srcTop = gScrollY + WINGRAPH_SCROLL_MARGIN;
+            srcHeight = WINGRAPH_SCROLL_SIZE;
         }
-        gDDSourceRect.left = x;
-        gDDSourceRect.right = x + width - 1;
-        gDDSourceRect.top = ySrc;
-        gDDSourceRect.bottom = ySrc + height - 1;
+        gDDSourceRect.left = srcLeft;
+        gDDSourceRect.right = srcLeft + srcWidth - 1;
+        gDDSourceRect.top = srcTop;
+        gDDSourceRect.bottom = srcTop + srcHeight - 1;
 
         pt.y = 0;
         pt.x = pt.y;
@@ -845,66 +845,66 @@ void WGInitializePalette() {
 // client-to-game transform uses its pinned 640x480 viewport.
 VA(0x00467f3d, 0x1b7)
 BOOL WGAppPaint(void* window, void* paintDC) {
-    i32 srcX;
-    i32 iSrcY;
-    i32 dstW;
-    i32 destX;
-    i32 nDestY;
     RECT rect;
+    i8 unusedChar;
+    i32 spareDword;
+    i32 sourceY;
+    i32 blitWidth;
+    i32 srcLeft;
+    PAINTSTRUCT ps;
+    i32 destTop;
+    i32 blitX;
     i32 destHeight;
-    i32 padding;
-    PAINTSTRUCT paintStruct;
-    i8 unused;
 
-    unused = 0;
+    unusedChar = 0;
     if (screenImage.bits != NULL) {
-        paintDC = BeginPaint(static_cast<HWND>(window), &paintStruct);
+        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
         SelectPalette(static_cast<HDC>(paintDC), hpalApp, FALSE);
         RealizePalette(static_cast<HDC>(paintDC));
         GetClientRect(static_cast<HWND>(window), &rect);
-        destX = 0;
-        srcX = destX;
-        nDestY = 0;
-        iSrcY = nDestY;
-        dstW = rect.right - rect.left;
+        blitX = 0;
+        srcLeft = blitX;
+        destTop = 0;
+        sourceY = destTop;
+        blitWidth = rect.right - rect.left;
         destHeight = rect.bottom - rect.top;
-        srcX = CLIENT_TO_GAME_X(destX);
-        iSrcY = CLIENT_TO_GAME_Y(nDestY);
+        srcLeft = CLIENT_TO_GAME_X(blitX);
+        sourceY = CLIENT_TO_GAME_Y(destTop);
         if (gScrollX != 0)
-            srcX += gScrollX;
+            srcLeft += gScrollX;
         if (gScrollY != 0)
-            iSrcY += gScrollY;
+            sourceY += gScrollY;
         gTtlBlts++;
         if (iMainWinScreenWidth == WINGRAPH_WIDTH && gMainWinScreenHeight == WINGRAPH_HEIGHT) {
-            destX = paintStruct.rcPaint.left & WINGRAPH_PAINT_ALIGN_MASK;
-            dstW = paintStruct.rcPaint.right - destX + 1;
-            nDestY = paintStruct.rcPaint.top;
-            destHeight = paintStruct.rcPaint.bottom - nDestY + 1;
+            blitX = ps.rcPaint.left & WINGRAPH_PAINT_ALIGN_MASK;
+            blitWidth = ps.rcPaint.right - blitX + 1;
+            destTop = ps.rcPaint.top;
+            destHeight = ps.rcPaint.bottom - destTop + 1;
             WinGBitBlt(
                 static_cast<HDC>(paintDC),
-                destX,
-                nDestY,
-                dstW,
+                blitX,
+                destTop,
+                blitWidth,
                 destHeight,
                 hdcImage,
-                destX + gScrollX,
-                nDestY + gScrollY
+                blitX + gScrollX,
+                destTop + gScrollY
             );
         } else {
             WinGStretchBlt(
                 static_cast<HDC>(paintDC),
-                destX,
-                nDestY,
-                dstW,
+                blitX,
+                destTop,
+                blitWidth,
                 destHeight,
                 hdcImage,
-                srcX,
-                iSrcY,
-                CLIENT_TO_GAME_X(dstW),
+                srcLeft,
+                sourceY,
+                CLIENT_TO_GAME_X(blitWidth),
                 CLIENT_TO_GAME_Y(destHeight)
             );
         }
-        EndPaint(static_cast<HWND>(window), &paintStruct);
+        EndPaint(static_cast<HWND>(window), &ps);
     }
     return TRUE;
 }

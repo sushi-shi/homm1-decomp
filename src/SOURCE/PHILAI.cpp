@@ -2705,30 +2705,30 @@ void philAI::HeroInteractionAtTown(
     i32 doInteraction,
     i32* value
 ) {
-    i32 transferRating;
-    i32 pick;
-    i32 speedLimit;
-    i32 stackFV;
-    i32 nRunning;
-    float fTownShare;
-    i32 curBest;
-    i32 garrisonFV;
-    i32 heroStrength;
-    i32 statSum;
-    i32 armyCount;
-    i32 moveNum;
-    i32 j;
-    float estWeight;
-    i32 estTransferValue;
-    i32 toHero;
-    float curveTerm;
+    i32 townFV;
     armyGroup* fromArmy;
-    i32 room;
-    float fShareDiff;
-    i32 newLearned;
+    i32 statSum;
+    i32 more;
+    float townShareDiff;
+    i32 stackCount;
+    i32 battlePower;
+    i32 whichSpell;
+    i32 otherIndex;
+    i32 estTransferValue;
+    float garrisonShare;
+    i32 choice;
+    armyGroup* targetArmyGroup;
+    i32 innerIndex;
     float myTargetShare;
-    armyGroup* toArmy;
     i32 i;
+    i32 transferRating;
+    i32 hasRoom;
+    float transferFactor;
+    float curveTerm;
+    i32 speedLimit;
+    i32 transferredCount;
+    i32 bestFV;
+    i32 stackFV;
 
     *value = 0;
     if (doInteraction) {
@@ -2781,13 +2781,13 @@ void philAI::HeroInteractionAtTown(
     if ((townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
         && (doInteraction || heroPointer->HasArtifact(ARTIFACT_MAGIC_BOOK))) {
         for (i = 0; i < gMageGuildSpellCount[townPointer->m_buildState]; i++) {
-            newLearned = heroPointer->AddSpell(
+            whichSpell = heroPointer->AddSpell(
                 townPointer->m_mageGuildSpells[i],
                 heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE],
                 doInteraction
             );
             *value += StatChangeValue(
-                          heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] - newLearned,
+                          heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE] - whichSpell,
                           heroPointer->m_primaryStats[HERO_PRIMARY_KNOWLEDGE]
                       )
                       * gSpellAIValue[townPointer->m_mageGuildSpells[i]]
@@ -2797,9 +2797,9 @@ void philAI::HeroInteractionAtTown(
                              : 1);
         }
     }
-    heroStrength = FightValueOfStack(&heroPointer->m_army, NULL, 0, 0, 0);
-    garrisonFV = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0);
-    fTownShare = static_cast<double>(garrisonFV) / (garrisonFV + heroStrength);
+    battlePower = FightValueOfStack(&heroPointer->m_army, NULL, 0, 0, 0);
+    townFV = FightValueOfStack(&townPointer->m_army, NULL, 0, 0, 0);
+    garrisonShare = static_cast<double>(townFV) / (townFV + battlePower);
     statSum = 0;
     statSum = heroPointer->m_primaryStats[HERO_PRIMARY_ATTACK]
               + heroPointer->m_primaryStats[HERO_PRIMARY_DEFENSE];
@@ -2809,82 +2809,84 @@ void philAI::HeroInteractionAtTown(
         myTargetShare = 0.54 - statSum * 0.02;
     else
         myTargetShare = 0.33 - statSum * 0.01;
-    fShareDiff =
-        (myTargetShare < fTownShare ? fTownShare - myTargetShare : myTargetShare - fTownShare);
-    if (fShareDiff < myTargetShare * 0.15)
+    townShareDiff =
+        (myTargetShare < garrisonShare ? garrisonShare - myTargetShare
+                                       : myTargetShare - garrisonShare);
+    if (townShareDiff < myTargetShare * 0.15)
         return;
-    toHero = 0;
-    if (myTargetShare < fTownShare)
-        toHero = 1;
+    otherIndex = 0;
+    if (myTargetShare < garrisonShare)
+        otherIndex = 1;
     if (doInteraction) {
-        if (heroStrength < garrisonFV)
-            estWeight = 0.25f;
+        if (battlePower < townFV)
+            transferFactor = 0.25f;
         else
-            estWeight = 0.13f;
-        curveTerm = 1.0f + fShareDiff - 0.22;
+            transferFactor = 0.13f;
+        curveTerm = 1.0f + townShareDiff - 0.22;
         transferRating = static_cast<i32>(
             (curveTerm * curveTerm - 1.0f) * gpCurPlayer->m_aiData.m_upgradeValueWeight
-            * (garrisonFV + heroStrength) * estWeight
+            * (townFV + battlePower) * transferFactor
         );
         if (transferRating < 0)
             transferRating = 0;
-        room = 0;
-        if (toHero) {
+        hasRoom = 0;
+        if (otherIndex) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (heroPointer->m_army.m_creatureCounts[i] <= 0)
-                    room = 1;
+                    hasRoom = 1;
         } else {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (townPointer->m_army.m_creatureCounts[i] <= 0)
-                    room = 1;
+                    hasRoom = 1;
         }
-        if (!room) {
+        if (!hasRoom) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+                for (innerIndex = 0; innerIndex < ARMY_GROUP_SLOT_COUNT; innerIndex++) {
                     if (townPointer->m_army.m_creatureTypes[i]
-                        == heroPointer->m_army.m_creatureTypes[j]) {
-                        room = 1;
+                        == heroPointer->m_army.m_creatureTypes[innerIndex]) {
+                        hasRoom = 1;
                         break;
                     }
                 }
             }
         }
-        if (!room)
+        if (!hasRoom)
             transferRating = 0;
         *value += transferRating;
         return;
     }
-    if (toHero)
-        fShareDiff = fShareDiff + 0.04;
-    estTransferValue = static_cast<i32>((heroStrength + garrisonFV) * fShareDiff);
-    fromArmy = toHero ? &townPointer->m_army : &heroPointer->m_army;
-    toArmy = toHero ? &heroPointer->m_army : &townPointer->m_army;
-    nRunning = 1;
+    if (otherIndex)
+        townShareDiff = townShareDiff + 0.04;
+    estTransferValue = static_cast<i32>((battlePower + townFV) * townShareDiff);
+    fromArmy = otherIndex ? &townPointer->m_army : &heroPointer->m_army;
+    targetArmyGroup = otherIndex ? &heroPointer->m_army : &townPointer->m_army;
+    more = 1;
     gbTroopReload = 0;
-    while (nRunning) {
-        if (!toHero) {
-            armyCount = 0;
+    while (more) {
+        if (!otherIndex) {
+            stackCount = 0;
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++)
                 if (heroPointer->m_army.m_creatureTypes[i] != CREATURE_NONE)
-                    armyCount += heroPointer->m_army.m_creatureCounts[i];
-            if (armyCount <= 1)
+                    stackCount += heroPointer->m_army.m_creatureCounts[i];
+            if (stackCount <= 1)
                 return;
         }
-        pick = -1;
+        choice = -1;
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (pick == -1) {
-                for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+            if (choice == -1) {
+                for (innerIndex = 0; innerIndex < ARMY_GROUP_SLOT_COUNT; innerIndex++) {
                     if (fromArmy->m_creatureTypes[i] != CREATURE_NONE
-                        && fromArmy->m_creatureTypes[i] == toArmy->m_creatureTypes[j]) {
-                        pick = i;
+                        && fromArmy->m_creatureTypes[i]
+                               == targetArmyGroup->m_creatureTypes[innerIndex]) {
+                        choice = i;
                         break;
                     }
                 }
             }
         }
-        if (pick == -1) {
-            curBest = -9999;
-            if (toHero)
+        if (choice == -1) {
+            bestFV = -9999;
+            if (otherIndex)
                 speedLimit = 1;
             else
                 speedLimit = 3;
@@ -2892,63 +2894,69 @@ void philAI::HeroInteractionAtTown(
                 if (fromArmy->m_creatureTypes[i] != CREATURE_NONE) {
                     stackFV = fromArmy->m_creatureCounts[i]
                               * gMonsterDatabase[fromArmy->m_creatureTypes[i]].fightValue;
-                    if ((toHero
+                    if ((otherIndex
                          && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed > speedLimit)
-                        || (!toHero
+                        || (!otherIndex
                             && gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed
                                    < speedLimit)) {
                         speedLimit = gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed;
-                        curBest = stackFV;
-                        pick = i;
+                        bestFV = stackFV;
+                        choice = i;
                     } else if (gMonsterDatabase[fromArmy->m_creatureTypes[i]].stats.speed
                                    == speedLimit
-                               && stackFV > curBest) {
-                        curBest = stackFV;
-                        pick = i;
+                               && stackFV > bestFV) {
+                        bestFV = stackFV;
+                        choice = i;
                     }
                 }
             }
         }
-        if (pick == -1) {
-            nRunning = 0;
-        } else if (toArmy->CanJoin(fromArmy->m_creatureTypes[pick])) {
-            moveNum = static_cast<i32>(static_cast<float>(
+        if (choice == -1) {
+            more = 0;
+        } else if (targetArmyGroup->CanJoin(fromArmy->m_creatureTypes[choice])) {
+            transferredCount = static_cast<i32>(static_cast<float>(
                 static_cast<double>(estTransferValue)
-                    / gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue
+                    / gMonsterDatabase[fromArmy->m_creatureTypes[choice]].fightValue
                 + 0.5
             ));
-            if (moveNum > 0) {
-                if (moveNum > fromArmy->m_creatureCounts[pick]) {
-                    moveNum = fromArmy->m_creatureCounts[pick];
+            if (transferredCount > 0) {
+                if (transferredCount > fromArmy->m_creatureCounts[choice]) {
+                    transferredCount = fromArmy->m_creatureCounts[choice];
                 } else {
-                    nRunning = 0;
-                    if (moveNum >= fromArmy->m_creatureCounts[pick] * 0.65
-                        || moveNum >= fromArmy->m_creatureCounts[pick] - 1) {
-                        if ((fromArmy->m_creatureCounts[pick] - moveNum)
-                                * gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue
-                            < ((toHero ? garrisonFV : heroStrength) - estTransferValue) * 0.2)
-                            moveNum = fromArmy->m_creatureCounts[pick];
+                    more = 0;
+                    if (transferredCount >= fromArmy->m_creatureCounts[choice] * 0.65
+                        || transferredCount >= fromArmy->m_creatureCounts[choice] - 1) {
+                        if ((fromArmy->m_creatureCounts[choice] - transferredCount)
+                                * gMonsterDatabase[fromArmy->m_creatureTypes[choice]].fightValue
+                            < ((otherIndex ? townFV : battlePower) - estTransferValue) * 0.2)
+                            transferredCount = fromArmy->m_creatureCounts[choice];
                     }
                 }
-                if (!toHero && moveNum >= armyCount) {
-                    moveNum = armyCount - 1;
-                    nRunning = 0;
+                if (!otherIndex && transferredCount >= stackCount) {
+                    transferredCount = stackCount - 1;
+                    more = 0;
                 }
-                if (gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue * moveNum * 1.2
+                if (gMonsterDatabase[fromArmy->m_creatureTypes[choice]].fightValue
+                        * transferredCount * 1.2
                     > estTransferValue)
-                    nRunning = 0;
+                    more = 0;
                 else
                     estTransferValue -=
-                        gMonsterDatabase[fromArmy->m_creatureTypes[pick]].fightValue * moveNum;
-                toArmy->Add(fromArmy->m_creatureTypes[pick], moveNum, ARMY_GROUP_EMPTY_SLOT);
-                fromArmy->m_creatureCounts[pick] -= moveNum;
-                if (fromArmy->m_creatureCounts[pick] == 0)
-                    fromArmy->m_creatureTypes[pick] = CREATURE_NONE;
+                        gMonsterDatabase[fromArmy->m_creatureTypes[choice]].fightValue
+                        * transferredCount;
+                targetArmyGroup->Add(
+                    fromArmy->m_creatureTypes[choice],
+                    transferredCount,
+                    ARMY_GROUP_EMPTY_SLOT
+                );
+                fromArmy->m_creatureCounts[choice] -= transferredCount;
+                if (fromArmy->m_creatureCounts[choice] == 0)
+                    fromArmy->m_creatureTypes[choice] = CREATURE_NONE;
             } else {
-                nRunning = 0;
+                more = 0;
             }
         } else {
-            nRunning = 0;
+            more = 0;
         }
     }
     if (!doInteraction && giHumanTownConquered == townPointer->m_id

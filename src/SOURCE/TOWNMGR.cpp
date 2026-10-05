@@ -1201,259 +1201,259 @@ void townManager::DrawTown(i8 updateScreen, i32 drawFlags) {
 VA(0x00462630, 0xdd2)
 #line 1483 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\TOWNMGR.CPP"
 i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
-    i32 yPos;
-    i32 resIndex;
-    char* descText;
-    textWidget* amountWidgets[RESOURCE_COUNT];
-    i32 nRowTypes[4];
-    i32 row;
-    i16 currX;
-    i16 unusedTop;
+    i32 entryWidth;
+    i16 buildCosts[RESOURCE_COUNT];
+    textWidget* descriptionWidget;
+    i16 dialogRight;
+    i16 resourceX;
+    i16 requiredCount;
+    i32 dwelling;
+    font* lineFont;
+    i16 dialogLeft;
+    i32 layoutSize;
+    i32 guildRank;
+    heroWindow* panel;
     i32 totalWidth;
-    i32 numLines;
-    heroWindow* nBuildWindow;
-    i16 unusedValue;
-    i16 unusedField;
-    i16 unusedControl;
-    i16 firstRow;
+    i16 dialogTop;
+    i32 lineTotal;
+    i32 panelExtent;
+    i16 dialogFlags;
+    i32 i;
     i32 space;
-    tag_message iEvt;
-    i8 resType[RESOURCE_COUNT];
-    i32 binSize;
-    i32 dwellIndex;
-    iconWidget* resWidgets[RESOURCE_COUNT];
-    i16 startX;
-    font* iF;
-    i16 unusedType;
-    i16 nBottomCount;
+    i16 lowerResources;
+    i32 rowY;
+    i32 originY;
+    i8 resourceTypes[RESOURCE_COUNT];
+    i32 costCount;
     i32 inRow;
-    i16 pResourceCount;
-    i32 j;
-    textWidget* descWidget;
-    i32 iTotalHeight;
-    i16 prices[RESOURCE_COUNT];
-    i16 unusedKind;
-    i32 nEntryWidth;
-    i32 curCost;
-    i16 unusedMode1;
-    i32 iMageLevel;
+    i32 typeId;
+    i16 startX;
+    i16 dialogButton;
+    i16 dialogWidth;
+    i32 rowIndex;
+    iconWidget* resWidgets[RESOURCE_COUNT];
+    i32 typeList[4];
+    i16 topResources;
+    tag_message msg;
+    char* infoBuffer;
+    i16 dialogResult;
+    textWidget* amountWidgets[RESOURCE_COUNT];
     char* amountText[RESOURCE_COUNT];
-    i32 baseY;
 
-    iMageLevel = 0;
-    j = 0;
-    curCost = 0;
-    descText = static_cast<char*>(malloc(300));
-    for (j = 0; j < RESOURCE_COUNT; j++)
-        resType[j] = prices[j] = RESOURCE_NONE;
-    dwellIndex = -1;
+    guildRank = 0;
+    i = 0;
+    costCount = 0;
+    infoBuffer = static_cast<char*>(malloc(300));
+    for (i = 0; i < RESOURCE_COUNT; i++)
+        resourceTypes[i] = buildCosts[i] = RESOURCE_NONE;
+    dwelling = -1;
     if (building > TOWN_NEUTRAL_BUILDING_LAST)
-        dwellIndex =
+        dwelling =
             building - BUILDING_SLOT_DWELLING_FIRST + m_town->m_type * TOWN_DWELLINGS_PER_FACTION;
     if (building == BUILDING_SLOT_MAGE_GUILD) {
         if (m_town->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            iMageLevel = gpTownManager->m_town->m_buildState + 1;
+            guildRank = gpTownManager->m_town->m_buildState + 1;
         else
-            iMageLevel = 0;
-        if (iMageLevel > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
-            iMageLevel = TOWN_MAGE_GUILD_COST_LEVEL_LAST;
-        for (j = 0; j < RESOURCE_COUNT; j++) {
-            if (gMageBuildingCosts[iMageLevel][j] > 0) {
-                resType[curCost] = j;
-                prices[curCost] = gMageBuildingCosts[iMageLevel][j];
-                curCost++;
+            guildRank = 0;
+        if (guildRank > TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+            guildRank = TOWN_MAGE_GUILD_COST_LEVEL_LAST;
+        for (i = 0; i < RESOURCE_COUNT; i++) {
+            if (gMageBuildingCosts[guildRank][i] > 0) {
+                resourceTypes[costCount] = i;
+                buildCosts[costCount] = gMageBuildingCosts[guildRank][i];
+                costCount++;
             }
         }
     } else if (building <= TOWN_NEUTRAL_BUILDING_LAST) {
-        for (j = 0; j < RESOURCE_COUNT; j++) {
+        for (i = 0; i < RESOURCE_COUNT; i++) {
             // clang-format off
 #line 1555
             H1_ASSERT(building >= 0 && building < TOWN_NEUTRAL_BUILDING_COUNT);
             // clang-format on
 #line 1556
-            H1_ASSERT(j >= 0 && j <= 6);
-            if (gNeutralBuildingCosts[building][j] > 0) {
-                resType[curCost] = j;
-                prices[curCost] = gNeutralBuildingCosts[building][j];
-                curCost++;
+            H1_ASSERT(i >= 0 && i <= 6);
+            if (gNeutralBuildingCosts[building][i] > 0) {
+                resourceTypes[costCount] = i;
+                buildCosts[costCount] = gNeutralBuildingCosts[building][i];
+                costCount++;
             }
         }
     } else {
-        for (j = 0; j < RESOURCE_COUNT; j++) {
+        for (i = 0; i < RESOURCE_COUNT; i++) {
             // clang-format off
 #line 1570
-            H1_ASSERT(dwellIndex >= 0 && dwellIndex < TOWN_DWELLING_COST_ROWS);
+            H1_ASSERT(dwelling >= 0 && dwelling < TOWN_DWELLING_COST_ROWS);
             // clang-format on
 #line 1571
-            H1_ASSERT(j >= 0 && j <= 6);
-            if (gDwellingCosts[dwellIndex][j] > 0) {
-                resType[curCost] = j;
-                prices[curCost] = gDwellingCosts[dwellIndex][j];
-                curCost++;
+            H1_ASSERT(i >= 0 && i <= 6);
+            if (gDwellingCosts[dwelling][i] > 0) {
+                resourceTypes[costCount] = i;
+                buildCosts[costCount] = gDwellingCosts[dwelling][i];
+                costCount++;
             }
         }
     }
-    unusedKind = 80;
-    unusedValue = 40;
-    unusedMode1 = 32;
-    unusedControl = 286;
-    unusedTop = 0;
-    unusedField = 2;
-    unusedType = 3;
-    resIndex = 0;
-    pResourceCount = 0;
-    firstRow = 0;
-    nBottomCount = 0;
-    for (j = 0; j < RESOURCE_COUNT; j++) {
-        if (resType[j] != RESOURCE_NONE)
-            pResourceCount++;
+    dialogResult = 80;
+    dialogRight = 40;
+    dialogButton = 32;
+    dialogLeft = 286;
+    dialogFlags = 0;
+    dialogTop = 2;
+    dialogWidth = 3;
+    typeId = 0;
+    requiredCount = 0;
+    topResources = 0;
+    lowerResources = 0;
+    for (i = 0; i < RESOURCE_COUNT; i++) {
+        if (resourceTypes[i] != RESOURCE_NONE)
+            requiredCount++;
     }
-    if (pResourceCount <= 4)
-        firstRow = pResourceCount;
-    else if (pResourceCount == 5) {
-        firstRow = 2;
-        nBottomCount = 3;
-    } else if (pResourceCount == 6) {
-        firstRow = 3;
-        nBottomCount = 3;
-    } else if (pResourceCount == 7) {
-        firstRow = 3;
-        nBottomCount = 4;
+    if (requiredCount <= 4)
+        topResources = requiredCount;
+    else if (requiredCount == 5) {
+        topResources = 2;
+        lowerResources = 3;
+    } else if (requiredCount == 6) {
+        topResources = 3;
+        lowerResources = 3;
+    } else if (requiredCount == 7) {
+        topResources = 3;
+        lowerResources = 4;
     }
     if (building <= TOWN_NEUTRAL_BUILDING_LAST)
-        sprintf(descText, gNeutralBuildingDescriptions[building]);
+        sprintf(infoBuffer, gNeutralBuildingDescriptions[building]);
     else
-        sprintf(descText, gDwellingDescriptions[dwellIndex]);
-    if (dwellIndex >= 0) {
-        u16 requirements;
-        i32 numPrereqs = 0;
-        requirements = gDwellingRequirements
+        sprintf(infoBuffer, gDwellingDescriptions[dwelling]);
+    if (dwelling >= 0) {
+        u16 prerequisiteMask;
+        i32 prerequisiteCount = 0;
+        prerequisiteMask = gDwellingRequirements
             [m_town->m_type * TOWN_DWELLINGS_PER_FACTION
              + (building - BUILDING_SLOT_DWELLING_FIRST)];
-        for (j = 0; j < BUILDING_SLOT_REQUIREMENT_END; j++) {
-            if (requirements & (1 << j)) {
-                if (numPrereqs == 0)
-                    strcat(descText, localization::Tr("town.build.requires"));
-                numPrereqs++;
-                strcat(descText, "\n");
-                if (j <= BUILDING_SLOT_STRUCTURE_LAST)
-                    strcat(descText, gNeutralBuildingNames[j]);
+        for (i = 0; i < BUILDING_SLOT_REQUIREMENT_END; i++) {
+            if (prerequisiteMask & (1 << i)) {
+                if (prerequisiteCount == 0)
+                    strcat(infoBuffer, localization::Tr("town.build.requires"));
+                prerequisiteCount++;
+                strcat(infoBuffer, "\n");
+                if (i <= BUILDING_SLOT_STRUCTURE_LAST)
+                    strcat(infoBuffer, gNeutralBuildingNames[i]);
                 else
                     strcat(
-                        descText,
+                        infoBuffer,
                         gDwellingNames
-                            [j - BUILDING_SLOT_DWELLING_FIRST
+                            [i - BUILDING_SLOT_DWELLING_FIRST
                              + m_town->m_type * TOWN_DWELLINGS_PER_FACTION]
                     );
             }
         }
     }
-    strcat(descText, "\n ");
-    iF = gpResourceManager->GetFont("bigfont.fnt");
-    numLines = iF->LineLength(descText, 0xee);
-    gpResourceManager->Dispose(iF);
-    baseY = 0x97;
-    iTotalHeight = baseY;
-    iTotalHeight += numLines << 4;
-    if (pResourceCount <= 4)
-        iTotalHeight += 0x2c;
+    strcat(infoBuffer, "\n ");
+    lineFont = gpResourceManager->GetFont("bigfont.fnt");
+    lineTotal = lineFont->LineLength(infoBuffer, 0xee);
+    gpResourceManager->Dispose(lineFont);
+    originY = 0x97;
+    panelExtent = originY;
+    panelExtent += lineTotal << 4;
+    if (requiredCount <= 4)
+        panelExtent += 0x2c;
     else
-        iTotalHeight += 0x58;
+        panelExtent += 0x58;
     if (!quickView)
-        iTotalHeight += 0x27;
-    binSize = (iTotalHeight - 0x35) / 0x2d;
-    if (binSize < 3)
-        binSize = 3;
-    if (binSize > 7)
-        binSize = 7;
-    sprintf(gText, "buybuil%d.bin", binSize);
-    nBuildWindow = new heroWindow(0xb1, 0x10, gText);
-    if (nBuildWindow == NULL)
+        panelExtent += 0x27;
+    layoutSize = (panelExtent - 0x35) / 0x2d;
+    if (layoutSize < 3)
+        layoutSize = 3;
+    if (layoutSize > 7)
+        layoutSize = 7;
+    sprintf(gText, "buybuil%d.bin", layoutSize);
+    panel = new heroWindow(0xb1, 0x10, gText);
+    if (panel == NULL)
         MemError();
-    SetWinText(nBuildWindow, WINDOW_TEXT_BUILD);
-    SET_WIDGET_MESSAGE(iEvt, WIDGET_COMMAND_SET_FRAME, BUY_BUILD_ICON_CONTROL);
-    iEvt.value = building < BUILDING_SLOT_RACE_FIRST
-                     ? building + 1
-                     : (gpTownManager->m_town->m_type + 1) * 7 + building - 6;
-    nBuildWindow->BroadcastMessage(iEvt);
+    SetWinText(panel, WINDOW_TEXT_BUILD);
+    SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_FRAME, BUY_BUILD_ICON_CONTROL);
+    msg.value = building < BUILDING_SLOT_RACE_FIRST
+                    ? building + 1
+                    : (gpTownManager->m_town->m_type + 1) * 7 + building - 6;
+    panel->BroadcastMessage(msg);
     if (building == BUILDING_SLOT_MAGE_GUILD)
-        sprintf(gText, localization::Tr("town.build.mage_guild_level"), iMageLevel + 1);
+        sprintf(gText, localization::Tr("town.build.mage_guild_level"), guildRank + 1);
     else
         strcpy(gText, GetBuildingName(building));
-    iEvt.command = WIDGET_COMMAND_SET_TEXT;
-    iEvt.id = BUY_BUILD_NAME_CONTROL;
-    iEvt.text = gText;
-    nBuildWindow->BroadcastMessage(iEvt);
-    descWidget = new textWidget(
+    msg.command = WIDGET_COMMAND_SET_TEXT;
+    msg.id = BUY_BUILD_NAME_CONTROL;
+    msg.text = gText;
+    panel->BroadcastMessage(msg);
+    descriptionWidget = new textWidget(
         0x18,
-        baseY,
+        originY,
         0xee,
-        (numLines << 4) + 6,
-        descText,
+        (lineTotal << 4) + 6,
+        infoBuffer,
         "bigfont.fnt",
         1,
         WIDGET_ID_NONE,
         8
     );
-    if (descWidget == NULL)
+    if (descriptionWidget == NULL)
         MemError();
-    nBuildWindow->AddWidget(descWidget, WINDOW_Z_ORDER_APPEND);
-    resIndex = 0;
-    for (row = 0; row < 2; row++) {
-        yPos = numLines * 16 + baseY + row * 44 + 12;
-        inRow = row == 0 ? firstRow : nBottomCount;
+    panel->AddWidget(descriptionWidget, WINDOW_Z_ORDER_APPEND);
+    typeId = 0;
+    for (rowIndex = 0; rowIndex < 2; rowIndex++) {
+        rowY = lineTotal * 16 + originY + rowIndex * 44 + 12;
+        inRow = rowIndex == 0 ? topResources : lowerResources;
         if (inRow > 0) {
             totalWidth = 0;
-            curCost = resIndex;
-            for (j = 0; j < 4; j++) {
-                if (j < inRow) {
-                    while (resType[curCost] == RESOURCE_NONE)
-                        curCost++;
-                    nRowTypes[j] = resType[curCost];
-                    curCost++;
+            costCount = typeId;
+            for (i = 0; i < 4; i++) {
+                if (i < inRow) {
+                    while (resourceTypes[costCount] == RESOURCE_NONE)
+                        costCount++;
+                    typeList[i] = resourceTypes[costCount];
+                    costCount++;
                 } else
-                    nRowTypes[j] = RESOURCE_NONE;
+                    typeList[i] = RESOURCE_NONE;
             }
-            for (j = 0; j < inRow; j++) {
-                totalWidth += static_cast<i16>(nRowTypes[j] == RESOURCE_GOLD ? 80 : 40);
+            for (i = 0; i < inRow; i++) {
+                totalWidth += static_cast<i16>(typeList[i] == RESOURCE_GOLD ? 80 : 40);
             }
             space = (266 - totalWidth) / (inRow + 1);
-            currX = startX = space + 10;
-            for (j = 0; j < inRow; j++) {
-                nEntryWidth = static_cast<i16>(nRowTypes[j] == RESOURCE_GOLD ? 80 : 40);
-                amountText[resIndex] = static_cast<char*>(malloc(10));
-                sprintf(amountText[resIndex], "%d", prices[resIndex]);
-                amountWidgets[resIndex] = new textWidget(
-                    currX,
-                    yPos + 32,
-                    nEntryWidth,
+            resourceX = startX = space + 10;
+            for (i = 0; i < inRow; i++) {
+                entryWidth = static_cast<i16>(typeList[i] == RESOURCE_GOLD ? 80 : 40);
+                amountText[typeId] = static_cast<char*>(malloc(10));
+                sprintf(amountText[typeId], "%d", buildCosts[typeId]);
+                amountWidgets[typeId] = new textWidget(
+                    resourceX,
+                    rowY + 32,
+                    entryWidth,
                     12,
-                    amountText[resIndex],
+                    amountText[typeId],
                     "smalfont.fnt",
                     1,
                     WIDGET_ID_NONE,
                     8
                 );
-                if (amountWidgets[resIndex] == NULL)
+                if (amountWidgets[typeId] == NULL)
                     MemError();
-                resWidgets[resIndex] = new iconWidget(
-                    currX,
-                    yPos,
-                    nEntryWidth,
+                resWidgets[typeId] = new iconWidget(
+                    resourceX,
+                    rowY,
+                    entryWidth,
                     12,
                     "resource.icn",
-                    resType[resIndex],
+                    resourceTypes[typeId],
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
                     1
                 );
-                if (resWidgets[resIndex] == NULL)
+                if (resWidgets[typeId] == NULL)
                     MemError();
-                nBuildWindow->AddWidget(amountWidgets[resIndex], WINDOW_Z_ORDER_APPEND);
-                nBuildWindow->AddWidget(resWidgets[resIndex], WINDOW_Z_ORDER_APPEND);
-                resIndex++;
-                currX += nEntryWidth + space;
+                panel->AddWidget(amountWidgets[typeId], WINDOW_Z_ORDER_APPEND);
+                panel->AddWidget(resWidgets[typeId], WINDOW_Z_ORDER_APPEND);
+                typeId++;
+                resourceX += entryWidth + space;
             }
         }
     }
@@ -1466,39 +1466,39 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         );
     m_selectedBuilding = TOWN_BUILDING_NONE;
     if (quickView) {
-        iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        iEvt.id = DIALOG_BUTTON_2;
-        nBuildWindow->BroadcastMessage(iEvt);
-        iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        iEvt.id = DIALOG_BUTTON_1;
-        nBuildWindow->BroadcastMessage(iEvt);
-        iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        iEvt.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        iEvt.id = 0;
-        nBuildWindow->BroadcastMessage(iEvt);
+        msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        msg.id = DIALOG_BUTTON_2;
+        panel->BroadcastMessage(msg);
+        msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        msg.id = DIALOG_BUTTON_1;
+        panel->BroadcastMessage(msg);
+        msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        msg.id = 0;
+        panel->BroadcastMessage(msg);
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(nBuildWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gpWindowManager->AddWindow(panel, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(nBuildWindow);
+        gpWindowManager->RemoveWindow(panel);
         gpMouseManager->ReallyShowPointer();
     } else {
         if (cannotBuy) {
-            iEvt.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            iEvt.id = DIALOG_BUTTON_2;
-            iEvt.value = WIDGET_FLAG_ENABLED;
-            nBuildWindow->BroadcastMessage(iEvt);
-            iEvt.command = WIDGET_COMMAND_SET_FLAGS;
-            iEvt.id = DIALOG_BUTTON_2;
-            iEvt.value = WIDGET_COMMAND_DIMMED;
-            nBuildWindow->BroadcastMessage(iEvt);
+            msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            msg.id = DIALOG_BUTTON_2;
+            msg.value = WIDGET_FLAG_ENABLED;
+            panel->BroadcastMessage(msg);
+            msg.command = WIDGET_COMMAND_SET_FLAGS;
+            msg.id = DIALOG_BUTTON_2;
+            msg.value = WIDGET_COMMAND_DIMMED;
+            panel->BroadcastMessage(msg);
         }
-        gpWindowManager->DoDialog(nBuildWindow, TrueFalseDialogHandler, 0);
+        gpWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);
         if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
             m_selectedBuilding = building;
-            for (j = 0; j < pResourceCount; j++)
-                gpCurPlayer->m_resources[resType[j]] -= prices[j];
+            for (i = 0; i < requiredCount; i++)
+                gpCurPlayer->m_resources[resourceTypes[i]] -= buildCosts[i];
         }
     }
     if (!quickView)
@@ -1508,7 +1508,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             TOWN_CLOSE_CONTROL,
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
-    delete nBuildWindow;
+    delete panel;
     if (quickView)
         return 0;
     else
