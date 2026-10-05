@@ -247,15 +247,15 @@ VA(0x0043d0c4, 0xccb)
 i32 oldmain(void) {
     char saveBuf[20];
     H1_ENUM_STORAGE(SmackVideo, char) endVideos[GAME_END_SEQUENCE_COUNT];
-    i32 n;
-    heroWindow* mainWin;
-    font* font;
+    i32 netIndex;
+    heroWindow* mainMenuWindow;
+    font* textFont;
     i8 backdropLoaded;
-    i8 initialMainScreen;
-    i32 idx;
-    i8 done;
+    i8 initialScreen;
+    i32 gamePlayer;
+    i32 sendResult;
+    i8 gameDone;
     i8 leave;
-    i32 result;
     i16 command;
 
     if (gKBDone)
@@ -289,10 +289,10 @@ i32 oldmain(void) {
             0,
             0
         );
-        font = gpResourceManager->GetFont("bigfont.fnt");
-        font->DrawString(localization::Tr("startup.loading.game"), 10, 10, 1);
+        textFont = gpResourceManager->GetFont("bigfont.fnt");
+        textFont->DrawString(localization::Tr("startup.loading.game"), 10, 10, 1);
         gpWindowManager->UpdateScreenRegion(10, 10, 600, 20);
-        gpResourceManager->Dispose(font);
+        gpResourceManager->Dispose(textFont);
         if (!gSkipIntro && PlaySmacker(SMACK_BUKA) && PlaySmacker(SMACK_NWCLOGO))
             PlaySmacker(SMACK_INTRO);
     }
@@ -300,7 +300,7 @@ i32 oldmain(void) {
     memset(gbThisNetHumanPlayer, 0, GAME_PLAYER_COUNT);
     leave = 0;
     backdropLoaded = 0;
-    initialMainScreen = 1;
+    initialScreen = 1;
 
     while (!leave) {
     mainMenu:
@@ -310,11 +310,11 @@ i32 oldmain(void) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                if (initialMainScreen)
+                if (initialScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
                     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
-                initialMainScreen = 0;
+                initialScreen = 0;
             }
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
         }
@@ -365,12 +365,12 @@ i32 oldmain(void) {
                 command = gGameCommand;
                 gGameCommand = MAIN_MENU_NO_COMMAND;
             } else {
-                mainWin = new heroWindow(400, 35, "stpmain.bin");
-                if (!mainWin)
+                mainMenuWindow = new heroWindow(400, 35, "stpmain.bin");
+                if (!mainMenuWindow)
                     MemError();
                 gInSetupDialog = 1;
-                gpWindowManager->DoDialog(mainWin, InitMenuHandler, 0);
-                delete mainWin;
+                gpWindowManager->DoDialog(mainMenuWindow, InitMenuHandler, 0);
+                delete mainMenuWindow;
                 command = gpWindowManager->m_dialogResult;
                 gInSetupDialog = 0;
             }
@@ -401,15 +401,15 @@ i32 oldmain(void) {
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
                 gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
-                done = 0;
+                gameDone = 0;
                 gpInputManager->Flush();
-                while (!done) {
+                while (!gameDone) {
                     Process1WindowsMessage();
                     switch (gpInputManager->GetEvent().type) {
                         case MESSAGE_KEY_DOWN:
                         case MESSAGE_LEFT_BUTTON_DOWN:
                         case MESSAGE_RIGHT_BUTTON_DOWN:
-                            done = 1;
+                            gameDone = 1;
                     }
                 }
                 gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
@@ -428,23 +428,23 @@ i32 oldmain(void) {
             goto processMenuCommand;
         if (!leave) {
             if (gRemoteOn && !giThisNetPos) {
-                n = 0;
-                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++) {
-                    if (gbHumanPlayer[idx]) {
-                        gbGamePosToNetPos[idx] = n;
-                        n++;
+                netIndex = 0;
+                for (gamePlayer = 0; gamePlayer < GAME_PLAYER_COUNT; gamePlayer++) {
+                    if (gbHumanPlayer[gamePlayer]) {
+                        gbGamePosToNetPos[gamePlayer] = netIndex;
+                        netIndex++;
                     } else {
-                        gbGamePosToNetPos[idx] = NET_POSITION_NONE;
+                        gbGamePosToNetPos[gamePlayer] = NET_POSITION_NONE;
                     }
                 }
-                for (idx = 0; idx < GAME_PLAYER_COUNT; idx++)
+                for (gamePlayer = 0; gamePlayer < GAME_PLAYER_COUNT; gamePlayer++)
                     memcpy(gText, gbGamePosToNetPos, GAME_PLAYER_COUNT);
                 giHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 giThisGamePos = giHostGamePos;
-                for (idx = 1; idx < giNumHumanPlayers; idx++) {
-                    result = TransmitRemoteData(
+                for (gamePlayer = 1; gamePlayer < giNumHumanPlayers; gamePlayer++) {
+                    sendResult = TransmitRemoteData(
                         gText,
-                        idx,
+                        gamePlayer,
                         4,
                         BOX_REMOTE_SETUP,
                         1,
@@ -452,12 +452,12 @@ i32 oldmain(void) {
                         REMOTE_MESSAGE_DEFAULT,
                         0
                     );
-                    if (!result)
+                    if (!sendResult)
                         ShutDown(NULL);
                 }
-                for (idx = 0; idx < gpGame->m_playerCount; idx++) {
-                    if (gbHumanPlayer[idx] && !gbThisNetHumanPlayer[idx]) {
-                        if (!gpGame->TransmitSaveGame(idx, 0))
+                for (gamePlayer = 0; gamePlayer < gpGame->m_playerCount; gamePlayer++) {
+                    if (gbHumanPlayer[gamePlayer] && !gbThisNetHumanPlayer[gamePlayer]) {
+                        if (!gpGame->TransmitSaveGame(gamePlayer, 0))
                             ShutDown(NULL);
                     }
                 }
