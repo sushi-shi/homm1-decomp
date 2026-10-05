@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <SOURCE/PATH.h>
@@ -366,7 +364,6 @@ i16 army::ValidRange(i16 targetHex) {
 }
 
 // HoMM2 donor behavior; HoMM1's WORD parameter/return prove the narrower API.
-// donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order
 // evidence: retail body uses signed WORD loads and returns through AX;
 // alternate=pol20:int OppositeDirection(int)@0x000be9e7
 VA(0x004470ce, 0x35)

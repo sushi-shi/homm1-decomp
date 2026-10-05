@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/audio.h>
@@ -49,9 +47,6 @@
 #include <string.h>
 #include <sys/stat.h>
 
-// donor PoL RVA 0x000708b0; preferred Buka symbol ?Write@playerData@@QAEXH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.582104;margin=0.473963;shape=0.500;size=0.883;calls=0.885;alternate=pol20:void playerData::Write(int)@0x000708b0
 VA(0x0042b400, 0x1f2)
 void playerData::Write(i32 file) {
     char unused[52];
@@ -81,9 +76,6 @@ void playerData::Write(i32 file) {
     write(file, m_obelisksVisited, sizeof(m_obelisksVisited));
 }
 
-// donor PoL RVA 0x00070aed; preferred Buka symbol ?Read@playerData@@QAEXH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.555449;margin=0.750197;shape=0.444;size=0.878;calls=0.880;alternate=pol20:void playerData::Read(int)@0x00070aed
 VA(0x0042b5f2, 0x1e1)
 void playerData::Read(i32 file) {
     char unused[52];
@@ -112,9 +104,6 @@ void playerData::Read(i32 file) {
     read(file, m_obelisksVisited, sizeof(m_obelisksVisited));
 }
 
-// donor PoL RVA 0x00070d1a; preferred Buka symbol ?NextHero@playerData@@QAEHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.473378;margin=0.450383;shape=0.230;size=0.850;calls=1.000;alternate=pol20:int playerData::NextHero(int)@0x00070d1a
 VA(0x0042b7d3, 0x100)
 i8 playerData::NextHero(i32) {
     i32 curHero = -1;
@@ -402,9 +391,6 @@ i8 game::GetMineId(i8 x, i8 y) {
     return GAME_MINE_NONE;
 }
 
-// donor PoL RVA 0x00071d89; preferred Buka symbol ?GenerateStandardFileName@@YIXPAD0@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.427111;margin=0.052277;shape=0.267;size=0.694;calls=1.000;alternate=pol20:void GenerateStandardFileName(char *, char *)@0x00071d89
 VA(0x0042c335, 0x1a8)
 void GenerateStandardFileName(char* source, char* destination) {
     char* ext;
@@ -443,9 +429,6 @@ void GenerateStandardFileName(char* source, char* destination) {
     strcpy(destination + indexOut, ext);
 }
 
-// donor PoL RVA 0x00071eb7; preferred Buka symbol ?SaveGame@game@@QAEHPADHC@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.606443;margin=0.348788;shape=0.410;size=0.678;calls=0.698;strings=%s%s|%s.%s|%s.GM%d;alternate=pol20:int game::SaveGame(char *, int, signed char)@0x00071eb7
 inline void game::ReadWorldMap(i32 fd) {
     read(fd, m_map, sizeof(m_map));
 }
@@ -558,9 +541,6 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     return 1;
 }
 
-// donor PoL RVA 0x000735bf; preferred Buka symbol ?LoadGame@game@@QAEXPADHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.668603;margin=0.422052;shape=0.401;size=0.926;calls=0.741;strings=%s%s|.\DATA\|.\GAMES\;alternate=pol20:void game::LoadGame(char *, int, int)@0x000735bf
 // Buka 2.1 game::LoadGame for HoMM1's save layout; origdata.bin restores
 // the default hero names and blank visibility, and the seats are re-dealt
 // to this session's human players.
@@ -1841,9 +1821,6 @@ i16 game::LoadMap(char* filename) {
     return 0;
 }
 
-// donor PoL RVA 0x00078fea; preferred Buka symbol ?ClaimTown@game@@QAEXHHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.415111;margin=0.758393;shape=0.164;size=0.968;calls=0.500;alternate=pol20:void game::ClaimTown(int, int, int)@0x00078fea
 VA(0x0043070a, 0x29b)
 void game::ClaimTown(i8 townId, i8 player) {
     i32 j;
@@ -2203,9 +2180,6 @@ i16 ViewSpecialHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x0007a649; preferred Buka symbol ?ViewArmy@game@@QAEXHHHHPAVtown@@HHHPAVhero@@PAVarmy@@PAVarmyGroup@@H@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.612909;margin=0.340762;shape=0.385;size=0.681;calls=0.829;strings= (%d)|%s%d|armywin.bin;alternate=pol20:void game::ViewArmy(int, int, int, int, class town *, int, int, int, class hero *, class army *, class armyGroup *, int)@0x0007a649
 VA(0x0043165b, 0x8af)
 void game::ViewArmy(
     i16 x,
@@ -2409,9 +2383,6 @@ void game::ViewArmy(
     delete m_viewArmyWindow;
 }
 
-// donor PoL RVA 0x0007b2cf; preferred Buka symbol ?ViewArmyHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.308927;margin=0.170943;shape=0.232;size=0.493;calls=0.556;alternate=pol20:int ViewArmyHandler(struct tag_message &)@0x0007b2cf
 VA(0x00431f0a, 0x17f)
 i16 ViewArmyHandler(tag_message& message) {
     i16 frameDelay;
@@ -3609,9 +3580,6 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
     }
 }
 
-// donor PoL RVA 0x00080b64; preferred Buka symbol ?SetVisibility@game@@QAEXHHHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.449662;margin=0.505159;shape=0.181;size=0.875;calls=1.000;alternate=pol20:void game::SetVisibility(int, int, int, int)@0x00080b64
 VA(0x00435a74, 0x22f)
 void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
     i32 i;
@@ -3646,9 +3614,6 @@ void game::SetVisibility(i16 x, i16 y, i16 player, i16 radius) {
     }
 }
 
-// donor PoL RVA 0x00080e6c; preferred Buka symbol ?GiveArmy@game@@QAEXPAVarmyGroup@@HHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.542661;margin=0.479075;shape=0.407;size=0.794;calls=1.000;alternate=pol20:void game::GiveArmy(class armyGroup *, int, int, int)@0x00080e6c
 VA(0x00435ca3, 0xc8)
 void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
     i32 swap;
@@ -3677,9 +3642,6 @@ void game::GiveArmy(armyGroup* group, i32 type, i32 count, i32 slot) {
     group->m_creatureCounts[i] += count;
 }
 
-// donor PoL RVA 0x00080f68; preferred Buka symbol ?ExperienceValueOfStack@game@@QAEHPAVarmyGroup@@PAVhero@@@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.491573;margin=0.501516;shape=0.250;size=0.900;calls=1.000;alternate=pol20:int game::ExperienceValueOfStack(class armyGroup *, class hero *)@0x00080f68
 VA(0x00435d6b, 0x7a)
 i32 game::ExperienceValueOfStack(armyGroup* group, hero* h) {
     i32 expValue = 0;
@@ -3741,9 +3703,6 @@ void SRand(i32 seed) {
     srand(seed);
 }
 
-// donor PoL RVA 0x00080ff9; preferred Buka symbol ?GetLuck@game@@QAEHPAVhero@@PAVarmy@@PAVtown@@@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.340271;margin=0.529148;shape=0.188;size=0.654;calls=0.667;alternate=pol20:int game::GetLuck(class hero *, class army *, class town *)@0x00080ff9
 VA(0x00435f6f, 0xb7)
 i32 game::GetLuck(hero* h, army*) {
     i32 luck;
@@ -3781,9 +3740,6 @@ static i32 s_adjacentMonsterMinX;
 DATA(0x004a6bec)
 static i32 s_adjacentMonsterMinY;
 
-// donor PoL RVA 0x00069bef; preferred Buka symbol ?FindAdjacentMonster@advManager@@QAEHHHPAH0HH@Z
-// donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.502628;margin=0.574839;shape=0.364;size=0.953;calls=0.667;alternate=pol20:int advManager::FindAdjacentMonster(int, int, int *, int *, int, int)@0x00069bef
 // HoMM1 retail returns the found flag in AL (xor al,al / mov al,1).
 VA(0x00436026, 0x2fa)
 i8 advManager::FindAdjacentMonster(
@@ -3857,9 +3813,6 @@ foundAdjacentMonster:
     return 1;
 }
 
-// donor PoL RVA 0x0008111f; preferred Buka symbol ?SetupAdjacentMons@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.519474;margin=0.741945;shape=0.279;size=0.996;calls=1.000;alternate=pol20:void game::SetupAdjacentMons(void)@0x0008111f
 VA(0x00436320, 0xbc)
 void game::SetupAdjacentMons(void) {
     i32 x;
@@ -3878,9 +3831,6 @@ void game::SetupAdjacentMons(void) {
     }
 }
 
-// donor PoL RVA 0x00081210; preferred Buka symbol ?CancelComputerScreen@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.526467;margin=0.434153;shape=0.371;size=0.866;calls=1.000;alternate=pol20:void game::CancelComputerScreen(void)@0x00081210
 VA(0x004363dc, 0x55)
 void game::CancelComputerScreen(void) {
     TurnOffAIMusic();
@@ -3895,9 +3845,6 @@ void game::CancelComputerScreen(void) {
         );
 }
 
-// donor PoL RVA 0x00081271; preferred Buka symbol ?ShowComputerScreen@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.481260;margin=0.673888;shape=0.345;size=0.812;calls=0.778;alternate=pol20:void game::ShowComputerScreen(void)@0x00081271
 VA(0x00436431, 0x105)
 void game::ShowComputerScreen(void) {
     if (gConfig.blackoutComputer || gRemoteOn) {
@@ -3940,9 +3887,6 @@ void game::ShowHeroesLogo(void) {
     }
 }
 
-// donor PoL RVA 0x000813fe; preferred Buka symbol ?WaitForPlayer@game@@QAEXPADH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.547163;margin=0.571086;shape=0.476;size=0.842;calls=0.833;alternate=pol20:void game::WaitForPlayer(char *, int)@0x000813fe
 VA(0x004365d2, 0x124)
 void game::WaitForPlayer(char* text, i32 player) {
     if (gbBlackoutPlayer && giNumHumanPlayers > 1 && !gRemoteOn) {
@@ -4218,10 +4162,6 @@ void game::CheckHeroConsistency(void) {
     }
 }
 
-// donor PoL RVA 0x00083219; preferred Buka symbol ?TransmitSaveGame@game@@QAEHHHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.660125;margin=0.426397;shape=0.321;size=0.898;calls=0.886;strings=%s%s|.\DATA\|PostWait;alternate=pol20:int game::TransmitSaveGame(int, int, int)@0x00083219
-
 // Saves REMOTE.GAM, optionally LZH-encodes it, then sends it in 200-byte
 // segments, 100 segments per acknowledged block.
 VA(0x004370d2, 0x5fd)
@@ -4382,9 +4322,6 @@ cleanup:
     return okay;
 }
 
-// donor PoL RVA 0x00083937; preferred Buka symbol ?ReceiveSaveGame@game@@QAEHHHHH@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.655741;margin=0.222523;shape=0.420;size=0.807;calls=0.714;strings=%s%s|.\DATA\|Receive End;alternate=pol20:int game::ReceiveSaveGame(int, int, int, int)@0x00083937
 // Collects the remote save in 200-byte segments, acknowledging each block
 // of 100, then decodes it and writes REMOTE.GAM.
 VA(0x004376cf, 0x4b0)
@@ -4503,9 +4440,6 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     return okay;
 }
 
-// donor PoL RVA 0x00083fc4; preferred Buka symbol ?DoNewTurn@game@@QAEXXZ
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.487826;margin=0.297906;shape=0.344;size=0.836;calls=0.867;alternate=pol20:void game::DoNewTurn(void)@0x00083fc4
 VA(0x00437b7f, 0x5b5)
 void game::DoNewTurn(void) {
     i32 track;
@@ -4619,9 +4553,6 @@ i32 game::GetBoatsBuilt(void) {
 DATA(0x004a6c29)
 i8 gShowMapInfo = 0;
 
-// donor PoL RVA 0x000b6f40; preferred Buka symbol ?GetMap@game@@QAEXXZ
-// donor Buka TU SOURCE/Newgame; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.547944;margin=0.077231;shape=0.356;size=0.530;calls=0.607;strings=.\MAPS\;alternate=pol20:void game::GetMap(void)@0x000b6f40
 // Buka 2.1 GetMap with HoMM1's player-count file masks and the reqextra.bin
 // map-info window; a cancelled pick restores the previous map's texts.
 VA(0x00438180, 0x373)
@@ -4893,9 +4824,6 @@ void game::RandomizePlayerCrests(void) {
     }
 }
 
-// donor PoL RVA 0x0008480a; preferred Buka symbol ?RestoreCell@game@@QAEXHHHHPAVmapCell@@H@Z
-// donor Buka TU SOURCE/GAME; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.572404;margin=0.482531;shape=0.423;size=0.977;calls=1.000;alternate=pol20:void game::RestoreCell(int, int, int, int, class mapCell *, int)@0x0008480a
 VA(0x00438e58, 0x87)
 void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, i32) {
     mapCell* cell;

@@ -212,9 +212,6 @@ void advManager::DrawCursor(void) {
     }
 }
 
-// donor PoL RVA 0x0000e198; preferred Buka symbol ?GetCursorBaseFrame@advManager@@QAEHH@Z
-// donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.375377;margin=0.466673;shape=0.186;size=0.574;calls=1.000;alternate=pol20:int advManager::GetCursorBaseFrame(int)@0x0000e198
 VA(0x00421dc4, 0x51)
 i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
     if (static_cast<i32>(direction) > static_cast<i32>(MAP_DIRECTION_SOUTH)) {
@@ -624,9 +621,6 @@ adjacentDone:
     return retCell;
 }
 
-// donor PoL RVA 0x0000f753; preferred Buka symbol ?CheckAdjacentMon@advManager@@QAEXPAH@Z
-// donor Buka TU SOURCE/CURSOR; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.530646;margin=0.751795;shape=0.360;size=0.888;calls=1.000;alternate=pol20:void advManager::CheckAdjacentMon(int *)@0x0000f753
 // Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
 // three-argument CompleteDraw.
 VA(0x00422df4, 0x161)

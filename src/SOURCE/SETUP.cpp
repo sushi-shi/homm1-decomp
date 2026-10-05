@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <SOURCE/SETUP.h>
@@ -56,9 +54,6 @@ i8 game::SetupCampaignGame(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00010ebf; preferred Buka symbol ?SetupBaud@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.648115;margin=0.123105;shape=0.395;size=0.777;calls=0.833;strings=stpbaud.bin;alternate=pol20:int game::SetupBaud(void)@0x00010ebf
 VA(0x00456c1d, 0x139)
 i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
@@ -85,9 +80,6 @@ i8 game::SetupBaud(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00011000; preferred Buka symbol ?SetupComPort@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.646978;margin=0.131942;shape=0.348;size=0.872;calls=0.750;strings=stpcom.bin;alternate=pol20:int game::SetupComPort(void)@0x00011000
 VA(0x00456d56, 0x1ae)
 i8 game::SetupComPort(void) {
     char initString[40];
@@ -130,9 +122,6 @@ i8 game::SetupComPort(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00011200; preferred Buka symbol ?SetupHotSeatGame@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.510359;margin=0.105262;shape=0.279;size=0.627;calls=0.545;strings=stphotst.bin;alternate=pol20:int game::SetupHotSeatGame(void)@0x00011200
 VA(0x00456f04, 0x107)
 i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
@@ -156,9 +145,6 @@ i8 game::SetupHotSeatGame(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00011438; preferred Buka symbol ?SetupNetworkGame@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.778953;margin=0.116684;shape=0.550;size=0.938;calls=1.000;strings=stpnet.bin;alternate=pol20:int game::SetupNetworkGame(void)@0x00011438
 VA(0x0045700b, 0xe7)
 i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
@@ -179,9 +165,6 @@ i8 game::SetupNetworkGame(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00011795; preferred Buka symbol ?SetupModemGame@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.697331;margin=0.184673;shape=0.396;size=0.996;calls=0.720;strings=stpdc.bin|stpdccfg.bin|stpmcfg.bin;alternate=pol20:int game::SetupModemGame(void)@0x00011795
 VA(0x004570f2, 0x299)
 i8 game::SetupModemGame(void) {
     heroWindow* window;
@@ -225,9 +208,6 @@ i8 game::SetupModemGame(void) {
     return 1;
 }
 
-// donor PoL RVA 0x00011aac; preferred Buka symbol ?SetupMultiPlayerGame@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.675100;margin=0.160042;shape=0.444;size=0.973;calls=0.529;strings=stpmp.bin;alternate=pol20:int game::SetupMultiPlayerGame(void)@0x00011aac
 VA(0x0045738b, 0x1a2)
 i8 game::SetupMultiPlayerGame(void) {
     i32 loop;
@@ -412,9 +392,6 @@ done:
     return result;
 }
 
-// donor PoL RVA 0x000123cc; preferred Buka symbol ?PickLoadGame@game@@QAEHXZ
-// donor Buka TU SOURCE/SETUP; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.594268;margin=0.566491;shape=0.333;size=0.748;calls=0.722;strings=.\GAMES\;alternate=pol20:int game::PickLoadGame(void)@0x000123cc
 VA(0x0045789f, 0x1c1)
 i8 game::PickLoadGame(void) {
     fileRequester* fileReq;

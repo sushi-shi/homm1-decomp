@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/audio.h>
@@ -68,9 +66,6 @@ combatManager::combatManager(void) {
     m_combatWindowOpen = 0;
 }
 
-// donor PoL RVA 0x0008ff0a; preferred Buka symbol ?CombineGroups@combatManager@@QAEXPAVarmyGroup@@0@Z
-// donor Buka TU SOURCE/CMBTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.491936;margin=0.502339;shape=0.296;size=0.801;calls=1.000;alternate=pol20:void combatManager::CombineGroups(class armyGroup *, class armyGroup *)@0x0008ff0a
 VA(0x00418cbb, 0x118)
 void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
     i16 i;

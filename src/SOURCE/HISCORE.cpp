@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -35,9 +33,6 @@ highScoreManager::highScoreManager(void) {
 VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
-// donor PoL RVA 0x00089a96; preferred Buka symbol ?Open@highScoreManager@@UAEHH@Z
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:1;base=0.779726;margin=0.242262;shape=0.537;size=0.989;calls=0.923;strings=highScoreManager|hiscore.bin;alternate=pol20:int highScoreManager::Open(int);   // virtual [override (implements baseManager pure virtual)]@0x00089a96
 VA(0x0043bdf3, 0x144)
 i16 highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -68,9 +63,6 @@ void highScoreManager::Close(void) {
     m_active = 0;
 }
 
-// donor PoL RVA 0x00089c40; preferred Buka symbol ?Main@highScoreManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.479652;margin=0.177846;shape=0.336;size=0.742;calls=1.000;alternate=pol20:int highScoreManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00089c40
 VA(0x0043bf85, 0x1fa)
 i16 highScoreManager::Main(struct tag_message& message) {
     i32 result;
@@ -145,9 +137,6 @@ i16 highScoreManager::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x00089e6a; preferred Buka symbol ?Update@highScoreManager@@QAEXXZ
-// donor Buka TU SOURCE/HISCORE; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.683474;margin=0.421632;shape=0.404;size=0.957;calls=0.730;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:void highScoreManager::Update(void)@0x00089e6a
 // Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
 // rating creature directly and highlights the new entry by fill colour.
 VA(0x0043c17f, 0x5ec)

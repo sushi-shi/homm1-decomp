@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/audio.h>
@@ -54,9 +52,6 @@ static char s_dwellingArmyName[1024];
 // function's compiler line static plus an offset; #line restores the original
 // file and lines (docs/patterns/vc4-gi-line-var.md).
 
-// donor PoL RVA 0x00013900; preferred Buka symbol ??0townObject@@QAE@HHPAD@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.615649;margin=0.314990;shape=0.431;size=0.799;calls=0.333;strings=%s.icn;alternate=pol20:void townObject::constructor(int, int, char *)@0x00013900
 // Buka TOWNMGR.cpp townObject ctor; HoMM1 reads frame count, rectangle and
 // building id from the .tod resource instead of sBuildingInfo.
 VA(0x0045ee90, 0x1c3)
@@ -97,9 +92,6 @@ townObject::townObject(char* name) {
     }
 }
 
-// donor PoL RVA 0x00013a6a; preferred Buka symbol ??1townObject@@QAE@XZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.564007;margin=0.293257;shape=0.438;size=0.896;calls=1.000;alternate=pol20:void townObject::~destructor(void)@0x00013a6a
 VA(0x0045f053, 0x56)
 townObject::~townObject() {
     if (m_border != NULL)
@@ -287,9 +279,6 @@ i16 townManager::Open(i16 id) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// donor PoL RVA 0x00014cc9; preferred Buka symbol ?UnloadTown@townManager@@QAEXXZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.470224;margin=0.176996;shape=0.284;size=0.924;calls=0.667;alternate=pol20:void townManager::UnloadTown(void)@0x00014cc9
 // Retail vtable slot 1: HoMM1's Close performs Buka's UnloadTown work.
 VA(0x0045f93d, 0x1db)
 void townManager::Close(void) {
@@ -529,9 +518,6 @@ void townManager::SetCommandAndText(struct tag_message& message) {
     ShowText(m_statusText);
 }
 
-// donor PoL RVA 0x000158e0; preferred Buka symbol ?ShowText@townManager@@QAEXPAD@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.613333;margin=0.109874;shape=0.519;size=1.000;calls=1.000;alternate=pol20:void townManager::ShowText(char *)@0x000158e0
 VA(0x00460770, 0x6b)
 void townManager::ShowText(char*) {
     tag_message message;
@@ -1050,9 +1036,6 @@ void townManager::RedrawTownScreen(void) {
     m_bankBox->Update();
 }
 
-// donor PoL RVA 0x0001771d; preferred Buka symbol ?SplitArmy@townManager@@QAEXXZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.732616;margin=0.021648;shape=0.430;size=0.991;calls=1.000;strings=splitwin.bin;alternate=pol20:void townManager::SplitArmy(void)@0x0001771d
 // Buka TOWNMGR.cpp:1923-1970; HoMM1 always names both armies and merges
 // into the first matching slot of the target army.
 VA(0x00462053, 0x334)
@@ -1124,9 +1107,6 @@ void townManager::ShiftQualChange(void) {
     m_townWindow->DrawWindow();
 }
 
-// donor PoL RVA 0x00017ab2; preferred Buka symbol ?ResetStrips@townManager@@QAEXXZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.515580;margin=0.398432;shape=0.375;size=0.860;calls=1.000;alternate=pol20:void townManager::ResetStrips(void)@0x00017ab2
 VA(0x0046243d, 0x8b)
 void townManager::ResetStrips(void) {
     if (m_swapStrip)
@@ -1503,9 +1483,6 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         return gpWindowManager->m_dialogResult == DIALOG_BUTTON_2;
 }
 
-// donor PoL RVA 0x00018bd2; preferred Buka symbol ?BuildObj@townManager@@QAEXH@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.630156;margin=0.342681;shape=0.206;size=0.999;calls=0.933;strings=buildtwn.82M;alternate=pol20:void townManager::BuildObj(int)@0x00018bd2
 // Buka TOWNMGR.cpp:2475; HoMM1 fizzles a fixed per-building rectangle
 // instead of computing the drawn extent.
 VA(0x00463402, 0x35f)
@@ -1865,9 +1842,6 @@ i16 MageGuildHandler(struct tag_message& message) {
     return EventWindowHandler(message);
 }
 
-// donor PoL RVA 0x0001a783; preferred Buka symbol ?SetupThievesGuild@townManager@@QAEXPAVheroWindow@@H@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.350822;margin=0.362412;shape=0.263;size=0.210;calls=0.163;strings=townwind.icn;alternate=pol20:void townManager::SetupThievesGuild(class heroWindow *, int)@0x0001a783
 // Buka TOWNMGR.cpp:3328 SetupThievesGuild; HoMM1 only draws the ranking
 // flags, with the category count taken from the number of guilds owned.
 VA(0x00464277, 0x2b5)
@@ -2200,9 +2174,6 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     return gpWindowManager->m_dialogResult != DIALOG_BUTTON_1;
 }
 
-// donor PoL RVA 0x00019c29; preferred Buka symbol ?TavernHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.461090;margin=0.267847;shape=0.244;size=0.845;calls=1.000;alternate=pol20:int TavernHandler(struct tag_message &)@0x00019c29
 // Buka TOWNMGR.cpp:2968-3000; HoMM1 animates frames 1-8 of control 2.
 VA(0x00465376, 0x125)
 i16 TavernHandler(struct tag_message& message) {
@@ -2238,9 +2209,6 @@ i16 TavernHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// donor PoL RVA 0x00019d7c; preferred Buka symbol ?DoTavern@townManager@@QAEXXZ
-// donor Buka TU SOURCE/TOWNMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.728216;margin=0.164549;shape=0.467;size=0.965;calls=0.889;strings=tavwin.bin;alternate=pol20:void townManager::DoTavern(void)@0x00019d7c
 // Buka TOWNMGR.cpp:3003-3032; HoMM1 plays the tavern theme instead of a
 // rumour and restores the town theme afterwards.
 VA(0x0046549b, 0xff)

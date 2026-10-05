@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/BITS.h>
@@ -87,9 +85,6 @@ void ForcePollSound() {
     PollSound();
 }
 
-// donor PoL RVA 0x000965be; preferred Buka symbol ?InitMainClasses@@YIXXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.512387;margin=0.755802;shape=0.400;size=0.925;calls=0.653;alternate=pol20:void InitMainClasses(void)@0x000965be
 VA(0x0043c808, 0x518)
 void InitMainClasses(void) {
     gpExec = new executive;
@@ -155,9 +150,6 @@ void DeleteMainClasses(void) {
     gpExec = NULL;
 }
 
-// donor PoL RVA 0x00096e21; preferred Buka symbol ?EarlySetup@@YIHXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.257149;margin=0.511941;shape=0.213;size=0.338;calls=0.600;alternate=pol20:int EarlySetup(void)@0x00096e21
 VA(0x0043cfcb, 0xf9)
 i32 EarlySetup(void) {
     DATA(0x004a9952)
@@ -770,9 +762,6 @@ char* GetMonsterName(i32 monster) {
     return gArmyNamesPlural[monster];
 }
 
-// donor PoL RVA 0x0009992c; preferred Buka symbol ?GetMonsterCost@@YIXHQAH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.424205;margin=0.383727;shape=0.192;size=0.855;calls=1.000;alternate=pol20:void GetMonsterCost(int, int * const)@0x0009992c
 VA(0x0043e3de, 0xbe)
 void GetMonsterCost(i32 monster, i32* const cost) {
     i32 index;
@@ -795,9 +784,6 @@ void GetMonsterCost(i32 monster, i32* const cost) {
     }
 }
 
-// donor PoL RVA 0x00099a6c; preferred Buka symbol ?CanBuild@@YIHPAVtown@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.375672;margin=0.371383;shape=0.277;size=0.517;calls=1.000;alternate=pol20:int CanBuild(class town *, int)@0x00099a6c
 // HoMM1 retail returns the result in AL (xor al,al / mov al,1).
 VA(0x0043e49c, 0x104)
 i8 CanBuild(town* t, i16 building) {
@@ -827,9 +813,6 @@ i8 CanBuild(town* t, i16 building) {
     return 0;
 }
 
-// donor PoL RVA 0x00099d21; preferred Buka symbol ?CanBuy@@YIHPAVtown@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.384626;margin=0.370647;shape=0.216;size=0.621;calls=1.000;alternate=pol20:int CanBuy(class town *, int)@0x00099d21
 // Retail returns a byte flag (xor al,al / mov al,1); philAI::CanBuyBHC tests al.
 VA(0x0043e5a0, 0xb6)
 i8 CanBuy(town* t, i16 type) {
@@ -1255,9 +1238,6 @@ void NormalDialog(
     delete gNormalDialogWindow;
 }
 
-// donor PoL RVA 0x000a2565; preferred Buka symbol ?UpdateNormalDialog@@YIXPAD@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.563703;margin=0.348381;shape=0.417;size=0.972;calls=1.000;alternate=pol20:void UpdateNormalDialog(char *)@0x000a2565
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
 VA(0x0043f440, 0x62)
@@ -1274,9 +1254,6 @@ void UpdateNormalDialog(char* text) {
     }
 }
 
-// donor PoL RVA 0x00099e81; preferred Buka symbol ?WaitHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.445743;margin=0.444520;shape=0.204;size=0.951;calls=0.688;alternate=pol20:int WaitHandler(struct tag_message &)@0x00099e81
 VA(0x0043f4a2, 0x14d)
 i16 WaitHandler(tag_message& message) {
     i8 result = 0;
@@ -1369,9 +1346,6 @@ i16 TrueFalseDialogHandler(tag_message& message) {
     return EventWindowHandler(message);
 }
 
-// donor PoL RVA 0x0009a52f; preferred Buka symbol ?PlayerDead@@YIXH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.488269;margin=0.466685;shape=0.274;size=0.981;calls=0.750;alternate=pol20:void PlayerDead(int)@0x0009a52f
 VA(0x0043f6b3, 0x145)
 void PlayerDead(i32 player) {
     playerData* currentPlayer;
@@ -1594,10 +1568,6 @@ void HandleRemoteSuddenExit(void) {
         REMOTE_MESSAGE_RELIABLE
     );
 }
-
-// donor PoL RVA 0x000a07e3; preferred Buka symbol ?ReceiveRemotePlayerExit@@YIXUSPlayerExit@@@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.368727;margin=0.249960;shape=0.192;size=0.687;calls=0.800;alternate=pol20:void ReceiveRemotePlayerExit(struct SPlayerExit)@0x000a07e3
 
 VA(0x0043f956, 0x238)
 // HoMM1 callers push four byte-sized values: player, an unused flag,
@@ -1855,9 +1825,6 @@ void CheckEndGame(i32 forced) {
     gInCheckEndGame = 0;
 }
 
-// donor PoL RVA 0x0009c07c; preferred Buka symbol ?QuickViewWait@@YIXXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.435968;margin=0.219505;shape=0.250;size=0.859;calls=0.600;alternate=pol20:void QuickViewWait(void)@0x0009c07c
 VA(0x004404c4, 0x7a)
 void QuickViewWait(void) {
     tag_message event;
@@ -1871,9 +1838,6 @@ void QuickViewWait(void) {
     }
 }
 
-// donor PoL RVA 0x0009c111; preferred Buka symbol ?InitVars@@YIXXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.679533;margin=0.555045;shape=0.387;size=0.991;calls=0.692;strings=mnuAdv|mnuCmbt|mnuDflt;alternate=pol20:void InitVars(void)@0x0009c111
 VA(0x0044053e, 0x175)
 void InitVars(void) {
     i32 i;
@@ -1969,9 +1933,6 @@ void game::ShowMoraleInfo(hero* h, i32 dialogType) {
     NormalDialog(gText, dialogType);
 }
 
-// donor PoL RVA 0x0009c92d; preferred Buka symbol ?ShowLuckInfo@game@@QAEXPAVhero@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.456267;margin=0.157936;shape=0.493;size=0.606;calls=0.556;alternate=pol20:void game::ShowLuckInfo(class hero *, int)@0x0009c92d
 VA(0x00440aa5, 0x1cd)
 void game::ShowLuckInfo(hero* h, i32 dialogType) {
     i32 alignments;
@@ -2030,9 +1991,6 @@ i16 GetMonType(i32 score, i32 highScoreType) {
     return gScoreMon[0][SCORE_MONSTER_TYPE];
 }
 
-// donor PoL RVA 0x0009ce14; preferred Buka symbol ?AddScoreToHighScore@@YIHHHHHPAD@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x00440d39, 0x32d)
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
@@ -2092,9 +2050,6 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     return 0;
 }
 
-// donor PoL RVA 0x0009d2c0; preferred Buka symbol ?BVResMsg@@YIXPADHH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.598508;margin=0.532475;shape=0.481;size=0.968;calls=1.000;alternate=pol20:void BVResMsg(char *, int, int)@0x0009d2c0
 VA(0x00441066, 0x51)
 void BVResMsg(char* s, i32 res, i32 qty) {
     giBottomViewOverride = BOTTOM_VIEW_RESOURCE;
@@ -2143,9 +2098,6 @@ i8 WaitForOtherPlayer(void) {
     return result;
 }
 
-// donor PoL RVA 0x0009d4a6; preferred Buka symbol ?PopNetBox@@YIXPADH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
     char* dataObj;
@@ -2340,9 +2292,6 @@ void AddNetBoxLine(char* text) {
     strcpy(cNetBoxLine[1], text);
 }
 
-// donor PoL RVA 0x0009e0f2; preferred Buka symbol ?ShutDown@@YIXPAD@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.466886;margin=0.632520;shape=0.403;size=0.708;calls=0.667;alternate=pol20:void ShutDown(char *)@0x0009e0f2
 VA(0x00441824, 0x11f)
 void ShutDown(char* message) {
     DATA(0x004a9958)
@@ -2387,9 +2336,6 @@ void ShutDown(char* message) {
     exit(0);
 }
 
-// donor PoL RVA 0x0009e306; preferred Buka symbol ?FileError@@YIXPAD@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.316461;margin=0.125092;shape=0.216;size=0.484;calls=0.500;alternate=pol20:void FileError(char *)@0x0009e306
 VA(0x00441943, 0x34)
 void FileError(char* filename) {
     char message[200];
@@ -2465,9 +2411,6 @@ void ShowCongrats(void) {
         AddScoreToHighScore(res, HIGH_SCORE_TYPE_STANDARD, "", gpGame->m_mapName);
 }
 
-// donor PoL RVA 0x0009e900; preferred Buka symbol ?CongratsWait@@YIXXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.447463;margin=0.065171;shape=0.300;size=0.684;calls=1.000;alternate=pol20:void CongratsWait(void)@0x0009e900
 VA(0x00441d6c, 0x8b)
 void CongratsWait(void) {
     i32 command = 0;
@@ -2560,9 +2503,6 @@ i16 DataEntryWindowHandler(tag_message& message) {
     return EventWindowHandler(message);
 }
 
-// donor PoL RVA 0x0009ea7c; preferred Buka symbol ?MemError@@YIXXZ
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.499168;margin=0.828160;shape=0.176;size=0.610;calls=1.000;strings=Out of Memory;alternate=pol20:void MemError(void)@0x0009ea7c
 VA(0x00442146, 0x60)
 void MemError(void) {
     DATA(0x004a995c)
@@ -2648,9 +2588,6 @@ i32 GameUnsaved(void) {
         return 0;
 }
 
-// donor PoL RVA 0x0009ec05; preferred Buka symbol ?HandleAppSpecificMenuCommands@@YIHH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.410709;margin=0.595745;shape=0.257;size=0.699;calls=0.542;alternate=pol20:int HandleAppSpecificMenuCommands(int)@0x0009ec05
 VA(0x0044238b, 0x523)
 i32 HandleAppSpecificMenuCommands(i32 command) {
     i32 menuChanged;

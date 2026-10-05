@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/bitmap.h>
@@ -185,9 +183,6 @@ i16 heroWindowManager::Main(tag_message& message) {
     return ret;
 }
 
-// donor PoL RVA 0x000cac40; preferred Buka symbol ?BroadcastMessage@heroWindowManager@@QAEHHHHH@Z
-// donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:7;base=0.484375;margin=1.382188;shape=0.250;size=0.844;calls=1.000;alternate=pol20:int heroWindowManager::BroadcastMessage(int, int, int, int)@0x000cac40
 VA(0x0046a4b4, 0x3d)
 i16 heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
     tag_message message;
@@ -242,8 +237,6 @@ void heroWindowManager::AddWindow(heroWindow* window, i16 zOrder, i8 openFlags) 
     m_focusWindow = window;
 }
 
-// donor PoL RVA 0x000cad40; preferred Buka symbol ?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z
-// donor Buka TU BASE/WINMGR; HoMM1 owner inferred from contiguous order
 VA(0x0046a657, 0xe9)
 void heroWindowManager::RemoveWindow(heroWindow* window) {
     if (window == NULL)

@@ -636,9 +636,6 @@ H1_ENUM_CONST_BEGIN(NetPositionConstant)
     NET_POSITION_HOST = 0
 H1_ENUM_CONST_END(NetPositionConstant)
 
-// donor PoL RVA 0x0009a6c1; preferred Buka symbol ?CheckEndGame@@YIXHH@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.237398;margin=0.276870;shape=0.229;size=0.353;calls=0.309;alternate=pol20:void CheckEndGame(int, int)@0x0009a6c1
 // playerData::m_daysLeft: NO_GRACE_PERIOD while the player holds a town;
 // losing the last town starts a GRACE_DAYS countdown (Buka
 // END_GAME_GRACE_DAYS) that game::NewDay runs down to elimination.
@@ -647,9 +644,6 @@ H1_ENUM_CONST_BEGIN(CheckEndGameConstant)
     END_GAME_GRACE_DAYS = CALENDAR_DAYS_PER_WEEK
 H1_ENUM_CONST_END(CheckEndGameConstant)
 
-// donor PoL RVA 0x0009c312; preferred Buka symbol ?ShowMoraleInfo@game@@QAEXPAVhero@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.469331;margin=0.613523;shape=0.400;size=0.774;calls=0.649;alternate=pol20:void game::ShowMoraleInfo(class hero *, int)@0x0009c312
 // KB's morale-screen text table; the five-alignment line was appended last.
 H1_ENUM_BEGIN(MoraleInfoText)
     MORALE_INFO_GOOD = 0,

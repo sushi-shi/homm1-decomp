@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -102,9 +100,6 @@ i16 swapManager::Open(i16 id) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// donor PoL RVA 0x000548be; preferred Buka symbol ?Close@swapManager@@UAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.610218;margin=0.602384;shape=0.500;size=0.986;calls=1.000;alternate=pol20:void swapManager::Close(void);   // virtual [override (implements baseManager pure virtual)]@0x000548be
 VA(0x0045d25f, 0x114)
 void swapManager::Close(void) {
     tag_message message;
@@ -174,9 +169,6 @@ void swapManager::DrawSelector(void) {
     }
 }
 
-// donor PoL RVA 0x00054be3; preferred Buka symbol ?Main@swapManager@@UAEHAAUtag_message@@@Z
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
 VA(0x0045d515, 0x88c)
 i16 swapManager::Main(struct tag_message& message) {
     i8 nowCloseRequested = 0;
@@ -698,9 +690,6 @@ void swapManager::Update(void) {
     }
 }
 
-// donor PoL RVA 0x00055fbd; preferred Buka symbol ?SplitMons@swapManager@@QAEXXZ
-// donor Buka TU SOURCE/SWAPMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
 VA(0x0045e628, 0x352)
 void swapManager::SplitMons(void) {
     i16 idPos;
