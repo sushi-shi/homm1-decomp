@@ -6,8 +6,7 @@ A driver around `homm1.compare.canonicalize.canonicalize_coff`: for every unit
 it is given it rewrites the compiler-private data names (`$SG`/`$T`/`name$S<n>`),
 resolves COFF weak externals to their default, names OLDNAMES references by
 the runtime function LINK binds them to, relocates a reviewed assembler
-module's resolved in-object calls, bounds each reviewed function before
-delinker alignment fill, and rewrites same-function
+module's resolved in-object calls, and rewrites same-function
 jump-table `DIR32` labels of both the recompiled base obj and its delinked
 target obj into a content-addressed, side-by-side view under `<out-dir>/`.
 `objdiff.json` points at these copies; the real base and target objects are
@@ -256,49 +255,22 @@ def comparison_copy(payload: bytes, *, data_matching_on: bool | None = None):
     return data, tuple(rows)
 
 
-def _stale(src: Path, out: Path, *depends: Path) -> bool:
+def _stale(src: Path, out: Path) -> bool:
     if not out.exists():
         return True
     out_mtime = out.stat().st_mtime
-    return (out_mtime < src.stat().st_mtime or out_mtime < _MODULE_MTIME
-            or any(path.is_file() and out_mtime < path.stat().st_mtime
-                   for path in depends))
-
-
-def padding_claims(unit: str) -> tuple[tuple[Path, ...], tuple[tuple[str, int], ...]]:
-    """(dependency paths, reviewed function sizes) for padding boundaries.
-
-    Fixed MASM units carry their claims in config; source units carry them in
-    the extracted VA fragments. Every reviewed function size bounds its
-    comparison extent, as in HoMM2's canonicalize_relocs.
-    """
-    from homm1.graph.fixed_asm import unit as fixed_asm_unit
-    from homm1.retail_labels import fragments
-    fixed = fixed_asm_unit(unit)
-    if fixed is not None:
-        return (), tuple((claim.name, claim.size) for claim in fixed.claims
-                         if claim.kind == "func")
-    return (fragments.fragment_path(unit),), tuple(
-        (claim.name, claim.size) for claim in fragments.unit_claims(unit)
-        if claim.kind == "func" and claim.size)
+    return out_mtime < src.stat().st_mtime or out_mtime < _MODULE_MTIME
 
 
 def _normalize_one(src: Path, out_obj: Path, out_sidecar: Path, *,
                    force: bool = False,
-                   function_claims: tuple[tuple[str, int], ...] = (),
-                   boundary_claims: tuple[tuple[str, int], ...] = (),
-                   depends: tuple[Path, ...] = ()) -> str:
-    """Normalize src -> out_obj (+ sidecar) when stale. Return a state token.
-
-    `function_claims` (fixed MASM units only) authorize in-object call
-    relocation; `boundary_claims` bound every reviewed function's extent.
-    """
-    if (not force and not _stale(src, out_obj, *depends)
-            and not _stale(src, out_sidecar, *depends)):
+                   function_claims: tuple[tuple[str, int], ...] = ()) -> str:
+    """Normalize src -> out_obj (+ sidecar) when stale. Return a state token."""
+    if not force and not _stale(src, out_obj) and not _stale(src, out_sidecar):
         return "skip"
     data, rows = comparison_copy(src.read_bytes())
     data = canon.relocate_in_object_calls(data, function_claims)
-    data = canon.add_function_padding_boundaries(data, boundary_claims)
+    data = canon.add_function_padding_boundaries(data, function_claims)
     canon._atomic_write(out_obj, data)
     canon._atomic_write(out_sidecar, canon.sidecar_bytes(rows))
     return "wrote"
@@ -416,13 +388,11 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
         function_claims = tuple(
             (claim.name, claim.size) for claim in fixed.claims
             if claim.kind == "func") if fixed is not None else ()
-        depends, boundary_claims = padding_claims(unit)
         base_src = base_dir / f"{unit}.obj"
         if base_src.exists():
             state = _normalize_one(
                 base_src, base_out / f"{unit}.obj", base_out / f"{unit}.symbols.tsv",
-                force=force, function_claims=function_claims,
-                boundary_claims=boundary_claims, depends=depends)
+                force=force, function_claims=function_claims)
             wrote += state == "wrote"
             skipped += state == "skip"
             base_n += 1
@@ -433,8 +403,7 @@ def normalize(base_dir: Path, target_dir: Path, out_dir: Path,
             target_obj = target_out / target_src.relative_to(target_dir)
             state = _normalize_one(
                 target_src, target_obj, target_sidecar, force=force,
-                function_claims=function_claims,
-                boundary_claims=boundary_claims, depends=depends)
+                function_claims=function_claims)
             wrote += state == "wrote"
             skipped += state == "skip"
             target_n += 1
