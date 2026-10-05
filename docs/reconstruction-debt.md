@@ -34,7 +34,18 @@ not yet modelled:
   (`m_frames`) and the font code's word view (`m_frameWords`). Its 26 casts are
   gone and the code is unchanged;
 - network packets: `char` buffers viewed as `RemoteMessage`,
-  `combatRemoteMessage`, `heroRemoteMessage` and fragment records;
+  `combatRemoteMessage`, `heroRemoteMessage` and fragment records.
+  `SendHeroTownData` uses one allocation for the combat record and both hero
+  fragments. It is now a local union of the three typed pointers (combat
+  record, hero fragment, wire bytes), so the frame slot is unchanged.
+  `ReceiveHeroTownData` and `DoCombat` read received records through
+  `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO`, the Buka 2.1 donor's view
+  macros. The remaining nine casts convert the `char*` that `GetRemoteData`,
+  `CheckHandleNet` and the transmit functions use for queue records; the
+  donor-derived symbols (`?GetRemoteData@@YIPADC@Z`) fix that type, and the
+  donor casts at the same call sites. A union cannot hold the combat payload
+  because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
+  `char[]` data identity;
 - remaining byte, word and integer views.
 
 The fix is the real type at its owner (a typed member, a packet struct or
