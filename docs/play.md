@@ -33,6 +33,6 @@ headers ships a native `WING32.DLL`, but it thunks to 16-bit WinG, which the
 WoW64 Wine cannot host, so it is not installed. No proprietary DLL is committed
 or fetched; the Smacker and Miles DLLs come from your installation.
 
-The generated `source-win95-1.2-1997` tree has the same runner as `play.py`:
-`nix run path:. -- --data "/path/to/HEROES"` builds with `build.py` and starts
-the result from `build/game/` (see [clean source](clean-source.md)).
+The generated `source-buka-2003` tree has no runner: its `build.py` writes
+`build/<locale>/HEROES.EXE`, which runs from an installed Buka game folder
+(see [clean source](clean-source.md)).

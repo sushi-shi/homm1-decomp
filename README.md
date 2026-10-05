@@ -76,9 +76,16 @@ review inputs, not defect totals. Preserve banked matches.
 
 ```text
 decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |
-        v
-source-win95-1.0
+        |                                                                 |
+        v                                                    +------------+------------+
+source-win95-1.0                                             |                         |
+                                                             v                         v
+                                                     source-buka-2003         classic-buka-2003
+                                                             |
+                                                    +--------+--------+
+                                                    |                 |
+                                                    v                 v
+                                                  port            source-te
 ```
 
 | Branch | Purpose |
@@ -88,6 +95,10 @@ source-win95-1.0
 | [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
 | [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka port; implementation and target migration in progress |
 | [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
+| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Generated clean source for Buka 2003: the primary C++ tree, with its Russian and English text catalog |
+| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | The same generated tree as a reading view, its text spelled out as UTF-8 Russian |
+| port | Cross-platform port based on `source-buka-2003` (planned) |
+| source-te | Branch based on `source-buka-2003` (planned) |
 
 ## Quickstart
 
