@@ -117,16 +117,15 @@ class BaselineTests(unittest.TestCase):
         self.assertEqual(reference_reason("a", 1, 100, 0, 10,
                                           {(1, 100): {"a"}}, {}), "")
 
-    def test_other_image_evidence_is_not_imported(self):
+    def test_reviewed_evidence_tables_are_read(self):
         with tempfile.TemporaryDirectory() as tmp:
-            p = Path(tmp) / "facts.json"
-            p.write_text(json.dumps(dict(image_sha256="old", functions=[
-                dict(name="f", rva="0x10", size=4, unit="SOURCE/F")],
-                refs=[dict(site="0x11", target="0x100", name="g", kind=6)])))
-            self.assertEqual(evidence([p], "new"), (set(), {}))
-            functions, refs = evidence([p], "old")
+            identities, proofs = Path(tmp) / "ids.tsv", Path(tmp) / "proofs.tsv"
+            identities.write_text("rva\tname\n0x00000010\tf\n")
+            proofs.write_text("site_rva\ttarget_rva\tsymbol\n"
+                              "0x00000011\t0x00000100\tg\n0x00000011\t0x00000100\th\n")
+            functions, refs = evidence(identities, proofs)
             self.assertIn((0x10, "f"), functions)
-            self.assertEqual(refs[(0x11, 0x100)], {"g"})
+            self.assertEqual(refs[(0x11, 0x100)], {"g", "h"})
 
     def test_readme_rejects_a_stale_baseline(self):
         from homm1.compare import baseline

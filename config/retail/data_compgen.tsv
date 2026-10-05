@@ -1,20 +1,20 @@
 # Reviewed VC6 compiler-generated floating constants; stable value-encoded names.
-# Evidence and complete payload/operand checks: buka-radar-locators.json.
-# TownQuickView unpooled strings: every use site and full payload independently verified; buka-quick-views.json.
-# ViewWorld unpooled strings: every use site and full payload independently verified; buka-map-views.json.
-# VC6 ctype<wchar_t>::id one-byte COMMON guard; full controls: buka-ctype-guard.json.
-# Combat AI doubles: complete operands and payloads in buka-combat-ai.json.
-# DamageEnemy float/division and double/rounding constants: buka-army-luck.json.
-# DamageGroup percentage and survivor thresholds: buka-army-group.json.
-# Complete-body constant references and exact typed payloads: buka-reference-completion.json.
-# Typed operands, unique instruction contexts and full payloads: buka-floating-constants.json.
-# Typed operands, unique instruction contexts and full payloads: buka-current-floating-constants.json.
-# Typed immutable value-encoded constants: buka-literal-pool-identities.json.
-# Complete unchanged literals and unique use contexts: buka-equal-literal-references.json.
-# Typed immutable value-encoded constants: buka-additional-literal-pool-identities.json.
-# Typed immutable value-encoded constants: buka-restored-ai-literal-pools.json.
-# Complete unchanged literals and unique use contexts: buka-final-equal-literal-references.json.
-# Complete unchanged literals and unique use contexts: buka-final-display-literal-references.json.
+# Evidence and complete payload/operand checks.
+# TownQuickView unpooled strings: every use site and full payload independently verified.
+# ViewWorld unpooled strings: every use site and full payload independently verified.
+# VC6 ctype<wchar_t>::id one-byte COMMON guard; full controls.
+# Combat AI doubles: complete operands and payloads.
+# DamageEnemy float/division and double/rounding constants.
+# DamageGroup percentage and survivor thresholds.
+# Complete-body constant references and exact typed payloads.
+# Typed operands, unique instruction contexts and full payloads.
+# Typed operands, unique instruction contexts and full payloads.
+# Typed immutable value-encoded constants.
+# Complete unchanged literals and unique use contexts.
+# Typed immutable value-encoded constants.
+# Typed immutable value-encoded constants.
+# Complete unchanged literals and unique use contexts.
+# Complete unchanged literals and unique use contexts.
 # Audio TU static-destructor guards: AudiereMusic stream/source (0xcdf70) and AudiereDevice::device (0xcdf71); users 0x691ae/0x69276 and 0x69b16.
 rva	size	name	owner	class
 0x0008a398	0x8	__real@8@4006c300000000000000	SOURCE/ADVMGR	fppool

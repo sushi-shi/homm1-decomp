@@ -2,35 +2,35 @@
 # NWC 1.2 rows are archived in nwc-1.2-reloc-referents.tsv, not applied to Buka.
 # Ordinary identities must resolve through reviewed owners; missing ones remain errors.
 function_rva	target_rva	site_rva	owner	addend	occurrences	provenance
-0x00024a50	0x000926d8	0x00025b25	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	Buka DoEvent shrine: gSpellNames[objectMetadata - 1]; indexed load biases table base by -4; full operand and CFG proof in buka-events.json
-0x000779d1	0x000d20aa	0x000779f0	_son	0xFFFFFFFE	1	Buka adaptive Huffman reconstruction indexes son from one word before its base; complete ordered instruction and addend proof in buka-lzhuf.json
-0x0002e595	0x00091fde	0x0002e6d1	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	Buka campaign index minus one: exact operand, owner and signed addend; buka-data-layout.json
-0x0003d0c4	0x000932bc	0x0003dac9	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	Buka campaign index minus one: exact operand, owner and signed addend; buka-data-layout.json
-0x00060294	0x00090601	0x00060650	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Town dwelling name: building slot starts at seven, so gDwellingType row base is biased by -7; full instruction/control-flow proof in buka-town-text.json
-0x0000e4c1	0x000a65eb	0x0000e6fb	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e70e	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e721	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e736	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e777	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e78a	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e79d	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e7b2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e87c	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e88f	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000ece8	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x00033b9c	0x00090601	0x00033c8c	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x00033b9c	0x00090601	0x00033d68	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0003435e	0x00090601	0x00034467	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0003435e	0x00090601	0x000344b2	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0004e36d	0x00090601	0x0004e44a	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x00063402	0x00090601	0x000634b2	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e924	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
-0x0000e4c1	0x000a65eb	0x0000e936	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
-0x0004ac0d	0x00090601	0x0004ae93	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
-0x0004ac0d	0x00090601	0x0004afe8	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow; buka-existing-data-references.json
-0x00007276	0x000926f4	0x00007557	?gResourceNames@@3PAPADA	0xFFFFFF0C	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
-0x0003a599	0x0009192a	0x0003a5b9	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
-0x0003abb3	0x00092410	0x0003ac62	?gStatNames@@3PAPADA	0xFFFFFEBC	1	Current typed payload, owner and independently anchored caller context; buka-current-data-references.json
-0x0003a64e	0x0009192a	0x0003a680	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Reviewed typed owner and signed index dataflow; buka-final-negative-references.json
-0x0004efb4	0x000903eb	0x00050186	?gSpellAIFlags@@3PACA	0xFFFFFFFF	1	Reviewed typed owner and signed index dataflow; buka-final-negative-references.json
-0x0004efb4	0x000903ae	0x00050135	?gSpellAIValue@@3PAFA	0xFFFFFFFE	1	Buka spell shrine: one-based metadata indexes the signed-word gSpellAIValue table at 0x903b0 with base -2; surrounding AddSpell and gSpellAIFlags accesses prove the index. Supersedes preceding pointer-array containment; buka-event-value-controls.json
+0x00024a50	0x000926d8	0x00025b25	?gSpellNames@@3PAPADA	0xFFFFFFFC	1	Buka DoEvent shrine: gSpellNames[objectMetadata - 1]; indexed load biases table base by -4; full operand and CFG proof
+0x000779d1	0x000d20aa	0x000779f0	_son	0xFFFFFFFE	1	Buka adaptive Huffman reconstruction indexes son from one word before its base; complete ordered instruction and addend proof
+0x0002e595	0x00091fde	0x0002e6d1	?gCampaignSideCrests@@3PAY01CA	0xFFFFFFFE	1	Buka campaign index minus one: exact operand, owner and signed addend
+0x0003d0c4	0x000932bc	0x0003dac9	?gCampaignSideNames@@3PAPADA	0xFFFFFFFC	1	Buka campaign index minus one: exact operand, owner and signed addend
+0x00060294	0x00090601	0x00060650	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Town dwelling name: building slot starts at seven, so gDwellingType row base is biased by -7; full instruction/control-flow proof
+0x0000e4c1	0x000a65eb	0x0000e6fb	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e70e	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e721	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e736	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e777	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e78a	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e79d	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e7b2	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e87c	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e88f	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000ece8	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Typed array owner, signed source addend and unique anchored instruction context
+0x00033b9c	0x00090601	0x00033c8c	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x00033b9c	0x00090601	0x00033d68	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0003435e	0x00090601	0x00034467	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0003435e	0x00090601	0x000344b2	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0004e36d	0x00090601	0x0004e44a	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x00063402	0x00090601	0x000634b2	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Typed array owner, signed source addend and unique anchored instruction context
+0x0000e4c1	0x000a65eb	0x0000e924	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow
+0x0000e4c1	0x000a65eb	0x0000e936	?bComboDraw@@3PAY0BB@CA	0xFFFFFFFF	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow
+0x0004ac0d	0x00090601	0x0004ae93	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow
+0x0004ac0d	0x00090601	0x0004afe8	?gDwellingType@@3PAY05CA	0xFFFFFFF9	1	Signed array addend verified by wider instruction context or explicit faction/building-index dataflow
+0x00007276	0x000926f4	0x00007557	?gResourceNames@@3PAPADA	0xFFFFFF0C	1	Current typed payload, owner and independently anchored caller context
+0x0003a599	0x0009192a	0x0003a5b9	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Current typed payload, owner and independently anchored caller context
+0x0003abb3	0x00092410	0x0003ac62	?gStatNames@@3PAPADA	0xFFFFFEBC	1	Current typed payload, owner and independently anchored caller context
+0x0003a64e	0x0009192a	0x0003a680	?gMinExpForLevel@@3PAY0M@FA	0xFFFFFFFE	1	Reviewed typed owner and signed index dataflow
+0x0004efb4	0x000903eb	0x00050186	?gSpellAIFlags@@3PACA	0xFFFFFFFF	1	Reviewed typed owner and signed index dataflow
+0x0004efb4	0x000903ae	0x00050135	?gSpellAIValue@@3PAFA	0xFFFFFFFE	1	Buka spell shrine: one-based metadata indexes the signed-word gSpellAIValue table at 0x903b0 with base -2; surrounding AddSpell and gSpellAIFlags accesses prove the index. Supersedes preceding pointer-array containment
