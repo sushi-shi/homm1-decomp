@@ -10,7 +10,6 @@
 
 #include <stdlib.h>
 
-VA_COMPGEN(0x00474fbc, 0x2b, "??1tileset@@UAE@XZ", 0x00474ea0)
 VA(0x00474ea0, 0x11c)
 tileset::tileset(i16 id)
     : resource(RESOURCE_CATEGORY_TILESET, id, RESOURCE_REFERENCE_INITIAL, NULL) {
@@ -24,7 +23,9 @@ tileset::tileset(i16 id)
     PostprocessBitmap(m_data, m_tileWidth, m_tileHeight * m_tileCount);
 }
 
-VA_COMPGEN(0x00475020, 0x2e, "??_Gtileset@@UAEPAXI@Z", 0x00474ea0)
 tileset::~tileset(void) {
     free(m_data);
 }
+
+VA_COMPGEN(0x00474fbc, 0x2b, "??1tileset@@UAE@XZ", 0x00474ea0)
+VA_COMPGEN(0x00475020, 0x2e, "??_Gtileset@@UAEPAXI@Z", 0x00474ea0)

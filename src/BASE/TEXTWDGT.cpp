@@ -14,7 +14,6 @@
 #include <string.h>
 
 VA(0x00471770, 0x58)
-VA_COMPGEN(0x00471da0, 0x2e, "??_GtextWidget@@UAEPAXI@Z", 0x00471770)
 textWidget::textWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_font = NULL;
     m_text = NULL;
@@ -156,3 +155,5 @@ void textWidget::SetText(char* text) {
         m_text = text;
     }
 }
+
+VA_COMPGEN(0x00471da0, 0x2e, "??_GtextWidget@@UAEPAXI@Z", 0x00471770)

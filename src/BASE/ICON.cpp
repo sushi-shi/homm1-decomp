@@ -14,7 +14,6 @@
 
 #include <stdlib.h>
 
-VA_COMPGEN(0x00470f5f, 0x2b, "??1icon@@UAE@XZ", 0x00470ea0)
 VA(0x00470ea0, 0xbf)
 icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
@@ -28,11 +27,11 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     PostprocessIcon(this);
 }
 
-VA_COMPGEN(0x00471740, 0x2e, "??_Gicon@@UAEPAXI@Z", 0x00470ea0)
 icon::~icon(void) {
     free(m_data);
 }
 
+VA_COMPGEN(0x00470f5f, 0x2b, "??1icon@@UAE@XZ", 0x00470ea0)
 // Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does.
 VA(0x00470f8a, 0x317)
 void icon::DrawToBuffer(
@@ -227,3 +226,5 @@ void icon::DimToBuffer(
     else
         FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
 }
+
+VA_COMPGEN(0x00471740, 0x2e, "??_Gicon@@UAEPAXI@Z", 0x00470ea0)

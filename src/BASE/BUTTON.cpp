@@ -16,7 +16,6 @@
 DATA(0x004d7f60)
 i32 gLeftRightSave = 0;
 
-VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
 VA(0x00476c80, 0x59)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_icon = NULL;
@@ -26,7 +25,6 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
-VA_COMPGEN(0x00477620, 0x2e, "??_Gbutton@@UAEPAXI@Z", 0x00476c80)
 button::~button(void) {
     gpResourceManager->Dispose(m_icon);
 }
@@ -98,6 +96,7 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
+VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
 VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
     i16 x;
@@ -218,3 +217,5 @@ void button::Draw(void) {
         ICON_DRAW_OFFSET_FULL
     );
 }
+
+VA_COMPGEN(0x00477620, 0x2e, "??_Gbutton@@UAEPAXI@Z", 0x00476c80)

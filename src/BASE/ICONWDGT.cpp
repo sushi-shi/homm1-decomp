@@ -10,7 +10,6 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA_COMPGEN(0x0046e13a, 0x5b, "??1iconWidget@@UAE@XZ", 0x0046deb0)
 VA(0x0046deb0, 0x4e)
 iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_icon = 0;
@@ -19,7 +18,6 @@ iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_orientation = ICON_DRAW_NORMAL;
 }
 
-VA_COMPGEN(0x0046e530, 0x2e, "??_GiconWidget@@UAEPAXI@Z", 0x0046deb0)
 iconWidget::~iconWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
@@ -86,6 +84,7 @@ void iconWidget::Read(void) {
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
+VA_COMPGEN(0x0046e13a, 0x5b, "??1iconWidget@@UAE@XZ", 0x0046deb0)
 VA(0x0046e195, 0x2a4)
 i16 iconWidget::Main(tag_message& message) {
     i16 x;
@@ -164,3 +163,5 @@ void iconWidget::Draw(void) {
             break;
     }
 }
+
+VA_COMPGEN(0x0046e530, 0x2e, "??_GiconWidget@@UAEPAXI@Z", 0x0046deb0)

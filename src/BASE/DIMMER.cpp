@@ -6,11 +6,9 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA_COMPGEN(0x00476c60, 0x1c, "??1dimmerWidget@@UAE@XZ", 0x00476ae0)
 VA(0x00476ae0, 0x2b)
 dimmerWidget::dimmerWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 
-VA_COMPGEN(0x00476c30, 0x2e, "??_GdimmerWidget@@UAEPAXI@Z", 0x00476ae0)
 dimmerWidget::~dimmerWidget(void) {}
 
 // @dead-code
@@ -35,3 +33,6 @@ VA(0x00476bda, 0x13)
 void dimmerWidget::Draw(void) {
     Dim();
 }
+
+VA_COMPGEN(0x00476c30, 0x2e, "??_GdimmerWidget@@UAEPAXI@Z", 0x00476ae0)
+VA_COMPGEN(0x00476c60, 0x1c, "??1dimmerWidget@@UAE@XZ", 0x00476ae0)
