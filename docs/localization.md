@@ -17,8 +17,8 @@ It produces an ordinary character-array initializer with exactly the catalog's
 bytes and no implicit NUL. The declared C++ array still controls storage size;
 both compilers reject excess characters. Original padding spaces belong in the
 catalog entry. Only the character macros used by a unit or its headers are
-emitted. Campaign town names use this form; their fixed-width provenance and
-whole-table controls are in `config/retail/buka-localized-tables.json`.
+emitted. Campaign town names use this form; their fixed-width provenance is in
+`config/retail/localization_fixed_width.tsv`.
 
 When retail changes a format argument list, `locales/format-variants.json`
 records the exact English and Russian signatures for that ID. Unknown IDs,
@@ -48,5 +48,6 @@ portable catalog/overlay tests with
 
 Migrated table entries retain exact 1.2 English. Their source commit, old and
 new pointer slots, and literal hashes are recorded in
-`config/retail/buka-localization.tsv`. The pinned Buka target selects Russian;
+`config/retail/localization.tsv` (resource labels:
+`config/retail/localization_resources.tsv`). The pinned Buka target selects Russian;
 nonmatching English objects use `build/ordinary/en`.

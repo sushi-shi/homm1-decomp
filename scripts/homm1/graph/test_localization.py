@@ -312,10 +312,12 @@ class LocalizationTests(unittest.TestCase):
         import csv
         root = Path(__file__).resolve().parents[3]
         catalog = loc.Catalog.load(root)
-        with (root / 'config/retail/buka-localization.tsv').open() as stream:
-            rows = list(csv.DictReader(stream, delimiter='\t'))
-        resource_rows = json.loads((root / 'config/retail/buka-resource-localization.json').read_text())['messages']
-        fixed_rows = json.loads((root / 'config/retail/buka-localized-tables.json').read_text())['campaign_scenarios']['fixed_width_names']
+        def table(name):
+            with (root / 'config/retail' / name).open() as stream:
+                return list(csv.DictReader(stream, delimiter='\t'))
+        rows = table('localization.tsv')
+        resource_rows = table('localization_resources.tsv')
+        fixed_rows = table('localization_fixed_width.tsv')
         self.assertEqual(set(catalog.english),
                          {row['id'] for row in rows} | {row['id'] for row in resource_rows}
                          | {row['id'] for row in fixed_rows})
@@ -328,7 +330,7 @@ class LocalizationTests(unittest.TestCase):
         for row in fixed_rows:
             self.assertEqual(catalog.english[row['id']], row['english'])
             payload = catalog.russian[row['id']].encode('cp1251')
-            self.assertEqual(len(payload), row['size'])
+            self.assertEqual(len(payload), int(row['size']))
             self.assertEqual(hashlib.sha256(payload).hexdigest(), row['payload_sha256'])
 
         for row in resource_rows:

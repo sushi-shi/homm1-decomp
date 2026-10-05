@@ -1,4 +1,4 @@
-"""Publish the generated tree as a single-commit snapshot branch (kf1 `655774b2`).
+"""Publish the generated tree as a single-commit snapshot branch.
 
 The branch always holds exactly one root commit: master's history is not
 imported, and regeneration replaces the snapshot rather than stacking on it.

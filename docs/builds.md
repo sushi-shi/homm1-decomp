@@ -1,9 +1,8 @@
 # HoMM1 builds
 
 This page catalogues the known HoMM1 executables, how each was built, and the
-runtime libraries each one ships. This branch is implementing the [1.2 to Buka transition](buka-2003.md).
-The active target is Buka 2003. Strict comparison remains unavailable while the address
-and reference migration is reviewed (`config/retail/targets.json`).
+runtime libraries each one ships. The active target is Buka 2003 (`config/retail/targets.json`); the
+[version lineage](versions/README.md) describes the changes between releases.
 
 Local copies are kept outside the repository in `~/Projects/homm1/exe`, listed
 in its `MANIFEST.md5`. Archive.org item ids are given as `item` or
@@ -12,7 +11,7 @@ here.
 
 The comparison measurements below were made in the parent 1.0 repository;
 "current reconstruction" in those comparisons refers to that snapshot.
-See [the 1.1 migration](win95-1.1.md) for this fork.
+See [Win95 1.1](versions/win95-1.1.md) for the 1.0 → 1.1 changes.
 
 "Shared with 1.0" means a function from the retail census, minus a few short
 functions that have no ≥6-byte unrelocated anchor, appears byte-for-byte in the
@@ -33,7 +32,7 @@ other image. Relocated fields are masked for this comparison.
 
 The original VC 4.1 attribution was inferred from linker 3.10. The 1.2 port
 subsequently verified the compiler against preserved media and retail-backed
-controls; see [the 1.2 migration](win95-1.2.md). Every Win32 build sets OS version 4.0, subsystem
+controls; see [Win95 1.2](versions/win95-1.2.md). Every Win32 build sets OS version 4.0, subsystem
 GUI 4.0 and image version 0.0. Each uses image base 0x400000, section alignment
 0x1000 and file alignment 0x200, and has a zero PE checksum. The DOS builds are
 Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
@@ -166,7 +165,7 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
   `ValueOfEventAtPosition` also changes; identical rounding is not assumed.
   The initial masked-byte survey could not establish unchanged source or
   behavioral equivalence. The complete per-function findings and current
-  reconstruction limits are in [the 1.1 review](win95-1.1.md#changed-function-review).
+  reconstruction limits are in [the 1.1 changed functions](versions/win95-1.1.md#changed-functions).
 - **Readme (patch) fixes:** cursor refresh after AI turns; cursor over castles;
   first combat monster behaviour; Identify Hero visibility.
 - **Usefulness:** a second compile-state sample from the same compiler and tree.
@@ -251,7 +250,6 @@ Watcom C/C++32 with DOS/4GW and are listed briefly at the end.
     WINMGR, INPUTMGR), so those functions are unoptimized.
   - FINDPATH and SEARCH are exceptions: complete-TU controls establish
     `/O2 /Ob2 /G5`; retail inlines Clear and QuickDistance in FindCombatPath.
-    See [the reviewed pathfinding evidence](../config/retail/buka-pathfinding.json).
   - There is no /GZ fill.
   - /GX: 125 `fs:[0]` frames, 109 FuncInfo records; no /GR.
   - Static VC6 LIBCMT.

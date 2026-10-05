@@ -38,8 +38,7 @@ A separate complete `/G5` versus Buka review checks all thirteen functions.
 The retail sequence excludes those clears. Stack-local placement remains
 unmatched in twelve functions and is not hidden by this compiler correction.
 Use the existing `cpp_buka_g5` unit profile; do not generalize this observation
-to unreviewed units. Full controls, hashes and retail comparisons are in
-[`buka-combat-ai.json`](../../config/retail/buka-combat-ai.json).
+to unreviewed units.
 
 
 ## Army drawing control
@@ -65,9 +64,6 @@ Both AND forms clear only EAX bit zero. They set different width-dependent
 flags, but the immediately following ADD overwrites all flags before use.
 Two such sites account for two additional bytes under `/G6`. This is an
 explicit control result, not a normalization accepted by strict comparison.
-See [`buka-army-drawing.json`](../../config/retail/buka-army-drawing.json) for
-all nine function controls and hashes. `Wince`'s separate boolean-materialization
-residue remains visible after the profile correction.
 
 
 ## Melee retaliation direction controls
@@ -76,7 +72,7 @@ The Buka melee routine passes both wide-creature retaliation direction choices
 through a signed byte before extending to its word parameter. The choices
 remain 0/5 and 2/3. Restoring the missing conversion in the first expression
 recovers the byte-to-word extension; the retail callee reads words for both
-arguments. See [the complete melee review](../../config/retail/buka-melee-attack.json).
+arguments.
 
 Do not infer full-register equality from a byte argument. Retail's `SETcc`
 leaves upper bits untouched, whereas the candidate's `NEG/SBB` idiom can define
@@ -95,8 +91,6 @@ These observations do not authorize a new CPU profile or comparison mask.
 the `/G5` sequence, and `IsMember` consumes the signed byte at its argument
 slot. All ten other explicit routines have identical profile-control bytes
 outside their checked references, and every branch destination agrees.
-The complete eleven-function control and retail review are in
-[`buka-army-group.json`](../../config/retail/buka-army-group.json).
 
 
 ## Combat-manager control
@@ -116,7 +110,7 @@ castle-flag value as conditional-value expressions reproduces the complete
 retail body without introducing authored temporaries.
 `Open`'s extra seven-byte null assignment immediately before `LoadPlaySample`
 is also absent from retail. These are source-form corrections, not comparison
-normalizations. See [the full controls](../../config/retail/buka-combat-setup.json).
+normalizations.
 
 
 ## Adventure-event controls
@@ -129,4 +123,3 @@ while `HouseEvent` and `HeroLoses` each omit two. Every retained instruction,
 reference/addend and branch target agrees between these controls. Their `/G5`
 bodies also match retail under strict comparison. The full dispatcher retains
 local-frame placement differences; other EVENTS behavior remains under review.
-See [`buka-events.json`](../../config/retail/buka-events.json).

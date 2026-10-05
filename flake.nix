@@ -8,7 +8,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     vostok-delinker-src = {
-      # Same reviewed-data-topology revision used by the Gruntz donor.
+      # Pinned revision with the reviewed data-topology support.
       url = "github:srp-survarium/vostok-delinker/81d34b204a0384a92cf3b4c641a8430256b2922e";
       flake = false;
     };

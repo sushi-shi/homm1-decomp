@@ -11,9 +11,7 @@ A measured example is `resourceManager::resourceManager` in `BASE/RESMGR`:
 strcpy(m_lastFileName, "");
 ```
 
-The complete-body review in
-[`buka-bulk-correspondence.json`](../../config/retail/buka-bulk-correspondence.json)
-pairs the operand at Buka RVA `0x6c133` with the compiler's empty-string member.
+The retail review pairs the operand at Buka RVA `0x6c133` with the compiler's empty-string member.
 It points to RVA `0xcfb48`, in the PE's loader-zero tail. The compiled member is
 in `.bss`; its semantic extent is one NUL byte, not its alignment padding or
 the distance to the next symbol. Compiler `$SG` ordinals are not stable names.

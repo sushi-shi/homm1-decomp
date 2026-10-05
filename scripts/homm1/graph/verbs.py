@@ -480,7 +480,7 @@ GAME_ENV = "build/game-wine"
 
 def play_main(argv: list[str] | None = None) -> int:
     """Build, link with resources, install the candidate beside your game data
-    and run it (Gruntz's `gruntz play`; runner in homm1.graph.play).
+    and run it (runner in homm1.graph.play).
 
     The installed game folder is given once with --data and remembered; the
     user's folder is never written. `--retail` runs the staged retail

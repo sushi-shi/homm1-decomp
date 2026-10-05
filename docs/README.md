@@ -3,7 +3,8 @@
 - [Matching workflow](tooling.md), [build system](build-system.md),
   [command map](tooling-map.md), [repository workflow](workflow.md).
 - [Maintained Win95 1.2 branch](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
-- [Win95 1.2 changes and port evidence](win95-1.2.md), [Win95 1.1 changes](win95-1.1.md).
+- [Version lineage](versions/README.md): [Win95 1.1](versions/win95-1.1.md),
+  [Win95 1.2](versions/win95-1.2.md), [Buka 2003](versions/buka-2003.md).
 - [Compiler and toolchain](compiler.md), [other builds](builds.md),
   [candidate linking](linker-flags.md),
   [candidate-image checks](image-diff.md), [playing the build](play.md),
@@ -13,8 +14,7 @@
   [equivalence surveys](equivalence/) of non-exact functions.
 - [Cleanliness](cleanliness-metrics.md), [source markers](comment-markers.md),
   [constants](constants.md), [enum reuse](enum-reuse.md), [clangd](clangd.md).
-- [Tooling inheritance](tooling-inheritance.md),
-  [script maintenance](../scripts/README.md),
+- [Script maintenance](../scripts/README.md),
   [Rust tools and the LZHUF port](../tools/README.md).
 
 Retail facts live in `config/retail`, build contracts in `config`, generated

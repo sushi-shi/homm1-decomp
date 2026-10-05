@@ -1,8 +1,7 @@
 """HoMM1 matching-decompilation command line.
 
-The matching commands are the Gruntz command surface, with the target-specific
-input and VC4 setup kept here because the retail executable and compiler media
-cannot be fetched by the repository.
+The target-specific input and compiler setup are kept here because the retail
+executable and compiler media cannot be fetched by the repository.
 """
 
 from __future__ import annotations
@@ -130,7 +129,7 @@ def main(argv: list[str] | None = None) -> int:
         from homm1.clean.run import main as clean_main
         return clean_main(rest)
     if cmd == "audit":
-        audits = {"dna-bands": "dna_bands", "tooling": "tooling", "usage": "usage"}
+        audits = {"dna-bands": "dna_bands", "usage": "usage"}
         if not rest or rest[0] not in audits:
             print("homm1 audit: expected " + ", ".join(audits), file=sys.stderr)
             return 2

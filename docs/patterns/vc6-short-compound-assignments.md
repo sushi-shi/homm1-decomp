@@ -32,8 +32,7 @@ stack slots. No branch or operand is masked in the actual matching pipeline.
 
 This preserves the stored signed-word values for the routine's bounded
 arithmetic. It is evidence about these measured expressions, not a rule to
-rewrite arbitrary arithmetic or to change operand types. Complete controls
-and references are in [`buka-catapult.json`](../../config/retail/buka-catapult.json).
+rewrite arbitrary arithmetic or to change operand types.
 
 
 The same distinction occurs for a signed-byte member in `SOURCE/COMMAND`
@@ -46,4 +45,3 @@ spelling does not reproduce it in this translation unit. These
 controls explain the two-byte size difference without changing the member type.
 The final explicit assignments also reproduce these retail instructions under
 the subsequently established `/G5` unit profile.
-See [`buka-combat-direction.json`](../../config/retail/buka-combat-direction.json).

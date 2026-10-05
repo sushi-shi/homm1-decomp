@@ -1,7 +1,6 @@
-"""Call-set and visibility evidence from Giten's inline diagnostic.
+"""Call-set and visibility evidence for inlining.
 
-Only --gap RVA is applicable without a measured VC4 inline-budget model.
-Giten's VC5 /O2 budget arithmetic is deliberately not presented as a VC4 fact.
+Only --gap RVA is applicable without a measured inline-budget model.
 """
 from homm1.core.usage import logged
 
