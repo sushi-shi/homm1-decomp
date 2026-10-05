@@ -199,7 +199,9 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
 # /GX frames; CombineGroups proves /G5 narrow arguments (buka-combat-setup.json).
-flags = "cpp_buka_g5"
+# /Ob2: retail .data has GetBackgroundName's static gCombatBkgNames right after
+# gSeed and its eleven strings among the function literals in source order.
+flags = "cpp_buka_ob2_g5"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
