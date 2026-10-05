@@ -540,12 +540,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
                 giMaxExtentY = COMBAT_VIEW_HEIGHT;
             gEnlargeScreenBlit = 0;
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
             gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }

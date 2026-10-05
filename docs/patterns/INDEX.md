@@ -48,3 +48,4 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 /Od frame slots follow the folded name hash (HoMM1 Buka, measured)](vc6-od-frame-slots.md).
 - [VC6 /Ob2 emits file-scope initializer literals in source order (HoMM1 Buka, measured)](vc6-ob2-literal-order.md).
 - [VC6 parenthesized cast operands keep a separate fild (HoMM1 Buka, measured)](vc6-parenthesized-cast-operand.md).
+- [VC6 helper forms: expression macros and value inlines are byte-neutral, statement macros and reference accessors are not (HoMM1 Buka, measured)](vc6-helper-forms.md).

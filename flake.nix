@@ -104,6 +104,22 @@
         '';
       };
 
+      # tools/: dependency-free Rust workspace (homm1-lzhuf). Its table test
+      # reads the reconstruction's initializers from vendor/lzhuf.
+      toolsTests = pkgs.runCommand "homm1-tools-tests" {
+        nativeBuildInputs = [ rust pkgs.stdenv.cc ];
+      } ''
+        mkdir -p repo/vendor
+        cp -r ${./tools} repo/tools
+        cp -r ${./vendor/lzhuf} repo/vendor/lzhuf
+        chmod -R u+w repo
+        export HOME="$TMPDIR" CARGO_TARGET_DIR="$TMPDIR/cargo-target"
+        cargo fmt --manifest-path repo/tools/Cargo.toml --all -- --check
+        cargo check --offline --manifest-path repo/tools/Cargo.toml --all-targets
+        cargo test --offline --manifest-path repo/tools/Cargo.toml
+        touch "$out"
+      '';
+
       python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
         project_dir="''${HOMM1_DIR:-}"
@@ -115,6 +131,7 @@
       commonTools = with pkgs; [
         homm1-cli python git ninja binutils llvm llvmPackages.clang-unwrapped clang-tools
         ripgrep file jq p7zip cabextract vostok-delinker objdiff objdiff-cli
+        rust
       ];
       commonHook = ''
         export HOMM1_DIR="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
@@ -127,6 +144,9 @@
       packages.${system} = {
         inherit vostok-delinker objdiff objdiff-cli;
         default = vostok-delinker;
+      };
+      checks.${system} = {
+        tools = toolsTests;
       };
       devShells.${system} = {
         default = pkgs.mkShell {
