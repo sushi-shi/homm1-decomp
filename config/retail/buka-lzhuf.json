@@ -2543,7 +2543,7 @@
       "size": 77,
       "object_size": 77,
       "instruction_count": 47,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "23344a78eff0fe6149c2725af91776e921cde99b41dd29fcfa545c734434e581",
       "references": [],
       "branches": [
@@ -2570,7 +2570,7 @@
       "size": 133,
       "object_size": 133,
       "instruction_count": 44,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "1aab985999745ba981dc043d054e0a6203e34b3da6c23430626b3e622f5b503d",
       "references": [
         {
@@ -2676,9 +2676,9 @@
       "name": "_DecodePosition",
       "rva": "0x777ee",
       "size": 202,
-      "object_size": 201,
+      "object_size": 202,
       "instruction_count": 66,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "b787bfb5157b61522c019920cf49aea8cd99a37e086e1b8cd0436d00acd18b20",
       "references": [
         {
@@ -2820,7 +2820,7 @@
       "size": 281,
       "object_size": 281,
       "instruction_count": 69,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "e394284eb38805c671e93e0d011d8cb9159d83dc1330554e24700150b84d5dda",
       "references": [
         {
@@ -3010,7 +3010,7 @@
       "size": 339,
       "object_size": 339,
       "instruction_count": 103,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "f41c49e12b88fc6fb25432238d5f5e61aa8efbb93b292041198a4139cff8b142",
       "references": [
         {
@@ -3237,7 +3237,7 @@
       "size": 297,
       "object_size": 297,
       "instruction_count": 96,
-      "object_sha256": "cc9174e15def6bb1195083717baeb17a2fcb6300b6af37b9cd6e489fd3939363",
+      "object_sha256": "d49d2b68016b9977c22b8ae10b024b1a4a33fbd60a11ebc2d3f2170b86052a69",
       "retail_sha256": "a7edf5311fe3fd6fcc8a1ac611f73309c760e70272200e850e45237f30eb1af6",
       "references": [
         {
@@ -5187,7 +5187,7 @@
       "/G5"
     ],
     "evidence": "Every C++ lzhuf body passes the complete ordered instruction/operand proof with this profile; registers, short-argument call sites and branch destinations agree. Local stack slots are recorded explicitly. The earlier G6 control inserted short-argument register clears absent from retail. No permutation search.",
-    "remaining": "Five C++ bodies have different local stack slots. Decoder DecodePosition uses a sign-extended imm8 compare in MASM versus retail imm16; same 16-bit value and branches, still scored strictly."
+    "remaining": "Five C++ bodies have different local stack slots. Decoder DecodePosition now emits retail's imm16 compare (66 81 FA FF FF) from `cmp dx,WORD PTR 65535`; the decoder object hash is the timestamp-zeroed MASM COFF object."
   },
   "nwc_table_controls": [
     {
