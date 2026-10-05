@@ -1,6 +1,5 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # EH frames are clues to cleanup lifetimes
 
@@ -22,9 +21,9 @@ inlining together. Frame presence or state-store counts alone do not establish
 how many source objects exist. Expanded constructors, repeated cleanup paths,
 and state-flow changes can alter those counts without adding an object.
 
-The [historical StepArrivalDrop control](https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/eh-frame-presence-is-a-source-fact.md)
-records equal state values and constructor/destructor call sets but different
-state-store counts. It refutes the use of that count as a direct object census.
+An MSVC 5.0 control had equal state values and constructor/destructor call
+sets but different state-store counts. It refutes the use of that count as a
+direct object census.
 
 Matching an exact pair calibrates detector consistency, not semantic validity.
 Do not treat an EH mismatch as an irreducible compiler choice, or fabricate a

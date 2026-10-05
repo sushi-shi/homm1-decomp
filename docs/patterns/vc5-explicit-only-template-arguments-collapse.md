@@ -1,12 +1,11 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # Explicit-only function template arguments collapse
 
 A function template whose parameter appears only as an explicit template
 argument, never in the function's parameter types, is not distinguished per
-argument by the pinned compiler. Within one translation unit, every
+argument by MSVC 5.0 SP3. Within one translation unit, every
 `F<X>(...)` call can reach the same instantiation body.
 
 Minimal probe (MSVC 5.0 SP3, `/O2 /MT /GX`):
@@ -28,7 +27,7 @@ void SetMB(int i) { *PoolM<B>::Resolve(i) = 4; }
 class-template static member keeps `SetMA` on `Pool<A>`.
 
 Signature: masked bytes identical, one relocation target swapped for a sibling
-instantiation's (`walls diagnose` reports REFERENT). It appears only in a TU
+instantiation's (a referent wall). It appears only in a TU
 that uses two or more arguments of the same template; a single-use TU looks
 correct.
 

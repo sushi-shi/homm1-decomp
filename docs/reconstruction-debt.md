@@ -39,13 +39,12 @@ not yet modelled:
   fragments. It is now a local union of the three typed pointers (combat
   record, hero fragment, wire bytes), so the frame slot is unchanged.
   `ReceiveHeroTownData` and `DoCombat` read received records through
-  `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO`, the Buka 2.1 donor's view
-  macros. The remaining nine casts convert the `char*` that `GetRemoteData`,
-  `CheckHandleNet` and the transmit functions use for queue records; the
-  donor-derived symbols (`?GetRemoteData@@YIPADC@Z`) fix that type, and the
-  donor casts at the same call sites. A union cannot hold the combat payload
-  because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
-  `char[]` data identity. `TransmitSaveGame` builds its packets in a named
+  the `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` view macros. The remaining
+  nine casts convert the `char*` that `GetRemoteData`, `CheckHandleNet` and the
+  transmit functions use for queue records; the `char* GetRemoteData(char)`
+  signature fixes that type, so the casts sit at those call sites. A union
+  cannot hold the combat payload because `armyGroup`/`town` members have
+  constructors. `PacketSend` keeps its `char[]` data identity. `TransmitSaveGame` builds its packets in a named
   `RemotePayload`, the `RemoteMessage` payload union;
 - remaining byte, word and integer views.
 
@@ -67,14 +66,12 @@ against new ones.
 **Unknown members.** `m_unknownNN` and `m_field_0xNNN` placeholders keep a
 class layout without a recovered name or type.
 
-**`goto`.** The HoMM2 Buka donor contains several hundred, so the original code
-used them. A `goto` stays when retail's block layout requires it; it is
+**`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
 
 **Dead locals.** Every never-referenced local must correspond to an
 unreferenced slot in retail's `/Od` frame (a hole between referenced slots or a
-larger frame). Names chosen only to fill frames are reviewed against donor
-spellings.
+larger frame).
 
 The audit lists locals with `clang-cl /Zs -Wunused-variable` after replacing
 each `#line` with an empty line, so diagnostics keep the file's own numbering.
@@ -106,10 +103,10 @@ next to an assertion must not move its `#line` source line.
 **Helpers, accessors and macros.** A reconstruction transcribes the expanded
 body of a helper the developers called. The common-code review reads each
 function, records its candidate families with a verdict, and restores a helper
-only where every affected object stays identical. Buka 2.1's helper audit is
-the donor; its spellings are hypotheses until the HoMM1 objects agree. Which
+only where every affected object stays identical. Candidate spellings are
+hypotheses until the HoMM1 objects agree. Which
 forms survive VC6 is recorded in [VC6 helper forms](patterns/vc6-helper-forms.md).
-Helpers that hide an enum-to-index cast (Buka's `IDX`, `HAS`, `BIT`) are not
+Helpers that hide an enum-to-index cast (such as `IDX`, `HAS`, `BIT`) are not
 introduced; typed indexing belongs to the enum domains.
 
 The combat and AI units (AI, ARMY, ARMYGRP, CMBTMGR, COMMAND, DRAWING,

@@ -36,31 +36,31 @@ src/BASE/BACKDROP.cpp	0x6ce40	backdropWidget::backdropWidget	read	none	Base cons
 src/BASE/BACKDROP.cpp	0x6ce6b	backdropWidget::backdropWidget	read	none	Base constructor call only.		kept-existing-source	100	100
 src/BASE/BACKDROP.cpp	0x6ceaa	backdropWidget::Read	read	widget-geometry	Uses READ_WIDGET_GEOMETRY then id/kind reads.		kept-existing-source	100	100
 src/BASE/BACKDROP.cpp	0x6cf21	backdropWidget::Main	read	none	Forwards to widget::Main.		kept-existing-source	100	100
-src/BASE/BACKDROP.cpp	0x6cf3a	backdropWidget::Draw	read	widget-screen-origin	Owner-relative update rectangle; Buka 2.1 writes the same expression open (R01) and no helper exists.		kept-existing-source	100	100
+src/BASE/BACKDROP.cpp	0x6cf3a	backdropWidget::Draw	read	widget-screen-origin	Owner-relative update rectangle; no helper exists.		kept-existing-source	100	100
 src/BASE/BASEMGR.cpp	0x688c0	baseManager::baseManager	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BASEMGR.cpp	0x6891a	baseManager::GetInfo	read	none	Field selector switch.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x73180	bitmap::bitmap	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x731cc	bitmap::bitmap	read	none	Field initialization plus malloc.		kept-existing-source	100	100
-src/BASE/BITMAP.cpp	0x73230	bitmap::bitmap	read	resource-read-header	PointToFile and three ReadWord header fields; the per-resource header layouts differ (tileset, bitmap, icon), as in Buka 2.1.		kept-existing-source	100	100
-src/BASE/BITMAP.cpp	0x73374	bitmap::DrawToBuffer	read	none	PollSound-bracketed blit; HoMM2 keeps the bracket open.		kept-existing-source	100	100
+src/BASE/BITMAP.cpp	0x73230	bitmap::bitmap	read	resource-read-header	PointToFile and three ReadWord header fields; the per-resource header layouts differ (tileset, bitmap, icon).		kept-existing-source	100	100
+src/BASE/BITMAP.cpp	0x73374	bitmap::DrawToBuffer	read	none	PollSound-bracketed blit; the bracket stays open.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x733bf	bitmap::DrawToScreen	read	none	PollSound-bracketed blit.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x73400	bitmap::GrabScreen	read	none	One call.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x73423	bitmap::GrabBitmap	read	none	One call.		kept-existing-source	100	100
-src/BASE/BITMAP.cpp	0x7345e	bitmap::Write	read	file-value	Raw writes of a palette and pixel plane: buffers with computed sizes, not whole values (Buka 2.1 H70 exclusion).		kept-existing-source	100	100
+src/BASE/BITMAP.cpp	0x7345e	bitmap::Write	read	file-value	Raw writes of a palette and pixel plane: buffers with computed sizes, not whole values.		kept-existing-source	100	100
 src/BASE/BITMAP.cpp	0x73501	bitmap::CopyTo	read	none	Row copy loop with stride; single site.		kept-existing-source	100	100
 src/BASE/BORDER.cpp	0x74950	border::border	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BORDER.cpp	0x7498e	border::border	read	none	Optional bitmap lookup.		kept-existing-source	100	100
-src/BASE/BORDER.cpp	0x74a90	border::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; the save/lookup/restore triple stays explicit as in Buka 2.1 (H04 lower-gain).		kept-existing-source	100	100
+src/BASE/BORDER.cpp	0x74a90	border::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; the save/lookup/restore triple stays explicit.		kept-existing-source	100	100
 src/BASE/BORDER.cpp	0x74b79	border::Main	read	widget-hit-test;widget-message	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; no further open-coded operation.		kept-existing-source	100	100
-src/BASE/BORDER.cpp	0x74d52	border::Draw	read	widget-screen-origin	Owner-relative origin then kind switch; donor open-codes.		kept-existing-source	100	100
+src/BASE/BORDER.cpp	0x74d52	border::Draw	read	widget-screen-origin	Owner-relative origin then kind switch; open-coded.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76c80	button::button	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76cd9	button::button	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76d87	button::button	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76e34	button::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; trailing field reads are button-specific.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76f8a	button::Main	read	widget-hit-test;widget-message	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the track-press loop is button policy.		kept-existing-source	100	100
-src/BASE/BUTTON.cpp	0x7739f	button::Select	read	widget-message	Select stores type and id before choosing the command: not SET_WIDGET_MESSAGE's order (Buka 2.1 H01 scope).		kept-existing-source	100	100
+src/BASE/BUTTON.cpp	0x7739f	button::Select	read	widget-message	Select stores type and id before choosing the command: not SET_WIDGET_MESSAGE's order.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x7748b	button::Deselect	read	widget-message	Uses SET_WIDGET_MESSAGE; the saved-modifier restore stays.		kept-existing-source	100	100
-src/BASE/BUTTON.cpp	0x77545	button::Draw	read	widget-screen-origin	Two DrawToBuffer arms; donor open-codes.		kept-existing-source	100	100
+src/BASE/BUTTON.cpp	0x77545	button::Draw	read	widget-screen-origin	Two DrawToBuffer arms; open-coded.		kept-existing-source	100	100
 src/BASE/DIMMER.cpp	0x76ae0	dimmerWidget::dimmerWidget	read	none	Base constructor call only.		kept-existing-source	100	100
 src/BASE/DIMMER.cpp	0x76b0b	dimmerWidget::dimmerWidget	read	none	Base constructor call only.		kept-existing-source	100	100
 src/BASE/DIMMER.cpp	0x76b4a	dimmerWidget::Read	read	widget-geometry	Uses READ_WIDGET_GEOMETRY.		kept-existing-source	100	100
@@ -70,20 +70,20 @@ src/BASE/EXEC.cpp	0x729f0	executive::executive	read	none	Field initialization.		
 src/BASE/EXEC.cpp	0x72a25	executive::InitSystem	read	none	Ordered start-up checks; each failure text is distinct.		kept-existing-source	100	100
 src/BASE/EXEC.cpp	0x72ae2	executive::ShutDownSystem	read	none	Manager list teardown.		kept-existing-source	100	100
 src/BASE/EXEC.cpp	0x72b98	executive::DoDialog	read	none	Manager link snapshot/restore; single site.		kept-existing-source	100	100
-src/BASE/EXEC.cpp	0x72d21	executive::AddManager	read	none	Priority-ordered list insertion; the heroWindow and window-manager insertions are different lists (R04).		kept-existing-source	100	100
+src/BASE/EXEC.cpp	0x72d21	executive::AddManager	read	none	Priority-ordered list insertion; the heroWindow and window-manager insertions are different lists.		kept-existing-source	100	100
 src/BASE/EXEC.cpp	0x72e6a	executive::RemoveManager	read	none	List unlink.		kept-existing-source	100	100
 src/BASE/EXEC.cpp	0x72f2d	executive::CallManager	read	none	Swap-in/out of the active manager.		kept-existing-source	100	100
-src/BASE/EXEC.cpp	0x72fb5	executive::MainLoop	read	event-poll	Process1WindowsMessage then GetEvent recurs in six loops; each loop's dispatch differs (Buka 2.1 R05).		kept-existing-source	100	100
+src/BASE/EXEC.cpp	0x72fb5	executive::MainLoop	read	event-poll	Process1WindowsMessage then GetEvent recurs in six loops; each loop's dispatch differs.		kept-existing-source	100	100
 src/BASE/EXEC.cpp	0x73120	executive::Terminate	read	none	One call.		kept-existing-source	100	100
 src/BASE/FONT.cpp	0x71dd0	font::font	read	resource-position-lookup	Font header and glyph icon load under gLoadingMonoIcon; single site.		kept-existing-source	100	100
 src/BASE/FONT.cpp	0x71e97	font::~font	read	none	Dispose.		kept-existing-source	100	100
 src/BASE/FONT.cpp	0x71ef2	RemapCyrillicCharacter	read	none	Already the shared CP1251 glyph remap helper.		kept-existing-source	100	100
-src/BASE/FONT.cpp	0x71f3e	font::DrawString	read	font-glyph-fold;font-glyph-advance	Glyph fold and advance. An inline FontGlyphIndex(i32) changes DrawString (99.79%): retail expands no inline here; Buka 2.1 also writes the fold open. The width read stays the evidenced manual word view (reconstruction debt).		rejected-trial	100	100
+src/BASE/FONT.cpp	0x71f3e	font::DrawString	read	font-glyph-fold;font-glyph-advance	Glyph fold and advance. An inline FontGlyphIndex(i32) changes DrawString (99.79%): retail expands no inline here The width read stays the evidenced manual word view (reconstruction debt).		rejected-trial	100	100
 src/BASE/FONT.cpp	0x7203d	font::DrawBoundedString	read	font-glyph-fold;font-glyph-advance	Same fold twice and advance three times; kept explicit with DrawString's measurement.		kept-existing-source	100	100
 src/BASE/FONT.cpp	0x7238c	font::LineLength	read	font-glyph-fold;font-glyph-advance	Same fold twice; kept explicit.		kept-existing-source	100	100
 src/BASE/FONT.cpp	0x725eb	font::LineWidth	read	font-glyph-fold;font-glyph-advance	Same fold once; kept explicit.		kept-existing-source	100	100
 src/BASE/ICON.cpp	0x70ea0	icon::icon	read	resource-read-header	Icon directory read; single site.		kept-existing-source	100	100
-src/BASE/ICON.cpp	0x70f8a	icon::DrawToBuffer	read	icon-extent	Extent compute/save/limit block shared with DimToBuffer; Buka 2.1 keeps it open in CombatClipDrawToBuffer and rejected an extent macro (H41).		kept-existing-source	100	100
+src/BASE/ICON.cpp	0x70f8a	icon::DrawToBuffer	read	icon-extent	Extent compute/save/limit block shared with DimToBuffer; kept open.		kept-existing-source	100	100
 src/BASE/ICON.cpp	0x712a1	icon::ClipFillToBuffer	read	none	One call with colour mapping.		kept-existing-source	100	100
 src/BASE/ICON.cpp	0x712f5	icon::FillToBuffer	read	icon-extent	Limit-only extent variant; differs from the full block.		kept-existing-source	100	100
 src/BASE/ICON.cpp	0x71453	icon::DimToBuffer	read	icon-extent	Same extent block as DrawToBuffer; kept explicit.		kept-existing-source	100	100
@@ -93,21 +93,21 @@ src/BASE/ICONWDGT.cpp	0x6dfa0	iconWidget::iconWidget	read	none	Field initializat
 src/BASE/ICONWDGT.cpp	0x6e041	iconWidget::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; trailing fields icon-specific.		kept-existing-source	100	100
 src/BASE/ICONWDGT.cpp	0x6e195	iconWidget::Main	read	widget-hit-test;widget-message	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE.		kept-existing-source	100	100
 src/BASE/ICONWDGT.cpp	0x6e439	iconWidget::Draw	read	widget-screen-origin	Owner-relative origin then kind switch.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6e560	KeyboardMessageHandler	read	event-ring-advance;client-to-game;current-graphics-config	Event ring write-advance with overrun drop repeats in MouseMessageHandler; Buka 2.1 writes both open. Modifier bookkeeping is keyboard-only. The F4 toggle reads CURRENT_GRAPHICS_CONFIG.	CURRENT_GRAPHICS_CONFIG	retained-exact	100	100
-src/BASE/INPUTMGR.cpp	0x6e9c4	MouseMessageHandler	read	event-ring-advance;client-to-game	Uses CLIENT_TO_GAME_X/Y; ring advance kept explicit as in the donor.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6e560	KeyboardMessageHandler	read	event-ring-advance;client-to-game;current-graphics-config	Event ring write-advance with overrun drop repeats in MouseMessageHandler; both stay open. Modifier bookkeeping is keyboard-only. The F4 toggle reads CURRENT_GRAPHICS_CONFIG.	CURRENT_GRAPHICS_CONFIG	retained-exact	100	100
+src/BASE/INPUTMGR.cpp	0x6e9c4	MouseMessageHandler	read	event-ring-advance;client-to-game	Uses CLIENT_TO_GAME_X/Y; ring advance kept explicit.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6ecfe	inputManager::inputManager	read	none	Field initialization.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6ed9e	inputManager::Open	read	event-queue-reset	Uses the existing ResetEventQueue inline (Buka 2.1).		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6ed9e	inputManager::Open	read	event-queue-reset	Uses the existing ResetEventQueue inline.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6ee42	inputManager::Close	read	event-queue-reset	Uses ResetEventQueue.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eea6	inputManager::Main	read	none	Returns 0.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6eeb6	inputManager::Flush	read	event-queue-reset	Uses ResetEventQueue.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6eed9	inputManager::GetEvent	read	empty-event	Empty-event initializer: Buka 2.1's InitializeEmptyEvent serves GetEvent and PeekEvent; HoMM1 has only GetEvent, so a single site stays explicit.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6eed9	inputManager::GetEvent	read	empty-event	Empty-event initializer: HoMM1 has only GetEvent (no PeekEvent), so a single site stays explicit.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetBooleanOption	read	none	Flag setter.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetPositiveOption	read	none	Clamped setter.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f039	inputManager::SetMouseCoords	read	none	Two stores.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f062	inputManager::SetKeyCodeType	read	none	Setter plus Flush.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f085	TranslateInputCharacterCp1251	read	none	Table translation; already the helper.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f0b9	inputManager::AsciiConvert	read	none	Shift table and CyrillicToLower; already uses the shared fold.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6f3cb	inputManager::MakeScanCodeTable	read	encode-scan-code	Thirty-five scan-code encodings: EncodeScanCode (Buka 2.1 INPUTMGR.cpp, inputManager.h without IDX).	EncodeScanCode	retained-exact	100	100
+src/BASE/INPUTMGR.cpp	0x6f3cb	inputManager::MakeScanCodeTable	read	encode-scan-code	Thirty-five scan-code encodings: EncodeScanCode (inputManager.h).	EncodeScanCode	retained-exact	100	100
 src/BASE/MAKEFILEID.cpp	0x73610	MAKEFILEID	read	none	Name hash; single site.		kept-existing-source	100	100
 src/BASE/MOUSEMGR.cpp	0x6b510	mouseManager::mouseManager	read	none	Field and table initialization.		kept-existing-source	100	100
 src/BASE/MOUSEMGR.cpp	0x6b612	mouseManager::Open	read	none	Open bookkeeping.		kept-existing-source	100	100
@@ -139,7 +139,7 @@ src/BASE/PALETTE.cpp	0x748c8	palette::Data	read	none	Accessor.		kept-existing-so
 src/BASE/RESMGR.cpp	0x6c0e0	resourceManager::resourceManager	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c15a	resourceManager::GetBackdrop	read	resource-read-header	Skips the three header words; single site.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c1d4	resourceManager::GetBackdropAtLoc	read	none	Row reads at a destination offset.		kept-existing-source	100	100
-src/BASE/RESMGR.cpp	0x6c25b	resourceManager::GetPalette	read	resource-cache-get	MakeId/Query/addref-or-construct: six typed getters repeat it with different constructors and id sources; Buka 2.1 keeps the getters open (R02).		kept-existing-source	100	100
+src/BASE/RESMGR.cpp	0x6c25b	resourceManager::GetPalette	read	resource-cache-get	MakeId/Query/addref-or-construct: six typed getters repeat it with different constructors and id sources; the getters stay open.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c31b	resourceManager::GetBitmap	read	resource-cache-get	Same cache getter shape; kept explicit.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c3db	resourceManager::GetIcon	read	none	Name-to-id forwarding overload.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c407	resourceManager::GetIcon	read	resource-cache-get	Same cache getter shape with a typed query result.		kept-existing-source	100	100
@@ -155,7 +155,7 @@ src/BASE/RESMGR.cpp	0x6c876	resourceManager::Main	read	none	Returns 0.		kept-exi
 src/BASE/RESMGR.cpp	0x6c886	resourceManager::Open	read	none	Open bookkeeping.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c8ec	resourceManager::RemoveResource	read	none	List unlink.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6c94d	resourceManager::Close	read	none	Close bookkeeping.		kept-existing-source	100	100
-src/BASE/RESMGR.cpp	0x6c9bb	resourceManager::LoadAggregateHeader	read	file-value	The aggregate count and directory use _read with the low-level descriptor; Buka 2.1's READ_FILE_VALUE is the read() spelling and RESMGR stays explicit.		kept-existing-source	100	100
+src/BASE/RESMGR.cpp	0x6c9bb	resourceManager::LoadAggregateHeader	read	file-value	The aggregate count and directory use _read with the low-level descriptor; READ_FILE_VALUE is the read() spelling, so RESMGR stays explicit.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6caa0	resourceManager::PointToFile	read	aggregate-entry-search	Directory search repeats in GetFileSize; the failure texts and results differ.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6cb72	resourceManager::GetFileSize	read	aggregate-entry-search	Same search as PointToFile; kept explicit.		kept-existing-source	100	100
 src/BASE/RESMGR.cpp	0x6cc33	resourceManager::SavePosition	read	none	One call.		kept-existing-source	100	100
@@ -175,7 +175,7 @@ src/BASE/TEXTNTRY.cpp	0x75830	textEntryWidget::textEntryWidget	read	none	Field i
 src/BASE/TEXTNTRY.cpp	0x75886	textEntryWidget::textEntryWidget	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/TEXTNTRY.cpp	0x759a0	textEntryWidget::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; text-entry rectangle fields are its own.		kept-existing-source	100	100
 src/BASE/TEXTNTRY.cpp	0x75c01	textEntryWidget::Main	read	widget-hit-test;widget-message;encode-scan-code	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the keypad decode now masks with EncodeScanCode(INPUT_SCAN_CODE_MASK).	EncodeScanCode	retained-exact	100	100
-src/BASE/TEXTNTRY.cpp	0x76671	textEntryWidget::Draw	read	widget-screen-origin	Owner-relative draws; donor open-codes.		kept-existing-source	100	100
+src/BASE/TEXTNTRY.cpp	0x76671	textEntryWidget::Draw	read	widget-screen-origin	Owner-relative draws; open-coded.		kept-existing-source	100	100
 src/BASE/TEXTNTRY.cpp	0x76838	textEntryWidget::SetupDisplayString	read	none	Display window scroll; single site.		kept-existing-source	100	100
 src/BASE/TEXTWDGT.cpp	0x71770	textWidget::textWidget	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/TEXTWDGT.cpp	0x717c8	textWidget::textWidget	read	none	Field initialization.		kept-existing-source	100	100
@@ -191,14 +191,14 @@ src/BASE/WIDGET.cpp	0x753fb	widget::widget	read	none	Field initialization.		kept
 src/BASE/WIDGET.cpp	0x75478	widget::~widget	read	none	Empty destructor.		kept-existing-source	100	100
 src/BASE/WIDGET.cpp	0x7548c	widget::Open	read	none	Two stores.		kept-existing-source	100	100
 src/BASE/WIDGET.cpp	0x754b0	widget::Close	read	none	Empty.		kept-existing-source	100	100
-src/BASE/WIDGET.cpp	0x754bb	widget::Main	read	widget-hit-test;widget-message;widget-screen-origin	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the two update rectangles stay open as in Buka 2.1.		kept-existing-source	100	100
+src/BASE/WIDGET.cpp	0x754bb	widget::Main	read	widget-hit-test;widget-message;widget-screen-origin	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the two update rectangles stay open.		kept-existing-source	100	100
 src/BASE/WIDGET.cpp	0x75783	widget::Dim	read	widget-screen-origin	Owner-relative origin then DimBitmapArea.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d020	heroWindow::heroWindow	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d0b2	heroWindow::heroWindow	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d150	heroWindow::heroWindow	read	none	Widget record factory switch; single site.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d6f0	heroWindow::Open	read	none	Open bookkeeping.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d775	heroWindow::Close	read	none	Widget list teardown.		kept-existing-source	100	100
-src/BASE/WINDOW.cpp	0x6d817	heroWindow::AddWidget	read	none	Z-ordered list insertion (R04).		kept-existing-source	100	100
+src/BASE/WINDOW.cpp	0x6d817	heroWindow::AddWidget	read	none	Z-ordered list insertion.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6d92a	heroWindow::RemoveWidget	read	none	List unlink.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6da11	heroWindow::BroadcastMessage	read	none	Dispatch loop.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6da72	heroWindow::DrawWindow	read	none	Overload forwarding.		kept-existing-source	100	100
@@ -206,8 +206,8 @@ src/BASE/WINDOW.cpp	0x6da87	heroWindow::DrawWindow	read	none	Overload forwarding
 src/BASE/WINDOW.cpp	0x6daab	heroWindow::DrawWindow	read	none	Draw broadcast and update.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6db7e	heroWindow::SaveBackground	read	none	Background save.		kept-existing-source	100	100
 src/BASE/WINDOW.cpp	0x6dc28	heroWindow::RestoreBackground	read	none	Background restore.		kept-existing-source	100	100
-src/BASE/WINDOW.cpp	0x6dcb2	heroWindow::MoveWindow	read	none	Clamped move; four clamps are window-specific (H07 lower-gain).		kept-existing-source	100	100
-src/BASE/WINMGR.cpp	0x69fb0	CycleColors	read	palette-cycle-rotate	Five rotations of palette segments (save, shift, restore); Buka 2.1 writes them open and one HoMM1 rotation uses memcpy for its single entry.		kept-existing-source	100	100
+src/BASE/WINDOW.cpp	0x6dcb2	heroWindow::MoveWindow	read	none	Clamped move; four clamps are window-specific.		kept-existing-source	100	100
+src/BASE/WINMGR.cpp	0x69fb0	CycleColors	read	palette-cycle-rotate	Five rotations of palette segments (save, shift, restore); they stay open, and one rotation uses memcpy for its single entry.		kept-existing-source	100	100
 src/BASE/WINMGR.cpp	0x6a14c	heroWindowManager::heroWindowManager	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/WINMGR.cpp	0x6a1eb	heroWindowManager::Open	read	none	Screen bitmap set-up.		kept-existing-source	100	100
 src/BASE/WINMGR.cpp	0x6a2f5	heroWindowManager::Close	read	none	Window list teardown.		kept-existing-source	100	100
@@ -239,16 +239,16 @@ src/BASE/miscwin.cpp	0x6fdc3	PostprocessPalette	read	none	Palette remap.		kept-e
 src/BASE/miscwin.cpp	0x6fe58	PostprocessBitmap	read	none	Empty.		kept-existing-source	100	100
 src/BASE/miscwin.cpp	0x6fe5d	PostprocessIcon	read	none	Empty.		kept-existing-source	100	100
 src/BASE/miscwin.cpp	0x6fe62	ClippedMonoIconToBitmap	read	none	Mono RLE clipper; the clip test has interior edges, not ICON_FITS_CLIP's whole-frame test.		kept-existing-source	100	100
-src/BASE/miscwin.cpp	0x70076	ClipIconToBitmap	read	icon-fits-clip	Whole-frame inside test before the run loop: ICON_FITS_CLIP (Buka 2.1 IconRle.h).	ICON_FITS_CLIP	retained-exact	100	100
+src/BASE/miscwin.cpp	0x70076	ClipIconToBitmap	read	icon-fits-clip	Whole-frame inside test before the run loop: ICON_FITS_CLIP.	ICON_FITS_CLIP	retained-exact	100	100
 src/SOURCE/ADVMGR.cpp	0x1000	advManager::advManager	read	lazy-resource-load	Constructor nulls icon, sample and widget slots in per-array loops; no shared operation.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x12af	advManager::~advManager	read	none	Empty destructor.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x12c3	advManager::Open	read	lazy-resource-load;memerror-check;current-player-select	Some forty if-NULL-then-load resource statements, the widget allocations with MemError and the watch-player swap stay explicit: Buka 2.1 ADVMGR keeps the loads open and H31 keeps MemError checks.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x2020	advManager::Close	read	resource-release	Dispose-and-null per resource slot; guarded and unguarded forms are mixed, so no single release macro (Buka 2.1 H88).		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x12c3	advManager::Open	read	lazy-resource-load;memerror-check;current-player-select	Some forty if-NULL-then-load resource statements, the widget allocations with MemError and the watch-player swap stay explicit.		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x2020	advManager::Close	read	resource-release	Dispose-and-null per resource slot; guarded and unguarded forms are mixed, so no single release macro.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x23a8	advManager::GetCursorSampleSet	read	none	Sample set load loop.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x244a	advManager::DoAdvCommand	read	current-hero;event-poll;redraw-pair	Route walk with the poll loop; current hero read as GetHero(gpCurPlayer->m_currentHero) as in Buka 2.1.		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x244a	advManager::DoAdvCommand	read	current-hero;event-poll;redraw-pair	Route walk with the poll loop; current hero read as GetHero(gpCurPlayer->m_currentHero).		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x298b	advManager::Main	read	current-hero;scroll-key-arms;cheat-reveal	Hot keys: eight direction arms repeat the control-key scroll test with different directions, and the reveal-map cheat calls SetVisibility per player; both are local dispatch.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x3609	advManager::Reseed	read	none	One store.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x3620	advManager::ProcessSelect	read	locator-scroll;quick-view-clamp;radar-origin-clamp	Hero/town locator scrolls and knob pages mirror each other with different counts; quick-view position clamps (Buka 2.1 H07) and the radar-origin clamp (twice in the drag loop) stay explicit.		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x3620	advManager::ProcessSelect	read	locator-scroll;quick-view-clamp;radar-origin-clamp	Hero/town locator scrolls and knob pages mirror each other with different counts; quick-view position clamps and the radar-origin clamp (twice in the drag loop) stay explicit.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x4475	advManager::ProcessDeSelect	read	normal-dialog-defaults	End-turn confirmation and bottom-view toggle.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x4621	advManager::ProcessSearch	read	current-hero;normal-dialog-defaults	Dig search; positioned NormalDialogs keep their coordinates.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x4a49	advManager::ProcessHover	read	current-hero;trigger-object;cursor-frame-select	Hover cursor selection by trigger type; the trigger masking stays open (typed MAP_TRIGGER_OBJECT is the enums worker's).		kept-existing-source	100	100
@@ -256,18 +256,18 @@ src/SOURCE/ADVMGR.cpp	0x5530	advManager::UpdateScreen	read	none	Screen blit and 
 src/SOURCE/ADVMGR.cpp	0x57a9	advManager::CompleteDraw	read	none	Draw passes over the view.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x5ace	advManager::CompleteDraw	read	none	Forwarding overload.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x5afd	advManager::GetCloudLookup	read	cloud-neighbour-mask	Eight neighbour tests appear twice (edge and interior variants with an extra mask guard); local.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x5efb	advManager::DrawCell	read	hero-embarked;adventure-icon-draw	IsEmbarked at three hero-cell tests. Icon draws keep the screen operand (no viewport arguments for Buka 2.1's DRAW_ADVENTURE_ICON to hide).	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/ADVMGR.cpp	0x5efb	advManager::DrawCell	read	hero-embarked;adventure-icon-draw	IsEmbarked at three hero-cell tests. Icon draws keep the screen operand (no viewport arguments for a DRAW_ADVENTURE_ICON helper to hide).	hero::IsEmbarked	retained-exact	100	100
 src/SOURCE/ADVMGR.cpp	0x6d26	advManager::GetCell	read	none	Already the GetCell accessor.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x6d7e	advManager::UpdateRadar	read	radar-owner-color	Owner colour lookup repeats three times in one switch; CELL_TERRAIN already names the terrain colour.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x7276	advManager::QuickInfo	read	widget-message;quick-view-clamp	Already SET_WIDGET_MESSAGE; position clamps stay explicit (H07).		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x7276	advManager::QuickInfo	read	widget-message;quick-view-clamp	Already SET_WIDGET_MESSAGE; position clamps stay explicit.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x7785	advManager::UpdateHeroLocator	read	widget-message	Locator widget updates reuse one message header; not SET_WIDGET_MESSAGE triples.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x7ae5	advManager::UpdateHeroLocators	read	none	Locator loop and knob position.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x7bb8	advManager::UpdateTownLocators	read	widget-message;town-building-bit	Header reuse; castle bit test waits for typed building flags.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x7ddd	advManager::UpdBottomView	read	none	Bottom view dispatch.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x7f20	advManager::ClearBottomView	read	none	Widget release loop.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x8046	advManager::UpdBottomViewEnemyTurn	read	bottom-view-widget-add	new iconWidget / MemError / AddWidget triples recur in every bottom view; each has its own geometry, id and z-order (Buka 2.1 H31, R26).		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x8046	advManager::UpdBottomViewEnemyTurn	read	bottom-view-widget-add	new iconWidget / MemError / AddWidget triples recur in every bottom view; each has its own geometry, id and z-order.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x8575	advManager::UpdBottomViewNewTurn	read	bottom-view-widget-add	Same widget-add sequences; kept explicit.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0x88e7	advManager::UpdBottomViewResMsg	read	bottom-view-widget-add	Same widget-add sequences; the format-string copy is not ALLOC_COPY_STRING (Buka 2.1 H05 exclusion).		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0x88e7	advManager::UpdBottomViewResMsg	read	bottom-view-widget-add	Same widget-add sequences; the format-string copy is not ALLOC_COPY_STRING.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x8c76	advManager::UpdBottomViewKingdom	read	bottom-view-widget-add;town-building-bit	Same widget-add sequences; castle bit counted directly.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x8fe4	advManager::UpdBottomViewHero	read	bottom-view-widget-add	Same widget-add sequences.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x9569	advManager::HeroQuickView	read	army-stack-widgets	Hero quick view; the stack icon/size widget pairs repeat in TownQuickView with different windows and counters.		kept-existing-source	100	100
@@ -280,7 +280,7 @@ src/SOURCE/ADVMGR.cpp	0xaf3e	advManager::MobilizeCurrHero	read	none	Mobilize cur
 src/SOURCE/ADVMGR.cpp	0xaf7f	advManager::DemobilizeCurrHero	read	none	Demobilize current hero.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xb0dd	advManager::SetTownContext	read	none	Town context switch.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xb301	advManager::SetHeroContext	read	hero-embarked	IsEmbarked selects the boat cursor.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/ADVMGR.cpp	0xb68e	advManager::DoHeroKnob	read	knob-drag	Hero and town knob drags mirror each other (Buka 2.1 keeps both).		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0xb68e	advManager::DoHeroKnob	read	knob-drag	Hero and town knob drags mirror each other.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xb8d3	advManager::DoTownKnob	read	knob-drag	Same as DoHeroKnob for towns.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xbb18	advManager::ViewPuzzle	read	none	Puzzle window.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xbebe	advManager::PuzzleDraw	read	none	Puzzle draw.		kept-existing-source	100	100
@@ -302,7 +302,7 @@ src/SOURCE/ADVMGR.cpp	0xf2f3	advManager::CheckLoadSample	read	none	Guarded sampl
 src/SOURCE/ADVMGR.cpp	0xf34d	advManager::InsertSound	read	none	Sound slot insertion.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xf55c	advManager::TeleportTo	read	none	Teleport sequence.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xf853	advManager::DimensionDoor	read	hero-embarked	IsEmbarked at the landing tests.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/ADVMGR.cpp	0xfa50	advManager::TownGate	read	hero-embarked;manhattan-length	IsEmbarked for the land requirement; the nearest-town distance is MANHATTAN_LENGTH (Buka 2.1 H96).	hero::IsEmbarked;MANHATTAN_LENGTH	retained-exact	100	100
+src/SOURCE/ADVMGR.cpp	0xfa50	advManager::TownGate	read	hero-embarked;manhattan-length	IsEmbarked for the land requirement; the nearest-town distance is MANHATTAN_LENGTH.	hero::IsEmbarked;MANHATTAN_LENGTH	retained-exact	100	100
 src/SOURCE/ADVMGR.cpp	0xfc90	advManager::SummonBoat	read	none	Boat summon search.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x1014b	advManager::ShowRoute	read	none	Route overlay.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0x10429	advManager::HideRoute	read	none	Route hide.		kept-existing-source	100	100
@@ -324,19 +324,19 @@ src/SOURCE/ADVMGR.cpp	0x113a4	advManager::SaveAdventureBorder	read	none	Border s
 src/SOURCE/ADVMGR.cpp	0x114e2	advManager::DrawAdventureBorder	read	none	Border draw.		kept-existing-source	100	100
 src/SOURCE/CURSOR.cpp	0x215c0	advManager::StartCursor	read	none	Cursor step set-up through normalDirTable; single site.		kept-existing-source	100	100
 src/SOURCE/CURSOR.cpp	0x21703	advManager::StopCursor	read	none	Cursor stop; the previous-cell flag clear is local.		kept-existing-source	100	100
-src/SOURCE/CURSOR.cpp	0x21820	advManager::DrawCursor	read	adventure-icon-draw	Hero/boat/shadow draws on the screen bitmap: HoMM1's IconToBitmap has no viewport arguments, so Buka 2.1's DRAW_ADVENTURE_ICON would only hide the screen operand; kept explicit. CELL_TERRAIN already names the footstep terrain.		kept-existing-source	100	100
+src/SOURCE/CURSOR.cpp	0x21820	advManager::DrawCursor	read	adventure-icon-draw	Hero/boat/shadow draws on the screen bitmap: HoMM1's IconToBitmap has no viewport arguments, so a DRAW_ADVENTURE_ICON helper would only hide the screen operand; kept explicit. CELL_TERRAIN already names the footstep terrain.		kept-existing-source	100	100
 src/SOURCE/CURSOR.cpp	0x21dc4	advManager::GetCursorBaseFrame	read	none	Direction to base frame; already the helper.		kept-existing-source	100	100
 src/SOURCE/CURSOR.cpp	0x21e15	advManager::TurnTo	read	none	Turn animation loop; single site.		kept-existing-source	100	100
-src/SOURCE/CURSOR.cpp	0x22023	advManager::GetMoveShowIt	read	current-hero	gpGame->GetHero(gpCurPlayer->m_currentHero) as in Buka 2.1 (no current-hero accessor); watch-bit tests are local.		kept-existing-source	100	100
-src/SOURCE/CURSOR.cpp	0x22127	advManager::MoveHero	read	hero-embarked;mobility-charge;current-hero	IsEmbarked at seven tests. The three charge-and-stop blocks (two CalcTerrainCost calls) stay explicit: Buka 2.1 MoveHero writes the same charge open.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/CURSOR.cpp	0x22023	advManager::GetMoveShowIt	read	current-hero	gpGame->GetHero(gpCurPlayer->m_currentHero) (no current-hero accessor); watch-bit tests are local.		kept-existing-source	100	100
+src/SOURCE/CURSOR.cpp	0x22127	advManager::MoveHero	read	hero-embarked;mobility-charge;current-hero	IsEmbarked at seven tests. The three charge-and-stop blocks (two CalcTerrainCost calls) stay explicit.	hero::IsEmbarked	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x22df4	advManager::CheckAdjacentMon	read	current-hero	Adjacent-monster interaction; single site.		kept-existing-source	100	100
 src/SOURCE/CURSOR.cpp	0x22f55	advManager::ValidMoveWithEvent	read	hero-embarked	IsEmbarked at three tests.	hero::IsEmbarked	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x230f8	advManager::ValidMove	read	non-shadow-object	North/south blocking tests use CELL_HAS_NON_SHADOW_OBJECT (shared with helpers worker B); the whirlpool exception stays at the caller.	CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x23344	advManager::MoveOrigin	read	none	Origin shift with cursor-flag moves; single site.		kept-existing-source	100	100
-src/SOURCE/EVENTS.cpp	0x24a50	advManager::DoEvent	read	hero-embarked;event-window-args;flag-reward-visit;memerror-check	IsEmbarked for the boat landing. EventWindow keeps its eight explicit arguments (Buka 2.1 declares no defaults). The visited-flag reward arms (buoy, faerie ring, fountain, oasis, statue) differ in stat and text; kept as written.	hero::IsEmbarked;NormalDialog defaults	retained-exact	100	100
+src/SOURCE/EVENTS.cpp	0x24a50	advManager::DoEvent	read	hero-embarked;event-window-args;flag-reward-visit;memerror-check	IsEmbarked for the boat landing. EventWindow keeps its eight explicit arguments. The visited-flag reward arms (buoy, faerie ring, fountain, oasis, statue) differ in stat and text; kept as written.	hero::IsEmbarked;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	none	Object erase with sound grid update.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x269b5	advManager::HeroSwap	read	none	Hero meeting through swapManager.		kept-existing-source	100	100
-src/SOURCE/EVENTS.cpp	0x26a58	advManager::TownEvent	read	current-hero	Town visit; current hero read as in Buka 2.1.		kept-existing-source	100	100
+src/SOURCE/EVENTS.cpp	0x26a58	advManager::TownEvent	read	current-hero	Town visit; current hero read through GetHero(gpCurPlayer->m_currentHero).		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26be9	advManager::EventSound	read	none	Event sound selection.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26dc6	advManager::EventWindow	read	normal-dialog-defaults	Forwards every argument to NormalDialog; no default to drop.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26e86	advManager::GiveArtifact	read	none	Artifact slot fill.		kept-existing-source	100	100
@@ -359,7 +359,7 @@ src/SOURCE/EVENTS.cpp	0x28f98	advManager::DoNetCombat	read	transmit-defaults	Net
 src/SOURCE/EVENTS.cpp	0x29107	advManager::DoCombat	read	none	Combat set-up and result.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x2968b	advManager::SendHeroTownData	read	transmit-defaults	Hero/town transfer; TransmitRemoteData trailing defaults dropped.	TransmitRemoteData defaults	retained-exact	100	100
 src/SOURCE/EVENTS.cpp	0x2990d	advManager::ReceiveHeroTownData	read	none	Receive transfer.	NormalDialog defaults;TransmitRemoteData defaults	retained-exact	100	100
-src/SOURCE/GAME.cpp	0x2b400	playerData::Write	read	file-value	Scalar fields through WRITE_FILE_VALUE (Buka 2.1 H70); arrays and the pad buffer stay explicit.	WRITE_FILE_VALUE	retained-exact	100	100
+src/SOURCE/GAME.cpp	0x2b400	playerData::Write	read	file-value	Scalar fields through WRITE_FILE_VALUE; arrays and the pad buffer stay explicit.	WRITE_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2b5f2	playerData::Read	read	file-value	Scalar fields through READ_FILE_VALUE; arrays and the pad buffer stay explicit.	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2b7d3	playerData::NextHero	read	none	Next mobile hero search.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b8d3	playerData::HasMobileHero	read	none	Mobility scan.		kept-existing-source	100	100
@@ -376,8 +376,8 @@ src/SOURCE/GAME.cpp	0x2c11a	game::RandomScan	read	none	Random free-slot scan; al
 src/SOURCE/GAME.cpp	0x2c17e	game::GetNewHeroId	read	none	Hero id pick.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2c263	game::GetTownId	read	none	Coordinate search.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2c2cc	game::GetMineId	read	none	Coordinate search.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2c335	GenerateStandardFileName	read	cp1251-upper	CP1251 upper fold on a u8 staging byte: Buka 2.1 H69 keeps the GAME staged sequences explicit after measured helper attempts.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2c4dd	game::SaveGame	read	file-value	Scalar globals and fields through WRITE_FILE_VALUE; the two-byte game prefix, padding and arrays stay explicit (Buka 2.1 H70 exclusions).	WRITE_FILE_VALUE	retained-exact	100	100
+src/SOURCE/GAME.cpp	0x2c335	GenerateStandardFileName	read	cp1251-upper	CP1251 upper fold on a u8 staging byte; the GAME staged sequences stay explicit.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2c4dd	game::SaveGame	read	file-value	Scalar globals and fields through WRITE_FILE_VALUE; the two-byte game prefix, padding and arrays stay explicit.	WRITE_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2cc73	game::LoadGame	read	file-value;calendar-day	READ_FILE_VALUE for scalars and GAME_DAY_NUMBER for giCurTurn.	GAME_DAY_NUMBER;READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2d4f2	NewGameHandler	read	widget-selection;dialog-finish	Already IS_WIDGET_SELECTION_NOTIFICATION and FINISH_DIALOG_MESSAGE.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2d9e5	game::UpdateNewGameWindow	read	widget-message	Already SET_WIDGET_MESSAGE for the first triple; the rest reuse the header.		kept-existing-source	100	100
@@ -386,7 +386,7 @@ src/SOURCE/GAME.cpp	0x2dec4	game::NewGame	read	none	New game set-up.		kept-exist
 src/SOURCE/GAME.cpp	0x2e2ad	game::ShowCampaignInfo	read	widget-message	Already SET_WIDGET_MESSAGE; later stores reuse the header.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2e521	game::InitEntireCampaign	read	none	Campaign start.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2e595	game::InitCampaignMap	read	calendar-day	Campaign day derives week/day from a campaign day (month-first, not GAME_DAY_NUMBER's direction) and sets giCurTurn with GAME_DAY_NUMBER.	GAME_DAY_NUMBER	retained-exact	100	100
-src/SOURCE/GAME.cpp	0x2e7f0	game::NewMap	read	manhattan-length	Map set-up; the ultimate-artifact spread test is MANHATTAN_LENGTH (Buka 2.1 H96).	MANHATTAN_LENGTH	retained-exact	100	100
+src/SOURCE/GAME.cpp	0x2e7f0	game::NewMap	read	manhattan-length	Map set-up; the ultimate-artifact spread test is MANHATTAN_LENGTH.	MANHATTAN_LENGTH	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2f621	GetObjectFamily	read	none	Object family table.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2f672	game::SettleOverlay	read	overlay-promote	Overlay-to-object promotion repeats inside one function; local.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2f830	game::RandomizeEvents	read	none	Random events.		kept-existing-source	100	100
@@ -404,7 +404,7 @@ src/SOURCE/GAME.cpp	0x32089	game::Overview	read	town-building-bit	Kingdom overvi
 src/SOURCE/GAME.cpp	0x32d0a	game::GetRandomNumTroops	read	none	Troop count roll.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x32f67	game::TurnOnAIMusic	read	none	Music switch.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x32f81	game::TurnOffAIMusic	read	none	Music switch.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x32f8c	game::NextPlayer	read	current-player-select	Next player; the gpCurPlayer/giCurPlayerBit selection stays open as in Buka 2.1 GAME.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x32f8c	game::NextPlayer	read	current-player-select	Next player; the gpCurPlayer/giCurPlayerBit selection stays open.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x334ac	game::ComputeDailyGold	read	none	Daily gold.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x336ce	game::PerDay	read	calendar-day	Day advance; giCurTurn uses GAME_DAY_NUMBER.	GAME_DAY_NUMBER	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x33b9c	game::PerWeek	read	none	Weekly growth.		kept-existing-source	100	100
@@ -452,32 +452,32 @@ src/SOURCE/HERO.cpp	0x38f8a	hero::HasArtifact	read	none	Artifact slot search; al
 src/SOURCE/HERO.cpp	0x38fd5	hero::CalcMobility	read	hero-embarked	Uses IsEmbarked for the sea branch; artifact bonuses are HasArtifact calls.	hero::IsEmbarked	retained-exact	100	100
 src/SOURCE/HERO.cpp	0x39192	hero::HasSpell	read	none	Spell slot search; already the helper.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x391d3	hero::GetNumSpells	read	none	Two counting loops; single site.		kept-existing-source	100	100
-src/SOURCE/HERO.cpp	0x3929b	hero::UseSpell	read	spell-range-scan	Combat and adventure halves repeat the same remove-and-compact over different slot ranges inside one function; the donor's spell book has another layout, so no shared helper.		kept-existing-source	100	100
+src/SOURCE/HERO.cpp	0x3929b	hero::UseSpell	read	spell-range-scan	Combat and adventure halves repeat the same remove-and-compact over different slot ranges inside one function; no shared helper.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3949f	hero::AddSpell	read	spell-range-scan	Same two-range scan for adding; kept explicit.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x39646	hero::RedrawHeroScreen	read	none	Backdrop, draw and full update.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3968e	hero::HeroView	read	mood-icons;widget-message	Luck and morale icon blocks are parallel but use different widgets and frames; message header reused across broadcasts (not SET_WIDGET_MESSAGE triples).		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x39cd8	HeroMessageUpdate	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x39d44	hero::HeroScreenUpdate	read	none	Slot highlight loop.		kept-existing-source	100	100
-src/SOURCE/HERO.cpp	0x39ddd	hero::UpdateArmies	read	widget-show-hide	Per-slot hide or frame/text broadcasts; the show/hide pattern recurs in SWAPMGR and HeroView with different widgets (Buka 2.1 R31).		kept-existing-source	100	100
+src/SOURCE/HERO.cpp	0x39ddd	hero::UpdateArmies	read	widget-show-hide	Per-slot hide or frame/text broadcasts; the show/hide pattern recurs in SWAPMGR and HeroView with different widgets.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x39f93	hero::ViewStat	read	widget-message;normal-dialog-defaults	Already SET_WIDGET_MESSAGE; NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
-src/SOURCE/HERO.cpp	0x3a114	hero::ViewArtifact	read	normal-dialog-defaults;quick-view-mode	NormalDialog trailing defaults dropped; the OK/QUICK_VIEW ternary stays (Buka 2.1 H97).	NormalDialog defaults	retained-exact	100	100
+src/SOURCE/HERO.cpp	0x3a114	hero::ViewArtifact	read	normal-dialog-defaults;quick-view-mode	NormalDialog trailing defaults dropped; the OK/QUICK_VIEW ternary stays.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/HERO.cpp	0x3a152	hero::Dismiss	read	normal-dialog-defaults	NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
-src/SOURCE/HERO.cpp	0x3a199	hero::Deallocate	read	hero-embarked;player-id-list-remove;army-group-dismiss	IsEmbarked for the boat release. The hero-id compaction mirrors town::Deallocate (kept explicit, Buka 2.1 H23); per-slot Dismiss calls stay.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/HERO.cpp	0x3a599	hero::GetExperience	read	experience-growth	Growth beyond the table repeats in GetLevel with different loop exits; Buka 2.1 keeps both.		kept-existing-source	100	100
+src/SOURCE/HERO.cpp	0x3a199	hero::Deallocate	read	hero-embarked;player-id-list-remove;army-group-dismiss	IsEmbarked for the boat release. The hero-id compaction mirrors town::Deallocate (kept explicit); per-slot Dismiss calls stay.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/HERO.cpp	0x3a599	hero::GetExperience	read	experience-growth	Growth beyond the table repeats in GetLevel with different loop exits; both stay explicit.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3a64e	hero::GetLevel	read	experience-growth	Same growth; kept explicit.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3a725	hero::ApplyBattleWinTemps	read	temporary-event-bonus	Seven flag-test, adjust, clear-bit pairs; the stat and step differ per flag. Local to one function.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3a89e	hero::ApplyBattleLossTemps	read	none	One call.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3a8b1	hero::CheckLevel	read	normal-dialog-defaults	Level-up rolls; the hero-resource NormalDialog keeps its resource arguments.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/HERO.cpp	0x3ab68	hero::NumArtifacts	read	none	Count loop.		kept-existing-source	100	100
 src/SOURCE/HERO.cpp	0x3abb3	UpdateHeroScreenStatusBar	read	creature-display-name	Status texts always use the plural table (no count), so CREATURE_DISPLAY_NAME does not apply.		kept-existing-source	100	100
-src/SOURCE/HERO.cpp	0x3b0b5	HeroHandler	read	quick-view-mode;dialog-finish	Uses FINISH_DIALOG_MESSAGE; the quick-view ternaries stay (Buka 2.1 H97).	NormalDialog defaults	retained-exact	100	100
+src/SOURCE/HERO.cpp	0x3b0b5	HeroHandler	read	quick-view-mode;dialog-finish	Uses FINISH_DIALOG_MESSAGE; the quick-view ternaries stay.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/KB.cpp	0x3c7b0	PollSound	read	none	Sound poll.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3c7f1	ForcePollSound	read	none	Sound poll.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3c808	InitMainClasses	read	memerror-check	Manager allocations with MemError checks.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3cd20	DeleteMainClasses	read	none	Manager release.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3cfcb	EarlySetup	read	none	Early set-up.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3d0c4	oldmain	read	clear-screen	Main loop; the full-screen black fill/blit pair stays open as in SMACKMGR.		kept-existing-source	100	100
-src/SOURCE/KB.cpp	0x3dd8f	toupper	read	cp1251-upper	The callable toupper is distinct from CyrillicToUpper (Buka 2.1 H69).		kept-existing-source	100	100
+src/SOURCE/KB.cpp	0x3dd8f	toupper	read	cp1251-upper	The callable toupper is distinct from CyrillicToUpper.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3de12	InterpretCommandLine	read	none	Command line parse.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e05e	InitMenuHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION replaces the open select/right-click pair.	IS_WIDGET_SELECTION_NOTIFICATION	retained-exact	100	100
 src/SOURCE/KB.cpp	0x3e1b2	NullHandler	read	none	Returns.		kept-existing-source	100	100
@@ -488,7 +488,7 @@ src/SOURCE/KB.cpp	0x3e3c0	GetMonsterSingularName	read	none	Name table.		kept-exi
 src/SOURCE/KB.cpp	0x3e3cf	GetMonsterName	read	none	Name table.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e3de	GetMonsterCost	read	none	Cost table.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e49c	CanBuild	read	town-building-bit	CanBuild: building-mask and requirement tests (deferred typed flags).		kept-existing-source	100	100
-src/SOURCE/KB.cpp	0x3e5a0	CanBuy	read	next-mage-guild-level	CanBuy's guild cost level is `level < LAST ? level + 1 : LAST`, a different comparison from Buka 2.1's NEXT_MAGE_GUILD_LEVEL; single site, kept.		kept-existing-source	100	100
+src/SOURCE/KB.cpp	0x3e5a0	CanBuy	read	next-mage-guild-level	CanBuy's guild cost level is `level < LAST ? level + 1 : LAST`, not the `level + 1 < COUNT` form of a NEXT_MAGE_GUILD_LEVEL macro; single site, kept.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e656	GetBuildingBaseResourceValue	read	none	Base value.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3e693	NormalDialog	read	alloc-copy-string;quick-view-show;memerror-check	NormalDialog body. The or-word malloc/strcpy is ALLOC_COPY_STRING's shape but the only HoMM1 site and the macro would hide its cast; the quick-view show/wait/remove sequence varies across nine sites.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x3f440	UpdateNormalDialog	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
@@ -499,14 +499,14 @@ src/SOURCE/KB.cpp	0x3f6b3	PlayerDead	read	none	Player death.		kept-existing-sour
 src/SOURCE/KB.cpp	0x3f7f8	HandleRemoteDeadPlayerExit	read	none	Remote exit.	TransmitRemoteData defaults	retained-exact	100	100
 src/SOURCE/KB.cpp	0x3f882	HandleRemoteSuddenExit	read	transmit-defaults	Player exit packet; the trailing game-position default dropped, reliability arguments kept.	TransmitRemoteData defaults	retained-exact	100	100
 src/SOURCE/KB.cpp	0x3f956	ReceiveRemotePlayerExit	read	transmit-defaults	Player exit; trailing default dropped.		kept-existing-source	100	100
-src/SOURCE/KB.cpp	0x3fb8e	CheckEndGame	read	player-hero-accessor	The find-artifact bearer is game::GetPlayerHero, as in Buka 2.1 KB.	game::GetPlayerHero	retained-exact	100	100
+src/SOURCE/KB.cpp	0x3fb8e	CheckEndGame	read	player-hero-accessor	The find-artifact bearer is game::GetPlayerHero.	game::GetPlayerHero	retained-exact	100	100
 src/SOURCE/KB.cpp	0x404c4	QuickViewWait	read	none	Quick view wait.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x4053e	InitVars	read	none	Variable init.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x406b3	game::ShowMoraleInfo	read	none	Morale text.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x40aa5	game::ShowLuckInfo	read	none	Luck text.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x40c72	ClearMapExtra	read	none	Clear extras.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x40ccf	GetMonType	read	none	Score creature.		kept-existing-source	100	100
-src/SOURCE/KB.cpp	0x40d39	AddScoreToHighScore	read	file-value	Score entries written with WRITE_FILE_VALUE; the oversized entry reads stay explicit (Buka 2.1 H70 exclusion).	WRITE_FILE_VALUE	retained-exact	100	100
+src/SOURCE/KB.cpp	0x40d39	AddScoreToHighScore	read	file-value	Score entries written with WRITE_FILE_VALUE; the oversized entry reads stay explicit.	WRITE_FILE_VALUE	retained-exact	100	100
 src/SOURCE/KB.cpp	0x41066	BVResMsg	read	none	Bottom message.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x410b7	GOut	read	none	Debug out.		kept-existing-source	100	100
 src/SOURCE/KB.cpp	0x410d6	NetPosToGamePos	read	none	Position map.		kept-existing-source	100	100
@@ -548,7 +548,7 @@ src/SOURCE/kbwin.cpp	0x43bb5	SetMenuStatus	read	current-graphics-config	Menu sta
 src/SOURCE/kbwin.cpp	0x43ccd	SetNoDialogMenus	read	none	Menu enable state.		kept-existing-source	100	100
 src/SOURCE/kbwin.cpp	0x43d1f	SetMenus	read	none	Menu walk.		kept-existing-source	100	100
 src/SOURCE/kbwin.cpp	0x43e4a	SetGameDefaults	read	current-graphics-config	Both executable rows initialized by index; CURRENT_GRAPHICS_CONFIG names only the running row, so the loop stays.		kept-existing-source	100	100
-src/SOURCE/kbwin.cpp	0x43f8f	ReadPrefs	read	registry-value	Twenty-five RegQueryValueExA calls: no donor helper (Buka 2.1 has no registry code) and a wrapper would only hide the LPBYTE cast.		kept-existing-source	100	100
+src/SOURCE/kbwin.cpp	0x43f8f	ReadPrefs	read	registry-value	Twenty-five RegQueryValueExA calls: no helper, and a wrapper would only hide the LPBYTE cast.		kept-existing-source	100	100
 src/SOURCE/kbwin.cpp	0x443f7	WritePrefs	read	registry-value	Twenty-five RegSetValueExA calls; kept explicit for the same reason.		kept-existing-source	100	100
 src/SOURCE/kbwin.cpp	0x44702	DriveSupportsFreeSpaceQuery	read	none	Drive probe.		kept-existing-source	100	100
 src/SOURCE/kbwin.cpp	0x44774	SetupCDDrive	read	registry-value	CD drive search and registry store.		kept-existing-source	100	100
@@ -562,23 +562,23 @@ src/SOURCE/RECRUIT.cpp	0x50ef9	recruitUnit::Open	read	none	Window set-up and max
 src/SOURCE/RECRUIT.cpp	0x51154	recruitUnit::Close	read	normal-dialog-defaults	NormalDialog with a fixed position keeps its position arguments; trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/RECRUIT.cpp	0x5120b	recruitUnit::Update	read	widget-message	Header type/command once, then id/text broadcasts; not a SET_WIDGET_MESSAGE triple.		kept-existing-source	100	100
 src/SOURCE/RECRUIT.cpp	0x51325	recruitUnit::Main	read	none	Quantity editing and purchase; single site.		kept-existing-source	100	100
-src/SOURCE/RECRUIT.cpp	0x51697	recruitUnit::recruitUnit	read	cost-resource-search	First non-gold cost resource search repeats in the town constructor and QuickViewRecruit; Buka 2.1 RECRUIT keeps all three open.		kept-existing-source	100	100
-src/SOURCE/RECRUIT.cpp	0x51753	recruitUnit::recruitUnit	read	cost-resource-search	Same search; kept explicit as in the donor.		kept-existing-source	100	100
-src/SOURCE/RECRUIT.cpp	0x5182c	QuickViewRecruit	read	cost-resource-search	Same search; kept explicit as in the donor.		kept-existing-source	100	100
+src/SOURCE/RECRUIT.cpp	0x51697	recruitUnit::recruitUnit	read	cost-resource-search	First non-gold cost resource search repeats in the town constructor and QuickViewRecruit; all three stay open.		kept-existing-source	100	100
+src/SOURCE/RECRUIT.cpp	0x51753	recruitUnit::recruitUnit	read	cost-resource-search	Same search; kept explicit.		kept-existing-source	100	100
+src/SOURCE/RECRUIT.cpp	0x5182c	QuickViewRecruit	read	cost-resource-search	Same search; kept explicit.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x53b70	ShowThisMap	read	none	Constant filter.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x53b7a	fileRequester::fileRequester	read	file-value	Map header read through READ_FILE_VALUE (whole SMapHeader).	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/REQUEST.cpp	0x54354	fileRequester::~fileRequester	read	none	Empty destructor.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x54368	fileRequester::Close	read	none	Array releases and window removal.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x54459	fileRequester::Open	read	widget-message	SET_WIDGET_MESSAGE at the max-length triple; the label/text updates reuse the header.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x54826	fileRequester::SetOK	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
-src/SOURCE/REQUEST.cpp	0x5488d	fileRequester::Main	read	filename-character-filter;saved-humans-digit;normal-dialog-defaults	Filename character filter is a single site; the saved-game human digit (extension[2] - '0') repeats three times in REQUEST but has no donor helper. NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
+src/SOURCE/REQUEST.cpp	0x5488d	fileRequester::Main	read	filename-character-filter;saved-humans-digit;normal-dialog-defaults	Filename character filter is a single site; the saved-game human digit (extension[2] - '0') repeats three times in REQUEST but has no helper. NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/REQUEST.cpp	0x55329	fileRequester::UpdateMapInfo	read	none	Selection change guard.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x553a7	fileRequester::DoKnob	read	none	Knob drag loop; single site.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55602	fileRequester::Update	read	saved-humans-digit	Row text and suffix; the human digit read stays explicit.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55aa0	fileRequester::GetMapName	read	none	Bounded selection accessor.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55af9	fileRequester::GetFilename	read	none	File name composition.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55c0e	fileRequester::ShowMapInfo	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
-src/SOURCE/SETUP.cpp	0x56b10	game::SetupCampaignGame	read	setup-dialog-run	new/MemError/DoDialog/delete then result switch: the eight SETUP dialogs share the run sequence but switch on different results (Buka 2.1 R38).		kept-existing-source	100	100
+src/SOURCE/SETUP.cpp	0x56b10	game::SetupCampaignGame	read	setup-dialog-run	new/MemError/DoDialog/delete then result switch: the eight SETUP dialogs share the run sequence but switch on different results.		kept-existing-source	100	100
 src/SOURCE/SETUP.cpp	0x56c1d	game::SetupBaud	read	setup-dialog-run	Same run sequence; kept explicit.		kept-existing-source	100	100
 src/SOURCE/SETUP.cpp	0x56d56	game::SetupComPort	read	setup-dialog-run	Same run sequence; modem init prompt is local.		kept-existing-source	100	100
 src/SOURCE/SETUP.cpp	0x56f04	game::SetupHotSeatGame	read	setup-dialog-run	Same run sequence.		kept-existing-source	100	100
@@ -587,7 +587,7 @@ src/SOURCE/SETUP.cpp	0x570f2	game::SetupModemGame	read	setup-dialog-run	Window c
 src/SOURCE/SETUP.cpp	0x5738b	game::SetupMultiPlayerGame	read	setup-dialog-run	Same run sequence; modem loop is local.		kept-existing-source	100	100
 src/SOURCE/SETUP.cpp	0x5752d	game::SetupGame	read	setup-dialog-run	Menu-command shortcuts and the run sequence.		kept-existing-source	100	100
 src/SOURCE/SETUP.cpp	0x5789f	game::PickLoadGame	read	none	File requester run; single site.		kept-existing-source	100	100
-src/SOURCE/SETUP.cpp	0x57a60	SetupCampaignGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION (Buka 2.1 H78) replaces the open select/right-click pair; the right-button modifier test stays explicit as in the donor.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
+src/SOURCE/SETUP.cpp	0x57a60	SetupCampaignGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION replaces the open select/right-click pair; the right-button modifier test stays explicit.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SETUP.cpp	0x57b37	SetupComPortHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SETUP.cpp	0x57c3e	SetupBaudHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SETUP.cpp	0x57d45	SetupHotSeatGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
@@ -595,18 +595,18 @@ src/SOURCE/SETUP.cpp	0x57e0d	SetupModemGameHandler	read	widget-selection	IS_WIDG
 src/SOURCE/SETUP.cpp	0x57f05	SetupMultiPlayerGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SETUP.cpp	0x57fdc	SetupNetworkGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SETUP.cpp	0x58089	SetupGameHandler	read	widget-selection	IS_WIDGET_SELECTION_NOTIFICATION.	IS_WIDGET_SELECTION_NOTIFICATION;NormalDialog defaults	retained-exact	100	100
-src/SOURCE/SETUP.cpp	0x58151	BaseSetupHandler	read	dialog-finish	Already FINISH_DIALOG_MESSAGE; the menu-command cancel override follows it, as in Buka 2.1 H32.		kept-existing-source	100	100
+src/SOURCE/SETUP.cpp	0x58151	BaseSetupHandler	read	dialog-finish	Already FINISH_DIALOG_MESSAGE; the menu-command cancel override follows it.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x58240	InitSmackSound	read	none	Wave format probe; single site.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x583cf	ShutdownSmackSound	read	none	Driver release.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x583f9	ConvertSmackerPalette	read	none	Palette shift loop.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x58433	DoAdvance	read	none	Frame advance; single site.		kept-existing-source	100	100
-src/SOURCE/SMACKMGR.cpp	0x5856f	SmackMain	read	clear-screen	Full-screen black fill then blit repeats three times here and in KB; Buka 2.1 SMACKMGR writes them open.		kept-existing-source	100	100
+src/SOURCE/SMACKMGR.cpp	0x5856f	SmackMain	read	clear-screen	Full-screen black fill then blit repeats three times here and in KB; kept open.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x58cab	CloseSmackers	read	none	Guarded closes.		kept-existing-source	100	100
 src/SOURCE/SMACKMGR.cpp	0x58cf4	PlaySmacker	read	none	Palette/flag save around SmackMain.		kept-existing-source	100	100
-src/SOURCE/STRIP.cpp	0x5c6b0	strip::strip	read	memerror-check	Window and border allocation with MemError checks (Buka 2.1 H31 keeps them explicit).		kept-existing-source	100	100
+src/SOURCE/STRIP.cpp	0x5c6b0	strip::strip	read	memerror-check	Window and border allocation with MemError checks.		kept-existing-source	100	100
 src/SOURCE/STRIP.cpp	0x5c940	strip::~strip	read	none	Releases.		kept-existing-source	100	100
 src/SOURCE/STRIP.cpp	0x5ca47	strip::Draw	read	none	DrawIcons then update.		kept-existing-source	100	100
-src/SOURCE/STRIP.cpp	0x5ca7e	strip::DrawIcons	read	strip-slot-x	Slot x (m_x + i * step + first) repeats four times; a coordinate formula with no donor helper.		kept-existing-source	100	100
+src/SOURCE/STRIP.cpp	0x5ca7e	strip::DrawIcons	read	strip-slot-x	Slot x (m_x + i * step + first) repeats four times; a coordinate formula with no helper.		kept-existing-source	100	100
 src/SOURCE/STRIP.cpp	0x5ccb1	strip::DrawFrame	read	none	One call.		kept-existing-source	100	100
 src/SOURCE/STRIP.cpp	0x5ccdd	bankBox::bankBox	read	memerror-check	Window allocation.		kept-existing-source	100	100
 src/SOURCE/STRIP.cpp	0x5cdb1	bankBox::~bankBox	read	none	Release.		kept-existing-source	100	100
@@ -614,28 +614,28 @@ src/SOURCE/STRIP.cpp	0x5cde5	bankBox::Update	read	widget-message	Header type/com
 src/SOURCE/SWAPMGR.cpp	0x5cee0	swapManager::swapManager	read	none	Field initialization.		kept-existing-source	100	100
 src/SOURCE/SWAPMGR.cpp	0x5cf4a	swapManager::swapManager	read	none	Two stores.		kept-existing-source	100	100
 src/SOURCE/SWAPMGR.cpp	0x5cf7d	swapManager::Reset	read	none	Chained reset.		kept-existing-source	100	100
-src/SOURCE/SWAPMGR.cpp	0x5cfab	swapManager::Open	read	adventure-button-flags	The six-button disable broadcast is SET_ADVENTURE_BUTTON_FLAGS (Buka 2.1 H74; moved from ADVMGR.cpp to advManager.h).	SET_ADVENTURE_BUTTON_FLAGS	retained-exact	100	100
+src/SOURCE/SWAPMGR.cpp	0x5cfab	swapManager::Open	read	adventure-button-flags	The six-button disable broadcast is SET_ADVENTURE_BUTTON_FLAGS (moved from ADVMGR.cpp to advManager.h).	SET_ADVENTURE_BUTTON_FLAGS	retained-exact	100	100
 src/SOURCE/SWAPMGR.cpp	0x5d25f	swapManager::Close	read	adventure-button-flags	The six-button enable broadcast is SET_ADVENTURE_BUTTON_FLAGS.	SET_ADVENTURE_BUTTON_FLAGS	retained-exact	100	100
 src/SOURCE/SWAPMGR.cpp	0x5d373	swapManager::DrawSelector	read	none	Selector rectangle per side and item; single site.		kept-existing-source	100	100
-src/SOURCE/SWAPMGR.cpp	0x5d515	swapManager::Main	read	swap-side-arms;normal-dialog-defaults	Left and right arms mirror each other with different control ranges (Buka 2.1 R31); NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
+src/SOURCE/SWAPMGR.cpp	0x5d515	swapManager::Main	read	swap-side-arms;normal-dialog-defaults	Left and right arms mirror each other with different control ranges; NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/SWAPMGR.cpp	0x5dda1	swapManager::ViewMon	read	none	One ViewArmy call.		kept-existing-source	100	100
 src/SOURCE/SWAPMGR.cpp	0x5de3b	swapManager::SwapArtifacts	read	none	Artifact exchange with stat updates.		kept-existing-source	100	100
-src/SOURCE/SWAPMGR.cpp	0x5df61	swapManager::SwapMons	read	army-group-dismiss	Merge/swap with explicit type/count clears (Buka 2.1 H71 keeps them).		kept-existing-source	100	100
+src/SOURCE/SWAPMGR.cpp	0x5df61	swapManager::SwapMons	read	army-group-dismiss	Merge/swap with explicit type/count clears.		kept-existing-source	100	100
 src/SOURCE/SWAPMGR.cpp	0x5e1ba	swapManager::Update	read	widget-show-hide	Six show/hide loops over both heroes; kept explicit.		kept-existing-source	100	100
 src/SOURCE/SWAPMGR.cpp	0x5e628	swapManager::SplitMons	read	army-group-dismiss	Split dialog and transfer; explicit clears.		kept-existing-source	100	100
 src/SOURCE/TOWN.cpp	0x5e9c0	town::town	read	none	Field initialization.		kept-existing-source	100	100
-src/SOURCE/TOWN.cpp	0x5ea20	town::HasGarrison	read	type-present-slot	Type-only garrison test (Buka 2.1 H21 keeps type-present queries explicit).		kept-existing-source	100	100
+src/SOURCE/TOWN.cpp	0x5ea20	town::HasGarrison	read	type-present-slot	Type-only garrison test.		kept-existing-source	100	100
 src/SOURCE/TOWN.cpp	0x5ea63	town::GiveSpells	read	town-building-bit	Mage guild bit test; typed building-mask helpers wait for the enum domains (no HAS/BIT).		kept-existing-source	100	100
 src/SOURCE/TOWN.cpp	0x5eb1c	town::XformToCastle	read	none	Map frame offsets over the footprint.		kept-existing-source	100	100
 src/SOURCE/TOWN.cpp	0x5ec84	town::View	read	none	Uses the existing townManager::SetTown inline.		kept-existing-source	100	100
-src/SOURCE/TOWN.cpp	0x5ed10	town::Deallocate	read	player-id-list-remove	Remove-from-player-list compaction also appears in hero::Deallocate; Buka 2.1 H23 keeps it explicit.		kept-existing-source	100	100
+src/SOURCE/TOWN.cpp	0x5ed10	town::Deallocate	read	player-id-list-remove	Remove-from-player-list compaction also appears in hero::Deallocate; kept explicit.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5ee90	townObject::townObject	read	none	Town object set-up.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f053	townObject::~townObject	read	none	Release.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f0a9	townObject::Draw	read	none	Animated draw.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f1ac	townManager::townManager	read	none	Field initialization.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f215	townManager::Open	read	lazy-resource-load;memerror-check	Town screen set-up; per-building object creation keeps its own geometry.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x5f93d	townManager::Close	read	none	Close and release.		kept-existing-source	100	100
-src/SOURCE/TOWNMGR.cpp	0x5fb18	townManager::SetArmyCommand	read	creature-name-lowercase	Army command text: the plural name copy plus CyrillicToLower repeats five times; the lowered copy is not CREATURE_DISPLAY_NAME (Buka 2.1 H38 exclusion).		kept-existing-source	100	100
+src/SOURCE/TOWNMGR.cpp	0x5fb18	townManager::SetArmyCommand	read	creature-name-lowercase	Army command text: the plural name copy plus CyrillicToLower repeats five times; the lowered copy is not CREATURE_DISPLAY_NAME.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x60294	townManager::SetCommandAndText	read	none	Status text by widget.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x60770	townManager::ShowText	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x607db	townManager::Main	read	none	Town dispatch.	NormalDialog defaults	retained-exact	100	100
@@ -648,12 +648,12 @@ src/SOURCE/TOWNMGR.cpp	0x624c8	townManager::Toggle	read	none	Selection toggle.		
 src/SOURCE/TOWNMGR.cpp	0x6254d	townManager::DrawTown	read	none	Screen draw.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x62630	townManager::BuyBuild	read	next-mage-guild-level	Build window costs: the guild rank clamp is an if-form cap, not Buka's NEXT_MAGE_GUILD_LEVEL ternary.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x63402	townManager::BuildObj	read	none	Build animation.		kept-existing-source	100	100
-src/SOURCE/TOWNMGR.cpp	0x63761	townManager::SetupCastle	read	town-building-complete;castle-frame-select	Built-state test is TOWN_BUILDING_COMPLETE (Buka 2.1 H73, SetupCastle). Frame selection by buildable/affordable masks stays explicit.	TOWN_BUILDING_COMPLETE	retained-exact	100	100
+src/SOURCE/TOWNMGR.cpp	0x63761	townManager::SetupCastle	read	town-building-complete;castle-frame-select	Built-state test is TOWN_BUILDING_COMPLETE. Frame selection by buildable/affordable masks stays explicit.	TOWN_BUILDING_COMPLETE	retained-exact	100	100
 src/SOURCE/TOWNMGR.cpp	0x63bbb	townManager::SetupWell	read	none	Well window.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x63e70	townManager::SetupMage	read	none	Mage guild window.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x6412c	MageGuildHandler	read	none	Guild handler.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/TOWNMGR.cpp	0x64277	townManager::SetupThievesGuild	read	none	Thieves guild window.		kept-existing-source	100	100
-src/SOURCE/TOWNMGR.cpp	0x6452c	townManager::GetCategoryStats	read	player-hero-accessor	Army-strength category reads heroes and towns through game::GetPlayerHero/GetPlayerTown, as Buka 2.1 TOWNMGR does (byte-identical here; helpers worker B measured DetermineHeroToMove as code-changing, so it is a per-site form).	game::GetPlayerHero;game::GetPlayerTown	retained-exact	100	100
+src/SOURCE/TOWNMGR.cpp	0x6452c	townManager::GetCategoryStats	read	player-hero-accessor	Army-strength category reads heroes and towns through game::GetPlayerHero/GetPlayerTown (byte-identical here; helpers worker B measured DetermineHeroToMove as code-changing, so it is a per-site form).	game::GetPlayerHero;game::GetPlayerTown	retained-exact	100	100
 src/SOURCE/TOWNMGR.cpp	0x64937	townManager::SortStats	read	none	Bubble sort of stats.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x64a22	townManager::GetBuildingName	read	none	Name forwarding.		kept-existing-source	100	100
 src/SOURCE/TOWNMGR.cpp	0x64a47	townManager::RecruitHero	read	current-player-select	Tavern recruit; available-hero id reads stay direct (HoMM1's i8 accessor would add a byte temp).		kept-existing-source	100	100
@@ -665,21 +665,21 @@ src/SOURCE/HISCORE.cpp	0x3bd60	highScoreManager::highScoreManager	read	none	Init
 src/SOURCE/HISCORE.cpp	0x3bddf	highScoreManager::~highScoreManager	read	none	Empty destructor.		kept-existing-source	100	100
 src/SOURCE/HISCORE.cpp	0x3bdf3	highScoreManager::Open	read	none	Open bookkeeping.		kept-existing-source	100	100
 src/SOURCE/HISCORE.cpp	0x3bf37	highScoreManager::Close	read	none	Close bookkeeping.		kept-existing-source	100	100
-src/SOURCE/HISCORE.cpp	0x3bf85	highScoreManager::Main	read	executive-return	Animation timer and dispatch; the executive-return message pair recurs in several managers but each sets its own value (kept open, as in the donor).		kept-existing-source	100	100
-src/SOURCE/HISCORE.cpp	0x3c17f	highScoreManager::Update	read	file-value;score-text-widget-id	Score records through READ_FILE_VALUE (Buka 2.1 H70 HISCORE site). The rank*4+first+offset widget ids stay explicit as in Buka 2.1.	READ_FILE_VALUE	retained-exact	100	100
+src/SOURCE/HISCORE.cpp	0x3bf85	highScoreManager::Main	read	executive-return	Animation timer and dispatch; the executive-return message pair recurs in several managers but each sets its own value (kept open).		kept-existing-source	100	100
+src/SOURCE/HISCORE.cpp	0x3c17f	highScoreManager::Update	read	file-value;score-text-widget-id	Score records through READ_FILE_VALUE. The rank*4+first+offset widget ids stay explicit.	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/netwin.cpp	0x44c90	is_netbios_avail	read	none	Adapter probe.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x44d24	nb_init	read	none	NetBIOS set-up; single site.		kept-existing-source	100	100
-src/SOURCE/netwin.cpp	0x44ebf	nb_term	read	free-node-queue;ncb-cancel	Three queue drains use FREE_NODE_QUEUE (Buka 2.1 H66). The NCBCANCEL block recurs in nb_sess/nb_close_session; Buka 2.1 netwin keeps it open (R28).	FREE_NODE_QUEUE	retained-exact	100	100
+src/SOURCE/netwin.cpp	0x44ebf	nb_term	read	free-node-queue;ncb-cancel	Three queue drains use FREE_NODE_QUEUE. The NCBCANCEL block recurs in nb_sess/nb_close_session; kept open.	FREE_NODE_QUEUE	retained-exact	100	100
 src/SOURCE/netwin.cpp	0x45089	nb_rcv	read	none	Locked pop and copy.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45121	nb_snd	read	none	Locked queue add.		kept-existing-source	100	100
-src/SOURCE/netwin.cpp	0x4520f	nb_sess	read	ncb-cancel	Two NCBCANCEL blocks; kept explicit as in the donor.		kept-existing-source	100	100
+src/SOURCE/netwin.cpp	0x4520f	nb_sess	read	ncb-cancel	Two NCBCANCEL blocks; kept explicit.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x456ff	nb_stat	read	none	Status read.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45712	nb_thr_ctl	read	none	Send loop.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x4592e	nb_add_name	read	none	Broadcast name send.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x459e3	nb_add_name_done	read	none	Name registration result.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45b79	nb_recv_any	read	none	Receive-any NCB.		kept-existing-source	100	100
-src/SOURCE/netwin.cpp	0x45c27	nb_recv_any_done	read	ncb-session-index	Session lookup by NCB pointer also in nb_call_done; two sites, kept open as in the donor.		kept-existing-source	100	100
-src/SOURCE/netwin.cpp	0x45d49	nb_call	read	ncb-call-listen	nb_call and nb_listen differ only in the command; Buka 2.1 keeps both bodies.		kept-existing-source	100	100
+src/SOURCE/netwin.cpp	0x45c27	nb_recv_any_done	read	ncb-session-index	Session lookup by NCB pointer also in nb_call_done; two sites, kept open.		kept-existing-source	100	100
+src/SOURCE/netwin.cpp	0x45d49	nb_call	read	ncb-call-listen	nb_call and nb_listen differ only in the command; both bodies stay.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45e00	nb_listen	read	ncb-call-listen	Same as nb_call.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45eb7	nb_call_done	read	ncb-session-index	Same lookup as nb_recv_any_done.		kept-existing-source	100	100
 src/SOURCE/netwin.cpp	0x45fb1	nb_arm_recv	read	none	Receive arm loop.		kept-existing-source	100	100
@@ -689,7 +689,7 @@ src/SOURCE/netwin.cpp	0x462be	nb_format_name	read	none	Name padding.		kept-exist
 src/SOURCE/REMOTE.cpp	0x519f0	RemoteCleanup	read	none	Driver unload.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x51a56	ReadFileBlock	read	none	File block read.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x51abb	FileSize	read	none	File size.		kept-existing-source	100	100
-src/SOURCE/REMOTE.cpp	0x51b2f	RemoteMain	read	wait-dialog	Direct-connect wait dialog then the gbFunctionComplete abort; the wait-then-abort pair recurs seven times in REMOTE but Buka 2.1 Netbios/dpnetwin write it open.	NormalDialog defaults	retained-exact	100	100
+src/SOURCE/REMOTE.cpp	0x51b2f	RemoteMain	read	wait-dialog	Direct-connect wait dialog then the gbFunctionComplete abort; the wait-then-abort pair recurs seven times in REMOTE and stays open.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/REMOTE.cpp	0x51d50	UnloadRemoteDriver	read	none	Driver switch.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x51d83	calc_crc	read	none	CRC loop.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x51e2e	EncodePacket	read	none	Packet encode.		kept-existing-source	100	100
@@ -708,11 +708,11 @@ src/SOURCE/REMOTE.cpp	0x5291e	GUIModemCommand	read	wait-dialog	Command wait dial
 src/SOURCE/REMOTE.cpp	0x52980	GUIModemCommandExec	read	none	Command step.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x529ff	ModemCommand	read	none	Command write.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x52a5e	GUIModemResponse	read	wait-dialog	Response wait dialog; kept explicit.	NormalDialog defaults	retained-exact	100	100
-src/SOURCE/REMOTE.cpp	0x52ac9	GUIModemResponseExec	read	modem-response-truncate	Buka 2.1's TruncateModemResponse inline names the `[17] = 0` store; single site and the response limits belong to the enum domains, so not introduced.		kept-existing-source	100	100
+src/SOURCE/REMOTE.cpp	0x52ac9	GUIModemResponseExec	read	modem-response-truncate	A TruncateModemResponse inline would name the `[17] = 0` store; single site and the response limits belong to the enum domains, so not introduced.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x52b7c	write_buffer	read	none	Already the helper.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x52b9d	read_byte	read	none	Already the helper.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x52bd0	write_byte	read	none	Already the helper.		kept-existing-source	100	100
-src/SOURCE/REMOTE.cpp	0x52be9	Connect	read	direct-connect-id	Six-digit id string generation repeats in WaitForDirectConnect; two sites, Buka 2.1 Modem keeps both.		kept-existing-source	100	100
+src/SOURCE/REMOTE.cpp	0x52be9	Connect	read	direct-connect-id	Six-digit id string generation repeats in WaitForDirectConnect; two sites, both kept.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x52e5f	WaitForDirectConnect	read	direct-connect-id	Same id generation; kept explicit.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x53122	ReadPacket	read	none	Packet read.		kept-existing-source	100	100
 src/SOURCE/REMOTE.cpp	0x53206	WriteModemPacket	read	none	Packet write.		kept-existing-source	100	100
@@ -725,13 +725,13 @@ src/SOURCE/comwin.cpp	0x1c984	pop_node	read	none	Already the list helper.		kept-
 src/SOURCE/comwin.cpp	0x1c9ba	init_anchor	read	none	Already the list helper.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1c9d2	ShutdownComError	read	none	Error text table switch.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1cd46	com_init	read	none	Port open and DCB set-up.		kept-existing-source	100	100
-src/SOURCE/comwin.cpp	0x1d048	com_term	read	free-node-queue	Two queue drains use FREE_NODE_QUEUE (Buka 2.1 H66).	FREE_NODE_QUEUE	retained-exact	100	100
+src/SOURCE/comwin.cpp	0x1d048	com_term	read	free-node-queue	Two queue drains use FREE_NODE_QUEUE.	FREE_NODE_QUEUE	retained-exact	100	100
 src/SOURCE/comwin.cpp	0x1d126	com_rcv	read	none	Read with clear-error.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1d1e4	com_snd	read	none	Queue a node or send a break.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1d2fe	com_sess	read	none	Returns 0.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1d306	com_stat	read	none	Status query.		kept-existing-source	100	100
 src/SOURCE/comwin.cpp	0x1d357	comm_wrt_task	read	none	Write task loop.		kept-existing-source	100	100
-src/SOURCE/wingraph.cpp	0x66710	DDRestoreDisplayMode	read	ddsd-check	`if (result != DD_OK) DDSD(...)` follows every DirectDraw call; Buka 2.1 wingraph writes each check open (the #line/__LINE__ arguments are per site).		kept-existing-source	100	100
+src/SOURCE/wingraph.cpp	0x66710	DDRestoreDisplayMode	read	ddsd-check	`if (result != DD_OK) DDSD(...)` follows every DirectDraw call; each check stays open (the #line/__LINE__ arguments are per site).		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x6674e	DDQueryNewPalette	read	none	Palette query.		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x6677b	CreatePrimary	read	ddsd-check;release-and-null	Clipper release.		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x667f8	SetupClipper	read	ddsd-check;current-graphics-config	CURRENT_GRAPHICS_CONFIG; DDSD checks explicit.	CURRENT_GRAPHICS_CONFIG	retained-exact	100	100
@@ -742,7 +742,7 @@ src/SOURCE/wingraph.cpp	0x66fe8	DDSetPalette	read	ddsd-check	Palette attach.		ke
 src/SOURCE/wingraph.cpp	0x6706a	DDCreateSurface	read	ddsd-check	Surface creation.		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x6716a	DDSD	read	none	Error code report.		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x67557	DDUpdatePalette	read	ddsd-check	Palette update.		kept-existing-source	100	100
-src/SOURCE/wingraph.cpp	0x6764c	DDCleanUpWinGraphics	read	ddsd-check;release-and-null	COM release-and-null per object (Buka 2.1 keeps them open).		kept-existing-source	100	100
+src/SOURCE/wingraph.cpp	0x6764c	DDCleanUpWinGraphics	read	ddsd-check;release-and-null	COM release-and-null per object (kept open).		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x677a0	DDSetFullScreenStatus	read	ddsd-check;current-graphics-config	CURRENT_GRAPHICS_CONFIG.	CURRENT_GRAPHICS_CONFIG	retained-exact	100	100
 src/SOURCE/wingraph.cpp	0x67a31	WGQueryNewPalette	read	none	WinG palette query.		kept-existing-source	100	100
 src/SOURCE/wingraph.cpp	0x67aa3	WGInitGraphics	read	none	WinG set-up.		kept-existing-source	100	100

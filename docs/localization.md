@@ -1,6 +1,6 @@
 # Static localization
 
-Buka text lives in UTF-8 catalogs, following HoMM2's build-time design.
+Buka text lives in UTF-8 catalogs that are resolved at build time.
 `locales/messages.def` preserves the exact original English; `locales/ru.po`
 uses the semantic ID as `msgctxt` and repeats that English as `msgid`.
 Russian text is recovered from the retail executable, not newly translated.

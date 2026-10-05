@@ -28,8 +28,7 @@ Its creature-balance term is
 static_cast<float>(ideal[townNo]) / (static_cast<float>(strengths[townNo])) / 3.0f + 0.66
 ```
 
-which emits retail's `FILD; FILD; FDIVP; FDIV dword; FADD qword`. HoMM2 Buka's
-`GetBestBHC` spells the same parenthesized cast.
+which emits retail's `FILD; FILD; FDIVP; FDIV dword; FADD qword`.
 
 ## Second control: a call result times a parenthesized cast
 

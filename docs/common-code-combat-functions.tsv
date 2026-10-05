@@ -16,7 +16,7 @@ src/SOURCE/ARMY.cpp	0x13330	army::army	read	army-target-pair	Uses CLEAR_ARMY_TAR
 src/SOURCE/ARMY.cpp	0x133ec	army::InitClean	read	none	Resource slot clears.		kept-existing-source	100	100
 src/SOURCE/ARMY.cpp	0x13450	army::Init	read	none	Creature record copy and hero stat bonus.		kept-existing-source	100	100
 src/SOURCE/ARMY.cpp	0x13555	army::LoadResources	read	none	Resource name formatting per sample; no repeated helper beyond sprintf/GetSample pairs.		kept-existing-source	100	100
-src/SOURCE/ARMY.cpp	0x13760	army::FreeResources	read	none	Guarded dispose/null pairs per resource (donor R18 keeps them).		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13760	army::FreeResources	read	none	Guarded dispose/null pairs per resource.		kept-existing-source	100	100
 src/SOURCE/ARMY.cpp	0x13834	army::DrawToBuffer	read	edge-column;area-spell-loops	Stand and effect poses repeat the shadow switch; ordered draw policy, kept.		kept-existing-source	100	100
 src/SOURCE/ARMY.cpp	0x13fd9	army::Stand	read	none	Pose reset and redraw.		kept-existing-source	100	100
 src/SOURCE/ARMY.cpp	0x1402e	army::Wince	read	none	Pose and grid mode.		kept-existing-source	100	100
@@ -54,8 +54,8 @@ src/SOURCE/CMBTMGR.cpp	0x18b30	combatManager::combatManager	read	none	Chained fi
 src/SOURCE/CMBTMGR.cpp	0x18cbb	combatManager::CombineGroups	read	none	Add/Dismiss calls already named.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x18dd3	combatManager::SetupCombat	read	town-building-bit	Per-side setup; castle bit test is town domain.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x19118	combatManager::Open	read	none	Ordered open sequence.		kept-existing-source	100	100
-src/SOURCE/CMBTMGR.cpp	0x19519	combatManager::Close	read	none	Survivor census stays (donor H91).		kept-existing-source	100	100
-src/SOURCE/CMBTMGR.cpp	0x1972a	combatManager::UpdateArmyGroup	read	army-group-dismiss	Open-coded Dismiss stays (donor H71).		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x19519	combatManager::Close	read	none	Survivor census stays.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1972a	combatManager::UpdateArmyGroup	read	army-group-dismiss	Open-coded Dismiss stays.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x19865	combatManager::GenerateMap	read	clear-hex-occupant;hex-index	Grid initialization stores five cell fields; not CLEAR_HEX_OCCUPANT.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x19ffc	combatManager::GetBackgroundName	read	trigger-object	Terrain/background table switch.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1a123	combatManager::MoreTreesNear	read	none	Neighbourhood tileset census.		kept-existing-source	100	100
@@ -65,7 +65,7 @@ src/SOURCE/CMBTMGR.cpp	0x1a528	combatManager::LoadArmies	read	none	Per-side Init
 src/SOURCE/CMBTMGR.cpp	0x1a787	combatManager::FreeArmies	read	none	Resource frees.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1a842	combatManager::NoShowCombatLog	read	none	Empty.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1a84f	combatManager::GetGridIndex	read	hex-index	Pixel-to-hex arithmetic.		kept-existing-source	100	100
-src/SOURCE/CMBTMGR.cpp	0x1a8f6	combatManager::CheckApplyGoodMorale	read	creature-display-name	Separate-format singular/plural sprintfs stay (donor H38).		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a8f6	combatManager::CheckApplyGoodMorale	read	creature-display-name	Separate-format singular/plural sprintfs stay.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1aa9b	combatManager::CheckApplyBadMorale	read	creature-display-name	Separate-format singular/plural sprintfs stay.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1ac0e	combatManager::GetNextArmy	read	monster-flag-test	Turn order scan.		kept-existing-source	100	100
 src/SOURCE/CMBTMGR.cpp	0x1ade7	combatManager::IsWinner	read	opposite-combat-side	1 - side and side ^= 1 stay explicit.		kept-existing-source	100	100
@@ -91,8 +91,8 @@ src/SOURCE/COMMAND.cpp	0x1edae	combatManager::RightClick	read	army-at-hex	Quick 
 src/SOURCE/COMMAND.cpp	0x1ef1f	combatManager::DoCommand	read	set-next-combat-move;command-view-triple	The move arm's existing comma expression is SET_NEXT_COMBAT_MOVE; the attack arm stores the hex first and stays.	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
 src/SOURCE/COMMAND.cpp	0x1f209	WinCombatHandler	read	none	Uses FINISH_DIALOG_MESSAGE/SET_WIDGET_MESSAGE already.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x1f389	combatManager::ClearWinLoseBottom	read	none	Widget removal loop.		kept-existing-source	100	100
-src/SOURCE/COMMAND.cpp	0x1f491	combatManager::ShowWinLoseArtifact	read	memerror-check	Widget construction (donor R32).		kept-existing-source	100	100
-src/SOURCE/COMMAND.cpp	0x1f71e	combatManager::ShowDeadArmies	read	memerror-check	Widget construction (donor R32).		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1f491	combatManager::ShowWinLoseArtifact	read	memerror-check	Widget construction.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1f71e	combatManager::ShowDeadArmies	read	memerror-check	Widget construction.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x1fe71	combatManager::DoVictory	read	opposite-combat-side	Victory protocol and result texts.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x205a2	combatManager::DoLoseWindow	read	memerror-check	Lose animation loop.		kept-existing-source	100	100
 src/SOURCE/COMMAND.cpp	0x20a7e	combatManager::DoSurrender	read	opposite-combat-side	Surrender cost and dialog.		kept-existing-source	100	100
@@ -113,7 +113,7 @@ src/SOURCE/DRAWING.cpp	0x23bab	combatManager::DrawBackground	read	hex-index	Grou
 src/SOURCE/DRAWING.cpp	0x23d6c	combatManager::DrawFrame	read	inclusive-region;extent-clamp;extent-reset	Extent screen update is UPDATE_INCLUSIVE_REGION; clamps and box computation stay.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100
 src/SOURCE/FINDPATH.cpp	0x29c60	searchArray::searchArray	read	none	Constructor.		kept-existing-source	100	100
 src/SOURCE/FINDPATH.cpp	0x29c70	searchArray::Clear	read	none	Storage clears.		kept-existing-source	100	100
-src/SOURCE/FINDPATH.cpp	0x29ca0	searchArray::QuickDistance	read	none	The named approximate metric (donor H39).		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29ca0	searchArray::QuickDistance	read	none	The named approximate metric.		kept-existing-source	100	100
 src/SOURCE/FINDPATH.cpp	0x29cf0	TerrainStepCost	read	none	Terrain cost switch.		kept-existing-source	100	100
 src/SOURCE/FINDPATH.cpp	0x29d50	CalcTerrainCost	read	none	Cost table lookup.		kept-existing-source	100	100
 src/SOURCE/FINDPATH.cpp	0x29da0	searchArray::FindCombatPath	read	search-node-accessor	Combat path search; m_cells column-0 nodes stay direct.		kept-existing-source	100	100
