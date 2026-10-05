@@ -33,6 +33,24 @@ convention and instruction bodies match the Watcom-built DOS family. The
 tested Watcom C compilers did not reproduce, from ordinary C, the byte-aligned
 layout or the retained nested saves.
 
+Buka 2003 did not recompile the decoder with its VC6 compiler. All six Buka
+decoder bodies equal the NWC Windows module (February 1996, May 1996 and
+August 1997 builds) after masking absolute addresses, including the
+Windows-only `Decode` adaptation. They keep the Watcom register convention
+(callee-saved `ECX`/`EDX`, no stack frame, a nested `push ebx` in
+`DecodePosition`) and the unpadded odd starts, none of which VC6 `/Od` or `/O2`
+C produces. The single difference is in `DecodePosition`: Buka encodes
+`cmp dx,0FFFFh` with a word immediate (`66 81 FA FF FF`), as the German DOS
+build of 1995-10-09 also does, while every other NWC build uses the
+sign-extended byte immediate (`66 83 FA FF`). The masked `DecodePosition` and
+`ReconstructDecoderTree` bodies match only the German DOS and Buka images. Buka
+therefore linked a decoder object from the same pre-built family, not one
+rebuilt from C. The HoMM2 Buka 2.1 donor uses bzip2 rather than LZHUF and has no
+corresponding decoder. In the reconstruction the full-width immediate is written
+`cmp dx,WORD PTR 65535`: ML 6 keeps a word immediate only when it is explicitly
+typed. A forward-referenced constant, `TEXTEQU`, `OPTION M510` and
+`OPTION NOSIGNEXTEND` all still select the byte form.
+
 `reference/decoder_correspondence.c` establishes types, algorithm
 correspondence, and compiler provenance. Watcom C/386 10.0a reproduces the
 complete `UpdateDecoderTree` instruction body, but emits a different save order

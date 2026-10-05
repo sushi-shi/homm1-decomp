@@ -237,7 +237,11 @@ L_7fdb5:
     sub edx,2
 L_7fdd5:
     dec edx
-    cmp dx,65535
+    ; Buka's object keeps the full word immediate (66 81 FA FF FF), like the
+    ; German DOS 1995-10-09 build; the NWC Windows builds use the sign-extended
+    ; byte form. ML 6 emits the full form only for an explicitly WORD-typed
+    ; immediate.
+    cmp dx,WORD PTR 65535
     je L_7fde9
     mov ebx,eax
     add ebx,eax
