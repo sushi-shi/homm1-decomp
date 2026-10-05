@@ -1323,18 +1323,18 @@ i16 army::WalkTo(void) {
 // Walks the found path one hex at a time, at most the stack's speed.
 VA(0x00416d38, 0xe6)
 i16 army::WalkTo(i16 destHex) {
-    i8 step;
-    i32 moved;
+    i32 stepCount;
+    i8 pathIndex;
 
     m_targetSide = m_targetIndex = COMBAT_ARMY_INDEX_NONE;
     if (!FindPath(m_hex, destHex, m_stats.speed, 1, ARMY_PATH_ANY_TARGET_HEX))
         return ARMY_PATH_BLOCKED;
-    moved = 0;
-    for (step = gpSearchArray->m_pathLength - 1; step >= 0; step--) {
-        Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
-        moved++;
-        if (moved >= m_stats.speed)
-            step = -1;
+    stepCount = 0;
+    for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex >= 0; pathIndex--) {
+        Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+        stepCount++;
+        if (stepCount >= m_stats.speed)
+            pathIndex = -1;
     }
     if (!m_spellEndCondition)
         CancelSpell();
@@ -1350,8 +1350,8 @@ i16 army::AttackTo(void) {
 // Flyers jump next to the target; walkers stop short when out of moves.
 VA(0x00416e3a, 0x1a2)
 i16 army::AttackTo(i16 destHex) {
-    i8 step;
-    i32 moved;
+    i32 stepCount;
+    i8 pathIndex;
 
     if (m_stats.attributes & MONSTER_FLAGS_FLYING) {
         if (m_hex != destHex)
@@ -1368,12 +1368,12 @@ i16 army::AttackTo(i16 destHex) {
             m_attackDirection = gpSearchArray->m_directions[0];
             DoAttack(0);
         } else {
-            step = 0;
-            moved = 0;
-            for (step = gpSearchArray->m_pathLength - 1; step; step--) {
-                Walk(gpSearchArray->m_directions[step], 0, step != gpSearchArray->m_pathLength - 1);
-                moved++;
-                if (moved >= m_stats.speed && step != 1) {
+            pathIndex = 0;
+            stepCount = 0;
+            for (pathIndex = gpSearchArray->m_pathLength - 1; pathIndex; pathIndex--) {
+                Walk(gpSearchArray->m_directions[pathIndex], 0, pathIndex != gpSearchArray->m_pathLength - 1);
+                stepCount++;
+                if (stepCount >= m_stats.speed && pathIndex != 1) {
                     Stand(1);
                     return ARMY_PATH_BLOCKED;
                 }
