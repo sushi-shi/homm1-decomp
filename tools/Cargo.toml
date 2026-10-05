@@ -1,0 +1,11 @@
+[workspace]
+resolver = "2"
+members = ["homm1-lzhuf"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[profile.release]
+overflow-checks = true
