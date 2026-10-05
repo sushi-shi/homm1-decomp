@@ -8,7 +8,7 @@
 - [Compiler and toolchain](compiler.md), [other builds](builds.md),
   [candidate linking](linker-flags.md),
   [candidate-image checks](image-diff.md), [playing the build](play.md),
-  [clean source branch](clean-source.md).
+  [generated source branches](clean-source.md).
 - [Score tracking](match-status.md), [permutation](permuter.md),
   [compiler patterns](patterns/INDEX.md), per-unit
   [equivalence surveys](equivalence/) of non-exact functions.

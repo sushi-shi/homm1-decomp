@@ -124,10 +124,6 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
 VA(0x0046e9c4, 0x33a)
 #line 137 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
-    DATA(0x004a3dcc)
-    static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
-    DATA(0x004a3de4)
-    static char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
     if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)

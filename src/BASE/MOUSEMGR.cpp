@@ -15,25 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-DATA(0x004a10e4)
-char gAdventureColor[] = "CO";
-DATA(0x004a10e8)
-char gAdventureMonochrome[] = "BW";
-DATA(0x004a10ec)
-char gAdventureBitmapFormat[] = "ADVM%s%02d.BMP";
-DATA(0x004a10fc)
-char gSpellColor[] = "CO";
-DATA(0x004a1100)
-char gSpellMonochrome[] = "BW";
-DATA(0x004a1104)
-char gSpellBitmapFormat[] = "SPEL%s%02d.BMP";
-DATA(0x004a1114)
-char gCombatColor[] = "CO";
-DATA(0x004a1118)
-char gCombatMonochrome[] = "BW";
-DATA(0x004a111c)
-char gCombatBitmapFormat[] = "CMSE%s%02d.BMP";
-
 VA(0x0046b510, 0x102)
 mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
@@ -164,22 +145,22 @@ void mouseManager::SetPointer(i16 frame) {
         if (gMouseCursorType == MOUSE_CURSOR_ADVENTURE)
             sprintf(
                 filename,
-                gAdventureBitmapFormat,
-                gColorMice ? gAdventureColor : gAdventureMonochrome,
+                "ADVM%s%02d.BMP",
+                gColorMice ? "CO" : "BW",
                 frame + 1
             );
         else if (gMouseCursorType == MOUSE_CURSOR_SPELL)
             sprintf(
                 filename,
-                gSpellBitmapFormat,
-                gColorMice ? gSpellColor : gSpellMonochrome,
+                "SPEL%s%02d.BMP",
+                gColorMice ? "CO" : "BW",
                 frame + 1
             );
         else
             sprintf(
                 filename,
-                gCombatBitmapFormat,
-                gColorMice ? gCombatColor : gCombatMonochrome,
+                "CMSE%s%02d.BMP",
+                gColorMice ? "CO" : "BW",
                 frame + 1
             );
 

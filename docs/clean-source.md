@@ -1,18 +1,27 @@
-# Generated source branch
+# Generated source branches
 
-`homm1 clean` derives a clean, buildable source tree from committed `HEAD` and
-can publish it as a local single-commit branch.
+`homm1 clean` derives two trees from committed `HEAD`, with no matching
+machinery, and can publish each one as a local single-commit branch:
+
+| Variant | Branch | Contents |
+| --- | --- | --- |
+| `source` | `source-buka-2003` | The primary C++ tree. Game text stays as catalog references (`localization::Tr("id")`) with an English and a Russian catalog. Builds either language with the pinned VC6. |
+| `classic` | `classic-buka-2003` | The same tree as a reading view. Every reference is spelled out as a readable UTF-8 Russian literal. The `HOMM1_RUSSIAN` conditionals keep their Russian branch. The integer-enum and name-mangling model is unchanged. |
 
 ```sh
-homm1 clean --out build/clean                        # generate
-homm1 clean --out build/clean --verify               # build and compare
-homm1 clean --out build/clean --verify --publish     # branch source-win95-1.2-1997
+homm1 clean                                        # build/source
+homm1 clean --verify                               # build and compare
+homm1 clean --verify --publish                     # branch source-buka-2003
+homm1 clean --variant classic --verify --publish   # branch classic-buka-2003
 ```
 
-`--ref REVISION` exports another commit. `--working-tree` previews tracked and
-staged files but cannot publish. Output inside the checkout must be a child of
-`build/`, and an existing output is replaced only when it carries the
-generator's marker.
+`--out` defaults to `build/<variant>`, and `--ref REVISION` exports another
+commit. `--working-tree` previews tracked and staged files, but it cannot
+publish. Output inside the checkout must be a child of `build/`. An existing
+output is replaced only when it carries the generator's marker.
+
+`source-buka-2003` is the base for later branches (a cross-platform port and
+`source-te`). Change the source on `decomp-buka-2003`, then regenerate.
 
 ## What is removed
 
@@ -26,85 +35,136 @@ generator's marker.
 | `H1_C_LINKAGE` | `extern "C"` |
 | `#include <match.h>` | `#include <H1/Ints.h>` (match.h also defines the integer aliases) |
 | `#include <Domains.h>`, `<H1/Macros.h>` | deleted with the headers |
-| `#line N "D:\\Heroes\\..."` | deleted; the compiler supplies `__FILE__`/`__LINE__` |
+| `#line N "..."` | deleted; the compiler supplies `__FILE__`/`__LINE__` |
 | `//`, `/* */` and MASM/RC/DEF `;` comments | deleted |
 
-Each rule is the expansion VC4 already compiles in the matching build. The
-`H1_ENUM_*` rules select that production branch, not Domains.h's C++20 strict
-view: VC4 cannot compile `enum class`, `using enum` or `H1EnumStorage`, and
-substituting the domain type even where its storage is `int` fails six units
-with C2446/C2664 and moves code in two more. The enum declarations stay named.
+Each rule is the expansion that VC6 already compiles in the matching build.
+The `H1_ENUM_*` rules select that production branch, not Domains.h's C++20
+strict view. VC6 cannot compile `enum class`, `using enum` or
+`H1EnumStorage`. The strict view is not buildable as a tree either: a clang-cl
+`/std:c++20` syntax check of the strict headers and units reports 5,534
+errors. The enum declarations stay named.
 
-The lexer never enters string or character literals, removes comments without
-joining tokens and expands macro arguments innermost first. Generation fails
-if a comment, scaffolding name or `#line` survives, if a construct leaves
-stranded `;` or `,`, or if `src/` holds a file no rule covers.
+The lexer never enters string or character literals. It removes comments
+without joining tokens and expands macro arguments innermost first.
+Generation fails in any of these cases:
 
-The tree carries the unit sources, every header, `Heroes.rc`, the module
-definition, a `build.json` link contract, import stubs for `wail32.dll` and
-`smkwai32.dll` (from the retail import table through `homm1.graph.implib`), a
-`build.py`, the `play.py` runner, a flake and a short README. LZHUF's reference sources, research
-notes and all tooling stay on `decomp-win95-1.2`. `build.json` keeps retail object order
-and the BASE library, computed from the annotations before removal; no address
+- a comment, scaffolding name or `#line` survives;
+- a construct leaves a stranded `;` or `,`;
+- `src/` holds a file that no rule covers;
+- in the classic view, a catalog reference or `HOMM1_RUSSIAN` survives, or an
+  `#elif` follows a `HOMM1_RUSSIAN` conditional.
+
+Both trees carry the unit sources, every header, `Heroes.rc`, the module
+definition and import stubs for `mss32.dll`, `smackw32.dll` and `audiere.dll`.
+The stubs come from the retail import table through `homm1.graph.implib`.
+
+The source tree also carries:
+
+- `locales/` (`messages.def`, `ru.po`, `format-variants.json`) and
+  `catalog.py`;
+- a `build.json` link contract and `build.py`;
+- a flake and a README.
+
+`build.json` keeps the retail object order, the BASE library and the retail
+`/OPT:NOREF`, computed from the annotations before they are removed. No address
 reaches the tree.
+
+The classic tree drops the build files and the catalog. It keeps a README that
+points to `source-buka-2003` for building. Research notes and all tooling stay
+on `decomp-buka-2003`.
+
+## Localization
+
+The source tree names each piece of text by catalog ID. Its `build.py
+--locale ru|en` writes a copy of the sources to `build/<locale>/localized/`
+with each reference resolved to the selected language's literal: Windows-1251
+bytes, or a brace-enclosed character initializer for `Chars`. In the same copy,
+`HOMM1_RUSSIAN` becomes `1` or `0`. `Heroes.rc` gets wide Unicode string
+literals and `LANG_RUSSIAN` or `LANG_ENGLISH`. Nothing is looked up at run
+time.
+
+The classic view resolves the same references once, for Russian:
+
+- C++ literals are UTF-8 text, with controls escaped (`\n`, `\t`, `\r` or
+  three-digit octal);
+- `Heroes.rc` starts with `#pragma code_page(65001)`, uses `""`-doubled RC
+  literals and declares language `0x19`.
+
+The view is for reading. VC6 copies literal bytes as written, so compiling the
+UTF-8 files would not reproduce the Windows-1251 strings.
 
 ## Verification
 
-`--verify` first runs `homm1 link` so the matching objects and candidate are
-current. It then compiles two trees through `homm1.tool.cl`/fixedroot with each
-unit's profile and links both through `homm1.graph.link` without `/FORCE`.
+`--verify` first runs `homm1 link` so that the matching objects and the
+candidate are current. It then compiles the trees with the pinned VC6 and each
+unit's `config/units.toml` profile. MASM units are assembled as the retail
+link's OMF and as comparison COFF. Every tree links through `homm1.graph.link`
+without `/FORCE`, and an unresolved external fails verification.
 
-- The control tree applies the same expansions and comment removal but keeps
-  every line, the `#line` pins and the scaffolding headers and their includes.
-  It must reproduce every non-debug object section and the candidate
-  `HEROESW.EXE` byte for byte, apart from LINK's timestamps.
-- The clean tree must compile and link. Its code differs: under retail's `/Gi`,
-  VC4's symbol handles follow the path strings of the opened files and the
-  source line numbers ([handle paths](patterns/vc4-gi-handles-follow-path-lengths.md),
-  [line statics](patterns/vc4-gi-line-var.md)). Removing the scaffolding includes
-  alone leaves 16 of 62 C++ units identical; the `#line` pins change assertion
-  line words and file literals.
-- Finally the tree's `build.py` runs through its own flake and must produce
-  `HEROESW.EXE`.
+- **Control.** The tree applies the same expansions and comment removal, but
+  keeps every line, the `#line` pins and the scaffolding headers and includes.
+  Each unit compiles in the matching build's localization view (the
+  length-padded catalog macros through the forced include). The control must
+  reproduce every non-debug section of all 68 objects (bytes, relocations and
+  symbol names) and the candidate `HEROES.EXE` byte for byte. The only
+  exception is LINK's TimeDateStamps (PE header, export, resource and debug
+  directories, and the CodeView signature). This proves that the transforms
+  change no code.
+- **Source.** The generated tree is compiled from its Russian localized copy,
+  as its own `build.py` does, and must link. Its objects are compared after
+  VC6's compiler-local names (`$L`, `$T`, `$SG`, `$E`, `$S`, `$label$N`) are
+  renumbered by first appearance. These counters advance with every macro a
+  compilation defines, so they shift once the scaffolding headers are gone.
+  Every remaining difference is listed, and the command fails unless the
+  differing unit's source uses `H1_ASSERT`, `__FILE__` or `__LINE__`. Without
+  the `#line` pins, those assertions carry their own line numbers and file
+  names. Currently 56 of 68 units are identical. The 12 that differ are the
+  assertion units INPUTMGR, MOUSEMGR, RESMGR, WINMGR, miscwin, EVENTS, NOOPT,
+  PATH, SMACKMGR, TOWNMGR, netwin and wingraph.
+- **Standalone** (source variant). The tree's `build.py` runs through its own
+  flake for `--locale ru` and `--locale en`. Each run must produce
+  `build/<locale>/HEROES.EXE`.
+- **Classic equivalence** (classic variant). The classic files must equal the
+  source tree's Russian compiler input token for token. Each UTF-8 literal is
+  read back as the Windows-1251 bytes it shows, and it may stand for a byte
+  literal or for a `Chars` brace initializer. `Heroes.rc` strings must carry
+  the same text as the rendered wide literals. The classic tree itself is not
+  compiled.
 
-The per-section differences of both trees are written to
-`build/clean-verify/differences.tsv`. Nothing is banked; this is not a retail
-match claim. The game has not been run from the generated executable here.
+The per-section differences are written to
+`build/<variant>-verify/differences.tsv`. Nothing is banked, and this is not a
+retail match claim. The game has not been run from a generated executable here.
 
 ## Publication
 
-`--publish [BRANCH]` (default `source-win95-1.2-1997`) writes the tree as one root
-commit through a private Git index, so no worktree changes. The message records
-`Generated-By: homm1 clean` and `Source-Commit:`. Regeneration replaces the
-snapshot. An identical regeneration from the same commit is a no-op. The command
-refuses a branch checked out in any worktree and a branch whose tip it did not
-generate. It never pushes; update a remote with an explicit
-`--force-with-lease=<branch>:<expected tip>`.
+`--publish [BRANCH]` writes the tree as one root commit through a private Git
+index, so no worktree changes. The default branch is `<variant>-buka-2003`. The
+commit message records `Generated-By: homm1 clean` and `Source-Commit:`.
+
+- Regeneration replaces the snapshot.
+- An identical regeneration from the same commit is a no-op.
+- The command refuses a branch that is checked out in any worktree, and a
+  branch whose tip it did not generate.
+- It never pushes. Update a remote with an explicit
+  `--force-with-lease=<branch>:<expected tip>`.
 
 ## Standalone build
 
 ```sh
-nix develop -c python3 build.py --icon-from /path/to/HEROESW.EXE
+nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE              # Russian
+nix develop -c python3 build.py --locale en --icon-from /path/to/HEROES.EXE  # English
 ```
 
-The flake fetches the hash-pinned toolchain release (VC4, MASM 6.11, WinG,
-DirectX 1) and supplies Wine and LLVM. `build.py` compiles each unit with its
-retail profile in a fresh directory, builds the vendor import libraries from
-the stubs, compiles resources with `llvm-rc`/`llvm-cvtres` and links with the
-retail library line and object order. The program icon is a retail asset, so
-`--icon-from` extracts it from the user's executable. Without the fixedroot
-view the code is equivalent but not identical to the matching build.
+The flake fetches the hash-pinned Buka toolchain release (VC6 SP5 and the
+vendor SDK files) and supplies Wine and LLVM. `build.py` works as follows:
 
-## Playing the generated tree
+- It compiles each unit with its retail profile in a fresh directory, using a
+  Wine prefix under `build/wineprefix`.
+- It builds the vendor import libraries from the stubs.
+- It compiles resources with `llvm-rc`/`llvm-cvtres`.
+- It links with the retail library line and object order.
 
-```sh
-nix run path:. -- --data "/path/to/HEROES"    # remembered; later: nix run path:.
-```
-
-The flake's app runs `play.py`, a copy of `homm1.graph.play` (see
-[playing the build](play.md)): it builds with `build.py`, taking the icon from the
-`HEROESW.EXE` in `--data`, installs the result in `build/game/game/` beside copies
-of the user's `DATA`, `MAPS` and `GAMES`, maps `--cd` or a stand-in as `D:`
-and starts the game through gamescope in its own Wine prefix. `--dry-run`
-stops before launching. The generated README carries the branch diagram and
-these instructions.
+The program icon is a retail asset, so `--icon-from` extracts it from the
+user's executable. The generated README carries the branch diagram and these
+instructions.

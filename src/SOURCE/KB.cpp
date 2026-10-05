@@ -3105,6 +3105,9 @@ DATA(0x00490f90)
 char gAnimPath[352] = ".\\ANIM\\";
 DATA(0x004910f0)
 char gSoundPath[352] = ".\\SOUND\\";
+// The CD music directory, appended to the registry CD path by PlayMusic.
+DATA(0x00491250)
+char gTracksPath[352] = "\\TRACKS\\";
 DATA(0x004913b0)
 char gGamePath[20] = ".\\GAMES\\";
 DATA(0x004913c4)
@@ -3167,6 +3170,12 @@ float gSpellCastNumMod[21] = {
     0.0f,  1.0f,  1.7f,  2.2f,  2.6f,  2.95f, 3.27f, 3.56f, 3.81f, 4.04f, 4.25f,
     4.45f, 4.64f, 4.83f, 5.01f, 5.19f, 5.36f, 5.53f, 5.68f, 5.82f, 5.96f,
 };
+// Two sixteen-entry byte tables that no retail code reads; the Win95 1.0
+// image has the same bytes in the same place.
+DATA(0x0049190c)
+u8 gUnusedByteTable1[16] = {0, 0, 2, 9, 4, 17, 10, 13, 6, 8, 16, 12, 11, 15, 14, 18};
+DATA(0x0049191c)
+u8 gUnusedByteTable2[16] = {4, 2, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1};
 DATA(0x0049192c)
 i16 gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -4093,14 +4102,11 @@ char* gTownCommand[22] = {
     localization::Tr("table.gTownCommand.18"), localization::Tr("table.gTownCommand.19"),
     localization::Tr("table.gTownCommand.20"), localization::Tr("table.gTownCommand.21"),
 };
-DATA(0x004939f0)
+DATA(0x00492f3c)
 char* gGameTypeHelp[5] = {
-    "Play a single, standard game against computer opponents.",
-    "Play the campaign game - a series of linked single games.",
-    "Play against other human players, either sitting at the same computer, or linked through a "
-    "network or modem.",
-    "Play a practice game.",
-    "Cancel out of this menu back to the main menu.",
+    localization::Tr("table.gGameTypeHelp.0"), localization::Tr("table.gGameTypeHelp.1"),
+    localization::Tr("table.gGameTypeHelp.2"), localization::Tr("table.gGameTypeHelp.3"),
+    localization::Tr("table.gGameTypeHelp.4"),
 };
 DATA(0x00492f50)
 char* gHeroNames[36][2] = {
@@ -4472,6 +4478,8 @@ DATA(0x004a74cc)
 i32 bSpecialHideCursor;
 DATA(0x004a74ac)
 class searchArray* gpSearchArray;
+DATA(0x004a7b7c)
+i32 gbBlackoutPlayer;
 DATA(0x004a7838)
 char cNetBoxLine[2][60];
 DATA(0x004a7b98)
@@ -4494,8 +4502,6 @@ DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7495)
 i8 gbCombatSurrender;
-DATA(0x004a7b7c)
-i32 gbBlackoutPlayer;
 DATA(0x004a7b80)
 char gMapName[13];
 DATA(0x004a9560)

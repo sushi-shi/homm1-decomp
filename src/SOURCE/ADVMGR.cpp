@@ -6596,6 +6596,9 @@ DATA(0x0048e144)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
 DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
+// No retail code reads this value.
+DATA(0x0048e14c)
+i32 gUnusedAdventureValue = 28;
 DATA(0x004a6728)
 class heroWindow* gAdventurePanel;
 DATA(0x004a65ac)

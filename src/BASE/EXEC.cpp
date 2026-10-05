@@ -1,4 +1,4 @@
-// HoMM1 executive manager scheduling.
+// HoMM1 executive manager scheduling, reconstructed against the retail code.
 
 #include <match.h>
 
@@ -33,20 +33,6 @@ DATA(0x004a16b8)
 char gDialogManagerError3[] = localization::Tr("startup.manager.failed");
 DATA(0x004a16d4)
 char gDialogManagerError4[] = localization::Tr("startup.manager.failed");
-// Retail keeps the manager-list dump texts between the dialog and call-manager
-// errors; HoMM1 code no longer references them.
-DATA(0x004a3d04)
-char gManagerListStart[] = "-----Manager List Start-----";
-DATA(0x004a3d24)
-char gManagerListDivider1[] = "-----";
-DATA(0x004a3d2c)
-char gManagerListHeaderFormat[] = "Head %d   Tail %d";
-DATA(0x004a3d40)
-char gManagerListDivider2[] = "-----";
-DATA(0x004a3d48)
-char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
-DATA(0x004a3d74)
-char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
 DATA(0x004a16f0)
 char gCallManagerError1[] = localization::Tr("startup.manager.failed");
 DATA(0x004a170c)
@@ -99,7 +85,7 @@ void executive::ShutDownSystem(void) {
     gpInputManager->Close();
 }
 
-// Saves twenty manager links per array.
+// Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
 VA(0x00472b98, 0x189)
 i16 executive::DoDialog(baseManager* manager) {
     baseManager* savePrev[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
@@ -214,12 +200,12 @@ void executive::CallManager(baseManager* manager) {
     m_activeManager = saved;
 }
 
-// Event loop.
+// Retail 0x47a5a0 event loop; Buka BASE/EXEC MainLoop correspondence.
 VA(0x00472fb5, 0x16b)
 void executive::MainLoop(void) {
     i8 done = 0;
     tag_message message;
-    i32 unusedMode;
+    i32 unusedMode; // dead local: retail's /Od frame holds its unreferenced slot
     i8 dispatch = 1;
     if (m_managerListHead == NULL)
         return;
@@ -262,6 +248,7 @@ void executive::MainLoop(void) {
     }
 }
 
+// HoMM2 Buka's Terminate has the same body.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473120, 0x18)

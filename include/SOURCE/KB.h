@@ -332,6 +332,7 @@ extern char gGamePath[];
 extern char* gArtifactEvent[];
 extern char gMapPath[];
 extern char gSoundPath[];
+extern char gTracksPath[];
 extern i32 gInDialog;
 extern class palette* gPalette;
 // Main: right-click help for the six adventure panel buttons, the typed

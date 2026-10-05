@@ -1086,12 +1086,25 @@ transmitComplete:
 // The object's .data and .bss, in retail address order.
 DATA(0x0049f048)
 i32 gNetNameIndex = -1;
+// No retail code reads these two values.
+DATA(0x0049f04c)
+i32 gUnusedRemoteValue1 = -1;
+DATA(0x0049f050)
+i32 gUnusedRemoteValue2 = -1;
 DATA(0x0049f054)
 i32 gBaudBits = 8;
 DATA(0x0049f058)
 i32 gLastConfirm = -1;
 DATA(0x0049f05c)
 i32 gLastHeartbeatReceive = 1999999999;
+// Serial-link choices kept from the modem setup; no retail code reads them.
+DATA(0x0049f060)
+i32 gBaudRates[7] = {300, 1200, 2400, 9600, 19200, 38400, 57600};
+DATA(0x0049f07c)
+i32 gComIrqs[7] = {1, 2, 3, 4, 5, 7, 9};
+// No retail code reads this value.
+DATA(0x0049f098)
+i32 gUnusedRemoteValue3 = -1;
 DATA(0x004cc7e8)
 char idstr[8];
 DATA(0x004cc6e8)

@@ -1491,15 +1491,6 @@ rva	name
 0x000a0f0c	_gVolumeLevels
 0x000a0ff8	?gMouseOffset@@3PAHA
 0x000a1004	?gHotSpot@@3PAY01EA
-0x000a10e4	?gAdventureColor@@3PADA
-0x000a10e8	?gAdventureMonochrome@@3PADA
-0x000a10ec	?gAdventureBitmapFormat@@3PADA
-0x000a10fc	?gSpellColor@@3PADA
-0x000a1100	?gSpellMonochrome@@3PADA
-0x000a1104	?gSpellBitmapFormat@@3PADA
-0x000a1114	?gCombatColor@@3PADA
-0x000a1118	?gCombatMonochrome@@3PADA
-0x000a111c	?gCombatBitmapFormat@@3PADA
 0x000a1374	?gDynamicConstruct@@3PADA
 0x000a1388	_gInputCharacterMapCp1251
 0x000a1484	_gIconXAdjust
