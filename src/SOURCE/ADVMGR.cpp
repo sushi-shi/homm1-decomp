@@ -75,24 +75,6 @@ i32 s_drawCovered;
 DATA(0x004a65e8)
 i32 s_drawStoneTile;
 
-// Buka 2.1's unconditional six-button enable/disable broadcast.
-#define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
-    ((message).type = MESSAGE_WIDGET,                                                              \
-     (message).command = (cmd),                                                                    \
-     (message).value = WIDGET_FLAG_ENABLED,                                                        \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST,                                                     \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 1,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 2,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 3,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 4,                                                 \
-     (window)->BroadcastMessage(message),                                                          \
-     (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
-     (window)->BroadcastMessage(message))
-
 // donor PoL RVA 0x00056350; preferred Buka symbol ??0advManager@@QAE@XZ
 // donor Buka TU SOURCE/ADVMGR; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.538995;margin=0.239070;shape=0.344;size=0.950;calls=1.000;alternate=pol20:void advManager::constructor(void)@0x00056350
@@ -2212,15 +2194,14 @@ void advManager::DrawCell(
             heroYOffset6 = 0;
             if (newCell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                 savedShowHero = gpGame->GetHero(newCell0->m_objectMetadata);
-                flagColorValue = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                flagColorValue = savedShowHero->IsEmbarked()
                                      ? PLAYER_COLOR_NONE
                                      : gpGame->m_players[savedShowHero->m_owner].m_color;
-                position = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                               ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
-                               : savedShowHero->m_heroClass;
+                position = savedShowHero->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
+                                                       : savedShowHero->m_heroClass;
                 savedFrame = GetCursorBaseFrame(savedShowHero->m_direction);
                 drawHeroIcon0 = 1;
-                if (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
+                if (savedShowHero->IsEmbarked())
                     heroYOffset6 = HERO_BOAT_Y_OFFSET;
             }
         }
@@ -4201,9 +4182,8 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     m_mapOriginY = heroPtr->m_y - ADVMGR_VIEW_CENTER;
     m_cursorMapX = m_cursorMapY = ADVMGR_VIEW_CENTER;
     m_previousCursorMapX = m_previousCursorMapY = CURSOR_CELL_NONE;
-    m_cursorType = heroPtr->m_eventFlags & HERO_EVENT_EMBARKED
-                       ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
-                       : heroPtr->m_heroClass;
+    m_cursorType =
+        heroPtr->IsEmbarked() ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT) : heroPtr->m_heroClass;
     m_cursorDirection = heroPtr->m_direction;
     m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
     cellPtrItem = GetCell(heroPtr->m_x, heroPtr->m_y);
@@ -5613,8 +5593,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     }
 
     if (gpMouseManager->IsVis()) {
-        drawX = gpMouseManager->m_unknown49 >> CELL_PIXEL_SHIFT;
-        drawY = gpMouseManager->m_unknown4d >> CELL_PIXEL_SHIFT;
+        drawX = gpMouseManager->m_savedLeft >> CELL_PIXEL_SHIFT;
+        drawY = gpMouseManager->m_savedTop >> CELL_PIXEL_SHIFT;
         ++bComboDraw[drawX][drawY];
         ++bComboDraw[drawX + 1][drawY];
         ++bComboDraw[drawX][drawY + 1];
@@ -5987,9 +5967,8 @@ void advManager::DimensionDoor(void) {
         newX = m_mapOriginX + m_lastHoverCell;
         newY = m_mapOriginY + m_hoverCellY;
         targetCell = GetCell(newX, newY);
-        if (((targetHero->m_eventFlags & HERO_EVENT_EMBARKED)
-             && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
-            || (!(targetHero->m_eventFlags & HERO_EVENT_EMBARKED)
+        if ((targetHero->IsEmbarked() && targetCell->m_tileIndex >= MAP_CELL_TILES_PER_TERRAIN)
+            || (!targetHero->IsEmbarked()
                 && targetCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)) {
             NormalDialog(
                 localization::Tr("adventure.dimension_door.failed"),
@@ -6028,13 +6007,15 @@ void advManager::TownGate(void) {
     nearestDistance = TOWN_PORTAL_DISTANCE_LIMIT;
     selectedTown = -1;
     targetHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
-    if (targetHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+    if (targetHero->IsEmbarked()) {
         NormalDialog(localization::Tr("adventure.town_gate.land_required"), NORMAL_DIALOG_TYPE_OK);
         return;
     }
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        dist = abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_x - targetHero->m_x)
-               + abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_y - targetHero->m_y);
+        dist = MANHATTAN_LENGTH(
+            gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_x - targetHero->m_x,
+            gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_y - targetHero->m_y
+        );
         if (dist < nearestDistance) {
             nearestDistance = dist;
             selectedTown = i;
@@ -6732,7 +6713,7 @@ void advManager::SaveAdventureBorder(void) {
 
     m_adventureBorder = static_cast<u8*>(malloc(BORDER_BUFFER_SIZE));
     u8* savedPixels = m_adventureBorder;
-    i8* screen = gpWindowManager->m_screen->m_pixels;
+    u8* screen = gpWindowManager->m_screen->m_pixels;
     i32 row;
     for (row = 0; row < BORDER_EDGE_SIZE; ++row) {
         memcpy(savedPixels, screen, ADVENTURE_VIEWPORT_EXTENT);
@@ -6758,7 +6739,7 @@ void advManager::SaveAdventureBorder(void) {
 VA(0x004114e2, 0x134)
 void advManager::DrawAdventureBorder(void) {
     u8* savedPixels;
-    i8* screen;
+    u8* screen;
     i32 row;
 
     if (m_adventureBorder == NULL)

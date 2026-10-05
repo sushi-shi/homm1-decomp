@@ -1,0 +1,234 @@
+source	rva	function	read_status	helper_candidates	decision	retained_helpers	verdict	max_before	max_after
+src/SOURCE/AI.cpp	0x11660	combatManager::AICheckRetreat	read	artifact-value-sum;opposite-combat-side	Side strength snapshot through IsAlive and a copied hero; artifact sum loop and the 1 - side scaling stay explicit.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x11d88	combatManager::DoCompAI	read	set-next-combat-move;town-building-bit;hex-free;opposite-combat-side	Four action/hex pairs queue a move; castle archer count tests building bits (town domain).	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
+src/SOURCE/AI.cpp	0x125fa	combatManager::GetShooterMask	read	monster-flag-test	Per-side mask loop; flag tests are plain.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x126b1	combatManager::GetFlyerMask	read	monster-flag-test	Same loop shape as the shooter mask, different flags and local order; no shared helper.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x1275a	combatManager::GetWalkerMask	read	monster-flag-test	Same loop family; distinct predicate.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x1281e	combatManager::GetBestArmy	read	none	Strongest masked stack via army::Strength.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x128bd	combatManager::GetWorstArmy	read	none	Weakest masked stack via army::Strength.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x1295c	combatManager::GetClosestArmy	read	none	QuickDistance over hex pixel centres.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x12a5e	combatManager::GetStrength	read	monster-flag-test	Masked live-stack strength sum.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x12b0f	combatManager::AttemptAttack	read	set-next-combat-move;army-target-pair	Two action/hex pairs; target side/index stores and the rear-hex step stay explicit.	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
+src/SOURCE/AI.cpp	0x12c92	combatManager::AttemptAdjacentAttack	read	set-next-combat-move;hex-has-occupant;edge-column;opposite-combat-side	One action/hex pair; its occupant test compares index first, so HEX_HAS_OCCUPANT does not apply.	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
+src/SOURCE/AI.cpp	0x12f0e	combatManager::WalkTowardArmyFront	read	set-next-combat-move;edge-column;army-target-pair	Action store separated from the path walk that computes the hex: explicit. CLEAR_ARMY_TARGET already used.		kept-existing-source	100	100
+src/SOURCE/AI.cpp	0x130f8	combatManager::WalkTowardArmy	read	set-next-combat-move;army-target-pair	Action store separated from the path walk: explicit.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13330	army::army	read	army-target-pair	Uses CLEAR_ARMY_TARGET; spell-icon globals reset stays.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x133ec	army::InitClean	read	none	Resource slot clears.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13450	army::Init	read	none	Creature record copy and hero stat bonus.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13555	army::LoadResources	read	none	Resource name formatting per sample; no repeated helper beyond sprintf/GetSample pairs.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13760	army::FreeResources	read	none	Guarded dispose/null pairs per resource (donor R18 keeps them).		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13834	army::DrawToBuffer	read	edge-column;area-spell-loops	Stand and effect poses repeat the shadow switch; ordered draw policy, kept.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x13fd9	army::Stand	read	none	Pose reset and redraw.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x1402e	army::Wince	read	none	Pose and grid mode.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x14084	army::Walk	read	inclusive-region;extent-clamp;extent-reset;rear-hex-offset	Screen update is UPDATE_INCLUSIVE_REGION; clamps (do/while trial 95.62%) and the truthiness rear-hex offsets stay explicit.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100
+src/SOURCE/ARMY.cpp	0x14854	army::SpecialAttack	read	attack-message;rear-hex-offset;hex-index	Missile flight and wall test; compare-form rear column offset and the message stay explicit.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x154c8	army::DoHydraAttack	read	area-spell-loops;attack-message;army-target-pair	Twin direction loops and the chained target clear stay explicit.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x15c2b	army::DirDoAttack	read	none	Direction store and DoAttack.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x15c4d	army::DoAttack	read	creature-display-name;hex-occupied;army-ignores-spells;dwarf-resistance;attack-message	Genie message uses CREATURE_DISPLAY_NAME; effect-first immunity tests and the occupied-cell tests stay explicit.	CREATURE_DISPLAY_NAME	retained-exact	100	100
+src/SOURCE/ARMY.cpp	0x16cdf	army::ResetPath	read	none	Path flag clear loop.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x16d1c	army::WalkTo(void)	read	none	Forwarder to WalkTo(hex).		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x16d38	army::WalkTo	read	army-target-pair	Chained index-first target clear, not CLEAR_ARMY_TARGET.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x16e1e	army::AttackTo(void)	read	none	Forwarder to AttackTo(hex).		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x16e3a	army::AttackTo	read	none	Path walk and attack.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x16fdc	army::CheckLuck	read	none	Luck roll, sample and message.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x1717c	army::DamageEnemy	read	none	Damage roll formula; clamps are value policy.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x17391	army::Damage	read	current-army	Facing from the current army read inline; kept.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x174f1	army::PowEffect	read	spell-icon-cache;rear-hex-offset	Icon cache reload and truthiness rear hex stay explicit.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x17d6f	army::Strength	read	stack-fight-value	The out-of-line stack strength.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x17d94	army::SpellEffect	read	spell-icon-cache	Icon cache reload by id stays explicit.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x17eaf	army::CancelSpell	read	none	Spell undo switch.		kept-existing-source	100	100
+src/SOURCE/ARMY.cpp	0x17f49	army::GoBerserk	read	set-next-combat-move;army-target-pair	Three action/hex pairs; the ValidAttack-separated pair stays explicit.	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
+src/SOURCE/ARMY.cpp	0x1811f	army::MoveAttack	read	hex-has-occupant;army-target-pair;rear-hex-offset	Target cell test is HEX_HAS_OCCUPANT; CLEAR_ARMY_TARGET already used.	HEX_HAS_OCCUPANT	retained-exact	100	100
+src/SOURCE/ARMYGRP.cpp	0x184b0	armyGroup::armyGroup	read	none	Uses CLEAR_ARMY_GROUP.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x184e1	armyGroup::View	read	none	Empty.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x184ee	armyGroup::GetMorale	read	town-building-bit	Artifact morale adds and clamp; tavern bit test is town domain.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x18609	armyGroup::Dismiss	read	army-group-dismiss	The slot clear itself.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x1862f	armyGroup::IsMember	read	none	Slot search.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x18676	armyGroup::IsHomogeneous	read	none	Race census.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x187b4	armyGroup::CanJoin	read	none	Two IsMember calls.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x187ef	armyGroup::GetNumArmies	read	none	Occupied slot count.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x18841	armyGroup::Add	read	none	Slot search and add.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x1893f	armyGroup::Swap	read	none	Two swaps through one temporary.		kept-existing-source	100	100
+src/SOURCE/ARMYGRP.cpp	0x189b6	armyGroup::DamageGroup	read	none	Per-creature kill roll.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x18b30	combatManager::combatManager	read	none	Chained field initialization.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x18cbb	combatManager::CombineGroups	read	none	Add/Dismiss calls already named.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x18dd3	combatManager::SetupCombat	read	town-building-bit	Per-side setup; castle bit test is town domain.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x19118	combatManager::Open	read	none	Ordered open sequence.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x19519	combatManager::Close	read	none	Survivor census stays (donor H91).		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1972a	combatManager::UpdateArmyGroup	read	army-group-dismiss	Open-coded Dismiss stays (donor H71).		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x19865	combatManager::GenerateMap	read	clear-hex-occupant;hex-index	Grid initialization stores five cell fields; not CLEAR_HEX_OCCUPANT.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x19ffc	combatManager::GetBackgroundName	read	trigger-object	Terrain/background table switch.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a123	combatManager::MoreTreesNear	read	none	Neighbourhood tileset census.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a2f8	combatManager::LoadIcons	read	none	Icon loads.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a4bc	combatManager::FreeIcons	read	none	Icon disposes.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a528	combatManager::LoadArmies	read	none	Per-side Init/LoadResources.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a787	combatManager::FreeArmies	read	none	Resource frees.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a842	combatManager::NoShowCombatLog	read	none	Empty.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a84f	combatManager::GetGridIndex	read	hex-index	Pixel-to-hex arithmetic.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1a8f6	combatManager::CheckApplyGoodMorale	read	creature-display-name	Separate-format singular/plural sprintfs stay (donor H38).		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1aa9b	combatManager::CheckApplyBadMorale	read	creature-display-name	Separate-format singular/plural sprintfs stay.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1ac0e	combatManager::GetNextArmy	read	monster-flag-test	Turn order scan.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1ade7	combatManager::IsWinner	read	opposite-combat-side	1 - side and side ^= 1 stay explicit.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1ae9c	combatManager::CatAttack	read	inclusive-region;extent-clamp;hex-index	Three screen updates are UPDATE_INCLUSIVE_REGION; clamps stay.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100
+src/SOURCE/CMBTMGR.cpp	0x1bb8e	combatManager::RegenerateField	read	none	Rebuild sequence.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1bbd1	combatManager::KeepAttack	read	town-building-bit;rear-hex-offset;stack-fight-value	Uses CREATURE_DISPLAY_NAME/UPDATE_INCLUSIVE_REGION already; building bits are town domain.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c6b4	combatManager::ExperienceValueOfStack	read	none	Loss value sum.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c7a0	combatManager::ResetHitByCreature	read	none	Flag clear loop.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c7ff	ValidHex	read	none	Range test function.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c826	combatManager::SaveCombatBorder	read	none	Border copy.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c87d	combatManager::DrawCombatBorder	read	none	Border restore.		kept-existing-source	100	100
+src/SOURCE/CMBTMGR.cpp	0x1c900	??_H@YGXPAXIHP6EX0@Z@Z	read	none	Compiler-generated vector constructor iterator.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1d460	combatManager::Main	read	current-army	Remote action copy and dispatch.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1d6dc	combatManager::ValidHexToStandOn	read	hex-has-occupant;edge-column;hex-free	Current-stack test is HEX_HAS_OCCUPANT; edge and obstacle tests stay.	HEX_HAS_OCCUPANT	retained-exact	100	100
+src/SOURCE/COMMAND.cpp	0x1d783	combatManager::SetCombatDirections	read	hex-has-occupant;army-target-pair	Four target-occupant tests are HEX_HAS_OCCUPANT; save/restore of the target stays.	HEX_HAS_OCCUPANT	retained-exact	100	100
+src/SOURCE/COMMAND.cpp	0x1de87	combatManager::CheckSetMouseDirection	read	hex-has-occupant	Rear-hex target test is HEX_HAS_OCCUPANT.	HEX_HAS_OCCUPANT	retained-exact	100	100
+src/SOURCE/COMMAND.cpp	0x1e3eb	combatManager::GetPointer	read	none	Command to pointer.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1e408	combatManager::ProcessCombatMsg	read	command-view-triple	Message dispatch.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1e900	combatManager::ResetRound	read	none	Round reset.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1ea22	combatManager::CheckWin	read	opposite-combat-side	Winner selection.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1eb45	combatManager::GetCommand	read	edge-column;army-target-pair	Uses CLEAR_ARMY_TARGET already; target stores stay.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1edae	combatManager::RightClick	read	army-at-hex	Quick view dispatch.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1ef1f	combatManager::DoCommand	read	set-next-combat-move;command-view-triple	The move arm's existing comma expression is SET_NEXT_COMBAT_MOVE; the attack arm stores the hex first and stays.	SET_NEXT_COMBAT_MOVE	retained-exact	100	100
+src/SOURCE/COMMAND.cpp	0x1f209	WinCombatHandler	read	none	Uses FINISH_DIALOG_MESSAGE/SET_WIDGET_MESSAGE already.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1f389	combatManager::ClearWinLoseBottom	read	none	Widget removal loop.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1f491	combatManager::ShowWinLoseArtifact	read	memerror-check	Widget construction (donor R32).		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1f71e	combatManager::ShowDeadArmies	read	memerror-check	Widget construction (donor R32).		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x1fe71	combatManager::DoVictory	read	opposite-combat-side	Victory protocol and result texts.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x205a2	combatManager::DoLoseWindow	read	memerror-check	Lose animation loop.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x20a7e	combatManager::DoSurrender	read	opposite-combat-side	Surrender cost and dialog.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x20cd1	combatManager::CheckChangeSelector	read	current-army	Selector redraw.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x20d8c	combatManager::CheckCastleAttack	read	opposite-combat-side	Catapult/keep turns.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x20e7c	combatManager::CheckGetAIMove	read	none	AI dispatch.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x20ed8	combatManager::GetControl	read	none	Net control decision.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x21003	combatManager::ResetMouse	read	none	Hover replay.		kept-existing-source	100	100
+src/SOURCE/COMMAND.cpp	0x210c0	combatManager::ProcessNextAction	read	current-army;opposite-combat-side	Action execution.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23670	combatManager::UpdateGrid	read	none	Dirty row update.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x236c0	combatManager::UpdateGridForMove	read	none	Direction-aware dirty row.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23707	combatManager::CombatMessage(text)	read	none	Uses SET_WIDGET_MESSAGE already.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x237b4	combatManager::CombatMessage(command)	read	current-army	Help line formatting.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23a3a	combatManager::ResetLimitCreature	read	none	Redraw mask reset.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23acc	combatManager::SetGridMode	read	none	Setter.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23ae5	combatManager::UpdateCombatArea	read	none	Row blit.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23bab	combatManager::DrawBackground	read	hex-index	Ground and wall strip.		kept-existing-source	100	100
+src/SOURCE/DRAWING.cpp	0x23d6c	combatManager::DrawFrame	read	inclusive-region;extent-clamp;extent-reset	Extent screen update is UPDATE_INCLUSIVE_REGION; clamps and box computation stay.	UPDATE_INCLUSIVE_REGION	retained-exact	100	100
+src/SOURCE/FINDPATH.cpp	0x29c60	searchArray::searchArray	read	none	Constructor.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29c70	searchArray::Clear	read	none	Storage clears.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29ca0	searchArray::QuickDistance	read	none	The named approximate metric (donor H39).		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29cf0	TerrainStepCost	read	none	Terrain cost switch.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29d50	CalcTerrainCost	read	none	Cost table lookup.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x29da0	searchArray::FindCombatPath	read	search-node-accessor	Combat path search; m_cells column-0 nodes stay direct.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x2a070	searchArray::PushCombatPoint	read	search-node-accessor	Binary insertion.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x2a1a0	searchArray::PushPoint	read	search-node-accessor	Binary insertion with scratch globals.		kept-existing-source	100	100
+src/SOURCE/FINDPATH.cpp	0x2a440	searchArray::TestPossibleDirections	read	non-shadow-object;trigger-object	Both object-blocking tests are CELL_HAS_NON_SHADOW_OBJECT; water/trigger rules stay.	CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
+src/SOURCE/FLY.cpp	0x2a6a0	army::CanFit	read	hex-has-occupant;edge-column;hex-free	Both current-stack tests are HEX_HAS_OCCUPANT.	HEX_HAS_OCCUPANT	retained-exact	100	100
+src/SOURCE/FLY.cpp	0x2a8a0	army::ValidFlight	read	none	Flight direction search.		kept-existing-source	100	100
+src/SOURCE/FLY.cpp	0x2ac90	army::FlyTo(void)	read	none	Forwarder.		kept-existing-source	100	100
+src/SOURCE/FLY.cpp	0x2acac	army::FlyTo	read	inclusive-region;extent-clamp;extent-reset;rear-hex-offset	Uses UPDATE_INCLUSIVE_REGION already; compare-form rear hex and clamps stay.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b700	hexcell::hexcell	read	clear-hex-occupant	Constructor stores index 0, not the clear contract.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b73f	hexcell::TakeOccupant	read	clear-hex-occupant	Clears side and frame of the source, not the index: explicit.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b781	hexcell::DrawGround	read	none	Icon draw.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b7c1	hexcell::DrawOccupant	read	army-at-hex	Occupant draw.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b832	hexcell::DrawTower	read	hex-row-from-y	Mirrored tower draw.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3b956	hexcell::DrawWall	read	hex-row-from-y	Wall damage frames.		kept-existing-source	100	100
+src/SOURCE/HEXCELL.cpp	0x3bbcf	hexcell::DrawObstacle	read	none	Obstacle state switch.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46450	army::FindPath	read	none	Speed override and rear retry.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x4656e	army::ValidPath	read	none	Flight or path.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x465f4	army::GetMoveMask	read	none	Direction mask loop.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46666	army::GetAttackMask	read	none	Direction mask loop.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46712	army::ValidMove(direction)	read	none	Forwarder.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46735	army::ValidMove	read	hex-free	Front/rear free-cell tests.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x468bc	army::ValidAttack	read	hex-has-occupant;opposite-combat-side	Assigned-target test reads the side once into a local; explicit.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46ad2	army::GetAdjacentCellIndex	read	none	Adjacency with asserts.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46bb6	GetAdjacentCellIndexNoArmy	read	none	Adjacency with asserts.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x46c74	army::ValidRange	read	none	Range direction search.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x470ce	OppositeDirection	read	none	The named hex-direction opposite.		kept-existing-source	100	100
+src/SOURCE/PATH.cpp	0x47103	army::GetBestDirection	read	none	Direction preference tables.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47900	AiPrint	read	none	Forwarder.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47914	AbsAiPrint	read	none	Debug level override.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47951	ResetHeroRVs	read	none	Uses MANHATTAN_LENGTH already.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47aa1	CheckDoMain	read	none	Frame throttling.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47c6b	ShowStatus	read	none	Empty.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47c70	philAI::ShowDebugText	read	none	Debug line.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47cee	philAI::philAI	read	none	Constructor.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47d3f	philAI::DoAllHeroInteractions	read	none	Town interaction loop.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x47dc7	philAI::CheckBuyStuff	read	town-building-bit;player-hero-accessor	Raw castle record and GetTown both evaluated (retail); kept.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x481b6	philAI::GoodAdjacent	read	trigger-object	Adjacent event choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4834a	philAI::CheckReload	read	hero-embarked;search-node-accessor	Embarked argument is IsEmbarked; GetNode trial 90.81%.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x486ce	philAI::CheckBerserk	read	none	Threat census.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x488e4	philAI::DoDimensionDoor	read	none	Teleport search.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x48a6f	philAI::DoAI	read	hero-embarked	Embarked step limit is IsEmbarked.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x4919e	philAI::GetGameAIVars	read	none	Loop.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x491dd	philAI::GetTurnAIVars	read	calendar-turn	Day-first turn number awaits worker A's GAME_DAY_NUMBER.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x497c8	philAI::GetBestBHC	read	town-building-bit	Purchase choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x49d14	philAI::DetermineHeroToMove	read	player-hero-accessor	GetPlayerHero trial 93.39%; raw records stay.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x49dfe	philAI::DetermineTargetPosition	read	hero-embarked;search-node-accessor	Five embarked tests are IsEmbarked.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x4a69b	philAI::ProbableOutcomeOfBattle	read	artifact-value-sum;attack-bonus	Battle odds formula.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4abfa	philAI::GetOddsOfWinning	read	none	Constant.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ac0d	philAI::ValueOfBuyingBuilding	read	town-building-bit	Building valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b114	philAI::GetBestBuilding	read	town-building-bit	Building choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b215	philAI::ValueOfBuyingCreature	read	monster-flag-test	Creature valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b47d	philAI::GetBestCreature	read	town-building-bit	Creature choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b605	philAI::CreaturesToBuy(town)	read	none	Forwarder.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b644	philAI::CreaturesToBuy	read	none	Purchase count.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b68b	philAI::MaxBuyableCreatures	read	none	Affordable count.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b70d	philAI::ValueOfBuyingHero	read	artifact-value-sum	Hero valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b891	philAI::GetBestHero	read	none	Hero choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4b9bd	philAI::LikelihoodOfEnemyAttacking	read	none	Constant outputs.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ba11	philAI::MeanRVOfUnexploredTerritory	read	none	Constant.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ba20	philAI::GetGameAttentionValue	read	none	Attention weights.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4bb6d	philAI::GetTurnAttentionValue	read	none	Attention weights.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4bc33	philAI::RVConversion	read	none	Resource value sum.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4bca4	philAI::TurnsToBuy	read	none	Shortfall turns.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4bd6b	philAI::RVOfPosition	read	hero-embarked;trigger-object	Two embarked tests are IsEmbarked.	hero::IsEmbarked	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x4c217	philAI::StrategicValueOfPosition	read	hero-embarked;manhattan-length;cell-terrain	Embarked test is IsEmbarked; the destination gap is MANHATTAN_LENGTH and its terrain CELL_TERRAIN.	hero::IsEmbarked;MANHATTAN_LENGTH;CELL_TERRAIN	retained-exact	100	100
+src/SOURCE/PHILAI.cpp	0x4ca51	philAI::ValueOfTown	read	town-building-bit	Town valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4cb0a	philAI::TurnCostResource	read	none	Resource costs.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4cc15	philAI::TurnValueOfObelisk	read	none	Obelisk value.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4cd10	philAI::FutureDeflator	read	none	Deflator.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4cd57	philAI::FightValueOfStack	read	town-building-bit;spell-power-read;stack-fight-value	Stack valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4d38f	philAI::EvaluateOneTimeCreaturePurchase	read	stack-fight-value	Purchase valuation.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4d521	philAI::QuickCombat	read	none	Auto-resolve.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4d821	philAI::HeroInteractionAtTown	read	town-building-bit	Uses MANHATTAN_LENGTH already; troop transfer policy.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e236	philAI::ChooseGoldOrExperience	read	none	Choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e275	philAI::ChooseEvaluateBattle	read	none	Battle choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e319	philAI::ChooseToBuyArtifact	read	none	Choice.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e35b	philAI::ChooseToPayRansomOnHero	read	none	Constant.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e36d	philAI::BuildBuilding	read	town-building-bit	Building purchase.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e4ad	philAI::BuildHero	read	none	Hero purchase.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e6d0	philAI::BuildCreature	read	none	Creature purchase.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e77d	philAI::CanBuyBHC	read	none	Purchase check.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4e8bc	philAI::CombatMonsterEvent	read	monster-group-fill	Uses CLEAR_ARMY_GROUP already; count spread stays.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ea2c	philAI::FightEvent	read	none	Ghost site fight.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ec5b	philAI::DamageGroup	read	none	Loss application.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ecb0	philAI::StatChangeValue	read	none	Table difference.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4ecff	philAI::IncrementHourGlass	read	none	Hourglass phase.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4edcb	philAI::TownEvent	read	none	Town capture.		kept-existing-source	100	100
+src/SOURCE/PHILAI.cpp	0x4efb4	philAI::ValueOfEventAtPosition	read	monster-group-fill;attack-bonus;trigger-object	Per-object valuation; uses CLEAR_ARMY_GROUP and MANHATTAN_LENGTH already.		kept-existing-source	100	100
+src/SOURCE/SEARCH.cpp	0x55e50	searchArray::FindNearestObject	read	opposite-map-direction	Walk-back direction is OppositeMapDirection.	OppositeMapDirection	retained-exact	100	100
+src/SOURCE/SEARCH.cpp	0x56080	searchArray::BuildPath	read	opposite-map-direction	Walk-back direction is OppositeMapDirection.	OppositeMapDirection	retained-exact	100	100
+src/SOURCE/SEARCH.cpp	0x56150	searchArray::SeedPosition	read	opposite-map-direction;non-shadow-object	Monster back-push direction is OppositeMapDirection; object test is CELL_HAS_NON_SHADOW_OBJECT.	OppositeMapDirection;CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
+src/SOURCE/SPELLAI.cpp	0x58de0	combatManager::DoSpellAI	read	spell-power-read	Spell choice.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x58f76	combatManager::DetermineEffectOfSpell	read	army-at-hex;opposite-combat-side	Target walk.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x593a3	combatManager::RawEffectSpellInfluence	read	army-ignores-spells	Immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLAI.cpp	0x595e9	combatManager::ClearEffects	read	none	Clear loop.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x5963b	combatManager::NextPos	read	none	Row step.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x59678	combatManager::FirstArmy	read	none	Hex scan.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x596de	combatManager::EffectSpellCure	read	opposite-combat-side	Cure valuation.		kept-existing-source	100	100
+src/SOURCE/SPELLAI.cpp	0x598ea	combatManager::EffectSpellResurrect	read	army-ignores-spells;army-at-hex	Immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLAI.cpp	0x599be	combatManager::EffectSpellDamage	read	army-ignores-spells;hex-occupied;army-at-hex	Negated immunity test is ARMY_IGNORES_SPELLS; index-first occupancy stays.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLS.cpp	0x59e90	combatManager::ViewSpells	read	none	Spell book dispatch.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x59faf	CombatSpecialHandler	read	none	Hover help.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5a0b0	HandleCastSpell	read	none	Target picking.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5a30d	combatManager::ValidSpellTarget	read	army-ignores-spells;edge-column;opposite-combat-side	Anti-magic/dispel/dragon triple stays explicit.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5a572	combatManager::SpellMessage	read	army-at-hex	Message.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5a668	combatManager::CastSpell	read	clear-hex-occupant;hex-has-occupant;dwarf-resistance;spell-power-read	Three teleport clears are CLEAR_HEX_OCCUPANT; negated destination test stays.	CLEAR_HEX_OCCUPANT	retained-exact	100	100
+src/SOURCE/SPELLS.cpp	0x5b2c6	combatManager::DefaultSpell	read	army-at-hex	Two-frame effect.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5b375	combatManager::CastMassSpell	read	spell-icon-cache	Icon cache reload stays.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5b6f8	combatManager::CancelSideSpells	read	none	Cancel loop.		kept-existing-source	100	100
+src/SOURCE/SPELLS.cpp	0x5b7e8	combatManager::Fireball	read	army-ignores-spells;dwarf-resistance;area-spell-loops	Negated immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLS.cpp	0x5bbeb	combatManager::MeteorShower	read	army-ignores-spells;dwarf-resistance;area-spell-loops	Negated immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLS.cpp	0x5bfed	combatManager::ElementalStorm	read	army-ignores-spells;dwarf-resistance	Negated immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/SPELLS.cpp	0x5c2bd	combatManager::Armageddon	read	army-ignores-spells;dwarf-resistance	Negated immunity test is ARMY_IGNORES_SPELLS.	ARMY_IGNORES_SPELLS	retained-exact	100	100
+src/SOURCE/VIEW.cpp	0x65ef0	combatManager::ViewGeneral	read	dim-widget-pair;opposite-combat-side	Widget id block and dim pairs stay (retail frame).		kept-existing-source	100	100
+src/SOURCE/VIEW.cpp	0x663ee	HandleViewGeneral	read	none	Dialog handler.		kept-existing-source	100	100
+src/SOURCE/VIEW.cpp	0x66595	combatManager::ViewArmy	read	none	Window placement.		kept-existing-source	100	100

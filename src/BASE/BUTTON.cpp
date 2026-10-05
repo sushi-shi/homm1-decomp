@@ -80,13 +80,11 @@ button::button(
 
 VA(0x00476e34, 0xfb)
 void button::Read(void) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_normalFrame = gpResourceManager->ReadWord();
     m_pressedFrame = gpResourceManager->ReadWord();

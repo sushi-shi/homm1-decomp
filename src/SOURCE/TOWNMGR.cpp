@@ -637,14 +637,7 @@ i16 townManager::Main(struct tag_message& message) {
                                             == HERO_ARTIFACT_SLOT_COUNT)
                                             NormalDialog(
                                                 localization::Tr("town.spellbook.no_space"),
-                                                NORMAL_DIALOG_TYPE_OK,
-                                                -1,
-                                                -1,
-                                                NORMAL_DIALOG_NO_RESOURCE,
-                                                0,
-                                                NORMAL_DIALOG_NO_RESOURCE,
-                                                0,
-                                                NORMAL_DIALOG_NO_OR_TEXT
+                                                NORMAL_DIALOG_TYPE_OK
                                             );
                                         else {
                                             m_heroWindow0 =
@@ -826,12 +819,7 @@ i16 townManager::Main(struct tag_message& message) {
                                     localization::Tr("town.boat.unavailable"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     0xd0,
-                                    0x28,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    0x28
                                 );
                             gpWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
@@ -1616,8 +1604,7 @@ void townManager::SetupCastle(class heroWindow* window) {
     }
     for (i = 0; i < TOWN_CASTLE_SPECIAL_BUILDING_COUNT; i++) {
         stateFrame = TOWN_CASTLE_FRAME_NONE;
-        if ((m_town->m_buildings & (1 << i))
-            && (i != BUILDING_SLOT_MAGE_GUILD || m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4))
+        if (TOWN_BUILDING_COMPLETE(*m_town, i))
             stateFrame = TOWN_CASTLE_FRAME_BUILT;
         else if (!(m_buildableBuildings & (1 << i)))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_BUILD;
@@ -1869,10 +1856,7 @@ i16 MageGuildHandler(struct tag_message& message) {
                             -1,
                             -1,
                             NORMAL_DIALOG_SPELL,
-                            spellId,
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_OR_TEXT
+                            spellId
                         );
                         return MESSAGE_DISPATCH_CONSUME;
                 }
@@ -2021,8 +2005,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                 case THIEVES_CATEGORY_ARMY_STRENGTH:
                     strengthValue = 0;
                     for (index = 0; index < gpGame->m_players[player].m_heroCount; index++) {
-                        playerHeroData =
-                            gpGame->GetHero(gpGame->m_players[player].m_heroIds[index]);
+                        playerHeroData = gpGame->GetPlayerHero(player, index);
                         strengthValue += gpPhilAI->FightValueOfStack(
                             &playerHeroData->m_army,
                             playerHeroData,
@@ -2032,7 +2015,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                         );
                     }
                     for (index = 0; index < gpGame->m_players[player].m_townCount; index++) {
-                        townItem = gpGame->GetTown(gpGame->m_players[player].m_townIds[index]);
+                        townItem = gpGame->GetPlayerTown(player, index);
                         if (townItem->HasGarrison())
                             strengthValue +=
                                 gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0, 0, 0);

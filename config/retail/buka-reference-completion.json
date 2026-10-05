@@ -2986,7 +2986,7 @@
     },
     {
       "unit": "BASE/RESMGR",
-      "function": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+      "function": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
       "site": "0x6cdbf",
       "target": "0xa132c",
       "size": 51,

@@ -249,9 +249,9 @@ rva	size	symbol	provenance
 0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cddac	4	?gTtlBlts@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cef88	300	?hMouseCursor@@3PAPAUHICON__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cf0b4	300	?hbmpAndMask@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cf30c	300	?hbmpColor@@3PAPAUHBITMAP__@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cef88	300	?hMouseCursor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf0b4	300	?hbmpAndMask@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf30c	300	?hbmpColor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json

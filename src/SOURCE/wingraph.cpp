@@ -134,7 +134,7 @@ VA(0x004667f8, 0xbe)
 void SetupClipper(void) {
     i32 result;
 
-    if (gConfig.gfx[gCurExe].fullScreen == 0) {
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
         result = gDD->CreateClipper(0, &gClipper, NULL);
         if (result != DD_OK)
 #line 99
@@ -164,7 +164,7 @@ void DDInitGraphics(void) {
     if (result != DD_OK)
 #line 122
         DDSD(result, __FILE__, __LINE__);
-    if (gConfig.gfx[gCurExe].fullScreen != 0) {
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0) {
         SetMenuStatus(0);
         result = gDD->SetCooperativeLevel(
             hwndApp,
@@ -194,7 +194,7 @@ void DDInitGraphics(void) {
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
 VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
-BOOL DDAppPaint(void* window, void* paintDC) {
+BOOL DDAppPaint(HWND window, HDC paintDC) {
     i32 srcWidth;
     i32 srcHeight;
     i32 srcTop;
@@ -210,8 +210,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         return TRUE;
     {
         gWinGraphBusy = TRUE;
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        GetClientRect(static_cast<HWND>(window), &gDDClientRect);
+        paintDC = BeginPaint(window, &ps);
+        GetClientRect(window, &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
             ps.rcPaint = gDDClientRect;
         if (ps.rcPaint.right < LOGICAL_SCREEN_WIDTH)
@@ -294,7 +294,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
 #line 276
             DDSD(gDDResult, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gDDSurfaceDesc.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gDDSurfaceDesc.lpSurface);
             gInitWin = gDDSurfaceDesc.lpSurface;
         } else {
             gInitWin = gDDSurfaceDesc.lpSurface;
@@ -302,7 +302,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         if (gDDResult != DD_OK)
 #line 287
             DDSD(gDDResult, __FILE__, __LINE__);
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
         gWinGraphBusy = FALSE;
     }
     return TRUE;
@@ -400,7 +400,7 @@ struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
 #line 435
             DDSD(ddrval, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<i8*>(ddsd.lpSurface);
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(ddsd.lpSurface);
             gInitWin = ddsd.lpSurface;
         } else {
             gInitWin = ddsd.lpSurface;
@@ -615,16 +615,16 @@ void DDSetFullScreenStatus(i32 fullScreen) {
 
     if (gWinGraphBusy != FALSE)
         return;
-    if (gConfig.gfx[gCurExe].fullScreen == fullScreen)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen == fullScreen)
         return;
     {
-        x = gConfig.gfx[gCurExe].x;
-        y = gConfig.gfx[gCurExe].y;
-        width = gConfig.gfx[gCurExe].width;
-        windowHeight = gConfig.gfx[gCurExe].height;
+        x = CURRENT_GRAPHICS_CONFIG.x;
+        y = CURRENT_GRAPHICS_CONFIG.y;
+        width = CURRENT_GRAPHICS_CONFIG.width;
+        windowHeight = CURRENT_GRAPHICS_CONFIG.height;
         gWinGraphBusy = TRUE;
-        gConfig.gfx[gCurExe].fullScreen = fullScreen;
-        if (gConfig.gfx[gCurExe].fullScreen != 0)
+        CURRENT_GRAPHICS_CONFIG.fullScreen = fullScreen;
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
             SetMenuStatus(0);
 
         hres = gDD->SetCooperativeLevel(
@@ -634,7 +634,7 @@ void DDSetFullScreenStatus(i32 fullScreen) {
         if (hres != DD_OK)
 #line 596
             DDSD(hres, __FILE__, __LINE__);
-        if (gConfig.gfx[gCurExe].fullScreen != 0) {
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0) {
             hres = gDD->SetDisplayMode(LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT, WINGRAPH_COLOR_DEPTH);
             if (hres != DD_OK)
 #line 602
@@ -660,14 +660,14 @@ void DDSetFullScreenStatus(i32 fullScreen) {
             DDSD(hres, __FILE__, __LINE__);
         WritePrefs();
         gWinGraphBusy = FALSE;
-        if (gConfig.gfx[gCurExe].fullScreen == 0) {
+        if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
             SetMenuStatus(1);
             ResizeWindow(x, y, width, windowHeight);
         } else {
-            gConfig.gfx[gCurExe].x = x;
-            gConfig.gfx[gCurExe].y = y;
-            gConfig.gfx[gCurExe].width = width;
-            gConfig.gfx[gCurExe].height = windowHeight;
+            CURRENT_GRAPHICS_CONFIG.x = x;
+            CURRENT_GRAPHICS_CONFIG.y = y;
+            CURRENT_GRAPHICS_CONFIG.width = width;
+            CURRENT_GRAPHICS_CONFIG.height = windowHeight;
         }
         SetupClipper();
     }
@@ -727,7 +727,7 @@ void WGInitGraphics() {
         WinGCreateBitmap(hdcImage, reinterpret_cast<LPBITMAPINFO>(&screenImage), &screenImage.bits);
     screenImage.header.biSizeImage = screenImage.header.biWidth * screenImage.header.biHeight;
     screenImage.header.biSizeImage *= Orientation;
-    gbmOldMonoBitmap = static_cast<HBITMAP>(SelectObject(hdcImage, bitmap));
+    gbmOldMonoBitmap = SelectObject(hdcImage, bitmap);
     gInitWin = screenImage.bits;
     PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
@@ -838,7 +838,7 @@ void WGInitializePalette() {
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
 // client-to-game transform uses its pinned 640x480 viewport.
 VA(0x00467f3d, 0x1b7)
-BOOL WGAppPaint(void* window, void* paintDC) {
+BOOL WGAppPaint(HWND window, HDC paintDC) {
     RECT rect;
     i8 unusedChar;
     i32 spareDword;
@@ -852,10 +852,10 @@ BOOL WGAppPaint(void* window, void* paintDC) {
 
     unusedChar = 0;
     if (screenImage.bits != NULL) {
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        SelectPalette(static_cast<HDC>(paintDC), hpalApp, FALSE);
-        RealizePalette(static_cast<HDC>(paintDC));
-        GetClientRect(static_cast<HWND>(window), &rect);
+        paintDC = BeginPaint(window, &ps);
+        SelectPalette(paintDC, hpalApp, FALSE);
+        RealizePalette(paintDC);
+        GetClientRect(window, &rect);
         blitX = 0;
         srcLeft = blitX;
         destTop = 0;
@@ -875,7 +875,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             destTop = ps.rcPaint.top;
             destHeight = ps.rcPaint.bottom - destTop + 1;
             WinGBitBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -886,7 +886,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             );
         } else {
             WinGStretchBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -898,7 +898,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
                 CLIENT_TO_GAME_Y(destHeight)
             );
         }
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
     }
     return TRUE;
 }
@@ -984,7 +984,7 @@ void GetGraphicsInfo(void) {
 VA(0x00468265, 0x46)
 void InitGraphics() {
     ConnectToDLLs();
-    if (gConfig.gfx[gCurExe].fullScreen != 0)
+    if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
     else
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
@@ -996,7 +996,7 @@ void InitGraphics() {
 
 // Buka's graphics dispatcher returns the selected backend's paint result.
 VA(0x004682ab, 0x30)
-BOOL AppPaint(void* window, void* paintDC) {
+BOOL AppPaint(HWND window, HDC paintDC) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGAppPaint(window, paintDC);
     else
@@ -1036,11 +1036,11 @@ VA(0x0046833c, 0x84)
 void SetFullScreenStatus(i32 fullScreen) {
     if (gInSmacker != 0)
         return;
-    if (fullScreen == gConfig.gfx[gCurExe].fullScreen)
+    if (fullScreen == CURRENT_GRAPHICS_CONFIG.fullScreen)
         return;
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING) {
         // HoMM1 has no DirectDraw-attached guard or cursor refresh here.
-        gConfig.gfx[gCurExe].fullScreen = 1;
+        CURRENT_GRAPHICS_CONFIG.fullScreen = 1;
         if (SetGraphicsType(WINGRAPH_GRAPHICS_DIRECT_DRAW) != FALSE)
             DDSetFullScreenStatus(fullScreen);
         return;
@@ -1079,24 +1079,24 @@ BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     if (graphicsType == WINGRAPH_GRAPHICS_DIRECT_DRAW && gDDrawAttached == FALSE)
         return FALSE;
 
-    fullState = gConfig.gfx[gCurExe].fullScreen;
-    x = gConfig.gfx[gCurExe].x;
-    y = gConfig.gfx[gCurExe].y;
-    width = gConfig.gfx[gCurExe].width;
-    hgt = gConfig.gfx[gCurExe].height;
+    fullState = CURRENT_GRAPHICS_CONFIG.fullScreen;
+    x = CURRENT_GRAPHICS_CONFIG.x;
+    y = CURRENT_GRAPHICS_CONFIG.y;
+    width = CURRENT_GRAPHICS_CONFIG.width;
+    hgt = CURRENT_GRAPHICS_CONFIG.height;
     buffer = malloc(LOGICAL_SCREEN_WIDTH * LOGICAL_SCREEN_HEIGHT);
     memcpy(buffer, gpWindowManager->m_screen->m_pixels, LOGICAL_SCREEN_WIDTH * LOGICAL_SCREEN_HEIGHT);
     if (graphicsType == WINGRAPH_GRAPHICS_WING) {
-        gConfig.gfx[gCurExe].fullScreen = 0;
+        CURRENT_GRAPHICS_CONFIG.fullScreen = 0;
         DDCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_WING;
         WGInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     } else {
         WGCleanUpWinGraphics();
         gGraphicsType = WINGRAPH_GRAPHICS_DIRECT_DRAW;
         DDInitGraphics();
-        gpWindowManager->m_screen->m_pixels = static_cast<i8*>(gInitWin);
+        gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gInitWin);
     }
     memcpy(gpWindowManager->m_screen->m_pixels, buffer, LOGICAL_SCREEN_WIDTH * LOGICAL_SCREEN_HEIGHT);
     free(buffer);

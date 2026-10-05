@@ -82,7 +82,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     EventSound(eventKind, cell->m_objectMetadata);
     switch (eventKind) {
         case MAP_OBJECT_COAST:
-            if (visitingHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+            if (visitingHero->IsEmbarked()) {
                 visitingHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 visitingHero->m_remainingMobility = 0;
                 visitingHero->m_direction = m_cursorDirection;
@@ -800,17 +800,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
         case MAP_OBJECT_ARTIFACT:
             if (visitingHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
-                NormalDialog(
-                    localization::Tr("event.artifact.full"),
-                    NORMAL_DIALOG_TYPE_OK,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(localization::Tr("event.artifact.full"), NORMAL_DIALOG_TYPE_OK);
                 break;
             }
             switch (cell->m_objectMetadata) {
@@ -1907,10 +1897,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 -1,
                                 -1,
                                 NORMAL_DIALOG_ARTIFACT,
-                                sourceHero->m_artifacts[j],
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                sourceHero->m_artifacts[j]
                             );
                         }
                         gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = GAME_HERO_NONE;
@@ -2067,7 +2054,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     mapVisited[x][y] |= giCurPlayerBit;
     switch (eventType) {
         case MAP_OBJECT_COAST:
-            if (eventHero->m_eventFlags & HERO_EVENT_EMBARKED) {
+            if (eventHero->IsEmbarked()) {
                 eventHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
                 eventHero->m_remainingMobility = 0;
                 eventHero->m_direction = m_cursorDirection;
@@ -2954,9 +2941,6 @@ void advManager::SendHeroTownData(
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             COMBAT_REMOTE_COMMAND,
-            1,
-            1,
-            REMOTE_MESSAGE_DEFAULT,
             1
         );
         if (!result)
@@ -2971,9 +2955,6 @@ void advManager::SendHeroTownData(
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             COMBAT_REMOTE_COMMAND,
-            1,
-            1,
-            REMOTE_MESSAGE_DEFAULT,
             1
         );
         if (!result)
@@ -3047,16 +3028,7 @@ void advManager::ReceiveHeroTownData(
         memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
     }
 
-    mainResult = TransmitRemoteData(
-        NULL,
-        *remotePlayer,
-        0,
-        COMBAT_REMOTE_CONFIRM_COMMAND,
-        1,
-        1,
-        REMOTE_MESSAGE_DEFAULT,
-        1
-    );
+    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, COMBAT_REMOTE_CONFIRM_COMMAND, 1);
     if (!mainResult)
         ShutDown(NULL);
 
@@ -3066,14 +3038,7 @@ void advManager::ReceiveHeroTownData(
         if (lastPacketTimeNum + COMBAT_REMOTE_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
+                NORMAL_DIALOG_TYPE_YES_NO
             );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTimeNum = KBTickCount();

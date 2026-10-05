@@ -54,8 +54,7 @@ i16 highScoreManager::Open(i16 id) {
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    glTimers[HIGH_SCORE_TIMER_SLOT] =
-        KBTickCount() + static_cast<i32>(HIGH_SCORE_ANIMATION_DELAY);
+    glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
 
@@ -82,17 +81,15 @@ i16 highScoreManager::Main(struct tag_message& message) {
         gShowHighScore = 0;
 
     if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
-        glTimers[HIGH_SCORE_TIMER_SLOT] =
-            KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
+        glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
             m_animationFrames[entry] =
                 (m_animationFrames[entry] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             windowMessage.type = MESSAGE_WIDGET;
             windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
-            windowMessage.value =
-                m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                + m_animationFrames[entry] / static_cast<i32>(HIGH_SCORE_ANIMATION_FRAME_DIVISOR);
+            windowMessage.value = m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                                  + m_animationFrames[entry] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
@@ -198,7 +195,7 @@ void highScoreManager::Update(void) {
         if (noScoreFile)
             highScore.score = HIGH_SCORE_EMPTY;
         else
-            read(inputFile, &highScore, sizeof(highScore));
+            READ_FILE_VALUE(inputFile, highScore);
 
         if (highScore.score == HIGH_SCORE_EMPTY) {
             m_monsterTypes[rank] = 0;

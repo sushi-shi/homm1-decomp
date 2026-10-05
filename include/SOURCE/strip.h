@@ -45,7 +45,7 @@ class icon;
 class strip {
 public:
     heroWindow* m_window;
-    char m_unknown04[0x12];
+    char m_unused04[0x12];
     i16 m_x;
     i16 m_y;
     i8 m_stripType;

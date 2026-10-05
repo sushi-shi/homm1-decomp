@@ -1,0 +1,100 @@
+candidate	verdict	owner	form	sites	decision
+hero-embarked	retained	include/SOURCE/hero.h	existing inline	22	Existing hero::IsEmbarked (Buka 2.1 H22) replaces every embarked-flag query in CURSOR (MoveHero x7, ValidMoveWithEvent x3), HERO (CalcMobility, Deallocate), EVENTS (DoEvent, DoAIEvent) and ADVMGR (DrawCell x3, SetHeroContext, DimensionDoor x2, TownGate). Flag mutations stay explicit. Byte-identical. Control: returning i8 instead of i32 drops 10 functions (1047/1057), so the accessor is int-valued, as Buka 2.1 measured for playerData's accessors.
+current-graphics-config	retained	include/SOURCE/KB.h	macro	60	CURRENT_GRAPHICS_CONFIG = gConfig.gfx[gCurExe] (Buka 2.1 H15, without IDX): a live lvalue re-read at every use. kbwin 37, wingraph 21, miscwin 2, INPUTMGR 1 (KB has none left). Loops over both executable rows (SetGameDefaults) and the registry slots indexed by CONFIG_EXECUTABLE_* stay explicit. Byte-identical.
+encode-scan-code	retained	include/BASE/inputManager.h	macro	37	EncodeScanCode(scanCode) = scanCode << INPUT_KEY_SCAN_SHIFT (Buka 2.1 INPUTMGR.cpp, without IDX): MakeScanCodeTable 35, KB PopNetBox's F1 case label, TEXTNTRY's keypad decode mask. Byte-identical.
+icon-fits-clip	retained	include/BASE/icon.h	macro	1	ICON_FITS_CLIP (Buka 2.1 H11) in ClipIconToBitmap's whole-frame test: left, right, top, bottom. HoMM1's other decoders are assembly; ClippedMonoIconToBitmap tests row runs, not a frame. Byte-identical.
+adventure-button-flags	retained	include/SOURCE/advManager.h	macro	4	SET_ADVENTURE_BUTTON_FLAGS (Buka 2.1 H74) moved from ADVMGR.cpp to its owner header and applied at swapManager::Open/Close (2 new sites; DisableButtons/EnableButtons already used it). The window expression is re-evaluated per broadcast, as SWAPMGR wrote it. Byte-identical.
+free-node-queue	retained	include/SOURCE/comwin.h	macro	5	FREE_NODE_QUEUE(node, anchor) (Buka 2.1 H66): one while statement popping and freeing. com_term 2, nb_term 3. Byte-identical.
+widget-selection	retained	include/BASE/message.h	existing macro	9	Existing IS_WIDGET_SELECTION_NOTIFICATION (Buka 2.1 H78) at SETUP's eight help handlers and KB InitMenuHandler. The right-button modifier test stays at the caller, as in the donor. Byte-identical.
+widget-message	retained	include/BASE/message.h	existing macro	1	Existing SET_WIDGET_MESSAGE (Buka 2.1 H01) at game::ViewSpells' spell-book filter, the only exact type/command/id triple left in these units. Header reuse, id-before-command orders and scattered stores stay explicit. Byte-identical.
+calendar-day	retained	include/SOURCE/game.h	macro	3	GAME_DAY_NUMBER(g) (Buka 2.1 H87): day-first sum with the u16 fields promoted. GAME LoadGame, InitCampaignMap, PerDay. philAI::GetTurnAIVars is helpers worker B's site. Byte-identical.
+town-building-complete	retained	include/SOURCE/town.h	macro	1	TOWN_BUILDING_COMPLETE(t, slot) (Buka 2.1 H73, at the donor's SetupCastle site): mask first, then non-guild or level 4. HoMM1 spells the mask 1 << slot (no BIT). Byte-identical.
+file-value	retained	include/BASE/Misc.h	macro	88	READ_FILE_VALUE/WRITE_FILE_VALUE(fd, value) (Buka 2.1 H70): whole scalar values whose literal sizes equal sizeof (GAME playerData::Read/Write, SaveGame, LoadGame, LoadMap), HISCORE Update, REQUEST's map header, KB's score entry writes. Arrays, the two-byte game prefix, padding, KB's oversized entry reads and RESMGR's _read calls stay explicit. Byte-identical.
+normal-dialog-defaults	retained	include/SOURCE/KB.h	existing defaults	54	NormalDialog's existing trailing defaults (Buka 2.1 H30): 54 calls drop default arguments (GAME 15, SETUP 11, REMOTE 10, HERO 5, EVENTS 3, REQUEST 3, TOWNMGR 3, SWAPMGR 2, RECRUIT 1, kbwin 1). Positioned and resource-bearing calls keep their arguments up to the last non-default. No code change.
+transmit-defaults	retained	include/SOURCE/REMOTE.h	defaults	11	TransmitRemoteData declares allowRetryDialog = 1 and messageType = REMOTE_MESSAGE_DEFAULT (Buka 2.1 H68) and HoMM1's trailing gamePosDestination = 1 (ten of thirteen calls). EVENTS 3, GAME 4, KB 3, REMOTE 1 calls shortened; COMMAND's call is helpers worker B's. No code change.
+player-hero-accessor	retained	include/SOURCE/game.h	existing inline	3	game::GetPlayerHero/GetPlayerTown at the donor's sites: townManager::GetCategoryStats' army strength (hero and town) and CheckEndGame's find-artifact bearer. Byte-identical here; helpers worker B measured philAI::DetermineHeroToMove at 93.39% with the same accessor, so the form is per site.
+non-shadow-object	retained	include/SOURCE/mapCell.h	macro	2	CELL_HAS_NON_SHADOW_OBJECT (Buka 2.1 H25, HoMM1 form without the dummy tileset; shared with helpers worker B) at ValidMove's north and south tests; the whirlpool exception stays at the caller. ADVMGR's draw paths test the flag first and stay explicit. Byte-identical.
+manhattan-length	retained	include/BASE/Misc.h	existing macro	2	Existing MANHATTAN_LENGTH (Buka 2.1 H96) at TownGate's nearest-town distance and NewMap's ultimate-artifact spread. CreateFizzleTables' three-channel sum is not a two-delta length. Byte-identical.
+font-glyph-fold	rejected-trial	src/BASE/FONT.cpp	inline function	6	The CP1251 glyph fold (control/unsupported -> 0x7f, Cyrillic remap, minus ' ') repeats six times in DrawString, DrawBoundedString, LineLength and LineWidth. An inline FontGlyphIndex(i32) drops DrawString to 99.79%: retail expanded no inline. Buka 2.1 also writes the fold open (GetCharacterWidth is out of line there). A statement macro would be byte-neutral but has no donor precedent; the folds stay explicit.
+font-glyph-advance	keep	src/BASE/FONT.cpp	existing source	7	widths[glyph * 6 + 2] + 1: the evidenced manual word view of the glyph directory (reconstruction debt, i16 index for imul 6); a macro would hide the layout instead of typing it.
+widget-screen-origin	keep	BASE widgets	existing source	12	m_owner->m_posX + m_x / m_posY + m_y and the owner-relative update rectangles: Buka 2.1 writes them open in every widget (R01).
+icon-extent	keep	src/BASE/ICON.cpp	existing source	2	DrawToBuffer/DimToBuffer's compute/save/limit extent block: Buka 2.1 keeps it open in CombatClipDrawToBuffer and rejected an extent macro (H41).
+resource-cache-get	keep	src/BASE/RESMGR.cpp	existing source	6	MakeId/Query/addref-or-construct getters: different constructors and id sources (Buka 2.1 R02).
+resource-position-lookup	keep	BASE widgets	existing source	6	Read13/SavePosition/GetX/RestorePosition: Buka 2.1 H04 lower-gain; the lookup forms differ (font, icon, bitmap).
+resource-read-header	keep	BASE resources	existing source	4	PointToFile plus header ReadWord fields: layouts differ per resource.
+memerror-check	keep	all	existing source	many	new + NULL test + MemError stays explicit (Buka 2.1 H31).
+lazy-resource-load	keep	src/SOURCE/ADVMGR.cpp	existing source	40	if-NULL-then-GetIcon/GetTileset loads in advManager::Open: Buka 2.1 ADVMGR writes them open; each slot has its own resource.
+resource-release	keep	ADVMGR	existing source	20	Dispose-and-null with mixed guards (Buka 2.1 H88).
+current-hero	keep	adventure units	existing source	26	gpGame->GetHero(gpCurPlayer->m_currentHero): Buka 2.1 writes the same expression; HoMM1's i8 CurrentHero() is used only where retail shows its byte temporary.
+current-player-select	keep	GAME	existing source	5	gpCurPlayer = &gpGame->m_players[giCurPlayer]; giCurPlayerBit = 1 << giCurPlayer: Buka 2.1 GAME/CURSOR write it open.
+adventure-icon-draw	keep	ADVMGR/CURSOR	existing source	25	Buka 2.1's DRAW_ADVENTURE_ICON hides five viewport arguments; HoMM1's IconToBitmap takes (icon, screen, x, y, frame, mode), so only the screen operand would be hidden.
+mobility-charge	keep	src/SOURCE/CURSOR.cpp	existing source	3	MoveHero's charge-and-stop blocks: Buka 2.1 MoveHero writes the charge open.
+bottom-view-widget-add	keep	src/SOURCE/ADVMGR.cpp	existing source	20	new iconWidget/textWidget, MemError, AddWidget per bottom-view slot: geometry, id and z-order differ (H31, R26).
+quick-view-clamp	keep	ADVMGR	existing source	6	Four-if position clamps (Buka 2.1 H07); a do/while macro adds code (H34, helpers worker B's measurement).
+setup-dialog-run	keep	src/SOURCE/SETUP.cpp	existing source	8	new heroWindow/MemError/DoDialog/delete then a result switch (Buka 2.1 R38).
+quick-view-mode	keep	HERO	existing source	4	quickView == 0 ? OK : QUICK_VIEW (Buka 2.1 H97).
+widget-show-hide	keep	HERO/SWAPMGR	existing source	10	Per-slot hide or frame broadcasts with different widgets (Buka 2.1 R31).
+player-id-list-remove	keep	TOWN/HERO	existing source	2	Find, compact, sentinel and count update (Buka 2.1 H23).
+army-group-dismiss	keep	SWAPMGR/HERO	existing source	4	Type/count clears stay explicit (Buka 2.1 H71).
+cost-resource-search	keep	src/SOURCE/RECRUIT.cpp	existing source	3	First non-gold cost resource: Buka 2.1 RECRUIT keeps the three searches open.
+event-window-args	keep	src/SOURCE/EVENTS.cpp	existing source	many	EventWindow takes eight explicit arguments; Buka 2.1 declares no defaults for it, so its calls are not shortened.
+wait-dialog	keep	src/SOURCE/REMOTE.cpp	existing source	7	Wait dialog then the gbFunctionComplete abort: Buka 2.1 Netbios/dpnetwin write it open.
+ncb-cancel	keep	src/SOURCE/netwin.cpp	existing source	4	NCBCANCEL set-up blocks (Buka 2.1 R28).
+ddsd-check	keep	src/SOURCE/wingraph.cpp	existing source	25	if (result != DD_OK) DDSD(result, __FILE__, __LINE__): Buka 2.1 wingraph writes each check open, and each carries its own #line.
+registry-value	keep	src/SOURCE/kbwin.cpp	existing source	50	RegQueryValueExA/RegSetValueExA per preference: Buka 2.1 has no registry code to compare, and a wrapper would only hide the LPBYTE cast.
+direct-connect-id	keep	src/SOURCE/REMOTE.cpp	existing source	2	Six-digit id generation in Connect and WaitForDirectConnect; two sites.
+saved-humans-digit	keep	src/SOURCE/REQUEST.cpp	existing source	3	extension[2] - '0' human count; no donor helper.
+score-text-widget-id	keep	src/SOURCE/HISCORE.cpp	existing source	8	rank * stride + first + offset widget ids: Buka 2.1 HISCORE writes them open.
+clear-screen	keep	KB/SMACKMGR	existing source	3	Full-screen black fill then blit: Buka 2.1 SMACKMGR writes it open.
+alloc-copy-string	keep	src/SOURCE/KB.cpp	existing source	1	NormalDialog's or-word copy is the only HoMM1 instance and the macro would hide a malloc cast; ADVMGR's format copy is a Buka 2.1 H05 exclusion.
+creature-name-lowercase	keep	TOWNMGR	existing source	5	Plural name copy plus CyrillicToLower is not CREATURE_DISPLAY_NAME (Buka 2.1 H38 exclusion).
+cp1251-upper	keep	GAME/KB	existing source	2	GenerateStandardFileName's staged fold and the callable toupper (Buka 2.1 H69 measured exclusions).
+next-mage-guild-level	keep	KB/TOWNMGR	existing source	2	CanBuy compares level < LAST, Buka 2.1's macro compares level + 1 < COUNT; the build window clamps with an if. No exact counterpart.
+event-ring-advance	keep	src/BASE/INPUTMGR.cpp	existing source	2	Write-index advance with overrun drop in both message handlers: Buka 2.1 writes both open.
+empty-event	keep	src/BASE/INPUTMGR.cpp	existing source	1	Buka 2.1's InitializeEmptyEvent serves GetEvent and PeekEvent; HoMM1 has only GetEvent.
+modem-response-truncate	deferred	include/SOURCE/REMOTE.h	inline function	1	Buka 2.1's TruncateModemResponse names GUIMRresponse[17] = 0; single HoMM1 site, and the response limit constant belongs to the enum domains (helpers worker for enums).
+fight-value-defaults	deferred	include/SOURCE/philAI.h	defaults	4	Buka 2.1 defaults FightValueOfStack's useTown/townId; the declaration belongs to philAI (helpers worker B), so EVENTS/TOWNMGR's trailing zeros wait for it.
+town-building-bit	deferred	include/SOURCE/town.h	typed flag helper	12	m_buildings & (1 << BUILDING_SLOT_X) in KB, ADVMGR, GAME, TOWN, TOWNMGR: Buka 2.1's HAS/BIT are strict-view index casts (IDX), so the typed building-flag form waits for the enums worker.
+trigger-object	deferred	include/SOURCE/mapObjectTypes.h	typed helper	many	(m_triggerType & MAP_TRIGGER_TYPE_MASK): Buka 2.1's MAP_TRIGGER_OBJECT is a strict-view typed conversion; for the enums worker.
+enum-indexed-arrays	deferred	enums worker	H1 enum array wrapper	many	gConfig.gfx[gCurExe], gpGame->m_players[player], m_heroIds/m_townIds and the resource arrays are indexed with i32/i8 values. No IDX-style cast helper is introduced; use the enums worker's typed array wrappers when they land in work/buka-int.
+widget-geometry	keep	include/BASE/widget.h	existing macro	7	Existing READ_WIDGET_GEOMETRY (Buka 2.1 H03) already covers every widget reader; id/kind and trailing fields stay per widget.
+widget-hit-test	keep	include/BASE/widget.h	existing macro	9	Existing WIDGET_CONTAINS_LOCAL_POINT (Buka 2.1 H02) already covers every widget-local hit test; the local coordinate conversion stays at the caller.
+dialog-finish	keep	include/BASE/heroWindowManager.h	existing macro	11	Existing FINISH_DIALOG_MESSAGE (Buka 2.1 H32) already covers the same-order sites; VIEW/TOWNMGR/ADVMGR result stores differ.
+client-to-game	keep	include/BASE/display.h	existing macro	12	Existing CLIENT_TO_GAME_X/Y (Buka 2.1 H13) already covers the input and paint conversions; BlitBitmapToScreen scales the other way (game to client) with -1 edges.
+event-queue-reset	keep	src/BASE/INPUTMGR.cpp	existing inline	3	Existing ResetEventQueue static inline (Buka 2.1) in Open, Close and Flush.
+creature-display-name	keep	include/SOURCE/KB.h	existing macro	0	Existing CREATURE_DISPLAY_NAME: no count-driven singular/plural choice in these units (status texts always use the plural table).
+event-poll	keep	BASE/ADVMGR	existing source	6	Process1WindowsMessage then GetEvent in each modal loop; the dispatch differs (Buka 2.1 R05).
+audio-guarded-node	keep	src/BASE/Audio.cpp	existing source	4	SamplesSuspended guard then FindSampleNode; each function acts differently on the node.
+music-position-save	keep	src/BASE/Audio.cpp	existing source	2	Save-position-then-stop in PlayMusic and StopMusic; StopMusic also nulls the stream.
+palette-cycle-rotate	keep	src/BASE/WINMGR.cpp	existing source	5	Palette segment rotations in CycleColors: Buka 2.1 writes them open, and one HoMM1 rotation uses memcpy for a single entry.
+cursor-mask-bit	keep	src/BASE/MOUSEMGR.cpp	existing source	4	Cursor mask bit sets inside one loop, different planes and conditions.
+aggregate-entry-search	keep	src/BASE/RESMGR.cpp	existing source	2	Directory search in PointToFile and GetFileSize; failure texts and results differ.
+army-stack-widgets	keep	src/SOURCE/ADVMGR.cpp	existing source	2	Quick-view stack icon/size widget pairs in HeroQuickView and TownQuickView with different windows and counters.
+cloud-neighbour-mask	keep	src/SOURCE/ADVMGR.cpp	existing source	1	GetCloudLookup's eight neighbour tests in edge and interior variants.
+radar-owner-color	keep	src/SOURCE/ADVMGR.cpp	existing source	1	Owner colour lookup three times in one switch.
+radar-origin-clamp	keep	src/SOURCE/ADVMGR.cpp	existing source	2	Radar drag origin clamps (Buka 2.1 H07).
+locator-scroll	keep	src/SOURCE/ADVMGR.cpp	existing source	4	Hero/town locator page scrolls mirror each other with different counts.
+knob-drag	keep	src/SOURCE/ADVMGR.cpp	existing source	2	DoHeroKnob/DoTownKnob mirror each other (Buka 2.1 keeps both).
+view-world-flags	keep	src/SOURCE/ADVMGR.cpp	existing source	4	ViewWorld owner-flag draw pairs differ in offsets and sprites.
+scroll-key-arms	keep	src/SOURCE/ADVMGR.cpp	existing source	8	Direction hot-key arms in advManager::Main.
+cheat-reveal	keep	src/SOURCE/ADVMGR.cpp	existing source	1	Per-player SetVisibility in the reveal cheat.
+cursor-frame-select	keep	src/SOURCE/ADVMGR.cpp	existing source	1	Hover cursor frame by trigger type.
+redraw-pair	keep	ADVMGR/CURSOR/EVENTS	existing source	10	CompleteDraw then UpdateScreen stay two calls (Buka 2.1 H59).
+flag-reward-visit	keep	src/SOURCE/EVENTS.cpp	existing source	5	Visited-flag reward arms differ in stat and text.
+ai-event-arms	keep	src/SOURCE/EVENTS.cpp	existing source	1	DoAIEvent's per-object arms.
+castle-frame-select	keep	src/SOURCE/TOWNMGR.cpp	existing source	1	Castle frame by buildable/affordable masks.
+overlay-promote	keep	src/SOURCE/GAME.cpp	existing source	2	Overlay-to-object promotion inside SettleOverlay.
+spell-page-refresh	keep	src/SOURCE/GAME.cpp	existing source	2	UpdateSpellWidgets plus MoveWindow(0, 0) per page arm.
+quick-view-show	keep	several	existing source	9	AddWindow/QuickViewWait/RemoveWindow with varying pointer hide forms.
+executive-return	keep	several managers	existing source	4	MESSAGE_EXECUTIVE/RETURN_RESULT pair; each manager sets its own value.
+mood-icons	keep	src/SOURCE/HERO.cpp	existing source	2	Luck and morale icon blocks in HeroView with different widgets and frames.
+spell-range-scan	keep	src/SOURCE/HERO.cpp	existing source	2	Combat/adventure halves of UseSpell and AddSpell.
+experience-growth	keep	src/SOURCE/HERO.cpp	existing source	2	Growth beyond the table in GetExperience and GetLevel (Buka 2.1 keeps both).
+temporary-event-bonus	keep	src/SOURCE/HERO.cpp	existing source	7	ApplyBattleWinTemps' flag/stat pairs.
+swap-side-arms	keep	src/SOURCE/SWAPMGR.cpp	existing source	2	Left and right arms of swapManager::Main (Buka 2.1 R31).
+type-present-slot	keep	src/SOURCE/TOWN.cpp	existing source	1	Type-only garrison test (Buka 2.1 H21).
+filename-character-filter	keep	src/SOURCE/REQUEST.cpp	existing source	1	Single filename character filter.
+strip-slot-x	keep	src/SOURCE/STRIP.cpp	existing source	4	Slot x coordinate formula in DrawIcons.
+ncb-session-index	keep	src/SOURCE/netwin.cpp	existing source	2	Session lookup by NCB pointer (Buka 2.1 keeps both).
+ncb-call-listen	keep	src/SOURCE/netwin.cpp	existing source	2	nb_call/nb_listen differ only in the command (Buka 2.1 keeps both bodies).
+release-and-null	keep	src/SOURCE/wingraph.cpp	existing source	5	COM Release then NULL per DirectDraw object.

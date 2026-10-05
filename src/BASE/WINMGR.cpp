@@ -113,7 +113,7 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
     m_screen->m_width = LOGICAL_SCREEN_WIDTH;
     m_screen->m_height = LOGICAL_SCREEN_HEIGHT;
-    m_screen->m_pixels = static_cast<i8*>(gInitWin);
+    m_screen->m_pixels = static_cast<u8*>(gInitWin);
     if (m_screen == NULL) {
         Cleanup();
         return WINDOW_MANAGER_OPEN_FAILURE;
@@ -546,14 +546,9 @@ void heroWindowManager::FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 d
         gpResourceManager->PointToFile(gpResourceManager->MakeId(gText));
         gpResourceManager->ReadBlock(ccycleBuf, FIZZLE_CYCLE_TABLE_BYTES);
         for (sourceY = y; sourceY < y + height; sourceY++) {
-            // Byte access is proven by the retail load/shift sequence.
-            savePixel = reinterpret_cast<u8*>(m_fizzleSource->m_pixels) // byte-evidenced
-                        + (sourceY - y) * m_fizzleSource->m_width;
-            workPixel = reinterpret_cast<u8*>(m_fizzleWork->m_pixels) // byte-evidenced
-                        + (sourceY - y) * width;
-            // Byte access is proven by the retail framebuffer stores.
-            screenPixel = reinterpret_cast<u8*>(m_screen->m_pixels) // byte-evidenced
-                          + sourceY * LOGICAL_SCREEN_WIDTH + x;
+            savePixel = m_fizzleSource->m_pixels + (sourceY - y) * m_fizzleSource->m_width;
+            workPixel = m_fizzleWork->m_pixels + (sourceY - y) * width;
+            screenPixel = m_screen->m_pixels + sourceY * LOGICAL_SCREEN_WIDTH + x;
             for (sourceX = x; sourceX < x + width; sourceX++) {
                 *screenPixel = ccycleBuf[static_cast<u16>(
                     *workPixel | (*savePixel << FIZZLE_LOOKUP_HIGH_BYTE_SHIFT)

@@ -473,12 +473,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],
@@ -550,12 +550,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],

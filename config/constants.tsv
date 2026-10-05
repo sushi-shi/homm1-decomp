@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1962
+#floor	1964
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -927,9 +927,7 @@ src/SOURCE/TOWN.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 <
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/ARMYGRP.cpp	*	1	trivial-function-literal	1 bitwise	the unit bit of a 1 << n single-bit mask (town building slots, player bits, flag sets)
 src/SOURCE/GAME.cpp	playerData::Write	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/GAME.cpp	*	*	call-argument	write(int, const void *, unsigned int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	playerData::Read	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
-src/SOURCE/GAME.cpp	*	*	call-argument	read(int, void *, unsigned int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	*	*	call-argument	Scan(i8 *, i8, i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	*	*	call-argument	RandomScan(i8 *, i8, i8, i32) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	game::SaveGame	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
@@ -941,7 +939,6 @@ src/SOURCE/GAME.cpp	*	*	call-argument	InitCampaignMap(i32, i32) argument *	a fla
 src/SOURCE/GAME.cpp	*	*	call-argument	ProcessRandomObjects(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	*	*	call-argument	GetNewHeroId(i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	*	*	call-argument	SetupTown(i8, i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
-src/SOURCE/GAME.cpp	*	*	call-argument	abs(int) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator + Random()	a random roll's range arithmetic or threshold (retail odds)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	comparison-or-bound	operator <= Random()	a random roll's range arithmetic or threshold (retail odds)
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	comparison-or-bound	operator > m_objectIndex	a retail tuning factor, odds, weight, frame or formula constant of this routine

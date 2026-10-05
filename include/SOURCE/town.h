@@ -99,7 +99,7 @@ public:
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;
     i8 m_customized;
-    char m_unknown28[4];
+    char m_unused28[4];
     i8 m_mageGuildSpells[TOWN_MAGE_GUILD_SPELL_COUNT];
     // ClaimTown sets two turns for a town taken from no owner, else zero.
     // GetBestBHC logs and compares it zero-extended.
@@ -164,5 +164,11 @@ H1_ENUM_BEGIN(BuildingSlotType)
     // give it to barbarian towns only; no HoMM1 reader tests it.
     BUILDING_SLOT_SPECIAL = 13
 H1_ENUM_END(BuildingSlotType)
+
+// Building slot is built in town t, the mage guild only at its last level
+// (Buka 2.1 town.h): mask first, then the guild level.
+#define TOWN_BUILDING_COMPLETE(t, slot)                                                            \
+    (((t).m_buildings & (1 << (slot)))                                                             \
+     && ((slot) != BUILDING_SLOT_MAGE_GUILD || (t).m_buildState == MAGE_GUILD_STATE_LEVEL_4))
 
 #endif // HOMM1_SOURCE_TOWN_H

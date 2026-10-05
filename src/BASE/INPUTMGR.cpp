@@ -117,7 +117,7 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
                 AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
-                SetFullScreenStatus(1 - gConfig.gfx[gCurExe].fullScreen);
+                SetFullScreenStatus(1 - CURRENT_GRAPHICS_CONFIG.fullScreen);
         }
     }
     return event->type == MESSAGE_NONE;
@@ -409,7 +409,7 @@ void inputManager::AsciiConvert(tag_message& event) {
 VA(0x0046f3cb, 0x46a)
 void inputManager::MakeScanCodeTable(void) {
     for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
-        m_keyState[scanCode] = scanCode << INPUT_KEY_SCAN_SHIFT;
+        m_keyState[scanCode] = EncodeScanCode(scanCode);
     m_keyState[INPUT_SCAN_NONE] = 0;
     m_keyState[INPUT_SCAN_ESCAPE] = INPUT_ASCII_ESCAPE;
     m_keyState[INPUT_SCAN_1] = '1';
@@ -439,7 +439,7 @@ void inputManager::MakeScanCodeTable(void) {
     m_keyState[INPUT_SCAN_LEFT_BRACKET] = '[';
     m_keyState[INPUT_SCAN_RIGHT_BRACKET] = ']';
     m_keyState[INPUT_SCAN_ENTER] = '\n';
-    m_keyState[INPUT_SCAN_CONTROL] = INPUT_SCAN_CONTROL << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_CONTROL] = EncodeScanCode(INPUT_SCAN_CONTROL);
     m_keyState[INPUT_SCAN_A] = 'A';
     m_keyState[INPUT_SCAN_S] = 'S';
     m_keyState[INPUT_SCAN_D] = 'D';
@@ -451,8 +451,8 @@ void inputManager::MakeScanCodeTable(void) {
     m_keyState[INPUT_SCAN_L] = 'L';
     m_keyState[INPUT_SCAN_SEMICOLON] = ';';
     m_keyState[INPUT_SCAN_APOSTROPHE] = '\'';
-    m_keyState[INPUT_SCAN_GRAVE] = INPUT_SCAN_GRAVE << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_LEFT_SHIFT] = INPUT_SCAN_LEFT_SHIFT << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_GRAVE] = EncodeScanCode(INPUT_SCAN_GRAVE);
+    m_keyState[INPUT_SCAN_LEFT_SHIFT] = EncodeScanCode(INPUT_SCAN_LEFT_SHIFT);
     m_keyState[INPUT_SCAN_BACKSLASH] = '\\';
     m_keyState[INPUT_SCAN_Z] = 'Z';
     m_keyState[INPUT_SCAN_X] = 'X';
@@ -464,39 +464,39 @@ void inputManager::MakeScanCodeTable(void) {
     m_keyState[INPUT_SCAN_COMMA] = ',';
     m_keyState[INPUT_SCAN_PERIOD] = '.';
     m_keyState[INPUT_SCAN_SLASH] = '/';
-    m_keyState[INPUT_SCAN_RIGHT_SHIFT] = INPUT_SCAN_RIGHT_SHIFT << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_RIGHT_SHIFT] = EncodeScanCode(INPUT_SCAN_RIGHT_SHIFT);
     m_keyState[INPUT_SCAN_NUMPAD_MULTIPLY] = '*';
-    m_keyState[INPUT_SCAN_ALT] = INPUT_SCAN_ALT << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_ALT] = EncodeScanCode(INPUT_SCAN_ALT);
     m_keyState[INPUT_SCAN_SPACE] = ' ';
-    m_keyState[INPUT_SCAN_CAPS_LOCK] = INPUT_SCAN_CAPS_LOCK << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F1] = INPUT_SCAN_F1 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F2] = INPUT_SCAN_F2 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F3] = INPUT_SCAN_F3 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F4] = INPUT_SCAN_F4 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F5] = INPUT_SCAN_F5 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F6] = INPUT_SCAN_F6 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F7] = INPUT_SCAN_F7 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F8] = INPUT_SCAN_F8 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F9] = INPUT_SCAN_F9 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F10] = INPUT_SCAN_F10 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUM_LOCK] = INPUT_SCAN_NUM_LOCK << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_SCROLL_LOCK] = INPUT_SCAN_SCROLL_LOCK << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_7] = INPUT_SCAN_NUMPAD_7 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_8] = INPUT_SCAN_NUMPAD_8 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_9] = INPUT_SCAN_NUMPAD_9 << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_CAPS_LOCK] = EncodeScanCode(INPUT_SCAN_CAPS_LOCK);
+    m_keyState[INPUT_SCAN_F1] = EncodeScanCode(INPUT_SCAN_F1);
+    m_keyState[INPUT_SCAN_F2] = EncodeScanCode(INPUT_SCAN_F2);
+    m_keyState[INPUT_SCAN_F3] = EncodeScanCode(INPUT_SCAN_F3);
+    m_keyState[INPUT_SCAN_F4] = EncodeScanCode(INPUT_SCAN_F4);
+    m_keyState[INPUT_SCAN_F5] = EncodeScanCode(INPUT_SCAN_F5);
+    m_keyState[INPUT_SCAN_F6] = EncodeScanCode(INPUT_SCAN_F6);
+    m_keyState[INPUT_SCAN_F7] = EncodeScanCode(INPUT_SCAN_F7);
+    m_keyState[INPUT_SCAN_F8] = EncodeScanCode(INPUT_SCAN_F8);
+    m_keyState[INPUT_SCAN_F9] = EncodeScanCode(INPUT_SCAN_F9);
+    m_keyState[INPUT_SCAN_F10] = EncodeScanCode(INPUT_SCAN_F10);
+    m_keyState[INPUT_SCAN_NUM_LOCK] = EncodeScanCode(INPUT_SCAN_NUM_LOCK);
+    m_keyState[INPUT_SCAN_SCROLL_LOCK] = EncodeScanCode(INPUT_SCAN_SCROLL_LOCK);
+    m_keyState[INPUT_SCAN_NUMPAD_7] = EncodeScanCode(INPUT_SCAN_NUMPAD_7);
+    m_keyState[INPUT_SCAN_NUMPAD_8] = EncodeScanCode(INPUT_SCAN_NUMPAD_8);
+    m_keyState[INPUT_SCAN_NUMPAD_9] = EncodeScanCode(INPUT_SCAN_NUMPAD_9);
     m_keyState[INPUT_SCAN_NUMPAD_MINUS] = '-';
-    m_keyState[INPUT_SCAN_NUMPAD_4] = INPUT_SCAN_NUMPAD_4 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_5] = INPUT_SCAN_NUMPAD_5 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_6] = INPUT_SCAN_NUMPAD_6 << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_NUMPAD_4] = EncodeScanCode(INPUT_SCAN_NUMPAD_4);
+    m_keyState[INPUT_SCAN_NUMPAD_5] = EncodeScanCode(INPUT_SCAN_NUMPAD_5);
+    m_keyState[INPUT_SCAN_NUMPAD_6] = EncodeScanCode(INPUT_SCAN_NUMPAD_6);
     m_keyState[INPUT_SCAN_NUMPAD_PLUS] = '+';
-    m_keyState[INPUT_SCAN_NUMPAD_1] = INPUT_SCAN_NUMPAD_1 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_2] = INPUT_SCAN_NUMPAD_2 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_3] = INPUT_SCAN_NUMPAD_3 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_0] = INPUT_SCAN_NUMPAD_0 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_NUMPAD_DELETE] = INPUT_SCAN_NUMPAD_DELETE << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_SYSREQ] = INPUT_SCAN_SYSREQ << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_RESERVED_55] = INPUT_SCAN_RESERVED_55 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_ISO_BACKSLASH] = INPUT_SCAN_ISO_BACKSLASH << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F11] = INPUT_SCAN_F11 << INPUT_KEY_SCAN_SHIFT;
-    m_keyState[INPUT_SCAN_F12] = INPUT_SCAN_F12 << INPUT_KEY_SCAN_SHIFT;
+    m_keyState[INPUT_SCAN_NUMPAD_1] = EncodeScanCode(INPUT_SCAN_NUMPAD_1);
+    m_keyState[INPUT_SCAN_NUMPAD_2] = EncodeScanCode(INPUT_SCAN_NUMPAD_2);
+    m_keyState[INPUT_SCAN_NUMPAD_3] = EncodeScanCode(INPUT_SCAN_NUMPAD_3);
+    m_keyState[INPUT_SCAN_NUMPAD_0] = EncodeScanCode(INPUT_SCAN_NUMPAD_0);
+    m_keyState[INPUT_SCAN_NUMPAD_DELETE] = EncodeScanCode(INPUT_SCAN_NUMPAD_DELETE);
+    m_keyState[INPUT_SCAN_SYSREQ] = EncodeScanCode(INPUT_SCAN_SYSREQ);
+    m_keyState[INPUT_SCAN_RESERVED_55] = EncodeScanCode(INPUT_SCAN_RESERVED_55);
+    m_keyState[INPUT_SCAN_ISO_BACKSLASH] = EncodeScanCode(INPUT_SCAN_ISO_BACKSLASH);
+    m_keyState[INPUT_SCAN_F11] = EncodeScanCode(INPUT_SCAN_F11);
+    m_keyState[INPUT_SCAN_F12] = EncodeScanCode(INPUT_SCAN_F12);
 }

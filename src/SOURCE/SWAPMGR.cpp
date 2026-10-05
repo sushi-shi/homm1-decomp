@@ -80,21 +80,11 @@ i16 swapManager::Open(i16 id) {
     message.text = gText;
     message.id = CONTROL_TITLE;
     m_window->BroadcastMessage(message);
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED;
-    message.id = ADVENTURE_CONTROL_NEXT_HERO;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_OVERVIEW;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_END_TURN;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
+    SET_ADVENTURE_BUTTON_FLAGS(
+        message,
+        gpAdvManager->m_adventureWindow,
+        WIDGET_COMMAND_CLEAR_FLAGS
+    );
     Update();
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     KBChangeMenu(hmnuAdv);
@@ -124,21 +114,7 @@ void swapManager::Close(void) {
     delete m_window;
     m_active = 0;
     gpAdvManager->Activate();
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FLAGS;
-    message.value = WIDGET_FLAG_ENABLED;
-    message.id = ADVENTURE_CONTROL_NEXT_HERO;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_CONTINUE_ROUTE;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_OVERVIEW;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_END_TURN;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_ADVENTURE_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
-    message.id = ADVENTURE_CONTROL_GAME_OPTIONS;
-    gpAdvManager->m_adventureWindow->BroadcastMessage(message);
+    SET_ADVENTURE_BUTTON_FLAGS(message, gpAdvManager->m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
 }
 
 VA(0x0045d373, 0x1a2)
@@ -280,14 +256,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
                                     localization::Tr("artifact.trade.forbidden"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             }
@@ -349,14 +318,7 @@ i16 swapManager::Main(struct tag_message& message) {
                                            == ARTIFACT_FIZBIN_OF_MISFORTUNE)) {
                                 NormalDialog(
                                     localization::Tr("artifact.trade.forbidden"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             }

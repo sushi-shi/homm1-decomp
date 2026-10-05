@@ -453,8 +453,7 @@ i16 SetupCampaignGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -474,17 +473,7 @@ i16 SetupCampaignGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(
-                gSetupCampaignGameHelp[helpIndex],
-                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gSetupCampaignGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
     }
     return BaseSetupHandler(message);
 }
@@ -494,8 +483,7 @@ i16 SetupComPortHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -516,29 +504,9 @@ i16 SetupComPortHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gDirectConnect)
-                NormalDialog(
-                    gSetupDCComPortHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupDCComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
             else
-                NormalDialog(
-                    gSetupComPortHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupComPortHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
         }
     }
     return BaseSetupHandler(message);
@@ -549,8 +517,7 @@ i16 SetupBaudHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -571,29 +538,9 @@ i16 SetupBaudHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gDirectConnect)
-                NormalDialog(
-                    gSetupDCBaudHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupDCBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
             else
-                NormalDialog(
-                    gSetupBaudHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupBaudHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
         }
     }
     return BaseSetupHandler(message);
@@ -604,8 +551,7 @@ i16 SetupHotSeatGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -622,17 +568,7 @@ i16 SetupHotSeatGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(
-                gSetupHotSeatGameHelp[helpIndex],
-                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gSetupHotSeatGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
     }
     return BaseSetupHandler(message);
 }
@@ -642,8 +578,7 @@ i16 SetupModemGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -661,29 +596,9 @@ i16 SetupModemGameHandler(tag_message& message) {
         }
         if (helpIndex >= HELP_FIRST) {
             if (gDirectConnect)
-                NormalDialog(
-                    gSetupDCGameHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupDCGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
             else
-                NormalDialog(
-                    gSetupModemGameHelp[helpIndex],
-                    NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gSetupModemGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
         }
     }
     return BaseSetupHandler(message);
@@ -694,8 +609,7 @@ i16 SetupMultiPlayerGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -715,17 +629,7 @@ i16 SetupMultiPlayerGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(
-                gSetupMultiPlayerGameHelp[helpIndex],
-                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gSetupMultiPlayerGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
     }
     return BaseSetupHandler(message);
 }
@@ -735,8 +639,7 @@ i16 SetupNetworkGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -750,17 +653,7 @@ i16 SetupNetworkGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(
-                gSetupNetworkGameHelp[helpIndex],
-                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gSetupNetworkGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
     }
     return BaseSetupHandler(message);
 }
@@ -770,8 +663,7 @@ i16 SetupGameHandler(tag_message& message) {
     i32 helpIndex;
 
     if ((message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        && (message.command == WIDGET_NOTIFY_SELECT
-            || message.command == WIDGET_NOTIFY_RIGHT_CLICK)) {
+        && IS_WIDGET_SELECTION_NOTIFICATION(message.command)) {
         helpIndex = NO_HELP;
         switch (message.id) {
             case CHOICE_ONE:
@@ -788,17 +680,7 @@ i16 SetupGameHandler(tag_message& message) {
                 break;
         }
         if (helpIndex >= HELP_FIRST)
-            NormalDialog(
-                gSetupGameHelp[helpIndex],
-                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gSetupGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
     }
     return BaseSetupHandler(message);
 }

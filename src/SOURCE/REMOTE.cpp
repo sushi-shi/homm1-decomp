@@ -128,17 +128,7 @@ void RemoteMain(i32 gameMode) {
                 WFDCStage = 0;
                 giWaitType = DIALOG_WAIT_DIRECT_CONNECT;
                 strcpy(directConnectMessage, localization::Tr("network.direct.wait"));
-                NormalDialog(
-                    directConnectMessage,
-                    NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(directConnectMessage, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
                 if (!gbFunctionComplete)
                     ShutDown(NULL);
             } else {
@@ -475,32 +465,12 @@ i32 nbnet_init(void) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_GUEST;
             sprintf(gText, localization::Tr("network.guest.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             buffer[0] = gNumNetGuests;
@@ -510,32 +480,12 @@ i32 nbnet_init(void) {
         case REMOTE_GAME_NETWORK_GUEST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_GUEST;
             sprintf(gText, localization::Tr("network.initialize.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             giWaitType = DIALOG_WAIT_NETBIOS_HOST;
             sprintf(gText, localization::Tr("network.host.wait"));
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
             break;
@@ -607,17 +557,7 @@ void GUIModemCommand(char* message, char* command) {
     iModemCommandPos = 0;
     giWaitType = DIALOG_WAIT_MODEM_COMMAND;
     strcpy(cModemCommand, command);
-    NormalDialog(
-        message,
-        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
     if (!gbFunctionComplete)
         ShutDown(NULL);
 }
@@ -664,17 +604,7 @@ i8 GUIModemResponse(char* message, char* response) {
     GUIMRrespptr = 0;
     strcpy(GUIMRresp, response);
     giWaitType = DIALOG_WAIT_MODEM_RESPONSE;
-    NormalDialog(
-        message,
-        NORMAL_DIALOG_TYPE_WAIT_CANCEL,
-        -1,
-        -1,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_RESOURCE,
-        0,
-        NORMAL_DIALOG_NO_OR_TEXT
-    );
+    NormalDialog(message, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
     if (!gbFunctionComplete)
         ShutDown(NULL);
     return 0;
@@ -982,17 +912,7 @@ i32 TransmitRemoteData(
             DelayMilli(1000);
         }
         if (allowRetryDialog && tries == REMOTE_RETRY_COUNT && result == 0) {
-            NormalDialog(
-                localization::Tr("network.send.retry"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 tries = -1;
         }
@@ -1069,17 +989,7 @@ void PollRemote(void) {
         gLastHeartbeatSend = KBTickCount();
     }
     if (KBTickCount() > gLastHeartbeatReceive + 60000 && !gInTimeoutFail) {
-        NormalDialog(
-            localization::Tr("network.peer.wait"),
-            NORMAL_DIALOG_TYPE_YES_NO,
-            -1,
-            -1,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(localization::Tr("network.peer.wait"), NORMAL_DIALOG_TYPE_YES_NO);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             gLastHeartbeatReceive = KBTickCount();
         } else {
@@ -1187,25 +1097,14 @@ i32 TransmitAndWait(
     if (!gRemoteOn || gInNetSetup)
         return 1;
     receivedData = NULL;
-    result =
-        TransmitRemoteData(bytes, destination, length, command, 1, 1, REMOTE_MESSAGE_DEFAULT, 1);
+    result = TransmitRemoteData(bytes, destination, length, command, 1);
     if (result == 0)
         goto transmitComplete;
     clock = KBTickCount();
     complete = 0;
     while (!complete) {
         if (clock + 20000 < KBTickCount()) {
-            NormalDialog(
-                localization::Tr("network.send.retry"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(localization::Tr("network.send.retry"), NORMAL_DIALOG_TYPE_YES_NO);
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 clock = KBTickCount();
             } else {

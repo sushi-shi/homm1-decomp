@@ -57,27 +57,27 @@ void playerData::Write(i32 file) {
     char unused[52];
 
     write(file, m_unknown00, sizeof(m_unknown00));
-    write(file, &m_color, 1);
-    write(file, &m_difficulty, 1);
-    write(file, &m_heroCount, 1);
-    write(file, &m_currentHero, 1);
-    write(file, &m_heroLocatorPage, 1);
+    WRITE_FILE_VALUE(file, m_color);
+    WRITE_FILE_VALUE(file, m_difficulty);
+    WRITE_FILE_VALUE(file, m_heroCount);
+    WRITE_FILE_VALUE(file, m_currentHero);
+    WRITE_FILE_VALUE(file, m_heroLocatorPage);
     write(file, m_heroIds, sizeof(m_heroIds));
     write(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     memset(unused, 0, PLAYER_SAVE_PAD_SIZE);
     write(file, unused, PLAYER_SAVE_PAD_SIZE);
-    write(file, &m_ultimateArtifactHintChance, 1);
-    write(file, &m_ultimateArtifactHintX, 1);
-    write(file, &m_ultimateArtifactHintY, 1);
-    write(file, &m_daysLeft, 1);
-    write(file, &m_townCount, 1);
-    write(file, &m_currentTown, 1);
-    write(file, &m_townLocatorPage, 1);
+    WRITE_FILE_VALUE(file, m_ultimateArtifactHintChance);
+    WRITE_FILE_VALUE(file, m_ultimateArtifactHintX);
+    WRITE_FILE_VALUE(file, m_ultimateArtifactHintY);
+    WRITE_FILE_VALUE(file, m_daysLeft);
+    WRITE_FILE_VALUE(file, m_townCount);
+    WRITE_FILE_VALUE(file, m_currentTown);
+    WRITE_FILE_VALUE(file, m_townLocatorPage);
     write(file, m_townIds, sizeof(m_townIds));
     write(file, m_resources, sizeof(m_resources));
     write(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    write(file, &m_unknown99[1], 1);
-    write(file, &m_unknown99[1], 1);
+    WRITE_FILE_VALUE(file, m_unknown99[1]);
+    WRITE_FILE_VALUE(file, m_unknown99[1]);
     write(file, m_obelisksVisited, sizeof(m_obelisksVisited));
 }
 
@@ -89,26 +89,26 @@ void playerData::Read(i32 file) {
     char unused[52];
 
     read(file, m_unknown00, sizeof(m_unknown00));
-    read(file, &m_color, 1);
-    read(file, &m_difficulty, 1);
-    read(file, &m_heroCount, 1);
-    read(file, &m_currentHero, 1);
-    read(file, &m_heroLocatorPage, 1);
+    READ_FILE_VALUE(file, m_color);
+    READ_FILE_VALUE(file, m_difficulty);
+    READ_FILE_VALUE(file, m_heroCount);
+    READ_FILE_VALUE(file, m_currentHero);
+    READ_FILE_VALUE(file, m_heroLocatorPage);
     read(file, m_heroIds, sizeof(m_heroIds));
     read(file, m_availableHeroIds, sizeof(m_availableHeroIds));
     read(file, unused, PLAYER_SAVE_PAD_SIZE);
-    read(file, &m_ultimateArtifactHintChance, 1);
-    read(file, &m_ultimateArtifactHintX, 1);
-    read(file, &m_ultimateArtifactHintY, 1);
-    read(file, &m_daysLeft, 1);
-    read(file, &m_townCount, 1);
-    read(file, &m_currentTown, 1);
-    read(file, &m_townLocatorPage, 1);
+    READ_FILE_VALUE(file, m_ultimateArtifactHintChance);
+    READ_FILE_VALUE(file, m_ultimateArtifactHintX);
+    READ_FILE_VALUE(file, m_ultimateArtifactHintY);
+    READ_FILE_VALUE(file, m_daysLeft);
+    READ_FILE_VALUE(file, m_townCount);
+    READ_FILE_VALUE(file, m_currentTown);
+    READ_FILE_VALUE(file, m_townLocatorPage);
     read(file, m_townIds, sizeof(m_townIds));
     read(file, m_resources, sizeof(m_resources));
     read(file, m_aiData.m_income, sizeof(m_aiData.m_income));
-    read(file, &m_unknown99[1], 1);
-    read(file, &m_unknown99[1], 1);
+    READ_FILE_VALUE(file, m_unknown99[1]);
+    READ_FILE_VALUE(file, m_unknown99[1]);
     read(file, m_obelisksVisited, sizeof(m_obelisksVisited));
 }
 
@@ -500,29 +500,29 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     outFile = open(savePath, O_WRONLY | O_CREAT | O_TRUNC | O_BINARY, S_IWRITE);
     if (outFile == -1)
         FileError(savePath);
-    write(outFile, &gbIAmGreatest, 1);
+    WRITE_FILE_VALUE(outFile, gbIAmGreatest);
     write(outFile, this, 2);
-    write(outFile, &giMonthType, 1);
-    write(outFile, &giMonthTypeExtra, 1);
-    write(outFile, &giWeekType, 1);
-    write(outFile, &giWeekTypeExtra, 1);
-    write(outFile, &m_campaignType, 4);
-    write(outFile, &m_campaignScenario, 4);
-    write(outFile, &m_campaignDay, 4);
-    write(outFile, &m_campaignScenariosWon, 4);
+    WRITE_FILE_VALUE(outFile, giMonthType);
+    WRITE_FILE_VALUE(outFile, giMonthTypeExtra);
+    WRITE_FILE_VALUE(outFile, giWeekType);
+    WRITE_FILE_VALUE(outFile, giWeekTypeExtra);
+    WRITE_FILE_VALUE(outFile, m_campaignType);
+    WRITE_FILE_VALUE(outFile, m_campaignScenario);
+    WRITE_FILE_VALUE(outFile, m_campaignDay);
+    WRITE_FILE_VALUE(outFile, m_campaignScenariosWon);
     memset(buffer, 0, 0x2c);
     write(outFile, buffer, 0x2c);
     write(outFile, m_mapDescription, sizeof(m_mapDescription));
-    write(outFile, &m_mapSize, 1);
-    write(outFile, &m_mapDifficulty, 1);
+    WRITE_FILE_VALUE(outFile, m_mapSize);
+    WRITE_FILE_VALUE(outFile, m_mapDifficulty);
     write(outFile, m_mapName, sizeof(m_mapName));
     GenerateStandardFileName(m_saveName, buffer);
     write(outFile, buffer, 0x11);
-    write(outFile, &m_difficulty, 1);
-    write(outFile, &m_playerCount, 1);
+    WRITE_FILE_VALUE(outFile, m_difficulty);
+    WRITE_FILE_VALUE(outFile, m_playerCount);
     gSaveCurPlayer = giCurPlayer;
-    write(outFile, &gSaveCurPlayer, 1);
-    write(outFile, &m_deadPlayerCount, 1);
+    WRITE_FILE_VALUE(outFile, gSaveCurPlayer);
+    WRITE_FILE_VALUE(outFile, m_deadPlayerCount);
     write(outFile, m_playerDead, sizeof(m_playerDead));
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
         humans[iFile] = gbHumanPlayer[iFile];
@@ -530,13 +530,13 @@ i16 game::SaveGame(char* filename, i8 generateName) {
             humans[iFile] = 0;
     }
     write(outFile, humans, GAME_PLAYER_COUNT);
-    write(outFile, &m_day, 2);
-    write(outFile, &m_week, 2);
-    write(outFile, &m_month, 2);
+    WRITE_FILE_VALUE(outFile, m_day);
+    WRITE_FILE_VALUE(outFile, m_week);
+    WRITE_FILE_VALUE(outFile, m_month);
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++)
         m_players[iFile].Write(outFile);
     WriteWorldMap(outFile);
-    write(outFile, &m_obeliskCount, 1);
+    WRITE_FILE_VALUE(outFile, m_obeliskCount);
     write(outFile, m_heroRecs, sizeof(m_heroRecs));
     write(outFile, m_availableHeroes, sizeof(m_availableHeroes));
     write(outFile, m_castleRecs, sizeof(m_castleRecs));
@@ -548,9 +548,9 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     write(outFile, m_boats, sizeof(m_boats));
     write(outFile, m_boatSlots, sizeof(m_boatSlots));
     write(outFile, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    write(outFile, &m_ultimateArtifactX, 1);
-    write(outFile, &m_ultimateArtifactY, 1);
-    write(outFile, &m_ultimateArtifactId, 1);
+    WRITE_FILE_VALUE(outFile, m_ultimateArtifactX);
+    WRITE_FILE_VALUE(outFile, m_ultimateArtifactY);
+    WRITE_FILE_VALUE(outFile, m_ultimateArtifactId);
     write(outFile, m_mapSounds, sizeof(m_mapSounds));
     write(outFile, m_mapExtra, sizeof(m_mapExtra));
     write(outFile, mapVisited, sizeof(mapVisited));
@@ -586,28 +586,28 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     if (oldHandle == -1)
         FileError(pathName);
     ClearMapExtra();
-    read(oldHandle, &gbIAmGreatest, 1);
+    READ_FILE_VALUE(oldHandle, gbIAmGreatest);
     read(oldHandle, this, 2);
-    read(oldHandle, &giMonthType, 1);
-    read(oldHandle, &giMonthTypeExtra, 1);
-    read(oldHandle, &giWeekType, 1);
-    read(oldHandle, &giWeekTypeExtra, 1);
-    read(oldHandle, &m_campaignType, 4);
-    read(oldHandle, &m_campaignScenario, 4);
-    read(oldHandle, &m_campaignDay, 4);
-    read(oldHandle, &m_campaignScenariosWon, 4);
+    READ_FILE_VALUE(oldHandle, giMonthType);
+    READ_FILE_VALUE(oldHandle, giMonthTypeExtra);
+    READ_FILE_VALUE(oldHandle, giWeekType);
+    READ_FILE_VALUE(oldHandle, giWeekTypeExtra);
+    READ_FILE_VALUE(oldHandle, m_campaignType);
+    READ_FILE_VALUE(oldHandle, m_campaignScenario);
+    READ_FILE_VALUE(oldHandle, m_campaignDay);
+    READ_FILE_VALUE(oldHandle, m_campaignScenariosWon);
     read(oldHandle, buffer, 0x2c);
     read(oldHandle, m_mapDescription, sizeof(m_mapDescription));
-    read(oldHandle, &m_mapSize, 1);
-    read(oldHandle, &m_mapDifficulty, 1);
+    READ_FILE_VALUE(oldHandle, m_mapSize);
+    READ_FILE_VALUE(oldHandle, m_mapDifficulty);
     read(oldHandle, m_mapName, sizeof(m_mapName));
     read(oldHandle, m_saveName, 0x11);
     sprintf(m_saveName, filename);
-    read(oldHandle, &m_difficulty, 1);
-    read(oldHandle, &m_playerCount, 1);
-    read(oldHandle, &gSaveCurPlayer, 1);
+    READ_FILE_VALUE(oldHandle, m_difficulty);
+    READ_FILE_VALUE(oldHandle, m_playerCount);
+    READ_FILE_VALUE(oldHandle, gSaveCurPlayer);
     giCurPlayer = gSaveCurPlayer;
-    read(oldHandle, &m_deadPlayerCount, 1);
+    READ_FILE_VALUE(oldHandle, m_deadPlayerCount);
     read(oldHandle, m_playerDead, sizeof(m_playerDead));
     read(oldHandle, theHumans, GAME_PLAYER_COUNT);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
@@ -628,15 +628,14 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
             gbThisNetHumanPlayer[ix] = 0;
         }
     }
-    read(oldHandle, &m_day, 2);
-    read(oldHandle, &m_week, 2);
-    read(oldHandle, &m_month, 2);
-    giCurTurn =
-        m_day + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + (m_month - 1) * CALENDAR_DAYS_PER_MONTH;
+    READ_FILE_VALUE(oldHandle, m_day);
+    READ_FILE_VALUE(oldHandle, m_week);
+    READ_FILE_VALUE(oldHandle, m_month);
+    giCurTurn = GAME_DAY_NUMBER(*this);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++)
         m_players[ix].Read(oldHandle);
     ReadWorldMap(oldHandle);
-    read(oldHandle, &m_obeliskCount, 1);
+    READ_FILE_VALUE(oldHandle, m_obeliskCount);
     read(oldHandle, m_heroRecs, sizeof(m_heroRecs));
     if (origData) {
         for (ix = 0; ix < GAME_HERO_COUNT; ix++) {
@@ -654,9 +653,9 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     read(oldHandle, m_boats, sizeof(m_boats));
     read(oldHandle, m_boatSlots, sizeof(m_boatSlots));
     read(oldHandle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    read(oldHandle, &m_ultimateArtifactX, 1);
-    read(oldHandle, &m_ultimateArtifactY, 1);
-    read(oldHandle, &m_ultimateArtifactId, 1);
+    READ_FILE_VALUE(oldHandle, m_ultimateArtifactX);
+    READ_FILE_VALUE(oldHandle, m_ultimateArtifactY);
+    READ_FILE_VALUE(oldHandle, m_ultimateArtifactId);
     if (origData) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
@@ -745,17 +744,7 @@ i16 NewGameHandler(tag_message& message) {
                         break;
                 }
                 if (helpIndex >= 0)
-                    NormalDialog(
-                        gNewGameHelp[helpIndex],
-                        NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                        -1,
-                        -1,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_RESOURCE,
-                        0,
-                        NORMAL_DIALOG_NO_OR_TEXT
-                    );
+                    NormalDialog(gNewGameHelp[helpIndex], NORMAL_DIALOG_TYPE_QUICK_VIEW);
             }
         } else {
             switch (message.command) {
@@ -772,12 +761,7 @@ i16 NewGameHandler(tag_message& message) {
                                     localization::Tr("game.opponent.required"),
                                     NORMAL_DIALOG_TYPE_OK,
                                     0xb1,
-                                    0x3c,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    0x3c
                                 );
                                 break;
                             } else {
@@ -1116,17 +1100,7 @@ void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
     gpWindowManager->DoDialog(window, EventWindowHandler, 0);
     delete window;
     if (gpWindowManager->m_dialogResult == CAMPAIGN_INFO_RESTART) {
-        NormalDialog(
-            localization::Tr("campaign.restart.confirm"),
-            NORMAL_DIALOG_TYPE_YES_NO,
-            -1,
-            -1,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(localization::Tr("campaign.restart.confirm"), NORMAL_DIALOG_TYPE_YES_NO);
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
@@ -1178,8 +1152,7 @@ void game::InitCampaignMap(i32 scenario, i32) {
     m_week =
         (m_campaignDay - 1 - (m_month - 1) * CALENDAR_DAYS_PER_MONTH) / CALENDAR_DAYS_PER_WEEK + 1;
     m_day = (m_campaignDay - 1) % CALENDAR_DAYS_PER_WEEK + 1;
-    giCurTurn =
-        m_day + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + (m_month - 1) * CALENDAR_DAYS_PER_MONTH;
+    giCurTurn = GAME_DAY_NUMBER(*this);
     gbIAmGreatest = gCampaignScenarios[scenario].kingOfTheHill;
     giNumHumanPlayers = 0;
     m_players[0].m_difficulty = HUMAN_HANDICAP_EXPERT;
@@ -1357,8 +1330,10 @@ void game::NewMap(char* mapName) {
            || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
            || (giNumHumanPlayers == 1
-               && ultimateSpread >= abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
-                                        + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y))) {
+               && ultimateSpread >= MANHATTAN_LENGTH(
+                      i - m_heroRecs[m_players[0].m_heroIds[0]].m_x,
+                      j - m_heroRecs[m_players[0].m_heroIds[0]].m_y
+                  ))) {
         ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
         i = Random(9, 62);
         j = Random(9, 62);
@@ -1586,7 +1561,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
-                    if (!static_cast<u8>(nextCell->m_objectMetadata)) {
+                    if (!nextCell->m_objectMetadata) {
                         nextCell->m_objectMetadata = GetRandomNumTroops(nextCell->m_objectIndex);
                         if (Random(0, 99) <= 25 && nextCell->m_objectIndex != CREATURE_GHOST)
                             nextCell->m_objectMetadata |= MONSTER_WILLING_FLAG;
@@ -1596,7 +1571,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = nextCell->m_objectIndex;
                     if (nextCell->m_objectIndex > 4)
                         nextCell->m_objectMetadata -= RESOURCE_PILE_OBJECT_BASE;
-                    switch (static_cast<u8>(nextCell->m_objectMetadata)) {
+                    switch (nextCell->m_objectMetadata) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
                             nextCell->m_objectMetadata = Random(8, 16);
@@ -1669,10 +1644,8 @@ void game::RandomizeEvents(void) {
                     id = GetTownId(x, y);
                     for (j = 0; j < TOWN_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-                            if (!static_cast<u8>(
-                                    m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
-                                        .m_objectMetadata
-                                ))
+                            if (!m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
+                                     .m_objectMetadata)
                                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
                                     .m_objectMetadata = id;
                         }
@@ -1685,7 +1658,7 @@ void game::RandomizeEvents(void) {
                     id = GetMineId(x, y);
                     for (j = 0; j < MINE_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
-                            if (!static_cast<u8>(m_map[x + i][y - j].m_objectMetadata)
+                            if (!m_map[x + i][y - j].m_objectMetadata
                                 || (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                        == (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
                                 m_map[x + i][y - j].m_objectMetadata = id;
@@ -1813,20 +1786,20 @@ i16 game::LoadMap(char* filename) {
     handle = open(gText, O_BINARY);
     if (handle == -1)
         FileError(gText);
-    read(handle, &theVersion, 2);
+    READ_FILE_VALUE(handle, theVersion);
     if (theVersion == MAP_HEADER_ID) {
         msg = malloc(sizeof(SMapHeader));
         read(handle, msg, sizeof(SMapHeader) - sizeof(theVersion));
-        read(handle, &theVersion, 2);
+        READ_FILE_VALUE(handle, theVersion);
         free(msg);
     }
-    read(handle, &width, 2);
-    read(handle, &height, 2);
+    READ_FILE_VALUE(handle, width);
+    READ_FILE_VALUE(handle, height);
     ReadWorldMap(handle);
     for (i = 0; i < GAME_TOWN_COUNT; i++) {
-        read(handle, &x, 1);
-        read(handle, &y, 1);
-        read(handle, &type, 1);
+        READ_FILE_VALUE(handle, x);
+        READ_FILE_VALUE(handle, y);
+        READ_FILE_VALUE(handle, type);
         if (x >= 0) {
             m_castleRecs[i].m_x = x;
             m_castleRecs[i].m_y = y;
@@ -1840,9 +1813,9 @@ i16 game::LoadMap(char* filename) {
         }
     }
     for (i = 0; i < GAME_MINE_COUNT; i++) {
-        read(handle, &x, 1);
-        read(handle, &y, 1);
-        read(handle, &type, 1);
+        READ_FILE_VALUE(handle, x);
+        READ_FILE_VALUE(handle, y);
+        READ_FILE_VALUE(handle, type);
         if (x >= 0) {
             m_mines[i].x = x;
             m_mines[i].y = y;
@@ -1850,12 +1823,12 @@ i16 game::LoadMap(char* filename) {
         }
     }
     read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
-    read(handle, &m_obeliskCount, 1);
+    READ_FILE_VALUE(handle, m_obeliskCount);
     read(handle, m_mapSounds, sizeof(m_mapSounds));
     if (theVersion >= MAP_EXTRA_VERSION) {
-        read(handle, &iMaxMapExtra, 4);
+        READ_FILE_VALUE(handle, iMaxMapExtra);
         for (i = 1; i < iMaxMapExtra; i++) {
-            read(handle, &pwSizeOfMapExtra[i], 4);
+            READ_FILE_VALUE(handle, pwSizeOfMapExtra[i]);
             ppMapExtra[i] = malloc(pwSizeOfMapExtra[i]);
             read(handle, ppMapExtra[i], pwSizeOfMapExtra[i]);
         }
@@ -1969,17 +1942,7 @@ i8 game::ViewSpells(
     i16 winX[3] = {177, 97, 177};
     i16 winY[3] = {100, 47, 100};
     if (!spellHero->GetNumSpells(spellType)) {
-        NormalDialog(
-            localization::Tr("spell.none.available"),
-            NORMAL_DIALOG_TYPE_OK,
-            -1,
-            -1,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
-        );
+        NormalDialog(localization::Tr("spell.none.available"), NORMAL_DIALOG_TYPE_OK);
     } else {
         m_viewSpellsCallback = callback;
         m_viewSpellsReadOnly = readOnly;
@@ -1996,10 +1959,12 @@ i8 game::ViewSpells(
                 MemError();
         }
         if (spellType != SPELL_TYPE_ALL) {
-            msg.type = MESSAGE_WIDGET;
-            msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            msg.id = spellType == SPELL_TYPE_COMBAT ? SPELL_BOOK_ADVENTURE_SPELLS
-                                                    : SPELL_BOOK_COMBAT_SPELLS;
+            SET_WIDGET_MESSAGE(
+                msg,
+                WIDGET_COMMAND_CLEAR_FLAGS,
+                spellType == SPELL_TYPE_COMBAT ? SPELL_BOOK_ADVENTURE_SPELLS
+                                               : SPELL_BOOK_COMBAT_SPELLS
+            );
             msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
             m_viewSpellsWindow->BroadcastMessage(msg);
         }
@@ -2098,62 +2063,31 @@ i16 ViewSpellsHandler(tag_message& message) {
                                 -1,
                                 -1,
                                 NORMAL_DIALOG_SPELL,
-                                spell,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                spell
                             );
                             break;
                         case SPELL_BOOK_PREVIOUS_PAGE:
                             NormalDialog(
                                 gSpellHelp[SPELL_HELP_PREVIOUS_PAGE],
-                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW
                             );
                             break;
                         case SPELL_BOOK_NEXT_PAGE:
                             NormalDialog(
                                 gSpellHelp[SPELL_HELP_NEXT_PAGE],
-                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW
                             );
                             break;
                         case SPELL_BOOK_ADVENTURE_SPELLS:
                             NormalDialog(
                                 gSpellHelp[SPELL_HELP_ADVENTURE_SPELLS],
-                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW
                             );
                             break;
                         case SPELL_BOOK_COMBAT_SPELLS:
                             NormalDialog(
                                 gSpellHelp[SPELL_HELP_COMBAT_SPELLS],
-                                NORMAL_DIALOG_TYPE_QUICK_VIEW,
-                                -1,
-                                -1,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_RESOURCE,
-                                0,
-                                NORMAL_DIALOG_NO_OR_TEXT
+                                NORMAL_DIALOG_TYPE_QUICK_VIEW
                             );
                             break;
                     }
@@ -2173,10 +2107,7 @@ i16 ViewSpellsHandler(tag_message& message) {
                                     -1,
                                     -1,
                                     NORMAL_DIALOG_SPELL,
-                                    spell,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    spell
                                 );
                                 return MESSAGE_DISPATCH_CONSUME;
                             }
@@ -2414,7 +2345,7 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfoObj->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<u8>(monsterInfoObj->stats.hitPoints));
+    sprintf(gText, "\n%s%d", gArmyStatText[4], monsterInfoObj->stats.hitPoints);
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfoObj->stats.speed]);
     strcat(statText, gText);
@@ -2498,12 +2429,7 @@ i16 ViewArmyHandler(tag_message& message) {
                             localization::Tr("army.dismiss.confirm"),
                             NORMAL_DIALOG_TYPE_YES_NO,
                             0xb1,
-                            0x36,
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_RESOURCE,
-                            0,
-                            NORMAL_DIALOG_NO_OR_TEXT
+                            0x36
                         );
                         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                             gbDismissArmy = 1;
@@ -3048,8 +2974,7 @@ void game::PerDay(void) {
         }
     }
     m_day++;
-    giCurTurn =
-        m_day + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + (m_month - 1) * CALENDAR_DAYS_PER_MONTH;
+    giCurTurn = GAME_DAY_NUMBER(*this);
     if (m_day > CALENDAR_DAYS_PER_WEEK) {
         m_day = 1;
         PerWeek();
@@ -3122,46 +3047,38 @@ void game::PerWeek(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        != WEEKLY_WATER_WHEEL_EMPTY)
+                    if (m_map[posX][posY].m_objectMetadata != WEEKLY_WATER_WHEEL_EMPTY)
                         m_map[posX][posY].m_objectMetadata = WEEKLY_WATER_WHEEL_GOLD;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(3, 6);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(1, 3);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(3, 6);
                     break;
                 default:
@@ -4041,10 +3958,7 @@ void game::WaitForPlayer(char* text, i32 player) {
             0x61,
             -1,
             NORMAL_DIALOG_CREST,
-            gpGame->m_players[player].m_color,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
+            gpGame->m_players[player].m_color
         );
         StopMusic();
     }
@@ -4170,8 +4084,7 @@ void game::ProcessOnMapHeroes(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             loc = &m_map[posX][posY];
             if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
-                extra =
-                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(loc->m_objectMetadata)]);
+                extra = static_cast<mapHeroExtra*>(ppMapExtra[loc->m_objectMetadata]);
                 theHeroEntry = GetHero(extra->heroId);
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                     theHeroEntry->m_army.m_creatureCounts[i] = extra->troopCounts[i];
@@ -4255,8 +4168,7 @@ void game::CheckHeroConsistency(void) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                if (static_cast<u8>(cell->m_objectMetadata) >= 0
-                    && static_cast<u8>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
+                if (cell->m_objectMetadata >= 0 && cell->m_objectMetadata < GAME_HERO_COUNT) {
                     boardHro = GetHero(cell->m_objectMetadata);
                     if (boardHro->m_owner < 0 || boardHro->m_owner > GAME_PLAYER_COUNT - 1) {
                         if (boardHro->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
@@ -4405,10 +4317,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             remotePlayer,
                             length + REMOTE_SAVE_INDEX_SIZE,
                             REMOTE_COMMAND_SAVE_DATA,
-                            0,
-                            1,
-                            REMOTE_MESSAGE_DEFAULT,
-                            1
+                            0
                         );
                         if (!replyState)
                             ShutDown(NULL);
@@ -4439,16 +4348,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                 }
             }
         }
-        replyState = TransmitRemoteData(
-            NULL,
-            remotePlayer,
-            0,
-            REMOTE_COMMAND_SAVE_FINISH,
-            1,
-            1,
-            REMOTE_MESSAGE_DEFAULT,
-            1
-        );
+        replyState = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_FINISH, 1);
         if (!replyState)
             ShutDown(NULL);
         okay = 1;
@@ -4507,16 +4407,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         PollSound();
         Process1WindowsMessage();
     }
-    curRet = TransmitRemoteData(
-        NULL,
-        remotePlayer,
-        0,
-        REMOTE_COMMAND_SAVE_INIT_RESPONSE,
-        1,
-        1,
-        REMOTE_MESSAGE_DEFAULT,
-        1
-    );
+    curRet = TransmitRemoteData(NULL, remotePlayer, 0, REMOTE_COMMAND_SAVE_INIT_RESPONSE, 1);
     if (!curRet)
         ShutDown(NULL);
     memset(myGotIt, 0, sizeof(myGotIt));
@@ -4531,14 +4422,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
         if (lastPacketTimeNum + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
-                NORMAL_DIALOG_TYPE_YES_NO,
-                -1,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
+                NORMAL_DIALOG_TYPE_YES_NO
             );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 lastPacketTimeNum = KBTickCount();
@@ -4570,9 +4454,6 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
                         remotePlayer,
                         REMOTE_SAVE_ACK_MAP_SIZE,
                         REMOTE_COMMAND_SAVE_ACK_RESPONSE,
-                        1,
-                        1,
-                        REMOTE_MESSAGE_DEFAULT,
                         1
                     );
                     if (!curRet)
@@ -4652,10 +4533,7 @@ void game::DoNewTurn(void) {
             0x61,
             -1,
             NORMAL_DIALOG_CREST,
-            gpGame->m_players[giCurPlayer].Color(),
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
+            gpGame->m_players[giCurPlayer].Color()
         );
     }
     if (gpCurPlayer->m_heroCount > 0)
@@ -4708,17 +4586,7 @@ void game::DoNewTurn(void) {
             }
             PlayMusic(track);
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
-            NormalDialog(
-                gText,
-                NORMAL_DIALOG_TYPE_OK,
-                0x61,
-                -1,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_RESOURCE,
-                0,
-                NORMAL_DIALOG_NO_OR_TEXT
-            );
+            NormalDialog(gText, NORMAL_DIALOG_TYPE_OK, 0x61);
             PlayMusic(gpAdvManager->m_currentTerrain);
         }
     }

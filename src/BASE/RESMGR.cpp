@@ -64,8 +64,7 @@ void resourceManager::GetBackdropAtLoc(
     imageHeight = ReadWord();
     for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
         ReadBlock(
-            destination->m_pixels + curRow * LOGICAL_SCREEN_WIDTH
-                + destinationX,
+            destination->m_pixels + curRow * LOGICAL_SCREEN_WIDTH + destinationX,
             width
         );
     }
@@ -413,14 +412,14 @@ i16 resourceManager::MakeId(char* name) {
 
 // donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
 VA(0x0046cd95, 0x1b)
-void resourceManager::Read13(i8* destination) {
+void resourceManager::Read13(char* destination) {
     ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
 // donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x0046cdb0, 0x52)
 #line 679 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
-void resourceManager::ReadBlock(i8* destination, u32 size) {
+void resourceManager::ReadBlock(void* destination, u32 size) {
 #line 680
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     PollSound();

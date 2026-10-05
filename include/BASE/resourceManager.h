@@ -69,8 +69,8 @@ public:
     i16 ReadWord();
     i32 ReadLong();
     i16 MakeId(char* name);
-    void Read13(i8* destination);
-    void ReadBlock(i8* destination, u32 size);
+    void Read13(char* destination);
+    void ReadBlock(void* destination, u32 size);
 };
 #pragma pack(pop)
 

@@ -244,6 +244,11 @@ public:
 };
 #pragma pack(pop)
 
+// Spells pass over the stack: green dragons and anti-magic ignore them
+// (SPELLS' damage spells, SPELLAI's valuations); type first, then effect.
+#define ARMY_IGNORES_SPELLS(a)                                                                     \
+    ((a)->m_creatureType == CREATURE_DRAGON || (a)->m_spellEffect == SPELL_ANTI_MAGIC)
+
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 // The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.

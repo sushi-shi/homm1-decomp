@@ -291,7 +291,7 @@ public:
     // The combat screen window (Open's cmbtwin.bin); CombatMessage sets its
     // text widget (0xc).
     class heroWindow* m_combatWindow;
-    char m_unknown6f5[4];
+    char m_unused6f5[4];
     i16 m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     i16 m_messageTypeMask;
@@ -578,6 +578,10 @@ extern H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
 extern i32 giNextActionGridIndex;
 extern i32 giNextActionExtra;
 extern i32 giNextActionGridIndex2;
+// Queue a move (or attack) toward a hex (Buka 2.1 combatManager.h): the
+// action is stored before the hex expression is evaluated; other action
+// fields stay with the caller.
+#define SET_NEXT_COMBAT_MOVE(hex) (giNextAction = ACTION_MOVE, giNextActionGridIndex = (hex))
 // gCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
 // shot%s left)", "General's Options", "View Opposing General", "View %s

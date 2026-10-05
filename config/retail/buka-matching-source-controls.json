@@ -947,7 +947,7 @@
         },
         {
           "offset": "0x86",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -957,7 +957,7 @@
         },
         {
           "offset": "0x95",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -1207,7 +1207,7 @@
         },
         {
           "offset": "0x96",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -1217,7 +1217,7 @@
         },
         {
           "offset": "0xa5",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -1277,7 +1277,7 @@
         },
         {
           "offset": "0x113",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {

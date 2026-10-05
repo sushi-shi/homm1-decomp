@@ -191,6 +191,25 @@ H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
 
+// Buka 2.1's unconditional six-button enable/disable broadcast; the window
+// expression is re-evaluated for every broadcast.
+#define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
+    ((message).type = MESSAGE_WIDGET,                                                              \
+     (message).command = (cmd),                                                                    \
+     (message).value = WIDGET_FLAG_ENABLED,                                                        \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST,                                                     \
+     (window)->BroadcastMessage(message),                                                          \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 1,                                                 \
+     (window)->BroadcastMessage(message),                                                          \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 2,                                                 \
+     (window)->BroadcastMessage(message),                                                          \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 3,                                                 \
+     (window)->BroadcastMessage(message),                                                          \
+     (message).id = ADVMGR_PANEL_BUTTON_FIRST + 4,                                                 \
+     (window)->BroadcastMessage(message),                                                          \
+     (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
+     (window)->BroadcastMessage(message))
+
 struct adventureSoundCell {
     i32 soundId;
     i32 volume;
@@ -209,14 +228,14 @@ public:
     i8* m_visibilityMap;
     i8 m_routeShown;
     i8 m_currentTerrain;
-    char m_unknown9b[4];
+    char m_unused9b[4];
     class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
     class iconWidget* m_scrollLeftButton;
     class iconWidget* m_scrollRightButton;
     // Open adds these five panel backdrops to the adventure window.
     class backdropWidget* m_panelBackdrops[ADVMGR_PANEL_ICON_COUNT];
     u8* m_adventureBorder;
-    char m_unknownc3[4];
+    char m_unusedc3[4];
     class tileset* m_groundTiles;
     class tileset* m_cloudTiles;
     class tileset* m_stoneTiles;

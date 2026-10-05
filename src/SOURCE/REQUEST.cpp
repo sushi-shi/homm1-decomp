@@ -10,6 +10,7 @@
 #include <BASE/iconWidget.h>
 #include <BASE/inputManager.h>
 #include <BASE/message.h>
+#include <BASE/Misc.h>
 #include <BASE/widget.h>
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/game.h>
@@ -151,7 +152,7 @@ fileRequester::fileRequester(
             file = open(fullFileName, O_BINARY);
             if (file == -1)
                 FileError(fullFileName);
-            read(file, &headerData, sizeof(headerData));
+            READ_FILE_VALUE(file, headerData);
             if (headerData.id == MAP_HEADER_ID) {
                 strcpy(m_mapNames[entryIndex].text, headerData.name);
                 strcpy(m_mapInfo[entryIndex].description, headerData.description);
@@ -361,14 +362,7 @@ i16 fileRequester::Main(tag_message& message) {
                                 && !m_filename[0]) {
                                 NormalDialog(
                                     localization::Tr("file.selection.required"),
-                                    NORMAL_DIALOG_TYPE_OK,
-                                    -1,
-                                    -1,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_RESOURCE,
-                                    0,
-                                    NORMAL_DIALOG_NO_OR_TEXT
+                                    NORMAL_DIALOG_TYPE_OK
                                 );
                                 break;
                             } else {
@@ -500,17 +494,7 @@ i16 fileRequester::Main(tag_message& message) {
             if (key < giNumHumanPlayers
                 && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
                 sprintf(gText, localization::Tr("file.humans.minimum"), key, giNumHumanPlayers);
-                NormalDialog(
-                    gText,
-                    NORMAL_DIALOG_TYPE_OK,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
                 handled = 0;
             }
             if (key > giNumHumanPlayers) {
@@ -520,17 +504,7 @@ i16 fileRequester::Main(tag_message& message) {
                     key,
                     key - giNumHumanPlayers
                 );
-                NormalDialog(
-                    gText,
-                    NORMAL_DIALOG_TYPE_YES_NO,
-                    -1,
-                    -1,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_RESOURCE,
-                    0,
-                    NORMAL_DIALOG_NO_OR_TEXT
-                );
+                NormalDialog(gText, NORMAL_DIALOG_TYPE_YES_NO);
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
                     handled = 0;
             }

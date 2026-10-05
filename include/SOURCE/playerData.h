@@ -83,7 +83,7 @@ struct playerAttentionWeights {
 class playerAIData {
 public:
     playerAttentionWeights m_attentionWeights;
-    char m_unknown18[0x1c];
+    char m_unused18[0x1c];
     i32 m_income[RESOURCE_COUNT];
     i32 m_obeliskValue;
     // GetTurnAIVars stores MeanRVOfUnexploredTerritory here (+0xf5).
@@ -113,7 +113,8 @@ public:
     i8 m_heroLocatorPage;
     i8 m_heroIds[PLAYER_HERO_CAPACITY];
     i8 m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
-    char m_unknown20[0x32];
+    // Write stores zeros and Read skips this span.
+    char m_unusedSaveData[0x32];
     // Saved one byte at a time between the hero and town blocks.
     i8 m_ultimateArtifactHintChance;
     i8 m_ultimateArtifactHintX;

@@ -137,15 +137,17 @@ extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
 
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
 i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
+// Buka 2.1 REMOTE.h defaults the retry dialog and message type; HoMM1's
+// trailing destination flag defaults to its usual game-position addressing.
 i32 TransmitRemoteData(
     char* data,
     i32 destination,
     i32 length,
     i8 command,
     i8 reliable,
-    i8 allowRetryDialog,
-    i8 messageType,
-    i8 gamePosDestination
+    i8 allowRetryDialog = 1,
+    i8 messageType = REMOTE_MESSAGE_DEFAULT,
+    i8 gamePosDestination = 1
 );
 char* GetRemoteData(i8 remove);
 i32 TransmitAndWait(

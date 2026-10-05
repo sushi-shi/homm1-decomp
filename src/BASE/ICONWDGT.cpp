@@ -68,13 +68,11 @@ iconWidget::iconWidget(
 
 VA(0x0046e041, 0xf9)
 void iconWidget::Read(void) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_frame = gpResourceManager->ReadWord();
     m_orientation = gpResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;

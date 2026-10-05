@@ -960,12 +960,7 @@ void combatManager::CatAttack(i8 side) {
             }
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
             xPos += dxVal;
             ourY += localDy;
             prevFrm++;
@@ -1004,12 +999,7 @@ void combatManager::CatAttack(i8 side) {
             }
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
             xPos += dxVal;
             ourY += (12 - i) * localDy;
             prevFrm++;
@@ -1035,12 +1025,7 @@ void combatManager::CatAttack(i8 side) {
                 giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
             DrawFrame(0);
             boulderRef->DrawToBuffer(xPos, ourY, prevFrm, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            gpWindowManager->UpdateScreenRegion(
-                giMinExtentX,
-                giMinExtentY,
-                giMaxExtentX - giMinExtentX + 1,
-                giMaxExtentY - giMinExtentY + 1
-            );
+            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
             xPos += dxVal;
             ourY += i * localDy;
             prevFrm++;
@@ -1271,7 +1256,7 @@ void combatManager::KeepAttack(void) {
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 10;
         lastX = inFlightX;

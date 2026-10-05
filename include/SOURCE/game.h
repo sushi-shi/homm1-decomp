@@ -266,7 +266,7 @@ class game {
 public:
     // ShowCongrats scales the base score by this percentage.
     i16 m_difficultyRating;
-    i8 m_unknown0002;
+    i8 m_unused0002;
     // ControlPanel's scenario-info choice shows the campaign when positive.
     i32 m_campaignType;
     i32 m_campaignScenario;
@@ -287,7 +287,7 @@ public:
     // InitEntireCampaign stores 3 here.
     i8 m_difficulty;
     i8 m_playerCount;
-    i8 m_unknown200;
+    i8 m_unused200;
     i8 m_deadPlayerCount;
     i8 m_playerDead[GAME_PLAYER_COUNT];
     u16 m_day;
@@ -295,7 +295,7 @@ public:
     u16 m_month;
     class playerData m_players[GAME_PLAYER_COUNT];
     class mapCell m_map[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-    char m_unknownd0a0[0x5100];
+    char m_unusedd0a0[0x5100];
     i8 m_obeliskCount;
     class town m_castleRecs[GAME_TOWN_COUNT];
     // ClaimTown mirrors each town owner into this byte array.
@@ -322,7 +322,7 @@ public:
     i8 m_ultimateArtifactId;
     // NewGame's newgame.bin window.
     class heroWindow* m_newGameWindow;
-    i8 m_unknown16e5d;
+    i8 m_unused16e5d;
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter (Buka name).
@@ -537,6 +537,12 @@ public:
     void VisitObelisk(i8 player);
 };
 #pragma pack(pop)
+
+// The one-based day number of game g's calendar, day first (Buka 2.1
+// game.h); the u16 fields promote to int.
+#define GAME_DAY_NUMBER(g)                                                                         \
+    ((g).m_day + ((g).m_week - 1) * CALENDAR_DAYS_PER_WEEK                                         \
+     + ((g).m_month - 1) * CALENDAR_DAYS_PER_MONTH)
 
 // Recomputes a player's ultimate-artifact hint (cdecl, int player).
 void ComputeUALoc(i32 player);

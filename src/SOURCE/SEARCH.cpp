@@ -93,8 +93,7 @@ i16 searchArray::FindNearestObject(
         *pathDirection++ = pathNode->direction;
         if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
-        i16 backDirection =
-            (pathNode->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
+        i16 backDirection = OppositeMapDirection(pathNode->direction);
         destinationX += normalDirTable[backDirection].x;
         destinationY += normalDirTable[backDirection].y;
     }
@@ -125,8 +124,7 @@ i32 searchArray::BuildPath(
                 break;
             }
         }
-        i16 backDirection =
-            (node->direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
+        i16 backDirection = OppositeMapDirection(node->direction);
         destinationX += normalDirTable[backDirection].x;
         destinationY += normalDirTable[backDirection].y;
     }
@@ -269,9 +267,10 @@ void searchArray::SeedPosition(
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
-                    && gpGame->m_availableHeroes[static_cast<u8>(
-                           gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_objectMetadata
-                       )] == giCurPlayer)
+                    && gpGame->m_availableHeroes[gpAdvManager
+                                                     ->GetCell(s_currentNode.x, s_currentNode.y)
+                                                     ->m_objectMetadata]
+                           == giCurPlayer)
                     goto point_complete;
             } else {
                 if (!findAdjacentMonster)
@@ -412,8 +411,7 @@ void searchArray::SeedPosition(
                         s_targetCell = gpAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
                         if (((1 << s_direction) & SEARCH_DIRECTION_OBJECT_MASK)
-                            && s_targetCell->m_objectIndex != MAP_CELL_NO_FRAME
-                            && !(s_targetCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
+                            && CELL_HAS_NON_SHADOW_OBJECT(s_targetCell))
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited
                             && !(s_targetCell->m_triggerType & MAP_TRIGGER_EVENT)) {
@@ -438,8 +436,7 @@ void searchArray::SeedPosition(
                             PushPoint(
                                 s_mapX,
                                 s_mapY,
-                                (s_direction + MAP_DIRECTION_OPPOSITE_OFFSET)
-                                    & MAP_DIRECTION_INDEX_MASK,
+                                OppositeMapDirection(s_direction),
                                 s_stepCost[s_direction & SEARCH_DIAGONAL_COST_MASK],
                                 maximumCost,
                                 1,

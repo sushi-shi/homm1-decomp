@@ -151,12 +151,7 @@ void recruitUnit::Close(void) {
             localization::Tr("recruitment.garrison.full"),
             NORMAL_DIALOG_TYPE_OK,
             RECRUIT_NO_ROOM_DIALOG_X,
-            RECRUIT_NO_ROOM_DIALOG_Y,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_RESOURCE,
-            0,
-            NORMAL_DIALOG_NO_OR_TEXT
+            RECRUIT_NO_ROOM_DIALOG_Y
         );
     gpWindowManager->BroadcastMessage(
         MESSAGE_WIDGET,

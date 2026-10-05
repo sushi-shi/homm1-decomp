@@ -125,6 +125,10 @@ H1_ENUM_CONST_BEGIN(InputKeyCodeConstant)
     INPUT_ASCII_DELETE = 0x7f
 H1_ENUM_CONST_END(InputKeyCodeConstant)
 
+// A key without a character: its scan code moved into the high byte (Buka
+// 2.1 INPUTMGR.cpp EncodeScanCode).
+#define EncodeScanCode(scanCode) ((scanCode) << INPUT_KEY_SCAN_SHIFT)
+
 #pragma pack(push, 1)
 class inputManager : public baseManager {
 public:
