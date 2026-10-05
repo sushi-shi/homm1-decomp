@@ -6593,6 +6593,9 @@ DATA(0x004a6754)
 i32 gCurHourGlassPhase = 0;
 DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
+// No retail code reads this value.
+DATA(0x0048e14c)
+i32 gUnusedAdventureValue = 28;
 DATA(0x004a6758)
 i32 gForceUpdate = 0;
 DATA(0x004a6728)

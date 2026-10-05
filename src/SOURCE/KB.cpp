@@ -3092,6 +3092,12 @@ float gSpellCastNumMod[21] = {
 };
 DATA(0x004a98ca)
 i8 gDrawSavedCursor = 0;
+// Two sixteen-entry byte tables that no retail code reads; the Win95 1.0
+// image has the same bytes in the same place.
+DATA(0x0049190c)
+u8 gUnusedByteTable1[16] = {0, 0, 2, 9, 4, 17, 10, 13, 6, 8, 16, 12, 11, 15, 14, 18};
+DATA(0x0049191c)
+u8 gUnusedByteTable2[16] = {4, 2, 2, 1, 2, 1, 1, 1, 2, 1, 1, 1, 1, 1, 1, 1};
 DATA(0x0049192c)
 i16 gMinExpForLevel[4][12] = {
     {0, 1000, 2000, 3200, 4500, 6000, 7700, 9000, 11000, 13200, 15500, 18500},
@@ -4054,14 +4060,11 @@ char* gTownCommand[22] = {
     localization::Tr("table.gTownCommand.18"), localization::Tr("table.gTownCommand.19"),
     localization::Tr("table.gTownCommand.20"), localization::Tr("table.gTownCommand.21"),
 };
-DATA(0x004939f0)
+DATA(0x00492f3c)
 char* gGameTypeHelp[5] = {
-    "Play a single, standard game against computer opponents.",
-    "Play the campaign game - a series of linked single games.",
-    "Play against other human players, either sitting at the same computer, or linked through a "
-    "network or modem.",
-    "Play a practice game.",
-    "Cancel out of this menu back to the main menu.",
+    localization::Tr("table.gGameTypeHelp.0"), localization::Tr("table.gGameTypeHelp.1"),
+    localization::Tr("table.gGameTypeHelp.2"), localization::Tr("table.gGameTypeHelp.3"),
+    localization::Tr("table.gGameTypeHelp.4"),
 };
 DATA(0x00492f50)
 char* gHeroNames[36][2] = {

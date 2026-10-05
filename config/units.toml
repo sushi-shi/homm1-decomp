@@ -330,7 +330,9 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
-flags = "cpp_buka_g5"
+# /Ob2: gcCDTrackName's literal sits among the function literals at its
+# definition, between the preference and CD-probe literals.
+flags = "cpp_buka_ob2_g5"
 
 [[unit]]
 unit = "SOURCE/netwin"
