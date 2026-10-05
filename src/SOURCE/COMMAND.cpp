@@ -296,10 +296,9 @@ void combatManager::SetCombatDirections(i32 targetHex) {
         if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
             mapped = (dir + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT;
         else
-            mapped = static_cast<i8>(
-                dir == COMBAT_DIRECTION_WIDE_WEST ? COMBAT_DIRECTION_WIDE_EAST
-                                                  : COMBAT_DIRECTION_WIDE_WEST
-            );
+            mapped = dir == COMBAT_DIRECTION_WIDE_WEST
+                         ? static_cast<i8>(COMBAT_DIRECTION_WIDE_EAST)
+                         : static_cast<i8>(COMBAT_DIRECTION_WIDE_WEST);
         if (hasPath[mapped]) {
             if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (dir == COMBAT_DIRECTION_NORTHEAST
