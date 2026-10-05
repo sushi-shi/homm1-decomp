@@ -54,7 +54,7 @@ float GetEffectsVolume() {
 
 VA(0x00469d6e, 0x15)
 float ScaleSampleVolume(int volume) {
-    return GetEffectsVolume() * volume / 127.0f;
+    return GetEffectsVolume() * (static_cast<float>(volume)) / 127.0f;
 }
 
 VA(0x00469d83, 0xb)
