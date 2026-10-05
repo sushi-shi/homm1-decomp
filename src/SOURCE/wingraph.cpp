@@ -201,10 +201,10 @@ void DDInitGraphics(void) {
 VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 BOOL DDAppPaint(void* window, void* paintDC) {
-    i32 ySrc;
-    i32 height;
-    i32 x;
-    i32 width;
+    i32 srcWidth;
+    i32 srcHeight;
+    i32 srcTop;
+    i32 srcLeft;
     PAINTSTRUCT ps;
     POINT pt;
 
@@ -226,22 +226,22 @@ BOOL DDAppPaint(void* window, void* paintDC) {
             ps.rcPaint.bottom++;
 
         gDDDestinationRect = ps.rcPaint;
-        width = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
-        height = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
-        x = CLIENT_TO_GAME_X(gDDDestinationRect.left);
-        ySrc = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
+        srcWidth = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
+        srcHeight = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
+        srcLeft = CLIENT_TO_GAME_X(gDDDestinationRect.left);
+        srcTop = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
         if (gScrollX != 0) {
-            x = gScrollX + WINGRAPH_SCROLL_MARGIN;
-            width = WINGRAPH_SCROLL_SIZE;
+            srcLeft = gScrollX + WINGRAPH_SCROLL_MARGIN;
+            srcWidth = WINGRAPH_SCROLL_SIZE;
         }
         if (gScrollY != 0) {
-            ySrc = gScrollY + WINGRAPH_SCROLL_MARGIN;
-            height = WINGRAPH_SCROLL_SIZE;
+            srcTop = gScrollY + WINGRAPH_SCROLL_MARGIN;
+            srcHeight = WINGRAPH_SCROLL_SIZE;
         }
-        gDDSourceRect.left = x;
-        gDDSourceRect.right = x + width - 1;
-        gDDSourceRect.top = ySrc;
-        gDDSourceRect.bottom = ySrc + height - 1;
+        gDDSourceRect.left = srcLeft;
+        gDDSourceRect.right = srcLeft + srcWidth - 1;
+        gDDSourceRect.top = srcTop;
+        gDDSourceRect.bottom = srcTop + srcHeight - 1;
 
         pt.y = 0;
         pt.x = pt.y;
