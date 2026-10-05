@@ -1,8 +1,7 @@
 # Rust tools
 
-A dependency-free Cargo workspace, modelled on the King's Field `tools/`
-workspace. Build output goes to the ignored `build/cargo/`
-(`tools/.cargo/config.toml`).
+A dependency-free Cargo workspace. Build output goes to the ignored
+`build/cargo/` (`tools/.cargo/config.toml`).
 
 | Crate | Purpose |
 | --- | --- |

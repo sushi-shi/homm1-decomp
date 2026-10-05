@@ -31,7 +31,7 @@ commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
 - [ ] Review game-type `reinterpret_cast`: **51 sites** (12 network packet
-  views at the `char*` record APIs and donor view macros, 39 other
+  views at the `char*` record APIs and view macros, 39 other
   byte/word/integer views; the icon frame directory and the combat and save
   transfer buffers are typed); 69 further casts are Win32 API boundaries.
   Every remaining cast carries its reason (cast ledger OPEN = 0).

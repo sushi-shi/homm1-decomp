@@ -49,8 +49,7 @@ build of 1995-10-09 also does, while every other NWC build uses the
 sign-extended byte immediate (`66 83 FA FF`). The masked `DecodePosition` and
 `ReconstructDecoderTree` bodies match only the German DOS and Buka images. Buka
 therefore linked a decoder object from the same pre-built family, not one
-rebuilt from C. The HoMM2 Buka 2.1 donor uses bzip2 rather than LZHUF and has no
-corresponding decoder. In the reconstruction the full-width immediate is written
+rebuilt from C. In the reconstruction the full-width immediate is written
 `cmp dx,WORD PTR 65535`: ML 6 keeps a word immediate only when it is explicitly
 typed. A forward-referenced constant, `TEXTEQU`, `OPTION M510` and
 `OPTION NOSIGNEXTEND` all still select the byte form.
