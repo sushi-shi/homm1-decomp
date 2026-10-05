@@ -136,6 +136,14 @@ tileset* resourceManager::GetTileset(char* name) {
     }
 }
 
+// The Windows build loads no mouse resources (HoMM2 Buka GetMouse).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046c577, 0xf)
+mouse* resourceManager::GetMouse(char*) {
+    return NULL;
+}
+
 VA(0x0046c586, 0xc0)
 font* resourceManager::GetFont(char* name) {
     i16 resourceId = MakeId(name);

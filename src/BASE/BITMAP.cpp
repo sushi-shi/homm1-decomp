@@ -64,6 +64,16 @@ void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
 }
 
+// HoMM2 Buka bitmap::DrawToScreen.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x004733bf, 0x41)
+void bitmap::DrawToScreen(i16 x, i16 y) {
+    PollSound();
+    BlitBitmapToScreen(this, 0, 0, m_width, m_height, x, y);
+    PollSound();
+}
+
 VA(0x00473400, 0x23)
 void bitmap::GrabScreen(i16 x, i16 y) {
     GrabScreenBitmap(this, x, y);

@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+DATA(0x004a1360)
+char gDefaultConstruct[] = "Default Construct";
 DATA(0x004a1374)
 char gDynamicConstruct[] = "Dynamic Construct";
 
@@ -37,6 +39,24 @@ H1_ENUM_BEGIN(WindowWidgetRecordType)
     WIDGET_RECORD_TEXT_ENTRY_RECT = 0x201,
     WIDGET_RECORD_TEXT_ENTRY_MULTILINE = 0x202
 H1_ENUM_END(WindowWidgetRecordType)
+
+// HoMM2 Buka's default heroWindow constructor: a full-screen fixed-layer
+// window. No retail caller survives.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046d020, 0x92)
+heroWindow::heroWindow(void) {
+    strcpy(m_name, gDefaultConstruct);
+    m_nextWindow = m_prevWindow = NULL;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
+    m_posX = m_posY = 0;
+    m_winWidth = LOGICAL_SCREEN_WIDTH;
+    m_winHeight = LOGICAL_SCREEN_HEIGHT;
+    m_winFlags = WINDOW_FLAG_FIXED_LAYER;
+    m_winState = WINDOW_STATE_CLOSED;
+    m_widgetListTail = m_widgetListHead = NULL;
+    m_savedBackground = NULL;
+}
 
 // donor PoL RVA 0x000cec20; preferred Buka symbol ??0heroWindow@@QAE@HHHHH@Z
 // donor Buka TU BASE/WINDOW; HoMM1 owner inferred from contiguous order

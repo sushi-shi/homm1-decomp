@@ -17,7 +17,7 @@ from homm1.verify.srcscan import VA_RE, claim_rva, source_files
 
 MARKER_RE = re.compile(r"^\s*(?://|;)\s*@dead-code\b")
 PROOF_RE = re.compile(r"\bZero-ref:")
-ASM_PROC_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s+PROC\b", re.IGNORECASE)
+ASM_PROC_RE = re.compile(r"^\s*([A-Za-z_?][\w?@$]*)\s+PROC\b", re.IGNORECASE)
 LOOKAHEAD = 6
 
 

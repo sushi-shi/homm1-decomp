@@ -273,6 +273,12 @@ void mouseManager::SetPointer(i16 frame) {
 VA(0x0046bf6f, 0xb)
 void mouseManager::ReallyShowPointer(void) {}
 
+// Descriptive name: an empty two-argument hook (`ret 8`).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046bf7a, 0xd)
+void mouseManager::UnusedTwoArgumentHook1(i16, i16) {}
+
 VA(0x0046bf87, 0xb)
 void mouseManager::ReallyHidePointer(void) {}
 
@@ -284,6 +290,18 @@ void mouseManager::HideColorPointer(void) {}
 // RestoreUnderlying pair); retail keeps only the returns.
 VA(0x0046bf9d, 0xb)
 void mouseManager::RestoreUnderlying(void) {}
+
+// HoMM2 Buka's SaveAndDraw(void), empty in the Windows build.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046bfa8, 0xb)
+void mouseManager::SaveAndDraw(void) {}
+
+// Descriptive name: an empty two-argument hook (`ret 8`).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046bfb3, 0xd)
+void mouseManager::UnusedTwoArgumentHook2(i16, i16) {}
 
 // advManager::UpdateScreen pushes the two origin words and a sign-extended
 // cursor flag word.
@@ -305,6 +323,12 @@ void mouseManager::NewUpdate(i32) {}
 
 VA(0x0046bff2, 0xd)
 void mouseManager::WarpPointer(i16, i16) {}
+
+// Descriptive name: an empty one-argument hook (`ret 4`).
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046bfff, 0xd)
+void mouseManager::UnusedOneArgumentHook(i32) {}
 
 // donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order

@@ -24,6 +24,24 @@ widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
     m_kind = kind;
 }
 
+// HoMM2 Buka's default widget: a 16-pixel enabled, drawn widget.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x004753fb, 0x7d)
+widget::widget(void) {
+    m_owner = 0;
+    m_next = 0;
+    m_prev = 0;
+    m_id = 0;
+    m_flags = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+    m_zOrder = WINDOW_Z_ORDER_APPEND;
+    m_kind = WIDGET_KIND_DEFAULT;
+    m_y = 0;
+    m_x = 0;
+    m_width = WIDGET_DEFAULT_EXTENT;
+    m_height = WIDGET_DEFAULT_EXTENT;
+}
+
 VA(0x00475478, 0x14)
 widget::~widget(void) {}
 

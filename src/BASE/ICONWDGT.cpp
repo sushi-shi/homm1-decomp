@@ -24,6 +24,29 @@ iconWidget::~iconWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
 
+// The icon-file-id overload; no retail caller survives.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046defe, 0xa2)
+iconWidget::iconWidget(
+    i16 x,
+    i16 y,
+    i16 width,
+    i16 height,
+    i16 iconId,
+    i8 frame,
+    i8 orientation,
+    i16 id,
+    i16 kind,
+    i16 fillColor
+)
+    : widget(x, y, width, height, id, kind) {
+    m_icon = gpResourceManager->GetIcon(iconId);
+    m_frame = frame;
+    m_fillColor = fillColor;
+    m_orientation = orientation;
+}
+
 // Retail reads the frame argument as a signed byte before widening it.
 VA(0x0046dfa0, 0xa1)
 iconWidget::iconWidget(

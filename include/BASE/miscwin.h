@@ -45,6 +45,8 @@ void BlitBitmapToScreen(
 );
 void PostprocessBitmap(i8*, i32, i32);
 void GrabScreenBitmap(class bitmap* destination, i32 x, i32 y);
+void BitmapToScreen(class bitmap* image);
+i16 AutoInitSVGA(void);
 void PostprocessIcon(class icon*);
 
 H1_ENUM_CONST_BEGIN(ScreenBlitConstant)

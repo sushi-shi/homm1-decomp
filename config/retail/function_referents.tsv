@@ -1201,6 +1201,7 @@ rva	name	provenance
 0x0007a380	__strnicmp	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x0007a490	__strcmpi	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x0007a560	__purecall	Buka adventure-manager family: three baseManager vtable slots; complete pinned LIBCMT /9272 contribution; buka-advmgr.json
+0x0007a569	_fwrite	Pinned LIBCMT fwrite.obj: complete 0x2f-byte body equal, lock/_fwrite_lk/unlock call shape; buka-missing-bodies.json
 0x0007b098	_GetCurrentThreadId@0	Buka FF25 import thunk at 0x7b098; PE IAT 0x8a13c KERNEL32.dll!GetCurrentThreadId; decoration from pinned or verified import library, or compiled WinG caller
 0x0007b09e	_GetCurrentThread@0	Buka FF25 import thunk at 0x7b09e; PE IAT 0x8a124 KERNEL32.dll!GetCurrentThread; decoration from pinned or verified import library, or compiled WinG caller
 0x00088550	_RtlUnwind@16	Buka FF25 import thunk at 0x88550; PE IAT 0x8a1c4 KERNEL32.dll!RtlUnwind; decoration from pinned or verified import library, or compiled WinG caller

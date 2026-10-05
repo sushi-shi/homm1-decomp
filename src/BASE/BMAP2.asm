@@ -139,6 +139,8 @@ EVEN
 ; The backward different-row path moves w / 4 DWORDs first with ESI/EDI on
 ; the row's LAST byte, so for w >= 4 each DWORD reaches 3 bytes past the row
 ; end; the byte loop above is the w < 4 / same-row behaviour.
+; @dead-code
+; Zero-ref: no incoming call, jump or relocated reference in retail.
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z PROC NEAR
     push ebp
     mov ebp, esp

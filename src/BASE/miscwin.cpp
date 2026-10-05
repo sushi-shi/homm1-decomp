@@ -81,6 +81,12 @@ void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     );
 }
 
+// HoMM2 Buka BitmapToScreen: blit a whole bitmap to the screen origin.
+VA(0x0046fa2c, 0x29)
+void BitmapToScreen(bitmap* image) {
+    BlitBitmapToScreen(image, 0, 0, image->m_width, image->m_height, 0, 0);
+}
+
 VA(0x0046fa55, 0x50)
 void SetPalette(i8* paletteData, i32 updateDisplay) {
     memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
@@ -182,6 +188,14 @@ struct PaletteColor {
     u8 green;
     u8 blue;
 };
+
+// HoMM2 Buka AutoInitSVGA: the Windows build has no SVGA mode to set up.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046fd82, 0x8)
+i16 AutoInitSVGA(void) {
+    return 0;
+}
 
 VA(0x0046fd8a, 0x39)
 #line 207 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\OLDASM.CPP"

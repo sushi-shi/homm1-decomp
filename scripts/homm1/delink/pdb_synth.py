@@ -600,6 +600,21 @@ def write_data_debt(rows, path: Path = DATA_DEBT) -> bool:
          for r, line in zip(rows, format_unprovisioned(rows))])
 
 
+def prune_data_debt(provided: set[int], path: Path = DATA_DEBT) -> int:
+    """Drop worklist rows the delink data manifest provides at their exact rva.
+
+    pdb_synth derives the worklist before `data_manifest.generate` addresses
+    the compiler literal pools (`$SG`/`$T` members proven by relocation
+    pairing). Those rows reach the delinker with an identity, so they are not
+    debt. Interior targets of a provisional gap carve stay listed. Returns the
+    remaining count."""
+    from homm1.core.tsv import read as read_tsv, write as write_tsv
+    banner, header, rows = read_tsv(path)
+    kept = [r for r in rows if int(r["rva"], 16) not in provided]
+    write_tsv(path, banner, header, [[r[h] for h in header] for r in kept])
+    return len(kept)
+
+
 def relax_fences(rdata_syms, data_syms, data_matching_on: bool) -> int:
     """With data matching off, respell every `UNPROVISIONED_` fence `DAT_` so
     the delinker emits it instead of refusing. Call AFTER the worklist is
