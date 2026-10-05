@@ -1074,7 +1074,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
         CheckDoMain(0, 0);
         GetBestCreature(townPointer, choice, fValue);
         fValue = fValue
-                 * (static_cast<float>(ideal[townNo]) / static_cast<float>(strengths[townNo]) / 3.0f
+                 * (static_cast<float>(ideal[townNo]) / (static_cast<float>(strengths[townNo])) / 3.0f
                     + 0.66);
         fValue = fValue * ((100 - Random(0, 10)) / 100.0);
         if (fValue > bestBHCValue) {
@@ -1097,7 +1097,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
             } else if (gpCurPlayer->m_heroCount == 0) {
                 fValue += 500.0f;
             }
-            if (bestBHCValue < fValue) {
+            if (fValue > bestBHCValue) {
                 bestBHCValue = fValue;
                 best = choice;
             }
