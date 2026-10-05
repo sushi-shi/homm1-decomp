@@ -109,10 +109,6 @@ rva	size	symbol	provenance
 0x0003f410	490	?gMenuEnableStatus@@3PAUSMenuEnableStatus@@A	game 0x921a0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x0004142c	20	?gGameTypeHelp@@3PAPADA	game 0x939f0 (SOURCE/KB): complete initialized bytes (20) unique in the image; no code user
 0x0004c4a8	4	?gFRDummy@@3PADA	game 0x9f4e0 (SOURCE/REQUEST): 1 code reference(s) from placed bodies
-0x0004c6c4	4	?gGraphicsType@@3HA	game 0xa0194 (SOURCE/wingraph): 11 code reference(s) from placed bodies
-0x0004c6c8	4	?gMainVideoModeColorDepth@@3HA	game 0xa0198 (SOURCE/wingraph): 2 code reference(s) from placed bodies
-0x0004c6cc	4	?gMainVideoModeWidth@@3HA	game 0xa019c (SOURCE/wingraph): 6 code reference(s) from placed bodies
-0x0004c6d0	4	?gMainVideoModeHeight@@3HA	game 0xa01a0 (SOURCE/wingraph): 1 code reference(s) from placed bodies
 0x00051b8c	4	?gpMouseManager@@3PAVmouseManager@@A	game 0xa7164 (SOURCE/KB): 28 code reference(s) from placed bodies
 0x00051e94	4	?DEFAULT_AGGREGATE_NAME@@3PADA	game 0xa7498 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00051ea0	4	?gpWindowManager@@3PAVheroWindowManager@@A	game 0xa74a8 (SOURCE/KB): 44 code reference(s) from placed bodies
@@ -136,6 +132,7 @@ rva	size	symbol	provenance
 0x000528b0	4	?gScrollX@@3HA	game 0xa98d0 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x000528b4	4	?gScrollY@@3HA	game 0xa98d4 (SOURCE/KB): 3 code reference(s) from placed bodies
 0x000528d4	4	?gInDialog@@3HA	game 0xa98f8 (SOURCE/KB): 2 code reference(s) from placed bodies
+0x000528d8	4	?gMinimized@@3HA	game 0xa9900 (SOURCE/KB): fields of this image's own compile of the shared source (VA_AT body, masked-identical)
 0x000528dc	4	?gInSetupDialog@@3HA	game 0xa98fc (SOURCE/KB): 1 code reference(s) from placed bodies
 0x000528f4	1	?gFirstTimeThrough@@3CA	game 0xa9928 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00052a6c	4	?gMainWinScreenHeight@@3HA	game 0xa99dc (SOURCE/kbwin): 10 code reference(s) from placed bodies
@@ -147,14 +144,3 @@ rva	size	symbol	provenance
 0x00052ecc	4	?hmnuApp@@3PAUHMENU__@@A	game 0xa9e3c (SOURCE/kbwin): 3 code reference(s) from placed bodies
 0x00052ee4	4	_?gLastGetMessage@?1??Process1WindowsMessage@@YAXXZ@4HA	game 0xa9e54 (SOURCE/kbwin): 2 code reference(s) from placed bodies
 0x00052ee8	4	_?gNoDialogMenusOn@?1??SetNoDialogMenus@@YAXH@Z@4HA	game 0xa9e58 (SOURCE/kbwin): 3 code reference(s) from placed bodies
-0x00053400	4	?gDDrawAttached@@3HA	game 0xcdda0 (SOURCE/wingraph): 3 code reference(s) from placed bodies
-0x00053410	4	?gWinGraphBusy@@3HA	game 0xcddb0 (SOURCE/wingraph): 8 code reference(s) from placed bodies
-0x00053414	4	?gDirectDrawCreate@@3P6GJPAU_GUID@@PAPAUIDirectDraw@@PAUIUnknown@@@ZA	game 0xcddb4 (SOURCE/wingraph): 3 code reference(s) from placed bodies
-0x00053418	4	?gDD@@3PAUIDirectDraw@@A	game 0xcddb8 (SOURCE/wingraph): 33 code reference(s) from placed bodies
-0x0005341c	4	?gDDSPrimary@@3PAUIDirectDrawSurface@@A	game 0xcddbc (SOURCE/wingraph): 21 code reference(s) from placed bodies
-0x00053420	4	?gDDSOne@@3PAUIDirectDrawSurface@@A	game 0xcddc0 (SOURCE/wingraph): 5 code reference(s) from placed bodies
-0x00053424	4	?gClipper@@3PAUIDirectDrawClipper@@A	game 0xcddc4 (SOURCE/wingraph): 12 code reference(s) from placed bodies
-0x00053434	4	?hdcImage@@3PAUHDC__@@A	game 0xcddd4 (SOURCE/wingraph): 11 code reference(s) from placed bodies
-0x00053438	4	?gbmOldMonoBitmap@@3PAUHBITMAP__@@A	game 0xcddd8 (SOURCE/wingraph): 2 code reference(s) from placed bodies
-0x0005343c	4	?hpalApp@@3PAUHPALETTE__@@A	game 0xcdddc (SOURCE/wingraph): 8 code reference(s) from placed bodies
-0x00053440	4	?gDDrawLibrary@@3PAUHINSTANCE__@@A	game 0xcdde0 (SOURCE/wingraph): 5 code reference(s) from placed bodies

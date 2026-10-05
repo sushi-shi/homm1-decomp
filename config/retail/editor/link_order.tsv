@@ -16,7 +16,7 @@
 # image-only: EDITOR/MAPOBJ 0x00010fa0..0x00016282: descriptive: editManager methods placing named map objects
 # image-only: EDITOR/REQUEST 0x00016290..0x0001849e: descriptive: fileRequester (3 bodies identical to the game's REQUEST)
 # image-only: EDITOR/TERRMGR 0x000184a0..0x00019484: descriptive: Open stores the class name "terrainManager"
-# image-only: EDITOR/wingraph 0x00019490..0x0001b316: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\wingraph.cpp
+# image-only: SOURCE/wingraph 0x00019490..0x0001b316: retail assertion path U:\HMM\VSS\HMM1\Source\Editor\wingraph.cpp; the shared source compiled with the editor profile
 # Exact body spans only; padding gaps are not assigned.
 index	unit	lo	hi	class
 0	EDITOR/CLEARMGR	0x00001000	0x000017cb	code
@@ -29,7 +29,7 @@ index	unit	lo	hi	class
 7	EDITOR/MAPOBJ	0x00010fa0	0x00016282	code
 8	EDITOR/REQUEST	0x00016290	0x0001849e	code
 9	EDITOR/TERRMGR	0x000184a0	0x00019484	code
-10	EDITOR/wingraph	0x00019490	0x0001b316	code
+10	SOURCE/wingraph	0x00019490	0x0001b316	code
 11	BASE/BASEMGR	0x0001b500	0x0001b5db	code
 12	BASE/WINDOW	0x0001b5e0	0x0001c467	code
 13	BASE/BUTTON	0x0001c470	0x0001ce07	code

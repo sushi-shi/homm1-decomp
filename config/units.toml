@@ -23,6 +23,9 @@ cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5"]
 # every function literal; /Ob2 emits them in source order. Code is unchanged and
 # all 13 REQUEST bodies are exact; KB regresses under /Ob2 (data-first order).
 cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5"]
+# EDITOR.EXE's own objects expand string/memory intrinsics inline (/Oi): the
+# editor's wingraph bodies equal this profile's compile of the game source.
+cpp_editor_oi_g5 = ["/nologo", "/c", "/Od", "/Oi", "/Ob1", "/GX", "/MT", "/G5"]
 
 # EDITOR.EXE (config/retail/targets.json `editor`) links the BASE library objects
 # marked `images = ["game", "editor"]`: each of their bodies occurs byte-identically
@@ -373,8 +376,10 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/wingraph"
 source = "src/SOURCE/wingraph.cpp"
-# G5 retail controls agree.
+# G5 retail controls agree. EDITOR.EXE links its own compile (Editor\wingraph.cpp).
 flags = "cpp_buka_g5"
+images = ["game", "editor"]
+image_flags = { editor = "cpp_editor_oi_g5" }
 # retail __FILE__ "D:\\Heroes\\Source\\wingraph.cpp"
 retail_file = "Source\\wingraph.cpp"
 

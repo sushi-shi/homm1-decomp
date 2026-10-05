@@ -66,7 +66,7 @@ BASE_OBJS = IMAGE_BUILD / "objdiff/base"
 # Presence test ONLY (never extraction): a TU with no rva.h macro at all is a
 # vendored TU with no claims - skip it.
 ANN_DECL_RE = re.compile(r"^decl-va:(0x[0-9a-fA-F]+)$")
-LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
+LABELED_TU_RE = re.compile(r"\b(?:VA_DECL|VA_AT|VA|DATA|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN)\s*\(")
 DATA_MACRO_RE = re.compile(r"\bDATA\s*\(\s*(0x[0-9a-fA-F]+)\s*\)")
 VA_COMPGEN_RE = re.compile(
     r'\bVA_COMPGEN\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*'
@@ -75,7 +75,8 @@ VA_COMPGEN_RE = re.compile(
 RVA_DYNINIT_RE = re.compile(
     r"\bRVA_DYNINIT\s*\(\s*(0x[0-9a-fA-F]+)\s*,\s*(0x[0-9a-fA-F]+|\d+)\s*,"
     r"\s*([A-Za-z_][A-Za-z0-9_:<>]*)\s*\)")
-ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?$")
+ANN_VA_RE = re.compile(r"^va:(0x[0-9a-fA-F]+)(?:\s+size:(0x[0-9a-fA-F]+|\d+))?"
+                       r"(?:\s+image:(\w+))?$")
 ANN_DATA_RE = re.compile(r"^(data-va|data):(0x[0-9a-fA-F]+)$")
 
 DATA_COMPGEN_RE = re.compile(r"\bDATA_COMPGEN\s*\(")
@@ -187,7 +188,8 @@ def ir_claims(ir: str) -> tuple[list[tuple[int, str, int | None]],
                     v = m.group(2)
                     size = int(v, 16) if v.lower().startswith("0x") else int(v)
                 funcs.append((int(m.group(1), 16) - image().image_base,
-                              msvc_names.func(name, decorated=decorated), size, space))
+                              msvc_names.func(name, decorated=decorated), size,
+                              m.group(3) or space))
                 continue
             m = ANN_DATA_RE.match(ann)
             if m:
@@ -627,6 +629,7 @@ def extract_unit(unit: str, source: str, compdb: dict) -> tuple[list[list[str]],
 
 MACRO_SITE_RE = re.compile(
     r"\b(VA_DECL|VA_COMPGEN|RVA_DYNINIT|DATA_COMPGEN|VA|DATA)\s*\(\s*(0x[0-9a-fA-F]+)")
+VA_AT_SITE_RE = re.compile(r"\bVA_AT\s*\(\s*(\w+)\s*,\s*(0x[0-9a-fA-F]+)")
 
 
 def sweep_sites() -> dict[str, dict[int, str]]:
@@ -644,10 +647,17 @@ def sweep_sites() -> dict[str, dict[int, str]]:
         for path in sorted(root.rglob("*")):
             if path.suffix not in (".cpp", ".h") or path.name == "rva.h":
                 continue
+            text = blank_comments(path.read_text(errors="replace"))
+            # VA_AT names the selected image wherever it is written
+            for m in VA_AT_SITE_RE.finditer(text):
+                if m.group(1) == image_key():
+                    lineno = text.count("\n", 0, m.start()) + 1
+                    out.setdefault("VA", {}).setdefault(
+                        int(m.group(2), 16) - image().image_base, []).append(
+                        f"{path.relative_to(REPO)}:{lineno}")
             # another image's source spells another address space
             if claim_space(path) != image_key():
                 continue
-            text = blank_comments(path.read_text(errors="replace"))
             for m in MACRO_SITE_RE.finditer(text):        # whole-file: a macro
                 lineno = text.count("\n", 0, m.start()) + 1   # may span lines
                 macro = m.group(1)

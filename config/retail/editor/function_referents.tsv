@@ -6,7 +6,7 @@ rva	name	provenance
 0x0000863a	?DelayMilli@@YAXH@Z	game 0x463d9: masked game body 0x463d9 (22 bytes, 2 fields masked) unique at a census start
 0x00008650	?DelayTilMilli@@YAXH@Z	game 0x463ef: masked game body 0x463ef (27 bytes, 3 fields masked) unique at a census start
 0x0000866b	?FileError@@YAXPAD@Z	game 0x41943: masked game body 0x41943 (52 bytes, 3 fields masked) unique at a census start
-0x0000869f	?ShutDown@@YAXPAD@Z	callee of placed BASE/RESMGR body at site 0x1fce9; game callee 0x41824
+0x0000869f	?ShutDown@@YAXPAD@Z	callee of placed SOURCE/wingraph body at site 0x1a233; game callee 0x41824
 0x00008983	?MemError@@YAXXZ	callee of placed BASE/WINMGR body at site 0x203e3; game callee 0x42146
 0x00008995	?IsCDDrive@@YA_NH@Z	game 0x42254: masked game body 0x42254 (57 bytes, 7 fields masked) unique at a census start
 0x00009056	?QuickViewWait@@YAXXZ	game 0x404c4: masked game body 0x404c4 (122 bytes, 4 fields masked) unique at a census start
@@ -22,40 +22,17 @@ rva	name	provenance
 0x0000d9de	?SetNoDialogMenus@@YAXH@Z	game 0x43ccd: masked game body 0x43ccd (82 bytes, 6 fields masked) unique at a census start
 0x0000da30	?SetMenus@@YAXPAUHMENU__@@H@Z	game 0x43d1f: masked game body 0x43d1f (299 bytes, 13 fields masked) unique at a census start
 0x0000db5b	?SetGameDefaults@@YAXXZ	game 0x43e4a: masked game body 0x43e4a (325 bytes, 25 fields masked) unique at a census start
+0x0000e143	?WritePrefs@@YAXXZ	callee of placed SOURCE/wingraph body at site 0x1a71a; game callee 0x443f7
 0x0000e466	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	game 0x44702: masked game body 0x44702 (114 bytes, 6 fields masked) unique at a census start
 0x0000e8ca	?KBTickCount@@YAHXZ	game 0x44b4e: masked game body 0x44b4e (11 bytes) at its unit's block offset, shared by 2 bodies (1 identical occurrence(s))
 0x0000e8d5	?ProcessAssert@@YAXHPADH@Z	game 0x44b59: masked game body 0x44b59 (85 bytes, 9 fields masked) unique at a census start
 0x00017166	?SetOK@fileRequester@@QAEXC@Z	game 0x54826: masked game body 0x54826 (103 bytes, 2 fields masked) unique at a census start
 0x00017c01	?DoKnob@fileRequester@@QAEXXZ	game 0x553a7: masked game body 0x553a7 (603 bytes, 27 fields masked) unique at a census start
 0x000182d2	?GetMapName@fileRequester@@QAEPADXZ	game 0x55aa0: masked game body 0x55aa0 (89 bytes, 1 fields masked) unique at a census start
-0x00019490	?DDRestoreDisplayMode@@YAXXZ	game 0x66710: masked game body 0x66710 (62 bytes, 5 fields masked) unique at a census start
-0x000194ce	?DDQueryNewPalette@@YAHXZ	game 0x6674e: masked game body 0x6674e (45 bytes, 3 fields masked) unique at a census start
-0x000194fb	?CreatePrimary@@YAXXZ	game 0x6677b: masked game body 0x6677b (125 bytes, 10 fields masked) unique at a census start
-0x00019578	?SetupClipper@@YAXXZ	game 0x667f8: masked game body 0x667f8 (190 bytes, 18 fields masked) unique at a census start
-0x00019636	?DDInitGraphics@@YAXXZ	game 0x668b6: masked game body 0x668b6 (313 bytes, 29 fields masked) unique at a census start
-0x00019c52	?DDInitializePalette@@YAXXZ	game 0x66ed3: masked game body 0x66ed3 (277 bytes, 21 fields masked) unique at a census start
-0x00019d67	?DDSetPalette@@YAHXZ	game 0x66fe8: masked game body 0x66fe8 (130 bytes, 10 fields masked) unique at a census start
-0x00019ee7	?DDSD@@YAXHPADH@Z	game 0x6716a: masked game body 0x6716a (1005 bytes, 66 fields masked) unique at a census start
-0x0001a2d4	?DDUpdatePalette@@YAXPAC@Z	game 0x67557: masked game body 0x67557 (245 bytes, 16 fields masked) unique at a census start
-0x0001a3c9	?DDCleanUpWinGraphics@@YAXXZ	game 0x6764c: masked game body 0x6764c (340 bytes, 33 fields masked) unique at a census start
-0x0001a51d	?DDSetFullScreenStatus@@YAXH@Z	game 0x677a0: masked game body 0x677a0 (657 bytes, 64 fields masked) unique at a census start
-0x0001a7ae	?WGQueryNewPalette@@YAHXZ	game 0x67a31: masked game body 0x67a31 (114 bytes, 10 fields masked) unique at a census start
-0x0001a820	?WGInitGraphics@@YAXXZ	game 0x67aa3: masked game body 0x67aa3 (315 bytes, 41 fields masked) unique at a census start
-0x0001aae1	?WGInitializePalette@@YAXXZ	game 0x67d9b: masked game body 0x67d9b (418 bytes, 37 fields masked) unique at a census start
-0x0001ac83	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	game 0x67f3d: masked game body 0x67f3d (439 bytes, 26 fields masked) unique at a census start
-0x0001ae3a	?WGCleanUpWinGraphics@@YAXXZ	game 0x680f4: masked game body 0x680f4 (103 bytes, 12 fields masked) unique at a census start
-0x0001aea1	?ConnectToDLLs@@YAXXZ	game 0x6815b: masked game body 0x6815b (86 bytes, 12 fields masked) unique at a census start
-0x0001aef7	?DisconnectDLLs@@YAXXZ	game 0x681b1: masked game body 0x681b1 (26 bytes, 3 fields masked) unique at a census start
-0x0001af11	?RestoreDisplayMode@@YAXXZ	game 0x681cb: masked game body 0x681cb (21 bytes, 2 fields masked) unique at a census start
-0x0001af26	?SetPalette@@YAHXZ	game 0x681e0: masked game body 0x681e0 (23 bytes, 2 fields masked) unique at a census start
-0x0001af3d	?GetGraphicsInfo@@YAXXZ	game 0x681f7: masked game body 0x681f7 (110 bytes, 11 fields masked) unique at a census start
-0x0001afab	?InitGraphics@@YAXXZ	game 0x68265: masked game body 0x68265 (70 bytes, 8 fields masked) unique at a census start
-0x0001aff1	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	game 0x682ab: masked game body 0x682ab (48 bytes, 3 fields masked) unique at a census start
-0x0001b021	?InitializePalette@@YAXXZ	game 0x682db: masked game body 0x682db (26 bytes) at its unit's block offset, shared by 15 bodies (2 identical occurrence(s))
-0x0001b03b	?UpdatePalette@@YAXPAC@Z	game 0x682f5: masked game body 0x682f5 (40 bytes, 3 fields masked) unique at a census start
-0x0001b063	?CleanUpWinGraphics@@YAXXZ	game 0x6831d: masked game body 0x6831d (31 bytes, 4 fields masked) unique at a census start
-0x0001b082	?SetFullScreenStatus@@YAXH@Z	game 0x6833c: masked game body 0x6833c (132 bytes, 11 fields masked) unique at a census start
-0x0001b106	?QueryNewPalette@@YAHXZ	game 0x683c0: masked game body 0x683c0 (26 bytes) at its unit's block offset, shared by 15 bodies (2 identical occurrence(s))
+0x0001976f	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	callee of placed SOURCE/wingraph body at site 0x1b017; game callee 0x669ef
+0x00019de9	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	callee of placed SOURCE/wingraph body at site 0x1950b; game callee 0x6706a
+0x0001a95b	?WGUpdatePalette@@YAXPAC@Z	callee of placed SOURCE/wingraph body at site 0x1b04b; game callee 0x67bde
+0x0001b120	?SetGraphicsType@@YAHH@Z	callee of placed SOURCE/wingraph body at site 0x1b0c3; game callee 0x683da
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
 0x0001b326	_GetDriveTypeA@4	FF25 thunk of KERNEL32.DLL!GetDriveTypeA; name of game thunk 0x68646
 0x0001b32c	_GetLastError@0	FF25 thunk of KERNEL32.DLL!GetLastError; name of game thunk 0x685ec

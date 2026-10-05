@@ -38,7 +38,10 @@ addresses; every other tree spells `HEROES.EXE` addresses
 (`retail_labels.source.claim_space`). A shared unit therefore keeps its game
 claims. The editor reads them through `config/retail/editor/placements.tsv`,
 which joins each game identity (kind, game rva) to the editor address where
-the same entity is proven to lie; the name stays the source's.
+the same entity is proven to lie; the name stays the source's. A body the
+shared source compiles differently for the editor names its editor address
+with `VA_AT(editor, address, size)` beside its `VA`; each program reads only
+the claims of its own address space.
 
 `homm1 --image editor audit placements --write-config` derives that table and
 the editor's provider tables from the game's resolved bindings and the two
@@ -57,6 +60,8 @@ retail images:
 - An unplaced callee of a placed shared body takes the game callee's name: one
   source call site names one function (`PollSound`, `operator delete`).
 - Import thunks pair by their IAT import.
+- Data referenced only by a `VA_AT` body is named from the editor's own compile
+  of that body, where it equals the retail body with relocations masked.
 
 `--check` fails when the committed tables differ from a fresh derivation (for
 example after a game rename).
@@ -104,12 +109,20 @@ C objects and 9 MASM 6.13 objects. Each C++ object ends with the
   Retail assertion paths name `Editor\EDITMGR.CPP`, `Editor\EDITOR.CPP`,
   `Editor\OVERLAY.CPP` and `Editor\wingraph.cpp`; the other names are
   descriptive (the class names the managers store).
-- `Editor\wingraph.cpp` is the editor's own copy of the game's `wingraph.cpp`:
-  29 of its bodies are identical to the game's, four differ. The editor's
-  window/menu unit has 13 bodies identical to the game's `kbwin`, `EDITOR.CPP`
-  carries copies of six `KB`/`NOOPT` bodies, and the editor's file requester
-  three of `REQUEST`'s. These are separate files in retail, so they stay
-  separate source.
+- `Editor\wingraph.cpp` is the game's `wingraph.cpp` compiled with the
+  editor's profile: the editor's own objects expand string and memory
+  intrinsics inline (`/Oi`, `cpp_editor_oi_g5`; its `strcpy`/`memset`/`memcpy`
+  calls are `rep` sequences), which alone accounts for three of the four
+  bodies that differ from the game's. The fourth, `WGUpdatePalette`, has no
+  partial combat-screen redraw. `src/SOURCE/wingraph.cpp` is therefore one
+  source for both programs (unit `SOURCE/wingraph`, `image_flags`), with the
+  editor's path strings and that branch selected by `HOMM1_EDITOR`; all 33
+  editor bodies are exact.
+- The editor's window/menu unit has 13 bodies identical to the game's `kbwin`,
+  `EDITOR.CPP` carries copies of six `KB`/`NOOPT` bodies, and the editor's
+  file requester three of `REQUEST`'s. Their units differ from the game's
+  (other functions, data and `/Oi`), so they are reconstructed as editor
+  units.
 
 [`shared-function-accounting.tsv`](shared-function-accounting.tsv) lists every
 editor reconstruction target with its shared unit, its identical game body or

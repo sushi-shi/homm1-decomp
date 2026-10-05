@@ -386,11 +386,70 @@ class Placer:
                             f"FF25 thunk of {key[0]}!{key[1]}; name of game thunk 0x{b['rva']:x}"))
         return out
 
+    def place_data_from_image_claims(self) -> None:
+        """Data of shared units referenced only by bodies the shared source
+        compiles differently for this image (`VA_AT(<image>, ...)`): where the
+        image's compiled body equals the retail body with relocations masked,
+        each DIR32 field names its symbol at the retail value less the addend."""
+        from homm1.compare.canonicalize import CoffObject, RELOCATION_WIDTHS
+        from homm1.core.msvc_names import mask
+        from homm1.core.paths import image_build
+        names = {mask(b["name"]): b for b in self.bindings
+                 if b["space"] != "text" and b["name"] and b["channel"] in SRC_CHANNELS}
+        claims_dir = image_build(self.image) / "gen/claims"
+        found: dict[int, set[int]] = defaultdict(set)
+        for unit in sorted(self.shared):
+            frag = claims_dir / f"{unit}.tsv"
+            obj = image_build(self.image) / "objdiff/base" / f"{unit}.obj"
+            if not frag.is_file() or not obj.is_file():
+                continue
+            own = {r["name"]: (int(r["rva"], 16), int(r["size"], 16))
+                   for r in read_tsv(frag)[2]
+                   if r.get("space") == self.image and r["kind"] == "func" and r["size"]}
+            if not own:
+                continue
+            c = CoffObject(obj.read_bytes())
+            for sym in c.symbols.values():
+                if sym.typ != 0x20 or sym.section <= 0 or sym.name not in own:
+                    continue
+                erva, size = own[sym.name]
+                sec = c.sections[sym.section - 1]
+                body = c.section_bytes(sec)[sym.value:sym.value + size]
+                relocs = [r for r in c.relocations
+                          if r.section == sym.section and sym.value <= r.site < sym.value + size]
+                retail = self.etext[erva - self.eva:erva - self.eva + size]
+                masked = bytearray(body), bytearray(retail)
+                for r in relocs:
+                    for i in range(r.site - sym.value, r.site - sym.value
+                                   + RELOCATION_WIDTHS.get(r.typ, 4)):
+                        masked[0][i] = masked[1][i] = 0
+                if masked[0] != masked[1]:
+                    continue
+                for r in relocs:
+                    if r.typ != 0x6:
+                        continue
+                    b = names.get(mask(c.symbols[r.symbol_index].name))
+                    if b is None:
+                        continue
+                    off = r.site - sym.value
+                    addend = struct.unpack_from("<i", body, off)[0]
+                    value = struct.unpack_from("<I", retail, off)[0] - 0x400000
+                    found[b["rva"]].add(value - addend)
+        for grva, eaddrs in found.items():
+            if grva in self.data:
+                continue
+            if len(eaddrs) == 1:
+                self.data[grva] = (eaddrs.pop(), "fields of this image's own compile of the "
+                                                 "shared source (VA_AT body, masked-identical)")
+            else:
+                self.problems.append(f"data 0x{grva:x}: image compile fields disagree")
+
     def run(self) -> None:
         self.place_functions()
         self.drop_collisions()
         self.check_calls()
         self.place_data()
+        self.place_data_from_image_claims()
 
 
 GENERATED = ("placements.tsv", "function_referents.tsv", "data_vtables.tsv",
@@ -469,8 +528,9 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     banner = []
     if current.is_file():
         banner, _h, kept = read_tsv(current)
+        derived = {u for _lo, _hi, u, _c in rows}
         rows += [(int(r["lo"], 16), int(r["hi"], 16), r["unit"], r["class"])
-                 for r in kept if r["unit"] not in p.shared]
+                 for r in kept if r["unit"] not in derived]
     banner = [line for line in banner if line.startswith("# image-only:")] or [
         "# image-only: spans of units with no game counterpart are reviewed by hand."]
     rows.sort()

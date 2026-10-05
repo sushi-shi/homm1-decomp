@@ -178,6 +178,11 @@ def load_units(image: str = "game") -> tuple[dict, list[dict]]:
         if u["unit"] in seen:
             raise SystemExit(f"{MANIFEST}: duplicate unit '{u['unit']}'")
         seen.add(u["unit"])
+        # A unit another image compiles with another profile names it per image.
+        profile = u.get("image_flags", {}).get(image, u["flags"])
+        if profile not in profiles:
+            raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' image {image} references "
+                             f"unknown flags profile '{profile}'")
         if u["flags"] not in profiles:
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' references unknown "
                              f"flags profile '{u['flags']}' "
@@ -192,7 +197,7 @@ def load_units(image: str = "game") -> tuple[dict, list[dict]]:
         if u["compiler"] not in {"vc40", "vc41", "vc6"}:
             raise SystemExit(f"{MANIFEST}: unit '{u['unit']}' has unsupported "
                              f"compiler '{u['compiler']}'")
-        u["cflags"] = list(profiles[u["flags"]]) + defines
+        u["cflags"] = list(profiles[profile]) + defines
     return data, units
 
 
