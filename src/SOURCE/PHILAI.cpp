@@ -1263,8 +1263,8 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                     bestY = y;
                     bestRV = cellValue;
                 } else if (cellValue == bestRV && cellValue == 0) {
-                    if (MANHATTAN_LENGTH(bestY - pHero->m_y, bestX - pHero->m_x)
-                        < MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)) {
+                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)
+                        > MANHATTAN_LENGTH(bestX - pHero->m_x, bestY - pHero->m_y)) {
                         bestX = x;
                         bestY = y;
                     }
