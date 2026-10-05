@@ -870,7 +870,7 @@ i16 NewGameHandler(tag_message& message) {
                             iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
-                            if (giNumHumanPlayers > iPlayer
+                            if (iPlayer < giNumHumanPlayers
                                 && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = HUMAN_HANDICAP_EASY;
                             break;
