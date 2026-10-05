@@ -8,10 +8,6 @@ Supply your own game executable and assets; they are not included here.
 
 ## Branches
 
-Win95 1.2 is maintained on [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
-See the [1.1 → 1.2 changes](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md)
-for behavior differences and port validation.
-
 ```text
 decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2
         |
