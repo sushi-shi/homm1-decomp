@@ -6812,6 +6812,9 @@ DATA(0x004a65cc)
 i8 gFreshSave;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;
-// ADVMGR's ambient-sound volume by distance; Buka's 0..127 scale.
+// ADVMGR's ambient-sound volume by distance; Buka's 0..127 scale. Eight
+// slots, five initialized: the zero tail is 0x0048a380..0x0048a38b, before
+// advManager's vtable, and the Win95 1.0 image has the same 12 zero bytes
+// after its 64/48/32/16/10 table.
 DATA(0x0048a36c)
-const i32 gEnvironmentVolume[5] = {127, 96, 63, 31, 21};
+const i32 gEnvironmentVolume[8] = {127, 96, 63, 31, 21};

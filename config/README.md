@@ -43,8 +43,8 @@ Migration tables identify both their source and destination versions.
   delinker cannot infer.
 - `functions_static_libs.tsv`, `data_vtables.tsv`, `data_static_libs.tsv`,
   `data_compgen.tsv`: provider claim channels (`homm1 model`).
-- `import_libraries.tsv`: vendor import libraries whose format differs from
-  VC4 LINK output (`homm1.graph.implib`).
+- `import_libraries.tsv`: import libraries whose format differs from the
+  pinned LINK's output (`homm1.graph.implib`).
 - `link_order.tsv`, `link_bands.tsv`: link-layout channels; admitting rows
   changes delinker ownership.
 - `dna_bands.tsv`: executable DNA census against VC4 LIBCMT/OLDNAMES

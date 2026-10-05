@@ -230,9 +230,29 @@ def toolchain_lib(stem: str) -> Path | None:
     return None
 
 
+def shaped_lib(dll: str, shapes: dict[str, dict[str, str]] | None = None
+               ) -> Path | None:
+    """The pinned shape toolchain's own `<stem>.lib` for a DLL that
+    import_libraries.tsv places in an older format (Buka's NETAPI32.LIB is
+    VC4.1's), or None when the row has no such library or the toolchain is
+    not installed - the caller then falls back to the selected toolchain."""
+    shape = (lib_shapes() if shapes is None else shapes).get(dll)
+    if not shape or shape["format"] not in SHAPE_LINKERS:
+        return None
+    from homm1 import toolchain
+    name = SHAPE_LINKERS[shape["format"]]
+    try:
+        toolchain.verify(name)
+    except (KeyError, ValueError):
+        return None
+    lib = toolchain.root(name) / "lib"
+    return find_ci(lib, f"{Path(dll).stem}.lib") if lib.is_dir() else None
+
+
 def survey() -> list[tuple[str, dict[str, int], Path | None]]:
     """[(dll, {name: hint}, existing_lib_or_None)] over retail's imports."""
-    return [(dll, names, toolchain_lib(Path(dll).stem))
+    shapes = lib_shapes()
+    return [(dll, names, shaped_lib(dll, shapes) or toolchain_lib(Path(dll).stem))
             for dll, names in import_table().items()]
 
 
@@ -530,7 +550,11 @@ def lib_shapes() -> dict[str, dict[str, str]]:
 #: format of the 1994 SDK libraries still in VC4's lib/, e.g. ctl3d32.lib).
 #: The two null-descriptor symbols differ, so a vc2 library linked beside the
 #: VC4 Win32 libraries adds a second 20-byte .idata$3 terminator.
-SHAPE_LINKERS = {"vc4": "vc40", "vc2": "vc20"}
+#: vc41: LINK 3.10's long format under a VC6 link (Buka): every import is a
+#: full COFF member without @comp.id, so the Rich header counts it as prodid 0
+#: rather than as a short import, and VC6 LINK orders its IAT slots unlike
+#: those of short members.
+SHAPE_LINKERS = {"vc4": "vc40", "vc2": "vc20", "vc41": "vc41"}
 
 
 def _shape_linker(fmt: str, dll: str, verbose: bool) -> Path | None:

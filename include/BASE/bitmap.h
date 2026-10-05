@@ -26,7 +26,7 @@ public:
     bitmap(void);
     bitmap(i16 type, i16 width, i16 height);
     bitmap(i16 id);
-    virtual inline ~bitmap();
+    virtual ~bitmap();
     // --- methods ---
     void DrawToBufferCareful(i16 x, i16 y);
     void DrawToBuffer(i16 x, i16 y);

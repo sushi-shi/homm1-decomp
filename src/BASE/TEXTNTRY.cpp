@@ -28,10 +28,6 @@ textEntryWidget::textEntryWidget(void) : textWidget() {
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-textEntryWidget::~textEntryWidget(void) {
-    gpResourceManager->Dispose(m_icon);
-}
-
 // The parameterized constructor; no retail caller survives (HoMM1 has no
 // inset layout arguments).
 // @dead-code
@@ -60,7 +56,11 @@ textEntryWidget::textEntryWidget(
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
+VA(0x00475945, 0x5b)
+textEntryWidget::~textEntryWidget(void) {
+    gpResourceManager->Dispose(m_icon);
+}
+
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     char name[RESOURCE_NAME_CAPACITY];

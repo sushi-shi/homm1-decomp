@@ -49,13 +49,13 @@ bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFEREN
     PollSound();
 }
 
+VA(0x00473336, 0x3e)
 bitmap::~bitmap(void) {
     if (m_pixels != NULL)
         free(m_pixels);
     m_pixels = NULL;
 }
 
-VA_COMPGEN(0x00473336, 0x3e, "??1bitmap@@UAE@XZ", 0x00473180)
 VA(0x00473374, 0x4b)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();

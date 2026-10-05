@@ -25,10 +25,6 @@ button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_hotkey = BUTTON_NO_HOTKEY;
 }
 
-button::~button(void) {
-    gpResourceManager->Dispose(m_icon);
-}
-
 // The icon-file-id and icon-name overloads; no retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
@@ -94,7 +90,11 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
-VA_COMPGEN(0x00476f2f, 0x5b, "??1button@@UAE@XZ", 0x00476c80)
+VA(0x00476f2f, 0x5b)
+button::~button(void) {
+    gpResourceManager->Dispose(m_icon);
+}
+
 VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
     i16 x;
