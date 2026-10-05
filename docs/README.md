@@ -13,8 +13,7 @@
   [equivalence surveys](equivalence/) of non-exact functions.
 - [Cleanliness](cleanliness-metrics.md), [source markers](comment-markers.md),
   [constants](constants.md), [enum reuse](enum-reuse.md), [clangd](clangd.md).
-- [Tooling inheritance](tooling-inheritance.md),
-  [script maintenance](../scripts/README.md),
+- [Script maintenance](../scripts/README.md),
   [Rust tools and the LZHUF port](../tools/README.md).
 
 Retail facts live in `config/retail`, build contracts in `config`, generated
