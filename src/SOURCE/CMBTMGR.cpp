@@ -200,8 +200,8 @@ i16 combatManager::Open(i16 priority) {
     gbIconClipOn = 0;
     m_computeExtent = 0;
     m_redrawExtent = 0;
-    gCurLoadedSpellIcon = NULL;
-    gCurLoadedSpellFileId = 0;
+    gLoadedEffectIcn = NULL;
+    gEffectFileId = 0;
     gpMouseManager->SetPointer("cmbtmous.mse", COMBAT_POINTER_DEFAULT);
     m_combatWindow = new heroWindow(0, 0, "cmbtwin.bin");
     if (!m_combatWindow)
@@ -656,10 +656,10 @@ void combatManager::FreeArmies(void) {
         m_armies[COMBAT_ATTACKER_SIDE][i].FreeResources();
     for (i = 0; i < m_numArmies[COMBAT_DEFENDER_SIDE]; i++)
         m_armies[COMBAT_DEFENDER_SIDE][i].FreeResources();
-    if (gCurLoadedSpellIcon)
-        gpResourceManager->Dispose(gCurLoadedSpellIcon);
-    gCurLoadedSpellIcon = NULL;
-    gCurLoadedSpellFileId = 0;
+    if (gLoadedEffectIcn)
+        gpResourceManager->Dispose(gLoadedEffectIcn);
+    gLoadedEffectIcn = NULL;
+    gEffectFileId = 0;
 }
 
 // No callers and an empty body.

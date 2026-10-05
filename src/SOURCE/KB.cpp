@@ -283,7 +283,7 @@ i32 oldmain(void) {
         backdropLoaded = 1;
         if (gGameCommand != MAIN_MENU_QUIT)
             gpWindowManager->m_updateFlags = 1;
-        gCampaignChoice = 0;
+        gChosenCampaignIndex = 0;
         gpMouseManager->ReallyShowPointer();
 
         if (gMenuCommand != APP_MENU_NONE) {
@@ -571,7 +571,7 @@ i32 InterpretCommandLine(void) {
     gbBlackoutPlayer = 1;
     strcpy(gMapName, "AES31000.map");
     strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
-    strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
+    strcpy(gMapDesc, localization::Tr("scenario.claw.description"));
 
     size = strlen(gCommandParams);
     for (i = 0; i < size; i++) {
@@ -975,8 +975,8 @@ void NormalDialog(
     }
 
     sprintf(iconFile, "evntwin%d.bin", rows);
-    gNormalDialogWindow = new heroWindow(x, y, iconFile);
-    if (!gNormalDialogWindow)
+    gCommonDialogBox = new heroWindow(x, y, iconFile);
+    if (!gCommonDialogBox)
         MemError();
 
     msg.type = MESSAGE_WIDGET;
@@ -985,18 +985,18 @@ void NormalDialog(
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
         msg.id = NORMAL_DIALOG_BUTTON_OK;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        gCommonDialogBox->BroadcastMessage(msg);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
         msg.id = NORMAL_DIALOG_BUTTON_CANCEL;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        gCommonDialogBox->BroadcastMessage(msg);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
         msg.id = NORMAL_DIALOG_BUTTON_YES;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        gCommonDialogBox->BroadcastMessage(msg);
         msg.id = NORMAL_DIALOG_BUTTON_NO;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        gCommonDialogBox->BroadcastMessage(msg);
     }
 
     for (index = 0; index < NORMAL_DIALOG_RESOURCE_COUNT; index++) {
@@ -1120,7 +1120,7 @@ void NormalDialog(
         );
         if (!resourcePanel)
             MemError();
-        gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+        gCommonDialogBox->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         if (resourceKind[index] == NORMAL_DIALOG_ARTIFACT) {
             resourcePanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6,
@@ -1136,7 +1136,7 @@ void NormalDialog(
             );
             if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gCommonDialogBox->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
         if (resourceKind[index] == NORMAL_DIALOG_CREST) {
             resourcePanel = new iconWidget(
@@ -1153,7 +1153,7 @@ void NormalDialog(
             );
             if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gCommonDialogBox->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
         if (resourceKind[index] == NORMAL_DIALOG_HERO) {
             sprintf(iconFile, "port%04d.icn", resourceAmounts[index]);
@@ -1171,7 +1171,7 @@ void NormalDialog(
             );
             if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gCommonDialogBox->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
         captionText = new textWidget(
             resCenterX - 50,
@@ -1186,12 +1186,12 @@ void NormalDialog(
         );
         if (!captionText)
             MemError();
-        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
+        gCommonDialogBox->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
     }
 
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
     msg.text = text;
-    gNormalDialogWindow->BroadcastMessage(msg);
+    gCommonDialogBox->BroadcastMessage(msg);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
         orWord = static_cast<char*>(malloc(strlen(localization::Tr("dialog.choice.or")) + 1));
@@ -1209,7 +1209,7 @@ void NormalDialog(
         );
         if (!captionText)
             MemError();
-        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
+        gCommonDialogBox->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gpAdvManager->m_active == 1)
@@ -1218,17 +1218,17 @@ void NormalDialog(
         gpMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);
 
     if (dialogType == NORMAL_DIALOG_TYPE_WAIT_CANCEL || dialogType == NORMAL_DIALOG_TYPE_WAIT_OK) {
-        gpWindowManager->DoDialog(gNormalDialogWindow, WaitHandler, 0);
+        gpWindowManager->DoDialog(gCommonDialogBox, WaitHandler, 0);
     } else if (dialogType == NORMAL_DIALOG_TYPE_QUICK_VIEW) {
         gpMouseManager->ReallyHidePointer();
-        gpWindowManager->AddWindow(gNormalDialogWindow, WINDOW_Z_ORDER_APPEND, 1);
+        gpWindowManager->AddWindow(gCommonDialogBox, WINDOW_Z_ORDER_APPEND, 1);
         QuickViewWait();
-        gpWindowManager->RemoveWindow(gNormalDialogWindow);
+        gpWindowManager->RemoveWindow(gCommonDialogBox);
         gpMouseManager->ReallyShowPointer();
     } else {
-        gpWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
+        gpWindowManager->DoDialog(gCommonDialogBox, EventWindowHandler, 0);
     }
-    delete gNormalDialogWindow;
+    delete gCommonDialogBox;
 }
 
 // @dead-code
@@ -1240,9 +1240,9 @@ void UpdateNormalDialog(char* text) {
         i16 show = 1;
         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
         message.text = text;
-        gNormalDialogWindow->BroadcastMessage(message);
-        gNormalDialogWindow->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
-        gNormalDialogWindow
+        gCommonDialogBox->BroadcastMessage(message);
+        gCommonDialogBox->DrawWindow(0, 0, NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT);
+        gCommonDialogBox
             ->DrawWindow(1, WINDOW_ALL_WIDGETS_LOW, NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID);
     }
 }
@@ -1847,7 +1847,7 @@ void InitVars(void) {
     strcpy(cNetBoxLine[0], "");
     strcpy(cNetBoxLine[1], "");
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
-        ppMapExtra[i] = NULL;
+        pMapExtra[i] = NULL;
     hmnuDflt = LoadMenuA(hInstApp, "mnuDflt");
     hmnuCmbt = LoadMenuA(hInstApp, "mnuCmbt");
     hmnuAdv = LoadMenuA(hInstApp, "mnuAdv");
@@ -1958,9 +1958,9 @@ VA(0x00440c72, 0x5d)
 void ClearMapExtra(void) {
     i32 i;
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++) {
-        if (ppMapExtra[i]) {
-            free(ppMapExtra[i]);
-            ppMapExtra[i] = NULL;
+        if (pMapExtra[i]) {
+            free(pMapExtra[i]);
+            pMapExtra[i] = NULL;
         }
     }
     iMaxMapExtra = MAP_EXTRA_FIRST_RECORD;
@@ -2547,16 +2547,16 @@ VA(0x0044228d, 0x59)
 void LoadSystemwideIcons(void) {
     gBuyBuildIcons = gpResourceManager->GetIcon("buybuild.icn");
     gSystemIcons = gpResourceManager->GetIcon("system.icn");
-    bigFont = gpResourceManager->GetFont("bigfont.fnt");
-    smallFont = gpResourceManager->GetFont("smalfont.fnt");
+    gBigFont = gpResourceManager->GetFont("bigfont.fnt");
+    gSmallFont = gpResourceManager->GetFont("smalfont.fnt");
 }
 
 VA(0x004422e6, 0x4b)
 void UnloadSystemwideIcons(void) {
     gpResourceManager->Dispose(gBuyBuildIcons);
     gpResourceManager->Dispose(gSystemIcons);
-    gpResourceManager->Dispose(bigFont);
-    gpResourceManager->Dispose(smallFont);
+    gpResourceManager->Dispose(gBigFont);
+    gpResourceManager->Dispose(gSmallFont);
 }
 
 // Retail empty lifecycle hook.
@@ -4445,7 +4445,7 @@ i32 giMaxExtentX;
 DATA(0x004a7b78)
 i32 giMaxExtentY;
 DATA(0x004a74e0)
-class font* smallFont;
+class font* gSmallFont;
 DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
 DATA(0x004a98c0)
@@ -4483,13 +4483,13 @@ philAI* gpPhilAI;
 DATA(0x004a7bac)
 char* cDEDest;
 DATA(0x004a74ec)
-heroWindow* gNormalDialogWindow;
+heroWindow* gCommonDialogBox;
 DATA(0x004a7474)
 i32 giHostGamePos;
 DATA(0x004a7164)
 mouseManager* gpMouseManager;
 DATA(0x004a7468)
-class font* bigFont;
+class font* gBigFont;
 DATA(0x004a7fb8)
 class icon* gSystemIcons;
 DATA(0x004a7495)
@@ -4503,7 +4503,7 @@ i32 giMinExtentY;
 DATA(0x004a7b9c)
 i8 iMPBaseType;
 DATA(0x004a7fb4)
-class hero* gHVHero;
+class hero* gInfoViewedHero;
 DATA(0x004a747c)
 i32 giHeroScreenSrcIndex;
 DATA(0x004a7494)
@@ -4533,7 +4533,7 @@ configStruct gConfig;
 DATA(0x004a7a10)
 char gcRegAppPath[352];
 DATA(0x004a9410)
-i8 gCampaignChoice;
+i8 gChosenCampaignIndex;
 DATA(0x004a7ba0)
 class game* gpGame;
 DATA(0x004a7823)
@@ -4541,7 +4541,7 @@ i8 gbRetreatWin;
 DATA(0x004a7b8d)
 H1_ENUM_STORAGE(DialogWaitType, i8) giWaitType;
 DATA(0x004a74e8)
-i16 gCurLoadedSpellFileId;
+i16 gEffectFileId;
 DATA(0x004a761c)
 i32 giBottomViewOverride;
 DATA(0x004a76c4)
@@ -4559,9 +4559,9 @@ char gcRegCDRomPath[352];
 DATA(0x004a7628)
 class heroWindow* heroWin;
 DATA(0x004a9400)
-class icon* gCurLoadedSpellIcon;
+class icon* gLoadedEffectIcn;
 DATA(0x004a7bb8)
-void* ppMapExtra[255];
+void* pMapExtra[255];
 DATA(0x004a989c)
 i32 giCurGeneral;
 DATA(0x004a7b70)
@@ -4571,13 +4571,13 @@ i32 giNumHumanPlayers;
 DATA(0x004a955c)
 i8 gbIconClipOn;
 DATA(0x004a6cc8)
-i32 pwSizeOfMapExtra[255];
+i32 iSizeOfMapExtra[255];
 DATA(0x004a95cc)
 i32 iDEMaxLen;
 DATA(0x004a7828)
 class combatManager* gpCombatManager;
 DATA(0x004a7478)
-i16 gSpellEffectFrame;
+i16 gImpactOverlayFrame;
 DATA(0x004a95c8)
 executive* gpExec;
 DATA(0x004a7638)
@@ -4589,7 +4589,7 @@ H1_ENUM_STORAGE(MainMenuControl, i16) gGameCommand;
 DATA(0x004a9738)
 i8 giMonthType;
 DATA(0x004a6c4c)
-char gMapDescription[124];
+char gMapDesc[124];
 DATA(0x004a7498)
 char* DEFAULT_AGGREGATE_NAME;
 DATA(0x004a7b94)
@@ -4623,7 +4623,7 @@ i32 giBottomViewResourceQty;
 DATA(0x004a74c8)
 i8 gbWaitForRemoteReceive;
 DATA(0x004a95d0)
-char gLastMapName[352];
+char gPrevGameFile[352];
 DATA(0x004a940c)
 townManager* gpTownManager;
 DATA(0x004a782c)

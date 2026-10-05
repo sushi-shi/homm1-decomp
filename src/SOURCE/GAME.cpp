@@ -496,8 +496,8 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     write(outFile, buffer, 0x11);
     WRITE_FILE_VALUE(outFile, m_difficulty);
     WRITE_FILE_VALUE(outFile, m_playerCount);
-    gSaveCurPlayer = giCurPlayer;
-    WRITE_FILE_VALUE(outFile, gSaveCurPlayer);
+    gSavedCurPlayer = giCurPlayer;
+    WRITE_FILE_VALUE(outFile, gSavedCurPlayer);
     WRITE_FILE_VALUE(outFile, m_deadPlayerCount);
     write(outFile, m_playerDead, sizeof(m_playerDead));
     for (iFile = 0; iFile < GAME_PLAYER_COUNT; iFile++) {
@@ -577,8 +577,8 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     sprintf(m_saveName, filename);
     READ_FILE_VALUE(oldHandle, m_difficulty);
     READ_FILE_VALUE(oldHandle, m_playerCount);
-    READ_FILE_VALUE(oldHandle, gSaveCurPlayer);
-    giCurPlayer = gSaveCurPlayer;
+    READ_FILE_VALUE(oldHandle, gSavedCurPlayer);
+    giCurPlayer = gSavedCurPlayer;
     READ_FILE_VALUE(oldHandle, m_deadPlayerCount);
     read(oldHandle, m_playerDead, sizeof(m_playerDead));
     read(oldHandle, theHumans, GAME_PLAYER_COUNT);
@@ -953,6 +953,13 @@ void game::GiveTroopsToNeutralTowns(void) {
     }
 }
 
+DATA(0x004a6c10)
+char gCurMapName[16] = "";
+DATA(0x004a6c20)
+i32 gEndSequence = 0;
+DATA(0x004a6c24)
+i32 gGameOver = 0;
+
 // Starts campaigns directly, restores the previous setup choices and falls
 // back to a default map when the remembered one does not fit the human
 // player count.
@@ -963,8 +970,8 @@ i8 game::NewGame(void) {
     i32 player;
     if (!SetupGame(1))
         return 0;
-    if (gCampaignChoice > 0) {
-        InitEntireCampaign(gCampaignChoice);
+    if (gChosenCampaignIndex > 0) {
+        InitEntireCampaign(gChosenCampaignIndex);
         return 1;
     }
     if (gbWaitForRemoteReceive)
@@ -975,12 +982,12 @@ i8 game::NewGame(void) {
         MemError();
     SetWinText(m_newGameWindow, WINDOW_TEXT_NEW_GAME);
     if (gNewGameSettingsSaved) {
-        gpGame->m_difficulty = gSavedDifficulty;
-        m_players[1].m_difficulty = gSavedPlayerTypes[1];
-        m_players[2].m_difficulty = gSavedPlayerTypes[2];
-        m_players[3].m_difficulty = gSavedPlayerTypes[3];
+        gpGame->m_difficulty = gOldGameDifficulty;
+        m_players[1].m_difficulty = gSavedDifficulties[1];
+        m_players[2].m_difficulty = gSavedDifficulties[2];
+        m_players[3].m_difficulty = gSavedDifficulties[3];
         gbIAmGreatest = gSavedKingOfTheHill;
-        m_players[0].m_color = gSavedCrest;
+        m_players[0].m_color = gKeptColor;
         for (player = 1; player < giNumHumanPlayers; player++) {
             if (m_players[player].m_difficulty == HUMAN_HANDICAP_NONE)
                 m_players[player].m_difficulty = m_players[0].m_difficulty;
@@ -993,13 +1000,13 @@ i8 game::NewGame(void) {
         if (giNumHumanPlayers == 1) {
             strcpy(gMapName, "AES31000.map");
             strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
-            strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
+            strcpy(gMapDesc, localization::Tr("scenario.claw.description"));
             gMapSize = MAP_SIZE_SMALL;
             gMapDifficulty = MAP_DIFFICULTY_EASY;
         } else {
             strcpy(gMapName, "CNM51234.map");
             strcpy(gFullMapName, localization::Tr("scenario.bay.name"));
-            strcpy(gMapDescription, localization::Tr("scenario.bay.description"));
+            strcpy(gMapDesc, localization::Tr("scenario.bay.description"));
             gMapSize = MAP_SIZE_MEDIUM;
             gMapDifficulty = MAP_DIFFICULTY_NORMAL;
         }
@@ -1011,17 +1018,17 @@ i8 game::NewGame(void) {
     if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_1)
         return 0;
     strcpy(m_mapName, gFullMapName);
-    strcpy(m_mapDescription, gMapDescription);
+    strcpy(m_mapDescription, gMapDesc);
     m_mapSize = gMapSize;
     m_mapDifficulty = gMapDifficulty;
     strcpy(m_mapName, gFullMapName);
     gNewGameSettingsSaved = 1;
-    gSavedDifficulty = gpGame->m_difficulty;
-    gSavedPlayerTypes[1] = m_players[1].m_difficulty;
-    gSavedPlayerTypes[2] = m_players[2].m_difficulty;
-    gSavedPlayerTypes[3] = m_players[3].m_difficulty;
+    gOldGameDifficulty = gpGame->m_difficulty;
+    gSavedDifficulties[1] = m_players[1].m_difficulty;
+    gSavedDifficulties[2] = m_players[2].m_difficulty;
+    gSavedDifficulties[3] = m_players[3].m_difficulty;
     gSavedKingOfTheHill = gbIAmGreatest;
-    gSavedCrest = m_players[0].m_color;
+    gKeptColor = m_players[0].m_color;
     NewMap(gMapName);
     return 1;
 }
@@ -1792,9 +1799,9 @@ i16 game::LoadMap(char* filename) {
     if (theVersion >= MAP_EXTRA_VERSION) {
         READ_FILE_VALUE(handle, iMaxMapExtra);
         for (i = 1; i < iMaxMapExtra; i++) {
-            READ_FILE_VALUE(handle, pwSizeOfMapExtra[i]);
-            ppMapExtra[i] = malloc(pwSizeOfMapExtra[i]);
-            read(handle, ppMapExtra[i], pwSizeOfMapExtra[i]);
+            READ_FILE_VALUE(handle, iSizeOfMapExtra[i]);
+            pMapExtra[i] = malloc(iSizeOfMapExtra[i]);
+            read(handle, pMapExtra[i], iSizeOfMapExtra[i]);
         }
     } else {
         iMaxMapExtra = 1;
@@ -3170,7 +3177,7 @@ void game::RandomizeTown(i8 x, i8 y, i8 isCastle) {
     m_castleRecs[townNum].m_type = race;
     plain = 1;
     if (town->m_extraIndex >= 1
-        && static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex])->customized)
+        && static_cast<mapTownExtra*>(pMapExtra[town->m_extraIndex])->customized)
         plain = 0;
     if (plain) {
         m_castleRecs[townNum].m_buildings =
@@ -3299,10 +3306,10 @@ void game::RandomizeMine(i8 x, i8 y) {
                 resType = Random(1, 6);
                 break;
         }
-        if (!gMineTypeCount[resType])
+        if (!gMineTypeNums[resType])
             count = 30;
     }
-    gMineTypeCount[resType]++;
+    gMineTypeNums[resType]++;
     switch (resType) {
         case RESOURCE_WOOD:
             mineFrame = 5;
@@ -3483,7 +3490,7 @@ void game::ProcessRandomObjects(i32 castlesOnly) {
     i32 highFVNum;
 
     for (i = 0; i < RESOURCE_COUNT; i++)
-        gMineTypeCount[i] = 0;
+        gMineTypeNums[i] = 0;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gRandomTownTypes[i] = TOWN_TYPE_NONE;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
@@ -3697,13 +3704,13 @@ static i32 s_adjacentMonsterEndX;
 DATA(0x004a6c04)
 static i32 s_adjacentMonsterEndY;
 DATA(0x004a6bd4)
-static i32 s_adjacentMonsterX;
+static i32 s_adjacentGuardX;
 DATA(0x004a6bd8)
-static i32 s_adjacentMonsterY;
+static i32 s_adjacentGuardY;
 DATA(0x004a6be8)
-static i32 s_adjacentMonsterMinX;
+static i32 s_adjacentGuardMinX;
 DATA(0x004a6bec)
-static i32 s_adjacentMonsterMinY;
+static i32 s_adjacentGuardMinY;
 
 VA(0x00436026, 0x2fa)
 i8 advManager::FindAdjacentMonster(
@@ -3719,18 +3726,18 @@ i8 advManager::FindAdjacentMonster(
 
     if (originX > 0 && originY > 0 && originX < MAP_CELL_GRID_SIZE - 1
         && originY < MAP_CELL_GRID_SIZE - 1) {
-        for (s_adjacentMonsterX = originX - 1; s_adjacentMonsterX < s_adjacentMonsterEndX;
-             ++s_adjacentMonsterX) {
-            for (s_adjacentMonsterY = originY - 1; s_adjacentMonsterY < s_adjacentMonsterEndY;
-                 ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
+        for (s_adjacentGuardX = originX - 1; s_adjacentGuardX < s_adjacentMonsterEndX;
+             ++s_adjacentGuardX) {
+            for (s_adjacentGuardY = originY - 1; s_adjacentGuardY < s_adjacentMonsterEndY;
+                 ++s_adjacentGuardY) {
+                if (m_mapData[s_adjacentGuardX][s_adjacentGuardY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-                    if (s_adjacentMonsterY < originY) {
+                    if (s_adjacentGuardY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
                              || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
-                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
+                            && (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY))
                             goto foundAdjacentMonster;
-                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
+                    } else if (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY) {
                         goto foundAdjacentMonster;
                     }
                 }
@@ -3742,27 +3749,27 @@ i8 advManager::FindAdjacentMonster(
         if (originY == MAP_CELL_GRID_SIZE - 1)
             s_adjacentMonsterEndY = originY + 1;
         if (originX == 0)
-            s_adjacentMonsterMinX = 0;
+            s_adjacentGuardMinX = 0;
         else
-            s_adjacentMonsterMinX = originX - 1;
+            s_adjacentGuardMinX = originX - 1;
         if (originY == 0)
-            s_adjacentMonsterMinY = 0;
+            s_adjacentGuardMinY = 0;
         else
-            s_adjacentMonsterMinY = originY - 1;
+            s_adjacentGuardMinY = originY - 1;
 
-        for (s_adjacentMonsterX = s_adjacentMonsterMinX; s_adjacentMonsterX < s_adjacentMonsterEndX;
-             ++s_adjacentMonsterX) {
-            for (s_adjacentMonsterY = s_adjacentMonsterMinY;
-                 s_adjacentMonsterY < s_adjacentMonsterEndY;
-                 ++s_adjacentMonsterY) {
-                if (m_mapData[s_adjacentMonsterX][s_adjacentMonsterY].m_triggerType
+        for (s_adjacentGuardX = s_adjacentGuardMinX; s_adjacentGuardX < s_adjacentMonsterEndX;
+             ++s_adjacentGuardX) {
+            for (s_adjacentGuardY = s_adjacentGuardMinY;
+                 s_adjacentGuardY < s_adjacentMonsterEndY;
+                 ++s_adjacentGuardY) {
+                if (m_mapData[s_adjacentGuardX][s_adjacentGuardY].m_triggerType
                     == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
-                    if (s_adjacentMonsterY < originY) {
+                    if (s_adjacentGuardY < originY) {
                         if ((GetCell(originX, originY)->m_objectIndex == MAP_CELL_NO_FRAME
                              || (GetCell(originX, originY)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
-                            && (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY))
+                            && (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY))
                             goto foundAdjacentMonster;
-                    } else if (s_adjacentMonsterX != excludedX || s_adjacentMonsterY != excludedY) {
+                    } else if (s_adjacentGuardX != excludedX || s_adjacentGuardY != excludedY) {
                         goto foundAdjacentMonster;
                     }
                 }
@@ -3772,8 +3779,8 @@ i8 advManager::FindAdjacentMonster(
     return 0;
 
 foundAdjacentMonster:
-    *monsterX = s_adjacentMonsterX;
-    *monsterY = s_adjacentMonsterY;
+    *monsterX = s_adjacentGuardX;
+    *monsterY = s_adjacentGuardY;
     return 1;
 }
 
@@ -3944,7 +3951,7 @@ i8 game::SetupTowns(void) {
         town = GetTown(i);
         town->m_customized = 0;
         if (town->m_extraIndex >= 1) {
-            newExtra = static_cast<mapTownExtra*>(ppMapExtra[town->m_extraIndex]);
+            newExtra = static_cast<mapTownExtra*>(pMapExtra[town->m_extraIndex]);
             if (newExtra->customized && newExtra->owner != MAP_TOWN_OWNER_UNSET) {
                 if (newExtra->owner >= gpGame->m_playerCount)
                     curOwn = gpGame->m_playerCount - 1;
@@ -3999,7 +4006,7 @@ void game::ProcessOnMapHeroes(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             loc = &m_map[posX][posY];
             if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
-                extra = static_cast<mapHeroExtra*>(ppMapExtra[loc->m_objectMetadata]);
+                extra = static_cast<mapHeroExtra*>(pMapExtra[loc->m_objectMetadata]);
                 theHeroEntry = GetHero(extra->heroId);
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                     theHeroEntry->m_army.m_creatureCounts[i] = extra->troopCounts[i];
@@ -4523,7 +4530,7 @@ void game::GetMap(void) {
 
     strcpy(oldMapName, gMapName);
     strcpy(saveFullName, gFullMapName);
-    strcpy(oldDescription, gMapDescription);
+    strcpy(oldDescription, gMapDesc);
     gShowMapInfo = 1;
     strcpy(gCurMapName, "");
     gReqExtraWindow = new heroWindow(310, 332, "reqextra.bin");
@@ -4549,7 +4556,7 @@ void game::GetMap(void) {
     } else {
         strcpy(gMapName, oldMapName);
         strcpy(gFullMapName, saveFullName);
-        strcpy(gMapDescription, oldDescription);
+        strcpy(gMapDesc, oldDescription);
         delete theRequest;
     }
     delete gReqExtraWindow;
@@ -4794,28 +4801,22 @@ void game::RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, mapCell* passedCell, 
 
 // GAME globals. gNewGameSettingsSaved is local to NewGame; gMonType is
 // local to PerMonth, and gShowMapInfo is defined above GetMap.
-DATA(0x004a6c24)
-i32 gGameOver = 0;
 DATA(0x0048fcc8)
 i32 gLastSeed = 135621123;
 DATA(0x004a6c0c)
-i8 gSaveCurPlayer;
+i8 gSavedCurPlayer;
 DATA(0x004a6bdc)
-i8 gSavedCrest;
+i8 gKeptColor;
 DATA(0x004a6bf0)
-i8 gSavedDifficulty;
-DATA(0x004a6c20)
-i32 gEndSequence;
+i8 gOldGameDifficulty;
 DATA(0x004a6c0d)
 i8 gbDismissArmy;
 DATA(0x004a6be4)
 heroWindow* gReqExtraWindow;
 DATA(0x004a6bd0)
-i8 gSavedPlayerTypes[4];
+i8 gSavedDifficulties[4];
 DATA(0x004a6bf4)
-i16 gMineTypeCount[RESOURCE_COUNT];
-DATA(0x004a6c10)
-char gCurMapName[16];
+i16 gMineTypeNums[RESOURCE_COUNT];
 DATA(0x004a6c0e)
 i8 gSavedKingOfTheHill;
 DATA(0x004a6be0)

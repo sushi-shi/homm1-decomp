@@ -69,13 +69,13 @@ RECT gDDClientRect;
 DATA(0x004cd938)
 RECT gDDSourceRect;
 DATA(0x004cdd90)
-RECT gDDDestinationRect;
+RECT gDDDestRect;
 DATA(0x004cd8c0)
-i32 gDDResult;
+i32 gDDrawStatus;
 DATA(0x004cd8c8)
-_DDSURFACEDESC gDDSurfaceDesc;
+_DDSURFACEDESC gDDrawSurfaceDesc;
 DATA(0x004cdd88)
-i32 gPaintStart;
+i32 gDDPaintStart;
 DATA(0x004cd948)
 WingImage screenImage;
 
@@ -202,11 +202,11 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
         if (ps.rcPaint.bottom < WINGRAPH_PAINT_Y_END)
             ps.rcPaint.bottom++;
 
-        gDDDestinationRect = ps.rcPaint;
-        srcWidth = CLIENT_TO_GAME_X(gDDDestinationRect.right - gDDDestinationRect.left + 1);
-        srcHeight = CLIENT_TO_GAME_Y(gDDDestinationRect.bottom - gDDDestinationRect.top + 1);
-        srcLeft = CLIENT_TO_GAME_X(gDDDestinationRect.left);
-        srcTop = CLIENT_TO_GAME_Y(gDDDestinationRect.top);
+        gDDDestRect = ps.rcPaint;
+        srcWidth = CLIENT_TO_GAME_X(gDDDestRect.right - gDDDestRect.left + 1);
+        srcHeight = CLIENT_TO_GAME_Y(gDDDestRect.bottom - gDDDestRect.top + 1);
+        srcLeft = CLIENT_TO_GAME_X(gDDDestRect.left);
+        srcTop = CLIENT_TO_GAME_Y(gDDDestRect.top);
         if (gScrollX != 0) {
             srcLeft = gScrollX + WINGRAPH_SCROLL_MARGIN;
             srcWidth = WINGRAPH_SCROLL_SIZE;
@@ -223,11 +223,11 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
         pt.y = 0;
         pt.x = pt.y;
         ClientToScreen(hwndApp, &pt);
-        OffsetRect(&gDDDestinationRect, pt.x, pt.y);
-        gDDResult = gDDSOne->Unlock(NULL);
-        if (gDDResult != DD_OK)
+        OffsetRect(&gDDDestRect, pt.x, pt.y);
+        gDDrawStatus = gDDSOne->Unlock(NULL);
+        if (gDDrawStatus != DD_OK)
 #line 233
-            DDSD(gDDResult, __FILE__, __LINE__);
+            DDSD(gDDrawStatus, __FILE__, __LINE__);
 
         if (gDDSourceRect.left < 0)
             gDDSourceRect.left = 0;
@@ -238,53 +238,53 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
         if (gDDSourceRect.bottom > WINGRAPH_PAINT_Y_END)
             gDDSourceRect.bottom = WINGRAPH_HEIGHT;
 
-        gPaintStart = KBTickCount();
+        gDDPaintStart = KBTickCount();
         while (TRUE) {
-            gDDResult =
-                gDDSPrimary->Blt(&gDDDestinationRect, gDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
-            if (gDDResult == DDERR_SURFACELOST) {
-                gDDResult = gDDSPrimary->Restore();
-                if (gDDResult == DDERR_WRONGMODE) {
-                    gDDResult =
+            gDDrawStatus =
+                gDDSPrimary->Blt(&gDDDestRect, gDDSOne, &gDDSourceRect, DDBLT_WAIT, NULL);
+            if (gDDrawStatus == DDERR_SURFACELOST) {
+                gDDrawStatus = gDDSPrimary->Restore();
+                if (gDDrawStatus == DDERR_WRONGMODE) {
+                    gDDrawStatus =
                         gDD->SetDisplayMode(WINGRAPH_WIDTH, WINGRAPH_HEIGHT, WINGRAPH_COLOR_DEPTH);
-                    if (gDDResult != DD_OK)
+                    if (gDDrawStatus != DD_OK)
 #line 252
-                        DDSD(gDDResult, __FILE__, __LINE__);
-                    gDDResult = gDDSPrimary->Restore();
-                    if (gDDResult != DD_OK)
+                        DDSD(gDDrawStatus, __FILE__, __LINE__);
+                    gDDrawStatus = gDDSPrimary->Restore();
+                    if (gDDrawStatus != DD_OK)
 #line 256
-                        DDSD(gDDResult, __FILE__, __LINE__);
-                    gDDDestinationRect = gDDSourceRect;
+                        DDSD(gDDrawStatus, __FILE__, __LINE__);
+                    gDDDestRect = gDDSourceRect;
                 }
-                if (gDDResult != DD_OK)
+                if (gDDrawStatus != DD_OK)
 #line 261
-                    DDSD(gDDResult, __FILE__, __LINE__);
-            } else if (gDDResult == DDERR_SURFACEBUSY
-                       && KBTickCount() < gPaintStart + WINGRAPH_PAINT_TIMEOUT) {
+                    DDSD(gDDrawStatus, __FILE__, __LINE__);
+            } else if (gDDrawStatus == DDERR_SURFACEBUSY
+                       && KBTickCount() < gDDPaintStart + WINGRAPH_PAINT_TIMEOUT) {
                 gBusyRetry++;
-            } else if (gDDResult != DD_OK) {
+            } else if (gDDrawStatus != DD_OK) {
 #line 266
-                DDSD(gDDResult, __FILE__, __LINE__);
+                DDSD(gDDrawStatus, __FILE__, __LINE__);
             } else {
                 break;
             }
         }
 
-        memset(&gDDSurfaceDesc, 0, sizeof(gDDSurfaceDesc));
-        gDDSurfaceDesc.dwSize = sizeof(gDDSurfaceDesc);
-        gDDResult = gDDSOne->Lock(NULL, &gDDSurfaceDesc, DDLOCK_WAIT, NULL);
-        if (gDDResult != DD_OK)
+        memset(&gDDrawSurfaceDesc, 0, sizeof(gDDrawSurfaceDesc));
+        gDDrawSurfaceDesc.dwSize = sizeof(gDDrawSurfaceDesc);
+        gDDrawStatus = gDDSOne->Lock(NULL, &gDDrawSurfaceDesc, DDLOCK_WAIT, NULL);
+        if (gDDrawStatus != DD_OK)
 #line 276
-            DDSD(gDDResult, __FILE__, __LINE__);
+            DDSD(gDDrawStatus, __FILE__, __LINE__);
         if (gpWindowManager->m_screen != NULL) {
-            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gDDSurfaceDesc.lpSurface);
-            gInitWin = gDDSurfaceDesc.lpSurface;
+            gpWindowManager->m_screen->m_pixels = static_cast<u8*>(gDDrawSurfaceDesc.lpSurface);
+            gInitWin = gDDrawSurfaceDesc.lpSurface;
         } else {
-            gInitWin = gDDSurfaceDesc.lpSurface;
+            gInitWin = gDDrawSurfaceDesc.lpSurface;
         }
-        if (gDDResult != DD_OK)
+        if (gDDrawStatus != DD_OK)
 #line 287
-            DDSD(gDDResult, __FILE__, __LINE__);
+            DDSD(gDDrawStatus, __FILE__, __LINE__);
         EndPaint(window, &ps);
         gWinGraphBusy = FALSE;
     }

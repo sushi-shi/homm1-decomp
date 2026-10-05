@@ -3,7 +3,7 @@
   "method": "Unique contiguous candidate/retail instruction contexts, exact registers/widths/non-reference operands, known call/data anchors, checked in-context branches and injective local mapping. Every discovered use agrees on the owner. Existing typed declarations and full zero-initialized bytes checked; no storage enlargement. These controls establish data identities, not whole-caller equivalence.",
   "data_migrations": [
     {
-      "name": "?gSaveCurPlayer@@3CA",
+      "name": "?gSavedCurPlayer@@3CA",
       "old_rva": "0xa7318",
       "rva": "0xa6c0c",
       "size": 1,
@@ -14,7 +14,7 @@
           "function_rva": "0x2c4dd",
           "site_rva": "0x2c8a9",
           "target_rva": "0xa6c0c",
-          "symbol": "?gSaveCurPlayer@@3CA",
+          "symbol": "?gSavedCurPlayer@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -92,14 +92,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2c8a9",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2c8b0",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
@@ -117,7 +117,7 @@
           "function_rva": "0x2c4dd",
           "site_rva": "0x2c8b0",
           "target_rva": "0xa6c0c",
-          "symbol": "?gSaveCurPlayer@@3CA",
+          "symbol": "?gSavedCurPlayer@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -195,14 +195,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2c8a9",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2c8b0",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
@@ -220,7 +220,7 @@
           "function_rva": "0x2cc73",
           "site_rva": "0x2cedb",
           "target_rva": "0xa6c0c",
-          "symbol": "?gSaveCurPlayer@@3CA",
+          "symbol": "?gSavedCurPlayer@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -354,14 +354,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2cedb",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2ceec",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
@@ -380,7 +380,7 @@
           "function_rva": "0x2cc73",
           "site_rva": "0x2ceec",
           "target_rva": "0xa6c0c",
-          "symbol": "?gSaveCurPlayer@@3CA",
+          "symbol": "?gSavedCurPlayer@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -458,7 +458,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSaveCurPlayer@@3CA",
+              "symbol": "?gSavedCurPlayer@@3CA",
               "site_rva": "0x2ceec",
               "target_rva": "0xa6c0c",
               "addend": "0x0",
@@ -474,7 +474,7 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
-      "type_declaration": "i8 gSaveCurPlayer;",
+      "type_declaration": "i8 gSavedCurPlayer;",
       "storage": ".bss"
     },
     {
@@ -573,7 +573,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2dfcd",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
@@ -673,7 +673,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2e246",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
@@ -692,7 +692,7 @@
       "storage": ".bss"
     },
     {
-      "name": "?gSavedDifficulty@@3CA",
+      "name": "?gOldGameDifficulty@@3CA",
       "old_rva": "0xa72f8",
       "rva": "0xa6bf0",
       "size": 1,
@@ -703,7 +703,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2dfcd",
           "target_rva": "0xa6bf0",
-          "symbol": "?gSavedDifficulty@@3CA",
+          "symbol": "?gOldGameDifficulty@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -780,14 +780,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2dfcd",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfdc",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
@@ -805,7 +805,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e246",
           "target_rva": "0xa6bf0",
-          "symbol": "?gSavedDifficulty@@3CA",
+          "symbol": "?gOldGameDifficulty@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -882,14 +882,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2e246",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e255",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
@@ -904,11 +904,11 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
-      "type_declaration": "i8 gSavedDifficulty;",
+      "type_declaration": "i8 gOldGameDifficulty;",
       "storage": ".bss"
     },
     {
-      "name": "?gSavedPlayerTypes@@3PACA",
+      "name": "?gSavedDifficulties@@3PACA",
       "old_rva": "0xa72d8",
       "rva": "0xa6bd0",
       "size": 4,
@@ -919,7 +919,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2dfdc",
           "target_rva": "0xa6bd1",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x1",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -989,21 +989,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2dfcd",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfdc",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfeb",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
@@ -1021,7 +1021,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2dfeb",
           "target_rva": "0xa6bd2",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x2",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -1146,28 +1146,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2dfcd",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfdc",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfeb",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dff9",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1181,7 +1181,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedCrest@@3CA",
+              "symbol": "?gKeptColor@@3CA",
               "site_rva": "0x2e013",
               "target_rva": "0xa6bdc",
               "addend": "0x0",
@@ -1199,7 +1199,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2dff9",
           "target_rva": "0xa6bd3",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x3",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -1269,14 +1269,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dfeb",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dff9",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1301,7 +1301,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e255",
           "target_rva": "0xa6bd1",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x1",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -1440,28 +1440,28 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedDifficulty@@3CA",
+              "symbol": "?gOldGameDifficulty@@3CA",
               "site_rva": "0x2e246",
               "target_rva": "0xa6bf0",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e255",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e264",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e272",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1486,7 +1486,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e264",
           "target_rva": "0xa6bd2",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x2",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -1556,21 +1556,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e255",
               "target_rva": "0xa6bd1",
               "addend": "0x1",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e264",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e272",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1588,7 +1588,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e272",
           "target_rva": "0xa6bd3",
-          "symbol": "?gSavedPlayerTypes@@3PACA",
+          "symbol": "?gSavedDifficulties@@3PACA",
           "addend": "0x3",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -1658,14 +1658,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e264",
               "target_rva": "0xa6bd2",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e272",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1687,7 +1687,7 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
-      "type_declaration": "i8 gSavedPlayerTypes[4];",
+      "type_declaration": "i8 gSavedDifficulties[4];",
       "storage": ".bss"
     },
     {
@@ -1772,7 +1772,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2dff9",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1786,7 +1786,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedCrest@@3CA",
+              "symbol": "?gKeptColor@@3CA",
               "site_rva": "0x2e013",
               "target_rva": "0xa6bdc",
               "addend": "0x0",
@@ -1881,7 +1881,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gSavedPlayerTypes@@3PACA",
+              "symbol": "?gSavedDifficulties@@3PACA",
               "site_rva": "0x2e272",
               "target_rva": "0xa6bd3",
               "addend": "0x3",
@@ -1895,7 +1895,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedCrest@@3CA",
+              "symbol": "?gKeptColor@@3CA",
               "site_rva": "0x2e28c",
               "target_rva": "0xa6bdc",
               "addend": "0x0",
@@ -1914,7 +1914,7 @@
       "storage": ".bss"
     },
     {
-      "name": "?gSavedCrest@@3CA",
+      "name": "?gKeptColor@@3CA",
       "old_rva": "0xa72e4",
       "rva": "0xa6bdc",
       "size": 1,
@@ -1925,7 +1925,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e013",
           "target_rva": "0xa6bdc",
-          "symbol": "?gSavedCrest@@3CA",
+          "symbol": "?gKeptColor@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -2002,7 +2002,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedCrest@@3CA",
+              "symbol": "?gKeptColor@@3CA",
               "site_rva": "0x2e013",
               "target_rva": "0xa6bdc",
               "addend": "0x0",
@@ -2021,7 +2021,7 @@
           "function_rva": "0x2dec4",
           "site_rva": "0x2e28c",
           "target_rva": "0xa6bdc",
-          "symbol": "?gSavedCrest@@3CA",
+          "symbol": "?gKeptColor@@3CA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -2112,7 +2112,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gSavedCrest@@3CA",
+              "symbol": "?gKeptColor@@3CA",
               "site_rva": "0x2e28c",
               "target_rva": "0xa6bdc",
               "addend": "0x0",
@@ -2127,7 +2127,7 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d",
-      "type_declaration": "i8 gSavedCrest;",
+      "type_declaration": "i8 gKeptColor;",
       "storage": ".bss"
     },
     {
@@ -2831,7 +2831,7 @@
       "storage": ".bss"
     },
     {
-      "name": "?gMineTypeCount@@3PAFA",
+      "name": "?gMineTypeNums@@3PAFA",
       "old_rva": "0xa7300",
       "rva": "0xa6bf4",
       "size": 14,
@@ -2842,7 +2842,7 @@
           "function_rva": "0x34e9f",
           "site_rva": "0x34f6b",
           "target_rva": "0xa6bf4",
-          "symbol": "?gMineTypeCount@@3PAFA",
+          "symbol": "?gMineTypeNums@@3PAFA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -2912,7 +2912,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f6b",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
@@ -2931,7 +2931,7 @@
           "function_rva": "0x34e9f",
           "site_rva": "0x34f87",
           "target_rva": "0xa6bf4",
-          "symbol": "?gMineTypeCount@@3PAFA",
+          "symbol": "?gMineTypeNums@@3PAFA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -3145,21 +3145,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f6b",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f87",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f97",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
@@ -3182,7 +3182,7 @@
           "function_rva": "0x34e9f",
           "site_rva": "0x34f97",
           "target_rva": "0xa6bf4",
-          "symbol": "?gMineTypeCount@@3PAFA",
+          "symbol": "?gMineTypeNums@@3PAFA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -3396,21 +3396,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f6b",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f87",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gMineTypeCount@@3PAFA",
+              "symbol": "?gMineTypeNums@@3PAFA",
               "site_rva": "0x34f97",
               "target_rva": "0xa6bf4",
               "addend": "0x0",
@@ -3430,7 +3430,7 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "e7ecebbc590bc88b3761fa6cd03d749f87463dabb67021a5c6768c25ec68b3f2",
-      "type_declaration": "i16 gMineTypeCount[RESOURCE_COUNT];",
+      "type_declaration": "i16 gMineTypeNums[RESOURCE_COUNT];",
       "storage": ".bss"
     },
     {
@@ -3695,28 +3695,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -4010,28 +4010,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -4064,7 +4064,7 @@
       "storage": ".bss"
     },
     {
-      "name": "_s_adjacentMonsterX",
+      "name": "_s_adjacentGuardX",
       "old_rva": "0xa72dc",
       "rva": "0xa6bd4",
       "size": 4,
@@ -4075,7 +4075,7 @@
           "function_rva": "0x36026",
           "site_rva": "0x36144",
           "target_rva": "0xa6bd4",
-          "symbol": "_s_adjacentMonsterX",
+          "symbol": "_s_adjacentGuardX",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -4325,28 +4325,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -4378,7 +4378,7 @@
           "function_rva": "0x36026",
           "site_rva": "0x36160",
           "target_rva": "0xa6bd4",
-          "symbol": "_s_adjacentMonsterX",
+          "symbol": "_s_adjacentGuardX",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -4592,28 +4592,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -4635,11 +4635,11 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
-      "type_declaration": "static i32 s_adjacentMonsterX;",
+      "type_declaration": "static i32 s_adjacentGuardX;",
       "storage": ".bss"
     },
     {
-      "name": "_s_adjacentMonsterY",
+      "name": "_s_adjacentGuardY",
       "old_rva": "0xa72e0",
       "rva": "0xa6bd8",
       "size": 4,
@@ -4650,7 +4650,7 @@
           "function_rva": "0x36026",
           "site_rva": "0x3614e",
           "target_rva": "0xa6bd8",
-          "symbol": "_s_adjacentMonsterY",
+          "symbol": "_s_adjacentGuardY",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -4840,28 +4840,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -4879,7 +4879,7 @@
           "function_rva": "0x36026",
           "site_rva": "0x3616b",
           "target_rva": "0xa6bd8",
-          "symbol": "_s_adjacentMonsterY",
+          "symbol": "_s_adjacentGuardY",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -5129,28 +5129,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36144",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3614e",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterX",
+              "symbol": "_s_adjacentGuardX",
               "site_rva": "0x36160",
               "target_rva": "0xa6bd4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "_s_adjacentMonsterY",
+              "symbol": "_s_adjacentGuardY",
               "site_rva": "0x3616b",
               "target_rva": "0xa6bd8",
               "addend": "0x0",
@@ -5179,7 +5179,7 @@
       ],
       "unit": "SOURCE/GAME",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
-      "type_declaration": "static i32 s_adjacentMonsterY;",
+      "type_declaration": "static i32 s_adjacentGuardY;",
       "storage": ".bss"
     },
     {
@@ -6067,12 +6067,12 @@
       "storage": ".bss"
     },
     {
-      "name": "_s_adjacentMonsterMinX",
+      "name": "_s_adjacentGuardMinX",
       "old_rva": "0xa72f0",
       "rva": "0xa6be8",
       "size": 4,
       "unit": "SOURCE/GAME",
-      "type_declaration": "static i32 s_adjacentMonsterMinX;",
+      "type_declaration": "static i32 s_adjacentGuardMinX;",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
       "method": "Full conditional CFG: compare signed 32-bit coordinate argument to zero; store zero or argument-1 into this global. Its read initializes the corresponding independently proven scan cursor. This is the existing source expression; no statement or codegen change.",
       "condition": [
@@ -6109,21 +6109,21 @@
         {
           "site_rva": "0x361b3",
           "target_rva": "0xa6be8",
-          "symbol": "_s_adjacentMonsterMinX",
+          "symbol": "_s_adjacentGuardMinX",
           "kind": 6,
           "asm": "mov dword ptr [0x4a6be8], 0"
         },
         {
           "site_rva": "0x361c5",
           "target_rva": "0xa6be8",
-          "symbol": "_s_adjacentMonsterMinX",
+          "symbol": "_s_adjacentGuardMinX",
           "kind": 6,
           "asm": "mov dword ptr [0x4a6be8], edx"
         },
         {
           "site_rva": "0x361e8",
           "target_rva": "0xa6be8",
-          "symbol": "_s_adjacentMonsterMinX",
+          "symbol": "_s_adjacentGuardMinX",
           "kind": 6,
           "asm": "mov ecx, dword ptr [0x4a6be8]"
         }
@@ -6131,12 +6131,12 @@
       "storage": ".bss"
     },
     {
-      "name": "_s_adjacentMonsterMinY",
+      "name": "_s_adjacentGuardMinY",
       "old_rva": "0xa72f4",
       "rva": "0xa6bec",
       "size": 4,
       "unit": "SOURCE/GAME",
-      "type_declaration": "static i32 s_adjacentMonsterMinY;",
+      "type_declaration": "static i32 s_adjacentGuardMinY;",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
       "method": "Full conditional CFG: compare signed 32-bit coordinate argument to zero; store zero or argument-1 into this global. Its read initializes the corresponding independently proven scan cursor. This is the existing source expression; no statement or codegen change.",
       "condition": [
@@ -6173,21 +6173,21 @@
         {
           "site_rva": "0x361d1",
           "target_rva": "0xa6bec",
-          "symbol": "_s_adjacentMonsterMinY",
+          "symbol": "_s_adjacentGuardMinY",
           "kind": 6,
           "asm": "mov dword ptr [0x4a6bec], 0"
         },
         {
           "site_rva": "0x361e2",
           "target_rva": "0xa6bec",
-          "symbol": "_s_adjacentMonsterMinY",
+          "symbol": "_s_adjacentGuardMinY",
           "kind": 6,
           "asm": "mov dword ptr [0x4a6bec], eax"
         },
         {
           "site_rva": "0x36216",
           "target_rva": "0xa6bec",
-          "symbol": "_s_adjacentMonsterMinY",
+          "symbol": "_s_adjacentGuardMinY",
           "kind": 6,
           "asm": "mov ecx, dword ptr [0x4a6bec]"
         }

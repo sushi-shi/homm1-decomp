@@ -13,7 +13,7 @@ H1_ENUM_BEGIN(NetbiosProbeCommand)
     NETBIOS_COMMAND_PROBE = 0x7f
 H1_ENUM_END(NetbiosProbeCommand)
 
-extern u8 gNetbiosLana;
+extern u8 gNetAdapterNum;
 extern u8 gNetbiosAvail;
 
 H1_ENUM_CONST_BEGIN(NetbiosRuntimeConstant)
@@ -73,18 +73,18 @@ extern u8* gNbListenName;
 extern u8 gNbMaxSess;
 extern u8 gNbShutdown;
 extern u8 gNetStatus[7];
-extern u8 gNbSessLsn[7];
-extern NCB gNbSessNcb[7];
-extern NCB gNbCtlNcb;
-extern u8 gNbSessBuf[];
+extern u8 gSessNums[7];
+extern NCB gNetPeerNcb[7];
+extern NCB gNetAdminNcb;
+extern u8 gNbSessionBuffer[];
 extern u8 gNbLocalNum;
 extern char* gNbGroupName;
 extern u8 gNbCallRetries;
 extern u8 gNbRcvData[7][0x1000];
-extern NetbiosName gNbNameBuf[7];
-extern CRITICAL_SECTION gNbRcvLock;
-extern CRITICAL_SECTION gNbSndLock;
-extern tag_Anchor gNbRcvQueue;
+extern NetbiosName gNetPeerNameTable[7];
+extern CRITICAL_SECTION gNetbiosRcvCrit;
+extern CRITICAL_SECTION gNetSendCs;
+extern tag_Anchor gNetIncomingQueue;
 extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbFreeQueue;
 extern HANDLE gNbEvents[9];

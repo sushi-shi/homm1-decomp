@@ -389,7 +389,7 @@ src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideRetreated[[][]
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbIconClipOn	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_computeExtent	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_redrawExtent	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gCurLoadedSpellFileId	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gEffectFileId	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbRetreatWin	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store gbCombatSurrender	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/CMBTMGR.cpp	*	0	trivial-function-literal	0 store m_sideDefeated[[][]]	a flag, counter or index local/field set to 0 or 1
@@ -1005,7 +1005,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gText[[]]	a counter, ac
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gbThisNetHumanPlayer[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giCurPlayer	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gMineTypeCount[[]]	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gMineTypeNums[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store giNumHumanPlayers	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store gold	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store heading	a counter, accumulator, coordinate or field reset to zero
@@ -1157,7 +1157,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index present	the first
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index dwellingRoll	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gDwellingType	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gSavedPlayerTypes	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
+src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gSavedDifficulties	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_availableHeroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_garrison	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_players	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)

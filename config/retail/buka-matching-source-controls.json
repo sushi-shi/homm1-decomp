@@ -345,12 +345,12 @@
       "ordered_references": [
         {
           "offset": "0x25",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 0
         },
         {
           "offset": "0x47",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 1
         },
         {
@@ -395,7 +395,7 @@
         },
         {
           "offset": "0xa8",
-          "symbol": "?gNbNameBuf@@3PAUNetbiosName@@A",
+          "symbol": "?gNetPeerNameTable@@3PAUNetbiosName@@A",
           "addend": 0
         },
         {
@@ -405,7 +405,7 @@
         },
         {
           "offset": "0xbd",
-          "symbol": "?gNbNameBuf@@3PAUNetbiosName@@A",
+          "symbol": "?gNetPeerNameTable@@3PAUNetbiosName@@A",
           "addend": 0
         },
         {
@@ -415,7 +415,7 @@
         },
         {
           "offset": "0xd7",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 0
         },
         {
@@ -425,17 +425,17 @@
         },
         {
           "offset": "0xed",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 1
         },
         {
           "offset": "0x100",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 1
         },
         {
           "offset": "0x111",
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "addend": 0
         },
         {

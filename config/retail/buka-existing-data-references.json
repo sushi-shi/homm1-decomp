@@ -348,7 +348,7 @@
       "function_rva": "0x45712",
       "site_rva": "0x45822",
       "target_rva": "0xb209a",
-      "symbol": "?gNbCtlNcb@@3U_NCB@@A",
+      "symbol": "?gNetAdminNcb@@3U_NCB@@A",
       "addend": "0x2",
       "kind": 6
     },
@@ -358,7 +358,7 @@
       "function_rva": "0x45712",
       "site_rva": "0x4582a",
       "target_rva": "0xb209a",
-      "symbol": "?gNbCtlNcb@@3U_NCB@@A",
+      "symbol": "?gNetAdminNcb@@3U_NCB@@A",
       "addend": "0x2",
       "kind": 6
     },
@@ -368,7 +368,7 @@
       "function_rva": "0x45c27",
       "site_rva": "0x45c6e",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6
     },
@@ -378,7 +378,7 @@
       "function_rva": "0x45c27",
       "site_rva": "0x45d14",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6
     },
@@ -388,7 +388,7 @@
       "function_rva": "0x45c27",
       "site_rva": "0x45d27",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6
     },
@@ -398,7 +398,7 @@
       "function_rva": "0x45eb7",
       "site_rva": "0x45efd",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6
     },
@@ -408,7 +408,7 @@
       "function_rva": "0x45eb7",
       "site_rva": "0x45f23",
       "target_rva": "0xb1eda",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x2",
       "kind": 6
     },
@@ -418,7 +418,7 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x45fd8",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6
     },
@@ -428,7 +428,7 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x46027",
       "target_rva": "0xb1eda",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x2",
       "kind": 6
     },
@@ -448,7 +448,7 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x46075",
       "target_rva": "0xb1f14",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x3c",
       "kind": 6
     },
@@ -3749,11 +3749,11 @@
       "function_rva": "0x45712",
       "site_rva": "0x45822",
       "target_rva": "0xb209a",
-      "symbol": "?gNbCtlNcb@@3U_NCB@@A",
+      "symbol": "?gNetAdminNcb@@3U_NCB@@A",
       "addend": "0x2",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbCtlNcb@@3U_NCB@@A",
+        "symbol": "?gNetAdminNcb@@3U_NCB@@A",
         "owner_rva": "0xb2098",
         "size": 64,
         "source_unit": "SOURCE/netwin",
@@ -3819,7 +3819,7 @@
       ],
       "known_anchors": [
         {
-          "symbol": "?gNbSessLsn@@3PAEA",
+          "symbol": "?gSessNums@@3PAEA",
           "operand_rva": "0x4581c",
           "target": "0xa9eb0",
           "addend": "0x0",
@@ -3837,11 +3837,11 @@
       "function_rva": "0x45c27",
       "site_rva": "0x45c6e",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",
@@ -3925,11 +3925,11 @@
       "function_rva": "0x45eb7",
       "site_rva": "0x45efd",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",
@@ -4091,7 +4091,7 @@
       ],
       "known_anchors": [
         {
-          "symbol": "?gNbSessLsn@@3PAEA",
+          "symbol": "?gSessNums@@3PAEA",
           "operand_rva": "0x45f29",
           "target": "0xa9eb0",
           "addend": "0x0",
@@ -4110,11 +4110,11 @@
       "function_rva": "0x45eb7",
       "site_rva": "0x45f23",
       "target_rva": "0xb1eda",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x2",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",
@@ -4180,7 +4180,7 @@
       ],
       "known_anchors": [
         {
-          "symbol": "?gNbSessLsn@@3PAEA",
+          "symbol": "?gSessNums@@3PAEA",
           "operand_rva": "0x45f29",
           "target": "0xa9eb0",
           "addend": "0x0",
@@ -4198,11 +4198,11 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x45fd8",
       "target_rva": "0xb1ed9",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x1",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",
@@ -4284,11 +4284,11 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x46027",
       "target_rva": "0xb1eda",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x2",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",
@@ -4354,7 +4354,7 @@
       ],
       "known_anchors": [
         {
-          "symbol": "?gNbSessLsn@@3PAEA",
+          "symbol": "?gSessNums@@3PAEA",
           "operand_rva": "0x46021",
           "target": "0xa9eb0",
           "addend": "0x0",
@@ -4447,21 +4447,21 @@
       ],
       "known_anchors": [
         {
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "operand_rva": "0x4605f",
           "target": "0xb1f08",
           "addend": "0x30",
           "kind": 6
         },
         {
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "operand_rva": "0x46075",
           "target": "0xb1f14",
           "addend": "0x3c",
           "kind": 6
         },
         {
-          "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+          "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
           "operand_rva": "0x46081",
           "target": "0xb1ed8",
           "addend": "0x0",
@@ -4477,11 +4477,11 @@
       "function_rva": "0x45fb1",
       "site_rva": "0x46075",
       "target_rva": "0xb1f14",
-      "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+      "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
       "addend": "0x3c",
       "kind": 6,
       "owner": {
-        "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+        "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
         "owner_rva": "0xb1ed8",
         "size": 448,
         "source_unit": "SOURCE/netwin",

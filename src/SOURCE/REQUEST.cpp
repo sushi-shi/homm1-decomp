@@ -179,7 +179,7 @@ VA(0x00454368, 0xf1)
 void fileRequester::Close(void) {
     if (!m_active)
         return;
-    strcpy(gLastMapName, GetMapName());
+    strcpy(gPrevGameFile, GetMapName());
     strcpy(gLastFilename, GetFilename());
     if (m_fileNames)
         delete[] m_fileNames;
@@ -205,7 +205,7 @@ i16 fileRequester::Open(i16 priority) {
     char* dotPtr;
     i8 enable;
 
-    strcpy(gLastMapName, "");
+    strcpy(gPrevGameFile, "");
     strcpy(gLastFilename, "");
     m_window = new heroWindow(m_x, m_y, "request.bin");
     if (!m_window)
@@ -485,7 +485,7 @@ i16 fileRequester::Main(tag_message& message) {
     }
 
     if (handled == 1) {
-        if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
+        if (gChosenCampaignIndex <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             if (key < giNumHumanPlayers
@@ -622,7 +622,7 @@ void fileRequester::Update(i8 drawWindow) {
             oldHumans =
                 m_extensions[m_topIndex + y].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             newPlayers = 0;
-            if (oldHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
+            if (oldHumans != 1 && gChosenCampaignIndex <= 0 && gRequestingGames) {
                 newPlayers = 1;
                 sprintf(prevExtra, " (%d %s)", oldHumans, localization::Tr("file.players.label"));
                 theSuffixWidth = bigFont->LineWidth(prevExtra);
@@ -732,7 +732,7 @@ void fileRequester::ShowMapInfo(void) {
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         strcpy(gFullMapName, m_mapNames[m_selectedIndex].text);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
-        strcpy(gMapDescription, m_mapInfo[m_selectedIndex].description);
+        strcpy(gMapDesc, m_mapInfo[m_selectedIndex].description);
     SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, descriptionId);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE)
         msg.text = m_mapInfo[m_selectedIndex].description;

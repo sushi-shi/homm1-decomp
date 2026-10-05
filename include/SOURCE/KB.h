@@ -70,7 +70,7 @@ extern char* DEFAULT_AGGREGATE_NAME;
 extern class resourceManager* gpResourceManager;
 extern class heroWindowManager* gpWindowManager;
 extern class mouseManager* gpMouseManager;
-extern class heroWindow* gNormalDialogWindow;
+extern class heroWindow* gCommonDialogBox;
 extern class advManager* gpAdvManager;
 extern i8 gbThisNetHumanPlayer[];
 extern class townManager* gpTownManager;
@@ -108,7 +108,7 @@ extern i32 gMageBaseResourceValues[];
 extern i32 gNeutralBaseResourceValues[];
 extern i32 gDwellingBaseResourceValues[];
 extern char cNetBoxLine[][60];
-// ppMapExtra/pwSizeOfMapExtra: the map file's extra records (signs, events,
+// pMapExtra/iSizeOfMapExtra: the map file's extra records (signs, events,
 // town customizations), addressed by a cell's or town's byte index. Record 0
 // is never allocated, so iMaxMapExtra restarts at FIRST_RECORD (InitVars,
 // ClearMapExtra, game::LoadMap) and ClearMapExtra frees every slot.
@@ -116,17 +116,17 @@ H1_ENUM_CONST_BEGIN(MapExtraConstant)
     MAP_EXTRA_FIRST_RECORD = 1,
     MAP_EXTRA_RECORD_CAPACITY = 255
 H1_ENUM_CONST_END(MapExtraConstant)
-extern void* ppMapExtra[];
+extern void* pMapExtra[];
 extern class icon* gBuyBuildIcons;
 extern class icon* gSystemIcons;
-extern class font* bigFont;
-extern class font* smallFont;
+extern class font* gBigFont;
+extern class font* gSmallFont;
 extern i16 gScoreMon[][2];
 extern i16 gScoreCampaignMon[][2];
 // Combat effect icon files by effect (0x00490ef0) and the one loaded effect
 // icon (0x004c709c) army draws and PowEffect share.
 extern char* gCombatFxNames[];
-extern class icon* gCurLoadedSpellIcon;
+extern class icon* gLoadedEffectIcn;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
 char* GetMonsterSingularName(i32 monster);
@@ -191,7 +191,7 @@ extern i8 giScreenScroll;
 extern i32 gbBlackoutPlayer;
 extern char gMapName[];
 extern char gFullMapName[];
-extern char gMapDescription[];
+extern char gMapDesc[];
 extern char cAggPathName[];
 extern i32 giNumHumanPlayers;
 extern i32 gbHumanPlayer[];
@@ -262,7 +262,7 @@ extern char* gMineNames[];
 extern char* gObjectNames[];
 // KB's map-extra record count and sizes.
 extern i32 iMaxMapExtra;
-extern i32 pwSizeOfMapExtra[];
+extern i32 iSizeOfMapExtra[];
 // KB's adventure status-bar resource message and its menu, wait and victory
 // screens.
 void BVResMsg(char* s, i32 res, i32 qty);
@@ -360,7 +360,7 @@ extern i16 gRadarTerrainColor[];
 extern i8 gRouteFrame[][8];
 // Damage multipliers for attack minus defense, -20..20 (0x00492288).
 extern float gBattleStat[];
-extern i16 gSpellEffectFrame;
+extern i16 gImpactOverlayFrame;
 // Pow (impact) effect icons by effect (0x00490eb0).
 extern char* gPowEffectNames[];
 extern char* gArmySizeNames[6][2];
@@ -380,7 +380,7 @@ extern i8 gInCombat;
 // Neighbour hex per combat hex and direction (0x00490fd8), -1 off grid.
 extern i8 gCombatAdjacency[45][6];
 // The loaded combat effect icon's file id (0x004c6d64).
-extern i16 gCurLoadedSpellFileId;
+extern i16 gEffectFileId;
 // ProcessCombatMsg records the hero casting from the combat screen.
 extern i32 giCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
@@ -393,7 +393,7 @@ H1_ENUM_CONST_BEGIN(LastFilenameConstant)
     GLOBAL_LAST_FILENAME_SIZE = 0x15f
 H1_ENUM_CONST_END(LastFilenameConstant)
 extern char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
-extern char gLastMapName[];
+extern char gPrevGameFile[];
 extern char* gMapSizeNames[];
 extern char* gHeroScreen[];
 extern char* gArtifactDesc[];
@@ -403,7 +403,7 @@ extern char* gClassNames[];
 extern float gClassNavigationMod[];
 extern i32 giHeroScreenSrcIndex;
 extern i16 gMinExpForLevel[][HERO_EXPERIENCE_LEVEL_TABLE_COUNT];
-extern class hero* gHVHero;
+extern class hero* gInfoViewedHero;
 extern char* gStatDesc[];
 extern char* gStatNames[];
 extern class heroWindow* heroWin;
@@ -532,7 +532,7 @@ extern char* gHumanPlayerTypeNames[];
 // on it), scenario titles and briefings, two crest bytes per side (the first
 // is the human player's), side names and win texts, and the town a campaign
 // map renames at a fixed position (x, y, then the name).
-extern i8 gCampaignChoice;
+extern i8 gChosenCampaignIndex;
 extern i8 giMonthType;
 extern i8 giMonthTypeExtra;
 extern char* gInitMenuHelp[];

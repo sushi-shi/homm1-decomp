@@ -4890,7 +4890,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?ppMapExtra@@3PAPAXA",
+            "symbol": "?pMapExtra@@3PAPAXA",
             "operand": "0x4064a",
             "target": "0xa7bb8",
             "addend": "0x0",
@@ -7965,21 +7965,21 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66be2",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66be8",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66bfb",
             "target": "0xcd8c0",
             "addend": "0x0",

@@ -543,14 +543,14 @@ i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
 extern i32 gEndSequence;
 // SaveGame files the current player through this byte.
-extern i8 gSaveCurPlayer;
+extern i8 gSavedCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
-extern i8 gSavedDifficulty;
-extern i8 gSavedPlayerTypes[];
+extern i8 gOldGameDifficulty;
+extern i8 gSavedDifficulties[];
 extern i8 gSavedKingOfTheHill;
-extern i8 gSavedCrest;
+extern i8 gKeptColor;
 extern i8 gRandomTownTypes[4];
-extern i16 gMineTypeCount[];
+extern i16 gMineTypeNums[];
 extern i32 gLastSeed;
 i32 SGenRand(void);
 i32 SRandom(i32 low, i32 high);

@@ -363,7 +363,7 @@
         {
           "offset": "0x161",
           "kind": 6,
-          "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": "0x0",
           "site_rva": "0x19279",
           "target_rva": "0xa9400",
@@ -372,7 +372,7 @@
         {
           "offset": "0x16c",
           "kind": 6,
-          "symbol": "?gCurLoadedSpellFileId@@3FA",
+          "symbol": "?gEffectFileId@@3FA",
           "addend": "0x0",
           "site_rva": "0x19284",
           "target_rva": "0xa74e8",
@@ -968,7 +968,7 @@
       ]
     },
     {
-      "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "name": "?gLoadedEffectIcn@@3PAVicon@@A",
       "rva": "0xa9400",
       "size": 4,
       "units": [
@@ -983,7 +983,7 @@
           "function": "?Open@combatManager@@UAEFF@Z",
           "offset": "0x161",
           "kind": 6,
-          "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": "0x0",
           "site_rva": "0x19279",
           "target_rva": "0xa9400",
@@ -992,7 +992,7 @@
       ]
     },
     {
-      "name": "?gCurLoadedSpellFileId@@3FA",
+      "name": "?gEffectFileId@@3FA",
       "rva": "0xa74e8",
       "size": 2,
       "units": [
@@ -1007,7 +1007,7 @@
           "function": "?Open@combatManager@@UAEFF@Z",
           "offset": "0x16c",
           "kind": 6,
-          "symbol": "?gCurLoadedSpellFileId@@3FA",
+          "symbol": "?gEffectFileId@@3FA",
           "addend": "0x0",
           "site_rva": "0x19284",
           "target_rva": "0xa74e8",

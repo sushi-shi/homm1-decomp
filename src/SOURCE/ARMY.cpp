@@ -47,9 +47,9 @@ army::army(void) {
         m_samples[i] = NULL;
     m_effectAnimation = COMBAT_EFFECT_NONE;
     m_drawShadow = 1;
-    gCurLoadedSpellIcon = NULL;
-    gCurLoadedSpellFileId = 0;
-    gSpellEffectFrame = 0;
+    gLoadedEffectIcn = NULL;
+    gEffectFileId = 0;
+    gImpactOverlayFrame = 0;
     CLEAR_ARMY_TARGET(this);
     m_attackDirection = COMBAT_DIRECTION_INVALID;
     m_unknown04 = 0;
@@ -319,7 +319,7 @@ void army::DrawToBuffer(i16 x, i16 y) {
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
-            gCurLoadedSpellIcon->DrawToBuffer(xPos, y, gSpellEffectFrame, m_facing, offsetMode);
+            gLoadedEffectIcn->DrawToBuffer(xPos, y, gImpactOverlayFrame, m_facing, offsetMode);
             break;
     }
     gbIconClipOn = 0;
@@ -1548,10 +1548,10 @@ void army::PowEffect(i8 effect) {
         frames = 10;
     else
         frames = longest;
-    if (gCurLoadedSpellFileId != effect) {
-        gpResourceManager->Dispose(gCurLoadedSpellIcon);
-        gCurLoadedSpellIcon = gpResourceManager->GetIcon(gPowEffectNames[effect]);
-        gCurLoadedSpellFileId = effect;
+    if (gEffectFileId != effect) {
+        gpResourceManager->Dispose(gLoadedEffectIcn);
+        gLoadedEffectIcn = gpResourceManager->GetIcon(gPowEffectNames[effect]);
+        gEffectFileId = effect;
     }
     for (curSide = 0; curSide < COMBAT_SIDE_COUNT; curSide++)
         for (slot = 0; slot < gpCombatManager->m_numArmies[curSide]; slot++)
@@ -1579,7 +1579,7 @@ void army::PowEffect(i8 effect) {
                 }
             }
         }
-        gSpellEffectFrame = theStep;
+        gImpactOverlayFrame = theStep;
         gpCombatManager->DrawFrame(1);
         theStep++;
     }
@@ -1606,7 +1606,7 @@ void army::PowEffect(i8 effect) {
                 }
             }
         }
-        gSpellEffectFrame = theStep;
+        gImpactOverlayFrame = theStep;
         gpCombatManager->DrawFrame(1);
         theStep++;
     }
@@ -1651,10 +1651,10 @@ void army::SpellEffect(i16 effect, i32 frameDelay) {
 
     m_effectAnimation = effect;
     effectFileIdIndex = MAKEFILEID(gCombatFxNames[effect]);
-    if (gCurLoadedSpellFileId != effectFileIdIndex) {
-        gpResourceManager->Dispose(gCurLoadedSpellIcon);
-        gCurLoadedSpellIcon = gpResourceManager->GetIcon(effectFileIdIndex);
-        gCurLoadedSpellFileId = effectFileIdIndex;
+    if (gEffectFileId != effectFileIdIndex) {
+        gpResourceManager->Dispose(gLoadedEffectIcn);
+        gLoadedEffectIcn = gpResourceManager->GetIcon(effectFileIdIndex);
+        gEffectFileId = effectFileIdIndex;
     }
     m_animationSequence = ARMY_ANIMATION_EFFECT;
     frameCount = 10;
@@ -1663,7 +1663,7 @@ void army::SpellEffect(i16 effect, i32 frameDelay) {
     for (curFrame = 0; curFrame < frameCount; curFrame++) {
         gpCombatManager->m_computeExtent = 1;
         glTimers[COMBAT_EFFECT_TIMER_SLOT] = KBTickCount() + frameDelay;
-        gSpellEffectFrame = curFrame;
+        gImpactOverlayFrame = curFrame;
         gpCombatManager->DrawFrame(1);
         DelayTil(glTimers + COMBAT_EFFECT_TIMER_SLOT);
     }

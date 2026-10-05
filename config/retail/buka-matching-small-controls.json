@@ -27,12 +27,12 @@
         },
         {
           "offset": "0x8c",
-          "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0
         },
         {
           "offset": "0x94",
-          "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0
         },
         {
@@ -47,12 +47,12 @@
         },
         {
           "offset": "0xa6",
-          "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0
         },
         {
           "offset": "0xb1",
-          "symbol": "?gCurLoadedSpellFileId@@3FA",
+          "symbol": "?gEffectFileId@@3FA",
           "addend": 0
         }
       ]

@@ -347,7 +347,7 @@ i8 hero::HeroView(i8 viewOnly) {
     }
     RedrawHeroScreen();
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
-    gHVHero = this;
+    gInfoViewedHero = this;
     gpWindowManager->DoDialog(heroWin, HeroHandler, 0);
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, 8, NULL);
     delete heroWin;
@@ -736,9 +736,9 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
         case HERO_SCREEN_MORALE_FIRST:
         case HERO_SCREEN_MORALE_FIRST + 1:
         case HERO_SCREEN_MORALE_LAST:
-            if (gHVHero->m_army.GetMorale(gHVHero, NULL) > 0)
+            if (gInfoViewedHero->m_army.GetMorale(gInfoViewedHero, NULL) > 0)
                 sprintf(gText, gHeroScreen[HERO_TEXT_GOOD_MORALE]);
-            else if (gHVHero->m_army.GetMorale(gHVHero, NULL) == 0)
+            else if (gInfoViewedHero->m_army.GetMorale(gInfoViewedHero, NULL) == 0)
                 sprintf(gText, gHeroScreen[HERO_TEXT_NEUTRAL_MORALE]);
             else
                 sprintf(gText, gHeroScreen[HERO_TEXT_BAD_MORALE]);
@@ -746,9 +746,9 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
         case HERO_SCREEN_LUCK_FIRST:
         case HERO_SCREEN_LUCK_FIRST + 1:
         case HERO_SCREEN_LUCK_LAST:
-            if (gpGame->GetLuck(gHVHero, NULL) > 0)
+            if (gpGame->GetLuck(gInfoViewedHero, NULL) > 0)
                 sprintf(gText, gHeroScreen[HERO_TEXT_GOOD_LUCK]);
-            else if (gpGame->GetLuck(gHVHero, NULL) == 0)
+            else if (gpGame->GetLuck(gInfoViewedHero, NULL) == 0)
                 sprintf(gText, gHeroScreen[HERO_TEXT_NEUTRAL_LUCK]);
             else
                 sprintf(gText, gHeroScreen[HERO_TEXT_BAD_LUCK]);
@@ -764,11 +764,11 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
         case HERO_SCREEN_ARMY_SLOT_FIRST + 4:
             slot = widgetId - HERO_SCREEN_ARMY_SLOT_FIRST;
             if (giHeroScreenSrcIndex == HERO_SCREEN_SOURCE_NONE) {
-                if (gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
+                if (gInfoViewedHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                     sprintf(
                         gText,
                         gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                        gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
+                        gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[slot]]
                     );
                 else
                     strcpy(gText, gHeroScreen[HERO_TEXT_EMPTY]);
@@ -776,29 +776,29 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
+                    gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[slot]]
                 );
             } else if (gpTownManager->m_castleDialogActive) {
-                if (gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
+                if (gInfoViewedHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                     sprintf(
                         gText,
                         gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                        gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
+                        gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[slot]]
                     );
                 else
                     strcpy(gText, gHeroScreen[HERO_TEXT_EMPTY]);
-            } else if (gHVHero->m_army.m_creatureTypes[slot] == CREATURE_NONE) {
+            } else if (gInfoViewedHero->m_army.m_creatureTypes[slot] == CREATURE_NONE) {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_MOVE_ARMY],
-                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]
+                    gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]
                 );
             } else {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_EXCHANGE_ARMIES],
-                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
-                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
+                    gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
+                    gArmyNamesPlural[gInfoViewedHero->m_army.m_creatureTypes[slot]]
                 );
             }
             break;
@@ -816,24 +816,24 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
         case HERO_SCREEN_ARTIFACT_FIRST + 11:
         case HERO_SCREEN_ARTIFACT_FIRST + 12:
         case HERO_SCREEN_ARTIFACT_FIRST + 13:
-            if (gHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_NONE)
+            if (gInfoViewedHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST] == ARTIFACT_NONE)
                 sprintf(gText, gHeroScreen[HERO_TEXT_EMPTY]);
-            else if (gHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]
+            else if (gInfoViewedHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]
                      == ARTIFACT_MAGIC_BOOK)
                 strcpy(gText, gHeroScreen[HERO_TEXT_VIEW_SPELLS]);
             else
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_ARTIFACT],
-                    gArtifactNames[gHVHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]
+                    gArtifactNames[gInfoViewedHero->m_artifacts[widgetId - HERO_SCREEN_ARTIFACT_FIRST]]
                 );
             break;
         case HERO_SCREEN_DISMISS:
             sprintf(
                 gText,
                 gHeroScreen[HERO_TEXT_DISMISS],
-                gHVHero->m_name,
-                gClassNames[gHVHero->m_heroClass]
+                gInfoViewedHero->m_name,
+                gClassNames[gInfoViewedHero->m_heroClass]
             );
             break;
         case HERO_SCREEN_EXIT:
@@ -877,7 +877,7 @@ i16 HeroHandler(struct tag_message& message) {
                 if (!quickViewVal) {
                     switch (message.id) {
                         case HERO_SCREEN_DISMISS:
-                            if (gHVHero->Dismiss())
+                            if (gInfoViewedHero->Dismiss())
                                 complete = 1;
                             break;
                         case HERO_SCREEN_EXIT:
@@ -893,7 +893,7 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_CREST:
                         if (!quickViewVal) {
                             gpGame->Overview();
-                            gHVHero->RedrawHeroScreen();
+                            gInfoViewedHero->RedrawHeroScreen();
                             gpWindowManager->FadeScreen(WINDOW_FADE_IN, 8, NULL);
                         }
                         break;
@@ -901,13 +901,13 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_DEFENSE:
                     case HERO_SCREEN_SPELL_POWER:
                     case HERO_SCREEN_KNOWLEDGE:
-                        gHVHero->ViewStat(message.id - HERO_SCREEN_STAT_FIRST, quickViewVal);
+                        gInfoViewedHero->ViewStat(message.id - HERO_SCREEN_STAT_FIRST, quickViewVal);
                         break;
                     case HERO_SCREEN_MORALE_FIRST:
                     case HERO_SCREEN_MORALE_FIRST + 1:
                     case HERO_SCREEN_MORALE_LAST:
                         gpGame->ShowMoraleInfo(
-                            gHVHero,
+                            gInfoViewedHero,
                             quickViewVal == 0 ? NORMAL_DIALOG_TYPE_OK
                                               : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
@@ -916,20 +916,20 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_LUCK_FIRST + 1:
                     case HERO_SCREEN_LUCK_LAST:
                         gpGame->ShowLuckInfo(
-                            gHVHero,
+                            gInfoViewedHero,
                             quickViewVal == 0 ? NORMAL_DIALOG_TYPE_OK
                                               : NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                         break;
                     case HERO_SCREEN_EXPERIENCE_ICON:
                     case HERO_SCREEN_EXPERIENCE:
-                        curHeroLevel = gHVHero->GetLevel(gHVHero->m_experience);
-                        nextLevelExp = gHVHero->GetExperience(curHeroLevel + 1);
+                        curHeroLevel = gInfoViewedHero->GetLevel(gInfoViewedHero->m_experience);
+                        nextLevelExp = gInfoViewedHero->GetExperience(curHeroLevel + 1);
                         sprintf(
                             gText,
                             localization::Tr("hero.experience.details"),
                             curHeroLevel,
-                            gHVHero->m_experience,
+                            gInfoViewedHero->m_experience,
                             nextLevelExp
                         );
                         NormalDialog(
@@ -945,48 +945,48 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_ARMY_SLOT_FIRST + 4:
                         slot = message.id - HERO_SCREEN_ARMY_SLOT_FIRST;
                         if (!quickViewVal && giHeroScreenSrcIndex == HERO_SCREEN_SOURCE_NONE) {
-                            if (gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
+                            if (gInfoViewedHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                                 giHeroScreenSrcIndex = slot;
-                                gHVHero->HeroScreenUpdate();
+                                gInfoViewedHero->HeroScreenUpdate();
                             }
                         } else if ((quickViewVal
-                                    && gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
+                                    && gInfoViewedHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                                    || (!quickViewVal
                                        && giHeroScreenSrcIndex
                                               == message.id - HERO_SCREEN_ARMY_SLOT_FIRST)) {
                             gpGame->ViewArmy(
                                 119,
                                 20,
-                                gHVHero->m_army.m_creatureTypes[slot],
-                                gHVHero->m_army.m_creatureCounts[slot],
+                                gInfoViewedHero->m_army.m_creatureTypes[slot],
+                                gInfoViewedHero->m_army.m_creatureCounts[slot],
                                 NULL,
                                 quickViewVal || gpTownManager->m_castleDialogActive == 1
-                                    || gHVHero->m_army.GetNumArmies() == 1,
+                                    || gInfoViewedHero->m_army.GetNumArmies() == 1,
                                 0,
                                 quickViewVal,
-                                gHVHero,
+                                gInfoViewedHero,
                                 NULL,
-                                &gHVHero->m_army
+                                &gInfoViewedHero->m_army
                             );
                             if (!quickViewVal)
                                 giHeroScreenSrcIndex = HERO_SCREEN_SOURCE_NONE;
-                            gHVHero->HeroScreenUpdate();
+                            gInfoViewedHero->HeroScreenUpdate();
                         } else if (!quickViewVal && gpTownManager->m_castleDialogActive) {
-                            if (gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
+                            if (gInfoViewedHero->m_army.m_creatureTypes[slot] != CREATURE_NONE) {
                                 giHeroScreenSrcIndex = slot;
-                                gHVHero->HeroScreenUpdate();
+                                gInfoViewedHero->HeroScreenUpdate();
                             }
                         } else if (!quickViewVal) {
-                            temporaryVal = gHVHero->m_army.m_creatureTypes[slot];
-                            gHVHero->m_army.m_creatureTypes[slot] =
-                                gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex];
-                            gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex] = temporaryVal;
-                            temporaryVal = gHVHero->m_army.m_creatureCounts[slot];
-                            gHVHero->m_army.m_creatureCounts[slot] =
-                                gHVHero->m_army.m_creatureCounts[giHeroScreenSrcIndex];
-                            gHVHero->m_army.m_creatureCounts[giHeroScreenSrcIndex] = temporaryVal;
+                            temporaryVal = gInfoViewedHero->m_army.m_creatureTypes[slot];
+                            gInfoViewedHero->m_army.m_creatureTypes[slot] =
+                                gInfoViewedHero->m_army.m_creatureTypes[giHeroScreenSrcIndex];
+                            gInfoViewedHero->m_army.m_creatureTypes[giHeroScreenSrcIndex] = temporaryVal;
+                            temporaryVal = gInfoViewedHero->m_army.m_creatureCounts[slot];
+                            gInfoViewedHero->m_army.m_creatureCounts[slot] =
+                                gInfoViewedHero->m_army.m_creatureCounts[giHeroScreenSrcIndex];
+                            gInfoViewedHero->m_army.m_creatureCounts[giHeroScreenSrcIndex] = temporaryVal;
                             giHeroScreenSrcIndex = HERO_SCREEN_SOURCE_NONE;
-                            gHVHero->HeroScreenUpdate();
+                            gInfoViewedHero->HeroScreenUpdate();
                         }
                         if (!quickViewVal) {
                             gpWindowManager->m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -1007,15 +1007,15 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_ARTIFACT_FIRST + 11:
                     case HERO_SCREEN_ARTIFACT_FIRST + 12:
                     case HERO_SCREEN_ARTIFACT_FIRST + 13:
-                        if (gHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
+                        if (gInfoViewedHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
                             != ARTIFACT_NONE) {
                             if (!quickViewVal
-                                && gHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
+                                && gInfoViewedHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST]
                                        == ARTIFACT_MAGIC_BOOK)
-                                gpGame->ViewSpells(gHVHero, SPELL_TYPE_ALL, ViewSpecialHandler, 1);
+                                gpGame->ViewSpells(gInfoViewedHero, SPELL_TYPE_ALL, ViewSpecialHandler, 1);
                             else
-                                gHVHero->ViewArtifact(
-                                    gHVHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST],
+                                gInfoViewedHero->ViewArtifact(
+                                    gInfoViewedHero->m_artifacts[message.id - HERO_SCREEN_ARTIFACT_FIRST],
                                     quickViewVal
                                 );
                         }

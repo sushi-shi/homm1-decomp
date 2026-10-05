@@ -585,10 +585,10 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
 
     m_computeExtent = m_redrawExtent = 0;
     fileIdNo = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
-    if (gCurLoadedSpellFileId != fileIdNo) {
-        gpResourceManager->Dispose(gCurLoadedSpellIcon);
-        gCurLoadedSpellIcon = gpResourceManager->GetIcon(fileIdNo);
-        gCurLoadedSpellFileId = fileIdNo;
+    if (gEffectFileId != fileIdNo) {
+        gpResourceManager->Dispose(gLoadedEffectIcn);
+        gLoadedEffectIcn = gpResourceManager->GetIcon(fileIdNo);
+        gEffectFileId = fileIdNo;
     }
     if (castSide == COMBAT_SIDE_ANY) {
         team = COMBAT_DEFENDER_SIDE;
@@ -618,12 +618,12 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        gSpellEffectFrame = armyIndex;
+        gImpactOverlayFrame = armyIndex;
         DrawFrame(1);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        gSpellEffectFrame = armyIndex;
+        gImpactOverlayFrame = armyIndex;
         DrawFrame(1);
     }
     if (castSide == COMBAT_SIDE_ANY) {

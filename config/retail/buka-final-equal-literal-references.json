@@ -154,7 +154,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e117",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -261,7 +261,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e117",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -444,7 +444,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e163",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -551,7 +551,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e163",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -862,7 +862,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x3de89",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -1031,7 +1031,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x3de89",
             "target": "0xa6c4c",
             "addend": "0x0",

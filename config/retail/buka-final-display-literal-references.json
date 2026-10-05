@@ -154,7 +154,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e117",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -261,7 +261,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e117",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -444,7 +444,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e163",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -551,7 +551,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x2e163",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -862,7 +862,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x3de89",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -1031,7 +1031,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gMapDescription@@3PADA",
+            "symbol": "?gMapDesc@@3PADA",
             "operand": "0x3de89",
             "target": "0xa6c4c",
             "addend": "0x0",
@@ -1624,21 +1624,21 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66cf2",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66cf8",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d0b",
             "target": "0xcd8c0",
             "addend": "0x0",
@@ -1724,21 +1724,21 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d2b",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d31",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d44",
             "target": "0xcd8c0",
             "addend": "0x0",
@@ -1824,21 +1824,21 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDDestinationRect@@3UtagRECT@@A",
+            "symbol": "?gDDDestRect@@3UtagRECT@@A",
             "operand": "0x66d79",
             "target": "0xcdd9c",
             "addend": "0xc",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d7f",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66d92",
             "target": "0xcd8c0",
             "addend": "0x0",
@@ -1924,14 +1924,14 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66dd3",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66de6",
             "target": "0xcd8c0",
             "addend": "0x0",
@@ -2017,21 +2017,21 @@
         ],
         "anchors": [
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66e35",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66e3b",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66e4e",
             "target": "0xcd8c0",
             "addend": "0x0",
@@ -2124,14 +2124,14 @@
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66e93",
             "target": "0xcd8c0",
             "addend": "0x0",
             "kind": 6
           },
           {
-            "symbol": "?gDDResult@@3HA",
+            "symbol": "?gDDrawStatus@@3HA",
             "operand": "0x66ea5",
             "target": "0xcd8c0",
             "addend": "0x0",

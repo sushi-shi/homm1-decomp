@@ -15,7 +15,7 @@
     "strip constructor": "Place firstBorderId before the slot index in firstBorderId + i + 1. Retail reads the parameter before the signed-word loop local; donor uses the same order.",
     "advManager::PuzzleDraw": "Place left before x in the DrawCell map-coordinate sum, consistent with the later GetCell lookup and retail parameter-first load. Local placement remains non-exact.",
     "game::NewGame": "Use player < giNumHumanPlayers in the restored-player loop. Retail loads the local before comparing against the global; other source and locale behavior is unchanged.",
-    "combatManager::CastMassSpell": "Compare gCurLoadedSpellFileId before fileId, matching the retail global-then-local sign extensions. Local placement remains non-exact.",
+    "combatManager::CastMassSpell": "Compare gEffectFileId before fileId, matching the retail global-then-local sign extensions. Local placement remains non-exact.",
     "townManager::BuildObj": "Remove the redundant sample = NULL immediately before LoadPlaySample assigns it. Retail has no such store; the corresponding donor also directly assigns the loaded sample.",
     "philAI::CheckReload": "Compute the denominator as 2.0f + friendly + enemyPressure, preserving retail floating-point order. The donor has the same base-first expression. Local placement remains non-exact."
   },

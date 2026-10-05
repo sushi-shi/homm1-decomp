@@ -594,9 +594,9 @@ extern i32 gLimitUpdMinX;
 extern i32 giLimitUpdMinY;
 extern i32 giLimitUpdMaxX;
 extern i32 giLimitUpdMaxY;
-extern class heroWindow* gPanel;
+extern class heroWindow* gAdventurePanel;
 extern i8 bPrefsChanged;
-extern i8 gFreshSave;
+extern i8 gSaveClean;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 extern i8 bComboDraw[][17];
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.

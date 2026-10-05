@@ -98,7 +98,7 @@ rva	size	symbol	provenance
 0x000a1490	4	_gIconWidth	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a1494	4	_gIconHeight	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a54ec	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
-0x000cad50	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
+0x000cad50	448	?gNetPeerNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
 0x000ce178	1800	?bmpAndMask@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000ce670	300	?hMouseCursor@@3PAPAXA	75 cursor handles
@@ -181,11 +181,11 @@ rva	size	symbol	provenance
 0x000a74d0	1	?giWeekTypeExtra@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a7b80	13	?gMapName@@3PADA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a74dc	4	?gbInNewGameSetup@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
-0x000a6cc8	1020	?pwSizeOfMapExtra@@3PAHA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a6cc8	1020	?iSizeOfMapExtra@@3PAHA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9921	1	?gOverviewShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9914	4	?gHeartbeatSeen@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9920	1	?gHeroWindShowing@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
-0x000a7fb4	4	?gHVHero@@3PAVhero@@A	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
+0x000a7fb4	4	?gInfoViewedHero@@3PAVhero@@A	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9949	1	?gShowHighScore@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a7624	1	?giHighScoreType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9951	1	?gInPollSound@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
@@ -201,18 +201,18 @@ rva	size	symbol	provenance
 0x000a9954	1	?gInCheckEndGame@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a7484	14	?giTerrainCost@@3PAY01CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
 0x000a9900	4	?gMinimized@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
-0x000a6bd0	4	?gSavedPlayerTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6bd4	4	_s_adjacentMonsterX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6bd8	4	_s_adjacentMonsterY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6bdc	1	?gSavedCrest@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bd0	4	?gSavedDifficulties@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bd4	4	_s_adjacentGuardX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bd8	4	_s_adjacentGuardY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bdc	1	?gKeptColor@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6be0	4	?gRandomTownTypes@@3PACA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6be8	4	_s_adjacentMonsterMinX	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
-0x000a6bec	4	_s_adjacentMonsterMinY	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
-0x000a6bf0	1	?gSavedDifficulty@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6bf4	14	?gMineTypeCount@@3PAFA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6be8	4	_s_adjacentGuardMinX	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
+0x000a6bec	4	_s_adjacentGuardMinY	Buka FindAdjacentMonster complete conditional CFG and typed scan-cursor consumers; buka-game-globals.json
+0x000a6bf0	1	?gOldGameDifficulty@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6bf4	14	?gMineTypeNums@@3PAFA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c04	4	_s_adjacentMonsterEndY	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c08	4	_s_adjacentMonsterEndX	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
-0x000a6c0c	1	?gSaveCurPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
+0x000a6c0c	1	?gSavedCurPlayer@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c0d	1	?gbDismissArmy@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c0e	1	?gSavedKingOfTheHill@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c20	4	?gEndSequence@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
@@ -240,11 +240,11 @@ rva	size	symbol	provenance
 0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdd90	16	?gDDDestinationRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cdd90	16	?gDDDestRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cd938	16	?gDDSourceRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cd8c0	4	?gDDResult@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdd88	4	?gPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cd8c8	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
+0x000cd8c0	4	?gDDrawStatus@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cdd88	4	?gDDPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cd8c8	108	?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
 0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
 0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json

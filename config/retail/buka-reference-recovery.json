@@ -11240,7 +11240,7 @@
               "kind": 20
             },
             {
-              "symbol": "?gCampaignChoice@@3CA",
+              "symbol": "?gChosenCampaignIndex@@3CA",
               "site_rva": "0x55187",
               "target_rva": "0xa9410",
               "addend": "0x0",
@@ -11337,7 +11337,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?gCampaignChoice@@3CA",
+              "symbol": "?gChosenCampaignIndex@@3CA",
               "site_rva": "0x5579c",
               "target_rva": "0xa9410",
               "addend": "0x0",
@@ -24269,7 +24269,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gCampaignChoice@@3CA",
+      "symbol": "?gChosenCampaignIndex@@3CA",
       "site_rva": "0x55187",
       "target_rva": "0xa9410",
       "addend": "0x0",
@@ -24290,7 +24290,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gCampaignChoice@@3CA",
+      "symbol": "?gChosenCampaignIndex@@3CA",
       "site_rva": "0x5579c",
       "target_rva": "0xa9410",
       "addend": "0x0",

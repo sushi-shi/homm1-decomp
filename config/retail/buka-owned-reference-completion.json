@@ -283,7 +283,7 @@
       ]
     },
     {
-      "name": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "name": "?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A",
       "rva": "0xcd8c8",
       "size": 108,
       "unit": "SOURCE/wingraph",
@@ -509,7 +509,7 @@
       "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e70",
       "target_rva": "0xcd8ec",
-      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "symbol": "?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A",
       "kind": 6,
       "addend": "0x24"
     },
@@ -518,7 +518,7 @@
       "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e79",
       "target_rva": "0xcd8ec",
-      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "symbol": "?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A",
       "kind": 6,
       "addend": "0x24"
     },
@@ -527,7 +527,7 @@
       "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "site_rva": "0x66e87",
       "target_rva": "0xcd8ec",
-      "symbol": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "symbol": "?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A",
       "kind": 6,
       "addend": "0x24"
     }
@@ -628,7 +628,7 @@
       "object_sha256": "a9018849176c368ffc8906d4886fdf48c9d2c7f24f096a0b6a7cff8959235b58"
     },
     {
-      "name": "?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A",
+      "name": "?gDDrawSurfaceDesc@@3U_DDSURFACEDESC@@A",
       "rva": "0xcd8c8",
       "size": 108,
       "object_sha256": "50cfb7717f12016cc54c3b0ef17248d4d24d2b6b4222d9abde85ac456be0e45f"

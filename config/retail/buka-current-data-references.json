@@ -6764,7 +6764,7 @@
           "kind": 20
         },
         {
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "operand_rva": "0x3ad1c",
           "target": "0xa7fb4",
           "addend": "0x0",
@@ -7697,7 +7697,7 @@
           "kind": 20
         },
         {
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "operand_rva": "0x3aefd",
           "target": "0xa7fb4",
           "addend": "0x0",
@@ -7799,7 +7799,7 @@
           "kind": 20
         },
         {
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "operand_rva": "0x3af45",
           "target": "0xa7fb4",
           "addend": "0x0",

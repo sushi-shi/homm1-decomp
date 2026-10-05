@@ -7573,7 +7573,7 @@
             "kind": 6
           },
           {
-            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
             "operand": "0x459ff",
             "target": "0xb1ed8",
             "addend": "0x0",
@@ -7652,7 +7652,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?gNbSessNcb@@3PAU_NCB@@A",
+            "symbol": "?gNetPeerNcb@@3PAU_NCB@@A",
             "operand": "0x45fd8",
             "target": "0xb1ed9",
             "addend": "0x1",

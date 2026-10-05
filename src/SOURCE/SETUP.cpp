@@ -36,16 +36,16 @@ i8 game::SetupCampaignGame(void) {
     delete window;
     switch (gpWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gCampaignChoice = CAMPAIGN_IRONFIST;
+            gChosenCampaignIndex = CAMPAIGN_IRONFIST;
             break;
         case CHOICE_TWO:
-            gCampaignChoice = CAMPAIGN_SLAYER;
+            gChosenCampaignIndex = CAMPAIGN_SLAYER;
             break;
         case CHOICE_THREE:
-            gCampaignChoice = CAMPAIGN_LAMANDA;
+            gChosenCampaignIndex = CAMPAIGN_LAMANDA;
             break;
         case CHOICE_FOUR:
-            gCampaignChoice = CAMPAIGN_ALAMAR;
+            gChosenCampaignIndex = CAMPAIGN_ALAMAR;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -272,22 +272,22 @@ i8 game::SetupGame(i8 newGame) {
     if (gMenuCommand != APP_MENU_NONE) {
         switch (gMenuCommand) {
             case APP_MENU_NEW_CAMPAIGN_IRONFIST:
-                gCampaignChoice = CAMPAIGN_IRONFIST;
+                gChosenCampaignIndex = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_CAMPAIGN_SLAYER:
-                gCampaignChoice = CAMPAIGN_SLAYER;
+                gChosenCampaignIndex = CAMPAIGN_SLAYER;
                 break;
             case APP_MENU_NEW_CAMPAIGN_LAMANDA:
-                gCampaignChoice = CAMPAIGN_LAMANDA;
+                gChosenCampaignIndex = CAMPAIGN_LAMANDA;
                 break;
             case APP_MENU_NEW_CAMPAIGN_ALAMAR:
-                gCampaignChoice = CAMPAIGN_ALAMAR;
+                gChosenCampaignIndex = CAMPAIGN_ALAMAR;
                 break;
             case APP_MENU_NEW_STANDARD_GAME:
             case APP_MENU_LOAD_STANDARD_GAME:
                 break;
             case APP_MENU_LOAD_CAMPAIGN_GAME:
-                gCampaignChoice = CAMPAIGN_IRONFIST;
+                gChosenCampaignIndex = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_HOT_SEAT_2:
             case APP_MENU_LOAD_HOT_SEAT_2:
@@ -359,7 +359,7 @@ i8 game::SetupGame(i8 newGame) {
         case CHOICE_ONE:
             break;
         case CHOICE_TWO:
-            gCampaignChoice = CAMPAIGN_IRONFIST;
+            gChosenCampaignIndex = CAMPAIGN_IRONFIST;
             if (newGame) {
                 if (!SetupCampaignGame()) {
                     result = 0;
@@ -403,9 +403,9 @@ i8 game::PickLoadGame(void) {
         0x136,
         0xe,
         FILE_REQUESTER_LOAD,
-        gCampaignChoice > 0 ? "*.CGM" : "*.GM*",
+        gChosenCampaignIndex > 0 ? "*.CGM" : "*.GM*",
         gGamePath,
-        gCampaignChoice > 0 ? ".CGM" : ".GM*"
+        gChosenCampaignIndex > 0 ? ".CGM" : ".GM*"
     );
     if (!fileReq)
         MemError();

@@ -238,13 +238,13 @@
           {
             "offset": "0x71c",
             "kind": 6,
-            "symbol": "?gSpellEffectFrame@@3FA",
+            "symbol": "?gImpactOverlayFrame@@3FA",
             "addend": "0x0"
           },
           {
             "offset": "0x72d",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+            "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
             "addend": "0x0"
           },
           {
@@ -1604,7 +1604,7 @@
           "site": "0x13f50",
           "offset": "0x71c",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -1612,7 +1612,7 @@
           "site": "0x13f61",
           "offset": "0x72d",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -5238,7 +5238,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?bigFont@@3PAVfont@@A",
+      "name": "?gBigFont@@3PAVfont@@A",
       "unit": "SOURCE/KB",
       "old_rva": "0xa7b78",
       "rva": "0xa7468",
@@ -5250,7 +5250,7 @@
           "site": "0x422cb",
           "offset": "0x3e",
           "kind": 6,
-          "name": "?bigFont@@3PAVfont@@A",
+          "name": "?gBigFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa7468"
         },
@@ -5258,7 +5258,7 @@
           "site": "0x4230e",
           "offset": "0x28",
           "kind": 6,
-          "name": "?bigFont@@3PAVfont@@A",
+          "name": "?gBigFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa7468"
         }
@@ -5266,7 +5266,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?smallFont@@3PAVfont@@A",
+      "name": "?gSmallFont@@3PAVfont@@A",
       "unit": "SOURCE/KB",
       "old_rva": "0xa7c00",
       "rva": "0xa74e0",
@@ -5278,7 +5278,7 @@
           "site": "0x422e0",
           "offset": "0x53",
           "kind": 6,
-          "name": "?smallFont@@3PAVfont@@A",
+          "name": "?gSmallFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa74e0"
         },
@@ -5286,7 +5286,7 @@
           "site": "0x4231f",
           "offset": "0x39",
           "kind": 6,
-          "name": "?smallFont@@3PAVfont@@A",
+          "name": "?gSmallFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa74e0"
         }
@@ -5548,7 +5548,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?gSpellEffectFrame@@3FA",
+      "name": "?gImpactOverlayFrame@@3FA",
       "unit": "SOURCE/KB",
       "old_rva": "0xa7478",
       "rva": "0xa7478",
@@ -5560,7 +5560,7 @@
           "site": "0x13f50",
           "offset": "0x71c",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         }
@@ -5568,7 +5568,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "name": "?gLoadedEffectIcn@@3PAVicon@@A",
       "unit": "SOURCE/KB",
       "old_rva": "0xa9400",
       "rva": "0xa9400",
@@ -5580,7 +5580,7 @@
           "site": "0x13f61",
           "offset": "0x72d",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         }
@@ -7228,7 +7228,7 @@
           {
             "offset": "0x3e",
             "kind": 6,
-            "symbol": "?bigFont@@3PAVfont@@A",
+            "symbol": "?gBigFont@@3PAVfont@@A",
             "addend": "0x0",
             "site_rva": "0x422cb",
             "target_rva": "0xa7468",
@@ -7263,7 +7263,7 @@
           {
             "offset": "0x53",
             "kind": 6,
-            "symbol": "?smallFont@@3PAVfont@@A",
+            "symbol": "?gSmallFont@@3PAVfont@@A",
             "addend": "0x0",
             "site_rva": "0x422e0",
             "target_rva": "0xa74e0",
@@ -7372,7 +7372,7 @@
           "site": "0x422cb",
           "offset": "0x3e",
           "kind": 6,
-          "name": "?bigFont@@3PAVfont@@A",
+          "name": "?gBigFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa7468"
         },
@@ -7405,7 +7405,7 @@
           "site": "0x422e0",
           "offset": "0x53",
           "kind": 6,
-          "name": "?smallFont@@3PAVfont@@A",
+          "name": "?gSmallFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa74e0"
         }
@@ -7483,7 +7483,7 @@
           {
             "offset": "0x28",
             "kind": 6,
-            "symbol": "?bigFont@@3PAVfont@@A",
+            "symbol": "?gBigFont@@3PAVfont@@A",
             "addend": "0x0",
             "site_rva": "0x4230e",
             "target_rva": "0xa7468",
@@ -7509,7 +7509,7 @@
           {
             "offset": "0x39",
             "kind": 6,
-            "symbol": "?smallFont@@3PAVfont@@A",
+            "symbol": "?gSmallFont@@3PAVfont@@A",
             "addend": "0x0",
             "site_rva": "0x4231f",
             "target_rva": "0xa74e0",
@@ -7592,7 +7592,7 @@
           "site": "0x4230e",
           "offset": "0x28",
           "kind": 6,
-          "name": "?bigFont@@3PAVfont@@A",
+          "name": "?gBigFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa7468"
         },
@@ -7616,7 +7616,7 @@
           "site": "0x4231f",
           "offset": "0x39",
           "kind": 6,
-          "name": "?smallFont@@3PAVfont@@A",
+          "name": "?gSmallFont@@3PAVfont@@A",
           "addend": 0,
           "target": "0xa74e0"
         },
@@ -7640,7 +7640,7 @@
       "eh": null
     }
   ],
-  "resolved_identity_collision": "The inherited bigFont claim at 0xa7b78 shadowed the newly verified giMaxExtentY. Complete LoadSystemwideIcons/UnloadSystemwideIcons review migrates bigFont to 0xa7468 and the three associated resource pointers. The 0xa7b78 fence is retained for giMaxExtentY; no alias or mask.",
+  "resolved_identity_collision": "The inherited gBigFont claim at 0xa7b78 shadowed the newly verified giMaxExtentY. Complete LoadSystemwideIcons/UnloadSystemwideIcons review migrates gBigFont to 0xa7468 and the three associated resource pointers. The 0xa7b78 fence is retained for giMaxExtentY; no alias or mask.",
   "final_data_manifest": [
     {
       "name": "?gbIconClipOn@@3CA",
@@ -7775,7 +7775,7 @@
       "provenance": "src-DATA-sizeof"
     },
     {
-      "name": "?bigFont@@3PAVfont@@A",
+      "name": "?gBigFont@@3PAVfont@@A",
       "object": "SOURCE/KB.c",
       "rva": "0xa7468",
       "size": "0x4",
@@ -7787,7 +7787,7 @@
       "provenance": "src-DATA-sizeof"
     },
     {
-      "name": "?smallFont@@3PAVfont@@A",
+      "name": "?gSmallFont@@3PAVfont@@A",
       "object": "SOURCE/KB.c",
       "rva": "0xa74e0",
       "size": "0x4",
@@ -7811,7 +7811,7 @@
       "provenance": "src-DATA-sizeof"
     },
     {
-      "name": "?gSpellEffectFrame@@3FA",
+      "name": "?gImpactOverlayFrame@@3FA",
       "object": "SOURCE/KB.c",
       "rva": "0xa7478",
       "size": "0x2",
@@ -7823,7 +7823,7 @@
       "provenance": "src-DATA-sizeof"
     },
     {
-      "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "name": "?gLoadedEffectIcn@@3PAVicon@@A",
       "object": "SOURCE/KB.c",
       "rva": "0xa9400",
       "size": "0x4",
@@ -7880,7 +7880,7 @@
     "link": "663552-byte candidate, zero unresolved external and duplicate-symbol warnings, no /FORCE.",
     "localization": "869 used IDs; zero errors; catalog content unchanged.",
     "usage": "homm1 audit usage passes.",
-    "data": "All thirteen migrated typed initializers and six already-migrated identities verified. Every reviewed identity has its complete typed extent in the generated data manifest; bigFont/giMaxExtentY collision resolved.",
+    "data": "All thirteen migrated typed initializers and six already-migrated identities verified. Every reviewed identity has its complete typed extent in the generated data manifest; gBigFont/giMaxExtentY collision resolved.",
     "readme": "Generated score update requires the unavailable strict report.",
     "strict_score": "Unavailable until complete delinking and inherited-claim migration succeed. Diagnostic correspondences and Wince equivalence are not strict scores.",
     "runtime": "Reconstructed runtime not yet validated.",

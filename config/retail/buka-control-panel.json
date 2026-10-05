@@ -196,7 +196,7 @@
           {
             "offset": "0x4b",
             "kind": 6,
-            "symbol": "?gFreshSave@@3CA",
+            "symbol": "?gSaveClean@@3CA",
             "addend": "0x0"
           },
           {
@@ -232,13 +232,13 @@
           {
             "offset": "0xb7",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
             "offset": "0xbd",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -250,7 +250,7 @@
           {
             "offset": "0xcd",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -268,7 +268,7 @@
           {
             "offset": "0x106",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -280,7 +280,7 @@
           {
             "offset": "0x122",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -292,7 +292,7 @@
           {
             "offset": "0x144",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -304,7 +304,7 @@
           {
             "offset": "0x160",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -328,7 +328,7 @@
           {
             "offset": "0x17c",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -346,7 +346,7 @@
           {
             "offset": "0x18e",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0"
           },
           {
@@ -896,7 +896,7 @@
           "site": "0xd326",
           "offset": "0x4b",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         },
@@ -946,7 +946,7 @@
           "site": "0xd392",
           "offset": "0xb7",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -954,7 +954,7 @@
           "site": "0xd398",
           "offset": "0xbd",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -970,7 +970,7 @@
           "site": "0xd3a8",
           "offset": "0xcd",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -994,7 +994,7 @@
           "site": "0xd3e1",
           "offset": "0x106",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1010,7 +1010,7 @@
           "site": "0xd3fd",
           "offset": "0x122",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1026,7 +1026,7 @@
           "site": "0xd41f",
           "offset": "0x144",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1042,7 +1042,7 @@
           "site": "0xd43b",
           "offset": "0x160",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1074,7 +1074,7 @@
           "site": "0xd457",
           "offset": "0x17c",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1098,7 +1098,7 @@
           "site": "0xd469",
           "offset": "0x18e",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1332,7 +1332,7 @@
           {
             "offset": "0x30",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd5f6",
             "target_rva": "0xa6728",
@@ -1358,7 +1358,7 @@
           {
             "offset": "0x57",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd61d",
             "target_rva": "0xa6728",
@@ -1384,7 +1384,7 @@
           {
             "offset": "0x78",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd63e",
             "target_rva": "0xa6728",
@@ -1410,7 +1410,7 @@
           {
             "offset": "0x9f",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd665",
             "target_rva": "0xa6728",
@@ -1436,7 +1436,7 @@
           {
             "offset": "0xc0",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd686",
             "target_rva": "0xa6728",
@@ -1471,7 +1471,7 @@
           {
             "offset": "0xf8",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd6be",
             "target_rva": "0xa6728",
@@ -1506,7 +1506,7 @@
           {
             "offset": "0x122",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd6e8",
             "target_rva": "0xa6728",
@@ -1541,7 +1541,7 @@
           {
             "offset": "0x146",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd70c",
             "target_rva": "0xa6728",
@@ -1576,7 +1576,7 @@
           {
             "offset": "0x16a",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd730",
             "target_rva": "0xa6728",
@@ -1611,7 +1611,7 @@
           {
             "offset": "0x195",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd75b",
             "target_rva": "0xa6728",
@@ -1646,7 +1646,7 @@
           {
             "offset": "0x1b9",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd77f",
             "target_rva": "0xa6728",
@@ -1681,7 +1681,7 @@
           {
             "offset": "0x1e3",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd7a9",
             "target_rva": "0xa6728",
@@ -1698,7 +1698,7 @@
           {
             "offset": "0x1fa",
             "kind": 6,
-            "symbol": "?gPanel@@3PAVheroWindow@@A",
+            "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
             "addend": "0x0",
             "site_rva": "0xd7c0",
             "target_rva": "0xa6728",
@@ -1748,7 +1748,7 @@
           "site": "0xd5f6",
           "offset": "0x30",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1772,7 +1772,7 @@
           "site": "0xd61d",
           "offset": "0x57",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1796,7 +1796,7 @@
           "site": "0xd63e",
           "offset": "0x78",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1820,7 +1820,7 @@
           "site": "0xd665",
           "offset": "0x9f",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1844,7 +1844,7 @@
           "site": "0xd686",
           "offset": "0xc0",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1876,7 +1876,7 @@
           "site": "0xd6be",
           "offset": "0xf8",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1908,7 +1908,7 @@
           "site": "0xd6e8",
           "offset": "0x122",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1940,7 +1940,7 @@
           "site": "0xd70c",
           "offset": "0x146",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -1972,7 +1972,7 @@
           "site": "0xd730",
           "offset": "0x16a",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -2004,7 +2004,7 @@
           "site": "0xd75b",
           "offset": "0x195",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -2036,7 +2036,7 @@
           "site": "0xd77f",
           "offset": "0x1b9",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -2068,7 +2068,7 @@
           "site": "0xd7a9",
           "offset": "0x1e3",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -2084,7 +2084,7 @@
           "site": "0xd7c0",
           "offset": "0x1fa",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -2178,7 +2178,7 @@
           {
             "offset": "0x8a",
             "kind": 6,
-            "symbol": "?gCampaignChoice@@3CA",
+            "symbol": "?gChosenCampaignIndex@@3CA",
             "addend": "0x0"
           },
           {
@@ -2268,7 +2268,7 @@
           {
             "offset": "0x166",
             "kind": 6,
-            "symbol": "?gFreshSave@@3CA",
+            "symbol": "?gSaveClean@@3CA",
             "addend": "0x0"
           },
           {
@@ -2666,7 +2666,7 @@
           "site": "0xd857",
           "offset": "0x8a",
           "kind": 6,
-          "name": "?gCampaignChoice@@3CA",
+          "name": "?gChosenCampaignIndex@@3CA",
           "addend": 0,
           "target": "0xa9410"
         },
@@ -2794,7 +2794,7 @@
           "site": "0xd933",
           "offset": "0x166",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         },
@@ -2995,7 +2995,7 @@
           {
             "offset": "0x253",
             "kind": 6,
-            "symbol": "?gFreshSave@@3CA",
+            "symbol": "?gSaveClean@@3CA",
             "addend": "0x0"
           },
           {
@@ -3997,7 +3997,7 @@
           "site": "0xdc25",
           "offset": "0x253",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         },
@@ -4529,7 +4529,7 @@
   ],
   "data_claims": [
     {
-      "name": "?gFreshSave@@3CA",
+      "name": "?gSaveClean@@3CA",
       "unit": "SOURCE/ADVMGR",
       "old_rva": "0xcb004",
       "rva": "0xa65cc",
@@ -4542,7 +4542,7 @@
           "site": "0xd326",
           "offset": "0x4b",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         },
@@ -4550,7 +4550,7 @@
           "site": "0xd933",
           "offset": "0x166",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         },
@@ -4558,7 +4558,7 @@
           "site": "0xdc25",
           "offset": "0x253",
           "kind": 6,
-          "name": "?gFreshSave@@3CA",
+          "name": "?gSaveClean@@3CA",
           "addend": 0,
           "target": "0xa65cc"
         }
@@ -4641,7 +4641,7 @@
       ]
     },
     {
-      "name": "?gPanel@@3PAVheroWindow@@A",
+      "name": "?gAdventurePanel@@3PAVheroWindow@@A",
       "unit": "SOURCE/ADVMGR",
       "old_rva": "0xcb168",
       "rva": "0xa6728",
@@ -4654,7 +4654,7 @@
           "site": "0xd392",
           "offset": "0xb7",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4662,7 +4662,7 @@
           "site": "0xd398",
           "offset": "0xbd",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4670,7 +4670,7 @@
           "site": "0xd3a8",
           "offset": "0xcd",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4678,7 +4678,7 @@
           "site": "0xd3e1",
           "offset": "0x106",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4686,7 +4686,7 @@
           "site": "0xd3fd",
           "offset": "0x122",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4694,7 +4694,7 @@
           "site": "0xd41f",
           "offset": "0x144",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4702,7 +4702,7 @@
           "site": "0xd43b",
           "offset": "0x160",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4710,7 +4710,7 @@
           "site": "0xd457",
           "offset": "0x17c",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4718,7 +4718,7 @@
           "site": "0xd469",
           "offset": "0x18e",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4726,7 +4726,7 @@
           "site": "0xd5f6",
           "offset": "0x30",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4734,7 +4734,7 @@
           "site": "0xd61d",
           "offset": "0x57",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4742,7 +4742,7 @@
           "site": "0xd63e",
           "offset": "0x78",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4750,7 +4750,7 @@
           "site": "0xd665",
           "offset": "0x9f",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4758,7 +4758,7 @@
           "site": "0xd686",
           "offset": "0xc0",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4766,7 +4766,7 @@
           "site": "0xd6be",
           "offset": "0xf8",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4774,7 +4774,7 @@
           "site": "0xd6e8",
           "offset": "0x122",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4782,7 +4782,7 @@
           "site": "0xd70c",
           "offset": "0x146",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4790,7 +4790,7 @@
           "site": "0xd730",
           "offset": "0x16a",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4798,7 +4798,7 @@
           "site": "0xd75b",
           "offset": "0x195",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4806,7 +4806,7 @@
           "site": "0xd77f",
           "offset": "0x1b9",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4814,7 +4814,7 @@
           "site": "0xd7a9",
           "offset": "0x1e3",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         },
@@ -4822,7 +4822,7 @@
           "site": "0xd7c0",
           "offset": "0x1fa",
           "kind": 6,
-          "name": "?gPanel@@3PAVheroWindow@@A",
+          "name": "?gAdventurePanel@@3PAVheroWindow@@A",
           "addend": 0,
           "target": "0xa6728"
         }
@@ -5030,7 +5030,7 @@
       ]
     },
     {
-      "name": "?gCampaignChoice@@3CA",
+      "name": "?gChosenCampaignIndex@@3CA",
       "unit": "SOURCE/KB",
       "old_rva": "0xa9b58",
       "rva": "0xa9410",
@@ -5043,7 +5043,7 @@
           "site": "0xd857",
           "offset": "0x8a",
           "kind": 6,
-          "name": "?gCampaignChoice@@3CA",
+          "name": "?gChosenCampaignIndex@@3CA",
           "addend": 0,
           "target": "0xa9410"
         }

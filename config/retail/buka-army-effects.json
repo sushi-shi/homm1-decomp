@@ -59,13 +59,13 @@
           {
             "offset": "0xed",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellFileId@@3FA",
+            "symbol": "?gEffectFileId@@3FA",
             "addend": "0x0"
           },
           {
             "offset": "0xfb",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+            "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
             "addend": "0x0"
           },
           {
@@ -101,13 +101,13 @@
           {
             "offset": "0x123",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+            "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
             "addend": "0x0"
           },
           {
             "offset": "0x12f",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellFileId@@3FA",
+            "symbol": "?gEffectFileId@@3FA",
             "addend": "0x0"
           },
           {
@@ -239,7 +239,7 @@
           {
             "offset": "0x3fc",
             "kind": 6,
-            "symbol": "?gSpellEffectFrame@@3FA",
+            "symbol": "?gImpactOverlayFrame@@3FA",
             "addend": "0x0"
           },
           {
@@ -359,7 +359,7 @@
           {
             "offset": "0x676",
             "kind": 6,
-            "symbol": "?gSpellEffectFrame@@3FA",
+            "symbol": "?gImpactOverlayFrame@@3FA",
             "addend": "0x0"
           },
           {
@@ -2102,7 +2102,7 @@
           "site": "0x175de",
           "offset": "0xed",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -2110,7 +2110,7 @@
           "site": "0x175ec",
           "offset": "0xfb",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -2158,7 +2158,7 @@
           "site": "0x17614",
           "offset": "0x123",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -2166,7 +2166,7 @@
           "site": "0x17620",
           "offset": "0x12f",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -2342,7 +2342,7 @@
           "site": "0x178ed",
           "offset": "0x3fc",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -2502,7 +2502,7 @@
           "site": "0x17b67",
           "offset": "0x676",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -2704,13 +2704,13 @@
           {
             "offset": "0x2e",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellFileId@@3FA",
+            "symbol": "?gEffectFileId@@3FA",
             "addend": "0x0"
           },
           {
             "offset": "0x3b",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+            "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
             "addend": "0x0"
           },
           {
@@ -2740,13 +2740,13 @@
           {
             "offset": "0x5c",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+            "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
             "addend": "0x0"
           },
           {
             "offset": "0x67",
             "kind": 6,
-            "symbol": "?gCurLoadedSpellFileId@@3FA",
+            "symbol": "?gEffectFileId@@3FA",
             "addend": "0x0"
           },
           {
@@ -2788,7 +2788,7 @@
           {
             "offset": "0xeb",
             "kind": 6,
-            "symbol": "?gSpellEffectFrame@@3FA",
+            "symbol": "?gImpactOverlayFrame@@3FA",
             "addend": "0x0"
           },
           {
@@ -2937,7 +2937,7 @@
           "site": "0x17dc2",
           "offset": "0x2e",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -2945,7 +2945,7 @@
           "site": "0x17dcf",
           "offset": "0x3b",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -2985,7 +2985,7 @@
           "site": "0x17df0",
           "offset": "0x5c",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -2993,7 +2993,7 @@
           "site": "0x17dfb",
           "offset": "0x67",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -3049,7 +3049,7 @@
           "site": "0x17e7f",
           "offset": "0xeb",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -5770,7 +5770,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?gCurLoadedSpellFileId@@3FA",
+      "name": "?gEffectFileId@@3FA",
       "unit": "SOURCE/KB",
       "old_rva": "0xa74e8",
       "rva": "0xa74e8",
@@ -5782,7 +5782,7 @@
           "site": "0x175de",
           "offset": "0xed",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -5790,7 +5790,7 @@
           "site": "0x17620",
           "offset": "0x12f",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -5798,7 +5798,7 @@
           "site": "0x17dc2",
           "offset": "0x2e",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         },
@@ -5806,7 +5806,7 @@
           "site": "0x17dfb",
           "offset": "0x67",
           "kind": 6,
-          "name": "?gCurLoadedSpellFileId@@3FA",
+          "name": "?gEffectFileId@@3FA",
           "addend": 0,
           "target": "0xa74e8"
         }
@@ -5814,7 +5814,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "name": "?gLoadedEffectIcn@@3PAVicon@@A",
       "unit": "SOURCE/KB",
       "old_rva": "0xa9400",
       "rva": "0xa9400",
@@ -5826,7 +5826,7 @@
           "site": "0x175ec",
           "offset": "0xfb",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -5834,7 +5834,7 @@
           "site": "0x17614",
           "offset": "0x123",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -5842,7 +5842,7 @@
           "site": "0x17dcf",
           "offset": "0x3b",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         },
@@ -5850,7 +5850,7 @@
           "site": "0x17df0",
           "offset": "0x5c",
           "kind": 6,
-          "name": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+          "name": "?gLoadedEffectIcn@@3PAVicon@@A",
           "addend": 0,
           "target": "0xa9400"
         }
@@ -5946,7 +5946,7 @@
       "initializer": "Complete typed object initializer and every pointed string checked against retail bytes"
     },
     {
-      "name": "?gSpellEffectFrame@@3FA",
+      "name": "?gImpactOverlayFrame@@3FA",
       "unit": "SOURCE/KB",
       "old_rva": "0xa7478",
       "rva": "0xa7478",
@@ -5958,7 +5958,7 @@
           "site": "0x178ed",
           "offset": "0x3fc",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -5966,7 +5966,7 @@
           "site": "0x17b67",
           "offset": "0x676",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         },
@@ -5974,7 +5974,7 @@
           "site": "0x17e7f",
           "offset": "0xeb",
           "kind": 6,
-          "name": "?gSpellEffectFrame@@3FA",
+          "name": "?gImpactOverlayFrame@@3FA",
           "addend": 0,
           "target": "0xa7478"
         }
@@ -6163,7 +6163,7 @@
   ],
   "profile": "Existing SOURCE/ARMY /Od /Ob1 /GX /MT /G5; unchanged.",
   "source_changes": [
-    "PowEffect compares gCurLoadedSpellFileId before effect, restoring retail pure-read order.",
+    "PowEffect compares gEffectFileId before effect, restoring retail pure-read order.",
     "MoveAttack compares m_hex before m_moveTargetHex, restoring retail pure-read order.",
     "MoveAttack uses baseHex += m_facing ? -1 : 1 for wide directions, restoring the branch-free retail rear-hex adjustment."
   ],

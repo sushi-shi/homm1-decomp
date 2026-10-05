@@ -64,13 +64,13 @@ i32 s_drawCloudFrame;
 DATA(0x004a6714)
 u16 s_drawGroundTile;
 DATA(0x004a672c)
-i8 s_drawFlipCloud;
+i8 s_drawCloudMirrored;
 DATA(0x004a65a4)
-u8 s_drawTileset;
+u8 s_drawCellSet;
 DATA(0x004a65d4)
 i32 s_drawCovered;
 DATA(0x004a65e8)
-i32 s_drawStoneTile;
+i32 s_drawMapStoneTile;
 
 VA(0x00401000, 0x2af)
 advManager::advManager(void) {
@@ -548,6 +548,23 @@ class mapCell* advManager::DoAdvCommand(void) {
         ForceNewHover();
     return cellPtr;
 }
+
+DATA(0x004a673c)
+i32 gLastScrollTime = 0;
+DATA(0x004a6740)
+i32 gSandAnim = 0;
+DATA(0x004a6744)
+i32 gLastHourGlassUpdateTime = 0;
+DATA(0x004a6748)
+i32 TrigX = 0;
+DATA(0x004a674c)
+i32 TrigY = 0;
+DATA(0x004a6750)
+i32 gCurBottomView = BOTTOM_VIEW_NONE;
+DATA(0x004a6754)
+i32 gCurHourGlassPhase = 0;
+DATA(0x004a6758)
+i32 gForceUpdate = 0;
 
 VA(0x0040298b, 0xc7e)
 i16 advManager::Main(struct tag_message& message) {
@@ -1932,36 +1949,36 @@ void advManager::DrawCell(
     newCell0 = GetCell(mapX, mapY);
     if (!gAllBlack
         && (mapX < 0 || mapY < 0 || mapX >= MAP_CELL_GRID_SIZE || mapY >= MAP_CELL_GRID_SIZE)) {
-        s_drawStoneTile = STONE_TILE_NONE;
+        s_drawMapStoneTile = STONE_TILE_NONE;
         if (mapX == -1) {
             if (mapY == -1)
-                s_drawStoneTile = STONE_TILE_TOP_LEFT;
+                s_drawMapStoneTile = STONE_TILE_TOP_LEFT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = STONE_TILE_BOTTOM_LEFT;
+                s_drawMapStoneTile = STONE_TILE_BOTTOM_LEFT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                s_drawMapStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_LEFT_BASE;
         } else if (mapX == MAP_CELL_GRID_SIZE) {
             if (mapY == -1)
-                s_drawStoneTile = STONE_TILE_TOP_RIGHT;
+                s_drawMapStoneTile = STONE_TILE_TOP_RIGHT;
             else if (mapY == MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = STONE_TILE_BOTTOM_RIGHT;
+                s_drawMapStoneTile = STONE_TILE_BOTTOM_RIGHT;
             else if (mapY >= 0 && mapY < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                s_drawMapStoneTile = ((mapY + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_RIGHT_BASE;
         } else if (mapY == -1) {
             if (mapX >= 0 && mapX < MAP_CELL_GRID_SIZE)
-                s_drawStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+                s_drawMapStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                                   + STONE_TILE_TOP_BASE;
         } else if (mapY == MAP_CELL_GRID_SIZE && mapX >= 0 && mapX < MAP_CELL_GRID_SIZE) {
-            s_drawStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
+            s_drawMapStoneTile = ((mapX + STONE_PATTERN_COORDINATE_SHIFT) & CLOUD_VARIANT_MASK)
                               + STONE_TILE_BOTTOM_BASE;
         }
-        if (s_drawStoneTile == STONE_TILE_NONE)
-            s_drawStoneTile =
+        if (s_drawMapStoneTile == STONE_TILE_NONE)
+            s_drawMapStoneTile =
                 (mapX + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS
                 + ((mapY + STONE_PATTERN_COORDINATE_SHIFT) % CLOUD_VARIANTS) * CLOUD_VARIANTS;
-        TileToBitmap(m_stoneTiles, s_drawStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
+        TileToBitmap(m_stoneTiles, s_drawMapStoneTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         return;
     } else {
         if (!((!gAllBlack && (gpGame->m_mapExtra[mapX][mapY] & giCurWatchPlayerBit))
@@ -1983,10 +2000,10 @@ void advManager::DrawCell(
                 return;
             }
             if (s_drawCloudFrame >= CLOUD_FLIPPED_FRAME_BASE) {
-                s_drawFlipCloud = 1;
+                s_drawCloudMirrored = 1;
                 s_drawCloudFrame -= CLOUD_FLIPPED_FRAME_BASE;
             } else {
-                s_drawFlipCloud = 0;
+                s_drawCloudMirrored = 0;
             }
             if ((s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_1
                  || s_drawCloudFrame == CLOUD_X_ALTERNATE_FRAME_2)
@@ -2000,7 +2017,7 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_CLOUD) {
         if (s_drawCovered) {
-            if (s_drawFlipCloud)
+            if (s_drawCloudMirrored)
                 FlipIconToBitmap(
                     m_cloudOverlayIcon,
                     gpWindowManager->m_screen,
@@ -2046,11 +2063,11 @@ void advManager::DrawCell(
         s_drawGroundTile |= newCell0->m_tileIndex & 0xff;
         TileToBitmap(m_groundTiles, s_drawGroundTile, gpWindowManager->m_screen, pixelX7, pixelY3);
         if (newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (!drawingPuzzle || s_drawTileset != TILESET_OBJ32_07
+            s_drawCellSet = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
+            if (!drawingPuzzle || s_drawCellSet != TILESET_OBJ32_07
                 || newCell0->m_objectIndex != DIG_HOLE_FRAME)
                 IconToBitmap(
-                    m_objectIcons[s_drawTileset],
+                    m_objectIcons[s_drawCellSet],
                     gpWindowManager->m_screen,
                     pixelX7,
                     pixelY3,
@@ -2062,10 +2079,10 @@ void advManager::DrawCell(
     if (drawMask & ADVMGR_DRAW_OBJECT) {
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (s_drawTileset != TILESET_MONS32) {
+            s_drawCellSet = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
+            if (s_drawCellSet != TILESET_MONS32) {
                 IconToBitmap(
-                    m_objectIcons[s_drawTileset],
+                    m_objectIcons[s_drawCellSet],
                     gpWindowManager->m_screen,
                     pixelX7,
                     pixelY3,
@@ -2074,7 +2091,7 @@ void advManager::DrawCell(
                 );
                 if (newCell0->m_flags & MAP_CELL_OBJECT_ANIMATED)
                     IconToBitmap(
-                        m_objectIcons[s_drawTileset],
+                        m_objectIcons[s_drawCellSet],
                         gpWindowManager->m_screen,
                         pixelX7,
                         pixelY3,
@@ -2098,8 +2115,8 @@ void advManager::DrawCell(
         savedShowHero = NULL;
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
-            if (s_drawTileset == TILESET_MONS32 && newCell0->m_objectIndex <= CREATURE_COUNT - 1) {
+            s_drawCellSet = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
+            if (s_drawCellSet == TILESET_MONS32 && newCell0->m_objectIndex <= CREATURE_COUNT - 1) {
                 if (mapX == m_lastQuickViewX && mapY == m_lastQuickViewY) {
                     if (m_mineGuardianFacingLeft)
                         FlipIconToBitmap(
@@ -2265,9 +2282,9 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_OVERLAY) {
         if (newCell0->m_overlayIndex != MAP_CELL_NO_FRAME) {
-            s_drawTileset = newCell0->m_overlayTileset & MAP_CELL_TILESET_MASK;
+            s_drawCellSet = newCell0->m_overlayTileset & MAP_CELL_TILESET_MASK;
             IconToBitmap(
-                m_objectIcons[s_drawTileset],
+                m_objectIcons[s_drawCellSet],
                 gpWindowManager->m_screen,
                 pixelX7,
                 pixelY3,
@@ -2276,7 +2293,7 @@ void advManager::DrawCell(
             );
             if (newCell0->m_flags & MAP_CELL_OVERLAY_ANIMATED)
                 IconToBitmap(
-                    m_objectIcons[s_drawTileset],
+                    m_objectIcons[s_drawCellSet],
                     gpWindowManager->m_screen,
                     pixelX7,
                     pixelY3,
@@ -4873,34 +4890,34 @@ i16 advManager::ControlPanel(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     gameCommand = MAIN_MENU_NO_COMMAND;
     oldSpeedState = gConfig.walkSpeed;
-    gFreshSave = 0;
+    gSaveClean = 0;
     anyMobilized = m_heroContextLocked;
     bPrefsChanged = 0;
     DemobilizeCurrHero();
-    gPanel = new heroWindow(160, 10, "cpanel.bin");
-    if (gPanel == NULL)
+    gAdventurePanel = new heroWindow(160, 10, "cpanel.bin");
+    if (gAdventurePanel == NULL)
         MemError();
-    SetWinText(gPanel, WINDOW_TEXT_CONTROL_PANEL);
+    SetWinText(gAdventurePanel, WINDOW_TEXT_CONTROL_PANEL);
     if (gRemoteOn) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        gPanel->BroadcastMessage(message);
+        gAdventurePanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        gPanel->BroadcastMessage(message);
+        gAdventurePanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
         message.value = WIDGET_COMMAND_DIMMED;
-        gPanel->BroadcastMessage(message);
+        gAdventurePanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
-        gPanel->BroadcastMessage(message);
+        gAdventurePanel->BroadcastMessage(message);
     }
     UpdateCPanel(1);
-    gpWindowManager->DoDialog(gPanel, CPanelHandler, 0);
-    delete gPanel;
+    gpWindowManager->DoDialog(gAdventurePanel, CPanelHandler, 0);
+    delete gAdventurePanel;
     switch (gpWindowManager->m_dialogResult) {
         case CONTROL_NEW_GAME:
         case CONTROL_LOAD_GAME:
@@ -4944,48 +4961,48 @@ void UpdateCPanel(i8 initialDraw) {
 
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_FRAME, CONTROL_MUSIC_VOLUME);
     message.value = gConfig.musicVolume ? CPANEL_FRAME_MUSIC_ON : CPANEL_FRAME_MUSIC_OFF;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME;
     message.value = gConfig.soundVolume ? CPANEL_FRAME_SOUND_ON : CPANEL_FRAME_SOUND_OFF;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED;
     message.value = gConfig.walkSpeed + CPANEL_FRAME_WALK_SPEED_FIRST;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE;
     message.value = (gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL)
                     + CPANEL_FRAME_MUSIC_SOURCE_FIRST;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE;
     message.value = gConfig.showRoute + CPANEL_FRAME_SHOW_ROUTE_FIRST;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES;
     if (gRemoteOn)
         message.value = CPANEL_FRAME_ENEMY_MOVES_FIRST;
     else
         message.value = 1 - gConfig.blackoutComputer + CPANEL_FRAME_ENEMY_MOVES_FIRST;
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
     message.text = onOffText[gConfig.musicVolume];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME_TEXT;
     message.text = onOffText[gConfig.soundVolume];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED_TEXT;
     message.text = walkSpeedText[gConfig.walkSpeed];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
     message.text =
         musicQualityText[gConfig.musicSource ? CPANEL_MUSIC_LABEL_CD : CPANEL_MUSIC_LABEL_LOCAL];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
     message.text = onOffText[gConfig.showRoute];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
     message.text = onOffText[1 - gConfig.blackoutComputer];
-    gPanel->BroadcastMessage(message);
+    gAdventurePanel->BroadcastMessage(message);
     if (!initialDraw)
-        gPanel->MoveWindow(0, 0);
+        gAdventurePanel->MoveWindow(0, 0);
 }
 
 VA(0x0040d7cd, 0x205)
@@ -5005,7 +5022,7 @@ i8 SaveGame(void) {
     for (player = 0; player < GAME_PLAYER_COUNT; player++)
         if (!gpGame->m_playerDead[player] && gbHumanPlayer[player])
             humans++;
-    if (gCampaignChoice > 0) {
+    if (gChosenCampaignIndex > 0) {
         sprintf(extensionBuf, ".CGM");
         sprintf(searchMask, "*.CGM");
     } else {
@@ -5019,7 +5036,7 @@ i8 SaveGame(void) {
     res = gpExec->DoDialog(newFileReq);
     if (res == DIALOG_BUTTON_2) {
         success = 1;
-        gFreshSave = 1;
+        gSaveClean = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog(localization::Tr("adventure.save.success"), NORMAL_DIALOG_TYPE_OK, 0xb1);
@@ -5094,7 +5111,7 @@ i16 CPanelHandler(struct tag_message& message) {
                             strcpy(question, localization::Tr("adventure.confirm_quit"));
                         confirm_reset:
                             handled = 1;
-                            if (!gFreshSave) {
+                            if (!gSaveClean) {
                                 NormalDialog(question, NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x50);
                                 if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                                     handled = 0;
@@ -6575,28 +6592,12 @@ void advManager::DrawAdventureBorder(void) {
 // ADVMGR globals. Retail emits some among the literals of their users.
 DATA(0x0048e140)
 i32 gLimitUpdMinX = UPDATE_NONE;
-DATA(0x004a673c)
-i32 gLastScrollTime = 0;
-DATA(0x004a6740)
-i32 gSandAnim = 0;
-DATA(0x004a6744)
-i32 gLastHourGlassUpdateTime = 0;
-DATA(0x004a6748)
-i32 TrigX = 0;
-DATA(0x004a674c)
-i32 TrigY = 0;
-DATA(0x004a6750)
-i32 gCurBottomView = BOTTOM_VIEW_NONE;
 DATA(0x0048e144)
 i32 gCurBottomViewEnemy = BOTTOM_VIEW_NO_ENEMY;
-DATA(0x004a6754)
-i32 gCurHourGlassPhase = 0;
 DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
-DATA(0x004a6758)
-i32 gForceUpdate = 0;
 DATA(0x004a6728)
-class heroWindow* gPanel;
+class heroWindow* gAdventurePanel;
 DATA(0x004a65ac)
 i32 giFrameStep;
 DATA(0x004a6730)
@@ -6612,7 +6613,7 @@ i32 giLimitUpdMinY;
 DATA(0x004a65ec)
 i8 bComboDraw[17][17];
 DATA(0x004a65cc)
-i8 gFreshSave;
+i8 gSaveClean;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;
 // ADVMGR's ambient-sound volume by distance, on a 0..127 scale. Eight

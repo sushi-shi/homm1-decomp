@@ -40,67 +40,67 @@
           {
             "offset": "0x7f",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x9b",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0xb0",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0xda",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0xf7",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x10c",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x136",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x164",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x193",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x199",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
             "offset": "0x1cc",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
@@ -112,7 +112,7 @@
           {
             "offset": "0x1e5",
             "kind": 6,
-            "symbol": "?s_drawStoneTile@@3HA",
+            "symbol": "?s_drawMapStoneTile@@3HA",
             "addend": "0x0"
           },
           {
@@ -196,7 +196,7 @@
           {
             "offset": "0x2d2",
             "kind": 6,
-            "symbol": "?s_drawFlipCloud@@3CA",
+            "symbol": "?s_drawCloudMirrored@@3CA",
             "addend": "0x0"
           },
           {
@@ -214,7 +214,7 @@
           {
             "offset": "0x2e8",
             "kind": 6,
-            "symbol": "?s_drawFlipCloud@@3CA",
+            "symbol": "?s_drawCloudMirrored@@3CA",
             "addend": "0x0"
           },
           {
@@ -274,7 +274,7 @@
           {
             "offset": "0x363",
             "kind": 6,
-            "symbol": "?s_drawFlipCloud@@3CA",
+            "symbol": "?s_drawCloudMirrored@@3CA",
             "addend": "0x0"
           },
           {
@@ -388,13 +388,13 @@
           {
             "offset": "0x568",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
             "offset": "0x578",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -406,7 +406,7 @@
           {
             "offset": "0x5b0",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -418,13 +418,13 @@
           {
             "offset": "0x60c",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
             "offset": "0x613",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -436,7 +436,7 @@
           {
             "offset": "0x643",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -454,7 +454,7 @@
           {
             "offset": "0x699",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -478,13 +478,13 @@
           {
             "offset": "0x74b",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
             "offset": "0x753",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -682,7 +682,7 @@
           {
             "offset": "0xd45",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -694,7 +694,7 @@
           {
             "offset": "0xd6b",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -712,7 +712,7 @@
           {
             "offset": "0xdc2",
             "kind": 6,
-            "symbol": "?s_drawTileset@@3EA",
+            "symbol": "?s_drawCellSet@@3EA",
             "addend": "0x0"
           },
           {
@@ -1498,7 +1498,7 @@
           "site": "0x5f7a",
           "offset": "0x7f",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1506,7 +1506,7 @@
           "site": "0x5f96",
           "offset": "0x9b",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1514,7 +1514,7 @@
           "site": "0x5fab",
           "offset": "0xb0",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1522,7 +1522,7 @@
           "site": "0x5fd5",
           "offset": "0xda",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1530,7 +1530,7 @@
           "site": "0x5ff2",
           "offset": "0xf7",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1538,7 +1538,7 @@
           "site": "0x6007",
           "offset": "0x10c",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1546,7 +1546,7 @@
           "site": "0x6031",
           "offset": "0x136",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1554,7 +1554,7 @@
           "site": "0x605f",
           "offset": "0x164",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1562,7 +1562,7 @@
           "site": "0x608e",
           "offset": "0x193",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1570,7 +1570,7 @@
           "site": "0x6094",
           "offset": "0x199",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1578,7 +1578,7 @@
           "site": "0x60c7",
           "offset": "0x1cc",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1594,7 +1594,7 @@
           "site": "0x60e0",
           "offset": "0x1e5",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -1706,7 +1706,7 @@
           "site": "0x61cd",
           "offset": "0x2d2",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         },
@@ -1730,7 +1730,7 @@
           "site": "0x61e3",
           "offset": "0x2e8",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         },
@@ -1810,7 +1810,7 @@
           "site": "0x625e",
           "offset": "0x363",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         },
@@ -1962,7 +1962,7 @@
           "site": "0x6463",
           "offset": "0x568",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -1970,7 +1970,7 @@
           "site": "0x6473",
           "offset": "0x578",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -1986,7 +1986,7 @@
           "site": "0x64ab",
           "offset": "0x5b0",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2002,7 +2002,7 @@
           "site": "0x6507",
           "offset": "0x60c",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2010,7 +2010,7 @@
           "site": "0x650e",
           "offset": "0x613",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2026,7 +2026,7 @@
           "site": "0x653e",
           "offset": "0x643",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2050,7 +2050,7 @@
           "site": "0x6594",
           "offset": "0x699",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2082,7 +2082,7 @@
           "site": "0x6646",
           "offset": "0x74b",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2090,7 +2090,7 @@
           "site": "0x664e",
           "offset": "0x753",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2354,7 +2354,7 @@
           "site": "0x6c40",
           "offset": "0xd45",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2370,7 +2370,7 @@
           "site": "0x6c66",
           "offset": "0xd6b",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2394,7 +2394,7 @@
           "site": "0x6cbd",
           "offset": "0xdc2",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2427,7 +2427,7 @@
   ],
   "data_claims": [
     {
-      "name": "?s_drawStoneTile@@3HA",
+      "name": "?s_drawMapStoneTile@@3HA",
       "unit": "SOURCE/ADVMGR",
       "old_rva": "0xcb020",
       "rva": "0xa65e8",
@@ -2439,7 +2439,7 @@
           "site": "0x5f7a",
           "offset": "0x7f",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2447,7 +2447,7 @@
           "site": "0x5f96",
           "offset": "0x9b",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2455,7 +2455,7 @@
           "site": "0x5fab",
           "offset": "0xb0",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2463,7 +2463,7 @@
           "site": "0x5fd5",
           "offset": "0xda",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2471,7 +2471,7 @@
           "site": "0x5ff2",
           "offset": "0xf7",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2479,7 +2479,7 @@
           "site": "0x6007",
           "offset": "0x10c",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2487,7 +2487,7 @@
           "site": "0x6031",
           "offset": "0x136",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2495,7 +2495,7 @@
           "site": "0x605f",
           "offset": "0x164",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2503,7 +2503,7 @@
           "site": "0x608e",
           "offset": "0x193",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2511,7 +2511,7 @@
           "site": "0x6094",
           "offset": "0x199",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2519,7 +2519,7 @@
           "site": "0x60c7",
           "offset": "0x1cc",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         },
@@ -2527,7 +2527,7 @@
           "site": "0x60e0",
           "offset": "0x1e5",
           "kind": 6,
-          "name": "?s_drawStoneTile@@3HA",
+          "name": "?s_drawMapStoneTile@@3HA",
           "addend": 0,
           "target": "0xa65e8"
         }
@@ -2700,7 +2700,7 @@
       ]
     },
     {
-      "name": "?s_drawFlipCloud@@3CA",
+      "name": "?s_drawCloudMirrored@@3CA",
       "unit": "SOURCE/ADVMGR",
       "old_rva": "0xcb16c",
       "rva": "0xa672c",
@@ -2712,7 +2712,7 @@
           "site": "0x61cd",
           "offset": "0x2d2",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         },
@@ -2720,7 +2720,7 @@
           "site": "0x61e3",
           "offset": "0x2e8",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         },
@@ -2728,7 +2728,7 @@
           "site": "0x625e",
           "offset": "0x363",
           "kind": 6,
-          "name": "?s_drawFlipCloud@@3CA",
+          "name": "?s_drawCloudMirrored@@3CA",
           "addend": 0,
           "target": "0xa672c"
         }
@@ -2794,7 +2794,7 @@
       ]
     },
     {
-      "name": "?s_drawTileset@@3EA",
+      "name": "?s_drawCellSet@@3EA",
       "unit": "SOURCE/ADVMGR",
       "old_rva": "0xcafdc",
       "rva": "0xa65a4",
@@ -2806,7 +2806,7 @@
           "site": "0x6463",
           "offset": "0x568",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2814,7 +2814,7 @@
           "site": "0x6473",
           "offset": "0x578",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2822,7 +2822,7 @@
           "site": "0x64ab",
           "offset": "0x5b0",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2830,7 +2830,7 @@
           "site": "0x6507",
           "offset": "0x60c",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2838,7 +2838,7 @@
           "site": "0x650e",
           "offset": "0x613",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2846,7 +2846,7 @@
           "site": "0x653e",
           "offset": "0x643",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2854,7 +2854,7 @@
           "site": "0x6594",
           "offset": "0x699",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2862,7 +2862,7 @@
           "site": "0x6646",
           "offset": "0x74b",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2870,7 +2870,7 @@
           "site": "0x664e",
           "offset": "0x753",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2878,7 +2878,7 @@
           "site": "0x6c40",
           "offset": "0xd45",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2886,7 +2886,7 @@
           "site": "0x6c66",
           "offset": "0xd6b",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         },
@@ -2894,7 +2894,7 @@
           "site": "0x6cbd",
           "offset": "0xdc2",
           "kind": 6,
-          "name": "?s_drawTileset@@3EA",
+          "name": "?s_drawCellSet@@3EA",
           "addend": 0,
           "target": "0xa65a4"
         }

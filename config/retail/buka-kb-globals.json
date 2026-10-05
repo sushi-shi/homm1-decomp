@@ -3897,7 +3897,7 @@
       "storage": ".bss"
     },
     {
-      "name": "?pwSizeOfMapExtra@@3PAHA",
+      "name": "?iSizeOfMapExtra@@3PAHA",
       "old_rva": "0xa73c8",
       "rva": "0xa6cc8",
       "size": 1020,
@@ -3908,7 +3908,7 @@
           "function_rva": "0x30344",
           "site_rva": "0x306ca",
           "target_rva": "0xa6cc8",
-          "symbol": "?pwSizeOfMapExtra@@3PAHA",
+          "symbol": "?iSizeOfMapExtra@@3PAHA",
           "addend": "0x0",
           "object_sha256": "7e8642936c6c8f2b5fc94eb5f2e6b45c5ea4cf589561cbd4eb58d998148299b6",
           "instruction_context": [
@@ -3969,14 +3969,14 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?ppMapExtra@@3PAPAXA",
+              "symbol": "?pMapExtra@@3PAPAXA",
               "site_rva": "0x306bf",
               "target_rva": "0xa7bb8",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?ppMapExtra@@3PAPAXA",
+              "symbol": "?pMapExtra@@3PAPAXA",
               "site_rva": "0x306d6",
               "target_rva": "0xa7bb8",
               "addend": "0x0",
@@ -3985,7 +3985,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?pwSizeOfMapExtra@@3PAHA",
+              "symbol": "?iSizeOfMapExtra@@3PAHA",
               "site_rva": "0x306ca",
               "target_rva": "0xa6cc8",
               "addend": "0x0",
@@ -4000,7 +4000,7 @@
       ],
       "unit": "SOURCE/KB",
       "payload_sha256": "1cfc9251644a358213d808b8088517b87a9f024bdf46198a3ed692b98b7373a7",
-      "type_declaration": "i32 pwSizeOfMapExtra[255];",
+      "type_declaration": "i32 iSizeOfMapExtra[255];",
       "storage": ".bss"
     },
     {
@@ -4703,7 +4703,7 @@
       "storage": ".bss"
     },
     {
-      "name": "?gHVHero@@3PAVhero@@A",
+      "name": "?gInfoViewedHero@@3PAVhero@@A",
       "old_rva": "0xa86fc",
       "rva": "0xa7fb4",
       "size": 4,
@@ -4714,7 +4714,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3ac9c",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -4860,14 +4860,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3ac9c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3aca3",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -4883,7 +4883,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3aca3",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5029,14 +5029,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3ac9c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3aca3",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5052,7 +5052,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3acd0",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5198,14 +5198,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3acd0",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3acd7",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5221,7 +5221,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3acd7",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5367,14 +5367,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3acd0",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3acd7",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5390,7 +5390,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3ad1c",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5474,7 +5474,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3ad1c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5490,7 +5490,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3ad4a",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5574,7 +5574,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3ad4a",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5590,7 +5590,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3adbf",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5660,7 +5660,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3adbf",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5678,7 +5678,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3aebd",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5748,14 +5748,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3aebd",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3aecc",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5773,7 +5773,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3af45",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5850,7 +5850,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3af45",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5866,7 +5866,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3af71",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -5943,7 +5943,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3af71",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -5959,7 +5959,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3af9d",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6043,7 +6043,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3af9d",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6059,7 +6059,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3afc8",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6143,14 +6143,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3afc8",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3afda",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6166,7 +6166,7 @@
           "function_rva": "0x3abb3",
           "site_rva": "0x3afda",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6243,14 +6243,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3afc8",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3afda",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6266,7 +6266,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b17a",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6336,7 +6336,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b17a",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6354,7 +6354,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b1e0",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6438,7 +6438,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b1e0",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6454,7 +6454,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b210",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6524,7 +6524,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b210",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6542,7 +6542,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b22f",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6619,7 +6619,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b22f",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6635,7 +6635,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b255",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6712,7 +6712,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b255",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6728,7 +6728,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b26c",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6812,14 +6812,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b26c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b276",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6835,7 +6835,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b276",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -6905,14 +6905,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b26c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b276",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -6930,7 +6930,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b28b",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7000,7 +7000,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b28b",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7019,7 +7019,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b29c",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7089,7 +7089,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b29c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7108,7 +7108,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b30e",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7178,7 +7178,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b30e",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7196,7 +7196,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b328",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7273,7 +7273,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b328",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7292,7 +7292,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b344",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7417,14 +7417,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b328",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b344",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7443,7 +7443,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b390",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7520,7 +7520,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b390",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7536,7 +7536,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b3b6",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7636,14 +7636,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b3b6",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b3c2",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7661,7 +7661,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b3c2",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7785,21 +7785,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b390",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b3b6",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b3c2",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7817,7 +7817,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b413",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -7894,7 +7894,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b413",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -7912,7 +7912,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b440",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8044,14 +8044,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b440",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b459",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8070,7 +8070,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b459",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8147,7 +8147,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b459",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8166,7 +8166,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b478",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8298,28 +8298,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b459",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b478",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b48b",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b497",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8339,7 +8339,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b48b",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8409,21 +8409,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b478",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b48b",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b497",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8442,7 +8442,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b497",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8519,21 +8519,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b48b",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b497",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4a4",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8552,7 +8552,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b4a4",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8629,14 +8629,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b497",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4a4",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8655,7 +8655,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b4ba",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8725,14 +8725,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4ba",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4cd",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8751,7 +8751,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b4cd",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8821,21 +8821,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4ba",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4cd",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4d9",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8854,7 +8854,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b4d9",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -8931,21 +8931,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4cd",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4d9",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4ee",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -8964,7 +8964,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b4ee",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9041,21 +9041,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4d9",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4ee",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b507",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9073,7 +9073,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b507",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9150,14 +9150,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b4ee",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b507",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9176,7 +9176,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b53c",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9288,7 +9288,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b53c",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9306,7 +9306,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b55e",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9424,14 +9424,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b55e",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b57a",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9449,7 +9449,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b57a",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9533,7 +9533,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b57a",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9549,7 +9549,7 @@
           "function_rva": "0x3b0b5",
           "site_rva": "0x3b5a7",
           "target_rva": "0xa7fb4",
-          "symbol": "?gHVHero@@3PAVhero@@A",
+          "symbol": "?gInfoViewedHero@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "3daf5e796d79131da09913213a339adc660974f58255265182ac6f2af71565d8",
           "instruction_context": [
@@ -9607,7 +9607,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gHVHero@@3PAVhero@@A",
+              "symbol": "?gInfoViewedHero@@3PAVhero@@A",
               "site_rva": "0x3b5a7",
               "target_rva": "0xa7fb4",
               "addend": "0x0",
@@ -9622,7 +9622,7 @@
       ],
       "unit": "SOURCE/KB",
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119",
-      "type_declaration": "class hero* gHVHero;",
+      "type_declaration": "class hero* gInfoViewedHero;",
       "storage": ".bss"
     },
     {

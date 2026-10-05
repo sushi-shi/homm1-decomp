@@ -2772,7 +2772,7 @@
     {
       "site_rva": "0xd326",
       "target_rva": "0xa65cc",
-      "symbol": "?gFreshSave@@3CA",
+      "symbol": "?gSaveClean@@3CA",
       "kind": 6,
       "owner_rva": "0xa65cc",
       "addend": 0,
@@ -2790,7 +2790,7 @@
     {
       "site_rva": "0xd392",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2799,7 +2799,7 @@
     {
       "site_rva": "0xd398",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2808,7 +2808,7 @@
     {
       "site_rva": "0xd3a8",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2826,7 +2826,7 @@
     {
       "site_rva": "0xd3e1",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2835,7 +2835,7 @@
     {
       "site_rva": "0xd3fd",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2844,7 +2844,7 @@
     {
       "site_rva": "0xd41f",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2853,7 +2853,7 @@
     {
       "site_rva": "0xd43b",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2862,7 +2862,7 @@
     {
       "site_rva": "0xd457",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2880,7 +2880,7 @@
     {
       "site_rva": "0xd469",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -2997,7 +2997,7 @@
     {
       "site_rva": "0xd5f6",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3015,7 +3015,7 @@
     {
       "site_rva": "0xd61d",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3033,7 +3033,7 @@
     {
       "site_rva": "0xd63e",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3051,7 +3051,7 @@
     {
       "site_rva": "0xd665",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3069,7 +3069,7 @@
     {
       "site_rva": "0xd686",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3096,7 +3096,7 @@
     {
       "site_rva": "0xd6be",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3123,7 +3123,7 @@
     {
       "site_rva": "0xd6e8",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3150,7 +3150,7 @@
     {
       "site_rva": "0xd70c",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3177,7 +3177,7 @@
     {
       "site_rva": "0xd730",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3204,7 +3204,7 @@
     {
       "site_rva": "0xd75b",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3231,7 +3231,7 @@
     {
       "site_rva": "0xd77f",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3258,7 +3258,7 @@
     {
       "site_rva": "0xd7a9",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3267,7 +3267,7 @@
     {
       "site_rva": "0xd7c0",
       "target_rva": "0xa6728",
-      "symbol": "?gPanel@@3PAVheroWindow@@A",
+      "symbol": "?gAdventurePanel@@3PAVheroWindow@@A",
       "kind": 6,
       "owner_rva": "0xa6728",
       "addend": 0,
@@ -3312,7 +3312,7 @@
     {
       "site_rva": "0xd857",
       "target_rva": "0xa9410",
-      "symbol": "?gCampaignChoice@@3CA",
+      "symbol": "?gChosenCampaignIndex@@3CA",
       "kind": 6,
       "owner_rva": "0xa9410",
       "addend": 0,
@@ -3339,7 +3339,7 @@
     {
       "site_rva": "0xd933",
       "target_rva": "0xa65cc",
-      "symbol": "?gFreshSave@@3CA",
+      "symbol": "?gSaveClean@@3CA",
       "kind": 6,
       "owner_rva": "0xa65cc",
       "addend": 0,
@@ -3384,7 +3384,7 @@
     {
       "site_rva": "0xdc25",
       "target_rva": "0xa65cc",
-      "symbol": "?gFreshSave@@3CA",
+      "symbol": "?gSaveClean@@3CA",
       "kind": 6,
       "owner_rva": "0xa65cc",
       "addend": 0,
@@ -8039,7 +8039,7 @@
     {
       "site_rva": "0x175de",
       "target_rva": "0xa74e8",
-      "symbol": "?gCurLoadedSpellFileId@@3FA",
+      "symbol": "?gEffectFileId@@3FA",
       "kind": 6,
       "owner_rva": "0xa74e8",
       "addend": 0,
@@ -8048,7 +8048,7 @@
     {
       "site_rva": "0x175ec",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -8084,7 +8084,7 @@
     {
       "site_rva": "0x17614",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -8093,7 +8093,7 @@
     {
       "site_rva": "0x17620",
       "target_rva": "0xa74e8",
-      "symbol": "?gCurLoadedSpellFileId@@3FA",
+      "symbol": "?gEffectFileId@@3FA",
       "kind": 6,
       "owner_rva": "0xa74e8",
       "addend": 0,
@@ -8264,7 +8264,7 @@
     {
       "site_rva": "0x178ed",
       "target_rva": "0xa7478",
-      "symbol": "?gSpellEffectFrame@@3FA",
+      "symbol": "?gImpactOverlayFrame@@3FA",
       "kind": 6,
       "owner_rva": "0xa7478",
       "addend": 0,
@@ -8426,7 +8426,7 @@
     {
       "site_rva": "0x17b67",
       "target_rva": "0xa7478",
-      "symbol": "?gSpellEffectFrame@@3FA",
+      "symbol": "?gImpactOverlayFrame@@3FA",
       "kind": 6,
       "owner_rva": "0xa7478",
       "addend": 0,
@@ -8534,7 +8534,7 @@
     {
       "site_rva": "0x17dc2",
       "target_rva": "0xa74e8",
-      "symbol": "?gCurLoadedSpellFileId@@3FA",
+      "symbol": "?gEffectFileId@@3FA",
       "kind": 6,
       "owner_rva": "0xa74e8",
       "addend": 0,
@@ -8543,7 +8543,7 @@
     {
       "site_rva": "0x17dcf",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -8570,7 +8570,7 @@
     {
       "site_rva": "0x17df0",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -8579,7 +8579,7 @@
     {
       "site_rva": "0x17dfb",
       "target_rva": "0xa74e8",
-      "symbol": "?gCurLoadedSpellFileId@@3FA",
+      "symbol": "?gEffectFileId@@3FA",
       "kind": 6,
       "owner_rva": "0xa74e8",
       "addend": 0,
@@ -8624,7 +8624,7 @@
     {
       "site_rva": "0x17e7f",
       "target_rva": "0xa7478",
-      "symbol": "?gSpellEffectFrame@@3FA",
+      "symbol": "?gImpactOverlayFrame@@3FA",
       "kind": 6,
       "owner_rva": "0xa7478",
       "addend": 0,
@@ -8885,7 +8885,7 @@
     {
       "site_rva": "0x5f7a",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8894,7 +8894,7 @@
     {
       "site_rva": "0x5f96",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8903,7 +8903,7 @@
     {
       "site_rva": "0x5fab",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8912,7 +8912,7 @@
     {
       "site_rva": "0x5fd5",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8921,7 +8921,7 @@
     {
       "site_rva": "0x5ff2",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8930,7 +8930,7 @@
     {
       "site_rva": "0x6007",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8939,7 +8939,7 @@
     {
       "site_rva": "0x6031",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8948,7 +8948,7 @@
     {
       "site_rva": "0x605f",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8957,7 +8957,7 @@
     {
       "site_rva": "0x608e",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8966,7 +8966,7 @@
     {
       "site_rva": "0x6094",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8975,7 +8975,7 @@
     {
       "site_rva": "0x60c7",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -8993,7 +8993,7 @@
     {
       "site_rva": "0x60e0",
       "target_rva": "0xa65e8",
-      "symbol": "?s_drawStoneTile@@3HA",
+      "symbol": "?s_drawMapStoneTile@@3HA",
       "kind": 6,
       "owner_rva": "0xa65e8",
       "addend": 0,
@@ -9092,7 +9092,7 @@
     {
       "site_rva": "0x61cd",
       "target_rva": "0xa672c",
-      "symbol": "?s_drawFlipCloud@@3CA",
+      "symbol": "?s_drawCloudMirrored@@3CA",
       "kind": 6,
       "owner_rva": "0xa672c",
       "addend": 0,
@@ -9119,7 +9119,7 @@
     {
       "site_rva": "0x61e3",
       "target_rva": "0xa672c",
-      "symbol": "?s_drawFlipCloud@@3CA",
+      "symbol": "?s_drawCloudMirrored@@3CA",
       "kind": 6,
       "owner_rva": "0xa672c",
       "addend": 0,
@@ -9209,7 +9209,7 @@
     {
       "site_rva": "0x625e",
       "target_rva": "0xa672c",
-      "symbol": "?s_drawFlipCloud@@3CA",
+      "symbol": "?s_drawCloudMirrored@@3CA",
       "kind": 6,
       "owner_rva": "0xa672c",
       "addend": 0,
@@ -9335,7 +9335,7 @@
     {
       "site_rva": "0x6463",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9344,7 +9344,7 @@
     {
       "site_rva": "0x6473",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9362,7 +9362,7 @@
     {
       "site_rva": "0x64ab",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9371,7 +9371,7 @@
     {
       "site_rva": "0x6507",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9380,7 +9380,7 @@
     {
       "site_rva": "0x650e",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9398,7 +9398,7 @@
     {
       "site_rva": "0x653e",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9416,7 +9416,7 @@
     {
       "site_rva": "0x6594",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9434,7 +9434,7 @@
     {
       "site_rva": "0x6646",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9443,7 +9443,7 @@
     {
       "site_rva": "0x664e",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9596,7 +9596,7 @@
     {
       "site_rva": "0x6c40",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9614,7 +9614,7 @@
     {
       "site_rva": "0x6c66",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -9632,7 +9632,7 @@
     {
       "site_rva": "0x6cbd",
       "target_rva": "0xa65a4",
-      "symbol": "?s_drawTileset@@3EA",
+      "symbol": "?s_drawCellSet@@3EA",
       "kind": 6,
       "owner_rva": "0xa65a4",
       "addend": 0,
@@ -13952,7 +13952,7 @@
     {
       "site_rva": "0x13f50",
       "target_rva": "0xa7478",
-      "symbol": "?gSpellEffectFrame@@3FA",
+      "symbol": "?gImpactOverlayFrame@@3FA",
       "kind": 6,
       "owner_rva": "0xa7478",
       "addend": 0,
@@ -13961,7 +13961,7 @@
     {
       "site_rva": "0x13f61",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -14879,7 +14879,7 @@
     {
       "site_rva": "0x422cb",
       "target_rva": "0xa7468",
-      "symbol": "?bigFont@@3PAVfont@@A",
+      "symbol": "?gBigFont@@3PAVfont@@A",
       "kind": 6,
       "owner_rva": "0xa7468",
       "addend": 0,
@@ -14888,7 +14888,7 @@
     {
       "site_rva": "0x4230e",
       "target_rva": "0xa7468",
-      "symbol": "?bigFont@@3PAVfont@@A",
+      "symbol": "?gBigFont@@3PAVfont@@A",
       "kind": 6,
       "owner_rva": "0xa7468",
       "addend": 0,
@@ -14897,7 +14897,7 @@
     {
       "site_rva": "0x422e0",
       "target_rva": "0xa74e0",
-      "symbol": "?smallFont@@3PAVfont@@A",
+      "symbol": "?gSmallFont@@3PAVfont@@A",
       "kind": 6,
       "owner_rva": "0xa74e0",
       "addend": 0,
@@ -14906,7 +14906,7 @@
     {
       "site_rva": "0x4231f",
       "target_rva": "0xa74e0",
-      "symbol": "?smallFont@@3PAVfont@@A",
+      "symbol": "?gSmallFont@@3PAVfont@@A",
       "kind": 6,
       "owner_rva": "0xa74e0",
       "addend": 0,
@@ -17354,7 +17354,7 @@
     {
       "site_rva": "0x133a7",
       "target_rva": "0xa9400",
-      "symbol": "?gCurLoadedSpellIcon@@3PAVicon@@A",
+      "symbol": "?gLoadedEffectIcn@@3PAVicon@@A",
       "kind": 6,
       "owner_rva": "0xa9400",
       "addend": 0,
@@ -17363,7 +17363,7 @@
     {
       "site_rva": "0x133b2",
       "target_rva": "0xa74e8",
-      "symbol": "?gCurLoadedSpellFileId@@3FA",
+      "symbol": "?gEffectFileId@@3FA",
       "kind": 6,
       "owner_rva": "0xa74e8",
       "addend": 0,
@@ -17372,7 +17372,7 @@
     {
       "site_rva": "0x133bb",
       "target_rva": "0xa7478",
-      "symbol": "?gSpellEffectFrame@@3FA",
+      "symbol": "?gImpactOverlayFrame@@3FA",
       "kind": 6,
       "owner_rva": "0xa7478",
       "addend": 0,
