@@ -701,9 +701,9 @@ rva	size	unit	name	status	evidence
 0x00058433	0x13c	SOURCE/SMACKMGR	?DoAdvance@@YAXPAUSmack@@HHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0005856f	0x73c	SOURCE/SMACKMGR	?SmackMain@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00058cab	0x49	SOURCE/SMACKMGR	?CloseSmackers@@YAXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00058cf4	0xa9	SOURCE/SMACKMGR	?PlaySmacker@@YAHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x00058d9d	0x27	SOURCE/SMACKMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?PlaySmacker@@YAHC@Z; buka-function-structure.json.
-0x00058dc4	0x12	SOURCE/SMACKMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?PlaySmacker@@YAHC@Z; buka-function-structure.json.
+0x00058cf4	0xa9	SOURCE/SMACKMGR	?PlaySmacker@@YAHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x00058d9d	0x27	SOURCE/SMACKMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?PlaySmacker@@YAHH@Z; buka-function-structure.json.
+0x00058dc4	0x12	SOURCE/SMACKMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?PlaySmacker@@YAHH@Z; buka-function-structure.json.
 0x00058de0	0x196	SOURCE/SPELLAI	?DoSpellAI@combatManager@@QAEHC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00058f76	0x42d	SOURCE/SPELLAI	?DetermineEffectOfSpell@combatManager@@QAEXHPAH0@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x000593a3	0x246	SOURCE/SPELLAI	?RawEffectSpellInfluence@combatManager@@QAEHPAVarmy@@H@Z	source-claim	Active source annotation; identity does not imply exact bytes.

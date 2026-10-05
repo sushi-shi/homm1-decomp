@@ -880,6 +880,7 @@ i32 hero::NumArtifacts(void) {
     return count;
 }
 
+// Buka names every army slot with the plural creature table.
 VA(0x0043abb3, 0x502)
 void UpdateHeroScreenStatusBar(i16 widgetId) {
     tag_message message; // Unused; retail keeps the donor's message frame.
@@ -937,22 +938,22 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
                     sprintf(
                         gText,
                         gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                        gArmyNames[gHVHero->m_army.m_creatureTypes[slot]]
+                        gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
                     );
                 else
                     strcpy(gText, gHeroScreen[HERO_TEXT_EMPTY]);
-            } else if (slot == giHeroScreenSrcIndex) {
+            } else if (giHeroScreenSrcIndex == slot) {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                    gArmyNames[gHVHero->m_army.m_creatureTypes[slot]]
+                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
                 );
             } else if (gpTownManager->m_castleDialogActive) {
                 if (gHVHero->m_army.m_creatureTypes[slot] != CREATURE_NONE)
                     sprintf(
                         gText,
                         gHeroScreen[HERO_TEXT_SELECT_ARMY],
-                        gArmyNames[gHVHero->m_army.m_creatureTypes[slot]]
+                        gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
                     );
                 else
                     strcpy(gText, gHeroScreen[HERO_TEXT_EMPTY]);
@@ -960,14 +961,14 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_MOVE_ARMY],
-                    gArmyNames[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]
+                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]]
                 );
             } else {
                 sprintf(
                     gText,
                     gHeroScreen[HERO_TEXT_EXCHANGE_ARMIES],
-                    gArmyNames[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
-                    gArmyNames[gHVHero->m_army.m_creatureTypes[slot]]
+                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[giHeroScreenSrcIndex]],
+                    gArmyNamesPlural[gHVHero->m_army.m_creatureTypes[slot]]
                 );
             }
             break;

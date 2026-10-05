@@ -1938,7 +1938,7 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
                        - (tied - 1) * THIEVES_TIE_CENTERING_STEP;
             for (pos = firstPlayer; !(pos > hi); pos++) {
                 marker = new iconWidget(
-                    (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH + startPos,
+                    startPos + (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH,
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH,
                     THIEVES_RANK_ICON_HEIGHT,
@@ -2283,7 +2283,7 @@ i16 CastleHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (message.id == gpTownManager->m_lastHoverId)
+                if (gpTownManager->m_lastHoverId == message.id)
                     break;
                 gpTownManager->m_lastHoverId = message.id;
                 switch (message.id) {
@@ -2388,10 +2388,7 @@ i16 CastleHandler(struct tag_message& message) {
                 );
                 return MESSAGE_DISPATCH_CONSUME;
             case WIDGET_NOTIFY_SELECT:
-                if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-                    quickFlag = 1;
-                else
-                    quickFlag = 0;
+                quickFlag = (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) != 0;
                 switch (message.id) {
                     case BUILDING_SLOT_MAGE_GUILD:
                         if (!quickFlag

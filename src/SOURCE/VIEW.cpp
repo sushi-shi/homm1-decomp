@@ -145,7 +145,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
     wnd->BroadcastMessage(message);
     if (m_heroes[side] == NULL || allowActions == 0
         || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK) || m_heroCastSpell[side] != 0
-        || m_currentSide != giCurGeneral) {
+        || giCurGeneral != m_currentSide) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = GENERAL_CAST_SPELL;
         message.value = WIDGET_FLAG_ENABLED;
@@ -154,7 +154,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
-    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || m_currentSide != giCurGeneral) {
+    if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || giCurGeneral != m_currentSide) {
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.id = GENERAL_SURRENDER;
         message.value = WIDGET_FLAG_ENABLED;
@@ -163,7 +163,7 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         message.value = WIDGET_FLAG_DIMMED;
         wnd->BroadcastMessage(message);
     }
-    if (allowActions == 0 || m_currentSide != giCurGeneral
+    if (allowActions == 0 || giCurGeneral != m_currentSide
         || (giCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
         || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
         || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {

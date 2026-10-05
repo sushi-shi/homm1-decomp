@@ -5255,7 +5255,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?PlaySmacker@@YAHC@Z",
+              "symbol": "?PlaySmacker@@YAHH@Z",
               "site_rva": "0x3da1b",
               "target_rva": "0x58cf4",
               "addend": "0x0",
@@ -5351,14 +5351,14 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?PlaySmacker@@YAHC@Z",
+              "symbol": "?PlaySmacker@@YAHH@Z",
               "site_rva": "0x3da1b",
               "target_rva": "0x58cf4",
               "addend": "0x0",
               "kind": 20
             },
             {
-              "symbol": "?PlaySmacker@@YAHC@Z",
+              "symbol": "?PlaySmacker@@YAHH@Z",
               "site_rva": "0x3da25",
               "target_rva": "0x58cf4",
               "addend": "0x0",

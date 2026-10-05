@@ -36,6 +36,6 @@ void ConvertSmackerPalette(u8* paletteData);
 void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette, i32 skipPalette);
 void SmackMain();
 void CloseSmackers();
-i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i8) smackNumber);
+i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);
 
 #endif

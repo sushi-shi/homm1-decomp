@@ -750,7 +750,7 @@ void philAI::DoAI(i32 player) {
     halfShown = 0;
     if (gGameOver)
         return;
-    if (giLimitPlayer && giLimitPlayer != player)
+    if (giLimitPlayer && player != giLimitPlayer)
         return;
     GetTurnAIVars(player);
     ShowStatus();
@@ -779,10 +779,7 @@ void philAI::DoAI(i32 player) {
         }
         moveDone = 0;
         ResetHeroRVs(0, 0, 0);
-        if (aiHero->m_eventFlags & HERO_EVENT_EMBARKED)
-            stepMax = 15;
-        else
-            stepMax = 5;
+        stepMax = (aiHero->m_eventFlags & HERO_EVENT_EMBARKED) ? 15 : 5;
         minRV = aiHero->m_mobility + 42;
         stepMax = static_cast<i32>(stepMax * (1.7 - gpCurPlayer->m_difficulty * 0.1));
         minRV =
@@ -837,7 +834,7 @@ void philAI::DoAI(i32 player) {
                     pathIndex = gpSearchArray->m_pathLength - 1;
                     moveResult = 0;
                     moveInterrupt = 0;
-                    while (pathIndex >= 0 && stepMax > steps) {
+                    while (pathIndex >= 0 && steps < stepMax) {
                         stopAfterStep = (steps + 1 == stepMax || pathIndex == 0) ? 1 : 0;
                         if (pathIndex > 0 && GoodAdjacent(aiHero, &bestDirection)) {
                             gpSearchArray->m_directions[pathIndex] = bestDirection;
@@ -872,7 +869,7 @@ void philAI::DoAI(i32 player) {
                     if (pathIndex < 0 && gpCurPlayer->m_ultimateArtifactHintChance > 15
                         && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
                         && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y) {
-                        if (aiHero->m_mobility == aiHero->m_remainingMobility)
+                        if (aiHero->m_remainingMobility == aiHero->m_mobility)
                             gpAdvManager->ProcessSearch(
                                 ADVMGR_SEARCH_VIEW_CENTER,
                                 ADVMGR_SEARCH_VIEW_CENTER
@@ -995,7 +992,7 @@ void philAI::GetTurnAIVars(i32 player) {
                     for (y = yPos - 10; y <= yPos + 10; y++) {
                         if (x >= 0 && x < MAP_CELL_GRID_SIZE && y >= 0 && y < MAP_CELL_GRID_SIZE) {
                             mineValue = abs(MANHATTAN_LENGTH(x - xPos, y - yPos) - 4) >> 2;
-                            if (gaiTurnValueOfMine[x][y] > mineValue)
+                            if (mineValue < gaiTurnValueOfMine[x][y])
                                 gaiTurnValueOfMine[x][y] = mineValue;
                         }
                     }
@@ -1077,7 +1074,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
         CheckDoMain(0, 0);
         GetBestCreature(townPointer, choice, fValue);
         fValue = fValue
-                 * (static_cast<float>(ideal[townNo]) / static_cast<float>(strengths[townNo]) / 3.0f
+                 * (static_cast<float>(ideal[townNo]) / (static_cast<float>(strengths[townNo])) / 3.0f
                     + 0.66);
         fValue = fValue * ((100 - Random(0, 10)) / 100.0);
         if (fValue > bestBHCValue) {
@@ -1100,7 +1097,7 @@ void philAI::GetBestBHC(i32, BHC& best) {
             } else if (gpCurPlayer->m_heroCount == 0) {
                 fValue += 500.0f;
             }
-            if (bestBHCValue < fValue) {
+            if (fValue > bestBHCValue) {
                 bestBHCValue = fValue;
                 best = choice;
             }
@@ -1266,8 +1263,8 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                     bestY = y;
                     bestRV = cellValue;
                 } else if (cellValue == bestRV && cellValue == 0) {
-                    if (MANHATTAN_LENGTH(bestY - pHero->m_y, bestX - pHero->m_x)
-                        < MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)) {
+                    if (MANHATTAN_LENGTH(x - pHero->m_x, y - pHero->m_y)
+                        > MANHATTAN_LENGTH(bestX - pHero->m_x, bestY - pHero->m_y)) {
                         bestX = x;
                         bestY = y;
                     }
@@ -1390,7 +1387,7 @@ void philAI::ProbableOutcomeOfBattle(
         factor = gpCurPlayer->m_aiData.m_attentionWeights.upgradeBase + 0.66;
         if (gbHumanPlayer[enemyPlayer])
             outcomeValue = static_cast<i32>(
-                outcomeValue + (defenderRemaining * factor * factor) * gAttackHumanBonus
+                outcomeValue + defenderRemaining * gAttackHumanBonus * factor * factor
             );
         else
             outcomeValue = static_cast<i32>(
@@ -1407,7 +1404,7 @@ void philAI::ProbableOutcomeOfBattle(
         outcomeValue = static_cast<i32>(outcomeValue - (attArts + 1400) * (1.0f - winChance));
         exp = gpGame->ExperienceValueOfStack(defender, defenderHero);
         outcomeValue =
-            static_cast<i32>(outcomeValue + exp * attackerHero->m_aiFightValue * winChance * 0.8);
+            static_cast<i32>(outcomeValue + exp * 0.8 * winChance * attackerHero->m_aiFightValue);
     }
     if (defenderHero) {
         for (artSlot = 0; artSlot < HERO_ARTIFACT_SLOT_COUNT; artSlot++) {
@@ -2119,7 +2116,7 @@ i32 philAI::RVOfPosition(
     else if (estTurns > 1.0f)
         estTurns = estTurns * 1.2;
     totalValue = static_cast<i32>(totalValue / (estTurns + 0.2));
-    delta = static_cast<i32>(delta * 2 / (estTurns + 1.0f));
+    delta = static_cast<i32>(delta * 2 / (1.0f + estTurns));
     if (estLiveChance == 100)
         totalValue += delta;
     if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && curTriggerType == MAP_OBJECT_COAST)
@@ -2670,7 +2667,7 @@ i32 philAI::QuickCombat(
         }
         if (defenderHero != NULL)
             attackerHero->ApplyBattleWinTemps();
-        defenderDamage = diff * fracLost;
+        defenderDamage = fracLost * diff;
         attackerDamage = 1.0f;
         if (attackerDamage >= 0.99 && defenderHero != NULL)
             gpAdvManager->GiveExperience(defenderHero, defenderExp, 1);

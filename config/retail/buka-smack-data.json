@@ -778,7 +778,7 @@
         },
         {
           "unit": "SOURCE/SMACKMGR",
-          "function": "?PlaySmacker@@YAHC@Z",
+          "function": "?PlaySmacker@@YAHH@Z",
           "function_rva": "0x58cf4",
           "site_rva": "0x58d52",
           "target_rva": "0xcc8d0",
@@ -1049,7 +1049,7 @@
         },
         {
           "unit": "SOURCE/SMACKMGR",
-          "function": "?PlaySmacker@@YAHC@Z",
+          "function": "?PlaySmacker@@YAHH@Z",
           "function_rva": "0x58cf4",
           "site_rva": "0x58d09",
           "target_rva": "0xcc8d4",

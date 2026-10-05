@@ -419,15 +419,15 @@ i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
     iIsMovingDown = 0;
     iLeftFl = 0;
     rightFl = 0;
-    if (sourceColumnCheck < targetCol)
+    if (targetCol > sourceColumnCheck)
         rightFl = 1;
-    else if (sourceColumnCheck != targetCol)
+    else if (targetCol != sourceColumnCheck)
         iLeftFl = 1;
-    if (sourceRowVal < targetRowVal)
+    if (targetRowVal > sourceRowVal)
         iIsMovingDown = 1;
-    else if (sourceRowVal != targetRowVal)
+    else if (targetRowVal != sourceRowVal)
         movingUp = 1;
-    if (iLeftFl == rightFl) {
+    if (rightFl == iLeftFl) {
         if (movingUp == 1) {
             if (sourceRowVal & 1) {
                 if (!(blockedMask & COMBAT_DIRECTION_BIT_NORTHWEST))
