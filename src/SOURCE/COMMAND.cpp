@@ -112,8 +112,7 @@ i8 combatManager::ValidHexToStandOn(i32 hex) {
     if (hex != ARMY_HEX_INVALID && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN
         && hex % COMBAT_GRID_COLUMNS != 0 && m_hexCells[hex].m_obstacleIndex == COMBAT_OBSTACLE_NONE
         && (m_hexCells[hex].m_occupantSide == COMBAT_SIDE_NONE
-            || (m_hexCells[hex].m_occupantSide == m_currentSide
-                && m_hexCells[hex].m_occupantIndex == m_currentArmyIndex)))
+            || HEX_HAS_OCCUPANT(m_hexCells[hex], m_currentSide, m_currentArmyIndex)))
         return 1;
     else
         return 0;
@@ -233,20 +232,16 @@ void combatManager::SetCombatDirections(i32 targetHex) {
         if (keptReachable[wasMapped]) {
             if (mainTarget->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (dir == COMBAT_DIRECTION_NORTHEAST
-                    && m_hexCells[targetHex - 1].m_occupantSide == owner
-                    && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
+                    && HEX_HAS_OCCUPANT(m_hexCells[targetHex - 1], owner, targetIndex))
                     outDir = COMBAT_DIRECTION_WIDE_WEST;
                 else if (dir == COMBAT_DIRECTION_NORTHWEST
-                         && m_hexCells[targetHex + 1].m_occupantSide == owner
-                         && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
+                         && HEX_HAS_OCCUPANT(m_hexCells[targetHex + 1], owner, targetIndex))
                     outDir = COMBAT_DIRECTION_WIDE_WEST;
                 else if (dir == COMBAT_DIRECTION_SOUTHEAST
-                         && m_hexCells[targetHex - 1].m_occupantSide == owner
-                         && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
+                         && HEX_HAS_OCCUPANT(m_hexCells[targetHex - 1], owner, targetIndex))
                     outDir = COMBAT_DIRECTION_WIDE_EAST;
                 else if (dir == COMBAT_DIRECTION_SOUTHWEST
-                         && m_hexCells[targetHex + 1].m_occupantSide == owner
-                         && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
+                         && HEX_HAS_OCCUPANT(m_hexCells[targetHex + 1], owner, targetIndex))
                     outDir = COMBAT_DIRECTION_WIDE_EAST;
             }
             if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
@@ -382,8 +377,11 @@ void combatManager::CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex
                 alternate = COMBAT_DIRECTION_SOUTHWEST;
             }
         } else {
-            if (m_hexCells[targetHex - 1].m_occupantSide == curArmyRef->m_targetSide
-                && m_hexCells[targetHex - 1].m_occupantIndex == curArmyRef->m_targetIndex)
+            if (HEX_HAS_OCCUPANT(
+                    m_hexCells[targetHex - 1],
+                    curArmyRef->m_targetSide,
+                    curArmyRef->m_targetIndex
+                ))
                 targetHex--;
             if (hexDir == COMBAT_DIRECTION_WIDE_WEST)
                 hexDir = COMBAT_DIRECTION_NORTHEAST;
@@ -781,7 +779,7 @@ void combatManager::DoCommand(i8 command) {
         case COMBAT_MESSAGE_COMMAND_MOVE:
         case COMBAT_MESSAGE_COMMAND_FLY:
         case COMBAT_MESSAGE_COMMAND_SHOOT:
-            giNextAction = ACTION_MOVE, giNextActionGridIndex = m_selectedHex;
+            SET_NEXT_COMBAT_MOVE(m_selectedHex);
             giNextActionExtra = ARMY_HEX_INVALID;
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:

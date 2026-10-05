@@ -43,8 +43,11 @@ i16 army::CanFit(i16* hex) {
             mapCell = &gpCombatManager->m_hexCells[candidateHex];
         if (ValidHex(candidateHex)
             && (mapCell->m_occupantSide == COMBAT_SIDE_NONE
-                || (mapCell->m_occupantSide == gpCombatManager->m_currentSide
-                    && mapCell->m_occupantIndex == gpCombatManager->m_currentArmyIndex))
+                || HEX_HAS_OCCUPANT(
+                    *mapCell,
+                    gpCombatManager->m_currentSide,
+                    gpCombatManager->m_currentArmyIndex
+                ))
             && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
             return 1;
         } else {
@@ -58,8 +61,11 @@ i16 army::CanFit(i16* hex) {
             else
                 return 0;
             if ((mapCell->m_occupantSide == COMBAT_SIDE_NONE
-                 || (mapCell->m_occupantSide == gpCombatManager->m_currentSide
-                     && mapCell->m_occupantIndex == gpCombatManager->m_currentArmyIndex))
+                 || HEX_HAS_OCCUPANT(
+                     *mapCell,
+                     gpCombatManager->m_currentSide,
+                     gpCombatManager->m_currentArmyIndex
+                 ))
                 && mapCell->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
                 *hex = candidateHex;
                 return 1;

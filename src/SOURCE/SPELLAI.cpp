@@ -282,7 +282,7 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
             effect = 0;
             break;
     }
-    if (target->m_creatureType == CREATURE_DRAGON || target->m_spellEffect == SPELL_ANTI_MAGIC)
+    if (ARMY_IGNORES_SPELLS(target))
         effect = 0;
     else if (target->m_creatureType == CREATURE_DWARF && effect < 0)
         effect = effect * 0.75;
@@ -393,7 +393,7 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     i32 count;
 
     target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (target->m_creatureType == CREATURE_DRAGON || target->m_spellEffect == SPELL_ANTI_MAGIC) {
+    if (ARMY_IGNORES_SPELLS(target)) {
         *effect = 0;
         return;
     }
@@ -462,8 +462,7 @@ void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower
                 && !gArmyEffected[m_hexCells[hex].m_occupantSide]
                                  [m_hexCells[hex].m_occupantIndex]) {
                 gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] = 1;
-                if (targetArmy->m_creatureType != CREATURE_DRAGON
-                    && targetArmy->m_spellEffect != SPELL_ANTI_MAGIC) {
+                if (!ARMY_IGNORES_SPELLS(targetArmy)) {
                     if (targetArmy->m_creatureType == CREATURE_DWARF)
                         hitDamage = baseDamage * 0.75;
                     else
