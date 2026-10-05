@@ -43,7 +43,9 @@ def run(model: Model | None = None, target_dir: Path = TARGET_DIR,
     model = model or resolve()
 
     synth = pdb_synth.synth(model)
-    data_manifest.generate(model)
+    enrolled, _sections, _withheld = data_manifest.generate(model)
+    remaining = pdb_synth.prune_data_debt({row["rva"] for row in enrolled})
+    print(f"[delink] data debt after literal-pool provisioning: {remaining}")
 
     from homm1.tool import delinker
     # The delinker writes one file per inferred source path but does not prune
