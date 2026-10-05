@@ -418,99 +418,99 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
 VA(0x004599be, 0x491)
 void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex) {
     i32 partValue[COMBAT_SIDE_COUNT];
-    i32 killed;
+    i32 unusedTotal;
     i32 stacksKilled[COMBAT_SIDE_COUNT];
-    i32 extra;
-    i32 finished;
-    army* targetCreature;
-    i32 combatValue[COMBAT_SIDE_COUNT];
+    i32 fightValue[COMBAT_SIDE_COUNT];
     i32 side;
     i32 hitDamage;
-    i32 cell;
-    i32 power;
-    i32 dir;
+    army* targetArmy;
+    i32 hex;
+    i32 baseDamage;
+    i32 done;
+    i32 facing;
+    i32 killedCount;
 
-    power = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * damagePerPower;
-    cell = 0;
-    dir = COMBAT_DIRECTION_NORTHEAST;
-    finished = 0;
+    baseDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * damagePerPower;
+    hex = 0;
+    facing = COMBAT_DIRECTION_NORTHEAST;
+    done = 0;
     if (m_hexCells[targetHex].m_occupantIndex >= 0)
-        targetCreature =
+        targetArmy =
             &m_armies[m_hexCells[targetHex].m_occupantSide][m_hexCells[targetHex].m_occupantIndex];
     for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
         stacksKilled[side] = 0;
         partValue[side] = 0;
-        combatValue[side] = 0;
+        fightValue[side] = 0;
     }
     ClearEffects();
-    while (!finished) {
+    while (!done) {
         switch (spell) {
             case SPELL_ARMAGEDDON:
             case SPELL_STORM:
-                NextPos(&cell);
-                finished = cell > COMBAT_SPELL_AI_HEX_LAST;
+                NextPos(&hex);
+                done = hex > COMBAT_SPELL_AI_HEX_LAST;
                 break;
             case SPELL_FIREBALL:
             case SPELL_METEOR_SHOWER:
-                if (dir < COMBAT_DIRECTION_ADJACENT_COUNT) {
-                    cell = GetAdjacentCellIndexNoArmy(targetHex, dir);
-                    dir++;
+                if (facing < COMBAT_DIRECTION_ADJACENT_COUNT) {
+                    hex = GetAdjacentCellIndexNoArmy(targetHex, facing);
+                    facing++;
                 } else
-                    finished = 1;
+                    done = 1;
                 break;
             case SPELL_LIGHTNING_BOLT:
-                if (cell == targetHex)
-                    finished = 1;
+                if (hex == targetHex)
+                    done = 1;
                 else
-                    cell = targetHex;
+                    hex = targetHex;
                 break;
         }
-        if (!finished && m_hexCells[cell].m_occupantIndex >= 0
-            && m_hexCells[cell].m_occupantSide >= 0) {
-            targetCreature =
-                &m_armies[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex];
-            if (targetCreature->m_stats.hitPoints > 0
-                && !gArmyEffected[m_hexCells[cell].m_occupantSide]
-                                 [m_hexCells[cell].m_occupantIndex]) {
-                gArmyEffected[m_hexCells[cell].m_occupantSide][m_hexCells[cell].m_occupantIndex] =
+        if (!done && m_hexCells[hex].m_occupantIndex >= 0
+            && m_hexCells[hex].m_occupantSide >= 0) {
+            targetArmy =
+                &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
+            if (targetArmy->m_stats.hitPoints > 0
+                && !gArmyEffected[m_hexCells[hex].m_occupantSide]
+                                 [m_hexCells[hex].m_occupantIndex]) {
+                gArmyEffected[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex] =
                     1;
-                if (targetCreature->m_creatureType != CREATURE_DRAGON
-                    && targetCreature->m_spellEffect != SPELL_ANTI_MAGIC) {
-                    if (targetCreature->m_creatureType == CREATURE_DWARF)
-                        hitDamage = power * 0.75;
+                if (targetArmy->m_creatureType != CREATURE_DRAGON
+                    && targetArmy->m_spellEffect != SPELL_ANTI_MAGIC) {
+                    if (targetArmy->m_creatureType == CREATURE_DWARF)
+                        hitDamage = baseDamage * 0.75;
                     else
-                        hitDamage = power;
-                    killed = hitDamage / targetCreature->m_stats.hitPoints;
-                    extra = hitDamage % targetCreature->m_stats.hitPoints;
-                    if (extra + targetCreature->m_hitPointsLost
-                        >= targetCreature->m_stats.hitPoints) {
-                        killed++;
-                        extra -=
-                            targetCreature->m_stats.hitPoints - targetCreature->m_hitPointsLost;
+                        hitDamage = baseDamage;
+                    killedCount = hitDamage / targetArmy->m_stats.hitPoints;
+                    unusedTotal = hitDamage % targetArmy->m_stats.hitPoints;
+                    if (unusedTotal + targetArmy->m_hitPointsLost
+                        >= targetArmy->m_stats.hitPoints) {
+                        killedCount++;
+                        unusedTotal -=
+                            targetArmy->m_stats.hitPoints - targetArmy->m_hitPointsLost;
                     }
-                    if (killed >= targetCreature->m_quantity) {
-                        killed = targetCreature->m_quantity;
-                        extra = 0;
-                        stacksKilled[m_hexCells[cell].m_occupantSide]++;
+                    if (killedCount >= targetArmy->m_quantity) {
+                        killedCount = targetArmy->m_quantity;
+                        unusedTotal = 0;
+                        stacksKilled[m_hexCells[hex].m_occupantSide]++;
                     }
-                    partValue[m_hexCells[cell].m_occupantSide] +=
-                        (killed * targetCreature->m_stats.hitPoints + extra * 0.75)
-                        * gMonsterDatabase[targetCreature->m_creatureType].fightValue
-                        / targetCreature->m_stats.hitPoints;
-                    combatValue[m_hexCells[cell].m_occupantSide] +=
-                        killed * targetCreature->m_stats.hitPoints
-                        * gMonsterDatabase[targetCreature->m_creatureType].fightValue
-                        / targetCreature->m_stats.hitPoints;
+                    partValue[m_hexCells[hex].m_occupantSide] +=
+                        (killedCount * targetArmy->m_stats.hitPoints + unusedTotal * 0.75)
+                        * gMonsterDatabase[targetArmy->m_creatureType].fightValue
+                        / targetArmy->m_stats.hitPoints;
+                    fightValue[m_hexCells[hex].m_occupantSide] +=
+                        killedCount * targetArmy->m_stats.hitPoints
+                        * gMonsterDatabase[targetArmy->m_creatureType].fightValue
+                        / targetArmy->m_stats.hitPoints;
                 }
             }
         }
     }
     if (stacksKilled[COMBAT_DEFENDER_SIDE] >= m_numArmies[COMBAT_DEFENDER_SIDE]
         || stacksKilled[COMBAT_ATTACKER_SIDE] >= m_numArmies[COMBAT_ATTACKER_SIDE]) {
-        if (combatValue[m_currentSide] <= 0)
+        if (fightValue[m_currentSide] <= 0)
             *effect = 100000000 - gSpellAIValue[spell];
         else
-            *effect = combatValue[1 - m_currentSide] - combatValue[m_currentSide];
+            *effect = fightValue[1 - m_currentSide] - fightValue[m_currentSide];
     } else
         *effect = partValue[1 - m_currentSide] - partValue[m_currentSide];
 }
