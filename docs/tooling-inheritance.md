@@ -64,6 +64,12 @@ HoMM1-owned. PoL 2.0 supplies secondary source correspondence.
   that MASM resolved inside one module the REL32 relocation that the delinked
   target carries. A postcondition proves that the call target is unchanged.
   This lets one retail module stay a single object (`BASE/LZHUFDEC`).
+- `add_function_padding_boundaries` retains HoMM2 Buka `canonicalize_relocs`'s
+  `$fnpad@<offset>` boundary for every reviewed function size, not only fixed
+  MASM claims. Source units supply sizes from their extracted VA fragments.
+  Without it, delinker alignment fill after an embedded switch index table
+  decodes into the table's last instruction (`AppCommand`, `DDSD`,
+  `SetupGame`). No byte is changed, removed or masked.
 - The 1.1 fork retains HoMM2 Buka `e0689d3`'s fixed-MASM claim mechanism;
   only target VAs change. The new `sema fid` is a HoMM1 discovery command,
   reviewed against Gruntz's `verify/link_tier.py` masking and HoMM2's
