@@ -1,4 +1,4 @@
-// HoMM1 font loading, source-correspondent to the Buka 2.1 resource family.
+// HoMM1 font loading.
 
 #include <match.h>
 
@@ -76,7 +76,6 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     i32 baseGlyph;
     i16* theWidths;
     char spaceCharValue;
-    // Names place the /Od frame slots (docs/patterns/vc6-od-frame-slots.md).
     i16 startIdx;
     i16 lineEnd;
     i16 drawColor;
@@ -170,7 +169,6 @@ i32 font::LineLength(char* str, i16 maxW) {
     char* cursor;
     char v;
 
-    // The spellings place the /Od frame slots; stores keep retail order.
     mainStart = 0;
     curLineEnd = 0;
     thePos = 0;
@@ -222,9 +220,6 @@ i32 font::LineWidth(char* text) {
     i32 curCh;
     i32 spare;
     i16* table;
-    // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
-    // retail frame keeps its unused dword and word slots. The spellings place
-    // the slots (docs/patterns/vc6-od-frame-slots.md).
     i32 oldSpare;
     i16 theLen;
     i16 newSpare, mySpare, savedSpare, position, thisWidth;

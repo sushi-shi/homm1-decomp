@@ -1399,7 +1399,7 @@
     },
     {
       "unit": "SOURCE/kbwin",
-      "name": "?SetMenus@@YAXPAXH@Z",
+      "name": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "old_rva": "0x33a24",
       "rva": "0x43d1f",
       "size": 299,
@@ -1480,7 +1480,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "name": "?DDAppPaint@@YAHPAX0@Z",
+      "name": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "old_rva": "0x352f6",
       "rva": "0x669ef",
       "size": 1252,
@@ -1561,7 +1561,7 @@
     },
     {
       "unit": "SOURCE/wingraph",
-      "name": "?WGAppPaint@@YAHPAX0@Z",
+      "name": "?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "old_rva": "0x36aa4",
       "rva": "0x67f3d",
       "size": 439,
@@ -11153,7 +11153,7 @@
     {
       "site_rva": "0x1f91",
       "target_rva": "0xa98e4",
-      "symbol": "?hmnuAdv@@3PAXA",
+      "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
       "kind": 6,
       "owner_rva": "0xa98e4",
       "addend": 0,

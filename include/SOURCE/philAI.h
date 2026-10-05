@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_PHILAI_H
 #define HOMM1_SOURCE_PHILAI_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 75 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -24,7 +22,7 @@ class font;
 class hero;
 class mapCell;
 class town;
-// Buka 2.1 purchase record: town, kind, building/dwelling and count.
+// Purchase record: town, kind, building/dwelling and count.
 // DoAI's boat plan holds back the shipyard's price (gNeutralBuildingCosts
 // row BUILDING_SLOT_SHIPYARD: 2000 gold, 20 wood) while it buys other things,
 // as it holds back TOWN_BOAT_GOLD_COST/WOOD_COST for the boat.
@@ -33,7 +31,7 @@ H1_ENUM_CONST_BEGIN(AIBoatPlanConstant)
     AI_SHIPYARD_WOOD_RESERVE = 20
 H1_ENUM_CONST_END(AIBoatPlanConstant)
 
-// BHC::type: what GetBestBHC chose to buy (Buka 2.1 PHILAI.h AIPurchaseType):
+// BHC::type: what GetBestBHC chose to buy:
 // GetBestBuilding/GetBestHero/GetBestCreature fill BUILDING/HERO/CREATURE,
 // DoAI dispatches BuildBuilding/BuildHero/BuildCreature and CanBuyBHC checks
 // each; NONE when nothing is worth buying (DoAI buys when type >= FIRST).
@@ -160,8 +158,8 @@ public:
         class armyGroup* group,
         class hero* heroPointer,
         i32 useHero,
-        i8 useTown,
-        i8 townId
+        i8 useTown = 0,
+        i8 townId = 0
     );
     void EvaluateOneTimeCreaturePurchase(
         class hero* pHero,
@@ -263,8 +261,7 @@ extern float gAttackComputerBonus;
 // ultimate artifact's average value.
 extern i16 gaiHeroEventStratRVOfPos[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 // DoAI's per-turn visit log: up to 30 positions (x, y) a hero has moved
-// from; a target already in it ends the hero's turn (Buka 2.1 ADVMGR.h
-// names).
+// from; a target already in it ends the hero's turn.
 H1_ENUM_CONST_BEGIN(AIPlaceVisitConstant)
     ADVMGR_PLACE_VISIT_COUNT = 30,
     ADVMGR_PLACE_COORDINATE_COUNT = 2
@@ -287,7 +284,7 @@ extern class searchArray SVSearchArray;
 extern float fReduceFactor;
 // The per-cell/per-hero resource-value caches (gaiHeroStrategicRVOfPos,
 // gaiHeroEventStratRVOfPos, gaiHeroLiveChance) hold RV_UNSET until
-// evaluated; ResetHeroRVs writes it back (Buka's name).
+// evaluated; ResetHeroRVs writes it back.
 H1_ENUM_CONST_BEGIN(AIResourceValue)
     RV_UNSET = -32001
 H1_ENUM_CONST_END(AIResourceValue)
@@ -300,7 +297,7 @@ H1_ENUM_END(MapExtraFlag)
 // Shared with GAME and EVENTS: the per-cell bitmask of the players whose
 // heroes have stood there and the current/watch players' high bits (all in
 // PHILAI's .bss band), ViewArmy's dismiss flag and the creatures a creature
-// month may feature (Buka PHILAI.h).
+// month may feature.
 extern i8 mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 extern u8 giCurPlayerHighBit;
 extern u8 gCurWatchPlayerHighBit;

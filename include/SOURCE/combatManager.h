@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_COMBATMANAGER_H
 #define HOMM1_SOURCE_COMBATMANAGER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 149 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <Domains.h>
@@ -21,7 +19,7 @@ class town;
 struct SBolt;
 struct tag_message;
 
-// Buka's CombatMessageCommand: GetCommand derives one from the hovered hex
+// Combat commands: GetCommand derives one from the hovered hex
 // and DoCommand runs it (move, fly, shoot, own and opposing hero options,
 // view, attack, spell book, retreat, surrender).
 H1_ENUM_BEGIN(CombatMessageCommand)
@@ -39,7 +37,7 @@ H1_ENUM_BEGIN(CombatMessageCommand)
     COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13
 H1_ENUM_END(CombatMessageCommand)
 
-// Buka's CombatAction: the queued giNextAction that the combat loop
+// The queued giNextAction that the combat loop
 // executes; DoCommand, the spell book and the skip button set it.
 H1_ENUM_BEGIN(CombatAction)
     ACTION_NONE = 0,
@@ -54,7 +52,7 @@ H1_ENUM_END(CombatAction)
 // cmbtmous.mse frames: GetPointer returns the command's own frame (0..4)
 // and maps the opposing-options command to the view pointer; DEFAULT is the
 // plain arrow (hotspot 1,1) and ATTACK_FIRST + CombatHexDirection the sword
-// pointing from that side (Buka COMBAT_POINTER_DEFAULT, POINTER_ATTACK_OFFSET).
+// pointing from that side.
 H1_ENUM_BEGIN(CombatPointerCode)
     COMBAT_POINTER_VIEW = 5,
     COMBAT_POINTER_DEFAULT = 6,
@@ -73,7 +71,7 @@ H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_CASTLE_WALL_COLUMN = 5,
     // No stack slot: hexcell::m_occupantIndex of an empty hex and
-    // army::m_targetIndex without a target (Buka COMBAT_AI_NO_ARMY).
+    // army::m_targetIndex without a target.
     COMBAT_ARMY_INDEX_NONE = -1
 H1_ENUM_CONST_END(CombatGridConstant)
 
@@ -113,8 +111,7 @@ H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
     COMBAT_WALL_FRAME_NONE = -1
 H1_ENUM_CONST_END(CombatDrawStateConstant)
 
-// Combat AI tuning thresholds (Buka combatManager.h CombatAIConstant names
-// with HoMM1's values): AICheckRetreat's artifact-value and army-strength
+// Combat AI tuning thresholds: AICheckRetreat's artifact-value and army-strength
 // tiers, experience divisor and difficulty scale; DoCompAI's rounded
 // one-fifth strength; GetWorstArmy's starting strength; the unlimited
 // speed WalkTowardArmy/WalkTowardArmyFront give a stack for path probes.
@@ -142,9 +139,8 @@ H1_ENUM_CONST_BEGIN(CombatAIConstant)
     COMBAT_AI_CASTLE_ARCHER_STRENGTH = 100
 H1_ENUM_CONST_END(CombatAIConstant)
 
-// DoCompAI's plan for the acting stack (Buka CombatAIConstant
-// COMBAT_AI_ATTACK_*): shooters with shots left shoot, flyers fly, the rest
-// walk.
+// DoCompAI's plan for the acting stack: shooters with shots left shoot,
+// flyers fly, the rest walk.
 H1_ENUM_BEGIN(CombatAIAttackPlan)
     COMBAT_AI_ATTACK_NONE = 0,
     COMBAT_AI_ATTACK_SHOOT = 1,
@@ -168,7 +164,7 @@ H1_ENUM_BEGIN(CombatIconSlot)
     COMBAT_ICON_COUNT = 9
 H1_ENUM_END(CombatIconSlot)
 
-// Buka CombatRemotePacket: the combat action relayed through
+// The combat action relayed through
 // GetRemoteData (command 0x17) or a net chat line (command 0xb).
 #pragma pack(push, 1)
 struct CombatRemotePacket {
@@ -189,10 +185,8 @@ struct CombatRemotePacket {
 };
 #pragma pack(pop)
 
-// HoMM1 combat manager, 0x7d3 bytes (InitMainClasses; constructor
-// 0x0044b440). Field names follow Buka where the retail use matches;
-// unrecovered spans stay opaque. GameUnsaved reads the baseManager m_active
-// word through gpCombatManager.
+// Combat manager, 0x7d3 bytes (InitMainClasses; constructor 0x0044b440).
+// GameUnsaved reads the baseManager m_active word through gpCombatManager.
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
@@ -252,7 +246,7 @@ public:
     i8 m_gridSelectionDisabled;
     i8 m_limitCreature;
     i8 m_limitCreatureHex;
-    // Buka m_showArmyQuantities: army::DrawToBuffer draws the quantity box.
+    // army::DrawToBuffer draws the quantity box.
     i8 m_showArmyQuantities;
     i8 m_selectedHex;
     i8 m_directionTargetHex;
@@ -270,8 +264,7 @@ public:
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
     // mirror the castle art from side 1's flag.
     i8 m_castleSide[2];
-    // Buka m_visitingHeroPresent: SetupCombat sets side 0 when the defending
-    // town has a garrisoned hero.
+    // SetupCombat sets side 0 when the defending town has a garrisoned hero.
     char m_visitingHeroPresent[2];
     // CatAttack's target row in the castle wall column.
     i16 m_catapultTarget;
@@ -299,9 +292,9 @@ public:
     // Per stack draw state: ResetLimitCreature clears it (-1 for the dead)
     // and army::SpellEffect marks the stack it animates.
     i32 m_limitCreatureCount[2][5];
-    // Buka passes these to DrawFrame as computeExtent/redrawExtent: the first
-    // limits the redraw to the boxes of stacks in m_limitCreatureCount, the
-    // second restores only the current extent from the background buffer.
+    // DrawFrame's extent modes: the first limits the redraw to the boxes of
+    // stacks in m_limitCreatureCount, the second restores only the current
+    // extent from the background buffer.
     i32 m_computeExtent;
     i32 m_redrawExtent;
     // UpdateCombatArea does nothing until the combat window is up.
@@ -329,46 +322,32 @@ public:
     void NoShowCombatLog(char*);
     void ClearCombatMessages(i32 force);
     void CheckUpdateCombatMessages(void);
-    // HoMM1 retail 0x00470aa9: text and a redraw flag (ret 8).
     void CombatMessage(char* text, i32 updateScreen);
-    // HoMM1 retail 0x00470b5e: command help line (ret 4).
     void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
     void SetupGridForArmy(class army* armyPointer);
-    // Buka RVA 0x236c0: word hex, byte direction, word attributes
-    // (ret 0xc); the upward directions also redraw the row above.
+    // The upward directions also redraw the row above.
     void UpdateGridForMove(i16 hex, i8 direction, i16 attributes);
-    // Buka RVA 0x23670: word hex and unused word attributes (ret 8).
     void UpdateGrid(i16 hex, i16);
     void DrawBackground(void);
     void UpdateMouseGrid(i32 hexIndex, i32 forceUpdate);
-    // HoMM1 retail 0x004711fb takes only the update flag (ret 4).
     void DrawFrame(i8 updateScreen);
-    // Buka RVA 0x23acc: byte mode (ret 4).
     void SetGridMode(i8 mode);
     void DrawSmallView(i32 viewIndex, i32 updateScreen);
-    // HoMM1 retail 0x00438310 returns its result in AL (ret 0xc).
     i8 ViewGeneral(i32 side, i32 allowActions, i32 quickView);
-    // HoMM1 retail 0x00438a9f: army, side and a quick-view flag (ret 0xc).
     void ViewArmy(class army* viewedArmy, i32 side, i32 quickView);
     i32 HasValidSpellTarget(i32 spell);
     i8 ViewSpells(i32);
     i32 FindResurrectArmyIndex(i32 side, i32 spell, i32 hex);
-    // HoMM1 retail 0x0040e04c: byte spell and hex, byte result (ret 8).
     i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
-    // HoMM1 retail 0x0040e33c: byte spell and hex (ret 8).
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
-    // HoMM1 retail 0x0040e464: byte spell, hex, creature flag and teleport
-    // destination (ret 0x10).
     void
     CastSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 targetHex, i8 castByCreature, i8 teleportDest);
     void DefaultSpell(i8 targetHex);
-    // HoMM1 retail 0x0040f298: Cure (one side) and Dispel (both sides)
-    // animation; byte side (2 = both) and cure-only flag (ret 8).
+    // Cure (one side) and Dispel (both sides) animation; side 2 means both.
     void CastMassSpell(i8 castSide, i8 cureOnly);
-    // HoMM1 retail 0x0040f69f: cancels the side's spells after the mass
-    // animation (ret 8).
+    // Cancels the side's spells after the mass animation.
     void CancelSideSpells(i8 side, i8 cureOnly);
     void Fireball(i8 targetHex);
     void MeteorShower(i8 targetHex);
@@ -462,7 +441,6 @@ public:
     void AddArmy(i32 side, i32 monsterType, i32 quantity, i32 hex, i32 flags, i32 animate);
     void SetupSmallView(void);
     void ViewBallista(i32 quickView);
-    // HoMM1 retail 0x00437010: byte side (ret 4).
     i32 DoSpellAI(i8 side);
     void DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex);
     i32 EffectSpellCreateCreature(i32 hex, i32 spell);
@@ -471,9 +449,8 @@ public:
     void NextPos(i32* hex);
     i32 FirstArmy(i32 startHex, i32 side, i32* hex);
     i32 FirstResurrectable(i32 startHex, i32* hex, i32 spell);
-    // HoMM1 retail 0x00437aa1 (ret 0xc), 0x00437d14 (ret 8) and 0x00437e0d
-    // (ret 0x10): DetermineEffectOfSpell passes the effect, then a side and
-    // flag, a hex, or the spell, base damage and hex.
+    // DetermineEffectOfSpell passes the effect, then a side and flag, a hex,
+    // or the spell, base damage and hex.
     void EffectSpellCure(i32* effect, i32 targetSide, i8 cure);
     void EffectSpellResurrect(i32* effect, i32 hex);
     void EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex);
@@ -492,12 +469,11 @@ public:
     );
     void InitNonVisualVars(void);
     void SetupAdjacencyArray(void);
-    // HoMM1 retail 0x0044c103: byte side (ret 4).
     void UpdateArmyGroup(i8 side);
     void GenerateMap(void);
     char* GetBackgroundName(void);
     i8 MoreTreesNear(void);
-    // HoMM1 retail 0x0044e7f2: no callers; rebuilds the field and redraws.
+    // No callers; rebuilds the field and redraws.
     void RegenerateField(void);
     void LoadIcons(void);
     void FreeIcons(void);
@@ -506,14 +482,11 @@ public:
     i16 GetGridIndex(i16 x, i16 y);
     void CheckApplyGoodMorale(i32 side, i32 index);
     i32 CheckApplyBadMorale(i32 side, i32 index);
-    // HoMM1 returns the found flag in AL.
     i8 GetNextArmy(i32 checkMorale);
-    // HoMM1 retail 0x0044d9ca: byte side, byte result.
     i8 IsWinner(i8 side);
     void CatAttack(i8 side);
-    // HoMM1 has a single keep (retail 0x0044e840, plain ret).
+    // A town has a single keep.
     void KeepAttack(void);
-    // HoMM1 retail 0x0044f3cb: byte side (ret 4).
     i32 ExperienceValueOfStack(i8 side);
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
@@ -535,11 +508,9 @@ public:
     );
     void CombatSystemOptions(void);
     i32 AICheckRetreat(void);
-    // HoMM1 retail 0x00464ca3: byte side (ret 4).
     void DoCompAI(i8);
     float GetModLichDamage(class army* target, float damage);
     void DoLichShot(class army* lich);
-    // HoMM1 AI masks take a byte side and return word bit masks.
     i16 GetShooterMask(i8 side);
     i32 GetMirrorImageMask(i32 side);
     i16 GetFlyerMask(i8 side);
@@ -566,7 +537,6 @@ i16 HandleCastSpell(struct tag_message& message);
 // teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
-// Stale alias of gSpellEffectFrame (0x4c78b4): unreferenced, kept so later symbol handles stay put.
 extern i16 giCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
 extern i8 iMaxTransferArtifacts;
@@ -578,9 +548,8 @@ extern H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
 extern i32 giNextActionGridIndex;
 extern i32 giNextActionExtra;
 extern i32 giNextActionGridIndex2;
-// Queue a move (or attack) toward a hex (Buka 2.1 combatManager.h): the
-// action is stored before the hex expression is evaluated; other action
-// fields stay with the caller.
+// Queue a move (or attack) toward a hex: the action is stored before the
+// hex expression is evaluated; other action fields stay with the caller.
 #define SET_NEXT_COMBAT_MOVE(hex) (giNextAction = ACTION_MOVE, giNextActionGridIndex = (hex))
 // gCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
@@ -599,12 +568,10 @@ H1_ENUM_BEGIN(CombatMessageText)
     COMBAT_TEXT_COUNT = 9
 H1_ENUM_END(CombatMessageText)
 // Fallback net player for a combat action broadcast (0x004c6710).
-// Stale alias of giHostGamePos (0x4c6710): unreferenced, kept so later symbol handles stay put.
 extern i32 giRemoteDefaultPlayer;
 extern i8 iTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
 extern i8 gbThisNetHasControl;
-// Moved from COMMAND.cpp.
 // gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)
@@ -646,8 +613,7 @@ H1_ENUM_END(CombatWinLoseControl)
 
 // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
 // the casualty counts, then the two side headings and the casualty title.
-// DoVictory's experience line buffer (Buka 2.1 VICTORY_EXPERIENCE_TEXT_SIZE;
-// retail's frame places message directly above a 152-byte array).
+// DoVictory's experience line buffer.
 H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
     COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
 H1_ENUM_CONST_END(CombatVictoryConstant)
@@ -670,8 +636,8 @@ H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
     COMBAT_REAR_HEX_UNUSED = -2
 H1_ENUM_CONST_END(CombatRearHexConstant)
 
-// Combat-window widget ids ProcessCombatMsg handles: the battlefield (0x40,
-// Buka CombatControlId CONTROL_MAIN_BUTTON; ResetMouse hovers it), the button
+// Combat-window widget ids ProcessCombatMsg handles: the battlefield (0x40;
+// ResetMouse hovers it), the button
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
 H1_ENUM_BEGIN(CombatControlId)
@@ -680,7 +646,6 @@ H1_ENUM_BEGIN(CombatControlId)
     COMBAT_CONTROL_FIELD = 0x40
 H1_ENUM_END(CombatControlId)
 
-// Moved from DRAWING.cpp.
 // clang-format off
 // cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
 // redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
@@ -693,7 +658,6 @@ H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)
     COMBAT_STATUS_HEIGHT = 0x14
 H1_ENUM_CONST_END(CombatStatusLineConstant)
 
-// Moved from CMBTMGR.cpp.
 // gCombatBkgNames rows: GetBackgroundName picks one per terrain (forest or
 // mountain variant by MoreTreesNear), the boat for water and the graveyard.
 H1_ENUM_BEGIN(CombatBackground)
@@ -711,17 +675,14 @@ H1_ENUM_BEGIN(CombatBackground)
     COMBAT_BACKGROUND_COUNT = 11
 H1_ENUM_END(CombatBackground)
 
-// Moved from SPELLS.cpp.
 // spelmous.mse frames: HandleCastSpell shows the selected SpellType's own
 // frame over a valid target and frame 19, after the combat spells, otherwise.
 H1_ENUM_BEGIN(SpellPointerFrame)
     SPELL_POINTER_NO_TARGET = 19
 H1_ENUM_END(SpellPointerFrame)
 
-// Moved from SPELLAI.cpp.
-// DetermineEffectOfSpell's target walk (Buka 2.1 SPELLAI.cpp
-// CombatSpellAITargetMode; HoMM1 numbers its four modes in this order): one
-// global evaluation, every area position, or each friendly / enemy stack.
+// DetermineEffectOfSpell's target walk: one global evaluation, every area
+// position, or each friendly / enemy stack.
 H1_ENUM_BEGIN(CombatSpellAITargetMode)
     SPELL_AI_GLOBAL = 0,
     SPELL_AI_AREA = 1,

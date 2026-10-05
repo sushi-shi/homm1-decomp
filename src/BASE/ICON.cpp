@@ -1,4 +1,4 @@
-// HoMM1 icon loading follows Buka 2.1, with a retail post-read hook.
+// Icon loading, with a retail post-read hook.
 
 #include <match.h>
 
@@ -23,12 +23,12 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     PostprocessIcon(this);
 }
 
+VA(0x00470f5f, 0x2b)
 icon::~icon(void) {
     free(m_data);
 }
 
-VA_COMPGEN(0x00470f5f, 0x2b, "??1icon@@UAE@XZ", 0x00470ea0)
-// Each orientation arm sets its own top/bottom, as HoMM2 CombatClipDrawToBuffer does.
+// Each orientation arm sets its own top/bottom.
 VA(0x00470f8a, 0x317)
 void icon::DrawToBuffer(
     i16 x,

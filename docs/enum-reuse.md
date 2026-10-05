@@ -50,9 +50,8 @@ Follow both value paths through their fields, callers and tables. Direct
 transport of one quantity supports reuse (HoMM1's `combatManager::GetPointer`
 returns its command as the pointer code). Two zero-based tables that only share
 an order support retention (`MoraleInfoText` rows and `ArtifactType` medals).
-HoMM2 Buka is the domain donor: it keeps `BaseManagerMessageMask` apart from
-`MessageType`, and spells per-window dialog roles as aliases of the reserved
-slots (`FILE_REQUESTER_OK = DIALOG_BUTTON_2`), so role names stay with their
+`BaseManagerMessageMask` stays apart from `MessageType`, and per-window dialog
+roles are spelled as aliases of the reserved slots (`FILE_REQUESTER_OK = DIALOG_BUTTON_2`), so role names stay with their
 window while slot-named copies move to `DialogButtonId`. Constant groups
 (`H1_ENUM_CONST`) are not value domains, but a member that repeats a domain's
 quantity (the 640x480 logical screen, `RESOURCE_GOLD`, a widget command) is a

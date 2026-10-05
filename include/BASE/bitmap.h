@@ -4,7 +4,7 @@
 #include <BASE/resource.h>
 #include <H1/Macros.h>
 
-// bitmap::m_bitmapType: 0x21 marks a plain off-screen memory bitmap (Buka bitmap.h).
+// bitmap::m_bitmapType: 0x21 marks a plain off-screen memory bitmap.
 H1_ENUM_BEGIN_SPLIT(BitmapType, i16)
     BITMAP_TYPE_NONE = 0,
     BITMAP_TYPE_MEMORY = 0x21
@@ -22,7 +22,7 @@ public:
     bitmap(void);
     bitmap(i16 type, i16 width, i16 height);
     bitmap(i16 id);
-    virtual inline ~bitmap();
+    virtual ~bitmap();
     // --- methods ---
     void DrawToBufferCareful(i16 x, i16 y);
     void DrawToBuffer(i16 x, i16 y);

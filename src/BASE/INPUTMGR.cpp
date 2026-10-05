@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #define WIN32_LEAN_AND_MEAN
 
 #include <match.h>
@@ -123,9 +121,6 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
     return event->type == MESSAGE_NONE;
 }
 
-// donor PoL RVA 0x000cde60; preferred Buka symbol ?MouseMessageHandler@@YIHPAXIIJ@Z
-// donor Buka TU BASE/INPUTMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.528083;margin=0.800438;shape=0.151;size=0.712;calls=0.800;strings=ReleaseCapture Failed;alternate=pol20:int MouseMessageHandler(void *, unsigned int, unsigned int, long int)@0x000cde60
 VA(0x0046e9c4, 0x33a)
 #line 137 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
@@ -251,8 +246,6 @@ i16 inputManager::Main(tag_message&) {
     return 0;
 }
 
-// Buka 2.1 and PoL 2.0 both reset the two queue indices in this method.
-// HoMM1's body confirms the same short fields at +0x230 and +0x232.
 VA(0x0046eeb6, 0x23)
 void inputManager::Flush(void) {
     ResetEventQueue(this);
@@ -283,7 +276,6 @@ tag_message inputManager::GetEvent(void) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046efd7, 0x31)
 void inputManager::SetBooleanOption(i16 enabled) {
-    // Retail reserves 16 unaddressed frame bytes, a tag_message's size.
     tag_message unusedMessage;
 
     if (enabled)
@@ -301,9 +293,6 @@ void inputManager::SetPositiveOption(i16 value) {
         m_field_0x23a = 1;
 }
 
-// The donor assigns the key-code mode and then flushes the event queue.
-// Buka calls Flush and stores the mode as a short at +0x340.
-// HoMM2 Buka keeps SetMouseCoords empty; HoMM1 records the coordinates.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046f039, 0x29)

@@ -78,14 +78,14 @@ replay/solver scripts were research tooling and are not kept in the tree.
    `before:#include <mss.h>` when a cached global decides the tie) select the
    colouring class.
 2. Realise a required offset authentically:
-   - include order per the donor;
+   - an include order that other source evidence supports;
    - a value-preserving spelling that changes the handle count (a dropped cast,
      or `if (a && b)` against nested ifs:
      [control flow consumes handles](vc4-control-flow-consumes-c1-handles.md));
    - a retail-evidenced declaration.
 
    Then check the whole unit. `SetMusicQuality` is exact this way: MSS precedes
-   `windows.h` as in Buka's include list, and `CDPlay` stores
+   `windows.h` in the include list, and `CDPlay` stores
    `m_currentTrack = track` without a cast.
 3. If no class reaches retail, the residue is not the tie order. Look at the
    graph instead: temporaries, live ranges, references (see the Chaitin-Briggs

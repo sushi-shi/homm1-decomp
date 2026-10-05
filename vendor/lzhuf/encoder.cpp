@@ -293,106 +293,6 @@ extern "C" DATA(0x004a1840) u8 d_len[256] = {
     8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8
 };
 
-VA(0x00473c8f, 0x68)
-void InitializeTree(void)
-{
-    i16 i;
-    for (i = WINDOW_SIZE + 1; i <= WINDOW_SIZE + 256; ++i)
-        rson[i] = NIL;
-    for (i = 0; i < WINDOW_SIZE; ++i)
-        dad[i] = NIL;
-}
-
-VA(0x004743a9, 0x238)
-void ReconstructEncoderTree(void)
-{
-    i16 k, i, j;
-    u16 f, l;
-
-    j = 0;
-    for (i = 0; i < TREE_SIZE; ++i) {
-        if (son[i] >= TREE_SIZE) {
-            freq[j] = static_cast<u16>((freq[i] + 1) / 2);
-            son[j] = son[i];
-            ++j;
-        }
-    }
-    for (i = 0, j = CHARACTER_COUNT; j < TREE_SIZE; i += 2, ++j) {
-        f = freq[j] = static_cast<u16>(freq[i] + freq[i + 1]);
-        for (k = j - 1; f < freq[k]; --k)
-            ;
-        ++k;
-        l = static_cast<u16>((j - k) * 2);
-        memmove(&freq[k + 1], &freq[k], l);
-        freq[k] = f;
-        memmove(&son[k + 1], &son[k], l);
-        son[k] = static_cast<i16>(i);
-    }
-    for (i = 0; i < TREE_SIZE; ++i) {
-        k = son[i];
-        if (k >= TREE_SIZE)
-            prnt[k] = static_cast<i16>(i);
-        else
-            prnt[k] = prnt[k + 1] = static_cast<i16>(i);
-    }
-}
-
-VA(0x004745e1, 0x10c)
-void PutCode(i16 length, u16 code)
-{
-    putbuf |= code >> putlen;
-    putlen += length;
-    if (putlen >= 8) {
-        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
-        putlen -= 8;
-        if (putlen >= 8) {
-            *codePtr++ = static_cast<char>(putbuf) & 0xff;
-            codesize += 2;
-            putlen -= 8;
-            putbuf = static_cast<u16>(code << (length - putlen));
-        } else {
-            putbuf <<= 8;
-            ++codesize;
-        }
-    }
-}
-
-VA(0x00474172, 0xa4)
-void EncodeCharacter(u16 character)
-{
-    u16 code, len;
-    u16 i;
-    i16 j, k;
-
-    i = 0;
-    j = 0;
-    k = prnt[character + TREE_SIZE];
-    do {
-        i >>= 1;
-        if (k & 1)
-            i += 0x8000;
-        ++j;
-        k = prnt[k];
-    } while (k != ROOT);
-    PutCode(j, i);
-    // The original codec saves these diagnostic values. Buka retains the
-    // assignments in local slots immediately before updating the tree.
-    code = i;
-    len = j;
-    UpdateEncoderTree(character);
-}
-
-VA(0x004746ed, 0x5f)
-void EncodePosition(u16 position)
-{
-    u16 upper;
-
-    upper = position >> 6;
-    PutCode(positionLength[upper],
-            static_cast<u16>(positionCode[upper] << 8));
-    PutCode(6, static_cast<u16>((position & 0x3F) << 10));
-}
-
 VA(0x00473780, 0x12b)
 i32 DecodeData(char *destination, char *source)
 {
@@ -417,6 +317,7 @@ i32 DecodeData(char *destination, char *source)
     i32 decodedSize = static_cast<i32>(size);
     return decodedSize;
 }
+
 VA(0x004738ab, 0x3e4)
 i32 EncodeData(char *destination, char *source, u32 sourceLength)
 {
@@ -487,38 +388,14 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     return static_cast<i32>(codesize);
 }
 
-VA(0x00474216, 0x193)
-static void UpdateEncoderTree(i16 character)
+VA(0x00473c8f, 0x68)
+void InitializeTree(void)
 {
-    i16 k;
-    register i16 i, j, l;
-
-    if (freq[ROOT] == MAX_FREQUENCY)
-        ReconstructEncoderTree();
-    character = prnt[character + TREE_SIZE];
-    do {
-        k = ++freq[character];
-        if (k > freq[l = character + 1]) {
-            while (k > freq[++l])
-                ;
-            --l;
-            freq[character] = freq[l];
-            freq[l] = k;
-
-            i = son[character];
-            prnt[i] = static_cast<i16>(l);
-            if (i < TREE_SIZE)
-                prnt[i + 1] = static_cast<i16>(l);
-            j = son[l];
-            son[l] = static_cast<i16>(i);
-            prnt[j] = static_cast<i16>(character);
-            if (j < TREE_SIZE)
-                prnt[j + 1] = static_cast<i16>(character);
-            son[character] = static_cast<i16>(j);
-            character = l;
-        }
-        character = prnt[character];
-    } while (character != 0);
+    i16 i;
+    for (i = WINDOW_SIZE + 1; i <= WINDOW_SIZE + 256; ++i)
+        rson[i] = NIL;
+    for (i = 0; i < WINDOW_SIZE; ++i)
+        dad[i] = NIL;
 }
 
 VA(0x00473cf7, 0x2a9)
@@ -613,6 +490,130 @@ static void DeleteNode(i16 node)
     else
         lson[dad[node]] = static_cast<i16>(replacement);
     dad[node] = NIL;
+}
+
+VA(0x00474172, 0xa4)
+void EncodeCharacter(u16 character)
+{
+    u16 code, len;
+    u16 i;
+    i16 j, k;
+
+    i = 0;
+    j = 0;
+    k = prnt[character + TREE_SIZE];
+    do {
+        i >>= 1;
+        if (k & 1)
+            i += 0x8000;
+        ++j;
+        k = prnt[k];
+    } while (k != ROOT);
+    PutCode(j, i);
+    // The original codec saves these diagnostic values. Buka retains the
+    // assignments in local slots immediately before updating the tree.
+    code = i;
+    len = j;
+    UpdateEncoderTree(character);
+}
+
+VA(0x00474216, 0x193)
+static void UpdateEncoderTree(i16 character)
+{
+    i16 k;
+    register i16 i, j, l;
+
+    if (freq[ROOT] == MAX_FREQUENCY)
+        ReconstructEncoderTree();
+    character = prnt[character + TREE_SIZE];
+    do {
+        k = ++freq[character];
+        if (k > freq[l = character + 1]) {
+            while (k > freq[++l])
+                ;
+            --l;
+            freq[character] = freq[l];
+            freq[l] = k;
+
+            i = son[character];
+            prnt[i] = static_cast<i16>(l);
+            if (i < TREE_SIZE)
+                prnt[i + 1] = static_cast<i16>(l);
+            j = son[l];
+            son[l] = static_cast<i16>(i);
+            prnt[j] = static_cast<i16>(character);
+            if (j < TREE_SIZE)
+                prnt[j + 1] = static_cast<i16>(character);
+            son[character] = static_cast<i16>(j);
+            character = l;
+        }
+        character = prnt[character];
+    } while (character != 0);
+}
+
+VA(0x004743a9, 0x238)
+void ReconstructEncoderTree(void)
+{
+    i16 k, i, j;
+    u16 f, l;
+
+    j = 0;
+    for (i = 0; i < TREE_SIZE; ++i) {
+        if (son[i] >= TREE_SIZE) {
+            freq[j] = static_cast<u16>((freq[i] + 1) / 2);
+            son[j] = son[i];
+            ++j;
+        }
+    }
+    for (i = 0, j = CHARACTER_COUNT; j < TREE_SIZE; i += 2, ++j) {
+        f = freq[j] = static_cast<u16>(freq[i] + freq[i + 1]);
+        for (k = j - 1; f < freq[k]; --k)
+            ;
+        ++k;
+        l = static_cast<u16>((j - k) * 2);
+        memmove(&freq[k + 1], &freq[k], l);
+        freq[k] = f;
+        memmove(&son[k + 1], &son[k], l);
+        son[k] = static_cast<i16>(i);
+    }
+    for (i = 0; i < TREE_SIZE; ++i) {
+        k = son[i];
+        if (k >= TREE_SIZE)
+            prnt[k] = static_cast<i16>(i);
+        else
+            prnt[k] = prnt[k + 1] = static_cast<i16>(i);
+    }
+}
+
+VA(0x004745e1, 0x10c)
+void PutCode(i16 length, u16 code)
+{
+    putbuf |= code >> putlen;
+    putlen += length;
+    if (putlen >= 8) {
+        *codePtr++ = static_cast<char>(putbuf >> 8) & 0xff;
+        putlen -= 8;
+        if (putlen >= 8) {
+            *codePtr++ = static_cast<char>(putbuf) & 0xff;
+            codesize += 2;
+            putlen -= 8;
+            putbuf = static_cast<u16>(code << (length - putlen));
+        } else {
+            putbuf <<= 8;
+            ++codesize;
+        }
+    }
+}
+
+VA(0x004746ed, 0x5f)
+void EncodePosition(u16 position)
+{
+    u16 upper;
+
+    upper = position >> 6;
+    PutCode(positionLength[upper],
+            static_cast<u16>(positionCode[upper] << 8));
+    PutCode(6, static_cast<u16>((position & 0x3F) << 10));
 }
 
 // The original codec's final-byte helper is out of line in Buka.

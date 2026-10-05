@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_HEROWINDOWMANAGER_H
 #define HOMM1_BASE_HEROWINDOWMANAGER_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 17 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
@@ -65,14 +63,12 @@ public:
 #pragma pack(pop)
 
 // A dialog handler records the selected widget as the dialog result and turns
-// the message into the dialog-select notification (Buka 2.1
-// heroWindowManager.h; HoMM1 assigns id and command in one chain).
+// the message into the dialog-select notification.
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
     (gpWindowManager->m_dialogResult = (message).id,                                               \
      (message).command = (message).id = WIDGET_COMMAND_DIALOG_SELECT)
 
-// Redraw the inclusive screen rectangle left..right, top..bottom (Buka 2.1
-// heroWindowManager.h).
+// Redraw the inclusive screen rectangle left..right, top..bottom.
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
@@ -84,9 +80,9 @@ H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_OUT = 1
 H1_ENUM_END(WindowFadeMode)
 
-// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen (Buka SMACKMGR
-// SHORT_FADE / NORMAL_FADE): the short fade of dialogs and screen changes and
-// the long fade of the window manager's start-up.
+// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen: the short fade
+// of dialogs and screen changes and the long fade of the window manager's
+// start-up.
 H1_ENUM_BEGIN(WindowFadeSteps)
     WINDOW_FADE_STEPS_SHORT = 8,
     WINDOW_FADE_STEPS_NORMAL = 0x80
@@ -102,8 +98,8 @@ H1_ENUM_CONST_END(WindowManagerConstant)
 class palette;
 
 // Moved from WINMGR.cpp.
-// FizzleForward's colour-cycle transition (Buka WINMGR.cpp WindowFizzleConstant,
-// CYCLE_FRAME_COUNT): eight CCYCLE tables of 64K word-indexed lookups.
+// FizzleForward's colour-cycle transition: eight CCYCLE tables of 64K
+// word-indexed lookups.
 H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
     CYCLE_FRAME_COUNT = 8,
     FIZZLE_DEFAULT_DELAY = 150,

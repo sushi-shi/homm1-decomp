@@ -61,7 +61,7 @@ extern ComPortState gComPorts[];
 void init_anchor(tag_Anchor* anchor, i32, i32);
 void add_node(tag_Anchor* anchor, tag_Node* node);
 tag_Node* pop_node(tag_Anchor* anchor);
-// Pop and free every node of a queue, leaving node NULL (Buka 2.1 comwin.h).
+// Pop and free every node of a queue, leaving node NULL.
 // One while statement, so it is safe as a conditional body.
 #define FREE_NODE_QUEUE(node, anchor)                                                              \
     while (((node) = pop_node(anchor)) != NULL)                                                    \

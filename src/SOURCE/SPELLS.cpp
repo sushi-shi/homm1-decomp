@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/audio.h>
@@ -31,8 +29,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Buka SPELLS.cpp ViewSpells; HoMM1 has no elemental or mass-spell target
-// checks before queueing the cast.
 VA(0x00459e90, 0x11f)
 i8 combatManager::ViewSpells(i32) {
     m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
@@ -59,7 +55,7 @@ i8 combatManager::ViewSpells(i32) {
     return 0;
 }
 
-// Buka SPELLS.cpp CombatSpecialHandler: spell-book hover help.
+// Spell-book hover help.
 VA(0x00459faf, 0x101)
 i16 CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
@@ -97,8 +93,8 @@ i16 CombatSpecialHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Buka SPELLS.cpp HandleCastSpell; HoMM1 refreshes the coordinates from the
-// mouse manager before re-entering for the teleport destination.
+// HandleCastSpell refreshes the coordinates from the mouse manager before
+// re-entering for the teleport destination.
 VA(0x0045a0b0, 0x25d)
 i16 HandleCastSpell(struct tag_message& message) {
     DATA(0x0049f97c)
@@ -165,8 +161,8 @@ i16 HandleCastSpell(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Buka SPELLS.cpp ValidSpellTarget; HoMM1 has no resurrection corpses, and
-// anti-magic, dispel and green dragons stop every spell but the area ones.
+// There are no resurrection corpses; anti-magic, dispel and green dragons
+// stop every spell but the area ones.
 VA(0x0045a30d, 0x265)
 i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
     i32 unused;
@@ -230,7 +226,6 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
     return 1;
 }
 
-// Buka SPELLS.cpp SpellMessage without the resurrection target.
 VA(0x0045a572, 0xf6)
 void combatManager::SpellMessage(i8 spell, i8 hex) {
     switch (spell) {
@@ -258,8 +253,8 @@ void combatManager::SpellMessage(i8 spell, i8 hex) {
     CombatMessage(gText, 1);
 }
 
-// Buka SPELLS.cpp CastSpell; HoMM1 has nineteen spells, a single timed effect
-// per stack and no eagle eye, mirror image or elementals.
+// HoMM1 has nineteen spells, a single timed effect per stack and no eagle
+// eye, mirror image or elementals.
 VA(0x0045a668, 0xc5e)
 void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 teleportDest) {
     army* targetCreature;
@@ -562,7 +557,7 @@ done:
     CheckChangeSelector();
 }
 
-// Buka SPELLS.cpp DefaultSpell; HoMM1 plays the effect in two frames.
+// DefaultSpell plays the effect in two frames.
 VA(0x0045b2c6, 0xaf)
 void combatManager::DefaultSpell(i8 targetHex) {
     army* target;
@@ -671,8 +666,8 @@ void combatManager::CancelSideSpells(i8 side, i8 cureOnly) {
     }
 }
 
-// Buka SPELLS.cpp Fireball; HoMM1 draws the clipped ball and its mirror and
-// always hits the target hex and its six neighbours.
+// Fireball draws the clipped ball and its mirror and always hits the target
+// hex and its six neighbours.
 VA(0x0045b7e8, 0x403)
 void combatManager::Fireball(i8 targetHex) {
     i32 prevDmg;
@@ -741,8 +736,7 @@ void combatManager::Fireball(i8 targetHex) {
     DrawFrame(1);
 }
 
-// Buka SPELLS.cpp MeteorShower; HoMM1 drops a meteor on each of the seven
-// hexes in turn.
+// MeteorShower drops a meteor on each of the seven hexes in turn.
 VA(0x0045bbeb, 0x402)
 void combatManager::MeteorShower(i8 targetHex) {
     i16 i;
@@ -816,7 +810,7 @@ void combatManager::MeteorShower(i8 targetHex) {
     DrawFrame(1);
 }
 
-// Buka SPELLS.cpp ElementalStorm over HoMM1's 10x7 grid of 64-pixel tiles.
+// ElementalStorm over the 10x7 grid of 64-pixel tiles.
 VA(0x0045bfed, 0x2d0)
 void combatManager::ElementalStorm(void) {
     i32 prevDamage;
@@ -879,8 +873,7 @@ void combatManager::ElementalStorm(void) {
     DrawFrame(1);
 }
 
-// Buka SPELLS.cpp Armageddon; HoMM1 fades a copy of kb.pal to red instead of
-// shaking the screen.
+// Armageddon fades a copy of kb.pal to red.
 VA(0x0045c2bd, 0x3b6)
 void combatManager::Armageddon(void) {
     i16 sideIdxNo;

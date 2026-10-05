@@ -43,10 +43,8 @@ instruction controls, object/header hashes, references and CRT entries are in
 
 Use the existing `data_compgen.tsv` COMMON mechanism for this compiler-owned
 storage; never introduce a source global to imitate it. The control's volatile
-`_$E` ordinal is evidence only, not a stable function identity. HoMM2 Buka
-`e0689d3f71b2942b544fd677cb54085a13503d7b` uses the same guard name in its
-`config/compiler_generated_data.tsv`; HoMM1's address and extent come from
-its own independently verified image and objects.
+`_$E` ordinal is evidence only, not a stable function identity. The guard's
+address and extent come from HoMM1's own verified image and objects.
 
 This establishes the data identity and the compiler mechanism. Most HoMM1
 game units still lack the relevant header emission, so matching their startup

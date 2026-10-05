@@ -6,7 +6,7 @@
 
 struct tag_message;
 
-// SETUP's dialog handlers (Buka SETUP.h).
+// SETUP's dialog handlers.
 i16 BaseSetupHandler(struct tag_message& message);
 i16 SetupCampaignGameHandler(struct tag_message& message);
 i16 SetupBaudHandler(struct tag_message& message);

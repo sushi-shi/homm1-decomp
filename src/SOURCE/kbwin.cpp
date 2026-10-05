@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <SOURCE/kbwin.h>
@@ -29,9 +27,6 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
 
-// donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
 VA(0x00442ca0, 0x11a)
 H1_C_LINKAGE i32 __stdcall
 WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 showCommand) {
@@ -74,9 +69,6 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     return static_cast<i32>(message.wParam);
 }
 
-// donor PoL RVA 0x0001be26; preferred Buka symbol ?AppInit@@YIHPAX0HPAD@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:1;base=0.682496;margin=0.205177;shape=0.345;size=0.971;calls=0.867;strings=Heroes|hInstApp;alternate=pol20:int AppInit(void *, void *, int, char *)@0x0001be26
 VA(0x00442dba, 0x28e)
 BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine) {
     WNDCLASSA appClass;
@@ -161,15 +153,12 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
     }
 }
 
-// Buka returns TRUE directly; the inherited foreground test is absent.
+// Returns TRUE without a foreground test.
 VA(0x00443048, 0xa)
 BOOL AppIdle(void) {
     return TRUE;
 }
 
-// donor PoL RVA 0x0001c190; preferred Buka symbol ?AppWndProc@@YGJPAXIIJ@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.508573;margin=0.535153;shape=0.364;size=0.977;calls=0.857;alternate=pol20:long int AppWndProc(void *, unsigned int, unsigned int, long int)@0x0001c190
 VA(0x00443052, 0x6ad)
 long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messageData) {
     DATA(0x004a9e44)
@@ -295,8 +284,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
     return DefWindowProcA(window, message, messageParam, messageData);
 }
 
-// About-dialog callback; 1.2 does not export this function.
-// Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
+// About-dialog callback.
 VA(0x004436ff, 0x67)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     i32 wmId;
@@ -323,9 +311,6 @@ void AppExit(void) {
     CleanUpMenus();
 }
 
-// donor PoL RVA 0x0001c7b8; preferred Buka symbol ?Process1WindowsMessage@@YIXXZ
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.631126;margin=0.664983;shape=0.634;size=0.797;calls=1.000;alternate=pol20:void Process1WindowsMessage(void)@0x0001c7b8
 VA(0x00443775, 0x7f)
 void Process1WindowsMessage(void) {
     DATA(0x004a9e54)
@@ -347,9 +332,6 @@ void Process1WindowsMessage(void) {
     }
 }
 
-// donor PoL RVA 0x0001c880; preferred Buka symbol ?ResizeWindow@@YIXHHHH@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.562416;margin=0.918799;shape=0.364;size=0.993;calls=1.000;alternate=pol20:void ResizeWindow(int, int, int, int)@0x0001c880
 VA(0x004437f4, 0x11d)
 void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     i32 windowX;
@@ -380,9 +362,6 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     WritePrefs();
 }
 
-// donor PoL RVA 0x0001c9c7; preferred Buka symbol ?AppCommand@@YIJPAXIIJ@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.642433;margin=0.651384;shape=0.267;size=0.907;calls=1.000;strings=HEROES;alternate=pol20:long int AppCommand(void *, unsigned int, unsigned int, long int)@0x0001c9c7
 VA(0x00443911, 0x165)
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
     DLGPROC lpfnDlgProc;
@@ -439,7 +418,7 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
     return 0;
 }
 
-// PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
+// Disables unsupported window sizes.
 VA(0x00443a76, 0xae)
 void UpdateDfltMenu(HMENU menu) {
     i32 result;
@@ -459,9 +438,6 @@ void UpdateDfltMenu(HMENU menu) {
         EnableMenuItem(menu, KBWIN_MENU_FULLSCREEN, MF_GRAYED);
 }
 
-// donor PoL RVA 0x0001cc35; preferred Buka symbol ?KBChangeMenu@@YIXPAX@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.545069;margin=0.304682;shape=0.429;size=0.841;calls=1.000;alternate=pol20:void KBChangeMenu(void *)@0x0001cc35
 VA(0x00443b24, 0x91)
 void KBChangeMenu(HMENU menu) {
     if (menu == NULL)
@@ -482,9 +458,6 @@ void KBChangeMenu(HMENU menu) {
     }
 }
 
-// donor PoL RVA 0x0001cce1; preferred Buka symbol ?SetMenuStatus@@YIXH@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.517140;margin=0.517010;shape=0.323;size=0.903;calls=1.000;alternate=pol20:void SetMenuStatus(int)@0x0001cce1
 VA(0x00443bb5, 0x118)
 void SetMenuStatus(i32 showMenu) {
     i32 winWidth;
@@ -515,9 +488,6 @@ void SetMenuStatus(i32 showMenu) {
     );
 }
 
-// donor PoL RVA 0x0001ce3d; preferred Buka symbol ?SetNoDialogMenus@@YIXH@Z
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.510874;margin=0.487078;shape=0.429;size=0.686;calls=1.000;alternate=pol20:void SetNoDialogMenus(int)@0x0001ce3d
 VA(0x00443ccd, 0x52)
 void SetNoDialogMenus(i32 menusEnabled) {
     DATA(0x004a9e58)
@@ -532,8 +502,8 @@ void SetNoDialogMenus(i32 menusEnabled) {
     SetMenus(hmnuApp, menusEnabled);
 }
 
-// PoL 2.0 SetMenus correspondence: recurse into popups, then restore
-// each command from the normal or setup enable table.
+// Recurse into popups, then restore each command from the normal or setup
+// enable table.
 VA(0x00443d1f, 0x12b)
 void SetMenus(HMENU menu, i32 enabled) {
     i32 index;
@@ -571,8 +541,8 @@ void SetMenus(HMENU menu, i32 enabled) {
     UpdateDfltMenu(menu);
 }
 
-// PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
-// speed unconditionally in Buka; the old processor/slow-video choice is gone.
+// Picks the walk speed unconditionally; the old processor/slow-video choice
+// is gone.
 VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
     i32 i;
@@ -1128,7 +1098,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
-    u32 unusedErr; // Buka 2.1's unused dwErr keeps a frame slot.
+    u32 unusedErr;
     u32 logicalDrives;
     i32 eachCd;
     i32 thisFh;
@@ -1215,9 +1185,6 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     return CD_SETUP_NOT_FOUND;
 }
 
-// donor PoL RVA 0x000a0c76; preferred Buka symbol ?SetWinText@@YIXPAVheroWindow@@H@Z
-// donor Buka TU SOURCE/KB; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.447557;margin=0.235076;shape=0.180;size=0.912;calls=1.000;alternate=pol20:void SetWinText(class heroWindow *, int)@0x000a0c76
 VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {
     i32 i;
@@ -1231,17 +1198,11 @@ void SetWinText(heroWindow* window, i16 id) {
     }
 }
 
-// donor PoL RVA 0x0001d011; preferred Buka symbol ?KBTickCount@@YIJXZ
-// donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
-// evidence: reviewed-anchor;alternate=pol20:long int KBTickCount(void)@0x0001d011
 VA(0x00444b4e, 0xb)
 i32 KBTickCount(void) {
     return GetTickCount();
 }
 
-// donor PoL RVA 0x000c47f0; preferred Buka symbol ?ProcessAssert@@YIXHPADH@Z
-// donor Buka TU BASE/Misc; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.598916;margin=0.432613;shape=0.279;size=0.853;calls=0.600;strings=Assert Failure;alternate=pol20:void ProcessAssert(int, char *, int)@0x000c47f0
 VA(0x00444b59, 0x55)
 void ProcessAssert(i32 condition, char* file, i32 line) {
     i32 unusedAssertWord;
@@ -1253,7 +1214,6 @@ void ProcessAssert(i32 condition, char* file, i32 line) {
     }
 }
 
-// PoL 2.0 Misc.cpp FindToken correspondence.
 VA(0x00444bae, 0x50)
 char* FindToken(char* text, char token) {
     i32 pos;
@@ -1267,7 +1227,6 @@ char* FindToken(char* text, char token) {
     return NULL;
 }
 
-// PoL 2.0 Misc.cpp FindLastToken correspondence.
 VA(0x00444bfe, 0x50)
 char* FindLastToken(char* text, char token) {
     i32 pos;

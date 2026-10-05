@@ -36,9 +36,8 @@ H1_ENUM_CONST_BEGIN(CombatPointerSectorConstant)
 H1_ENUM_CONST_END(CombatPointerSectorConstant)
 
 // combatManager's per-side arrays (m_armies, m_heroes, m_playerId, ...).
-// HoMM1's SetupCombat stores the attacker in side 1 and the defender in side
-// 0 (Buka 2.1 combatTypes.h CombatSide has the opposite numbering); -1 marks
-// an empty hex or no target.
+// SetupCombat stores the attacker in side 1 and the defender in side 0; -1
+// marks an empty hex or no target.
 H1_ENUM_BEGIN(CombatSide)
     COMBAT_SIDE_NONE = -1,
     COMBAT_DEFENDER_SIDE = 0,
@@ -48,8 +47,7 @@ H1_ENUM_END(CombatSide)
 
 // army::m_facing, also passed as the sprite orientation: the attacker (side
 // 1) starts at column 1 with facing side ^ 1 = 0, so 0 faces right and 1 is
-// the mirrored, left-facing sprite (Buka ArmyFacing numbers them the other
-// way round, with its attacker in side 0).
+// the mirrored, left-facing sprite.
 H1_ENUM_BEGIN(ArmyFacing)
     ARMY_FACING_RIGHT = 0,
     ARMY_FACING_LEFT = 1
@@ -127,8 +125,7 @@ H1_ENUM_CONST_END(CombatHeroHex)
 
 // combatManager::m_combatResult, the side that won (CheckWin; a retreating
 // side loses to the other), DRAW when both sides fall, PENDING from Open
-// until the battle ends; advManager::DoCombat switches on it for losses
-// (Buka CombatResult names, HoMM1 side numbering).
+// until the battle ends; advManager::DoCombat switches on it for losses.
 H1_ENUM_BEGIN(CombatResult)
     COMBAT_RESULT_DRAW = -1,
     COMBAT_RESULT_DEFENDER = 0,
@@ -137,8 +134,7 @@ H1_ENUM_BEGIN(CombatResult)
 H1_ENUM_END(CombatResult)
 
 // A side argument meaning both sides: CastMassSpell's castSide (mass dispel)
-// and the spell AI's FirstArmy/EffectSpellCure target side (Buka SPELLAI
-// SPELL_AI_ANY_SIDE).
+// and the spell AI's FirstArmy/EffectSpellCure target side.
 H1_ENUM_CONST_BEGIN(CombatSideSelection)
     COMBAT_SIDE_ANY = 2
 H1_ENUM_CONST_END(CombatSideSelection)

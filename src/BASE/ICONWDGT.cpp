@@ -18,10 +18,6 @@ iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_orientation = ICON_DRAW_NORMAL;
 }
 
-iconWidget::~iconWidget(void) {
-    gpResourceManager->Dispose(m_icon);
-}
-
 // The icon-file-id overload; no retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
@@ -81,7 +77,11 @@ void iconWidget::Read(void) {
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
 }
 
-VA_COMPGEN(0x0046e13a, 0x5b, "??1iconWidget@@UAE@XZ", 0x0046deb0)
+VA(0x0046e13a, 0x5b)
+iconWidget::~iconWidget(void) {
+    gpResourceManager->Dispose(m_icon);
+}
+
 VA(0x0046e195, 0x2a4)
 i16 iconWidget::Main(tag_message& message) {
     i16 x;

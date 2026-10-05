@@ -19,11 +19,6 @@ border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_background = NULL;
 }
 
-border::~border(void) {
-    if (m_background)
-        gpResourceManager->Dispose(m_background);
-}
-
 VA(0x0047498e, 0x9e)
 border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
     : widget(x, y, width, height, id, kind) {
@@ -34,7 +29,12 @@ border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillCo
     m_fillColor = fillColor;
 }
 
-VA_COMPGEN(0x00474a2c, 0x64, "??1border@@UAE@XZ", 0x00474950)
+VA(0x00474a2c, 0x64)
+border::~border(void) {
+    if (m_background)
+        gpResourceManager->Dispose(m_background);
+}
+
 VA(0x00474a90, 0xe9)
 void border::Read(void) {
     char name[RESOURCE_NAME_CAPACITY];

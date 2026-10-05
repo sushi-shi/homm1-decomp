@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_SEARCHARRAY_H
 #define HOMM1_SOURCE_SEARCHARRAY_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 13 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -26,11 +24,10 @@ H1_ENUM_CONST_BEGIN(SearchDirectionConstant)
     SEARCH_DIAGONAL_COST_MASK = 1
 H1_ENUM_CONST_END(SearchDirectionConstant)
 
-// SeedPosition's cost bookkeeping (Buka searchArray.h SearchConstant names,
-// HoMM1 values on its 4/6/8 step-cost scale): MAX_COST starts the best cost
-// to an explicit target, TARGET_COST_WINDOW (one straight step) stops the
-// flood once nothing cheaper can reach it and lets a continued seed return
-// early, MONSTER_RESEED_WINDOW (three straight steps) skips neighbours an
+// SeedPosition's cost bookkeeping (on the 4/6/8 step-cost scale): MAX_COST
+// starts the best cost to an explicit target, TARGET_COST_WINDOW (one straight
+// step) stops the flood once nothing cheaper can reach it and lets a continued
+// seed return early, MONSTER_RESEED_WINDOW (three straight steps) skips neighbours an
 // adjacent-monster node already reached that cheaply. INVALID_COORDINATE is
 // the no-target / no-monster coordinate (m_specialTargetX/Y, PushPoint's
 // value/previous bytes, FindAdjacentMonster's excluded monster).
@@ -38,8 +35,7 @@ H1_ENUM_CONST_END(SearchDirectionConstant)
 // UNLIMITED_COST (999) is a cost cap or mobility no route reaches: the
 // maximumCost advManager passes to SeedPosition/BuildPath for the cursor
 // route, philAI's seed mobility, and FindNearestObject's per-step mobility
-// (CalcTerrainCost then always charges the full diagonal cost). Buka's
-// ADVMGR ROUTE_PATH_COST_LIMIT (59999) plays the same role.
+// (CalcTerrainCost then always charges the full diagonal cost).
 H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_INVALID_COORDINATE = -1,
     // maximumCost <= 0 imposes no cost cap (FindNearestObject, SeedPosition
@@ -52,7 +48,6 @@ H1_ENUM_CONST_BEGIN(SearchConstant)
     SEARCH_MAX_COST = 9999
 H1_ENUM_CONST_END(SearchConstant)
 
-// Donor searchNode's real packed record; HoMM1 stores nodes inline.
 // HoMM1 packs the direction nibble under a 12-bit distance in the word at +2
 // (CheckReload shifts it right four; the path builder masks 0xf).
 #pragma pack(push, 1)
@@ -63,8 +58,8 @@ struct searchNode {
     u16 direction : SEARCH_DIRECTION_BIT_COUNT;
     u16 distance : 12;
     u8 visited : SEARCH_FLAG_BIT_COUNT;
-    // Buka unknownFlag: TestPossibleDirections' occupancy for the step that
-    // pushed the node; SeedPosition then inspects the cell's trigger.
+    // TestPossibleDirections' occupancy for the step that pushed the node;
+    // SeedPosition then inspects the cell's trigger.
     u8 occupied : SEARCH_FLAG_BIT_COUNT;
     u8 rvFlag1 : SEARCH_FLAG_BIT_COUNT;
     // DetermineTargetPosition passes bits 3..7 to RVOfPosition as a byte.
@@ -101,9 +96,7 @@ public:
     // --- constructors ---
     searchArray(void);
     // --- methods ---
-    // HoMM1 retail 0x0046e730: word coordinates and cost cap (ret 0x14).
     i32 BuildPath(i16 startX, i16 startY, i16 destinationX, i16 destinationY, i16 maximumCost);
-    // HoMM1 retail 0x0046e820: word seed and cost cap (ret 0x30).
     void SeedPosition(
         i16 seedX,
         i16 seedY,
@@ -118,15 +111,13 @@ public:
         i32 continueSeed,
         i32 scanMap
     );
-    // HoMM1 retail 0x0046e4f0: seeds from a hero and builds the path to the
-    // nearest cell carrying the trigger type (EVENTS finds a town with 0xa8).
+    // Seeds from a hero and builds the path to the nearest cell carrying the
+    // trigger type (EVENTS finds a town with 0xa8).
     i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
     void Init(void);
     void Close(void);
     void Clear(void);
     i16 QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2);
-    // HoMM1 retail 0x0044ec60 (ret 0x30): word x/y, unsigned word
-    // direction/cost/mobility and byte flags and coordinates.
     void PushPoint(
         i16 x,
         i16 y,
@@ -141,7 +132,6 @@ public:
         i8 previousX,
         i8 previousY
     );
-    // HoMM1 retail 0x0044ef10 (ret 0x18): word coordinates and occupancy flag.
     void TestPossibleDirections(
         i16 x,
         i16 y,
@@ -151,11 +141,8 @@ public:
         i32 waterMode
     );
     void SeedCombatPosition(class army* unit);
-    // HoMM1 retail 0x0044e820 takes four arguments (ret 0x10).
     // attackPath is an ArmyPathTarget (PATH.h).
     i16 FindCombatPath(i16 sourceHex, i16 targetHex, class army* unit, i8 attackPath);
-    // HoMM1 retail 0x0044eb20 (ret 0x10): word hex/direction and unsigned
-    // word distance/speed.
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)

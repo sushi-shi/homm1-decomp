@@ -41,7 +41,7 @@ H1_ENUM_BEGIN(WalkSpeed)
 H1_ENUM_END(WalkSpeed)
 
 // The opposite direction is (d + OPPOSITE_OFFSET) & INDEX_MASK (SEARCH's
-// path walk-back and PushPoint; Buka KB_TYPES.h MapDirectionConstant).
+// path walk-back and PushPoint).
 H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_OPPOSITE_OFFSET = 4,
     MAP_DIRECTION_INDEX_MASK = 7,
@@ -49,7 +49,8 @@ H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_DIAGONAL_BIT = 1
 H1_ENUM_CONST_END(MapDirectionConstant)
 
-// The step that walks a map direction back (Buka 2.1 KB_TYPES.h).
+// The step that walks a map direction back (SEARCH's path walk-back and
+// monster back-push).
 inline i32 OppositeMapDirection(i32 direction) {
     return (direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
 }
@@ -62,7 +63,7 @@ H1_ENUM_CONST_BEGIN(CursorFrameConstant)
 H1_ENUM_CONST_END(CursorFrameConstant)
 
 // advmice.mse frames for mouseManager::SetPointer while the adventure cursor
-// set is loaded (Buka 2.1 ADVMGR.cpp AdventurePointerFrame: same numbering).
+// set is loaded.
 // advManager::ProcessHover picks a role and adds day * DAY_STRIDE for the
 // days of travel (0..DAY_LAST); WATER_ACTION + day marks a buoy or whirlpool
 // reached by boat. WAIT is shown while another (AI or remote) player moves.

@@ -1,8 +1,7 @@
 # Generated source branch
 
 `homm1 clean` derives a clean, buildable source tree from committed `HEAD` and
-can publish it as a local single-commit branch. The port follows HoMM2 Buka's
-`homm2 clean` and kf1's `kf clean`; see [tooling inheritance](tooling-inheritance.md).
+can publish it as a local single-commit branch.
 
 ```sh
 homm1 clean --out build/clean                        # generate

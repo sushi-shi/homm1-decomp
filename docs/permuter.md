@@ -94,7 +94,7 @@ candidate for inspection, but it cannot satisfy the exact-closure gate.
 
 A source-only exact candidate is written as `exact.cpp` for review. A candidate
 containing disposable TU state is written as `exact-disposable.cpp`; never apply
-its probes. Like Giten, `permute state --record-max` can retain an audited exact
+its probes. `permute state --record-max` can retain an audited exact
 compiler-state peak for the unchanged function: unrounded score 100, exact size,
 complete ordered relocations, restored source hash, a unique existing bank row,
 and the same comparison mode are required. Only MAX/HIST change; banked CUR,

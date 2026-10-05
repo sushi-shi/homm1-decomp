@@ -6,11 +6,10 @@
 #include <SOURCE/hero.h>
 #include <SOURCE/town.h>
 
-// mapCell::m_objectMetadata payloads DoEvent/DoAIEvent decode per object
-// (Buka EVENTS.h MapObjectEncodingConstant, HoMM1 numbering): campfire
-// packed resource/amount, skeleton, artifact pickup modes, daemon cave
-// outcomes, graveyard/shipwreck ghost sites, windmill and resource piles,
-// and the wandering monster's willing-to-join flag over its count.
+// mapCell::m_objectMetadata payloads DoEvent/DoAIEvent decode per object:
+// campfire packed resource/amount, skeleton, artifact pickup modes, daemon
+// cave outcomes, graveyard/shipwreck ghost sites, windmill and resource
+// piles, and the wandering monster's willing-to-join flag over its count.
 H1_ENUM_CONST_BEGIN(MapObjectEncodingConstant)
     MAP_EVENT_DATA_EMPTY = 0,
     MAP_EVENT_DATA_AVAILABLE = 1,
@@ -39,8 +38,7 @@ H1_ENUM_CONST_BEGIN(MapObjectEncodingConstant)
     MONSTER_COUNT_MASK = 0x7f
 H1_ENUM_CONST_END(MapObjectEncodingConstant)
 
-// Event rewards, costs and guards (Buka MapEventRewardConstant names where
-// HoMM1 has the same event).
+// Event rewards, costs and guards.
 H1_ENUM_CONST_BEGIN(MapEventRewardConstant)
     MINE_GOLD_INCOME = 1000,
     MINE_ORE_INCOME = 2,
@@ -76,23 +74,20 @@ H1_ENUM_CONST_BEGIN(MapEventRewardConstant)
     GHOST_HUGE_GOLD = 2000
 H1_ENUM_CONST_END(MapEventRewardConstant)
 
-// FizzleCenter's sample: the hero-loss fade or the pickup chime (Buka
-// EVENT_FIZZLE_HERO_LOSS / EVENT_FIZZLE_ARTIFACT; HoMM1 plays "pickup%02d"
-// for every erased pickup).
+// FizzleCenter's sample: the hero-loss fade or the pickup chime
+// ("pickup%02d" plays for every erased pickup).
 H1_ENUM_BEGIN(EventFizzleType)
     EVENT_FIZZLE_HERO_LOSS = 0,
     EVENT_FIZZLE_PICKUP = 1
 H1_ENUM_END(EventFizzleType)
 
-// GiveTakeArtifactStat's direction (Buka EVENT_ARTIFACT_TAKE).
+// GiveTakeArtifactStat's direction.
 H1_ENUM_BEGIN(EventArtifactStat)
     EVENT_ARTIFACT_GIVE = 0,
     EVENT_ARTIFACT_TAKE = 1
 H1_ENUM_END(EventArtifactStat)
 
-// Screen and distance constants of the event effects (Buka EVENTS.h
-// MapEventDisplayConstant / MapEventSpatialConstant / EventEffectConstant,
-// HoMM1 values).
+// Screen and distance constants of the event effects.
 H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     COAST_FIZZLE_X = 0xc0,
     COAST_FIZZLE_Y = 0xc0,
@@ -112,8 +107,7 @@ H1_ENUM_CONST_BEGIN(MapEventDisplayConstant)
     EVENT_TEXT_WINDOW_END = 76
 H1_ENUM_CONST_END(MapEventDisplayConstant)
 
-// DoCombat's network wait marker and memory thresholds (Buka EVENTS.cpp
-// CombatFlowConstant names, HoMM1 values).
+// DoCombat's network wait marker and memory thresholds.
 H1_ENUM_CONST_BEGIN(CombatFlowConstant)
     COMBAT_NETWORK_POLL_X = 30,
     COMBAT_NETWORK_POLL_Y = 30,
@@ -127,14 +121,13 @@ H1_ENUM_CONST_BEGIN(CombatFlowConstant)
     COMBAT_RANDOM_SEED_MAX = 1000
 H1_ENUM_CONST_END(CombatFlowConstant)
 
-// Event-music flag used by the Buka event/audio flow.
+// Event-music flag used by the event/audio flow.
 extern i8 gEventMusicPlaying;
 
 // Moved from EVENTS.cpp.
 // advManager::EventWindow's eventId: the gEventText row it prints, or
-// EVENT_TEXT_CUSTOM for caller text (Buka 2.1 EVENTS.h MapEventTextId; HoMM1
-// numbers its own rows). The five houses use RECRUIT/RANKS_FULL/EMPTY of the
-// first house plus three rows per house.
+// EVENT_TEXT_CUSTOM for caller text. The five houses use
+// RECRUIT/RANKS_FULL/EMPTY of the first house plus three rows per house.
 H1_ENUM_BEGIN(MapEventTextId)
     EVENT_TEXT_CUSTOM = -1,
     EVENT_TEXT_ALCHEMIST_CAPTURED = 0,
@@ -217,8 +210,8 @@ H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
     COMBAT_REMOTE_BUFFER_SIZE = 0xff
 H1_ENUM_CONST_END(CombatRemoteConstant)
 
-// SendHeroTownData's payload after the remote-message header, as in Buka's
-// combatRemoteData; hero records follow one fragment byte.
+// SendHeroTownData's payload after the remote-message header; hero records
+// follow one fragment byte.
 #pragma pack(push, 1)
 struct combatRemoteData {
     i8 fragment;
@@ -267,7 +260,7 @@ struct heroRemoteMessage {
 #pragma pack(pop)
 
 // CheckHandleNet, GetRemoteData and ReceiveHeroTownData pass received records
-// as char*; the Buka 2.1 donor reads them through these views.
+// as char* and read them through these views.
 #define EVENTS_REMOTE_MESSAGE(buffer)                                                              \
     (reinterpret_cast<combatRemoteMessage*>(buffer)) // API-forced: char* records.
 #define EVENTS_REMOTE_HERO(buffer)                                                                 \

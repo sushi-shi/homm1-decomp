@@ -1,6 +1,5 @@
-// Combat screen drawing; Buka 2.1 SOURCE/DRAWING correspondence. HoMM1
-// keeps one text line in the combat window and redraws the battlefield
-// from the grid row UpdateGrid records.
+// Combat screen drawing. HoMM1 keeps one text line in the combat window and
+// redraws the battlefield from the grid row UpdateGrid records.
 
 #include <match.h>
 

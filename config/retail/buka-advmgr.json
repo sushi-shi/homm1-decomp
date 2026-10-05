@@ -1402,13 +1402,13 @@
         {
           "offset": "0xcce",
           "kind": 6,
-          "symbol": "?hmnuAdv@@3PAXA",
+          "symbol": "?hmnuAdv@@3PAUHMENU__@@A",
           "addend": "0x0"
         },
         {
           "offset": "0xcd4",
           "kind": 20,
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": "0x0"
         },
         {
@@ -4737,7 +4737,7 @@
       ]
     },
     {
-      "name": "?hmnuAdv@@3PAXA",
+      "name": "?hmnuAdv@@3PAUHMENU__@@A",
       "unit": "SOURCE/KB",
       "old_rva": "0x92c38",
       "rva": "0xa98e4",
@@ -4745,7 +4745,7 @@
       "initializer": "typed zero/null initializer; full retail bytes agree",
       "references": [
         {
-          "name": "?hmnuAdv@@3PAXA",
+          "name": "?hmnuAdv@@3PAUHMENU__@@A",
           "site": "0x1f91",
           "kind": 6,
           "addend": 0,
@@ -6353,14 +6353,14 @@
         "owner": "0x6bf6f"
       },
       {
-        "name": "?hmnuAdv@@3PAXA",
+        "name": "?hmnuAdv@@3PAUHMENU__@@A",
         "site": "0x1f91",
         "kind": 6,
         "addend": 0,
         "owner": "0xa98e4"
       },
       {
-        "name": "?KBChangeMenu@@YAXPAX@Z",
+        "name": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
         "site": "0x1f97",
         "kind": 20,
         "addend": 0,

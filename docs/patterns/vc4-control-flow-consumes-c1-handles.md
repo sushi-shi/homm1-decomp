@@ -58,7 +58,7 @@ slot-neutral way to add handles.
    written in a code-identical spelling. Typical candidates are `&&` versus nested
    `if`, `if/else` versus separate `if`s, casts, labels and loop forms.
    Rebuild the edited function and confirm its bytes are unchanged.
-3. Prefer a spelling with donor support (HoMM2 Buka 2.1/PoL). A spelling picked
+3. Prefer a spelling that other source evidence supports. A spelling picked
    only for its handle count is a reconstruction choice, like a local
    declaration order. Comment it at the edit.
 

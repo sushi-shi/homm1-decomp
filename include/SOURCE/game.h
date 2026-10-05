@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_GAME_H
 #define HOMM1_SOURCE_GAME_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 114 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -23,7 +21,7 @@ struct SMapHeader;
 struct tag_message;
 
 // game::m_difficulty: the four new-game difficulty buttons and
-// gDifficultyNames ("Easy", "Normal", "Hard", "Expert"); Buka GameDifficulty.
+// gDifficultyNames ("Easy", "Normal", "Hard", "Expert").
 H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_EASY = 0,
     DIFFICULTY_NORMAL = 1,
@@ -32,7 +30,7 @@ H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_COUNT = 4
 H1_ENUM_END(GameDifficulty)
 
-// giWeekType / giMonthType (Buka CalendarPeriodType): a named week or month
+// giWeekType / giMonthType: a named week or month
 // (gWeekNames / gMonthNames[special]), a creature week or month
 // (gArmyNames[special] grows), or the month of the plague. NONE suppresses
 // the new-week announcement.
@@ -75,7 +73,7 @@ H1_ENUM_CONST_BEGIN(DailyIncomeConstant)
     DAILY_MINE_YIELD_OTHER = 1
 H1_ENUM_CONST_END(DailyIncomeConstant)
 
-// Weekly growth (PerWeek/PerMonth, Buka GameWeeklyConstant): a well adds two
+// Weekly growth (PerWeek/PerMonth): a well adds two
 // creatures a dwelling, the week's creature five; renewable sites stop
 // restocking at 100 and an emptied water wheel (0xff) refills to 2.
 H1_ENUM_CONST_BEGIN(GameWeeklyConstant)
@@ -100,8 +98,7 @@ H1_ENUM_BEGIN(SpellBookControl)
     SPELL_BOOK_LABEL_FIRST = 10
 H1_ENUM_END(SpellBookControl)
 
-// campaign.bin widget ids (Buka CampaignControlId spells RESTART 0x385); the
-// progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
+// campaign.bin widget ids; the progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
 // fills them; KB's EventWindowHandler restarts the scenario on RESTART.
 H1_ENUM_BEGIN(CampaignInfoControl)
     CAMPAIGN_INFO_NAME = 1,
@@ -143,7 +140,7 @@ H1_ENUM_CONST_BEGIN(UltimateHintConstant)
     OBELISK_PIECE_PICK_TRIES = 100
 H1_ENUM_CONST_END(UltimateHintConstant)
 
-// RandomizeHeroPool / SetRandomHeroArmies (Buka GameRandomHeroConstant):
+// RandomizeHeroPool / SetRandomHeroArmies:
 // starting experience 40 + 0..50, the strong-army flag (PHILAI's hires), the
 // chance of the second and third table stacks (50/25 percent, +30/+40 for a
 // strong army) and the counts drawn in tenths (min * 10 .. max * 10 + 9).
@@ -183,7 +180,7 @@ H1_ENUM_CONST_BEGIN(SaveFileConstant)
 H1_ENUM_CONST_END(SaveFileConstant)
 
 // ComputeDailyGold strides mines by seven bytes from game+0x14341 with the
-// owner at +1 and the type at +2, as in HoMM2's mineRecord.
+// owner at +1 and the type at +2.
 #pragma pack(push, 1)
 struct mineRecord {
     i8 id;
@@ -197,8 +194,8 @@ struct mineRecord {
 };
 #pragma pack(pop)
 
-// CreateBoat fills eight-byte records from game+0x14486 in HoMM2's
-// boatRecord order (direction 2, owner at +7).
+// CreateBoat fills eight-byte records from game+0x14486 (direction 2, owner
+// at +7).
 #pragma pack(push, 1)
 struct boatRecord {
     i8 id;
@@ -325,10 +322,10 @@ public:
     i8 m_unused16e5d;
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
-    // TavernHandler advances this word as its animation counter (Buka name).
+    // TavernHandler advances this word as its animation counter.
     i16 m_viewArmyResult;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
-    // ViewSpells' window state (Buka m_viewSpells*): the hero's spell slots
+    // ViewSpells' window state: the hero's spell slots
     // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
     class heroWindow* m_viewSpellsWindow;
     class hero* m_viewSpellsHero;
@@ -383,8 +380,7 @@ public:
     i32 SetupPuzzlePieces(i32 player, i32 justCount);
     i8 IsMobile(i8 heroId);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
-    // Inline world-map file I/O (LoadMap, SaveGame, LoadGame): each
-    // expansion leaves its jmp $+0 after the read or write call.
+    // Inline world-map file I/O (LoadMap, SaveGame, LoadGame).
     void ReadWorldMap(i32 fd);
     void WriteWorldMap(i32 fd);
     i8 CreateBoat(i8 x, i8 y);
@@ -476,7 +472,7 @@ public:
     i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
     // HoMM1 retail: hero and army only (ret 8).
     i32 GetLuck(class hero* h, class army*);
-    // Buka enemy-turn crest reads widen the stored color to a signed short.
+    // Enemy-turn crest reads widen the stored color to a signed short.
     i16 GetPlayerColor(i32 player) {
         return m_players[player].m_color;
     }
@@ -538,8 +534,8 @@ public:
 };
 #pragma pack(pop)
 
-// The one-based day number of game g's calendar, day first (Buka 2.1
-// game.h); the u16 fields promote to int.
+// The one-based day number of game g's calendar, day first; the u16 fields
+// promote to int.
 #define GAME_DAY_NUMBER(g)                                                                         \
     ((g).m_day + ((g).m_week - 1) * CALENDAR_DAYS_PER_WEEK                                         \
      + ((g).m_month - 1) * CALENDAR_DAYS_PER_MONTH)
@@ -623,9 +619,8 @@ H1_ENUM_BEGIN(NewGameHelp)
     NEW_GAME_HELP_HUMAN_OPPONENT = 8
 H1_ENUM_END(NewGameHelp)
 
-// GiveTroopsToNeutralTowns (Buka NeutralTownReinforcementConstant names): a
-// 1..15 roll picks the tier, whose key plus the town type selects the
-// recruit and whose range the count.
+// GiveTroopsToNeutralTowns: a 1..15 roll picks the tier, whose key plus the
+// town type selects the recruit and whose range the count.
 H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
     REINFORCEMENT_ROLL_MIN = 1,
     REINFORCEMENT_ROLL_MAX = 15,
@@ -646,8 +641,8 @@ H1_ENUM_CONST_BEGIN(NeutralTownReinforcementConstant)
     REINFORCEMENT_TIER_FOUR_COUNT_MAX = 3
 H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
 
-// armywin.bin widget ids; Buka ViewArmyControlId names the dismiss (DIALOG_BUTTON_3)
-// and close (DIALOG_BUTTON_0) buttons. The animation icon cycles
+// armywin.bin widget ids; dismiss is DIALOG_BUTTON_3 and close
+// DIALOG_BUTTON_0. The animation icon cycles
 // VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
 H1_ENUM_BEGIN(ViewArmyControl)
     VIEW_ARMY_COUNT_FRAME = 1,
@@ -694,7 +689,7 @@ H1_ENUM_CONST_BEGIN(TerrainTileConstant)
     TERRAIN_TILE_VARIANT_COUNT = 4
 H1_ENUM_CONST_END(TerrainTileConstant)
 
-// REMOTE.GAM transfer (Buka RemoteSaveConstant): the sender announces the
+// REMOTE.GAM transfer: the sender announces the
 // size (BOX_REMOTE_SAVE, answered by REMOTE_COMMAND_SAVE_INIT_RESPONSE),
 // streams SEGMENT_SIZE-byte segments (SAVE_DATA), asks for each
 // BATCH_SIZE-segment block's acknowledgement map (SAVE_ACK_REQUEST /

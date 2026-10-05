@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <SOURCE/PATH.h>
@@ -12,12 +10,9 @@
 #include <SOURCE/kbwin.h>
 #include <SOURCE/searchArray.h>
 
-// Retail compiled this file incrementally (/Gi): each ProcessAssert line is the
-// function's compiler line static plus an offset; #line restores the original
-// file and lines (docs/patterns/vc4-gi-line-var.md).
+// #line restores the original source file and line numbers of the asserts.
 
-// Buka PATH.cpp FindPath; HoMM1 takes the speed slot unused and retries a
-// two-hex creature from its rear hex.
+// The speed slot is unused; a two-hex creature retries from its rear hex.
 VA(0x00446450, 0x11e)
 i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode) {
     i16 retVal;
@@ -47,7 +42,6 @@ i16 army::FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode
     return retVal;
 }
 
-// Buka PATH.cpp ValidPath.
 VA(0x0044656e, 0x86)
 i16 army::ValidPath(i16 targetHex, i8 pathMode) {
     i32 pathResult;
@@ -65,7 +59,6 @@ i16 army::ValidPath(i16 targetHex, i8 pathMode) {
     return 0;
 }
 
-// Buka PATH.cpp GetMoveMask.
 VA(0x004465f4, 0x72)
 i16 army::GetMoveMask(i16 sourceHex) {
     i16 blockedMaskVal;
@@ -82,7 +75,6 @@ i16 army::GetMoveMask(i16 sourceHex) {
     return blockedMaskVal | (1 << COMBAT_DIRECTION_WIDE_WEST) | (1 << COMBAT_DIRECTION_WIDE_EAST);
 }
 
-// Buka PATH.cpp GetAttackMask.
 VA(0x00446666, 0xac)
 i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
     i16 theDirection;
@@ -103,13 +95,11 @@ i16 army::GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex) {
     return curMask;
 }
 
-// Buka PATH.cpp ValidMove(direction).
 VA(0x00446712, 0x23)
 i16 army::ValidMove(i16 direction) {
     return ValidMove(m_hex, direction);
 }
 
-// Buka PATH.cpp ValidMove; HoMM1 has no castle gate exception.
 VA(0x00446735, 0x187)
 i16 army::ValidMove(i16 sourceHex, i16 direction) {
     i16 destHexNext;
@@ -159,7 +149,6 @@ i16 army::ValidMove(i16 sourceHex, i16 direction) {
         return frontValid;
 }
 
-// Buka PATH.cpp ValidAttack.
 VA(0x004468bc, 0x216)
 i16 army::ValidAttack(
     i16 sourceHex,
@@ -227,7 +216,6 @@ i16 army::ValidAttack(
     return 0;
 }
 
-// Buka PATH.cpp GetAdjacentCellIndex with HoMM1's asserts.
 VA(0x00446ad2, 0xe4)
 i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
 #line 311 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
@@ -249,7 +237,6 @@ i16 army::GetAdjacentCellIndex(i16 hex, i16 direction)
     return gCombatAdjacency[hex][direction];
 }
 
-// Buka PATH.cpp GetAdjacentCellIndexNoArmy with HoMM1's asserts.
 VA(0x00446bb6, 0xbe)
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
 #line 328 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\PATH.CPP"
@@ -269,7 +256,6 @@ i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction)
     return gCombatAdjacency[hex][direction];
 }
 
-// Buka PATH.cpp ValidRange.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00446c74, 0x45a)
@@ -365,10 +351,6 @@ i16 army::ValidRange(i16 targetHex) {
     return 0;
 }
 
-// HoMM2 donor behavior; HoMM1's WORD parameter/return prove the narrower API.
-// donor Buka TU SOURCE/PATH; HoMM1 owner inferred from contiguous order
-// evidence: retail body uses signed WORD loads and returns through AX;
-// alternate=pol20:int OppositeDirection(int)@0x000be9e7
 VA(0x004470ce, 0x35)
 H1_ENUM_RETURN(CombatHexDirection, i16)
 OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
@@ -387,8 +369,7 @@ OppositeDirection(H1_ENUM_PARAM(CombatHexDirection, i16) direction) {
     }
 }
 
-// Buka PATH.cpp GetBestDirection with HoMM1's nine-hex rows and byte
-// row/column flags.
+// Nine-hex rows and byte row/column flags.
 VA(0x00447103, 0x7b7)
 i16 army::GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask) {
     i8 targetCol;

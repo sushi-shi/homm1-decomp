@@ -29,8 +29,7 @@ H1_ENUM_CONST_BEGIN(WingraphPaintConstant)
 H1_ENUM_CONST_END(WingraphPaintConstant)
 
 // gGraphicsType: the WinG window backend or the DirectDraw full-screen one
-// (InitGraphics picks DirectDraw for full screen; Buka WingraphGraphicsType,
-// same numbering).
+// (InitGraphics picks DirectDraw for full screen).
 H1_ENUM_BEGIN(WingraphGraphicsType)
     WINGRAPH_GRAPHICS_WING = 1,
     WINGRAPH_GRAPHICS_DIRECT_DRAW = 2

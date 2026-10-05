@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_FILEREQUESTER_H
 #define HOMM1_SOURCE_FILEREQUESTER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 12 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
@@ -16,16 +14,14 @@ H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_NAME_SIZE = 0x15f,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
-    // The constructor's unaddressed frame buffer between its sort indices
-    // and the find result.
+    // Size of the constructor's unused name buffer.
     FILE_REQUESTER_UNUSED_NAME_SIZE = 200,
     FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101,
     FILE_REQUESTER_UPDATE_STORAGE_SIZE = 372
 H1_ENUM_CONST_END(FileRequesterStorageConstant)
 
 // fileRequester::m_mode (the constructor's mode): pick a game or map to load,
-// or name the game to save (HoMM1 numbering; Buka FileRequesterMode splits
-// map/game loads).
+// or name the game to save.
 H1_ENUM_BEGIN(FileRequesterMode)
     FILE_REQUESTER_LOAD = 0,
     FILE_REQUESTER_SAVE = 1
@@ -43,7 +39,7 @@ H1_ENUM_CONST_END(FileRequesterSelectionConstant)
 
 // The list rows' text width, the gutter the scroll knob travels (56..212
 // with the knob centred at 134 for a short list) and the click-to-page
-// arithmetic (Buka FileRequesterScrollGeometry).
+// arithmetic.
 H1_ENUM_CONST_BEGIN(FileRequesterScrollGeometry)
     FILE_REQUESTER_ROW_TEXT_WIDTH = 207,
     FILE_REQUESTER_PLAYER_SUFFIX_GAP = 6,
@@ -80,10 +76,10 @@ H1_ENUM_BEGIN(MapDifficulty)
     MAP_DIFFICULTY_FORGET_IT = 4
 H1_ENUM_END(MapDifficulty)
 
-// request.bin widget ids (Buka FileRequesterControlId, HoMM1 layout): the
-// scroll arrows, gutter and knob, the ten list rows from LIST_FIRST, the
-// filename entry and its prompt, and the map-info window's size, level and
-// description fields; OK/CANCEL are the dialog role buttons.
+// request.bin widget ids: the scroll arrows, gutter and knob, the ten list
+// rows from LIST_FIRST, the filename entry and its prompt, and the map-info
+// window's size, level and description fields; OK/CANCEL are the dialog role
+// buttons.
 H1_ENUM_BEGIN(FileRequesterControlId)
     FILE_REQUESTER_OK = DIALOG_BUTTON_2,
     FILE_REQUESTER_CANCEL = DIALOG_BUTTON_1,

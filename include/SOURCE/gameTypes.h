@@ -37,7 +37,7 @@ H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_ARTIFACT_ON_MAP = 36
 H1_ENUM_CONST_END(GamePlayerConstant)
 
-// The calendar (Buka GameCalendarConstant): four seven-day weeks a month.
+// The calendar: four seven-day weeks a month.
 H1_ENUM_CONST_BEGIN(GameCalendarConstant)
     CALENDAR_DAYS_PER_WEEK = 7,
     CALENDAR_DAYS_PER_MONTH = 28,

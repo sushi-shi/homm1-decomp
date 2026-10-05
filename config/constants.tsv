@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1948
+#floor	1934
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -1054,7 +1054,6 @@ src/SOURCE/TOWNMGR.cpp	townManager::SetupMage	*	store	initializer of *	a local b
 src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_SPELL_CONTROL	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_ICON_CONTROL	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	comparison-or-bound	operator >= numThieves	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/TOWNMGR.cpp	*	*	call-argument	FightValueOfStack(class armyGroup *, class hero *, i32, i8, i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/TOWNMGR.cpp	townManager::RecruitHero	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	GetHero(i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	BuyBuild(i16, i8, i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
@@ -1242,7 +1241,6 @@ src/SOURCE/CURSOR.cpp	*	1	call-argument	PlayerMonsterInteract(* argument 7	Playe
 src/SOURCE/CURSOR.cpp	advManager::MoveHero	4	comparison-or-bound	operator <	the first ground tiles of each terrain run (% MAP_CELL_TILES_PER_TERRAIN < 4)
 src/SOURCE/EVENTS.cpp	*	0	call-argument	AddSpell(* argument 3	AddSpell's flag argument
 src/SOURCE/EVENTS.cpp	*	*	call-argument	ChooseEvaluateBattle(* argument [567]	ChooseEvaluateBattle's flags and the 500 estimate
-src/SOURCE/EVENTS.cpp	*	*	call-argument	FightValueOfStack(* argument 5	FightValueOfStack's town id argument
 src/SOURCE/EVENTS.cpp	*	*	call-argument	QuickCombat(* argument [56]	QuickCombat's flag arguments
 src/SOURCE/EVENTS.cpp	*	*	call-argument	SendHeroTownData(* argument 1[234]	SendHeroTownData's zero arguments
 src/SOURCE/EVENTS.cpp	*	*	call-argument	CheckHandleNetPlayerWait(* argument 2	CheckHandleNetPlayerWait's flag argument
