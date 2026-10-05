@@ -241,7 +241,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         gDDSourceRect.left = x;
         gDDSourceRect.right = x + width - 1;
         gDDSourceRect.top = ySrc;
-        gDDSourceRect.bottom = height + ySrc - 1;
+        gDDSourceRect.bottom = ySrc + height - 1;
 
         pt.y = 0;
         pt.x = pt.y;
