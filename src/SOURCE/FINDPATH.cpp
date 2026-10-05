@@ -121,7 +121,7 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
     searchNode node;
     i32 distance;
     i16 attackMask;
-    i32 moveMask;
+    i16 moveMask;
     i32 bestDistance;
     i32 opposite;
 
