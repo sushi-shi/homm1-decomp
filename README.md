@@ -7,12 +7,12 @@ See [port changes and evidence](docs/buka-2003.md). Supply your own executable
 and game assets.
 
 <!-- match-score:start -->
-**Matching: 99.91% exact (1,056/1,057 annotated functions); 100.00% fuzzy.**
+**Matching: 100.00% exact (1,057/1,057 annotated functions); 100.00% fuzzy.**
 
 | Module   | Units |    Functions exact |  Fuzzy |
 | :------- | ----: | -----------------: | -----: |
 | `SOURCE` |    36 | 760 / 760 (100.0%) | 100.0% |
-| `BASE`   |    32 |  279 / 280 (99.6%) | 100.0% |
+| `BASE`   |    32 | 280 / 280 (100.0%) | 100.0% |
 | `lzhuf`  |     2 |   17 / 17 (100.0%) | 100.0% |
 
 1,057 functions compared with strict objdiff; 0 missing comparisons, counted as zero. Full build verification remains incomplete.
