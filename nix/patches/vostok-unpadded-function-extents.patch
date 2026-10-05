@@ -1,0 +1,38 @@
+diff --git a/src/object_files.rs b/src/object_files.rs
+index baef922..b2d85da 100644
+--- a/src/object_files.rs
++++ b/src/object_files.rs
+@@ -1201,7 +1201,14 @@ impl ObjectFile {
+         body: &[u8],
+     ) -> ObjectOffset {
+         let text_section_id = self.text_section();
+-        let fun_offset_in_coff_text = self.append_section_data(text_section_id, body, 0x90);
++        // A delinked function carries exactly its census extent: unoptimized
++        // MSVC packs functions back to back, so a body ending at an unaligned
++        // address (for example after a switch byte-index table) must not gain
++        // trailing NOP fill that the retail image does not contain.
++        let fun_offset_in_coff_text = ObjectOffset {
++            offset: self.object.append_section_data(text_section_id, body, 1),
++            section_id: text_section_id,
++        };
+ 
+         let mut names = vec![name];
+         for alias in aliases {
+@@ -1909,6 +1916,17 @@ mod tests {
+         assert!(object.symbols.contains_key(b"external".as_slice()));
+     }
+ 
++    #[test]
++    fn functions_are_packed_at_their_census_extents() {
++        let mut output = ObjectFile::empty(false);
++        let first = output.add_function(b"first".as_slice().into(), &[], &[0xc3, 0x00, 0x01]);
++        let second = output.add_function(b"second".as_slice().into(), &[], &[0x55, 0xc3]);
++        assert_eq!(first.offset, 0);
++        assert_eq!(second.offset, 3);
++        let text = output.text_section_id.unwrap();
++        assert_eq!(output.object.section(text).data(), &[0xc3, 0x00, 0x01, 0x55, 0xc3]);
++    }
++
+     #[test]
+     fn folded_function_emits_all_real_aliases_at_one_offset() {
+         let mut output = ObjectFile::empty(false);
