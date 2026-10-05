@@ -101,4 +101,9 @@ public:
 };
 #pragma pack(pop)
 
+// The cell holds an object that blocks pathing: a drawn frame that is not
+// shadow-only (Buka 2.1 mapcell.h; HoMM1 has no dummy object tileset).
+#define CELL_HAS_NON_SHADOW_OBJECT(cell)                                                           \
+    ((cell)->m_objectIndex != MAP_CELL_NO_FRAME && !((cell)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
+
 #endif // HOMM1_SOURCE_MAPCELL_H

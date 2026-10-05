@@ -765,12 +765,10 @@ i16 advManager::ValidMove(i16 direction) {
     hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
     north = (1 << direction) & CURSOR_NORTH_DIRECTION_MASK;
     downMask = (1 << direction) & CURSOR_SOUTH_DIRECTION_MASK;
-    if (north && hereCellItem->m_objectIndex != MAP_CELL_NO_FRAME
-        && !(hereCellItem->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
+    if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
         && hereCellItem->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
-    if (downMask && destCell->m_objectIndex != MAP_CELL_NO_FRAME
-        && !(destCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
+    if (downMask && CELL_HAS_NON_SHADOW_OBJECT(destCell)
         && destCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;
     return 1;

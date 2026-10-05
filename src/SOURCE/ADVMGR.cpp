@@ -6012,8 +6012,10 @@ void advManager::TownGate(void) {
         return;
     }
     for (i = 0; i < gpCurPlayer->m_townCount; i++) {
-        dist = abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_x - targetHero->m_x)
-               + abs(gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_y - targetHero->m_y);
+        dist = MANHATTAN_LENGTH(
+            gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_x - targetHero->m_x,
+            gpGame->m_castleRecs[gpCurPlayer->m_townIds[i]].m_y - targetHero->m_y
+        );
         if (dist < nearestDistance) {
             nearestDistance = dist;
             selectedTown = i;

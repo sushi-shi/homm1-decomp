@@ -2005,8 +2005,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                 case THIEVES_CATEGORY_ARMY_STRENGTH:
                     strengthValue = 0;
                     for (index = 0; index < gpGame->m_players[player].m_heroCount; index++) {
-                        playerHeroData =
-                            gpGame->GetHero(gpGame->m_players[player].m_heroIds[index]);
+                        playerHeroData = gpGame->GetPlayerHero(player, index);
                         strengthValue += gpPhilAI->FightValueOfStack(
                             &playerHeroData->m_army,
                             playerHeroData,
@@ -2016,7 +2015,7 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                         );
                     }
                     for (index = 0; index < gpGame->m_players[player].m_townCount; index++) {
-                        townItem = gpGame->GetTown(gpGame->m_players[player].m_townIds[index]);
+                        townItem = gpGame->GetPlayerTown(player, index);
                         if (townItem->HasGarrison())
                             strengthValue +=
                                 gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0, 0, 0);

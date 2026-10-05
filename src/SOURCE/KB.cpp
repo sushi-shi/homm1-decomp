@@ -1798,8 +1798,7 @@ void CheckEndGame(i32 forced) {
                 for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
                     if (!gpGame->m_playerDead[playerIndex]) {
                         for (index = 0; index < gpGame->m_players[playerIndex].m_heroCount; index++) {
-                            bearer =
-                                gpGame->GetHero(gpGame->m_players[playerIndex].m_heroIds[index]);
+                            bearer = gpGame->GetPlayerHero(playerIndex, index);
                             if (bearer->HasArtifact(ARTIFACT_ULTIMATE_BOOK)
                                 || bearer->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
                                 || bearer->HasArtifact(ARTIFACT_ULTIMATE_CLOAK)

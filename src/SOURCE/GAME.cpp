@@ -1330,8 +1330,10 @@ void game::NewMap(char* mapName) {
            || m_map[i][j].m_overlayIndex != MAP_CELL_NO_FRAME
            || m_map[i][j].m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
            || (giNumHumanPlayers == 1
-               && ultimateSpread >= abs(i - m_heroRecs[m_players[0].m_heroIds[0]].m_x)
-                                        + abs(j - m_heroRecs[m_players[0].m_heroIds[0]].m_y))) {
+               && ultimateSpread >= MANHATTAN_LENGTH(
+                      i - m_heroRecs[m_players[0].m_heroIds[0]].m_x,
+                      j - m_heroRecs[m_players[0].m_heroIds[0]].m_y
+                  ))) {
         ultimateSpread = Random(1, 20) + Random(1, 20) + Random(1, 30);
         i = Random(9, 62);
         j = Random(9, 62);
