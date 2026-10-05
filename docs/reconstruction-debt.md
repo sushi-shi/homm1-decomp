@@ -39,18 +39,18 @@ not yet modelled:
   fragments. It is now a local union of the three typed pointers (combat
   record, hero fragment, wire bytes), so the frame slot is unchanged.
   `ReceiveHeroTownData` and `DoCombat` read received records through
-  `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO`, the Buka 2.1 donor's view
-  macros. The remaining nine casts convert the `char*` that `GetRemoteData`,
-  `CheckHandleNet` and the transmit functions use for queue records; the
-  donor-derived symbols (`?GetRemoteData@@YIPADC@Z`) fix that type, and the
-  donor casts at the same call sites. A union cannot hold the combat payload
+  `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO`, the view macros in
+  `EVENTS.h`. The remaining nine casts convert the `char*` that
+  `GetRemoteData`, `CheckHandleNet` and the transmit functions use for queue
+  records. That type is fixed by the claimed names
+  (`?GetRemoteData@@YIPADC@Z`). A union cannot hold the combat payload
   because `armyGroup`/`town` members have constructors. `PacketSend` keeps its
   `char[]` data identity. `TransmitSaveGame` builds its packets in a named
   `RemotePayload`, the `RemoteMessage` payload union;
 - resource reads and pixel buffers (resolved): `resourceManager::ReadBlock`
-  takes `void*` and `Read13` takes `char*`, both the HoMM2 donor's types. The
+  takes `void*` (it only forwards to `_read`) and `Read13` takes `char*`. The
   widget and font name buffers are `char`. `bitmap::m_pixels` and
-  `tileset::m_data` are `u8*`, like the donor's bitmap (palette indices).
+  `tileset::m_data` are `u8*`, because they hold palette indices.
   This removed 15 casts, including the fizzle loop's byte views, and the code is
   unchanged;
 - remaining byte, word and integer views. Each one is a different typed read of
@@ -76,29 +76,27 @@ against new ones.
 **Unknown members.** `m_unknownNN` and `m_field_0xNNN` placeholders keep a
 class layout without a recovered name or type.
 
-Names come from a code user or the Buka 2.1 donor:
+Names come from a code user:
 
 - mouseManager's `m_savedLeft`/`m_savedTop` are the cursor area ComboDraw
-  marks; Buka never updates them after the constructor.
+  marks; nothing updates them after the constructor.
 - playerData's `m_unusedSaveData` is the span Write zeroes and Read skips.
 
-Spans that no code reads or writes take the donor's spelling for such
-members: `m_unused<offset>`, or `m_padding<offset>` in recruitUnit. Nineteen
+Spans that no code reads or writes are spelled `m_unused<offset>`, or
+`m_padding<offset>` in recruitUnit. Nineteen
 placeholders remain:
 
 - inputManager (seven): written by its constructor, the event queue, the two
   option setters and advManager's context changes; nothing reads them.
 - army (two), combatManager (four), heroWindowManager (two), town (one) and
   mouseManager (one): set only by constructors or Init.
-- playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read. Like
-  HoMM2's `m_barrierTents`, `m_unknown99[1]` is written twice.
+- playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read;
+  `m_unknown99[1]` is written twice.
 
-The HoMM2 donor leaves the corresponding fields unnamed as well
-(`field_0x742`, `m_unknownF373`, ...). Inventing a meaning for them is not
-evidence, so they stay placeholders until a reader is found.
+Inventing a meaning for them is not evidence, so they stay placeholders until
+a reader is found.
 
-**`goto`.** The HoMM2 Buka donor contains several hundred, so the original code
-used them. A `goto` stays when retail's block layout requires it; it is
+**`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
 
 The 204 C++ statements (the other two `rg` hits are comments in
@@ -137,10 +135,10 @@ bodies exact:
 
 - Win32 handles. The menu, instance, window and DC handles were declared
   `void*`, so every API call cast them back. All units now build with
-  `/DNO_STRICT` (`config/units.toml`), which makes VC6's handles `void*` as in
-  the HoMM2 Buka lineage. The owners are typed `HMENU`, `HINSTANCE`, `HWND`,
-  `HDC` and `HANDLE`, the HoMM2 donor's spellings, and the 61 casts are gone.
-  Mangled names keep the `PAX` handles the claims already used. The retail
+  `/DNO_STRICT` (`config/units.toml`), which makes VC6's handles `void*`. The
+  owners are typed `HMENU`, `HINSTANCE`, `HWND`, `HDC` and `HANDLE`, and the
+  61 casts are gone. Mangled names keep the `PAX` handles the claims already
+  used. The retail
   data identities that had recorded the STRICT spelling (`hwndApp`, `hpalApp`,
   `hdcImage`, the mouse cursor and bitmap tables) were renamed to match.
 - Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
@@ -150,7 +148,7 @@ bodies exact:
 
 The remaining casts are:
 
-- Float-to-integer conversions. The HoMM2 donor spells these the same way.
+- Float-to-integer conversions, kept explicit at each `__ftol`.
 - `void*` results of `malloc`, `GlobalAlloc` and the resource cache. C++
   requires these casts.
 - Narrowing stores and `i8` ternary arms whose byte width retail shows.
@@ -195,15 +193,14 @@ their own types:
 | --- | --- |
 | `tag_message`, three anonymous words | Each message type reads the same word under its own name and type (command or key code or x, id or y, value or text). Retail reads every word directly off the message, so a named payload level would change the operand order. |
 | `icon` resource data | Raw bytes, the `IconEntry` directory and Buka's font word reads. |
-| `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. The HoMM2 donor has the same union. |
-| `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. The HoMM2 donor has the same union. |
+| `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. |
+| `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. |
 | `CombatRemotePacket` payload | Combat actions or a chat line. |
 | `RemotePayload` | The remote message payload layouts. |
 | `advManager::SendHeroTownData` buffer (`EVENTS.cpp`) | The single allocation is filled as the combat record, then as each hero fragment. |
 
 `nb_sess` is the only `va_start` user. It is a standard variadic function:
 the `REMOTE.cpp` callers pass between one and three trailing arguments
-depending on the operation, and the HoMM2 donor declares the same variadic
-`nb_sess`. Its leading unused `i32` keeps the `com_sess(i32, i32, ...)`
+depending on the operation. Its leading unused `i32` keeps the `com_sess(i32, i32, ...)`
 calling shape, because retail pushes a zero in front of the operation. No
 function walks its arguments by address.

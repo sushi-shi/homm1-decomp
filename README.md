@@ -31,7 +31,7 @@ commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
 - [ ] Review game-type `reinterpret_cast`: **36 sites** (12 network packet
-  views at the `char*` record APIs and donor view macros, 24 other
+  views at the `char*` record APIs and the `EVENTS.h` view macros, 24 other
   byte/word/integer views). The icon frame directory, the combat and save
   transfer buffers, resource reads and pixel buffers are typed. 69 further
   casts are Win32 API boundaries.
@@ -47,8 +47,8 @@ review inputs, not defect totals. Preserve banked matches.
   casts and unexplained casts.
 - [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
   remain; each is only ever cleared, initialized or saved, so no code user
-  names it. The mouse's saved area and the player's unused save span carry
-  Buka names, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
+  names it. The mouse's saved area and the player's unused save span are
+  named from their code users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
 - [x] Review gotos: **204 statements**, all kept because retail's block layout
   requires them. Replacing them with `break`, `else if` or nothing breaks an
   exact match, because VC6 `/Od` emits a `jmp` for every `goto`
@@ -60,8 +60,8 @@ review inputs, not defect totals. Preserve banked matches.
   type are gone, including the Win32 handles now built `NO_STRICT`; the
   remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
 - [x] Review unions: **9 definitions**, each one shared storage with typed
-  readers; varargs: **1 function** (`nb_sess`), standard `va_arg` as in the
-  donor, with no argument-address walking.
+  readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
+  argument-address walking.
 - [ ] Common-code review (helpers, accessors, macros): the 15 combat and AI
   units are read (**233 functions**, [ledger](docs/common-code-combat.tsv));
   **11 families** retained at **54 sites**, 4 rejected by measurement, 25 kept

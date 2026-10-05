@@ -113,7 +113,7 @@ public:
     i8 m_heroLocatorPage;
     i8 m_heroIds[PLAYER_HERO_CAPACITY];
     i8 m_availableHeroIds[PLAYER_TAVERN_HERO_COUNT];
-    // Buka m_unusedSaveData: Write stores zeros and Read skips this span.
+    // Write stores zeros and Read skips this span.
     char m_unusedSaveData[0x32];
     // Saved one byte at a time between the hero and town blocks.
     i8 m_ultimateArtifactHintChance;

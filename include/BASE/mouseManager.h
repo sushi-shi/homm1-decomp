@@ -38,9 +38,8 @@ public:
     i16 m_hotspotY;
     i16 m_mouseX;
     i16 m_mouseY;
-    // The cursor's saved screen area (Buka m_savedLeft/m_savedTop): ComboDraw
-    // marks the map cells under it. Buka's mouse code never updates them
-    // after the constructor clears them.
+    // The cursor's saved screen area: ComboDraw marks the map cells under it.
+    // The mouse code never updates them after the constructor clears them.
     i32 m_savedLeft;
     i32 m_savedTop;
     i8 m_unknown51;

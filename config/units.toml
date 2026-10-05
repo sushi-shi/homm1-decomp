@@ -12,9 +12,9 @@ SOURCE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Game'
 # Every profile defines NO_STRICT. VC6's WINDEF.H defines STRICT unless
 # NO_STRICT is set, and DECLARE_HANDLE depends on it: without STRICT a handle is
 # `typedef HANDLE name` (void*), with it a distinct `struct name##__ *`. This
-# changes mangling, not code; both are 32-bit pointers. The HoMM2 PoL 2.0
-# CodeView records the Buka lineage's choice (?hmnuDflt@@3PAXA,
-# ?KBChangeMenu@@YIXPAX@Z), and HoMM1's claimed names use the same PAX handles.
+# changes mangling, not code; both are 32-bit pointers. The claimed names use
+# void* handles (?hmnuDflt@@3PAXA, ?KBChangeMenu@@YAXPAX@Z), and NO_STRICT
+# keeps that spelling for handles declared with their Win32 types.
 #
 # Unoptimized VC6 SP5 baseline. /Ob1 is directly measured in the Audiere
 # routines; the remaining units still require individual retail comparison.
