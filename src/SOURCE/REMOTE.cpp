@@ -751,7 +751,7 @@ void write_byte(i32 value) {
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00452be9, 0x276)
 void Connect(void) {
-    i32 result;
+    i32 code;
     char msg[20];
     u32 randSeed = KBTickCount();
     randSeed %= 1000000;

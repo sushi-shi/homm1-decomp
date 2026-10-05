@@ -2122,7 +2122,7 @@ i16 GetMonType(i32 score, i32 highScoreType) {
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x00440d39, 0x32d)
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
-    HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
     i32 theDest;
     i32 nextFile;
@@ -2140,12 +2140,12 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
         missingFileValue = 1;
     if (missingFileValue) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            memset(&scores[entry], 0, sizeof(HighScoreEntry));
-            scores[entry].score = HIGH_SCORE_EMPTY;
+            memset(&curScores[entry], 0, sizeof(HighScoreEntry));
+            curScores[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(nextFile, &scores[entry], sizeof(scores));
+            read(nextFile, &curScores[entry], sizeof(curScores));
         close(nextFile);
     }
 
@@ -2154,9 +2154,9 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     gHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-        if ((score >= scores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
-            || (score <= scores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
-            || scores[entry].score == HIGH_SCORE_EMPTY) {
+        if ((score >= curScores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= curScores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
+            || curScores[entry].score == HIGH_SCORE_EMPTY) {
             gHighScoreRank = entry;
             break;
         }
@@ -2164,16 +2164,16 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 
     if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
         for (theDest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; theDest >= entry; theDest--)
-            scores[theDest + 1] = scores[theDest];
+            curScores[theDest + 1] = curScores[theDest];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
-        strcpy(scores[entry].playerName, enteredPlayerName);
-        strcpy(scores[entry].scenarioName, scenarioName);
-        scores[entry].score = score;
+        strcpy(curScores[entry].playerName, enteredPlayerName);
+        strcpy(curScores[entry].scenarioName, scenarioName);
+        curScores[entry].score = score;
         nextFile = open(savedName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (nextFile == -1)
             FileError(savedName);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            write(nextFile, &scores[entry], sizeof(HighScoreEntry));
+            write(nextFile, &curScores[entry], sizeof(HighScoreEntry));
         close(nextFile);
     }
     return 0;
