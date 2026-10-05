@@ -98,20 +98,6 @@ void button::Read(void) {
     m_kind = gpResourceManager->ReadWord();
 }
 
-VA(0x0047748b, 0xba)
-i16 button::Deselect(tag_message& message) {
-    if (!(m_flags & WIDGET_FLAG_SELECTED))
-        return MESSAGE_DISPATCH_CONTINUE;
-    m_flags &= ~WIDGET_FLAG_SELECTED;
-    Draw();
-    gpWindowManager
-        ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
-    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
-    message.modifiers = gLeftRightSave;
-    gLeftRightSave = MESSAGE_MODIFIER_NONE;
-    return MESSAGE_DISPATCH_FORWARD;
-}
-
 VA(0x00476f8a, 0x415)
 i16 button::Main(tag_message& message) {
     i16 x;
@@ -195,6 +181,20 @@ i16 button::Select(tag_message& message) {
         message.command = WIDGET_NOTIFY_SELECT;
     glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
     gLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
+    return MESSAGE_DISPATCH_FORWARD;
+}
+
+VA(0x0047748b, 0xba)
+i16 button::Deselect(tag_message& message) {
+    if (!(m_flags & WIDGET_FLAG_SELECTED))
+        return MESSAGE_DISPATCH_CONTINUE;
+    m_flags &= ~WIDGET_FLAG_SELECTED;
+    Draw();
+    gpWindowManager
+        ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
+    SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
+    message.modifiers = gLeftRightSave;
+    gLeftRightSave = MESSAGE_MODIFIER_NONE;
     return MESSAGE_DISPATCH_FORWARD;
 }
 
