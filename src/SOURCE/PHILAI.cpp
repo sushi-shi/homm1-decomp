@@ -2665,7 +2665,7 @@ i32 philAI::QuickCombat(
         }
         if (defenderHero != NULL)
             attackerHero->ApplyBattleWinTemps();
-        defenderDamage = diff * fracLost;
+        defenderDamage = fracLost * diff;
         attackerDamage = 1.0f;
         if (attackerDamage >= 0.99 && defenderHero != NULL)
             gpAdvManager->GiveExperience(defenderHero, defenderExp, 1);
