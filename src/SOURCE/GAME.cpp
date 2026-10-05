@@ -568,11 +568,11 @@ VA(0x0042cc73, 0x87f)
 i16 game::LoadGame(char* filename, i32 origData, i32) {
     i32 junk2;
     i32 numHumans;
-    i32 i;
-    i32 handle;
+    i32 ix;
+    i32 oldHandle;
     char pathName[452];
-    i8 humans[GAME_PLAYER_COUNT];
-    i32 junk;
+    i8 theHumans[GAME_PLAYER_COUNT];
+    i32 nextJunk;
     char buffer[0x2c];
 
     numHumans = 0;
@@ -584,94 +584,94 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
         sprintf(pathName, "%s%s", gDataPath, filename);
     else
         sprintf(pathName, "%s%s", gGamePath, filename);
-    handle = open(pathName, O_BINARY);
-    if (handle == -1)
+    oldHandle = open(pathName, O_BINARY);
+    if (oldHandle == -1)
         FileError(pathName);
     ClearMapExtra();
-    read(handle, &gbIAmGreatest, 1);
-    read(handle, this, 2);
-    read(handle, &giMonthType, 1);
-    read(handle, &giMonthTypeExtra, 1);
-    read(handle, &giWeekType, 1);
-    read(handle, &giWeekTypeExtra, 1);
-    read(handle, &m_campaignType, 4);
-    read(handle, &m_campaignScenario, 4);
-    read(handle, &m_campaignDay, 4);
-    read(handle, &m_campaignScenariosWon, 4);
-    read(handle, buffer, 0x2c);
-    read(handle, m_mapDescription, sizeof(m_mapDescription));
-    read(handle, &m_mapSize, 1);
-    read(handle, &m_mapDifficulty, 1);
-    read(handle, m_mapName, sizeof(m_mapName));
-    read(handle, m_saveName, 0x11);
+    read(oldHandle, &gbIAmGreatest, 1);
+    read(oldHandle, this, 2);
+    read(oldHandle, &giMonthType, 1);
+    read(oldHandle, &giMonthTypeExtra, 1);
+    read(oldHandle, &giWeekType, 1);
+    read(oldHandle, &giWeekTypeExtra, 1);
+    read(oldHandle, &m_campaignType, 4);
+    read(oldHandle, &m_campaignScenario, 4);
+    read(oldHandle, &m_campaignDay, 4);
+    read(oldHandle, &m_campaignScenariosWon, 4);
+    read(oldHandle, buffer, 0x2c);
+    read(oldHandle, m_mapDescription, sizeof(m_mapDescription));
+    read(oldHandle, &m_mapSize, 1);
+    read(oldHandle, &m_mapDifficulty, 1);
+    read(oldHandle, m_mapName, sizeof(m_mapName));
+    read(oldHandle, m_saveName, 0x11);
     sprintf(m_saveName, filename);
-    read(handle, &m_difficulty, 1);
-    read(handle, &m_playerCount, 1);
-    read(handle, &gSaveCurPlayer, 1);
+    read(oldHandle, &m_difficulty, 1);
+    read(oldHandle, &m_playerCount, 1);
+    read(oldHandle, &gSaveCurPlayer, 1);
     giCurPlayer = gSaveCurPlayer;
-    read(handle, &m_deadPlayerCount, 1);
-    read(handle, m_playerDead, sizeof(m_playerDead));
-    read(handle, humans, GAME_PLAYER_COUNT);
-    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if ((humans[i] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
+    read(oldHandle, &m_deadPlayerCount, 1);
+    read(oldHandle, m_playerDead, sizeof(m_playerDead));
+    read(oldHandle, theHumans, GAME_PLAYER_COUNT);
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
+        if ((theHumans[ix] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
             numHumans++;
-            gbHumanPlayer[i] = 1;
+            gbHumanPlayer[ix] = 1;
         } else {
-            gbHumanPlayer[i] = 0;
+            gbHumanPlayer[ix] = 0;
         }
     }
-    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if (gbHumanPlayer[i]) {
-            if (!gRemoteOn || i == giThisGamePos)
-                gbThisNetHumanPlayer[i] = 1;
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
+        if (gbHumanPlayer[ix]) {
+            if (!gRemoteOn || ix == giThisGamePos)
+                gbThisNetHumanPlayer[ix] = 1;
             else
-                gbThisNetHumanPlayer[i] = 0;
+                gbThisNetHumanPlayer[ix] = 0;
         } else {
-            gbThisNetHumanPlayer[i] = 0;
+            gbThisNetHumanPlayer[ix] = 0;
         }
     }
-    read(handle, &m_day, 2);
-    read(handle, &m_week, 2);
-    read(handle, &m_month, 2);
+    read(oldHandle, &m_day, 2);
+    read(oldHandle, &m_week, 2);
+    read(oldHandle, &m_month, 2);
     giCurTurn =
         m_day + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + (m_month - 1) * CALENDAR_DAYS_PER_MONTH;
-    for (i = 0; i < GAME_PLAYER_COUNT; i++)
-        m_players[i].Read(handle);
-    ReadWorldMap(handle);
-    read(handle, &m_obeliskCount, 1);
-    read(handle, m_heroRecs, sizeof(m_heroRecs));
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++)
+        m_players[ix].Read(oldHandle);
+    ReadWorldMap(oldHandle);
+    read(oldHandle, &m_obeliskCount, 1);
+    read(oldHandle, m_heroRecs, sizeof(m_heroRecs));
     if (origData) {
-        for (i = 0; i < GAME_HERO_COUNT; i++) {
-            strcpy(m_heroRecs[i].m_name, gHeroNames[i][0]);
-            strcpy(m_heroRecs[i].m_shortName, gHeroNames[i][1]);
+        for (ix = 0; ix < GAME_HERO_COUNT; ix++) {
+            strcpy(m_heroRecs[ix].m_name, gHeroNames[ix][0]);
+            strcpy(m_heroRecs[ix].m_shortName, gHeroNames[ix][1]);
         }
     }
-    read(handle, m_availableHeroes, sizeof(m_availableHeroes));
-    read(handle, m_castleRecs, sizeof(m_castleRecs));
-    read(handle, m_townOwners, sizeof(m_townOwners));
-    read(handle, m_townBuiltToday, sizeof(m_townBuiltToday));
-    read(handle, m_mines, sizeof(m_mines));
-    read(handle, m_mineOwners, sizeof(m_mineOwners));
-    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
-    read(handle, m_boats, sizeof(m_boats));
-    read(handle, m_boatSlots, sizeof(m_boatSlots));
-    read(handle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    read(handle, &m_ultimateArtifactX, 1);
-    read(handle, &m_ultimateArtifactY, 1);
-    read(handle, &m_ultimateArtifactId, 1);
+    read(oldHandle, m_availableHeroes, sizeof(m_availableHeroes));
+    read(oldHandle, m_castleRecs, sizeof(m_castleRecs));
+    read(oldHandle, m_townOwners, sizeof(m_townOwners));
+    read(oldHandle, m_townBuiltToday, sizeof(m_townBuiltToday));
+    read(oldHandle, m_mines, sizeof(m_mines));
+    read(oldHandle, m_mineOwners, sizeof(m_mineOwners));
+    read(oldHandle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(oldHandle, m_boats, sizeof(m_boats));
+    read(oldHandle, m_boatSlots, sizeof(m_boatSlots));
+    read(oldHandle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    read(oldHandle, &m_ultimateArtifactX, 1);
+    read(oldHandle, &m_ultimateArtifactY, 1);
+    read(oldHandle, &m_ultimateArtifactId, 1);
     if (origData) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
         memset(mapVisited, 0, sizeof(mapVisited));
         strcpy(gpGame->m_saveName, localization::Tr("save.name.new_game"));
     } else {
-        read(handle, m_mapSounds, sizeof(m_mapSounds));
-        read(handle, m_mapExtra, sizeof(m_mapExtra));
-        read(handle, mapVisited, sizeof(mapVisited));
+        read(oldHandle, m_mapSounds, sizeof(m_mapSounds));
+        read(oldHandle, m_mapExtra, sizeof(m_mapExtra));
+        read(oldHandle, mapVisited, sizeof(mapVisited));
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gpGame->m_saveName, filename);
     }
-    close(handle);
+    close(oldHandle);
     gpAdvManager->m_heroContextLocked = 0;
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     giCurPlayerBit = 1 << giCurPlayer;
