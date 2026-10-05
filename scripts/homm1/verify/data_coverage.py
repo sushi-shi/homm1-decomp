@@ -52,13 +52,13 @@ from __future__ import annotations
 import bisect
 from collections import Counter, defaultdict
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.core.tsv import read as read_tsv
 from homm1.core.tsv import write as write_tsv
 
-MANIFEST = BUILD / "gen/delink_data_manifest.tsv"
-SECTIONS = BUILD / "gen/delink_data_section_manifest.tsv"
-GAPS_TSV = BUILD / "gen/data_coverage_gaps.tsv"
+MANIFEST = IMAGE_BUILD / "gen/delink_data_manifest.tsv"
+SECTIONS = IMAGE_BUILD / "gen/delink_data_section_manifest.tsv"
+GAPS_TSV = IMAGE_BUILD / "gen/data_coverage_gaps.tsv"
 
 #: cl aligns a standalone global to its own element size, capped at 8 for the
 #: ordinary sections (16 needs `__declspec(align)`, which MSVC 5 lacks).

@@ -17,11 +17,11 @@ from __future__ import annotations
 import json
 from functools import lru_cache
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 
 #: current first, the banked reference second (homm1.verify.scores.REPORTS)
-REPORTS = (BUILD / "objdiff/compare-new/report.json",
-           BUILD / "objdiff/report.json")
+REPORTS = (IMAGE_BUILD / "objdiff/compare-new/report.json",
+           IMAGE_BUILD / "objdiff/report.json")
 REPORT = REPORTS[0]
 
 

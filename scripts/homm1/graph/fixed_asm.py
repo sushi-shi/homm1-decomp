@@ -25,10 +25,12 @@ class FixedAsmUnit:
 
 
 def _read_units(path: Path | None = None) -> dict[str, FixedAsmUnit]:
-    from homm1.core.paths import RETAIL
+    # Assembly claims spell game addresses; another image places them
+    # through its placements (homm1.retail_labels.fragments).
+    from homm1.core.paths import RETAIL_ROOT
     from homm1.core.tsv import read
     result = {}
-    for row in read(path or RETAIL / "asm_claims.tsv")[2]:
+    for row in read(path or RETAIL_ROOT / "asm_claims.tsv")[2]:
         name, source = row["unit"], row["source"]
         previous = result.get(name, FixedAsmUnit(source, ()))
         if previous.source != source:
@@ -66,4 +68,5 @@ def fragment_rows(name: str, configured_source: str) -> list[dict[str, str]]:
         "kind": claim.kind,
         "channel": "src",
         "type": "",
+        "space": "game",
     } for claim in record.claims]

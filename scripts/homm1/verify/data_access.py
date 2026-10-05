@@ -1005,7 +1005,7 @@ def main(argv=None) -> int:
     import argparse
     from pathlib import Path
 
-    from homm1.core.paths import BUILD
+    from homm1.core.paths import BUILD, IMAGE_BUILD
     ap = argparse.ArgumentParser(prog="homm1 verify data-access",
                                  description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -1024,7 +1024,7 @@ def main(argv=None) -> int:
                     help="the derived worklist")
     ap.add_argument("--sql", help="raw SQL over the map")
     ap.add_argument("--touched", nargs="?", type=Path,
-                    const=BUILD / "gen/data_touched_ranges.tsv",
+                    const=IMAGE_BUILD / "gen/data_touched_ranges.tsv",
                     help="write the byte ranges retail touches (the coverage join)")
     ap.add_argument("--limit", type=int, default=40,
                     help="cap the printed rows")

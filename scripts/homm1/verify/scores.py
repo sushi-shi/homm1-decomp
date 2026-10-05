@@ -18,10 +18,10 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 
-REPORTS = (BUILD / "objdiff/compare-new/report.json",
-           BUILD / "objdiff/report.json")
+REPORTS = (IMAGE_BUILD / "objdiff/compare-new/report.json",
+           IMAGE_BUILD / "objdiff/report.json")
 
 EH_BAND_PREFIXES = ("__ehreg$", "__ehunwind$")
 EXACT = 99.995

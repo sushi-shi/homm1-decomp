@@ -12,10 +12,10 @@ import struct
 from collections import Counter
 
 from homm1.compare.canonicalize import CoffObject
-from homm1.core.paths import BUILD, RETAIL
+from homm1.core.paths import BUILD, IMAGE_BUILD, RETAIL
 from homm1.core.tsv import read as read_tsv
 
-ROOT = BUILD / "objdiff/baseline"
+ROOT = IMAGE_BUILD / "objdiff/baseline"
 
 
 def evidence(identities=None, proofs=None):
@@ -83,7 +83,7 @@ def audit_references(census, model, target_dir, pe, image_hash):
         known_referents.setdefault(rva, set()).add(name)
     # These literal rows have full candidate/retail payload checks in the
     # existing manifest generator. Compiler $SG ordinals are not stable.
-    _, _, literals = read_tsv(BUILD / "gen/delink_data_manifest.tsv")
+    _, _, literals = read_tsv(IMAGE_BUILD / "gen/delink_data_manifest.tsv")
     for row in literals:
         if row["provenance"] == "retail-reloc-sg-literal":
             known_referents.setdefault(int(row["rva"], 16), set()).add(row["name"])

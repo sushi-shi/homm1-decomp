@@ -18,9 +18,11 @@ All Python commands use `scripts/homm1` and the shared usage logger.
 | `workflow` | `workflow` | Repository hooks and safe staged formatting |
 | `clean` | `clean` | Clean source tree, VC4 verification and snapshot branch ([clean source](clean-source.md)) |
 | `audit usage`, `audit dna-bands` | `audit` | Usage-logging coverage, DNA census |
+| `audit census`, `audit placements` | `audit` | An image's structural census; game identities placed in another image ([editor](editor.md)) |
 | `verify lzhuf-oracle` | `verify.lzhuf_oracle` | Runs the retail LZHUF codec under Wine against the Rust port in [`tools/`](../tools/README.md) |
 
-Run each command's help for its current options. `homm1 sema -` accepts batch
+`homm1 --image editor <command>` runs any command against `EDITOR.EXE`
+([editor](editor.md)). Run each command's help for its current options. `homm1 sema -` accepts batch
 queries. [The build guide](build-system.md) defines artifact paths and modes;
 [tooling](tooling.md#usage-history) defines invocation logging. No VC5
 inline-budget command is advertised as supported when its implementation is

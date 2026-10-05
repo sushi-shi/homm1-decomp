@@ -79,7 +79,8 @@ def engine_universe(model=None) -> dict:
     # rows.  They deliberately stay out of functions.tsv because pdb_synth
     # already carves EH and extra starts perturb Vostok's TU partition.  The
     # committed DNA report is the byte-exact reporting partition.
-    evidence = REPO / "config/retail/dna_bands.tsv"
+    from homm1.core.paths import RETAIL
+    evidence = RETAIL / "dna_bands.tsv"
     evidence_counts: dict[str, int] = {}
     evidence_code: dict[str, int] = {}
     structural = []

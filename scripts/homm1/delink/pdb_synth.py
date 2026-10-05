@@ -31,13 +31,13 @@ import hashlib
 import struct
 from pathlib import Path
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink import coffx, eh_band, implib, static_dtors
 from homm1.delink.image import retail, sections_of
 from homm1.model import Model
 
-PDB_DIR = BUILD / "pdb"
-BASE_DIR = BUILD / "objdiff/base"
+PDB_DIR = IMAGE_BUILD / "pdb"
+BASE_DIR = IMAGE_BUILD / "objdiff/base"
 
 #: Functions with no claimed unit fall into address buckets of 2**BUCKET_SHIFT
 #: bytes (the granularity the matched functions were delinked under).
@@ -351,6 +351,20 @@ def game_site_test(model: Model):
     lib = sorted((b.rva, b.size) for b in model.functions
                  if b.channel == "functions_static_libs" and b.size)
     lib_starts = [x[0] for x in lib]
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    if image_key() != DEFAULT_IMAGE:
+        # Another image's reconstruction is still being enrolled: identities
+        # are required for every reference a source-claimed body makes (those
+        # are scored strictly); a body no source claims yet is not compared,
+        # and its targets stay counted in the data debt as DAT_ fences.
+        claimed = sorted((b.rva, b.size) for b in model.functions
+                         if b.channel in ("src", "src_compgen", "src_dyninit") and b.size)
+        claimed_starts = [x[0] for x in claimed]
+
+        def is_claimed(site: int) -> bool:
+            i = bisect.bisect_right(claimed_starts, site) - 1
+            return i >= 0 and site < claimed[i][0] + claimed[i][1]
+        return is_claimed
 
     def is_game(site: int) -> bool:
         band = band_of(site)
@@ -417,6 +431,19 @@ def drop_interior_placeholders(rdata_syms, data_syms, model) -> int:
     Mutates; returns count."""
     claims = sorted((b.rva, b.size) for b in model.data
                     if b.channel and b.name and b.size)
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    if image_key() != DEFAULT_IMAGE:
+        # Another image's reviewed data names were placed with the extent of
+        # the game datum they name (audit placements); they contain their
+        # interior references until a source claim of that image owns them.
+        from homm1.core.paths import RETAIL
+        from homm1.core.tsv import read as read_tsv
+        have = {rva for rva, _size in claims}
+        path = RETAIL / "data_symbols.tsv"
+        if path.is_file():
+            claims = sorted(claims + [(int(r["rva"], 16), int(r["size"], 0))
+                                      for r in read_tsv(path)[2]
+                                      if int(r["rva"], 16) not in have and int(r["size"], 0)])
     starts = [c[0] for c in claims]
 
     def interior(rva: int) -> bool:
@@ -580,7 +607,7 @@ def format_unprovisioned(rows) -> list[str]:
 
 
 #: The derived unprovisioned worklist, written every delink in both modes.
-DATA_DEBT = BUILD / "gen/data_debt.tsv"
+DATA_DEBT = IMAGE_BUILD / "gen/data_debt.tsv"
 
 
 def write_data_debt(rows, path: Path = DATA_DEBT) -> bool:
@@ -946,9 +973,17 @@ def synth(model: Model, out_yaml: Path | None = None, out_pdb: Path | None = Non
     unprov = unprovisioned_rows(rdata_syms, data_syms, model)
     write_data_debt(unprov)
     from homm1.core import data_matching
-    relaxed = relax_fences(rdata_syms, data_syms, data_matching.enabled())
+    # Another image is enrolled incrementally: its unprovided identities stay
+    # in the debt worklist and are fenced DAT_, which no reconstructed name
+    # ever matches, so the strict comparison still scores them as misses.
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    relaxed = relax_fences(rdata_syms, data_syms,
+                           data_matching.enabled() and image_key() == DEFAULT_IMAGE)
     log(f"{data_matching.label()}: {relaxed} unprovided data fences relaxed")
-    if unprov:
+    if unprov and relaxed:
+        log(f"data debt: {len(unprov)} target(s) referenced by claimed bodies lack "
+            "a provided identity (fenced DAT_; build/<image>/gen/data_debt.tsv)")
+    elif unprov:
         log(f"UNPROVISIONED: {len(unprov)} game-referenced data target(s) "
             "lack a provided identity (the delinker refuses to emit these):")
         for line in format_unprovisioned(unprov):

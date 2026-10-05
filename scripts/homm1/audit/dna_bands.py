@@ -23,7 +23,7 @@ from pathlib import Path
 from homm1.compare.canonicalize import (
     CoffObject, FUNCTION_TYPE, MEM_EXECUTE, RELOCATION_WIDTHS,
 )
-from homm1.core.paths import BUILD, REPO, RETAIL, msvc_dir
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO, RETAIL, msvc_dir
 from homm1.core.tsv import read as read_tsv
 from homm1.delink import eh_band, pdb_synth
 from homm1.delink.image import retail
@@ -32,7 +32,7 @@ from homm1.model import resolve
 from homm1.retail_labels.censuses import functions
 
 
-OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
+OUTPUT = IMAGE_BUILD / "gen/homm1-dna-bands.tsv"
 EVIDENCE = RETAIL / "dna_bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
 #: Retail links the pinned toolchain's LIBCMT.LIB (multithreaded), not LIBC.LIB
@@ -121,7 +121,7 @@ def _candidate_index():
 
     # Own objects are included only to recover compiler-private bodies.  They
     # can never turn an ordinary game body into a library exclusion.
-    base = BUILD / "objdiff/base"
+    base = IMAGE_BUILD / "objdiff/base"
     for path in sorted(base.rglob("*.obj")):
         source = "base:" + str(path.relative_to(base).with_suffix(""))
         add(_coff_candidates(path.read_bytes(), source))

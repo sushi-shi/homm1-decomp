@@ -17,6 +17,14 @@
 #include <io.h>
 #include <string.h>
 
+// Retail assertion paths: each program's BASE objects were compiled in its own
+// checkout (HEROES.EXE and EDITOR.EXE assertion strings).
+#ifdef HOMM1_EDITOR
+#define INPUTMGR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Base\\INPUTMGR.CPP"
+#else
+#define INPUTMGR_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
+#endif
+
 DATA(0x004a1388) static u8 gInputCharacterMapCp1251[0x80] = {
     0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
     0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
@@ -122,7 +130,7 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
 }
 
 VA(0x0046e9c4, 0x33a)
-#line 137 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
+#line 137 INPUTMGR_CPP_PATH
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
     if (gpInputManager == NULL)
         return 1;

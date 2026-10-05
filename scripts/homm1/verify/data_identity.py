@@ -59,11 +59,11 @@ from pathlib import Path
 from homm1.compare import canonicalize as canon
 from homm1.compare import normalize
 from homm1.core.msvc_names import mask
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.walls.pairscan import is_local_label
 
-TARGET = BUILD / "objdiff/target-new"
-TSV = BUILD / "gen/data_identity.tsv"
+TARGET = IMAGE_BUILD / "objdiff/target-new"
+TSV = IMAGE_BUILD / "gen/data_identity.tsv"
 
 _CODE = canon.MEM_EXECUTE | 0x20
 _DIR32NB = 0x0007

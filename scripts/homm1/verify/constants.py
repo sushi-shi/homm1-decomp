@@ -42,14 +42,14 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from homm1.core.paths import BUILD, REPO, compiler_id
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO, compiler_id
 from homm1.verify.constant_context import semantic_context
 from homm1.verify.srcscan import blank_comments
 
 
-CDB = BUILD / "clangd/compile_commands.json"
-REPORT = BUILD / "gen/bare_constants.tsv"
-CONTEXT_REPORT = BUILD / "gen/constant_contexts.tsv"
+CDB = IMAGE_BUILD / "clangd/compile_commands.json"
+REPORT = IMAGE_BUILD / "gen/bare_constants.tsv"
+CONTEXT_REPORT = IMAGE_BUILD / "gen/constant_contexts.tsv"
 _NUMBER = re.compile(rb"(?:0[xX][0-9A-Fa-f]+|[0-9]+)(?:[uUlL]*)(?![A-Za-z0-9_.])")
 _FLOAT = re.compile(rb"(?:[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?[fFlL]?"
                     rb"|[0-9]+[eE][-+]?[0-9]+[fFlL]?")
@@ -976,7 +976,7 @@ WORKLIST = REPO / "config/constants.tsv"
 #: does not parse (a literal meets an enum class, or a declaration disagrees
 #: with its definition).
 RETAIL_VIEW_UNITS: list[str] = []
-OPEN_REPORT = BUILD / "gen/constants_open.tsv"
+OPEN_REPORT = IMAGE_BUILD / "gen/constants_open.tsv"
 _WORKLIST_FIELDS = ("file", "owner", "spelling", "group", "detail", "reason")
 
 

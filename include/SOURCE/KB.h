@@ -160,7 +160,10 @@ i8 CanBuild(class town* t, i16 building);
 i8 CanBuy(class town* t, i16 type);
 extern "C" void PollSound();
 void ForcePollSound();
+#ifndef HOMM1_EDITOR
+// The game's Cyrillic-aware toupper; the editor uses the runtime's.
 char toupper(char character);
+#endif
 H1_ENUM_CONST_BEGIN(Cp1251CaseConstant)
     CYRILLIC_CASE_OFFSET = 0x20,
     CYRILLIC_CAPITAL_YO = 0xa8,

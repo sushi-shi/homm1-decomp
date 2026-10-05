@@ -15,6 +15,14 @@
 #include <stdlib.h>
 #include <string.h>
 
+// Retail assertion paths: EDITOR.EXE links its own compile of this file
+// (Source\Editor\wingraph.cpp, in another checkout).
+#ifdef HOMM1_EDITOR
+#define WINGRAPH_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Editor\\wingraph.cpp"
+#else
+#define WINGRAPH_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#endif
+
 // wingraph owns retail .data 0x0049fe60-0x0048eb17 and .bss
 // 0x004a46a0-0x004a4b7f.
 DATA(0x004a0190)
@@ -80,7 +88,7 @@ DATA(0x004cd948)
 WingImage screenImage;
 
 VA(0x00466710, 0x3e)
-#line 49 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 49 WINGRAPH_CPP_PATH
 void DDRestoreDisplayMode() {
     i32 result;
     if (gDD != NULL) {
@@ -103,7 +111,7 @@ BOOL DDQueryNewPalette() {
 }
 
 VA(0x0046677b, 0x7d)
-#line 71 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 71 WINGRAPH_CPP_PATH
 void CreatePrimary(void) {
     i32 result;
 
@@ -119,7 +127,7 @@ void CreatePrimary(void) {
 }
 
 VA(0x004667f8, 0xbe)
-#line 91 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 91 WINGRAPH_CPP_PATH
 void SetupClipper(void) {
     i32 result;
 
@@ -140,7 +148,7 @@ void SetupClipper(void) {
 }
 
 VA(0x004668b6, 0x139)
-#line 114 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 114 WINGRAPH_CPP_PATH
 void DDInitGraphics(void) {
     i32 result;
 
@@ -176,7 +184,8 @@ void DDInitGraphics(void) {
 }
 
 VA(0x004669ef, 0x4e4)
-#line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+VA_AT(editor, 0x0041976f, 0x4e3)
+#line 161 WINGRAPH_CPP_PATH
 BOOL DDAppPaint(HWND window, HDC paintDC) {
     i32 srcWidth;
     i32 srcHeight;
@@ -292,7 +301,7 @@ BOOL DDAppPaint(HWND window, HDC paintDC) {
 }
 
 VA(0x00466ed3, 0x115)
-#line 315 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 315 WINGRAPH_CPP_PATH
 void DDInitializePalette() {
     i32 ddrval;
     HDC curHdc;
@@ -328,7 +337,7 @@ void DDInitializePalette() {
 }
 
 VA(0x00466fe8, 0x82)
-#line 387 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 387 WINGRAPH_CPP_PATH
 BOOL DDSetPalette() {
     i32 result;
     if (gWinGraphBusy != FALSE)
@@ -345,7 +354,8 @@ BOOL DDSetPalette() {
 }
 
 VA(0x0046706a, 0x100)
-#line 417 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+VA_AT(editor, 0x00419de9, 0xfe)
+#line 417 WINGRAPH_CPP_PATH
 struct IDirectDrawSurface* DDCreateSurface(u32 width, u32 height, i32 primary) {
     _DDSURFACEDESC ddsd;
     IDirectDrawSurface* lpSurface;
@@ -494,7 +504,7 @@ void DDSD(i32 error, char* file, i32 line) {
 }
 
 VA(0x00467557, 0xf5)
-#line 524 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 524 WINGRAPH_CPP_PATH
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
     i32 curRes;
@@ -529,7 +539,7 @@ void DDUpdatePalette(i8* paletteData) {
 }
 
 VA(0x0046764c, 0x154)
-#line 550 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 550 WINGRAPH_CPP_PATH
 void DDCleanUpWinGraphics(void) {
     i32 restoreVal;
     i32 result;
@@ -568,7 +578,7 @@ void DDCleanUpWinGraphics(void) {
 }
 
 VA(0x004677a0, 0x291)
-#line 596 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
+#line 596 WINGRAPH_CPP_PATH
 void DDSetFullScreenStatus(i32 fullScreen) {
     i32 width;
     i32 x;
@@ -694,6 +704,7 @@ void WGInitGraphics() {
 }
 
 VA(0x00467bde, 0x1bd)
+VA_AT(editor, 0x0041a95b, 0x186)
 void WGUpdatePalette(i8* paletteData) {
     HDC deviceContext;
     i32 result;
@@ -728,6 +739,10 @@ void WGUpdatePalette(i8* paletteData) {
     result = RealizePalette(deviceContext);
     ReleaseDC(hwndApp, deviceContext);
     if (gMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
+#ifdef HOMM1_EDITOR
+        // The editor has no combat screen to redraw partially.
+        {
+#else
         if (gLimitedCombatUpdatePalette != 0) {
             if (gFullCombatScreenDrawn != 0)
                 BlitBitmapToScreen(
@@ -740,6 +755,7 @@ void WGUpdatePalette(i8* paletteData) {
                     0
                 );
         } else {
+#endif
             BlitBitmapToScreen(
                 gpWindowManager->m_screen,
                 0,
@@ -1012,6 +1028,7 @@ BOOL QueryNewPalette() {
 }
 
 VA(0x004683da, 0x1c6)
+VA_AT(editor, 0x0041b120, 0x1bd)
 BOOL SetGraphicsType(H1_ENUM_PARAM(WingraphGraphicsType, i32) graphicsType) {
     void* buffer;
     i32 width;

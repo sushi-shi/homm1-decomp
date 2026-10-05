@@ -29,9 +29,9 @@ import json
 import struct
 from collections import defaultdict
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 
-_CACHE = BUILD / "gen/class_sizes.json"
+_CACHE = IMAGE_BUILD / "gen/class_sizes.json"
 _WINDOW = 4096
 
 

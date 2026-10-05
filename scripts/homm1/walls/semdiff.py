@@ -94,12 +94,12 @@ import re
 from collections import Counter
 from difflib import SequenceMatcher
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.delink.coffx import Obj
 from homm1.tool import objdump
 from homm1.walls.diagnose import _find_function, _jump_table_bytes, _locate
 
-NORM = BUILD / "objdiff/compare-new"
+NORM = IMAGE_BUILD / "objdiff/compare-new"
 
 #: `[reg+N]` / `[reg+idx*s+N]`, esp deliberately excluded - a stack slot is a
 #: frame-layout accident, a member displacement is the class model.

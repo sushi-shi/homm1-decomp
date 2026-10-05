@@ -14,6 +14,10 @@ from homm1.retail_labels import Claim
 
 
 def _rows(name: str, path: Path | None):
+    # Another image may not carry every provider table; the game must.
+    from homm1.core.paths import DEFAULT_IMAGE, image_key
+    if path is None and image_key() != DEFAULT_IMAGE and not (RETAIL / name).is_file():
+        return []
     _b, _h, raw = read_tsv(path or RETAIL / name)
     return raw
 
