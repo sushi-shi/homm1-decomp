@@ -51,11 +51,14 @@ review inputs, not defect totals. Preserve banked matches.
   lost its exact frame. The 41 with an initializer emit retail stores.
 - [ ] Review `static_cast`: **508 sites**.
 - [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
-- [ ] Common-code review (helpers, accessors, macros): the 15 combat and AI
-  units are read (**233 functions**, [ledger](docs/common-code-combat.tsv));
+- [ ] Common-code review (helpers, accessors, macros): every source unit is
+  read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
   **11 families** retained at **54 sites**, 4 rejected by measurement, 25 kept
-  explicit, 5 deferred to typed enum domains or another unit's helper.
-  Adventure, town, hero and BASE units pending.
+  explicit, 5 deferred. Adventure, town, hero, network, Windows and BASE
+  (**764 functions**, [ledger](docs/common-code-adventure.tsv)): **16 families**
+  retained at **301 sites** (65 of them calls shortened by declared defaults),
+  1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
+  or another unit's owner.
 
 ## Branches
 

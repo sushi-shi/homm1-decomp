@@ -55,3 +55,23 @@ compares it with 1. Retail uses both forms: the first in army::Walk, PowEffect
 and MoveAttack, the second in FLY, SpecialAttack and KeepAttack. Rewriting one
 Walk site in the compare form drops Walk to 99.79%. A single rear-hex-offset
 macro cannot reproduce both forms, so these sites stay explicit.
+
+## Adventure and BASE measurements
+
+Measured while recovering the [adventure common-code ledger](../common-code-adventure.tsv):
+
+- `hero::IsEmbarked()` returning `i32` is byte-identical at all 22 adventure
+  sites. Declaring it `i8` drops ten functions (1047/1057): the byte return is
+  stored to a frame temporary before the test, as Buka 2.1 measured for
+  playerData's accessors (inline-accessor-return-width). The int-valued
+  accessor is the evidenced form.
+- `game::GetPlayerHero`/`GetPlayerTown` are byte-identical where the pointer is
+  stored straight into a local (townManager::GetCategoryStats,
+  CheckEndGame) but change philAI::DetermineHeroToMove (above). The accessor is
+  a per-site form, not a header-wide rewrite.
+- An inline `FontGlyphIndex(i32)` for FONT's CP1251 glyph fold drops
+  font::DrawString to 99.79%; retail expanded no inline there.
+- Default arguments added to a declaration (`TransmitRemoteData`) or dropped
+  at call sites (`NormalDialog`) never change code: the compiler pushes the
+  same constants.
+

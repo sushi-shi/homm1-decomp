@@ -117,5 +117,15 @@ FINDPATH, FLY, HEXCELL, PATH, PHILAI, SEARCH, SPELLAI, SPELLS, VIEW) are read
 in full: [function checklist](common-code-combat-functions.tsv),
 [candidate catalogue](common-code-combat.tsv).
 
+The adventure, town, hero, network, Windows and BASE units (ADVMGR, CURSOR,
+EVENTS, GAME, HERO, KB, kbwin, RECRUIT, REQUEST, SETUP, SMACKMGR, STRIP,
+SWAPMGR, TOWN, TOWNMGR, HISCORE, netwin, REMOTE, comwin, wingraph and every
+C++ BASE unit) are read in full: [function checklist](common-code-adventure-functions.tsv),
+[candidate catalogue](common-code-adventure.tsv). Compiler-generated bodies,
+the assembly units (BITS, BMAP2, Icon2b, Icon2bc, TILE) and the vendored LZHUF
+code are outside the checklist. Declared default arguments (`NormalDialog`,
+`TransmitRemoteData`) count as recovered source conveniences: they shorten calls
+without changing code.
+
 **Unions and varargs.** Alternate views and manual argument access are kept only
 where retail evidence requires them.
