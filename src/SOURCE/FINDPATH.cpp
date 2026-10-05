@@ -388,14 +388,12 @@ void searchArray::TestPossibleDirections(
         }
 
         if ((1 << gSearchDirection) & SEARCH_DIRECTION_EDGE_OBJECT_MASK) {
-            if (gSearchCurrentCell->m_objectIndex != MAP_CELL_NO_FRAME
-                && !(gSearchCurrentCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)) {
+            if (CELL_HAS_NON_SHADOW_OBJECT(gSearchCurrentCell)) {
                 gSearchTerrain = TERRAIN_INVALID;
                 goto storeDirection;
             }
         } else if ((1 << gSearchDirection) & SEARCH_DIRECTION_OBJECT_MASK) {
-            if (gSearchNextCell->m_objectIndex != MAP_CELL_NO_FRAME
-                && !(gSearchNextCell->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)) {
+            if (CELL_HAS_NON_SHADOW_OBJECT(gSearchNextCell)) {
                 if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
                     gSearchTriggerType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     if (gSearchTriggerType != MAP_OBJECT_MONSTER

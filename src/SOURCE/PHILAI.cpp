@@ -428,7 +428,7 @@ void philAI::CheckReload(hero* pHero) {
         pHero->m_y,
         pHero->m_direction,
         pHero->m_mobility << 2,
-        pHero->m_eventFlags & HERO_EVENT_EMBARKED,
+        pHero->IsEmbarked(),
         0,
         pHero->m_remainingMobility,
         pHero->m_heroClass,
@@ -648,7 +648,7 @@ void philAI::DoAI(i32 player) {
         }
         allMoveDone = 0;
         ResetHeroRVs(0, 0, 0);
-        origStep = (savedAiHero->m_eventFlags & HERO_EVENT_EMBARKED) ? 15 : 5;
+        origStep = savedAiHero->IsEmbarked() ? 15 : 5;
         minRV = savedAiHero->m_mobility + 42;
         origStep = static_cast<i32>(origStep * (1.7 - gpCurPlayer->m_difficulty * 0.1));
         minRV =
@@ -1056,7 +1056,7 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
         pHero->m_y,
         pHero->m_direction,
         mobility * 3,
-        pHero->m_eventFlags & HERO_EVENT_EMBARKED,
+        pHero->IsEmbarked(),
         1,
         pHero->m_remainingMobility,
         pHero->m_heroClass,
@@ -1086,18 +1086,17 @@ void philAI::DetermineTargetPosition(hero* pHero, i8& targetX, i8& targetY, i16 
                             thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
                             || thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
                             || (thisCellRec->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                                && !(pHero->m_eventFlags & HERO_EVENT_EMBARKED));
+                                && !pHero->IsEmbarked());
                 } else {
-                    validFlag = (thisCellRec->m_triggerType & MAP_TRIGGER_EVENT)
-                                || (thisCellRec->m_triggerType == MAP_OBJECT_COAST
-                                    && (pHero->m_eventFlags & HERO_EVENT_EMBARKED))
-                                || (oldX % curSpacing == 0 && y % curSpacing == 0
-                                    && (((pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                         && CELL_TERRAIN(thisCellRec) == TERRAIN_WATER)
-                                        || (!(pHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                                            && CELL_TERRAIN(thisCellRec) != TERRAIN_WATER)))
-                                || (oldX == gpCurPlayer->m_ultimateArtifactHintX
-                                    && y == gpCurPlayer->m_ultimateArtifactHintY);
+                    validFlag =
+                        (thisCellRec->m_triggerType & MAP_TRIGGER_EVENT)
+                        || (thisCellRec->m_triggerType == MAP_OBJECT_COAST && pHero->IsEmbarked())
+                        || (oldX % curSpacing == 0 && y % curSpacing == 0
+                            && ((pHero->IsEmbarked() && CELL_TERRAIN(thisCellRec) == TERRAIN_WATER)
+                                || (!pHero->IsEmbarked()
+                                    && CELL_TERRAIN(thisCellRec) != TERRAIN_WATER)))
+                        || (oldX == gpCurPlayer->m_ultimateArtifactHintX
+                            && y == gpCurPlayer->m_ultimateArtifactHintY);
                 }
                 if (validFlag) {
                     for (entry = 0; entry < gpCurPlayer->m_heroCount; entry++) {
@@ -1981,7 +1980,7 @@ i32 philAI::RVOfPosition(
         totalValue += oldVal;
     }
     estTurnsVal = static_cast<float>(gpSearchArray->m_cells[x][y].distance) / pHero->m_mobility;
-    if (pHero->m_eventFlags & HERO_EVENT_EMBARKED)
+    if (pHero->IsEmbarked())
         estTurnsVal = estTurnsVal * 0.5 + 0.5;
     else if (estTurnsVal > 5.0f)
         estTurnsVal *= 3.0f;
@@ -1999,7 +1998,7 @@ i32 philAI::RVOfPosition(
     oldDelta = static_cast<i32>(oldDelta * 2 / (1.0f + estTurnsVal));
     if (oldChance == AI_CHANCE_CERTAIN)
         totalValue += oldDelta;
-    if ((pHero->m_eventFlags & HERO_EVENT_EMBARKED) && newCurTriggerType == MAP_OBJECT_COAST)
+    if (pHero->IsEmbarked() && newCurTriggerType == MAP_OBJECT_COAST)
         totalValue += 40;
     return totalValue;
 }
@@ -2058,7 +2057,7 @@ i32 philAI::StrategicValueOfPosition(
         gSVSearchArrayInUse = 1;
         searchData = &SVSearchArray;
     }
-    wasInBoat = pHero->m_eventFlags & HERO_EVENT_EMBARKED;
+    wasInBoat = pHero->IsEmbarked();
     if (wasInBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
         wasInBoat = 0;
     if (immediate) {
@@ -2134,19 +2133,15 @@ i32 philAI::StrategicValueOfPosition(
     baseTerrainNum = CELL_TERRAIN(gpAdvManager->GetCell(targetX, targetY));
     for (prevHeroNo = 0; prevHeroNo < gpCurPlayer->m_heroCount; prevHeroNo++) {
         if (gpCurPlayer->m_heroIds[prevHeroNo] != pHero->m_id) {
-            nGap =
-                abs(gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX - targetX)
-                + abs(
-                    gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY - targetY
-                );
+            nGap = MANHATTAN_LENGTH(
+                gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX - targetX,
+                gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY - targetY
+            );
             if (nGap < 9) {
-                curTerrain = giGroundToTerrain
-                    [gpAdvManager
-                         ->GetCell(
-                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX,
-                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY
-                         )
-                         ->m_tileIndex];
+                curTerrain = CELL_TERRAIN(gpAdvManager->GetCell(
+                    gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX,
+                    gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY
+                ));
                 if (!((baseTerrainNum == TERRAIN_WATER && curTerrain > TERRAIN_WATER_LAST)
                       || (baseTerrainNum > TERRAIN_WATER_LAST && curTerrain == TERRAIN_WATER)))
                     myValue -= (9 - nGap) * 1250 / 9;

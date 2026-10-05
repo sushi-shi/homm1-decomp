@@ -40,6 +40,11 @@ H1_ENUM_CONST_BEGIN(MapDirectionConstant)
     MAP_DIRECTION_DIAGONAL_BIT = 1
 H1_ENUM_CONST_END(MapDirectionConstant)
 
+// The step that walks a map direction back (Buka 2.1 KB_TYPES.h).
+inline i32 OppositeMapDirection(i32 direction) {
+    return (direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
+}
+
 H1_ENUM_CONST_BEGIN(CursorFrameConstant)
     CURSOR_FRAMES_PER_DIRECTION = 9,
     CURSOR_BOAT_BASE_FRAME_5 = 0x9b,

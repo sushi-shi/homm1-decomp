@@ -101,4 +101,10 @@ public:
 };
 #pragma pack(pop)
 
+// The cell carries an object that is more than a shadow (Buka 2.1
+// mapcell.h): index first, then the shadow-only flag. Pathing treats such an
+// object as an obstacle; the draw paths test the flag first and stay explicit.
+#define CELL_HAS_NON_SHADOW_OBJECT(cell)                                                           \
+    ((cell)->m_objectIndex != MAP_CELL_NO_FRAME && !((cell)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
+
 #endif // HOMM1_SOURCE_MAPCELL_H
