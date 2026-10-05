@@ -155,6 +155,7 @@ rva	kind
 0x0008a758	vtable
 0x0008a764	fppool
 0x0008a768	vtable
+0x0008a774	fppool
 0x0008a778	vtable
 0x0008a784	vtable
 0x0008a790	vtable

@@ -30,6 +30,9 @@ H1_ENUM_CONST_BEGIN(WindowFizzleConstant)
     FIZZLE_DEFAULT_DELAY = 150,
     FIZZLE_CYCLE_TABLE_BYTES = 0x10000,
     FIZZLE_LOOKUP_HIGH_BYTE_SHIFT = 8,
+    PALETTE_CUBE_LEVELS = 64,
+    PALETTE_NEAREST_DISTANCE_LIMIT = 1000,
+    FIZZLE_COLOR_PAIR_FLOATS = 256 * 256 * 3,
     SCREENSHOT_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(WindowFizzleConstant)
 
@@ -390,6 +393,89 @@ void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {
         delete m_fizzleSource;
     m_fizzleSource = new bitmap(BITMAP_TYPE_NONE, width, height);
     BlitBitmap(gpWindowManager->m_screen, x, y, width, height, m_fizzleSource, 0, 0);
+}
+
+// One colour pair's interpolated channels in CreateFizzleTables' flat tables.
+#define FIZZLE_PAIR(values, from, to)                                                              \
+    ((values) + (from) * PALETTE_COLOR_COUNT * PALETTE_GRAPHICS_CHANNELS                           \
+     + (to) * PALETTE_GRAPHICS_CHANNELS)
+
+// Offline generator for FizzleForward's CCYCLE tables (HoMM2 Buka keeps only
+// an empty CreateFizzleTables at the same position). For every pair of
+// palette colours it interpolates eight steps toward the second colour and
+// stores the nearest palette entry of each step, found through a 64-level
+// RGB cube. No retail caller survives.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046acd9, 0x444)
+void CreateFizzleTables(void) {
+    u8 (*paletteColors)[PALETTE_GRAPHICS_CHANNELS];
+    u8 (*table)[PALETTE_COLOR_COUNT];
+    float* increment;
+    u32 g;
+    i32 minDist;
+    i32 delta;
+    i32 destColor;
+    i32 src;
+    u8 (*rgbCube)[PALETTE_CUBE_LEVELS][PALETTE_CUBE_LEVELS];
+    i32 c;
+    i32 cycleFrame;
+    u32 r;
+    u32 b;
+    FILE* fp;
+    float* blend;
+
+    paletteColors = reinterpret_cast<u8 (*)[PALETTE_GRAPHICS_CHANNELS]>(gpBufferPalette->m_data);
+    rgbCube = static_cast<u8 (*)[PALETTE_CUBE_LEVELS][PALETTE_CUBE_LEVELS]>(
+        malloc(PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS)
+    );
+    table = static_cast<u8 (*)[PALETTE_COLOR_COUNT]>(malloc(FIZZLE_CYCLE_TABLE_BYTES));
+    increment = static_cast<float*>(malloc(FIZZLE_COLOR_PAIR_FLOATS * sizeof(float)));
+    blend = static_cast<float*>(malloc(FIZZLE_COLOR_PAIR_FLOATS * sizeof(float)));
+    memset(rgbCube, 0, PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS);
+    for (r = 0; r < PALETTE_CUBE_LEVELS; r++) {
+        for (g = 0; g < PALETTE_CUBE_LEVELS; g++) {
+            for (b = 0; b < PALETTE_CUBE_LEVELS; b++) {
+                minDist = PALETTE_NEAREST_DISTANCE_LIMIT;
+                for (src = 0; src < PALETTE_COLOR_COUNT; src++) {
+                    delta = abs(paletteColors[src][0] - r) + abs(paletteColors[src][1] - g)
+                               + abs(paletteColors[src][2] - b);
+                    if (delta < minDist) {
+                        minDist = delta;
+                        rgbCube[r][g][b] = src;
+                    }
+                }
+            }
+        }
+    }
+    for (src = 0; src < PALETTE_COLOR_COUNT; src++) {
+        for (destColor = 0; destColor < PALETTE_COLOR_COUNT; destColor++) {
+            for (c = 0; c < PALETTE_GRAPHICS_CHANNELS; c++) {
+                FIZZLE_PAIR(increment, src, destColor)[c] =
+                    (paletteColors[destColor][c] - paletteColors[src][c]) / (CYCLE_FRAME_COUNT + 1.0f);
+                FIZZLE_PAIR(blend, src, destColor)[c] = paletteColors[src][c];
+            }
+        }
+    }
+    for (cycleFrame = 0; cycleFrame < CYCLE_FRAME_COUNT; cycleFrame++) {
+        for (src = 0; src < PALETTE_COLOR_COUNT; src++) {
+            for (destColor = 0; destColor < PALETTE_COLOR_COUNT; destColor++) {
+                for (c = 0; c < PALETTE_GRAPHICS_CHANNELS; c++)
+                    FIZZLE_PAIR(blend, src, destColor)[c] += FIZZLE_PAIR(increment, src, destColor)[c];
+                table[src][destColor] = rgbCube[static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[0])]
+                                         [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[1])]
+                                         [static_cast<i32>(FIZZLE_PAIR(blend, src, destColor)[2])];
+            }
+        }
+        sprintf(gText, "CCYCLE%02d.BIN", cycleFrame);
+        fp = fopen(gText, "wb");
+        fwrite(table, FIZZLE_CYCLE_TABLE_BYTES, 1, fp);
+        fclose(fp);
+    }
+    free(rgbCube);
+    free(table);
+    free(increment);
+    free(blend);
 }
 
 // donor PoL RVA 0x000cb1e0; HoMM1 removes the later palette-fade arguments
