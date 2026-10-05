@@ -43,4 +43,5 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 word-sized compound assignments (HoMM1 Buka, measured)](vc6-short-compound-assignments.md).
 - [VC6 byte-valued conditional results (HoMM1 Buka, measured)](vc6-byte-conditional-results.md).
 - [VC6 explicit float-conversion stores (HoMM1 Buka, measured)](vc6-float-conversion-stores.md).
+- [VC6 `throw()` functions keep new-expression temporaries without an EH frame (HoMM1 Buka, measured)](vc6-throw-spec-eh-frame.md).
 - [VC6 /Od frame slots follow the folded name hash (HoMM1 Buka, measured)](vc6-od-frame-slots.md).

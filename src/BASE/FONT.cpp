@@ -4,7 +4,6 @@
 
 #include <BASE/font.h>
 #include <BASE/icon.h>
-#include <BASE/IconEntry.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
@@ -46,11 +45,11 @@ i32 RemapCyrillicCharacter(i32 character) {
 
 VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
-    IconEntry* entries = reinterpret_cast<IconEntry*>(
+    i16* entries = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
+    ); // byte-evidenced: word view of the packed IconEntry directory.
     i32 glyph = 0;
-    i16 drawX = x;
+    i16 pos = x;
     i16 index = 0;
     while (text[index] != 0) {
         glyph = static_cast<u8>(text[index]);
@@ -61,14 +60,15 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
         glyph -= ' ';
         if (glyph != 0)
             m_glyphIcon->FillToBuffer(
-                drawX,
+                pos,
                 y + m_headerWord,
                 glyph,
                 color,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-        drawX += entries[glyph].w + FONT_GLYPH_ADVANCE_SPACING;
+        pos += entries[glyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+               + FONT_GLYPH_ADVANCE_SPACING;
         index++;
     }
 }
@@ -77,7 +77,7 @@ VA(0x0047203d, 0x34f)
 void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
     i16 s;
     i32 q;
-    IconEntry* widths;
+    i16* widths;
     char spaceChar;
     // Names place the frame slots; the order gives the operand sort keys of
     // p < s, p >= r, lw <= width, x + t and y + u.
@@ -92,9 +92,9 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     char v;
 
     s = strlen(str);
-    widths = reinterpret_cast<IconEntry*>(
+    widths = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
+    ); // byte-evidenced: word view of the packed IconEntry directory.
     spaceChar = ' ';
     t = 0;
     u = 0;
@@ -113,7 +113,8 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
             else if (q > 0x7f)
                 q = RemapCyrillicCharacter(q);
             q -= ' ';
-            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
+            lw += widths[q * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                  + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > width) {
@@ -125,11 +126,12 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
                 else if (q > 0x7f)
                     q = RemapCyrillicCharacter(q);
                 q -= ' ';
-                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[q * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                      + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
             if (w[p] == ' ')
-                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
         lineEnd = p;
         v = w[lineEnd];
@@ -161,9 +163,9 @@ i32 font::LineLength(char* str, i16 maxW) {
     i16 p;
     i16 s = strlen(str);
     i32 q;
-    IconEntry* widths = reinterpret_cast<IconEntry*>(
+    i16* widths = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
+    ); // byte-evidenced: word view of the packed IconEntry directory.
     char spaceChar = ' ';
     i32 z = 0;
     i16 t = 0;
@@ -187,7 +189,8 @@ i32 font::LineLength(char* str, i16 maxW) {
             else if (q > 0x7f)
                 q = RemapCyrillicCharacter(q);
             q -= ' ';
-            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
+            lw += widths[q * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                  + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
         if (lw > maxW) {
@@ -199,11 +202,12 @@ i32 font::LineLength(char* str, i16 maxW) {
                 else if (q > 0x7f)
                     q = RemapCyrillicCharacter(q);
                 q -= ' ';
-                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[q * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                      + FONT_GLYPH_ADVANCE_SPACING;
                 p--;
             }
             if (w[p] == ' ')
-                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
+                lw -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
         y = p;
         z++;
@@ -218,7 +222,7 @@ VA(0x004725eb, 0x133)
 i32 font::LineWidth(char* text) {
     i32 q;
     i32 u;
-    IconEntry* table;
+    i16* table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
     // retail body proves y's dword store and the five word stores below
     // (u is the census's unused slot). s follows y for the operand sort key.
@@ -228,9 +232,9 @@ i32 font::LineWidth(char* text) {
     char* v;
 
     s = strlen(text);
-    table = reinterpret_cast<IconEntry*>(
+    table = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
+    ); // byte-evidenced: word view of the packed IconEntry directory.
     y = 0;
     t = 0;
     r = 0;
@@ -246,7 +250,8 @@ i32 font::LineWidth(char* text) {
             else if (q > 0x7f)
                 q = RemapCyrillicCharacter(q);
             q -= ' ';
-            w += table[q].w + FONT_GLYPH_ADVANCE_SPACING;
+            w += table[q * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                 + FONT_GLYPH_ADVANCE_SPACING;
             p++;
         }
     }
