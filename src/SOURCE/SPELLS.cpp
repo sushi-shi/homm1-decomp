@@ -895,67 +895,67 @@ void combatManager::ElementalStorm(void) {
 // shaking the screen.
 VA(0x0045c2bd, 0x3b6)
 void combatManager::Armageddon(void) {
-    i16 sideIdx;
-    i32 damage;
+    i16 sideIdxNo;
+    i32 dmg;
     i16 index;
-    i8* palData;
+    i8* palDataEntry;
     i16 fadeStep;
     army* curArmy;
-    palette* kbPal;
-    i16 i;
-    palette* workPal;
+    palette* curPal;
+    i16 jx;
+    palette* workPalItem;
     i8 hit;
 
-    damage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
+    dmg = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50;
     hit = 0;
-    for (sideIdx = 0; sideIdx < COMBAT_SIDE_COUNT; sideIdx++) {
-        for (index = 0; index < m_numArmies[sideIdx]; index++) {
-            curArmy = &m_armies[sideIdx][index];
+    for (sideIdxNo = 0; sideIdxNo < COMBAT_SIDE_COUNT; sideIdxNo++) {
+        for (index = 0; index < m_numArmies[sideIdxNo]; index++) {
+            curArmy = &m_armies[sideIdxNo][index];
             if (curArmy->m_creatureType != CREATURE_DRAGON
                 && curArmy->m_spellEffect != SPELL_ANTI_MAGIC
                 && (curArmy->m_creatureType != CREATURE_DWARF || SRandom(0, 127) % 4 != 1)
                 && !(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)) {
-                curArmy->Damage(damage);
+                curArmy->Damage(dmg);
                 hit = 1;
             }
         }
     }
     if (hit) {
-        sprintf(gText, localization::Tr("combat.armageddon.damage"), damage);
+        sprintf(gText, localization::Tr("combat.armageddon.damage"), dmg);
         CombatMessage(gText, 1);
     }
     gpWindowManager->m_updateFlags = 0;
-    kbPal = gpResourceManager->GetPalette("kb.pal");
-    workPal = new palette;
-    if (!workPal)
+    curPal = gpResourceManager->GetPalette("kb.pal");
+    workPalItem = new palette;
+    if (!workPalItem)
         MemError();
-    memcpy(workPal->Data(), kbPal->Data(), 0x300);
+    memcpy(workPalItem->Data(), curPal->Data(), 0x300);
     glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
-    palData = workPal->Data();
+    palDataEntry = workPalItem->Data();
     for (fadeStep = 0; fadeStep < 32; fadeStep++) {
-        for (i = 0; i < PALETTE_COLOR_COUNT; i++) {
-            if (palData[i * 3 + 1])
-                palData[i * 3 + 1]--;
-            if (palData[i * 3 + 2])
-                palData[i * 3 + 2]--;
+        for (jx = 0; jx < PALETTE_COLOR_COUNT; jx++) {
+            if (palDataEntry[jx * 3 + 1])
+                palDataEntry[jx * 3 + 1]--;
+            if (palDataEntry[jx * 3 + 2])
+                palDataEntry[jx * 3 + 2]--;
         }
         DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        SetPalette(palData, 1);
+        SetPalette(palDataEntry, 1);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     }
     curArmy->PowEffect(COMBAT_POW_RED_FIRE);
-    for (sideIdx = 0; sideIdx < COMBAT_SIDE_COUNT; sideIdx++) {
-        for (index = 0; index < m_numArmies[sideIdx]; index++) {
-            curArmy = &m_armies[sideIdx][index];
+    for (sideIdxNo = 0; sideIdxNo < COMBAT_SIDE_COUNT; sideIdxNo++) {
+        for (index = 0; index < m_numArmies[sideIdxNo]; index++) {
+            curArmy = &m_armies[sideIdxNo][index];
             if (!(curArmy->m_stats.attributes & MONSTER_FLAGS_DEAD))
                 curArmy->Stand(0);
         }
     }
     DrawFrame(1);
-    SetPalette(kbPal->Data(), 1);
+    SetPalette(curPal->Data(), 1);
     gpWindowManager->m_updateFlags = 1;
-    gpResourceManager->Dispose(kbPal);
-    delete workPal;
+    gpResourceManager->Dispose(curPal);
+    delete workPalItem;
 }
 
 // SPELLS owns retail .data 0x00490690-0x0048f4d3. HandleCastSpell's

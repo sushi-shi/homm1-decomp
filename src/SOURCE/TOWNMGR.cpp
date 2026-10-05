@@ -61,9 +61,9 @@ static char s_dwellingArmyName[1024];
 // building id from the .tod resource instead of sBuildingInfo.
 VA(0x0045ee90, 0x1c3)
 townObject::townObject(char* name) {
-    char fileName[16];
+    char fileNameText[16];
     i16 w;
-    i16 tmp;
+    i16 temp;
     i16 id;
     i16 x;
     i16 h;
@@ -73,8 +73,8 @@ townObject::townObject(char* name) {
     m_icon = NULL;
     m_border = NULL;
     m_visible = 1;
-    sprintf(fileName, "%s.tod", name);
-    id = gpResourceManager->MakeId(fileName);
+    sprintf(fileNameText, "%s.tod", name);
+    id = gpResourceManager->MakeId(fileNameText);
     gpResourceManager->PointToFile(id);
     m_animationFrameCount = gpResourceManager->ReadByte();
     x = gpResourceManager->ReadWord();
@@ -83,8 +83,8 @@ townObject::townObject(char* name) {
     h = gpResourceManager->ReadWord();
     id = gpResourceManager->ReadWord();
     m_buildingId = id;
-    sprintf(fileName, "%s.icn", name);
-    m_icon = gpResourceManager->GetIcon(fileName);
+    sprintf(fileNameText, "%s.icn", name);
+    m_icon = gpResourceManager->GetIcon(fileNameText);
     if (id == BUILDING_SLOT_MAGE_GUILD) {
         h = gpTownManager->m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_HEIGHT
             + TOWN_MAGE_GUILD_BASE_HEIGHT;
@@ -1069,9 +1069,9 @@ void townManager::RedrawTownScreen(void) {
 // into the first matching slot of the target army.
 VA(0x00462053, 0x334)
 void townManager::SplitArmy(void) {
-    i16 messageId = 1;
+    i16 messageIdIndex = 1;
     tag_message message;
-    i16 merge;
+    i16 theMerge;
     i16 numberId = TOWN_SPLIT_SETUP_AMOUNT_CONTROL;
     i16 n;
 
@@ -1101,15 +1101,15 @@ void townManager::SplitArmy(void) {
     gpWindowManager->DoDialog(m_heroWindow1, SplitArmyHandler, 0);
     delete m_heroWindow1;
     if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
-        merge = 0;
+        theMerge = 0;
         for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
             if (m_pendingStrip->m_army->m_creatureTypes[n]
                 == m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]) {
-                merge = 1;
+                theMerge = 1;
                 break;
             }
         }
-        if (merge)
+        if (theMerge)
             m_pendingStrip->m_army->m_creatureCounts[n] += m_splitAmount;
         else {
             m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] =
@@ -2075,14 +2075,14 @@ char* townManager::GetBuildingName(i16 building) {
 // a cannot-recruit view is a timed quick view, and the town strips are rebuilt.
 VA(0x00464a47, 0x92f)
 i8 townManager::RecruitHero(i8 cannotRecruit) {
-    tag_message message;
-    i16 unusedButtonText = 1;
-    i16 unusedDimState = 2;
+    tag_message evtCopy;
+    i16 unusedButtonTextVal = 1;
+    i16 oldState = 2;
     i16 unusedControlId = 3;
-    i16 unusedPortraitState = 4;
+    i16 curState = 4;
     i16 unusedTextState = 6;
     i16 unusedPortraitControl = 7;
-    i16 unusedButtonIcon = 8;
+    i16 curUnusedButtonIcon = 8;
     i16 unusedMode = 9;
 
     m_heroWindow1 = new heroWindow(0xb1, 0x10, "rcrthero.bin");
@@ -2092,32 +2092,32 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
     m_recruitHeroes[0] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[0]);
     m_recruitHeroes[1] = gpGame->GetHero(gpCurPlayer->m_availableHeroIds[1]);
     m_recruitHeroes[0]->m_owner = m_recruitHeroes[1]->m_owner = giCurPlayer;
-    message.type = MESSAGE_WIDGET;
+    evtCopy.type = MESSAGE_WIDGET;
     if (cannotRecruit) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = RECRUIT_HERO_SELECT_FIRST;
-        m_heroWindow1->BroadcastMessage(message);
-        message.id = RECRUIT_HERO_SELECT_SECOND;
-        m_heroWindow1->BroadcastMessage(message);
-        message.id = DIALOG_BUTTON_1;
-        m_heroWindow1->BroadcastMessage(message);
+        evtCopy.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        evtCopy.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        evtCopy.id = RECRUIT_HERO_SELECT_FIRST;
+        m_heroWindow1->BroadcastMessage(evtCopy);
+        evtCopy.id = RECRUIT_HERO_SELECT_SECOND;
+        m_heroWindow1->BroadcastMessage(evtCopy);
+        evtCopy.id = DIALOG_BUTTON_1;
+        m_heroWindow1->BroadcastMessage(evtCopy);
     }
     sprintf(gText, "port%04d.icn", m_recruitHeroes[0]->m_portrait);
-    message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = RECRUIT_HERO_PORTRAIT_FIRST;
-    message.text = gText;
-    m_heroWindow1->BroadcastMessage(message);
+    evtCopy.command = WIDGET_COMMAND_SET_ICON;
+    evtCopy.id = RECRUIT_HERO_PORTRAIT_FIRST;
+    evtCopy.text = gText;
+    m_heroWindow1->BroadcastMessage(evtCopy);
     sprintf(gText, "port%04d.icn", m_recruitHeroes[1]->m_portrait);
-    message.id = RECRUIT_HERO_PORTRAIT_SECOND;
-    m_heroWindow1->BroadcastMessage(message);
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = RECRUIT_HERO_CLASS_FIRST;
-    message.text = gClassNames[m_recruitHeroes[0]->m_heroClass];
-    m_heroWindow1->BroadcastMessage(message);
-    message.id = RECRUIT_HERO_CLASS_SECOND;
-    message.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
-    m_heroWindow1->BroadcastMessage(message);
+    evtCopy.id = RECRUIT_HERO_PORTRAIT_SECOND;
+    m_heroWindow1->BroadcastMessage(evtCopy);
+    evtCopy.command = WIDGET_COMMAND_SET_TEXT;
+    evtCopy.id = RECRUIT_HERO_CLASS_FIRST;
+    evtCopy.text = gClassNames[m_recruitHeroes[0]->m_heroClass];
+    m_heroWindow1->BroadcastMessage(evtCopy);
+    evtCopy.id = RECRUIT_HERO_CLASS_SECOND;
+    evtCopy.text = gClassNames[m_recruitHeroes[1]->m_heroClass];
+    m_heroWindow1->BroadcastMessage(evtCopy);
     m_recruitState = RECRUIT_HERO_NONE;
     if (cannotRecruit) {
         gpMouseManager->ReallyHidePointer();
