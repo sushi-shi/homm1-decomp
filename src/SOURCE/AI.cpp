@@ -209,21 +209,18 @@ void combatManager::DoCompAI(i8) {
             } else {
                 ndx = GetBestArmy(sideEnemy, mainShooters[sideEnemy]);
                 if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                    giNextAction = ACTION_MOVE;
-                    giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                    SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
                 }
                 ndx = GetBestArmy(sideEnemy, origMasks[sideEnemy]);
                 if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                    giNextAction = ACTION_MOVE;
-                    giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                    SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
                 }
                 if (walkerMask[sideEnemy]) {
                     ndx = GetClosestArmy(curArmy, sideEnemy, walkerMask[sideEnemy]);
                     if (ndx != COMBAT_ARMY_INDEX_NONE) {
-                        giNextAction = ACTION_MOVE;
-                        giNextActionGridIndex = m_armies[sideEnemy][ndx].m_hex;
+                        SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                         goto finish;
                     }
                 }
@@ -274,8 +271,7 @@ void combatManager::DoCompAI(i8) {
                     tile = &gpCombatManager->m_hexCells[targetHexValue];
                     if (ValidHex(targetHexValue) && tile->m_occupantSide == COMBAT_SIDE_NONE
                         && tile->m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
-                        giNextAction = ACTION_MOVE;
-                        giNextActionGridIndex = targetHexValue;
+                        SET_NEXT_COMBAT_MOVE(targetHexValue);
                         goto finish;
                     }
                 }
@@ -461,8 +457,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
         targetHex = m_armies[side][targetArmy].m_hex;
         currentArmy->m_moveTargetHex = targetHex;
         if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
-            giNextAction = ACTION_MOVE;
-            giNextActionGridIndex = targetHex;
+            SET_NEXT_COMBAT_MOVE(targetHex);
             return 1;
         }
         if (m_armies[side][targetArmy].m_stats.attributes & MONSTER_FLAGS_WIDE) {
@@ -472,8 +467,7 @@ i8 combatManager::AttemptAttack(class army* currentArmy, i8 side, i16 mask) {
                 targetHex++;
             currentArmy->m_moveTargetHex = targetHex;
             if (currentArmy->ValidPath(targetHex, ARMY_PATH_ANY_TARGET_HEX)) {
-                giNextAction = ACTION_MOVE;
-                giNextActionGridIndex = targetHex;
+                SET_NEXT_COMBAT_MOVE(targetHex);
                 return 1;
             }
         }
@@ -525,8 +519,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     else
         victim = GetBestArmy(1 - m_currentSide, enemyMask);
     if (victim != COMBAT_ARMY_INDEX_NONE) {
-        giNextAction = ACTION_MOVE;
-        giNextActionGridIndex = m_armies[1 - m_currentSide][victim].m_hex;
+        SET_NEXT_COMBAT_MOVE(m_armies[1 - m_currentSide][victim].m_hex);
         return 1;
     } else {
         return 0;

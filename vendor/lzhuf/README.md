@@ -11,6 +11,10 @@ locations:
 | `reference/paul-edwards-1990-lzhuf.c` | Unmodified historical source snapshot used only as provenance evidence. It is not a build input. |
 | `reference/jnos-1.11f-lzhuf.c` | Unmodified historical source snapshot used only as provenance evidence. It is not a build input. |
 
+A safe Rust port of the complete codec, byte-exact with these objects, is in
+[`tools/homm1-lzhuf`](../../tools/README.md). `homm1 verify lzhuf-oracle`
+compares it with the retail `EncodeData`/`DecodeData` executed under Wine.
+
 The `initialSon`, `initialFrequency`, and `initialParent` arrays are defined
 directly in `encoder.cpp`. Both `DecodeData` and `EncodeData` copy these
 templates into the shared working trees. There is no separate table translation
@@ -75,3 +79,26 @@ the extracted file's SHA-256 is
 `239cb266cb5c1387f70c79e9c4806fd7edd780a96c15e34b17a2cd9d63d7abc2`.
 This is source-family evidence rather than proof that New World Computing used
 JNOS itself.
+
+## Runtime behaviour
+
+Executing the retail functions (`homm1 verify lzhuf-oracle`) establishes
+these properties of the linked codec; the reconstruction keeps all of them:
+
+- `text_buf` is shared by both directions and never cleared. `EncodeData`
+  fills `text_buf[0..4036)` with spaces, but its search trees also compare
+  the stale look-ahead and mirror bytes, so short encodings depend on earlier
+  calls in the same process.
+- `DecodeData` fills nothing. A stream that copies from the encoder's space
+  prefill decodes those bytes from whatever the receiver's window holds; in a
+  fresh process they become zero bytes. The shipped `REMOTE.GAM` is affected:
+  decoded in a fresh process, two spaces at offsets 221 and 222 become zeros.
+- For empty input the `unsigned short` look-ahead count wraps, and
+  `EncodeData` codes 65 536 window positions after a zero length prefix.
+- `TransmitSaveGame` (`SOURCE/GAME.cpp`) sends the value `EncodeData`
+  returns as the transfer size. That value excludes the four-byte length
+  prefix, so the last four bytes of the stream are never sent, and the
+  receiver decodes them from the uninitialised end of its `malloc` buffer.
+  For the shipped `REMOTE.GAM`, filling the missing bytes with `00h` or
+  `CDh` changes the last 26 or 29 decoded bytes. This is retail behaviour
+  and is reconstructed as such.

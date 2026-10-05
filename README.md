@@ -51,6 +51,11 @@ review inputs, not defect totals. Preserve banked matches.
   lost its exact frame. The 41 with an initializer emit retail stores.
 - [ ] Review `static_cast`: **508 sites**.
 - [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
+- [ ] Common-code review (helpers, accessors, macros): the 15 combat and AI
+  units are read (**233 functions**, [ledger](docs/common-code-combat.tsv));
+  **11 families** retained at **54 sites**, 4 rejected by measurement, 25 kept
+  explicit, 5 deferred to typed enum domains or another unit's helper.
+  Adventure, town, hero and BASE units pending.
 
 ## Branches
 
@@ -91,6 +96,8 @@ Retail inputs, tools, Wine state and generated reports stay in ignored `build/`.
 
 See [the matching workflow](docs/tooling.md), [setup and editors](docs/workflow.md),
 and the [documentation index](docs/README.md).
+[`tools/`](tools/README.md) holds Rust tools, including a byte-exact port of
+the game's LZHUF save-transfer codec.
 Contributor rules and verification commands are in [AGENTS.md](AGENTS.md).
 
 ## License
