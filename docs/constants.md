@@ -29,7 +29,22 @@ game: pixel geometry of the retail layouts, icon frame numbers, random bounds,
 byte widths of saved fields, delays. A value that a domain names is not kept;
 name it.
 
-## VC4 booleans
+Each site also carries `context_key`/`context_label`: the declaration identity
+of its destination (callee parameter, field, variable, comparison operand,
+switch subject, array or function return; `verify/constant_context.py`). `build/gen/constant_contexts.tsv` groups the counted
+sites by that key, so one destination's literals are reviewed together. The
+keys are review leads: one `Read` length can receive unrelated sizes.
+
+## Booleans
+
+The Buka target is VC6 (`config/units.toml` `compiler = "vc6"`), which has
+`bool`, `true` and `false`. A `0`/`1` stored to, passed as, returned as or
+compared with a C++ `bool` is proven `false`/`true`; condition and logical
+operand truthiness (`while (1)`, `!0`, `x && 1`) is not a boolean
+destination. Win32 `BOOL` stays `TRUE`/`FALSE`. The rules below apply to VC4
+targets.
+
+### VC4 booleans
 
 VC4 has no `bool`, `true` or `false` (C2065). Clang's C++ `bool` contexts
 (conditions, logical operands) are int truthiness in the retail compiler and
@@ -46,3 +61,24 @@ an unscoped (`FLAGS`/`CONST`) domain is proven as its unique enumerator. A
 literal that meets an `enum class` domain is a strict-view error; such units
 fall back to the retail view, are counted in the output (`-v` lists them), and
 the error is itself the site to name.
+
+## Typed enum arrays
+
+An array indexed by one domain is declared with
+`H1_ENUM_ARRAY(type, name, Domain, COUNT)` (`include/Domains.h`); two
+domain-indexed dimensions use `H1_ENUM_ARRAY2(type, name, Domain1, COUNT1,
+Domain2, COUNT2)`. The retail view expands to the plain `type name[COUNT]`,
+so VC6 sees no class, no inline `operator[]` and no change in frame slots or
+C1 state. The strict view expands to `H1EnumArray<type, Domain, COUNT>`, whose
+subscript and `+` accept only `Domain` (or its `H1_ENUM_STORAGE`); a raw
+integer or another domain's value selects a deleted overload, and the array
+still converts to its element pointer as the retail array decays.
+`H1_ENUM_STEPPED(Domain)` gives a domain used as a loop variable its `++`,
+`--`, `+ n` and `- n` in the strict view (nothing in the retail view).
+
+Do not add an `IDX(x)`-style integer escape: a domain-indexed array takes the
+domain's extent, its index is typed storage or a typed loop variable, and a
+genuine conversion at a domain boundary is a narrow, commented one. `enum-domains`
+rejects an `H1_ENUM_ARRAY`/`STEPPED` domain that is undeclared, a constant
+group or a flag set; `scripts/homm1/verify/test_domains.py` checks both views.
+

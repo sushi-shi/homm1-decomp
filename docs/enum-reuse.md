@@ -18,7 +18,19 @@ derived reports to ignored `build/gen/`:
 - `enum_role_pairs.tsv`: pairs where at least two equal values also have equal
   member-name suffixes after each enum's common prefix. A search aid only.
 
+Every evaluated member also records its use contexts: the declaration
+identity (field, parameter, comparison operand, switch subject, array, return)
+that receives each reference to it. `enum_value_collisions.tsv` lists contexts
+shared by two declarations of one value (`shared_named_contexts`) or by a
+declaration and a bare literal of that value (`shared_literal_contexts`, read
+from `build/gen/bare_constants.tsv`, so run `homm1 verify constants` first);
+`enum_domain_pairs.tsv` ranks pairs by shared direct contexts before numeric
+overlap. A shared destination is a lead for one domain; a transport that
+carries several domains (the `tag_message::id` widget id, each window's own
+controls) is not.
+
 Use `--value N`, `--duplicates`, `--json` and `--no-report` to inspect.
+`--extend-ledger` appends wholly new domains as `pending` rows.
 
 ## Decisions
 
@@ -30,6 +42,9 @@ evaluated `name=value` members and one decision:
 - `canonical`: this enum owns values that another reviewed block reuses.
 - `reuse`: the members moved to the canonical enum; `member_reuse` maps every
   moved member to `source-enum::MEMBER`.
+  A member that no code names any more maps to `-` (retired); the check
+  requires its identifier to be absent from every file under `include/` and
+  `src/`.
 - `pending`: the producers, consumers and encodings still need review, or the
   reuse is decided but the source move has not landed. Pending rows keep the
   command nonzero.
@@ -49,3 +64,40 @@ Every starting member needs a current home with the same value. New, removed
 or changed members require a new decision: add the row when an enum is added.
 Moving members changes C1 symbol numbering in the TU, so do source moves as a
 reviewed batch and re-check edited functions with `homm1 match`.
+
+## Buka ledger
+
+The Buka branch inherited the NWC ledger. Its starting snapshot was rebased on
+the Buka tree: a row whose current members and values are unchanged kept its
+reviewed `retain`/`canonical` decision; every other current block started
+`pending` (with the NWC reason quoted as a lead), and NWC rows for blocks that
+do not exist in Buka were dropped.
+
+## Review result
+
+All 403 starting blocks are reviewed: 67 `canonical`, 288 `retain`, 48
+`reuse`. 98 members moved into a canonical domain and 43 members no Buka
+code names were retired; the census now holds 397 blocks, 2,872 members and
+168 cross-domain collision values, each covered by a reviewed row. The merges
+follow shared producers and consumers:
+
+| Canonical owner | Merged copies | Shared use |
+| --- | --- | --- |
+| `KB.h` `TimerSlot` | eleven per-owner glTimers slot constants | every one indexes `glTimers`, now `H1_ENUM_ARRAY(i32, glTimers, TimerSlot, ...)` |
+| `display.h` `LogicalScreenConstant` | miscwin, wingraph, bitmap, icon, inputManager, resourceManager and kbwin 640x480 copies | m_screen size/stride, DirectDraw mode, full-screen regions |
+| `KB.h` `DebugLevel` | Misc, philAI, fileRequester and kbwin levels | every value is stored to or compared with `giDebugLevel` |
+| `palette.h` / `display.h` palette sizes | the 768-byte, 256-entry and 3-byte copies | `palette::m_data` copies and the LOGPALETTE |
+| `dialog.h` `DialogButtonId` | NormalDialog, setup and panel slot literals | `m_dialogResult` and the window records |
+| `cursorTypes.h` `MapDirectionMask` | cursor and path-search direction masks | the same north/south object test |
+| `advManager.h` view geometry | quick-view, summon-boat, combo-draw and update copies of the inner map box; the radar corner of the world and puzzle windows; the view centre of CURSOR and EVENTS | clamps and regions of the one adventure view |
+| `REMOTE.h` | combat hand-off commands, three reply timeouts | `RemoteMessage::command` and the same wait loop |
+| `soundmgr.h` `ConfigVolumeLevel` | volume OFF/FIRST/LAST | `gConfig.musicVolume/soundVolume` |
+| `hero.h` `HERO_ID_NONE`, `gameTypes.h` `GAME_PLAYER_NONE` | GAME_HERO_NONE, INVALID_HERO, HERO_OWNER_NONE | `m_currentHero`, `m_owner` |
+| `baseManager.h` `BaseManagerMessageMask` | mouse, town and combat manager masks | `baseManager::m_messageMask` |
+| `inputManager.h` `InputScanCode` | textEntryWidget's key switch | the scan code before `AsciiConvert` |
+| smaller owners | sample volume, music tracks, keep-current-frame, boat flag, map grid, Dragon City row, last filename size | one field or argument each |
+
+Per-window control ids, help-text rows and screen geometry that only share
+numbers through the `tag_message::id` transport or by coincidence are
+retained with that reason.
+

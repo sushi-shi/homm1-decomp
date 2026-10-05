@@ -230,7 +230,9 @@ flags = "cpp_buka_g5"
 unit = "SOURCE/CMBTMGR"
 source = "src/SOURCE/CMBTMGR.cpp"
 # /GX frames; CombineGroups proves /G5 narrow arguments.
-flags = "cpp_buka_g5"
+# /Ob2: retail .data has GetBackgroundName's static gCombatBkgNames right after
+# gSeed and its eleven strings among the function literals in source order.
+flags = "cpp_buka_ob2_g5"
 
 [[unit]]
 unit = "SOURCE/COMMAND"
@@ -368,9 +370,11 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
-flags = "cpp_buka_g5"
+# /Ob2: gcCDTrackName's literal sits among the function literals at its
+# definition, between the preference and CD-probe literals.
+flags = "cpp_buka_ob2_g5"
 images = ["game", "editor"]
-image_flags = { editor = "cpp_editor_oi_g5" }
+image_flags = { editor = "cpp_editor_oi_ob2_g5" }
 
 [[unit]]
 unit = "SOURCE/netwin"

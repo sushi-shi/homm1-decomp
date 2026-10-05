@@ -414,7 +414,7 @@ void advManager::GetCursorSampleSet(i32 sampleSet) {
     for (i32 index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
-        m_cursorSamples[index]->m_playbackData.volume = CURSOR_SAMPLE_VOLUME;
+        m_cursorSamples[index]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
     }
 }
 
@@ -642,7 +642,7 @@ i16 advManager::Main(struct tag_message& message) {
                 break;
             case MESSAGE_KEY_DOWN:
                 orient = -1;
-                if (gpCurPlayer->CurrentHero() != INVALID_HERO)
+                if (gpCurPlayer->CurrentHero() != HERO_ID_NONE)
                     curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
                 else
                     curHero = NULL;
@@ -896,13 +896,13 @@ i16 advManager::Main(struct tag_message& message) {
                         if (gpCurPlayer->CurrentTown() != GAME_TOWN_NONE) {
                             m_selectedCell = ADVMGR_COMMAND_TOWN_VIEW;
                             DoAdvCommand();
-                        } else if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
+                        } else if (gpCurPlayer->CurrentHero() != HERO_ID_NONE) {
                             m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                             DoAdvCommand();
                         }
                         break;
                 }
-                if (gpCurPlayer->m_currentHero != INVALID_HERO && orient >= 0) {
+                if (gpCurPlayer->m_currentHero != HERO_ID_NONE && orient >= 0) {
                     HideRoute(1, 1, 1);
                     gpMouseManager->ReallyHidePointer();
                     location = MoveHero(orient, 1, &TrigX, &TrigY, &movedSet, 0, &bEnded);
@@ -1065,7 +1065,7 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     QuickInfo(m_lastHoverCell, m_hoverCellY);
                 } else {
                     if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER
-                        && gpCurPlayer->CurrentHero() != INVALID_HERO && m_heroContextLocked) {
+                        && gpCurPlayer->CurrentHero() != HERO_ID_NONE && m_heroContextLocked) {
                         objectTypeState = MAP_OBJECT_HERO;
                         objectIdIndex = gpCurPlayer->CurrentHero();
                     } else {
@@ -1075,27 +1075,27 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     switch (objectTypeState) {
                         case MAP_OBJECT_HERO:
                             mouseX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
-                            if (mouseX < QUICK_VIEW_MIN_X)
-                                mouseX = QUICK_VIEW_MIN_X;
-                            if (mouseX + HERO_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                            if (mouseX < BORDER_EDGE_SIZE)
+                                mouseX = BORDER_EDGE_SIZE;
+                            if (mouseX + HERO_QUICK_VIEW_WIDTH > BORDER_MIDDLE_END)
                                 mouseX = HERO_QUICK_VIEW_RIGHT_X;
                             mouseY = m_hoverCellY * CELL_PIXELS - HERO_QUICK_VIEW_Y_OFFSET;
-                            if (mouseY < QUICK_VIEW_MIN_Y)
-                                mouseY = QUICK_VIEW_MIN_Y;
-                            if (mouseY + HERO_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                            if (mouseY < BORDER_EDGE_SIZE)
+                                mouseY = BORDER_EDGE_SIZE;
+                            if (mouseY + HERO_QUICK_VIEW_HEIGHT > BORDER_MIDDLE_END)
                                 mouseY = HERO_QUICK_VIEW_BOTTOM_Y;
                             HeroQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
                         case MAP_OBJECT_TOWN:
                             mouseX = m_lastHoverCell * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
-                            if (mouseX < QUICK_VIEW_MIN_X)
-                                mouseX = QUICK_VIEW_MIN_X;
-                            if (mouseX + TOWN_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                            if (mouseX < BORDER_EDGE_SIZE)
+                                mouseX = BORDER_EDGE_SIZE;
+                            if (mouseX + TOWN_QUICK_VIEW_WIDTH > BORDER_MIDDLE_END)
                                 mouseX = TOWN_QUICK_VIEW_RIGHT_X;
                             mouseY = m_hoverCellY * CELL_PIXELS - TOWN_QUICK_VIEW_Y_OFFSET;
-                            if (mouseY < QUICK_VIEW_MIN_Y)
-                                mouseY = QUICK_VIEW_MIN_Y;
-                            if (mouseY + TOWN_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                            if (mouseY < BORDER_EDGE_SIZE)
+                                mouseY = BORDER_EDGE_SIZE;
+                            if (mouseY + TOWN_QUICK_VIEW_HEIGHT > BORDER_MIDDLE_END)
                                 mouseY = TOWN_QUICK_VIEW_BOTTOM_Y;
                             TownQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
@@ -1110,13 +1110,13 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
             } else if (visible) {
                 currentHero = NULL;
                 mobileResult = 0;
-                if (gpCurPlayer->m_currentHero != INVALID_HERO) {
+                if (gpCurPlayer->m_currentHero != HERO_ID_NONE) {
                     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
                     mobileResult = gpGame->IsMobile(currentHero->m_id);
                 }
                 if (currentHero) {
                     if (m_lastHoverCell == ADVMGR_VIEW_CENTER && m_hoverCellY == ADVMGR_VIEW_CENTER
-                        && gpCurPlayer->CurrentHero() != INVALID_HERO && m_heroContextLocked) {
+                        && gpCurPlayer->CurrentHero() != HERO_ID_NONE && m_heroContextLocked) {
                         m_selectedCell = ADVMGR_COMMAND_HERO_VIEW;
                         DoAdvCommand();
                     } else if ((!mobileResult
@@ -1425,7 +1425,7 @@ i32 advManager::ProcessHover(struct tag_message* message) {
                     return 1;
                 }
                 location = GetCell(m_commandTargetX, m_commandTargetY);
-                if (gpCurPlayer->m_currentHero == INVALID_HERO) {
+                if (gpCurPlayer->m_currentHero == HERO_ID_NONE) {
                     if ((location->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_TOWN
                         && gpGame->GetTown(location->m_objectMetadata)->m_owner == giCurPlayer) {
                         gpMouseManager->SetPointer(ADVENTURE_POINTER_TOWN);
@@ -1688,12 +1688,12 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     if (gLimitUpdMinX == UPDATE_NONE)
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE
         );
     else
         BlitBitmapToScreen(
@@ -2439,14 +2439,14 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
     quickInfoShowFlag = 1;
     currentCell = NULL;
     posX = cellX * CELL_PIXELS - QUICK_INFO_X_OFFSET;
-    if (posX < QUICK_VIEW_MIN_X)
-        posX = QUICK_VIEW_MIN_X;
-    if (posX + QUICK_INFO_WIDTH > QUICK_VIEW_RIGHT)
+    if (posX < BORDER_EDGE_SIZE)
+        posX = BORDER_EDGE_SIZE;
+    if (posX + QUICK_INFO_WIDTH > BORDER_MIDDLE_END)
         posX = QUICK_INFO_RIGHT_X;
     posY = cellY * CELL_PIXELS - QUICK_INFO_Y_OFFSET;
-    if (posY < QUICK_VIEW_MIN_Y)
-        posY = QUICK_VIEW_MIN_Y;
-    if (posY + QUICK_INFO_HEIGHT > QUICK_VIEW_BOTTOM)
+    if (posY < BORDER_EDGE_SIZE)
+        posY = BORDER_EDGE_SIZE;
+    if (posY + QUICK_INFO_HEIGHT > BORDER_MIDDLE_END)
         posY = QUICK_INFO_BOTTOM_Y;
 
     pWin = new heroWindow(posX, posY, "qwikinfo.bin");
@@ -2549,7 +2549,7 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
         return;
     if (locatorSlot == LOCATOR_SLOT_CURRENT_HERO) {
         curHero = gpCurPlayer->CurrentHero();
-        if (curHero == INVALID_HERO)
+        if (curHero == HERO_ID_NONE)
             return;
         for (i = 0; i < LOCATOR_VISIBLE_COUNT; i++) {
             if (curHero == gpCurPlayer->m_heroIds[gpCurPlayer->m_heroLocatorPage + i])
@@ -2564,11 +2564,11 @@ void advManager::UpdateHeroLocator(i32 locatorSlot, i8 drawWindow, i8 updateScre
     message.command = WIDGET_COMMAND_SET_COLOR;
     message.id = widgetBase + HERO_LOCATOR_HIGHLIGHT;
     message.value = (whichHero == gpCurPlayer->m_currentHero
-                     && gpCurPlayer->m_currentHero != INVALID_HERO && !gAllBlack)
+                     && gpCurPlayer->m_currentHero != HERO_ID_NONE && !gAllBlack)
                         ? LOCATOR_HIGHLIGHT_COLOR
                         : 0;
     m_adventureWindow->BroadcastMessage(message);
-    if (whichHero == INVALID_HERO || gAllBlack) {
+    if (whichHero == HERO_ID_NONE || gAllBlack) {
         message.id = widgetBase + HERO_LOCATOR_BUTTON;
         message.command = WIDGET_COMMAND_SET_FRAME;
         message.value = locatorSlot;
@@ -2724,7 +2724,7 @@ void advManager::UpdBottomView(i8 forceUpdate, i8 drawWindow, i8 updateScreen) {
 
     if (!gbThisNetHumanPlayer[giCurPlayer] || gAllBlack)
         updated = UpdBottomViewEnemyTurn();
-    else if (gpCurPlayer->CurrentHero() == INVALID_HERO)
+    else if (gpCurPlayer->CurrentHero() == HERO_ID_NONE)
         updated = UpdBottomViewKingdom();
     else
         updated = UpdBottomViewHero();
@@ -3425,7 +3425,7 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
     statId = QUICK_VIEW_STAT_FIRST;
     playerColorWidget = QUICK_VIEW_FLAG;
     msg.type = MESSAGE_WIDGET;
-    if (heroId == INVALID_HERO)
+    if (heroId == HERO_ID_NONE)
         return;
     targetHero = gpGame->GetHero(heroId);
     if (targetHero->m_owner == giCurPlayer || m_identifyHeroActive == 1) {
@@ -3980,12 +3980,12 @@ void advManager::DeactivateCurrTown(void) {
 VA(0x0040af22, 0x1c)
 void advManager::DeactivateCurrHero(void) {
     DemobilizeCurrHero();
-    gpCurPlayer->m_currentHero = INVALID_HERO;
+    gpCurPlayer->m_currentHero = HERO_ID_NONE;
 }
 
 VA(0x0040af3e, 0x41)
 void advManager::MobilizeCurrHero(i32 update) {
-    if (gpCurPlayer->m_currentHero == INVALID_HERO)
+    if (gpCurPlayer->m_currentHero == HERO_ID_NONE)
         return;
     if (m_heroContextLocked)
         return;
@@ -3994,7 +3994,7 @@ void advManager::MobilizeCurrHero(i32 update) {
 
 VA(0x0040af7f, 0x15e)
 void advManager::DemobilizeCurrHero(void) {
-    if (gpCurPlayer->m_currentHero == INVALID_HERO)
+    if (gpCurPlayer->m_currentHero == HERO_ID_NONE)
         return;
     if (!m_heroContextLocked)
         return;
@@ -4068,7 +4068,7 @@ void advManager::SetHeroContext(i8 heroId, i8 update) {
     mapCell* cellPtrItem;
     hero* heroPtr;
 
-    if (heroId == INVALID_HERO)
+    if (heroId == HERO_ID_NONE)
         return;
     wasVisible = gpMouseManager->IsVis();
     gpMouseManager->ReallyHidePointer();
@@ -4247,18 +4247,18 @@ void advManager::ViewPuzzle(void) {
     for (j = 0; j < PUZZLE_PIECE_COUNT; j++)
         puzzleIcn->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
     gpWindowManager->SaveFizzleSource(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
-    pWin = new heroWindow(PUZZLE_WINDOW_X, PUZZLE_WINDOW_Y, "viewpuzl.bin");
+    pWin = new heroWindow(RADAR_LEFT, RADAR_TOP, "viewpuzl.bin");
     if (!pWin)
         MemError();
     gpWindowManager->AddWindow(pWin, WINDOW_Z_ORDER_APPEND, 1);
@@ -4299,10 +4299,10 @@ void advManager::ViewPuzzle(void) {
     if (visibleCount != PUZZLE_PIECE_COUNT) {
         gpMouseManager->ReallyHidePointer();
         gpWindowManager->FizzleForward(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
             PUZZLE_FIZZLE_TIME
         );
         gpMouseManager->ReallyShowPointer();
@@ -4393,7 +4393,7 @@ void advManager::CastSpell(i8 spell) {
     hero* caster;
     i32 guardianCount;
 
-    if (gpCurPlayer->CurrentHero() != INVALID_HERO)
+    if (gpCurPlayer->CurrentHero() != HERO_ID_NONE)
         caster = gpGame->GetHero(gpCurPlayer->m_currentHero);
     else
         caster = NULL;
@@ -4480,14 +4480,14 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     prevTilesets[TILESET_TREE32] = gpResourceManager->GetIcon("tree6.icn");
     prevTilesets[TILESET_MTN32] = gpResourceManager->GetIcon("mtn6.icn");
     prevTilesets[TILESET_TOWN32] = gpResourceManager->GetIcon("town6.icn");
-    if (gpCurPlayer->CurrentHero() != INVALID_HERO)
+    if (gpCurPlayer->CurrentHero() != HERO_ID_NONE)
         prevHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     FillBitmapArea(
         gpWindowManager->m_screen,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE,
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
         0
     );
 
@@ -4828,13 +4828,13 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     }
 
     gpWindowManager->UpdateScreenRegion(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
     sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
-    win = new heroWindow(WORLD_WINDOW_X, WORLD_WINDOW_Y, gText);
+    win = new heroWindow(RADAR_LEFT, RADAR_TOP, gText);
     if (!win)
         MemError();
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
@@ -5169,7 +5169,7 @@ i16 CPanelHandler(struct tag_message& message) {
 
 VA(0x0040de70, 0x95)
 void advManager::CheckCastSpell(void) {
-    if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
+    if (gpCurPlayer->CurrentHero() != HERO_ID_NONE) {
         MobilizeCurrHero(0);
         CompleteDraw(0);
         UpdateScreen(0, 0);
@@ -5198,7 +5198,7 @@ void advManager::AdvPanel(void) {
         adventurePanel = new heroWindow(160, 40, "apanel.bin");
         if (adventurePanel == NULL)
             MemError();
-        if (gpCurPlayer->CurrentHero() == INVALID_HERO) {
+        if (gpCurPlayer->CurrentHero() == HERO_ID_NONE) {
             message.type = MESSAGE_WIDGET;
             message.id = PANEL_SEARCH;
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
@@ -5572,14 +5572,14 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     giLimitUpdMinY <<= CELL_PIXEL_SHIFT;
     giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << CELL_PIXEL_SHIFT) - 1;
     giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << CELL_PIXEL_SHIFT) - 1;
-    if (gLimitUpdMinX < COMBO_UPDATE_MIN)
-        gLimitUpdMinX = COMBO_UPDATE_MIN;
-    if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
-        giLimitUpdMaxX = COMBO_UPDATE_MAX;
-    if (giLimitUpdMinY < COMBO_UPDATE_MIN)
-        giLimitUpdMinY = COMBO_UPDATE_MIN;
-    if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
-        giLimitUpdMaxY = COMBO_UPDATE_MAX;
+    if (gLimitUpdMinX < BORDER_EDGE_SIZE)
+        gLimitUpdMinX = BORDER_EDGE_SIZE;
+    if (giLimitUpdMaxX > BORDER_MIDDLE_END - 1)
+        giLimitUpdMaxX = BORDER_MIDDLE_END - 1;
+    if (giLimitUpdMinY < BORDER_EDGE_SIZE)
+        giLimitUpdMinY = BORDER_EDGE_SIZE;
+    if (giLimitUpdMaxY > BORDER_MIDDLE_END - 1)
+        giLimitUpdMaxY = BORDER_MIDDLE_END - 1;
     if (gLimitUpdMinX > giLimitUpdMaxX || giLimitUpdMinY > giLimitUpdMaxY) {
         gLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
@@ -5769,10 +5769,10 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
         location->m_flags |= MAP_CELL_HERO_CURSOR;
         gpMouseManager->ReallyHidePointer();
         gpWindowManager->SaveFizzleSource(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE
         );
         CompleteDraw(0);
         PollSound();
@@ -5780,10 +5780,10 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
         if (!gbHumanPlayer[giCurPlayer])
             curFizzle -= TELEPORT_REMOTE_FIZZLE_ADJUSTMENT;
         gpWindowManager->FizzleForward(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
             FIZZLE_USE_DEFAULT_DELAY
         );
         PollSound();
@@ -5927,7 +5927,7 @@ void advManager::SummonBoat(void) {
         heroSlot = gpCurPlayer->CurrentHero();
         for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
             if (gpGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                && gpGame->m_boats[slotIndex].heroId == (heroSlot | SUMMON_OCCUPIED_FLAG)) {
+                && gpGame->m_boats[slotIndex].heroId == (heroSlot | BOAT_OCCUPIED_FLAG)) {
                 foundBoat = 1;
                 break;
             }
@@ -5935,7 +5935,7 @@ void advManager::SummonBoat(void) {
         if (!foundBoat) {
             for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
                 if (gpGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                    && (gpGame->m_boats[slotIndex].heroId & SUMMON_OCCUPIED_FLAG)
+                    && (gpGame->m_boats[slotIndex].heroId & BOAT_OCCUPIED_FLAG)
                     && gpGame->m_boats[slotIndex].owner == giCurPlayer) {
                     foundBoat = 1;
                     break;
@@ -5957,17 +5957,17 @@ void advManager::SummonBoat(void) {
                 && boatRec->y >= m_mapOriginY
                 && boatRec->y < m_mapOriginY + ADVMGR_VIEW_CELL_COUNT) {
                 clipX = (boatRec->x - m_mapOriginX) * CELL_PIXELS - SUMMON_FIZZLE_X_OFFSET;
-                if (clipX < SUMMON_SCREEN_MARGIN)
-                    clipX = SUMMON_SCREEN_MARGIN;
+                if (clipX < BORDER_EDGE_SIZE)
+                    clipX = BORDER_EDGE_SIZE;
                 clipY = (boatRec->y - m_mapOriginY) * CELL_PIXELS - SUMMON_FIZZLE_Y_OFFSET;
-                if (clipY < SUMMON_SCREEN_MARGIN)
-                    clipY = SUMMON_SCREEN_MARGIN;
+                if (clipY < BORDER_EDGE_SIZE)
+                    clipY = BORDER_EDGE_SIZE;
                 clipWidth = SUMMON_FIZZLE_WIDTH;
                 clipHeight = SUMMON_FIZZLE_HEIGHT;
-                if (clipX + clipWidth >= SUMMON_SCREEN_LIMIT)
-                    clipWidth = SUMMON_SCREEN_LIMIT - clipX;
-                if (clipY + clipHeight >= SUMMON_SCREEN_LIMIT)
-                    clipHeight = SUMMON_SCREEN_LIMIT - clipY;
+                if (clipX + clipWidth >= BORDER_MIDDLE_END)
+                    clipWidth = BORDER_MIDDLE_END - clipX;
+                if (clipY + clipHeight >= BORDER_MIDDLE_END)
+                    clipHeight = BORDER_MIDDLE_END - clipY;
                 gpWindowManager->SaveFizzleSource(clipX, clipY, clipWidth, clipHeight);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 gpWindowManager
@@ -6019,7 +6019,7 @@ void advManager::ShowRoute(i32 redraw, i32, i32 updateButton) {
     reachable = 0;
     if (!gbThisNetHumanPlayer[giCurPlayer] && (!giDebugLevel || !gShowComputerRoute))
         return;
-    if (gpCurPlayer->m_currentHero == INVALID_HERO) {
+    if (gpCurPlayer->m_currentHero == HERO_ID_NONE) {
         HideRoute(redraw, 0, 1);
         return;
     }
@@ -6094,7 +6094,7 @@ void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
             WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
         );
 
-    if (clearDestination && gpCurPlayer->m_currentHero != INVALID_HERO) {
+    if (clearDestination && gpCurPlayer->m_currentHero != HERO_ID_NONE) {
         currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
         currentHero->m_destinationX = HERO_DESTINATION_NONE;
         currentHero->m_destinationY = HERO_DESTINATION_NONE;
@@ -6112,7 +6112,7 @@ void advManager::HideRoute(i32 redraw, i32 clearDestination, i32 updateButton) {
 
 VA(0x004104fa, 0x7d)
 void advManager::CheckDimHero(void) {
-    if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == INVALID_HERO)
+    if (!gbThisNetHumanPlayer[giCurPlayer] || gpCurPlayer->CurrentHero() == HERO_ID_NONE)
         return;
     if (!gpGame->IsMobile(gpCurPlayer->CurrentHero())) {
         ShowRoute(1, 0, 0);
@@ -6142,7 +6142,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
 
     if (!gbThisNetHumanPlayer[giCurPlayer])
         return;
-    if (gpCurPlayer->m_currentHero == INVALID_HERO)
+    if (gpCurPlayer->m_currentHero == HERO_ID_NONE)
         return;
 
     currentHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
@@ -6333,7 +6333,7 @@ void advManager::SetInitialMapOrigin(void) {
         townPointer = gpGame->GetTown(gpCurPlayer->m_currentTown);
         m_mapOriginX = townPointer->m_x - ADVMGR_VIEW_CENTER;
         m_mapOriginY = townPointer->m_y - ADVMGR_VIEW_CENTER;
-    } else if (gpCurPlayer->CurrentHero() != INVALID_HERO) {
+    } else if (gpCurPlayer->CurrentHero() != HERO_ID_NONE) {
         MobilizeCurrHero(0);
     } else if (gpCurPlayer->m_heroCount > 0) {
         heroPtr = &gpGame->m_heroRecs[gpCurPlayer->m_heroIds[0]];
@@ -6593,6 +6593,9 @@ DATA(0x004a6754)
 i32 gCurHourGlassPhase = 0;
 DATA(0x0048e148)
 i32 gLastHourGlassPhase = 1;
+// No retail code reads this value.
+DATA(0x0048e14c)
+i32 gUnusedAdventureValue = 28;
 DATA(0x004a6758)
 i32 gForceUpdate = 0;
 DATA(0x004a6728)

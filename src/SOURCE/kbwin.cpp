@@ -382,8 +382,8 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
             ResizeWindow(
                 KBWIN_KEEP_POSITION,
                 KBWIN_KEEP_POSITION,
-                KBWIN_WIDTH_640,
-                KBWIN_HEIGHT_480
+                LOGICAL_SCREEN_WIDTH,
+                LOGICAL_SCREEN_HEIGHT
             );
             break;
         case KBWIN_MENU_SIZE_800_600:
@@ -427,7 +427,7 @@ void UpdateDfltMenu(HMENU menu) {
 
     if (CURRENT_GRAPHICS_CONFIG.showMenu == 0)
         return;
-    if (gMainVideoModeWidth <= KBWIN_WIDTH_640)
+    if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH)
         EnableMenuItem(menu, KBWIN_MENU_SIZE_640_480, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_800)
         EnableMenuItem(menu, KBWIN_MENU_SIZE_800_600, MF_GRAYED);
@@ -548,8 +548,8 @@ VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
     i32 i;
 
-    gConfig.musicVolume = 1;
-    gConfig.soundVolume = 1;
+    gConfig.musicVolume = SOUND_VOLUME_100;
+    gConfig.soundVolume = SOUND_VOLUME_100;
     gConfig.autosave = 1;
     gConfig.showRoute = 1;
     gConfig.blackoutComputer = 0;
@@ -557,14 +557,14 @@ void SetGameDefaults(void) {
         gConfig.gfx[i].showMenu = 1;
         gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
         gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
-        if (gMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gDDrawAttached) {
+        if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH && gDDrawAttached) {
             gConfig.gfx[i].fullScreen = 1;
             gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
             gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
         } else {
             gConfig.gfx[i].fullScreen = 1;
-            gConfig.gfx[i].width = DEFAULT_WINDOW_WIDTH;
-            gConfig.gfx[i].height = DEFAULT_WINDOW_HEIGHT;
+            gConfig.gfx[i].width = LOGICAL_SCREEN_WIDTH;
+            gConfig.gfx[i].height = LOGICAL_SCREEN_HEIGHT;
         }
     }
     gConfig.blackoutComputer = 0;
@@ -1072,6 +1072,13 @@ void WritePrefs(void) {
     }
 }
 
+DATA(0x0049e700)
+char gAppName[] = localization::Tr("window.gAppName");
+DATA(0x0049e708)
+char gTitle[] = localization::Tr("window.gTitle");
+// No retail code reads this value; it sits between gTitle and gcCDTrackName.
+DATA(0x0049e71c)
+i32 gUnusedWindowValue = -1;
 // This path deliberately has no leading slash.
 DATA(0x0049e720)
 static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
@@ -1087,7 +1094,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 
     wsprintfA(szPath, "%c:", driveLetter);
     oldMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-    if (GetDiskFreeSpaceExA(szPath, &availToCaller, &total, &freeBytes) != 0) {
+    if (GetDiskFreeSpaceExA(szPath, &availToCaller, &total, &freeBytes) != FALSE) {
         SetErrorMode(oldMode);
         return true;
     } else {
@@ -1241,11 +1248,6 @@ char* FindLastToken(char* text, char token) {
     return NULL;
 }
 
-// kbwin owns retail .data 0x0049f7a8-0x004a0503 and .bss 0x004ca490-0x004ca903.
-DATA(0x0049e700)
-char gAppName[] = localization::Tr("window.gAppName");
-DATA(0x0049e708)
-char gTitle[] = localization::Tr("window.gTitle");
 DATA(0x004a9e34)
 HWND hwndApp = NULL;
 DATA(0x004a9e38)

@@ -533,7 +533,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
         gLimitToExtent = 0;
         gComputeExtent = 0;
         gFullCombatScreenDrawn = 0;
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
             if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
@@ -545,7 +545,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
         }
     } else if (updateScreen == 1) {
         gFullCombatScreenDrawn = 1;
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();
     }

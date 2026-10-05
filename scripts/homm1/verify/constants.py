@@ -8,6 +8,9 @@ context proves a semantic replacement:
   * integer zero implicitly converted to a pointer -> NULL
   * integer zero/one used as Win32 BOOL -> FALSE/TRUE (VC4 has no `bool`,
     `true` or `false`: C2065; Clang's C++ bool conditions are not a VC4 type)
+  * integer zero/one stored to, passed as or returned as a C++ `bool` ->
+    false/true, only when the target compiler (config/units.toml) has the
+    keyword (VC5 and later); conditions and logical operands are truthiness
   * integer equality whose other direct operand is an enum with one uniquely
     named value -> member
 
@@ -39,19 +42,33 @@ from concurrent.futures import ProcessPoolExecutor
 from dataclasses import asdict, dataclass
 from pathlib import Path
 
-from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO, compiler_id
+from homm1.verify.constant_context import semantic_context
 from homm1.verify.srcscan import blank_comments
 
 
 CDB = IMAGE_BUILD / "clangd/compile_commands.json"
 REPORT = IMAGE_BUILD / "gen/bare_constants.tsv"
+CONTEXT_REPORT = IMAGE_BUILD / "gen/constant_contexts.tsv"
 _NUMBER = re.compile(rb"(?:0[xX][0-9A-Fa-f]+|[0-9]+)(?:[uUlL]*)(?![A-Za-z0-9_.])")
 _FLOAT = re.compile(rb"(?:[0-9]+\.[0-9]*|\.[0-9]+)(?:[eE][-+]?[0-9]+)?[fFlL]?"
                     rb"|[0-9]+[eE][-+]?[0-9]+[fFlL]?")
 _SUFFIX = re.compile(r"[uUlL]+$")
 _BOOLEAN_TYPE_SPELLINGS = {"BOOL"}
-#: VC4 (MSVC 4.x) predates the bool keywords; spelling them is C2065.
+#: VC4 (MSVC 4.x) predates the bool keywords; spelling them is C2065. VC5
+#: introduced `bool`, `true` and `false`, so a VC6 target (Buka) keeps them.
 _CXX_BOOLEAN = re.compile(r"\b(?:false|true)\b")
+_BOOL_COMPILERS = frozenset(("vc5", "vc6"))
+
+
+def _compiler_has_bool() -> bool:
+    try:
+        return compiler_id() in _BOOL_COMPILERS
+    except (OSError, KeyError):
+        return False
+
+
+_HAS_BOOL = _compiler_has_bool()
 #: Clang's strict-domain view (Domains.h selects it by __cplusplus).
 _STRICT_VIEW = ["/std:c++20", "/Zc:__cplusplus"]
 #: Macro names a proven replacement may spell; each must be visible.
@@ -77,6 +94,8 @@ class Site:
     review_group: str
     review_context: str
     reason: str
+    context_key: str = ""
+    context_label: str = ""
 
     @property
     def proven(self) -> bool:
@@ -87,10 +106,30 @@ def _flags(entry: dict) -> list[str]:
     args = list(entry.get("arguments") or entry["command"].split())
     src = entry["file"]
     out = ["--driver-mode=cl"]
-    for arg in args[1:]:
+    rest = args[1:]
+    index = 0
+    while index < len(rest):
+        arg = rest[index]
+        # The compile database pins the content-addressed localization overlay
+        # of the source as it was when the database was written. An edited
+        # file would parse through that stale copy and every offset after the
+        # edit would miss its literal; regenerate the overlay below instead.
+        if (arg == "-Xclang" and index + 3 < len(rest)
+                and rest[index + 1] in ("-ivfsoverlay", "-include")
+                and rest[index + 2] == "-Xclang"
+                and "/build/" in rest[index + 3].replace("\\", "/")
+                and "localization" in rest[index + 3]):
+            index += 4
+            continue
         if arg == "/c" or arg == src or arg.endswith(src):
+            index += 1
             continue
         out.append(arg)
+        index += 1
+    directory = Path(entry.get("directory") or REPO)
+    source = Path(src) if Path(src).is_absolute() else directory / src
+    from homm1.graph.localization import clang_args
+    out.extend(clang_args(directory, source))
     return out
 
 
@@ -293,10 +332,14 @@ def _semantic_type_role(cidx, ty):
     # condition, a logical operand) is int truthiness in the retail compiler.
     if _type_spelling(ty) in _BOOLEAN_TYPE_SPELLINGS:
         return "boolean"
+    if _HAS_BOOL and canonical.kind == cidx.TypeKind.BOOL:
+        return "boolean"
     return None
 
 
 def _boolean_classification(value, type_spelling, visible, reason):
+    if _HAS_BOOL and type_spelling == "bool":
+        return "boolean", "true" if value else "false", type_spelling, reason
     name = "TRUE" if value else "FALSE"
     if name not in visible:
         return ("numeric", "", type_spelling,
@@ -431,12 +474,38 @@ def _case_subject_type(cidx, stack):
     return None
 
 
+def _truth_context(cidx, stack) -> bool:
+    """Whether the literal's implicit conversion is a condition's truthiness.
+
+    Clang converts `while (1)`, `!0` and `x && 1` operands to `bool`; those
+    are tests, not values stored to a boolean destination."""
+    transparent = {cidx.CursorKind.PAREN_EXPR, cidx.CursorKind.UNEXPOSED_EXPR}
+    for pos in range(len(stack) - 1, -1, -1):
+        node = stack[pos]
+        if node.kind in transparent:
+            continue
+        if node.kind in (cidx.CursorKind.IF_STMT, cidx.CursorKind.WHILE_STMT,
+                         cidx.CursorKind.DO_STMT, cidx.CursorKind.FOR_STMT):
+            return True
+        if node.kind == cidx.CursorKind.CONDITIONAL_OPERATOR:
+            children = list(node.get_children())
+            owner = stack[pos + 1] if pos + 1 < len(stack) else None
+            return bool(children) and owner is not None and _same_cursor(children[0], owner)
+        if node.kind == cidx.CursorKind.UNARY_OPERATOR:
+            return "".join(t.spelling for t in node.get_tokens()).startswith("!")
+        if node.kind == cidx.CursorKind.BINARY_OPERATOR:
+            return node.spelling in ("&&", "||")
+        return False
+    return False
+
+
 def _classify(cidx, literal, stack, value, enum_values, visible):
     if _explicit_cast_ancestor(cidx, stack):
         return "numeric", "", "", "explicit conversion is an ingest boundary"
 
     parent = stack[-1] if stack else None
-    if parent is not None and parent.kind == cidx.CursorKind.UNEXPOSED_EXPR:
+    if (parent is not None and parent.kind == cidx.CursorKind.UNEXPOSED_EXPR
+            and not _truth_context(cidx, stack)):
         typed = _typed_value_classification(
             cidx, value, parent.type, visible, "implicit conversion")
         if typed is not None:
@@ -741,10 +810,12 @@ def _scan_entry(payload):
                         site_visible)
                     review_group, review_context = _review_group(
                         cidx, node, stack, scope, value, cls)
+                    key, label = semantic_context(cidx, node, stack)
                     sites.append(Site(
                         str(rel), node.location.line, node.location.column,
                         node.location.offset, function, scope, spelling, value,
-                        cls, repl, context, review_group, review_context, reason))
+                        cls, repl, context, review_group, review_context, reason,
+                        key, label))
         for child in node.get_children():
             walk(child, stack + (node,))
 
@@ -800,13 +871,36 @@ def write_report(path: Path, sites: list[Site]) -> None:
     fields = list(asdict(sites[0]).keys()) if sites else [
         "file", "line", "column", "offset", "function", "scope",
         "spelling", "value", "classification", "replacement",
-        "context_type", "review_group", "review_context", "reason"]
+        "context_type", "review_group", "review_context", "reason",
+        "context_key", "context_label"]
     lines = ["\t".join(fields)]
     for site in sites:
         row = asdict(site)
         lines.append("\t".join("" if row[name] is None else str(row[name])
                                for name in fields))
     path.write_text("\n".join(lines) + "\n")
+
+
+def write_groups(path: Path, sites: list[Site]) -> None:
+    """Derived destination worklist; an absent identity is never a shared key."""
+    import csv
+    groups: dict[str, list[Site]] = {}
+    for site in sites:
+        key = site.context_key or f"source:{site.file}:{site.offset}"
+        groups.setdefault(key, []).append(site)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    with path.open("w", newline="") as output:
+        writer = csv.writer(output, delimiter="\t", lineterminator="\n")
+        writer.writerow(["context_key", "context_label", "sites", "values",
+                         "sample_locations", "review_groups", "disposition"])
+        for key, rows in sorted(groups.items(), key=lambda pair: (-len(pair[1]), pair[0])):
+            automatic = all(s.proven for s in rows)
+            writer.writerow([key, rows[0].context_label, len(rows),
+                             ",".join(map(str, sorted({s.value for s in rows
+                                                       if s.value is not None}))),
+                             ";".join(f"{s.file}:{s.line}:{s.column}" for s in rows[:20]),
+                             ",".join(sorted({s.review_group for s in rows})),
+                             "needs-existing-name" if automatic else "pending-review"])
 
 
 def findings(sites: list[Site]) -> list[str]:
@@ -850,6 +944,8 @@ def cxx_boolean_spellings(*, repo: Path = REPO) -> list[str]:
     """`true`/`false` spellings: VC4 has no bool keywords (C2065), so the
     retail-era spelling of a BOOL value is the Win32 TRUE/FALSE macro."""
     findings = []
+    if _HAS_BOOL:
+        return findings
     for root_name in ("include", "src"):
         root = repo / root_name
         if not root.is_dir():
@@ -1053,6 +1149,7 @@ def main(argv=None) -> int:
     remaining, stale = open_sites(sites, keeps)
     if not args.no_report:
         write_report(REPORT, sites)
+        write_groups(CONTEXT_REPORT, [site for site in sites if is_counted(site)])
         write_open_report(OPEN_REPORT, remaining)
     if args.list is not None:
         for site in remaining:
@@ -1067,7 +1164,8 @@ def main(argv=None) -> int:
         for finding in bad + cxx_booleans:
             print(f"   {finding}")
     print(f"[constants] {summary(sites)}")
-    print(f"[constants] true/false spelling(s) (C2065 under VC4): {len(cxx_booleans)}")
+    if not _HAS_BOOL:
+        print(f"[constants] true/false spelling(s) (C2065 under VC4): {len(cxx_booleans)}")
     if not args.no_report:
         print(f"[constants] report: {REPORT.relative_to(REPO)}")
     if RETAIL_VIEW_UNITS:

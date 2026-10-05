@@ -248,7 +248,7 @@ void PlayMusic(int track) {
             gMusicFilename,
             "%s%s%02d-AudioTrack %02d.ogg",
             gcRegCDRomPath,
-            "\\TRACKS\\",
+            gTracksPath,
             discTrack,
             discTrack
         );

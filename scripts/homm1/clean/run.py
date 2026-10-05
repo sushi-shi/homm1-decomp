@@ -1,15 +1,20 @@
-"""homm1 clean - generate the clean source tree, verify it, publish it.
+"""homm1 clean - generate the clean source trees, verify them, publish them.
 
     homm1 clean --out build/clean
-    homm1 clean --out build/clean --verify
-    homm1 clean --out build/clean --verify --publish source-win95-1.2-1997
+    homm1 clean --out build/clean --verify --publish             # source-buka-2003
+    homm1 clean --variant classic --out build/classic --verify --publish
 
 The matching tree carries scaffolding that exists only to prove the source
 reproduces retail object code: address annotations (`VA`, `DATA`,
 `VA_COMPGEN`, `RVA_DYNINIT`), the dual-build enum machinery (`H1_ENUM_*`),
 the `#line` pins of retail assertion lines, and reconstruction comments. The
-generator resolves each macro to the production expansion the pinned VC4
-compiler already sees and removes the rest. See docs/clean-source.md.
+generator resolves each macro to the production expansion the pinned VC6
+compiler already sees and removes the rest.
+
+Two variants come from one snapshot. `source` keeps the catalog references
+(`localization::Tr("id")`) and builds Russian or English with VC6; `classic`
+is the same tree with the Russian text spelled out as readable UTF-8 for
+reading. See docs/clean-source.md.
 """
 
 from __future__ import annotations
@@ -25,14 +30,20 @@ import sys
 import tarfile
 import tempfile
 
-from homm1.clean import source
+from homm1.clean import classic, source
 from homm1.clean.project import EXECUTABLE
 from homm1.core.paths import REPO
 from homm1.core.usage import logged
 
 MARKER = ".homm1-clean-generated"
 PROVENANCE = "Generated-By: homm1 clean"
-DEFAULT_BRANCH = "source-win95-1.2-1997"
+#: The retail target the branches are named after.
+TARGET = "buka-2003"
+VARIANTS = ("source", "classic")
+
+
+def default_branch(variant: str) -> str:
+    return f"{variant}-{TARGET}"
 
 
 def git(repo: Path, *arguments: str, **kwargs) -> str:
@@ -91,22 +102,48 @@ def selected(files: dict[str, bytes]) -> dict[str, str]:
     return chosen
 
 
-def generate(files: dict[str, bytes], *, control: bool = False
+LOCALE_FILES = ("locales/messages.def", "locales/ru.po", "locales/format-variants.json")
+
+
+def catalog_of(files: dict[str, bytes]):
+    """The snapshot's localization catalog (None without one)."""
+    from homm1.graph.catalog import Catalog
+    if "locales/messages.def" not in files:
+        return None
+    variants = files.get("locales/format-variants.json")
+    return Catalog.parse(files["locales/messages.def"].decode("utf-8"),
+                         files["locales/ru.po"].decode("utf-8"),
+                         variants.decode("utf-8") if variants is not None else None)
+
+
+def generate(files: dict[str, bytes], *, variant: str = "source", control: bool = False
              ) -> tuple[dict[str, bytes], list[str]]:
     """The clean tree as {path: bytes}, plus any self-check failures.
 
-    `control` gives verification's line-preserving variant: the same macro
+    `variant` selects the source tree or its classic (readable Russian) view.
+    `control` gives verification's line-preserving source tree: the same macro
     expansions and comment removal, with every line, `#line` pin and
-    scaffolding header and include kept, so VC4's /Gi path and line
-    state equals the matching build's."""
+    scaffolding header and include kept, so the assertion lines and file
+    names equal the matching build's."""
+    if variant not in VARIANTS:
+        raise ValueError(f"unknown variant {variant!r}; choose from {', '.join(VARIANTS)}")
+    if control and variant != "source":
+        raise ValueError("the control tree is a source tree")
     transforms = {"cpp": source.clean_cpp, "asm": source.clean_asm, "rc": source.clean_rc}
     kinds = {"cpp": {}, "asm": {"asm": True}, "rc": {"rc": True}}
+    catalog = catalog_of(files)
+    if variant == "classic" and catalog is None:
+        raise ValueError("the classic view needs the snapshot's locales/ catalog")
     output: dict[str, bytes] = {}
     problems: list[str] = []
     for name, kind in sorted(selected(files).items()):
         text = files[name].decode("utf-8")
         try:
             cleaned = transforms[kind](text, keep_lines=control)
+            if variant == "classic" and kind == "cpp":
+                cleaned = classic.render_cpp(cleaned, catalog)
+            elif variant == "classic" and kind == "rc":
+                cleaned = classic.render_rc(cleaned, catalog)
         except ValueError as error:
             raise ValueError(f"{name}: {error}") from error
         if control:
@@ -119,24 +156,26 @@ def generate(files: dict[str, bytes], *, control: bool = False
             problems.append(f"{name}: comment survived")
         problems += [f"{name}: stranded punctuation: {line}"
                      for line in source.stranded(text, cleaned, **kinds[kind])]
+        if variant == "classic" and "localization::" in cleaned:
+            problems.append(f"{name}: a catalog reference survived the classic rendering")
         output[name] = cleaned.encode("utf-8")
-    for name in ("locales/messages.def", "locales/ru.po", "locales/format-variants.json"):
-        if name in files:
-            output[name] = files[name]
-    if "locales/messages.def" in files:
+    if variant == "source" and catalog is not None:
+        output.update({name: files[name] for name in LOCALE_FILES if name in files})
         output["catalog.py"] = files["scripts/homm1/graph/catalog.py"]
     if control:
-        import json
-        locale = json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru")
-        output["build.json"] = json.dumps({"locale": locale}).encode()
+        output["build.json"] = json.dumps({"locale": retail_locale(files)}).encode()
         # The scaffolding headers keep their declarations and definitions
         # (match.h now also carries the integer aliases), comments blanked.
         output.update({name: source.blank(source.strip_comments(files[name].decode())).encode()
                        for name in source.DROP_FILES})
         return output, problems
     from homm1.clean.project import project_files
-    output.update(project_files(files))
+    output.update(project_files(files, variant))
     return output, problems
+
+
+def retail_locale(files: dict[str, bytes]) -> str:
+    return json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru")
 
 
 def validate_output(repo: Path, requested: Path) -> Path:
@@ -185,17 +224,23 @@ def fingerprint(files: dict[str, bytes]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="homm1 clean", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--out", type=Path, default=Path("build/clean"))
+    parser.add_argument("--variant", choices=VARIANTS, default="source",
+                        help="source: the buildable tree with its locale catalog (default); "
+                             "classic: the same tree with readable Russian text")
+    parser.add_argument("--out", type=Path, help="output directory (default: build/<variant>)")
     parser.add_argument("--ref", default="HEAD", help="committed revision to export")
     parser.add_argument("--working-tree", action="store_true",
                         help="preview tracked working files (cannot publish)")
     parser.add_argument("--verify", action="store_true",
-                        help="build the tree with the pinned VC4 toolchain and compare "
-                             "it with the matching build")
-    parser.add_argument("--publish", metavar="BRANCH", nargs="?", const=DEFAULT_BRANCH,
-                        help=f"commit the tree as a single-commit snapshot branch "
-                             f"(default: {DEFAULT_BRANCH}); local only, never pushed")
+                        help="build the trees with the pinned VC6 toolchain and compare "
+                             "them with the matching build")
+    parser.add_argument("--publish", metavar="BRANCH", nargs="?", const="",
+                        help="commit the tree as a single-commit snapshot branch "
+                             "(default: <variant>-" + TARGET + "); local only, never pushed")
     args = parser.parse_args(argv)
+    args.out = args.out or Path("build") / args.variant
+    if args.publish == "":
+        args.publish = default_branch(args.variant)
     try:
         if args.publish and args.working_tree:
             raise ValueError("publication requires a committed revision, not --working-tree")
@@ -203,7 +248,7 @@ def main(argv: list[str] | None = None) -> int:
             raise ValueError("--verify compares with the current build; check out the "
                              "requested revision first")
         commit, inputs = snapshot(REPO, args.ref, working=args.working_tree)
-        files, problems = generate(inputs)
+        files, problems = generate(inputs, variant=args.variant)
         if problems:
             for problem in problems[:20]:
                 print(f"[clean] {problem}", file=sys.stderr)
@@ -214,7 +259,8 @@ def main(argv: list[str] | None = None) -> int:
         print(f"[clean] wrote {len(files)} files to {output} from {commit[:12]}"
               f"{' (working tree)' if args.working_tree else ''}; "
               f"SHA-256 {fingerprint(files)}")
-        print("[clean] no comments, scaffolding macros, #line pins or stranded punctuation remain")
+        print(f"[clean] {args.variant}: no comments, scaffolding macros, #line pins or "
+              "stranded punctuation remain")
         if args.verify:
             from homm1.clean.verify import verify
             if not args.working_tree and git(REPO, "status", "--porcelain", "--", "src",
@@ -222,7 +268,7 @@ def main(argv: list[str] | None = None) -> int:
                 print("[clean] note: the matching build reads the working tree, which "
                       "differs from HEAD; commit first for a like-for-like comparison",
                       file=sys.stderr)
-            status = verify(output, inputs)
+            status = verify(output, inputs, args.variant)
             if status:
                 return status
         if args.publish:

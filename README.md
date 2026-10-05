@@ -73,6 +73,16 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Review unions: **9 definitions**, each one shared storage with typed
   readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
   argument-address walking.
+- [x] Enum-domain review ([ledger](config/reviews/enum-reuse.tsv),
+  [notes](docs/enum-reuse.md)): **403** starting blocks reviewed (67
+  canonical, 288 retained, 48 merged); **98** members merged into shared
+  domains and **43** unused members retired; **168** cross-domain value
+  collisions remain, each with a reviewed reason.
+- [ ] Name bare constants: **1,934** open literals (`homm1 verify constants`
+  floor); compiler-proven NULL/bool/enum replacements are at 0.
+- [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
+  so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only
+  where a unit parses.
 - [ ] Common-code review (helpers, accessors, macros): every source unit is
   read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
   **14 families** retained at **77 sites** (22 of them calls shortened by
@@ -86,9 +96,16 @@ review inputs, not defect totals. Preserve banked matches.
 
 ```text
 decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |
-        v
-source-win95-1.0
+        |                                                                 |
+        v                                                    +------------+------------+
+source-win95-1.0                                             |                         |
+                                                             v                         v
+                                                     source-buka-2003         classic-buka-2003
+                                                             |
+                                                    +--------+--------+
+                                                    |                 |
+                                                    v                 v
+                                                  port            source-te
 ```
 
 | Branch | Purpose |
@@ -98,6 +115,10 @@ source-win95-1.0
 | [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
 | [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka port; implementation and target migration in progress |
 | [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
+| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Generated clean source for Buka 2003: the primary C++ tree, with its Russian and English text catalog |
+| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | The same generated tree as a reading view, its text spelled out as UTF-8 Russian |
+| port | Cross-platform port based on `source-buka-2003` (planned) |
+| source-te | Branch based on `source-buka-2003` (planned) |
 
 ## Quickstart
 

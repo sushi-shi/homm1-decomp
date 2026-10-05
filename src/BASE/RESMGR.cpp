@@ -68,7 +68,7 @@ void resourceManager::GetBackdropAtLoc(
     imageHeight = ReadWord();
     for (curRow = destinationY; curRow < destinationY + imageHeight; curRow++) {
         ReadBlock(
-            destination->m_pixels + curRow * RESOURCE_MANAGER_BACKDROP_ROW_BYTES + destinationX,
+            destination->m_pixels + curRow * LOGICAL_SCREEN_WIDTH + destinationX,
             width
         );
     }

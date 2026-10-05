@@ -69,10 +69,7 @@ CRT_REPLACES = "libc.lib"
 #: Buka retail was linked /DEBUG: its .rdata starts with the IAT and then a
 #: 0x1c-byte CodeView debug directory (0x0048a350), and its last 73 bytes are
 #: the NB10 record naming this PDB. The candidate writes its PDB at the same
-#: path, on a wine drive E: that maps to build/pdb-drive, so the record and
-#: the image size equal retail's. The record's signature and age (retail
-#: 0x3e5cda55, age 2: a PDB first written on 2003-02-26 and reused by the
-#: 2003-04-11 link) and the image timestamps remain link-time values.
+#: path, on a wine drive E: that maps to build/pdb-drive.
 RETAIL_PDB = r"E:\Users\igorl\VSS\HMM\HMM1\temp\release\game\heroes.pdb"
 PDB_DRIVE = "e:"
 
@@ -91,6 +88,36 @@ MODULE_DEF = REPO / "config/heroes.def"
 BASE_LIBRARY_FROM = 0x000688c0
 BASE_LIBRARY = "base.lib"
 BASE_LIBRARY_AFTER = "audiere.lib"
+#: Linker options of the retail build beyond the library line (the generated
+#: source tree's build.json carries them too). Buka retail was linked
+#: /OPT:NOREF: it keeps the unreferenced COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR,
+#: 0x1c900) and a jump thunk for each of its 200 import slots. (The NWC builds
+#: used /OPT:REF.)
+LINK_RETAIL_FLAGS = ["/OPT:NOREF"]
+
+def retail_link_times() -> tuple[str, int, str]:
+    """(PDB creation time, PDB age, link time) read from the retail image.
+
+    The NB10 signature is the time LINK created the PDB (retail 0x3e5cda55,
+    2003-02-26 15:16:37 UTC) and its age counts the links that wrote it
+    (2); the header TimeDateStamp is the final link (0x3e96d447,
+    2003-04-11 14:42:15 UTC). The candidate repeats that history: age-1
+    links at the PDB time against a fresh PDB, then one at the link time.
+    """
+    import datetime
+    import struct
+    from homm1.core.pe import image
+    data = image().data
+    pe = struct.unpack_from("<I", data, 0x3C)[0]
+    stamp = struct.unpack_from("<I", data, pe + 8)[0]
+    nb10 = data.rindex(b"NB10")
+    sig, age = struct.unpack_from("<II", data, nb10 + 8)
+
+    def utc(t: int) -> str:
+        return datetime.datetime.fromtimestamp(
+            t, datetime.timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    return utc(sig), age, utc(stamp)
+
 
 def retail_pdb_drive() -> Path:
     """Map wine's drive E: to build/pdb-drive and return the host path of
@@ -282,10 +309,7 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
         "/STACK:0x10240,0x1000",
     ]
     if keep_all:
-        # Buka retail was linked /OPT:NOREF: it keeps the unreferenced
-        # COMDAT ??_H@YGXPAXIHP6EX0@Z@Z (CMBTMGR, 0x1c900) and a jump thunk
-        # for each of its 200 import slots. (The NWC builds used /OPT:REF.)
-        rsp_lines.append("/OPT:NOREF")
+        rsp_lines += LINK_RETAIL_FLAGS
     if not dry_run:
         pdb = retail_pdb_drive() / RETAIL_PDB.rsplit("\\", 1)[1]
         pdb.unlink(missing_ok=True)       # a fresh PDB, as for the image
@@ -336,8 +360,12 @@ def candidate(out: Path, objs_dir: Path, *, mapfile: Path | None = None,
 
     logf = out.parent / f"{out.stem}.link.log"
     try:
+        pdb_time, age, link_time = retail_link_times()
+        for _ in range(age - 1):          # the links that aged the PDB
+            link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
+                           expect=[out, mapf], at=pdb_time)
         output = link_tool.link([f"@{winepath(rsp)}"], cwd=out.parent,
-                                expect=[out, mapf])
+                                expect=[out, mapf], at=link_time)
     except ToolError as e:
         full = getattr(e, "output", None) or str(e)
         logf.write_text(full)

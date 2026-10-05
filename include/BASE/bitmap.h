@@ -10,10 +10,6 @@ H1_ENUM_BEGIN_SPLIT(BitmapType, i16)
     BITMAP_TYPE_MEMORY = 0x21
 H1_ENUM_END_SPLIT(BitmapType)
 
-H1_ENUM_CONST_BEGIN(BitmapCopyConstant)
-    BITMAP_COPY_STRIDE = 640
-H1_ENUM_CONST_END(BitmapCopyConstant)
-
 #pragma pack(push, 1)
 class bitmap : public resource {
 public:

@@ -132,10 +132,6 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
 VA(0x0046e9c4, 0x33a)
 #line 137 INPUTMGR_CPP_PATH
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
-    DATA(0x004a3dcc)
-    static char gLeftReleaseCaptureFailure[] = "ReleaseCapture Failed";
-    DATA(0x004a3de4)
-    static char gRightReleaseCaptureFailure[] = "ReleaseCapture Failed";
     if (gpInputManager == NULL)
         return 1;
     if (gpInputManager->m_active != 1)
@@ -188,7 +184,7 @@ mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
-            gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
+            gpMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
     }
 
 afterMouseCoordinates:

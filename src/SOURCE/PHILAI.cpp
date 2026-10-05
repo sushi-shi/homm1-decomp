@@ -150,7 +150,7 @@ VA(0x00447914, 0x3d)
 void AbsAiPrint(char* text) {
     i32 saved;
 
-    if (giDebugLevel == 0)
+    if (giDebugLevel == DEBUG_LEVEL_NONE)
         return;
     saved = giDebugLevel;
     giDebugLevel = MISC_FORCED_DEBUG_LEVEL;
@@ -235,7 +235,7 @@ void ShowStatus() {}
 // twenty screen rows; retail gates it on the second debug level.
 VA(0x00447c70, 0x7e)
 void philAI::ShowDebugText(char* text) {
-    if (giDebugLevel >= 2) {
+    if (giDebugLevel >= AI_DEBUG_LEVEL_STATUS_TEXT_MIN) {
         FillBitmapArea(gpWindowManager->m_screen, 0, 460, LOGICAL_SCREEN_WIDTH, 20, 0);
         m_debugFont->DrawBoundedString(text, 0, 464, LOGICAL_SCREEN_WIDTH, 16, 1, FONT_ALIGN_LEFT);
         BlitBitmapToScreen(gpWindowManager->m_screen, 0, 460, LOGICAL_SCREEN_WIDTH, 20, 0, 460);
@@ -703,7 +703,7 @@ void philAI::DoAI(i32 player) {
                             break;
                         pathIndex--;
                     }
-                    if (savedAiHero->m_owner == HERO_OWNER_NONE)
+                    if (savedAiHero->m_owner == GAME_PLAYER_NONE)
                         goto nextHero;
                     if (savedAiHero->m_remainingMobility <= savedAiHero->m_mobility >> 1
                         && !halfShown) {
@@ -737,7 +737,7 @@ void philAI::DoAI(i32 player) {
                 }
                 if (eventCell) {
                     gpAdvManager->DoAIEvent(eventCell, savedAiHero, oldX, ourY);
-                    if (gpCurPlayer->m_currentHero == INVALID_HERO)
+                    if (gpCurPlayer->m_currentHero == HERO_ID_NONE)
                         goto nextHero;
                     ResetHeroRVs(1, savedAiHero->m_destinationX, savedAiHero->m_destinationY);
                 }
@@ -967,7 +967,7 @@ hero* philAI::DetermineHeroToMove(i32 player) {
     }
     if (bestHero >= 0)
         return &gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[bestHero]];
-    gpGame->m_players[player].m_currentHero = INVALID_HERO;
+    gpGame->m_players[player].m_currentHero = HERO_ID_NONE;
     return NULL;
 }
 

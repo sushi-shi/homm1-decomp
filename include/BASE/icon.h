@@ -10,8 +10,7 @@ struct SLimitData;
 H1_ENUM_CONST_BEGIN(IconMonoRleConstant)
     ICON_MONO_SKIP_MASK = 0x7f,
     ICON_MONO_END_COMMAND = 0x80,
-    ICON_MONO_NEWLINE_COMMAND = 0,
-    ICON_SCREEN_ROW_BYTES = 640
+    ICON_MONO_NEWLINE_COMMAND = 0
 H1_ENUM_CONST_END(IconMonoRleConstant)
 
 // A frame at (left, top), width x height, lies wholly inside the clip

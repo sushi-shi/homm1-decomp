@@ -1,6 +1,6 @@
 """The generated tree's standalone build inputs.
 
-`build.json` lists each unit with its VC4 profile and the candidate link
+`build.json` lists each unit with its VC6 profile and the candidate link
 contract of `homm1.graph.link`: objects in retail code order (each unit's
 lowest claimed function address, read from the annotations before they are
 removed), the BASE units archived into the library LINK searches after
@@ -20,8 +20,6 @@ from homm1.clean import source
 IMAGE_BASE = 0x400000
 TEMPLATE = "scripts/homm1/clean/template/"
 EXECUTABLE = ("build.py",)
-#: The game runner shared with `homm1 play`.
-RUNNER = "scripts/homm1/graph/play.py"
 
 
 def _units(files: dict[str, bytes]) -> list[dict]:
@@ -56,8 +54,10 @@ def manifest(files: dict[str, bytes]) -> dict:
             raise ValueError(f"{unit['unit']}: no claimed function orders it in the link")
         keyed.append((rva, index, unit["unit"]))
     ordered = [(rva, name) for rva, _i, name in sorted(keyed)]
+    from homm1.graph.link import LINK_RETAIL_FLAGS
     return {
         "compiler": config["build"]["compiler"],
+        "executable": json.loads(files["config/retail/targets.json"])["game"]["name"],
         "locale": json.loads(files["config/retail/targets.json"])["game"].get("locale", "ru"),
         "units": [{"unit": u["unit"], "source": u["source"],
                    "flags": config["flags"][u["flags"]]} for u in units],
@@ -68,7 +68,8 @@ def manifest(files: dict[str, bytes]) -> dict:
             "library_after": BASE_LIBRARY_AFTER,
             "libraries": [*LINK_LIBS, CRT_LIBRARY],
             "flags": ["/SUBSYSTEM:WINDOWS", "/BASE:0x400000", "/INCREMENTAL:NO",
-                      f"/NODEFAULTLIB:{CRT_REPLACES}", "/STACK:0x10240,0x1000"],
+                      *LINK_RETAIL_FLAGS, f"/NODEFAULTLIB:{CRT_REPLACES}",
+                      "/STACK:0x10240,0x1000"],
         },
     }
 
@@ -100,14 +101,20 @@ def flake_lock(files: dict[str, bytes]) -> tuple[bytes, str]:
     return (json.dumps(out, indent=2) + "\n").encode(), nixpkgs["locked"]["rev"]
 
 
-def project_files(files: dict[str, bytes]) -> dict[str, bytes]:
-    from homm1 import toolchain
-    output = {name.removeprefix(TEMPLATE): data for name, data in files.items()
-              if name.startswith(TEMPLATE)}
-    output["play.py"] = files[RUNNER]
-    output["build.json"] = (json.dumps(manifest(files), indent=2) + "\n").encode()
+def project_files(files: dict[str, bytes], variant: str = "source") -> dict[str, bytes]:
+    """The variant's project files: the source tree's build, the README of each."""
+    prefix = f"{TEMPLATE}{variant}/"
+    output = {name.removeprefix(prefix): data for name, data in files.items()
+              if name.startswith(prefix)}
+    if "README.md" not in output:
+        raise ValueError(f"no {prefix}README.md template")
+    output["LICENSE"] = files["LICENSE"]
     output["heroes.def"] = source.clean_asm(files["config/heroes.def"].decode()).encode()
     output.update(import_stubs())
+    if variant != "source":
+        return output
+    from homm1 import toolchain
+    output["build.json"] = (json.dumps(manifest(files), indent=2) + "\n").encode()
     output["flake.lock"], revision = flake_lock(files)
     contract = toolchain.release(manifest(files)["compiler"])
     url = (f"https://github.com/{toolchain.RELEASE_REPOSITORY}/releases/download/"
@@ -119,5 +126,4 @@ def project_files(files: dict[str, bytes]) -> dict[str, bytes]:
             raise ValueError(f"template flake.nix lacks {key}")
         flake = flake.replace(key, value)
     output["flake.nix"] = flake.encode()
-    output["LICENSE"] = files["LICENSE"]
     return output

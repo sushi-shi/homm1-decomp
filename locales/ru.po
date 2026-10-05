@@ -4476,6 +4476,26 @@ msgctxt "combat.network.canceled"
 msgid "Game canceled."
 msgstr "Игра прервана."
 
+msgctxt "table.gGameTypeHelp.0"
+msgid "Play a single, standard game against computer opponents."
+msgstr "Играть одиночный сценарий против компьютерных оппонентов."
+
+msgctxt "table.gGameTypeHelp.1"
+msgid "Play the campaign game - a series of linked single games."
+msgstr "Играть кампанию, состоящую из серии отдельных сценариев."
+
+msgctxt "table.gGameTypeHelp.2"
+msgid "Play against other human players, either sitting at the same computer, or linked through a network or modem."
+msgstr "Играть против других игроков-людей на одном компьютере, по сети или модему."
+
+msgctxt "table.gGameTypeHelp.3"
+msgid "Play a practice game."
+msgstr "Играть тренировочную игру."
+
+msgctxt "table.gGameTypeHelp.4"
+msgid "Cancel out of this menu back to the main menu."
+msgstr "Отменить и вернуться в главное меню."
+
 msgctxt "table.gHeroNames.0.0"
 msgid "Lord Kilburn"
 msgstr "Лорд Килбурн"
