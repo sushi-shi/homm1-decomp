@@ -1,0 +1,1368 @@
+# HoMM1 executable DNA census against the pinned toolchain LIBCMT.LIB/OLDNAMES.LIB.
+# Exact rows mask relocation fields on both sides; order rows are bracketed by exact anchors.
+rva	size	name	class	source	symbol	detail
+0x00001000	0x44	FUN_00401000	unknown			-
+0x00001044	0x188	FUN_00401044	unknown			-
+0x000011cc	0xc5	FUN_004011CC	unknown			-
+0x00001291	0x501	FUN_00401291	unknown			-
+0x00001792	0x27	FUN_00401792	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x000017b9	0x12	FUN_004017B9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000017cb	0x5	FUN_004017CB	linker-pad			-
+0x000017d0	0x5	FUN_004017D0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000017d5	0xb	FUN_004017D5	linker-pad			-
+0x000017e0	0xfb	FUN_004017E0	unknown			-
+0x000018db	0x41	FUN_004018DB	unknown			-
+0x0000191c	0x57a	FUN_0040191C	unknown			-
+0x00001e96	0x11e	FUN_00401E96	unknown			-
+0x00001fb4	0x883	FUN_00401FB4	unknown			-
+0x00002837	0x28	FUN_00402837	unknown			-
+0x0000285f	0x24	FUN_0040285F	unknown			-
+0x00002883	0x3f	FUN_00402883	unknown			-
+0x000028c2	0x28b	FUN_004028C2	unknown			-
+0x00002b4d	0x136	FUN_00402B4D	unknown			-
+0x00002c83	0x29	FUN_00402C83	unknown			-
+0x00002cac	0x282	FUN_00402CAC	unknown			-
+0x00002f2e	0x255	FUN_00402F2E	unknown			-
+0x00003183	0x34b	FUN_00403183	unknown			-
+0x000034ce	0x78	FUN_004034CE	unknown			-
+0x00003546	0x29c	FUN_00403546	unknown			-
+0x000037e2	0x141	FUN_004037E2	unknown			-
+0x00003923	0xcd	FUN_00403923	unknown			-
+0x000039f0	0x1e0	FUN_004039F0	unknown			-
+0x00003bd0	0xf7	FUN_00403BD0	unknown			-
+0x00003cc7	0x71	FUN_00403CC7	unknown			-
+0x00003d38	0xbdb	FUN_00403D38	unknown			-
+0x00004913	0x3c4	FUN_00404913	unknown			-
+0x00004cd7	0x256	FUN_00404CD7	unknown			-
+0x00004f2d	0x256	FUN_00404F2D	unknown			-
+0x00005183	0x50c	FUN_00405183	unknown			-
+0x0000568f	0x830	FUN_0040568F	unknown			-
+0x00005ebf	0x28b	FUN_00405EBF	unknown			-
+0x0000614a	0x210	FUN_0040614A	unknown			-
+0x0000635a	0x3e	FUN_0040635A	unknown			-
+0x00006398	0x70	FUN_00406398	unknown			-
+0x00006408	0xa5	FUN_00406408	unknown			-
+0x000064ad	0xa7	FUN_004064AD	unknown			-
+0x00006554	0xbb	FUN_00406554	unknown			-
+0x0000660f	0x37e	FUN_0040660F	unknown			-
+0x0000698d	0x41f	FUN_0040698D	unknown			-
+0x00006dac	0xba	FUN_00406DAC	unknown			-
+0x00006e66	0xf5	FUN_00406E66	unknown			-
+0x00006f5b	0x25c	FUN_00406F5B	unknown			-
+0x000071b7	0x382	FUN_004071B7	unknown			-
+0x00007539	0x12e	FUN_00407539	unknown			-
+0x00007667	0x45	FUN_00407667	unknown			-
+0x000076ac	0x90	FUN_004076AC	unknown			-
+0x0000773c	0x80	FUN_0040773C	unknown			-
+0x000077bc	0x129	FUN_004077BC	unknown			-
+0x000078e5	0x504	FUN_004078E5	unknown			-
+0x00007de9	0x1e6	FUN_00407DE9	unknown			-
+0x00007fcf	0xdb	FUN_00407FCF	unknown			-
+0x000080aa	0x52	FUN_004080AA	unknown			-
+0x000080fc	0x12f	FUN_004080FC	unknown			-
+0x0000822b	0x28	FUN_0040822B	unknown			-
+0x00008253	0x209	FUN_00408253	unknown			-
+0x0000845c	0x27	FUN_0040845C	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00008483	0x12	FUN_00408483	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00008495	0xb	FUN_00408495	linker-pad			-
+0x000084a0	0x5	FUN_004084A0	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000084a5	0x5	FUN_004084A5	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000084aa	0x106	FUN_004084AA	unknown			-
+0x000085b0	0xe	FUN_004085B0	unknown			-
+0x000085be	0x5	FUN_004085BE	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000085c3	0xe	FUN_004085C3	unknown			-
+0x000085d1	0x2e	FUN_004085D1	unknown			-
+0x000085ff	0x3b	FUN_004085FF	unknown			-
+0x0000863a	0x16	FUN_0040863A	unknown			-
+0x00008650	0x1b	FUN_00408650	unknown			-
+0x0000866b	0x34	FUN_0040866B	unknown			-
+0x0000869f	0xa7	FUN_0040869F	unknown			-
+0x00008746	0xd9	FUN_00408746	unknown			-
+0x0000881f	0x164	FUN_0040881F	unknown			-
+0x00008983	0x12	FUN_00408983	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00008995	0x39	FUN_00408995	unknown			-
+0x000089ce	0x20c	FUN_004089CE	unknown			-
+0x00008bda	0x137	FUN_00408BDA	unknown			-
+0x00008d11	0x2b4	FUN_00408D11	unknown			-
+0x00008fc5	0x91	FUN_00408FC5	unknown			-
+0x00009056	0x7a	FUN_00409056	unknown			-
+0x000090d0	0xbe	FUN_004090D0	unknown			-
+0x0000918e	0x4d	FUN_0040918E	unknown			-
+0x000091db	0x5	FUN_004091DB	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x000091e0	0x3c	FUN_004091E0	unknown			-
+0x0000921c	0x1b	FUN_0040921C	unknown			-
+0x00009237	0xa	FUN_00409237	unknown			-
+0x00009241	0x37	FUN_00409241	unknown			-
+0x00009278	0x5	FUN_00409278	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x0000927d	0x5	FUN_0040927D	helper-exact	base:BASE/Audio	?id@?$ctype@G@std@@$E	27 byte-identical candidates
+0x00009282	0x27	FUN_00409282	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x000092a9	0x12	FUN_004092A9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000092bb	0x5	FUN_004092BB	linker-pad			-
+0x000092c0	0x32	FUN_004092C0	unknown			-
+0x000092f2	0x123	FUN_004092F2	unknown			-
+0x00009415	0xa3	FUN_00409415	unknown			-
+0x000094b8	0x343	FUN_004094B8	unknown			-
+0x000097fb	0x410	FUN_004097FB	unknown			-
+0x00009c0b	0x358	FUN_00409C0B	unknown			-
+0x00009f63	0x1b7	FUN_00409F63	unknown			-
+0x0000a11a	0x33f	FUN_0040A11A	unknown			-
+0x0000a459	0x39b	FUN_0040A459	unknown			-
+0x0000a7f4	0x174	FUN_0040A7F4	unknown			-
+0x0000a968	0x1bd	FUN_0040A968	unknown			-
+0x0000ab25	0x188	FUN_0040AB25	unknown			-
+0x0000acad	0x32d	FUN_0040ACAD	unknown			-
+0x0000afda	0x34f	FUN_0040AFDA	unknown			-
+0x0000b329	0x137	FUN_0040B329	unknown			-
+0x0000b460	0x73	FUN_0040B460	unknown			-
+0x0000b4d3	0x1a7	FUN_0040B4D3	unknown			-
+0x0000b67a	0x152	FUN_0040B67A	unknown			-
+0x0000b7cc	0x15b	FUN_0040B7CC	unknown			-
+0x0000b927	0x3d0	FUN_0040B927	unknown			-
+0x0000bcf7	0x367	FUN_0040BCF7	unknown			-
+0x0000c05e	0x11c	FUN_0040C05E	unknown			-
+0x0000c17a	0x193	FUN_0040C17A	unknown			-
+0x0000c30d	0x3f8	FUN_0040C30D	unknown			-
+0x0000c705	0x25e	FUN_0040C705	unknown			-
+0x0000c963	0x27	FUN_0040C963	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0000c98a	0x12	FUN_0040C98A	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0000c99c	0x4	FUN_0040C99C	linker-pad			-
+0x0000c9a0	0x11a	FUN_0040C9A0	unknown			-
+0x0000caba	0x28a	FUN_0040CABA	unknown			-
+0x0000cd44	0xa	FUN_0040CD44	unknown			-
+0x0000cd4e	0x6c2	FUN_0040CD4E	unknown			-
+0x0000d410	0x67	FUN_0040D410	unknown			-
+0x0000d477	0xf	FUN_0040D477	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x0000d486	0x7f	FUN_0040D486	unknown			-
+0x0000d505	0x11d	FUN_0040D505	unknown			-
+0x0000d622	0x165	FUN_0040D622	unknown			-
+0x0000d787	0xae	FUN_0040D787	unknown			-
+0x0000d835	0x91	FUN_0040D835	unknown			-
+0x0000d8c6	0x118	FUN_0040D8C6	unknown			-
+0x0000d9de	0x52	FUN_0040D9DE	unknown			-
+0x0000da30	0x12b	FUN_0040DA30	unknown			-
+0x0000db5b	0x145	FUN_0040DB5B	unknown			-
+0x0000dca0	0x4a3	FUN_0040DCA0	unknown			-
+0x0000e143	0x323	FUN_0040E143	unknown			-
+0x0000e466	0x72	FUN_0040E466	unknown			-
+0x0000e4d8	0x387	FUN_0040E4D8	unknown			-
+0x0000e85f	0x6b	FUN_0040E85F	unknown			-
+0x0000e8ca	0xb	FUN_0040E8CA	unknown			-
+0x0000e8d5	0x55	FUN_0040E8D5	unknown			-
+0x0000e92a	0x55	FUN_0040E92A	unknown			-
+0x0000e97f	0x55	FUN_0040E97F	unknown			-
+0x0000e9d4	0x27	FUN_0040E9D4	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0000e9fb	0x12	FUN_0040E9FB	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0000ea0d	0x3	FUN_0040EA0D	linker-pad			-
+0x0000ea10	0x2b	FUN_0040EA10	unknown			-
+0x0000ea3b	0x372	FUN_0040EA3B	unknown			-
+0x0000edad	0x149	FUN_0040EDAD	unknown			-
+0x0000eef6	0x601	FUN_0040EEF6	unknown			-
+0x0000f4f7	0x18a	FUN_0040F4F7	unknown			-
+0x0000f681	0x387	FUN_0040F681	unknown			-
+0x0000fa08	0x766	FUN_0040FA08	unknown			-
+0x0001016e	0xf2	FUN_0041016E	unknown			-
+0x00010260	0x352	FUN_00410260	unknown			-
+0x000105b2	0x147	FUN_004105B2	unknown			-
+0x000106f9	0x599	FUN_004106F9	unknown			-
+0x00010c92	0x132	FUN_00410C92	unknown			-
+0x00010dc4	0x6f	FUN_00410DC4	unknown			-
+0x00010e33	0x134	FUN_00410E33	unknown			-
+0x00010f67	0x27	FUN_00410F67	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00010f8e	0x12	FUN_00410F8E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00010fa0	0x3c5	FUN_00410FA0	unknown			-
+0x00011365	0xd5	FUN_00411365	unknown			-
+0x0001143a	0x601	FUN_0041143A	unknown			-
+0x00011a3b	0x4bc	FUN_00411A3B	unknown			-
+0x00011ef7	0x62	FUN_00411EF7	unknown			-
+0x00011f59	0x3ce	FUN_00411F59	unknown			-
+0x00012327	0x303	FUN_00412327	unknown			-
+0x0001262a	0x1f4c	FUN_0041262A	unknown			-
+0x00014576	0x21f	FUN_00414576	unknown			-
+0x00014795	0xbd6	FUN_00414795	unknown			-
+0x0001536b	0xd32	FUN_0041536B	unknown			-
+0x0001609d	0x1ac	FUN_0041609D	unknown			-
+0x00016249	0x27	FUN_00416249	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00016270	0x12	FUN_00416270	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00016282	0xe	FUN_00416282	linker-pad			-
+0x00016290	0x248	FUN_00416290	unknown			-
+0x000164d8	0x8f3	FUN_004164D8	unknown			-
+0x00016dcb	0x14	FUN_00416DCB	unknown			-
+0x00016ddf	0x121	FUN_00416DDF	unknown			-
+0x00016f00	0x266	FUN_00416F00	unknown			-
+0x00017166	0x67	FUN_00417166	unknown			-
+0x000171cd	0x983	FUN_004171CD	unknown			-
+0x00017b50	0xb1	FUN_00417B50	unknown			-
+0x00017c01	0x25b	FUN_00417C01	unknown			-
+0x00017e5c	0x476	FUN_00417E5C	unknown			-
+0x000182d2	0x59	FUN_004182D2	unknown			-
+0x0001832b	0x12f	FUN_0041832B	unknown			-
+0x0001845a	0xb	FUN_0041845A	unknown			-
+0x00018465	0x27	FUN_00418465	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001848c	0x12	FUN_0041848C	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001849e	0x2	FUN_0041849E	linker-pad			-
+0x000184a0	0x41	FUN_004184A0	unknown			-
+0x000184e1	0x52c	FUN_004184E1	unknown			-
+0x00018a0d	0x166	FUN_00418A0D	unknown			-
+0x00018b73	0x741	FUN_00418B73	unknown			-
+0x000192b4	0x150	FUN_004192B4	unknown			-
+0x00019404	0x47	FUN_00419404	unknown			-
+0x0001944b	0x27	FUN_0041944B	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00019472	0x12	FUN_00419472	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00019484	0xc	FUN_00419484	linker-pad			-
+0x00019490	0x3e	FUN_00419490	unknown			-
+0x000194ce	0x2d	FUN_004194CE	unknown			-
+0x000194fb	0x7d	FUN_004194FB	unknown			-
+0x00019578	0xbe	FUN_00419578	unknown			-
+0x00019636	0x139	FUN_00419636	unknown			-
+0x0001976f	0x4e3	FUN_0041976F	unknown			-
+0x00019c52	0x115	FUN_00419C52	unknown			-
+0x00019d67	0x82	FUN_00419D67	unknown			-
+0x00019de9	0xfe	FUN_00419DE9	unknown			-
+0x00019ee7	0x3ed	FUN_00419EE7	unknown			-
+0x0001a2d4	0xf5	FUN_0041A2D4	unknown			-
+0x0001a3c9	0x154	FUN_0041A3C9	unknown			-
+0x0001a51d	0x291	FUN_0041A51D	unknown			-
+0x0001a7ae	0x72	FUN_0041A7AE	unknown			-
+0x0001a820	0x13b	FUN_0041A820	unknown			-
+0x0001a95b	0x186	FUN_0041A95B	unknown			-
+0x0001aae1	0x1a2	FUN_0041AAE1	unknown			-
+0x0001ac83	0x1b7	FUN_0041AC83	unknown			-
+0x0001ae3a	0x67	FUN_0041AE3A	unknown			-
+0x0001aea1	0x56	FUN_0041AEA1	unknown			-
+0x0001aef7	0x1a	FUN_0041AEF7	unknown			-
+0x0001af11	0x15	FUN_0041AF11	unknown			-
+0x0001af26	0x17	FUN_0041AF26	unknown			-
+0x0001af3d	0x6e	FUN_0041AF3D	unknown			-
+0x0001afab	0x46	FUN_0041AFAB	unknown			-
+0x0001aff1	0x30	FUN_0041AFF1	unknown			-
+0x0001b021	0x1a	FUN_0041B021	unknown			-
+0x0001b03b	0x28	FUN_0041B03B	unknown			-
+0x0001b063	0x1f	FUN_0041B063	unknown			-
+0x0001b082	0x84	FUN_0041B082	unknown			-
+0x0001b106	0x1a	FUN_0041B106	unknown			-
+0x0001b120	0x1bd	FUN_0041B120	unknown			-
+0x0001b2dd	0x27	FUN_0041B2DD	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001b304	0x12	FUN_0041B304	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001b316	0xa	FUN_0041B316	linker-pad			-
+0x0001b320	0x6	FUN_0041B320	import-thunk	KERNEL32.dll	CloseHandle	IAT RVA 0x38150
+0x0001b326	0x6	FUN_0041B326	import-thunk	KERNEL32.dll	GetDriveTypeA	IAT RVA 0x3805c
+0x0001b32c	0x6	FUN_0041B32C	import-thunk	KERNEL32.dll	GetLastError	IAT RVA 0x38050
+0x0001b332	0x6	FUN_0041B332	import-thunk	KERNEL32.dll	CreateEventA	IAT RVA 0x3804c
+0x0001b338	0x6	FUN_0041B338	import-thunk	KERNEL32.dll	GetDiskFreeSpaceExA	IAT RVA 0x38080
+0x0001b33e	0x6	FUN_0041B33E	import-thunk	KERNEL32.dll	SetErrorMode	IAT RVA 0x38078
+0x0001b344	0x6	FUN_0041B344	import-thunk	KERNEL32.dll	Sleep	IAT RVA 0x38058
+0x0001b34a	0x6	FUN_0041B34A	import-thunk	KERNEL32.dll	GetLogicalDrives	IAT RVA 0x3807c
+0x0001b350	0x6	FUN_0041B350	import-thunk	KERNEL32.dll	GetTickCount	IAT RVA 0x3806c
+0x0001b356	0x6	FUN_0041B356	import-thunk	KERNEL32.dll	FindClose	IAT RVA 0x38074
+0x0001b35c	0x6	FUN_0041B35C	import-thunk	KERNEL32.dll	FindNextFileA	IAT RVA 0x38070
+0x0001b362	0x6	FUN_0041B362	import-thunk	KERNEL32.dll	FindFirstFileA	IAT RVA 0x38060
+0x0001b368	0x6	FUN_0041B368	import-thunk	KERNEL32.dll	GetProcAddress	IAT RVA 0x38068
+0x0001b36e	0x6	FUN_0041B36E	import-thunk	KERNEL32.dll	LoadLibraryA	IAT RVA 0x38064
+0x0001b374	0x6	FUN_0041B374	import-thunk	KERNEL32.dll	FreeLibrary	IAT RVA 0x38054
+0x0001b37a	0x6	FUN_0041B37A	import-thunk	USER32.dll	MessageBeep	IAT RVA 0x38268
+0x0001b380	0x6	FUN_0041B380	import-thunk	USER32.dll	MessageBoxA	IAT RVA 0x381b4
+0x0001b386	0x6	FUN_0041B386	import-thunk	USER32.dll	LoadMenuA	IAT RVA 0x381bc
+0x0001b38c	0x6	FUN_0041B38C	import-thunk	USER32.dll	DestroyMenu	IAT RVA 0x381c0
+0x0001b392	0x6	FUN_0041B392	import-thunk	USER32.dll	SetMenu	IAT RVA 0x381c4
+0x0001b398	0x6	FUN_0041B398	import-thunk	USER32.dll	PostMessageA	IAT RVA 0x381c8
+0x0001b39e	0x6	FUN_0041B39E	import-thunk	USER32.dll	WaitMessage	IAT RVA 0x381cc
+0x0001b3a4	0x6	FUN_0041B3A4	import-thunk	USER32.dll	DispatchMessageA	IAT RVA 0x381d0
+0x0001b3aa	0x6	FUN_0041B3AA	import-thunk	USER32.dll	TranslateMessage	IAT RVA 0x381d4
+0x0001b3b0	0x6	FUN_0041B3B0	import-thunk	USER32.dll	PeekMessageA	IAT RVA 0x381d8
+0x0001b3b6	0x6	FUN_0041B3B6	import-thunk	USER32.dll	SetCursor	IAT RVA 0x381dc
+0x0001b3bc	0x6	FUN_0041B3BC	import-thunk	USER32.dll	LoadCursorA	IAT RVA 0x381e0
+0x0001b3c2	0x6	FUN_0041B3C2	import-thunk	USER32.dll	SetWindowLongA	IAT RVA 0x381e4
+0x0001b3c8	0x6	FUN_0041B3C8	import-thunk	USER32.dll	ShowWindow	IAT RVA 0x381e8
+0x0001b3ce	0x6	FUN_0041B3CE	import-thunk	USER32.dll	CreateWindowExA	IAT RVA 0x381ec
+0x0001b3d4	0x6	FUN_0041B3D4	import-thunk	USER32.dll	AdjustWindowRect	IAT RVA 0x381f0
+0x0001b3da	0x6	FUN_0041B3DA	import-thunk	USER32.dll	RegisterClassA	IAT RVA 0x381f4
+0x0001b3e0	0x6	FUN_0041B3E0	import-thunk	USER32.dll	LoadIconA	IAT RVA 0x381f8
+0x0001b3e6	0x6	FUN_0041B3E6	import-thunk	USER32.dll	PostQuitMessage	IAT RVA 0x381fc
+0x0001b3ec	0x6	FUN_0041B3EC	import-thunk	USER32.dll	DestroyWindow	IAT RVA 0x38258
+0x0001b3f2	0x6	FUN_0041B3F2	import-thunk	USER32.dll	GetWindowRect	IAT RVA 0x381b8
+0x0001b3f8	0x6	FUN_0041B3F8	import-thunk	USER32.dll	GetWindowLongA	IAT RVA 0x38254
+0x0001b3fe	0x6	FUN_0041B3FE	import-thunk	USER32.dll	SetTimer	IAT RVA 0x38250
+0x0001b404	0x6	FUN_0041B404	import-thunk	USER32.dll	DefWindowProcA	IAT RVA 0x3824c
+0x0001b40a	0x6	FUN_0041B40A	import-thunk	USER32.dll	EndDialog	IAT RVA 0x38248
+0x0001b410	0x6	FUN_0041B410	import-thunk	USER32.dll	GetMessageA	IAT RVA 0x38244
+0x0001b416	0x6	FUN_0041B416	import-thunk	USER32.dll	MoveWindow	IAT RVA 0x38240
+0x0001b41c	0x6	FUN_0041B41C	import-thunk	USER32.dll	WinHelpA	IAT RVA 0x3823c
+0x0001b422	0x6	FUN_0041B422	import-thunk	USER32.dll	DialogBoxParamA	IAT RVA 0x38238
+0x0001b428	0x6	FUN_0041B428	import-thunk	USER32.dll	EnableMenuItem	IAT RVA 0x38234
+0x0001b42e	0x6	FUN_0041B42E	import-thunk	USER32.dll	DrawMenuBar	IAT RVA 0x38230
+0x0001b434	0x6	FUN_0041B434	import-thunk	USER32.dll	GetSubMenu	IAT RVA 0x3822c
+0x0001b43a	0x6	FUN_0041B43A	import-thunk	USER32.dll	GetMenuItemID	IAT RVA 0x38228
+0x0001b440	0x6	FUN_0041B440	import-thunk	USER32.dll	GetMenuItemCount	IAT RVA 0x38224
+0x0001b446	0x6	FUN_0041B446	import-thunk	USER32.dll	wsprintfA	IAT RVA 0x38220
+0x0001b44c	0x6	FUN_0041B44C	import-thunk	USER32.dll	EndPaint	IAT RVA 0x3821c
+0x0001b452	0x6	FUN_0041B452	import-thunk	USER32.dll	OffsetRect	IAT RVA 0x38218
+0x0001b458	0x6	FUN_0041B458	import-thunk	USER32.dll	ClientToScreen	IAT RVA 0x38214
+0x0001b45e	0x6	FUN_0041B45E	import-thunk	USER32.dll	GetClientRect	IAT RVA 0x38210
+0x0001b464	0x6	FUN_0041B464	import-thunk	USER32.dll	BeginPaint	IAT RVA 0x3820c
+0x0001b46a	0x6	FUN_0041B46A	import-thunk	USER32.dll	ReleaseDC	IAT RVA 0x38208
+0x0001b470	0x6	FUN_0041B470	import-thunk	USER32.dll	GetDC	IAT RVA 0x38204
+0x0001b476	0x6	FUN_0041B476	import-thunk	USER32.dll	InvalidateRect	IAT RVA 0x38200
+0x0001b47c	0x6	FUN_0041B47C	import-thunk	GDI32.dll	GdiSetBatchLimit	IAT RVA 0x38018
+0x0001b482	0x6	FUN_0041B482	import-thunk	GDI32.dll	GetSystemPaletteEntries	IAT RVA 0x38024
+0x0001b488	0x6	FUN_0041B488	import-thunk	GDI32.dll	RealizePalette	IAT RVA 0x3801c
+0x0001b48e	0x6	FUN_0041B48E	import-thunk	GDI32.dll	SelectPalette	IAT RVA 0x38020
+0x0001b494	0x6	FUN_0041B494	import-thunk	GDI32.dll	PatBlt	IAT RVA 0x38030
+0x0001b49a	0x6	FUN_0041B49A	import-thunk	GDI32.dll	SelectObject	IAT RVA 0x38028
+0x0001b4a0	0x6	FUN_0041B4A0	import-thunk	GDI32.dll	CreatePalette	IAT RVA 0x3802c
+0x0001b4a6	0x6	FUN_0041B4A6	import-thunk	GDI32.dll	DeleteObject	IAT RVA 0x3803c
+0x0001b4ac	0x6	FUN_0041B4AC	import-thunk	GDI32.dll	AnimatePalette	IAT RVA 0x38034
+0x0001b4b2	0x6	FUN_0041B4B2	import-thunk	GDI32.dll	DeleteDC	IAT RVA 0x38038
+0x0001b4b8	0x6	FUN_0041B4B8	import-thunk	GDI32.dll	GetDeviceCaps	IAT RVA 0x38044
+0x0001b4be	0x6	FUN_0041B4BE	import-thunk	ADVAPI32.dll	RegCloseKey	IAT RVA 0x38000
+0x0001b4c4	0x6	FUN_0041B4C4	import-thunk	ADVAPI32.dll	RegQueryValueExA	IAT RVA 0x38004
+0x0001b4ca	0x6	FUN_0041B4CA	import-thunk	ADVAPI32.dll	RegCreateKeyA	IAT RVA 0x38008
+0x0001b4d0	0x6	FUN_0041B4D0	import-thunk	ADVAPI32.dll	RegSetValueExA	IAT RVA 0x3800c
+0x0001b4d6	0x6	FUN_0041B4D6	import-thunk	ADVAPI32.dll	RegOpenKeyExA	IAT RVA 0x38010
+0x0001b4dc	0x6	FUN_0041B4DC	import-thunk	WING32.dll	WinGCreateBitmap	IAT RVA 0x3829c
+0x0001b4e2	0x6	FUN_0041B4E2	import-thunk	WING32.dll	WinGCreateDC	IAT RVA 0x38290
+0x0001b4e8	0x6	FUN_0041B4E8	import-thunk	WING32.dll	WinGRecommendDIBFormat	IAT RVA 0x38294
+0x0001b4ee	0x6	FUN_0041B4EE	import-thunk	WING32.dll	WinGSetDIBColorTable	IAT RVA 0x38298
+0x0001b4f4	0x6	FUN_0041B4F4	import-thunk	WING32.dll	WinGStretchBlt	IAT RVA 0x382a0
+0x0001b4fa	0x6	FUN_0041B4FA	import-thunk	WING32.dll	WinGBitBlt	IAT RVA 0x382a4
+0x0001b500	0x5a	FUN_0041B500	unknown			-
+0x0001b55a	0x48	FUN_0041B55A	unknown			-
+0x0001b5a2	0x27	FUN_0041B5A2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001b5c9	0x12	FUN_0041B5C9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001b5db	0x5	FUN_0041B5DB	linker-pad			-
+0x0001b5e0	0x92	FUN_0041B5E0	unknown			-
+0x0001b672	0x9e	FUN_0041B672	unknown			-
+0x0001b710	0x5a0	FUN_0041B710	unknown			-
+0x0001bcb0	0x85	FUN_0041BCB0	unknown			-
+0x0001bd35	0xa2	FUN_0041BD35	unknown			-
+0x0001bdd7	0x113	FUN_0041BDD7	unknown			-
+0x0001beea	0xe7	FUN_0041BEEA	unknown			-
+0x0001bfd1	0x61	FUN_0041BFD1	unknown			-
+0x0001c032	0x15	FUN_0041C032	unknown			-
+0x0001c047	0x24	FUN_0041C047	unknown			-
+0x0001c06b	0xd3	FUN_0041C06B	unknown			-
+0x0001c13e	0xaa	FUN_0041C13E	unknown			-
+0x0001c1e8	0x8a	FUN_0041C1E8	unknown			-
+0x0001c272	0x1bc	FUN_0041C272	unknown			-
+0x0001c42e	0x27	FUN_0041C42E	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001c455	0x12	FUN_0041C455	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001c467	0x9	FUN_0041C467	linker-pad			-
+0x0001c470	0x59	FUN_0041C470	unknown			-
+0x0001c4c9	0xae	FUN_0041C4C9	unknown			-
+0x0001c577	0xad	FUN_0041C577	unknown			-
+0x0001c624	0xfb	FUN_0041C624	unknown			-
+0x0001c71f	0x5b	FUN_0041C71F	unknown			-
+0x0001c77a	0x415	FUN_0041C77A	unknown			-
+0x0001cb8f	0xec	FUN_0041CB8F	unknown			-
+0x0001cc7b	0xba	FUN_0041CC7B	unknown			-
+0x0001cd35	0x99	FUN_0041CD35	unknown			-
+0x0001cdce	0x27	FUN_0041CDCE	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001cdf5	0x12	FUN_0041CDF5	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001ce07	0x9	FUN_0041CE07	linker-pad			-
+0x0001ce10	0x2e	FUN_0041CE10	unknown			-
+0x0001ce3e	0x2	FUN_0041CE3E	linker-pad			-
+0x0001ce40	0x4e	FUN_0041CE40	unknown			-
+0x0001ce8e	0xa2	FUN_0041CE8E	unknown			-
+0x0001cf30	0xa1	FUN_0041CF30	unknown			-
+0x0001cfd1	0xf9	FUN_0041CFD1	unknown			-
+0x0001d0ca	0x5b	FUN_0041D0CA	unknown			-
+0x0001d125	0x2a4	FUN_0041D125	unknown			-
+0x0001d3c9	0xb1	FUN_0041D3C9	unknown			-
+0x0001d47a	0x27	FUN_0041D47A	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001d4a1	0x12	FUN_0041D4A1	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001d4b3	0xd	FUN_0041D4B3	linker-pad			-
+0x0001d4c0	0x2e	FUN_0041D4C0	unknown			-
+0x0001d4ee	0x2	FUN_0041D4EE	linker-pad			-
+0x0001d4f0	0x464	FUN_0041D4F0	unknown			-
+0x0001d954	0x33a	FUN_0041D954	unknown			-
+0x0001dc8e	0xa0	FUN_0041DC8E	unknown			-
+0x0001dd2e	0xa4	FUN_0041DD2E	unknown			-
+0x0001ddd2	0x64	FUN_0041DDD2	unknown			-
+0x0001de36	0x10	FUN_0041DE36	unknown			-
+0x0001de46	0x23	FUN_0041DE46	unknown			-
+0x0001de69	0xfe	FUN_0041DE69	unknown			-
+0x0001df67	0x31	FUN_0041DF67	unknown			-
+0x0001df98	0x31	FUN_0041DF98	unknown			-
+0x0001dfc9	0x29	FUN_0041DFC9	unknown			-
+0x0001dff2	0x23	FUN_0041DFF2	unknown			-
+0x0001e015	0x34	FUN_0041E015	unknown			-
+0x0001e049	0x312	FUN_0041E049	unknown			-
+0x0001e35b	0x46a	FUN_0041E35B	unknown			-
+0x0001e7c5	0x27	FUN_0041E7C5	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001e7ec	0x12	FUN_0041E7EC	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001e7fe	0x2	FUN_0041E7FE	linker-pad			-
+0x0001e800	0x102	FUN_0041E800	unknown			-
+0x0001e902	0x98	FUN_0041E902	unknown			-
+0x0001e99a	0x190	FUN_0041E99A	unknown			-
+0x0001eb2a	0x10	FUN_0041EB2A	unknown			-
+0x0001eb3a	0x68	FUN_0041EB3A	unknown			-
+0x0001eba2	0x6bd	FUN_0041EBA2	unknown			-
+0x0001f25f	0xb	FUN_0041F25F	unknown			-
+0x0001f26a	0xd	FUN_0041F26A	unknown			-
+0x0001f277	0xb	FUN_0041F277	unknown			-
+0x0001f282	0xb	FUN_0041F282	unknown			-
+0x0001f28d	0xb	FUN_0041F28D	unknown			-
+0x0001f298	0xb	FUN_0041F298	unknown			-
+0x0001f2a3	0xd	FUN_0041F2A3	unknown			-
+0x0001f2b0	0xd	FUN_0041F2B0	unknown			-
+0x0001f2bd	0xd	FUN_0041F2BD	unknown			-
+0x0001f2ca	0xb	FUN_0041F2CA	unknown			-
+0x0001f2d5	0xd	FUN_0041F2D5	unknown			-
+0x0001f2e2	0xd	FUN_0041F2E2	unknown			-
+0x0001f2ef	0xd	FUN_0041F2EF	unknown			-
+0x0001f2fc	0x56	FUN_0041F2FC	unknown			-
+0x0001f352	0xd	FUN_0041F352	unknown			-
+0x0001f35f	0xd	FUN_0041F35F	unknown			-
+0x0001f36c	0x13	FUN_0041F36C	unknown			-
+0x0001f37f	0x13	FUN_0041F37F	unknown			-
+0x0001f392	0x27	FUN_0041F392	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0001f3b9	0x12	FUN_0041F3B9	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0001f3cb	0x5	FUN_0041F3CB	linker-pad			-
+0x0001f3d0	0x7a	FUN_0041F3D0	unknown			-
+0x0001f44a	0x7a	FUN_0041F44A	unknown			-
+0x0001f4c4	0x87	FUN_0041F4C4	unknown			-
+0x0001f54b	0xc0	FUN_0041F54B	unknown			-
+0x0001f60b	0xc0	FUN_0041F60B	unknown			-
+0x0001f6cb	0x2c	FUN_0041F6CB	unknown			-
+0x0001f6f7	0xb0	FUN_0041F6F7	unknown			-
+0x0001f7a7	0xc0	FUN_0041F7A7	unknown			-
+0x0001f867	0xf	FUN_0041F867	unknown			-
+0x0001f876	0xc0	FUN_0041F876	unknown			-
+0x0001f936	0xbf	FUN_0041F936	unknown			-
+0x0001f9f5	0x75	FUN_0041F9F5	unknown			-
+0x0001fa6a	0x43	FUN_0041FA6A	unknown			-
+0x0001faad	0x7e	FUN_0041FAAD	unknown			-
+0x0001fb2b	0x3b	FUN_0041FB2B	unknown			-
+0x0001fb66	0x10	FUN_0041FB66	unknown			-
+0x0001fb76	0x66	FUN_0041FB76	unknown			-
+0x0001fbdc	0x61	FUN_0041FBDC	unknown			-
+0x0001fc3d	0x6e	FUN_0041FC3D	unknown			-
+0x0001fcab	0xe5	FUN_0041FCAB	unknown			-
+0x0001fd90	0xd2	FUN_0041FD90	unknown			-
+0x0001fe62	0xc1	FUN_0041FE62	unknown			-
+0x0001ff23	0x20	FUN_0041FF23	unknown			-
+0x0001ff43	0x23	FUN_0041FF43	unknown			-
+0x0001ff66	0x48	FUN_0041FF66	unknown			-
+0x0001ffae	0x4b	FUN_0041FFAE	unknown			-
+0x0001fff9	0x4b	FUN_0041FFF9	unknown			-
+0x00020044	0x41	FUN_00420044	unknown			-
+0x00020085	0x1b	FUN_00420085	unknown			-
+0x000200a0	0x52	FUN_004200A0	unknown			-
+0x000200f2	0x27	FUN_004200F2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00020119	0x12	FUN_00420119	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0002012b	0x5	FUN_0042012B	linker-pad			-
+0x00020130	0x19c	FUN_00420130	unknown			-
+0x000202cc	0x9f	FUN_004202CC	unknown			-
+0x0002036b	0x10a	FUN_0042036B	unknown			-
+0x00020475	0x9e	FUN_00420475	unknown			-
+0x00020513	0xc3	FUN_00420513	unknown			-
+0x000205d6	0x5e	FUN_004205D6	unknown			-
+0x00020634	0x3d	FUN_00420634	unknown			-
+0x00020671	0x166	FUN_00420671	unknown			-
+0x000207d7	0xe9	FUN_004207D7	unknown			-
+0x000208c0	0x1a8	FUN_004208C0	unknown			-
+0x00020a68	0x2f	FUN_00420A68	unknown			-
+0x00020a97	0x15d	FUN_00420A97	unknown			-
+0x00020bf4	0x2f	FUN_00420BF4	unknown			-
+0x00020c23	0xd3	FUN_00420C23	unknown			-
+0x00020cf6	0x65	FUN_00420CF6	unknown			-
+0x00020d5b	0xb	FUN_00420D5B	unknown			-
+0x00020d66	0xf3	FUN_00420D66	unknown			-
+0x00020e59	0x444	FUN_00420E59	unknown			-
+0x0002129d	0x36a	FUN_0042129D	unknown			-
+0x00021607	0x4d	FUN_00421607	unknown			-
+0x00021654	0x27	FUN_00421654	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0002167b	0x12	FUN_0042167B	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0002168d	0x3	FUN_0042168D	linker-pad			-
+0x00021690	0x185	FUN_00421690	unknown			-
+0x00021815	0x37	FUN_00421815	unknown			-
+0x0002184c	0x29	FUN_0042184C	unknown			-
+0x00021875	0x50	FUN_00421875	unknown			-
+0x000218c5	0x16d	FUN_004218C5	unknown			-
+0x00021a32	0x170	FUN_00421A32	unknown			-
+0x00021ba2	0x8	FUN_00421BA2	unknown			-
+0x00021baa	0x39	FUN_00421BAA	unknown			-
+0x00021be3	0x95	FUN_00421BE3	unknown			-
+0x00021c78	0x5	FUN_00421C78	unknown			-
+0x00021c7d	0x5	FUN_00421C7D	unknown			-
+0x00021c82	0x214	FUN_00421C82	unknown			-
+0x00021e96	0x307	FUN_00421E96	unknown			-
+0x0002219d	0x27	FUN_0042219D	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x000221c4	0x12	FUN_004221C4	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000221d6	0xa	FUN_004221D6	linker-pad			-
+0x000221e0	0xc7	FUN_004221E0	unknown			-
+0x000222a7	0x5b	FUN_004222A7	unknown			-
+0x00022302	0x4c	FUN_00422302	unknown			-
+0x0002234e	0xff	FUN_0042234E	unknown			-
+0x0002244d	0x34f	FUN_0042244D	unknown			-
+0x0002279c	0x25f	FUN_0042279C	unknown			-
+0x000229fb	0x133	FUN_004229FB	unknown			-
+0x00022b2e	0x27	FUN_00422B2E	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00022b55	0x12	FUN_00422B55	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00022b67	0x9	FUN_00422B67	linker-pad			-
+0x00022b70	0x2e	FUN_00422B70	unknown			-
+0x00022b9e	0x2	FUN_00422B9E	linker-pad			-
+0x00022ba0	0xbf	FUN_00422BA0	unknown			-
+0x00022c5f	0x2b	FUN_00422C5F	unknown			-
+0x00022c8a	0x317	FUN_00422C8A	unknown			-
+0x00022fa1	0x54	FUN_00422FA1	unknown			-
+0x00022ff5	0x15e	FUN_00422FF5	unknown			-
+0x00023153	0x2a8	FUN_00423153	unknown			-
+0x000233fb	0x27	FUN_004233FB	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00023422	0x12	FUN_00423422	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00023434	0xc	FUN_00423434	linker-pad			-
+0x00023440	0x2e	FUN_00423440	unknown			-
+0x0002346e	0x2	FUN_0042346E	linker-pad			-
+0x00023470	0x74	FUN_00423470	unknown			-
+0x000234e4	0xe6	FUN_004234E4	unknown			-
+0x000235ca	0x4b	FUN_004235CA	unknown			-
+0x00023615	0x1	FUN_00423615	linker-pad			-
+0x00023616	0x43	FUN_00423616	unknown			-
+0x00023659	0x3	FUN_00423659	linker-pad			-
+0x0002365c	0xd5	FUN_0042365C	unknown			-
+0x00023731	0x1	FUN_00423731	linker-pad			-
+0x00023732	0xcb	FUN_00423732	unknown			-
+0x000237fd	0x1	FUN_004237FD	linker-pad			-
+0x000237fe	0xd5	FUN_004237FE	unknown			-
+0x000238d3	0x1	FUN_004238D3	linker-pad			-
+0x000238d4	0xd3	FUN_004238D4	unknown			-
+0x000239a7	0x1	FUN_004239A7	linker-pad			-
+0x000239a8	0xd9	FUN_004239A8	unknown			-
+0x00023a81	0x1	FUN_00423A81	linker-pad			-
+0x00023a82	0xd6	FUN_00423A82	unknown			-
+0x00023b58	0x134	FUN_00423B58	unknown			-
+0x00023c8c	0x4	FUN_00423C8C	linker-pad			-
+0x00023c90	0x35	FUN_00423C90	unknown			-
+0x00023cc5	0xbd	FUN_00423CC5	unknown			-
+0x00023d82	0xb6	FUN_00423D82	unknown			-
+0x00023e38	0x189	FUN_00423E38	unknown			-
+0x00023fc1	0x149	FUN_00423FC1	unknown			-
+0x0002410a	0xc3	FUN_0042410A	unknown			-
+0x000241cd	0x88	FUN_004241CD	unknown			-
+0x00024255	0x16b	FUN_00424255	unknown			-
+0x000243c0	0x18	FUN_004243C0	unknown			-
+0x000243d8	0x27	FUN_004243D8	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x000243ff	0x12	FUN_004243FF	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024411	0xf	FUN_00424411	linker-pad			-
+0x00024420	0x3a	FUN_00424420	unknown			-
+0x0002445a	0x93	FUN_0042445A	unknown			-
+0x000244ed	0x2b	FUN_004244ED	unknown			-
+0x00024518	0x11	FUN_00424518	unknown			-
+0x00024529	0x27	FUN_00424529	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00024550	0x12	FUN_00424550	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024562	0xe	FUN_00424562	linker-pad			-
+0x00024570	0x2e	FUN_00424570	unknown			-
+0x0002459e	0x2	FUN_0042459E	linker-pad			-
+0x000245a0	0x162	FUN_004245A0	unknown			-
+0x00024702	0x35	FUN_00424702	unknown			-
+0x00024737	0x38d	FUN_00424737	unknown			-
+0x00024ac4	0x29	FUN_00424AC4	unknown			-
+0x00024aed	0x71	FUN_00424AED	unknown			-
+0x00024b5e	0x58	FUN_00424B5E	unknown			-
+0x00024bb6	0x63	FUN_00424BB6	unknown			-
+0x00024c19	0x77	FUN_00424C19	unknown			-
+0x00024c90	0x61	FUN_00424C90	unknown			-
+0x00024cf1	0x12	FUN_00424CF1	unknown			-
+0x00024d03	0x12	FUN_00424D03	unknown			-
+0x00024d15	0x11	FUN_00424D15	unknown			-
+0x00024d26	0xf	FUN_00424D26	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x00024d35	0x61	FUN_00424D35	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x00024d96	0x12	FUN_00424D96	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024da8	0x46	FUN_00424DA8	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
+0x00024dee	0xf	FUN_00424DEE	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x00024dfd	0x61	FUN_00424DFD	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x00024e5e	0x12	FUN_00424E5E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00024e70	0x46	FUN_00424E70	helper-exact	base:BASE/Audio	_$E24	-
+0x00024eb6	0x47	FUN_00424EB6	unknown			-
+0x00024efd	0x43b	FUN_00424EFD	unknown			-
+0x00025338	0xa	FUN_00425338	unknown			-
+0x00025342	0x164	FUN_00425342	unknown			-
+0x000254a6	0x55	FUN_004254A6	unknown			-
+0x000254fb	0x128	FUN_004254FB	unknown			-
+0x00025623	0x36	FUN_00425623	unknown			-
+0x00025659	0x12	FUN_00425659	unknown			-
+0x0002566b	0x12	FUN_0042566B	unknown			-
+0x0002567d	0x11	FUN_0042567D	unknown			-
+0x0002568e	0xf	FUN_0042568E	helper-exact	base:BASE/Audio	_$E21	4 byte-identical candidates
+0x0002569d	0x61	FUN_0042569D	helper-exact	base:BASE/Audio	_$E17	3 byte-identical candidates
+0x000256fe	0x12	FUN_004256FE	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00025710	0x46	FUN_00425710	helper-exact	base:BASE/Audio	_$E18	2 byte-identical candidates
+0x00025756	0xf	FUN_00425756	unknown			-
+0x00025765	0x70	FUN_00425765	unknown			-
+0x000257d5	0x132	FUN_004257D5	unknown			-
+0x00025907	0x5c	FUN_00425907	unknown			-
+0x00025963	0xb	FUN_00425963	unknown			-
+0x0002596e	0x15	FUN_0042596E	unknown			-
+0x00025983	0xb	FUN_00425983	unknown			-
+0x0002598e	0xf	FUN_0042598E	unknown			-
+0x0002599d	0x1c	FUN_0042599D	unknown			-
+0x000259b9	0x1c	FUN_004259B9	unknown			-
+0x000259d5	0x1d	FUN_004259D5	unknown			-
+0x000259f2	0x27	FUN_004259F2	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00025a19	0x12	FUN_00425A19	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00025a2b	0x5	FUN_00425A2B	linker-pad			-
+0x00025a30	0x2c	FUN_00425A30	helper-exact	base:BASE/Audio	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	4 byte-identical candidates
+0x00025a5c	0x4	FUN_00425A5C	linker-pad			-
+0x00025a60	0x51	FUN_00425A60	helper-exact	base:BASE/Audio	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	2 byte-identical candidates
+0x00025ab1	0xf	FUN_00425AB1	linker-pad			-
+0x00025ac0	0x2c	FUN_00425AC0	helper-exact	base:BASE/Audio	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	4 byte-identical candidates
+0x00025aec	0x4	FUN_00425AEC	linker-pad			-
+0x00025af0	0x51	FUN_00425AF0	helper-exact	base:BASE/Audio	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	2 byte-identical candidates
+0x00025b41	0xf	FUN_00425B41	linker-pad			-
+0x00025b50	0x2c	FUN_00425B50	helper-exact	base:BASE/Audio	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	4 byte-identical candidates
+0x00025b7c	0x4	FUN_00425B7C	linker-pad			-
+0x00025b80	0x2c	FUN_00425B80	helper-exact	base:BASE/Audio	??1AudiereSampleNode@@QAE@XZ	4 byte-identical candidates
+0x00025bac	0x4	FUN_00425BAC	linker-pad			-
+0x00025bb0	0x3e	FUN_00425BB0	unknown			-
+0x00025bee	0x9e	FUN_00425BEE	unknown			-
+0x00025c8c	0x64	FUN_00425C8C	unknown			-
+0x00025cf0	0xe9	FUN_00425CF0	unknown			-
+0x00025dd9	0x1d9	FUN_00425DD9	unknown			-
+0x00025fb2	0xd7	FUN_00425FB2	unknown			-
+0x00026089	0x27	FUN_00426089	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x000260b0	0x12	FUN_004260B0	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000260c2	0xe	FUN_004260C2	linker-pad			-
+0x000260d0	0x2e	FUN_004260D0	unknown			-
+0x000260fe	0x2	FUN_004260FE	linker-pad			-
+0x00026100	0x2b	FUN_00426100	unknown			-
+0x0002612b	0x3f	FUN_0042612B	unknown			-
+0x0002616a	0x77	FUN_0042616A	unknown			-
+0x000261e1	0x19	FUN_004261E1	unknown			-
+0x000261fa	0x4e	FUN_004261FA	unknown			-
+0x00026248	0x27	FUN_00426248	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0002626f	0x12	FUN_0042626F	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00026281	0xf	FUN_00426281	linker-pad			-
+0x00026290	0x2e	FUN_00426290	unknown			-
+0x000262be	0x2	FUN_004262BE	linker-pad			-
+0x000262c0	0x1c	FUN_004262C0	unknown			-
+0x000262dc	0x4	FUN_004262DC	linker-pad			-
+0x000262e0	0x56	FUN_004262E0	unknown			-
+0x00026336	0xbf	FUN_00426336	unknown			-
+0x000263f5	0x5b	FUN_004263F5	unknown			-
+0x00026450	0x261	FUN_00426450	unknown			-
+0x000266b1	0xa70	FUN_004266B1	unknown			-
+0x00027121	0x1c7	FUN_00427121	unknown			-
+0x000272e8	0x23d	FUN_004272E8	unknown			-
+0x00027525	0x27	FUN_00427525	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0002754c	0x12	FUN_0042754C	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x0002755e	0x2	FUN_0042755E	linker-pad			-
+0x00027560	0x2e	FUN_00427560	unknown			-
+0x0002758e	0x2	FUN_0042758E	linker-pad			-
+0x00027590	0x58	FUN_00427590	unknown			-
+0x000275e8	0xa5	FUN_004275E8	unknown			-
+0x0002768d	0x12a	FUN_0042768D	unknown			-
+0x000277b7	0x6a	FUN_004277B7	unknown			-
+0x00027821	0x238	FUN_00427821	unknown			-
+0x00027a59	0x66	FUN_00427A59	unknown			-
+0x00027abf	0x18	FUN_00427ABF	unknown			-
+0x00027ad7	0xa1	FUN_00427AD7	unknown			-
+0x00027b78	0x27	FUN_00427B78	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00027b9f	0x12	FUN_00427B9F	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00027bb1	0xf	FUN_00427BB1	linker-pad			-
+0x00027bc0	0x2e	FUN_00427BC0	unknown			-
+0x00027bee	0x2	FUN_00427BEE	linker-pad			-
+0x00027bf0	0x2b	FUN_00427BF0	unknown			-
+0x00027c1b	0x3f	FUN_00427C1B	unknown			-
+0x00027c5a	0x77	FUN_00427C5A	unknown			-
+0x00027cd1	0x19	FUN_00427CD1	unknown			-
+0x00027cea	0x13	FUN_00427CEA	unknown			-
+0x00027cfd	0x27	FUN_00427CFD	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00027d24	0x12	FUN_00427D24	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00027d36	0xa	FUN_00427D36	linker-pad			-
+0x00027d40	0x2e	FUN_00427D40	unknown			-
+0x00027d6e	0x2	FUN_00427D6E	linker-pad			-
+0x00027d70	0x1c	FUN_00427D70	unknown			-
+0x00027d8c	0x4	FUN_00427D8C	linker-pad			-
+0x00027d90	0x8b	FUN_00427D90	unknown			-
+0x00027e1b	0x7d	FUN_00427E1B	unknown			-
+0x00027e98	0x14	FUN_00427E98	unknown			-
+0x00027eac	0x24	FUN_00427EAC	unknown			-
+0x00027ed0	0xb	FUN_00427ED0	unknown			-
+0x00027edb	0x2c8	FUN_00427EDB	unknown			-
+0x000281a3	0x67	FUN_004281A3	unknown			-
+0x0002820a	0x27	FUN_0042820A	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00028231	0x12	FUN_00428231	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028243	0xd	FUN_00428243	linker-pad			-
+0x00028250	0x4c	FUN_00428250	unknown			-
+0x0002829c	0x64	FUN_0042829C	unknown			-
+0x00028300	0x106	FUN_00428300	unknown			-
+0x00028406	0x3e	FUN_00428406	unknown			-
+0x00028444	0x4b	FUN_00428444	unknown			-
+0x0002848f	0x41	FUN_0042848F	unknown			-
+0x000284d0	0x23	FUN_004284D0	unknown			-
+0x000284f3	0x3b	FUN_004284F3	unknown			-
+0x0002852e	0xa3	FUN_0042852E	unknown			-
+0x000285d1	0xa6	FUN_004285D1	unknown			-
+0x00028677	0x27	FUN_00428677	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0002869e	0x12	FUN_0042869E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x000286b0	0x2e	FUN_004286B0	unknown			-
+0x000286de	0x2	FUN_004286DE	linker-pad			-
+0x000286e0	0x11c	FUN_004286E0	unknown			-
+0x000287fc	0x2b	FUN_004287FC	unknown			-
+0x00028827	0x27	FUN_00428827	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x0002884e	0x12	FUN_0042884E	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028860	0x2e	FUN_00428860	unknown			-
+0x0002888e	0x2	FUN_0042888E	linker-pad			-
+0x00028890	0x232	FUN_00428890	unknown			-
+0x00028ac2	0x7f	FUN_00428AC2	unknown			-
+0x00028b41	0x27	FUN_00428B41	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00028b68	0x12	FUN_00428B68	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028b7a	0x6	FUN_00428B7A	linker-pad			-
+0x00028b80	0x2e	FUN_00428B80	unknown			-
+0x00028bae	0x2	FUN_00428BAE	linker-pad			-
+0x00028bb0	0x12b	FUN_00428BB0	unknown			-
+0x00028cdb	0x27	FUN_00428CDB	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00028d02	0x12	FUN_00428D02	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028d14	0xc	FUN_00428D14	linker-pad			-
+0x00028d20	0x3c	FUN_00428D20	unknown			-
+0x00028d5c	0x43	FUN_00428D5C	unknown			-
+0x00028d9f	0x14	FUN_00428D9F	unknown			-
+0x00028db3	0x27	FUN_00428DB3	helper-exact	base:BASE/Audio	_$E39	25 byte-identical candidates
+0x00028dda	0x12	FUN_00428DDA	helper-exact	base:BASE/Audio	_$E20	28 byte-identical candidates
+0x00028dec	0x25f	FUN_00428DEC	unknown			-
+0x0002904b	0x1	FUN_0042904B	linker-pad			-
+0x0002904c	0x258	FUN_0042904C	unknown			-
+0x000292a4	0xb	FUN_004292A4	crt-exact	libcmt.lib:/4284	??3@YAXPAX@Z	9 byte-identical candidates
+0x000292af	0xe	FUN_004292AF	crt-exact	libcmt.lib:/4346	??2@YAPAXI@Z	3 byte-identical candidates
+0x000292bd	0x34	FUN_004292BD	crt-exact	libcmt.lib:/1877	?_JumpToContinuation@@YGXPAXPAUEHRegistrationNode@@@Z	-
+0x000292f1	0x7	FUN_004292F1	crt-order	libcmt.lib:/1877	?_CallMemberFunction0@@YGXPAX0@Z	between exact anchors 0x292bd,0x29306
+0x000292f8	0x7	FUN_004292F8	crt-order	libcmt.lib:/1877	?_CallMemberFunction1@@YGXPAX00@Z	between exact anchors 0x292bd,0x29306
+0x000292ff	0x7	FUN_004292FF	crt-order	libcmt.lib:/1877	?_CallMemberFunction2@@YGXPAX00H@Z	between exact anchors 0x292bd,0x29306
+0x00029306	0x4f	FUN_00429306	crt-exact	libcmt.lib:/1877	?_UnwindNestedFrames@@YGXPAUEHRegistrationNode@@PAUEHExceptionRecord@@@Z	-
+0x00029355	0x36	FUN_00429355	crt-exact	libcmt.lib:/1877	___CxxFrameHandler	-
+0x0002938b	0x1a	FUN_0042938B	crt-exact	libcmt.lib:/1877	___CxxLongjmpUnwind@4	-
+0x000293a5	0x54	FUN_004293A5	crt-exact	libcmt.lib:/1877	?_CallCatchBlock2@@YAPAXPAUEHRegistrationNode@@PBU_s_FuncInfo@@PAXHK@Z	-
+0x000293f9	0x25	FUN_004293F9	crt-exact	libcmt.lib:/1877	?CatchGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUCatchGuardRN@@PAX2@Z	-
+0x0002941e	0xb6	FUN_0042941E	crt-exact	libcmt.lib:/1877	?_CallSETranslator@@YAHPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAX2PBU_s_FuncInfo@@H1@Z	-
+0x000294d4	0x75	FUN_004294D4	crt-exact	libcmt.lib:/1877	?TranslatorGuardHandler@@YA?AW4_EXCEPTION_DISPOSITION@@PAUEHExceptionRecord@@PAUTranslatorGuardRN@@PAX2@Z	-
+0x00029549	0x7b	FUN_00429549	crt-exact	libcmt.lib:/1877	?_GetRangeOfTrysToCheck@@YAPBU_s_TryBlockMapEntry@@PBU_s_FuncInfo@@HHPAI1@Z	-
+0x000295c4	0x42	FUN_004295C4	crt-prefix	libcmt.lib:/7724	__global_unwind2	unique masked 24-byte prefix
+0x00029606	0x58	FUN_00429606	crt-exact	libcmt.lib:/7724	__local_unwind2	-
+0x0002965e	0x10	FUN_0042965E	crt-exact	libcmt.lib:/7724	__NLG_Return2	-
+0x0002966e	0x23	FUN_0042966E	crt-exact	libcmt.lib:/7724	__abnormal_termination	-
+0x00029691	0x9	FUN_00429691	crt-exact	libcmt.lib:/7724	__NLG_Notify1	-
+0x0002969a	0x13	FUN_0042969A	crt-exact	libcmt.lib:/7724	__NLG_Notify	-
+0x000296ad	0x5	FUN_004296AD	crt-exact	libcmt.lib:/7724	__NLG_Dispatch	-
+0x000296b2	0x7e	FUN_004296B2	crt-exact	libcmt.lib:/9116	__onexit	-
+0x00029730	0x12	FUN_00429730	crt-exact	libcmt.lib:/9116	_atexit	-
+0x00029742	0x2f	FUN_00429742	crt-exact	libcmt.lib:/9116	___onexitinit	-
+0x00029771	0xe9	FUN_00429771	crt-exact	libcmt.lib:/3822	_free	-
+0x0002985a	0x12	FUN_0042985A	crt-exact	libcmt.lib:/4070	_malloc	-
+0x0002986c	0x2c	FUN_0042986C	crt-exact	libcmt.lib:/4070	__nh_malloc	-
+0x00029898	0xfc	FUN_00429898	crt-exact	libcmt.lib:/4070	__heap_alloc	-
+0x00029994	0x52	FUN_00429994	crt-exact	libcmt.lib:/12984	_sprintf	-
+0x000299e6	0x17	FUN_004299E6	crt-exact	libcmt.lib:/17931	__fpmath	-
+0x000299fd	0x1	FUN_004299FD	crt-order	libcmt.lib:/17931	__fpclear	between exact anchors 0x299e6,0x299fe
+0x000299fe	0x38	FUN_004299FE	crt-exact	libcmt.lib:/17931	__cfltcvt_init	-
+0x00029a36	0x10	FUN_00429A36	crt-exact	libcmt.lib:/2125	?__set_inconsistency@@YAP6AXXZP6AXXZ@Z	2 byte-identical candidates
+0x00029a46	0x2	FUN_00429A46	linker-pad			-
+0x00029a48	0x27	FUN_00429A48	crt-exact	libcmt.lib:/18903	__ftol	-
+0x00029a6f	0x1	FUN_00429A6F	linker-pad			-
+0x00029a70	0x2f	FUN_00429A70	crt-exact	libcmt.lib:/10313	__chkstk	-
+0x00029a9f	0x2d	FUN_00429A9F	crt-exact	libcmt.lib:/10371	__cinit	-
+0x00029acc	0x11	FUN_00429ACC	crt-exact	libcmt.lib:/10371	_exit	-
+0x00029add	0x11	FUN_00429ADD	crt-exact	libcmt.lib:/10371	__exit	-
+0x00029aee	0xf	FUN_00429AEE	crt-exact	libcmt.lib:/10371	__cexit	-
+0x00029afd	0xf	FUN_00429AFD	crt-exact	libcmt.lib:/10371	__c_exit	-
+0x00029b0c	0xa5	FUN_00429B0C	crt-exact	libcmt.lib:/10371	_doexit	-
+0x00029bb1	0x9	FUN_00429BB1	crt-order	libcmt.lib:/10371	__lockexit	between exact anchors 0x29b0c,0x29bc3
+0x00029bba	0x9	FUN_00429BBA	crt-order	libcmt.lib:/10371	__unlockexit	between exact anchors 0x29b0c,0x29bc3
+0x00029bc3	0x1a	FUN_00429BC3	crt-exact	libcmt.lib:/10371	__initterm	-
+0x00029bdd	0x8	FUN_00429BDD	crt-exact	libcmt.lib:/509	__toupper	-
+0x00029be5	0x6f	FUN_00429BE5	crt-exact	libcmt.lib:/509	_toupper	-
+0x00029c54	0xcc	FUN_00429C54	crt-exact	libcmt.lib:/509	__toupper_lk	-
+0x00029d20	0x8b	FUN_00429D20	crt-exact	libcmt.lib:/152	_atol	-
+0x00029dab	0xb	FUN_00429DAB	crt-order	libcmt.lib:/152	_atoi	between exact anchors 0x29d20,0x29db6
+0x00029db6	0xba	FUN_00429DB6	crt-exact	libcmt.lib:/152	__atoi64	-
+0x00029e70	0xfe	FUN_00429E70	crt-exact	libcmt.lib:/14374	_strncpy	-
+0x00029f6e	0xd	FUN_00429F6E	crt-exact	libcmt.lib:/9363	_srand	-
+0x00029f7b	0x22	FUN_00429F7B	crt-exact	libcmt.lib:/9363	_rand	-
+0x00029f9d	0x65	FUN_00429F9D	crt-exact	libcmt.lib:/5053	__lseek	3 byte-identical candidates
+0x0002a002	0x73	FUN_0042A002	crt-exact	libcmt.lib:/5053	__lseek_lk	-
+0x0002a075	0x86	FUN_0042A075	crt-exact	libcmt.lib:/1152	__chdir	-
+0x0002a0fb	0x108	FUN_0042A0FB	crt-exact	libcmt.lib:/10861	_WinMainCRTStartup	-
+0x0002a203	0x25	FUN_0042A203	crt-exact	libcmt.lib:/10861	__amsg_exit	2 byte-identical candidates
+0x0002a228	0x24	FUN_0042A228	crt-exact	libcmt.lib:/10861	_fast_error_exit	2 byte-identical candidates
+0x0002a24c	0x65	FUN_0042A24C	crt-exact	libcmt.lib:/5380	__write	3 byte-identical candidates
+0x0002a2b1	0x18b	FUN_0042A2B1	crt-exact	libcmt.lib:/5380	__write_lk	-
+0x0002a43c	0x5d	FUN_0042A43C	crt-exact	libcmt.lib:/4638	__close	-
+0x0002a499	0x83	FUN_0042A499	crt-exact	libcmt.lib:/4638	__close_lk	-
+0x0002a51c	0x17	FUN_0042A51C	crt-exact	libcmt.lib:/5144	__open	2 byte-identical candidates
+0x0002a533	0x2cf	FUN_0042A533	crt-exact	libcmt.lib:/5144	__sopen	-
+0x0002a802	0x65	FUN_0042A802	crt-exact	libcmt.lib:/5231	__read	3 byte-identical candidates
+0x0002a867	0x1d9	FUN_0042A867	crt-exact	libcmt.lib:/5231	__read_lk	-
+0x0002aa40	0x101	FUN_0042AA40	crt-exact	libcmt.lib:/14405	__strnicmp	-
+0x0002ab41	0xf	FUN_0042AB41	linker-pad			-
+0x0002ab50	0xd0	FUN_0042AB50	crt-exact	libcmt.lib:/14251	__stricmp	-
+0x0002ac20	0x9	FUN_0042AC20	crt-exact	libcmt.lib:/9272	__purecall	-
+0x0002ac29	0x7	FUN_0042AC29	linker-pad			-
+0x0002ac30	0x10	FUN_0042AC30	crt-exact	libcmt.lib:/14100	_strcpy	2 byte-identical candidates
+0x0002ac40	0xe0	FUN_0042AC40	crt-exact	libcmt.lib:/14100	_strcat	2 byte-identical candidates
+0x0002ad20	0xb	FUN_0042AD20	crt-exact	libcmt.lib:/8142	_abs	2 byte-identical candidates
+0x0002ad2b	0x5	FUN_0042AD2B	linker-pad			-
+0x0002ad30	0x58	FUN_0042AD30	crt-exact	libcmt.lib:/14070	_memset	-
+0x0002ad88	0x8	FUN_0042AD88	linker-pad			-
+0x0002ad90	0x335	FUN_0042AD90	crt-band	libcmt.lib:(link-band)	__crt_0042AD90	reviewed LIBCMT band 0x292a4..0x36df0; symbol unresolved
+0x0002b0c5	0xb	FUN_0042B0C5	linker-pad			-
+0x0002b0d0	0x335	FUN_0042B0D0	crt-band	libcmt.lib:(link-band)	__crt_0042B0D0	reviewed LIBCMT band 0x292a4..0x36df0; symbol unresolved
+0x0002b405	0x31	FUN_0042B405	crt-exact	libcmt.lib:/11935	_fclose	-
+0x0002b436	0x4c	FUN_0042B436	crt-exact	libcmt.lib:/11935	__fclose_lk	-
+0x0002b482	0x2f	FUN_0042B482	crt-exact	libcmt.lib:/12391	_fwrite	2 byte-identical candidates
+0x0002b4b1	0x10a	FUN_0042B4B1	crt-exact	libcmt.lib:/12391	__fwrite_lk	-
+0x0002b5bb	0x31	FUN_0042B5BB	crt-exact	libcmt.lib:/12056	__fsopen	2 byte-identical candidates
+0x0002b5ec	0x13	FUN_0042B5EC	crt-exact	libcmt.lib:/12056	_fopen	2 byte-identical candidates
+0x0002b5ff	0x1	FUN_0042B5FF	linker-pad			-
+0x0002b600	0x7b	FUN_0042B600	crt-exact	libcmt.lib:/14282	_strlen	-
+0x0002b67b	0x9b	FUN_0042B67B	crt-exact	libcmt.lib:/2006	___InternalCxxFrameHandler	-
+0x0002b716	0x1b3	FUN_0042B716	crt-exact	libcmt.lib:/2006	?FindHandler@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@EH1@Z	-
+0x0002b8c9	0xaa	FUN_0042B8C9	crt-exact	libcmt.lib:/2006	?FindHandlerForForeignException@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@HH1@Z	-
+0x0002b973	0x5d	FUN_0042B973	crt-exact	libcmt.lib:/2006	?TypeMatch@@YAHPBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_ThrowInfo@@@Z	-
+0x0002b9d0	0x9e	FUN_0042B9D0	crt-exact	libcmt.lib:/2006	___FrameUnwindToState	-
+0x0002ba6e	0x16	FUN_0042BA6E	crt-order	libcmt.lib:/2006	?FrameUnwindFilter@@YAHPAU_EXCEPTION_POINTERS@@@Z	between exact anchors 0x2b9d0,0x2ba84
+0x0002ba84	0x7b	FUN_0042BA84	crt-exact	libcmt.lib:/2006	?CatchIt@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PAXPBU_s_FuncInfo@@PBU_s_HandlerType@@PBU_s_CatchableType@@PBU_s_TryBlockMapEntry@@H1E@Z	-
+0x0002baff	0x11b	FUN_0042BAFF	crt-exact	libcmt.lib:/2006	?CallCatchBlock@@YAPAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PAU_CONTEXT@@PBU_s_FuncInfo@@PAXHK@Z	-
+0x0002bc1a	0x2a	FUN_0042BC1A	crt-exact	libcmt.lib:/2006	?ExFilterRethrow@@YAHPAU_EXCEPTION_POINTERS@@@Z	-
+0x0002bc44	0x1c4	FUN_0042BC44	crt-exact	libcmt.lib:/2006	?BuildCatchObject@@YAXPAUEHExceptionRecord@@PAUEHRegistrationNode@@PBU_s_HandlerType@@PBU_s_CatchableType@@@Z	-
+0x0002be08	0x67	FUN_0042BE08	crt-exact	libcmt.lib:/2006	?_DestructExceptionObject@@YAXPAUEHExceptionRecord@@E@Z	-
+0x0002be6f	0x23	FUN_0042BE6F	crt-exact	libcmt.lib:/2006	?AdjustPointer@@YAPAXPAXABUPMD@@@Z	-
+0x0002be92	0xe	FUN_0042BE92	linker-pad			-
+0x0002bea0	0x27	FUN_0042BEA0	crt-exact	libcmt.lib:/1909	__CallSettingFrame@12	-
+0x0002bec7	0x25	FUN_0042BEC7	crt-exact	libcmt.lib:/1909	__NLG_Return	-
+0x0002beec	0x54	FUN_0042BEEC	crt-exact	libcmt.lib:/10710	__mtinit	-
+0x0002bf40	0x1e	FUN_0042BF40	crt-exact	libcmt.lib:/10710	__mtterm	-
+0x0002bf5e	0x13	FUN_0042BF5E	crt-exact	libcmt.lib:/10710	__initptd	-
+0x0002bf71	0x67	FUN_0042BF71	crt-exact	libcmt.lib:/10710	__getptd	-
+0x0002bfd8	0xa0	FUN_0042BFD8	crt-exact	libcmt.lib:/10710	__freeptd	-
+0x0002c078	0x6	FUN_0042C078	import-thunk	KERNEL32.dll	GetCurrentThreadId	IAT RVA 0x3819c
+0x0002c07e	0x6	FUN_0042C07E	import-thunk	KERNEL32.dll	GetCurrentThread	IAT RVA 0x38170
+0x0002c084	0x61	FUN_0042C084	crt-exact	libcmt.lib:/2035	?terminate@@YAXXZ	-
+0x0002c0e5	0x18	FUN_0042C0E5	crt-exact	libcmt.lib:/2035	?unexpected@@YAXXZ	-
+0x0002c0fd	0x56	FUN_0042C0FD	crt-exact	libcmt.lib:/2035	?_inconsistency@@YAXXZ	-
+0x0002c153	0x32f	FUN_0042C153	crt-exact	libcmt.lib:/4129	_realloc	-
+0x0002c482	0xee	FUN_0042C482	crt-exact	libcmt.lib:/4100	__msize	-
+0x0002c570	0x2d	FUN_0042C570	crt-exact	libcmt.lib:/3912	__GetLinkerVersion	-
+0x0002c59d	0x148	FUN_0042C59D	crt-exact	libcmt.lib:/3912	___heap_select	-
+0x0002c6e5	0x5d	FUN_0042C6E5	crt-exact	libcmt.lib:/3912	__heap_init	-
+0x0002c742	0xa8	FUN_0042C742	crt-exact	libcmt.lib:/3912	__heap_term	-
+0x0002c7ea	0x1f	FUN_0042C7EA	crt-exact	libcmt.lib:/4160	__get_sbh_threshold	-
+0x0002c809	0xb3	FUN_0042C809	crt-exact	libcmt.lib:/4160	__set_sbh_threshold	-
+0x0002c8bc	0x48	FUN_0042C8BC	crt-exact	libcmt.lib:/4160	___sbh_heap_init	-
+0x0002c904	0x2b	FUN_0042C904	crt-exact	libcmt.lib:/4160	___sbh_find_block	-
+0x0002c92f	0x329	FUN_0042C92F	crt-exact	libcmt.lib:/4160	___sbh_free_block	-
+0x0002cc58	0x309	FUN_0042CC58	crt-exact	libcmt.lib:/4160	___sbh_alloc_block	-
+0x0002cf61	0xb1	FUN_0042CF61	crt-exact	libcmt.lib:/4160	___sbh_alloc_new_region	-
+0x0002d012	0xfb	FUN_0042D012	crt-exact	libcmt.lib:/4160	___sbh_alloc_new_group	-
+0x0002d10d	0x2f6	FUN_0042D10D	crt-exact	libcmt.lib:/4160	___sbh_resize_block	-
+0x0002d403	0xd1	FUN_0042D403	crt-exact	libcmt.lib:/4160	___sbh_heapmin	-
+0x0002d4d4	0x335	FUN_0042D4D4	crt-prefix	libcmt.lib:/4160	___sbh_heap_check	unique masked 24-byte prefix
+0x0002d809	0x1c	FUN_0042D809	crt-exact	libcmt.lib:/4160	__set_old_sbh_threshold	-
+0x0002d825	0x144	FUN_0042D825	crt-exact	libcmt.lib:/4160	___old_sbh_new_region	-
+0x0002d969	0x56	FUN_0042D969	crt-exact	libcmt.lib:/4160	___old_sbh_release_region	-
+0x0002d9bf	0xc2	FUN_0042D9BF	crt-exact	libcmt.lib:/4160	___old_sbh_decommit_pages	-
+0x0002da81	0x57	FUN_0042DA81	crt-exact	libcmt.lib:/4160	___old_sbh_find_block	-
+0x0002dad8	0x45	FUN_0042DAD8	crt-exact	libcmt.lib:/4160	___old_sbh_free_block	-
+0x0002db1d	0x208	FUN_0042DB1D	crt-exact	libcmt.lib:/4160	___old_sbh_alloc_block	-
+0x0002dd25	0x124	FUN_0042DD25	crt-exact	libcmt.lib:/4160	___old_sbh_alloc_block_from_page	-
+0x0002de49	0xa9	FUN_0042DE49	crt-exact	libcmt.lib:/4160	___old_sbh_resize_block	-
+0x0002def2	0x15e	FUN_0042DEF2	crt-exact	libcmt.lib:/4160	___old_sbh_heap_check	-
+0x0002e050	0x29	FUN_0042E050	crt-exact	libcmt.lib:/10557	__mtinitlocks	-
+0x0002e079	0x6c	FUN_0042E079	crt-exact	libcmt.lib:/10557	__mtdeletelocks	-
+0x0002e0e5	0x61	FUN_0042E0E5	crt-exact	libcmt.lib:/10557	__lock	-
+0x0002e146	0x15	FUN_0042E146	crt-exact	libcmt.lib:/10557	__unlock	-
+0x0002e15b	0x21	FUN_0042E15B	crt-prefix	libcmt.lib:/10557	__lockerr_exit	unique masked 24-byte prefix
+0x0002e17c	0xbd	FUN_0042E17C	crt-exact	libcmt.lib:/7783	__except_handler3	-
+0x0002e239	0x1b	FUN_0042E239	crt-exact	libcmt.lib:/7783	__seh_longjmp_unwind@4	-
+0x0002e254	0x2a	FUN_0042E254	crt-prefix	libcmt.lib:/4190	?_set_new_handler@@YAP6AHI@ZP6AHI@Z@Z	unique masked 24-byte prefix
+0x0002e27e	0x1b	FUN_0042E27E	crt-exact	libcmt.lib:/4190	__callnewh	-
+0x0002e299	0x118	FUN_0042E299	crt-exact	libcmt.lib:/11624	__flsbuf	-
+0x0002e3b1	0x741	FUN_0042E3B1	crt-exact	libcmt.lib:/12566	__output	-
+0x0002eaf2	0x35	FUN_0042EAF2	crt-exact	libcmt.lib:/12566	_write_char	-
+0x0002eb27	0x31	FUN_0042EB27	crt-exact	libcmt.lib:/12566	_write_multi_char	2 byte-identical candidates
+0x0002eb58	0x38	FUN_0042EB58	crt-exact	libcmt.lib:/12566	_write_string	-
+0x0002eb90	0xd	FUN_0042EB90	crt-exact	libcmt.lib:/11874	_get_int_arg	3 byte-identical candidates
+0x0002eb9d	0x10	FUN_0042EB9D	crt-exact	libcmt.lib:/11874	_get_int64_arg	3 byte-identical candidates
+0x0002ebad	0xe	FUN_0042EBAD	crt-exact	libcmt.lib:/11874	_get_short_arg	2 byte-identical candidates
+0x0002ebbb	0x12	FUN_0042EBBB	crt-exact	libcmt.lib:/11080	__setdefaultprecision	-
+0x0002ebcd	0x3e	FUN_0042EBCD	crt-exact	libcmt.lib:/19129	__ms_p5_test_fdiv	-
+0x0002ec0b	0x29	FUN_0042EC0B	crt-exact	libcmt.lib:/19129	__ms_p5_mp_test_fdiv	-
+0x0002ec34	0x5a	FUN_0042EC34	crt-exact	libcmt.lib:/17901	__forcdecpt	-
+0x0002ec8e	0x4e	FUN_0042EC8E	crt-exact	libcmt.lib:/17901	__cropzeros	-
+0x0002ecdc	0x18	FUN_0042ECDC	crt-exact	libcmt.lib:/17901	__positive	-
+0x0002ecf4	0x3e	FUN_0042ECF4	crt-exact	libcmt.lib:/17901	__fassign	-
+0x0002ed32	0x61	FUN_0042ED32	crt-exact	libcmt.lib:/17901	__cftoe	-
+0x0002ed93	0xc2	FUN_0042ED93	crt-exact	libcmt.lib:/17901	__cftoe2	-
+0x0002ee55	0x55	FUN_0042EE55	crt-exact	libcmt.lib:/17901	__cftof	-
+0x0002eeaa	0xa7	FUN_0042EEAA	crt-exact	libcmt.lib:/17901	__cftof2	-
+0x0002ef51	0x93	FUN_0042EF51	crt-exact	libcmt.lib:/17901	__cftog	-
+0x0002efe4	0x51	FUN_0042EFE4	crt-exact	libcmt.lib:/17901	__cfltcvt	-
+0x0002f035	0x25	FUN_0042F035	crt-exact	libcmt.lib:/17901	__shift	-
+0x0002f05a	0x246	FUN_0042F05A	crt-exact	libcmt.lib:/9509	_setlocale	-
+0x0002f2a0	0x11b	FUN_0042F2A0	crt-exact	libcmt.lib:/9509	__setlocale_set_cat	-
+0x0002f3bb	0xb9	FUN_0042F3BB	crt-exact	libcmt.lib:/9509	__setlocale_get_all	-
+0x0002f474	0x11b	FUN_0042F474	crt-prefix	libcmt.lib:/9509	__expandlocale	unique masked 24-byte prefix
+0x0002f58f	0x25	FUN_0042F58F	crt-exact	libcmt.lib:/9509	__strcats	-
+0x0002f5b4	0xcc	FUN_0042F5B4	crt-exact	libcmt.lib:/9509	___lc_strtolc	-
+0x0002f680	0x53	FUN_0042F680	crt-exact	libcmt.lib:/9509	___lc_lctostr	-
+0x0002f6d3	0x224	FUN_0042F6D3	crt-exact	libcmt.lib:/8055	___crtLCMapStringA	-
+0x0002f8f7	0x2b	FUN_0042F8F7	crt-exact	libcmt.lib:/7968	_strncnt	2 byte-identical candidates
+0x0002f922	0x75	FUN_0042F922	crt-exact	libcmt.lib:/236	__isctype	-
+0x0002f997	0x9	FUN_0042F997	linker-pad			-
+0x0002f9a0	0x34	FUN_0042F9A0	crt-exact	libcmt.lib:/4402	__allmul	-
+0x0002f9d4	0x73	FUN_0042F9D4	crt-exact	libcmt.lib:/1181	__dosmaperr	-
+0x0002fa47	0x9	FUN_0042FA47	crt-exact	libcmt.lib:/1181	__errno	-
+0x0002fa50	0x9	FUN_0042FA50	crt-exact	libcmt.lib:/1181	___doserrno	-
+0x0002fa59	0x123	FUN_0042FA59	crt-exact	libcmt.lib:/5172	__alloc_osfhnd	-
+0x0002fb7c	0x7c	FUN_0042FB7C	crt-exact	libcmt.lib:/5172	__set_osfhnd	-
+0x0002fbf8	0x7f	FUN_0042FBF8	crt-exact	libcmt.lib:/5172	__free_osfhnd	-
+0x0002fc77	0x42	FUN_0042FC77	crt-exact	libcmt.lib:/5172	__get_osfhandle	-
+0x0002fcb9	0xa7	FUN_0042FCB9	crt-exact	libcmt.lib:/5172	__open_osfhandle	-
+0x0002fd60	0x5f	FUN_0042FD60	crt-exact	libcmt.lib:/5172	__lock_fhandle	-
+0x0002fdbf	0x22	FUN_0042FDBF	crt-exact	libcmt.lib:/5172	__unlock_fhandle	-
+0x0002fde1	0x1bc	FUN_0042FDE1	crt-exact	libcmt.lib:/4962	__ioinit	-
+0x0002ff9d	0x54	FUN_0042FF9D	crt-exact	libcmt.lib:/4962	__ioterm	-
+0x0002fff1	0x7b	FUN_0042FFF1	crt-exact	libcmt.lib:/7599	__mbctoupper	-
+0x0003006c	0x13e	FUN_0043006C	crt-exact	libcmt.lib:/9870	__XcptFilter	-
+0x000301aa	0x3a	FUN_004301AA	crt-exact	libcmt.lib:/9870	_xcptlookup	-
+0x000301e4	0x58	FUN_004301E4	crt-exact	libcmt.lib:/10829	__wincmdln	-
+0x0003023c	0xb9	FUN_0043023C	crt-exact	libcmt.lib:/10617	__setenvp	-
+0x000302f5	0x99	FUN_004302F5	crt-exact	libcmt.lib:/10586	__setargv	-
+0x0003038e	0x1b4	FUN_0043038E	crt-exact	libcmt.lib:/10586	_parse_cmdline	-
+0x00030542	0x132	FUN_00430542	crt-exact	libcmt.lib:/7997	___crtGetEnvironmentStringsA	-
+0x00030674	0x2d	FUN_00430674	crt-prefix	libcmt.lib:/10464	__FF_MSGBANNER	unique masked 24-byte prefix
+0x000306a1	0xc	FUN_004306A1	crt-exact	libcmt.lib:/11167	__fgetchar	2 byte-identical candidates
+0x000306ad	0x153	FUN_004306AD	crt-exact	libcmt.lib:/10464	__NMSG_WRITE	-
+0x00030800	0x31	FUN_00430800	crt-exact	libcmt.lib:/10464	__GET_RTERRMSG	-
+0x00030831	0x59	FUN_00430831	crt-exact	libcmt.lib:/4608	__chsize	2 byte-identical candidates
+0x0003088a	0x125	FUN_0043088A	crt-exact	libcmt.lib:/4608	__chsize_lk	-
+0x000309af	0x8	FUN_004309AF	crt-exact	libcmt.lib:/478	__tolower	-
+0x000309b7	0x6f	FUN_004309B7	crt-exact	libcmt.lib:/478	_tolower	-
+0x00030a26	0xcb	FUN_00430A26	crt-exact	libcmt.lib:/478	__tolower_lk	-
+0x00030af1	0xa8	FUN_00430AF1	crt-exact	libcmt.lib:/11595	___initstdio	-
+0x00030b99	0x14	FUN_00430B99	crt-exact	libcmt.lib:/11595	___endstdio	-
+0x00030bad	0x2f	FUN_00430BAD	crt-exact	libcmt.lib:/11595	__lock_file	2 byte-identical candidates
+0x00030bdc	0x23	FUN_00430BDC	crt-exact	libcmt.lib:/11595	__lock_file2	2 byte-identical candidates
+0x00030bff	0x2f	FUN_00430BFF	crt-exact	libcmt.lib:/11595	__lock_file	2 byte-identical candidates
+0x00030c2e	0x23	FUN_00430C2E	crt-exact	libcmt.lib:/11595	__lock_file2	2 byte-identical candidates
+0x00030c51	0x2b	FUN_00430C51	crt-exact	libcmt.lib:/11687	__freebuf	-
+0x00030c7c	0x2f	FUN_00430C7C	crt-exact	libcmt.lib:/11995	_fflush	-
+0x00030cab	0x2e	FUN_00430CAB	crt-exact	libcmt.lib:/11995	__fflush_lk	-
+0x00030cd9	0x5c	FUN_00430CD9	crt-exact	libcmt.lib:/11995	__flush	-
+0x00030d35	0x9	FUN_00430D35	crt-exact	libcmt.lib:/11995	__flushall	-
+0x00030d3e	0xa4	FUN_00430D3E	crt-exact	libcmt.lib:/11995	_flsall	-
+0x00030de2	0x170	FUN_00430DE2	crt-exact	libcmt.lib:/11750	__openfile	-
+0x00030f52	0xc8	FUN_00430F52	crt-exact	libcmt.lib:/13045	__getstream	-
+0x0003101a	0x46	FUN_0043101A	crt-exact	libcmt.lib:/2093	?__CxxUnhandledExceptionFilter@@YGJPAU_EXCEPTION_POINTERS@@@Z	-
+0x00031060	0x11	FUN_00431060	crt-exact	libcmt.lib:/2093	?__CxxSetUnhandledExceptionFilter@@YAXXZ	-
+0x00031071	0xd	FUN_00431071	crt-exact	libcmt.lib:/2093	?__CxxRestoreUnhandledExceptionFilter@@YAXXZ	-
+0x0003107e	0x1c	FUN_0043107E	crt-band	libcmt.lib:(link-band)	__crt_0043107E	reviewed LIBCMT band 0x292a4..0x36df0; symbol unresolved
+0x0003109a	0x1c	FUN_0043109A	crt-band	libcmt.lib:(link-band)	__crt_0043109A	reviewed LIBCMT band 0x292a4..0x36df0; symbol unresolved
+0x000310b6	0x18	FUN_004310B6	crt-exact	libcmt.lib:/2153	?_ValidateExecute@@YAHP6GHXZ@Z	-
+0x000310ce	0x2	FUN_004310CE	linker-pad			-
+0x000310d0	0x84	FUN_004310D0	crt-exact	libcmt.lib:/14160	_strcmp	-
+0x00031154	0x13d	FUN_00431154	crt-exact	libcmt.lib:/3762	_calloc	-
+0x00031291	0x17	FUN_00431291	crt-exact	libcmt.lib:/8113	_abort	-
+0x000312a8	0x17	FUN_004312A8	crt-exact	libcmt.lib:/420	_strtol	6 byte-identical candidates
+0x000312bf	0x205	FUN_004312BF	crt-exact	libcmt.lib:/420	_strtoxl	-
+0x000314c4	0x2c	FUN_004314C4	crt-band	libcmt.lib:(link-band)	__crt_004314C4	reviewed LIBCMT band 0x292a4..0x36df0; symbol unresolved
+0x000314f0	0x6	FUN_004314F0	crt-exact	libcmt.lib:/14130	_strchr	-
+0x000314f6	0xb6	FUN_004314F6	crt-exact	libcmt.lib:/14130	___from_strstr_to_strchr	-
+0x000315ac	0x4	FUN_004315AC	linker-pad			-
+0x000315b0	0x80	FUN_004315B0	crt-exact	libcmt.lib:/14620	_strstr	-
+0x00031630	0x38	FUN_00431630	crt-exact	libcmt.lib:/14343	_strncmp	-
+0x00031668	0x44	FUN_00431668	crt-exact	libcmt.lib:/11719	__getbuf	-
+0x000316ac	0x29	FUN_004316AC	crt-exact	libcmt.lib:/4992	__isatty	-
+0x000316d5	0x59	FUN_004316D5	crt-exact	libcmt.lib:/696	_wctomb	-
+0x0003172e	0x69	FUN_0043172E	crt-exact	libcmt.lib:/696	__wctomb_lk	-
+0x00031797	0x9	FUN_00431797	linker-pad			-
+0x000317a0	0x68	FUN_004317A0	crt-exact	libcmt.lib:/4518	__aulldiv	-
+0x00031808	0x8	FUN_00431808	linker-pad			-
+0x00031810	0x75	FUN_00431810	crt-exact	libcmt.lib:/4548	__aullrem	-
+0x00031885	0x13	FUN_00431885	crt-exact	libcmt.lib:/19032	__statusfp	-
+0x00031898	0x14	FUN_00431898	crt-exact	libcmt.lib:/19032	__clearfp	-
+0x000318ac	0x35	FUN_004318AC	crt-exact	libcmt.lib:/19032	__control87	-
+0x000318e1	0x16	FUN_004318E1	crt-exact	libcmt.lib:/19032	__controlfp	-
+0x000318f7	0x2b	FUN_004318F7	crt-exact	libcmt.lib:/19032	__fpreset	-
+0x00031922	0x92	FUN_00431922	crt-exact	libcmt.lib:/19032	__abstract_cw	-
+0x000319b4	0x89	FUN_004319B4	crt-exact	libcmt.lib:/19032	__hw_cw	-
+0x00031a3d	0x35	FUN_00431A3D	crt-exact	libcmt.lib:/19032	__abstract_sw	-
+0x00031a72	0x49	FUN_00431A72	crt-exact	libcmt.lib:/17964	__ZeroTail	-
+0x00031abb	0x56	FUN_00431ABB	crt-exact	libcmt.lib:/17964	__IncMan	-
+0x00031b11	0x8c	FUN_00431B11	crt-exact	libcmt.lib:/17964	__RoundMan	-
+0x00031b9d	0x1b	FUN_00431B9D	crt-exact	libcmt.lib:/17964	__CopyMan	-
+0x00031bb8	0xc	FUN_00431BB8	crt-exact	libcmt.lib:/17964	__FillZeroMan	-
+0x00031bc4	0x1b	FUN_00431BC4	crt-exact	libcmt.lib:/17964	__IsZeroMan	-
+0x00031bdf	0x8d	FUN_00431BDF	crt-exact	libcmt.lib:/17964	__ShrMan	-
+0x00031c6c	0x16c	FUN_00431C6C	crt-exact	libcmt.lib:/17964	__ld12cvt	-
+0x00031dd8	0x16	FUN_00431DD8	crt-order	libcmt.lib:/17964	__ld12tod	between exact anchors 0x31c6c,0x31e04
+0x00031dee	0x16	FUN_00431DEE	crt-order	libcmt.lib:/17964	__ld12tof	between exact anchors 0x31c6c,0x31e04
+0x00031e04	0x7a	FUN_00431E04	crt-exact	libcmt.lib:/17964	__ld12told	-
+0x00031e7e	0x2d	FUN_00431E7E	crt-exact	libcmt.lib:/17964	__atodbl	2 byte-identical candidates
+0x00031eab	0x2e	FUN_00431EAB	crt-exact	libcmt.lib:/17964	__atoldbl	-
+0x00031ed9	0x2d	FUN_00431ED9	crt-exact	libcmt.lib:/17964	__atodbl	2 byte-identical candidates
+0x00031f06	0x77	FUN_00431F06	crt-exact	libcmt.lib:/30	__fptostr	-
+0x00031f7d	0x5c	FUN_00431F7D	crt-exact	libcmt.lib:/17834	__fltout2	-
+0x00031fd9	0xb6	FUN_00431FD9	crt-exact	libcmt.lib:/17834	___dtold	-
+0x0003208f	0x9	FUN_0043208F	crt-exact	libcmt.lib:/10402	__fptrap	-
+0x00032098	0x91	FUN_00432098	crt-exact	libcmt.lib:/8843	___init_time	-
+0x00032129	0x34e	FUN_00432129	crt-exact	libcmt.lib:/8843	__get_lc_time	-
+0x00032477	0x190	FUN_00432477	crt-exact	libcmt.lib:/8843	__free_lc_time	-
+0x00032607	0x1d5	FUN_00432607	crt-exact	libcmt.lib:/8812	___init_numeric	-
+0x000327dc	0x37	FUN_004327DC	crt-exact	libcmt.lib:/8781	_fix_grouping	2 byte-identical candidates
+0x00032813	0xcb	FUN_00432813	crt-exact	libcmt.lib:/8781	___init_monetary	-
+0x000328de	0x122	FUN_004328DE	crt-exact	libcmt.lib:/8781	__get_lc_lconv	-
+0x00032a00	0x37	FUN_00432A00	crt-exact	libcmt.lib:/8781	_fix_grouping	2 byte-identical candidates
+0x00032a37	0x4e	FUN_00432A37	crt-exact	libcmt.lib:/8781	__free_lc_lconv	-
+0x00032a85	0x248	FUN_00432A85	crt-prefix	libcmt.lib:/8717	___init_ctype	unique masked 24-byte prefix
+0x00032ccd	0x3	FUN_00432CCD	linker-pad			-
+0x00032cd0	0x3e	FUN_00432CD0	crt-exact	libcmt.lib:/14190	_strcspn	-
+0x00032d0e	0x2	FUN_00432D0E	linker-pad			-
+0x00032d10	0x3a	FUN_00432D10	crt-exact	libcmt.lib:/14468	_strpbrk	-
+0x00032d4a	0x17d	FUN_00432D4A	crt-exact	libcmt.lib:/8654	___get_qualified_locale	-
+0x00032ec7	0x58	FUN_00432EC7	crt-exact	libcmt.lib:/8654	_TranslateName	-
+0x00032f1f	0x87	FUN_00432F1F	crt-exact	libcmt.lib:/8654	_GetLcidFromLangCountry	-
+0x00032fa6	0x204	FUN_00432FA6	crt-exact	libcmt.lib:/8654	_LangCountryEnumProc@4	-
+0x000331aa	0x56	FUN_004331AA	crt-exact	libcmt.lib:/8654	_GetLcidFromLanguage	-
+0x00033200	0xbd	FUN_00433200	crt-exact	libcmt.lib:/8654	_LanguageEnumProc@4	-
+0x000332bd	0x37	FUN_004332BD	crt-exact	libcmt.lib:/8654	_GetLcidFromCountry	-
+0x000332f4	0x86	FUN_004332F4	crt-exact	libcmt.lib:/8654	_CountryEnumProc@4	-
+0x0003337a	0x1a	FUN_0043337A	crt-exact	libcmt.lib:/8654	_GetLcidFromDefault	-
+0x00033394	0x66	FUN_00433394	crt-exact	libcmt.lib:/8654	_ProcessCodePage	-
+0x000333fa	0x1f	FUN_004333FA	crt-exact	libcmt.lib:/8654	_TestDefaultCountry	-
+0x00033419	0x62	FUN_00433419	crt-exact	libcmt.lib:/8654	_TestDefaultLanguage	-
+0x0003347b	0x36	FUN_0043347B	crt-exact	libcmt.lib:/8654	_IsThisWindowsNT	-
+0x000334b1	0xe6	FUN_004334B1	crt-exact	libcmt.lib:/8654	_crtGetLocaleInfoA@16	-
+0x00033597	0x39	FUN_00433597	crt-exact	libcmt.lib:/8654	_LcidFromHexString	-
+0x000335d0	0x21	FUN_004335D0	crt-exact	libcmt.lib:/8654	_GetPrimaryLen	-
+0x000335f1	0x149	FUN_004335F1	crt-exact	libcmt.lib:/8084	___crtGetStringTypeA	-
+0x0003373a	0x1ad	FUN_0043373A	crt-exact	libcmt.lib:/6292	__setmbcp	-
+0x000338e7	0x4a	FUN_004338E7	crt-exact	libcmt.lib:/6292	_getSystemCP	-
+0x00033931	0x33	FUN_00433931	crt-exact	libcmt.lib:/6292	_CPtoLCID	-
+0x00033964	0x29	FUN_00433964	crt-exact	libcmt.lib:/6292	_setSBCS	-
+0x0003398d	0x185	FUN_0043398D	crt-exact	libcmt.lib:/6292	_setSBUpLow	-
+0x00033b12	0x10	FUN_00433B12	crt-exact	libcmt.lib:/6292	__getmbcp	-
+0x00033b22	0x2d	FUN_00433B22	crt-prefix	libcmt.lib:/6292	___initmbctable	unique masked 24-byte prefix
+0x00033b4f	0x11	FUN_00433B4F	crt-exact	libcmt.lib:/5794	__ismbbkprint	-
+0x00033b60	0x11	FUN_00433B60	crt-exact	libcmt.lib:/5794	__ismbbkpunct	-
+0x00033b71	0x14	FUN_00433B71	crt-exact	libcmt.lib:/5794	__ismbbalnum	-
+0x00033b85	0x14	FUN_00433B85	crt-exact	libcmt.lib:/5794	__ismbbalpha	-
+0x00033b99	0x14	FUN_00433B99	crt-exact	libcmt.lib:/5794	__ismbbgraph	-
+0x00033bad	0x14	FUN_00433BAD	crt-exact	libcmt.lib:/5794	__ismbbprint	-
+0x00033bc1	0x11	FUN_00433BC1	crt-exact	libcmt.lib:/5794	__ismbbpunct	-
+0x00033bd2	0x11	FUN_00433BD2	crt-exact	libcmt.lib:/5794	__ismbblead	-
+0x00033be3	0x11	FUN_00433BE3	crt-exact	libcmt.lib:/5794	__ismbbtrail	-
+0x00033bf4	0x27	FUN_00433BF4	crt-exact	libcmt.lib:/5794	__ismbbkana	-
+0x00033c1b	0x31	FUN_00433C1B	crt-exact	libcmt.lib:/5794	_x_ismbbtype	-
+0x00033c4c	0x89	FUN_00433C4C	crt-exact	libcmt.lib:/8323	___crtMessageBoxA	-
+0x00033cd5	0x59	FUN_00433CD5	crt-exact	libcmt.lib:/4608	__chsize	2 byte-identical candidates
+0x00033d2e	0x61	FUN_00433D2E	crt-exact	libcmt.lib:/5259	__setmode_lk	-
+0x00033d8f	0x81	FUN_00433D8F	crt-exact	libcmt.lib:/11842	__fcloseall	-
+0x00033e10	0x93	FUN_00433E10	crt-exact	libcmt.lib:/4667	__commit	-
+0x00033ea3	0x182	FUN_00433EA3	crt-exact	libcmt.lib:/9840	_signal	-
+0x00034025	0x62	FUN_00434025	crt-exact	libcmt.lib:/9840	_ctrlevent_capture@4	-
+0x00034087	0x182	FUN_00434087	crt-exact	libcmt.lib:/9840	_raise	-
+0x00034209	0x3d	FUN_00434209	crt-exact	libcmt.lib:/9840	_siglookup	-
+0x00034246	0x9	FUN_00434246	crt-exact	libcmt.lib:/9840	___fpecode	-
+0x0003424f	0x9	FUN_0043424F	crt-exact	libcmt.lib:/9840	___pxcptinfoptrs	-
+0x00034258	0x21	FUN_00434258	crt-exact	libcmt.lib:/17999	___addl	-
+0x00034279	0x5e	FUN_00434279	crt-exact	libcmt.lib:/17999	___add_12	-
+0x000342d7	0x2e	FUN_004342D7	crt-exact	libcmt.lib:/17999	___shl_12	-
+0x00034305	0x2d	FUN_00434305	crt-exact	libcmt.lib:/17999	___shr_12	-
+0x00034332	0xc7	FUN_00434332	crt-exact	libcmt.lib:/17999	___mtold12	-
+0x000343f9	0x4d1	FUN_004343F9	crt-exact	libcmt.lib:/18033	___strgtold12	-
+0x000348ca	0x3c	FUN_004348CA	crt-exact	libcmt.lib:/18033	___STRINGTOLD	-
+0x00034906	0x293	FUN_00434906	crt-exact	libcmt.lib:/18101	_$I10_OUTPUT	-
+0x00034b99	0x8f	FUN_00434B99	crt-exact	libcmt.lib:/17373	__Getdays	-
+0x00034c28	0x95	FUN_00434C28	crt-exact	libcmt.lib:/17373	__Getmonths	-
+0x00034cbd	0x232	FUN_00434CBD	crt-exact	libcmt.lib:/17373	__Gettnames	-
+0x00034eef	0x1b	FUN_00434EEF	crt-exact	libcmt.lib:/17373	_strftime	-
+0x00034f0a	0xfa	FUN_00434F0A	crt-exact	libcmt.lib:/17373	__Strftime	-
+0x00035004	0x3ef	FUN_00435004	crt-exact	libcmt.lib:/17373	__expandtime	-
+0x000353f3	0x27	FUN_004353F3	crt-exact	libcmt.lib:/17373	__store_str	-
+0x0003541a	0x6f	FUN_0043541A	crt-exact	libcmt.lib:/17373	__store_num	-
+0x00035489	0x49	FUN_00435489	crt-exact	libcmt.lib:/17373	__store_number	-
+0x000354d2	0x2cf	FUN_004354D2	crt-exact	libcmt.lib:/17373	__store_winword	-
+0x000357a1	0x13e	FUN_004357A1	crt-prefix	libcmt.lib:/8749	___getlocaleinfo	unique masked 24-byte prefix
+0x000358df	0x1c5	FUN_004358DF	crt-exact	libcmt.lib:/9811	___crtGetStringTypeW	-
+0x00035aa4	0x2d	FUN_00435AA4	crt-exact	libcmt.lib:/754	__itoa	-
+0x00035ad1	0x5c	FUN_00435AD1	crt-exact	libcmt.lib:/754	_xtoa	-
+0x00035b2d	0x2a	FUN_00435B2D	crt-exact	libcmt.lib:/754	__ltoa	-
+0x00035b57	0x1b	FUN_00435B57	crt-exact	libcmt.lib:/754	__ultoa	-
+0x00035b72	0x31	FUN_00435B72	crt-exact	libcmt.lib:/754	__i64toa	-
+0x00035ba3	0x86	FUN_00435BA3	crt-exact	libcmt.lib:/754	_x64toa@20	-
+0x00035c29	0x1b	FUN_00435C29	crt-exact	libcmt.lib:/754	__ui64toa	-
+0x00035c44	0x220	FUN_00435C44	crt-exact	libcmt.lib:/18068	___ld12mul	-
+0x00035e64	0x7c	FUN_00435E64	crt-exact	libcmt.lib:/18068	___multtenpow12	-
+0x00035ee0	0x2e	FUN_00435EE0	crt-exact	libcmt.lib:/17557	___tzset	-
+0x00035f0e	0x16	FUN_00435F0E	crt-exact	libcmt.lib:/17557	__tzset	-
+0x00035f24	0x287	FUN_00435F24	crt-exact	libcmt.lib:/17557	__tzset_lk	-
+0x000361ab	0x21	FUN_004361AB	crt-exact	libcmt.lib:/17557	__isindst	-
+0x000361cc	0x1ac	FUN_004361CC	crt-exact	libcmt.lib:/17557	__isindst_lk	-
+0x00036378	0x140	FUN_00436378	crt-exact	libcmt.lib:/17557	_cvtdate	-
+0x000364b8	0x113	FUN_004364B8	crt-exact	libcmt.lib:/9753	___crtGetLocaleInfoW	-
+0x000365cb	0x11e	FUN_004365CB	crt-exact	libcmt.lib:/8026	___crtGetLocaleInfoA	-
+0x000366e9	0x21	FUN_004366E9	crt-exact	libcmt.lib:/8593	_getenv	4 byte-identical candidates
+0x0003670a	0x7d	FUN_0043670A	crt-exact	libcmt.lib:/8593	__getenv_lk	-
+0x00036787	0x3f	FUN_00436787	crt-exact	libcmt.lib:/6852	__mbsnbicoll	-
+0x000367c6	0x6e	FUN_004367C6	crt-exact	libcmt.lib:/10217	___wtomb_environ	-
+0x00036834	0x27d	FUN_00436834	crt-exact	libcmt.lib:/7968	___crtCompareStringA	-
+0x00036ab1	0x2b	FUN_00436AB1	crt-exact	libcmt.lib:/7968	_strncnt	2 byte-identical candidates
+0x00036adc	0x187	FUN_00436ADC	crt-exact	libcmt.lib:/9479	___crtsetenv	-
+0x00036c63	0x58	FUN_00436C63	crt-exact	libcmt.lib:/9479	_findenv	-
+0x00036cbb	0x67	FUN_00436CBB	crt-exact	libcmt.lib:/9479	_copy_environ	2 byte-identical candidates
+0x00036d22	0x97	FUN_00436D22	crt-exact	libcmt.lib:/6355	__mbschr	-
+0x00036db9	0x2b	FUN_00436DB9	crt-exact	libcmt.lib:/5700	__mbsdup	2 byte-identical candidates
+0x00036de4	0xc	FUN_00436DE4	linker-pad			-
+0x00036df0	0x6	FUN_00436DF0	import-thunk	KERNEL32.dll	RtlUnwind	IAT RVA 0x38084
+0x00036df6	0x6	FUN_00436DF6	import-thunk	KERNEL32.dll	HeapFree	IAT RVA 0x38154
+0x00036dfc	0x6	FUN_00436DFC	import-thunk	KERNEL32.dll	HeapAlloc	IAT RVA 0x38158
+0x00036e02	0x6	FUN_00436E02	import-thunk	KERNEL32.dll	ExitProcess	IAT RVA 0x3815c
+0x00036e08	0x6	FUN_00436E08	import-thunk	KERNEL32.dll	TerminateProcess	IAT RVA 0x38160
+0x00036e0e	0x6	FUN_00436E0E	import-thunk	KERNEL32.dll	GetCurrentProcess	IAT RVA 0x38164
+0x00036e14	0x6	FUN_00436E14	import-thunk	KERNEL32.dll	InterlockedDecrement	IAT RVA 0x38168
+0x00036e1a	0x6	FUN_00436E1A	import-thunk	KERNEL32.dll	InterlockedIncrement	IAT RVA 0x3816c
+0x00036e20	0x6	FUN_00436E20	import-thunk	KERNEL32.dll	SetFilePointer	IAT RVA 0x3808c
+0x00036e26	0x6	FUN_00436E26	import-thunk	KERNEL32.dll	SetEnvironmentVariableA	IAT RVA 0x38090
+0x00036e2c	0x6	FUN_00436E2C	import-thunk	KERNEL32.dll	GetCurrentDirectoryA	IAT RVA 0x38178
+0x00036e32	0x6	FUN_00436E32	import-thunk	KERNEL32.dll	SetCurrentDirectoryA	IAT RVA 0x3817c
+0x00036e38	0x6	FUN_00436E38	import-thunk	KERNEL32.dll	GetModuleHandleA	IAT RVA 0x38180
+0x00036e3e	0x6	FUN_00436E3E	import-thunk	KERNEL32.dll	GetStartupInfoA	IAT RVA 0x38184
+0x00036e44	0x6	FUN_00436E44	import-thunk	KERNEL32.dll	GetCommandLineA	IAT RVA 0x38188
+0x00036e4a	0x6	FUN_00436E4A	import-thunk	KERNEL32.dll	GetVersion	IAT RVA 0x3818c
+0x00036e50	0x6	FUN_00436E50	import-thunk	KERNEL32.dll	WriteFile	IAT RVA 0x38190
+0x00036e56	0x6	FUN_00436E56	import-thunk	KERNEL32.dll	GetFileType	IAT RVA 0x38174
+0x00036e5c	0x6	FUN_00436E5C	import-thunk	KERNEL32.dll	CreateFileA	IAT RVA 0x38088
+0x00036e62	0x6	FUN_00436E62	import-thunk	KERNEL32.dll	ReadFile	IAT RVA 0x38198
+0x00036e68	0x6	FUN_00436E68	import-thunk	KERNEL32.dll	GetCurrentThreadId	IAT RVA 0x3819c
+0x00036e6e	0x6	FUN_00436E6E	import-thunk	KERNEL32.dll	TlsSetValue	IAT RVA 0x38194
+0x00036e74	0x6	FUN_00436E74	import-thunk	KERNEL32.dll	TlsAlloc	IAT RVA 0x381a4
+0x00036e7a	0x6	FUN_00436E7A	import-thunk	KERNEL32.dll	TlsFree	IAT RVA 0x381a8
+0x00036e80	0x6	FUN_00436E80	import-thunk	KERNEL32.dll	SetLastError	IAT RVA 0x381a0
+0x00036e86	0x6	FUN_00436E86	import-thunk	KERNEL32.dll	TlsGetValue	IAT RVA 0x381ac
+0x00036e8c	0x6	FUN_00436E8C	import-thunk	KERNEL32.dll	GetCurrentThread	IAT RVA 0x38170
+0x00036e92	0x6	FUN_00436E92	import-thunk	KERNEL32.dll	HeapReAlloc	IAT RVA 0x38130
+0x00036e98	0x6	FUN_00436E98	import-thunk	KERNEL32.dll	HeapSize	IAT RVA 0x3812c
+0x00036e9e	0x6	FUN_00436E9E	import-thunk	KERNEL32.dll	GetModuleFileNameA	IAT RVA 0x38128
+0x00036ea4	0x6	FUN_00436EA4	import-thunk	KERNEL32.dll	GetEnvironmentVariableA	IAT RVA 0x38124
+0x00036eaa	0x6	FUN_00436EAA	import-thunk	KERNEL32.dll	GetVersionExA	IAT RVA 0x38120
+0x00036eb0	0x6	FUN_00436EB0	import-thunk	KERNEL32.dll	HeapDestroy	IAT RVA 0x3811c
+0x00036eb6	0x6	FUN_00436EB6	import-thunk	KERNEL32.dll	HeapCreate	IAT RVA 0x38118
+0x00036ebc	0x6	FUN_00436EBC	import-thunk	KERNEL32.dll	VirtualFree	IAT RVA 0x38114
+0x00036ec2	0x6	FUN_00436EC2	import-thunk	KERNEL32.dll	VirtualAlloc	IAT RVA 0x38110
+0x00036ec8	0x6	FUN_00436EC8	import-thunk	KERNEL32.dll	IsBadWritePtr	IAT RVA 0x3810c
+0x00036ece	0x6	FUN_00436ECE	import-thunk	KERNEL32.dll	InitializeCriticalSection	IAT RVA 0x38108
+0x00036ed4	0x6	FUN_00436ED4	import-thunk	KERNEL32.dll	DeleteCriticalSection	IAT RVA 0x38104
+0x00036eda	0x6	FUN_00436EDA	import-thunk	KERNEL32.dll	EnterCriticalSection	IAT RVA 0x38100
+0x00036ee0	0x6	FUN_00436EE0	import-thunk	KERNEL32.dll	LeaveCriticalSection	IAT RVA 0x380fc
+0x00036ee6	0x6	FUN_00436EE6	import-thunk	KERNEL32.dll	FatalAppExitA	IAT RVA 0x380f8
+0x00036eec	0x6	FUN_00436EEC	import-thunk	KERNEL32.dll	WideCharToMultiByte	IAT RVA 0x380f4
+0x00036ef2	0x6	FUN_00436EF2	import-thunk	KERNEL32.dll	MultiByteToWideChar	IAT RVA 0x380f0
+0x00036ef8	0x6	FUN_00436EF8	import-thunk	KERNEL32.dll	LCMapStringA	IAT RVA 0x380ec
+0x00036efe	0x6	FUN_00436EFE	import-thunk	KERNEL32.dll	LCMapStringW	IAT RVA 0x380e8
+0x00036f04	0x6	FUN_00436F04	import-thunk	KERNEL32.dll	SetStdHandle	IAT RVA 0x380e4
+0x00036f0a	0x6	FUN_00436F0A	import-thunk	KERNEL32.dll	SetHandleCount	IAT RVA 0x380e0
+0x00036f10	0x6	FUN_00436F10	import-thunk	KERNEL32.dll	GetStdHandle	IAT RVA 0x380dc
+0x00036f16	0x6	FUN_00436F16	import-thunk	KERNEL32.dll	UnhandledExceptionFilter	IAT RVA 0x380d8
+0x00036f1c	0x6	FUN_00436F1C	import-thunk	KERNEL32.dll	FreeEnvironmentStringsA	IAT RVA 0x380d4
+0x00036f22	0x6	FUN_00436F22	import-thunk	KERNEL32.dll	FreeEnvironmentStringsW	IAT RVA 0x380d0
+0x00036f28	0x6	FUN_00436F28	import-thunk	KERNEL32.dll	GetEnvironmentStrings	IAT RVA 0x380cc
+0x00036f2e	0x6	FUN_00436F2E	import-thunk	KERNEL32.dll	GetEnvironmentStringsW	IAT RVA 0x380c8
+0x00036f34	0x6	FUN_00436F34	import-thunk	KERNEL32.dll	SetEndOfFile	IAT RVA 0x380c4
+0x00036f3a	0x6	FUN_00436F3A	import-thunk	KERNEL32.dll	SetUnhandledExceptionFilter	IAT RVA 0x380c0
+0x00036f40	0x6	FUN_00436F40	import-thunk	KERNEL32.dll	IsBadReadPtr	IAT RVA 0x380bc
+0x00036f46	0x6	FUN_00436F46	import-thunk	KERNEL32.dll	IsBadCodePtr	IAT RVA 0x380b8
+0x00036f4c	0x6	FUN_00436F4C	import-thunk	KERNEL32.dll	GetCPInfo	IAT RVA 0x380b4
+0x00036f52	0x6	FUN_00436F52	import-thunk	KERNEL32.dll	IsValidLocale	IAT RVA 0x380b0
+0x00036f58	0x6	FUN_00436F58	import-thunk	KERNEL32.dll	IsValidCodePage	IAT RVA 0x380ac
+0x00036f5e	0x6	FUN_00436F5E	import-thunk	KERNEL32.dll	GetLocaleInfoA	IAT RVA 0x380a8
+0x00036f64	0x6	FUN_00436F64	import-thunk	KERNEL32.dll	EnumSystemLocalesA	IAT RVA 0x380a4
+0x00036f6a	0x6	FUN_00436F6A	import-thunk	KERNEL32.dll	GetUserDefaultLCID	IAT RVA 0x380a0
+0x00036f70	0x6	FUN_00436F70	import-thunk	KERNEL32.dll	GetStringTypeA	IAT RVA 0x3809c
+0x00036f76	0x6	FUN_00436F76	import-thunk	KERNEL32.dll	GetStringTypeW	IAT RVA 0x38098
+0x00036f7c	0x6	FUN_00436F7C	import-thunk	KERNEL32.dll	GetACP	IAT RVA 0x38094
+0x00036f82	0x6	FUN_00436F82	import-thunk	KERNEL32.dll	GetOEMCP	IAT RVA 0x3814c
+0x00036f88	0x6	FUN_00436F88	import-thunk	KERNEL32.dll	FlushFileBuffers	IAT RVA 0x38148
+0x00036f8e	0x6	FUN_00436F8E	import-thunk	KERNEL32.dll	SetConsoleCtrlHandler	IAT RVA 0x38144
+0x00036f94	0x6	FUN_00436F94	import-thunk	KERNEL32.dll	GetTimeZoneInformation	IAT RVA 0x38140
+0x00036f9a	0x6	FUN_00436F9A	import-thunk	KERNEL32.dll	GetLocaleInfoW	IAT RVA 0x3813c
+0x00036fa0	0x6	FUN_00436FA0	import-thunk	KERNEL32.dll	CompareStringA	IAT RVA 0x38138
+0x00036fa6	0x6	FUN_00436FA6	import-thunk	KERNEL32.dll	CompareStringW	IAT RVA 0x38134
+0x00036fac	0x6	FUN_00436FAC	import-thunk	USER32.dll	ReleaseCapture	IAT RVA 0x38278
+0x00036fb2	0x6	FUN_00436FB2	import-thunk	USER32.dll	SetCapture	IAT RVA 0x3827c
+0x00036fb8	0x6	FUN_00436FB8	import-thunk	USER32.dll	DestroyIcon	IAT RVA 0x3825c
+0x00036fbe	0x6	FUN_00436FBE	import-thunk	USER32.dll	CreateIconIndirect	IAT RVA 0x38260
+0x00036fc4	0x6	FUN_00436FC4	import-thunk	USER32.dll	ScreenToClient	IAT RVA 0x38274
+0x00036fca	0x6	FUN_00436FCA	import-thunk	USER32.dll	GetCursorPos	IAT RVA 0x38264
+0x00036fd0	0x6	FUN_00436FD0	import-thunk	USER32.dll	ShowCursor	IAT RVA 0x38270
+0x00036fd6	0x6	FUN_00436FD6	import-thunk	USER32.dll	UpdateWindow	IAT RVA 0x3826c
+0x00036fdc	0x6	FUN_00436FDC	import-thunk	GDI32.dll	CreateBitmapIndirect	IAT RVA 0x38040
+0x00036fe2	0x6	FUN_00436FE2	import-thunk	audiere.dll	_AdrOpenSampleSource@4	IAT RVA 0x38284
+0x00036fe8	0x6	FUN_00436FE8	import-thunk	audiere.dll	_AdrOpenDevice@8	IAT RVA 0x38288
+0x00036fee	0x11	FUN_00436FEE	crt-exact	libcmt.lib:/5290	__tell	2 byte-identical candidates
+0x00036fff	0x1	FUN_00436FFF	linker-pad			-
+0x00037000	0x30	FUN_00437000	crt-exact	libcmt.lib:/14530	__strrev	-
+0x00037030	0xb	FUN_00437030	eh-funclet			-
+0x0003703b	0xb	FUN_0043703B	eh-funclet			-
+0x00037046	0xa	FUN_00437046	eh-funclet			-
+0x00037050	0xb	FUN_00437050	eh-funclet			-
+0x0003705b	0xb	FUN_0043705B	eh-funclet			-
+0x00037066	0xb	FUN_00437066	eh-funclet			-
+0x00037071	0xb	FUN_00437071	eh-funclet			-
+0x0003707c	0xb	FUN_0043707C	eh-funclet			-
+0x00037087	0xa	FUN_00437087	eh-funclet			-
+0x00037091	0xb	FUN_00437091	eh-funclet			-
+0x0003709c	0xb	FUN_0043709C	eh-funclet			-
+0x000370a7	0xb	FUN_004370A7	eh-funclet			-
+0x000370b2	0xb	FUN_004370B2	eh-funclet			-
+0x000370bd	0xa	FUN_004370BD	eh-funclet			-
+0x000370c7	0xb	FUN_004370C7	eh-funclet			-
+0x000370d2	0xa	FUN_004370D2	eh-funclet			-
+0x000370dc	0x4	FUN_004370DC	linker-pad			-
+0x000370e0	0xb	FUN_004370E0	eh-funclet			-
+0x000370eb	0xb	FUN_004370EB	eh-funclet			-
+0x000370f6	0xb	FUN_004370F6	eh-funclet			-
+0x00037101	0xb	FUN_00437101	eh-funclet			-
+0x0003710c	0xb	FUN_0043710C	eh-funclet			-
+0x00037117	0xb	FUN_00437117	eh-funclet			-
+0x00037122	0xb	FUN_00437122	eh-funclet			-
+0x0003712d	0xa	FUN_0043712D	eh-funclet			-
+0x00037137	0xb	FUN_00437137	eh-funclet			-
+0x00037142	0xa	FUN_00437142	eh-funclet			-
+0x0003714c	0x4	FUN_0043714C	linker-pad			-
+0x00037150	0xb	FUN_00437150	eh-funclet			-
+0x0003715b	0xa	FUN_0043715B	eh-funclet			-
+0x00037165	0xb	FUN_00437165	eh-funclet			-
+0x00037170	0xa	FUN_00437170	eh-funclet			-
+0x0003717a	0xb	FUN_0043717A	eh-funclet			-
+0x00037185	0xa	FUN_00437185	eh-funclet			-
+0x0003718f	0xb	FUN_0043718F	eh-funclet			-
+0x0003719a	0xa	FUN_0043719A	eh-funclet			-
+0x000371a4	0xb	FUN_004371A4	eh-funclet			-
+0x000371af	0xa	FUN_004371AF	eh-funclet			-
+0x000371b9	0xb	FUN_004371B9	eh-funclet			-
+0x000371c4	0xa	FUN_004371C4	eh-funclet			-
+0x000371ce	0xe	FUN_004371CE	eh-funclet			-
+0x000371dc	0xa	FUN_004371DC	eh-funclet			-
+0x000371e6	0xb	FUN_004371E6	eh-funclet			-
+0x000371f1	0xb	FUN_004371F1	eh-funclet			-
+0x000371fc	0xb	FUN_004371FC	eh-funclet			-
+0x00037207	0xb	FUN_00437207	eh-funclet			-
+0x00037212	0xb	FUN_00437212	eh-funclet			-
+0x0003721d	0xa	FUN_0043721D	eh-funclet			-
+0x00037227	0x9	FUN_00437227	linker-pad			-
+0x00037230	0xb	FUN_00437230	eh-funclet			-
+0x0003723b	0xb	FUN_0043723B	eh-funclet			-
+0x00037246	0xb	FUN_00437246	eh-funclet			-
+0x00037251	0xb	FUN_00437251	eh-funclet			-
+0x0003725c	0xa	FUN_0043725C	eh-funclet			-
+0x00037266	0xb	FUN_00437266	eh-funclet			-
+0x00037271	0xa	FUN_00437271	eh-funclet			-
+0x0003727b	0x5	FUN_0043727B	linker-pad			-
+0x00037280	0xb	FUN_00437280	eh-funclet			-
+0x0003728b	0xb	FUN_0043728B	eh-funclet			-
+0x00037296	0xa	FUN_00437296	eh-funclet			-
+0x000372a0	0xb	FUN_004372A0	eh-funclet			-
+0x000372ab	0xb	FUN_004372AB	eh-funclet			-
+0x000372b6	0xb	FUN_004372B6	eh-funclet			-
+0x000372c1	0xb	FUN_004372C1	eh-funclet			-
+0x000372cc	0xb	FUN_004372CC	eh-funclet			-
+0x000372d7	0xb	FUN_004372D7	eh-funclet			-
+0x000372e2	0xb	FUN_004372E2	eh-funclet			-
+0x000372ed	0xb	FUN_004372ED	eh-funclet			-
+0x000372f8	0xb	FUN_004372F8	eh-funclet			-
+0x00037303	0xb	FUN_00437303	eh-funclet			-
+0x0003730e	0xa	FUN_0043730E	eh-funclet			-
+0x00037318	0x8	FUN_00437318	linker-pad			-
+0x00037320	0xb	FUN_00437320	eh-funclet			FuncInfo/unwind-map child record
+0x0003732b	0xb	FUN_0043732B	eh-funclet			FuncInfo/unwind-map child record
+0x00037336	0xb	FUN_00437336	eh-funclet			FuncInfo/unwind-map child record
+0x00037341	0xb	FUN_00437341	eh-funclet			FuncInfo/unwind-map child record
+0x0003734c	0xb	FUN_0043734C	eh-funclet			FuncInfo/unwind-map child record
+0x00037357	0xb	FUN_00437357	eh-funclet			FuncInfo/unwind-map child record
+0x00037362	0xb	FUN_00437362	eh-funclet			FuncInfo/unwind-map child record
+0x0003736d	0xb	FUN_0043736D	eh-funclet			FuncInfo/unwind-map child record
+0x00037378	0xb	FUN_00437378	eh-funclet			FuncInfo/unwind-map child record
+0x00037383	0xa	FUN_00437383	eh-funclet			FuncInfo/unwind-map child record
+0x0003738d	0xb	FUN_0043738D	eh-funclet			FuncInfo/unwind-map child record
+0x00037398	0xa	FUN_00437398	eh-funclet			FuncInfo/unwind-map child record
+0x000373a2	0xe	FUN_004373A2	linker-pad			-
+0x000373b0	0x9	FUN_004373B0	eh-funclet			FuncInfo/unwind-map child record
+0x000373b9	0xa	FUN_004373B9	eh-funclet			FuncInfo/unwind-map child record
+0x000373c3	0x9	FUN_004373C3	eh-funclet			FuncInfo/unwind-map child record
+0x000373cc	0xa	FUN_004373CC	eh-funclet			FuncInfo/unwind-map child record
+0x000373d6	0x9	FUN_004373D6	eh-funclet			FuncInfo/unwind-map child record
+0x000373df	0xa	FUN_004373DF	eh-funclet			FuncInfo/unwind-map child record
+0x000373e9	0x7	FUN_004373E9	linker-pad			-
+0x000373f0	0x9	FUN_004373F0	eh-funclet			FuncInfo/unwind-map child record
+0x000373f9	0xa	FUN_004373F9	eh-funclet			FuncInfo/unwind-map child record
+0x00037403	0x9	FUN_00437403	eh-funclet			FuncInfo/unwind-map child record
+0x0003740c	0xa	FUN_0043740C	eh-funclet			FuncInfo/unwind-map child record
+0x00037416	0x9	FUN_00437416	eh-funclet			FuncInfo/unwind-map child record
+0x0003741f	0xa	FUN_0043741F	eh-funclet			FuncInfo/unwind-map child record
+0x00037429	0x7	FUN_00437429	linker-pad			-
+0x00037430	0xb	FUN_00437430	eh-funclet			FuncInfo/unwind-map child record
+0x0003743b	0xa	FUN_0043743B	eh-funclet			FuncInfo/unwind-map child record
+0x00037445	0xb	FUN_00437445	linker-pad			-
+0x00037450	0xb	FUN_00437450	eh-funclet			FuncInfo/unwind-map child record
+0x0003745b	0xa	FUN_0043745B	eh-funclet			FuncInfo/unwind-map child record
+0x00037465	0xb	FUN_00437465	eh-funclet			FuncInfo/unwind-map child record
+0x00037470	0xa	FUN_00437470	eh-funclet			FuncInfo/unwind-map child record
+0x0003747a	0xb	FUN_0043747A	eh-funclet			FuncInfo/unwind-map child record
+0x00037485	0xa	FUN_00437485	eh-funclet			FuncInfo/unwind-map child record
+0x0003748f	0xb	FUN_0043748F	eh-funclet			FuncInfo/unwind-map child record
+0x0003749a	0xa	FUN_0043749A	eh-funclet			FuncInfo/unwind-map child record
+0x000374a4	0xb	FUN_004374A4	eh-funclet			FuncInfo/unwind-map child record
+0x000374af	0xa	FUN_004374AF	eh-funclet			FuncInfo/unwind-map child record
+0x000374b9	0xb	FUN_004374B9	eh-funclet			FuncInfo/unwind-map child record
+0x000374c4	0xa	FUN_004374C4	eh-funclet			FuncInfo/unwind-map child record
+0x000374ce	0x2	FUN_004374CE	linker-pad			-
+0x000374d0	0xb	FUN_004374D0	eh-funclet			FuncInfo/unwind-map child record
+0x000374db	0xa	FUN_004374DB	eh-funclet			FuncInfo/unwind-map child record
+0x000374e5	0xb	FUN_004374E5	eh-funclet			FuncInfo/unwind-map child record
+0x000374f0	0xa	FUN_004374F0	eh-funclet			FuncInfo/unwind-map child record
+0x000374fa	0xb	FUN_004374FA	eh-funclet			FuncInfo/unwind-map child record
+0x00037505	0xa	FUN_00437505	eh-funclet			FuncInfo/unwind-map child record
+0x0003750f	0x1	FUN_0043750F	linker-pad			-
+0x00037510	0x9	FUN_00437510	eh-funclet			FuncInfo/unwind-map child record
+0x00037519	0xa	FUN_00437519	eh-funclet			FuncInfo/unwind-map child record
+0x00037523	0x9	FUN_00437523	eh-funclet			FuncInfo/unwind-map child record
+0x0003752c	0xa	FUN_0043752C	eh-funclet			FuncInfo/unwind-map child record
+0x00037536	0xa	FUN_00437536	linker-pad			-
+0x00037540	0x9	FUN_00437540	eh-funclet			FuncInfo/unwind-map child record
+0x00037549	0xa	FUN_00437549	eh-funclet			FuncInfo/unwind-map child record
+0x00037553	0xd	FUN_00437553	linker-pad			-
+0x00037560	0x9	FUN_00437560	eh-funclet			FuncInfo/unwind-map child record
+0x00037569	0xa	FUN_00437569	eh-funclet			FuncInfo/unwind-map child record
+0x00037573	0xd	FUN_00437573	linker-pad			-
+0x00037580	0xb	FUN_00437580	eh-funclet			FuncInfo/unwind-map child record
+0x0003758b	0x9	FUN_0043758B	eh-funclet			FuncInfo/unwind-map child record
+0x00037594	0x9	FUN_00437594	eh-funclet			FuncInfo/unwind-map child record
+0x0003759d	0xa	FUN_0043759D	eh-funclet			FuncInfo/unwind-map child record
+0x000375a7	0x9	FUN_004375A7	eh-funclet			FuncInfo/unwind-map child record
+0x000375b0	0x9	FUN_004375B0	eh-funclet			FuncInfo/unwind-map child record
+0x000375b9	0x9	FUN_004375B9	eh-funclet			FuncInfo/unwind-map child record
+0x000375c2	0xa	FUN_004375C2	eh-funclet			FuncInfo/unwind-map child record
+0x000375cc	0x4	FUN_004375CC	linker-pad			-
+0x000375d0	0x9	FUN_004375D0	eh-funclet			FuncInfo/unwind-map child record
+0x000375d9	0xa	FUN_004375D9	eh-funclet			FuncInfo/unwind-map child record
+0x000375e3	0x9	FUN_004375E3	eh-funclet			FuncInfo/unwind-map child record
+0x000375ec	0xa	FUN_004375EC	eh-funclet			FuncInfo/unwind-map child record
+0x000375f6	0xa	FUN_004375F6	linker-pad			-
+0x00037600	0x9	FUN_00437600	eh-funclet			FuncInfo/unwind-map child record
+0x00037609	0xa	FUN_00437609	eh-funclet			FuncInfo/unwind-map child record
+0x00037613	0x9	FUN_00437613	eh-funclet			FuncInfo/unwind-map child record
+0x0003761c	0xa	FUN_0043761C	eh-funclet			FuncInfo/unwind-map child record
+0x00037626	0xa	FUN_00437626	linker-pad			-
+0x00037630	0x9	FUN_00437630	eh-funclet			FuncInfo/unwind-map child record
+0x00037639	0xa	FUN_00437639	eh-funclet			FuncInfo/unwind-map child record
+0x00037643	0x9	FUN_00437643	eh-funclet			FuncInfo/unwind-map child record
+0x0003764c	0xa	FUN_0043764C	eh-funclet			FuncInfo/unwind-map child record
+0x00037656	0xa	FUN_00437656	linker-pad			-
+0x00037660	0x9	FUN_00437660	eh-funclet			FuncInfo/unwind-map child record
+0x00037669	0xa	FUN_00437669	eh-funclet			FuncInfo/unwind-map child record
+0x00037673	0xd	FUN_00437673	linker-pad			-
+0x00037680	0x9	FUN_00437680	eh-funclet			FuncInfo/unwind-map child record
+0x00037689	0xa	FUN_00437689	eh-funclet			FuncInfo/unwind-map child record
+0x00037693	0xd	FUN_00437693	linker-pad			-
+0x000376a0	0x9	FUN_004376A0	eh-funclet			FuncInfo/unwind-map child record
+0x000376a9	0xa	FUN_004376A9	eh-funclet			FuncInfo/unwind-map child record
+0x000376b3	0x9	FUN_004376B3	eh-funclet			FuncInfo/unwind-map child record
+0x000376bc	0xa	FUN_004376BC	eh-funclet			FuncInfo/unwind-map child record

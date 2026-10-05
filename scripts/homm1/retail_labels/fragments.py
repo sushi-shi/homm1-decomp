@@ -6,9 +6,10 @@
 Each row records the image whose addresses its macro spells (`space`, see
 homm1.retail_labels.source.claim_space). The selected image reads its own
 rows as written; a game-space row of another image's unit (shared source)
-is read through that image's placements.tsv, which joins it by (kind, game
-rva, name) to the image's own retail address. A game-space row with no
-placement is not a claim in that image.
+is read through that image's placements.tsv, which joins the game identity
+(kind, game rva) the shared source spells to the image's own retail address;
+the name stays the source's. A game-space row with no placement is not a claim
+in that image.
 """
 
 from __future__ import annotations
@@ -30,13 +31,13 @@ def fragment_path(unit: str) -> Path:
 
 
 @lru_cache(maxsize=None)
-def placements(image: str) -> dict[tuple[str, int, str], tuple[int, int | None]]:
-    """{(kind, game rva, name): (rva, size)} of a non-game image."""
+def placements(image: str) -> dict[tuple[str, int], tuple[int, int | None]]:
+    """{(kind, game rva): (rva, size)} of a non-game image."""
     path = retail_dir(image) / "placements.tsv"
     if not path.is_file():
         return {}
     _b, _h, raw = read_tsv(path)
-    return {(r["kind"], int(r["game_rva"], 16), r["name"]):
+    return {(r["kind"], int(r["game_rva"], 16)):
             (int(r["rva"], 16), int(r["size"], 16) if r["size"] else None)
             for r in raw}
 
@@ -55,7 +56,7 @@ def unit_claims(unit: str) -> list[Claim]:
         if space != image:
             if image == DEFAULT_IMAGE:
                 continue          # another image's address: not a game claim
-            placed = placements(image).get((r["kind"], rva, r["name"]))
+            placed = placements(image).get((r["kind"], rva))
             if placed is None:
                 continue
             meta["game_rva"] = rva

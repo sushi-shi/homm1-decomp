@@ -139,12 +139,12 @@ rva	size	symbol	provenance
 0x000528dc	4	?gInSetupDialog@@3HA	game 0xa98fc (SOURCE/KB): 1 code reference(s) from placed bodies
 0x000528f4	1	?gFirstTimeThrough@@3CA	game 0xa9928 (SOURCE/KB): 1 code reference(s) from placed bodies
 0x00052a6c	4	?gMainWinScreenHeight@@3HA	game 0xa99dc (SOURCE/kbwin): 10 code reference(s) from placed bodies
-0x00052a78	4	?hInstApp@@3PAXA	game 0xa99e8 (SOURCE/kbwin): 1 code reference(s) from placed bodies
-0x00052e7c	4	?hmnuCurrent@@3PAXA	game 0xa9dec (SOURCE/kbwin): 2 code reference(s) from placed bodies
+0x00052a78	4	?hInstApp@@3PAUHINSTANCE__@@A	game 0xa99e8 (SOURCE/kbwin): 1 code reference(s) from placed bodies
+0x00052e7c	4	?hmnuCurrent@@3PAUHMENU__@@A	game 0xa9dec (SOURCE/kbwin): 2 code reference(s) from placed bodies
 0x00052e80	4	?iMainWinScreenWidth@@3HA	game 0xa9df0 (SOURCE/kbwin): 10 code reference(s) from placed bodies
 0x00052ec4	4	?hwndApp@@3PAUHWND__@@A	game 0xa9e34 (SOURCE/kbwin): 26 code reference(s) from placed bodies
 0x00052ec8	4	?gForegroundApp@@3HA	game 0xa9e38 (SOURCE/kbwin): 3 code reference(s) from placed bodies
-0x00052ecc	4	?hmnuApp@@3PAXA	game 0xa9e3c (SOURCE/kbwin): 3 code reference(s) from placed bodies
+0x00052ecc	4	?hmnuApp@@3PAUHMENU__@@A	game 0xa9e3c (SOURCE/kbwin): 3 code reference(s) from placed bodies
 0x00052ee4	4	_?gLastGetMessage@?1??Process1WindowsMessage@@YAXXZ@4HA	game 0xa9e54 (SOURCE/kbwin): 2 code reference(s) from placed bodies
 0x00052ee8	4	_?gNoDialogMenusOn@?1??SetNoDialogMenus@@YAXH@Z@4HA	game 0xa9e58 (SOURCE/kbwin): 3 code reference(s) from placed bodies
 0x00053400	4	?gDDrawAttached@@3HA	game 0xcdda0 (SOURCE/wingraph): 3 code reference(s) from placed bodies

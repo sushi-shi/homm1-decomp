@@ -22,7 +22,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001c4c9	0xae	func	??0button@@QAE@FFFFFFFFFFF@Z	BASE/BUTTON	src	0x00076cd9	masked game body 0x76cd9 (174 bytes, 5 fields masked) unique at a census start
 0x0001c577	0xad	func	??0button@@QAE@FFFFPADFFFFFF@Z	BASE/BUTTON	src	0x00076d87	masked game body 0x76d87 (173 bytes, 5 fields masked) unique at a census start
 0x0001c624	0xfb	func	?Read@button@@QAEXXZ	BASE/BUTTON	src	0x00076e34	masked game body 0x76e34 (251 bytes, 28 fields masked) unique at a census start
-0x0001c71f	0x5b	func	??1button@@UAE@XZ	BASE/BUTTON	src_compgen	0x00076f2f	masked game body 0x76f2f (91 bytes) at its unit's block offset, shared by 10 bodies (2 identical occurrence(s))
+0x0001c71f	0x5b	func	??1button@@UAE@XZ	BASE/BUTTON	src	0x00076f2f	masked game body 0x76f2f (91 bytes) at its unit's block offset, shared by 10 bodies (2 identical occurrence(s))
 0x0001c77a	0x415	func	?Main@button@@UAEFAAUtag_message@@@Z	BASE/BUTTON	src	0x00076f8a	masked game body 0x76f8a (1045 bytes, 46 fields masked) unique at a census start
 0x0001cb8f	0xec	func	?Select@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	src	0x0007739f	masked game body 0x7739f (236 bytes, 6 fields masked) unique at a census start
 0x0001cc7b	0xba	func	?Deselect@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	src	0x0007748b	masked game body 0x7748b (186 bytes, 5 fields masked) unique at a census start
@@ -32,7 +32,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001ce8e	0xa2	func	??0iconWidget@@QAE@FFFFFCCFFF@Z	BASE/ICONWDGT	src	0x0006defe	masked game body 0x6defe (162 bytes, 5 fields masked) unique at a census start
 0x0001cf30	0xa1	func	??0iconWidget@@QAE@FFFFPADCCFFF@Z	BASE/ICONWDGT	src	0x0006dfa0	masked game body 0x6dfa0 (161 bytes, 5 fields masked) unique at a census start
 0x0001cfd1	0xf9	func	?Read@iconWidget@@QAEXXZ	BASE/ICONWDGT	src	0x0006e041	masked game body 0x6e041 (249 bytes, 26 fields masked) unique at a census start
-0x0001d0ca	0x5b	func	??1iconWidget@@UAE@XZ	BASE/ICONWDGT	src_compgen	0x0006e13a	masked game body 0x6e13a (91 bytes) at its unit's block offset, shared by 8 bodies (2 identical occurrence(s))
+0x0001d0ca	0x5b	func	??1iconWidget@@UAE@XZ	BASE/ICONWDGT	src	0x0006e13a	masked game body 0x6e13a (91 bytes) at its unit's block offset, shared by 8 bodies (2 identical occurrence(s))
 0x0001d125	0x2a4	func	?Main@iconWidget@@UAEFAAUtag_message@@@Z	BASE/ICONWDGT	src	0x0006e195	masked game body 0x6e195 (676 bytes, 21 fields masked) unique at a census start
 0x0001d3c9	0xb1	func	?Draw@iconWidget@@UAEXXZ	BASE/ICONWDGT	src	0x0006e439	masked game body 0x6e439 (177 bytes, 3 fields masked) unique at a census start
 0x0001d4c0	0x2e	func	??_GiconWidget@@UAEPAXI@Z	BASE/ICONWDGT	src_compgen	0x0006e530	masked game body 0x6e530 (46 bytes) at its unit's block offset, shared by 8 bodies (13 identical occurrence(s))
@@ -103,8 +103,8 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001ffae	0x4b	func	?ReadWord@resourceManager@@QAEFXZ	BASE/RESMGR	src	0x0006ccbe	masked game body 0x6ccbe (75 bytes, 3 fields masked) unique at a census start
 0x0001fff9	0x4b	func	?ReadLong@resourceManager@@QAEHXZ	BASE/RESMGR	src	0x0006cd09	masked game body 0x6cd09 (75 bytes, 3 fields masked) unique at a census start
 0x00020044	0x41	func	?MakeId@resourceManager@@QAEFPAD@Z	BASE/RESMGR	src	0x0006cd54	masked game body 0x6cd54 (65 bytes, 2 fields masked) unique at a census start
-0x00020085	0x1b	func	?Read13@resourceManager@@QAEXPAC@Z	BASE/RESMGR	src	0x0006cd95	masked game body 0x6cd95 (27 bytes, 1 fields masked) unique at a census start
-0x000200a0	0x52	func	?ReadBlock@resourceManager@@QAEXPACI@Z	BASE/RESMGR	src	0x0006cdb0	masked game body 0x6cdb0 (82 bytes, 5 fields masked) unique at a census start
+0x00020085	0x1b	func	?Read13@resourceManager@@QAEXPAD@Z	BASE/RESMGR	src	0x0006cd95	masked game body 0x6cd95 (27 bytes, 1 fields masked) unique at a census start
+0x000200a0	0x52	func	?ReadBlock@resourceManager@@QAEXPAXI@Z	BASE/RESMGR	src	0x0006cdb0	masked game body 0x6cdb0 (82 bytes, 5 fields masked) unique at a census start
 0x00020130	0x19c	func	?CycleColors@@YAXXZ	BASE/WINMGR	src	0x00069fb0	masked game body 0x69fb0 (412 bytes, 48 fields masked) unique at a census start
 0x000202cc	0x9f	func	??0heroWindowManager@@QAE@XZ	BASE/WINMGR	src	0x0006a14c	masked game body 0x6a14c (159 bytes, 2 fields masked) unique at a census start
 0x0002036b	0x10a	func	?Open@heroWindowManager@@UAEFF@Z	BASE/WINMGR	src	0x0006a1eb	masked game body 0x6a1eb (266 bytes, 9 fields masked) unique at a census start
@@ -134,7 +134,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00021ba2	0x8	func	?AutoInitSVGA@@YAFXZ	BASE/miscwin	src	0x0006fd82	masked game body 0x6fd82 (8 bytes) at its unit's block offset, shared by 13 bodies (1 identical occurrence(s))
 0x00021baa	0x39	func	?Random@@YAHHH@Z	BASE/miscwin	src	0x0006fd8a	masked game body 0x6fd8a (57 bytes, 3 fields masked) unique at a census start
 0x00021be3	0x95	func	?PostprocessPalette@@YAXPAC@Z	BASE/miscwin	src	0x0006fdc3	masked game body 0x6fdc3 (149 bytes, 6 fields masked) unique at a census start
-0x00021c78	0x5	func	?PostprocessBitmap@@YAXPACHH@Z	BASE/miscwin	src	0x0006fe58	masked game body 0x6fe58 (5 bytes) at its unit's block offset, shared by 13 bodies (9 identical occurrence(s))
+0x00021c78	0x5	func	?PostprocessBitmap@@YAXPAEHH@Z	BASE/miscwin	src	0x0006fe58	masked game body 0x6fe58 (5 bytes) at its unit's block offset, shared by 13 bodies (9 identical occurrence(s))
 0x00021c7d	0x5	func	?PostprocessIcon@@YAXPAVicon@@@Z	BASE/miscwin	src	0x0006fe5d	masked game body 0x6fe5d (5 bytes) at its unit's block offset, shared by 13 bodies (9 identical occurrence(s))
 0x00021c82	0x214	func	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	BASE/miscwin	src	0x0006fe62	masked game body 0x6fe62 (532 bytes, 12 fields masked) unique at a census start
 0x00021e96	0x307	func	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	BASE/miscwin	src	0x00070076	masked game body 0x70076 (775 bytes, 93 fields masked) unique at a census start
@@ -147,7 +147,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x000229fb	0x133	func	?LineWidth@font@@QAEHPAD@Z	BASE/FONT	src	0x000725eb	masked game body 0x725eb (307 bytes, 8 fields masked) unique at a census start
 0x00022b70	0x2e	func	??_Gfont@@UAEPAXI@Z	BASE/FONT	src_compgen	0x00072760	masked game body 0x72760 (46 bytes) at its unit's block offset, shared by 8 bodies (13 identical occurrence(s))
 0x00022ba0	0xbf	func	??0icon@@QAE@F@Z	BASE/ICON	src	0x00070ea0	masked game body 0x70ea0 (191 bytes, 13 fields masked) unique at a census start
-0x00022c5f	0x2b	func	??1icon@@UAE@XZ	BASE/ICON	src_compgen	0x00070f5f	masked game body 0x70f5f (43 bytes, 3 fields masked) unique at a census start
+0x00022c5f	0x2b	func	??1icon@@UAE@XZ	BASE/ICON	src	0x00070f5f	masked game body 0x70f5f (43 bytes, 3 fields masked) unique at a census start
 0x00022c8a	0x317	func	?DrawToBuffer@icon@@QAEXFFFCC@Z	BASE/ICON	src	0x00070f8a	masked game body 0x70f8a (791 bytes, 29 fields masked) unique at a census start
 0x00022fa1	0x54	func	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	BASE/ICON	src	0x000712a1	masked game body 0x712a1 (84 bytes, 3 fields masked) unique at a census start
 0x00022ff5	0x15e	func	?FillToBuffer@icon@@QAEXFFFFCC@Z	BASE/ICON	src	0x000712f5	masked game body 0x712f5 (350 bytes, 14 fields masked) unique at a census start
@@ -175,7 +175,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x000243c0	0x18	func	?Terminate@executive@@QAEXXZ	BASE/EXEC	src	0x00073120	masked game body 0x73120 (24 bytes, 2 fields masked) unique at a census start
 0x00024420	0x3a	func	??0palette@@QAE@XZ	BASE/PALETTE	src	0x000747d0	masked game body 0x747d0 (58 bytes, 3 fields masked) unique at a census start
 0x0002445a	0x93	func	??0palette@@QAE@F@Z	BASE/PALETTE	src	0x0007480a	masked game body 0x7480a (147 bytes, 8 fields masked) unique at a census start
-0x000244ed	0x2b	func	??1palette@@UAE@XZ	BASE/PALETTE	src_compgen	0x0007489d	masked game body 0x7489d (43 bytes, 3 fields masked) unique at a census start
+0x000244ed	0x2b	func	??1palette@@UAE@XZ	BASE/PALETTE	src	0x0007489d	masked game body 0x7489d (43 bytes, 3 fields masked) unique at a census start
 0x00024518	0x11	func	?Data@palette@@QAEPACXZ	BASE/PALETTE	src	0x000748c8	masked game body 0x748c8 (17 bytes, 0 fields masked) unique at a census start
 0x00024570	0x2e	func	??_Gpalette@@UAEPAXI@Z	BASE/PALETTE	src_compgen	0x00074920	masked game body 0x74920 (46 bytes) at its unit's block offset, shared by 5 bodies (13 identical occurrence(s))
 0x000245a0	0x162	func	?CleanupSamples@@YAXXZ	BASE/Audio	src	0x000689a0	masked game body 0x689a0 (354 bytes, 17 fields masked) unique at a census start
@@ -213,7 +213,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x000259d5	0x1d	func	?SetVolumes@@YAXHH@Z	BASE/Audio	src	0x00069dd5	masked game body 0x69dd5 (29 bytes, 2 fields masked) unique at a census start
 0x00025bb0	0x3e	func	??0border@@QAE@XZ	BASE/BORDER	src	0x00074950	masked game body 0x74950 (62 bytes, 2 fields masked) unique at a census start
 0x00025bee	0x9e	func	??0border@@QAE@FFFFFFFPAD@Z	BASE/BORDER	src	0x0007498e	masked game body 0x7498e (158 bytes, 5 fields masked) unique at a census start
-0x00025c8c	0x64	func	??1border@@UAE@XZ	BASE/BORDER	src_compgen	0x00074a2c	masked game body 0x74a2c (100 bytes, 5 fields masked) unique at a census start
+0x00025c8c	0x64	func	??1border@@UAE@XZ	BASE/BORDER	src	0x00074a2c	masked game body 0x74a2c (100 bytes, 5 fields masked) unique at a census start
 0x00025cf0	0xe9	func	?Read@border@@QAEXXZ	BASE/BORDER	src	0x00074a90	masked game body 0x74a90 (233 bytes, 22 fields masked) unique at a census start
 0x00025dd9	0x1d9	func	?Main@border@@UAEFAAUtag_message@@@Z	BASE/BORDER	src	0x00074b79	masked game body 0x74b79 (473 bytes, 11 fields masked) unique at a census start
 0x00025fb2	0xd7	func	?Draw@border@@UAEXXZ	BASE/BORDER	src	0x00074d52	masked game body 0x74d52 (215 bytes, 7 fields masked) unique at a census start
@@ -227,7 +227,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x000262c0	0x1c	func	??1backdropWidget@@UAE@XZ	BASE/BACKDROP	src_compgen	0x0006d000	masked game body 0x6d000 (28 bytes) at its unit's block offset, shared by 7 bodies (2 identical occurrence(s))
 0x000262e0	0x56	func	??0textEntryWidget@@QAE@XZ	BASE/TEXTNTRY	src	0x00075830	masked game body 0x75830 (86 bytes, 2 fields masked) unique at a census start
 0x00026336	0xbf	func	??0textEntryWidget@@QAE@FFFFFPAD0F0FFF@Z	BASE/TEXTNTRY	src	0x00075886	masked game body 0x75886 (191 bytes, 5 fields masked) unique at a census start
-0x000263f5	0x5b	func	??1textEntryWidget@@UAE@XZ	BASE/TEXTNTRY	src_compgen	0x00075945	masked game body 0x75945 (91 bytes, 5 fields masked) unique at a census start
+0x000263f5	0x5b	func	??1textEntryWidget@@UAE@XZ	BASE/TEXTNTRY	src	0x00075945	masked game body 0x75945 (91 bytes, 5 fields masked) unique at a census start
 0x00026450	0x261	func	?Read@textEntryWidget@@QAEXH@Z	BASE/TEXTNTRY	src	0x000759a0	masked game body 0x759a0 (609 bytes, 51 fields masked) unique at a census start
 0x000266b1	0xa70	func	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	BASE/TEXTNTRY	src	0x00075c01	masked game body 0x75c01 (2672 bytes, 97 fields masked) unique at a census start
 0x00027121	0x1c7	func	?Draw@textEntryWidget@@UAEXXZ	BASE/TEXTNTRY	src	0x00076671	masked game body 0x76671 (455 bytes, 8 fields masked) unique at a census start
@@ -259,7 +259,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x00028250	0x4c	func	??0bitmap@@QAE@XZ	BASE/BITMAP	src	0x00073180	masked game body 0x73180 (76 bytes, 2 fields masked) unique at a census start
 0x0002829c	0x64	func	??0bitmap@@QAE@FFF@Z	BASE/BITMAP	src	0x000731cc	masked game body 0x731cc (100 bytes, 3 fields masked) unique at a census start
 0x00028300	0x106	func	??0bitmap@@QAE@F@Z	BASE/BITMAP	src	0x00073230	masked game body 0x73230 (262 bytes, 17 fields masked) unique at a census start
-0x00028406	0x3e	func	??1bitmap@@UAE@XZ	BASE/BITMAP	src_compgen	0x00073336	masked game body 0x73336 (62 bytes, 3 fields masked) unique at a census start
+0x00028406	0x3e	func	??1bitmap@@UAE@XZ	BASE/BITMAP	src	0x00073336	masked game body 0x73336 (62 bytes, 3 fields masked) unique at a census start
 0x00028444	0x4b	func	?DrawToBuffer@bitmap@@QAEXFF@Z	BASE/BITMAP	src	0x00073374	masked game body 0x73374 (75 bytes, 4 fields masked) unique at a census start
 0x0002848f	0x41	func	?DrawToScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	src	0x000733bf	masked game body 0x733bf (65 bytes, 3 fields masked) unique at a census start
 0x000284d0	0x23	func	?GrabScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	src	0x00073400	masked game body 0x73400 (35 bytes, 1 fields masked) unique at a census start
@@ -268,7 +268,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x000285d1	0xa6	func	?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z	BASE/BITMAP	src	0x00073501	masked game body 0x73501 (166 bytes, 4 fields masked) unique at a census start
 0x000286b0	0x2e	func	??_Gbitmap@@UAEPAXI@Z	BASE/BITMAP	src_compgen	0x000735e0	masked game body 0x735e0 (46 bytes) at its unit's block offset, shared by 11 bodies (13 identical occurrence(s))
 0x000286e0	0x11c	func	??0tileset@@QAE@F@Z	BASE/TILESET	src	0x00074ea0	masked game body 0x74ea0 (284 bytes, 15 fields masked) unique at a census start
-0x000287fc	0x2b	func	??1tileset@@UAE@XZ	BASE/TILESET	src_compgen	0x00074fbc	masked game body 0x74fbc (43 bytes, 3 fields masked) unique at a census start
+0x000287fc	0x2b	func	??1tileset@@UAE@XZ	BASE/TILESET	src	0x00074fbc	masked game body 0x74fbc (43 bytes, 3 fields masked) unique at a census start
 0x00028860	0x2e	func	??_Gtileset@@UAEPAXI@Z	BASE/TILESET	src_compgen	0x00075020	masked game body 0x75020 (46 bytes) at its unit's block offset, shared by 3 bodies (13 identical occurrence(s))
 0x00028890	0x232	func	??0sample@@QAE@PAD@Z	BASE/SAMPLE	src	0x00075050	masked game body 0x75050 (562 bytes, 24 fields masked) unique at a census start
 0x00028ac2	0x7f	func	??1sample@@UAE@XZ	BASE/SAMPLE	src	0x00075282	masked game body 0x75282 (127 bytes, 6 fields masked) unique at a census start

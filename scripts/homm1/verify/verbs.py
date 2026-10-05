@@ -292,7 +292,15 @@ def cmd_readme(argv) -> int:
     ap.add_argument("--report", type=Path)
     ap.add_argument("--baseline", action="store_true",
                     help="write the conservative, unbanked whole-game baseline")
+    ap.add_argument("--image-section", action="store_true",
+                    help="print the selected non-game image's section (homm1 --image)")
     args = ap.parse_args(argv)
+    if args.image_section:
+        from homm1.model import resolve
+        from homm1.verify.universe import engine_universe
+        cur = scores.functions(scores.load(args.report))
+        print(rm.render_image_section(cur, bl.load(), engine_universe(resolve())))
+        return 0
     if args.baseline:
         if args.report is not None:
             ap.error("--baseline does not accept --report")

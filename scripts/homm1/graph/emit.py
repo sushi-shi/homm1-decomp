@@ -669,8 +669,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                 implicit=[G.BINDINGS, MANIFEST, COMPDB, *VERIFY_MODS])
         w.rule("verify_readme", command="$py -m homm1.verify readme && touch $out",
                description="refresh README score block")
+        from homm1.manifest import all_units as _all, unit_images as _images
+        image_reports = [graph.image_paths(i)["REPORT_JSON"] for i in pinned_images()
+                         if i != "game" and any(i in _images(u) for u in _all())]
         w.build("build/objdiff/.readme.stamp", "verify_readme",
-                inputs=[G.REPORT_JSON, FINGERPRINTS, "README.md"],
+                inputs=[G.REPORT_JSON, FINGERPRINTS, "README.md", *image_reports],
                 # the universe's carve-out classes (library/compiler/thunk)
                 implicit=[MANIFEST, "config/retail/dna_bands.tsv",
                           *VERIFY_BASELINES, *VERIFY_MODS])

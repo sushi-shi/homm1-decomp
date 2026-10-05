@@ -89,6 +89,64 @@ def score_table(cur: dict, ledger: dict, eng: dict) -> tuple[dict, dict]:
     return mods, tot
 
 
+def _image_label() -> str:
+    """Names the game image when other images report beside it."""
+    from homm1.core.paths import images
+    return " (HEROES.EXE)" if len(images()) > 1 else ""
+
+
+def image_sections() -> list[str]:
+    """Markdown sections of every other image with a report, each rendered
+    by a child process that selects that image (homm1.core.paths)."""
+    import os
+    import subprocess
+    import sys
+    from homm1.core.paths import DEFAULT_IMAGE, IMAGE_ENV, image_build, images
+    out: list[str] = []
+    for image in images():
+        if image == DEFAULT_IMAGE or not (image_build(image)
+                                          / "objdiff/compare-new/report.json").is_file():
+            continue
+        env = dict(os.environ, **{IMAGE_ENV: image})
+        r = subprocess.run([sys.executable, "-m", "homm1.verify", "readme",
+                            "--image-section"], env=env, capture_output=True,
+                           text=True, cwd=REPO)
+        if r.returncode != 0:
+            raise SystemExit(f"README section of image {image} failed:\n{r.stderr[-2000:]}")
+        out += ["", *r.stdout.rstrip("\n").splitlines()]
+    return out
+
+
+def render_image_section(cur: dict, ledger: dict, eng: dict) -> str:
+    """The selected (non-game) image's section of the README block."""
+    from homm1.core.inputs import targets
+    from homm1.core.paths import image_key
+    mods, tot = score_table(cur, ledger, eng)
+    tot_fn, tot_code = eng["real_fn"], eng["real_code"]
+    rows = []
+    for mod in sorted(mods, key=lambda k: -mods[k]["tf"]):
+        a = mods[mod]
+        fz = a["mw"] / a["tc"] if a["tc"] else 0.0
+        rows.append([f"`{mod}`", f"{len(a['units'])}",
+                     f"{a['mx']:,} / {a['tf']:,} ({_pct(a['mx'], a['tf']):.1f}%)",
+                     f"{fz:.1f}%"])
+    unclaimed = tot_fn - sum(a["tf"] for a in mods.values())
+    if unclaimed:
+        rows.append(["`(no source yet)`", "—", f"0 / {unclaimed:,} (0.0%)", "0.0%"])
+    name = targets()[image_key()].name
+    fuzzy = tot["mw"] / tot_code if tot_code else 0.0
+    return "\n".join([
+        f"### {name}",
+        "",
+        f"**{tot['max']:,} / {tot_fn:,} functions exact "
+        f"({_pct(tot['max'], tot_fn):.2f}%) &middot; {fuzzy:.2f}% fuzzy.** "
+        f"A separate image with its own link graph and scores; shared units "
+        f"compile once per image.",
+        "",
+        *_md_table(["Module", "Units", "Functions exact", "Fuzzy"], "lrrr", rows),
+    ])
+
+
 def render_block(cur: dict, ledger: dict, eng: dict) -> str:
     """The README score block (between the markers): everything at MAX, plus
     one CUR/MAX/HIST line."""
@@ -124,7 +182,7 @@ def render_block(cur: dict, ledger: dict, eng: dict) -> str:
         "",
         f"**{tot['max']:,} / {tot_fn:,} functions exact "
         f"({_pct(tot['max'], tot_fn):.2f}%) &middot; "
-        f"{fuzzy(tot['mw']):.2f}% fuzzy.**",
+        f"{fuzzy(tot['mw']):.2f}% fuzzy.**" + _image_label(),
         "",
         mode_note,
         "",
@@ -135,6 +193,7 @@ def render_block(cur: dict, ledger: dict, eng: dict) -> str:
         f"{fuzzy(tot['mw']):.2f}% / {fuzzy(tot['hw']):.2f}% fuzzy "
         "(defined in AGENTS.md). Totals cover every in-`.text` "
         "reconstruction target; generated and library code is excluded._",
+        *image_sections(),
         RM_END,
     ]
     return "\n".join(block)

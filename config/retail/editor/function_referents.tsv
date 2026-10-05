@@ -15,12 +15,12 @@ rva	name	provenance
 0x0000d477	?AppExit@@YAXXZ	game 0x43766: masked game body 0x43766 (15 bytes) at its unit's block offset, shared by 11 bodies (5 identical occurrence(s))
 0x0000d486	?Process1WindowsMessage@@YAXXZ	game 0x43775: masked game body 0x43775 (127 bytes, 9 fields masked) unique at a census start
 0x0000d505	?ResizeWindow@@YAXHHHH@Z	game 0x437f4: masked game body 0x437f4 (285 bytes, 20 fields masked) unique at a census start
-0x0000d622	?AppCommand@@YAHPAXIIH@Z	game 0x43911: masked game body 0x43911 (357 bytes, 28 fields masked) unique at a census start
-0x0000d787	?UpdateDfltMenu@@YAXPAX@Z	game 0x43a76: masked game body 0x43a76 (174 bytes, 13 fields masked) unique at a census start
-0x0000d835	?KBChangeMenu@@YAXPAX@Z	game 0x43b24: masked game body 0x43b24 (145 bytes, 15 fields masked) unique at a census start
+0x0000d622	?AppCommand@@YAHPAUHWND__@@IIH@Z	game 0x43911: masked game body 0x43911 (357 bytes, 28 fields masked) unique at a census start
+0x0000d787	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	game 0x43a76: masked game body 0x43a76 (174 bytes, 13 fields masked) unique at a census start
+0x0000d835	?KBChangeMenu@@YAXPAUHMENU__@@@Z	game 0x43b24: masked game body 0x43b24 (145 bytes, 15 fields masked) unique at a census start
 0x0000d8c6	?SetMenuStatus@@YAXH@Z	game 0x43bb5: masked game body 0x43bb5 (280 bytes, 31 fields masked) unique at a census start
 0x0000d9de	?SetNoDialogMenus@@YAXH@Z	game 0x43ccd: masked game body 0x43ccd (82 bytes, 6 fields masked) unique at a census start
-0x0000da30	?SetMenus@@YAXPAXH@Z	game 0x43d1f: masked game body 0x43d1f (299 bytes, 13 fields masked) unique at a census start
+0x0000da30	?SetMenus@@YAXPAUHMENU__@@H@Z	game 0x43d1f: masked game body 0x43d1f (299 bytes, 13 fields masked) unique at a census start
 0x0000db5b	?SetGameDefaults@@YAXXZ	game 0x43e4a: masked game body 0x43e4a (325 bytes, 25 fields masked) unique at a census start
 0x0000e466	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	game 0x44702: masked game body 0x44702 (114 bytes, 6 fields masked) unique at a census start
 0x0000e8ca	?KBTickCount@@YAHXZ	game 0x44b4e: masked game body 0x44b4e (11 bytes) at its unit's block offset, shared by 2 bodies (1 identical occurrence(s))
@@ -42,7 +42,7 @@ rva	name	provenance
 0x0001a7ae	?WGQueryNewPalette@@YAHXZ	game 0x67a31: masked game body 0x67a31 (114 bytes, 10 fields masked) unique at a census start
 0x0001a820	?WGInitGraphics@@YAXXZ	game 0x67aa3: masked game body 0x67aa3 (315 bytes, 41 fields masked) unique at a census start
 0x0001aae1	?WGInitializePalette@@YAXXZ	game 0x67d9b: masked game body 0x67d9b (418 bytes, 37 fields masked) unique at a census start
-0x0001ac83	?WGAppPaint@@YAHPAX0@Z	game 0x67f3d: masked game body 0x67f3d (439 bytes, 26 fields masked) unique at a census start
+0x0001ac83	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	game 0x67f3d: masked game body 0x67f3d (439 bytes, 26 fields masked) unique at a census start
 0x0001ae3a	?WGCleanUpWinGraphics@@YAXXZ	game 0x680f4: masked game body 0x680f4 (103 bytes, 12 fields masked) unique at a census start
 0x0001aea1	?ConnectToDLLs@@YAXXZ	game 0x6815b: masked game body 0x6815b (86 bytes, 12 fields masked) unique at a census start
 0x0001aef7	?DisconnectDLLs@@YAXXZ	game 0x681b1: masked game body 0x681b1 (26 bytes, 3 fields masked) unique at a census start
@@ -50,7 +50,7 @@ rva	name	provenance
 0x0001af26	?SetPalette@@YAHXZ	game 0x681e0: masked game body 0x681e0 (23 bytes, 2 fields masked) unique at a census start
 0x0001af3d	?GetGraphicsInfo@@YAXXZ	game 0x681f7: masked game body 0x681f7 (110 bytes, 11 fields masked) unique at a census start
 0x0001afab	?InitGraphics@@YAXXZ	game 0x68265: masked game body 0x68265 (70 bytes, 8 fields masked) unique at a census start
-0x0001aff1	?AppPaint@@YAHPAX0@Z	game 0x682ab: masked game body 0x682ab (48 bytes, 3 fields masked) unique at a census start
+0x0001aff1	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	game 0x682ab: masked game body 0x682ab (48 bytes, 3 fields masked) unique at a census start
 0x0001b021	?InitializePalette@@YAXXZ	game 0x682db: masked game body 0x682db (26 bytes) at its unit's block offset, shared by 15 bodies (2 identical occurrence(s))
 0x0001b03b	?UpdatePalette@@YAXPAC@Z	game 0x682f5: masked game body 0x682f5 (40 bytes, 3 fields masked) unique at a census start
 0x0001b063	?CleanUpWinGraphics@@YAXXZ	game 0x6831d: masked game body 0x6831d (31 bytes, 4 fields masked) unique at a census start

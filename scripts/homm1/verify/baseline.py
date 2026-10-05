@@ -18,9 +18,11 @@ from __future__ import annotations
 
 import sys
 
-from homm1.core.paths import CONFIG
+from homm1.core.paths import CONFIG, DEFAULT_IMAGE, image_key
 
-BASELINE = CONFIG / "match_baseline.tsv"
+#: The MAX ledger of the selected image (another image banks separately).
+BASELINE = CONFIG / ("match_baseline.tsv" if image_key() == DEFAULT_IMAGE
+                     else f"match_baseline.{image_key()}.tsv")
 
 EPS = 0.01      # ignore sub-0.01% jitter
 LEDGER_DP = 4   # the file stores percentages to this many decimals
