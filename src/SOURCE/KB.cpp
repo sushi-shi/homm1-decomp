@@ -1695,20 +1695,20 @@ H1_ENUM_CONST_END(CheckEndGameConstant)
 
 VA(0x0043fb8e, 0x936)
 void CheckEndGame(i32 forced) {
-    town* goalTown;
-    hero* artifactHero;
-    i8 ultimateOwner;
-    char text[200];
+    town* objectiveTown;
+    i8 artifactOwner;
+    hero* bearer;
+    char message[200];
+    i8 won;
+    i32 index;
     i32 numLiving;
-    i8 win;
-    playerData* pd;
-    i32 slot;
-    i8 lost;
-    i8 normalWin;
+    i8 defeated;
+    i8 defaultWin;
+    i32 playerIndex;
     i32 lastSurvivor;
-    i32 player;
-    i32 humansAlive;
-    i32 lastHumanPos;
+    i32 aliveHumans;
+    playerData* curPlayer;
+    i32 lastHuman;
 
     if (gbInNewGameSetup)
         return;
@@ -1718,15 +1718,15 @@ void CheckEndGame(i32 forced) {
         return;
     gInCheckEndGame = 1;
 
-    for (player = 0; player < gpGame->m_playerCount; player++) {
-        if (!gpGame->m_playerDead[player]) {
-            pd = &gpGame->m_players[player];
-            if (!pd->m_heroCount && !pd->m_townCount) {
-                PlayerDead(player);
+    for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
+        if (!gpGame->m_playerDead[playerIndex]) {
+            curPlayer = &gpGame->m_players[playerIndex];
+            if (!curPlayer->m_heroCount && !curPlayer->m_townCount) {
+                PlayerDead(playerIndex);
                 sprintf(
                     gText,
                     localization::Tr("player.vanquished"),
-                    gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
+                    gColorNames[gpGame->m_players[static_cast<i8>(playerIndex)].Color()]
                 );
                 gText[0] = CyrillicToUpper(gText[0]);
                 NormalDialog(
@@ -1735,15 +1735,15 @@ void CheckEndGame(i32 forced) {
                     0x61,
                     NORMAL_DIALOG_AUTO_POSITION,
                     NORMAL_DIALOG_CREST,
-                    gpGame->m_players[static_cast<i8>(player)].Color()
+                    gpGame->m_players[static_cast<i8>(playerIndex)].Color()
                 );
-            } else if (!pd->m_townCount) {
-                if (pd->m_daysLeft == END_GAME_NO_GRACE_PERIOD) {
-                    if (gbThisNetHumanPlayer[player]) {
+            } else if (!curPlayer->m_townCount) {
+                if (curPlayer->m_daysLeft == END_GAME_NO_GRACE_PERIOD) {
+                    if (gbThisNetHumanPlayer[playerIndex]) {
                         sprintf(
                             gText,
                             localization::Tr("endgame.last_town.lost"),
-                            gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
+                            gColorNames[gpGame->m_players[static_cast<i8>(playerIndex)].Color()]
                         );
                         gText[0] = CyrillicToUpper(gText[0]);
                         NormalDialog(
@@ -1752,24 +1752,24 @@ void CheckEndGame(i32 forced) {
                             NORMAL_DIALOG_AUTO_POSITION,
                             NORMAL_DIALOG_AUTO_POSITION,
                             NORMAL_DIALOG_CREST,
-                            gpGame->m_players[static_cast<i8>(player)].Color()
+                            gpGame->m_players[static_cast<i8>(playerIndex)].Color()
                         );
                     }
-                    pd->m_daysLeft = END_GAME_GRACE_DAYS;
-                } else if (!pd->m_daysLeft) {
-                    PlayerDead(player);
-                    if (gbThisNetHumanPlayer[player]) {
+                    curPlayer->m_daysLeft = END_GAME_GRACE_DAYS;
+                } else if (!curPlayer->m_daysLeft) {
+                    PlayerDead(playerIndex);
+                    if (gbThisNetHumanPlayer[playerIndex]) {
                         sprintf(
                             gText,
                             localization::Tr("endgame.heroes.abandon_you"),
-                            gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
+                            gColorNames[gpGame->m_players[static_cast<i8>(playerIndex)].Color()]
                         );
                         gText[0] = CyrillicToUpper(gText[0]);
                     } else {
                         sprintf(
                             gText,
                             localization::Tr("endgame.heroes.abandon_player"),
-                            gColorNames[gpGame->m_players[static_cast<i8>(player)].Color()]
+                            gColorNames[gpGame->m_players[static_cast<i8>(playerIndex)].Color()]
                         );
                         gText[0] = CyrillicToUpper(gText[0]);
                     }
@@ -1779,33 +1779,33 @@ void CheckEndGame(i32 forced) {
                         0x61,
                         NORMAL_DIALOG_AUTO_POSITION,
                         NORMAL_DIALOG_CREST,
-                        gpGame->m_players[static_cast<i8>(player)].Color()
+                        gpGame->m_players[static_cast<i8>(playerIndex)].Color()
                     );
                 }
             } else {
-                pd->m_daysLeft = END_GAME_NO_GRACE_PERIOD;
+                curPlayer->m_daysLeft = END_GAME_NO_GRACE_PERIOD;
             }
         }
     }
 
     numLiving = 0;
     lastSurvivor = 0;
-    humansAlive = 0;
-    lastHumanPos = 0;
-    for (player = 0; player < gpGame->m_playerCount; player++) {
-        if (!gpGame->m_playerDead[player]) {
+    aliveHumans = 0;
+    lastHuman = 0;
+    for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
+        if (!gpGame->m_playerDead[playerIndex]) {
             numLiving++;
-            lastSurvivor = player;
-            if (gbHumanPlayer[player]) {
-                humansAlive++;
-                lastHumanPos = player;
+            lastSurvivor = playerIndex;
+            if (gbHumanPlayer[playerIndex]) {
+                aliveHumans++;
+                lastHuman = playerIndex;
             }
         }
     }
 
-    win = 0;
-    lost = 0;
-    normalWin = 1;
+    won = 0;
+    defeated = 0;
+    defaultWin = 1;
     if (gpGame->m_campaignType > 0) {
         switch (gpGame->m_campaignScenario) {
             case 0:
@@ -1813,64 +1813,64 @@ void CheckEndGame(i32 forced) {
             case 5:
             case 6:
             case 7:
-                normalWin = 0;
-                goalTown = gpGame->GetTown(gpGame->GetTownId(
+                defaultWin = 0;
+                objectiveTown = gpGame->GetTown(gpGame->GetTownId(
                     gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX,
                     gCampaignScenarios[gpGame->m_campaignScenario].victoryTownY
                 ));
-                if (!goalTown->m_owner)
-                    win = 1;
-                if (gpGame->m_campaignScenario == 0 && goalTown->m_owner > 0) {
-                    lost = 1;
-                    strcpy(text, localization::Tr("endgame.enemy.captured_town"));
+                if (!objectiveTown->m_owner)
+                    won = 1;
+                if (gpGame->m_campaignScenario == 0 && objectiveTown->m_owner > 0) {
+                    defeated = 1;
+                    strcpy(message, localization::Tr("endgame.enemy.captured_town"));
                 }
                 break;
             case 2:
-                normalWin = 0;
-                ultimateOwner = GAME_PLAYER_NONE;
-                for (player = 0; player < gpGame->m_playerCount; player++) {
-                    if (!gpGame->m_playerDead[player]) {
-                        for (slot = 0; slot < gpGame->m_players[player].m_heroCount; slot++) {
-                            artifactHero =
-                                gpGame->GetHero(gpGame->m_players[player].m_heroIds[slot]);
-                            if (artifactHero->HasArtifact(ARTIFACT_ULTIMATE_BOOK)
-                                || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
-                                || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_CLOAK)
-                                || artifactHero->HasArtifact(ARTIFACT_ULTIMATE_WAND))
-                                ultimateOwner = player;
+                defaultWin = 0;
+                artifactOwner = GAME_PLAYER_NONE;
+                for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
+                    if (!gpGame->m_playerDead[playerIndex]) {
+                        for (index = 0; index < gpGame->m_players[playerIndex].m_heroCount; index++) {
+                            bearer =
+                                gpGame->GetHero(gpGame->m_players[playerIndex].m_heroIds[index]);
+                            if (bearer->HasArtifact(ARTIFACT_ULTIMATE_BOOK)
+                                || bearer->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
+                                || bearer->HasArtifact(ARTIFACT_ULTIMATE_CLOAK)
+                                || bearer->HasArtifact(ARTIFACT_ULTIMATE_WAND))
+                                artifactOwner = playerIndex;
                         }
                     }
                 }
-                if (!ultimateOwner)
-                    win = 1;
-                if (ultimateOwner > 0) {
-                    lost = 1;
-                    strcpy(text, localization::Tr("endgame.enemy.captured_artifact"));
+                if (!artifactOwner)
+                    won = 1;
+                if (artifactOwner > 0) {
+                    defeated = 1;
+                    strcpy(message, localization::Tr("endgame.enemy.captured_artifact"));
                 }
                 break;
             case 8:
-                normalWin = 0;
+                defaultWin = 0;
                 if (!gpGame->m_mineOwners[0])
-                    win = 1;
+                    won = 1;
                 if (gpGame->m_mineOwners[0] > 0) {
-                    lost = 1;
-                    strcpy(text, localization::Tr("endgame.enemy.captured_dragon_city"));
+                    defeated = 1;
+                    strcpy(message, localization::Tr("endgame.enemy.captured_dragon_city"));
                 }
         }
     }
 
-    if (lost) {
+    if (defeated) {
         gGameOver = 1;
         gEndSequence = GAME_END_LOST;
     }
-    if (win) {
+    if (won) {
         gGameOver = 1;
         gEndSequence = GAME_END_WON;
     }
-    if (numLiving == 1 || humansAlive == 0
-        || (humansAlive == 1 && !gbThisNetHumanPlayer[lastHumanPos])) {
-        if (humansAlive == 1 && gbThisNetHumanPlayer[lastHumanPos]) {
-            if (normalWin) {
+    if (numLiving == 1 || aliveHumans == 0
+        || (aliveHumans == 1 && !gbThisNetHumanPlayer[lastHuman])) {
+        if (aliveHumans == 1 && gbThisNetHumanPlayer[lastHuman]) {
+            if (defaultWin) {
                 gGameOver = 1;
                 gEndSequence = GAME_END_WON;
             }
