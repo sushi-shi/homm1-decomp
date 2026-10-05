@@ -230,15 +230,18 @@ def _unit_of(obj: Path) -> str | None:
 def first_claimed_rva(obj: Path, claims_dir: Path | None = None) -> int | None:
     """The unit's lowest claimed function RVA (dynamic initializers excluded)."""
     from homm1 import graph
+    from homm1.core.paths import image_key
     claims_dir = Path(claims_dir or REPO / graph.CLAIMS_DIR)
+    image = image_key()          # fragments also carry other images' claims
     unit = _unit_of(obj)
     f = claims_dir / f"{unit}.tsv" if unit else None
     lo = None
     if f is not None and f.is_file():
         for ln in f.read_text().splitlines():
             c = ln.split("\t")
+            space = c[6] if len(c) > 6 else ""
             if (len(c) > 4 and c[0].startswith("0x") and c[3] == "func"
-                    and c[4] != "src_dyninit"):
+                    and c[4] != "src_dyninit" and space in ("", image)):
                 rva = int(c[0], 16)
                 lo = rva if lo is None else min(lo, rva)
     return lo
