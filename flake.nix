@@ -154,9 +154,11 @@
           shellHook = commonHook;
         };
         build = pkgs.mkShell {
-          packages = commonTools ++ [ pkgs.wineWow64Packages.staging ];
+          packages = commonTools ++ [ pkgs.wineWow64Packages.staging pkgs.libfaketime ];
           shellHook = commonHook + ''
             export WINEPREFIX="$HOMM1_DIR/build/wineprefix"
+            # The candidate link runs LINK.EXE at the retail link times.
+            export HOMM1_FAKETIME_LIB="${pkgs.libfaketime}/lib/libfaketime.so.1"
             export WINEDLLOVERRIDES="mscoree,mshtml="
             export WINEDEBUG="fixme-all"
           '';
