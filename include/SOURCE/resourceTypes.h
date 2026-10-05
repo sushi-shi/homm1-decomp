@@ -4,8 +4,7 @@
 #include <Domains.h>
 
 H1_ENUM_BEGIN(ResourceType)
-// No resource (Buka RES_NONE): recruitUnit's creature without a
-// secondary cost.
+// No resource: recruitUnit's creature without a secondary cost.
     RESOURCE_NONE = -1,
     RESOURCE_WOOD = 0,
     RESOURCE_FIRST = RESOURCE_WOOD,

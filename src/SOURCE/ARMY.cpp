@@ -1,5 +1,4 @@
-// Combat stacks. Buka starts this object at army::army (RVA 0x13330),
-// after the SOURCE/AI locale startup and INT3 fill.
+// Combat stacks.
 
 #include <match.h>
 

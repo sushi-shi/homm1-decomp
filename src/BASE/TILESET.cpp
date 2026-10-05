@@ -1,4 +1,4 @@
-// HoMM1's packed tileset loader; Buka 2.1 supplies the resource contract.
+// HoMM1's packed tileset loader.
 
 #include <match.h>
 

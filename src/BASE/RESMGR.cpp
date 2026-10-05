@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// HoMM1 owns one aggregate descriptor rather than Buka's descriptor array.
+// The manager owns a single aggregate descriptor.
 VA(0x0046c0e0, 0x7a)
 resourceManager::resourceManager(void) : baseManager() {
     m_active = 0;
@@ -34,7 +34,6 @@ resourceManager::resourceManager(void) : baseManager() {
     m_lastFileId = 0;
 }
 
-// HoMM1 has only the raw-backdrop path of the Buka donor overload.
 VA(0x0046c15a, 0x7a)
 void resourceManager::GetBackdrop(char* name, class bitmap* backdrop) {
     PointToFile(MakeId(name));
@@ -45,7 +44,6 @@ void resourceManager::GetBackdrop(char* name, class bitmap* backdrop) {
     PostprocessBitmap(backdrop->m_pixels, backdrop->m_width, backdrop->m_height);
 }
 
-// HoMM1 likewise omits Buka's useIcon branch and keeps its row-copy loop.
 VA(0x0046c1d4, 0x87)
 void resourceManager::GetBackdropAtLoc(
     char* filename,
@@ -69,8 +67,6 @@ void resourceManager::GetBackdropAtLoc(
     }
 }
 
-// The resource cache and its miss path follow Buka 2.1 RESMGR. Retail's
-// 16-bit MakeId/Query pair and the derived constructors identify each member.
 VA(0x0046c25b, 0xc0)
 palette* resourceManager::GetPalette(char* name) {
     i16 id = MakeId(name);
@@ -134,7 +130,7 @@ tileset* resourceManager::GetTileset(char* name) {
     }
 }
 
-// The Windows build loads no mouse resources (HoMM2 Buka GetMouse).
+// The Windows build loads no mouse resources.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046c577, 0xf)
@@ -156,7 +152,7 @@ font* resourceManager::GetFont(char* name) {
     }
 }
 
-// Buka keeps the cached resource references and uses the filename-only loader.
+// Keeps the cached resource references and uses the filename-only loader.
 VA(0x0046c646, 0xbf)
 class sample* resourceManager::GetSample(char* name) {
     i16 fileId = MakeId(name);
@@ -197,7 +193,6 @@ void resourceManager::AddResource(class resource* newResource) {
     }
 }
 
-// donor Buka RVA 0x000b8740; PoL 2.0 has the same list walk and deletion order
 VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
     m_expunging = 1;
@@ -220,13 +215,12 @@ class resource* resourceManager::Query(i16 resourceId) {
     return cursorResource;
 }
 
-// donor Buka RVA 0x000b8800; HoMM1 returns its dispatch result through AX
 VA(0x0046c876, 0x10)
 i16 resourceManager::Main(tag_message&) {
     return 0;
 }
 
-// donor Buka RVA 0x000b8810; HoMM1 loads only the default aggregate
+// Loads only the default aggregate.
 VA(0x0046c886, 0x66)
 i16 resourceManager::Open(i16 priority) {
     if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
@@ -239,7 +233,6 @@ i16 resourceManager::Open(i16 priority) {
     return BASE_MANAGER_SUCCESS;
 }
 
-// donor Buka RVA 0x000b8890; PoL 2.0 is source-identical
 VA(0x0046c8ec, 0x61)
 void resourceManager::RemoveResource(class resource* resourceToRemove) {
     if (m_resourceListHead == resourceToRemove) {
@@ -256,7 +249,7 @@ void resourceManager::RemoveResource(class resource* resourceToRemove) {
     }
 }
 
-// HoMM1 has one aggregate, while Buka's later Close loops over several.
+// Closes the single aggregate.
 VA(0x0046c94d, 0x6e)
 void resourceManager::Close(void) {
     if (m_active != 1)
@@ -272,7 +265,7 @@ void resourceManager::Close(void) {
     m_active = 0;
 }
 
-// donor Buka RVA 0x000b89b0; HoMM1 replaces one packed aggregate directory
+// Replaces the single packed aggregate directory.
 VA(0x0046c9bb, 0xe5)
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
@@ -294,8 +287,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     return 0;
 }
 
-// donor Buka uses the same lookup and failure path across multiple aggregates;
-// HoMM1 has one packed directory and a signed 16-bit resource ID.
+// One packed directory, indexed by a signed 16-bit resource ID.
 VA(0x0046caa0, 0xd2)
 void resourceManager::PointToFile(i16 fileId) {
     i16 entry;
@@ -317,7 +309,7 @@ void resourceManager::PointToFile(i16 fileId) {
     _lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
 }
 
-// Single-aggregate variant of the Buka 2.1 directory lookup.
+// Single-aggregate directory lookup.
 VA(0x0046cb72, 0xc1)
 u32 resourceManager::GetFileSize(i16 fileId) {
     if (m_aggregateDir == NULL)
@@ -350,7 +342,6 @@ void resourceManager::RestorePosition(void) {
     _lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
 }
 
-// donor Buka RVA 0x000b8d80; HoMM1 uses its single aggregate descriptor
 VA(0x0046cc76, 0x48)
 #line 598 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 i8 resourceManager::ReadByte(void) {
@@ -371,7 +362,6 @@ i16 resourceManager::ReadWord(void) {
     return value;
 }
 
-// donor Buka RVA 0x000b8e40; HoMM1 uses its single aggregate descriptor
 VA(0x0046cd09, 0x4b)
 #line 639 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 i32 resourceManager::ReadLong(void) {
@@ -382,7 +372,6 @@ i32 resourceManager::ReadLong(void) {
     return value;
 }
 
-// donor Buka RVA 0x000b8ea0; HoMM1 has no translation argument and uses 16-bit IDs
 VA(0x0046cd54, 0x41)
 i16 resourceManager::MakeId(char* name) {
     u32 result = MAKEFILEID(name);
@@ -391,13 +380,11 @@ i16 resourceManager::MakeId(char* name) {
     return result;
 }
 
-// donor Buka RVA 0x000b8f40; constant and call shape are identical in HoMM1
 VA(0x0046cd95, 0x1b)
 void resourceManager::Read13(i8* destination) {
     ReadBlock(destination, RESOURCE_NAME_CAPACITY);
 }
 
-// donor Buka RVA 0x000b8f60; HoMM1 omits the later error-reporting branch
 VA(0x0046cdb0, 0x52)
 #line 679 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\RESMGR.CPP"
 void resourceManager::ReadBlock(i8* destination, u32 size) {

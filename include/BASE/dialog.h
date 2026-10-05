@@ -3,7 +3,7 @@
 
 #include <Domains.h>
 
-// Reserved window-record button slots, as in HoMM2 Buka's BASE/dialog.h.
+// Reserved window-record button slots.
 // heroWindowManager::DoDialog leaves the slot that closed a dialog in
 // m_dialogResult; each dialog assigns its own meaning (EventWindowHandler
 // closes on slots 0..3, 5 and 6, NormalDialog shows 1, 2, 5 and 6).

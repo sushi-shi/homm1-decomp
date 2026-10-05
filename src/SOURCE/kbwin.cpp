@@ -154,7 +154,7 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
     }
 }
 
-// Buka returns TRUE directly; the inherited foreground test is absent.
+// Returns TRUE without a foreground test.
 VA(0x00443048, 0xa)
 BOOL AppIdle(void) {
     return TRUE;
@@ -285,8 +285,7 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
     return DefWindowProcA(static_cast<HWND>(window), message, messageParam, messageData);
 }
 
-// About-dialog callback; 1.2 does not export this function.
-// Extent: entry through ret 16 at 0x45c1e9; next function starts at 0x45c1ec.
+// About-dialog callback.
 VA(0x004436ff, 0x67)
 BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     i32 wmId;
@@ -426,7 +425,7 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
     return 0;
 }
 
-// PoL 2.0 UpdateDfltMenu correspondence; disables unsupported window sizes.
+// Disables unsupported window sizes.
 VA(0x00443a76, 0xae)
 void UpdateDfltMenu(void* menu) {
     i32 result;
@@ -510,8 +509,8 @@ void SetNoDialogMenus(i32 menusEnabled) {
     SetMenus(hmnuApp, menusEnabled);
 }
 
-// PoL 2.0 SetMenus correspondence: recurse into popups, then restore
-// each command from the normal or setup enable table.
+// Recurse into popups, then restore each command from the normal or setup
+// enable table.
 VA(0x00443d1f, 0x12b)
 void SetMenus(void* menu, i32 enabled) {
     i32 index;
@@ -549,8 +548,8 @@ void SetMenus(void* menu, i32 enabled) {
     UpdateDfltMenu(menu);
 }
 
-// PoL 2.0 Misc.cpp SetGameDefaults correspondence; HoMM1 picks the walk
-// speed unconditionally in Buka; the old processor/slow-video choice is gone.
+// Picks the walk speed unconditionally; the old processor/slow-video choice
+// is gone.
 VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
     i32 i;
@@ -1106,7 +1105,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
-    u32 unusedErr; // Buka 2.1's unused dwErr keeps a frame slot.
+    u32 unusedErr;
     u32 logicalDrives;
     i32 eachCd;
     i32 thisFh;
@@ -1222,7 +1221,6 @@ void ProcessAssert(i32 condition, char* file, i32 line) {
     }
 }
 
-// PoL 2.0 Misc.cpp FindToken correspondence.
 VA(0x00444bae, 0x50)
 char* FindToken(char* text, char token) {
     i32 pos;
@@ -1236,7 +1234,6 @@ char* FindToken(char* text, char token) {
     return NULL;
 }
 
-// PoL 2.0 Misc.cpp FindLastToken correspondence.
 VA(0x00444bfe, 0x50)
 char* FindLastToken(char* text, char token) {
     i32 pos;

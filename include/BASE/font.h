@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_FONT_H
 #define HOMM1_BASE_FONT_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 9 methods, 0 own-virtual, 0 static data.
 
 #include <BASE/resource.h>
 
@@ -19,8 +17,8 @@ H1_ENUM_CONST_BEGIN(FontGlyphConstant)
     FONT_GLYPH_INDEX_LAST = 161,
     FONT_GLYPH_ADVANCE_SPACING = 1,
     // Buka reads glyph widths through a word view of the icon directory:
-    // retail scales the glyph by 6 words (one 12-byte IconEntry) and reads
-    // word 2 (IconEntry::w), `imul reg,6` then `[base+reg*2+4]`.
+    // each glyph is 6 words (one 12-byte IconEntry) and its width is word 2
+    // (IconEntry::w).
     FONT_GLYPH_ENTRY_WORDS = 6,
     FONT_GLYPH_WIDTH_WORD = 2
 H1_ENUM_CONST_END(FontGlyphConstant)
@@ -45,7 +43,7 @@ protected:
         i32 clipT,
         i32 clipR,
         i32 clipB
-    ); // ?...@font@@IAE... (protected)
+    );
 public:
     void DrawString(char* text, i16 x, i16 y, i16 color);
     i32 GetCharacterWidth(u8 character);

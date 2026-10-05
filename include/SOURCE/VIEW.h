@@ -5,14 +5,13 @@
 
 struct tag_message;
 
-// The combat general's stats window handler (Buka VIEW.h).
+// The combat general's stats window handler.
 i16 HandleViewGeneral(struct tag_message& message);
 
-// Moved from VIEW.cpp.
-// vgenwin.bin widget ids (Buka 2.1 VIEW.cpp ViewGeneralControl): name,
-// portrait, colour and stats boxes, the Cast Spell / Retreat / Surrender
-// buttons ViewGeneral disables and HandleViewGeneral returns, and the
-// frame widgets the retail block names without using.
+// vgenwin.bin widget ids: name, portrait, colour and stats boxes, the Cast
+// Spell / Retreat / Surrender buttons ViewGeneral disables and
+// HandleViewGeneral returns, and the frame widgets the retail block names
+// without using.
 H1_ENUM_BEGIN(ViewGeneralControl)
     GENERAL_CONTROL_NONE = 0,
     GENERAL_NAME_WIDGET = 1,
@@ -29,8 +28,7 @@ H1_ENUM_BEGIN(ViewGeneralControl)
     GENERAL_CONTROL_FOURTEEN = 14
 H1_ENUM_END(ViewGeneralControl)
 
-// HandleViewGeneral's hover line: the gViewGeneralHelp row (Buka
-// ViewGeneralHoverHelp).
+// HandleViewGeneral's hover line: the gViewGeneralHelp row.
 H1_ENUM_BEGIN(ViewGeneralHoverHelp)
     GENERAL_HOVER_HELP_CAST_SPELL = 1,
     GENERAL_HOVER_HELP_RETREAT = 2,

@@ -1,4 +1,4 @@
-// Buka resource-name hash, recovered from the retail instruction flow.
+// Buka resource-name hash.
 
 #include <match.h>
 

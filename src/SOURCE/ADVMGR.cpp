@@ -53,13 +53,12 @@
 #include <stdlib.h>
 #include <string.h>
 
-// The route-overlay byte at (column, row) of this->m_visibilityMap (Buka 2.1
-// ADVMGR.cpp; HoMM1 indexes row-major as row * size + column).
+// The route-overlay byte at (column, row) of this->m_visibilityMap, indexed
+// row-major as row * size + column.
 #define ADVMGR_VISIBILITY_AT(column, row)                                                          \
     (*(m_visibilityMap + (column) + (row) * MAP_CELL_GRID_SIZE))
 
-// DrawCell's per-call drawing state, kept in module storage as in Buka, which
-// defines it ahead of its functions (retail address order).
+// DrawCell's per-call drawing state, kept in module storage.
 DATA(0x004a65c8)
 i32 s_drawCloudFrame;
 DATA(0x004a6714)
@@ -932,7 +931,6 @@ i16 advManager::Main(struct tag_message& message) {
     return result;
 }
 
-// Buka 2.1 Reseed and HoMM1's seven call sites identify this tiny reset.
 VA(0x00403609, 0x17)
 void advManager::Reseed(i32, i32) {
     giSeedingValid = 0;
@@ -1840,14 +1838,14 @@ void advManager::CompleteDraw(i16 originX, i16 originY, i32 forceDraw) {
     }
 }
 
-// Buka 2.1 CompleteDraw(update) forwards the current map origin.
+// CompleteDraw(update) forwards the current map origin.
 VA(0x00405ace, 0x2f)
 void advManager::CompleteDraw(i32 update) {
     CompleteDraw(m_mapOriginX, m_mapOriginY, update);
 }
 
-// Buka 2.1 GetCloudLookup over HoMM1's x-major visibility bytes: edge
-// masks first, then each unseen neighbour, indexed into the cloud table.
+// Cloud lookup over the x-major visibility bytes: edge masks first, then
+// each unseen neighbour, indexed into the cloud table.
 VA(0x00405afd, 0x3fe)
 i32 advManager::GetCloudLookup(i32 x, i32 y) {
     i32 cloudMask = 0;
@@ -1906,9 +1904,6 @@ i32 advManager::GetCloudLookup(i32 x, i32 y) {
     return gCloudType[cloudMask];
 }
 
-// Buka instruction/CFG review: retail size and all 153 blocks agree.
-// Remaining differences are EBP-local displacements; see
-// config/retail/buka-adventure-cell.json.
 VA(0x00405efb, 0xe2b)
 void advManager::DrawCell(
     i16 mapX,
@@ -2301,7 +2296,7 @@ void advManager::DrawCell(
     }
 }
 
-// Buka 2.1 GetCell; HoMM1 returns the map base for any off-grid position.
+// Returns the map base for any off-grid position.
 VA(0x00406d26, 0x58)
 mapCell* advManager::GetCell(i16 x, i16 y) {
     if (x < 0 || y < 0 || x >= MAP_CELL_GRID_SIZE || y >= MAP_CELL_GRID_SIZE)
@@ -3975,13 +3970,13 @@ void advManager::RedrawAdvScreen(i32 update) {
         UpdateScreen(0, 0);
 }
 
-// Buka 2.1 DeactivateCurrTown clears the current player's town slot.
+// DeactivateCurrTown clears the current player's town slot.
 VA(0x0040af0e, 0x14)
 void advManager::DeactivateCurrTown(void) {
     gpCurPlayer->m_currentTown = GAME_TOWN_NONE;
 }
 
-// Buka 2.1 DeactivateCurrHero demobilizes before clearing the hero slot.
+// DeactivateCurrHero demobilizes before clearing the hero slot.
 VA(0x0040af22, 0x1c)
 void advManager::DeactivateCurrHero(void) {
     DemobilizeCurrHero();
@@ -4323,7 +4318,7 @@ void advManager::ViewPuzzle(void) {
     PlayMusic(m_currentTerrain);
 }
 
-// HoMM1 PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
+// PuzzleDraw redraws the 15x15 cells itself, overlaying the puzzle's
 // visible object/overlay frames and marking the target cell.
 VA(0x0040bebe, 0x1e5)
 void advManager::PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY) {
@@ -4448,9 +4443,8 @@ void advManager::CastSpell(i8 spell) {
         gpGame->GetHero(gpCurPlayer->m_currentHero)->UseSpell(spell);
 }
 
-// Buka 2.1 advManager::ViewWorld (SOURCE/Viewwrld).
-// HoMM1's adventure ViewWorld lives in ADVMGR (ground6/flag6/spheres icons);
-// CastSpell, AdvPanel, Main and the menu handler pass three signed bytes.
+// The adventure world view (ground6/flag6/spheres icons), opened from
+// CastSpell, AdvPanel, Main and the menu handler.
 VA(0x0040c243, 0x1062)
 void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) {
     icon* flags;
@@ -4857,7 +4851,7 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     RedrawAdvScreen(1);
 }
 
-// HoMM1-only helper: refresh the saved screen copy with the pointer hidden.
+// Refresh the saved screen copy with the pointer hidden.
 VA(0x0040d2a5, 0x36)
 void advManager::GrabScreen(void) {
     gpMouseManager->ReallyHidePointer();
@@ -4865,8 +4859,8 @@ void advManager::GrabScreen(void) {
     gpMouseManager->ReallyShowPointer();
 }
 
-// HoMM1 merges Buka's ControlPanel and SystemOptions: one cpanel.bin dialog
-// that also applies the walk-speed sample set and saves changed preferences.
+// The control panel and system options in one cpanel.bin dialog, which also
+// applies the walk-speed sample set and saves changed preferences.
 VA(0x0040d2db, 0x2eb)
 i16 advManager::ControlPanel(void) {
     tag_message message;
@@ -4943,7 +4937,7 @@ i16 advManager::ControlPanel(void) {
     return 0;
 }
 
-// Buka 2.1 UpdateSystemOptions over HoMM1's six control-panel options.
+// Updates the six control-panel options.
 VA(0x0040d5c6, 0x207)
 void UpdateCPanel(i8 initialDraw) {
     tag_message message;
@@ -5035,7 +5029,7 @@ i8 SaveGame(void) {
     return success;
 }
 
-// Buka 2.1 CPanelHandler plus SystemOptionsHandler's option cycling.
+// The control-panel handler, including option cycling.
 VA(0x0040d9d2, 0x49e)
 i16 CPanelHandler(struct tag_message& message) {
     i8 anyChanged = 0;
@@ -5242,7 +5236,6 @@ void advManager::AdvPanel(void) {
     }
 }
 
-// Buka gives Close its own help entry; the dialog-select stores are chained.
 VA(0x0040e0d3, 0x150)
 i16 APanelHandler(struct tag_message& message) {
     i8 handled = 0;
@@ -5382,7 +5375,7 @@ i16 DimensionDoorHandler(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// HoMM1 retail returns the redraw flag in AL (xor al,al / mov al,1).
+// Returns the redraw flag.
 VA(0x0040e4c1, 0xb48)
 i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     DATA(0x004a676c)
@@ -5595,7 +5588,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     return 1;
 }
 
-// Buka 2.1 ComboDraw(update) forwards the current map origin.
+// ComboDraw(update) forwards the current map origin.
 VA(0x0040f009, 0x2f)
 i8 advManager::ComboDraw(i32 update) {
     return ComboDraw(m_mapOriginX, m_mapOriginY, update);
@@ -5723,18 +5716,9 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// Retail ADVMGR .bss keeps four objects no HoMM1 code references: the
-// Buka/PoL ADVMGR globals iThisMaxY, iThisMinY, USMsg and CDMsg (both donors
-// declare them in advManager.h and never use them). VC4 orders .bss by name
-// key, and these keys fit the unclaimed retail slots: 229, 317 and 351 between
-// gPanel (203) and giFrameStep (414) fill 0x004c4f30-0x004c4f47 (4 + 4 + 16
-// bytes; HoMM1 has no town portal, so giTownPortalChoice/townPortalWin are
-// absent), and 892 between bComboDraw (596) and iLastAnimFrame (957) fills
-// 0x004c50b0-0x004c50bf. .bss position does not move them, so they sit with
-// the spell code (USMsg and CDMsg after TeleportTo).
-// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
+// ADVMGR .bss keeps four objects no code references: iThisMaxY, iThisMinY,
+// USMsg and CDMsg.
 i32 iThisMaxY;
-// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 i32 iThisMinY;
 
 VA(0x0040f55c, 0x2f7)
@@ -5857,9 +5841,7 @@ void advManager::DimensionDoor(void) {
     }
 }
 
-// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 struct tag_message USMsg;
-// No 1.2 address claim: unreferenced global; old 1.1 placement is not transferable.
 struct tag_message CDMsg;
 
 VA(0x0040fa50, 0x240)
@@ -6196,7 +6178,7 @@ void advManager::SeedTo(i32 targetX, i32 targetY) {
         );
 }
 
-// Buka 2.1 ForceNewHover; HoMM1 routes the hover through a message record.
+// Routes the hover through a message record.
 VA(0x00410707, 0x3f)
 void advManager::ForceNewHover(void) {
     struct tag_message msg;
@@ -6516,7 +6498,6 @@ disposeSamples:
     }
 }
 
-// Buka 2.1 advManager::DisableButtons.
 VA(0x0041121e, 0xc3)
 void advManager::DisableButtons(void) {
     if (gpAdvManager->m_active != 1)
@@ -6591,9 +6572,7 @@ void advManager::DrawAdventureBorder(void) {
     }
 }
 
-// ADVMGR globals: reviewed Buka claims are recorded in config/retail/buka-*.json.
-// Remaining NWC claims still require migration. Retail emits some globals among
-// the literals of their users.
+// ADVMGR globals. Retail emits some among the literals of their users.
 DATA(0x0048e140)
 i32 gLimitUpdMinX = UPDATE_NONE;
 DATA(0x004a673c)
@@ -6636,6 +6615,6 @@ DATA(0x004a65cc)
 i8 gFreshSave;
 DATA(0x004a65a8)
 i32 iLastAnimFrame;
-// ADVMGR's ambient-sound volume by distance; Buka's 0..127 scale.
+// ADVMGR's ambient-sound volume by distance, on a 0..127 scale.
 DATA(0x0048a36c)
 const i32 gEnvironmentVolume[5] = {127, 96, 63, 31, 21};

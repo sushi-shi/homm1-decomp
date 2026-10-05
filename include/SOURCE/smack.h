@@ -3,7 +3,7 @@
 
 // Buka imports nine Smacker 3.0g entries by ordinal from its shipped DLL.
 // Retail accesses NewPalette +0x68, Palette +0x6c, FrameNum +0x374 and
-// LastRectx +0x380. The summary layout follows the HoMM2 3.0g SDK donor.
+// LastRectx +0x380.
 
 #include <Domains.h>
 

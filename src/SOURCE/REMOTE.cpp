@@ -1,10 +1,9 @@
 // Remote play: the network and modem transports and their packet layer.
-// Buka 2.1 REMOTE, Netbios and Modem correspondence. Retail compiled these as
-// one object: RemoteCleanup starts it at 0x00458520 after SETUP's int3 fill,
-// Dial (0x00459627) and WriteModemPacket (0x0045a16b) start at odd addresses
-// directly after their predecessors, and the object's .data
-// (0x004a2c00-0x0049fdb7) and .bss (0x004c7e70-0x004ca487) interleave the
-// network, modem and packet-layer variables.
+// Retail compiled these as one object: RemoteCleanup starts it at 0x00458520
+// after SETUP's int3 fill, Dial (0x00459627) and WriteModemPacket (0x0045a16b)
+// start at odd addresses directly after their predecessors, and the object's
+// .data (0x004a2c00-0x0049fdb7) and .bss (0x004c7e70-0x004ca487) interleave
+// the network, modem and packet-layer variables.
 
 #include <match.h>
 
@@ -26,7 +25,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka 2.1 RemoteCleanup without the HoMM2 logging and DirectPlay modes.
 VA(0x004519f0, 0x66)
 void RemoteCleanup(void) {
     if (!gRemoteOn)
@@ -60,7 +58,6 @@ void* ReadFileBlock(char* filename, void* buffer, i32 size, i32 offset) {
     return buffer;
 }
 
-// Buka 2.1 MiscRuntime FileSize.
 VA(0x00451abb, 0x74)
 i32 FileSize(char* filename) {
     i32 length;
@@ -77,8 +74,6 @@ i32 FileSize(char* filename) {
     return length;
 }
 
-// Buka 2.1 RemoteMain merged with the HoMM2 ModemSetup mode switch; HoMM1
-// keeps the modem reset sequence in ModemSetup (0x459530).
 VA(0x00451b2f, 0x221)
 void RemoteMain(i32 gameMode) {
     char directConnectMessage[164];
@@ -436,7 +431,7 @@ i8 WaitForGuest(void) {
     return 0;
 }
 
-// Buka 2.1 Netbios nbnet_init; the host also sends the guest count.
+// The host also sends the guest count.
 VA(0x004525c8, 0x196)
 i32 nbnet_init(void) {
     char buffer[80];
@@ -475,7 +470,7 @@ i32 nbnet_init(void) {
     return 0;
 }
 
-// Buka 2.1 ModemSetup reset loop: open the port and reset a dial-up modem.
+// Open the port and reset a dial-up modem.
 VA(0x0045275e, 0xe0)
 void ModemSetup(void) {
     char command[104];
@@ -553,7 +548,7 @@ i8 GUIModemCommandExec(void) {
     }
 }
 
-// Buka 2.1 ModemCommand; HoMM1 writes one command byte at a time.
+// Writes one command byte at a time.
 VA(0x004529ff, 0x5f)
 void ModemCommand(char* command) {
     i32 curPos;
@@ -602,7 +597,7 @@ compareResponse:
     }
 }
 
-// Buka 2.1 serial queue helpers; HoMM1 has no outgoing-queue guard.
+// Serial queue helpers.
 VA(0x00452b7c, 0x21)
 i32 write_buffer(char* buffer, i32 length) {
     com_snd(0, 0, length, buffer, 0);
@@ -738,7 +733,6 @@ i32 WaitForDirectConnect(void) {
 VA(0x00453122, 0xe4)
 char ReadPacket(void) {
     i32 input;
-    // Unused; retail reserves 0x20 bytes with the input below it.
     char scratch[28];
     if (inque.writePosition > 4092) {
         inque.writePosition = 0;
@@ -776,7 +770,7 @@ readPacketStart:
 
 VA(0x00453206, 0xe2)
 void WriteModemPacket(char* buffer, i32 length) {
-    char unusedText[28]; // dead local: retail's /Od frame holds its unreferenced bytes
+    char unusedText[28];
     char encoded[MODEM_ENCODED_PACKET_SIZE];
     i32 encodedPosition = 0;
     if (length > MODEM_PACKET_MAX_LENGTH)

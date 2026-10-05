@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_RECRUITUNIT_H
 #define HOMM1_SOURCE_RECRUITUNIT_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 6 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <Domains.h>
@@ -20,7 +18,6 @@ H1_ENUM_BEGIN(RecruitSourceType)
     RECRUIT_SOURCE_TOWN = 0x28
 H1_ENUM_END(RecruitSourceType)
 
-// Both retail constructors, Open, Update and Main fix this packed layout.
 #pragma pack(push, 1)
 class recruitUnit : public baseManager {
 public:
@@ -45,7 +42,6 @@ public:
     char m_unknown5a[2];
     // --- constructors ---
     recruitUnit(class armyGroup* army, i8 creatureType, i16* available);
-    // HoMM1 has no refresh-town argument (retail ret 8).
     recruitUnit(class town* townData, i8 dwelling);
     // --- virtual methods (vtable order) ---
     virtual i16 Open(i16 priority) OVERRIDE;
@@ -65,9 +61,7 @@ void SetupRecruitWin(
     i32 available
 );
 void QuickViewRecruit(class town* townData, i8 dwelling);
-// Moved from RECRUIT.cpp.
-// Buka RecruitConstant (HoMM1 values): window and dialog positions and
-// SetupRecruitWin's text buffers.
+// Window and dialog positions and SetupRecruitWin's text buffers.
 H1_ENUM_CONST_BEGIN(RecruitConstant)
     RECRUIT_WINDOW_X = 0xa0,
     RECRUIT_WINDOW_Y = 0x10,
@@ -79,7 +73,7 @@ H1_ENUM_CONST_BEGIN(RecruitConstant)
     RECRUIT_LABEL_SIZE = 40
 H1_ENUM_CONST_END(RecruitConstant)
 
-// recruit0/1.bin and recruiq0/1.bin control ids (Buka RecruitControl).
+// recruit0/1.bin and recruiq0/1.bin control ids.
 H1_ENUM_BEGIN(RecruitControl)
     RECRUIT_CLOSE_CONTROL = DIALOG_BUTTON_0,
     RECRUIT_CANCEL_CONTROL = DIALOG_BUTTON_1,

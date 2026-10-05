@@ -1,5 +1,5 @@
-// Serial transport; Buka 2.1 SOURCE/comwin correspondence. HoMM1 keeps seven
-// port slots; Windows 95 1.1 adds ShutdownComError at each serial failure.
+// Serial transport with seven port slots; Windows 95 1.1 adds
+// ShutdownComError at each serial failure.
 
 #include <match.h>
 
@@ -42,7 +42,6 @@ void init_anchor(tag_Anchor* anchor, i32, i32) {
     anchor->tail = NULL;
 }
 
-// HoMM2 Buka 2.1 ShutdownComError; literals and error cases verified in 1.1.
 VA(0x0041c9d2, 0x374)
 void ShutdownComError(char* function) {
     char errorName[COM_ERROR_NAME_SIZE];
@@ -133,7 +132,7 @@ void ShutdownComError(char* function) {
 
 VA(0x0041cd46, 0x302)
 i16 com_init(u8 portNumber, i32 baudRate, i32 useDtr) {
-    i32 err; // Unused, as in Buka; retail still reserves its slot.
+    i32 err;
     i32 slot;
     BOOL rv;
     DCB state;

@@ -26,8 +26,7 @@
     // Each setup handler's help row (the gSetup*Help table texts name them); the
     // rows follow CHOICE_ONE.. and end with the cancel row.
 
-// Retail stpcmpgn.bin dialog driven by SetupCampaignGameHandler: HoMM1's
-// game::SetupCampaignGame, not the HoMM2 trading post the graph proposed.
+// The stpcmpgn.bin dialog driven by SetupCampaignGameHandler.
 VA(0x00456b10, 0x10d)
 i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
@@ -256,8 +255,7 @@ i8 game::SetupMultiPlayerGame(void) {
     return 1;
 }
 
-// Buka 2.1 game::SetupGame without the expansion campaign; the menu shortcuts
-// keep separate restart and load command ids.
+// The menu shortcuts keep separate restart and load command ids.
 VA(0x0045752d, 0x372)
 i8 game::SetupGame(i8 newGame) {
     heroWindow* window;
@@ -424,7 +422,7 @@ i8 game::PickLoadGame(void) {
     }
 }
 
-// Buka 2.1 SETUP help handlers; HoMM1 shows each help text as a type-4 dialog.
+// SETUP help handlers: each help text shows as a type-4 dialog.
 VA(0x00457a60, 0xd7)
 i16 SetupCampaignGameHandler(tag_message& message) {
     i32 helpIndex;

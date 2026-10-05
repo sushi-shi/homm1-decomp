@@ -37,13 +37,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-// @early-stop 99.45: m_mapSounds[m_mapOriginX + 7][m_mapOriginY + 7] in
-// the campfire arm - retail adds the column term first. As in EraseObj,
-// the column mul (one add below it) is lighter than the row's (x 72) for
-// every handle state and no authentic spelling is known; one more
-// code-free node on the column reproduces retail (99.69 with `+ 0`). The
-// abs(tx - x) + abs(ty - y) operand orders are handle state (solver:
-// whole-TU shift T=58 leaves only this site, 4 lines).
 VA(0x00424a50, 0x1d9d)
 void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     hero* visitingHero;
@@ -1180,20 +1173,6 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     CheckEndGame(0);
 }
 
-// @early-stop 97.31: m_mapSounds[x][y] (test and store) - retail adds the
-// column term first (mov eax,y; ecx=x*72; add eax,ecx). sortnode model:
-// the column mul 4(load y, 1) weighs 0x47 against the row's 4(load x, 72)
-// 0x53, so VC4 emits the row first for every handle state (x/y/gpGame/
-// locals, whole-TU and per-function shifts, all slot-preserving local
-// orders: replay and compiles). Retail needs one extra code-free node on the
-// column (a `y + 0` compile is exact). Callers pass full ints; casts,
-// pointer/1-D spellings and an inline accessor do not add it; a 1-byte
-// element or row struct for game::m_mapSounds flips this site but not
-// DoEvent's and shifts every game.h TU's handles, so no authentic
-// construct is known.
-// Buka advManager::EraseObj reduced to HoMM1's single-cell layers: the cell
-// falls back to the trigger kept in the low seven bits of byte 7 and borrows
-// the metadata of a neighbouring cell with that trigger.
 VA(0x004267ed, 0x1c8)
 void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
     i8 erased = 0;
@@ -1733,8 +1712,7 @@ i8 advManager::CombatMonsterEvent(
     return res;
 }
 
-// Buka's free GiveTakeArtifactStat; HoMM1 keeps per-artifact primary-stat
-// bonuses here and is called through gpAdvManager.
+// Per-artifact primary-stat bonuses, called through gpAdvManager.
 VA(0x004276bd, 0x1e4)
 void advManager::GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take) {
     i8 theStat = HERO_PRIMARY_NONE;

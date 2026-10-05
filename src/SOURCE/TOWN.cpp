@@ -27,7 +27,6 @@ town::town(void) {
     m_unknown19 = 0;
 }
 
-// HoMM1 retail returns in AL; the HoMM2 int return is a later signature.
 VA(0x0045ea20, 0x43)
 i8 town::HasGarrison(void) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
@@ -72,8 +71,7 @@ void town::XformToCastle(void) {
     }
 }
 
-// HoMM1's callee returns with `ret` and always fades; the donor's noFade
-// argument and memory-limit calculation belong to its later revision.
+// The callee returns with `ret` and always fades.
 VA(0x0045ec84, 0x8c)
 void town::View(void) {
     if (gHighMemBuffer > TOWN_VIEW_HIGH_MEMORY_LIMIT)

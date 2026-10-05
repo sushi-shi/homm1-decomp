@@ -1,4 +1,4 @@
-// Retail screen blitting, corresponding to Buka/PoL miscwin.
+// Retail screen blitting.
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -81,7 +81,7 @@ void GrabScreenBitmap(bitmap* destination, i32 x, i32 y) {
     );
 }
 
-// HoMM2 Buka BitmapToScreen: blit a whole bitmap to the screen origin.
+// Blit a whole bitmap to the screen origin.
 VA(0x0046fa2c, 0x29)
 void BitmapToScreen(bitmap* image) {
     BlitBitmapToScreen(image, 0, 0, image->m_width, image->m_height, 0, 0);
@@ -166,12 +166,9 @@ void FadeOut(i32 increment) throw() {
 }
 
 // ---------------------------------------------------------------------------
-// The rest of this object. Retail places OLDASM's helpers, the clipped icon
-// renderers in the same object as the blitters: VC4
-// LINK pulls a library member once per object in first-reference order, and
-// only a shared object reproduces retail's BASE order (this group first,
-// although the first symbol SOURCE references is Random). The OLDASM assert
-// keeps its own file name (retail 0x004a0838).
+// The rest of this object. Retail places OLDASM's helpers and the clipped icon
+// renderers in the same object as the blitters. The OLDASM assert keeps its
+// own file name (retail 0x004a0838).
 // ---------------------------------------------------------------------------
 
 // HoMM1 OLDASM.CPP helpers; the assert literal names the retail source file.
@@ -183,7 +180,7 @@ void FadeOut(i32 increment) throw() {
 #include <stdlib.h>
 #include <string.h>
 
-// HoMM2 Buka AutoInitSVGA: the Windows build has no SVGA mode to set up.
+// The Windows build has no SVGA mode to set up.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046fd82, 0x8)
@@ -221,7 +218,7 @@ void PostprocessBitmap(i8*, i32, i32) {}
 VA(0x0046fe5d, 0x5)
 void PostprocessIcon(icon*) {}
 
-// HoMM1's C++ mono clipping path, corresponding to donor Iconm2b.cpp.
+// HoMM1's C++ mono clipping path.
 
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
@@ -298,9 +295,7 @@ void ClippedMonoIconToBitmap(
 }
 
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
-// working value in file statics, as in the assembly renderers. Their
-// declaration order sets the compare operand sort keys; the .bss layout
-// follows the names, not this order.
+// working value in file statics, as in the assembly renderers.
 DATA(0x004cfb50)
 static i32 sClipY;
 DATA(0x004cfb58)

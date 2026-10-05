@@ -1,5 +1,4 @@
-// Located from HoMM2 Buka 2.1; HoMM1 uses the same bitmap core with
-// 16-bit dimensions and coordinates.
+// The bitmap core uses 16-bit dimensions and coordinates.
 
 #include <match.h>
 
@@ -63,7 +62,6 @@ void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
 }
 
-// HoMM2 Buka bitmap::DrawToScreen.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004733bf, 0x41)
@@ -88,7 +86,7 @@ void bitmap::GrabBitmap(bitmap* source, i16 x, i16 y) {
 VA(0x0047345e, 0xa3)
 void bitmap::Write(char* filename) {
     palette* combatPaletteData;
-    i32 unusedData; // dead local: retail's /Od frame holds its unreferenced slot
+    i32 unusedData;
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
     if (file == -1)
         return;

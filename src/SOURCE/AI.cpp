@@ -1,4 +1,4 @@
-// HoMM1 Buka combat AI: reviewed game functions occupy RVAs 0x11660..0x132ee.
+// HoMM1 Buka combat AI: game functions occupy RVAs 0x11660..0x132ee.
 // VC6 locale startup follows at 0x132ee/0x13315; INT3 padding ends at 0x13330,
 // where army::army begins. See config/retail/buka-combat-ai.json.
 
@@ -23,9 +23,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Buka AI.cpp AICheckRetreat: compares the two sides' fight values,
-// weighting the defender of a town and unspent stacks, against a chance
-// raised by the hero's artifacts and experience.
+// Compares the two sides' fight values, weighting the defender of a town
+// and unspent stacks, against a chance raised by the hero's artifacts and
+// experience.
 VA(0x00411660, 0x728)
 i32 combatManager::AICheckRetreat(void) {
     if (m_combatTowns[m_currentSide])
@@ -122,10 +122,9 @@ i32 combatManager::AICheckRetreat(void) {
     return 0;
 }
 
-// Buka AI.cpp DoCompAI: shooters shoot (adjacent enemies first), flyers and
-// walkers attack by target class, walkers otherwise close in; a castle
-// attacker steps toward the gate. The chosen move is nudged onto a free hex
-// next to an enemy.
+// Shooters shoot (adjacent enemies first), flyers and walkers attack by
+// target class, walkers otherwise close in; a castle attacker steps toward
+// the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
 void combatManager::DoCompAI(i8) {
     i8 strongerVal;
@@ -293,8 +292,8 @@ finish:
     }
 }
 
-// Buka AI.cpp mask helpers; HoMM1 loops word indices over m_numArmies and
-// builds word masks (dead flag 0x10, shooter 4, flyer 2).
+// Mask helpers: loop word indices over m_numArmies and build word masks
+// (dead flag 0x10, shooter 4, flyer 2).
 VA(0x004125fa, 0xb7)
 i16 combatManager::GetShooterMask(i8 side) {
     i16 armyIndex = 0;

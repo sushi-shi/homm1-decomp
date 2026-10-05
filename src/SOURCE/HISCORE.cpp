@@ -17,7 +17,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka HISCORE.cpp:22-29; HoMM1 adds the dispatch mask and score-type selection.
 VA(0x0043bd60, 0x7f)
 highScoreManager::highScoreManager(void) {
     i32 rank;
@@ -54,7 +53,7 @@ i16 highScoreManager::Open(i16 id) {
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
 
-// Buka HISCORE.cpp:51-56; retail window owner is +0x59, active is +0x2e.
+// The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
@@ -137,8 +136,8 @@ i16 highScoreManager::Main(struct tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
-// Buka HISCORE.cpp:121-283; HoMM1 reads 0x57-byte records, names the
-// rating creature directly and highlights the new entry by fill colour.
+// Update reads 0x57-byte records, names the rating creature directly and
+// highlights the new entry by fill colour.
 VA(0x0043c17f, 0x5ec)
 void highScoreManager::Update(void) {
     HighScoreEntry highScore;

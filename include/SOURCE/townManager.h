@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_TOWNMANAGER_H
 #define HOMM1_SOURCE_TOWNMANAGER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 26 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
@@ -238,10 +236,10 @@ H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_FIRST_ANIMATION_FRAME = 1
 H1_ENUM_CONST_END(TownTavernConstant)
 
-// Town purchases and building tables: the spell book and boat prices
-// (Buka TOWN_SPELL_BOOK_COST), the six dwellings each faction's rows hold in
-// the gDwelling* tables, and BuyBuild's split between neutral buildings
-// (gNeutralBuildingCosts rows 0..6) and dwellings.
+// Town purchases and building tables: the spell book and boat prices, the
+// six dwellings each faction's rows hold in the gDwelling* tables, and
+// BuyBuild's split between neutral buildings (gNeutralBuildingCosts rows
+// 0..6) and dwellings.
 H1_ENUM_CONST_BEGIN(TownBuildConstant)
     TOWN_SPELL_BOOK_COST = 500,
     TOWN_BOAT_GOLD_COST = 1000,
@@ -264,8 +262,7 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
     TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8,
     // strip's type argument (stored in strip::m_stripType, which HoMM1 never
     // reads): the garrison strip with or without a visiting hero and the
-    // hero strip (Buka TOWN_CREST_FRAME_WITH/WITHOUT_HERO,
-    // TOWN_HERO_STRIP_FRAME_COUNT).
+    // hero strip.
     TOWN_CREST_FRAME_WITH_HERO = 1,
     TOWN_CREST_FRAME_WITHOUT_HERO = 4,
     TOWN_HERO_STRIP_FRAME_COUNT = 3
@@ -283,7 +280,7 @@ H1_ENUM_BEGIN(TownRecruitHeroControl)
 H1_ENUM_END(TownRecruitHeroControl)
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
-// fix these packed offsets; names follow Buka where the use matches.
+// fix these packed offsets.
 #pragma pack(push, 1)
 class townManager : public baseManager {
 public:

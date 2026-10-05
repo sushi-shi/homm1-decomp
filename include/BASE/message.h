@@ -60,9 +60,7 @@ H1_ENUM_BEGIN(MessageModifier)
 H1_ENUM_END(MessageModifier)
 
 #pragma pack(push, 1)
-// Retail reaches every word directly off the message (the hover filters load
-// m_lastHoverId first); a named payload level changes VC4's operand order.
-// The anonymous unions only name the per-message-type views of each word.
+// The anonymous unions name the per-message-type views of each word.
 struct tag_message {
     H1_ENUM_STORAGE(MessageType, i16) type;
     union {
@@ -85,7 +83,7 @@ struct tag_message {
 };
 #pragma pack(pop)
 
-// Address a widget command to widget idValue (Buka 2.1 message.h).
+// Address a widget command to widget idValue.
 #define SET_WIDGET_MESSAGE(messageValue, commandValue, idValue)                                    \
     ((messageValue).type = MESSAGE_WIDGET,                                                         \
      (messageValue).command = (commandValue),                                                      \

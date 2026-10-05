@@ -1,4 +1,4 @@
-// Located from HoMM2 Buka 2.1 SEARCH.cpp; HoMM1 builds this TU with /O2.
+// HoMM1 builds this TU with /O2.
 
 #include <match.h>
 
@@ -22,9 +22,6 @@ i16 searchArray::FindNearestObject(
     i16 maximumCost,
     u8 triggerType
 ) {
-    // node.x/node.y are read in place: retail spills the coordinate as a CSE
-    // temporary in the dword slot below node. The declaration order gives the
-    // start-versus-destination compares their retail operand order.
     searchNode node;
     i8 possibleDirections[MAP_DIRECTION_COUNT];
     i8 directionCosts[MAP_DIRECTION_COUNT];
@@ -46,8 +43,6 @@ i16 searchArray::FindNearestObject(
         node = m_queue[--m_queueCount];
         if (maximumCost > 0 && node.distance > maximumCost)
             continue;
-        // Nested rather than &&: the code is the same, and the C1 labels it
-        // allocates give SeedPosition retail's register allocation.
         if (gpGame->m_map[node.x][node.y].m_triggerType == triggerType)
             if (node.x != startX || node.y != startY) {
                 m_specialTargetX = node.x;
@@ -100,7 +95,7 @@ i16 searchArray::FindNearestObject(
     return m_pathLength;
 }
 
-// Buka SEARCH.cpp BuildPath over HoMM1's packed node word.
+// BuildPath over the packed node word.
 VA(0x00456080, 0xc1)
 i32 searchArray::BuildPath(
     i16 startX,
@@ -131,10 +126,8 @@ i32 searchArray::BuildPath(
     return m_pathLength;
 }
 
-// Buka SEARCH.cpp SeedPosition; HoMM1 has no roads or pathfinding skill and
-// precomputes the straight and diagonal step costs once per node. Buka's
-// file-scope scratch is function-static here: only that TU state gives
-// retail's esi/edi/ebx allocation of this, continueSeed and zero.
+// HoMM1 has no roads or pathfinding skill and precomputes the straight and
+// diagonal step costs once per node.
 VA(0x00456150, 0x99c)
 void searchArray::SeedPosition(
     i16 seedX,

@@ -1,6 +1,5 @@
-; HoMM1 clipped icon renderers, plain and mirrored. Buka 2.1 icon2bc.cpp and
-; iconf2bc.cpp supply the identities; HoMM1 retail is hand-written and links
-; both as ONE object (a 90h EVEN pad separates them, not inter-object int3).
+; HoMM1 clipped icon renderers, plain and mirrored. Retail is hand-written
+; and links both as ONE object (a 90h EVEN pad separates them, not inter-object int3).
 
 .386
 .model flat
@@ -29,7 +28,6 @@ _gClipColumn DWORD 0
 .code
 
 ; Draw one unscaled icon frame into a bitmap, clipped to the bitmap bounds.
-; Buka 2.1 icon2bc.cpp supplies the identity; HoMM1 retail is hand-written.
 ;
 ; C++ equivalent (include/BASE/Icon2b.h, __cdecl). The frame setup and RLE
 ; are Icon2b.asm's. Rows above the bitmap are skipped by scanning the source
@@ -296,7 +294,6 @@ clip_7cc9f:
 
 EVEN
 ; Draw one unscaled icon frame mirrored horizontally, clipped to the bitmap.
-; Buka 2.1 iconf2bc.cpp supplies the identity; HoMM1 retail is hand-written.
 ;
 ; C++ equivalent: ClippedIconToBitmap with the frame drawn right to left from
 ; x (its right edge). Only the horizontal setup and the write direction

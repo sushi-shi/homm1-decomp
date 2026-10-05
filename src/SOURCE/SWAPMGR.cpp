@@ -22,7 +22,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Buka 2.1 swapManager::swapManager(void).
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0045cee0, 0x6a)
@@ -52,7 +51,7 @@ void swapManager::Reset(void) {
 VA(0x0045cfab, 0x2b4)
 i16 swapManager::Open(i16 id) {
     tag_message message;
-    i32 i; // Unused; retail still reserves its frame slot.
+    i32 i;
 
     Reset();
     m_window = new heroWindow(16, 16, "swapwin.bin");
@@ -522,7 +521,6 @@ void swapManager::ViewMon(void) {
     );
 }
 
-// Buka 2.1 swapManager::SwapArtifacts.
 VA(0x0045de3b, 0x126)
 void swapManager::SwapArtifacts(void) {
     i8 targetArtifact;

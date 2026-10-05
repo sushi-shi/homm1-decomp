@@ -2,8 +2,6 @@
 #define HOMM1_SOURCE_ARMY_H
 
 #include <Domains.h>
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 57 methods, 0 own-virtual, 0 static data.
 #include <H1/Macros.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/creatureTypes.h>
@@ -29,8 +27,8 @@ H1_ENUM_BEGIN(ArmySampleType)
     ARMY_SAMPLE_COUNT = 4
 H1_ENUM_END(ArmySampleType)
 
-// army::m_spellEndCondition: what ends m_spellEffect early (Buka
-// ArmySpellCancelType numbering); Init and CancelSpell store NONE.
+// army::m_spellEndCondition: what ends m_spellEffect early; Init and
+// CancelSpell store NONE.
 H1_ENUM_BEGIN(ArmySpellCancelType)
     ARMY_CANCEL_SPELLS_NONE = -1,
     ARMY_CANCEL_SPELLS_AFTER_MOVE = 0,
@@ -58,19 +56,17 @@ H1_ENUM_CONST_BEGIN(ArmyPowConstant)
 H1_ENUM_CONST_END(ArmyPowConstant)
 
 // LoadResources' sample playback settings and DrawToBuffer's quantity text
-// buffer (Buka ArmyCombatConstant ARMY_SAMPLE_VOLUME/CHANNEL and
-// ARMY_QUANTITY_TEXT_SIZE).
+// buffer.
 H1_ENUM_CONST_BEGIN(ArmyCombatConstant)
     ARMY_SAMPLE_VOLUME = 0x7f,
     ARMY_SAMPLE_CHANNEL = 3,
     ARMY_QUANTITY_TEXT_SIZE = 12,
-    // WalkTo/AttackTo when no path reaches the target (Buka ARMY_PATH_BLOCKED).
+    // WalkTo/AttackTo when no path reaches the target.
     ARMY_PATH_BLOCKED = 3,
     // SpecialAttack: a shot across an intact or damaged castle wall adds
     // this to the target's defense (DamageEnemy's defense modifier).
     ARMY_CASTLE_WALL_DEFENSE_BONUS = 4,
-    // Protection's defense bonus; CancelSpell takes it back (Buka
-    // ArmySpellStatConstant STONESKIN_DEFENSE_BONUS, the same +3).
+    // Protection's defense bonus; CancelSpell takes it back.
     ARMY_PROTECTION_DEFENSE_BONUS = 3
 H1_ENUM_CONST_END(ArmyCombatConstant)
 
@@ -84,8 +80,8 @@ H1_ENUM_END(ArmyLuck)
 
 // HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
-// Forget an army's attack target (Buka 2.1 army.h). VC4 rejects an
-// assignment through (*this).member, so the army is passed by pointer.
+// Forget an army's attack target. VC4 rejects an assignment through
+// (*this).member, so the army is passed by pointer.
 #define CLEAR_ARMY_TARGET(a)                                                                       \
     ((a)->m_targetSide = COMBAT_SIDE_NONE, (a)->m_targetIndex = COMBAT_ARMY_INDEX_NONE)
 
@@ -102,8 +98,8 @@ public:
     i8 m_moveTargetHex;
     H1_ENUM_STORAGE(CreatureType, i8) m_creatureType;
     i8 m_hex;
-    // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect
-    // (Buka m_animationSequence) and the frame within it.
+    // DrawToBuffer: pose 0 stand, 1 walk, 2 attack, 3 spell effect and the
+    // frame within it.
     H1_ENUM_STORAGE(ArmyAnimationSequence, i8) m_animationSequence;
     i8 m_animationFrame;
     H1_ENUM_STORAGE(ArmyFacing, i8) m_facing;
@@ -150,35 +146,28 @@ public:
     i8 m_spellRounds;
     // --- constructors ---
     army(void);
-    // DoSurrender inlines this test (retail jmp $+0 and dead flag test).
+    // DoSurrender inlines this test.
     i32 IsAlive(void) {
         return m_creatureType >= 0 && m_quantity > 0;
     }
     // --- methods ---
     void InitClean(void);
-    // HoMM1 retail: byte type, word count, byte side and index (ret 0x10).
     void Init(i8 type, i16 quantity, i8 side, i8 index);
     void LoadResources(void);
     void FreeResources(void);
-    // HoMM1 retail: word x/y (ret 8).
     void DrawToBuffer(i16 x, i16 y);
-    // HoMM1 retail 0x00467281: back to the standing frame, optionally
-    // redrawing the combat screen (ret 4).
+    // Back to the standing frame, optionally redrawing the combat screen.
     void Stand(i8 redraw);
     void Wince(void);
-    // HoMM1 retail 0x00467345: word direction, byte stand-after and
-    // continued-walk flags (ret 0xc).
+    // Direction, then the stand-after and continued-walk flags.
     void Walk(i16 direction, i8 standAfter, i8 continued);
     void SpecialAttack(void);
-    // HoMM1 retail 0x00468fc6: word direction (ret 4).
     void DirDoAttack(i16 direction);
-    // HoMM1 retail 0x00468861 takes no argument.
     void DoHydraAttack(void);
-    // HoMM1 retail 0x00468ff3: nonzero for a retaliation strike (ret 4).
+    // Nonzero for a retaliation strike.
     void DoAttack(i32 retaliation);
     void ResetPath(void);
     i16 WalkTo(void);
-    // HoMM1 retail 0x0046a0f0 / 0x0046a213: word hex, word result.
     i16 WalkTo(i16 destHex);
     i16 AttackTo(void);
     i16 AttackTo(i16 destHex);
@@ -190,14 +179,11 @@ public:
         i32 rangedAttack,
         i32 defenseModifier
     );
-    // HoMM1 retail 0x0046a8d3 takes only the damage (ret 4).
     i32 Damage(i32 damage);
-    // HoMM1 retail 0x0046aa49: byte effect index (ret 4).
     void PowEffect(i8 effect);
     u32 Strength(void);
     i32 LeaveNoBody(void);
     void ProcessDeath(i32 immediate);
-    // HoMM1 retail 0x0046b326: word effect, frame delay (ret 8).
     void SpellEffect(i16 effect, i32 frameDelay);
     void CancelSpellType(i32 cancelType);
     void CancelIndividualSpell(i32 influence);
@@ -208,7 +194,7 @@ public:
     float SpellCastWorkChance(i32 spell);
     i32 SpellCastWorks(i32 spell);
     void DispelGood(void);
-    // HoMM1 retail 0x0046b457: undoes m_spellEffect when it expires.
+    // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
     void Cure(i32 amount);
     i32 MidX(void);
@@ -218,18 +204,13 @@ public:
     i32 LeftX(void);
     i32 OtherArmyAdjacent(i32 side, i32 index);
     i32 GetPowBaseY(void);
-    // HoMM1 retail 0x0044a5e0: hex through a word pointer, word result (ret 4).
     i16 CanFit(i16* hex);
     i16 ValidFlight(i16 destination, i8 useDestination);
-    // HoMM1 retail 0x0044acaf/0x0044acd6: word destination, word result.
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
-    // HoMM1 retail 0x0046f280: word hexes, byte speed/flags (ret 0x14).
     i16 FindPath(i16 sourceHex, i16 targetHex, i8, i8 ignoreSpeed, i8 pathMode);
-    // HoMM1 retail 0x0046f3d2: word hex, byte path mode, word result (ret 8).
     i16 ValidPath(i16 targetHex, i8 pathMode);
     i16 GetMoveMask(i16 sourceHex);
-    // HoMM1 retail 0x0046f4eb: word hex, byte mode and target (ret 0xc).
     i16 GetAttackMask(i16 sourceHex, i8 targetMode, i8 targetHex);
     i16 ValidMove(i16 direction);
     i16 ValidMove(i16 sourceHex, i16 direction);
@@ -254,19 +235,16 @@ public:
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
 // The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.
-// Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager):
-// unreferenced, kept so later symbol handles stay put.
+// Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager);
+// unreferenced.
 extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.
 extern i8 gGenieHalf;
-// Set while SpecialAttack fires the second shot of a double shooter.
-// Moved from ARMY.cpp.
 // DrawToBuffer's outline colours (palette indices FillToBuffer paints the
 // sprite with): the stack m_limitCreature highlights, a beneficial spell
 // (haste, bless, protection, anti-magic) and any other spell. SpecialAttack
 // saves a MISSILE_PATCH_WIDTH x MISSILE_PATCH_HEIGHT screen patch centred on
-// the missile (half sizes either side) and restores it each step (Buka
-// ArmyDrawingConstant / CombatMissileAnimationConstant roles).
+// the missile (half sizes either side) and restores it each step.
 H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
     ARMY_LIMIT_OUTLINE_COLOR = 0xe4,
     ARMY_GOOD_SPELL_OUTLINE_COLOR = 0xf7,

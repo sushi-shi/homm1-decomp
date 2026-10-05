@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_PLAYERDATA_H
 #define HOMM1_SOURCE_PLAYERDATA_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 6 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -10,9 +8,8 @@
 
 // playerData::m_heroIds: a player keeps at most eight heroes (TOWNMGR's
 // recruit and swap tests).
-// The obelisk puzzle has 48 pieces kept as bits in m_obelisksVisited (Buka
-// PUZZLE_PIECE_COUNT / PUZZLE_PIECE_STORAGE_SIZE). The ultimate-artifact
-// hint coordinates are HINT_NONE until ComputeUALoc places them. Write/Read
+// The obelisk puzzle has 48 pieces kept as bits in m_obelisksVisited. The
+// ultimate-artifact hint coordinates are HINT_NONE until ComputeUALoc places them. Write/Read
 // save 50 zero bytes between the hero and hint blocks.
 H1_ENUM_CONST_BEGIN(PlayerDataConstant)
     PLAYER_HERO_CAPACITY = 8,
@@ -55,7 +52,7 @@ H1_ENUM_END(HumanHandicap)
 
 // Player colours: playerData::m_color indexes the constructor's flag ICNs
 // (b-/g-/r-/y-flag32.icn and -bflg32.icn) and KB's gColorNames
-// {"blue", "green", "red", "yellow"} (Buka PlayerColor, first four values);
+// {"blue", "green", "red", "yellow"};
 // UpdateRadar uses slot 4 of gRadarOwnerColor for unowned towns and mines.
 H1_ENUM_BEGIN(PlayerColor)
     // A seat whose crest is not chosen yet (the new-game and scenario
@@ -70,7 +67,7 @@ H1_ENUM_BEGIN(PlayerColor)
 H1_ENUM_END(PlayerColor)
 
 // TurnCostResource's &players[p]+0xa1 base and +0x34 income rows place
-// HoMM2's per-player AI block (without its last float) inside playerData.
+// the per-player AI block inside playerData.
 struct playerAttentionWeights {
     float gameWeightA;
     float gameRemainder;
@@ -97,13 +94,12 @@ public:
 };
 
 // Retail strides players by 0x105 bytes from game+0x20c (four records end at
-// the 0x620 world map); fields follow HoMM2's order after a HoMM1 prefix.
+// the 0x620 world map).
 #pragma pack(push, 1)
 class playerData {
 public:
     char m_unknown00[0x11];
-    // Buka m_color (Color()); SetupThievesGuild adds it to the town-window
-    // flag frame base.
+    // SetupThievesGuild adds it to the town-window flag frame base.
     H1_ENUM_STORAGE(PlayerColor, i8) m_color;
     // Computer-player difficulty: GetTurnAIVars scales the attack bonuses by
     // it and hero::CalcMobility grants computer heroes +3 from level 3.
@@ -118,7 +114,7 @@ public:
     i8 m_ultimateArtifactHintChance;
     i8 m_ultimateArtifactHintX;
     i8 m_ultimateArtifactHintY;
-    // Buka m_daysLeft: 7 when the last town falls, -1 when a town is held;
+    // 7 when the last town falls, -1 when a town is held;
     // the turn counts it down.
     i8 m_daysLeft;
     i8 m_townCount;
@@ -143,7 +139,7 @@ public:
     i8 CurrentTown(void) {
         return m_currentTown;
     }
-    // Buka crest reads widen the stored signed byte to a signed short.
+    // Crest reads widen the stored signed byte to a signed short.
     H1_ENUM_RETURN(PlayerColor, i16) Color(void) {
         return m_color;
     }

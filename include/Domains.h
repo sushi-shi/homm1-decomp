@@ -1,17 +1,15 @@
 #ifndef HOMM1_DOMAINS_H
 #define HOMM1_DOMAINS_H
 
-// Adapted from HoMM2's Ints.h: one source, strict domains in analysis,
-// explicitly chosen integer representations for the retail compiler.
+// One source, strict domains in analysis, explicitly chosen integer
+// representations for the retail compiler.
 //
-// Following Giten's EnumDomain.h: BEGIN_SPLIT declares a domain stored at one
-// retail width, FLAGS_BEGIN a bit set whose members combine with `|`, and
-// CONST_BEGIN a group of named encoding biases, masks, sentinels and extents
-// that is not a value domain. The retail spelling of every form is the same
-// named `enum name {`, so converting a block between forms leaves VC4's symbol
-// numbering and codegen unchanged. STORAGE types a field or global at the
-// domain's width; PARAM, RETURN and LOCAL type a parameter, return value or
-// temporary whose retail width is evidenced separately.
+// BEGIN_SPLIT declares a domain stored at one retail width, FLAGS_BEGIN a bit
+// set whose members combine with `|`, and CONST_BEGIN a group of named
+// encoding biases, masks, sentinels and extents that is not a value domain.
+// The retail spelling of every form is the same named `enum name {`.
+// STORAGE types a field or global at the domain's width; PARAM, RETURN and
+// LOCAL type a parameter, return value or temporary at its own retail width.
 #if defined(__cplusplus) && __cplusplus >= 202002L
 template<typename Domain, typename Storage> class H1EnumStorage {
 public:

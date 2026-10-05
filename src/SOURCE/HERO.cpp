@@ -41,7 +41,6 @@ hero::hero(void) {
     giHeroScreenSrcIndex = HERO_SCREEN_SOURCE_NONE;
 }
 
-// Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00438f7d, 0xd)
@@ -555,7 +554,6 @@ void hero::Deallocate(void) {
     CheckEndGame(0);
 }
 
-// Buka 2.1 hero::GetExperience.
 VA(0x0043a599, 0xb5)
 i32 hero::GetExperience(i32 level) {
     i32 experience;
@@ -701,7 +699,6 @@ void hero::CheckLevel(void) {
     }
 }
 
-// Buka 2.1 hero::NumArtifacts.
 VA(0x0043ab68, 0x4b)
 i32 hero::NumArtifacts(void) {
     i32 count = 0;
@@ -717,7 +714,7 @@ i32 hero::NumArtifacts(void) {
 // Buka names every army slot with the plural creature table.
 VA(0x0043abb3, 0x502)
 void UpdateHeroScreenStatusBar(i16 widgetId) {
-    tag_message message; // Unused; retail keeps the donor's message frame.
+    tag_message message;
     i16 slot;
 
     switch (widgetId) {

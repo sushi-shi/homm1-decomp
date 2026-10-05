@@ -246,8 +246,6 @@ i16 inputManager::Main(tag_message&) {
     return 0;
 }
 
-// Buka 2.1 and PoL 2.0 both reset the two queue indices in this method.
-// HoMM1's body confirms the same short fields at +0x230 and +0x232.
 VA(0x0046eeb6, 0x23)
 void inputManager::Flush(void) {
     ResetEventQueue(this);
@@ -278,7 +276,6 @@ tag_message inputManager::GetEvent(void) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046efd7, 0x31)
 void inputManager::SetBooleanOption(i16 enabled) {
-    // Retail reserves 16 unaddressed frame bytes, a tag_message's size.
     tag_message unusedMessage;
 
     if (enabled)
@@ -296,9 +293,6 @@ void inputManager::SetPositiveOption(i16 value) {
         m_field_0x23a = 1;
 }
 
-// The donor assigns the key-code mode and then flushes the event queue.
-// Buka calls Flush and stores the mode as a short at +0x340.
-// HoMM2 Buka keeps SetMouseCoords empty; HoMM1 records the coordinates.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046f039, 0x29)

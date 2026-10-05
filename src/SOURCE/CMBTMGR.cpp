@@ -44,7 +44,6 @@ i32 gInHighMoraleBonus = 0;
 DATA(0x0048f060)
 i32 gSeed = 1;
 
-// Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
 VA(0x00418b30, 0x18b)
 combatManager::combatManager(void) {
     m_gridMode = 0;
@@ -91,7 +90,7 @@ void combatManager::CombineGroups(armyGroup* from, armyGroup* to) {
     }
 }
 
-// Buka CMBTMGR.cpp SetupCombat; HoMM1's attacker is side 1.
+// The attacker is side 1.
 VA(0x00418dd3, 0x345)
 void combatManager::SetupCombat(
     i32 mapX,
@@ -166,8 +165,8 @@ void combatManager::SetupCombat(
     m_combatTowns[COMBAT_ATTACKER_SIDE] = NULL;
 }
 
-// Buka CMBTMGR.cpp Open: screen buffer, combat window, icons, armies and
-// field, then the fade-in and a random combat theme.
+// Open: screen buffer, combat window, icons, armies and field, then the
+// fade-in and a random combat theme.
 VA(0x00419118, 0x401)
 i16 combatManager::Open(i16 priority) {
     i32 song;
@@ -257,8 +256,8 @@ i16 combatManager::Open(i16 priority) {
 // GetBackgroundName's local static: /Gi emits it after Open's literals,
 // followed by its own.
 
-// Buka CMBTMGR.cpp Close; a wandering-monster cell keeps the surviving
-// count of the side that held it.
+// A wandering-monster cell keeps the surviving count of the side that held
+// it.
 VA(0x00419519, 0x211)
 void combatManager::Close(void) {
     i32 ii;
@@ -303,8 +302,8 @@ void combatManager::Close(void) {
     m_combatWindowOpen = 0;
 }
 
-// Buka CMBTMGR.cpp UpdateArmyGroup: copy surviving counts back into the
-// side's army group; a dead stack empties its slot.
+// Copy surviving counts back into the side's army group; a dead stack
+// empties its slot.
 VA(0x0041972a, 0x13b)
 void combatManager::UpdateArmyGroup(i8 side) {
     i16 i;
@@ -326,8 +325,8 @@ void combatManager::UpdateArmyGroup(i8 side) {
     }
 }
 
-// Buka CMBTMGR.cpp GenerateMap; HoMM1 also places both armies, scatters
-// ground patches and, outside a siege, up to two obstacles.
+// GenerateMap also places both armies, scatters ground patches and, outside
+// a siege, up to two obstacles.
 VA(0x00419865, 0x797)
 void combatManager::GenerateMap(void) {
     i16 x;
@@ -463,8 +462,7 @@ void combatManager::GenerateMap(void) {
     SRand(gSeed);
 }
 
-// Buka CMBTMGR.cpp GetBackgroundName; a graveyard (or a hero standing on
-// one) forces the graveyard field.
+// A graveyard (or a hero standing on one) forces the graveyard field.
 VA(0x00419ffc, 0x127)
 char* combatManager::GetBackgroundName(void) {
     DATA(0x0048f064)
@@ -517,8 +515,8 @@ char* combatManager::GetBackgroundName(void) {
     return gCombatBkgNames[COMBAT_BACKGROUND_GRASS_FOREST];
 }
 
-// Buka CMBTMGR.cpp MoreTreesNear: tree (9) against mountain (8) objects
-// within two cells of the battle.
+// MoreTreesNear: tree (9) against mountain (8) objects within two cells of
+// the battle.
 VA(0x0041a123, 0x1d5)
 i8 combatManager::MoreTreesNear(void) {
     i32 yPos;
@@ -565,7 +563,6 @@ i8 combatManager::MoreTreesNear(void) {
     return 0;
 }
 
-// Buka CMBTMGR.cpp LoadIcons.
 VA(0x0041a2f8, 0x1c4)
 void combatManager::LoadIcons(void) {
     i32 i;
@@ -597,7 +594,6 @@ void combatManager::LoadIcons(void) {
     }
 }
 
-// Buka CMBTMGR.cpp FreeIcons.
 VA(0x0041a4bc, 0x6c)
 void combatManager::FreeIcons(void) {
     i16 i;
@@ -609,7 +605,7 @@ void combatManager::FreeIcons(void) {
     gpResourceManager->Dispose(m_backgroundBitmap);
 }
 
-// Buka CMBTMGR.cpp LoadArmies; HoMM1 places stacks itself after Init.
+// LoadArmies places stacks itself after Init.
 VA(0x0041a528, 0x25f)
 void combatManager::LoadArmies(void) {
     i16 j;
@@ -666,15 +662,14 @@ void combatManager::FreeArmies(void) {
     gCurLoadedSpellFileId = 0;
 }
 
-// HoMM1 retail 0x0044d34c: no callers and an empty body; HoMM2's combat log
-// for unshown battles is the nearest one-argument fit.
+// No callers and an empty body.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0041a842, 0xd)
 void combatManager::NoShowCombatLog(char*) {}
 
-// Buka CMBTMGR.cpp GetGridIndex over HoMM1's 9x5 grid: rows 80 pixels high
-// from y 60, odd rows indented by 66 and even rows by 27, hexes 78 wide.
+// GetGridIndex over the 9x5 grid: rows 80 pixels high from y 60, odd rows
+// indented by 66 and even rows by 27, hexes 78 wide.
 VA(0x0041a84f, 0xa7)
 i16 combatManager::GetGridIndex(i16 x, i16 y) {
     y -= COMBAT_FIELD_TOP;
@@ -697,7 +692,7 @@ i16 combatManager::GetGridIndex(i16 x, i16 y) {
         return y * COMBAT_GRID_COLUMNS + x;
 }
 
-// Buka CMBTMGR.cpp CheckApplyGoodMorale; HoMM1 rolls the group's morale.
+// CheckApplyGoodMorale rolls the group's morale.
 VA(0x0041a8f6, 0x1a5)
 void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     armyGroup* theGroup;
@@ -743,8 +738,7 @@ void combatManager::CheckApplyGoodMorale(i32 side, i32 index) {
     WaitSample(sample);
 }
 
-// Buka CMBTMGR.cpp CheckApplyBadMorale; a computer side skips one roll
-// in four.
+// A computer side skips one bad-morale roll in four.
 VA(0x0041aa9b, 0x173)
 i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     armyGroup* theGroup;
@@ -783,8 +777,8 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
     return 1;
 }
 
-// Buka CMBTMGR.cpp GetNextArmy: the fastest unspent stack, alternating
-// sides, high-morale stacks first.
+// GetNextArmy: the fastest unspent stack, alternating sides, high-morale
+// stacks first.
 VA(0x0041ac0e, 0x1d9)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
     army* theArmy;
@@ -833,8 +827,7 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
     return 0;
 }
 
-// Buka CMBTMGR.cpp IsWinner: the other side surrendered, retreated or has
-// no live stack left.
+// IsWinner: the other side surrendered, retreated or has no live stack left.
 VA(0x0041ade7, 0xb5)
 i8 combatManager::IsWinner(i8 side) {
     i8 isWinner;
@@ -1110,8 +1103,8 @@ void combatManager::CatAttack(i8 side) {
     WaitSample(sampleInfo);
 }
 
-// HoMM1 retail 0x0044e7f2: unreferenced; reloads the armies and rebuilds
-// the field before a full redraw.
+// Unreferenced; reloads the armies and rebuilds the field before a full
+// redraw.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0041bb8e, 0x43)
@@ -1318,8 +1311,8 @@ void combatManager::KeepAttack(void) {
     gpMouseManager->ReallyShowPointer();
 }
 
-// Buka CMBTMGR.cpp ExperienceValueOfStack: fight value of the side's
-// losses, plus 500 for a defeated hero.
+// ExperienceValueOfStack: fight value of the side's losses, plus 500 for a
+// defeated hero.
 VA(0x0041c6b4, 0xec)
 i32 combatManager::ExperienceValueOfStack(i8 side) {
     i32 i;
@@ -1336,7 +1329,6 @@ i32 combatManager::ExperienceValueOfStack(i8 side) {
     return num;
 }
 
-// Buka CMBTMGR.cpp ResetHitByCreature.
 VA(0x0041c7a0, 0x5f)
 void combatManager::ResetHitByCreature(void) {
     i32 j;

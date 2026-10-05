@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_TEXTENTRYWIDGET_H
 #define HOMM1_BASE_TEXTENTRYWIDGET_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 8 methods, 2 own-virtual, 0 static data.
 
 #include <BASE/textWidget.h>
 #include <Domains.h>

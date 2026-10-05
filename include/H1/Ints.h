@@ -1,11 +1,8 @@
 // Ints.h - fixed-width integer aliases.
 //
-// Widths are this target's: 32-bit Win32 / MSVC 4.2, where `long` == `int` == 4
-// bytes and `unsigned long` == `unsigned int` == 4 bytes. So `i32`/`u32` cover
-// BOTH `int`/`long` and `unsigned`/`unsigned long` here; this keeps codegen
-// byte-identical (widths preserved) while making shapes read clearly. `i32` IS
-// `int`, so `int`->`i32` is a no-op for codegen and name-mangling; `long`->`i32`
-// changes only the mangled name (the RVA-keyed pairing + reloc-masking absorb it).
+// Widths are this target's: 32-bit Win32, where `long` == `int` == 4 bytes and
+// `unsigned long` == `unsigned int` == 4 bytes, so `i32`/`u32` cover both
+// `int`/`long` and `unsigned`/`unsigned long`.
 //
 // NOTE: the SDK's own aliases (BOOL/DWORD/WORD/BYTE/UINT/INT/LONG/...) are left
 // as-is in our sources - they pin our externs to the real Win32 signatures.
@@ -30,7 +27,7 @@ typedef unsigned __int64 u64;
 
 // Buka's project-wide prelude: every retail C++ unit (sixty /Od and two /O2)
 // instantiates std::ctype<wchar_t>::id and registers its cleanup, the output
-// of <string> (docs/patterns/vc6-ctype-startup.md).
+// of <string>.
 #include <string>
 
 #endif // HOMM1_H1_INTS_H

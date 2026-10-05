@@ -59,9 +59,8 @@ H1_ENUM_CONST_BEGIN(CreatureFactionConstant)
     CREATURE_FACTION_SIZE = 6
 H1_ENUM_CONST_END(CreatureFactionConstant)
 
-// Creature attribute bits (monster record / army::m_stats.attributes), Buka
-// 2.1 KB_TYPES.h MonsterFlags numbering: wide stacks take two hexes, flyers
-// skip the path, shooters spend shots, breath attacks hit the hex behind;
+// Creature attribute bits (monster record / army::m_stats.attributes): wide
+// stacks take two hexes, flyers skip the path, shooters spend shots, breath attacks hit the hex behind;
 // DEAD, HIGH_MORALE (a good-morale extra move), RETALIATED and TURN_SPENT are
 // combat state. ResetRound keeps ROUND_PERSISTENT_MASK each round; GenerateMap
 // keeps BATTLE_START_MASK when stacks enter the field.

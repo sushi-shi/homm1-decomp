@@ -3,7 +3,7 @@
 
 // Fixed-width integer aliases (H1/Ints.h). Every translation unit opens this
 // header first, so defining them here makes them reachable everywhere without
-// opening another header (under /Gi the opened-header set moves C1 handles).
+// opening another header.
 #ifndef HOMM1_INTS_DEFINED
 #define HOMM1_INTS_DEFINED
 typedef signed char i8;

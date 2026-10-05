@@ -262,8 +262,7 @@ void mouseManager::SetPointer(i16 frame) {
     gInSetPointer = FALSE;
 }
 
-// The Windows build leaves the software-pointer hooks empty; these names
-// follow the HoMM2 mouseManager methods with the same call arity.
+// The Windows build leaves the software-pointer hooks empty.
 VA(0x0046bf6f, 0xb)
 void mouseManager::ReallyShowPointer(void) {}
 
@@ -280,12 +279,11 @@ VA(0x0046bf92, 0xb)
 void mouseManager::HideColorPointer(void) {}
 
 // townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
-// under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
-// RestoreUnderlying pair); retail keeps only the returns.
+// under the pointer with these hooks; retail keeps only the returns.
 VA(0x0046bf9d, 0xb)
 void mouseManager::RestoreUnderlying(void) {}
 
-// HoMM2 Buka's SaveAndDraw(void), empty in the Windows build.
+// Empty in the Windows build.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046bfa8, 0xb)

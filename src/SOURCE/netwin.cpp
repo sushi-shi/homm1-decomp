@@ -16,9 +16,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-// Retail compiled this file incrementally (/Gi): each netlo.cpp ProcessAssert line is the
-// function's compiler line static plus an offset; #line restores the original
-// file and lines (docs/patterns/vc4-gi-line-var.md).
+// #line restores the original netlo.cpp file and line numbers of the
+// asserts.
 
 VA(0x00444c90, 0x94)
 i32 is_netbios_avail(void) {
@@ -43,7 +42,6 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     u8* buffer;
     NCB ncb;
     i32 jj;
-    // Retained unused result local from the PoL donor; retail reserves its frame word.
     i32 returnCode;
     if (is_netbios_avail() == 0)
         return 1;
@@ -85,8 +83,8 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     return 1;
 }
 
-// Buka netwin.cpp:149-193; HoMM1 drains the free queue and keeps the
-// cancel/delete-name sequence on one stack NCB.
+// Drains the free queue and keeps the cancel/delete-name sequence on one
+// stack NCB.
 VA(0x00444ebf, 0x1ca)
 H1_C_LINKAGE void __cdecl nb_term(i32) {
     NCB ncb;
@@ -129,7 +127,7 @@ H1_C_LINKAGE void __cdecl nb_term(i32) {
     DeleteCriticalSection(&gNbRcvLock);
 }
 
-// Buka netwin.cpp:195-217; HoMM1 keeps the unused leading argument.
+// The leading argument is unused.
 VA(0x00445089, 0x98)
 H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
     tag_Node* node;
@@ -148,8 +146,7 @@ H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer) {
 }
 
 VA(0x00445121, 0xee)
-// Retail has an unused leading argument and an explicit queue selection argument.
-// Their stack positions are proven by all four retail call sites.
+// The leading argument is unused.
 H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree) {
     tag_Node* node;
     if (session == gNbMaxSess && len == 0) {
@@ -293,13 +290,11 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
     return returnCodeValue;
 }
 
-// Buka netwin.cpp:374-380.
 VA(0x004456ff, 0x13)
 H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session) {
     return gNetStatus[session];
 }
 
-// Buka netwin.cpp:382-453; HoMM1 asserts through its netlo.cpp line base.
 VA(0x00445712, 0x21c)
 void nb_thr_ctl(void)
 #line 414 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
@@ -366,7 +361,6 @@ void nb_thr_ctl(void)
     }
 }
 
-// Buka netwin.cpp:455-475.
 VA(0x0044592e, 0xb5)
 void nb_add_name(void) {
     if (gNbCtlNcb.ncb_cmd_cplt != NRC_PENDING) {
@@ -385,8 +379,7 @@ void nb_add_name(void) {
     }
 }
 
-// Buka netwin.cpp:477-518; HoMM1 reports failures with wsprintf and
-// OutputDebugString instead of ShutDown.
+// Reports failures with wsprintf and OutputDebugString.
 VA(0x004459e3, 0x196)
 void __stdcall nb_add_name_done(NCB* ncb)
 #line 538 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
@@ -424,7 +417,6 @@ void __stdcall nb_add_name_done(NCB* ncb)
     }
 }
 
-// Buka netwin.cpp:520-536.
 VA(0x00445b79, 0xae)
 u16 nb_recv_any(i32 session) {
     if (gNbSessNcb[session].ncb_cmd_cplt != NRC_PENDING) {
@@ -439,7 +431,6 @@ u16 nb_recv_any(i32 session) {
     return gNbSessNcb[session].ncb_cmd_cplt;
 }
 
-// Buka netwin.cpp:538-567.
 VA(0x00445c27, 0x122)
 void __stdcall nb_recv_any_done(NCB* ncb) {
     i32 i;
@@ -463,7 +454,6 @@ void __stdcall nb_recv_any_done(NCB* ncb) {
     }
 }
 
-// Buka netwin.cpp:569-580.
 VA(0x00445d49, 0xb7)
 u16 nb_call(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
@@ -477,7 +467,6 @@ u16 nb_call(i32 session, void* name) {
     return Netbios(&gNbSessNcb[session]);
 }
 
-// Buka netwin.cpp:582-596.
 VA(0x00445e00, 0xb7)
 u16 nb_listen(i32 session, void* name) {
     memset(&gNbSessNcb[session], 0, sizeof(NCB));
@@ -491,7 +480,6 @@ u16 nb_listen(i32 session, void* name) {
     return Netbios(&gNbSessNcb[session]);
 }
 
-// Buka netwin.cpp:598-628.
 VA(0x00445eb7, 0xfa)
 void __stdcall nb_call_done(NCB* ncb) {
     i32 i;
@@ -522,7 +510,6 @@ void __stdcall nb_call_done(NCB* ncb) {
     }
 }
 
-// Buka netwin.cpp:630-659.
 VA(0x00445fb1, 0x126)
 void nb_arm_recv(i32 session)
 #line 742 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
@@ -554,7 +541,6 @@ void nb_arm_recv(i32 session)
     }
 }
 
-// Buka netwin.cpp:661-679.
 VA(0x004460d7, 0xae)
 void nb_close_session(i32 session) {
     NCB ncb;
@@ -578,7 +564,6 @@ void nb_close_session(i32 session) {
     }
 }
 
-// Buka netwin.cpp:681-711.
 VA(0x00446185, 0x139)
 void nb_recv_complete(i32 session) {
     tag_Node* node;
@@ -612,7 +597,6 @@ void nb_recv_complete(i32 session) {
     }
 }
 
-// Buka netwin.cpp:713-721.
 VA(0x004462be, 0x6e)
 void nb_format_name(char* source, u8* destination) {
     u32 i;
@@ -624,7 +608,7 @@ void nb_format_name(char* source, u8* destination) {
         destination[i] = ' ';
 }
 
-// netwin globals retain their individually reviewed retail identities below.
+// netwin globals.
 DATA(0x004b2160)
 u8 gNbCallRetries = 0;
 DATA(0x004b2161)

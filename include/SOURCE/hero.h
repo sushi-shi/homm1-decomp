@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_HERO_H
 #define HOMM1_SOURCE_HERO_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 34 methods, 0 own-virtual, 0 static data.
 
 #include <BASE/dialog.h>
 #include <Domains.h>
@@ -13,11 +11,7 @@
 // forward declarations:
 class town;
 
-// DemobilizeCurrHero's unfolded load/or/store proves an unsigned flag
-// operand against the signed event-flag dword.
 #define HERO_EVENT_EMBARKED 0x80u
-// ApplyBattleWinTemps' unfolded load/sub/store likewise proves unsigned
-// battle-temporary visit flags.
 #define HERO_EVENT_BUOY 0x2u
 #define HERO_EVENT_FOUNTAIN 0x4u
 #define HERO_EVENT_OASIS 0x8u
@@ -39,15 +33,14 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     HERO_CLASS_COUNT = 4,
     // Dismiss clears m_owner and the destination; playerData's hero lists
     // (m_heroIds, m_currentHero) and the boat records mark an empty entry
-    // with HERO_ID_NONE (Buka hero.h HERO_OWNER_NONE / HERO_DESTINATION_NONE).
+    // with HERO_ID_NONE.
     HERO_OWNER_NONE = -1,
     HERO_DESTINATION_NONE = -1,
     HERO_ID_NONE = -1,
     // playerData::m_availableHeroIds: the tavern's two heroes for hire.
     HERO_AVAILABLE_SLOT_COUNT = 2,
     // CheckLevel seeds SRand with m_randomSeed + level * SEED_FACTOR and
-    // reads gHeroSkillBonus row level - FIRST_LEVEL, clamped to ROW_LAST
-    // (Buka HERO_LEVEL_RANDOM_SEED_FACTOR).
+    // reads gHeroSkillBonus row level - FIRST_LEVEL, clamped to ROW_LAST.
     HERO_LEVEL_RANDOM_SEED_FACTOR = 30,
     HERO_SKILL_BONUS_FIRST_LEVEL = 2,
     HERO_SKILL_BONUS_ROW_LAST = 8
@@ -55,14 +48,13 @@ H1_ENUM_CONST_END(HeroConstant)
 
 // game::m_availableHeroes per hero id: the owning player, UNAVAILABLE, or
 // RETREATED for a hero that retreated or surrendered and waits in its
-// owner's tavern (Dismiss; Buka hero.h HeroConstant numbering).
+// owner's tavern (Dismiss).
 H1_ENUM_CONST_BEGIN(HeroAvailability)
     HERO_AVAILABILITY_UNAVAILABLE = -1,
     HERO_AVAILABILITY_RETREATED = 0x40
 H1_ENUM_CONST_END(HeroAvailability)
 
-// hero::GetNumSpells' selector (Buka hero.h HeroSpellType): combat slots,
-// adventure slots or both.
+// hero::GetNumSpells' selector: combat slots, adventure slots or both.
 H1_ENUM_BEGIN(HeroSpellType)
     SPELL_TYPE_COMBAT = 0,
     SPELL_TYPE_ADVENTURE = 1,
@@ -86,7 +78,7 @@ H1_ENUM_BEGIN(HeroPrimaryStat)
 H1_ENUM_END(HeroPrimaryStat)
 
 // Retail strides hero records by 0xb6 bytes from game+0x12985; the tail
-// keeps HoMM2's event-flag dword and AI fight-value float.
+// holds an event-flag dword and an AI fight-value float.
 #pragma pack(push, 1)
 class hero {
 public:
@@ -224,7 +216,7 @@ H1_ENUM_END(HeroScreenControl)
 // characteristics", good/neutral/bad morale and luck, "View Experience
 // Info", "Select %s", "Empty", "Move %s", "Exchange %s with %s", "View
 // Spells", "View %s Info", "Dismiss %s the %s", "Exit Hero Screen",
-// "Hero Screen" (Buka HeroScreenText numbering from 1).
+// "Hero Screen".
 H1_ENUM_BEGIN(HeroScreenText)
     HERO_TEXT_KINGDOM_OVERVIEW = 0,
     HERO_TEXT_PRIMARY_STAT = 1,

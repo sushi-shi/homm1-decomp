@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_ADVMANAGER_H
 #define HOMM1_SOURCE_ADVMANAGER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 139 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <Domains.h>
@@ -32,9 +30,9 @@ struct tag_message;
 
 H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
     ADVMGR_BOTTOM_VIEW_WIDGET_COUNT = 12,
-    // m_bottomViewPrimaryWidgets slots (Buka 2.1 names): the stone backdrop,
-    // the view's foreground icon, then its further icons; the secondary
-    // (text) array's army/count labels start at HERO_TEXT_FIRST.
+    // m_bottomViewPrimaryWidgets slots: the stone backdrop, the view's
+    // foreground icon, then its further icons; the secondary (text) array's
+    // army/count labels start at HERO_TEXT_FIRST.
     ADVMGR_BOTTOM_VIEW_BACKGROUND = 0,
     ADVMGR_BOTTOM_VIEW_FOREGROUND = 1,
     ADVMGR_BOTTOM_VIEW_ICON_FIRST = 2,
@@ -50,8 +48,7 @@ H1_ENUM_CONST_BEGIN(AdventureManagerStorageConstant)
 H1_ENUM_CONST_END(AdventureManagerStorageConstant)
 
 // No hero: playerData::m_currentHero/CurrentHero() with nothing selected,
-// an empty locator slot, a quick view of nobody (Buka 2.1 ADVMGR
-// INVALID_HERO).
+// an empty locator slot, a quick view of nobody.
 H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
@@ -66,15 +63,14 @@ H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
 // m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
 // attacker (DrawCell draws it facing); the constructor starts it at NONE
-// (Buka 2.1 QUICK_VIEW_NONE, -99, off every drawable cell) and DoCombat
-// clears the x back to CLEARED (-1) after the redraw.
+// (-99, off every drawable cell) and DoCombat clears the x back to CLEARED
+// (-1) after the redraw.
 H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
     QUICK_VIEW_NONE = -99,
     QUICK_VIEW_CLEARED = -1
 H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
 
-// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell (Buka
-// ADVMGR's m_lastHoverCell = CURSOR_INVALID_POSITION).
+// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell.
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
     CURSOR_INVALID_POSITION = -1
 H1_ENUM_CONST_END(AdventureCursorConstant)
@@ -105,7 +101,7 @@ H1_ENUM_BEGIN(AdventureHeroIcon)
 H1_ENUM_END(AdventureHeroIcon)
 
 // m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
-// runs (Buka 2.1 AdventureCommand, same numbering).
+// runs.
 H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_NONE = -1,
     ADVMGR_COMMAND_MOVE_TO = 1,
@@ -126,8 +122,7 @@ H1_ENUM_CONST_END(AdventureSpellConstant)
 // ProcessSearch digs at (x, y), or at the view centre when x is
 // VIEW_CENTER (the D key, the menu and philAI pass it for both); it marks a
 // dug cell with obj32-07.icn frame 1 as a shadow-only object, which DrawCell
-// hides on the puzzle map (Buka 2.1 AdventureSearchConstant DIG_HOLE_FRAME,
-// HoMM1 frame; Buka passes CURSOR_INVALID_POSITION for the centre).
+// hides on the puzzle map.
 H1_ENUM_CONST_BEGIN(AdventureSearchConstant)
     ADVMGR_SEARCH_VIEW_CENTER = -1,
     DIG_HOLE_FRAME = 1
@@ -144,8 +139,7 @@ H1_ENUM_CONST_BEGIN(AdventureLocatorConstant)
     LOCATOR_PAGE_DENOMINATOR_OFFSET = 4,
     LOCATOR_SCROLL_NO_PAGES_Y = 232,
     // The knobs slide from SCROLL_BASE_Y over the hero (73) or town (74)
-    // span; a click on the track maps the 92-pixel strip from 194 to a page
-    // (Buka 2.1 AdventureLocatorConstant names).
+    // span; a click on the track maps the 92-pixel strip from 194 to a page.
     LOCATOR_SCROLL_BASE_Y = 195,
     LOCATOR_HERO_SCROLL_SPAN = 73,
     LOCATOR_TOWN_SCROLL_SPAN = 74,
@@ -155,8 +149,7 @@ H1_ENUM_CONST_END(AdventureLocatorConstant)
 
 // Adventure-window widget ids handled by advManager::Main,
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
-// the hero/town locator columns (Buka 2.1 ADVMGR.cpp AdventurePanelCommand
-// and AdventureLocatorConstant use the same ids; HoMM2 adds buttons 7, 8).
+// the hero/town locator columns.
 H1_ENUM_BEGIN(AdventureControl)
     ADVENTURE_CONTROL_NEXT_HERO = 1,
     ADVENTURE_CONTROL_CONTINUE_ROUTE = 2,
@@ -185,15 +178,14 @@ H1_ENUM_BEGIN(AdventureControl)
 H1_ENUM_END(AdventureControl)
 
 // The six panel buttons (ADVENTURE_CONTROL_NEXT_HERO..GAME_OPTIONS) that
-// DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim
-// (Buka AdventurePanelButtonConstant).
+// DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim.
 H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
 
-// Buka 2.1's unconditional six-button enable/disable broadcast; the window
-// expression is re-evaluated for every broadcast.
+// Unconditional six-button enable/disable broadcast; the window expression
+// is re-evaluated for every broadcast.
 #define SET_ADVENTURE_BUTTON_FLAGS(message, window, cmd)                                           \
     ((message).type = MESSAGE_WIDGET,                                                              \
      (message).command = (cmd),                                                                    \
@@ -592,7 +584,7 @@ extern i32 gLastHourGlassUpdateTime;
 extern const i32 gEnvironmentVolume[];
 // gLimitUpdMinX with no pending limit box (UpdateScreen then redraws the
 // whole viewport), and m_previousCursorMapX/Y with no hero-cursor cell to
-// clear (Buka 2.1 AdventureUpdateScreenConstant UPDATE_NONE).
+// clear.
 H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
     UPDATE_NONE = -1,
     CURSOR_CELL_NONE = -1
@@ -610,8 +602,8 @@ extern i8 bComboDraw[][17];
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern i32 TrigX;
 extern i32 TrigY;
-// CURSOR globals (Buka advManager.h names, CURSOR data): HoMM1 keeps byte
-// flags and the last two footstep sample handles (0x004a0d4c/0x004a0d50).
+// CURSOR globals: byte flags and the last two footstep sample handles
+// (0x004a0d4c/0x004a0d50).
 extern i8 gMoveSoundMade;
 extern i8 EveryOther;
 extern i8 S1cursorDirection;
@@ -695,9 +687,9 @@ H1_ENUM_CONST_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_PANEL_Y = 392,
     BOTTOM_VIEW_PANEL_WIDTH = 143,
     BOTTOM_VIEW_PANEL_HEIGHT = 71,
-    // Buka 2.1 AdventureBottomViewConstant names: the stone backdrop is wider
-    // than the panel; the backdrop/foreground icons and the text widgets take
-    // these ids; the text and count buffers are malloc'd at these sizes.
+    // The stone backdrop is wider than the panel; the backdrop/foreground
+    // icons and the text widgets take these ids; the text and count buffers
+    // are malloc'd at these sizes.
     BOTTOM_VIEW_BACKGROUND_WIDTH = 159,
     BOTTOM_VIEW_BACKGROUND_ID = 2000,
     BOTTOM_VIEW_FOREGROUND_ID = 2001,
@@ -705,22 +697,19 @@ H1_ENUM_CONST_BEGIN(BottomViewPanelConstant)
     BOTTOM_VIEW_TEXT_ID_2 = 2101,
     BOTTOM_VIEW_TEXT_BUFFER_SIZE = 30,
     BOTTOM_VIEW_COUNT_BUFFER_SIZE = 8,
-    // Buka 2.1 names: no enemy turn drawn yet, no hourglass frame shown.
+    // No enemy turn drawn yet, no hourglass frame shown.
     BOTTOM_VIEW_NO_ENEMY = -1,
     BOTTOM_VIEW_NO_ANIMATION = -1
 H1_ENUM_CONST_END(BottomViewPanelConstant)
 
-// UpdBottomViewEnemyTurn's hourglass panel (Buka 2.1
-// AdventureEnemyTurnViewConstant names, same values): the hourglass,
-// running-sand and crest icons, their widget ids and z-orders, the sand
-// frame cycle and the animation delays.
-// The quick views' army rows (Buka 2.1 AdventureArmyQuickViewConstant,
-// AdventureHeroQuickViewConstant and AdventureTownQuickViewConstant names,
-// HoMM1 values): 32-pixel creature icons over a 12-pixel label 30 below,
-// rows of up to three (the vague layout puts two over three, the first row
-// 22 lower when there is only one row, the second 44 lower), a five-stack
-// first row nudged 12 pixels apart, label buffers, the windows' default
-// positions, and how much a town view reveals (thieves' guilds).
+// UpdBottomViewEnemyTurn's hourglass panel: the hourglass, running-sand and
+// crest icons, their widget ids and z-orders, the sand frame cycle and the
+// animation delays.
+// The quick views' army rows: 32-pixel creature icons over a 12-pixel label
+// 30 below, rows of up to three (the vague layout puts two over three, the
+// first row 22 lower when there is only one row, the second 44 lower), a
+// five-stack first row nudged 12 pixels apart, label buffers, the windows'
+// default positions, and how much a town view reveals (thieves' guilds).
 H1_ENUM_CONST_BEGIN(AdventureArmyQuickViewConstant)
     ARMY_QUICK_ICON_SIZE = 32,
     ARMY_QUICK_ICON_BASELINE = 30,
@@ -761,8 +750,7 @@ H1_ENUM_CONST_BEGIN(AdventureArmyQuickViewConstant)
 H1_ENUM_CONST_END(AdventureArmyQuickViewConstant)
 
 // TownQuickView's detail level: the owner sees exact counts; others see as
-// much as their thieves' guilds reveal, capped at size names (Buka 2.1
-// TOWN_QUICK_INFORMATION_* values).
+// much as their thieves' guilds reveal, capped at size names.
 H1_ENUM_BEGIN(TownQuickInformation)
     TOWN_QUICK_INFORMATION_UNKNOWN = 0,
     TOWN_QUICK_INFORMATION_NAMES = 1,
@@ -773,9 +761,8 @@ H1_ENUM_BEGIN(TownQuickInformation)
 H1_ENUM_END(TownQuickInformation)
 
 // Right-click quick views over the map: the window is offset from the
-// clicked cell and clamped inside the viewport's inner box (Buka 2.1
-// AdventureQuickViewPlacementConstant / AdventureQuickInfoObject names,
-// HoMM1 sizes; the right/bottom limits are the box edge minus the size).
+// clicked cell and clamped inside the viewport's inner box (the right/bottom
+// limits are the box edge minus the size).
 H1_ENUM_CONST_BEGIN(AdventureQuickViewPlacementConstant)
     QUICK_VIEW_MIN_X = 16,
     QUICK_VIEW_MIN_Y = 16,
@@ -801,12 +788,12 @@ H1_ENUM_CONST_BEGIN(AdventureQuickViewPlacementConstant)
     QUICK_INFO_BOTTOM_Y = QUICK_VIEW_BOTTOM - QUICK_INFO_HEIGHT
 H1_ENUM_CONST_END(AdventureQuickViewPlacementConstant)
 
-// DrawCell's sprite layout (Buka 2.1 AdventureDrawConstant names, HoMM1
-// values): cell pixels, the stone border tiles around the map (corners, then
-// four-tile runs per side picked by the coordinate's low bits, the inner
-// pattern offset by 16), the cloud variants and flipped/alternate frames,
-// the route arrow's y offset, minimon frames (seven per creature, the
-// facing frame last), the boat's y offset and the hero frame's mirror bit.
+// DrawCell's sprite layout: cell pixels, the stone border tiles around the
+// map (corners, then four-tile runs per side picked by the coordinate's low
+// bits, the inner pattern offset by 16), the cloud variants and
+// flipped/alternate frames, the route arrow's y offset, minimon frames (seven
+// per creature, the facing frame last), the boat's y offset and the hero
+// frame's mirror bit.
 H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     CELL_PIXELS = 32,
     CELL_PIXEL_SHIFT = 5,
@@ -834,11 +821,10 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
-// UpdateScreen's dirty box and animation clock (Buka 2.1
-// AdventureUpdateScreenConstant / AdventureAnimationPhaseIndex names; HoMM1
-// cycles m_updateMaxX through 6 steps and starts the columns at 0/1/3/5):
-// no limit box means the whole 448-pixel viewport at 16,16; odd steps
-// advance columns 1 and 3, even ones 0 and 2, each modulo 6 frames.
+// UpdateScreen's dirty box and animation clock: m_updateMaxX cycles through
+// 6 steps and the columns start at 0/1/3/5; no limit box means the whole
+// 448-pixel viewport at 16,16; odd steps advance columns 1 and 3, even ones
+// 0 and 2, each modulo 6 frames.
 H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
     UPDATE_VIEWPORT_ORIGIN = 16,
     UPDATE_VIEWPORT_SIZE = 448,
@@ -861,8 +847,7 @@ H1_ENUM_CONST_BEGIN(AdventureAnimationPhaseIndex)
     ANIMATION_PHASE_COLUMN_3_INITIAL = 5
 H1_ENUM_CONST_END(AdventureAnimationPhaseIndex)
 
-// advManager::ViewWorld's 6-pixel map (HoMM1's own view; window position
-// as Buka 2.1 Viewwrld's WORLD_WINDOW_X/Y): cells start 24 pixels in;
+// advManager::ViewWorld's 6-pixel map: cells start 24 pixels in;
 // ground6.icn has one frame per four ground tiles, vertically flipped tiles
 // 31 frames on and horizontally flipped ones drawn one cell-width minus one
 // to the right; tilesets[] is indexed by MapTileset; flag6.icn frames 0..3
@@ -883,10 +868,9 @@ H1_ENUM_CONST_BEGIN(ViewWorldConstant)
     VIEW_WORLD_RESOURCE_X_SHIFT = 3
 H1_ENUM_CONST_END(ViewWorldConstant)
 
-// The radar panel (Buka 2.1 AdventureScreenConstant/AdventureRadarConstant
-// names, HoMM1 values): 480..624 x 16..160, two pixels per map cell; trees
-// and mountains darken the terrain colour by 3 shades and the viewport box
-// is drawn in colour 0xbe.
+// The radar panel: 480..624 x 16..160, two pixels per map cell; trees and
+// mountains darken the terrain colour by 3 shades and the viewport box is
+// drawn in colour 0xbe.
 H1_ENUM_CONST_BEGIN(AdventureRadarConstant)
     RADAR_LEFT = 480,
     RADAR_RIGHT = 624,
@@ -898,17 +882,16 @@ H1_ENUM_CONST_BEGIN(AdventureRadarConstant)
     RADAR_VIEWPORT_COLOR = 0xbe
 H1_ENUM_CONST_END(AdventureRadarConstant)
 
-// TeleportTo's fizzle (Buka 2.1 AdventureTeleportConstant names; the
-// computed time is not passed on - FizzleForward gets the default delay).
+// TeleportTo's fizzle (the computed time is not passed on - FizzleForward
+// gets the default delay).
 H1_ENUM_CONST_BEGIN(AdventureTeleportConstant)
     TELEPORT_FIZZLE_TIME = 128,
     TELEPORT_REMOTE_FIZZLE_ADJUSTMENT = 64
 H1_ENUM_CONST_END(AdventureTeleportConstant)
 
-// SummonBoat (Buka 2.1 AdventureSummonBoatConstant names, HoMM1 values): a
-// boat whose heroId has OCCUPIED_FLAG carries that hero; the old berth is
-// restored with mode 5; the fizzle boxes around the old berth (clamped to
-// the viewport's inner box) and at the hero.
+// SummonBoat: a boat whose heroId has OCCUPIED_FLAG carries that hero; the
+// old berth is restored with mode 5; the fizzle boxes around the old berth
+// (clamped to the viewport's inner box) and at the hero.
 H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
     SUMMON_OCCUPIED_FLAG = 0x80,
     SUMMON_RESTORE_MODE = 5,
@@ -924,11 +907,10 @@ H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
     SUMMON_TARGET_HEIGHT = 96
 H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 
-// ViewPuzzle (Buka 2.1 AdventurePuzzleViewConstant names): puzzle.icn has
-// one piece per obelisk bit (playerData::m_obelisksVisited); the window sits
-// beside the viewport; the view centre is nudged off the artifact by
-// coordinate residues mod 3 (and mod 2), then the uncovered pieces fizzle
-// in over 220 ms.
+// ViewPuzzle: puzzle.icn has one piece per obelisk bit
+// (playerData::m_obelisksVisited); the window sits beside the viewport; the
+// view centre is nudged off the artifact by coordinate residues mod 3 (and
+// mod 2), then the uncovered pieces fizzle in over 220 ms.
 H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
     PUZZLE_PIECE_COUNT = 48,
     PUZZLE_WINDOW_X = 480,
@@ -940,9 +922,8 @@ H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
     PUZZLE_FIZZLE_TIME = 220
 H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
 
-// Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
-// the network-turn music hold, the walk
-// sample set and volume, and the looping-sample budget per high-memory unit.
+// The network-turn music hold, the walk sample set and volume, and the
+// looping-sample budget per high-memory unit.
 H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     FORCED_MUSIC_DELAY = 6000,
     CURSOR_SAMPLE_FAST_SET = 2,
@@ -957,11 +938,10 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     SCROLL_ICON_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
-// SetEnvironmentOrigin/InsertSound's looping map sounds (Buka 2.1
-// AdventureEnvironmentSoundConstant names): slots reset to the far volume
-// index, two passes (refresh known sounds, then insert new ones) over rings
-// whose edges span radius * 2 cells, sounds beyond MAX_DISTANCE stop, and
-// the loops play on channel type 3.
+// SetEnvironmentOrigin/InsertSound's looping map sounds: slots reset to the
+// far volume index, two passes (refresh known sounds, then insert new ones)
+// over rings whose edges span radius * 2 cells, sounds beyond MAX_DISTANCE
+// stop, and the loops play on channel type 3.
 H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
     ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
     ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
@@ -975,11 +955,10 @@ H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
     ENVIRONMENT_SOUND_NO_SLOT = -1
 H1_ENUM_CONST_END(AdventureEnvironmentSoundConstant)
 
-// ComboDraw's dirty-cell grid (Buka 2.1 AdventureComboDrawConstant names):
-// cloud-covered neighbours of a moving sprite get CLOUD_MARK so the cloud
-// pass redraws them, animation runs every FRAME_LIMIT frame steps, the
-// cursor marks two cells right, and the update box is clipped to the
-// viewport's inner pixels.
+// ComboDraw's dirty-cell grid: cloud-covered neighbours of a moving sprite
+// get CLOUD_MARK so the cloud pass redraws them, animation runs every
+// FRAME_LIMIT frame steps, the cursor marks two cells right, and the update
+// box is clipped to the viewport's inner pixels.
 H1_ENUM_CONST_BEGIN(AdventureComboDrawConstant)
     COMBO_CLEAR_BYTES = 256,
     COMBO_CLOUD_MARK = 10,
@@ -989,9 +968,8 @@ H1_ENUM_CONST_BEGIN(AdventureComboDrawConstant)
     COMBO_FAR_NEIGHBOR_OFFSET = 2
 H1_ENUM_CONST_END(AdventureComboDrawConstant)
 
-// advManager::Main's debug keys and digit cheat (Buka 2.1
-// AdventureCheatConstant names, HoMM1 values): the typed digits roll into a
-// six-digit sequence; 101495 reveals the whole map to every player.
+// advManager::Main's debug keys and digit cheat: the typed digits roll into
+// a six-digit sequence; 101495 reveals the whole map to every player.
 H1_ENUM_CONST_BEGIN(AdventureCheatConstant)
     CHEAT_SEQUENCE_RADIX = 10,
     CHEAT_SEQUENCE_MODULUS = 1000000,
@@ -1034,8 +1012,7 @@ H1_ENUM_CONST_BEGIN(AdventureEnemyTurnViewConstant)
     ENEMY_TURN_PHASE_DELAY = 700
 H1_ENUM_CONST_END(AdventureEnemyTurnViewConstant)
 
-// UpdBottomViewNewTurn's date texts (Buka AdventureNewTurnViewConstant
-// names; HoMM1 places the week line at 421).
+// UpdBottomViewNewTurn's date texts (the week line sits at 421).
 H1_ENUM_CONST_BEGIN(AdventureNewTurnViewConstant)
     NEW_TURN_DATE_TEXT_X = 479,
     NEW_TURN_WEEK_TEXT_Y = 421,
@@ -1045,9 +1022,8 @@ H1_ENUM_CONST_BEGIN(AdventureNewTurnViewConstant)
     NEW_TURN_DAY_TEXT_HEIGHT = 25
 H1_ENUM_CONST_END(AdventureNewTurnViewConstant)
 
-// UpdBottomViewResMsg's message and resource layout (Buka
-// AdventureResourceViewConstant names; HoMM1's text starts at 395 and the
-// count at 450).
+// UpdBottomViewResMsg's message and resource layout (the text starts at 395
+// and the count at 450).
 H1_ENUM_CONST_BEGIN(AdventureResourceViewConstant)
     RESOURCE_VIEW_TEXT_BASE_Y = 395,
     RESOURCE_VIEW_MULTILINE_HEIGHT = 32,
@@ -1066,8 +1042,7 @@ H1_ENUM_CONST_BEGIN(AdventureResourceViewConstant)
 H1_ENUM_CONST_END(AdventureResourceViewConstant)
 
 // UpdBottomViewKingdom's nine counters: the seven resources (ResourceType
-// order), then castles and villages (Buka AdventureKingdomViewConstant
-// names; HoMM1's text rows start at 392).
+// order), then castles and villages (the text rows start at 392).
 H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
     KINGDOM_VIEW_ENTRY_COUNT = 9,
     KINGDOM_VIEW_CASTLE_ENTRY = 7,
@@ -1091,8 +1066,7 @@ H1_ENUM_CONST_BEGIN(AdventureKingdomViewConstant)
     KINGDOM_VIEW_VILLAGE_TEXT_X = 80
 H1_ENUM_CONST_END(AdventureKingdomViewConstant)
 
-// UpdBottomViewHero's army icons and counts (Buka
-// AdventureBottomHeroViewConstant names).
+// UpdBottomViewHero's army icons and counts.
 H1_ENUM_CONST_BEGIN(AdventureBottomHeroViewConstant)
     BOTTOM_HERO_LABEL_BYTES = 6,
     // Count-label positions and stack counts the label layout distinguishes.
@@ -1175,9 +1149,8 @@ H1_ENUM_END(AdventurePanelHelp)
 
 // qhero0/qhero1/qtown1.bin widgets: name, portrait, the hero's four primary
 // stats from STAT_FIRST, and the owner's flag pair from FLAG (frames colour
-// * 2 and the next). The retail frames keep portraitId/statWidget/flagId
-// locals with these values. A window x of AT_LOCATOR places the hero view
-// beside its locator slot, the town view at its fixed spot.
+// * 2 and the next). A window x of AT_LOCATOR places the hero view beside
+// its locator slot, the town view at its fixed spot.
 H1_ENUM_CONST_BEGIN(QuickViewWidget)
     QUICK_VIEW_NAME = 1,
     QUICK_VIEW_PORTRAIT = 2,
@@ -1246,11 +1219,10 @@ H1_ENUM_BEGIN(ControlPanelHelp)
     CPANEL_HELP_SCENARIO_INFO = 11
 H1_ENUM_END(ControlPanelHelp)
 
-// DimensionDoor's dimdoor.bin dialog (Buka 2.1 AdventureTravelSpellConstant
-// names): hovering the map view (FIRST_BUTTON) sets m_dialogResult to
-// ACCEPT over a free cell, else REJECT, as does the other area (LAST_BUTTON);
-// a click with ACCEPT closes the dialog. TownGate starts its nearest-town
-// search at DISTANCE_LIMIT.
+// DimensionDoor's dimdoor.bin dialog: hovering the map view (FIRST_BUTTON)
+// sets m_dialogResult to ACCEPT over a free cell, else REJECT, as does the
+// other area (LAST_BUTTON); a click with ACCEPT closes the dialog. TownGate
+// starts its nearest-town search at DISTANCE_LIMIT.
 H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
     TRAVEL_DIALOG_REJECT = 0,
     TRAVEL_DIALOG_ACCEPT = 1,
@@ -1260,8 +1232,7 @@ H1_ENUM_CONST_BEGIN(AdventureTravelSpellConstant)
 H1_ENUM_CONST_END(AdventureTravelSpellConstant)
 
 // Moved from CURSOR.cpp.
-// Hero-cursor drawing and movement constants (Buka CURSOR.h CursorConstant
-// and CURSOR.cpp CursorPrivateConstant names, HoMM1 values).
+// Hero-cursor drawing and movement constants.
 H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_DRAW_X = 0xe0,
     CURSOR_DRAW_Y = 0xff,

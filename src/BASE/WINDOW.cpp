@@ -25,7 +25,7 @@ char gDefaultConstruct[] = "Default Construct";
 DATA(0x004a1374)
 char gDynamicConstruct[] = "Dynamic Construct";
 
-// HoMM2 Buka's default heroWindow constructor: a full-screen fixed-layer
+// Default heroWindow constructor: a full-screen fixed-layer
 // window. No retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.

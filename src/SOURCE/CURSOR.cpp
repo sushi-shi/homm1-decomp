@@ -1,5 +1,5 @@
-// HoMM1's CURSOR object (0x00439ee0-0x00407d8f): Buka SOURCE/CURSOR
-// advManager movement routines, aligned apart from wingraph and TOWNMGR.
+// CURSOR object (0x00439ee0-0x00407d8f): advManager movement routines,
+// aligned apart from wingraph and TOWNMGR.
 
 #include <match.h>
 
@@ -24,8 +24,7 @@
 #include <SOURCE/searchArray.h>
 #include <SOURCE/town.h>
 
-// Buka CURSOR.cpp:50 StartCursor; HoMM1 keys the cycle off the global
-// walk speed and indexes the map directly.
+// Keys the cycle off the global walk speed and indexes the map directly.
 VA(0x004215c0, 0x143)
 void advManager::StartCursor(i8 direction) {
     i16 oldDeltaX;
@@ -47,7 +46,7 @@ void advManager::StartCursor(i8 direction) {
     m_mapData[newX][newY].m_flags |= MAP_CELL_HERO_CURSOR;
 }
 
-// Buka CURSOR.cpp:78 StopCursor; HoMM1 also forgets the footstep samples.
+// Also forgets the footstep samples.
 VA(0x00421703, 0x11d)
 void advManager::StopCursor(i8 stopSound) {
     if (stopSound) {
@@ -65,8 +64,7 @@ void advManager::StopCursor(i8 stopSound) {
     m_cursorTurning = 0;
 }
 
-// Buka CURSOR.cpp:99 DrawCursor; HoMM1 draws the hero shadow first and
-// counts flag frames with m_updateMaxY.
+// Draws the hero shadow first and counts flag frames with m_updateMaxY.
 VA(0x00421820, 0x5a4)
 void advManager::DrawCursor(void) {
     i16 drawX;
@@ -230,8 +228,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
     }
 }
 
-// Buka CURSOR.cpp:379 TurnTo; HoMM1 keeps sixteen half-step frames and
-// word-sized step delays.
+// Sixteen half-step frames and word-sized step delays.
 VA(0x00421e15, 0x20e)
 void advManager::TurnTo(i8 direction) {
     i16 inc = 1;
@@ -276,9 +273,8 @@ void advManager::TurnTo(i8 direction) {
         UpdateScreen(0, 0);
 }
 
-// Buka CURSOR.cpp:429 GetMoveShowIt; HoMM1 reads the current hero itself
-// and tests the watch player's high bit (0x004be7cc) directly in the
-// map-extra grid.
+// Reads the current hero itself and tests the watch player's high bit
+// (0x004be7cc) directly in the map-extra grid.
 VA(0x00422023, 0x104)
 i32 advManager::GetMoveShowIt(i8 direction) {
     i16 dy;
@@ -299,8 +295,8 @@ i32 advManager::GetMoveShowIt(i8 direction) {
         return 0;
 }
 
-// Buka CURSOR.cpp MoveHero; HoMM1 recomputes the step cost from the hero
-// type, parks the boat on a coast step and has no deferred object draw.
+// Recomputes the step cost from the hero type and parks the boat on a
+// coast step.
 
 VA(0x00422127, 0xccd)
 mapCell* advManager::MoveHero(
@@ -621,8 +617,7 @@ adjacentDone:
     return retCell;
 }
 
-// Buka CURSOR.cpp:907; HoMM1 keeps byte flags and redraws through the
-// three-argument CompleteDraw.
+// Redraws through the three-argument CompleteDraw.
 VA(0x00422df4, 0x161)
 void advManager::CheckAdjacentMon(i8* adjacentMonster) {
     i32 posX;
@@ -670,9 +665,8 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
     }
 }
 
-// Buka CURSOR.cpp:962 ValidMoveWithEvent; HoMM1 lets a boat meet another
-// boat, forbids landing a boat on most objects and defers the rest to
-// ValidMove.
+// A boat may meet another boat but not land on most objects; the rest is
+// left to ValidMove.
 VA(0x00422f55, 0x1a3)
 i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
     i16 deltaY;
@@ -722,8 +716,8 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, i16 direction) {
     return ValidMove(direction);
 }
 
-// Buka CURSOR.cpp:1006 ValidMove; HoMM1 indexes from the cursor's map
-// position and tests the north/south object masks directly.
+// Indexes from the cursor's map position and tests the north/south object
+// masks directly.
 VA(0x004230f8, 0x24c)
 i16 advManager::ValidMove(i16 direction) {
     i16 curDirX;
@@ -768,7 +762,7 @@ i16 advManager::ValidMove(i16 direction) {
     return 1;
 }
 
-// Buka CURSOR.cpp:1099 MoveOrigin; HoMM1 indexes the map directly.
+// Indexes the map directly.
 VA(0x00423344, 0x2e8)
 void advManager::MoveOrigin(i16 directionX, i16 directionY) {
     i16 cellY;
@@ -803,7 +797,7 @@ void advManager::MoveOrigin(i16 directionX, i16 directionY) {
     m_forceCompleteDraw = 1;
 }
 
-// Buka movement tables and cursor state; typed initializers checked against retail.
+// Movement tables and cursor state.
 DATA(0x0048fa5c)
 i8 gMoveSoundMade = 1;
 DATA(0x0048fa60)
