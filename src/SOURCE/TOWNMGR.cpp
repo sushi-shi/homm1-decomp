@@ -1891,22 +1891,22 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     iconWidget* marker;
     i16 firstPlayer;
     i32 numThieves;
-    i16 wUnusedRankX = THIEVES_RANK_FIRST_X;
-    i16 iUnusedRankWidth = THIEVES_PLAYER_COLUMN_WIDTH;
-    i16 top = THIEVES_FIRST_CATEGORY_Y;
-    i16 rowSpacing = THIEVES_CATEGORY_ROW_HEIGHT;
+    i16 posX = THIEVES_RANK_FIRST_X;
+    i16 theIUnusedRankWidth = THIEVES_PLAYER_COLUMN_WIDTH;
+    i16 topNum = THIEVES_FIRST_CATEGORY_Y;
+    i16 oldSpacing = THIEVES_CATEGORY_ROW_HEIGHT;
     i16 frameBase = THIEVES_FLAG_FRAME_BASE;
-    i16 pos;
-    i16 lMarkWidth = THIEVES_RANK_ICON_WIDTH;
-    i16 bIconHeight = THIEVES_RANK_ICON_HEIGHT;
+    i16 newPos;
+    i16 savedLMarkWidth = THIEVES_RANK_ICON_WIDTH;
+    i16 iconHeightOn = THIEVES_RANK_ICON_HEIGHT;
     i16 bColWidth = THIEVES_PLAYER_WIDTH;
-    i8 ranking[GAME_PLAYER_COUNT];
-    i16 rank;
+    i8 baseRanking[GAME_PLAYER_COUNT];
+    i16 bestRank;
     i16 categoryIndex;
-    i32 totals[GAME_PLAYER_COUNT];
-    i16 startPos;
-    i16 hi;
-    i16 tied;
+    i32 savedTotals[GAME_PLAYER_COUNT];
+    i16 savedPos;
+    i16 realHi;
+    i16 isTied;
 
     if (categories == THIEVES_CATEGORIES_BY_GUILDS) {
         numThieves = gpGame->GetNumThievesGuilds(giCurPlayer);
@@ -1922,28 +1922,29 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
     if (categories > THIEVES_CATEGORY_COUNT)
         categories = THIEVES_CATEGORY_COUNT;
     for (categoryIndex = 0; categoryIndex < categories; categoryIndex++) {
-        GetCategoryStats(categoryIndex, totals, ranking);
-        SortStats(totals, ranking);
+        GetCategoryStats(categoryIndex, savedTotals, baseRanking);
+        SortStats(savedTotals, baseRanking);
         firstPlayer = 0;
-        hi = 0;
-        for (rank = 0; rank < THIEVES_RANK_COUNT; rank++) {
+        realHi = 0;
+        for (bestRank = 0; bestRank < THIEVES_RANK_COUNT; bestRank++) {
             if (firstPlayer == gpGame->m_playerCount - gpGame->m_deadPlayerCount)
                 break;
-            tied = 1;
-            while (hi + 1 < gpGame->m_playerCount && totals[hi + 1] == totals[hi]) {
-                tied++;
-                hi++;
+            isTied = 1;
+            while (realHi + 1 < gpGame->m_playerCount
+                   && savedTotals[realHi + 1] == savedTotals[realHi]) {
+                isTied++;
+                realHi++;
             }
-            startPos = rank * THIEVES_PLAYER_COLUMN_WIDTH + THIEVES_RANK_FIRST_X
-                       - (tied - 1) * THIEVES_TIE_CENTERING_STEP;
-            for (pos = firstPlayer; !(pos > hi); pos++) {
+            savedPos = bestRank * THIEVES_PLAYER_COLUMN_WIDTH + THIEVES_RANK_FIRST_X
+                       - (isTied - 1) * THIEVES_TIE_CENTERING_STEP;
+            for (newPos = firstPlayer; !(newPos > realHi); newPos++) {
                 marker = new iconWidget(
-                    startPos + (pos - firstPlayer) * THIEVES_RANK_ICON_WIDTH,
+                    savedPos + (newPos - firstPlayer) * THIEVES_RANK_ICON_WIDTH,
                     categoryIndex * THIEVES_CATEGORY_ROW_HEIGHT + THIEVES_FIRST_CATEGORY_Y,
                     THIEVES_RANK_ICON_WIDTH,
                     THIEVES_RANK_ICON_HEIGHT,
                     "townwind.icn",
-                    gpGame->m_players[ranking[pos]].m_color + THIEVES_FLAG_FRAME_BASE,
+                    gpGame->m_players[baseRanking[newPos]].m_color + THIEVES_FLAG_FRAME_BASE,
                     ICON_DRAW_NORMAL,
                     WIDGET_ID_NONE,
                     ICON_WIDGET_DRAW,
@@ -1953,8 +1954,8 @@ void townManager::SetupThievesGuild(class heroWindow* window, i16 categories) {
                     MemError();
                 window->AddWidget(marker, WINDOW_Z_ORDER_APPEND);
             }
-            hi++;
-            firstPlayer = hi;
+            realHi++;
+            firstPlayer = realHi;
         }
     }
 }
@@ -2277,7 +2278,7 @@ VA(0x0046559a, 0x650)
 i16 CastleHandler(struct tag_message& message) {
     i16 statusId = TOWN_CASTLE_STATUS_CONTROL;
     i32 result = 0;
-    i32 quickFlag;
+    i32 baseQuick;
     i32 objNum;
 
     if (message.type == MESSAGE_WIDGET) {
@@ -2388,10 +2389,10 @@ i16 CastleHandler(struct tag_message& message) {
                 );
                 return MESSAGE_DISPATCH_CONSUME;
             case WIDGET_NOTIFY_SELECT:
-                quickFlag = (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) != 0;
+                baseQuick = (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) != 0;
                 switch (message.id) {
                     case BUILDING_SLOT_MAGE_GUILD:
-                        if (!quickFlag
+                        if (!baseQuick
                             && (gpTownManager->m_town->m_buildState == MAGE_GUILD_STATE_LEVEL_4
                                 || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
@@ -2407,7 +2408,7 @@ i16 CastleHandler(struct tag_message& message) {
                     case BUILDING_SLOT_DWELLING_4:
                     case BUILDING_SLOT_DWELLING_5:
                     case BUILDING_SLOT_DWELLING_6:
-                        if (!quickFlag
+                        if (!baseQuick
                             && ((gpTownManager->m_town->m_buildings & (1 << message.id))
                                 || !(gpTownManager->m_buildableBuildings & (1 << message.id))))
                             break;
@@ -2419,11 +2420,11 @@ i16 CastleHandler(struct tag_message& message) {
                         result = gpTownManager->BuyBuild(
                             message.id,
                             (gpTownManager->m_affordableBuildings & (1 << message.id)) == 0,
-                            quickFlag
+                            baseQuick
                         );
                         break;
                     case TOWN_CASTLE_HERO_CONTROL:
-                        if (quickFlag)
+                        if (baseQuick)
                             gpTownManager->RecruitHero(1);
                         else if (!gpTownManager->m_recruitResult
                                  && gpCurPlayer->m_resources[RESOURCE_GOLD] >= gHeroGoldCost

@@ -59,68 +59,68 @@ H1_ENUM_END(ViewGeneralHoverHelp)
 // the side cannot use them.
 VA(0x00465ef0, 0x4fe)
 i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
-    i16 pictureCtrl;
-    i16 borderId;
+    i16 pictureCtrlVal;
+    i16 borderIdNum;
     i32 morale;
     i32 iLuck;
-    i16 barId;
+    i16 theBarId;
     i16 castSpellControl;
-    tag_message message;
+    tag_message packet;
     i16 surrenderBtn;
-    i16 colorControl;
+    i16 activeColorControl;
     heroWindow* wnd;
-    i16 nameCtrl;
-    i16 frameWidgetId;
-    i16 statBoxId;
-    i16 cornerCtrl;
-    i32 spare;
-    i16 captionCtrl;
-    i16 edgeCtrl;
-    i16 retreatId;
-    i16 baseCtrl;
+    i16 savedNameCtrl;
+    i16 prevFrameWidgetId;
+    i16 statBoxIdVal;
+    i16 corner;
+    i32 nextSpare;
+    i16 oldCaption;
+    i16 edgeCtrlVal;
+    i16 retreatIdIndex;
+    i16 activeCtrl;
 
     if (m_heroes[side] == NULL)
         return 0;
     // vgenwin.bin widget ids: retail stores the whole block (as Buka does)
     // though nothing reads it; their slots and the unused spare fix the frame.
-    nameCtrl = GENERAL_NAME_WIDGET;
-    pictureCtrl = GENERAL_PORTRAIT_WIDGET;
-    colorControl = GENERAL_COLOR_WIDGET;
-    statBoxId = GENERAL_STATS_WIDGET;
-    borderId = GENERAL_CONTROL_NONE;
-    captionCtrl = GENERAL_NAME_WIDGET;
-    cornerCtrl = GENERAL_CONTROL_SEVEN;
-    barId = GENERAL_CONTROL_EIGHT;
-    edgeCtrl = GENERAL_CONTROL_NINE;
+    savedNameCtrl = GENERAL_NAME_WIDGET;
+    pictureCtrlVal = GENERAL_PORTRAIT_WIDGET;
+    activeColorControl = GENERAL_COLOR_WIDGET;
+    statBoxIdVal = GENERAL_STATS_WIDGET;
+    borderIdNum = GENERAL_CONTROL_NONE;
+    oldCaption = GENERAL_NAME_WIDGET;
+    corner = GENERAL_CONTROL_SEVEN;
+    theBarId = GENERAL_CONTROL_EIGHT;
+    edgeCtrlVal = GENERAL_CONTROL_NINE;
     castSpellControl = GENERAL_CAST_SPELL;
-    retreatId = GENERAL_RETREAT;
+    retreatIdIndex = GENERAL_RETREAT;
     surrenderBtn = GENERAL_SURRENDER;
-    baseCtrl = GENERAL_CONTROL_THIRTEEN;
-    frameWidgetId = GENERAL_CONTROL_FOURTEEN;
+    activeCtrl = GENERAL_CONTROL_THIRTEEN;
+    prevFrameWidgetId = GENERAL_CONTROL_FOURTEEN;
     giCurGeneral = side;
-    message.type = MESSAGE_WIDGET;
+    packet.type = MESSAGE_WIDGET;
     wnd = new heroWindow(195, 60, "vgenwin.bin");
     if (wnd == NULL)
         MemError();
     sprintf(gText, "port%04d.icn", m_heroes[side]->m_portrait);
-    message.command = WIDGET_COMMAND_SET_ICON;
-    message.id = GENERAL_PORTRAIT_WIDGET;
-    message.text = gText;
-    wnd->BroadcastMessage(message);
-    message.command = WIDGET_COMMAND_SET_FRAME;
-    message.id = GENERAL_COLOR_WIDGET;
-    message.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
-    wnd->BroadcastMessage(message);
+    packet.command = WIDGET_COMMAND_SET_ICON;
+    packet.id = GENERAL_PORTRAIT_WIDGET;
+    packet.text = gText;
+    wnd->BroadcastMessage(packet);
+    packet.command = WIDGET_COMMAND_SET_FRAME;
+    packet.id = GENERAL_COLOR_WIDGET;
+    packet.value = gpGame->m_players[m_heroes[side]->m_owner].Color() + 1;
+    wnd->BroadcastMessage(packet);
     sprintf(
         gText,
         localization::Tr("hero.title"),
         m_heroes[side]->m_name,
         gClassNames[m_heroes[side]->m_heroClass]
     );
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = GENERAL_NAME_WIDGET;
-    message.text = gText;
-    wnd->BroadcastMessage(message);
+    packet.command = WIDGET_COMMAND_SET_TEXT;
+    packet.id = GENERAL_NAME_WIDGET;
+    packet.text = gText;
+    wnd->BroadcastMessage(packet);
     morale = m_heroes[side]->m_army.GetMorale(m_heroes[side], NULL);
     iLuck = gpGame->GetLuck(m_heroes[side], NULL);
     sprintf(
@@ -139,41 +139,41 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
         gViewGeneralLabels[5],
         gLuckText[iLuck + 3]
     );
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = GENERAL_STATS_WIDGET;
-    message.text = gText;
-    wnd->BroadcastMessage(message);
+    packet.command = WIDGET_COMMAND_SET_TEXT;
+    packet.id = GENERAL_STATS_WIDGET;
+    packet.text = gText;
+    wnd->BroadcastMessage(packet);
     if (m_heroes[side] == NULL || allowActions == 0
         || !m_heroes[side]->HasArtifact(ARTIFACT_MAGIC_BOOK) || m_heroCastSpell[side] != 0
         || giCurGeneral != m_currentSide) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = GENERAL_CAST_SPELL;
-        message.value = WIDGET_FLAG_ENABLED;
-        wnd->BroadcastMessage(message);
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_FLAG_DIMMED;
-        wnd->BroadcastMessage(message);
+        packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        packet.id = GENERAL_CAST_SPELL;
+        packet.value = WIDGET_FLAG_ENABLED;
+        wnd->BroadcastMessage(packet);
+        packet.command = WIDGET_COMMAND_SET_FLAGS;
+        packet.value = WIDGET_FLAG_DIMMED;
+        wnd->BroadcastMessage(packet);
     }
     if (allowActions == 0 || m_heroes[1 - m_currentSide] == NULL || giCurGeneral != m_currentSide) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = GENERAL_SURRENDER;
-        message.value = WIDGET_FLAG_ENABLED;
-        wnd->BroadcastMessage(message);
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_FLAG_DIMMED;
-        wnd->BroadcastMessage(message);
+        packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        packet.id = GENERAL_SURRENDER;
+        packet.value = WIDGET_FLAG_ENABLED;
+        wnd->BroadcastMessage(packet);
+        packet.command = WIDGET_COMMAND_SET_FLAGS;
+        packet.value = WIDGET_FLAG_DIMMED;
+        wnd->BroadcastMessage(packet);
     }
     if (allowActions == 0 || giCurGeneral != m_currentSide
         || (giCurGeneral == COMBAT_DEFENDER_SIDE && m_combatTowns[COMBAT_DEFENDER_SIDE] != NULL)
         || m_sideRetreated[COMBAT_DEFENDER_SIDE] != 0
         || m_sideRetreated[COMBAT_ATTACKER_SIDE] != 0) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.id = GENERAL_RETREAT;
-        message.value = WIDGET_FLAG_ENABLED;
-        wnd->BroadcastMessage(message);
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_FLAG_DIMMED;
-        wnd->BroadcastMessage(message);
+        packet.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        packet.id = GENERAL_RETREAT;
+        packet.value = WIDGET_FLAG_ENABLED;
+        wnd->BroadcastMessage(packet);
+        packet.command = WIDGET_COMMAND_SET_FLAGS;
+        packet.value = WIDGET_FLAG_DIMMED;
+        wnd->BroadcastMessage(packet);
     }
     if (quickView) {
         gpMouseManager->ReallyHidePointer();
