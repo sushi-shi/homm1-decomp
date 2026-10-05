@@ -51,6 +51,7 @@
           ./nix/patches/vostok-skip-inline-switch-tables.patch
           ./nix/patches/vostok-fixed-manifest-iat.patch
           ./nix/patches/vostok-report-unprovided.patch
+          ./nix/patches/vostok-unpadded-function-extents.patch
         ];
       };
 
