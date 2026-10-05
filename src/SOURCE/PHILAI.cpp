@@ -2977,7 +2977,7 @@ void philAI::ChooseEvaluateBattle(
     i32 curB;
     i32 leftA;
     i32 leftB;
-    i32 bestEmpty;
+    i32 thisVacant;
     i32 rating;
 
     ProbableOutcomeOfBattle(

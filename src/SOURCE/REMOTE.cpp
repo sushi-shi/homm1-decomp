@@ -219,7 +219,7 @@ VA(0x00451ea9, 0xb2)
 i32 DecodePacket(u8* data, i32 source) {
     u16 computedCrc;
     u16 crc;
-    i32 k;
+    i32 i;
     u32 theSize;
 
     computedCrc = 0;
@@ -868,7 +868,7 @@ VA(0x00453122, 0xe4)
 char ReadPacket(void) {
     i32 input;
     // Unused; retail reserves 0x20 bytes with the input below it.
-    char buffer[28];
+    char scratch[28];
     if (inque.writePosition > 4092) {
         inque.writePosition = 0;
         newpacket = 1;

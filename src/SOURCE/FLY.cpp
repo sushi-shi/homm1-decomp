@@ -77,15 +77,15 @@ i16 army::CanFit(i16* hex) {
 VA(0x0042a8a0, 0x3f0)
 i16 army::ValidFlight(i16 destination, i8 useDestination) {
     i16 directionMask;
-    i16 temp;
+    i16 heldTemp;
     i16 hitHex;
     i16 attackDirectionsNum;
     i16 nextHexValue;
-    i16 i;
+    i16 k;
     i8 orient;
-    i16 j;
+    i16 m;
     army* oldOpponent;
-    i16 savedHex;
+    i16 destHexNo;
     i16 n;
     i8 curAttackDirection;
 
@@ -102,14 +102,14 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
     }
     oldOpponent = &gpCombatManager->m_armies[m_targetSide][m_targetIndex];
     if (useDestination)
-        savedHex = destination;
+        destHexNo = destination;
     else
-        savedHex = oldOpponent->m_hex;
-    if (!ValidHex(savedHex))
+        destHexNo = oldOpponent->m_hex;
+    if (!ValidHex(destHexNo))
         return 0;
     attackDirectionsNum = GetAttackMask(m_hex, ARMY_ATTACK_TARGET_ASSIGNED, ARMY_HEX_INVALID);
     while (attackDirectionsNum != COMBAT_ALL_DIRECTIONS_BLOCKED) {
-        curAttackDirection = GetBestDirection(m_hex, savedHex, attackDirectionsNum);
+        curAttackDirection = GetBestDirection(m_hex, destHexNo, attackDirectionsNum);
         if (ValidAttack(
                 m_hex,
                 curAttackDirection,
@@ -126,13 +126,13 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
     }
     directionMask = 0;
     if ((oldOpponent->m_stats.attributes & MONSTER_FLAGS_WIDE) && !useDestination) {
-        savedHex += oldOpponent->m_facing == ARMY_FACING_RIGHT ? 1 : -1;
+        destHexNo += oldOpponent->m_facing == ARMY_FACING_RIGHT ? 1 : -1;
         directionMask = oldOpponent->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_WEST
                                                                    : COMBAT_DIRECTION_BIT_EAST;
     }
     while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
-        orient = GetBestDirection(savedHex, m_hex, directionMask);
-        nextHexValue = GetAdjacentCellIndex(savedHex, orient);
+        orient = GetBestDirection(destHexNo, m_hex, directionMask);
+        nextHexValue = GetAdjacentCellIndex(destHexNo, orient);
         if (ValidHex(nextHexValue) && CanFit(&nextHexValue)) {
             m_moveTargetHex = nextHexValue;
             if (!(m_stats.attributes & MONSTER_FLAGS_WIDE)) {
@@ -151,15 +151,15 @@ i16 army::ValidFlight(i16 destination, i8 useDestination) {
         }
     }
     if ((oldOpponent->m_stats.attributes & MONSTER_FLAGS_WIDE) && !useDestination) {
-        savedHex += oldOpponent->m_facing == ARMY_FACING_RIGHT ? -1 : 1;
+        destHexNo += oldOpponent->m_facing == ARMY_FACING_RIGHT ? -1 : 1;
         directionMask = oldOpponent->m_facing == ARMY_FACING_RIGHT ? COMBAT_DIRECTION_BIT_EAST
                                                                    : COMBAT_DIRECTION_BIT_WEST;
         while (directionMask != (1 << COMBAT_DIRECTION_ADJACENT_COUNT) - 1) {
-            orient = GetBestDirection(savedHex, m_hex, directionMask);
-            nextHexValue = GetAdjacentCellIndex(savedHex, orient);
+            orient = GetBestDirection(destHexNo, m_hex, directionMask);
+            nextHexValue = GetAdjacentCellIndex(destHexNo, orient);
             if (ValidHex(nextHexValue) && CanFit(&nextHexValue)) {
                 m_moveTargetHex = nextHexValue;
-                m_attackDirection = GetBestDirection(m_moveTargetHex, savedHex, 0);
+                m_attackDirection = GetBestDirection(m_moveTargetHex, destHexNo, 0);
                 return 1;
             } else {
                 directionMask |= 1 << orient;

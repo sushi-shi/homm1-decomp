@@ -50,17 +50,17 @@ VA(0x00444d24, 0x19b)
 H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     u8* buffer;
     NCB ncb;
-    i32 ii;
+    i32 jj;
     // Retained unused result local from the PoL donor; retail reserves its frame word.
     i32 returnCode;
     if (is_netbios_avail() == 0)
         return 1;
     if (gNetbiosAvail != 0) {
         gNbMaxSess = static_cast<u8>(maxSessions);
-        for (ii = 0; ii < static_cast<i32>(NETBIOS_SESSION_COUNT); ii++) {
-            gNetStatus[ii] = 0;
-            gNbSessLsn[ii] = static_cast<u8>(NETBIOS_INVALID_ID);
-            memset(&gNbSessNcb[ii], 0, sizeof(gNbSessNcb[ii]));
+        for (jj = 0; jj < static_cast<i32>(NETBIOS_SESSION_COUNT); jj++) {
+            gNetStatus[jj] = 0;
+            gNbSessLsn[jj] = static_cast<u8>(NETBIOS_INVALID_ID);
+            memset(&gNbSessNcb[jj], 0, sizeof(gNbSessNcb[jj]));
         }
         memset(gNbNameBuf, 0, sizeof(gNbNameBuf));
         InitializeCriticalSection(&gNbRcvLock);
@@ -68,8 +68,8 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
         init_anchor(&gNbRcvQueue, 1, 0);
         init_anchor(&gNbSndQueue, 1, 0);
         init_anchor(&gNbFreeQueue, 1, 0);
-        for (ii = 0; ii < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); ii++)
-            gNbEvents[ii] = CreateEventA(NULL, TRUE, FALSE, NULL);
+        for (jj = 0; jj < static_cast<i32>(NETBIOS_THREAD_EVENT_COUNT); jj++)
+            gNbEvents[jj] = CreateEventA(NULL, TRUE, FALSE, NULL);
         memset(&ncb, 0, sizeof(ncb));
         buffer = static_cast<u8*>(GlobalAlloc(GPTR, static_cast<i32>(NETBIOS_ADAPTER_STATUS_SIZE)));
         ncb.ncb_command = NCBASTAT;

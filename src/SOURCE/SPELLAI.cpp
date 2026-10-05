@@ -101,7 +101,7 @@ H1_ENUM_END(CombatSpellAITargetMode)
 VA(0x00458f76, 0x42d)
 void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 spellEffect;
-    i32 durMax;
+    i32 firstDurMax;
     i32 bDone;
     i32 owner;
     army* targetPtr;

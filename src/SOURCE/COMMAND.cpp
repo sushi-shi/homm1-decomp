@@ -841,7 +841,7 @@ i8 combatManager::RightClick(i8 hex) {
 // views the army at the selected hex on the current side.
 VA(0x0041ef1f, 0x2ea)
 void combatManager::DoCommand(i8 command) {
-    i32 unusedValue1;
+    i32 unusedValue1Value;
     i32 unusedValue2Value;
     army* currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
 

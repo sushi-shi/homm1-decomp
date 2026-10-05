@@ -1879,7 +1879,7 @@ i16 game::LoadMap(char* filename) {
     i32 handle;
     i8 x;
     i8 type;
-    i32 reserved;
+    i32 wasReserved;
     i16 theVersion;
 
     extern char gMapPath[];
@@ -3109,11 +3109,11 @@ i32 game::ComputeDailyGold(i32 player) {
 VA(0x004336ce, 0x4ce)
 void game::PerDay(void) {
     i16 i;
-    i16 production;
+    i16 theProduction;
     // Retail reserves one more unused slot between the counters.
-    i16 k;
+    i16 ii;
     i16 j;
-    i8 resource;
+    i8 curResource;
 
     for (i = 0; i < gpGame->m_playerCount; i++) {
         for (j = 0; j < RESOURCE_COUNT; j++)
@@ -3122,16 +3122,16 @@ void game::PerDay(void) {
     memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
     for (i = MINE_SLOT_STANDARD_FIRST; i < GAME_MINE_COUNT; i++) {
         if (m_mines[i].owner != GAME_PLAYER_NONE) {
-            resource = m_mines[i].type;
-            production = 0;
-            if (resource == RESOURCE_ORE)
-                production = DAILY_MINE_YIELD_WOOD_ORE;
-            else if (resource == RESOURCE_WOOD)
-                production = DAILY_MINE_YIELD_WOOD_ORE;
-            else if (resource != RESOURCE_GOLD)
-                production = DAILY_MINE_YIELD_OTHER;
-            if (resource != RESOURCE_GOLD)
-                m_players[m_mines[i].owner].m_resources[resource] += production;
+            curResource = m_mines[i].type;
+            theProduction = 0;
+            if (curResource == RESOURCE_ORE)
+                theProduction = DAILY_MINE_YIELD_WOOD_ORE;
+            else if (curResource == RESOURCE_WOOD)
+                theProduction = DAILY_MINE_YIELD_WOOD_ORE;
+            else if (curResource != RESOURCE_GOLD)
+                theProduction = DAILY_MINE_YIELD_OTHER;
+            if (curResource != RESOURCE_GOLD)
+                m_players[m_mines[i].owner].m_resources[curResource] += theProduction;
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++)

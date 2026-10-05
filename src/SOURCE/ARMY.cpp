@@ -981,13 +981,13 @@ void army::DirDoAttack(i16 direction) {
 // retaliates once, and creatures 5 and 8 strike twice.
 VA(0x00415c4d, 0x1092)
 void army::DoAttack(i32 retaliation) {
-    i32 unused;
+    i32 ignored;
     i32 oldMode;
     i16 frameBase;
     army* target2Info;
     i32 nextDmg;
     i16 lastHex;
-    i32 prevCurDir;
+    i32 myDir;
     i16 facing;
     i32 way;
     i32 castOk;
@@ -1083,7 +1083,7 @@ void army::DoAttack(i32 retaliation) {
     target2Info = NULL;
     targetPtr = NULL;
     if (ValidHex(lastHex)) {
-        i32 wasSavedKilled;
+        i32 newKilled;
         i16 nextHex;
 
         if (gpCombatManager->m_hexCells[lastHex].m_occupantSide >= 0
@@ -1095,7 +1095,7 @@ void army::DoAttack(i32 retaliation) {
             gpCombatManager->m_computeExtent = 1;
             DamageEnemy(targetPtr, &nextDmg, &kills, 0, 0);
         }
-        wasSavedKilled = kills;
+        newKilled = kills;
         nextHex = GetAdjacentCellIndex(lastHex, m_attackDirection);
         if ((m_stats.attributes & MONSTER_FLAGS_BREATH_ATTACK)
             && m_attackDirection < COMBAT_DIRECTION_ADJACENT_COUNT && ValidHex(nextHex)
@@ -1121,7 +1121,7 @@ void army::DoAttack(i32 retaliation) {
                     target2Info->Stand(1);
             }
         }
-        kills = wasSavedKilled;
+        kills = newKilled;
     }
     if (gGenieHalf)
         sprintf(
@@ -1282,10 +1282,10 @@ secondStrike:
     if ((m_creatureType == CREATURE_WOLF || m_creatureType == CREATURE_PALADIN) && targetPtr
         && targetPtr->m_quantity > 0 && !retaliation && m_spellEffect != SPELL_PARALYZE
         && m_quantity > 0) {
-        prevCurDir = m_attackDirection;
+        myDir = m_attackDirection;
         m_attackDirection = way;
         DoAttack(1);
-        m_attackDirection = prevCurDir;
+        m_attackDirection = myDir;
     }
     m_targetSide = lastHex = ARMY_HEX_INVALID;
     if (retaliation)

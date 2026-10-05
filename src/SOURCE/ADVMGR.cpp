@@ -2520,11 +2520,11 @@ void advManager::DrawCell(
 ) {
     i8 savedFrame;
     i32 heroYOffset6;
-    i32 cursorSuppressedFlag;
+    i32 savedSuppressed;
     i16 pixelY3;
     i16 pixelX7;
     mapCell* newCell0;
-    hero* newChampion;
+    hero* savedShowHero;
     i8 position;
     i8 flagColorValue;
     i8 drawHeroIcon0;
@@ -2699,7 +2699,7 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_HERO) {
         drawHeroIcon0 = 0;
-        newChampion = NULL;
+        savedShowHero = NULL;
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
@@ -2751,16 +2751,16 @@ void advManager::DrawCell(
         } else {
             heroYOffset6 = 0;
             if (newCell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                newChampion = gpGame->GetHero(newCell0->m_objectMetadata);
-                flagColorValue = (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                savedShowHero = gpGame->GetHero(newCell0->m_objectMetadata);
+                flagColorValue = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                                      ? PLAYER_COLOR_NONE
-                                     : gpGame->m_players[newChampion->m_owner].m_color;
-                position = (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                                     : gpGame->m_players[savedShowHero->m_owner].m_color;
+                position = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                                ? (i8)ADVMGR_HERO_ICON_BOAT
-                               : newChampion->m_heroClass;
-                savedFrame = GetCursorBaseFrame(newChampion->m_direction);
+                               : savedShowHero->m_heroClass;
+                savedFrame = GetCursorBaseFrame(savedShowHero->m_direction);
                 drawHeroIcon0 = 1;
-                if (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                if (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     heroYOffset6 = HERO_BOAT_Y_OFFSET;
             }
         }
