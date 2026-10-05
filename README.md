@@ -99,6 +99,8 @@ Retail inputs, tools, Wine state and generated reports stay in ignored `build/`.
 
 See [the matching workflow](docs/tooling.md), [setup and editors](docs/workflow.md),
 and the [documentation index](docs/README.md).
+[`tools/`](tools/README.md) holds Rust tools, including a byte-exact port of
+the game's LZHUF save-transfer codec.
 Contributor rules and verification commands are in [AGENTS.md](AGENTS.md).
 
 ## License

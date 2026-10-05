@@ -80,7 +80,8 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "data-coverage": "homm1.verify.data_coverage",
           "library-data-refs": "homm1.verify.library_data_refs",
           "layout": "homm1.verify.layout",
-          "link-tier": "homm1.verify.link_tier"}
+          "link-tier": "homm1.verify.link_tier",
+          "lzhuf-oracle": "homm1.verify.lzhuf_oracle"}
 
 #: runnable as `homm1 verify <name>` but in NO tier: read-only oracles, not
 #: gates. `vtable-scan` enumerates the image's vtables (verify.vtables is the
@@ -89,8 +90,10 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
 _QUERY_ONLY = ("layout", "library-data-refs", "vtable-scan")
 
 #: Audits that are deliberately explicit because they parse the whole source
-#: tree and are not part of a normal build tier.
-_STANDALONE = ("constants", "enum-reuse", "claim-size", "source-encoding", "review-claims")
+#: tree and are not part of a normal build tier. `lzhuf-oracle` executes the
+#: retail codec under Wine against tools/homm1-lzhuf.
+_STANDALONE = ("constants", "enum-reuse", "claim-size", "source-encoding", "review-claims",
+               "lzhuf-oracle")
 
 #: tier label -> verb, where the two spellings differ. homm1.verify.tiers
 #: labels the bans row `vtable-bans` (so do docs/tooling-map.md and every

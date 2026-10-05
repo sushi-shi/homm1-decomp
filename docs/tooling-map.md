@@ -18,6 +18,7 @@ All Python commands use `scripts/homm1` and the shared usage logger.
 | `workflow` | `workflow` | Repository hooks and safe staged formatting |
 | `clean` | `clean` | Clean source tree, VC4 verification and snapshot branch ([clean source](clean-source.md)) |
 | `audit tooling --whole-tree`, `audit usage`, `audit dna-bands` | `audit` | Pinned donor inventory, usage-logging coverage, DNA census |
+| `verify lzhuf-oracle` | `verify.lzhuf_oracle` | Runs the retail LZHUF codec under Wine against the Rust port in [`tools/`](../tools/README.md) |
 
 Run each command's help for its current options. `homm1 sema -` accepts batch
 queries. [The build guide](build-system.md) defines artifact paths and modes;
