@@ -552,17 +552,17 @@ void townManager::ShowText(char*) {
 // guild over a bottom cover window, sells the spell book and builds boats.
 VA(0x004607db, 0x11da)
 i16 townManager::Main(struct tag_message& message) {
-    i32 exitTown;
-    i8 rightClick;
+    i32 done;
+    i8 rightButton;
     class sample* res;
     recruitUnit* recruitMgr;
 
     res = NULL;
-    exitTown = 0;
+    done = 0;
     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
-        rightClick = 1;
+        rightButton = 1;
     else
-        rightClick = 0;
+        rightButton = 0;
     if (glTimers[TOWN_FRAME_TIMER_SLOT] < KBTickCount()) {
         DrawTown(1, 1);
         glTimers[TOWN_FRAME_TIMER_SLOT] = KBTickCount() + TOWN_REDRAW_INTERVAL;
@@ -585,7 +585,7 @@ i16 townManager::Main(struct tag_message& message) {
                         case BUILDING_SLOT_DWELLING_4:
                         case BUILDING_SLOT_DWELLING_5:
                         case BUILDING_SLOT_DWELLING_6:
-                            if (rightClick) {
+                            if (rightButton) {
                                 QuickViewRecruit(m_town, message.id - BUILDING_SLOT_DWELLING_FIRST);
                                 break;
                             }
@@ -602,7 +602,7 @@ i16 townManager::Main(struct tag_message& message) {
                         case BUILDING_SLOT_THIEVES_GUILD:
                         case BUILDING_SLOT_WELL:
                         case BUILDING_SLOT_CASTLE:
-                            if (rightClick)
+                            if (rightButton)
                                 break;
                             gpWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
@@ -723,16 +723,16 @@ i16 townManager::Main(struct tag_message& message) {
                             if (m_selectedBuilding != TOWN_BUILDING_NONE)
                                 BuildObj(m_selectedBuilding);
                             if (m_recruitResult) {
-                                hero* theHero;
+                                hero* visitingHero;
                                 i32 i;
                                 i32 width;
 
                                 gpMouseManager->ReallyHidePointer();
                                 res = LoadPlaySample("buildtwn.82M");
-                                theHero = gpGame->GetHero(m_town->m_occupyingHeroId);
+                                visitingHero = gpGame->GetHero(m_town->m_occupyingHeroId);
                                 width = 0;
                                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                                    if (theHero->m_army.m_creatureTypes[i] != CREATURE_NONE)
+                                    if (visitingHero->m_army.m_creatureTypes[i] != CREATURE_NONE)
                                         width = i + 1;
                                 }
                                 width = width * 88 + 0x70;
@@ -757,24 +757,24 @@ i16 townManager::Main(struct tag_message& message) {
                             );
                             break;
                         case BUILDING_SLOT_TAVERN:
-                            if (rightClick)
+                            if (rightButton)
                                 break;
                             DoTavern();
                             break;
                         case BUILDING_SLOT_TENT:
-                            if (rightClick)
+                            if (rightButton)
                                 return MESSAGE_DISPATCH_CONSUME;
                             if (BuyBuild(
                                     BUILDING_SLOT_CASTLE,
                                     !CanBuy(m_town, BUILDING_SLOT_CASTLE),
-                                    rightClick
+                                    rightButton
                                 )) {
                                 BuildObj(BUILDING_SLOT_CASTLE);
                                 m_town->XformToCastle();
                             }
                             break;
                         case BUILDING_SLOT_SHIPYARD:
-                            if (rightClick)
+                            if (rightButton)
                                 break;
                             gpWindowManager->BroadcastMessage(
                                 MESSAGE_WIDGET,
@@ -841,29 +841,29 @@ i16 townManager::Main(struct tag_message& message) {
                             );
                             break;
                         case TOWN_CLOSE_CONTROL:
-                            if (rightClick)
+                            if (rightButton)
                                 break;
-                            exitTown++;
+                            done++;
                             break;
                         default:
-                            if (rightClick) {
-                                i32 found;
+                            if (rightButton) {
+                                i32 hasHero;
                                 hero* viewHero;
 
-                                found = 0;
+                                hasHero = 0;
                                 if (message.id >= TOWN_GARRISON_SLOT_FIRST
                                     && message.id <= TOWN_GARRISON_SLOT_FIRST + 4) {
                                     m_selectedStrip = m_garrisonStrip;
                                     m_selectedArmySlot = message.id - TOWN_GARRISON_SLOT_FIRST;
-                                    found = 1;
+                                    hasHero = 1;
                                 }
                                 if (message.id >= TOWN_HERO_SLOT_FIRST
                                     && message.id <= TOWN_HERO_SLOT_FIRST + 4) {
                                     m_selectedStrip = m_heroStrip;
                                     m_selectedArmySlot = message.id - TOWN_HERO_SLOT_FIRST;
-                                    found = 1;
+                                    hasHero = 1;
                                 }
-                                if (found
+                                if (hasHero
                                     && m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]
                                            != CREATURE_NONE) {
                                     viewHero = m_selectedStrip == m_heroStrip
@@ -929,12 +929,12 @@ i16 townManager::Main(struct tag_message& message) {
                     ShiftQualChange();
                     break;
                 case INPUT_SCAN_ESCAPE:
-                    exitTown++;
+                    done++;
                     break;
             }
             break;
     }
-    if (exitTown == 1) {
+    if (done == 1) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
