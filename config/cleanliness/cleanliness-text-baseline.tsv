@@ -21,7 +21,7 @@ unexplained casts	0
 void* m_ members	0
 offset-cast macros	0
 forced COMDAT emitters	0
-cpp extern decls	6
+cpp extern decls	0
 cpp external prototypes	0
 view classes (*Views.h)	0
 duplicate header externs	0
