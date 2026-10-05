@@ -752,7 +752,7 @@ void philAI::DoAI(i32 player) {
     halfShown = 0;
     if (gGameOver)
         return;
-    if (giLimitPlayer && giLimitPlayer != player)
+    if (giLimitPlayer && player != giLimitPlayer)
         return;
     GetTurnAIVars(player);
     ShowStatus();
@@ -781,10 +781,7 @@ void philAI::DoAI(i32 player) {
         }
         moveDone = 0;
         ResetHeroRVs(0, 0, 0);
-        if (aiHero->m_eventFlags & HERO_EVENT_EMBARKED)
-            stepMax = 15;
-        else
-            stepMax = 5;
+        stepMax = (aiHero->m_eventFlags & HERO_EVENT_EMBARKED) ? 15 : 5;
         minRV = aiHero->m_mobility + 42;
         stepMax = static_cast<i32>(stepMax * (1.7 - gpCurPlayer->m_difficulty * 0.1));
         minRV = static_cast<i16>(
@@ -840,7 +837,7 @@ void philAI::DoAI(i32 player) {
                     pathIndex = gpSearchArray->m_pathLength - 1;
                     moveResult = 0;
                     moveInterrupt = 0;
-                    while (pathIndex >= 0 && stepMax > steps) {
+                    while (pathIndex >= 0 && steps < stepMax) {
                         stopAfterStep = (steps + 1 == stepMax || pathIndex == 0) ? 1 : 0;
                         if (pathIndex > 0 && GoodAdjacent(aiHero, &bestDirection)) {
                             gpSearchArray->m_directions[pathIndex] = bestDirection;
@@ -875,7 +872,7 @@ void philAI::DoAI(i32 player) {
                     if (pathIndex < 0 && gpCurPlayer->m_ultimateArtifactHintChance > 15
                         && gpCurPlayer->m_ultimateArtifactHintX == aiHero->m_x
                         && gpCurPlayer->m_ultimateArtifactHintY == aiHero->m_y) {
-                        if (aiHero->m_mobility == aiHero->m_remainingMobility)
+                        if (aiHero->m_remainingMobility == aiHero->m_mobility)
                             gpAdvManager->ProcessSearch(
                                 ADVMGR_SEARCH_VIEW_CENTER,
                                 ADVMGR_SEARCH_VIEW_CENTER
