@@ -134,13 +134,12 @@ type. The review removed 108 lines of casts, and each removal kept all 1057
 bodies exact:
 
 - Win32 handles. The menu, instance, window and DC handles were declared
-  `void*`, so every API call cast them back. All units now build with
-  `/DNO_STRICT` (`config/units.toml`), which makes VC6's handles `void*`. The
-  owners are typed `HMENU`, `HINSTANCE`, `HWND`, `HDC` and `HANDLE`, and the
-  61 casts are gone. Mangled names keep the `PAX` handles the claims already
-  used. The retail
-  data identities that had recorded the STRICT spelling (`hwndApp`, `hpalApp`,
-  `hdcImage`, the mouse cursor and bitmap tables) were renamed to match.
+  `void*`, so every API call cast them back. The owners are now typed `HMENU`,
+  `HINSTANCE`, `HWND`, `HDC` and `HANDLE` under VC6's default `STRICT` handle
+  types, and 60 casts are gone. Handle types only change mangling, so the
+  claimed names of the retyped globals and of the functions that take them
+  (`AppInit`, `AppWndProc`, `AppCommand`, the menu and paint functions) now use
+  the `STRICT` spelling, matching `hwndApp` and the other handle globals.
 - Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
   a `float` difference.
 - `CONST` enum values converted to `int` or a narrower integer. These enums are
