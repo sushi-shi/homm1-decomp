@@ -1,8 +1,7 @@
 """HoMM1 matching-decompilation command line.
 
-The matching commands are the Gruntz command surface, with the target-specific
-input and VC4 setup kept here because the retail executable and compiler media
-cannot be fetched by the repository.
+The target-specific input and compiler setup are kept here because the retail
+executable and compiler media cannot be fetched by the repository.
 """
 
 from __future__ import annotations

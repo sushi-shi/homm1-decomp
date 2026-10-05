@@ -661,11 +661,10 @@ def emit_yaml(funcs, rdata_syms, data_syms, iat_syms, names_map, out) -> None:
     """Write one synthetic DBI module per source object.
 
     Vostok asks a module's C13 line program which source owns each procedure.
-    Putting every source and every procedure into one module, as the earliest
-    Gruntz synthesizer did, leaves that lookup ambiguous inside pdb2: identical
-    input can assign whole functions to different files on successive runs.
-    HoMM3's current donor design uses one module per unit, making ownership a
-    structural fact.  A final data-only module carries the S_LDATA32 inventory.
+    Putting every source and every procedure into one module leaves that
+    lookup ambiguous inside pdb2: identical input can assign whole functions
+    to different files on successive runs. One module per unit makes
+    ownership a structural fact.  A final data-only module carries the S_LDATA32 inventory.
     """
     bounds = sections_of()
     text_base = bounds[".text"][0]

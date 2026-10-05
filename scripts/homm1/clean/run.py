@@ -140,7 +140,7 @@ def generate(files: dict[str, bytes], *, control: bool = False
 
 
 def validate_output(repo: Path, requested: Path) -> Path:
-    """Fail closed before any recursive deletion (kf1/HoMM2 rule)."""
+    """Fail closed before any recursive deletion."""
     path = requested if requested.is_absolute() else repo / requested
     if path.is_symlink() or any(parent.is_symlink() for parent in path.parents):
         raise ValueError("output must not traverse symlinks")

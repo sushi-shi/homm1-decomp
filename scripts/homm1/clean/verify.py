@@ -1,5 +1,5 @@
 """Build the clean tree with the pinned VC4 toolchain and compare it with the
-matching build (kf1's "verify against native linker outputs").
+matching build (verify against native linker outputs).
 
 Every unit compiles through the same `homm1.tool.cl` -> fixedroot path, with
 the same profile, retail file name and include view as the matching build;

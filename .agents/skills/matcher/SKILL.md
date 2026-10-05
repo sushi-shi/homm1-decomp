@@ -3,7 +3,6 @@ name: matcher
 description: Reconstruct and byte-match HoMM1 C++ functions, translation units, classes, globals, and referents against retail HEROES.EXE with VC4. Use for function matching, low historical-MAX work, TU reconstruction, class/type recovery, vtable or calling-convention recovery, relocation/referent correction, data modeling, and diagnosing a plateau before declaring it bounded or using the permuter.
 ---
 
-Adapted from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.
@@ -42,8 +41,8 @@ homm1 sema class <Class>           # vtable slots, hierarchy
 ```
 
 Also read the whole source function, declaration, callers, callees, adjacent
-family members, class layout, and any lineage candidate
-(HoMM2 Buka 2.1 first; PoL 2.0 second). Resolve identity or layout doubts before calling
+family members, class layout, and the same function in the earlier releases
+(docs/versions). Resolve identity or layout doubts before calling
 a row codegen residue. Mine history every time:
 
 ```sh
@@ -124,7 +123,7 @@ Details and proven exceptions: the `wall-identifier` skill.
 ## Stop and hand off
 
 - Claim exact closure only from an actual compile of the intended
-  function fingerprint. Remove disposable TU probes. As in Giten,
+  function fingerprint. Remove disposable TU probes.
   `permute state --record-max` may retain a proven exact compiler-state peak
   after its source-hash, size and ordered-relocation checks; it changes only
   MAX/HIST, never CUR or the restored source. Sub-100 states are diagnostic only.

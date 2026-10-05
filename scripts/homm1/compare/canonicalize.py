@@ -16,7 +16,6 @@ static + its `??_B` guard) are first materialized into `.bss` exactly as the
 linker would allocate them, so the delinked target's section symbol for the
 same datum has a base-side counterpart to pair with.
 
-Ported from the sibling homm2-decomp project (docs: data-symbol-normalization).
 MSVC 5.0 emits the same `$SG`/`$T`/`name$S<n>` compiler-private data forms and the
 same `$L<n>` in-.text jump-table labels as MSVC 4.2, so the classifier ports
 unchanged. The normalized copies live under build/objdiff/normalized/ and are
@@ -443,11 +442,11 @@ def relocate_in_object_calls(
 
 def add_function_padding_boundaries(
         payload: bytes, claims: tuple[tuple[str, int], ...]) -> bytes:
-    """Append donor-style local symbols at reviewed function ends.
+    """Append local boundary symbols at reviewed function ends.
 
     Vostok keeps linker alignment fill in the delinked ``.text`` section.
-    Objdiff otherwise infers the preceding function through that fill.  HoMM2's
-    comparison pipeline adds a local boundary symbol when the reviewed end is
+    Objdiff otherwise infers the preceding function through that fill, so this
+    adds a local boundary symbol when the reviewed end is
     followed by fewer than 16 bytes consisting solely of NOP/INT3.  No payload
     byte is inserted, removed, or changed.
     """
