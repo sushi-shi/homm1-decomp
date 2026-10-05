@@ -89,6 +89,25 @@ struct RemotePacketHeader {
 // keeps the same accessor).
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
 
+// A remote message's payload. TransmitRemoteData copies the caller's buffer to
+// +9 of the record; the save-game transfer builds its packets in this layout.
+#pragma pack(push, 1)
+union RemotePayload {
+    char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
+    // WaitForOtherPlayer passes the first payload dword to ReceiveSaveGame;
+    // CheckHandleNet also reads the sender's exit flag after it.
+    struct {
+        i32 saveSize;
+        i32 playerExited;
+    };
+    // Save-game transfer segments: segment index, then segment bytes.
+    struct {
+        i16 index;
+        char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
+    } segment;
+};
+#pragma pack(pop)
+
 // Retail TransmitRemoteData fills sender/id/type/command/size at +0/+1/+5/+6/+7
 // and copies the payload to +9; GetRemoteData copies 0x100-byte records.
 #pragma pack(push, 1)
@@ -98,20 +117,7 @@ struct RemoteMessage {
     i8 type;
     i8 command;
     i16 payloadSize;
-    union {
-        char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
-        // WaitForOtherPlayer passes the first payload dword to ReceiveSaveGame;
-        // CheckHandleNet also reads the sender's exit flag after it.
-        struct {
-            i32 saveSize;
-            i32 playerExited;
-        };
-        // Save-game transfer segments: segment index, then segment bytes.
-        struct {
-            i16 index;
-            char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
-        } segment;
-    } payload;
+    RemotePayload payload;
 };
 #pragma pack(pop)
 

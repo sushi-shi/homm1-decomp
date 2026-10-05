@@ -147,6 +147,7 @@ VA(0x00458433, 0x13c)
 void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette, i32 skipPalette) {
     if (drawFrame && smack->NewPalette && !skipPalette) {
         memcpy(gPalette->m_data, smack->Palette, PALETTE_DATA_SIZE);
+        // API-forced: ConvertSmackerPalette takes u8*.
         ConvertSmackerPalette(reinterpret_cast<u8*>(gPalette->m_data));
         if (updatePalette)
             UpdatePalette(gPalette->m_data);
@@ -155,6 +156,7 @@ void DoAdvance(Smack* smack, i32 drawFrame, i32 advanceFrame, i32 updatePalette,
     if (drawFrame) {
         while (SmackToBufferRect(smack, SMACK_SURFACE_SLOW)) {
             if (gSmackNum == SMACK_WIN2 && smack->FrameNum >= 22) {
+                // language-forced: the assertion tests the pointer as an integer.
 #line 178 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\SMACKMGR.CPP"
                 H1_ASSERT(reinterpret_cast<i32>(gcWinText));
                 gSmackFont->DrawBoundedString(gcWinText, 32, 342, 320, 106, 4, FONT_ALIGN_CENTER);

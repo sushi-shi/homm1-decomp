@@ -1584,7 +1584,7 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
         actionData[2] = giNextActionGridIndex;
         actionData[3] = giNextActionGridIndex2;
         transmitResult = TransmitRemoteData(
-            reinterpret_cast<char*>(actionData),
+            reinterpret_cast<char*>(actionData), // API-forced: TransmitRemoteData takes char*.
             remoteIndex,
             sizeof(actionData),
             REMOTE_COMMAND_COMBAT_ACTION,

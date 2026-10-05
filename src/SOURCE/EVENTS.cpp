@@ -2818,8 +2818,10 @@ struct heroRemoteMessage {
 
 // CheckHandleNet, GetRemoteData and ReceiveHeroTownData pass received records
 // as char*; the Buka 2.1 donor reads them through these views.
-#define EVENTS_REMOTE_MESSAGE(buffer) (reinterpret_cast<combatRemoteMessage*>(buffer))
-#define EVENTS_REMOTE_HERO(buffer) (reinterpret_cast<heroRemoteMessage*>(buffer))
+#define EVENTS_REMOTE_MESSAGE(buffer)                                                              \
+    (reinterpret_cast<combatRemoteMessage*>(buffer)) // API-forced: char* records.
+#define EVENTS_REMOTE_HERO(buffer)                                                                 \
+    (reinterpret_cast<heroRemoteMessage*>(buffer)) // API-forced: char* records.
 
 // donor PoL RVA 0x000b5e10; preferred Buka symbol ?DoCombat@advManager@@QAEHHHPAVhero@@PAVarmyGroup@@PAVtown@@01HHHH@Z
 // donor Buka TU SOURCE/EVENTS; HoMM1 owner inferred from contiguous order

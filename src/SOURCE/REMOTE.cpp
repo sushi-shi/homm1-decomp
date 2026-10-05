@@ -1075,7 +1075,7 @@ void PollRemote(void) {
         sndBuf.command = (giCurPlayer << 4) + gCurHourGlassPhase;
         sndBuf.payload.data[0] = 1;
         SendRemoteData(
-            reinterpret_cast<u8*>(&sndBuf),
+            reinterpret_cast<u8*>(&sndBuf), // API-forced: SendRemoteData takes wire bytes.
             NULL,
             1 - giThisNetPos,
             REMOTE_MESSAGE_HEADER_SIZE + 1
@@ -1123,7 +1123,7 @@ void PollRemote(void) {
     nextIncoming:
         result = ReceiveRemoteData(
             NULL,
-            reinterpret_cast<u8*>(&rcvBufIn),
+            reinterpret_cast<u8*>(&rcvBufIn), // API-forced: ReceiveRemoteData takes wire bytes.
             REMOTE_BROADCAST_PLAYER
         ); // API-forced: wire bytes.
         if (result && rcvBufIn.sender != giThisNetPos) {
@@ -1150,7 +1150,7 @@ void PollRemote(void) {
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
                 SendRemoteData(
-                    reinterpret_cast<u8*>(&sndBuf),
+                    reinterpret_cast<u8*>(&sndBuf), // API-forced: SendRemoteData takes wire bytes.
                     NULL,
                     rcvBufIn.sender,
                     REMOTE_MESSAGE_HEADER_SIZE

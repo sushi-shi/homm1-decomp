@@ -2527,9 +2527,8 @@ i32 philAI::QuickCombat(
         curWChance = 1.0f - curWinChance;
         newWinner = defender;
     }
-    // VC4 narrows this double through a stack temporary only for the C-style
-    // cast (retail frame 0x50); static_cast<float> drops the slot.
-    diff = (float)(newRnd > curWinChance ? newRnd - curWinChance : curWinChance - newRnd);
+    diff =
+        static_cast<float>(newRnd > curWinChance ? newRnd - curWinChance : curWinChance - newRnd);
     if (win != 0 && curWinChance > 0.6)
         diff *= curWinChance + 0.65;
     fracLostVal = (1.0 - diff) * (1.0 - diff);

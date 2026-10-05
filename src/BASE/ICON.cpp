@@ -20,7 +20,7 @@ icon::icon(i16 id) : resource(RESOURCE_CATEGORY_ICON, id, RESOURCE_REFERENCE_INI
     u32 length = gpResourceManager->ReadLong();
     m_data = static_cast<u8*>(malloc(length));
     gpResourceManager->ReadBlock(
-        reinterpret_cast<i8*>(m_data),
+        reinterpret_cast<i8*>(m_data), // API-forced: ReadBlock takes i8*.
         length
     ); // byte-evidenced: ReadBlock accepts signed bytes for icon pixel storage.
     PostprocessIcon(this);

@@ -1563,8 +1563,8 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
         case ADVENTURE_CONTROL_TOWN_LOCATOR_3:
         case ADVENTURE_CONTROL_TOWN_LOCATOR_4:
             objectTypeState = gpCurPlayer->m_townIds
-                           [gpCurPlayer->m_townLocatorPage + message->id
-                            - ADVENTURE_CONTROL_TOWN_LOCATOR_1];
+                                  [gpCurPlayer->m_townLocatorPage + message->id
+                                   - ADVENTURE_CONTROL_TOWN_LOCATOR_1];
             if (message->modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                 TownQuickView(
                     objectTypeState,
@@ -2757,7 +2757,7 @@ void advManager::DrawCell(
                                      ? PLAYER_COLOR_NONE
                                      : gpGame->m_players[savedShowHero->m_owner].m_color;
                 position = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
-                               ? (i8)ADVMGR_HERO_ICON_BOAT
+                               ? static_cast<i8>(ADVMGR_HERO_ICON_BOAT)
                                : savedShowHero->m_heroClass;
                 savedFrame = GetCursorBaseFrame(savedShowHero->m_direction);
                 drawHeroIcon0 = 1;

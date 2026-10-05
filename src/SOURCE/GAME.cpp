@@ -4453,7 +4453,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 blocksCount;
     i32 unusedData;
     i32 oldTrackVal;
-    char* sendPacket;
+    RemotePayload* sendPacket;
     i32 sizeVal;
     i32 entry;
     i32 segCountPos;
@@ -4488,7 +4488,7 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     extern char gDataPath[];
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     prevSize = FileSize(curPathname);
-    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
+    sendPacket = static_cast<RemotePayload*>(malloc(REMOTE_MESSAGE_SIZE));
     if (!iMPBaseType || (iMPBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
         mainOutData = static_cast<char*>(malloc(prevSize));
     dataObj = static_cast<char*>(malloc(prevSize));
@@ -4506,12 +4506,10 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
         else
             mainOutData = dataObj;
 
-        reinterpret_cast<i32*>(sendPacket)[0] =
-            prevSize; // byte-evidenced: the save-transfer packet header words
-        reinterpret_cast<i32*>(sendPacket)[1] =
-            playerExited; // byte-evidenced: the save-transfer packet header words
+        sendPacket->saveSize = prevSize;
+        sendPacket->playerExited = playerExited;
         replyState = TransmitAndWait(
-            sendPacket,
+            sendPacket->data,
             remotePlayer,
             REMOTE_SAVE_HEADER_SIZE,
             BOX_REMOTE_SAVE,
@@ -4540,16 +4538,14 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             length = prevSize - entry * REMOTE_SAVE_SEGMENT_SIZE;
                         else
                             length = REMOTE_SAVE_SEGMENT_SIZE;
-                        *reinterpret_cast<i16*>(sendPacket) = static_cast<i16>(
-                            entry
-                        ); // byte-evidenced: the save-transfer packet header words
+                        sendPacket->segment.index = static_cast<i16>(entry);
                         memcpy(
-                            sendPacket + REMOTE_SAVE_INDEX_SIZE,
+                            sendPacket->segment.data,
                             mainOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
                             length
                         );
                         replyState = TransmitRemoteData(
-                            sendPacket,
+                            sendPacket->data,
                             remotePlayer,
                             length + REMOTE_SAVE_INDEX_SIZE,
                             REMOTE_COMMAND_SAVE_DATA,
@@ -4562,11 +4558,9 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                             ShutDown(NULL);
                     }
                 }
-                *reinterpret_cast<i16*>(sendPacket) = static_cast<i16>(
-                    block * REMOTE_SAVE_BATCH_SIZE
-                ); // byte-evidenced: the save-transfer packet header words
+                sendPacket->segment.index = static_cast<i16>(block * REMOTE_SAVE_BATCH_SIZE);
                 replyState = TransmitAndWait(
-                    sendPacket,
+                    sendPacket->data,
                     remotePlayer,
                     REMOTE_SAVE_INDEX_SIZE,
                     REMOTE_COMMAND_SAVE_ACK_REQUEST,

@@ -213,6 +213,7 @@ void PostprocessPalette(i8* data) {
     for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
         memcpy(
             &remapped[gMonoColorMap[index]],
+            // byte-evidenced: RGB triples of the raw palette.
             &reinterpret_cast<PaletteColor*>(data)[index],
             sizeof(PaletteColor)
         );

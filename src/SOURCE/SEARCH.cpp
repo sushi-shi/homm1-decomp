@@ -325,6 +325,7 @@ void searchArray::SeedPosition(
             s_currentNode.x,
             s_currentNode.y,
             s_possibleDirections,
+            // API-forced: the occupancy array is passed as i8*.
             reinterpret_cast<i8*>(s_directionOccupied),
             1,
             waterMode
