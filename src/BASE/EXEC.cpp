@@ -51,6 +51,8 @@ DATA(0x004a16f0)
 char gCallManagerError1[] = localization::Tr("startup.manager.failed");
 DATA(0x004a170c)
 char gCallManagerError2[] = localization::Tr("startup.manager.failed");
+DATA(0x004a1728)
+char gTerminationMessage[] = "Terminated";
 
 VA(0x004729f0, 0x35)
 executive::executive(void) {
@@ -258,4 +260,12 @@ void executive::MainLoop(void) {
                 m_activeManager = m_activeManager->m_next;
         }
     }
+}
+
+// HoMM2 Buka's Terminate has the same body.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00473120, 0x18)
+void executive::Terminate(void) {
+    ShutDown(gTerminationMessage);
 }
