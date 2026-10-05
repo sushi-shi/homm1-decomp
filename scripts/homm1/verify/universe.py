@@ -85,7 +85,8 @@ def engine_universe(model=None) -> dict:
     structural = []
     class_category = {
         "eh-funclet": "eh", "compiler-helper": "compiler",
-        "helper-order": "compiler", "import-thunk": "thunk",
+        "helper-order": "compiler", "helper-exact": "compiler",
+        "import-thunk": "thunk",
         "linker-pad": "pad", "crt-exact": "library",
         "crt-prefix": "library", "crt-order": "library",
         "crt-band": "library",

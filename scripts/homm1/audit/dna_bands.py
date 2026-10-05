@@ -36,12 +36,15 @@ from homm1.retail_labels.censuses import functions
 OUTPUT = BUILD / "gen/homm1-dna-bands.tsv"
 EVIDENCE = RETAIL / "dna_bands.tsv"
 STATIC_LIBS = RETAIL / "functions_static_libs.tsv"
-#: Retail links VC4.0 LIBCMT.LIB (multithreaded), not LIBC.LIB: its _mtinit,
-#: _getptd and _lock/*_lk bodies match retail exactly (189 exact CRT bodies
-#: against LIBCMT, 106 against LIBC).
+#: Retail links the pinned toolchain's LIBCMT.LIB (multithreaded), not LIBC.LIB
+#: (NWC: VC4.0, 189 exact bodies; Buka: VC6 SP5, 471 exact bodies).
 RUNTIME_LIBS = ("libcmt.lib", "oldnames.lib")
 PREFIX = 24
-PRIVATE = re.compile(r"^(?:_?\$E\d+|\?\?_[EG])")
+#: Compiler-private bodies: volatile `$E<n>` dyninit/atexit helpers, vector
+#: and scalar deleting destructors, and the synthesized `...@@$E` cleanup of a
+#: template static (VC6 `?id@?$ctype@G@std@@$E`).
+PRIVATE = re.compile(r"^(?:_?\$E\d+|\?\?_[EG]|\?.*@@\$E$)")
+ORDINAL = re.compile(r"^_?\$E\d+$")
 
 HEADER = ("rva", "size", "name", "class", "source", "symbol", "detail")
 
@@ -205,6 +208,11 @@ def run_census():
     rows = []
     anchors: dict[str, list[tuple[int, int]]] = defaultdict(list)
     image_by_rva = {r["rva"]: r for r in _image_rows()}
+    # A source-claimed body is a reconstruction target even when its bytes
+    # equal a compiler-private body (an empty function and a synthesized
+    # cleanup are both `push ebp; mov ebp,esp; pop ebp; ret`).
+    source_rvas = {b.rva for b in resolve().functions
+                   if b.channel in ("src", "src_compgen")}
 
     for item in image_by_rva.values():
         rva, body = item["rva"], item["body"]
@@ -242,12 +250,17 @@ def run_census():
         matches = _matches(body, by_size.get(len(body), []))
         library = [m for m in matches if m.source.split(":", 1)[0] in RUNTIME_LIBS]
         private = [m for m in matches if m.source.startswith("base:")
-                   and PRIVATE.match(m.symbol)]
+                   and PRIVATE.match(m.symbol) and rva not in source_rvas]
         chosen = None
         if library and len({m.symbol for m in library}) == 1:
             chosen = library[0]
             row["class"] = "crt-exact"
-        elif private and len({m.symbol for m in private}) == 1:
+        elif private and (len({m.symbol for m in private}) == 1
+                          or (len({m.body for m in private}) == 1
+                              and all(ORDINAL.match(m.symbol) for m in private))):
+            # A `$E<n>` ordinal is volatile per object: the same compiler
+            # output in several units carries different ordinals but
+            # identical masked bytes.
             chosen = private[0]
             row["class"] = "helper-exact"
         if chosen:
@@ -413,7 +426,7 @@ def write_config(rows) -> dict[str, int]:
 def write_report(rows, path: Path) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with path.open("w", newline="") as stream:
-        stream.write("# HoMM1 executable DNA census against VC4 LIBCMT.LIB/OLDNAMES.LIB.\n")
+        stream.write("# HoMM1 executable DNA census against the pinned toolchain LIBCMT.LIB/OLDNAMES.LIB.\n")
         stream.write("# Exact rows mask relocation fields on both sides; order rows are bracketed by exact anchors.\n")
         writer = csv.DictWriter(stream, HEADER, delimiter="\t", lineterminator="\n")
         writer.writeheader()
