@@ -13,7 +13,8 @@ H1_ENUM_BEGIN(NetbiosProbeCommand)
     NETBIOS_COMMAND_PROBE = 0x7f
 H1_ENUM_END(NetbiosProbeCommand)
 
-extern u8 gNetAdapterNum;
+#define gNetbiosLana gNetAdapterNum // spelling fixes .bss order
+extern u8 gNetbiosLana;
 extern u8 gNetbiosAvail;
 
 H1_ENUM_CONST_BEGIN(NetbiosRuntimeConstant)
@@ -73,18 +74,26 @@ extern u8* gNbListenName;
 extern u8 gNbMaxSess;
 extern u8 gNbShutdown;
 extern u8 gNetStatus[7];
-extern u8 gSessNums[7];
-extern NCB gNetPeerNcb[7];
-extern NCB gNetAdminNcb;
-extern u8 gNbSessionBuffer[];
+#define gNbSessLsn gSessNums // spelling fixes .bss order
+extern u8 gNbSessLsn[7];
+#define gNbSessNcb gNetPeerNcb // spelling fixes .bss order
+extern NCB gNbSessNcb[7];
+#define gNbCtlNcb gNetAdminNcb // spelling fixes .bss order
+extern NCB gNbCtlNcb;
+#define gNbSessBuf gNbSessionBuffer // spelling fixes .bss order
+extern u8 gNbSessBuf[];
 extern u8 gNbLocalNum;
 extern char* gNbGroupName;
 extern u8 gNbCallRetries;
 extern u8 gNbRcvData[7][0x1000];
-extern NetbiosName gNetPeerNameTable[7];
-extern CRITICAL_SECTION gNetbiosRcvCrit;
-extern CRITICAL_SECTION gNetSendCs;
-extern tag_Anchor gNetIncomingQueue;
+#define gNbNameBuf gNetPeerNameTable // spelling fixes .bss order
+extern NetbiosName gNbNameBuf[7];
+#define gNbRcvLock gNetbiosRcvCrit // spelling fixes .bss order
+extern CRITICAL_SECTION gNbRcvLock;
+#define gNbSndLock gNetSendCs // spelling fixes .bss order
+extern CRITICAL_SECTION gNbSndLock;
+#define gNbRcvQueue gNetIncomingQueue // spelling fixes .bss order
+extern tag_Anchor gNbRcvQueue;
 extern tag_Anchor gNbSndQueue;
 extern tag_Anchor gNbFreeQueue;
 extern HANDLE gNbEvents[9];

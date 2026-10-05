@@ -35,7 +35,7 @@ textWidget::textWidget(
     i16 kind
 )
     : widget(x, y, width, height, id, kind) {
-    m_font = gpResourceManager->GetFont(fontName);
+    m_font = gResourceManager->GetFont(fontName);
     m_text = text;
     m_color = color;
     m_alignment = FONT_ALIGN_CENTER;
@@ -45,24 +45,24 @@ textWidget::textWidget(
 VA(0x0047186d, 0x12a)
 void textWidget::Read(void) {
     char name[RESOURCE_NAME_CAPACITY];
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    i16 length = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    i16 length = gResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
-    gpResourceManager->ReadBlock(m_text, length);
-    gpResourceManager->Read13(name);
-    gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(name);
-    gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    gResourceManager->ReadBlock(m_text, length);
+    gResourceManager->Read13(name);
+    gResourceManager->SavePosition();
+    m_font = gResourceManager->GetFont(name);
+    gResourceManager->RestorePosition();
+    m_color = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
+    m_alignment = static_cast<char>(gResourceManager->ReadWord() & COLOR_INDEX_MASK);
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT;
 }
 
 VA(0x00471997, 0x6a)
 textWidget::~textWidget(void) {
-    gpResourceManager->Dispose(m_font);
+    gResourceManager->Dispose(m_font);
     free(m_text);
 }
 

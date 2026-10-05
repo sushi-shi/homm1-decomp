@@ -28,11 +28,11 @@
 #include <SOURCE/wingraph.h>
 
 DATA(0x004a9e34)
-HWND hwndApp = NULL;
+HWND gAppWindow = NULL;
 DATA(0x004a9e38)
 i32 gForegroundApp = 0;
 DATA(0x004a9e3c)
-HMENU hmnuApp = NULL;
+HMENU gAppMenu = NULL;
 DATA(0x004a9e40)
 HANDLE gEventHandle = NULL;
 
@@ -42,7 +42,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     DWORD errorLast;
     MSG message;
 
-    hInstApp = instance;
+    gAppInstance = instance;
     gEventHandle =
         CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
     errorLast = GetLastError();
@@ -56,8 +56,8 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
         return 0;
     }
 
-    memset(gCommandParams, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
-    strncpy(gCommandParams, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
     if (EarlySetup() == 0)
         return 0;
     if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
@@ -83,30 +83,30 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
     WNDCLASSA appClass;
     RECT windowRectangle;
 
-    memset(bProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
-    bProcessMessage[WM_CREATE] = 1;
-    bProcessMessage[WM_KEYDOWN] = 1;
-    bProcessMessage[WM_KEYUP] = 1;
-    bProcessMessage[WM_MOUSEMOVE] = 1;
-    bProcessMessage[WM_LBUTTONDOWN] = 1;
-    bProcessMessage[WM_LBUTTONDBLCLK] = 1;
-    bProcessMessage[WM_RBUTTONDOWN] = 1;
-    bProcessMessage[WM_RBUTTONDBLCLK] = 1;
-    bProcessMessage[WM_LBUTTONUP] = 1;
-    bProcessMessage[WM_RBUTTONUP] = 1;
-    bProcessMessage[WM_TIMER] = 1;
-    bProcessMessage[WM_ACTIVATEAPP] = 1;
-    bProcessMessage[WM_ERASEBKGND] = 1;
-    bProcessMessage[WM_MOVE] = 1;
-    bProcessMessage[WM_SIZE] = 1;
-    bProcessMessage[WM_COMMAND] = 1;
-    bProcessMessage[WM_PALETTECHANGED] = 1;
-    bProcessMessage[WM_QUERYNEWPALETTE] = 1;
-    bProcessMessage[WM_PAINT] = 1;
-    bProcessMessage[WM_DESTROY] = 1;
-    bProcessMessage[WM_QUIT] = 1;
-    bProcessMessage[WM_CLOSE] = 1;
-    bProcessMessage[MM_MCINOTIFY] = 1;
+    memset(gProcessMessage, 0, KBWIN_MESSAGE_FILTER_SIZE);
+    gProcessMessage[WM_CREATE] = 1;
+    gProcessMessage[WM_KEYDOWN] = 1;
+    gProcessMessage[WM_KEYUP] = 1;
+    gProcessMessage[WM_MOUSEMOVE] = 1;
+    gProcessMessage[WM_LBUTTONDOWN] = 1;
+    gProcessMessage[WM_LBUTTONDBLCLK] = 1;
+    gProcessMessage[WM_RBUTTONDOWN] = 1;
+    gProcessMessage[WM_RBUTTONDBLCLK] = 1;
+    gProcessMessage[WM_LBUTTONUP] = 1;
+    gProcessMessage[WM_RBUTTONUP] = 1;
+    gProcessMessage[WM_TIMER] = 1;
+    gProcessMessage[WM_ACTIVATEAPP] = 1;
+    gProcessMessage[WM_ERASEBKGND] = 1;
+    gProcessMessage[WM_MOVE] = 1;
+    gProcessMessage[WM_SIZE] = 1;
+    gProcessMessage[WM_COMMAND] = 1;
+    gProcessMessage[WM_PALETTECHANGED] = 1;
+    gProcessMessage[WM_QUERYNEWPALETTE] = 1;
+    gProcessMessage[WM_PAINT] = 1;
+    gProcessMessage[WM_DESTROY] = 1;
+    gProcessMessage[WM_QUIT] = 1;
+    gProcessMessage[WM_CLOSE] = 1;
+    gProcessMessage[MM_MCINOTIFY] = 1;
 
     if (previousInstance == NULL) {
         appClass.hCursor = NULL;
@@ -127,30 +127,30 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
     }
 
     if (CURRENT_GRAPHICS_CONFIG.showMenu != 0)
-        giCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
+        gCurWindowsStyleFlags = KBWIN_WINDOWED_STYLE;
     else
-        giCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
+        gCurWindowsStyleFlags = KBWIN_FULLSCREEN_STYLE;
     windowRectangle.left = windowRectangle.top = 0;
     windowRectangle.right = CURRENT_GRAPHICS_CONFIG.width - 1;
     windowRectangle.bottom = CURRENT_GRAPHICS_CONFIG.height - 1;
-    AdjustWindowRect(&windowRectangle, giCurWindowsStyleFlags, CURRENT_GRAPHICS_CONFIG.showMenu);
-    hwndApp = CreateWindowExA(
+    AdjustWindowRect(&windowRectangle, gCurWindowsStyleFlags, CURRENT_GRAPHICS_CONFIG.showMenu);
+    gAppWindow = CreateWindowExA(
         0,
         gAppName,
         gTitle,
-        giCurWindowsStyleFlags,
+        gCurWindowsStyleFlags,
         CURRENT_GRAPHICS_CONFIG.x,
         CURRENT_GRAPHICS_CONFIG.y,
         windowRectangle.right - windowRectangle.left + 1,
         windowRectangle.bottom - windowRectangle.top + 1,
         NULL,
-        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? hmnuDflt : NULL,
+        CURRENT_GRAPHICS_CONFIG.showMenu != 0 ? gDefaultMenu : NULL,
         instance,
         NULL
     );
-    if (hwndApp != NULL) {
-        ShowWindow(hwndApp, showCommand);
-        SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
+    if (gAppWindow != NULL) {
+        ShowWindow(gAppWindow, showCommand);
+        SetWindowLongA(gAppWindow, GWL_STYLE, gCurWindowsStyleFlags);
         if (CURRENT_GRAPHICS_CONFIG.showMenu == 0)
             SetMenuStatus(0);
         InitGraphics();
@@ -174,7 +174,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
     static i32 gLastGTimerTickCount = 0;
     DATA(0x004a9e48)
     static i32 gLastCycleTickCount = 0;
-    if (message > KBWIN_PROCESS_MESSAGE_MAX || bProcessMessage[message] == 0)
+    if (message > KBWIN_PROCESS_MESSAGE_MAX || gProcessMessage[message] == 0)
         return DefWindowProcA(window, message, messageParam, messageData);
 
     switch (message) {
@@ -199,11 +199,11 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
                 return 0;
             break;
         case WM_TIMER:
-            lTemp = KBTickCount();
-            if (lTemp > gLastGTimerTickCount + KBWIN_TIMER_UPDATE_MIN_INTERVAL)
-                gLastGTimerTickCount = lTemp;
-            if (lTemp > gLastCycleTickCount + KBWIN_CYCLE_INTERVAL) {
-                gLastCycleTickCount = lTemp;
+            gTempValue = KBTickCount();
+            if (gTempValue > gLastGTimerTickCount + KBWIN_TIMER_UPDATE_MIN_INTERVAL)
+                gLastGTimerTickCount = gTempValue;
+            if (gTempValue > gLastCycleTickCount + KBWIN_CYCLE_INTERVAL) {
+                gLastCycleTickCount = gTempValue;
                 if (gGraphicsType == WINGRAPH_GRAPHICS_WING
                     && gMainVideoModeColorDepth != WINGRAPH_COLOR_DEPTH) {
                     gLastCycleTickCount += KBWIN_CYCLE_WING_DELAY;
@@ -219,44 +219,45 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
         case WM_ERASEBKGND:
             return 1;
         case WM_MOVE:
-            if (hwndApp == NULL)
+            if (gAppWindow == NULL)
                 return 0;
-            lTemp = GetWindowLongA(hwndApp, GWL_STYLE);
-            if ((lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0 && gClosingApp == 0
-                && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
-                GetWindowRect(window, &rcTemp);
-                CURRENT_GRAPHICS_CONFIG.x = rcTemp.left;
-                CURRENT_GRAPHICS_CONFIG.y = rcTemp.top;
+            gTempValue = GetWindowLongA(gAppWindow, GWL_STYLE);
+            if ((gTempValue & WS_MAXIMIZE) == 0 && (gTempValue & WS_MINIMIZE) == 0
+                && gClosingApp == 0 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
+                GetWindowRect(window, &gTempRect);
+                CURRENT_GRAPHICS_CONFIG.x = gTempRect.left;
+                CURRENT_GRAPHICS_CONFIG.y = gTempRect.top;
                 WritePrefs();
             }
             return 0;
         case WM_SIZE:
-            if (hwndApp != NULL) {
-                lTemp = GetWindowLongA(hwndApp, GWL_STYLE);
-                gMinimized = lTemp & WS_MINIMIZE;
-                if ((lTemp & WS_MINIMIZE) == 0)
+            if (gAppWindow != NULL) {
+                gTempValue = GetWindowLongA(gAppWindow, GWL_STYLE);
+                gMinimized = gTempValue & WS_MINIMIZE;
+                if ((gTempValue & WS_MINIMIZE) == 0)
                     EarlyResizeWindow(0, 0, 0, 0);
-                if ((lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0
+                if ((gTempValue & WS_MAXIMIZE) == 0 && (gTempValue & WS_MINIMIZE) == 0
                     && (LOWORD(messageData) < KBWIN_MIN_WIDTH
                         || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
-                    iTempX = LOWORD(messageData) < KBWIN_MIN_WIDTH ? KBWIN_MIN_WIDTH
+                    gTempX = LOWORD(messageData) < KBWIN_MIN_WIDTH ? KBWIN_MIN_WIDTH
                                                                    : LOWORD(messageData);
-                    iTempY = HIWORD(messageData) < KBWIN_MIN_HEIGHT ? KBWIN_MIN_HEIGHT
+                    gTempY = HIWORD(messageData) < KBWIN_MIN_HEIGHT ? KBWIN_MIN_HEIGHT
                                                                     : HIWORD(messageData);
-                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, iTempX, iTempY);
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, gTempX, gTempY);
                     return 0;
                 }
             }
-            iMainWinScreenWidth = LOWORD(messageData);
-            iMainWinScreenHeight = HIWORD(messageData);
-            if (iMainWinScreenWidth < 1)
-                iMainWinScreenWidth = 1;
-            if (iMainWinScreenHeight < 1)
-                iMainWinScreenHeight = 1;
-            if (hwndApp != NULL && (lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0
-                && gClosingApp == 0 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
-                CURRENT_GRAPHICS_CONFIG.width = iMainWinScreenWidth;
-                CURRENT_GRAPHICS_CONFIG.height = iMainWinScreenHeight;
+            gMainWinScreenWidth = LOWORD(messageData);
+            gMainWinScreenHeight = HIWORD(messageData);
+            if (gMainWinScreenWidth < 1)
+                gMainWinScreenWidth = 1;
+            if (gMainWinScreenHeight < 1)
+                gMainWinScreenHeight = 1;
+            if (gAppWindow != NULL && (gTempValue & WS_MAXIMIZE) == 0
+                && (gTempValue & WS_MINIMIZE) == 0 && gClosingApp == 0
+                && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
+                CURRENT_GRAPHICS_CONFIG.width = gMainWinScreenWidth;
+                CURRENT_GRAPHICS_CONFIG.height = gMainWinScreenHeight;
                 WritePrefs();
             }
             return 0;
@@ -272,13 +273,13 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             AppPaint(window, NULL);
             return 0;
         case WM_CLOSE:
-            if (window == hwndApp) {
+            if (window == gAppWindow) {
                 if (GameUnsaved() != 0) {
                     NormalDialog(
                         localization::Tr("adventure.confirm_quit"),
                         NORMAL_DIALOG_TYPE_YES_NO
                     );
-                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                    if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                         DestroyWindow(window);
                     return 0;
                 }
@@ -351,16 +352,16 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     i32 targetY;
     if (CURRENT_GRAPHICS_CONFIG.fullScreen != 0)
         return;
-    GetWindowRect(hwndApp, &windowRect);
+    GetWindowRect(gAppWindow, &windowRect);
     windowX = x == KBWIN_KEEP_POSITION ? windowRect.left : x;
     targetY = y == KBWIN_KEEP_POSITION ? windowRect.top : y;
     windowRect.left = 0;
     windowRect.top = 0;
     windowRect.right = width - 1;
     windowRect.bottom = height - 1;
-    AdjustWindowRect(&windowRect, giCurWindowsStyleFlags, CURRENT_GRAPHICS_CONFIG.showMenu);
+    AdjustWindowRect(&windowRect, gCurWindowsStyleFlags, CURRENT_GRAPHICS_CONFIG.showMenu);
     MoveWindow(
-        hwndApp,
+        gAppWindow,
         windowX,
         targetY,
         windowRect.right - windowRect.left + 1,
@@ -384,10 +385,10 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
         case KBWIN_MENU_ABOUT:
             lpfnDlgProc =
                 reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the BOOL dialog procedure.
-            DialogBoxParamA(hInstApp, "HEROES", window, lpfnDlgProc, 0);
+            DialogBoxParamA(gAppInstance, "HEROES", window, lpfnDlgProc, 0);
             break;
         case KBWIN_MENU_HELP:
-            WinHelpA(hwndApp, ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
+            WinHelpA(gAppWindow, ".\\HELP\\HEROES.HLP", HELP_FINDER, 0);
             break;
         case KBWIN_MENU_SIZE_640_480:
             ResizeWindow(
@@ -453,20 +454,20 @@ void UpdateDfltMenu(HMENU menu) {
 VA(0x00443b24, 0x91)
 void KBChangeMenu(HMENU menu) {
     if (menu == NULL)
-        menu = hmnuCurrent;
+        menu = gCurrentMenu;
     else
-        hmnuCurrent = menu;
-    hmnuApp = menu;
+        gCurrentMenu = menu;
+    gAppMenu = menu;
     if (CURRENT_GRAPHICS_CONFIG.showMenu) {
         if (menu != NULL) {
-            SetMenu(hwndApp, menu);
+            SetMenu(gAppWindow, menu);
             UpdateDfltMenu(menu);
             UpdateAppSpecificMenus(menu);
-            DrawMenuBar(hwndApp);
+            DrawMenuBar(gAppWindow);
         }
     } else {
-        SetMenu(hwndApp, NULL);
-        DrawMenuBar(hwndApp);
+        SetMenu(gAppWindow, NULL);
+        DrawMenuBar(gAppWindow);
     }
 }
 
@@ -485,13 +486,13 @@ void SetMenuStatus(i32 showMenu) {
     CURRENT_GRAPHICS_CONFIG.width = winWidth;
     CURRENT_GRAPHICS_CONFIG.height = height;
     WritePrefs();
-    windowStyle = GetWindowLongA(hwndApp, GWL_STYLE);
+    windowStyle = GetWindowLongA(gAppWindow, GWL_STYLE);
     if (CURRENT_GRAPHICS_CONFIG.showMenu)
-        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
+        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS | WS_OVERLAPPEDWINDOW;
     else
-        giCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
-    replacedStyle = SetWindowLongA(hwndApp, GWL_STYLE, giCurWindowsStyleFlags);
-    ShowWindow(hwndApp, SW_SHOWNA);
+        gCurWindowsStyleFlags = WS_VISIBLE | WS_CLIPSIBLINGS;
+    replacedStyle = SetWindowLongA(gAppWindow, GWL_STYLE, gCurWindowsStyleFlags);
+    ShowWindow(gAppWindow, SW_SHOWNA);
     ResizeWindow(
         KBWIN_KEEP_POSITION,
         KBWIN_KEEP_POSITION,
@@ -508,10 +509,10 @@ void SetNoDialogMenus(i32 menusEnabled) {
         return;
     if (!gNoDialogMenusOn && menusEnabled)
         return;
-    if (!hmnuApp)
+    if (!gAppMenu)
         return;
     gNoDialogMenusOn = 1 - menusEnabled;
-    SetMenus(hmnuApp, menusEnabled);
+    SetMenus(gAppMenu, menusEnabled);
 }
 
 // Recurse into popups, then restore each command from the normal or setup
@@ -835,21 +836,21 @@ void ReadPrefs(void) {
                 "AppPath",
                 NULL,
                 &regType,
-                reinterpret_cast<LPBYTE>(gcRegAppPath),
+                reinterpret_cast<LPBYTE>(gRegAppPath),
                 &length
             )
             != ERROR_SUCCESS)
-            strcpy(gcRegAppPath, "");
+            strcpy(gRegAppPath, "");
         if (RegQueryValueExA(
                 key,
                 "HMM1 CDDrive",
                 NULL,
                 &regType,
-                reinterpret_cast<LPBYTE>(gcRegCDRomPath),
+                reinterpret_cast<LPBYTE>(gRegCDRomPath),
                 &length
             )
             != ERROR_SUCCESS)
-            strcpy(gcRegCDRomPath, "");
+            strcpy(gRegCDRomPath, "");
         RegCloseKey(key);
         SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
         SetMusicSource(gConfig.musicSource != 0);
@@ -1087,12 +1088,12 @@ DATA(0x0049e700)
 char gAppName[] = localization::Tr("window.gAppName");
 DATA(0x0049e708)
 char gTitle[] = localization::Tr("window.gTitle");
-// No retail code reads this value; it sits between gTitle and gcCDTrackName.
+// No retail code reads this value; it sits between gTitle and gCDTrackName.
 DATA(0x0049e71c)
 i32 gUnusedWindowValue = -1;
 // This path deliberately has no leading slash.
 DATA(0x0049e720)
-static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
+static char* gCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
 
 VA(0x00444702, 0x72)
 // Suppress the system's critical-error dialog while probing an empty drive.
@@ -1132,7 +1133,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     sprintf(gText, "%sHEROES.AGG", gDataPath);
     thisFh = open(gText, _O_BINARY);
     if (thisFh == -1) {
-        if (_chdir(gcRegAppPath) == -1)
+        if (_chdir(gRegAppPath) == -1)
             return CD_SETUP_NO_APP_PATH;
         thisFh = open(gText, _O_BINARY);
         if (thisFh == -1)
@@ -1151,9 +1152,9 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
         }
     }
     tempDrives = index;
-    if (strlen(gcRegCDRomPath) > 0 && gcRegCDRomPath[0] >= 'A' && gcRegCDRomPath[0] <= 'Z'
-        && DriveSupportsFreeSpaceQuery(gcRegCDRomPath[0])) {
-        sprintf(gText, "%s%s", gcRegCDRomPath, gcCDTrackName);
+    if (strlen(gRegCDRomPath) > 0 && gRegCDRomPath[0] >= 'A' && gRegCDRomPath[0] <= 'Z'
+        && DriveSupportsFreeSpaceQuery(gRegCDRomPath[0])) {
+        sprintf(gText, "%s%s", gRegCDRomPath, gCDTrackName);
         thisFh = open(gText, _O_BINARY);
         if (thisFh != -1) {
             close(thisFh);
@@ -1165,7 +1166,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     for (eachCd = 0; eachCd < CD_SETUP_ATTEMPTS; eachCd++) {
         for (index = 0; index < tempDrives; index++) {
             if (DriveSupportsFreeSpaceQuery(cdDrives[index] + 'A')) {
-                sprintf(gText, "%c:%s", cdDrives[index] + 'A', gcCDTrackName);
+                sprintf(gText, "%c:%s", cdDrives[index] + 'A', gCDTrackName);
                 thisFh = open(gText, _O_BINARY);
                 if (thisFh == -1)
                     continue;
@@ -1177,7 +1178,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
                 }
                 close(thisFh);
                 if (pos != -1) {
-                    sprintf(gcRegCDRomPath, "%c:", cdDrives[index] + 'A');
+                    sprintf(gRegCDRomPath, "%c:", cdDrives[index] + 'A');
                     strcpy(
                         subKeyArray,
                         "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
@@ -1190,8 +1191,8 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
                             "HMM1 CDDrive",
                             0,
                             REG_SZ,
-                            reinterpret_cast<LPBYTE>(gcRegCDRomPath),
-                            strlen(gcRegCDRomPath) + 1
+                            reinterpret_cast<LPBYTE>(gRegCDRomPath),
+                            strlen(gRegCDRomPath) + 1
                         );
                         RegCloseKey(activeKeyVal);
                     }
@@ -1227,7 +1228,7 @@ void ProcessAssert(i32 condition, char* file, i32 line) {
     i32 unusedAssertWord;
     if (condition == 0) {
         sprintf(gText, "Assert statement failed in module %s, line %d.", file, line);
-        MessageBoxA(hwndApp, gText, "Assert Failure", MB_ICONHAND);
+        MessageBoxA(gAppWindow, gText, "Assert Failure", MB_ICONHAND);
         unusedAssertWord = 0;
         ShutDown(gText);
     }
@@ -1260,22 +1261,22 @@ char* FindLastToken(char* text, char token) {
 }
 
 DATA(0x004a99e8)
-HINSTANCE hInstApp;
+HINSTANCE gAppInstance;
 DATA(0x004a99c8)
-struct tagRECT rcTemp;
+struct tagRECT gTempRect;
 DATA(0x004a99dc)
-i32 iMainWinScreenHeight;
+i32 gMainWinScreenHeight;
 DATA(0x004a9dec)
-HMENU hmnuCurrent;
+HMENU gCurrentMenu;
 DATA(0x004a99e0)
-i32 iTempX;
+i32 gTempX;
 DATA(0x004a99e4)
-i32 iTempY;
+i32 gTempY;
 DATA(0x004a99d8)
-i32 lTemp;
+i32 gTempValue;
 DATA(0x004a99ec)
-u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
+u8 gProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004a9df4)
-char gCommandParams[KBWIN_COMMAND_LINE_CLEAR_SIZE];
+char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 DATA(0x004a9df0)
-i32 iMainWinScreenWidth;
+i32 gMainWinScreenWidth;

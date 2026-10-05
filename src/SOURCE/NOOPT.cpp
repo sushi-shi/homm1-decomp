@@ -16,8 +16,8 @@ VA(0x00446370, 0x2e)
 void DelayTicks(i32 ticks) {
     i32 unused = 0;
 
-    glTimers[DELAY_TICKS_TIMER_SLOT] = KBTickCount() + ticks * DELAY_TICK_MILLISECONDS;
-    DelayTil(glTimers + DELAY_TICKS_TIMER_SLOT);
+    gTimers[DELAY_TICKS_TIMER_SLOT] = KBTickCount() + ticks * DELAY_TICK_MILLISECONDS;
+    DelayTil(gTimers + DELAY_TICKS_TIMER_SLOT);
 }
 
 VA(0x0044639e, 0x3b)

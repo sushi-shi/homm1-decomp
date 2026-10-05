@@ -23,8 +23,8 @@
 #include <stdio.h>
 #include <string.h>
 
-    // Each setup handler's help row (the gSetup*Help table texts name them); the
-    // rows follow CHOICE_ONE.. and end with the cancel row.
+// Each setup handler's help row (the gSetup*Help table texts name them); the
+// rows follow CHOICE_ONE.. and end with the cancel row.
 
 // The stpcmpgn.bin dialog driven by SetupCampaignGameHandler.
 VA(0x00456b10, 0x10d)
@@ -32,20 +32,20 @@ i8 game::SetupCampaignGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpcmpgn.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupCampaignGameHandler, 0);
     delete window;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            gChosenCampaignIndex = CAMPAIGN_IRONFIST;
+            gCampaignChoice = CAMPAIGN_IRONFIST;
             break;
         case CHOICE_TWO:
-            gChosenCampaignIndex = CAMPAIGN_SLAYER;
+            gCampaignChoice = CAMPAIGN_SLAYER;
             break;
         case CHOICE_THREE:
-            gChosenCampaignIndex = CAMPAIGN_LAMANDA;
+            gCampaignChoice = CAMPAIGN_LAMANDA;
             break;
         case CHOICE_FOUR:
-            gChosenCampaignIndex = CAMPAIGN_ALAMAR;
+            gCampaignChoice = CAMPAIGN_ALAMAR;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -58,9 +58,9 @@ i8 game::SetupBaud(void) {
     heroWindow* window = new heroWindow(400, 35, "stpbaud.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupBaudHandler, 0);
+    gWindowManager->DoDialog(window, SetupBaudHandler, 0);
     delete window;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
             gConfig.baudRate[gDirectConnect] = CBR_2400;
             break;
@@ -86,9 +86,9 @@ i8 game::SetupComPort(void) {
     heroWindow* setupWindow = new heroWindow(400, 35, "stpcom.bin");
     if (!setupWindow)
         MemError();
-    gpWindowManager->DoDialog(setupWindow, SetupComPortHandler, 0);
+    gWindowManager->DoDialog(setupWindow, SetupComPortHandler, 0);
     delete setupWindow;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
             gConfig.comPort[gDirectConnect] = 1;
             break;
@@ -109,12 +109,7 @@ i8 game::SetupComPort(void) {
     if (!gDirectConnect) {
         strcpy(gConfig.modemInitString, "ATZ");
         sprintf(gText, "%s", gConfig.modemInitString);
-        GetDataEntry(
-            localization::Tr("setup.modem.initialization_prompt"),
-            initString,
-            40,
-            gText
-        );
+        GetDataEntry(localization::Tr("setup.modem.initialization_prompt"), initString, 40, gText);
         strcpy(gConfig.modemInitString, initString);
     }
     WritePrefs();
@@ -126,17 +121,17 @@ i8 game::SetupHotSeatGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stphotst.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupHotSeatGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupHotSeatGameHandler, 0);
     delete window;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            giNumHumanPlayers = 2;
+            gNumHumanPlayers = 2;
             break;
         case CHOICE_TWO:
-            giNumHumanPlayers = 3;
+            gNumHumanPlayers = 3;
             break;
         case CHOICE_THREE:
-            giNumHumanPlayers = 4;
+            gNumHumanPlayers = 4;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -149,14 +144,14 @@ i8 game::SetupNetworkGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpnet.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupNetworkGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupNetworkGameHandler, 0);
     delete window;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
+            gMapExtendedType = REMOTE_GAME_NETWORK_HOST;
             break;
         case CHOICE_TWO:
-            iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
+            gMapExtendedType = REMOTE_GAME_NETWORK_GUEST;
             break;
         case DIALOG_CANCEL:
             return 0;
@@ -181,11 +176,11 @@ i8 game::SetupModemGame(void) {
     }
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupModemGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupModemGameHandler, 0);
     delete window;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+            gMapExtendedType = REMOTE_GAME_MODEM_HOST;
             if (gConfig.comPort[gDirectConnect] == 0) {
                 if (!SetupComPort())
                     return 0;
@@ -194,7 +189,7 @@ i8 game::SetupModemGame(void) {
                 GetDataEntry(localization::Tr("modem.telephone.required"), numbuf, 35, NULL);
             break;
         case CHOICE_TWO:
-            iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+            gMapExtendedType = REMOTE_GAME_MODEM_GUEST;
             if (gConfig.comPort[gDirectConnect] == 0 && !SetupComPort())
                 return 0;
             break;
@@ -214,18 +209,18 @@ i8 game::SetupMultiPlayerGame(void) {
     heroWindow* window = new heroWindow(400, 35, "stpmp.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupMultiPlayerGameHandler, 0);
     delete window;
 
     gDirectConnect = 0;
-    switch (gpWindowManager->m_dialogResult) {
+    switch (gWindowManager->m_dialogResult) {
         case CHOICE_ONE:
-            iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+            gMapBaseType = MULTIPLAYER_BASE_HOT_SEAT;
             if (!SetupHotSeatGame())
                 return 0;
             break;
         case CHOICE_TWO:
-            iMPBaseType = MULTIPLAYER_BASE_NETWORK;
+            gMapBaseType = MULTIPLAYER_BASE_NETWORK;
             if (!SetupNetworkGame())
                 return 0;
             break;
@@ -235,7 +230,7 @@ i8 game::SetupMultiPlayerGame(void) {
         case CHOICE_THREE:
             gDirectConnect = 0;
         setupModem:
-            iMPBaseType = MULTIPLAYER_BASE_MODEM;
+            gMapBaseType = MULTIPLAYER_BASE_MODEM;
             loop = 1;
             while (loop) {
                 if (!SetupModemGame())
@@ -262,86 +257,86 @@ i8 game::SetupGame(i8 newGame) {
     i32 result;
 
     result = 1;
-    iMPExtendedType = REMOTE_GAME_UNSET;
-    iMPBaseType = MULTIPLAYER_BASE_UNSET;
-    giNumHumanPlayers = 1;
-    gbWaitForRemoteReceive = 0;
+    gMapExtendedType = REMOTE_GAME_UNSET;
+    gMapBaseType = MULTIPLAYER_BASE_UNSET;
+    gNumHumanPlayers = 1;
+    gWaitForRemoteReceive = 0;
     gDirectConnect = 0;
     gInSetupDialog = 1;
 
     if (gMenuCommand != APP_MENU_NONE) {
         switch (gMenuCommand) {
             case APP_MENU_NEW_CAMPAIGN_IRONFIST:
-                gChosenCampaignIndex = CAMPAIGN_IRONFIST;
+                gCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_CAMPAIGN_SLAYER:
-                gChosenCampaignIndex = CAMPAIGN_SLAYER;
+                gCampaignChoice = CAMPAIGN_SLAYER;
                 break;
             case APP_MENU_NEW_CAMPAIGN_LAMANDA:
-                gChosenCampaignIndex = CAMPAIGN_LAMANDA;
+                gCampaignChoice = CAMPAIGN_LAMANDA;
                 break;
             case APP_MENU_NEW_CAMPAIGN_ALAMAR:
-                gChosenCampaignIndex = CAMPAIGN_ALAMAR;
+                gCampaignChoice = CAMPAIGN_ALAMAR;
                 break;
             case APP_MENU_NEW_STANDARD_GAME:
             case APP_MENU_LOAD_STANDARD_GAME:
                 break;
             case APP_MENU_LOAD_CAMPAIGN_GAME:
-                gChosenCampaignIndex = CAMPAIGN_IRONFIST;
+                gCampaignChoice = CAMPAIGN_IRONFIST;
                 break;
             case APP_MENU_NEW_HOT_SEAT_2:
             case APP_MENU_LOAD_HOT_SEAT_2:
-                giNumHumanPlayers = 2;
-                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                gNumHumanPlayers = 2;
+                gMapBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
             case APP_MENU_NEW_HOT_SEAT_3:
             case APP_MENU_LOAD_HOT_SEAT_3:
-                giNumHumanPlayers = 3;
-                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                gNumHumanPlayers = 3;
+                gMapBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
             case APP_MENU_NEW_HOT_SEAT_4:
             case APP_MENU_LOAD_HOT_SEAT_4:
-                giNumHumanPlayers = 4;
-                iMPBaseType = MULTIPLAYER_BASE_HOT_SEAT;
+                gNumHumanPlayers = 4;
+                gMapBaseType = MULTIPLAYER_BASE_HOT_SEAT;
                 break;
             case APP_MENU_NEW_NETWORK_HOST:
             case APP_MENU_LOAD_NETWORK_HOST:
-                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
-                iMPExtendedType = REMOTE_GAME_NETWORK_HOST;
+                gMapBaseType = MULTIPLAYER_BASE_NETWORK;
+                gMapExtendedType = REMOTE_GAME_NETWORK_HOST;
                 goto remoteSetup;
             case APP_MENU_NEW_NETWORK_GUEST:
             case APP_MENU_LOAD_NETWORK_GUEST:
-                iMPBaseType = MULTIPLAYER_BASE_NETWORK;
-                iMPExtendedType = REMOTE_GAME_NETWORK_GUEST;
+                gMapBaseType = MULTIPLAYER_BASE_NETWORK;
+                gMapExtendedType = REMOTE_GAME_NETWORK_GUEST;
                 goto remoteSetup;
             case APP_MENU_NEW_MODEM_HOST:
             case APP_MENU_LOAD_MODEM_HOST:
-                iMPBaseType = MULTIPLAYER_BASE_MODEM;
-                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                gMapBaseType = MULTIPLAYER_BASE_MODEM;
+                gMapExtendedType = REMOTE_GAME_MODEM_HOST;
                 goto remoteSetup;
             case APP_MENU_NEW_MODEM_GUEST:
             case APP_MENU_LOAD_MODEM_GUEST:
-                iMPBaseType = MULTIPLAYER_BASE_MODEM;
-                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                gMapBaseType = MULTIPLAYER_BASE_MODEM;
+                gMapExtendedType = REMOTE_GAME_MODEM_GUEST;
                 goto remoteSetup;
             case APP_MENU_NEW_DIRECT_HOST:
             case APP_MENU_LOAD_DIRECT_HOST:
-                iMPBaseType = MULTIPLAYER_BASE_MODEM;
-                iMPExtendedType = REMOTE_GAME_MODEM_HOST;
+                gMapBaseType = MULTIPLAYER_BASE_MODEM;
+                gMapExtendedType = REMOTE_GAME_MODEM_HOST;
                 gDirectConnect = 1;
                 goto remoteSetup;
             case APP_MENU_NEW_DIRECT_GUEST:
             case APP_MENU_LOAD_DIRECT_GUEST:
-                iMPBaseType = MULTIPLAYER_BASE_MODEM;
-                iMPExtendedType = REMOTE_GAME_MODEM_GUEST;
+                gMapBaseType = MULTIPLAYER_BASE_MODEM;
+                gMapExtendedType = REMOTE_GAME_MODEM_GUEST;
                 gDirectConnect = 1;
                 goto remoteSetup;
 
             remoteSetup:
-                RemoteMain(iMPExtendedType);
-                if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST
-                    || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
-                    gbWaitForRemoteReceive = 1;
+                RemoteMain(gMapExtendedType);
+                if (gMapExtendedType == REMOTE_GAME_NETWORK_GUEST
+                    || gMapExtendedType == REMOTE_GAME_MODEM_GUEST)
+                    gWaitForRemoteReceive = 1;
                 break;
         }
         gMenuCommand = APP_MENU_NONE;
@@ -352,14 +347,14 @@ i8 game::SetupGame(i8 newGame) {
     window = new heroWindow(400, 35, "stpnewgm.bin");
     if (!window)
         MemError();
-    gpWindowManager->DoDialog(window, SetupGameHandler, 0);
+    gWindowManager->DoDialog(window, SetupGameHandler, 0);
     delete window;
 
-    switch (static_cast<i16>(gpWindowManager->m_dialogResult)) {
+    switch (static_cast<i16>(gWindowManager->m_dialogResult)) {
         case CHOICE_ONE:
             break;
         case CHOICE_TWO:
-            gChosenCampaignIndex = CAMPAIGN_IRONFIST;
+            gCampaignChoice = CAMPAIGN_IRONFIST;
             if (newGame) {
                 if (!SetupCampaignGame()) {
                     result = 0;
@@ -378,11 +373,11 @@ i8 game::SetupGame(i8 newGame) {
             goto done;
     }
 
-    if (iMPBaseType == MULTIPLAYER_BASE_NETWORK || iMPBaseType == MULTIPLAYER_BASE_MODEM) {
-        RemoteMain(iMPExtendedType);
-        if (iMPExtendedType == REMOTE_GAME_NETWORK_GUEST
-            || iMPExtendedType == REMOTE_GAME_MODEM_GUEST)
-            gbWaitForRemoteReceive = 1;
+    if (gMapBaseType == MULTIPLAYER_BASE_NETWORK || gMapBaseType == MULTIPLAYER_BASE_MODEM) {
+        RemoteMain(gMapExtendedType);
+        if (gMapExtendedType == REMOTE_GAME_NETWORK_GUEST
+            || gMapExtendedType == REMOTE_GAME_MODEM_GUEST)
+            gWaitForRemoteReceive = 1;
     }
 
 done:
@@ -397,23 +392,23 @@ i8 game::PickLoadGame(void) {
 
     if (!SetupGame(0))
         return 0;
-    if (gbWaitForRemoteReceive)
+    if (gWaitForRemoteReceive)
         return 1;
     fileReq = new fileRequester(
         0x136,
         0xe,
         FILE_REQUESTER_LOAD,
-        gChosenCampaignIndex > 0 ? "*.CGM" : "*.GM*",
+        gCampaignChoice > 0 ? "*.CGM" : "*.GM*",
         gGamePath,
-        gChosenCampaignIndex > 0 ? ".CGM" : ".GM*"
+        gCampaignChoice > 0 ? ".CGM" : ".GM*"
     );
     if (!fileReq)
         MemError();
-    gpMouseManager->ReallyShowPointer();
-    dialogResult = gpExec->DoDialog(fileReq);
-    gpMouseManager->ReallyHidePointer();
+    gMouseManager->ReallyShowPointer();
+    dialogResult = gExec->DoDialog(fileReq);
+    gMouseManager->ReallyHidePointer();
     if (dialogResult == DIALOG_BUTTON_2) {
-        gpGame->LoadGame(gLastFilename, 0, 0);
+        gGame->LoadGame(gLastFilename, 0, 0);
         delete fileReq;
         return 1;
     } else {
@@ -676,7 +671,7 @@ i16 BaseSetupHandler(tag_message& message) {
     if (handled || gMenuCommand != APP_MENU_NONE) {
         FINISH_DIALOG_MESSAGE(message);
         if (gMenuCommand != APP_MENU_NONE)
-            gpWindowManager->m_dialogResult = DIALOG_CANCEL;
+            gWindowManager->m_dialogResult = DIALOG_CANCEL;
         return MESSAGE_DISPATCH_FORWARD;
     }
     return MESSAGE_DISPATCH_CONSUME;

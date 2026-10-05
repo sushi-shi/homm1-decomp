@@ -39,10 +39,12 @@ DATA(0x004a6bc4)
 static i32 gSearchTerrainType;
 DATA(0x004a6ba0)
 static u32 gSearchPivot;
+#define gSearchDirection gSearchHeading // spelling fixes .bss order
 DATA(0x004a6bcc)
-static i32 gSearchHeading;
+static i32 gSearchDirection;
+#define gSearchNextCell gScanNeighborCell // spelling fixes .bss order
 DATA(0x004a6bac)
-static mapCell* gScanNeighborCell;
+static mapCell* gSearchNextCell;
 
 VA(0x00429c60, 0xa)
 searchArray::searchArray(void) {
@@ -68,7 +70,7 @@ i16 searchArray::QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2) {
                                  : xDistance + yDistance / DISTANCE_MINOR_DIVISOR;
 }
 
-// HoMM1-only per-terrain step cost that InitVars tabulates into giTerrainCost
+// HoMM1-only per-terrain step cost that InitVars tabulates into gTerrainCost
 // for both step kinds; a diagonal step costs half as much again.
 VA(0x00429cf0, 0x54)
 i16 TerrainStepCost(i8 terrain, i8 diagonal) {
@@ -98,12 +100,12 @@ i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
     if (waterMode == FINDPATH_WATER_MODE)
         terrain = FINDPATH_WATER_TERRAIN;
     if (diagonal == FINDPATH_STEP_STRAIGHT)
-        return giTerrainCost[terrain][diagonal];
-    if (mobility >= giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL])
-        return giTerrainCost[terrain][diagonal];
-    if (mobility >= giTerrainCost[terrain][FINDPATH_STEP_STRAIGHT])
-        return giTerrainCost[terrain][FINDPATH_STEP_STRAIGHT];
-    return giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
+        return gTerrainCost[terrain][diagonal];
+    if (mobility >= gTerrainCost[terrain][FINDPATH_STEP_DIAGONAL])
+        return gTerrainCost[terrain][diagonal];
+    if (mobility >= gTerrainCost[terrain][FINDPATH_STEP_STRAIGHT])
+        return gTerrainCost[terrain][FINDPATH_STEP_STRAIGHT];
+    return gTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
 }
 
 // HoMM1 has no castle moat, so combat paths take no moat slowdown.
@@ -144,10 +146,10 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
         if (node.distance > unit->m_stats.speed)
             continue;
         distance = QuickDistance(
-            gpCombatManager->m_hexCells[node.x].m_x,
-            gpCombatManager->m_hexCells[node.x].m_y,
-            gpCombatManager->m_hexCells[targetHex].m_x,
-            gpCombatManager->m_hexCells[targetHex].m_y
+            gCombatManager->m_hexCells[node.x].m_x,
+            gCombatManager->m_hexCells[node.x].m_y,
+            gCombatManager->m_hexCells[targetHex].m_x,
+            gCombatManager->m_hexCells[targetHex].m_y
         );
         if (unit->m_targetSide != COMBAT_SIDE_NONE) {
             attackMask = unit->GetAttackMask(node.x, ARMY_ATTACK_TARGET_ASSIGNED, attackTargetHex);
@@ -325,70 +327,70 @@ void searchArray::TestPossibleDirections(
     i32 waterMode
 ) {
     memset(occupied, 0, MAP_DIRECTION_COUNT);
-    gSearchCurrentCell = gpAdvManager->GetCell(x, y);
+    gSearchCurrentCell = gAdvManager->GetCell(x, y);
 
-    for (gSearchHeading = 0; gSearchHeading < MAP_DIRECTION_COUNT; gSearchHeading++) {
-        gSearchNeighborX = x + normalDirTable[gSearchHeading].x;
-        gSearchNeighborY = y + normalDirTable[gSearchHeading].y;
-        if (gSearchNeighborX <= -7 || gSearchNeighborX >= MAP_CELL_GRID_SIZE || gSearchNeighborY <= -7
-            || gSearchNeighborY >= MAP_CELL_GRID_SIZE) {
+    for (gSearchDirection = 0; gSearchDirection < MAP_DIRECTION_COUNT; gSearchDirection++) {
+        gSearchNeighborX = x + normalDirTable[gSearchDirection].x;
+        gSearchNeighborY = y + normalDirTable[gSearchDirection].y;
+        if (gSearchNeighborX <= -7 || gSearchNeighborX >= MAP_CELL_GRID_SIZE
+            || gSearchNeighborY <= -7 || gSearchNeighborY >= MAP_CELL_GRID_SIZE) {
             gSearchTerrainType = TERRAIN_INVALID;
             goto storeDirection;
         }
 
-        gScanNeighborCell = gpAdvManager->GetCell(gSearchNeighborX, gSearchNeighborY);
-        if (gScanNeighborCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
+        gSearchNextCell = gAdvManager->GetCell(gSearchNeighborX, gSearchNeighborY);
+        if (gSearchNextCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED) {
             gSearchTerrainType = TERRAIN_INVALID;
             goto storeDirection;
         }
-        if (gbHumanPlayer[giCurPlayer]
-            && !(gpGame->m_mapExtra[gSearchNeighborX][gSearchNeighborY] & giCurPlayerBit)) {
+        if (gHumanPlayer[gCurPlayer]
+            && !(gGame->m_mapExtra[gSearchNeighborX][gSearchNeighborY] & gCurPlayerBit)) {
             gSearchTerrainType = TERRAIN_INVALID;
             goto storeDirection;
         }
 
-        if (gScanNeighborCell->m_triggerType & MAP_TRIGGER_EVENT) {
+        if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
             if (!allowOccupied) {
                 if (gSearchNeighborX != m_specialTargetX || gSearchNeighborY != m_specialTargetY) {
                     gSearchTerrainType = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             } else {
-                occupied[gSearchHeading] = 1;
+                occupied[gSearchDirection] = 1;
             }
         }
 
-        gSearchTerrainType = CELL_TERRAIN(gScanNeighborCell);
+        gSearchTerrainType = CELL_TERRAIN(gSearchNextCell);
         if (gSearchTerrainType == TERRAIN_WATER) {
             if (waterMode) {
-                if (gScanNeighborCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
-                    || gScanNeighborCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)
+                    || gSearchNextCell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     gSearchTerrainType = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             } else {
-                if (gScanNeighborCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    && gScanNeighborCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
-                    && gScanNeighborCell->m_triggerType
+                if (gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                    && gSearchNextCell->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)
+                    && gSearchNextCell->m_triggerType
                            != (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIPWRECK)) {
                     gSearchTerrainType = TERRAIN_INVALID;
                     goto storeDirection;
                 }
             }
-        } else if (waterMode && gScanNeighborCell->m_triggerType != MAP_OBJECT_COAST) {
+        } else if (waterMode && gSearchNextCell->m_triggerType != MAP_OBJECT_COAST) {
             gSearchTerrainType = TERRAIN_INVALID;
             goto storeDirection;
         }
 
-        if ((1 << gSearchHeading) & MAP_DIRECTION_NORTH_MASK) {
+        if ((1 << gSearchDirection) & MAP_DIRECTION_NORTH_MASK) {
             if (CELL_HAS_NON_SHADOW_OBJECT(gSearchCurrentCell)) {
                 gSearchTerrainType = TERRAIN_INVALID;
                 goto storeDirection;
             }
-        } else if ((1 << gSearchHeading) & MAP_DIRECTION_SOUTH_MASK) {
-            if (CELL_HAS_NON_SHADOW_OBJECT(gScanNeighborCell)) {
-                if (gScanNeighborCell->m_triggerType & MAP_TRIGGER_EVENT) {
-                    gSearchObjectType = gScanNeighborCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
+        } else if ((1 << gSearchDirection) & MAP_DIRECTION_SOUTH_MASK) {
+            if (CELL_HAS_NON_SHADOW_OBJECT(gSearchNextCell)) {
+                if (gSearchNextCell->m_triggerType & MAP_TRIGGER_EVENT) {
+                    gSearchObjectType = gSearchNextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK;
                     if (gSearchObjectType != MAP_OBJECT_MONSTER
                         && gSearchObjectType != MAP_OBJECT_RESOURCE
                         && gSearchObjectType != MAP_OBJECT_TREASURE_CHEST
@@ -414,7 +416,7 @@ void searchArray::TestPossibleDirections(
         }
 
     storeDirection:
-        terrain[gSearchHeading] = static_cast<i8>(gSearchTerrainType);
+        terrain[gSearchDirection] = static_cast<i8>(gSearchTerrainType);
     }
 }
 

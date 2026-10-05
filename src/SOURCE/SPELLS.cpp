@@ -31,24 +31,24 @@
 
 VA(0x00459e90, 0x11f)
 i8 combatManager::ViewSpells(i32) {
-    m_selectedSpell = gpGame->ViewSpells(m_heroes[giCurGeneral], 0, CombatSpecialHandler, 0);
+    m_selectedSpell = gGame->ViewSpells(m_heroes[gCurGeneral], 0, CombatSpecialHandler, 0);
     if (m_selectedSpell != SPELL_NONE) {
         switch (m_selectedSpell) {
             case SPELL_CURE:
             case SPELL_DISPEL_MAGIC:
             case SPELL_ARMAGEDDON:
             case SPELL_STORM:
-                giNextAction = ACTION_CAST_SPELL;
-                giNextActionExtra = m_selectedSpell;
+                gNextAction = ACTION_CAST_SPELL;
+                gNextActionExtra = m_selectedSpell;
                 break;
             default:
-                giNextAction = ACTION_CAST_SPELL;
-                giNextActionExtra = m_selectedSpell;
-                gpMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
-                gpWindowManager->DoDialog(NULL, HandleCastSpell, 0);
+                gNextAction = ACTION_CAST_SPELL;
+                gNextActionExtra = m_selectedSpell;
+                gMouseManager->SetPointer("spelmous.mse", m_selectedSpell);
+                gWindowManager->DoDialog(NULL, HandleCastSpell, 0);
                 break;
         }
-        gpMouseManager->SetPointer("cmbtmous.mse", 0);
+        gMouseManager->SetPointer("cmbtmous.mse", 0);
         if (m_selectedSpell != SPELL_NONE)
             return 1;
     }
@@ -61,30 +61,27 @@ i16 CombatSpecialHandler(struct tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_COMMAND_HOVER:
-                if (message.id == gpWindowManager->m_lastHoverId)
+                if (message.id == gWindowManager->m_lastHoverId)
                     return MESSAGE_DISPATCH_CONSUME;
-                gpWindowManager->m_lastHoverId = message.id;
+                gWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case SPELL_BOOK_PREVIOUS_PAGE:
-                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_PREVIOUS_PAGE], 1);
                         break;
                     case SPELL_BOOK_NEXT_PAGE:
-                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_NEXT_PAGE], 1);
                         break;
                     case DIALOG_BUTTON_0:
-                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_CLOSE], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_CLOSE], 1);
                         break;
                     case SPELL_BOOK_ENTRY_FIRST:
                     case SPELL_BOOK_ENTRY_FIRST + 1:
                     case SPELL_BOOK_ENTRY_FIRST + 2:
                     case SPELL_BOOK_ENTRY_LAST:
-                        gpCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_SELECT_SPELL], 1);
                         break;
                     default:
-                        gpCombatManager->CombatMessage(
-                            gSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS],
-                            1
-                        );
+                        gCombatManager->CombatMessage(gSpellHelp[SPELL_HELP_VIEW_COMBAT_SPELLS], 1);
                         break;
                 }
                 return MESSAGE_DISPATCH_CONSUME;
@@ -103,41 +100,38 @@ i16 HandleCastSpell(struct tag_message& message) {
 
     switch (message.type) {
         case MESSAGE_MOUSE_MOVE:
-            hex = gpCombatManager->GetGridIndex(message.x, message.y);
+            hex = gCombatManager->GetGridIndex(message.x, message.y);
             if (hex != indexToCastOn) {
-                if (!gpCombatManager->ValidSpellTarget(gpCombatManager->m_selectedSpell, hex)) {
+                if (!gCombatManager->ValidSpellTarget(gCombatManager->m_selectedSpell, hex)) {
                     indexToCastOn = ARMY_HEX_INVALID;
-                    gpMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
-                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
-                        gpCombatManager->CombatMessage(
+                    gMouseManager->SetPointer(SPELL_POINTER_NO_TARGET);
+                    if (gCombatManager->m_selectedSpell == SPELL_TELEPORT && gInTeleportGetDest)
+                        gCombatManager->CombatMessage(
                             localization::Tr("spell.teleport.invalid"),
                             1
                         );
                     else
-                        gpCombatManager->CombatMessage(localization::Tr("spell.target.select"), 1);
+                        gCombatManager->CombatMessage(localization::Tr("spell.target.select"), 1);
                 } else {
                     indexToCastOn = hex;
-                    gpMouseManager->SetPointer(gpCombatManager->m_selectedSpell);
-                    gpCombatManager->SpellMessage(gpCombatManager->m_selectedSpell, hex);
+                    gMouseManager->SetPointer(gCombatManager->m_selectedSpell);
+                    gCombatManager->SpellMessage(gCombatManager->m_selectedSpell, hex);
                 }
             }
             break;
         case MESSAGE_LEFT_BUTTON_DOWN:
             if (indexToCastOn != ARMY_HEX_INVALID) {
                 if (gInTeleportGetDest)
-                    giNextActionGridIndex2 = indexToCastOn;
+                    gNextActionGridIndex2 = indexToCastOn;
                 else {
-                    giNextActionGridIndex = indexToCastOn;
-                    if (gpCombatManager->m_selectedSpell == SPELL_TELEPORT) {
+                    gNextActionGridIndex = indexToCastOn;
+                    if (gCombatManager->m_selectedSpell == SPELL_TELEPORT) {
                         gInTeleportGetDest = 1;
                         indexToCastOn = ARMY_HEX_INVALID;
                         message.type = MESSAGE_MOUSE_MOVE;
-                        gpMouseManager->MouseCoords(message.x, message.y);
+                        gMouseManager->MouseCoords(message.x, message.y);
                         HandleCastSpell(message);
-                        gpCombatManager->CombatMessage(
-                            localization::Tr("spell.teleport.select"),
-                            1
-                        );
+                        gCombatManager->CombatMessage(localization::Tr("spell.teleport.select"), 1);
                         return MESSAGE_DISPATCH_CONSUME;
                     }
                 }
@@ -151,8 +145,8 @@ i16 HandleCastSpell(struct tag_message& message) {
             if (message.keyCode != INPUT_SCAN_ESCAPE)
                 break;
         case MESSAGE_RIGHT_BUTTON_DOWN:
-            gpCombatManager->m_selectedSpell = SPELL_NONE;
-            giNextAction = ACTION_NONE;
+            gCombatManager->m_selectedSpell = SPELL_NONE;
+            gNextAction = ACTION_NONE;
             message.type = MESSAGE_WIDGET;
             message.command = WIDGET_COMMAND_DIALOG_SELECT;
             gInTeleportGetDest = 0;
@@ -191,9 +185,9 @@ i8 combatManager::ValidSpellTarget(i8 spell, i8 hex) {
         case SPELL_TELEPORT:
             if (gInTeleportGetDest) {
                 newHex = hex;
-                if (newHex == giNextActionGridIndex
-                    || !m_armies[gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantSide]
-                                [gpCombatManager->m_hexCells[giNextActionGridIndex].m_occupantIndex]
+                if (newHex == gNextActionGridIndex
+                    || !m_armies[gCombatManager->m_hexCells[gNextActionGridIndex].m_occupantSide]
+                                [gCombatManager->m_hexCells[gNextActionGridIndex].m_occupantIndex]
                                     .CanFit(&newHex))
                     return 0;
             } else {
@@ -277,9 +271,9 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                                 [m_hexCells[m_limitCreatureHex].m_occupantIndex]++;
         m_limitCreature = 0;
         m_limitCreatureHex = ARMY_HEX_INVALID;
-        gpCombatManager->DrawFrame(1);
+        gCombatManager->DrawFrame(1);
     }
-    gpMouseManager->ReallyHidePointer();
+    gMouseManager->ReallyHidePointer();
     if (!castByCreature && m_heroes[m_currentSide])
         m_heroes[m_currentSide]->UseSpell(spell);
     targetCreature = NULL;
@@ -343,7 +337,8 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             if (teleported->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 destination = targetHex;
                 if (teleported->m_facing == ARMY_FACING_RIGHT) {
-                    destination = teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_EAST);
+                    destination =
+                        teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_EAST);
                     if (destination == ARMY_HEX_INVALID
                         || (m_hexCells[destination].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[destination].m_occupantSide != armySide
@@ -352,7 +347,8 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
                         targetHex--;
                 }
                 if (teleported->m_facing == ARMY_FACING_LEFT) {
-                    destination = teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_WEST);
+                    destination =
+                        teleported->GetAdjacentCellIndex(destination, COMBAT_DIRECTION_WEST);
                     if (destination == ARMY_HEX_INVALID
                         || (m_hexCells[destination].m_occupantSide != COMBAT_SIDE_NONE
                             && (m_hexCells[destination].m_occupantSide != armySide
@@ -446,7 +442,7 @@ void combatManager::CastSpell(i8 spell, i8 targetHex, i8 castByCreature, i8 tele
             targetCreature->Stand(1);
             break;
         case SPELL_HASTE:
-            gpCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
+            gCombatManager->m_currentSpeed = CREATURE_SPEED_BLAZING;
             targetCreature->CancelSpell();
             targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
             targetCreature->SpellEffect(COMBAT_EFFECT_SLOW, 0);
@@ -585,10 +581,10 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
 
     m_computeExtent = m_redrawExtent = 0;
     fileIdNo = MAKEFILEID(gCombatFxNames[COMBAT_EFFECT_DISPEL_MAGIC]);
-    if (gEffectFileId != fileIdNo) {
-        gpResourceManager->Dispose(gLoadedEffectIcn);
-        gLoadedEffectIcn = gpResourceManager->GetIcon(fileIdNo);
-        gEffectFileId = fileIdNo;
+    if (gCurLoadedSpellFileId != fileIdNo) {
+        gResourceManager->Dispose(gCurLoadedSpellIcon);
+        gCurLoadedSpellIcon = gResourceManager->GetIcon(fileIdNo);
+        gCurLoadedSpellFileId = fileIdNo;
     }
     if (castSide == COMBAT_SIDE_ANY) {
         team = COMBAT_DEFENDER_SIDE;
@@ -618,12 +614,12 @@ void combatManager::CastMassSpell(i8 castSide, i8 cureOnly) {
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        gImpactOverlayFrame = armyIndex;
+        gSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     for (armyIndex = 0; armyIndex < 10; armyIndex++) {
         m_gridUpdateRow = 0;
-        gImpactOverlayFrame = armyIndex;
+        gSpellEffectFrame = armyIndex;
         DrawFrame(1);
     }
     if (castSide == COMBAT_SIDE_ANY) {
@@ -681,19 +677,19 @@ void combatManager::Fireball(i8 targetHex) {
 
     if (!ValidHex(targetHex))
         return;
-    fireballIcon = gpResourceManager->GetIcon("fireball.icn");
+    fireballIcon = gResourceManager->GetIcon("fireball.icn");
     xPos = m_hexCells[targetHex].m_x;
     y = m_hexCells[targetHex].m_y - 30;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         m_gridUpdateRow = 0;
-        ClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, xPos, y, i, 0);
-        FlipClippedIconToBitmap(fireballIcon, gpWindowManager->m_screen, xPos, y, i, 0);
+        ClippedIconToBitmap(fireballIcon, gWindowManager->m_screen, xPos, y, i, 0);
+        FlipClippedIconToBitmap(fireballIcon, gWindowManager->m_screen, xPos, y, i, 0);
         UpdateCombatArea();
         DrawFrame(0);
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
     }
-    gpResourceManager->Dispose(fireballIcon);
+    gResourceManager->Dispose(fireballIcon);
     curArmyPtr = &m_armies[m_currentSide][m_currentArmyIndex];
     adjHexes[0] = targetHex;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT; i++)
@@ -749,13 +745,13 @@ void combatManager::MeteorShower(i8 targetHex) {
 
     if (!ValidHex(targetHex))
         return;
-    rockIcon = gpResourceManager->GetIcon("meteor.icn");
+    rockIcon = gResourceManager->GetIcon("meteor.icn");
     curArmyPtr = &m_armies[m_currentSide][m_currentArmyIndex];
     adjHexes[0] = targetHex;
     for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT; i++)
         adjHexes[i + 1] = curArmyPtr->GetAdjacentCellIndex(targetHex, i);
     for (j = 0; j < 10; j++) {
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 112.5;
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 112.5;
         m_gridUpdateRow = 0;
         DrawFrame(0);
         for (i = 0; i < COMBAT_DIRECTION_ADJACENT_COUNT + 1; i++) {
@@ -769,9 +765,9 @@ void combatManager::MeteorShower(i8 targetHex) {
                 );
         }
         UpdateCombatArea();
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
     }
-    gpResourceManager->Dispose(rockIcon);
+    gResourceManager->Dispose(rockIcon);
     prevDmg = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     ClearEffects();
     hit = 0;
@@ -824,10 +820,10 @@ void combatManager::ElementalStorm(void) {
     i16 sideIdxNo;
     i8 hit;
 
-    storm = gpResourceManager->GetIcon("storm.icn");
+    storm = gResourceManager->GetIcon("storm.icn");
     for (oldCycle = 0; oldCycle < 5; oldCycle++) {
         for (frm = 0; frm < 10; frm++) {
-            glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+            gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
             m_gridUpdateRow = 0;
             DrawFrame(0);
             for (y = 0; y < 7; y++) {
@@ -841,10 +837,10 @@ void combatManager::ElementalStorm(void) {
                     );
             }
             UpdateCombatArea();
-            DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
+            DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         }
     }
-    gpResourceManager->Dispose(storm);
+    gResourceManager->Dispose(storm);
     hit = 0;
     prevDamage = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 25;
     for (sideIdxNo = 0; sideIdxNo < COMBAT_SIDE_COUNT; sideIdxNo++) {
@@ -904,13 +900,13 @@ void combatManager::Armageddon(void) {
         sprintf(gText, localization::Tr("combat.armageddon.damage"), dmg);
         CombatMessage(gText, 1);
     }
-    gpWindowManager->m_updateFlags = 0;
-    curPal = gpResourceManager->GetPalette("kb.pal");
+    gWindowManager->m_updateFlags = 0;
+    curPal = gResourceManager->GetPalette("kb.pal");
     workPalItem = new palette;
     if (!workPalItem)
         MemError();
     memcpy(workPalItem->Data(), curPal->Data(), 0x300);
-    glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+    gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     palDataEntry = workPalItem->Data();
     for (fadeStep = 0; fadeStep < 32; fadeStep++) {
         for (jx = 0; jx < PALETTE_COLOR_COUNT; jx++) {
@@ -919,9 +915,9 @@ void combatManager::Armageddon(void) {
             if (palDataEntry[jx * 3 + 2])
                 palDataEntry[jx * 3 + 2]--;
         }
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
         SetPalette(palDataEntry, 1);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
     }
     curArmy->PowEffect(COMBAT_POW_RED_FIRE);
     for (sideIdxNo = 0; sideIdxNo < COMBAT_SIDE_COUNT; sideIdxNo++) {
@@ -933,8 +929,8 @@ void combatManager::Armageddon(void) {
     }
     DrawFrame(1);
     SetPalette(curPal->Data(), 1);
-    gpWindowManager->m_updateFlags = 1;
-    gpResourceManager->Dispose(curPal);
+    gWindowManager->m_updateFlags = 1;
+    gResourceManager->Dispose(curPal);
     delete workPalItem;
 }
 

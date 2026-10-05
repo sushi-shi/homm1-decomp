@@ -554,7 +554,7 @@ H1_ENUM_CONST_END(ForcedMusicConstant)
 extern i32 gLastScrollTime;
 extern i32 gForceUpdate;
 // The adventure screen's bottom-right panel: gCurBottomView is the view
-// UpdBottomView last drew, giBottomViewOverride (KB.h) a temporary one that
+// UpdBottomView last drew, gBottomViewOverride (KB.h) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
 // resource message, and game's DISABLED hold while the AI moves.
 H1_ENUM_BEGIN(BottomViewMode)
@@ -568,7 +568,8 @@ H1_ENUM_BEGIN(BottomViewMode)
 H1_ENUM_END(BottomViewMode)
 extern i32 gCurBottomView;
 extern i32 gCurBottomViewEnemy;
-extern i32 iLastAnimFrame;
+#define gLastAnimFrame iLastAnimFrame // spelling fixes .bss order
+extern i32 gLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
 extern i32 gSandAnim;
 extern i32 gLastHourGlassPhase;
@@ -584,14 +585,19 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
 H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
 
 extern i32 gLimitUpdMinX;
-extern i32 giLimitUpdMinY;
-extern i32 giLimitUpdMaxX;
-extern i32 giLimitUpdMaxY;
+#define gLimitUpdMinY giLimitUpdMinY // spelling fixes .bss order
+extern i32 gLimitUpdMinY;
+extern i32 gLimitUpdMaxX;
+#define gLimitUpdMaxY giLimitUpdMaxY // spelling fixes .bss order
+extern i32 gLimitUpdMaxY;
 extern class heroWindow* gAdventurePanel;
-extern i8 bPrefsChanged;
-extern i8 gSaveClean;
+#define gPrefsChanged bPrefsChanged // spelling fixes .bss order
+extern i8 gPrefsChanged;
+#define gFreshSave gSaveClean // spelling fixes .bss order
+extern i8 gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
-extern i8 bComboDraw[][17];
+#define gComboDraw bComboDraw // spelling fixes .bss order
+extern i8 gComboDraw[][17];
 // DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
 extern i32 TrigX;
 extern i32 TrigY;
@@ -608,12 +614,14 @@ extern i16 gStepDelay[];
 // MoveHero's pixels per walk step by speed and the step offsets.
 extern i16 gPixelsPerStep[];
 extern i16 startVals[];
-extern i32 giFrameStep;
+#define gFrameStep giFrameStep // spelling fixes .bss order
+extern i32 gFrameStep;
 
 struct SMapChange {
     char _pad[64];
 };
-extern char cArmySizeName[];
+#define gArmySizeName cArmySizeName // spelling fixes .bss order
+extern char gArmySizeName[];
 extern i32 gCurHourGlassPhase;
 
 // Moved from ADVMGR.cpp.

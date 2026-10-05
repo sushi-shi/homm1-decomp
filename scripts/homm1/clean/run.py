@@ -136,10 +136,16 @@ def generate(files: dict[str, bytes], *, variant: str = "source", control: bool 
         raise ValueError("the classic view needs the snapshot's locales/ catalog")
     output: dict[str, bytes] = {}
     problems: list[str] = []
-    for name, kind in sorted(selected(files).items()):
+    chosen = sorted(selected(files).items())
+    renames = source.aliases(files[name].decode("utf-8") for name, kind in chosen
+                             if kind == "cpp")
+    for name, kind in chosen:
         text = files[name].decode("utf-8")
         try:
-            cleaned = transforms[kind](text, keep_lines=control)
+            if kind == "asm":
+                cleaned = source.clean_asm(text, keep_lines=control, renames=renames)
+            else:
+                cleaned = transforms[kind](text, keep_lines=control)
             if variant == "classic" and kind == "cpp":
                 cleaned = classic.render_cpp(cleaned, catalog)
             elif variant == "classic" and kind == "rc":

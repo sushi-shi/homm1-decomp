@@ -230,9 +230,9 @@ public:
     ((a)->m_creatureType == CREATURE_DRAGON || (a)->m_spellEffect == SPELL_ANTI_MAGIC)
 
 i16 GetAdjacentCellIndexNoArmy(i16 hex, i16 direction);
-// The combat spell-effect icon cache (KB.h gLoadedEffectIcn): army draws
+// The combat spell-effect icon cache (KB.h gCurLoadedSpellIcon): army draws
 // and PowEffect share one icon, reloaded when the effect file changes.
-// Stale alias of gEffectFileId (0x4c6d64, declared with combatManager);
+// Stale alias of gCurLoadedSpellFileId (0x4c6d64, declared with combatManager);
 // unreferenced.
 extern i16 gCurLoadedSpellEffect;
 // DamageEnemy flags a genie halving the target stack.

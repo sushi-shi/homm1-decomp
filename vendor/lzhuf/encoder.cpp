@@ -38,9 +38,11 @@ DATA(0x004d4d14) i16 match_length;
 DATA(0x004d259c) i16 lson[WINDOW_SIZE + 1];
 DATA(0x004d4d18) i16 rson[WINDOW_SIZE + 257];
 DATA(0x004d00a0) i16 dad[WINDOW_SIZE + 1];
-DATA(0x004d4d10) u32 decodeSkip;
+#define textsize decodeSkip // spelling fixes .bss order
+DATA(0x004d4d10) u32 textsize;
 DATA(0x004d45a4) u32 codesize;
-DATA(0x004d7f5c) u16 encbuf;
+#define putbuf encbuf // spelling fixes .bss order
+DATA(0x004d7f5c) u16 putbuf;
 DATA(0x004d7f5e) u8 putlen;
 DATA(0x004d2598) char *dataPtr;
 DATA(0x004d4d08) char *outputPos;
@@ -297,7 +299,7 @@ i32 DecodeData(char *destination, char *source)
 {
     register u32 size;
 
-    decodeSkip = 0;
+    textsize = 0;
     dataPtr = source;
     size = static_cast<u8>(*dataPtr++);
     size <<= 8;
@@ -324,7 +326,7 @@ i32 EncodeData(char *destination, char *source, u32 sourceLength)
     register u16 len;
     u32 stillConsumed;
 
-    encbuf = putlen = getbuf = getlen = codesize = 0;
+    putbuf = putlen = getbuf = getlen = codesize = 0;
     memset(freq, 0, sizeof(freq));
     memset(prnt, 0, sizeof(prnt));
     memset(son, 0, sizeof(son));
@@ -587,18 +589,18 @@ void ReconstructEncoderTree(void)
 VA(0x004745e1, 0x10c)
 void PutCode(i16 length, u16 code)
 {
-    encbuf |= code >> putlen;
+    putbuf |= code >> putlen;
     putlen += length;
     if (putlen >= 8) {
-        *dataPtr++ = static_cast<char>(encbuf >> 8) & 0xff;
+        *dataPtr++ = static_cast<char>(putbuf >> 8) & 0xff;
         putlen -= 8;
         if (putlen >= 8) {
-            *dataPtr++ = static_cast<char>(encbuf) & 0xff;
+            *dataPtr++ = static_cast<char>(putbuf) & 0xff;
             codesize += 2;
             putlen -= 8;
-            encbuf = static_cast<u16>(code << (length - putlen));
+            putbuf = static_cast<u16>(code << (length - putlen));
         } else {
-            encbuf <<= 8;
+            putbuf <<= 8;
             ++codesize;
         }
     }
@@ -620,7 +622,7 @@ VA(0x0047474c, 0x4a)
 static void EncodeEnd(void)
 {
     if (putlen != 0) {
-        *dataPtr++ = static_cast<char>(encbuf >> 8) & 0xff;
+        *dataPtr++ = static_cast<char>(putbuf >> 8) & 0xff;
         ++codesize;
     }
 }

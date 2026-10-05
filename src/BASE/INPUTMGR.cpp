@@ -17,17 +17,16 @@
 #include <io.h>
 #include <string.h>
 
-DATA(0x004a1388) static u8 gInputCharacterMapCp1251[0x80] = {
-    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c,
-    0x0d, 0x0e, 0x0f, 0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19,
-    0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20, 0x21, 0xdd, 0x23, 0x24, 0x25, 0x26,
-    0xfd, 0x28, 0x29, 0x2a, 0x2b, 0xe1, 0x2d, 0xfe, 0xb8, 0x30, 0x31, 0x32, 0x33,
-    0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0xc6, 0xe6, 0xc1, 0x3d, 0xde, 0xa8, 0x40,
-    0xd4, 0xc8, 0xd1, 0xc2, 0xd3, 0xc0, 0xcf, 0xd0, 0xd8, 0xce, 0xcb, 0xc4, 0xdc,
-    0xd2, 0xd9, 0xc7, 0xc9, 0xca, 0xdb, 0xc5, 0xc3, 0xcc, 0xd6, 0xd7, 0xcd, 0xdf,
-    0xf5, 0x5c, 0xfa, 0x5e, 0x5f, 0x60, 0xf4, 0xe8, 0xf1, 0xe2, 0xf3, 0xe0, 0xef,
-    0xf0, 0xf8, 0xee, 0xeb, 0xe4, 0xfc, 0xf2, 0xf9, 0xe7, 0xe9, 0xea, 0xfb, 0xe5,
-    0xe3, 0xec, 0xf6, 0xf7, 0xed, 0xff, 0xd5, 0x7c, 0xda, 0x7e, 0x7f
+DATA(0x004a1388)
+static u8 gInputCharacterMapCp1251[0x80] = {
+    0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f,
+    0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f,
+    0x20, 0x21, 0xdd, 0x23, 0x24, 0x25, 0x26, 0xfd, 0x28, 0x29, 0x2a, 0x2b, 0xe1, 0x2d, 0xfe, 0xb8,
+    0x30, 0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0xc6, 0xe6, 0xc1, 0x3d, 0xde, 0xa8,
+    0x40, 0xd4, 0xc8, 0xd1, 0xc2, 0xd3, 0xc0, 0xcf, 0xd0, 0xd8, 0xce, 0xcb, 0xc4, 0xdc, 0xd2, 0xd9,
+    0xc7, 0xc9, 0xca, 0xdb, 0xc5, 0xc3, 0xcc, 0xd6, 0xd7, 0xcd, 0xdf, 0xf5, 0x5c, 0xfa, 0x5e, 0x5f,
+    0x60, 0xf4, 0xe8, 0xf1, 0xe2, 0xf3, 0xe0, 0xef, 0xf0, 0xf8, 0xee, 0xeb, 0xe4, 0xfc, 0xf2, 0xf9,
+    0xe7, 0xe9, 0xea, 0xfb, 0xe5, 0xe3, 0xec, 0xf6, 0xf7, 0xed, 0xff, 0xd5, 0x7c, 0xda, 0x7e, 0x7f
 };
 
 static inline void ResetEventQueue(inputManager* manager) {
@@ -37,12 +36,12 @@ static inline void ResetEventQueue(inputManager* manager) {
 
 VA(0x0046e560, 0x464)
 i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) {
-    if (gpInputManager == NULL)
+    if (gInputManager == NULL)
         return 1;
-    if (gpInputManager->m_active != 1)
+    if (gInputManager->m_active != 1)
         return 1;
 
-    tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
+    tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->type = MESSAGE_NONE;
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
@@ -59,16 +58,16 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_CONTROL;
                     break;
                 case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_ALT;
                     break;
                 case INPUT_SCAN_LEFT_SHIFT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_LEFT_SHIFT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_LEFT_SHIFT;
                     break;
                 case INPUT_SCAN_RIGHT_SHIFT:
-                    gpInputManager->m_modifiers |= MESSAGE_MODIFIER_RIGHT_SHIFT;
+                    gInputManager->m_modifiers |= MESSAGE_MODIFIER_RIGHT_SHIFT;
                     break;
             }
             break;
@@ -82,37 +81,37 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
             event->modifiers = MESSAGE_MODIFIER_NONE;
             switch (event->keyCode) {
                 case INPUT_SCAN_CONTROL:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_CONTROL;
                     break;
                 case INPUT_SCAN_ALT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_ALT;
                     break;
                 case INPUT_SCAN_LEFT_SHIFT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_LEFT_SHIFT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_LEFT_SHIFT;
                     break;
                 case INPUT_SCAN_RIGHT_SHIFT:
-                    gpInputManager->m_modifiers &= ~MESSAGE_MODIFIER_RIGHT_SHIFT;
+                    gInputManager->m_modifiers &= ~MESSAGE_MODIFIER_RIGHT_SHIFT;
                     break;
             }
             break;
     }
 
     if (event->type != MESSAGE_NONE) {
-        event->modifiers = gpInputManager->m_modifiers;
-        gpInputManager->m_writeIndex++;
-        gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
-        if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
-            gpInputManager->m_readIndex++;
-            gpInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
+        event->modifiers = gInputManager->m_modifiers;
+        gInputManager->m_writeIndex++;
+        gInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
+        if (gInputManager->m_readIndex == gInputManager->m_writeIndex) {
+            gInputManager->m_readIndex++;
+            gInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
         }
-        gpInputManager->m_field_0x342 = 0;
-        if (gpWindowManager->m_active == 1) {
+        gInputManager->m_field_0x342 = 0;
+        if (gWindowManager->m_active == 1) {
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F12
                 && (event->modifiers & MESSAGE_MODIFIER_SHIFT_KEYS))
-                gpWindowManager->ScreenShot();
+                gWindowManager->ScreenShot();
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F1) {
                 SetFullScreenStatus(FALSE);
-                AppCommand(hwndApp, 0, KBWIN_MENU_HELP, 0);
+                AppCommand(gAppWindow, 0, KBWIN_MENU_HELP, 0);
             }
             if (event->type == MESSAGE_KEY_DOWN && event->keyCode == INPUT_SCAN_F4)
                 SetFullScreenStatus(1 - CURRENT_GRAPHICS_CONFIG.fullScreen);
@@ -124,16 +123,16 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
 VA(0x0046e9c4, 0x33a)
 #line 137 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\INPUTMGR.CPP"
 i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
-    if (gpInputManager == NULL)
+    if (gInputManager == NULL)
         return 1;
-    if (gpInputManager->m_active != 1)
+    if (gInputManager->m_active != 1)
         return 1;
-    if (gpInputManager->m_mouseMessageActive != 0)
+    if (gInputManager->m_mouseMessageActive != 0)
         return 1;
-    gpInputManager->m_mouseMessageActive = 1;
+    gInputManager->m_mouseMessageActive = 1;
 
     i32 captureReleased;
-    tag_message* event = &gpInputManager->m_eventRing[gpInputManager->m_writeIndex];
+    tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
     event->x = 0;
@@ -148,11 +147,11 @@ i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
             goto mouseCoordinates;
         case WM_LBUTTONDOWN:
             event->type = MESSAGE_LEFT_BUTTON_DOWN;
-            SetCapture(hwndApp);
+            SetCapture(gAppWindow);
             goto mouseCoordinates;
         case WM_RBUTTONDOWN:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
-            SetCapture(hwndApp);
+            SetCapture(gAppWindow);
             goto mouseCoordinates;
         case WM_RBUTTONDBLCLK:
             event->type = MESSAGE_RIGHT_BUTTON_DOWN;
@@ -165,33 +164,33 @@ i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
             event->type = MESSAGE_RIGHT_BUTTON_UP;
             captureReleased = ReleaseCapture();
 
-mouseCoordinates:
+        mouseCoordinates:
 #line 191
-        H1_ASSERT(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
-        event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
-        event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
+            H1_ASSERT(gMainWinScreenHeight > 0 && gMainWinScreenWidth > 0);
+            event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
+            event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
     }
 
 mouseMoveCursorCheck:
-    if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
+    if (message == WM_MOUSEMOVE && gMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
-            gpMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
+            gMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
     }
 
 afterMouseCoordinates:
     event->modifiers = MESSAGE_MODIFIER_NONE;
     if (event->type != MESSAGE_NONE) {
-        event->modifiers = gpInputManager->m_modifiers;
-        gpInputManager->m_writeIndex++;
-        gpInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
-        if (gpInputManager->m_readIndex == gpInputManager->m_writeIndex) {
-            gpInputManager->m_readIndex++;
-            gpInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
+        event->modifiers = gInputManager->m_modifiers;
+        gInputManager->m_writeIndex++;
+        gInputManager->m_writeIndex %= INPUT_EVENT_RING_CAPACITY;
+        if (gInputManager->m_readIndex == gInputManager->m_writeIndex) {
+            gInputManager->m_readIndex++;
+            gInputManager->m_readIndex %= INPUT_EVENT_RING_CAPACITY;
         }
     }
 
-    gpInputManager->m_mouseMessageActive = 0;
+    gInputManager->m_mouseMessageActive = 0;
     return event->type == MESSAGE_NONE;
 }
 
@@ -251,7 +250,7 @@ VA(0x0046eed9, 0xfe)
 tag_message inputManager::GetEvent(void) {
     tag_message event;
     PollSound();
-    if (gpInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
+    if (gInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
         event.type = MESSAGE_NONE;
         event.id = 0;
         event.command = event.id;
@@ -305,8 +304,7 @@ void inputManager::SetKeyCodeType(i16 keyCodeType) {
 
 VA(0x0046f085, 0x34)
 void TranslateInputCharacterCp1251(tag_message& event) {
-    if (event.keyCode >= 0
-        && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMapCp1251)))
+    if (event.keyCode >= 0 && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMapCp1251)))
         event.keyCode = static_cast<i8>(gInputCharacterMapCp1251[event.keyCode]);
 }
 

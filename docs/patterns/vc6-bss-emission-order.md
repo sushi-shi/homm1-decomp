@@ -62,9 +62,26 @@ longest key-ascending run; the rest need a name in the key window left
 between their kept neighbours, a zero initializer, or (for ties) another
 declaration order. Sibling spellings are the strongest evidence a window
 offers: `iMainWinScreenHeight` (key 410) and `iTempX`/`iTempY` (496/497)
-next to `iMainWinScreenWidth` and `iTempY`, `gBigFont`/`gSmallFont` (79/389)
+next to `gMainWinScreenWidth` and `iTempY`, `gBigFont`/`gSmallFont` (79/389)
 in `SOURCE/KB`, and `cColorBits` beside `cAndBits` in `BASE/MOUSEMGR` all
 fit their windows without search.
+
+## Alias defines
+
+The source spells the readable name; where that name's key falls outside its
+retail window, the owning header maps it to a spelling whose key fits,
+directly above the `extern` (file statics above their definition, function
+statics above their declaration):
+
+```cpp
+#define gGame gpGame // spelling fixes .bss order
+extern class game* gGame;
+```
+
+The compiler hashes the storage spelling, and function-local statics take it
+into their decorated name (`?s_direction_4@?1??SeedPosition@...`). Tie order
+still follows the first declaration. The generated trees (`homm1 clean`)
+drop these defines.
 
 ## Does not establish
 
