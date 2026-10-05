@@ -358,13 +358,21 @@ class Placer:
 
     # -- thunks ---------------------------------------------------------------
     def thunks(self) -> list[tuple[int, str, str]]:
-        import json
         from homm1.delink.image import Image
-        census = json.loads((retail_dir(self.image) / "census.json").read_text())
-        image_thunks = {(t["dll"].upper(), t["import_key"]): int(t["rva"], 16)
-                        for t in census["import_thunks"]}
-        slots = {slot: (dll.upper(), name or f"ordinal_{ordinal}")
-                 for slot, name, dll, ordinal in Image(self.game).import_slots()}
+
+        def iat(pe):
+            return {slot: (dll.upper(), name or f"ordinal_{ordinal}")
+                    for slot, name, dll, ordinal in Image(pe).import_slots()}
+        image_slots = iat(self.pe)
+        image_thunks = {}
+        for r in read_tsv(retail_dir(self.image) / "functions.tsv")[2]:
+            rva = int(r["rva"], 16)
+            raw = self.pe.read(rva, 6)
+            if r["kind"] == "thunk" and raw[:2] == b"\xff\x25":
+                key = image_slots.get(struct.unpack_from("<I", raw, 2)[0] - 0x400000)
+                if key:
+                    image_thunks[key] = rva
+        slots = iat(self.game)
         out = []
         for b in self.bindings:
             if b["kind"] != "thunk" or not b["name"]:
@@ -407,15 +415,16 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
     for erva, (name, why) in sorted(p.callee_names().items()):
         if erva not in taken:
             referents.append([f"0x{erva:08x}", name, why])
-    # LIBCMT publics at census starts whose whole member contribution matched
+    # LIBCMT bodies the DNA census matches exactly (masked) to one member
     named = {int(r[0], 16) for r in referents} | {int(r[0], 16) for r in placements}
-    import json
-    census = json.loads((retail_dir(p.image) / "census.json").read_text())
-    for start in census["starts"]:
-        rva = int(start["rva"], 16)
-        if "library_symbol" in start and rva not in named:
-            referents.append([f"0x{rva:08x}", start["library_symbol"],
-                              f"{start['evidence'][0]} (public symbol)"])
+    dna = retail_dir(p.image) / "dna_bands.tsv"
+    if dna.is_file():
+        for r in read_tsv(dna)[2]:
+            rva = int(r["rva"], 16)
+            if r["class"] == "crt-exact" and r["symbol"] and rva not in named \
+                    and r["source"].startswith("libcmt"):
+                referents.append([f"0x{rva:08x}", r["symbol"],
+                                  f"masked-exact {r['source']} (dna_bands.tsv)"])
     for grva, (erva, why) in sorted(p.data.items(), key=lambda kv: kv[1][0]):
         b = by_rva[grva]
         if b["channel"] in SRC_CHANNELS and b["unit"] in p.shared:
@@ -455,10 +464,20 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
         if len(deltas) == 1:
             d = deltas.pop()
             rows.append((lo + d, hi + d, r["unit"], r["class"]))
+    # Rows of image-only units are hand-owned (reviewed spans); keep them.
+    current = retail_dir(p.image) / "link_order.tsv"
+    banner = []
+    if current.is_file():
+        banner, _h, kept = read_tsv(current)
+        rows += [(int(r["lo"], 16), int(r["hi"], 16), r["unit"], r["class"])
+                 for r in kept if r["unit"] not in p.shared]
+    banner = [line for line in banner if line.startswith("# image-only:")] or [
+        "# image-only: spans of units with no game counterpart are reviewed by hand."]
     rows.sort()
     write_tsv(out / "link_order.tsv", [
-        digest_line,
-        "# Shared units' contributions: game link_order rows moved by their placed bodies' delta.",
+        "# Shared units' rows are game link_order rows moved by their placed bodies' delta",
+        f"# (`homm1 --image {p.image} audit placements --write-config`).",
+        *banner,
         "# Exact body spans only; padding gaps are not assigned."],
         ["index", "unit", "lo", "hi", "class"],
         [[str(i), u, f"0x{lo:08x}", f"0x{hi:08x}", c] for i, (lo, hi, u, c) in enumerate(rows)])
@@ -492,6 +511,60 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
             "vtables": len(vtables), "compgen": len(compgen)}
 
 
+def write_accounting(p: Placer, path: Path) -> dict:
+    """One row per reconstruction-target function of the image: its shared
+    unit and game counterpart, an identical game body in an image-specific
+    unit, a callee name proven only by shared call sites, or none."""
+    from collections import Counter
+    out = retail_dir(p.image)
+    by_rva = {b["rva"]: b for b in p.bindings}
+    image_rva = {erva: grva for grva, (erva, _w) in p.functions.items()}
+    callees = p.callee_names()
+    dna = {int(r["rva"], 16): r for r in read_tsv(out / "dna_bands.tsv")[2]}
+    units = [(int(r["lo"], 16), int(r["hi"], 16), r["unit"])
+             for r in read_tsv(out / "link_order.tsv")[2]]
+
+    def unit_of(rva):
+        return next((u for lo, hi, u in units if lo <= rva < hi), "")
+    rows, verdicts = [], Counter()
+    for start in sorted(int(r["rva"], 16) for r in read_tsv(out / "functions.tsv")[2]):
+        cls = dna.get(start, {}).get("class", "unknown")
+        if cls.startswith("crt") or cls in ("import-thunk", "eh-funclet", "linker-pad") \
+                or (cls != "unknown" and start not in image_rva):
+            continue                      # runtime, thunk, EH, fill, compiler helper
+        unit = unit_of(start)
+        grva = image_rva.get(start)
+        if grva is not None:
+            b = by_rva[grva]
+            shared = b["unit"] in p.shared
+            verdict = "shared-unit" if shared else "identical-body"
+            reason = ((f"compiled from the shared {b['unit']} source"
+                       + ("" if b["channel"] in SRC_CHANNELS else " (compiler-generated)"))
+                      if shared else
+                      f"retail body identical (fields masked) to {b['unit'] or 'game'} "
+                      f"{b['name']}; separate translation unit")
+            row = [p.image, f"0x{start:08x}", b["name"], unit, "game", f"0x{grva:08x}",
+                   b["name"], b["unit"], verdict, reason]
+        elif start in callees:
+            name, why = callees[start]
+            verdict = "call-site-named"
+            row = [p.image, f"0x{start:08x}", name, unit, "game", "", name, "",
+                   verdict, f"body not identical; {why}"]
+        else:
+            verdict = "image-specific"
+            row = [p.image, f"0x{start:08x}", "", unit, "", "", "", "", verdict,
+                   "no game body or call site corresponds"]
+        verdicts[verdict] += 1
+        rows.append(row)
+    write_tsv(path, [
+        f"# {p.image} reconstruction targets against the game: "
+        f"`homm1 --image {p.image} audit placements --accounting {path.relative_to(REPO)}`.",
+        "# " + ", ".join(f"{k} {v}" for k, v in sorted(verdicts.items()))],
+        ["image", "rva", "name", "unit", "counterpart_image", "counterpart_rva",
+         "counterpart", "counterpart_unit", "verdict", "reason"], rows)
+    return dict(verdicts)
+
+
 from homm1.core.usage import logged
 
 
@@ -500,6 +573,8 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(prog="homm1 audit placements", description=__doc__,
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--write-config", action="store_true")
+    ap.add_argument("--accounting", type=Path,
+                    help="write the shared-function accounting TSV to PATH")
     ap.add_argument("--check", action="store_true",
                     help="fail when the committed tables differ from a fresh derivation")
     a = ap.parse_args(argv)
@@ -531,6 +606,9 @@ def main(argv=None) -> int:
         if stale:
             return 1
         print("[placements] tables current")
+    if a.accounting:
+        counts = write_accounting(p, a.accounting.resolve())
+        print("[placements] accounting " + ", ".join(f"{k}={v}" for k, v in sorted(counts.items())))
     if a.write_config:
         counts = write_tables(p)
         print("[placements] wrote " + ", ".join(f"{k}={v}" for k, v in counts.items()))

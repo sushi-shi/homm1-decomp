@@ -3,9 +3,7 @@
     homm1 --image editor audit census                 # report only
     homm1 --image editor audit census --write-config  # (re)write the tables
 
-The pass is the committed form of the method recorded for the game census
-(`config/retail/buka-function-census.json`, `buka-absolute-references.json`):
-retail instructions are decoded recursively from the PE entry point, every
+Retail instructions are decoded recursively from the PE entry point, every
 direct call target, every code address an instruction operand or an
 initialized data word names, the import thunks, C++ EH registration stubs and
 their unwind funclets, and switch dispatch tables. Unreached code between
@@ -20,8 +18,8 @@ Outputs, all keyed to the selected image (`homm1 --image`):
                                 entries, and initialized data words that are
                                 code addresses
   absolute_reference_evidence.tsv  one evidence row per field
-  census.json                   counts, switch tables, EH groups, thunks and
-                                the rejected candidates
+  <image build>/gen/census.json  the report: counts, switch tables, EH
+                                groups, thunks and rejected candidates
 
 Instruction operands are admitted only at the decoded instruction boundary;
 relative branches/calls are excluded. Data words are admitted here only when
@@ -758,7 +756,7 @@ def write_tables(census: Census, out: Path) -> dict:
     lines = [
         f"# {census.pe.path.name} structural census: homm1 audit census (scripts/homm1/audit/census.py).",
         f"# image-sha256: {digest}",
-        "# Evidence: census.json. Names and strict source claims are separate.",
+        "# Starts only; names and strict source claims are separate.",
         "rva\tkind",
     ]
     lines += [f"0x{r:08x}\t{census.kinds.get(r, '')}" for r in rows]
@@ -767,7 +765,7 @@ def write_tables(census: Census, out: Path) -> dict:
     (out / "absolute_relocations.tsv").write_text("\n".join([
         f"# image-sha256: {digest}",
         "# Instruction operands, dispatch slots and code-address data words.",
-        "# Evidence: absolute_reference_evidence.tsv and census.json",
+        "# Evidence: absolute_reference_evidence.tsv",
         "site_rva\tkind",
     ] + [f"0x{r['site']:x}\tdir32" for r in fields]) + "\n")
     (out / "absolute_reference_evidence.tsv").write_text("\n".join([
@@ -785,7 +783,10 @@ def write_tables(census: Census, out: Path) -> dict:
                               if r in census.lib_names else {})} for r in rows],
                "switch_tables": census.tables, "eh_groups": census.eh_groups,
                "import_thunks": census.thunks, "rejected": census.rejected}
-    (out / "census.json").write_text(json.dumps(payload, indent=1) + "\n")
+    from homm1.core.paths import gen_dir
+    report = gen_dir() / "census.json"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(json.dumps(payload, indent=1) + "\n")
     return summary
 
 
