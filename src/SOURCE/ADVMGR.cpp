@@ -6138,7 +6138,7 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     i32 updateCount;
     i32 drawY;
     i32 drawX;
-    mapCell* cellPtr;
+    mapCell* cell;
 
     PollSound();
     if (!bShowIt)
@@ -6169,10 +6169,10 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
         for (drawY = 0; drawY < ADVMGR_VIEW_CELL_COUNT; drawY++) {
             if (originX + drawX >= 0 && originX + drawX < MAP_CELL_GRID_SIZE && originY + drawY >= 0
                 && originY + drawY < MAP_CELL_GRID_SIZE) {
-                cellPtr = GetCell(originX + drawX, originY + drawY);
-                if (cellPtr->m_flags & (MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OVERLAY_ANIMATED))
+                cell = GetCell(originX + drawX, originY + drawY);
+                if (cell->m_flags & (MAP_CELL_OBJECT_ANIMATED | MAP_CELL_OVERLAY_ANIMATED))
                     ++bComboDraw[drawX][drawY];
-                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
@@ -6188,8 +6188,8 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
                         }
                     }
                 }
-                if (cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    || cellPtr->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
+                if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
+                    || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_SHIP)) {
                     ++bComboDraw[drawX][drawY];
                     if (GetCloudLookup(drawX + originX, drawY + originY)) {
                         bComboDraw[drawX + 1][drawY] += COMBO_CLOUD_MARK;
