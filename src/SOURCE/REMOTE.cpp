@@ -313,7 +313,7 @@ i8 InitNetHost(void) {
     i32 needName;
 
     switch (gInitNetHostStatus) {
-        case 0:
+        case NET_HOST_INIT_START:
             if (static_cast<i16>(nb_init(0)) == 1) {
                 ShutDown(localization::Tr("network.netbios.missing"));
             } else {
@@ -322,14 +322,14 @@ i8 InitNetHost(void) {
                 giThisNetPos = 0;
             }
             break;
-        case 1:
+        case NET_HOST_INIT_CHECK_NAME:
             needName = !(nb_stat(0, 0) & NETBIOS_SESSION_NAME_REGISTERED);
             if (needName)
                 gInitNetHostStatus++;
             else
                 return 1;
             break;
-        case 2:
+        case NET_HOST_INIT_REGISTER_NAME:
             gNetNameIndex = 0;
             sprintf(gText, "HHOST%d", gNetNameIndex);
             if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
@@ -337,7 +337,7 @@ i8 InitNetHost(void) {
             else
                 ShutDown(localization::Tr("network.initialize.failed"));
             break;
-        case 3:
+        case NET_HOST_INIT_WAIT_NAME:
             needName = nb_stat(0, 0);
             if (needName & NETBIOS_SESSION_NAME_REGISTERED) {
                 return 1;
@@ -360,7 +360,7 @@ i8 InitNetGuest(void) {
     i32 unregistered;
 
     switch (gInitNetGuestStatus) {
-        case 0:
+        case NET_GUEST_INIT_START:
             if (static_cast<i16>(nb_init(6)) == 1) {
                 ShutDown(localization::Tr("network.netbios.missing"));
             } else {
@@ -369,20 +369,20 @@ i8 InitNetGuest(void) {
                 gInitNetGuestStatus++;
             }
             break;
-        case 1:
+        case NET_GUEST_INIT_CHECK_NAME:
             if (nb_stat(0, 6) & NETBIOS_SESSION_NAME_REGISTERED)
                 gInitNetGuestStatus += 3;
             else
                 gInitNetGuestStatus++;
             break;
-        case 2:
+        case NET_GUEST_INIT_REGISTER_NAME:
             sprintf(gText, "HGUEST%d", giThisNetPos);
             if (nb_sess(0, NETBIOS_SESSION_REGISTER, gText) == 0)
                 gInitNetGuestStatus++;
             else
                 ShutDown(localization::Tr("network.initialize.failed"));
             break;
-        case 3:
+        case NET_GUEST_INIT_WAIT_NAME:
             status = nb_stat(0, 6);
             unregistered = !(status & NETBIOS_SESSION_NAME_REGISTERED);
             if (unregistered) {
@@ -399,7 +399,7 @@ i8 InitNetGuest(void) {
                 gInitNetGuestStatus++;
             }
             break;
-        case 4:
+        case NET_GUEST_INIT_RECEIVE:
             if (nb_sess(0, NETBIOS_SESSION_RECEIVE_ANY, 0) != 0) {
                 sprintf(gText, localization::Tr("network.initialize.failed"));
                 ShutDown(gText);
@@ -415,12 +415,12 @@ i8 WaitForHost(void) {
     i32 status;
 
     switch (gWaitForHostStatus) {
-        case 0:
+        case NET_WAIT_SESSION:
             status = nb_stat(0, 0) & NETBIOS_SESSION_ACTIVE;
             if (status != 0)
                 gWaitForHostStatus++;
             break;
-        case 1:
+        case NET_WAIT_CONNECTED:
             if (nb_rcv(0, 3, buffer)) {
                 gNumNetGuests = buffer[0];
                 return 1;
@@ -443,12 +443,12 @@ i8 WaitForGuest(void) {
     i32 status;
 
     switch (gWaitForGuestStatus) {
-        case 0:
+        case NET_WAIT_SESSION:
             status = nb_sess(0, NETBIOS_SESSION_LISTEN_ANY, 6);
             if (status == 0)
                 gWaitForGuestStatus++;
             return 0;
-        case 1:
+        case NET_WAIT_CONNECTED:
             status = !(nb_stat(0, 6) & NETBIOS_SESSION_ACTIVE);
             if (status) {
                 if (KBTickCount() > gLastBroadcastTime + 500) {
@@ -759,7 +759,7 @@ void Connect(void) {
     do {
         if (ReadPacket()) {
             packet[packetlen] = 0;
-            if (packetlen != 10)
+            if (packetlen != DIRECT_CONNECT_ID_PACKET_LENGTH)
                 continue;
             if (strncmp(packet, "ID", 2))
                 continue;
@@ -793,7 +793,7 @@ i32 WaitForDirectConnect(void) {
     char idMessage[20];
     u32 rng;
     switch (WFDCStage) {
-        case 0:
+        case DIRECT_CONNECT_MAKE_ID:
             rng = KBTickCount();
             rng %= 1000000;
             idstr[0] = rng / 100000 + '0';
@@ -813,10 +813,10 @@ i32 WaitForDirectConnect(void) {
             localstage = remotestage;
             WFDCStage++;
             break;
-        case 1:
+        case DIRECT_CONNECT_EXCHANGE_ID:
             if (ReadPacket()) {
                 packet[packetlen] = 0;
-                if (packetlen != 10)
+                if (packetlen != DIRECT_CONNECT_ID_PACKET_LENGTH)
                     return 0;
                 if (strncmp(packet, "ID", 2))
                     return 0;
@@ -839,7 +839,7 @@ i32 WaitForDirectConnect(void) {
             if (localstage >= 2)
                 WFDCStage++;
             break;
-        case 2:
+        case DIRECT_CONNECT_DRAIN:
             if (!ReadPacket())
                 return 1;
             break;

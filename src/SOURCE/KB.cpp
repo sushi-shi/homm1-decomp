@@ -1549,7 +1549,7 @@ void HandleRemoteDeadPlayerExit(i32 position) {
         if (!gpGame->TransmitSaveGame(REMOTE_BROADCAST_PLAYER, 1))
             ShutDown(NULL);
         RemoteCleanup();
-    } else if (giNumHumanPlayers == 2) {
+    } else if (giNumHumanPlayers == REMOTE_PLAYER_COUNT) {
         giNumHumanPlayers--;
         gText[0] = position;
         gText[1] = 0;
@@ -1651,7 +1651,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
         }
         if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
         dropPlayer:
-            if (giNumHumanPlayers == 2) {
+            if (giNumHumanPlayers == REMOTE_PLAYER_COUNT) {
                 giNumHumanPlayers--;
                 RemoteCleanup();
                 gbHumanPlayer[position] = 0;
@@ -1778,11 +1778,11 @@ void CheckEndGame(i32 forced) {
     defaultWin = 1;
     if (gpGame->m_campaignType > 0) {
         switch (gpGame->m_campaignScenario) {
-            case 0:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
+            case CAMPAIGN_SCENARIO_1:
+            case CAMPAIGN_SCENARIO_5:
+            case CAMPAIGN_SCENARIO_6:
+            case CAMPAIGN_SCENARIO_7:
+            case CAMPAIGN_SCENARIO_8:
                 defaultWin = 0;
                 objectiveTown = gpGame->GetTown(gpGame->GetTownId(
                     gCampaignScenarios[gpGame->m_campaignScenario].victoryTownX,
@@ -1790,12 +1790,12 @@ void CheckEndGame(i32 forced) {
                 ));
                 if (!objectiveTown->m_owner)
                     won = 1;
-                if (gpGame->m_campaignScenario == 0 && objectiveTown->m_owner > 0) {
+                if (gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_1 && objectiveTown->m_owner > 0) {
                     defeated = 1;
                     strcpy(message, localization::Tr("endgame.enemy.captured_town"));
                 }
                 break;
-            case 2:
+            case CAMPAIGN_SCENARIO_EYE_OF_GOROS:
                 defaultWin = 0;
                 artifactOwner = GAME_PLAYER_NONE;
                 for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
@@ -1818,7 +1818,7 @@ void CheckEndGame(i32 forced) {
                     strcpy(message, localization::Tr("endgame.enemy.captured_artifact"));
                 }
                 break;
-            case 8:
+            case CAMPAIGN_SCENARIO_DRAGON_CITY:
                 defaultWin = 0;
                 if (!gpGame->m_mineOwners[0])
                     won = 1;
@@ -2852,34 +2852,34 @@ void UpdateSystemOptionsMenu(void) {
     for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
         CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
     switch (gConfig.musicVolume) {
-        case 1:
+        case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_MUSIC_100;
             break;
-        case 2:
+        case SOUND_VOLUME_90:
             checkedCommand = APP_MENU_MUSIC_90;
             break;
-        case 3:
+        case SOUND_VOLUME_80:
             checkedCommand = APP_MENU_MUSIC_80;
             break;
-        case 4:
+        case SOUND_VOLUME_70:
             checkedCommand = APP_MENU_MUSIC_70;
             break;
-        case 5:
+        case SOUND_VOLUME_60:
             checkedCommand = APP_MENU_MUSIC_60;
             break;
-        case 6:
+        case SOUND_VOLUME_50:
             checkedCommand = APP_MENU_MUSIC_50;
             break;
-        case 7:
+        case SOUND_VOLUME_40:
             checkedCommand = APP_MENU_MUSIC_40;
             break;
-        case 8:
+        case SOUND_VOLUME_30:
             checkedCommand = APP_MENU_MUSIC_30;
             break;
-        case 9:
+        case SOUND_VOLUME_20:
             checkedCommand = APP_MENU_MUSIC_20;
             break;
-        case 10:
+        case SOUND_VOLUME_10:
             checkedCommand = APP_MENU_MUSIC_10;
             break;
         default:
@@ -2891,34 +2891,34 @@ void UpdateSystemOptionsMenu(void) {
     for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
         CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
     switch (gConfig.soundVolume) {
-        case 1:
+        case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_SOUND_100;
             break;
-        case 2:
+        case SOUND_VOLUME_90:
             checkedCommand = APP_MENU_SOUND_90;
             break;
-        case 3:
+        case SOUND_VOLUME_80:
             checkedCommand = APP_MENU_SOUND_80;
             break;
-        case 4:
+        case SOUND_VOLUME_70:
             checkedCommand = APP_MENU_SOUND_70;
             break;
-        case 5:
+        case SOUND_VOLUME_60:
             checkedCommand = APP_MENU_SOUND_60;
             break;
-        case 6:
+        case SOUND_VOLUME_50:
             checkedCommand = APP_MENU_SOUND_50;
             break;
-        case 7:
+        case SOUND_VOLUME_40:
             checkedCommand = APP_MENU_SOUND_40;
             break;
-        case 8:
+        case SOUND_VOLUME_30:
             checkedCommand = APP_MENU_SOUND_30;
             break;
-        case 9:
+        case SOUND_VOLUME_20:
             checkedCommand = APP_MENU_SOUND_20;
             break;
-        case 10:
+        case SOUND_VOLUME_10:
             checkedCommand = APP_MENU_SOUND_10;
             break;
         default:

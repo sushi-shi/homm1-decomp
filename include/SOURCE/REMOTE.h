@@ -48,7 +48,9 @@ H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_CONFIRM_POLL_COUNT = 200,
     // InitNetHost/InitNetGuest try the NetBIOS names HHOST0../HGUEST1.. up to
     // this suffix before reporting every game slot used.
-    REMOTE_NET_NAME_LAST = 10
+    REMOTE_NET_NAME_LAST = 10,
+    // HoMM1's modem and network games connect two human players.
+    REMOTE_PLAYER_COUNT = 2
 H1_ENUM_CONST_END(RemoteConstant)
 
 H1_ENUM_BEGIN(RemoteGameMode)
@@ -262,5 +264,42 @@ struct outque_t {
     i32 writePosition;
     char data[2048];
 };
+
+// InitNetHost's polling stages (its static gInitNetHostStatus): start
+// NetBIOS, check for an existing name, register HHOST<n>, then wait for the
+// registration (trying the next suffix on a NetBIOS error).
+H1_ENUM_CONST_BEGIN(NetHostInitStage)
+    NET_HOST_INIT_START = 0,
+    NET_HOST_INIT_CHECK_NAME = 1,
+    NET_HOST_INIT_REGISTER_NAME = 2,
+    NET_HOST_INIT_WAIT_NAME = 3
+H1_ENUM_CONST_END(NetHostInitStage)
+
+// InitNetGuest's polling stages (gInitNetGuestStatus): as the host's, then a
+// session receive; an already registered name skips straight to RECEIVE.
+H1_ENUM_CONST_BEGIN(NetGuestInitStage)
+    NET_GUEST_INIT_START = 0,
+    NET_GUEST_INIT_CHECK_NAME = 1,
+    NET_GUEST_INIT_REGISTER_NAME = 2,
+    NET_GUEST_INIT_WAIT_NAME = 3,
+    NET_GUEST_INIT_RECEIVE = 4
+H1_ENUM_CONST_END(NetGuestInitStage)
+
+// WaitForHost/WaitForGuest stages: wait for (or listen for) the session, then
+// read the host's guest count or watch the session become active.
+H1_ENUM_CONST_BEGIN(NetSessionWaitStage)
+    NET_WAIT_SESSION = 0,
+    NET_WAIT_CONNECTED = 1
+H1_ENUM_CONST_END(NetSessionWaitStage)
+
+// WaitForDirectConnect's stages (WFDCStage): make the six-digit ID, exchange
+// "ID<id>_<stage>" packets until both sides reach stage 2, then drain.
+H1_ENUM_CONST_BEGIN(DirectConnectStage)
+    DIRECT_CONNECT_MAKE_ID = 0,
+    DIRECT_CONNECT_EXCHANGE_ID = 1,
+    DIRECT_CONNECT_DRAIN = 2,
+    // "ID", six digits, '_' and the stage digit.
+    DIRECT_CONNECT_ID_PACKET_LENGTH = 10
+H1_ENUM_CONST_END(DirectConnectStage)
 
 #endif

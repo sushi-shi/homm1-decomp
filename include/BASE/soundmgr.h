@@ -57,6 +57,21 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SOUND_VOLUME_FROM_CONFIG = -1
 H1_ENUM_CONST_END(SampleStreamConstant)
 
+// gConfig.musicVolume/soundVolume levels as the system menu labels them:
+// level 1 is full volume and level 10 the quietest (gVolumeLevels).
+H1_ENUM_CONST_BEGIN(ConfigVolumeLevel)
+    SOUND_VOLUME_100 = 1,
+    SOUND_VOLUME_90 = 2,
+    SOUND_VOLUME_80 = 3,
+    SOUND_VOLUME_70 = 4,
+    SOUND_VOLUME_60 = 5,
+    SOUND_VOLUME_50 = 6,
+    SOUND_VOLUME_40 = 7,
+    SOUND_VOLUME_30 = 8,
+    SOUND_VOLUME_20 = 9,
+    SOUND_VOLUME_10 = 10
+H1_ENUM_CONST_END(ConfigVolumeLevel)
+
 H1_ENUM_BEGIN(SampleReportQuery)
     SAMPLE_REPORT_VOLUME = 1,
     SAMPLE_REPORT_PLAYING = 4
