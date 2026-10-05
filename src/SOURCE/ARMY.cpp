@@ -3,6 +3,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
 #include <BASE/heroWindowManager.h>
@@ -14,7 +15,6 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
 #include <SOURCE/combatManager.h>

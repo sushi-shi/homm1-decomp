@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
@@ -15,7 +16,6 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/audio.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>

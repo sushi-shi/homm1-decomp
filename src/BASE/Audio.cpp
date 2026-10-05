@@ -2,8 +2,8 @@
 
 #include <match.h>
 
-#include <BASE/audio.h>
 #include <BASE/audiereBackend.h>
+#include <BASE/audio.h>
 
 DATA(0x004cdf50)
 audiere::AudioDevicePtr AudiereDevice::device;

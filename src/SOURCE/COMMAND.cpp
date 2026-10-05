@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/heroWindow.h>
@@ -15,7 +16,6 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/audio.h>
 #include <BASE/textWidget.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>

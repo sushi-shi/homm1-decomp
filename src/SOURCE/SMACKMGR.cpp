@@ -1,5 +1,9 @@
 // Buka movie playback, reconstructed from retail instructions and CFGs.
+
 #include <match.h>
+
+#include <mss.h>
+
 #include <BASE/audio.h>
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
@@ -15,7 +19,7 @@
 #include <SOURCE/kbwin.h>
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
-#include <mss.h>
+
 #include <stdio.h>
 #include <string.h>
 

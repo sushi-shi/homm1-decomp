@@ -3,10 +3,10 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/bitmap.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
-#include <BASE/audio.h>
 #include <SOURCE/army.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatManager.h>

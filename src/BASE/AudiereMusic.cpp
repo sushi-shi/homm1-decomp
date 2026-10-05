@@ -2,8 +2,8 @@
 
 #include <match.h>
 
-#include <BASE/audio.h>
 #include <BASE/audiereBackend.h>
+#include <BASE/audio.h>
 #include <SOURCE/KB.h>
 
 #include <stdio.h>

@@ -1,6 +1,9 @@
 // Buka resource-name hash, recovered from the retail instruction flow.
+
 #include <match.h>
+
 #include <BASE/MAKEFILEID.h>
+
 #include <string.h>
 
 VA(0x00473610, 0x12b)
