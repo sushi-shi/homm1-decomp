@@ -6,6 +6,7 @@
 // 17 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
+#include <BASE/display.h>
 #include <H1/Macros.h>
 #define WIN32_LEAN_AND_MEAN
 
@@ -130,10 +131,10 @@ extern ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
 // Moved from MOUSEMGR.cpp.
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)
     MOUSE_INITIAL_POINTER_FLAGS = 6,
-    MOUSE_INITIAL_X = 320,
-    MOUSE_INITIAL_Y = 240,
+    // The pointer starts at the centre of the logical screen.
+    MOUSE_INITIAL_X = LOGICAL_SCREEN_WIDTH / 2,
+    MOUSE_INITIAL_Y = LOGICAL_SCREEN_HEIGHT / 2,
     MOUSE_SAVED_BITMAP_SIZE = 0x40,
-    MOUSE_MANAGER_MESSAGE_MASK = 0x40,
     MOUSE_CURSOR_FILENAME_CAPACITY = 16
 H1_ENUM_CONST_END(MouseManagerStateConstant)
 

@@ -735,7 +735,7 @@ void philAI::DoAI(i32 player) {
                             break;
                         pathIndex--;
                     }
-                    if (savedAiHero->m_owner == HERO_OWNER_NONE)
+                    if (savedAiHero->m_owner == GAME_PLAYER_NONE)
                         goto nextHero;
                     if (savedAiHero->m_remainingMobility <= savedAiHero->m_mobility >> 1
                         && !halfShown) {
@@ -769,7 +769,7 @@ void philAI::DoAI(i32 player) {
                 }
                 if (eventCell) {
                     gpAdvManager->DoAIEvent(eventCell, savedAiHero, oldX, ourY);
-                    if (gpCurPlayer->m_currentHero == INVALID_HERO)
+                    if (gpCurPlayer->m_currentHero == HERO_ID_NONE)
                         goto nextHero;
                     ResetHeroRVs(1, savedAiHero->m_destinationX, savedAiHero->m_destinationY);
                 }
@@ -1007,7 +1007,7 @@ hero* philAI::DetermineHeroToMove(i32 player) {
     }
     if (bestHero >= 0)
         return &gpGame->m_heroRecs[gpGame->m_players[player].m_heroIds[bestHero]];
-    gpGame->m_players[player].m_currentHero = INVALID_HERO;
+    gpGame->m_players[player].m_currentHero = HERO_ID_NONE;
     return NULL;
 }
 

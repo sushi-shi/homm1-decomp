@@ -280,7 +280,7 @@ i16 townManager::Open(i16 id) {
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
-    m_messageMask = TOWN_MANAGER_MESSAGE_MASK;
+    m_messageMask = BASE_MANAGER_ACCEPT_TOWN_EVENT;
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "townManager");

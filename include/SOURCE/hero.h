@@ -37,10 +37,9 @@ H1_ENUM_CONST_BEGIN(HeroConstant)
     // the four classes.
     HERO_PER_CLASS_COUNT = 9,
     HERO_CLASS_COUNT = 4,
-    // Dismiss clears m_owner and the destination; playerData's hero lists
-    // (m_heroIds, m_currentHero) and the boat records mark an empty entry
-    // with HERO_ID_NONE (Buka hero.h HERO_OWNER_NONE / HERO_DESTINATION_NONE).
-    HERO_OWNER_NONE = -1,
+    // Dismiss clears the destination (and m_owner to GAME_PLAYER_NONE);
+    // playerData's hero lists (m_heroIds, m_currentHero), the boat records
+    // and game::m_randomArtifacts mark an empty entry with HERO_ID_NONE.
     HERO_DESTINATION_NONE = -1,
     HERO_ID_NONE = -1,
     // playerData::m_availableHeroIds: the tavern's two heroes for hire.

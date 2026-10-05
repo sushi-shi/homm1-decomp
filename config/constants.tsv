@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1964
+#floor	1948
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -747,10 +747,8 @@ src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store autosave	a boolean fla
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store gClosingApp	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store gFirstTimeThrough	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store musicVolume	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store showMenu	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store showRoute	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 store soundVolume	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality bottom	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/wingraph.cpp	*	0	trivial-function-literal	0 equality gForegroundApp	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested

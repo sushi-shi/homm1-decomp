@@ -64,7 +64,7 @@ VA(0x0046b612, 0x98)
 i16 mouseManager::Open(i16 priority) {
     m_savedUnderlying =
         new bitmap(BITMAP_TYPE_MEMORY, MOUSE_SAVED_BITMAP_SIZE, MOUSE_SAVED_BITMAP_SIZE);
-    m_messageMask = MOUSE_MANAGER_MESSAGE_MASK;
+    m_messageMask = BASE_MANAGER_ACCEPT_RIGHT_BUTTON_UP;
     m_priority = priority;
     m_active = 1;
     return BASE_MANAGER_SUCCESS;

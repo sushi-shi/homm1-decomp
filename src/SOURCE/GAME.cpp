@@ -120,7 +120,7 @@ i8 playerData::NextHero(i32) {
     i32 curHero = -1;
     i32 i;
 
-    if (gpCurPlayer->m_currentHero != GAME_HERO_NONE) {
+    if (gpCurPlayer->m_currentHero != HERO_ID_NONE) {
         for (i = 0; i < gpCurPlayer->m_heroCount; ++i) {
             if (gpCurPlayer->m_currentHero == gpCurPlayer->m_heroIds[i])
                 curHero = i;
@@ -135,7 +135,7 @@ i8 playerData::NextHero(i32) {
         if (gpGame->IsMobile(gpCurPlayer->m_heroIds[i]))
             return m_heroIds[i];
     }
-    return GAME_HERO_NONE;
+    return HERO_ID_NONE;
 }
 
 // Buka 2.1 playerData::HasMobileHero.
@@ -294,7 +294,7 @@ void game::VisitObelisk(i8 player) {
 // Buka 2.1 game::IsMobile.
 VA(0x0042bf56, 0x98)
 i8 game::IsMobile(i8 heroId) {
-    if (heroId == GAME_HERO_NONE)
+    if (heroId == HERO_ID_NONE)
         return 0;
     hero* mobileHero = &m_heroRecs[heroId];
     i32 terrainValue = CELL_TERRAIN(gpAdvManager->GetCell(mobileHero->m_x, mobileHero->m_y));
@@ -359,7 +359,7 @@ i8 game::RandomScan(i8* array, i8 start, i8 range, i32) {
 VA(0x0042c17e, 0xe5)
 i8 game::GetNewHeroId(i8 heroClass) {
     i8 freeSlot = GAME_TABLE_FREE;
-    i8 idx = GAME_HERO_NONE;
+    i8 idx = HERO_ID_NONE;
     i16 first = heroClass * HERO_PER_CLASS_COUNT;
     i32 ix;
     freeSlot = Scan(m_availableHeroes, first, HERO_PER_CLASS_COUNT);
@@ -376,7 +376,7 @@ i8 game::GetNewHeroId(i8 heroClass) {
             }
         }
     }
-    if (idx != GAME_HERO_NONE)
+    if (idx != HERO_ID_NONE)
         return idx;
     else
         return 0;
@@ -1208,7 +1208,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_currentTown = GAME_TOWN_NONE;
         m_players[i].m_heroCount = 0;
         m_players[i].m_heroLocatorPage = 0;
-        m_players[i].m_currentHero = GAME_HERO_NONE;
+        m_players[i].m_currentHero = HERO_ID_NONE;
     }
     memset(m_mapExtra, 0, sizeof(m_mapExtra));
     memset(mapVisited, 0, sizeof(mapVisited));

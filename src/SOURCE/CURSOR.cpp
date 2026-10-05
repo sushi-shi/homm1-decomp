@@ -288,7 +288,7 @@ i32 advManager::GetMoveShowIt(i8 direction) {
     hero* movingHero;
     i16 dx;
 
-    if (gpCurPlayer->CurrentHero() == INVALID_HERO)
+    if (gpCurPlayer->CurrentHero() == HERO_ID_NONE)
         return 0;
     movingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     dx = normalDirTable[direction].x;

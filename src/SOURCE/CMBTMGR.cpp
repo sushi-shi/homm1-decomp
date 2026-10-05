@@ -251,7 +251,7 @@ i16 combatManager::Open(i16 priority) {
     PlayMusic(song);
     gpInputManager->Flush();
     ResetMouse();
-    m_messageMask = MESSAGE_WIDGET;
+    m_messageMask = BASE_MANAGER_ACCEPT_WIDGET;
     m_priority = priority;
     m_active = 1;
     strcpy(m_name, "combatManager");

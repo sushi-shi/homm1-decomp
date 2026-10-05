@@ -45,11 +45,6 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
     SAMPLE_RATE_HIGH = 44100,
     SAMPLE_FORMAT_16_BIT = 1,
     SAMPLE_FORMAT_STEREO = 2,
-    // gConfig.musicVolume/soundVolume level that silences the channel
-    // (Buka CONFIG_VOLUME_MUTED).
-    SOUND_VOLUME_OFF = 0,
-    SOUND_VOLUME_FIRST = 1,
-    SOUND_VOLUME_LAST = 10,
     SOUND_VOLUME_EFFECT = 100,
     SOUND_VOLUME_MUSIC = 101,
     PCM_BITS_PER_BYTE_SHIFT = 3,
@@ -58,8 +53,11 @@ H1_ENUM_CONST_BEGIN(SampleStreamConstant)
 H1_ENUM_CONST_END(SampleStreamConstant)
 
 // gConfig.musicVolume/soundVolume levels as the system menu labels them:
-// level 1 is full volume and level 10 the quietest (gVolumeLevels).
+// OFF silences the channel, level 1 is full volume and level 10 the quietest
+// (gVolumeLevels); FIRST..LAST is the audible range the control panel
+// cycles through.
 H1_ENUM_CONST_BEGIN(ConfigVolumeLevel)
+    SOUND_VOLUME_OFF = 0,
     SOUND_VOLUME_100 = 1,
     SOUND_VOLUME_90 = 2,
     SOUND_VOLUME_80 = 3,
@@ -69,7 +67,9 @@ H1_ENUM_CONST_BEGIN(ConfigVolumeLevel)
     SOUND_VOLUME_40 = 7,
     SOUND_VOLUME_30 = 8,
     SOUND_VOLUME_20 = 9,
-    SOUND_VOLUME_10 = 10
+    SOUND_VOLUME_10 = 10,
+    SOUND_VOLUME_FIRST = SOUND_VOLUME_100,
+    SOUND_VOLUME_LAST = SOUND_VOLUME_10
 H1_ENUM_CONST_END(ConfigVolumeLevel)
 
 H1_ENUM_BEGIN(SampleReportQuery)

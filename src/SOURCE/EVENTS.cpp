@@ -1900,7 +1900,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 sourceHero->m_artifacts[j]
                             );
                         }
-                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = GAME_HERO_NONE;
+                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,

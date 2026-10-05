@@ -577,8 +577,8 @@ VA(0x00443e4a, 0x145)
 void SetGameDefaults(void) {
     i32 i;
 
-    gConfig.musicVolume = 1;
-    gConfig.soundVolume = 1;
+    gConfig.musicVolume = SOUND_VOLUME_100;
+    gConfig.soundVolume = SOUND_VOLUME_100;
     gConfig.autosave = 1;
     gConfig.showRoute = 1;
     gConfig.blackoutComputer = 0;
