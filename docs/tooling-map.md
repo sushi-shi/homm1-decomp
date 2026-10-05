@@ -5,7 +5,7 @@ All Python commands use `scripts/homm1` and the shared usage logger.
 | Command | Implementation | Purpose |
 | --- | --- | --- |
 | `configure`, `build`, `match`, `link` | `graph` | Graph, selected-unit loop, full verification, candidate link |
-| `play` | `graph.verbs`, `graph.play` | Build, link with resources, install beside local game data and run ([playing](play.md)) |
+| `play` | `graph.verbs`, `graph.play` | Build, link with resources, run in a Wine prefix prepared from the game copy ([playing](play.md)) |
 | `labels`, `model`, `delink`, `compare` | `retail_labels`, `model`, `delink`, `compare` | Claim-to-object comparison pipeline |
 | `verify status`, `check`, `bank`, `readme` | `verify.verbs` | Reporting, gates, explicit ledger update, generated README |
 | `verify fingerprints`, `verify <gate>` | `verify` | Source hashes and individual gates |

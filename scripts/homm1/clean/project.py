@@ -19,7 +19,9 @@ from homm1.clean import source
 
 IMAGE_BASE = 0x400000
 TEMPLATE = "scripts/homm1/clean/template/"
-EXECUTABLE = ("build.py",)
+#: The game runner shared with `homm1 play`; the source tree carries it as play.py.
+RUNNER = "scripts/homm1/graph/play.py"
+EXECUTABLE = ("build.py", "play.py")
 
 
 def _units(files: dict[str, bytes]) -> list[dict]:
@@ -114,6 +116,7 @@ def project_files(files: dict[str, bytes], variant: str = "source") -> dict[str,
     if variant != "source":
         return output
     from homm1 import toolchain
+    output["play.py"] = files[RUNNER]
     output["build.json"] = (json.dumps(manifest(files), indent=2) + "\n").encode()
     output["flake.lock"], revision = flake_lock(files)
     contract = toolchain.release(manifest(files)["compiler"])

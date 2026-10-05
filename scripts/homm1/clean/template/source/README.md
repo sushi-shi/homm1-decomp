@@ -5,6 +5,28 @@ Windows), built with the original Visual C++ 6.0 SP5 toolchain. The game text
 lives in a catalog: `locales/messages.def` keeps the original English and
 `locales/ru.po` the Russian translation. Building selects one of them.
 
+## Build and play
+
+On x86-64 Linux with Nix flakes enabled, from this directory, with your copy of
+the Buka 2003 game (an installed game folder, the CD or its `.iso` image):
+
+```sh
+nix run .#play -- --game /path/to/game-or-cd.iso   # first run
+nix run .#play                                     # later runs
+nix run .#play -- --locale en --window             # English build, in a 640x480 window
+```
+
+The first run checks the game files, copies them into
+`~/.local/share/homm1-buka/` (`$XDG_DATA_HOME`), builds `build/ru/HEROES.EXE`
+with the game's icon, creates a Wine prefix with the CD as drive `D:` and the
+game's registry key, and starts the game full screen at 640x480. Later runs
+rebuild only when the sources changed and remember the language. Saved games
+and high scores stay in `~/.local/share/homm1-buka/game/`. If the screen cannot
+switch to 640x480 the game stops at start-up; `--window` runs it in a 640x480
+Wine desktop window instead. Other options: `--rebuild`, `--prefix-reset`,
+`--dry-run` (print the steps, change nothing) and `-- ARGS` for the game;
+`nix run .#play -- --help` lists them.
+
 ## Branches
 
 ```text
@@ -57,8 +79,7 @@ the sources under `build/<locale>/localized/`; nothing is looked up at run time.
 Edit the catalogs, not the copies. The English build changes only the program's
 own text and menus; the game's data files stay as installed.
 
-To run the result, copy it into an installed Buka game folder and start it with
-Wine.
+`nix run .#play` runs the result with your game data; see [Build and play](#build-and-play).
 
 ## Regeneration
 

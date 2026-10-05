@@ -15,7 +15,7 @@ output byte:
 
 Phase 1 encodes a deterministic generated corpus plus any real files (game
 saves, REMOTE.GAM, maps; `--data` scans an installed game folder and defaults
-to the folder `homm1 play` remembered) from a fresh process state, and runs
+to the game folder `homm1 play` installed) from a fresh process state, and runs
 stateful sessions that expose the shared window (stale look-ahead, a seeded
 window, back-to-back calls, a fresh receiver). Phase 2 decodes the retail
 streams with the encoder's space prefill and with a fresh zeroed window.
@@ -296,7 +296,7 @@ def main(argv=None) -> int:
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--data", type=Path,
                     help="installed game folder to scan for saves and maps "
-                         "(default: the folder `homm1 play` remembered)")
+                         "(default: the game folder `homm1 play` installed)")
     ap.add_argument("--input", type=Path, action="append", default=[],
                     help="additional real input file (repeatable)")
     ap.add_argument("--quick", action="store_true", help="small generated corpus only")
@@ -305,8 +305,7 @@ def main(argv=None) -> int:
     data = a.data
     if data is None:
         from homm1.graph import play
-        from homm1.graph.verbs import GAME_ENV
-        data = play.remembered(REPO / GAME_ENV, "data", None)
+        data = play.installed_game()
 
     addresses = _addresses()
     if WORK.exists():

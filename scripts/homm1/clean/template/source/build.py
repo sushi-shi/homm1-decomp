@@ -2,14 +2,15 @@
 """Build HEROES.EXE with the Visual C++ 6.0 SP5 toolchain under Wine.
 
     python3 build.py [--locale ru|en] [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
+                     [--out DIR]
 
 DIR holds vc6/ (CL, ML, LINK and the VC6 headers and libraries), wing10/ and
 dx1/ (the WinG and DirectX 1 SDK files), as in the hash-pinned release the
 flake fetches. `--locale` selects the text compiled into the program: the
 catalog in locales/ resolves every `localization::Tr("id")` to Russian (the
 retail program, the default) or the original English as Windows-1251 literals
-under build/<locale>/localized/, and the program is build/<locale>/HEROES.EXE;
-the source files are never rewritten. Resources compile with llvm-rc and llvm-cvtres. The
+under build/<locale>/localized/, and the program is build/<locale>/HEROES.EXE
+(`--out` replaces build/); the source files are never rewritten. Resources compile with llvm-rc and llvm-cvtres. The
 icon is a retail asset: `--icon-from` extracts it from your HEROES.EXE;
 without it the executable carries the menus and About box but no icon.
 """
@@ -43,7 +44,7 @@ class Wine:
                     toolchain / compiler / "include"]
         libraries = [OUT / "imports", toolchain / "wing10" / "lib", toolchain / compiler / "lib"]
         self.includes = includes
-        prefix = ROOT / "build" / "wineprefix"
+        prefix = OUT.parent / "wineprefix"
         self.env = dict(os.environ, WINEPREFIX=str(prefix), WINEPATH=windows(self.bin),
                         INCLUDE=";".join(map(windows, includes)),
                         LIB=";".join(map(windows, libraries)),
@@ -186,11 +187,13 @@ def build() -> int:
     parser.add_argument("--toolchain", type=Path, default=os.environ.get("HOMM1_TOOLCHAIN"))
     parser.add_argument("--icon-from", type=Path, help="your HEROES.EXE, for the icon")
     parser.add_argument("--jobs", type=int, default=min(8, os.cpu_count() or 1))
+    parser.add_argument("--out", type=Path, default=ROOT / "build",
+                        help="output directory (default: build/)")
     manifest = json.loads((ROOT / "build.json").read_text())
     compiler = manifest["compiler"]
     parser.add_argument("--locale", choices=("ru", "en"), default=manifest.get("locale", "ru"))
     args = parser.parse_args()
-    OUT = ROOT / "build" / args.locale
+    OUT = args.out.resolve() / args.locale
     if args.toolchain is None or not (args.toolchain / compiler / "bin/CL.EXE").is_file():
         parser.error(f"--toolchain (or HOMM1_TOOLCHAIN) must hold {compiler}/bin/CL.EXE; "
                      "`nix develop` supplies it")
@@ -226,7 +229,7 @@ def build() -> int:
         *link["flags"], *libraries,
         *[f'"{windows(objects[u])}"' for u in link["objects"]], f'"{windows(rsrc)}"']) + "\n")
     wine.run("LINK.EXE", [f"@{windows(response)}"], OUT, executable)
-    print(f"built {executable.relative_to(ROOT)}", flush=True)
+    print(f"built {executable}", flush=True)
     return 0
 
 
