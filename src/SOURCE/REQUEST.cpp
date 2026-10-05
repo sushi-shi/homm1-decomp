@@ -200,12 +200,12 @@ void fileRequester::Close(void) {
 // slot whose extension digit matches the human player count.
 VA(0x00454459, 0x3cd)
 i16 fileRequester::Open(i16 priority) {
-    const i16 scrollId = FILE_REQUESTER_SCROLL_KNOB;
-    i32 i;
-    const i16 promptId = FILE_REQUESTER_FILENAME_LABEL;
+    const i16 scrollKnobId = FILE_REQUESTER_SCROLL_KNOB;
     tag_message message;
+    i32 i;
+    const i16 nameLabelId = FILE_REQUESTER_FILENAME_LABEL;
+    char* dotPtr;
     i8 enable;
-    char* period;
 
     strcpy(gLastMapName, "");
     strcpy(gLastFilename, "");
@@ -220,7 +220,7 @@ i16 fileRequester::Open(i16 priority) {
         "scroll.icn",
         4,
         ICON_DRAW_NORMAL,
-        scrollId,
+        scrollKnobId,
         ICON_WIDGET_DRAW,
         1
     );
@@ -234,13 +234,13 @@ i16 fileRequester::Open(i16 priority) {
         enable = 1;
         const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gpGame->m_saveName);
-        period = FindLastToken(m_filename, '.');
-        if (period)
-            *period = 0;
+        dotPtr = FindLastToken(m_filename, '.');
+        if (dotPtr)
+            *dotPtr = 0;
         message.id = textEntryId;
         message.text = m_filename;
         m_window->BroadcastMessage(message);
-        message.id = promptId;
+        message.id = nameLabelId;
         sprintf(gText, localization::Tr("file.save.label"));
         message.text = gText;
         m_window->BroadcastMessage(message);
@@ -260,13 +260,13 @@ i16 fileRequester::Open(i16 priority) {
                 }
             }
         }
-        message.id = promptId;
+        message.id = nameLabelId;
         sprintf(gText, localization::Tr("file.load.label"));
         message.text = gText;
         m_window->BroadcastMessage(message);
     }
-    const i16 nameId = FILE_REQUESTER_FILENAME_ENTRY;
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, nameId);
+    const i16 entryId = FILE_REQUESTER_FILENAME_ENTRY;
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, entryId);
     message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
     Update(0);
