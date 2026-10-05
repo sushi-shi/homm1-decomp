@@ -1393,10 +1393,8 @@ src/SOURCE/kbwin.cpp	*	*	call-argument	DialogBoxParamA(HINSTANCE, LPCSTR, HWND, 
 src/SOURCE/kbwin.cpp	*	*	call-argument	WinHelpA(HWND, LPCSTR, UINT, DWORD) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/kbwin.cpp	*	*	call-argument	SetFullScreenStatus(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/kbwin.cpp	*	*	call-argument	EnableMenuItem(HMENU, UINT, UINT) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/kbwin.cpp	ReadPrefsFromFile	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/kbwin.cpp	*	*	call-argument	access(const char *, int) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/kbwin.cpp	*	*	call-argument	RegOpenKeyExA(HKEY, LPCSTR, DWORD, REGSAM, PHKEY) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/kbwin.cpp	WritePrefsToFile	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/kbwin.cpp	*	*	call-argument	fwrite(const void *, size_t, size_t, FILE *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/kbwin.cpp	*	*	call-argument	sprintf(char *, const char *, ...) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/kbwin.cpp	*	*	call-argument	_lseek(int, long, int) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)

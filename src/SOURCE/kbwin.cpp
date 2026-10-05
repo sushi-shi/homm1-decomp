@@ -618,69 +618,29 @@ void SetGameDefaults(void) {
     gConfig.walkSpeed = WALK_SPEED_CANTER;
 }
 
-// @dead-code
-// Zero-ref: no incoming call, jump or relocated reference in retail.
-// NWC-only: no standalone Buka body; see buka-function-map.json.
-void ReadPrefsFromFile(void) {
-    FILE* fp;
-    i32 result;
-    char buffer[100];
-
-    sprintf(gText, "%s", "HEROES.CFG");
-    if (access(gText, 0) == -1) {
-        memset(&gConfig, 0, sizeof(gConfig));
-        SetGameDefaults();
-        WritePrefs();
-    } else {
-        fp = fopen(gText, "rb");
-        if (fp == NULL)
-            FileError(gText);
-        fread(&gConfig, sizeof(gConfig), 1, fp);
-        if (gConfig.gfx[gCurExe].width <= 0)
-            gConfig.gfx[gCurExe].width = MINIMUM_WINDOW_WIDTH;
-        if (gConfig.gfx[gCurExe].height <= 0)
-            gConfig.gfx[gCurExe].height = MINIMUM_WINDOW_HEIGHT;
-        if (gConfig.gfx[gCurExe].x < 0)
-            gConfig.gfx[gCurExe].x = 0;
-        if (gConfig.gfx[gCurExe].x > gMainVideoModeHeight - WINDOW_POSITION_MARGIN)
-            gConfig.gfx[gCurExe].x = gMainVideoModeHeight - WINDOW_POSITION_MARGIN;
-        if (gConfig.gfx[gCurExe].y < 0)
-            gConfig.gfx[gCurExe].y = 0;
-        if (gConfig.gfx[gCurExe].y > gMainVideoModeWidth - WINDOW_POSITION_MARGIN)
-            gConfig.gfx[gCurExe].y = gMainVideoModeWidth - WINDOW_POSITION_MARGIN;
-        result = fclose(fp);
-        if (gConfig.walkSpeed == CONFIG_UNINITIALIZED) {
-            SetGameDefaults();
-            WritePrefs();
-        }
-    }
-    strcpy(gcRegCDRomPath, "");
-    strcpy(gcRegAppPath, "");
-}
-
 VA(0x00443f8f, 0x468)
 void ReadPrefs(void) {
+    DWORD length;
     HKEY key;
-    DWORD cbData;
-    DWORD dataType;
-    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    char subKey[REGISTRY_TEXT_BUFFER_SIZE];
     i32 rc;
+    DWORD regType;
     DWORD volumeProbe;
-    DWORD musicVolume;
-    DWORD soundVolume;
+    DWORD savedMusic;
+    DWORD effectsVolume;
 
-    strcpy(szSubKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
+    strcpy(subKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
     key = NULL;
-    rc = RegCreateKeyA(HKEY_LOCAL_MACHINE, szSubKey, &key);
+    rc = RegCreateKeyA(HKEY_LOCAL_MACHINE, subKey, &key);
     if (rc == ERROR_SUCCESS) {
-        cbData = REGISTRY_DWORD_BYTES;
+        length = REGISTRY_DWORD_BYTES;
         if (RegQueryValueExA(
                 key,
                 "HMM1 MusicVolume",
                 NULL,
-                &dataType,
+                &regType,
                 reinterpret_cast<LPBYTE>(&volumeProbe),
-                &cbData
+                &length
             )
             != ERROR_SUCCESS) {
             memset(&gConfig, 0, sizeof(gConfig));
@@ -693,222 +653,222 @@ void ReadPrefs(void) {
             key,
             "HMM1 MusicVolume",
             NULL,
-            &dataType,
-            reinterpret_cast<LPBYTE>(&musicVolume),
-            &cbData
+            &regType,
+            reinterpret_cast<LPBYTE>(&savedMusic),
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 FXVolume",
             NULL,
-            &dataType,
-            reinterpret_cast<LPBYTE>(&soundVolume),
-            &cbData
+            &regType,
+            reinterpret_cast<LPBYTE>(&effectsVolume),
+            &length
         );
-        gConfig.musicVolume = musicVolume;
-        gConfig.soundVolume = soundVolume;
+        gConfig.musicVolume = savedMusic;
+        gConfig.soundVolume = effectsVolume;
         RegQueryValueExA(
             key,
             "HMM1 WalkSpeed",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.walkSpeed),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 ShowRoute",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.showRoute),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 BlackoutComputer",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.blackoutComputer),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 SoundQuality",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.musicSource),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 DirectConnectComPort",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_DIRECT]),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 DirectConnectBaudRate",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_DIRECT]),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 ModemComPort",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.comPort[CONFIG_CONNECTION_MODEM]),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 ModemBaudRate",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.baudRate[CONFIG_CONNECTION_MODEM]),
-            &cbData
+            &length
         );
-        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        length = REGISTRY_TEXT_VALUE_SIZE;
         RegQueryValueExA(
             key,
             "HMM1 ModemInitString",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(gConfig.modemInitString),
-            &cbData
+            &length
         );
-        cbData = REGISTRY_DWORD_BYTES;
+        length = REGISTRY_DWORD_BYTES;
         RegQueryValueExA(
             key,
             "HMM1 UseAutosave",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.autosave),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 FirstMapOffset",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.firstMapOffset),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 CurrentMapOffset",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameShowMenu",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameWindowXLeft",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].x),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameWindowYTop",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].y),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameWindowWidth",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].width),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameWindowHeight",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].height),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 GameFullScreen",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].fullScreen),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorShowMenu",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].showMenu),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorWindowXLeft",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].x),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorWindowYTop",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].y),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorWindowWidth",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorWindowHeight",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height),
-            &cbData
+            &length
         );
         RegQueryValueExA(
             key,
             "HMM1 EditorFullScreen",
             NULL,
-            &dataType,
+            &regType,
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
-            &cbData
+            &length
         );
-        cbData = REGISTRY_TEXT_VALUE_SIZE;
+        length = REGISTRY_TEXT_VALUE_SIZE;
         if (RegQueryValueExA(
                 key,
                 "AppPath",
                 NULL,
-                &dataType,
+                &regType,
                 reinterpret_cast<LPBYTE>(gcRegAppPath),
-                &cbData
+                &length
             )
             != ERROR_SUCCESS)
             strcpy(gcRegAppPath, "");
@@ -916,9 +876,9 @@ void ReadPrefs(void) {
                 key,
                 "HMM1 CDDrive",
                 NULL,
-                &dataType,
+                &regType,
                 reinterpret_cast<LPBYTE>(gcRegCDRomPath),
-                &cbData
+                &length
             )
             != ERROR_SUCCESS)
             strcpy(gcRegCDRomPath, "");
@@ -928,43 +888,27 @@ void ReadPrefs(void) {
     }
 }
 
-// @dead-code
-// Zero-ref: no incoming call, jump or relocated reference in retail.
-// NWC-only: no standalone Buka body; see buka-function-map.json.
-void WritePrefsToFile(void) {
-    FILE* file;
-    char buffer[100];
-
-    memset(buffer, 0, sizeof(buffer));
-    sprintf(gText, "%s", "HEROES.CFG");
-    file = fopen(gText, "wb");
-    if (file == NULL)
-        FileError(gText);
-    fwrite(&gConfig, sizeof(gConfig), 1, file);
-    fclose(file);
-}
-
 VA(0x004443f7, 0x30b)
 void WritePrefs(void) {
     HKEY key;
-    char szSubKey[REGISTRY_TEXT_BUFFER_SIZE];
+    char subKey[REGISTRY_TEXT_BUFFER_SIZE];
     i32 rc;
-    DWORD musicVolume;
-    DWORD soundVolume;
+    DWORD savedMusic;
+    DWORD effectsVolume;
 
     UpdateSystemOptionsMenu();
-    strcpy(szSubKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
+    strcpy(subKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
     key = NULL;
-    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, szSubKey, 0, KEY_ALL_ACCESS, &key);
+    rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, KEY_ALL_ACCESS, &key);
     if (rc == ERROR_SUCCESS) {
-        soundVolume = gConfig.soundVolume;
-        musicVolume = gConfig.musicVolume;
+        effectsVolume = gConfig.soundVolume;
+        savedMusic = gConfig.musicVolume;
         RegSetValueExA(
             key,
             "HMM1 MusicVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&musicVolume),
+            reinterpret_cast<LPBYTE>(&savedMusic),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
@@ -972,7 +916,7 @@ void WritePrefs(void) {
             "HMM1 FXVolume",
             0,
             REG_DWORD,
-            reinterpret_cast<LPBYTE>(&soundVolume),
+            reinterpret_cast<LPBYTE>(&effectsVolume),
             REGISTRY_DWORD_BYTES
         );
         RegSetValueExA(
@@ -1198,6 +1142,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
+    u32 unusedErr; // Buka 2.1's unused dwErr keeps a frame slot.
     u32 logicalDrives;
     i32 eachCd;
     i32 thisFh;
@@ -1209,7 +1154,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     HKEY activeKeyVal;
     char subKeyArray[REGISTRY_TEXT_BUFFER_SIZE];
 
-    sprintf(gText, "%sHEROES.AGG", ".\\DATA\\");
+    sprintf(gText, "%sHEROES.AGG", gDataPath);
     thisFh = open(gText, _O_BINARY);
     if (thisFh == -1) {
         if (_chdir(gcRegAppPath) == -1)

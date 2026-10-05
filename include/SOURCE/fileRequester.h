@@ -16,7 +16,9 @@ H1_ENUM_CONST_BEGIN(FileRequesterStorageConstant)
     FILE_REQUESTER_NAME_SIZE = 0x15f,
     FILE_REQUESTER_EXTENSION_SIZE = 5,
     FILE_REQUESTER_LOCAL_NAME_SIZE = 352,
-    FILE_REQUESTER_LOCAL_EXTENSION_SIZE = 208,
+    // The constructor's unaddressed frame buffer between its sort indices
+    // and the find result.
+    FILE_REQUESTER_UNUSED_NAME_SIZE = 200,
     FILE_REQUESTER_MAP_DESCRIPTION_SIZE = 101,
     FILE_REQUESTER_UPDATE_STORAGE_SIZE = 372
 H1_ENUM_CONST_END(FileRequesterStorageConstant)
