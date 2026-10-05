@@ -45,18 +45,19 @@ fileRequester::fileRequester(
     const char* directory,
     const char* defaultExtension
 ) {
-    HANDLE dirHandle;
-    i32 fd;
-    char fullPath[412];
-    SMapHeader header;
-    i32 findResult;
-    WIN32_FIND_DATA fileData;
-    char* ptr;
-    char extStr[FILE_REQUESTER_LOCAL_EXTENSION_SIZE];
-    char fileName[FILE_REQUESTER_LOCAL_NAME_SIZE];
+    char fullFileName[412];
+    i32 file;
+    SMapHeader headerData;
+    i32 found;
+    char unusedName[FILE_REQUESTER_UNUSED_NAME_SIZE];
     i32 moveValue;
-    i32 sortedCount;
-    i32 index;
+    i32 entryIndex;
+    char extension[FILE_REQUESTER_EXTENSION_SIZE];
+    WIN32_FIND_DATA findFileData;
+    i32 insertCount;
+    char* dotPtr;
+    char nameBuffer[FILE_REQUESTER_LOCAL_NAME_SIZE];
+    HANDLE findHandleWork;
 
     m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
     m_fileCount = 0;
@@ -76,15 +77,15 @@ fileRequester::fileRequester(
 
     sprintf(gText, "%s%s", directory, pattern);
     m_fileCount = 0;
-    dirHandle = FindFirstFile(gText, &fileData);
-    if (dirHandle != INVALID_HANDLE_VALUE) {
-        if (ShowThisMap(fileData.cFileName))
+    findHandleWork = FindFirstFile(gText, &findFileData);
+    if (findHandleWork != INVALID_HANDLE_VALUE) {
+        if (ShowThisMap(findFileData.cFileName))
             m_fileCount++;
-        while (FindNextFile(dirHandle, &fileData)) {
-            if (ShowThisMap(fileData.cFileName))
+        while (FindNextFile(findHandleWork, &findFileData)) {
+            if (ShowThisMap(findFileData.cFileName))
                 m_fileCount++;
         }
-        FindClose(dirHandle);
+        FindClose(findHandleWork);
     }
 
     m_fileNames = new FileRequesterName[m_fileCount + 1];
@@ -101,27 +102,27 @@ fileRequester::fileRequester(
         if (!m_mapInfo)
             MemError();
     }
-    for (index = 0; index < m_fileCount; index++) {
-        strcpy(m_fileNames[index].text, "");
-        strcpy(m_extensions[index].text, "");
+    for (entryIndex = 0; entryIndex < m_fileCount; entryIndex++) {
+        strcpy(m_fileNames[entryIndex].text, "");
+        strcpy(m_extensions[entryIndex].text, "");
     }
 
-    sortedCount = 0;
+    insertCount = 0;
     sprintf(gText, "%s%s", directory, pattern);
-    dirHandle = FindFirstFile(gText, &fileData);
-    if (dirHandle != INVALID_HANDLE_VALUE) {
-        findResult = 1;
-        while (findResult) {
-            if (ShowThisMap(fileData.cFileName)) {
-                strcpy(fileName, fileData.cFileName);
-                ptr = FindLastToken(fileName, '.');
-                if (ptr) {
-                    strcpy(extStr, ptr);
-                    *ptr = 0;
+    findHandleWork = FindFirstFile(gText, &findFileData);
+    if (findHandleWork != INVALID_HANDLE_VALUE) {
+        found = 1;
+        while (found) {
+            if (ShowThisMap(findFileData.cFileName)) {
+                strcpy(nameBuffer, findFileData.cFileName);
+                dotPtr = FindLastToken(nameBuffer, '.');
+                if (dotPtr) {
+                    strcpy(extension, dotPtr);
+                    *dotPtr = 0;
                 }
-                for (index = 0; index < sortedCount; index++) {
-                    if (strcmpi(fileName, m_fileNames[index].text) < 0) {
-                        for (moveValue = sortedCount; moveValue > index; moveValue--) {
+                for (entryIndex = 0; entryIndex < insertCount; entryIndex++) {
+                    if (strcmpi(nameBuffer, m_fileNames[entryIndex].text) < 0) {
+                        for (moveValue = insertCount; moveValue > entryIndex; moveValue--) {
                             strcpy(m_fileNames[moveValue].text, m_fileNames[moveValue - 1].text);
                             strcpy(m_extensions[moveValue].text, m_extensions[moveValue - 1].text);
                         }
@@ -129,40 +130,40 @@ fileRequester::fileRequester(
                     }
                 }
             insert:
-                strcpy(m_fileNames[index].text, fileName);
-                strcpy(m_extensions[index].text, extStr);
-                sortedCount++;
+                strcpy(m_fileNames[entryIndex].text, nameBuffer);
+                strcpy(m_extensions[entryIndex].text, extension);
+                insertCount++;
             }
-            findResult = FindNextFile(dirHandle, &fileData);
+            found = FindNextFile(findHandleWork, &findFileData);
         }
-        FindClose(dirHandle);
+        FindClose(findHandleWork);
     }
 
     if (gShowMapInfo) {
-        for (index = 0; index < sortedCount; index++) {
+        for (entryIndex = 0; entryIndex < insertCount; entryIndex++) {
             sprintf(
-                fullPath,
+                fullFileName,
                 "%s%s%s",
                 directory,
-                m_fileNames[index].text,
-                m_extensions[index].text
+                m_fileNames[entryIndex].text,
+                m_extensions[entryIndex].text
             );
-            fd = open(fullPath, O_BINARY);
-            if (fd == -1)
-                FileError(fullPath);
-            read(fd, &header, sizeof(header));
-            if (header.id == MAP_HEADER_ID) {
-                strcpy(m_mapNames[index].text, header.name);
-                strcpy(m_mapInfo[index].description, header.description);
-                m_mapInfo[index].difficulty = header.difficulty;
-                m_mapInfo[index].size = header.size;
+            file = open(fullFileName, O_BINARY);
+            if (file == -1)
+                FileError(fullFileName);
+            read(file, &headerData, sizeof(headerData));
+            if (headerData.id == MAP_HEADER_ID) {
+                strcpy(m_mapNames[entryIndex].text, headerData.name);
+                strcpy(m_mapInfo[entryIndex].description, headerData.description);
+                m_mapInfo[entryIndex].difficulty = headerData.difficulty;
+                m_mapInfo[entryIndex].size = headerData.size;
             } else {
-                strcpy(m_mapNames[index].text, m_fileNames[index].text);
-                strcpy(m_mapInfo[index].description, "");
-                m_mapInfo[index].difficulty = MAP_DIFFICULTY_EASY;
-                m_mapInfo[index].size = MAP_SIZE_SMALL;
+                strcpy(m_mapNames[entryIndex].text, m_fileNames[entryIndex].text);
+                strcpy(m_mapInfo[entryIndex].description, "");
+                m_mapInfo[entryIndex].difficulty = MAP_DIFFICULTY_EASY;
+                m_mapInfo[entryIndex].size = MAP_SIZE_SMALL;
             }
-            close(fd);
+            close(file);
         }
     }
 
@@ -302,24 +303,24 @@ void fileRequester::SetOK(i8 enabled) {
 // human count, encoded as its extension digit, before accepting it.
 VA(0x0045488d, 0xa9c)
 i16 fileRequester::Main(tag_message& message) {
-    i32 newTop;
+    i32 firstShown;
     i32 stepSize;
-    i32 numPages;
+    i32 pageCount;
     const i16 arrowUpId = FILE_REQUESTER_SCROLL_UP;
-    tag_message msg;
-    const i16 downArrowId = FILE_REQUESTER_SCROLL_DOWN;
-    const i16 railId = FILE_REQUESTER_SCROLL_GUTTER;
-    const i16 firstRowId = FILE_REQUESTER_LIST_FIRST;
-    const i16 scrollerId = FILE_REQUESTER_SCROLL_KNOB;
-    const i16 nameId = FILE_REQUESTER_FILENAME_ENTRY;
-    i16 ch;
-    i16 len;
-    i32 finished;
+    tag_message reply;
+    i16 length;
+    i16 key;
+    i32 handled;
     i16 ptrY;
     i16 ptrX;
-    char fileName[FILE_REQUESTER_LOCAL_NAME_SIZE];
+    char nameBuffer[FILE_REQUESTER_LOCAL_NAME_SIZE];
+    const i16 downId = FILE_REQUESTER_SCROLL_DOWN;
+    const i16 scrollBarId = FILE_REQUESTER_SCROLL_GUTTER;
+    const i16 firstItemId = FILE_REQUESTER_LIST_FIRST;
+    const i16 scrollerId = FILE_REQUESTER_SCROLL_KNOB;
+    const i16 fileNameId = FILE_REQUESTER_FILENAME_ENTRY;
 
-    finished = 0;
+    handled = 0;
     if (!(message.type & m_acceptMask)) {
         if (message.type) {
             message.type = MESSAGE_NONE;
@@ -372,56 +373,56 @@ i16 fileRequester::Main(tag_message& message) {
                                 break;
                             } else {
                                 message.value = message.id;
-                                finished = 1;
+                                handled = 1;
                             }
                             break;
                         case DIALOG_BUTTON_1:
                             message.value = message.id;
-                            finished = 1;
+                            handled = 1;
                             break;
                     }
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
-                        case nameId:
-                            SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_GET_TEXT, nameId);
-                            m_window->BroadcastMessage(msg);
-                            memset(fileName, 0, 9);
-                            strcpy(fileName, msg.text);
-                            len = strlen(fileName);
-                            for (ch = 0; ch < len; ch++) {
-                                if ((static_cast<u8>(fileName[ch]) < 'A'
-                                     || static_cast<u8>(fileName[ch]) > 'Z')
-                                    && (static_cast<u8>(fileName[ch]) < 'a'
-                                        || static_cast<u8>(fileName[ch]) > 'z')
-                                    && (static_cast<u8>(fileName[ch]) < '0'
-                                        || static_cast<u8>(fileName[ch]) > '9')
-                                    && (static_cast<u8>(fileName[ch]) < CYRILLIC_CAPITAL_A
-                                        || static_cast<u8>(fileName[ch]) > CYRILLIC_CAPITAL_YA)
-                                    && (static_cast<u8>(fileName[ch]) < CYRILLIC_SMALL_A
-                                        || static_cast<u8>(fileName[ch]) > CYRILLIC_SMALL_YA)
-                                    && static_cast<u8>(fileName[ch]) != CYRILLIC_CAPITAL_YO
-                                    && static_cast<u8>(fileName[ch]) != CYRILLIC_SMALL_YO
-                                    && static_cast<u8>(fileName[ch]) != '_'
-                                    && static_cast<u8>(fileName[ch]) != ' '
-                                    && !FindToken("$%'-_@~`!(){}^#&+,;=[].", fileName[ch]))
-                                    fileName[ch] = 0;
+                        case fileNameId:
+                            SET_WIDGET_MESSAGE(reply, WIDGET_COMMAND_GET_TEXT, fileNameId);
+                            m_window->BroadcastMessage(reply);
+                            memset(nameBuffer, 0, 9);
+                            strcpy(nameBuffer, reply.text);
+                            length = strlen(nameBuffer);
+                            for (key = 0; key < length; key++) {
+                                if ((static_cast<u8>(nameBuffer[key]) < 'A'
+                                     || static_cast<u8>(nameBuffer[key]) > 'Z')
+                                    && (static_cast<u8>(nameBuffer[key]) < 'a'
+                                        || static_cast<u8>(nameBuffer[key]) > 'z')
+                                    && (static_cast<u8>(nameBuffer[key]) < '0'
+                                        || static_cast<u8>(nameBuffer[key]) > '9')
+                                    && (static_cast<u8>(nameBuffer[key]) < CYRILLIC_CAPITAL_A
+                                        || static_cast<u8>(nameBuffer[key]) > CYRILLIC_CAPITAL_YA)
+                                    && (static_cast<u8>(nameBuffer[key]) < CYRILLIC_SMALL_A
+                                        || static_cast<u8>(nameBuffer[key]) > CYRILLIC_SMALL_YA)
+                                    && static_cast<u8>(nameBuffer[key]) != CYRILLIC_CAPITAL_YO
+                                    && static_cast<u8>(nameBuffer[key]) != CYRILLIC_SMALL_YO
+                                    && static_cast<u8>(nameBuffer[key]) != '_'
+                                    && static_cast<u8>(nameBuffer[key]) != ' '
+                                    && !FindToken("$%'-_@~`!(){}^#&+,;=[].", nameBuffer[key]))
+                                    nameBuffer[key] = 0;
                             }
-                            for (ch = strlen(fileName) - 1; ch >= 0; ch--) {
-                                if (static_cast<u8>(fileName[ch]) == ' ')
-                                    fileName[ch] = 0;
+                            for (key = strlen(nameBuffer) - 1; key >= 0; key--) {
+                                if (static_cast<u8>(nameBuffer[key]) == ' ')
+                                    nameBuffer[key] = 0;
                                 else
-                                    ch = -1;
+                                    key = -1;
                             }
-                            if (strlen(fileName) > 0 && static_cast<u8>(fileName[0]) > ' ') {
+                            if (strlen(nameBuffer) > 0 && static_cast<u8>(nameBuffer[0]) > ' ') {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
-                                strcpy(m_filename, fileName);
+                                strcpy(m_filename, nameBuffer);
                                 SetOK(1);
                             }
-                            msg.command = WIDGET_COMMAND_SET_TEXT;
-                            msg.id = nameId;
-                            msg.text = m_filename;
-                            m_window->BroadcastMessage(msg);
+                            reply.command = WIDGET_COMMAND_SET_TEXT;
+                            reply.id = fileNameId;
+                            reply.text = m_filename;
+                            m_window->BroadcastMessage(reply);
                             Update(1);
                             break;
                         case arrowUpId:
@@ -430,7 +431,7 @@ i16 fileRequester::Main(tag_message& message) {
                                 Update(1);
                             }
                             break;
-                        case downArrowId:
+                        case downId:
                             if (m_topIndex + FILE_REQUESTER_VISIBLE_ROWS < m_fileCount) {
                                 m_topIndex++;
                                 if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
@@ -438,16 +439,16 @@ i16 fileRequester::Main(tag_message& message) {
                                 Update(1);
                             }
                             break;
-                        case railId:
-                            numPages = m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET;
-                            if (numPages < 1)
-                                numPages = 1;
-                            stepSize = FILE_REQUESTER_GUTTER_STEPS / numPages;
+                        case scrollBarId:
+                            pageCount = m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET;
+                            if (pageCount < 1)
+                                pageCount = 1;
+                            stepSize = FILE_REQUESTER_GUTTER_STEPS / pageCount;
                             gpMouseManager->MouseCoords(ptrX, ptrY);
                             ptrY -= m_y + FILE_REQUESTER_GUTTER_TOP;
                             ptrY -= FILE_REQUESTER_SCROLL_KNOB_HALF_HEIGHT;
-                            newTop = ptrY * FILE_REQUESTER_GUTTER_SCALE / stepSize;
-                            m_topIndex = newTop;
+                            firstShown = ptrY * FILE_REQUESTER_GUTTER_SCALE / stepSize;
+                            m_topIndex = firstShown;
                             if (m_topIndex + FILE_REQUESTER_LAST_ROW_OFFSET >= m_fileCount)
                                 m_topIndex = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
                             if (m_topIndex < 0)
@@ -457,23 +458,23 @@ i16 fileRequester::Main(tag_message& message) {
                         case scrollerId:
                             DoKnob();
                             break;
-                        case firstRowId:
-                        case firstRowId + 1:
-                        case firstRowId + 2:
-                        case firstRowId + 3:
-                        case firstRowId + 4:
-                        case firstRowId + 5:
-                        case firstRowId + 6:
-                        case firstRowId + 7:
-                        case firstRowId + 8:
-                        case firstRowId + 9:
-                            if (message.id - firstRowId + m_topIndex == m_selectedIndex) {
+                        case firstItemId:
+                        case firstItemId + 1:
+                        case firstItemId + 2:
+                        case firstItemId + 3:
+                        case firstItemId + 4:
+                        case firstItemId + 5:
+                        case firstItemId + 6:
+                        case firstItemId + 7:
+                        case firstItemId + 8:
+                        case firstItemId + 9:
+                            if (message.id - firstItemId + m_topIndex == m_selectedIndex) {
                                 message.value = DIALOG_BUTTON_2;
                                 message.id = DIALOG_BUTTON_2;
-                                finished = 1;
+                                handled = 1;
                                 break;
                             }
-                            m_selectedIndex = message.id - firstRowId + m_topIndex;
+                            m_selectedIndex = message.id - firstItemId + m_topIndex;
                             if (m_selectedIndex >= m_fileCount) {
                                 m_selectedIndex = FILE_REQUESTER_SELECTION_NONE;
                                 SetOK(0);
@@ -492,13 +493,13 @@ i16 fileRequester::Main(tag_message& message) {
             break;
     }
 
-    if (finished == 1) {
+    if (handled == 1) {
         if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
-            ch = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
-            if (ch < giNumHumanPlayers
+            key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
+            if (key < giNumHumanPlayers
                 && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
-                sprintf(gText, localization::Tr("file.humans.minimum"), ch, giNumHumanPlayers);
+                sprintf(gText, localization::Tr("file.humans.minimum"), key, giNumHumanPlayers);
                 NormalDialog(
                     gText,
                     NORMAL_DIALOG_TYPE_OK,
@@ -510,14 +511,14 @@ i16 fileRequester::Main(tag_message& message) {
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                finished = 0;
+                handled = 0;
             }
-            if (ch > giNumHumanPlayers) {
+            if (key > giNumHumanPlayers) {
                 sprintf(
                     gText,
                     localization::Tr("file.humans.computer"),
-                    ch,
-                    ch - giNumHumanPlayers
+                    key,
+                    key - giNumHumanPlayers
                 );
                 NormalDialog(
                     gText,
@@ -531,10 +532,10 @@ i16 fileRequester::Main(tag_message& message) {
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
                 if (gpWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
-                    finished = 0;
+                    handled = 0;
             }
         }
-        if (finished) {
+        if (handled) {
             message.type = MESSAGE_EXECUTIVE;
             message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
             return MESSAGE_DISPATCH_FORWARD;
