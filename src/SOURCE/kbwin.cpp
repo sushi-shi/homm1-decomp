@@ -1166,7 +1166,7 @@ static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
 
 VA(0x00444702, 0x72)
 // Suppress the system's critical-error dialog while probing an empty drive.
-static bool DriveSupportsFreeSpaceQuery(char driveLetter) {
+bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     UINT oldMode;
     char szPath[CD_DRIVE_QUERY_PATH_SIZE];
     ULARGE_INTEGER availToCaller;
