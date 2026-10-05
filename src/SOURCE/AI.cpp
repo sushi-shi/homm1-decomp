@@ -310,7 +310,8 @@ i16 combatManager::GetShooterMask(i8 side) {
     for (armyIndex = 0; armyIndex < m_numArmies[side]; armyIndex++) {
         currentArmy = &m_armies[side][armyIndex];
         if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)
-            && (currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) && currentArmy->m_stats.shots > 0)
+            && (currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
+            && currentArmy->m_stats.shots > 0)
             bits |= armyBit;
         armyBit <<= 1;
     }
@@ -346,7 +347,8 @@ i16 combatManager::GetWalkerMask(i8 side) {
         currentArmy = &m_armies[side][armyIndex];
         if (currentArmy && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_DEAD)
             && !(currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING)
-            && (!(currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) || currentArmy->m_stats.shots <= 0))
+            && (!(currentArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER)
+                || currentArmy->m_stats.shots <= 0))
             bits |= armyBit;
         armyBit <<= 1;
     }
@@ -357,21 +359,21 @@ VA(0x0041281e, 0x9f)
 i16 combatManager::GetBestArmy(i8 side, i16 mask) {
     i16 armyIndex = 0;
     i16 bitFlag = 1;
-    u32 strength;
-    u32 bestStrength = 0;
-    i16 best = COMBAT_ARMY_INDEX_NONE;
+    u32 savedStrength;
+    u32 theStrength = 0;
+    i16 curBest = COMBAT_ARMY_INDEX_NONE;
 
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
         if (mask & bitFlag) {
-            strength = m_armies[side][armyIndex].Strength();
-            if (strength > bestStrength) {
-                best = armyIndex;
-                bestStrength = strength;
+            savedStrength = m_armies[side][armyIndex].Strength();
+            if (savedStrength > theStrength) {
+                curBest = armyIndex;
+                theStrength = savedStrength;
             }
         }
         bitFlag <<= 1;
     }
-    return best;
+    return curBest;
 }
 
 VA(0x004128bd, 0x9f)
@@ -486,20 +488,20 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
     i16 otherHex;
     i16 hex;
     i16 oneBit;
-    i16 dir;
+    i16 direction;
     i16 enemyMask;
-    i16 openMask;
-    i16 target;
+    i16 openMaskValue;
+    i16 victim;
 
-    openMask =
+    openMaskValue =
         ~currentArmy->GetAttackMask(currentArmy->m_hex, ARMY_ATTACK_TARGET_ENEMY, ARMY_HEX_INVALID);
-    if (!openMask)
+    if (!openMaskValue)
         return 0;
     oneBit = 1;
     enemyMask = 0;
-    for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
-        if (openMask & oneBit) {
-            hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, dir);
+    for (direction = 0; direction < COMBAT_DIRECTION_COUNT; direction++) {
+        if (openMaskValue & oneBit) {
+            hex = currentArmy->GetAdjacentCellIndex(currentArmy->m_hex, direction);
             if (ValidHex(hex) && (currentArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
                     && m_hexCells[hex].m_occupantSide != 1 - m_currentSide
                 || m_hexCells[hex].m_occupantIndex == m_currentArmyIndex
@@ -510,7 +512,7 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
                     otherHex = currentArmy->m_hex - 1;
                 if (hex % COMBAT_GRID_COLUMNS != 0
                     && hex % COMBAT_GRID_COLUMNS != COMBAT_GRID_LAST_COLUMN)
-                    hex = currentArmy->GetAdjacentCellIndex(otherHex, dir);
+                    hex = currentArmy->GetAdjacentCellIndex(otherHex, direction);
                 if (m_hexCells[hex].m_occupantSide != 1 - m_currentSide)
                     hex = ARMY_HEX_INVALID;
             }
@@ -520,12 +522,12 @@ i8 combatManager::AttemptAdjacentAttack(class army* currentArmy) {
         oneBit <<= 1;
     }
     if (currentArmy->m_creatureType == CREATURE_GHOST)
-        target = GetWorstArmy(1 - m_currentSide, enemyMask);
+        victim = GetWorstArmy(1 - m_currentSide, enemyMask);
     else
-        target = GetBestArmy(1 - m_currentSide, enemyMask);
-    if (target != COMBAT_ARMY_INDEX_NONE) {
+        victim = GetBestArmy(1 - m_currentSide, enemyMask);
+    if (victim != COMBAT_ARMY_INDEX_NONE) {
         giNextAction = ACTION_MOVE;
-        giNextActionGridIndex = m_armies[1 - m_currentSide][target].m_hex;
+        giNextActionGridIndex = m_armies[1 - m_currentSide][victim].m_hex;
         return 1;
     } else {
         return 0;
@@ -537,9 +539,9 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
     i16 frontHex;
     i32 armyIndex;
     i32 frontDelta;
-    i32 canReach;
+    i32 canReachRequested;
     i8 oldSpeed;
-    i16 pathNdx;
+    i16 pathNdxIndex;
     i16 left;
 
     CLEAR_ARMY_TARGET(currentArmy);
@@ -556,21 +558,21 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
         return WalkTowardArmy(currentArmy, side, mask);
     oldSpeed = currentArmy->m_stats.speed;
     currentArmy->m_stats.speed = COMBAT_AI_UNLIMITED_PATH_SPEED;
-    canReach =
+    canReachRequested =
         gpSearchArray
             ->FindCombatPath(currentArmy->m_hex, frontHex, currentArmy, ARMY_PATH_EXACT_TARGET_HEX);
     currentArmy->m_stats.speed = oldSpeed;
     if (gpSearchArray->m_pathLength > 0) {
         giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;
-        pathNdx = gpSearchArray->m_pathLength - 1;
+        pathNdxIndex = gpSearchArray->m_pathLength - 1;
         giNextActionGridIndex = currentArmy->m_hex;
-        while (pathNdx >= 0 && left) {
+        while (pathNdxIndex >= 0 && left) {
             giNextActionGridIndex = currentArmy->GetAdjacentCellIndex(
                 giNextActionGridIndex,
-                gpSearchArray->m_directions[pathNdx]
+                gpSearchArray->m_directions[pathNdxIndex]
             );
-            pathNdx--;
+            pathNdxIndex--;
             left--;
         }
         return 1;
@@ -580,58 +582,58 @@ i8 combatManager::WalkTowardArmyFront(class army* currentArmy, i8 side, i16 mask
 
 VA(0x004130f8, 0x1f6)
 i8 combatManager::WalkTowardArmy(class army* currentArmy, i8 side, i16 mask) {
-    i32 armyIndex;
-    i8 savedSpeed;
+    i32 slot;
+    i8 savedSpeedRequested;
     i32 routeGot;
-    i16 attackMask;
+    i16 attackMaskValue;
     i16 pathNdx;
     i16 left;
     army* targetPtr;
-    i16 goalHex;
+    i16 savedHex;
     i32 dest;
 
-    armyIndex = GetClosestArmy(currentArmy, side, mask);
-    if (armyIndex == COMBAT_ARMY_INDEX_NONE)
+    slot = GetClosestArmy(currentArmy, side, mask);
+    if (slot == COMBAT_ARMY_INDEX_NONE)
         return 0;
-    targetPtr = &m_armies[side][armyIndex];
-    goalHex = targetPtr->m_hex;
+    targetPtr = &m_armies[side][slot];
+    savedHex = targetPtr->m_hex;
     currentArmy->m_targetSide = side;
-    currentArmy->m_targetIndex = armyIndex;
-    attackMask = currentArmy->GetAttackMask(
+    currentArmy->m_targetIndex = slot;
+    attackMaskValue = currentArmy->GetAttackMask(
         currentArmy->m_hex,
         ARMY_ATTACK_TARGET_ASSIGNED,
         ARMY_HEX_INVALID
     );
-    if (attackMask != COMBAT_ALL_DIRECTIONS_BLOCKED) {
+    if (attackMaskValue != COMBAT_ALL_DIRECTIONS_BLOCKED) {
         giNextAction = ACTION_SKIP_TURN;
         return 1;
     }
-    savedSpeed = currentArmy->m_stats.speed;
+    savedSpeedRequested = currentArmy->m_stats.speed;
     currentArmy->m_stats.speed = COMBAT_AI_UNLIMITED_PATH_SPEED;
     routeGot = gpSearchArray->FindCombatPath(
         currentArmy->m_hex,
-        goalHex,
+        savedHex,
         currentArmy,
         ARMY_PATH_ASSIGNED_TARGET_HEX
     );
     if (!routeGot && (targetPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)) {
         switch (targetPtr->m_facing) {
             case ARMY_FACING_LEFT:
-                --goalHex;
+                --savedHex;
                 break;
             case ARMY_FACING_RIGHT:
-                ++goalHex;
+                ++savedHex;
                 break;
         }
-        if (goalHex != ARMY_HEX_INVALID)
+        if (savedHex != ARMY_HEX_INVALID)
             routeGot = gpSearchArray->FindCombatPath(
                 currentArmy->m_hex,
-                goalHex,
+                savedHex,
                 currentArmy,
                 ARMY_PATH_ASSIGNED_TARGET_HEX
             );
     }
-    currentArmy->m_stats.speed = savedSpeed;
+    currentArmy->m_stats.speed = savedSpeedRequested;
     if (gpSearchArray->m_pathLength > 1) {
         giNextAction = ACTION_MOVE;
         left = currentArmy->m_stats.speed;

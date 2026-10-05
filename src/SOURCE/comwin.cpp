@@ -135,11 +135,22 @@ void ShutdownComError(char* function) {
             break;
     }
 
-    sprintf(message, "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: %s\n\n", function, error, errorName);
+    sprintf(
+        message,
+        "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: "
+        "%s\n\n",
+        function,
+        error,
+        errorName
+    );
     strcat(message, "Suggested solutions:");
     strcat(message, "\n  1) Make sure all cables are firmly connected.");
     strcat(message, "\n  2) Reboot computer.");
-    strcat(message, "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd button down on the screen where you choose Host or Guest.)");
+    strcat(
+        message,
+        "\n  3) Check to make sure you have the correct COM port setting in 'CONFIG'. (The 3rd "
+        "button down on the screen where you choose Host or Guest.)"
+    );
     strcat(message, "\n  4) Consider lowering the BAUD rate in 'CONFIG' to 19200 or 9600.");
     ShutDown(message);
 }
@@ -264,16 +275,16 @@ i16 com_rcv(i16 port, u16 requested, void* buffer) {
 VA(0x0041d1e4, 0x11a)
 i16 com_snd(i16 port, u16, u16 length, void* data, i32 priority) {
     tag_Node* node;
-    BOOL result;
+    BOOL res;
 
     if (gComPorts[port].handle != INVALID_HANDLE_VALUE) {
         if (!length) {
-            result = SetCommBreak(gComPorts[port].handle);
-            if (!result)
+            res = SetCommBreak(gComPorts[port].handle);
+            if (!res)
                 ShutdownComError("Set communications break");
             Sleep(COM_BREAK_DELAY);
-            result = ClearCommBreak(gComPorts[port].handle);
-            if (!result)
+            res = ClearCommBreak(gComPorts[port].handle);
+            if (!res)
                 ShutdownComError("Clear communications break");
             return 0;
         }
@@ -329,12 +340,12 @@ void comm_wrt_task(void) {
         totalWritten = 0;
         while (comPort->handle != INVALID_HANDLE_VALUE && totalWritten < packetNode->len) {
             callRv = WriteFile(
-                    comPort->handle,
-                    &packetNode->comData[totalWritten],
-                    packetNode->len - totalWritten,
-                    &sizeWritten,
-                    NULL
-                );
+                comPort->handle,
+                &packetNode->comData[totalWritten],
+                packetNode->len - totalWritten,
+                &sizeWritten,
+                NULL
+            );
             if (!callRv)
                 ShutdownComError("Write communications data");
             totalWritten += sizeWritten;

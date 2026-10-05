@@ -39,10 +39,15 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
     MSG message;
 
     hInstApp = instance;
-    gEventHandle = CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
+    gEventHandle =
+        CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
     errorLast = GetLastError();
     if (gEventHandle == NULL || errorLast == ERROR_ALREADY_EXISTS) {
-        sprintf(gText, localization::Tr("startup.instance.already_running"), localization::Tr("startup.instance.game_title"));
+        sprintf(
+            gText,
+            localization::Tr("startup.instance.already_running"),
+            localization::Tr("startup.instance.game_title")
+        );
         MessageBoxA(NULL, gText, localization::Tr("startup.error.title"), MB_ICONHAND);
         return 0;
     }
@@ -104,7 +109,8 @@ BOOL AppInit(void* instance, void* previousInstance, i32 showCommand, char* comm
 
     if (previousInstance == NULL) {
         appClass.hCursor = NULL;
-        appClass.hIcon = LoadIconA(static_cast<HINSTANCE>(instance), MAKEINTRESOURCEA(KBWIN_APPLICATION_ICON));
+        appClass.hIcon =
+            LoadIconA(static_cast<HINSTANCE>(instance), MAKEINTRESOURCEA(KBWIN_APPLICATION_ICON));
         appClass.lpszMenuName = NULL;
         appClass.lpszClassName = gAppName;
         appClass.hbrBackground =
@@ -250,8 +256,8 @@ long __stdcall AppWndProc(void* window, u32 message, u32 messageParam, long mess
                 iMainWinScreenWidth = 1;
             if (gMainWinScreenHeight < 1)
                 gMainWinScreenHeight = 1;
-            if (hwndApp != NULL && (lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0 && gClosingApp == 0
-                && gConfig.gfx[gCurExe].fullScreen == 0) {
+            if (hwndApp != NULL && (lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0
+                && gClosingApp == 0 && gConfig.gfx[gCurExe].fullScreen == 0) {
                 gConfig.gfx[gCurExe].width = iMainWinScreenWidth;
                 gConfig.gfx[gCurExe].height = gMainWinScreenHeight;
                 WritePrefs();
@@ -367,7 +373,14 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     windowRect.right = width - 1;
     windowRect.bottom = height - 1;
     AdjustWindowRect(&windowRect, giCurWindowsStyleFlags, gConfig.gfx[gCurExe].showMenu);
-    MoveWindow(hwndApp, windowX, targetY, windowRect.right - windowRect.left + 1, windowRect.bottom - windowRect.top + 1, TRUE);
+    MoveWindow(
+        hwndApp,
+        windowX,
+        targetY,
+        windowRect.right - windowRect.left + 1,
+        windowRect.bottom - windowRect.top + 1,
+        TRUE
+    );
     gConfig.gfx[gCurExe].x = windowX;
     gConfig.gfx[gCurExe].y = targetY;
     gConfig.gfx[gCurExe].width = width;
@@ -644,7 +657,6 @@ void ReadPrefsFromFile(void) {
     strcpy(gcRegCDRomPath, "");
     strcpy(gcRegAppPath, "");
 }
-
 
 VA(0x00443f8f, 0x468)
 void ReadPrefs(void) {
@@ -932,7 +944,6 @@ void WritePrefsToFile(void) {
     fclose(file);
 }
 
-
 VA(0x004443f7, 0x30b)
 void WritePrefs(void) {
     HKEY key;
@@ -1188,81 +1199,81 @@ VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     u32 logicalDrives;
-    i32 cd;
-    i32 fh;
+    i32 eachCd;
+    i32 thisFh;
     i32 index;
     i32 cdDrives[CD_DRIVE_LETTER_COUNT];
-    char buffer[CD_PROBE_BUFFER_SIZE];
+    char endBuffer[CD_PROBE_BUFFER_SIZE];
     i32 pos;
-    i32 numCD;
-    HKEY key;
-    char subKey[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 tempDrives;
+    HKEY activeKeyVal;
+    char subKeyArray[REGISTRY_TEXT_BUFFER_SIZE];
 
     sprintf(gText, "%sHEROES.AGG", ".\\DATA\\");
-    fh = open(gText, _O_BINARY);
-    if (fh == -1) {
+    thisFh = open(gText, _O_BINARY);
+    if (thisFh == -1) {
         if (_chdir(gcRegAppPath) == -1)
             return CD_SETUP_NO_APP_PATH;
-        fh = open(gText, _O_BINARY);
-        if (fh == -1)
+        thisFh = open(gText, _O_BINARY);
+        if (thisFh == -1)
             return CD_SETUP_NO_DATA;
     }
-    close(fh);
+    close(thisFh);
     logicalDrives = GetLogicalDrives();
     // Retail clears 26 bytes, although the drive slots are 32-bit integers.
     memset(cdDrives, 0, CD_DRIVE_LETTER_COUNT);
-    for (cd = CD_FIRST_DRIVE_LETTER, index = 0; cd < CD_DRIVE_LETTER_COUNT; cd++) {
-        if (logicalDrives & (1 << cd)) {
-            if (IsCDDrive(cd)) {
-                cdDrives[index] = cd;
+    for (eachCd = CD_FIRST_DRIVE_LETTER, index = 0; eachCd < CD_DRIVE_LETTER_COUNT; eachCd++) {
+        if (logicalDrives & (1 << eachCd)) {
+            if (IsCDDrive(eachCd)) {
+                cdDrives[index] = eachCd;
                 index++;
             }
         }
     }
-    numCD = index;
+    tempDrives = index;
     if (strlen(gcRegCDRomPath) > 0 && gcRegCDRomPath[0] >= 'A' && gcRegCDRomPath[0] <= 'Z'
         && DriveSupportsFreeSpaceQuery(gcRegCDRomPath[0])) {
         sprintf(gText, "%s%s", gcRegCDRomPath, gcCDTrackName);
-        fh = open(gText, _O_BINARY);
-        if (fh != -1) {
-            close(fh);
+        thisFh = open(gText, _O_BINARY);
+        if (thisFh != -1) {
+            close(thisFh);
             return CD_SETUP_READY;
         }
     }
-    if (numCD <= 0)
+    if (tempDrives <= 0)
         return CD_SETUP_NO_DRIVE;
-    for (cd = 0; cd < CD_SETUP_ATTEMPTS; cd++) {
-        for (index = 0; index < numCD; index++) {
+    for (eachCd = 0; eachCd < CD_SETUP_ATTEMPTS; eachCd++) {
+        for (index = 0; index < tempDrives; index++) {
             if (DriveSupportsFreeSpaceQuery(cdDrives[index] + 'A')) {
                 sprintf(gText, "%c:%s", cdDrives[index] + 'A', gcCDTrackName);
-                fh = open(gText, _O_BINARY);
-                if (fh == -1)
+                thisFh = open(gText, _O_BINARY);
+                if (thisFh == -1)
                     continue;
-                pos = _lseek(fh, 0, SEEK_END);
+                pos = _lseek(thisFh, 0, SEEK_END);
                 if (pos != -1) {
-                    pos = _lseek(fh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                    pos = _lseek(thisFh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
                     if (pos != -1)
-                        pos = read(fh, buffer, CD_AUTORUN_TAIL_BYTES);
+                        pos = read(thisFh, endBuffer, CD_AUTORUN_TAIL_BYTES);
                 }
-                close(fh);
+                close(thisFh);
                 if (pos != -1) {
                     sprintf(gcRegCDRomPath, "%c:", cdDrives[index] + 'A');
                     strcpy(
-                        subKey,
+                        subKeyArray,
                         "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
                     );
-                    key = NULL;
-                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, KEY_WRITE, &key)
+                    activeKeyVal = NULL;
+                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKeyArray, 0, KEY_WRITE, &activeKeyVal)
                         == ERROR_SUCCESS) {
                         RegSetValueExA(
-                            key,
+                            activeKeyVal,
                             "HMM1 CDDrive",
                             0,
                             REG_SZ,
                             reinterpret_cast<LPBYTE>(gcRegCDRomPath),
                             strlen(gcRegCDRomPath) + 1
                         );
-                        RegCloseKey(key);
+                        RegCloseKey(activeKeyVal);
                     }
                     return CD_SETUP_READY;
                 }

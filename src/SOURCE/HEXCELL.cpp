@@ -55,14 +55,24 @@ void hexcell::DrawTower(i8 frame) {
     i16 row;
 
     level = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
-    gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-        ->DrawToBuffer(level ? m_x : m_x + 28, m_y, frame, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
+    gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+        level ? m_x : m_x + 28,
+        m_y,
+        frame,
+        ICON_DRAW_FLIPPED,
+        ICON_DRAW_OFFSET_FULL
+    );
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
     if (row == COMBAT_GRID_LAST_ROW)
         return;
     if (row & 1)
-        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(level ? m_x : m_x + 28, m_y, 9, ICON_DRAW_FLIPPED, ICON_DRAW_OFFSET_FULL);
+        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+            level ? m_x : m_x + 28,
+            m_y,
+            9,
+            ICON_DRAW_FLIPPED,
+            ICON_DRAW_OFFSET_FULL
+        );
     else
         gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
             ->DrawToBuffer(level ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
@@ -70,26 +80,26 @@ void hexcell::DrawTower(i8 frame) {
 
 VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {
-    i8 flip;
+    i8 lastFlip;
     i16 row;
-    i16 damageLevel;
+    i16 levelValue;
 
-    flip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    lastFlip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
-    damageLevel = gpCombatManager->m_wallDamage;
+    levelValue = gpCombatManager->m_wallDamage;
     gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-        flip ? m_x - 15 : m_x + 15,
+        lastFlip ? m_x - 15 : m_x + 15,
         row == 0 ? m_y - 20 : m_y - 36,
         gpCombatManager->m_wallFrame,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
     );
-    if (damageLevel != COMBAT_WALL_DAMAGE_NONE) {
+    if (levelValue != COMBAT_WALL_DAMAGE_NONE) {
         if (row == COMBAT_GRID_LAST_ROW) {
             gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                flip ? m_x : m_x + 15,
+                lastFlip ? m_x : m_x + 15,
                 m_y + 8,
-                damageLevel,
+                levelValue,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
@@ -97,33 +107,33 @@ void hexcell::DrawWall(void) {
         }
         if (row & 1) {
             gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                flip ? m_x : m_x + 8,
+                lastFlip ? m_x : m_x + 8,
                 m_y + 40,
-                damageLevel,
+                levelValue,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (damageLevel > 0)
+            if (levelValue > 0)
                 gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    flip ? m_x - 40 : m_x - 32,
+                    lastFlip ? m_x - 40 : m_x - 32,
                     m_y + 60,
-                    damageLevel - 1,
+                    levelValue - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
         } else {
             gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                flip ? m_x - 28 : m_x - 8,
+                lastFlip ? m_x - 28 : m_x - 8,
                 m_y + 40,
-                damageLevel,
+                levelValue,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (damageLevel > 0)
+            if (levelValue > 0)
                 gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    flip ? m_x + 20 : m_x + 40,
+                    lastFlip ? m_x + 20 : m_x + 40,
                     m_y + 60,
-                    damageLevel - 1,
+                    levelValue - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );

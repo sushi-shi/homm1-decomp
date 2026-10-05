@@ -319,20 +319,20 @@ VA(0x00466ed3, 0x115)
 #line 315 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDInitializePalette() {
     i32 ddrval;
-    HDC hdc;
+    HDC curHdc;
     i32 i;
     if (gWinGraphBusy != FALSE)
         return;
     {
-        hdc = GetDC(NULL);
-        GetSystemPaletteEntries(hdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
+        curHdc = GetDC(NULL);
+        GetSystemPaletteEntries(curHdc, 0, WINGRAPH_SYSTEM_PALETTE_SIZE, LogicalPalette.entries);
         GetSystemPaletteEntries(
-            hdc,
+            curHdc,
             WINGRAPH_MUTABLE_PALETTE_END,
             WINGRAPH_SYSTEM_PALETTE_SIZE,
             &LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END]
         );
-        ReleaseDC(NULL, hdc);
+        ReleaseDC(NULL, curHdc);
         for (i = 0; i < WINGRAPH_SYSTEM_PALETTE_END; i++) {
             LogicalPalette.entries[i].peFlags = 0;
             LogicalPalette.entries[WINGRAPH_MUTABLE_PALETTE_END + i].peFlags = 0;
@@ -533,7 +533,7 @@ VA(0x00467557, 0xf5)
 #line 524 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
 void DDUpdatePalette(i8* paletteData) {
     i32 entry;
-    i32 res;
+    i32 curRes;
 
     if (gWinGraphBusy != FALSE)
         return;
@@ -553,15 +553,15 @@ void DDUpdatePalette(i8* paletteData) {
     // API-forced: ProcessAssert accepts the donor pointer assertion as a 32-bit int.
 #line 521
     H1_ASSERT(reinterpret_cast<i32>(gDDPal));
-    res = gDDPal->SetEntries(
+    curRes = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
         WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
-    if (res != DD_OK)
+    if (curRes != DD_OK)
 #line 525
-        DDSD(res, __FILE__, __LINE__);
+        DDSD(curRes, __FILE__, __LINE__);
 }
 
 // donor PoL RVA 0x00036539; preferred Buka symbol ?DDCleanUpWinGraphics@@YIXXZ
@@ -982,9 +982,7 @@ void GetGraphicsInfo(void) {
         gMainVideoModeHeight = GetDeviceCaps(screenDC, VERTRES);
         ReleaseDC(NULL, screenDC);
         if (gMainVideoModeColorDepth < WINGRAPH_COLOR_DEPTH)
-            ShutDown(
-                localization::Tr("display.color_mode.required")
-            );
+            ShutDown(localization::Tr("display.color_mode.required"));
     }
 }
 

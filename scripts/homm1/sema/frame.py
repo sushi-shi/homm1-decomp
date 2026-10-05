@@ -1,4 +1,4 @@
-"""homm1 sema frame - show VC4 local names and /Od slot buckets.
+"""homm1 sema frame - show candidate local names and /Od slot buckets.
 
     homm1 sema frame BASE/LZHUF
     homm1 sema frame EncodeData

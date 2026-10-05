@@ -224,8 +224,9 @@ i16 townManager::Open(i16 id) {
     m_garrisonStrip = new strip(
         0,
         TOWN_GARRISON_STRIP_Y,
-        m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
-                                                              : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
+        m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
+            ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
+            : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
         gpResourceManager->MakeId(gText),
         0,
         &m_town->m_army,
@@ -334,13 +335,12 @@ void townManager::SetArmyCommand(i16 qualifier) {
         }
         if (sameType) {
             if (qualifier) {
-                strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
-                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
-                sprintf(
-                    m_statusText,
-                    gTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY],
-                    s_armyCommandText
+                strcpy(
+                    s_armyCommandText,
+                    gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
                 );
+                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
+                sprintf(m_statusText, gTownCommand[TOWN_TEXT_REDISTRIBUTE_ARMY], s_armyCommandText);
                 m_command = TOWN_ARMY_COMMAND_SPLIT;
             } else if (lastArmy) {
                 strcpy(s_armyCommandText, gTownCommand[TOWN_TEXT_CANNOT_COMBINE_LAST_ARMY]);
@@ -348,18 +348,20 @@ void townManager::SetArmyCommand(i16 qualifier) {
                 strcpy(m_statusText, s_armyCommandText);
                 return;
             } else {
-                strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
-                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
-                sprintf(
-                    m_statusText,
-                    gTownCommand[TOWN_TEXT_COMBINE_ARMIES],
-                    s_armyCommandText
+                strcpy(
+                    s_armyCommandText,
+                    gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
                 );
+                s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
+                sprintf(m_statusText, gTownCommand[TOWN_TEXT_COMBINE_ARMIES], s_armyCommandText);
                 m_command = TOWN_ARMY_COMMAND_MERGE;
             }
         } else if (qualifier
                    && m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot] == CREATURE_NONE) {
-            strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+            strcpy(
+                s_armyCommandText,
+                gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+            );
             s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
             sprintf(
                 m_statusText,
@@ -384,19 +386,24 @@ void townManager::SetArmyCommand(i16 qualifier) {
             strcpy(m_statusText, gTownCommand[TOWN_TEXT_CANNOT_MOVE_LAST_ARMY]);
             return;
         } else {
-            strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
-            s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
-            sprintf(
-                m_statusText,
-                gTownCommand[TOWN_TEXT_MOVE_ARMY],
-                s_armyCommandText
+            strcpy(
+                s_armyCommandText,
+                gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
             );
+            s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
+            sprintf(m_statusText, gTownCommand[TOWN_TEXT_MOVE_ARMY], s_armyCommandText);
             m_command = TOWN_ARMY_COMMAND_SWAP;
         }
     } else {
-        strcpy(s_armyCommandText, gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]);
+        strcpy(
+            s_armyCommandText,
+            gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]]
+        );
         s_armyCommandText[0] = CyrillicToLower(s_armyCommandText[0]);
-        strcpy(s_pendingArmyName, gArmyNamesPlural[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]);
+        strcpy(
+            s_pendingArmyName,
+            gArmyNamesPlural[m_pendingStrip->m_army->m_creatureTypes[m_pendingArmySlot]]
+        );
         s_pendingArmyName[0] = CyrillicToLower(s_pendingArmyName[0]);
         sprintf(
             m_statusText,
@@ -447,7 +454,8 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                     sprintf(
                         m_statusText,
                         gTownCommand[TOWN_TEXT_SELECT_ARMY],
-                        gArmyNamesPlural[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
+                        gArmyNamesPlural[m_selectedStrip->m_army
+                                             ->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
                 }
@@ -476,7 +484,8 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                     sprintf(
                         m_statusText,
                         gTownCommand[TOWN_TEXT_SELECT_ARMY],
-                        gArmyNamesPlural[m_selectedStrip->m_army->m_creatureTypes[m_selectedArmySlot]]
+                        gArmyNamesPlural[m_selectedStrip->m_army
+                                             ->m_creatureTypes[m_selectedArmySlot]]
                     );
                     m_command = TOWN_ARMY_COMMAND_SELECT;
                 }
@@ -514,11 +523,7 @@ void townManager::SetCommandAndText(struct tag_message& message) {
                 gArmyNamesPlural[gDwellingType[m_town->m_type][id - BUILDING_SLOT_DWELLING_FIRST]]
             );
             s_dwellingArmyName[0] = CyrillicToLower(s_dwellingArmyName[0]);
-            sprintf(
-                m_statusText,
-                gTownCommand[TOWN_TEXT_DWELLING],
-                s_dwellingArmyName
-            );
+            sprintf(m_statusText, gTownCommand[TOWN_TEXT_DWELLING], s_dwellingArmyName);
             break;
     }
     ShowText(m_statusText);
@@ -1080,8 +1085,10 @@ void townManager::SplitArmy(void) {
         gText,
         localization::Tr("town.split.prompt"),
         gArmyNamesPlural[m_swapStrip->m_army->m_creatureTypes[m_swapArmySlot]],
-        m_swapStrip == m_heroStrip ? localization::Tr("town.split.hero_army") : localization::Tr("town.split.garrison"),
-        m_pendingStrip == m_heroStrip ? localization::Tr("town.split.hero_army") : localization::Tr("town.split.garrison")
+        m_swapStrip == m_heroStrip ? localization::Tr("town.split.hero_army")
+                                   : localization::Tr("town.split.garrison"),
+        m_pendingStrip == m_heroStrip ? localization::Tr("town.split.hero_army")
+                                      : localization::Tr("town.split.garrison")
     );
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = TOWN_SPLIT_PROMPT_CONTROL;
@@ -1321,7 +1328,8 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
         u16 requirements;
         i32 numPrereqs = 0;
         requirements = gDwellingRequirements
-            [m_town->m_type * TOWN_DWELLINGS_PER_FACTION + (building - BUILDING_SLOT_DWELLING_FIRST)];
+            [m_town->m_type * TOWN_DWELLINGS_PER_FACTION
+             + (building - BUILDING_SLOT_DWELLING_FIRST)];
         for (j = 0; j < BUILDING_SLOT_REQUIREMENT_END; j++) {
             if (requirements & (1 << j)) {
                 if (numPrereqs == 0)
@@ -1580,10 +1588,10 @@ void townManager::BuildObj(i16 building) {
 VA(0x00463761, 0x45a)
 void townManager::SetupCastle(class heroWindow* window) {
     i16 builtIcon = TOWN_CASTLE_FRAME_BUILT;
-    i16 cannotBuild = TOWN_CASTLE_FRAME_CANNOT_BUILD;
+    i16 buildVal = TOWN_CASTLE_FRAME_CANNOT_BUILD;
     i16 noMoney = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
     i16 i;
-    tag_message message;
+    tag_message msg;
     i32 stateFrame;
 
     m_affordableBuildings = m_buildableBuildings = 0;
@@ -1593,18 +1601,18 @@ void townManager::SetupCastle(class heroWindow* window) {
         if (CanBuild(m_town, i))
             m_buildableBuildings |= 1 << i;
     }
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
+    msg.type = MESSAGE_WIDGET;
+    msg.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
-        message.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
-        message.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
-        window->BroadcastMessage(message);
+        msg.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
+        msg.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        window->BroadcastMessage(msg);
     }
-    message.command = WIDGET_COMMAND_SET_TEXT;
+    msg.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
-        message.id = i + TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL;
-        message.text = GetBuildingName(i + BUILDING_SLOT_DWELLING_FIRST);
-        window->BroadcastMessage(message);
+        msg.id = i + TOWN_CASTLE_FIRST_DWELLING_NAME_CONTROL;
+        msg.text = GetBuildingName(i + BUILDING_SLOT_DWELLING_FIRST);
+        window->BroadcastMessage(msg);
     }
     for (i = 0; i < TOWN_CASTLE_SPECIAL_BUILDING_COUNT; i++) {
         stateFrame = TOWN_CASTLE_FRAME_NONE;
@@ -1616,18 +1624,18 @@ void townManager::SetupCastle(class heroWindow* window) {
         else if (!(m_affordableBuildings & (1 << i)))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
         if (stateFrame != TOWN_CASTLE_FRAME_NONE) {
-            message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
-            message.value = WIDGET_FLAG_DRAW;
-            window->BroadcastMessage(message);
-            message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = stateFrame;
-            window->BroadcastMessage(message);
+            msg.command = WIDGET_COMMAND_SET_FLAGS;
+            msg.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
+            msg.value = WIDGET_FLAG_DRAW;
+            window->BroadcastMessage(msg);
+            msg.command = WIDGET_COMMAND_SET_FRAME;
+            msg.value = stateFrame;
+            window->BroadcastMessage(msg);
         } else {
-            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
-            message.value = WIDGET_FLAG_DRAW;
-            window->BroadcastMessage(message);
+            msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            msg.id = i + TOWN_CASTLE_FIRST_STATE_CONTROL;
+            msg.value = WIDGET_FLAG_DRAW;
+            window->BroadcastMessage(msg);
         }
     }
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
@@ -1639,18 +1647,18 @@ void townManager::SetupCastle(class heroWindow* window) {
         else if (!(m_affordableBuildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
             stateFrame = TOWN_CASTLE_FRAME_CANNOT_AFFORD;
         if (stateFrame != TOWN_CASTLE_FRAME_NONE) {
-            message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
-            message.value = WIDGET_FLAG_DRAW;
-            window->BroadcastMessage(message);
-            message.command = WIDGET_COMMAND_SET_FRAME;
-            message.value = stateFrame;
-            window->BroadcastMessage(message);
+            msg.command = WIDGET_COMMAND_SET_FLAGS;
+            msg.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
+            msg.value = WIDGET_FLAG_DRAW;
+            window->BroadcastMessage(msg);
+            msg.command = WIDGET_COMMAND_SET_FRAME;
+            msg.value = stateFrame;
+            window->BroadcastMessage(msg);
         } else {
-            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
-            message.value = WIDGET_FLAG_DRAW;
-            window->BroadcastMessage(message);
+            msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            msg.id = i + TOWN_CASTLE_FIRST_DWELLING_STATE_CONTROL;
+            msg.value = WIDGET_FLAG_DRAW;
+            window->BroadcastMessage(msg);
         }
     }
     if (gpCurPlayer->m_resources[RESOURCE_GOLD] < gHeroGoldCost)
@@ -1662,17 +1670,17 @@ void townManager::SetupCastle(class heroWindow* window) {
         stateFrame = TOWN_CASTLE_FRAME_BUILT;
     else
         stateFrame = TOWN_CASTLE_FRAME_NONE;
-    message.id = TOWN_CASTLE_HERO_STATE_CONTROL;
-    message.value = WIDGET_FLAG_DRAW;
+    msg.id = TOWN_CASTLE_HERO_STATE_CONTROL;
+    msg.value = WIDGET_FLAG_DRAW;
     if (stateFrame != TOWN_CASTLE_FRAME_NONE) {
-        message.command = WIDGET_COMMAND_SET_FLAGS;
-        window->BroadcastMessage(message);
-        message.command = WIDGET_COMMAND_SET_FRAME;
-        message.value = stateFrame;
-        window->BroadcastMessage(message);
+        msg.command = WIDGET_COMMAND_SET_FLAGS;
+        window->BroadcastMessage(msg);
+        msg.command = WIDGET_COMMAND_SET_FRAME;
+        msg.value = stateFrame;
+        window->BroadcastMessage(msg);
     } else {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        window->BroadcastMessage(message);
+        msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        window->BroadcastMessage(msg);
     }
 }
 
@@ -1682,51 +1690,46 @@ VA(0x00463bbb, 0x2b5)
 void townManager::SetupWell(class heroWindow* window) {
     i16 iconBase = TOWN_WELL_FIRST_ICON_CONTROL;
     i16 buildingName = TOWN_WELL_FIRST_NAME_CONTROL;
-    i16 growthRate;
+    i16 theRate;
     i16 firstMonsterIcon = TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
-    i16 creatureId = TOWN_WELL_FIRST_CREATURE_CONTROL;
-    i16 firstAvailable = TOWN_WELL_FIRST_AVAILABLE_CONTROL;
-    tag_message message;
+    i16 idPos = TOWN_WELL_FIRST_CREATURE_CONTROL;
+    i16 firstAvailableVal = TOWN_WELL_FIRST_AVAILABLE_CONTROL;
+    tag_message msg;
     i16 i;
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_FRAME;
+    msg.type = MESSAGE_WIDGET;
+    msg.command = WIDGET_COMMAND_SET_FRAME;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
-        message.id = i + TOWN_WELL_FIRST_ICON_CONTROL;
-        message.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
-        window->BroadcastMessage(message);
-        message.id = i + TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
-        message.value = gDwellingType[m_town->m_type][i];
-        window->BroadcastMessage(message);
+        msg.id = i + TOWN_WELL_FIRST_ICON_CONTROL;
+        msg.value = (m_town->m_type + 1) * TOWN_WELL_FRAMES_PER_TYPE + i + 1;
+        window->BroadcastMessage(msg);
+        msg.id = i + TOWN_WELL_FIRST_MONSTER_ICON_CONTROL;
+        msg.value = gDwellingType[m_town->m_type][i];
+        window->BroadcastMessage(msg);
     }
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_SET_TEXT;
+    msg.type = MESSAGE_WIDGET;
+    msg.command = WIDGET_COMMAND_SET_TEXT;
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
-        message.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
-        message.text = GetBuildingName(i + BUILDING_SLOT_DWELLING_FIRST);
-        window->BroadcastMessage(message);
-        message.id = i + TOWN_WELL_FIRST_CREATURE_CONTROL;
+        msg.id = i + TOWN_WELL_FIRST_NAME_CONTROL;
+        msg.text = GetBuildingName(i + BUILDING_SLOT_DWELLING_FIRST);
+        window->BroadcastMessage(msg);
+        msg.id = i + TOWN_WELL_FIRST_CREATURE_CONTROL;
         strcpy(gText, gArmyNames[gDwellingType[m_town->m_type][i]]);
         gText[0] = CyrillicToUpper(gText[0]);
-        message.text = gText;
-        window->BroadcastMessage(message);
+        msg.text = gText;
+        window->BroadcastMessage(msg);
     }
     for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
-        message.id = i + TOWN_WELL_FIRST_AVAILABLE_CONTROL;
+        msg.id = i + TOWN_WELL_FIRST_AVAILABLE_CONTROL;
         if (!(m_town->m_buildings & (1 << (i + BUILDING_SLOT_DWELLING_FIRST))))
             strcpy(gText, localization::Tr("town.well.empty"));
         else {
-            growthRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
-            growthRate += WEEKLY_WELL_GROWTH_BONUS;
-            sprintf(
-                gText,
-                localization::Tr("town.well.growth"),
-                m_town->m_garrison[i],
-                growthRate
-            );
+            theRate = gMonsterDatabase[gDwellingType[m_town->m_type][i]].growth;
+            theRate += WEEKLY_WELL_GROWTH_BONUS;
+            sprintf(gText, localization::Tr("town.well.growth"), m_town->m_garrison[i], theRate);
         }
-        message.text = gText;
-        window->BroadcastMessage(message);
+        msg.text = gText;
+        window->BroadcastMessage(msg);
     }
 }
 
@@ -1734,17 +1737,17 @@ void townManager::SetupWell(class heroWindow* window) {
 // the levels above the guild and stacking tower frames by level.
 VA(0x00463e70, 0x2bc)
 void townManager::SetupMage(class heroWindow* window) {
-    i16 off = 0;
+    i16 curOff = 0;
     i16 shown = 1;
-    i16 iconFrame = 2;
+    i16 iconFrameNum = 2;
     i16 messageId = TOWN_MAGE_DESCRIPTION_CONTROL;
     i16 slotBase = TOWN_MAGE_FIRST_SPELL_CONTROL;
-    i16 iconOffset = TOWN_MAGE_FIRST_ICON_CONTROL;
+    i16 thisIconOffset = TOWN_MAGE_FIRST_ICON_CONTROL;
     i16 nameBase = TOWN_MAGE_FIRST_NAME_CONTROL;
     i16 firstTower = TOWN_MAGE_FIRST_TOWER_CONTROL;
     tag_message message;
-    i16 spellIndex;
-    i32 spellState;
+    i16 spellNo;
+    i32 spellStateVal;
 
     message.type = MESSAGE_WIDGET;
     if (m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE) {
@@ -1754,58 +1757,58 @@ void townManager::SetupMage(class heroWindow* window) {
         message.text = gText;
         window->BroadcastMessage(message);
     }
-    for (spellIndex = 0; spellIndex < TOWN_MAGE_GUILD_SPELL_COUNT; spellIndex++) {
-        switch (spellIndex) {
+    for (spellNo = 0; spellNo < TOWN_MAGE_GUILD_SPELL_COUNT; spellNo++) {
+        switch (spellNo) {
             case 0:
             case 1:
             case 2:
-                spellState = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_1);
+                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_1);
                 break;
             case 3:
             case 4:
-                spellState = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_2);
+                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_2);
                 break;
             case 5:
             case 6:
-                spellState = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_3);
+                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_3);
                 break;
             default:
-                spellState = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_4);
+                spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_4);
                 break;
         }
         message.command = WIDGET_COMMAND_SET_FRAME;
-        message.id = spellIndex + TOWN_MAGE_FIRST_SPELL_CONTROL;
-        message.value = spellState;
+        message.id = spellNo + TOWN_MAGE_FIRST_SPELL_CONTROL;
+        message.value = spellStateVal;
         window->BroadcastMessage(message);
-        if (spellState == MAGE_GUILD_SPELL_FRAME_LOCKED) {
+        if (spellStateVal == MAGE_GUILD_SPELL_FRAME_LOCKED) {
             message.command = WIDGET_COMMAND_CLEAR_FLAGS;
             message.value = WIDGET_FLAG_DRAW;
-            message.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
+            message.id = spellNo + TOWN_MAGE_FIRST_ICON_CONTROL;
             window->BroadcastMessage(message);
-            message.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
+            message.id = spellNo + TOWN_MAGE_FIRST_NAME_CONTROL;
             window->BroadcastMessage(message);
         } else {
             message.command = WIDGET_COMMAND_SET_FRAME;
-            message.id = spellIndex + TOWN_MAGE_FIRST_ICON_CONTROL;
-            message.value = m_town->m_mageGuildSpells[spellIndex];
+            message.id = spellNo + TOWN_MAGE_FIRST_ICON_CONTROL;
+            message.value = m_town->m_mageGuildSpells[spellNo];
             window->BroadcastMessage(message);
             message.command = WIDGET_COMMAND_SET_TEXT;
-            message.id = spellIndex + TOWN_MAGE_FIRST_NAME_CONTROL;
-            message.text = gSpellNames[m_town->m_mageGuildSpells[spellIndex]];
+            message.id = spellNo + TOWN_MAGE_FIRST_NAME_CONTROL;
+            message.text = gSpellNames[m_town->m_mageGuildSpells[spellNo]];
             window->BroadcastMessage(message);
         }
     }
     message.command = WIDGET_COMMAND_CLEAR_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (spellIndex = 1; spellIndex < TOWN_MAGE_TOWER_FRAME_COUNT; spellIndex++) {
-        message.id = spellIndex + TOWN_MAGE_FIRST_TOWER_CONTROL;
+    for (spellNo = 1; spellNo < TOWN_MAGE_TOWER_FRAME_COUNT; spellNo++) {
+        message.id = spellNo + TOWN_MAGE_FIRST_TOWER_CONTROL;
         window->BroadcastMessage(message);
     }
     message.command = WIDGET_COMMAND_SET_FLAGS;
     message.value = WIDGET_FLAG_DRAW;
-    for (spellIndex = 0; spellIndex < m_town->m_buildState; spellIndex++) {
+    for (spellNo = 0; spellNo < m_town->m_buildState; spellNo++) {
         message.id =
-            (spellIndex + 1) * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + TOWN_MAGE_FIRST_TOWER_CONTROL;
+            (spellNo + 1) * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE + TOWN_MAGE_FIRST_TOWER_CONTROL;
         window->BroadcastMessage(message);
     }
     message.id = m_town->m_buildState * TOWN_MAGE_GUILD_LEVEL_FRAME_STRIDE
@@ -1818,16 +1821,16 @@ void townManager::SetupMage(class heroWindow* window) {
 VA(0x0046412c, 0x14b)
 i16 MageGuildHandler(struct tag_message& message) {
     i16 firstSpell = TOWN_MAGE_FIRST_SPELL_CONTROL;
-    i16 iconBase = TOWN_MAGE_FIRST_ICON_CONTROL;
-    i32 quickView;
+    i16 iconBaseVal = TOWN_MAGE_FIRST_ICON_CONTROL;
+    i32 quickViewVal;
     i32 spellId;
-    i32 mageLevel;
-    i32 spellPos;
+    i32 theMageLevel;
+    i32 spellPosIndex;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_SELECT:
-                quickView = message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON;
+                quickViewVal = message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON;
                 switch (message.id) {
                     case TOWN_MAGE_FIRST_SPELL_CONTROL:
                     case TOWN_MAGE_FIRST_SPELL_CONTROL + 1:
@@ -1838,7 +1841,7 @@ i16 MageGuildHandler(struct tag_message& message) {
                     case TOWN_MAGE_FIRST_SPELL_CONTROL + 6:
                     case TOWN_MAGE_FIRST_SPELL_CONTROL + 7:
                     case TOWN_MAGE_FIRST_SPELL_CONTROL + 8:
-                        spellPos = message.id - TOWN_MAGE_FIRST_SPELL_CONTROL;
+                        spellPosIndex = message.id - TOWN_MAGE_FIRST_SPELL_CONTROL;
                         goto showSpell;
                     case TOWN_MAGE_FIRST_ICON_CONTROL:
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 1:
@@ -1849,20 +1852,20 @@ i16 MageGuildHandler(struct tag_message& message) {
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 6:
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 7:
                     case TOWN_MAGE_FIRST_ICON_CONTROL + 8:
-                        spellPos = message.id - TOWN_MAGE_FIRST_ICON_CONTROL;
+                        spellPosIndex = message.id - TOWN_MAGE_FIRST_ICON_CONTROL;
                     showSpell:
-                        mageLevel = gpTownManager->m_town->m_buildState;
-                        if ((mageLevel == MAGE_GUILD_STATE_LEVEL_1
-                             && spellPos > MAGE_GUILD_LEVEL_1_LAST_SLOT)
-                            || (mageLevel == MAGE_GUILD_STATE_LEVEL_2
-                                && spellPos > MAGE_GUILD_LEVEL_2_LAST_SLOT)
-                            || (mageLevel == MAGE_GUILD_STATE_LEVEL_3
-                                && spellPos > MAGE_GUILD_LEVEL_3_LAST_SLOT))
+                        theMageLevel = gpTownManager->m_town->m_buildState;
+                        if ((theMageLevel == MAGE_GUILD_STATE_LEVEL_1
+                             && spellPosIndex > MAGE_GUILD_LEVEL_1_LAST_SLOT)
+                            || (theMageLevel == MAGE_GUILD_STATE_LEVEL_2
+                                && spellPosIndex > MAGE_GUILD_LEVEL_2_LAST_SLOT)
+                            || (theMageLevel == MAGE_GUILD_STATE_LEVEL_3
+                                && spellPosIndex > MAGE_GUILD_LEVEL_3_LAST_SLOT))
                             return MESSAGE_DISPATCH_CONSUME;
-                        spellId = gpTownManager->m_town->m_mageGuildSpells[spellPos];
+                        spellId = gpTownManager->m_town->m_mageGuildSpells[spellPosIndex];
                         NormalDialog(
                             gSpellDesc[spellId],
-                            quickView ? NORMAL_DIALOG_TYPE_QUICK_VIEW : NORMAL_DIALOG_TYPE_OK,
+                            quickViewVal ? NORMAL_DIALOG_TYPE_QUICK_VIEW : NORMAL_DIALOG_TYPE_OK,
                             -1,
                             -1,
                             NORMAL_DIALOG_SPELL,
@@ -1962,15 +1965,15 @@ VA(0x0046452c, 0x40b)
 void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const order) {
     i16 townIndex;
     i16 index;
-    i32 strength;
+    i32 strengthValue;
     i16 player;
-    i16 numTowns;
+    i16 firstNumTowns;
     i16 numCastles;
-    hero* playerHero;
-    town* theTown;
+    hero* playerHeroData;
+    town* townItem;
 
     for (player = 0; player < gpGame->m_playerCount; player++) {
-        numTowns = 0;
+        firstNumTowns = 0;
         numCastles = 0;
         order[player] = player;
         if (gpGame->m_playerDead[player]) {
@@ -1982,9 +1985,9 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                         if (gpGame->m_castleRecs[townIndex].m_owner == player
                             && (gpGame->m_castleRecs[townIndex].m_buildings
                                 & (1 << BUILDING_SLOT_TENT)))
-                            numTowns++;
+                            firstNumTowns++;
                     }
-                    stats[player] = numTowns;
+                    stats[player] = firstNumTowns;
                     break;
                 case THIEVES_CATEGORY_CASTLES:
                     for (townIndex = 0; townIndex < GAME_TOWN_COUNT; townIndex++) {
@@ -2015,19 +2018,25 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     stats[player] = gpGame->m_players[player].CountVisitedObelisks();
                     break;
                 case THIEVES_CATEGORY_ARMY_STRENGTH:
-                    strength = 0;
+                    strengthValue = 0;
                     for (index = 0; index < gpGame->m_players[player].m_heroCount; index++) {
-                        playerHero = gpGame->GetHero(gpGame->m_players[player].m_heroIds[index]);
-                        strength +=
-                            gpPhilAI->FightValueOfStack(&playerHero->m_army, playerHero, 0, 0, 0);
+                        playerHeroData =
+                            gpGame->GetHero(gpGame->m_players[player].m_heroIds[index]);
+                        strengthValue += gpPhilAI->FightValueOfStack(
+                            &playerHeroData->m_army,
+                            playerHeroData,
+                            0,
+                            0,
+                            0
+                        );
                     }
                     for (index = 0; index < gpGame->m_players[player].m_townCount; index++) {
-                        theTown = gpGame->GetTown(gpGame->m_players[player].m_townIds[index]);
-                        if (theTown->HasGarrison())
-                            strength +=
-                                gpPhilAI->FightValueOfStack(&theTown->m_army, NULL, 0, 0, 0);
+                        townItem = gpGame->GetTown(gpGame->m_players[player].m_townIds[index]);
+                        if (townItem->HasGarrison())
+                            strengthValue +=
+                                gpPhilAI->FightValueOfStack(&townItem->m_army, NULL, 0, 0, 0);
                     }
-                    stats[player] = strength;
+                    stats[player] = strengthValue;
                     break;
             }
         }
@@ -2156,8 +2165,9 @@ i8 townManager::RecruitHero(i8 cannotRecruit) {
         m_garrisonStrip = new strip(
             0,
             TOWN_GARRISON_STRIP_Y,
-            m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
-                                                                  : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
+            m_town->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
+                ? static_cast<i8>(TOWN_CREST_FRAME_WITHOUT_HERO)
+                : static_cast<i8>(TOWN_CREST_FRAME_WITH_HERO),
             gpResourceManager->MakeId(gText),
             0,
             &m_town->m_army,
@@ -2444,8 +2454,8 @@ i16 CastleHandler(struct tag_message& message) {
 // buttons on selection and redraws the whole split window.
 VA(0x00465bea, 0x2cc)
 i16 SplitArmyHandler(struct tag_message& message) {
-    i16 plusControl = TOWN_SPLIT_INCREASE_CONTROL;
-    i32 unusedAction;
+    i16 plusControlNum = TOWN_SPLIT_INCREASE_CONTROL;
+    i32 unusedActionVal;
     i16 minusButton = TOWN_SPLIT_DECREASE_CONTROL;
     i16 amountText = TOWN_SPLIT_AMOUNT_CONTROL;
     i32 handled = 0;
