@@ -35,6 +35,13 @@ H1_ENUM_CONST_BEGIN(BaseManagerConstant)
     BASE_MANAGER_NAME_CAPACITY = 30
 H1_ENUM_CONST_END(BaseManagerConstant)
 
+// baseManager::GetInfo selectors; any other selector reads as zero.
+H1_ENUM_BEGIN(BaseManagerInfoField)
+    BASE_MANAGER_INFO_MESSAGE_MASK = 0,
+    BASE_MANAGER_INFO_PRIORITY = 1,
+    BASE_MANAGER_INFO_ACTIVE = 2
+H1_ENUM_END(BaseManagerInfoField)
+
 #pragma pack(push, 1)
 class baseManager {
 public:
@@ -50,6 +57,7 @@ public:
     void Activate(void) {
         m_active = 1;
     }
+    i16 GetInfo(H1_ENUM_PARAM(BaseManagerInfoField, i16) field);
     virtual i16 Open(i16 priority) = 0;
     virtual void Close() = 0;
     virtual i16 Main(tag_message& message) = 0;

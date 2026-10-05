@@ -785,6 +785,15 @@ void GetBuildingCost(i32 race, i16 building, i32* const destination, i32 mageLev
     }
 }
 
+// The singular creature-name lookup beside GetMonsterName (HoMM2 Buka's
+// GetMonsterName); no retail caller survives.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0043e3c0, 0xf)
+char* GetMonsterSingularName(i32 monster) {
+    return gArmyNames[monster];
+}
+
 VA(0x0043e3cf, 0xf)
 char* GetMonsterName(i32 monster) {
     return gArmyNamesPlural[monster];

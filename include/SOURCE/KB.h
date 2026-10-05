@@ -132,6 +132,7 @@ extern char* gCombatFxNames[];
 extern class icon* gCurLoadedSpellIcon;
 
 // HoMM1 KB name table accessor (retail 0x004516bf).
+char* GetMonsterSingularName(i32 monster);
 char* GetMonsterName(i32 monster);
 class sample* LoadPlaySample(char* name);
 extern i32 glTimers[];
