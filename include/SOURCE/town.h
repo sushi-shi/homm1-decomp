@@ -16,6 +16,18 @@ H1_ENUM_CONST_BEGIN(TownConstant)
     TOWN_OCCUPYING_HERO_NONE = -1
 H1_ENUM_CONST_END(TownConstant)
 
+// m_mageGuildSpells slots by guild level: three first-level spells, two each
+// of the second and third, then the fourth and fifth levels.
+H1_ENUM_CONST_BEGIN(MageGuildSpellSlot)
+    MAGE_GUILD_SLOT_LEVEL_1_FIRST = 0,
+    MAGE_GUILD_SLOT_LEVEL_1_SECOND = 1,
+    MAGE_GUILD_SLOT_LEVEL_1_THIRD = 2,
+    MAGE_GUILD_SLOT_LEVEL_2_FIRST = 3,
+    MAGE_GUILD_SLOT_LEVEL_2_SECOND = 4,
+    MAGE_GUILD_SLOT_LEVEL_3_FIRST = 5,
+    MAGE_GUILD_SLOT_LEVEL_3_SECOND = 6
+H1_ENUM_CONST_END(MageGuildSpellSlot)
+
 // town::m_type: the faction whose dwellings the town builds. Retail
 // gDwellingType rows (0..5 knight, 12..17 sorceress, 6..11 barbarian, 18..23
 // warlock creatures) and GiveTroopsToNeutralTowns' recruits fix the order.

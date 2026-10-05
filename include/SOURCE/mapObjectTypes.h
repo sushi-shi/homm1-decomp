@@ -84,6 +84,10 @@ H1_ENUM_BEGIN(MapObjectType)
     // Unnamed in gObjectNames: a shadow cell placed without an event bit;
     // RandomizeEvents marks it MAP_CELL_OBJECT_SHADOW_ONLY.
     MAP_OBJECT_SHADOW = 50,
+    // Also unnamed: a passable cell of a resource pile's art. QuickInfo names
+    // the resource of its objectIndex + 2 and the hero cursor treats it like
+    // a shadow.
+    MAP_OBJECT_RESOURCE_SHADOW = 51,
     MAP_OBJECT_MOUNTAINS = 52,
     MAP_OBJECT_MOUNTAINS_2 = 53,
     MAP_OBJECT_MOUNTAINS_3 = 54,

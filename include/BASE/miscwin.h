@@ -30,6 +30,21 @@ void ClipIconToBitmap(
     i32 clipH
 );
 i32 Random(i32 low, i32 high);
+
+// Outcomes of a ten-way roll, Random(0, 9) or Random(0, 99) % 10, as the
+// event setup switches share them out in tenths.
+H1_ENUM_CONST_BEGIN(RandomDecile)
+    RANDOM_DECILE_0 = 0,
+    RANDOM_DECILE_1 = 1,
+    RANDOM_DECILE_2 = 2,
+    RANDOM_DECILE_3 = 3,
+    RANDOM_DECILE_4 = 4,
+    RANDOM_DECILE_5 = 5,
+    RANDOM_DECILE_6 = 6,
+    RANDOM_DECILE_7 = 7,
+    RANDOM_DECILE_8 = 8,
+    RANDOM_DECILE_9 = 9
+H1_ENUM_CONST_END(RandomDecile)
 void FadeIn(i32 increment) throw();
 void FadeOut(i32 increment) throw();
 void PostprocessPalette(i8* data);

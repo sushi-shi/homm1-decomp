@@ -2548,7 +2548,7 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                         gResourceNames[currentCell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE]
                     );
                     break;
-                case 51:
+                case MAP_OBJECT_RESOURCE_SHADOW:
                     sprintf(gText, "\n\n%s", gResourceNames[currentCell->m_objectIndex + 2]);
                     break;
                 case MAP_OBJECT_MONSTER:
@@ -3629,14 +3629,14 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
 
         rowY = HERO_QUICK_VAGUE_FIRST_ROW_Y;
         switch (creatureCount) {
-            case 1:
-            case 2:
-            case 3:
+            case ARMY_QUICK_ONE_STACK:
+            case ARMY_QUICK_TWO_STACKS:
+            case ARMY_QUICK_THREE_STACKS:
                 rowY += ARMY_QUICK_FIRST_ROW_SHIFT;
                 topRow = creatureCount;
                 row2 = 0;
                 break;
-            case 4:
+            case ARMY_QUICK_FOUR_STACKS:
                 topRow = ARMY_QUICK_FIRST_ROW_COUNT;
                 row2 = 2;
                 break;
@@ -3899,14 +3899,14 @@ void advManager::TownQuickView(i8 townId, i8, i16 windowX, i16 windowY) {
 
         curY = TOWN_QUICK_FIRST_ROW_Y;
         switch (creatureCount) {
-            case 1:
-            case 2:
-            case 3:
+            case ARMY_QUICK_ONE_STACK:
+            case ARMY_QUICK_TWO_STACKS:
+            case ARMY_QUICK_THREE_STACKS:
                 curY += ARMY_QUICK_FIRST_ROW_SHIFT;
                 topRow = creatureCount;
                 row2 = 0;
                 break;
-            case 4:
+            case ARMY_QUICK_FOUR_STACKS:
                 topRow = ARMY_QUICK_FIRST_ROW_COUNT;
                 row2 = 2;
                 break;

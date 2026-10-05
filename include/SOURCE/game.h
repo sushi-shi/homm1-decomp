@@ -700,4 +700,19 @@ H1_ENUM_CONST_BEGIN(RemoteSaveConstant)
     REMOTE_SAVE_TRANSFER_SOUNDS = 8
 H1_ENUM_CONST_END(RemoteSaveConstant)
 
+// Human player counts the map filenames encode (digit 4..7 of "????1234.MAP")
+// and opponent counts CalcDifficultyRating rates.
+H1_ENUM_CONST_BEGIN(GamePlayerCount)
+    GAME_PLAYERS_TWO = 2,
+    GAME_PLAYERS_THREE = 3,
+    GAME_PLAYERS_FOUR = 4
+H1_ENUM_CONST_END(GamePlayerCount)
+
+// PerMonth's month of a creature: each empty land cell spawns that creature
+// when Random(0, ROLL_MAX) hits ROLL_HIT.
+H1_ENUM_CONST_BEGIN(MonthCreatureSpawnConstant)
+    MONTH_CREATURE_SPAWN_ROLL_MAX = 360,
+    MONTH_CREATURE_SPAWN_ROLL_HIT = 10
+H1_ENUM_CONST_END(MonthCreatureSpawnConstant)
+
 #endif // HOMM1_SOURCE_GAME_H

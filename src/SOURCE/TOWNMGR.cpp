@@ -1759,17 +1759,17 @@ void townManager::SetupMage(class heroWindow* window) {
     }
     for (spellNo = 0; spellNo < TOWN_MAGE_GUILD_SPELL_COUNT; spellNo++) {
         switch (spellNo) {
-            case 0:
-            case 1:
-            case 2:
+            case MAGE_GUILD_SLOT_LEVEL_1_FIRST:
+            case MAGE_GUILD_SLOT_LEVEL_1_SECOND:
+            case MAGE_GUILD_SLOT_LEVEL_1_THIRD:
                 spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_1);
                 break;
-            case 3:
-            case 4:
+            case MAGE_GUILD_SLOT_LEVEL_2_FIRST:
+            case MAGE_GUILD_SLOT_LEVEL_2_SECOND:
                 spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_2);
                 break;
-            case 5:
-            case 6:
+            case MAGE_GUILD_SLOT_LEVEL_3_FIRST:
+            case MAGE_GUILD_SLOT_LEVEL_3_SECOND:
                 spellStateVal = static_cast<i16>(m_town->m_buildState < MAGE_GUILD_STATE_LEVEL_3);
                 break;
             default:

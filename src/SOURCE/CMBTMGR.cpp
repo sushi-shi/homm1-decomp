@@ -916,18 +916,19 @@ void combatManager::CatAttack(i8 side) {
                == COMBAT_OBSTACLE_NONE)
             m_catapultTarget = SRandom(0, 4);
     } else if (m_hexCells[nextCol + COMBAT_GRID_COLUMNS].m_obstacleIndex == COMBAT_OBSTACLE_NONE) {
-        m_catapultTarget = 3;
+        m_catapultTarget = COMBAT_CATAPULT_LOWER_WALL_ROW;
     } else if (m_hexCells[nextCol + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex
                == COMBAT_OBSTACLE_NONE) {
-        m_catapultTarget = 1;
+        m_catapultTarget = COMBAT_CATAPULT_UPPER_WALL_ROW;
     } else if (m_hexCells[nextCol + COMBAT_GRID_COLUMNS].m_obstacleIndex != COMBAT_WALL_INTACT) {
-        m_catapultTarget = 3;
+        m_catapultTarget = COMBAT_CATAPULT_LOWER_WALL_ROW;
     } else if (m_hexCells[nextCol + 3 * COMBAT_GRID_COLUMNS].m_obstacleIndex
                != COMBAT_WALL_INTACT) {
-        m_catapultTarget = 1;
+        m_catapultTarget = COMBAT_CATAPULT_UPPER_WALL_ROW;
     } else {
         m_catapultTarget = SRandom(0, 1);
-        m_catapultTarget = m_catapultTarget ? 3 : 1;
+        m_catapultTarget =
+            m_catapultTarget ? COMBAT_CATAPULT_LOWER_WALL_ROW : COMBAT_CATAPULT_UPPER_WALL_ROW;
     }
     startX = 0x75;
     startY = 0x104;
@@ -976,7 +977,7 @@ void combatManager::CatAttack(i8 side) {
     } else {
         summitXValue = (startX + curTgtX) / 2;
         switch (m_catapultTarget) {
-            case 1:
+            case COMBAT_CATAPULT_UPPER_WALL_ROW:
                 newY = 25;
                 break;
             default:

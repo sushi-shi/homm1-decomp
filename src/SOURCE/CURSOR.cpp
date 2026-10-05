@@ -590,8 +590,8 @@ mapCell* advManager::MoveHero(
             case MAP_OBJECT_TREE_STUMP:
             case MAP_OBJECT_OAK_TREE:
             case MAP_OBJECT_NOTHING_HERE:
-            case 50:
-            case 51:
+            case MAP_OBJECT_SHADOW:
+            case MAP_OBJECT_RESOURCE_SHADOW:
             case MAP_OBJECT_MOUNTAINS:
             case MAP_OBJECT_MOUNTAINS_2:
             case MAP_OBJECT_MOUNTAINS_3:

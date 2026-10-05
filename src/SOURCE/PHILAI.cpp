@@ -3375,7 +3375,7 @@ i32 philAI::ValueOfEventAtPosition(hero* pHero, i16 x, i16 y, i32 immediate, i32
                 );
             }
             break;
-        case 1:
+        case MAP_OBJECT_ALCHEMIST_LAB:
         case MAP_OBJECT_MINE:
         case MAP_OBJECT_SAWMILL:
             if (gpGame->m_mineOwners[gEventCell->m_objectMetadata] == pHero->m_owner) {

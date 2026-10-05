@@ -725,4 +725,11 @@ H1_ENUM_BEGIN(CombatSpellAITargetMode)
     SPELL_AI_ENEMY = 3
 H1_ENUM_END(CombatSpellAITargetMode)
 
+// CatAttack's targets, as grid rows of the castle wall column: the two wall
+// sections either side of the gate.
+H1_ENUM_CONST_BEGIN(CatapultTargetRow)
+    COMBAT_CATAPULT_UPPER_WALL_ROW = 1,
+    COMBAT_CATAPULT_LOWER_WALL_ROW = 3
+H1_ENUM_CONST_END(CatapultTargetRow)
+
 #endif // HOMM1_SOURCE_COMBATMANAGER_H

@@ -1033,9 +1033,9 @@ i8 game::NewGame(void) {
         }
     }
     if (!strnicmp(gMapName, "camp", 4) || (giNumHumanPlayers == 1 && gMapName[4] != '1')
-        || (giNumHumanPlayers == 2 && gMapName[5] != '2')
-        || (giNumHumanPlayers == 3 && gMapName[6] != '3')
-        || (giNumHumanPlayers == 4 && gMapName[7] != '4')) {
+        || (giNumHumanPlayers == GAME_PLAYERS_TWO && gMapName[5] != '2')
+        || (giNumHumanPlayers == GAME_PLAYERS_THREE && gMapName[6] != '3')
+        || (giNumHumanPlayers == GAME_PLAYERS_FOUR && gMapName[7] != '4')) {
         if (giNumHumanPlayers == 1) {
             strcpy(gMapName, "AES31000.map");
             strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
@@ -1502,26 +1502,26 @@ void game::RandomizeEvents(void) {
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SKELETON:
                     nextCell->m_objectMetadata =
-                        Random(0, 9) == 3 ? SKELETON_ARTIFACT : SKELETON_EMPTY;
+                        Random(0, 9) == RANDOM_DECILE_3 ? SKELETON_ARTIFACT : SKELETON_EMPTY;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DAEMON_CAVE:
                     switch (Random(0, 99) % 10) {
-                        case 0:
-                        case 1:
-                        case 2:
+                        case RANDOM_DECILE_0:
+                        case RANDOM_DECILE_1:
+                        case RANDOM_DECILE_2:
                             nextCell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE;
                             break;
-                        case 3:
+                        case RANDOM_DECILE_3:
                             nextCell->m_objectMetadata = DAEMON_REWARD_ARTIFACT;
                             break;
-                        case 4:
-                        case 5:
-                        case 6:
+                        case RANDOM_DECILE_4:
+                        case RANDOM_DECILE_5:
+                        case RANDOM_DECILE_6:
                             nextCell->m_objectMetadata = DAEMON_REWARD_EXPERIENCE_GOLD;
                             break;
-                        case 7:
-                        case 8:
-                        case 9:
+                        case RANDOM_DECILE_7:
+                        case RANDOM_DECILE_8:
+                        case RANDOM_DECILE_9:
                             nextCell->m_objectMetadata = DAEMON_REWARD_RANSOM;
                             break;
                     }
@@ -1547,22 +1547,22 @@ void game::RandomizeEvents(void) {
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_GRAVEYARD:
                 treasure:
                     switch (Random(0, 99) % 10) {
-                        case 0:
-                        case 1:
-                        case 2:
+                        case RANDOM_DECILE_0:
+                        case RANDOM_DECILE_1:
+                        case RANDOM_DECILE_2:
                             nextCell->m_objectMetadata = GHOST_SITE_SMALL;
                             break;
-                        case 3:
-                        case 4:
-                        case 5:
+                        case RANDOM_DECILE_3:
+                        case RANDOM_DECILE_4:
+                        case RANDOM_DECILE_5:
                             nextCell->m_objectMetadata = GHOST_SITE_MEDIUM;
                             break;
-                        case 6:
-                        case 7:
-                        case 8:
+                        case RANDOM_DECILE_6:
+                        case RANDOM_DECILE_7:
+                        case RANDOM_DECILE_8:
                             nextCell->m_objectMetadata = GHOST_SITE_LARGE;
                             break;
-                        case 9:
+                        case RANDOM_DECILE_9:
                             nextCell->m_objectMetadata = GHOST_SITE_HUGE;
                             break;
                     }
@@ -1611,17 +1611,17 @@ void game::RandomizeEvents(void) {
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_SPELL_SHRINE:
                     switch (Random(0, 9)) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
+                        case RANDOM_DECILE_0:
+                        case RANDOM_DECILE_1:
+                        case RANDOM_DECILE_2:
+                        case RANDOM_DECILE_3:
                             nextCell->m_objectMetadata =
                                 gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_1][Random(0, 7)] + 1;
                             break;
-                        case 4:
-                        case 5:
-                        case 6:
-                        case 7:
+                        case RANDOM_DECILE_4:
+                        case RANDOM_DECILE_5:
+                        case RANDOM_DECILE_6:
+                        case RANDOM_DECILE_7:
                             nextCell->m_objectMetadata =
                                 gMageGuildSpellPool[MAGE_GUILD_STATE_LEVEL_2][Random(0, 7)] + 1;
                             break;
@@ -1647,20 +1647,20 @@ void game::RandomizeEvents(void) {
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_ARTIFACT:
                     switch (Random(0, 99) % 10) {
-                        case 0:
-                        case 1:
-                        case 2:
-                        case 3:
-                        case 4:
-                        case 5:
+                        case RANDOM_DECILE_0:
+                        case RANDOM_DECILE_1:
+                        case RANDOM_DECILE_2:
+                        case RANDOM_DECILE_3:
+                        case RANDOM_DECILE_4:
+                        case RANDOM_DECILE_5:
                             nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
                             break;
-                        case 6:
-                        case 7:
+                        case RANDOM_DECILE_6:
+                        case RANDOM_DECILE_7:
                             nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_GUARDED;
                             break;
-                        case 8:
-                        case 9:
+                        case RANDOM_DECILE_8:
+                        case RANDOM_DECILE_9:
                             nextCell->m_objectMetadata = ARTIFACT_EVENT_MODE_GOLD;
                             break;
                     }
@@ -3227,7 +3227,7 @@ void game::PerMonth(void) {
             for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
                 spot = gpAdvManager->GetCell(x, y);
                 if (!spot->m_triggerType && CELL_TERRAIN(spot)) {
-                    if (Random(0, 360) == 10) {
+                    if (Random(0, MONTH_CREATURE_SPAWN_ROLL_MAX) == MONTH_CREATURE_SPAWN_ROLL_HIT) {
                         spot->m_triggerType = (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER);
                         spot->m_objectTileset = TILESET_MONS32;
                         spot->m_objectIndex = giMonthTypeExtra;
@@ -4763,11 +4763,11 @@ void game::GetMap(void) {
         MemError();
     if (giNumHumanPlayers == 1)
         sprintf(mask, "????1???.MAP");
-    else if (giNumHumanPlayers == 2)
+    else if (giNumHumanPlayers == GAME_PLAYERS_TWO)
         sprintf(mask, "?????2??.MAP");
-    else if (giNumHumanPlayers == 3)
+    else if (giNumHumanPlayers == GAME_PLAYERS_THREE)
         sprintf(mask, "??????3?.MAP");
-    else if (giNumHumanPlayers == 4)
+    else if (giNumHumanPlayers == GAME_PLAYERS_FOUR)
         sprintf(mask, "???????4.MAP");
     theRequest = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gMapPath, ".MAP");
     if (!theRequest)
@@ -4843,9 +4843,9 @@ i32 game::CalcDifficultyRating(void) {
             total += 0;
         } else if (m_playerCount - giNumHumanPlayers == 1) {
             total += 0;
-        } else if (m_playerCount - giNumHumanPlayers == 2) {
+        } else if (m_playerCount - giNumHumanPlayers == GAME_PLAYERS_TWO) {
             total += 5;
-        } else if (m_playerCount - giNumHumanPlayers == 3) {
+        } else if (m_playerCount - giNumHumanPlayers == GAME_PLAYERS_THREE) {
             total += 10;
         }
     }

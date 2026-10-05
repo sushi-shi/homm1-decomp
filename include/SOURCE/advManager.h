@@ -710,6 +710,12 @@ H1_ENUM_CONST_BEGIN(AdventureArmyQuickViewConstant)
     ARMY_QUICK_FIRST_ROW_SHIFT = 22,
     ARMY_QUICK_SECOND_ROW_SHIFT = 44,
     ARMY_QUICK_FIRST_ROW_COUNT = 2,
+    // Stack counts the layouts distinguish: up to three fit one row; four
+    // split two over two; five two over three.
+    ARMY_QUICK_ONE_STACK = 1,
+    ARMY_QUICK_TWO_STACKS = 2,
+    ARMY_QUICK_THREE_STACKS = 3,
+    ARMY_QUICK_FOUR_STACKS = 4,
     ARMY_QUICK_FIVE_STACK_X_SHIFT = 12,
     ARMY_QUICK_TEXT_WIDTH = 60,
     ARMY_QUICK_TEXT_X_ADJUSTMENT = 14,
