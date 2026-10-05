@@ -221,7 +221,7 @@
       "ordered_references": [
         {
           "offset": "0x6",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -311,7 +311,7 @@
         },
         {
           "offset": "0xa2",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -336,7 +336,7 @@
         },
         {
           "offset": "0xc6",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -376,7 +376,7 @@
         },
         {
           "offset": "0xfd",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -386,7 +386,7 @@
         },
         {
           "offset": "0x109",
-          "symbol": "?gbmOldMonoBitmap@@3PAUHBITMAP__@@A",
+          "symbol": "?gbmOldMonoBitmap@@3PAXA",
           "addend": 0
         },
         {
@@ -411,7 +411,7 @@
         },
         {
           "offset": "0x12c",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {

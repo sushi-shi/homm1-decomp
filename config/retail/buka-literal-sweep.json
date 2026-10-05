@@ -7901,7 +7901,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+            "symbol": "?hbmpAndMask@@3PAPAXA",
             "operand": "0x6bde3",
             "target": "0xcf0b4",
             "addend": "0x0",
@@ -7996,7 +7996,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+            "symbol": "?hMouseCursor@@3PAPAXA",
             "operand": "0x6bf3f",
             "target": "0xcef88",
             "addend": "0x0",
@@ -8010,7 +8010,7 @@
             "kind": 20
           },
           {
-            "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+            "symbol": "?hMouseCursor@@3PAPAXA",
             "operand": "0x6bf52",
             "target": "0xcef88",
             "addend": "0x0",

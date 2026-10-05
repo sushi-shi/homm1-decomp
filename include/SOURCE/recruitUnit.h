@@ -26,14 +26,14 @@ class recruitUnit : public baseManager {
 public:
     H1_ENUM_STORAGE(RecruitSourceType, i8) m_sourceType;
     i8 m_creatureType;
-    char m_unknown32[4];
+    char m_padding32[4];
     i32 m_goldCost;
     i8 m_resourceType;
     i16 m_resourceCost;
     heroWindow* m_window;
-    char m_unknown41[4];
+    char m_padding41[4];
     armyGroup* m_army;
-    i8 m_unknown49;
+    i8 m_padding49;
     i8 m_recruited;
     i8 m_noRoom;
     i16* m_available;
@@ -42,7 +42,7 @@ public:
     i16 m_resourceTotal;
     i16 m_quantity;
     // RecruitEvent allocates 0x5c bytes.
-    char m_unknown5a[2];
+    char m_padding5a[2];
     // --- constructors ---
     recruitUnit(class armyGroup* army, i8 creatureType, i16* available);
     // HoMM1 has no refresh-town argument (retail ret 8).

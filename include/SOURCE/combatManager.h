@@ -291,7 +291,7 @@ public:
     // The combat screen window (Open's cmbtwin.bin); CombatMessage sets its
     // text widget (0xc).
     class heroWindow* m_combatWindow;
-    char m_unknown6f5[4];
+    char m_unused6f5[4];
     i16 m_unknown6f9;
     // ProcessCombatMsg ignores message types outside this mask.
     i16 m_messageTypeMask;

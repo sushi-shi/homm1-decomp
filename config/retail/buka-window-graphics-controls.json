@@ -311,7 +311,7 @@
             "size": 149
           },
           {
-            "name": "?PostprocessBitmap@@YAXPACHH@Z",
+            "name": "?PostprocessBitmap@@YAXPAEHH@Z",
             "rva": "0x6fe58",
             "before": 100.0,
             "after": 100.0,

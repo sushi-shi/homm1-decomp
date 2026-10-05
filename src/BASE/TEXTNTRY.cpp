@@ -63,25 +63,20 @@ textEntryWidget::textEntryWidget(
 VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_maxLength = gpResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
-    // byte-evidenced: ReadBlock accepts signed bytes for text storage.
-    gpResourceManager->ReadBlock(reinterpret_cast<i8*>(m_text), m_maxLength);
+    gpResourceManager->ReadBlock(m_text, m_maxLength);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_font = gpResourceManager->GetFont(name);
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(
-        reinterpret_cast<char*>(name)
-    ); // byte-evidenced: resource name APIs use differently signed bytes.
+    m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_entryType = type;
     if (type == TEXT_ENTRY_READ_RECT) {

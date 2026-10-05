@@ -37,16 +37,14 @@ border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillCo
 VA_COMPGEN(0x00474a2c, 0x64, "??1border@@UAE@XZ", 0x00474950)
 VA(0x00474a90, 0xe9)
 void border::Read(void) {
-    i8 name[RESOURCE_NAME_CAPACITY];
+    char name[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gpResourceManager);
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     if (m_kind == BORDER_BACKGROUND_BITMAP) {
         gpResourceManager->Read13(name);
         gpResourceManager->SavePosition();
-        m_background = gpResourceManager->GetBitmap(
-            reinterpret_cast<char*>(name)
-        ); // byte-evidenced: resource name APIs use differently signed bytes.
+        m_background = gpResourceManager->GetBitmap(name);
         gpResourceManager->RestorePosition();
         return;
     }

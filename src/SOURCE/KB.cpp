@@ -173,7 +173,7 @@ i32 EarlySetup(void) {
     switch (SetupCDDrive()) {
         case CD_SETUP_NO_DRIVE:
             MessageBoxA(
-                static_cast<HWND>(hwndApp),
+                hwndApp,
                 localization::Tr("startup.cd.inaccessible"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -182,7 +182,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
-                static_cast<HWND>(hwndApp),
+                hwndApp,
                 localization::Tr("startup.cd.required"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -191,7 +191,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
-                static_cast<HWND>(hwndApp),
+                hwndApp,
                 localization::Tr("startup.directory.invalid"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -200,7 +200,7 @@ i32 EarlySetup(void) {
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
-                static_cast<HWND>(hwndApp),
+                hwndApp,
                 localization::Tr("startup.data.missing"),
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
@@ -1894,10 +1894,10 @@ void InitVars(void) {
     strcpy(cNetBoxLine[1], "");
     for (i = 0; i < MAP_EXTRA_RECORD_CAPACITY; i++)
         ppMapExtra[i] = NULL;
-    hmnuDflt = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuDflt");
-    hmnuCmbt = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuCmbt");
-    hmnuAdv = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuAdv");
-    hmnuTown = LoadMenuA(static_cast<HINSTANCE>(hInstApp), "mnuTown");
+    hmnuDflt = LoadMenuA(hInstApp, "mnuDflt");
+    hmnuCmbt = LoadMenuA(hInstApp, "mnuCmbt");
+    hmnuAdv = LoadMenuA(hInstApp, "mnuAdv");
+    hmnuTown = LoadMenuA(hInstApp, "mnuTown");
 }
 
 VA(0x004406b3, 0x3f2)
@@ -2357,7 +2357,7 @@ void ShutDown(char* message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
         MessageBoxA(
-            static_cast<HWND>(hwndApp),
+            hwndApp,
             buffer,
             localization::Tr("shutdown.unexpected.title"),
             MB_ICONHAND
@@ -2697,7 +2697,7 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             SaveGame();
             break;
         case APP_MENU_QUIT:
-            PostMessage(static_cast<HWND>(hwndApp), WM_CLOSE, 0, 0);
+            PostMessage(hwndApp, WM_CLOSE, 0, 0);
             break;
         case APP_MENU_MUSIC_OFF:
             gConfig.musicVolume = SOUND_VOLUME_OFF;
@@ -2843,7 +2843,7 @@ void UpdateSystemOptionsMenu(void) {
         return;
 
     for (menuCommand = APP_MENU_MUSIC_FIRST; menuCommand <= APP_MENU_MUSIC_LAST; menuCommand++)
-        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
+        CheckMenuItem(hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.musicVolume) {
         case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_MUSIC_100;
@@ -2879,10 +2879,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_MUSIC_OFF;
             break;
     }
-    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
+    CheckMenuItem(hmnuApp, checkedCommand, MF_CHECKED);
 
     for (menuCommand = APP_MENU_SOUND_FIRST; menuCommand <= APP_MENU_SOUND_LAST; menuCommand++)
-        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
+        CheckMenuItem(hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.soundVolume) {
         case SOUND_VOLUME_100:
             checkedCommand = APP_MENU_SOUND_100;
@@ -2918,10 +2918,10 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SOUND_OFF;
             break;
     }
-    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
+    CheckMenuItem(hmnuApp, checkedCommand, MF_CHECKED);
 
     for (menuCommand = APP_MENU_SPEED_FIRST; menuCommand <= APP_MENU_SPEED_LAST; menuCommand++)
-        CheckMenuItem(static_cast<HMENU>(hmnuApp), menuCommand, MF_UNCHECKED);
+        CheckMenuItem(hmnuApp, menuCommand, MF_UNCHECKED);
     switch (gConfig.walkSpeed) {
         case WALK_SPEED_JUMP:
             checkedCommand = APP_MENU_SPEED_JUMP;
@@ -2939,19 +2939,19 @@ void UpdateSystemOptionsMenu(void) {
             checkedCommand = APP_MENU_SPEED_WALK;
             break;
     }
-    CheckMenuItem(static_cast<HMENU>(hmnuApp), checkedCommand, MF_CHECKED);
+    CheckMenuItem(hmnuApp, checkedCommand, MF_CHECKED);
     CheckMenuItem(
-        static_cast<HMENU>(hmnuApp),
+        hmnuApp,
         APP_MENU_CD_STEREO,
         gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED
     );
     CheckMenuItem(
-        static_cast<HMENU>(hmnuApp),
+        hmnuApp,
         APP_MENU_SHOW_PATH,
         gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED
     );
     CheckMenuItem(
-        static_cast<HMENU>(hmnuApp),
+        hmnuApp,
         APP_MENU_VIEW_ENEMY_MOVES,
         1 - gConfig.blackoutComputer ? MF_CHECKED : MF_UNCHECKED
     );
@@ -2960,15 +2960,15 @@ void UpdateSystemOptionsMenu(void) {
 VA(0x00442bcc, 0x7d)
 void CleanUpMenus(void) {
     if (hmnuApp) {
-        SetMenu(static_cast<HWND>(hwndApp), NULL);
+        SetMenu(hwndApp, NULL);
         if (hmnuAdv)
-            DestroyMenu(static_cast<HMENU>(hmnuAdv));
+            DestroyMenu(hmnuAdv);
         if (hmnuDflt)
-            DestroyMenu(static_cast<HMENU>(hmnuDflt));
+            DestroyMenu(hmnuDflt);
         if (hmnuCmbt)
-            DestroyMenu(static_cast<HMENU>(hmnuCmbt));
+            DestroyMenu(hmnuCmbt);
         if (hmnuTown)
-            DestroyMenu(static_cast<HMENU>(hmnuTown));
+            DestroyMenu(hmnuTown);
     }
     hmnuApp = NULL;
 }
@@ -3405,13 +3405,13 @@ i32 gNoBorder = 0;
 DATA(0x00492194)
 i32 gEnlargeScreenBlit = 1;
 DATA(0x004a98dc)
-void* hmnuDflt = NULL;
+HMENU hmnuDflt = NULL;
 DATA(0x004a98e0)
-void* hmnuCmbt = NULL;
+HMENU hmnuCmbt = NULL;
 DATA(0x004a98e4)
-void* hmnuAdv = NULL;
+HMENU hmnuAdv = NULL;
 DATA(0x004a98e8)
-void* hmnuTown = NULL;
+HMENU hmnuTown = NULL;
 DATA(0x004a98ec)
 i32 gColorMice = 0;
 DATA(0x004a98f0)

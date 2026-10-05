@@ -216,7 +216,7 @@ void PostprocessPalette(i8* data) {
 }
 
 VA(0x0046fe58, 0x5)
-void PostprocessBitmap(i8*, i32, i32) {}
+void PostprocessBitmap(u8*, i32, i32) {}
 
 VA(0x0046fe5d, 0x5)
 void PostprocessIcon(icon*) {}
@@ -308,7 +308,7 @@ static i32 sClipBottom;
 DATA(0x004cfbb4)
 static i32 sClipRowStart;
 DATA(0x004cfb64)
-static i8* sClipRow;
+static u8* sClipRow;
 DATA(0x004cfb68)
 static IconEntry* sClipEntry;
 DATA(0x004cfb5c)

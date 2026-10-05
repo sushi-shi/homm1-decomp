@@ -53,7 +53,8 @@ extern char* gArmySpriteNames[28];
 extern char* gArmyNamesPlural[];
 // A creature's name, singular for counts at most one (HoMM1 Buka retail and
 // HoMM2 Buka 2.1 KBDeclarations.h).
-#define CREATURE_DISPLAY_NAME(type, count) ((count) <= 1 ? gArmyNames[type] : gArmyNamesPlural[type])
+#define CREATURE_DISPLAY_NAME(type, count)                                                         \
+    ((count) <= 1 ? gArmyNames[type] : gArmyNamesPlural[type])
 extern struct tag_monsterInfo gMonsterDatabase[];
 extern i32 gMinimized;
 extern char* gMemoryErrorTitle;
@@ -83,10 +84,6 @@ extern i32 giBottomViewOverrideEndTime;
 extern i32 giBottomViewResource;
 extern i32 giBottomViewResourceQty;
 extern char gcBottomViewText[];
-extern void* hmnuAdv;
-extern void* hmnuDflt;
-extern void* hmnuCmbt;
-extern void* hmnuTown;
 extern i32 gHeroMoving;
 extern i32 gRemoteOn;
 extern class heroWindow* DataEntryWin;

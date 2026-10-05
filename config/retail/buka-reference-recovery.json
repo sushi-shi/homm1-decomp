@@ -21670,7 +21670,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?hdcImage@@3PAUHDC__@@A",
+              "symbol": "?hdcImage@@3PAXA",
               "site_rva": "0x67aa9",
               "target_rva": "0xcddd4",
               "addend": "0x0",
@@ -25669,7 +25669,7 @@
       "kind": 6
     },
     {
-      "symbol": "?hdcImage@@3PAUHDC__@@A",
+      "symbol": "?hdcImage@@3PAXA",
       "site_rva": "0x67aa9",
       "target_rva": "0xcddd4",
       "addend": "0x0",
@@ -25795,7 +25795,7 @@
       "kind": 20
     },
     {
-      "symbol": "?hdcImage@@3PAUHDC__@@A",
+      "symbol": "?hdcImage@@3PAXA",
       "site_rva": "0x67b45",
       "target_rva": "0xcddd4",
       "addend": "0x0",
@@ -25809,7 +25809,7 @@
       "kind": 6
     },
     {
-      "symbol": "?hdcImage@@3PAUHDC__@@A",
+      "symbol": "?hdcImage@@3PAXA",
       "site_rva": "0x67b69",
       "target_rva": "0xcddd4",
       "addend": "0x0",
@@ -25844,7 +25844,7 @@
       "kind": 20
     },
     {
-      "symbol": "?hdcImage@@3PAUHDC__@@A",
+      "symbol": "?hdcImage@@3PAXA",
       "site_rva": "0x67ba0",
       "target_rva": "0xcddd4",
       "addend": "0x0",
@@ -25886,7 +25886,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gbmOldMonoBitmap@@3PAUHBITMAP__@@A",
+      "symbol": "?gbmOldMonoBitmap@@3PAXA",
       "site_rva": "0x67bac",
       "target_rva": "0xcddd8",
       "addend": "0x0",
@@ -25984,7 +25984,7 @@
       "kind": 6
     },
     {
-      "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+      "symbol": "?hpalApp@@3PAXA",
       "site_rva": "0x67ca2",
       "target_rva": "0xcdddc",
       "addend": "0x0",
@@ -25998,7 +25998,7 @@
       "kind": 6
     },
     {
-      "symbol": "?hdcImage@@3PAUHDC__@@A",
+      "symbol": "?hdcImage@@3PAXA",
       "site_rva": "0x67cbb",
       "target_rva": "0xcddd4",
       "addend": "0x0",
@@ -29430,14 +29430,14 @@
       "kind": 6
     },
     {
-      "symbol": "?hwndApp@@3PAUHWND__@@A",
+      "symbol": "?hwndApp@@3PAXA",
       "site_rva": "0x43264",
       "target_rva": "0xa9e34",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?hwndApp@@3PAUHWND__@@A",
+      "symbol": "?hwndApp@@3PAXA",
       "site_rva": "0x43276",
       "target_rva": "0xa9e34",
       "addend": "0x0",

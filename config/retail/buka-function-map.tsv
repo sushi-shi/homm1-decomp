@@ -968,10 +968,10 @@ rva	size	unit	name	status	evidence
 0x0006ccbe	0x4b	BASE/RESMGR	?ReadWord@resourceManager@@QAEFXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006cd09	0x4b	BASE/RESMGR	?ReadLong@resourceManager@@QAEHXZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006cd54	0x41	BASE/RESMGR	?MakeId@resourceManager@@QAEFPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006cd95	0x1b	BASE/RESMGR	?Read13@resourceManager@@QAEXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006cdb0	0x52	BASE/RESMGR	?ReadBlock@resourceManager@@QAEXPACI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006ce02	0x27	BASE/RESMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPACI@Z; buka-function-structure.json.
-0x0006ce29	0x12	BASE/RESMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPACI@Z; buka-function-structure.json.
+0x0006cd95	0x1b	BASE/RESMGR	?Read13@resourceManager@@QAEXPAD@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006cdb0	0x52	BASE/RESMGR	?ReadBlock@resourceManager@@QAEXPAXI@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006ce02	0x27	BASE/RESMGR	std::ctype<wchar_t>::id initializer	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPAXI@Z; buka-function-structure.json.
+0x0006ce29	0x12	BASE/RESMGR	std::ctype<wchar_t>::id registration	generated	buka-ctype-guard.json; full compiler controls and retail operand checks. Trailing TU contribution after ?ReadBlock@resourceManager@@QAEXPAXI@Z; buka-function-structure.json.
 0x0006ce40	0x2b	BASE/BACKDROP	??0backdropWidget@@QAE@XZ	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006ce6b	0x3f	BASE/BACKDROP	??0backdropWidget@@QAE@FFFFFF@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006ceaa	0x77	BASE/BACKDROP	?Read@backdropWidget@@QAEXXZ	source-claim	Active source annotation; identity does not imply exact bytes.
@@ -1033,7 +1033,7 @@ rva	size	unit	name	status	evidence
 0x0006fd82	0x8	BASE/miscwin	Unused free function returning short zero; original name/signature unresolved.	semantic-only	buka-function-map.json remaining_body_roles; original name/ABI or template binding unresolved.
 0x0006fd8a	0x39	BASE/miscwin	?Random@@YAHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fdc3	0x95	BASE/miscwin	?PostprocessPalette@@YAXPAC@Z	source-claim	Active source annotation; identity does not imply exact bytes.
-0x0006fe58	0x5	BASE/miscwin	?PostprocessBitmap@@YAXPACHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
+0x0006fe58	0x5	BASE/miscwin	?PostprocessBitmap@@YAXPAEHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fe5d	0x5	BASE/miscwin	?PostprocessIcon@@YAXPAVicon@@@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x0006fe62	0x214	BASE/miscwin	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.
 0x00070076	0x307	BASE/miscwin	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	source-claim	Active source annotation; identity does not imply exact bytes.

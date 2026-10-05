@@ -2518,8 +2518,7 @@ i32 philAI::QuickCombat(
         curWChance = 1.0f - curWinChance;
         newWinner = defender;
     }
-    diff =
-        static_cast<float>(newRnd > curWinChance ? newRnd - curWinChance : curWinChance - newRnd);
+    diff = newRnd > curWinChance ? newRnd - curWinChance : curWinChance - newRnd;
     if (win != 0 && curWinChance > 0.6)
         diff *= curWinChance + 0.65;
     fracLostVal = (1.0 - diff) * (1.0 - diff);

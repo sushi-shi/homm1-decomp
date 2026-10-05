@@ -46,8 +46,8 @@ mouseManager::mouseManager(void) {
     m_cursorReady = 1;
     m_active = 0;
     strcpy(m_name, "mouseManager");
-    m_unknown49 = 0;
-    m_unknown4d = 0;
+    m_savedLeft = 0;
+    m_savedTop = 0;
     m_unknown51 = 0;
     m_savedUnderlying = NULL;
     m_cursorFrame = 0;
@@ -186,16 +186,8 @@ void mouseManager::SetPointer(i16 frame) {
             );
 
         gpResourceManager->PointToFile(gpResourceManager->MakeId(filename));
-        // API-forced: ReadBlock takes i8*.
-        gpResourceManager->ReadBlock(
-            reinterpret_cast<i8*>(gColorBits[cursorIndex]),
-            MOUSE_CURSOR_BITMAP_HEADER_BYTES
-        );
-        // API-forced: ReadBlock takes i8*.
-        gpResourceManager->ReadBlock(
-            reinterpret_cast<i8*>(gColorBits[cursorIndex]),
-            MOUSE_CURSOR_COLOR_BYTES
-        );
+        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
+        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
         memset(
             cAndBits[cursorIndex],
             0,

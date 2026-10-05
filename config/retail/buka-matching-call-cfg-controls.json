@@ -35727,7 +35727,7 @@
         },
         {
           "offset": "0x6a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35752,7 +35752,7 @@
         },
         {
           "offset": "0x8a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35777,7 +35777,7 @@
         },
         {
           "offset": "0xaa",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35802,7 +35802,7 @@
         },
         {
           "offset": "0xc9",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35889,7 +35889,7 @@
         },
         {
           "offset": "0x6a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35914,7 +35914,7 @@
         },
         {
           "offset": "0x8a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35939,7 +35939,7 @@
         },
         {
           "offset": "0xaa",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -35964,7 +35964,7 @@
         },
         {
           "offset": "0xc9",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -40617,17 +40617,17 @@
         },
         {
           "offset": "0x215",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x21b",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x227",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -40642,7 +40642,7 @@
         },
         {
           "offset": "0x23d",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -40949,17 +40949,17 @@
         },
         {
           "offset": "0x215",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x21b",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x227",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -40974,7 +40974,7 @@
         },
         {
           "offset": "0x23d",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41177,12 +41177,12 @@
         },
         {
           "offset": "0x212",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x224",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41267,12 +41267,12 @@
         },
         {
           "offset": "0x2b2",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x2c1",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41372,7 +41372,7 @@
         },
         {
           "offset": "0x432",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41452,7 +41452,7 @@
         },
         {
           "offset": "0x4f4",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41709,12 +41709,12 @@
         },
         {
           "offset": "0x212",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x224",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41799,12 +41799,12 @@
         },
         {
           "offset": "0x2b2",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x2c1",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41904,7 +41904,7 @@
         },
         {
           "offset": "0x432",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -41984,7 +41984,7 @@
         },
         {
           "offset": "0x4f4",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42117,7 +42117,7 @@
         },
         {
           "offset": "0x22",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42147,7 +42147,7 @@
         },
         {
           "offset": "0xc2",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42214,7 +42214,7 @@
         },
         {
           "offset": "0x22",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42244,7 +42244,7 @@
         },
         {
           "offset": "0xc2",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42347,7 +42347,7 @@
         },
         {
           "offset": "0x72",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42474,7 +42474,7 @@
         },
         {
           "offset": "0x72",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42647,7 +42647,7 @@
         },
         {
           "offset": "0x8d",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42682,7 +42682,7 @@
         },
         {
           "offset": "0xcd",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42692,7 +42692,7 @@
         },
         {
           "offset": "0xde",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42799,7 +42799,7 @@
         },
         {
           "offset": "0x8d",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42834,7 +42834,7 @@
         },
         {
           "offset": "0xcd",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -42844,7 +42844,7 @@
         },
         {
           "offset": "0xde",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -73790,7 +73790,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -73865,7 +73865,7 @@
         },
         {
           "offset": "0x167",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74102,7 +74102,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74177,7 +74177,7 @@
         },
         {
           "offset": "0x167",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74390,7 +74390,7 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74405,7 +74405,7 @@
         },
         {
           "offset": "0xdd",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -74415,12 +74415,12 @@
         },
         {
           "offset": "0xe9",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74440,12 +74440,12 @@
         },
         {
           "offset": "0x108",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x10e",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74455,12 +74455,12 @@
         },
         {
           "offset": "0x11e",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x129",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74475,7 +74475,7 @@
         },
         {
           "offset": "0x14a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74572,7 +74572,7 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74587,7 +74587,7 @@
         },
         {
           "offset": "0xdd",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "addend": 0
         },
         {
@@ -74597,12 +74597,12 @@
         },
         {
           "offset": "0xe9",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74622,12 +74622,12 @@
         },
         {
           "offset": "0x108",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x10e",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74637,12 +74637,12 @@
         },
         {
           "offset": "0x11e",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
           "offset": "0x129",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "addend": 0
         },
         {
@@ -74657,7 +74657,7 @@
         },
         {
           "offset": "0x14a",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -75600,7 +75600,7 @@
         },
         {
           "offset": "0x151",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -75752,7 +75752,7 @@
         },
         {
           "offset": "0x151",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -75840,7 +75840,7 @@
         },
         {
           "offset": "0xb9",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -75855,12 +75855,12 @@
         },
         {
           "offset": "0xe3",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         }
       ],
@@ -75887,7 +75887,7 @@
         },
         {
           "offset": "0xb9",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -75902,12 +75902,12 @@
         },
         {
           "offset": "0xe3",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         }
       ],
@@ -75940,12 +75940,12 @@
         },
         {
           "offset": "0xa3",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0xb0",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -75955,7 +75955,7 @@
         },
         {
           "offset": "0xc1",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76000,12 +76000,12 @@
         },
         {
           "offset": "0x12b",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x138",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76015,17 +76015,17 @@
         },
         {
           "offset": "0x149",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x157",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x164",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76035,7 +76035,7 @@
         },
         {
           "offset": "0x175",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76062,12 +76062,12 @@
         },
         {
           "offset": "0xa3",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0xb0",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76077,7 +76077,7 @@
         },
         {
           "offset": "0xc1",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76122,12 +76122,12 @@
         },
         {
           "offset": "0x12b",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x138",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76137,17 +76137,17 @@
         },
         {
           "offset": "0x149",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x157",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
           "offset": "0x164",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76157,7 +76157,7 @@
         },
         {
           "offset": "0x175",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76220,7 +76220,7 @@
         },
         {
           "offset": "0xd2",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76375,7 +76375,7 @@
         },
         {
           "offset": "0x214",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76390,7 +76390,7 @@
         },
         {
           "offset": "0x22f",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76545,7 +76545,7 @@
         },
         {
           "offset": "0x51d",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76555,7 +76555,7 @@
         },
         {
           "offset": "0x531",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76620,7 +76620,7 @@
         },
         {
           "offset": "0x5d8",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76650,7 +76650,7 @@
         },
         {
           "offset": "0x628",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76665,7 +76665,7 @@
         },
         {
           "offset": "0x641",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76685,7 +76685,7 @@
         },
         {
           "offset": "0x679",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76695,7 +76695,7 @@
         },
         {
           "offset": "0x68d",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76705,7 +76705,7 @@
         },
         {
           "offset": "0x6a0",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76762,7 +76762,7 @@
         },
         {
           "offset": "0xd2",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -76917,7 +76917,7 @@
         },
         {
           "offset": "0x214",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -76932,7 +76932,7 @@
         },
         {
           "offset": "0x22f",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
@@ -77087,7 +77087,7 @@
         },
         {
           "offset": "0x51d",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77097,7 +77097,7 @@
         },
         {
           "offset": "0x531",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77162,7 +77162,7 @@
         },
         {
           "offset": "0x5d8",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77192,7 +77192,7 @@
         },
         {
           "offset": "0x628",
-          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpAndMask@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77207,7 +77207,7 @@
         },
         {
           "offset": "0x641",
-          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
+          "symbol": "?hbmpColor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77227,7 +77227,7 @@
         },
         {
           "offset": "0x679",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77237,7 +77237,7 @@
         },
         {
           "offset": "0x68d",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77247,7 +77247,7 @@
         },
         {
           "offset": "0x6a0",
-          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
+          "symbol": "?hMouseCursor@@3PAPAXA",
           "addend": 0
         },
         {
@@ -77300,7 +77300,7 @@
         },
         {
           "offset": "0x7b",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         }
       ],
@@ -77332,7 +77332,7 @@
         },
         {
           "offset": "0x7b",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         }
       ],
@@ -78585,7 +78585,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -78717,7 +78717,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -79090,7 +79090,7 @@
         },
         {
           "offset": "0x3b5",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -79367,7 +79367,7 @@
         },
         {
           "offset": "0x3b5",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -79490,7 +79490,7 @@
         },
         {
           "offset": "0xe5",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -79500,7 +79500,7 @@
         },
         {
           "offset": "0xfe",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -79697,7 +79697,7 @@
         },
         {
           "offset": "0xe5",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -79707,7 +79707,7 @@
         },
         {
           "offset": "0xfe",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -80298,7 +80298,7 @@
         },
         {
           "offset": "0x169",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -80308,7 +80308,7 @@
         },
         {
           "offset": "0x176",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -80370,7 +80370,7 @@
         },
         {
           "offset": "0x169",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -80380,7 +80380,7 @@
         },
         {
           "offset": "0x176",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "addend": 0
         },
         {
@@ -83699,7 +83699,7 @@
         },
         {
           "offset": "0x8f",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -83811,7 +83811,7 @@
         },
         {
           "offset": "0x8f",
-          "symbol": "?Read13@resourceManager@@QAEXPAC@Z",
+          "symbol": "?Read13@resourceManager@@QAEXPAD@Z",
           "addend": 0
         },
         {
@@ -83934,12 +83934,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],
@@ -84011,12 +84011,12 @@
         },
         {
           "offset": "0xcf",
-          "symbol": "?ReadBlock@resourceManager@@QAEXPACI@Z",
+          "symbol": "?ReadBlock@resourceManager@@QAEXPAXI@Z",
           "addend": 0
         },
         {
           "offset": "0xfb",
-          "symbol": "?PostprocessBitmap@@YAXPACHH@Z",
+          "symbol": "?PostprocessBitmap@@YAXPAEHH@Z",
           "addend": 0
         }
       ],

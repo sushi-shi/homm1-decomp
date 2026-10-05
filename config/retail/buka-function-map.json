@@ -10686,7 +10686,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -10701,7 +10701,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -10716,7 +10716,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11124,7 +11124,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadLong@resourceManager@@QAEHXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
         "?PostprocessIcon@@YAXPAVicon@@@Z"
       ],
       "retail_calls": [
@@ -11133,7 +11133,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadLong@resourceManager@@QAEHXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
         "?PostprocessIcon@@YAXPAVicon@@@Z"
       ],
       "known_call_agreements": [
@@ -11142,7 +11142,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadLong@resourceManager@@QAEHXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
         "?PostprocessIcon@@YAXPAVicon@@@Z"
       ],
       "old_discovery": {
@@ -11198,8 +11198,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11215,8 +11215,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11232,8 +11232,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11291,7 +11291,7 @@
         "?PointToFile@resourceManager@@QAEXF@Z",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z"
       ],
       "retail_calls": [
@@ -11299,7 +11299,7 @@
         "?PointToFile@resourceManager@@QAEXF@Z",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z"
       ],
       "known_call_agreements": [
@@ -11307,7 +11307,7 @@
         "?PointToFile@resourceManager@@QAEXF@Z",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z"
       ],
       "old_discovery": {
@@ -11517,8 +11517,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
         "_PollSound",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z",
         "_PollSound"
       ],
       "retail_calls": [
@@ -11529,8 +11529,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
         "_PollSound",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z",
         "_PollSound"
       ],
       "known_call_agreements": [
@@ -11541,8 +11541,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
         "_PollSound",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z",
         "_PollSound"
       ],
       "old_discovery": {
@@ -11739,19 +11739,19 @@
         "??0resource@@QAE@FFFPAV0@@Z",
         "_malloc",
         "?PointToFile@resourceManager@@QAEXF@Z",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z"
       ],
       "retail_calls": [
         "??0resource@@QAE@FFFPAV0@@Z",
         "_malloc",
         "?PointToFile@resourceManager@@QAEXF@Z",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z"
       ],
       "known_call_agreements": [
         "??0resource@@QAE@FFFPAV0@@Z",
         "_malloc",
         "?PointToFile@resourceManager@@QAEXF@Z",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z"
       ],
       "old_discovery": {
         "rva": "0x7480a",
@@ -11870,7 +11870,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11883,7 +11883,7 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -11966,8 +11966,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z"
       ],
       "retail_calls": [
         "??0resource@@QAE@FFFPAV0@@Z",
@@ -11976,8 +11976,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z"
       ],
       "known_call_agreements": [
         "??0resource@@QAE@FFFPAV0@@Z",
@@ -11986,8 +11986,8 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?PostprocessBitmap@@YAXPACHH@Z"
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?PostprocessBitmap@@YAXPAEHH@Z"
       ],
       "old_discovery": {
         "rva": "0x74ea0",
@@ -12155,14 +12155,14 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -12183,14 +12183,14 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
@@ -12211,14 +12211,14 @@
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "_malloc",
-        "?ReadBlock@resourceManager@@QAEXPACI@Z",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?ReadBlock@resourceManager@@QAEXPAXI@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetFont@resourceManager@@QAEPAVfont@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
         "?ReadWord@resourceManager@@QAEFXZ",
-        "?Read13@resourceManager@@QAEXPAC@Z",
+        "?Read13@resourceManager@@QAEXPAD@Z",
         "?SavePosition@resourceManager@@QAEXXZ",
         "?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z",
         "?RestorePosition@resourceManager@@QAEXXZ",

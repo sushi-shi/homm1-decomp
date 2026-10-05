@@ -38,10 +38,12 @@ public:
     i16 m_hotspotY;
     i16 m_mouseX;
     i16 m_mouseY;
-    i32 m_unknown49;
-    i32 m_unknown4d;
+    // The cursor's saved screen area: ComboDraw marks the map cells under it.
+    // The mouse code never updates them after the constructor clears them.
+    i32 m_savedLeft;
+    i32 m_savedTop;
     i8 m_unknown51;
-    char m_unknown52[9];
+    char m_unused52[9];
     i16 m_drawnX;
     i16 m_drawnY;
 

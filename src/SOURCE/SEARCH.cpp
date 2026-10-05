@@ -267,9 +267,10 @@ void searchArray::SeedPosition(
                 s_adjacentMonsterX = s_currentNode.x;
                 s_adjacentMonsterY = s_currentNode.y;
                 if (s_triggerType == MAP_OBJECT_HERO
-                    && gpGame->m_availableHeroes[static_cast<u8>(
-                           gpAdvManager->GetCell(s_currentNode.x, s_currentNode.y)->m_objectMetadata
-                       )] == giCurPlayer)
+                    && gpGame->m_availableHeroes[gpAdvManager
+                                                     ->GetCell(s_currentNode.x, s_currentNode.y)
+                                                     ->m_objectMetadata]
+                           == giCurPlayer)
                     goto point_complete;
             } else {
                 if (!findAdjacentMonster)
