@@ -76,6 +76,12 @@ H1_ENUM_END(CombatWinLoseControl)
 
 // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
 // the casualty counts, then the two side headings and the casualty title.
+// DoVictory's experience line buffer (Buka 2.1 VICTORY_EXPERIENCE_TEXT_SIZE;
+// retail's frame places message directly above a 152-byte array).
+H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
+    COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
+H1_ENUM_CONST_END(CombatVictoryConstant)
+
 H1_ENUM_CONST_BEGIN(CombatWinLoseSlot)
     WIN_LOSE_SLOT_SIDE_HEADING_FIRST = 10,
     WIN_LOSE_SLOT_CASUALTY_TITLE = 12,
@@ -1206,8 +1212,9 @@ VA(0x0041fe71, 0x731)
 void combatManager::DoVictory(i8 winningSide) {
     i32 levelsGained;
     tag_message message;
+    i32 cost; // unused, as in the Buka 2.1 donor; retail keeps its slot
     i32 i;
-    char expText[156];
+    char experienceText[COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE];
 
     levelsGained = 0;
     iMaxTransferArtifacts = 0;
@@ -1271,7 +1278,7 @@ void combatManager::DoVictory(i8 winningSide) {
                     if (levelsGained > 0 && winningSide == COMBAT_DEFENDER_SIDE
                         && giNumHumanPlayers > 1)
                         sprintf(
-                            expText,
+                            experienceText,
                             gBattleResults[BATTLE_RESULT_EXPERIENCE_AND_LEVELS],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide],
@@ -1279,12 +1286,12 @@ void combatManager::DoVictory(i8 winningSide) {
                         );
                     else
                         sprintf(
-                            expText,
+                            experienceText,
                             gBattleResults[BATTLE_RESULT_EXPERIENCE],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide]
                         );
-                    strcat(gText, expText);
+                    strcat(gText, experienceText);
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 } else {
                     if (gbCombatSurrender)
