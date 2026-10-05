@@ -46404,18 +46404,16 @@
               "target_rva": "0xcddf0",
               "addend": "0x0",
               "kind": 6
-            }
-          ],
-          "private_literals": [
+            },
             {
-              "symbol": "$SG11257",
+              "symbol": "?gTracksPath@@3PADA",
               "site_rva": "0x69421",
               "target_rva": "0x91250",
               "addend": "0x0",
-              "kind": 6,
-              "payload_sha256": "5db00047244d290f6730dfda784c87c20e40957cbc81e6b7b79fab55bb1d7b32",
-              "size": 9
-            },
+              "kind": 6
+            }
+          ],
+          "private_literals": [
             {
               "symbol": "$SG11258",
               "site_rva": "0x6942b",
@@ -46525,18 +46523,16 @@
               "target_rva": "0xcddf0",
               "addend": "0x0",
               "kind": 6
-            }
-          ],
-          "private_literals": [
+            },
             {
-              "symbol": "$SG11257",
+              "symbol": "?gTracksPath@@3PADA",
               "site_rva": "0x69421",
               "target_rva": "0x91250",
               "addend": "0x0",
-              "kind": 6,
-              "payload_sha256": "5db00047244d290f6730dfda784c87c20e40957cbc81e6b7b79fab55bb1d7b32",
-              "size": 9
-            },
+              "kind": 6
+            }
+          ],
+          "private_literals": [
             {
               "symbol": "$SG11258",
               "site_rva": "0x6942b",

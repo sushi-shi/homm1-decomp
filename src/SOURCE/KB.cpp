@@ -3103,6 +3103,9 @@ DATA(0x00490f90)
 char gAnimPath[352] = ".\\ANIM\\";
 DATA(0x004910f0)
 char gSoundPath[352] = ".\\SOUND\\";
+// The CD music directory, appended to the registry CD path by PlayMusic.
+DATA(0x00491250)
+char gTracksPath[352] = "\\TRACKS\\";
 DATA(0x004913b0)
 char gGamePath[20] = ".\\GAMES\\";
 DATA(0x004913c4)

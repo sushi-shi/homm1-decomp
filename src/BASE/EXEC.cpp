@@ -33,20 +33,6 @@ DATA(0x004a16b8)
 char gDialogManagerError3[] = localization::Tr("startup.manager.failed");
 DATA(0x004a16d4)
 char gDialogManagerError4[] = localization::Tr("startup.manager.failed");
-// Retail keeps the manager-list dump texts (PoL SExecutiveText names) between the
-// dialog and call-manager errors; HoMM1 code no longer references them.
-DATA(0x004a3d04)
-char gManagerListStart[] = "-----Manager List Start-----";
-DATA(0x004a3d24)
-char gManagerListDivider1[] = "-----";
-DATA(0x004a3d2c)
-char gManagerListHeaderFormat[] = "Head %d   Tail %d";
-DATA(0x004a3d40)
-char gManagerListDivider2[] = "-----";
-DATA(0x004a3d48)
-char gManagerListEntryFormat[] = "Manager %20s  this %d   prev %d  next %d";
-DATA(0x004a3d74)
-char gManagerListStop[] = "--*--Manager List Stop --*--\n\n";
 DATA(0x004a16f0)
 char gCallManagerError1[] = localization::Tr("startup.manager.failed");
 DATA(0x004a170c)

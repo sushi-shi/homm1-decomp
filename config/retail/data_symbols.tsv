@@ -5,7 +5,7 @@ rva	size	symbol	provenance
 0x0009f510	8	$SG16677	VC4 literal `KB.LOG` plus alignment byte
 0x0009f518	2	$SG16678	VC4 newline literal including terminator
 0x000a0ff8	12	?gMouseOffset@@3PAHA	Unique typed payload and cursor-family argument/index flow; buka-cursor-data-completion.json
-0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls; buka-reference-recovery.json
 0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
 0x000a31bc	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
@@ -99,21 +99,21 @@ rva	size	symbol	provenance
 0x000a1494	4	_gIconHeight	Buka typed MASM initializer and every complete-body reference checked; buka-reference-completion.json
 0x000a54ec	4	__adjust_fdiv	LIBC FDIV-erratum flag read by cl's Pentium fdiv check, code-required identity
 0x000cad50	448	?gNbSessNcb@@3PAU_NCB@@A	nb_init retail operand and loop/memset extent; pinned Win32 record or Buka queue/name identity; code layout only
-0x000ce178	1800	?bmpAndMask@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000ce178	1800	?bmpAndMask@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000ce880	1800	?bmpColor@@3PAUtagBITMAP@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000ce670	300	?hMouseCursor@@3PAPAXA	75 cursor handles
 0x000ce7a0	300	?hbmpAndMask@@3PAPAXA	75 mask bitmap handles
-0x000cf1e0	300	?gColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf1e0	300	?gColorBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
-0x000cf438	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cf438	1500	?mouseIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cf240	4	?nMCIError@@3IA	retail-backed code identity only
 0x000cf248	256	?CommandString@@3PADA	retail-backed code identity only
 0x000cf348	256	?lpszReturnString@@3PADA	retail-backed code identity only
 0x000cf448	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
 0x000cf488	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
 0x000cf498	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
-0x000ce110	1	?gWindowFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000ce110	1	?gWindowFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cf540	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
 0x000cfbb8	1256	_freq	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
 0x000d00a0	8194	_dad	Buka complete lzhuf instruction/reference proof and typed initializer; buka-lzhuf.json
@@ -173,6 +173,7 @@ rva	size	symbol	provenance
 0x00090e30	352	?gDataPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x00090f90	352	?gAnimPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x000910f0	352	?gSoundPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
+0x00091250	352	?gTracksPath@@3PADA	Buka KB path global used by PlayMusic; buka-link-data.json
 0x000913c4	20	?gMapPath@@3PADA	Buka typed initializer and code users; buka-resource-paths.json
 0x00091bc8	272	?gWinSetup@@3PAUWindowTextEntry@@A	Buka typed initializer and code users; buka-resource-paths.json
 0x000a9738	1	?giMonthType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-kb-globals.json
@@ -218,52 +219,52 @@ rva	size	symbol	provenance
 0x000a6c20	4	?gEndSequence@@3HA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x000a6c28	1	_?gNewGameSettingsSaved@?1??NewGame@game@@QAECXZ@4CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage; buka-game-globals.json
 0x00092f50	288	?gHeroNames@@3PAY01PADA	LoadGame full/short hero-name indexing and complete localized pointer table; buka-hero-names.json
-0x0008fcbc	12	_?gMonType@?1??PerMonth@game@@QAEXXZ@4PACA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000903b0	58	?gSpellAIValue@@3PAFA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0009040c	32	?gMageGuildSpellPool@@3PAY07CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x00090620	112	?gMageBuildingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x00090690	196	?gNeutralBuildingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000907e0	672	?gDwellingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x00090ac0	512	?gTownBuildingExtents@@3PAY0BA@UTownBuildingExtent@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x00090d0c	112	?gStartingResources@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000913e0	32	?gClassNavigationMod@@3PAMA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000918b4	4	?gMageGuildSpellCount@@3PACA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x00093428	4	?gRequiredExtendedMemory@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0009342c	4	?gRequiredConventionalMemory@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a4b0	4	_AI_STRATEGIC_POSITION_SCORE_FACTOR	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0009f05c	4	?gLastHeartbeatReceive@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a6d0	4	_SPELL_AI_SLOW_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a6e4	4	_SPELL_AI_HASTE_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a6ec	4	_SPELL_AI_STONESKIN_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdd90	16	?gDDDestinationRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cd938	16	?gDDSourceRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cd8c0	4	?gDDResult@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdd88	4	?gPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x0008fcbc	12	_?gMonType@?1??PerMonth@game@@QAEXXZ@4PACA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000903b0	58	?gSpellAIValue@@3PAFA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0009040c	32	?gMageGuildSpellPool@@3PAY07CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x00090620	112	?gMageBuildingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x00090690	196	?gNeutralBuildingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000907e0	672	?gDwellingCosts@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x00090ac0	512	?gTownBuildingExtents@@3PAY0BA@UTownBuildingExtent@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x00090d0c	112	?gStartingResources@@3PAY06HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000913e0	32	?gClassNavigationMod@@3PAMA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000918b4	4	?gMageGuildSpellCount@@3PACA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x00093428	4	?gRequiredExtendedMemory@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0009342c	4	?gRequiredConventionalMemory@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a4b0	4	_AI_STRATEGIC_POSITION_SCORE_FACTOR	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0009f05c	4	?gLastHeartbeatReceive@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a6d0	4	_SPELL_AI_SLOW_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a6e4	4	_SPELL_AI_HASTE_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a6ec	4	_SPELL_AI_STONESKIN_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cdd90	16	?gDDDestinationRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cd938	16	?gDDSourceRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cd8c0	4	?gDDResult@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cdd88	4	?gPaintStart@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cd8c8	108	?gDDSurfaceDesc@@3U_DDSURFACEDESC@@A	Independent reviewed owner identity, complete current typed payload and nonoverlap; buka-owned-reference-completion.json
-0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cddac	4	?gTtlBlts@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cef88	300	?hMouseCursor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cf0b4	300	?hbmpAndMask@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cf30c	300	?hbmpColor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfbb4	4	_sClipRowStart	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb60	4	_sClipX	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb50	4	_sClipY	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfbb0	4	_sClipInside	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb54	4	_sClipRight	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb58	4	_sClipBottom	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
-0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-data-layout.json
+0x000cddc8	4	?gDDPal@@3PAUIDirectDrawPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cdda4	4	?gInitWin@@3PAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cddd0	4	?gInDDSD@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cddac	4	?gTtlBlts@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cef88	300	?hMouseCursor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cf0b4	300	?hbmpAndMask@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cf30c	300	?hbmpColor@@3PAPAXA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb44	4	_?gInSetPointer@?1??SetPointer@mouseManager@@QAEXF@Z@4HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb68	4	_sClipEntry	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb5c	4	_sClipSource	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfbb4	4	_sClipRowStart	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb60	4	_sClipX	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb50	4	_sClipY	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfbb0	4	_sClipInside	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb54	4	_sClipRight	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb58	4	_sClipBottom	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb64	4	_sClipRow	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cfb6c	4	_sClipRun	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
+0x000cddcc	4	?gBusyRetry@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners; buka-link-data.json
 0x000cdf58	4	_gSampleBuffer	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000cdf5c	4	_gSampleFrames	Buka audio: complete typed payload and retail code users; buka-audio-data.json
 0x000cdf60	4	_gSampleChannels	Buka audio: complete typed payload and retail code users; buka-audio-data.json

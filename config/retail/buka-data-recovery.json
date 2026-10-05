@@ -2101,7 +2101,7 @@
         {
           "site_rva": "0x69421",
           "target_rva": "0x91250",
-          "symbol": "$SG11257",
+          "symbol": "?gTracksPath@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0x91250"
