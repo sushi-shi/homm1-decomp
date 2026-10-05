@@ -20,7 +20,6 @@ The ladder (AGENTS.md): the FIRST divergence class decides the wall.
              The ladder does not compare branch destinations or which calls
              each edge reaches. LoadEntranceConfig's misplaced ResetCell
              passed this screen; audit semantic edges before steering. Lever:
-             https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/relevations/cl5-callcrossing-ebx-first-by-use-schedule.md;
              a disposable A/B as described in
              docs/patterns/tu-state-probe-family-decides-reachability.md.
 
@@ -444,8 +443,7 @@ def _duplicate_tail_probe(basm: str, tasm: str, wall: str) -> None:
               "unconditional suffix cross-jump is /Os-gated and OFF in our "
               "/O2 build, so what merges here is value-based factoring: look "
               "for a join at the suffix head, a per-arm destructible local, "
-              "or arm VALUES that differ where retail's agree. "
-              "https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/relevations/wall-reasons-layout.md")
+              "or arm VALUES that differ where retail's agree.")
     elif ts and not bs:
         print("    -> only TARGET duplicates a long suffix: retail's arms "
               "carried something ours factored away (a per-arm scope is the "

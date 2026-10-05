@@ -1,72 +1,55 @@
-# HoMM1 reconstruction
+# HoMM1 Buka 2003 reconstruction
 
-Use the pinned Buka 2003 Windows `HEROES.EXE` from
-`config/retail/targets.json`. Retail bytes and RVAs are the authority. This
-image is linked /FIXED: absolute referents require a reviewed manifest.
-The editor and NWC releases are secondary evidence. The Buka source/claim
-migration is in progress; inherited NWC address tables are not Buka evidence.
+Byte-matching C++ reconstruction of the Buka 2003 Windows `HEROES.EXE`
+(`config/retail/targets.json`), built with the pinned Visual C++ 6.0 SP5
+toolchain. Retail bytes are the authority. Every annotated function matches;
+the remaining goals are a byte-identical linked executable and the scenario
+editor (`EDITOR.EXE`) as a second target.
 
-- Enter `nix develop .#build` and run `homm1 build` after source, claim,
-  compiler, delinker or comparison changes, including tooling changes.
-- Use `homm1 match` for the normal edit loop and `homm1 sema` for detailed
-  object/retail inspection. Comparison is strict (`config/compare.toml`
-  `data_matching = true`): data-reference identities and addends are checked
-  together with calls, imports and EH identities.
-- Keep candidate linking working through `homm1 link`; unresolved definitions
-  are reconstruction findings. Never add `/FORCE` to hide them.
-- Do not use decompiler output. Reconstruct control flow from retail assembly
-  and generated CFGs; use source donors only as corroborating evidence.
-- Recover ordinary C++ and real types. Do not use byte arrays, naked assembly,
-  dummy bodies or address masking to manufacture a score.
-- Keep retail facts under `config/retail`, build contracts under `config`,
-  tooling under `scripts/homm1`, compiler mechanisms under `docs/patterns`,
-  headers under `include`, and reconstruction source under `src/BASE` or
-  `src/SOURCE`.
-- Retail executables, compiler media/toolchains, Wine prefixes and generated
-  artifacts belong in ignored `build/`.
-- Data identities, types and initializers come from retail bytes and their code
-  users; never model data as untyped byte blobs.
-- Use the pinned Buka VC6 profiles in `config/units.toml`; compiler claims require
-  retail-backed controls. Do not reuse HoMM3
-  VC6 flags. HoMM2 Buka 2.1 is the preferred source-correspondence donor, with
-  2.0 as secondary evidence.
-- The tooling design follows the pinned Giten donor, with Gruntz ancestry, documented in
-  `docs/tooling.md`. Adapt target facts in the existing modules; do not add a
-  parallel adapter pipeline.
-- Preserve usage logging on every tooling entry point (`homm1.core.usage.logged`),
-  including direct module and batch commands. `homm1 audit usage` checks coverage.
-- Review tooling ports against both Gruntz and HoMM2. Record donor revisions and
-  retained/adapted/deferred/inapplicable capabilities in
-  `docs/tooling-inheritance.md`; repeat `homm1 audit tooling`. A copied package
-  or game-specific ledger does not establish command or behavioral parity.
+## Build and gates
 
-## Matching workflow and skills
+- Work inside `nix develop .#build`. Run `homm1 build` after any source,
+  claim, config or tooling change.
+- Every commit keeps `homm1 compare --baseline` at 100% and `homm1 build
+  verify` passing. `homm1 link` builds the candidate executable; never use
+  `/FORCE`.
+- The README status block is generated (`homm1 verify readme`); never edit
+  it by hand. `homm1 verify bank` updates the score ledger.
 
-Skills live in `.agents/skills/`; `.claude/skills` links there and `CLAUDE.md`
-links here. Edit the canonical files. Use `matcher` for reconstruction,
-`wall-identifier` for plateau diagnosis, `holista` for evidence-backed helper
-recovery, and `permute` for classified compiler-state/source-variant experiments.
-The skills do not authorize unrelated commits, gate exceptions or fake source.
+## Source rules
 
-Pick work with `homm1 walls inventory --todo --limit N` or recover rows where
-HIST exceeds MAX. Read `homm1 walls priors <rva>`, then diagnose in order:
-code referent, call set, control flow, register/schedule. Keep donor compiler
-observations separate from measured target-compiler behavior.
+- Ordinary C++ with real types. No decompiler output, byte blobs, naked
+  assembly, dummy bodies, address masking, pragmas, or helpers that only hide
+  a cast (`IDX`-style); enum-indexed data uses the typed enum wrappers.
+- Data identities, types and initializers come from retail bytes and their
+  code users.
+- Compiler profiles live in `config/units.toml`; changing one needs
+  retail-backed evidence.
+- Comments describe behaviour, not how a match was achieved. Keep cast
+  reasons, `VA`/`DATA` annotations and `#line` directives (they pin retail
+  assertion line numbers).
+- Repository text is self-contained: no references to other projects.
 
-`homm1 match BASE/MOUSEMGR` is the selected-unit loop. Run `homm1 build` for
-cross-unit edits; run `homm1 build verify` for required final gate verification.
-CUR is the current comparison (the ledger records CUR at its last bank),
-MAX the best score for its current source fingerprint, and HIST the historical
-peak within one comparison mode. A source-hash change can reset MAX; a current
-TU-state dip does not erase it. Never retain probe source. Giten-compatible
-`permute state --record-max` may retain an audited exact peak for an unchanged
-function after restoring source; sub-100 probes remain diagnostic only.
+## Layout
 
-README status is generated by `homm1 verify readme`, also a build edge.
-`homm1 verify bank` explicitly changes the score ledger. Do not maintain score
-counts in prose outside the generated block. Keep reusable compiler mechanisms
-under `docs/patterns/`; retail facts belong in `config/retail`.
+| Path | Contents |
+| --- | --- |
+| `src/BASE`, `src/SOURCE`, `include/` | reconstructed source and headers |
+| `vendor/` | third-party code (Audiere, LZHUF) |
+| `config/`, `config/retail/` | build contracts; retail facts |
+| `scripts/homm1/` | tooling; keep `homm1.core.usage.logged` on entry points (`homm1 audit usage`) |
+| `tools/` | Rust tools |
+| `docs/`, `docs/patterns/` | reference docs; measured compiler mechanisms |
+| `build/` (ignored) | retail images, toolchains, Wine prefixes, generated files |
 
-Workflow setup and the donor-wide inventory are described in `docs/workflow.md`
-and `docs/tooling-inheritance.md`. Run `homm1 audit tooling --giten PATH
---whole-tree --json` when reviewing changes outside the Python package too.
+## Branches
+
+`decomp-buka-2003` (this branch) generates `source-buka-2003` and
+`classic-buka-2003` with `homm1 clean`; never edit generated branches. The
+cross-platform `port` and the `source-te` edition build on `source-buka-2003`.
+
+## Skills
+
+`.agents/skills/` (linked from `.claude/skills`): `matcher` for
+reconstruction, `wall-identifier` for diagnosing a non-matching function,
+`holista` for helper recovery, `permute` for compiler-state experiments.

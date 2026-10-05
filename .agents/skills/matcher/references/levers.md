@@ -1,14 +1,13 @@
-> Donor evidence from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> Named closures below are historical examples from other projects. VC5/VC6
-> claims are not validated VC4 rules. Use HoMM2 correspondence for HoMM1;
-> strict scoring checks data-reference names and addends.
+> Named closures below are historical examples observed with MSVC 5.0; they
+> are hypotheses until measured on this target's compiler. Strict scoring
+> checks data-reference names and addends.
 
 # Exact-match lever catalog
 
 A reasoning aid, not a plan template or a menu of blind mutations: use an entry
 only when retail/source evidence licenses it, and mark the family checked when
-it does not apply. Derived from checked-in exact closures, hard-wall history,
-and the HoMM3/LithTech source-shape campaigns. Compiler mechanisms live in
+it does not apply. Derived from exact closures and hard-wall history.
+Compiler mechanisms live in
 `docs/patterns/INDEX.md`.
 
 ## 1. Recover source before steering the compiler

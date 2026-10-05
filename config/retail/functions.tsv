@@ -1,7 +1,7 @@
 # Buka 2003 starts reviewed against retail instructions, PE imports, C++ EH records and pinned VC6 COFF contributions.
 # image-sha256: 34233110eff3c5689664ded89577486e3fe8d6961d917c381172248a08a654db
-# Evidence: buka-function-census.json. Names and strict source claims are separate.
-# FINDPATH/SEARCH /O2 ctype<wchar_t>::id initializers are compiler helpers: buka-ctype-guard.json.
+# Evidence. Names and strict source claims are separate.
+# FINDPATH/SEARCH /O2 ctype<wchar_t>::id initializers are compiler helpers.
 rva	kind
 0x00001000	
 0x000012af	

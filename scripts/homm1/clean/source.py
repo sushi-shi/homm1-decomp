@@ -1,4 +1,4 @@
-"""Source transforms for the generated clean tree (HoMM2 `clean_source.py`, kf1 lexer).
+"""Source transforms for the generated clean tree.
 
 Every rule reproduces the production expansion that the pinned VC4 compiler
 already sees when it builds the matching objects; nothing here changes what

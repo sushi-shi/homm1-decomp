@@ -101,7 +101,7 @@ def load_cache() -> tuple[dict[str, dict], dict[tuple[str, str], str]]:
         return units, funcs
     text = path.read_text()
     if f"# fingerprint-version: {CACHE_VERSION}" not in text.splitlines():
-        return units, funcs  # invalidate donor union caches, including the seed
+        return units, funcs  # invalidate union caches, including the seed
     section = None
     for line in text.splitlines():
         if line.startswith("# [units]"):

@@ -1,31 +1,31 @@
 # Reviewed Buka rows identify their evidence; other rows remain inherited NWC claims.
 rva	size	name	kind	note
-0x0008a38c	0xc	??_7advManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a414	0xc	??_7combatManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a4a0	0xc	??_7highScoreManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a6a8	0xc	??_7recruitUnit@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a6b4	0xc	??_7fileRequester@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a700	0xc	??_7swapManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a74c	0xc	??_7townManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a758	0xc	??_7baseManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a768	0xc	??_7heroWindowManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a778	0xc	??_7mouseManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a784	0xc	??_7resourceManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a790	0xc	??_7backdropWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a79c	0xc	??_7iconWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7a8	0xc	??_7inputManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7b4	0x4	??_7icon@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7b8	0xc	??_7textWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7c4	0x4	??_7font@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7c8	0x4	??_7bitmap@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7cc	0x4	??_7palette@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7d0	0xc	??_7border@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7dc	0x4	??_7tileset@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7e0	0x4	??_7sample@@6B@	primary	Constructor/destructor vptr stores, one-slot topology and complete scalar deleting destructor; buka-sample-vtable.json
-0x0008a7e4	0xc	??_7widget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7f0	0xc	??_7textEntryWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a7fc	0xc	??_7dimmerWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a808	0xc	??_7button@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
-0x0008a814	0x4	??_7resource@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology; buka-function-map.json
+0x0008a38c	0xc	??_7advManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a414	0xc	??_7combatManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a4a0	0xc	??_7highScoreManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a6a8	0xc	??_7recruitUnit@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a6b4	0xc	??_7fileRequester@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a700	0xc	??_7swapManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a74c	0xc	??_7townManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a758	0xc	??_7baseManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a768	0xc	??_7heroWindowManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a778	0xc	??_7mouseManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a784	0xc	??_7resourceManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a790	0xc	??_7backdropWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a79c	0xc	??_7iconWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7a8	0xc	??_7inputManager@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7b4	0x4	??_7icon@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7b8	0xc	??_7textWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7c4	0x4	??_7font@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7c8	0x4	??_7bitmap@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7cc	0x4	??_7palette@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7d0	0xc	??_7border@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7dc	0x4	??_7tileset@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7e0	0x4	??_7sample@@6B@	primary	Constructor/destructor vptr stores, one-slot topology and complete scalar deleting destructor
+0x0008a7e4	0xc	??_7widget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7f0	0xc	??_7textEntryWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a7fc	0xc	??_7dimmerWidget@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a808	0xc	??_7button@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
+0x0008a814	0x4	??_7resource@@6B@	primary	Constructor instruction correspondence and complete compiled slot topology
 0x0008d3c8	0xc	??_7smackManager@@6B@	primary	Open/Close/Main
 0x0008d5b0	0xc	??_7soundManager@@6B@	primary	Open/Close/Main

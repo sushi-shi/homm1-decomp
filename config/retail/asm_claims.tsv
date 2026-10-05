@@ -1,39 +1,39 @@
 # Assembly source claims; only Buka-proven rows are migrated.
 unit	source	rva	size	name	kind	provenance
-BASE/BMAP2	src/BASE/BMAP2.asm	0x00072800	0x74	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	func	buka-bulk-correspondence.json
-BASE/BMAP2	src/BASE/BMAP2.asm	0x00072874	0xe6	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	func	buka-bulk-correspondence.json
-BASE/BMAP2	src/BASE/BMAP2.asm	0x0007295a	0x4b	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/BMAP2	src/BASE/BMAP2.asm	0x000729a6	0x43	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
-BASE/BITS	src/BASE/BITS.asm	0x00072790	0x2e	_BitTest	func	buka-bulk-correspondence.json
-BASE/BITS	src/BASE/BITS.asm	0x000727be	0x20	_BitSet	func	buka-function-map.json
-BASE/BITS	src/BASE/BITS.asm	0x000727de	0x22	_BitClear	func	buka-function-map.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000703b8	0xd5	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x0007048e	0xcb	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x0007055a	0xd5	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x00070630	0xd3	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x00070704	0xd9	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000707de	0xd6	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000708b4	0x25f	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x00070b14	0x258	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	buka-bulk-correspondence.json
-BASE/TILE	src/BASE/TILE.asm	0x00070d6c	0x134	_TileToBitmap	func	buka-bulk-correspondence.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007771c	0x4d	_LzhufMemmove	func	buka-bulk-correspondence.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077769	0x85	_GetBit	func	buka-bulk-correspondence.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000777ee	0xca	_DecodePosition	func	buka-function-map.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000778b8	0x119	_UpdateDecoderTree	func	buka-bulk-correspondence.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000779d1	0x153	_ReconstructDecoderTree	func	buka-reviewed-claims.json
-BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077b24	0x129	_Decode	func	buka-function-map.json
-BASE/BMAP2	src/BASE/BMAP2.asm	0x000a14b8	0x100	_gDimPalette	data	buka-reference-completion.json: BYTE[256] palette-index remap
-BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15b8	0x4	_gBitmapSourceSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15bc	0x4	_gBitmapRowSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000a148c	0x4	_gIconDataBase	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1490	0x4	_gIconWidth	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1494	0x4	_gIconHeight	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1484	0x4	_gIconXAdjust	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1488	0x4	_gIconYAdjust	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a8	0x4	_gClipRowSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14ac	0x4	_gClipColumn	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a0	0x4	_gClipLeftSkip	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a149c	0x4	_gClipRowsLeft	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a4	0x4	_gClipVisibleWidth	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/TILE	src/BASE/TILE.asm	0x000a14b0	0x4	_gTileScratch	data	buka-reference-completion.json: DWORD scalar from MASM declaration
-BASE/TILE	src/BASE/TILE.asm	0x000a14b4	0x2	_gTileRows	data	buka-reference-completion.json: WORD scalar from MASM declaration
+BASE/BMAP2	src/BASE/BMAP2.asm	0x00072800	0x74	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	func	retail review
+BASE/BMAP2	src/BASE/BMAP2.asm	0x00072874	0xe6	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	func	retail review
+BASE/BMAP2	src/BASE/BMAP2.asm	0x0007295a	0x4b	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	func	retail review
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000729a6	0x43	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	func	retail review
+BASE/BITS	src/BASE/BITS.asm	0x00072790	0x2e	_BitTest	func	retail review
+BASE/BITS	src/BASE/BITS.asm	0x000727be	0x20	_BitSet	func	retail review
+BASE/BITS	src/BASE/BITS.asm	0x000727de	0x22	_BitClear	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000703b8	0xd5	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x0007048e	0xcb	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x0007055a	0xd5	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x00070630	0xd3	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x00070704	0xd9	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000707de	0xd6	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000708b4	0x25f	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x00070b14	0x258	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	func	retail review
+BASE/TILE	src/BASE/TILE.asm	0x00070d6c	0x134	_TileToBitmap	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x0007771c	0x4d	_LzhufMemmove	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077769	0x85	_GetBit	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000777ee	0xca	_DecodePosition	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000778b8	0x119	_UpdateDecoderTree	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x000779d1	0x153	_ReconstructDecoderTree	func	retail review
+BASE/LZHUFDEC	vendor/lzhuf/decoder/Decoder.asm	0x00077b24	0x129	_Decode	func	retail review
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a14b8	0x100	_gDimPalette	data	BYTE[256] palette-index remap
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15b8	0x4	_gBitmapSourceSkip	data	DWORD scalar from MASM declaration
+BASE/BMAP2	src/BASE/BMAP2.asm	0x000a15bc	0x4	_gBitmapRowSkip	data	DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a148c	0x4	_gIconDataBase	data	DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1490	0x4	_gIconWidth	data	DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1494	0x4	_gIconHeight	data	DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1484	0x4	_gIconXAdjust	data	DWORD scalar from MASM declaration
+BASE/Icon2b	src/BASE/Icon2b.asm	0x000a1488	0x4	_gIconYAdjust	data	DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a8	0x4	_gClipRowSkip	data	DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14ac	0x4	_gClipColumn	data	DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a0	0x4	_gClipLeftSkip	data	DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a149c	0x4	_gClipRowsLeft	data	DWORD scalar from MASM declaration
+BASE/Icon2bc	src/BASE/Icon2bc.asm	0x000a14a4	0x4	_gClipVisibleWidth	data	DWORD scalar from MASM declaration
+BASE/TILE	src/BASE/TILE.asm	0x000a14b0	0x4	_gTileScratch	data	DWORD scalar from MASM declaration
+BASE/TILE	src/BASE/TILE.asm	0x000a14b4	0x2	_gTileRows	data	WORD scalar from MASM declaration
