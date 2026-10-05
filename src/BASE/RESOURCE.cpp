@@ -5,6 +5,19 @@
 
 #include <BASE/resource.h>
 
+#include <stddef.h>
+
+// HoMM2 Buka's default resource: an empty, unlisted bitmap record.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00477650, 0x3c)
+resource::resource(void) {
+    m_resourceType = RESOURCE_CATEGORY_BITMAP;
+    m_refCount = RESOURCE_REFERENCE_EMPTY;
+    m_id = 0;
+    m_next = NULL;
+}
+
 VA(0x0047768c, 0x43)
 resource::resource(
     i16 category,

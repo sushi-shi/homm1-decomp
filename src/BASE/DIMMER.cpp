@@ -13,6 +13,12 @@ dimmerWidget::dimmerWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 VA_COMPGEN(0x00476c30, 0x2e, "??_GdimmerWidget@@UAEPAXI@Z", 0x00476ae0)
 dimmerWidget::~dimmerWidget(void) {}
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x00476b0b, 0x3f)
+dimmerWidget::dimmerWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind)
+    : widget(x, y, width, height, id, kind) {}
+
 VA(0x00476b4a, 0x77)
 void dimmerWidget::Read(void) {
     READ_WIDGET_GEOMETRY(this, gpResourceManager);

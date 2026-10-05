@@ -23,13 +23,17 @@ H1_ENUM_FLAGS_BEGIN(WidgetFlag, i16)
 H1_ENUM_FLAGS_END(WidgetFlag)
 
 H1_ENUM_CONST_BEGIN(WidgetFlagConstant)
-    WIDGET_FLAG_MASK = 0xffff
+    WIDGET_FLAG_MASK = 0xffff,
+    // widget::widget(void)'s width and height (Buka WIDGET.cpp DEFAULT_EXTENT).
+    WIDGET_DEFAULT_EXTENT = 16
 H1_ENUM_CONST_END(WidgetFlagConstant)
 
 H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_NONE = 0,
     // border kind 1: drawn without its background (Buka widgetKind.h).
     WIDGET_KIND_TRANSPARENT = 1,
+    // widget::widget(void)'s kind (Buka widgetKind.h WIDGET_KIND_DEFAULT).
+    WIDGET_KIND_DEFAULT = 2,
     WIDGET_KIND_TEXT = 0x200,
     WIDGET_KIND_AUTO_REPEAT = 0x1000,
     WIDGET_KIND_TRACK_PRESS = 0x2000,

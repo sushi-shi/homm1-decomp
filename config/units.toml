@@ -79,7 +79,9 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "BASE/DIMMER"
 source = "src/BASE/DIMMER.cpp"
-flags = "cpp_buka"
+# The six-short dimmerWidget constructor pushes its arguments without /G6
+# register clears.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "BASE/ICONWDGT"
