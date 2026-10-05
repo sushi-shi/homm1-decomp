@@ -1,17 +1,13 @@
 #ifndef HOMM1_SOURCE_DIALOGTYPES_H
 #define HOMM1_SOURCE_DIALOGTYPES_H
 
+#include <BASE/dialog.h>
 #include <Domains.h>
 
 H1_ENUM_BEGIN(NormalDialogWidgetRange)
     NORMAL_DIALOG_FOREGROUND_WIDGET_LIMIT = 0x9000,
     NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID = -256
 H1_ENUM_END(NormalDialogWidgetRange)
-
-H1_ENUM_BEGIN(NormalDialogResult)
-    NORMAL_DIALOG_CONFIRM = 0x7805,
-    NORMAL_DIALOG_CANCEL = 0x7806
-H1_ENUM_END(NormalDialogResult)
 
 // HoMM1 NormalDialog's resource slot kinds (frames of resource.icn first).
 H1_ENUM_BEGIN(NormalDialogResourceType)
@@ -54,11 +50,15 @@ H1_ENUM_BEGIN(NormalDialogOrText)
     NORMAL_DIALOG_SHOW_OR_TEXT = 1
 H1_ENUM_END(NormalDialogOrText)
 
+// NormalDialog's buttons, shown by slot; the caller reads the pressed one
+// from m_dialogResult (CONFIRM is the yes button, CANCEL the no button).
 H1_ENUM_BEGIN(NormalDialogButton)
-    NORMAL_DIALOG_BUTTON_OK = 0x7801,
-    NORMAL_DIALOG_BUTTON_CANCEL = 0x7802,
-    NORMAL_DIALOG_BUTTON_YES = 0x7805,
-    NORMAL_DIALOG_BUTTON_NO = 0x7806
+    NORMAL_DIALOG_BUTTON_OK = DIALOG_BUTTON_1,
+    NORMAL_DIALOG_BUTTON_CANCEL = DIALOG_BUTTON_2,
+    NORMAL_DIALOG_BUTTON_YES = DIALOG_BUTTON_5,
+    NORMAL_DIALOG_BUTTON_NO = DIALOG_BUTTON_6,
+    NORMAL_DIALOG_CONFIRM = NORMAL_DIALOG_BUTTON_YES,
+    NORMAL_DIALOG_CANCEL = NORMAL_DIALOG_BUTTON_NO
 H1_ENUM_END(NormalDialogButton)
 
 H1_ENUM_CONST_BEGIN(NormalDialogLayout)

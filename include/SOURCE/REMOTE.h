@@ -50,7 +50,11 @@ H1_ENUM_CONST_BEGIN(RemoteConstant)
     // this suffix before reporting every game slot used.
     REMOTE_NET_NAME_LAST = 10,
     // HoMM1's modem and network games connect two human players.
-    REMOTE_PLAYER_COUNT = 2
+    REMOTE_PLAYER_COUNT = 2,
+    // Milliseconds a confirmed send, the combat setup exchange or a saved-game
+    // transfer waits for the other side before NormalDialog asks whether to
+    // keep waiting.
+    REMOTE_WAIT_TIMEOUT = 20000
 H1_ENUM_CONST_END(RemoteConstant)
 
 H1_ENUM_BEGIN(RemoteGameMode)

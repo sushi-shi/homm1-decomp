@@ -2742,7 +2742,7 @@ i32 advManager::DoCombat(
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
                         switch (EVENTS_REMOTE_MESSAGE(receivedPacket)->command) {
-                            case COMBAT_REMOTE_COMMAND:
+                            case REMOTE_COMMAND_HERO_TOWN_DATA:
                                 ReceiveHeroTownData(
                                     receivedPacket,
                                     &senderNum,
@@ -2925,8 +2925,8 @@ void advManager::SendHeroTownData(
         buffer.bytes,
         remotePlayer,
         sizeof(combatRemoteData),
-        COMBAT_REMOTE_COMMAND,
-        COMBAT_REMOTE_CONFIRM_COMMAND,
+        REMOTE_COMMAND_HERO_TOWN_DATA,
+        REMOTE_COMMAND_HERO_TOWN_CONFIRM,
         &reply
     );
     if (!result)
@@ -2940,7 +2940,7 @@ void advManager::SendHeroTownData(
             buffer.bytes,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
-            COMBAT_REMOTE_COMMAND,
+            REMOTE_COMMAND_HERO_TOWN_DATA,
             1
         );
         if (!result)
@@ -2954,7 +2954,7 @@ void advManager::SendHeroTownData(
             buffer.bytes,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
-            COMBAT_REMOTE_COMMAND,
+            REMOTE_COMMAND_HERO_TOWN_DATA,
             1
         );
         if (!result)
@@ -3028,14 +3028,14 @@ void advManager::ReceiveHeroTownData(
         memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
     }
 
-    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, COMBAT_REMOTE_CONFIRM_COMMAND, 1);
+    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, 1);
     if (!mainResult)
         ShutDown(NULL);
 
     lastPacketTimeNum = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
-        if (lastPacketTimeNum + COMBAT_REMOTE_TIMEOUT < KBTickCount()) {
+        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO
@@ -3047,7 +3047,7 @@ void advManager::ReceiveHeroTownData(
         }
         packet = GetRemoteData(1);
         if (packet && EVENTS_REMOTE_MESSAGE(packet)->type == REMOTE_MESSAGE_RELIABLE
-            && EVENTS_REMOTE_MESSAGE(packet)->command == COMBAT_REMOTE_COMMAND) {
+            && EVENTS_REMOTE_MESSAGE(packet)->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
             lastPacketTimeNum = KBTickCount();
             if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
                 == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {

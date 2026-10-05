@@ -614,7 +614,6 @@ src/SOURCE/REMOTE.cpp	Connect	*	*	*	the direct-connect id's decimal digits, pack
 src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	*	*	the direct-connect id packet layout and handshake stages
 src/SOURCE/REMOTE.cpp	ReadPacket	*	*	*	the receive queue's wrap point and an unused frame buffer
 src/SOURCE/REMOTE.cpp	PollRemote	*	*	*	the heartbeat interval/timeout, its player/hourglass nibble packing and the remote-exit arguments
-src/SOURCE/REMOTE.cpp	TransmitAndWait	20000	arithmetic	*	the response timeout in ticks
 src/SOURCE/SETUP.cpp	game::SetupComPort	*	store	store to comPort[]	a COM port number (COM1..COM4)
 src/SOURCE/SETUP.cpp	*	*	store	store to giNumHumanPlayers	a hot-seat human player count
 src/SOURCE/SETUP.cpp	game::PickLoadGame	0	call-argument	SetupGame(* argument 1	SetupGame's flag argument

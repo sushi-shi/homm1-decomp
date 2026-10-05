@@ -207,17 +207,14 @@ H1_ENUM_CONST_BEGIN(HouseEventConstant)
     EVENT_HOUSE_COUNT = 5
 H1_ENUM_CONST_END(HouseEventConstant)
 
-// Remote combat hand-off (Buka CombatRemoteCommand / CombatRemoteFragment):
-// SendHeroTownData sends the combat record as COMMAND (answered by
-// CONFIRM), then each hero in its own fragment.
+// Remote combat hand-off: SendHeroTownData sends the combat record as
+// REMOTE_COMMAND_HERO_TOWN_DATA (answered by REMOTE_COMMAND_HERO_TOWN_CONFIRM),
+// then each hero in its own fragment.
 H1_ENUM_CONST_BEGIN(CombatRemoteConstant)
-    COMBAT_REMOTE_COMMAND = 0x15,
-    COMBAT_REMOTE_CONFIRM_COMMAND = 0x16,
     COMBAT_REMOTE_FRAGMENT_COMBAT = 0,
     COMBAT_REMOTE_FRAGMENT_FIRST_HERO = 1,
     COMBAT_REMOTE_FRAGMENT_SECOND_HERO = 2,
-    COMBAT_REMOTE_BUFFER_SIZE = 0xff,
-    COMBAT_REMOTE_TIMEOUT = 20000
+    COMBAT_REMOTE_BUFFER_SIZE = 0xff
 H1_ENUM_CONST_END(CombatRemoteConstant)
 
 // SendHeroTownData's payload after the remote-message header, as in Buka's

@@ -35,7 +35,7 @@ i32 gMainVideoModeHeight = 768;
 DATA(0x004a01a4)
 i32 Orientation = 1;
 DATA(0x004a01a8)
-WingPalette LogicalPalette = {0x300, WINGRAPH_PALETTE_SIZE};
+WingPalette LogicalPalette = {0x300, PALETTE_COLOR_COUNT};
 DATA(0x004cdda4)
 void* gInitWin = NULL;
 // Buka's image/scroll counters are identified by the retail WinG paint path.
@@ -534,13 +534,13 @@ void DDUpdatePalette(i8* paletteData) {
     if (gForegroundApp == 0)
         return;
     for (entry = WINGRAPH_SYSTEM_PALETTE_SIZE; entry < WINGRAPH_MUTABLE_PALETTE_END; entry++) {
-        LogicalPalette.entries[entry].peRed = paletteData[entry * WINGRAPH_PALETTE_COMPONENT_COUNT]
+        LogicalPalette.entries[entry].peRed = paletteData[entry * PALETTE_GRAPHICS_CHANNELS]
                                               << WINGRAPH_PALETTE_VALUE_SHIFT;
         LogicalPalette.entries[entry].peGreen =
-            paletteData[entry * WINGRAPH_PALETTE_COMPONENT_COUNT + 1]
+            paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 1]
             << WINGRAPH_PALETTE_VALUE_SHIFT;
         LogicalPalette.entries[entry].peBlue =
-            paletteData[entry * WINGRAPH_PALETTE_COMPONENT_COUNT + 2]
+            paletteData[entry * PALETTE_GRAPHICS_CHANNELS + 2]
             << WINGRAPH_PALETTE_VALUE_SHIFT;
         LogicalPalette.entries[entry].peFlags = PC_NOCOLLAPSE;
     }
@@ -550,7 +550,7 @@ void DDUpdatePalette(i8* paletteData) {
     curRes = gDDPal->SetEntries(
         0,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (curRes != DD_OK)
@@ -749,13 +749,13 @@ void WGUpdatePalette(i8* paletteData) {
     AnimatePalette(
         hpalApp,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &LogicalPalette.entries[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     WinGSetDIBColorTable(
         hdcImage,
         WINGRAPH_SYSTEM_PALETTE_SIZE,
-        WINGRAPH_PALETTE_SIZE - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
+        PALETTE_COLOR_COUNT - WINGRAPH_SYSTEM_PALETTE_SIZE * 2,
         &screenImage.colors[WINGRAPH_SYSTEM_PALETTE_SIZE]
     );
     if (hpalApp != NULL)

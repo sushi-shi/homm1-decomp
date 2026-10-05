@@ -763,8 +763,8 @@ i16 advManager::ValidMove(i16 direction) {
             return 0;
     }
     hereCellItem = &m_mapData[m_mapOriginX + m_cursorMapX][m_mapOriginY + m_cursorMapY];
-    north = (1 << direction) & CURSOR_NORTH_DIRECTION_MASK;
-    downMask = (1 << direction) & CURSOR_SOUTH_DIRECTION_MASK;
+    north = (1 << direction) & MAP_DIRECTION_NORTH_MASK;
+    downMask = (1 << direction) & MAP_DIRECTION_SOUTH_MASK;
     if (north && CELL_HAS_NON_SHADOW_OBJECT(hereCellItem)
         && hereCellItem->m_triggerType != (MAP_TRIGGER_EVENT | MAP_OBJECT_WHIRLPOOL))
         return 0;

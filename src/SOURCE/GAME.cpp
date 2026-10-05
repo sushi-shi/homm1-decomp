@@ -4419,7 +4419,7 @@ i32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     while (!done) {
         PollSound();
         CheckDoMain(0, 1);
-        if (lastPacketTimeNum + REMOTE_SAVE_RECEIVE_TIMEOUT < KBTickCount()) {
+        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO

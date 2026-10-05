@@ -410,7 +410,7 @@ void searchArray::SeedPosition(
                         s_adjacentY = s_mapY + normalDirTable[s_direction].y;
                         s_targetCell = gpAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
-                        if (((1 << s_direction) & SEARCH_DIRECTION_OBJECT_MASK)
+                        if (((1 << s_direction) & MAP_DIRECTION_SOUTH_MASK)
                             && CELL_HAS_NON_SHADOW_OBJECT(s_targetCell))
                             s_directionBlocked = 0;
                         if (s_directionBlocked && m_cells[s_adjacentX][s_adjacentY].visited

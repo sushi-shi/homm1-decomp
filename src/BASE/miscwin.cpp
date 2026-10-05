@@ -89,7 +89,7 @@ void BitmapToScreen(bitmap* image) {
 
 VA(0x0046fa55, 0x50)
 void SetPalette(i8* paletteData, i32 updateDisplay) {
-    memcpy(gpBufferPalette->m_data, paletteData, PALETTE_GRAPHICS_BYTES);
+    memcpy(gpBufferPalette->m_data, paletteData, PALETTE_DATA_SIZE);
     memcpy(
         gCyclePal,
         paletteData + PALETTE_CYCLE_FIRST * PALETTE_GRAPHICS_CHANNELS,
@@ -107,7 +107,7 @@ void FadeIn(i32 increment) throw() {
     if (pal == NULL)
         MemError();
     done = false;
-    memset(pal->m_data, 0, PALETTE_GRAPHICS_BYTES);
+    memset(pal->m_data, 0, PALETTE_DATA_SIZE);
     if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
@@ -118,7 +118,7 @@ void FadeIn(i32 increment) throw() {
             UpdatePalette(gpBufferPalette->m_data);
         } else {
             threshold = PALETTE_FADE_LEVEL_LAST - i;
-            for (j = 0; j < PALETTE_GRAPHICS_END; j++) {
+            for (j = 0; j < PALETTE_DATA_SIZE; j++) {
                 if (gpBufferPalette->m_data[j] > threshold)
                     pal->m_data[j] = gpBufferPalette->m_data[j] - threshold;
             }
@@ -142,13 +142,13 @@ void FadeOut(i32 increment) throw() {
     done = false;
     if (CURRENT_GRAPHICS_CONFIG.fullScreen == 0)
         increment *= PALETTE_WINDOWED_FADE_SCALE;
-    memcpy(pal->m_data, gpBufferPalette->m_data, PALETTE_GRAPHICS_BYTES);
+    memcpy(pal->m_data, gpBufferPalette->m_data, PALETTE_DATA_SIZE);
     for (i = 0; i < PALETTE_FADE_LEVEL_END; i += increment) {
     fadeStep:
         PollSound();
         if (i == PALETTE_FADE_LEVEL_LAST)
             done = true;
-        for (j = 0; j < PALETTE_GRAPHICS_END; j++) {
+        for (j = 0; j < PALETTE_DATA_SIZE; j++) {
             if (pal->m_data[j] > 0) {
                 if (pal->m_data[j] > increment)
                     pal->m_data[j] -= increment;
@@ -202,8 +202,8 @@ i32 Random(i32 low, i32 high) {
 // Called on the loaded kb.pal data before SetPalette.
 VA(0x0046fdc3, 0x95)
 void PostprocessPalette(i8* data) {
-    PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_GRAPHICS_BYTES));
-    memset(remapped, 0, PALETTE_GRAPHICS_BYTES);
+    PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_DATA_SIZE));
+    memset(remapped, 0, PALETTE_DATA_SIZE);
     for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
         memcpy(
             &remapped[gMonoColorMap[index]],
@@ -211,7 +211,7 @@ void PostprocessPalette(i8* data) {
             &reinterpret_cast<PaletteColor*>(data)[index],
             sizeof(PaletteColor)
         );
-    memcpy(data, remapped, PALETTE_GRAPHICS_BYTES);
+    memcpy(data, remapped, PALETTE_DATA_SIZE);
     free(remapped);
 }
 
