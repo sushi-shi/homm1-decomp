@@ -1071,6 +1071,13 @@ void WritePrefs(void) {
     }
 }
 
+DATA(0x0049e700)
+char gAppName[] = localization::Tr("window.gAppName");
+DATA(0x0049e708)
+char gTitle[] = localization::Tr("window.gTitle");
+// No retail code reads this value; it sits between gTitle and gcCDTrackName.
+DATA(0x0049e71c)
+i32 gUnusedWindowValue = -1;
 // This path deliberately has no leading slash.
 DATA(0x0049e720)
 static char* gcCDTrackName = "Tracks\\02-AudioTrack 02.ogg";
@@ -1240,11 +1247,6 @@ char* FindLastToken(char* text, char token) {
     return NULL;
 }
 
-// kbwin owns retail .data 0x0049f7a8-0x004a0503 and .bss 0x004ca490-0x004ca903.
-DATA(0x0049e700)
-char gAppName[] = localization::Tr("window.gAppName");
-DATA(0x0049e708)
-char gTitle[] = localization::Tr("window.gTitle");
 DATA(0x004a9e34)
 HWND hwndApp = NULL;
 DATA(0x004a9e38)

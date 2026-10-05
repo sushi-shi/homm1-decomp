@@ -23,6 +23,8 @@ _gIconYAdjust DWORD 0
 _gIconDataBase DWORD 0
 _gIconWidth DWORD 0
 _gIconHeight DWORD 0
+; A sixth frame variable that no retail code reads (0x004a1498).
+_gIconUnused DWORD 0
 
 .code
 

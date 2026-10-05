@@ -10,15 +10,6 @@ rva	size	symbol	provenance
 0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
 0x000a31bc	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
 0x000a31c0	30	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
-0x000a10e4	3	?gAdventureColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a10e8	3	?gAdventureMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a10ec	15	?gAdventureBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow
-0x000a10fc	3	?gSpellColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a1100	3	?gSpellMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a1104	15	?gSpellBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow
-0x000a1114	3	?gCombatColor@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a1118	3	?gCombatMonochrome@@3PADA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a111c	15	?gCombatBitmapFormat@@3PADA	Unique typed payload and cursor-family argument/index flow
 0x000a3228	30	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
 0x000a3248	30	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
 0x000a3298	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
@@ -57,8 +48,6 @@ rva	size	symbol	provenance
 0x000a16f0	28	?gCallManagerError1@@3PADA	Localized manager error array and ordered retail call use
 0x000a170c	28	?gCallManagerError2@@3PADA	Localized manager error array and ordered retail call use
 0x000a3dc8	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
-0x000a3dcc	24	?gLeftReleaseCaptureFailure@@3PADA	first code-required release-failure literal slot
-0x000a3de4	24	?gRightReleaseCaptureFailure@@3PADA	second code-required release-failure literal slot
 0x000a3dfc	30	?gInputManagerAssertFile@@3PADA	code-required assertion source path
 0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked
 0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked
@@ -173,6 +162,7 @@ rva	size	symbol	provenance
 0x00090e30	352	?gDataPath@@3PADA	Buka typed initializer and code users
 0x00090f90	352	?gAnimPath@@3PADA	Buka typed initializer and code users
 0x000910f0	352	?gSoundPath@@3PADA	Buka typed initializer and code users
+0x00091250	352	?gTracksPath@@3PADA	KB path global between gSoundPath and gGamePath; PlayMusic is its only user
 0x000913c4	20	?gMapPath@@3PADA	Buka typed initializer and code users
 0x00091bc8	272	?gWinSetup@@3PAUWindowTextEntry@@A	Buka typed initializer and code users
 0x000a9738	1	?giMonthType@@3CA	Buka unique instruction contexts, consistent code users and typed zero-initialized storage

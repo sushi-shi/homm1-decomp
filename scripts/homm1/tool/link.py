@@ -21,13 +21,27 @@ from homm1.tool import ToolError
 from homm1.tool.wine import ensure_link_deps, era_tool, run
 
 
+def faked_clock(at: str) -> dict[str, str]:
+    """The environment that runs a wine tool with its clock frozen at `at`
+    (UTC, `YYYY-MM-DD hh:mm:ss`): libfaketime from the build shell."""
+    import os
+    lib = os.environ.get("HOMM1_FAKETIME_LIB")
+    if not lib or not Path(lib).is_file():
+        raise ToolError("HOMM1_FAKETIME_LIB unset - run inside `nix develop .#build`")
+    env = dict(os.environ)
+    env.update(LD_PRELOAD=lib, FAKETIME=at, TZ="UTC",
+               FAKETIME_DONT_FAKE_MONOTONIC="1")
+    return env
+
+
 def link(args: list[str], *, cwd: Path | None = None,
          expect: list[Path] = (), timeout: float | None = None,
-         exe: Path | None = None) -> str:
+         exe: Path | None = None, at: str | None = None) -> str:
     """Run link.exe with `args`; verify every `expect` path exists after.
 
     `exe` selects another pinned linker (the VC 2.0 LINK that rebuilds a
-    period vendor import library); the default is the VC4 LINK.EXE.
+    period vendor import library); the default is the VC4 LINK.EXE. `at`
+    freezes the linker's clock (UTC) so its timestamps are reproducible.
     """
     if exe is None:
         ensure_link_deps()
@@ -38,6 +52,7 @@ def link(args: list[str], *, cwd: Path | None = None,
     for p in expect:
         p.unlink(missing_ok=True)
     output, rc = run(["wine", str(link_exe), *args], cwd=cwd, timeout=timeout,
+                     env=faked_clock(at) if at else None,
                      success=expect[0] if expect else None)
     missing = [p for p in expect if not p.exists()]
     if missing or (not expect and rc != 0):
