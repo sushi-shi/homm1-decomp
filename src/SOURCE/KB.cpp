@@ -902,80 +902,80 @@ void NormalDialog(
     i32 secondResourceValue,
     H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
 ) {
-    char szFilename[NORMAL_DIALOG_FILENAME_LENGTH];
-    char* amountText[NORMAL_DIALOG_RESOURCE_COUNT];
-    i32 sizingHeight;
-    i32 resourceYPos;
-    i32 kind[NORMAL_DIALOG_RESOURCE_COUNT];
-    iconWidget* iconPanel;
-    i32 resWidth;
-    i16 bShowMessage;
-    font* bigFont;
+    char* amounts[NORMAL_DIALOG_RESOURCE_COUNT];
+    i32 sizedHeight;
+    i32 resourceKind[NORMAL_DIALOG_RESOURCE_COUNT];
+    iconWidget* resourcePanel;
     i32 width;
-    i32 height;
-    i32 i;
-    i32 contentSize;
-    i32 id;
-    i32 iHeight;
-    i32 resourceQty[NORMAL_DIALOG_RESOURCE_COUNT];
-    tag_message message;
-    i32 heightIndex;
-    i32 lineCount;
-    i32 resourceFrame;
+    tag_message msg;
+    i32 rows;
+    char iconFile[NORMAL_DIALOG_FILENAME_LENGTH];
+    i32 resourceAmounts[NORMAL_DIALOG_RESOURCE_COUNT];
+    i32 wrappedLines;
+    i32 totalHeight;
+    i32 iconFrameIndex;
+    i16 showMessageText;
+    i32 nextId;
+    i32 panelHeight;
     i32 frameHeight;
-    textWidget* captionWidget;
-    i32 maxIconHeight;
+    textWidget* captionText;
+    i32 index;
+    i32 resourceIconY;
+    i32 addedHeight;
+    i32 tallestImage;
+    font* bigFont;
     i32 resCenterX;
-    char* szOr;
+    i32 resWidth;
+    char* orWord;
 
     resCenterX = 0;
-    resourceYPos = 0;
-    resourceFrame = 0;
-    id = NORMAL_DIALOG_TEXT_WIDGET_FIRST_ID;
+    resourceIconY = 0;
+    iconFrameIndex = 0;
+    nextId = NORMAL_DIALOG_TEXT_WIDGET_FIRST_ID;
     resWidth = 0;
-    iHeight = 0;
-    bShowMessage = 1;
-    kind[0] = firstResourceType;
-    resourceQty[0] = firstResourceValue;
-    kind[1] = secondResourceType;
-    resourceQty[1] = secondResourceValue;
+    addedHeight = 0;
+    showMessageText = 1;
+    resourceKind[0] = firstResourceType;
+    resourceAmounts[0] = firstResourceValue;
+    resourceKind[1] = secondResourceType;
+    resourceAmounts[1] = secondResourceValue;
 
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
-    lineCount = bigFont->LineLength(text, NORMAL_DIALOG_TEXT_LINE_WIDTH);
+    wrappedLines = bigFont->LineLength(text, NORMAL_DIALOG_TEXT_LINE_WIDTH);
     gpResourceManager->Dispose(bigFont);
-    contentSize = lineCount * NORMAL_DIALOG_TEXT_LINE_HEIGHT;
+    totalHeight = wrappedLines * NORMAL_DIALOG_TEXT_LINE_HEIGHT;
     if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
-        contentSize += NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
+        totalHeight += NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
 
-    maxIconHeight = 0;
-    for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
-        switch (kind[i]) {
+    tallestImage = 0;
+    for (index = 0; index < NORMAL_DIALOG_RESOURCE_COUNT; index++) {
+        switch (resourceKind[index]) {
             case NORMAL_DIALOG_ARTIFACT:
-                sizingHeight = 76;
+                sizedHeight = 76;
                 break;
             case NORMAL_DIALOG_LUCK_BONUS:
-                sizingHeight = 28;
+                sizedHeight = 28;
                 break;
             case NORMAL_DIALOG_LUCK_PENALTY:
-                sizingHeight = 57;
+                sizedHeight = 57;
                 break;
             case NORMAL_DIALOG_MORALE_BONUS:
-                sizingHeight = 62;
+                sizedHeight = 62;
                 break;
             case NORMAL_DIALOG_MORALE_PENALTY:
-                sizingHeight = 59;
+                sizedHeight = 59;
                 break;
             case NORMAL_DIALOG_EXPERIENCE:
-                sizingHeight = 76;
+                sizedHeight = 76;
                 break;
             case NORMAL_DIALOG_CREST:
-                sizingHeight = 55;
+                sizedHeight = 55;
                 break;
             case NORMAL_DIALOG_HERO:
-                sizingHeight = 111;
+                sizedHeight = 111;
                 break;
             case NORMAL_DIALOG_RESOURCE_GOLD:
-                sizingHeight = 26;
+                sizedHeight = 26;
                 break;
             case RESOURCE_WOOD:
             case RESOURCE_MERCURY:
@@ -983,144 +983,144 @@ void NormalDialog(
             case RESOURCE_SULFUR:
             case RESOURCE_CRYSTAL:
             case RESOURCE_GEMS:
-                sizingHeight = 44;
+                sizedHeight = 44;
                 break;
             case NORMAL_DIALOG_SPELL:
-                sizingHeight = 52;
+                sizedHeight = 52;
                 break;
             default:
-                sizingHeight = 0;
+                sizedHeight = 0;
                 break;
         }
-        if (sizingHeight > maxIconHeight)
-            maxIconHeight = sizingHeight;
+        if (sizedHeight > tallestImage)
+            tallestImage = sizedHeight;
     }
 
-    if (maxIconHeight > 0)
-        contentSize += maxIconHeight + 12;
-    heightIndex = (contentSize - 12) / NORMAL_DIALOG_WINDOW_ROW_HEIGHT;
-    if (heightIndex > NORMAL_DIALOG_MAX_ROWS)
-        heightIndex = NORMAL_DIALOG_MAX_ROWS;
-    if (heightIndex <= 0 && dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
-        heightIndex = 1;
+    if (tallestImage > 0)
+        totalHeight += tallestImage + 12;
+    rows = (totalHeight - 12) / NORMAL_DIALOG_WINDOW_ROW_HEIGHT;
+    if (rows > NORMAL_DIALOG_MAX_ROWS)
+        rows = NORMAL_DIALOG_MAX_ROWS;
+    if (rows <= 0 && dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
+        rows = 1;
     width = NORMAL_DIALOG_WINDOW_WIDTH;
-    height = heightIndex * NORMAL_DIALOG_WINDOW_ROW_HEIGHT + NORMAL_DIALOG_WINDOW_BASE_HEIGHT;
+    panelHeight = rows * NORMAL_DIALOG_WINDOW_ROW_HEIGHT + NORMAL_DIALOG_WINDOW_BASE_HEIGHT;
 
-    if (x == NORMAL_DIALOG_AUTO_POSITION || x + width >= LOGICAL_SCREEN_WIDTH - 1) {
+    if (x == NORMAL_DIALOG_AUTO_POSITION || width + x >= LOGICAL_SCREEN_WIDTH - 1) {
         if (gpAdvManager->m_active == 1 && !gHeroWindShowing && !gOverviewShowing)
             x = NORMAL_DIALOG_ADVENTURE_X;
         else
             x = (LOGICAL_SCREEN_WIDTH - width) / 2;
     }
-    if (y == NORMAL_DIALOG_AUTO_POSITION || y + height >= LOGICAL_SCREEN_HEIGHT - 1) {
-        y = (LOGICAL_SCREEN_HEIGHT - height) / 2;
+    if (y == NORMAL_DIALOG_AUTO_POSITION || panelHeight + y >= LOGICAL_SCREEN_HEIGHT - 1) {
+        y = (LOGICAL_SCREEN_HEIGHT - panelHeight) / 2;
         if (y > NORMAL_DIALOG_MAX_TOP)
             y = NORMAL_DIALOG_MAX_TOP;
     }
 
-    sprintf(szFilename, "evntwin%d.bin", heightIndex);
-    gNormalDialogWindow = new heroWindow(x, y, szFilename);
+    sprintf(iconFile, "evntwin%d.bin", rows);
+    gNormalDialogWindow = new heroWindow(x, y, iconFile);
     if (!gNormalDialogWindow)
         MemError();
 
-    message.type = MESSAGE_WIDGET;
-    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    message.value = NORMAL_DIALOG_BUTTON_FLAGS;
+    msg.type = MESSAGE_WIDGET;
+    msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    msg.value = NORMAL_DIALOG_BUTTON_FLAGS;
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        message.id = NORMAL_DIALOG_BUTTON_OK;
-        gNormalDialogWindow->BroadcastMessage(message);
+        msg.id = NORMAL_DIALOG_BUTTON_OK;
+        gNormalDialogWindow->BroadcastMessage(msg);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        message.id = NORMAL_DIALOG_BUTTON_CANCEL;
-        gNormalDialogWindow->BroadcastMessage(message);
+        msg.id = NORMAL_DIALOG_BUTTON_CANCEL;
+        gNormalDialogWindow->BroadcastMessage(msg);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
-        message.id = NORMAL_DIALOG_BUTTON_YES;
-        gNormalDialogWindow->BroadcastMessage(message);
-        message.id = NORMAL_DIALOG_BUTTON_NO;
-        gNormalDialogWindow->BroadcastMessage(message);
+        msg.id = NORMAL_DIALOG_BUTTON_YES;
+        gNormalDialogWindow->BroadcastMessage(msg);
+        msg.id = NORMAL_DIALOG_BUTTON_NO;
+        gNormalDialogWindow->BroadcastMessage(msg);
     }
 
-    for (i = 0; i < NORMAL_DIALOG_RESOURCE_COUNT; i++) {
-        iconPanel = NULL;
-        captionWidget = NULL;
-        if (kind[i] == NORMAL_DIALOG_NO_RESOURCE)
+    for (index = 0; index < NORMAL_DIALOG_RESOURCE_COUNT; index++) {
+        resourcePanel = NULL;
+        captionText = NULL;
+        if (resourceKind[index] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
-        amountText[i] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
-        if (kind[i] <= NORMAL_DIALOG_RESOURCE_LAST) {
-            if (resourceQty[i] > 0)
-                sprintf(amountText[i], "%d", resourceQty[i]);
-            else if (resourceQty[i] == 0)
-                strcpy(amountText[i], "");
+        amounts[index] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
+        if (resourceKind[index] <= NORMAL_DIALOG_RESOURCE_LAST) {
+            if (resourceAmounts[index] > 0)
+                sprintf(amounts[index], "%d", resourceAmounts[index]);
+            else if (resourceAmounts[index] == 0)
+                strcpy(amounts[index], "");
             else
-                sprintf(amountText[i], localization::Tr("dialog.income.per_day"), -resourceQty[i]);
-            strcpy(szFilename, "resource.icn");
-            resourceFrame = kind[i];
-        } else if (kind[i] == NORMAL_DIALOG_SPELL) {
-            sprintf(amountText[i], "%s", gSpellNames[resourceQty[i]]);
-            strcpy(szFilename, "spells.icn");
-            resourceFrame = resourceQty[i];
-        } else if (kind[i] == NORMAL_DIALOG_CREST) {
-            sprintf(amountText[i], "%s", "");
-            strcpy(szFilename, "brcrest.icn");
-            resourceFrame = resourceQty[i];
-        } else if (kind[i] == NORMAL_DIALOG_HERO) {
-            sprintf(amountText[i], "%s", "");
-            sprintf(szFilename, "surrendr.icn");
-            resourceFrame = 4;
-        } else if (kind[i] == NORMAL_DIALOG_EXPERIENCE || kind[i] == NORMAL_DIALOG_MORALE_BONUS
-                   || kind[i] == NORMAL_DIALOG_MORALE_PENALTY || kind[i] == NORMAL_DIALOG_LUCK_BONUS
-                   || kind[i] == NORMAL_DIALOG_LUCK_PENALTY) {
-            strcpy(amountText[i], "");
-            strcpy(szFilename, "expmrl.icn");
-            resourceFrame = kind[i] - NORMAL_DIALOG_EXPMRL_FIRST;
-            if (kind[i] == NORMAL_DIALOG_EXPERIENCE && resourceQty[i] != NORMAL_DIALOG_NO_VALUE)
-                sprintf(amountText[i], "%d", resourceQty[i]);
+                sprintf(amounts[index], localization::Tr("dialog.income.per_day"), -resourceAmounts[index]);
+            strcpy(iconFile, "resource.icn");
+            iconFrameIndex = resourceKind[index];
+        } else if (resourceKind[index] == NORMAL_DIALOG_SPELL) {
+            sprintf(amounts[index], "%s", gSpellNames[resourceAmounts[index]]);
+            strcpy(iconFile, "spells.icn");
+            iconFrameIndex = resourceAmounts[index];
+        } else if (resourceKind[index] == NORMAL_DIALOG_CREST) {
+            sprintf(amounts[index], "%s", "");
+            strcpy(iconFile, "brcrest.icn");
+            iconFrameIndex = resourceAmounts[index];
+        } else if (resourceKind[index] == NORMAL_DIALOG_HERO) {
+            sprintf(amounts[index], "%s", "");
+            sprintf(iconFile, "surrendr.icn");
+            iconFrameIndex = 4;
+        } else if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE || resourceKind[index] == NORMAL_DIALOG_MORALE_BONUS
+                   || resourceKind[index] == NORMAL_DIALOG_MORALE_PENALTY || resourceKind[index] == NORMAL_DIALOG_LUCK_BONUS
+                   || resourceKind[index] == NORMAL_DIALOG_LUCK_PENALTY) {
+            strcpy(amounts[index], "");
+            strcpy(iconFile, "expmrl.icn");
+            iconFrameIndex = resourceKind[index] - NORMAL_DIALOG_EXPMRL_FIRST;
+            if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE && resourceAmounts[index] != NORMAL_DIALOG_NO_VALUE)
+                sprintf(amounts[index], "%d", resourceAmounts[index]);
         } else {
-            strcpy(amountText[i], "");
-            strcpy(szFilename, "resource.icn");
-            resourceFrame = kind[i];
+            strcpy(amounts[index], "");
+            strcpy(iconFile, "resource.icn");
+            iconFrameIndex = resourceKind[index];
         }
 
-        switch (kind[i]) {
+        switch (resourceKind[index]) {
             case NORMAL_DIALOG_ARTIFACT:
                 resWidth = 76;
-                sizingHeight = 76;
+                sizedHeight = 76;
                 break;
             case NORMAL_DIALOG_LUCK_BONUS:
                 resWidth = 64;
-                sizingHeight = 28;
+                sizedHeight = 28;
                 break;
             case NORMAL_DIALOG_LUCK_PENALTY:
                 resWidth = 64;
-                sizingHeight = 57;
+                sizedHeight = 57;
                 break;
             case NORMAL_DIALOG_MORALE_BONUS:
                 resWidth = 64;
-                sizingHeight = 62;
+                sizedHeight = 62;
                 break;
             case NORMAL_DIALOG_MORALE_PENALTY:
                 resWidth = 64;
-                sizingHeight = 59;
+                sizedHeight = 59;
                 break;
             case NORMAL_DIALOG_EXPERIENCE:
                 resWidth = 64;
-                sizingHeight = 64;
+                sizedHeight = 64;
                 break;
             case NORMAL_DIALOG_CREST:
                 resWidth = 50;
-                sizingHeight = 55;
+                sizedHeight = 55;
                 break;
             case NORMAL_DIALOG_HERO:
                 resWidth = 111;
-                sizingHeight = 105;
+                sizedHeight = 105;
                 break;
             case NORMAL_DIALOG_RESOURCE_GOLD:
                 resWidth = 76;
-                sizingHeight = 26;
+                sizedHeight = 26;
                 break;
             case RESOURCE_WOOD:
             case RESOURCE_MERCURY:
@@ -1129,63 +1129,63 @@ void NormalDialog(
             case RESOURCE_CRYSTAL:
             case RESOURCE_GEMS:
                 resWidth = 38;
-                sizingHeight = 32;
+                sizedHeight = 32;
                 break;
             case NORMAL_DIALOG_SPELL:
                 resWidth = 38;
-                sizingHeight = 40;
+                sizedHeight = 40;
                 break;
         }
 
-        if (strlen(amountText[i]) > 0)
-            sizingHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
-        if (i == 0) {
-            resCenterX = kind[1] == NORMAL_DIALOG_NO_RESOURCE ? width / 2 : width / 3;
+        if (strlen(amounts[index]) > 0)
+            sizedHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
+        if (index == 0) {
+            resCenterX = resourceKind[1] == NORMAL_DIALOG_NO_RESOURCE ? width / 2 : width / 3;
         } else {
             resCenterX = width * 2 / 3;
         }
-        resourceYPos = height - sizingHeight - NORMAL_DIALOG_RESOURCE_BOTTOM_INSET;
+        resourceIconY = panelHeight - sizedHeight - NORMAL_DIALOG_RESOURCE_BOTTOM_INSET;
         if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
-            resourceYPos -= NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
-        if (maxIconHeight > sizingHeight)
-            resourceYPos -= (maxIconHeight - sizingHeight) / 2;
+            resourceIconY -= NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
+        if (tallestImage > sizedHeight)
+            resourceIconY -= (tallestImage - sizedHeight) / 2;
 
-        iconPanel = new iconWidget(
+        resourcePanel = new iconWidget(
             resCenterX - resWidth / 2,
-            resourceYPos,
+            resourceIconY,
             resWidth,
-            sizingHeight,
-            szFilename,
-            resourceFrame,
+            sizedHeight,
+            iconFile,
+            iconFrameIndex,
             ICON_DRAW_NORMAL,
             WIDGET_ID_NONE,
             ICON_WIDGET_DRAW,
             1
         );
-        if (!iconPanel)
+        if (!resourcePanel)
             MemError();
-        gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
-        if (kind[i] == NORMAL_DIALOG_ARTIFACT) {
-            iconPanel = new iconWidget(
+        gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+        if (resourceKind[index] == NORMAL_DIALOG_ARTIFACT) {
+            resourcePanel = new iconWidget(
                 resCenterX - resWidth / 2 + 6,
-                resourceYPos + 6,
+                resourceIconY + 6,
                 76,
                 76,
                 "artifact.icn",
-                resourceQty[i],
+                resourceAmounts[index],
                 ICON_DRAW_NORMAL,
                 WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!iconPanel)
+            if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
-        if (kind[i] == NORMAL_DIALOG_CREST) {
-            iconPanel = new iconWidget(
+        if (resourceKind[index] == NORMAL_DIALOG_CREST) {
+            resourcePanel = new iconWidget(
                 resCenterX - resWidth / 2 - 4,
-                resourceYPos - 4,
+                resourceIconY - 4,
                 58,
                 55,
                 "brcrest.icn",
@@ -1195,65 +1195,65 @@ void NormalDialog(
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!iconPanel)
+            if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
-        if (kind[i] == NORMAL_DIALOG_HERO) {
-            sprintf(szFilename, "port%04d.icn", resourceQty[i]);
-            iconPanel = new iconWidget(
+        if (resourceKind[index] == NORMAL_DIALOG_HERO) {
+            sprintf(iconFile, "port%04d.icn", resourceAmounts[index]);
+            resourcePanel = new iconWidget(
                 resCenterX - resWidth / 2 + 5,
-                resourceYPos + 5,
+                resourceIconY + 5,
                 101,
                 95,
-                szFilename,
+                iconFile,
                 0,
                 ICON_DRAW_NORMAL,
                 WIDGET_ID_NONE,
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!iconPanel)
+            if (!resourcePanel)
                 MemError();
-            gNormalDialogWindow->AddWidget(iconPanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
         }
-        captionWidget = new textWidget(
+        captionText = new textWidget(
             resCenterX - 50,
-            resourceYPos + sizingHeight - 10,
+            resourceIconY + sizedHeight - 10,
             100,
             12,
-            amountText[i],
+            amounts[index],
             "smalfont.fnt",
             1,
-            id++,
+            nextId++,
             WIDGET_KIND_TEXT
         );
-        if (!captionWidget)
+        if (!captionText)
             MemError();
-        gNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
     }
 
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
-    message.text = text;
-    gNormalDialogWindow->BroadcastMessage(message);
+    SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
+    msg.text = text;
+    gNormalDialogWindow->BroadcastMessage(msg);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
-        szOr = static_cast<char*>(malloc(strlen(localization::Tr("dialog.choice.or")) + 1));
-        strcpy(szOr, localization::Tr("dialog.choice.or"));
-        captionWidget = new textWidget(
+        orWord = static_cast<char*>(malloc(strlen(localization::Tr("dialog.choice.or")) + 1));
+        strcpy(orWord, localization::Tr("dialog.choice.or"));
+        captionText = new textWidget(
             width / 2 - 17,
-            resourceYPos + 30,
+            resourceIconY + 30,
             40,
             12,
-            szOr,
+            orWord,
             "smalfont.fnt",
             1,
-            id++,
+            nextId++,
             WIDGET_KIND_TEXT
         );
-        if (!captionWidget)
+        if (!captionText)
             MemError();
-        gNormalDialogWindow->AddWidget(captionWidget, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gpAdvManager->m_active == 1)
