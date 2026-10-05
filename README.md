@@ -48,11 +48,16 @@ review inputs, not defect totals. Preserve banked matches.
   remain; each is only ever cleared, initialized or saved, so no code user
   names it. The mouse's saved area and the player's unused save span carry
   Buka names, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
-- [ ] Review gotos: **206 statements**; keep those retail's block layout requires.
+- [x] Review gotos: **204 statements**, all kept because retail's block layout
+  requires them. Replacing them with `break`, `else if` or nothing breaks an
+  exact match, because VC6 `/Od` emits a `jmp` for every `goto`
+  ([classes](docs/reconstruction-debt.md)).
 - [x] Review dead locals: **116** never-read locals. The 75 without an
   initializer were removed together as a control, and every affected function
   lost its exact frame. The 41 with an initializer emit retail stores.
-- [ ] Review `static_cast`: **508 sites**.
+- [ ] Review `static_cast`: **400 sites**. Casts that only hid a wrong declared
+  type are gone, including the Win32 handles now built `NO_STRICT`; the
+  remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
 - [ ] Review unions: **10 definitions**; manual varargs: **1 function** (netwin).
 
 ## Branches

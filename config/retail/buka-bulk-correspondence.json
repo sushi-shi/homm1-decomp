@@ -14256,7 +14256,7 @@
         {
           "site_rva": "0x42451",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -15456,7 +15456,7 @@
         {
           "site_rva": "0x42bdb",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -15848,7 +15848,7 @@
         {
           "site_rva": "0x43b66",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -15880,7 +15880,7 @@
         {
           "site_rva": "0x43b8b",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -15896,7 +15896,7 @@
         {
           "site_rva": "0x43b9b",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -15912,7 +15912,7 @@
         {
           "site_rva": "0x43ba8",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -16256,7 +16256,7 @@
         {
           "site_rva": "0x44b8b",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27255,7 +27255,7 @@
         {
           "site_rva": "0x66849",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27411,7 +27411,7 @@
         {
           "site_rva": "0x66917",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27483,7 +27483,7 @@
         {
           "site_rva": "0x6698e",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27575,7 +27575,7 @@
         {
           "site_rva": "0x67a38",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27591,7 +27591,7 @@
         {
           "site_rva": "0x67a48",
           "target_rva": "0xcdddc",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdddc"
@@ -27599,7 +27599,7 @@
         {
           "site_rva": "0x67a53",
           "target_rva": "0xcdddc",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdddc"
@@ -27623,7 +27623,7 @@
         {
           "site_rva": "0x67a75",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27639,7 +27639,7 @@
         {
           "site_rva": "0x67a8b",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -27667,7 +27667,7 @@
         {
           "site_rva": "0x680fa",
           "target_rva": "0xcddd4",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcddd4"
@@ -27675,7 +27675,7 @@
         {
           "site_rva": "0x68102",
           "target_rva": "0xcddd8",
-          "symbol": "?gbmOldMonoBitmap@@3PAUHBITMAP__@@A",
+          "symbol": "?gbmOldMonoBitmap@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcddd8"
@@ -27683,7 +27683,7 @@
         {
           "site_rva": "0x68109",
           "target_rva": "0xcddd4",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcddd4"
@@ -27707,7 +27707,7 @@
         {
           "site_rva": "0x68122",
           "target_rva": "0xcddd4",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcddd4"
@@ -27723,7 +27723,7 @@
         {
           "site_rva": "0x6812f",
           "target_rva": "0xcddd4",
-          "symbol": "?hdcImage@@3PAUHDC__@@A",
+          "symbol": "?hdcImage@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcddd4"
@@ -27731,7 +27731,7 @@
         {
           "site_rva": "0x68139",
           "target_rva": "0xcdddc",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdddc"
@@ -27739,7 +27739,7 @@
         {
           "site_rva": "0x68142",
           "target_rva": "0xcdddc",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdddc"
@@ -27755,7 +27755,7 @@
         {
           "site_rva": "0x6814f",
           "target_rva": "0xcdddc",
-          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
+          "symbol": "?hpalApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdddc"
@@ -27791,7 +27791,7 @@
         {
           "site_rva": "0x6816a",
           "target_rva": "0xcdde0",
-          "symbol": "?gDDrawLibrary@@3PAUHINSTANCE__@@A",
+          "symbol": "?gDDrawLibrary@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdde0"
@@ -27799,7 +27799,7 @@
         {
           "site_rva": "0x68170",
           "target_rva": "0xcdde0",
-          "symbol": "?gDDrawLibrary@@3PAUHINSTANCE__@@A",
+          "symbol": "?gDDrawLibrary@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdde0"
@@ -27815,7 +27815,7 @@
         {
           "site_rva": "0x6817d",
           "target_rva": "0xcdde0",
-          "symbol": "?gDDrawLibrary@@3PAUHINSTANCE__@@A",
+          "symbol": "?gDDrawLibrary@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcdde0"
@@ -28960,7 +28960,7 @@
         {
           "site_rva": "0x6c025",
           "target_rva": "0xa9e34",
-          "symbol": "?hwndApp@@3PAUHWND__@@A",
+          "symbol": "?hwndApp@@3PAXA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9e34"
@@ -36300,7 +36300,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?hwndApp@@3PAUHWND__@@A",
+      "name": "?hwndApp@@3PAXA",
       "rva": "0xa9e34",
       "size": 4,
       "unit": "SOURCE/kbwin",
@@ -37901,7 +37901,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?hpalApp@@3PAUHPALETTE__@@A",
+      "name": "?hpalApp@@3PAXA",
       "rva": "0xcdddc",
       "size": 4,
       "unit": "SOURCE/wingraph",
@@ -37913,7 +37913,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?hdcImage@@3PAUHDC__@@A",
+      "name": "?hdcImage@@3PAXA",
       "rva": "0xcddd4",
       "size": 4,
       "unit": "SOURCE/wingraph",
@@ -37925,7 +37925,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?gbmOldMonoBitmap@@3PAUHBITMAP__@@A",
+      "name": "?gbmOldMonoBitmap@@3PAXA",
       "rva": "0xcddd8",
       "size": 4,
       "unit": "SOURCE/wingraph",
@@ -37961,7 +37961,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?gDDrawLibrary@@3PAUHINSTANCE__@@A",
+      "name": "?gDDrawLibrary@@3PAXA",
       "rva": "0xcdde0",
       "size": 4,
       "unit": "SOURCE/wingraph",

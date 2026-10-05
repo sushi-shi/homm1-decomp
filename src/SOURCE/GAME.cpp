@@ -1586,7 +1586,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = MAP_EVENT_DATA_AVAILABLE;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER:
-                    if (!static_cast<u8>(nextCell->m_objectMetadata)) {
+                    if (!nextCell->m_objectMetadata) {
                         nextCell->m_objectMetadata = GetRandomNumTroops(nextCell->m_objectIndex);
                         if (Random(0, 99) <= 25 && nextCell->m_objectIndex != CREATURE_GHOST)
                             nextCell->m_objectMetadata |= MONSTER_WILLING_FLAG;
@@ -1596,7 +1596,7 @@ void game::RandomizeEvents(void) {
                     nextCell->m_objectMetadata = nextCell->m_objectIndex;
                     if (nextCell->m_objectIndex > 4)
                         nextCell->m_objectMetadata -= RESOURCE_PILE_OBJECT_BASE;
-                    switch (static_cast<u8>(nextCell->m_objectMetadata)) {
+                    switch (nextCell->m_objectMetadata) {
                         case RESOURCE_WOOD:
                         case RESOURCE_ORE:
                             nextCell->m_objectMetadata = Random(8, 16);
@@ -1669,10 +1669,8 @@ void game::RandomizeEvents(void) {
                     id = GetTownId(x, y);
                     for (j = 0; j < TOWN_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-                            if (!static_cast<u8>(
-                                    m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
-                                        .m_objectMetadata
-                                ))
+                            if (!m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
+                                     .m_objectMetadata)
                                 m_map[x - TOWN_FOOTPRINT_LEFT + i][y - TOWN_FOOTPRINT_TOP + j]
                                     .m_objectMetadata = id;
                         }
@@ -1685,7 +1683,7 @@ void game::RandomizeEvents(void) {
                     id = GetMineId(x, y);
                     for (j = 0; j < MINE_FOOTPRINT_HEIGHT; j++) {
                         for (i = 0; i < MINE_FOOTPRINT_WIDTH; i++) {
-                            if (!static_cast<u8>(m_map[x + i][y - j].m_objectMetadata)
+                            if (!m_map[x + i][y - j].m_objectMetadata
                                 || (m_map[x + i][y - j].m_triggerType & MAP_TRIGGER_TYPE_MASK)
                                        == (nextCell->m_triggerType & MAP_TRIGGER_TYPE_MASK))
                                 m_map[x + i][y - j].m_objectMetadata = id;
@@ -2414,7 +2412,7 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfoObj->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<u8>(monsterInfoObj->stats.hitPoints));
+    sprintf(gText, "\n%s%d", gArmyStatText[4], monsterInfoObj->stats.hitPoints);
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfoObj->stats.speed]);
     strcat(statText, gText);
@@ -3122,46 +3120,38 @@ void game::PerWeek(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             switch (m_map[posX][posY].m_triggerType) {
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WATERWHEEL:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        != WEEKLY_WATER_WHEEL_EMPTY)
+                    if (m_map[posX][posY].m_objectMetadata != WEEKLY_WATER_WHEEL_EMPTY)
                         m_map[posX][posY].m_objectMetadata = WEEKLY_WATER_WHEEL_GOLD;
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WINDMILL:
                     m_map[posX][posY].m_objectMetadata = Random(1, 5);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_STRAW_HUT:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(3, 6);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_HOUSE:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DWARF_LOG_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(2, 4);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_PEASANT_LOG_CABIN:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(5, 10);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_DESERT_TENT:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(1, 3);
                     break;
                 case MAP_TRIGGER_EVENT | MAP_OBJECT_WAGON_CAMP:
-                    if (static_cast<u8>(m_map[posX][posY].m_objectMetadata)
-                        < WEEKLY_SITE_STOCK_LIMIT)
+                    if (m_map[posX][posY].m_objectMetadata < WEEKLY_SITE_STOCK_LIMIT)
                         m_map[posX][posY].m_objectMetadata += Random(3, 6);
                     break;
                 default:
@@ -4170,8 +4160,7 @@ void game::ProcessOnMapHeroes(void) {
         for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
             loc = &m_map[posX][posY];
             if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
-                extra =
-                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(loc->m_objectMetadata)]);
+                extra = static_cast<mapHeroExtra*>(ppMapExtra[loc->m_objectMetadata]);
                 theHeroEntry = GetHero(extra->heroId);
                 for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                     theHeroEntry->m_army.m_creatureCounts[i] = extra->troopCounts[i];
@@ -4255,8 +4244,7 @@ void game::CheckHeroConsistency(void) {
         for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
             cell = gpAdvManager->GetCell(x, y);
             if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                if (static_cast<u8>(cell->m_objectMetadata) >= 0
-                    && static_cast<u8>(cell->m_objectMetadata) < GAME_HERO_COUNT) {
+                if (cell->m_objectMetadata >= 0 && cell->m_objectMetadata < GAME_HERO_COUNT) {
                     boardHro = GetHero(cell->m_objectMetadata);
                     if (boardHro->m_owner < 0 || boardHro->m_owner > GAME_PLAYER_COUNT - 1) {
                         if (boardHro->m_locationType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {

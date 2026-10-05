@@ -9,20 +9,27 @@ BASE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Base'
 SOURCE = 'E:\Users\igorl\VSS\HMM\HMM1\Source\Game'
 
 [flags]
+# Every profile defines NO_STRICT. VC6's WINDEF.H defines STRICT unless
+# NO_STRICT is set, and DECLARE_HANDLE depends on it: without STRICT a handle is
+# `typedef HANDLE name` (void*), with it a distinct `struct name##__ *`. This
+# changes mangling, not code; both are 32-bit pointers. The HoMM2 PoL 2.0
+# CodeView records the Buka lineage's choice (?hmnuDflt@@3PAXA,
+# ?KBChangeMenu@@YIXPAX@Z), and HoMM1's claimed names use the same PAX handles.
+#
 # Unoptimized VC6 SP5 baseline. /Ob1 is directly measured in the Audiere
 # routines; the remaining units still require individual retail comparison.
-cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6"]
+cpp_buka = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G6", "/DNO_STRICT"]
 # SAMPLE's full constructor (including switch tables) and destructor agree
 # under /G5; /G6 inserts two extra short-argument register clears.
-cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5"]
+cpp_buka_g5 = ["/nologo", "/c", "/Od", "/Ob1", "/GX", "/MT", "/G5", "/DNO_STRICT"]
 # FINDPATH and SEARCH retain optimization; automatic inlining is proved by
 # FindCombatPath containing the Clear and QuickDistance instruction bodies.
-cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5"]
+cpp_buka_o2_g5 = ["/nologo", "/c", "/O2", "/Ob2", "/GX", "/MT", "/G5", "/DNO_STRICT"]
 # REQUEST: retail places gFRDummy's "" between UpdateMapInfo's and ShowMapInfo's
 # .bss literals (source order). /Ob1 emits file-scope initializer literals before
 # every function literal; /Ob2 emits them in source order. Code is unchanged and
 # all 13 REQUEST bodies are exact; KB regresses under /Ob2 (data-first order).
-cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5"]
+cpp_buka_ob2_g5 = ["/nologo", "/c", "/Od", "/Ob2", "/GX", "/MT", "/G5", "/DNO_STRICT"]
 
 [[unit]]
 unit = "BASE/BITS"

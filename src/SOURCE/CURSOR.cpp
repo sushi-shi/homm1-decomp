@@ -229,7 +229,7 @@ i16 advManager::GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction) {
                 return 0;
         }
     } else {
-        return static_cast<i32>(direction) * static_cast<i32>(CURSOR_FRAMES_PER_DIRECTION);
+        return static_cast<i32>(direction) * CURSOR_FRAMES_PER_DIRECTION;
     }
 }
 

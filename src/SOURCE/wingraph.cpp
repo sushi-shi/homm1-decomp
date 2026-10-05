@@ -194,7 +194,7 @@ void DDInitGraphics(void) {
 // evidence: graph:1;base=0.713701;margin=0.241032;shape=0.479;size=0.871;calls=0.917;strings=ResetDisplayMode;alternate=pol20:int DDAppPaint(void *, void *)@0x00035601
 VA(0x004669ef, 0x4e4)
 #line 161 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\wingraph.cpp"
-BOOL DDAppPaint(void* window, void* paintDC) {
+BOOL DDAppPaint(HWND window, HDC paintDC) {
     i32 srcWidth;
     i32 srcHeight;
     i32 srcTop;
@@ -210,8 +210,8 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         return TRUE;
     {
         gWinGraphBusy = TRUE;
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        GetClientRect(static_cast<HWND>(window), &gDDClientRect);
+        paintDC = BeginPaint(window, &ps);
+        GetClientRect(window, &gDDClientRect);
         if (ps.rcPaint.right == 0 || ps.rcPaint.bottom == 0)
             ps.rcPaint = gDDClientRect;
         if (ps.rcPaint.right < WINGRAPH_PAINT_X_END)
@@ -302,7 +302,7 @@ BOOL DDAppPaint(void* window, void* paintDC) {
         if (gDDResult != DD_OK)
 #line 287
             DDSD(gDDResult, __FILE__, __LINE__);
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
         gWinGraphBusy = FALSE;
     }
     return TRUE;
@@ -727,7 +727,7 @@ void WGInitGraphics() {
         WinGCreateBitmap(hdcImage, reinterpret_cast<LPBITMAPINFO>(&screenImage), &screenImage.bits);
     screenImage.header.biSizeImage = screenImage.header.biWidth * screenImage.header.biHeight;
     screenImage.header.biSizeImage *= Orientation;
-    gbmOldMonoBitmap = static_cast<HBITMAP>(SelectObject(hdcImage, bitmap));
+    gbmOldMonoBitmap = SelectObject(hdcImage, bitmap);
     gInitWin = screenImage.bits;
     PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
 }
@@ -838,7 +838,7 @@ void WGInitializePalette() {
 // Buka 2.1 supplies the WinG paint sequence and local lifetimes. HoMM1's
 // client-to-game transform uses its pinned 640x480 viewport.
 VA(0x00467f3d, 0x1b7)
-BOOL WGAppPaint(void* window, void* paintDC) {
+BOOL WGAppPaint(HWND window, HDC paintDC) {
     RECT rect;
     i8 unusedChar;
     i32 spareDword;
@@ -852,10 +852,10 @@ BOOL WGAppPaint(void* window, void* paintDC) {
 
     unusedChar = 0;
     if (screenImage.bits != NULL) {
-        paintDC = BeginPaint(static_cast<HWND>(window), &ps);
-        SelectPalette(static_cast<HDC>(paintDC), hpalApp, FALSE);
-        RealizePalette(static_cast<HDC>(paintDC));
-        GetClientRect(static_cast<HWND>(window), &rect);
+        paintDC = BeginPaint(window, &ps);
+        SelectPalette(paintDC, hpalApp, FALSE);
+        RealizePalette(paintDC);
+        GetClientRect(window, &rect);
         blitX = 0;
         srcLeft = blitX;
         destTop = 0;
@@ -875,7 +875,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             destTop = ps.rcPaint.top;
             destHeight = ps.rcPaint.bottom - destTop + 1;
             WinGBitBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -886,7 +886,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
             );
         } else {
             WinGStretchBlt(
-                static_cast<HDC>(paintDC),
+                paintDC,
                 blitX,
                 destTop,
                 blitWidth,
@@ -898,7 +898,7 @@ BOOL WGAppPaint(void* window, void* paintDC) {
                 CLIENT_TO_GAME_Y(destHeight)
             );
         }
-        EndPaint(static_cast<HWND>(window), &ps);
+        EndPaint(window, &ps);
     }
     return TRUE;
 }
@@ -996,7 +996,7 @@ void InitGraphics() {
 
 // Buka's graphics dispatcher returns the selected backend's paint result.
 VA(0x004682ab, 0x30)
-BOOL AppPaint(void* window, void* paintDC) {
+BOOL AppPaint(HWND window, HDC paintDC) {
     if (gGraphicsType == WINGRAPH_GRAPHICS_WING)
         return WGAppPaint(window, paintDC);
     else

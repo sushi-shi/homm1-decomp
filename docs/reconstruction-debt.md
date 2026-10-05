@@ -14,7 +14,7 @@ the local spellings are re-fitted with the
 ```sh
 rg -o 'reinterpret_cast<[^>]+>' src include      # split: Win32 types (LP*, H*, P*, *PROC) vs game types
 rg -c 'static_cast<' src include
-rg -w goto src include
+rg -w goto src include                           # two hits are comments in Icon2bc.asm
 rg -c '\bunion\b' src include
 clang-cl /Zs -Wno-everything -Wunused-variable ...  # dead locals (#line blanked)
 rg '\bm_(unknown|unk|pad|field)[A-Za-z0-9_]*' include
@@ -92,6 +92,21 @@ evidence, so they stay placeholders until a reader is found.
 used them. A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
 
+The 204 C++ statements (the other two `rg` hits are comments in
+`src/BASE/Icon2bc.asm`) fall into these classes. The counts are from a source
+scan, and each class was checked by compiling a structured replacement:
+
+| Class | Count | Structured form tried | Result |
+| --- | ---: | --- | --- |
+| Forward skip to a shared tail outside a `switch` | 76 | `combatManager::GetControl` early exit as `else if` | 1056/1057. The nested `else` exits become a chain of `jmp`s (`jmp +2; jmp back`), while retail jumps once, directly to the tail. |
+| Shared tail at the end of `switch` cases | 73 | (not tried) | Each case jumps to one common tail. Duplicating the tail adds code, and moving it after the `switch` changes the `break` targets. |
+| Backward (retry or re-entry) | 24 | (not tried) | These re-enter the middle of a block, and no loop gives the same entry point. |
+| Jump to the next statement | 17 | `KB.cpp` `goto L; L:` removed | 1056/1057. VC6 `/Od` emits a `jmp` for every `goto`, even one to the next instruction. |
+| Single-loop exit | 12 | `fileRequester::fileRequester` `goto insert` and `ReceiveRemoteData` loop `goto done` as `break` | 1056/1057 for each. `break` emits a different jump than the retail `goto`. |
+| Multi-level loop exit | 2 | (no structured form) | `break` leaves only the inner loop. |
+
+Every goto is kept because retail's block layout requires it.
+
 **Dead locals.** Every never-referenced local must correspond to an
 unreferenced slot in retail's `/Od` frame (a hole between referenced slots or a
 larger frame). Names chosen only to fill frames are reviewed against donor
@@ -107,7 +122,31 @@ unread slot in retail's frame.
 
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
-declared type.
+declared type. A libclang scan compared each cast's operand type with its target
+type. The review removed 108 lines of casts, and each removal kept all 1057
+bodies exact:
+
+- Win32 handles. The menu, instance, window and DC handles were declared
+  `void*`, so every API call cast them back. All units now build with
+  `/DNO_STRICT` (`config/units.toml`), which makes VC6's handles `void*` as in
+  the HoMM2 Buka lineage. The owners are typed `HMENU`, `HINSTANCE`, `HWND`,
+  `HDC` and `HANDLE`, the HoMM2 donor's spellings, and the 61 casts are gone.
+  Mangled names keep the `PAX` handles the claims already used. The retail
+  data identities that had recorded the STRICT spelling (`hwndApp`, `hpalApp`,
+  `hdcImage`, the mouse cursor and bitmap tables) were renamed to match.
+- Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
+  a `float` difference.
+- `CONST` enum values converted to `int` or a narrower integer. These enums are
+  unscoped in both views, so the cast does nothing.
+
+The remaining casts are:
+
+- Float-to-integer conversions. The HoMM2 donor spells these the same way.
+- `void*` results of `malloc`, `GlobalAlloc` and the resource cache. C++
+  requires these casts.
+- Narrowing stores and `i8` ternary arms whose byte width retail shows.
+- `char` to `u8` code-page comparisons.
+- Casts of strict-domain values, which are `enum class` in the Clang view.
 
 **Verify-board text debt.** `homm1 verify board` ratchets several textual
 metrics, and their committed floors are 0:
