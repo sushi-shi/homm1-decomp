@@ -29,7 +29,10 @@ rg 'va_start' src
 types at API boundaries are expected. Game-type casts mark data whose type is
 not yet modelled:
 
-- the icon frame directory: `IconEntry*` views of `icon::m_data` resource bytes;
+- the icon frame directory (resolved): `icon` holds its loaded ICN resource in
+  a union of the raw bytes (`m_data`), the leading `IconEntry` directory
+  (`m_frames`) and the font code's word view (`m_frameWords`). Its 26 casts are
+  gone and the code is unchanged;
 - network packets: `char` buffers viewed as `RemoteMessage`,
   `combatRemoteMessage`, `heroRemoteMessage` and fragment records;
 - remaining byte, word and integer views.

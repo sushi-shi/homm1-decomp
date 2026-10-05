@@ -230,7 +230,6 @@ void PostprocessIcon(icon*) {}
 
 #include <BASE/bitmap.h>
 #include <BASE/icon.h>
-#include <BASE/IconEntry.h>
 #include <BASE/Iconm2b.h>
 
 #include <string.h>
@@ -251,9 +250,7 @@ void ClippedMonoIconToBitmap(
 ) {
     i32 clipRight = clipX + clipW - 1;
     i32 clipLast = clipY + clipH - 1;
-    IconEntry* entry =
-        reinterpret_cast<IconEntry*>(sourceIcon->m_data)
-        + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
+    IconEntry* entry = sourceIcon->m_frames + frame;
     u8* source = sourceIcon->m_data + entry->srcOffset;
     i32 curX = x + entry->x;
     i32 curY = y + entry->y;
@@ -343,8 +340,7 @@ void ClipIconToBitmap(
     i32 clipW,
     i32 clipH
 ) {
-    sClipEntry = reinterpret_cast<IconEntry*>(sourceIcon->m_data)
-                 + frame; // byte-evidenced: packed frame directory decoded from resource bytes.
+    sClipEntry = sourceIcon->m_frames + frame;
     sClipSource = sourceIcon->m_data + sClipEntry->srcOffset;
     sClipX = sClipRowStart = x + sClipEntry->x;
     sClipY = y + sClipEntry->y;

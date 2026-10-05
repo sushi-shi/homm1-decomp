@@ -25,9 +25,9 @@ Manually maintained cleanup checklist; see the [review rules and measuring
 commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
 review inputs, not defect totals. Preserve banked matches.
 
-- [ ] Review game-type `reinterpret_cast`: **115 sites** (26 icon frame
-  directory, 40 network packet views, 49 other byte/word/integer views); 69
-  further casts are Win32 API boundaries.
+- [ ] Review game-type `reinterpret_cast`: **86 sites** (40 network packet
+  views, 46 other byte/word/integer views; the icon frame directory is typed);
+  69 further casts are Win32 API boundaries.
 - [ ] Replace manual byte layouts with named types: font glyph word view
   (**6 sites**) and literal-index packet bytes.
 - [x] Negative offsets: **0 sites** (no negative indexing, `this` arithmetic or

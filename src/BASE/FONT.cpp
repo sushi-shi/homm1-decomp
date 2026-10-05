@@ -45,9 +45,7 @@ i32 RemapCyrillicCharacter(i32 character) {
 
 VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
-    i16* entries = reinterpret_cast<i16*>(
-        m_glyphIcon->m_data
-    ); // byte-evidenced: word view of the packed IconEntry directory.
+    i16* entries = m_glyphIcon->m_frameWords;
     i32 glyph = 0;
     i16 pos = x;
     i16 index = 0;
@@ -91,9 +89,7 @@ void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16
     char v;
 
     textLen = strlen(str);
-    theWidths = reinterpret_cast<i16*>(
-        m_glyphIcon->m_data
-    ); // byte-evidenced: word view of the packed IconEntry directory.
+    theWidths = m_glyphIcon->m_frameWords;
     spaceCharValue = ' ';
     bestDrawX = 0;
     u = 0;
@@ -165,9 +161,7 @@ i32 font::LineLength(char* str, i16 maxW) {
     i16 thePos;
     i16 theLen = strlen(str);
     i32 baseGlyph;
-    i16* widths = reinterpret_cast<i16*>(
-        m_glyphIcon->m_data
-    ); // byte-evidenced: word view of the packed IconEntry directory.
+    i16* widths = m_glyphIcon->m_frameWords;
     char charVal = ' ';
     i32 z = 0;
     i16 t = 0;
@@ -236,9 +230,7 @@ i32 font::LineWidth(char* text) {
     char* p;
 
     theLen = strlen(text);
-    table = reinterpret_cast<i16*>(
-        m_glyphIcon->m_data
-    ); // byte-evidenced: word view of the packed IconEntry directory.
+    table = m_glyphIcon->m_frameWords;
     oldSpare = 0;
     newSpare = 0;
     mySpare = 0;

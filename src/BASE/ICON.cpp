@@ -6,7 +6,6 @@
 #include <BASE/icon.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
-#include <BASE/IconEntry.h>
 #include <BASE/Iconm2b.h>
 #include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
@@ -45,36 +44,20 @@ void icon::DrawToBuffer(
     if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (mode != ICON_DRAW_OFFSET_FULL)
-                m_drawRight =
-                    x
-                    - (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                       >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
+                m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
-                m_drawRight = x
-                              - reinterpret_cast<IconEntry*>(m_data)[frame]
-                                    .x; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawLeft = m_drawRight
-                         - reinterpret_cast<IconEntry*>(m_data)[frame]
-                               .w; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawTop = y
-                        + reinterpret_cast<IconEntry*>(m_data)[frame].y; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawBottom = m_drawTop
-                           + reinterpret_cast<IconEntry*>(m_data)[frame].h; // byte-evidenced: packed frame entry in resource bytes.
+                m_drawRight = x - m_frames[frame].x;
+            m_drawLeft = m_drawRight - m_frames[frame].w;
+            m_drawTop = y + m_frames[frame].y;
+            m_drawBottom = m_drawTop + m_frames[frame].h;
         } else {
             if (mode != ICON_DRAW_OFFSET_FULL)
-                m_drawLeft = x
-                             + (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                                >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
+                m_drawLeft = x + (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
-                m_drawLeft = x
-                             + reinterpret_cast<IconEntry*>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawRight = m_drawLeft
-                          + reinterpret_cast<IconEntry*>(m_data)[frame]
-                                .w; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawTop = y
-                        + reinterpret_cast<IconEntry*>(m_data)[frame].y; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawBottom = m_drawTop
-                           + reinterpret_cast<IconEntry*>(m_data)[frame].h; // byte-evidenced: packed frame entry in resource bytes.
+                m_drawLeft = x + m_frames[frame].x;
+            m_drawRight = m_drawLeft + m_frames[frame].w;
+            m_drawTop = y + m_frames[frame].y;
+            m_drawBottom = m_drawTop + m_frames[frame].h;
         }
         if (gSaveBiggestExtent != 0) {
             if (m_drawLeft < giMinExtentX)
@@ -143,10 +126,10 @@ void icon::FillToBuffer(
 ) {
     if (orientation == ICON_DRAW_NORMAL) {
         if (gLimitToExtent) {
-            m_drawLeft = x + reinterpret_cast<IconEntry*>(m_data)[frame].x;
-            m_drawRight = m_drawLeft + reinterpret_cast<IconEntry*>(m_data)[frame].w;
-            m_drawTop = y + reinterpret_cast<IconEntry*>(m_data)[frame].y;
-            m_drawBottom = m_drawTop + reinterpret_cast<IconEntry*>(m_data)[frame].h;
+            m_drawLeft = x + m_frames[frame].x;
+            m_drawRight = m_drawLeft + m_frames[frame].w;
+            m_drawTop = y + m_frames[frame].y;
+            m_drawBottom = m_drawTop + m_frames[frame].h;
             if (!gCurrArmyDrawn || m_drawLeft > giMaxExtentX || m_drawRight < giMinExtentX
                 || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY)
                 return;
@@ -176,36 +159,20 @@ void icon::DimToBuffer(
     if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
             if (mode != ICON_DRAW_OFFSET_FULL)
-                m_drawRight =
-                    x
-                    - (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                       >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
+                m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
-                m_drawRight = x
-                              - reinterpret_cast<IconEntry*>(m_data)[frame]
-                                    .x; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawLeft = m_drawRight
-                         - reinterpret_cast<IconEntry*>(m_data)[frame]
-                               .w; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawTop = y
-                        + reinterpret_cast<IconEntry*>(m_data)[frame].y; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawBottom = m_drawTop
-                           + reinterpret_cast<IconEntry*>(m_data)[frame].h; // byte-evidenced: packed frame entry in resource bytes.
+                m_drawRight = x - m_frames[frame].x;
+            m_drawLeft = m_drawRight - m_frames[frame].w;
+            m_drawTop = y + m_frames[frame].y;
+            m_drawBottom = m_drawTop + m_frames[frame].h;
         } else {
             if (mode != ICON_DRAW_OFFSET_FULL)
-                m_drawLeft = x
-                             + (reinterpret_cast<IconEntry*>(m_data)[frame].x
-                                >> ICON_DRAW_QUARTER_OFFSET_SHIFT); // byte-evidenced: packed frame entry in resource bytes.
+                m_drawLeft = x + (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
-                m_drawLeft = x
-                             + reinterpret_cast<IconEntry*>(m_data)[frame].x; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawRight = m_drawLeft
-                          + reinterpret_cast<IconEntry*>(m_data)[frame]
-                                .w; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawTop = y
-                        + reinterpret_cast<IconEntry*>(m_data)[frame].y; // byte-evidenced: packed frame entry in resource bytes.
-            m_drawBottom = m_drawTop
-                           + reinterpret_cast<IconEntry*>(m_data)[frame].h; // byte-evidenced: packed frame entry in resource bytes.
+                m_drawLeft = x + m_frames[frame].x;
+            m_drawRight = m_drawLeft + m_frames[frame].w;
+            m_drawTop = y + m_frames[frame].y;
+            m_drawBottom = m_drawTop + m_frames[frame].h;
         }
         if (gSaveBiggestExtent != 0) {
             if (m_drawLeft < giMinExtentX)

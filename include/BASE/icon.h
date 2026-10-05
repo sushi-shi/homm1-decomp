@@ -4,6 +4,7 @@
 // 8 methods, 0 own-virtual, 0 static data.
 
 #include <BASE/resource.h>
+#include <BASE/IconEntry.h>
 
 // forward declarations:
 struct SLimitData;
@@ -38,7 +39,14 @@ H1_ENUM_CONST_END(IconDrawOffsetConstant)
 class icon : public resource {
 public:
     i16 m_frameCount;
-    u8* m_data;
+    // The loaded ICN resource: a leading directory of m_frameCount packed
+    // IconEntry records, then the frame pixels each srcOffset addresses.
+    // Buka's font code reads the directory as words (font.h).
+    union {
+        u8* m_data;
+        IconEntry* m_frames;
+        i16* m_frameWords;
+    };
     i16 m_drawLeft;
     i16 m_drawRight;
     i16 m_drawTop;
