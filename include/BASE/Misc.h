@@ -10,8 +10,4 @@ class bitmap;
 
 void SetPalette(i8* paletteData, i32 updateDisplay);
 
-H1_ENUM_CONST_BEGIN(MiscLogConstant)
-    MISC_FORCED_DEBUG_LEVEL = 9
-H1_ENUM_CONST_END(MiscLogConstant)
-
 #endif

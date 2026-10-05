@@ -611,7 +611,7 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     read(oldHandle, m_playerDead, sizeof(m_playerDead));
     read(oldHandle, theHumans, GAME_PLAYER_COUNT);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
-        if ((theHumans[ix] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
+        if ((theHumans[ix] || giDebugLevel >= GAME_DEBUG_LEVEL_ALL_HUMAN_MIN) && numHumans < giNumHumanPlayers) {
             numHumans++;
             gbHumanPlayer[ix] = 1;
         } else {
@@ -2751,7 +2751,7 @@ void game::Overview(void) {
         }
     }
 
-    gpWindowManager->UpdateScreenRegion(0, 0, 640, 480);
+    gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     baseWin = new heroWindow(0, 0, "overwind.bin");
     if (!baseWin)
         MemError();

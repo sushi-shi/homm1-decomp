@@ -1,7 +1,5 @@
-"""homm1.verify.constant_context - shared AST destination identities.
-
-Ported from Gruntz `7d4bd55b9` (scripts/gruntz/verify/constant_context.py)
-for `homm1 verify constants` and `homm1 verify enum-reuse`.
+"""homm1.verify.constant_context - shared AST destination identities for
+`homm1 verify constants` and `homm1 verify enum-reuse`.
 
 Keys name declarations, not their display names or numeric values.  Operations
 between a value and its destination remain in the key: a bit mask used to build

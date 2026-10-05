@@ -134,7 +134,7 @@ void army::LoadResources(void) {
     for (idx = 0; idx < ARMY_SAMPLE_COUNT; idx++) {
         if (m_samples[idx]) {
             m_samples[idx]->m_playbackData.repeat = 0;
-            m_samples[idx]->m_playbackData.volume = ARMY_SAMPLE_VOLUME;
+            m_samples[idx]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
         }
     }
 }
@@ -513,7 +513,7 @@ void army::Walk(i16 direction, i8 standAfter, i8 continued) {
             rectMaxX = giMaxExtentX;
         if (giMaxExtentY > ourMaxY)
             ourMaxY = giMaxExtentY;
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         gpWindowManager
             ->UpdateScreenRegion(col, ourMinY, rectMaxX - col + 1, ourMaxY - ourMinY + 1);
@@ -703,7 +703,7 @@ void army::SpecialAttack(void) {
             clipTop = inFlightY - ARMY_MISSILE_HALF_HEIGHT;
         if (inFlightY + ARMY_MISSILE_HALF_HEIGHT > maxY)
             maxY = inFlightY + ARMY_MISSILE_HALF_HEIGHT;
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         UPDATE_INCLUSIVE_REGION(clipLeft, clipTop, maxX, maxY);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 15;
         oldTipX = inFlightX;

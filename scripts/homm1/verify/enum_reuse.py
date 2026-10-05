@@ -22,7 +22,7 @@ view is a fatal coverage hole rather than a silently incomplete report.
 
 Each evaluated member also records its semantic use contexts (the declaration
 identity of the field, parameter, comparison operand, switch subject, array or
-return that receives it; ported from Gruntz `7d4bd55b9`), so the collision and
+return that receives it), so the collision and
 pair reports rank domains that share producers/consumers above numeric overlap.
 """
 

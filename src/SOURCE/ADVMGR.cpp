@@ -447,7 +447,7 @@ void advManager::GetCursorSampleSet(i32 sampleSet) {
     for (i32 index = 0; index < ADVMGR_CURSOR_SAMPLE_COUNT; ++index) {
         sprintf(gText, "wsnd%1d%1d.82M", sampleSet, suffixSample[index]);
         m_cursorSamples[index] = gpResourceManager->GetSample(gText);
-        m_cursorSamples[index]->m_playbackData.volume = CURSOR_SAMPLE_VOLUME;
+        m_cursorSamples[index]->m_playbackData.volume = SAMPLE_VOLUME_FULL;
     }
 }
 
@@ -6101,7 +6101,7 @@ void advManager::SummonBoat(void) {
         heroSlot = gpCurPlayer->CurrentHero();
         for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
             if (gpGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                && gpGame->m_boats[slotIndex].heroId == (heroSlot | SUMMON_OCCUPIED_FLAG)) {
+                && gpGame->m_boats[slotIndex].heroId == (heroSlot | BOAT_OCCUPIED_FLAG)) {
                 foundBoat = 1;
                 break;
             }
@@ -6109,7 +6109,7 @@ void advManager::SummonBoat(void) {
         if (!foundBoat) {
             for (slotIndex = 0; slotIndex < GAME_BOAT_COUNT; slotIndex++) {
                 if (gpGame->m_boatSlots[slotIndex] != GAME_TABLE_FREE
-                    && (gpGame->m_boats[slotIndex].heroId & SUMMON_OCCUPIED_FLAG)
+                    && (gpGame->m_boats[slotIndex].heroId & BOAT_OCCUPIED_FLAG)
                     && gpGame->m_boats[slotIndex].owner == giCurPlayer) {
                     foundBoat = 1;
                     break;

@@ -197,8 +197,8 @@ void advManager::DrawCursor(void) {
             if (!EveryOther)
                 PlaySample(
                     m_cursorSamples[CELL_TERRAIN(GetCell(
-                        m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
-                        m_mapOriginY + CURSOR_MAP_DRAW_OFFSET
+                        m_mapOriginX + ADVMGR_VIEW_CENTER,
+                        m_mapOriginY + ADVMGR_VIEW_CENTER
                     ))]
                 );
         }
@@ -496,8 +496,8 @@ mapCell* advManager::MoveHero(
             0;
     m_updateMinX = m_updateMinY = 0;
     gpGame->SetVisibility(
-        m_mapOriginX + xInc + CURSOR_MAP_DRAW_OFFSET,
-        m_mapOriginY + yInc + CURSOR_MAP_DRAW_OFFSET,
+        m_mapOriginX + xInc + ADVMGR_VIEW_CENTER,
+        m_mapOriginY + yInc + ADVMGR_VIEW_CENTER,
         giCurPlayer,
         gHeroScoutRadius[champion->m_heroClass]
     );
@@ -567,11 +567,11 @@ mapCell* advManager::MoveHero(
     if (processEvent && stopAfterMove && ComboDraw(0))
         UpdateScreen(0, 0);
     SetEnvironmentOrigin(
-        m_mapOriginX + CURSOR_MAP_DRAW_OFFSET,
-        m_mapOriginY + CURSOR_MAP_DRAW_OFFSET,
+        m_mapOriginX + ADVMGR_VIEW_CENTER,
+        m_mapOriginY + ADVMGR_VIEW_CENTER,
         0
     );
-    inc = GetCell(m_mapOriginX + CURSOR_MAP_DRAW_OFFSET, m_mapOriginY + CURSOR_MAP_DRAW_OFFSET)
+    inc = GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)
               ->m_tileIndex;
     if (giGroundToTerrain[inc] != m_currentTerrain && inc % MAP_CELL_TILES_PER_TERRAIN < 4) {
         m_currentTerrain = giGroundToTerrain[inc];
@@ -748,9 +748,9 @@ i16 advManager::ValidMove(i16 direction) {
     firstDirY = normalDirTable[direction].y;
     newX = m_mapOriginX + curDirX;
     newY = m_mapOriginY + firstDirY;
-    if (newX < -CURSOR_MAP_DRAW_OFFSET || newX > MAP_CELL_GRID_SIZE - CURSOR_MAP_DRAW_OFFSET - 1)
+    if (newX < -ADVMGR_VIEW_CENTER || newX > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
         return 0;
-    if (newY < -CURSOR_MAP_DRAW_OFFSET || newY > MAP_CELL_GRID_SIZE - CURSOR_MAP_DRAW_OFFSET - 1)
+    if (newY < -ADVMGR_VIEW_CENTER || newY > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)
         return 0;
     destCell = &m_mapData[newX + m_cursorMapX][newY + m_cursorMapY];
     if (destCell->m_secondaryTrigger & MAP_CELL_SECONDARY_BLOCKED)

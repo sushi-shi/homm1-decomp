@@ -325,12 +325,10 @@ H1_ENUM_CONST_BEGIN(AIHourGlassConstant)
 H1_ENUM_CONST_END(AIHourGlassConstant)
 
 // ValueOfEventAtPosition's battle odds: CERTAIN is a 100% chance; debug
-// level EVENT traces events and turns into BATTLE tracing for column
-// TRACE_COLUMN.
+// level AI_DEBUG_LEVEL_EVENT (KB.h DebugLevel) turns into BATTLE tracing for
+// column TRACE_COLUMN.
 H1_ENUM_CONST_BEGIN(AIEventValueConstant)
     AI_CHANCE_CERTAIN = 100,
-    AI_DEBUG_LEVEL_EVENT = 5,
-    AI_DEBUG_LEVEL_BATTLE = 9,
     AI_DEBUG_TRACE_COLUMN = 15
 H1_ENUM_CONST_END(AIEventValueConstant)
 

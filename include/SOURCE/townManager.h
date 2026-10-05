@@ -29,8 +29,6 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_STATUS_REGION_HEIGHT = 0x10,
     TOWN_NAME_TEXT_CONTROL = 0x25,
     TOWN_REDRAW_INTERVAL = 0x96,
-    // glTimers slot the town screen and the tavern animate on.
-    TOWN_FRAME_TIMER_SLOT = 0,
     TOWN_FIRST_FACTION_OBJECT = 5,
     TOWN_CREST_NO_HERO_OFFSET = 0x10,
     TOWN_MANAGER_MESSAGE_MASK = 0x800,

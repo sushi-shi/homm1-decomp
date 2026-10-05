@@ -157,7 +157,7 @@ VA(0x00447914, 0x3d)
 void AbsAiPrint(char* text) {
     i32 saved;
 
-    if (giDebugLevel == 0)
+    if (giDebugLevel == DEBUG_LEVEL_NONE)
         return;
     saved = giDebugLevel;
     giDebugLevel = MISC_FORCED_DEBUG_LEVEL;
@@ -245,7 +245,7 @@ void ShowStatus() {}
 // twenty screen rows; retail gates it on the second debug level.
 VA(0x00447c70, 0x7e)
 void philAI::ShowDebugText(char* text) {
-    if (giDebugLevel >= 2) {
+    if (giDebugLevel >= AI_DEBUG_LEVEL_STATUS_TEXT_MIN) {
         FillBitmapArea(gpWindowManager->m_screen, 0, 460, LOGICAL_SCREEN_WIDTH, 20, 0);
         m_debugFont->DrawBoundedString(text, 0, 464, LOGICAL_SCREEN_WIDTH, 16, 1, FONT_ALIGN_LEFT);
         BlitBitmapToScreen(gpWindowManager->m_screen, 0, 460, LOGICAL_SCREEN_WIDTH, 20, 0, 460);

@@ -498,7 +498,7 @@ i16 fileRequester::Main(tag_message& message) {
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             if (key < giNumHumanPlayers
-                && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH) {
+                && giDebugLevel < FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN) {
                 sprintf(gText, localization::Tr("file.humans.minimum"), key, giNumHumanPlayers);
                 NormalDialog(
                     gText,

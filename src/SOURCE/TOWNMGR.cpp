@@ -611,7 +611,7 @@ i16 townManager::Main(struct tag_message& message) {
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
                             m_coverWindow =
-                                new heroWindow(0, 0x100, 0x280, 6, WINDOW_FLAG_SAVE_BACKGROUND);
+                                new heroWindow(0, 0x100, LOGICAL_SCREEN_WIDTH, 6, WINDOW_FLAG_SAVE_BACKGROUND);
                             if (m_coverWindow == NULL)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -1058,7 +1058,7 @@ void townManager::RedrawTownScreen(void) {
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0);
-    gpWindowManager->UpdateScreenRegion(0, 0x100, 0x280, 0x1e0);
+    gpWindowManager->UpdateScreenRegion(0, 0x100, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     m_bankBox->Update();
 }
 

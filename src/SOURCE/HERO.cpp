@@ -392,7 +392,7 @@ void HeroMessageUpdate(char* text) {
     message.text = text;
     gheroWin->BroadcastMessage(message);
     gheroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
-    gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
+    gpWindowManager->UpdateScreenRegion(0, 459, LOGICAL_SCREEN_WIDTH, 20);
 }
 
 // donor PoL RVA 0x0006cb33; preferred Buka symbol ?HeroScreenUpdate@hero@@QAEXXZ

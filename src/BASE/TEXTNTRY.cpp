@@ -180,24 +180,24 @@ i16 textEntryWidget::Main(tag_message& message) {
                     event = gpInputManager->GetEvent();
                     if (event.type == MESSAGE_KEY_DOWN) {
                         switch (event.keyCode) {
-                            case TEXT_ENTRY_KEY_ESCAPE:
+                            case INPUT_SCAN_ESCAPE:
                                 strcpy(edit, original);
                                 done++;
                                 break;
-                            case TEXT_ENTRY_KEY_DELETE:
+                            case INPUT_SCAN_NUMPAD_DELETE:
                                 if (m_cursorPosition < strlen(edit)) {
                                     strcpy(swap, edit + m_cursorPosition + 1);
                                     strcpy(edit + m_cursorPosition, swap);
                                 }
                                 break;
-                            case TEXT_ENTRY_KEY_LEFT:
+                            case INPUT_SCAN_NUMPAD_4:
                                 if (m_cursorPosition > 0) {
                                     m_cursorPosition--;
                                     if (m_cursorPosition < m_displayOffset)
                                         m_displayOffset = m_cursorPosition;
                                 }
                                 break;
-                            case TEXT_ENTRY_KEY_RIGHT:
+                            case INPUT_SCAN_NUMPAD_6:
                                 if (m_cursorPosition < strlen(edit))
                                     m_cursorPosition++;
                                 break;
@@ -205,7 +205,7 @@ i16 textEntryWidget::Main(tag_message& message) {
                                 gpInputManager->AsciiConvert(event);
                                 if (event.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
                                     done++;
-                                } else if (event.keyCode == TEXT_ENTRY_KEY_BACKSPACE) {
+                                } else if (event.keyCode == INPUT_ASCII_DELETE) {
                                     if (m_cursorPosition > 0) {
                                         strcpy(swap, edit + m_cursorPosition);
                                         strcpy(edit + m_cursorPosition - 1, swap);
@@ -222,34 +222,34 @@ i16 textEntryWidget::Main(tag_message& message) {
                                                    & (INPUT_SCAN_CODE_MASK << INPUT_KEY_SCAN_SHIFT))
                                                   >> INPUT_KEY_SCAN_SHIFT;
                                         switch (key) {
-                                            case TEXT_ENTRY_KEYPAD_0:
+                                            case INPUT_SCAN_NUMPAD_0:
                                                 typed = '0';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_1:
+                                            case INPUT_SCAN_NUMPAD_1:
                                                 typed = '1';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_2:
+                                            case INPUT_SCAN_NUMPAD_2:
                                                 typed = '2';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_3:
+                                            case INPUT_SCAN_NUMPAD_3:
                                                 typed = '3';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_4:
+                                            case INPUT_SCAN_NUMPAD_4:
                                                 typed = '4';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_5:
+                                            case INPUT_SCAN_NUMPAD_5:
                                                 typed = '5';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_6:
+                                            case INPUT_SCAN_NUMPAD_6:
                                                 typed = '6';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_7:
+                                            case INPUT_SCAN_NUMPAD_7:
                                                 typed = '7';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_8:
+                                            case INPUT_SCAN_NUMPAD_8:
                                                 typed = '8';
                                                 break;
-                                            case TEXT_ENTRY_KEYPAD_9:
+                                            case INPUT_SCAN_NUMPAD_9:
                                                 typed = '9';
                                                 break;
                                         }

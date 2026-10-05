@@ -470,11 +470,11 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             removeObj = 1;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
-                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             SetEnvironmentOrigin(
-                m_mapOriginX + ENVIRONMENT_BORDER,
-                m_mapOriginY + ENVIRONMENT_BORDER,
+                m_mapOriginX + ADVMGR_VIEW_CENTER,
+                m_mapOriginY + ADVMGR_VIEW_CENTER,
                 1
             );
             break;
@@ -1237,8 +1237,8 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
         gpGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
         if (bShowIt)
             SetEnvironmentOrigin(
-                m_mapOriginX + ENVIRONMENT_BORDER,
-                m_mapOriginY + ENVIRONMENT_BORDER,
+                m_mapOriginX + ADVMGR_VIEW_CENTER,
+                m_mapOriginY + ADVMGR_VIEW_CENTER,
                 1
             );
     }
@@ -2199,8 +2199,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeEvent = 1;
-            gpGame->m_mapSounds[m_mapOriginX + ENVIRONMENT_BORDER]
-                               [m_mapOriginY + ENVIRONMENT_BORDER] = MAP_SOUND_NONE;
+            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {

@@ -56,11 +56,10 @@ H1_ENUM_CONST_BEGIN(AdventureHeroConstant)
     INVALID_HERO = -1
 H1_ENUM_CONST_END(AdventureHeroConstant)
 
-// The adventure screen's animation clock: glTimers slot FRAME_TIMER_SLOT
+// The adventure screen's animation clock (KB.h ADVENTURE_FRAME_TIMER_SLOT)
 // re-armed TIMER_DELAY ms ahead (advManager::Open/Main/UpdateScreen,
 // DimensionDoorHandler, philAI's CheckDoMain).
 H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
-    ADVENTURE_FRAME_TIMER_SLOT = 0,
     TIMER_DELAY = 120
 H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
@@ -886,12 +885,11 @@ H1_ENUM_CONST_BEGIN(AdventureTeleportConstant)
     TELEPORT_REMOTE_FIZZLE_ADJUSTMENT = 64
 H1_ENUM_CONST_END(AdventureTeleportConstant)
 
-// SummonBoat (Buka 2.1 AdventureSummonBoatConstant names, HoMM1 values): a
-// boat whose heroId has OCCUPIED_FLAG carries that hero; the old berth is
+// SummonBoat (the boat's hero flag is game.h BOAT_OCCUPIED_FLAG): the old
+// berth is
 // restored with mode 5; the fizzle boxes around the old berth (clamped to
 // the viewport's inner box) and at the hero.
 H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
-    SUMMON_OCCUPIED_FLAG = 0x80,
     SUMMON_RESTORE_MODE = 5,
     SUMMON_SCREEN_MARGIN = 16,
     SUMMON_SCREEN_LIMIT = 464,
@@ -921,13 +919,12 @@ H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
     PUZZLE_FIZZLE_TIME = 220
 H1_ENUM_CONST_END(AdventurePuzzleViewConstant)
 
-// Buka 2.1 AdventureStateConstant / AdventureOpenConstant names, HoMM1 values:
-// the network-turn music hold, the walk
-// sample set and volume, and the looping-sample budget per high-memory unit.
+// The network-turn music hold, the walk sample set (played at sample.h
+// SAMPLE_VOLUME_FULL), the looping-sample budget per high-memory unit and
+// Open's locator scroll knobs.
 H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     FORCED_MUSIC_DELAY = 6000,
     CURSOR_SAMPLE_FAST_SET = 2,
-    CURSOR_SAMPLE_VOLUME = 127,
     HIGH_MEMORY_BUFFER_DIVISOR = 100,
     // Open's locator scroll knobs (scroll.icn frame 4).
     SCROLL_Y = 195,
@@ -1093,8 +1090,8 @@ H1_ENUM_CONST_BEGIN(AdventureScrollConstant)
 // The adventure view is ADVMGR_VIEW_CELL_COUNT cells square; the hero
 // stands on its centre cell, ADVMGR_VIEW_CENTER from the origin.
     ADVMGR_VIEW_CENTER = 7,
-    SCROLL_MIN_ORIGIN = -7,
-    SCROLL_MAX_ORIGIN = 64,
+    SCROLL_MIN_ORIGIN = -ADVMGR_VIEW_CENTER,
+    SCROLL_MAX_ORIGIN = MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1,
     SCROLL_TICK_INTERVAL = 70,
     HOVER_SCROLL_FRAME_FIRST = 32,
     HOVER_SCROLL_FRAME_END = 40
@@ -1253,13 +1250,10 @@ H1_ENUM_CONST_BEGIN(CursorConstant)
     CURSOR_LAST_FRAME_COUNT = 8,
     CURSOR_TURN_FRAME_COUNT = 16,
     CURSOR_SLOW_TURN_MULTIPLIER = 3,
-    CURSOR_MAP_DRAW_OFFSET = 7,
     CURSOR_MOVE_HALF_TILE_PIXELS = 16,
     CURSOR_NORTH_DIRECTION_MASK = 0x83,
     CURSOR_SOUTH_DIRECTION_MASK = 0x38,
     CURSOR_DIAGONAL_DIRECTION_BIT = 1,
-    CURSOR_TURN_TIMER_SLOT = 1,
-    BOAT_OCCUPIED_FLAG = 0x80,
     SLOW_CURSOR_CYCLE_START = 2,
     SKIPPED_ANIMATION_FRAME = 4,
     FOOTSTEP_ANIMATION_FRAME = 3,

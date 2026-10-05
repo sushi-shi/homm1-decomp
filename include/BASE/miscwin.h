@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_MISCWIN_H
 #define HOMM1_BASE_MISCWIN_H
 
+#include <BASE/display.h>
 #include <Domains.h>
 
 // miscwin.cpp: Windows-side screen, palette and clipped-icon helpers.
@@ -63,11 +64,10 @@ void BitmapToScreen(class bitmap* image);
 i16 AutoInitSVGA(void);
 void PostprocessIcon(class icon*);
 
+// BlitBitmapToScreen's enlarged invalid rectangle for a scaled window: a
+// width or height below LOGICAL_SCREEN_WIDTH - 3 grows by four pixels.
 H1_ENUM_CONST_BEGIN(ScreenBlitConstant)
-    SCREEN_BLIT_WIDTH = 640,
-    SCREEN_BLIT_HEIGHT = 480,
-    SCREEN_BLIT_WIDTH_END = 640,
-    SCREEN_BLIT_ENLARGE_END = 637,
+    SCREEN_BLIT_ENLARGE_END = LOGICAL_SCREEN_WIDTH - 3,
     SCREEN_BLIT_ENLARGE_PIXELS = 4
 H1_ENUM_CONST_END(ScreenBlitConstant)
 

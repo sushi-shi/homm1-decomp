@@ -573,7 +573,7 @@ i32 InterpretCommandLine(void) {
     i32 i;
     i32 helpRequested = 0;
 
-    giDebugLevel = 0;
+    giDebugLevel = DEBUG_LEVEL_NONE;
     giShowIntro = 1;
     gColorMice = 0;
     gSpecialMouseMasks = 1;

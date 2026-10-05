@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1963
+#floor	1962
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -141,7 +141,6 @@ src/SOURCE/VIEW.cpp	combatManager::ViewArmy	*	*	*	the army view window's pixel g
 src/SOURCE/REMOTE.cpp	InitNetGuest	3	arithmetic	*	the NetBIOS initialisation state machine's step skip
 src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	arithmetic	*	the decimal digits of the direct-connect id
 src/SOURCE/REMOTE.cpp	WaitForDirectConnect	*	array-index	array subscript idstr	the direct-connect id's digit positions
-*	*	*	comparison-or-bound	operator [=<>]* giDebugLevel	a giDebugLevel verbosity threshold
 src/SOURCE/EVENTS.cpp	advManager::GiveTakeArtifactStat	*	store	store to amount	the artifact's primary-stat bonus
 src/SOURCE/GAME.cpp	game::RandomizeEvents	*	arithmetic	operator % Random()	a random roll's range
 *	*	*.*	arithmetic	*	a floating-point tuning factor (AI weight, damage or value scale)

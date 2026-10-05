@@ -111,8 +111,8 @@ i16 heroWindowManager::Open(i16 managerOrder) {
     if (m_screen == NULL)
         MemError();
     m_screen->m_bitmapType = BITMAP_TYPE_MEMORY;
-    m_screen->m_width = SCREEN_BLIT_WIDTH;
-    m_screen->m_height = SCREEN_BLIT_HEIGHT;
+    m_screen->m_width = LOGICAL_SCREEN_WIDTH;
+    m_screen->m_height = LOGICAL_SCREEN_HEIGHT;
     m_screen->m_pixels = static_cast<i8*>(gInitWin);
     if (m_screen == NULL) {
         Cleanup();

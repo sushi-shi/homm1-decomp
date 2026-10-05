@@ -54,7 +54,7 @@ i16 highScoreManager::Open(i16 id) {
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
     gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
-    glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
+    glTimers[HIGH_SCORE_TIMER_SLOT] =
         KBTickCount() + static_cast<i32>(HIGH_SCORE_ANIMATION_DELAY);
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
@@ -81,8 +81,8 @@ i16 highScoreManager::Main(struct tag_message& message) {
     if (gShowHighScore != 0)
         gShowHighScore = 0;
 
-    if (glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] < KBTickCount()) {
-        glTimers[static_cast<i32>(HIGH_SCORE_TIMER_SLOT)] =
+    if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
+        glTimers[HIGH_SCORE_TIMER_SLOT] =
             KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
             m_animationFrames[entry] =

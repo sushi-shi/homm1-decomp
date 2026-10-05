@@ -33,18 +33,18 @@ void BlitBitmapToScreen(
     if (sourceBitmap != gpWindowManager->m_screen) {
         for (i32 row = 0; row < height; row++)
             memcpy(
-                gpWindowManager->m_screen->m_pixels + (destinationY + row) * SCREEN_BLIT_WIDTH
+                gpWindowManager->m_screen->m_pixels + (destinationY + row) * LOGICAL_SCREEN_WIDTH
                     + destinationX,
                 sourceBitmap->m_pixels + (row + sourceY) * sourceBitmap->m_width + sourceX,
                 width
             );
     }
     if (gEnlargeScreenBlit != 0) {
-        if (iMainWinScreenWidth == SCREEN_BLIT_WIDTH
-            && gMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
-            if (width < SCREEN_BLIT_WIDTH_END)
+        if (iMainWinScreenWidth == LOGICAL_SCREEN_WIDTH
+            && gMainWinScreenHeight == LOGICAL_SCREEN_HEIGHT) {
+            if (width < LOGICAL_SCREEN_WIDTH)
                 width++;
-            if (height < SCREEN_BLIT_WIDTH_END)
+            if (height < LOGICAL_SCREEN_WIDTH)
                 height++;
         } else {
             if (destinationX > 0)
@@ -58,11 +58,11 @@ void BlitBitmapToScreen(
         }
     }
     RECT invalidRectangle;
-    invalidRectangle.left = destinationX * iMainWinScreenWidth / SCREEN_BLIT_WIDTH;
-    invalidRectangle.top = destinationY * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
-    invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
+    invalidRectangle.left = destinationX * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH;
+    invalidRectangle.top = destinationY * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT;
+    invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
     invalidRectangle.bottom =
-        (destinationY + height) * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
+        (destinationY + height) * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT - 1;
     InvalidateRect(hwndApp, &invalidRectangle, FALSE);
     UpdateWindow(hwndApp);
 }
@@ -262,26 +262,26 @@ void ClippedMonoIconToBitmap(
                 if (curX >= clipX) {
                     if (curX + *source <= clipRight)
                         memset(
-                            destination->m_pixels + curX + curY * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + curX + curY * LOGICAL_SCREEN_WIDTH,
                             color,
                             *source
                         );
                     else
                         memset(
-                            destination->m_pixels + curX + curY * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + curX + curY * LOGICAL_SCREEN_WIDTH,
                             color,
                             clipRight - curX + 1
                         );
                 } else {
                     if (curX + *source <= clipRight)
                         memset(
-                            destination->m_pixels + clipX + curY * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + clipX + curY * LOGICAL_SCREEN_WIDTH,
                             color,
                             curX + *source - clipX
                         );
                     else
                         memset(
-                            destination->m_pixels + clipX + curY * ICON_SCREEN_ROW_BYTES,
+                            destination->m_pixels + clipX + curY * LOGICAL_SCREEN_WIDTH,
                             color,
                             clipW
                         );

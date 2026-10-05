@@ -416,8 +416,8 @@ i32 AppCommand(void* window, u32 message, u32 messageParam, i32 messageData) {
             ResizeWindow(
                 KBWIN_KEEP_POSITION,
                 KBWIN_KEEP_POSITION,
-                KBWIN_WIDTH_640,
-                KBWIN_HEIGHT_480
+                LOGICAL_SCREEN_WIDTH,
+                LOGICAL_SCREEN_HEIGHT
             );
             break;
         case KBWIN_MENU_SIZE_800_600:
@@ -461,7 +461,7 @@ void UpdateDfltMenu(void* menu) {
 
     if (gConfig.gfx[gCurExe].showMenu == 0)
         return;
-    if (gMainVideoModeWidth <= KBWIN_WIDTH_640)
+    if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_640_480, MF_GRAYED);
     if (gMainVideoModeWidth <= KBWIN_WIDTH_800)
         EnableMenuItem(static_cast<HMENU>(menu), KBWIN_MENU_SIZE_800_600, MF_GRAYED);
@@ -600,14 +600,14 @@ void SetGameDefaults(void) {
         gConfig.gfx[i].showMenu = 1;
         gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
         gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
-        if (gMainVideoModeWidth <= DEFAULT_WINDOW_WIDTH && gDDrawAttached) {
+        if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH && gDDrawAttached) {
             gConfig.gfx[i].fullScreen = 1;
             gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
             gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
         } else {
             gConfig.gfx[i].fullScreen = 1;
-            gConfig.gfx[i].width = DEFAULT_WINDOW_WIDTH;
-            gConfig.gfx[i].height = DEFAULT_WINDOW_HEIGHT;
+            gConfig.gfx[i].width = LOGICAL_SCREEN_WIDTH;
+            gConfig.gfx[i].height = LOGICAL_SCREEN_HEIGHT;
         }
     }
     gConfig.blackoutComputer = 0;
