@@ -11,9 +11,9 @@
 
 VA(0x00475370, 0x8b)
 widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
-    m_owner = 0;
-    m_next = 0;
-    m_prev = 0;
+    m_owner = NULL;
+    m_next = NULL;
+    m_prev = NULL;
     m_x = x;
     m_y = y;
     m_width = width;
@@ -29,9 +29,9 @@ widget::widget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind) {
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x004753fb, 0x7d)
 widget::widget(void) {
-    m_owner = 0;
-    m_next = 0;
-    m_prev = 0;
+    m_owner = NULL;
+    m_next = NULL;
+    m_prev = NULL;
     m_id = 0;
     m_flags = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
     m_zOrder = WINDOW_Z_ORDER_APPEND;

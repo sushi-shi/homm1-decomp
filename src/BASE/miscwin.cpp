@@ -125,7 +125,7 @@ void FadeIn(i32 increment) throw() {
             UpdatePalette(pal->m_data);
         }
     }
-    if (done == 0) {
+    if (done == false) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }
@@ -158,7 +158,7 @@ void FadeOut(i32 increment) throw() {
         }
         UpdatePalette(pal->m_data);
     }
-    if (done == 0) {
+    if (done == false) {
         i = PALETTE_FADE_LEVEL_LAST;
         goto fadeStep;
     }

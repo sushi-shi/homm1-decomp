@@ -1130,7 +1130,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 
     wsprintfA(szPath, "%c:", driveLetter);
     oldMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-    if (GetDiskFreeSpaceExA(szPath, &availToCaller, &total, &freeBytes) != 0) {
+    if (GetDiskFreeSpaceExA(szPath, &availToCaller, &total, &freeBytes) != FALSE) {
         SetErrorMode(oldMode);
         return true;
     } else {

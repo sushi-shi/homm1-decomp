@@ -29,7 +29,23 @@ game: pixel geometry of the retail layouts, icon frame numbers, random bounds,
 byte widths of saved fields, delays. A value that a domain names is not kept;
 name it.
 
-## VC4 booleans
+Each site also carries `context_key`/`context_label`: the declaration identity
+of its destination (callee parameter, field, variable, comparison operand,
+switch subject, array or function return; ported from Gruntz's
+`constant_context.py`). `build/gen/constant_contexts.tsv` groups the counted
+sites by that key, so one destination's literals are reviewed together. The
+keys are review leads: one `Read` length can receive unrelated sizes.
+
+## Booleans
+
+The Buka target is VC6 (`config/units.toml` `compiler = "vc6"`), which has
+`bool`, `true` and `false`. A `0`/`1` stored to, passed as, returned as or
+compared with a C++ `bool` is proven `false`/`true`; condition and logical
+operand truthiness (`while (1)`, `!0`, `x && 1`) is not a boolean
+destination. Win32 `BOOL` stays `TRUE`/`FALSE`. The rules below apply to VC4
+targets.
+
+### VC4 booleans
 
 VC4 has no `bool`, `true` or `false` (C2065). Clang's C++ `bool` contexts
 (conditions, logical operands) are int truthiness in the retail compiler and

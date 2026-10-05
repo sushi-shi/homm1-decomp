@@ -18,7 +18,19 @@ derived reports to ignored `build/gen/`:
 - `enum_role_pairs.tsv`: pairs where at least two equal values also have equal
   member-name suffixes after each enum's common prefix. A search aid only.
 
+Every evaluated member also records its use contexts: the declaration
+identity (field, parameter, comparison operand, switch subject, array, return)
+that receives each reference to it. `enum_value_collisions.tsv` lists contexts
+shared by two declarations of one value (`shared_named_contexts`) or by a
+declaration and a bare literal of that value (`shared_literal_contexts`, read
+from `build/gen/bare_constants.tsv`, so run `homm1 verify constants` first);
+`enum_domain_pairs.tsv` ranks pairs by shared direct contexts before numeric
+overlap. A shared destination is a lead for one domain; a transport that
+carries several domains (the `tag_message::id` widget id, each window's own
+controls) is not.
+
 Use `--value N`, `--duplicates`, `--json` and `--no-report` to inspect.
+`--extend-ledger` appends wholly new domains as `pending` rows.
 
 ## Decisions
 
@@ -50,3 +62,11 @@ Every starting member needs a current home with the same value. New, removed
 or changed members require a new decision: add the row when an enum is added.
 Moving members changes C1 symbol numbering in the TU, so do source moves as a
 reviewed batch and re-check edited functions with `homm1 match`.
+
+## Buka ledger
+
+The Buka branch inherited the NWC ledger. Its starting snapshot was rebased on
+the Buka tree: a row whose current members and values are unchanged kept its
+reviewed `retain`/`canonical` decision; every other current block started
+`pending` (with the NWC reason quoted as a lead), and NWC rows for blocks that
+do not exist in Buka were dropped.

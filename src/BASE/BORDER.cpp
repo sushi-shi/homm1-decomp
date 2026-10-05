@@ -16,7 +16,7 @@
 VA(0x00474950, 0x3e)
 border::border(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
     m_fillColor = 0;
-    m_background = 0;
+    m_background = NULL;
 }
 
 border::~border(void) {
@@ -27,10 +27,10 @@ border::~border(void) {
 VA(0x0047498e, 0x9e)
 border::border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name)
     : widget(x, y, width, height, id, kind) {
-    if (name != 0)
+    if (name != NULL)
         m_background = gpResourceManager->GetBitmap(name);
     else
-        m_background = 0;
+        m_background = NULL;
     m_fillColor = fillColor;
 }
 
@@ -51,7 +51,7 @@ void border::Read(void) {
         return;
     }
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_background = 0;
+    m_background = NULL;
 }
 
 VA(0x00474b79, 0x1d9)

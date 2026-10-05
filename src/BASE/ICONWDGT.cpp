@@ -12,7 +12,7 @@
 
 VA(0x0046deb0, 0x4e)
 iconWidget::iconWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
-    m_icon = 0;
+    m_icon = NULL;
     m_frame = 0;
     m_fillColor = 0;
     m_orientation = ICON_DRAW_NORMAL;
@@ -98,7 +98,7 @@ i16 iconWidget::Main(tag_message& message) {
             switch (message.command) {
                 case WIDGET_COMMAND_SET_ICON:
                     if (message.id == m_id) {
-                        if (m_icon != 0) {
+                        if (m_icon != NULL) {
                             gpResourceManager->Dispose(m_icon);
                             m_icon = gpResourceManager->GetIcon(message.text);
                         }
