@@ -3,13 +3,13 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>
 #include <BASE/Icon2b.h>
 #include <BASE/Icond2b.h>
 #include <BASE/inputManager.h>
 #include <BASE/mouseManager.h>
-#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/EVENTS.h>
 #include <SOURCE/game.h>

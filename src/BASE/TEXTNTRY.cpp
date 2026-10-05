@@ -18,7 +18,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
 VA(0x00475830, 0x56)
 textEntryWidget::textEntryWidget(void) : textWidget() {
     m_cursorPosition = 0;
@@ -29,7 +28,6 @@ textEntryWidget::textEntryWidget(void) : textWidget() {
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-VA_COMPGEN(0x00476ab0, 0x2e, "??_GtextEntryWidget@@UAEPAXI@Z", 0x00475830)
 textEntryWidget::~textEntryWidget(void) {
     gpResourceManager->Dispose(m_icon);
 }
@@ -62,6 +60,7 @@ textEntryWidget::textEntryWidget(
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
+VA_COMPGEN(0x00475945, 0x5b, "??1textEntryWidget@@UAE@XZ", 0x00475830)
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     i8 name[RESOURCE_NAME_CAPACITY];
@@ -375,3 +374,5 @@ void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
         }
     }
 }
+
+VA_COMPGEN(0x00476ab0, 0x2e, "??_GtextEntryWidget@@UAEPAXI@Z", 0x00475830)

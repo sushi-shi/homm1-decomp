@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/BITS.h>
 #include <BASE/executive.h>
 #include <BASE/font.h>
@@ -17,7 +18,6 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resource.h>
 #include <BASE/resourceManager.h>
-#include <BASE/audio.h>
 #include <BASE/TILE.h>
 #include <BASE/tileset.h>
 #include <BASE/widget.h>

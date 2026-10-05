@@ -915,8 +915,11 @@ rva	name	provenance
 0x00069d9d	?SetEffectsVolume@@YAXH@Z	Buka control-panel instruction/CFG/EH review: 0xdcf9; buka-control-panel.json
 0x00069db9	?SetMusicVolume@@YAXH@Z	Buka control-panel instruction/CFG/EH review: 0xdcc4; buka-control-panel.json
 0x00069dd5	?SetVolumes@@YAXHH@Z	Buka adventure-manager family: Open call 0x1fd4; manually reconstructed Audio.cpp and buka-audio.json; buka-advmgr.json
+0x00069e30	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	VC6 COMDAT body equal; template argument from the ordered EH unwind calls of AudiereEffects/AudiereMusic paired with the compiled objects' funclets
 0x00069e60	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00069ec0	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	VC6 COMDAT body equal; template argument from the ordered EH unwind calls of AudiereEffects/AudiereMusic paired with the compiled objects' funclets
 0x00069ef0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
+0x00069f50	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	VC6 COMDAT body equal; template argument from the ordered EH unwind calls of AudiereEffects/AudiereMusic paired with the compiled objects' funclets
 0x00069f80	??1AudiereSampleNode@@QAE@XZ	Full pinned-library/header-object instruction fingerprint and source caller controls; buka-shared-call-identities.json
 0x00069fb0	?CycleColors@@YAXXZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json
 0x0006a14c	??0heroWindowManager@@QAE@XZ	Buka complete compiled-body fingerprint, exact relocation shape and cross-reference consistency; buka-bulk-correspondence.json

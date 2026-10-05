@@ -23,7 +23,6 @@ font::font(i16 id) : resource(RESOURCE_CATEGORY_FONT, id, RESOURCE_REFERENCE_INI
     gLoadingMonoIcon = 0;
 }
 
-VA_COMPGEN(0x00472760, 0x2e, "??_Gfont@@UAEPAXI@Z", 0x00471dd0)
 VA(0x00471e97, 0x5b)
 font::~font(void) {
     gpResourceManager->Dispose(m_glyphIcon);
@@ -253,3 +252,5 @@ i32 font::LineWidth(char* text) {
     }
     return thisWidth;
 }
+
+VA_COMPGEN(0x00472760, 0x2e, "??_Gfont@@UAEPAXI@Z", 0x00471dd0)

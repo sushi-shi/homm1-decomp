@@ -4,6 +4,7 @@
 
 #include <SOURCE/EVENTS.h>
 
+#include <BASE/audio.h>
 #include <BASE/bmap2.h>
 #include <BASE/executive.h>
 #include <BASE/heroWindow.h>
@@ -15,7 +16,6 @@
 #include <BASE/mouseManager.h>
 #include <BASE/resource.h>
 #include <BASE/sample.h>
-#include <BASE/audio.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatManager.h>

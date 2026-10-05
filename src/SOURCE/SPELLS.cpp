@@ -3,7 +3,6 @@
 #include <match.h>
 
 #include <BASE/audio.h>
-
 #include <BASE/display.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/icon.h>

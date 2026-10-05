@@ -17,9 +17,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
-VA_COMPGEN(0x00473336, 0x3e, "??1bitmap@@UAE@XZ", 0x00473180)
 VA(0x00473180, 0x4c)
-VA_COMPGEN(0x004735e0, 0x2e, "??_Gbitmap@@UAEPAXI@Z", 0x00473180)
 bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = BITMAP_TYPE_NONE;
     m_width = 0;
@@ -57,6 +55,7 @@ bitmap::~bitmap(void) {
     m_pixels = NULL;
 }
 
+VA_COMPGEN(0x00473336, 0x3e, "??1bitmap@@UAE@XZ", 0x00473180)
 VA(0x00473374, 0x4b)
 void bitmap::DrawToBuffer(i16 x, i16 y) {
     PollSound();
@@ -129,3 +128,5 @@ void bitmap::CopyTo(
     }
     PollSound();
 }
+
+VA_COMPGEN(0x004735e0, 0x2e, "??_Gbitmap@@UAEPAXI@Z", 0x00473180)

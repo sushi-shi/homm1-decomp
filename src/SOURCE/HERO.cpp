@@ -2,13 +2,13 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/heroWindow.h>
 #include <BASE/heroWindowManager.h>
 #include <BASE/message.h>
 #include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/resourceManager.h>
-#include <BASE/audio.h>
 #include <BASE/widget.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>

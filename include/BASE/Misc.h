@@ -9,28 +9,8 @@ class bitmap;
 #define MANHATTAN_LENGTH(dx, dy) (abs((dx)) + abs((dy)))
 
 void SetPalette(i8* paletteData, i32 updateDisplay);
-void LogTruncate();
-void LogInt(char* label, i32 value);
-void LogStr(char* text);
-void LogStr(char* label, i32 value1, i32 value2);
-void LogStr(char* label, i32 value1, i32 value2, i32 value3, i32 value4, i32 value5);
-void LogStr(
-    char* label,
-    i32 value1,
-    i32 value2,
-    i32 value3,
-    i32 value4,
-    i32 value5,
-    i32 value6,
-    i32 value7
-);
 
 H1_ENUM_CONST_BEGIN(MiscLogConstant)
-    MISC_FILE_DEBUG_BEGIN = 2,
-    MISC_DEBUGGER_OUTPUT_LEVEL = 3,
-    MISC_LOG_TEXT_CAPACITY = 500,
-    MISC_LOG_VALUE_TEXT_CAPACITY = 100,
-    MISC_LOG_VALUES_TEXT_CAPACITY = 130,
     MISC_FORCED_DEBUG_LEVEL = 9
 H1_ENUM_CONST_END(MiscLogConstant)
 

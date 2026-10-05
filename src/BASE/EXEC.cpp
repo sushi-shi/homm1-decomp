@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/baseManager.h>
 #include <BASE/executive.h>
 #include <BASE/heroWindowManager.h>
@@ -9,7 +10,6 @@
 #include <BASE/Misc.h>
 #include <BASE/mouseManager.h>
 #include <BASE/resourceManager.h>
-#include <BASE/audio.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 

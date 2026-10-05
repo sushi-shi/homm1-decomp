@@ -2,6 +2,7 @@
 
 #include <match.h>
 
+#include <BASE/audio.h>
 #include <BASE/baseManager.h>
 #include <BASE/bitmap.h>
 #include <BASE/font.h>
@@ -15,7 +16,6 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <BASE/sample.h>
-#include <BASE/audio.h>
 #include <BASE/soundmgr.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
@@ -47,7 +47,6 @@ DATA(0x0048f060)
 i32 gSeed = 1;
 
 // Buka CMBTMGR.cpp combatManager(); HoMM1 keeps no message buffers.
-VA_COMPGEN(0x0041c900, 0x27, "??_H@YGXPAXIHP6EX0@Z@Z", 0x00418b30)
 VA(0x00418b30, 0x18b)
 combatManager::combatManager(void) {
     m_gridMode = 0;
@@ -1416,3 +1415,5 @@ void combatManager::DrawCombatBorder(void) {
         LOGICAL_SCREEN_WIDTH * (LOGICAL_SCREEN_HEIGHT - COMBAT_VIEW_HEIGHT)
     );
 }
+
+VA_COMPGEN(0x0041c900, 0x27, "??_H@YGXPAXIHP6EX0@Z@Z", 0x00418b30)

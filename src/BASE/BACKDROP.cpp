@@ -8,11 +8,9 @@
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
-VA_COMPGEN(0x0046d000, 0x1c, "??1backdropWidget@@UAE@XZ", 0x0046ce40)
 VA(0x0046ce40, 0x2b)
 backdropWidget::backdropWidget(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {}
 
-VA_COMPGEN(0x0046cfd0, 0x2e, "??_GbackdropWidget@@UAEPAXI@Z", 0x0046ce40)
 backdropWidget::~backdropWidget(void) {}
 
 VA(0x0046ce6b, 0x3f)
@@ -36,3 +34,6 @@ void backdropWidget::Draw(void) {
     gpWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
 }
+
+VA_COMPGEN(0x0046cfd0, 0x2e, "??_GbackdropWidget@@UAEPAXI@Z", 0x0046ce40)
+VA_COMPGEN(0x0046d000, 0x1c, "??1backdropWidget@@UAE@XZ", 0x0046ce40)

@@ -474,6 +474,7 @@ void CreateFizzleTables(void) {
     FILE* fp;
     float* blend;
 
+    // byte-evidenced: retail reads the i8 palette channels zero-extended, as RGB rows.
     paletteColors = reinterpret_cast<u8 (*)[PALETTE_GRAPHICS_CHANNELS]>(gpBufferPalette->m_data);
     rgbCube = static_cast<u8 (*)[PALETTE_CUBE_LEVELS][PALETTE_CUBE_LEVELS]>(
         malloc(PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS * PALETTE_CUBE_LEVELS)
