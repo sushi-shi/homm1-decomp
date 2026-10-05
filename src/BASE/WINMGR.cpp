@@ -155,6 +155,32 @@ void heroWindowManager::Close(void) {
     m_active = 0;
 }
 
+// Descriptive name: an unreferenced hit test. The topmost window containing
+// (x, y) becomes the focus window and the previous focus moves to
+// m_activeWindow; returns whether the focus changed.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
+VA(0x0046a393, 0xc3)
+i16 heroWindowManager::UpdateHoverWindow(i16 x, i16 y) {
+    heroWindow* window = m_windowListTail;
+
+    while (window != NULL) {
+        if (x >= window->m_posX && y >= window->m_posY && x < window->m_posX + window->m_winWidth
+            && y < window->m_posY + window->m_winHeight) {
+            if (window != m_focusWindow) {
+                m_activeWindow = m_focusWindow;
+                m_focusWindow = window;
+                return 1;
+            }
+            return 0;
+        }
+        window = window->m_prevWindow;
+    }
+    m_activeWindow = m_focusWindow;
+    m_focusWindow = NULL;
+    return 1;
+}
+
 VA(0x0046a456, 0x5e)
 i16 heroWindowManager::Main(tag_message& message) {
     i16 ret = MESSAGE_DISPATCH_CONTINUE;
@@ -312,6 +338,15 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
     return 0;
 }
 
+// HoMM2 Buka UpdateScreen plus HoMM1's final software-pointer redraw.
+VA(0x0046a8e8, 0x2f)
+void heroWindowManager::UpdateScreen(void) {
+    PollSound();
+    BitmapToScreen(m_screen);
+    PollSound();
+    gpMouseManager->ShowColorPointer();
+}
+
 // HoMM1 hides the software pointer only when it overlaps the updated region.
 VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
@@ -341,6 +376,16 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
     if (savedPointerHidden)
         gpMouseManager->ShowColorPointer();
     PollSound();
+}
+
+VA(0x0046aa74, 0x2f)
+void heroWindowManager::RedrawScreen(void) {
+    heroWindow* window = m_windowListHead;
+
+    while (window != NULL) {
+        window->DrawWindow();
+        window = window->m_nextWindow;
+    }
 }
 
 // Retail byte saved-update state and word arguments precede the later donor widening.
