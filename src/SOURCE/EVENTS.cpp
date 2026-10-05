@@ -1467,17 +1467,17 @@ void advManager::EventWindow(
     i32 value2,
     H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
 ) {
-    i32 unusedValue1;
+    i32 newValue1;
     i32 unusedValue7;
-    i32 stop;
+    i32 stopOk;
     i32 unusedValue8;
     i32 unusedValue9;
-    i32 unusedValue11;
-    i32 unusedValue12;
+    i32 curUnusedValue11;
+    i32 unusedValue12Value;
     char eventText[EVENT_TEXT_BUFFER_SIZE];
     i16 newUnused;
 
-    stop = 0;
+    stopOk = 0;
     GrabScreen();
     newUnused = 1;
     if (eventId >= 0 && eventId < EVENT_TEXT_WINDOW_END)
@@ -1529,7 +1529,7 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     i32 prevLevel;
     i32 unusedValue1;
     i32 unusedValue2;
-    i32 newLevelVal;
+    i32 savedLevel;
     i32 levelGapVal;
 
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
@@ -1539,10 +1539,10 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     H1_ASSERT(experience >= 0);
 #line 1094
     H1_ASSERT(eventHero->m_experience >= 0);
-    newLevelVal = eventHero->GetLevel(eventHero->m_experience);
+    savedLevel = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();
-    return newLevelVal - prevLevel;
+    return savedLevel - prevLevel;
 }
 
 VA(0x00427003, 0x6a)
@@ -2332,11 +2332,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 );
                 if (numHired > 0) {
                     gpGame->GiveArmy(&eventHero->m_army, troopType, numHired, bestSlot);
-                    cell->m_objectMetadata = cell->m_objectMetadata - numHired;
+                    cell->m_objectMetadata -= numHired;
                     if (!available) {
                         GetMonsterCost(troopType, cost);
                         for (counter = 0; counter < RESOURCE_COUNT; counter++)
-                            gpCurPlayer->m_resources[counter] -= -(-(cost[counter] * numHired));
+                            gpCurPlayer->m_resources[counter] -= numHired * cost[counter];
                     }
                 }
             }
@@ -2647,84 +2647,84 @@ void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventH
 VA(0x00428f98, 0x16f)
 i32 advManager::DoNetCombat(char* packet) {
     hero* leader;
-    i32 dy;
-    i32 px;
+    i32 theCellY;
+    i32 curPosX;
     i32 randSeed;
-    i32 savedOpponentValue;
+    i32 ourFoe;
     i8 res;
     i32 party;
-    hero* attackingHero;
-    i32 srcY;
+    hero* nextAttacker;
+    i32 curStartY;
     i32 sx;
     armyGroup* defendArmy;
-    armyGroup* selAttArmy;
+    armyGroup* selAttArmyPtr;
     town* tempTown;
-    i32 reserved;
-    i32 unused2;
+    i32 allReserved;
+    i32 curUnused2;
 
-    attackingHero = NULL;
-    selAttArmy = NULL;
+    nextAttacker = NULL;
+    selAttArmyPtr = NULL;
     tempTown = NULL;
     leader = NULL;
     defendArmy = NULL;
     ReceiveHeroTownData(
         packet,
-        &savedOpponentValue,
-        &px,
-        &dy,
-        &attackingHero,
-        &selAttArmy,
+        &ourFoe,
+        &curPosX,
+        &theCellY,
+        &nextAttacker,
+        &selAttArmyPtr,
         &tempTown,
         &leader,
         &defendArmy,
         &sx,
-        &srcY,
+        &curStartY,
         &randSeed,
         &res,
         &gbRetreatWin,
         &gbCombatSurrender
     );
-    party = attackingHero->m_owner;
+    party = nextAttacker->m_owner;
     res = DoCombat(
-        px,
-        dy,
-        attackingHero,
-        selAttArmy,
+        curPosX,
+        theCellY,
+        nextAttacker,
+        selAttArmyPtr,
         tempTown,
         leader,
         defendArmy,
         sx,
-        srcY,
+        curStartY,
         randSeed,
         0
     );
     if (!gbHumanPlayer[party])
         SendHeroTownData(
-            px,
-            dy,
-            attackingHero,
-            selAttArmy,
+            curPosX,
+            theCellY,
+            nextAttacker,
+            selAttArmyPtr,
             tempTown,
             leader,
             defendArmy,
             sx,
-            srcY,
+            curStartY,
             randSeed,
-            savedOpponentValue,
+            ourFoe,
             res,
             gbRetreatWin,
             gbCombatSurrender
         );
-    if (selAttArmy)
-        free(selAttArmy);
+    if (selAttArmyPtr)
+        free(selAttArmyPtr);
     if (defendArmy)
         free(defendArmy);
     if (tempTown)
         free(tempTown);
     if (leader)
         free(leader);
-    if (attackingHero)
-        free(attackingHero);
+    if (nextAttacker)
+        free(nextAttacker);
     gbRetreatWin = 0;
     return 1;
 }

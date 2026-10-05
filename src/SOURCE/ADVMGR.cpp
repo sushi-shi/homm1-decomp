@@ -705,7 +705,7 @@ VA(0x004012c3, 0xd5d)
 i16 advManager::Open(i16 id) {
     i32 savedShowIt;
     i32 firstTime;
-    i32 oldPlayer;
+    i32 oldPlayerVal;
     i32 oldVolume;
     i32 i;
 
@@ -891,13 +891,13 @@ i16 advManager::Open(i16 id) {
     SetInitialMapOrigin();
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
     gpMouseManager->SetColorMice(0);
-    oldPlayer = giCurPlayer;
+    oldPlayerVal = giCurPlayer;
     savedShowIt = bShowIt;
     giCurPlayer = giCurWatchPlayer;
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     bShowIt = 1;
     RedrawAdvScreen(1);
-    giCurPlayer = oldPlayer;
+    giCurPlayer = oldPlayerVal;
     bShowIt = savedShowIt;
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     if (!gbThisNetHumanPlayer[giCurPlayer])
@@ -1156,7 +1156,7 @@ i16 advManager::Main(struct tag_message& message) {
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
-    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giHostGamePos == giThisGamePos)) {
+    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giThisGamePos == giHostGamePos)) {
         gpPhilAI->DoAI(giCurPlayer);
         gpGame->NextPlayer();
         return MESSAGE_DISPATCH_CONSUME;
@@ -2520,11 +2520,11 @@ void advManager::DrawCell(
 ) {
     i8 savedFrame;
     i32 heroYOffset6;
-    i32 cursorSuppressedFlag;
+    i32 savedSuppressed;
     i16 pixelY3;
     i16 pixelX7;
     mapCell* newCell0;
-    hero* newChampion;
+    hero* savedShowHero;
     i8 position;
     i8 flagColorValue;
     i8 drawHeroIcon0;
@@ -2699,7 +2699,7 @@ void advManager::DrawCell(
     }
     if (drawMask & ADVMGR_DRAW_HERO) {
         drawHeroIcon0 = 0;
-        newChampion = NULL;
+        savedShowHero = NULL;
         if (!(newCell0->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY)
             && newCell0->m_objectIndex != MAP_CELL_NO_FRAME) {
             s_drawTileset = newCell0->m_objectTileset & MAP_CELL_TILESET_MASK;
@@ -2751,16 +2751,16 @@ void advManager::DrawCell(
         } else {
             heroYOffset6 = 0;
             if (newCell0->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
-                newChampion = gpGame->GetHero(newCell0->m_objectMetadata);
-                flagColorValue = (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                savedShowHero = gpGame->GetHero(newCell0->m_objectMetadata);
+                flagColorValue = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                                      ? PLAYER_COLOR_NONE
-                                     : gpGame->m_players[newChampion->m_owner].m_color;
-                position = (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                                     : gpGame->m_players[savedShowHero->m_owner].m_color;
+                position = (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                                ? (i8)ADVMGR_HERO_ICON_BOAT
-                               : newChampion->m_heroClass;
-                savedFrame = GetCursorBaseFrame(newChampion->m_direction);
+                               : savedShowHero->m_heroClass;
+                savedFrame = GetCursorBaseFrame(savedShowHero->m_direction);
                 drawHeroIcon0 = 1;
-                if (newChampion->m_eventFlags & HERO_EVENT_EMBARKED)
+                if (savedShowHero->m_eventFlags & HERO_EVENT_EMBARKED)
                     heroYOffset6 = HERO_BOAT_Y_OFFSET;
             }
         }
@@ -3664,12 +3664,12 @@ i8 advManager::UpdBottomViewNewTurn(void) {
 // evidence: graph:3;base=0.790087;margin=0.239399;shape=0.649;size=0.884;calls=0.793;strings=resource.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewResMsg(void)@0x00061716
 VA(0x004088e7, 0x38f)
 i8 advManager::UpdBottomViewResMsg(void) {
-    i32 iconW;
-    i32 iconH;
+    i32 oldIconW;
+    i32 iconHVal;
     i32 y;
-    i32 lineCnt;
+    i32 lineCntNo;
     char* messageText;
-    char* countString;
+    char* prevCountString;
     font* smFont;
 
     if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_RESOURCE)
@@ -3700,9 +3700,9 @@ i8 advManager::UpdBottomViewResMsg(void) {
     if (giBottomViewResource < 0) {
         y = RESOURCE_VIEW_MULTILINE_HEIGHT;
         smFont = gpResourceManager->GetFont("smalfont.fnt");
-        lineCnt = smFont->LineLength(gcBottomViewText, BOTTOM_VIEW_PANEL_WIDTH);
+        lineCntNo = smFont->LineLength(gcBottomViewText, BOTTOM_VIEW_PANEL_WIDTH);
         gpResourceManager->Dispose(smFont);
-        y -= lineCnt * RESOURCE_VIEW_LINE_HEIGHT;
+        y -= lineCntNo * RESOURCE_VIEW_LINE_HEIGHT;
     }
     messageText = static_cast<char*>(malloc(strlen(gcBottomViewText) + 1));
     sprintf(messageText, gcBottomViewText);
@@ -3723,17 +3723,17 @@ i8 advManager::UpdBottomViewResMsg(void) {
 
     if (giBottomViewResource >= 0) {
         if (giBottomViewResource == RESOURCE_GOLD) {
-            iconW = RESOURCE_VIEW_GOLD_WIDTH;
-            iconH = RESOURCE_VIEW_GOLD_HEIGHT;
+            oldIconW = RESOURCE_VIEW_GOLD_WIDTH;
+            iconHVal = RESOURCE_VIEW_GOLD_HEIGHT;
         } else {
-            iconW = RESOURCE_VIEW_ICON_WIDTH;
-            iconH = RESOURCE_VIEW_ICON_HEIGHT;
+            oldIconW = RESOURCE_VIEW_ICON_WIDTH;
+            iconHVal = RESOURCE_VIEW_ICON_HEIGHT;
         }
         m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(
-            (BOTTOM_VIEW_PANEL_WIDTH - iconW) / 2 + BOTTOM_VIEW_PANEL_X,
-            RESOURCE_VIEW_ICON_BOTTOM - iconH - RESOURCE_VIEW_ICON_BOTTOM_PADDING,
-            iconW,
-            iconH,
+            (BOTTOM_VIEW_PANEL_WIDTH - oldIconW) / 2 + BOTTOM_VIEW_PANEL_X,
+            RESOURCE_VIEW_ICON_BOTTOM - iconHVal - RESOURCE_VIEW_ICON_BOTTOM_PADDING,
+            oldIconW,
+            iconHVal,
             "resource.icn",
             giBottomViewResource,
             ICON_DRAW_NORMAL,
@@ -3748,14 +3748,14 @@ i8 advManager::UpdBottomViewResMsg(void) {
             WINDOW_Z_ORDER_APPEND
         );
 
-        countString = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
-        sprintf(countString, "%d", giBottomViewResourceQty);
+        prevCountString = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
+        sprintf(prevCountString, "%d", giBottomViewResourceQty);
         m_bottomViewSecondaryWidgets[1] = new textWidget(
             RESOURCE_VIEW_COUNT_X,
             RESOURCE_VIEW_COUNT_Y,
             RESOURCE_VIEW_COUNT_WIDTH,
             RESOURCE_VIEW_COUNT_HEIGHT,
-            countString,
+            prevCountString,
             "smalfont.fnt",
             1,
             BOTTOM_VIEW_TEXT_ID_2,
@@ -3883,24 +3883,24 @@ i8 advManager::UpdBottomViewKingdom(void) {
 // evidence: graph:3;base=0.635193;margin=0.117414;shape=0.302;size=0.961;calls=0.625;strings=mons32.icn|smalfont.fnt|stonback.icn;alternate=pol20:int advManager::UpdBottomViewHero(void)@0x00061dd8
 VA(0x00408fe4, 0x585)
 i8 advManager::UpdBottomViewHero(void) {
-    i16 slotNum;
+    i16 slotNumPos;
     i8 creatureType;
-    i32 n;
-    i32 qtyX;
-    char* countStr[ARMY_GROUP_SLOT_COUNT];
+    i32 j;
+    i32 col;
+    char* countStrData[ARMY_GROUP_SLOT_COUNT];
     i16 nStacks;
     i16 iCrest;
-    hero* targetHero;
+    hero* curHero;
     i32 y;
-    i32 x;
-    char* heroName;
+    i32 nextX;
+    char* newHeroName;
 
     if (!gForceUpdate && gCurBottomView == BOTTOM_VIEW_HERO)
         return 0;
 
     ClearBottomView();
     gCurBottomView = BOTTOM_VIEW_HERO;
-    targetHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
+    curHero = gpGame->GetHero(gpCurPlayer->CurrentHero());
     nStacks = 0;
 
     m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_BACKGROUND] = new iconWidget(
@@ -3922,7 +3922,7 @@ i8 advManager::UpdBottomViewHero(void) {
         WINDOW_Z_ORDER_APPEND
     );
 
-    iCrest = gpCurPlayer->Color() * HERO_CLASS_COUNT + targetHero->m_heroClass;
+    iCrest = gpCurPlayer->Color() * HERO_CLASS_COUNT + curHero->m_heroClass;
     m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_FOREGROUND] = new iconWidget(
         495,
         395,
@@ -3942,15 +3942,15 @@ i8 advManager::UpdBottomViewHero(void) {
         WINDOW_Z_ORDER_APPEND
     );
 
-    heroName = static_cast<char*>(malloc(9));
-    strcpy(heroName, targetHero->m_shortName);
-    heroName[8] = 0;
+    newHeroName = static_cast<char*>(malloc(9));
+    strcpy(newHeroName, curHero->m_shortName);
+    newHeroName[8] = 0;
     m_bottomViewSecondaryWidgets[0] = new textWidget(
         475,
         418,
         66,
         12,
-        heroName,
+        newHeroName,
         "smalfont.fnt",
         1,
         BOTTOM_VIEW_TEXT_ID,
@@ -3960,71 +3960,71 @@ i8 advManager::UpdBottomViewHero(void) {
         MemError();
     m_adventureWindow->AddWidget(m_bottomViewSecondaryWidgets[0], WINDOW_Z_ORDER_APPEND);
 
-    for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
-        if (targetHero->m_army.m_creatureTypes[n] != CREATURE_NONE)
+    for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+        if (curHero->m_army.m_creatureTypes[j] != CREATURE_NONE)
             nStacks++;
     }
     if (nStacks) {
-        slotNum = 0;
-        for (n = 0; n < ARMY_GROUP_SLOT_COUNT; n++) {
-            creatureType = targetHero->m_army.m_creatureTypes[n];
+        slotNumPos = 0;
+        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+            creatureType = curHero->m_army.m_creatureTypes[j];
             if (creatureType != CREATURE_NONE) {
-                countStr[slotNum] = static_cast<char*>(malloc(BOTTOM_HERO_LABEL_BYTES));
-                sprintf(countStr[slotNum], "%d", targetHero->m_army.m_creatureCounts[n]);
-                y = slotNum <= 2 ? 38 : 3;
-                if (slotNum == 0) {
-                    x = nStacks <= 2 ? 77 : 101;
-                } else if (slotNum == 1) {
-                    x = nStacks == 2 ? 28 : 52;
-                } else if (slotNum == 2) {
-                    x = 3;
-                } else if (slotNum == 3) {
-                    x = nStacks == 4 ? 77 : 101;
+                countStrData[slotNumPos] = static_cast<char*>(malloc(BOTTOM_HERO_LABEL_BYTES));
+                sprintf(countStrData[slotNumPos], "%d", curHero->m_army.m_creatureCounts[j]);
+                y = slotNumPos <= 2 ? 38 : 3;
+                if (slotNumPos == 0) {
+                    nextX = nStacks <= 2 ? 77 : 101;
+                } else if (slotNumPos == 1) {
+                    nextX = nStacks == 2 ? 28 : 52;
+                } else if (slotNumPos == 2) {
+                    nextX = 3;
+                } else if (slotNumPos == 3) {
+                    nextX = nStacks == 4 ? 77 : 101;
                 } else {
-                    x = 52;
+                    nextX = 52;
                 }
-                m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
+                m_bottomViewPrimaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_ICON_FIRST] =
                     new iconWidget(
-                        x + BOTTOM_VIEW_PANEL_X,
+                        nextX + BOTTOM_VIEW_PANEL_X,
                         y + BOTTOM_VIEW_PANEL_Y,
                         BOTTOM_HERO_ICON_WIDTH,
                         BOTTOM_HERO_ICON_HEIGHT,
                         "mons32.icn",
                         creatureType,
                         ICON_DRAW_NORMAL,
-                        slotNum + BOTTOM_HERO_FIRST_ICON_ID,
+                        slotNumPos + BOTTOM_HERO_FIRST_ICON_ID,
                         ICON_WIDGET_DRAW,
                         1
                     );
-                if (!m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
+                if (!m_bottomViewPrimaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                     MemError();
-                if (gMons32Width[creatureType] < 28 && strlen(countStr[slotNum]) <= 2)
-                    qtyX = x + 30;
+                if (gMons32Width[creatureType] < 28 && strlen(countStrData[slotNumPos]) <= 2)
+                    col = nextX + 30;
                 else
-                    qtyX = x + gMons32Width[creatureType] + 2;
-                m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST] =
+                    col = nextX + gMons32Width[creatureType] + 2;
+                m_bottomViewSecondaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST] =
                     new textWidget(
-                        qtyX + BOTTOM_VIEW_PANEL_X,
+                        col + BOTTOM_VIEW_PANEL_X,
                         y + 414,
-                        strlen(countStr[slotNum]) * BOTTOM_HERO_CHARACTER_WIDTH,
+                        strlen(countStrData[slotNumPos]) * BOTTOM_HERO_CHARACTER_WIDTH,
                         BOTTOM_HERO_LABEL_HEIGHT,
-                        countStr[slotNum],
+                        countStrData[slotNumPos],
                         "smalfont.fnt",
                         1,
-                        slotNum + BOTTOM_HERO_FIRST_TEXT_ID,
+                        slotNumPos + BOTTOM_HERO_FIRST_TEXT_ID,
                         WIDGET_KIND_TEXT
                     );
-                if (!m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST])
+                if (!m_bottomViewSecondaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST])
                     MemError();
                 m_adventureWindow->AddWidget(
-                    m_bottomViewPrimaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_ICON_FIRST],
+                    m_bottomViewPrimaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_ICON_FIRST],
                     WINDOW_Z_ORDER_APPEND
                 );
                 m_adventureWindow->AddWidget(
-                    m_bottomViewSecondaryWidgets[slotNum + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST],
+                    m_bottomViewSecondaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST],
                     WINDOW_Z_ORDER_APPEND
                 );
-                slotNum++;
+                slotNumPos++;
             }
         }
     }
@@ -5721,41 +5721,42 @@ void UpdateCPanel(i8 initialDraw) {
 
 VA(0x0040d7cd, 0x205)
 i8 SaveGame(void) {
-    i16 iResult;
-    fileRequester* fileReq;
+    i16 res;
+    fileRequester* newFileReq;
     char searchMask[16];
     i8 success;
     i32 humans;
-    i32 plIdx;
-    char extension[8];
+    i32 player;
+    char extensionBuf[8];
 
     success = 0;
     humans = 0;
     gpAdvManager->DisableButtons();
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
-    for (plIdx = 0; plIdx < GAME_PLAYER_COUNT; plIdx++)
-        if (!gpGame->m_playerDead[plIdx] && gbHumanPlayer[plIdx])
+    for (player = 0; player < GAME_PLAYER_COUNT; player++)
+        if (!gpGame->m_playerDead[player] && gbHumanPlayer[player])
             humans++;
     if (gCampaignChoice > 0) {
-        sprintf(extension, ".CGM");
+        sprintf(extensionBuf, ".CGM");
         sprintf(searchMask, "*.CGM");
     } else {
-        sprintf(extension, ".GM%d", humans);
+        sprintf(extensionBuf, ".GM%d", humans);
         sprintf(searchMask, "*.GM*");
     }
     extern char gGamePath[];
-    fileReq = new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gGamePath, extension);
-    if (!fileReq)
+    newFileReq =
+        new fileRequester(0xa0, 0x28, FILE_REQUESTER_SAVE, searchMask, gGamePath, extensionBuf);
+    if (!newFileReq)
         MemError();
-    iResult = gpExec->DoDialog(fileReq);
-    if (iResult == DIALOG_BUTTON_2) {
+    res = gpExec->DoDialog(newFileReq);
+    if (res == DIALOG_BUTTON_2) {
         success = 1;
         gFreshSave = 1;
         success = gpGame->SaveGame(gLastFilename, 0);
         if (success)
             NormalDialog(localization::Tr("adventure.save.success"), NORMAL_DIALOG_TYPE_OK, 0xb1);
     }
-    delete fileReq;
+    delete newFileReq;
     gpAdvManager->EnableButtons();
     return success;
 }

@@ -219,7 +219,7 @@ VA(0x00451ea9, 0xb2)
 i32 DecodePacket(u8* data, i32 source) {
     u16 computedCrc;
     u16 crc;
-    i32 k;
+    i32 i;
     u32 theSize;
 
     computedCrc = 0;
@@ -751,7 +751,7 @@ void write_byte(i32 value) {
 // evidence: graph:2;base=0.591174;margin=0.244003;shape=0.392;size=0.585;calls=0.933;strings=ID%s_%i;alternate=pol20:void Connect(void)@0x0000cfec
 VA(0x00452be9, 0x276)
 void Connect(void) {
-    i32 result;
+    i32 code;
     char msg[20];
     u32 randSeed = KBTickCount();
     randSeed %= 1000000;
@@ -868,7 +868,7 @@ VA(0x00453122, 0xe4)
 char ReadPacket(void) {
     i32 input;
     // Unused; retail reserves 0x20 bytes with the input below it.
-    char buffer[28];
+    char scratch[28];
     if (inque.writePosition > 4092) {
         inque.writePosition = 0;
         newpacket = 1;
@@ -949,7 +949,7 @@ i32 TransmitRemoteData(
     i8 messageType,
     i8 gamePosDestination
 ) {
-    i32 k;
+    i32 i;
     i32 result;
     i32 j;
     RemoteMessage msg;
@@ -982,14 +982,14 @@ i32 TransmitRemoteData(
         if (!reliable && result) {
             return 1;
         } else if (result) {
-            k = 0;
-            while (k < REMOTE_CONFIRM_POLL_COUNT) {
+            i = 0;
+            while (i < REMOTE_CONFIRM_POLL_COUNT) {
                 ForcePollSound();
                 if (gLastConfirm == gIDCtr)
                     return 1;
                 result = 0;
                 DelayMilli(10);
-                k++;
+                i++;
             }
         } else {
             DelayMilli(1000);
@@ -1103,7 +1103,7 @@ void PollRemote(void) {
                 else
                     newControl = 1;
             } else {
-                if (giHostGamePos == giThisGamePos)
+                if (giThisGamePos == giHostGamePos)
                     newControl = 0;
                 else
                     newControl = 1;
@@ -1134,7 +1134,7 @@ void PollRemote(void) {
                     gRemoteReady = 1;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = 1;
-                if (giHostGamePos != giThisGamePos && giCurPlayer != giThisGamePos
+                if (giThisGamePos != giHostGamePos && giCurPlayer != giThisGamePos
                     && gpAdvManager->m_active == 1 && rcvBufIn.command / 16 != giThisGamePos) {
                     giCurPlayer = rcvBufIn.command / 16;
                     gCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;

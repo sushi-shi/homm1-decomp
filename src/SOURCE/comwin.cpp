@@ -69,13 +69,13 @@ void init_anchor(tag_Anchor* anchor, i32, i32) {
 // HoMM2 Buka 2.1 ShutdownComError; literals and error cases verified in 1.1.
 VA(0x0041c9d2, 0x374)
 void ShutdownComError(char* function) {
-    DWORD error;
     char errorName[COM_ERROR_NAME_SIZE];
     char message[COM_ERROR_MESSAGE_SIZE];
+    DWORD errorCode;
 
-    error = GetLastError();
+    errorCode = GetLastError();
 
-    switch (error) {
+    switch (errorCode) {
         case ERROR_INVALID_FUNCTION:
             strcpy(errorName, "ERROR_INVALID_FUNCTION    ");
             break;
@@ -140,7 +140,7 @@ void ShutdownComError(char* function) {
         "Communications error on function '%s'\n\nWin95 Error Code: %d\nWin95 Error Meaning: "
         "%s\n\n",
         function,
-        error,
+        errorCode,
         errorName
     );
     strcat(message, "Suggested solutions:");

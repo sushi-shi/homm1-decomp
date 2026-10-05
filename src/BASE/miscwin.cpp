@@ -94,7 +94,7 @@ void SetPalette(i8* paletteData, i32 updateDisplay) {
 }
 
 VA(0x0046faa5, 0x16d)
-void FadeIn(i32 increment) {
+void FadeIn(i32 increment) throw() {
     bool done;
     i32 i, j, threshold;
     palette* pal = new palette;
@@ -127,7 +127,7 @@ void FadeIn(i32 increment) {
 }
 
 VA(0x0046fc12, 0x170)
-void FadeOut(i32 increment) {
+void FadeOut(i32 increment) throw() {
     bool done;
     i32 i, j;
     palette* pal = new palette;

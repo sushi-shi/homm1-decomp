@@ -2119,7 +2119,7 @@ i16 GetMonType(i32 score, i32 highScoreType) {
 // evidence: graph:2;base=0.701795;margin=0.122445;shape=0.377;size=0.950;calls=0.929;strings=%sCAMPAIGN.HS|%sSTANDARD.HS|.\DATA\;alternate=pol20:int AddScoreToHighScore(int, int, int, int, char *)@0x0009ce14
 VA(0x00440d39, 0x32d)
 i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
-    HighScoreEntry scores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+    HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
     i32 theDest;
     i32 nextFile;
@@ -2137,12 +2137,12 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
         missingFileValue = 1;
     if (missingFileValue) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            memset(&scores[entry], 0, sizeof(HighScoreEntry));
-            scores[entry].score = HIGH_SCORE_EMPTY;
+            memset(&curScores[entry], 0, sizeof(HighScoreEntry));
+            curScores[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(nextFile, &scores[entry], sizeof(scores));
+            read(nextFile, &curScores[entry], sizeof(curScores));
         close(nextFile);
     }
 
@@ -2151,9 +2151,9 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
     gHighScoreRank = HIGH_SCORE_EMPTY;
     giScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-        if ((score >= scores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
-            || (score <= scores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
-            || scores[entry].score == HIGH_SCORE_EMPTY) {
+        if ((score >= curScores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= curScores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
+            || curScores[entry].score == HIGH_SCORE_EMPTY) {
             gHighScoreRank = entry;
             break;
         }
@@ -2161,16 +2161,16 @@ i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
 
     if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
         for (theDest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; theDest >= entry; theDest--)
-            scores[theDest + 1] = scores[theDest];
+            curScores[theDest + 1] = curScores[theDest];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
-        strcpy(scores[entry].playerName, enteredPlayerName);
-        strcpy(scores[entry].scenarioName, scenarioName);
-        scores[entry].score = score;
+        strcpy(curScores[entry].playerName, enteredPlayerName);
+        strcpy(curScores[entry].scenarioName, scenarioName);
+        curScores[entry].score = score;
         nextFile = open(savedName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
         if (nextFile == -1)
             FileError(savedName);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            write(nextFile, &scores[entry], sizeof(HighScoreEntry));
+            write(nextFile, &curScores[entry], sizeof(HighScoreEntry));
         close(nextFile);
     }
     return 0;
@@ -2247,135 +2247,135 @@ H1_ENUM_CONST_END(NetBoxConstant)
 // evidence: graph:2;base=0.593152;margin=0.055238;shape=0.393;size=0.624;calls=0.688;strings=netbox.bin;alternate=pol20:void PopNetBox(char *, int)@0x0009d4a6
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
-    char* data;
+    char* dataObj;
     i8 blinkState;
-    i8 drawLines;
+    i8 lines;
     i8 bClose;
-    i32 firstId;
-    font* font;
-    i8 shown;
+    i32 myBaseId;
+    font* fontPtr;
+    i8 oldShown;
     i32 pause;
-    i32 lineTextLimit;
-    i8 exitForIncomingData;
-    i8 sendText;
-    tag_message incoming;
-    tag_message message;
-    i32 len;
+    i32 curLimit;
+    i8 nextExitOnData;
+    i8 curText;
+    tag_message nextIncoming;
+    tag_message messageData;
+    i32 curLen;
     char text[80];
-    i8 oldShowIt;
-    i8 updateInput;
-    i32 lineHeight;
-    i32 msgTime;
-    heroWindow* netWin;
-    i32 success;
-    i32 textWidth;
+    i8 savedShowIt;
+    i8 updateInputNum;
+    i32 heightValue;
+    i32 oldMsgTime;
+    heroWindow* theWin;
+    i32 lastSuccess;
+    i32 curWidth;
 
     if (!gRemoteOn)
         return;
-    lineTextLimit = 60;
-    firstId = 1;
-    lineHeight = 42;
-    font = gpResourceManager->GetFont("bigfont.fnt");
-    msgTime = 0;
+    curLimit = 60;
+    myBaseId = 1;
+    heightValue = 42;
+    fontPtr = gpResourceManager->GetFont("bigfont.fnt");
+    oldMsgTime = 0;
     if (notice) {
         AddNetBoxLine(notice);
-        msgTime = KBTickCount();
+        oldMsgTime = KBTickCount();
     }
-    len = 0;
-    shown = gpMouseManager->IsVis();
-    oldShowIt = bShowIt;
+    curLen = 0;
+    oldShown = gpMouseManager->IsVis();
+    savedShowIt = bShowIt;
     bShowIt = 1;
-    netWin = new heroWindow(0, 418, "netbox.bin");
-    if (!netWin)
+    theWin = new heroWindow(0, 418, "netbox.bin");
+    if (!theWin)
         MemError();
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
-    message.text = cNetBoxLine[0];
-    netWin->BroadcastMessage(message);
-    message.id = NET_BOX_LINE_LATEST;
-    message.text = cNetBoxLine[1];
-    netWin->BroadcastMessage(message);
-    gpWindowManager->AddWindow(netWin, WINDOW_Z_ORDER_APPEND, 1);
+    SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
+    messageData.text = cNetBoxLine[0];
+    theWin->BroadcastMessage(messageData);
+    messageData.id = NET_BOX_LINE_LATEST;
+    messageData.text = cNetBoxLine[1];
+    theWin->BroadcastMessage(messageData);
+    gpWindowManager->AddWindow(theWin, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
-    exitForIncomingData = 0;
+    nextExitOnData = 0;
     bClose = 0;
-    updateInput = 1;
+    updateInputNum = 1;
     blinkState = 0;
-    sendText = 0;
-    drawLines = 1;
+    curText = 0;
+    lines = 1;
     strcpy(text, "");
     gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_ASCII);
 
     while (!bClose) {
         PollSound();
-        data = GetRemoteData(0);
-        if (data) {
+        dataObj = GetRemoteData(0);
+        if (dataObj) {
             // API-forced: GetRemoteData returns queue records as char*.
-            if (reinterpret_cast<RemoteMessage*>(data)->type != REMOTE_MESSAGE_RELIABLE) {
-                data = GetRemoteData(1);
+            if (reinterpret_cast<RemoteMessage*>(dataObj)->type != REMOTE_MESSAGE_RELIABLE) {
+                dataObj = GetRemoteData(1);
             } else {
                 switch (
-                    reinterpret_cast<RemoteMessage*>(data)->command
+                    reinterpret_cast<RemoteMessage*>(dataObj)->command
                 ) { // API-forced: char* record.
                     case REMOTE_COMMAND_CHAT:
-                        data = GetRemoteData(1);
+                        dataObj = GetRemoteData(1);
                         AddNetBoxLine(
-                            reinterpret_cast<RemoteMessage*>(data)->payload.data
+                            reinterpret_cast<RemoteMessage*>(dataObj)->payload.data
                         ); // API-forced: char* record.
-                        drawLines = 1;
-                        if (msgTime)
-                            msgTime = KBTickCount();
+                        lines = 1;
+                        if (oldMsgTime)
+                            oldMsgTime = KBTickCount();
                         break;
                     default:
                         AddNetBoxLine(localization::Tr("network.incoming.close"));
-                        drawLines = 1;
-                        exitForIncomingData = 1;
+                        lines = 1;
+                        nextExitOnData = 1;
                         break;
                 }
             }
         }
 
         Process1WindowsMessage();
-        incoming = gpInputManager->GetEvent();
-        switch (incoming.type) {
+        nextIncoming = gpInputManager->GetEvent();
+        switch (nextIncoming.type) {
             case MESSAGE_KEY_DOWN:
-                msgTime = 0;
-                switch (incoming.keyCode) {
+                oldMsgTime = 0;
+                switch (nextIncoming.keyCode) {
                     case INPUT_ASCII_ESCAPE:
                     case INPUT_SCAN_F1 << INPUT_KEY_SCAN_SHIFT:
                         bClose = 1;
                         break;
                     case INPUT_ASCII_DELETE:
-                        if (len > 0)
-                            len--;
-                        updateInput = 1;
+                        if (curLen > 0)
+                            curLen--;
+                        updateInputNum = 1;
                         blinkState = 1;
                         break;
                     case '\n':
-                        sendText = 1;
+                        curText = 1;
                         break;
                     default:
-                        if (len < 58 && incoming.keyCode) {
-                            text[len] = 0;
-                            textWidth = font->LineWidth(text);
-                            if (textWidth + 30 < 610) {
-                                text[len] = incoming.keyCode & 0xff;
-                                len++;
-                                updateInput = 1;
+                        if (curLen < 58 && nextIncoming.keyCode) {
+                            text[curLen] = 0;
+                            curWidth = fontPtr->LineWidth(text);
+                            if (curWidth + 30 < 610) {
+                                text[curLen] = nextIncoming.keyCode & 0xff;
+                                curLen++;
+                                updateInputNum = 1;
                                 blinkState = 0;
                             }
                         }
                 }
         }
 
-        if (!updateInput && glTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
+        if (!updateInputNum && glTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
             blinkState = 1 - blinkState;
-            updateInput = 1;
+            updateInputNum = 1;
         }
-        if (sendText) {
-            sendText = 0;
-            text[len] = 0;
+        if (curText) {
+            curText = 0;
+            text[curLen] = 0;
             AddNetBoxLine(text);
-            success = TransmitRemoteData(
+            lastSuccess = TransmitRemoteData(
                 text,
                 REMOTE_BROADCAST_PLAYER,
                 strlen(text) + 1,
@@ -2385,41 +2385,41 @@ void PopNetBox(char* notice) {
                 REMOTE_MESSAGE_DEFAULT,
                 1
             );
-            if (!success)
+            if (!lastSuccess)
                 ShutDown(NULL);
-            len = 0;
+            curLen = 0;
             strcpy(text, "");
-            updateInput = 1;
-            drawLines = 1;
+            updateInputNum = 1;
+            lines = 1;
         }
-        if (drawLines) {
-            drawLines = 0;
-            SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
-            message.text = cNetBoxLine[0];
-            netWin->BroadcastMessage(message);
-            message.id = NET_BOX_LINE_LATEST;
-            message.text = cNetBoxLine[1];
-            netWin->BroadcastMessage(message);
-            netWin->DrawWindow();
+        if (lines) {
+            lines = 0;
+            SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
+            messageData.text = cNetBoxLine[0];
+            theWin->BroadcastMessage(messageData);
+            messageData.id = NET_BOX_LINE_LATEST;
+            messageData.text = cNetBoxLine[1];
+            theWin->BroadcastMessage(messageData);
+            theWin->DrawWindow();
             gpWindowManager->UpdateScreenRegion(0, 418, 639, 61);
         }
-        if (updateInput) {
-            updateInput = 0;
+        if (updateInputNum) {
+            updateInputNum = 0;
             glTimers[NET_BOX_BLINK_TIMER_SLOT] = KBTickCount() + NET_BOX_BLINK_DELAY;
             if (blinkState)
-                text[len] = '_';
+                text[curLen] = '_';
             else
-                text[len] = ' ';
-            text[len + 1] = 0;
-            SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NET_BOX_INPUT);
-            message.text = text;
-            netWin->BroadcastMessage(message);
-            netWin->DrawWindow();
+                text[curLen] = ' ';
+            text[curLen + 1] = 0;
+            SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_INPUT);
+            messageData.text = text;
+            theWin->BroadcastMessage(messageData);
+            theWin->DrawWindow();
             gpWindowManager->UpdateScreenRegion(0, 460, 639, 16);
         }
-        if (msgTime && msgTime + 6000 < KBTickCount())
+        if (oldMsgTime && oldMsgTime + 6000 < KBTickCount())
             bClose = 1;
-        if (exitForIncomingData) {
+        if (nextExitOnData) {
             for (pause = 0; pause < 30; pause++) {
                 PollSound();
                 DelayMilli(90);
@@ -2428,11 +2428,11 @@ void PopNetBox(char* notice) {
         }
     }
     gpInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
-    gpWindowManager->RemoveWindow(netWin);
-    bShowIt = oldShowIt;
-    if (shown)
+    gpWindowManager->RemoveWindow(theWin);
+    bShowIt = savedShowIt;
+    if (oldShown)
         gpMouseManager->ReallyShowPointer();
-    gpResourceManager->Dispose(font);
+    gpResourceManager->Dispose(fontPtr);
 }
 
 // Buka 2.1 AddNetBoxLine reduced to HoMM1's two uncoloured lines.
@@ -2613,7 +2613,7 @@ H1_ENUM_END(DataEntryControl)
 // Buka 2.1 GetDataEntry without the prompt-sized window and textEntryWidget.
 VA(0x00441df7, 0x1a0)
 void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* initialText) {
-    i16 widgetId = DATA_ENTRY_TEXT;
+    i16 widgetIdNo = DATA_ENTRY_TEXT;
     tag_message message;
     char textBuffer[100];
 

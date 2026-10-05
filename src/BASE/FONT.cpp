@@ -4,7 +4,6 @@
 
 #include <BASE/font.h>
 #include <BASE/icon.h>
-#include <BASE/IconEntry.h>
 #include <BASE/resourceManager.h>
 #include <SOURCE/KB.h>
 
@@ -46,11 +45,11 @@ i32 RemapCyrillicCharacter(i32 character) {
 
 VA(0x00471f3e, 0xff)
 void font::DrawString(char* text, i16 x, i16 y, i16 color) {
-    IconEntry* entries = reinterpret_cast<IconEntry*>(
+    i16* entries = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
+    ); // byte-evidenced: word view of the packed IconEntry directory.
     i32 glyph = 0;
-    i16 drawX = x;
+    i16 pos = x;
     i16 index = 0;
     while (text[index] != 0) {
         glyph = static_cast<u8>(text[index]);
@@ -61,154 +60,163 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
         glyph -= ' ';
         if (glyph != 0)
             m_glyphIcon->FillToBuffer(
-                drawX,
+                pos,
                 y + m_headerWord,
                 glyph,
                 color,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-        drawX += entries[glyph].w + FONT_GLYPH_ADVANCE_SPACING;
+        pos += entries[glyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+               + FONT_GLYPH_ADVANCE_SPACING;
         index++;
     }
 }
 
 VA(0x0047203d, 0x34f)
 void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
-    i16 s;
-    i32 q;
-    IconEntry* widths;
-    char spaceChar;
-    // Names place the frame slots; the order gives the operand sort keys of
-    // p < s, p >= r, lw <= width, x + t and y + u.
-    i16 r;
+    i16 textLen;
+    i32 baseGlyph;
+    i16* theWidths;
+    char spaceCharValue;
+    // Names place the /Od frame slots (docs/patterns/vc6-od-frame-slots.md).
+    i16 startIdx;
     i16 lineEnd;
     i16 drawColor;
-    i16 t;
-    i16 p;
-    i16 lw;
+    i16 bestDrawX;
+    i16 curPosIdx;
+    i16 tempWidth;
     i16 u;
-    char* w;
+    char* myText;
     char v;
 
-    s = strlen(str);
-    widths = reinterpret_cast<IconEntry*>(
+    textLen = strlen(str);
+    theWidths = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
-    spaceChar = ' ';
-    t = 0;
+    ); // byte-evidenced: word view of the packed IconEntry directory.
+    spaceCharValue = ' ';
+    bestDrawX = 0;
     u = 0;
-    r = 0;
+    startIdx = 0;
     lineEnd = 0;
-    p = 0;
-    lw = 0;
-    w = new char[s + 1];
-    strcpy(w, str);
+    curPosIdx = 0;
+    tempWidth = 0;
+    myText = new char[textLen + 1];
+    strcpy(myText, str);
     drawColor = color;
-    while (p < s && w[p] != 0 && u + m_height <= height) {
-        while (w[p] != 0 && w[p] != '\n' && lw <= width) {
-            q = static_cast<u8>(w[p]);
-            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
-                q = 0x7f;
-            else if (q > 0x7f)
-                q = RemapCyrillicCharacter(q);
-            q -= ' ';
-            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
-            p++;
+    while (curPosIdx < textLen && myText[curPosIdx] != 0 && u + m_height <= height) {
+        while (myText[curPosIdx] != 0 && myText[curPosIdx] != '\n' && tempWidth <= width) {
+            baseGlyph = static_cast<u8>(myText[curPosIdx]);
+            if (baseGlyph < ' '
+                || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8 && baseGlyph != 0xa8))
+                baseGlyph = 0x7f;
+            else if (baseGlyph > 0x7f)
+                baseGlyph = RemapCyrillicCharacter(baseGlyph);
+            baseGlyph -= ' ';
+            tempWidth += theWidths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                         + FONT_GLYPH_ADVANCE_SPACING;
+            curPosIdx++;
         }
-        if (lw > width) {
-            p--;
-            while (w[p] != ' ' && p >= r) {
-                q = static_cast<u8>(w[p]);
-                if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
-                    q = 0x7f;
-                else if (q > 0x7f)
-                    q = RemapCyrillicCharacter(q);
-                q -= ' ';
-                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
-                p--;
+        if (tempWidth > width) {
+            curPosIdx--;
+            while (myText[curPosIdx] != ' ' && curPosIdx >= startIdx) {
+                baseGlyph = static_cast<u8>(myText[curPosIdx]);
+                if (baseGlyph < ' '
+                    || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8
+                        && baseGlyph != 0xa8))
+                    baseGlyph = 0x7f;
+                else if (baseGlyph > 0x7f)
+                    baseGlyph = RemapCyrillicCharacter(baseGlyph);
+                baseGlyph -= ' ';
+                tempWidth -= theWidths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                             + FONT_GLYPH_ADVANCE_SPACING;
+                curPosIdx--;
             }
-            if (w[p] == ' ')
-                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
+            if (myText[curPosIdx] == ' ')
+                tempWidth -= theWidths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
-        lineEnd = p;
-        v = w[lineEnd];
-        w[lineEnd] = 0;
+        lineEnd = curPosIdx;
+        v = myText[lineEnd];
+        myText[lineEnd] = 0;
         switch (align) {
             case FONT_ALIGN_LEFT:
-                t = 0;
+                bestDrawX = 0;
                 break;
             case FONT_ALIGN_CENTER:
-                t = (width - lw) / 2;
+                bestDrawX = (width - tempWidth) / 2;
                 break;
             case FONT_ALIGN_RIGHT:
-                t = width - lw;
+                bestDrawX = width - tempWidth;
                 break;
         }
-        DrawString(w + r, t + x, u + y, drawColor);
-        w[lineEnd] = v;
+        DrawString(myText + startIdx, bestDrawX + x, u + y, drawColor);
+        myText[lineEnd] = v;
         u += m_height;
-        r = lineEnd + 1;
-        p = r;
-        lw = 0;
+        startIdx = lineEnd + 1;
+        curPosIdx = startIdx;
+        tempWidth = 0;
     }
-    delete[] w;
+    delete[] myText;
 }
 
 VA(0x0047238c, 0x25f)
 i32 font::LineLength(char* str, i16 maxW) {
     i16 lw;
-    i16 p;
-    i16 s = strlen(str);
-    i32 q;
-    IconEntry* widths = reinterpret_cast<IconEntry*>(
+    i16 thePos;
+    i16 theLen = strlen(str);
+    i32 baseGlyph;
+    i16* widths = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
-    char spaceChar = ' ';
+    ); // byte-evidenced: word view of the packed IconEntry directory.
+    char charVal = ' ';
     i32 z = 0;
     i16 t = 0;
-    i16 y;
-    i16 r;
-    char* w;
+    i16 curLineEnd;
+    i16 mainStart;
+    char* cursor;
     char v;
 
-    // lw, then p, lead the declarations for the operand sort keys of lw <= maxW
-    // and p < s; r follows p for p >= r. Stores keep retail order.
-    r = 0;
-    y = 0;
-    p = 0;
+    // The spellings place the /Od frame slots; stores keep retail order.
+    mainStart = 0;
+    curLineEnd = 0;
+    thePos = 0;
     lw = 0;
-    w = str;
-    while (p < s && w[p] != 0) {
-        while (w[p] != 0 && w[p] != '\n' && lw <= maxW) {
-            q = static_cast<u8>(w[p]);
-            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
-                q = 0x7f;
-            else if (q > 0x7f)
-                q = RemapCyrillicCharacter(q);
-            q -= ' ';
-            lw += widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
-            p++;
+    cursor = str;
+    while (thePos < theLen && cursor[thePos] != 0) {
+        while (cursor[thePos] != 0 && cursor[thePos] != '\n' && lw <= maxW) {
+            baseGlyph = static_cast<u8>(cursor[thePos]);
+            if (baseGlyph < ' '
+                || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8 && baseGlyph != 0xa8))
+                baseGlyph = 0x7f;
+            else if (baseGlyph > 0x7f)
+                baseGlyph = RemapCyrillicCharacter(baseGlyph);
+            baseGlyph -= ' ';
+            lw += widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                  + FONT_GLYPH_ADVANCE_SPACING;
+            thePos++;
         }
         if (lw > maxW) {
-            p--;
-            while (w[p] != ' ' && p >= r) {
-                q = static_cast<u8>(w[p]);
-                if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
-                    q = 0x7f;
-                else if (q > 0x7f)
-                    q = RemapCyrillicCharacter(q);
-                q -= ' ';
-                lw -= widths[q].w + FONT_GLYPH_ADVANCE_SPACING;
-                p--;
+            thePos--;
+            while (cursor[thePos] != ' ' && thePos >= mainStart) {
+                baseGlyph = static_cast<u8>(cursor[thePos]);
+                if (baseGlyph < ' '
+                    || (baseGlyph > 0x7f && baseGlyph < 0xc0 && baseGlyph != 0xb8
+                        && baseGlyph != 0xa8))
+                    baseGlyph = 0x7f;
+                else if (baseGlyph > 0x7f)
+                    baseGlyph = RemapCyrillicCharacter(baseGlyph);
+                baseGlyph -= ' ';
+                lw -= widths[baseGlyph * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                      + FONT_GLYPH_ADVANCE_SPACING;
+                thePos--;
             }
-            if (w[p] == ' ')
-                lw -= widths[0].w + FONT_GLYPH_ADVANCE_SPACING;
+            if (cursor[thePos] == ' ')
+                lw -= widths[FONT_GLYPH_WIDTH_WORD] + FONT_GLYPH_ADVANCE_SPACING;
         }
-        y = p;
+        curLineEnd = thePos;
         z++;
-        r = y + 1;
-        p = r;
+        mainStart = curLineEnd + 1;
+        thePos = mainStart;
         lw = 0;
     }
     return z;
@@ -216,39 +224,40 @@ i32 font::LineLength(char* str, i16 maxW) {
 
 VA(0x004725eb, 0x133)
 i32 font::LineWidth(char* text) {
-    i32 q;
-    i32 u;
-    IconEntry* table;
+    i32 curCh;
+    i32 spare;
+    i16* table;
     // PoL 2.0 retains this shared line-layout local census; HoMM1's /Od
-    // retail body proves y's dword store and the five word stores below
-    // (u is the census's unused slot). s follows y for the operand sort key.
-    i32 y;
-    i16 s;
-    i16 t, r, x, p, w;
-    char* v;
+    // retail frame keeps its unused dword and word slots. The spellings place
+    // the slots (docs/patterns/vc6-od-frame-slots.md).
+    i32 oldSpare;
+    i16 theLen;
+    i16 newSpare, mySpare, savedSpare, position, thisWidth;
+    char* p;
 
-    s = strlen(text);
-    table = reinterpret_cast<IconEntry*>(
+    theLen = strlen(text);
+    table = reinterpret_cast<i16*>(
         m_glyphIcon->m_data
-    ); // byte-evidenced: packed frame directory decoded from resource bytes.
-    y = 0;
-    t = 0;
-    r = 0;
-    x = 0;
-    p = 0;
-    w = 0;
-    v = text;
-    while (p < s && v[p] != 0) {
-        while (v[p] != 0 && v[p] != '\n') {
-            q = static_cast<u8>(v[p]);
-            if (q < ' ' || (q > 0x7f && q < 0xc0 && q != 0xb8 && q != 0xa8))
-                q = 0x7f;
-            else if (q > 0x7f)
-                q = RemapCyrillicCharacter(q);
-            q -= ' ';
-            w += table[q].w + FONT_GLYPH_ADVANCE_SPACING;
-            p++;
+    ); // byte-evidenced: word view of the packed IconEntry directory.
+    oldSpare = 0;
+    newSpare = 0;
+    mySpare = 0;
+    savedSpare = 0;
+    position = 0;
+    thisWidth = 0;
+    p = text;
+    while (position < theLen && p[position] != 0) {
+        while (p[position] != 0 && p[position] != '\n') {
+            curCh = static_cast<u8>(p[position]);
+            if (curCh < ' ' || (curCh > 0x7f && curCh < 0xc0 && curCh != 0xb8 && curCh != 0xa8))
+                curCh = 0x7f;
+            else if (curCh > 0x7f)
+                curCh = RemapCyrillicCharacter(curCh);
+            curCh -= ' ';
+            thisWidth += table[curCh * FONT_GLYPH_ENTRY_WORDS + FONT_GLYPH_WIDTH_WORD]
+                         + FONT_GLYPH_ADVANCE_SPACING;
+            position++;
         }
     }
-    return w;
+    return thisWidth;
 }

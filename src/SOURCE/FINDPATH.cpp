@@ -99,19 +99,15 @@ i16 TerrainStepCost(i8 terrain, i8 diagonal) {
 // Donor CalcTerrainCost family; HoMM1 lacks pathfinding-skill/road dimensions.
 VA(0x00429d50, 0x4e)
 i32 CalcTerrainCost(i32 terrain, i32 diagonal, i32 mobility, i32 waterMode) {
-    i32 baseCost;
-    i32 diagonalCost;
     if (waterMode == FINDPATH_WATER_MODE)
         terrain = FINDPATH_WATER_TERRAIN;
     if (diagonal == FINDPATH_STEP_STRAIGHT)
         return giTerrainCost[terrain][diagonal];
-    diagonalCost = giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
-    if (mobility >= diagonalCost)
+    if (mobility >= giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL])
         return giTerrainCost[terrain][diagonal];
-    baseCost = giTerrainCost[terrain][FINDPATH_STEP_STRAIGHT];
-    if (mobility < baseCost)
-        baseCost = diagonalCost;
-    return baseCost;
+    if (mobility >= giTerrainCost[terrain][FINDPATH_STEP_STRAIGHT])
+        return giTerrainCost[terrain][FINDPATH_STEP_STRAIGHT];
+    return giTerrainCost[terrain][FINDPATH_STEP_DIAGONAL];
 }
 
 // Buka FINDPATH.cpp:405-582 without the moat slowdown: HoMM1 has no castle
@@ -125,7 +121,7 @@ i16 searchArray::FindCombatPath(i16 sourceHex, i16 targetHex, army* unit, i8 att
     searchNode node;
     i32 distance;
     i16 attackMask;
-    i32 moveMask;
+    i16 moveMask;
     i32 bestDistance;
     i32 opposite;
 

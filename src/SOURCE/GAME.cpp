@@ -568,11 +568,11 @@ VA(0x0042cc73, 0x87f)
 i16 game::LoadGame(char* filename, i32 origData, i32) {
     i32 junk2;
     i32 numHumans;
-    i32 i;
-    i32 handle;
+    i32 ix;
+    i32 oldHandle;
     char pathName[452];
-    i8 humans[GAME_PLAYER_COUNT];
-    i32 junk;
+    i8 theHumans[GAME_PLAYER_COUNT];
+    i32 nextJunk;
     char buffer[0x2c];
 
     numHumans = 0;
@@ -584,94 +584,94 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
         sprintf(pathName, "%s%s", gDataPath, filename);
     else
         sprintf(pathName, "%s%s", gGamePath, filename);
-    handle = open(pathName, O_BINARY);
-    if (handle == -1)
+    oldHandle = open(pathName, O_BINARY);
+    if (oldHandle == -1)
         FileError(pathName);
     ClearMapExtra();
-    read(handle, &gbIAmGreatest, 1);
-    read(handle, this, 2);
-    read(handle, &giMonthType, 1);
-    read(handle, &giMonthTypeExtra, 1);
-    read(handle, &giWeekType, 1);
-    read(handle, &giWeekTypeExtra, 1);
-    read(handle, &m_campaignType, 4);
-    read(handle, &m_campaignScenario, 4);
-    read(handle, &m_campaignDay, 4);
-    read(handle, &m_campaignScenariosWon, 4);
-    read(handle, buffer, 0x2c);
-    read(handle, m_mapDescription, sizeof(m_mapDescription));
-    read(handle, &m_mapSize, 1);
-    read(handle, &m_mapDifficulty, 1);
-    read(handle, m_mapName, sizeof(m_mapName));
-    read(handle, m_saveName, 0x11);
+    read(oldHandle, &gbIAmGreatest, 1);
+    read(oldHandle, this, 2);
+    read(oldHandle, &giMonthType, 1);
+    read(oldHandle, &giMonthTypeExtra, 1);
+    read(oldHandle, &giWeekType, 1);
+    read(oldHandle, &giWeekTypeExtra, 1);
+    read(oldHandle, &m_campaignType, 4);
+    read(oldHandle, &m_campaignScenario, 4);
+    read(oldHandle, &m_campaignDay, 4);
+    read(oldHandle, &m_campaignScenariosWon, 4);
+    read(oldHandle, buffer, 0x2c);
+    read(oldHandle, m_mapDescription, sizeof(m_mapDescription));
+    read(oldHandle, &m_mapSize, 1);
+    read(oldHandle, &m_mapDifficulty, 1);
+    read(oldHandle, m_mapName, sizeof(m_mapName));
+    read(oldHandle, m_saveName, 0x11);
     sprintf(m_saveName, filename);
-    read(handle, &m_difficulty, 1);
-    read(handle, &m_playerCount, 1);
-    read(handle, &gSaveCurPlayer, 1);
+    read(oldHandle, &m_difficulty, 1);
+    read(oldHandle, &m_playerCount, 1);
+    read(oldHandle, &gSaveCurPlayer, 1);
     giCurPlayer = gSaveCurPlayer;
-    read(handle, &m_deadPlayerCount, 1);
-    read(handle, m_playerDead, sizeof(m_playerDead));
-    read(handle, humans, GAME_PLAYER_COUNT);
-    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if ((humans[i] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
+    read(oldHandle, &m_deadPlayerCount, 1);
+    read(oldHandle, m_playerDead, sizeof(m_playerDead));
+    read(oldHandle, theHumans, GAME_PLAYER_COUNT);
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
+        if ((theHumans[ix] || giDebugLevel >= 2) && numHumans < giNumHumanPlayers) {
             numHumans++;
-            gbHumanPlayer[i] = 1;
+            gbHumanPlayer[ix] = 1;
         } else {
-            gbHumanPlayer[i] = 0;
+            gbHumanPlayer[ix] = 0;
         }
     }
-    for (i = 0; i < GAME_PLAYER_COUNT; i++) {
-        if (gbHumanPlayer[i]) {
-            if (!gRemoteOn || i == giThisGamePos)
-                gbThisNetHumanPlayer[i] = 1;
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
+        if (gbHumanPlayer[ix]) {
+            if (!gRemoteOn || ix == giThisGamePos)
+                gbThisNetHumanPlayer[ix] = 1;
             else
-                gbThisNetHumanPlayer[i] = 0;
+                gbThisNetHumanPlayer[ix] = 0;
         } else {
-            gbThisNetHumanPlayer[i] = 0;
+            gbThisNetHumanPlayer[ix] = 0;
         }
     }
-    read(handle, &m_day, 2);
-    read(handle, &m_week, 2);
-    read(handle, &m_month, 2);
+    read(oldHandle, &m_day, 2);
+    read(oldHandle, &m_week, 2);
+    read(oldHandle, &m_month, 2);
     giCurTurn =
         m_day + (m_week - 1) * CALENDAR_DAYS_PER_WEEK + (m_month - 1) * CALENDAR_DAYS_PER_MONTH;
-    for (i = 0; i < GAME_PLAYER_COUNT; i++)
-        m_players[i].Read(handle);
-    ReadWorldMap(handle);
-    read(handle, &m_obeliskCount, 1);
-    read(handle, m_heroRecs, sizeof(m_heroRecs));
+    for (ix = 0; ix < GAME_PLAYER_COUNT; ix++)
+        m_players[ix].Read(oldHandle);
+    ReadWorldMap(oldHandle);
+    read(oldHandle, &m_obeliskCount, 1);
+    read(oldHandle, m_heroRecs, sizeof(m_heroRecs));
     if (origData) {
-        for (i = 0; i < GAME_HERO_COUNT; i++) {
-            strcpy(m_heroRecs[i].m_name, gHeroNames[i][0]);
-            strcpy(m_heroRecs[i].m_shortName, gHeroNames[i][1]);
+        for (ix = 0; ix < GAME_HERO_COUNT; ix++) {
+            strcpy(m_heroRecs[ix].m_name, gHeroNames[ix][0]);
+            strcpy(m_heroRecs[ix].m_shortName, gHeroNames[ix][1]);
         }
     }
-    read(handle, m_availableHeroes, sizeof(m_availableHeroes));
-    read(handle, m_castleRecs, sizeof(m_castleRecs));
-    read(handle, m_townOwners, sizeof(m_townOwners));
-    read(handle, m_townBuiltToday, sizeof(m_townBuiltToday));
-    read(handle, m_mines, sizeof(m_mines));
-    read(handle, m_mineOwners, sizeof(m_mineOwners));
-    read(handle, m_randomArtifacts, sizeof(m_randomArtifacts));
-    read(handle, m_boats, sizeof(m_boats));
-    read(handle, m_boatSlots, sizeof(m_boatSlots));
-    read(handle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
-    read(handle, &m_ultimateArtifactX, 1);
-    read(handle, &m_ultimateArtifactY, 1);
-    read(handle, &m_ultimateArtifactId, 1);
+    read(oldHandle, m_availableHeroes, sizeof(m_availableHeroes));
+    read(oldHandle, m_castleRecs, sizeof(m_castleRecs));
+    read(oldHandle, m_townOwners, sizeof(m_townOwners));
+    read(oldHandle, m_townBuiltToday, sizeof(m_townBuiltToday));
+    read(oldHandle, m_mines, sizeof(m_mines));
+    read(oldHandle, m_mineOwners, sizeof(m_mineOwners));
+    read(oldHandle, m_randomArtifacts, sizeof(m_randomArtifacts));
+    read(oldHandle, m_boats, sizeof(m_boats));
+    read(oldHandle, m_boatSlots, sizeof(m_boatSlots));
+    read(oldHandle, m_obeliskVisitors, sizeof(m_obeliskVisitors));
+    read(oldHandle, &m_ultimateArtifactX, 1);
+    read(oldHandle, &m_ultimateArtifactY, 1);
+    read(oldHandle, &m_ultimateArtifactId, 1);
     if (origData) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
         memset(mapVisited, 0, sizeof(mapVisited));
         strcpy(gpGame->m_saveName, localization::Tr("save.name.new_game"));
     } else {
-        read(handle, m_mapSounds, sizeof(m_mapSounds));
-        read(handle, m_mapExtra, sizeof(m_mapExtra));
-        read(handle, mapVisited, sizeof(mapVisited));
+        read(oldHandle, m_mapSounds, sizeof(m_mapSounds));
+        read(oldHandle, m_mapExtra, sizeof(m_mapExtra));
+        read(oldHandle, mapVisited, sizeof(mapVisited));
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gpGame->m_saveName, filename);
     }
-    close(handle);
+    close(oldHandle);
     gpAdvManager->m_heroContextLocked = 0;
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     giCurPlayerBit = 1 << giCurPlayer;
@@ -870,7 +870,7 @@ i16 NewGameHandler(tag_message& message) {
                             iPlayer = message.id - NEW_GAME_OPPONENT_TOGGLE_BASE;
                             gpGame->m_players[iPlayer].m_difficulty++;
                             gpGame->m_players[iPlayer].m_difficulty %= PLAYER_TYPE_COUNT;
-                            if (giNumHumanPlayers > iPlayer
+                            if (iPlayer < giNumHumanPlayers
                                 && !gpGame->m_players[iPlayer].m_difficulty)
                                 gpGame->m_players[iPlayer].m_difficulty = HUMAN_HANDICAP_EASY;
                             break;
@@ -1879,7 +1879,7 @@ i16 game::LoadMap(char* filename) {
     i32 handle;
     i8 x;
     i8 type;
-    i32 reserved;
+    i32 wasReserved;
     i16 theVersion;
 
     extern char gMapPath[];
@@ -2037,7 +2037,7 @@ i8 game::ViewSpells(
     i16 (*callback)(struct tag_message&),
     i8 readOnly
 ) {
-    tag_message message;
+    tag_message msg;
 
     m_viewSpell = SPELL_NONE;
     i16 winX[3] = {177, 97, 177};
@@ -2070,12 +2070,12 @@ i8 game::ViewSpells(
                 MemError();
         }
         if (spellType != SPELL_TYPE_ALL) {
-            message.type = MESSAGE_WIDGET;
-            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            message.id = spellType == SPELL_TYPE_COMBAT ? SPELL_BOOK_ADVENTURE_SPELLS
-                                                        : SPELL_BOOK_COMBAT_SPELLS;
-            message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-            m_viewSpellsWindow->BroadcastMessage(message);
+            msg.type = MESSAGE_WIDGET;
+            msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            msg.id = spellType == SPELL_TYPE_COMBAT ? SPELL_BOOK_ADVENTURE_SPELLS
+                                                    : SPELL_BOOK_COMBAT_SPELLS;
+            msg.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+            m_viewSpellsWindow->BroadcastMessage(msg);
         }
         UpdateSpellWidgets();
         gpWindowManager->DoDialog(m_viewSpellsWindow, ViewSpellsHandler, 0);
@@ -2382,46 +2382,46 @@ void game::ViewArmy(
     class army* theArmy,
     class armyGroup* theGroup
 ) {
-    char numText[12];
-    i32 shotCount;
+    char localText[12];
+    i32 shotCountNo;
     i16 baseX;
     i16 spacing;
-    i16 topY;
-    i16 animId;
-    i32 morale;
-    tag_monsterInfo* monsterInfo;
-    i16 numId;
-    i32 i;
+    i16 posY;
+    i16 activeId;
+    i32 myMorale;
+    tag_monsterInfo* monsterInfoObj;
+    i16 idIndex;
+    i32 m;
     char* statText;
-    i32 luck;
-    tag_message message;
-    char iconName[16];
-    iconWidget* monsterWidget;
-    i16 statsMessage;
-    i16 titleLabel;
-    i32 mod;
+    i32 savedLuck;
+    tag_message origMessage;
+    char iconNameBuffer[16];
+    iconWidget* theMonsterWidget;
+    i16 note;
+    i16 curTitleLabel;
+    i32 oldMod;
     i16 blankBtn;
-    char fileName[13];
+    char theName[13];
 
     baseX = 86;
-    topY = 164;
+    posY = 164;
     blankBtn = VIEW_ARMY_COUNT_FRAME;
-    numId = VIEW_ARMY_COUNT_TEXT;
-    titleLabel = VIEW_ARMY_TITLE;
-    statsMessage = VIEW_ARMY_STATS;
-    animId = VIEW_ARMY_ANIMATION;
-    message.type = MESSAGE_WIDGET;
+    idIndex = VIEW_ARMY_COUNT_TEXT;
+    curTitleLabel = VIEW_ARMY_TITLE;
+    note = VIEW_ARMY_STATS;
+    activeId = VIEW_ARMY_ANIMATION;
+    origMessage.type = MESSAGE_WIDGET;
 
     if (monsterType != CREATURE_SWORDSMAN)
-        strcpy(iconName, gArmySpriteNames[monsterType]);
+        strcpy(iconNameBuffer, gArmySpriteNames[monsterType]);
     else
-        strcpy(iconName, "swrdsman");
-    monsterInfo = &gMonsterDatabase[monsterType];
+        strcpy(iconNameBuffer, "swrdsman");
+    monsterInfoObj = &gMonsterDatabase[monsterType];
     m_viewArmyWindow = new heroWindow(x, y, "armywin.bin");
     if (!m_viewArmyWindow)
         MemError();
     spacing = 30;
-    if (monsterInfo->stats.attributes & MONSTER_FLAGS_WIDE) {
+    if (monsterInfoObj->stats.attributes & MONSTER_FLAGS_WIDE) {
         switch (facing) {
             case ARMY_FACING_RIGHT:
                 spacing += 43;
@@ -2433,120 +2433,120 @@ void game::ViewArmy(
     } else {
         spacing += facing == ARMY_FACING_LEFT ? 76 : 86;
     }
-    if (monsterInfo->stats.attributes & MONSTER_FLAGS_FLYING)
-        sprintf(fileName, "%s.wlk", iconName);
+    if (monsterInfoObj->stats.attributes & MONSTER_FLAGS_FLYING)
+        sprintf(theName, "%s.wlk", iconNameBuffer);
     else
-        sprintf(fileName, "%s.wip", iconName);
-    monsterWidget = new iconWidget(
+        sprintf(theName, "%s.wip", iconNameBuffer);
+    theMonsterWidget = new iconWidget(
         spacing,
         164,
         86,
         149,
-        fileName,
+        theName,
         0,
         facing == ARMY_FACING_LEFT,
         VIEW_ARMY_ANIMATION,
         ICON_WIDGET_DRAW,
         1
     );
-    if (!monsterWidget)
+    if (!theMonsterWidget)
         MemError();
-    m_viewArmyWindow->AddWidget(monsterWidget, WINDOW_Z_ORDER_APPEND);
+    m_viewArmyWindow->AddWidget(theMonsterWidget, WINDOW_Z_ORDER_APPEND);
 
-    strcpy(fileName, gArmyNames[monsterType]);
-    fileName[0] = CyrillicToUpper(fileName[0]);
-    message.command = WIDGET_COMMAND_SET_TEXT;
-    message.id = VIEW_ARMY_TITLE;
-    message.text = fileName;
-    m_viewArmyWindow->BroadcastMessage(message);
+    strcpy(theName, gArmyNames[monsterType]);
+    theName[0] = CyrillicToUpper(theName[0]);
+    origMessage.command = WIDGET_COMMAND_SET_TEXT;
+    origMessage.id = VIEW_ARMY_TITLE;
+    origMessage.text = theName;
+    m_viewArmyWindow->BroadcastMessage(origMessage);
 
     statText = static_cast<char*>(malloc(VIEW_ARMY_STAT_TEXT_SIZE));
     if (theGroup)
-        morale = theGroup->GetMorale(theHero, castle);
+        myMorale = theGroup->GetMorale(theHero, castle);
     else
-        morale = 0;
+        myMorale = 0;
     sprintf(statText, "");
 
-    mod = 0;
-    sprintf(gText, "%s%d", gArmyStatText[0], monsterInfo->stats.attack);
+    oldMod = 0;
+    sprintf(gText, "%s%d", gArmyStatText[0], monsterInfoObj->stats.attack);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[HERO_PRIMARY_ATTACK];
-    if (mod) {
-        sprintf(gText, " (%d)", monsterInfo->stats.attack + mod);
+        oldMod += theHero->m_primaryStats[HERO_PRIMARY_ATTACK];
+    if (oldMod) {
+        sprintf(gText, " (%d)", monsterInfoObj->stats.attack + oldMod);
         strcat(statText, gText);
     }
 
-    mod = 0;
-    sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfo->stats.defense);
+    oldMod = 0;
+    sprintf(gText, "\n%s%d", gArmyStatText[1], monsterInfoObj->stats.defense);
     strcat(statText, gText);
     if (theHero)
-        mod += theHero->m_primaryStats[HERO_PRIMARY_DEFENSE];
+        oldMod += theHero->m_primaryStats[HERO_PRIMARY_DEFENSE];
     if (theArmy && theArmy->m_spellEffect == SPELL_PROTECTION)
-        mod += 3;
-    if (mod) {
-        sprintf(gText, " (%d)", monsterInfo->stats.defense + mod);
+        oldMod += 3;
+    if (oldMod) {
+        sprintf(gText, " (%d)", monsterInfoObj->stats.defense + oldMod);
         strcat(statText, gText);
     }
 
-    if (monsterInfo->stats.attributes & MONSTER_FLAGS_SHOOTER) {
+    if (monsterInfoObj->stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (theArmy)
-            shotCount = theArmy->m_stats.shots;
+            shotCountNo = theArmy->m_stats.shots;
         else
-            shotCount = monsterInfo->stats.shots;
-        if (shotCount > 0) {
+            shotCountNo = monsterInfoObj->stats.shots;
+        if (shotCountNo > 0) {
             if (gpCombatManager->m_active == 1)
-                sprintf(gText, "\n%s%d", gArmyStatText[2], shotCount);
+                sprintf(gText, "\n%s%d", gArmyStatText[2], shotCountNo);
             else
-                sprintf(gText, "\n%s%d", gArmyStatText[8], shotCount);
+                sprintf(gText, "\n%s%d", gArmyStatText[8], shotCountNo);
             strcat(statText, gText);
         }
     }
 
-    sprintf(gText, "\n%s%d", gArmyStatText[3], monsterInfo->stats.damageMin);
+    sprintf(gText, "\n%s%d", gArmyStatText[3], monsterInfoObj->stats.damageMin);
     strcat(statText, gText);
-    if (monsterInfo->stats.damageMin != monsterInfo->stats.damageMax) {
-        sprintf(gText, "-%d", monsterInfo->stats.damageMax);
+    if (monsterInfoObj->stats.damageMin != monsterInfoObj->stats.damageMax) {
+        sprintf(gText, "-%d", monsterInfoObj->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<u8>(monsterInfo->stats.hitPoints));
+    sprintf(gText, "\n%s%d", gArmyStatText[4], static_cast<u8>(monsterInfoObj->stats.hitPoints));
     strcat(statText, gText);
-    sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfo->stats.speed]);
+    sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfoObj->stats.speed]);
     strcat(statText, gText);
-    sprintf(gText, "\n%s%s", gArmyStatText[6], gMoraleText[morale + 3]);
+    sprintf(gText, "\n%s%s", gArmyStatText[6], gMoraleText[myMorale + 3]);
     strcat(statText, gText);
-    luck = GetLuck(theHero, theArmy);
-    sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[luck + 3]);
+    savedLuck = GetLuck(theHero, theArmy);
+    sprintf(gText, "\n%s%s", gArmyStatText[7], gLuckText[savedLuck + 3]);
     strcat(statText, gText);
 
-    message.id = VIEW_ARMY_STATS;
-    message.text = statText;
-    m_viewArmyWindow->BroadcastMessage(message);
+    origMessage.id = VIEW_ARMY_STATS;
+    origMessage.text = statText;
+    m_viewArmyWindow->BroadcastMessage(origMessage);
     if (disableDismiss) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = VIEW_ARMY_DISMISS;
-        m_viewArmyWindow->BroadcastMessage(message);
+        origMessage.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        origMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        origMessage.id = VIEW_ARMY_DISMISS;
+        m_viewArmyWindow->BroadcastMessage(origMessage);
     }
     if (quickView) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = VIEW_ARMY_CLOSE;
-        m_viewArmyWindow->BroadcastMessage(message);
+        origMessage.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        origMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        origMessage.id = VIEW_ARMY_CLOSE;
+        m_viewArmyWindow->BroadcastMessage(origMessage);
     }
     if (numTroops < 1) {
-        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        message.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
-        message.id = VIEW_ARMY_COUNT_FRAME;
-        m_viewArmyWindow->BroadcastMessage(message);
-        message.id = VIEW_ARMY_COUNT_TEXT;
-        m_viewArmyWindow->BroadcastMessage(message);
+        origMessage.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        origMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
+        origMessage.id = VIEW_ARMY_COUNT_FRAME;
+        m_viewArmyWindow->BroadcastMessage(origMessage);
+        origMessage.id = VIEW_ARMY_COUNT_TEXT;
+        m_viewArmyWindow->BroadcastMessage(origMessage);
     } else {
-        sprintf(numText, "%d", numTroops);
-        message.command = WIDGET_COMMAND_SET_TEXT;
-        message.id = VIEW_ARMY_COUNT_TEXT;
-        message.text = numText;
-        m_viewArmyWindow->BroadcastMessage(message);
+        sprintf(localText, "%d", numTroops);
+        origMessage.command = WIDGET_COMMAND_SET_TEXT;
+        origMessage.id = VIEW_ARMY_COUNT_TEXT;
+        origMessage.text = localText;
+        m_viewArmyWindow->BroadcastMessage(origMessage);
     }
     glTimers[VIEW_ARMY_TIMER_SLOT] = KBTickCount() + VIEW_ARMY_FRAME_DELAY;
     m_viewArmyResult = 0;
@@ -2559,10 +2559,10 @@ void game::ViewArmy(
     } else {
         gpWindowManager->DoDialog(m_viewArmyWindow, ViewArmyHandler, 0);
         if (gbDismissArmy && theGroup) {
-            for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                if (theGroup->m_creatureTypes[i] == monsterType) {
-                    theGroup->m_creatureTypes[i] = CREATURE_NONE;
-                    theGroup->m_creatureCounts[i] = 0;
+            for (m = 0; m < ARMY_GROUP_SLOT_COUNT; m++) {
+                if (theGroup->m_creatureTypes[m] == monsterType) {
+                    theGroup->m_creatureTypes[m] = CREATURE_NONE;
+                    theGroup->m_creatureCounts[m] = 0;
                 }
             }
         }
@@ -3109,11 +3109,11 @@ i32 game::ComputeDailyGold(i32 player) {
 VA(0x004336ce, 0x4ce)
 void game::PerDay(void) {
     i16 i;
-    i16 production;
+    i16 theProduction;
     // Retail reserves one more unused slot between the counters.
-    i16 k;
+    i16 ii;
     i16 j;
-    i8 resource;
+    i8 curResource;
 
     for (i = 0; i < gpGame->m_playerCount; i++) {
         for (j = 0; j < RESOURCE_COUNT; j++)
@@ -3122,16 +3122,16 @@ void game::PerDay(void) {
     memset(m_townBuiltToday, 0, sizeof(m_townBuiltToday));
     for (i = MINE_SLOT_STANDARD_FIRST; i < GAME_MINE_COUNT; i++) {
         if (m_mines[i].owner != GAME_PLAYER_NONE) {
-            resource = m_mines[i].type;
-            production = 0;
-            if (resource == RESOURCE_ORE)
-                production = DAILY_MINE_YIELD_WOOD_ORE;
-            else if (resource == RESOURCE_WOOD)
-                production = DAILY_MINE_YIELD_WOOD_ORE;
-            else if (resource != RESOURCE_GOLD)
-                production = DAILY_MINE_YIELD_OTHER;
-            if (resource != RESOURCE_GOLD)
-                m_players[m_mines[i].owner].m_resources[resource] += production;
+            curResource = m_mines[i].type;
+            theProduction = 0;
+            if (curResource == RESOURCE_ORE)
+                theProduction = DAILY_MINE_YIELD_WOOD_ORE;
+            else if (curResource == RESOURCE_WOOD)
+                theProduction = DAILY_MINE_YIELD_WOOD_ORE;
+            else if (curResource != RESOURCE_GOLD)
+                theProduction = DAILY_MINE_YIELD_OTHER;
+            if (curResource != RESOURCE_GOLD)
+                m_players[m_mines[i].owner].m_resources[curResource] += theProduction;
         }
     }
     for (i = 0; i < GAME_TOWN_COUNT; i++)
@@ -3684,43 +3684,43 @@ void game::RandomizeHeroPool(void) {
 // only from the first two stacks of each class table.
 VA(0x00435566, 0x28f)
 void game::SetRandomHeroArmies(i16 heroId, i32 strongArmy) {
-    armyGroup* army = &m_heroRecs[heroId].m_army;
-    i16 slot = 0;
-    i16 armyTable[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
+    armyGroup* curArmy = &m_heroRecs[heroId].m_army;
+    i16 curSlot = 0;
+    i16 armies[HERO_CLASS_COUNT][RANDOM_HERO_ARMY_OPTION_COUNT][RANDOM_HERO_ARMY_FIELD_COUNT] = {
         {{CREATURE_PEASANT, 30, 50}, {CREATURE_ARCHER, 3, 5}, {CREATURE_PIKEMAN, 2, 4}},
         {{CREATURE_GOBLIN, 15, 25}, {CREATURE_ORC, 3, 5}, {CREATURE_WOLF, 2, 3}},
         {{CREATURE_SPRITE, 10, 20}, {CREATURE_DWARF, 2, 4}, {CREATURE_ELF, 1, 2}},
         {{CREATURE_CENTAUR, 6, 10}, {CREATURE_GARGOYLE, 2, 4}, {CREATURE_GRIFFIN, 1, 2}}
     };
-    i32 present[RANDOM_HERO_ARMY_OPTION_COUNT];
+    i32 curPresent[RANDOM_HERO_ARMY_OPTION_COUNT];
     i32 i;
-    i32 max;
+    i32 curMax;
     i32 minNum;
 
-    present[0] = 1;
-    present[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
-                                     + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
-    present[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
-                                     + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
-    if (!present[2])
-        present[1] = 1;
+    curPresent[0] = 1;
+    curPresent[1] = Random(0, 99) < RANDOM_HERO_FIRST_STACK_CHANCE
+                                        + (strongArmy ? RANDOM_HERO_FIRST_STACK_BONUS_CHANCE : 0);
+    curPresent[2] = Random(0, 99) < RANDOM_HERO_SECOND_STACK_CHANCE
+                                        + (strongArmy ? RANDOM_HERO_SECOND_STACK_BONUS_CHANCE : 0);
+    if (!curPresent[2])
+        curPresent[1] = 1;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-        army->m_creatureTypes[i] = CREATURE_NONE;
-        army->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
+        curArmy->m_creatureTypes[i] = CREATURE_NONE;
+        curArmy->m_creatureCounts[i] = RANDOM_HERO_EMPTY_COUNT;
     }
     for (i = 0; i < RANDOM_HERO_ARMY_SELECTION_COUNT; i++) {
-        if (present[i]) {
-            army->m_creatureTypes[slot] =
-                armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
-            minNum = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
+        if (curPresent[i]) {
+            curArmy->m_creatureTypes[curSlot] =
+                armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_CREATURE];
+            minNum = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MIN]
                      * RANDOM_HERO_COUNT_SCALE;
-            max = armyTable[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
-                      * RANDOM_HERO_COUNT_SCALE
-                  + RANDOM_HERO_COUNT_ROUNDING;
+            curMax = armies[m_heroRecs[heroId].m_heroClass][i][RANDOM_HERO_ARMY_FIELD_MAX]
+                         * RANDOM_HERO_COUNT_SCALE
+                     + RANDOM_HERO_COUNT_ROUNDING;
             if (strongArmy)
-                minNum = (minNum + max) / 2;
-            army->m_creatureCounts[slot] = Random(minNum, max) / RANDOM_HERO_COUNT_SCALE;
-            slot++;
+                minNum = (minNum + curMax) / 2;
+            curArmy->m_creatureCounts[curSlot] = Random(minNum, curMax) / RANDOM_HERO_COUNT_SCALE;
+            curSlot++;
         }
     }
 }
@@ -4278,70 +4278,70 @@ i8 game::SetupTowns(void) {
 // town gate occupies the town.
 VA(0x00436a6c, 0x325)
 void game::ProcessOnMapHeroes(void) {
-    i32 mapY;
+    i32 posY;
     mapHeroExtra* extra;
-    town* town;
+    town* curTown;
     i32 townId;
     i32 iPlayer;
-    i32 k;
-    i32 j;
-    i32 mapX;
+    i32 i;
+    i32 jx;
+    i32 posX;
     mapCell* north;
-    mapCell* cell;
-    hero* theHero;
+    mapCell* loc;
+    hero* theHeroEntry;
 
-    for (mapY = 0; mapY < MAP_CELL_GRID_SIZE; mapY++) {
-        for (mapX = 0; mapX < MAP_CELL_GRID_SIZE; mapX++) {
-            cell = &m_map[mapX][mapY];
-            if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
+    for (posY = 0; posY < MAP_CELL_GRID_SIZE; posY++) {
+        for (posX = 0; posX < MAP_CELL_GRID_SIZE; posX++) {
+            loc = &m_map[posX][posY];
+            if ((loc->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 extra =
-                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(cell->m_objectMetadata)]);
-                theHero = GetHero(extra->heroId);
-                for (k = 0; k < ARMY_GROUP_SLOT_COUNT; k++) {
-                    theHero->m_army.m_creatureCounts[k] = extra->troopCounts[k];
-                    if (theHero->m_army.m_creatureCounts[k] > 0)
-                        theHero->m_army.m_creatureTypes[k] = extra->troopTypes[k];
+                    static_cast<mapHeroExtra*>(ppMapExtra[static_cast<u8>(loc->m_objectMetadata)]);
+                theHeroEntry = GetHero(extra->heroId);
+                for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
+                    theHeroEntry->m_army.m_creatureCounts[i] = extra->troopCounts[i];
+                    if (theHeroEntry->m_army.m_creatureCounts[i] > 0)
+                        theHeroEntry->m_army.m_creatureTypes[i] = extra->troopTypes[i];
                     else
-                        theHero->m_army.m_creatureTypes[k] = CREATURE_NONE;
+                        theHeroEntry->m_army.m_creatureTypes[i] = CREATURE_NONE;
                 }
-                for (j = 0; j < MAP_HERO_EXTRA_ARTIFACT_COUNT; j++) {
-                    if (extra->artifacts[j] >= 0)
-                        gpAdvManager->GiveArtifact(theHero, extra->artifacts[j]);
+                for (jx = 0; jx < MAP_HERO_EXTRA_ARTIFACT_COUNT; jx++) {
+                    if (extra->artifacts[jx] >= 0)
+                        gpAdvManager->GiveArtifact(theHeroEntry, extra->artifacts[jx]);
                 }
-                theHero->m_experience = 0;
-                gpAdvManager->GiveExperience(theHero, extra->experience, 1);
-                theHero->CheckLevel();
-                theHero->m_x = mapX;
-                theHero->m_y = mapY;
+                theHeroEntry->m_experience = 0;
+                gpAdvManager->GiveExperience(theHeroEntry, extra->experience, 1);
+                theHeroEntry->CheckLevel();
+                theHeroEntry->m_x = posX;
+                theHeroEntry->m_y = posY;
                 if (extra->owner >= gpGame->m_playerCount)
                     iPlayer = gpGame->m_playerCount - 1;
                 else
                     iPlayer = extra->owner;
-                theHero->m_owner = iPlayer;
+                theHeroEntry->m_owner = iPlayer;
                 m_availableHeroes[extra->heroId] = iPlayer;
-                m_players[theHero->m_owner].m_heroIds[m_players[theHero->m_owner].m_heroCount] =
-                    theHero->m_id;
-                m_players[theHero->m_owner].m_heroCount++;
-                if (mapY > 0) {
-                    north = &m_map[mapX][mapY - 1];
+                m_players[theHeroEntry->m_owner]
+                    .m_heroIds[m_players[theHeroEntry->m_owner].m_heroCount] = theHeroEntry->m_id;
+                m_players[theHeroEntry->m_owner].m_heroCount++;
+                if (posY > 0) {
+                    north = &m_map[posX][posY - 1];
                     if (north->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)) {
-                        theHero->m_y--;
-                        townId = GetTownId(mapX, mapY - 1);
-                        town = GetTown(townId);
-                        town->m_occupyingHeroId = theHero->m_id;
+                        theHeroEntry->m_y--;
+                        townId = GetTownId(posX, posY - 1);
+                        curTown = GetTown(townId);
+                        curTown->m_occupyingHeroId = theHeroEntry->m_id;
                     }
                 }
-                cell->m_objectTileset = 0;
-                cell->m_objectIndex = MAP_CELL_NO_FRAME;
-                cell->m_overlayTileset = 0;
-                cell->m_overlayIndex = MAP_CELL_NO_FRAME;
-                cell->m_objectMetadata = 0;
-                cell->m_triggerType = MAP_OBJECT_NONE;
+                loc->m_objectTileset = 0;
+                loc->m_objectIndex = MAP_CELL_NO_FRAME;
+                loc->m_overlayTileset = 0;
+                loc->m_overlayIndex = MAP_CELL_NO_FRAME;
+                loc->m_objectMetadata = 0;
+                loc->m_triggerType = MAP_OBJECT_NONE;
                 SetVisibility(
-                    theHero->m_x,
-                    theHero->m_y,
-                    theHero->m_owner,
-                    gHeroScoutRadius[theHero->m_heroClass]
+                    theHeroEntry->m_x,
+                    theHeroEntry->m_y,
+                    theHeroEntry->m_owner,
+                    gHeroScoutRadius[theHeroEntry->m_heroClass]
                 );
             }
         }
@@ -4898,8 +4898,8 @@ void game::GetMap(void) {
     char oldDescription[124];
     char oldMapName[16];
     char mask[16];
-    i16 result;
-    fileRequester* request;
+    i16 code;
+    fileRequester* theRequest;
 
     strcpy(oldMapName, gMapName);
     strcpy(saveFullName, gFullMapName);
@@ -4918,20 +4918,20 @@ void game::GetMap(void) {
     else if (giNumHumanPlayers == 4)
         sprintf(mask, "???????4.MAP");
     extern char gMapPath[];
-    request = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gMapPath, ".MAP");
-    if (!request)
+    theRequest = new fileRequester(310, 14, FILE_REQUESTER_LOAD, mask, gMapPath, ".MAP");
+    if (!theRequest)
         MemError();
-    request->ShowMapInfo();
-    result = gpExec->DoDialog(request);
+    theRequest->ShowMapInfo();
+    code = gpExec->DoDialog(theRequest);
     gpWindowManager->RemoveWindow(gReqExtraWindow);
-    if (result == DIALOG_BUTTON_2) {
+    if (code == DIALOG_BUTTON_2) {
         strcpy(gMapName, gLastFilename);
-        delete request;
+        delete theRequest;
     } else {
         strcpy(gMapName, oldMapName);
         strcpy(gFullMapName, saveFullName);
         strcpy(gMapDescription, oldDescription);
-        delete request;
+        delete theRequest;
     }
     delete gReqExtraWindow;
     gShowMapInfo = 0;
@@ -4952,7 +4952,7 @@ i32 game::GetNumThievesGuilds(i32 color) {
 
 // Buka 2.1 game::CalcDifficultyRating for HoMM1: difficulty, opponents
 // (human seats by handicap, computers by level), King of the Hill, map
-// size and map difficulty.
+// size and map difficulty. Zero bonuses are still added (/Od load/store).
 VA(0x00438573, 0x2e3)
 i32 game::CalcDifficultyRating(void) {
     i32 i;
@@ -4960,6 +4960,7 @@ i32 game::CalcDifficultyRating(void) {
 
     total = 0;
     if (m_difficulty == DIFFICULTY_EASY) {
+        total += 0;
     } else if (m_difficulty == DIFFICULTY_NORMAL) {
         total += 10;
     } else if (m_difficulty == DIFFICULTY_HARD) {
@@ -4988,7 +4989,9 @@ i32 game::CalcDifficultyRating(void) {
     }
     if (gbIAmGreatest) {
         if (m_playerCount - giNumHumanPlayers == 0) {
+            total += 0;
         } else if (m_playerCount - giNumHumanPlayers == 1) {
+            total += 0;
         } else if (m_playerCount - giNumHumanPlayers == 2) {
             total += 5;
         } else if (m_playerCount - giNumHumanPlayers == 3) {
@@ -4996,6 +4999,7 @@ i32 game::CalcDifficultyRating(void) {
         }
     }
     if (gMapSize == MAP_SIZE_SMALL) {
+        total += 0;
     } else if (gMapSize == MAP_SIZE_MEDIUM) {
         total += 10;
     } else if (gMapSize == MAP_SIZE_LARGE) {
@@ -5049,21 +5053,21 @@ done:
 
 VA(0x00438934, 0x410)
 void game::ShowScenInfo(void) {
-    i16 i;
-    const i8 sizeId = 100;
-    const i8 mapLevelId = 101;
-    const i8 mapDescId = 102;
+    i16 jj;
+    const i8 sizeIdNo = 100;
+    const i8 selLevelId = 101;
+    const i8 selDescId = 102;
     const i8 crestId = 103;
-    const i8 nameId = 104;
-    const i8 levelId = 105;
-    const i8 playersId = 106;
+    const i8 nameIdIndex = 104;
+    const i8 levelIdIdx = 105;
+    const i8 playersIdPos = 106;
     const i8 kingOfHillId = 107;
     const i8 ratingId = 108;
-    char line1[20];
-    i32 difficulty;
+    char line1Buf[20];
+    i32 baseDifficulty;
     heroWindow* scenWindow;
-    tag_message message;
-    i16 idx;
+    tag_message packet;
+    i16 startIdx;
     // Retail reserves one unused slot between the seat counters.
     i32 pad;
 
@@ -5071,65 +5075,65 @@ void game::ShowScenInfo(void) {
     scenWindow = new heroWindow(159, 14, "sceninfo.bin");
     if (!scenWindow)
         MemError();
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, nameId);
-    message.text = m_mapName;
-    scenWindow->BroadcastMessage(message);
-    difficulty = m_difficulty;
+    SET_WIDGET_MESSAGE(packet, WIDGET_COMMAND_SET_TEXT, nameIdIndex);
+    packet.text = m_mapName;
+    scenWindow->BroadcastMessage(packet);
+    baseDifficulty = m_difficulty;
     if (giCurPlayer > 0)
-        difficulty = gpCurPlayer->m_difficulty - 1;
-    message.id = levelId;
-    message.text = gDifficultyNames[difficulty];
-    scenWindow->BroadcastMessage(message);
-    message.id = playersId;
-    message.text = gText;
+        baseDifficulty = gpCurPlayer->m_difficulty - 1;
+    packet.id = levelIdIdx;
+    packet.text = gDifficultyNames[baseDifficulty];
+    scenWindow->BroadcastMessage(packet);
+    packet.id = playersIdPos;
+    packet.text = gText;
     sprintf(gText, "");
-    for (i = 1; i < GAME_PLAYER_COUNT; i++) {
+    for (jj = 1; jj < GAME_PLAYER_COUNT; jj++) {
         if (giCurPlayer == 0) {
             sprintf(
-                line1,
+                line1Buf,
                 "%s\n",
-                gbHumanPlayer[i] ? gHandicapNames[m_players[i].m_difficulty]
-                                 : gPlayerTypeNames[m_players[i].m_difficulty]
+                gbHumanPlayer[jj] ? gHandicapNames[m_players[jj].m_difficulty]
+                                  : gPlayerTypeNames[m_players[jj].m_difficulty]
             );
-        } else if (i == 1) {
-            sprintf(line1, "%s\n", gHandicapNames[m_difficulty + 1]);
+        } else if (jj == 1) {
+            sprintf(line1Buf, "%s\n", gHandicapNames[m_difficulty + 1]);
         } else {
-            idx = i - 1 < giCurPlayer ? i - 1 : i;
+            startIdx = jj - 1 < giCurPlayer ? jj - 1 : jj;
             sprintf(
-                line1,
+                line1Buf,
                 "%s\n",
-                gbHumanPlayer[idx] ? gHandicapNames[m_players[idx].m_difficulty]
-                                   : gPlayerTypeNames[m_players[idx].m_difficulty]
+                gbHumanPlayer[startIdx] ? gHandicapNames[m_players[startIdx].m_difficulty]
+                                        : gPlayerTypeNames[m_players[startIdx].m_difficulty]
             );
         }
-        strcat(gText, line1);
+        strcat(gText, line1Buf);
     }
-    scenWindow->BroadcastMessage(message);
-    message.id = kingOfHillId;
-    message.text = gText;
+    scenWindow->BroadcastMessage(packet);
+    packet.id = kingOfHillId;
+    packet.text = gText;
     sprintf(
         gText,
         gbIAmGreatest ? localization::Tr("scenario.info.yes") : localization::Tr("scenario.info.no")
     );
-    scenWindow->BroadcastMessage(message);
-    message.id = ratingId;
+    scenWindow->BroadcastMessage(packet);
+    packet.id = ratingId;
     sprintf(gText, "%d%%", gpGame->m_difficultyRating);
-    message.text = gText;
-    scenWindow->BroadcastMessage(message);
-    message.id = sizeId;
-    message.text = gMapSizeNames[m_mapSize];
-    scenWindow->BroadcastMessage(message);
-    message.id = mapLevelId;
-    message.text = gMapDifficultyNames[m_mapDifficulty];
-    scenWindow->BroadcastMessage(message);
-    message.id = mapDescId;
-    message.text = m_mapDescription;
-    scenWindow->BroadcastMessage(message);
-    message.command = WIDGET_COMMAND_SET_FRAME;
+    packet.text = gText;
+    scenWindow->BroadcastMessage(packet);
+    packet.id = sizeIdNo;
+    packet.text = gMapSizeNames[m_mapSize];
+    scenWindow->BroadcastMessage(packet);
+    packet.id = selLevelId;
+    packet.text = gMapDifficultyNames[m_mapDifficulty];
+    scenWindow->BroadcastMessage(packet);
+    packet.id = selDescId;
+    packet.text = m_mapDescription;
+    scenWindow->BroadcastMessage(packet);
+    packet.command = WIDGET_COMMAND_SET_FRAME;
     if (m_players[giCurPlayer].m_color != PLAYER_COLOR_NONE) {
-        message.id = crestId;
-        message.value = m_players[giCurPlayer].m_color * 2 + 11;
-        scenWindow->BroadcastMessage(message);
+        packet.id = crestId;
+        packet.value = m_players[giCurPlayer].m_color * 2 + 11;
+        scenWindow->BroadcastMessage(packet);
     }
     gpWindowManager->DoDialog(scenWindow, EventWindowHandler, 0);
 }

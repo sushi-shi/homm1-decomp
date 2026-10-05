@@ -559,3 +559,21 @@ Controls cover an unknown ordinal, agreeing evidence, conflicting identities,
 and the existing malformed/archive/image validation cases. Deferred: full-image
 provisioning and final build verification. Inapplicable: donor-specific target
 layouts and unrelated ABI rules. This does not establish donor-wide parity.
+
+## Unpadded delinked function extents
+
+Reviewed the retained Gruntz delinker pin
+`81d34b204a0384a92cf3b4c641a8430256b2922e` and HoMM2 Buka's pin
+`1393e24b4804cb357fdac147c68013f0aa5a9d95`. Both pad every delinked function
+to a four-byte boundary with `0x90` (`append_with_padding`). Buka's unoptimized
+VC6 functions are packed back to back, so a body ending at an unaligned address
+gained one to three bytes absent from retail. After a switch byte-index table
+objdiff decodes that fill as data and scored it as deleted bytes: 15 complete
+bodies, including `GetObjectFamily` (`0x2f621`) and `PerWeek` (`0x33b9c`).
+
+Adapted: `vostok-unpadded-function-extents.patch` appends each function at its
+census extent with no fill; data sections keep the existing padding. A Rust test
+checks two unaligned functions are packed contiguously. The target now carries
+exactly retail's function bytes; no comparison byte is masked. The Python
+fill-boundary canonicalization is retained for reviewed retail fill. The
+baseline rose from 932 to 947 exact bodies with no regressed function.

@@ -809,7 +809,7 @@ i32 combatManager::CheckApplyBadMorale(i32 side, i32 index) {
 // sides, high-morale stacks first.
 VA(0x0041ac0e, 0x1d9)
 i8 combatManager::GetNextArmy(i32 checkMorale) {
-    army* pArmy;
+    army* theArmy;
     i8 oldSpeed;
     i32 sideIter;
     i16 temp;
@@ -823,13 +823,15 @@ i8 combatManager::GetNextArmy(i32 checkMorale) {
             stackSide ^= 1;
             for (counterValue = 0; counterValue < m_numArmies[stackSide]; counterValue++) {
                 bSkip = 0;
-                pArmy = &m_armies[stackSide][counterValue];
-                if ((pArmy->m_stats.attributes & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT))
-                    || pArmy->m_spellEffect == SPELL_PARALYZE || pArmy->m_spellEffect == SPELL_BLIND
-                    || (pArmy->m_stats.speed != m_currentSpeed
-                        && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
+                theArmy = &m_armies[stackSide][counterValue];
+                if ((theArmy->m_stats.attributes & (MONSTER_FLAGS_DEAD | MONSTER_FLAGS_TURN_SPENT))
+                    || theArmy->m_spellEffect == SPELL_PARALYZE
+                    || theArmy->m_spellEffect == SPELL_BLIND
+                    || (theArmy->m_stats.speed != m_currentSpeed
+                        && !(theArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE)))
                     bSkip = 1;
-                if (!bSkip && !oldSpeed && !(pArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE))
+                if (!bSkip && !oldSpeed
+                    && !(theArmy->m_stats.attributes & MONSTER_FLAGS_HIGH_MORALE))
                     bSkip = 1;
                 if (!bSkip && checkMorale && CheckApplyBadMorale(stackSide, counterValue))
                     bSkip = 1;

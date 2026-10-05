@@ -17,7 +17,12 @@ H1_ENUM_END(FontAlignment)
 
 H1_ENUM_CONST_BEGIN(FontGlyphConstant)
     FONT_GLYPH_INDEX_LAST = 161,
-    FONT_GLYPH_ADVANCE_SPACING = 1
+    FONT_GLYPH_ADVANCE_SPACING = 1,
+    // Buka reads glyph widths through a word view of the icon directory:
+    // retail scales the glyph by 6 words (one 12-byte IconEntry) and reads
+    // word 2 (IconEntry::w), `imul reg,6` then `[base+reg*2+4]`.
+    FONT_GLYPH_ENTRY_WORDS = 6,
+    FONT_GLYPH_WIDTH_WORD = 2
 H1_ENUM_CONST_END(FontGlyphConstant)
 
 #pragma pack(push, 1)

@@ -2147,51 +2147,51 @@ i32 philAI::StrategicValueOfPosition(
     DATA(0x004ca198)
     static i8 gSVSearchArrayInUse = 0;
     i32 nGap;
-    searchArray* pSearch;
-    i32 inBoat;
-    i32 extra2;
+    searchArray* searchData;
+    i32 wasInBoat;
+    i32 nextExtra2;
     mapCell* cell;
     i32 thisY;
     i32 newSeedRange;
-    i32 iReach;
-    i32 x;
-    i32 heroIndex;
+    i32 curReach;
+    i32 oldX;
+    i32 prevHeroNo;
     i32 danger;
-    i32 baseTerrain;
+    i32 baseTerrainNum;
     i32 myValue;
-    searchArray* madeSearch;
-    i32 destTerrain;
+    searchArray* theSearch;
+    i32 curTerrain;
 
     if (!immediate && gaiHeroStrategicRVOfPos[targetX][targetY] != RV_UNSET) {
         *liveChance = gaiLiveChanceOfPos[targetX][targetY];
         return gaiHeroStrategicRVOfPos[targetX][targetY];
     }
     myValue = 0;
-    madeSearch = NULL;
+    theSearch = NULL;
     *liveChance = 100;
     if (gSVSearchArrayInUse) {
-        madeSearch = new searchArray;
-        if (!madeSearch)
+        theSearch = new searchArray;
+        if (!theSearch)
             MemError();
-        pSearch = madeSearch;
+        searchData = theSearch;
     } else {
         gSVSearchArrayInUse = 1;
-        pSearch = &SVSearchArray;
+        searchData = &SVSearchArray;
     }
-    inBoat = pHero->m_eventFlags & HERO_EVENT_EMBARKED;
-    if (inBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
-        inBoat = 0;
+    wasInBoat = pHero->m_eventFlags & HERO_EVENT_EMBARKED;
+    if (wasInBoat && gpAdvManager->GetCell(targetX, targetY)->m_triggerType == MAP_OBJECT_COAST)
+        wasInBoat = 0;
     if (immediate) {
         newSeedRange = 60;
     } else {
         newSeedRange = 36;
     }
-    pSearch->SeedPosition(
+    searchData->SeedPosition(
         targetX,
         targetY,
         MAP_DIRECTION_EAST,
         newSeedRange,
-        inBoat,
+        wasInBoat,
         0,
         SEARCH_UNLIMITED_COST,
         pHero->m_heroClass,
@@ -2200,32 +2200,33 @@ i32 philAI::StrategicValueOfPosition(
         0,
         0
     );
-    pSearch->m_cells[targetX][targetY].visited = 0;
-    for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+    searchData->m_cells[targetX][targetY].visited = 0;
+    for (oldX = 0; oldX < MAP_CELL_GRID_SIZE; oldX++) {
         for (thisY = 0; thisY < MAP_CELL_GRID_SIZE; thisY++) {
-            if (pSearch->m_cells[x][thisY].visited) {
-                cell = gpAdvManager->GetCell(x, thisY);
+            if (searchData->m_cells[oldX][thisY].visited) {
+                cell = gpAdvManager->GetCell(oldX, thisY);
                 if ((!immediate && (cell->m_triggerType & MAP_TRIGGER_EVENT))
                     || (immediate
                         && cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO))) {
                     CheckDoMain(0, 0);
-                    myValue += ValueOfEventAtPosition(pHero, x, thisY, 0, &iDummy)
-                               / (pSearch->m_cells[x][thisY].distance + 2.0);
+                    myValue += ValueOfEventAtPosition(pHero, oldX, thisY, 0, &iDummy)
+                               / (searchData->m_cells[oldX][thisY].distance + 2.0);
                 }
                 if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)) {
                     if (gaiHeroLiveChance[cell->m_objectMetadata] == RV_UNSET)
-                        ValueOfEventAtPosition(pHero, x, thisY, 0, &iDummy);
+                        ValueOfEventAtPosition(pHero, oldX, thisY, 0, &iDummy);
                     if (gaiHeroLiveChance[cell->m_objectMetadata] != RV_UNSET
                         && gaiHeroLiveChance[cell->m_objectMetadata] < 100) {
-                        iReach = gpGame->GetHero(cell->m_objectMetadata)->m_mobility;
+                        curReach = gpGame->GetHero(cell->m_objectMetadata)->m_mobility;
                         if (gbHumanPlayer[gpGame->m_availableHeroes[cell->m_objectMetadata]]) {
-                            if (pSearch->m_cells[x][thisY].distance <= iReach) {
-                                if (pSearch->m_cells[x][thisY].distance <= 14)
+                            if (searchData->m_cells[oldX][thisY].distance <= curReach) {
+                                if (searchData->m_cells[oldX][thisY].distance <= 14)
                                     danger = 100 - gaiHeroLiveChance[cell->m_objectMetadata];
                                 else
                                     danger = (100 - gaiHeroLiveChance[cell->m_objectMetadata])
-                                             * (iReach - pSearch->m_cells[x][thisY].distance + 10)
-                                             / iReach;
+                                             * (curReach - searchData->m_cells[oldX][thisY].distance
+                                                + 10)
+                                             / curReach;
                             } else {
                                 danger = static_cast<i32>(
                                     (100 - gaiHeroLiveChance[cell->m_objectMetadata]) * 0.2
@@ -2233,46 +2234,47 @@ i32 philAI::StrategicValueOfPosition(
                             }
                         } else {
                             danger = (100 - gaiHeroLiveChance[cell->m_objectMetadata])
-                                     * (iReach + 20 - pSearch->m_cells[x][thisY].distance)
-                                     / (iReach + 20);
+                                     * (curReach + 20 - searchData->m_cells[oldX][thisY].distance)
+                                     / (curReach + 20);
                         }
                         *liveChance = *liveChance * (100 - danger) / 100;
                     }
                 }
-                if (pSearch->m_cells[x][thisY].distance < 32
-                    && gpAdvManager->GetCell(x, thisY)->m_triggerType
+                if (searchData->m_cells[oldX][thisY].distance < 32
+                    && gpAdvManager->GetCell(oldX, thisY)->m_triggerType
                            == (MAP_TRIGGER_EVENT | MAP_OBJECT_HERO)
-                    && gpAdvManager->GetCell(x, thisY)->m_objectMetadata != pHero->m_id
-                    && gpGame->m_availableHeroes[gpAdvManager->GetCell(x, thisY)->m_objectMetadata]
+                    && gpAdvManager->GetCell(oldX, thisY)->m_objectMetadata != pHero->m_id
+                    && gpGame->m_availableHeroes[gpAdvManager->GetCell(oldX, thisY)
+                                                     ->m_objectMetadata]
                            == pHero->m_owner)
-                    myValue -= (32 - pSearch->m_cells[x][thisY].distance) * 1250 >> 5;
+                    myValue -= (32 - searchData->m_cells[oldX][thisY].distance) * 1250 >> 5;
             }
         }
     }
-    baseTerrain = CELL_TERRAIN(gpAdvManager->GetCell(targetX, targetY));
-    for (heroIndex = 0; heroIndex < gpCurPlayer->m_heroCount; heroIndex++) {
-        if (gpCurPlayer->m_heroIds[heroIndex] != pHero->m_id) {
+    baseTerrainNum = CELL_TERRAIN(gpAdvManager->GetCell(targetX, targetY));
+    for (prevHeroNo = 0; prevHeroNo < gpCurPlayer->m_heroCount; prevHeroNo++) {
+        if (gpCurPlayer->m_heroIds[prevHeroNo] != pHero->m_id) {
             nGap =
-                abs(gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX - targetX)
+                abs(gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX - targetX)
                 + abs(
-                    gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY - targetY
+                    gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY - targetY
                 );
             if (nGap < 9) {
-                destTerrain = giGroundToTerrain
+                curTerrain = giGroundToTerrain
                     [gpAdvManager
                          ->GetCell(
-                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationX,
-                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[heroIndex]].m_destinationY
+                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationX,
+                             gpGame->m_heroRecs[gpCurPlayer->m_heroIds[prevHeroNo]].m_destinationY
                          )
                          ->m_tileIndex];
-                if (!((baseTerrain == TERRAIN_WATER && destTerrain > TERRAIN_WATER_LAST)
-                      || (baseTerrain > TERRAIN_WATER_LAST && destTerrain == TERRAIN_WATER)))
+                if (!((baseTerrainNum == TERRAIN_WATER && curTerrain > TERRAIN_WATER_LAST)
+                      || (baseTerrainNum > TERRAIN_WATER_LAST && curTerrain == TERRAIN_WATER)))
                     myValue -= (9 - nGap) * 1250 / 9;
             }
         }
     }
-    if (madeSearch)
-        delete madeSearch;
+    if (theSearch)
+        delete theSearch;
     else
         gSVSearchArrayInUse = 0;
     myValue = static_cast<i32>(myValue * AI_STRATEGIC_POSITION_SCORE_FACTOR);
@@ -2974,7 +2976,7 @@ void philAI::ChooseEvaluateBattle(
     i32 curB;
     i32 leftA;
     i32 leftB;
-    i32 bestEmpty;
+    i32 thisVacant;
     i32 rating;
 
     ProbableOutcomeOfBattle(

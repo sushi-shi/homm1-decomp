@@ -76,6 +76,12 @@ H1_ENUM_END(CombatWinLoseControl)
 
 // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
 // the casualty counts, then the two side headings and the casualty title.
+// DoVictory's experience line buffer (Buka 2.1 VICTORY_EXPERIENCE_TEXT_SIZE;
+// retail's frame places message directly above a 152-byte array).
+H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
+    COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
+H1_ENUM_CONST_END(CombatVictoryConstant)
+
 H1_ENUM_CONST_BEGIN(CombatWinLoseSlot)
     WIN_LOSE_SLOT_SIDE_HEADING_FIRST = 10,
     WIN_LOSE_SLOT_CASUALTY_TITLE = 12,
@@ -192,30 +198,30 @@ i8 combatManager::ValidHexToStandOn(i32 hex) {
 // table and keeps the 24-sector map as bytes.
 VA(0x0041d783, 0x704)
 void combatManager::SetCombatDirections(i32 targetHex) {
-    i32 mapped;
-    i32 targetSide;
-    i32 numUnset;
-    i8 hasPath[COMBAT_DIRECTION_COUNT];
-    i32 after;
-    i32 rear[COMBAT_DIRECTION_COUNT];
-    i32 before;
+    i32 wasMapped;
+    i32 owner;
+    i32 oldUnset;
+    i8 keptReachable[COMBAT_DIRECTION_COUNT];
+    i32 next;
+    i32 myRear[COMBAT_DIRECTION_COUNT];
+    i32 bestBefore;
     i32 outDir;
     i32 dir;
     i32 directionHexes[COMBAT_DIRECTION_COUNT];
-    army* curArmy;
+    army* curArmyPtr;
     i32 targetIndex;
-    army* target;
-    i8 canStand[COMBAT_DIRECTION_COUNT];
+    army* mainTarget;
+    i8 canStandIn[COMBAT_DIRECTION_COUNT];
 
-    curArmy = &m_armies[m_currentSide][m_currentArmyIndex];
-    targetSide = curArmy->m_targetSide;
-    targetIndex = curArmy->m_targetIndex;
-    CLEAR_ARMY_TARGET(curArmy);
-    target = &m_armies[targetSide][targetIndex];
+    curArmyPtr = &m_armies[m_currentSide][m_currentArmyIndex];
+    owner = curArmyPtr->m_targetSide;
+    targetIndex = curArmyPtr->m_targetIndex;
+    CLEAR_ARMY_TARGET(curArmyPtr);
+    mainTarget = &m_armies[owner][targetIndex];
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         if (dir == COMBAT_DIRECTION_WIDE_WEST || dir == COMBAT_DIRECTION_WIDE_EAST) {
-            if (curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                if (curArmy->m_facing == ARMY_FACING_RIGHT) {
+            if (curArmyPtr->m_stats.attributes & MONSTER_FLAGS_WIDE) {
+                if (curArmyPtr->m_facing == ARMY_FACING_RIGHT) {
                     if (dir == COMBAT_DIRECTION_WIDE_WEST)
                         directionHexes[dir] =
                             gCombatAdjacency[targetHex][COMBAT_DIRECTION_NORTHWEST];
@@ -234,9 +240,9 @@ void combatManager::SetCombatDirections(i32 targetHex) {
                 directionHexes[dir] = ARMY_HEX_INVALID;
         } else
             directionHexes[dir] = gCombatAdjacency[targetHex][dir];
-        if ((curArmy->m_stats.attributes & MONSTER_FLAGS_WIDE)
+        if ((curArmyPtr->m_stats.attributes & MONSTER_FLAGS_WIDE)
             && directionHexes[dir] != ARMY_HEX_INVALID) {
-            if (curArmy->m_facing == ARMY_FACING_RIGHT) {
+            if (curArmyPtr->m_facing == ARMY_FACING_RIGHT) {
                 if (dir == COMBAT_DIRECTION_NORTHWEST || dir == COMBAT_DIRECTION_WEST
                     || dir == COMBAT_DIRECTION_SOUTHWEST) {
                     if (directionHexes[dir] % COMBAT_GRID_COLUMNS == COMBAT_GRID_FIRST_INNER_COLUMN)
@@ -245,9 +251,9 @@ void combatManager::SetCombatDirections(i32 targetHex) {
                         directionHexes[dir]--;
                 }
                 if (directionHexes[dir] % COMBAT_GRID_COLUMNS == COMBAT_GRID_LAST_INNER_COLUMN)
-                    rear[dir] = ARMY_HEX_INVALID;
+                    myRear[dir] = ARMY_HEX_INVALID;
                 else
-                    rear[dir] = directionHexes[dir] + 1;
+                    myRear[dir] = directionHexes[dir] + 1;
             } else {
                 if (dir == COMBAT_DIRECTION_NORTHEAST || dir == COMBAT_DIRECTION_EAST
                     || dir == COMBAT_DIRECTION_SOUTHEAST) {
@@ -257,71 +263,70 @@ void combatManager::SetCombatDirections(i32 targetHex) {
                         directionHexes[dir]++;
                 }
                 if (directionHexes[dir] % COMBAT_GRID_COLUMNS == COMBAT_GRID_FIRST_INNER_COLUMN)
-                    rear[dir] = ARMY_HEX_INVALID;
+                    myRear[dir] = ARMY_HEX_INVALID;
                 else
-                    rear[dir] = directionHexes[dir] - 1;
+                    myRear[dir] = directionHexes[dir] - 1;
             }
         } else
-            rear[dir] = COMBAT_REAR_HEX_UNUSED;
-        if (ValidHexToStandOn(directionHexes[dir]) && ValidHexToStandOn(rear[dir]))
-            canStand[dir] = 1;
+            myRear[dir] = COMBAT_REAR_HEX_UNUSED;
+        if (ValidHexToStandOn(directionHexes[dir]) && ValidHexToStandOn(myRear[dir]))
+            canStandIn[dir] = 1;
         else
-            canStand[dir] = 0;
+            canStandIn[dir] = 0;
     }
-    if (curArmy->m_stats.attributes & MONSTER_FLAGS_FLYING) {
+    if (curArmyPtr->m_stats.attributes & MONSTER_FLAGS_FLYING) {
         for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++)
-            hasPath[dir] = canStand[dir];
+            keptReachable[dir] = canStandIn[dir];
     } else {
         for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
-            if (canStand[dir]) {
-                if (curArmy->m_hex == directionHexes[dir]
-                    || curArmy->ValidPath(directionHexes[dir], ARMY_PATH_EXACT_TARGET_HEX))
-                    hasPath[dir] = 1;
+            if (canStandIn[dir]) {
+                if (curArmyPtr->m_hex == directionHexes[dir]
+                    || curArmyPtr->ValidPath(directionHexes[dir], ARMY_PATH_EXACT_TARGET_HEX))
+                    keptReachable[dir] = 1;
                 else
-                    hasPath[dir] = 0;
+                    keptReachable[dir] = 0;
             } else
-                hasPath[dir] = 0;
+                keptReachable[dir] = 0;
         }
     }
     m_validDirectionCount = 0;
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
-        if (hasPath[dir])
+        if (keptReachable[dir])
             m_validDirectionCount++;
     }
     if (!m_validDirectionCount)
-        hasPath[COMBAT_DIRECTION_WIDE_WEST] = 1;
+        keptReachable[COMBAT_DIRECTION_WIDE_WEST] = 1;
     memset(m_directionMap, -1, sizeof(m_directionMap));
     for (dir = 0; dir < COMBAT_DIRECTION_COUNT; dir++) {
         outDir = dir;
         if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
-            mapped = (dir + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT;
+            wasMapped = (dir + COMBAT_DIRECTION_OPPOSITE_OFFSET) % COMBAT_DIRECTION_ADJACENT_COUNT;
         else
-            mapped = static_cast<i8>(
-                dir == COMBAT_DIRECTION_WIDE_WEST ? COMBAT_DIRECTION_WIDE_EAST
-                                                  : COMBAT_DIRECTION_WIDE_WEST
-            );
-        if (hasPath[mapped]) {
-            if (target->m_stats.attributes & MONSTER_FLAGS_WIDE) {
+            wasMapped = dir == COMBAT_DIRECTION_WIDE_WEST
+                            ? static_cast<i8>(COMBAT_DIRECTION_WIDE_EAST)
+                            : static_cast<i8>(COMBAT_DIRECTION_WIDE_WEST);
+        if (keptReachable[wasMapped]) {
+            if (mainTarget->m_stats.attributes & MONSTER_FLAGS_WIDE) {
                 if (dir == COMBAT_DIRECTION_NORTHEAST
-                    && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                    && m_hexCells[targetHex - 1].m_occupantSide == owner
                     && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
                     outDir = COMBAT_DIRECTION_WIDE_WEST;
                 else if (dir == COMBAT_DIRECTION_NORTHWEST
-                         && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex + 1].m_occupantSide == owner
                          && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
                     outDir = COMBAT_DIRECTION_WIDE_WEST;
                 else if (dir == COMBAT_DIRECTION_SOUTHEAST
-                         && m_hexCells[targetHex - 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex - 1].m_occupantSide == owner
                          && m_hexCells[targetHex - 1].m_occupantIndex == targetIndex)
                     outDir = COMBAT_DIRECTION_WIDE_EAST;
                 else if (dir == COMBAT_DIRECTION_SOUTHWEST
-                         && m_hexCells[targetHex + 1].m_occupantSide == targetSide
+                         && m_hexCells[targetHex + 1].m_occupantSide == owner
                          && m_hexCells[targetHex + 1].m_occupantIndex == targetIndex)
                     outDir = COMBAT_DIRECTION_WIDE_EAST;
             }
             if (dir < COMBAT_DIRECTION_ADJACENT_COUNT)
                 memset(
-                    &m_directionMap[mapped * COMBAT_POINTER_SECTORS_PER_DIRECTION],
+                    &m_directionMap[wasMapped * COMBAT_POINTER_SECTORS_PER_DIRECTION],
                     outDir,
                     COMBAT_POINTER_SECTORS_PER_DIRECTION
                 );
@@ -336,29 +341,29 @@ void combatManager::SetCombatDirections(i32 targetHex) {
             }
         }
     }
-    numUnset = COMBAT_POINTER_SECTOR_COUNT;
-    while (numUnset > 0) {
+    oldUnset = COMBAT_POINTER_SECTOR_COUNT;
+    while (oldUnset > 0) {
         for (dir = 0; dir < COMBAT_POINTER_SECTOR_COUNT; dir++) {
             if (m_directionMap[dir] == COMBAT_DIRECTION_INVALID) {
-                after = (dir + 1) % COMBAT_POINTER_SECTOR_COUNT;
-                before = (dir + COMBAT_POINTER_SECTOR_COUNT - 1) % COMBAT_POINTER_SECTOR_COUNT;
-                if (m_directionMap[after] >= 0 && m_directionMap[after] <= COMBAT_DIRECTION_LAST)
-                    m_directionMap[dir] = m_directionMap[after] + COMBAT_POINTER_SECTOR_FILLED;
-                else if (m_directionMap[before] >= 0
-                         && m_directionMap[before] <= COMBAT_DIRECTION_LAST)
-                    m_directionMap[dir] = m_directionMap[before] + COMBAT_POINTER_SECTOR_FILLED;
+                next = (dir + 1) % COMBAT_POINTER_SECTOR_COUNT;
+                bestBefore = (dir + COMBAT_POINTER_SECTOR_COUNT - 1) % COMBAT_POINTER_SECTOR_COUNT;
+                if (m_directionMap[next] >= 0 && m_directionMap[next] <= COMBAT_DIRECTION_LAST)
+                    m_directionMap[dir] = m_directionMap[next] + COMBAT_POINTER_SECTOR_FILLED;
+                else if (m_directionMap[bestBefore] >= 0
+                         && m_directionMap[bestBefore] <= COMBAT_DIRECTION_LAST)
+                    m_directionMap[dir] = m_directionMap[bestBefore] + COMBAT_POINTER_SECTOR_FILLED;
             }
         }
-        numUnset = 0;
+        oldUnset = 0;
         for (dir = 0; dir < COMBAT_POINTER_SECTOR_COUNT; dir++) {
             if (m_directionMap[dir] >= COMBAT_POINTER_SECTOR_FILLED)
                 m_directionMap[dir] -= COMBAT_POINTER_SECTOR_FILLED;
             else if (m_directionMap[dir] == COMBAT_DIRECTION_INVALID)
-                numUnset++;
+                oldUnset++;
         }
     }
-    curArmy->m_targetSide = targetSide;
-    curArmy->m_targetIndex = targetIndex;
+    curArmyPtr->m_targetSide = owner;
+    curArmyPtr->m_targetIndex = targetIndex;
 }
 
 // Buka COMMAND.cpp CheckSetMouseDirection; HoMM1 hexes are 78 by 80 and
@@ -841,7 +846,7 @@ i8 combatManager::RightClick(i8 hex) {
 // views the army at the selected hex on the current side.
 VA(0x0041ef1f, 0x2ea)
 void combatManager::DoCommand(i8 command) {
-    i32 unusedValue1;
+    i32 unusedValue1Value;
     i32 unusedValue2Value;
     army* currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
 
@@ -1064,31 +1069,31 @@ VA(0x0041f71e, 0x753)
 void combatManager::ShowDeadArmies(class heroWindow* window) {
     i32 numLost[COMBAT_SIDE_COUNT];
     char* buffer;
-    i32 casualtyType[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
-    i32 iconSpacing;
+    i32 casualtyTypeStr[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+    i32 theIconSpacing;
     i32 armyIndex;
-    i32 side;
+    i32 team;
     i16 boxWidth = 0x140;
-    i16 bottom = 0x1ca;
-    i32 rowY;
+    i16 bottomVal = 0x1ca;
+    i32 rowYVal;
     tag_message message;
     i32 casualtyCount[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
     i32 firstX;
 
-    for (side = 0; side < WIN_LOSE_SLOT_COUNT; side++) {
-        m_winLoseBottomWidgets[side] = NULL;
-        m_winLoseBottomTextWidgets[side] = NULL;
+    for (team = 0; team < WIN_LOSE_SLOT_COUNT; team++) {
+        m_winLoseBottomWidgets[team] = NULL;
+        m_winLoseBottomTextWidgets[team] = NULL;
     }
-    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
-        numLost[side] = 0;
+    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
+        numLost[team] = 0;
         for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
-            if (m_armies[side][armyIndex].m_creatureType != CREATURE_NONE
-                && m_armies[side][armyIndex].m_initialQuantity
-                       > m_armies[side][armyIndex].m_quantity) {
-                casualtyType[side][numLost[side]] = m_armies[side][armyIndex].m_creatureType;
-                casualtyCount[side][numLost[side]] = m_armies[side][armyIndex].m_initialQuantity
-                                                     - m_armies[side][armyIndex].m_quantity;
-                numLost[side]++;
+            if (m_armies[team][armyIndex].m_creatureType != CREATURE_NONE
+                && m_armies[team][armyIndex].m_initialQuantity
+                       > m_armies[team][armyIndex].m_quantity) {
+                casualtyTypeStr[team][numLost[team]] = m_armies[team][armyIndex].m_creatureType;
+                casualtyCount[team][numLost[team]] = m_armies[team][armyIndex].m_initialQuantity
+                                                     - m_armies[team][armyIndex].m_quantity;
+                numLost[team]++;
             }
         }
     }
@@ -1111,17 +1116,17 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
         m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_CASUALTY_TITLE],
         WINDOW_Z_ORDER_APPEND
     );
-    for (side = 0; side < COMBAT_SIDE_COUNT; side++) {
-        rowY = side == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
+    for (team = 0; team < COMBAT_SIDE_COUNT; team++) {
+        rowYVal = team == COMBAT_ATTACKER_SIDE ? 0x118 : 0x159;
         buffer = static_cast<char*>(malloc(0x1e));
         sprintf(
             buffer,
-            side == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker")
+            team == COMBAT_ATTACKER_SIDE ? localization::Tr("combat.casualties.attacker")
                                          : localization::Tr("combat.casualties.defender")
         );
-        m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side] = new textWidget(
+        m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] = new textWidget(
             0,
-            rowY,
+            rowYVal,
             0x140,
             0x14,
             buffer,
@@ -1130,71 +1135,71 @@ void combatManager::ShowDeadArmies(class heroWindow* window) {
             WIN_LOSE_CASUALTY_HEADING,
             WIDGET_KIND_TEXT
         );
-        if (m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side] == NULL)
+        if (m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team] == NULL)
             MemError();
         window->AddWidget(
-            m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + side],
+            m_winLoseBottomTextWidgets[WIN_LOSE_SLOT_SIDE_HEADING_FIRST + team],
             WINDOW_Z_ORDER_APPEND
         );
-        if (numLost[side] <= 0) {
+        if (numLost[team] <= 0) {
             buffer = static_cast<char*>(malloc(10));
             sprintf(buffer, localization::Tr("common.none"));
-            m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT] = new textWidget(
+            m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT] = new textWidget(
                 0,
-                rowY + 0x12,
+                rowYVal + 0x12,
                 0x140,
                 0x14,
                 buffer,
                 "smalfont.fnt",
                 1,
-                side * ARMY_GROUP_SLOT_COUNT + WIN_LOSE_CASUALTY_TEXT_FIRST,
+                team * ARMY_GROUP_SLOT_COUNT + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
-            if (m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT] == NULL)
+            if (m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT] == NULL)
                 MemError();
             window->AddWidget(
-                m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT],
+                m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT],
                 WINDOW_Z_ORDER_APPEND
             );
         }
-        iconSpacing = 0x28;
-        firstX = (0x140 - iconSpacing * numLost[side]) / 2 + 3;
-        for (armyIndex = 0; armyIndex < numLost[side]; armyIndex++) {
-            m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new iconWidget(
-                firstX + iconSpacing * armyIndex,
-                rowY + 0xf,
+        theIconSpacing = 0x28;
+        firstX = (0x140 - theIconSpacing * numLost[team]) / 2 + 3;
+        for (armyIndex = 0; armyIndex < numLost[team]; armyIndex++) {
+            m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] = new iconWidget(
+                firstX + theIconSpacing * armyIndex,
+                rowYVal + 0xf,
                 0x20,
                 0x1c,
                 "mons32.icn",
-                casualtyType[side][armyIndex],
+                casualtyTypeStr[team][armyIndex],
                 ICON_DRAW_NORMAL,
-                side * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_ICON_FIRST,
+                team * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_ICON_FIRST,
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
+            if (m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
                 MemError();
             buffer = static_cast<char*>(malloc(9));
-            sprintf(buffer, "%d", casualtyCount[side][armyIndex]);
-            m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] = new textWidget(
-                firstX + iconSpacing * armyIndex,
-                rowY + 0x2e,
+            sprintf(buffer, "%d", casualtyCount[team][armyIndex]);
+            m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] = new textWidget(
+                firstX + theIconSpacing * armyIndex,
+                rowYVal + 0x2e,
                 0x20,
                 0xc,
                 buffer,
                 "smalfont.fnt",
                 1,
-                side * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_TEXT_FIRST,
+                team * ARMY_GROUP_SLOT_COUNT + armyIndex + WIN_LOSE_CASUALTY_TEXT_FIRST,
                 WIDGET_KIND_TEXT
             );
-            if (m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
+            if (m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex] == NULL)
                 MemError();
             window->AddWidget(
-                m_winLoseBottomWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex],
+                m_winLoseBottomWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex],
                 WINDOW_Z_ORDER_APPEND
             );
             window->AddWidget(
-                m_winLoseBottomTextWidgets[side * ARMY_GROUP_SLOT_COUNT + armyIndex],
+                m_winLoseBottomTextWidgets[team * ARMY_GROUP_SLOT_COUNT + armyIndex],
                 WINDOW_Z_ORDER_APPEND
             );
         }
@@ -1207,8 +1212,9 @@ VA(0x0041fe71, 0x731)
 void combatManager::DoVictory(i8 winningSide) {
     i32 levelsGained;
     tag_message message;
+    i32 cost; // unused, as in the Buka 2.1 donor; retail keeps its slot
     i32 i;
-    char expText[156];
+    char experienceText[COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE];
 
     levelsGained = 0;
     iMaxTransferArtifacts = 0;
@@ -1272,7 +1278,7 @@ void combatManager::DoVictory(i8 winningSide) {
                     if (levelsGained > 0 && winningSide == COMBAT_DEFENDER_SIDE
                         && giNumHumanPlayers > 1)
                         sprintf(
-                            expText,
+                            experienceText,
                             gBattleResults[BATTLE_RESULT_EXPERIENCE_AND_LEVELS],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide],
@@ -1280,12 +1286,12 @@ void combatManager::DoVictory(i8 winningSide) {
                         );
                     else
                         sprintf(
-                            expText,
+                            experienceText,
                             gBattleResults[BATTLE_RESULT_EXPERIENCE],
                             m_heroes[winningSide]->m_name,
                             m_experienceValue[1 - winningSide]
                         );
-                    strcat(gText, expText);
+                    strcat(gText, experienceText);
                     m_heroes[winningSide]->ApplyBattleWinTemps();
                 } else {
                     if (gbCombatSurrender)
@@ -1321,69 +1327,61 @@ void combatManager::DoVictory(i8 winningSide) {
 // scrolling backdrop until the window's button is released.
 VA(0x004205a2, 0x4dc)
 void combatManager::DoLoseWindow(void) {
-    i16 walkFrame;
+    i16 walkFrameNum;
     i16 lAnimY;
-    i16 unusedWalkX;
-    i16 unusedWalkY;
-    tag_message message;
+    i16 curWalkX;
+    i16 curUnusedWalkY;
+    tag_message packet;
     heroWindow* loseWindow;
-    bitmap* bmp;
-    i16 result;
-    i32 iDelay;
-    i16 offset;
-    i32 losingSide;
-    i16 width;
-    i16 animX;
-    i16 blitHeight;
-    i16 iAreaWidth;
-    i16 stop;
+    bitmap* newBmp;
+    i16 res;
+    i32 delayVal;
+    i16 bestOffset;
+    i32 party;
+    i16 nextWidth;
+    i16 sx;
+    i16 blitHeightVal;
+    i16 iAreaWidthVal;
+    i16 stopRequested;
     icon* walkIcon;
 
-    iDelay = 0xb4;
-    animX = 0x31;
+    delayVal = 0xb4;
+    sx = 0x31;
     lAnimY = 0x26;
-    iAreaWidth = 0xdf;
-    blitHeight = 0x7d;
-    width = 0x280;
-    unusedWalkX = 0x6f;
-    unusedWalkY = 0x8a;
+    iAreaWidthVal = 0xdf;
+    blitHeightVal = 0x7d;
+    nextWidth = 0x280;
+    curWalkX = 0x6f;
+    curUnusedWalkY = 0x8a;
     iMaxTransferArtifacts = 0;
-    walkFrame = 0;
-    offset = 0;
-    stop = 0;
+    walkFrameNum = 0;
+    bestOffset = 0;
+    stopRequested = 0;
     if (giCurPlayer == m_playerId[COMBAT_ATTACKER_SIDE]
         && gbThisNetHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
-        losingSide = COMBAT_ATTACKER_SIDE;
+        party = COMBAT_ATTACKER_SIDE;
     else if (giCurPlayer == m_playerId[COMBAT_DEFENDER_SIDE]
              && gbThisNetHumanPlayer[m_playerId[COMBAT_DEFENDER_SIDE]])
-        losingSide = COMBAT_DEFENDER_SIDE;
+        party = COMBAT_DEFENDER_SIDE;
     else if (m_playerId[COMBAT_ATTACKER_SIDE] != GAME_PLAYER_NONE
              && gbThisNetHumanPlayer[m_playerId[COMBAT_ATTACKER_SIDE]])
-        losingSide = COMBAT_ATTACKER_SIDE;
+        party = COMBAT_ATTACKER_SIDE;
     else
-        losingSide = COMBAT_DEFENDER_SIDE;
+        party = COMBAT_DEFENDER_SIDE;
     loseWindow = new heroWindow(0x9f, 2, "losecmbt.bin");
     if (loseWindow == NULL)
         MemError();
-    bmp = gpResourceManager->GetBitmap("losecmbt.bmp");
+    newBmp = gpResourceManager->GetBitmap("losecmbt.bmp");
     gLoadingMonoIcon = 1;
     walkIcon = gpResourceManager->GetIcon("losewalk.icn");
     gLoadingMonoIcon = 0;
-    if (m_heroes[losingSide]) {
+    if (m_heroes[party]) {
         if (gbCombatSurrender)
-            sprintf(
-                gText,
-                gBattleResults[BATTLE_RESULT_HERO_SURRENDERS],
-                m_heroes[losingSide]->m_name
-            );
+            sprintf(gText, gBattleResults[BATTLE_RESULT_HERO_SURRENDERS], m_heroes[party]->m_name);
         else if (gbRetreatWin)
-            sprintf(gText, gBattleResults[BATTLE_RESULT_HERO_FLEES], m_heroes[losingSide]->m_name);
+            sprintf(gText, gBattleResults[BATTLE_RESULT_HERO_FLEES], m_heroes[party]->m_name);
         else
-            sprintf(
-                gText,
-                gBattleResults[BATTLE_RESULT_HERO_DEFEATED],
-                m_heroes[losingSide]->m_name
-            );
+            sprintf(gText, gBattleResults[BATTLE_RESULT_HERO_DEFEATED], m_heroes[party]->m_name);
     } else {
         if (gbCombatSurrender)
             sprintf(gText, gBattleResults[BATTLE_RESULT_FORCES_SURRENDER]);
@@ -1392,40 +1390,46 @@ void combatManager::DoLoseWindow(void) {
         else
             sprintf(gText, gBattleResults[BATTLE_RESULT_FORCES_DEFEATED]);
     }
-    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
-    message.text = gText;
-    loseWindow->BroadcastMessage(message);
+    SET_WIDGET_MESSAGE(packet, WIDGET_COMMAND_SET_TEXT, WIN_LOSE_RESULT_TEXT);
+    packet.text = gText;
+    loseWindow->BroadcastMessage(packet);
     ShowDeadArmies(loseWindow);
     gpWindowManager->AddWindow(loseWindow, WINDOW_Z_ORDER_APPEND, 0);
-    BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+    BlitBitmap(newBmp, bestOffset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
+    walkIcon->FillToBuffer(0x10e, 0x8c, walkFrameNum, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(0x9f, 2, 0x140, 0x1ca);
     glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
     do {
         if (glTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
-            BlitBitmap(bmp, offset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
-            walkIcon
-                ->FillToBuffer(0x10e, 0x8c, walkFrame, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+            BlitBitmap(newBmp, bestOffset, 0, 0xdf, 0x7d, gpWindowManager->m_screen, 0xd0, 0x28);
+            walkIcon->FillToBuffer(
+                0x10e,
+                0x8c,
+                walkFrameNum,
+                0,
+                ICON_DRAW_NORMAL,
+                ICON_DRAW_OFFSET_FULL
+            );
             gpWindowManager->UpdateScreenRegion(0xd0, 0x28, 0xdf, 0x7d);
-            walkFrame++;
-            walkFrame = walkFrame % 8;
-            offset += 2;
-            if (offset > 0x1a0)
-                offset = 0;
+            walkFrameNum++;
+            walkFrameNum = walkFrameNum % 8;
+            bestOffset += 2;
+            if (bestOffset > 0x1a0)
+                bestOffset = 0;
             glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 0xb4;
         }
         Process1WindowsMessage();
-        message = gpInputManager->GetEvent();
-        gpMouseManager->Main(message);
-        result = gpWindowManager->Main(message);
-        if (result == MESSAGE_DISPATCH_FORWARD && message.type == MESSAGE_WIDGET
-            && message.command == WIDGET_NOTIFY_DESELECT && message.id == DIALOG_BUTTON_0)
-            stop = 1;
-    } while (!stop);
+        packet = gpInputManager->GetEvent();
+        gpMouseManager->Main(packet);
+        res = gpWindowManager->Main(packet);
+        if (res == MESSAGE_DISPATCH_FORWARD && packet.type == MESSAGE_WIDGET
+            && packet.command == WIDGET_NOTIFY_DESELECT && packet.id == DIALOG_BUTTON_0)
+            stopRequested = 1;
+    } while (!stopRequested);
     gpWindowManager->RemoveWindow(loseWindow);
     delete loseWindow;
     gpResourceManager->Dispose(walkIcon);
-    gpResourceManager->Dispose(bmp);
+    gpResourceManager->Dispose(newBmp);
 }
 
 // Buka COMMAND.cpp DoSurrender; HoMM1 charges half the stack cost and has
@@ -1436,7 +1440,7 @@ i16 combatManager::DoSurrender(void) {
     i16 unusedResult;
     i32 armyIndex;
     tag_message message;
-    i16 unusedType;
+    i16 unusedTypeValue;
 
     giSurrenderCost = 0;
     for (armyIndex = 0; armyIndex < ARMY_GROUP_SLOT_COUNT; armyIndex++) {
@@ -1445,7 +1449,7 @@ i16 combatManager::DoSurrender(void) {
                 m_armies[m_currentSide][armyIndex].m_quantity
                 * (gMonsterDatabase[m_armies[m_currentSide][armyIndex].m_creatureType].cost / 2);
     }
-    unusedType = 1;
+    unusedTypeValue = 1;
     unusedResult = 2;
     win = new heroWindow(0x55, 0x50, "surrendr.bin");
     if (win == NULL)

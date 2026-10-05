@@ -493,10 +493,10 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSide != m_targetSide
                                     && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
                                             == CREATURE_NONE
-                                        || m_heroes[m_selectedSide]
-                                                   ->m_army.m_creatureTypes[m_selectedSlot]
-                                               == m_heroes[m_targetSide]
-                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                        || m_heroes[m_targetSide]
+                                                   ->m_army.m_creatureTypes[m_targetSlot]
+                                               == m_heroes[m_selectedSide]
+                                                      ->m_army.m_creatureTypes[m_selectedSlot])) {
                                     SplitMons();
                                     Reset();
                                 } else {
@@ -558,10 +558,10 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSide != m_targetSide
                                     && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
                                             == CREATURE_NONE
-                                        || m_heroes[m_selectedSide]
-                                                   ->m_army.m_creatureTypes[m_selectedSlot]
-                                               == m_heroes[m_targetSide]
-                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                        || m_heroes[m_targetSide]
+                                                   ->m_army.m_creatureTypes[m_targetSlot]
+                                               == m_heroes[m_selectedSide]
+                                                      ->m_army.m_creatureTypes[m_selectedSlot])) {
                                     SplitMons();
                                     Reset();
                                 } else {
@@ -784,20 +784,20 @@ void swapManager::Update(void) {
 // evidence: graph:3;base=0.761691;margin=0.047739;shape=0.487;size=0.960;calls=1.000;strings=splitwin.bin;alternate=pol20:void swapManager::SplitMons(void)@0x00055fbd
 VA(0x0045e628, 0x352)
 void swapManager::SplitMons(void) {
-    i16 textId;
-    armyGroup* dstTroops;
+    i16 idPos;
+    armyGroup* dstTroopsPtr;
     armyGroup* selectedArmy;
-    i16 amountWidget;
+    i16 amountWidgetVal;
     tag_message message;
     i16 found;
-    i16 i;
+    i16 lastI;
 
-    amountWidget = TOWN_SPLIT_AMOUNT_CONTROL;
+    amountWidgetVal = TOWN_SPLIT_AMOUNT_CONTROL;
     found = 0;
     selectedArmy = &m_heroes[m_selectedSide]->m_army;
-    dstTroops = &m_heroes[m_targetSide]->m_army;
+    dstTroopsPtr = &m_heroes[m_targetSide]->m_army;
     found = 0;
-    textId = 1;
+    idPos = 1;
     gpTownManager->m_heroWindow1 =
         new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
     if (!gpTownManager->m_heroWindow1)
@@ -823,26 +823,27 @@ void swapManager::SplitMons(void) {
     gpWindowManager->DoDialog(gpTownManager->m_heroWindow1, SplitArmyHandler, 0);
     delete gpTownManager->m_heroWindow1;
     if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
-        for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            if (dstTroops->m_creatureTypes[i] == selectedArmy->m_creatureTypes[m_selectedSlot]) {
+        for (lastI = 0; lastI < ARMY_GROUP_SLOT_COUNT; lastI++) {
+            if (dstTroopsPtr->m_creatureTypes[lastI]
+                == selectedArmy->m_creatureTypes[m_selectedSlot]) {
                 found = 1;
                 break;
             }
         }
         if (found) {
-            dstTroops->m_creatureCounts[i] += gpTownManager->m_splitAmount;
+            dstTroopsPtr->m_creatureCounts[lastI] += gpTownManager->m_splitAmount;
         } else {
-            if (dstTroops->m_creatureTypes[m_targetSlot] != CREATURE_NONE) {
-                for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                    if (dstTroops->m_creatureTypes[i] == CREATURE_NONE)
+            if (dstTroopsPtr->m_creatureTypes[m_targetSlot] != CREATURE_NONE) {
+                for (lastI = 0; lastI < ARMY_GROUP_SLOT_COUNT; lastI++) {
+                    if (dstTroopsPtr->m_creatureTypes[lastI] == CREATURE_NONE)
                         break;
                 }
-                if (i < ARMY_GROUP_SLOT_COUNT)
-                    m_targetSlot = i;
+                if (lastI < ARMY_GROUP_SLOT_COUNT)
+                    m_targetSlot = lastI;
             }
-            dstTroops->m_creatureTypes[m_targetSlot] =
+            dstTroopsPtr->m_creatureTypes[m_targetSlot] =
                 selectedArmy->m_creatureTypes[m_selectedSlot];
-            dstTroops->m_creatureCounts[m_targetSlot] = gpTownManager->m_splitAmount;
+            dstTroopsPtr->m_creatureCounts[m_targetSlot] = gpTownManager->m_splitAmount;
         }
         selectedArmy->m_creatureCounts[m_selectedSlot] -= gpTownManager->m_splitAmount;
         if (selectedArmy->m_creatureCounts[m_selectedSlot] == 0)
