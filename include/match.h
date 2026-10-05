@@ -16,6 +16,11 @@ typedef __int64 i64;
 typedef unsigned __int64 u64;
 #endif
 
+// Buka's project-wide prelude: every retail C++ unit (sixty /Od and two /O2)
+// instantiates std::ctype<wchar_t>::id and registers its cleanup, the output
+// of <string> (docs/patterns/vc6-ctype-startup.md).
+#include <string>
+
 // Reconstruction metadata. The compiler receives ordinary C++.
 #ifdef __clang__
 #define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))
