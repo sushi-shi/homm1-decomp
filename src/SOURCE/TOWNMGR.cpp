@@ -2006,14 +2006,14 @@ void townManager::GetCategoryStats(i8 category, i32* const stats, i8* const orde
                     stats[player] = gpGame->m_players[player].m_resources[RESOURCE_GOLD];
                     break;
                 case THIEVES_CATEGORY_WOOD_AND_ORE:
-                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_ORE]
+                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_WOOD]
                                     + gpGame->m_players[player].m_resources[RESOURCE_CRYSTAL]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_WOOD];
+                                    + gpGame->m_players[player].m_resources[RESOURCE_ORE];
                     break;
                 case THIEVES_CATEGORY_RARE_RESOURCES:
-                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_MERCURY]
+                    stats[player] = gpGame->m_players[player].m_resources[RESOURCE_GEMS]
                                     + gpGame->m_players[player].m_resources[RESOURCE_SULFUR]
-                                    + gpGame->m_players[player].m_resources[RESOURCE_GEMS];
+                                    + gpGame->m_players[player].m_resources[RESOURCE_MERCURY];
                     break;
                 case THIEVES_CATEGORY_OBELISKS:
                     stats[player] = gpGame->m_players[player].CountVisitedObelisks();
