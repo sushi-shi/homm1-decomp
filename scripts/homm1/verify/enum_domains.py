@@ -11,6 +11,8 @@ Invariants:
   5. RANGE TESTS NAME A BOUNDARY, NOT A MEMBER (fatal; the fix is a RENAME at
      the compared value - the compare FORM is load-bearing).
   6. Enumerators are SCREAMING_SNAKE (fatal).
+  7. H1_ENUM_ARRAY/ARRAY2 index domains and H1_ENUM_STEPPED domains are
+     declared value domains, not constant groups or flag sets (fatal).
 
     python3 -m homm1.verify.enum_domains [--gate] [-v]
 """
@@ -32,6 +34,10 @@ STORAGE = re.compile(r"\bH1_ENUM_(?P<usage>STORAGE|STORAGE_STEPPED|LOCAL|PARAM|R
                      r"\(\s*(\w+)\s*,\s*(\w+)\s*\)")
 BARE_ENUM = re.compile(
     r"^[ \t]*(?:typedef[ \t]+)?enum[ \t]+(\w+)[ \t]*\{(?P<body>[^}]*)\}", re.M)
+ARRAY = re.compile(r"\bH1_ENUM_ARRAY\(\s*[^,()]+(?:\([^()]*\))?\s*,\s*\w+\s*,\s*(\w+)\s*,")
+ARRAY2 = re.compile(r"\bH1_ENUM_ARRAY2\(\s*[^,()]+(?:\([^()]*\))?\s*,\s*\w+\s*,\s*(\w+)\s*,"
+                    r"[^,]+,\s*(\w+)\s*,")
+STEPPED = re.compile(r"\bH1_ENUM_STEPPED\(\s*(\w+)\s*\)")
 # `<<`/`>>` halves must not read as range tests (645 shifts matched before)
 RANGE_TEST = re.compile(r"(?<![<>])([<>]=?)(?![<>])[ \t]*([A-Z][A-Z0-9_]{2,})\b")
 MARKER_OK = re.compile(
@@ -106,6 +112,24 @@ def audit():
                              f"storage '{want}' ({decl_site.get(dom, '?')}) "
                              f"but stored as '{st}' here - two beliefs about "
                              f"retail's field width")
+
+    flag_sets = set()
+    for f in files:
+        flag_sets.update(m.group(1) for m in DECL_FLAGS.finditer(texts[f]))
+    for f in files:
+        r = str(f.relative_to(REPO))
+        t = texts[f]
+        uses = [(m, (m.group(1),), "ARRAY") for m in ARRAY.finditer(t)]
+        uses += [(m, (m.group(1), m.group(2)), "ARRAY2") for m in ARRAY2.finditer(t)]
+        uses += [(m, (m.group(1),), "STEPPED") for m in STEPPED.finditer(t)]
+        for m, domains, usage in uses:
+            line = t[:m.start()].count("\n") + 1
+            for dom in domains:
+                if dom not in declared:
+                    fatal.append(f"{r}:{line}: H1_ENUM_{usage} names undeclared domain '{dom}'")
+                elif dom in constant_groups or dom in flag_sets:
+                    fatal.append(f"{r}:{line}: H1_ENUM_{usage} domain '{dom}' is a "
+                                 f"constant group or flag set, not an index domain")
 
     for f in files:
         if f.suffix != ".h":

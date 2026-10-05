@@ -562,7 +562,7 @@ i32 InterpretCommandLine(void) {
     i32 i;
     i32 helpRequested = 0;
 
-    giDebugLevel = 0;
+    giDebugLevel = DEBUG_LEVEL_NONE;
     giShowIntro = 1;
     gColorMice = 0;
     gSpecialMouseMasks = 1;
@@ -2625,34 +2625,34 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             gConfig.musicVolume = SOUND_VOLUME_OFF;
             goto adjustMusic;
         case APP_MENU_MUSIC_100:
-            gConfig.musicVolume = SOUND_VOLUME_FIRST;
+            gConfig.musicVolume = SOUND_VOLUME_100;
             goto adjustMusic;
         case APP_MENU_MUSIC_90:
-            gConfig.musicVolume = 2;
+            gConfig.musicVolume = SOUND_VOLUME_90;
             goto adjustMusic;
         case APP_MENU_MUSIC_80:
-            gConfig.musicVolume = 3;
+            gConfig.musicVolume = SOUND_VOLUME_80;
             goto adjustMusic;
         case APP_MENU_MUSIC_70:
-            gConfig.musicVolume = 4;
+            gConfig.musicVolume = SOUND_VOLUME_70;
             goto adjustMusic;
         case APP_MENU_MUSIC_60:
-            gConfig.musicVolume = 5;
+            gConfig.musicVolume = SOUND_VOLUME_60;
             goto adjustMusic;
         case APP_MENU_MUSIC_50:
-            gConfig.musicVolume = 6;
+            gConfig.musicVolume = SOUND_VOLUME_50;
             goto adjustMusic;
         case APP_MENU_MUSIC_40:
-            gConfig.musicVolume = 7;
+            gConfig.musicVolume = SOUND_VOLUME_40;
             goto adjustMusic;
         case APP_MENU_MUSIC_30:
-            gConfig.musicVolume = 8;
+            gConfig.musicVolume = SOUND_VOLUME_30;
             goto adjustMusic;
         case APP_MENU_MUSIC_20:
-            gConfig.musicVolume = 9;
+            gConfig.musicVolume = SOUND_VOLUME_20;
             goto adjustMusic;
         case APP_MENU_MUSIC_10:
-            gConfig.musicVolume = SOUND_VOLUME_LAST;
+            gConfig.musicVolume = SOUND_VOLUME_10;
             goto adjustMusic;
         adjustMusic:
             SetMusicVolume(gConfig.musicVolume);
@@ -2662,34 +2662,34 @@ i32 HandleAppSpecificMenuCommands(i32 command) {
             gConfig.soundVolume = SOUND_VOLUME_OFF;
             goto adjustSound;
         case APP_MENU_SOUND_100:
-            gConfig.soundVolume = SOUND_VOLUME_FIRST;
+            gConfig.soundVolume = SOUND_VOLUME_100;
             goto adjustSound;
         case APP_MENU_SOUND_90:
-            gConfig.soundVolume = 2;
+            gConfig.soundVolume = SOUND_VOLUME_90;
             goto adjustSound;
         case APP_MENU_SOUND_80:
-            gConfig.soundVolume = 3;
+            gConfig.soundVolume = SOUND_VOLUME_80;
             goto adjustSound;
         case APP_MENU_SOUND_70:
-            gConfig.soundVolume = 4;
+            gConfig.soundVolume = SOUND_VOLUME_70;
             goto adjustSound;
         case APP_MENU_SOUND_60:
-            gConfig.soundVolume = 5;
+            gConfig.soundVolume = SOUND_VOLUME_60;
             goto adjustSound;
         case APP_MENU_SOUND_50:
-            gConfig.soundVolume = 6;
+            gConfig.soundVolume = SOUND_VOLUME_50;
             goto adjustSound;
         case APP_MENU_SOUND_40:
-            gConfig.soundVolume = 7;
+            gConfig.soundVolume = SOUND_VOLUME_40;
             goto adjustSound;
         case APP_MENU_SOUND_30:
-            gConfig.soundVolume = 8;
+            gConfig.soundVolume = SOUND_VOLUME_30;
             goto adjustSound;
         case APP_MENU_SOUND_20:
-            gConfig.soundVolume = 9;
+            gConfig.soundVolume = SOUND_VOLUME_20;
             goto adjustSound;
         case APP_MENU_SOUND_10:
-            gConfig.soundVolume = SOUND_VOLUME_LAST;
+            gConfig.soundVolume = SOUND_VOLUME_10;
             goto adjustSound;
         adjustSound:
             SetEffectsVolume(gConfig.soundVolume);
@@ -4551,7 +4551,7 @@ i16 gCurLoadedSpellFileId;
 DATA(0x004a761c)
 i32 giBottomViewOverride;
 DATA(0x004a76c4)
-char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
+char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 DATA(0x004a7470)
 class icon* gBuyBuildIcons;
 DATA(0x004a74ea)

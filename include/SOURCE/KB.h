@@ -5,6 +5,7 @@
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
@@ -132,15 +133,27 @@ extern class icon* gCurLoadedSpellIcon;
 char* GetMonsterSingularName(i32 monster);
 char* GetMonsterName(i32 monster);
 class sample* LoadPlaySample(char* name);
-extern i32 glTimers[];
-// Shared glTimers slots; the table ends at giScore (0x004c6a98), six slots.
-// Units keep slots 0 and 1.
-H1_ENUM_CONST_BEGIN(GlobalTimerConstant)
-    GLOBAL_TIMER_COUNT = 6,
+// glTimers slots: each entry is a KBTickCount() deadline that DelayTil waits
+// for or a loop compares against. Slots 2, 4 and 5 are global; slots 0 and
+// 1 are the clocks of whichever screen runs, so each owner's role name is an
+// alias of its slot.
+// The table ends at giScore (0x004c6a98), six slots.
+H1_ENUM_BEGIN(TimerSlot)
+    ADVENTURE_FRAME_TIMER_SLOT = 0,
+    COMBAT_FRAME_TIMER_SLOT = 0,
+    TOWN_FRAME_TIMER_SLOT = 0,
+    VIEW_ARMY_TIMER_SLOT = 0,
+    HIGH_SCORE_TIMER_SLOT = 0,
+    NET_BOX_BLINK_TIMER_SLOT = 0,
+    COMBAT_EFFECT_TIMER_SLOT = 1,
+    CURSOR_TURN_TIMER_SLOT = 1,
+    DELAY_TICKS_TIMER_SLOT = 1,
     GLOBAL_BUTTON_REPEAT_TIMER_SLOT = 2,
     GLOBAL_MUSIC_FADE_TIMER_SLOT = 4,
-    GLOBAL_POLL_SOUND_TIMER_SLOT = 5
-H1_ENUM_CONST_END(GlobalTimerConstant)
+    GLOBAL_POLL_SOUND_TIMER_SLOT = 5,
+    GLOBAL_TIMER_COUNT = 6
+H1_ENUM_END(TimerSlot)
+extern H1_ENUM_ARRAY(i32, glTimers, TimerSlot, GLOBAL_TIMER_COUNT);
 void EarlyShutDownSystem();
 void QuickViewWait();
 i8 CanBuild(class town* t, i16 building);
@@ -324,6 +337,22 @@ extern i32 gMonoIconSkip;
 extern u8 gMonoColorMap[];
 extern class inputManager* gpInputManager;
 extern i32 gCurExe;
+// giDebugLevel, set from the command line: NONE is release play; any level
+// shows the computer's routes and cell details (ADVMGR). From the second
+// level a saved game loads with another player count (REQUEST), every
+// player is set up as human (GAME) and philAI draws its status text.
+// AbsAiPrint forces the MISC_FORCED level for one line; philAI traces events
+// at EVENT and switches to BATTLE tracing on the trace column.
+H1_ENUM_BEGIN(DebugLevel)
+    DEBUG_LEVEL_NONE = 0,
+    FILE_REQUESTER_DEBUG_ALLOW_PLAYER_MISMATCH_MIN = 2,
+    GAME_DEBUG_LEVEL_ALL_HUMAN_MIN = 2,
+    AI_DEBUG_LEVEL_STATUS_TEXT_MIN = 2,
+    KBWIN_TRACE_DEBUG_LEVEL = 4,
+    AI_DEBUG_LEVEL_EVENT = 5,
+    AI_DEBUG_LEVEL_BATTLE = 9,
+    MISC_FORCED_DEBUG_LEVEL = 9
+H1_ENUM_END(DebugLevel)
 extern i32 giDebugLevel;
 extern class palette* gpBufferPalette;
 extern i32 gColorMice;
@@ -389,11 +418,9 @@ extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;
-// The last save name: retail places gbRetreatWin at its 0x15f-byte end.
-H1_ENUM_CONST_BEGIN(LastFilenameConstant)
-    GLOBAL_LAST_FILENAME_SIZE = 0x15f
-H1_ENUM_CONST_END(LastFilenameConstant)
-extern char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
+// The file requester's last chosen name (fileRequester::GetFilename);
+// retail places gbRetreatWin at its end.
+extern char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 extern char gLastMapName[];
 extern char* gMapSizeNames[];
 extern char* gHeroScreen[];
@@ -690,10 +717,9 @@ H1_ENUM_BEGIN(NetBoxControl)
     NET_BOX_INPUT = 3
 H1_ENUM_END(NetBoxControl)
 
-// PopNetBox blinks the input cursor on glTimers slot BLINK_TIMER_SLOT every
+// PopNetBox blinks the input cursor on NET_BOX_BLINK_TIMER_SLOT every
 // BLINK_DELAY ms.
 H1_ENUM_CONST_BEGIN(NetBoxConstant)
-    NET_BOX_BLINK_TIMER_SLOT = 0,
     NET_BOX_BLINK_DELAY = 360
 H1_ENUM_CONST_END(NetBoxConstant)
 

@@ -17,16 +17,15 @@ H1_ENUM_CONST_END(GameStorageConstant)
 
 // The -1 "none" of the game table indices. A player index (game::m_players,
 // giCurPlayer, town/hero/castle/mine owners, combatManager::m_playerId) is
-// NONE for the neutral owner of an unclaimed town or mine and the monster
-// side of a combat; a hero or town id (playerData::m_currentHero/m_heroIds,
-// m_currentTown/m_townIds, game::m_availableHeroes) is NONE for an empty
-// slot. game::Scan/RandomScan look for a FREE (-1) entry of a signed-char
-// table (m_boatSlots, m_availableHeroes, m_townOwners); RandomScan gives up
-// after RANDOM_SCAN_TRIES rolls. A player's "high" bit is its bit in the
-// upper nibble of a per-player byte (giCurPlayerHighBit = 1 << (p + SHIFT)).
+// NONE for the neutral owner of an unclaimed town or mine, a dismissed hero
+// and the monster side of a combat; a town id (m_currentTown/m_townIds) is
+// NONE for an empty slot (a hero id's is hero.h HERO_ID_NONE).
+// game::Scan/RandomScan look for a FREE (-1) entry of a signed-char table
+// (m_boatSlots, m_availableHeroes, m_townOwners); RandomScan gives up after
+// RANDOM_SCAN_TRIES rolls. A player's "high" bit is its bit in the upper
+// nibble of a per-player byte (giCurPlayerHighBit = 1 << (p + SHIFT)).
 H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_PLAYER_NONE = -1,
-    GAME_HERO_NONE = -1,
     GAME_TOWN_NONE = -1,
     GAME_MINE_NONE = -1,
     GAME_TABLE_FREE = -1,

@@ -321,7 +321,7 @@ i16 army::FlyTo(i16 destination) {
             oldMaxExtentX = giMaxExtentX;
         if (giMaxExtentY > maxY)
             maxY = giMaxExtentY;
-        DelayTil(glTimers);
+        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
         glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UPDATE_INCLUSIVE_REGION(oldX, oldY, oldMaxExtentX, maxY);
         m_animationFrame += flyBackwards == 1 ? -1 : 1;

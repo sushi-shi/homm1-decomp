@@ -63,6 +63,16 @@ review inputs, not defect totals. Preserve banked matches.
 - [x] Review unions: **9 definitions**, each one shared storage with typed
   readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
   argument-address walking.
+- [x] Enum-domain review ([ledger](config/reviews/enum-reuse.tsv),
+  [notes](docs/enum-reuse.md)): **403** starting blocks reviewed (67
+  canonical, 288 retained, 48 merged); **98** members merged into shared
+  domains and **43** unused members retired; **168** cross-domain value
+  collisions remain, each with a reviewed reason.
+- [ ] Name bare constants: **1,934** open literals (`homm1 verify constants`
+  floor); compiler-proven NULL/bool/enum replacements are at 0.
+- [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
+  so typed arrays (`H1_ENUM_ARRAY`) and enum destinations are checked only
+  where a unit parses.
 - [ ] Common-code review (helpers, accessors, macros): every source unit is
   read. Combat and AI (**233 functions**, [ledger](docs/common-code-combat.tsv)):
   **14 families** retained at **77 sites** (22 of them calls shortened by

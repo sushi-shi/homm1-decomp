@@ -109,11 +109,11 @@ void bitmap::CopyTo(
     i32 height
 ) {
     PollSound();
-    if (width != BITMAP_COPY_STRIDE) {
+    if (width != LOGICAL_SCREEN_WIDTH) {
         for (i32 row = 0; row < height; row++) {
             memcpy(
-                destination->m_pixels + destinationX + (destinationY + row) * BITMAP_COPY_STRIDE,
-                m_pixels + sourceX + (sourceY + row) * BITMAP_COPY_STRIDE,
+                destination->m_pixels + destinationX + (destinationY + row) * LOGICAL_SCREEN_WIDTH,
+                m_pixels + sourceX + (sourceY + row) * LOGICAL_SCREEN_WIDTH,
                 width
             );
         }

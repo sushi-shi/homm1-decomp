@@ -153,7 +153,7 @@ i16 townManager::Open(i16 id) {
     i8 buildId;
 
     gpGame->CheckHeroConsistency();
-    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
     if (m_townWindow == NULL)
@@ -267,7 +267,7 @@ i16 townManager::Open(i16 id) {
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
-    m_messageMask = TOWN_MANAGER_MESSAGE_MASK;
+    m_messageMask = BASE_MANAGER_ACCEPT_TOWN_EVENT;
     m_priority = id;
     m_active = 1;
     strcpy(m_name, "townManager");
@@ -591,7 +591,7 @@ i16 townManager::Main(struct tag_message& message) {
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
                             m_coverWindow =
-                                new heroWindow(0, 0x100, 0x280, 6, WINDOW_FLAG_SAVE_BACKGROUND);
+                                new heroWindow(0, 0x100, LOGICAL_SCREEN_WIDTH, 6, WINDOW_FLAG_SAVE_BACKGROUND);
                             if (m_coverWindow == NULL)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -1026,7 +1026,7 @@ void townManager::RedrawTownScreen(void) {
     message.text = m_statusText;
     m_townWindow->BroadcastMessage(message);
     m_townWindow->DrawWindow(0);
-    gpWindowManager->UpdateScreenRegion(0, 0x100, 0x280, 0x1e0);
+    gpWindowManager->UpdateScreenRegion(0, 0x100, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
     m_bankBox->Update();
 }
 
@@ -2200,10 +2200,10 @@ void townManager::DoTavern(void) {
     if (m_heroWindow0 == NULL)
         MemError();
     SetWinText(m_heroWindow0, WINDOW_TEXT_TAVERN);
-    PlayMusic(TOWN_TAVERN_MUSIC);
+    PlayMusic(MUSIC_TRACK_TAVERN);
     gpWindowManager->DoDialog(m_heroWindow0, TavernHandler, 0);
     delete m_heroWindow0;
-    PlayMusic(townTheme[m_town->m_type] + TOWN_THEME_MUSIC_BASE);
+    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
 
 // Hovers by widget id and recruits a single hero (control 0x30).

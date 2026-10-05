@@ -176,7 +176,7 @@ mouseMoveCursorCheck:
     if (message == WM_MOUSEMOVE && gpMouseManager != NULL) {
         if (event->x > INPUT_CURSOR_INTERIOR_X_MIN && event->x < INPUT_CURSOR_INTERIOR_X_MAX
             && event->y > INPUT_CURSOR_INTERIOR_Y_MIN && event->y < INPUT_CURSOR_INTERIOR_Y_MAX)
-            gpMouseManager->SetPointer(INPUT_KEEP_CURRENT_MOUSE_FRAME);
+            gpMouseManager->SetPointer(MOUSE_KEEP_CURRENT_FRAME);
     }
 
 afterMouseCoordinates:

@@ -373,7 +373,7 @@ void HeroMessageUpdate(char* text) {
     message.text = text;
     gheroWin->BroadcastMessage(message);
     gheroWin->DrawWindow(0, HERO_SCREEN_STATUS_FIRST, HERO_SCREEN_STATUS_TEXT);
-    gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
+    gpWindowManager->UpdateScreenRegion(0, 459, LOGICAL_SCREEN_WIDTH, 20);
 }
 
 VA(0x00439d44, 0x99)
@@ -546,7 +546,7 @@ void hero::Deallocate(void) {
         gpGame->m_players[m_owner].m_availableHeroIds[availSlot] = m_id;
         gpGame->m_availableHeroes[m_id] = HERO_AVAILABILITY_RETREATED;
     }
-    m_owner = HERO_OWNER_NONE;
+    m_owner = GAME_PLAYER_NONE;
     m_destinationX = m_destinationY = HERO_DESTINATION_NONE;
     if (!gbCombatSurrender)
         gpGame->SetRandomHeroArmies(m_id, RANDOM_HERO_NORMAL_ARMY);

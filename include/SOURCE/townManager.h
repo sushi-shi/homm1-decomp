@@ -27,11 +27,8 @@ H1_ENUM_CONST_BEGIN(TownManagerStorageConstant)
     TOWN_STATUS_REGION_HEIGHT = 0x10,
     TOWN_NAME_TEXT_CONTROL = 0x25,
     TOWN_REDRAW_INTERVAL = 0x96,
-    // glTimers slot the town screen and the tavern animate on.
-    TOWN_FRAME_TIMER_SLOT = 0,
     TOWN_FIRST_FACTION_OBJECT = 5,
     TOWN_CREST_NO_HERO_OFFSET = 0x10,
-    TOWN_MANAGER_MESSAGE_MASK = 0x800,
     TOWN_REDRAW_FIRST_CONTROL = 0x24,
     TOWN_REDRAW_LAST_CONTROL = 0x25,
     TOWN_VIEWPORT_WIDTH = 0x280,
@@ -222,13 +219,11 @@ H1_ENUM_BEGIN(TownCastleInfoText)
     TOWN_CASTLE_INFO_OPTIONS = 13
 H1_ENUM_END(TownCastleInfoText)
 
-// The tavern window, its animation and the town music (TOWN_THEME_MUSIC_BASE
-// + townTheme[type] is a town's ambient track).
+// The tavern window and its animation (the tavern plays MUSIC_TRACK_TAVERN;
+// MUSIC_TRACK_TOWN_FIRST + townTheme[type] is a town's ambient track).
 H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
-    TOWN_TAVERN_MUSIC = 0x2f,
-    TOWN_THEME_MUSIC_BASE = 0x1d,
     TOWN_TAVERN_ANIMATION_DELAY = 70,
     TOWN_TAVERN_UNUSED_FRAME = 2,
     TOWN_TAVERN_ANIMATION_CONTROL = 2,

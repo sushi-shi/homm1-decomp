@@ -4,6 +4,8 @@
 #include <BASE/resource.h>
 #include <Domains.h>
 
+// A sample's m_playbackData.volume at full scale (0..127): the resource
+// default and the army and walk samples' setting.
 H1_ENUM_CONST_BEGIN(SampleDefaultConstant)
     SAMPLE_VOLUME_FULL = 127
 H1_ENUM_CONST_END(SampleDefaultConstant)

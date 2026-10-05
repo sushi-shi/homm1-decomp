@@ -18,6 +18,12 @@ view is a fatal coverage hole rather than a silently incomplete report.
     homm1 verify enum-reuse --value 10       # inspect one value
     homm1 verify enum-reuse --json           # machine-readable full census
     homm1 verify enum-reuse --init-ledger    # snapshot the review worklist
+    homm1 verify enum-reuse --extend-ledger  # append new domains as pending
+
+Each evaluated member also records its semantic use contexts (the declaration
+identity of the field, parameter, comparison operand, switch subject, array or
+return that receives it), so the collision and
+pair reports rank domains that share producers/consumers above numeric overlap.
 """
 
 from __future__ import annotations
@@ -32,11 +38,12 @@ import re
 import sys
 from collections import Counter, defaultdict
 from concurrent.futures import ProcessPoolExecutor
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field, replace
 from itertools import combinations
 from pathlib import Path
 
 from homm1.core.paths import BUILD, REPO
+from homm1.verify.constant_context import semantic_context
 from homm1.verify.constants import _flags, _require_cl_mode, _source_path
 from homm1.verify.srcscan import blank_comments
 
@@ -54,6 +61,10 @@ LEDGER_FIELDS = (
     "reason",
 )
 LEDGER_DECISIONS = frozenset(("pending", "retain", "canonical", "reuse"))
+#: member_reuse target of a member removed because no code names it: the
+#: check requires the identifier to be absent from every project file.
+RETIRED = "-"
+_IDENTIFIER = re.compile(r"[A-Za-z_]\w*")
 
 _MACRO_BLOCK = re.compile(
     r"\bH1_ENUM_(BEGIN|BEGIN_SPLIT|FLAGS_BEGIN|CONST_BEGIN)"
@@ -102,6 +113,7 @@ class RawConstant:
     parent_file: str
     parent_offset: int
     context: str
+    use_contexts: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -118,6 +130,7 @@ class Constant:
     storage: str
     expression: str
     contexts: tuple[str, ...]
+    use_contexts: tuple[str, ...] = field(default=())
 
 
 def _project_files(repo: Path):
@@ -251,7 +264,9 @@ def _scan_entry(payload):
     except RuntimeError as exc:
         return [], f"{path}: {exc}"
     try:
-        tu = cidx.Index.create().parse(str(path), args=args)
+        tu = cidx.Index.create().parse(
+            str(path), args=args,
+            options=cidx.TranslationUnit.PARSE_DETAILED_PROCESSING_RECORD)
     except cidx.TranslationUnitLoadError as exc:
         return [], f"{path}: libclang could not load TU: {exc}"
     errors = [diag for diag in tu.diagnostics if diag.severity >= cidx.Diagnostic.Error]
@@ -288,7 +303,44 @@ def _scan_entry(payload):
             node.location.column, node.location.offset, parent_name,
             parent_file, parent_offset, context,
         ))
+    uses = _named_uses(cidx, tu, repo, {(row.file, row.offset) for row in constants})
+    constants = [replace(row, use_contexts=tuple(sorted(uses.get((row.file, row.offset), ()))))
+                 for row in constants]
     return constants, None
+
+
+def _named_uses(cidx, tu, repo, definitions):
+    """Destination identities of every reference to a project enumerator."""
+    uses = defaultdict(set)
+    relative_paths = {}
+
+    def location(node):
+        if node.location.file is None:
+            return None
+        name = node.location.file.name
+        if name not in relative_paths:
+            try:
+                rel = str(Path(name).resolve().relative_to(repo))
+                relative_paths[name] = rel if rel.startswith(("src/", "include/")) else None
+            except ValueError:
+                relative_paths[name] = None
+        rel = relative_paths[name]
+        return None if rel is None else (rel, node.location.offset)
+
+    def walk(node, stack):
+        if node.kind == cidx.CursorKind.DECL_REF_EXPR and node.referenced is not None:
+            ref = node.referenced
+            if ref.kind == cidx.CursorKind.ENUM_CONSTANT_DECL and location(node):
+                definition = location(ref)
+                if definition in definitions:
+                    key, _label = semantic_context(cidx, node, stack)
+                    if key:
+                        uses[definition].add(key)
+        for child in node.get_children():
+            walk(child, (*stack, node))
+
+    walk(tu.cursor, ())
+    return uses
 
 
 def scan_entries(entries: list[dict], *, repo: Path = REPO, jobs: int = 1):
@@ -309,7 +361,9 @@ def scan_entries(entries: list[dict], *, repo: Path = REPO, jobs: int = 1):
                 continue
             for constant in constants:
                 key = (constant.file, constant.offset, constant.value)
-                rows.setdefault(key, constant)
+                old = rows.get(key)
+                rows[key] = replace(old or constant, use_contexts=tuple(sorted(
+                    set(constant.use_contexts) | set(old.use_contexts if old else ()))))
                 contexts[key].add(constant.context)
     finally:
         if pool is not None:
@@ -343,7 +397,7 @@ def _join(raw, contexts, blocks):
             constant.value, constant.name, constant.file, constant.line,
             constant.column, constant.offset, block.source_enum, block.domain,
             block.kind, block.storage, member.expression,
-            tuple(sorted(contexts[key])),
+            tuple(sorted(contexts[key])), constant.use_contexts,
         ))
 
     uncovered_source = [
@@ -386,12 +440,14 @@ def write_report(path: Path, constants: list[Constant]) -> None:
     fields = (
         "value", "hex", "name", "file", "line", "column", "offset",
         "source_enum", "domain", "kind", "storage", "expression", "contexts",
+        "use_contexts",
     )
     rows = []
     for constant in constants:
         row = asdict(constant)
         row["hex"] = hex(constant.value)
         row["contexts"] = ";".join(constant.contexts)
+        row["use_contexts"] = json.dumps(list(constant.use_contexts))
         rows.append({name: row[name] for name in fields})
     _write_tsv(path, fields, rows)
 
@@ -414,9 +470,17 @@ def write_collision_report(path: Path, constants: list[Constant], literals_path:
     for constant in constants:
         by_value[constant.value].append(constant)
     literals = _literal_counts(literals_path)
+    literal_contexts = defaultdict(set)
+    if literals_path.is_file():
+        with literals_path.open(newline="") as stream:
+            for row in csv.DictReader(stream, dialect="excel-tab"):
+                if (row.get("scope") == "function-body" and row.get("value")
+                        and row.get("context_key")):
+                    literal_contexts[int(row["value"])].add(row["context_key"])
     fields = (
         "value", "hex", "declarations", "domains", "members",
-        "function_literal_sites", "literal_groups",
+        "function_literal_sites", "literal_groups", "shared_named_contexts",
+        "shared_literal_contexts",
     )
     rows = []
     for value, declarations in sorted(by_value.items()):
@@ -424,6 +488,10 @@ def write_collision_report(path: Path, constants: list[Constant], literals_path:
         literal_groups = literals.get(value, Counter())
         if len(domains) < 2 and not literal_groups:
             continue
+        context_domains = defaultdict(set)
+        for declaration in declarations:
+            for key in declaration.use_contexts:
+                context_domains[key].add(declaration.source_enum)
         rows.append({
             "value": value,
             "hex": hex(value),
@@ -434,7 +502,14 @@ def write_collision_report(path: Path, constants: list[Constant], literals_path:
             "function_literal_sites": sum(literal_groups.values()),
             "literal_groups": ";".join(f"{name}={count}"
                                        for name, count in sorted(literal_groups.items())),
+            "shared_named_contexts": json.dumps(sorted(
+                key for key, owners in context_domains.items() if len(owners) > 1)),
+            "shared_literal_contexts": json.dumps(sorted(
+                set(context_domains) & literal_contexts[value])),
         })
+    rows.sort(key=lambda row: (
+        not json.loads(row["shared_named_contexts"]),
+        not json.loads(row["shared_literal_contexts"]), row["value"]))
     _write_tsv(path, fields, rows)
 
 
@@ -446,7 +521,7 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
     fields = (
         "left", "right", "left_members", "right_members", "shared_values",
         "shared_count", "min_coverage_pct", "exact_value_set",
-        "exact_value_sequence",
+        "exact_value_sequence", "shared_contexts", "direct_shared_contexts",
     )
     rows = []
     for left_name, right_name in combinations(sorted(by_domain), 2):
@@ -456,8 +531,16 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
         right_values = {row.value for row in right}
         shared = sorted(left_values & right_values)
         exact_set = left_values == right_values
-        if len(shared) < 2 and not exact_set:
+        shared_contexts = set()
+        for value in shared:
+            left_contexts = {key for row in left if row.value == value
+                             for key in row.use_contexts}
+            right_contexts = {key for row in right if row.value == value
+                              for key in row.use_contexts}
+            shared_contexts.update(left_contexts & right_contexts)
+        if len(shared) < 2 and not exact_set and not shared_contexts:
             continue
+        direct = sorted(key for key in shared_contexts if "/via:" not in key)
         coverage = 100.0 * len(shared) / min(len(left_values), len(right_values))
         rows.append({
             "left": left_name,
@@ -472,8 +555,12 @@ def write_pair_report(path: Path, constants: list[Constant]) -> None:
                 "yes" if [row.value for row in left] == [row.value for row in right]
                 else "no"
             ),
+            "shared_contexts": json.dumps(sorted(shared_contexts)),
+            "direct_shared_contexts": json.dumps(direct),
         })
     rows.sort(key=lambda row: (
+        -len(json.loads(row["direct_shared_contexts"])),
+        -len(json.loads(row["shared_contexts"])),
         row["exact_value_sequence"] != "yes",
         row["exact_value_set"] != "yes",
         -float(row["min_coverage_pct"]),
@@ -557,6 +644,37 @@ def init_ledger(path: Path, constants: list[Constant], blocks: list[Block]) -> N
     _write_tsv(path, LEDGER_FIELDS, rows)
 
 
+def extend_ledger(path: Path, constants: list[Constant]) -> int:
+    """Add unclaimed current declarations as pending, preserving old decisions."""
+    with path.open(newline="") as stream:
+        reader = csv.DictReader(stream, dialect="excel-tab")
+        if tuple(reader.fieldnames or ()) != LEDGER_FIELDS:
+            raise ValueError(f"{path}: unexpected ledger schema")
+        rows = list(reader)
+    claimed = set()
+    existing = {row["source_enum"] for row in rows}
+    for row in rows:
+        members, findings = _parse_members(row["members"], source_enum=row["source_enum"])
+        reuse, more = _parse_reuse(row["member_reuse"], source_enum=row["source_enum"])
+        if findings or more:
+            raise ValueError("; ".join(findings + more))
+        claimed.update(reuse.get(name, f"{row['source_enum']}::{name}") for name in members)
+    added = 0
+    for domain, members in sorted(_members_by_enum(constants).items()):
+        unclaimed = [row for row in members if f"{domain}::{row.name}" not in claimed]
+        if not unclaimed or domain in existing:
+            # An existing row keeps its starting snapshot and decision;
+            # check_ledger still reports the unclaimed additions.
+            continue
+        rows.append({"source_enum": domain,
+                     "members": ";".join(f"{row.name}={row.value}" for row in unclaimed),
+                     "decision": "pending", "current_enums": domain,
+                     "member_reuse": "", "reason": ""})
+        added += 1
+    _write_tsv(path, LEDGER_FIELDS, rows)
+    return added
+
+
 def _parse_members(text: str, *, source_enum: str) -> tuple[dict[str, int], list[str]]:
     members = {}
     findings = []
@@ -585,6 +703,11 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
             findings.append(f"{source_enum}: malformed member_reuse {item!r}")
             continue
         old, target = item.split("=", 1)
+        if target == RETIRED:
+            if old in reuse:
+                findings.append(f"{source_enum}: duplicate member_reuse for {old}")
+            reuse[old] = target
+            continue
         if "::" not in target:
             findings.append(
                 f"{source_enum}: member_reuse target needs source-enum::member: {item!r}")
@@ -595,8 +718,16 @@ def _parse_reuse(text: str, *, source_enum: str) -> tuple[dict[str, str], list[s
     return reuse, findings
 
 
-def check_ledger(path: Path, constants: list[Constant]) -> list[str]:
+def _project_identifiers(repo: Path) -> set[str]:
+    names: set[str] = set()
+    for path in _project_files(repo):
+        names.update(_IDENTIFIER.findall(blank_comments(path.read_text(errors="replace"))))
+    return names
+
+
+def check_ledger(path: Path, constants: list[Constant], *, repo: Path = REPO) -> list[str]:
     """Prove that every starting member has a reviewed, value-preserving home."""
+    identifiers = None
     if not path.is_file():
         return [f"{path}: missing review ledger (run --init-ledger once)"]
     current = {
@@ -647,6 +778,13 @@ def check_ledger(path: Path, constants: list[Constant]) -> list[str]:
             target_enums = set()
             for name, value in members.items():
                 target = reuse.get(name, f"{source_enum}::{name}")
+                if target == RETIRED:
+                    if identifiers is None:
+                        identifiers = _project_identifiers(repo)
+                    if name in identifiers:
+                        findings.append(
+                            f"{source_enum}: retired member {name} is still named in the project")
+                    continue
                 target_enum, separator, target_name = target.rpartition("::")
                 if not separator or not target_enum or not target_name:
                     findings.append(
@@ -701,6 +839,8 @@ def main(argv=None) -> int:
                         help="do not write build/gen derived reports")
     parser.add_argument("--init-ledger", action="store_true",
                         help="create the complete pending review ledger; refuse overwrite")
+    parser.add_argument("--extend-ledger", action="store_true",
+                        help="append unclaimed current domains as pending rows")
     parser.add_argument("--jobs", type=int,
                         default=min(4, multiprocessing.cpu_count()),
                         help="parallel libclang translation-unit workers")
@@ -753,6 +893,14 @@ def main(argv=None) -> int:
             return 2
         print(f"[enum-reuse] initialized {LEDGER.relative_to(REPO)} with "
               f"{len(blocks)} pending row(s)", file=sys.stderr)
+    if args.extend_ledger:
+        try:
+            added = extend_ledger(LEDGER, constants)
+        except (OSError, ValueError) as exc:
+            print(f"[enum-reuse] FATAL: {exc}")
+            return 2
+        print(f"[enum-reuse] appended {added} pending row(s) to "
+              f"{LEDGER.relative_to(REPO)}", file=sys.stderr)
     findings = check_ledger(LEDGER, constants)
     for finding in findings[:20]:
         print(f"   {finding}", file=sys.stderr)

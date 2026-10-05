@@ -100,15 +100,6 @@ H1_ENUM_BEGIN(CombatEffectAnimation)
     COMBAT_EFFECT_COUNT = 26
 H1_ENUM_END(CombatEffectAnimation)
 
-// glTimers slot the combat screens pace their animation frames with
-// (combatManager::Open/Main/KeepAttack, the win/lose windows).
-// army::PowEffect and SpellEffect pace their effect frames on the second
-// slot.
-H1_ENUM_CONST_BEGIN(CombatTimerSlot)
-    COMBAT_FRAME_TIMER_SLOT = 0,
-    COMBAT_EFFECT_TIMER_SLOT = 1
-H1_ENUM_CONST_END(CombatTimerSlot)
-
 // hexcell::m_obstacleIndex: a rock's frame in the obstacle icon, or for a
 // castle piece (column 5) the wall state. GenerateMap builds the wall INTACT;
 // Catapult marks the struck piece HIT (from INTACT) or DAMAGED_HIT, then it

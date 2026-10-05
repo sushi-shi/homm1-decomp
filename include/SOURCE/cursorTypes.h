@@ -18,6 +18,15 @@ H1_ENUM_BEGIN(MapDirection)
     MAP_DIRECTION_UNMIRRORED_LAST = MAP_DIRECTION_SOUTH
 H1_ENUM_END(MapDirection)
 
+// Direction bit masks over MapDirection (1 << direction): a step north-west,
+// north or north-east is blocked by an object on the cell it leaves, a step
+// south-east, south or south-west by one on the cell it enters (the hero
+// cursor's move test and the path searches).
+H1_ENUM_CONST_BEGIN(MapDirectionMask)
+    MAP_DIRECTION_NORTH_MASK = 0x83,
+    MAP_DIRECTION_SOUTH_MASK = 0x38
+H1_ENUM_CONST_END(MapDirectionMask)
+
 // gConfig.walkSpeed ("Walk Speed"): the Speed menu's Walk..Jump commands
 // store 0..4; advManager's hero walk indexes gStepDelay by it and skips
 // frames and sounds at JUMP.
