@@ -37,9 +37,7 @@ and explain why adding an arbitrary dummy constructor is not a reconstruction.
 HoMM1 Buka contains sixty complete unoptimized initializer/registration pairs
 and two optimized bodies, after FINDPATH and SEARCH. Together they account for
 all 184 absolute references to the guard and all 62 associated CRT initializer
-entries. The guard is one loader-zero byte at RVA `0xd82d8`. The complete
-instruction controls, object/header hashes, references and CRT entries are in
-[`buka-ctype-guard.json`](../../config/retail/buka-ctype-guard.json).
+entries. The guard is one loader-zero byte at RVA `0xd82d8`.
 
 Use the existing `data_compgen.tsv` COMMON mechanism for this compiler-owned
 storage; never introduce a source global to imitate it. The control's volatile

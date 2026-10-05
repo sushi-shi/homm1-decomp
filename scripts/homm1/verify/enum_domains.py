@@ -1,6 +1,6 @@
 """homm1.verify.enum_domains - the enum-domain layer's structural gate (fast).
 
-Ported invariants (https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/enum-modeling-plan.md, https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/enum-domains.md):
+Invariants:
   1. SPLIT-WIDTH AGREEMENT (fatal): every H1_ENUM_STORAGE(N, S) matches the
      domain's declared narrow storage. Local temporaries and ABI parameter/return
      widths are independently evidenced and may differ from a packed field.

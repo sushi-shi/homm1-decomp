@@ -28,14 +28,11 @@ read by the named tooling. Generated state belongs in `build/`.
 
 ## Retail facts (`retail/`)
 
-Current census and claim RVAs refer to the pinned 1.2 `HEROESW.EXE`.
-Migration tables identify both their source and destination versions.
+Files at the top of `retail/` describe the pinned Buka 2003 `HEROES.EXE`; a
+second image keeps the same kinds of files in its own subdirectory (for
+example `retail/editor/`). Addresses are image RVAs.
 
-- `win95-1.1-to-1.2.tsv`, `win95-1.1-to-1.2-review.tsv`: current port
-  correspondence, mapping evidence and complete old-function inventory.
-- `win95-1.0-to-1.1.tsv`, `win95-1.0-to-1.1-review.tsv`: retained historical
-  correspondence and review for the earlier port.
-- `targets.json`: hashes of the game and optional editor executables.
+- `targets.json`: hashes of the game and editor executables.
 - `functions.tsv`, `data.tsv`: hand-owned `.text`/data start censuses. They
   supply structure only; names and sizes come from source and provider claims.
 - `function_referents.tsv`, `reloc_referents.tsv`, `data_symbols.tsv`: reviewed
@@ -43,11 +40,36 @@ Migration tables identify both their source and destination versions.
   delinker cannot infer.
 - `functions_static_libs.tsv`, `data_vtables.tsv`, `data_static_libs.tsv`,
   `data_compgen.tsv`: provider claim channels (`homm1 model`).
-- `import_libraries.tsv`: import libraries whose format differs from the
-  pinned LINK's output (`homm1.graph.implib`).
+- `asm_claims.tsv`: MASM unit claims (`homm1.graph.fixed_asm`).
+- `absolute_relocations.tsv`, `absolute_reference_evidence.tsv`: the reviewed
+  absolute-reference manifest of the `/FIXED` image and its per-site evidence.
+- `import_libraries.tsv`, `import_symbols.json`: import libraries whose format
+  differs from the pinned LINK's output, and import names (`homm1.graph.implib`).
 - `link_order.tsv`, `link_bands.tsv`: link-layout channels; admitting rows
   changes delinker ownership.
-- `dna_bands.tsv`: executable DNA census against VC4 LIBCMT/OLDNAMES
+- `dna_bands.tsv`: executable DNA census against the VC6 libraries
   (`homm1 audit dna-bands`, `verify.universe`).
-- `homm2_tu_segments.tsv`: retail RVA ranges assigned to source units, read by
-  the DNA census.
+- `unit_spans.tsv`: retail RVA ranges assigned to source units, read by the
+  DNA census.
+- `function_identities.tsv`, `reference_proofs.tsv`: reviewed function
+  identities and (site, target, symbol) reference proofs for the
+  `homm1 compare --baseline` reference audit.
+- `localization.tsv`, `localization_resources.tsv`,
+  `localization_fixed_width.tsv`: provenance (pointer slots, literal and
+  resource payload hashes) of every catalog entry, checked by the
+  localization tests.
+- `assets.json`: hashes of the retail game data files.
+
+### Release lineage (`retail/versions/`)
+
+Correspondence between the game's releases, described in
+[version lineage](../docs/versions/README.md):
+
+- `win95-1.0-to-1.1.tsv`, `win95-1.0-to-1.1-review.tsv`: 1.0 → 1.1 address
+  correspondence and changed-function review.
+- `win95-1.1-to-1.2.tsv`, `win95-1.1-to-1.2-review.tsv`: 1.1 → 1.2
+  correspondence and complete old-function inventory.
+- `win95-1.2-to-buka-2003.tsv`: 1.2 → Buka function and data correspondence;
+  rows without a new RVA are 1.2 functions with no standalone Buka body.
+- `win95-1.2-reloc-referents.tsv`: the 1.2 image's relocation referents.
+- `images.json`: PE inventories of the 1.2 and Buka executables and DLLs.

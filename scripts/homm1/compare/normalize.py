@@ -10,8 +10,7 @@ module's resolved in-object calls, and rewrites same-function
 jump-table `DIR32` labels of both the recompiled base obj and its delinked
 target obj into a content-addressed, side-by-side view under `<out-dir>/`.
 `objdiff.json` points at these copies; the real base and target objects are
-never touched, so the transform is matching-NEUTRAL (see canonicalize.py and
-the sibling homm2 docs/data-symbol-normalization).
+never touched, so the transform is matching-NEUTRAL (see canonicalize.py).
 
 Per-object work is skipped when the normalized copy is already newer than its
 input and the normalizer modules, so a single-file edit only re-normalizes that

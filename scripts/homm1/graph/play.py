@@ -1,8 +1,8 @@
 """homm1.graph.play - install a built HEROESW.EXE beside local game data and run it.
 
 One definition shared by `homm1 play` (the matching build's candidate) and the
-generated clean tree's `nix run path:. -- --data DIR` (its own build.py), after
-Gruntz's `gruntz play` and clean-export runner. The clean tree carries a copy
+generated clean tree's `nix run path:. -- --data DIR` (its own build.py). The
+clean tree carries a copy
 of this file as play.py, so it imports nothing beyond the standard library.
 
 <target>/ holds:

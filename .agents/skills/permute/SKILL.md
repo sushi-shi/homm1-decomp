@@ -3,7 +3,6 @@ name: permute
 description: Run classified HoMM1 permutation campaigns as bounded N-island/M-frontier approximation searches, then inspect diverse high-scoring compiler states and translate their clues into authentic source changes. Use when a reconstructed function is complete but below 100%, when asked to search for higher fuzzy states, when several walls need permutation-candidate classification, or when an exact disposable TU-state result must be understood rather than copied.
 ---
 
-Adapted from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
 Use HoMM1's pinned VC4 profile and absolute `VA(...)` source annotations.
 The active score is strict (`data_matching=true`): data-reference identities
 and addends count. `AGENTS.md` and the user's instructions take precedence.

@@ -38,7 +38,7 @@ def unit_claims(unit: str) -> list[Claim]:
 def units() -> list[str]:
     """Manifest unit names represented by the fragment tree.
 
-    Unit names intentionally retain donor directories (for example
+    Unit names include their directory (for example
     ``SOURCE/HISCORE``), so a recursive walk must recover the path relative to
     ``FRAGMENTS`` rather than just ``Path.stem``.
     """

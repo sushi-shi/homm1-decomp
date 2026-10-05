@@ -231,7 +231,7 @@ def resolve_iat(slots, base_dir: Path | None) -> tuple[list, list]:
             # needed to form the corresponding COFF import-pointer symbol.
             if name.startswith(("_", "@", "?")):
                 dec = "__imp_" + name
-            elif "__imp_" + name in exact:  # donor/vendor import-library proof
+            elif "__imp_" + name in exact:  # vendor import-library proof
                 dec = "__imp_" + name
             elif name in by_norm:          # win32: undecorated export -> @N
                 dec = by_norm[name]

@@ -1,6 +1,6 @@
 """Check that compiled source tokens use explicit bytes for non-ASCII text.
 
-The Giten donor uses Shift-JIS; HoMM1 text must follow its own retail bytes.
+HoMM1 text must follow its own retail bytes.
 This audit is opt-in and makes no encoding claim about HoMM1 resources.
 """
 

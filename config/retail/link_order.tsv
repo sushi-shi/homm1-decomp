@@ -1,5 +1,5 @@
 # Reviewed Buka TU contributions, including generated and unnamed bodies.
-# Ownership evidence: buka-function-map.json, buka-ctype-guard.json, buka-function-structure.json.
+# Ownership evidence: retail contribution boundaries and the VC6 locale-startup pairs.
 # Exact body spans only; padding gaps are not assigned. CRT attribution does not alter census exclusions.
 index	unit	lo	hi	class
 0	SOURCE/ADVMGR	0x00001000	0x0001164f	code
