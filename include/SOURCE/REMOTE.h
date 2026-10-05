@@ -129,7 +129,7 @@ extern u8 GameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
 extern char PacketSend[];
-extern i32 gNumNetGuests;
+extern i32 iNetGuests;
 extern i32 gLastConfirm;
 extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];

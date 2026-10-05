@@ -12036,14 +12036,14 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?gCommandLine@@3PADA",
+              "symbol": "?gCommandParams@@3PADA",
               "site_rva": "0x3df53",
               "target_rva": "0xa9df6",
               "addend": "0x2",
               "kind": 6
             },
             {
-              "symbol": "?gCommandLine@@3PADA",
+              "symbol": "?gCommandParams@@3PADA",
               "site_rva": "0x3df73",
               "target_rva": "0xa9df6",
               "addend": "0x2",
@@ -12284,7 +12284,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?gCommandLine@@3PADA",
+              "symbol": "?gCommandParams@@3PADA",
               "site_rva": "0x3df9a",
               "target_rva": "0xa9df6",
               "addend": "0x2",

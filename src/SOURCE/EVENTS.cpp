@@ -2051,7 +2051,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     oldPlayer = giCurPlayer;
     ownerPlayerData = gpCurPlayer;
     --eventHero->m_remainingMobility;
-    mapVisited[x][y] |= giCurPlayerBit;
+    gMapVisitFlags[x][y] |= giCurPlayerBit;
     switch (eventType) {
         case MAP_OBJECT_COAST:
             if (eventHero->IsEmbarked()) {

@@ -13771,7 +13771,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -13781,7 +13781,7 @@
         },
         {
           "offset": "0xeb",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         }
       ],
@@ -13838,7 +13838,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -13848,7 +13848,7 @@
         },
         {
           "offset": "0xeb",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         }
       ],
@@ -19719,7 +19719,7 @@
         },
         {
           "offset": "0x7a3",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -19754,7 +19754,7 @@
         },
         {
           "offset": "0x816",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -19864,7 +19864,7 @@
         },
         {
           "offset": "0x90a",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -19874,7 +19874,7 @@
         },
         {
           "offset": "0x920",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -20311,7 +20311,7 @@
         },
         {
           "offset": "0x6ca",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -20346,7 +20346,7 @@
         },
         {
           "offset": "0x734",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -20456,7 +20456,7 @@
         },
         {
           "offset": "0x822",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -20466,7 +20466,7 @@
         },
         {
           "offset": "0x838",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -21849,7 +21849,7 @@
         },
         {
           "offset": "0x6d",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -21859,7 +21859,7 @@
         },
         {
           "offset": "0x83",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -21879,7 +21879,7 @@
         },
         {
           "offset": "0x153",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -22246,7 +22246,7 @@
         },
         {
           "offset": "0x6d",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -22256,7 +22256,7 @@
         },
         {
           "offset": "0x83",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -22276,7 +22276,7 @@
         },
         {
           "offset": "0x153",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -27479,7 +27479,7 @@
         },
         {
           "offset": "0x196",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -27799,7 +27799,7 @@
         },
         {
           "offset": "0x495",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -28041,7 +28041,7 @@
         },
         {
           "offset": "0x196",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": 0
         },
         {
@@ -28361,7 +28361,7 @@
         },
         {
           "offset": "0x495",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0
         },
         {
@@ -36097,7 +36097,7 @@
         },
         {
           "offset": "0x84",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -36107,12 +36107,12 @@
         },
         {
           "offset": "0xb7",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
           "offset": "0xd8",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 1
         },
         {
@@ -36132,7 +36132,7 @@
         },
         {
           "offset": "0x121",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36142,7 +36142,7 @@
         },
         {
           "offset": "0x141",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36152,7 +36152,7 @@
         },
         {
           "offset": "0x161",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36162,7 +36162,7 @@
         },
         {
           "offset": "0x188",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36344,7 +36344,7 @@
         },
         {
           "offset": "0x84",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -36354,12 +36354,12 @@
         },
         {
           "offset": "0xb7",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
           "offset": "0xd8",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 1
         },
         {
@@ -36379,7 +36379,7 @@
         },
         {
           "offset": "0x121",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36389,7 +36389,7 @@
         },
         {
           "offset": "0x141",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36399,7 +36399,7 @@
         },
         {
           "offset": "0x161",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -36409,7 +36409,7 @@
         },
         {
           "offset": "0x188",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 2
         },
         {
@@ -40157,7 +40157,7 @@
         },
         {
           "offset": "0x76",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -40167,7 +40167,7 @@
         },
         {
           "offset": "0x89",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -40284,7 +40284,7 @@
         },
         {
           "offset": "0x76",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -40294,7 +40294,7 @@
         },
         {
           "offset": "0x89",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "addend": 0
         },
         {
@@ -41317,7 +41317,7 @@
         },
         {
           "offset": "0x380",
-          "symbol": "?gTempX@@3HA",
+          "symbol": "?iTempX@@3HA",
           "addend": 0
         },
         {
@@ -41332,7 +41332,7 @@
         },
         {
           "offset": "0x3cb",
-          "symbol": "?gTempX@@3HA",
+          "symbol": "?iTempX@@3HA",
           "addend": 0
         },
         {
@@ -41347,7 +41347,7 @@
         },
         {
           "offset": "0x406",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -41362,12 +41362,12 @@
         },
         {
           "offset": "0x41f",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
           "offset": "0x428",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -41422,7 +41422,7 @@
         },
         {
           "offset": "0x490",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -41849,7 +41849,7 @@
         },
         {
           "offset": "0x380",
-          "symbol": "?gTempX@@3HA",
+          "symbol": "?iTempX@@3HA",
           "addend": 0
         },
         {
@@ -41864,7 +41864,7 @@
         },
         {
           "offset": "0x3cb",
-          "symbol": "?gTempX@@3HA",
+          "symbol": "?iTempX@@3HA",
           "addend": 0
         },
         {
@@ -41879,7 +41879,7 @@
         },
         {
           "offset": "0x406",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -41894,12 +41894,12 @@
         },
         {
           "offset": "0x41f",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
           "offset": "0x428",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -41954,7 +41954,7 @@
         },
         {
           "offset": "0x490",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -49952,17 +49952,17 @@
         },
         {
           "offset": "0x4e",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x58",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -49977,12 +49977,12 @@
         },
         {
           "offset": "0x89",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x9c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -49992,12 +49992,12 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?gEventSeen@@3HA",
+          "symbol": "?gCellSeen@@3HA",
           "addend": 0
         },
         {
           "offset": "0xca",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50012,7 +50012,7 @@
         },
         {
           "offset": "0xff",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50022,27 +50022,27 @@
         },
         {
           "offset": "0x111",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
           "offset": "0x117",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x122",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x12a",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x130",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50052,12 +50052,12 @@
         },
         {
           "offset": "0x13f",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x148",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50067,32 +50067,32 @@
         },
         {
           "offset": "0x15b",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x160",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x165",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16a",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16f",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x174",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -50107,12 +50107,12 @@
         },
         {
           "offset": "0x19e",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a4",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50122,7 +50122,7 @@
         },
         {
           "offset": "0x1b6",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -50132,12 +50132,12 @@
         },
         {
           "offset": "0x1c2",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c7",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50162,62 +50162,62 @@
         },
         {
           "offset": "0x1eb",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1f1",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1fa",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x204",
-          "symbol": "?gEventSeen@@3HA",
+          "symbol": "?gCellSeen@@3HA",
           "addend": 0
         },
         {
           "offset": "0x20d",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x22d",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
           "offset": "0x233",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x23b",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
           "offset": "0x241",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x248",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x24d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x255",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
@@ -50227,7 +50227,7 @@
         },
         {
           "offset": "0x261",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
@@ -50237,7 +50237,7 @@
         },
         {
           "offset": "0x26f",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
@@ -50252,12 +50252,12 @@
         },
         {
           "offset": "0x281",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x28c",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50267,7 +50267,7 @@
         },
         {
           "offset": "0x2af",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -50277,7 +50277,7 @@
         },
         {
           "offset": "0x2c9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50287,7 +50287,7 @@
         },
         {
           "offset": "0x2e5",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50302,12 +50302,12 @@
         },
         {
           "offset": "0x308",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x317",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50322,7 +50322,7 @@
         },
         {
           "offset": "0x339",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50347,12 +50347,12 @@
         },
         {
           "offset": "0x379",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x37e",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50362,7 +50362,7 @@
         },
         {
           "offset": "0x39b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50387,7 +50387,7 @@
         },
         {
           "offset": "0x3d0",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -50397,12 +50397,12 @@
         },
         {
           "offset": "0x3dd",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x3e8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50417,7 +50417,7 @@
         },
         {
           "offset": "0x40e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -50427,17 +50427,17 @@
         },
         {
           "offset": "0x425",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x430",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x43d",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
@@ -50462,27 +50462,27 @@
         },
         {
           "offset": "0x46b",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x47d",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x489",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x492",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x498",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50492,22 +50492,22 @@
         },
         {
           "offset": "0x4a6",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4ac",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x4b6",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4c4",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50517,27 +50517,27 @@
         },
         {
           "offset": "0x4d6",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4e7",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4ef",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4f8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4fe",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50547,17 +50547,17 @@
         },
         {
           "offset": "0x50c",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x512",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x51c",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50567,7 +50567,7 @@
         },
         {
           "offset": "0x530",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -50577,32 +50577,32 @@
         },
         {
           "offset": "0x542",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x547",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x54c",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x551",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x556",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x55b",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -50617,17 +50617,17 @@
         },
         {
           "offset": "0x588",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x594",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x59b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50637,7 +50637,7 @@
         },
         {
           "offset": "0x5b3",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50652,12 +50652,12 @@
         },
         {
           "offset": "0x5ec",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x5fa",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50672,7 +50672,7 @@
         },
         {
           "offset": "0x62d",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -50692,7 +50692,7 @@
         },
         {
           "offset": "0x648",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50702,22 +50702,22 @@
         },
         {
           "offset": "0x663",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x668",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x670",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x67a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -50727,7 +50727,7 @@
         },
         {
           "offset": "0x686",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
@@ -50742,12 +50742,12 @@
         },
         {
           "offset": "0x698",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6a0",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -50762,27 +50762,27 @@
         },
         {
           "offset": "0x6b6",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6bc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6c2",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6cb",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6d9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50792,7 +50792,7 @@
         },
         {
           "offset": "0x6fc",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50807,12 +50807,12 @@
         },
         {
           "offset": "0x720",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x72c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -50822,7 +50822,7 @@
         },
         {
           "offset": "0x74f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50837,17 +50837,17 @@
         },
         {
           "offset": "0x771",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x789",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x793",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -50857,7 +50857,7 @@
         },
         {
           "offset": "0x7a6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -50867,17 +50867,17 @@
         },
         {
           "offset": "0x7c2",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x7c8",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x7de",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -50887,12 +50887,12 @@
         },
         {
           "offset": "0x7f7",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x7fd",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -50902,7 +50902,7 @@
         },
         {
           "offset": "0x80c",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -50912,27 +50912,27 @@
         },
         {
           "offset": "0x81a",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x81f",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x828",
-          "symbol": "?gEventTownId@@3HA",
+          "symbol": "?gHeroGarrisonId@@3HA",
           "addend": 0
         },
         {
           "offset": "0x82e",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x83c",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -50952,7 +50952,7 @@
         },
         {
           "offset": "0x863",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -50977,7 +50977,7 @@
         },
         {
           "offset": "0x89e",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -50992,42 +50992,42 @@
         },
         {
           "offset": "0x8c5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8ca",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8cf",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8d4",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8d9",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8de",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0x8e3",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x8ee",
-          "symbol": "?gEventTownId@@3HA",
+          "symbol": "?gHeroGarrisonId@@3HA",
           "addend": 0
         },
         {
@@ -51042,12 +51042,12 @@
         },
         {
           "offset": "0x909",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x90f",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -51067,7 +51067,7 @@
         },
         {
           "offset": "0x945",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51082,22 +51082,22 @@
         },
         {
           "offset": "0x95b",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x964",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x96a",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x970",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51107,12 +51107,12 @@
         },
         {
           "offset": "0x97c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x988",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -51122,12 +51122,12 @@
         },
         {
           "offset": "0x99c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x9a8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51142,12 +51142,12 @@
         },
         {
           "offset": "0x9b8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x9be",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51157,7 +51157,7 @@
         },
         {
           "offset": "0x9d1",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51167,7 +51167,7 @@
         },
         {
           "offset": "0x9eb",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51177,7 +51177,7 @@
         },
         {
           "offset": "0x9fe",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51192,7 +51192,7 @@
         },
         {
           "offset": "0xa0f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51202,7 +51202,7 @@
         },
         {
           "offset": "0xa27",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51212,7 +51212,7 @@
         },
         {
           "offset": "0xa3a",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51227,7 +51227,7 @@
         },
         {
           "offset": "0xa4b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51237,7 +51237,7 @@
         },
         {
           "offset": "0xa63",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51247,7 +51247,7 @@
         },
         {
           "offset": "0xa76",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51262,7 +51262,7 @@
         },
         {
           "offset": "0xa87",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51272,7 +51272,7 @@
         },
         {
           "offset": "0xa9c",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51282,7 +51282,7 @@
         },
         {
           "offset": "0xaaf",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51297,7 +51297,7 @@
         },
         {
           "offset": "0xac0",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51307,7 +51307,7 @@
         },
         {
           "offset": "0xad5",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51322,7 +51322,7 @@
         },
         {
           "offset": "0xae6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51332,7 +51332,7 @@
         },
         {
           "offset": "0xaf8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51342,7 +51342,7 @@
         },
         {
           "offset": "0xb0f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51352,7 +51352,7 @@
         },
         {
           "offset": "0xb2a",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51362,12 +51362,12 @@
         },
         {
           "offset": "0xb3d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb43",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51382,12 +51382,12 @@
         },
         {
           "offset": "0xb57",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb63",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51397,12 +51397,12 @@
         },
         {
           "offset": "0xb76",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb7c",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51417,27 +51417,27 @@
         },
         {
           "offset": "0xb90",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb96",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb9f",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xba9",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xbb8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51447,12 +51447,12 @@
         },
         {
           "offset": "0xbd2",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xbd7",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51462,27 +51462,27 @@
         },
         {
           "offset": "0xbfa",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xc09",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc15",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc1e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc26",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51492,7 +51492,7 @@
         },
         {
           "offset": "0xc39",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51507,12 +51507,12 @@
         },
         {
           "offset": "0xc50",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc56",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
@@ -51522,7 +51522,7 @@
         },
         {
           "offset": "0xc70",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51532,7 +51532,7 @@
         },
         {
           "offset": "0xc8c",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51547,12 +51547,12 @@
         },
         {
           "offset": "0xcaf",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xcbd",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51562,7 +51562,7 @@
         },
         {
           "offset": "0xccb",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -51577,7 +51577,7 @@
         },
         {
           "offset": "0xcf3",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51587,52 +51587,52 @@
         },
         {
           "offset": "0xd16",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd1b",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd20",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd25",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd2a",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd2f",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xd34",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xd3f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xd4b",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xd55",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51642,7 +51642,7 @@
         },
         {
           "offset": "0xd72",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51657,7 +51657,7 @@
         },
         {
           "offset": "0xda5",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51667,47 +51667,47 @@
         },
         {
           "offset": "0xdb6",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdbb",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdc0",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdc5",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdca",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdcf",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xdd5",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xddf",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xdef",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51717,17 +51717,17 @@
         },
         {
           "offset": "0xe0e",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xe18",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xe22",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -51752,12 +51752,12 @@
         },
         {
           "offset": "0xe50",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xe5e",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -51777,7 +51777,7 @@
         },
         {
           "offset": "0xe8c",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -51802,22 +51802,22 @@
         },
         {
           "offset": "0xec9",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0xecf",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0xed5",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xedb",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
@@ -51827,12 +51827,12 @@
         },
         {
           "offset": "0xee5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xeea",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51842,17 +51842,17 @@
         },
         {
           "offset": "0xf08",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xf17",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xf27",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51917,12 +51917,12 @@
         },
         {
           "offset": "0xfa5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xfab",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -51932,7 +51932,7 @@
         },
         {
           "offset": "0xfcc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51947,7 +51947,7 @@
         },
         {
           "offset": "0xffe",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51962,7 +51962,7 @@
         },
         {
           "offset": "0x102c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51977,7 +51977,7 @@
         },
         {
           "offset": "0x105d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -51992,7 +51992,7 @@
         },
         {
           "offset": "0x108b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52007,7 +52007,7 @@
         },
         {
           "offset": "0x10b9",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52027,7 +52027,7 @@
         },
         {
           "offset": "0x10d4",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52087,7 +52087,7 @@
         },
         {
           "offset": "0x1121",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52097,7 +52097,7 @@
         },
         {
           "offset": "0x1158",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52107,12 +52107,12 @@
         },
         {
           "offset": "0x116e",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1174",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52122,17 +52122,17 @@
         },
         {
           "offset": "0x1187",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x118d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x11a8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -52147,12 +52147,12 @@
         },
         {
           "offset": "0x11c1",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x11c6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52172,7 +52172,7 @@
         },
         {
           "offset": "0x120d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52182,22 +52182,22 @@
         },
         {
           "offset": "0x121d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1225",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1233",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1251",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52212,7 +52212,7 @@
         },
         {
           "offset": "0x1270",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52222,17 +52222,17 @@
         },
         {
           "offset": "0x1292",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x129e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x12ad",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52242,7 +52242,7 @@
         },
         {
           "offset": "0x12db",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52257,12 +52257,12 @@
         },
         {
           "offset": "0x12ff",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1309",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52277,12 +52277,12 @@
         },
         {
           "offset": "0x132a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1335",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52297,12 +52297,12 @@
         },
         {
           "offset": "0x1356",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1361",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52317,12 +52317,12 @@
         },
         {
           "offset": "0x1382",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1389",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52337,12 +52337,12 @@
         },
         {
           "offset": "0x13aa",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x13b2",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52357,12 +52357,12 @@
         },
         {
           "offset": "0x13d3",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x13db",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52377,17 +52377,17 @@
         },
         {
           "offset": "0x13fc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1406",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1416",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52397,7 +52397,7 @@
         },
         {
           "offset": "0x1431",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52407,17 +52407,17 @@
         },
         {
           "offset": "0x144f",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1459",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1469",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52437,27 +52437,27 @@
         },
         {
           "offset": "0x148b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1495",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x149a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x149f",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14a6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52467,27 +52467,27 @@
         },
         {
           "offset": "0x14c0",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14ce",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14d3",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14d8",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14df",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52497,22 +52497,22 @@
         },
         {
           "offset": "0x14fd",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1502",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1507",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x150e",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52522,27 +52522,27 @@
         },
         {
           "offset": "0x1528",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1536",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x153b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1540",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1547",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52552,27 +52552,27 @@
         },
         {
           "offset": "0x1561",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x156f",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1574",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1579",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1580",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52582,27 +52582,27 @@
         },
         {
           "offset": "0x159a",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15a8",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15ad",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15b2",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15b9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52612,27 +52612,27 @@
         },
         {
           "offset": "0x15d3",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15e1",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15e6",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15eb",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15f2",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52642,22 +52642,22 @@
         },
         {
           "offset": "0x160c",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x161a",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x162a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1639",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52667,22 +52667,22 @@
         },
         {
           "offset": "0x16ad",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16b8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16c0",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16c6",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -52692,12 +52692,12 @@
         },
         {
           "offset": "0x16d5",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16de",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -52707,7 +52707,7 @@
         },
         {
           "offset": "0x16f4",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52717,7 +52717,7 @@
         },
         {
           "offset": "0x1721",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52767,22 +52767,22 @@
         },
         {
           "offset": "0x179e",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17aa",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17b3",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17b9",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -52792,12 +52792,12 @@
         },
         {
           "offset": "0x17c8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17d0",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -52812,7 +52812,7 @@
         },
         {
           "offset": "0x17fd",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52822,7 +52822,7 @@
         },
         {
           "offset": "0x181c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52857,7 +52857,7 @@
         },
         {
           "offset": "0x1876",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52877,7 +52877,7 @@
         },
         {
           "offset": "0x18b2",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52907,12 +52907,12 @@
         },
         {
           "offset": "0x194a",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1971",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52937,12 +52937,12 @@
         },
         {
           "offset": "0x1a14",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a1c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52952,12 +52952,12 @@
         },
         {
           "offset": "0x1a30",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a3f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -52972,7 +52972,7 @@
         },
         {
           "offset": "0x1a66",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -52982,17 +52982,17 @@
         },
         {
           "offset": "0x1a78",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a87",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a96",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53022,12 +53022,12 @@
         },
         {
           "offset": "0x1af1",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1af9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53047,7 +53047,7 @@
         },
         {
           "offset": "0x1b1e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53057,12 +53057,12 @@
         },
         {
           "offset": "0x1b31",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b3a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53077,7 +53077,7 @@
         },
         {
           "offset": "0x1b4a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53087,12 +53087,12 @@
         },
         {
           "offset": "0x1b59",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b62",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53107,12 +53107,12 @@
         },
         {
           "offset": "0x1b72",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b82",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53122,52 +53122,52 @@
         },
         {
           "offset": "0x1ba8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1bbb",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bc5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bcd",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1be0",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bec",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bf8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c04",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c10",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c29",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53177,7 +53177,7 @@
         },
         {
           "offset": "0x1c36",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53424,17 +53424,17 @@
         },
         {
           "offset": "0x4e",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x58",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53449,12 +53449,12 @@
         },
         {
           "offset": "0x89",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x9c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": 0
         },
         {
@@ -53464,12 +53464,12 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?gEventSeen@@3HA",
+          "symbol": "?gCellSeen@@3HA",
           "addend": 0
         },
         {
           "offset": "0xca",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53484,7 +53484,7 @@
         },
         {
           "offset": "0xff",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53494,27 +53494,27 @@
         },
         {
           "offset": "0x111",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
           "offset": "0x117",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x122",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x12a",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x130",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -53524,12 +53524,12 @@
         },
         {
           "offset": "0x13f",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x148",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -53539,32 +53539,32 @@
         },
         {
           "offset": "0x15b",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x160",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x165",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16a",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16f",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x174",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -53579,12 +53579,12 @@
         },
         {
           "offset": "0x19e",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a4",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53594,7 +53594,7 @@
         },
         {
           "offset": "0x1b6",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -53604,12 +53604,12 @@
         },
         {
           "offset": "0x1c2",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c7",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53634,62 +53634,62 @@
         },
         {
           "offset": "0x1eb",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1f1",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1fa",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x204",
-          "symbol": "?gEventSeen@@3HA",
+          "symbol": "?gCellSeen@@3HA",
           "addend": 0
         },
         {
           "offset": "0x20d",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x22d",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
           "offset": "0x233",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x23b",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
           "offset": "0x241",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x248",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x24d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x255",
-          "symbol": "?gArtifactChoice1@@3HA",
+          "symbol": "?gPrizeUnguardedValue@@3HA",
           "addend": 0
         },
         {
@@ -53699,7 +53699,7 @@
         },
         {
           "offset": "0x261",
-          "symbol": "?gArtifactChoice2@@3HA",
+          "symbol": "?gPrizeGuardedWorth@@3HA",
           "addend": 0
         },
         {
@@ -53709,7 +53709,7 @@
         },
         {
           "offset": "0x26f",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": 0
         },
         {
@@ -53724,12 +53724,12 @@
         },
         {
           "offset": "0x281",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x28c",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53739,7 +53739,7 @@
         },
         {
           "offset": "0x2af",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53749,7 +53749,7 @@
         },
         {
           "offset": "0x2c9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53759,7 +53759,7 @@
         },
         {
           "offset": "0x2e5",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53774,12 +53774,12 @@
         },
         {
           "offset": "0x308",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x317",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53794,7 +53794,7 @@
         },
         {
           "offset": "0x339",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53819,12 +53819,12 @@
         },
         {
           "offset": "0x379",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x37e",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53834,7 +53834,7 @@
         },
         {
           "offset": "0x39b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53859,7 +53859,7 @@
         },
         {
           "offset": "0x3d0",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53869,12 +53869,12 @@
         },
         {
           "offset": "0x3dd",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x3e8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -53889,7 +53889,7 @@
         },
         {
           "offset": "0x40e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -53899,17 +53899,17 @@
         },
         {
           "offset": "0x425",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x430",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x43d",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
@@ -53934,27 +53934,27 @@
         },
         {
           "offset": "0x46b",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x47d",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x489",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x492",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x498",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -53964,22 +53964,22 @@
         },
         {
           "offset": "0x4a6",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4ac",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x4b6",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4c4",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -53989,27 +53989,27 @@
         },
         {
           "offset": "0x4d6",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4e7",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4ef",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4f8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x4fe",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -54019,17 +54019,17 @@
         },
         {
           "offset": "0x50c",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x512",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x51c",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -54039,7 +54039,7 @@
         },
         {
           "offset": "0x530",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -54049,32 +54049,32 @@
         },
         {
           "offset": "0x542",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x547",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x54c",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x551",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x556",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x55b",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54089,17 +54089,17 @@
         },
         {
           "offset": "0x588",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x594",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": 0
         },
         {
           "offset": "0x59b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54109,7 +54109,7 @@
         },
         {
           "offset": "0x5b3",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54124,12 +54124,12 @@
         },
         {
           "offset": "0x5ec",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x5fa",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54144,7 +54144,7 @@
         },
         {
           "offset": "0x62d",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54164,7 +54164,7 @@
         },
         {
           "offset": "0x648",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54174,22 +54174,22 @@
         },
         {
           "offset": "0x663",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x668",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x670",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x67a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -54199,7 +54199,7 @@
         },
         {
           "offset": "0x686",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
@@ -54214,12 +54214,12 @@
         },
         {
           "offset": "0x698",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6a0",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54234,27 +54234,27 @@
         },
         {
           "offset": "0x6b6",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6bc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6c2",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6cb",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x6d9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54264,7 +54264,7 @@
         },
         {
           "offset": "0x6fc",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54279,12 +54279,12 @@
         },
         {
           "offset": "0x720",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x72c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -54294,7 +54294,7 @@
         },
         {
           "offset": "0x74f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54309,17 +54309,17 @@
         },
         {
           "offset": "0x771",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x789",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x793",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -54329,7 +54329,7 @@
         },
         {
           "offset": "0x7a6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54339,17 +54339,17 @@
         },
         {
           "offset": "0x7c2",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x7c8",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x7de",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -54359,12 +54359,12 @@
         },
         {
           "offset": "0x7f7",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x7fd",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -54374,7 +54374,7 @@
         },
         {
           "offset": "0x80c",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -54384,27 +54384,27 @@
         },
         {
           "offset": "0x81a",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x81f",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x828",
-          "symbol": "?gEventTownId@@3HA",
+          "symbol": "?gHeroGarrisonId@@3HA",
           "addend": 0
         },
         {
           "offset": "0x82e",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0x83c",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -54424,7 +54424,7 @@
         },
         {
           "offset": "0x863",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -54449,7 +54449,7 @@
         },
         {
           "offset": "0x89e",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -54464,42 +54464,42 @@
         },
         {
           "offset": "0x8c5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8ca",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8cf",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8d4",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8d9",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0x8de",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0x8e3",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x8ee",
-          "symbol": "?gEventTownId@@3HA",
+          "symbol": "?gHeroGarrisonId@@3HA",
           "addend": 0
         },
         {
@@ -54514,12 +54514,12 @@
         },
         {
           "offset": "0x909",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
           "offset": "0x90f",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -54539,7 +54539,7 @@
         },
         {
           "offset": "0x945",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54554,22 +54554,22 @@
         },
         {
           "offset": "0x95b",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x964",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x96a",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0x970",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54579,12 +54579,12 @@
         },
         {
           "offset": "0x97c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x988",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": 0
         },
         {
@@ -54594,12 +54594,12 @@
         },
         {
           "offset": "0x99c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x9a8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -54614,12 +54614,12 @@
         },
         {
           "offset": "0x9b8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x9be",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54629,7 +54629,7 @@
         },
         {
           "offset": "0x9d1",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54639,7 +54639,7 @@
         },
         {
           "offset": "0x9eb",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54649,7 +54649,7 @@
         },
         {
           "offset": "0x9fe",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54664,7 +54664,7 @@
         },
         {
           "offset": "0xa0f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54674,7 +54674,7 @@
         },
         {
           "offset": "0xa27",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54684,7 +54684,7 @@
         },
         {
           "offset": "0xa3a",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54699,7 +54699,7 @@
         },
         {
           "offset": "0xa4b",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54709,7 +54709,7 @@
         },
         {
           "offset": "0xa63",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54719,7 +54719,7 @@
         },
         {
           "offset": "0xa76",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54734,7 +54734,7 @@
         },
         {
           "offset": "0xa87",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54744,7 +54744,7 @@
         },
         {
           "offset": "0xa9c",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54754,7 +54754,7 @@
         },
         {
           "offset": "0xaaf",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54769,7 +54769,7 @@
         },
         {
           "offset": "0xac0",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54779,7 +54779,7 @@
         },
         {
           "offset": "0xad5",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54794,7 +54794,7 @@
         },
         {
           "offset": "0xae6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54804,7 +54804,7 @@
         },
         {
           "offset": "0xaf8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54814,7 +54814,7 @@
         },
         {
           "offset": "0xb0f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54824,7 +54824,7 @@
         },
         {
           "offset": "0xb2a",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54834,12 +54834,12 @@
         },
         {
           "offset": "0xb3d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb43",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54854,12 +54854,12 @@
         },
         {
           "offset": "0xb57",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb63",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54869,12 +54869,12 @@
         },
         {
           "offset": "0xb76",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb7c",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -54889,27 +54889,27 @@
         },
         {
           "offset": "0xb90",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb96",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xb9f",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xba9",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xbb8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54919,12 +54919,12 @@
         },
         {
           "offset": "0xbd2",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xbd7",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -54934,27 +54934,27 @@
         },
         {
           "offset": "0xbfa",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xc09",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc15",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc1e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc26",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -54964,7 +54964,7 @@
         },
         {
           "offset": "0xc39",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -54979,12 +54979,12 @@
         },
         {
           "offset": "0xc50",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xc56",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
@@ -54994,7 +54994,7 @@
         },
         {
           "offset": "0xc70",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55004,7 +55004,7 @@
         },
         {
           "offset": "0xc8c",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55019,12 +55019,12 @@
         },
         {
           "offset": "0xcaf",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xcbd",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55034,7 +55034,7 @@
         },
         {
           "offset": "0xccb",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -55049,7 +55049,7 @@
         },
         {
           "offset": "0xcf3",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55059,52 +55059,52 @@
         },
         {
           "offset": "0xd16",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd1b",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd20",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd25",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd2a",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0xd2f",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xd34",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xd3f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xd4b",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xd55",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55114,7 +55114,7 @@
         },
         {
           "offset": "0xd72",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55129,7 +55129,7 @@
         },
         {
           "offset": "0xda5",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55139,47 +55139,47 @@
         },
         {
           "offset": "0xdb6",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdbb",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdc0",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdc5",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdca",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": 0
         },
         {
           "offset": "0xdcf",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xdd5",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xddf",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xdef",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55189,17 +55189,17 @@
         },
         {
           "offset": "0xe0e",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xe18",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
           "offset": "0xe22",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
@@ -55224,12 +55224,12 @@
         },
         {
           "offset": "0xe50",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
           "offset": "0xe5e",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": 0
         },
         {
@@ -55249,7 +55249,7 @@
         },
         {
           "offset": "0xe8c",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
@@ -55274,22 +55274,22 @@
         },
         {
           "offset": "0xec9",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0xecf",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": 0
         },
         {
           "offset": "0xed5",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": 0
         },
         {
           "offset": "0xedb",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": 0
         },
         {
@@ -55299,12 +55299,12 @@
         },
         {
           "offset": "0xee5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xeea",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55314,17 +55314,17 @@
         },
         {
           "offset": "0xf08",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0xf17",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0xf27",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55389,12 +55389,12 @@
         },
         {
           "offset": "0xfa5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0xfab",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55404,7 +55404,7 @@
         },
         {
           "offset": "0xfcc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55419,7 +55419,7 @@
         },
         {
           "offset": "0xffe",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55434,7 +55434,7 @@
         },
         {
           "offset": "0x102c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55449,7 +55449,7 @@
         },
         {
           "offset": "0x105d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55464,7 +55464,7 @@
         },
         {
           "offset": "0x108b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55479,7 +55479,7 @@
         },
         {
           "offset": "0x10b9",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55499,7 +55499,7 @@
         },
         {
           "offset": "0x10d4",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55559,7 +55559,7 @@
         },
         {
           "offset": "0x1121",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55569,7 +55569,7 @@
         },
         {
           "offset": "0x1158",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55579,12 +55579,12 @@
         },
         {
           "offset": "0x116e",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1174",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55594,17 +55594,17 @@
         },
         {
           "offset": "0x1187",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x118d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x11a8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -55619,12 +55619,12 @@
         },
         {
           "offset": "0x11c1",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x11c6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55644,7 +55644,7 @@
         },
         {
           "offset": "0x120d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55654,22 +55654,22 @@
         },
         {
           "offset": "0x121d",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1225",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1233",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1251",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55684,7 +55684,7 @@
         },
         {
           "offset": "0x1270",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55694,17 +55694,17 @@
         },
         {
           "offset": "0x1292",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x129e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x12ad",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55714,7 +55714,7 @@
         },
         {
           "offset": "0x12db",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55729,12 +55729,12 @@
         },
         {
           "offset": "0x12ff",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1309",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55749,12 +55749,12 @@
         },
         {
           "offset": "0x132a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1335",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55769,12 +55769,12 @@
         },
         {
           "offset": "0x1356",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1361",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55789,12 +55789,12 @@
         },
         {
           "offset": "0x1382",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1389",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55809,12 +55809,12 @@
         },
         {
           "offset": "0x13aa",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x13b2",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55829,12 +55829,12 @@
         },
         {
           "offset": "0x13d3",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x13db",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55849,17 +55849,17 @@
         },
         {
           "offset": "0x13fc",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1406",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1416",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55869,7 +55869,7 @@
         },
         {
           "offset": "0x1431",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55879,17 +55879,17 @@
         },
         {
           "offset": "0x144f",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1459",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1469",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -55909,27 +55909,27 @@
         },
         {
           "offset": "0x148b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1495",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x149a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x149f",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14a6",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55939,27 +55939,27 @@
         },
         {
           "offset": "0x14c0",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14ce",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14d3",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14d8",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x14df",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55969,22 +55969,22 @@
         },
         {
           "offset": "0x14fd",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1502",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1507",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x150e",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -55994,27 +55994,27 @@
         },
         {
           "offset": "0x1528",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1536",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x153b",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1540",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1547",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56024,27 +56024,27 @@
         },
         {
           "offset": "0x1561",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x156f",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1574",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1579",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1580",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56054,27 +56054,27 @@
         },
         {
           "offset": "0x159a",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15a8",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15ad",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15b2",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15b9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56084,27 +56084,27 @@
         },
         {
           "offset": "0x15d3",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15e1",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15e6",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15eb",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": 0
         },
         {
           "offset": "0x15f2",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56114,22 +56114,22 @@
         },
         {
           "offset": "0x160c",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x161a",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x162a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1639",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56139,22 +56139,22 @@
         },
         {
           "offset": "0x16ad",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16b8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16c0",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16c6",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -56164,12 +56164,12 @@
         },
         {
           "offset": "0x16d5",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x16de",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -56179,7 +56179,7 @@
         },
         {
           "offset": "0x16f4",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56189,7 +56189,7 @@
         },
         {
           "offset": "0x1721",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56239,22 +56239,22 @@
         },
         {
           "offset": "0x179e",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17aa",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17b3",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17b9",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -56264,12 +56264,12 @@
         },
         {
           "offset": "0x17c8",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
           "offset": "0x17d0",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": 0
         },
         {
@@ -56284,7 +56284,7 @@
         },
         {
           "offset": "0x17fd",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56294,7 +56294,7 @@
         },
         {
           "offset": "0x181c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56329,7 +56329,7 @@
         },
         {
           "offset": "0x1876",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56349,7 +56349,7 @@
         },
         {
           "offset": "0x18b2",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56379,12 +56379,12 @@
         },
         {
           "offset": "0x194a",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1971",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56409,12 +56409,12 @@
         },
         {
           "offset": "0x1a14",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a1c",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56424,12 +56424,12 @@
         },
         {
           "offset": "0x1a30",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a3f",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56444,7 +56444,7 @@
         },
         {
           "offset": "0x1a66",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56454,17 +56454,17 @@
         },
         {
           "offset": "0x1a78",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a87",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1a96",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56494,12 +56494,12 @@
         },
         {
           "offset": "0x1af1",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1af9",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
@@ -56519,7 +56519,7 @@
         },
         {
           "offset": "0x1b1e",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56529,12 +56529,12 @@
         },
         {
           "offset": "0x1b31",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b3a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56549,7 +56549,7 @@
         },
         {
           "offset": "0x1b4a",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56559,12 +56559,12 @@
         },
         {
           "offset": "0x1b59",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b62",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56579,12 +56579,12 @@
         },
         {
           "offset": "0x1b72",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1b82",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56594,52 +56594,52 @@
         },
         {
           "offset": "0x1ba8",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1bbb",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bc5",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bcd",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": 0
         },
         {
           "offset": "0x1be0",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bec",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1bf8",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c04",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c10",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
           "offset": "0x1c29",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -56649,7 +56649,7 @@
         },
         {
           "offset": "0x1c36",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0
         },
         {
@@ -57517,7 +57517,7 @@
         },
         {
           "offset": "0xa8",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "addend": 0
         },
         {
@@ -57652,7 +57652,7 @@
         },
         {
           "offset": "0x1d2",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "addend": 0
         },
         {
@@ -57764,7 +57764,7 @@
         },
         {
           "offset": "0xa8",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "addend": 0
         },
         {
@@ -57899,7 +57899,7 @@
         },
         {
           "offset": "0x1d2",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "addend": 0
         },
         {
@@ -75425,12 +75425,12 @@
         },
         {
           "offset": "0x97",
-          "symbol": "?gWindowFadeSavedUpdate@@3CA",
+          "symbol": "?gFadeSavedUpdate@@3CA",
           "addend": 0
         },
         {
           "offset": "0xae",
-          "symbol": "?gWindowFadeSavedUpdate@@3CA",
+          "symbol": "?gFadeSavedUpdate@@3CA",
           "addend": 0
         },
         {
@@ -75472,12 +75472,12 @@
         },
         {
           "offset": "0x97",
-          "symbol": "?gWindowFadeSavedUpdate@@3CA",
+          "symbol": "?gFadeSavedUpdate@@3CA",
           "addend": 0
         },
         {
           "offset": "0xae",
-          "symbol": "?gWindowFadeSavedUpdate@@3CA",
+          "symbol": "?gFadeSavedUpdate@@3CA",
           "addend": 0
         },
         {
@@ -75850,7 +75850,7 @@
         },
         {
           "offset": "0xd5",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -75897,7 +75897,7 @@
         },
         {
           "offset": "0xd5",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -75980,12 +75980,12 @@
         },
         {
           "offset": "0xfd",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
           "offset": "0x10a",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -75995,7 +75995,7 @@
         },
         {
           "offset": "0x11d",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76102,12 +76102,12 @@
         },
         {
           "offset": "0xfd",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
           "offset": "0x10a",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76117,7 +76117,7 @@
         },
         {
           "offset": "0x11d",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76230,7 +76230,7 @@
         },
         {
           "offset": "0xf0",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76365,7 +76365,7 @@
         },
         {
           "offset": "0x208",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76380,7 +76380,7 @@
         },
         {
           "offset": "0x223",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76420,7 +76420,7 @@
         },
         {
           "offset": "0x2b4",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76435,7 +76435,7 @@
         },
         {
           "offset": "0x31c",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76450,7 +76450,7 @@
         },
         {
           "offset": "0x390",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76470,7 +76470,7 @@
         },
         {
           "offset": "0x401",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76600,7 +76600,7 @@
         },
         {
           "offset": "0x5b5",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76625,7 +76625,7 @@
         },
         {
           "offset": "0x5e4",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 0
         },
         {
@@ -76635,7 +76635,7 @@
         },
         {
           "offset": "0x600",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 4
         },
         {
@@ -76645,7 +76645,7 @@
         },
         {
           "offset": "0x618",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 8
         },
         {
@@ -76655,7 +76655,7 @@
         },
         {
           "offset": "0x62e",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 12
         },
         {
@@ -76670,12 +76670,12 @@
         },
         {
           "offset": "0x65c",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 16
         },
         {
           "offset": "0x668",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 0
         },
         {
@@ -76772,7 +76772,7 @@
         },
         {
           "offset": "0xf0",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76907,7 +76907,7 @@
         },
         {
           "offset": "0x208",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76922,7 +76922,7 @@
         },
         {
           "offset": "0x223",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76962,7 +76962,7 @@
         },
         {
           "offset": "0x2b4",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76977,7 +76977,7 @@
         },
         {
           "offset": "0x31c",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -76992,7 +76992,7 @@
         },
         {
           "offset": "0x390",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -77012,7 +77012,7 @@
         },
         {
           "offset": "0x401",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -77142,7 +77142,7 @@
         },
         {
           "offset": "0x5b5",
-          "symbol": "?gColorBits@@3PAPAEA",
+          "symbol": "?cColorBits@@3PAPAEA",
           "addend": 0
         },
         {
@@ -77167,7 +77167,7 @@
         },
         {
           "offset": "0x5e4",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 0
         },
         {
@@ -77177,7 +77177,7 @@
         },
         {
           "offset": "0x600",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 4
         },
         {
@@ -77187,7 +77187,7 @@
         },
         {
           "offset": "0x618",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 8
         },
         {
@@ -77197,7 +77197,7 @@
         },
         {
           "offset": "0x62e",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 12
         },
         {
@@ -77212,12 +77212,12 @@
         },
         {
           "offset": "0x65c",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 16
         },
         {
           "offset": "0x668",
-          "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+          "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
           "addend": 0
         },
         {
@@ -79520,7 +79520,7 @@
         },
         {
           "offset": "0x144",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -79545,7 +79545,7 @@
         },
         {
           "offset": "0x1af",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -79727,7 +79727,7 @@
         },
         {
           "offset": "0x144",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -79752,7 +79752,7 @@
         },
         {
           "offset": "0x1af",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80273,7 +80273,7 @@
         },
         {
           "offset": "0x90",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80283,7 +80283,7 @@
         },
         {
           "offset": "0x11d",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80293,7 +80293,7 @@
         },
         {
           "offset": "0x150",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80345,7 +80345,7 @@
         },
         {
           "offset": "0x90",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80355,7 +80355,7 @@
         },
         {
           "offset": "0x11d",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {
@@ -80365,7 +80365,7 @@
         },
         {
           "offset": "0x150",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {

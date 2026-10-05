@@ -12206,7 +12206,7 @@
     {
       "site_rva": "0xf668",
       "target_rva": "0xb7430",
-      "symbol": "?gCurWatchPlayerHighBit@@3EA",
+      "symbol": "?gCurWatchPlayerHighFlag@@3EA",
       "kind": 6,
       "owner_rva": "0xb7430",
       "addend": 0,

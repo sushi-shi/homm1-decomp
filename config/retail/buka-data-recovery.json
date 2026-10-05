@@ -7155,7 +7155,7 @@
         {
           "site_rva": "0x7779b",
           "target_rva": "0xd2598",
-          "symbol": "_codePtr",
+          "symbol": "_dataPtr",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xd2598"
@@ -7195,7 +7195,7 @@
         {
           "site_rva": "0x777e5",
           "target_rva": "0xd2598",
-          "symbol": "_codePtr",
+          "symbol": "_dataPtr",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xd2598"
@@ -7381,7 +7381,7 @@
         {
           "site_rva": "0x6c052",
           "target_rva": "0xa99dc",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa99dc"
@@ -21463,7 +21463,7 @@
         {
           "site_rva": "0xf668",
           "target_rva": "0xb7430",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xb7430"
@@ -35355,7 +35355,7 @@
         {
           "site_rva": "0x220d1",
           "target_rva": "0xb7430",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xb7430"
@@ -35371,7 +35371,7 @@
         {
           "site_rva": "0x2210e",
           "target_rva": "0xb7430",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xb7430"
@@ -45947,7 +45947,7 @@
         {
           "site_rva": "0x524e4",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -46050,7 +46050,7 @@
         {
           "site_rva": "0x52598",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -46058,7 +46058,7 @@
         {
           "site_rva": "0x525a1",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -46097,7 +46097,7 @@
         {
           "site_rva": "0x525d0",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -46241,7 +46241,7 @@
         {
           "site_rva": "0x5268c",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -55926,7 +55926,7 @@
         {
           "site_rva": "0x42d16",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"
@@ -55942,7 +55942,7 @@
         {
           "site_rva": "0x42d29",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"

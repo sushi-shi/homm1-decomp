@@ -228,7 +228,7 @@
       "function_rva": "0x3de12",
       "site_rva": "0x3deea",
       "target_rva": "0xa9df5",
-      "symbol": "?gCommandLine@@3PADA",
+      "symbol": "?gCommandParams@@3PADA",
       "addend": "0x1",
       "kind": 6
     },
@@ -2932,11 +2932,11 @@
       "function_rva": "0x3de12",
       "site_rva": "0x3deea",
       "target_rva": "0xa9df5",
-      "symbol": "?gCommandLine@@3PADA",
+      "symbol": "?gCommandParams@@3PADA",
       "addend": "0x1",
       "kind": 6,
       "owner": {
-        "symbol": "?gCommandLine@@3PADA",
+        "symbol": "?gCommandParams@@3PADA",
         "owner_rva": "0xa9df4",
         "size": 61,
         "source_unit": "SOURCE/kbwin",

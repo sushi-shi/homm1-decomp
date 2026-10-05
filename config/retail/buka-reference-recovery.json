@@ -14,7 +14,7 @@
   },
   "data_migrations": [
     {
-      "name": "?gEventRV@@3HA",
+      "name": "?gVisitResult@@3HA",
       "old_rva": "0xaa0c8",
       "rva": "0xb2208",
       "size": 4,
@@ -27,7 +27,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f624",
           "target_rva": "0xb2208",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -117,28 +117,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f624",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f62e",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f63a",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f64c",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -153,7 +153,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gEventCell@@3PAVmapCell@@A",
+      "name": "?gEventLocation@@3PAVmapCell@@A",
       "old_rva": "0xc0b94",
       "rva": "0xc8cbc",
       "size": 4,
@@ -166,7 +166,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f03d",
           "target_rva": "0xc8cbc",
-          "symbol": "?gEventCell@@3PAVmapCell@@A",
+          "symbol": "?gEventLocation@@3PAVmapCell@@A",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -243,14 +243,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f03d",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x4f050",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -784,7 +784,7 @@
       "payload_sha256": "af5570f5a1810b7af78caf4bc70a660f0df51e42baf91d4de5b2328de0e83dfc"
     },
     {
-      "name": "?gEventLoop@@3HA",
+      "name": "?gEventSlot@@3HA",
       "old_rva": "0xaa034",
       "rva": "0xb2174",
       "size": 4,
@@ -797,7 +797,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f431",
           "target_rva": "0xb2174",
-          "symbol": "?gEventLoop@@3HA",
+          "symbol": "?gEventSlot@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -922,42 +922,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gMonsterCount@@3HA",
+              "symbol": "?gEventMonsterCount@@3HA",
               "site_rva": "0x4f41f",
               "target_rva": "0xbb15c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f431",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f43d",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f446",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f44c",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f45a",
               "target_rva": "0xb2174",
               "addend": "0x0",
@@ -1072,7 +1072,7 @@
       "payload_sha256": "5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef"
     },
     {
-      "name": "?gWinChance@@3MA",
+      "name": "?gCombatWinningFraction@@3MA",
       "old_rva": "0xaca64",
       "rva": "0xb4b9c",
       "size": 4,
@@ -1085,7 +1085,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f50f",
           "target_rva": "0xb4b9c",
-          "symbol": "?gWinChance@@3MA",
+          "symbol": "?gCombatWinningFraction@@3MA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -1210,42 +1210,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gWinChance@@3MA",
+              "symbol": "?gCombatWinningFraction@@3MA",
               "site_rva": "0x4f50f",
               "target_rva": "0xb4b9c",
               "addend": "0x0",
@@ -1800,28 +1800,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f676",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x4f67f",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f68d",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f6b0",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -1842,21 +1842,21 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f6d4",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f6e0",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f703",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -1871,7 +1871,7 @@
       "payload_sha256": "834a709ba2534ebe3ee1397fd4f7bd288b2acc1d20a08d6c862dcd99b6f04400"
     },
     {
-      "name": "?gReduceByReload@@3HA",
+      "name": "?gDiscountByReloadFlag@@3HA",
       "old_rva": "0xaca60",
       "rva": "0xb4b98",
       "size": 4,
@@ -1884,7 +1884,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f67f",
           "target_rva": "0xb4b98",
-          "symbol": "?gReduceByReload@@3HA",
+          "symbol": "?gDiscountByReloadFlag@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -2016,35 +2016,35 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f66a",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f670",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f676",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x4f67f",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f68d",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -2059,7 +2059,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gEventTown@@3PAVtown@@A",
+      "name": "?gEventTownRec@@3PAVtown@@A",
       "old_rva": "0xc2060",
       "rva": "0xca184",
       "size": 4,
@@ -2072,7 +2072,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f747",
           "target_rva": "0xca184",
-          "symbol": "?gEventTown@@3PAVtown@@A",
+          "symbol": "?gEventTownRec@@3PAVtown@@A",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -2197,21 +2197,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f725",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f73d",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f747",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -2225,21 +2225,21 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f75a",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventHero@@3PAVhero@@A",
+              "symbol": "?gFoe@@3PAVhero@@A",
               "site_rva": "0x4f776",
               "target_rva": "0xb4ba4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventHero@@3PAVhero@@A",
+              "symbol": "?gFoe@@3PAVhero@@A",
               "site_rva": "0x4f77c",
               "target_rva": "0xb4ba4",
               "addend": "0x0",
@@ -4151,7 +4151,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?mapVisited@@3PAY0EI@CA",
+      "name": "?gMapVisitFlags@@3PAY0EI@CA",
       "old_rva": "0xc0bf8",
       "rva": "0xc8d1c",
       "size": 5184,
@@ -4164,7 +4164,7 @@
           "function_rva": "0x27cdd",
           "site_rva": "0x27d3d",
           "target_rva": "0xc8d1c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": "0x0",
           "object_sha256": "d19e043d614022eb0dd64c43bf60e4335d17c65c928517356972ecdb7abf41fa",
           "instruction_context": [
@@ -4234,7 +4234,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x27d3d",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -4250,7 +4250,7 @@
           "function_rva": "0x2c4dd",
           "site_rva": "0x2cc47",
           "target_rva": "0xc8d1c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -4329,7 +4329,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x2cc47",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -4347,7 +4347,7 @@
           "function_rva": "0x2cc73",
           "site_rva": "0x2d33d",
           "target_rva": "0xc8d1c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -4417,7 +4417,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x2d33d",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -4435,7 +4435,7 @@
           "function_rva": "0x2e7f0",
           "site_rva": "0x2e943",
           "target_rva": "0xc8d1c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -4519,7 +4519,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x2e943",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -4537,7 +4537,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f050",
           "target_rva": "0xc8d1c",
-          "symbol": "?mapVisited@@3PAY0EI@CA",
+          "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -4607,14 +4607,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f03d",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?mapVisited@@3PAY0EI@CA",
+              "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
               "site_rva": "0x4f050",
               "target_rva": "0xc8d1c",
               "addend": "0x0",
@@ -5009,35 +5009,35 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f7ce",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7d3",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTownId@@3HA",
+              "symbol": "?gHeroGarrisonId@@3HA",
               "site_rva": "0x4f7dc",
               "target_rva": "0xc8cb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7e2",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7f0",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -5068,7 +5068,7 @@
       "payload_sha256": "030a1a64b337c633d995221728d15e8b0d086cc0dcf4557205111b089b04464d"
     },
     {
-      "name": "?gEventHero@@3PAVhero@@A",
+      "name": "?gFoe@@3PAVhero@@A",
       "old_rva": "0xaca6c",
       "rva": "0xb4ba4",
       "size": 4,
@@ -5081,7 +5081,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f776",
           "target_rva": "0xb4ba4",
-          "symbol": "?gEventHero@@3PAVhero@@A",
+          "symbol": "?gFoe@@3PAVhero@@A",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -5151,14 +5151,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventHero@@3PAVhero@@A",
+              "symbol": "?gFoe@@3PAVhero@@A",
               "site_rva": "0x4f776",
               "target_rva": "0xb4ba4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventHero@@3PAVhero@@A",
+              "symbol": "?gFoe@@3PAVhero@@A",
               "site_rva": "0x4f77c",
               "target_rva": "0xb4ba4",
               "addend": "0x0",
@@ -5173,7 +5173,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gPurchaseSlot@@3HA",
+      "name": "?gRecruitStackSlot@@3HA",
       "old_rva": "0xc0ba4",
       "rva": "0xc8ccc",
       "size": 4,
@@ -5186,7 +5186,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x50449",
           "target_rva": "0xc8ccc",
-          "symbol": "?gPurchaseSlot@@3HA",
+          "symbol": "?gRecruitStackSlot@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -5304,49 +5304,49 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gPurchaseSlot@@3HA",
+              "symbol": "?gRecruitStackSlot@@3HA",
               "site_rva": "0x50449",
               "target_rva": "0xc8ccc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x5044e",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseNum@@3HA",
+              "symbol": "?gPurchaseTotal@@3HA",
               "site_rva": "0x50453",
               "target_rva": "0xb2214",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x5045a",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x50474",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseSlot@@3HA",
+              "symbol": "?gRecruitStackSlot@@3HA",
               "site_rva": "0x50482",
               "target_rva": "0xc8ccc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50487",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -5363,7 +5363,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gPurchaseNum@@3HA",
+      "name": "?gPurchaseTotal@@3HA",
       "old_rva": "0xaa0d4",
       "rva": "0xb2214",
       "size": 4,
@@ -5376,7 +5376,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x50453",
           "target_rva": "0xb2214",
-          "symbol": "?gPurchaseNum@@3HA",
+          "symbol": "?gPurchaseTotal@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -5494,42 +5494,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gPurchaseNum@@3HA",
+              "symbol": "?gPurchaseTotal@@3HA",
               "site_rva": "0x50453",
               "target_rva": "0xb2214",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x5045a",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x50474",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseSlot@@3HA",
+              "symbol": "?gRecruitStackSlot@@3HA",
               "site_rva": "0x50482",
               "target_rva": "0xc8ccc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50487",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseNum@@3HA",
+              "symbol": "?gPurchaseTotal@@3HA",
               "site_rva": "0x5048c",
               "target_rva": "0xb2214",
               "addend": "0x0",
@@ -6459,7 +6459,7 @@
       "payload_sha256": "d20fa3449f556711a3964ea0a3bc30f27f93823adccc5cc1ddff99803c042e22"
     },
     {
-      "name": "?gOutcome@@3HA",
+      "name": "?gSimOutcome@@3HA",
       "old_rva": "0xb2ffc",
       "rva": "0xbb12c",
       "size": 4,
@@ -6472,7 +6472,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f4f6",
           "target_rva": "0xbb12c",
-          "symbol": "?gOutcome@@3HA",
+          "symbol": "?gSimOutcome@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -6542,42 +6542,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f4e4",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
@@ -7979,70 +7979,70 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x50b5c",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b6f",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b79",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x50b81",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b94",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50ba0",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50bac",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50bb8",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50bc4",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50bdd",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -8056,7 +8056,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50bea",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -8428,42 +8428,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7c0",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f7ce",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7d3",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTownId@@3HA",
+              "symbol": "?gHeroGarrisonId@@3HA",
               "site_rva": "0x4f7dc",
               "target_rva": "0xc8cb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7e2",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7f0",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -8972,7 +8972,7 @@
       "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
     },
     {
-      "name": "?gAttackerLoss@@3HA",
+      "name": "?gExpectedOurCasualties@@3HA",
       "old_rva": "0xb2fec",
       "rva": "0xbb11c",
       "size": 4,
@@ -8985,7 +8985,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f50a",
           "target_rva": "0xbb11c",
-          "symbol": "?gAttackerLoss@@3HA",
+          "symbol": "?gExpectedOurCasualties@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -9110,49 +9110,49 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f4e4",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gWinChance@@3MA",
+              "symbol": "?gCombatWinningFraction@@3MA",
               "site_rva": "0x4f50f",
               "target_rva": "0xb4b9c",
               "addend": "0x0",
@@ -10108,7 +10108,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f6b0",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -10129,14 +10129,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f6d4",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f6e0",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -10151,7 +10151,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gDefenderRemaining@@3HA",
+      "name": "?gEstGuardPower@@3HA",
       "old_rva": "0xb2ff8",
       "rva": "0xbb128",
       "size": 4,
@@ -10164,7 +10164,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f4fb",
           "target_rva": "0xbb128",
-          "symbol": "?gDefenderRemaining@@3HA",
+          "symbol": "?gEstGuardPower@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -10234,42 +10234,42 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gWinChance@@3MA",
+              "symbol": "?gCombatWinningFraction@@3MA",
               "site_rva": "0x4f50f",
               "target_rva": "0xb4b9c",
               "addend": "0x0",
@@ -10284,7 +10284,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gAttackerRemaining@@3HA",
+      "name": "?gEstOurForce@@3HA",
       "old_rva": "0xb2ff4",
       "rva": "0xbb124",
       "size": 4,
@@ -10297,7 +10297,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f500",
           "target_rva": "0xbb124",
-          "symbol": "?gAttackerRemaining@@3HA",
+          "symbol": "?gEstOurForce@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -10415,49 +10415,49 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f4e4",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gWinChance@@3MA",
+              "symbol": "?gCombatWinningFraction@@3MA",
               "site_rva": "0x4f50f",
               "target_rva": "0xb4b9c",
               "addend": "0x0",
@@ -10472,7 +10472,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gDefenderLoss@@3HA",
+      "name": "?gOpponentLosses@@3HA",
       "old_rva": "0xb2ff0",
       "rva": "0xbb120",
       "size": 4,
@@ -10485,7 +10485,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f505",
           "target_rva": "0xbb120",
-          "symbol": "?gDefenderLoss@@3HA",
+          "symbol": "?gOpponentLosses@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -10610,49 +10610,49 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventLoop@@3HA",
+              "symbol": "?gEventSlot@@3HA",
               "site_rva": "0x4f4e4",
               "target_rva": "0xb2174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gOutcome@@3HA",
+              "symbol": "?gSimOutcome@@3HA",
               "site_rva": "0x4f4f6",
               "target_rva": "0xbb12c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderRemaining@@3HA",
+              "symbol": "?gEstGuardPower@@3HA",
               "site_rva": "0x4f4fb",
               "target_rva": "0xbb128",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerRemaining@@3HA",
+              "symbol": "?gEstOurForce@@3HA",
               "site_rva": "0x4f500",
               "target_rva": "0xbb124",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gDefenderLoss@@3HA",
+              "symbol": "?gOpponentLosses@@3HA",
               "site_rva": "0x4f505",
               "target_rva": "0xbb120",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gAttackerLoss@@3HA",
+              "symbol": "?gExpectedOurCasualties@@3HA",
               "site_rva": "0x4f50a",
               "target_rva": "0xbb11c",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gWinChance@@3MA",
+              "symbol": "?gCombatWinningFraction@@3MA",
               "site_rva": "0x4f50f",
               "target_rva": "0xb4b9c",
               "addend": "0x0",
@@ -10667,7 +10667,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gMonsterCount@@3HA",
+      "name": "?gEventMonsterCount@@3HA",
       "old_rva": "0xb3030",
       "rva": "0xbb15c",
       "size": 4,
@@ -10680,7 +10680,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f41f",
           "target_rva": "0xbb15c",
-          "symbol": "?gMonsterCount@@3HA",
+          "symbol": "?gEventMonsterCount@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -10738,7 +10738,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gMonsterCount@@3HA",
+              "symbol": "?gEventMonsterCount@@3HA",
               "site_rva": "0x4f41f",
               "target_rva": "0xbb15c",
               "addend": "0x0",
@@ -10836,14 +10836,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f73d",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f747",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -10857,7 +10857,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f75a",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -11571,7 +11571,7 @@
       "payload_sha256": "67abdd721024f0ff4e0b3f4c2fc13bc5bad42d0b7851d456d88d203d15aaa450"
     },
     {
-      "name": "?giCurPlayerHighBit@@3EA",
+      "name": "?gCurPlayerTopBit@@3EA",
       "old_rva": "0xc2054",
       "rva": "0xca178",
       "size": 1,
@@ -11584,7 +11584,7 @@
           "function_rva": "0x2cc73",
           "site_rva": "0x2d495",
           "target_rva": "0xca178",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -11661,7 +11661,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?giCurPlayerHighBit@@3EA",
+              "symbol": "?gCurPlayerTopBit@@3EA",
               "site_rva": "0x2d495",
               "target_rva": "0xca178",
               "addend": "0x0",
@@ -11677,7 +11677,7 @@
           "function_rva": "0x2e7f0",
           "site_rva": "0x2e85d",
           "target_rva": "0xca178",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -11754,7 +11754,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?giCurPlayerHighBit@@3EA",
+              "symbol": "?gCurPlayerTopBit@@3EA",
               "site_rva": "0x2e85d",
               "target_rva": "0xca178",
               "addend": "0x0",
@@ -11770,7 +11770,7 @@
           "function_rva": "0x32f8c",
           "site_rva": "0x33122",
           "target_rva": "0xca178",
-          "symbol": "?giCurPlayerHighBit@@3EA",
+          "symbol": "?gCurPlayerTopBit@@3EA",
           "addend": "0x0",
           "object_sha256": "cb0495eaf5157f26cf58a07dd04f2732d33363f828999cef28df11631b74a0f8",
           "instruction_context": [
@@ -11840,7 +11840,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?giCurPlayerHighBit@@3EA",
+              "symbol": "?gCurPlayerTopBit@@3EA",
               "site_rva": "0x33122",
               "target_rva": "0xca178",
               "addend": "0x0",
@@ -12845,7 +12845,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50aee",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -12859,7 +12859,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50afe",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -12873,14 +12873,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gReduceByBerserk@@3HA",
+              "symbol": "?gDiscountForRampageFlag@@3HA",
               "site_rva": "0x50b0d",
               "target_rva": "0xca174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b16",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -13159,14 +13159,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gReduceByBerserk@@3HA",
+              "symbol": "?gDiscountForRampageFlag@@3HA",
               "site_rva": "0x50b0d",
               "target_rva": "0xca174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b16",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -13180,7 +13180,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50b26",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -13633,7 +13633,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50a1a",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -13647,14 +13647,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50a2c",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50a3b",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -13770,7 +13770,7 @@
       "payload_sha256": "6e340b9cffb37a989ca544e6bb780a2c78901d3fb33738768511a30617afa01d"
     },
     {
-      "name": "?gReduceByBerserk@@3HA",
+      "name": "?gDiscountForRampageFlag@@3HA",
       "old_rva": "0xc2050",
       "rva": "0xca174",
       "size": 4,
@@ -13783,7 +13783,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4fb5d",
           "target_rva": "0xca174",
-          "symbol": "?gReduceByBerserk@@3HA",
+          "symbol": "?gDiscountForRampageFlag@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -13915,49 +13915,49 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4fb44",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4fb4a",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x4fb53",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByBerserk@@3HA",
+              "symbol": "?gDiscountForRampageFlag@@3HA",
               "site_rva": "0x4fb5d",
               "target_rva": "0xca174",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4fb6c",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4fb86",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4fb8b",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -14062,7 +14062,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50866",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -14271,14 +14271,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50aa5",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x50aad",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
@@ -14306,7 +14306,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50ad2",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -14320,14 +14320,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x50ae5",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50aee",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -14341,7 +14341,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50afe",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -14355,7 +14355,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gReduceByBerserk@@3HA",
+              "symbol": "?gDiscountForRampageFlag@@3HA",
               "site_rva": "0x50b0d",
               "target_rva": "0xca174",
               "addend": "0x0",
@@ -15724,14 +15724,14 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x50ae5",
               "target_rva": "0xb4b98",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50aee",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -15745,7 +15745,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50afe",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -16155,7 +16155,7 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4fbed",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -16169,14 +16169,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4fc04",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gReduceByReload@@3HA",
+              "symbol": "?gDiscountByReloadFlag@@3HA",
               "site_rva": "0x4fc0a",
               "target_rva": "0xb4b98",
               "addend": "0x0",
@@ -16550,7 +16550,7 @@
       "payload_sha256": "3addfb141cd7c9c4c6543a82191a3707ac29c7a041217782e61d4d91c691aee8"
     },
     {
-      "name": "?gEventTownId@@3HA",
+      "name": "?gHeroGarrisonId@@3HA",
       "old_rva": "0xc0b8c",
       "rva": "0xc8cb4",
       "size": 4,
@@ -16563,7 +16563,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f7dc",
           "target_rva": "0xc8cb4",
-          "symbol": "?gEventTownId@@3HA",
+          "symbol": "?gHeroGarrisonId@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -16633,28 +16633,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f7ce",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7d3",
               "target_rva": "0xca184",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTownId@@3HA",
+              "symbol": "?gHeroGarrisonId@@3HA",
               "site_rva": "0x4f7dc",
               "target_rva": "0xc8cb4",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f7e2",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -16750,7 +16750,7 @@
               "kind": 6
             },
             {
-              "symbol": "?gNumNetGuests@@3HA",
+              "symbol": "?iNetGuests@@3HA",
               "site_rva": "0x51bd7",
               "target_rva": "0xcb3e4",
               "addend": "0x0",
@@ -18035,14 +18035,14 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+              "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
               "site_rva": "0x6be96",
               "target_rva": "0xcf438",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+              "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
               "site_rva": "0x6beb2",
               "target_rva": "0xcf43c",
               "addend": "0x4",
@@ -20720,7 +20720,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gArtifactChoice3@@3HA",
+      "name": "?gItemPurchaseScore@@3HA",
       "old_rva": "0xb3008",
       "rva": "0xbb138",
       "size": 4,
@@ -20733,7 +20733,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f1ae",
           "target_rva": "0xbb138",
-          "symbol": "?gArtifactChoice3@@3HA",
+          "symbol": "?gItemPurchaseScore@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -20791,28 +20791,28 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gArtifactChoice3@@3HA",
+              "symbol": "?gItemPurchaseScore@@3HA",
               "site_rva": "0x4f19f",
               "target_rva": "0xbb138",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gArtifactChoice3@@3HA",
+              "symbol": "?gItemPurchaseScore@@3HA",
               "site_rva": "0x4f1a5",
               "target_rva": "0xbb138",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gArtifactChoice3@@3HA",
+              "symbol": "?gItemPurchaseScore@@3HA",
               "site_rva": "0x4f1ae",
               "target_rva": "0xbb138",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventSeen@@3HA",
+              "symbol": "?gCellSeen@@3HA",
               "site_rva": "0x4f1b8",
               "target_rva": "0xca15c",
               "addend": "0x0",
@@ -20827,7 +20827,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gTownValue@@3HA",
+      "name": "?gEventTownScore@@3HA",
       "old_rva": "0xaa0d0",
       "rva": "0xb2210",
       "size": 4,
@@ -20840,7 +20840,7 @@
           "function_rva": "0x4efb4",
           "site_rva": "0x4f73d",
           "target_rva": "0xb2210",
-          "symbol": "?gTownValue@@3HA",
+          "symbol": "?gEventTownScore@@3HA",
           "addend": "0x0",
           "object_sha256": "61d4c2845c1758b06e81c3f61e07de4388607051ff3f42b3b99e0f0204dc8271",
           "instruction_context": [
@@ -20972,21 +20972,21 @@
           ],
           "migrated_references": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x4f725",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gTownValue@@3HA",
+              "symbol": "?gEventTownScore@@3HA",
               "site_rva": "0x4f73d",
               "target_rva": "0xb2210",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventTown@@3PAVtown@@A",
+              "symbol": "?gEventTownRec@@3PAVtown@@A",
               "site_rva": "0x4f747",
               "target_rva": "0xca184",
               "addend": "0x0",
@@ -21000,14 +21000,14 @@
               "kind": 6
             },
             {
-              "symbol": "?gEventCell@@3PAVmapCell@@A",
+              "symbol": "?gEventLocation@@3PAVmapCell@@A",
               "site_rva": "0x4f75a",
               "target_rva": "0xc8cbc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventHero@@3PAVhero@@A",
+              "symbol": "?gFoe@@3PAVhero@@A",
               "site_rva": "0x4f776",
               "target_rva": "0xb4ba4",
               "addend": "0x0",
@@ -22179,7 +22179,7 @@
       "payload_sha256": "374708fff7719dd5979ec875d56cd2286f6d3cf7ec317a3b25632aab28ec37bb"
     },
     {
-      "name": "?gTempX@@3HA",
+      "name": "?iTempX@@3HA",
       "old_rva": "0xc2080",
       "rva": "0xa99e0",
       "size": 4,
@@ -22342,14 +22342,14 @@
             {
               "site_rva": "0x433d2",
               "target_rva": "0xa99e0",
-              "symbol": "?gTempX@@3HA",
+              "symbol": "?iTempX@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4341d",
               "target_rva": "0xa99e0",
-              "symbol": "?gTempX@@3HA",
+              "symbol": "?iTempX@@3HA",
               "addend": "0x0",
               "kind": 6
             }
@@ -22497,7 +22497,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gArtifactChoice1@@3HA",
+      "name": "?gPrizeUnguardedValue@@3HA",
       "old_rva": "0xb3000",
       "rva": "0xbb130",
       "size": 4,
@@ -22572,21 +22572,21 @@
             {
               "site_rva": "0x4f0c5",
               "target_rva": "0xbb130",
-              "symbol": "?gArtifactChoice1@@3HA",
+              "symbol": "?gPrizeUnguardedValue@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4f1e1",
               "target_rva": "0xbb130",
-              "symbol": "?gArtifactChoice1@@3HA",
+              "symbol": "?gPrizeUnguardedValue@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4f209",
               "target_rva": "0xbb130",
-              "symbol": "?gArtifactChoice1@@3HA",
+              "symbol": "?gPrizeUnguardedValue@@3HA",
               "addend": "0x0",
               "kind": 6
             }
@@ -22597,12 +22597,12 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gArtifactChoice2@@3HA",
+      "name": "?gPrizeGuardedWorth@@3HA",
       "old_rva": "0xb3004",
       "rva": "0xbb134",
       "size": 4,
       "method": "Direct retail dataflow review; no source expression changed.",
-      "meaning": "Guarded pickup valuation is int(base artifact value * gWinChance + gOutcome) after ProbableOutcomeOfBattle; metadata 2 selects it.",
+      "meaning": "Guarded pickup valuation is int(base artifact value * gCombatWinningFraction + gSimOutcome) after ProbableOutcomeOfBattle; metadata 2 selects it.",
       "unit": "SOURCE/PHILAI",
       "source": "src/SOURCE/PHILAI.cpp",
       "controls": [
@@ -22768,21 +22768,21 @@
             {
               "site_rva": "0x4f176",
               "target_rva": "0xbb134",
-              "symbol": "?gArtifactChoice2@@3HA",
+              "symbol": "?gPrizeGuardedWorth@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4f1ef",
               "target_rva": "0xbb134",
-              "symbol": "?gArtifactChoice2@@3HA",
+              "symbol": "?gPrizeGuardedWorth@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4f215",
               "target_rva": "0xbb134",
-              "symbol": "?gArtifactChoice2@@3HA",
+              "symbol": "?gPrizeGuardedWorth@@3HA",
               "addend": "0x0",
               "kind": 6
             }
@@ -22793,7 +22793,7 @@
       "payload_sha256": "df3f619804a92fdb4057192dc43dd748ea778adc52bc498ce80524c014b81119"
     },
     {
-      "name": "?gEventSeen@@3HA",
+      "name": "?gCellSeen@@3HA",
       "old_rva": "0xc2038",
       "rva": "0xca15c",
       "size": 4,
@@ -22964,14 +22964,14 @@
             {
               "site_rva": "0x4f078",
               "target_rva": "0xca15c",
-              "symbol": "?gEventSeen@@3HA",
+              "symbol": "?gCellSeen@@3HA",
               "addend": "0x0",
               "kind": 6
             },
             {
               "site_rva": "0x4f1b8",
               "target_rva": "0xca15c",
-              "symbol": "?gEventSeen@@3HA",
+              "symbol": "?gCellSeen@@3HA",
               "addend": "0x0",
               "kind": 6
             }
@@ -23001,11 +23001,11 @@
     },
     {
       "rva": "0xc9d38",
-      "owner": "?mapVisited@@3PAY0EI@CA"
+      "owner": "?gMapVisitFlags@@3PAY0EI@CA"
     },
     {
       "rva": "0xc9d50",
-      "owner": "?mapVisited@@3PAY0EI@CA"
+      "owner": "?gMapVisitFlags@@3PAY0EI@CA"
     },
     {
       "rva": "0xb2fd0",
@@ -23323,9 +23323,9 @@
     "?gScoreCampaignMon@@3PAY01FA",
     "?gcRegAppPath@@3PADA",
     "_AI_ATTENTION_IDENTITY_FLOAT",
-    "?gEventSeen@@3HA",
-    "?gArtifactChoice1@@3HA",
-    "?gArtifactChoice2@@3HA",
+    "?gCellSeen@@3HA",
+    "?gPrizeUnguardedValue@@3HA",
+    "?gPrizeGuardedWorth@@3HA",
     "?gDwellingRequirements@@3PAGA"
   ],
   "pending_payloads": [
@@ -23511,7 +23511,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50aee",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -23525,7 +23525,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50afe",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -23539,14 +23539,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gReduceByBerserk@@3HA",
+      "symbol": "?gDiscountForRampageFlag@@3HA",
       "site_rva": "0x50b0d",
       "target_rva": "0xca174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b16",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -23567,7 +23567,7 @@
       "kind": 6
     },
     {
-      "symbol": "?giCurPlayerHighBit@@3EA",
+      "symbol": "?gCurPlayerTopBit@@3EA",
       "site_rva": "0x2d495",
       "target_rva": "0xca178",
       "addend": "0x0",
@@ -23588,7 +23588,7 @@
       "kind": 6
     },
     {
-      "symbol": "?giCurPlayerHighBit@@3EA",
+      "symbol": "?gCurPlayerTopBit@@3EA",
       "site_rva": "0x2e85d",
       "target_rva": "0xca178",
       "addend": "0x0",
@@ -23602,7 +23602,7 @@
       "kind": 6
     },
     {
-      "symbol": "?giCurPlayerHighBit@@3EA",
+      "symbol": "?gCurPlayerTopBit@@3EA",
       "site_rva": "0x33122",
       "target_rva": "0xca178",
       "addend": "0x0",
@@ -23667,21 +23667,21 @@
     {
       "site_rva": "0x4f0c5",
       "target_rva": "0xbb130",
-      "symbol": "?gArtifactChoice1@@3HA",
+      "symbol": "?gPrizeUnguardedValue@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
       "site_rva": "0x4f1e1",
       "target_rva": "0xbb130",
-      "symbol": "?gArtifactChoice1@@3HA",
+      "symbol": "?gPrizeUnguardedValue@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
       "site_rva": "0x4f209",
       "target_rva": "0xbb130",
-      "symbol": "?gArtifactChoice1@@3HA",
+      "symbol": "?gPrizeUnguardedValue@@3HA",
       "addend": "0x0",
       "kind": 6
     },
@@ -23700,7 +23700,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b26",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -24127,49 +24127,49 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4e4",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gOutcome@@3HA",
+      "symbol": "?gSimOutcome@@3HA",
       "site_rva": "0x4f4f6",
       "target_rva": "0xbb12c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gDefenderRemaining@@3HA",
+      "symbol": "?gEstGuardPower@@3HA",
       "site_rva": "0x4f4fb",
       "target_rva": "0xbb128",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gAttackerRemaining@@3HA",
+      "symbol": "?gEstOurForce@@3HA",
       "site_rva": "0x4f500",
       "target_rva": "0xbb124",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gDefenderLoss@@3HA",
+      "symbol": "?gOpponentLosses@@3HA",
       "site_rva": "0x4f505",
       "target_rva": "0xbb120",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gAttackerLoss@@3HA",
+      "symbol": "?gExpectedOurCasualties@@3HA",
       "site_rva": "0x4f50a",
       "target_rva": "0xbb11c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f50f",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -24183,49 +24183,49 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f879",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gDefenderRemaining@@3HA",
+      "symbol": "?gEstGuardPower@@3HA",
       "site_rva": "0x4f87e",
       "target_rva": "0xbb128",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gAttackerRemaining@@3HA",
+      "symbol": "?gEstOurForce@@3HA",
       "site_rva": "0x4f883",
       "target_rva": "0xbb124",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gDefenderLoss@@3HA",
+      "symbol": "?gOpponentLosses@@3HA",
       "site_rva": "0x4f888",
       "target_rva": "0xbb120",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gAttackerLoss@@3HA",
+      "symbol": "?gExpectedOurCasualties@@3HA",
       "site_rva": "0x4f88d",
       "target_rva": "0xbb11c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f892",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f897",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
@@ -24479,35 +24479,35 @@
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4f7ce",
       "target_rva": "0xb2210",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7d3",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTownId@@3HA",
+      "symbol": "?gHeroGarrisonId@@3HA",
       "site_rva": "0x4f7dc",
       "target_rva": "0xc8cb4",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7e2",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7f0",
       "target_rva": "0xca184",
       "addend": "0x0",
@@ -24563,14 +24563,14 @@
       "kind": 6
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x27d3d",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x27d53",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -24593,7 +24593,7 @@
       "object_symbol": "_write"
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x2cc47",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -24607,7 +24607,7 @@
       "kind": 20
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x2d33d",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -24630,7 +24630,7 @@
       "object_symbol": "_read"
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x2d3a7",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -24658,7 +24658,7 @@
       "kind": 20
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x2e943",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -24672,14 +24672,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f03d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?mapVisited@@3PAY0EI@CA",
+      "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
       "site_rva": "0x4f050",
       "target_rva": "0xc8d1c",
       "addend": "0x0",
@@ -25202,12 +25202,12 @@
     {
       "site_rva": "0x4f078",
       "target_rva": "0xca15c",
-      "symbol": "?gEventSeen@@3HA",
+      "symbol": "?gCellSeen@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventSeen@@3HA",
+      "symbol": "?gCellSeen@@3HA",
       "site_rva": "0x4f1b8",
       "target_rva": "0xca15c",
       "addend": "0x0",
@@ -25235,14 +25235,14 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f64c",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f654",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25277,7 +25277,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f8f9",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25305,21 +25305,21 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f95c",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f96c",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f972",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25340,14 +25340,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f99f",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4f9b2",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25375,14 +25375,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4fa89",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fa9a",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -25403,7 +25403,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4fade",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25424,28 +25424,28 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4faf1",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4faf7",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fb0b",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4fb17",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
@@ -25473,35 +25473,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fb2a",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4fb30",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fb44",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fb4a",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x4fb53",
       "target_rva": "0xb4b98",
       "addend": "0x0",
@@ -25522,35 +25522,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4fe7d",
       "target_rva": "0xb2210",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4fe83",
       "target_rva": "0xb2210",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gWinChance@@3MA",
+      "symbol": "?gCombatWinningFraction@@3MA",
       "site_rva": "0x4fe89",
       "target_rva": "0xb4b9c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gOutcome@@3HA",
+      "symbol": "?gSimOutcome@@3HA",
       "site_rva": "0x4fe8f",
       "target_rva": "0xbb12c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fe99",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -25907,7 +25907,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gMainWinScreenHeight@@3HA",
+      "symbol": "?iMainWinScreenHeight@@3HA",
       "site_rva": "0x67bbe",
       "target_rva": "0xa99dc",
       "addend": "0x0",
@@ -26292,49 +26292,49 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f624",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f62e",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gOutcome@@3HA",
+      "symbol": "?gSimOutcome@@3HA",
       "site_rva": "0x4f63a",
       "target_rva": "0xbb12c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gOutcome@@3HA",
+      "symbol": "?gSimOutcome@@3HA",
       "site_rva": "0x4f66a",
       "target_rva": "0xbb12c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f670",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f676",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x4f67f",
       "target_rva": "0xb4b98",
       "addend": "0x0",
@@ -26348,7 +26348,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f68d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26362,7 +26362,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f6b0",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26383,14 +26383,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f6d4",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f6e0",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26411,14 +26411,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f725",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4f73d",
       "target_rva": "0xb2210",
       "addend": "0x0",
@@ -26439,28 +26439,28 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f930",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f93c",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4f950",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gReduceByBerserk@@3HA",
+      "symbol": "?gDiscountForRampageFlag@@3HA",
       "site_rva": "0x4fb5d",
       "target_rva": "0xca174",
       "addend": "0x0",
@@ -26495,56 +26495,56 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4fb86",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fb8b",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4fbae",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fbbd",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fbc9",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fbd2",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4fbda",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fbed",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26558,7 +26558,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fc04",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26572,7 +26572,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x4fc0a",
       "target_rva": "0xb4b98",
       "addend": "0x0",
@@ -26593,14 +26593,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x4fc63",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4fc71",
       "target_rva": "0xca184",
       "addend": "0x0",
@@ -26614,21 +26614,21 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x501c1",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x501d1",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x501d9",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26642,28 +26642,28 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50224",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50246",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50252",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50261",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26698,21 +26698,21 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5028f",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x502b3",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x502bd",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26740,28 +26740,28 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x502de",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x502e9",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5030a",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50315",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26782,14 +26782,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50336",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5033d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26824,28 +26824,28 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5035e",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50366",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50387",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5038f",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26859,21 +26859,21 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x503b0",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x503ba",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x503ca",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26887,7 +26887,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x503e5",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -26901,21 +26901,21 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50403",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5040d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5041d",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -26929,42 +26929,42 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5043f",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x50449",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5044e",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x50453",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5045a",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x50474",
       "target_rva": "0xb4b98",
       "addend": "0x0",
@@ -26978,28 +26978,28 @@
       "kind": 20
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x50482",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50487",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x5048c",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50493",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27013,28 +27013,28 @@
       "kind": 20
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x504b1",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x504b6",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x504bb",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x504c2",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27048,35 +27048,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x504dc",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x504ea",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x504ef",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x504f4",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x504fb",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27090,35 +27090,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x50515",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x50523",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50528",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x5052d",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50534",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27132,35 +27132,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x5054e",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x5055c",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50561",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x50566",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x5056d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27174,35 +27174,35 @@
       "kind": 20
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x50587",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseSlot@@3HA",
+      "symbol": "?gRecruitStackSlot@@3HA",
       "site_rva": "0x50595",
       "target_rva": "0xc8ccc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5059a",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gPurchaseNum@@3HA",
+      "symbol": "?gPurchaseTotal@@3HA",
       "site_rva": "0x5059f",
       "target_rva": "0xb2214",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x505a6",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27216,28 +27216,28 @@
       "kind": 20
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x505c0",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x505ce",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x505de",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x505ed",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27251,7 +27251,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x506d5",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27265,14 +27265,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x507b1",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x507d0",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27286,7 +27286,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x5082a",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27307,7 +27307,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50866",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27335,14 +27335,14 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x509c8",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x509d0",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27356,21 +27356,21 @@
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x509e4",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x509f3",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50a1a",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27384,21 +27384,21 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50a2c",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50a3b",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50a4a",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27412,14 +27412,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50aa5",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50aad",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -27447,7 +27447,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50ad2",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27461,14 +27461,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gReduceByReload@@3HA",
+      "symbol": "?gDiscountByReloadFlag@@3HA",
       "site_rva": "0x50ae5",
       "target_rva": "0xb4b98",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b36",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27482,70 +27482,70 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50b5c",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b6f",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b79",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50b81",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50b94",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50ba0",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50bac",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50bb8",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50bc4",
       "target_rva": "0xb2208",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50bdd",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27559,7 +27559,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "site_rva": "0x50bea",
       "target_rva": "0xb2208",
       "addend": "0x0",
@@ -27587,7 +27587,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f747",
       "target_rva": "0xca184",
       "addend": "0x0",
@@ -27601,21 +27601,21 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f75a",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f776",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7c0",
       "target_rva": "0xca184",
       "addend": "0x0",
@@ -27636,14 +27636,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4f852",
       "target_rva": "0xb2210",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4f90f",
       "target_rva": "0xb2210",
       "addend": "0x0",
@@ -27664,7 +27664,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gTownValue@@3HA",
+      "symbol": "?gEventTownScore@@3HA",
       "site_rva": "0x4fc7f",
       "target_rva": "0xb2210",
       "addend": "0x0",
@@ -27995,14 +27995,14 @@
       "kind": 20
     },
     {
-      "symbol": "?gAttackerLoss@@3HA",
+      "symbol": "?gExpectedOurCasualties@@3HA",
       "site_rva": "0x4f53c",
       "target_rva": "0xbb11c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gMonsterCount@@3HA",
+      "symbol": "?gEventMonsterCount@@3HA",
       "site_rva": "0x4f548",
       "target_rva": "0xbb15c",
       "addend": "0x0",
@@ -28072,21 +28072,21 @@
       "kind": 20
     },
     {
-      "symbol": "?gArtifactChoice3@@3HA",
+      "symbol": "?gItemPurchaseScore@@3HA",
       "site_rva": "0x4f19f",
       "target_rva": "0xbb138",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gArtifactChoice3@@3HA",
+      "symbol": "?gItemPurchaseScore@@3HA",
       "site_rva": "0x4f1a5",
       "target_rva": "0xbb138",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gArtifactChoice3@@3HA",
+      "symbol": "?gItemPurchaseScore@@3HA",
       "site_rva": "0x4f1ae",
       "target_rva": "0xbb138",
       "addend": "0x0",
@@ -28095,14 +28095,14 @@
     {
       "site_rva": "0x433d2",
       "target_rva": "0xa99e0",
-      "symbol": "?gTempX@@3HA",
+      "symbol": "?iTempX@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
       "site_rva": "0x4341d",
       "target_rva": "0xa99e0",
-      "symbol": "?gTempX@@3HA",
+      "symbol": "?iTempX@@3HA",
       "addend": "0x0",
       "kind": 6
     },
@@ -28177,14 +28177,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7ab",
       "target_rva": "0xca184",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventTown@@3PAVtown@@A",
+      "symbol": "?gEventTownRec@@3PAVtown@@A",
       "site_rva": "0x4f7b1",
       "target_rva": "0xca184",
       "addend": "0x0",
@@ -28205,7 +28205,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventTownId@@3HA",
+      "symbol": "?gHeroGarrisonId@@3HA",
       "site_rva": "0x4f8a2",
       "target_rva": "0xc8cb4",
       "addend": "0x0",
@@ -28226,14 +28226,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f8bd",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f8c3",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
@@ -28296,7 +28296,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f77c",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
@@ -28310,7 +28310,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventHero@@3PAVhero@@A",
+      "symbol": "?gFoe@@3PAVhero@@A",
       "site_rva": "0x4f792",
       "target_rva": "0xb4ba4",
       "addend": "0x0",
@@ -28324,7 +28324,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gNumNetGuests@@3HA",
+      "symbol": "?iNetGuests@@3HA",
       "site_rva": "0x51bd7",
       "target_rva": "0xcb3e4",
       "addend": "0x0",
@@ -28506,7 +28506,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fb6c",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29124,21 +29124,21 @@
     {
       "site_rva": "0x4f176",
       "target_rva": "0xbb134",
-      "symbol": "?gArtifactChoice2@@3HA",
+      "symbol": "?gPrizeGuardedWorth@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
       "site_rva": "0x4f1ef",
       "target_rva": "0xbb134",
-      "symbol": "?gArtifactChoice2@@3HA",
+      "symbol": "?gPrizeGuardedWorth@@3HA",
       "addend": "0x0",
       "kind": 6
     },
     {
       "site_rva": "0x4f215",
       "target_rva": "0xbb134",
-      "symbol": "?gArtifactChoice2@@3HA",
+      "symbol": "?gPrizeGuardedWorth@@3HA",
       "addend": "0x0",
       "kind": 6
     },
@@ -29199,14 +29199,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f703",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f985",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29220,7 +29220,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fa74",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29234,7 +29234,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4faac",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29248,7 +29248,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fac3",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29262,7 +29262,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gMonsterCount@@3HA",
+      "symbol": "?gEventMonsterCount@@3HA",
       "site_rva": "0x4f41f",
       "target_rva": "0xbb15c",
       "addend": "0x0",
@@ -29283,56 +29283,56 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f446",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f44c",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f45a",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f460",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gMonsterCount@@3HA",
+      "symbol": "?gEventMonsterCount@@3HA",
       "site_rva": "0x4f46a",
       "target_rva": "0xbb15c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f478",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gMonsterCount@@3HA",
+      "symbol": "?gEventMonsterCount@@3HA",
       "site_rva": "0x4f48a",
       "target_rva": "0xbb15c",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f54f",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29465,14 +29465,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f431",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f43d",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29486,49 +29486,49 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f49b",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4a3",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4ac",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4b2",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4c0",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f4c6",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x4f4d0",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29549,42 +29549,42 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50661",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x5066c",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50674",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x5067a",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50689",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50692",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29612,28 +29612,28 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50752",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x5075e",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50767",
       "target_rva": "0xb2174",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x5076d",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29647,7 +29647,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x5077c",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29661,7 +29661,7 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventLoop@@3HA",
+      "symbol": "?gEventSlot@@3HA",
       "site_rva": "0x50784",
       "target_rva": "0xb2174",
       "addend": "0x0",
@@ -29752,14 +29752,14 @@
       "kind": 6
     },
     {
-      "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+      "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
       "site_rva": "0x6be96",
       "target_rva": "0xcf438",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+      "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
       "site_rva": "0x6beb2",
       "target_rva": "0xcf43c",
       "addend": "0x4",
@@ -29773,7 +29773,7 @@
       "kind": 6
     },
     {
-      "symbol": "?mouseIconInfo@@3PAU_ICONINFO@@A",
+      "symbol": "?cursorIconInfo@@3PAU_ICONINFO@@A",
       "site_rva": "0x6beca",
       "target_rva": "0xcf440",
       "addend": "0x8",
@@ -29955,14 +29955,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f27d",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f299",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -29983,7 +29983,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f567",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -30004,7 +30004,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4f5a0",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -30018,14 +30018,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fc24",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fc40",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -30046,14 +30046,14 @@
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x4fca7",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
       "kind": 6
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x506a8",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -30067,7 +30067,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x508fe",
       "target_rva": "0xc8cbc",
       "addend": "0x0",
@@ -30095,7 +30095,7 @@
       "kind": 20
     },
     {
-      "symbol": "?gEventCell@@3PAVmapCell@@A",
+      "symbol": "?gEventLocation@@3PAVmapCell@@A",
       "site_rva": "0x50925",
       "target_rva": "0xc8cbc",
       "addend": "0x0",

@@ -102,7 +102,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x5041d",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -123,28 +123,28 @@
               "kind": 20
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x5043f",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseSlot@@3HA",
+              "symbol": "?gRecruitStackSlot@@3HA",
               "site_rva": "0x50449",
               "target_rva": "0xc8ccc",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x5044e",
               "target_rva": "0xb2208",
               "addend": "0x0",
               "kind": 6
             },
             {
-              "symbol": "?gPurchaseNum@@3HA",
+              "symbol": "?gPurchaseTotal@@3HA",
               "site_rva": "0x50453",
               "target_rva": "0xb2214",
               "addend": "0x0",
@@ -255,7 +255,7 @@
           ],
           "known_anchors": [
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50205",
               "target_rva": "0xb2208",
               "addend": "0x0",
@@ -269,7 +269,7 @@
               "kind": 20
             },
             {
-              "symbol": "?gEventRV@@3HA",
+              "symbol": "?gVisitResult@@3HA",
               "site_rva": "0x50224",
               "target_rva": "0xb2208",
               "addend": "0x0",

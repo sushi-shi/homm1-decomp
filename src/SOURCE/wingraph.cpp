@@ -729,7 +729,7 @@ void WGInitGraphics() {
     screenImage.header.biSizeImage *= Orientation;
     gbmOldMonoBitmap = SelectObject(hdcImage, bitmap);
     gInitWin = screenImage.bits;
-    PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, gMainWinScreenHeight, BLACKNESS);
+    PatBlt(hdcImage, 0, 0, iMainWinScreenWidth, iMainWinScreenHeight, BLACKNESS);
 }
 
 VA(0x00467bde, 0x1bd)
@@ -869,7 +869,7 @@ BOOL WGAppPaint(HWND window, HDC paintDC) {
         if (gScrollY != 0)
             sourceY += gScrollY;
         gTtlBlts++;
-        if (iMainWinScreenWidth == WINGRAPH_WIDTH && gMainWinScreenHeight == WINGRAPH_HEIGHT) {
+        if (iMainWinScreenWidth == WINGRAPH_WIDTH && iMainWinScreenHeight == WINGRAPH_HEIGHT) {
             blitX = ps.rcPaint.left & WINGRAPH_PAINT_ALIGN_MASK;
             blitWidth = ps.rcPaint.right - blitX + 1;
             destTop = ps.rcPaint.top;

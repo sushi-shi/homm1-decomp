@@ -584,25 +584,25 @@ i32 InterpretCommandLine(void) {
     strcpy(gFullMapName, localization::Tr("scenario.claw.name"));
     strcpy(gMapDescription, localization::Tr("scenario.claw.description"));
 
-    size = strlen(gCommandLine);
+    size = strlen(gCommandParams);
     for (i = 0; i < size; i++) {
-        if (gCommandLine[i] == '/' && i + 1 < size) {
-            switch (toupper(gCommandLine[i + 1])) {
+        if (gCommandParams[i] == '/' && i + 1 < size) {
+            switch (toupper(gCommandParams[i + 1])) {
                 case 'I':
                     if (i + 2 < size)
-                        giShowIntro = gCommandLine[i + 2] - '0';
+                        giShowIntro = gCommandParams[i + 2] - '0';
                     break;
                 case 'C':
                     if (i + 2 < size)
-                        gColorMice = gCommandLine[i + 2] - '0';
+                        gColorMice = gCommandParams[i + 2] - '0';
                     break;
                 case 'S':
                     if (i + 2 < size)
-                        gbNoSound = 1 - (gCommandLine[i + 2] - '0');
+                        gbNoSound = 1 - (gCommandParams[i + 2] - '0');
                     break;
                 case 'B':
                     if (i + 2 < size)
-                        gSpecialMouseMasks = gCommandLine[i + 2] - '0';
+                        gSpecialMouseMasks = gCommandParams[i + 2] - '0';
                     break;
             }
         }

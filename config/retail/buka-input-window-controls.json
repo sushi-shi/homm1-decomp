@@ -7,7 +7,7 @@
   "changes": {
     "mouseManager::Close": "Early inactive return and explicit saved-bitmap null guard before delete; retain both HoMM1 delays and both bitmap-mask cleanup paths.",
     "mouseManager::SetPointer": "Separate negative-frame and inactive guards; frame-before-offset addition; unsigned cursor pixel loads at retail offsets 0x2c1, 0x329, 0x39d and 0x40e.",
-    "gColorBits": "Retype pointees from signed i8 to unsigned u8. Owner storage RVA 0xcf1e0 and 75 pointer elements are unchanged. Canonical data-symbol spelling and layout facts follow the recovered type. ReadBlock retains its signed-byte API, with an explicit pointer conversion at the two reads.",
+    "cColorBits": "Retype pointees from signed i8 to unsigned u8. Owner storage RVA 0xcf1e0 and 75 pointer elements are unchanged. Canonical data-symbol spelling and layout facts follow the recovered type. ReadBlock retains its signed-byte API, with an explicit pointer conversion at the two reads.",
     "heroWindow resource constructor": "Chained null assignments and compound flag OR; use donor idx, pButton, pIcon, pText and pTextEnt names and corresponding declaration order. HoMM1 widget cases and field widths are retained.",
     "KeyboardMessageHandler": "Restore VK_RETURN to INPUT_SCAN_ENTER normalization on both WM_KEYDOWN and WM_KEYUP. Restore donor modifier case order: Control, Alt, left Shift, right Shift.",
     "inputManager::Open": "Retain the retail signed 16-bit positive-option local, initialized to one and passed to SetPositiveOption. G5 emits the observed partial-register argument load without an added xor.",

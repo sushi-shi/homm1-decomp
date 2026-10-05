@@ -24,7 +24,7 @@ H1_ENUM_CONST_END(GameStorageConstant)
 // game::Scan/RandomScan look for a FREE (-1) entry of a signed-char table
 // (m_boatSlots, m_availableHeroes, m_townOwners); RandomScan gives up after
 // RANDOM_SCAN_TRIES rolls. A player's "high" bit is its bit in the upper
-// nibble of a per-player byte (giCurPlayerHighBit = 1 << (p + SHIFT)).
+// nibble of a per-player byte (gCurPlayerTopBit = 1 << (p + SHIFT)).
 H1_ENUM_CONST_BEGIN(GamePlayerConstant)
     GAME_PLAYER_NONE = -1,
     GAME_HERO_NONE = -1,

@@ -19523,7 +19523,7 @@
         {
           "site_rva": "0x524e4",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -19623,7 +19623,7 @@
         {
           "site_rva": "0x52598",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -19631,7 +19631,7 @@
         {
           "site_rva": "0x525a1",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -19667,7 +19667,7 @@
         {
           "site_rva": "0x525d0",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -19811,7 +19811,7 @@
         {
           "site_rva": "0x5268c",
           "target_rva": "0xcb3e4",
-          "symbol": "?gNumNetGuests@@3HA",
+          "symbol": "?iNetGuests@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xcb3e4"
@@ -28984,7 +28984,7 @@
         {
           "site_rva": "0x6c052",
           "target_rva": "0xa99dc",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa99dc"
@@ -32648,7 +32648,7 @@
         {
           "site_rva": "0x7779b",
           "target_rva": "0xd2598",
-          "symbol": "_codePtr",
+          "symbol": "_dataPtr",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xd2598"
@@ -32688,7 +32688,7 @@
         {
           "site_rva": "0x777e5",
           "target_rva": "0xd2598",
-          "symbol": "_codePtr",
+          "symbol": "_dataPtr",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xd2598"
@@ -36848,7 +36848,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?gNumNetGuests@@3HA",
+      "name": "?iNetGuests@@3HA",
       "rva": "0xcb3e4",
       "size": 4,
       "unit": "SOURCE/REMOTE",
@@ -37937,7 +37937,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "?gMainWinScreenHeight@@3HA",
+      "name": "?iMainWinScreenHeight@@3HA",
       "rva": "0xa99dc",
       "size": 4,
       "unit": "SOURCE/kbwin",
@@ -38129,7 +38129,7 @@
       "initializer_equal_without_relocations": true
     },
     {
-      "name": "_codePtr",
+      "name": "_dataPtr",
       "rva": "0xd2598",
       "size": 4,
       "unit": "BASE/LZHUF",

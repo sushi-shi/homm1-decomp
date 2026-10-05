@@ -101,7 +101,7 @@ void RemoteMain(i32 gameMode) {
             giThisNetPos = 1;
         modemStart:
             gRemoteOn = 1;
-            gNumNetGuests = 1;
+            iNetGuests = 1;
             inque.writePosition = 0;
             inque.readPosition = 0;
             outque.writePosition = 0;
@@ -137,7 +137,7 @@ void RemoteMain(i32 gameMode) {
             break;
     }
     gRemoteOn = 1;
-    giNumHumanPlayers = gNumNetGuests + 1;
+    giNumHumanPlayers = iNetGuests + 1;
     gIDCtr = (giThisNetPos + gNetNameIndex * 400 + 1) * 100000000;
     gInNetSetup = 0;
 }
@@ -292,6 +292,27 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
     return result;
 }
 
+DATA(0x004cc7f0)
+i32 gIDCtr = 0;
+DATA(0x004cc800)
+i32 packetlen = 0;
+DATA(0x004cc804)
+i32 inescape = 0;
+DATA(0x004cc808)
+i32 newpacket = 0;
+DATA(0x004cc80c)
+i32 gInOrderCtr = 0;
+DATA(0x004cc810)
+i32 gCurLastID = 0;
+DATA(0x004cc814)
+u8 GameMode = 0;
+DATA(0x004cc815)
+u8 gPacketSequence = 0;
+DATA(0x004cc818)
+i32 gLastHeartbeatSend = 0;
+DATA(0x004cc81c)
+i8 gInNetSetup = 0;
+
 // donor PoL RVA 0x000132f0; preferred Buka symbol ?InitNetHost@@YICXZ
 // donor Buka TU SOURCE/Netbios; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.405636;margin=0.349549;shape=0.179;size=0.703;calls=1.000;alternate=pol20:signed char InitNetHost(void)@0x000132f0
@@ -399,6 +420,11 @@ i8 InitNetGuest(void) {
     return 0;
 }
 
+DATA(0x004cc81e)
+i8 gInitNetGuestStatus = 0;
+DATA(0x004cc81f)
+i8 gWaitForHostStatus = 0;
+
 VA(0x0045247d, 0x75)
 i8 WaitForHost(void) {
     char buffer[80];
@@ -412,7 +438,7 @@ i8 WaitForHost(void) {
             break;
         case NET_WAIT_CONNECTED:
             if (nb_rcv(0, 3, buffer)) {
-                gNumNetGuests = buffer[0];
+                iNetGuests = buffer[0];
                 return 1;
             }
             break;
@@ -446,7 +472,7 @@ i8 WaitForGuest(void) {
                     nb_snd(0, 0, 0, NULL, 0);
                 }
             } else {
-                gNumNetGuests++;
+                iNetGuests++;
                 nb_sess(0, NETBIOS_SESSION_MOVE, 6, gNetNameIndex + 1, 1);
                 return 1;
             }
@@ -460,7 +486,7 @@ i32 nbnet_init(void) {
     char buffer[80];
     i32 status;
 
-    gNumNetGuests = 0;
+    iNetGuests = 0;
     switch (GameMode) {
         case REMOTE_GAME_NETWORK_HOST:
             giWaitType = DIALOG_WAIT_NETBIOS_INIT_HOST;
@@ -473,7 +499,7 @@ i32 nbnet_init(void) {
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gbFunctionComplete)
                 ShutDown(NULL);
-            buffer[0] = gNumNetGuests;
+            buffer[0] = iNetGuests;
             while (nb_snd(0, gNetNameIndex + 1, 3, buffer, 0))
                 PollSound();
             break;
@@ -1127,36 +1153,12 @@ transmitComplete:
 // The object's .data and .bss, in retail address order.
 DATA(0x0049f048)
 i32 gNetNameIndex = -1;
-DATA(0x004cc7f0)
-i32 gIDCtr = 0;
 DATA(0x0049f054)
 i32 gBaudBits = 8;
-DATA(0x004cc800)
-i32 packetlen = 0;
-DATA(0x004cc804)
-i32 inescape = 0;
-DATA(0x004cc808)
-i32 newpacket = 0;
-DATA(0x004cc80c)
-i32 gInOrderCtr = 0;
 DATA(0x0049f058)
 i32 gLastConfirm = -1;
-DATA(0x004cc810)
-i32 gCurLastID = 0;
-DATA(0x004cc814)
-u8 GameMode = 0;
-DATA(0x004cc815)
-u8 gPacketSequence = 0;
-DATA(0x004cc818)
-i32 gLastHeartbeatSend = 0;
 DATA(0x0049f05c)
 i32 gLastHeartbeatReceive = 1999999999;
-DATA(0x004cc81c)
-i8 gInNetSetup = 0;
-DATA(0x004cc81e)
-i8 gInitNetGuestStatus = 0;
-DATA(0x004cc81f)
-i8 gWaitForHostStatus = 0;
 DATA(0x004cc7e8)
 char idstr[8];
 DATA(0x004cc6e8)
@@ -1192,7 +1194,7 @@ i32 iLastDialPos;
 DATA(0x004cb3dc)
 i32 remotestage;
 DATA(0x004cb3e4)
-i32 gNumNetGuests;
+i32 iNetGuests;
 DATA(0x004cb2b0)
 char GUIMRresp[40];
 DATA(0x004ca290)

@@ -94,7 +94,7 @@
           {
             "offset": "0x10c",
             "kind": 6,
-            "symbol": "?gCurWatchPlayerHighBit@@3EA",
+            "symbol": "?gCurWatchPlayerHighFlag@@3EA",
             "addend": "0x0"
           },
           {
@@ -640,7 +640,7 @@
           "site": "0xf668",
           "offset": "0x10c",
           "kind": 6,
-          "name": "?gCurWatchPlayerHighBit@@3EA",
+          "name": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0,
           "target": "0xb7430"
         },
@@ -5485,7 +5485,7 @@
   ],
   "data_claims": [
     {
-      "name": "?gCurWatchPlayerHighBit@@3EA",
+      "name": "?gCurWatchPlayerHighFlag@@3EA",
       "unit": "SOURCE/PHILAI",
       "old_rva": "0xaf2f8",
       "rva": "0xb7430",
@@ -5498,7 +5498,7 @@
           "site": "0xf668",
           "offset": "0x10c",
           "kind": 6,
-          "name": "?gCurWatchPlayerHighBit@@3EA",
+          "name": "?gCurWatchPlayerHighFlag@@3EA",
           "addend": 0,
           "target": "0xb7430"
         }

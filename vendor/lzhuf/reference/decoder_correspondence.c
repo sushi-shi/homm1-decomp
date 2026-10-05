@@ -17,12 +17,12 @@ extern short son[T];
 extern short prnt[T + N_CHAR];
 extern unsigned short freq[T + 1];
 extern unsigned char text_buf[N + F - 1];
-extern unsigned long textsize;
-extern unsigned long decodeSize;
+extern unsigned long decodeSkip;
+extern unsigned long decodeLen;
 extern unsigned short getbuf;
 extern unsigned char getlen;
-extern char *codePtr;
-extern char *decodeOutput;
+extern char *dataPtr;
+extern char *outputPos;
 extern const unsigned char d_code[256];
 extern const unsigned char d_len[256];
 
@@ -54,7 +54,7 @@ int GetBit(void)
         register unsigned i;
         register unsigned short dx = getbuf;
         register unsigned char glen = getlen;
-        register unsigned char *cursor = (unsigned char *)codePtr;
+        register unsigned char *cursor = (unsigned char *)dataPtr;
 
         do {
             if ((int)(i = *cursor++) < 0)
@@ -64,7 +64,7 @@ int GetBit(void)
         } while (glen <= 8);
         getbuf = (unsigned short)(dx << 1);
         getlen = (unsigned char)(glen - 1);
-        codePtr = (char *)cursor;
+        dataPtr = (char *)cursor;
         return (dx & 0x8000) >> 15;
     }
 }
@@ -78,7 +78,7 @@ int DecodePosition(void)
     unsigned j, c;
 
     while (glen <= 8) {
-        if ((int)(i = (unsigned char)*codePtr++) < 0)
+        if ((int)(i = (unsigned char)*dataPtr++) < 0)
             i = 0;
         dx |= (unsigned short)(i << (8 - glen));
         glen += 8;
@@ -168,10 +168,10 @@ void Decode(void)
     char *output;
     unsigned long length;
 
-    output = decodeOutput;
-    length = decodeSize;
+    output = outputPos;
+    length = decodeLen;
     r = N - F;
-    for (count = 0; count < textsize + length; ) {
+    for (count = 0; count < decodeSkip + length; ) {
         c = son[R];
         while ((unsigned short)c < T) {
             c = (short)(c + GetBit());
@@ -180,7 +180,7 @@ void Decode(void)
         c = (short)(c - T);
         UpdateDecoderTree(c);
         if (c < 256) {
-            if (count >= textsize)
+            if (count >= decodeSkip)
                 *output++ = (char)c;
             text_buf[r++] = (unsigned char)c;
             r &= N - 1;
@@ -190,7 +190,7 @@ void Decode(void)
             j = (short)(c - 255 + THRESHOLD);
             for (k = 0; k < j; k++) {
                 c = text_buf[(i + k) & (N - 1)];
-                if (count >= textsize && count < textsize + length)
+                if (count >= decodeSkip && count < decodeSkip + length)
                     *output++ = (char)c;
                 text_buf[r++] = (unsigned char)c;
                 r &= N - 1;

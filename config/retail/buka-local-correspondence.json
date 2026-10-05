@@ -8743,7 +8743,7 @@
         {
           "site_rva": "0xf668",
           "target_rva": "0xb7430",
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xb7430"
@@ -20840,7 +20840,7 @@
         {
           "site_rva": "0x42d16",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"
@@ -20856,7 +20856,7 @@
         {
           "site_rva": "0x42d29",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"
@@ -23125,7 +23125,7 @@
       "definition_object_sha256": "17d503ff32440c7d51ec4ad68cb7ce279ebc25e19dc61dadc6174e92fb797ce6"
     },
     {
-      "name": "?gCommandLine@@3PADA",
+      "name": "?gCommandParams@@3PADA",
       "rva": "0xa9df4",
       "size": 61,
       "unit": "SOURCE/kbwin",
@@ -23141,7 +23141,7 @@
           "function": "_WinMain@16",
           "site_rva": "0x42d16",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"
@@ -23151,7 +23151,7 @@
           "function": "_WinMain@16",
           "site_rva": "0x42d29",
           "target_rva": "0xa9df4",
-          "symbol": "?gCommandLine@@3PADA",
+          "symbol": "?gCommandParams@@3PADA",
           "kind": 6,
           "addend": "0x0",
           "owner_rva": "0xa9df4"

@@ -29,6 +29,15 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/wingraph.h>
 
+DATA(0x004a9e34)
+HWND hwndApp = NULL;
+DATA(0x004a9e38)
+i32 gForegroundApp = 0;
+DATA(0x004a9e3c)
+HMENU hmnuApp = NULL;
+DATA(0x004a9e40)
+HANDLE gEventHandle = NULL;
+
 // donor PoL RVA 0x0001bce0; preferred Buka symbol _WinMain@16
 // donor Buka TU SOURCE/kbwin; HoMM1 owner inferred from contiguous order
 // evidence: graph:2;base=0.651055;margin=0.328202;shape=0.658;size=0.820;calls=1.000;alternate=pol20:_WinMain@16@0x0001bce0
@@ -52,8 +61,8 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
         return 0;
     }
 
-    memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
-    strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    memset(gCommandParams, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
+    strncpy(gCommandParams, commandLine, KBWIN_COMMAND_LINE_LIMIT);
     if (EarlySetup() == 0)
         return 0;
     if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
@@ -241,24 +250,24 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
                 if ((lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0
                     && (LOWORD(messageData) < KBWIN_MIN_WIDTH
                         || HIWORD(messageData) < KBWIN_MIN_HEIGHT)) {
-                    gTempX = LOWORD(messageData) < KBWIN_MIN_WIDTH ? KBWIN_MIN_WIDTH
+                    iTempX = LOWORD(messageData) < KBWIN_MIN_WIDTH ? KBWIN_MIN_WIDTH
                                                                    : LOWORD(messageData);
                     iTempY = HIWORD(messageData) < KBWIN_MIN_HEIGHT ? KBWIN_MIN_HEIGHT
                                                                     : HIWORD(messageData);
-                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, gTempX, iTempY);
+                    ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, iTempX, iTempY);
                     return 0;
                 }
             }
             iMainWinScreenWidth = LOWORD(messageData);
-            gMainWinScreenHeight = HIWORD(messageData);
+            iMainWinScreenHeight = HIWORD(messageData);
             if (iMainWinScreenWidth < 1)
                 iMainWinScreenWidth = 1;
-            if (gMainWinScreenHeight < 1)
-                gMainWinScreenHeight = 1;
+            if (iMainWinScreenHeight < 1)
+                iMainWinScreenHeight = 1;
             if (hwndApp != NULL && (lTemp & WS_MAXIMIZE) == 0 && (lTemp & WS_MINIMIZE) == 0
                 && gClosingApp == 0 && CURRENT_GRAPHICS_CONFIG.fullScreen == 0) {
                 CURRENT_GRAPHICS_CONFIG.width = iMainWinScreenWidth;
-                CURRENT_GRAPHICS_CONFIG.height = gMainWinScreenHeight;
+                CURRENT_GRAPHICS_CONFIG.height = iMainWinScreenHeight;
                 WritePrefs();
             }
             return 0;
@@ -316,6 +325,9 @@ BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
     PollSound();
     return FALSE;
 }
+
+DATA(0x004a9e4c)
+i32 gClosingApp = 0;
 
 VA(0x00443766, 0xf)
 void AppExit(void) {
@@ -1286,26 +1298,16 @@ DATA(0x0049e700)
 char gAppName[] = localization::Tr("window.gAppName");
 DATA(0x0049e708)
 char gTitle[] = localization::Tr("window.gTitle");
-DATA(0x004a9e34)
-HWND hwndApp = NULL;
-DATA(0x004a9e38)
-i32 gForegroundApp = 0;
-DATA(0x004a9e3c)
-HMENU hmnuApp = NULL;
-DATA(0x004a9e40)
-HANDLE gEventHandle = NULL;
-DATA(0x004a9e4c)
-i32 gClosingApp = 0;
 DATA(0x004a99e8)
 HINSTANCE hInstApp;
 DATA(0x004a99c8)
 struct tagRECT rcTemp;
 DATA(0x004a99dc)
-i32 gMainWinScreenHeight;
+i32 iMainWinScreenHeight;
 DATA(0x004a9dec)
 HMENU hmnuCurrent;
 DATA(0x004a99e0)
-i32 gTempX;
+i32 iTempX;
 DATA(0x004a99e4)
 i32 iTempY;
 DATA(0x004a99d8)
@@ -1313,6 +1315,6 @@ i32 lTemp;
 DATA(0x004a99ec)
 u8 bProcessMessage[KBWIN_MESSAGE_FILTER_SIZE];
 DATA(0x004a9df4)
-char gCommandLine[KBWIN_COMMAND_LINE_CLEAR_SIZE];
+char gCommandParams[KBWIN_COMMAND_LINE_CLEAR_SIZE];
 DATA(0x004a9df0)
 i32 iMainWinScreenWidth;

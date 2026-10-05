@@ -54,7 +54,7 @@ mouseManager::mouseManager(void) {
     for (i32 cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
         hMouseCursor[cursorIndex] = NULL;
         cAndBits[cursorIndex] = NULL;
-        gColorBits[cursorIndex] = NULL;
+        cColorBits[cursorIndex] = NULL;
         hbmpAndMask[cursorIndex] = NULL;
         hbmpColor[cursorIndex] = NULL;
     }
@@ -89,9 +89,9 @@ void mouseManager::Close(void) {
         if (cAndBits[cursorIndex] != NULL)
             free(cAndBits[cursorIndex]);
         cAndBits[cursorIndex] = NULL;
-        if (gColorBits[cursorIndex] != NULL)
-            free(gColorBits[cursorIndex]);
-        gColorBits[cursorIndex] = NULL;
+        if (cColorBits[cursorIndex] != NULL)
+            free(cColorBits[cursorIndex]);
+        cColorBits[cursorIndex] = NULL;
         if (hbmpAndMask[cursorIndex] != NULL)
             DeleteObject(hbmpAndMask[cursorIndex]);
         hbmpAndMask[cursorIndex] = NULL;
@@ -118,6 +118,9 @@ void mouseManager::SetPointer(char* name, i16 frame) {
         gMouseCursorType = MOUSE_CURSOR_COMBAT;
     SetPointer(frame);
 }
+
+DATA(0x004cfb40)
+i32 gMouseCursorType = 0;
 
 // donor PoL RVA 0x000c9630; preferred Buka symbol ?SetPointer@mouseManager@@QAEXH@Z
 // donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
@@ -157,7 +160,7 @@ void mouseManager::SetPointer(i16 frame) {
     H1_ASSERT(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT);
 
     if (hMouseCursor[cursorIndex] == NULL) {
-        gColorBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
+        cColorBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gColorMice)
             cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
         else
@@ -186,8 +189,8 @@ void mouseManager::SetPointer(i16 frame) {
             );
 
         gpResourceManager->PointToFile(gpResourceManager->MakeId(filename));
-        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
-        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
+        gpResourceManager->ReadBlock(cColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
+        gpResourceManager->ReadBlock(cColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
         memset(
             cAndBits[cursorIndex],
             0,
@@ -197,21 +200,21 @@ void mouseManager::SetPointer(i16 frame) {
         for (y = MOUSE_CURSOR_BITMAP_BEGIN; y < MOUSE_CURSOR_BITMAP_END; y++) {
             for (x = MOUSE_CURSOR_BITMAP_BEGIN; x < MOUSE_CURSOR_BITMAP_END; x++) {
                 if (gSpecialMouseMasks && !gColorMice) {
-                    if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
+                    if (*(cColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
                         *(cAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
                           + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
-                    else if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 1)
+                    else if (*(cColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 1)
                         *(cAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
                           + y * MOUSE_CURSOR_MASK_ROW_BYTES + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                 } else {
-                    if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
+                    if (*(cColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
                         *(cAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
                           + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                     else if (!gColorMice
-                             && *(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) != 1)
+                             && *(cColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) != 1)
                         *(cAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
                           + y * MOUSE_CURSOR_MASK_ROW_BYTES + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
@@ -240,16 +243,16 @@ void mouseManager::SetPointer(i16 frame) {
             bmpColor[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
             bmpColor[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
             bmpColor[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
-            bmpColor[cursorIndex].bmBits = gColorBits[cursorIndex];
+            bmpColor[cursorIndex].bmBits = cColorBits[cursorIndex];
             hbmpColor[cursorIndex] = CreateBitmapIndirect(&bmpColor[cursorIndex]);
         }
 
-        mouseIconInfo[cursorIndex].fIcon = FALSE;
-        mouseIconInfo[cursorIndex].xHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
-        mouseIconInfo[cursorIndex].yHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
-        mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
-        mouseIconInfo[cursorIndex].hbmColor = gColorMice ? hbmpColor[cursorIndex] : NULL;
-        hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
+        cursorIconInfo[cursorIndex].fIcon = FALSE;
+        cursorIconInfo[cursorIndex].xHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
+        cursorIconInfo[cursorIndex].yHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
+        cursorIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
+        cursorIconInfo[cursorIndex].hbmColor = gColorMice ? hbmpColor[cursorIndex] : NULL;
+        hMouseCursor[cursorIndex] = CreateIconIndirect(&cursorIconInfo[cursorIndex]);
         // API-forced handle value.
 #line 343
         H1_ASSERT(reinterpret_cast<i32>(hMouseCursor[cursorIndex]));
@@ -355,8 +358,6 @@ void mouseManager::ShowSystemCursor(void) {
 // zero-filled cursor tables (0x004cac88..).
 DATA(0x004a0ff8)
 i32 gMouseOffset[3] = {0, 40, 55};
-DATA(0x004cfb40)
-i32 gMouseCursorType = 0;
 DATA(0x004a1004)
 u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {2, 3},   {2, 3},   {12, 11}, {12, 13}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},
@@ -380,8 +381,8 @@ u8* cAndBits[MOUSE_CURSOR_COUNT];
 DATA(0x004ce880)
 BITMAP bmpColor[MOUSE_CURSOR_COUNT];
 DATA(0x004cf1e0)
-u8* gColorBits[MOUSE_CURSOR_COUNT];
+u8* cColorBits[MOUSE_CURSOR_COUNT];
 DATA(0x004cf438)
-ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+ICONINFO cursorIconInfo[MOUSE_CURSOR_COUNT];
 DATA(0x004cf0b4)
 HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];

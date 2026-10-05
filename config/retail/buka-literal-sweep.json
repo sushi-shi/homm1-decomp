@@ -368,7 +368,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?mapVisited@@3PAY0EI@CA",
+            "symbol": "?gMapVisitFlags@@3PAY0EI@CA",
             "operand": "0x2d33d",
             "target": "0xc8d1c",
             "addend": "0x0",

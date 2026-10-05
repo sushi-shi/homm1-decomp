@@ -119,13 +119,13 @@ extern i32 gMouseCursorType;
 extern i32 gMouseOffset[3];
 extern u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT];
 extern HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
-extern u8* gColorBits[MOUSE_CURSOR_COUNT];
+extern u8* cColorBits[MOUSE_CURSOR_COUNT];
 extern u8* cAndBits[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
 extern BITMAP bmpColor[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];
 extern HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
-extern ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+extern ICONINFO cursorIconInfo[MOUSE_CURSOR_COUNT];
 
 // Moved from MOUSEMGR.cpp.
 H1_ENUM_CONST_BEGIN(MouseManagerStateConstant)

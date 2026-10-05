@@ -876,7 +876,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gCommandLine@@3PADA",
+            "symbol": "?gCommandParams@@3PADA",
             "operand": "0x3de96",
             "target": "0xa9df4",
             "addend": "0x0",
@@ -1045,7 +1045,7 @@
             "kind": 20
           },
           {
-            "symbol": "?gCommandLine@@3PADA",
+            "symbol": "?gCommandParams@@3PADA",
             "operand": "0x3de96",
             "target": "0xa9df4",
             "addend": "0x0",

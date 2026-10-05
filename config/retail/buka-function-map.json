@@ -17566,7 +17566,7 @@
       "rva": "0x7474c",
       "size": 74,
       "unit": "BASE/LZHUF",
-      "role": "Flush final partial encoded byte from putbuf, advance codePtr and increment codesize.",
+      "role": "Flush final partial encoded byte from encbuf, advance dataPtr and increment codesize.",
       "retail_body_sha256": "86054e183255916116f53318c6d23a3be396148a72262a31acd72f37b22adb91",
       "name": "?EncodeEnd@@YAXXZ",
       "evidence": "buka-lzhuf.json",

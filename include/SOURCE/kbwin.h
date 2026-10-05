@@ -115,13 +115,13 @@ H1_ENUM_CONST_END(PrefsConstant)
 
 extern HINSTANCE hInstApp;
 extern HANDLE gEventHandle;
-extern char gCommandLine[];
+extern char gCommandParams[];
 extern u8 bProcessMessage[];
 extern char gAppName[];
 extern char gTitle[];
 extern i32 lTemp;
 extern struct tagRECT rcTemp;
-extern i32 gTempX;
+extern i32 iTempX;
 extern i32 iTempY;
 
 #pragma pack(push, 1)
@@ -176,7 +176,7 @@ char* FindLastToken(char* text, char token);
 void SetMenus(HMENU menu, i32 enabled);
 extern HWND hwndApp;
 extern i32 iMainWinScreenWidth;
-extern i32 gMainWinScreenHeight;
+extern i32 iMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);
 #define H1_ASSERT(condition) ProcessAssert((condition), __FILE__, __LINE__)
 void WritePrefs();

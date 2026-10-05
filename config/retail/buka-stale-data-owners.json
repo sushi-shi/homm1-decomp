@@ -71,7 +71,7 @@
     },
     {
       "start": "0x50a88",
-      "meaning": "Ultimate-artifact hint chance minus15 times the 16200 value, divided by100, stores gEventRV.",
+      "meaning": "Ultimate-artifact hint chance minus15 times the 16200 value, divided by100, stores gVisitResult.",
       "instructions": [
         "50a88: mov eax, dword ptr [0x4b4ba8]",
         "50a8d: movsx ecx, byte ptr [eax + 0x52]",

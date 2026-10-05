@@ -294,9 +294,9 @@ i32 advManager::GetMoveShowIt(i8 direction) {
     dx = normalDirTable[direction].x;
     dy = normalDirTable[direction].y;
     if ((gbThisNetHumanPlayer[giCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
-        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
+        && ((gpGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighFlag)
             || (gpGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
-                & gCurWatchPlayerHighBit)))
+                & gCurWatchPlayerHighFlag)))
         return 1;
     else
         return 0;

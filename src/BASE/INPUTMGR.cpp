@@ -176,7 +176,7 @@ i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
 
 mouseCoordinates:
 #line 191
-        H1_ASSERT(gMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
+        H1_ASSERT(iMainWinScreenHeight > 0 && iMainWinScreenWidth > 0);
         event->x = CLIENT_TO_GAME_X(LOWORD(messageData));
         event->y = CLIENT_TO_GAME_Y(HIWORD(messageData));
     }

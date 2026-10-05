@@ -301,9 +301,9 @@ H1_ENUM_END(MapExtraFlag)
 // heroes have stood there and the current/watch players' high bits (all in
 // PHILAI's .bss band), ViewArmy's dismiss flag and the creatures a creature
 // month may feature (Buka PHILAI.h).
-extern i8 mapVisited[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
-extern u8 giCurPlayerHighBit;
-extern u8 gCurWatchPlayerHighBit;
+extern i8 gMapVisitFlags[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+extern u8 gCurPlayerTopBit;
+extern u8 gCurWatchPlayerHighFlag;
 void AiPrint(char* text);
 void AbsAiPrint(char* text);
 extern i8 gShowComputerRoute;

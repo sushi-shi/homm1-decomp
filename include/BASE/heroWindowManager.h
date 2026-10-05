@@ -77,7 +77,7 @@ public:
     (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern i8 gWindowFadeSavedUpdate;
+extern i8 gFadeSavedUpdate;
 
 H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_IN = 0,

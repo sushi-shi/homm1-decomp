@@ -8156,7 +8156,7 @@
           {
             "offset": "0x1cb",
             "kind": 6,
-            "symbol": "?gCurWatchPlayerHighBit@@3EA",
+            "symbol": "?gCurWatchPlayerHighFlag@@3EA",
             "addend": "0x0"
           },
           {

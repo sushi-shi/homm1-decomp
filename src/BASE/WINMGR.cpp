@@ -393,11 +393,11 @@ void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPal
             i8 saved = m_updateFlags;
             m_updateFlags = 0;
             FadeIn(steps);
-            m_updateFlags = saved | gWindowFadeSavedUpdate;
+            m_updateFlags = saved | gFadeSavedUpdate;
             break;
         }
         case WINDOW_FADE_OUT:
-            gWindowFadeSavedUpdate = m_updateFlags;
+            gFadeSavedUpdate = m_updateFlags;
             m_updateFlags = 0;
             FadeOut(steps);
             break;
@@ -586,6 +586,6 @@ void heroWindowManager::ReleaseFizzleSource(void) {
 // Window-manager data, initialized from retail .data (0x004a0870..) and
 // zero-filled storage (0x004cac20..).
 DATA(0x004ce110)
-i8 gWindowFadeSavedUpdate;
+i8 gFadeSavedUpdate;
 DATA(0x004ce114)
 i8 gCyclePal[PALETTE_CYCLE_BYTES];

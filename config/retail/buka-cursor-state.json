@@ -858,7 +858,7 @@
           "object_offset": "0x94"
         },
         {
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "site_rva": "0x220d1",
           "target_rva": "0xb7430",
@@ -874,7 +874,7 @@
           "object_offset": "0xca"
         },
         {
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "site_rva": "0x2210e",
           "target_rva": "0xb7430",
@@ -1198,7 +1198,7 @@
           "object_offset": "0x94"
         },
         {
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "site_rva": "0x220d1",
           "target_rva": "0xb7430",
@@ -1214,7 +1214,7 @@
           "object_offset": "0xca"
         },
         {
-          "symbol": "?gCurWatchPlayerHighBit@@3EA",
+          "symbol": "?gCurWatchPlayerHighFlag@@3EA",
           "kind": 6,
           "site_rva": "0x2210e",
           "target_rva": "0xb7430",

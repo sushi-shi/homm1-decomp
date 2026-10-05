@@ -92,7 +92,7 @@
       "owner": "?gSpellAIFlags@@3PACA",
       "owner_rva": "0x903ec",
       "addend": -1,
-      "identity_evidence": "The reviewed gEventCell pointer at RVA 0xc8cbc is loaded; its unsigned objectMetadata byte at offset 9 indexes the reviewed i8 gSpellAIFlags table with a -1 bias. The result is tested for SPELL_AI_FLAG_COMBAT (bit 0), as in the current shrine case source.",
+      "identity_evidence": "The reviewed gEventLocation pointer at RVA 0xc8cbc is loaded; its unsigned objectMetadata byte at offset 9 indexes the reviewed i8 gSpellAIFlags table with a -1 bias. The result is tested for SPELL_AI_FLAG_COMBAT (bit 0), as in the current shrine case source.",
       "instruction_context": [
         {
           "retail_rva": "0x50179",

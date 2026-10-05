@@ -553,7 +553,7 @@ i16 game::SaveGame(char* filename, i8 generateName) {
     WRITE_FILE_VALUE(outFile, m_ultimateArtifactId);
     write(outFile, m_mapSounds, sizeof(m_mapSounds));
     write(outFile, m_mapExtra, sizeof(m_mapExtra));
-    write(outFile, mapVisited, sizeof(mapVisited));
+    write(outFile, gMapVisitFlags, sizeof(gMapVisitFlags));
     close(outFile);
     return 1;
 }
@@ -659,12 +659,12 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     if (origData) {
         memset(m_mapSounds, MAP_SOUND_NONE, sizeof(m_mapSounds));
         memset(m_mapExtra, 0, sizeof(m_mapExtra));
-        memset(mapVisited, 0, sizeof(mapVisited));
+        memset(gMapVisitFlags, 0, sizeof(gMapVisitFlags));
         strcpy(gpGame->m_saveName, localization::Tr("save.name.new_game"));
     } else {
         read(oldHandle, m_mapSounds, sizeof(m_mapSounds));
         read(oldHandle, m_mapExtra, sizeof(m_mapExtra));
-        read(oldHandle, mapVisited, sizeof(mapVisited));
+        read(oldHandle, gMapVisitFlags, sizeof(gMapVisitFlags));
         if (strcmp(filename, "REMOTE.GAM"))
             strcpy(gpGame->m_saveName, filename);
     }
@@ -676,8 +676,8 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     while (!gbThisNetHumanPlayer[giCurWatchPlayer])
         giCurWatchPlayer = (giCurWatchPlayer + 1) % m_playerCount;
     giCurWatchPlayerBit = 1 << giCurWatchPlayer;
-    giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
-    gCurWatchPlayerHighBit = 1 << (giCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurPlayerTopBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurWatchPlayerHighFlag = 1 << (giCurWatchPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     bShowIt = gbThisNetHumanPlayer[giCurPlayer];
     memset(mapExtra, 0, sizeof(mapExtra));
     if (!origData)
@@ -1199,8 +1199,8 @@ void game::NewMap(char* mapName) {
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     giCurPlayerBit = 1 << giCurPlayer;
     giCurWatchPlayerBit = giCurPlayerBit;
-    giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
-    gCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurPlayerTopBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurWatchPlayerHighFlag = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     giCurWatchPlayer = giCurPlayer;
     for (i = 0; i < m_playerCount; i++) {
         m_players[i].m_townCount = 0;
@@ -1211,7 +1211,7 @@ void game::NewMap(char* mapName) {
         m_players[i].m_currentHero = GAME_HERO_NONE;
     }
     memset(m_mapExtra, 0, sizeof(m_mapExtra));
-    memset(mapVisited, 0, sizeof(mapVisited));
+    memset(gMapVisitFlags, 0, sizeof(gMapVisitFlags));
     RandomizeHeroPool();
     strcpy(gMapName, mapName);
     LoadMap(gMapName);
@@ -2829,7 +2829,7 @@ void game::NextPlayer(void) {
     } while (gpGame->m_playerDead[giCurPlayer]);
     gpCurPlayer = &gpGame->m_players[giCurPlayer];
     giCurPlayerBit = 1 << giCurPlayer;
-    giCurPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+    gCurPlayerTopBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     for (ii = 0; ii < m_players[giCurPlayer].m_heroCount; ii++) {
         currentHero = &m_heroRecs[m_players[giCurPlayer].m_heroIds[ii]];
         currentHero->m_mobility = currentHero->CalcMobility();
@@ -2874,7 +2874,7 @@ void game::NextPlayer(void) {
             CancelComputerScreen();
         giCurWatchPlayerBit = giCurPlayerBit;
         giCurWatchPlayer = giCurPlayer;
-        gCurWatchPlayerHighBit = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
+        gCurWatchPlayerHighFlag = 1 << (giCurPlayer + GAME_PLAYER_HIGH_BIT_SHIFT);
     }
     DoNewTurn();
     gpMouseManager->ReallyShowPointer();

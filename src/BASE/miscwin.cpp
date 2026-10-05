@@ -41,7 +41,7 @@ void BlitBitmapToScreen(
     }
     if (gEnlargeScreenBlit != 0) {
         if (iMainWinScreenWidth == SCREEN_BLIT_WIDTH
-            && gMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
+            && iMainWinScreenHeight == SCREEN_BLIT_HEIGHT) {
             if (width < SCREEN_BLIT_WIDTH_END)
                 width++;
             if (height < SCREEN_BLIT_WIDTH_END)
@@ -59,10 +59,10 @@ void BlitBitmapToScreen(
     }
     RECT invalidRectangle;
     invalidRectangle.left = destinationX * iMainWinScreenWidth / SCREEN_BLIT_WIDTH;
-    invalidRectangle.top = destinationY * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
+    invalidRectangle.top = destinationY * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT;
     invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / SCREEN_BLIT_WIDTH - 1;
     invalidRectangle.bottom =
-        (destinationY + height) * gMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
+        (destinationY + height) * iMainWinScreenHeight / SCREEN_BLIT_HEIGHT - 1;
     InvalidateRect(hwndApp, &invalidRectangle, FALSE);
     UpdateWindow(hwndApp);
 }

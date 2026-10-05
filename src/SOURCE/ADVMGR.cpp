@@ -5889,7 +5889,7 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
     CompleteDraw(0);
     if (!gbHumanPlayer[giCurPlayer]) {
         if (!gConfig.blackoutComputer && !gRemoteOn
-            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & gCurWatchPlayerHighBit))
+            && (gpGame->m_mapExtra[mapHero->m_x][mapHero->m_y] & gCurWatchPlayerHighFlag))
             bShowIt = 1;
         else
             bShowIt = 0;

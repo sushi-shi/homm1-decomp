@@ -64,8 +64,8 @@
     "retail_sha256": "2c1b1e948058d52b04f122802abd57ccc846495bda6d57a0e0978411de330dac"
   },
   "source_corrections": [
-    "Assign the map-visited Boolean expression directly to gEventSeen; retail has one compiler temporary followed by a single global assignment.",
-    "Artifact evaluation adds gOutcome before the chance-weighted artifact value, multiplies 2000.0f before gold value, and accumulates choices in order 1, 2, 3.",
+    "Assign the map-visited Boolean expression directly to gCellSeen; retail has one compiler temporary followed by a single global assignment.",
+    "Artifact evaluation adds gSimOutcome before the chance-weighted artifact value, multiplies 2000.0f before gold value, and accumulates choices in order 1, 2, 3.",
     "The willing-monster test multiplies count before creature fight value.",
     "Both hostile-town adjustments load the town value before the multiplier; the hero-in-town adjustment multiplies the player-count term before the human/computer bonus.",
     "The hero event adds the existing event value before the chance-weighted town value.",

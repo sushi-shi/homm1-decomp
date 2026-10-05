@@ -241,7 +241,7 @@
         {
           "site_rva": "0x4ff59",
           "target_rva": "0xb2208",
-          "symbol": "?gEventRV@@3HA",
+          "symbol": "?gVisitResult@@3HA",
           "addend": 0,
           "kind": 6
         }
@@ -371,7 +371,7 @@
     {
       "site_rva": "0x4ff59",
       "target_rva": "0xb2208",
-      "symbol": "?gEventRV@@3HA",
+      "symbol": "?gVisitResult@@3HA",
       "addend": 0,
       "kind": 6
     }

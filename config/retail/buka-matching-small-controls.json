@@ -401,7 +401,7 @@
         },
         {
           "offset": "0x11b",
-          "symbol": "?gMainWinScreenHeight@@3HA",
+          "symbol": "?iMainWinScreenHeight@@3HA",
           "addend": 0
         },
         {

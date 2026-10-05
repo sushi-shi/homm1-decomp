@@ -28,7 +28,7 @@ monster-flag-test	keep	army	existing source	131	m_stats.attributes & MONSTER_FLA
 calendar-turn	retained	include/SOURCE/game.h	existing macro	1	GetTurnAIVars' giCurTurn is GAME_DAY_NUMBER(*gpGame): day first, u16 fields promoted to int. Byte-identical.
 artifact-value-sum	keep	AI/PHILAI	existing source	4	Regular-artifact gArtifactBaseRV sums (AICheckRetreat, ProbableOutcomeOfBattle x2, ValueOfBuyingHero): accumulators and guards differ.
 attack-bonus	keep	PHILAI	existing source	5	gbHumanPlayer[p] ? gAttackHumanBonus : gAttackComputerBonus: four ternaries and one if/else in ProbableOutcomeOfBattle, each a single selection.
-monster-group-fill	keep	PHILAI	existing source	2	CombatMonsterEvent and ValueOfEventAtPosition spread a count over five slots with a local versus the gEventLoop global counter.
+monster-group-fill	keep	PHILAI	existing source	2	CombatMonsterEvent and ValueOfEventAtPosition spread a count over five slots with a local versus the gEventSlot global counter.
 stack-fight-value	keep	army	existing source	18	quantity * gMonsterDatabase[t].fightValue (18 fightValue reads); army::Strength is an out-of-line call with the reversed product.
 army-group-dismiss	keep	armyGroup	existing source	1	UpdateArmyGroup's type/count stores are armyGroup::Dismiss open-coded; calling Dismiss would add a call relocation.
 army-target-pair	keep	army	existing source	6	Target side/index stores (AttemptAttack, WalkTowardArmy, GetCommand, SetCombatDirections restore, GoBerserk, MoveAttack); chained clears (WalkTo index first, DoAttack/DoHydraAttack with targetHexValue/lastHex) are not CLEAR_ARMY_TARGET's store order.
