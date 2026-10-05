@@ -29,14 +29,18 @@ review inputs, not defect totals. Preserve banked matches.
   views: 9 at the `char*` record APIs and 3 donor-style view macros; 43 other
   byte/word/integer views; the icon frame directory and combat send buffer
   are typed); 69 further casts are Win32 API boundaries.
-- [ ] Replace manual byte layouts with named types: font glyph word view
-  (**6 sites**) and literal-index packet bytes.
+- [x] Replace manual byte layouts with named types: the font reads
+  `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
+  only an `i16` index yields retail's `imul 6`; `IconEntry[g].w`, `i16[6]`
+  rows and packed structs give `imul 12`. No literal-index packet stores
+  remain.
 - [x] Negative offsets: **0 sites** (no negative indexing, `this` arithmetic or
   container-of recovery).
 - [ ] Recover unknown members: **41** `m_unknown*`/`m_field_0x*` placeholders.
 - [ ] Review gotos: **206 statements**; keep those retail's block layout requires.
-- [ ] Review dead locals: **59** never-referenced locals, each to be tied to an
-  unreferenced retail frame slot.
+- [x] Review dead locals: **116** never-read locals. The 75 without an
+  initializer were removed together as a control, and every affected function
+  lost its exact frame. The 41 with an initializer emit retail stores.
 - [ ] Review `static_cast`: **499 sites**.
 - [ ] Review unions: **8 definitions**; manual varargs: **1 function** (netwin).
 

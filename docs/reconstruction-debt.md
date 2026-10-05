@@ -16,7 +16,7 @@ rg -o 'reinterpret_cast<[^>]+>' src include      # split: Win32 types (LP*, H*, 
 rg -c 'static_cast<' src include
 rg -w goto src include
 rg -c '\bunion\b' src include
-rg '\bunused[A-Z0-9][A-Za-z0-9_]*\b\s*(\[|;|=)' src  # dead locals
+clang-cl /Zs -Wno-everything -Wunused-variable ...  # dead locals (#line blanked)
 rg '\bm_(unknown|unk|pad|field)[A-Za-z0-9_]*' include
 rg '\[\s*-\s*[0-9]' src include                    # negative indexing
 rg 'CONTAINING_RECORD|container_of|\bthis\)\s*-' src include
@@ -74,6 +74,14 @@ replaced only when a structured form compiles to identical bytes.
 unreferenced slot in retail's `/Od` frame (a hole between referenced slots or a
 larger frame). Names chosen only to fill frames are reviewed against donor
 spellings.
+
+The audit lists locals with `clang-cl /Zs -Wunused-variable` after replacing
+each `#line` with an empty line, so diagnostics keep the file's own numbering.
+It found 116 such locals. The 41 with an initializer emit retail stores. A
+control removed the 75 initializer-free declarations together: every function
+that contained one lost its exact frame, and the others were unchanged. Under
+`/Od`, VC6 gives each declared local its own slot, so each of these maps to an
+unread slot in retail's frame.
 
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
