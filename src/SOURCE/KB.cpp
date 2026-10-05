@@ -2532,7 +2532,7 @@ void ShowCongrats(void) {
     heroWindow* win;
 
     daysScore = GetBaseScore(giCurTurn);
-    result = gpGame->m_difficultyRating * daysScore / 100;
+    result = daysScore * gpGame->m_difficultyRating / 100;
     PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
     gpMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
