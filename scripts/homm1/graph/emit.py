@@ -560,7 +560,9 @@ def emit(out: Path | None = None) -> tuple[int, int]:
                description="refresh README score block")
         w.build("build/objdiff/.readme.stamp", "verify_readme",
                 inputs=[graph.REPORT_JSON, FINGERPRINTS, "README.md"],
-                implicit=[MANIFEST, *VERIFY_BASELINES, *VERIFY_MODS])
+                # the universe's carve-out classes (library/compiler/thunk)
+                implicit=[MANIFEST, "config/retail/dna_bands.tsv",
+                          *VERIFY_BASELINES, *VERIFY_MODS])
         # Giten matching-loop behavior: build refreshes scores and README.
         # Merge preparation explicitly runs `homm1 build verify`; all gates
         # remain fatal there, including MAX and the fast+normal tiers.
