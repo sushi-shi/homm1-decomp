@@ -454,7 +454,7 @@ class Placer:
         from homm1.core.paths import image_build
         names = {mask(b["name"]): b for b in self.bindings
                  if b["space"] != "text" and b["name"]
-                 and b["channel"] in (*SRC_CHANNELS, "data_vtables")}
+                 and b["channel"] in (*SRC_CHANNELS, "data_vtables", "data_compgen")}
         claims_dir = image_build(self.image) / "gen/claims"
         found: dict[int, set[int]] = defaultdict(set)
         for unit in sorted(self.shared):

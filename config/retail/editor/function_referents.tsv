@@ -11,15 +11,13 @@ rva	name	provenance
 0x0000881f	?EarlySetup@@YAHXZ	callee of a body compiled for this image from shared source
 0x00008983	?MemError@@YAXXZ	callee of placed BASE/WINMGR body at site 0x203e3; game callee 0x42146
 0x00008995	?IsCDDrive@@YA_NH@Z	game 0x42254: masked game body 0x42254 (57 bytes, 7 fields masked) unique at a census start
+0x00008d11	?NormalDialog@@YAXPADHHHHHHHH@Z	callee of a body compiled for this image from shared source
 0x00009056	?QuickViewWait@@YAXXZ	game 0x404c4: masked game body 0x404c4 (122 bytes, 4 fields masked) unique at a census start
 0x000091db	?UpdateAppSpecificMenus@@YAXPAX@Z	callee of placed SOURCE/kbwin body at site 0xd892; game callee 0x42c49
 0x000091e0	?CleanUpMenus@@YAXXZ	callee of placed SOURCE/kbwin body at site 0xd47f; game callee 0x42bcc
 0x0000921c	?EarlyShutDownSystem@@YAXXZ	callee of placed BASE/EXEC body at site 0x23d8b; game callee 0x42331
 0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
 0x0000927d	?UpdateSystemOptionsMenu@@YAXXZ	callee of a body compiled for this image from shared source
-0x00016290	?ShowThisMap@@YAHPAD@Z	callee of a body compiled for this image from shared source
-0x00017e5c	?Update@fileRequester@@QAEXC@Z	callee of placed SOURCE/REQUEST body at site 0x17dad; game callee 0x55602
-0x0001845a	?ShowMapInfo@fileRequester@@QAEXXZ	callee of a body compiled for this image from shared source
 0x0001b320	_CloseHandle@4	FF25 thunk of KERNEL32.DLL!CloseHandle; name of game thunk 0x68616
 0x0001b326	_GetDriveTypeA@4	FF25 thunk of KERNEL32.DLL!GetDriveTypeA; name of game thunk 0x68646
 0x0001b32c	_GetLastError@0	FF25 thunk of KERNEL32.DLL!GetLastError; name of game thunk 0x685ec

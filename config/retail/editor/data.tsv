@@ -3,6 +3,7 @@
 rva	kind
 0x00038394	vtable
 0x000383a0	fppool
+0x000383a8	fppool
 0x000383bc	vtable
 0x000383c8	vtable
 0x000383d4	vtable
