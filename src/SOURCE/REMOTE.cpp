@@ -908,29 +908,30 @@ readPacketStart:
 // evidence: graph:2;base=0.395642;margin=0.361596;shape=0.175;size=0.824;calls=0.667;alternate=pol20:void WriteModemPacket(char *, int)@0x0000d4df
 VA(0x00453206, 0xe2)
 void WriteModemPacket(char* buffer, i32 length) {
-    char buf[544];
-    i32 curPos = 0;
+    char unusedText[28]; // dead local: retail's /Od frame holds its unreferenced bytes
+    char encoded[MODEM_ENCODED_PACKET_SIZE];
+    i32 encodedPosition = 0;
     if (length > MODEM_PACKET_MAX_LENGTH)
         return;
 
-    buf[curPos] = MODEM_PACKET_ESCAPE;
-    ++curPos;
-    buf[curPos] = MODEM_PACKET_START;
-    ++curPos;
+    encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+    ++encodedPosition;
+    encoded[encodedPosition] = MODEM_PACKET_START;
+    ++encodedPosition;
     while (length--) {
         if (*buffer == MODEM_PACKET_ESCAPE) {
-            buf[curPos] = MODEM_PACKET_ESCAPE;
-            ++curPos;
+            encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+            ++encodedPosition;
         }
-        buf[curPos] = *buffer;
-        ++curPos;
+        encoded[encodedPosition] = *buffer;
+        ++encodedPosition;
         ++buffer;
     }
-    buf[curPos] = MODEM_PACKET_ESCAPE;
-    ++curPos;
-    buf[curPos] = MODEM_PACKET_END;
-    ++curPos;
-    while (write_buffer(buf, curPos) == 0)
+    encoded[encodedPosition] = MODEM_PACKET_ESCAPE;
+    ++encodedPosition;
+    encoded[encodedPosition] = MODEM_PACKET_END;
+    ++encodedPosition;
+    while (write_buffer(encoded, encodedPosition) == 0)
         ForcePollSound();
 }
 

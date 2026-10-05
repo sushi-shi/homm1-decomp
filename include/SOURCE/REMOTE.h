@@ -192,7 +192,9 @@ H1_ENUM_BEGIN(ModemPacketControl)
 H1_ENUM_END(ModemPacketControl)
 
 H1_ENUM_CONST_BEGIN(ModemPacketConstant)
-    MODEM_PACKET_MAX_LENGTH = 0x100
+    MODEM_PACKET_MAX_LENGTH = 0x100,
+    // Worst case: every payload byte escaped, plus both frame markers.
+    MODEM_ENCODED_PACKET_SIZE = 516
 H1_ENUM_CONST_END(ModemPacketConstant)
 
 extern i32 iLastActionTime;
