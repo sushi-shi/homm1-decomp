@@ -312,30 +312,30 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
 // HoMM1 hides the software pointer only when it overlaps the updated region.
 VA(0x0046a917, 0x15d)
 void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) {
-    i16 top, left, bottom, right;
-    i16 pointerHidden;
-    i16 mouseX, mouseY;
+    i16 topVal, left, curBottom, right;
+    i16 savedPointerHidden;
+    i16 px, mouseY;
 
     left = x - gpMouseManager->m_savedUnderlying->m_width;
-    top = y - gpMouseManager->m_savedUnderlying->m_height;
+    topVal = y - gpMouseManager->m_savedUnderlying->m_height;
     right = x + width;
-    bottom = y + height;
-    mouseX = gpMouseManager->m_mouseX;
+    curBottom = y + height;
+    px = gpMouseManager->m_mouseX;
     mouseY = gpMouseManager->m_mouseY;
-    pointerHidden = 0;
+    savedPointerHidden = 0;
     if (gpMouseManager->IsVis()) {
-        if (mouseX < left || mouseX > right)
-            pointerHidden = 0;
-        else if (mouseY < top || mouseY > bottom)
-            pointerHidden = 0;
-        else if (mouseX >= left && mouseY >= top && mouseX <= right && mouseY <= bottom)
-            pointerHidden = 1;
+        if (px < left || px > right)
+            savedPointerHidden = 0;
+        else if (mouseY < topVal || mouseY > curBottom)
+            savedPointerHidden = 0;
+        else if (px >= left && mouseY >= topVal && px <= right && mouseY <= curBottom)
+            savedPointerHidden = 1;
     }
     PollSound();
-    if (pointerHidden)
+    if (savedPointerHidden)
         gpMouseManager->HideColorPointer();
     BlitBitmapToScreen(m_screen, x, y, width, height, x, y);
-    if (pointerHidden)
+    if (savedPointerHidden)
         gpMouseManager->ShowColorPointer();
     PollSound();
 }
@@ -380,8 +380,7 @@ void heroWindowManager::ScreenShot(void) {
 // Descriptive name: this retail hook is empty and is called on Open failure
 // and before Close releases the screen. Its original name is unavailable.
 VA(0x0046abdb, 0xb)
-void heroWindowManager::Cleanup(void) {
-}
+void heroWindowManager::Cleanup(void) {}
 
 VA(0x0046abe6, 0xf3)
 void heroWindowManager::SaveFizzleSource(i16 x, i16 y, i16 width, i16 height) {

@@ -188,48 +188,56 @@ VA(0x0045d373, 0x1a2)
 void swapManager::DrawSelector(void) {
     const i16 frameColor = 232;
     const i16 leftArmyBase = 24;
-    const i16 rightMonsterBase = 252;
-    const i16 troopTop = 148;
-    const i16 armySpacing = 35;
+    const i16 rightMonsterBaseVal = 252;
+    const i16 curTop = 148;
+    const i16 armySpacingVal = 35;
     const i16 art1 = 76;
-    const i16 art2 = 305;
-    const i16 artTop = 194;
+    const i16 curArt2 = 305;
+    const i16 newTop = 194;
     const i16 itemGap = 35;
-    i16 x = 0;
-    i16 y = 0;
+    i16 mainX = 0;
+    i16 mainY = 0;
 
     if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != SWAP_SLOT_NONE) {
         switch (m_selectedSide) {
             case SWAP_SIDE_LEFT:
                 switch (m_itemType) {
                     case SWAP_ITEM_ARMY:
-                        x = m_selectedSlot * armySpacing + leftArmyBase - 1;
-                        y = troopTop - 1;
+                        mainX = m_selectedSlot * armySpacingVal + leftArmyBase - 1;
+                        mainY = curTop - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        x = art1 + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
-                            - 1;
-                        y = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + artTop - 1;
+                        mainX = art1
+                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
+                                - 1;
+                        mainY = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + newTop - 1;
                         break;
                 }
                 break;
             case SWAP_SIDE_RIGHT:
                 switch (m_itemType) {
                     case SWAP_ITEM_ARMY:
-                        x = m_selectedSlot * armySpacing + rightMonsterBase - 1;
-                        y = troopTop - 1;
+                        mainX = m_selectedSlot * armySpacingVal + rightMonsterBaseVal - 1;
+                        mainY = curTop - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        x = art2 + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
-                            - 1;
-                        y = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + artTop - 1;
+                        mainX = curArt2
+                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
+                                - 1;
+                        mainY = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + newTop - 1;
                         break;
                 }
                 break;
         }
-        m_selectorIcon
-            ->FillToBuffer(x + 16, y + 16, 2, frameColor, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-        gpWindowManager->UpdateScreenRegion(x + 16, y + 16, 36, 36);
+        m_selectorIcon->FillToBuffer(
+            mainX + 16,
+            mainY + 16,
+            2,
+            frameColor,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
+        gpWindowManager->UpdateScreenRegion(mainX + 16, mainY + 16, 36, 36);
     }
 }
 
@@ -238,7 +246,7 @@ void swapManager::DrawSelector(void) {
 // evidence: graph:4;base=0.525982;margin=0.522986;shape=0.320;size=0.991;calls=0.960;alternate=pol20:int swapManager::Main(struct tag_message &);   // virtual [override (implements baseManager pure virtual)]@0x00054be3
 VA(0x0045d515, 0x88c)
 i16 swapManager::Main(struct tag_message& message) {
-    i8 closeRequested = 0;
+    i8 nowCloseRequested = 0;
     i8 quickView;
     i32 artIndex;
 
@@ -267,7 +275,7 @@ i16 swapManager::Main(struct tag_message& message) {
                     if (quickView)
                         break;
                     if (message.id == DIALOG_BUTTON_0)
-                        closeRequested = 1;
+                        nowCloseRequested = 1;
                     break;
                 case WIDGET_NOTIFY_SELECT:
                     switch (message.id) {
@@ -578,7 +586,7 @@ i16 swapManager::Main(struct tag_message& message) {
         default:
             break;
     }
-    if (closeRequested == 1) {
+    if (nowCloseRequested == 1) {
         message.type = MESSAGE_EXECUTIVE;
         message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
         return MESSAGE_DISPATCH_FORWARD;

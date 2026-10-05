@@ -47,15 +47,15 @@ i32 gSpellAITargetSide;
 // Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
 VA(0x00458de0, 0x196)
 i32 combatManager::DoSpellAI(i8 side) {
-    i32 selectedSpell;
-    i32 bestEffect;
+    i32 selectedSpellVal;
+    i32 bestEffectVal;
     i32 spellEffect;
     i32 bestHexWork;
-    i32 slotIndex;
+    i32 entry;
     i32 candHex;
 
-    bestEffect = 0;
-    selectedSpell = SPELL_NONE;
+    bestEffectVal = 0;
+    selectedSpellVal = SPELL_NONE;
     bestHexWork = -1;
     if (m_heroes[side] == NULL)
         return 0;
@@ -65,21 +65,21 @@ i32 combatManager::DoSpellAI(i8 side) {
         gSpellAIEffectShift = 1;
     else
         gSpellAIEffectShift = 0;
-    for (slotIndex = 0; slotIndex < HERO_SPELL_SLOT_COUNT; slotIndex++) {
-        if (m_heroes[side]->m_spells[slotIndex] >= 0
-            && (gSpellAIFlags[m_heroes[side]->m_spells[slotIndex]] & SPELL_AI_FLAG_COMBAT)
-            && m_heroes[side]->m_spellCharges[slotIndex] > 0) {
-            DetermineEffectOfSpell(m_heroes[side]->m_spells[slotIndex], &spellEffect, &candHex);
-            if (spellEffect > bestEffect) {
-                bestEffect = spellEffect;
-                selectedSpell = m_heroes[side]->m_spells[slotIndex];
+    for (entry = 0; entry < HERO_SPELL_SLOT_COUNT; entry++) {
+        if (m_heroes[side]->m_spells[entry] >= 0
+            && (gSpellAIFlags[m_heroes[side]->m_spells[entry]] & SPELL_AI_FLAG_COMBAT)
+            && m_heroes[side]->m_spellCharges[entry] > 0) {
+            DetermineEffectOfSpell(m_heroes[side]->m_spells[entry], &spellEffect, &candHex);
+            if (spellEffect > bestEffectVal) {
+                bestEffectVal = spellEffect;
+                selectedSpellVal = m_heroes[side]->m_spells[entry];
                 bestHexWork = candHex;
             }
         }
     }
-    if (bestEffect > 0) {
+    if (bestEffectVal > 0) {
         giNextAction = ACTION_CAST_SPELL;
-        giNextActionExtra = selectedSpell;
+        giNextActionExtra = selectedSpellVal;
         giNextActionGridIndex = bestHexWork;
         return 1;
     }
@@ -103,16 +103,16 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
     i32 spellEffect;
     i32 durMax;
     i32 bDone;
-    i32 side;
-    army* target;
+    i32 owner;
+    army* targetPtr;
     i32 spellMode;
-    i32 curHex;
+    i32 curHexVal;
 
     bDone = 0;
-    side = COMBAT_DEFENDER_SIDE;
-    curHex = COMBAT_SPELL_AI_HEX_FIRST;
+    owner = COMBAT_DEFENDER_SIDE;
+    curHexVal = COMBAT_SPELL_AI_HEX_FIRST;
     spellEffect = 0;
-    target = NULL;
+    targetPtr = NULL;
     *bestEffect = 0;
     switch (spell) {
         case SPELL_CURE:
@@ -132,7 +132,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
         case SPELL_PROTECTION:
         case SPELL_ANTI_MAGIC:
             spellMode = SPELL_AI_FRIENDLY;
-            side = m_currentSide;
+            owner = m_currentSide;
             break;
         case SPELL_LIGHTNING_BOLT:
         case SPELL_SLOW:
@@ -142,19 +142,19 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
         case SPELL_BERZERKER:
         case SPELL_PARALYZE:
             spellMode = SPELL_AI_ENEMY;
-            side = 1 - m_currentSide;
+            owner = 1 - m_currentSide;
             break;
         default:
             *bestEffect = 0;
             return;
     }
     if (spellMode == SPELL_AI_FRIENDLY || spellMode == SPELL_AI_ENEMY)
-        bDone = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, side, &curHex);
+        bDone = FirstArmy(COMBAT_SPELL_AI_HEX_FIRST, owner, &curHexVal);
     while (!bDone) {
-        if (m_hexCells[curHex].m_occupantIndex >= 0) {
-            target =
-                &m_armies[m_hexCells[curHex].m_occupantSide][m_hexCells[curHex].m_occupantIndex];
-            gSpellAITargetSide = m_hexCells[curHex].m_occupantSide;
+        if (m_hexCells[curHexVal].m_occupantIndex >= 0) {
+            targetPtr = &m_armies[m_hexCells[curHexVal].m_occupantSide]
+                                 [m_hexCells[curHexVal].m_occupantIndex];
+            gSpellAITargetSide = m_hexCells[curHexVal].m_occupantSide;
         }
         switch (spell) {
             case SPELL_CURE:
@@ -164,22 +164,22 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
                 EffectSpellCure(&spellEffect, COMBAT_SIDE_ANY, 0);
                 break;
             case SPELL_RESURRECT:
-                EffectSpellResurrect(&spellEffect, curHex);
+                EffectSpellResurrect(&spellEffect, curHexVal);
                 break;
             case SPELL_ARMAGEDDON:
-                EffectSpellDamage(&spellEffect, spell, 50, curHex);
+                EffectSpellDamage(&spellEffect, spell, 50, curHexVal);
                 break;
             case SPELL_STORM:
-                EffectSpellDamage(&spellEffect, spell, 25, curHex);
+                EffectSpellDamage(&spellEffect, spell, 25, curHexVal);
                 break;
             case SPELL_FIREBALL:
-                EffectSpellDamage(&spellEffect, spell, 10, curHex);
+                EffectSpellDamage(&spellEffect, spell, 10, curHexVal);
                 break;
             case SPELL_METEOR_SHOWER:
-                EffectSpellDamage(&spellEffect, spell, 25, curHex);
+                EffectSpellDamage(&spellEffect, spell, 25, curHexVal);
                 break;
             case SPELL_LIGHTNING_BOLT:
-                EffectSpellDamage(&spellEffect, spell, 25, curHex);
+                EffectSpellDamage(&spellEffect, spell, 25, curHexVal);
                 break;
             case SPELL_HASTE:
             case SPELL_BLESS:
@@ -188,26 +188,26 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
                 if (spell == SPELL_ANTI_MAGIC && m_heroes[1 - m_currentSide] == NULL)
                     spellEffect = 0;
                 else
-                    spellEffect = RawEffectSpellInfluence(target, spell) >> gSpellAIEffectShift;
-                if (target->m_spellEffect >= 0)
-                    spellEffect -= RawEffectSpellInfluence(target, target->m_spellEffect);
+                    spellEffect = RawEffectSpellInfluence(targetPtr, spell) >> gSpellAIEffectShift;
+                if (targetPtr->m_spellEffect >= 0)
+                    spellEffect -= RawEffectSpellInfluence(targetPtr, targetPtr->m_spellEffect);
                 break;
             case SPELL_SLOW:
             case SPELL_BLIND:
             case SPELL_CURSE:
             case SPELL_BERZERKER:
             case SPELL_PARALYZE:
-                spellEffect = -(RawEffectSpellInfluence(target, spell) >> gSpellAIEffectShift);
-                if (target->m_spellEffect >= 0)
-                    spellEffect += RawEffectSpellInfluence(target, target->m_spellEffect);
+                spellEffect = -(RawEffectSpellInfluence(targetPtr, spell) >> gSpellAIEffectShift);
+                if (targetPtr->m_spellEffect >= 0)
+                    spellEffect += RawEffectSpellInfluence(targetPtr, targetPtr->m_spellEffect);
                 break;
             case SPELL_TELEPORT:
                 spellEffect = 0;
                 break;
             case SPELL_TURN_UNDEAD:
-                if (target->m_creatureType == CREATURE_GHOST)
-                    spellEffect =
-                        target->m_quantity * gMonsterDatabase[target->m_creatureType].fightValue;
+                if (targetPtr->m_creatureType == CREATURE_GHOST)
+                    spellEffect = targetPtr->m_quantity
+                                  * gMonsterDatabase[targetPtr->m_creatureType].fightValue;
                 else
                     spellEffect = 0;
                 break;
@@ -217,7 +217,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
         }
         if (spellEffect > *bestEffect) {
             *bestEffect = spellEffect;
-            *bestHex = curHex;
+            *bestHex = curHexVal;
         }
         switch (spellMode) {
             case SPELL_AI_GLOBAL:
@@ -225,11 +225,11 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
                 break;
             case SPELL_AI_FRIENDLY:
             case SPELL_AI_ENEMY:
-                bDone = FirstArmy(curHex + 1, side, &curHex);
+                bDone = FirstArmy(curHexVal + 1, owner, &curHexVal);
                 break;
             case SPELL_AI_AREA:
-                NextPos(&curHex);
-                if (curHex > COMBAT_SPELL_AI_HEX_LAST)
+                NextPos(&curHexVal);
+                if (curHexVal > COMBAT_SPELL_AI_HEX_LAST)
                     bDone = 1;
                 break;
         }
@@ -339,26 +339,26 @@ i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
 VA(0x004596de, 0x20c)
 void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
     i32 curSide;
-    i32 negEffect;
-    i32 index;
+    i32 prevNegEffect;
+    i32 entry;
     army* armyPtr;
     i32 posEffect;
-    i32 finished;
-    i32 fightValue;
+    i32 done;
+    i32 quantity;
 
     *effect = 0;
-    finished = 0;
+    done = 0;
     if (targetSide == COMBAT_SIDE_ANY)
         curSide = m_currentSide;
     else
         curSide = targetSide;
-    while (!finished) {
-        negEffect = 0;
+    while (!done) {
+        prevNegEffect = 0;
         posEffect = 0;
-        for (index = 0; index < ARMY_GROUP_SLOT_COUNT; index++) {
-            if (m_armies[curSide][index].IsAlive()) {
-                armyPtr = &m_armies[curSide][index];
-                fightValue =
+        for (entry = 0; entry < ARMY_GROUP_SLOT_COUNT; entry++) {
+            if (m_armies[curSide][entry].IsAlive()) {
+                armyPtr = &m_armies[curSide][entry];
+                quantity =
                     armyPtr->m_quantity * gMonsterDatabase[armyPtr->m_creatureType].fightValue;
                 switch (armyPtr->m_spellEffect) {
                     case SPELL_SLOW:
@@ -366,7 +366,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
                     case SPELL_CURSE:
                     case SPELL_BERZERKER:
                     case SPELL_PARALYZE:
-                        negEffect += -RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
+                        prevNegEffect += -RawEffectSpellInfluence(armyPtr, armyPtr->m_spellEffect);
                         break;
                     case SPELL_HASTE:
                     case SPELL_BLESS:
@@ -381,15 +381,15 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
             posEffect = 0;
         if (targetSide == COMBAT_SIDE_ANY) {
             if (curSide == m_currentSide)
-                *effect += negEffect - posEffect;
+                *effect += prevNegEffect - posEffect;
             else
-                *effect += posEffect - negEffect;
+                *effect += posEffect - prevNegEffect;
         } else
-            *effect += negEffect;
+            *effect += prevNegEffect;
         if (targetSide == COMBAT_SIDE_ANY && curSide == m_currentSide)
             curSide = 1 - m_currentSide;
         else
-            finished = 1;
+            done = 1;
     }
 }
 
@@ -402,13 +402,12 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     i32 count;
 
     target = &m_armies[m_hexCells[hex].m_occupantSide][m_hexCells[hex].m_occupantIndex];
-    if (target->m_creatureType == CREATURE_DRAGON
-        || target->m_spellEffect == SPELL_ANTI_MAGIC) {
+    if (target->m_creatureType == CREATURE_DRAGON || target->m_spellEffect == SPELL_ANTI_MAGIC) {
         *effect = 0;
         return;
     }
     count = m_heroes[m_currentSide]->m_primaryStats[HERO_PRIMARY_SPELL_POWER] * 50
-          / target->m_stats.hitPoints;
+            / target->m_stats.hitPoints;
     if (count + target->m_quantity > target->m_initialQuantity)
         count = target->m_initialQuantity - target->m_quantity;
     *effect = count * gMonsterDatabase[target->m_creatureType].fightValue;
