@@ -1075,27 +1075,27 @@ i32 advManager::ProcessSelect(struct tag_message* message, class mapCell** event
                     switch (objectTypeState) {
                         case MAP_OBJECT_HERO:
                             mouseX = m_lastHoverCell * CELL_PIXELS - HERO_QUICK_VIEW_X_OFFSET;
-                            if (mouseX < QUICK_VIEW_MIN_X)
-                                mouseX = QUICK_VIEW_MIN_X;
-                            if (mouseX + HERO_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                            if (mouseX < BORDER_EDGE_SIZE)
+                                mouseX = BORDER_EDGE_SIZE;
+                            if (mouseX + HERO_QUICK_VIEW_WIDTH > BORDER_MIDDLE_END)
                                 mouseX = HERO_QUICK_VIEW_RIGHT_X;
                             mouseY = m_hoverCellY * CELL_PIXELS - HERO_QUICK_VIEW_Y_OFFSET;
-                            if (mouseY < QUICK_VIEW_MIN_Y)
-                                mouseY = QUICK_VIEW_MIN_Y;
-                            if (mouseY + HERO_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                            if (mouseY < BORDER_EDGE_SIZE)
+                                mouseY = BORDER_EDGE_SIZE;
+                            if (mouseY + HERO_QUICK_VIEW_HEIGHT > BORDER_MIDDLE_END)
                                 mouseY = HERO_QUICK_VIEW_BOTTOM_Y;
                             HeroQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
                         case MAP_OBJECT_TOWN:
                             mouseX = m_lastHoverCell * CELL_PIXELS - TOWN_QUICK_VIEW_X_OFFSET;
-                            if (mouseX < QUICK_VIEW_MIN_X)
-                                mouseX = QUICK_VIEW_MIN_X;
-                            if (mouseX + TOWN_QUICK_VIEW_WIDTH > QUICK_VIEW_RIGHT)
+                            if (mouseX < BORDER_EDGE_SIZE)
+                                mouseX = BORDER_EDGE_SIZE;
+                            if (mouseX + TOWN_QUICK_VIEW_WIDTH > BORDER_MIDDLE_END)
                                 mouseX = TOWN_QUICK_VIEW_RIGHT_X;
                             mouseY = m_hoverCellY * CELL_PIXELS - TOWN_QUICK_VIEW_Y_OFFSET;
-                            if (mouseY < QUICK_VIEW_MIN_Y)
-                                mouseY = QUICK_VIEW_MIN_Y;
-                            if (mouseY + TOWN_QUICK_VIEW_HEIGHT > QUICK_VIEW_BOTTOM)
+                            if (mouseY < BORDER_EDGE_SIZE)
+                                mouseY = BORDER_EDGE_SIZE;
+                            if (mouseY + TOWN_QUICK_VIEW_HEIGHT > BORDER_MIDDLE_END)
                                 mouseY = TOWN_QUICK_VIEW_BOTTOM_Y;
                             TownQuickView(objectIdIndex, QUICK_VIEW_NO_LOCATOR, mouseX, mouseY);
                             break;
@@ -1688,12 +1688,12 @@ void advManager::UpdateScreen(i8 cursorUpdate, i8 forceUpdate) {
     if (gLimitUpdMinX == UPDATE_NONE)
         BlitBitmapToScreen(
             gpWindowManager->m_screen,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE
         );
     else
         BlitBitmapToScreen(
@@ -2439,14 +2439,14 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
     quickInfoShowFlag = 1;
     currentCell = NULL;
     posX = cellX * CELL_PIXELS - QUICK_INFO_X_OFFSET;
-    if (posX < QUICK_VIEW_MIN_X)
-        posX = QUICK_VIEW_MIN_X;
-    if (posX + QUICK_INFO_WIDTH > QUICK_VIEW_RIGHT)
+    if (posX < BORDER_EDGE_SIZE)
+        posX = BORDER_EDGE_SIZE;
+    if (posX + QUICK_INFO_WIDTH > BORDER_MIDDLE_END)
         posX = QUICK_INFO_RIGHT_X;
     posY = cellY * CELL_PIXELS - QUICK_INFO_Y_OFFSET;
-    if (posY < QUICK_VIEW_MIN_Y)
-        posY = QUICK_VIEW_MIN_Y;
-    if (posY + QUICK_INFO_HEIGHT > QUICK_VIEW_BOTTOM)
+    if (posY < BORDER_EDGE_SIZE)
+        posY = BORDER_EDGE_SIZE;
+    if (posY + QUICK_INFO_HEIGHT > BORDER_MIDDLE_END)
         posY = QUICK_INFO_BOTTOM_Y;
 
     pWin = new heroWindow(posX, posY, "qwikinfo.bin");
@@ -4247,18 +4247,18 @@ void advManager::ViewPuzzle(void) {
     for (j = 0; j < PUZZLE_PIECE_COUNT; j++)
         puzzleIcn->DrawToBuffer(0, 0, j, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
     gpWindowManager->UpdateScreenRegion(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
     gpWindowManager->SaveFizzleSource(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
-    pWin = new heroWindow(PUZZLE_WINDOW_X, PUZZLE_WINDOW_Y, "viewpuzl.bin");
+    pWin = new heroWindow(RADAR_LEFT, RADAR_TOP, "viewpuzl.bin");
     if (!pWin)
         MemError();
     gpWindowManager->AddWindow(pWin, WINDOW_Z_ORDER_APPEND, 1);
@@ -4299,10 +4299,10 @@ void advManager::ViewPuzzle(void) {
     if (visibleCount != PUZZLE_PIECE_COUNT) {
         gpMouseManager->ReallyHidePointer();
         gpWindowManager->FizzleForward(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
             PUZZLE_FIZZLE_TIME
         );
         gpMouseManager->ReallyShowPointer();
@@ -4484,10 +4484,10 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
         prevHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
     FillBitmapArea(
         gpWindowManager->m_screen,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE,
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
         0
     );
 
@@ -4828,13 +4828,13 @@ void advManager::ViewWorld(i8 spellType, i8 drawAllObjects, i8 drawAllTerrains) 
     }
 
     gpWindowManager->UpdateScreenRegion(
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_ORIGIN,
-        UPDATE_VIEWPORT_SIZE,
-        UPDATE_VIEWPORT_SIZE
+        BORDER_EDGE_SIZE,
+        BORDER_EDGE_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE,
+        ADVENTURE_VIEWPORT_INNER_SIZE
     );
     sprintf(gText, "view-%02d.bin", spellType - SPELL_VIEW_MINES);
-    win = new heroWindow(WORLD_WINDOW_X, WORLD_WINDOW_Y, gText);
+    win = new heroWindow(RADAR_LEFT, RADAR_TOP, gText);
     if (!win)
         MemError();
     gpWindowManager->DoDialog(win, TrueFalseDialogHandler, 0);
@@ -5572,14 +5572,14 @@ i8 advManager::ComboDraw(i16 originX, i16 originY, i8 animate) {
     giLimitUpdMinY <<= CELL_PIXEL_SHIFT;
     giLimitUpdMaxX = ((giLimitUpdMaxX + 1) << CELL_PIXEL_SHIFT) - 1;
     giLimitUpdMaxY = ((giLimitUpdMaxY + 1) << CELL_PIXEL_SHIFT) - 1;
-    if (gLimitUpdMinX < COMBO_UPDATE_MIN)
-        gLimitUpdMinX = COMBO_UPDATE_MIN;
-    if (giLimitUpdMaxX > COMBO_UPDATE_MAX)
-        giLimitUpdMaxX = COMBO_UPDATE_MAX;
-    if (giLimitUpdMinY < COMBO_UPDATE_MIN)
-        giLimitUpdMinY = COMBO_UPDATE_MIN;
-    if (giLimitUpdMaxY > COMBO_UPDATE_MAX)
-        giLimitUpdMaxY = COMBO_UPDATE_MAX;
+    if (gLimitUpdMinX < BORDER_EDGE_SIZE)
+        gLimitUpdMinX = BORDER_EDGE_SIZE;
+    if (giLimitUpdMaxX > BORDER_MIDDLE_END - 1)
+        giLimitUpdMaxX = BORDER_MIDDLE_END - 1;
+    if (giLimitUpdMinY < BORDER_EDGE_SIZE)
+        giLimitUpdMinY = BORDER_EDGE_SIZE;
+    if (giLimitUpdMaxY > BORDER_MIDDLE_END - 1)
+        giLimitUpdMaxY = BORDER_MIDDLE_END - 1;
     if (gLimitUpdMinX > giLimitUpdMaxX || giLimitUpdMinY > giLimitUpdMaxY) {
         gLimitUpdMinX = giLimitUpdMaxX - 1;
         giLimitUpdMinY = giLimitUpdMaxY - 1;
@@ -5769,10 +5769,10 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
         location->m_flags |= MAP_CELL_HERO_CURSOR;
         gpMouseManager->ReallyHidePointer();
         gpWindowManager->SaveFizzleSource(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE
         );
         CompleteDraw(0);
         PollSound();
@@ -5780,10 +5780,10 @@ void advManager::TeleportTo(i32 x, i32 y, i32) {
         if (!gbHumanPlayer[giCurPlayer])
             curFizzle -= TELEPORT_REMOTE_FIZZLE_ADJUSTMENT;
         gpWindowManager->FizzleForward(
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_ORIGIN,
-            UPDATE_VIEWPORT_SIZE,
-            UPDATE_VIEWPORT_SIZE,
+            BORDER_EDGE_SIZE,
+            BORDER_EDGE_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
+            ADVENTURE_VIEWPORT_INNER_SIZE,
             FIZZLE_USE_DEFAULT_DELAY
         );
         PollSound();
@@ -5957,17 +5957,17 @@ void advManager::SummonBoat(void) {
                 && boatRec->y >= m_mapOriginY
                 && boatRec->y < m_mapOriginY + ADVMGR_VIEW_CELL_COUNT) {
                 clipX = (boatRec->x - m_mapOriginX) * CELL_PIXELS - SUMMON_FIZZLE_X_OFFSET;
-                if (clipX < SUMMON_SCREEN_MARGIN)
-                    clipX = SUMMON_SCREEN_MARGIN;
+                if (clipX < BORDER_EDGE_SIZE)
+                    clipX = BORDER_EDGE_SIZE;
                 clipY = (boatRec->y - m_mapOriginY) * CELL_PIXELS - SUMMON_FIZZLE_Y_OFFSET;
-                if (clipY < SUMMON_SCREEN_MARGIN)
-                    clipY = SUMMON_SCREEN_MARGIN;
+                if (clipY < BORDER_EDGE_SIZE)
+                    clipY = BORDER_EDGE_SIZE;
                 clipWidth = SUMMON_FIZZLE_WIDTH;
                 clipHeight = SUMMON_FIZZLE_HEIGHT;
-                if (clipX + clipWidth >= SUMMON_SCREEN_LIMIT)
-                    clipWidth = SUMMON_SCREEN_LIMIT - clipX;
-                if (clipY + clipHeight >= SUMMON_SCREEN_LIMIT)
-                    clipHeight = SUMMON_SCREEN_LIMIT - clipY;
+                if (clipX + clipWidth >= BORDER_MIDDLE_END)
+                    clipWidth = BORDER_MIDDLE_END - clipX;
+                if (clipY + clipHeight >= BORDER_MIDDLE_END)
+                    clipHeight = BORDER_MIDDLE_END - clipY;
                 gpWindowManager->SaveFizzleSource(clipX, clipY, clipWidth, clipHeight);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
                 gpWindowManager

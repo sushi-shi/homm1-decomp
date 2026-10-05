@@ -4545,7 +4545,7 @@ i16 gCurLoadedSpellFileId;
 DATA(0x004a761c)
 i32 giBottomViewOverride;
 DATA(0x004a76c4)
-char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
+char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 DATA(0x004a7470)
 class icon* gBuyBuildIcons;
 DATA(0x004a74ea)

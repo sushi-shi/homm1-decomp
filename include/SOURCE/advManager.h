@@ -626,12 +626,18 @@ H1_ENUM_CONST_BEGIN(AdventureScreenConstant)
     SCROLL_BORDER = 16
 H1_ENUM_CONST_END(AdventureScreenConstant)
 
+// The adventure map view is ADVENTURE_VIEWPORT_EXTENT pixels square at the
+// screen origin; its frame covers BORDER_EDGE_SIZE pixels on each side, so
+// the visible map is the inner box [BORDER_EDGE_SIZE, BORDER_MIDDLE_END):
+// UpdateScreen's region, the quick views' and SummonBoat's clamps, the combo
+// draw's update limits, and the saved frame strips (BORDER_*_BYTES).
 H1_ENUM_CONST_BEGIN(AdventureBorderConstant)
     ADVENTURE_VIEWPORT_EXTENT = 480,
     BORDER_EDGE_SIZE = 16,
     BORDER_SIDE_BYTES = 16,
     BORDER_SAVED_SIDE_BYTES = 32,
-    BORDER_MIDDLE_END = 464,
+    BORDER_MIDDLE_END = ADVENTURE_VIEWPORT_EXTENT - BORDER_EDGE_SIZE,
+    ADVENTURE_VIEWPORT_INNER_SIZE = BORDER_MIDDLE_END - BORDER_EDGE_SIZE,
     BORDER_BUFFER_SIZE = 0x7400
 H1_ENUM_CONST_END(AdventureBorderConstant)
 
@@ -757,28 +763,24 @@ H1_ENUM_END(TownQuickInformation)
 // clicked cell and clamped inside the viewport's inner box (the right/bottom
 // limits are the box edge minus the size).
 H1_ENUM_CONST_BEGIN(AdventureQuickViewPlacementConstant)
-    QUICK_VIEW_MIN_X = 16,
-    QUICK_VIEW_MIN_Y = 16,
-    QUICK_VIEW_RIGHT = 464,
-    QUICK_VIEW_BOTTOM = 464,
     HERO_QUICK_VIEW_X_OFFSET = 73,
     HERO_QUICK_VIEW_Y_OFFSET = 65,
     HERO_QUICK_VIEW_WIDTH = 178,
     HERO_QUICK_VIEW_HEIGHT = 162,
-    HERO_QUICK_VIEW_RIGHT_X = QUICK_VIEW_RIGHT - HERO_QUICK_VIEW_WIDTH,
-    HERO_QUICK_VIEW_BOTTOM_Y = QUICK_VIEW_BOTTOM - HERO_QUICK_VIEW_HEIGHT,
+    HERO_QUICK_VIEW_RIGHT_X = BORDER_MIDDLE_END - HERO_QUICK_VIEW_WIDTH,
+    HERO_QUICK_VIEW_BOTTOM_Y = BORDER_MIDDLE_END - HERO_QUICK_VIEW_HEIGHT,
     TOWN_QUICK_VIEW_X_OFFSET = 89,
     TOWN_QUICK_VIEW_Y_OFFSET = 70,
     TOWN_QUICK_VIEW_WIDTH = 210,
     TOWN_QUICK_VIEW_HEIGHT = 172,
-    TOWN_QUICK_VIEW_RIGHT_X = QUICK_VIEW_RIGHT - TOWN_QUICK_VIEW_WIDTH,
-    TOWN_QUICK_VIEW_BOTTOM_Y = QUICK_VIEW_BOTTOM - TOWN_QUICK_VIEW_HEIGHT,
+    TOWN_QUICK_VIEW_RIGHT_X = BORDER_MIDDLE_END - TOWN_QUICK_VIEW_WIDTH,
+    TOWN_QUICK_VIEW_BOTTOM_Y = BORDER_MIDDLE_END - TOWN_QUICK_VIEW_HEIGHT,
     QUICK_INFO_X_OFFSET = 57,
     QUICK_INFO_Y_OFFSET = 25,
     QUICK_INFO_WIDTH = 146,
     QUICK_INFO_HEIGHT = 82,
-    QUICK_INFO_RIGHT_X = QUICK_VIEW_RIGHT - QUICK_INFO_WIDTH,
-    QUICK_INFO_BOTTOM_Y = QUICK_VIEW_BOTTOM - QUICK_INFO_HEIGHT
+    QUICK_INFO_RIGHT_X = BORDER_MIDDLE_END - QUICK_INFO_WIDTH,
+    QUICK_INFO_BOTTOM_Y = BORDER_MIDDLE_END - QUICK_INFO_HEIGHT
 H1_ENUM_CONST_END(AdventureQuickViewPlacementConstant)
 
 // DrawCell's sprite layout: cell pixels, the stone border tiles around the
@@ -819,8 +821,6 @@ H1_ENUM_CONST_END(AdventureDrawConstant)
 // 448-pixel viewport at 16,16; odd steps advance columns 1 and 3, even ones
 // 0 and 2, each modulo 6 frames.
 H1_ENUM_CONST_BEGIN(AdventureUpdateScreenConstant)
-    UPDATE_VIEWPORT_ORIGIN = 16,
-    UPDATE_VIEWPORT_SIZE = 448,
     UPDATE_ANIMATION_PHASES = 6,
     UPDATE_FRAME_CYCLE = 6,
     // The odd steps, which advance columns 1 and 3.
@@ -847,8 +847,6 @@ H1_ENUM_CONST_END(AdventureAnimationPhaseIndex)
 // are player colours, 5 marks the current hero and 6 an artifact; town flags
 // straddle the cell and resource letters sit 3 pixels left.
 H1_ENUM_CONST_BEGIN(ViewWorldConstant)
-    WORLD_WINDOW_X = 480,
-    WORLD_WINDOW_Y = 16,
     VIEW_WORLD_CELL_PIXELS = 6,
     VIEW_WORLD_ORIGIN = 24,
     VIEW_WORLD_TILESET_COUNT = 16,
@@ -887,8 +885,6 @@ H1_ENUM_CONST_END(AdventureTeleportConstant)
 // the viewport's inner box) and at the hero.
 H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
     SUMMON_RESTORE_MODE = 5,
-    SUMMON_SCREEN_MARGIN = 16,
-    SUMMON_SCREEN_LIMIT = 464,
     SUMMON_FIZZLE_X_OFFSET = 32,
     SUMMON_FIZZLE_Y_OFFSET = 16,
     SUMMON_FIZZLE_WIDTH = 96,
@@ -905,8 +901,6 @@ H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 // mod 2), then the uncovered pieces fizzle in over 220 ms.
 H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
     PUZZLE_PIECE_COUNT = 48,
-    PUZZLE_WINDOW_X = 480,
-    PUZZLE_WINDOW_Y = 16,
     PUZZLE_ALIGNMENT_DIVISOR = 3,
     PUZZLE_Y_ADJUST_X_FACTOR = 2,
     PUZZLE_Y_ADJUST_Y_FACTOR = 5,
@@ -954,8 +948,6 @@ H1_ENUM_CONST_BEGIN(AdventureComboDrawConstant)
     COMBO_CLEAR_BYTES = 256,
     COMBO_CLOUD_MARK = 10,
     COMBO_FRAME_LIMIT = 12,
-    COMBO_UPDATE_MIN = 16,
-    COMBO_UPDATE_MAX = 463,
     COMBO_FAR_NEIGHBOR_OFFSET = 2
 H1_ENUM_CONST_END(AdventureComboDrawConstant)
 
@@ -1076,6 +1068,7 @@ H1_ENUM_CONST_END(AdventureBottomHeroViewConstant)
 H1_ENUM_CONST_BEGIN(AdventureScrollConstant)
 // The adventure view is ADVMGR_VIEW_CELL_COUNT cells square; the hero
 // stands on its centre cell, ADVMGR_VIEW_CENTER from the origin.
+    ADVMGR_VIEW_CELL_COUNT = 15,
     ADVMGR_VIEW_CENTER = 7,
     SCROLL_MIN_ORIGIN = -ADVMGR_VIEW_CENTER,
     SCROLL_MAX_ORIGIN = MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1,
@@ -1103,8 +1096,7 @@ H1_ENUM_BEGIN(AdventureDrawMask)
     ADVMGR_DRAW_OBJECT = 0x02,
     ADVMGR_DRAW_OVERLAY = 0x04,
     ADVMGR_DRAW_HERO = 0x08,
-    ADVMGR_DRAW_CLOUD = 0x20,
-    ADVMGR_VIEW_CELL_COUNT = 15
+    ADVMGR_DRAW_CLOUD = 0x20
 H1_ENUM_END(AdventureDrawMask)
 
 // GetCloudLookup's unseen-neighbour bits (index into gCloudType): the four

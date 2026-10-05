@@ -16,6 +16,7 @@
 #include <BASE/sample.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/armyGroup.h>
+#include <SOURCE/campaignTypes.h>
 #include <SOURCE/combatManager.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/game.h>
@@ -189,7 +190,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 if (gpGame->m_campaignType > 0
-                    && gpGame->m_campaignScenario == DRAGON_CITY_CAMPAIGN_SCENARIO)
+                    && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_DRAGON_CITY)
                     numTroops = DRAGON_CITY_CAMPAIGN_DRAGON_COUNT;
                 else
                     numTroops = DRAGON_CITY_DRAGON_COUNT;

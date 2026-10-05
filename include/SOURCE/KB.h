@@ -5,6 +5,7 @@
 #include <SOURCE/armyGroup.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/dialogTypes.h>
+#include <SOURCE/fileRequester.h>
 #include <SOURCE/FINDPATH.h>
 #include <SOURCE/gameTypes.h>
 #include <SOURCE/hero.h>
@@ -416,11 +417,9 @@ extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
 extern char* gDifficultyNames[];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;
-// The last save name: retail places gbRetreatWin at its 0x15f-byte end.
-H1_ENUM_CONST_BEGIN(LastFilenameConstant)
-    GLOBAL_LAST_FILENAME_SIZE = 0x15f
-H1_ENUM_CONST_END(LastFilenameConstant)
-extern char gLastFilename[GLOBAL_LAST_FILENAME_SIZE];
+// The file requester's last chosen name (fileRequester::GetFilename);
+// retail places gbRetreatWin at its end.
+extern char gLastFilename[FILE_REQUESTER_NAME_SIZE];
 extern char gLastMapName[];
 extern char* gMapSizeNames[];
 extern char* gHeroScreen[];

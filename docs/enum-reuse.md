@@ -72,3 +72,32 @@ the Buka tree: a row whose current members and values are unchanged kept its
 reviewed `retain`/`canonical` decision; every other current block started
 `pending` (with the NWC reason quoted as a lead), and NWC rows for blocks that
 do not exist in Buka were dropped.
+
+## Review result
+
+All 403 starting blocks are reviewed: 67 `canonical`, 288 `retain`, 48
+`reuse`. 98 members moved into a canonical domain and 43 members no Buka
+code names were retired; the census now holds 397 blocks, 2,872 members and
+168 cross-domain collision values, each covered by a reviewed row. The merges
+follow shared producers and consumers:
+
+| Canonical owner | Merged copies | Shared use |
+| --- | --- | --- |
+| `KB.h` `TimerSlot` | eleven per-owner glTimers slot constants | every one indexes `glTimers`, now `H1_ENUM_ARRAY(i32, glTimers, TimerSlot, ...)` |
+| `display.h` `LogicalScreenConstant` | miscwin, wingraph, bitmap, icon, inputManager, resourceManager and kbwin 640x480 copies | m_screen size/stride, DirectDraw mode, full-screen regions |
+| `KB.h` `DebugLevel` | Misc, philAI, fileRequester and kbwin levels | every value is stored to or compared with `giDebugLevel` |
+| `palette.h` / `display.h` palette sizes | the 768-byte, 256-entry and 3-byte copies | `palette::m_data` copies and the LOGPALETTE |
+| `dialog.h` `DialogButtonId` | NormalDialog, setup and panel slot literals | `m_dialogResult` and the window records |
+| `cursorTypes.h` `MapDirectionMask` | cursor and path-search direction masks | the same north/south object test |
+| `advManager.h` view geometry | quick-view, summon-boat, combo-draw and update copies of the inner map box; the radar corner of the world and puzzle windows; the view centre of CURSOR and EVENTS | clamps and regions of the one adventure view |
+| `REMOTE.h` | combat hand-off commands, three reply timeouts | `RemoteMessage::command` and the same wait loop |
+| `soundmgr.h` `ConfigVolumeLevel` | volume OFF/FIRST/LAST | `gConfig.musicVolume/soundVolume` |
+| `hero.h` `HERO_ID_NONE`, `gameTypes.h` `GAME_PLAYER_NONE` | GAME_HERO_NONE, INVALID_HERO, HERO_OWNER_NONE | `m_currentHero`, `m_owner` |
+| `baseManager.h` `BaseManagerMessageMask` | mouse, town and combat manager masks | `baseManager::m_messageMask` |
+| `inputManager.h` `InputScanCode` | textEntryWidget's key switch | the scan code before `AsciiConvert` |
+| smaller owners | sample volume, music tracks, keep-current-frame, boat flag, map grid, Dragon City row, last filename size | one field or argument each |
+
+Per-window control ids, help-text rows and screen geometry that only share
+numbers through the `tag_message::id` transport or by coincidence are
+retained with that reason.
+
