@@ -1,4 +1,4 @@
-// Retail-backed text-entry widget resource reader.
+// Text-entry widget resource reader.
 
 #include <match.h>
 
@@ -28,8 +28,7 @@ textEntryWidget::textEntryWidget(void) : textWidget() {
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
-// The parameterized constructor; no retail caller survives (HoMM1 has no
-// inset layout arguments).
+// The parameterized constructor; no retail caller survives.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00475886, 0xbf)

@@ -1,5 +1,5 @@
-// Combat hex cells; Buka 2.1 SOURCE/HEXCELL correspondence. HoMM1 cells
-// are twelve bytes and draw the castle towers and walls themselves.
+// Combat hex cells. HoMM1 cells are twelve bytes and draw the castle towers
+// and walls themselves.
 
 #include <match.h>
 

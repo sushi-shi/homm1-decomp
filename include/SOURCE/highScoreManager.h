@@ -1,7 +1,5 @@
 #ifndef HOMM1_SOURCE_HIGHSCOREMANAGER_H
 #define HOMM1_SOURCE_HIGHSCOREMANAGER_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 5 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <BASE/dialog.h>
@@ -13,9 +11,8 @@ struct tag_message;
 
 class heroWindow;
 
-// hiscore.bin control ids (Buka HighScoreControlId; HoMM1 numbers the title
-// pair 0x67/0x68, ten animated monsters 201..210 and four text columns per
-// row: name, scenario, score, rating).
+// hiscore.bin control ids: the title pair 0x67/0x68, ten animated monsters
+// 201..210 and four text columns per row (name, scenario, score, rating).
 H1_ENUM_BEGIN(HighScoreControlId)
     HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
     HIGH_SCORE_STANDARD_BUTTON = 100,
@@ -40,12 +37,12 @@ H1_ENUM_CONST_END(HighScoreTextColumn)
 H1_ENUM_CONST_BEGIN(HighScoreManagerConstant)
     HIGH_SCORE_DISPLAY_ENTRY_COUNT = 10,
     HIGH_SCORE_FILENAME_LENGTH = 350,
-    // Main tests message.m_type against the mask Buka's managers share.
+    // Main tests message.m_type against the mask the managers share.
     HIGH_SCORE_DISPATCH_MASK = 0x32f
 H1_ENUM_CONST_END(HighScoreManagerConstant)
 
-// Monster animation (Buka HighScoreAnimationConstant; HoMM1 strides seven
-// frames per rating monster and advances one frame every third tick).
+// Monster animation: seven frames per rating monster, advancing one frame
+// every third tick.
 H1_ENUM_CONST_BEGIN(HighScoreAnimationConstant)
     HIGH_SCORE_ANIMATION_FRAME_COUNT = 18,
     HIGH_SCORE_ANIMATION_DELAY = 120,

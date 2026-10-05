@@ -2,8 +2,6 @@
 #define HOMM1_BASE_MOUSEMANAGER_H
 
 #include <Domains.h>
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 17 methods, 3 own-virtual, 0 static data.
 
 #include <BASE/baseManager.h>
 #include <H1/Macros.h>
@@ -16,8 +14,7 @@ struct tag_message;
 class bitmap;
 
 // SetPointer frame that leaves the current pointer alone: SetPointer returns
-// for any negative frame (TOWNMGR Close and ADVMGR pass it; Buka
-// MOUSE_INVALID_CURSOR_FRAME).
+// for any negative frame (TOWNMGR Close and ADVMGR pass it).
 H1_ENUM_CONST_BEGIN(MouseCursorFrameConstant)
     MOUSE_INVALID_CURSOR_FRAME = -1
 H1_ENUM_CONST_END(MouseCursorFrameConstant)

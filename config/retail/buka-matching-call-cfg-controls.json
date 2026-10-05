@@ -35727,7 +35727,7 @@
         },
         {
           "offset": "0x6a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35752,7 +35752,7 @@
         },
         {
           "offset": "0x8a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35777,7 +35777,7 @@
         },
         {
           "offset": "0xaa",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35802,7 +35802,7 @@
         },
         {
           "offset": "0xc9",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35889,7 +35889,7 @@
         },
         {
           "offset": "0x6a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35914,7 +35914,7 @@
         },
         {
           "offset": "0x8a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35939,7 +35939,7 @@
         },
         {
           "offset": "0xaa",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -35964,7 +35964,7 @@
         },
         {
           "offset": "0xc9",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -40092,7 +40092,7 @@
       "candidate_references": [
         {
           "offset": "0xa",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "addend": 0
         },
         {
@@ -40182,7 +40182,7 @@
         },
         {
           "offset": "0xb3",
-          "symbol": "?AppInit@@YAHPAX0HPAD@Z",
+          "symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
           "addend": 0
         },
         {
@@ -40219,7 +40219,7 @@
       "retail_references": [
         {
           "offset": "0xa",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "addend": 0
         },
         {
@@ -40309,7 +40309,7 @@
         },
         {
           "offset": "0xb3",
-          "symbol": "?AppInit@@YAHPAX0HPAD@Z",
+          "symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
           "addend": 0
         },
         {
@@ -40346,7 +40346,7 @@
       "objdiff_score": 100.0
     },
     {
-      "function_symbol": "?AppInit@@YAHPAX0HPAD@Z",
+      "function_symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
       "function_rva": "0x42dba",
       "unit": "SOURCE/kbwin",
       "complete_body_and_references_exact": true,
@@ -40492,7 +40492,7 @@
         },
         {
           "offset": "0xfc",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 0
         },
         {
@@ -40572,7 +40572,7 @@
         },
         {
           "offset": "0x1c1",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
@@ -40617,17 +40617,17 @@
         },
         {
           "offset": "0x215",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x21b",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x227",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -40642,7 +40642,7 @@
         },
         {
           "offset": "0x23d",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -40824,7 +40824,7 @@
         },
         {
           "offset": "0xfc",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 0
         },
         {
@@ -40904,7 +40904,7 @@
         },
         {
           "offset": "0x1c1",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
@@ -40949,17 +40949,17 @@
         },
         {
           "offset": "0x215",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x21b",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x227",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -40974,7 +40974,7 @@
         },
         {
           "offset": "0x23d",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41021,7 +41021,7 @@
       "objdiff_score": 100.0
     },
     {
-      "function_symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function_symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "function_rva": "0x43052",
       "unit": "SOURCE/kbwin",
       "complete_body_and_references_exact": true,
@@ -41042,22 +41042,22 @@
         },
         {
           "offset": "0x69",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1429
         },
         {
           "offset": "0x70",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1397
         },
         {
           "offset": "0xa7",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1463
         },
         {
           "offset": "0xae",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1447
         },
         {
@@ -41102,7 +41102,7 @@
         },
         {
           "offset": "0x17e",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41117,12 +41117,12 @@
         },
         {
           "offset": "0x195",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
           "offset": "0x19a",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41137,7 +41137,7 @@
         },
         {
           "offset": "0x1b3",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41152,12 +41152,12 @@
         },
         {
           "offset": "0x1cb",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
           "offset": "0x1d7",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41177,12 +41177,12 @@
         },
         {
           "offset": "0x212",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x224",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41267,12 +41267,12 @@
         },
         {
           "offset": "0x2b2",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x2c1",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41372,7 +41372,7 @@
         },
         {
           "offset": "0x432",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41437,7 +41437,7 @@
         },
         {
           "offset": "0x4b7",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 0
         },
         {
@@ -41447,12 +41447,12 @@
         },
         {
           "offset": "0x4e1",
-          "symbol": "?AppPaint@@YAHPAX0@Z",
+          "symbol": "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "addend": 0
         },
         {
           "offset": "0x4f4",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41502,62 +41502,62 @@
         },
         {
           "offset": "0x575",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 245
         },
         {
           "offset": "0x579",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1341
         },
         {
           "offset": "0x57d",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 528
         },
         {
           "offset": "0x581",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 688
         },
         {
           "offset": "0x585",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1242
         },
         {
           "offset": "0x589",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1263
         },
         {
           "offset": "0x58d",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1359
         },
         {
           "offset": "0x591",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1369
         },
         {
           "offset": "0x5a7",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 503
         },
         {
           "offset": "0x5ab",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 290
         },
         {
           "offset": "0x5af",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1190
         },
         {
           "offset": "0x5b3",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1369
         }
       ],
@@ -41574,22 +41574,22 @@
         },
         {
           "offset": "0x69",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1429
         },
         {
           "offset": "0x70",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1397
         },
         {
           "offset": "0xa7",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1463
         },
         {
           "offset": "0xae",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1447
         },
         {
@@ -41634,7 +41634,7 @@
         },
         {
           "offset": "0x17e",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41649,12 +41649,12 @@
         },
         {
           "offset": "0x195",
-          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
           "offset": "0x19a",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41669,7 +41669,7 @@
         },
         {
           "offset": "0x1b3",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41684,12 +41684,12 @@
         },
         {
           "offset": "0x1cb",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
           "offset": "0x1d7",
-          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAXIIJ@Z@4HA",
+          "symbol": "_?gLastCycleTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA",
           "addend": 0
         },
         {
@@ -41709,12 +41709,12 @@
         },
         {
           "offset": "0x212",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x224",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41799,12 +41799,12 @@
         },
         {
           "offset": "0x2b2",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x2c1",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41904,7 +41904,7 @@
         },
         {
           "offset": "0x432",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -41969,7 +41969,7 @@
         },
         {
           "offset": "0x4b7",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 0
         },
         {
@@ -41979,12 +41979,12 @@
         },
         {
           "offset": "0x4e1",
-          "symbol": "?AppPaint@@YAHPAX0@Z",
+          "symbol": "?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
           "addend": 0
         },
         {
           "offset": "0x4f4",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42034,62 +42034,62 @@
         },
         {
           "offset": "0x575",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 245
         },
         {
           "offset": "0x579",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1341
         },
         {
           "offset": "0x57d",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 528
         },
         {
           "offset": "0x581",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 688
         },
         {
           "offset": "0x585",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1242
         },
         {
           "offset": "0x589",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1263
         },
         {
           "offset": "0x58d",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1359
         },
         {
           "offset": "0x591",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1369
         },
         {
           "offset": "0x5a7",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 503
         },
         {
           "offset": "0x5ab",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 290
         },
         {
           "offset": "0x5af",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1190
         },
         {
           "offset": "0x5b3",
-          "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+          "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
           "addend": 1369
         }
       ],
@@ -42117,7 +42117,7 @@
         },
         {
           "offset": "0x22",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42147,7 +42147,7 @@
         },
         {
           "offset": "0xc2",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42214,7 +42214,7 @@
         },
         {
           "offset": "0x22",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42244,7 +42244,7 @@
         },
         {
           "offset": "0xc2",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42301,7 +42301,7 @@
       "objdiff_score": 100.0
     },
     {
-      "function_symbol": "?AppCommand@@YAHPAXIIH@Z",
+      "function_symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
       "function_rva": "0x43911",
       "unit": "SOURCE/kbwin",
       "complete_body_and_references_exact": true,
@@ -42312,12 +42312,12 @@
       "candidate_references": [
         {
           "offset": "0x34",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 308
         },
         {
           "offset": "0x3b",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 276
         },
         {
@@ -42332,7 +42332,7 @@
         },
         {
           "offset": "0x57",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "addend": 0
         },
         {
@@ -42347,7 +42347,7 @@
         },
         {
           "offset": "0x72",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42397,54 +42397,54 @@
         },
         {
           "offset": "0x114",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 130
         },
         {
           "offset": "0x118",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 154
         },
         {
           "offset": "0x11c",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 178
         },
         {
           "offset": "0x120",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 202
         },
         {
           "offset": "0x124",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 226
         },
         {
           "offset": "0x128",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 103
         },
         {
           "offset": "0x12c",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 63
         },
         {
           "offset": "0x130",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 256
         }
       ],
       "retail_references": [
         {
           "offset": "0x34",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 308
         },
         {
           "offset": "0x3b",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 276
         },
         {
@@ -42459,7 +42459,7 @@
         },
         {
           "offset": "0x57",
-          "symbol": "?hInstApp@@3PAXA",
+          "symbol": "?hInstApp@@3PAUHINSTANCE__@@A",
           "addend": 0
         },
         {
@@ -42474,7 +42474,7 @@
         },
         {
           "offset": "0x72",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42524,42 +42524,42 @@
         },
         {
           "offset": "0x114",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 130
         },
         {
           "offset": "0x118",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 154
         },
         {
           "offset": "0x11c",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 178
         },
         {
           "offset": "0x120",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 202
         },
         {
           "offset": "0x124",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 226
         },
         {
           "offset": "0x128",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 103
         },
         {
           "offset": "0x12c",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 63
         },
         {
           "offset": "0x130",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 256
         }
       ],
@@ -42617,7 +42617,7 @@
         },
         {
           "offset": "0x5a",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -42647,7 +42647,7 @@
         },
         {
           "offset": "0x8d",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42682,7 +42682,7 @@
         },
         {
           "offset": "0xcd",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42692,7 +42692,7 @@
         },
         {
           "offset": "0xde",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42769,7 +42769,7 @@
         },
         {
           "offset": "0x5a",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -42799,7 +42799,7 @@
         },
         {
           "offset": "0x8d",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42834,7 +42834,7 @@
         },
         {
           "offset": "0xcd",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42844,7 +42844,7 @@
         },
         {
           "offset": "0xde",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -42881,7 +42881,7 @@
       "objdiff_score": 100.0
     },
     {
-      "function_symbol": "?SetMenus@@YAXPAXH@Z",
+      "function_symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "function_rva": "0x43d1f",
       "unit": "SOURCE/kbwin",
       "complete_body_and_references_exact": true,
@@ -42907,7 +42907,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?SetMenus@@YAXPAXH@Z",
+          "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "addend": 0
         },
         {
@@ -42937,7 +42937,7 @@
         },
         {
           "offset": "0x120",
-          "symbol": "?UpdateDfltMenu@@YAXPAX@Z",
+          "symbol": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         }
       ],
@@ -42959,7 +42959,7 @@
         },
         {
           "offset": "0x5c",
-          "symbol": "?SetMenus@@YAXPAXH@Z",
+          "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
           "addend": 0
         },
         {
@@ -42989,7 +42989,7 @@
         },
         {
           "offset": "0x120",
-          "symbol": "?UpdateDfltMenu@@YAXPAX@Z",
+          "symbol": "?UpdateDfltMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         }
       ],
@@ -56987,12 +56987,12 @@
         },
         {
           "offset": "0x209",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x20f",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -57099,12 +57099,12 @@
         },
         {
           "offset": "0x209",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x20f",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -62520,12 +62520,12 @@
         },
         {
           "offset": "0x34",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x3a",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -63342,12 +63342,12 @@
         },
         {
           "offset": "0x34",
-          "symbol": "?hmnuDflt@@3PAXA",
+          "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x3a",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -67480,12 +67480,12 @@
         },
         {
           "offset": "0x6a6",
-          "symbol": "?hmnuTown@@3PAXA",
+          "symbol": "?hmnuTown@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x6ac",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -67947,12 +67947,12 @@
         },
         {
           "offset": "0x6a6",
-          "symbol": "?hmnuTown@@3PAXA",
+          "symbol": "?hmnuTown@@3PAUHMENU__@@A",
           "addend": 0
         },
         {
           "offset": "0x6ac",
-          "symbol": "?KBChangeMenu@@YAXPAX@Z",
+          "symbol": "?KBChangeMenu@@YAXPAUHMENU__@@@Z",
           "addend": 0
         },
         {
@@ -73790,7 +73790,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -73865,7 +73865,7 @@
         },
         {
           "offset": "0x167",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74102,7 +74102,7 @@
         },
         {
           "offset": "0xae",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74177,7 +74177,7 @@
         },
         {
           "offset": "0x167",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74390,7 +74390,7 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74405,7 +74405,7 @@
         },
         {
           "offset": "0xdd",
-          "symbol": "?hdcImage@@3PAXA",
+          "symbol": "?hdcImage@@3PAUHDC__@@A",
           "addend": 0
         },
         {
@@ -74415,12 +74415,12 @@
         },
         {
           "offset": "0xe9",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74440,12 +74440,12 @@
         },
         {
           "offset": "0x108",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0x10e",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74455,12 +74455,12 @@
         },
         {
           "offset": "0x11e",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0x129",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74475,7 +74475,7 @@
         },
         {
           "offset": "0x14a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74572,7 +74572,7 @@
         },
         {
           "offset": "0xc4",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74587,7 +74587,7 @@
         },
         {
           "offset": "0xdd",
-          "symbol": "?hdcImage@@3PAXA",
+          "symbol": "?hdcImage@@3PAUHDC__@@A",
           "addend": 0
         },
         {
@@ -74597,12 +74597,12 @@
         },
         {
           "offset": "0xe9",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74622,12 +74622,12 @@
         },
         {
           "offset": "0x108",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0x10e",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -74637,12 +74637,12 @@
         },
         {
           "offset": "0x11e",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
           "offset": "0x129",
-          "symbol": "?hpalApp@@3PAXA",
+          "symbol": "?hpalApp@@3PAUHPALETTE__@@A",
           "addend": 0
         },
         {
@@ -74657,7 +74657,7 @@
         },
         {
           "offset": "0x14a",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -75840,7 +75840,7 @@
         },
         {
           "offset": "0xb9",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -75855,12 +75855,12 @@
         },
         {
           "offset": "0xe3",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         }
       ],
@@ -75887,7 +75887,7 @@
         },
         {
           "offset": "0xb9",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -75902,12 +75902,12 @@
         },
         {
           "offset": "0xe3",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0xf1",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         }
       ],
@@ -75940,12 +75940,12 @@
         },
         {
           "offset": "0xa3",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
           "offset": "0xb0",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -75955,7 +75955,7 @@
         },
         {
           "offset": "0xc1",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76000,12 +76000,12 @@
         },
         {
           "offset": "0x12b",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x138",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76015,17 +76015,17 @@
         },
         {
           "offset": "0x149",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x157",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x164",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76035,7 +76035,7 @@
         },
         {
           "offset": "0x175",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76062,12 +76062,12 @@
         },
         {
           "offset": "0xa3",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
           "offset": "0xb0",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76077,7 +76077,7 @@
         },
         {
           "offset": "0xc1",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76122,12 +76122,12 @@
         },
         {
           "offset": "0x12b",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x138",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76137,17 +76137,17 @@
         },
         {
           "offset": "0x149",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x157",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
           "offset": "0x164",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76157,7 +76157,7 @@
         },
         {
           "offset": "0x175",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76220,7 +76220,7 @@
         },
         {
           "offset": "0xd2",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76545,7 +76545,7 @@
         },
         {
           "offset": "0x51d",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76555,7 +76555,7 @@
         },
         {
           "offset": "0x531",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76620,7 +76620,7 @@
         },
         {
           "offset": "0x5d8",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76650,7 +76650,7 @@
         },
         {
           "offset": "0x628",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76665,7 +76665,7 @@
         },
         {
           "offset": "0x641",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -76685,7 +76685,7 @@
         },
         {
           "offset": "0x679",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76695,7 +76695,7 @@
         },
         {
           "offset": "0x68d",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76705,7 +76705,7 @@
         },
         {
           "offset": "0x6a0",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -76762,7 +76762,7 @@
         },
         {
           "offset": "0xd2",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -77087,7 +77087,7 @@
         },
         {
           "offset": "0x51d",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -77097,7 +77097,7 @@
         },
         {
           "offset": "0x531",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -77162,7 +77162,7 @@
         },
         {
           "offset": "0x5d8",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -77192,7 +77192,7 @@
         },
         {
           "offset": "0x628",
-          "symbol": "?hbmpAndMask@@3PAPAXA",
+          "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -77207,7 +77207,7 @@
         },
         {
           "offset": "0x641",
-          "symbol": "?hbmpColor@@3PAPAXA",
+          "symbol": "?hbmpColor@@3PAPAUHBITMAP__@@A",
           "addend": 0
         },
         {
@@ -77227,7 +77227,7 @@
         },
         {
           "offset": "0x679",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -77237,7 +77237,7 @@
         },
         {
           "offset": "0x68d",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -77247,7 +77247,7 @@
         },
         {
           "offset": "0x6a0",
-          "symbol": "?hMouseCursor@@3PAPAXA",
+          "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
           "addend": 0
         },
         {
@@ -79090,12 +79090,12 @@
         },
         {
           "offset": "0x3b5",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x3bb",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 0
         },
         {
@@ -79367,12 +79367,12 @@
         },
         {
           "offset": "0x3b5",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
           "offset": "0x3bb",
-          "symbol": "?AppCommand@@YAHPAXIIH@Z",
+          "symbol": "?AppCommand@@YAHPAUHWND__@@IIH@Z",
           "addend": 0
         },
         {
@@ -79490,7 +79490,7 @@
         },
         {
           "offset": "0xe5",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -79500,7 +79500,7 @@
         },
         {
           "offset": "0xfe",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -79697,7 +79697,7 @@
         },
         {
           "offset": "0xe5",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -79707,7 +79707,7 @@
         },
         {
           "offset": "0xfe",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -80298,7 +80298,7 @@
         },
         {
           "offset": "0x169",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -80308,7 +80308,7 @@
         },
         {
           "offset": "0x176",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -80370,7 +80370,7 @@
         },
         {
           "offset": "0x169",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {
@@ -80380,7 +80380,7 @@
         },
         {
           "offset": "0x176",
-          "symbol": "?hwndApp@@3PAXA",
+          "symbol": "?hwndApp@@3PAUHWND__@@A",
           "addend": 0
         },
         {

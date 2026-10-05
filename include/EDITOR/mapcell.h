@@ -1,13 +1,7 @@
 #ifndef HOMM1_EDITOR_MAPCELL_H
 #define HOMM1_EDITOR_MAPCELL_H
-// Map data records for the EDITOR/mapcell TU (fullMap). NOT original source.
-//
-// Layout recovered from the retail /Od this+offset accesses (mapcell.c.obj):
-//   - mapCellExtra is a PACKED 7-byte record (stride proven by *7 indexing and
-//     the (extras - i) + i*8 addressing idiom in ClearCellExtra / the _write of
-//     extraCount*7 bytes).
-//   - mapCell is a 12-byte record (cells allocated as width*height*12; memcpy 12).
-// Byte/word access widths + bit positions are read off the andb/andw/movw forms.
+// Map data records for the EDITOR/mapcell TU (fullMap): mapCellExtra is a
+// packed 7-byte record, mapCell a 12-byte record.
 
 #include <H1/Ints.h>
 
@@ -28,7 +22,7 @@ struct mapCellExtra {  // 7 bytes (packed)
 };
 #pragma pack(pop)
 
-class mapCell { // 12 bytes (CodeView mangles every use as PAVmapCell -> class)
+class mapCell { // 12 bytes
 public:
     u16 tile;          // +0
     u8 objFlag0 : 1;   // +2 bit0

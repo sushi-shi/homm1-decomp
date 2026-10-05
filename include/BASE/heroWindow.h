@@ -1,7 +1,5 @@
 #ifndef HOMM1_BASE_HEROWINDOW_H
 #define HOMM1_BASE_HEROWINDOW_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 15 methods, 0 own-virtual, 0 static data.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -25,7 +23,7 @@ H1_ENUM_BEGIN(WindowState)
     WINDOW_STATE_OPEN = 1
 H1_ENUM_END(WindowState)
 
-// heroWindow::Open status (Buka WINDOW.cpp OPEN_FAILURE).
+// heroWindow::Open status.
 H1_ENUM_BEGIN(WindowOpenStatus)
     WINDOW_OPEN_SUCCESS = 0,
     WINDOW_OPEN_FAILURE = 3

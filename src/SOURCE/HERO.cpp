@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/audio.h>
@@ -29,11 +27,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-// donor PoL RVA 0x0006c3a0; preferred Buka symbol ??0hero@@QAE@XZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.493986;margin=0.210035;shape=0.273;size=0.962;calls=1.000;alternate=pol20:void hero::constructor(void)@0x0006c3a0
 VA(0x00438f20, 0x5d)
-// clang-format on
 hero::hero(void) {
     m_id = 0;
     m_owner = 0;
@@ -46,7 +40,6 @@ hero::hero(void) {
     giHeroScreenSrcIndex = HERO_SCREEN_SOURCE_NONE;
 }
 
-// Buka 2.1 hero::GetArmyStrengths: an empty body in both games.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00438f7d, 0xd)
@@ -63,9 +56,6 @@ i8 hero::HasArtifact(i8 artifact) {
     return 0;
 }
 
-// donor PoL RVA 0x0006c526; preferred Buka symbol ?CalcMobility@hero@@QAEHXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.418178;margin=0.237740;shape=0.210;size=0.862;calls=0.714;alternate=pol20:int hero::CalcMobility(void)@0x0006c526
 VA(0x00438fd5, 0x1bd)
 i16 hero::CalcMobility(void) {
     i16 mobilityTable[3] = {40, 50, 60};
@@ -228,9 +218,6 @@ done:
     return added;
 }
 
-// donor PoL RVA 0x0006f305; preferred Buka symbol ?RedrawHeroScreen@@YIXXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.519414;margin=0.462427;shape=0.417;size=0.819;calls=1.000;alternate=pol20:void RedrawHeroScreen(void)@0x0006f305
 VA(0x00439646, 0x48)
 void hero::RedrawHeroScreen(void) {
     gpResourceManager->GetBackdrop("heroscrn.bmp", gpWindowManager->m_screen);
@@ -238,9 +225,6 @@ void hero::RedrawHeroScreen(void) {
     gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
-// donor PoL RVA 0x0006f354; preferred Buka symbol ?HeroView@@YIHHHH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:8;base=0.391018;margin=1.082891;shape=0.247;size=0.310;calls=0.359;strings=herowind.bin;alternate=pol20:int HeroView(int, int, int)@0x0006f354
 VA(0x0043968e, 0x64a)
 i8 hero::HeroView(i8 viewOnly) {
     i32 heroLuck;
@@ -379,9 +363,6 @@ i8 hero::HeroView(i8 viewOnly) {
     return 0;
 }
 
-// donor PoL RVA 0x0006cab1; preferred Buka symbol ?HeroMessageUpdate@@YIXPAD@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.570065;margin=0.065812;shape=0.448;size=0.919;calls=1.000;alternate=pol20:void HeroMessageUpdate(char *)@0x0006cab1
 VA(0x00439cd8, 0x6c)
 void HeroMessageUpdate(char* text) {
     tag_message message;
@@ -395,9 +376,6 @@ void HeroMessageUpdate(char* text) {
     gpWindowManager->UpdateScreenRegion(0, 459, 640, 20);
 }
 
-// donor PoL RVA 0x0006cb33; preferred Buka symbol ?HeroScreenUpdate@hero@@QAEXXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.542456;margin=0.317795;shape=0.400;size=0.865;calls=1.000;alternate=pol20:void hero::HeroScreenUpdate(void)@0x0006cb33
 VA(0x00439d44, 0x99)
 void hero::HeroScreenUpdate(void) {
     tag_message message;
@@ -418,9 +396,6 @@ void hero::HeroScreenUpdate(void) {
     gpWindowManager->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
 }
 
-// donor PoL RVA 0x0006cbdb; preferred Buka symbol ?UpdateArmies@hero@@QAEXXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.520009;margin=0.290164;shape=0.295;size=0.980;calls=0.909;alternate=pol20:void hero::UpdateArmies(void)@0x0006cbdb
 VA(0x00439ddd, 0x1b6)
 void hero::UpdateArmies(void) {
     tag_message message;
@@ -500,9 +475,6 @@ void hero::ViewArtifact(i8 artifact, i8 quickView) {
     );
 }
 
-// donor PoL RVA 0x0006ce8b; preferred Buka symbol ?Dismiss@hero@@QAEHXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.462026;margin=0.671820;shape=0.242;size=0.843;calls=1.000;alternate=pol20:int hero::Dismiss(void)@0x0006ce8b
 VA(0x0043a152, 0x47)
 i8 hero::Dismiss(void) {
     NormalDialog(localization::Tr("hero.dismiss.confirm"), NORMAL_DIALOG_TYPE_YES_NO, 0xb1, 0x1c);
@@ -513,9 +485,6 @@ i8 hero::Dismiss(void) {
     return 0;
 }
 
-// donor PoL RVA 0x0006cee8; preferred Buka symbol ?Deallocate@hero@@QAEXH@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:5;base=0.482098;margin=0.987612;shape=0.300;size=0.883;calls=0.875;alternate=pol20:void hero::Deallocate(int)@0x0006cee8
 VA(0x0043a199, 0x400)
 void hero::Deallocate(void) {
     i32 oldOwner;
@@ -584,7 +553,6 @@ void hero::Deallocate(void) {
     CheckEndGame(0);
 }
 
-// Buka 2.1 hero::GetExperience.
 VA(0x0043a599, 0xb5)
 i32 hero::GetExperience(i32 level) {
     i32 experience;
@@ -670,9 +638,6 @@ void hero::ApplyBattleLossTemps(void) {
     ApplyBattleWinTemps();
 }
 
-// donor PoL RVA 0x0006d83f; preferred Buka symbol ?CheckLevel@hero@@QAEXXZ
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.312130;margin=0.246272;shape=0.276;size=0.445;calls=0.500;alternate=pol20:void hero::CheckLevel(void)@0x0006d83f
 VA(0x0043a8b1, 0x2b7)
 void hero::CheckLevel(void) {
     i32 oldLvl;
@@ -733,7 +698,6 @@ void hero::CheckLevel(void) {
     }
 }
 
-// Buka 2.1 hero::NumArtifacts.
 VA(0x0043ab68, 0x4b)
 i32 hero::NumArtifacts(void) {
     i32 count = 0;
@@ -749,7 +713,7 @@ i32 hero::NumArtifacts(void) {
 // Buka names every army slot with the plural creature table.
 VA(0x0043abb3, 0x502)
 void UpdateHeroScreenStatusBar(i16 widgetId) {
-    tag_message message; // Unused; retail keeps the donor's message frame.
+    tag_message message;
     i16 slot;
 
     switch (widgetId) {
@@ -882,9 +846,6 @@ void UpdateHeroScreenStatusBar(i16 widgetId) {
     HeroMessageUpdate(gText);
 }
 
-// donor PoL RVA 0x0006e816; preferred Buka symbol ?HeroHandler@@YIHAAUtag_message@@@Z
-// donor Buka TU SOURCE/HERO; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.360602;margin=0.481730;shape=0.266;size=0.702;calls=0.568;alternate=pol20:int HeroHandler(struct tag_message &)@0x0006e816
 VA(0x0043b0b5, 0x610)
 i16 HeroHandler(struct tag_message& message) {
     tag_message newEvent;

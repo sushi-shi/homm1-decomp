@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/baseManager.h>
@@ -122,9 +120,6 @@ void mouseManager::SetPointer(char* name, i16 frame) {
 DATA(0x004cfb40)
 i32 gMouseCursorType = 0;
 
-// donor PoL RVA 0x000c9630; preferred Buka symbol ?SetPointer@mouseManager@@QAEXH@Z
-// donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:7;base=0.417606;margin=1.286688;shape=0.189;size=0.849;calls=0.737;alternate=pol20:void mouseManager::SetPointer(int)@0x000c9630
 VA(0x0046b8b2, 0x6bd)
 #line 232 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\MOUSEMGR.CPP"
 void mouseManager::SetPointer(i16 frame) {
@@ -262,8 +257,7 @@ void mouseManager::SetPointer(i16 frame) {
     gInSetPointer = FALSE;
 }
 
-// The Windows build leaves the software-pointer hooks empty; these names
-// follow the HoMM2 mouseManager methods with the same call arity.
+// The Windows build leaves the software-pointer hooks empty.
 VA(0x0046bf6f, 0xb)
 void mouseManager::ReallyShowPointer(void) {}
 
@@ -280,12 +274,11 @@ VA(0x0046bf92, 0xb)
 void mouseManager::HideColorPointer(void) {}
 
 // townManager::DrawTown and advManager::UpdateScreen bracket a screen blit
-// under the pointer with these hooks (Buka MiscRuntime's SaveAndDraw /
-// RestoreUnderlying pair); retail keeps only the returns.
+// under the pointer with these hooks; retail keeps only the returns.
 VA(0x0046bf9d, 0xb)
 void mouseManager::RestoreUnderlying(void) {}
 
-// HoMM2 Buka's SaveAndDraw(void), empty in the Windows build.
+// Empty in the Windows build.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046bfa8, 0xb)
@@ -324,9 +317,6 @@ void mouseManager::WarpPointer(i16, i16) {}
 VA(0x0046bfff, 0xd)
 void mouseManager::UnusedOneArgumentHook(i32) {}
 
-// donor PoL RVA 0x000c9ec0; preferred Buka symbol ?MouseCoords@mouseManager@@QAEXAAH0@Z
-// donor Buka TU BASE/MOUSEMGR; HoMM1 owner inferred from contiguous order
-// evidence: graph:4;base=0.387847;margin=0.576156;shape=0.081;size=0.906;calls=1.000;alternate=pol20:void mouseManager::MouseCoords(int &, int &)@0x000c9ec0
 VA(0x0046c00c, 0x56)
 void mouseManager::MouseCoords(i16& x, i16& y) {
     POINT point;

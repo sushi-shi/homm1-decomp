@@ -110,10 +110,10 @@ References remain subject to strict identity/addend comparison.
 
 Separately, `SetupCombat`'s three conditional-value assignments account for
 three four-byte compiler temporaries. The retail frame is 20 bytes; expanded
-branch assignments produce an eight-byte frame and different stores. The
-hero/group choices and original-town assignment are corroborated by HoMM2
-Buka 2.1. Restoring those expressions and the castle-flag value expression
-reproduces the complete retail body without introducing authored temporaries.
+branch assignments produce an eight-byte frame and different stores.
+Restoring the hero/group choices, the original-town assignment and the
+castle-flag value as conditional-value expressions reproduces the complete
+retail body without introducing authored temporaries.
 `Open`'s extra seven-byte null assignment immediately before `LoadPlaySample`
 is also absent from retail. These are source-form corrections, not comparison
 normalizations. See [the full controls](../../config/retail/buka-combat-setup.json).

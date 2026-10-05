@@ -1,4 +1,4 @@
-// Retail delay helpers; Buka NOOPT correspondence with HoMM1 assertion.
+// Retail delay helpers.
 
 #include <match.h>
 
@@ -9,7 +9,7 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
 
-// No direct caller survives in retail; the HoMM2 timer slot names glTimers.
+// No direct caller survives in retail.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00446370, 0x2e)

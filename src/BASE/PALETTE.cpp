@@ -1,4 +1,4 @@
-// HoMM1's packed palette resource; Buka 2.1 supplies the cache contract.
+// The packed palette resource.
 
 #include <match.h>
 
@@ -13,7 +13,6 @@ palette::palette(void) : resource(RESOURCE_CATEGORY_PALETTE, -1, RESOURCE_REFERE
     m_data = static_cast<i8*>(malloc(PALETTE_DATA_SIZE));
 }
 
-// VC4 emits this virtual deleting destructor from the ordinary destructor below.
 VA(0x0047480a, 0x93)
 palette::palette(i16 id)
     : resource(RESOURCE_CATEGORY_PALETTE, id, RESOURCE_REFERENCE_INITIAL, NULL) {

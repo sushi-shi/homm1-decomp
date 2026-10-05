@@ -1563,7 +1563,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [
@@ -1663,7 +1663,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [
@@ -1763,7 +1763,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [
@@ -1863,7 +1863,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [
@@ -1956,7 +1956,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [
@@ -2056,7 +2056,7 @@
       "size": 53,
       "payload_sha256": "3154bdb01527790bc7e259ef9a859f1282a5adc31cb38e962c8519f77e434621",
       "unit": "SOURCE/wingraph",
-      "function": "?DDAppPaint@@YAHPAX0@Z",
+      "function": "?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z",
       "object_sha256": "11f3970c89609db1f2e357746a1d83c7a32e10300fe43fef9ac5cfca1608eed5",
       "context": {
         "instructions": [

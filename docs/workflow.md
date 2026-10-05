@@ -1,10 +1,10 @@
 # Repository workflow
 
 The four project skills live under `.agents/skills`: `matcher`,
-`wall-identifier`, `holista`, and `permute`. They follow the donor's evidence
-loop with HoMM1's VC4 profiles, VA annotations and strict score.
-Their reference catalog and `docs/patterns` preserve donor compiler observations
-as hypotheses to test, not established HoMM1 behavior.
+`wall-identifier`, `holista`, and `permute`. They follow one evidence loop
+with HoMM1's VC4 profiles, VA annotations and strict score.
+Their reference catalog and `docs/patterns` keep compiler observations that
+were not measured on HoMM1 as hypotheses to test, not established behavior.
 `CLAUDE.md` and `.claude/skills` link to the canonical instructions and skills;
 `.claude/agents/matcher.md` supplies the bounded worker profile.
 

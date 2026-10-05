@@ -1,8 +1,8 @@
 # VC6 /Od frame slots follow the folded name hash
 
 The Buka VC6 SP5 `/Od` compiler assigns named locals to stack slots by a hash
-of their spelling, not by declaration order. The rule is the one HoMM2 measured
-on the same compiler; the NWC branches' VC4.0 variant does not apply:
+of their spelling, not by declaration order. The NWC branches' VC4.0 variant
+of the hash does not apply:
 
 ```text
 h = 0; for each character c:  h = (h >> 4) + h * 4 + c      (32-bit)

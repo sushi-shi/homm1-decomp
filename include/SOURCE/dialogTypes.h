@@ -48,7 +48,7 @@ H1_ENUM_END(NormalDialogType)
 
 // NormalDialog's showOrText argument: SHOW_OR_TEXT prints "or" between the two
 // resource icons (a choice, e.g. the treasure chest's gold or experience);
-// every other caller passes -1 (Buka's default).
+// every other caller passes -1.
 H1_ENUM_BEGIN(NormalDialogOrText)
     NORMAL_DIALOG_NO_OR_TEXT = -1,
     NORMAL_DIALOG_SHOW_OR_TEXT = 1
@@ -84,8 +84,7 @@ H1_ENUM_CONST_END(NormalDialogLayout)
 
 // giWaitType: which poll WaitHandler runs while a wait dialog is up
 // (WaitForOtherPlayer, WaitForGuest, WaitForHost, InitNetGuest, InitNetHost,
-// GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect; Buka
-// KBDeclarations.h DialogWaitType, same numbering).
+// GUIModemCommandExec, GUIModemResponseExec, WaitForDirectConnect).
 H1_ENUM_BEGIN(DialogWaitType)
     DIALOG_WAIT_OTHER_PLAYER = 0,
     DIALOG_WAIT_NETBIOS_GUEST = 1,

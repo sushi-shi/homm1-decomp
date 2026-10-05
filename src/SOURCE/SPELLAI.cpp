@@ -1,7 +1,5 @@
 // HoMM1 SPELLAI: combat spell selection for computer-controlled heroes.
-// Retail int3 padding opens this object at 0x00437010; Buka 2.1
-// SOURCE/SPELLAI.cpp supplies the family (DoSpellAI, DetermineEffectOfSpell,
-// RawEffectSpellInfluence, ClearEffects, NextPos, FirstArmy, EffectSpell*).
+// Retail int3 padding opens this object at 0x00437010.
 
 #include <match.h>
 
@@ -16,8 +14,7 @@
 
 #include <stdlib.h>
 
-// Per-spell weights of a stack's fight value (Buka keeps the same named
-// float constants for its larger spell list).
+// Per-spell weights of a stack's fight value.
 DATA(0x0048a6d0)
 static const float SPELL_AI_SLOW_MODIFIER = -0.11f;
 DATA(0x0048a6d4)
@@ -44,7 +41,7 @@ i32 gSpellAIEffectShift;
 DATA(0x004cccb0)
 i32 gSpellAITargetSide;
 
-// Buka SPELLAI.cpp:69-139; HoMM1 heroes memorize spells with charges.
+// Heroes memorize spells with charges.
 VA(0x00458de0, 0x196)
 i32 combatManager::DoSpellAI(i8 side) {
     i32 selectedSpellVal;
@@ -87,8 +84,8 @@ i32 combatManager::DoSpellAI(i8 side) {
     return 0;
 }
 
-// Buka SPELLAI.cpp:141-733 reduced to HoMM1's nineteen combat spells: each
-// spell is scored once, across the area grid, or over one side's stacks.
+// HoMM1's nineteen combat spells: each spell is scored once, across the area
+// grid, or over one side's stacks.
 VA(0x00458f76, 0x42d)
 void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* bestHex) {
     i32 spellEffect;
@@ -227,8 +224,7 @@ void combatManager::DetermineEffectOfSpell(i32 spell, i32* bestEffect, i32* best
     }
 }
 
-// Buka SPELLAI.cpp:802-960: a spell's value as a share of the stack's
-// fight value.
+// A spell's value as a share of the stack's fight value.
 VA(0x004593a3, 0x246)
 i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
     i32 worth;
@@ -289,7 +285,6 @@ i32 combatManager::RawEffectSpellInfluence(army* target, i32 spell) {
     return effect;
 }
 
-// Buka SPELLAI.cpp:962-973.
 VA(0x004595e9, 0x52)
 void combatManager::ClearEffects(void) {
     i32 side;
@@ -300,7 +295,7 @@ void combatManager::ClearEffects(void) {
     }
 }
 
-// Buka 2.1 NextPos with HoMM1's retail-backed nine-hex row width.
+// Rows are nine hexes wide.
 VA(0x0045963b, 0x3d)
 void combatManager::NextPos(i32* hex) {
     if ((*hex + COMBAT_SPELL_AI_ROW_END_OFFSET) % COMBAT_GRID_COLUMNS == 0)
@@ -309,8 +304,8 @@ void combatManager::NextPos(i32* hex) {
         (*hex)++;
 }
 
-// Buka SPELLAI.cpp:983-995: the next hex at or after startHex holding a
-// stack of the side (2: either side).
+// The next hex at or after startHex holding a stack of the side (2: either
+// side).
 VA(0x00459678, 0x66)
 i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
     while (startHex <= COMBAT_SPELL_AI_HEX_LAST) {
@@ -325,8 +320,8 @@ i32 combatManager::FirstArmy(i32 startHex, i32 side, i32* hex) {
     return 1;
 }
 
-// Buka SPELLAI.cpp:1022-1136: the value of cancelling a side's (2: both
-// sides') spell effects; HoMM1 stacks carry a single effect.
+// The value of cancelling a side's (2: both sides') spell effects; stacks
+// carry a single effect.
 VA(0x004596de, 0x20c)
 void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
     i32 curSide;
@@ -384,8 +379,7 @@ void combatManager::EffectSpellCure(i32* effect, i32 targetSide, i8 cure) {
     }
 }
 
-// Buka SPELLAI.cpp:1147-1166: the fight value Resurrect would restore to
-// the stack on hex.
+// The fight value Resurrect would restore to the stack on hex.
 VA(0x004598ea, 0xd4)
 void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     army* target;
@@ -404,8 +398,8 @@ void combatManager::EffectSpellResurrect(i32* effect, i32 hex) {
     *effect = count * gMonsterDatabase[target->m_creatureType].fightValue;
 }
 
-// Buka SPELLAI.cpp:1183-1525: the net fight value a damage spell destroys,
-// or a decisive value when it wipes out a side.
+// The net fight value a damage spell destroys, or a decisive value when it
+// wipes out a side.
 VA(0x004599be, 0x491)
 void combatManager::EffectSpellDamage(i32* effect, i32 spell, i32 damagePerPower, i32 targetHex) {
     i32 partValue[COMBAT_SIDE_COUNT];

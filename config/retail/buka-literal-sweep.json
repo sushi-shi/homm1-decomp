@@ -1378,7 +1378,7 @@
             "kind": 20
           },
           {
-            "symbol": "?hmnuDflt@@3PAXA",
+            "symbol": "?hmnuDflt@@3PAUHMENU__@@A",
             "operand": "0x3d124",
             "target": "0xa98dc",
             "addend": "0x0",
@@ -3475,7 +3475,7 @@
     {
       "id": "adventure.confirm_quit",
       "unit": "SOURCE/kbwin",
-      "function": "?AppWndProc@@YGJPAXIIJ@Z",
+      "function": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "function_rva": "0x43052",
       "operand_rva": "0x43566",
       "literal_rva": "0x9e788",
@@ -7901,7 +7901,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hbmpAndMask@@3PAPAXA",
+            "symbol": "?hbmpAndMask@@3PAPAUHBITMAP__@@A",
             "operand": "0x6bde3",
             "target": "0xcf0b4",
             "addend": "0x0",
@@ -7996,7 +7996,7 @@
         ],
         "anchors": [
           {
-            "symbol": "?hMouseCursor@@3PAPAXA",
+            "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
             "operand": "0x6bf3f",
             "target": "0xcef88",
             "addend": "0x0",
@@ -8010,7 +8010,7 @@
             "kind": 20
           },
           {
-            "symbol": "?hMouseCursor@@3PAPAXA",
+            "symbol": "?hMouseCursor@@3PAPAUHICON__@@A",
             "operand": "0x6bf52",
             "target": "0xcef88",
             "addend": "0x0",
@@ -8573,7 +8573,7 @@
       {
         "id": "adventure.confirm_quit",
         "unit": "SOURCE/kbwin",
-        "function": "?AppWndProc@@YGJPAXIIJ@Z",
+        "function": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
         "retail_literal": "0x9e788",
         "object_operands": [
           "0x501"

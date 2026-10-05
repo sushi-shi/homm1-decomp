@@ -1,7 +1,6 @@
 #ifndef HOMM1_SOURCE_HEXCELL_H
 #define HOMM1_SOURCE_HEXCELL_H
-// Reconstructed class (SOURCE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// HoMM1 keeps 12-byte cells: combatManager strides its 45 hexes by twelve
+// Cells are 12 bytes: combatManager strides its 45 hexes by twelve
 // bytes from +0x40.
 
 #include <Domains.h>

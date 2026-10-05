@@ -1,12 +1,9 @@
 #ifndef HOMM1_BASE_WIDGET_H
 #define HOMM1_BASE_WIDGET_H
-// Reconstructed class (BASE) from CodeView NB09 of HEROES2W.EXE — NOT original source.
-// 7 methods, 3 own-virtual (all pure), 0 static data.
-// Abstract root of the BASE UI-widget hierarchy. Verified from ??_7widget@@6B@: the
-// vtable is 3 all-__purecall slots in order [Draw, ~widget, Main]. Draw is pure with
-// NO body (emits no symbol); ~widget (??1widget@@UAE, 0x7) and Main (?Main@widget@@UAE,
-// 0x2f4) are pure-virtual-WITH-body. Declaration order == vtable slot order; derived
-// classes (border, iconWidget, textWidget, dimmerWidget, ...) override these 3 slots.
+// Abstract root of the BASE UI-widget hierarchy. The vtable is three __purecall
+// slots in order [Draw, ~widget, Main]. Draw has no body; ~widget and Main are
+// pure virtual with bodies. Derived classes (border, iconWidget, textWidget,
+// dimmerWidget, ...) override these three slots.
 
 #include <Domains.h>
 #include <H1/Macros.h>
@@ -24,15 +21,15 @@ H1_ENUM_FLAGS_END(WidgetFlag)
 
 H1_ENUM_CONST_BEGIN(WidgetFlagConstant)
     WIDGET_FLAG_MASK = 0xffff,
-    // widget::widget(void)'s width and height (Buka WIDGET.cpp DEFAULT_EXTENT).
+    // widget::widget(void)'s width and height.
     WIDGET_DEFAULT_EXTENT = 16
 H1_ENUM_CONST_END(WidgetFlagConstant)
 
 H1_ENUM_BEGIN(WidgetKind)
     WIDGET_KIND_NONE = 0,
-    // border kind 1: drawn without its background (Buka widgetKind.h).
+    // border kind 1: drawn without its background.
     WIDGET_KIND_TRANSPARENT = 1,
-    // widget::widget(void)'s kind (Buka widgetKind.h WIDGET_KIND_DEFAULT).
+    // widget::widget(void)'s kind.
     WIDGET_KIND_DEFAULT = 2,
     WIDGET_KIND_TEXT = 0x200,
     WIDGET_KIND_AUTO_REPEAT = 0x1000,
@@ -41,20 +38,18 @@ H1_ENUM_BEGIN(WidgetKind)
 H1_ENUM_END(WidgetKind)
 
 // widget::m_id of a widget that issues no command (decorative icons and text
-// built into a window; Buka TOWN_WIDGET_ID_NONE).
+// built into a window).
 H1_ENUM_CONST_BEGIN(WidgetIdConstant)
     WIDGET_ID_NONE = -1
 H1_ENUM_CONST_END(WidgetIdConstant)
 
-// (x, y), in the owner window's coordinates, lies inside widget w (Buka 2.1
-// widget.h).
+// (x, y), in the owner window's coordinates, lies inside widget w.
 #define WIDGET_CONTAINS_LOCAL_POINT(w, x, y)                                                       \
     ((x) >= (w).m_x && (y) >= (w).m_y && (x) < (w).m_x + (w).m_width                               \
      && (y) < (w).m_y + (w).m_height)
 
 // A widget record's four geometry words, read in order from the open resource
-// (Buka 2.1 widget.h). VC4 rejects an assignment through (*this).member, so
-// the widget is passed by pointer.
+// into the widget pointed to by w.
 #define READ_WIDGET_GEOMETRY(w, resources)                                                         \
     ((w)->m_x = (resources)->ReadWord(),                                                           \
      (w)->m_y = (resources)->ReadWord(),                                                           \

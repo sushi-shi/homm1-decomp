@@ -1,5 +1,4 @@
-; HoMM1 bitmap rectangle primitives.  These are the hand-written predecessors
-; of the C++ routines retained by HoMM2's BASE/bmap2 module.
+; Bitmap rectangle primitives.
 
 .386
 .model flat
@@ -40,8 +39,7 @@ _gBitmapRowSkip DWORD 0
 ; do/while: callers pass height >= 1 (and width >= 1). A width wider than the
 ; bitmap's row returns without drawing.
 
-; Buka BASE/bmap2.cpp BlitBitmap is the same copy written in C++ (it keeps its
-; cursors in globals instead of the two skip words).
+; BlitBitmap in C++:
 ;
 ;   void BlitBitmap(bitmap* src, int sx, int sy, int w, int h,
 ;                   bitmap* dst, int dx, int dy) {
@@ -261,9 +259,7 @@ backward_same_row:
 ?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z ENDP
 
 EVEN
-; Buka BASE/bmap2.cpp DimBitmapArea is the C++ successor; HoMM2 adds a dim
-; level selecting one of several tables, HoMM1 has the single gDimPalette.
-; The width check is unsigned (jb).
+; DimBitmapArea in C++; the width check is unsigned (jb).
 ;
 ;   void DimBitmapArea(bitmap* bmp, int x, int y, int w, int h) {
 ;       if ((unsigned)bmp->m_width < (unsigned)w) return;
@@ -315,7 +311,7 @@ dim_done:
 ?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z ENDP
 
 EVEN
-; Buka BASE/bmap2.cpp FillBitmapArea is the C++ successor (same arguments).
+; FillBitmapArea in C++:
 ;
 ;   void FillBitmapArea(bitmap* bmp, int x, int y, int w, int h, int color) {
 ;       if ((unsigned)bmp->m_width < (unsigned)w) return;

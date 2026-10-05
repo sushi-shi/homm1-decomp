@@ -1,4 +1,4 @@
-// HoMM1 sample resource loader; Buka SAMPLE.cpp supplies the suffix decoding.
+// Sample resource loader with name-suffix format decoding.
 
 #include <match.h>
 

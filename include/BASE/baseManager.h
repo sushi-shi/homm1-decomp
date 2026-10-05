@@ -6,12 +6,12 @@
 struct tag_message;
 
 // executive::AddManager appends a manager whose priority is unassigned after
-// the list tail (Buka BASE_MANAGER_PRIORITY_UNASSIGNED).
+// the list tail.
 H1_ENUM_BEGIN(BaseManagerPriority)
     BASE_MANAGER_PRIORITY_UNASSIGNED = -1
 H1_ENUM_END(BaseManagerPriority)
 
-// Manager Open/AddManager status (Buka EXEC MANAGER_SUCCESS/MANAGER_ERROR).
+// Manager Open/AddManager status.
 H1_ENUM_BEGIN(BaseManagerStatus)
     BASE_MANAGER_SUCCESS = 0,
     BASE_MANAGER_ERROR = 3
@@ -53,7 +53,7 @@ public:
     i16 m_active;
 
     baseManager();
-    // swapManager::Close's inline store through a this temporary.
+    // swapManager::Close's inline store.
     void Activate(void) {
         m_active = 1;
     }

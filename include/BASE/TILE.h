@@ -4,7 +4,7 @@
 class bitmap;
 class tileset;
 
-// BASE/TILE.asm cdecl tile blitter (HoMM2 Buka TILE.h signature).
+// BASE/TILE.asm cdecl tile blitter.
 extern "C" void __cdecl TileToBitmap(tileset* tiles, u32 tile, bitmap* dest, i32 x, i32 y);
 
 #endif

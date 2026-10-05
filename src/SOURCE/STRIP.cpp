@@ -1,5 +1,3 @@
-// Located from HoMM2 Buka 2.1; PoL 2.0 supplies the VC4 declaration.
-
 #include <match.h>
 
 #include <BASE/border.h>
@@ -19,9 +17,6 @@
 
 #include <stdio.h>
 
-// donor PoL RVA 0x00032230; preferred Buka symbol ??0strip@@QAE@HHHKHPAVarmyGroup@@HHH@Z
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.710816;margin=0.058489;shape=0.438;size=0.937;calls=0.800;strings=strip.icn;alternate=pol20:void strip::constructor(int, int, int, unsigned long int, int, class armyGroup *, int, int, int)@0x00032230
 VA(0x0045c6b0, 0x290)
 strip::strip(
     i16 x,
@@ -83,9 +78,6 @@ strip::strip(
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, drawWindow);
 }
 
-// donor PoL RVA 0x000324ae; preferred Buka symbol ??1strip@@QAE@XZ
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.560366;margin=0.278966;shape=0.418;size=0.916;calls=1.000;alternate=pol20:void strip::~destructor(void)@0x000324ae
 VA(0x0045c940, 0x107)
 strip::~strip() {
     i16 i;
@@ -103,18 +95,12 @@ strip::~strip() {
     gpResourceManager->Dispose(m_portraitIcon);
 }
 
-// donor PoL RVA 0x000325f2; preferred Buka symbol ?Draw@strip@@QAEXXZ
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:3;base=0.508282;margin=0.688808;shape=0.381;size=0.803;calls=1.000;alternate=pol20:void strip::Draw(void)@0x000325f2
 VA(0x0045ca47, 0x37)
 void strip::Draw(void) {
     DrawIcons(1);
     gpWindowManager->UpdateScreenRegion(m_x, m_y, STRIP_WINDOW_WIDTH, STRIP_WINDOW_HEIGHT);
 }
 
-// donor PoL RVA 0x00032632; preferred Buka symbol ?DrawIcons@strip@@QAEXH@Z
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.411442;margin=0.465209;shape=0.280;size=0.697;calls=0.714;alternate=pol20:void strip::DrawIcons(int)@0x00032632
 VA(0x0045ca7e, 0x233)
 void strip::DrawIcons(i8 drawWindow) {
     i16 i;
@@ -195,9 +181,6 @@ void strip::DrawFrame(void) {
         ->DrawToBuffer(m_x, m_y, STRIP_BACKGROUND_FRAME, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
-// donor PoL RVA 0x00032a38; preferred Buka symbol ??0bankBox@@QAE@HHPAVplayerData@@@Z
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.721149;margin=0.159729;shape=0.520;size=0.843;calls=0.833;strings=bankbox.bin;alternate=pol20:void bankBox::constructor(int, int, class playerData *)@0x00032a38
 VA(0x0045ccdd, 0xd4)
 bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     m_player = player;
@@ -210,9 +193,6 @@ bankBox::bankBox(i16 x, i16 y, class playerData* player) {
     Update();
 }
 
-// donor PoL RVA 0x00032aea; preferred Buka symbol ??1bankBox@@QAE@XZ
-// donor Buka TU SOURCE/STRIP; HoMM1 owner inferred from contiguous order
-// evidence: graph:2;base=0.486146;margin=0.167932;shape=0.360;size=0.776;calls=1.000;alternate=pol20:void bankBox::~destructor(void)@0x00032aea
 VA(0x0045cdb1, 0x34)
 bankBox::~bankBox() {
     gpWindowManager->RemoveWindow(m_window);

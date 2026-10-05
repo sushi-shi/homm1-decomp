@@ -1,4 +1,4 @@
-// Buka movie playback, reconstructed from retail instructions and CFGs.
+// Buka movie playback.
 
 #include <match.h>
 
@@ -177,7 +177,7 @@ void SmackMain() {
     i32 unusedTrue = 1;
     gSmackLastFramePlayed = 0;
     i32 unusedPlaybackState = 0;
-    i32 unusedTimer; // dead locals: retail's /Od frame holds their unreferenced slots
+    i32 unusedTimer;
     i32 unusedKey;
     gSmackFont = gpResourceManager->GetFont("bigfont.fnt");
     KBChangeMenu(hmnuDflt);

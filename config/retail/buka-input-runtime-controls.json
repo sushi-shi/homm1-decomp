@@ -87,7 +87,7 @@
       "retail_sha256": "4bde88a924c790b7c6def8ac2f916896c62c38a02ffc0da564f6235e7efe1627"
     },
     {
-      "symbol": "?SetMenus@@YAXPAXH@Z",
+      "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "rva": "0x43d1f",
       "candidate_instructions": 92,
       "retail_instructions": 92,
@@ -309,7 +309,7 @@
     },
     {
       "rva": "0x43d1f",
-      "symbol": "?SetMenus@@YAXPAXH@Z",
+      "symbol": "?SetMenus@@YAXPAUHMENU__@@H@Z",
       "before": 99.891304,
       "after": 100.0
     },

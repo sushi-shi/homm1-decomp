@@ -38,7 +38,7 @@
       "retail_sha256": "bcbcccb4a7189c9f7cb9be7354448562151fcf5aac53c3735c3c58951465bf19"
     },
     {
-      "symbol": "?AppInit@@YAHPAX0HPAD@Z",
+      "symbol": "?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z",
       "rva": "0x42dba",
       "candidate_instructions": 152,
       "retail_instructions": 152,
@@ -67,7 +67,7 @@
       "retail_sha256": "034f3ff4fdf3b17789a712bc4db73350d421eb71b5edb2a1bc0d56e8558f097e"
     },
     {
-      "symbol": "?AppWndProc@@YGJPAXIIJ@Z",
+      "symbol": "?AppWndProc@@YGJPAUHWND__@@IIJ@Z",
       "rva": "0x43052",
       "candidate_instructions": 358,
       "retail_instructions": 358,

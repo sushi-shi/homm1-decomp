@@ -1,12 +1,10 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
-
 # Compiler patterns
 
-Observations from the Giten/Gruntz MSVC 5.0 SP3 work and HoMM1 VC4
-measurements. This branch uses [the verified VC4.1 toolchain](vc41-win95-1997.md)
-for Win95 1.2; earlier VC4.0 observations retain their original scope.
+Reusable observations about the compilers this reconstruction uses: VC4.0 for
+the NWC Win95 builds, [VC4.1](vc41-win95-1997.md) for Win95 1.2, and VC6 SP5
+for the Buka build. Each note states the compiler it was measured on. Notes
+headed as unmeasured hypotheses describe MSVC 5.0 behaviour that has not been
+re-measured on this target's compilers.
 Start with [the index](INDEX.md). These are clues for reading compiler output,
 not a catalogue of matching victories or proof of original source.
 

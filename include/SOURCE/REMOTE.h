@@ -19,12 +19,10 @@ H1_ENUM_BEGIN(RemoteBoxCommand)
 H1_ENUM_END(RemoteBoxCommand)
 
 // RemoteMessage::command values (TransmitRemoteData's command argument and
-// the receivers' switches). The save-game transfer (TransmitSaveGame /
-// ReceiveSaveGame) and the hero/town exchange before a networked battle
-// follow Buka 2.1's GAME.cpp RemoteSaveConstant and EVENTS.cpp
-// CombatRemoteCommand numbering; chat text (PopNetBox), combat actions
-// (ProcessNextAction) and the exit notice (HandleRemote*Exit) complete it.
-// SAVE_INIT and SETUP are the RemoteBoxCommand values.
+// the receivers' switches): the save-game transfer (TransmitSaveGame /
+// ReceiveSaveGame), the hero/town exchange before a networked battle, chat
+// text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
+// (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
 H1_ENUM_BEGIN(RemoteCommand)
     REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
     REMOTE_COMMAND_SAVE_DATA = 3,
@@ -49,7 +47,7 @@ H1_ENUM_CONST_BEGIN(RemoteConstant)
     // InitNetHost/InitNetGuest try the NetBIOS names HHOST0../HGUEST1.. up to
     // this suffix before reporting every game slot used.
     REMOTE_NET_NAME_LAST = 10,
-    // HoMM1's modem and network games connect two human players.
+    // Modem and network games connect two human players.
     REMOTE_PLAYER_COUNT = 2
 H1_ENUM_CONST_END(RemoteConstant)
 
@@ -87,8 +85,7 @@ struct RemotePacketHeader {
 };
 #pragma pack(pop)
 
-// API-forced: PacketSend/packet are byte buffers framed by this header (Buka
-// keeps the same accessor).
+// API-forced: PacketSend/packet are byte buffers framed by this header.
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
 
 // A remote message's payload. TransmitRemoteData copies the caller's buffer to
@@ -137,8 +134,7 @@ extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
 
 i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
 i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
-// Buka 2.1 REMOTE.h defaults the retry dialog and message type; HoMM1's
-// trailing destination flag defaults to its usual game-position addressing.
+// The trailing destination flag defaults to game-position addressing.
 i32 TransmitRemoteData(
     char* data,
     i32 destination,
@@ -172,7 +168,7 @@ i8 WaitForHost(void);
 i8 WaitForGuest(void);
 
 // PollRemote's heartbeat clocks, timeout latch, recent-id ring and the
-// incoming/outgoing message buffers (Buka REMOTE.h).
+// incoming/outgoing message buffers.
 extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
@@ -180,12 +176,12 @@ extern RemoteMessage rcvBufIn;
 extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
-// The network setup's host/guest handshake states and broadcast clock (Buka
-// Netbios.h; retail places them inside REMOTE's data, 0x004a2d4c-0x004a2e68).
+// The network setup's host/guest handshake states and broadcast clock
+// (retail places them inside REMOTE's data, 0x004a2d4c-0x004a2e68).
 extern i8 gInitNetGuestStatus;
 extern i8 gWaitForHostStatus;
 void PollRemote();
-// HoMM1 REMOTE.cpp defines the transport bring-up (Buka REMOTE and Netbios).
+// REMOTE.cpp defines the transport bring-up.
 void RemoteMain(i32 gameMode);
 i32 nbnet_init(void);
 

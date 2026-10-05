@@ -1,6 +1,5 @@
-> Imported from Giten `39384dc6726478357b5efd42c66522781e8310fe`.
-> This is donor evidence, not a validated HoMM1 VC4 rule. Commands and source
-> examples describe that donor. Re-prove applicable mechanisms with VC4.
+> Unmeasured hypothesis: observed with MSVC 5.0; not measured on this
+> target's VC4 or VC6 compilers. Re-prove the mechanism before relying on it.
 
 # Sibling scopes can change stack-slot reuse
 
@@ -22,12 +21,11 @@ case Load: {
 }
 ```
 
-The [recorded SerializeFields A/B](https://github.com/sushi-shi/gruntz-decomp/blob/b27b05deb249e4cacbb29f55f17b469ecfe56f26/docs/patterns/switch-arm-locals-overlay-only-when-scoped.md)
-reports a smaller matching frame after moving arm-specific declarations from
-function scope into their arms.
+An MSVC 5.0 A/B reported a smaller frame, matching retail, after moving
+arm-specific declarations from function scope into their arms.
 
 This demonstrates a scope-sensitive allocation, **not** the old universal claim
-that VC5 overlays slots only for disjoint lexical scopes. A shared retail slot
+that MSVC 5.0 overlays slots only for disjoint lexical scopes. A shared retail slot
 does not uniquely recover source scope, and a frame-size difference can also
 come from spills, temporaries, alignment, or EH.
 
@@ -38,11 +36,10 @@ to steer allocation.
 ## Dead parameter homes
 
 A scoped local can also land in the stack home of a parameter that is dead by
-then. In OpJumpUnlessStatContest (0x4348b0) one `case` declares two
-out-locals whose addresses it passes; cl 5.0 places them in the homes of the
-already-consumed `level` and `swap` parameters and the frame shrinks from 0x10
-to 8 bytes, matching retail. Declared at function scope, the same locals get
-their own frame slots. So a retail local addressed at a parameter's `[esp+n]`
-home is a hint that the source scoped it narrowly, not that the source reused
-the parameter. Lane 2's field-object residues (a local "stored in a dead
-parameter slot") may be the same mechanism where the scoping was not tried.
+then. In an observed MSVC 5.0 case, one `case` arm declares two out-locals
+whose addresses it passes; the compiler places them in the homes of two
+already-consumed parameters and the frame shrinks from 0x10 to 8 bytes,
+matching retail. Declared at function scope, the same locals get their own
+frame slots. So a retail local addressed at a parameter's `[esp+n]` home is a
+hint that the source scoped it narrowly, not that the source reused the
+parameter.
