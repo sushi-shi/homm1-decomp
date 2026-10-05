@@ -339,6 +339,8 @@ i16 heroWindowManager::DoDialog(heroWindow* window, i16 (*handler)(tag_message&)
 }
 
 // HoMM2 Buka UpdateScreen plus HoMM1's final software-pointer redraw.
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046a8e8, 0x2f)
 void heroWindowManager::UpdateScreen(void) {
     PollSound();
@@ -378,6 +380,8 @@ void heroWindowManager::UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height) 
     PollSound();
 }
 
+// @dead-code
+// Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046aa74, 0x2f)
 void heroWindowManager::RedrawScreen(void) {
     heroWindow* window = m_windowListHead;
