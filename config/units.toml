@@ -231,7 +231,9 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/HISCORE"
 source = "src/SOURCE/HISCORE.cpp"
-flags = "cpp_buka"
+# Update's byte-armed GetMonType conditional emits retail's TEST; SETE CL
+# under /G5; /G6 emits NEG; SBB AL,AL; INC AL for the same source.
+flags = "cpp_buka_g5"
 
 [[unit]]
 unit = "SOURCE/KB"

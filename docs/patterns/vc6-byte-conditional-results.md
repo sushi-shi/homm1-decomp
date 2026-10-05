@@ -45,3 +45,11 @@ conditional has signed-byte arms (`COMBAT_ATTACKER_SIDE` and
 Casting the completed integer comparison instead emits the arithmetic Boolean
 sequence. The complete body and references are exact; see
 [`buka-seed-attention-controls.json`](../../config/retail/buka-seed-attention-controls.json).
+
+`highScoreManager::Update` (`SOURCE/HISCORE`) adds a CPU-profile control. Its
+`GetMonType` argument is `m_showCampaignScores ? static_cast<i8>(campaign) :
+static_cast<i8>(standard)`. Under `/G5` it emits retail's
+`TEST; SETE CL; MOVSX EDX,CL`; the same source under `/G6` emits
+`NEG; SBB AL,AL; INC AL; MOVSX ECX,AL`. Logical-not and a cast `== 0` emit
+`NEG; SBB; INC` under both profiles. The unit therefore uses `/G5`, and the
+function is exact.

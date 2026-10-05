@@ -205,7 +205,11 @@ void highScoreManager::Update(void) {
             m_monsterTypes[rank] = 0;
             sprintf(gText, "");
         } else {
-            m_monsterTypes[rank] = GetMonType(highScore.score, static_cast<i8>(!m_showCampaignScores));
+            m_monsterTypes[rank] = GetMonType(
+                highScore.score,
+                m_showCampaignScores ? static_cast<i8>(HIGH_SCORE_TYPE_CAMPAIGN)
+                                     : static_cast<i8>(HIGH_SCORE_TYPE_STANDARD)
+            );
         }
 
         hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
