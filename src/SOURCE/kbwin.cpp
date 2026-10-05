@@ -1198,6 +1198,7 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
+    u32 unusedErr; // Buka 2.1's unused dwErr keeps a frame slot.
     u32 logicalDrives;
     i32 eachCd;
     i32 thisFh;
@@ -1209,7 +1210,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     HKEY activeKeyVal;
     char subKeyArray[REGISTRY_TEXT_BUFFER_SIZE];
 
-    sprintf(gText, "%sHEROES.AGG", ".\\DATA\\");
+    sprintf(gText, "%sHEROES.AGG", gDataPath);
     thisFh = open(gText, _O_BINARY);
     if (thisFh == -1) {
         if (_chdir(gcRegAppPath) == -1)
