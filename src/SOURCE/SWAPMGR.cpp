@@ -493,10 +493,10 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSide != m_targetSide
                                     && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
                                             == CREATURE_NONE
-                                        || m_heroes[m_selectedSide]
-                                                   ->m_army.m_creatureTypes[m_selectedSlot]
-                                               == m_heroes[m_targetSide]
-                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                        || m_heroes[m_targetSide]
+                                                   ->m_army.m_creatureTypes[m_targetSlot]
+                                               == m_heroes[m_selectedSide]
+                                                      ->m_army.m_creatureTypes[m_selectedSlot])) {
                                     SplitMons();
                                     Reset();
                                 } else {
@@ -558,10 +558,10 @@ i16 swapManager::Main(struct tag_message& message) {
                                     && m_selectedSide != m_targetSide
                                     && (m_heroes[m_targetSide]->m_army.m_creatureTypes[m_targetSlot]
                                             == CREATURE_NONE
-                                        || m_heroes[m_selectedSide]
-                                                   ->m_army.m_creatureTypes[m_selectedSlot]
-                                               == m_heroes[m_targetSide]
-                                                      ->m_army.m_creatureTypes[m_targetSlot])) {
+                                        || m_heroes[m_targetSide]
+                                                   ->m_army.m_creatureTypes[m_targetSlot]
+                                               == m_heroes[m_selectedSide]
+                                                      ->m_army.m_creatureTypes[m_selectedSlot])) {
                                     SplitMons();
                                     Reset();
                                 } else {

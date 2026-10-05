@@ -1103,7 +1103,7 @@ void PollRemote(void) {
                 else
                     newControl = 1;
             } else {
-                if (giHostGamePos == giThisGamePos)
+                if (giThisGamePos == giHostGamePos)
                     newControl = 0;
                 else
                     newControl = 1;
@@ -1134,7 +1134,7 @@ void PollRemote(void) {
                     gRemoteReady = 1;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = 1;
-                if (giHostGamePos != giThisGamePos && giCurPlayer != giThisGamePos
+                if (giThisGamePos != giHostGamePos && giCurPlayer != giThisGamePos
                     && gpAdvManager->m_active == 1 && rcvBufIn.command / 16 != giThisGamePos) {
                     giCurPlayer = rcvBufIn.command / 16;
                     gCurHourGlassPhase = rcvBufIn.command - giCurPlayer * 16;

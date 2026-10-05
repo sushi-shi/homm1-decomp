@@ -1156,7 +1156,7 @@ i16 advManager::Main(struct tag_message& message) {
         message.executiveCommand = EXECUTIVE_COMMAND_TERMINATE_LOOP;
         return MESSAGE_DISPATCH_FORWARD;
     }
-    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giHostGamePos == giThisGamePos)) {
+    if (!gbHumanPlayer[giCurPlayer] && (!gRemoteOn || giThisGamePos == giHostGamePos)) {
         gpPhilAI->DoAI(giCurPlayer);
         gpGame->NextPlayer();
         return MESSAGE_DISPATCH_CONSUME;
