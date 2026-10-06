@@ -58,7 +58,13 @@ H1_ENUM_CONST_END(FileRequesterScrollGeometry)
 // version; versions from MAP_EXTRA_VERSION carry map-extra records).
 H1_ENUM_CONST_BEGIN(MapHeaderConstant)
     MAP_HEADER_ID = 1000,
-    MAP_EXTRA_VERSION = 1112
+    MAP_EXTRA_VERSION = 1112,
+    MAP_HEADER_NAME_COUNT = 10,
+    MAP_HEADER_NAME_SIZE = 15,
+    // The map's name and description in each of eight languages (the
+    // requester shows the first).
+    MAP_HEADER_LANGUAGE_COUNT = 8,
+    MAP_HEADER_DESCRIPTION_SIZE = 121
 H1_ENUM_CONST_END(MapHeaderConstant)
 
 // SMapHeader::size, gMapSize and game::m_mapSize: retail gMapSizeNames
@@ -87,21 +93,16 @@ H1_ENUM_END(MapDifficulty)
 // window's size, level and description fields; OK/CANCEL are the dialog role
 // buttons.
 H1_ENUM_ID_BEGIN(FileRequesterControlId)
-    FILE_REQUESTER_OK = DIALOG_BUTTON_2,
-    FILE_REQUESTER_CANCEL = DIALOG_BUTTON_1,
-    FILE_REQUESTER_SCROLL_UP = 1,
-    FILE_REQUESTER_SCROLL_DOWN = 2,
-    FILE_REQUESTER_SCROLL_GUTTER = 3,
-    FILE_REQUESTER_LIST_FIRST = 4,
-    FILE_REQUESTER_SCROLL_KNOB = 14,
-    FILE_REQUESTER_FILENAME_ENTRY = 15,
-    FILE_REQUESTER_FILENAME_LABEL = 16,
-    FILE_REQUESTER_MAP_SIZE = 100,
+FILE_REQUESTER_OK = DIALOG_BUTTON_2,
+    FILE_REQUESTER_CANCEL = DIALOG_BUTTON_1, FILE_REQUESTER_SCROLL_UP = 1,
+    FILE_REQUESTER_SCROLL_DOWN = 2, FILE_REQUESTER_SCROLL_GUTTER = 3, FILE_REQUESTER_LIST_FIRST = 4,
+    FILE_REQUESTER_SCROLL_KNOB = 14, FILE_REQUESTER_FILENAME_ENTRY = 15,
+    FILE_REQUESTER_FILENAME_LABEL = 16, FILE_REQUESTER_MAP_SIZE = 100,
     FILE_REQUESTER_MAP_LEVEL = 101,
-    FILE_REQUESTER_MAP_DESCRIPTION = 102
-H1_ENUM_ID_END(FileRequesterControlId)
+    FILE_REQUESTER_MAP_DESCRIPTION =
+        102 H1_ENUM_ID_END(FileRequesterControlId)
 
-H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
+            H1_ENUM_CONST_BEGIN(FileRequesterListConstant)
     FILE_REQUESTER_VISIBLE_ROWS = 10,
     FILE_REQUESTER_LAST_ROW_OFFSET = 9,
     FILE_REQUESTER_DISPATCH_MASK = 0x32f,
@@ -125,14 +126,20 @@ struct FileRequesterMapInfo {
     char description[FILE_REQUESTER_MAP_DESCRIPTION_SIZE];
 };
 
-// .MAP header as the requester reads it: 0x554 bytes, id 1000 marks a valid
-// map; the name and description offsets are fixed by the constructor.
+// .MAP header: 0x554 bytes, id 1000 marks a valid map. A name and a
+// description per language (the requester shows the first; the editor fills
+// eight of each), and the editor's maps end the header with the format word
+// (1000 for the editor's own format; maps without it are two bytes shorter).
+// No code reads the two name slots after the languages' or the bytes between
+// the descriptions and the format.
 struct SMapHeader {
     i16 id;
     H1_ENUM_STORAGE(MapDifficulty, i8) difficulty;
     H1_ENUM_STORAGE(MapSize, i8) size;
-    char name[0x96];
-    char description[0x4ba];
+    char name[MAP_HEADER_NAME_COUNT][MAP_HEADER_NAME_SIZE];
+    char description[MAP_HEADER_LANGUAGE_COUNT][MAP_HEADER_DESCRIPTION_SIZE];
+    u8 unknown462[0xf0];
+    i16 format;
 };
 
 // PickLoadGame allocates 0x1bc bytes; constructor, Open, Main and Update fix

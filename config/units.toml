@@ -370,7 +370,7 @@ flags = "cpp_buka_g5"
 [[unit]]
 unit = "SOURCE/kbwin"
 source = "src/SOURCE/kbwin.cpp"
-# /Ob2: gcCDTrackName's literal sits among the function literals at its
+# /Ob2: gCDTrackName's literal sits among the function literals at its
 # definition, between the preference and CD-probe literals.
 flags = "cpp_buka_ob2_g5"
 images = ["game", "editor"]
@@ -472,9 +472,51 @@ source = "src/SOURCE/VIEW.cpp"
 # Complete retail instruction/call controls leave only local-stack placement.
 flags = "cpp_buka_g5"
 
+# EDITOR.EXE's main manager (Editor\EDITMGR.CPP), linked by the editor only.
+[[unit]]
+unit = "EDITOR/EDITMGR"
+source = "src/EDITOR/EDITMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
 # EDITOR.EXE's program unit (Editor\EDITOR.CPP), linked by the editor only.
 [[unit]]
 unit = "EDITOR/EDITOR"
 source = "src/EDITOR/EDITOR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The eraser tool (clearManager); descriptive unit name.
+[[unit]]
+unit = "EDITOR/CLEARMGR"
+source = "src/EDITOR/CLEARMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The map-information tool (eventsManager) and its dialogs; descriptive unit name.
+[[unit]]
+unit = "EDITOR/EVENTMGR"
+source = "src/EDITOR/EVENTMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The object-placement tool (Editor\OVERLAY.CPP).
+[[unit]]
+unit = "EDITOR/OVERLAY"
+source = "src/EDITOR/OVERLAY.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The random map generator's editManager methods; descriptive unit name.
+[[unit]]
+unit = "EDITOR/MAPOBJ"
+source = "src/EDITOR/MAPOBJ.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
+# The terrain painting tool (terrainManager); descriptive unit name.
+[[unit]]
+unit = "EDITOR/TERRMGR"
+source = "src/EDITOR/TERRMGR.cpp"
 flags = "cpp_editor_oi_g5"
 images = ["editor"]

@@ -49,10 +49,8 @@ void swapManager::Reset(void) {
         SwapManagerSide,
         H1_ENUM_ENCODE(
             SwapManagerItemType,
-            m_itemType = H1_ENUM_DECODE(
-                SwapManagerItemType,
-                m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE
-            )
+            m_itemType =
+                H1_ENUM_DECODE(SwapManagerItemType, m_selectedSlot = m_targetSlot = SWAP_SLOT_NONE)
         )
     );
 }
@@ -86,18 +84,14 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) swapManager::Open(i16 id) {
     message.text = gText;
     message.id = CONTROL_TITLE;
     m_window->BroadcastMessage(message);
-    SET_ADVENTURE_BUTTON_FLAGS(
-        message,
-        gpAdvManager->m_adventureWindow,
-        WIDGET_COMMAND_CLEAR_FLAGS
-    );
+    SET_ADVENTURE_BUTTON_FLAGS(message, gAdvManager->m_adventureWindow, WIDGET_COMMAND_CLEAR_FLAGS);
     Update();
-    gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
-    KBChangeMenu(hmnuAdv);
+    gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
+    KBChangeMenu(gAdventureMenu);
     gMonoIconSkip = 2;
-    m_selectorIcon = gpResourceManager->GetIcon("swapbtn.icn");
+    m_selectorIcon = gResourceManager->GetIcon("swapbtn.icn");
     gMonoIconSkip = -1;
-    gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
+    gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
     m_messageFilter = MESSAGE_KEY_DOWN | MESSAGE_KEY_UP | MESSAGE_MOUSE_MOVE
                       | MESSAGE_LEFT_BUTTON_DOWN | MESSAGE_RIGHT_BUTTON_DOWN | 0x100
                       | MESSAGE_WIDGET;
@@ -112,68 +106,74 @@ VA(0x0045d25f, 0x114)
 void swapManager::Close(void) {
     tag_message message;
 
-    gpResourceManager->Dispose(m_selectorIcon);
-    gpWindowManager->RemoveWindow(m_window);
+    gResourceManager->Dispose(m_selectorIcon);
+    gWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
-    gpAdvManager->Activate();
-    SET_ADVENTURE_BUTTON_FLAGS(message, gpAdvManager->m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
+    gAdvManager->Activate();
+    SET_ADVENTURE_BUTTON_FLAGS(message, gAdvManager->m_adventureWindow, WIDGET_COMMAND_SET_FLAGS);
 }
 
 VA(0x0045d373, 0x1a2)
 void swapManager::DrawSelector(void) {
     const i16 frameColor = 232;
-    const i16 leftArmyBase = 24;
-    const i16 rightMonsterBaseVal = 252;
-    const i16 curTop = 148;
-    const i16 armySpacingVal = 35;
-    const i16 art1 = 76;
-    const i16 curArt2 = 305;
-    const i16 newTop = 194;
-    const i16 itemGap = 35;
-    i16 mainX = 0;
-    i16 mainY = 0;
+    const i16 leftArmyLeft = 24;
+    const i16 rightArmyLeft = 252;
+    const i16 armyRow = 148;
+    const i16 armyStride = 35;
+    const i16 leftArtifactCol = 76;
+    const i16 rightArtifactCol = 305;
+    const i16 artifactY0 = 194;
+    const i16 artifactsSpacing = 35;
+    i16 selectorX0 = 0;
+    i16 selectorY0 = 0;
 
     if (m_selectedSide != SWAP_SIDE_NONE && m_selectedSlot != SWAP_SLOT_NONE) {
         switch (m_selectedSide) {
             case SWAP_SIDE_LEFT:
                 switch (m_itemType) {
                     case SWAP_ITEM_ARMY:
-                        mainX = m_selectedSlot * armySpacingVal + leftArmyBase - 1;
-                        mainY = curTop - 1;
+                        selectorX0 = m_selectedSlot * armyStride + leftArmyLeft - 1;
+                        selectorY0 = armyRow - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        mainX = art1
-                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
-                                - 1;
-                        mainY = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + newTop - 1;
+                        selectorX0 =
+                            leftArtifactCol
+                            + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing
+                                                                              : 0)
+                            - 1;
+                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing
+                                     + artifactY0 - 1;
                         break;
                 }
                 break;
             case SWAP_SIDE_RIGHT:
                 switch (m_itemType) {
                     case SWAP_ITEM_ARMY:
-                        mainX = m_selectedSlot * armySpacingVal + rightMonsterBaseVal - 1;
-                        mainY = curTop - 1;
+                        selectorX0 = m_selectedSlot * armyStride + rightArmyLeft - 1;
+                        selectorY0 = armyRow - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        mainX = curArt2
-                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? itemGap : 0)
-                                - 1;
-                        mainY = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * itemGap + newTop - 1;
+                        selectorX0 =
+                            rightArtifactCol
+                            + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing
+                                                                              : 0)
+                            - 1;
+                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing
+                                     + artifactY0 - 1;
                         break;
                 }
                 break;
         }
         m_selectorIcon->FillToBuffer(
-            mainX + 16,
-            mainY + 16,
+            selectorX0 + 16,
+            selectorY0 + 16,
             2,
             frameColor,
             ICON_DRAW_NORMAL,
             ICON_DRAW_OFFSET_FULL
         );
-        gpWindowManager->UpdateScreenRegion(mainX + 16, mainY + 16, 36, 36);
+        gWindowManager->UpdateScreenRegion(selectorX0 + 16, selectorY0 + 16, 36, 36);
     }
 }
 
@@ -216,22 +216,22 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                             if (quickView)
                                 break;
                             m_heroes[SWAP_SIDE_LEFT]->HeroView(1);
-                            gpAdvManager->RedrawAdvScreen(1);
+                            gAdvManager->RedrawAdvScreen(1);
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gpWindowManager
+                            gWindowManager
                                 ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
                             break;
                         case CONTROL_RIGHT_HERO:
                             if (quickView)
                                 break;
                             m_heroes[SWAP_SIDE_RIGHT]->HeroView(1);
-                            gpAdvManager->RedrawAdvScreen(1);
+                            gAdvManager->RedrawAdvScreen(1);
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gpWindowManager
+                            gWindowManager
                                 ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
                             break;
                         case CONTROL_LEFT_ARTIFACT_FIRST:
@@ -368,7 +368,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                         ->m_army
                                         .m_creatureTypes[message.id - CONTROL_LEFT_ARMY_FIRST]
                                     != CREATURE_NONE)
-                                    gpGame->ViewArmy(
+                                    gGame->ViewArmy(
                                         TOWN_ARMY_VIEW_X,
                                         TOWN_ARMY_VIEW_Y,
                                         m_heroes[SWAP_SIDE_LEFT]
@@ -434,7 +434,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                                         ->m_army
                                         .m_creatureTypes[message.id - CONTROL_RIGHT_ARMY_FIRST]
                                     != CREATURE_NONE)
-                                    gpGame->ViewArmy(
+                                    gGame->ViewArmy(
                                         TOWN_ARMY_VIEW_X,
                                         TOWN_ARMY_VIEW_Y,
                                         m_heroes[SWAP_SIDE_RIGHT]
@@ -515,7 +515,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
 
 VA(0x0045dda1, 0x9a)
 void swapManager::ViewMon(void) {
-    gpGame->ViewArmy(
+    gGame->ViewArmy(
         TOWN_ARMY_VIEW_X,
         TOWN_ARMY_VIEW_Y,
         m_heroes[m_selectedSide]->m_army.m_creatureTypes[m_targetSlot],
@@ -540,69 +540,61 @@ void swapManager::SwapArtifacts(void) {
 
     selectedArtifact = m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot];
     targetArtifact = m_heroes[m_targetSide]->m_artifacts[m_targetSlot];
-    gpAdvManager->GiveTakeArtifactStat(
-        m_heroes[m_selectedSide],
-        selectedArtifact,
-        EVENT_ARTIFACT_TAKE
-    );
-    gpAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], targetArtifact, EVENT_ARTIFACT_TAKE);
+    gAdvManager
+        ->GiveTakeArtifactStat(m_heroes[m_selectedSide], selectedArtifact, EVENT_ARTIFACT_TAKE);
+    gAdvManager->GiveTakeArtifactStat(m_heroes[m_targetSide], targetArtifact, EVENT_ARTIFACT_TAKE);
     m_heroes[m_selectedSide]->m_artifacts[m_selectedSlot] = targetArtifact;
     m_heroes[m_targetSide]->m_artifacts[m_targetSlot] = selectedArtifact;
-    gpAdvManager->GiveTakeArtifactStat(
-        m_heroes[m_selectedSide],
-        targetArtifact,
-        EVENT_ARTIFACT_GIVE
-    );
-    gpAdvManager->GiveTakeArtifactStat(
-        m_heroes[m_targetSide],
-        selectedArtifact,
-        EVENT_ARTIFACT_GIVE
-    );
+    gAdvManager
+        ->GiveTakeArtifactStat(m_heroes[m_selectedSide], targetArtifact, EVENT_ARTIFACT_GIVE);
+    gAdvManager
+        ->GiveTakeArtifactStat(m_heroes[m_targetSide], selectedArtifact, EVENT_ARTIFACT_GIVE);
 }
 
 VA(0x0045df61, 0x259)
 void swapManager::SwapMons(void) {
-    armyGroup* destTroops;
-    armyGroup* sourceTroops;
+    armyGroup* targetTroops;
+    armyGroup* selectedArmy;
     i16 i;
     i16 j;
 
-    sourceTroops = &m_heroes[m_selectedSide]->m_army;
-    destTroops = &m_heroes[m_targetSide]->m_army;
-    if (sourceTroops != destTroops) {
-        if (sourceTroops->GetNumArmies() == 1
-            && (destTroops->m_creatureTypes[m_targetSlot] == CREATURE_NONE
-                || destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])))
+    selectedArmy = &m_heroes[m_selectedSide]->m_army;
+    targetTroops = &m_heroes[m_targetSide]->m_army;
+    if (selectedArmy != targetTroops) {
+        if (selectedArmy->GetNumArmies() == 1
+            && (targetTroops->m_creatureTypes[m_targetSlot] == CREATURE_NONE
+                || targetTroops->IsMember(selectedArmy->m_creatureTypes[m_selectedSlot])))
             return;
-        if (destTroops->IsMember(sourceTroops->m_creatureTypes[m_selectedSlot])) {
+        if (targetTroops->IsMember(selectedArmy->m_creatureTypes[m_selectedSlot])) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                if (destTroops->m_creatureTypes[i] == sourceTroops->m_creatureTypes[m_selectedSlot])
+                if (targetTroops->m_creatureTypes[i]
+                    == selectedArmy->m_creatureTypes[m_selectedSlot])
                     break;
             }
-            destTroops->m_creatureCounts[i] += sourceTroops->m_creatureCounts[m_selectedSlot];
-            sourceTroops->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
-            sourceTroops->m_creatureCounts[m_selectedSlot] = 0;
+            targetTroops->m_creatureCounts[i] += selectedArmy->m_creatureCounts[m_selectedSlot];
+            selectedArmy->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
+            selectedArmy->m_creatureCounts[m_selectedSlot] = 0;
             return;
-        } else if (sourceTroops->IsMember(destTroops->m_creatureTypes[m_targetSlot])) {
+        } else if (selectedArmy->IsMember(targetTroops->m_creatureTypes[m_targetSlot])) {
             for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
-                if (sourceTroops->m_creatureTypes[j] == destTroops->m_creatureTypes[m_targetSlot])
+                if (selectedArmy->m_creatureTypes[j] == targetTroops->m_creatureTypes[m_targetSlot])
                     break;
             }
-            sourceTroops->m_creatureCounts[j] += destTroops->m_creatureCounts[m_targetSlot];
-            destTroops->m_creatureTypes[m_targetSlot] = CREATURE_NONE;
-            destTroops->m_creatureCounts[m_targetSlot] = 0;
+            selectedArmy->m_creatureCounts[j] += targetTroops->m_creatureCounts[m_targetSlot];
+            targetTroops->m_creatureTypes[m_targetSlot] = CREATURE_NONE;
+            targetTroops->m_creatureCounts[m_targetSlot] = 0;
             if (j != m_selectedSlot) {
-                destTroops->m_creatureTypes[m_targetSlot] =
-                    sourceTroops->m_creatureTypes[m_selectedSlot];
-                destTroops->m_creatureCounts[m_targetSlot] =
-                    sourceTroops->m_creatureCounts[m_selectedSlot];
-                sourceTroops->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
-                sourceTroops->m_creatureCounts[m_selectedSlot] = 0;
+                targetTroops->m_creatureTypes[m_targetSlot] =
+                    selectedArmy->m_creatureTypes[m_selectedSlot];
+                targetTroops->m_creatureCounts[m_targetSlot] =
+                    selectedArmy->m_creatureCounts[m_selectedSlot];
+                selectedArmy->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
+                selectedArmy->m_creatureCounts[m_selectedSlot] = 0;
             }
             return;
         }
     }
-    sourceTroops->Swap(m_selectedSlot, destTroops, m_targetSlot);
+    selectedArmy->Swap(m_selectedSlot, targetTroops, m_targetSlot);
 }
 
 VA(0x0045e1ba, 0x46e)
@@ -721,26 +713,26 @@ void swapManager::Update(void) {
 
 VA(0x0045e628, 0x352)
 void swapManager::SplitMons(void) {
-    i16 idPos;
-    armyGroup* dstTroopsPtr;
+    i16 textControl;
+    armyGroup* targetTroops;
     armyGroup* selectedArmy;
-    i16 amountWidgetVal;
+    i16 amountWidgetId;
     tag_message message;
     i16 found;
-    i16 lastI;
+    i16 placeSlot;
 
-    amountWidgetVal = TOWN_SPLIT_AMOUNT_CONTROL;
+    amountWidgetId = TOWN_SPLIT_AMOUNT_CONTROL;
     found = 0;
     selectedArmy = &m_heroes[m_selectedSide]->m_army;
-    dstTroopsPtr = &m_heroes[m_targetSide]->m_army;
+    targetTroops = &m_heroes[m_targetSide]->m_army;
     found = 0;
-    idPos = 1;
-    gpTownManager->m_heroWindow1 =
+    textControl = 1;
+    gTownManager->m_heroWindow1 =
         new heroWindow(TOWN_SPLIT_WINDOW_X, TOWN_SPLIT_WINDOW_Y, "splitwin.bin");
-    if (!gpTownManager->m_heroWindow1)
+    if (!gTownManager->m_heroWindow1)
         MemError();
-    gpTownManager->m_splitAmount = 0;
-    gpTownManager->m_splitMaximum = selectedArmy->m_creatureCounts[m_selectedSlot];
+    gTownManager->m_splitAmount = 0;
+    gTownManager->m_splitMaximum = selectedArmy->m_creatureCounts[m_selectedSlot];
     message.type = MESSAGE_WIDGET;
     sprintf(
         gText,
@@ -752,37 +744,37 @@ void swapManager::SplitMons(void) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = TOWN_SPLIT_PROMPT_CONTROL;
     message.text = gText;
-    gpTownManager->m_heroWindow1->BroadcastMessage(message);
-    sprintf(gText, "%d", gpTownManager->m_splitAmount);
+    gTownManager->m_heroWindow1->BroadcastMessage(message);
+    sprintf(gText, "%d", gTownManager->m_splitAmount);
     message.id = TOWN_SPLIT_AMOUNT_CONTROL;
     message.text = gText;
-    gpTownManager->m_heroWindow1->BroadcastMessage(message);
-    gpWindowManager->DoDialog(gpTownManager->m_heroWindow1, SplitArmyHandler, 0);
-    delete gpTownManager->m_heroWindow1;
-    if (gpWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
-        for (lastI = 0; lastI < ARMY_GROUP_SLOT_COUNT; lastI++) {
-            if (dstTroopsPtr->m_creatureTypes[lastI]
+    gTownManager->m_heroWindow1->BroadcastMessage(message);
+    gWindowManager->DoDialog(gTownManager->m_heroWindow1, SplitArmyHandler, 0);
+    delete gTownManager->m_heroWindow1;
+    if (gWindowManager->m_dialogResult == DIALOG_BUTTON_2) {
+        for (placeSlot = 0; placeSlot < ARMY_GROUP_SLOT_COUNT; placeSlot++) {
+            if (targetTroops->m_creatureTypes[placeSlot]
                 == selectedArmy->m_creatureTypes[m_selectedSlot]) {
                 found = 1;
                 break;
             }
         }
         if (found) {
-            dstTroopsPtr->m_creatureCounts[lastI] += gpTownManager->m_splitAmount;
+            targetTroops->m_creatureCounts[placeSlot] += gTownManager->m_splitAmount;
         } else {
-            if (dstTroopsPtr->m_creatureTypes[m_targetSlot] != CREATURE_NONE) {
-                for (lastI = 0; lastI < ARMY_GROUP_SLOT_COUNT; lastI++) {
-                    if (dstTroopsPtr->m_creatureTypes[lastI] == CREATURE_NONE)
+            if (targetTroops->m_creatureTypes[m_targetSlot] != CREATURE_NONE) {
+                for (placeSlot = 0; placeSlot < ARMY_GROUP_SLOT_COUNT; placeSlot++) {
+                    if (targetTroops->m_creatureTypes[placeSlot] == CREATURE_NONE)
                         break;
                 }
-                if (lastI < ARMY_GROUP_SLOT_COUNT)
-                    m_targetSlot = lastI;
+                if (placeSlot < ARMY_GROUP_SLOT_COUNT)
+                    m_targetSlot = placeSlot;
             }
-            dstTroopsPtr->m_creatureTypes[m_targetSlot] =
+            targetTroops->m_creatureTypes[m_targetSlot] =
                 selectedArmy->m_creatureTypes[m_selectedSlot];
-            dstTroopsPtr->m_creatureCounts[m_targetSlot] = gpTownManager->m_splitAmount;
+            targetTroops->m_creatureCounts[m_targetSlot] = gTownManager->m_splitAmount;
         }
-        selectedArmy->m_creatureCounts[m_selectedSlot] -= gpTownManager->m_splitAmount;
+        selectedArmy->m_creatureCounts[m_selectedSlot] -= gTownManager->m_splitAmount;
         if (selectedArmy->m_creatureCounts[m_selectedSlot] == 0)
             selectedArmy->m_creatureTypes[m_selectedSlot] = CREATURE_NONE;
     }

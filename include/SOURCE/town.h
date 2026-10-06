@@ -88,7 +88,9 @@ public:
     // Retail constructor and HasGarrison establish this packed prefix.
     i8 m_id;
     i8 m_owner;
-    i8 m_threat;
+
+    // gTownNames index (GetTownName); NewMap deals each town a unique one.
+    i8 m_nameIndex;
     H1_ENUM_STORAGE(TownType, i8) m_type;
     // XformToCastle sign-extends the map coordinates.
     i8 m_x;
@@ -98,7 +100,9 @@ public:
     i16 m_buildings;
     i8 m_buildState;
     i8 m_unknown19;
-    i16 m_garrison[6];
+    // Creatures waiting in each dwelling for recruitment (recruitUnit's
+    // m_available); grows weekly.
+    i16 m_dwellingAvailable[6];
     // ProcessMapExtra files the cell's map-extra index here; SetupTowns
     // marks towns whose extra record carries a custom setup.
     u8 m_extraIndex;
@@ -119,9 +123,6 @@ public:
     void XformToCastle(void);
     void View(void);
     void Deallocate(void);
-    void BuildBuilding(i32 building);
-    i32 CanBuildDock(void);
-    void CalcNumLevelArchers(i32* numArchers, i32* mageGuildLevel);
 };
 #pragma pack(pop)
 
@@ -130,7 +131,7 @@ public:
 // bit 1 << id. CanBuild confirms the roles: 6 needs no castle, 3 needs water
 // at the dock cell, 5 is never built and 0 has mage-guild levels.
 H1_ENUM_BEGIN(BuildingSlotType)
-    // townManager::m_selectedBuilding with no building bought.
+// townManager::m_selectedBuilding with no building bought.
     BUILDING_SLOT_NONE = -1,
     BUILDING_SLOT_FIRST = 0,
     BUILDING_SLOT_MAGE_GUILD = 0,

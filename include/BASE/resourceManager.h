@@ -55,7 +55,6 @@ public:
     mouse* GetMouse(char*);
     font* GetFont(char* name);
     sample* GetSample(char* name);
-    MIDIWrap* GetMIDIWrap(char* name);
     void Dispose(resource* resourceToDispose);
     void AddResource(resource* newResource);
     void Expunge();

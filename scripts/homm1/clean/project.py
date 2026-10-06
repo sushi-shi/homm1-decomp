@@ -25,8 +25,12 @@ EXECUTABLE = ("build.py", "play.py")
 
 
 def _units(files: dict[str, bytes]) -> list[dict]:
+    """The game's units; units only another image links stay out of the tree."""
     import tomllib
-    return list(tomllib.loads(files["config/units.toml"].decode())["unit"])
+    from homm1.core.paths import DEFAULT_IMAGE
+    from homm1.manifest import unit_images
+    return [u for u in tomllib.loads(files["config/units.toml"].decode())["unit"]
+            if DEFAULT_IMAGE in unit_images(u)]
 
 
 def first_function(files: dict[str, bytes], unit: dict) -> int | None:
@@ -48,8 +52,7 @@ def manifest(files: dict[str, bytes]) -> dict:
     from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, BASE_LIBRARY_FROM,
                                   CRT_LIBRARY, CRT_REPLACES, LINK_LIBS)
     config = tomllib.loads(files["config/units.toml"].decode())
-    # The tree builds the game; editor-only units stay in the matching tree.
-    units = [unit for unit in config["unit"] if "game" in unit.get("images", ["game"])]
+    units = _units(files)
     keyed = []
     for index, unit in enumerate(units):
         rva = first_function(files, unit)

@@ -102,11 +102,10 @@ inline CombatSide& CombatSwitchSide(CombatSide& side) {
 // army::m_facing, also passed as the sprite orientation: the attacker (side
 // 1) starts at column 1 with facing side ^ 1 = 0, so 0 faces right and 1 is
 // the mirrored, left-facing sprite.
-// hexcell::m_occupantFrame records the facing a cell's occupant was last
-// drawn with; the constructor and TakeOccupant reset it to
-// HEXCELL_OCCUPANT_FRAME_NONE so the next frame redraws.
+// hexcell::m_occupantFootprintHalf holds the facing-side half of a wide
+// stack a cell shows, NONE for a one-hex stack or an empty cell.
 H1_ENUM_BEGIN(ArmyFacing)
-    HEXCELL_OCCUPANT_FRAME_NONE = -1,
+    ARMY_FACING_NONE = -1,
     ARMY_FACING_RIGHT = 0,
     ARMY_FACING_LEFT = 1
 H1_ENUM_END(ArmyFacing)
@@ -190,7 +189,7 @@ H1_ENUM_END(CombatObstacleIndex)
 // combatManager::m_combatIcons slots, as LoadCombatResources fills them:
 // the terrain's ground and obstacle icons, textbar.icn, catapult.icn,
 // tent.icn, castle%02d.icn, cloud.icn, keep%02d.icn and spells.icn.
-// hexcell::m_groundIcon and m_obstacleType name the slot a cell draws from.
+// hexcell::m_groundIcon and m_obstacleIcon name the slot a cell draws from.
 H1_ENUM_BEGIN(CombatIconSlot)
     COMBAT_ICON_GROUND = 0,
     COMBAT_ICON_TEXTBAR = 1,

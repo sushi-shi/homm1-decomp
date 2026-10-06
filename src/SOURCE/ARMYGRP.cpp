@@ -24,29 +24,30 @@ void armyGroup::View(i32) {}
 
 // HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
 VA(0x004184ee, 0x11b)
-i16 armyGroup::GetMorale(hero* h, town* t) {
+i16 armyGroup::GetMorale(hero* armyHero, town* occupiedTown) {
     i32 morale;
     H1_ENUM_LOCAL(ArmyGroupAlignmentResult, i32) alignment;
 
     morale = 0;
     alignment = IsHomogeneous(ARMY_GROUP_EMPTY_SLOT);
     morale += H1_ENUM_ENCODE(ArmyGroupAlignmentResult, alignment);
-    if (h) {
-        if (!h->m_heroClass)
+    if (armyHero) {
+        if (!armyHero->m_heroClass)
             morale++;
-        morale += h->m_morale;
-        if (h->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
+        morale += armyHero->m_morale;
+        if (armyHero->HasArtifact(ARTIFACT_MEDAL_OF_VALOR))
             morale++;
-        if (h->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
+        if (armyHero->HasArtifact(ARTIFACT_MEDAL_OF_COURAGE))
             morale++;
-        if (h->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
+        if (armyHero->HasArtifact(ARTIFACT_MEDAL_OF_HONOR))
             morale++;
-        if (h->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
+        if (armyHero->HasArtifact(ARTIFACT_MEDAL_OF_DISTINCTION))
             morale++;
-        if (h->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
+        if (armyHero->HasArtifact(ARTIFACT_FIZBIN_OF_MISFORTUNE))
             morale -= 2;
     }
-    if (t && (t->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TAVERN)))
+    if (occupiedTown
+        && (occupiedTown->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_TAVERN)))
         morale++;
     if (morale < ARMY_GROUP_MORALE_MIN)
         morale = ARMY_GROUP_MORALE_MIN;
@@ -73,25 +74,25 @@ i8 armyGroup::IsMember(H1_ENUM_PARAM(CreatureType, i8) creatureType) {
 
 // Races are six consecutive creature ids.
 VA(0x00418676, 0x13e)
-H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 countRaces) {
-    i32 numCreatureTypes = 0;
+H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 alignmentMode) {
+    i32 numTypeRuns = 0;
     i8 raceUsed[ARMY_GROUP_RACE_COUNT];
     raceUsed[0] = raceUsed[1] = raceUsed[2] = raceUsed[3] = raceUsed[4] = 0;
-    H1_ENUM_LOCAL(CreatureType, i32) prev = CREATURE_NONE;
+    H1_ENUM_LOCAL(CreatureType, i32) prevType = CREATURE_NONE;
     i32 numRaces;
     i16 i;
     for (i = 0; i < ARMY_GROUP_SLOT_COUNT; ++i) {
         if (m_creatureTypes[i] != CREATURE_NONE) {
-            if (countRaces == ARMY_GROUP_EMPTY_SLOT)
+            if (alignmentMode == ARMY_GROUP_EMPTY_SLOT)
                 ++raceUsed[CREATURE_FACTION(m_creatureTypes[i])];
-            if (m_creatureTypes[i] != prev) {
-                ++numCreatureTypes;
-                prev = m_creatureTypes[i];
+            if (m_creatureTypes[i] != prevType) {
+                ++numTypeRuns;
+                prevType = m_creatureTypes[i];
             }
         }
     }
 
-    if (numCreatureTypes <= 1)
+    if (numTypeRuns <= 1)
         return ARMY_GROUP_ALIGNMENT_NO_MODIFIER;
 
     numRaces = 0;
@@ -174,9 +175,9 @@ void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
 }
 
 VA(0x004189b6, 0x133)
-void armyGroup::DamageGroup(float damagePercent) {
+void armyGroup::DamageGroup(float casualtyFraction) {
     i32 killed;
-    i32 killChance = static_cast<i32>(damagePercent * 100.0f);
+    i32 killChance = casualtyFraction * 100.0f;
     i32 i;
     i32 isFirstTroop = 1;
     i32 j;
@@ -188,10 +189,10 @@ void armyGroup::DamageGroup(float damagePercent) {
                 if (SRandom(0, 100) < killChance)
                     ++killed;
             }
-            if (isFirstTroop && killed == m_creatureCounts[i] && damagePercent < 0.999)
+            if (isFirstTroop && killed == m_creatureCounts[i] && casualtyFraction < 0.999)
                 --killed;
             m_creatureCounts[i] -= killed;
-            if (m_creatureCounts[i] <= 0 || damagePercent >= 1.0) {
+            if (m_creatureCounts[i] <= 0 || casualtyFraction >= 1.0) {
                 m_creatureCounts[i] = 0;
                 m_creatureTypes[i] = CREATURE_NONE;
             }

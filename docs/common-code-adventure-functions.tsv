@@ -57,7 +57,7 @@ src/BASE/BUTTON.cpp	0x76c80	button::button	read	none	Field initialization.		kept
 src/BASE/BUTTON.cpp	0x76cd9	button::button	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76d87	button::button	read	none	Field initialization.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x76e34	button::Read	read	widget-geometry;resource-position-lookup	READ_WIDGET_GEOMETRY; trailing field reads are button-specific.		kept-existing-source	100	100
-src/BASE/BUTTON.cpp	0x76f8a	button::Main	read	widget-hit-test;widget-message	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the track-press loop is button policy.		kept-existing-source	100	100
+src/BASE/BUTTON.cpp	0x76f8a	button::Main	read	widget-hit-test;widget-message;button-release	Uses WIDGET_CONTAINS_LOCAL_POINT and SET_WIDGET_MESSAGE; the track-press loop is button policy.	IS_BUTTON_RELEASE_MESSAGE	retained-exact	100	100
 src/BASE/BUTTON.cpp	0x7739f	button::Select	read	widget-message	Select stores type and id before choosing the command: not SET_WIDGET_MESSAGE's order.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x7748b	button::Deselect	read	widget-message	Uses SET_WIDGET_MESSAGE; the saved-modifier restore stays.		kept-existing-source	100	100
 src/BASE/BUTTON.cpp	0x77545	button::Draw	read	widget-screen-origin	Two DrawToBuffer arms; open-coded.		kept-existing-source	100	100
@@ -280,8 +280,8 @@ src/SOURCE/ADVMGR.cpp	0xaf3e	advManager::MobilizeCurrHero	read	none	Mobilize cur
 src/SOURCE/ADVMGR.cpp	0xaf7f	advManager::DemobilizeCurrHero	read	none	Demobilize current hero.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xb0dd	advManager::SetTownContext	read	none	Town context switch.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xb301	advManager::SetHeroContext	read	hero-embarked	IsEmbarked selects the boat cursor.	hero::IsEmbarked	retained-exact	100	100
-src/SOURCE/ADVMGR.cpp	0xb68e	advManager::DoHeroKnob	read	knob-drag	Hero and town knob drags mirror each other.		kept-existing-source	100	100
-src/SOURCE/ADVMGR.cpp	0xb8d3	advManager::DoTownKnob	read	knob-drag	Same as DoHeroKnob for towns.		kept-existing-source	100	100
+src/SOURCE/ADVMGR.cpp	0xb68e	advManager::DoHeroKnob	read	knob-drag;button-release	Hero and town knob drags mirror each other.	IS_BUTTON_RELEASE_MESSAGE	retained-exact	100	100
+src/SOURCE/ADVMGR.cpp	0xb8d3	advManager::DoTownKnob	read	knob-drag;button-release	Same as DoHeroKnob for towns.	IS_BUTTON_RELEASE_MESSAGE	retained-exact	100	100
 src/SOURCE/ADVMGR.cpp	0xbb18	advManager::ViewPuzzle	read	none	Puzzle window.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xbebe	advManager::PuzzleDraw	read	none	Puzzle draw.		kept-existing-source	100	100
 src/SOURCE/ADVMGR.cpp	0xc0a3	advManager::CastSpell	read	none	Spell dispatch.		kept-existing-source	100	100
@@ -334,7 +334,7 @@ src/SOURCE/CURSOR.cpp	0x22f55	advManager::ValidMoveWithEvent	read	hero-embarked	
 src/SOURCE/CURSOR.cpp	0x230f8	advManager::ValidMove	read	non-shadow-object	North/south blocking tests use CELL_HAS_NON_SHADOW_OBJECT (shared with helpers worker B); the whirlpool exception stays at the caller.	CELL_HAS_NON_SHADOW_OBJECT	retained-exact	100	100
 src/SOURCE/CURSOR.cpp	0x23344	advManager::MoveOrigin	read	none	Origin shift with cursor-flag moves; single site.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x24a50	advManager::DoEvent	read	hero-embarked;event-window-args;flag-reward-visit;memerror-check	IsEmbarked for the boat landing. EventWindow keeps its eight explicit arguments. The visited-flag reward arms (buoy, faerie ring, fountain, oasis, statue) differ in stat and text; kept as written.	hero::IsEmbarked;NormalDialog defaults	retained-exact	100	100
-src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	none	Object erase with sound grid update.		kept-existing-source	100	100
+src/SOURCE/EVENTS.cpp	0x267ed	advManager::EraseObj	read	map-cell-in-bounds	Object erase with sound grid update.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/EVENTS.cpp	0x269b5	advManager::HeroSwap	read	none	Hero meeting through swapManager.		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26a58	advManager::TownEvent	read	current-hero	Town visit; current hero read through GetHero(gpCurPlayer->m_currentHero).		kept-existing-source	100	100
 src/SOURCE/EVENTS.cpp	0x26be9	advManager::EventSound	read	none	Event sound selection.		kept-existing-source	100	100
@@ -363,10 +363,10 @@ src/SOURCE/GAME.cpp	0x2b400	playerData::Write	read	file-value	Scalar fields thro
 src/SOURCE/GAME.cpp	0x2b5f2	playerData::Read	read	file-value	Scalar fields through READ_FILE_VALUE; arrays and the pad buffer stay explicit.	READ_FILE_VALUE	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2b7d3	playerData::NextHero	read	none	Next mobile hero search.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b8d3	playerData::HasMobileHero	read	none	Mobility scan.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2b929	playerData::CountVisitedObelisks	read	none	Bit count.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2b929	playerData::CountPuzzlePiecesRemoved	read	none	Bit count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2b97f	playerData::BuildingsOwned	read	town-building-bit	Building-mask counts; typed building flags are deferred.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2ba35	playerData::NumOfGivenArtifact	read	none	Artifact count.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	none	Hint placement.		kept-existing-source	100	100
+src/SOURCE/GAME.cpp	0x2bab9	ComputeUALoc	read	map-cell-in-bounds	Hint placement.	MAP_CELL_IN_BOUNDS	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x2bdda	game::VisitObelisk	read	none	Obelisk piece pick.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bf56	game::IsMobile	read	none	Mobility test; CELL_TERRAIN already used.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x2bfee	game::GetWorldMapData	read	none	Accessor.		kept-existing-source	100	100
@@ -435,8 +435,8 @@ src/SOURCE/GAME.cpp	0x36796	game::ProcessMapExtra	read	none	Map extras.		kept-ex
 src/SOURCE/GAME.cpp	0x3689d	game::SetupTowns	read	none	Towns set-up.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x36a6c	game::ProcessOnMapHeroes	read	none	Map heroes.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x36d91	game::CheckHeroConsistency	read	none	Consistency check.		kept-existing-source	100	100
-src/SOURCE/GAME.cpp	0x370d2	game::TransmitSaveGame	read	transmit-defaults	Save transfer; TransmitRemoteData trailing defaults dropped where they matched.	TransmitRemoteData defaults	retained-exact	100	100
-src/SOURCE/GAME.cpp	0x376cf	game::ReceiveSaveGame	read	transmit-defaults	Save receive; TransmitRemoteData trailing defaults dropped.	NormalDialog defaults;TransmitRemoteData defaults	retained-exact	100	100
+src/SOURCE/GAME.cpp	0x370d2	game::TransmitSaveGame	read	transmit-defaults;remote-save-encoded	Save transfer; TransmitRemoteData trailing defaults dropped where they matched.	TransmitRemoteData defaults;REMOTE_SAVE_ENCODED	retained-exact	100	100
+src/SOURCE/GAME.cpp	0x376cf	game::ReceiveSaveGame	read	transmit-defaults;remote-save-encoded	Save receive; TransmitRemoteData trailing defaults dropped.	NormalDialog defaults;TransmitRemoteData defaults;REMOTE_SAVE_ENCODED	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x37b7f	game::DoNewTurn	read	none	New turn.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/GAME.cpp	0x38134	game::GetBoatsBuilt	read	none	Boat count.		kept-existing-source	100	100
 src/SOURCE/GAME.cpp	0x38180	game::GetMap	read	none	Map choice.		kept-existing-source	100	100
@@ -573,7 +573,7 @@ src/SOURCE/REQUEST.cpp	0x54459	fileRequester::Open	read	widget-message	SET_WIDGE
 src/SOURCE/REQUEST.cpp	0x54826	fileRequester::SetOK	read	widget-message	Already SET_WIDGET_MESSAGE.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x5488d	fileRequester::Main	read	filename-character-filter;saved-humans-digit;normal-dialog-defaults	Filename character filter is a single site; the saved-game human digit (extension[2] - '0') repeats three times in REQUEST but has no helper. NormalDialog trailing defaults dropped.	NormalDialog defaults	retained-exact	100	100
 src/SOURCE/REQUEST.cpp	0x55329	fileRequester::UpdateMapInfo	read	none	Selection change guard.		kept-existing-source	100	100
-src/SOURCE/REQUEST.cpp	0x553a7	fileRequester::DoKnob	read	none	Knob drag loop; single site.		kept-existing-source	100	100
+src/SOURCE/REQUEST.cpp	0x553a7	fileRequester::DoKnob	read	button-release	Knob drag loop; single site.	IS_BUTTON_RELEASE_MESSAGE	retained-exact	100	100
 src/SOURCE/REQUEST.cpp	0x55602	fileRequester::Update	read	saved-humans-digit	Row text and suffix; the human digit read stays explicit.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55aa0	fileRequester::GetMapName	read	none	Bounded selection accessor.		kept-existing-source	100	100
 src/SOURCE/REQUEST.cpp	0x55af9	fileRequester::GetFilename	read	none	File name composition.		kept-existing-source	100	100

@@ -10,7 +10,8 @@
 
 // playerData::m_heroIds: a player keeps at most eight heroes (TOWNMGR's
 // recruit and swap tests).
-// The obelisk puzzle has 48 pieces kept as bits in m_obelisksVisited. The
+// The obelisk puzzle has 48 pieces; m_puzzlePiecesRemoved holds one bit per
+// uncovered piece. The
 // ultimate-artifact hint coordinates are HINT_NONE until ComputeUALoc places them. Write/Read
 // save 50 zero bytes between the hero and hint blocks.
 H1_ENUM_CONST_BEGIN(PlayerDataConstant)
@@ -132,7 +133,7 @@ public:
     i8 m_townIds[GAME_TOWN_COUNT];
     H1_ENUM_ARRAY(i32, m_resources, ResourceType, RESOURCE_COUNT);
     char m_unknown99[2];
-    u8 m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
+    u8 m_puzzlePiecesRemoved[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;
     // --- methods ---
     void Write(i32 file);
@@ -145,7 +146,7 @@ public:
         i32 buildState
     );
     i32 NumOfGivenArtifact(H1_ENUM_PARAM(ArtifactType, i32) artifact);
-    i8 CountVisitedObelisks(void);
+    i8 CountPuzzlePiecesRemoved(void);
     i8 CurrentHero(void) {
         return m_currentHero;
     }

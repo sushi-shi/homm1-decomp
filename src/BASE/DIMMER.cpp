@@ -19,9 +19,9 @@ dimmerWidget::dimmerWidget(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind
 
 VA(0x00476b4a, 0x77)
 void dimmerWidget::Read(void) {
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
 }
 
 VA(0x00476bc1, 0x19)

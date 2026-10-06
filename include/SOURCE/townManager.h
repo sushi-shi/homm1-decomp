@@ -71,25 +71,21 @@ H1_ENUM_STEPPED(TownCommandText)
 extern H1_ENUM_ARRAY(char*, gTownCommand, TownCommandText, TOWN_TEXT_COUNT);
 
 H1_ENUM_ID_BEGIN(TownControl)
-    TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
-    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d,
-    TOWN_GARRISON_FIRST_CONTROL = 0x10,
+TOWN_EMPTY_STATUS_CONTROL_FIRST = 0x1c,
+    TOWN_EMPTY_STATUS_CONTROL_LAST = 0x1d, TOWN_GARRISON_FIRST_CONTROL = 0x10,
     TOWN_GARRISON_SLOT_FIRST = 0x11,
     // The five army slots of each strip run FIRST..LAST (Main's hover range).
-    TOWN_GARRISON_SLOT_LAST = 0x15,
-    TOWN_HERO_FIRST_CONTROL = 0x16,
-    TOWN_HERO_SLOT_FIRST = 0x17,
+    TOWN_GARRISON_SLOT_LAST = 0x15, TOWN_HERO_FIRST_CONTROL = 0x16, TOWN_HERO_SLOT_FIRST = 0x17,
     TOWN_HERO_SLOT_LAST = 0x1b,
-    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0
-H1_ENUM_ID_END(TownControl)
+    TOWN_CLOSE_CONTROL = DIALOG_BUTTON_0 H1_ENUM_ID_END(TownControl)
 
-// Town objects: gTownObjectType's empty entry and a .tod without a border
-// widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
-// gTownObjectNames holds the neutral objects, the four town-type
-// prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
-// The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
-// its level frames come in pairs.
-H1_ENUM_CONST_BEGIN(TownObjectConstant)
+    // Town objects: gTownObjectType's empty entry and a .tod without a border
+    // widget are NONE (m_selectedBuilding's empty value is BUILDING_SLOT_NONE).
+    // gTownObjectNames holds the neutral objects, the four town-type
+    // prefixes, then the faction-object suffixes (index type + TOWN_TYPE_COUNT).
+    // The mage guild's border grows 20 pixels a level above 0x61, bottom 0x99;
+    // its level frames come in pairs.
+    H1_ENUM_CONST_BEGIN(TownObjectConstant)
     TOWN_OBJECT_NONE = -1,
     TOWN_MAGE_GUILD_LEVEL_HEIGHT = 20,
     TOWN_MAGE_GUILD_BASE_HEIGHT = 0x61,
@@ -186,20 +182,18 @@ H1_ENUM_CONST_BEGIN(TownCastleControl)
     TOWN_CASTLE_STATUS_HEIGHT = 0x10
 H1_ENUM_CONST_END(TownCastleControl)
 
-// RecruitHero's m_recruitState: which of the two tavern heroes was hired.
+// RecruitHero's m_recruitState: which of the two candidate heroes was hired.
 H1_ENUM_CONST_BEGIN(TownRecruitHeroConstant)
     RECRUIT_HERO_NONE = -1
 H1_ENUM_CONST_END(TownRecruitHeroConstant)
 
 // buybuil%d.bin controls BuyBuild fills: the building's picture and name.
 H1_ENUM_ID_BEGIN(TownBuyBuildControl)
-    BUY_BUILD_ICON_CONTROL = 2,
-    BUY_BUILD_NAME_CONTROL = 3
-H1_ENUM_ID_END(TownBuyBuildControl)
+BUY_BUILD_ICON_CONTROL = 2, BUY_BUILD_NAME_CONTROL = 3 H1_ENUM_ID_END(TownBuyBuildControl)
 
-// castle.bin state frames over a building's icon.
-H1_ENUM_BEGIN(TownCastleFrame)
-    // No state frame: SetupCastle clears the state widget.
+                            // castle.bin state frames over a building's icon.
+                            H1_ENUM_BEGIN(TownCastleFrame)
+                            // No state frame: SetupCastle clears the state widget.
     TOWN_CASTLE_FRAME_NONE = -1,
     TOWN_CASTLE_FRAME_BUILT = 0xb,
     TOWN_CASTLE_FRAME_CANNOT_BUILD = 0xc,
@@ -269,20 +263,17 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
 H1_ENUM_CONST_END(TownScreenConstant)
 
 // rcrthero.bin widget ids: the two candidates' portraits, class labels and
-// select buttons (dimmed for the cannot-recruit quick view).
+// select buttons (dimmed for the right-click quick view).
 H1_ENUM_ID_BEGIN(TownRecruitHeroControl)
-    RECRUIT_HERO_PORTRAIT_FIRST = 2,
-    RECRUIT_HERO_PORTRAIT_SECOND = 3,
-    RECRUIT_HERO_CLASS_FIRST = 6,
-    RECRUIT_HERO_CLASS_SECOND = 7,
+RECRUIT_HERO_PORTRAIT_FIRST = 2,
+    RECRUIT_HERO_PORTRAIT_SECOND = 3, RECRUIT_HERO_CLASS_FIRST = 6, RECRUIT_HERO_CLASS_SECOND = 7,
     RECRUIT_HERO_SELECT_FIRST = 8,
-    RECRUIT_HERO_SELECT_SECOND = 9
-H1_ENUM_ID_END(TownRecruitHeroControl)
+    RECRUIT_HERO_SELECT_SECOND = 9 H1_ENUM_ID_END(TownRecruitHeroControl)
 
 // The constructor, UnloadTown, ShowText, ResetStrips and recruitUnit::Close
 // fix these packed offsets.
 #pragma pack(push, 1)
-class townManager : public baseManager {
+        class townManager : public baseManager {
 public:
     town* m_town;
     bitmap* m_backgroundBitmap;
@@ -303,7 +294,8 @@ public:
     char m_statusText[TOWN_MANAGER_STATUS_TEXT_SIZE];
     i16 m_lastHoverId;
     H1_ENUM_STORAGE(TownArmyCommand, i8) m_command;
-    // SetupCastle's recruit-slot state and its affordable/buildable masks.
+    // Set once RecruitHero hires a hero this visit (SetupCastle, CastleHandler
+    // and Main read it), then SetupCastle's affordable/buildable masks.
     i8 m_recruitResult;
     u16 m_affordableBuildings;
     u16 m_buildableBuildings;
@@ -313,7 +305,7 @@ public:
     heroWindow* m_heroWindow1;
     i16 m_splitAmount;
     i16 m_splitMaximum;
-    // RecruitHero: the chosen tavern slot (-1 if none) and both candidates.
+    // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.
     i16 m_recruitState;
     hero* m_recruitHeroes[2];
     // HoMM1 Main tests this additional mask against message.type.
@@ -321,17 +313,13 @@ public:
     // --- constructors ---
     townManager(void);
     // --- virtual methods (vtable order) ---
-    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 id) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void SetupExtraStuff(void);
     void SetTown(town* value) {
         m_town = value;
     }
-    void ChangeTown(void);
-    void SetupTown(void);
-    void UnloadTown(void);
     void SetArmyCommand(H1_ENUM_PARAM(MessageModifier, i16) qualifier);
     void SetCommandAndText(struct tag_message& message);
     void ShowText(char*);
@@ -341,17 +329,15 @@ public:
     void ShiftQualChange(void);
     void ResetStrips(void);
     void Toggle(H1_ENUM_PARAM(BuildingSlotType, i8) building);
-    void DrawTown(i8 updateScreen, i32 drawFlags);
+    void DrawTown(i8 updateScreen, i32 advanceAnimation);
     i16 BuyBuild(H1_ENUM_PARAM(BuildingSlotType, i16) building, i8 cannotBuy, i8 quickView);
     void BuildObj(H1_ENUM_PARAM(BuildingSlotType, i16) building);
     void SetupMage(class heroWindow* window);
-    i8 RecruitHero(i8 cannotRecruit);
+    i8 RecruitHero(i8 quickView);
     void DoTavern(void);
     void SetupWell(class heroWindow* window);
-    void SetupThievesGuild(
-        class heroWindow* window,
-        H1_ENUM_PARAM(TownThievesCategory, i16) categories
-    );
+    void
+    SetupThievesGuild(class heroWindow* window, H1_ENUM_PARAM(TownThievesCategory, i16) categories);
     void SetupCastle(class heroWindow* window);
     char* GetBuildingName(H1_ENUM_PARAM(BuildingSlotType, i16) building);
     // HoMM1 keeps the thieves-guild helpers as townManager members.
@@ -373,7 +359,13 @@ struct TownBuildingExtent {
 };
 
 // Open's per-type town-object layout (0x0048d428).
-extern const H1_ENUM_ARRAY_ROWS(i8, gTownObjectType, TownType, TOWN_TYPE_COUNT, TOWN_MANAGER_OBJECT_CAPACITY);
+extern const H1_ENUM_ARRAY_ROWS(
+    i8,
+    gTownObjectType,
+    TownType,
+    TOWN_TYPE_COUNT,
+    TOWN_MANAGER_OBJECT_CAPACITY
+);
 H1_ENUM_RETURN(MessageDispatchResult, i16) TavernHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) MageGuildHandler(struct tag_message& message);
 H1_ENUM_RETURN(MessageDispatchResult, i16) SplitArmyHandler(struct tag_message& message);

@@ -106,7 +106,7 @@ public:
         i32 waterMode,
         i32 findAdjacentMonster,
         i32 mobility,
-        i32 costMode,
+        i32 heroClass,
         i32 targetX,
         i32 targetY,
         i32 continueSeed,
@@ -115,8 +115,6 @@ public:
     // Seeds from a hero and builds the path to the nearest cell carrying the
     // trigger type (EVENTS finds a town with 0xa8).
     i16 FindNearestObject(i16 startX, i16 startY, i16 direction, i16 maximumCost, u8 triggerType);
-    void Init(void);
-    void Close(void);
     void Clear(void);
     i16 QuickDistance(i16 x1, i16 y1, i16 x2, i16 y2);
     void PushPoint(
@@ -137,11 +135,10 @@ public:
         i16 x,
         i16 y,
         i8* const terrain,
-        i8* const occupied,
+        u8* const occupied,
         i16 allowOccupied,
         i32 waterMode
     );
-    void SeedCombatPosition(class army* unit);
     // attackPath is an ArmyPathTarget (PATH.h).
     i16 FindCombatPath(
         i16 sourceHex,
@@ -152,6 +149,7 @@ public:
     void PushCombatPoint(i16 hex, i16 direction, u16 distance, u16 speed);
 };
 #pragma pack(pop)
+#define gFullySeeded gSearchSeedingComplete // spelling fixes .bss order
 extern i32 gFullySeeded;
 
 #endif // HOMM1_SOURCE_SEARCHARRAY_H

@@ -62,7 +62,6 @@ public:
     heroWindow(i16 x, i16 y, char* resourceName);
     // --- methods ---
     H1_ENUM_RETURN(WindowOpenStatus, i16) Open(i16 zOrder, i8 flags);
-    void RemoveAndDeleteWidget(i32 id);
     void Close(void);
     void AddWidget(class widget* newWidget, i16 zOrder);
     void RemoveWidget(class widget* w);

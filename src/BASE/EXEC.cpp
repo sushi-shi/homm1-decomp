@@ -17,8 +17,7 @@
 DATA(0x004a15cc)
 char gResourceManagerInitError[] = localization::Tr("startup.resources.failed");
 DATA(0x004a1604)
-char gInputManagerInitError[] =
-    localization::Tr("startup.input.failed");
+char gInputManagerInitError[] = localization::Tr("startup.input.failed");
 DATA(0x004a162c)
 char gSoundManagerInitError[] = localization::Tr("startup.sound.failed");
 DATA(0x004a1644)
@@ -51,15 +50,15 @@ executive::executive(void) {
 // Retail opens sound unconditionally and returns AX.
 VA(0x00472a25, 0xbd)
 H1_ENUM_RETURN(BaseManagerStatus, i16) executive::InitSystem(void) {
-    if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (gResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
-    if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (gInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gInputManagerInitError);
     if (!InitAudio())
         ShutDown(gSoundManagerInitError);
-    if (AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gMouseManagerInitError);
-    if (AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gWindowManagerInitError);
     return BASE_MANAGER_SUCCESS;
 }
@@ -73,16 +72,16 @@ void executive::ShutDownSystem(void) {
     baseManager* manager = m_managerListHead;
     while (manager != NULL) {
         next = manager->m_next;
-        if (manager != gpWindowManager && manager != gpMouseManager)
+        if (manager != gWindowManager && manager != gMouseManager)
             RemoveManager(manager);
         manager = next;
     }
-    if (gpWindowManager->m_active == 1)
-        RemoveManager(gpWindowManager);
-    if (gpMouseManager->m_active == 1)
-        RemoveManager(gpMouseManager);
-    gpResourceManager->Close();
-    gpInputManager->Close();
+    if (gWindowManager->m_active == 1)
+        RemoveManager(gWindowManager);
+    if (gMouseManager->m_active == 1)
+        RemoveManager(gMouseManager);
+    gResourceManager->Close();
+    gInputManager->Close();
 }
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
@@ -105,14 +104,11 @@ i16 executive::DoDialog(baseManager* manager) {
     }
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (ex.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (ex.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
     ex.MainLoop();
     RemoveManager(manager);
@@ -209,10 +205,10 @@ void executive::MainLoop(void) {
     i8 dispatch = 1;
     if (m_managerListHead == NULL)
         return;
-    gpInputManager->Flush();
+    gInputManager->Flush();
     while (!done) {
         Process1WindowsMessage();
-        message = gpInputManager->GetEvent();
+        message = gInputManager->GetEvent();
         dispatch = 1;
         m_activeManager = m_managerListHead;
         if (m_activeManager == NULL)

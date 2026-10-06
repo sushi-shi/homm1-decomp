@@ -46,7 +46,7 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     if (is_netbios_avail() == 0)
         return 1;
     if (gNetbiosAvail != 0) {
-        gNbMaxSess = static_cast<u8>(maxSessions);
+        gNbMaxSess = maxSessions;
         for (jj = 0; jj < NETBIOS_SESSION_COUNT; jj++) {
             gNetStatus[jj] = 0;
             gNbSessLsn[jj] = NETBIOS_INVALID_ID;
@@ -155,7 +155,7 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
         return NRC_SNUMOUT;
     node = static_cast<tag_Node*>(malloc(len + NETBIOS_PACKET_HEADER_SIZE));
     node->len = len;
-    node->sessionIndex = static_cast<u8>(session);
+    node->sessionIndex = session;
     memcpy(node->data, data, len);
     EnterCriticalSection(&gNbSndLock);
     if (queueToFree)
@@ -238,7 +238,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, H1_ENUM_PARAM(NetbiosSessionOperation, i32
             destinationSession = va_arg(nextList, i32);
             anyIsFree = va_arg(nextList, i32);
             if (savedSession == gNbMaxSess)
-                gNbMaxSess = static_cast<u8>(destinationSession);
+                gNbMaxSess = destinationSession;
             if (gNbSessLsn[savedSession] == NETBIOS_INVALID_ID)
                 return NRC_GOODRET;
             gNbSessLsn[destinationSession] = gNbSessLsn[savedSession];
@@ -574,7 +574,7 @@ void nb_recv_complete(i32 session) {
                     );
                     if (node != NULL) {
                         node->len = gNbSessNcb[session].ncb_length;
-                        node->sessionIndex = static_cast<u8>(session);
+                        node->sessionIndex = session;
                         memcpy(node->data, gNbRcvData[session], node->len);
                         EnterCriticalSection(&gNbRcvLock);
                         add_node(&gNbRcvQueue, node);
@@ -606,6 +606,9 @@ void nb_format_name(char* source, u8* destination) {
 }
 
 // netwin globals.
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9e68)
+i32 gOldNetwinWord;
 DATA(0x004b2160)
 u8 gNbCallRetries = 0;
 DATA(0x004b2161)
@@ -631,6 +634,9 @@ DATA(0x004b20d8)
 NetbiosName gNbNameBuf[7];
 DATA(0x004b0ed8)
 u8 gNbSessBuf[0xfd0];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004b1ea8)
+u8 gNetwinDeadName[48];
 DATA(0x004b1ed8)
 NCB gNbSessNcb[7];
 DATA(0x004b2098)

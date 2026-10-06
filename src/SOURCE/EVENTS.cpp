@@ -49,7 +49,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     H1_ENUM_LOCAL(ArtifactType, i32) artifactId;
     i32 income;
     hero* opponent;
-    H1_ENUM_LOCAL(CombatSide, i32) res;
+    H1_ENUM_LOCAL(CombatSide, i32) fightOutcome;
     i8 teleX;
     i8 teleY;
     char resourceText[20];
@@ -62,12 +62,12 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     town* theirTown;
     i32 numTroops;
 
-    visitingHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    visitingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeObj = 0;
     fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
     gEventMusicPlaying = 1;
-    gpMouseManager->ReallyHidePointer();
+    gMouseManager->ReallyHidePointer();
     EventSound(eventKind, cell->m_objectMetadata);
     switch (eventKind) {
         case MAP_OBJECT_COAST:
@@ -79,14 +79,14 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 m_cursorType = H1_ENUM_DECODE(AdventureHeroIcon, visitingHero->m_heroClass);
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
                 m_cursorActive = 1;
-                gpWindowManager->SaveFizzleSource(
+                gWindowManager->SaveFizzleSource(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
                     COAST_FIZZLE_HEIGHT
                 );
                 CompleteDraw(m_mapOriginX, m_mapOriginY, 0);
-                gpWindowManager->FizzleForward(
+                gWindowManager->FizzleForward(
                     COAST_FIZZLE_X,
                     COAST_FIZZLE_Y,
                     COAST_FIZZLE_WIDTH,
@@ -97,8 +97,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             }
             break;
         case MAP_OBJECT_SHIP:
-            boat = &gpGame->m_boats[cell->m_objectMetadata];
-            gpGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 2);
+            boat = &gGame->m_boats[cell->m_objectMetadata];
+            gGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 2);
             visitingHero->m_eventFlags |= HERO_EVENT_EMBARKED;
             visitingHero->m_remainingMobility = 0;
             boat->heroId = visitingHero->m_id;
@@ -111,19 +111,19 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             UpdateScreen(0, 0);
             break;
         case MAP_OBJECT_MINE:
-            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
+            if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
                 break;
-            if (gpGame->m_mines[cell->m_objectMetadata].type == RESOURCE_GOLD)
+            if (gGame->m_mines[cell->m_objectMetadata].type == RESOURCE_GOLD)
                 income = MINE_GOLD_INCOME;
-            else if (gpGame->m_mines[cell->m_objectMetadata].type == RESOURCE_ORE)
+            else if (gGame->m_mines[cell->m_objectMetadata].type == RESOURCE_ORE)
                 income = MINE_ORE_INCOME;
             else
                 income = MINE_RARE_INCOME;
             EventWindow(
-                EVENT_TEXT_MINE_CAPTURED(gpGame->m_mines[cell->m_objectMetadata].type),
+                EVENT_TEXT_MINE_CAPTURED(gGame->m_mines[cell->m_objectMetadata].type),
                 NORMAL_DIALOG_TYPE_OK,
                 "",
-                NORMAL_DIALOG_RESOURCE(gpGame->m_mines[cell->m_objectMetadata].type),
+                NORMAL_DIALOG_RESOURCE(gGame->m_mines[cell->m_objectMetadata].type),
                 -income,
                 NORMAL_DIALOG_NO_RESOURCE,
                 0,
@@ -131,7 +131,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             goto claimMine;
         case MAP_OBJECT_ALCHEMIST_LAB:
-            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
+            if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
                 break;
             EventWindow(
                 EVENT_TEXT_ALCHEMIST_CAPTURED,
@@ -145,7 +145,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             goto claimMine;
         case MAP_OBJECT_SAWMILL:
-            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
+            if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
                 break;
             EventWindow(
                 EVENT_TEXT_SAWMILL_CAPTURED,
@@ -159,12 +159,12 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             goto claimMine;
         claimMine:
-            gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
+            gGame->ClaimMine(cell->m_objectMetadata, gCurPlayer);
             break;
         case MAP_OBJECT_LIGHTHOUSE:
-            if (gpGame->m_mineOwners[MINE_SLOT_LIGHTHOUSE] == giCurPlayer)
+            if (gGame->m_mineOwners[MINE_SLOT_LIGHTHOUSE] == gCurPlayer)
                 break;
-            gpGame->ClaimMine(MINE_SLOT_LIGHTHOUSE, giCurPlayer);
+            gGame->ClaimMine(MINE_SLOT_LIGHTHOUSE, gCurPlayer);
             EventWindow(
                 EVENT_TEXT_LIGHTHOUSE_CAPTURED,
                 NORMAL_DIALOG_TYPE_OK,
@@ -177,7 +177,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             break;
         case MAP_OBJECT_DRAGON_CITY:
-            if (gpGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == giCurPlayer)
+            if (gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == gCurPlayer)
                 break;
             EventWindow(
                 EVENT_TEXT_DRAGON_CITY_PROMPT,
@@ -189,9 +189,9 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                if (gpGame->m_campaignType > 0
-                    && gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_DRAGON_CITY)
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                if (gGame->m_campaignType > 0
+                    && gGame->m_campaignScenario == CAMPAIGN_SCENARIO_DRAGON_CITY)
                     numTroops = DRAGON_CITY_CAMPAIGN_DRAGON_COUNT;
                 else
                     numTroops = DRAGON_CITY_DRAGON_COUNT;
@@ -207,7 +207,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         y
                     )
                     == COMBAT_RESULT_ATTACKER) {
-                    gpGame->ClaimMine(MINE_SLOT_DRAGON_CITY, giCurPlayer);
+                    gGame->ClaimMine(MINE_SLOT_DRAGON_CITY, gCurPlayer);
                     EventWindow(
                         EVENT_TEXT_DRAGON_CITY_CONQUERED,
                         NORMAL_DIALOG_TYPE_OK,
@@ -235,7 +235,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     * CHEST_EXPERIENCE_MULTIPLIER,
                 NORMAL_DIALOG_SHOW_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                 GiveResource(
                     visitingHero,
                     RESOURCE_GOLD,
@@ -462,8 +462,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             removeObj = 1;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
-            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
-                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
+            gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                              [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             SetEnvironmentOrigin(
                 m_mapOriginX + ADVMGR_VIEW_CENTER,
                 m_mapOriginY + ADVMGR_VIEW_CENTER,
@@ -531,7 +531,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
         case MAP_OBJECT_RESOURCE:
             // A resource pile's object frame selects its resource.
-            eventResource = H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
+            eventResource =
+                H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
             GiveResource(
                 visitingHero,
                 eventResource,
@@ -594,7 +595,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 RecruitEvent(visitingHero, CREATURE_GENIE, cell);
                 if (!cell->m_objectMetadata) {
                     removeObj = 1;
@@ -625,7 +626,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     RecruitEvent(visitingHero, CREATURE_ROGUE, cell);
             }
             break;
@@ -652,7 +653,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
                     RecruitEvent(visitingHero, CREATURE_NOMAD, cell);
             }
             break;
@@ -667,10 +668,10 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             PlayerMonsterInteract(cell, cell, visitingHero, &removeObj, x, y, 0, x, y);
             break;
         case MAP_OBJECT_OBELISK:
-            if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1]
+            if (!(gGame->m_obeliskVisitors[cell->m_objectMetadata - 1]
                   & (1 << visitingHero->m_owner))) {
-                gpGame->VisitObelisk(visitingHero->m_owner);
-                gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= 1 << visitingHero->m_owner;
+                gGame->VisitObelisk(visitingHero->m_owner);
+                gGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= 1 << visitingHero->m_owner;
                 EventWindow(
                     EVENT_TEXT_OBELISK_REWARD,
                     NORMAL_DIALOG_TYPE_OK,
@@ -706,17 +707,17 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
+            gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             thiefWindow = new heroWindow(0, 0, "thiefwin.bin");
             if (!thiefWindow)
                 MemError();
             SetWinText(thiefWindow, WINDOW_TEXT_THIEVES_GUILD);
-            gpTownManager->SetupThievesGuild(thiefWindow, THIEVES_CATEGORY_COUNT);
+            gTownManager->SetupThievesGuild(thiefWindow, THIEVES_CATEGORY_COUNT);
             strcpy(gText, localization::Tr("event.shrine.rankings"));
             SET_WIDGET_MESSAGE(widgetEvent, WIDGET_COMMAND_SET_TEXT, 0);
             widgetEvent.text = gText;
             thiefWindow->BroadcastMessage(widgetEvent);
-            gpWindowManager->DoDialog(thiefWindow, TrueFalseDialogHandler, 0);
+            gWindowManager->DoDialog(thiefWindow, TrueFalseDialogHandler, 0);
             delete thiefWindow;
             RedrawAdvScreen(1);
             break;
@@ -725,7 +726,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 gText,
                 "%s'%s'.",
                 gEventText[EVENT_TEXT_SPELL_SHRINE],
-                gSpellNames[H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET)]
+                gSpellNames
+                    [H1_ENUM_DECODE(SpellType, cell->m_objectMetadata - MAP_EVENT_SPELL_OFFSET)]
             );
             if (visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK)) {
                 visitingHero->AddSpell(
@@ -766,7 +768,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             portalCount = 0;
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                 for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
-                    if (gpGame->m_map[teleX][teleY].m_triggerType
+                    if (gGame->m_map[teleX][teleY].m_triggerType
                             == static_cast<u8>(MAP_EVENT_TRIGGER(eventKind))
                         && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                > (eventKind == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
@@ -779,7 +781,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     portalCount = Random(1, portalCount);
                 for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                     for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
-                        if (gpGame->m_map[teleX][teleY].m_triggerType
+                        if (gGame->m_map[teleX][teleY].m_triggerType
                                 == static_cast<u8>(MAP_EVENT_TRIGGER(eventKind))
                             && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                    > (eventKind == MAP_OBJECT_STONE_LITHS
@@ -792,7 +794,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 }
             teleport:
                 StopCursor(1);
-                gpAdvManager->TeleportTo(teleX, teleY, 1);
+                gAdvManager->TeleportTo(teleX, teleY, 1);
             }
             break;
         case MAP_OBJECT_ARTIFACT:
@@ -874,10 +876,10 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         0,
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
-                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                        if (gpGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD]
+                    if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                        if (gGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD]
                             >= ARTIFACT_EVENT_GOLD_COST) {
-                            gpGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD] -=
+                            gGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD] -=
                                 ARTIFACT_EVENT_GOLD_COST;
                             goto giveArtifact;
                         } else {
@@ -911,16 +913,16 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             break;
         case MAP_OBJECT_HERO:
             DemobilizeCurrHero();
-            opponent = gpGame->GetHero(cell->m_objectMetadata);
-            if (opponent->m_owner == giCurPlayer) {
+            opponent = gGame->GetHero(cell->m_objectMetadata);
+            if (opponent->m_owner == gCurPlayer) {
                 HeroSwap(visitingHero, opponent);
             } else {
                 theirTown = NULL;
                 if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
-                    theirTown = gpGame->GetTown(opponent->m_occupiedTown);
+                    theirTown = gGame->GetTown(opponent->m_occupiedTown);
                     theirTown->m_occupyingHeroId = opponent->m_id;
                 }
-                res = DoCombat(
+                fightOutcome = DoCombat(
                     x,
                     y,
                     visitingHero,
@@ -933,12 +935,12 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == COMBAT_RESULT_ATTACKER && theirTown)
-                    gpGame->ClaimTown(theirTown->m_id, giCurPlayer);
+                if (fightOutcome == COMBAT_RESULT_ATTACKER && theirTown)
+                    gGame->ClaimTown(theirTown->m_id, gCurPlayer);
             }
             break;
         case MAP_OBJECT_SIGNPOST:
-            gpSearchArray->FindNearestObject(
+            gSearchArray->FindNearestObject(
                 visitingHero->m_x,
                 visitingHero->m_y,
                 // Seeds the first search node's direction field.
@@ -946,15 +948,15 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 SEARCH_NO_COST_LIMIT,
                 MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)
             );
-            if (GetCell(gpSearchArray->m_specialTargetX, gpSearchArray->m_specialTargetY)
+            if (GetCell(gSearchArray->m_specialTargetX, gSearchArray->m_specialTargetY)
                     ->m_triggerType
                 == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN)) {
                 sprintf(
                     gText,
                     gEventText[EVENT_TEXT_SIGNPOST],
-                    GetTownName(gpGame->GetTownId(
-                        gpSearchArray->m_specialTargetX,
-                        gpSearchArray->m_specialTargetY
+                    GetTownName(gGame->GetTownId(
+                        gSearchArray->m_specialTargetX,
+                        gSearchArray->m_specialTargetY
                     ))
                 );
                 EventWindow(
@@ -980,7 +982,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CANCEL)
                 break;
             switch (cell->m_objectMetadata) {
                 case DAEMON_CAVE_EMPTY:
@@ -1014,7 +1016,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 case DAEMON_REWARD_ARTIFACT:
                     if (visitingHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
                         goto goldReward;
-                    if (gpGame->GetRandomArtifactId() == ARTIFACT_NONE)
+                    if (gGame->GetRandomArtifactId() == ARTIFACT_NONE)
                         goto goldReward;
                     GiveExperience(visitingHero, DAEMON_EXPERIENCE, 0);
                     artifactId = GiveRandomArtifact(visitingHero);
@@ -1059,8 +1061,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         0,
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
-                    if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
-                        if (gpGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD]
+                    if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                        if (gGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD]
                             < DAEMON_GOLD) {
                             EventWindow(
                                 EVENT_TEXT_DAEMON_CAVE_DEATH,
@@ -1074,7 +1076,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             );
                             HeroLoses(visitingHero);
                         } else {
-                            gpGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD] -=
+                            gGame->m_players[visitingHero->m_owner].m_resources[RESOURCE_GOLD] -=
                                 DAEMON_GOLD;
                         }
                     } else {
@@ -1094,7 +1096,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
                     case GHOST_SITE_EMPTY:
                         EventWindow(
@@ -1129,7 +1131,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 0,
                 NORMAL_DIALOG_NO_OR_TEXT
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 switch (cell->m_objectMetadata) {
                     case GHOST_SITE_EMPTY:
                         EventWindow(
@@ -1149,8 +1151,14 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         break;
                     default:
                         previousCell = GetCell(
-                            x - normalDirTable[H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)].x,
-                            y - normalDirTable[H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)].y
+                            x
+                                - normalDirTable
+                                      [H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)]
+                                          .x,
+                            y
+                                - normalDirTable
+                                      [H1_ENUM_ENCODE(MapDirection, visitingHero->m_direction)]
+                                          .y
                         );
                         if (GhostEvent(
                                 visitingHero,
@@ -1179,7 +1187,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     }
     UpdateScreen(0, 0);
     PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
-    gpMouseManager->ReallyShowPointer();
+    gMouseManager->ReallyShowPointer();
     CheckEndGame(0);
 }
 
@@ -1200,23 +1208,23 @@ void advManager::EraseObj(class mapCell* cell, i32 x, i32 y) {
         cell->m_secondaryTrigger -= cell->m_triggerType;
         for (i = x - 1; i <= x + 1; i++) {
             for (j = y - 1; j <= y + 1; j++) {
-                if (i >= 0 && i < MAP_CELL_GRID_SIZE && j >= 0 && j < MAP_CELL_GRID_SIZE
-                    && gpGame->m_map[i][j].m_triggerType == cell->m_triggerType)
-                    cell->m_objectMetadata = gpGame->m_map[i][j].m_objectMetadata;
+                if (MAP_CELL_IN_BOUNDS(i, j)
+                    && gGame->m_map[i][j].m_triggerType == cell->m_triggerType)
+                    cell->m_objectMetadata = gGame->m_map[i][j].m_objectMetadata;
             }
         }
-        gpGame->SettleOverlay(x, y);
+        gGame->SettleOverlay(x, y);
     }
-    if (gpGame->m_mapSounds[x][y] != MAP_SOUND_NONE) {
-        gpGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
-        if (bShowIt)
+    if (gGame->m_mapSounds[x][y] != MAP_SOUND_NONE) {
+        gGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
+        if (gShowIt)
             SetEnvironmentOrigin(
                 m_mapOriginX + ADVMGR_VIEW_CENTER,
                 m_mapOriginY + ADVMGR_VIEW_CENTER,
                 1
             );
     }
-    gpGame->SetupAdjacentMons();
+    gGame->SetupAdjacentMons();
 }
 
 VA(0x004269b5, 0xa3)
@@ -1226,52 +1234,52 @@ void advManager::HeroSwap(class hero* firstHero, class hero* secondHero) {
     swapMgr = new swapManager(firstHero, secondHero);
     if (!swapMgr)
         MemError();
-    gpExec->DoDialog(swapMgr);
+    gExec->DoDialog(swapMgr);
     delete swapMgr;
 }
 
 VA(0x00426a58, 0x191)
 void advManager::TownEvent(class mapCell* cell, i32 x, i32 y) {
-    hero* curHero;
-    H1_ENUM_LOCAL(CombatSide, i32) result;
-    hero* defender;
-    town* recRef;
+    hero* attackingHero;
+    H1_ENUM_LOCAL(CombatSide, i32) combatOutcome;
+    hero* defendingHero;
+    town* eventTown;
 
-    recRef = gpGame->GetTown(cell->m_objectMetadata);
-    curHero = gpGame->GetHero(gpCurPlayer->m_currentHero);
+    eventTown = gGame->GetTown(cell->m_objectMetadata);
+    attackingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     DemobilizeCurrHero();
-    if (recRef->m_owner == giCurPlayer) {
-        recRef->m_occupyingHeroId = gpCurPlayer->CurrentHero();
-        recRef->View();
-    } else if (recRef->HasGarrison()) {
-        defender = recRef->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
-                       ? NULL
-                       : gpGame->GetHero(recRef->m_occupyingHeroId);
-        result = DoCombat(
+    if (eventTown->m_owner == gCurPlayer) {
+        eventTown->m_occupyingHeroId = gCurPlayerData->CurrentHero();
+        eventTown->View();
+    } else if (eventTown->HasGarrison()) {
+        defendingHero = eventTown->m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE
+                            ? NULL
+                            : gGame->GetHero(eventTown->m_occupyingHeroId);
+        combatOutcome = DoCombat(
             x,
             y,
-            curHero,
-            &curHero->m_army,
-            recRef,
-            defender,
-            &recRef->m_army,
+            attackingHero,
+            &attackingHero->m_army,
+            eventTown,
+            defendingHero,
+            &eventTown->m_army,
             x,
             y,
             COMBAT_RANDOM_SEED_NEW,
             1
         );
-        if (result == COMBAT_RESULT_ATTACKER)
-            gpGame->ClaimTown(recRef->m_id, giCurPlayer);
+        if (combatOutcome == COMBAT_RESULT_ATTACKER)
+            gGame->ClaimTown(eventTown->m_id, gCurPlayer);
     } else {
-        gpGame->ClaimTown(recRef->m_id, giCurPlayer);
+        gGame->ClaimTown(eventTown->m_id, gCurPlayer);
         UpdateRadar(1, 0);
         UpdateHeroLocators(1, 1);
         UpdateTownLocators(1, 1);
-        recRef->m_occupyingHeroId = gpCurPlayer->CurrentHero();
-        recRef->View();
+        eventTown->m_occupyingHeroId = gCurPlayerData->CurrentHero();
+        eventTown->View();
     }
-    recRef->GiveSpells();
-    curHero->CheckLevel();
+    eventTown->GiveSpells();
+    attackingHero->CheckLevel();
 }
 
 // Adventure-event music cue; HoMM1 keys the ambient track off the map
@@ -1412,7 +1420,7 @@ i16 advManager::GiveArtifact(class hero* eventHero, H1_ENUM_PARAM(ArtifactType, 
     if (slot == HERO_ARTIFACT_SLOT_COUNT)
         return GIVE_ARTIFACT_NO_SLOT;
     eventHero->m_artifacts[slot] = artifact;
-    gpGame->m_randomArtifacts[artifact] = eventHero->m_id;
+    gGame->m_randomArtifacts[artifact] = eventHero->m_id;
     GiveTakeArtifactStat(eventHero, artifact, EVENT_ARTIFACT_GIVE);
     return slot;
 }
@@ -1421,7 +1429,7 @@ VA(0x00426f16, 0x4f)
 H1_ENUM_RETURN(ArtifactType, i32) advManager::GiveRandomArtifact(class hero* eventHero) {
     H1_ENUM_LOCAL(ArtifactType, i8) artifact;
 
-    artifact = gpGame->GetRandomArtifactId();
+    artifact = gGame->GetRandomArtifactId();
     if (artifact == ARTIFACT_NONE)
         GiveResource(eventHero, RESOURCE_GOLD, EVENT_RANDOM_ARTIFACT_GOLD);
     else
@@ -1435,7 +1443,7 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     i32 prevLevel;
     i32 unusedValue1;
     i32 unusedValue2;
-    i32 savedLevel;
+    i32 levelNow;
     i32 levelGapVal;
 
     prevLevel = eventHero->GetLevel(eventHero->m_experience);
@@ -1445,16 +1453,20 @@ i32 advManager::GiveExperience(class hero* eventHero, i32 experience, i8 checkLe
     H1_ASSERT(experience >= 0);
 #line 1094
     H1_ASSERT(eventHero->m_experience >= 0);
-    savedLevel = eventHero->GetLevel(eventHero->m_experience);
+    levelNow = eventHero->GetLevel(eventHero->m_experience);
     if (checkLevel)
         eventHero->CheckLevel();
-    return savedLevel - prevLevel;
+    return levelNow - prevLevel;
 }
 
 VA(0x00427003, 0x6a)
-void advManager::GiveResource(class hero* eventHero, H1_ENUM_PARAM(ResourceType, i8) resource, i16 amount) {
+void advManager::GiveResource(
+    class hero* eventHero,
+    H1_ENUM_PARAM(ResourceType, i8) resource,
+    i16 amount
+) {
     if (resource >= RESOURCE_FIRST && resource <= RESOURCE_LAST)
-        gpGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
+        gGame->m_players[eventHero->m_owner].m_resources[resource] += amount;
 }
 
 VA(0x0042706d, 0xbf)
@@ -1472,7 +1484,7 @@ void advManager::RecruitEvent(
     recruitWindow = new recruitUnit(&eventHero->m_army, creatureType, &availableCount);
     if (!recruitWindow)
         MemError();
-    gpExec->DoDialog(recruitWindow);
+    gExec->DoDialog(recruitWindow);
     delete recruitWindow;
     cell->m_objectMetadata = availableCount;
 }
@@ -1628,7 +1640,8 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
             NORMAL_DIALOG_NO_OR_TEXT
         );
     } else {
-        H1_ENUM_LOCAL(CreatureType, i8) creatures[EVENT_HOUSE_COUNT] =
+        H1_ENUM_LOCAL(CreatureType, i8)
+        creatures[EVENT_HOUSE_COUNT] =
             {CREATURE_GOBLIN, CREATURE_PEASANT, CREATURE_ARCHER, CREATURE_DWARF, CREATURE_PEASANT};
 
         EventWindow(
@@ -1641,7 +1654,7 @@ void advManager::HouseEvent(class hero* eventHero, class mapCell* cell) {
             0,
             NORMAL_DIALOG_NO_OR_TEXT
         );
-        if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+        if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             if (eventHero->m_army.CanJoin(creatures[houseIndex])) {
                 eventHero->m_army
                     .Add(creatures[houseIndex], cell->m_objectMetadata, ARMY_GROUP_EMPTY_SLOT);
@@ -1666,46 +1679,46 @@ VA(0x004274db, 0x1e2)
 H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
     class hero* eventHero,
     H1_ENUM_PARAM(CreatureType, i8) monsterType,
-    i16 count,
+    i16 monsterCount,
     class mapCell* cell,
     i32 x,
     i32 y,
     i8 heroDefends,
-    i32 fromX,
-    i32 fromY
+    i32 combatX,
+    i32 combatY
 ) {
     i16 i;
-    H1_ENUM_LOCAL(CombatSide, i32) res;
+    H1_ENUM_LOCAL(CombatSide, i32) combatRes;
 
     DemobilizeCurrHero();
-    if (fromX == -1) {
-        fromX = x;
-        fromY = y;
+    if (combatX == -1) {
+        combatX = x;
+        combatY = y;
     } else {
-        m_lastQuickViewX = fromX;
-        m_lastQuickViewY = fromY;
-        m_mineGuardianFacingLeft = eventHero->m_x < fromX;
+        m_combatMonsterX = combatX;
+        m_combatMonsterY = combatY;
+        m_combatMonsterFacingLeft = eventHero->m_x < combatX;
         if (ComboDraw(0))
             UpdateScreen(0, 0);
-        m_lastQuickViewX = QUICK_VIEW_CLEARED;
+        m_combatMonsterX = COMBAT_MONSTER_CELL_CLEARED;
     }
-    CLEAR_ARMY_GROUP(*gpMonGroup);
-    if (count / ARMY_GROUP_SLOT_COUNT > 0) {
+    CLEAR_ARMY_GROUP(*gMonGroup);
+    if (monsterCount / ARMY_GROUP_SLOT_COUNT > 0) {
         for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-            gpMonGroup->m_creatureTypes[i] = monsterType;
-            gpMonGroup->m_creatureCounts[i] = count / ARMY_GROUP_SLOT_COUNT;
+            gMonGroup->m_creatureTypes[i] = monsterType;
+            gMonGroup->m_creatureCounts[i] = monsterCount / ARMY_GROUP_SLOT_COUNT;
         }
     }
-    for (i = count % ARMY_GROUP_SLOT_COUNT - 1; i >= 0; i--) {
-        gpMonGroup->m_creatureTypes[i] = monsterType;
-        gpMonGroup->m_creatureCounts[i]++;
+    for (i = monsterCount % ARMY_GROUP_SLOT_COUNT - 1; i >= 0; i--) {
+        gMonGroup->m_creatureTypes[i] = monsterType;
+        gMonGroup->m_creatureCounts[i]++;
     }
     if (heroDefends)
-        res = DoCombat(
-            fromX,
-            fromY,
+        combatRes = DoCombat(
+            combatX,
+            combatY,
             NULL,
-            gpMonGroup,
+            gMonGroup,
             NULL,
             eventHero,
             &eventHero->m_army,
@@ -1715,24 +1728,24 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
             1
         );
     else
-        res = DoCombat(
-            fromX,
-            fromY,
+        combatRes = DoCombat(
+            combatX,
+            combatY,
             eventHero,
             &eventHero->m_army,
             NULL,
             NULL,
-            gpMonGroup,
+            gMonGroup,
             x,
             y,
             COMBAT_RANDOM_SEED_NEW,
             1
         );
     MobilizeCurrHero(0);
-    return res;
+    return combatRes;
 }
 
-// Per-artifact primary-stat bonuses, called through gpAdvManager.
+// Per-artifact primary-stat bonuses, called through gAdvManager.
 VA(0x004276bd, 0x1e4)
 void advManager::GiveTakeArtifactStat(
     class hero* targetHero,
@@ -1854,8 +1867,8 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                 if (sourceHero->m_artifacts[j] != ARTIFACT_NONE
                     && sourceHero->m_artifacts[j] != ARTIFACT_MAGIC_BOOK) {
                     if (sourceHero->m_artifacts[j] <= ARTIFACT_ULTIMATE_LAST) {
-                        if (gbThisNetHumanPlayer[sourceHero->m_owner]
-                            || gbThisNetHumanPlayer[destHero->m_owner]) {
+                        if (gThisNetHumanPlayer[sourceHero->m_owner]
+                            || gThisNetHumanPlayer[destHero->m_owner]) {
                             sprintf(
                                 gText,
                                 localization::Tr("event.artifact.disappears"),
@@ -1870,7 +1883,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                                 H1_ENUM_ENCODE(ArtifactType, sourceHero->m_artifacts[j])
                             );
                         }
-                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
+                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = HERO_ID_NONE;
                     } else {
                         GiveTakeArtifactStat(
                             destHero,
@@ -1878,7 +1891,7 @@ void advManager::TransferArtifacts(class hero* sourceHero, class hero* destHero)
                             EVENT_ARTIFACT_GIVE
                         );
                         destHero->m_artifacts[i] = sourceHero->m_artifacts[j];
-                        gpGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
+                        gGame->m_randomArtifacts[sourceHero->m_artifacts[j]] = destHero->m_id;
                     }
                     GiveTakeArtifactStat(
                         sourceHero,
@@ -1913,7 +1926,7 @@ void advManager::DoWhirlpool(class hero* eventHero) {
     i32 lowestValue;
     i32 creatureValue;
 
-    if (!gbHumanPlayer[eventHero->m_owner])
+    if (!gHumanPlayer[eventHero->m_owner])
         return;
     if (Random(EVENT_WHIRLPOOL_TRIGGER_ROLL, EVENT_WHIRLPOOL_TRIGGER_MAX)
         != EVENT_WHIRLPOOL_TRIGGER_ROLL)
@@ -1944,7 +1957,7 @@ VA(0x00427c1b, 0xc2)
 void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
     class sample* fizzleSample;
 
-    if (!bShowIt)
+    if (!gShowIt)
         return;
     switch (fizzleType) {
         case EVENT_FIZZLE_HERO_LOSS:
@@ -1957,10 +1970,10 @@ void advManager::FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType) {
             return;
     }
     fizzleSample = LoadPlaySample(gText);
-    gpWindowManager
+    gWindowManager
         ->SaveFizzleSource(EVENT_FIZZLE_X, EVENT_FIZZLE_Y, EVENT_FIZZLE_WIDTH, EVENT_FIZZLE_HEIGHT);
     CompleteDraw(0);
-    gpWindowManager->FizzleForward(
+    gWindowManager->FizzleForward(
         EVENT_FIZZLE_X,
         EVENT_FIZZLE_Y,
         EVENT_FIZZLE_WIDTH,
@@ -1985,7 +1998,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i32 eventWork[4];
     i8 removeEvent;
     hero* opponent;
-    H1_ENUM_LOCAL(CombatSide, i32) res;
+    H1_ENUM_LOCAL(CombatSide, i32) fightOutcome;
     i32 battleResult;
     H1_ENUM_LOCAL(MapObjectType, i8) eventType;
     i8 teleX;
@@ -2006,10 +2019,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     eventType = MAP_TRIGGER_OBJECT(cell->m_triggerType);
     removeEvent = 0;
     handled = 0;
-    oldPlayer = giCurPlayer;
-    ownerPlayerData = gpCurPlayer;
+    oldPlayer = gCurPlayer;
+    ownerPlayerData = gCurPlayerData;
     --eventHero->m_remainingMobility;
-    mapVisited[x][y] |= giCurPlayerBit;
+    gMapVisitFlags[x][y] |= gCurPlayerBit;
     switch (eventType) {
         case MAP_OBJECT_COAST:
             if (eventHero->IsEmbarked()) {
@@ -2024,8 +2037,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_SHIP:
-            boat = &gpGame->m_boats[cell->m_objectMetadata];
-            gpGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 3);
+            boat = &gGame->m_boats[cell->m_objectMetadata];
+            gGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 3);
             eventHero->m_eventFlags |= HERO_EVENT_EMBARKED;
             eventHero->m_remainingMobility = 0;
             boat->heroId = eventHero->m_id;
@@ -2038,26 +2051,26 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
         case MAP_OBJECT_ALCHEMIST_LAB:
         case MAP_OBJECT_MINE:
         case MAP_OBJECT_SAWMILL:
-            if (gpGame->m_mineOwners[cell->m_objectMetadata] == giCurPlayer)
+            if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
                 break;
-            gpGame->ClaimMine(cell->m_objectMetadata, giCurPlayer);
+            gGame->ClaimMine(cell->m_objectMetadata, gCurPlayer);
             break;
         case MAP_OBJECT_LIGHTHOUSE:
-            if (gpGame->m_mineOwners[MINE_SLOT_LIGHTHOUSE] == giCurPlayer)
+            if (gGame->m_mineOwners[MINE_SLOT_LIGHTHOUSE] == gCurPlayer)
                 break;
-            gpGame->ClaimMine(MINE_SLOT_LIGHTHOUSE, giCurPlayer);
+            gGame->ClaimMine(MINE_SLOT_LIGHTHOUSE, gCurPlayer);
             break;
         case MAP_OBJECT_DRAGON_CITY:
-            if (gpGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == giCurPlayer)
+            if (gGame->m_mineOwners[MINE_SLOT_DRAGON_CITY] == gCurPlayer)
                 break;
             for (c = 0; c < ARMY_GROUP_SLOT_COUNT; c++) {
-                gpMonGroup->m_creatureTypes[c] = CREATURE_DRAGON;
-                gpMonGroup->m_creatureCounts[c] = 1;
+                gMonGroup->m_creatureTypes[c] = CREATURE_DRAGON;
+                gMonGroup->m_creatureCounts[c] = 1;
             }
-            gpPhilAI->ChooseEvaluateBattle(
+            gPhilAI->ChooseEvaluateBattle(
                 &eventHero->m_army,
                 eventHero,
-                gpMonGroup,
+                gMonGroup,
                 NULL,
                 0,
                 0,
@@ -2067,13 +2080,13 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             );
             if (canWin) {
                 c = DRAGON_CITY_DRAGON_COUNT;
-                success = gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &c, cell);
+                success = gPhilAI->CombatMonsterEvent(eventHero, CREATURE_DRAGON, &c, cell);
                 if (success)
-                    gpGame->ClaimMine(MINE_SLOT_DRAGON_CITY, giCurPlayer);
+                    gGame->ClaimMine(MINE_SLOT_DRAGON_CITY, gCurPlayer);
             }
             break;
         case MAP_OBJECT_TREASURE_CHEST:
-            if (gpPhilAI->ChooseGoldOrExperience(
+            if (gPhilAI->ChooseGoldOrExperience(
                     eventHero,
                     cell->m_objectMetadata * CHEST_GOLD_MULTIPLIER,
                     (cell->m_objectMetadata - CHEST_EXPERIENCE_LEVEL_OFFSET)
@@ -2145,8 +2158,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeEvent = 1;
-            gpGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
-                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
+            gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
+                              [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << cell->m_objectMetadata))) {
@@ -2166,7 +2179,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_RESOURCE:
             // A resource pile's object frame selects its resource.
-            eventResource = H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
+            eventResource =
+                H1_ENUM_DECODE(ResourceType, cell->m_objectIndex - RESOURCE_PILE_OBJECT_BASE);
             GiveResource(
                 eventHero,
                 eventResource,
@@ -2220,7 +2234,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             goto recruit;
         recruit:
             if (cell->m_objectMetadata) {
-                gpPhilAI->EvaluateOneTimeCreaturePurchase(
+                gPhilAI->EvaluateOneTimeCreaturePurchase(
                     eventHero,
                     recruitType,
                     cell->m_objectMetadata,
@@ -2230,14 +2244,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     freeSlot
                 );
                 if (recruited > 0) {
-                    gpGame->GiveArmy(&eventHero->m_army, recruitType, recruited, freeSlot);
+                    gGame->GiveArmy(&eventHero->m_army, recruitType, recruited, freeSlot);
                     cell->m_objectMetadata -= recruited;
                     if (!isFree) {
                         GetMonsterCost(recruitType, troopCost);
                         // c also holds the guard count philAI updates through
                         // its address, so the resource loop decodes it.
                         for (c = 0; c < H1_ENUM_ENCODE(ResourceType, RESOURCE_COUNT); c++)
-                            gpCurPlayer->m_resources[H1_ENUM_DECODE(ResourceType, c)] -=
+                            gCurPlayerData->m_resources[H1_ENUM_DECODE(ResourceType, c)] -=
                                 recruited * troopCost[H1_ENUM_DECODE(ResourceType, c)];
                     }
                 }
@@ -2249,9 +2263,9 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             ComputerMonsterInteract(cell, eventHero, &removeEvent);
             break;
         case MAP_OBJECT_OBELISK:
-            if (!(gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & giCurPlayerBit)) {
-                gpGame->VisitObelisk(eventHero->m_owner);
-                gpGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= giCurPlayerBit;
+            if (!(gGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & gCurPlayerBit)) {
+                gGame->VisitObelisk(eventHero->m_owner);
+                gGame->m_obeliskVisitors[cell->m_objectMetadata - 1] |= gCurPlayerBit;
             }
             break;
         case MAP_OBJECT_RANKING_SHRINE:
@@ -2265,7 +2279,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 );
             break;
         case MAP_OBJECT_TOWN:
-            gpPhilAI->TownEvent(cell, eventHero, x, y);
+            gPhilAI->TownEvent(cell, eventHero, x, y);
             break;
         case MAP_OBJECT_WHIRLPOOL:
             DoWhirlpool(eventHero);
@@ -2273,7 +2287,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             portalCount = 0;
             for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                 for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
-                    if (gpGame->m_map[teleX][teleY].m_triggerType
+                    if (gGame->m_map[teleX][teleY].m_triggerType
                             == static_cast<u8>(MAP_EVENT_TRIGGER(eventType))
                         && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                > (eventType == MAP_OBJECT_STONE_LITHS ? STONE_LITHS_MIN_DISTANCE
@@ -2286,7 +2300,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     portalCount = Random(1, portalCount);
                 for (teleY = 0; teleY < MAP_CELL_GRID_SIZE; teleY++) {
                     for (teleX = 0; teleX < MAP_CELL_GRID_SIZE; teleX++) {
-                        if (gpGame->m_map[teleX][teleY].m_triggerType
+                        if (gGame->m_map[teleX][teleY].m_triggerType
                                 == static_cast<u8>(MAP_EVENT_TRIGGER(eventType))
                             && MANHATTAN_LENGTH(teleX - x, teleY - y)
                                    > (eventType == MAP_OBJECT_STONE_LITHS
@@ -2299,7 +2313,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 }
             teleport:
                 StopCursor(1);
-                gpAdvManager->TeleportTo(teleX, teleY, 0);
+                gAdvManager->TeleportTo(teleX, teleY, 0);
             }
             break;
         case MAP_OBJECT_ARTIFACT:
@@ -2311,16 +2325,16 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
                     c = ARTIFACT_EVENT_GUARD_ROGUE_COUNT;
-                    if (gpPhilAI->CombatMonsterEvent(eventHero, CREATURE_ROGUE, &c, cell))
+                    if (gPhilAI->CombatMonsterEvent(eventHero, CREATURE_ROGUE, &c, cell))
                         goto giveArtifact;
                     break;
                 case ARTIFACT_EVENT_MODE_GOLD:
-                    if (gpPhilAI->ChooseToBuyArtifact(
+                    if (gPhilAI->ChooseToBuyArtifact(
                             eventHero,
                             H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex),
                             ARTIFACT_EVENT_GOLD_COST
                         )) {
-                        gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] -=
+                        gGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] -=
                             ARTIFACT_EVENT_GOLD_COST;
                         goto giveArtifact;
                     } else {
@@ -2330,14 +2344,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_HERO:
-            opponent = gpGame->GetHero(cell->m_objectMetadata);
-            priorShowIt = bShowIt;
-            if (opponent->m_owner == giCurPlayer)
+            opponent = gGame->GetHero(cell->m_objectMetadata);
+            priorShowIt = gShowIt;
+            if (opponent->m_owner == gCurPlayer)
                 return;
             if (opponent->m_locationType == MAP_EVENT_TRIGGER(MAP_OBJECT_TOWN))
-                heroTown = gpGame->GetTown(opponent->m_occupiedTown);
-            if (!gbHumanPlayer[opponent->m_owner]) {
-                battleResult = gpPhilAI->QuickCombat(
+                heroTown = gGame->GetTown(opponent->m_occupiedTown);
+            if (!gHumanPlayer[opponent->m_owner]) {
+                battleResult = gPhilAI->QuickCombat(
                     &eventHero->m_army,
                     eventHero,
                     &opponent->m_army,
@@ -2348,7 +2362,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     theirLosses
                 );
                 if (battleResult && heroTown)
-                    battleResult = gpPhilAI->QuickCombat(
+                    battleResult = gPhilAI->QuickCombat(
                         &eventHero->m_army,
                         eventHero,
                         &heroTown->m_army,
@@ -2361,7 +2375,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             } else {
                 if (heroTown)
                     heroTown->m_occupyingHeroId = opponent->m_id;
-                res = DoCombat(
+                fightOutcome = DoCombat(
                     x,
                     y,
                     eventHero,
@@ -2374,8 +2388,8 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     COMBAT_RANDOM_SEED_NEW,
                     1
                 );
-                if (res == COMBAT_RESULT_ATTACKER && heroTown)
-                    gpGame->ClaimTown(heroTown->m_id, giCurPlayer);
+                if (fightOutcome == COMBAT_RESULT_ATTACKER && heroTown)
+                    gGame->ClaimTown(heroTown->m_id, gCurPlayer);
             }
             CompleteDraw(0);
             break;
@@ -2397,10 +2411,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     GiveResource(eventHero, RESOURCE_GOLD, DAEMON_GOLD);
                     break;
                 case DAEMON_REWARD_RANSOM:
-                    if (gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD]
+                    if (gGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD]
                         >= DAEMON_GOLD) {
-                        if (gpPhilAI->ChooseToPayRansomOnHero(eventHero, DAEMON_GOLD))
-                            gpGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] +=
+                        if (gPhilAI->ChooseToPayRansomOnHero(eventHero, DAEMON_GOLD))
+                            gGame->m_players[eventHero->m_owner].m_resources[RESOURCE_GOLD] +=
                                 -DAEMON_GOLD;
                         else
                             HeroLoses(eventHero);
@@ -2413,15 +2427,15 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             break;
         case MAP_OBJECT_GRAVEYARD:
         case MAP_OBJECT_SHIPWRECK:
-            gpPhilAI->FightEvent(eventHero, cell);
+            gPhilAI->FightEvent(eventHero, cell);
             break;
         default:
             break;
     }
     if (removeEvent)
         EraseObj(cell, x, y);
-    giCurPlayer = oldPlayer;
-    gpCurPlayer = ownerPlayerData;
+    gCurPlayer = oldPlayer;
+    gCurPlayerData = ownerPlayerData;
     CheckEndGame(0);
 }
 
@@ -2430,7 +2444,7 @@ void advManager::PlayerMonsterInteract(
     class mapCell* cell,
     class mapCell* combatCell,
     class hero* eventHero,
-    i8* handled,
+    i8* removeMonsterObject,
     i32 x,
     i32 y,
     i8 unused,
@@ -2441,9 +2455,10 @@ void advManager::PlayerMonsterInteract(
 
     unused = 0;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
-        if (gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
+        if (gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
             > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
-                  * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue * 1.75) {
+                  * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue
+                  * 1.75) {
             if (eventHero->m_army.CanJoin(H1_ENUM_DECODE(CreatureType, cell->m_objectIndex))) {
                 sprintf(
                     gText,
@@ -2460,13 +2475,13 @@ void advManager::PlayerMonsterInteract(
                     0,
                     NORMAL_DIALOG_NO_OR_TEXT
                 );
-                if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
+                if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                     eventHero->m_army.Add(
                         H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
                         cell->m_objectMetadata & MONSTER_COUNT_MASK,
                         ARMY_GROUP_EMPTY_SLOT
                     );
-                    *handled = 1;
+                    *removeMonsterObject = 1;
                     return;
                 } else {
                     EventWindow(
@@ -2495,141 +2510,147 @@ void advManager::PlayerMonsterInteract(
         combatY
     );
     if (result == COMBAT_RESULT_ATTACKER || result == COMBAT_RESULT_DRAW)
-        *handled = 1;
+        *removeMonsterObject = 1;
 }
 
 // HoMM1's computer heroes absorb a willing stack (bit 7) they outmatch by
 // 7:4, otherwise fight it through philAI's quick combat.
 VA(0x00428e5f, 0x139)
-void advManager::ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled) {
+void advManager::ComputerMonsterInteract(
+    class mapCell* cell,
+    class hero* eventHero,
+    i8* removeMonsterObject
+) {
     i32 numToBuy;
-    i32 quantity;
+    i32 purchaseWorth;
     i32 bestSlot;
-    i32 retVal;
-    i32 creatureCountIdx;
+    i32 won;
+    i32 monsterCount;
 
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG
-        && gpPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
+        && gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, 0)
                > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
-                     * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)].fightValue * 1.75) {
-        gpPhilAI->EvaluateOneTimeCreaturePurchase(
+                     * gMonsterDatabase[H1_ENUM_DECODE(CreatureType, cell->m_objectIndex)]
+                           .fightValue
+                     * 1.75) {
+        gPhilAI->EvaluateOneTimeCreaturePurchase(
             eventHero,
             H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
             cell->m_objectMetadata & MONSTER_COUNT_MASK,
             1,
             numToBuy,
-            quantity,
+            purchaseWorth,
             bestSlot
         );
         if (numToBuy > 0) {
-            gpGame->GiveArmy(
+            gGame->GiveArmy(
                 &eventHero->m_army,
                 H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
                 cell->m_objectMetadata & MONSTER_COUNT_MASK,
                 bestSlot
             );
-            *handled = 1;
+            *removeMonsterObject = 1;
         }
     } else {
-        creatureCountIdx = cell->m_objectMetadata & MONSTER_COUNT_MASK;
-        retVal = gpPhilAI->CombatMonsterEvent(
+        monsterCount = cell->m_objectMetadata & MONSTER_COUNT_MASK;
+        won = gPhilAI->CombatMonsterEvent(
             eventHero,
             H1_ENUM_DECODE(CreatureType, cell->m_objectIndex),
-            &creatureCountIdx,
+            &monsterCount,
             cell
         );
-        cell->m_objectMetadata = (cell->m_objectMetadata & MONSTER_WILLING_FLAG) + creatureCountIdx;
-        if (retVal)
-            *handled = 1;
+        cell->m_objectMetadata = (cell->m_objectMetadata & MONSTER_WILLING_FLAG) + monsterCount;
+        if (won)
+            *removeMonsterObject = 1;
     }
 }
 
 VA(0x00428f98, 0x16f)
-i32 advManager::DoNetCombat(char* packet) {
-    hero* leader;
+i32 advManager::DoNetCombat(RemoteMessage* packet) {
+    hero* secondHro;
     i32 theCellY;
     i32 curPosX;
     i32 randSeed;
     i32 ourFoe;
-    i8 res;
-    i32 party;
-    hero* nextAttacker;
+    i8 combatRes;
+    i32 firstSide;
+    hero* attackingHro;
     i32 curStartY;
     i32 sx;
-    armyGroup* defendArmy;
-    armyGroup* selAttArmyPtr;
-    town* tempTown;
+    armyGroup* secondArmy;
+    armyGroup* attackTroops;
+    town* battleTown;
     i32 allReserved;
     i32 curUnused2;
 
-    nextAttacker = NULL;
-    selAttArmyPtr = NULL;
-    tempTown = NULL;
-    leader = NULL;
-    defendArmy = NULL;
+    attackingHro = NULL;
+    attackTroops = NULL;
+    battleTown = NULL;
+    secondHro = NULL;
+    secondArmy = NULL;
     ReceiveHeroTownData(
         packet,
         &ourFoe,
         &curPosX,
         &theCellY,
-        &nextAttacker,
-        &selAttArmyPtr,
-        &tempTown,
-        &leader,
-        &defendArmy,
+        &attackingHro,
+        &attackTroops,
+        &battleTown,
+        &secondHro,
+        &secondArmy,
         &sx,
         &curStartY,
         &randSeed,
-        &res,
-        &gbRetreatWin,
-        &gbCombatSurrender
+        &combatRes,
+        &gRetreatWin,
+        &gCombatSurrender
     );
-    party = nextAttacker->m_owner;
+    firstSide = attackingHro->m_owner;
     // The result goes back to the remote player as the record's result byte.
-    res = H1_ENUM_ENCODE(
+    combatRes = H1_ENUM_ENCODE(
         CombatSide,
         DoCombat(
             curPosX,
             theCellY,
-            nextAttacker,
-            selAttArmyPtr,
-            tempTown,
-            leader,
-            defendArmy,
+            attackingHro,
+            attackTroops,
+            battleTown,
+            secondHro,
+            secondArmy,
             sx,
             curStartY,
             randSeed,
             0
         )
     );
-    if (!gbHumanPlayer[party])
+    if (!gHumanPlayer[firstSide])
         SendHeroTownData(
             curPosX,
             theCellY,
-            nextAttacker,
-            selAttArmyPtr,
-            tempTown,
-            leader,
-            defendArmy,
+            attackingHro,
+            attackTroops,
+            battleTown,
+            secondHro,
+            secondArmy,
             sx,
             curStartY,
             randSeed,
             ourFoe,
-            res,
-            gbRetreatWin,
-            gbCombatSurrender
+            combatRes,
+            gRetreatWin,
+            gCombatSurrender
         );
-    if (selAttArmyPtr)
-        free(selAttArmyPtr);
-    if (defendArmy)
-        free(defendArmy);
-    if (tempTown)
-        free(tempTown);
-    if (leader)
-        free(leader);
-    if (nextAttacker)
-        free(nextAttacker);
-    gbRetreatWin = 0;
+    if (attackTroops)
+        free(attackTroops);
+    if (secondArmy)
+        free(secondArmy);
+    if (battleTown)
+        free(battleTown);
+    if (secondHro)
+        free(secondHro);
+    if (attackingHro)
+        free(attackingHro);
+    gRetreatWin = 0;
     return 1;
 }
 
@@ -2652,11 +2673,11 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     hero* hero1Net;
     armyGroup* army1NetRef;
     town* townNetItem;
-    i32 senderNum;
-    char* receivedPacket;
-    i8 res;
+    i32 senderPlayer;
+    RemoteMessage* receivedPacket;
+    i8 combatRes;
     tag_message message;
-    i32 curPlayer;
+    i32 defenderSide;
     i32 attackPlayer;
     i32 oldPlayer;
     i8 showItSaved;
@@ -2665,19 +2686,19 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
     gInCombat = 1;
     attackPlayer = firstHero ? firstHero->m_owner : -1;
     if (secondHero)
-        curPlayer = secondHero->m_owner;
+        defenderSide = secondHero->m_owner;
     else if (combatTown)
-        curPlayer = combatTown->m_owner;
+        defenderSide = combatTown->m_owner;
     else
-        curPlayer = GAME_PLAYER_NONE;
+        defenderSide = GAME_PLAYER_NONE;
     if (randomSeed == COMBAT_RANDOM_SEED_NEW)
         randomSeed = Random(1, COMBAT_RANDOM_SEED_MAX);
     DemobilizeCurrHero();
-    oldPlayer = giCurPlayer;
-    showItSaved = bShowIt;
+    oldPlayer = gCurPlayer;
+    showItSaved = gShowIt;
 
-    if (attackPlayer >= 0 && curPlayer >= 0 && gbHumanPlayer[curPlayer]) {
-        if (!gbThisNetHumanPlayer[curPlayer]) {
+    if (attackPlayer >= 0 && defenderSide >= 0 && gHumanPlayer[defenderSide]) {
+        if (!gThisNetHumanPlayer[defenderSide]) {
             SendHeroTownData(
                 x,
                 y,
@@ -2689,16 +2710,16 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                 setupCombatX,
                 setupCombatY,
                 randomSeed,
-                curPlayer,
+                defenderSide,
                 0,
                 0,
                 0
             );
-            if (!gbHumanPlayer[attackPlayer]) {
+            if (!gHumanPlayer[attackPlayer]) {
                 while (1) {
                     PollSound();
                     FillBitmapArea(
-                        gpWindowManager->m_screen,
+                        gWindowManager->m_screen,
                         COMBAT_NETWORK_POLL_X,
                         COMBAT_NETWORK_POLL_Y,
                         COMBAT_NETWORK_POLL_WIDTH,
@@ -2707,11 +2728,11 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                     );
                     receivedPacket = CheckHandleNet();
                     if (receivedPacket) {
-                        switch (EVENTS_REMOTE_MESSAGE(receivedPacket)->command) {
+                        switch (receivedPacket->command) {
                             case REMOTE_COMMAND_HERO_TOWN_DATA:
                                 ReceiveHeroTownData(
                                     receivedPacket,
-                                    &senderNum,
+                                    &senderPlayer,
                                     &x,
                                     &y,
                                     &hero1Net,
@@ -2722,9 +2743,9 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                                     &setupCombatX,
                                     &setupCombatY,
                                     &randomSeed,
-                                    &res,
-                                    &gbRetreatWin,
-                                    &gbCombatSurrender
+                                    &combatRes,
+                                    &gRetreatWin,
+                                    &gCombatSurrender
                                 );
                                 if (army1NetRef) {
                                     memcpy(firstArmy, army1NetRef, sizeof(armyGroup));
@@ -2746,32 +2767,33 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
                                     memcpy(firstHero, hero1Net, sizeof(hero));
                                     free(hero1Net);
                                 }
-                                gpCombatManager->m_combatResult = H1_ENUM_DECODE(CombatSide, res);
+                                gCombatManager->m_combatResult =
+                                    H1_ENUM_DECODE(CombatSide, combatRes);
                                 goto combatFinished;
                         }
                     }
                     Process1WindowsMessage();
-                    message = gpInputManager->GetEvent();
+                    message = gInputManager->GetEvent();
                     CheckHandleNetPlayerWait(message, 1);
                 }
             }
-        } else if (!gbThisNetHumanPlayer[attackPlayer]) {
-            bShowIt = 1;
-            gpGame->TurnOffAIMusic();
+        } else if (!gThisNetHumanPlayer[attackPlayer]) {
+            gShowIt = 1;
+            gGame->TurnOffAIMusic();
             sprintf(
                 gText,
                 localization::Tr("combat.network.attacked"),
-                gColorNames[gpGame->m_players[curPlayer].m_color],
+                gColorNames[gGame->m_players[defenderSide].m_color],
                 combatTown ? localization::Tr("combat.network.town")
                            : localization::Tr("combat.network.hero")
             );
             gText[0] = CyrillicToUpper(gText[0]);
-            gpGame->WaitForPlayer(gText, curPlayer);
+            gGame->WaitForPlayer(gText, defenderSide);
         }
     }
 
-    bShowIt = 1;
-    gpCombatManager->SetupCombat(
+    gShowIt = 1;
+    gCombatManager->SetupCombat(
         x,
         y,
         firstHero,
@@ -2787,7 +2809,7 @@ H1_ENUM_RETURN(CombatSide, i32) advManager::DoCombat(
         gAdvDisposeLevel = ADV_DISPOSE_FULL;
     else if (gHighMemBuffer > COMBAT_LOW_MEMORY_LIMIT)
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
-    gpExec->CallManager(gpCombatManager);
+    gExec->CallManager(gCombatManager);
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
 
 combatFinished:
@@ -2796,14 +2818,14 @@ combatFinished:
     if (secondHero)
         secondHero->CheckLevel();
     if (processLosses) {
-        switch (gpCombatManager->m_combatResult) {
+        switch (gCombatManager->m_combatResult) {
             case COMBAT_RESULT_ATTACKER:
-                if (!gbRetreatWin)
+                if (!gRetreatWin)
                     TransferArtifacts(secondHero, firstHero);
                 HeroLoses(secondHero);
                 break;
             case COMBAT_RESULT_DEFENDER:
-                if (!gbRetreatWin)
+                if (!gRetreatWin)
                     TransferArtifacts(firstHero, secondHero);
                 HeroLoses(firstHero);
                 break;
@@ -2815,20 +2837,20 @@ combatFinished:
                 break;
         }
     }
-    bShowIt = showItSaved;
-    giCurPlayer = oldPlayer;
-    if (!gbHumanPlayer[giCurPlayer]) {
-        gpGame->ShowComputerScreen();
-        gpGame->TurnOnAIMusic();
+    gShowIt = showItSaved;
+    gCurPlayer = oldPlayer;
+    if (!gHumanPlayer[gCurPlayer]) {
+        gGame->ShowComputerScreen();
+        gGame->TurnOnAIMusic();
         SetNoDialogMenus(0);
     } else {
         SetNoDialogMenus(1);
     }
     MobilizeCurrHero(0);
     if (processLosses)
-        gbRetreatWin = 0;
+        gRetreatWin = 0;
     gInCombat = 0;
-    return gpCombatManager->m_combatResult;
+    return gCombatManager->m_combatResult;
 }
 
 VA(0x0042968b, 0x282)
@@ -2848,13 +2870,12 @@ void advManager::SendHeroTownData(
     i8 retreatWin,
     i8 combatSurrender
 ) {
-    char* reply;
+    RemoteMessage* reply;
     i32 result;
     // One allocation carries the combat record, then each hero fragment.
     union {
         combatRemoteData* combat;
         combatRemoteHeroFragment* heroFragment;
-        char* bytes;
     } buffer;
 
     buffer.combat = NULL;
@@ -2874,18 +2895,17 @@ void advManager::SendHeroTownData(
     buffer.combat->combatSurrender = combatSurrender;
     buffer.combat->firstOwner = firstHero ? firstHero->m_owner : -1;
     buffer.combat->firstGold =
-        firstHero ? gpGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
+        firstHero ? gGame->m_players[firstHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     buffer.combat->secondOwner = secondHero ? secondHero->m_owner : -1;
     buffer.combat->secondGold =
-        secondHero ? gpGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
+        secondHero ? gGame->m_players[secondHero->m_owner].m_resources[RESOURCE_GOLD] : 0;
     memcpy(&buffer.combat->firstArmy, firstArmy, sizeof(armyGroup));
     memcpy(&buffer.combat->secondArmy, secondArmy, sizeof(armyGroup));
     if (combatTown)
         memcpy(&buffer.combat->combatTown, combatTown, sizeof(town));
 
-    // API-forced: TransmitAndWait/TransmitRemoteData take char* payloads.
     result = TransmitAndWait(
-        buffer.bytes,
+        buffer.combat,
         remotePlayer,
         sizeof(combatRemoteData),
         REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2898,9 +2918,8 @@ void advManager::SendHeroTownData(
     if (firstHero) {
         buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_FIRST_HERO;
         memcpy(buffer.heroFragment->data, firstHero, sizeof(hero));
-        // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
-            buffer.bytes,
+            buffer.heroFragment,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2912,9 +2931,8 @@ void advManager::SendHeroTownData(
     if (secondHero) {
         buffer.heroFragment->fragment = COMBAT_REMOTE_FRAGMENT_SECOND_HERO;
         memcpy(buffer.heroFragment->data, secondHero, sizeof(hero));
-        // API-forced: TransmitRemoteData takes a char* payload.
         result = TransmitRemoteData(
-            buffer.bytes,
+            buffer.heroFragment,
             remotePlayer,
             sizeof(combatRemoteHeroFragment),
             REMOTE_COMMAND_HERO_TOWN_DATA,
@@ -2928,7 +2946,7 @@ void advManager::SendHeroTownData(
 
 VA(0x0042990d, 0x30f)
 void advManager::ReceiveHeroTownData(
-    char* packet,
+    RemoteMessage* packet,
     i32* remotePlayer,
     i32* x,
     i32* y,
@@ -2945,10 +2963,10 @@ void advManager::ReceiveHeroTownData(
     i8* combatSurrender
 ) {
     i8 hasTownOn;
-    i32 mainResult;
-    i32 lastPacketTimeNum;
+    i32 confirmSent;
+    i32 lastReceiveTick;
     i8 firstOwner;
-    i8 defenderOwner;
+    i8 secondOwner;
     i8 bFirstHero;
     i8 hasSecondHero;
 
@@ -2958,7 +2976,7 @@ void advManager::ReceiveHeroTownData(
     *secondHero = NULL;
     *secondArmy = NULL;
     bFirstHero = hasSecondHero = hasTownOn = 0;
-    *remotePlayer = EVENTS_REMOTE_MESSAGE(packet)->sender;
+    *remotePlayer = packet->sender;
     *x = EVENTS_REMOTE_MESSAGE(packet)->combat.x;
     *y = EVENTS_REMOTE_MESSAGE(packet)->combat.y;
     bFirstHero = EVENTS_REMOTE_MESSAGE(packet)->combat.hasFirstHero;
@@ -2972,11 +2990,11 @@ void advManager::ReceiveHeroTownData(
     *combatSurrender = EVENTS_REMOTE_MESSAGE(packet)->combat.combatSurrender;
     firstOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.firstOwner;
     if (firstOwner > 0)
-        gpGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] =
+        gGame->m_players[firstOwner].m_resources[RESOURCE_GOLD] =
             EVENTS_REMOTE_MESSAGE(packet)->combat.firstGold;
-    defenderOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.secondOwner;
-    if (defenderOwner > 0)
-        gpGame->m_players[defenderOwner].m_resources[RESOURCE_GOLD] =
+    secondOwner = EVENTS_REMOTE_MESSAGE(packet)->combat.secondOwner;
+    if (secondOwner > 0)
+        gGame->m_players[secondOwner].m_resources[RESOURCE_GOLD] =
             EVENTS_REMOTE_MESSAGE(packet)->combat.secondGold;
 
     *firstArmy = static_cast<armyGroup*>(malloc(sizeof(armyGroup)));
@@ -2988,27 +3006,27 @@ void advManager::ReceiveHeroTownData(
         memcpy(*combatTown, &EVENTS_REMOTE_MESSAGE(packet)->combat.combatTown, sizeof(town));
     }
 
-    mainResult = TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, 1);
-    if (!mainResult)
+    confirmSent = TransmitRemoteData(NULL, *remotePlayer, 0, REMOTE_COMMAND_HERO_TOWN_CONFIRM, 1);
+    if (!confirmSent)
         ShutDown(NULL);
 
-    lastPacketTimeNum = KBTickCount();
+    lastReceiveTick = KBTickCount();
     while ((hasSecondHero && !*secondHero) || (bFirstHero && !*firstHero)) {
         PollSound();
-        if (lastPacketTimeNum + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
+        if (lastReceiveTick + REMOTE_WAIT_TIMEOUT < KBTickCount()) {
             NormalDialog(
                 localization::Tr("combat.network.receive_error"),
                 NORMAL_DIALOG_TYPE_YES_NO
             );
-            if (gpWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
-                lastPacketTimeNum = KBTickCount();
+            if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM)
+                lastReceiveTick = KBTickCount();
             else
                 ShutDown(localization::Tr("combat.network.canceled"));
         }
         packet = GetRemoteData(1);
-        if (packet && EVENTS_REMOTE_MESSAGE(packet)->type == REMOTE_MESSAGE_RELIABLE
-            && EVENTS_REMOTE_MESSAGE(packet)->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
-            lastPacketTimeNum = KBTickCount();
+        if (packet && packet->type == REMOTE_MESSAGE_RELIABLE
+            && packet->command == REMOTE_COMMAND_HERO_TOWN_DATA) {
+            lastReceiveTick = KBTickCount();
             if (EVENTS_REMOTE_HERO(packet)->heroFragment.fragment
                 == COMBAT_REMOTE_FRAGMENT_FIRST_HERO) {
                 *firstHero = static_cast<hero*>(malloc(sizeof(hero)));

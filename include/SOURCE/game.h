@@ -34,7 +34,7 @@ H1_ENUM_BEGIN(GameDifficulty)
     DIFFICULTY_COUNT = 4
 H1_ENUM_END(GameDifficulty)
 
-// giWeekType / giMonthType: a named week or month
+// gWeekType / gMonthType: a named week or month
 // (gWeekNames / gMonthNames[special]), a creature week or month
 // (gArmyNames[special] grows), or the month of the plague. NONE suppresses
 // the new-week announcement.
@@ -93,31 +93,23 @@ H1_ENUM_CONST_END(GameWeeklyConstant)
 // and CombatSpecialHandler (gSpellHelp rows 0..3 describe 2..5); entries
 // 6..9 are the visible spells and 10..13 their labels (UpdateSpellWidgets).
 H1_ENUM_ID_BEGIN(SpellBookControl)
-    SPELL_BOOK_PREVIOUS_PAGE = 2,
-    SPELL_BOOK_NEXT_PAGE = 3,
-    SPELL_BOOK_ADVENTURE_SPELLS = 4,
-    SPELL_BOOK_COMBAT_SPELLS = 5,
-    SPELL_BOOK_ENTRY_FIRST = 6,
-    SPELL_BOOK_ENTRY_LAST = 9,
-    SPELL_BOOK_LABEL_FIRST = 10
-H1_ENUM_ID_END(SpellBookControl)
+SPELL_BOOK_PREVIOUS_PAGE = 2,
+    SPELL_BOOK_NEXT_PAGE = 3, SPELL_BOOK_ADVENTURE_SPELLS = 4, SPELL_BOOK_COMBAT_SPELLS = 5,
+    SPELL_BOOK_ENTRY_FIRST = 6, SPELL_BOOK_ENTRY_LAST = 9,
+    SPELL_BOOK_LABEL_FIRST = 10 H1_ENUM_ID_END(SpellBookControl)
 
-// campaign.bin widget ids; the progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
-// fills them; KB's EventWindowHandler restarts the scenario on RESTART.
-H1_ENUM_ID_BEGIN(CampaignInfoControl)
-    CAMPAIGN_INFO_NAME = 1,
-    CAMPAIGN_INFO_TEXT = 2,
-    CAMPAIGN_INFO_PROGRESS = 3,
-    CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
-    CAMPAIGN_INFO_RESTART = 0x385
-H1_ENUM_ID_END(CampaignInfoControl)
+    // campaign.bin widget ids; the progress icon shows scenarios won + PROGRESS_FRAME_BASE. game::ShowCampaignInfo
+    // fills them; KB's EventWindowHandler restarts the scenario on RESTART.
+    H1_ENUM_ID_BEGIN(CampaignInfoControl) CAMPAIGN_INFO_NAME = 1,
+    CAMPAIGN_INFO_TEXT = 2, CAMPAIGN_INFO_PROGRESS = 3, CAMPAIGN_INFO_PROGRESS_FRAME_BASE = 4,
+    CAMPAIGN_INFO_RESTART = 0x385 H1_ENUM_ID_END(CampaignInfoControl)
 
-// game::m_campaignScenario: scenarios LORD_FIRST..LORD_LAST are the four
-// rival-lord scenarios, one per CampaignChoice in order; KB's scenario
-// advance skips the player's own lord. In them the human starts with one
-// hero and no town (NewMap), and a placed town the human owns takes the
-// crest's race (RandomizeTown).
-H1_ENUM_CONST_BEGIN(CampaignScenarioConstant)
+    // game::m_campaignScenario: scenarios LORD_FIRST..LORD_LAST are the four
+    // rival-lord scenarios, one per CampaignChoice in order; KB's scenario
+    // advance skips the player's own lord. In them the human starts with one
+    // hero and no town (NewMap), and a placed town the human owns takes the
+    // crest's race (RandomizeTown).
+    H1_ENUM_CONST_BEGIN(CampaignScenarioConstant)
     CAMPAIGN_SCENARIO_LORD_FIRST = 4,
     CAMPAIGN_SCENARIO_LORD_LAST = 7
 H1_ENUM_CONST_END(CampaignScenarioConstant)
@@ -133,11 +125,11 @@ H1_ENUM_CONST_BEGIN(SpellBookConstant)
 H1_ENUM_CONST_END(SpellBookConstant)
 
 // ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
-// obelisks, four percent per further obelisk; a missed roll scatters the
+// puzzle pieces are removed, four percent per further piece; a missed roll scatters the
 // hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
 H1_ENUM_CONST_BEGIN(UltimateHintConstant)
-    ULTIMATE_HINT_OBELISK_MIN = 11,
-    ULTIMATE_HINT_PERCENT_PER_OBELISK = 4,
+    ULTIMATE_HINT_PIECE_MIN = 11,
+    ULTIMATE_HINT_PERCENT_PER_PIECE = 4,
     ULTIMATE_HINT_SCATTER = 3,
     ULTIMATE_HINT_PLACE_TRIES = 200,
     // VisitObelisk's fallback piece search.
@@ -230,6 +222,7 @@ H1_ENUM_CONST_END(BoatRecordConstant)
 // and castle bits, which the record's castle flag decides).
 H1_ENUM_CONST_BEGIN(MapTownRecordConstant)
     MAP_TOWN_TYPE_MASK = 0x7f,
+    MAP_TOWN_CASTLE_FLAG = 0x80,
     MAP_TOWN_OWNER_UNSET = -2,
     MAP_TOWN_EXTRA_BUILDING_MASK = 0x1f9f,
     // mapHeroExtra::artifacts: a placed hero's four starting artifacts.
@@ -330,7 +323,7 @@ public:
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter.
-    i16 m_viewArmyResult;
+    i16 m_dialogAnimationCounter;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
     // ViewSpells' window state: the hero's spell slots
     // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
@@ -360,31 +353,20 @@ public:
         return &m_castleRecs[m_players[player].m_townIds[index]];
     }
     // --- methods ---
-    void SetupDynamicStuff(i32 redraw, i32 updateKnob, i32 forceUpdate);
-    void SetupNewOverviewType(i32 overviewType, i32 redrawFrom);
-    void SetupResources(void);
     void Overview(void);
-    void DoKnob(void);
-    i32 ProcessIconSelect(i32 widgetId, i32 quickView);
     i8 SetupCampaignGame(void);
     i8 SetupBaud(void);
     i8 SetupComPort(void);
     i8 SetupHotSeatGame(void);
     i8 SetupNetworkGame(void);
-    i32 SetupNetworkGame2(void);
     i8 SetupModemGame(void);
     i8 SetupMultiPlayerGame(void);
     i8 SetupGame(i8 newGame);
     i8 PickLoadGame(void);
-    i32 HandleCampaignWin(void);
-    void PlayPreScenarioSmacker(i32 side, i32 map);
-    void ShowCampaignInfo(i32 scenario, i32 fromMenu, i32);
-    void CampaignInfoUpdate(i32 redraw);
+    void ShowCampaignInfo(i32 scenario, i32 viewOnly, i32);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
     void InitCampaignMap(i32 scenario, i32);
-    i32 MineTypesOwned(i32 owner, i32 mineType);
-    i32 SetupPuzzlePieces(i32 player, i32 justCount);
     i8 IsMobile(i8 heroId);
     class mapCell (*GetWorldMapData(void))[MAP_CELL_GRID_SIZE];
     // Inline world-map file I/O (LoadMap, SaveGame, LoadGame).
@@ -397,16 +379,11 @@ public:
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
     i16 SaveGame(char* filename, i8 generateName);
-    void SetupOrigData(void);
     // HoMM1 retail returns 1 in AX (ret 0xc).
     i16 LoadGame(char* filename, i32 origData, i32);
-    void GiveTroopsToNeutralTown(i32 townId);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
     void RandomizeEvents(void);
-    void InitializePasswords(void);
-    void RandomizeBarrier(class mapCell* cell);
-    void RandomizePassword(class mapCell* cell);
     // HoMM1 retail returns 0 in AX.
     i16 LoadMap(char* filename);
     void ClaimTown(i8 townId, i8 player);
@@ -445,40 +422,24 @@ public:
     i32 ComputeDailyGold(i32 player);
     void PerDay(void);
     void PerWeek(void);
-    void WeeklyRecruitSite(class mapCell* cell);
-    void WeeklyGenericSite(class mapCell* cell);
     void PerMonth(void);
-    void ConvertObject(
-        i32 left,
-        i32 top,
-        i32 right,
-        i32 bottom,
-        i32 oldTileset,
-        i32 oldFirstIndex,
-        i32 oldLastIndex,
-        i32 newTileset,
-        i32 newFirstIndex,
-        i32 oldTrigger,
-        i32 newTrigger
-    );
     // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(i8 x, i8 y, i8 isCastle);
     // HoMM1 retail: byte x and y (ret 8).
     void RandomizeMine(i8 x, i8 y);
     // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
     void SetupTown(i8 townId, i8 aiOwned);
-    void InitRandomArtifacts(void);
     H1_ENUM_RETURN(ArtifactType, i8) GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     // HoMM1 retail: towns-only pass flag (ret 4).
     void ProcessRandomObjects(i32 castlesOnly);
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
-    void MakeAllWaterVisible(i32 player);
-    void GiveArmy(class armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot);
-    i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
+    void
+    GiveArmy(class armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot);
+    i32 ExperienceValueOfStack(class armyGroup* group, class hero* heroPointer);
     // HoMM1 retail: hero and army only (ret 8).
-    i32 GetLuck(class hero* h, class army*);
+    i32 GetLuck(class hero* heroPointer, class army*);
     // Enemy-turn crest reads widen the stored color to a signed short.
     H1_ENUM_RETURN(PlayerColor, i16) GetPlayerColor(i32 player) {
         return m_players[player].m_color;
@@ -488,10 +449,6 @@ public:
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
     void WaitForPlayer(char* text, i32 player);
-    i32 HasLateOverlay(i32 column, i32 row);
-    void ConvertFlagToLateOverlay(i32 column, i32 row);
-    i32 HasObjectTilesetIndex(i32 column, i32 row, i32 tileset, i32 index);
-    void ConvertAllToLateOverlay(i32 column, i32 row);
     // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(i32 x, i32 y);
@@ -506,36 +463,19 @@ public:
     i32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
-    i32 GetNumThievesGuilds(i32 color);
+    i32 GetNumThievesGuilds(i32 player);
     i32 CalcDifficultyRating(void);
-    void RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, class mapCell* passedCell, i32);
-    void SetMapSize(i32 width, i32 height);
-    i32 HeroIDToHeroPos(class playerData* player, i32 heroId);
-    i32 TownIDToTownPos(class playerData* player, i32 townId);
-    void SetupNewRumour(void);
-    void CheckForTimeEvent(void);
-    i32 CountShrines(i32 player);
-    void ShowMoraleInfo(class hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
-    void ShowLuckInfo(class hero* h, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
+    void RestoreCell(i32 x, i32 y, i32 objectType, i32 barrier, class mapCell* passedCell, i32);
+    void ShowMoraleInfo(class hero* heroPointer, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
+    void ShowLuckInfo(class hero* heroPointer, H1_ENUM_PARAM(NormalDialogType, i32) dialogType);
     // Retail GetMap never reads ecx; its caller passes no this.
     static void GetMap(void);
-    void ProcessNewMap(struct SMapHeader* header);
-    void InitNewGame(struct SMapHeader* header);
-    void SetupNetPlayerNames(void);
     // Retail returns the started flag in AL.
     i8 NewGame(void);
-    void CleanUpNewGameWindow(void);
-    void InitNewGameWindow(void);
     void UpdateNewGameWindow(void);
-    i32 ProcessNGKeyPress(struct tag_message& message);
-    void NGKPSetupDisplayString(char* text, u16 cursor);
-    void DrawNGKPDisplayString(i32 updateScreen);
     void ShowScenInfo(void);
     // HoMM1: NewMap gives every opponent a distinct crest.
     void RandomizePlayerCrests(void);
-    void GetLossConditionText(char* text);
-    void GetVictoryConditionText(char* text);
-    i32 GetSideDesc(char* text, i32 firstPlayer, i32 lastPlayer);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(i8 player);
 };
@@ -556,13 +496,18 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) ViewArmyHandler(struct tag_message& m
 i32 GetBaseScore(i32 days);
 extern i32 gGameOver;
 // SaveGame files the current player through this byte.
-extern i8 gSaveCurPlayer;
+extern i8 gSavedCurPlayer;
 // NewGame remembers the last new-game settings for the next setup screen.
+
+#define gSavedDifficulty gOldGameDifficulty // spelling fixes .bss order
 extern H1_ENUM_STORAGE(GameDifficulty, i8) gSavedDifficulty;
-extern i8 gSavedPlayerTypes[];
+extern i8 gSavedDifficulties[];
 extern i8 gSavedKingOfTheHill;
+
+#define gSavedCrest gKeptColor // spelling fixes .bss order
 extern H1_ENUM_STORAGE(PlayerColor, i8) gSavedCrest;
 extern H1_ENUM_STORAGE(TownType, i8) gRandomTownTypes[4];
+#define gMineTypeCount gMineTypeNums // spelling fixes .bss order
 extern H1_ENUM_ARRAY(i16, gMineTypeCount, ResourceType, RESOURCE_COUNT);
 extern i32 gLastSeed;
 i32 SGenRand(void);
@@ -574,7 +519,8 @@ void SRand(i32 seed);
 extern i8 gShowMapInfo;
 extern heroWindow* gReqExtraWindow;
 extern char gCurMapName[];
-extern i8 gbDismissArmy;
+#define gDismissArmy gbDismissArmy // spelling fixes .bss order
+extern i8 gDismissArmy;
 
 // Moved from GAME.cpp.
 // newgame.bin widget ids. The opponent toggles are players 1..3 (id - 1);
@@ -582,28 +528,20 @@ extern i8 gbDismissArmy;
 // names on the reserved dialog slots (gNewGameHelp: 0x7802 accepts, 0x7801
 // returns to the main menu).
 H1_ENUM_ID_BEGIN(NewGameControl)
-    NEW_GAME_OPPONENT_FIRST = 2,
-    NEW_GAME_OPPONENT_LAST = 4,
-    NEW_GAME_COLOR = 8,
-    NEW_GAME_SCENARIO_SELECT = 0xc,
-    NEW_GAME_DIFFICULTY_FIRST = 0xd,
-    NEW_GAME_DIFFICULTY_LAST = 0x10,
-    NEW_GAME_SCENARIO_NAME = 0x11,
-    NEW_GAME_SCENARIO_PANEL = 0x12,
-    NEW_GAME_KING_OF_THE_HILL = 0x13,
-    NEW_GAME_RATING = 0x14,
-    NEW_GAME_CANCEL = DIALOG_BUTTON_1,
-    NEW_GAME_OK = DIALOG_BUTTON_2,
+NEW_GAME_OPPONENT_FIRST = 2,
+    NEW_GAME_OPPONENT_LAST = 4, NEW_GAME_COLOR = 8, NEW_GAME_SCENARIO_SELECT = 0xc,
+    NEW_GAME_DIFFICULTY_FIRST = 0xd, NEW_GAME_DIFFICULTY_LAST = 0x10, NEW_GAME_SCENARIO_NAME = 0x11,
+    NEW_GAME_SCENARIO_PANEL = 0x12, NEW_GAME_KING_OF_THE_HILL = 0x13, NEW_GAME_RATING = 0x14,
+    NEW_GAME_CANCEL = DIALOG_BUTTON_1, NEW_GAME_OK = DIALOG_BUTTON_2,
     // Player p's type toggle is p + TOGGLE_BASE (ids 2..4) and its type label
     // p + LABEL_BASE (ids 5..7).
     NEW_GAME_OPPONENT_TOGGLE_BASE = 1,
-    NEW_GAME_OPPONENT_LABEL_BASE = 4
-H1_ENUM_ID_END(NewGameControl)
+    NEW_GAME_OPPONENT_LABEL_BASE = 4 H1_ENUM_ID_END(NewGameControl)
 
-// newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
-// the computer-type faces (type + base), the crests (two per color) and
-// the King of the Hill toggle (flag + base).
-H1_ENUM_CONST_BEGIN(NewGameFrame)
+    // newgame.icn frames UpdateNewGameWindow selects: the human-opponent face,
+    // the computer-type faces (type + base), the crests (two per color) and
+    // the King of the Hill toggle (flag + base).
+    H1_ENUM_CONST_BEGIN(NewGameFrame)
     NEW_GAME_FRAME_COMPUTER_TYPE_BASE = 5,
     NEW_GAME_FRAME_CREST_BASE = 11,
     NEW_GAME_FRAME_CREST_STRIDE = 2,
@@ -653,16 +591,12 @@ H1_ENUM_CONST_END(NeutralTownReinforcementConstant)
 // DIALOG_BUTTON_0. The animation icon cycles
 // VIEW_ARMY_ANIMATION_FRAMES frames every VIEW_ARMY_FRAME_DELAY ticks.
 H1_ENUM_ID_BEGIN(ViewArmyControl)
-    VIEW_ARMY_COUNT_FRAME = 1,
-    VIEW_ARMY_COUNT_TEXT = 2,
-    VIEW_ARMY_TITLE = 3,
-    VIEW_ARMY_STATS = 4,
-    VIEW_ARMY_ANIMATION = 5,
+VIEW_ARMY_COUNT_FRAME = 1,
+    VIEW_ARMY_COUNT_TEXT = 2, VIEW_ARMY_TITLE = 3, VIEW_ARMY_STATS = 4, VIEW_ARMY_ANIMATION = 5,
     VIEW_ARMY_DISMISS = DIALOG_BUTTON_3,
-    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0
-H1_ENUM_ID_END(ViewArmyControl)
+    VIEW_ARMY_CLOSE = DIALOG_BUTTON_0 H1_ENUM_ID_END(ViewArmyControl)
 
-H1_ENUM_CONST_BEGIN(ViewArmyConstant)
+        H1_ENUM_CONST_BEGIN(ViewArmyConstant)
     VIEW_ARMY_ANIMATION_FRAMES = 6,
     VIEW_ARMY_FRAME_DELAY = 90,
     VIEW_ARMY_STAT_TEXT_SIZE = 550
@@ -670,14 +604,13 @@ H1_ENUM_CONST_END(ViewArmyConstant)
 
 // overwind.bin widget ids: resource r's count is RESOURCE_BASE + r.
 H1_ENUM_ID_BEGIN(OverviewControl)
-    OVERVIEW_RESOURCE_BASE = 1,
+OVERVIEW_RESOURCE_BASE = 1,
     OVERVIEW_DATE = 64,
-    OVERVIEW_DAILY_GOLD = 65
-H1_ENUM_ID_END(OverviewControl)
+    OVERVIEW_DAILY_GOLD = 65 H1_ENUM_ID_END(OverviewControl)
 
-// Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
-// creature week or month picks from, and gNewTurnText's announcement rows.
-H1_ENUM_CONST_BEGIN(CalendarConstant)
+    // Calendar draws: gWeekNames / gMonthNames sizes, the creature tables a
+    // creature week or month picks from, and gNewTurnText's announcement rows.
+    H1_ENUM_CONST_BEGIN(CalendarConstant)
     CALENDAR_WEEK_NAME_COUNT = 15,
     CALENDAR_WEEK_CREATURE_COUNT = 24,
     CALENDAR_MONTH_NAME_COUNT = 10,

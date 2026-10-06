@@ -39,11 +39,11 @@ mouseManager::mouseManager(void) {
     m_savedUnderlying = NULL;
     m_cursorFrame = 0;
     for (i32 cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-        hMouseCursor[cursorIndex] = NULL;
-        cAndBits[cursorIndex] = NULL;
+        gMouseCursors[cursorIndex] = NULL;
+        gAndBits[cursorIndex] = NULL;
         gColorBits[cursorIndex] = NULL;
-        hbmpAndMask[cursorIndex] = NULL;
-        hbmpColor[cursorIndex] = NULL;
+        gAndMaskBitmaps[cursorIndex] = NULL;
+        gColorBitmaps[cursorIndex] = NULL;
     }
 }
 
@@ -70,21 +70,21 @@ void mouseManager::Close(void) {
     SetCursor(LoadCursorA(NULL, IDC_ARROW));
     DelayMilli(50);
     for (cursorIndex = 0; cursorIndex < MOUSE_CURSOR_COUNT; cursorIndex++) {
-        if (hMouseCursor[cursorIndex] != NULL)
-            DestroyIcon(hMouseCursor[cursorIndex]);
-        hMouseCursor[cursorIndex] = NULL;
-        if (cAndBits[cursorIndex] != NULL)
-            free(cAndBits[cursorIndex]);
-        cAndBits[cursorIndex] = NULL;
+        if (gMouseCursors[cursorIndex] != NULL)
+            DestroyIcon(gMouseCursors[cursorIndex]);
+        gMouseCursors[cursorIndex] = NULL;
+        if (gAndBits[cursorIndex] != NULL)
+            free(gAndBits[cursorIndex]);
+        gAndBits[cursorIndex] = NULL;
         if (gColorBits[cursorIndex] != NULL)
             free(gColorBits[cursorIndex]);
         gColorBits[cursorIndex] = NULL;
-        if (hbmpAndMask[cursorIndex] != NULL)
-            DeleteObject(hbmpAndMask[cursorIndex]);
-        hbmpAndMask[cursorIndex] = NULL;
-        if (hbmpColor[cursorIndex] != NULL)
-            DeleteObject(hbmpColor[cursorIndex]);
-        hbmpColor[cursorIndex] = NULL;
+        if (gAndMaskBitmaps[cursorIndex] != NULL)
+            DeleteObject(gAndMaskBitmaps[cursorIndex]);
+        gAndMaskBitmaps[cursorIndex] = NULL;
+        if (gColorBitmaps[cursorIndex] != NULL)
+            DeleteObject(gColorBitmaps[cursorIndex]);
+        gColorBitmaps[cursorIndex] = NULL;
     }
     DelayMilli(50);
 }
@@ -105,6 +105,9 @@ void mouseManager::SetPointer(char* name, i16 frame) {
         gMouseCursorType = MOUSE_CURSOR_COMBAT;
     SetPointer(frame);
 }
+
+DATA(0x004cfb40)
+i32 gMouseCursorType = 0;
 
 VA(0x0046b8b2, 0x6bd)
 #line 232 MOUSEMGR_CPP_PATH
@@ -140,40 +143,25 @@ void mouseManager::SetPointer(i16 frame) {
 #line 266
     H1_ASSERT(cursorIndex >= 0 && cursorIndex < MOUSE_CURSOR_COUNT);
 
-    if (hMouseCursor[cursorIndex] == NULL) {
+    if (gMouseCursors[cursorIndex] == NULL) {
         gColorBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_COLOR_BYTES));
         if (gColorMice)
-            cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
+            gAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_MASK_PLANE_BYTES));
         else
-            cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_AND_BYTES));
+            gAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_AND_BYTES));
 
         if (gMouseCursorType == MOUSE_CURSOR_ADVENTURE)
-            sprintf(
-                filename,
-                "ADVM%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "ADVM%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
         else if (gMouseCursorType == MOUSE_CURSOR_SPELL)
-            sprintf(
-                filename,
-                "SPEL%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "SPEL%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
         else
-            sprintf(
-                filename,
-                "CMSE%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "CMSE%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
 
-        gpResourceManager->PointToFile(gpResourceManager->MakeId(filename));
-        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
-        gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
+        gResourceManager->PointToFile(gResourceManager->MakeId(filename));
+        gResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
+        gResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_COLOR_BYTES);
         memset(
-            cAndBits[cursorIndex],
+            gAndBits[cursorIndex],
             0,
             gColorMice ? MOUSE_CURSOR_MASK_PLANE_BYTES : MOUSE_CURSOR_AND_BYTES
         );
@@ -182,64 +170,64 @@ void mouseManager::SetPointer(i16 frame) {
             for (x = MOUSE_CURSOR_BITMAP_BEGIN; x < MOUSE_CURSOR_BITMAP_END; x++) {
                 if (gSpecialMouseMasks && !gColorMice) {
                     if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
-                        *(cAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
+                        *(gAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
                           + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                     else if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 1)
-                        *(cAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
+                        *(gAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
                           + y * MOUSE_CURSOR_MASK_ROW_BYTES + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                 } else {
                     if (*(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) == 0)
-                        *(cAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
+                        *(gAndBits[cursorIndex] + y * MOUSE_CURSOR_MASK_ROW_BYTES
                           + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                     else if (!gColorMice
                              && *(gColorBits[cursorIndex] + x + y * MOUSE_CURSOR_BITMAP_WIDTH) != 1)
-                        *(cAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
+                        *(gAndBits[cursorIndex] + MOUSE_CURSOR_MASK_PLANE_BYTES
                           + y * MOUSE_CURSOR_MASK_ROW_BYTES + (x >> MOUSE_CURSOR_MASK_SHIFT)) |=
                             1 << (MOUSE_CURSOR_MASK_HIGH_BIT - (x & MOUSE_CURSOR_MASK_HIGH_BIT));
                 }
             }
         }
 
-        bmpAndMask[cursorIndex].bmType = 0;
-        bmpAndMask[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
-        bmpAndMask[cursorIndex].bmHeight =
+        gAndMaskBitmapInfo[cursorIndex].bmType = 0;
+        gAndMaskBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
+        gAndMaskBitmapInfo[cursorIndex].bmHeight =
             gColorMice ? MOUSE_CURSOR_BITMAP_WIDTH : MOUSE_CURSOR_MASK_HEIGHT;
-        bmpAndMask[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
-        bmpAndMask[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
-        bmpAndMask[cursorIndex].bmBitsPixel = MOUSE_CURSOR_BITMAP_BITS_PER_PIXEL;
-        bmpAndMask[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
-        bmpAndMask[cursorIndex].bmBits = cAndBits[cursorIndex];
-        hbmpAndMask[cursorIndex] = CreateBitmapIndirect(&bmpAndMask[cursorIndex]);
+        gAndMaskBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
+        gAndMaskBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
+        gAndMaskBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_BITMAP_BITS_PER_PIXEL;
+        gAndMaskBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_MASK_ROW_BYTES;
+        gAndMaskBitmapInfo[cursorIndex].bmBits = gAndBits[cursorIndex];
+        gAndMaskBitmaps[cursorIndex] = CreateBitmapIndirect(&gAndMaskBitmapInfo[cursorIndex]);
         // API-forced handle value.
 #line 322
-        H1_ASSERT(reinterpret_cast<i32>(hbmpAndMask[cursorIndex]));
+        H1_ASSERT(reinterpret_cast<i32>(gAndMaskBitmaps[cursorIndex]));
 
         if (gColorMice) {
-            bmpColor[cursorIndex].bmType = 0;
-            bmpColor[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
-            bmpColor[cursorIndex].bmHeight = MOUSE_CURSOR_BITMAP_WIDTH;
-            bmpColor[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
-            bmpColor[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
-            bmpColor[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
-            bmpColor[cursorIndex].bmBits = gColorBits[cursorIndex];
-            hbmpColor[cursorIndex] = CreateBitmapIndirect(&bmpColor[cursorIndex]);
+            gColorBitmapInfo[cursorIndex].bmType = 0;
+            gColorBitmapInfo[cursorIndex].bmWidth = MOUSE_CURSOR_BITMAP_WIDTH;
+            gColorBitmapInfo[cursorIndex].bmHeight = MOUSE_CURSOR_BITMAP_WIDTH;
+            gColorBitmapInfo[cursorIndex].bmPlanes = MOUSE_CURSOR_BITMAP_PLANES;
+            gColorBitmapInfo[cursorIndex].bmBitsPixel = MOUSE_CURSOR_COLOR_BITS_PER_PIXEL;
+            gColorBitmapInfo[cursorIndex].bmWidthBytes = MOUSE_CURSOR_BITMAP_WIDTH;
+            gColorBitmapInfo[cursorIndex].bmBits = gColorBits[cursorIndex];
+            gColorBitmaps[cursorIndex] = CreateBitmapIndirect(&gColorBitmapInfo[cursorIndex]);
         }
 
-        mouseIconInfo[cursorIndex].fIcon = FALSE;
-        mouseIconInfo[cursorIndex].xHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
-        mouseIconInfo[cursorIndex].yHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
-        mouseIconInfo[cursorIndex].hbmMask = hbmpAndMask[cursorIndex];
-        mouseIconInfo[cursorIndex].hbmColor = gColorMice ? hbmpColor[cursorIndex] : NULL;
-        hMouseCursor[cursorIndex] = CreateIconIndirect(&mouseIconInfo[cursorIndex]);
+        gMouseIconInfo[cursorIndex].fIcon = FALSE;
+        gMouseIconInfo[cursorIndex].xHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_HORIZONTAL];
+        gMouseIconInfo[cursorIndex].yHotspot = gHotSpot[cursorIndex][MOUSE_CURSOR_VERTICAL];
+        gMouseIconInfo[cursorIndex].hbmMask = gAndMaskBitmaps[cursorIndex];
+        gMouseIconInfo[cursorIndex].hbmColor = gColorMice ? gColorBitmaps[cursorIndex] : NULL;
+        gMouseCursors[cursorIndex] = CreateIconIndirect(&gMouseIconInfo[cursorIndex]);
         // API-forced handle value.
 #line 343
-        H1_ASSERT(reinterpret_cast<i32>(hMouseCursor[cursorIndex]));
+        H1_ASSERT(reinterpret_cast<i32>(gMouseCursors[cursorIndex]));
     }
 
-    SetCursor(hMouseCursor[cursorIndex]);
+    SetCursor(gMouseCursors[cursorIndex]);
     gInSetPointer = FALSE;
 }
 
@@ -308,7 +296,7 @@ void mouseManager::MouseCoords(i16& x, i16& y) {
     POINT point;
 
     GetCursorPos(&point);
-    ScreenToClient(hwndApp, &point);
+    ScreenToClient(gAppWindow, &point);
     x = CLIENT_TO_GAME_X(point.x);
     y = CLIENT_TO_GAME_Y(point.y);
 }
@@ -334,8 +322,6 @@ void mouseManager::ShowSystemCursor(void) {
 // zero-filled cursor tables (0x004cac88..).
 DATA(0x004a0ff8)
 i32 gMouseOffset[3] = {0, 40, 55};
-DATA(0x004cfb40)
-i32 gMouseCursorType = 0;
 DATA(0x004a1004)
 u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {2, 3},   {2, 3},   {12, 11}, {12, 13}, {15, 11}, {10, 10}, {12, 13}, {9, 12},  {7, 9},
@@ -349,18 +335,18 @@ u8 gHotSpot[MOUSE_CURSOR_COUNT][MOUSE_CURSOR_AXIS_COUNT] = {
     {22, 23}, {22, 23}, {22, 23}
 };
 DATA(0x004cf30c)
-HBITMAP hbmpColor[MOUSE_CURSOR_COUNT];
+HBITMAP gColorBitmaps[MOUSE_CURSOR_COUNT];
 DATA(0x004ce178)
-BITMAP bmpAndMask[MOUSE_CURSOR_COUNT];
+BITMAP gAndMaskBitmapInfo[MOUSE_CURSOR_COUNT];
 DATA(0x004cef88)
-HCURSOR hMouseCursor[MOUSE_CURSOR_COUNT];
+HCURSOR gMouseCursors[MOUSE_CURSOR_COUNT];
 DATA(0x004cfa14)
-u8* cAndBits[MOUSE_CURSOR_COUNT];
+u8* gAndBits[MOUSE_CURSOR_COUNT];
 DATA(0x004ce880)
-BITMAP bmpColor[MOUSE_CURSOR_COUNT];
+BITMAP gColorBitmapInfo[MOUSE_CURSOR_COUNT];
 DATA(0x004cf1e0)
 u8* gColorBits[MOUSE_CURSOR_COUNT];
 DATA(0x004cf438)
-ICONINFO mouseIconInfo[MOUSE_CURSOR_COUNT];
+ICONINFO gMouseIconInfo[MOUSE_CURSOR_COUNT];
 DATA(0x004cf0b4)
-HBITMAP hbmpAndMask[MOUSE_CURSOR_COUNT];
+HBITMAP gAndMaskBitmaps[MOUSE_CURSOR_COUNT];

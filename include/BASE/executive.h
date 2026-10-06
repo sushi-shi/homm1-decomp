@@ -36,7 +36,6 @@ public:
     H1_ENUM_RETURN(BaseManagerStatus, i16) InitSystem(void);
     void ShutDownSystem(void);
     i16 DoDialog(class baseManager* manager);
-    void PrintManagerList(void);
     H1_ENUM_RETURN(BaseManagerStatus, i16) AddManager(class baseManager* manager, i16 priority);
     void RemoveManager(class baseManager* manager);
     void CallManager(class baseManager* manager);

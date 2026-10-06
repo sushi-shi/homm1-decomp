@@ -90,7 +90,7 @@ public:
     // UpdBottomViewHero copies this 8-character label into its name widget.
     char m_shortName[9];
     // Indexes gClassNames, gMinExpForLevel and the class crest frames;
-    // combat copies it to m_heroType.
+    // combat copies it to m_heroClass.
     i8 m_heroClass;
     // port%04d.icn portrait number.
     i8 m_portrait;
@@ -132,13 +132,10 @@ public:
     // --- constructors ---
     hero(void);
     // --- methods ---
-    void Read(i32 file, i8 expansion);
-    void Write(i32 file, i8 expansion);
     void GetArmyStrengths(u32* const);
     i8 HasArtifact(H1_ENUM_PARAM(ArtifactType, i8) artifact);
     i16 CalcMobility(void);
     i8 HasSpell(H1_ENUM_PARAM(SpellType, i8) spell);
-    i32 GetNthSpell(i32 type, i32 spellNumber);
     i16 GetNumSpells(H1_ENUM_PARAM(HeroSpellType, i8) type);
     void UseSpell(H1_ENUM_PARAM(SpellType, i8) spell);
     i32 AddSpell(H1_ENUM_PARAM(SpellType, i8) spell, i8 charges, i32 checkOnly);
@@ -156,26 +153,15 @@ public:
     void ApplyBattleLossTemps(void);
     void CheckLevel(void);
     i32 NumArtifacts(void);
-    void SetSS(i32 skill, i32 level);
-    i32 TakeSS(i32 skill, i32 levels);
-    i32 GiveSS(i32 skill, i32 levels);
-    i32 CreatureTypeCount(i32 creatureType);
-    void UpgradeCreatures(i32 oldCreatureType, i32 newCreatureType);
-    i32 GetNthSS(i32 ordinal);
-    class town* GetOccupiedTown(void);
-    i8 Stats(i32 stat);
-    i8 GetSSLevel(i32 skill);
-    void DoSSLevelDialog(i32 skill, i32 quickView);
-    void CheckAnduranPieces(i32 showDialog);
 };
 #pragma pack(pop)
 
-extern class heroWindow* gheroWin;
+extern class heroWindow* gHeroWin;
 
 void HeroMessageUpdate(char* text);
 void UpdateHeroScreenStatusBar(i16 widgetId);
 // Stale alias of gHeroWindShowing (0x494128): unreferenced, kept so later symbol handles stay put.
-extern i8 gbHeroScreenActive;
+extern i8 gHeroScreenActive;
 H1_ENUM_RETURN(MessageDispatchResult, i16) HeroHandler(struct tag_message& message);
 // Moved from HERO.cpp.
 // clang-format off
@@ -257,7 +243,7 @@ H1_ENUM_CONST_BEGIN(HeroScreenMoodConstant)
     HERO_SCREEN_MOOD_ICON_COUNT = 3
 H1_ENUM_CONST_END(HeroScreenMoodConstant)
 
-// giHeroScreenSrcIndex: the army slot picked up on the hero screen, or NONE.
+// gHeroScreenSrcIndex: the army slot picked up on the hero screen, or NONE.
 // UpdateArmies shows an empty slot with background frame EMPTY and a
 // creature over its faction's frame (FACTION_FIRST + type / faction size).
 H1_ENUM_CONST_BEGIN(HeroScreenArmyConstant)

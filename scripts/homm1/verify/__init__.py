@@ -64,6 +64,7 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "strict-view": "homm1.verify.strict_view",
           "label-style": "homm1.verify.label_style",
           "line-directives": "homm1.verify.line_directives",
+          "localization": "homm1.verify.localization",
           "include-order": "homm1.verify.include_order",
           "unique-names": "homm1.verify.unique_names",
           "library-overlap": "homm1.verify.library_overlap",
@@ -82,6 +83,7 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "library-data-refs": "homm1.verify.library_data_refs",
           "layout": "homm1.verify.layout",
           "link-tier": "homm1.verify.link_tier",
+          "link-diff": "homm1.verify.link_diff",
           "lzhuf-oracle": "homm1.verify.lzhuf_oracle"}
 
 #: runnable as `homm1 verify <name>` but in NO tier: read-only oracles, not

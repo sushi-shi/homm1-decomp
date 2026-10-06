@@ -33,29 +33,54 @@ not yet modelled:
   a union of the raw bytes (`m_data`), the leading `IconEntry` directory
   (`m_frames`) and the font code's word view (`m_frameWords`). Its 26 casts are
   gone and the code is unchanged;
-- network packets: `char` buffers viewed as `RemoteMessage`,
-  `combatRemoteMessage`, `heroRemoteMessage` and fragment records.
-  `SendHeroTownData` uses one allocation for the combat record and both hero
-  fragments. It is now a local union of the three typed pointers (combat
-  record, hero fragment, wire bytes), so the frame slot is unchanged.
-  `ReceiveHeroTownData` and `DoCombat` read received records through
-  the `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` view macros. The remaining
-  nine casts convert the `char*` that `GetRemoteData`, `CheckHandleNet` and the
-  transmit functions use for queue records; the `char* GetRemoteData(char)`
-  signature fixes that type, so the casts sit at those call sites. A union
-  cannot hold the combat payload because `armyGroup`/`town` members have
-  constructors. `PacketSend` keeps its `char[]` data identity. `TransmitSaveGame` builds its packets in a named
-  `RemotePayload`, the `RemoteMessage` payload union;
+- network packets (resolved): the remote queue hands out typed records.
+  `GetRemoteData` returns `RemoteMessage*` (its output buffer `rcvBufOut` is a
+  `RemoteMessage`), `CheckHandleNet`, `DoNetCombat`, `ReceiveHeroTownData` and
+  `TransmitAndWait`'s response carry `RemoteMessage*`, and `SendRemoteData`,
+  `ReceiveRemoteData`, `EncodePacket` and `DecodePacket` take the
+  `RemoteMessage` they copy to or from the wire. `TransmitRemoteData` and
+  `TransmitAndWait` take `void*` payloads, because they only copy the caller's
+  bytes into the record. The relayed combat action is a `CombatRemoteAction`
+  member of the `RemotePayload` union (it replaced the duplicate
+  `CombatRemotePacket` record), and `ProcessNextAction` builds it in a typed
+  local of the same 16 bytes. 17 casts are gone and every object is identical
+  apart from the changed names. `SendHeroTownData` uses one allocation for the
+  combat record and both hero fragments, through a local union of the two typed
+  pointers (one frame slot, as in retail);
 - resource reads and pixel buffers (resolved): `resourceManager::ReadBlock`
   takes `void*` (it only forwards to `_read`) and `Read13` takes `char*`. The
   widget and font name buffers are `char`. `bitmap::m_pixels` and
   `tileset::m_data` are `u8*`, because they hold palette indices.
   This removed 15 casts, including the fizzle loop's byte views, and the code is
   unchanged;
-- remaining byte, word and integer views. Each one is a different typed read of
-  the same storage. Examples are the palette RGB triples, the search occupancy
-  bytes (filled signed, read zero-extended), handle-to-integer assertions and
-  CRC byte walks.
+- the adventure search's occupancy flags (resolved): `TestPossibleDirections`
+  only clears and sets them, and `SeedPosition` reads them zero-extended, so
+  the parameter and both callers' arrays are `u8`;
+- remaining views, each a different typed read of the same storage (10
+  sites, each with its reason at the cast):
+  - `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` overlay a received record's
+    payload as the combat record or a hero fragment. `combatRemoteData` holds
+    `armyGroup` and `town` objects, whose constructors keep it out of the
+    `RemotePayload` union (VC6 rejects union members with constructors);
+  - `PollRemote` receives into `rcvBufIn` and reads it through
+    `REMOTE_MESSAGE`: retail places that buffer 4-byte aligned, which a
+    `RemoteMessage` object (8-byte aligned by VC6) cannot be, so it stays a
+    `char` array;
+  - the wire layer frames the `char` packet buffers with `RemotePacketHeader`
+    (`REMOTE_PACKET`) and walks them as unsigned bytes for the CRC. The receive
+    buffer also carries the direct-connect `ID` text, so it stays `char`;
+  - palette channels: `palette::m_data` is `i8` because the fades compare its
+    channels signed; `PostprocessPalette` moves `PaletteColor` triples,
+    `CreateFizzleTables` reads the channels zero-extended as RGB
+    rows, and `ConvertSmackerPalette` scales Smacker's 8-bit channels as `u8`;
+  - `DoAdvance`'s win-text assertion passes the pointer to `ProcessAssert`'s
+    `i32` condition, as retail pushes the pointer itself.
+
+Casts whose operand or target is a Win32 type are API boundaries (77 sites):
+`LPBYTE`/`PUCHAR`/`LPBITMAPINFO` buffer arguments, window and dialog
+procedures, `GetProcAddress` results, the handle assertions and the
+`HINSTANCE`/`WPARAM` comparisons (the value itself is the integer retail
+tests), and the NetBIOS name bytes.
 
 The fix is the real type at its owner (a typed member, a packet struct or
 union), not an inline accessor: under `/Od /Ob1` an inlined accessor adds frame
@@ -92,8 +117,11 @@ placeholders remain:
 - playerData `m_unknown00`/`m_unknown99`: only copied raw by Write/Read;
   `m_unknown99[1]` is written twice.
 
-Inventing a meaning for them is not evidence, so they stay placeholders until
-a reader is found.
+The editor image compiles the same BASE managers, so it was searched too:
+no instruction in `EDITOR.EXE` or `HEROES.EXE` loads `gpInputManager`,
+`gpMouseManager` or `gpWindowManager` and then reads one of these offsets.
+Inventing a meaning for them is not
+evidence, so they stay placeholders until a reader is found.
 
 **`goto`.** A `goto` stays when retail's block layout requires it; it is
 replaced only when a structured form compiles to identical bytes.
@@ -111,6 +139,15 @@ scan, and each class was checked by compiling a structured replacement:
 | Single-loop exit | 12 | `fileRequester::fileRequester` `goto insert` and `ReceiveRemoteData` loop `goto done` as `break` | 1056/1057 for each. `break` emits a different jump than the retail `goto`. |
 | Multi-level loop exit | 2 | (no structured form) | `break` leaves only the inner loop. |
 
+Every site was also tried in place as `break;` and as `continue;`, one
+compile per trial against the unchanged object (408 trials). 161 do not
+compile, because the `goto` is not inside a loop, and none of the 247 that
+compile leaves the object identical. The loop exits show why: VC6 `/Od`
+compiles `if (c) break;` to one conditional jump to the loop exit, while
+`if (c) goto L;` keeps a conditional jump around an unconditional `jmp L`.
+`advManager::DoAdvCommand`'s route loop shrinks from 1345 to 1340 bytes with
+`break`; retail has the `jmp` at every site.
+
 Every goto is kept because retail's block layout requires it.
 
 **Dead locals.** Every never-referenced local must correspond to an
@@ -121,9 +158,22 @@ The audit lists locals with `clang-cl /Zs -Wunused-variable` after replacing
 each `#line` with an empty line, so diagnostics keep the file's own numbering.
 It found 116 such locals. The 41 with an initializer emit retail stores. A
 control removed the 75 initializer-free declarations together: every function
-that contained one lost its exact frame, and the others were unchanged. Under
-`/Od`, VC6 gives each declared local its own slot, so each of these maps to an
-unread slot in retail's frame.
+that contained one lost its exact frame, and the others were unchanged. Each
+of the 75 was then removed alone (its line blanked, so `#line` pins hold), and
+every single removal changes its function. Under `/Od`, VC6 gives each
+declared local its own slot, so each of these maps to an unread slot in
+retail's frame. The 101 locals that are only written (`-Wunused-but-set-variable`)
+are retail stores.
+
+**Dead declarations.** A function or method declared in a header but never
+defined, called or linked is a name with no body in either image. A libclang
+pass over every game unit and the editor's `EDITOR.cpp` lists the
+non-virtual declarations that no unit defines or references, that no object
+(assembly units included) defines, and that carry no `VA_DECL` claim. The
+adventure, game, hero, town and BASE headers lost 109 such declarations, and
+the combat headers 98; two remain in `combatManager.h` for that lane.
+Constructors, destructors and virtual methods stay, because the vtables and
+object lifetimes evidence them.
 
 **`static_cast`.** Narrowing and signedness conversions are often required for
 retail's widths; the review removes the ones that only paper over a wrong
@@ -137,20 +187,36 @@ bodies exact:
   types, and 60 casts are gone. Handle types only change mangling, so the
   claimed names of the retyped globals and of the functions that take them
   (`AppInit`, `AppWndProc`, `AppCommand`, the menu and paint functions) now use
-  the `STRICT` spelling, matching `hwndApp` and the other handle globals.
+  the `STRICT` spelling, matching `gAppWindow` and the other handle globals.
 - Casts to the operand's own type: `u8` map-cell payloads, `u8` hit points and
   a `float` difference.
 - `CONST` enum values converted to `int` or a narrower integer. These enums are
   unscoped in both views, so the cast does nothing.
 
+A second libclang pass over every unit listed each `static_cast` whose operand and target are arithmetic types (or a
+`CONST`/`FLAGS` enum, unscoped in both views) and whose value is consumed where
+C++ applies the same conversion implicitly: the right side of `=` with a
+left side of the target type, a variable initializer, a non-variadic argument,
+a `return`, a compound assignment, or an arithmetic operand whose other
+operand already has the target type. Removing those 167 casts left every
+object byte-identical except one: `ScaleSampleVolume`'s
+`GetEffectsVolume() * static_cast<float>(volume)` becomes an `fimul` from
+memory without the cast, so it stays. Casts of names declared through the
+`H1_ENUM_*` storage macros are excluded, because the strict view types them
+as enums. `highScoreManager::Main`'s one cast of a `MessageModifier` mask is
+gone too: every other modifier test in the tree is written without it.
+
 The remaining casts are:
 
-- Float-to-integer conversions, kept explicit at each `__ftol`.
-- `void*` results of `malloc`, `GlobalAlloc` and the resource cache. C++
-  requires these casts.
-- Narrowing stores and `i8` ternary arms whose byte width retail shows.
-- `char` to `u8` code-page comparisons.
-- Casts of strict-domain values, which are `enum class` in the Clang view.
+- `void*` results of `malloc`, `GlobalAlloc` and the resource cache, and the
+  resource-to-subclass downcasts. C++ requires these casts.
+- Strict-domain values converted to their storage width (`enum class` in the
+  Clang view), including enum-indexed subscripts.
+- `i8` ternary arms, which give the conditional its byte type.
+- Conversions whose result feeds a wider operation (`static_cast<u8>(c) >=
+  'a'`, `static_cast<i8>(Random(0, 3)) + 4`, integer-to-floating divisions):
+  dropping these changes the value.
+- `ScaleSampleVolume`'s `float` operand (above).
 
 Retyping the owner was measured for the remaining narrowing casts on locals
 and failed. For example, declaring `CheckEndGame`'s player index `i8` instead
@@ -196,8 +262,8 @@ code are outside the checklist. Declared default arguments (`NormalDialog`,
 without changing code.
 
 **Unions and varargs.** Alternate views and manual argument access are kept only
-where retail evidence requires them. Nine unions remain; the tenth `rg` hit is
-a comment in `ARMY.cpp`. Each one gives two or more readers of the same storage
+where retail evidence requires them. Eight unions remain; the other two `rg`
+hits are comments in `ARMY.cpp` and `EVENTS.h`. Each one gives two or more readers of the same storage
 their own types:
 
 | Union | Readers |
@@ -206,8 +272,7 @@ their own types:
 | `icon` resource data | Raw bytes, the `IconEntry` directory and Buka's font word reads. |
 | `searchNode` tail | The adventure search reads adjacent-monster bytes, and the value search reads signed coordinates. |
 | `tag_Node` payload | The serial payload at +0xa, and the NetBIOS session byte then payload at +0xb. |
-| `CombatRemotePacket` payload | Combat actions or a chat line. |
-| `RemotePayload` | The remote message payload layouts. |
+| `RemotePayload` | The remote message payload layouts: text, the save transfer header and segments, and the relayed combat action. |
 | `advManager::SendHeroTownData` buffer (`EVENTS.cpp`) | The single allocation is filled as the combat record, then as each hero fragment. |
 
 `nb_sess` is the only `va_start` user. It is a standard variadic function:

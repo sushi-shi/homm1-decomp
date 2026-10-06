@@ -16,8 +16,8 @@ H1_ENUM_CONST_BEGIN(PaletteFormatConstant)
 H1_ENUM_CONST_END(PaletteFormatConstant)
 
 // A client-area coordinate scaled to the logical screen.
-// iMainWinScreenWidth/Height are kbwin's client extents.
-#define CLIENT_TO_GAME_X(x) (((x) * LOGICAL_SCREEN_WIDTH) / iMainWinScreenWidth)
+// gMainWinScreenWidth/Height are kbwin's client extents.
+#define CLIENT_TO_GAME_X(x) (((x) * LOGICAL_SCREEN_WIDTH) / gMainWinScreenWidth)
 #define CLIENT_TO_GAME_Y(y) (((y) * LOGICAL_SCREEN_HEIGHT) / gMainWinScreenHeight)
 
 #endif // HOMM1_BASE_DISPLAY_H

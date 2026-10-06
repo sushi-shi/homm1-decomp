@@ -16,19 +16,15 @@ class heroWindow;
 // hiscore.bin control ids: the title pair 0x67/0x68, ten animated monsters
 // 201..210 and four text columns per row (name, scenario, score, rating).
 H1_ENUM_ID_BEGIN(HighScoreControlId)
-    HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
-    HIGH_SCORE_STANDARD_BUTTON = 100,
-    HIGH_SCORE_TITLE_WIDGET = 0x67,
-    HIGH_SCORE_SUBTITLE_WIDGET = 0x68,
-    HIGH_SCORE_FIRST_TEXT_WIDGET = 0x6a,
-    HIGH_SCORE_CAMPAIGN_BUTTON = 0x93,
-    HIGH_SCORE_ANIMATED_WIDGET_FIRST = 200,
+HIGH_SCORE_CLOSE_BUTTON = DIALOG_BUTTON_0,
+    HIGH_SCORE_STANDARD_BUTTON = 100, HIGH_SCORE_TITLE_WIDGET = 0x67,
+    HIGH_SCORE_SUBTITLE_WIDGET = 0x68, HIGH_SCORE_FIRST_TEXT_WIDGET = 0x6a,
+    HIGH_SCORE_CAMPAIGN_BUTTON = 0x93, HIGH_SCORE_ANIMATED_WIDGET_FIRST = 200,
     HIGH_SCORE_FIRST_MONSTER_WIDGET = 0xc9,
-    HIGH_SCORE_ANIMATED_WIDGET_LAST = 210
-H1_ENUM_ID_END(HighScoreControlId)
+    HIGH_SCORE_ANIMATED_WIDGET_LAST = 210 H1_ENUM_ID_END(HighScoreControlId)
 
-// Text widget columns of one score row (Update's id stride and offsets).
-H1_ENUM_CONST_BEGIN(HighScoreTextColumn)
+    // Text widget columns of one score row (Update's id stride and offsets).
+    H1_ENUM_CONST_BEGIN(HighScoreTextColumn)
     HIGH_SCORE_TEXT_NAME_OFFSET = 0,
     HIGH_SCORE_TEXT_SCENARIO_OFFSET = 1,
     HIGH_SCORE_TEXT_SCORE_OFFSET = 2,
@@ -95,7 +91,7 @@ public:
 };
 #pragma pack(pop)
 
-// giHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
+// gHighScoreType and AddScoreToHighScore/GetMonType's score table: campaign
 // scores (CAMPAIGN.HS, fewest days first; gScoreCampaignMon) or standard
 // scores (STANDARD.HS, highest first; gScoreMon). highScoreManager shows the
 // matching list.

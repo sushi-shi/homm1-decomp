@@ -73,23 +73,23 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
     backdropWidget* pBack;
 
     strcpy(m_name, resourceName);
-    jb = gpResourceManager->MakeId(resourceName);
-    gpResourceManager->PointToFile(jb);
+    jb = gResourceManager->MakeId(resourceName);
+    gResourceManager->PointToFile(jb);
     m_savedBackground = NULL;
     m_nextWindow = m_prevWindow = NULL;
     m_winState = WINDOW_STATE_CLOSED;
     m_zOrder = WINDOW_Z_ORDER_APPEND;
     m_posX = x;
     m_posY = y;
-    m_winWidth = gpResourceManager->ReadWord();
-    m_winHeight = gpResourceManager->ReadWord();
-    m_winFlags = H1_ENUM_CAST(WindowFlag, i16, gpResourceManager->ReadWord());
+    m_winWidth = gResourceManager->ReadWord();
+    m_winHeight = gResourceManager->ReadWord();
+    m_winFlags = H1_ENUM_CAST(WindowFlag, i16, gResourceManager->ReadWord());
     m_winFlags |= WINDOW_FLAG_OWNS_WIDGETS;
     m_widgetListTail = m_widgetListHead = NULL;
     idx = 0;
     while (idx == 0) {
         PollSound();
-        rec = H1_ENUM_CAST(WindowWidgetRecordType, i16, gpResourceManager->ReadWord());
+        rec = H1_ENUM_CAST(WindowWidgetRecordType, i16, gResourceManager->ReadWord());
         pWidget = NULL;
         switch (rec) {
             case WIDGET_RECORD_END:
@@ -150,12 +150,12 @@ VA(0x0046d6f0, 0x85)
 H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::Open(i16 zOrder, i8 flags) {
     if ((m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         return WINDOW_OPEN_FAILURE;
-    gpMouseManager->ReallyHidePointer();
+    gMouseManager->ReallyHidePointer();
     if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE && SaveBackground() != 0)
         return WINDOW_OPEN_FAILURE;
     m_zOrder = zOrder;
     DrawWindow(flags);
-    gpMouseManager->ReallyShowPointer();
+    gMouseManager->ReallyShowPointer();
     m_winState |= WINDOW_STATE_OPEN;
     return WINDOW_OPEN_SUCCESS;
 }
@@ -163,7 +163,8 @@ H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::Open(i16 zOrder, i8 flags) {
 VA(0x0046d775, 0xa2)
 void heroWindow::Close(void) {
     widget *current, *next;
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE && (m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE
+        && (m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         RestoreBackground();
     current = m_widgetListHead;
     while (current != NULL) {
@@ -282,7 +283,7 @@ void heroWindow::DrawWindow(i16 update, i32 firstId, i32 lastId) {
     }
     PollSound();
     if (update != 0 && (m_winFlags & WINDOW_UPDATE_SUPPRESS_MASK) != WINDOW_FLAG_FIXED_LAYER) {
-        gpWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
+        gWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
         PollSound();
     }
 }
@@ -299,7 +300,7 @@ i16 heroWindow::SaveBackground(void) {
 VA(0x0046dc28, 0x8a)
 void heroWindow::RestoreBackground(void) {
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
-    gpWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
+    gWindowManager->UpdateScreenRegion(m_posX, m_posY, m_winWidth, m_winHeight);
     delete m_savedBackground;
     m_savedBackground = NULL;
 }
@@ -323,7 +324,7 @@ void heroWindow::MoveWindow(i16 dx, i16 dy) {
     m_savedBackground->DrawToBuffer(m_posX, m_posY);
     m_posX = toX;
     m_posY = toY;
-    m_savedBackground->GrabBitmap(gpWindowManager->m_screen, m_posX, m_posY);
+    m_savedBackground->GrabBitmap(gWindowManager->m_screen, m_posX, m_posY);
     DrawWindow(0);
     oldWidth += abs(m_posX - x);
     oldHgt += abs(m_posY - yPrev);
@@ -331,5 +332,5 @@ void heroWindow::MoveWindow(i16 dx, i16 dy) {
         x = m_posX;
     if (m_posY < yPrev)
         yPrev = m_posY;
-    gpWindowManager->UpdateScreenRegion(x, yPrev, oldWidth, oldHgt);
+    gWindowManager->UpdateScreenRegion(x, yPrev, oldWidth, oldHgt);
 }

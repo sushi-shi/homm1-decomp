@@ -15,7 +15,7 @@ hexcell::hexcell(void) {
     m_occupantSide = COMBAT_SIDE_NONE;
     m_occupantIndex = 0;
     m_obstacleIndex = COMBAT_OBSTACLE_NONE;
-    m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+    m_occupantFootprintHalf = ARMY_FACING_NONE;
     m_pathFlag = 0;
 }
 
@@ -24,39 +24,40 @@ VA(0x0043b73f, 0x42)
 hexcell* hexcell::TakeOccupant(hexcell* from) {
     m_occupantSide = from->m_occupantSide;
     m_occupantIndex = from->m_occupantIndex;
-    m_occupantFrame = from->m_occupantFrame;
+    m_occupantFootprintHalf = from->m_occupantFootprintHalf;
     from->m_occupantSide = COMBAT_SIDE_NONE;
-    from->m_occupantFrame = HEXCELL_OCCUPANT_FRAME_NONE;
+    from->m_occupantFootprintHalf = ARMY_FACING_NONE;
     return this;
 }
 
 VA(0x0043b781, 0x40)
 void hexcell::DrawGround(void) {
-    gpCombatManager->m_combatIcons[m_groundIcon]
+    gCombatManager->m_combatIcons[m_groundIcon]
         ->DrawToBuffer(m_x, m_y, m_groundFrame, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
 }
 
 VA(0x0043b7c1, 0x71)
 void hexcell::DrawOccupant(void) {
-    H1_ENUM_LOCAL(ArmyFacing, i8) frame;
+    H1_ENUM_LOCAL(ArmyFacing, i8) occupantFacing;
     army* occupant;
 
     if (m_occupantSide != COMBAT_SIDE_NONE) {
-        occupant = &gpCombatManager->m_armies[m_occupantSide][m_occupantIndex];
-        frame = occupant->m_facing;
-        if (m_occupantFrame != frame)
+        occupant = &gCombatManager->m_armies[m_occupantSide][m_occupantIndex];
+        occupantFacing = occupant->m_facing;
+        if (m_occupantFootprintHalf != occupantFacing)
             occupant->DrawToBuffer(m_x, m_y);
     }
 }
 
+#define mirrored level // frame-slot spelling
 VA(0x0043b832, 0x124)
 void hexcell::DrawTower(H1_ENUM_PARAM(CombatObstacleIndex, i8) frame) {
-    i8 level;
+    i8 mirrored;
     i16 row;
 
-    level = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
-    gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
-        level ? m_x : m_x + 28,
+    mirrored = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+        mirrored ? m_x : m_x + 28,
         m_y,
         // The tower piece's obstacle state is its frame in castle%02d.icn.
         H1_ENUM_ENCODE(CombatObstacleIndex, frame),
@@ -67,74 +68,80 @@ void hexcell::DrawTower(H1_ENUM_PARAM(CombatObstacleIndex, i8) frame) {
     if (row == COMBAT_GRID_LAST_ROW)
         return;
     if (row & 1)
-        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
-            level ? m_x : m_x + 28,
+        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+            mirrored ? m_x : m_x + 28,
             m_y,
             9,
             ICON_DRAW_FLIPPED,
             ICON_DRAW_OFFSET_FULL
         );
     else
-        gpCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(level ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+            mirrored ? m_x - 28 : m_x,
+            m_y,
+            9,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
 }
+#undef mirrored
 
 VA(0x0043b956, 0x279)
 void hexcell::DrawWall(void) {
-    i8 lastFlip;
+    i8 level;
     i16 row;
-    i16 levelValue;
+    i16 rubbleFrame;
 
-    lastFlip = gpCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
+    level = gCombatManager->m_castleSide[COMBAT_ATTACKER_SIDE] == 1;
     row = (m_y - COMBAT_HEX_ORIGIN_Y) / COMBAT_HEX_HEIGHT;
-    levelValue = gpCombatManager->m_wallDamage;
-    gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-        lastFlip ? m_x - 15 : m_x + 15,
+    rubbleFrame = gCombatManager->m_wallDamage;
+    gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+        level ? m_x - 15 : m_x + 15,
         row == 0 ? m_y - 20 : m_y - 36,
-        gpCombatManager->m_wallFrame,
+        gCombatManager->m_wallFrame,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL
     );
-    if (levelValue != COMBAT_WALL_DAMAGE_NONE) {
+    if (rubbleFrame != COMBAT_WALL_DAMAGE_NONE) {
         if (row == COMBAT_GRID_LAST_ROW) {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x : m_x + 15,
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                level ? m_x : m_x + 15,
                 m_y + 8,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
             return;
         }
         if (row & 1) {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x : m_x + 8,
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                level ? m_x : m_x + 8,
                 m_y + 40,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (levelValue > 0)
-                gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    lastFlip ? m_x - 40 : m_x - 32,
+            if (rubbleFrame > 0)
+                gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                    level ? m_x - 40 : m_x - 32,
                     m_y + 60,
-                    levelValue - 1,
+                    rubbleFrame - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
         } else {
-            gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                lastFlip ? m_x - 28 : m_x - 8,
+            gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                level ? m_x - 28 : m_x - 8,
                 m_y + 40,
-                levelValue,
+                rubbleFrame,
                 ICON_DRAW_NORMAL,
                 ICON_DRAW_OFFSET_FULL
             );
-            if (levelValue > 0)
-                gpCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
-                    lastFlip ? m_x + 20 : m_x + 40,
+            if (rubbleFrame > 0)
+                gCombatManager->m_combatIcons[COMBAT_ICON_CLOUD]->DrawToBuffer(
+                    level ? m_x + 20 : m_x + 40,
                     m_y + 60,
-                    levelValue - 1,
+                    rubbleFrame - 1,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -144,19 +151,19 @@ void hexcell::DrawWall(void) {
 
 VA(0x0043bbcf, 0x151)
 void hexcell::DrawObstacle(void) {
-    if (m_obstacleType == COMBAT_ICON_CASTLE) {
+    if (m_obstacleIcon == COMBAT_ICON_CASTLE) {
         switch (m_obstacleIndex) {
             case COMBAT_WALL_INTACT:
             case COMBAT_WALL_DAMAGED:
                 DrawTower(m_obstacleIndex);
                 break;
             case COMBAT_WALL_INTACT_HIT:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
                     DrawTower(COMBAT_WALL_INTACT);
                 DrawWall();
                 break;
             case COMBAT_WALL_DAMAGED_HIT:
-                if (gpCombatManager->m_wallFrame < 4 || gpCombatManager->m_wallSurvives == 1)
+                if (gCombatManager->m_wallFrame < 4 || gCombatManager->m_wallSurvives == 1)
                     DrawTower(COMBAT_WALL_DAMAGED);
                 DrawWall();
                 break;
@@ -165,7 +172,8 @@ void hexcell::DrawObstacle(void) {
                 break;
         }
     } else {
-        gpCombatManager->m_combatIcons[COMBAT_ICON_OBSTACLES]
+        gCombatManager
+            ->m_combatIcons[COMBAT_ICON_OBSTACLES]
             // A rock's obstacle index is its frame in the obstacle icon.
             ->DrawToBuffer(
                 m_x,

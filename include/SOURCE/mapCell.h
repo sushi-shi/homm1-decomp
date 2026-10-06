@@ -2,7 +2,7 @@
 #define HOMM1_SOURCE_MAPCELL_H
 // HoMM1 adventure-map cell. advManager::GetCell's x*720 + y*10 addressing
 // and game::GetWorldMapData's embedded 72x72 map prove a ten-byte record;
-// the editor's twelve-byte mapCell (EDITOR/mapcell.h) adds an extra chain.
+// the editor edits the same record (editMap) beside each cell's object ids.
 
 #include <Domains.h>
 
@@ -18,9 +18,9 @@ H1_ENUM_CONST_BEGIN(MapCellConstant)
     // m_secondaryTrigger bit 7: the cell blocks pathing (DoDimensionDoor and
     // ViewWorld's dimension-door preview skip it).
     MAP_CELL_SECONDARY_BLOCKED = 0x80,
-    // Ground tiles come in runs of 20 per terrain (giGroundToTerrain[i] =
+    // Ground tiles come in runs of 20 per terrain (gGroundToTerrain[i] =
     // i / 20); tiles below 20 are water. The seven terrains' runs make the
-    // 140-entry giGroundToTerrain table InitVars fills.
+    // 140-entry gGroundToTerrain table InitVars fills.
     MAP_CELL_TILES_PER_TERRAIN = 20,
     MAP_CELL_GROUND_TILE_COUNT = 140,
     // DrawCell shifts m_flags' two ground-flip bits to TileToBitmap's bits
@@ -71,6 +71,9 @@ H1_ENUM_BEGIN(MapTileset)
     TILESET_OBJ32_07 = 7,
     TILESET_MTN32 = 8,
     TILESET_TREE32 = 9,
+    // The tilesets up to here hold terrain objects; the editor's eraser
+    // clears them by the terrain under them (inclusive).
+    TILESET_TERRAIN_OBJECT_LAST = TILESET_TREE32,
     TILESET_TOWN32 = 10,
     TILESET_RSRC32 = 11,
     TILESET_MONS32 = 12,
@@ -118,5 +121,10 @@ public:
 // object as an obstacle; the draw paths test the flag first and stay explicit.
 #define CELL_HAS_NON_SHADOW_OBJECT(cell)                                                           \
     ((cell)->m_objectIndex != MAP_CELL_NO_FRAME && !((cell)->m_flags & MAP_CELL_OBJECT_SHADOW_ONLY))
+
+// (x, y) lies on the map grid: the column's lower and upper bound, then the
+// row's.
+#define MAP_CELL_IN_BOUNDS(x, y)                                                                   \
+    ((x) >= 0 && (x) < MAP_CELL_GRID_SIZE && (y) >= 0 && (y) < MAP_CELL_GRID_SIZE)
 
 #endif // HOMM1_SOURCE_MAPCELL_H

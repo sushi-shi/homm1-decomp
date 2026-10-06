@@ -167,7 +167,7 @@ public:
     // --- methods ---
     void InitClean(void);
     void Init(
-        H1_ENUM_PARAM(CreatureType, i8) type,
+        H1_ENUM_PARAM(CreatureType, i8) creatureType,
         i16 quantity,
         H1_ENUM_PARAM(CombatSide, i8) side,
         i8 index
@@ -187,9 +187,9 @@ public:
     void DoAttack(i32 retaliation);
     void ResetPath(void);
     i16 WalkTo(void);
-    i16 WalkTo(i16 destHex);
+    i16 WalkTo(i16 destination);
     i16 AttackTo(void);
-    i16 AttackTo(i16 destHex);
+    i16 AttackTo(i16 destination);
     void CheckLuck(void);
     void DamageEnemy(
         class army* target,
@@ -201,36 +201,19 @@ public:
     i32 Damage(i32 damage);
     void PowEffect(H1_ENUM_PARAM(CombatPowEffect, i8) effect);
     u32 Strength(void);
-    i32 LeaveNoBody(void);
-    void ProcessDeath(i32 immediate);
     void SpellEffect(H1_ENUM_PARAM(CombatEffectAnimation, i16) effect, i32 frameDelay);
-    void CancelSpellType(i32 cancelType);
-    void CancelIndividualSpell(i32 influence);
-    i32 SetSpellInfluence(i32 influence, i32 rounds);
-    void DecrementSpellRounds(void);
     void GoBerserk(void);
-    void MoveAttack(i32 hex, i32 moveOnly);
-    float SpellCastWorkChance(i32 spell);
-    i32 SpellCastWorks(i32 spell);
-    void DispelGood(void);
+    void MoveAttack(i32 destination, i32 moveOnly);
     // Undoes m_spellEffect when it expires.
     void CancelSpell(void);
-    void Cure(i32 amount);
-    i32 MidX(void);
-    i32 MidY(void);
-    i32 TopY(void);
-    i32 RightX(void);
-    i32 LeftX(void);
-    i32 OtherArmyAdjacent(i32 side, i32 index);
-    i32 GetPowBaseY(void);
     i16 CanFit(i16* hex);
-    i16 ValidFlight(i16 destination, H1_ENUM_PARAM(ArmyPathTarget, i8) useDestination);
+    i16 ValidFlight(i16 destination, H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode);
     i16 FlyTo(void);
     i16 FlyTo(i16 destination);
     i16 FindPath(
         i16 sourceHex,
         i16 targetHex,
-        i8,
+        i8 speed,
         i8 ignoreSpeed,
         H1_ENUM_PARAM(ArmyPathTarget, i8) pathMode
     );
@@ -281,7 +264,7 @@ H1_ENUM_CONST_BEGIN(ArmyDrawingConstant)
 H1_ENUM_CONST_END(ArmyDrawingConstant)
 
 H1_ENUM_CONST_BEGIN(ArmyMessageConstant)
-    TARGET_NAME_SIZE = 100
+    ARMY_TARGET_NAME_SIZE = 100
 H1_ENUM_CONST_END(ArmyMessageConstant)
 
 // Creature specials fire on one outcome of SRandom(1, ROLL_MAX): the

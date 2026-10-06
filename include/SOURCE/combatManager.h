@@ -20,7 +20,6 @@ class hero;
 class heroWindow;
 class icon;
 class town;
-struct SBolt;
 struct tag_message;
 
 // Combat commands: GetCommand derives one from the hovered hex
@@ -41,7 +40,7 @@ H1_ENUM_BEGIN(CombatMessageCommand)
     COMBAT_MESSAGE_COMMAND_OPPOSING_OPTIONS = 13
 H1_ENUM_END(CombatMessageCommand)
 
-// The queued giNextAction that the combat loop
+// The queued gNextAction that the combat loop
 // executes; DoCommand, the spell book and the skip button set it.
 H1_ENUM_BEGIN(CombatAction)
     ACTION_NONE = 0,
@@ -58,19 +57,17 @@ H1_ENUM_END(CombatAction)
 // plain arrow (hotspot 1,1) and ATTACK_FIRST + CombatHexDirection the sword
 // pointing from that side.
 H1_ENUM_ID_BEGIN(CombatPointerCode)
-    COMBAT_POINTER_VIEW = 5,
-    COMBAT_POINTER_DEFAULT = 6,
-    COMBAT_POINTER_ATTACK_FIRST = 7
-H1_ENUM_ID_END(CombatPointerCode)
+COMBAT_POINTER_VIEW = 5, COMBAT_POINTER_DEFAULT = 6,
+                         COMBAT_POINTER_ATTACK_FIRST = 7 H1_ENUM_ID_END(CombatPointerCode)
 
-// Two sides (attacker 0, defender 1) index m_armies and m_numArmies.
-// The hex grid is nine columns by five rows (hex = row * 9 + column):
-// DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
-// m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
-// siege the town wall stands in column 5 (DrawBackground draws it there,
-// SpecialAttack tests shots across it, DoCompAI moves defenders to the
-// column inside it).
-H1_ENUM_CONST_BEGIN(CombatGridConstant)
+                         // Two sides (defender 0, attacker 1) index m_armies and m_numArmies.
+                         // The hex grid is nine columns by five rows (hex = row * 9 + column):
+                         // DrawBackground and DrawFrame walk it row by row, army/AI/FLY code splits
+                         // m_hex with % and / 9 and treats columns 0 and 8 as the side edges. In a
+                         // siege the town wall stands in column 5 (DrawBackground draws it there,
+                         // SpecialAttack tests shots across it, DoCompAI moves defenders to the
+                         // column inside it).
+                         H1_ENUM_CONST_BEGIN(CombatGridConstant)
     COMBAT_HEX_COUNT = 45,
     COMBAT_SIDE_ARMY_COUNT = 6,
     COMBAT_CASTLE_WALL_COLUMN = 5,
@@ -101,12 +98,12 @@ H1_ENUM_CONST_BEGIN(CombatViewConstant)
     COMBAT_CATAPULT_ROW = 3
 H1_ENUM_CONST_END(CombatViewConstant)
 
-// Per-side draw sentinels: m_heroType and m_catapultFrame hold -1 for a side
+// Per-side draw sentinels: m_heroClass and m_catapultFrame hold -1 for a side
 // without a hero or catapult (DrawFrame skips the tent / catapult);
 // ResetLimitCreature marks a dead stack's m_limitCreatureCount HIDDEN so
 // DrawFrame never grows the redraw box for it.
 H1_ENUM_CONST_BEGIN(CombatDrawStateConstant)
-    COMBAT_HERO_TYPE_NONE = -1,
+    COMBAT_HERO_CLASS_NONE = -1,
     COMBAT_CATAPULT_FRAME_NONE = -1,
     COMBAT_LIMIT_CREATURE_HIDDEN = -1,
     // m_wallDamage without damage frames to draw (hexcell::DrawWall).
@@ -152,29 +149,8 @@ H1_ENUM_BEGIN(CombatAIAttackPlan)
     COMBAT_AI_ATTACK_WALK = 3
 H1_ENUM_END(CombatAIAttackPlan)
 
-// The combat action relayed through
-// GetRemoteData (command 0x17) or a net chat line (command 0xb).
-#pragma pack(push, 1)
-struct CombatRemotePacket {
-    i8 sender;
-    i32 id;
-    H1_ENUM_STORAGE(RemoteMessageType, i8) type;
-    i8 command;
-    i16 payloadSize;
-    union {
-        struct {
-            H1_ENUM_STORAGE(CombatAction, i32) nextAction;
-            i32 nextActionExtra;
-            i32 nextActionGridIndex;
-            i32 nextActionGridIndex2;
-        };
-        char text[0xf7];
-    };
-};
-#pragma pack(pop)
-
 // Combat manager, 0x7d3 bytes (InitMainClasses; constructor 0x0044b440).
-// GameUnsaved reads the baseManager m_active word through gpCombatManager.
+// GameUnsaved reads the baseManager m_active word through gCombatManager.
 #pragma pack(push, 1)
 class combatManager : public baseManager {
 public:
@@ -186,8 +162,9 @@ public:
     hexcell m_hexCells[COMBAT_HEX_COUNT];
     // First grid row (0-4) UpdateCombatArea must redraw; 5 when clean.
     i16 m_gridUpdateRow;
-    // DrawFrame skips the grid overlay while this is set (SetGridMode).
-    i8 m_gridMode;
+    // DrawFrame draws each row's occupants right to left while this is set
+    // (SetDrawRightToLeft).
+    i8 m_drawRightToLeft;
     // LoadIcons indexes the ground and obstacle tables by this terrain;
     // GetBackgroundName forces 6 for a graveyard field.
     H1_ENUM_STORAGE(TerrainType, i8) m_terrainType;
@@ -218,10 +195,10 @@ public:
     // game::ViewArmy).
     H1_ENUM_ARRAY(class armyGroup*, m_armyGroups, CombatSide, COMBAT_SIDE_COUNT);
     // Set by a surrender (ProcessNextAction).
-    H1_ENUM_ARRAY(i8, m_sideDefeated, CombatSide, COMBAT_SIDE_COUNT);
-    // SetupCombat copies gbHumanPlayer per side; a bad-morale roll may spare
+    H1_ENUM_ARRAY(i8, m_sideSurrendered, CombatSide, COMBAT_SIDE_COUNT);
+    // SetupCombat copies gHumanPlayer per side; a bad-morale roll may spare
     // a computer side.
-    H1_ENUM_ARRAY(char, m_humanSide, CombatSide, COMBAT_SIDE_COUNT);
+    H1_ENUM_ARRAY(char, m_humanPlayerSide, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i8, m_playerId, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i32, m_experienceValue, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i8, m_heroCastSpell, CombatSide, COMBAT_SIDE_COUNT);
@@ -245,8 +222,9 @@ public:
     H1_ENUM_ARRAY(i16, m_catapultAttackCount, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i16, m_catapultAttacksRemaining, CombatSide, COMBAT_SIDE_COUNT);
     H1_ENUM_ARRAY(i16, m_keepAttacksRemaining, CombatSide, COMBAT_SIDE_COUNT);
-    // SetupCombat copies each hero's +0x1c byte (-1 without a hero).
-    H1_ENUM_ARRAY(i16, m_heroType, CombatSide, COMBAT_SIDE_COUNT);
+    // SetupCombat copies each hero's class (-1 without a hero); DrawFrame
+    // draws it as the tent frame.
+    H1_ENUM_ARRAY(i16, m_heroClass, CombatSide, COMBAT_SIDE_COUNT);
     i16 m_unknown6d9;
     i16 m_unknown6db;
     // Per side: the side fights from a castle. hexcell::DrawTower/DrawWall
@@ -255,7 +233,7 @@ public:
     // SetupCombat sets side 0 when the defending town has a garrisoned hero.
     H1_ENUM_ARRAY(char, m_visitingHeroPresent, CombatSide, COMBAT_SIDE_COUNT);
     // CatAttack's target row in the castle wall column.
-    i16 m_catapultTarget;
+    i16 m_catapultTargetRow;
     // CatAttack: 1 when the shot only damages the wall, 0 when it falls;
     // hexcell::DrawObstacle keeps the tower during the impact frames.
     i8 m_wallSurvives;
@@ -309,28 +287,21 @@ public:
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
-    void NoShowCombatLog(char*);
-    void ClearCombatMessages(i32 force);
-    void CheckUpdateCombatMessages(void);
+    void NoShowCombatLog(char* message);
     void CombatMessage(char* text, i32 updateScreen);
     void CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messageType);
     void ResetLimitCreature(void);
     void UpdateCombatArea(void);
-    void SetupGridForArmy(class army* armyPointer);
     // The upward directions also redraw the row above.
     void
     UpdateGridForMove(i16 hex, H1_ENUM_PARAM(CombatHexDirection, i8) direction, i16 attributes);
-    void UpdateGrid(i16 hex, i16);
+    void UpdateGrid(i16 hex, i16 attributes);
     void DrawBackground(void);
-    void UpdateMouseGrid(i32 hexIndex, i32 forceUpdate);
     void DrawFrame(i8 updateScreen);
-    void SetGridMode(i8 mode);
-    void DrawSmallView(i32 viewIndex, i32 updateScreen);
+    void SetDrawRightToLeft(i8 rightToLeft);
     i8 ViewGeneral(H1_ENUM_PARAM(CombatSide, i32) side, i32 allowActions, i32 quickView);
     void ViewArmy(class army* viewedArmy, H1_ENUM_PARAM(CombatSide, i32) side, i32 quickView);
-    i32 HasValidSpellTarget(i32 spell);
     i8 ViewSpells(i32);
-    i32 FindResurrectArmyIndex(i32 side, i32 spell, i32 hex);
     i8 ValidSpellTarget(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex);
     void
@@ -344,67 +315,11 @@ public:
     void MeteorShower(i8 targetHex);
     void ElementalStorm(void);
     void Armageddon(void);
-    void TurnToStone(class army* target);
-    void BloodLustEffect(class army* target, i32 effect);
-    void Ripple(i32 strength);
-    void Blur(i32 redAdjust, i32 greenAdjust, i32 blueAdjust);
-    void ResetBoltAngle(struct SBolt* bolt);
-    void DrawBolt(struct SBolt* bolt, i32 stepCount);
-    void AddBolt(
-        struct SBolt* bolt,
-        i32 startX,
-        i32 startY,
-        i32 endX,
-        i32 endY,
-        i32 branchDistance,
-        i32 startWidth,
-        i32 endWidth,
-        i32 colorMode,
-        i32 minAngle,
-        i32 maxAngle,
-        i32 angleDistance,
-        i32 forceAngle
-    );
-    void DoBolt(
-        i32 managePointer,
-        i32 startX,
-        i32 startY,
-        i32 endX,
-        i32 endY,
-        i32 branchDistance,
-        i32 branchLength,
-        i32 startWidth,
-        i32 endWidth,
-        i32 colorMode,
-        i32 minAngle,
-        i32 maxAngle,
-        i32 angleDistance,
-        i32 unusedParameter,
-        i32 forceAngle,
-        i32 frameDelay,
-        i32 brightenPalette
-    );
-    i32 GetNextChainLightningTarget(class army* source, i32 requireWorks);
-    void ChainLightning(i32 targetHex, i32 spellPower);
-    void VaporizeCreature(i32 side, i32 armyIndex);
-    void RippleCreature(i32 side, i32 armyIndex, i32 mode);
-    void MirrorImage(i32 targetHex);
-    void SummonElemental(i32 monsterType, i32 spellPower);
-    void DoLuck(i32 side, i32 armyIndex);
-    void DoBlast(i32 targetHex, i32 spell);
-    void Resurrect(i32 spell, i32 targetHex, i32 spellPower);
-    i32 SpaceForElementalExists(void);
-    void ShowSpellCastFailure(class army*, i32);
-    void
-    ModifyDamageForArtifacts(i32* damage, i32 spell, class hero* attacker, class hero* defender);
-    void Earthquake(void);
-    void ShowSpellMessage(i32 castByCreature, i32 spell, class army* target);
     i8 ValidHexToStandOn(i32 hex);
     void SetCombatDirections(i32 targetHex);
     void CheckSetMouseDirection(i32 mouseX, i32 mouseY, i32 targetHex);
     H1_ENUM_RETURN(CombatPointerCode, i32) GetPointer(H1_ENUM_PARAM(CombatMessageCommand, i32) command);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessCombatMsg(struct tag_message& message);
-    i32 IsNegationSphereInEffect(void);
     void ResetRound(void);
     i32 CheckWin(struct tag_message* message);
     H1_ENUM_RETURN(CombatMessageCommand, i8) GetCommand(i16 hex);
@@ -412,8 +327,6 @@ public:
     void DoCommand(H1_ENUM_PARAM(CombatMessageCommand, i8) command);
     void ClearWinLoseBottom(class heroWindow* window);
     void ShowWinLoseArtifact(class heroWindow* window, H1_ENUM_PARAM(ArtifactType, i32) artifact);
-    void ShowSkeletons(class heroWindow* window);
-    void ShowEagleEyeSpell(class heroWindow* window);
     void ShowDeadArmies(class heroWindow* window);
     void DoVictory(H1_ENUM_PARAM(CombatSide, i8) winningSide);
     void DoLoseWindow(void);
@@ -424,14 +337,6 @@ public:
     void GetControl(void);
     void ResetMouse(void);
     H1_ENUM_RETURN(MessageDispatchResult, i16) ProcessNextAction(struct tag_message& message);
-    void ResetCyclingCreatures(void);
-    void ResetCycleTimers(void);
-    void CycleCombatScreen(void);
-    void SetCombatViewArmySmallLevel(i32 level);
-    void SetCombatGrid(i32 showGrid, i32 showMouseHex, i32 shadeLevel);
-    void AddArmy(i32 side, i32 monsterType, i32 quantity, i32 hex, i32 flags, i32 animate);
-    void SetupSmallView(void);
-    void ViewBallista(i32 quickView);
     i32 DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side);
     void DetermineEffectOfSpell(H1_ENUM_PARAM(SpellType, i32) spell, i32* bestEffect, i32* bestHex);
     i32 EffectSpellCreateCreature(i32 hex, i32 spell);
@@ -442,7 +347,7 @@ public:
     i32 FirstResurrectable(i32 startHex, i32* hex, i32 spell);
     // DetermineEffectOfSpell passes the effect, then a side and flag, a hex,
     // or the spell, base damage and hex.
-    void EffectSpellCure(i32* effect, H1_ENUM_PARAM(CombatSide, i32) targetSide, i8 cure);
+    void EffectSpellCure(i32* effect, H1_ENUM_PARAM(CombatSide, i32) targetSide, i8 cureOnly);
     void EffectSpellResurrect(i32* effect, i32 hex);
     void EffectSpellDamage(
         i32* effect,
@@ -450,7 +355,7 @@ public:
         i32 damagePerPower,
         i32 targetHex
     );
-    void CombineGroups(class armyGroup* from, class armyGroup* to);
+    void CombineGroups(class armyGroup* sourceGroup, class armyGroup* targetGroup);
     void SetupCombat(
         i32 mapX,
         i32 mapY,
@@ -463,8 +368,6 @@ public:
         i32 combatY,
         i32 randomSeed
     );
-    void InitNonVisualVars(void);
-    void SetupAdjacencyArray(void);
     void UpdateArmyGroup(H1_ENUM_PARAM(CombatSide, i8) side);
     void GenerateMap(void);
     char* GetBackgroundName(void);
@@ -487,33 +390,11 @@ public:
     void ResetHitByCreature(void);
     void SaveCombatBorder(void);
     void DrawCombatBorder(void);
-    void SetupAndLoadObstacles(void);
-    void MakeCreaturesVanish(void);
-    void LowerDoor(void);
-    void RaiseDoor(void);
-    void TestRaiseDoor(void);
-    i32 InCastle(i32 hex);
-    i32 ShotIsThroughWall(i32 side, i32 sourceHex, i32 targetHex);
-    void ShootMissile(
-        i32 sourceX,
-        i32 sourceY,
-        i32 targetX,
-        i32 targetY,
-        float* directionAngles,
-        class icon* missileIcon
-    );
-    void CombatSystemOptions(void);
     i32 AICheckRetreat(void);
-    void DoCompAI(H1_ENUM_PARAM(CombatSide, i8));
-    float GetModLichDamage(class army* target, float damage);
-    void DoLichShot(class army* lich);
+    void DoCompAI(H1_ENUM_PARAM(CombatSide, i8) side);
     i16 GetShooterMask(H1_ENUM_PARAM(CombatSide, i8) side);
-    i32 GetMirrorImageMask(i32 side);
     i16 GetFlyerMask(H1_ENUM_PARAM(CombatSide, i8) side);
-    i32 GetAllMask(i32 side);
     i16 GetWalkerMask(H1_ENUM_PARAM(CombatSide, i8) side);
-    i32 GetOutOfItMask(i32 side);
-    i32 GetTraitorMask(i32 side);
     i16 GetBestArmy(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
     i16 GetWorstArmy(H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
     i16 GetClosestArmy(class army* currentArmy, H1_ENUM_PARAM(CombatSide, i8) side, i16 mask);
@@ -533,20 +414,26 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) HandleCastSpell(struct tag_message& m
 // teleport second-click state (0x00490690).
 extern i8 gInTeleportGetDest;
 // Frame of the mass-spell glow drawn by DrawFrame (0x004c78b4).
-extern i16 giCombatFxFrame;
+extern i16 gCombatFxFrame;
 // Captured artifacts shown page by page on the victory window.
-extern i8 iMaxTransferArtifacts;
-extern i32 iCurTransferArtifact;
+#define gMaxTransferArtifacts iMaxTransferArtifacts // spelling fixes .bss order
+extern i8 gMaxTransferArtifacts;
+#define gCurTransferArtifact iCurTransferArtifact // spelling fixes .bss order
+extern i32 gCurTransferArtifact;
 // DoSurrender: gold the enemy hero asks for (0x004a4bac).
-extern i32 giSurrenderCost;
+#define gSurrenderCost giSurrenderCost // spelling fixes .bss order
+extern i32 gSurrenderCost;
 // The queued combat action and its grid/extra arguments (0x004a4bc0..).
-extern H1_ENUM_STORAGE(CombatAction, i32) giNextAction;
-extern i32 giNextActionGridIndex;
-extern i32 giNextActionExtra;
-extern i32 giNextActionGridIndex2;
+extern H1_ENUM_STORAGE(CombatAction, i32) gNextAction;
+#define gNextActionGridIndex giNextActionGridIndex // spelling fixes .bss order
+extern i32 gNextActionGridIndex;
+#define gNextActionExtra giNextActionExtra // spelling fixes .bss order
+extern i32 gNextActionExtra;
+#define gNextActionGridIndex2 giNextActionGridIndex2 // spelling fixes .bss order
+extern i32 gNextActionGridIndex2;
 // Queue a move (or attack) toward a hex: the action is stored before the
 // hex expression is evaluated; other action fields stay with the caller.
-#define SET_NEXT_COMBAT_MOVE(hex) (giNextAction = ACTION_MOVE, giNextActionGridIndex = (hex))
+#define SET_NEXT_COMBAT_MOVE(hex) (gNextAction = ACTION_MOVE, gNextActionGridIndex = (hex))
 // gCombatMessage indices, the command help lines CombatMessage(short)
 // prints: "", "Move %s here.", "Fly %s here.", "Attack %s", "Shoot %s(%d
 // shot%s left)", "General's Options", "View Opposing General", "View %s
@@ -565,10 +452,12 @@ H1_ENUM_BEGIN(CombatMessageText)
 H1_ENUM_END(CombatMessageText)
 extern H1_ENUM_ARRAY(char*, gCombatMessage, CombatMessageText, COMBAT_TEXT_COUNT);
 // Fallback net player for a combat action broadcast (0x004c6710).
-extern i32 giRemoteDefaultPlayer;
-extern H1_ENUM_STORAGE(ArtifactType, i8) iTransferArtifacts[];
+extern i32 gRemoteDefaultPlayer;
+#define gTransferArtifacts iTransferArtifacts // spelling fixes .bss order
+extern H1_ENUM_STORAGE(ArtifactType, i8) gTransferArtifacts[];
 // Network combat: this machine controls the current side (0x004a4b98).
-extern i8 gbThisNetHasControl;
+#define gThisNetHasControl gbThisNetHasControl // spelling fixes .bss order
+extern i8 gThisNetHasControl;
 // gCombatHelp rows ProcessCombatMsg shows when the pointer is off the grid:
 // over the auto-combat strip (left), the skip strip (right), or neither.
 H1_ENUM_BEGIN(CombatHelpText)
@@ -603,20 +492,15 @@ extern H1_ENUM_ARRAY(char*, gBattleResults, BattleResultText, BATTLE_RESULT_COUN
 // (casualties: icon/count ids are FIRST + side * ARMY_GROUP_SLOT_COUNT + slot,
 // with the count id doubling as the side's "None" line) fills in.
 H1_ENUM_ID_BEGIN(CombatWinLoseControl)
-    WIN_LOSE_ANIMATION = 1,
-    WIN_LOSE_RESULT_TEXT = 0x65,
-    WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
-    WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1,
-    WIN_LOSE_ARTIFACT_ICON = 0x7d2,
-    WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834,
-    WIN_LOSE_ARTIFACT_NAME = 0x835,
-    WIN_LOSE_CASUALTY_HEADING = 0x83e
-H1_ENUM_ID_END(CombatWinLoseControl)
+WIN_LOSE_ANIMATION = 1, WIN_LOSE_RESULT_TEXT = 0x65, WIN_LOSE_CASUALTY_ICON_FIRST = 0x7d0,
+                        WIN_LOSE_ARTIFACT_BACKGROUND = 0x7d1, WIN_LOSE_ARTIFACT_ICON = 0x7d2,
+                        WIN_LOSE_CASUALTY_TEXT_FIRST = 0x834, WIN_LOSE_ARTIFACT_NAME = 0x835,
+                        WIN_LOSE_CASUALTY_HEADING = 0x83e H1_ENUM_ID_END(CombatWinLoseControl)
 
-// m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
-// the casualty counts, then the two side headings and the casualty title.
-// DoVictory's experience line buffer.
-H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
+                        // m_winLoseBottomTextWidgets slots: side * ARMY_GROUP_SLOT_COUNT + slot for
+                        // the casualty counts, then the two side headings and the casualty title.
+                        // DoVictory's experience line buffer.
+                        H1_ENUM_CONST_BEGIN(CombatVictoryConstant)
     COMBAT_VICTORY_EXPERIENCE_TEXT_SIZE = 152
 H1_ENUM_CONST_END(CombatVictoryConstant)
 
@@ -628,13 +512,11 @@ H1_ENUM_CONST_END(CombatWinLoseSlot)
 
 // surrendr.bin widget ids DoSurrender fills (the victor's portrait, the offer).
 H1_ENUM_ID_BEGIN(SurrenderControl)
-    SURRENDER_PORTRAIT = 1,
-    SURRENDER_TEXT = 2
-H1_ENUM_ID_END(SurrenderControl)
+SURRENDER_PORTRAIT = 1, SURRENDER_TEXT = 2 H1_ENUM_ID_END(SurrenderControl)
 
-// SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
-// (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
-H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
+                        // SetCombatDirections' rear hex for a one-hex stack: no rear hex to check
+                        // (ValidHexToStandOn accepts it; CheckSetMouseDirection's backHex default).
+                        H1_ENUM_CONST_BEGIN(CombatRearHexConstant)
     COMBAT_REAR_HEX_UNUSED = -2
 H1_ENUM_CONST_END(CombatRearHexConstant)
 
@@ -643,12 +525,11 @@ H1_ENUM_CONST_END(CombatRearHexConstant)
 // that stops grid selection and hides the pointer, and the skip-turn button
 // that queues ACTION_SKIP_TURN.
 H1_ENUM_ID_BEGIN(CombatControlId)
-    COMBAT_CONTROL_DISABLE_SELECTION = 2,
+COMBAT_CONTROL_DISABLE_SELECTION = 2,
     COMBAT_CONTROL_SKIP_TURN = 8,
-    COMBAT_CONTROL_FIELD = 0x40
-H1_ENUM_ID_END(CombatControlId)
+    COMBAT_CONTROL_FIELD = 0x40 H1_ENUM_ID_END(CombatControlId)
 
-// clang-format off
+    // clang-format off
 // cmbtwin.bin's status line: CombatMessage sets the text widget (id 12),
 // redraws widgets 2..12 of the text bar and blits the bar's screen rectangle.
 H1_ENUM_CONST_BEGIN(CombatStatusLineConstant)

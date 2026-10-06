@@ -23,7 +23,7 @@
 
 // Lowers the first grid row that needs redrawing to the one above the hex.
 VA(0x00423670, 0x50)
-void combatManager::UpdateGrid(i16 hex, i16) {
+void combatManager::UpdateGrid(i16 hex, i16 attributes) {
     i16 row;
 
     row = hex / COMBAT_GRID_COLUMNS - 1;
@@ -65,7 +65,7 @@ void combatManager::CombatMessage(char* text, i32 updateScreen) {
     m_combatWindow->DrawWindow(0, COMBAT_STATUS_FIRST_CONTROL, COMBAT_STATUS_TEXT_CONTROL);
     SaveCombatBorder();
     if (updateScreen)
-        gpWindowManager->UpdateScreenRegion(
+        gWindowManager->UpdateScreenRegion(
             COMBAT_STATUS_X,
             COMBAT_STATUS_Y,
             COMBAT_STATUS_WIDTH,
@@ -106,29 +106,15 @@ void combatManager::CombatMessage(H1_ENUM_PARAM(CombatMessageCommand, i16) messa
             sprintf(gText, gCombatMessage[COMBAT_TEXT_FLY], gArmyNames[actingMonsterType]);
             break;
         case COMBAT_MESSAGE_COMMAND_ATTACK:
-#if HOMM1_RUSSIAN
             sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNamesPlural[targetMonsterType]);
-#else
-            sprintf(gText, gCombatMessage[COMBAT_TEXT_ATTACK], gArmyNames[targetMonsterType]);
-#endif
             break;
         case COMBAT_MESSAGE_COMMAND_SHOOT:
-#if HOMM1_RUSSIAN
             sprintf(
                 gText,
                 gCombatMessage[COMBAT_TEXT_SHOOT],
                 gArmyNamesPlural[targetMonsterType],
                 currentArmy->m_stats.shots
             );
-#else
-            sprintf(
-                gText,
-                gCombatMessage[COMBAT_TEXT_SHOOT],
-                gArmyNames[targetMonsterType],
-                currentArmy->m_stats.shots,
-                currentArmy->m_stats.shots > 1 ? "s" : ""
-            );
-#endif
             break;
         case COMBAT_MESSAGE_COMMAND_OPTIONS:
             strcpy(gText, gCombatMessage[COMBAT_TEXT_GENERALS_OPTIONS]);
@@ -171,8 +157,8 @@ void combatManager::ResetLimitCreature(void) {
 }
 
 VA(0x00423acc, 0x19)
-void combatManager::SetGridMode(i8 mode) {
-    m_gridMode = mode;
+void combatManager::SetDrawRightToLeft(i8 rightToLeft) {
+    m_drawRightToLeft = rightToLeft;
 }
 
 // Blits the rows from m_gridUpdateRow down (the first row also takes the
@@ -193,7 +179,7 @@ void combatManager::UpdateCombatArea(void) {
     if (height + baseY > COMBAT_VIEW_HEIGHT)
         height = COMBAT_VIEW_HEIGHT - baseY;
     gEnlargeScreenBlit = 0;
-    gpWindowManager->UpdateScreenRegion(0, baseY, LOGICAL_SCREEN_WIDTH, height);
+    gWindowManager->UpdateScreenRegion(0, baseY, LOGICAL_SCREEN_WIDTH, height);
     gEnlargeScreenBlit = 1;
     m_gridUpdateRow = COMBAT_GRID_ROWS;
 }
@@ -233,121 +219,122 @@ void combatManager::DrawBackground(void) {
             }
         }
     }
-    gpWindowManager->m_screen
+    gWindowManager->m_screen
         ->CopyTo(m_backgroundBuffer, 0, 0, 0, 0, LOGICAL_SCREEN_WIDTH, COMBAT_VIEW_HEIGHT);
     m_backgroundDrawn = 1;
 }
 
 // Redraws the battlefield: only the boxes around the stacks marked in
 // m_limitCreatureCount when m_computeExtent is set, else the whole area.
-// Rows draw obstacles, then occupants (right to left while m_gridMode is
+// Rows draw obstacles, then occupants (right to left while m_drawRightToLeft is
 // set), with the catapult (row 3) and the two heroes (rows 1 and 2).
+#define armyRight selBoxRight // frame-slot spelling
 VA(0x00423d6c, 0xca3)
 void combatManager::DrawFrame(i8 updateScreen) {
-    i16 curCol;
-    i32 selBoxRight;
-    i8 savedDrawn;
-    H1_ENUM_LOCAL(CombatSide, i32) side;
+    i16 col;
+    i8 anyLimited;
+    i32 armyRight;
+    H1_ENUM_LOCAL(CombatSide, i32) armyTop;
     i32 i;
-    i32 boxBottomValue;
-    i32 boxTopNum;
-    i32 theLeft;
-    i32 sideDeltaVal;
+    i32 rearDelta;
+    i32 side;
+    i32 armyLeft;
+    i32 armyBottom;
     i16 row;
 
     if (!m_combatWindowOpen)
         return;
     if (m_computeExtent) {
-        giMaxExtentX = giMaxExtentY = 0;
-        giMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
-        giMinExtentY = COMBAT_VIEW_HEIGHT - 1;
-        savedDrawn = 0;
+        gMaxExtentX = gMaxExtentY = 0;
+        gMinExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        gMinExtentY = COMBAT_VIEW_HEIGHT - 1;
+        anyLimited = 0;
         for (side = COMBAT_SIDE_FIRST; side < COMBAT_SIDE_COUNT; side++) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
                 if (m_limitCreatureCount[side][i] > 0) {
-                    savedDrawn = 1;
-                    curCol = m_armies[side][i].m_hex % COMBAT_GRID_COLUMNS;
+                    anyLimited = 1;
+                    col = m_armies[side][i].m_hex % COMBAT_GRID_COLUMNS;
                     row = m_armies[side][i].m_hex / COMBAT_GRID_COLUMNS;
-                    boxTopNum = row * COMBAT_HEX_HEIGHT;
-                    boxBottomValue = (row + 2) * COMBAT_HEX_HEIGHT + 20;
+                    armyTop = row * COMBAT_HEX_HEIGHT;
+                    armyBottom = (row + 2) * COMBAT_HEX_HEIGHT + 20;
                     if (m_extendLimitDown)
-                        boxBottomValue += 60;
+                        armyBottom += 60;
                     if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
-                        theLeft = curCol * COMBAT_HEX_WIDTH - 110;
-                        selBoxRight = (curCol + 1) * COMBAT_HEX_WIDTH + 70;
+                        armyLeft = col * COMBAT_HEX_WIDTH - 110;
+                        armyRight = (col + 1) * COMBAT_HEX_WIDTH + 70;
                     } else {
-                        theLeft = curCol * COMBAT_HEX_WIDTH - 70;
-                        selBoxRight = (curCol + 1) * COMBAT_HEX_WIDTH + 110;
+                        armyLeft = col * COMBAT_HEX_WIDTH - 70;
+                        armyRight = (col + 1) * COMBAT_HEX_WIDTH + 110;
                     }
                     if (m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_LUCK
                         || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_LUCK
                         || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_GOOD_MORALE
                         || m_armies[side][i].m_effectAnimation == COMBAT_EFFECT_BAD_MORALE)
-                        boxTopNum -= 100;
+                        armyTop -= 100;
                     if (m_armies[side][i].m_creatureType == CREATURE_CAVALRY)
-                        boxTopNum -= 60;
+                        armyTop -= 60;
                     if (m_armies[side][i].m_creatureType == CREATURE_SPRITE
                         || m_armies[side][i].m_creatureType == CREATURE_ORC
                         || m_armies[side][i].m_creatureType == CREATURE_TROLL) {
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT)
-                            selBoxRight += 40;
+                            armyRight += 40;
                         else
-                            theLeft -= 40;
+                            armyLeft -= 40;
                     }
-                    if (boxTopNum < giMinExtentY)
-                        giMinExtentY = boxTopNum;
-                    if (boxBottomValue > giMaxExtentY)
-                        giMaxExtentY = boxBottomValue;
-                    if (theLeft < giMinExtentX)
-                        giMinExtentX = theLeft;
-                    if (selBoxRight > giMaxExtentX)
-                        giMaxExtentX = selBoxRight;
+                    if (armyTop < gMinExtentY)
+                        gMinExtentY = armyTop;
+                    if (armyBottom > gMaxExtentY)
+                        gMaxExtentY = armyBottom;
+                    if (armyLeft < gMinExtentX)
+                        gMinExtentX = armyLeft;
+                    if (armyRight > gMaxExtentX)
+                        gMaxExtentX = armyRight;
                     if (m_armies[side][i].m_stats.attributes & MONSTER_FLAGS_WIDE) {
-                        sideDeltaVal = side == COMBAT_DEFENDER_SIDE ? -1 : 1;
+                        rearDelta = side == COMBAT_DEFENDER_SIDE ? -1 : 1;
                         if (m_armies[side][i].m_facing == ARMY_FACING_LEFT) {
-                            theLeft = (curCol + sideDeltaVal) * COMBAT_HEX_WIDTH - 110;
-                            selBoxRight = (curCol + sideDeltaVal + 1) * COMBAT_HEX_WIDTH + 70;
+                            armyLeft = (col + rearDelta) * COMBAT_HEX_WIDTH - 110;
+                            armyRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 70;
                         } else {
-                            theLeft = (curCol + sideDeltaVal) * COMBAT_HEX_WIDTH - 70;
-                            selBoxRight = (curCol + sideDeltaVal + 1) * COMBAT_HEX_WIDTH + 110;
+                            armyLeft = (col + rearDelta) * COMBAT_HEX_WIDTH - 70;
+                            armyRight = (col + rearDelta + 1) * COMBAT_HEX_WIDTH + 110;
                         }
                     }
-                    if (theLeft < giMinExtentX)
-                        giMinExtentX = theLeft;
-                    if (selBoxRight > giMaxExtentX)
-                        giMaxExtentX = selBoxRight;
+                    if (armyLeft < gMinExtentX)
+                        gMinExtentX = armyLeft;
+                    if (armyRight > gMaxExtentX)
+                        gMaxExtentX = armyRight;
                 }
             }
         }
-        if (!savedDrawn) {
+        if (!anyLimited) {
             m_computeExtent = 0;
             return;
         }
-        if (giMinExtentX < 0)
-            giMinExtentX = 0;
-        if (giMinExtentY < 0)
-            giMinExtentY = 0;
-        if (giMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
-            giMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
-        if (giMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
-            giMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
+        if (gMinExtentX < 0)
+            gMinExtentX = 0;
+        if (gMinExtentY < 0)
+            gMinExtentY = 0;
+        if (gMaxExtentX > LOGICAL_SCREEN_WIDTH - 1)
+            gMaxExtentX = LOGICAL_SCREEN_WIDTH - 1;
+        if (gMaxExtentY > COMBAT_VIEW_HEIGHT - 1)
+            gMaxExtentY = COMBAT_VIEW_HEIGHT - 1;
     }
     m_gridUpdateRow = 0;
     if (!gLimitToExtent) {
         if (m_backgroundDrawn) {
             if (m_computeExtent || m_redrawExtent)
                 m_backgroundBuffer->CopyTo(
-                    gpWindowManager->m_screen,
-                    giMinExtentX,
-                    giMinExtentY,
-                    giMinExtentX,
-                    giMinExtentY,
-                    giMaxExtentX - giMinExtentX + 1,
-                    giMaxExtentY - giMinExtentY + 1
+                    gWindowManager->m_screen,
+                    gMinExtentX,
+                    gMinExtentY,
+                    gMinExtentX,
+                    gMinExtentY,
+                    gMaxExtentX - gMinExtentX + 1,
+                    gMaxExtentY - gMinExtentY + 1
                 );
             else
                 m_backgroundBuffer->CopyTo(
-                    gpWindowManager->m_screen,
+                    gWindowManager->m_screen,
                     0,
                     0,
                     0,
@@ -363,7 +350,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
         gLimitToExtent = 1;
         gComputeExtent = 1;
     }
-    if (!m_gridMode) {
+    if (!m_drawRightToLeft) {
         for (row = 0; row < COMBAT_GRID_ROWS; row++) {
             if (row == COMBAT_CATAPULT_ROW
                 && m_catapultFrame[COMBAT_ATTACKER_SIDE] != COMBAT_CATAPULT_FRAME_NONE) {
@@ -383,26 +370,26 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     ICON_DRAW_OFFSET_FULL
                 );
             }
-            for (curCol = 0; curCol < COMBAT_GRID_COLUMNS; curCol++)
-                if (m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].m_obstacleIndex
+            for (col = 0; col < COMBAT_GRID_COLUMNS; col++)
+                if (m_hexCells[row * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
                     != COMBAT_OBSTACLE_NONE)
-                    m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].DrawObstacle();
+                    m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawObstacle();
             if (row == 0 && m_castleSide[COMBAT_DEFENDER_SIDE])
                 m_combatIcons[COMBAT_ICON_KEEP]
                     ->DrawToBuffer(0x22d, 0, 0, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-            for (curCol = 1; curCol <= COMBAT_GRID_LAST_COLUMN - 1; curCol++) {
+            for (col = 1; col <= COMBAT_GRID_LAST_COLUMN - 1; col++) {
                 if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
-                           == row * COMBAT_GRID_COLUMNS + curCol)
+                           == row * COMBAT_GRID_COLUMNS + col)
                     gCurrArmyDrawn = 1;
-                m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].DrawOccupant();
+                m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawOccupant();
             }
             if (row == COMBAT_DEFENDER_HERO_ROW
-                && m_heroType[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                && m_heroClass[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_CLASS_NONE) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x27f,
                     0xa9,
-                    m_heroType[COMBAT_DEFENDER_SIDE],
+                    m_heroClass[COMBAT_DEFENDER_SIDE],
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -411,7 +398,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     0xeb,
                     H1_ENUM_ENCODE(
                         PlayerColor,
-                        gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
+                        gGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
                     ) + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
@@ -419,17 +406,17 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x238,
                     0xfd,
-                    m_heroType[COMBAT_DEFENDER_SIDE] + 8,
+                    m_heroClass[COMBAT_DEFENDER_SIDE] + 8,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
             }
             if (row == COMBAT_ATTACKER_HERO_ROW
-                && m_heroType[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                && m_heroClass[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_CLASS_NONE) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0,
                     0x59,
-                    m_heroType[COMBAT_ATTACKER_SIDE],
+                    m_heroClass[COMBAT_ATTACKER_SIDE],
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -438,7 +425,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     0x9b,
                     H1_ENUM_ENCODE(
                         PlayerColor,
-                        gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
+                        gGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
                     ) + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
@@ -446,7 +433,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x36,
                     0xad,
-                    m_heroType[COMBAT_ATTACKER_SIDE] + 8,
+                    m_heroClass[COMBAT_ATTACKER_SIDE] + 8,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -475,23 +462,23 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     ICON_DRAW_OFFSET_FULL
                 );
             }
-            for (curCol = 0; curCol < COMBAT_GRID_COLUMNS; curCol++)
-                if (m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].m_obstacleIndex
+            for (col = 0; col < COMBAT_GRID_COLUMNS; col++)
+                if (m_hexCells[row * COMBAT_GRID_COLUMNS + col].m_obstacleIndex
                     != COMBAT_OBSTACLE_NONE)
-                    m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].DrawObstacle();
-            for (curCol = COMBAT_GRID_LAST_COLUMN - 1; curCol >= 1; curCol--) {
+                    m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawObstacle();
+            for (col = COMBAT_GRID_LAST_COLUMN - 1; col >= 1; col--) {
                 if (gLimitToExtent
                     && m_armies[m_currentSide][m_currentArmyIndex].m_hex
-                           == row * COMBAT_GRID_COLUMNS + curCol)
+                           == row * COMBAT_GRID_COLUMNS + col)
                     gCurrArmyDrawn = 1;
-                m_hexCells[row * COMBAT_GRID_COLUMNS + curCol].DrawOccupant();
+                m_hexCells[row * COMBAT_GRID_COLUMNS + col].DrawOccupant();
             }
             if (row == COMBAT_ATTACKER_HERO_ROW
-                && m_heroType[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                && m_heroClass[COMBAT_ATTACKER_SIDE] != COMBAT_HERO_CLASS_NONE) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0,
                     0x59,
-                    m_heroType[COMBAT_ATTACKER_SIDE],
+                    m_heroClass[COMBAT_ATTACKER_SIDE],
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -500,7 +487,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     0x9b,
                     H1_ENUM_ENCODE(
                         PlayerColor,
-                        gpGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
+                        gGame->m_players[m_playerId[COMBAT_ATTACKER_SIDE]].Color()
                     ) + 4,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
@@ -508,17 +495,17 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x36,
                     0xad,
-                    m_heroType[COMBAT_ATTACKER_SIDE] + 8,
+                    m_heroClass[COMBAT_ATTACKER_SIDE] + 8,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
             }
             if (row == COMBAT_DEFENDER_HERO_ROW
-                && m_heroType[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_TYPE_NONE) {
+                && m_heroClass[COMBAT_DEFENDER_SIDE] != COMBAT_HERO_CLASS_NONE) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x27f,
                     0xa9,
-                    m_heroType[COMBAT_DEFENDER_SIDE],
+                    m_heroClass[COMBAT_DEFENDER_SIDE],
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -527,7 +514,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                     0xeb,
                     H1_ENUM_ENCODE(
                         PlayerColor,
-                        gpGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
+                        gGame->m_players[m_playerId[COMBAT_DEFENDER_SIDE]].Color()
                     ) + 4,
                     ICON_DRAW_FLIPPED,
                     ICON_DRAW_OFFSET_FULL
@@ -535,7 +522,7 @@ void combatManager::DrawFrame(i8 updateScreen) {
                 m_combatIcons[COMBAT_ICON_TENT]->DrawToBuffer(
                     0x238,
                     0xfd,
-                    m_heroType[COMBAT_DEFENDER_SIDE] + 8,
+                    m_heroClass[COMBAT_DEFENDER_SIDE] + 8,
                     ICON_DRAW_NORMAL,
                     ICON_DRAW_OFFSET_FULL
                 );
@@ -549,20 +536,21 @@ void combatManager::DrawFrame(i8 updateScreen) {
         gLimitToExtent = 0;
         gComputeExtent = 0;
         gFullCombatScreenDrawn = 0;
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         if (updateScreen == 1) {
-            if (giMaxExtentY > COMBAT_VIEW_HEIGHT)
-                giMaxExtentY = COMBAT_VIEW_HEIGHT;
+            if (gMaxExtentY > COMBAT_VIEW_HEIGHT)
+                gMaxExtentY = COMBAT_VIEW_HEIGHT;
             gEnlargeScreenBlit = 0;
-            UPDATE_INCLUSIVE_REGION(giMinExtentX, giMinExtentY, giMaxExtentX, giMaxExtentY);
+            UPDATE_INCLUSIVE_REGION(gMinExtentX, gMinExtentY, gMaxExtentX, gMaxExtentY);
             gEnlargeScreenBlit = 1;
             m_gridUpdateRow = COMBAT_GRID_ROWS;
         }
     } else if (updateScreen == 1) {
         gFullCombatScreenDrawn = 1;
-        DelayTil(&glTimers[COMBAT_FRAME_TIMER_SLOT]);
-        glTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
+        DelayTil(&gTimers[COMBAT_FRAME_TIMER_SLOT]);
+        gTimers[COMBAT_FRAME_TIMER_SLOT] = KBTickCount() + 75;
         UpdateCombatArea();
     }
 }
+#undef armyRight

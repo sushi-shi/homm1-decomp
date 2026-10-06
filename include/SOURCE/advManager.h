@@ -31,6 +31,7 @@ class sample;
 class tileset;
 class town;
 class widget;
+struct RemoteMessage;
 struct SMapChange;
 struct tag_message;
 
@@ -60,16 +61,16 @@ H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
     TIMER_DELAY = 120
 H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
-// m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
-// attacker (DrawCell draws it facing); the constructor starts it at NONE
-// (-99, off every drawable cell) and DoCombat clears the x back to CLEARED
-// (-1) after the redraw.
-H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
-    QUICK_VIEW_NONE = -99,
-    QUICK_VIEW_CLEARED = -1
-H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
+// m_combatMonsterX/Y: the map cell of the monster CombatMonsterEvent turns to
+// face the attacker (DrawCell draws it facing); the constructor starts it at
+// NONE (-99, off every drawable cell) and CombatMonsterEvent clears the x back
+// to CLEARED (-1) after the redraw.
+H1_ENUM_CONST_BEGIN(AdventureCombatMonsterCellConstant)
+    COMBAT_MONSTER_CELL_NONE = -99,
+    COMBAT_MONSTER_CELL_CLEARED = -1
+H1_ENUM_CONST_END(AdventureCombatMonsterCellConstant)
 
-// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell.
+// m_hoverCellX/m_hoverCellY before the mouse hovers a view cell.
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
     CURSOR_INVALID_POSITION = -1
 H1_ENUM_CONST_END(AdventureCursorConstant)
@@ -99,8 +100,8 @@ H1_ENUM_BEGIN(AdventureHeroIcon)
     ADVMGR_HERO_ICON_BOAT = 4
 H1_ENUM_END(AdventureHeroIcon)
 
-// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
-// runs.
+// m_pendingCommand: the action ProcessHover/ProcessSelect queue and
+// advManager::DoAdvCommand runs.
 H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_NONE = -1,
     ADVMGR_COMMAND_MOVE_TO = 1,
@@ -150,35 +151,23 @@ H1_ENUM_CONST_END(AdventureLocatorConstant)
 // ProcessSelect/DeSelect/Hover: the six panel buttons, radar, map view and
 // the hero/town locator columns.
 H1_ENUM_ID_BEGIN(AdventureControl)
-    ADVENTURE_CONTROL_NEXT_HERO = 1,
-    ADVENTURE_CONTROL_CONTINUE_ROUTE = 2,
-    ADVENTURE_CONTROL_OVERVIEW = 3,
-    ADVENTURE_CONTROL_END_TURN = 4,
-    ADVENTURE_CONTROL_ADVENTURE_OPTIONS = 5,
-    ADVENTURE_CONTROL_GAME_OPTIONS = 6,
-    ADVENTURE_CONTROL_RADAR = 9,
-    ADVENTURE_CONTROL_MAP_VIEW = 10,
-    ADVENTURE_CONTROL_TOWN_LOCATOR_1 = 16,
-    ADVENTURE_CONTROL_TOWN_LOCATOR_2 = 17,
-    ADVENTURE_CONTROL_TOWN_LOCATOR_3 = 18,
-    ADVENTURE_CONTROL_TOWN_LOCATOR_4 = 19,
-    ADVENTURE_CONTROL_HERO_PAGE_PREVIOUS = 20,
-    ADVENTURE_CONTROL_HERO_PAGE_NEXT = 21,
-    ADVENTURE_CONTROL_HERO_SCROLL = 22,
-    ADVENTURE_CONTROL_TOWN_PAGE_PREVIOUS = 23,
-    ADVENTURE_CONTROL_TOWN_PAGE_NEXT = 24,
-    ADVENTURE_CONTROL_TOWN_SCROLL = 25,
-    ADVENTURE_CONTROL_HERO_KNOB = 26,
-    ADVENTURE_CONTROL_TOWN_KNOB = 27,
-    ADVENTURE_CONTROL_HERO_LOCATOR_1 = 105,
-    ADVENTURE_CONTROL_HERO_LOCATOR_2 = 112,
-    ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
-    ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126
-H1_ENUM_ID_END(AdventureControl)
+ADVENTURE_CONTROL_NEXT_HERO = 1,
+    ADVENTURE_CONTROL_CONTINUE_ROUTE = 2, ADVENTURE_CONTROL_OVERVIEW = 3,
+    ADVENTURE_CONTROL_END_TURN = 4, ADVENTURE_CONTROL_ADVENTURE_OPTIONS = 5,
+    ADVENTURE_CONTROL_GAME_OPTIONS = 6, ADVENTURE_CONTROL_RADAR = 9,
+    ADVENTURE_CONTROL_MAP_VIEW = 10, ADVENTURE_CONTROL_TOWN_LOCATOR_1 = 16,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_2 = 17, ADVENTURE_CONTROL_TOWN_LOCATOR_3 = 18,
+    ADVENTURE_CONTROL_TOWN_LOCATOR_4 = 19, ADVENTURE_CONTROL_HERO_PAGE_PREVIOUS = 20,
+    ADVENTURE_CONTROL_HERO_PAGE_NEXT = 21, ADVENTURE_CONTROL_HERO_SCROLL = 22,
+    ADVENTURE_CONTROL_TOWN_PAGE_PREVIOUS = 23, ADVENTURE_CONTROL_TOWN_PAGE_NEXT = 24,
+    ADVENTURE_CONTROL_TOWN_SCROLL = 25, ADVENTURE_CONTROL_HERO_KNOB = 26,
+    ADVENTURE_CONTROL_TOWN_KNOB = 27, ADVENTURE_CONTROL_HERO_LOCATOR_1 = 105,
+    ADVENTURE_CONTROL_HERO_LOCATOR_2 = 112, ADVENTURE_CONTROL_HERO_LOCATOR_3 = 119,
+    ADVENTURE_CONTROL_HERO_LOCATOR_4 = 126 H1_ENUM_ID_END(AdventureControl)
 
-// The six panel buttons (ADVENTURE_CONTROL_NEXT_HERO..GAME_OPTIONS) that
-// DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim.
-H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
+    // The six panel buttons (ADVENTURE_CONTROL_NEXT_HERO..GAME_OPTIONS) that
+    // DisableButtons/EnableButtons and game's Show/CancelComputerScreen dim.
+    H1_ENUM_CONST_BEGIN(AdventurePanelButtonConstant)
     ADVMGR_PANEL_BUTTON_FIRST = 1,
     ADVMGR_PANEL_BUTTON_LAST = 6
 H1_ENUM_CONST_END(AdventurePanelButtonConstant)
@@ -202,9 +191,10 @@ H1_ENUM_CONST_END(AdventurePanelButtonConstant)
      (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
      (window)->BroadcastMessage(message))
 
+// m_activeSounds: a playing map sound and its nearest ring distance.
 struct adventureSoundCell {
     i32 soundId;
-    i32 volume;
+    i32 distance;
 };
 
 // DrawCell's layers.
@@ -221,12 +211,12 @@ H1_ENUM_FLAGS_END(AdventureDrawMask)
 #pragma pack(push, 1)
 class advManager : public baseManager {
 public:
-    H1_ENUM_STORAGE(AdventureCommand, i8) m_selectedCell;
+    H1_ENUM_STORAGE(AdventureCommand, i8) m_pendingCommand;
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
-    i8* m_visibilityMap;
+    i8* m_routeMap;
     i8 m_routeShown;
     H1_ENUM_STORAGE(TerrainType, i8) m_currentTerrain;
     char m_unused9b[4];
@@ -241,23 +231,23 @@ public:
     class tileset* m_cloudTiles;
     class tileset* m_stoneTiles;
     H1_ENUM_ARRAY(class icon*, m_objectIcons, MapTileset, ADVMGR_OBJECT_ICON_COUNT);
-    class icon* m_puzzleIcon;
+    class icon* m_radarIcon;
     class icon* m_cloudOverlayIcon;
     i16 m_mapOriginX;
     i16 m_mapOriginY;
     i16 m_previousOriginX;
     i16 m_previousOriginY;
-    i16 m_lastHoverCell;
+    i16 m_hoverCellX;
     i16 m_hoverCellY;
     i16 m_commandTargetX;
     i16 m_commandTargetY;
-    i16 m_updateMinX;
-    i16 m_updateMinY;
-    i16 m_updateMaxX;
-    i16 m_updateMaxY;
+    i16 m_scrollOffsetX;
+    i16 m_scrollOffsetY;
+    i16 m_animationFrame;
+    i16 m_flagFrameCounter;
     i8 m_animationPhases[ADVMGR_ANIMATION_PHASE_COUNT];
     H1_ENUM_ARRAY(class icon*, m_heroIcons, AdventureHeroIcon, ADVMGR_HERO_ICON_COUNT);
-    class icon* m_boatShadowIcon;
+    class icon* m_shadowIcon;
     H1_ENUM_ARRAY(class icon*, m_flagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
     H1_ENUM_ARRAY(class icon*, m_boatFlagIcons, PlayerColor, ADVMGR_PLAYER_COLOR_COUNT);
     i8 m_cursorActive;
@@ -276,15 +266,15 @@ public:
     i32 m_heroContextLocked;
     i32 m_townContextLocked;
     i8 m_forceCompleteDraw;
-    i8 m_lastQuickViewX;
-    i8 m_lastQuickViewY;
-    i8 m_mineGuardianFacingLeft;
+    i8 m_combatMonsterX;
+    i8 m_combatMonsterY;
+    i8 m_combatMonsterFacingLeft;
     i32 m_activeSoundMask;
     adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
     class sample* m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
     H1_ENUM_ARRAY(class sample*, m_cursorSamples, TerrainType, ADVMGR_CURSOR_SAMPLE_COUNT);
     i8 m_identifyHeroActive;
-    i8 m_openState;
+    i8 m_heroesLogoShown;
     // Main drops message types outside this mask (Open sets 0x32f).
     i16 m_messageTypeMask;
     // --- constructors ---
@@ -298,7 +288,6 @@ public:
     void StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction);
     void StopCursor(i8 stopSound);
     void DrawCursor(void);
-    void DrawCursorShadow(void);
     i16 GetCursorBaseFrame(H1_ENUM_PARAM(MapDirection, i16) direction);
     void TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction);
     i32 GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction);
@@ -316,15 +305,7 @@ public:
     i16 ValidMoveWithEvent(class hero* movingHero, H1_ENUM_PARAM(MapDirection, i16) direction);
     i16 ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction);
     void MoveOrigin(i16 directionX, i16 directionY);
-    void ProcessMapChange(struct SMapChange change);
-    void ProcessIncomingSingleMapChange(struct SMapChange* incoming);
-    void ProcessIncomingGroupMapChange(char* incomingData);
-    void PurgeMapChangeQueue(void);
-    void UnwindMapChangeQueue(i32 maximumToUnwind, i32 processChanges);
     void ViewWorld(H1_ENUM_PARAM(SpellType, i8) spellType, i8 drawAllObjects, i8 drawAllTerrains);
-    void VWCleanup(void);
-    void VWInit(i32 centerX, i32 centerY);
-    void VWCompleteDraw(void);
     void GetCursorSampleSet(i32 sampleSet);
     class mapCell* DoAdvCommand(void);
     i32 GetCommandTargetX(void) {
@@ -333,7 +314,6 @@ public:
     i32 GetCommandTargetY(void) {
         return m_commandTargetY;
     }
-    void CheckSetEvilInterface(i32 redraw, i32 player);
     void Reseed(i32, i32);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessSelect(struct tag_message* message, class mapCell** eventCell);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
@@ -341,7 +321,7 @@ public:
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessHover(struct tag_message* message);
     void UpdateScreen(i8 cursorUpdate, i8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
-    void CompleteDraw(i32 update);
+    void CompleteDraw(i32 forceDraw);
     i32 GetCloudLookup(i32 x, i32 y);
     void DrawCell(
         i16 mapX,
@@ -367,7 +347,7 @@ public:
     i8 UpdBottomViewHero(void);
     void HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY);
     char* GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar);
-    void TownQuickView(i8 townId, i8, i16 windowX, i16 windowY);
+    void TownQuickView(i8 townId, i8 locatorSlot, i16 windowX, i16 windowY);
     void RedrawAdvScreen(i32 update);
     void GiveTakeArtifactStat(
         class hero* targetHero,
@@ -386,10 +366,9 @@ public:
     void GrabScreen(void);
     void CheckCastSpell(void);
     i8 ComboDraw(i16 originX, i16 originY, i8 animate);
-    i8 ComboDraw(i32 update);
+    i8 ComboDraw(i32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
-    i32 GetSoundId(i32 x, i32 y);
     void InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer);
     void TeleportTo(i32 x, i32 y, i32);
     void DimensionDoor(void);
@@ -406,7 +385,7 @@ public:
     i32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
-    char* CheckHandleNet(void);
+    RemoteMessage* CheckHandleNet(void);
     H1_ENUM_RETURN(MessageDispatchResult, i16) CheckHandleNetPlayerWait(struct tag_message& message, i8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
     void DisableButtons(void);
@@ -425,18 +404,9 @@ public:
     void PuzzleDraw(i32 left, i32 top, i32 markX, i32 markY);
     void AdvPanel(void);
     i16 ControlPanel(void);
-    void SystemOptions(void);
-    i32 DoVisions(class hero* visionHero);
-    i32 IsCrystalBallInEffect(i32 x, i32 y, i32 radius);
     void DoEvent(class mapCell* cell, i32 x, i32 y);
     void EraseObj(class mapCell* cell, i32 x, i32 y);
     void HeroSwap(class hero* firstHero, class hero* secondHero);
-    i32 BarrierEvent(class mapCell*, class hero*);
-    void PasswordEvent(class mapCell*, class hero*);
-    void GenericSiteEvent(class mapCell* cell, class hero* eventHero);
-    void RecruitSiteEvent(class mapCell* cell, class hero* eventHero);
-    void ExpansionRecruitEvent(class hero* eventHero, i32 creatureType, i16* availableCount);
-    void JailEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     void TownEvent(class mapCell* cell, i32 x, i32 y);
     void EventSound(H1_ENUM_PARAM(MapObjectType, i16) eventType, i16 eventData);
     void EventWindow(
@@ -459,8 +429,6 @@ public:
         H1_ENUM_PARAM(CreatureType, i32) creatureType,
         class mapCell* cell
     );
-    i32 SkeletonEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
-    i32 ZombieEvent(class hero* eventHero, class mapCell* cell, char* text, i32 x, i32 y);
     i8 GhostEvent(
         class hero* eventHero,
         class mapCell* cell,
@@ -473,37 +441,33 @@ public:
     H1_ENUM_RETURN(CombatSide, i8) CombatMonsterEvent(
         class hero* eventHero,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
-        i16 count,
+        i16 monsterCount,
         class mapCell* cell,
         i32 x,
         i32 y,
         i8 heroDefends,
-        i32 fromX,
-        i32 fromY
+        i32 combatX,
+        i32 combatY
     );
     void TransferArtifacts(class hero* sourceHero, class hero* destHero);
     void HeroLoses(class hero* lostHero);
     void DoWhirlpool(class hero* eventHero);
     void FizzleCenter(H1_ENUM_PARAM(EventFizzleType, i32) fizzleType);
     void DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
-    i32 BarrierAIEvent(class mapCell*, class hero*);
-    void PasswordAIEvent(class mapCell*, class hero*);
-    void GenericSiteAIEvent(class mapCell* cell, class hero* eventHero);
-    void RecruitSiteAIEvent(class mapCell* cell, class hero* eventHero);
-    void JailAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i32 y);
     void PlayerMonsterInteract(
         class mapCell* cell,
         class mapCell* combatCell,
         class hero* eventHero,
-        i8* handled,
+        i8* removeMonsterObject,
         i32 x,
         i32 y,
         i8 unused,
         i32 combatX,
         i32 combatY
     );
-    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled);
-    i32 DoNetCombat(char* packet);
+    void
+    ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
+    i32 DoNetCombat(RemoteMessage* packet);
     H1_ENUM_RETURN(CombatSide, i32) DoCombat(
         i32 x,
         i32 y,
@@ -534,7 +498,7 @@ public:
         i8 combatSurrender
     );
     void ReceiveHeroTownData(
-        char* packet,
+        RemoteMessage* packet,
         i32* remotePlayer,
         i32* x,
         i32* y,
@@ -549,19 +513,6 @@ public:
         i8* combatResult,
         i8* retreatWin,
         i8* combatSurrender
-    );
-    i32 AutoResolveCombat(
-        i32 x,
-        i32 y,
-        class hero* firstHero,
-        class armyGroup* firstArmy,
-        class town* combatTown,
-        class hero* secondHero,
-        class armyGroup* secondArmy,
-        i32 setupCombatX,
-        i32 setupCombatY,
-        i32 randomSeed,
-        i32 processLosses
     );
 };
 #pragma pack(pop)
@@ -591,7 +542,7 @@ inline constexpr MusicTrack TerrainMusicTrack(TerrainType terrain) {
 #endif
 
 // The adventure screen's bottom-right panel: gCurBottomView is the view
-// UpdBottomView last drew, giBottomViewOverride (defined in KB) a temporary one that
+// UpdBottomView last drew, gBottomViewOverride (defined in KB) a temporary one that
 // wins until its end time: the new-turn/kingdom toggle, KB's BVResMsg
 // resource message, and game's DISABLED hold while the AI moves.
 H1_ENUM_BEGIN(BottomViewMode)
@@ -604,9 +555,11 @@ H1_ENUM_BEGIN(BottomViewMode)
     BOTTOM_VIEW_OVERRIDE_DISABLED = 6
 H1_ENUM_END(BottomViewMode)
 extern H1_ENUM_STORAGE(BottomViewMode, i32) gCurBottomView;
-extern H1_ENUM_STORAGE(BottomViewMode, i32) giBottomViewOverride;
+#define gBottomViewOverride giBottomViewOverride // spelling fixes .bss order
+extern H1_ENUM_STORAGE(BottomViewMode, i32) gBottomViewOverride;
 extern i32 gCurBottomViewEnemy;
-extern i32 iLastAnimFrame;
+#define gLastAnimFrame iLastAnimFrame // spelling fixes .bss order
+extern i32 gLastAnimFrame;
 // UpdBottomViewEnemyTurn's hourglass animation clocks and frames.
 extern i32 gSandAnim;
 extern i32 gLastHourGlassPhase;
@@ -622,36 +575,54 @@ H1_ENUM_CONST_BEGIN(AdventureUpdateLimitConstant)
 H1_ENUM_CONST_END(AdventureUpdateLimitConstant)
 
 extern i32 gLimitUpdMinX;
-extern i32 giLimitUpdMinY;
-extern i32 giLimitUpdMaxX;
-extern i32 giLimitUpdMaxY;
-extern class heroWindow* gPanel;
-extern i8 bPrefsChanged;
+#define gLimitUpdMinY giLimitUpdMinY // spelling fixes .bss order
+extern i32 gLimitUpdMinY;
+extern i32 gLimitUpdMaxX;
+#define gLimitUpdMaxY giLimitUpdMaxY // spelling fixes .bss order
+extern i32 gLimitUpdMaxY;
+extern class heroWindow* gAdventurePanel;
+#define gPrefsChanged bPrefsChanged // spelling fixes .bss order
+extern i8 gPrefsChanged;
+#define gFreshSave gSaveClean // spelling fixes .bss order
 extern i8 gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
-extern i8 bComboDraw[][17];
-// DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
-extern i32 TrigX;
-extern i32 TrigY;
-// CURSOR globals: byte flags and the last two footstep sample handles
-// (0x004a0d4c/0x004a0d50).
+#define gComboDraw bComboDraw // spelling fixes .bss order
+extern i8 gComboDraw[][17];
+// The cell whose trigger MoveHero reports, handed from DoAdvCommand's walk
+// to DoEvent.
+#define gTriggerX TrigX // spelling fixes .bss order
+extern i32 gTriggerX;
+#define gTriggerY TrigY // spelling fixes .bss order
+extern i32 gTriggerY;
+// CURSOR globals: the footstep and alternate-frame flags, and the hero cursor
+// state DrawCursor saves and restores around gDrawSavedCursor.
 extern i8 gMoveSoundMade;
-extern i8 EveryOther;
-extern H1_ENUM_STORAGE(MapDirection, i8) S1cursorDirection;
-extern i16 S1cursorBaseFrame;
-extern i16 S1cursorFrameCount;
-extern i16 S1cursorCycle;
-extern i16 S1cursorTurning;
+
+#define gEveryOther EveryOther // spelling fixes .bss order
+extern i8 gEveryOther;
+#define gSavedCursorDirection S1cursorDirection // spelling fixes .bss order
+extern H1_ENUM_STORAGE(MapDirection, i8) gSavedCursorDirection;
+#define gSavedCursorBaseFrame S1cursorBaseFrame // spelling fixes .bss order
+extern i16 gSavedCursorBaseFrame;
+#define gSavedCursorFrameCount S1cursorFrameCount // spelling fixes .bss order
+extern i16 gSavedCursorFrameCount;
+#define gSavedCursorCycle S1cursorCycle // spelling fixes .bss order
+extern i16 gSavedCursorCycle;
+#define gSavedCursorTurning S1cursorTurning // spelling fixes .bss order
+extern i16 gSavedCursorTurning;
 extern H1_ENUM_ARRAY(i16, gStepDelay, WalkSpeed, WALK_SPEED_COUNT);
 // MoveHero's pixels per walk step by speed and the step offsets.
 extern H1_ENUM_ARRAY(i16, gPixelsPerStep, WalkSpeed, WALK_SPEED_COUNT);
-extern i16 startVals[];
-extern i32 giFrameStep;
+#define gStepScrollStart startVals // spelling fixes .bss order
+extern i16 gStepScrollStart[];
+#define gFrameStep giFrameStep // spelling fixes .bss order
+extern i32 gFrameStep;
 
 struct SMapChange {
     char _pad[64];
 };
-extern char cArmySizeName[];
+#define gArmySizeName cArmySizeName // spelling fixes .bss order
+extern char gArmySizeName[];
 extern i32 gCurHourGlassPhase;
 
 // Moved from ADVMGR.cpp.
@@ -699,7 +670,7 @@ H1_ENUM_CONST_END(AdventureLocatorWidget)
 // locators.icn frames: the empty hero slots (one per slot), the empty town
 // slots from EMPTY_TOWN_FIRST, the occupied hero frame, and the town frames
 // by town type from TOWN_FIRST, CASTLE_OFFSET further on once it has a castle.
-// m_visibilityMap while a route is shown (ShowRoute, DrawCell): a 1-based
+// m_routeMap while a route is shown (ShowRoute, DrawCell): a 1-based
 // route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
 // the DESTINATION mark; steps the hero reaches today move REACHABLE_OFFSET
 // frames on to the second arrow set.
@@ -854,7 +825,7 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
-// UpdateScreen's dirty box and animation clock: m_updateMaxX cycles through
+// UpdateScreen's animation clock and dirty box: m_animationFrame cycles through
 // 6 steps and the columns start at 0/1/3/5; no limit box means the whole
 // 448-pixel viewport at 16,16; odd steps advance columns 1 and 3, even ones
 // 0 and 2, each modulo 6 frames.
@@ -934,7 +905,7 @@ H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
 H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 
 // ViewPuzzle: puzzle.icn has one piece per obelisk bit
-// (playerData::m_obelisksVisited); the window sits beside the viewport; the
+// (playerData::m_puzzlePiecesRemoved); the window sits beside the viewport; the
 // view centre is nudged off the artifact by coordinate residues mod 3 (and
 // mod 2), then the uncovered pieces fizzle in over 220 ms.
 H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
@@ -962,12 +933,13 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     SCROLL_ICON_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
-// SetEnvironmentOrigin/InsertSound's looping map sounds: slots reset to the
-// far volume index, two passes (refresh known sounds, then insert new ones)
+// SetEnvironmentOrigin/InsertSound's looping map sounds: a slot's ring
+// distance (adventureSoundCell::distance, indexing gEnvironmentVolume) resets
+// to FAR_DISTANCE, two passes (refresh known sounds, then insert new ones)
 // over rings whose edges span radius * 2 cells, and sounds beyond
 // MAX_DISTANCE stop.
 H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
-    ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
+    ENVIRONMENT_SOUND_FAR_DISTANCE = 127,
     ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
     ENVIRONMENT_SOUND_FIRST_LAYER = 1,
     ENVIRONMENT_SOUND_LAYER_COUNT = 2,
@@ -1128,7 +1100,6 @@ H1_ENUM_CONST_BEGIN(AdventurePanelDialogConstant)
     PANEL_CAST_SPELL = 3,
     PANEL_SEARCH = 4
 H1_ENUM_CONST_END(AdventurePanelDialogConstant)
-
 
 // GetCloudLookup's unseen-neighbour bits (index into gCloudType): the four
 // edge neighbours, then the diagonals clockwise from north-east; off-map

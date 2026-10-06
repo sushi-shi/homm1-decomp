@@ -64,7 +64,6 @@ public:
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 UpdateHoverWindow(i16 x, i16 y);
-    H1_ENUM_RETURN(MessageDispatchResult, i16) ConvertToHover(struct tag_message& message);
     H1_ENUM_RETURN(MessageDispatchResult, i16) BroadcastMessage(
         H1_ENUM_PARAM(MessageType, i16) type,
         H1_ENUM_PARAM(BaseWidgetCommand, i16) command,
@@ -73,13 +72,19 @@ public:
     );
     void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
     void RemoveWindow(class heroWindow* window);
-    i16 DoDialog(class heroWindow* window, H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(struct tag_message&), i32 fade);
+    i16 DoDialog(
+        class heroWindow* window,
+        H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(struct tag_message&),
+        i32 fade
+    );
     void UpdateScreen(void);
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);
     void Cleanup(void);
     void FadeScreen(
-        H1_ENUM_PARAM(WindowFadeMode, i16) direction, i16 steps, class palette* currentPalette
+        H1_ENUM_PARAM(WindowFadeMode, i16) direction,
+        i16 steps,
+        class palette* currentPalette
     );
     void ScreenShot(void);
     void SaveFizzleSource(i16 x, i16 y, i16 width, i16 height);
@@ -91,16 +96,18 @@ public:
 // A dialog handler records the selected widget as the dialog result and turns
 // the message into the dialog-select notification.
 #define FINISH_DIALOG_MESSAGE(message)                                                             \
-    (gpWindowManager->m_dialogResult = (message).id,                                               \
+    (gWindowManager->m_dialogResult = (message).id,                                                \
      (message).command = H1_ENUM_DECODE(                                                           \
-         BaseWidgetCommand, (message).id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)))
+         BaseWidgetCommand,                                                                        \
+         (message).id = H1_ENUM_ENCODE(BaseWidgetCommand, WIDGET_COMMAND_DIALOG_SELECT)            \
+     ))
 
 // Redraw the inclusive screen rectangle left..right, top..bottom.
 #define UPDATE_INCLUSIVE_REGION(left, top, right, bottom)                                          \
-    (gpWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
+    (gWindowManager->UpdateScreenRegion((left), (top), (right) - (left) + 1, (bottom) - (top) + 1))
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
-extern i8 gWindowFadeSavedUpdate;
+extern i8 gFadeSavedUpdate;
 
 class palette;
 

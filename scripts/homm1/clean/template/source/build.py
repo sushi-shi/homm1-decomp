@@ -1,16 +1,17 @@
 #!/usr/bin/env python3
 """Build HEROES.EXE with the Visual C++ 6.0 SP5 toolchain under Wine.
 
-    python3 build.py [--locale ru|en] [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
+    python3 build.py [--locale LANG] [--toolchain DIR] [--icon-from HEROES.EXE] [--jobs N]
                      [--out DIR]
 
 DIR holds vc6/ (CL, ML, LINK and the VC6 headers and libraries), wing10/ and
 dx1/ (the WinG and DirectX 1 SDK files), as in the hash-pinned release the
-flake fetches. `--locale` selects the text compiled into the program: the
-catalog in locales/ resolves every `localization::Tr("id")` to Russian (the
-retail program, the default) or the original English as Windows-1251 literals
-under build/<locale>/localized/, and the program is build/<locale>/HEROES.EXE
-(`--out` replaces build/); the source files are never rewritten. Resources compile with llvm-rc and llvm-cvtres. The
+flake fetches. `--locale` selects the language compiled into the program, one
+of locales/<LANG>.json (default: ru, the retail program): its catalog resolves
+every `localization::Tr("id")` to literals in the language's Windows code page
+under build/<LANG>/localized/, and the program is build/<LANG>/HEROES.EXE
+(`--out` replaces build/); the source files are never rewritten. Resources
+compile with llvm-rc and llvm-cvtres in the language's resource language. The
 icon is a retail asset: `--icon-from` extracts it from your HEROES.EXE;
 without it the executable carries the menus and About box but no icon.
 """
@@ -145,9 +146,17 @@ def icon_group(executable: Path) -> bytes:
     return header + images
 
 
-def resources(icon_from: Path | None, locale: str) -> Path:
+def load_catalog():
+    """The validated catalog; every problem is reported at once."""
     from catalog import Catalog
-    script = Catalog.load(ROOT).render_resource(
+    try:
+        return Catalog.load(ROOT)
+    except ValueError as error:
+        raise SystemExit(f"locales/ is invalid (python3 catalog.py check):\n{error}")
+
+
+def resources(icon_from: Path | None, locale: str) -> Path:
+    script = load_catalog().render_resource(
         (ROOT / "src/SOURCE/Heroes.rc").read_text(), locale=locale)
     stage = OUT / "rsrc"
     stage.mkdir(parents=True, exist_ok=True)
@@ -165,8 +174,7 @@ def resources(icon_from: Path | None, locale: str) -> Path:
 
 
 def prepare_sources(locale: str):
-    from catalog import Catalog
-    catalog = Catalog.load(ROOT)
+    catalog = load_catalog()
     for directory in ("src", "include", "vendor"):
         for source in (ROOT / directory).rglob("*"):
             if not source.is_file():
@@ -191,7 +199,9 @@ def build() -> int:
                         help="output directory (default: build/)")
     manifest = json.loads((ROOT / "build.json").read_text())
     compiler = manifest["compiler"]
-    parser.add_argument("--locale", choices=("ru", "en"), default=manifest.get("locale", "ru"))
+    parser.add_argument("--locale", default=manifest.get("locale", "ru"),
+                        choices=sorted(p.stem for p in (ROOT / "locales").glob("*.json")),
+                        help="the language (locales/LANG.json; default: %(default)s)")
     args = parser.parse_args()
     OUT = args.out.resolve() / args.locale
     if args.toolchain is None or not (args.toolchain / compiler / "bin/CL.EXE").is_file():

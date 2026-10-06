@@ -78,7 +78,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) widget::Main(tag_message& message) {
                             Dim();
                         }
                         if (m_flags & WIDGET_FLAG_UPDATE) {
-                            gpWindowManager->UpdateScreenRegion(
+                            gWindowManager->UpdateScreenRegion(
                                 m_owner->m_posX + m_x,
                                 m_owner->m_posY + m_y,
                                 m_width,
@@ -96,7 +96,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) widget::Main(tag_message& message) {
                         if (flags & WIDGET_FLAG_DIMMED)
                             Draw();
                         if (flags & WIDGET_FLAG_UPDATE)
-                            gpWindowManager->UpdateScreenRegion(
+                            gWindowManager->UpdateScreenRegion(
                                 m_owner->m_posX + m_x,
                                 m_owner->m_posY + m_y,
                                 m_width,
@@ -123,5 +123,5 @@ VA(0x00475783, 0x67)
 void widget::Dim(void) {
     i16 x = m_owner->m_posX + m_x;
     i16 y = m_owner->m_posY + m_y;
-    DimBitmapArea(gpWindowManager->m_screen, x, y, m_width, m_height);
+    DimBitmapArea(gWindowManager->m_screen, x, y, m_width, m_height);
 }

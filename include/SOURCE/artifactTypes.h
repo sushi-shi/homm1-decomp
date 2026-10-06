@@ -58,4 +58,8 @@ H1_ENUM_BEGIN(ArtifactType)
 H1_ENUM_END(ArtifactType)
 H1_ENUM_STEPPED(ArtifactType)
 
+// The AI values every artifact but the magic book: gArtifactBaseRV has an
+// entry for each id below ARTIFACT_REGULAR_END.
+#define ARTIFACT_HAS_BASE_VALUE(id) ((id) >= 0 && (id) < ARTIFACT_REGULAR_END)
+
 #endif // HOMM1_SOURCE_ARTIFACTTYPES_H

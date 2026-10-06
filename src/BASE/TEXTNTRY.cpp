@@ -49,7 +49,7 @@ textEntryWidget::textEntryWidget(
     : textWidget(x, y, width, height, text, fontName, color, id, kind) {
     m_cursorPosition = 0;
     m_maxLength = maxLength;
-    m_icon = gpResourceManager->GetIcon(iconName);
+    m_icon = gResourceManager->GetIcon(iconName);
     m_iconFrame = iconFrame;
     m_displayOffset = 0;
     m_kind = WIDGET_KIND_TEXT_ENTRY;
@@ -57,36 +57,37 @@ textEntryWidget::textEntryWidget(
 
 VA(0x00475945, 0x5b)
 textEntryWidget::~textEntryWidget(void) {
-    gpResourceManager->Dispose(m_icon);
+    gResourceManager->Dispose(m_icon);
 }
 
 VA(0x004759a0, 0x261)
 void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     char name[RESOURCE_NAME_CAPACITY];
-    READ_WIDGET_GEOMETRY(this, gpResourceManager);
-    m_maxLength = gpResourceManager->ReadWord();
+    READ_WIDGET_GEOMETRY(this, gResourceManager);
+    m_maxLength = gResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(m_maxLength + 5));
-    gpResourceManager->ReadBlock(m_text, m_maxLength);
-    gpResourceManager->Read13(name);
-    gpResourceManager->SavePosition();
-    m_font = gpResourceManager->GetFont(name);
-    gpResourceManager->RestorePosition();
-    m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
+    gResourceManager->ReadBlock(m_text, m_maxLength);
+    gResourceManager->Read13(name);
+    gResourceManager->SavePosition();
+    m_font = gResourceManager->GetFont(name);
+    gResourceManager->RestorePosition();
+    m_color = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = H1_ENUM_DECODE(
-        FontAlignment, static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK)
+        FontAlignment,
+        static_cast<char>(gResourceManager->ReadWord() & COLOR_INDEX_MASK)
     );
-    gpResourceManager->Read13(name);
-    gpResourceManager->SavePosition();
-    m_icon = gpResourceManager->GetIcon(name);
-    gpResourceManager->RestorePosition();
+    gResourceManager->Read13(name);
+    gResourceManager->SavePosition();
+    m_icon = gResourceManager->GetIcon(name);
+    gResourceManager->RestorePosition();
     m_entryType = type;
     if (type == TEXT_ENTRY_READ_RECT) {
-        m_rectX = gpResourceManager->ReadWord();
-        m_rectY = gpResourceManager->ReadWord();
-        m_rectW = gpResourceManager->ReadWord();
-        m_rectH = gpResourceManager->ReadWord();
-        m_maxLines = gpResourceManager->ReadWord();
-        m_preserveTextOnFocus = gpResourceManager->ReadWord();
+        m_rectX = gResourceManager->ReadWord();
+        m_rectY = gResourceManager->ReadWord();
+        m_rectW = gResourceManager->ReadWord();
+        m_rectH = gResourceManager->ReadWord();
+        m_maxLines = gResourceManager->ReadWord();
+        m_preserveTextOnFocus = gResourceManager->ReadWord();
     } else {
         m_rectX = m_x;
         m_rectY = m_y;
@@ -98,9 +99,9 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
         else
             m_preserveTextOnFocus = 0;
     }
-    m_iconFrame = gpResourceManager->ReadWord();
-    m_id = gpResourceManager->ReadWord();
-    m_kind = gpResourceManager->ReadWord();
+    m_iconFrame = gResourceManager->ReadWord();
+    m_id = gResourceManager->ReadWord();
+    m_kind = gResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT_ENTRY;
 }
 
@@ -156,7 +157,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                 char copy[TEXT_ENTRY_DISPLAY_CAPACITY];
                 char original[TEXT_ENTRY_DISPLAY_CAPACITY];
 
-                gpMouseManager->ReallyHidePointer();
+                gMouseManager->ReallyHidePointer();
                 x = m_owner->m_posX + m_x;
                 y = m_owner->m_posY + m_y;
                 strcpy(original, m_text);
@@ -169,11 +170,11 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                 strcpy(edit, m_text);
                 SetupDisplayString(edit, m_cursorPosition);
                 Draw();
-                gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
                 done = 0;
                 while (done == 0) {
                     Process1WindowsMessage();
-                    event = gpInputManager->GetEvent();
+                    event = gInputManager->GetEvent();
                     if (event.type == MESSAGE_KEY_DOWN) {
                         switch (event.keyCode) {
                             case INPUT_SCAN_ESCAPE:
@@ -198,7 +199,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                                     m_cursorPosition++;
                                 break;
                             default:
-                                gpInputManager->AsciiConvert(event);
+                                gInputManager->AsciiConvert(event);
                                 if (event.keyCode == TEXT_ENTRY_KEY_ACCEPT) {
                                     done++;
                                 } else if (event.keyCode == INPUT_ASCII_DELETE) {
@@ -278,14 +279,14 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                         }
                         SetupDisplayString(edit, m_cursorPosition);
                         Draw();
-                        gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                        gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
                     }
                 }
                 strcpy(m_text, edit);
                 m_displayOffset = 0;
                 Draw();
-                gpWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
-                gpMouseManager->ReallyShowPointer();
+                gWindowManager->UpdateScreenRegion(x, y, m_width, m_height);
+                gMouseManager->ReallyShowPointer();
                 SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_SELECT, m_id);
                 return MESSAGE_DISPATCH_FORWARD;
             }

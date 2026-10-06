@@ -163,13 +163,12 @@ def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
     .res, or (with `retail`) when any payload differs from retail."""
     src, out = Path(src).resolve(), Path(out).resolve()
     from homm1.graph.catalog import Catalog
-    from homm1.graph.localization import matching_locale
-    matching = matching_locale(REPO)
-    locale = locale or matching
-    if locale not in ('ru', 'en'):
-        raise ToolError(f'unsupported resource locale: {locale}')
-    if locale != matching and not out.is_relative_to(REPO / 'build/ordinary' / locale):
-        raise ToolError(f'nonmatching resources must use build/ordinary/{locale}')
+    from homm1.graph.localization import check_locale, matching_locale
+    localized = (REPO / 'locales/messages.pot').is_file()
+    locale = locale or (matching_locale(REPO) if localized else None)
+    problem = check_locale(REPO, locale, out, 'resources') if localized else None
+    if problem:
+        raise ToolError(problem)
     if not src.exists():
         raise ToolError(f"resource script missing: {src}")
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -181,7 +180,7 @@ def compile(src: Path | str, out: Path | str, *, flags: list[str] = (),
     with tempfile.TemporaryDirectory(prefix=".rc-", dir=out.parent) as stage_name:
         script = Path(stage_name) / src.name
         text = src.read_text(encoding='utf-8')
-        if (REPO / 'locales/messages.def').is_file():
+        if localized:
             text = Catalog.load(REPO).render_resource(text, locale=locale)
         script.write_text(text, encoding='ascii')
         if retail_leaves is not None:
@@ -228,7 +227,7 @@ def main() -> int:
                     help="retail image: stage its icon and gate every payload")
     ap.add_argument("--report", type=Path,
                     help="JSON payload report (with --verify-exe)")
-    ap.add_argument("--locale", choices=("ru", "en"),
+    ap.add_argument("--locale",
                     help="alternate locale requires build/ordinary/<locale> output")
     ap.add_argument("flags", nargs=argparse.REMAINDER)
     a = ap.parse_args()

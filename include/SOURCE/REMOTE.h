@@ -14,29 +14,22 @@ H1_ENUM_BEGIN(RemoteMessageType)
 H1_ENUM_END(RemoteMessageType)
 
 H1_ENUM_ID_BEGIN(RemoteBoxCommand)
-    BOX_REMOTE_SAVE = 1,
-    BOX_REMOTE_SETUP = 0x1f
-H1_ENUM_ID_END(RemoteBoxCommand)
+BOX_REMOTE_SAVE = 1,
+    BOX_REMOTE_SETUP = 0x1f H1_ENUM_ID_END(RemoteBoxCommand)
 
-// RemoteMessage::command values (TransmitRemoteData's command argument and
-// the receivers' switches): the save-game transfer (TransmitSaveGame /
-// ReceiveSaveGame), the hero/town exchange before a networked battle, chat
-// text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
-// (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
-H1_ENUM_ID_BEGIN(RemoteCommand)
-    REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
-    REMOTE_COMMAND_SAVE_DATA = 3,
-    REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
-    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5,
-    REMOTE_COMMAND_SAVE_FINISH = 6,
-    REMOTE_COMMAND_CHAT = 11,
-    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15,
-    REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
+    // RemoteMessage::command values (TransmitRemoteData's command argument and
+    // the receivers' switches): the save-game transfer (TransmitSaveGame /
+    // ReceiveSaveGame), the hero/town exchange before a networked battle, chat
+    // text (PopNetBox), combat actions (ProcessNextAction) and the exit notice
+    // (HandleRemote*Exit). SAVE_INIT and SETUP are the RemoteBoxCommand values.
+    H1_ENUM_ID_BEGIN(RemoteCommand) REMOTE_COMMAND_SAVE_INIT_RESPONSE = 2,
+    REMOTE_COMMAND_SAVE_DATA = 3, REMOTE_COMMAND_SAVE_ACK_REQUEST = 4,
+    REMOTE_COMMAND_SAVE_ACK_RESPONSE = 5, REMOTE_COMMAND_SAVE_FINISH = 6, REMOTE_COMMAND_CHAT = 11,
+    REMOTE_COMMAND_HERO_TOWN_DATA = 0x15, REMOTE_COMMAND_HERO_TOWN_CONFIRM = 0x16,
     REMOTE_COMMAND_COMBAT_ACTION = 0x17,
-    REMOTE_COMMAND_PLAYER_EXIT = 30
-H1_ENUM_ID_END(RemoteCommand)
+    REMOTE_COMMAND_PLAYER_EXIT = 30 H1_ENUM_ID_END(RemoteCommand)
 
-H1_ENUM_CONST_BEGIN(RemoteConstant)
+        H1_ENUM_CONST_BEGIN(RemoteConstant)
     REMOTE_BROADCAST_PLAYER = 0x7f,
     REMOTE_MESSAGE_HEADER_SIZE = 9,
     REMOTE_MESSAGE_SIZE = 0x100,
@@ -71,6 +64,12 @@ H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
 
+// TransmitSaveGame and ReceiveSaveGame move the saved game LZHUF-encoded in
+// modem games, and in network games once the other side is ready.
+#define REMOTE_SAVE_ENCODED()                                                                      \
+    (!H1_ENUM_ENCODE(MultiplayerBaseType, gMapBaseType)                                            \
+     || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+
 // UnloadRemoteDriver's driver: the serial (com_*) driver for modem and direct
 // connect games, NetBIOS (nb_*) for network games (RemoteCleanup).
 H1_ENUM_BEGIN(RemoteDriverType)
@@ -91,6 +90,20 @@ struct RemotePacketHeader {
 
 // API-forced: PacketSend/packet are byte buffers framed by this header.
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
+// API-forced: rcvBufIn is a byte buffer read as a message record (retail
+// keeps it 4-byte aligned, as an array, not 8-byte aligned like a record).
+#define REMOTE_MESSAGE(buffer) (reinterpret_cast<RemoteMessage*>(buffer))
+
+// The combat action ProcessNextAction relays to the other player and
+// combatManager::Main replays (REMOTE_COMMAND_COMBAT_ACTION).
+#pragma pack(push, 1)
+struct CombatRemoteAction {
+    i32 nextAction;
+    i32 nextActionExtra;
+    i32 nextActionGridIndex;
+    i32 nextActionGridIndex2;
+};
+#pragma pack(pop)
 
 // A remote message's payload. TransmitRemoteData copies the caller's buffer to
 // +9 of the record; the save-game transfer builds its packets in this layout.
@@ -108,6 +121,7 @@ union RemotePayload {
         i16 index;
         char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
     } segment;
+    CombatRemoteAction combatAction;
 };
 #pragma pack(pop)
 
@@ -130,17 +144,19 @@ extern H1_ENUM_STORAGE(RemoteGameMode, u8) GameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
 extern char PacketSend[];
+#define gNumNetGuests iNetGuests // spelling fixes .bss order
 extern i32 gNumNetGuests;
 extern i32 gLastConfirm;
-extern i32 iInOrder[REMOTE_QUEUE_CAPACITY];
+#define gInOrder iInOrder // spelling fixes .bss order
+extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
-extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
+extern RemoteMessage rcvBufOut;
 
-i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
-i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
+i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length);
+i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType);
 // The trailing destination flag defaults to game-position addressing.
 i32 TransmitRemoteData(
-    char* data,
+    void* data,
     i32 destination,
     i32 length,
     i8 command,
@@ -149,14 +165,14 @@ i32 TransmitRemoteData(
     H1_ENUM_PARAM(RemoteMessageType, i8) messageType = REMOTE_MESSAGE_DEFAULT,
     i8 gamePosDestination = 1
 );
-char* GetRemoteData(i8 remove);
+RemoteMessage* GetRemoteData(i8 remove);
 i32 TransmitAndWait(
-    char* bytes,
+    void* bytes,
     i32 destination,
     i32 length,
     i8 command,
     i8 responseCommand,
-    char** response
+    RemoteMessage** response
 );
 void RemoteCleanup(void);
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver);
@@ -164,8 +180,8 @@ i32 FileSize(char* filename);
 void WriteModemPacket(char* buffer, i32 length);
 char ReadPacket(void);
 void calc_crc(u16* crc, u8* data, i32 length);
-i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length);
-i32 DecodePacket(u8* data, i32 source);
+i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length);
+i32 DecodePacket(RemoteMessage* data, i32 source);
 i8 InitNetHost(void);
 i8 InitNetGuest(void);
 i8 WaitForHost(void);
@@ -176,8 +192,9 @@ i8 WaitForGuest(void);
 extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
-extern RemoteMessage rcvBufIn;
-extern i32 iLastIds[REMOTE_RECENT_ID_COUNT];
+extern char rcvBufIn[REMOTE_MESSAGE_SIZE];
+#define gLastIds iLastIds // spelling fixes .bss order
+extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
 // The network setup's host/guest handshake states and broadcast clock
@@ -211,14 +228,17 @@ H1_ENUM_CONST_BEGIN(ModemPacketConstant)
     MODEM_ENCODED_PACKET_SIZE = 516
 H1_ENUM_CONST_END(ModemPacketConstant)
 
-extern i32 iLastActionTime;
-extern i32 iModemCommandPos;
-extern char cModemCommand[];
+#define gLastActionTime iLastActionTime // spelling fixes .bss order
+extern i32 gLastActionTime;
+#define gModemCommandPos iModemCommandPos // spelling fixes .bss order
+extern i32 gModemCommandPos;
+extern char gModemCommand[];
 extern char GUIMRresponse[];
 extern char GUIMRresp[];
 extern i32 GUIMRrespptr;
 extern i32 GUIMRc;
-extern i32 iLastDialPos;
+#define gLastDialPos iLastDialPos // spelling fixes .bss order
+extern i32 gLastDialPos;
 extern char numbuf[];
 struct inque_t {
     i32 readPosition;

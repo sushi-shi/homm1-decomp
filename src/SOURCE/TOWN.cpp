@@ -16,7 +16,7 @@
 VA(0x0045e9c0, 0x60)
 town::town(void) {
     m_type = TOWN_TYPE_KNIGHT;
-    m_threat = 0;
+    m_nameIndex = 0;
     m_id = 0;
     m_owner = 0;
     m_x = 0;
@@ -43,7 +43,7 @@ void town::GiveSpells(void) {
 
     if (m_occupyingHeroId == TOWN_OCCUPYING_HERO_NONE)
         return;
-    visitingHero = gpGame->GetHero(m_occupyingHeroId);
+    visitingHero = gGame->GetHero(m_occupyingHeroId);
     if (!visitingHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
         return;
     if (!(m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD)))
@@ -63,11 +63,11 @@ void town::XformToCastle(void) {
     i16 i;
 
     for (i = 0; i < TOWN_FOOTPRINT_WIDTH; i++) {
-        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - TOWN_FOOTPRINT_TOP].m_overlayIndex +=
+        gGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - TOWN_FOOTPRINT_TOP].m_overlayIndex +=
             TOWN_CASTLE_FRAME_OFFSET;
-        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - 1].m_objectIndex +=
+        gGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y - 1].m_objectIndex +=
             TOWN_CASTLE_FRAME_OFFSET;
-        gpGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y].m_objectIndex += TOWN_CASTLE_FRAME_OFFSET;
+        gGame->m_map[m_x - TOWN_FOOTPRINT_LEFT + i][m_y].m_objectIndex += TOWN_CASTLE_FRAME_OFFSET;
     }
 }
 
@@ -79,12 +79,12 @@ void town::View(void) {
     else
         gAdvDisposeLevel = ADV_DISPOSE_PARTIAL;
 
-    townManager* manager = gpTownManager;
+    townManager* manager = gTownManager;
     manager->SetTown(this);
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
-    gpExec->CallManager(gpTownManager);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gExec->CallManager(gTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
-        gpAdvManager->SetHeroContext(m_occupyingHeroId, 0);
+        gAdvManager->SetHeroContext(m_occupyingHeroId, 0);
     gAdvDisposeLevel = ADV_DISPOSE_NONE;
 }
 
@@ -92,15 +92,15 @@ VA(0x0045ed10, 0x13d)
 void town::Deallocate(void) {
     playerData* ownerData;
     i16 i;
-    i8 found;
+    i8 foundIndex;
 
-    ownerData = &gpGame->m_players[m_owner];
-    found = -1;
+    ownerData = &gGame->m_players[m_owner];
+    foundIndex = -1;
     for (i = 0; i < ownerData->m_townCount; i++) {
         if (ownerData->m_townIds[i] == m_id)
-            found = i;
+            foundIndex = i;
     }
-    for (i = found; i < ownerData->m_townCount - 1; i++)
+    for (i = foundIndex; i < ownerData->m_townCount - 1; i++)
         ownerData->m_townIds[i] = ownerData->m_townIds[i + 1];
     ownerData->m_townIds[ownerData->m_townCount - 1] = GAME_TOWN_NONE;
     if (ownerData->m_currentTown == m_id)
@@ -110,6 +110,6 @@ void town::Deallocate(void) {
         ownerData->m_townLocatorPage = 0;
     else if (ownerData->m_townLocatorPage + LOCATOR_PAGE_THRESHOLD > ownerData->m_townCount)
         ownerData->m_townLocatorPage = ownerData->m_townCount - LOCATOR_PAGE_THRESHOLD;
-    gpGame->m_townOwners[m_id] = GAME_PLAYER_NONE;
+    gGame->m_townOwners[m_id] = GAME_PLAYER_NONE;
     m_owner = GAME_PLAYER_NONE;
 }

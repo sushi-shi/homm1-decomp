@@ -58,7 +58,7 @@ public:
         i16 x,
         i16 y,
         i8 stripType,
-        i16 portraitId,
+        i16 portraitIconId,
         i8 portraitFrame,
         class armyGroup* army,
         i16 firstBorderId,
