@@ -68,7 +68,9 @@ retail images:
   of that body, where it equals the retail body with relocations masked.
 - The vtable of a class only the editor defines is named where the editor's own
   constructor, relocations masked, equals retail and stores it, and every slot
-  of the compiled vtable holds the address of the method the editor claims.
+  of the compiled vtable holds the address of the method the editor claims. A
+  floating constant an editor-only body reads is named where retail's bytes
+  equal its pool entry.
 
 `--check` fails when the committed tables differ from a fresh derivation (for
 example after a game rename).
@@ -126,15 +128,11 @@ C objects and 9 MASM 6.13 objects. Each C++ object ends with the
   editor's path strings and that branch selected by `HOMM1_EDITOR`; all 33
   editor bodies are exact.
 - `kbwin.cpp` and `REQUEST.cpp` are shared the same way (`REQUEST` with
-  `/Ob2`, as in the game). Under the editor profile 21 of the 23 `kbwin`
-  bodies and 9 of the 14 `REQUEST` bodies place; the editor's `AppWndProc`
-  calls editor dialog helpers and one more function, and `ShowThisMap`,
-  `Open`, `Main`, `Update` and `ShowMapInfo` of the requester are editor
-  variants still to reconstruct. `SetWinText` scans a 70-row table in the
-  editor (`WINDOW_TEXT_ENTRY_COUNT`). The editor's window class, title and
-  instance strings are its own localized text; no catalog entries exist for
-  them yet, so `WinMain`, `AppInit` and `AppCommand` miss only those
-  literals.
+  `/Ob2`, as in the game). The editor's `AppWndProc` and the requester's
+  `ShowThisMap`, `Open`, `Main`, `Update` and `ShowMapInfo` are editor
+  variants selected by `HOMM1_EDITOR`; `SetWinText` scans a 70-row table in
+  the editor. The editor's window class, title and instance strings are its
+  own catalog entries.
 - `EDITOR.CPP` carries copies of six `KB`/`NOOPT` bodies inside an editor
   unit with its own functions and data; it stays an editor unit.
 

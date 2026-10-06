@@ -345,7 +345,9 @@ class Placer:
         pairs.sort()
         self.pairs, self.keys = pairs, [g for g, _e in pairs]
         for b in self.bindings:
-            if b["space"] == "text" or not b["name"]:
+            # literal-pool names spell the game address: the image's own
+            # compile places its literals (never the game's by their bytes)
+            if b["space"] == "text" or not b["name"] or RVA_NAMED.match(b["name"]):
                 continue
             placed = self.place_datum(b["rva"], b["size"], b["name"], b["space"])
             if placed is not None:
@@ -622,8 +624,13 @@ def write_tables(p: Placer, out: Path | None = None) -> dict:
         if erva not in taken:
             referents.append([f"0x{erva:08x}", name, why])
             taken.add(erva)
+    from homm1.core.paths import image_build
+    own_claims = {int(r["rva"], 16)
+                  for frag in sorted((image_build(p.image) / "gen/claims").rglob("*.tsv"))
+                  for r in read_tsv(frag)[2]
+                  if r.get("space") == p.image and r["kind"] == "func"}
     for erva, callees in sorted(p.image_callees.items()):
-        if erva not in taken and len(callees) == 1:
+        if erva not in taken and erva not in own_claims and len(callees) == 1:
             referents.append([f"0x{erva:08x}", next(iter(callees)),
                               "callee of a body compiled for this image from shared source"])
     # LIBCMT bodies the DNA census matches exactly (masked) to one member

@@ -339,6 +339,44 @@ msgstr ""
 msgid "display.color_mode.required"
 msgstr ""
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.few"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.mixed"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.unset"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.dragon_city.multiple"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.lighthouse.multiple"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.next"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.obelisks.many"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.stone_liths.single"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.whirlpool.single"
+msgstr ""
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.clear.options.help"
 msgstr ""
@@ -373,6 +411,33 @@ msgstr ""
 
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.title"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.new.confirm"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.no_description"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.old_format"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.random.name"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.saved"
+msgstr ""
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.unnamed"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp
@@ -453,6 +518,10 @@ msgstr ""
 msgid "editor.overlay.selected.help"
 msgstr ""
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.quit.confirm"
+msgstr ""
+
 #: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
@@ -489,6 +558,10 @@ msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.trees"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.cd.required"
 msgstr ""
 
 #: src/EDITOR/EDITOR.cpp
@@ -1543,7 +1616,7 @@ msgstr ""
 msgid "spell.teleport.select"
 msgstr ""
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.cd.inaccessible"
 msgstr ""
 
@@ -1551,15 +1624,15 @@ msgstr ""
 msgid "startup.cd.required"
 msgstr ""
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.data.missing"
 msgstr ""
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr ""
 
-#: src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr ""
 
@@ -2989,6 +3062,70 @@ msgstr ""
 
 #: src/SOURCE/KB.cpp
 msgid "table.gDwellingNames.23"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.1"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.2"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.3"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.4"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.5"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.6"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.7"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.1"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.2"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.3"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.4"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.5"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.6"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.7"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.8"
+msgstr ""
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.9"
 msgstr ""
 
 #: src/SOURCE/KB.cpp

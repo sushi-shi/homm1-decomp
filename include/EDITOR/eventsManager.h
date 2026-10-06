@@ -131,7 +131,7 @@ H1_ENUM_CONST_BEGIN(ClearWindowConstant)
 H1_ENUM_CONST_END(ClearWindowConstant)
 
 // dtlwind.bin: difficulty and size radio rows, and the name, description and
-// file-code fields. The header keeps one name and description per language.
+// file-code fields (the header's name and description per language).
 H1_ENUM_CONST_BEGIN(DetailsWindowConstant)
     DETAILS_WINDOW_FIRST_DIFFICULTY = 0x1f4,
     DETAILS_WINDOW_DIFFICULTY_COUNT = 4,
@@ -140,10 +140,7 @@ H1_ENUM_CONST_BEGIN(DetailsWindowConstant)
     DETAILS_WINDOW_NAME = 0x320,
     DETAILS_WINDOW_DESCRIPTION = 0x321,
     DETAILS_WINDOW_MAP_CODE = 0x322,
-    DETAILS_WINDOW_MAP_CODE_LENGTH = 4,
-    DETAILS_WINDOW_LANGUAGE_COUNT = 8,
-    DETAILS_WINDOW_NAME_SIZE = 15,
-    DETAILS_WINDOW_DESCRIPTION_SIZE = 121
+    DETAILS_WINDOW_MAP_CODE_LENGTH = 4
 H1_ENUM_CONST_END(DetailsWindowConstant)
 
 // editnew.bin: a track and a knob (escroll.icn) per terrain and density row,

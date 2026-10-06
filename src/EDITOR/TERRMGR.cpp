@@ -260,7 +260,7 @@ i16 terrainManager::Main(tag_message& message) {
                         case TERRAIN_BUTTON_DIRT:
                             SelectTerrain(TERRAIN_DIRT);
                             break;
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             dragMode = TERRAIN_DRAG_CELLS;
                             if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
                                 ground = TERRAIN_WATER;
@@ -302,8 +302,8 @@ i16 terrainManager::Main(tag_message& message) {
                                                 );
                                                 break;
                                             case TERRAIN_DRAG_BRUSH:
-                                                tilesWide = x < EDIT_MANAGER_MAP_SIZE - 1 ? 2 : 1;
-                                                tilesHigh = y < EDIT_MANAGER_MAP_SIZE - 1 ? 2 : 1;
+                                                tilesWide = x < MAP_CELL_GRID_SIZE - 1 ? 2 : 1;
+                                                tilesHigh = y < MAP_CELL_GRID_SIZE - 1 ? 2 : 1;
                                                 gEditManager->PaintGround(
                                                     x - gEditManager->m_viewX,
                                                     y - gEditManager->m_viewY,
@@ -346,12 +346,12 @@ i16 terrainManager::Main(tag_message& message) {
                     }
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    if (message.id != EDITOR_MAP_WIDGET
+                    if (message.id != EDIT_CONTROL_MAP
                         && message.id == gEditManager->m_lastCommandId)
                         return 1;
                     gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(newX, newY);
                             gEditManager->ScreenToCell(newX, newY);
                             if (gEditManager->m_cursorX != newX
@@ -390,12 +390,12 @@ void terrainManager::RandomizeTiles(void) {
 
     for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++)
         gEditManager->BlendTerrain(i, 1, 1, 0, 0);
-    for (y = 0; y < EDIT_MANAGER_MAP_SIZE; y++) {
-        for (x = 0; x < EDIT_MANAGER_MAP_SIZE; x++) {
-            tileTerrain = gEditManager->m_cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
-            tile = gEditManager->m_cells[x][y].m_tileIndex;
+    for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
+        for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
+            tileTerrain = gEditManager->m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN;
+            tile = gEditManager->m_map.cells[x][y].m_tileIndex;
             if (tileTerrain * MAP_CELL_TILES_PER_TERRAIN == tile)
-                gEditManager->m_cells[x][y].m_tileIndex +=
+                gEditManager->m_map.cells[x][y].m_tileIndex +=
                     Random(0, TERRAIN_TILE_VARIANT_COUNT - 1);
         }
     }

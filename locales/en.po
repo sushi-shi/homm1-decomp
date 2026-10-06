@@ -338,6 +338,44 @@ msgstr "%d/day"
 msgid "display.color_mode.required"
 msgstr "Heroes requires 256 color mode or higher.\n\nTo change color mode, right click in an open area on the Windows 95 background, choose 'Properties', then the 'Settings' tab, then change the entry in the 'Color Palette Box'."
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.few"
+msgstr "There are fewer than 4 castles on the map!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.mixed"
+msgstr "Castles with set properties were found, but all castles were given properties. All of these castles will be turned into towns!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.unset"
+msgstr "Some castles have no properties set. All of these castles will be turned into towns!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.dragon_city.multiple"
+msgstr "More than one Dragon City on the map"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.lighthouse.multiple"
+msgstr "More than one lighthouse on the map"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.next"
+msgstr "%s\n\nShow the next error?"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.obelisks.many"
+msgstr "%d obelisks on the map. There must be no more than 48 of them."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.stone_liths.single"
+msgstr "Only one set of stone liths on the map. Another set of stone liths must be placed."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.whirlpool.single"
+msgstr "Only 1 whirlpool on the map. Another whirlpool must be placed."
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.clear.options.help"
 msgstr "Provides finer control over which objects are removed."
@@ -373,6 +411,33 @@ msgstr "Heroes Editor"
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.title"
 msgstr "Heroes Editor"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.new.confirm"
+msgstr "Do you want to clear the map and start from  scratch? "
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.no_description"
+msgstr "No description"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.old_format"
+msgstr "Warning -\nThis is an old map.\n\nAll maps created in the DOS version of Heroes, including this map, are in the old format. This format does not support removing objects. Any map created for the Win version of Heroes, like any map created with this editor, works normally."
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.random.name"
+msgstr "Random %d"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.saved"
+msgstr "'%s' saved successfully"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.unnamed"
+msgstr "No name %d"
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.overlay.category.0"
@@ -452,6 +517,10 @@ msgstr "Unsuitable location"
 msgid "editor.overlay.selected.help"
 msgstr "Selected object."
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.quit.confirm"
+msgstr "Do you really want to quit?\n"
+
 #: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
@@ -489,6 +558,10 @@ msgstr "Generating map - placing treasure..."
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.trees"
 msgstr "Generating map - placing trees..."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.cd.required"
+msgstr "You must have the Heroes CD in the CD drive to use\nthe Heroes of Might and Magic editor.  \n\nPlease insert the CD and try again."
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.initialize.failed"
@@ -1542,7 +1615,7 @@ msgstr "Invalid Teleport Destination"
 msgid "spell.teleport.select"
 msgstr "Select teleport destination."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.cd.inaccessible"
 msgstr "Unable to access CD Drive."
 
@@ -1550,15 +1623,15 @@ msgstr "Unable to access CD Drive."
 msgid "startup.cd.required"
 msgstr "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of Might and Magic.  \n\nPlease insert the CD and try again."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.data.missing"
 msgstr "Unable to find the Heroes data files.  Please run the installation program."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr "Unable to change to the Heroes directory.  Please run the installation program."
 
-#: src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr "Startup Error"
 
@@ -2989,6 +3062,70 @@ msgstr "Swamp"
 #: src/SOURCE/KB.cpp
 msgid "table.gDwellingNames.23"
 msgstr "Black Tower"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.1"
+msgstr "Radar map\n\nControls the camera position."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.2"
+msgstr "Scrolling\n\nUsed to move the map along the screen's axes."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.3"
+msgstr "Terrain\n\nUsed to paint different types of terrain."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.4"
+msgstr "Objects\n\nUsed to place objects (mountains, trees, etc.) on the map."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.5"
+msgstr "Information\n\nUsed to set monster counts and edit heroes and towns."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.6"
+msgstr "Eraser\n\nUsed to remove objects from the map."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.7"
+msgstr "Map\n\nThe map itself is drawn here!"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.1"
+msgstr "Scroll\n\nScroll the screen in the indicated direction."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.2"
+msgstr "Switch between zoomed and normal view."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.3"
+msgstr "Undo the last action. Press again to redo the undone action."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.4"
+msgstr "Change the map's name, description and other map information."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.5"
+msgstr "Start a new map from scratch."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.6"
+msgstr "Load an existing map."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.7"
+msgstr "Save the map to disk."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.8"
+msgstr "Quit"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.9"
+msgstr "Use the random map generator."
 
 #: src/SOURCE/KB.cpp
 msgid "table.gEventText.0"

@@ -472,6 +472,13 @@ source = "src/SOURCE/VIEW.cpp"
 # Complete retail instruction/call controls leave only local-stack placement.
 flags = "cpp_buka_g5"
 
+# EDITOR.EXE's main manager (Editor\EDITMGR.CPP), linked by the editor only.
+[[unit]]
+unit = "EDITOR/EDITMGR"
+source = "src/EDITOR/EDITMGR.cpp"
+flags = "cpp_editor_oi_g5"
+images = ["editor"]
+
 # EDITOR.EXE's program unit (Editor\EDITOR.CPP), linked by the editor only.
 [[unit]]
 unit = "EDITOR/EDITOR"

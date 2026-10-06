@@ -111,9 +111,9 @@ i16 eventsManager::Main(tag_message& message) {
                         break;
                     x = gEditManager->m_viewX + gEditManager->m_cursorX;
                     y = gEditManager->m_viewY + gEditManager->m_cursorY;
-                    cell = &gEditManager->m_cells[x][y];
+                    cell = &gEditManager->m_map.cells[x][y];
                     switch (message.id) {
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             if (cell->m_triggerType == EVENTS_OBJECT_TOWN
                                 || cell->m_triggerType == EVENTS_OBJECT_CASTLE
                                 || cell->m_triggerType == EVENTS_OBJECT_CASTLE_GATE)
@@ -133,11 +133,11 @@ i16 eventsManager::Main(tag_message& message) {
                     }
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    if (message.id != EDITOR_MAP_WIDGET && message.id == gEventsLastHoverId)
+                    if (message.id != EDIT_CONTROL_MAP && message.id == gEventsLastHoverId)
                         return 1;
                     gEventsLastHoverId = message.id;
                     switch (message.id) {
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(newX, newY);
                             gEditManager->ScreenToCell(newX, newY);
                             if (gEditManager->m_cursorX != newX
@@ -187,8 +187,8 @@ void eventsManager::EditCell(i16 x, i16 y) {
     const i16 firstByteId = CELL_WINDOW_FIRST_BYTE;
     const i16 firstToggle = CELL_WINDOW_FIRST_FLAG;
     tag_message msg;
-    gEditCell = &gEditManager->m_cells[x][y];
-    gEditCellPair = &gEditManager->m_cellPairs[x][y];
+    gEditCell = &gEditManager->m_map.cells[x][y];
+    gEditCellPair = &gEditManager->m_map.cellPairs[x][y];
     original = *gEditCell;
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "cellwin.bin");
     msg.type = MESSAGE_WIDGET;
@@ -233,7 +233,7 @@ void eventsManager::EditCell(i16 x, i16 y) {
     gWindowManager->DoDialog(gEditDialog, CellWindowHandler, 0);
     delete gEditDialog;
     if (gWindowManager->m_dialogResult == DIALOG_BUTTON_1)
-        gEditManager->m_cells[x][y] = original;
+        gEditManager->m_map.cells[x][y] = original;
     else
         gEditManager->m_mapChanged = 1;
     gEditManager->DrawMap();
@@ -362,7 +362,7 @@ void eventsManager::EditTown(i16 x, i16 y) {
     // Never read: a slot of the retail frame.
     i32 unusedResult;
 
-    gEditCell = &gEditManager->m_cells[x][y];
+    gEditCell = &gEditManager->m_map.cells[x][y];
     if (gEditCell->m_objectMetadata == 0) {
         NormalDialog(localization::Tr("editor.events.town.old_editor"), NORMAL_DIALOG_TYPE_OK);
         return;
@@ -583,7 +583,7 @@ void eventsManager::EditMonster(i16 x, i16 y) {
     char text[20];
     tag_message widgetMessage;
 
-    gEditCell = &gEditManager->m_cells[x][y];
+    gEditCell = &gEditManager->m_map.cells[x][y];
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "monedit.bin");
     SetWinText(gEditDialog, EVENTS_WINDOW_TEXT_MONSTER);
     gMonsterCount = gEditCell->m_objectMetadata;
@@ -669,7 +669,7 @@ void eventsManager::EditHero(i16 x, i16 y) {
     // Never read: a slot of the retail frame.
     i32 unusedResult;
 
-    gEditCell = &gEditManager->m_cells[x][y];
+    gEditCell = &gEditManager->m_map.cells[x][y];
     saved = *gEditCell;
     gHeroEdit = *static_cast<editHeroExtra*>(gEditManager->m_extras[gEditCell->m_objectMetadata]);
     gEditDialog = new heroWindow(EVENTS_DIALOG_X, EVENTS_DIALOG_Y, "heroedit.bin");
@@ -872,8 +872,8 @@ i32 ClearOptionsDialog(void) {
         gEditManager->ClearArea(
             0,
             0,
-            EDIT_MANAGER_MAP_SIZE,
-            EDIT_MANAGER_MAP_SIZE,
+            MAP_CELL_GRID_SIZE,
+            MAP_CELL_GRID_SIZE,
             gClearFlags & CLEAR_FLAG_CLASS_MASK,
             0
         );
@@ -992,13 +992,13 @@ void UpdateMapDetailsWindow(void) {
     }
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = DETAILS_WINDOW_NAME;
-    message.text = gMapHeader->name;
+    message.text = gMapHeader->name[0];
     gDetailsWindow->BroadcastMessage(message);
     message.id = DETAILS_WINDOW_DESCRIPTION;
-    message.text = gMapHeader->description;
+    message.text = gMapHeader->description[0];
     gDetailsWindow->BroadcastMessage(message);
     message.id = DETAILS_WINDOW_MAP_CODE;
-    strcpy(gText, gEditManager->m_mapCode);
+    strcpy(gText, gEditManager->m_mapFileName);
     gText[DETAILS_WINDOW_MAP_CODE_LENGTH] = 0;
     message.text = gText;
     gDetailsWindow->BroadcastMessage(message);
@@ -1036,13 +1036,13 @@ i16 MapDetailsWindowHandler(tag_message& message) {
                 gMapHeader->size = message.id - DETAILS_WINDOW_FIRST_SIZE;
             else if (message.id == DETAILS_WINDOW_NAME) {
                 gDetailsWindow->BroadcastMessage(request);
-                for (i = 0; i < DETAILS_WINDOW_LANGUAGE_COUNT; i++)
-                    strcpy(&gMapHeader->name[i * DETAILS_WINDOW_NAME_SIZE], request.text);
+                for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
+                    strcpy(gMapHeader->name[i], request.text);
             } else if (message.id == DETAILS_WINDOW_DESCRIPTION) {
                 gDetailsWindow->BroadcastMessage(request);
-                for (i = 0; i < DETAILS_WINDOW_LANGUAGE_COUNT; i++)
+                for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
                     strcpy(
-                        &gMapHeader->description[i * DETAILS_WINDOW_DESCRIPTION_SIZE],
+                        gMapHeader->description[i],
                         request.text
                     );
             } else if (message.id == DETAILS_WINDOW_MAP_CODE) {
@@ -1050,7 +1050,7 @@ i16 MapDetailsWindowHandler(tag_message& message) {
                 strcpy(gText, request.text);
                 for (i = 0; i < DETAILS_WINDOW_MAP_CODE_LENGTH; i++) {
                     if (i >= strlen(gText))
-                        gEditManager->m_mapCode[i] = '-';
+                        gEditManager->m_mapFileName[i] = '-';
                     else if ((static_cast<u8>(gText[i]) >= 'A' && static_cast<u8>(gText[i]) <= 'Z')
                              || (static_cast<u8>(gText[i]) >= 'a'
                                  && static_cast<u8>(gText[i]) <= 'z')
@@ -1063,9 +1063,9 @@ i16 MapDetailsWindowHandler(tag_message& message) {
                              || static_cast<u8>(gText[i]) == CYRILLIC_CAPITAL_YO
                              || static_cast<u8>(gText[i]) == CYRILLIC_SMALL_YO
                              || static_cast<u8>(gText[i]) == '-')
-                        gEditManager->m_mapCode[i] = gText[i];
+                        gEditManager->m_mapFileName[i] = gText[i];
                     else
-                        gEditManager->m_mapCode[i] = '-';
+                        gEditManager->m_mapFileName[i] = '-';
                 }
             } else
                 modified = false;

@@ -53,7 +53,7 @@ i16 clearManager::Open(i16 priority) {
         CLEAR_OPTIONS_BUTTON_PRESSED_FRAME,
         0,
         BUTTON_NO_HOTKEY,
-        EDITOR_TOOL_OPTIONS_BUTTON,
+        EDIT_CONTROL_TOOL_OPTIONS,
         WIDGET_KIND_DEFAULT
     );
     gEditManager->m_window->AddWidget(m_optionsButton, -1);
@@ -99,7 +99,7 @@ i16 clearManager::Main(tag_message& message) {
                     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
                         break;
                     switch (message.id) {
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             if (message.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS)
                                 dragMode = CLEAR_DRAG_CELLS;
                             else
@@ -166,25 +166,25 @@ i16 clearManager::Main(tag_message& message) {
                     break;
                 case WIDGET_NOTIFY_DESELECT:
                     switch (message.id) {
-                        case EDITOR_TOOL_OPTIONS_BUTTON:
+                        case EDIT_CONTROL_TOOL_OPTIONS:
                             ClearOptionsDialog();
                             break;
                     }
                     break;
                 case WIDGET_NOTIFY_RIGHT_CLICK:
-                    if (message.id == EDITOR_TOOL_OPTIONS_BUTTON)
+                    if (message.id == EDIT_CONTROL_TOOL_OPTIONS)
                         NormalDialog(
                             gClearToolHelp[CLEAR_TOOL_HELP_OPTIONS],
                             NORMAL_DIALOG_TYPE_QUICK_VIEW
                         );
                     break;
                 case WIDGET_COMMAND_HOVER:
-                    if (message.id != EDITOR_MAP_WIDGET
+                    if (message.id != EDIT_CONTROL_MAP
                         && message.id == gEditManager->m_lastCommandId)
                         return 1;
                     gEditManager->m_lastCommandId = message.id;
                     switch (message.id) {
-                        case EDITOR_MAP_WIDGET:
+                        case EDIT_CONTROL_MAP:
                             gMouseManager->MouseCoords(newX, newY);
                             gEditManager->ScreenToCell(newX, newY);
                             if (gEditManager->m_cursorX != newX

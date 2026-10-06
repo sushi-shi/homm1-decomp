@@ -338,6 +338,44 @@ msgstr "%d/день"
 msgid "display.color_mode.required"
 msgstr "Для героев требуется режим 256 цветов экрана или более.\n\nЧтобы изменить режим цветности, нажмите правую кнопку мыши на рабочем столе Windows и в открывшемся окне выберите 'Свойства', а затем 'Установки'. Здесь вы и сможете определить цветность экрана."
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.few"
+msgstr "На карте меньше 4 замков!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.mixed"
+msgstr "Найдены замки с заданными свойствами, но всем замкам были заданы свойства. Все эти замки будут превращены в города!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.castles.unset"
+msgstr "Для некоторых замков не заданы свойства. Все эти замки будут превращены в города!\n"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.dragon_city.multiple"
+msgstr "Более одного Драконьего города на карте"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.lighthouse.multiple"
+msgstr "Более одного маяка на карте"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.next"
+msgstr "%s\n\nПоказать следующую ошибку?"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.check.obelisks.many"
+msgstr "%d обелисков на карте. Их должно быть не более 48 штук."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.stone_liths.single"
+msgstr "Только одни путевые врата на карте. Необходимо установить еще одни путевые врата."
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.check.whirlpool.single"
+msgstr "Только 1 водоворот на карте. Необходимо поместить еще один водоворот."
+
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.clear.options.help"
 msgstr "Обеспечивает более детальное управление процессом удаления объектов."
@@ -373,6 +411,33 @@ msgstr "Редактор Героев"
 #: src/SOURCE/kbwin.cpp
 msgid "editor.instance.title"
 msgstr "Редактор Героев"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.new.confirm"
+msgstr "Вы хотите отчистить карту и начать с  нуля? "
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.no_description"
+msgstr "Нет описания"
+
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.map.old_format"
+msgstr "Внимание -\nЭто старая карта.\n\nВсе карты, созданные в DOS версии Героев, включая эту карту, созданы в старом формате. Этот формат не поддерживает удаление объектов. Любые из карт, созданные под Win версию Героев как и любая карта, созданная с помощью этого редактора, работает нормально."
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.random.name"
+msgstr "Случайная %d"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.saved"
+msgstr "'%s' сохранена успешно"
+
+#: src/EDITOR/EDITMGR.cpp
+#, c-format
+msgid "editor.map.unnamed"
+msgstr "Нет имени %d"
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.overlay.category.0"
@@ -452,6 +517,10 @@ msgstr "Неподходящее место"
 msgid "editor.overlay.selected.help"
 msgstr "Выбранный объект."
 
+#: src/EDITOR/EDITMGR.cpp
+msgid "editor.quit.confirm"
+msgstr "Вы действительно хотите выйти?\n"
+
 #: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
@@ -489,6 +558,10 @@ msgstr "Генерация карты - размещаю сокровища..."
 #: src/EDITOR/MAPOBJ.cpp
 msgid "editor.random.status.trees"
 msgstr "Генерация карты - размещаю деревья..."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "editor.startup.cd.required"
+msgstr "У вас должен быть компакт-диск героев в CD приводе, чтобы\nиспользовать редактор Героев Меча и Магии.  \n\nПожалуйста, вставьте компакт-диск и попробуйте еще раз."
 
 #: src/EDITOR/EDITOR.cpp
 msgid "editor.startup.initialize.failed"
@@ -1542,7 +1615,7 @@ msgstr "Ошибочная точка телепортации"
 msgid "spell.teleport.select"
 msgstr "Выберите место назначения."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.cd.inaccessible"
 msgstr "Нет доступа к CD приводу."
 
@@ -1550,15 +1623,15 @@ msgstr "Нет доступа к CD приводу."
 msgid "startup.cd.required"
 msgstr "У вас должен быть компакт-диск Героев в CD приводе, чтобы играть\nв Героев Меча и Магии. \n\nВставьте диск и попробуйте еще раз."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.data.missing"
 msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."
 
-#: src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.directory.invalid"
 msgstr "Невозможно изменить директорию. Пожалуйста, переустановите программу."
 
-#: src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr "Ошибка загрузки"
 
@@ -2989,6 +3062,70 @@ msgstr "Болото"
 #: src/SOURCE/KB.cpp
 msgid "table.gDwellingNames.23"
 msgstr "Черная башня"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.1"
+msgstr "Радарная карта\n\nУправляет положением камеры."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.2"
+msgstr "Скроллинг\n\nИспользуется для перемещения карты по осям экрана."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.3"
+msgstr "Земля\n\nИспользуется для рисования разных типов земли."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.4"
+msgstr "Объекты\n\nИспользуется для размещения объектов (горы, деревья и т.п.) на карте."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.5"
+msgstr "Информация\n\nИспользуется для указания количества монстров, редактирования героев и городов."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.6"
+msgstr "Ластик\n\nИспользуется для удаления объектов с карты."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditAreaHelp.7"
+msgstr "Карта\n\nЗдесь рисуют саму карту!"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.1"
+msgstr "Прокрутка\n\nПрокрутить экран в указанном направлении."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.2"
+msgstr "Переключение между режимом увеличения и обычным просмотром."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.3"
+msgstr "Отменить последнее действие. Нажмите еще раз, чтобы повторить отмененное действие."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.4"
+msgstr "Изменить название карты, описание и другую информацию о карте."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.5"
+msgstr "Начать новую карту с нуля."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.6"
+msgstr "Загрузить существующую карту."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.7"
+msgstr "Сохранить карту на диск."
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.8"
+msgstr "Выйти"
+
+#: src/EDITOR/EDITOR.cpp
+msgid "table.gEditButtonHelp.9"
+msgstr "Использовать генератор случайных карт."
 
 #: src/SOURCE/KB.cpp
 msgid "table.gEventText.0"

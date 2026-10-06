@@ -106,9 +106,15 @@ H1_ENUM_END(GeneratorDensity)
 extern char* gGeneratorTerrainNames[];
 // RemoveSmallRegions counts the map's land cells here.
 extern i32 gLandCellCount;
-// Set while the generator generates a map to save unseen: the map view draws
-// clouds only.
+// Set while the generator works unseen (gSaveUnseen): the map view draws
+// clouds only and the radar black.
 extern i32 gGeneratingMaps;
+// Cleared while a map without the editor's format word is loaded: such maps
+// keep no object ids, so the eraser clears whole cells.
+extern i32 gNewMapFormat;
+// The right-click help of editwind.bin's buttons and areas.
+extern char* gEditButtonHelp[];
+extern char* gEditAreaHelp[];
 
 void ShowStatusText(char* text);
 void ClearStatusText(void);

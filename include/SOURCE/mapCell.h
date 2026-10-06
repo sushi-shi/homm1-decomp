@@ -2,7 +2,7 @@
 #define HOMM1_SOURCE_MAPCELL_H
 // HoMM1 adventure-map cell. advManager::GetCell's x*720 + y*10 addressing
 // and game::GetWorldMapData's embedded 72x72 map prove a ten-byte record;
-// the editor's twelve-byte mapCell (EDITOR/mapcell.h) adds an extra chain.
+// the editor edits the same record (editMap) beside each cell's object ids.
 
 #include <Domains.h>
 
@@ -59,8 +59,9 @@ H1_ENUM_BEGIN(MapTileset)
     TILESET_OBJ32_07 = 7,
     TILESET_MTN32 = 8,
     TILESET_TREE32 = 9,
-    // Tilesets up to this one hold scenery (objects, mountains, trees).
-    TILESET_SCENERY_LAST = TILESET_TREE32,
+    // The tilesets up to here hold terrain objects; the editor's eraser
+    // clears them by the terrain under them (inclusive).
+    TILESET_TERRAIN_OBJECT_LAST = TILESET_TREE32,
     TILESET_TOWN32 = 10,
     TILESET_RSRC32 = 11,
     TILESET_MONS32 = 12,
