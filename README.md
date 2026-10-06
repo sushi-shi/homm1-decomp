@@ -1,9 +1,11 @@
 # homm1-decomp-buka
 
+> **The decompilation is complete.** Every function of both programs matches,
+> and `HEROES.EXE` and `EDITOR.EXE` rebuild byte-identical to retail.
+
 C++ reconstruction of **Heroes of Might and Magic — Buka 2003** (`HEROES.EXE`
-and the scenario editor `EDITOR.EXE`), built with VC6 SP5. Both programs link
-byte-identical to the retail executables. Text lives in per-language catalogs
-(Russian and English).
+and the scenario editor `EDITOR.EXE`), built with VC6 SP5. Text lives in per-language catalogs (Russian and
+English).
 
 See [Buka 2003 changes](docs/versions/buka-2003.md) and the [version lineage](docs/versions/README.md)
 (Win95 1.0 → 1.1 → 1.2 → Buka 2003). Supply your own executable
@@ -36,13 +38,6 @@ _CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.
 | `EDITOR` |     7 | 143 / 143 (100.0%) | 100.0% |
 | `SOURCE` |     3 |   69 / 69 (100.0%) | 100.0% |
 <!-- match-score:end -->
-
-## Reconstruction debt
-
-None open. The [debt notes](docs/reconstruction-debt.md) record each
-resolved category, its final count and the commands that re-measure it; the
-`homm1 build verify` gates (constants floor 0, strict view 0, link-diff 0 for
-both programs) keep them closed.
 
 ## Branches
 

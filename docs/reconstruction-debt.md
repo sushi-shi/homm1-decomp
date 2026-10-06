@@ -1,7 +1,9 @@
 # Reconstruction debt review
 
-The README checklist counts source constructs that a reconstruction tends to
-introduce and the original developers probably did not write. Counts cover
+This review counted source constructs that a reconstruction tends to
+introduce and the original developers probably did not write. Every category
+is now resolved (see Resolved below); the `homm1 build verify` gates keep the
+measured ones at their final counts. Counts cover
 `src` and `include`; vendor code is excluded. A count is a review input, not a
 defect total: a Win32 boundary cast or a `goto` that retail's control flow
 requires is correct source. Every cleanup preserves banked exact matches
