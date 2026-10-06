@@ -22,9 +22,10 @@
 #include <SOURCE/KB.h>
 #include <SOURCE/advManager.h>
 #include <SOURCE/army.h>
-#include <SOURCE/combatManager.h>
 #include <SOURCE/artifactTypes.h>
+#include <SOURCE/combatManager.h>
 #include <SOURCE/creatureTypes.h>
+#include <SOURCE/EVENTS.h>
 #include <SOURCE/game.h>
 #include <SOURCE/hero.h>
 #include <SOURCE/kbwin.h>
@@ -209,6 +210,8 @@ void BerserkWithNothingToAttack() {
     // Hex 0 is a corner the flier's draws (1-43) never pick.
     gCombatManager->m_hexCells[0].m_occupantSide = 0;
     gCombatManager->m_hexCells[0].m_occupantIndex = 0;
+    hero* savedHero = gCombatManager->m_heroes[0];
+    gCombatManager->m_heroes[0] = nullptr;
     army* stack = new army;
     stack->Init(CREATURE_GRIFFIN, 5, 0, 0);
     stack->m_hex = 0;
@@ -228,6 +231,7 @@ void BerserkWithNothingToAttack() {
     stack->GoBerserk();
     Expect(gNextAction == ACTION_SKIP_TURN, "a berserk walker that cannot move waits");
     delete stack;
+    gCombatManager->m_heroes[0] = savedHero;
     memcpy(gCombatManager->m_hexCells, savedCells, sizeof(savedCells));
     gNextAction = ACTION_NONE;
 }
@@ -315,6 +319,103 @@ void RandomArtifactWithoutAFreeSlot() {
     bearer->m_owner = savedOwner;
 }
 
+
+// The computer's campfire cleared the ambient sound at the view's centre
+// instead of its own cell; a computer hero with every slot full lost the
+// map artifacts it walked onto.
+void ComputerCampfireAndFullHero() {
+    hero* visitor = &gGame->m_heroRecs[9];
+    i8 savedOwner = visitor->m_owner;
+    i8 savedArtifacts[HERO_ARTIFACT_SLOT_COUNT];
+    memcpy(savedArtifacts, visitor->m_artifacts, sizeof(savedArtifacts));
+    visitor->m_owner = 1;
+    i32 centreX = gAdvManager->m_mapOriginX + ADVMGR_VIEW_CENTER;
+    i32 centreY = gAdvManager->m_mapOriginY + ADVMGR_VIEW_CENTER;
+    int x = centreX < 36 ? 50 : 20;
+    int y = 30;
+    mapCell saved = gGame->m_map[x][y];
+    i8 savedCentreSound = gGame->m_mapSounds[centreX][centreY];
+    gGame->m_mapSounds[centreX][centreY] = 3;
+    gGame->m_mapSounds[x][y] = 5;
+    gGame->m_map[x][y].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_CAMPFIRE);
+    gGame->m_map[x][y].m_objectMetadata = (2 << CAMPFIRE_AMOUNT_SHIFT) | RESOURCE_WOOD;
+    gAdvManager->DoAIEvent(&gGame->m_map[x][y], visitor, x, y);
+    Expect(gGame->m_mapSounds[centreX][centreY] == 3 && gGame->m_mapSounds[x][y] == MAP_SOUND_NONE,
+           "a computer's campfire silences its own cell, not the view's centre");
+    gGame->m_map[x][y] = saved;
+    gGame->m_map[x][y].m_triggerType = MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT);
+    gGame->m_map[x][y].m_objectIndex = ARTIFACT_FIRST + 1;
+    gGame->m_map[x][y].m_objectMetadata = ARTIFACT_EVENT_MODE_PICKUP;
+    memset(visitor->m_artifacts, ARTIFACT_FIRST, sizeof(visitor->m_artifacts));
+    gAdvManager->DoAIEvent(&gGame->m_map[x][y], visitor, x, y);
+    Expect(gGame->m_map[x][y].m_triggerType == MAP_EVENT_TRIGGER(MAP_OBJECT_ARTIFACT),
+           "a computer hero with every slot full leaves the artifact on the map");
+    gGame->m_map[x][y] = saved;
+    gGame->m_mapSounds[centreX][centreY] = savedCentreSound;
+    memcpy(visitor->m_artifacts, savedArtifacts, sizeof(savedArtifacts));
+    visitor->m_owner = savedOwner;
+}
+
+// Beside the map's east edge Summon Boat tried the cells past it, which
+// GetCell answers with cell (0,0): with water there, the boat went to x 72.
+void SummonBoatOnTheEdge() {
+    const int x = MAP_CELL_GRID_SIZE - 1;
+    const int y = 20;
+    mapCell* map = &gGame->m_map[0][0];
+    mapCell savedMap[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+    memcpy(savedMap, gGame->m_map, sizeof(savedMap));
+    boatRecord savedBoat = gGame->m_boats[0];
+    i8 savedSlot = gGame->m_boatSlots[0];
+    i16 savedOriginX = gAdvManager->m_mapOriginX;
+    i16 savedOriginY = gAdvManager->m_mapOriginY;
+    i8 savedHero = gGame->m_players[0].m_currentHero;
+    for (int dx = -1; dx <= 0; dx++)
+        for (int dy = -1; dy <= 1; dy++) {
+            gGame->m_map[x + dx][y + dy].m_tileIndex = 2 * MAP_CELL_TILES_PER_TERRAIN;
+            gGame->m_map[x + dx][y + dy].m_objectIndex = MAP_CELL_NO_FRAME;
+        }
+    gGame->m_map[x - 1][y].m_tileIndex = 0;
+    map->m_tileIndex = 0;
+    map->m_objectIndex = MAP_CELL_NO_FRAME;
+    gGame->m_boatSlots[0] = 0;
+    gGame->m_boats[0].heroId = static_cast<i8>(BOAT_OCCUPIED_FLAG);
+    gGame->m_boats[0].owner = 0;
+    gGame->m_boats[0].x = 60;
+    gGame->m_boats[0].y = 60;
+    gCurPlayer = 0;
+    gCurPlayerData = &gGame->m_players[0];
+    gCurPlayerData->m_currentHero = gCurPlayerData->m_heroIds[0];
+    gAdvManager->m_mapOriginX = x - ADVMGR_VIEW_CENTER;
+    gAdvManager->m_mapOriginY = y - ADVMGR_VIEW_CENTER;
+    b32 savedShowIt = gShowIt;
+    gShowIt = false;
+    gAdvManager->SummonBoat();
+    gShowIt = savedShowIt;
+    Expect(gGame->m_boats[0].x == x - 1 && gGame->m_boats[0].y == y,
+           "Summon Boat on the map's edge puts the boat on the water beside the hero");
+    memcpy(gGame->m_map, savedMap, sizeof(savedMap));
+    gGame->m_boats[0] = savedBoat;
+    gGame->m_boatSlots[0] = savedSlot;
+    gAdvManager->m_mapOriginX = savedOriginX;
+    gAdvManager->m_mapOriginY = savedOriginY;
+    gGame->m_players[0].m_currentHero = savedHero;
+}
+
+// PNM31234 keeps towns without records under two monsters; once a monster
+// was gone, its cell showed and selected town 0.
+void StrayTownsUnderMonsters() {
+    NewGame("PNM31234.MAP");
+    const int cells[][2] = {{7, 45}, {33, 61}};
+    bool none = true;
+    for (const auto& c : cells) {
+        mapCell* cell = &gGame->m_map[c[0]][c[1]];
+        gAdvManager->EraseObj(cell, c[0], c[1]);
+        none = none && MAP_TRIGGER_OBJECT(cell->m_triggerType) != MAP_OBJECT_TOWN;
+    }
+    Expect(none, "a defeated monster on PNM31234 uncovers no town without a record");
+    NewGame("AES31000.MAP");
+}
+
 }  // namespace
 
 int main() {
@@ -354,6 +455,9 @@ int main() {
     RandomArtifactWithoutAFreeSlot();
     CommanderStatsHoldInTheirByte();
     BerserkWithNothingToAttack();
+    ComputerCampfireAndFullHero();
+    SummonBoatOnTheEdge();
+    StrayTownsUnderMonsters();
     std::string cleanup = "rm -r '" + config + "'";
     if (std::system(cleanup.c_str()) != 0)
         std::fprintf(stderr, "could not remove %s\n", config.c_str());

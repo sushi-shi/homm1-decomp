@@ -4166,11 +4166,24 @@ i32 game::MapDataValid(void) {
     return 1;
 }
 
+b32 game::OnTownFootprint(i32 x, i32 y) {
+    i32 i;
+
+    for (i = 0; i < GAME_TOWN_COUNT; i++) {
+        if (x >= m_castleRecs[i].m_x - TOWN_FOOTPRINT_LEFT
+            && x < m_castleRecs[i].m_x - TOWN_FOOTPRINT_LEFT + TOWN_FOOTPRINT_WIDTH
+            && y >= m_castleRecs[i].m_y - TOWN_FOOTPRINT_TOP && y <= m_castleRecs[i].m_y)
+            return true;
+    }
+    return false;
+}
+
 void game::ProcessMapExtra(void) {
     i32 y;
     mapCell* cell;
     i32 x;
     i8 townNum;
+    i32 hidden;
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             cell = &m_map[x][y];
@@ -4186,6 +4199,12 @@ void game::ProcessMapExtra(void) {
                     m_noMapHeroes = false;
                     break;
             }
+            // Some maps keep a hero, or a town away from every town, under
+            // another object. Neither has a record: once the object was
+            // gone, the cell showed and selected hero or town 0.
+            hidden = MAP_TRIGGER_OBJECT(cell->m_secondaryTrigger);
+            if (hidden == MAP_OBJECT_HERO || (hidden == MAP_OBJECT_TOWN && !OnTownFootprint(x, y)))
+                cell->m_secondaryTrigger -= hidden;
         }
     }
 }

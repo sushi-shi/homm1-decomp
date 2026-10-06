@@ -403,19 +403,19 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     );
                     break;
                 case SKELETON_ARTIFACT:
-                    // With every artifact in play GiveRandomArtifact pays
-                    // gold instead and returns no artifact; the original then
-                    // named artifact -1 (the bytes before the name table).
-                    // The gold is now shown as for a hero with no free slot.
-                    if (visitingHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT
-                        || (artifactId = GiveRandomArtifact(cell, visitingHero)) == ARTIFACT_NONE) {
+                    // With no free slot, or with every artifact in play,
+                    // GiveRandomArtifact pays gold instead and returns no
+                    // artifact (the original then named artifact -1, the
+                    // bytes before the name table).
+                    artifactId = GiveRandomArtifact(cell, visitingHero);
+                    if (artifactId == ARTIFACT_NONE) {
                         sprintf(gText, "%s.", localization::Tr("event.skeleton.treasure"));
                         EventWindow(
                             EVENT_TEXT_CUSTOM,
                             NORMAL_DIALOG_TYPE_OK,
                             gText,
                             NORMAL_DIALOG_RESOURCE_GOLD,
-                            SKELETON_GOLD,
+                            EVENT_RANDOM_ARTIFACT_GOLD,
                             NORMAL_DIALOG_NO_RESOURCE,
                             0,
                             NORMAL_DIALOG_NO_OR_TEXT
@@ -534,8 +534,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             );
             removeObj = true;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
-            gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
-                              [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
+            gGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
             SetEnvironmentOrigin(
                 m_mapOriginX + ADVMGR_VIEW_CENTER,
                 m_mapOriginY + ADVMGR_VIEW_CENTER,
@@ -2209,8 +2208,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
             removeEvent = true;
-            gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
-                              [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
+            gGame->m_mapSounds[x][y] = MAP_SOUND_NONE;
             break;
         case MAP_OBJECT_GAZEBO:
             if (!(eventHero->m_visitedSites & (1 << (cell->m_objectMetadata & 31)))) {
