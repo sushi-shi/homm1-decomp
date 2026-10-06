@@ -1997,7 +1997,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     handled = false;
     oldPlayer = gCurPlayer;
     ownerPlayerData = gCurPlayerData;
-    --eventHero->m_remainingMobility;
+    // Visiting costs the computer a movement point, unless the
+    // SlightlyHarderAI option spares it.
+    if (!gConfig.slightlyHarderAI)
+        --eventHero->m_remainingMobility;
     gMapVisitFlags[x][y] |= gCurPlayerBit;
     switch (eventType) {
         case MAP_OBJECT_COAST:
