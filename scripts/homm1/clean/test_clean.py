@@ -253,6 +253,17 @@ class DomainArrayTests(unittest.TestCase):
         self.assertIn("short gGrid[SLOT_COUNT][ROW_COUNT];", cleaned)
         self.assertNotIn("H1_ENUM", cleaned)
 
+    def test_a_continued_argument_drops_its_backslash(self):
+        cleaned = source.clean_cpp(
+            "#define FINISH(message) \\\n"
+            "    ((message).command = H1_ENUM_DECODE( \\\n"
+            "         Command, \\\n"
+            "         (message).id = H1_ENUM_ENCODE(Command, SELECT)    \\\n"
+            "     ))\n")
+        self.assertIn("((message).id = SELECT)", cleaned)
+        self.assertNotIn("SELECT    \\", cleaned)
+        self.assertNotIn("H1_ENUM", cleaned)
+
 
 if __name__ == '__main__':
     unittest.main()

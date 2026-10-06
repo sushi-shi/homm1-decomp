@@ -108,7 +108,7 @@ WORD_RULES = {
 RESIDUE_NAMES = frozenset(CALL_RULES) | frozenset(WORD_RULES) | {
     "HOMM1_MATCH_H", "HOMM1_DOMAINS_H", "HOMM1_H1_MACROS_H", "H1EnumStorage",
     "H1EnumShared", "H1EnumArray", "H1EnumBit", "H1EnumDecode", "H1EnumEncode",
-    "H1_STRICT_DOMAINS", "H1Bool",
+    "H1_STRICT_DOMAINS", "H1Bool", "H1IsBool",
 }
 RESIDUE_PREFIXES = ("H1_ENUM_",)
 
@@ -241,7 +241,10 @@ def rewrite(text: str, *, keep_lines: bool = False) -> str:
             # expansion keeps them as backslash-newlines.
             continued = bool(re.search(r"\\[ \t]*\n", raw))
             if continued:
-                args = [re.sub(r"\s*\\[ \t]*\n\s*", " ", arg) for arg in args]
+                # An argument's own continuations join it; one that ends the
+                # argument (before its comma or closing parenthesis) was
+                # stripped of its newline with the argument, so it ends it.
+                args = [re.sub(r"\s*\\[ \t]*(?:\n\s*|$)", " ", arg).strip() for arg in args]
             if not keep_lines:
                 args = [re.sub(r"\s*\n\s*", " ", arg) for arg in args]
                 breaks = 0
