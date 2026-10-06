@@ -250,6 +250,11 @@ void RunReplayAction(const ReplayAction& action) {
         gPending.push_back(event);
     } else if (action.verb == "exit") {
         Log("replay: exit");
+        // The audio thread keeps calling the music and loop callbacks until
+        // the device is closed; std::exit alone destroyed their state under
+        // them (a rare crash at the end of scripted runs). The program's own
+        // exit closes the platform first, and so does this one.
+        Shutdown();
         std::exit(0);
     } else {
         Log("replay line %d: unknown action %s", action.line, action.verb.c_str());

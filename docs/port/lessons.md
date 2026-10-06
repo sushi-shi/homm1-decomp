@@ -305,6 +305,10 @@ down where it is implemented:
   own copy of the sample, because the audio thread refills it while the game
   may free the sample (`StopSample` does nothing while samples are suspended,
   as during a computer player's turn).
+  Every way out of the program closes the audio device before static
+  destructors run: the replay's `exit` used to call `std::exit` with the
+  audio thread still feeding music from state being destroyed, a crash at
+  the end of about one scripted run in a few hundred.
 - **Movies** (`src/PORT/SOURCE/Smacker.cpp`): the Smacker calls the game makes
   are implemented, including the decode-ahead palette and the frame counter
   that wraps to 0 at the end, which is how the game detects a movie's end. A
