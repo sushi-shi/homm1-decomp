@@ -4047,7 +4047,8 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     dataSize = FileSize(curPathname);
     if (REMOTE_SAVE_ENCODED())
-        mainOutData = static_cast<char*>(malloc(dataSize));
+        // Room for a stream larger than its input.
+        mainOutData = static_cast<char*>(malloc(dataSize * 2 + REMOTE_SAVE_BUFFER_EXTRA));
     dataObj = static_cast<char*>(malloc(dataSize));
     mainFile = FileOpen(curPathname, FILE_OPEN_READ);
     if (mainFile == FILE_DESCRIPTOR_INVALID)
@@ -4058,8 +4059,11 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     {
         FileRead(mainFile, dataObj, dataSize);
         FileClose(mainFile);
+        // EncodeData returns the size of its code, which follows the stream's
+        // four-byte decoded size: the original sent that many bytes and so
+        // never the stream's last four.
         if (REMOTE_SAVE_ENCODED())
-            dataSize = EncodeData(mainOutData, dataObj, dataSize);
+            dataSize = EncodeData(mainOutData, dataObj, dataSize) + REMOTE_SAVE_DECODED_SIZE_BYTES;
         else
             mainOutData = dataObj;
 
