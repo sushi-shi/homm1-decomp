@@ -6,6 +6,39 @@ C++ 6.0 SP5 toolchain. The text lives in a catalog with one translation per
 language: `locales/ru.po` (the retail Russian) and `locales/en.po` (English).
 Building selects one of them.
 
+## Branches
+
+```text
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2
+                                         |
+                                         v
+                                     decomp-buka-2003
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003 (you are here)   classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te                  port ------------------> port-te
+```
+
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
+
 ## Build and play
 
 On x86-64 Linux with Nix flakes enabled, from this directory, with your copy of
@@ -42,40 +75,6 @@ finds the CD by its first music track, reads the game's registry key (its
 window settings are the `HMM1 Editor...` values) and loads and saves maps in
 `~/.local/share/homm1-buka/game/MAPS/`. It takes the same options as the game's
 runner.
-
-## Branches
-
-```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |                                                                 |
-        v                                                    +------------+------------+
-source-win95-1.0                                             |                         |
-                                                             v                         v
-                                                     source-buka-2003         classic-buka-2003
-                                                             |
-                                                    +--------+--------+
-                                                    |                 |
-                                                    v                 v
-                                                  port            source-te
-                                                    |
-                                                    v
-                                                 port-te
-```
-
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Win95 1.0 `HEROES.EXE` (Feb 1996) |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Win95 1.1 `HEROES.EXE` (May 1996) |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1 |
-| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka 2003 game and editor, byte-identical |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Clean source, Win95 1.0 |
-| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Clean source, Buka 2003 (ru/en) |
-| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | Reading view, UTF-8 Russian |
-| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port: Linux, Windows, browser |
-| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | Tournament Edition on the source |
-| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | Tournament Edition on the port |
-
-This branch is `source-buka-2003`.
 
 ## Build
 

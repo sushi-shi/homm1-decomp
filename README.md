@@ -1,15 +1,13 @@
-# homm1-decomp-buka
+# homm1-decomp
 
 > **The decompilation is complete.** Every function of both programs matches,
 > and `HEROES.EXE` and `EDITOR.EXE` rebuild byte-identical to retail.
 
 C++ reconstruction of **Heroes of Might and Magic — Buka 2003** (`HEROES.EXE`
-and the scenario editor `EDITOR.EXE`), built with VC6 SP5. Text lives in per-language catalogs (Russian and
-English).
-
-See [Buka 2003 changes](docs/versions/buka-2003.md) and the [version lineage](docs/versions/README.md)
-(Win95 1.0 → 1.1 → 1.2 → Buka 2003). Supply your own executable
-and game assets.
+and the scenario editor `EDITOR.EXE`), built with the original Visual C++ 6.0
+SP5 toolchain under Wine. Text lives in per-language catalogs (Russian and
+English). Retail bytes are authoritative. Supply your own executables and game
+assets.
 
 <!-- match-score:start -->
 ## Match status
@@ -42,34 +40,35 @@ _CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.
 ## Branches
 
 ```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2 ---> decomp-buka-2003
-        |                                                                 |
-        v                                                    +------------+------------+
-source-win95-1.0                                             |                         |
-                                                             v                         v
-                                                     source-buka-2003         classic-buka-2003
-                                                             |
-                                                    +--------+--------+
-                                                    |                 |
-                                                    v                 v
-                                                  port            source-te
-                                                    |
-                                                    v
-                                                 port-te
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2
+                                         |
+                                         v
+                                     decomp-buka-2003 (you are here)
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003                  classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te                  port ------------------> port-te
 ```
 
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Win95 1.0 `HEROES.EXE` (Feb 1996) |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Win95 1.1 `HEROES.EXE` (May 1996) |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1 |
-| [decomp-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) | Buka 2003 game and editor, byte-identical |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Clean source, Win95 1.0 |
-| [source-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) | Clean source, Buka 2003 (ru/en) |
-| [classic-buka-2003](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) | Reading view, UTF-8 Russian |
-| [port](https://github.com/sushi-shi/homm1-decomp/tree/port) | Native port: Linux, Windows, browser |
-| [source-te](https://github.com/sushi-shi/homm1-decomp/tree/source-te) | Tournament Edition on the source |
-| [port-te](https://github.com/sushi-shi/homm1-decomp/tree/port-te) | Tournament Edition on the port |
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
 
 ## Quickstart
 
@@ -86,17 +85,27 @@ homm1 build
 homm1 build verify
 homm1 match BASE/MOUSEMGR
 homm1 verify status
-homm1 play --game /path/to/game-or-cd.iso   # optional: run the build
+homm1 play --game /path/to/game-or-cd.iso   # optional: run the rebuilt game
 ```
 
-The optional editor is supplied with `init --editor-exe /path/to/EDITOR.EXE`.
-Retail inputs, tools, Wine state and generated reports stay in ignored `build/`.
+The editor is supplied with `init --editor-exe /path/to/EDITOR.EXE`. Retail
+inputs, the toolchain, Wine state and generated reports stay in ignored
+`build/`.
 
-See [the matching workflow](docs/tooling.md), [setup and editors](docs/workflow.md),
-and the [documentation index](docs/README.md).
-[`tools/`](tools/README.md) holds Rust tools, including a byte-exact port of
-the game's LZHUF save-transfer codec.
-Contributor rules and verification commands are in [AGENTS.md](AGENTS.md).
+## Versions
+
+The [version lineage](docs/versions/README.md) runs Win95 1.0 → 1.1 → 1.2 →
+Buka 2003; what Buka changed is in [Buka 2003 changes](docs/versions/buka-2003.md).
+
+## Documentation
+
+- [Matching tooling](docs/tooling.md), [command map](docs/tooling-map.md) and
+  [repository workflow](docs/workflow.md)
+- [Other builds](docs/builds.md) and [playing the build](docs/play.md)
+- [Rust tools](tools/README.md), including a byte-exact port of the game's
+  LZHUF save-transfer codec
+- [Documentation index](docs/README.md); contributor rules and verification
+  commands are in [AGENTS.md](AGENTS.md)
 
 ## License
 
