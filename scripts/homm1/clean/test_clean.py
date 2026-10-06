@@ -149,6 +149,100 @@ class LayoutAliasTests(unittest.TestCase):
             self._bss(33680, ["_putbuf", "_putlen", "_text_buf"]), theirs, {"other"}))
 
 
+class FrameSlotAliasTests(unittest.TestCase):
+    UNIT = ("i32 minX;\n"
+            "#define minX ourFirstX // frame-slot spelling\n"
+            "#define maxX curEndX // frame-slot spelling\n"
+            "void advManager::UpdateRadar(i32 force) {\n"
+            "    i32 minX = force;\n"
+            "    i32 maxX = minX + 1;\n"
+            "    Draw(minX, maxX);\n"
+            "}\n"
+            "#undef minX\n"
+            "#undef maxX\n"
+            "\n"
+            "void advManager::Other() { i32 ourFirstX = 0; }\n")
+
+    @staticmethod
+    def _bracket(body: str) -> str:
+        return "#define minX ourFirstX // frame-slot spelling\n" + body + "#undef minX\n"
+
+    def test_groups_cover_defines_through_undefs(self):
+        self.assertEqual(source.local_aliases(self.UNIT),
+                         [(1, 9, {"minX": "ourFirstX", "maxX": "curEndX"})])
+
+    def test_the_source_tree_drops_the_pair_and_keeps_the_readable_names(self):
+        cleaned = source.clean_cpp(self.UNIT)
+        self.assertNotIn("#define", cleaned)
+        self.assertNotIn("#undef", cleaned)
+        self.assertIn("i32 minX = force;\n    i32 maxX = minX + 1;", cleaned)
+        # Outside its function the storage spelling is an ordinary name.
+        self.assertIn("i32 ourFirstX = 0;", cleaned)
+
+    def test_the_control_tree_keeps_the_pair_and_every_line(self):
+        cleaned = source.clean_cpp(self.UNIT, keep_lines=True)
+        self.assertIn("#define minX ourFirstX", cleaned)
+        self.assertIn("#undef maxX", cleaned)
+        self.assertEqual(cleaned.count("\n"), self.UNIT.count("\n"))
+
+    def test_a_define_without_its_undef_fails(self):
+        with self.assertRaisesRegex(ValueError, "not #undef'd"):
+            source.clean_cpp("#define minX ourFirstX // frame-slot spelling\n"
+                             "void f() { i32 minX; }\n")
+        with self.assertRaisesRegex(ValueError, "not #undef'd"):
+            source.clean_cpp(self.UNIT.replace("#undef maxX\n", ""))
+
+    def test_a_stray_undef_fails(self):
+        with self.assertRaisesRegex(ValueError, "outside"):
+            source.clean_cpp(self.UNIT + "#undef minX\n")
+
+    def test_the_pair_brackets_exactly_one_function(self):
+        with self.assertRaisesRegex(ValueError, "more than one"):
+            source.clean_cpp(self._bracket("void f() { i32 minX; }\nvoid g() { }\n"))
+        with self.assertRaisesRegex(ValueError, "exactly one"):
+            source.clean_cpp(self._bracket("void f() { i32 minX; }\ni32 g;\n"))
+
+    def test_the_storage_spelling_inside_the_function_fails(self):
+        with self.assertRaisesRegex(ValueError, "split"):
+            source.clean_cpp(self._bracket("void f() { i32 minX; ourFirstX = 1; }\n"))
+
+    def test_the_storage_spelling_may_still_name_a_type(self):
+        cleaned = source.clean_cpp(
+            "#define moraleSound sample // frame-slot spelling\n"
+            "void f() { class sample* moraleSound; Wait(moraleSound); }\n"
+            "#undef moraleSound\n")
+        self.assertIn("class sample* moraleSound;", cleaned)
+
+    def test_captured_parameters_members_and_qualified_names_fail(self):
+        for body in ("void f(i32 minX) { i32 y = minX; }\n",
+                     "void f() { i32 minX; minX = box.minX; }\n",
+                     "void f() { i32 minX; minX = box->minX; }\n",
+                     "void f() { i32 minX; minX = limits::minX; }\n",
+                     "void f() { class minX* minX; }\n"):
+            with self.subTest(body=body), self.assertRaisesRegex(ValueError, "capture"):
+                source.clean_cpp(self._bracket(body))
+
+    def test_an_unused_alias_fails(self):
+        with self.assertRaisesRegex(ValueError, "never used"):
+            source.clean_cpp(self._bracket("void f() { i32 x; }\n"))
+
+    def test_bss_aliases_are_not_frame_slot_aliases(self):
+        self.assertEqual(source.local_aliases(LayoutAliasTests.HEADER), [])
+
+    def test_aliased_units_explain_their_source_differences(self):
+        from pathlib import Path
+        from tempfile import TemporaryDirectory
+        from unittest import mock
+        with TemporaryDirectory() as tree:
+            Path(tree, "a.cpp").write_text("void f() {}\n")
+            with mock.patch("homm1.manifest.units",
+                            return_value=[{"unit": "A", "source": "a.cpp"}]):
+                self.assertEqual(verify.unexplained_differences(Path(tree), {"A": [".text"]}),
+                                 ["A"])
+                self.assertEqual(verify.unexplained_differences(
+                    Path(tree), {"A": [".text"]}, {"a.cpp"}), [])
+
+
 class DomainArrayTests(unittest.TestCase):
     def test_domain_arrays_become_plain_arrays(self):
         cleaned = source.clean_cpp(

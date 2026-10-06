@@ -38,3 +38,28 @@ named local occupies, the remaining wall is the local spellings. Renaming a
 local to a name in the required bucket reproduces the retail frame; any name in
 the same bucket gives the identical layout. The VC4 hash previously used by
 `homm1.core.od_slots` mispredicted these frames and is replaced there.
+
+## Function-scoped aliases
+
+Where the readable name of a local falls in the wrong slot, the function
+spells the readable name and a define placed just before it hands the
+compiler the slot-fitting spelling; the `#undef` follows its closing brace:
+
+```cpp
+#define minX ourFirstX // frame-slot spelling
+VA(0x00406d7e, 0x4f8)
+void advManager::UpdateRadar(i8 updateScreen, i32 partial) { i32 minX; ... }
+#undef minX
+```
+
+The compiler hashes `ourFirstX`, so the frame and the code are unchanged.
+The readable name must spell nothing else in that function: not a
+parameter, a member (`cell.minX`, `p->minX`), a qualified name, a called
+function or a name inside a macro it expands. The storage spelling may
+appear there only as a type name (`class sample* moraleSound;` behind
+`#define moraleSound sample`). `homm1 clean` drops each pair and keeps the
+readable name, and fails on an unbalanced pair, a pair that brackets more
+than one definition, or a capture it can see; the generated trees' frames
+then follow the readable spellings. The define lines move later lines of the
+file, so a function with an assertion after them relies on its `#line` pin.
+

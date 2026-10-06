@@ -37,6 +37,7 @@ output is replaced only when it carries the generator's marker.
 | `#include <Domains.h>`, `<H1/Macros.h>` | deleted with the headers |
 | `#line N "..."` | deleted; the compiler supplies `__FILE__`/`__LINE__` |
 | `#define name storage // spelling fixes .bss order` | deleted; the readable name stays, and MASM references to the storage spelling take it |
+| `#define name storage // frame-slot spelling` before a function, `#undef name` after it | deleted; the function's readable local name stays |
 | `//`, `/* */` and MASM/RC/DEF `;` comments | deleted |
 
 Each rule is the expansion that VC6 already compiles in the matching build.
@@ -52,6 +53,9 @@ Generation fails in any of these cases:
 
 - a comment, scaffolding name or `#line` survives;
 - a construct leaves a stranded `;` or `,`;
+- a frame-slot alias is not `#undef`'d right after its function, brackets
+  more than one definition, or its readable name also spells a parameter,
+  member or qualified name there (or its storage spelling appears there);
 - `src/` holds a file that no rule covers;
 - in the classic view, a catalog reference survives.
 
