@@ -263,7 +263,7 @@ void resourceManager::Close(void) {
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE) {
-        _close(m_aggregateFd);
+        close(m_aggregateFd);
         m_aggregateFd = RESOURCE_MANAGER_INVALID_FILE;
     }
     m_active = 0;
@@ -273,21 +273,21 @@ void resourceManager::Close(void) {
 VA(0x0046c9bb, 0xe5)
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
-    i32 aggregateFd = _open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+    i32 aggregateFd = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
     if (aggregateFd == RESOURCE_MANAGER_INVALID_FILE) {
         sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
     }
     if (m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE)
-        _close(m_aggregateFd);
+        close(m_aggregateFd);
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
     m_aggregateFd = aggregateFd;
-    _read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
+    read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
     directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
     m_aggregateDir = static_cast<aggEntry*>(malloc(directoryBytes));
-    _read(m_aggregateFd, m_aggregateDir, directoryBytes);
+    read(m_aggregateFd, m_aggregateDir, directoryBytes);
     return 0;
 }
 
@@ -310,7 +310,7 @@ void resourceManager::PointToFile(i16 fileId) {
         );
         ShutDown(gText);
     }
-    _lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
+    lseek(m_aggregateFd, m_aggregateDir[entry].offset, SEEK_SET);
 }
 
 // Single-aggregate directory lookup.
@@ -343,7 +343,7 @@ void resourceManager::SavePosition(void) {
 
 VA(0x0046cc53, 0x23)
 void resourceManager::RestorePosition(void) {
-    _lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
+    lseek(m_aggregateFd, m_savedPosition, SEEK_SET);
 }
 
 VA(0x0046cc76, 0x48)
@@ -352,7 +352,7 @@ i8 resourceManager::ReadByte(void) {
 #line 599
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i8 value = 0;
-    _read(m_aggregateFd, &value, sizeof(value));
+    read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -362,7 +362,7 @@ i16 resourceManager::ReadWord(void) {
 #line 620
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i16 value = 0;
-    _read(m_aggregateFd, &value, sizeof(value));
+    read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -372,7 +372,7 @@ i32 resourceManager::ReadLong(void) {
 #line 640
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     i32 value = 0;
-    _read(m_aggregateFd, &value, sizeof(value));
+    read(m_aggregateFd, &value, sizeof(value));
     return value;
 }
 
@@ -395,6 +395,6 @@ void resourceManager::ReadBlock(void* destination, u32 size) {
 #line 680
     H1_ASSERT(m_aggregateFd != RESOURCE_MANAGER_INVALID_FILE);
     PollSound();
-    i32 bytesRead = _read(m_aggregateFd, destination, size);
+    i32 bytesRead = read(m_aggregateFd, destination, size);
     PollSound();
 }

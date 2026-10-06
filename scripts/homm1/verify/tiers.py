@@ -4,7 +4,8 @@
           #line/__LINE__ placement, include order, localization catalogs) -
           seconds, no build artifacts.
   normal  code/model joins (unique names, library overlap, TU order, dead
-          code, undefined closure) - needs bindings + base/target objs.
+          code, undefined closure) - needs bindings + base/target objs - and
+          the linked candidate's per-region diff against its banked ceiling.
   full    slower code-evidence audits (assert relocs and caller/callee).
   data    data/vtable audits, deliberately opt-in until the data campaign.
   link    candidate-EXE audits (sections, image diff, link defects) - needs
@@ -156,6 +157,12 @@ def _data_coverage():
     return data_coverage.gate_findings()
 
 
+def _link_diff():
+    from homm1.verify import link_diff
+    # The verify edge depends on the candidate, so the tier reads it as built.
+    return link_diff.gate_findings(relink=False)
+
+
 def _link_tier():
     from homm1.verify import link_tier
     return link_tier.gate_findings()
@@ -181,6 +188,7 @@ TIERS: dict[str, list[tuple[str, object]]] = {
         ("undefined-closure", _undefined_closure),
         ("data-identity", _data_identity),
         ("review-claims", _review_claims),
+        ("link-diff", _link_diff),
     ],
     "full": [
         ("assert-relocs", _assert_relocs),

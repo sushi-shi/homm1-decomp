@@ -129,11 +129,11 @@ H1_ENUM_CONST_BEGIN(SpellBookConstant)
 H1_ENUM_CONST_END(SpellBookConstant)
 
 // ComputeUALoc: a player sees the ultimate artifact's hint only after eleven
-// obelisks, four percent per further obelisk; a missed roll scatters the
+// puzzle pieces are removed, four percent per further piece; a missed roll scatters the
 // hint up to three cells (3 - three 0..2 rolls) for at most 200 tries.
 H1_ENUM_CONST_BEGIN(UltimateHintConstant)
-    ULTIMATE_HINT_OBELISK_MIN = 11,
-    ULTIMATE_HINT_PERCENT_PER_OBELISK = 4,
+    ULTIMATE_HINT_PIECE_MIN = 11,
+    ULTIMATE_HINT_PERCENT_PER_PIECE = 4,
     ULTIMATE_HINT_SCATTER = 3,
     ULTIMATE_HINT_PLACE_TRIES = 200,
     // VisitObelisk's fallback piece search.
@@ -323,7 +323,7 @@ public:
     // ViewArmy's open army window; ViewArmyHandler animates it.
     class heroWindow* m_viewArmyWindow;
     // TavernHandler advances this word as its animation counter.
-    i16 m_viewArmyResult;
+    i16 m_dialogAnimationCounter;
     // InitMainClasses allocates 0x16e7a bytes for the game object.
     // ViewSpells' window state: the hero's spell slots
     // run from m_spellFirst to m_spellLast, four per page from m_viewSpellsTop.
@@ -371,7 +371,7 @@ public:
     i8 PickLoadGame(void);
     i32 HandleCampaignWin(void);
     void PlayPreScenarioSmacker(i32 side, i32 map);
-    void ShowCampaignInfo(i32 scenario, i32 fromMenu, i32);
+    void ShowCampaignInfo(i32 scenario, i32 viewOnly, i32);
     void CampaignInfoUpdate(i32 redraw);
     void InitEntireCampaign(i32 side);
     // Retail InitCampaignMap takes the scenario and an unused int (ret 8).
@@ -469,9 +469,9 @@ public:
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
     void MakeAllWaterVisible(i32 player);
     void GiveArmy(class armyGroup* group, i32 type, i32 count, i32 slot);
-    i32 ExperienceValueOfStack(class armyGroup* group, class hero* h);
+    i32 ExperienceValueOfStack(class armyGroup* group, class hero* heroPointer);
     // HoMM1 retail: hero and army only (ret 8).
-    i32 GetLuck(class hero* h, class army*);
+    i32 GetLuck(class hero* heroPointer, class army*);
     // Enemy-turn crest reads widen the stored color to a signed short.
     i16 GetPlayerColor(i32 player) {
         return m_players[player].m_color;
@@ -499,9 +499,9 @@ public:
     i32 ReceiveSaveGame(i32 dataSize, i32 remotePlayer);
     void DoNewTurn(void);
     i32 GetBoatsBuilt(void);
-    i32 GetNumThievesGuilds(i32 color);
+    i32 GetNumThievesGuilds(i32 player);
     i32 CalcDifficultyRating(void);
-    void RestoreCell(i32 x, i32 y, i32 obj, i32 barrier, class mapCell* passedCell, i32);
+    void RestoreCell(i32 x, i32 y, i32 objectType, i32 barrier, class mapCell* passedCell, i32);
     void SetMapSize(i32 width, i32 height);
     i32 HeroIDToHeroPos(class playerData* player, i32 heroId);
     i32 TownIDToTownPos(class playerData* player, i32 townId);

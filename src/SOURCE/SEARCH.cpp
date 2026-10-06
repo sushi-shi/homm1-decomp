@@ -14,6 +14,10 @@
 
 // HoMM1: flood from the hero until a cell carrying the trigger type turns
 // up, then walk the directions back into the path buffer.
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cc878)
+static i32 gSearchDeadInt;
+
 VA(0x00455e50, 0x22b)
 i16 searchArray::FindNearestObject(
     i16 startX,
@@ -24,7 +28,7 @@ i16 searchArray::FindNearestObject(
 ) {
     searchNode node;
     i8 possibleDirections[MAP_DIRECTION_COUNT];
-    i8 directionCosts[MAP_DIRECTION_COUNT];
+    i8 directionOccupied[MAP_DIRECTION_COUNT];
     i16 i;
     i16 terrain;
     i16 cost;
@@ -49,7 +53,7 @@ i16 searchArray::FindNearestObject(
                 m_specialTargetY = node.y;
                 break;
             }
-        TestPossibleDirections(node.x, node.y, possibleDirections, directionCosts, 1, 0);
+        TestPossibleDirections(node.x, node.y, possibleDirections, directionOccupied, 1, 0);
         for (i = 0; i < MAP_DIRECTION_COUNT; i++) {
             terrain = possibleDirections[i];
             if (terrain != TERRAIN_INVALID) {
@@ -137,7 +141,7 @@ void searchArray::SeedPosition(
     i32 waterMode,
     i32 findAdjacentMonster,
     i32 mobility,
-    i32 costMode,
+    i32 heroClass,
     i32 targetX,
     i32 targetY,
     i32 continueSeed,
@@ -340,14 +344,14 @@ void searchArray::SeedPosition(
                                                  s_terrain,
                                                  FINDPATH_STEP_STRAIGHT,
                                                  gCurTempMobility - s_currentNode.distance,
-                                                 costMode
+                                                 heroClass
                                              );
         s_stepCost[FINDPATH_STEP_DIAGONAL] = s_currentNode.distance
                                              + CalcTerrainCost(
                                                  s_terrain,
                                                  FINDPATH_STEP_DIAGONAL,
                                                  gCurTempMobility - s_currentNode.distance,
-                                                 costMode
+                                                 heroClass
                                              );
         for (s_direction = 0; s_direction < MAP_DIRECTION_COUNT; s_direction++) {
             if (s_possibleDirections[s_direction] == TERRAIN_INVALID)
@@ -393,7 +397,7 @@ void searchArray::SeedPosition(
                             s_possibleDirections[s_direction],
                             s_direction & SEARCH_DIAGONAL_COST_MASK,
                             gCurTempMobility - s_currentNode.distance,
-                            costMode
+                            heroClass
                         )
                     < s_bestTargetCost)
                     s_bestTargetCost = s_currentNode.distance
@@ -401,7 +405,7 @@ void searchArray::SeedPosition(
                                            s_possibleDirections[s_direction],
                                            s_direction & SEARCH_DIAGONAL_COST_MASK,
                                            gCurTempMobility - s_currentNode.distance,
-                                           costMode
+                                           heroClass
                                        );
             }
         }
@@ -431,7 +435,7 @@ void searchArray::SeedPosition(
                                     s_terrain,
                                     FINDPATH_STEP_STRAIGHT,
                                     gCurTempMobility - s_adjacentCost,
-                                    costMode
+                                    heroClass
                                 );
                             s_stepCost[FINDPATH_STEP_DIAGONAL] =
                                 s_adjacentCost
@@ -439,7 +443,7 @@ void searchArray::SeedPosition(
                                     s_terrain,
                                     FINDPATH_STEP_DIAGONAL,
                                     gCurTempMobility - s_adjacentCost,
-                                    costMode
+                                    heroClass
                                 );
                             PushPoint(
                                 s_mapX,

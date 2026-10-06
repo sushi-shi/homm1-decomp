@@ -82,7 +82,7 @@
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetHeroContext(* argument 2	advManager::SetHeroContext's update flag
 *	*	[01]	call-argument	ScreenScroll(* argument 2	advManager::ScreenScroll's update-pointer flag
-*	*	[01]	call-argument	ComboDraw(i32) argument 1	advManager::ComboDraw's update flag
+*	*	[01]	call-argument	ComboDraw(i32) argument 1	advManager::ComboDraw's animate flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
 *	*	[01]	call-argument	GetRemoteData(* argument 1	GetRemoteData's remove-from-queue flag
 *	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
@@ -431,13 +431,13 @@ src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store mask	a flag, counter or
 src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store frontValid	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store frontValid	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality frontValid	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store iLeftFl	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iLeftFl	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store iIsMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store isMovingDown	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	0	trivial-function-literal	0 store goingLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store goingLeft	a flag, counter or index local/field set to 0 or 1
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 store isMovingDown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 bitwise	an odd/even row test or a single low bit
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iLeftFl	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality iIsMovingDown	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality goingLeft	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
+src/SOURCE/PATH.cpp	*	1	trivial-function-literal	1 equality isMovingDown	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store gRemoteOn	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	1	trivial-function-literal	1 store gInNetSetup	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/REMOTE.cpp	*	0	trivial-function-literal	0 store giThisNetPos	a flag, counter or index local/field set to 0 or 1
@@ -639,7 +639,7 @@ src/SOURCE/netwin.cpp	nb_thr_ctl	0	call-argument	WaitFor*(* argument [24]	a zero
 src/SOURCE/ARMYGRP.cpp	*	-1	trivial-function-literal	-1 initializer	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 equality gForceSwitchMusic	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/GAME.cpp	*	-1	trivial-function-literal	-1 initializer	a -1 not-found / unset local index or retail table sentinel without a domain name
-src/SOURCE/TOWN.cpp	*	-1	trivial-function-literal	-1 store found	a -1 not-found / unset local index or retail table sentinel without a domain name
+src/SOURCE/TOWN.cpp	*	-1	trivial-function-literal	-1 store foundIndex	a -1 not-found / unset local index or retail table sentinel without a domain name
 src/SOURCE/ARMYGRP.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/ARMYGRP.cpp	*	1	trivial-function-literal	1 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
@@ -680,7 +680,7 @@ src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gOverviewShowing	a bool
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store gShowMapInfo	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_customized	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_noMapHeroes	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_openState	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
+src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_heroesLogoShown	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_playerDead[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store okay	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store one	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -818,7 +818,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_campaignScenario	a co
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_campaignScenariosWon	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_creatureCounts[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_experience	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_garrison[[]]	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_dwellingAvailable[[]]	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_heroLocatorPage	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_mobility	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_objectMetadata	a counter, accumulator, coordinate or field reset to zero
@@ -828,7 +828,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_spellFirst	a counter,
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_townLocatorPage	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_turnsOwned	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_ultimateArtifactHintChance	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_viewArmyResult	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_dialogAnimationCounter	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numHumans	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numMines	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store numTowns	a counter, accumulator, coordinate or field reset to zero
@@ -846,7 +846,7 @@ src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store m_splitAmount	a coun
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_buildState	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_id	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_owner	a counter, accumulator, coordinate or field reset to zero
-src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_threat	a counter, accumulator, coordinate or field reset to zero
+src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_nameIndex	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_townLocatorPage	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_type	a counter, accumulator, coordinate or field reset to zero
 src/SOURCE/TOWN.cpp	*	0	trivial-function-literal	0 store m_unknown19	a counter, accumulator, coordinate or field reset to zero
@@ -900,7 +900,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gCampaignSideCres
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gDwellingType	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index gText	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_availableHeroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_garrison	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
+src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_dwellingAvailable	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_heroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_players	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index m_townIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
@@ -908,7 +908,7 @@ src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 array-index monsterName	the f
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gDwellingType	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index gSavedDifficulties	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_availableHeroIds	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_garrison	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
+src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_dwellingAvailable	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 array-index m_players	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/HISCORE.cpp	*	0	trivial-function-literal	0 array-index gText	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
 src/SOURCE/RECRUIT.cpp	*	0	trivial-function-literal	0 array-index monsterName	the first or second element of a fixed table or pair (player 0/1 seats, tavern pair, first town/hero)
@@ -947,8 +947,8 @@ src/SOURCE/GAME.cpp	game::ViewSpells	*	initializer-payload	*	a retail table payl
 src/SOURCE/GAME.cpp	ViewSpellsHandler	*	arithmetic	operator + SPELL_BOOK_ENTRY_FIRST	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/GAME.cpp	game::ViewArmy	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/GAME.cpp	game::ViewArmy	*	store	store to baseX	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/GAME.cpp	game::ViewArmy	*	store	store to spacing	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/GAME.cpp	game::ViewArmy	*	arithmetic	compound assignment to spacing	retail window/screen layout in pixels or frames, or a text/row count of this routine
+src/SOURCE/GAME.cpp	game::ViewArmy	*	store	store to monsterLeft	retail window/screen layout in pixels or frames, or a text/row count of this routine
+src/SOURCE/GAME.cpp	game::ViewArmy	*	arithmetic	compound assignment to monsterLeft	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/GAME.cpp	ViewArmyHandler	*	store	store to frameDelay	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/GAME.cpp	*	*	call-argument	TrimLoopingSounds(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/GAME.cpp	game::Overview	*	store	store to spare1	retail window/screen layout in pixels or frames, or a text/row count of this routine
@@ -1053,7 +1053,7 @@ src/SOURCE/TOWNMGR.cpp	townManager::BuyBuild	*	arithmetic	compound assignment to
 src/SOURCE/TOWNMGR.cpp	townManager::SetupMage	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_SPELL_CONTROL	the n-th control of a widget-id run (FIRST + n) in a case label or range
 src/SOURCE/TOWNMGR.cpp	MageGuildHandler	*	arithmetic	operator + TOWN_MAGE_FIRST_ICON_CONTROL	the n-th control of a widget-id run (FIRST + n) in a case label or range
-src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	comparison-or-bound	operator >= numThieves	retail window/screen layout in pixels or frames, or a text/row count of this routine
+src/SOURCE/TOWNMGR.cpp	townManager::SetupThievesGuild	*	comparison-or-bound	operator >= numGuilds	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/TOWNMGR.cpp	townManager::RecruitHero	*	store	initializer of *	a local buffer extent or a named local id/geometry constant
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	GetHero(i8) argument *	a geometry, offset, length, text-row or table index argument (pixels, cell offsets, string slots, byte counts)
 src/SOURCE/TOWNMGR.cpp	*	*	call-argument	BuyBuild(i16, i8, i8) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
