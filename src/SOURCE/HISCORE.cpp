@@ -28,13 +28,12 @@ highScoreManager::highScoreManager(void) {
         m_showCampaignScores = !gHighScoreType;
 }
 
-// HoMM1 keeps an empty destructor; it only restores this class's vtable.
 VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
 VA(0x0043bdf3, 0x144)
-H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 id) {
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 priority) {
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
     gResourceManager->GetBackdrop(gText, gWindowManager->m_screen);
     m_window = new heroWindow(0, 0, "hiscore.bin");
@@ -43,11 +42,11 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 id) {
     Update();
     gWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
-    m_priority = id;
+    m_priority = priority;
     m_active = 1;
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(gDefaultMenu);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     gTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
     return H1_ENUM_CAST(BaseManagerStatus, i16, BASE_MANAGER_SUCCESS);
 }
@@ -55,7 +54,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 id) {
 // The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
@@ -64,7 +63,7 @@ void highScoreManager::Close(void) {
 VA(0x0043bf85, 0x1fa)
 H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_message& message) {
     b32 result;
-    i32 entry;
+    i32 rank;
     tag_message windowMessage;
 
     result = false;
@@ -73,15 +72,15 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) highScoreManager::Main(struct tag_mes
 
     if (gTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
         gTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
-        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            m_animationFrames[entry] =
-                (m_animationFrames[entry] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+        for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
+            m_animationFrames[rank] =
+                (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             windowMessage.type = MESSAGE_WIDGET;
-            windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+            windowMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
-            windowMessage.value = H1_ENUM_ENCODE(CreatureType, m_monsterTypes[entry])
-                                      * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                                  + m_animationFrames[entry] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+            windowMessage.value =
+                H1_ENUM_ENCODE(CreatureType, m_monsterTypes[rank]) * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);

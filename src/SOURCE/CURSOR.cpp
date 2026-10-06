@@ -35,8 +35,8 @@ void advManager::StartCursor(H1_ENUM_PARAM(MapDirection, i8) direction) {
     m_cursorDirection = direction;
     m_cursorFrame = GetCursorBaseFrame(direction) + 1;
     m_cursorCycle = gConfig.walkSpeed > WALK_SPEED_FIRST ? 1 : SLOW_CURSOR_CYCLE_START;
-    deltaX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
-    deltaY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
+    deltaX = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    deltaY = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     m_previousCursorMapX = m_cursorMapX;
     m_previousCursorMapY = m_cursorMapY;
     m_cursorMapX += deltaX;
@@ -250,8 +250,8 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
         delayTime = delayTime * 1.5;
     do {
         m_cursorCycle = 1;
-        m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END ? horseFrameFlip[frameIndex]
-                                                                  : boatFrameFlip[frameIndex];
+        m_cursorFrame = m_cursorType < ADVMGR_HERO_ICON_CLASS_END ? gHorseFrameFlip[frameIndex]
+                                                                  : gBoatFrameFlip[frameIndex];
         m_cursorFrameCount = 0;
         gTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
         if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
@@ -284,8 +284,8 @@ i32 advManager::GetMoveShowIt(H1_ENUM_PARAM(MapDirection, i8) direction) {
     if (gCurPlayerData->CurrentHero() == HERO_ID_NONE)
         return 0;
     movingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
-    dx = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
-    dy = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
+    dx = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    dy = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     if ((gThisNetHumanPlayer[gCurPlayer] || (!gConfig.blackoutComputer && !gRemoteOn))
         && ((gGame->m_mapExtra[movingHero->m_x][movingHero->m_y] & gCurWatchPlayerHighBit)
             || (gGame->m_mapExtra[movingHero->m_x + dx][movingHero->m_y + dy]
@@ -331,8 +331,8 @@ mapCell* advManager::MoveHero(
     champion = gGame->GetHero(gCurPlayerData->m_currentHero);
     posX = champion->m_x;
     startY = champion->m_y;
-    xInc = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
-    yInc = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
+    xInc = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    yInc = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     gShowIt = GetMoveShowIt(direction);
     theTerrain = CELL_TERRAIN(GetCell(champion->m_x, champion->m_y));
     nextCellItem = GetCell(champion->m_x + xInc, champion->m_y + yInc);
@@ -598,7 +598,7 @@ movementDone:
     UpdateRadar(true, true);
     gHeroMoving = false;
     if (posX != champion->m_x || startY != champion->m_y) {
-        if (mapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
+        if (gMapExtra[champion->m_x][champion->m_y] & MAP_EXTRA_MONSTER_ADJACENT) {
             if (champion->IsEmbarked())
                 goto adjacentDone;
             if (retCell && MAP_TRIGGER_OBJECT(retCell->m_triggerType) == MAP_OBJECT_SHIP)
@@ -672,8 +672,8 @@ i16 advManager::ValidMoveWithEvent(hero* movingHero, H1_ENUM_PARAM(MapDirection,
     i16 newX;
     mapCell* cellPtr;
 
-    deltaX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
-    deltaY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
+    deltaX = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    deltaY = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     newX = movingHero->m_x + deltaX;
     newY = movingHero->m_y + deltaY;
     if (newX < 0 || newX > MAP_CELL_GRID_SIZE - 1 || newY < 0 || newY > MAP_CELL_GRID_SIZE - 1)
@@ -726,8 +726,8 @@ i16 advManager::ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction) {
     i16 newX;
     i16 newY;
 
-    deltaX = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
-    deltaY = normalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
+    deltaX = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].x;
+    deltaY = gNormalDirTable[H1_ENUM_ENCODE(MapDirection, direction)].y;
     newX = m_mapOriginX + deltaX;
     newY = m_mapOriginY + deltaY;
     if (newX < -ADVMGR_VIEW_CENTER || newX > MAP_CELL_GRID_SIZE - ADVMGR_VIEW_CENTER - 1)

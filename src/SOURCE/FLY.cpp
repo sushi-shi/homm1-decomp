@@ -18,7 +18,7 @@
 
 #include <math.h>
 
-// HoMM1: the hex arrives through a word pointer; a two-hex creature that
+// The hex arrives through a word pointer; a two-hex creature that
 // does not fit facing forward moves its hex to the other side.
 VA(0x0042a6a0, 0x200)
 i16 army::CanFit(i16* hex) {
@@ -194,7 +194,7 @@ i16 army::FlyTo(void) {
     return FlyTo(m_moveTargetHex);
 }
 
-// HoMM1 flies along a straight pixel line: six frames per hex of the longer
+// Flies along a straight pixel line: six frames per hex of the longer
 // grid axis, the rounding remainder split over the two ends.
 #define sourceColumn colFrom   // frame-slot spelling
 #define sourceRow curRow       // frame-slot spelling

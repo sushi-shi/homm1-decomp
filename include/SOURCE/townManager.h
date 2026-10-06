@@ -221,7 +221,7 @@ H1_ENUM_END(TownCastleInfoText)
 extern H1_ENUM_ARRAY(char*, gCastleInfo, TownCastleInfoText, TOWN_CASTLE_INFO_COUNT);
 
 // The tavern window and its animation (the tavern plays MUSIC_TRACK_TAVERN;
-// MUSIC_TRACK_TOWN_FIRST + townTheme[type] is a town's ambient track).
+// MUSIC_TRACK_TOWN_FIRST + gTownTheme[type] is a town's ambient track).
 H1_ENUM_CONST_BEGIN(TownTavernConstant)
     TOWN_TAVERN_WINDOW_X = 0xa2,
     TOWN_TAVERN_WINDOW_Y = 0xa,
@@ -254,7 +254,7 @@ H1_ENUM_CONST_BEGIN(TownScreenConstant)
     TOWN_BANK_BOX_X = 0x222,
     TOWN_BANK_BOX_Y = 0x100,
     TOWN_EMPTY_HERO_PORTRAIT_FRAME = 8,
-    // strip's type argument (stored in strip::m_stripType, which HoMM1 never
+    // strip's type argument (stored in strip::m_stripType, which nothing
     // reads): the garrison strip with or without a visiting hero and the
     // hero strip.
     TOWN_CREST_FRAME_WITH_HERO = 1,
@@ -308,7 +308,7 @@ public:
     // RecruitHero: the chosen candidate slot (-1 if none) and both candidates.
     i16 m_recruitState;
     hero* m_recruitHeroes[2];
-    // HoMM1 Main tests this additional mask against message.type.
+    // Main tests this additional mask against message.type.
     i16 m_dispatchMask;
     // --- constructors ---
     townManager(void);
@@ -340,7 +340,7 @@ public:
     SetupThievesGuild(class heroWindow* window, H1_ENUM_PARAM(TownThievesCategory, i16) categories);
     void SetupCastle(class heroWindow* window);
     char* GetBuildingName(H1_ENUM_PARAM(BuildingSlotType, i16) building);
-    // HoMM1 keeps the thieves-guild helpers as townManager members.
+    // Thieves-guild helpers.
     void GetCategoryStats(
         H1_ENUM_PARAM(TownThievesCategory, i8) category,
         i32* const stats,

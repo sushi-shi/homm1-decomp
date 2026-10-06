@@ -1,5 +1,4 @@
-// HoMM1 SPELLAI: combat spell selection for computer-controlled heroes.
-// Retail int3 padding opens this object at 0x00437010.
+// Combat spell selection for computer-controlled heroes.
 
 #include <match.h>
 
@@ -86,7 +85,7 @@ i32 combatManager::DoSpellAI(H1_ENUM_PARAM(CombatSide, i8) side) {
 }
 #undef bestHex
 
-// HoMM1's nineteen combat spells: each spell is scored once, across the area
+// Each of the nineteen combat spells is scored once, across the area
 // grid, or over one side's stacks.
 #define done bDone // frame-slot spelling
 VA(0x00458f76, 0x42d)

@@ -1,5 +1,3 @@
-// HoMM1 builds this TU with /O2.
-
 #include <match.h>
 
 #include <SOURCE/advManager.h>
@@ -12,8 +10,8 @@
 #include <SOURCE/playerData.h>
 #include <SOURCE/searchArray.h>
 
-// HoMM1: flood from the hero until a cell carrying the trigger type turns
-// up, then walk the directions back into the path buffer.
+// Floods from the hero until a cell carrying the trigger type turns
+// up, then walks the directions back into the path buffer.
 // No retail code reads this; it holds its retail .bss place.
 DATA(0x004cc878)
 static i32 gSearchDeadInt;
@@ -64,8 +62,8 @@ i16 searchArray::FindNearestObject(
                     SEARCH_UNLIMITED_COST,
                     0
                 );
-                neighborX = node.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, i)].x;
-                neighborY = node.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, i)].y;
+                neighborX = node.x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, i)].x;
+                neighborY = node.y + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, i)].y;
                 PushPoint(
                     neighborX,
                     neighborY,
@@ -94,8 +92,8 @@ i16 searchArray::FindNearestObject(
         if (++m_pathLength >= SEARCH_PATH_CAPACITY)
             break;
         i16 backDirection = OppositeMapDirection(pathNode->direction);
-        destinationX += normalDirTable[backDirection].x;
-        destinationY += normalDirTable[backDirection].y;
+        destinationX += gNormalDirTable[backDirection].x;
+        destinationY += gNormalDirTable[backDirection].y;
     }
     return m_pathLength;
 }
@@ -125,13 +123,13 @@ i32 searchArray::BuildPath(
             }
         }
         i16 backDirection = OppositeMapDirection(node->direction);
-        destinationX += normalDirTable[backDirection].x;
-        destinationY += normalDirTable[backDirection].y;
+        destinationX += gNormalDirTable[backDirection].x;
+        destinationY += gNormalDirTable[backDirection].y;
     }
     return m_pathLength;
 }
 
-// HoMM1 has no roads or pathfinding skill and precomputes the straight and
+// There are no roads or pathfinding skill; this precomputes the straight and
 // diagonal step costs once per node.
 VA(0x00456150, 0x99c)
 void searchArray::SeedPosition(
@@ -307,7 +305,7 @@ void searchArray::SeedPosition(
             if (s_triggerType == MAP_OBJECT_COAST)
                 goto point_complete;
         } else {
-            if ((mapExtra[s_currentNode.x][s_currentNode.y] & MAP_EXTRA_MONSTER_ADJACENT)
+            if ((gMapExtra[s_currentNode.x][s_currentNode.y] & MAP_EXTRA_MONSTER_ADJACENT)
                 && (s_currentNode.x != seedX || s_currentNode.y != seedY)) {
                 if (!findAdjacentMonster)
                     goto point_complete;
@@ -359,11 +357,11 @@ void searchArray::SeedPosition(
             if (H1_ENUM_DECODE(TerrainType, s_possibleDirections[s_direction]) == TERRAIN_INVALID)
                 continue;
             s_neighborX =
-                s_currentNode.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
+                s_currentNode.x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
             s_neighborY =
-                s_currentNode.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
+                s_currentNode.y + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
             if (findAdjacentMonster
-                && (mapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
+                && (gMapExtra[s_neighborX][s_neighborY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && m_cells[s_neighborX][s_neighborY].visited
                 && m_cells[s_neighborX][s_neighborY].rvFlag1
                 && m_cells[s_neighborX][s_neighborY].distance
@@ -394,9 +392,9 @@ void searchArray::SeedPosition(
                 s_currentNode.previousY
             );
             if (s_hasTarget
-                && s_currentNode.x + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x
+                && s_currentNode.x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x
                        == targetX
-                && s_currentNode.y + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y
+                && s_currentNode.y + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y
                        == targetY
                 && !s_currentNode.rvFlag1) {
                 if (s_currentNode.distance
@@ -428,9 +426,9 @@ void searchArray::SeedPosition(
                     for (s_direction = MAP_DIRECTION_FIRST; s_direction < MAP_DIRECTION_COUNT;
                          s_direction++) {
                         s_adjacentX =
-                            s_mapX + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
+                            s_mapX + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].x;
                         s_adjacentY =
-                            s_mapY + normalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
+                            s_mapY + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, s_direction)].y;
                         s_targetCell = gAdvManager->GetCell(s_adjacentX, s_adjacentY);
                         s_directionBlocked = 1;
                         if ((H1_ENUM_BIT(MapDirection, s_direction) & MAP_DIRECTION_SOUTH_MASK)

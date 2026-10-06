@@ -144,7 +144,7 @@ static const float AI_ATTENTION_IDENTITY_FLOAT = 1.0f;
 DATA(0x0048a4c4)
 static const float AI_ATTENTION_IDENTITY = 1.0f;
 
-// HoMM1 routes the status-line print through the AI object's debug font.
+// Routes the status-line print through the AI object's debug font.
 VA(0x00447900, 0x14)
 void AiPrint(char* text) {
     gPhilAI->ShowDebugText(text);
@@ -375,10 +375,10 @@ i32 philAI::GoodAdjacent(hero* aiHero, H1_ENUM_PARAM(MapDirection, i32) * direct
         return 0;
     for (heading = MAP_DIRECTION_FIRST; heading < MAP_DIRECTION_COUNT; heading++) {
         if (gAdvManager->ValidMoveWithEvent(aiHero, heading)) {
-            cellX = aiHero->m_x + normalDirTable[H1_ENUM_ENCODE(MapDirection, heading)].x;
-            cellY = aiHero->m_y + normalDirTable[H1_ENUM_ENCODE(MapDirection, heading)].y;
+            cellX = aiHero->m_x + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, heading)].x;
+            cellY = aiHero->m_y + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, heading)].y;
             if ((gAdvManager->GetCell(cellX, cellY)->m_triggerType & MAP_TRIGGER_EVENT)
-                && !(mapExtra[cellX][cellY] & MAP_EXTRA_MONSTER_ADJACENT)
+                && !(gMapExtra[cellX][cellY] & MAP_EXTRA_MONSTER_ADJACENT)
                 && MAP_TRIGGER_OBJECT(gAdvManager->GetCell(cellX, cellY)->m_triggerType)
                        != MAP_OBJECT_STONE_LITHS
                 && MAP_TRIGGER_OBJECT(gAdvManager->GetCell(cellX, cellY)->m_triggerType)
@@ -559,8 +559,8 @@ i8 philAI::DoDimensionDoor(hero* aiHero) {
     cellX = aiHero->m_x;
     cellY = aiHero->m_y;
     for (pathIndex = gSearchArray->m_pathLength - 1; pathIndex >= 1; pathIndex--) {
-        cellX += normalDirTable[gSearchArray->m_directions[pathIndex]].x;
-        cellY += normalDirTable[gSearchArray->m_directions[pathIndex]].y;
+        cellX += gNormalDirTable[gSearchArray->m_directions[pathIndex]].x;
+        cellY += gNormalDirTable[gSearchArray->m_directions[pathIndex]].y;
         if (abs(cellX - aiHero->m_x) <= 7 && abs(cellY - aiHero->m_y) <= 7) {
             cell = gAdvManager->GetCell(cellX, cellY);
             if (!(cell->m_triggerType & MAP_TRIGGER_EVENT)
@@ -2224,7 +2224,6 @@ float philAI::FutureDeflator(i32* const resources) {
     return value;
 }
 
-// HoMM1 retail returns with ret 0x14: five stack arguments.
 VA(0x0044cd57, 0x638)
 i32 philAI::FightValueOfStack(
     armyGroup* group,
@@ -2852,7 +2851,7 @@ void philAI::ChooseEvaluateBattle(
     }
 }
 
-// HoMM1 treasure-artifact purchase: affordable gold and an artifact worth
+// Treasure-artifact purchase: affordable gold and an artifact worth
 // more than its gold cost.
 VA(0x0044e319, 0x42)
 i32 philAI::ChooseToBuyArtifact(
@@ -3132,7 +3131,7 @@ i32 philAI::DamageGroup(armyGroup* group, hero* loser, hero* winner, float casua
     }
 }
 
-// HoMM1 primary-stat valuation: the table worth of the new level (capped at
+// Primary-stat valuation: the table worth of the new level (capped at
 // twenty) less that of the old one; used for hero stat gains.
 VA(0x0044ecb0, 0x4f)
 float philAI::StatChangeValue(i32 oldValue, i32 newValue) {
@@ -3960,7 +3959,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
     if (gBerserk && gReduceByBerserk)
         gVisitResult = gVisitResult * gBerserkFactor;
     if (!immediate) {
-        if (gVisitResult > 0 && (mapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
+        if (gVisitResult > 0 && (gMapExtra[x][y] & MAP_EXTRA_MONSTER_ADJACENT)
             && MAP_TRIGGER_OBJECT(gEventLocation->m_triggerType) != MAP_OBJECT_MONSTER)
             gVisitResult = 0;
         if (gVisitResult < 0

@@ -51,16 +51,16 @@ public:
     // --- virtual methods (vtable order) ---
     virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
-    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message&) OVERRIDE;
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     // CombatManager::ViewSpells passes a sign-extended word frame.
     void SetPointer(char* name, i16 frame);
     void SetPointer(i16 frame);
-    void NewUpdate(i32);
+    void NewUpdate(i32 force);
     void MouseCoords(i16& x, i16& y);
     void SaveAndDraw(void);
-    // HoMM1 Windows keeps the DOS buffer-pointer hooks as empty stubs.
-    void SaveAndDraw(class bitmap*, i16, i16, i16);
+    // The buffer-pointer hooks are empty stubs.
+    void SaveAndDraw(class bitmap* buffer, i16 x, i16 y, i16 cursorUpdate);
     void RestoreUnderlying(void);
     void ReallyHidePointer(void);
     void ReallyShowPointer(void);
@@ -70,13 +70,13 @@ public:
         return m_pointerFlags & 1;
     }
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
-    void MovePointer(i16, i16);
+    void MovePointer(i16 x, i16 y);
     // Empty in the Windows build (retail 0x00473410, `ret 4`); the locator
     // knob drag passes 4 on entry and 6 on release.
-    void SetCursorShape(i32);
+    void SetCursorShape(i32 shape);
     // Empty in the Windows build (retail 0x00476e50, `ret 8`).
-    void WarpPointer(i16, i16);
-    void SetColorMice(i32);
+    void WarpPointer(i16 x, i16 y);
+    void SetColorMice(i32 enabled);
     // Empty unreferenced Windows-build hooks; original names unavailable.
     void UnusedTwoArgumentHook1(i16, i16);
     void UnusedTwoArgumentHook2(i16, i16);

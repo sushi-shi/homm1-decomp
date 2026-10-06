@@ -1,6 +1,6 @@
 #ifndef HOMM1_SOURCE_MAPCELL_H
 #define HOMM1_SOURCE_MAPCELL_H
-// HoMM1 adventure-map cell. advManager::GetCell's x*720 + y*10 addressing
+// Adventure-map cell. advManager::GetCell's x*720 + y*10 addressing
 // and game::GetWorldMapData's embedded 72x72 map prove a ten-byte record;
 // the editor edits the same record (editMap) beside each cell's object ids.
 

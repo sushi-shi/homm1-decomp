@@ -379,28 +379,22 @@ public:
     i8 GetTownId(i8 x, i8 y);
     i8 GetMineId(i8 x, i8 y);
     i16 SaveGame(char* filename, b8 generateName);
-    // HoMM1 retail returns 1 in AX (ret 0xc).
     i16 LoadGame(char* filename, b32 origData, i32);
     void GiveTroopsToNeutralTowns(void);
     void NewMap(char* mapName);
     void RandomizeEvents(void);
-    // HoMM1 retail returns 0 in AX.
     i16 LoadMap(char* filename);
     void ClaimTown(i8 townId, i8 player);
     void ClaimMine(i8 mineId, i8 player);
-    // HoMM1 retail: byte spell type and read-only flag, spell in AL (ret 0x10).
     H1_ENUM_RETURN(SpellType, i8) ViewSpells(
         class hero* spellHero,
         H1_ENUM_PARAM(HeroSpellType, i8) spellType,
         H1_ENUM_RETURN(MessageDispatchResult, i16) (*callback)(struct tag_message&),
         i8 readOnly
     );
-    // HoMM1: limits the spell page to the combat or adventure slots.
+    // Limits the spell page to the combat or adventure slots.
     void SetupSpellRange(H1_ENUM_PARAM(HeroSpellType, i16) spellType);
     void UpdateSpellWidgets(void);
-    // HoMM1 retail: word x/y, byte creature/flags, word count, eleven
-    // arguments (ret 0x2c); combatManager::ViewArmy pushes its word locals
-    // unextended and the body hands them to heroWindow(short, short, char*).
     void ViewArmy(
         i16 x,
         i16 y,
@@ -414,7 +408,6 @@ public:
         class army* theArmy,
         class armyGroup* theGroup
     );
-    // HoMM1 retail: byte creature, count returned in AL.
     i8 GetRandomNumTroops(H1_ENUM_PARAM(CreatureType, i8) monsterType);
     void TurnOnAIMusic(void);
     void TurnOffAIMusic(void);
@@ -423,22 +416,18 @@ public:
     void PerDay(void);
     void PerWeek(void);
     void PerMonth(void);
-    // HoMM1 retail: byte x, y and castle flag (ret 0xc).
     void RandomizeTown(i8 x, i8 y, b8 isCastle);
-    // HoMM1 retail: byte x and y (ret 8).
     void RandomizeMine(i8 x, i8 y);
-    // HoMM1 retail 0x00442fb4 (ret 8): default dwellings and mage-guild spells.
+    // Default dwellings and mage-guild spells.
     void SetupTown(i8 townId, b8 aiOwned);
     H1_ENUM_RETURN(ArtifactType, i8) GetRandomArtifactId(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
-    // HoMM1 retail: towns-only pass flag (ret 4).
     void ProcessRandomObjects(b32 castlesOnly);
     void SetVisibility(i16 x, i16 y, i16 player, i16 radius);
     void
     GiveArmy(class armyGroup* group, H1_ENUM_PARAM(CreatureType, i32) type, i32 count, i32 slot);
     i32 ExperienceValueOfStack(class armyGroup* group, class hero* heroPointer);
-    // HoMM1 retail: hero and army only (ret 8).
     i32 GetLuck(class hero* heroPointer, class army*);
     // Enemy-turn crest reads widen the stored color to a signed short.
     H1_ENUM_RETURN(PlayerColor, i16) GetPlayerColor(i32 player) {
@@ -449,10 +438,10 @@ public:
     void ShowComputerScreen(void);
     void ShowHeroesLogo(void);
     void WaitForPlayer(char* text, i32 player);
-    // HoMM1 retail 0x0043d4c3 (ret 8): once a cell's object frame is gone,
+    // Once a cell's object frame is gone,
     // pulls its overlay frame down into the object layer.
     void SettleOverlay(i32 x, i32 y);
-    // HoMM1: NewMap rerolls each cell's terrain tile variant after LoadMap.
+    // NewMap rerolls each cell's terrain tile variant after LoadMap.
     void RandomizeTerrainTiles(void);
     void ProcessMapExtra(void);
     // Retail returns whether no town took an owner from its map extra (AL).
@@ -474,7 +463,7 @@ public:
     i8 NewGame(void);
     void UpdateNewGameWindow(void);
     void ShowScenInfo(void);
-    // HoMM1: NewMap gives every opponent a distinct crest.
+    // NewMap gives every opponent a distinct crest.
     void RandomizePlayerCrests(void);
     // DoEvent's obelisk branch (byte player, ret 4).
     void VisitObelisk(i8 player);

@@ -7,34 +7,7 @@ rva	size	symbol	provenance
 0x000a0ff8	12	?gMouseOffset@@3PAHA	Unique typed payload and cursor-family argument/index flow
 0x000cfb40	4	?gMouseCursorType@@3HA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000a1004	150	?gHotSpot@@3PAY01EA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a31b8	4	?gInSetPointer@@3HA	SetPointer recursion guard
-0x000a31bc	2	?gMouseManagerAssertLine@@3FA	MOUSEMGR assertion line base
-0x000a31c0	30	?gMouseManagerAssertFile1@@3PADA	first SetPointer assertion path
-0x000a3228	30	?gMouseManagerAssertFile2@@3PADA	second SetPointer assertion path
-0x000a3248	30	?gMouseManagerAssertFile3@@3PADA	third SetPointer assertion path
-0x000a3298	900	?CDPreviousPosition@@3PAY0P@DA	retail-backed code identity only
-0x000a361c	4	?CDPlayOnce@@3HA	retail-backed code identity only
-0x000a3624	4	?CDPlaying@@3HA	retail-backed code identity only
-0x000a3628	1	?CDTrackMap@@3PACA	retail-backed code identity only
-0x000a3790	2	?gCDPositionAssertLine@@3FA	retail-backed code identity only
-0x000a3794	30	?gCDPositionAssertFile@@3PADA	retail-backed code identity only
-0x000a3938	2	?gStartSampleAssertLine@@3FA	retail code-required identity, initializer/complete extent deferred
-0x000a393c	30	?gStartSampleAssertFile@@3PADA	retail code-required identity, initializer/complete extent deferred
-0x000a3994	2	?gModifySampleAssertLine@@3FA	ModifySample loads signed line word then adds 27
-0x000a3998	30	?gModifySampleAssertFile@@3PADA	ModifySample assertion filename identity, initializer coverage deferred
-0x000a39b8	2	?gAdjustMusicAssertLine@@3FA	signed word assertion base used by AdjustMusicVolumes
-0x000a39bc	30	?gAdjustMusicAssertFile@@3PADA	retail source assertion path, identity only
-0x000a39dc	2	?gAmbientMusicAssertLine@@3FA	PlayAmbientMusic signed word plus36
-0x000a39e0	30	?gAmbientMusicAssertFile@@3PADA	PlayAmbientMusic assertion filename
-0x000a3a30	4	?gSoundManagerAssertLine@@3FA	PollSound assertion line base
-0x000a3a34	30	?gSoundManagerAssertFile1@@3PADA	first PollSound assertion source path
-0x000a3a54	30	?gSoundManagerAssertFile2@@3PADA	second PollSound assertion source path
-0x000a3a74	30	?gSoundManagerAssertFile3@@3PADA	third PollSound assertion source path
-0x000a3a94	30	?gSoundManagerAssertFile4@@3PADA	fourth PollSound assertion source path
-0x000a3ab4	30	?gSoundManagerAssertFile5@@3PADA	fifth PollSound assertion source path
 0x000a3b34	4	?gDialogNestCount@@3HA	dialog nesting counter
-0x000a3b38	2	?gWindowFadeAssertLine@@3FA	FadeScreen signed word assertion line base
-0x000a3b3c	28	?gWindowFadeAssertFile@@3PADA	FadeScreen WINMGR source assertion path
 0x000a1374	18	?gDynamicConstruct@@3PADA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000a15cc	56	?gResourceManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
 0x000a1604	39	?gInputManagerInitError@@3PADA	Buka localized char-array initializer and executive::InitSystem operand; buka-localization.tsv
@@ -47,8 +20,6 @@ rva	size	symbol	provenance
 0x000a16d4	28	?gDialogManagerError4@@3PADA	Localized manager error array and ordered retail call use
 0x000a16f0	28	?gCallManagerError1@@3PADA	Localized manager error array and ordered retail call use
 0x000a170c	28	?gCallManagerError2@@3PADA	Localized manager error array and ordered retail call use
-0x000a3dc8	2	?gInputManagerAssertLine@@3FA	INPUTMGR assertion line base
-0x000a3dfc	30	?gInputManagerAssertFile@@3PADA	code-required assertion source path
 0x000a14b8	256	_gDimPalette	Buka typed MASM initializer and every complete-body reference checked
 0x000a15b8	4	_gBitmapSourceSkip	Buka typed MASM initializer and every complete-body reference checked
 0x000a15bc	4	_gBitmapRowSkip	Buka typed MASM initializer and every complete-body reference checked
@@ -56,14 +27,6 @@ rva	size	symbol	provenance
 0x000a3f54	20	$anon_str_7bbccdc9700208c3c280ce39079f0dbdfefbb724c3441ff972805b19116b57e0_0	code-required open-error literal identity
 0x000a3f68	32	$anon_str_ca2427e0f3917c25fd1e64b0d475896ac3002453e2d73c433c391a34fbc830ff_0	code-required invalid-aggregate literal identity
 0x000a3f88	76	$anon_str_eb27b9b48e8c2732b85397bc8636fc7eeb79802771cac487ea5e2a5fc9705844_0	code-required missing-resource literal identity
-0x000a4030	4	?gReadByteAssertLine@@3FA	ReadByte assertion line record
-0x000a4034	28	?gReadByteAssertFile@@3PADA	ReadByte assertion source path
-0x000a4050	4	?gReadWordAssertLine@@3FA	ReadWord assertion line record
-0x000a4054	28	?gReadWordAssertFile@@3PADA	ReadWord assertion source path
-0x000a4070	4	?gReadLongAssertLine@@3FA	ReadLong assertion line record
-0x000a4074	28	?gReadLongAssertFile@@3PADA	ReadLong assertion source path
-0x000a4090	4	?gReadBlockAssertLine@@3FA	ReadBlock assertion line record
-0x000a4094	28	?gReadBlockAssertFile@@3PADA	ReadBlock assertion source path
 0x000a149c	4	_gClipRowsLeft	Buka typed MASM initializer and every complete-body reference checked
 0x000a14a0	4	_gClipLeftSkip	Buka typed MASM initializer and every complete-body reference checked
 0x000a14a4	4	_gClipVisibleWidth	Buka typed MASM initializer and every complete-body reference checked
@@ -96,12 +59,6 @@ rva	size	symbol	provenance
 0x000cea00	300	?hbmpColor@@3PAPAXA	75 color bitmap handles
 0x000cf438	1500	?cursorIconInfo@@3PAU_ICONINFO@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cfa14	300	?cAndBits@@3PAPAEA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000cf240	4	?gMciError@@3IA	retail-backed code identity only
-0x000cf248	256	?gMciCommandString@@3PADA	retail-backed code identity only
-0x000cf348	256	?gMciReturnString@@3PADA	retail-backed code identity only
-0x000cf448	2	?gSampleVolumes@@3PAFA	retail code-required identity, initializer/complete extent deferred
-0x000cf488	16	?gWaveFormat@@3Upcmwaveformat_tag@@A	retail writes all fields of the real SDK PCMWAVEFORMAT, code layout only
-0x000cf498	48	?gAuxCaps@@3UtagAUXCAPSA@@A	CDStartup fills the real SDK auxiliary-device capability record, code layout only
 0x000ce110	1	?gFadeSavedUpdate@@3CA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cf540	96	?gCyclePal@@3PACA	SetPalette copies32RGBtriplets and cycle helper references same table
 0x000cfbb8	1256	_freq	Buka complete lzhuf instruction/reference proof and typed initializer
@@ -155,7 +112,7 @@ rva	size	symbol	provenance
 0x0009276c	96	?gDwellingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users
 0x00092750	28	?gNeutralBuildingNames@@3PAPADA	Buka typed initializer and reviewed code/pointer users
 0x00093268	36	?gCampaignWinTexts@@3PAPADA	Buka typed initializer and reviewed code/pointer users
-0x00091cd8	4	?townTheme@@3PACA	Buka typed initializer and reviewed code/pointer users
+0x00091cd8	4	?gTownTheme@@3PACA	Buka typed initializer and reviewed code/pointer users
 0x00092194	4	?gEnlargeScreenBlit@@3HA	Buka typed initializer and reviewed code/pointer users
 0x000a9910	4	?gRemoteReady@@3HA	Buka typed initializer and reviewed code/pointer users
 0x00091ce0	765	?gCampaignScenarios@@3PAUcampaignScenario@@A	Complete typed array payload and independently verified references; remove census splits inside source arrays
@@ -227,7 +184,7 @@ rva	size	symbol	provenance
 0x0008a6e8	4	_SPELL_AI_BLESS_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a6ec	4	_SPELL_AI_PROTECTION_MODIFIER	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0008a70c	64	?gTownObjectType@@3QAY0BA@$$CBCA	Buka typed payload, unique anchored code uses and disjoint data owners
-0x000a01a8	1028	?LogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
+0x000a01a8	1028	?gLogicalPalette@@3UWingPalette@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x0009f97c	1	_?indexToCastOn@?1??HandleCastSpell@@YAFAAUtag_message@@@Z@4CA	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdd78	16	?gDDClientRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
 0x000cdd90	16	?gDDDestRect@@3UtagRECT@@A	Buka typed payload, unique anchored code uses and disjoint data owners
@@ -342,7 +299,7 @@ rva	size	symbol	provenance
 0x0009f058	4	?gLastConfirm@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc818	4	?gLastHeartbeatSend@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000cc828	1	_?gInTimeoutFail@?1??PollRemote@@YAXXZ@4CA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
-0x000a01a4	4	?Orientation@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
+0x000a01a4	4	?gOrientation@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a0190	4	?gWinGAttached@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000a7fbc	4	?giScore@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca168	4	?iCurPlaceToVisit@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
@@ -370,7 +327,7 @@ rva	size	symbol	provenance
 0x000bb134	4	?gPrizeGuardedWorth@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x000ca15c	4	?gCellSeen@@3HA	Whole-tree Buka reference sweep: complete typed payload and anchored/dataflow controls
 0x0009f7c0	144	_gSmackSoundFormats	Typed Smacker globals and localized window titles; complete payload and retail uses
-0x0009f850	162	?SmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
+0x0009f850	162	?gSmackOptions@@3PAUSSmackOptions@@A	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x0009f8f4	44	_gSmackVolumes	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d0	1	?gMovieId@@3CA	Typed Smacker globals and localized window titles; complete payload and retail uses
 0x000cc8d4	4	_gSmackEnded	Typed Smacker globals and localized window titles; complete payload and retail uses
@@ -433,7 +390,7 @@ rva	size	symbol	provenance
 0x0009e720	4	_gCDTrackName	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow
-0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use
+0x000a1388	128	_gInputCharacterMap	Complete payload and compiled/retail use
 0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Complete payload and compiled/retail use
 0x00092c94	96	?gDwellingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls
 0x000931b4	28	?gNeutralBuildingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls

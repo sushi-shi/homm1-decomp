@@ -1,4 +1,4 @@
-; HoMM1 unscaled icon renderers: plain, mirrored, monochrome, mirrored
+; Unscaled icon renderers: plain, mirrored, monochrome, mirrored
 ; monochrome, dimmed and mirrored dimmed. Retail links them as ONE object:
 ; the procedures are separated by a single 90h (EVEN) instead of the int3
 ; fill LINK puts between objects, they share the frame variables below, and

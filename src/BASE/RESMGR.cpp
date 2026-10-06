@@ -138,7 +138,7 @@ tileset* resourceManager::GetTileset(char* name) {
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x0046c577, 0xf)
-mouse* resourceManager::GetMouse(char*) {
+mouse* resourceManager::GetMouse(char* name) {
     return NULL;
 }
 
@@ -197,19 +197,21 @@ void resourceManager::AddResource(class resource* newResource) {
     }
 }
 
+#define current cur // frame-slot spelling
 VA(0x0046c7bd, 0x7e)
 void resourceManager::Expunge(void) {
     m_expunging = true;
-    resource* cur = m_resourceListHead;
+    resource* current = m_resourceListHead;
     resource* next = NULL;
-    while (cur != NULL) {
-        next = cur->m_next;
-        RemoveResource(cur);
-        delete cur;
-        cur = next;
+    while (current != NULL) {
+        next = current->m_next;
+        RemoveResource(current);
+        delete current;
+        current = next;
     }
     m_expunging = false;
 }
+#undef current
 
 VA(0x0046c83b, 0x3b)
 class resource* resourceManager::Query(i16 resourceId) {
@@ -220,14 +222,14 @@ class resource* resourceManager::Query(i16 resourceId) {
 }
 
 VA(0x0046c876, 0x10)
-H1_ENUM_RETURN(MessageDispatchResult, i16) resourceManager::Main(tag_message&) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) resourceManager::Main(tag_message& message) {
     return MESSAGE_DISPATCH_CONTINUE;
 }
 
 // Loads only the default aggregate.
 VA(0x0046c886, 0x66)
 H1_ENUM_RETURN(BaseManagerStatus, i16) resourceManager::Open(i16 priority) {
-    if (LoadAggregateHeader(DEFAULT_AGGREGATE_NAME) != 0)
+    if (LoadAggregateHeader(gDefaultAggregateName) != 0)
         return BASE_MANAGER_ERROR;
     m_messageMask = BASE_MANAGER_ACCEPT_RESOURCE;
     m_priority = priority;
@@ -273,8 +275,8 @@ void resourceManager::Close(void) {
 VA(0x0046c9bb, 0xe5)
 i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
     i16 directoryBytes;
-    i32 aggregateFp = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
-    if (aggregateFp == RESOURCE_MANAGER_INVALID_FILE) {
+    i32 aggregateFd = open(aggregateName, RESOURCE_MANAGER_BINARY_OPEN_MODE);
+    if (aggregateFd == RESOURCE_MANAGER_INVALID_FILE) {
         sprintf(gText, localization::Tr("file.aggregate.open_failed"), aggregateName);
         ShutDown(gText);
         return RESOURCE_MANAGER_LOAD_ERROR;
@@ -283,7 +285,7 @@ i16 resourceManager::LoadAggregateHeader(char* aggregateName) {
         close(m_aggregateFd);
     if (m_aggregateDir != NULL)
         free(m_aggregateDir);
-    m_aggregateFd = aggregateFp;
+    m_aggregateFd = aggregateFd;
     read(m_aggregateFd, &m_aggregateEntryCount, sizeof(m_aggregateEntryCount));
     directoryBytes = m_aggregateEntryCount * sizeof(aggEntry);
     m_aggregateDir = static_cast<aggEntry*>(malloc(directoryBytes));

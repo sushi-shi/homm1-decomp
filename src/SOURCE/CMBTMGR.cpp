@@ -200,7 +200,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_backgroundDrawn = false;
     sample = LoadPlaySample("PREBATTL.82M");
     gNextAction = ACTION_NONE;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
@@ -234,7 +234,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     m_combatPalette = gResourceManager->GetPalette("kb.pal");
     KBChangeMenu(gCombatMenu);
     CombatMessage("", true);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = true;
     gMouseManager->NewUpdate(1);
     gMouseManager->WarpPointer(
@@ -286,7 +286,7 @@ void combatManager::Close(void) {
     }
     DrawCombatBorder();
     gLimitedCombatUpdatePalette = false;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     delete m_backgroundBuffer;
     for (i = COMBAT_SIDE_FIRST; i < COMBAT_SIDE_COUNT; i++)
         UpdateArmyGroup(i);
@@ -551,8 +551,8 @@ i8 combatManager::MoreTreesNear(void) {
     originY = m_combatY;
     for (radius = 0; radius < 3; radius++) {
         for (dir = MAP_DIRECTION_FIRST; dir < MAP_DIRECTION_COUNT; dir++) {
-            xPos = originX + normalDirTable[H1_ENUM_ENCODE(MapDirection, dir)].x * radius;
-            yPos = originY + normalDirTable[H1_ENUM_ENCODE(MapDirection, dir)].y * radius;
+            xPos = originX + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, dir)].x * radius;
+            yPos = originY + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, dir)].y * radius;
             if (MAP_CELL_IN_BOUNDS(xPos, yPos)) {
                 cell = gAdvManager->GetCell(xPos, yPos);
                 nearbyTileset =
@@ -878,7 +878,7 @@ i8 combatManager::IsWinner(H1_ENUM_PARAM(CombatSide, i8) side) {
     return isWinner;
 }
 
-// HoMM1 catapult: a boulder arcs (or, for the top row, flies straight) at
+// Catapult: a boulder arcs (or, for the top row, flies straight) at
 // a random standing wall piece; a breach roll knocks it down, otherwise
 // the piece is damaged.
 #define catapultSound sampleInfo // frame-slot spelling
@@ -1159,7 +1159,7 @@ void combatManager::RegenerateField(void) {
     DrawFrame(true);
 }
 
-// HoMM1 castle keep: shoots the attacker's most dangerous stack (shooters,
+// Castle keep: shoots the attacker's most dangerous stack (shooters,
 // then flyers, then fight value) with dice from the town's buildings.
 VA(0x0041bbd1, 0xae3)
 void combatManager::KeepAttack(void) {
@@ -1382,13 +1382,13 @@ void combatManager::ResetHitByCreature(void) {
     }
 }
 
-// HoMM1's combat grid is nine columns by five rows.
+// The combat grid is nine columns by five rows.
 VA(0x0041c7ff, 0x27)
 i32 ValidHex(i32 hex) {
     return hex >= 0 && hex <= COMBAT_HEX_COUNT - 1;
 }
 
-// HoMM1 SaveCombatBorder: keep the twenty screen rows under the field.
+// Keeps the twenty screen rows under the field.
 VA(0x0041c826, 0x57)
 void combatManager::SaveCombatBorder(void) {
     if (!m_savedBorder)
@@ -1402,7 +1402,7 @@ void combatManager::SaveCombatBorder(void) {
     );
 }
 
-// HoMM1 DrawCombatBorder: put the saved rows back.
+// Puts the saved border rows back.
 VA(0x0041c87d, 0x42)
 void combatManager::DrawCombatBorder(void) {
     if (!m_savedBorder)

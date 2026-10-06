@@ -35,7 +35,7 @@ H1_ENUM_CONST_END(HighScoreTextColumn)
 H1_ENUM_CONST_BEGIN(HighScoreManagerConstant)
     HIGH_SCORE_DISPLAY_ENTRY_COUNT = 10,
     HIGH_SCORE_FILENAME_LENGTH = 350,
-    // Main tests message.m_type against the mask the managers share.
+    // Main tests message.type against the mask the managers share.
     HIGH_SCORE_DISPATCH_MASK = 0x32f
 H1_ENUM_CONST_END(HighScoreManagerConstant)
 
@@ -77,13 +77,13 @@ public:
     H1_ENUM_STORAGE(CreatureType, i16) m_monsterTypes[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i8 m_showCampaignScores;
     heroWindow* m_window;
-    // HoMM1 Main tests this additional mask against message.m_type.
+    // Main tests this additional mask against message.type.
     i16 m_dispatchMask;
     // --- constructors ---
     highScoreManager(void);
     ~highScoreManager();
     // --- virtual methods (vtable order) ---
-    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 id) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
@@ -105,7 +105,7 @@ H1_ENUM_CONST_BEGIN(HighScoreRuntimeConstant)
     HIGH_SCORE_EMPTY = -1
 H1_ENUM_CONST_END(HighScoreRuntimeConstant)
 
-// HoMM1 score files hold 0x57-byte records; Update reads name, scenario and
+// Score files hold 0x57-byte records; Update reads name, scenario and
 // score from the fixed prefix.
 #pragma pack(push, 1)
 struct HighScoreEntry {

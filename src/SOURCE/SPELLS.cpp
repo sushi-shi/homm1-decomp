@@ -263,8 +263,7 @@ void combatManager::SpellMessage(H1_ENUM_PARAM(SpellType, i8) spell, i8 hex) {
     CombatMessage(gText, true);
 }
 
-// HoMM1 has nineteen spells, a single timed effect per stack and no eagle
-// eye, mirror image or elementals.
+// A stack carries a single timed effect.
 #define target targetCreature     // frame-slot spelling
 #define targetSide armySide       // frame-slot spelling
 #define targetIndex occupantIndex // frame-slot spelling
@@ -604,7 +603,7 @@ void combatManager::DefaultSpell(i8 targetHex) {
     target->Stand(true);
 }
 
-// HoMM1 Cure and Dispel Magic: one glow over every affected stack, then the
+// Cure and Dispel Magic: one glow over every affected stack, then the
 // spells are cancelled side by side.
 VA(0x0045b375, 0x383)
 void combatManager::CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cureOnly) {
@@ -666,7 +665,7 @@ void combatManager::CastMassSpell(H1_ENUM_PARAM(CombatSide, i8) castSide, i8 cur
     DrawFrame(true);
 }
 
-// HoMM1: lifts every stack of one side out of the glow and cancels its
+// Lifts every stack of one side out of the glow and cancels its
 // spell (only the harmful ones for Cure).
 VA(0x0045b6f8, 0xf0)
 void combatManager::CancelSideSpells(H1_ENUM_PARAM(CombatSide, i8) side, i8 cureOnly) {

@@ -28,7 +28,7 @@
 // The character each key types, by its US-layout character: the selected
 // language's keyboard table.
 DATA(0x004a1388)
-static u8 gInputCharacterMapCp1251[0x80] = localization::Chars("locale.keyboard");
+static u8 gInputCharacterMap[0x80] = localization::Chars("locale.keyboard");
 
 static inline void ResetEventQueue(inputManager* manager) {
     manager->m_writeIndex = 0;
@@ -36,7 +36,7 @@ static inline void ResetEventQueue(inputManager* manager) {
 }
 
 VA(0x0046e560, 0x464)
-i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) {
+i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData) {
     if (gInputManager == NULL)
         return 1;
     if (gInputManager->m_active != 1)
@@ -123,7 +123,7 @@ i32 KeyboardMessageHandler(void*, u32 message, u32 virtualKey, i32 messageData) 
 
 VA(0x0046e9c4, 0x33a)
 #line 137 INPUTMGR_CPP_PATH
-i32 MouseMessageHandler(void*, u32 message, u32, i32 messageData) {
+i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData) {
     if (gInputManager == NULL)
         return 1;
     if (gInputManager->m_active != 1)
@@ -198,7 +198,7 @@ afterMouseCoordinates:
 VA(0x0046ecfe, 0xa0)
 inputManager::inputManager(void) {
     m_active = 0;
-    m_field_0x34a = 0;
+    m_forceMouseMove = 0;
     m_mouseMessageActive = 0;
     m_requestedPriority = 1;
     m_field_0x33c = 0;
@@ -238,7 +238,7 @@ void inputManager::Close(void) {
 }
 
 VA(0x0046eea6, 0x10)
-H1_ENUM_RETURN(MessageDispatchResult, i16) inputManager::Main(tag_message&) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) inputManager::Main(tag_message& message) {
     return MESSAGE_DISPATCH_CONTINUE;
 }
 
@@ -305,9 +305,9 @@ void inputManager::SetKeyCodeType(i16 keyCodeType) {
 }
 
 VA(0x0046f085, 0x34)
-void TranslateInputCharacterCp1251(tag_message& event) {
-    if (event.keyCode >= 0 && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMapCp1251)))
-        event.keyCode = static_cast<i8>(gInputCharacterMapCp1251[event.keyCode]);
+void TranslateInputCharacter(tag_message& event) {
+    if (event.keyCode >= 0 && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMap)))
+        event.keyCode = static_cast<i8>(gInputCharacterMap[event.keyCode]);
 }
 
 VA(0x0046f0b9, 0x312)
@@ -315,9 +315,9 @@ void inputManager::AsciiConvert(tag_message& event) {
     if ((event.keyCode >= INPUT_SCAN_FUNCTION_KEY_FIRST
          && event.keyCode <= INPUT_SCAN_FUNCTION_KEY_LAST)
         || event.keyCode == INPUT_SCAN_F11 || event.keyCode == INPUT_SCAN_F12)
-        event.keyCode = m_keyState[event.keyCode];
+        event.keyCode = m_scanCodeTable[event.keyCode];
     else
-        event.keyCode = m_keyState[event.keyCode] & INPUT_SCAN_CODE_MASK;
+        event.keyCode = m_scanCodeTable[event.keyCode] & INPUT_SCAN_CODE_MASK;
 
     if ((event.modifiers & MESSAGE_MODIFIER_SHIFT_KEYS) == MESSAGE_MODIFIER_NONE
         && event.keyCode > 'A' - 1 && event.keyCode < 'Z' + 1)
@@ -388,100 +388,100 @@ void inputManager::AsciiConvert(tag_message& event) {
         }
     }
     if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == MESSAGE_MODIFIER_NONE)
-        TranslateInputCharacterCp1251(event);
+        TranslateInputCharacter(event);
 }
 
 VA(0x0046f3cb, 0x46a)
 void inputManager::MakeScanCodeTable(void) {
     for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
-        m_keyState[scanCode] = EncodeScanCode(scanCode);
-    m_keyState[INPUT_SCAN_NONE] = 0;
-    m_keyState[INPUT_SCAN_ESCAPE] = INPUT_ASCII_ESCAPE;
-    m_keyState[INPUT_SCAN_1] = '1';
-    m_keyState[INPUT_SCAN_2] = '2';
-    m_keyState[INPUT_SCAN_3] = '3';
-    m_keyState[INPUT_SCAN_4] = '4';
-    m_keyState[INPUT_SCAN_5] = '5';
-    m_keyState[INPUT_SCAN_6] = '6';
-    m_keyState[INPUT_SCAN_7] = '7';
-    m_keyState[INPUT_SCAN_8] = '8';
-    m_keyState[INPUT_SCAN_9] = '9';
-    m_keyState[INPUT_SCAN_0] = '0';
-    m_keyState[INPUT_SCAN_MINUS] = '-';
-    m_keyState[INPUT_SCAN_EQUALS] = '=';
-    m_keyState[INPUT_SCAN_BACKSPACE] = INPUT_ASCII_DELETE;
-    m_keyState[INPUT_SCAN_TAB] = '\t';
-    m_keyState[INPUT_SCAN_Q] = 'Q';
-    m_keyState[INPUT_SCAN_W] = 'W';
-    m_keyState[INPUT_SCAN_E] = 'E';
-    m_keyState[INPUT_SCAN_R] = 'R';
-    m_keyState[INPUT_SCAN_T] = 'T';
-    m_keyState[INPUT_SCAN_Y] = 'Y';
-    m_keyState[INPUT_SCAN_U] = 'U';
-    m_keyState[INPUT_SCAN_I] = 'I';
-    m_keyState[INPUT_SCAN_O] = 'O';
-    m_keyState[INPUT_SCAN_P] = 'P';
-    m_keyState[INPUT_SCAN_LEFT_BRACKET] = '[';
-    m_keyState[INPUT_SCAN_RIGHT_BRACKET] = ']';
-    m_keyState[INPUT_SCAN_ENTER] = '\n';
-    m_keyState[INPUT_SCAN_CONTROL] = EncodeScanCode(INPUT_SCAN_CONTROL);
-    m_keyState[INPUT_SCAN_A] = 'A';
-    m_keyState[INPUT_SCAN_S] = 'S';
-    m_keyState[INPUT_SCAN_D] = 'D';
-    m_keyState[INPUT_SCAN_F] = 'F';
-    m_keyState[INPUT_SCAN_G] = 'G';
-    m_keyState[INPUT_SCAN_H] = 'H';
-    m_keyState[INPUT_SCAN_J] = 'J';
-    m_keyState[INPUT_SCAN_K] = 'K';
-    m_keyState[INPUT_SCAN_L] = 'L';
-    m_keyState[INPUT_SCAN_SEMICOLON] = ';';
-    m_keyState[INPUT_SCAN_APOSTROPHE] = '\'';
-    m_keyState[INPUT_SCAN_GRAVE] = EncodeScanCode(INPUT_SCAN_GRAVE);
-    m_keyState[INPUT_SCAN_LEFT_SHIFT] = EncodeScanCode(INPUT_SCAN_LEFT_SHIFT);
-    m_keyState[INPUT_SCAN_BACKSLASH] = '\\';
-    m_keyState[INPUT_SCAN_Z] = 'Z';
-    m_keyState[INPUT_SCAN_X] = 'X';
-    m_keyState[INPUT_SCAN_C] = 'C';
-    m_keyState[INPUT_SCAN_V] = 'V';
-    m_keyState[INPUT_SCAN_B] = 'B';
-    m_keyState[INPUT_SCAN_N] = 'N';
-    m_keyState[INPUT_SCAN_M] = 'M';
-    m_keyState[INPUT_SCAN_COMMA] = ',';
-    m_keyState[INPUT_SCAN_PERIOD] = '.';
-    m_keyState[INPUT_SCAN_SLASH] = '/';
-    m_keyState[INPUT_SCAN_RIGHT_SHIFT] = EncodeScanCode(INPUT_SCAN_RIGHT_SHIFT);
-    m_keyState[INPUT_SCAN_NUMPAD_MULTIPLY] = '*';
-    m_keyState[INPUT_SCAN_ALT] = EncodeScanCode(INPUT_SCAN_ALT);
-    m_keyState[INPUT_SCAN_SPACE] = ' ';
-    m_keyState[INPUT_SCAN_CAPS_LOCK] = EncodeScanCode(INPUT_SCAN_CAPS_LOCK);
-    m_keyState[INPUT_SCAN_F1] = EncodeScanCode(INPUT_SCAN_F1);
-    m_keyState[INPUT_SCAN_F2] = EncodeScanCode(INPUT_SCAN_F2);
-    m_keyState[INPUT_SCAN_F3] = EncodeScanCode(INPUT_SCAN_F3);
-    m_keyState[INPUT_SCAN_F4] = EncodeScanCode(INPUT_SCAN_F4);
-    m_keyState[INPUT_SCAN_F5] = EncodeScanCode(INPUT_SCAN_F5);
-    m_keyState[INPUT_SCAN_F6] = EncodeScanCode(INPUT_SCAN_F6);
-    m_keyState[INPUT_SCAN_F7] = EncodeScanCode(INPUT_SCAN_F7);
-    m_keyState[INPUT_SCAN_F8] = EncodeScanCode(INPUT_SCAN_F8);
-    m_keyState[INPUT_SCAN_F9] = EncodeScanCode(INPUT_SCAN_F9);
-    m_keyState[INPUT_SCAN_F10] = EncodeScanCode(INPUT_SCAN_F10);
-    m_keyState[INPUT_SCAN_NUM_LOCK] = EncodeScanCode(INPUT_SCAN_NUM_LOCK);
-    m_keyState[INPUT_SCAN_SCROLL_LOCK] = EncodeScanCode(INPUT_SCAN_SCROLL_LOCK);
-    m_keyState[INPUT_SCAN_NUMPAD_7] = EncodeScanCode(INPUT_SCAN_NUMPAD_7);
-    m_keyState[INPUT_SCAN_NUMPAD_8] = EncodeScanCode(INPUT_SCAN_NUMPAD_8);
-    m_keyState[INPUT_SCAN_NUMPAD_9] = EncodeScanCode(INPUT_SCAN_NUMPAD_9);
-    m_keyState[INPUT_SCAN_NUMPAD_MINUS] = '-';
-    m_keyState[INPUT_SCAN_NUMPAD_4] = EncodeScanCode(INPUT_SCAN_NUMPAD_4);
-    m_keyState[INPUT_SCAN_NUMPAD_5] = EncodeScanCode(INPUT_SCAN_NUMPAD_5);
-    m_keyState[INPUT_SCAN_NUMPAD_6] = EncodeScanCode(INPUT_SCAN_NUMPAD_6);
-    m_keyState[INPUT_SCAN_NUMPAD_PLUS] = '+';
-    m_keyState[INPUT_SCAN_NUMPAD_1] = EncodeScanCode(INPUT_SCAN_NUMPAD_1);
-    m_keyState[INPUT_SCAN_NUMPAD_2] = EncodeScanCode(INPUT_SCAN_NUMPAD_2);
-    m_keyState[INPUT_SCAN_NUMPAD_3] = EncodeScanCode(INPUT_SCAN_NUMPAD_3);
-    m_keyState[INPUT_SCAN_NUMPAD_0] = EncodeScanCode(INPUT_SCAN_NUMPAD_0);
-    m_keyState[INPUT_SCAN_NUMPAD_DELETE] = EncodeScanCode(INPUT_SCAN_NUMPAD_DELETE);
-    m_keyState[INPUT_SCAN_SYSREQ] = EncodeScanCode(INPUT_SCAN_SYSREQ);
-    m_keyState[INPUT_SCAN_RESERVED_55] = EncodeScanCode(INPUT_SCAN_RESERVED_55);
-    m_keyState[INPUT_SCAN_ISO_BACKSLASH] = EncodeScanCode(INPUT_SCAN_ISO_BACKSLASH);
-    m_keyState[INPUT_SCAN_F11] = EncodeScanCode(INPUT_SCAN_F11);
-    m_keyState[INPUT_SCAN_F12] = EncodeScanCode(INPUT_SCAN_F12);
+        m_scanCodeTable[scanCode] = EncodeScanCode(scanCode);
+    m_scanCodeTable[INPUT_SCAN_NONE] = 0;
+    m_scanCodeTable[INPUT_SCAN_ESCAPE] = INPUT_ASCII_ESCAPE;
+    m_scanCodeTable[INPUT_SCAN_1] = '1';
+    m_scanCodeTable[INPUT_SCAN_2] = '2';
+    m_scanCodeTable[INPUT_SCAN_3] = '3';
+    m_scanCodeTable[INPUT_SCAN_4] = '4';
+    m_scanCodeTable[INPUT_SCAN_5] = '5';
+    m_scanCodeTable[INPUT_SCAN_6] = '6';
+    m_scanCodeTable[INPUT_SCAN_7] = '7';
+    m_scanCodeTable[INPUT_SCAN_8] = '8';
+    m_scanCodeTable[INPUT_SCAN_9] = '9';
+    m_scanCodeTable[INPUT_SCAN_0] = '0';
+    m_scanCodeTable[INPUT_SCAN_MINUS] = '-';
+    m_scanCodeTable[INPUT_SCAN_EQUALS] = '=';
+    m_scanCodeTable[INPUT_SCAN_BACKSPACE] = INPUT_ASCII_DELETE;
+    m_scanCodeTable[INPUT_SCAN_TAB] = '\t';
+    m_scanCodeTable[INPUT_SCAN_Q] = 'Q';
+    m_scanCodeTable[INPUT_SCAN_W] = 'W';
+    m_scanCodeTable[INPUT_SCAN_E] = 'E';
+    m_scanCodeTable[INPUT_SCAN_R] = 'R';
+    m_scanCodeTable[INPUT_SCAN_T] = 'T';
+    m_scanCodeTable[INPUT_SCAN_Y] = 'Y';
+    m_scanCodeTable[INPUT_SCAN_U] = 'U';
+    m_scanCodeTable[INPUT_SCAN_I] = 'I';
+    m_scanCodeTable[INPUT_SCAN_O] = 'O';
+    m_scanCodeTable[INPUT_SCAN_P] = 'P';
+    m_scanCodeTable[INPUT_SCAN_LEFT_BRACKET] = '[';
+    m_scanCodeTable[INPUT_SCAN_RIGHT_BRACKET] = ']';
+    m_scanCodeTable[INPUT_SCAN_ENTER] = '\n';
+    m_scanCodeTable[INPUT_SCAN_CONTROL] = EncodeScanCode(INPUT_SCAN_CONTROL);
+    m_scanCodeTable[INPUT_SCAN_A] = 'A';
+    m_scanCodeTable[INPUT_SCAN_S] = 'S';
+    m_scanCodeTable[INPUT_SCAN_D] = 'D';
+    m_scanCodeTable[INPUT_SCAN_F] = 'F';
+    m_scanCodeTable[INPUT_SCAN_G] = 'G';
+    m_scanCodeTable[INPUT_SCAN_H] = 'H';
+    m_scanCodeTable[INPUT_SCAN_J] = 'J';
+    m_scanCodeTable[INPUT_SCAN_K] = 'K';
+    m_scanCodeTable[INPUT_SCAN_L] = 'L';
+    m_scanCodeTable[INPUT_SCAN_SEMICOLON] = ';';
+    m_scanCodeTable[INPUT_SCAN_APOSTROPHE] = '\'';
+    m_scanCodeTable[INPUT_SCAN_GRAVE] = EncodeScanCode(INPUT_SCAN_GRAVE);
+    m_scanCodeTable[INPUT_SCAN_LEFT_SHIFT] = EncodeScanCode(INPUT_SCAN_LEFT_SHIFT);
+    m_scanCodeTable[INPUT_SCAN_BACKSLASH] = '\\';
+    m_scanCodeTable[INPUT_SCAN_Z] = 'Z';
+    m_scanCodeTable[INPUT_SCAN_X] = 'X';
+    m_scanCodeTable[INPUT_SCAN_C] = 'C';
+    m_scanCodeTable[INPUT_SCAN_V] = 'V';
+    m_scanCodeTable[INPUT_SCAN_B] = 'B';
+    m_scanCodeTable[INPUT_SCAN_N] = 'N';
+    m_scanCodeTable[INPUT_SCAN_M] = 'M';
+    m_scanCodeTable[INPUT_SCAN_COMMA] = ',';
+    m_scanCodeTable[INPUT_SCAN_PERIOD] = '.';
+    m_scanCodeTable[INPUT_SCAN_SLASH] = '/';
+    m_scanCodeTable[INPUT_SCAN_RIGHT_SHIFT] = EncodeScanCode(INPUT_SCAN_RIGHT_SHIFT);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_MULTIPLY] = '*';
+    m_scanCodeTable[INPUT_SCAN_ALT] = EncodeScanCode(INPUT_SCAN_ALT);
+    m_scanCodeTable[INPUT_SCAN_SPACE] = ' ';
+    m_scanCodeTable[INPUT_SCAN_CAPS_LOCK] = EncodeScanCode(INPUT_SCAN_CAPS_LOCK);
+    m_scanCodeTable[INPUT_SCAN_F1] = EncodeScanCode(INPUT_SCAN_F1);
+    m_scanCodeTable[INPUT_SCAN_F2] = EncodeScanCode(INPUT_SCAN_F2);
+    m_scanCodeTable[INPUT_SCAN_F3] = EncodeScanCode(INPUT_SCAN_F3);
+    m_scanCodeTable[INPUT_SCAN_F4] = EncodeScanCode(INPUT_SCAN_F4);
+    m_scanCodeTable[INPUT_SCAN_F5] = EncodeScanCode(INPUT_SCAN_F5);
+    m_scanCodeTable[INPUT_SCAN_F6] = EncodeScanCode(INPUT_SCAN_F6);
+    m_scanCodeTable[INPUT_SCAN_F7] = EncodeScanCode(INPUT_SCAN_F7);
+    m_scanCodeTable[INPUT_SCAN_F8] = EncodeScanCode(INPUT_SCAN_F8);
+    m_scanCodeTable[INPUT_SCAN_F9] = EncodeScanCode(INPUT_SCAN_F9);
+    m_scanCodeTable[INPUT_SCAN_F10] = EncodeScanCode(INPUT_SCAN_F10);
+    m_scanCodeTable[INPUT_SCAN_NUM_LOCK] = EncodeScanCode(INPUT_SCAN_NUM_LOCK);
+    m_scanCodeTable[INPUT_SCAN_SCROLL_LOCK] = EncodeScanCode(INPUT_SCAN_SCROLL_LOCK);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_7] = EncodeScanCode(INPUT_SCAN_NUMPAD_7);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_8] = EncodeScanCode(INPUT_SCAN_NUMPAD_8);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_9] = EncodeScanCode(INPUT_SCAN_NUMPAD_9);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_MINUS] = '-';
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_4] = EncodeScanCode(INPUT_SCAN_NUMPAD_4);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_5] = EncodeScanCode(INPUT_SCAN_NUMPAD_5);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_6] = EncodeScanCode(INPUT_SCAN_NUMPAD_6);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_PLUS] = '+';
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_1] = EncodeScanCode(INPUT_SCAN_NUMPAD_1);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_2] = EncodeScanCode(INPUT_SCAN_NUMPAD_2);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_3] = EncodeScanCode(INPUT_SCAN_NUMPAD_3);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_0] = EncodeScanCode(INPUT_SCAN_NUMPAD_0);
+    m_scanCodeTable[INPUT_SCAN_NUMPAD_DELETE] = EncodeScanCode(INPUT_SCAN_NUMPAD_DELETE);
+    m_scanCodeTable[INPUT_SCAN_SYSREQ] = EncodeScanCode(INPUT_SCAN_SYSREQ);
+    m_scanCodeTable[INPUT_SCAN_RESERVED_55] = EncodeScanCode(INPUT_SCAN_RESERVED_55);
+    m_scanCodeTable[INPUT_SCAN_ISO_BACKSLASH] = EncodeScanCode(INPUT_SCAN_ISO_BACKSLASH);
+    m_scanCodeTable[INPUT_SCAN_F11] = EncodeScanCode(INPUT_SCAN_F11);
+    m_scanCodeTable[INPUT_SCAN_F12] = EncodeScanCode(INPUT_SCAN_F12);
 }

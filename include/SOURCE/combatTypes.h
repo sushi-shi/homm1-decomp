@@ -236,7 +236,7 @@ H1_ENUM_CONST_BEGIN(CombatGridDimension)
     COMBAT_GRID_LAST_INNER_COLUMN = 7
 H1_ENUM_CONST_END(CombatGridDimension)
 
-// HoMM1 spell-AI row traversal: retail NextPos steps along a row of
+// Spell-AI row traversal: NextPos steps along a row of
 // COMBAT_GRID_COLUMNS hexes, skipping the two edge columns. A constant
 // group: the offsets and bounds are hex-index arithmetic, not a value domain.
 H1_ENUM_CONST_BEGIN(CombatSpellAIGrid)

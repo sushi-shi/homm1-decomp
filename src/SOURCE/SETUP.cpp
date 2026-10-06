@@ -186,7 +186,7 @@ i8 game::SetupModemGame(void) {
                     return 0;
             }
             if (!gDirectConnect)
-                GetDataEntry(localization::Tr("modem.telephone.required"), numbuf, 35, NULL);
+                GetDataEntry(localization::Tr("modem.telephone.required"), gPhoneNumber, 35, NULL);
             break;
         case CHOICE_TWO:
             gMapExtendedType = REMOTE_GAME_MODEM_GUEST;

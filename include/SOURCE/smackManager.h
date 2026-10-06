@@ -31,7 +31,7 @@ struct SSmackOptions {
 };
 #pragma pack(pop)
 
-extern H1_ENUM_ARRAY(SSmackOptions, SmackOptions, SmackVideo, SMACK_COUNT);
+extern H1_ENUM_ARRAY(SSmackOptions, gSmackOptions, SmackVideo, SMACK_COUNT);
 extern H1_ENUM_STORAGE(SmackVideo, i8) gMovieId;
 void InitSmackSound();
 void ShutdownSmackSound();

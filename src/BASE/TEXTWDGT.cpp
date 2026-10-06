@@ -42,16 +42,17 @@ textWidget::textWidget(
     m_kind = WIDGET_KIND_TEXT;
 }
 
+#define fontName name // frame-slot spelling
 VA(0x0047186d, 0x12a)
 void textWidget::Read(void) {
-    char name[RESOURCE_NAME_CAPACITY];
+    char fontName[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gResourceManager);
     i16 length = gResourceManager->ReadWord();
     m_text = static_cast<char*>(malloc(length));
     gResourceManager->ReadBlock(m_text, length);
-    gResourceManager->Read13(name);
+    gResourceManager->Read13(fontName);
     gResourceManager->SavePosition();
-    m_font = gResourceManager->GetFont(name);
+    m_font = gResourceManager->GetFont(fontName);
     gResourceManager->RestorePosition();
     m_color = gResourceManager->ReadWord() & COLOR_INDEX_MASK;
     m_alignment = H1_ENUM_DECODE(
@@ -62,6 +63,7 @@ void textWidget::Read(void) {
     m_kind = gResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT;
 }
+#undef fontName
 
 VA(0x00471997, 0x6a)
 textWidget::~textWidget(void) {

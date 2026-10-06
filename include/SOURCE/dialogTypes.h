@@ -11,7 +11,7 @@ H1_ENUM_CONST_BEGIN(NormalDialogWidgetRange)
     NORMAL_DIALOG_BACKGROUND_WIDGET_LAST_ID = -256
 H1_ENUM_CONST_END(NormalDialogWidgetRange)
 
-// HoMM1 NormalDialog's resource slot kinds (frames of resource.icn first).
+// NormalDialog's resource slot kinds (frames of resource.icn first).
 H1_ENUM_BEGIN(NormalDialogResourceType)
     NORMAL_DIALOG_NO_RESOURCE = -1,
     NORMAL_DIALOG_RESOURCE_WOOD = 0,

@@ -94,7 +94,7 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
         m_rectW = m_width;
         m_rectH = m_height;
         m_maxLines = 1;
-        if (type == TEXT_ENTRY_READ_MULTILINE)
+        if (type == TEXT_ENTRY_READ_SCROLLING)
             m_preserveTextOnFocus = 1;
         else
             m_preserveTextOnFocus = 0;
@@ -266,9 +266,9 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
                                         strcpy(edit, swap);
                                         m_cursorPosition++;
                                         SetupDisplayString(edit, m_cursorPosition);
-                                        if (m_entryType != TEXT_ENTRY_READ_MULTILINE) {
-                                            i32 lineLength = m_font->LineLength(m_text, m_width);
-                                            if (lineLength > m_maxLines) {
+                                        if (m_entryType != TEXT_ENTRY_READ_SCROLLING) {
+                                            i32 lineCount = m_font->LineLength(m_text, m_width);
+                                            if (lineCount > m_maxLines) {
                                                 strcpy(edit, copy);
                                                 m_cursorPosition--;
                                             }
@@ -298,7 +298,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) textEntryWidget::Main(tag_message& me
 
 VA(0x00476671, 0x1c7)
 void textEntryWidget::Draw(void) {
-    if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
+    if (m_entryType == TEXT_ENTRY_READ_SCROLLING) {
         char display[TEXT_ENTRY_DISPLAY_CAPACITY];
         strcpy(display, m_text + m_displayOffset);
         u32 len = strlen(display);
@@ -343,7 +343,7 @@ void textEntryWidget::SetupDisplayString(char* source, u16 cursor) {
         strcpy(m_text + cursor + 1, source + cursor);
     else
         m_text[cursor + 1] = 0;
-    if (m_entryType == TEXT_ENTRY_READ_MULTILINE) {
+    if (m_entryType == TEXT_ENTRY_READ_SCROLLING) {
         changed = true;
         while (changed) {
             changed = false;

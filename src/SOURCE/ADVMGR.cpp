@@ -337,7 +337,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
         gGame->ShowComputerScreen();
     gMouseManager->ReallyShowPointer();
     KBChangeMenu(gAdventureMenu);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
     gBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
     SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
@@ -532,7 +532,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             gMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             gGame->GetHero(gCurPlayerData->m_currentHero)->HeroView(false);
             RedrawAdvScreen(true);
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case ADVMGR_COMMAND_SELECT_HERO:
             SetHeroContext(
@@ -1302,7 +1302,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessDeSelect(
         case ADVENTURE_CONTROL_OVERVIEW:
             gGame->Overview();
             RedrawAdvScreen(true);
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
     }
     if (message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
@@ -1559,7 +1559,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                     gMouseManager->SetPointer(
                                         baseFrame + ADVENTURE_POINTER_DISEMBARK
                                     );
-                                else if (mapExtra[m_commandTargetX][m_commandTargetY]
+                                else if (gMapExtra[m_commandTargetX][m_commandTargetY]
                                          & MAP_EXTRA_MONSTER_ADJACENT)
                                     gMouseManager->SetPointer(baseFrame + ADVENTURE_POINTER_ATTACK);
                                 else
@@ -1594,7 +1594,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                             default:
                             defaultHover:
                                 trigType = MAP_TRIGGER_OBJECT(hoverCell->m_triggerType);
-                                if ((mapExtra[m_commandTargetX][m_commandTargetY]
+                                if ((gMapExtra[m_commandTargetX][m_commandTargetY]
                                      & MAP_EXTRA_MONSTER_ADJACENT)
                                     && m_cursorType != ADVMGR_HERO_ICON_BOAT
                                     && trigType != MAP_OBJECT_SKELETON
@@ -1654,7 +1654,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i32) advManager::ProcessHover(struct tag_m
                                                 );
                                                 break;
                                             default:
-                                                if (mapExtra[m_commandTargetX][m_commandTargetY]
+                                                if (gMapExtra[m_commandTargetX][m_commandTargetY]
                                                     & MAP_EXTRA_MONSTER_ADJACENT)
                                                     gMouseManager->SetPointer(
                                                         baseFrame + ADVENTURE_POINTER_ATTACK
@@ -4157,7 +4157,7 @@ void advManager::SetTownContext(i8 townId) {
     }
     if (wasVisible)
         gMouseManager->ReallyShowPointer();
-    gInputManager->m_field_0x34a = 1;
+    gInputManager->m_forceMouseMove = 1;
     m_hoverCellX = 0;
 }
 
@@ -4229,7 +4229,7 @@ void advManager::SetHeroContext(i8 heroId, b8 update) {
     if (!gHeroMoving) {
         if (wasVisible)
             gMouseManager->ReallyShowPointer();
-        gInputManager->m_field_0x34a = 1;
+        gInputManager->m_forceMouseMove = 1;
         m_hoverCellX = 0;
     }
 }
@@ -5119,24 +5119,24 @@ void UpdateCPanel(b8 initialDraw) {
     gAdventurePanel->BroadcastMessage(message);
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.id = CONTROL_MUSIC_VOLUME_TEXT;
-    message.text = onOffText[gConfig.musicVolume];
+    message.text = gOnOffText[gConfig.musicVolume];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SOUND_VOLUME_TEXT;
-    message.text = onOffText[gConfig.soundVolume];
+    message.text = gOnOffText[gConfig.soundVolume];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_WALK_SPEED_TEXT;
-    message.text = walkSpeedText[gConfig.walkSpeed];
+    message.text = gWalkSpeedText[gConfig.walkSpeed];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_MUSIC_SOURCE_TEXT;
-    message.text = musicQualityText
+    message.text = gMusicQualityText
         [H1_ENUM_ENCODE(SoundMusicSource, gConfig.musicSource) ? CPANEL_MUSIC_LABEL_CD
                                                                : CPANEL_MUSIC_LABEL_LOCAL];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ROUTE_TEXT;
-    message.text = onOffText[gConfig.showRoute];
+    message.text = gOnOffText[gConfig.showRoute];
     gAdventurePanel->BroadcastMessage(message);
     message.id = CONTROL_SHOW_ENEMY_MOVES_TEXT;
-    message.text = onOffText[1 - gConfig.blackoutComputer];
+    message.text = gOnOffText[1 - gConfig.blackoutComputer];
     gAdventurePanel->BroadcastMessage(message);
     if (!initialDraw)
         gAdventurePanel->MoveWindow(0, 0);
@@ -5897,8 +5897,8 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, USMsg,
-// CDMsg and four words that only retail's layout shows.
+// ADVMGR .bss keeps objects no code references: gThisMaxY, gThisMinY, gUSMsg,
+// gCDMsg and four unreferenced words.
 #define gThisMaxY iThisMaxY // spelling fixes .bss order
 DATA(0x004a65a0)
 i32 gThisMaxY;
@@ -6032,11 +6032,12 @@ void advManager::DimensionDoor(void) {
     }
 }
 
-#define USMsg gUSMsgCopy // spelling fixes .bss order
+#define gUSMsg gUSMsgCopy // spelling fixes .bss order
 DATA(0x004a6718)
-struct tag_message USMsg;
+struct tag_message gUSMsg;
+#define gCDMsg CDMsg // spelling fixes .bss order
 DATA(0x004a65b0)
-struct tag_message CDMsg;
+struct tag_message gCDMsg;
 
 VA(0x0040fa50, 0x240)
 void advManager::TownGate(void) {
@@ -6109,9 +6110,10 @@ void advManager::SummonBoat(void) {
         goto summon_done;
     for (iDir = MAP_DIRECTION_FIRST; iDir < MAP_DIRECTION_COUNT; iDir++) {
         destinationCell = GetCell(
-            m_mapOriginX + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x
+            m_mapOriginX + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x
                 + ADVMGR_VIEW_CENTER,
-            m_mapOriginY + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y + ADVMGR_VIEW_CENTER
+            m_mapOriginY + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y
+                + ADVMGR_VIEW_CENTER
         );
         if (destinationCell->m_objectIndex == MAP_CELL_NO_FRAME
             && destinationCell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN) {
@@ -6169,9 +6171,9 @@ void advManager::SummonBoat(void) {
                 gWindowManager
                     ->FizzleForward(clipX, clipY, clipWidth, clipHeight, FIZZLE_USE_DEFAULT_DELAY);
             }
-            boatRec->x = m_mapOriginX + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x
+            boatRec->x = m_mapOriginX + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].x
                          + ADVMGR_VIEW_CENTER;
-            boatRec->y = m_mapOriginY + normalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y
+            boatRec->y = m_mapOriginY + gNormalDirTable[H1_ENUM_ENCODE(MapDirection, iDir)].y
                          + ADVMGR_VIEW_CENTER;
             boatRec->savedTriggerType = destinationCell->m_triggerType;
             boatRec->savedEventData = destinationCell->m_objectMetadata;
@@ -6248,8 +6250,8 @@ void advManager::ShowRoute(b32 redraw, i32, b32 updateButton) {
                 remain,
                 hero->m_heroClass
             );
-            mapX += normalDirTable[dir].x;
-            mapY += normalDirTable[dir].y;
+            mapX += gNormalDirTable[dir].x;
+            mapY += gNormalDirTable[dir].y;
             if (index == 0) {
                 m_routeMap[mapX + mapY * MAP_CELL_GRID_SIZE] = ROUTE_CELL_DESTINATION;
             } else {

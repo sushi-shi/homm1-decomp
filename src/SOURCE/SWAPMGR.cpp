@@ -220,8 +220,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                             break;
                         case CONTROL_RIGHT_HERO:
                             if (quickView)
@@ -231,8 +230,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) swapManager::Main(struct tag_message&
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                             break;
                         case CONTROL_LEFT_ARTIFACT_FIRST:
                         case CONTROL_LEFT_ARTIFACT_FIRST + 1:

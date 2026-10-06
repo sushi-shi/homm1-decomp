@@ -10,10 +10,10 @@ void BlitBitmap(
     i32 width,
     i32 height,
     bitmap* destination,
-    i32 dx,
-    i32 dy
+    i32 destinationX,
+    i32 destinationY
 );
-void DimBitmapArea(bitmap* bmp, i32 x, i32 y, i32 w, i32 h);
+void DimBitmapArea(bitmap* image, i32 x, i32 y, i32 width, i32 height);
 void FillBitmapArea(bitmap* image, i32 x, i32 y, i32 width, i32 height, i32 color);
 
 #endif

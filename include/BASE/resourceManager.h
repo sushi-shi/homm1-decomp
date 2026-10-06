@@ -44,7 +44,7 @@ public:
     resourceManager();
     virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority);
     virtual void Close();
-    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message&);
+    virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message);
     void GetBackdrop(char* name, bitmap* backdrop);
     void GetBackdropAtLoc(char* filename, bitmap* destination, i32 destinationX, i32 destinationY);
     palette* GetPalette(char* name);
@@ -52,7 +52,7 @@ public:
     icon* GetIcon(char* name);
     icon* GetIcon(i16 fileId);
     tileset* GetTileset(char* name);
-    mouse* GetMouse(char*);
+    mouse* GetMouse(char* name);
     font* GetFont(char* name);
     sample* GetSample(char* name);
     void Dispose(resource* resourceToDispose);

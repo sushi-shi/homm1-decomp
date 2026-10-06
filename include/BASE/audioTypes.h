@@ -43,7 +43,7 @@ H1_ENUM_BEGIN(MusicTrack)
     MUSIC_TRACK_LIGHTHOUSE = 0x1a,
     MUSIC_TRACK_SPELL_SHRINE = 0x1b,
     MUSIC_TRACK_TREASURE = 0x1c,
-    // The four town themes (MUSIC_TRACK_TOWN_FIRST + townTheme[town type]).
+    // The four town themes (MUSIC_TRACK_TOWN_FIRST + gTownTheme[town type]).
     MUSIC_TRACK_TOWN_FIRST = 0x1d,
     MUSIC_TRACK_TOWN_LAST = 0x20,
     // combatManager::Open picks one of the first three battle themes.

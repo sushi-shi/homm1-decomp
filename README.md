@@ -37,57 +37,15 @@ _CUR / MAX / HIST: 1,057 / 1,057 / 1,057 exact &middot; 100.00% / 100.00% / 100.
 
 ## Reconstruction debt
 
-Manually maintained cleanup checklist; see the [review rules and measuring
-commands](docs/reconstruction-debt.md). Counts cover `src` and `include` and are
-review inputs, not defect totals. Preserve banked matches.
+Open cleanup work; the [debt notes](docs/reconstruction-debt.md) hold the
+measuring commands and the record of resolved categories. Counts cover `src`
+and `include`. Preserve banked matches and the linked-image identity.
 
-- [x] Review game-type `reinterpret_cast`: **10 sites** (from 36): two
-  combat-transfer payload overlays, the 4-byte-aligned receive buffer's record
-  view, the wire packet header and its two CRC byte walks, three palette
-  channel views and one pointer assertion. The icon
-  frame directory, the remote message queue (typed `RemoteMessage` records and
-  payloads), the combat and save transfer buffers, the search occupancy flags,
-  resource reads and pixel buffers are typed. 77 further casts are
-  Win32 API boundaries, including the handle assertions and comparisons.
-  Every remaining cast carries its reason (cast ledger OPEN = 0).
-- [x] Replace manual byte layouts with named types: the font reads
-  `icon::m_frameWords` (**6 sites**). `widths[g * 6 + 2]` is retained because
-  only an `i16` index yields retail's `imul 6`. No literal-index packet stores
-  remain.
-- [x] Negative offsets: **0 sites** (no negative indexing, `this` arithmetic or
-  container-of recovery).
-- [x] Verify-board text debt at **0**: magic case labels, unnamed domain
-  compares, `.cpp`-local enums and views, `.cpp` extern declarations, C-style
-  casts and unexplained casts.
 - [ ] Recover unknown members: **19** `m_unknown*`/`m_field_0x*` placeholders
   remain; each is only ever cleared, initialized or saved, so no code user
   names it, and neither the game nor the editor image reads one. The mouse's
   saved area and the player's unused save span are named from their code
   users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
-- [x] Review gotos: **204 statements**, all kept because retail's block layout
-  requires them. Replacing them with `break`, `else if` or nothing breaks an
-  exact match, because VC6 `/Od` emits a `jmp` for every `goto`; each site was
-  also tried as `break` and `continue`, and none compiles identically
-  ([classes](docs/reconstruction-debt.md)).
-- [x] Review dead locals: **116** never-read locals. Each of the 75 without
-  an initializer was removed alone, and every removal changes its function's
-  frame. The 41 with an initializer emit retail stores.
-- [x] Remove dead declarations: **109** declared methods and functions with no
-  definition, call or object symbol in either image are gone (98 more in the
-  combat headers); **2** remain in `combatManager.h`.
-- [x] Review `static_cast`: **245 lines** (from 410). Casts that only hid a
-  wrong declared type are gone, including the `void*` Win32 handles, which are
-  now `STRICT`, and so are the 168 that restated the conversion an assignment,
-  initialization, argument, return or arithmetic operand already performs; the
-  remaining classes are listed in the [debt notes](docs/reconstruction-debt.md).
-- [x] Review unions: **8 definitions**, each one shared storage with typed
-  readers; varargs: **1 function** (`nb_sess`), standard `va_arg` with no
-  argument-address walking.
-- [x] Enum-domain review ([ledger](config/reviews/enum-reuse.tsv),
-  [notes](docs/enum-reuse.md)): **403** starting blocks reviewed (67
-  canonical, 288 retained, 48 merged); **98** members merged into shared
-  domains and **43** unused members retired; **168** cross-domain value
-  collisions remain, each with a reviewed reason.
 - [ ] Name bare constants: **1,926** open literals (`homm1 verify constants`
   floor); compiler-proven NULL/bool/enum replacements are at 0.
 - [ ] Strict enum view (`/std:c++20`): **60 of 61** units do not compile yet,
@@ -101,6 +59,8 @@ review inputs, not defect totals. Preserve banked matches.
   retained at **317 sites** (65 of them calls shortened by declared defaults),
   1 rejected by measurement, 77 kept explicit, 5 deferred to typed enum domains
   or another unit's owner.
+- [ ] Editor-only units (`src/EDITOR`): constants, naming review and the
+  debt checklist have not yet been applied to the 143 editor-only functions.
 
 ## Branches
 

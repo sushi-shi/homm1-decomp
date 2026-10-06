@@ -26,13 +26,14 @@ H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_OUT = 1
 H1_ENUM_END(WindowFadeMode)
 
-// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen: the short fade
-// of dialogs and screen changes and the long fade of the window manager's
-// start-up.
-H1_ENUM_CONST_BEGIN(WindowFadeSteps)
-    WINDOW_FADE_STEPS_SHORT = 8,
-    WINDOW_FADE_STEPS_NORMAL = 0x80
-H1_ENUM_CONST_END(WindowFadeSteps)
+// Palette-level increments passed to FadeIn/FadeOut/FadeScreen. A fade walks
+// the 64 palette levels by this increment (doubled in a window): SHORT fades
+// over eight frames; NORMAL passes the last level at once, so the palette
+// switches without a visible fade (the window manager's start-up).
+H1_ENUM_CONST_BEGIN(WindowFadeIncrement)
+    WINDOW_FADE_SHORT = 8,
+    WINDOW_FADE_NORMAL = 0x80
+H1_ENUM_CONST_END(WindowFadeIncrement)
 
 H1_ENUM_CONST_BEGIN(WindowManagerConstant)
     WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
@@ -59,7 +60,7 @@ public:
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 managerOrder) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
@@ -70,7 +71,7 @@ public:
         i16 widgetId,
         i16 value
     );
-    void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
+    void AddWindow(class heroWindow* window, i16 zOrder, i8 updateScreen);
     void RemoveWindow(class heroWindow* window);
     i16 DoDialog(
         class heroWindow* window,
@@ -83,7 +84,7 @@ public:
     void Cleanup(void);
     void FadeScreen(
         H1_ENUM_PARAM(WindowFadeMode, i16) direction,
-        i16 steps,
+        i16 increment,
         class palette* currentPalette
     );
     void ScreenShot(void);

@@ -43,7 +43,7 @@ public:
         i16 y,
         i16 width,
         i16 height,
-        char* iconId,
+        char* iconName,
         i16 normalFrame,
         i16 pressedFrame,
         i16 selectMode,

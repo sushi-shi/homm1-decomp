@@ -81,7 +81,7 @@ H1_ENUM_BEGIN(ArmyLuck)
     ARMY_LUCK_GOOD = 1
 H1_ENUM_END(ArmyLuck)
 
-// HoMM1 combat stack, 0x54 bytes (retail constructor 0x00466490);
+// Combat stack, 0x54 bytes;
 // army::Init copies 0x13 bytes of gMonsterDatabase from +0xc into +0x16.
 // Forget an army's attack target; takes a pointer to the army.
 #define CLEAR_ARMY_TARGET(a)                                                                       \
@@ -151,7 +151,7 @@ public:
     class icon* m_attackIcon;
     // move, attack, wince and shoot sounds.
     H1_ENUM_ARRAY(class sample*, m_samples, ArmySampleType, ARMY_SAMPLE_COUNT);
-    // Active spell; HoMM1 lets a stack carry one timed effect.
+    // Active spell; a stack carries one timed effect.
     H1_ENUM_STORAGE(SpellType, i8) m_spellEffect;
     // What breaks m_spellEffect early: 0 the stack moving, 1 its own attack,
     // 2 taking damage, 3 only the round count; -1 with no spell.

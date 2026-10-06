@@ -8,12 +8,11 @@
 
 // border kinds, carried in widget::m_kind.
 H1_ENUM_ID_BEGIN(BorderBackgroundKind)
-    BORDER_BACKGROUND_SOLID = 0x400,
-    BORDER_BACKGROUND_BITMAP = 0x800
-H1_ENUM_ID_END(BorderBackgroundKind)
+BORDER_BACKGROUND_SOLID = 0x400, BORDER_BACKGROUND_BITMAP =
+                                     0x800 H1_ENUM_ID_END(BorderBackgroundKind)
 
-// forward declarations:
-class bitmap;
+                                 // forward declarations:
+                                 class bitmap;
 struct tag_message;
 
 #pragma pack(push, 1)
@@ -23,7 +22,7 @@ public:
     i16 m_fillColor;
     // --- constructors ---
     border(void);
-    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name);
+    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* bitmapName);
     virtual ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;

@@ -154,7 +154,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
     i8 buildId;
 
     gGame->CheckHeroConsistency();
-    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
+    PlayMusic(gTownTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
     PollSound();
     m_townWindow = new heroWindow(0, 0, "townwind.bin");
     if (m_townWindow == NULL)
@@ -265,7 +265,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 priority) {
     gMouseManager->ReallyShowPointer();
     gMouseManager->NewUpdate(1);
     KBChangeMenu(gTownMenu);
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     m_castleDialogActive = false;
     m_recruitResult = false;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -293,7 +293,7 @@ void townManager::Close(void) {
     gWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
     StopMusic();
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
@@ -1054,12 +1054,12 @@ void townManager::DoCommand(H1_ENUM_PARAM(TownArmyCommand, i8) command) {
             visitor = gGame->GetHero(m_town->m_occupyingHeroId);
             visitor->HeroView(true);
             RedrawTownScreen();
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_GARRISON:
             gGame->Overview();
             RedrawTownScreen();
-            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_SPLIT:
             SplitArmy();
@@ -2296,7 +2296,7 @@ void townManager::DoTavern(void) {
     PlayMusic(MUSIC_TRACK_TAVERN);
     gWindowManager->DoDialog(m_heroWindow0, TavernHandler, false);
     delete m_heroWindow0;
-    PlayMusic(townTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
+    PlayMusic(gTownTheme[m_town->m_type] + MUSIC_TRACK_TOWN_FIRST);
 }
 
 // Hovers by widget id and recruits a single hero (control 0x30).

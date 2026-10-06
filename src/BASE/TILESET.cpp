@@ -1,4 +1,4 @@
-// HoMM1's packed tileset loader.
+// Packed tileset loader.
 
 #include <match.h>
 

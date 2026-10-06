@@ -1,4 +1,4 @@
-// HoMM1 executive manager scheduling, reconstructed against the retail code.
+// Executive manager scheduling.
 
 #include <match.h>
 
@@ -85,39 +85,52 @@ void executive::ShutDownSystem(void) {
 }
 
 // Buka BASE/EXEC DoDialog; retail saves twenty manager links per array.
+#define nestedExecutive ex      // frame-slot spelling
+#define savedManagers saveMgr   // frame-slot spelling
+#define savedPrevLinks savePrev // frame-slot spelling
+#define savedNextLinks saveNext // frame-slot spelling
+#define index idx               // frame-slot spelling
 VA(0x00472b98, 0x189)
 i16 executive::DoDialog(baseManager* manager) {
-    baseManager* savePrev[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    i32 idx;
-    baseManager* p;
-    baseManager* saveMgr[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    baseManager* saveNext[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
-    executive ex;
+    baseManager* savedPrevLinks[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    i32 index;
+    baseManager* node;
+    baseManager* savedManagers[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    baseManager* savedNextLinks[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
+    executive nestedExecutive;
     i32 count = 0;
-    p = m_managerListHead;
-    while (p != NULL) {
-        saveMgr[count] = p;
-        savePrev[count] = p->m_prev;
-        saveNext[count] = p->m_next;
-        p = p->m_next;
+    node = m_managerListHead;
+    while (node != NULL) {
+        savedManagers[count] = node;
+        savedPrevLinks[count] = node->m_prev;
+        savedNextLinks[count] = node->m_next;
+        node = node->m_next;
         count++;
     }
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (ex.AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (nestedExecutive.AddManager(gMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (ex.AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (nestedExecutive.AddManager(gWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
+    if (nestedExecutive.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
+        != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
-    ex.MainLoop();
+    nestedExecutive.MainLoop();
     RemoveManager(manager);
-    for (idx = 0; idx < count; idx++) {
-        saveMgr[idx]->m_prev = savePrev[idx];
-        saveMgr[idx]->m_next = saveNext[idx];
+    for (index = 0; index < count; index++) {
+        savedManagers[index]->m_prev = savedPrevLinks[index];
+        savedManagers[index]->m_next = savedNextLinks[index];
     }
-    return ex.m_result;
+    return nestedExecutive.m_result;
 }
+#undef nestedExecutive
+#undef savedManagers
+#undef savedPrevLinks
+#undef savedNextLinks
+#undef index
 
 VA(0x00472d21, 0x149)
 H1_ENUM_RETURN(BaseManagerStatus, i16) executive::AddManager(baseManager* manager, i16 priority) {
@@ -244,7 +257,6 @@ void executive::MainLoop(void) {
     }
 }
 
-// HoMM2 Buka's Terminate has the same body.
 // @dead-code
 // Zero-ref: no incoming call, jump or relocated reference in retail.
 VA(0x00473120, 0x18)
