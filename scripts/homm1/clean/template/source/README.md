@@ -2,8 +2,8 @@
 
 C++ source for the 2003 Buka edition of Heroes of Might and Magic (`HEROES.EXE`,
 Windows), built with the original Visual C++ 6.0 SP5 toolchain. The game text
-lives in a catalog: `locales/messages.def` keeps the original English and
-`locales/ru.po` the Russian translation. Building selects one of them.
+lives in a catalog with one translation per language: `locales/ru.po` (the
+retail Russian) and `locales/en.po` (English). Building selects one of them.
 
 ## Build and play
 
@@ -74,10 +74,19 @@ program icon from your own executable. Game data and the Smacker, Miles and
 Audiere runtime DLLs are not included.
 
 The source keeps every piece of game text as `localization::Tr("id")`. The build
-resolves each ID to the selected language as Windows-1251 literals in a copy of
-the sources under `build/<locale>/localized/`; nothing is looked up at run time.
-Edit the catalogs, not the copies. The English build changes only the program's
-own text and menus; the game's data files stay as installed.
+resolves each ID to the selected language as literals in its Windows code page
+in a copy of the sources under `build/<locale>/localized/`; nothing is looked up
+at run time. Edit the catalogs, not the copies. The English build changes only
+the program's own text and menus; the game's data files stay as installed.
+
+`locales/messages.pot` lists every ID the source uses. Each language is a
+`locales/<lang>.po` translation plus a `locales/<lang>.json` descriptor: its
+Windows code page, resource language, system locale, glyph set and keyboard
+table. To add a language, write its descriptor, run `python3 catalog.py update`
+to create its `.po`, translate every entry, check it with
+`python3 catalog.py check` and build with `--locale <lang>`. The game draws text
+with the fonts in its data files, which have glyphs for ASCII and, in Buka's
+edition, Cyrillic; a language needing other letters also needs new fonts.
 
 `nix run .#play` runs the result with your game data; see [Build and play](#build-and-play).
 

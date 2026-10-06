@@ -24,8 +24,9 @@ Four checks, all of which must pass:
   Russian compiler input token for token once its UTF-8 literals are read as
   the Windows-1251 bytes they show (classic_equivalence).
 * The source tree's own build.py, run through its flake (which fetches the
-  hash-pinned toolchain release), must produce HEROES.EXE in both languages,
-  and its game runner (`nix run .#play`, play.py) must complete a dry run.
+  hash-pinned toolchain release), must produce HEROES.EXE in every language
+  of its catalog, and its game runner (`nix run .#play`, play.py) must
+  complete a dry run.
 
 Nothing is patched or banked; this proves the generated source compiles to
 the matching program, not a retail match.
@@ -276,12 +277,14 @@ def compare_images(clean: Path, matching: Path) -> tuple[bool, dict[str, int]]:
 # Build
 # --------------------------------------------------------------------------
 
-def localize(tree: Path, out: Path, locale: str = "ru") -> Path:
+def localize(tree: Path, out: Path, locale: str | None = None) -> Path:
     """Copy src/, include/ and vendor/ of `tree` to `out` with every catalog
-    reference resolved to `locale`'s Windows-1251 literals, as the tree's own
-    build.py does; returns `out`."""
+    reference resolved to `locale`'s code page literals (default: the
+    matching language), as the tree's own build.py does; returns `out`."""
     from homm1.graph.catalog import Catalog
+    from homm1.graph.localization import matching_locale
     catalog = Catalog.load(tree)
+    locale = locale or matching_locale(tree)
     for directory in ("src", "include", "vendor"):
         for path in sorted((tree / directory).rglob("*")):
             if not path.is_file():
@@ -552,10 +555,11 @@ def _significant(text: str, **kind) -> list[tuple[str, str]]:
     return [(k, s) for k, s in tokens(text, **kind) if k != "space"]
 
 
-def _equivalent_cpp(classic: str, reference: str) -> str | None:
+def _equivalent_cpp(classic: str, reference: str, codepage: int = 1251) -> str | None:
     """None when `classic` equals `reference` token for token, a classic
     literal standing for the reference literal (or brace-enclosed character
-    initializer) with the same Windows-1251 bytes; else a description."""
+    initializer) with the same code page bytes; else a description."""
+    encoding = f"cp{codepage}"
     ours, theirs = _significant(classic), _significant(reference)
     i = j = 0
     while i < len(ours) and j < len(theirs):
@@ -564,9 +568,9 @@ def _equivalent_cpp(classic: str, reference: str) -> str | None:
             i, j = i + 1, j + 1
             continue
         if kind == "literal" and spelling.startswith('"'):
-            mine = literal_bytes(spelling)
+            mine = literal_bytes(spelling, encoding)
             if their_kind == "literal" and their_spelling.startswith('"') \
-                    and literal_bytes(their_spelling) == mine:
+                    and literal_bytes(their_spelling, encoding) == mine:
                 i, j = i + 1, j + 1
                 continue
             if their_spelling == "{":
@@ -574,7 +578,7 @@ def _equivalent_cpp(classic: str, reference: str) -> str | None:
                 k, chars = j + 1, bytearray()
                 while k < len(theirs) and theirs[k][0] == "literal" \
                         and theirs[k][1].startswith("'"):
-                    chars += literal_bytes(theirs[k][1])
+                    chars += literal_bytes(theirs[k][1], encoding)
                     k += 1
                     if theirs[k][1] == ",":
                         k += 1
@@ -588,10 +592,10 @@ def _equivalent_cpp(classic: str, reference: str) -> str | None:
 
 
 def classic_equivalence(classic_tree: Path, localized: Path, source_tree: Path) -> list[str]:
-    """Differences between the classic tree and the source tree's Russian
-    compiler input (`localized`, from localize())."""
-    from homm1.clean.classic import resolve_conditionals
+    """Differences between the classic tree and the source tree's compiler
+    input for the matching language (`localized`, from localize())."""
     from homm1.graph.catalog import Catalog
+    from homm1.graph.localization import matching_locale
     problems = []
     classic_files = {p.relative_to(classic_tree).as_posix() for p in classic_tree.rglob("*")
                      if p.is_file()}
@@ -605,6 +609,7 @@ def classic_equivalence(classic_tree: Path, localized: Path, source_tree: Path) 
             continue
         problems.append(f"{name}: only in {'classic' if name in classic_files else 'source'}")
     catalog = Catalog.load(source_tree)
+    locale = matching_locale(source_tree)
     for name in sorted(expected & classic_files):
         if name == "README.md":
             continue
@@ -612,11 +617,11 @@ def classic_equivalence(classic_tree: Path, localized: Path, source_tree: Path) 
         suffix = Path(name).suffix.lower()
         if suffix in (".cpp", ".h", ".c", ".hpp", ".inc") and name.split("/")[0] in (
                 "src", "include", "vendor"):
-            reference = resolve_conditionals((localized / name).read_text(), "1")
-            difference = _equivalent_cpp(ours, reference)
+            reference = (localized / name).read_text()
+            difference = _equivalent_cpp(ours, reference, catalog.locale(locale).codepage)
         elif suffix == ".rc":
-            reference = catalog.render_resource((source_tree / name).read_text(), locale="ru")
-            difference = _equivalent_rc(ours, reference)
+            reference = catalog.render_resource((source_tree / name).read_text(), locale=locale)
+            difference = _equivalent_rc(ours, reference, catalog, locale)
         else:
             difference = None if ours == (source_tree / name).read_text(encoding="utf-8") \
                 else "content differs"
@@ -637,16 +642,19 @@ def _rc_tokens(text: str) -> list[tuple[str, str]]:
     return out
 
 
-def _equivalent_rc(classic: str, reference: str) -> str | None:
+def _equivalent_rc(classic: str, reference: str, catalog, locale: str) -> str | None:
     """The classic script against the source's rendered script: the language
-    #define becomes its value, the UTF-8 code page pragma is new, and each
+    #defines become their values, the UTF-8 code page pragma is new, and each
     string must carry the same text."""
-    from homm1.clean.classic import LANG_RUSSIAN, RESOURCE_LANGUAGE
+    from homm1.clean.classic import resource_language
+    values = resource_language(catalog, locale)
     lines = reference.split("\n")
-    define = f"#define {RESOURCE_LANGUAGE} {LANG_RUSSIAN}"
-    if lines[0] != define:
-        return f"unexpected rendered header {lines[0]!r}"
-    reference = "\n".join(lines[1:]).replace(RESOURCE_LANGUAGE, LANG_RUSSIAN)
+    defines = [f"#define {symbol} {value}" for symbol, value in values.items()]
+    if lines[:len(defines)] != defines:
+        return f"unexpected rendered header {lines[:len(defines)]!r}"
+    reference = "\n".join(lines[len(defines):])
+    for symbol, value in values.items():
+        reference = re.sub(r"\b" + symbol + r"\b", value, reference)
     classic = classic.replace("#pragma code_page(65001)", "", 1)
     ours, theirs = _rc_tokens(classic), _rc_tokens(reference)
     if len(ours) != len(theirs):
@@ -662,7 +670,7 @@ def _equivalent_rc(classic: str, reference: str) -> str | None:
 
 def standalone(tree: Path) -> int:
     """Run the tree's own build (its flake's toolchain, Wine and llvm-rc) for
-    both languages."""
+    every language of its catalog (locales/<code>.json)."""
     import os
     import subprocess
     from homm1.core.paths import retail_exe
@@ -670,7 +678,7 @@ def standalone(tree: Path) -> int:
     env = {key: value for key, value in os.environ.items()
            if key not in ("WINEPREFIX", "PYTHONPATH", "HOMM1_TOOLCHAIN", "MSVC_DIR")}
     executable = json.loads((tree / "build.json").read_text())["executable"]
-    for locale in ("ru", "en"):
+    for locale in sorted(path.stem for path in (tree / "locales").glob("*.json")):
         command = ["nix", "develop", f"path:{tree}", "-c", "python3", "build.py",
                    "--locale", locale]
         if retail_exe().is_file():

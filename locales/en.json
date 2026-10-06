@@ -1,0 +1,11 @@
+{
+  "name": "English",
+  "codepage": 1252,
+  "resource_language": "0x0409",
+  "system_locale": "en_US.UTF-8",
+  "glyphs": "ascii",
+  "keyboard": {
+    "keys": "",
+    "typed": ""
+  }
+}
