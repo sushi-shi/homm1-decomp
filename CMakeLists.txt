@@ -130,6 +130,9 @@ target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
 target_compile_definitions(homm1_platform PRIVATE HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
 target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
+if(WIN32)
+  target_link_libraries(homm1_platform PUBLIC ws2_32)
+endif()
 
 # --------------------------------------------------------------------------
 # The programs: the game (heroes) and the scenario editor (heroes-editor).

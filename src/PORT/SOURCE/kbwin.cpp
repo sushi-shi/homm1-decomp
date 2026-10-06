@@ -26,6 +26,7 @@
 #endif
 
 #include <PLATFORM/File.h>
+#include <PLATFORM/Net.h>
 #include <PLATFORM/Platform.h>
 
 #include "../PortHost.h"
@@ -331,11 +332,20 @@ i32 KBRunProgram(int argc, char** argv) {
             fullScreen = 0;
         } else if (argument == "--fullscreen") {
             fullScreen = 1;
+        } else if (argument == "--port" && i + 1 < argc) {
+            long port = std::strtol(argv[++i], nullptr, 10);
+            if (port > 0 && port < 65536)
+                platform::net::CurrentSettings().port = static_cast<u16>(port);
+        } else if (argument == "--join" && i + 1 < argc) {
+            platform::net::CurrentSettings().join = argv[++i];
         } else if (argument == "--help") {
             std::printf(
-                "usage: %s [--data DIR] [--window|--fullscreen] [OPTIONS]\n"
+                "usage: %s [--data DIR] [--window|--fullscreen] [--port N] [--join ADDRESS[:PORT]]\n"
+                "          [OPTIONS]\n"
+                "--port and --join: network, modem and direct-connection play over TCP\n"
+                "(the host listens on the port, default %d; a guest joins the address).\n"
                 "OPTIONS are the original's switches, e.g. /I0 to skip the intro.\n",
-                argv[0]);
+                argv[0], static_cast<int>(platform::net::DEFAULT_PORT));
             return 0;
         } else {
             if (!gameArguments.empty())
@@ -343,6 +353,7 @@ i32 KBRunProgram(int argc, char** argv) {
             gameArguments += argument;
         }
     }
+    platform::net::LoadSettingsFromEnvironment();
     if (!KBStartHost(dataRoot.c_str(), gameArguments.c_str(), fullScreen))
         return 1;
     oldmain();
