@@ -70,6 +70,41 @@ port-te commits of its own and merges of `port`. Build, run and test it as
 `port` (`docs/port/README.md`); the game is the edition, the editor stays
 the Buka editor.
 
+### Installing it with the flake
+
+port-te's flake installs the edition the way the port's installs the game
+(README, "Install with a NixOS flake"): `heroes` runs the Tournament Edition,
+`heroes-editor` the Buka editor. Its saved games, maps and high scores live
+in `~/.local/share/homm1-te/game` and its settings in
+`~/.config/homm1/heroes-te-LANG.cfg`, apart from a plain installation's
+`homm1` folder and `heroes.cfg`.
+
+```nix
+inputs.homm1-te.url = "github:sushi-shi/homm1-decomp/port-te";
+inputs.homm1-game = {
+  url = "path:/path/to/folder-with-the-iso";
+  flake = false;
+};
+
+# in a NixOS configuration's modules (homeManagerModules.default alike):
+homm1-te.nixosModules.default
+{
+  programs.homm1 = {
+    enable = true;
+    edition = "te";                      # the default on this branch
+    game = "${homm1-game}/heroes.iso";   # your Buka 2003 image
+    locale = "ru";                       # or "en"
+  };
+}
+```
+
+`edition = "buka"` refers to the port branch's flake, which builds the Buka
+edition; one system can take `programs.homm1` from one of the two flakes.
+Without installing: `HOMM1_GAME=/path/to/heroes.iso nix run
+github:sushi-shi/homm1-decomp/port-te`. The package is
+`packages.x86_64-linux.default`, overridable like the port's (`game`,
+`locale`, `editor`; `stateName` is `homm1-te`, `edition` `te`).
+
 ### Platform rows on the port's layer
 
 The port replaces the Windows units (`kbwin`, `wingraph`, `Audio`,
