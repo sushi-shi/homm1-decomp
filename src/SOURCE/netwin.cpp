@@ -299,13 +299,13 @@ void nb_thr_ctl(void)
 #line 414 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\netlo.cpp"
 {
     NCB ncbVal;
-    i32 sendComplete;
+    b32 sendComplete;
     tag_Node* packet;
-    i32 running;
+    b32 running;
     i32 i;
     u8 result;
 
-    running = 1;
+    running = true;
     if (WaitForMultipleObjects(NETBIOS_THREAD_EVENT_COUNT, gNbEvents, FALSE, 0) == WAIT_TIMEOUT)
         return;
     if (WaitForSingleObject(gNbEvents[NETBIOS_WAKE_EVENT], 0) == WAIT_OBJECT_0)
@@ -323,7 +323,7 @@ void nb_thr_ctl(void)
             packet = pop_node(&gNbSndQueue);
         LeaveCriticalSection(&gNbSndLock);
         if (packet == NULL) {
-            running = 0;
+            running = false;
         } else {
             memset(&gNbCtlNcb, 0, sizeof(gNbCtlNcb));
             gNbCtlNcb.ncb_lsn = gNbSessLsn[packet->sessionIndex];
@@ -333,12 +333,12 @@ void nb_thr_ctl(void)
                 gNbCtlNcb.ncb_length = packet->len;
                 gNbCtlNcb.ncb_command = NCBSEND;
                 gNbCtlNcb.ncb_lana_num = gNetbiosLana;
-                sendComplete = 0;
+                sendComplete = false;
                 while (!sendComplete) {
                     result = Netbios(&gNbCtlNcb);
                     switch (result) {
                         case NRC_GOODRET:
-                            sendComplete = 1;
+                            sendComplete = true;
                             break;
                         case NRC_PENDING:
 #line 475

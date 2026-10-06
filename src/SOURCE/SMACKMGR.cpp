@@ -20,11 +20,12 @@
 #include <SOURCE/smackManager.h>
 #include <SOURCE/wingraph.h>
 
+#include <limits.h>
 #include <stdio.h>
 #include <string.h>
 
 DATA(0x0049f7c0)
-static SmackSoundFormat gSmackSoundFormats[12] = {
+static SmackSoundFormat gSmackSoundFormats[SMACK_SOUND_FORMAT_COUNT] = {
     {WAVE_FORMAT_4S16, 2, 44100, 16},
     {WAVE_FORMAT_4S08, 2, 44100, 8},
     {WAVE_FORMAT_4M16, 1, 44100, 16},
@@ -40,12 +41,12 @@ static SmackSoundFormat gSmackSoundFormats[12] = {
 };
 DATA(0x0049f850)
 H1_ENUM_ARRAY(SSmackOptions, gSmackOptions, SmackVideo, SMACK_COUNT) = {
-    {"BUKA", "", 1, 1, 1, 0, 0, 0, 0},
-    {"NWCLOGO", "", 1, 1, 1, 0, 0, 0, 0},
-    {"INTRO", "", 1, 1, 1, 0, 0, 0, 0},
-    {"LOSE", "", 1, 1, 0, 0, 0, 0, 0},
-    {"WIN1", "", 1, 1, 0, 0, 0, 0, 0},
-    {"WIN2", "", 1, 1, 0, 0, 0, 0, 0}
+    {"BUKA", "", true, true, true, false, false, 0, 0},
+    {"NWCLOGO", "", true, true, true, false, false, 0, 0},
+    {"INTRO", "", true, true, true, false, false, 0, 0},
+    {"LOSE", "", true, true, false, false, false, 0, 0},
+    {"WIN1", "", true, true, false, false, false, 0, 0},
+    {"WIN2", "", true, true, false, false, false, 0, 0}
 };
 DATA(0x0049f8f4)
 static i32 gSmackVolumes[11] = {0, 127, 97, 75, 52, 40, 30, 20, 15, 10, 5};
@@ -97,7 +98,7 @@ void InitSmackSound() {
     if (waveOutGetDevCaps(0, &gSmackWaveCaps, sizeof(gSmackWaveCaps)))
         return;
     gSmackAudioFormat.format = 0;
-    for (u32 i = 0; i < 12; ++i) {
+    for (u32 i = 0; i < SMACK_SOUND_FORMAT_COUNT; ++i) {
         if (gSmackWaveCaps.dwFormats & gSmackSoundFormats[i].format) {
             gSmackAudioFormat.format = gSmackSoundFormats[i].format;
             gSmackAudioFormat.channels = gSmackSoundFormats[i].channels;
@@ -107,19 +108,19 @@ void InitSmackSound() {
         }
     }
     if (!gSmackAudioFormat.format) {
-        gSmackAudioFormat.channels = 1;
-        gSmackAudioFormat.samplesPerSecond = 22050;
-        gSmackAudioFormat.bitsPerSample = 8;
+        gSmackAudioFormat.channels = SMACK_FALLBACK_CHANNELS;
+        gSmackAudioFormat.samplesPerSecond = SMACK_FALLBACK_SAMPLE_RATE;
+        gSmackAudioFormat.bitsPerSample = SMACK_FALLBACK_BITS_PER_SAMPLE;
     }
     AIL_startup();
     gSmackPcmFormat.wf.wFormatTag = WAVE_FORMAT_PCM;
     gSmackPcmFormat.wf.nChannels = gSmackAudioFormat.channels;
     gSmackPcmFormat.wf.nSamplesPerSec = gSmackAudioFormat.samplesPerSecond;
     gSmackPcmFormat.wf.nAvgBytesPerSec = gSmackAudioFormat.samplesPerSecond
-                                         * (gSmackAudioFormat.bitsPerSample / 8)
+                                         * (gSmackAudioFormat.bitsPerSample / CHAR_BIT)
                                          * gSmackAudioFormat.channels;
     gSmackPcmFormat.wf.nBlockAlign =
-        (gSmackAudioFormat.bitsPerSample / 8) * gSmackAudioFormat.channels;
+        (gSmackAudioFormat.bitsPerSample / CHAR_BIT) * gSmackAudioFormat.channels;
     gSmackPcmFormat.wBitsPerSample = gSmackAudioFormat.bitsPerSample;
     if (AIL_waveOutOpen(&gSmackDigDriver, NULL, 0, &gSmackPcmFormat.wf))
         gSmackDigDriver = NULL;
@@ -141,7 +142,7 @@ void ConvertSmackerPalette(u8* paletteData) {
 }
 
 VA(0x00458433, 0x13c)
-void DoAdvance(Smack* smack, i32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette) {
+void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette) {
     if (drawFrame && smack->NewPalette && !skipPalette) {
         memcpy(gPalette->m_data, smack->Palette, PALETTE_DATA_SIZE);
         // API-forced: ConvertSmackerPalette takes u8*.
@@ -152,7 +153,7 @@ void DoAdvance(Smack* smack, i32 drawFrame, b32 advanceFrame, b32 updatePalette,
     SmackDoFrame(smack);
     if (drawFrame) {
         while (SmackToBufferRect(smack, SMACK_SURFACE_SLOW)) {
-            if (gMovieId == SMACK_WIN2 && smack->FrameNum >= 22) {
+            if (gMovieId == SMACK_WIN2 && smack->FrameNum >= SMACK_WIN2_TEXT_FIRST_FRAME) {
                 // language-forced: the assertion tests the pointer as an integer.
 #line 178 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Game\\SMACKMGR.CPP"
                 H1_ASSERT(reinterpret_cast<i32>(gWinText));
@@ -180,7 +181,7 @@ void SmackMain() {
     b32 active;
     b32 primaryOn;
     b32 companionOn;
-    i32 unusedTrue = 1;
+    b32 unusedTrue = true;
     gSmackPrevFrame = false;
     i32 unusedPlaybackState = 0;
     i32 unusedTimer;
@@ -246,7 +247,7 @@ void SmackMain() {
             if (!primaryOn || gSmackPrimary->Frames > 1)
                 DoAdvance(
                     gSmackPrimary,
-                    1,
+                    true,
                     true,
                     primaryOn || !gSmackOptions[gMovieId].fadeIn,
                     false
@@ -261,11 +262,11 @@ void SmackMain() {
         }
         if (gSmackCompanion && primaryOn && !SmackWait(gSmackCompanion)) {
             if (companionOn && gSmackCompanion->FrameNum == gSmackCompanion->Frames - 1) {
-                i32 drawLastFrame;
+                b32 drawLastFrame;
                 if (gSmackOptions[gMovieId].drawCompanion)
-                    drawLastFrame = 1;
+                    drawLastFrame = true;
                 else
-                    drawLastFrame = 0;
+                    drawLastFrame = false;
                 DoAdvance(gSmackCompanion, drawLastFrame, false, false, true);
                 gSmackPrevFrame = true;
                 while (SmackWait(gSmackCompanion))

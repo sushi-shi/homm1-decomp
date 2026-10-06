@@ -36,17 +36,17 @@ static inline void ResetEventQueue(inputManager* manager) {
 }
 
 VA(0x0046e560, 0x464)
-i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData) {
+b32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messageData) {
     if (gInputManager == NULL)
-        return 1;
+        return true;
     if (gInputManager->m_active != 1)
-        return 1;
+        return true;
 
     tag_message* event = &gInputManager->m_eventRing[gInputManager->m_writeIndex];
     event->type = MESSAGE_NONE;
     event->modifiers = MESSAGE_MODIFIER_NONE;
     event->y = 0;
-    event->keyCode = 0;
+    event->keyCode = INPUT_SCAN_NONE;
 
     switch (message) {
         case WM_KEYDOWN:
@@ -123,13 +123,13 @@ i32 KeyboardMessageHandler(void* window, u32 message, u32 virtualKey, i32 messag
 
 VA(0x0046e9c4, 0x33a)
 #line 137 INPUTMGR_CPP_PATH
-i32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData) {
+b32 MouseMessageHandler(void* window, u32 message, u32 keyFlags, i32 messageData) {
     if (gInputManager == NULL)
-        return 1;
+        return true;
     if (gInputManager->m_active != 1)
-        return 1;
+        return true;
     if (gInputManager->m_mouseMessageActive != 0)
-        return 1;
+        return true;
     gInputManager->m_mouseMessageActive = 1;
 
     i32 captureReleased;
@@ -206,7 +206,7 @@ inputManager::inputManager(void) {
     m_field_0x238 = 0;
     m_field_0x23a = 1;
     m_keyCodeType = INPUT_KEY_CODE_SCAN;
-    m_recordFile = -1;
+    m_recordFile = FILE_DESCRIPTOR_INVALID;
     m_field_0x34f = 0;
 }
 
@@ -230,7 +230,7 @@ VA(0x0046ee42, 0x64)
 void inputManager::Close(void) {
     if (m_active != 1)
         return;
-    if (m_recordFile != -1)
+    if (m_recordFile != FILE_DESCRIPTOR_INVALID)
         close(m_recordFile);
     ResetEventQueue(this);
     m_requestedPriority = 0;
@@ -395,7 +395,7 @@ VA(0x0046f3cb, 0x46a)
 void inputManager::MakeScanCodeTable(void) {
     for (u32 scanCode = 0; scanCode < INPUT_SCAN_CODE_CAPACITY; scanCode++)
         m_scanCodeTable[scanCode] = EncodeScanCode(scanCode);
-    m_scanCodeTable[INPUT_SCAN_NONE] = 0;
+    m_scanCodeTable[INPUT_SCAN_NONE] = '\0';
     m_scanCodeTable[INPUT_SCAN_ESCAPE] = INPUT_ASCII_ESCAPE;
     m_scanCodeTable[INPUT_SCAN_1] = '1';
     m_scanCodeTable[INPUT_SCAN_2] = '2';

@@ -5,6 +5,7 @@
 #include <BASE/bitmap.h>
 #include <BASE/bmap2.h>
 #include <BASE/heroWindowManager.h>
+#include <BASE/Misc.h>
 #include <BASE/miscwin.h>
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
@@ -88,7 +89,7 @@ void bitmap::Write(char* filename) {
     palette* combatPaletteData;
     i32 unusedData;
     i32 file = open(filename, O_WRONLY | O_CREAT | O_BINARY, S_IWRITE);
-    if (file == -1)
+    if (file == FILE_DESCRIPTOR_INVALID)
         return;
     combatPaletteData = gResourceManager->GetPalette("combat.pal");
     i8* paletteData = combatPaletteData->Data();

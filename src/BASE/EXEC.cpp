@@ -138,7 +138,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) executive::AddManager(baseManager* manage
         return BASE_MANAGER_ERROR;
     if (priority == BASE_MANAGER_PRIORITY_UNASSIGNED) {
         if (m_managerListTail == NULL)
-            priority = 0;
+            priority = BASE_MANAGER_PRIORITY_FIRST;
         else
             priority = m_managerListTail->m_priority + 1;
     }

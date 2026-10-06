@@ -75,7 +75,7 @@ fileRequester::fileRequester(
     char fullFileName[412];
     i32 file;
     SMapHeader header;
-    i32 found;
+    BOOL found;
     char unusedName[FILE_REQUESTER_UNUSED_NAME_SIZE];
     i32 shiftRow;
     i32 entryIndex;
@@ -138,14 +138,14 @@ fileRequester::fileRequester(
     sprintf(gText, "%s%s", directory, pattern);
     findHandle = FindFirstFile(gText, &findFileData);
     if (findHandle != INVALID_HANDLE_VALUE) {
-        found = 1;
+        found = TRUE;
         while (found) {
             if (ShowThisMap(findFileData.cFileName)) {
                 strcpy(nameBuffer, findFileData.cFileName);
                 extensionStart = FindLastToken(nameBuffer, '.');
                 if (extensionStart) {
                     strcpy(extension, extensionStart);
-                    *extensionStart = 0;
+                    *extensionStart = '\0';
                 }
                 for (entryIndex = 0; entryIndex < insertCount; entryIndex++) {
                     if (strcmpi(nameBuffer, m_fileNames[entryIndex].text) < 0) {
@@ -176,7 +176,7 @@ fileRequester::fileRequester(
                 m_extensions[entryIndex].text
             );
             file = open(fullFileName, O_BINARY);
-            if (file == -1)
+            if (file == FILE_DESCRIPTOR_INVALID)
                 FileError(fullFileName);
             READ_FILE_VALUE(file, header);
             if (header.id == MAP_HEADER_ID) {
@@ -273,7 +273,7 @@ H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
         strcpy(m_filename, gGame->m_saveName);
         extensionStart = FindLastToken(m_filename, '.');
         if (extensionStart)
-            *extensionStart = 0;
+            *extensionStart = '\0';
         message.id = textEntryId;
         message.text = m_filename;
         m_window->BroadcastMessage(message);
@@ -442,11 +442,11 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                                     && static_cast<u8>(nameBuffer[key]) != '_'
                                     && static_cast<u8>(nameBuffer[key]) != ' '
                                     && !FindToken("$%'-_@~`!(){}^#&+,;=[].", nameBuffer[key]))
-                                    nameBuffer[key] = 0;
+                                    nameBuffer[key] = '\0';
                             }
                             for (key = strlen(nameBuffer) - 1; key >= 0; key--) {
                                 if (static_cast<u8>(nameBuffer[key]) == ' ')
-                                    nameBuffer[key] = 0;
+                                    nameBuffer[key] = '\0';
                                 else
                                     key = -1;
                             }

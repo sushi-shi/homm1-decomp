@@ -151,7 +151,8 @@ H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::Open(i16 zOrder, i8 updateScre
     if ((m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         return WINDOW_OPEN_FAILURE;
     gMouseManager->ReallyHidePointer();
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE && SaveBackground() != 0)
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE
+        && SaveBackground() != WINDOW_OPEN_SUCCESS)
         return WINDOW_OPEN_FAILURE;
     m_zOrder = zOrder;
     DrawWindow(updateScreen);
@@ -182,11 +183,11 @@ void heroWindow::AddWidget(widget* newWidget, i16 zOrder) {
     widget* currentWidget = m_widgetListHead;
     if (zOrder == WINDOW_Z_ORDER_APPEND) {
         if (currentWidget == NULL)
-            zOrder = 0;
+            zOrder = WINDOW_Z_ORDER_BOTTOM;
         else
             zOrder = currentWidget->m_zOrder + 1;
     }
-    if (newWidget->Open(zOrder, this) != 0)
+    if (newWidget->Open(zOrder, this) != WINDOW_OPEN_SUCCESS)
         return;
     while (currentWidget != NULL && currentWidget->m_zOrder > zOrder)
         currentWidget = currentWidget->m_next;
@@ -290,12 +291,12 @@ void heroWindow::DrawWindow(i16 updateScreen, i32 firstId, i32 lastId) {
 }
 
 VA(0x0046db7e, 0xaa)
-i16 heroWindow::SaveBackground(void) {
+H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::SaveBackground(void) {
     m_savedBackground = new bitmap(BITMAP_TYPE_MEMORY, m_winWidth, m_winHeight);
     PollSound();
     m_savedBackground->GrabScreen(m_posX, m_posY);
     PollSound();
-    return 0;
+    return WINDOW_OPEN_SUCCESS;
 }
 
 VA(0x0046dc28, 0x8a)

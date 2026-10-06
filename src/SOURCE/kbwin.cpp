@@ -200,7 +200,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
             return 0;
         case WM_KEYDOWN:
         case WM_KEYUP:
-            if (KeyboardMessageHandler(window, message, messageParam, messageData) == 0)
+            if (KeyboardMessageHandler(window, message, messageParam, messageData) == false)
                 return 0;
             break;
         case WM_MOUSEMOVE:
@@ -210,7 +210,7 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
         case WM_RBUTTONDOWN:
         case WM_RBUTTONUP:
         case WM_RBUTTONDBLCLK:
-            if (MouseMessageHandler(window, message, messageParam, messageData) == 0)
+            if (MouseMessageHandler(window, message, messageParam, messageData) == false)
                 return 0;
             break;
         case WM_TIMER:
@@ -1167,11 +1167,11 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
 
     sprintf(gText, "%sHEROES.AGG", gDataPath);
     probeFd = open(gText, _O_BINARY);
-    if (probeFd == -1) {
+    if (probeFd == FILE_DESCRIPTOR_INVALID) {
         if (_chdir(gRegAppPath) == -1)
             return CD_SETUP_NO_APP_PATH;
         probeFd = open(gText, _O_BINARY);
-        if (probeFd == -1)
+        if (probeFd == FILE_DESCRIPTOR_INVALID)
             return CD_SETUP_NO_DATA;
     }
     close(probeFd);
@@ -1191,7 +1191,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
         && DriveSupportsFreeSpaceQuery(gRegCDRomPath[0])) {
         sprintf(gText, "%s%s", gRegCDRomPath, gCDTrackName);
         probeFd = open(gText, _O_BINARY);
-        if (probeFd != -1) {
+        if (probeFd != FILE_DESCRIPTOR_INVALID) {
             close(probeFd);
             return CD_SETUP_READY;
         }
@@ -1203,7 +1203,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
             if (DriveSupportsFreeSpaceQuery(cdDrives[index] + 'A')) {
                 sprintf(gText, "%c:%s", cdDrives[index] + 'A', gCDTrackName);
                 probeFd = open(gText, _O_BINARY);
-                if (probeFd == -1)
+                if (probeFd == FILE_DESCRIPTOR_INVALID)
                     continue;
                 tailResult = _lseek(probeFd, 0, SEEK_END);
                 if (tailResult != -1) {

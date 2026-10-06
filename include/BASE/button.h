@@ -6,6 +6,9 @@
 #include <H1/Macros.h>
 
 H1_ENUM_CONST_BEGIN(ButtonConstant)
+// m_selectMode: a selected button sends the select notification, or ends
+// its dialog with its id as the result.
+    BUTTON_SELECT_NOTIFY = 0,
     BUTTON_SELECT_DIALOG_RESULT = 1,
     BUTTON_REPEAT_DELAY_TICKS = 60,
     BUTTON_NO_HOTKEY = -1

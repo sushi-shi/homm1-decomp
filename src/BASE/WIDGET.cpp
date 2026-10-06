@@ -44,10 +44,10 @@ VA(0x00475478, 0x14)
 widget::~widget(void) {}
 
 VA(0x0047548c, 0x24)
-i16 widget::Open(i16 zOrder, heroWindow* owner) {
+H1_ENUM_RETURN(WindowOpenStatus, i16) widget::Open(i16 zOrder, heroWindow* owner) {
     m_zOrder = zOrder;
     m_owner = owner;
-    return 0;
+    return WINDOW_OPEN_SUCCESS;
 }
 
 VA(0x004754b0, 0xb)

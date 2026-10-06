@@ -6,7 +6,7 @@
 # (tab-separated; every field is an fnmatch glob, `*` matches anything; the
 # first matching row wins): file owner spelling group detail reason.
 # group/detail are the census' review_group/review_context columns.
-#floor	1616
+#floor	1469
 *	*	0	trivial-function-literal	0 for-init	a for loop's counter starts at zero
 *	*	0	trivial-function-literal	0 initializer*	an accumulator or counter declared at zero
 *	*	1	trivial-function-literal	1 arithmetic*	a one-step offset: the next index, element or count
@@ -62,7 +62,6 @@
 *	*	0x100	bitwise-or-packing	operator |	the input-filter bit 0x100 retail sets in manager message masks (no producer posts it; Buka lacks it too)
 *	*	[01]	call-argument	SetNoDialogMenus(* argument 1	SetNoDialogMenus's menus-enabled flag
 *	*	[01]	call-argument	SetEnvironmentOrigin(* argument 3	advManager::SetEnvironmentOrigin's stop-sounds flag
-*	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
 *	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
 *	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
 *	*	[01]	call-argument	CombatMonsterEvent(* argument 7	advManager::CombatMonsterEvent's hero-defends flag
@@ -428,8 +427,6 @@ src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality gNetbiosAvail	a te
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNetStatus[[][]]	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbShutdown	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality length	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
-src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store sendComplete	a flag, counter or index local/field set to 0 or 1
-src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 store sendComplete	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 equality memcmp()	a test against 0 (none, empty, unset) or 1 (a set flag or a single item)
 src/SOURCE/netwin.cpp	*	0	trivial-function-literal	0 store gNbCallRetries	a flag, counter or index local/field set to 0 or 1
 src/SOURCE/netwin.cpp	*	1	trivial-function-literal	1 condition	an unconditional loop
@@ -532,8 +529,6 @@ src/SOURCE/TOWNMGR.cpp	*	1	trivial-function-literal	1 store sameType	a boolean f
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppIdle()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality AppInit()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality EarlySetup()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality KeyboardMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality MouseMessageHandler()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality RegisterClassA()	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality condition	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 equality fullScreen	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -851,12 +846,7 @@ src/SOURCE/kbwin.cpp	*	*	call-argument	RegSetValueExA(HKEY, LPCSTR, DWORD, DWORD
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetHWnd(DWORD, HWND) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/wingraph.cpp	*	*	call-argument	SetMenuStatus(i32) argument *	a flag, mode or selector argument of a HoMM1 routine without a named domain (draw/update/redraw/give-take flags, transfer options, no-exclusion -1)
 src/SOURCE/wingraph.cpp	*	*	call-argument	GetSystemPaletteEntries(HDC, UINT, UINT, LPPALETTEENTRY) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	DDUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
 src/SOURCE/wingraph.cpp	*	*	call-argument	PatBlt(HDC, int, int, int, int, DWORD) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	bitwise-or-packing	operator << paletteData[[]]	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	WGUpdatePalette	*	arithmetic	operator +	retail window/screen layout in pixels or frames, or a text/row count of this routine
-src/SOURCE/wingraph.cpp	*	*	call-argument	AnimatePalette(HPALETTE, UINT, UINT, const PALETTEENTRY *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
-src/SOURCE/wingraph.cpp	*	*	call-argument	WinGSetDIBColorTable(HDC, UINT, UINT, const RGBQUAD *) argument *	a Win32/CRT API literal argument (filter 0, reserved 0, flags, sizes)
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	ShowRoute(* argument [123]	advManager::ShowRoute's redraw / show / update flags
 src/SOURCE/ADVMGR.cpp	*	[01]	call-argument	Reseed(* argument [12]	advManager::Reseed's flag arguments
 src/SOURCE/ADVMGR.cpp	advManager::Main	*	array-index	array subscript m_playerDead	a player slot the debug keys kill

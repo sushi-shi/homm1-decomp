@@ -46,7 +46,7 @@ sample::sample(char* name)
                 break;
             case 'M':
             case 'm':
-                m_playbackData.stereo = 0;
+                m_playbackData.stereo = SAMPLE_LOAD_MONO;
                 break;
         }
     }

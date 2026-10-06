@@ -40,7 +40,11 @@ H1_ENUM_CONST_BEGIN(SampleLoadConstant)
     SAMPLE_LOAD_RATE_44100 = 44100,
     SAMPLE_LOAD_FORMAT_8_BIT = 0,
     SAMPLE_LOAD_FORMAT_16_BIT = 1,
-    SAMPLE_LOAD_STEREO = 1
+    SAMPLE_LOAD_MONO = 0,
+    SAMPLE_LOAD_STEREO = 1,
+    // The channel count PlaySample opens the sample's buffer with.
+    SAMPLE_CHANNEL_COUNT_MONO = 1,
+    SAMPLE_CHANNEL_COUNT_STEREO = 2
 H1_ENUM_CONST_END(SampleLoadConstant)
 
 #endif

@@ -21,6 +21,11 @@ H1_ENUM_CONST_BEGIN(MouseCursorFrameConstant)
     MOUSE_INVALID_CURSOR_FRAME = -1
 H1_ENUM_CONST_END(MouseCursorFrameConstant)
 
+// The m_pointerFlags bit IsVis tests: the software pointer is drawn.
+H1_ENUM_CONST_BEGIN(MousePointerFlag)
+    MOUSE_POINTER_FLAG_VISIBLE = 1
+H1_ENUM_CONST_END(MousePointerFlag)
+
 #pragma pack(push, 1)
 class mouseManager : public baseManager {
 public:
@@ -67,7 +72,7 @@ public:
     void HideColorPointer(void);
     void ShowColorPointer(void);
     i32 IsVis(void) {
-        return m_pointerFlags & 1;
+        return m_pointerFlags & MOUSE_POINTER_FLAG_VISIBLE;
     }
     // Empty in the Windows build (retail 0x00476e20, `ret 8`).
     void MovePointer(i16 x, i16 y);
@@ -110,7 +115,12 @@ H1_ENUM_CONST_BEGIN(MouseManagerConstant)
     MOUSE_CURSOR_ADVENTURE = 0,
     MOUSE_CURSOR_COMBAT = 1,
     MOUSE_CURSOR_SPELL = 2,
-    MOUSE_KEEP_CURRENT_FRAME = 1000
+    MOUSE_KEEP_CURRENT_FRAME = 1000,
+    // Cursor bitmap pixels SetPointer turns into the AND/XOR masks: index 0
+    // is transparent; index 1 is the monochrome pointer's black (the white
+    // XOR plane under the special masks).
+    MOUSE_CURSOR_PIXEL_TRANSPARENT = 0,
+    MOUSE_CURSOR_PIXEL_OUTLINE = 1
 H1_ENUM_CONST_END(MouseManagerConstant)
 
 extern i32 gMouseCursorType;

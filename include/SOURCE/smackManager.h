@@ -21,11 +21,11 @@ H1_ENUM_END(SmackVideo)
 struct SSmackOptions {
     char fileName[9];
     char companionFileName[9];
-    i8 fadeIn;
-    i8 fadeOut;
-    i8 preload;
-    i8 waitForInput;
-    i8 drawCompanion;
+    b8 fadeIn;
+    b8 fadeOut;
+    b8 preload;
+    b8 waitForInput;
+    b8 drawCompanion;
     i16 companionX;
     i16 companionY;
 };
@@ -36,10 +36,25 @@ extern H1_ENUM_STORAGE(SmackVideo, i8) gMovieId;
 void InitSmackSound();
 void ShutdownSmackSound();
 void ConvertSmackerPalette(u8* paletteData);
-void DoAdvance(Smack* smack, i32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
+void DoAdvance(Smack* smack, b32 drawFrame, b32 advanceFrame, b32 updatePalette, b32 skipPalette);
 void SmackMain();
 void CloseSmackers();
 i32 PlaySmacker(H1_ENUM_PARAM(SmackVideo, i32) smackNumber);
+
+// InitSmackSound tries the wave formats from 44 kHz 16-bit stereo down to
+// 11 kHz 8-bit mono and falls back to 22 kHz 8-bit mono when the device
+// reports none of them.
+H1_ENUM_CONST_BEGIN(SmackSoundConstant)
+    SMACK_SOUND_FORMAT_COUNT = 12,
+    SMACK_FALLBACK_CHANNELS = 1,
+    SMACK_FALLBACK_SAMPLE_RATE = 22050,
+    SMACK_FALLBACK_BITS_PER_SAMPLE = 8
+H1_ENUM_CONST_END(SmackSoundConstant)
+
+// The WIN2 movie frame from which SmackMain draws the victory text over it.
+H1_ENUM_CONST_BEGIN(SmackTextConstant)
+    SMACK_WIN2_TEXT_FIRST_FRAME = 22
+H1_ENUM_CONST_END(SmackTextConstant)
 
 #pragma pack(push, 1)
 struct SmackSoundFormat {
