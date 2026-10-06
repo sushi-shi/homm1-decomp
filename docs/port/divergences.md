@@ -65,13 +65,16 @@ commit.
 
 | Area | Original | Now |
 | --- | --- | --- |
-| Settings | Registry key `HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000`; the modem init string was stored with a length of 4 bytes. | `$XDG_CONFIG_HOME/homm1/heroes.cfg`, same value names; the init string is stored whole. |
+| Settings | Registry key `HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000`; the modem init string was stored with a length of 4 bytes. | `$XDG_CONFIG_HOME/homm1/heroes.cfg` (`%APPDATA%\homm1\heroes.cfg` on Windows, the site's IndexedDB in a browser), same value names; the init string is stored whole. The file is replaced atomically, like a save. |
 | First start | Full screen. | In a window (F4 switches, as in the original). Later starts use the saved choice; `--window` and `--fullscreen` override it. |
 | Music source | The CD's `TRACKS` folder on a CD drive (asking for the CD when absent). | The `Tracks` folder in `$HOMM1_CD`, a `cd` folder beside the game folder, or the game folder; without it, the installed digital music in `SOUND`. |
 | Menu bar | A Windows menu bar in windowed mode (options, window sizes, help). | Drawn by the port in the same place with the game's small font and Windows' colours, for the game and the editor; an open menu runs a modal loop as Windows' did. Window-size commands size the window. |
-| Help and About | WinHelp file `HELP\HEROES.HLP`; an About dialog box. | Help is unavailable and its item greyed; About shows the About box's text in a message box. |
+| Help and About | WinHelp file `HELP\HEROES.HLP`, opened at its contents (`HELP_FINDER`); an About dialog box. | Help converts the book to one HTML page and shows it in the system's browser (a new tab in the browser build), opening at the contents and index; WinHelp's pop-up and secondary windows become in-page links, macros are not run. The item is greyed only when the file is missing. About shows the About box's text in a message box. |
 | Network and serial play | NetBIOS, modem and direct cable. | Not available: choosing them reports the original's "NetBIOS not found" or serial error. |
 | Single instance | A named event refused a second copy. | No check. |
+| Game data in a browser | Installed from the CD. | The page copies the player's game folder (and, if given, the CD's music and the help file) into the site's IndexedDB once; saved games and maps are written back there and can be downloaded from the page. |
+| Window in a browser | A window of the chosen size. | A canvas of the game's size (menu bar included) that the page scales to the browser window; the window-size commands change the canvas, full screen is the browser's. |
+| Log on Windows | None. | The native Windows programs are GUI programs; their log goes to a redirected stderr, the parent console or `%APPDATA%\homm1\homm1.log`. |
 
 ## Retail defects kept
 

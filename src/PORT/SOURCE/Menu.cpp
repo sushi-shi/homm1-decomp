@@ -696,8 +696,10 @@ void UpdateDfltMenu(KBMenu menu) {
         MenuEnableItem(menu, KBWIN_MENU_SIZE_1024_768, false);
     if (desktopWidth <= KBWIN_WIDTH_1280)
         MenuEnableItem(menu, KBWIN_MENU_SIZE_1280_1024, false);
-    // The help file is a WinHelp book, which current hosts cannot show.
-    MenuEnableItem(menu, KBWIN_MENU_HELP, false);
+    // The help book is shown converted from the game's WinHelp file; without
+    // that file the item is unavailable.
+    if (!HelpAvailable())
+        MenuEnableItem(menu, KBWIN_MENU_HELP, false);
 }
 
 std::string MenuAboutText() {

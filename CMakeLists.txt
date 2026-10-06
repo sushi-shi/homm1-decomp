@@ -1,8 +1,9 @@
 cmake_minimum_required(VERSION 3.20)
 project(homm1 CXX)
 
-# Native build of the game (and, once its sources are present, the scenario
-# editor) on the SDL3 platform layer. The Visual C++ 6 build (build.py) is
+# Native build of the game and the scenario editor on the SDL3 platform
+# layer, for Linux and (cross-compiled with MinGW-w64, nix/windows.nix)
+# Windows. The Visual C++ 6 build (build.py) is
 # separate and unaffected.
 
 include(CTest)
@@ -27,6 +28,12 @@ endif()
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 find_package(PkgConfig REQUIRED)
 find_package(SDL3 REQUIRED CONFIG)
+# SDL marks its headers non-system, so the strict warnings below would apply
+# to its macros (old-style casts) wherever the compiler wrapper does not
+# already pass them as system headers, as Nix's does natively.
+if(TARGET SDL3::Headers AND NOT CMAKE_VERSION VERSION_LESS "3.25")
+  set_property(TARGET SDL3::Headers PROPERTY SYSTEM 1)
+endif()
 pkg_check_modules(FFMPEG REQUIRED IMPORTED_TARGET libavformat libavcodec libavutil libswresample)
 
 # --------------------------------------------------------------------------
@@ -116,6 +123,31 @@ set(HOMM1_GAME_WARNINGS
   -Wno-restrict -Wno-nonnull -Wno-unused-result -Wno-narrowing -Wno-register
   -Werror=return-type -Werror=int-to-pointer-cast -Werror=mismatched-new-delete
   -Wformat-security -Wno-error=format-security -Wdelete-non-virtual-dtor)
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # Some of the options above are GCC's alone.
+  list(APPEND HOMM1_GAME_WARNINGS -Wno-unknown-warning-option)
+endif()
+
+# --------------------------------------------------------------------------
+# The browser build (Emscripten). The game's own loops block - menus,
+# dialogs, combat and the adventure map each run a loop that polls for input
+# - so the program cannot return to the browser between frames. ASYNCIFY
+# lets those loops yield where they already wait: SDL_Delay, presenting a
+# frame and the event poll unwind the WebAssembly stack to the browser and
+# rewind it afterwards. JSPI would do the same with less code, but is not
+# available in every browser yet (docs/port/README.md).
+# --------------------------------------------------------------------------
+
+if(EMSCRIPTEN)
+  set(HOMM1_WEB_PRE_JS ${CMAKE_SOURCE_DIR}/src/PLATFORM/Web/pre.js)
+  set(HOMM1_WEB_LINK_OPTIONS
+    -sASYNCIFY=1 -sASYNCIFY_STACK_SIZE=262144
+    -sSTACK_SIZE=8MB -sINITIAL_MEMORY=64MB -sALLOW_MEMORY_GROWTH=1
+    -sFORCE_FILESYSTEM=1 -lidbfs.js
+    -sINVOKE_RUN=0 -sEXIT_RUNTIME=1 -sENVIRONMENT=web
+    "-sEXPORTED_RUNTIME_METHODS=FS,callMain,ENV"
+    --pre-js ${HOMM1_WEB_PRE_JS})
+endif()
 
 # --------------------------------------------------------------------------
 # Platform layer: host services behind include/PLATFORM interfaces.
@@ -128,8 +160,15 @@ target_include_directories(homm1_platform PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_WARNINGS}
   ${HOMM1_SANITIZE_FLAGS})
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
-target_compile_definitions(homm1_platform PRIVATE HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
+target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
 target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 PkgConfig::FFMPEG)
+if(WIN32)
+  # MinGW: the C++ runtime is linked in; the programs then need only SDL3,
+  # FFmpeg and the compiler's thread library beside them.
+  target_link_options(homm1_platform PUBLIC -static-libgcc -static-libstdc++)
+  # C99 formatting (%zu, %lld) for the log, as on other hosts.
+  target_compile_definitions(homm1_platform PRIVATE __USE_MINGW_ANSI_STDIO=1)
+endif()
 
 # --------------------------------------------------------------------------
 # The programs: the game (heroes) and the scenario editor (heroes-editor).
@@ -188,12 +227,24 @@ function(homm1_program name target output rc)
 
   set_source_files_properties(${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp PROPERTIES GENERATED TRUE)
   add_executable(${name} ${HOMM1_LOCALIZED}/src/PORT/SOURCE/Main.cpp)
-  set_target_properties(${name} PROPERTIES OUTPUT_NAME ${output})
+  # A Windows GUI program: no console window (the log is routed in Host.cpp).
+  set_target_properties(${name} PROPERTIES OUTPUT_NAME ${output} WIN32_EXECUTABLE TRUE)
   target_link_libraries(${name} PRIVATE ${name}_units)
+  if(EMSCRIPTEN)
+    target_link_options(${name} PRIVATE ${HOMM1_WEB_LINK_OPTIONS})
+    set_property(TARGET ${name} APPEND PROPERTY LINK_DEPENDS ${HOMM1_WEB_PRE_JS})
+  endif()
 endfunction()
 
 homm1_program(homm1 game heroes src/SOURCE/Heroes.rc)
 homm1_program(homm1_editor editor heroes-editor src/EDITOR/Editor.rc)
+
+# The help converter as a command-line tool (tools/help).
+add_executable(homm1_hlp2html ${CMAKE_SOURCE_DIR}/tools/help/hlp2html.cpp)
+set_target_properties(homm1_hlp2html PROPERTIES OUTPUT_NAME homm1-hlp2html)
+target_compile_options(homm1_hlp2html PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_WARNINGS}
+  ${HOMM1_SANITIZE_FLAGS})
+target_link_libraries(homm1_hlp2html PRIVATE homm1_platform)
 
 # --------------------------------------------------------------------------
 # Tests.

@@ -150,7 +150,16 @@ bool OpenDisplay() {
     std::string requested = Environment("HOMM1_SCALE");
     if (!requested.empty())
         scale = std::max(1, std::atoi(requested.c_str()));
+#ifdef __EMSCRIPTEN__
+    // In a page the canvas keeps the image's own size and the page scales
+    // it to the browser window (src/PLATFORM/Web/homm1.js). A resizable SDL
+    // window would instead follow the canvas's shown size and letterbox the
+    // image inside it.
+    scale = 1;
+    SDL_WindowFlags flags = 0;
+#else
     SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
+#endif
     if (!SDL_CreateWindowAndRenderer(
             defaults.title, kWidth * scale, (kHeight + gBar) * scale, flags, &gWindow, &gRenderer)) {
         Log("cannot open a window: %s", SDL_GetError());
@@ -350,7 +359,7 @@ bool SaveDisplayBmp(const char* hostPath) {
     const int height = kHeight + gBar;
     std::vector<u8> rgb(static_cast<size_t>(kWidth * height * 3));
     CaptureDisplay(rgb.data());
-    std::FILE* file = std::fopen(hostPath, "wb");
+    SDL_IOStream* file = SDL_IOFromFile(hostPath, "wb");
     if (file == nullptr)
         return false;
     const u32 rowBytes = kWidth * 3;
@@ -368,7 +377,7 @@ bool SaveDisplayBmp(const char* hostPath) {
     header[26] = 1;
     header[28] = 24;
     put32(34, imageBytes);
-    bool ok = std::fwrite(header, sizeof(header), 1, file) == 1;
+    bool ok = SDL_WriteIO(file, header, sizeof(header)) == sizeof(header);
     std::vector<u8> row(rowBytes);
     for (int y = height - 1; y >= 0 && ok; y--) {
         for (int x = 0; x < kWidth; x++) {
@@ -377,9 +386,9 @@ bool SaveDisplayBmp(const char* hostPath) {
             row[static_cast<size_t>(x * 3 + 1)] = source[1];
             row[static_cast<size_t>(x * 3 + 2)] = source[0];
         }
-        ok = std::fwrite(row.data(), row.size(), 1, file) == 1;
+        ok = SDL_WriteIO(file, row.data(), row.size()) == row.size();
     }
-    return std::fclose(file) == 0 && ok;
+    return SDL_CloseIO(file) && ok;
 }
 
 void SetReferenceImage(const u8* pixels) {

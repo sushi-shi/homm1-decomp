@@ -8,9 +8,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
+#include <random>
 #include <string>
-#include <sys/stat.h>
-#include <unistd.h>
+#include <system_error>
 
 namespace {
 
@@ -32,16 +33,17 @@ void Touch(const std::string& path, const char* text) {
 }  // namespace
 
 int main() {
-    const char* temporary = std::getenv("TMPDIR");
-    std::string pattern = std::string(temporary != nullptr && temporary[0] != '\0' ? temporary : "/tmp")
-                          + "/homm1-file-test-XXXXXX";
-    const char* root = mkdtemp(pattern.data());
-    Expect(root != nullptr, "temporary folder");
-    if (root == nullptr)
+    namespace fs = std::filesystem;
+    std::error_code error;
+    fs::path folder = fs::temp_directory_path(error)
+                      / ("homm1-file-test-" + std::to_string(std::random_device()()));
+    Expect(!error && fs::create_directories(folder / "Data", error)
+               && fs::create_directories(folder / "Maps", error),
+           "temporary folder");
+    if (error)
         return 1;
-    std::string base = root;
-    mkdir((base + "/Data").c_str(), 0755);
-    mkdir((base + "/Maps").c_str(), 0755);
+    std::string base = folder.string();
+    const char* root = base.c_str();
     Touch(base + "/Data/heroes.agg", "agg");
     Touch(base + "/Maps/b.map", "b");
     Touch(base + "/Maps/A.MAP", "a");
@@ -54,8 +56,12 @@ int main() {
     Expect(std::string(resolved) == base + "/Data/heroes.agg", "resolves to the stored name");
     Expect(!FileResolve("..\\outside", FILE_OPEN_READ, resolved, sizeof(resolved)),
            "refuses to leave the game folder");
-    Expect(!FileResolve("C:\\WINDOWS\\WIN.INI", FILE_OPEN_READ, resolved, sizeof(resolved)),
+    Expect(!FileResolve("C:WIN.INI", FILE_OPEN_READ, resolved, sizeof(resolved)),
            "refuses drive paths");
+#if !defined(_WIN32)
+    Expect(!FileResolve("C:\\WINDOWS\\WIN.INI", FILE_OPEN_READ, resolved, sizeof(resolved)),
+           "refuses absolute drive paths");
+#endif
     Expect(!FileResolve("DATA\\MISSING.BIN", FILE_OPEN_READ, resolved, sizeof(resolved)),
            "a missing file does not resolve for reading");
     Expect(FileResolve("GAMES\\NEW.GM1", FILE_OPEN_WRITE, resolved, sizeof(resolved)),
@@ -84,8 +90,7 @@ int main() {
     Expect(FileNameMatches("*.GM?", "save.gm1"), "wildcards ignore case");
     Expect(!FileNameMatches("*.GM?", "save.gm12"), "? matches one character");
 
-    std::string cleanup = "rm -r '" + base + "'";
-    if (std::system(cleanup.c_str()) != 0)
+    if (fs::remove_all(folder, error) == 0 || error)
         std::fprintf(stderr, "could not remove %s\n", root);
     if (gFailures != 0)
         return 1;

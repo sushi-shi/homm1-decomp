@@ -43,11 +43,11 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <filesystem>
+#include <random>
 #include <string>
+#include <system_error>
 #include <vector>
-
-#include <sys/stat.h>
-#include <unistd.h>
 
 bool KBStartHost(const char* dataRoot, const char* gameArguments, i32 fullScreen);
 
@@ -72,6 +72,33 @@ std::vector<u8> ReadHostFile(const std::string& path) {
         bytes.push_back(static_cast<u8>(c));
     std::fclose(file);
     return bytes;
+}
+
+// Links target at link, or copies it where the host refuses links (Windows
+// without the privilege).
+bool LinkOrCopy(const std::filesystem::path& target, const std::filesystem::path& link) {
+    namespace fs = std::filesystem;
+    std::error_code error;
+    if (fs::is_directory(target, error)) {
+        fs::create_directory_symlink(target, link, error);
+        if (error)
+            fs::copy(target, link, fs::copy_options::recursive, error);
+    } else {
+        fs::create_symlink(target, link, error);
+        if (error)
+            fs::copy_file(target, link, error);
+    }
+    return !error;
+}
+
+void SetVariable(const char* name, const char* value, bool replace) {
+    if (!replace && std::getenv(name) != nullptr)
+        return;
+#if defined(_WIN32)
+    _putenv_s(name, value);
+#else
+    setenv(name, value, 1);
+#endif
 }
 
 std::string FindEntry(const std::string& directory, const char* name) {
@@ -286,18 +313,18 @@ int main() {
     }
     // A scratch game folder: the data folder linked in, the maps linked
     // one by one into a writable MAPS folder.
-    const char* temporary = std::getenv("TMPDIR");
-    std::string pattern = std::string(temporary != nullptr && temporary[0] != '\0' ? temporary : "/tmp")
-                          + "/homm1-editor-maps-XXXXXX";
-    const char* root = mkdtemp(pattern.data());
-    if (root == nullptr)
+    namespace fs = std::filesystem;
+    std::error_code error;
+    fs::path folder = fs::temp_directory_path(error)
+                      / ("homm1-editor-maps-" + std::to_string(std::random_device()()));
+    if (error || !fs::create_directories(folder / "MAPS", error)
+        || !fs::create_directories(folder / "GAMES", error))
         return 1;
-    std::string scratch = root;
+    std::string scratch = folder.string();
     std::string dataDirectory = FindEntry(data, "DATA");
     std::string mapsDirectory = FindEntry(data, "MAPS");
     Expect(!dataDirectory.empty() && !mapsDirectory.empty(), "game data folders");
-    if (symlink(dataDirectory.c_str(), (scratch + "/DATA").c_str()) != 0
-        || mkdir((scratch + "/MAPS").c_str(), 0755) != 0 || mkdir((scratch + "/GAMES").c_str(), 0755) != 0)
+    if (!LinkOrCopy(dataDirectory, folder / "DATA"))
         return 1;
     std::vector<std::string> maps;
     FileSetRoot(data);
@@ -312,13 +339,13 @@ int main() {
         FileFindClose(find);
     }
     for (const std::string& name : maps)
-        if (symlink((mapsDirectory + "/" + name).c_str(), (scratch + "/MAPS/" + name).c_str()) != 0)
+        if (!LinkOrCopy(fs::path(mapsDirectory) / name, folder / "MAPS" / name))
             return 1;
 
-    setenv("SDL_VIDEODRIVER", "dummy", 0);
-    setenv("SDL_AUDIO_DRIVER", "dummy", 0);
-    setenv("HOMM1_NO_DIALOGS", "1", 1);
-    setenv("XDG_CONFIG_HOME", scratch.c_str(), 1);
+    SetVariable("SDL_VIDEODRIVER", "dummy", false);
+    SetVariable("SDL_AUDIO_DRIVER", "dummy", false);
+    SetVariable("HOMM1_NO_DIALOGS", "1", true);
+    SetVariable("HOMM1_CONFIG", (scratch + "/config").c_str(), true);
     if (!KBStartHost(scratch.c_str(), "", 0))
         return 1;
     if (gExec->InitSystem() != 0)
@@ -329,8 +356,7 @@ int main() {
         CheckMap(scratch, name);
     Expect(!maps.empty(), "shipped maps found");
 
-    std::string cleanup = "rm -r '" + scratch + "'";
-    if (std::system(cleanup.c_str()) != 0)
+    if (fs::remove_all(folder, error) == 0 || error)
         std::fprintf(stderr, "could not remove %s\n", scratch.c_str());
     if (gFailures != 0) {
         std::fprintf(stderr, "%d failure(s)\n", gFailures);

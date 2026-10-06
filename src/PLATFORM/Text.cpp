@@ -12,7 +12,6 @@ namespace {
 
 // Unicode for bytes 0x80-0xFF of the Windows code pages the catalogs use.
 // Undefined bytes map to U+FFFD.
-#if HOMM1_CODEPAGE == 1251
 constexpr char16_t kCodepage1251[128] = {
     0x0402, 0x0403, 0x201A, 0x0453, 0x201E, 0x2026, 0x2020, 0x2021,
     0x20AC, 0x2030, 0x0409, 0x2039, 0x040A, 0x040C, 0x040B, 0x040F,
@@ -31,23 +30,19 @@ constexpr char16_t kCodepage1251[128] = {
     0x0440, 0x0441, 0x0442, 0x0443, 0x0444, 0x0445, 0x0446, 0x0447,
     0x0448, 0x0449, 0x044A, 0x044B, 0x044C, 0x044D, 0x044E, 0x044F,
 };
-#else
 constexpr char16_t kCodepage1252[32] = {
     0x20AC, 0xFFFD, 0x201A, 0x0192, 0x201E, 0x2026, 0x2020, 0x2021,
     0x02C6, 0x2030, 0x0160, 0x2039, 0x0152, 0xFFFD, 0x017D, 0xFFFD,
     0xFFFD, 0x2018, 0x2019, 0x201C, 0x201D, 0x2022, 0x2013, 0x2014,
     0x02DC, 0x2122, 0x0161, 0x203A, 0x0153, 0xFFFD, 0x017E, 0x0178,
 };
-#endif
 
-char32_t Decode(unsigned char byte) {
+char32_t Decode(unsigned char byte, int codepage) {
     if (byte < 0x80)
         return byte;
-#if HOMM1_CODEPAGE == 1251
-    return kCodepage1251[byte - 0x80];
-#else
-    return byte < 0xA0 ? kCodepage1252[byte - 0x80] : static_cast<char32_t>(byte);
-#endif
+    if (codepage == 1251)
+        return static_cast<char32_t>(kCodepage1251[byte - 0x80]);
+    return byte < 0xA0 ? static_cast<char32_t>(kCodepage1252[byte - 0x80]) : static_cast<char32_t>(byte);
 }
 
 void Append(std::string& out, char32_t code) {
@@ -70,7 +65,15 @@ std::string ToUtf8(const char* text) {
     if (text == nullptr)
         return out;
     for (const char* cursor = text; *cursor != '\0'; cursor++)
-        Append(out, Decode(static_cast<unsigned char>(*cursor)));
+        Append(out, Decode(static_cast<unsigned char>(*cursor), HOMM1_CODEPAGE));
+    return out;
+}
+
+std::string ToUtf8(const std::string& text, int codepage) {
+    std::string out;
+    out.reserve(text.size());
+    for (char c : text)
+        Append(out, Decode(static_cast<unsigned char>(c), codepage));
     return out;
 }
 
