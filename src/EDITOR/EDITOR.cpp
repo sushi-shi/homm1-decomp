@@ -24,6 +24,7 @@
 #include <BASE/palette.h>
 #include <BASE/resourceManager.h>
 #include <EDITOR/editManager.h>
+#include <EDITOR/overlayManager.h>
 #include <SOURCE/appMenu.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
@@ -279,7 +280,7 @@ void EarlyResizeWindow(i32, i32, i32, i32) {}
 VA(0x0040927d, 0x5)
 void UpdateSystemOptionsMenu(void) {}
 
-// The tool units' shared state (CLEARMGR, TERRMGR and EDITMGR read it).
+// The tool units' shared state (CLEARMGR, OVERLAY, TERRMGR and EDITMGR read it).
 DATA(0x0043f39c)
 i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
@@ -300,9 +301,34 @@ char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
     "",
     localization::Tr("editor.clear.options.help")
 };
+DATA(0x0043f73c)
+char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
+    "",
+    localization::Tr("editor.overlay.selected.help")
+};
+DATA(0x0043f7a8)
+char* gOverlayCategoryNames[OVERLAY_CATEGORY_COUNT] = {
+    localization::Tr("editor.overlay.category.0"),
+    localization::Tr("editor.overlay.category.1"),
+    localization::Tr("editor.overlay.category.2"),
+    localization::Tr("editor.overlay.category.3"),
+    localization::Tr("editor.overlay.category.4"),
+    localization::Tr("editor.overlay.category.5"),
+    localization::Tr("editor.overlay.category.6"),
+    localization::Tr("editor.overlay.category.7"),
+    localization::Tr("editor.overlay.category.8"),
+    localization::Tr("editor.overlay.category.9"),
+    localization::Tr("editor.overlay.category.10")
+};
 DATA(0x00451e9c)
 i32 gSelectionWidth;
 DATA(0x00451f70)
 i32 gSelectionY;
 DATA(0x00451f80)
 i32 gSelectionHeight;
+DATA(0x0045245c)
+i16 gNextObjectId;
+DATA(0x004528c8)
+i32 gOverlayCategory;
+DATA(0x004528cc)
+i32 gOverlayShownCategory;

@@ -2,6 +2,7 @@
 # Data starts placed from the game census by their code users (placements.tsv).
 rva	kind
 0x000382cc	vtable
+0x00038338	vtable
 0x00038394	vtable
 0x000383a0	fppool
 0x000383a8	fppool
@@ -50,6 +51,8 @@ rva	kind
 0x0003f5fc	
 0x0003f714	
 0x0003f734	
+0x0003f73c	
+0x0003f7a8	
 0x0003f7d4	
 0x00049d8c	string
 0x0004b37c	string
@@ -64,6 +67,8 @@ rva	kind
 0x0004b81c	
 0x0004b8a4	string
 0x0004bdf0	string
+0x0004bea4	
+0x0004bea8	
 0x0004c4a8	
 0x0004c6c0	
 0x0004c6c4	
@@ -147,6 +152,7 @@ rva	kind
 0x00052448	
 0x0005244c	
 0x00052458	
+0x0005245c	
 0x00052460	
 0x00052590	
 0x00052594	
@@ -167,6 +173,8 @@ rva	kind
 0x000528b0	
 0x000528b4	
 0x000528b8	
+0x000528c8	
+0x000528cc	
 0x000528d0	
 0x000528d4	
 0x000528d8	

@@ -53,13 +53,28 @@ H1_ENUM_BEGIN(ClearToolHelp)
     CLEAR_TOOL_HELP_OPTIONS = 1
 H1_ENUM_END(ClearToolHelp)
 
+H1_ENUM_BEGIN(OverlayToolHelp)
+    OVERLAY_TOOL_HELP_NONE = -1,
+    OVERLAY_TOOL_HELP_SELECTED = 1
+H1_ENUM_END(OverlayToolHelp)
+
 H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
     EDITOR_TERRAIN_TOOL_HELP_COUNT = 8,
-    EDITOR_CLEAR_TOOL_HELP_COUNT = 2
+    EDITOR_CLEAR_TOOL_HELP_COUNT = 2,
+    EDITOR_OVERLAY_TOOL_HELP_COUNT = 2
 H1_ENUM_CONST_END(EditorToolHelpConstant)
 
 extern char* gTerrainToolHelp[];
 extern char* gClearToolHelp[];
+
+// The object tool's preview-border help and category names.
+extern char* gOverlayToolHelp[];
+extern char* gOverlayCategoryNames[];
+// The category the object tool places from and the one its panel shows.
+extern i32 gOverlayCategory;
+extern i32 gOverlayShownCategory;
+// The id of the last placed object (editManager::m_cellPairs).
+extern i16 gNextObjectId;
 
 void ShowStatusText(char* text);
 void ClearStatusText(void);
