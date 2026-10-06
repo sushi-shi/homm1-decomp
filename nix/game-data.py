@@ -5,9 +5,7 @@
 
 PATH is what `nix run .#play -- --game` takes: an installed game folder, the
 CD (a mount or a copy of its files), its .iso image or a .zip/.7z of either,
-or a folder holding only such an image. A .rar of any of these (archive.org's
-`***REMOVED***` holds the CD image) is unpacked first
-with unar, 7-Zip's RAR decoder not being free.
+or a folder holding only such an image. A .rar of any of these is unpacked first with unar, 7-Zip's RAR decoder not being free.
 The copy is found and checked with play.py's own rules (the resource archive
 by SHA-256, the other files by name and size; the CD's installer is unpacked
 with unshield, images are read with 7z) and laid out as

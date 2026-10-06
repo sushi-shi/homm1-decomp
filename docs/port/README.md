@@ -458,8 +458,7 @@ puts `heroes` and `heroes-editor` launchers (`nix/launch.sh`) on the native
 programs, with the menu entries and the icons of your copy's programs. Its
 `game` may be the CD image, the CD's files, an installed game folder or a
 `.zip`/`.7z`/`.rar` of one, or a folder holding only the image (`game =
-homm1-game;`). `nix/game-data.py` unpacks a `.rar` with unar (archive.org's
-anthology holds the CD image), checks the copy (the resource archive by
+homm1-game;`). `nix/game-data.py` unpacks a `.rar` with unar, checks the copy (the resource archive by
 SHA-256, the other files by name and size), unpacks the CD's installer when
 it is a CD and lays the game out in the store; nothing is fetched from a
 binary cache. Without `game` the programs are installed alone, and the first
