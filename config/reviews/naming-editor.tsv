@@ -1,0 +1,82 @@
+kind	owner	old	new	evidence
+enum	EventsObjectType	EVENTS_OBJECT_CASTLE/EVENTS_OBJECT_CASTLE_GATE	MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN/RANDOM_CASTLE	0xc0/0xc1 are the event bit on map-file codes 64/65 (game::ProcessRandomObjects' random town and castle), not a castle and its gate; the copies of the game's trigger codes are retired
+enum	EventsObjectType	EVENTS_OBJECT_MONSTER_2..6/EVENTS_OBJECT_HERO	MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER(_WEAK.._VERY_STRONG)/MAP_FILE_OBJECT_HERO	0xbf, 0xc3..0xc6 and 0xc7 are the random-monster bands and the placed hero's map-file codes with the event bit (ProcessOnMapHeroes reads the hero record)
+enum	RandomMapConstant	RANDOM_MAP_BARBARIAN_CASTLE_FRAME/RANDOM_MAP_SORCERESS_CASTLE_FRAME	EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)/EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)	town32.icn's race blocks follow TownType (WriteTowns writes objectIndex / TOWN_RACE_FRAME_STRIDE as the town's type and game::LoadMap reads it so): frame 46 is the sorceress castle, 70 the barbarian one
+enum	EditCoastTile	EDIT_COAST_OPEN/EDGE/OUTER_CORNER/SIDE/INNER_CORNER	EDIT_TILE_PLAIN/NORTH_EDGE/NORTH_EAST_CORNER/EAST_EDGE/NORTH_EAST_INNER_CORNER	every terrain's tiles come in these five runs (BlendTerrain fits terrainBase + run * 4 for a differing north, north-and-east, east or north-east neighbour; the flip bits mirror them), not only water's coast
+param	SetTileVariant	tile	firstTile	the first tile of the run of TERRAIN_TILE_VARIANT_COUNT variants the cell takes
+aliased	editManager::DrawRadar	buttonIcn	buttonsIcon	the buttons.icn icon whose radar cell and view-box frames it draws
+aliased	editManager::DrawCell	sx/sy	screenX/screenY	the cell's screen position in the map view
+aliased	editManager::PaintGround	spacing	cellPixels	the view's cell size in pixels (16 zoomed out, else 32)
+aliased	editManager::ClearArea	tag/ownerRec/thatCell	clearedId/cellIds/otherCell	the object id being erased, the scanned cell's editMapCellPair and that cell
+local	ScatterDetails	cellOwner	cellIds	the cell's editMapCellPair (object and overlay ids)
+aliased	editManager::WriteTowns	spot	cell	the scanned map cell
+aliased	editManager::WriteMines	spot/beaconX/beaconY/beaconCount/numCities/neighbour/mineNumber	cell/lighthouseX/lighthouseY/lighthouseCount/cityCount/markerCell/mineSlot	the lighthouse (MAP_OBJECT_LIGHTHOUSE, catalog "More than one lighthouse") and Dragon City counts, the cell east of a mine that carries its resource marker, and the game::m_mines slot (MINE_SLOT_STANDARD_FIRST on)
+member	overlayType	groundMask	footprintMask	every occupied cell: MeasureOverlay sizes the object from it, DrawFootprint outlines it, CanPlaceOverlay tests each of its cells and PlaceOverlay gives each its trigger; cells outside overlayMask go on the object layer; the table's masks equal the cells that have frames
+param	overlayManager::DrawFootprint	groundMask	footprintMask	callers pass overlayType::footprintMask
+member	overlayManager	m_unknown16ca	m_unused16ca	no instruction of EDITOR.EXE addresses offset 0x16ca of the manager (only m_font at 0x16ce is read); spelled as an unused span per the project convention
+enum	OverlayTypeConstant	OVERLAY_TYPE_MINE_RESOURCE	OVERLAY_TYPE_RESOURCE_MARKER	flag 1 is set on the rovr-0n resource markers (trigger MAP_OBJECT_RESOURCE_SHADOW) that Main and PlaceOverlay put on a mine's marker cell through PlaceMineResource, not on mines (mines carry OVERLAY_TYPE_SHOWS_RESOURCE)
+local	overlayManager::Main	result	finished	only ever 0; when 1, Main posts EXECUTIVE_COMMAND_TERMINATE_LOOP (same frame bucket)
+enum	OverlayManagerConstant	OVERLAY_TOWN_LIMIT	GAME_TOWN_COUNT	the "Town limit (%d) reached" check is the game's town table, which WriteTowns pads and game::LoadMap reads
+param	BalanceTerrainPercents	fixed	changedTerrain	the slider row NewMapWindowHandler and DragNewMapSlider just changed (TERRAIN_INVALID from NewMapDialog when the window closes); with one, only grass is topped up, nothing is held fixed
+aliased	BalanceTerrainPercents	unfixedTotal/total	othersTotal/landTotal	the sum of every terrain but the changed one, and the sum from grass on compared with NEW_MAP_MINIMUM_LAND; aliases keep the slot spellings
+param	DragNewMapSlider	terrain	terrainRow	selects gTerrainPercent/gTerrainKnobs (set) or gDensityPercent/gDensityKnobs; callers pass 1 for the terrain tracks and knobs, 0 for the density ones
+local	eventsManager::UpdateTownWindow	building	toggleIndex	counts the building toggles from TOWN_WINDOW_FIRST_BUILDING while the loop index walks the building slots
+local	ClearWindowHandler	set/index	wasSet/flagIndex	the toggled gClearFlags bit's state before the click, and its bit index (toggle id - CLEAR_WINDOW_FIRST_TOGGLE)
+enum	ExtraWindowConstant	EXTRA_WINDOW_NEUTRAL_OWNER	EXTRA_WINDOW_FIRST_PLAYER	owner = id - 0x240, so 0x240 is player 0's radio; neutral (GAME_PLAYER_NONE) is 0x23f and the town's unset owner (MAP_TOWN_OWNER_UNSET) 0x23e
+enum	CellWindowConstant	CELL_WINDOW_OBJECT_FLAG	CELL_WINDOW_EVENT_TOGGLE	the toggle flips m_triggerType's MAP_TRIGGER_EVENT bit
+enum	EventsDialogButton	DIALOG_BUTTON_1/DIALOG_BUTTON_2	EVENTS_DIALOG_CANCEL/EVENTS_DIALOG_OK	slot 1 restores the cell or keeps the record (NewMapDialog returns 0), slot 2 applies (ClearOptionsDialog erases)
+global	EditCell	giDebugLevel	gDebugLevel	the readable name of KB.h's aliased global (the storage spelling was written out)
+member	editManager	m_lastCommandId	m_lastHoverId	written only by the clear, terrain and object tools' WIDGET_COMMAND_HOVER cases, which return early when the hovered widget (other than the map) repeats it; eventsManager keeps the same test in its own gEventsLastHoverId
+aliased	editManager::GenerateRandomMap	type	terrain	loops over gTerrainPercent/gGeneratorTerrainNames rows and passes it as PaintRandomTerrain's terrain
+aliased	editManager::GenerateRandomMap	canvas	paintFrom	one past the first terrain with a share: later terrains are painted from it over terrain paintFrom - 1
+aliased	editManager::PaintRandomTerrain	sourceY	seedY	the seed's row, paired with the seed column; the walk starts there
+aliased	editManager::PaintRandomTerrain	total	targetCells	percent of the map's cells: the cells the terrain should cover
+aliased	editManager::PaintRandomTerrain	xBias	horizontalWeight	Random(0, 9) below it steps the walk horizontally, else vertically
+aliased	editManager::PaintRandomTerrain	upperWeight	maxWeight	the drifting weights' upper clamp
+aliased	editManager::PaintRandomTerrain	yAxis	upWeight	Random(0, 9) below it steps the walk north (walkY--), else south
+aliased	editManager::PaintRandomTerrain	turnWeight	leftWeight	Random(0, 9) below it steps the walk west (walkX--), else east
+aliased	editManager::PaintRandomTerrain	lowerCap	minWeight	the drifting weights' lower clamp
+aliased	editManager::PaintRandomTerrain	startX	seedX	the seed's column (drifts every eighth step); the walk starts there
+aliased	editManager::RemoveSmallRegions	fromX	minX	the region's bounding box: left column (pairs with maxX)
+local	editManager::RemoveSmallRegions	other	neighbourTerrain	the first differing terrain met beside the region; a small region takes it
+aliased	editManager::RemoveSmallRegions	tallyX	countX	column of the land-cell count into gLandCellCount
+aliased	editManager::RemoveSmallRegions	j	y	the scanned cell's row inside the bounding box
+aliased	editManager::RemoveSmallRegions	landY	countY	row of the land-cell count into gLandCellCount
+aliased	editManager::RemoveSmallRegions	homeY	startY	the row of the cell a region starts from (pairs with startX)
+aliased	editManager::RemoveSmallRegions	y1	maxY	the region's bounding box: bottom row
+aliased	editManager::RemoveSmallRegions	n	x	the scanned cell's column inside the bounding box
+aliased	editManager::RemoveSmallRegions	searchTop	minY	the region's bounding box: top row
+local	editManager::PlaceObstacleChains	variety	treeFamily	the first letter of the tree objects the chain uses (a autumn, p pine, t deciduous: atmn-, pine-, tree-); PlaceChainLink compares it with name[0]
+aliased	editManager::PlaceObstacleChains	ridges	chainCount	chains to lay (one per 40 land cells, scaled by density) for mountains and trees alike
+aliased	editManager::PlaceChainLink	frame	piece	not an icon frame: the offset of the chain object for the direction's slope from the chain's first object (n + piece)
+aliased	editManager::PlaceChainLink	generic	anyTerrainChain	the chain object for any terrain (terrainMask RANDOM_MAP_ANY_TERRAIN), of treeFamily for trees
+aliased	editManager::PlaceChainLink	specific	terrainChain	the chain object made for the cell's terrain (terrainMask == the terrain bit)
+aliased	editManager::PlaceChainLink	bit	terrainBit	the cell's terrain bit, compared with overlayType::terrainMask
+param	editManager::PlaceChainLink	kind	treeFamily	PlaceObstacleChains' tree family letter, compared with the object name's first letter
+aliased	editManager::PlaceTowns	belongs	castleRegion	the land region (rank) each of the four castles is placed in
+aliased	editManager::PlaceTowns	anyGate	stoneLiths	xtgate: object trigger 41 MAP_OBJECT_STONE_LITHS; the road loop keeps it away from other stone liths
+aliased	editManager::PlaceTowns	winterGate	snowStoneLiths	stgate (snow tileset obj32-02): trigger 41 MAP_OBJECT_STONE_LITHS, placed on snow
+aliased	editManager::PlaceTowns	desertGateLiths	desertStoneLiths	dtgate (desert tileset obj32-05): trigger 41 MAP_OBJECT_STONE_LITHS, placed on desert
+aliased	editManager::PlaceTowns	endY	destY	the road's end row, paired with destX (retail computes it from the peer's x)
+aliased	editManager::PlaceTowns	y0	fromY	the road's start row, paired with fromX
+aliased	editManager::PlaceTowns	freeX	foundX	the column of the first unnumbered land cell, paired with foundY
+aliased	editManager::PlaceTowns	scanY	nearY	the row paired with nearX in the site, approach and road walks
+local	editManager::PlaceResourceSite	river	resourceMarker	rovr-0N: flags OVERLAY_TYPE_MINE_RESOURCE, trigger 51 MAP_OBJECT_RESOURCE_SHADOW; PlaceMineResource draws it as the mine's resource marker
+aliased	editManager::PlaceRandomObjects	siteIndex	siteResource	Random(0, RESOURCE_COUNT - 1): the resource of the site to place (quota[] index, PlaceResourceSite argument)
+aliased	editManager::PlaceRandomObjects	towns	townTries	the try budget: towns to place times RANDOM_MAP_TRIES_PER_OBJECT, minus a try per loop
+aliased	editManager::PlaceRandomObjects	obeliskTurns	obeliskTries	the try budget: obelisks to place times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceRandomObjects	townObject	randomTown	xtown: trigger 64 MAP_FILE_OBJECT_RANDOM_TOWN
+aliased	editManager::PlaceTreasures	caches	treasureTries	the try budget: treasures to place times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceTreasures	down	southBlocked	set when the cell's south side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	right	eastBlocked	set when the cell's east side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	up	northBlocked	set when the cell's north side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	left	westBlocked	set when the cell's west side is the map edge, water or a terrain obstacle
+aliased	editManager::PlaceTreasures	goods	randomResource	xrsrc: trigger 62 MAP_FILE_OBJECT_RANDOM_RESOURCE
+aliased	editManager::PlaceTreasures	bonfire	campfire	firemult: trigger 8 MAP_OBJECT_CAMPFIRE
+aliased	editManager::PlaceTreasures	wanderers	monsterTries	the try budget: wandering monsters times RANDOM_MAP_TRIES_PER_OBJECT
+aliased	editManager::PlaceTreasures	bounty	randomArtifact	xart: trigger 61 MAP_FILE_OBJECT_RANDOM_ARTIFACT
+aliased	editManager::PlaceTreasures	layout	guard	holds a TreasureGuard (the guarded corner)
+enum	RandomMapSiteKind	RANDOM_MAP_SITE_SAWMILL/ALCHEMIST_LAB/FIRST_MINE/KIND_COUNT	RESOURCE_WOOD/MERCURY/ORE/COUNT	the site kinds are the resource the site produces (WriteMines' 0, 1, frame + 2; gMineSiteKinds)
+param	editManager::PlaceResourceSite	kind	resource	the site's resource: 0 sawmill (wood), 1 alchemist's lab (mercury), 2..6 the mine whose marker WriteMines records as frame + 2
+member	editTownExtra/editHeroExtra	reserved	unused14/unused19	no instruction of either image touches the block's bytes: PlaceOverlay's memset, the dialogs' whole-record copies and SaveMap's write cover it, the game's readers stop at mapTownExtra/mapHeroExtra; spelled at its offset as the project's other unread spans
+enum	EditExtraConstant	EDIT_EXTRA_RESERVED_SIZE	EDIT_EXTRA_UNUSED_SIZE	the unused block's size (see unused14/unused19)

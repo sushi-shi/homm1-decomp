@@ -5,6 +5,13 @@
 // functions it shares with the game keep their SOURCE/KB.h declarations.
 
 #include <Domains.h>
+#include <SOURCE/terrainTypes.h>
+
+// The terrains the terrain tool paints and the generator mixes
+// (TerrainType).
+H1_ENUM_CONST_BEGIN(EditorTerrainConstant)
+    EDITOR_TERRAIN_COUNT = TERRAIN_LAST + 1
+H1_ENUM_CONST_END(EditorTerrainConstant)
 
 // The status bar: the bottom 16-pixel row of the 640x480 screen.
 H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
@@ -14,12 +21,17 @@ H1_ENUM_CONST_BEGIN(EditorStatusBarConstant)
     EDITOR_STATUS_BAR_HEIGHT = 16,
     EDITOR_STATUS_TEXT_CAPACITY = 200,
     // ShowStatusText keeps the text this long.
-    EDITOR_STATUS_TEXT_HOLD_MILLISECONDS = 3000
+    EDITOR_STATUS_TEXT_HOLD_MILLISECONDS = 3000,
+    // ShowStatusWarning's text is cleared after this long.
+    EDITOR_STATUS_WARNING_MILLISECONDS = 1500,
+    // gStatusTextClearTime when the text stays until it is replaced.
+    EDITOR_STATUS_TEXT_KEPT = 0
 H1_ENUM_CONST_END(EditorStatusBarConstant)
 
-extern b8 gCommandLineInterpreted;
+extern i8 gCommandLineInterpreted;
 extern i32 gStatusTextShown;
-// When the status bar text is cleared (0: kept until replaced).
+// When the status bar text is cleared (EDITOR_STATUS_TEXT_KEPT: kept until
+// replaced).
 extern i32 gStatusTextClearTime;
 extern i32 gStatusTextHoldTime;
 extern char gStatusText[];
@@ -58,17 +70,45 @@ H1_ENUM_BEGIN(OverlayToolHelp)
     OVERLAY_TOOL_HELP_SELECTED = 1
 H1_ENUM_END(OverlayToolHelp)
 
+// editManager::Main's right-click help: gEditButtonHelp for editwind.bin's
+// buttons (every scroll arrow shares one entry), gEditAreaHelp for its areas
+// (both tracks and knobs share one); entry 0 is empty in both.
+H1_ENUM_BEGIN(EditButtonHelp)
+    EDIT_BUTTON_HELP_NONE = -1,
+    EDIT_BUTTON_HELP_SCROLL = 1,
+    EDIT_BUTTON_HELP_ZOOM = 2,
+    EDIT_BUTTON_HELP_UNDO = 3,
+    EDIT_BUTTON_HELP_MAP_INFO = 4,
+    EDIT_BUTTON_HELP_NEW = 5,
+    EDIT_BUTTON_HELP_LOAD = 6,
+    EDIT_BUTTON_HELP_SAVE = 7,
+    EDIT_BUTTON_HELP_QUIT = 8,
+    EDIT_BUTTON_HELP_RANDOM_MAP = 9
+H1_ENUM_END(EditButtonHelp)
+
+H1_ENUM_BEGIN(EditAreaHelp)
+    EDIT_AREA_HELP_RADAR = 1,
+    EDIT_AREA_HELP_SCROLLING = 2,
+    EDIT_AREA_HELP_TERRAIN = 3,
+    EDIT_AREA_HELP_OBJECTS = 4,
+    EDIT_AREA_HELP_DETAILS = 5,
+    EDIT_AREA_HELP_ERASER = 6,
+    EDIT_AREA_HELP_MAP = 7
+H1_ENUM_END(EditAreaHelp)
+
 H1_ENUM_CONST_BEGIN(EditorToolHelpConstant)
-    EDITOR_TERRAIN_TOOL_HELP_COUNT = 8,
+    EDITOR_TERRAIN_TOOL_HELP_COUNT = EDITOR_TERRAIN_COUNT + 1,
     EDITOR_CLEAR_TOOL_HELP_COUNT = 2,
-    EDITOR_OVERLAY_TOOL_HELP_COUNT = 2
+    EDITOR_OVERLAY_TOOL_HELP_COUNT = 2,
+    EDITOR_BUTTON_HELP_COUNT = 10,
+    EDITOR_AREA_HELP_COUNT = 8
 H1_ENUM_CONST_END(EditorToolHelpConstant)
 
-extern H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT);
-extern H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT);
+extern char* gTerrainToolHelp[];
+extern char* gClearToolHelp[];
 
 // The object tool's preview-border help and category names.
-extern H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT);
+extern char* gOverlayToolHelp[];
 extern char* gOverlayCategoryNames[];
 // The category the object tool places from and the one its panel shows.
 extern i32 gOverlayCategory;
@@ -78,7 +118,6 @@ extern i16 gNextObjectId;
 
 // The random map generator's slider rows.
 H1_ENUM_CONST_BEGIN(EditorGeneratorConstant)
-    EDITOR_GENERATOR_TERRAIN_COUNT = 7,
     EDITOR_GENERATOR_DENSITY_COUNT = 5
 H1_ENUM_CONST_END(EditorGeneratorConstant)
 
@@ -90,9 +129,9 @@ extern struct SMapHeader* gMapHeader;
 // The random map generator's settings (editnew.bin): the share of each
 // terrain and the density of each object class, in percent; whether towns are
 // scattered rather than centred; whether the map is saved unseen.
-extern double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT];
+extern double gTerrainPercent[EDITOR_TERRAIN_COUNT];
 extern double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT];
-extern b32 gScatterTowns;
+extern i32 gScatterTowns;
 extern i32 gSaveUnseen;
 // gDensityPercent's rows.
 H1_ENUM_BEGIN(GeneratorDensity)
@@ -111,7 +150,7 @@ extern i32 gLandCellCount;
 extern i32 gGeneratingMaps;
 // Cleared while a map without the editor's format word is loaded: such maps
 // keep no object ids, so the eraser clears whole cells.
-extern b32 gNewMapFormat;
+extern i32 gNewMapFormat;
 // The right-click help of editwind.bin's buttons and areas.
 extern char* gEditButtonHelp[];
 extern char* gEditAreaHelp[];

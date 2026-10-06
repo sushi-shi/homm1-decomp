@@ -45,7 +45,7 @@
 #define EDITOR_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Editor\\EDITOR.CPP"
 
 DATA(0x0043ede4)
-b8 gCommandLineInterpreted = true;
+i8 gCommandLineInterpreted = 1;
 DATA(0x00451ea4)
 editManager* gEditManager;
 DATA(0x004528d0)
@@ -57,11 +57,11 @@ i32 gStatusTextHoldTime;
 DATA(0x00451ea8)
 char gStatusText[EDITOR_STATUS_TEXT_CAPACITY];
 DATA(0x0043f398)
-b32 gNewMapFormat = true;
+i32 gNewMapFormat = 1;
 DATA(0x004528e4)
 i32 gGeneratingMaps;
 DATA(0x0043f744)
-char* gEditButtonHelp[10] = {
+char* gEditButtonHelp[EDITOR_BUTTON_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditButtonHelp.1"),
     localization::Tr("table.gEditButtonHelp.2"),
@@ -74,7 +74,7 @@ char* gEditButtonHelp[10] = {
     localization::Tr("table.gEditButtonHelp.9"),
 };
 DATA(0x0043f76c)
-char* gEditAreaHelp[8] = {
+char* gEditAreaHelp[EDITOR_AREA_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditAreaHelp.1"),
     localization::Tr("table.gEditAreaHelp.2"),
@@ -95,7 +95,7 @@ VA(0x004084aa, 0x106)
 i32 oldmain(void) {
     palette* editorPalette;
 
-    if (H1_ENUM_ENCODE(BaseManagerStatus, gExec->InitSystem()))
+    if (gExec->InitSystem())
         ShutDown(localization::Tr("editor.startup.initialize.failed"));
     KBChangeMenu(gDefaultMenu);
     editorPalette = gResourceManager->GetPalette("kb.pal");
@@ -103,10 +103,7 @@ i32 oldmain(void) {
     gMapX = 0;
     gMapY = 0;
     gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, editorPalette);
-    if (H1_ENUM_ENCODE(
-            BaseManagerStatus,
-            gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        ))
+    if (gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown(localization::Tr("startup.manager.failed"));
     gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, editorPalette);
     gExec->MainLoop();
@@ -177,7 +174,7 @@ void ShutDown(char* message) {
         SetFullScreenStatus(0);
         MessageBoxA(gAppWindow, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
-    gClosingApp = true;
+    gClosingApp = 1;
     gExec->ShutDownSystem();
     if (gEventHandle) {
         CloseHandle(gEventHandle);
@@ -185,7 +182,7 @@ void ShutDown(char* message) {
     }
     DeleteMainClasses();
     AppExit();
-    exit(0);
+    exit(EXIT_SUCCESS);
 }
 
 // The /D (debug level) and /B (mouse masks) command-line switches.
@@ -211,14 +208,14 @@ i32 InterpretCommandLine(void) {
             }
         }
     }
-    gCommandLineInterpreted = true;
+    gCommandLineInterpreted = 1;
     return 1;
 }
 
 VA(0x0040881f, 0x164)
 i32 EarlySetup(void) {
     DATA(0x004528f5)
-    static b8 gEarlySetupDone = false;
+    static i8 gEarlySetupDone = 0;
     i32 i;
 
     if (gEarlySetupDone)
@@ -238,7 +235,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NOT_FOUND:
             MessageBoxA(
@@ -247,7 +244,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_APP_PATH:
             MessageBoxA(
@@ -256,7 +253,7 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
         case CD_SETUP_NO_DATA:
             MessageBoxA(
@@ -265,12 +262,12 @@ i32 EarlySetup(void) {
                 localization::Tr("startup.error.title"),
                 MB_ICONHAND
             );
-            exit(0);
+            exit(EXIT_SUCCESS);
             break;
     }
     gDefaultMenu = LoadMenuA(gAppInstance, "mnuDflt");
     for (i = 0; i < MAP_CELL_GROUND_TILE_COUNT; i++)
-        gGroundToTerrain[i] = H1_ENUM_DECODE(TerrainType, i / MAP_CELL_TILES_PER_TERRAIN);
+        gGroundToTerrain[i] = i / MAP_CELL_TILES_PER_TERRAIN;
     return 1;
 }
 
@@ -418,13 +415,13 @@ void NormalDialog(
         gWindowManager->RemoveWindow(gNormalDialogWindow);
         gMouseManager->ReallyShowPointer();
     } else {
-        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, false);
+        gWindowManager->DoDialog(gNormalDialogWindow, EventWindowHandler, 0);
     }
     delete gNormalDialogWindow;
 }
 
 VA(0x00408fc5, 0x91)
-H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& message) {
+i16 EventWindowHandler(tag_message& message) {
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -452,7 +449,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) EventWindowHandler(tag_message& messa
 VA(0x00409056, 0x7a)
 void QuickViewWait(void) {
     tag_message event;
-    b32 done = false;
+    i32 done = 0;
     while (!done) {
         PollSound();
         Process1WindowsMessage();
@@ -498,7 +495,7 @@ void ShowStatusText(char* text) {
 
 VA(0x0040918e, 0x4d)
 void ClearStatusText(void) {
-    gStatusTextClearTime = 0;
+    gStatusTextClearTime = EDITOR_STATUS_TEXT_KEPT;
     if (gStatusTextShown) {
         gStatusTextShown = 0;
         gEditManager->m_window->DrawWindow(0);
@@ -527,7 +524,7 @@ void CleanUpMenus(void) {
 VA(0x0040921c, 0x1b)
 void EarlyShutDownSystem(void) {
     if (gEditManager)
-        gEditManager->SelectTool(EDIT_TOOL_NONE);
+        gEditManager->SelectTool(EDIT_MANAGER_NO_TOOL);
 }
 
 // The editor always asks before quitting.
@@ -560,7 +557,7 @@ i32 gClearFlags = EDITOR_CLEAR_FLAGS_DEFAULT;
 DATA(0x0043f3a0)
 i32 gSelectionX = -1;
 DATA(0x0043f714)
-H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP_COUNT) = {
+char* gTerrainToolHelp[EDITOR_TERRAIN_TOOL_HELP_COUNT] = {
     "",
     localization::Tr("editor.terrain.help.water"),
     localization::Tr("editor.terrain.help.grass"),
@@ -571,12 +568,12 @@ H1_ENUM_ARRAY(char*, gTerrainToolHelp, TerrainToolHelp, EDITOR_TERRAIN_TOOL_HELP
     localization::Tr("editor.terrain.help.dirt")
 };
 DATA(0x0043f734)
-H1_ENUM_ARRAY(char*, gClearToolHelp, ClearToolHelp, EDITOR_CLEAR_TOOL_HELP_COUNT) = {
+char* gClearToolHelp[EDITOR_CLEAR_TOOL_HELP_COUNT] = {
     "",
     localization::Tr("editor.clear.options.help")
 };
 DATA(0x0043f73c)
-H1_ENUM_ARRAY(char*, gOverlayToolHelp, OverlayToolHelp, EDITOR_OVERLAY_TOOL_HELP_COUNT) = {
+char* gOverlayToolHelp[EDITOR_OVERLAY_TOOL_HELP_COUNT] = {
     "",
     localization::Tr("editor.overlay.selected.help")
 };
@@ -609,17 +606,17 @@ i32 gOverlayShownCategory;
 
 // The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
 DATA(0x0043f3a8)
-double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
-b32 gScatterTowns = true;
+i32 gScatterTowns = 1;
 DATA(0x004528e0)
 i32 gSaveUnseen;
 DATA(0x0045259c)
 i32 gLandCellCount;
 DATA(0x0043f78c)
-char* gGeneratorTerrainNames[EDITOR_GENERATOR_TERRAIN_COUNT] = {
+char* gGeneratorTerrainNames[EDITOR_TERRAIN_COUNT] = {
     localization::Tr("editor.terrain.name.0"),
     localization::Tr("editor.terrain.name.1"),
     localization::Tr("editor.terrain.name.2"),
