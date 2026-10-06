@@ -9,7 +9,8 @@ script serves it on a local port and, like a player would:
 
 1. opens the page and gives it the game folder (and the CD music and help
    file when named) through the page's own file inputs;
-2. starts the game with /I0, reaches the main menu, starts a standard game
+2. starts the game with /I0, reaches the main menu, opens the help (when
+   given) in a new tab, starts a standard game
    and waits for the adventure map;
 3. reloads the page: the files must still be there (IndexedDB); starts the
    game with its intro movie and checks that audio is running after the
@@ -43,6 +44,8 @@ LOAD_OK = (392, 305)
 FILE_OPTIONS = (604, 378)
 SAVE_GAME = (252, 140)
 SAVE_OK = (243, 330)
+HELP_MENU = (118, -9)
+HELP_ITEM = (140, 12)
 SAVE = "________.GM1"
 
 
@@ -194,6 +197,22 @@ def main() -> int:
         session.check_running()
         menu = display_signature(page)
         session.shot("main-menu")
+        if args.help_file is not None:
+            # The Help menu converts the stored help file and opens it in a
+            # new tab.
+            session.click(HELP_MENU, 0.7)
+            with context.expect_page(timeout=60000) as opened:
+                session.click(HELP_ITEM, 0.5)
+            help_page = opened.value
+            help_page.wait_for_load_state()
+            sections = help_page.evaluate("() => document.querySelectorAll('section').length")
+            print(f"  help opened in a new tab: {help_page.url[:40]}..., {sections} sections")
+            if sections == 0:
+                raise RuntimeError("the help tab has no topics")
+            help_page.screenshot(path=str(args.out / f"{args.browser}-help.png"))
+            help_page.close()
+            page.bring_to_front()
+            page.wait_for_timeout(1000)
         session.click(NEW_GAME, 1.5)
         session.click(STANDARD_GAME, 2.5)
         session.shot("scenario-list")

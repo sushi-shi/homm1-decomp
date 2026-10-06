@@ -26,6 +26,7 @@
 #endif
 
 #include <PLATFORM/File.h>
+#include <PLATFORM/Help.h>
 #include <PLATFORM/Platform.h>
 
 #include "../PortHost.h"
@@ -426,9 +427,7 @@ i32 AppMenuCommand(i32 command) {
             platform::ShowMessage(gTitle, MenuAboutText().c_str());
             break;
         case KBWIN_MENU_HELP:
-            // The original opened HELP\HEROES.HLP in WinHelp, which current
-            // hosts cannot show.
-            platform::Log("help is not available");
+            OpenHelp();
             break;
         case KBWIN_MENU_SIZE_640_480:
             ResizeWindow(KBWIN_KEEP_POSITION, KBWIN_KEEP_POSITION, LOGICAL_SCREEN_WIDTH,
@@ -453,6 +452,54 @@ i32 AppMenuCommand(i32 command) {
             return HandleAppSpecificMenuCommands(command);
     }
     return 0;
+}
+
+// ---------------------------------------------------------------- help
+
+// The original opened its help book with WinHelp(".\\HELP\\HEROES.HLP",
+// HELP_FINDER), the contents page; both programs share it. Current hosts have
+// no WinHelp, so the port converts the book and its contents file to one HTML
+// document in its settings folder (again only when they change) and shows
+// that page in the browser.
+namespace {
+
+const char kHelpBook[] = ".\\HELP\\HEROES.HLP";
+const char kHelpContents[] = ".\\HELP\\HEROES.CNT";
+
+bool ResolveExisting(const char* path, std::string& hostPath) {
+    char resolved[FILE_PATH_CAPACITY];
+    if (!FileExists(path) || !FileResolve(path, FILE_OPEN_READ, resolved, sizeof(resolved)))
+        return false;
+    hostPath = resolved;
+    return true;
+}
+
+}  // namespace
+
+bool HelpAvailable() {
+    std::string hostPath;
+    return ResolveExisting(kHelpBook, hostPath);
+}
+
+void OpenHelp() {
+    std::string book;
+    if (!ResolveExisting(kHelpBook, book)) {
+        platform::Log("help is not available: no HELP\\HEROES.HLP in the game data");
+        return;
+    }
+    std::string contents;
+    ResolveExisting(kHelpContents, contents);
+    std::string page;
+    std::string error;
+    if (!platform::help::PrepareHelp(book, contents, platform::ConfigDirectory() + "help/", page,
+                                     error)) {
+        platform::Log("help: %s", error.c_str());
+        platform::ShowMessage(gTitle, "The help file HELP\\HEROES.HLP could not be read.");
+        return;
+    }
+    platform::Log("help: %s", page.c_str());
+    if (!platform::OpenDocument(page))
+        platform::ShowMessage(gTitle, "The help could not be shown in the browser.");
 }
 
 // ---------------------------------------------------------------- menus

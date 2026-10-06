@@ -149,7 +149,16 @@ bool OpenDisplay() {
     std::string requested = Environment("HOMM1_SCALE");
     if (!requested.empty())
         scale = std::max(1, std::atoi(requested.c_str()));
+#ifdef __EMSCRIPTEN__
+    // In a page the canvas keeps the image's own size and the page scales
+    // it to the browser window (src/PLATFORM/Web/homm1.js). A resizable SDL
+    // window would instead follow the canvas's shown size and letterbox the
+    // image inside it.
+    scale = 1;
+    SDL_WindowFlags flags = 0;
+#else
     SDL_WindowFlags flags = SDL_WINDOW_RESIZABLE;
+#endif
     if (!SDL_CreateWindowAndRenderer(
             defaults.title, kWidth * scale, (kHeight + gBar) * scale, flags, &gWindow, &gRenderer)) {
         Log("cannot open a window: %s", SDL_GetError());

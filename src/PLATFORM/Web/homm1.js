@@ -245,9 +245,14 @@
   // The canvas holds the game's image at its own size (SDL sets it, menu
   // bar included); the page shows it as large as the window allows, keeping
   // its proportions. SDL maps pointer positions through the shown size.
+  //
+  // SDL measures the canvas's CSS size when it creates its window and, when
+  // something already sizes it, takes that as the window size; so the page
+  // sizes the canvas only once SDL has set its pixel size.
+  let fitting = false;
   function fitCanvas() {
     const canvas = $('canvas');
-    if (!canvas.width || !canvas.height)
+    if (!fitting || canvas.width <= 1 || canvas.height <= 1)
       return;
     const room = $('screen').clientWidth;
     const height = window.innerHeight - canvas.getBoundingClientRect().top - 16;
@@ -273,8 +278,8 @@
     const args = ['--data', GAME];
     const extra = (params.get('args') || '').split(/\s+/).filter(Boolean);
     $('canvas').focus();
+    fitting = true;
     Module.callMain(args.concat(extra));
-    fitCanvas();
   }
 
   async function forget() {
