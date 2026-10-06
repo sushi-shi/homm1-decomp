@@ -14,9 +14,13 @@ SDL_AudioDeviceID gDevice = 0;
 
 // ---------------------------------------------------------------- samples
 
+// A looping voice refills its stream from the audio thread for as long as it
+// plays, so it keeps its own copy of the sample: the game may free the
+// sample's resource while it still plays (its StopSample does nothing while
+// samples are suspended, as during a computer player's turn).
 struct VoiceState {
     SDL_AudioStream* stream = nullptr;
-    const void* data = nullptr;
+    std::vector<u8> data;
     int bytes = 0;
     bool loop = false;
 };
@@ -27,7 +31,7 @@ Voice gNextVoice = 1;
 void SDLCALL RefillLoop(void* userdata, SDL_AudioStream* stream, int additional, int) {
     const VoiceState* voice = static_cast<const VoiceState*>(userdata);
     while (additional > 0 && voice->bytes > 0) {
-        SDL_PutAudioStreamData(stream, voice->data, voice->bytes);
+        SDL_PutAudioStreamData(stream, voice->data.data(), voice->bytes);
         additional -= voice->bytes;
     }
 }
@@ -162,7 +166,8 @@ Voice PlaySample(
     Voice id = gNextVoice++;
     VoiceState& voice = gVoices[id];
     voice.stream = stream;
-    voice.data = data;
+    if (loop)
+        voice.data.assign(static_cast<const u8*>(data), static_cast<const u8*>(data) + bytes);
     voice.bytes = static_cast<int>(bytes);
     voice.loop = loop;
     SDL_SetAudioStreamGain(stream, volume);

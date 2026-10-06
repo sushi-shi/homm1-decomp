@@ -45,8 +45,36 @@ add_test(NAME save_roundtrip
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/save_roundtrip.py $<TARGET_FILE:homm1>)
 set_tests_properties(save_roundtrip PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 400)
 
+# A save on a full disk is reported and the game goes on (needs the game data,
+# xvfb-run and /dev/full).
+add_test(NAME save_diskfull
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/save_diskfull.py $<TARGET_FILE:homm1>)
+set_tests_properties(save_diskfull PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 400)
+
 # Every shipped map through the editor's reader and writer (needs HOMM1_DATA).
 add_executable(editor_maps_test editor_maps_test.cpp)
 target_link_libraries(editor_maps_test PRIVATE homm1_editor_units)
 add_test(NAME editor_maps_test COMMAND editor_maps_test)
 set_tests_properties(editor_maps_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 600)
+
+# The retail out-of-bounds defects fixed in the shared game units (needs
+# HOMM1_DATA; most useful in a sanitizer build).
+add_executable(game_regressions_test game_regressions_test.cpp)
+target_link_libraries(game_regressions_test PRIVATE homm1_units)
+add_test(NAME game_regressions_test COMMAND game_regressions_test)
+set_tests_properties(game_regressions_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 300)
+
+# The retail defects fixed in the scenario editor (needs HOMM1_DATA).
+add_executable(editor_regressions_test editor_regressions_test.cpp)
+target_link_libraries(editor_regressions_test PRIVATE homm1_editor_units)
+add_test(NAME editor_regressions_test COMMAND editor_regressions_test)
+set_tests_properties(editor_regressions_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 300)
+
+# The long-running sanitizer survey (docs/port/README.md): opt-in, not a test.
+option(HOMM1_SURVEY "Build the survey program that plays the game headless (tools/port/survey.py)" OFF)
+if(HOMM1_SURVEY)
+  add_executable(homm1_survey survey/survey.cpp)
+  target_link_libraries(homm1_survey PRIVATE homm1_units)
+  add_executable(homm1_editor_survey survey/editor_survey.cpp)
+  target_link_libraries(homm1_editor_survey PRIVATE homm1_editor_units)
+endif()

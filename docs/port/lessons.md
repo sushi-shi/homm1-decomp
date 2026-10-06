@@ -140,10 +140,20 @@ edge cases are listed in [divergences.md](divergences.md)).
 sanitizers.
 
 **Guard.** The AddressSanitizer/UBSan build (section 12) runs the start-up,
-new game and load paths; each finding is fixed where it happens with the same
-observable result (for example `strcpy(gMapName, gMapName)` in
-`game::NewMap`, and the archive lookup above), and listed in
-[divergences.md](divergences.md).
+new game and load paths, and the survey (`tools/port/survey.py`, README)
+plays every shipped map, the campaign openings, random battles and random
+editor maps with computer players, and both programs under random input.
+Most of what it found was one class: an index one step outside a grid or a
+table at its edge, or a -1 meaning "none" used as an index (map cells beyond
+the edge in the path search, mine flags and object shadows above the top
+row, hex -1 beside the battlefield, tavern slots and hero owners of -1, a
+63-entry name table read up to 127). Each is fixed where it happens; where
+the original's result was fixed by the linker's layout (the quick info texts
+read from the next tables, the masked shift of a 32-bit site mask) the same
+result is produced without leaving the table, otherwise the evident intent
+is kept, and each is listed in [divergences.md](divergences.md). Map
+contents are checked once when a game starts on a map (`game::MapDataValid`)
+instead of at each use.
 
 ## 7. Compiler semantics the code relies on
 
@@ -180,7 +190,10 @@ crash or full disk in between destroys the previous save.
 
 **Guard.** `FileReplace` writes the whole file to a sibling `.partial` file,
 flushes it with `fsync`, then renames it over the old one; on failure the old
-file is untouched. Saved games, high scores and settings use it.
+file is untouched. Saved games, high scores and settings use it. A save that
+fails (a full disk, a read-only folder) is reported and play goes on; the
+original ended the program when the file could not be created
+(`save_diskfull` tests it with `/dev/full`).
 
 ## 10. Format strings and fixed buffers
 
@@ -203,7 +216,9 @@ trips the assertion; one that wraps breaks every comparison.
 
 **Guard.** `platform::Ticks()` counts from 1,000,000 at start-up, which
 satisfies the assertion and keeps the signed comparisons valid for 24 days of
-continuous play.
+continuous play. After that the game ends with the assertion in `DelayTil`
+(`HOMM1_TICK_START` shows it); the original did the same after 24.8 days of
+Windows uptime.
 
 ## 12. Sanitizers, warnings and tests in the build
 
@@ -257,6 +272,10 @@ down where it is implemented:
 - **Music** (`src/PORT/BASE/Audio.cpp`): the original host's track policy (CD
   track map, which tracks repeat, where a track resumes) is kept; only the
   decoder changes.
+- **Sound effects** (`src/PLATFORM/SDL3/Audio.cpp`): a looping voice keeps its
+  own copy of the sample, because the audio thread refills it while the game
+  may free the sample (`StopSample` does nothing while samples are suspended,
+  as during a computer player's turn).
 - **Movies** (`src/PORT/SOURCE/Smacker.cpp`): the Smacker calls the game makes
   are implemented, including the decode-ahead palette and the frame counter
   that wraps to 0 at the end, which is how the game detects a movie's end. A

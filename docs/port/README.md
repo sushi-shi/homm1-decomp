@@ -79,10 +79,49 @@ format word, trigger bytes, the town, mine, artifact, obelisk and sound tables,
 the cells above random towns that the editor clears on saving, and the layout
 of older-format maps) is accounted for in its header comment; saving the saved
 map again must reproduce it.
+`save_diskfull` saves on a full disk (the save's temporary file is a link to
+`/dev/full`) and checks that the game reports it and goes on.
+`game_regressions_test` and `editor_regressions_test` (with `HOMM1_DATA`,
+headless) check the retail out-of-bounds defects fixed in the shared units;
+they are most useful in the sanitizer build.
 `nix flake check` builds the native and sanitizer builds and runs their tests
 (without game data).
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
+
+### Sanitizer survey
+
+The long-running survey is opt-in (`-DHOMM1_SURVEY=ON`, not part of ctest).
+It builds `homm1_survey` and `homm1_editor_survey`, which link the programs'
+units with their own entry points and play them headless, and
+`tools/port/survey.py` runs them in parallel and groups what the sanitizers
+report:
+
+```sh
+cmake -S . -B build/port-asan -G Ninja -DHOMM1_SANITIZERS=ON \
+      -DHOMM1_SANITIZERS_RECOVER=ON -DHOMM1_SURVEY=ON
+ninja -C build/port-asan
+tools/port/survey.py --build build/port-asan --data ~/.local/share/homm1-buka/game \
+      --parts ai,campaign,load,combat,editor,monkey,monkey-editor --jobs 8
+```
+
+- `ai`: every shipped map with every player a computer player for `--days`
+  days; each week the game is saved, loaded and saved again, and the two
+  files must match.
+- `campaign`: every campaign scenario's opening; `load`: the shipped saved
+  games, continued by the computer.
+- `combat`: random battles on the combat screen between computer players,
+  with random heroes, armies, spells and artifacts, against heroes, monsters
+  and towns (with and without castles).
+- `editor`: random maps from the editor's generator with random settings,
+  each saved, read and saved again, then played by the computer.
+- `monkey`, `monkey-editor`: the game and the editor under random clicks and
+  keys (including the menu bar and F4) under `xvfb-run`.
+
+Each finding is printed once with how often it was seen and a command that
+reproduces it; a run that stops making progress is stopped
+(`HOMM1_SURVEY_WATCHDOG`) and its stack printed. `--keep-logs` keeps every
+run's output.
 
 ### Unattended runs
 
@@ -107,6 +146,10 @@ Actions: `move X Y`, `click X Y`, `left-down`, `left-up`, `right-down`,
 `shot PATH`, `quit` (the window's close button), `exit` (end at once). While
 a replay runs the real mouse and keyboard are ignored.
 `HOMM1_NO_DIALOGS=1` sends message boxes to the log only.
+`HOMM1_TIME_SCALE=N` runs the game's clock N times faster than real time
+(animations, delays and the replay's times alike); `HOMM1_TICK_START=N`
+starts the clock at N instead of 1,000,000 (for example just below 2^31, to
+see the tick count wrap).
 
 ## Architecture
 
