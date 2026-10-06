@@ -3,8 +3,8 @@
 region	differing
 size	0
 headers	87
-.text	3677
+.text	0
 .rdata	0
-.data	14
+.data	0
 .rsrc	0
 overlay	0

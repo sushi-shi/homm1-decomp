@@ -27,8 +27,8 @@ template <class Resource> struct AudiereNode {
 typedef AudiereNode<sample> AudiereSampleNode;
 
 struct AudiereMusic {
-    static audiere::OutputStreamPtr stream;
-    static audiere::SampleSourcePtr source;
+    static audiere::OutputStreamPtr channel;
+    static audiere::SampleSourcePtr origin;
 };
 // Retail declares one more static data member than the device and music
 // pointers: VC6 numbers the destroy-once guards from a TU counter that every
@@ -36,8 +36,8 @@ struct AudiereMusic {
 // does the music guard (0x004cdf70) sort before the device guard (0x004cdf71).
 // The 4 bytes after the device pointer, which no retail code reads, are it.
 struct AudiereDevice {
-    static audiere::AudioDevicePtr device;
-    static int unusedSlot;
+    static audiere::AudioDevicePtr driver;
+    static int dummy;
 };
 
 #endif

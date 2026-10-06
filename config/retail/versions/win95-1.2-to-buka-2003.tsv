@@ -2070,7 +2070,7 @@ old_rva	new_rva	name	note
 0x000cc44c	0x000cb3dc	?remotestage@@3HA	
 0x000cc480	0x000cb410	?sndBuf@@3URemoteMessage@@A	
 0x000cc580	0x000cb510	?WFDCStage@@3HA	
-0x000cc6d8	0x000cb664	?rcvBufIn@@3URemoteMessage@@A	
+0x000cc6d8	0x000cb664	?rcvBufIn@@3PADA	
 0x000cc7d8	0x000cb768	?outque@@3Uoutque_t@@A	
 0x000cc8b0	0x000cc8b0	?gSearchSeedingComplete@@3HA	
 0x000cd6e0	0x000cc670	?iLastIds@@3PAHA	

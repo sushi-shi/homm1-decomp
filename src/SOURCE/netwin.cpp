@@ -606,6 +606,9 @@ void nb_format_name(char* source, u8* destination) {
 }
 
 // netwin globals.
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004a9e68)
+i32 gOldNetwinWord;
 DATA(0x004b2160)
 u8 gNbCallRetries = 0;
 DATA(0x004b2161)
