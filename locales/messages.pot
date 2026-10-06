@@ -1968,15 +1968,11 @@ msgstr ""
 msgid "spell.teleport.select"
 msgstr ""
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.cd.inaccessible"
 msgstr ""
 
-#: src/SOURCE/KB.cpp
-msgid "startup.cd.required"
-msgstr ""
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.data.missing"
 msgstr ""
 
@@ -1985,11 +1981,11 @@ msgstr ""
 msgid "startup.data.not_found"
 msgstr ""
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.directory.invalid"
 msgstr ""
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr ""
 

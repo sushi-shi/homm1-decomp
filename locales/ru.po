@@ -1211,7 +1211,7 @@ msgstr "Герои Меча и Магии"
 
 #: src/SOURCE/Heroes.rc
 msgid "resource.HEROES.version"
-msgstr "Версия 1.1"
+msgstr "Турнирное издание 1.05 f3"
 
 #: src/SOURCE/Heroes.rc
 msgid "resource.MNUADV.command40005"
@@ -1967,15 +1967,11 @@ msgstr "Ошибочная точка телепортации"
 msgid "spell.teleport.select"
 msgstr "Выберите место назначения."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.cd.inaccessible"
 msgstr "Нет доступа к CD приводу."
 
-#: src/SOURCE/KB.cpp
-msgid "startup.cd.required"
-msgstr "У вас должен быть компакт-диск Героев в CD приводе, чтобы играть\nв Героев Меча и Магии. \n\nВставьте диск и попробуйте еще раз."
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.data.missing"
 msgstr "Невозможно найти файлы данных Героев.  Пожалуйста, переустановите программу."
 
@@ -1984,11 +1980,11 @@ msgstr "Невозможно найти файлы данных Героев.  �
 msgid "startup.data.not_found"
 msgstr "Данные игры не найдены. Проверены папки:%s\n\nУкажите папку, в которой находится DATA\\HEROES.AGG, в переменной HOMM1_DATA или запустите программу с параметром --data ПАПКА."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.directory.invalid"
 msgstr "Невозможно изменить директорию. Пожалуйста, переустановите программу."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr "Ошибка загрузки"
 
@@ -2015,7 +2011,7 @@ msgstr "Герои Меча и Магии"
 
 #: src/SOURCE/KB.cpp
 msgid "startup.loading.game"
-msgstr "Загрузка Героев Меча и Магии (версия 1.1)"
+msgstr "# Загрузка Героев Меча и Магии TE 1.05 f3 #"
 
 #: src/BASE/EXEC.cpp src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.manager.failed"

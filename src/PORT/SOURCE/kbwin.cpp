@@ -66,10 +66,13 @@ namespace {
 // ---------------------------------------------------------------- settings
 
 // The original kept its settings in the registry under
-// HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000. The port
-// keeps the same values, by the same names, in a text file.
+// HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000, the
+// edition under its own key (PREFS_REGISTRY_KEY). The port keeps the same
+// values, by the same names, in a text file; the edition's file
+// (PREFS_SETTINGS_FILE) is apart from the original game's heroes.cfg, as its
+// key was.
 std::string SettingsPath() {
-    return platform::ConfigDirectory() + "heroes.cfg";
+    return platform::ConfigDirectory() + PREFS_SETTINGS_FILE;
 }
 
 std::map<std::string, std::string> LoadSettings() {
@@ -147,6 +150,15 @@ std::vector<SettingField> IntegerSettings() {
         {"HMM1 EditorWindowWidth", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].width},
         {"HMM1 EditorWindowHeight", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].height},
         {"HMM1 EditorFullScreen", &gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen},
+        // The edition's options.
+        {"HMM1 ShowEnemyMobility", &gConfig.showEnemyMobility},
+        {"HMM1 SoftRetreatSurrender", &gConfig.softRetreatSurrender},
+        {"HMM1 SlightlyHarderAI", &gConfig.slightlyHarderAI},
+        {"HMM1 CheatMode", &gConfig.cheatMode},
+        {"HMM1 OriginalCheatKeys", &gConfig.originalCheatKeys},
+        {"HMM1 LosslessAudio", &gConfig.losslessAudio},
+        {"HMM1 PlayVideos", &gConfig.playVideos},
+        {"HMM1 BattleMessageFormat", &gConfig.battleMessageFormat},
     };
 }
 
@@ -347,6 +359,13 @@ void Process1WindowsMessage(void) {
     static u32 gLastCall = 0;
     platform::Event event;
     bool handled = false;
+#ifndef __EMSCRIPTEN__
+    // Give the processor away between passes so waiting loops stay idle, as
+    // the edition's pump did. (SDL already runs Windows' timer at 1 ms, the
+    // edition's timer period. A page yields to the browser in the event poll
+    // instead: a sleep there would wait for a browser timer, at least 4 ms.)
+    platform::Sleep(KBWIN_IDLE_SLEEP);
+#endif
     while (platform::PollEvent(event)) {
         Dispatch(event);
         handled = true;
@@ -546,8 +565,12 @@ void ReadPrefs(void) {
         WritePrefs();
         return;
     }
+    // Edition values missing from older settings keep their defaults.
+    SetEditionDefaults();
     for (const SettingField& field : IntegerSettings())
         ReadSetting(values, field.name, *field.value);
+    // The game always starts with its menu bar.
+    gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu = 1;
     ReadSetting(values, "HMM1 ModemInitString", gConfig.modemInitString,
                 sizeof(gConfig.modemInitString));
     SetVolumes(gConfig.soundVolume, gConfig.musicVolume);

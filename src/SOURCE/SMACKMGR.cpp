@@ -293,7 +293,9 @@ i32 PlaySmacker(i32 smackNumber) {
     gWindowManager->m_updateFlags = 0;
     StopMusic();
     gMovieId = smackNumber;
-    SmackMain();
+    // Videos play only when the player enabled them.
+    if (gConfig.playVideos)
+        SmackMain();
     memcpy(gBufferPalette->m_data, savedPalette, PALETTE_DATA_SIZE);
     gWindowManager->m_updateFlags = savedUpdateFlags;
     gInSmacker = false;

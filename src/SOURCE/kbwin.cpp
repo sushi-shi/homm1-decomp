@@ -67,6 +67,8 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
 
     memset(gCommandLine, 0, KBWIN_COMMAND_LINE_CLEAR_SIZE);
     strncpy(gCommandLine, commandLine, KBWIN_COMMAND_LINE_LIMIT);
+    // A fine timer lets the idle Sleep in the message pump stay short.
+    timeBeginPeriod(KBWIN_TIMER_RESOLUTION);
     if (EarlySetup() == false)
         return 0;
     if (AppInit(instance, previousInstance, showCommand, commandLine) == 0)
@@ -325,6 +327,7 @@ i32 gUnusedWindowCount = 0;
 void AppExit(void) {
     CleanUpWinGraphics();
     CleanUpMenus();
+    timeEndPeriod(KBWIN_TIMER_RESOLUTION);
 }
 
 void Process1WindowsMessage(void) {
@@ -332,12 +335,14 @@ void Process1WindowsMessage(void) {
     MSG message;
     i32 currentTick;
 
+    // Give the processor away between passes so waiting loops stay idle.
+    Sleep(KBWIN_IDLE_SLEEP);
     while (PeekMessageA(&message, NULL, 0, 0, PM_REMOVE) != FALSE) {
         TranslateMessage(&message);
         DispatchMessageA(&message);
     }
     currentTick = KBTickCount();
-    if (currentTick - gLastGetMessage > 150) {
+    if (currentTick - gLastGetMessage > KBWIN_GET_MESSAGE_INTERVAL) {
         gLastGetMessage = currentTick;
         if (GetMessageA(&message, NULL, 0, 0) != FALSE) {
             TranslateMessage(&message);
@@ -562,7 +567,7 @@ void ReadPrefs(void) {
     DWORD savedMusic;
     DWORD effectsVolume;
 
-    strcpy(subKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
+    strcpy(subKey, PREFS_REGISTRY_KEY);
     key = NULL;
     rc = RegCreateKeyA(HKEY_LOCAL_MACHINE, subKey, &key);
     if (rc == ERROR_SUCCESS) {
@@ -600,6 +605,8 @@ void ReadPrefs(void) {
         );
         gConfig.musicVolume = savedMusic;
         gConfig.soundVolume = effectsVolume;
+        // Edition values missing from older preferences keep their defaults.
+        SetEditionDefaults();
         RegQueryValueExA(
             key,
             "HMM1 WalkSpeed",
@@ -698,14 +705,8 @@ void ReadPrefs(void) {
             reinterpret_cast<LPBYTE>(&gConfig.currentMapOffset),
             &length
         );
-        RegQueryValueExA(
-            key,
-            "HMM1 GameShowMenu",
-            NULL,
-            &regType,
-            reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu),
-            &length
-        );
+        // The game always starts with its menu bar.
+        gConfig.gfx[CONFIG_EXECUTABLE_GAME].showMenu = 1;
         RegQueryValueExA(
             key,
             "HMM1 GameWindowXLeft",
@@ -794,6 +795,70 @@ void ReadPrefs(void) {
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
             &length
         );
+        RegQueryValueExA(
+            key,
+            "HMM1 ShowEnemyMobility",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.showEnemyMobility),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 SoftRetreatSurrender",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.softRetreatSurrender),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 SlightlyHarderAI",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.slightlyHarderAI),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 CheatMode",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.cheatMode),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 OriginalCheatKeys",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.originalCheatKeys),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 LosslessAudio",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.losslessAudio),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 PlayVideos",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.playVideos),
+            &length
+        );
+        RegQueryValueExA(
+            key,
+            "HMM1 BattleMessageFormat",
+            NULL,
+            &regType,
+            reinterpret_cast<LPBYTE>(&gConfig.battleMessageFormat),
+            &length
+        );
         length = REGISTRY_TEXT_VALUE_SIZE;
         if (RegQueryValueExA(
                 key,
@@ -829,7 +894,7 @@ void WritePrefs(void) {
     DWORD effectsVolume;
 
     UpdateSystemOptionsMenu();
-    strcpy(subKey, "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000");
+    strcpy(subKey, PREFS_REGISTRY_KEY);
     key = NULL;
     rc = RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKey, 0, KEY_ALL_ACCESS, &key);
     if (rc == ERROR_SUCCESS) {
@@ -1043,6 +1108,70 @@ void WritePrefs(void) {
             reinterpret_cast<LPBYTE>(&gConfig.gfx[CONFIG_EXECUTABLE_EDITOR].fullScreen),
             REGISTRY_DWORD_BYTES
         );
+        RegSetValueExA(
+            key,
+            "HMM1 ShowEnemyMobility",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.showEnemyMobility),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 SoftRetreatSurrender",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.softRetreatSurrender),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 SlightlyHarderAI",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.slightlyHarderAI),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 CheatMode",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.cheatMode),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 OriginalCheatKeys",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.originalCheatKeys),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 LosslessAudio",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.losslessAudio),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 PlayVideos",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.playVideos),
+            REGISTRY_DWORD_BYTES
+        );
+        RegSetValueExA(
+            key,
+            "HMM1 BattleMessageFormat",
+            0,
+            REG_DWORD,
+            reinterpret_cast<LPBYTE>(&gConfig.battleMessageFormat),
+            REGISTRY_DWORD_BYTES
+        );
         RegCloseKey(key);
     }
 }
@@ -1147,7 +1276,7 @@ i32 SetupCDDrive(void) {
                     sprintf(gRegCDRomPath, "%c:", cdDrives[index] + 'A');
                     strcpy(
                         keyPath,
-                        "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
+                        PREFS_REGISTRY_KEY
                     );
                     key = NULL;
                     if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, keyPath, 0, KEY_WRITE, &key)

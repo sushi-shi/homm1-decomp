@@ -1739,6 +1739,7 @@
         "library_after": "audiere.lib",
         "libraries": [
           "oldnames.lib",
+          "winmm.lib",
           "kernel32.lib",
           "user32.lib",
           "gdi32.lib",

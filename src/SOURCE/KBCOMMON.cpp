@@ -31,11 +31,11 @@ void SetGameDefaults(void) {
         gConfig.gfx[i].x = DEFAULT_WINDOW_ORIGIN;
         gConfig.gfx[i].y = DEFAULT_WINDOW_ORIGIN;
         if (gMainVideoModeWidth <= LOGICAL_SCREEN_WIDTH && gDDrawAttached) {
-            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].fullScreen = 0;
             gConfig.gfx[i].width = DEFAULT_SMALL_WINDOW_WIDTH;
             gConfig.gfx[i].height = DEFAULT_SMALL_WINDOW_HEIGHT;
         } else {
-            gConfig.gfx[i].fullScreen = 1;
+            gConfig.gfx[i].fullScreen = 0;
             gConfig.gfx[i].width = LOGICAL_SCREEN_WIDTH;
             gConfig.gfx[i].height = LOGICAL_SCREEN_HEIGHT;
         }
@@ -46,6 +46,18 @@ void SetGameDefaults(void) {
     gConfig.musicSource = SOUND_MUSIC_SOURCE_CD;
     gFirstTimeThrough = true;
     gConfig.walkSpeed = WALK_SPEED_CANTER;
+    SetEditionDefaults();
+}
+
+void SetEditionDefaults(void) {
+    gConfig.showEnemyMobility = 0;
+    gConfig.softRetreatSurrender = 0;
+    gConfig.slightlyHarderAI = 0;
+    gConfig.cheatMode = CHEAT_MODE_EXTENDED;
+    gConfig.originalCheatKeys = 0;
+    gConfig.losslessAudio = 0;
+    gConfig.playVideos = 0;
+    gConfig.battleMessageFormat = BATTLE_MESSAGE_FORECAST;
 }
 
 void SetWinText(heroWindow* window, i16 id) {

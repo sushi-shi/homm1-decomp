@@ -190,24 +190,6 @@ b32 EarlySetup(void) {
     ReadPrefs();
     if (!InterpretCommandLine())
         return true;
-    switch (SetupCDDrive()) {
-        case CD_SETUP_NO_DRIVE:
-            KBErrorBox(localization::Tr("startup.cd.inaccessible"), localization::Tr("startup.error.title"));
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NOT_FOUND:
-            KBErrorBox(localization::Tr("startup.cd.required"), localization::Tr("startup.error.title"));
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NO_APP_PATH:
-            KBErrorBox(localization::Tr("startup.directory.invalid"), localization::Tr("startup.error.title"));
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NO_DATA:
-            KBErrorBox(localization::Tr("startup.data.missing"), localization::Tr("startup.error.title"));
-            exit(EXIT_SUCCESS);
-            break;
-    }
     InitVars();
     return true;
 }
