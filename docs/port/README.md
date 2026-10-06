@@ -12,6 +12,9 @@ only its toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
 - [Build and run](#build-and-run): [Linux](#build-and-run),
   [Windows](#windows), [in a browser](#in-a-browser), [macOS](#macos),
   [the help book](#help), [multiplayer](#multiplayer)
+- [Installing with Nix](#installing-with-nix)
+- [The Visual C++ 6 build](#the-visual-c-6-build) and the
+  [text catalog](#the-text-catalog)
 - [Architecture](#architecture)
 - [Status](#status)
 - [Keeping up with the source branch](#keeping-up-with-the-source-branch)
@@ -24,12 +27,17 @@ only its toolchain and packages. The Visual C++ 6 build of `HEROES.EXE` and
 With Nix (flakes enabled), from the repository root:
 
 ```sh
-nix develop .#port
-cmake -S . -B build/port -G Ninja          # -DHOMM1_LOCALE=en for English
-ninja -C build/port
-build/port/heroes --data ~/.local/share/homm1-buka/game          # the game
-build/port/heroes-editor --data ~/.local/share/homm1-buka/game   # the editor
+nix develop                                # or .#port: the native build alone
+cmake --preset linux                       # -DHOMM1_LOCALE=en for English
+cmake --build --preset linux
+build/linux/heroes --data ~/.local/share/homm1-buka/game          # the game
+build/linux/heroes-editor --data ~/.local/share/homm1-buka/game   # the editor
+ctest --preset linux                       # with HOMM1_DATA=... for the data tests
 ```
+
+The presets (`CMakePresets.json`) are `linux`, `wasm` (configured with
+`emcmake`) and `windows` (MinGW-w64), building in `build/<preset>`; plain
+`cmake -S . -B build/port -G Ninja` works as before.
 
 `nix run .#native` and `nix run .#native-editor` build and run them from the
 flake (pass `-- --data DIR`). To install them with your game data as
@@ -40,7 +48,7 @@ the launchers and the data import are `nix/game.nix`, `nix/launch.sh` and
 
 Without Nix: CMake 3.20, Ninja or Make, a C++20 compiler (GCC 12+ or Clang
 15+), Python 3 and SDL 3.2+ (without an installed SDL, CMake 3.25 downloads
-and builds SDL 3.4.8 with the programs).
+SDL 3.4.8, pinned by SHA-256, and links it into the programs).
 
 The programs need the game data of the Buka edition: a folder with `DATA`,
 `MAPS`, `GAMES`, `SOUND` and `ANIM` (the CD's game folder, or what
@@ -92,7 +100,23 @@ xvfb-run wine result/bin/heroes.exe --data 'Z:\home\me\.local\share\homm1-buka\g
 `HOMM1_INPUT_REPLAY` takes a Windows path there, and `shot` paths may be
 `Z:\...`. The unit tests cross-build and pass under Wine with
 `-DCMAKE_CROSSCOMPILING_EMULATOR=wine` (all but `save_roundtrip`, whose
-driver is a Linux script); the flake does not run them.
+driver is a Linux script); the flake runs `file_test` and `data_root_test`
+from the package's `tests` output under Wine (`windows-tests`), and
+`HOMM1_DATA=DIR nix run .#windows-smoke` starts `heroes.exe` from a player's
+game folder three ways.
+
+On Windows itself (MinGW-w64, CMake 3.25+, Ninja, Python 3), `cmake --preset
+windows` and `cmake --build --preset windows` build both programs in
+`build\windows`; without an installed SDL, CMake fetches it and links it, the C++ runtime and the
+thread library in (`-static`), so each program is a single `.exe` that
+imports only Windows' own DLLs. That path is checked by cross-building the
+preset with nixpkgs' MinGW-w64 from a fetched SDL and starting the result
+under Wine.
+
+The game folder search takes the paths a player gives (`--data`,
+`HOMM1_DATA`, `HOMM1_CD`, `HOMM1_CONFIG`) without surrounding blanks, one pair
+of surrounding quotes and trailing separators (`platform::ConfiguredDirectory`);
+when no folder holds the data, the message lists every folder tried.
 
 ### In a browser
 
@@ -101,8 +125,10 @@ nix build .#wasm           # result/share/homm1-web: the page and both programs
 nix run .#web              # serves it on http://127.0.0.1:8000/
 ```
 
-`nix/wasm.nix` builds SDL3 and both programs with
-Emscripten. The page (`src/PLATFORM/Web/`) asks for the game folder once
+`nix/wasm.nix` builds SDL3 and both programs with Emscripten. Without Nix,
+`emcmake cmake --preset wasm` and `cmake --build --preset wasm` (emsdk 5.0.6,
+CMake 3.25+, Ninja, Python 3) build the same with an SDL that CMake fetches,
+and copy the page beside the programs: `build/wasm` is the site. The page (`src/PLATFORM/Web/`) asks for the game folder once
 (**Choose a folder**: the folder with `DATA`, `MAPS`, ..., or one above it
 that also holds the CD's `Tracks` and `HEROES.HLP`; **Add single files**
 takes music tracks or the help file on their own), copies it into the
@@ -424,6 +450,94 @@ programs set it) so that SIGTERM ends them.
 (animations, delays and the replay's times alike); `HOMM1_TICK_START=N`
 starts the clock at N instead of 1,000,000 (for example just below 2^31, to
 see the tick count wrap).
+
+## Installing with Nix
+
+The installable package (`packages.x86_64-linux.default`, `nix/game.nix`)
+puts `heroes` and `heroes-editor` launchers (`nix/launch.sh`) on the native
+programs, with the menu entries and the icons of your copy's programs. Its
+`game` may be the CD image, the CD's files, an installed game folder or a
+`.zip`/`.7z` of one, or a folder holding only the image (`game =
+homm1-game;`). `nix/game-data.py` checks the copy (the resource archive by
+SHA-256, the other files by name and size), unpacks the CD's installer when
+it is a CD and lays the game out in the store; nothing is fetched from a
+binary cache. Without `game` the programs are installed alone, and the first
+start imports your copy from `HOMM1_GAME` into
+`$XDG_DATA_HOME/homm1/data` (`~/.local/share/homm1/data`).
+
+The programs run on `$XDG_DATA_HOME/homm1/game`, where `ANIM`, `SOUND`,
+`HELP` and the resource archive are links into the data, and the files the
+programs write (saved games in `GAMES`, maps in `MAPS`, high scores and the
+network save in `DATA`) are copied from it once and never overwritten or
+brought back after being deleted. `--data DIR` or `HOMM1_DATA` bypasses the
+launcher's folder and runs on `DIR` as it is. The package overrides as
+`.override { game = ...; locale = "en"; editor = false; }`; the module's
+options (`programs.homm1.game`, `.locale`, `.editor.enable`, `.package`) do
+the same.
+
+## The Visual C++ 6 build
+
+The branch still builds the original programs, `HEROES.EXE` and
+`EDITOR.EXE`, with the Visual C++ 6.0 SP5 toolchain under Wine:
+
+```sh
+nix develop -c python3 build.py --icon-from /path/to/HEROES.EXE              # Russian
+nix develop -c python3 build.py --locale en --icon-from /path/to/HEROES.EXE  # English
+nix develop -c python3 build.py --target all \
+    --icon-from /path/to/HEROES.EXE --icon-from /path/to/EDITOR.EXE
+```
+
+This writes `build/ru/HEROES.EXE` or `build/en/HEROES.EXE`, and with
+`--target editor` (or `all`) `build/<locale>/EDITOR.EXE`. The flake fetches
+the hash-pinned Visual C++ 6.0 SP5, WinG and DirectX 1 files and supplies
+Wine and LLVM's resource tools. Each unit compiles with its own retail
+optimization profile (`build.json`) and links in retail object order. The
+editor reuses the game's BASE library and its `kbwin`, `REQUEST` and
+`wingraph` sources, compiled a second time with the editor's own profiles and
+`HOMM1_EDITOR` defined. `--icon-from` takes each program's icon from your own
+executable of the same name. Game data and the Smacker, Miles and Audiere
+runtime DLLs are not included.
+
+`nix run .#play` builds `HEROES.EXE` and runs it on your copy under Wine:
+
+```sh
+nix run .#play -- --game /path/to/game-or-cd.iso   # first run
+nix run .#play                                     # later runs
+nix run .#play -- --locale en --window             # English build, in a 640x480 window
+nix run .#editor -- --window                       # the scenario editor
+```
+
+The first run checks the game files, copies them into
+`~/.local/share/homm1-buka/` (`$XDG_DATA_HOME`), builds the program with the
+game's icon, creates a Wine prefix with the CD as drive `D:` and the game's
+registry key, and starts the game full screen at 640x480 (`--window` runs it
+in a 640x480 Wine desktop window). Later runs rebuild only when the sources
+changed and remember the language. Saved games and high scores stay in
+`~/.local/share/homm1-buka/game/`. The editor uses the same game copy, Wine
+prefix, CD drive and registry key. Other options: `--rebuild`,
+`--prefix-reset`, `--dry-run` and `-- ARGS` for the program;
+`nix run .#play -- --help` lists them.
+
+### The text catalog
+
+The source keeps every piece of game text as `localization::Tr("id")`. Both
+builds resolve each ID to the selected language as literals in its Windows
+code page, in a copy of the sources (`build/<locale>/localized/`,
+`build/<preset>/localized/`); nothing is looked up at run time. Edit the
+catalogs, not the copies. The English build changes only the program's own
+text and menus; the game's data files stay as installed.
+
+`locales/messages.pot` lists every ID the source uses. Each language is a
+`locales/<lang>.po` translation plus a `locales/<lang>.json` descriptor: its
+Windows code page, resource language, system locale, glyph set and keyboard
+table. To add a language, write its descriptor, run `python3 catalog.py
+update` to create its `.po`, translate every entry, check it with
+`python3 catalog.py check` and build with `--locale <lang>` (natively
+`-DHOMM1_LOCALE=<lang>`). Source text outside the catalog is ASCII without
+numeric escapes; ctest runs `catalog.py check` and `update --check`
+(`catalog_check`, `catalog_update_check`). The game draws text with the
+fonts in its data files, which have glyphs for ASCII and, in Buka's edition,
+Cyrillic; a language needing other letters also needs new fonts.
 
 ## Architecture
 
