@@ -48,8 +48,13 @@ void Sleep(u32 milliseconds);
 // The game's text is single-byte in the language's Windows code page (the
 // build defines HOMM1_CODEPAGE); the host wants UTF-8.
 std::string ToUtf8(const char* text);
+// Text in a given Windows code page: 1251, else read as 1252.
+std::string ToUtf8(const std::string& text, int codepage);
 
 void ShowMessage(const char* title, const char* text);
+// Shows a local document (an HTML file at hostPath) in the system's browser,
+// or in a new browser tab when the program itself runs in a browser.
+bool OpenDocument(const std::string& hostPath);
 #if defined(__GNUC__)
 __attribute__((format(printf, 1, 2)))
 #endif

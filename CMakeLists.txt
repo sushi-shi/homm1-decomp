@@ -195,6 +195,13 @@ endfunction()
 homm1_program(homm1 game heroes src/SOURCE/Heroes.rc)
 homm1_program(homm1_editor editor heroes-editor src/EDITOR/Editor.rc)
 
+# The help converter as a command-line tool (tools/help).
+add_executable(homm1_hlp2html ${CMAKE_SOURCE_DIR}/tools/help/hlp2html.cpp)
+set_target_properties(homm1_hlp2html PROPERTIES OUTPUT_NAME homm1-hlp2html)
+target_compile_options(homm1_hlp2html PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_WARNINGS}
+  ${HOMM1_SANITIZE_FLAGS})
+target_link_libraries(homm1_hlp2html PRIVATE homm1_platform)
+
 # --------------------------------------------------------------------------
 # Tests.
 # --------------------------------------------------------------------------

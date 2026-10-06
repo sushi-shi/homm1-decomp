@@ -3,7 +3,25 @@
 #include <cstdarg>
 #include <cstdio>
 #include <cstdlib>
+#include <filesystem>
 #include <sys/stat.h>
+
+#ifdef __EMSCRIPTEN__
+#include <emscripten.h>
+
+// The document is in the program's in-memory file system, which the browser
+// cannot open by URL: its bytes go to a Blob shown in a new tab.
+EM_JS(int, OpenDocumentInBrowser, (const char* path), {
+    try {
+        const bytes = FS.readFile(UTF8ToString(path));
+        const url = URL.createObjectURL(new Blob([bytes], {type: 'text/html'}));
+        return window.open(url, '_blank') ? 1 : 0;
+    } catch (e) {
+        console.error('open document', e);
+        return 0;
+    }
+});
+#endif
 
 namespace platform {
 
@@ -84,6 +102,39 @@ void ShowMessage(const char* title, const char* text) {
     if (Environment("HOMM1_NO_DIALOGS").empty())
         SDL_ShowSimpleMessageBox(
             SDL_MESSAGEBOX_ERROR, utf8Title.c_str(), utf8Text.c_str(), sdl::Window());
+}
+
+bool OpenDocument(const std::string& hostPath) {
+#ifdef __EMSCRIPTEN__
+    return OpenDocumentInBrowser(hostPath.c_str()) != 0;
+#else
+    // A file URL of the absolute path, with the bytes outside the unreserved
+    // set percent-encoded (the path is UTF-8).
+    std::error_code error;
+    std::filesystem::path absolute = std::filesystem::absolute(hostPath, error);
+    std::string path = error ? hostPath : absolute.generic_string();
+    std::string url = "file://";
+    if (!path.empty() && path[0] != '/')
+        url += '/';  // a Windows drive letter
+    static const char kHex[] = "0123456789ABCDEF";
+    for (char c : path) {
+        unsigned char byte = static_cast<unsigned char>(c);
+        if ((byte >= 'A' && byte <= 'Z') || (byte >= 'a' && byte <= 'z')
+            || (byte >= '0' && byte <= '9') || c == '/' || c == '-' || c == '_' || c == '.'
+            || c == '~' || c == ':') {
+            url += c;
+        } else {
+            url += '%';
+            url += kHex[byte >> 4];
+            url += kHex[byte & 15];
+        }
+    }
+    if (!SDL_OpenURL(url.c_str())) {
+        Log("cannot open %s: %s", url.c_str(), SDL_GetError());
+        return false;
+    }
+    return true;
+#endif
 }
 
 void Log(const char* format, ...) {

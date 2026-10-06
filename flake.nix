@@ -62,6 +62,7 @@
         installPhase = ''
           install -Dm755 heroes $out/bin/homm1
           install -Dm755 heroes-editor $out/bin/homm1-editor
+          install -Dm755 homm1-hlp2html $out/bin/homm1-hlp2html
         '';
         meta.mainProgram = "homm1";
       };
