@@ -77,13 +77,22 @@
       # The installable game: `heroes` and `heroes-editor` on the native
       # programs, with the player's game data laid out in the store when
       # `game` is given (nix/game.nix; README, "Install with a NixOS flake").
+      # On port-te the programs are the Tournament Edition; its saved games
+      # live in their own per-user folder (homm1-te) and its settings in their
+      # own files (heroes-te-LANG.cfg), apart from the plain game's.
       game = pkgs.lib.makeOverridable (import ./nix/game.nix {
         inherit pkgs native;
         runner = ./play.py;
-      }) { };
+      }) { stateName = "homm1-te"; edition = "te"; };
       # The game as a NixOS or home-manager option set. `edition` picks the
-      # programs; the Tournament Edition can join `editions` later.
-      editions = system: { buka = self.packages.${system}.default; };
+      # programs: this branch (port-te) builds the Tournament Edition; the
+      # Buka edition's programs are the port branch's flake.
+      editions = system: {
+        te = self.packages.${system}.default;
+        buka = throw ''
+          programs.homm1.edition = "buka": this flake (port-te) builds the Tournament
+          Edition; take the Buka edition from the port branch's flake.'';
+      };
       module = target: { config, lib, pkgs, ... }:
         let
           cfg = config.programs.homm1;
@@ -95,9 +104,13 @@
           options.programs.homm1 = {
             enable = lib.mkEnableOption "Heroes of Might and Magic (native port)";
             edition = lib.mkOption {
-              type = lib.types.enum [ "buka" ];
-              default = "buka";
-              description = "The edition to install: buka (the Buka 2003 edition).";
+              type = lib.types.enum [ "buka" "te" ];
+              default = "te";
+              description = ''
+                The edition to install: te (the Tournament Edition, this branch's
+                programs; the editor stays the Buka editor) or buka (the Buka 2003
+                edition, from the port branch's flake).
+              '';
             };
             game = lib.mkOption {
               type = lib.types.nullOr lib.types.path;

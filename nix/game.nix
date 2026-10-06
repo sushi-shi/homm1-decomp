@@ -8,11 +8,13 @@
 #            it the launchers import $HOMM1_GAME on their first run.
 #   locale   the language compiled into the programs (locales/<LANG>.json).
 #   editor   whether to install the scenario editor.
+#   edition  "buka", or "te" for the Tournament Edition (port-te): names the
+#            game in its desktop entry; the editor is the Buka editor in both.
 #
 # Another edition (Tournament Edition) is another set of programs and its own
 # per-user folder: `stateName` keeps the editions' saved games apart.
 { pkgs, native, runner }:
-{ game ? null, locale ? "ru", editor ? true, stateName ? "homm1" }:
+{ game ? null, locale ? "ru", editor ? true, stateName ? "homm1", edition ? "buka" }:
 let
   inherit (pkgs) lib;
   programs = if locale == "ru" then native else native.overrideAttrs (old: {
@@ -45,7 +47,7 @@ let
     done
   '';
   title = {
-    heroes = "Heroes of Might and Magic";
+    heroes = if edition == "te" then "Heroes of Might and Magic TE" else "Heroes of Might and Magic";
     heroes-editor = "Heroes of Might and Magic Scenario Editor";
   };
   launcher = name: executable: pkgs.writeShellApplication {
@@ -71,7 +73,9 @@ pkgs.symlinkJoin {
   name = "homm1-${locale}";
   paths = [
     (launcher "heroes" "homm1")
-    (desktop "heroes" "heroes" "Turn-based strategy (native port of the Buka 2003 edition)")
+    (desktop "heroes" "heroes" (if edition == "te"
+      then "Turn-based strategy (the Tournament Edition on the native port of the Buka 2003 edition)"
+      else "Turn-based strategy (native port of the Buka 2003 edition)"))
   ] ++ lib.optionals editor [
     (launcher "heroes-editor" "homm1-editor")
     (desktop "heroes-editor" "editor" "Scenario editor for Heroes of Might and Magic")
