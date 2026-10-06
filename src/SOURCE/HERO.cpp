@@ -183,7 +183,8 @@ i32 hero::AddSpell(i8 spell, i8 charges, b32 checkOnly) {
                 if (checkOnly)
                     goto done;
                 m_spells[i] = spell;
-                m_spellCharges[i] = charges;
+                if (!gCheatUnlimitedSpells[gCurPlayer][m_id] || m_spellCharges[i] <= charges)
+                    m_spellCharges[i] = charges;
                 break;
             }
         }
@@ -198,7 +199,8 @@ i32 hero::AddSpell(i8 spell, i8 charges, b32 checkOnly) {
                 if (checkOnly)
                     goto done;
                 m_spells[i] = spell;
-                m_spellCharges[i] = charges;
+                if (!gCheatUnlimitedSpells[gCurPlayer][m_id] || m_spellCharges[i] <= charges)
+                    m_spellCharges[i] = charges;
                 break;
             }
         }

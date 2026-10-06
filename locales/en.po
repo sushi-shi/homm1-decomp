@@ -49,6 +49,18 @@ msgid "adventure.quick_info.visited"
 msgstr "\n\n%s\n(Visited)"
 
 #: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr "Are you sure you want to load a quicksave?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr "Quicksave not found."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr "Game saved successfully."
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Game saved successfully."
 

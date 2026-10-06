@@ -1,5 +1,7 @@
 #include <H1/Ints.h>
 
+#include <PLATFORM/File.h>
+
 #include <BASE/audio.h>
 #include <BASE/backdropWidget.h>
 #include <BASE/baseManager.h>
@@ -557,6 +559,152 @@ i32 gCurHourGlassPhase = 0;
 b32 gForceUpdate = false;
 i32 gUnusedAdvCount = 0;
 
+b8 gCheatUnlimitedMovement[GAME_PLAYER_COUNT][GAME_HERO_COUNT];
+b8 gCheatUnlimitedSpells[GAME_PLAYER_COUNT][GAME_HERO_COUNT];
+
+void ClearCheatState(void) {
+    memset(gCheatUnlimitedMovement, 0, sizeof(gCheatUnlimitedMovement));
+    memset(gCheatUnlimitedSpells, 0, sizeof(gCheatUnlimitedSpells));
+}
+
+// The extended cheat codes act on the current player, its current hero and
+// its current town.
+void advManager::ApplyExtendedCheat(i32 code) {
+    hero* curHero;
+    town* curTown;
+    i32 i;
+    i32 level;
+    i32 experience;
+    i8 creature;
+    i8 artifact;
+    i16 growth;
+    i32 townType;
+
+    curHero = NULL;
+    if (gCurPlayerData->m_currentHero != HERO_ID_NONE)
+        curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    if (code == CHEAT_RESOURCES || code == CHEAT_ALL) {
+        for (i = 0; i < RESOURCE_COUNT; i++) {
+            if (i == RESOURCE_GOLD)
+                gCurPlayerData->m_resources[i] += CHEAT_GOLD_GIFT;
+            else if (i == RESOURCE_WOOD || i == RESOURCE_ORE)
+                gCurPlayerData->m_resources[i] += CHEAT_COMMON_RESOURCE_GIFT;
+            else
+                gCurPlayerData->m_resources[i] += CHEAT_RARE_RESOURCE_GIFT;
+        }
+        RedrawAdvScreen(true);
+    }
+    if (code == CHEAT_CASTLE && gCurPlayerData->m_currentTown != GAME_TOWN_NONE) {
+        curTown = gGame->GetTown(gCurPlayerData->m_currentTown);
+        if (curTown->m_buildings & (1 << BUILDING_SLOT_TENT)) {
+            curTown->XformToCastle();
+            curTown->m_buildings -= (1 << BUILDING_SLOT_TENT);
+        }
+        curTown->m_buildings |= (1 << BUILDING_SLOT_MAGE_GUILD) | (1 << BUILDING_SLOT_THIEVES_GUILD)
+                                | (1 << BUILDING_SLOT_TAVERN) | (1 << BUILDING_SLOT_WELL)
+                                | (1 << BUILDING_SLOT_CASTLE);
+        for (i = BUILDING_SLOT_DWELLING_FIRST; i <= BUILDING_SLOT_DWELLING_LAST; i++)
+            curTown->m_buildings |= 1 << i;
+        if (GetCell(curTown->m_x - 1, curTown->m_y + 1)->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
+            curTown->m_buildings |= (1 << BUILDING_SLOT_SHIPYARD);
+        curTown->m_buildState = MAGE_GUILD_STATE_LEVEL_4;
+        for (i = 0; i < BUILDING_SLOT_DWELLING_COUNT; i++) {
+            growth =
+                gMonsterDatabase[gDwellingType[curTown->m_type][i]].growth * CHEAT_CREATURE_WEEKS;
+            if (curTown->m_dwellingAvailable[i] > CHEAT_GARRISON_MAX - growth)
+                curTown->m_dwellingAvailable[i] = CHEAT_GARRISON_MAX;
+            else
+                curTown->m_dwellingAvailable[i] += growth;
+        }
+        SetTownContext(curTown->m_id);
+    }
+    if (!curHero)
+        return;
+    if (code == CHEAT_MOVEMENT || code == CHEAT_ALL) {
+        gCheatUnlimitedMovement[gCurPlayer][curHero->m_id] = true;
+        curHero->m_mobility = curHero->m_remainingMobility = CHEAT_UNLIMITED_MOBILITY;
+        SetHeroContext(curHero->m_id, false);
+    }
+    if (code == CHEAT_MAGIC || code == CHEAT_ALL) {
+        if (!curHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
+            GiveArtifact(curHero, ARTIFACT_MAGIC_BOOK);
+        for (i = 0; i < HERO_SPELL_SLOT_COUNT; i++)
+            curHero->AddSpell(i, CHEAT_SPELL_CHARGES_FULL, false);
+        gCheatUnlimitedSpells[gCurPlayer][curHero->m_id] = true;
+    }
+    if (code >= CHEAT_LEVELS_FIRST && code <= CHEAT_LEVELS_LAST) {
+        level = curHero->GetLevel(curHero->m_experience) + code - CHEAT_ALL;
+        if (level > CHEAT_MAX_LEVEL)
+            level = CHEAT_MAX_LEVEL;
+        // Beyond the experience table a level needs more than its
+        // threshold.
+        experience = curHero->GetExperience(level);
+        if (level > HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
+            experience++;
+        if (experience > curHero->m_experience)
+            GiveExperience(curHero, experience - curHero->m_experience, true);
+    }
+    if ((code >= CHEAT_CREATURE_FIRST && code <= CHEAT_CREATURE_LAST) || code == CHEAT_ALL) {
+        if (code == CHEAT_ALL) {
+            // The strongest creature of the hero's own town.
+            for (townType = 0; townType < TOWN_TYPE_COUNT; townType++) {
+                if (gTownHeroClass[townType] == curHero->m_heroClass)
+                    break;
+            }
+            creature = gDwellingType[townType][BUILDING_SLOT_DWELLING_COUNT - 1];
+        } else {
+            creature = code % CHEAT_CODE_ITEM_MODULUS;
+        }
+        if (curHero->m_army.CanJoin(creature))
+            curHero->m_army.Add(
+                creature,
+                gMonsterDatabase[creature].growth * CHEAT_CREATURE_WEEKS,
+                ARMY_GROUP_EMPTY_SLOT
+            );
+        RedrawAdvScreen(true);
+    }
+    if (code >= CHEAT_ARTIFACT_FIRST && code <= CHEAT_ARTIFACT_LAST) {
+        artifact = code % CHEAT_CODE_ITEM_MODULUS;
+        if (artifact != ARTIFACT_MAGIC_BOOK || !curHero->HasArtifact(ARTIFACT_MAGIC_BOOK))
+            GiveArtifact(curHero, artifact);
+    }
+}
+
+// F5 saves the game under a fixed name, numbered like the autosave.
+void advManager::QuickSave(void) {
+    gGame->SaveGame("QUICKSAVE", true);
+    NormalDialog(localization::Tr("adventure.quick_save.done"), NORMAL_DIALOG_TYPE_OK, 0xb1, 0x50);
+}
+
+// F9 asks to reload the quick save; the game is then reloaded from the main
+// loop like any loaded game. Not available in network games.
+b32 advManager::QuickLoad(void) {
+    char path[452];
+
+    if (gRemoteOn)
+        return false;
+    NormalDialog(
+        localization::Tr("adventure.quick_load.confirm"),
+        NORMAL_DIALOG_TYPE_YES_NO,
+        0xb1,
+        0x50
+    );
+    if (gWindowManager->m_dialogResult != NORMAL_DIALOG_CONFIRM)
+        return false;
+    gGame->QuickSaveName(gLastFilename);
+    sprintf(path, "%s%s", gGamePath, gLastFilename);
+    if (!FileExists(path)) {
+        NormalDialog(
+            localization::Tr("adventure.quick_load.missing"),
+            NORMAL_DIALOG_TYPE_OK,
+            0xb1,
+            0x50
+        );
+        return false;
+    }
+    return true;
+}
+
 i16 advManager::Main(struct tag_message& message) {
     static i32 gCheatSeq = 0;
     i32 yPos;
@@ -657,8 +805,18 @@ i16 advManager::Main(struct tag_message& message) {
                         || message.keyCode == INPUT_SCAN_F5 || message.keyCode == INPUT_SCAN_F6
                         || message.keyCode == INPUT_SCAN_F7 || message.keyCode == INPUT_SCAN_F8
                         || message.keyCode == INPUT_SCAN_F9 || message.keyCode == INPUT_SCAN_F10
-                        || message.keyCode == INPUT_SCAN_F11 || message.keyCode == INPUT_SCAN_F12))
+                        || message.keyCode == INPUT_SCAN_F11
+                        || message.keyCode == INPUT_SCAN_F12)) {
+                    // Outside debug mode F5 saves the game in place and F9
+                    // reloads that save.
+                    if (message.keyCode == INPUT_SCAN_F5) {
+                        QuickSave();
+                    } else if (message.keyCode == INPUT_SCAN_F9 && QuickLoad()) {
+                        quit = 1;
+                        gGameCommand = MAIN_MENU_QUICK_LOAD;
+                    }
                     break;
+                }
                 switch (message.keyCode) {
                     case INPUT_SCAN_F2:
                         PopNetBox(NULL);
@@ -758,8 +916,12 @@ i16 advManager::Main(struct tag_message& message) {
                         amount = 9;
                         goto processCheatDigit;
                     processCheatDigit:
+                        if (gConfig.cheatMode == CHEAT_MODE_OFF)
+                            break;
                         gCheatSeq =
                             gCheatSeq * CHEAT_SEQUENCE_RADIX % CHEAT_SEQUENCE_MODULUS + amount;
+                        if (gConfig.cheatMode == CHEAT_MODE_EXTENDED)
+                            ApplyExtendedCheat(gCheatSeq);
                         if (gCheatSeq == CHEAT_REVEAL_MAP) {
                             gGame->SetVisibility(
                                 CHEAT_REVEAL_CENTER,
@@ -1320,7 +1482,8 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
     if (gCurPlayerData->m_currentHero == HERO_ID_NONE)
         return 1;
     hero = gGame->GetHero(gCurPlayerData->m_currentHero);
-    if (hero->m_remainingMobility != hero->m_mobility) {
+    if (hero->m_remainingMobility != hero->m_mobility
+        && !gCheatUnlimitedMovement[gCurPlayer][hero->m_id]) {
         NormalDialog(localization::Tr("adventure.search.requires_full_day"), NORMAL_DIALOG_TYPE_OK);
         return true;
     }
@@ -1399,7 +1562,8 @@ b32 advManager::ProcessSearch(i32 x, i32 y) {
         WaitSample(sample);
     for (pl = 0; pl < gGame->m_playerCount; pl++)
         ComputeUALoc(pl);
-    hero->m_remainingMobility = 0;
+    if (!gCheatUnlimitedMovement[gCurPlayer][hero->m_id])
+        hero->m_remainingMobility = 0;
     UpdBottomView(true, true, true);
     CheckDimHero();
     Reseed(0, 0);

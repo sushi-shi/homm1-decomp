@@ -498,6 +498,24 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     outFile.Put(&gMapVisitFlags[0][0], sizeof(gMapVisitFlags));
 }
 
+// The quick save's file name, as SaveGame generates it: one per campaign,
+// otherwise numbered by the human players still in the game.
+void game::QuickSaveName(char* name) {
+    i32 humans;
+    i32 i;
+
+    if (m_campaignType > 0) {
+        sprintf(name, "%s.%s", "QUICKSAVE", "CGM");
+    } else {
+        humans = 0;
+        for (i = 0; i < GAME_PLAYER_COUNT; i++) {
+            if (!m_playerDead[i] && gHumanPlayer[i])
+                humans++;
+        }
+        sprintf(name, "%s.GM%d", "QUICKSAVE", humans);
+    }
+}
+
 i16 game::LoadGame(char* filename, b32 origData, b32) {
     i32 junk2;
     i32 numHumans;
@@ -2788,6 +2806,8 @@ void game::NextPlayer(void) {
             && currentHero->m_y == gCampaignScenarios[m_campaignScenario].victoryTownY)
             currentHero->m_mobility = 0;
         currentHero->m_remainingMobility = currentHero->m_mobility;
+        if (gCheatUnlimitedMovement[gCurPlayer][currentHero->m_id])
+            currentHero->m_remainingMobility = currentHero->m_mobility = CHEAT_UNLIMITED_MOBILITY;
     }
     if (!gThisNetHumanPlayer[gCurPlayer]) {
         gMouseManager->SetPointer(ADVENTURE_POINTER_WAIT);

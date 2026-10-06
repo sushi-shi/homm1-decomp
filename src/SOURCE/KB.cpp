@@ -253,6 +253,7 @@ i32 oldmain(void) {
     initialScreen = true;
 
     while (!leave) {
+        ClearCheatState();
     mainMenu:
         PlayMusic(MUSIC_TRACK_MAIN_MENU);
         if (!backdropLoaded) {
@@ -333,6 +334,11 @@ i32 oldmain(void) {
             case MAIN_MENU_LOAD_GAME:
                 if (!gGame->PickLoadGame())
                     goto mainMenu;
+                break;
+            case MAIN_MENU_QUICK_LOAD:
+                gGame->LoadGame(gLastFilename, false, false);
+                if (gGame->m_campaignType > 0)
+                    gCampaignChoice = gGame->m_campaignType;
                 break;
             case MAIN_MENU_HIGH_SCORES:
                 if ((gExec->AddManager(gHighScoreManager, BASE_MANAGER_PRIORITY_UNASSIGNED)))
@@ -548,7 +554,7 @@ b32 InterpretCommandLine(void) {
     i32 i;
     b32 helpRequested = false;
 
-    gDebugLevel = DEBUG_LEVEL_NONE;
+    gDebugLevel = gConfig.originalCheatKeys ? ADVENTURE_DEBUG_KEYS_LEVEL_MIN : DEBUG_LEVEL_NONE;
     gShowIntro = 1;
     gColorMice = 0;
     gSpecialMouseMasks = 1;

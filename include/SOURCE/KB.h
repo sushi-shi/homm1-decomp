@@ -26,9 +26,17 @@ enum SampleWaitConstant {
 };
 
 enum MainMenuControl {
-MAIN_MENU_NO_COMMAND = -1, MAIN_MENU_NEW_GAME = 1, MAIN_MENU_LOAD_GAME = 2, MAIN_MENU_QUIT = 4,
-                           MAIN_MENU_HIGH_SCORES = 5, MAIN_MENU_CREDITS = 6,
-                           MAIN_MENU_LAST = MAIN_MENU_CREDITS };
+    MAIN_MENU_NO_COMMAND = -1,
+    MAIN_MENU_NEW_GAME = 1,
+    MAIN_MENU_LOAD_GAME = 2,
+    MAIN_MENU_QUIT = 4,
+    MAIN_MENU_HIGH_SCORES = 5,
+    MAIN_MENU_CREDITS = 6,
+    MAIN_MENU_LAST = MAIN_MENU_CREDITS,
+    // Not a menu button: the adventure map asks the main loop to reload the
+    // quick save.
+    MAIN_MENU_QUICK_LOAD = 0x40
+};
 
                                extern b8 gInPollSound;
 extern i8 gNoSound;
