@@ -14,30 +14,30 @@
 // payloads must fit a message, and a message the packet header's length byte.
 H1_STATIC_ASSERT(REMOTE_MESSAGE_HEADER_RECORD_SIZE == 1 + 4 + 1 + 1 + 2, "message header");
 H1_STATIC_ASSERT(REMOTE_PACKET_HEADER_RECORD_SIZE == 1 + 1 + 1 + 1 + 2, "packet header");
-H1_STATIC_ASSERT(REMOTE_MESSAGE_MAX_SIZE < REMOTE_MESSAGE_SIZE, "a message's length fits a byte");
+H1_STATIC_ASSERT(REMOTE_MESSAGE_MAX_SIZE < static_cast<i32>(REMOTE_MESSAGE_SIZE), "a message's length fits a byte");
 H1_STATIC_ASSERT(sizeof(((RemotePayload*)0)->data) > REMOTE_PAYLOAD_MAX_SIZE, "payload buffer");
-H1_STATIC_ASSERT(REMOTE_SETUP_RECORD_SIZE == GAME_PLAYER_COUNT, "setup table");
-H1_STATIC_ASSERT(REMOTE_SAVE_HEADER_RECORD_SIZE == REMOTE_SAVE_HEADER_SIZE, "save header");
-H1_STATIC_ASSERT(REMOTE_SAVE_INDEX_RECORD_SIZE == REMOTE_SAVE_INDEX_SIZE, "save index");
-H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE == REMOTE_SAVE_ACK_MAP_SIZE, "save acknowledgement");
-H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE >= REMOTE_SAVE_BATCH_SIZE, "a flag per segment");
+H1_STATIC_ASSERT(REMOTE_SETUP_RECORD_SIZE == static_cast<i32>(GAME_PLAYER_COUNT), "setup table");
+H1_STATIC_ASSERT(REMOTE_SAVE_HEADER_RECORD_SIZE == static_cast<i32>(REMOTE_SAVE_HEADER_SIZE), "save header");
+H1_STATIC_ASSERT(REMOTE_SAVE_INDEX_RECORD_SIZE == static_cast<i32>(REMOTE_SAVE_INDEX_SIZE), "save index");
+H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE == static_cast<i32>(REMOTE_SAVE_ACK_MAP_SIZE), "save acknowledgement");
+H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE >= static_cast<i32>(REMOTE_SAVE_BATCH_SIZE), "a flag per segment");
 H1_STATIC_ASSERT(COMBAT_ACTION_RECORD_SIZE == 4 * 4, "combat action");
 H1_STATIC_ASSERT(
     COMBAT_REMOTE_RECORD_SIZE
-        == 8 + 4 + 4 + 4 + 1 + 4 + 2 * ARMY_GROUP_RECORD_SIZE + TOWN_RECORD_SIZE,
+        == 8 + 4 + 4 + 4 + 1 + 4 + 2 * static_cast<i32>(ARMY_GROUP_RECORD_SIZE) + static_cast<i32>(TOWN_RECORD_SIZE),
     "combat hand-off"
 );
-H1_STATIC_ASSERT(COMBAT_REMOTE_HERO_RECORD_SIZE == 1 + HERO_RECORD_SIZE, "hero hand-off");
-H1_STATIC_ASSERT(COMBAT_REMOTE_HERO_RECORD_SIZE <= COMBAT_REMOTE_BUFFER_SIZE, "hand-off buffer");
+H1_STATIC_ASSERT(COMBAT_REMOTE_HERO_RECORD_SIZE == 1 + static_cast<i32>(HERO_RECORD_SIZE), "hero hand-off");
+H1_STATIC_ASSERT(COMBAT_REMOTE_HERO_RECORD_SIZE <= static_cast<i32>(COMBAT_REMOTE_BUFFER_SIZE), "hand-off buffer");
 H1_STATIC_ASSERT(COMBAT_REMOTE_HERO_RECORD_SIZE <= REMOTE_PAYLOAD_MAX_SIZE, "hero fits");
 H1_STATIC_ASSERT(COMBAT_REMOTE_RECORD_SIZE <= REMOTE_PAYLOAD_MAX_SIZE, "battle fits");
 H1_STATIC_ASSERT(
-    REMOTE_SAVE_INDEX_RECORD_SIZE + REMOTE_SAVE_SEGMENT_SIZE <= REMOTE_PAYLOAD_MAX_SIZE,
+    REMOTE_SAVE_INDEX_RECORD_SIZE + static_cast<i32>(REMOTE_SAVE_SEGMENT_SIZE) <= REMOTE_PAYLOAD_MAX_SIZE,
     "save segment fits"
 );
 H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE <= REMOTE_PAYLOAD_MAX_SIZE, "acknowledgement fits");
 H1_STATIC_ASSERT(MODEM_ID_RECORD_SIZE == 2 + MODEM_ID_DIGITS + 1 + 1, "modem identification");
-H1_STATIC_ASSERT(MODEM_ID_RECORD_SIZE == DIRECT_CONNECT_ID_PACKET_LENGTH, "modem id length");
+H1_STATIC_ASSERT(MODEM_ID_RECORD_SIZE == static_cast<i32>(DIRECT_CONNECT_ID_PACKET_LENGTH), "modem id length");
 
 const char gNetbiosGroupName[NETBIOS_GROUP_NAME_SIZE + 1] = "Empire Too ";
 
@@ -185,12 +185,12 @@ i32 ReadRemoteSaveIndex(RecordReader& in) {
 
 void WriteRemoteSaveAck(RecordWriter& out, const char* flags) {
     out.Put(flags, REMOTE_SAVE_BATCH_SIZE);
-    out.Zeros(REMOTE_SAVE_ACK_RECORD_SIZE - REMOTE_SAVE_BATCH_SIZE);
+    out.Zeros(REMOTE_SAVE_ACK_RECORD_SIZE - static_cast<i32>(REMOTE_SAVE_BATCH_SIZE));
 }
 
 void ReadRemoteSaveAck(RecordReader& in, char* flags) {
     in.Get(flags, REMOTE_SAVE_BATCH_SIZE);
-    in.Skip(REMOTE_SAVE_ACK_RECORD_SIZE - REMOTE_SAVE_BATCH_SIZE);
+    in.Skip(REMOTE_SAVE_ACK_RECORD_SIZE - static_cast<i32>(REMOTE_SAVE_BATCH_SIZE));
 }
 
 void WriteRemotePlayerExit(RecordWriter& out, const RemotePlayerExit& record) {

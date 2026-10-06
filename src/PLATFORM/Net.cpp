@@ -73,7 +73,7 @@ void CloseSocket(std::intptr_t socket) {
 bool SetNonBlocking(NativeSocket socket) {
 #if defined(_WIN32)
     u_long enabled = 1;
-    return ioctlsocket(socket, FIONBIO, &enabled) == 0;
+    return ioctlsocket(socket, static_cast<long>(FIONBIO), &enabled) == 0;
 #else
     int flags = fcntl(socket, F_GETFL, 0);
     return flags >= 0 && fcntl(socket, F_SETFL, flags | O_NONBLOCK) == 0;
