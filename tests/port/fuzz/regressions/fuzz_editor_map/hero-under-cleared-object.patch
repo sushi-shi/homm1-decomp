@@ -1,0 +1,6 @@
+# A cell (10,10) whose secondary trigger is a hero: clearing the object over
+# it (as the checks do around random towns) makes it a hero without a
+# record, which the checks read through a null pointer.
+base MAPS\AES31000.MAP
+set 8677 47
+expect refused

@@ -10893,8 +10893,9 @@ i16 editManager::LoadMap(char* name) {
 
 // The cells of a map just read, checked where the editor relies on them: the
 // town and hero cells name extra records that exist, a hero's record names a
-// hero, an artifact cell names an artifact, and a mine has room for the cell
-// right of it, which holds its resource marker. The original trusted them
+// hero, an artifact cell names an artifact, a mine has room for the cell
+// right of it, which holds its resource marker, and no cell becomes a hero
+// without a record when the object over it is cleared. The original trusted them
 // and indexed past its tables for a map that broke any of these.
 i32 editManager::MapObjectsValid(void) {
     i32 x;
@@ -10923,6 +10924,10 @@ i32 editManager::MapObjectsValid(void) {
                         return 0;
                     break;
             }
+            // Clearing an object makes the cell's secondary trigger its
+            // trigger, without a record: it cannot be a hero.
+            if ((cell->m_secondaryTrigger & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO)
+                return 0;
             if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_FILE_OBJECT_HERO) {
                 if (cell->m_objectMetadata < MAP_EXTRA_FIRST_RECORD
                     || cell->m_objectMetadata >= m_extraCount)
