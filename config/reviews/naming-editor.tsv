@@ -78,3 +78,5 @@ aliased	editManager::PlaceTreasures	bounty	randomArtifact	xart: trigger 61 MAP_F
 aliased	editManager::PlaceTreasures	layout	guard	holds a TreasureGuard (the guarded corner)
 enum	RandomMapSiteKind	RANDOM_MAP_SITE_SAWMILL/ALCHEMIST_LAB/FIRST_MINE/KIND_COUNT	RESOURCE_WOOD/MERCURY/ORE/COUNT	the site kinds are the resource the site produces (WriteMines' 0, 1, frame + 2; gMineSiteKinds)
 param	editManager::PlaceResourceSite	kind	resource	the site's resource: 0 sawmill (wood), 1 alchemist's lab (mercury), 2..6 the mine whose marker WriteMines records as frame + 2
+member	editTownExtra/editHeroExtra	reserved	unused14/unused19	no instruction of either image touches the block's bytes: PlaceOverlay's memset, the dialogs' whole-record copies and SaveMap's write cover it, the game's readers stop at mapTownExtra/mapHeroExtra; spelled at its offset as the project's other unread spans
+enum	EditExtraConstant	EDIT_EXTRA_RESERVED_SIZE	EDIT_EXTRA_UNUSED_SIZE	the unused block's size (see unused14/unused19)

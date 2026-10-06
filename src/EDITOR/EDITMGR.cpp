@@ -50,6 +50,7 @@
 #include <fcntl.h>
 #include <io.h>
 #include <stdio.h>
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/stat.h>
@@ -10873,11 +10874,15 @@ i16 editManager::SaveMap(char* name) {
     data = MAP_HEADER_ID;
     write(handle, &data, sizeof(data));
     if (gNewMapFormat) {
-        write(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - 2 * sizeof(i16));
+        write(
+            handle,
+            &gEditMapHeader.difficulty,
+            offsetof(SMapHeader, format) - offsetof(SMapHeader, difficulty)
+        );
         formatWord = MAP_HEADER_ID;
         write(handle, &formatWord, sizeof(formatWord));
     } else {
-        write(handle, &gEditMapHeader, sizeof(gEditMapHeader) - sizeof(i16));
+        write(handle, &gEditMapHeader, offsetof(SMapHeader, format));
     }
     data = EDIT_MAP_VERSION;
     write(handle, &data, sizeof(data));
@@ -10930,7 +10935,11 @@ i16 editManager::LoadMap(char* name) {
     read(handle, &headerId, sizeof(headerId));
     if (headerId == MAP_HEADER_ID) {
         gEditMapHeader.id = headerId;
-        read(handle, &gEditMapHeader.difficulty, sizeof(gEditMapHeader) - sizeof(i16));
+        read(
+            handle,
+            &gEditMapHeader.difficulty,
+            sizeof(gEditMapHeader) - offsetof(SMapHeader, difficulty)
+        );
         read(handle, &headerId, sizeof(headerId));
     } else {
         NewMap(0);
