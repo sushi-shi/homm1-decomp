@@ -17,7 +17,7 @@
 namespace platform::help {
 
 // Bumped whenever the output changes, so cached conversions are redone.
-constexpr int CONVERTER_VERSION = 1;
+constexpr int CONVERTER_VERSION = 2;
 
 // What a conversion found, for tests and diagnostics.
 struct Report {
@@ -35,6 +35,14 @@ struct Report {
     int imagesFailed = 0;         // pictures that could not be decoded
 };
 
+// The page's own words, UTF-8: the headings of the contents and the keyword
+// index, and each topic's link back to the contents. The program passes them
+// in its language (the catalog's help.contents and help.index).
+struct Labels {
+    std::string contents = "Contents";
+    std::string index = "Index";
+};
+
 // Converts the help file's bytes and the text of its contents file (empty
 // when there is none). codepage 0 takes the text's code page from the file.
 // On failure returns false with a reason in error.
@@ -44,7 +52,8 @@ bool Convert(
     int codepage,
     std::string& html,
     Report& report,
-    std::string& error
+    std::string& error,
+    const Labels& labels = Labels()
 );
 
 // The same for files on disk; cntPath may be empty.
@@ -52,7 +61,8 @@ bool ConvertWinHelp(
     const std::string& hlpPath,
     const std::string& cntPath,
     std::string& html,
-    std::string& error
+    std::string& error,
+    const Labels& labels = Labels()
 );
 
 // Converts hlpPath (with cntPath, which may be empty or missing) into an HTML
@@ -63,7 +73,8 @@ bool PrepareHelp(
     const std::string& cntPath,
     const std::string& outputDirectory,
     std::string& htmlPath,
-    std::string& error
+    std::string& error,
+    const Labels& labels = Labels()
 );
 
 }  // namespace platform::help

@@ -11,7 +11,7 @@ msgstr "Один или более героев все еще могут ход�
 msgid "adventure.confirm_load"
 msgstr "Загрузить новую игру? (Данная игра будет потеряна)."
 
-#: src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
 msgid "adventure.confirm_quit"
 msgstr "Вы хотите выйти из игры?"
 
@@ -522,10 +522,6 @@ msgid "editor.quit.confirm"
 msgstr "Вы действительно хотите выйти?\n"
 
 #: src/EDITOR/MAPOBJ.cpp
-msgid "editor.random.castles.failed"
-msgstr "Невозможно установить замки"
-
-#: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
 msgstr "'%s' сохранена успешно"
@@ -971,11 +967,11 @@ msgstr "Пустыня"
 msgid "editor.terrain.name.6"
 msgstr "Земля"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"
 msgstr "Редактор Героев"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.title"
 msgstr "Редактор Героев"
 
@@ -1046,7 +1042,7 @@ msgstr "Выбранная вами игра позволяет играть т�
 msgid "file.load.label"
 msgstr "Загрузить:"
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
 msgstr "Ошибка открытия файла %s!"
@@ -1074,6 +1070,14 @@ msgstr "Игра требует как минимум одного оппоне�
 #: src/SOURCE/KB.cpp
 msgid "game.restart.confirm"
 msgstr "Вы действительно хотите начать сначала?  (Данная игра будет потеряна)."
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.contents"
+msgstr "Содержание"
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.index"
+msgstr "Указатель"
 
 #: src/SOURCE/HERO.cpp
 msgid "hero.dismiss.confirm"
@@ -6287,10 +6291,10 @@ msgstr "Ходит %s игрок."
 msgid "ui.new_game.difficulty_rating"
 msgstr "Сложность:"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gAppName"
 msgstr "Герои"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gTitle"
 msgstr "Герои Меча и Магии"

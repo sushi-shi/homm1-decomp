@@ -12,7 +12,7 @@ msgstr ""
 msgid "adventure.confirm_load"
 msgstr ""
 
-#: src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
 msgid "adventure.confirm_quit"
 msgstr ""
 
@@ -523,10 +523,6 @@ msgid "editor.quit.confirm"
 msgstr ""
 
 #: src/EDITOR/MAPOBJ.cpp
-msgid "editor.random.castles.failed"
-msgstr ""
-
-#: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
 msgstr ""
@@ -972,11 +968,11 @@ msgstr ""
 msgid "editor.terrain.name.6"
 msgstr ""
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"
 msgstr ""
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.title"
 msgstr ""
 
@@ -1047,7 +1043,7 @@ msgstr ""
 msgid "file.load.label"
 msgstr ""
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
 msgstr ""
@@ -1074,6 +1070,14 @@ msgstr ""
 
 #: src/SOURCE/KB.cpp
 msgid "game.restart.confirm"
+msgstr ""
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.contents"
+msgstr ""
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.index"
 msgstr ""
 
 #: src/SOURCE/HERO.cpp
@@ -6288,10 +6292,10 @@ msgstr ""
 msgid "ui.new_game.difficulty_rating"
 msgstr ""
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gAppName"
 msgstr ""
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gTitle"
 msgstr ""

@@ -46,6 +46,11 @@ constexpr u32 kTopicPositionBlockShift = 14;
 constexpr u32 kTopicPositionMask = 0x3FFF;
 constexpr i32 kTopicOffsetBlockSize = 0x8000;
 constexpr size_t kMaxFileSize = 64u << 20;
+// A link written before its target topic is known (see ResolveLinks).
+constexpr char kLinkOpen[] = "<!--link:";
+constexpr char kLinkClose[] = "-->";
+constexpr size_t kLinkOpenLength = sizeof(kLinkOpen) - 1;
+constexpr size_t kLinkCloseLength = sizeof(kLinkClose) - 1;
 constexpr size_t kMaxRecordText = 1u << 20;
 constexpr size_t kMaxPictureBytes = 64u << 20;
 
@@ -565,7 +570,8 @@ struct ContentsEntry {
 
 class Converter {
 public:
-    Converter(const Bytes& bytes, Report& report) : m_bytes(bytes), m_report(report) {}
+    Converter(const Bytes& bytes, Report& report, const Labels& labels)
+        : m_bytes(bytes), m_report(report), m_labels(labels) {}
 
     bool Run(const std::string& contents, int codepage, std::string& html, std::string& error) {
         if (!m_file.Open(m_bytes, error))
@@ -1071,26 +1077,28 @@ private:
         }
     }
 
-    // Links are written as placeholders "\x01<hash>\x02" until all topics
-    // are known, then replaced by the topic's anchor.
+    // Links are written as placeholders (an HTML comment holding the topic's
+    // hash, which escaped topic text cannot contain) until all topics are
+    // known, then replaced by the topic's anchor.
     void ResolveLinks(std::string& body) {
         std::string out;
         size_t at = 0;
         while (true) {
-            size_t open = body.find('\x01', at);
+            size_t open = body.find(kLinkOpen, at);
             if (open == std::string::npos)
                 break;
-            size_t close = body.find('\x02', open);
+            size_t close = body.find(kLinkClose, open);
             if (close == std::string::npos)
                 break;
             out.append(body, at, open - at);
-            std::string digits = body.substr(open + 1, close - open - 1);
+            std::string digits =
+                body.substr(open + kLinkOpenLength, close - open - kLinkOpenLength);
             u32 hash = static_cast<u32>(std::strtoul(digits.c_str(), nullptr, 10));
             std::string anchor = AnchorOfHash(hash);
             if (anchor.empty())
                 m_report.jumpsUnresolved++;
             out += "#" + anchor;
-            at = close + 1;
+            at = close + kLinkCloseLength;
         }
         out.append(body, at, std::string::npos);
         body = std::move(out);
@@ -1337,8 +1345,8 @@ private:
                     u32 hash = info.U32();
                     bool popup = command == 0xE2 || command == 0xE6;
                     OpenLink(line, out,
-                             "<a class=\"" + std::string(popup ? "popup" : "jump") + "\" href=\"\x01"
-                                 + std::to_string(hash) + "\x02\">",
+                             "<a class=\"" + std::string(popup ? "popup" : "jump") + "\" href=\"" + kLinkOpen
+                                 + std::to_string(hash) + kLinkClose + "\">",
                              false);
                     m_report.jumps++;
                     break;
@@ -1358,7 +1366,8 @@ private:
                     if (file.empty()) {
                         OpenLink(line, out,
                                  "<a class=\"" + std::string(popup ? "popup" : "jump")
-                                     + "\" href=\"\x01" + std::to_string(hash) + "\x02\">",
+                                     + "\" href=\"" + kLinkOpen + std::to_string(hash) + kLinkClose
+                                     + "\">",
                                  false);
                         m_report.jumps++;
                     } else {
@@ -1514,9 +1523,9 @@ private:
 
     void Write(std::string& html) const {
         bool russian = m_codepage == 1251;
-        const char* contentsLabel = russian ? "Содержание" : "Contents";
-        const char* indexLabel = russian ? "Указатель" : "Index";
-        const char* backLabel = russian ? "Содержание" : "Contents";
+        const std::string& contentsLabel = m_labels.contents;
+        const std::string& indexLabel = m_labels.index;
+        const std::string& backLabel = m_labels.contents;
         std::string title = !m_contentsTitle.empty() ? m_contentsTitle : Text(m_title);
         if (title.empty())
             title = "Help";
@@ -1567,7 +1576,7 @@ private:
         }
         html += "\n</nav>\n";
         if (!m_keywords.empty()) {
-            html += "<nav class=\"index\"><h2>" + std::string(indexLabel) + "</h2>\n<ul>";
+            html += "<nav class=\"index\"><h2>" + indexLabel + "</h2>\n<ul>";
             for (const auto& [word, topics] : m_keywords) {
                 html += "<li>";
                 if (topics.size() == 1) {
@@ -1601,6 +1610,7 @@ private:
 
     const Bytes& m_bytes;
     Report& m_report;
+    const Labels& m_labels;
     HelpFile m_file;
     u16 m_version = 0;
     bool m_compressed = false;
@@ -1661,10 +1671,11 @@ bool Convert(
     int codepage,
     std::string& html,
     Report& report,
-    std::string& error
+    std::string& error,
+    const Labels& labels
 ) {
     report = Report();
-    Converter converter(helpFile, report);
+    Converter converter(helpFile, report, labels);
     return converter.Run(contentsFile, codepage, html, error);
 }
 
@@ -1672,7 +1683,8 @@ bool ConvertWinHelp(
     const std::string& hlpPath,
     const std::string& cntPath,
     std::string& html,
-    std::string& error
+    std::string& error,
+    const Labels& labels
 ) {
     Bytes help;
     if (!ReadWholeFile(hlpPath, help)) {
@@ -1683,7 +1695,8 @@ bool ConvertWinHelp(
     if (!cntPath.empty())
         ReadWholeFile(cntPath, contents);
     Report report;
-    return Convert(help, std::string(contents.begin(), contents.end()), 0, html, report, error);
+    return Convert(help, std::string(contents.begin(), contents.end()), 0, html, report, error,
+                   labels);
 }
 
 bool PrepareHelp(
@@ -1691,7 +1704,8 @@ bool PrepareHelp(
     const std::string& cntPath,
     const std::string& outputDirectory,
     std::string& htmlPath,
-    std::string& error
+    std::string& error,
+    const Labels& labels
 ) {
     std::filesystem::path directory(outputDirectory);
     std::string stem = std::filesystem::path(hlpPath).stem().string();
@@ -1704,7 +1718,8 @@ bool PrepareHelp(
     htmlPath = html.string();
     std::string expected = "homm1-help " + std::to_string(CONVERTER_VERSION) + "\n"
                            + Fingerprint(hlpPath) + "\n"
-                           + (cntPath.empty() ? std::string("-") : Fingerprint(cntPath)) + "\n";
+                           + (cntPath.empty() ? std::string("-") : Fingerprint(cntPath)) + "\n"
+                           + labels.contents + "\n" + labels.index + "\n";
     {
         std::ifstream existing(stamp, std::ios::binary);
         std::stringstream contents;
@@ -1714,7 +1729,7 @@ bool PrepareHelp(
             return true;
     }
     std::string document;
-    if (!ConvertWinHelp(hlpPath, cntPath, document, error))
+    if (!ConvertWinHelp(hlpPath, cntPath, document, error, labels))
         return false;
     std::error_code failure;
     std::filesystem::create_directories(directory, failure);

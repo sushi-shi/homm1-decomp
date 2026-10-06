@@ -11,7 +11,7 @@ msgstr "One or more Heroes may still move, are you sure you want to end your tur
 msgid "adventure.confirm_load"
 msgstr "Are you sure you want to load a new game?  (Your current game will be lost)"
 
-#: src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/ADVMGR.cpp src/SOURCE/kbwin.cpp
 msgid "adventure.confirm_quit"
 msgstr "Are you sure you want to quit?"
 
@@ -522,10 +522,6 @@ msgid "editor.quit.confirm"
 msgstr "Do you really want to quit?\n"
 
 #: src/EDITOR/MAPOBJ.cpp
-msgid "editor.random.castles.failed"
-msgstr "Cannot place the castles"
-
-#: src/EDITOR/MAPOBJ.cpp
 #, c-format
 msgid "editor.random.saved"
 msgstr "'%s' saved successfully"
@@ -971,11 +967,11 @@ msgstr "Desert"
 msgid "editor.terrain.name.6"
 msgstr "Dirt"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.app_name"
 msgstr "Heroes Editor"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "editor.window.title"
 msgstr "Heroes Editor"
 
@@ -1046,7 +1042,7 @@ msgstr "The game you have chosen only has slots for %d human(s).  You need one w
 msgid "file.load.label"
 msgstr "File to Load:"
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/GAME.cpp src/SOURCE/KB.cpp
 #, c-format
 msgid "file.open.failed"
 msgstr "Error opening file %s!"
@@ -1074,6 +1070,14 @@ msgstr "A game requires at least one opponent."
 #: src/SOURCE/KB.cpp
 msgid "game.restart.confirm"
 msgstr "Are you sure you want to restart?  (Your current game will be lost)"
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.contents"
+msgstr "Contents"
+
+#: src/PORT/SOURCE/kbwin.cpp
+msgid "help.index"
+msgstr "Index"
 
 #: src/SOURCE/HERO.cpp
 msgid "hero.dismiss.confirm"
@@ -6287,10 +6291,10 @@ msgstr "%s player turn."
 msgid "ui.new_game.difficulty_rating"
 msgstr "Difficulty Rating:"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gAppName"
 msgstr "Heroes"
 
-#: src/SOURCE/kbwin.cpp
+#: src/PORT/SOURCE/kbwin.cpp src/SOURCE/kbwin.cpp
 msgid "window.gTitle"
 msgstr "Heroes of Might and Magic"

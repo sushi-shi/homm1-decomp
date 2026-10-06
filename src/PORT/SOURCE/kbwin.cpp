@@ -502,8 +502,11 @@ void OpenHelp() {
     ResolveExisting(kHelpContents, contents);
     std::string page;
     std::string error;
+    platform::help::Labels labels;
+    labels.contents = platform::ToUtf8(localization::Tr("help.contents"));
+    labels.index = platform::ToUtf8(localization::Tr("help.index"));
     if (!platform::help::PrepareHelp(book, contents, platform::ConfigDirectory() + "help/", page,
-                                     error)) {
+                                     error, labels)) {
         platform::Log("help: %s", error.c_str());
         platform::ShowMessage(gTitle, "The help file HELP\\HEROES.HLP could not be read.");
         return;

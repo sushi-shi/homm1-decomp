@@ -102,3 +102,10 @@ set_tests_properties(net_game_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 1200)
 # regression inputs by default, built as libFuzzer programs with
 # -DHOMM1_FUZZERS=ON.
 add_subdirectory(fuzz)
+
+# The text catalog: the templates are current and the sources carry no inline
+# non-ASCII text or numeric escapes (catalog.py).
+add_test(NAME catalog_check
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/catalog.py check --root ${CMAKE_SOURCE_DIR})
+add_test(NAME catalog_update_check
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/catalog.py update --check --root ${CMAKE_SOURCE_DIR})
