@@ -19,6 +19,7 @@ struct boatRecord;
 struct HighScoreEntry;
 struct SMapHeader;
 struct aggEntry;
+struct SaveHeaderReserved;
 
 enum FileRecordSize {
     ARMY_GROUP_RECORD_SIZE = 15,
@@ -35,7 +36,12 @@ enum FileRecordSize {
     MAP_HERO_EXTRA_RECORD_SIZE = 25,
     // The largest map extra record; blocks are allocated at least this large
     // so that a record read through its structure never leaves the block.
-    MAP_EXTRA_RECORD_MAX_SIZE = MAP_HERO_EXTRA_RECORD_SIZE
+    MAP_EXTRA_RECORD_MAX_SIZE = MAP_HERO_EXTRA_RECORD_SIZE,
+    // A saved game's reserved header block (zero in the original game's
+    // saves); the edition's begin with the format tag, "H1TE" and the
+    // format version.
+    SAVE_FORMAT_TAG_RECORD_SIZE = 8,
+    SAVE_HEADER_RESERVED_RECORD_SIZE = 0x2c
 };
 
 void WriteArmyGroup(RecordWriter& out, const armyGroup& group);
@@ -55,5 +61,7 @@ void ReadHighScore(RecordReader& in, HighScoreEntry& record);
 void WriteMapHeader(RecordWriter& out, const SMapHeader& header);
 void ReadMapHeader(RecordReader& in, SMapHeader& header);
 void ReadAggEntry(RecordReader& in, aggEntry& entry);
+void WriteSaveHeaderReserved(RecordWriter& out, const SaveHeaderReserved& record);
+void ReadSaveHeaderReserved(RecordReader& in, SaveHeaderReserved& record);
 
 #endif

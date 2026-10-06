@@ -27,6 +27,14 @@ homm1_test(remote_records_test
   SOURCES remote_records_test.cpp
   GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
 
+# The native TCP session handshake refuses peers of another protocol version
+# (the edition against the original game), over sockets on localhost.
+homm1_test(net_session_test
+  SOURCES net_session_test.cpp
+  GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/PORT/SOURCE/netwin.cpp
+    ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
+set_tests_properties(net_session_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 60)
+
 homm1_test(file_test
   SOURCES file_test.cpp)
 

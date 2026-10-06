@@ -1260,6 +1260,10 @@ msgstr ""
 msgid "network.setup.wait"
 msgstr ""
 
+#: src/SOURCE/GAME.cpp
+msgid "network.version.mismatch"
+msgstr ""
+
 #: src/SOURCE/KB.cpp
 #, c-format
 msgid "player.vanquished"

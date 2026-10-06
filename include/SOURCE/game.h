@@ -142,7 +142,30 @@ enum GameLuckConstant {
 
 enum SaveFileConstant {
     SAVE_FILE_BASE_NAME_LENGTH = 8,
-    SAVE_FILE_NAME_SCAN_STOP = 999
+    SAVE_FILE_NAME_SCAN_STOP = 999,
+    // The header's reserved block, zero in the original game's saves.
+    SAVE_FILE_RESERVED_SIZE = 0x2c
+};
+
+// Saves written by this edition begin their reserved header block with a
+// signature and a format version; the original game's saves leave it zero
+// and load as SAVE_FORMAT_ORIGINAL.
+#define SAVE_FORMAT_SIGNATURE "H1TE"
+enum SaveFormatVersion {
+    SAVE_FORMAT_ORIGINAL = 0,
+    // hero::m_fledState, live hero::m_cowardice, tavern heroes reserved
+    // with HERO_AVAILABILITY_IN_TAVERN.
+    SAVE_FORMAT_TOURNAMENT_1 = 1,
+    SAVE_FORMAT_CURRENT = SAVE_FORMAT_TOURNAMENT_1
+};
+
+struct SaveFormatTag {
+    char signature[4];
+    i32 version;
+};
+struct SaveHeaderReserved {
+    SaveFormatTag format;
+    char unused[SAVE_FILE_RESERVED_SIZE - sizeof(SaveFormatTag)];
 };
 
 #pragma pack(push, 1)
@@ -339,6 +362,7 @@ public:
     i8 CellRandomArtifactId(i32 cellIndex);
     i32 CountObelisksVisitedBy(i8 player);
     void QuickSaveName(char* name);
+    void UpgradeOriginalSave(void);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     void ProcessRandomObjects(b32 castlesOnly);

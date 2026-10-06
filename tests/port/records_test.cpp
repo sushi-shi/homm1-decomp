@@ -2,7 +2,9 @@
 // back to the same bytes, and refuses truncated input. With the game data
 // ($HOMM1_DATA), every shipped map, saved game, high score table and the
 // resource archive directory must parse to exactly its file length and
-// re-encode byte for byte.
+// re-encode byte for byte. The edition's saves carry a format tag ("H1TE"
+// and the format version) in the header block the original game leaves zero;
+// every saved game found is also checked with that tag in place.
 
 #include <H1/Ints.h>
 
@@ -197,7 +199,7 @@ void TranscodeSavedGame(RecordReader& in, RecordWriter& out, bool original) {
     t.Bytes(4);
     for (int i = 0; i < 4; i++)
         t.Value<i32>();
-    t.Bytes(0x2c);
+    t.Records<SaveHeaderReserved>(1, ReadSaveHeaderReserved, WriteSaveHeaderReserved);
     t.Bytes(0x79);
     t.Bytes(2);
     t.Bytes(0x11);
@@ -226,10 +228,49 @@ void TranscodeSavedGame(RecordReader& in, RecordWriter& out, bool original) {
         t.Bytes(MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE * 3);
 }
 
+// The offset of a saved game's reserved header block: the fields before it.
+const int kSaveReservedOffset = 1 + 2 + 4 + 4 * 4;
+
+// The edition's tag: a block written by the codec holds exactly "H1TE", the
+// version and zeros, and reads back as such; the original game's zero block
+// carries no tag.
+void CheckSaveFormatTag() {
+    SaveHeaderReserved tagged;
+    std::memset(&tagged, 0, sizeof(tagged));
+    std::memcpy(tagged.format.signature, SAVE_FORMAT_SIGNATURE, sizeof(tagged.format.signature));
+    tagged.format.version = SAVE_FORMAT_CURRENT;
+    RecordWriter out;
+    WriteSaveHeaderReserved(out, tagged);
+    std::vector<u8> expected(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
+    std::memcpy(expected.data(), "H1TE\x01", 5);
+    Expect(SAVE_FORMAT_CURRENT == SAVE_FORMAT_TOURNAMENT_1 && SAVE_FORMAT_TOURNAMENT_1 == 1,
+           "save format: the edition's version is 1");
+    Expect(out.Size() == SAVE_HEADER_RESERVED_RECORD_SIZE
+               && std::memcmp(out.Data(), expected.data(), expected.size()) == 0,
+           "save format tag bytes");
+    SaveHeaderReserved decoded;
+    Fill(decoded, 0x55);
+    RecordReader in(out.Data(), out.Size());
+    ReadSaveHeaderReserved(in, decoded);
+    Expect(in.Ok() && in.Remaining() == 0
+               && std::memcmp(decoded.format.signature, SAVE_FORMAT_SIGNATURE, 4) == 0
+               && decoded.format.version == SAVE_FORMAT_TOURNAMENT_1,
+           "save format tag round trip");
+    std::vector<u8> zeros(SAVE_HEADER_RESERVED_RECORD_SIZE, 0);
+    RecordReader originalIn(zeros.data(), static_cast<i32>(zeros.size()));
+    ReadSaveHeaderReserved(originalIn, decoded);
+    Expect(originalIn.Ok()
+               && std::memcmp(decoded.format.signature, SAVE_FORMAT_SIGNATURE, 4) != 0
+               && decoded.format.version == SAVE_FORMAT_ORIGINAL,
+           "the original game's block has no tag");
+}
+
 void TranscodeHighScores(RecordReader& in, RecordWriter& out) {
     Transcoder t{in, out};
     t.Records<HighScoreEntry>(HIGH_SCORE_DISPLAY_ENTRY_COUNT, ReadHighScore, WriteHighScore);
 }
+
+void CheckTaggedSave(const std::string& gamePath);
 
 // Names in records keep their terminator in the shipped files; bytes after
 // it are carried as they are, so a re-encoding is exact.
@@ -250,6 +291,32 @@ void CheckFile(const std::string& gamePath, const std::function<void(RecordReade
                && std::memcmp(out.Data(), bytes.data(), bytes.size()) == 0,
            gamePath + ": re-encodes byte for byte");
     std::printf("ok %s (%zu bytes)\n", gamePath.c_str(), bytes.size());
+}
+
+// A saved game with the edition's tag in its header block parses the same
+// and re-encodes byte for byte, tag included.
+void CheckTaggedSave(const std::string& gamePath) {
+    char resolved[FILE_PATH_CAPACITY];
+    if (!FileResolve(gamePath.c_str(), FILE_OPEN_READ, resolved, sizeof(resolved)))
+        return;
+    std::vector<u8> bytes = ReadHostFile(resolved);
+    if (bytes.size() < static_cast<size_t>(kSaveReservedOffset + SAVE_HEADER_RESERVED_RECORD_SIZE))
+        return;
+    // The block is zero in the original game's saves, tagged in the edition's.
+    const u8* block = bytes.data() + kSaveReservedOffset;
+    bool zero = true;
+    for (int i = 0; i < SAVE_HEADER_RESERVED_RECORD_SIZE; i++)
+        zero = zero && block[i] == 0;
+    Expect(zero || std::memcmp(block, SAVE_FORMAT_SIGNATURE, 4) == 0,
+           gamePath + ": the header block is zero or tagged");
+    std::memset(bytes.data() + kSaveReservedOffset, 0, SAVE_HEADER_RESERVED_RECORD_SIZE);
+    std::memcpy(bytes.data() + kSaveReservedOffset, "H1TE\x01", 5);
+    RecordReader in(bytes.data(), static_cast<i32>(bytes.size()));
+    RecordWriter out;
+    TranscodeSavedGame(in, out, false);
+    Expect(in.Ok() && in.Remaining() == 0 && out.Size() == static_cast<i32>(bytes.size())
+               && std::memcmp(out.Data(), bytes.data(), bytes.size()) == 0,
+           gamePath + " with the edition's tag: re-encodes byte for byte");
 }
 
 void CheckArchive() {
@@ -290,6 +357,9 @@ int main() {
     CheckCodec<boatRecord>("boat", BOAT_RECORD_SIZE, WriteBoat, ReadBoat);
     CheckCodec<HighScoreEntry>("high score", HIGH_SCORE_RECORD_SIZE, WriteHighScore, ReadHighScore);
     CheckCodec<SMapHeader>("map header", MAP_HEADER_RECORD_SIZE, WriteMapHeader, ReadMapHeader);
+    CheckCodec<SaveHeaderReserved>("save header block", SAVE_HEADER_RESERVED_RECORD_SIZE,
+                                   WriteSaveHeaderReserved, ReadSaveHeaderReserved);
+    CheckSaveFormatTag();
 
     const char* data = std::getenv("HOMM1_DATA");
     if (data != nullptr && data[0] != '\0') {
@@ -303,10 +373,12 @@ int main() {
         }
         Expect(maps > 0, "shipped maps found");
         for (const char* pattern : {"GAMES\\*.GM?", "GAMES\\*.CGM"}) {
-            for (const std::string& name : List(pattern))
+            for (const std::string& name : List(pattern)) {
                 CheckFile("GAMES\\" + name, [](RecordReader& in, RecordWriter& out) {
                     TranscodeSavedGame(in, out, false);
                 });
+                CheckTaggedSave("GAMES\\" + name);
+            }
         }
         CheckFile("DATA\\REMOTE.GAM", [](RecordReader& in, RecordWriter& out) {
             TranscodeSavedGame(in, out, false);

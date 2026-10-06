@@ -390,6 +390,7 @@ i16 game::SaveGame(char* filename, b8 generateName) {
     char savePath[452];
     char genName[452];
     char buffer[100];
+    SaveHeaderReserved reserved;
 
     gAdvManager->DemobilizeCurrHero();
     if (generateName) {
@@ -437,6 +438,7 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     i32 iFile;
     char humans[GAME_PLAYER_COUNT];
     char buffer[100];
+    SaveHeaderReserved reserved;
 
     outFile.Put(gIAmGreatest);
     outFile.Put(m_difficultyRating);
@@ -448,8 +450,10 @@ void game::WriteSaveRecord(RecordWriter& outFile) {
     outFile.Put(m_campaignScenario);
     outFile.Put(m_campaignDay);
     outFile.Put(m_campaignScenariosWon);
-    memset(buffer, 0, 0x2c);
-    outFile.Put(buffer, 0x2c);
+    memset(&reserved, 0, sizeof(reserved));
+    memcpy(reserved.format.signature, SAVE_FORMAT_SIGNATURE, sizeof(reserved.format.signature));
+    reserved.format.version = SAVE_FORMAT_CURRENT;
+    WriteSaveHeaderReserved(outFile, reserved);
     outFile.Put(m_mapDescription, sizeof(m_mapDescription));
     outFile.Put(m_mapSize);
     outFile.Put(m_mapDifficulty);
@@ -516,7 +520,27 @@ void game::QuickSaveName(char* name) {
     }
 }
 
+// The original game did not reserve the heroes it drew for the taverns each
+// week; reserve those on offer now, so they stay out of other taverns.
+void game::UpgradeOriginalSave(void) {
+    i32 player;
+    i32 slot;
+    i8 heroId;
+
+    for (player = 0; player < GAME_PLAYER_COUNT; player++) {
+        if (m_playerDead[player])
+            continue;
+        for (slot = 0; slot < PLAYER_TAVERN_HERO_COUNT; slot++) {
+            heroId = m_players[player].m_availableHeroIds[slot];
+            if (heroId >= 0 && heroId < GAME_HERO_COUNT
+                && m_availableHeroes[heroId] == HERO_AVAILABILITY_UNAVAILABLE)
+                m_availableHeroes[heroId] = HERO_AVAILABILITY_IN_TAVERN;
+        }
+    }
+}
+
 i16 game::LoadGame(char* filename, b32 origData, b32) {
+    i32 saveFormat;
     i32 junk2;
     i32 numHumans;
     i32 ix;
@@ -524,7 +548,7 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     char pathName[452];
     i8 theHumans[GAME_PLAYER_COUNT];
     i32 nextJunk;
-    char buffer[0x2c];
+    SaveHeaderReserved reserved;
 
     numHumans = 0;
     gGameOver = false;
@@ -546,7 +570,16 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
     m_campaignScenario = theLoadHandle.GetI32();
     m_campaignDay = theLoadHandle.GetI32();
     m_campaignScenariosWon = theLoadHandle.GetI32();
-    theLoadHandle.Get(buffer, 0x2c);
+    ReadSaveHeaderReserved(theLoadHandle, reserved);
+    if (memcmp(reserved.format.signature, SAVE_FORMAT_SIGNATURE, sizeof(reserved.format.signature))
+        == 0)
+        saveFormat = reserved.format.version;
+    else
+        saveFormat = SAVE_FORMAT_ORIGINAL;
+    // A network partner running another version sends a game this one
+    // cannot play in step with.
+    if (!strcmp(filename, "REMOTE.GAM") && saveFormat != SAVE_FORMAT_CURRENT)
+        ShutDown(localization::Tr("network.version.mismatch"));
     theLoadHandle.Get(m_mapDescription, sizeof(m_mapDescription));
     theLoadHandle.Get(m_mapSize);
     theLoadHandle.Get(m_mapDifficulty);
@@ -635,6 +668,8 @@ i16 game::LoadGame(char* filename, b32 origData, b32) {
         || m_mapSize > MAP_SIZE_LARGE || m_mapDifficulty < MAP_DIFFICULTY_EASY
         || m_mapDifficulty > MAP_DIFFICULTY_FORGET_IT)
         FileError(pathName);
+    if (!origData && saveFormat == SAVE_FORMAT_ORIGINAL)
+        UpgradeOriginalSave();
     gAdvManager->m_heroContextLocked = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;

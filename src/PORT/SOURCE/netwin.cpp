@@ -15,9 +15,12 @@
 //     original's datagram to that UDP port on the local networks;
 //   - a guest given --join ADDRESS[:PORT] calls that address; without it, it
 //     waits for the host's datagram and calls the address it came from;
-//   - the call opens with a frame naming both sides ("H1NB", version, kind,
-//     called name, calling name) and the listener answers with its own name;
-//     every later frame is one NetBIOS message.
+//   - the call opens with a frame naming both sides ("H1NB", frame version,
+//     protocol version, kind, called name, calling name; remoteRecords.h)
+//     and the listener answers with its own name; every later frame is one
+//     NetBIOS message. A peer that speaks another version of the game's
+//     protocol (REMOTE_PROTOCOL_VERSION: the edition's against the original
+//     game's) is refused at once.
 //
 // The session table, the status bits the game polls (name registered,
 // active, connected), MOVE, the receive queue and the two send queues keep
@@ -61,18 +64,14 @@ enum NetbiosReturnCode {
     NRC_NORESOURCES = 0x38
 };
 
-// The session frames that open a TCP session.
+// The session frames that open a TCP session (remoteRecords.h).
 enum SessionFrame {
-    SESSION_VERSION = 1,
-    SESSION_CALL = 1,
-    SESSION_ACCEPT = 2,
-    SESSION_REFUSE = 3,
-    SESSION_MAGIC_SIZE = 4,
+    SESSION_CALL = NETBIOS_FRAME_CALL,
+    SESSION_ACCEPT = NETBIOS_FRAME_ACCEPT,
+    SESSION_REFUSE = NETBIOS_FRAME_REFUSE,
     CALL_RETRY_LIMIT = NETBIOS_CALL_RETRY_LIMIT,
     CALL_RETRY_DELAY = NETBIOS_CALL_RETRY_DELAY
 };
-
-const char kSessionMagic[SESSION_MAGIC_SIZE + 1] = "H1NB";
 
 enum Pending {
     PENDING_NONE,
@@ -142,25 +141,13 @@ bool IsAnyName(const u8* name) {
 
 void WriteSessionFrame(Stream& stream, u8 kind, const u8* first, const u8* second) {
     RecordWriter frame;
-    frame.Put(kSessionMagic, SESSION_MAGIC_SIZE);
-    frame.Put(static_cast<u8>(SESSION_VERSION));
-    frame.Put(kind);
-    frame.Put(first, NETBIOS_NAME_RECORD_SIZE);
-    frame.Put(second, NETBIOS_NAME_RECORD_SIZE);
+    WriteNetbiosSession(frame, kind, first, second);
     stream.WriteFrame(frame.Data(), static_cast<size_t>(frame.Size()));
 }
 
-bool ReadSessionFrame(const std::vector<u8>& bytes, u8& kind, u8* first, u8* second) {
+i32 ReadSessionFrame(const std::vector<u8>& bytes, u8& kind, u8* first, u8* second) {
     RecordReader frame(bytes.data(), static_cast<i32>(bytes.size()));
-    char magic[SESSION_MAGIC_SIZE];
-    u8 version = 0;
-    frame.Get(magic, SESSION_MAGIC_SIZE);
-    frame.Get(version);
-    frame.Get(kind);
-    frame.Get(first, NETBIOS_NAME_RECORD_SIZE);
-    frame.Get(second, NETBIOS_NAME_RECORD_SIZE);
-    return frame.Ok() && frame.Remaining() == 0
-           && memcmp(magic, kSessionMagic, SESSION_MAGIC_SIZE) == 0 && version == SESSION_VERSION;
+    return ReadNetbiosSession(frame, kind, first, second);
 }
 
 void CloseSlot(Slot& slot) {
@@ -241,7 +228,20 @@ void PumpSlot(i32 index) {
         u8 first[NETBIOS_NAME_RECORD_SIZE];
         u8 second[NETBIOS_NAME_RECORD_SIZE];
         if (slot.stream->ReadFrame(frame)) {
-            if (!ReadSessionFrame(frame, kind, first, second)) {
+            i32 check = ReadSessionFrame(frame, kind, first, second);
+            if (check == NETBIOS_SESSION_OTHER_PROTOCOL) {
+                // Another version of the game: refuse it, and stop calling it.
+                platform::Log("network: %s plays another version of the game; refused",
+                              platform::net::ToString(slot.stream->Peer()).c_str());
+                memset(first, 0, sizeof(first));
+                if (slot.pending == PENDING_LISTEN) {
+                    WriteSessionFrame(*slot.stream, SESSION_REFUSE, localName, first);
+                    slot.stream->Pump();
+                } else {
+                    slot.pending = PENDING_NONE;
+                }
+                alive = false;
+            } else if (check != NETBIOS_SESSION_VALID) {
                 alive = false;
             } else if (slot.pending == PENDING_CALL && kind == SESSION_ACCEPT) {
                 // first: the listener's name.

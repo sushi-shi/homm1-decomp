@@ -30,6 +30,13 @@ H1_STATIC_ASSERT(sizeof(HighScoreEntry) == HIGH_SCORE_RECORD_SIZE, "high score l
 H1_STATIC_ASSERT(sizeof(aggEntry) == AGG_ENTRY_RECORD_SIZE, "archive entry layout");
 H1_STATIC_ASSERT(sizeof(mapCell) == MAP_CELL_RECORD_SIZE, "map cell layout");
 H1_STATIC_ASSERT(sizeof(i8) == 1 && sizeof(i16) == 2 && sizeof(i32) == 4, "integer widths");
+H1_STATIC_ASSERT(sizeof(SaveFormatTag) == SAVE_FORMAT_TAG_RECORD_SIZE, "save format tag layout");
+H1_STATIC_ASSERT(sizeof(SaveHeaderReserved) == SAVE_HEADER_RESERVED_RECORD_SIZE, "save header block layout");
+H1_STATIC_ASSERT(
+    static_cast<i32>(SAVE_FILE_RESERVED_SIZE) == static_cast<i32>(SAVE_HEADER_RESERVED_RECORD_SIZE),
+    "save header block size"
+);
+H1_STATIC_ASSERT(sizeof(SAVE_FORMAT_SIGNATURE) == sizeof(((SaveFormatTag*)0)->signature) + 1, "save signature");
 
 void WriteArmyGroup(RecordWriter& out, const armyGroup& group) {
     out.Put(group.m_creatureTypes, ARMY_GROUP_SLOT_COUNT);
@@ -333,4 +340,16 @@ void ReadAggEntry(RecordReader& in, aggEntry& entry) {
     entry.id = in.GetI16();
     entry.offset = in.GetI32();
     entry.size = in.GetU32();
+}
+
+void WriteSaveHeaderReserved(RecordWriter& out, const SaveHeaderReserved& record) {
+    out.Put(record.format.signature, sizeof(record.format.signature));
+    out.Put(record.format.version);
+    out.Put(record.unused, sizeof(record.unused));
+}
+
+void ReadSaveHeaderReserved(RecordReader& in, SaveHeaderReserved& record) {
+    in.Get(record.format.signature, sizeof(record.format.signature));
+    record.format.version = in.GetI32();
+    in.Get(record.unused, sizeof(record.unused));
 }

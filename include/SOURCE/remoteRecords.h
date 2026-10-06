@@ -59,9 +59,14 @@ enum RemoteRecordSize {
     NETBIOS_NAME_RECORD_SIZE = 16,
     NETBIOS_GROUP_NAME_SIZE = 11,
     NETBIOS_ANNOUNCE_RECORD_SIZE = NETBIOS_GROUP_NAME_SIZE + NETBIOS_NAME_RECORD_SIZE,
-    // The serial handshake: "ID", six digits, "_", the connect stage.
+    // The serial handshake: the protocol's tag (REMOTE_PROTOCOL_CONNECT_TAG,
+    // "ID" in the original game), six digits, "_", the connect stage.
     MODEM_ID_DIGITS = 6,
-    MODEM_ID_RECORD_SIZE = 10
+    MODEM_ID_RECORD_SIZE = 10,
+    // The native TCP transport's session frame: magic, frame version,
+    // protocol version, kind, the called and the calling name.
+    NETBIOS_SESSION_MAGIC_SIZE = 4,
+    NETBIOS_SESSION_RECORD_SIZE = NETBIOS_SESSION_MAGIC_SIZE + 3 + 2 * NETBIOS_NAME_RECORD_SIZE
 };
 
 // The NetBIOS group name the original's broadcasts begin with.
@@ -150,5 +155,31 @@ bool ReadNetbiosAnnounce(RecordReader& in, u8* name);
 void WriteModemId(RecordWriter& out, const char* id, i32 stage);
 // False unless the packet is an identification packet.
 bool ReadModemId(RecordReader& in, char* id, i32& stage);
+
+// ------------------------------------------------------------ native sessions
+
+// A native program's TCP session (src/PORT/SOURCE/netwin.cpp) opens with a
+// frame from each side: the caller's names the name it calls and its own,
+// the listener's answer accepts or refuses. The frame carries the game's
+// protocol version (REMOTE_PROTOCOL_VERSION), and each side refuses a peer of
+// another version. Version 1 frames, which carried no protocol byte, are the
+// original game's protocol.
+#define NETBIOS_SESSION_MAGIC "H1NB"
+enum NetbiosSessionFrame {
+    NETBIOS_SESSION_FRAME_VERSION = 2,
+    NETBIOS_FRAME_CALL = 1,
+    NETBIOS_FRAME_ACCEPT = 2,
+    NETBIOS_FRAME_REFUSE = 3
+};
+enum NetbiosSessionCheck {
+    NETBIOS_SESSION_VALID = 0,
+    NETBIOS_SESSION_MALFORMED = 1,
+    NETBIOS_SESSION_OTHER_PROTOCOL = 2
+};
+// first and second: NETBIOS_NAME_RECORD_SIZE bytes each.
+void WriteNetbiosSession(RecordWriter& out, u8 kind, const u8* first, const u8* second);
+// A NetbiosSessionCheck; kind and the names are valid only for
+// NETBIOS_SESSION_VALID.
+i32 ReadNetbiosSession(RecordReader& in, u8& kind, u8* first, u8* second);
 
 #endif

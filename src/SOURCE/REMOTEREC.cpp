@@ -38,8 +38,16 @@ H1_STATIC_ASSERT(
 H1_STATIC_ASSERT(REMOTE_SAVE_ACK_RECORD_SIZE <= REMOTE_PAYLOAD_MAX_SIZE, "acknowledgement fits");
 H1_STATIC_ASSERT(MODEM_ID_RECORD_SIZE == 2 + MODEM_ID_DIGITS + 1 + 1, "modem identification");
 H1_STATIC_ASSERT(MODEM_ID_RECORD_SIZE == static_cast<i32>(DIRECT_CONNECT_ID_PACKET_LENGTH), "modem id length");
+H1_STATIC_ASSERT(sizeof(REMOTE_PROTOCOL_CONNECT_TAG) == 2 + 1, "modem identification tag");
+H1_STATIC_ASSERT(REMOTE_PROTOCOL_VERSION > 0 && REMOTE_PROTOCOL_VERSION < 0x100, "protocol version byte");
+H1_STATIC_ASSERT(
+    NETBIOS_SESSION_RECORD_SIZE == NETBIOS_SESSION_MAGIC_SIZE + 1 + 1 + 1 + 2 * NETBIOS_NAME_RECORD_SIZE,
+    "native session frame"
+);
 
-const char gNetbiosGroupName[NETBIOS_GROUP_NAME_SIZE + 1] = "Empire Too ";
+// The edition's protocol version is part of the group name, so its hosts and
+// the original game's do not find each other (the original's: "Empire Too ").
+const char gNetbiosGroupName[NETBIOS_GROUP_NAME_SIZE + 1] = "Empire TE1 ";
 
 // ------------------------------------------------------------ framing
 
@@ -108,7 +116,9 @@ i32 EncodeRemotePacket(
     header.Put(sequence);
     header.Put(static_cast<u8>(body.Size()));
     header.Put(static_cast<u16>(0));
-    crc = 0;
+    // The checksum starts from the protocol's seed, so packets of another
+    // version of the protocol fail it.
+    crc = REMOTE_PROTOCOL_CRC_SEED;
     calc_crc(&crc, const_cast<u8*>(header.Data()), header.Size());
     calc_crc(&crc, const_cast<u8*>(body.Data()), body.Size());
     memcpy(packet, header.Data(), REMOTE_PACKET_HEADER_RECORD_SIZE - 2);
@@ -135,7 +145,7 @@ bool DecodeRemotePacket(
     RemoteMessage& message
 ) {
     u8 zeros[2] = {0, 0};
-    u16 crc = 0;
+    u16 crc = REMOTE_PROTOCOL_CRC_SEED;
 
     if (length < REMOTE_PACKET_HEADER_RECORD_SIZE + header.payloadSize)
         return false;
@@ -302,7 +312,7 @@ bool ReadNetbiosAnnounce(RecordReader& in, u8* name) {
 
 void WriteModemId(RecordWriter& out, const char* id, i32 stage) {
     char text[32];
-    sprintf(text, "ID%.6s_%i", id, stage);
+    sprintf(text, "%s%.6s_%i", REMOTE_PROTOCOL_CONNECT_TAG, id, stage);
     out.Bytes(text, static_cast<i32>(strlen(text)));
 }
 
@@ -311,9 +321,43 @@ bool ReadModemId(RecordReader& in, char* id, i32& stage) {
     if (in.Remaining() != MODEM_ID_RECORD_SIZE)
         return false;
     in.Get(text, MODEM_ID_RECORD_SIZE);
-    if (!in.Ok() || text[0] != 'I' || text[1] != 'D')
+    if (!in.Ok() || strncmp(text, REMOTE_PROTOCOL_CONNECT_TAG, 2) != 0)
         return false;
     memcpy(id, text + 2, MODEM_ID_DIGITS);
     stage = text[MODEM_ID_RECORD_SIZE - 1] - '0';
     return true;
+}
+
+// ------------------------------------------------------------ native sessions
+
+void WriteNetbiosSession(RecordWriter& out, u8 kind, const u8* first, const u8* second) {
+    out.Put(NETBIOS_SESSION_MAGIC, NETBIOS_SESSION_MAGIC_SIZE);
+    out.Put(static_cast<u8>(NETBIOS_SESSION_FRAME_VERSION));
+    out.Put(static_cast<u8>(REMOTE_PROTOCOL_VERSION));
+    out.Put(kind);
+    out.Put(first, NETBIOS_NAME_RECORD_SIZE);
+    out.Put(second, NETBIOS_NAME_RECORD_SIZE);
+}
+
+i32 ReadNetbiosSession(RecordReader& in, u8& kind, u8* first, u8* second) {
+    char magic[NETBIOS_SESSION_MAGIC_SIZE];
+    u8 frameVersion = 0;
+    u8 protocol = 0;
+    in.Get(magic, NETBIOS_SESSION_MAGIC_SIZE);
+    in.Get(frameVersion);
+    if (!in.Ok() || memcmp(magic, NETBIOS_SESSION_MAGIC, NETBIOS_SESSION_MAGIC_SIZE) != 0)
+        return NETBIOS_SESSION_MALFORMED;
+    // The first frames carried no protocol byte: the original game's
+    // protocol.
+    if (frameVersion != NETBIOS_SESSION_FRAME_VERSION)
+        return NETBIOS_SESSION_OTHER_PROTOCOL;
+    in.Get(protocol);
+    if (in.Ok() && protocol != REMOTE_PROTOCOL_VERSION)
+        return NETBIOS_SESSION_OTHER_PROTOCOL;
+    in.Get(kind);
+    in.Get(first, NETBIOS_NAME_RECORD_SIZE);
+    in.Get(second, NETBIOS_NAME_RECORD_SIZE);
+    if (!in.Ok() || in.Remaining() != 0)
+        return NETBIOS_SESSION_MALFORMED;
+    return NETBIOS_SESSION_VALID;
 }
