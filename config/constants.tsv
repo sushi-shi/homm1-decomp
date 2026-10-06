@@ -1512,3 +1512,6 @@ src/SOURCE/KB.cpp	ReceiveRemotePlayerExit	0	trivial-function-literal	0 array-ind
 src/SOURCE/KB.cpp	ShowCongrats	0	*	*	the player name's first letter, capitalised
 src/SOURCE/kbwin.cpp	SetupCDDrive	0	call-argument	DriveSupportsFreeSpaceQuery(char) argument 1	the drive letter, the CD path's first character
 src/SOURCE/ADVMGR.cpp	advManager::CheckHandleNet	0	call-argument	ReceiveRemotePlayerExit(* argument 2	ReceiveRemotePlayerExit's hadControl, which it never reads: the exiting guest had no control
+src/SOURCE/ADVMGR.cpp	advManager::Main	1	call-argument	GiveArmy(* argument 3	the debug key's single creature of each kind
+src/SOURCE/CURSOR.cpp	advManager::GetCursorBaseFrame	0	trivial-function-literal	0 return	frame 0, north's base frame, for a direction outside the table
+src/SOURCE/ADVMGR.cpp	advManager::UpdateRadar	1	call-argument	ClipFillToBuffer(* argument 3	radar.icn's viewport-box frame (frames have no names)

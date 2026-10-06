@@ -709,13 +709,13 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) advManager::Main(struct tag_message& 
                             gGame->GiveArmy(
                                 &curHero->m_army,
                                 CREATURE_DRAGON,
-                                CHEAT_CREATURE_COUNT,
+                                1,
                                 ARMY_GROUP_EMPTY_SLOT
                             );
                             gGame->GiveArmy(
                                 &curHero->m_army,
                                 CREATURE_TROLL,
-                                CHEAT_CREATURE_COUNT,
+                                1,
                                 ARMY_GROUP_EMPTY_SLOT
                             );
                         }
@@ -2481,7 +2481,7 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
     m_radarIcon->ClipFillToBuffer(
         m_mapOriginX * RADAR_CELL_PIXELS + RADAR_LEFT,
         m_mapOriginY * RADAR_CELL_PIXELS + RADAR_TOP,
-        RADAR_VIEWPORT_FRAME,
+        1,
         RADAR_VIEWPORT_COLOR,
         ICON_DRAW_NORMAL,
         ICON_DRAW_OFFSET_FULL,

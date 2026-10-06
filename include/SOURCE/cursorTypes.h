@@ -72,11 +72,7 @@ inline i32 OppositeMapDirection(i32 direction) {
     return (direction + MAP_DIRECTION_OPPOSITE_OFFSET) & MAP_DIRECTION_INDEX_MASK;
 }
 
-// GetCursorBaseFrame: direction * FRAMES_PER_DIRECTION for the unmirrored
-// directions (north's base frame is the first), the boat's own frames for the
-// mirrored ones.
 H1_ENUM_CONST_BEGIN(CursorFrameConstant)
-    CURSOR_BASE_FRAME_NORTH = 0,
     CURSOR_FRAMES_PER_DIRECTION = 9,
     CURSOR_BOAT_BASE_FRAME_5 = 0x9b,
     CURSOR_BOAT_BASE_FRAME_6 = 0x92,

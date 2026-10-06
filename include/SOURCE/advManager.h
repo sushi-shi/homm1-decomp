@@ -890,10 +890,8 @@ H1_ENUM_CONST_BEGIN(AdventureRadarConstant)
     RADAR_CELL_PIXELS = 2,
     RADAR_TERRAIN_SHADE = 3,
     RADAR_VIEWPORT_COLOR = 0xbe,
-    // Unexplored cells fill with colour 0 (black); radar.icn frame 1 is the
-    // viewport box.
-    RADAR_UNEXPLORED_COLOR = 0,
-    RADAR_VIEWPORT_FRAME = 1
+    // Unexplored cells fill with colour 0 (black).
+    RADAR_UNEXPLORED_COLOR = 0
 H1_ENUM_CONST_END(AdventureRadarConstant)
 
 // TeleportTo's fizzle (the computed time is not passed on - FizzleForward
@@ -987,8 +985,7 @@ H1_ENUM_CONST_BEGIN(AdventureCheatConstant)
     CHEAT_SPELL_CHARGES = 5,
     CHEAT_MOBILITY = 2999,
     CHEAT_REVEAL_CENTER = 30,
-    CHEAT_REVEAL_RADIUS = 100,
-    CHEAT_CREATURE_COUNT = 1
+    CHEAT_REVEAL_RADIUS = 100
 H1_ENUM_CONST_END(AdventureCheatConstant)
 
 H1_ENUM_CONST_BEGIN(AdventureEnemyTurnViewConstant)
