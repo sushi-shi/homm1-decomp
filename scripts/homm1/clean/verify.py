@@ -597,7 +597,7 @@ def classic_equivalence(classic_tree: Path, localized: Path, source_tree: Path) 
                      if p.is_file()}
     source_files = {p.relative_to(source_tree).as_posix() for p in source_tree.rglob("*")
                     if p.is_file() and not p.relative_to(source_tree).parts[0] == "build"}
-    build_only = {"build.py", "build.json", "flake.nix", "flake.lock", "catalog.py"}
+    build_only = {"build.py", "build.json", "flake.nix", "flake.lock", "catalog.py", "play.py"}
     expected = {name for name in source_files
                 if name not in build_only and not name.startswith("locales/")}
     for name in sorted(expected ^ (classic_files - {".homm1-clean-generated"})):
