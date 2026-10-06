@@ -4,6 +4,8 @@
 
 #include <SOURCE/REMOTE.h>
 
+#include <PLATFORM/Records.h>
+
 #include <BASE/heroWindowManager.h>
 #include <BASE/Misc.h>
 #include <SOURCE/advManager.h>
@@ -15,6 +17,7 @@
 #include <SOURCE/NOOPT.h>
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
+#include <SOURCE/remoteRecords.h>
 #include <SOURCE/SETUP.h>
 
 #include <stdio.h>
@@ -133,59 +136,35 @@ void UnloadRemoteDriver(i16 networkDriver) {
     }
 }
 
-void calc_crc(u16* crc, u8* data, i32 length) {
-    i32 unused = 0;
-    i16 overflow;
-    i16 mask;
-    while (length--) {
-        for (mask = REMOTE_CRC_BYTE_TOP_BIT; mask; mask >>= 1) {
-            overflow = *crc & REMOTE_CRC_TOP_BIT;
-            *crc <<= 1;
-            *crc |= (mask & *data) != 0;
-            if (overflow)
-                *crc ^= REMOTE_CRC_POLYNOMIAL;
-        }
-        data++;
-    }
-}
+// calc_crc is defined with the message codecs (REMOTEREC.cpp).
 
 i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length) {
-    u16 crc;
-
-    REMOTE_PACKET(gPacketSend)->source = source;
-    REMOTE_PACKET(gPacketSend)->destination = destination;
-    REMOTE_PACKET(gPacketSend)->sequence = gPacketSequence;
-    REMOTE_PACKET(gPacketSend)->payloadSize = length;
-    crc = 0;
-    REMOTE_PACKET(gPacketSend)->crc = crc;
-    memcpy(gPacketSend + sizeof(RemotePacketHeader), data, length);
-    calc_crc(&crc, reinterpret_cast<u8*>(gPacketSend), length + sizeof(RemotePacketHeader));
-    REMOTE_PACKET(gPacketSend)->crc = crc;
-    return length + sizeof(RemotePacketHeader);
+    if (length != data->payloadSize + REMOTE_MESSAGE_HEADER_SIZE)
+        return 0;
+    return EncodeRemotePacket(
+        gPacketSend,
+        REMOTE_PACKET_MAX_SIZE,
+        source,
+        destination,
+        gPacketSequence,
+        *data
+    );
 }
 
-b32 DecodePacket(RemoteMessage* data, i32 source) {
-    u16 computedCrc;
-    u16 crc;
-    i32 i;
-    u32 dataSize;
+b32 DecodePacket(RemoteMessage* data, i32 source, i32 packetLength) {
+    RemotePacketHeader header;
 
-    computedCrc = 0;
-    if (REMOTE_PACKET(gPacket)->source != source && source != REMOTE_BROADCAST_PLAYER) {
+    if (!ReadRemotePacketHeader(gPacket, packetLength, header))
+        return false;
+    if (header.source != source && source != REMOTE_BROADCAST_PLAYER) {
         return false;
     }
-    if (REMOTE_PACKET(gPacket)->destination != gThisNetPos
-        && REMOTE_PACKET(gPacket)->destination != REMOTE_BROADCAST_PLAYER) {
+    if (header.destination != gThisNetPos && header.destination != REMOTE_BROADCAST_PLAYER) {
         return false;
     }
-    dataSize = REMOTE_PACKET(gPacket)->payloadSize;
-    crc = REMOTE_PACKET(gPacket)->crc;
-    REMOTE_PACKET(gPacket)->crc = 0;
-    calc_crc(&computedCrc, reinterpret_cast<u8*>(gPacket), dataSize + sizeof(RemotePacketHeader));
-    if (crc != computedCrc) {
+    if (!DecodeRemotePacket(gPacket, packetLength, header, *data)) {
         return false;
     }
-    memcpy(data, gPacket + sizeof(RemotePacketHeader), dataSize);
     return true;
 }
 
@@ -206,6 +185,8 @@ b32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) 
         destination = 1 - gThisNetPos;
     }
     size = EncodePacket(dataToSend, gThisNetPos, destination, length);
+    if (size == 0)
+        return false;
     switch (gRemoteGameMode) {
         case REMOTE_GAME_NETWORK_HOST:
         case REMOTE_GAME_NETWORK_GUEST:
@@ -219,7 +200,7 @@ b32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length) 
             break;
         case REMOTE_GAME_MODEM_HOST:
         case REMOTE_GAME_MODEM_GUEST:
-            WriteModemPacket(gPacketSend, size);
+            WriteModemPacket(reinterpret_cast<char*>(gPacketSend), size);
             out = true;
             break;
     }
@@ -239,17 +220,17 @@ b32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 source) {
                 source = gNetNameIndex + 1;
             else
                 source = 0;
-            receiveResult = nb_rcv(0, 0x100, gPacket);
+            receiveResult = nb_rcv(0, REMOTE_PACKET_MAX_SIZE, gPacket);
             if (receiveResult == 0)
                 return false;
-            result = DecodePacket(data, source);
+            result = DecodePacket(data, source, receiveResult);
             break;
         case REMOTE_GAME_MODEM_HOST:
         case REMOTE_GAME_MODEM_GUEST:
             receiveResult = ReadPacket();
             if (receiveResult == 0)
                 return false;
-            result = DecodePacket(data, source);
+            result = DecodePacket(data, source, gModemPacketLength);
             break;
     }
     return result;
@@ -379,8 +360,9 @@ b8 WaitForHost(void) {
                 gWaitForHostStatus++;
             break;
         case NET_WAIT_CONNECTED:
-            if (nb_rcv(0, 3, buffer)) {
-                gNumNetGuests = buffer[0];
+            if (nb_rcv(0, REMOTE_GUEST_COUNT_RECORD_SIZE, buffer)) {
+                RecordReader count(reinterpret_cast<u8*>(buffer), REMOTE_GUEST_COUNT_RECORD_SIZE);
+                gNumNetGuests = ReadRemoteGuestCount(count);
                 return true;
             }
             break;
@@ -417,7 +399,7 @@ b8 WaitForGuest(void) {
 }
 
 i32 nbnet_init(void) {
-    char buffer[80];
+    RecordWriter guestCount;
     i32 status;
 
     gNumNetGuests = 0;
@@ -433,8 +415,14 @@ i32 nbnet_init(void) {
             NormalDialog(gText, NORMAL_DIALOG_TYPE_WAIT_CANCEL);
             if (!gFunctionComplete)
                 ShutDown(NULL);
-            buffer[0] = gNumNetGuests;
-            while (nb_snd(0, gNetNameIndex + 1, 3, buffer, 0))
+            WriteRemoteGuestCount(guestCount, gNumNetGuests);
+            while (nb_snd(
+                0,
+                gNetNameIndex + 1,
+                guestCount.Size(),
+                const_cast<u8*>(guestCount.Data()),
+                0
+            ))
                 PollSound();
             break;
         case REMOTE_GAME_NETWORK_GUEST:
@@ -590,7 +578,8 @@ void write_byte(i32 value) {
 
 void Connect(void) {
     i32 code;
-    char idMessage[20];
+    char remoteId[MODEM_ID_DIGITS];
+    i32 remoteStage;
     u32 randSeed = KBTickCount();
     randSeed %= 1000000;
     gModemIdString[0] = randSeed / 100000 + '0';
@@ -610,26 +599,28 @@ void Connect(void) {
     gLocalConnectStage = gRemoteConnectStage;
     do {
         if (ReadPacket()) {
-            gPacket[gModemPacketLength] = 0;
-            if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
+            RecordReader idPacket(gPacket, gModemPacketLength);
+            if (!ReadModemId(idPacket, remoteId, remoteStage))
                 continue;
-            if (strncmp(gPacket, "ID", 2))
-                continue;
-            if (!strncmp(gPacket + 2, gModemIdString, 6)) {
+            if (!strncmp(remoteId, gModemIdString, MODEM_ID_DIGITS)) {
                 sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
                 GOut(gText);
                 RemoteCleanup();
             }
-            strncpy(gRemoteModemIdString, gPacket + 2, 6);
-            gRemoteConnectStage = gPacket[9] - '0';
+            strncpy(gRemoteModemIdString, remoteId, MODEM_ID_DIGITS);
+            gRemoteConnectStage = remoteStage;
             gLocalConnectStage = gRemoteConnectStage + 1;
             gLastIdSendTime = -1;
         }
         gConnectTick = KBTickCount();
         if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
+            RecordWriter idMessage;
             gLastIdSendTime = gConnectTick;
-            sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
-            WriteModemPacket(idMessage, strlen(idMessage));
+            WriteModemId(idMessage, gModemIdString, gLocalConnectStage);
+            WriteModemPacket(
+                reinterpret_cast<char*>(const_cast<u8*>(idMessage.Data())),
+                idMessage.Size()
+            );
         }
         PollSound();
     } while (gLocalConnectStage < 2);
@@ -638,7 +629,8 @@ void Connect(void) {
 }
 
 b32 WaitForDirectConnect(void) {
-    char idMessage[20];
+    char remoteId[MODEM_ID_DIGITS];
+    i32 remoteStage;
     u32 idSeed;
     switch (gDirectConnectStage) {
         case DIRECT_CONNECT_MAKE_ID:
@@ -663,26 +655,28 @@ b32 WaitForDirectConnect(void) {
             break;
         case DIRECT_CONNECT_EXCHANGE_ID:
             if (ReadPacket()) {
-                gPacket[gModemPacketLength] = 0;
-                if (gModemPacketLength != DIRECT_CONNECT_ID_PACKET_LENGTH)
+                RecordReader idPacket(gPacket, gModemPacketLength);
+                if (!ReadModemId(idPacket, remoteId, remoteStage))
                     return false;
-                if (strncmp(gPacket, "ID", 2))
-                    return false;
-                if (!strncmp(gPacket + 2, gModemIdString, 6)) {
+                if (!strncmp(remoteId, gModemIdString, MODEM_ID_DIGITS)) {
                     sprintf(gText, "Duplicate ID Strings!\nSorry Please Try Again\n");
                     GOut(gText);
                     RemoteCleanup();
                 }
-                strncpy(gRemoteModemIdString, gPacket + 2, 6);
-                gRemoteConnectStage = gPacket[9] - '0';
+                strncpy(gRemoteModemIdString, remoteId, MODEM_ID_DIGITS);
+                gRemoteConnectStage = remoteStage;
                 gLocalConnectStage = gRemoteConnectStage + 1;
                 gLastIdSendTime = -1;
             }
             gConnectTick = KBTickCount();
             if (gConnectTick / 1000 != gLastIdSendTime / 1000) {
+                RecordWriter idMessage;
                 gLastIdSendTime = gConnectTick;
-                sprintf(idMessage, "ID%s_%i", gModemIdString, gLocalConnectStage);
-                WriteModemPacket(idMessage, strlen(idMessage));
+                WriteModemId(idMessage, gModemIdString, gLocalConnectStage);
+                WriteModemPacket(
+                    reinterpret_cast<char*>(const_cast<u8*>(idMessage.Data())),
+                    idMessage.Size()
+                );
             }
             if (gLocalConnectStage >= 2)
                 gDirectConnectStage++;
@@ -778,6 +772,8 @@ b32 TransmitRemoteData(
 
     if (!gRemoteOn || gInNetSetup)
         return true;
+    if (length < 0 || length > REMOTE_PAYLOAD_MAX_SIZE)
+        return false;
     if (gamePosDestination && destination != REMOTE_BROADCAST_PLAYER)
         destination = gGamePosToNetPos[destination];
     result = false;
@@ -820,6 +816,27 @@ b32 TransmitRemoteData(
     return result;
 }
 
+b32 TransmitRemoteRecord(
+    const RecordWriter& record,
+    i32 destination,
+    i8 command,
+    b8 reliable,
+    b8 allowRetryDialog,
+    i8 messageType,
+    b8 gamePosDestination
+) {
+    return TransmitRemoteData(
+        const_cast<u8*>(record.Data()),
+        destination,
+        record.Size(),
+        command,
+        reliable,
+        allowRetryDialog,
+        messageType,
+        gamePosDestination
+    );
+}
+
 RemoteMessage* GetRemoteData(b8 remove) {
     i32 oldestOrder;
     i32 queueIndex;
@@ -837,7 +854,7 @@ RemoteMessage* GetRemoteData(b8 remove) {
         }
     }
     if (selected >= 0) {
-        memcpy(&gReceiveOut, &gReceiveQueue[selected], REMOTE_MESSAGE_SIZE);
+        gReceiveOut = gReceiveQueue[selected];
         if (remove)
             gReceiveQueue[selected].type = REMOTE_MESSAGE_NONE;
         gReceiveQueue[selected].sender = NetPosToGamePos(gReceiveQueue[selected].sender);
@@ -902,54 +919,53 @@ void PollRemote(void) {
     result = true;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(NULL, REMOTE_MESSAGE(gReceiveIn), REMOTE_BROADCAST_PLAYER);
-        if (result && REMOTE_MESSAGE(gReceiveIn)->sender != gThisNetPos) {
-            if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_CONFIRM) {
-                gLastConfirm = REMOTE_MESSAGE(gReceiveIn)->id;
+        result = ReceiveRemoteData(NULL, &gReceiveIn, REMOTE_BROADCAST_PLAYER);
+        if (result && gReceiveIn.sender != gThisNetPos) {
+            if (gReceiveIn.type == REMOTE_MESSAGE_CONFIRM) {
+                gLastConfirm = gReceiveIn.id;
                 goto done;
-            } else if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_HEARTBEAT) {
-                if (REMOTE_MESSAGE(gReceiveIn)->payloadSize == 1
-                    && REMOTE_MESSAGE(gReceiveIn)->payload.data[0] == 1)
+            } else if (gReceiveIn.type == REMOTE_MESSAGE_HEARTBEAT) {
+                if (gReceiveIn.payloadSize == 1
+                    && gReceiveIn.payload.data[0] == 1)
                     gRemoteReady = true;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = true;
                 if (gThisGamePos != gHostGamePos && gCurPlayer != gThisGamePos
                     && gAdvManager->m_active == 1
-                    && REMOTE_MESSAGE(gReceiveIn)->command / 16 != gThisGamePos) {
-                    gCurPlayer = REMOTE_MESSAGE(gReceiveIn)->command / 16;
-                    gCurHourGlassPhase = REMOTE_MESSAGE(gReceiveIn)->command - gCurPlayer * 16;
+                    && gReceiveIn.command / 16 != gThisGamePos) {
+                    gCurPlayer = gReceiveIn.command / 16;
+                    gCurHourGlassPhase = gReceiveIn.command - gCurPlayer * 16;
                 }
                 goto done;
             } else if (queueFull) {
                 goto done;
             }
-            if (REMOTE_MESSAGE(gReceiveIn)->type == REMOTE_MESSAGE_RELIABLE) {
+            if (gReceiveIn.type == REMOTE_MESSAGE_RELIABLE) {
                 gSendMessage.sender = gThisNetPos;
-                gSendMessage.id = REMOTE_MESSAGE(gReceiveIn)->id;
+                gSendMessage.id = gReceiveIn.id;
                 gSendMessage.type = REMOTE_MESSAGE_CONFIRM;
                 gSendMessage.payloadSize = 0;
                 SendRemoteData(
                     &gSendMessage,
                     NULL,
-                    REMOTE_MESSAGE(gReceiveIn)->sender,
+                    gReceiveIn.sender,
                     REMOTE_MESSAGE_HEADER_SIZE
                 );
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if ((gReceiveQueue[i].type)
-                    && gReceiveQueue[i].id == REMOTE_MESSAGE(gReceiveIn)->id)
+                if ((gReceiveQueue[i].type) && gReceiveQueue[i].id == gReceiveIn.id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
-                if (gLastIds[i] == REMOTE_MESSAGE(gReceiveIn)->id)
+                if (gLastIds[i] == gReceiveIn.id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (!(gReceiveQueue[i].type)) {
                     gInOrder[i] = gInOrderCtr++;
-                    memcpy(&gReceiveQueue[i], gReceiveIn, REMOTE_MESSAGE_SIZE);
+                    gReceiveQueue[i] = gReceiveIn;
                     numQueued++;
-                    gLastIds[gCurLastID] = REMOTE_MESSAGE(gReceiveIn)->id;
+                    gLastIds[gCurLastID] = gReceiveIn.id;
                     gCurLastID = (gCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
                     if (numQueued == REMOTE_QUEUE_CAPACITY)
                         goto done;
@@ -1003,6 +1019,23 @@ transmitComplete:
     return result;
 }
 
+i32 TransmitAndWaitRecord(
+    const RecordWriter& record,
+    i32 destination,
+    i8 command,
+    i8 responseCommand,
+    RemoteMessage** response
+) {
+    return TransmitAndWait(
+        const_cast<u8*>(record.Data()),
+        destination,
+        record.Size(),
+        command,
+        responseCommand,
+        response
+    );
+}
+
 i32 gNetNameIndex = -1;
 i32 gUnusedRemoteValue1 = -1;
 i32 gUnusedRemoteValue2 = -1;
@@ -1024,7 +1057,7 @@ i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 i32 gDirectConnectStage;
 char gRemoteModemIdString[8];
 i32 gRemoteOldLong;
-char gPacketSend[256];
+u8 gPacketSend[REMOTE_PACKET_MAX_SIZE];
 i32 gConnectTick;
 i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 RemoteMessage gSendMessage;
@@ -1036,9 +1069,9 @@ i32 gOldRemoteIdBits;
 char gModemExpectedResponse[40];
 i32 gLastIdSendTime;
 inque_t gModemInQueue;
-char gPacket[256];
+u8 gPacket[REMOTE_PACKET_MAX_SIZE];
 i32 gLastActionTime;
-char gReceiveIn[REMOTE_MESSAGE_SIZE];
+RemoteMessage gReceiveIn;
 char gModemResponseLine[80];
 RemoteMessage gReceiveQueue[REMOTE_QUEUE_CAPACITY];
 outque_t gModemOutQueue;

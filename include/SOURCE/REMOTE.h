@@ -66,7 +66,9 @@ enum RemoteDriverType {
     REMOTE_DRIVER_NETBIOS = 1
 };
 
-#pragma pack(push, 1)
+// The protocol's structures as the game uses them. On the wire they are the
+// original's byte-packed layout, which the codecs in remoteRecords.h write
+// and read field by field.
 struct RemotePacketHeader {
     i8 source;
     i8 destination;
@@ -74,36 +76,21 @@ struct RemotePacketHeader {
     u8 payloadSize;
     u16 crc;
 };
-#pragma pack(pop)
 
-#define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
-#define REMOTE_MESSAGE(buffer) (reinterpret_cast<RemoteMessage*>(buffer))
-
-#pragma pack(push, 1)
 struct CombatRemoteAction {
     i32 nextAction;
     i32 nextActionExtra;
     i32 nextActionGridIndex;
     i32 nextActionGridIndex2;
 };
-#pragma pack(pop)
 
-#pragma pack(push, 1)
-union RemotePayload {
-    char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE];
-    struct {
-        i32 saveSize;
-        i32 playerExited;
-    };
-    struct {
-        i16 index;
-        char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
-    } segment;
-    CombatRemoteAction combatAction;
+// A message's payload bytes as they travel, decoded by the payload codecs
+// (remoteRecords.h). One byte more than the largest payload: a received
+// payload is always followed by a zero byte, so text payloads are terminated.
+struct RemotePayload {
+    char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE + 1];
 };
-#pragma pack(pop)
 
-#pragma pack(push, 1)
 struct RemoteMessage {
     i8 sender;
     i32 id;
@@ -112,14 +99,13 @@ struct RemoteMessage {
     i16 payloadSize;
     RemotePayload payload;
 };
-#pragma pack(pop)
 
 extern b8 gInNetSetup;
 extern i32 gIDCtr;
 extern u8 gRemoteGameMode;
 extern u8 gPacketSequence;
 extern i32 gNetNameIndex;
-extern char gPacketSend[];
+extern u8 gPacketSend[];
 extern i32 gNumNetGuests;
 extern i32 gLastConfirm;
 enum RemoteReceiveOrderConstant {
@@ -142,11 +128,28 @@ b32 TransmitRemoteData(
     i8 messageType = REMOTE_MESSAGE_DEFAULT,
     b8 gamePosDestination = true
 );
+// The same for a message encoded by the codecs (remoteRecords.h).
+b32 TransmitRemoteRecord(
+    const class RecordWriter& record,
+    i32 destination,
+    i8 command,
+    b8 reliable,
+    b8 allowRetryDialog = true,
+    i8 messageType = REMOTE_MESSAGE_DEFAULT,
+    b8 gamePosDestination = true
+);
 RemoteMessage* GetRemoteData(b8 remove);
 b32 TransmitAndWait(
     void* bytes,
     i32 destination,
     i32 length,
+    i8 command,
+    i8 responseCommand,
+    RemoteMessage** response
+);
+i32 TransmitAndWaitRecord(
+    const class RecordWriter& record,
+    i32 destination,
     i8 command,
     i8 responseCommand,
     RemoteMessage** response
@@ -158,7 +161,7 @@ void WriteModemPacket(char* buffer, i32 length);
 char ReadPacket(void);
 void calc_crc(u16* crc, u8* data, i32 length);
 i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length);
-b32 DecodePacket(RemoteMessage* data, i32 source);
+b32 DecodePacket(RemoteMessage* data, i32 source, i32 packetLength);
 b8 InitNetHost(void);
 b8 InitNetGuest(void);
 b8 WaitForHost(void);
@@ -167,7 +170,7 @@ b8 WaitForGuest(void);
 extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
 extern RemoteMessage gSendMessage;
-extern char gReceiveIn[REMOTE_MESSAGE_SIZE];
+extern RemoteMessage gReceiveIn;
 extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
 extern i32 gCurLastID;
@@ -212,7 +215,7 @@ extern i32 gBaudBits;
 extern b32 gModemInEscape;
 extern b32 gModemNewPacket;
 extern i32 gModemPacketLength;
-extern char gPacket[];
+extern u8 gPacket[];
 extern char gModemIdString[];
 extern char gRemoteModemIdString[];
 extern i32 gLastIdSendTime;

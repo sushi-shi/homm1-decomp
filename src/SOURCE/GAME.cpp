@@ -41,6 +41,7 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/remoteRecords.h>
 #include <SOURCE/saveRecords.h>
 #include <SOURCE/town.h>
 
@@ -4010,14 +4011,15 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     i32 blocksCount;
     i32 unusedData;
     i32 oldTrackVal;
-    RemotePayload* sendPacket;
+    RemoteSaveHeader saveHeader;
+    char ackFlags[REMOTE_SAVE_BATCH_SIZE];
     i32 segmentsInBlock;
     i32 entry;
     i32 totalSegments;
     i32 mainFile;
     i32 unusedOffset;
     RemoteMessage* incomingNow;
-    char ackedArray[500];
+    char ackedArray[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 unusedY;
     b32 replyState;
     i32 unusedSeq;
@@ -4044,7 +4046,6 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     SaveGame("REMOTE.GAM", false);
     sprintf(curPathname, "%s%s", gDataPath, "REMOTE.GAM");
     dataSize = FileSize(curPathname);
-    sendPacket = static_cast<RemotePayload*>(malloc(REMOTE_MESSAGE_SIZE));
     if (REMOTE_SAVE_ENCODED())
         mainOutData = static_cast<char*>(malloc(dataSize));
     dataObj = static_cast<char*>(malloc(dataSize));
@@ -4062,16 +4063,19 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
         else
             mainOutData = dataObj;
 
-        sendPacket->saveSize = dataSize;
-        sendPacket->playerExited = playerExited;
-        replyState = TransmitAndWait(
-            sendPacket->data,
-            remotePlayer,
-            REMOTE_SAVE_HEADER_SIZE,
-            BOX_REMOTE_SAVE,
-            REMOTE_COMMAND_SAVE_INIT_RESPONSE,
-            &incomingNow
-        );
+        saveHeader.saveSize = dataSize;
+        saveHeader.playerExited = playerExited;
+        {
+            RecordWriter headerRecord;
+            WriteRemoteSaveHeader(headerRecord, saveHeader);
+            replyState = TransmitAndWaitRecord(
+                headerRecord,
+                remotePlayer,
+                BOX_REMOTE_SAVE,
+                REMOTE_COMMAND_SAVE_INIT_RESPONSE,
+                &incomingNow
+            );
+        }
         if (!replyState)
             ShutDown(NULL);
 
@@ -4090,40 +4094,38 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
                     PollSound();
                     CheckDoMain(0, true);
                     if (!ackedArray[entry]) {
+                        RecordWriter segment;
                         if (entry + 1 == totalSegments)
                             length = dataSize - entry * REMOTE_SAVE_SEGMENT_SIZE;
                         else
                             length = REMOTE_SAVE_SEGMENT_SIZE;
-                        sendPacket->segment.index = entry;
-                        memcpy(
-                            sendPacket->segment.data,
-                            mainOutData + entry * REMOTE_SAVE_SEGMENT_SIZE,
-                            length
-                        );
-                        replyState = TransmitRemoteData(
-                            sendPacket->data,
-                            remotePlayer,
-                            length + REMOTE_SAVE_INDEX_SIZE,
-                            REMOTE_COMMAND_SAVE_DATA,
-                            false
-                        );
+                        WriteRemoteSaveIndex(segment, entry);
+                        segment.Bytes(mainOutData + entry * REMOTE_SAVE_SEGMENT_SIZE, length);
+                        replyState =
+                            TransmitRemoteRecord(segment, remotePlayer, REMOTE_COMMAND_SAVE_DATA, false);
                         if (!replyState)
                             ShutDown(NULL);
                     }
                 }
-                sendPacket->segment.index = block * REMOTE_SAVE_BATCH_SIZE;
-                replyState = TransmitAndWait(
-                    sendPacket->data,
-                    remotePlayer,
-                    REMOTE_SAVE_INDEX_SIZE,
-                    REMOTE_COMMAND_SAVE_ACK_REQUEST,
-                    REMOTE_COMMAND_SAVE_ACK_RESPONSE,
-                    &incomingNow
-                );
+                {
+                    RecordWriter ackRequest;
+                    WriteRemoteSaveIndex(ackRequest, block * REMOTE_SAVE_BATCH_SIZE);
+                    replyState = TransmitAndWaitRecord(
+                        ackRequest,
+                        remotePlayer,
+                        REMOTE_COMMAND_SAVE_ACK_REQUEST,
+                        REMOTE_COMMAND_SAVE_ACK_RESPONSE,
+                        &incomingNow
+                    );
+                }
                 if (!replyState)
                     ShutDown(NULL);
+                {
+                    RecordReader ackResponse = RemotePayloadReader(*incomingNow);
+                    ReadRemoteSaveAck(ackResponse, ackFlags);
+                }
                 for (entry = 0; entry < segmentsInBlock; entry++) {
-                    if (incomingNow->payload.data[entry] > 0)
+                    if (ackFlags[entry] > 0)
                         ackedArray[entry + block * REMOTE_SAVE_BATCH_SIZE] = 1;
                 }
                 wasFinished = true;
@@ -4142,7 +4144,6 @@ i32 game::TransmitSaveGame(i32 remotePlayer, i32 playerExited) {
     }
 
 cleanup:
-    free(sendPacket);
     if (REMOTE_SAVE_ENCODED())
         free(mainOutData);
     free(dataObj);
@@ -4166,12 +4167,14 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     i32 trackOld;
     i32 handleValue;
     b8 done;
-    char* sendPacket;
+    char ackFlags[REMOTE_SAVE_BATCH_SIZE];
     RemoteMessage* receivedPacketObj;
     i32 curRet;
     i32 lastPacketTimeNum;
-    char myGotIt[500];
+    char myGotIt[REMOTE_SAVE_SEGMENT_LIMIT];
     i32 packetStartValue;
+    i32 segmentLength;
+    u32 decodedSize;
     char* decodedData;
 
     gAdvManager->TrimLoopingSounds(REMOTE_SAVE_TRANSFER_SOUNDS);
@@ -4180,6 +4183,11 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     oldUnused1 = false;
     okay = false;
     trackOld = MUSIC_TRACK_NONE;
+    // The size comes from the peer: it must fit the acknowledgement tables
+    // (and, compressed, hold the decoded size).
+    if (dataSize < REMOTE_SAVE_DECODED_SIZE_BYTES
+        || dataSize > REMOTE_SAVE_SEGMENT_LIMIT * REMOTE_SAVE_SEGMENT_SIZE)
+        return 0;
     if (gAdvManager->m_active == 1)
         BVResMsg(localization::Tr("network.receive.title"), RESOURCE_NONE, 0);
     trackOld = GetCurrentTrack();
@@ -4194,8 +4202,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     memset(myGotIt, 0, sizeof(myGotIt));
     if (REMOTE_SAVE_ENCODED())
         decodedData = static_cast<char*>(malloc(REMOTE_SAVE_DECODE_BUFFER_SIZE));
-    sendPacket = static_cast<char*>(malloc(REMOTE_MESSAGE_SIZE));
-    curInData = static_cast<char*>(malloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA));
+    curInData = static_cast<char*>(calloc(dataSize + REMOTE_SAVE_BUFFER_EXTRA, 1));
     lastPacketTimeNum = KBTickCount();
     while (!done) {
         PollSound();
@@ -4215,40 +4222,55 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
             && (receivedPacketObj->type == REMOTE_MESSAGE_RELIABLE
                 || receivedPacketObj->type == REMOTE_MESSAGE_UNRELIABLE)) {
             lastPacketTimeNum = KBTickCount();
+            RecordReader payload = RemotePayloadReader(*receivedPacketObj);
             switch (receivedPacketObj->command) {
                 case REMOTE_COMMAND_SAVE_DATA:
-                    packetStartValue = receivedPacketObj->payload.segment.index;
+                    // A segment outside the save is not stored.
+                    packetStartValue = ReadRemoteSaveIndex(payload);
+                    segmentLength = payload.Remaining();
+                    if (!payload.Ok() || packetStartValue < 0
+                        || packetStartValue >= REMOTE_SAVE_SEGMENT_LIMIT
+                        || segmentLength > REMOTE_SAVE_SEGMENT_SIZE
+                        || packetStartValue * REMOTE_SAVE_SEGMENT_SIZE + segmentLength > dataSize)
+                        break;
                     myGotIt[packetStartValue] = 1;
-                    memcpy(
-                        curInData + packetStartValue * REMOTE_SAVE_SEGMENT_SIZE,
-                        receivedPacketObj->payload.segment.data,
-                        receivedPacketObj->payloadSize - REMOTE_SAVE_INDEX_SIZE
-                    );
+                    payload.Bytes(curInData + packetStartValue * REMOTE_SAVE_SEGMENT_SIZE, segmentLength);
                     break;
-                case REMOTE_COMMAND_SAVE_ACK_REQUEST:
-                    packetStartValue = receivedPacketObj->payload.segment.index;
+                case REMOTE_COMMAND_SAVE_ACK_REQUEST: {
+                    RecordWriter ackResponse;
+                    packetStartValue = ReadRemoteSaveIndex(payload);
                     for (i = packetStartValue; i < packetStartValue + REMOTE_SAVE_BATCH_SIZE; i++)
-                        *(sendPacket + i - packetStartValue) = myGotIt[i];
-                    curRet = TransmitRemoteData(
-                        sendPacket,
+                        ackFlags[i - packetStartValue] =
+                            i >= 0 && i < REMOTE_SAVE_SEGMENT_LIMIT ? myGotIt[i] : 0;
+                    WriteRemoteSaveAck(ackResponse, ackFlags);
+                    curRet = TransmitRemoteRecord(
+                        ackResponse,
                         remotePlayer,
-                        REMOTE_SAVE_ACK_MAP_SIZE,
                         REMOTE_COMMAND_SAVE_ACK_RESPONSE,
                         true
                     );
                     if (!curRet)
                         ShutDown(NULL);
                     break;
+                }
                 case REMOTE_COMMAND_SAVE_FINISH:
                     done = true;
                     break;
             }
         }
     }
-    if (REMOTE_SAVE_ENCODED())
+    if (REMOTE_SAVE_ENCODED()) {
+        // The compressed stream begins with its decoded size, big-endian.
+        decodedSize = static_cast<u32>(static_cast<u8>(curInData[0])) << 24
+                      | static_cast<u32>(static_cast<u8>(curInData[1])) << 16
+                      | static_cast<u32>(static_cast<u8>(curInData[2])) << 8
+                      | static_cast<u32>(static_cast<u8>(curInData[3]));
+        if (decodedSize > REMOTE_SAVE_DECODE_BUFFER_SIZE)
+            goto refused;
         dataSize = DecodeData(decodedData, curInData);
-    else
+    } else {
         decodedData = curInData;
+    }
     sprintf(pathname, "%s%s", gDataPath, "REMOTE.GAM");
     handleValue = FileOpen(pathname, FILE_OPEN_WRITE);
     if (handleValue == FILE_DESCRIPTOR_INVALID)
@@ -4256,7 +4278,7 @@ b32 game::ReceiveSaveGame(i32 dataSize, i32 remotePlayer) {
     FileWrite(handleValue, decodedData, dataSize);
     FileClose(handleValue);
     okay = true;
-    free(sendPacket);
+refused:
     free(curInData);
     if (REMOTE_SAVE_ENCODED())
         free(decodedData);

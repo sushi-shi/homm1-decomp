@@ -28,6 +28,7 @@
 #include <SOURCE/philAI.h>
 #include <SOURCE/playerData.h>
 #include <SOURCE/REMOTE.h>
+#include <SOURCE/remoteRecords.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,6 +38,7 @@ i16 combatManager::Main(struct tag_message& message) {
     i32 result = MESSAGE_DISPATCH_CONSUME;
     army* currentArmy;
     RemoteMessage* packet;
+    CombatRemoteAction remoteAction;
 
     if (gTimers[COMBAT_FRAME_TIMER_SLOT] < KBTickCount()) {
         PollSound();
@@ -48,12 +50,15 @@ i16 combatManager::Main(struct tag_message& message) {
     packet = GetRemoteData(true);
     if (packet && packet->type == REMOTE_MESSAGE_RELIABLE) {
         switch (packet->command) {
-            case REMOTE_COMMAND_COMBAT_ACTION:
-                gNextAction = packet->payload.combatAction.nextAction;
-                gNextActionExtra = packet->payload.combatAction.nextActionExtra;
-                gNextActionGridIndex = packet->payload.combatAction.nextActionGridIndex;
-                gNextActionGridIndex2 = packet->payload.combatAction.nextActionGridIndex2;
+            case REMOTE_COMMAND_COMBAT_ACTION: {
+                RecordReader payload = RemotePayloadReader(*packet);
+                ReadCombatRemoteAction(payload, remoteAction);
+                gNextAction = remoteAction.nextAction;
+                gNextActionExtra = remoteAction.nextActionExtra;
+                gNextActionGridIndex = remoteAction.nextActionGridIndex;
+                gNextActionGridIndex2 = remoteAction.nextActionGridIndex2;
                 goto processAction;
+            }
             case REMOTE_COMMAND_CHAT:
                 PopNetBox(packet->payload.data);
                 break;
@@ -1443,6 +1448,7 @@ void combatManager::ResetMouse(void) {
 
 i16 combatManager::ProcessNextAction(struct tag_message& message) {
     CombatRemoteAction actionData;
+    RecordWriter actionRecord;
     i32 transmitResult;
     i32 remoteIndex;
     b8 doAdvance;
@@ -1458,13 +1464,9 @@ i16 combatManager::ProcessNextAction(struct tag_message& message) {
         actionData.nextActionExtra = gNextActionExtra;
         actionData.nextActionGridIndex = gNextActionGridIndex;
         actionData.nextActionGridIndex2 = gNextActionGridIndex2;
-        transmitResult = TransmitRemoteData(
-            &actionData,
-            remoteIndex,
-            sizeof(actionData),
-            REMOTE_COMMAND_COMBAT_ACTION,
-            true
-        );
+        WriteCombatRemoteAction(actionRecord, actionData);
+        transmitResult =
+            TransmitRemoteRecord(actionRecord, remoteIndex, REMOTE_COMMAND_COMBAT_ACTION, true);
         if (!transmitResult)
             ShutDown(NULL);
     }

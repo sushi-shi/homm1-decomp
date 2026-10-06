@@ -22,6 +22,11 @@ homm1_test(records_test
   SOURCES records_test.cpp
   GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
 
+# The network and serial message codecs, with golden packets.
+homm1_test(remote_records_test
+  SOURCES remote_records_test.cpp
+  GAME_SOURCES ${CMAKE_SOURCE_DIR}/src/SOURCE/REMOTEREC.cpp ${CMAKE_SOURCE_DIR}/src/SOURCE/SAVEREC.cpp)
+
 homm1_test(file_test
   SOURCES file_test.cpp)
 
