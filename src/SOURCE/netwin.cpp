@@ -631,6 +631,9 @@ DATA(0x004b20d8)
 NetbiosName gNbNameBuf[7];
 DATA(0x004b0ed8)
 u8 gNbSessBuf[0xfd0];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004b1ea8)
+u8 gNetwinDeadName[48];
 DATA(0x004b1ed8)
 NCB gNbSessNcb[7];
 DATA(0x004b2098)

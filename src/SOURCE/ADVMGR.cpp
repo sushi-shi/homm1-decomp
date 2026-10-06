@@ -566,6 +566,8 @@ DATA(0x004a6754)
 i32 gCurHourGlassPhase = 0;
 DATA(0x004a6758)
 i32 gForceUpdate = 0;
+DATA(0x004a675c)
+i32 gUnusedAdvCount = 0;
 
 VA(0x0040298b, 0xc7e)
 i16 advManager::Main(struct tag_message& message) {
@@ -5725,10 +5727,18 @@ void advManager::InsertSound(i16 x, i16 y, i16 distance, i8 soundLayer) {
     }
 }
 
-// ADVMGR .bss keeps four objects no code references: iThisMaxY, iThisMinY,
-// USMsg and CDMsg.
+// ADVMGR .bss keeps objects no code references: iThisMaxY, iThisMinY, USMsg,
+// CDMsg and four words that only retail's layout shows.
+DATA(0x004a65a0)
 i32 iThisMaxY;
+DATA(0x004a65c0)
 i32 iThisMinY;
+DATA(0x004a65c4)
+i32 gUnusedAdvTemp;
+DATA(0x004a65d0)
+i32 gAdvSpareFlag2;
+DATA(0x004a65d8)
+i32 gAdvSpareInt;
 
 VA(0x0040f55c, 0x2f7)
 void advManager::TeleportTo(i32 x, i32 y, i32) {
@@ -5850,7 +5860,10 @@ void advManager::DimensionDoor(void) {
     }
 }
 
+#define USMsg gUSMsgCopy // spelling fixes .bss order
+DATA(0x004a6718)
 struct tag_message USMsg;
+DATA(0x004a65b0)
 struct tag_message CDMsg;
 
 VA(0x0040fa50, 0x240)

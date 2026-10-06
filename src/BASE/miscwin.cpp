@@ -327,6 +327,9 @@ DATA(0x004cfb6c)
 static u32 sClipRun;
 DATA(0x004cfbb0)
 static BOOL sClipInside;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cfb70)
+static u8 sMiscScanTable[64];
 
 VA(0x00470076, 0x307)
 void ClipIconToBitmap(

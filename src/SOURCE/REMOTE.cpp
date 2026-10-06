@@ -280,6 +280,9 @@ i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType) {
 
 DATA(0x004cc7f0)
 i32 gIDCtr = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cc7f4)
+i32 gUnusedRemoteWords[3] = {0, 0, 0};
 DATA(0x004cc800)
 i32 packetlen = 0;
 DATA(0x004cc804)
@@ -1119,12 +1122,18 @@ DATA(0x004ca28c)
 i32 localstage;
 DATA(0x004ca1a0)
 char numbuf[40];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ca1c8)
+u8 gRemoteOldName[156];
 DATA(0x004cc670)
 i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 DATA(0x004cb510)
 i32 WFDCStage;
 DATA(0x004ca29c)
 char remoteidstr[8];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ca2a4)
+i32 gRemoteOldLong;
 DATA(0x004cb564)
 char PacketSend[256];
 DATA(0x004ca298)
@@ -1141,6 +1150,9 @@ DATA(0x004cb3dc)
 i32 remotestage;
 DATA(0x004cb3e4)
 i32 gNumNetGuests;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cb3e8)
+i32 gOldRemoteIdBits;
 DATA(0x004cb2b0)
 char GUIMRresp[40];
 DATA(0x004ca290)
