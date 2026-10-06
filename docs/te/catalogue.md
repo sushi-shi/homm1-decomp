@@ -12,7 +12,9 @@ the retail image (base `0x400000`); function names come from
 `config/retail/buka-function-map.tsv` and original semantics from the matched
 source under `src/`. `changes.tsv` (next to this file) holds one row per
 change with the columns `id, component, kind, va_or_key, function, category,
-description, recommendation, risk`.
+description, recommendation, risk, status, status_note`; `status` records how
+this branch implements the row (implemented, differs, deferred,
+skipped-out-of-scope).
 
 ## 1. Summary
 
@@ -831,3 +833,72 @@ Quickload is already refused in network games.
 - The `fixBalance` crest mapping for campaign scenarios 4–7 is unresolved.
 - D03 (`.\TRACKS\` byte) and the users of `RCRTHER1.BIN` are unresolved; both
   look inert.
+
+## 7. source-te decisions
+
+Where the Tournament Edition binary has a bug, an ambiguity or a design that
+does not fit source, this branch implements the intended behaviour:
+
+- **Fled state (TE-RS-\*, X24).** The edition kept "retreated/surrendered
+  today" in `hero::m_primaryStats[4]`, the byte the Ballista of Quickness
+  raises by 3, so the artifact corrupted the state. The state lives in its
+  own byte, `hero::m_fledState` (the former `m_unused38`, zero in
+  `ORIGDATA.BIN` and in every original save): none, retreated, surrendered.
+  `m_cowardice` is a live field (floor `HERO_COWARDICE_MIN` = -3). The
+  executable's own `m_name[16]` day flag is not reproduced (the edition's
+  runtime disabled it). The reset of a killed or dismissed hero restores all
+  five stat bytes.
+- **Tavern marker (X30).** `0x40` already meant "sitting in a tavern" in the
+  original game, not "retreated"; it is renamed `HERO_AVAILABILITY_IN_TAVERN`.
+  Last week's pair is released only if still marked and not redrawn.
+- **Surrender (TE-RS-2).** The surrender cost is copied only on the computer's
+  path (the edition also overwrote it for a human, which desynchronises
+  network peers); the computer's offer has its own text and portrait; it is
+  offered only against a hero (the edition crashed without one); refused, the
+  computer picks its spell with the existing spell evaluator.
+  `gbCombatSurrender` is cleared after every combat.
+- **Hero screen (X26).** The edition's early return left `gHeroWindShowing`
+  set and skipped the movement refresh only to free bytes; both are kept.
+- **View World (TE-FIX-8).** The mine letter comes from
+  `m_mines[hero.m_occupiedTown]` (+0x24); the edition read `m_locationType`
+  (+0x23), an out-of-range index.
+- **Recruit maximum (TE-FIX-7).** The count is clamped to the available
+  creatures before it is stored in the 16-bit field; the edition's dword store
+  overwrote the next field.
+- **Random artifacts (X22).** The per-cell choice is kept, but only artifacts
+  not yet in play are drawn and the 1000-gold fallback stays.
+- **Town footprint (TE-MAP-1).** Event objects inside a footprint keep their
+  metadata.
+- **Quick load (TE-QOL-1).** F9 reloads through the main loop, like the load
+  command; the edition's guard (`gFreshSave`) is replaced by a network-game
+  guard, and the file is checked where it is saved.
+- **Cheats (TE-CH-2).** Level codes add to the level computed from experience
+  (the edition trusted a possibly stale `m_level`).
+- **Damage forecast (X16).** The estimate uses the real damage formula
+  (shared helpers `army::ScaleDamage` and `army::ShotCrossesCastleWall`); the
+  status bar shows target hit points, damage and kills in words.
+- **DetermineEffectOfSpell (TE-UNR-1).** Decoded: the computer no longer casts
+  Bless or Curse on stacks whose damage range is one value (Peasants).
+- **Final campaign battle (TE-SCR-2).** Scenario 8, cell (41,37) is the last
+  campaign's Dragon City, not the Paladin stronghold; the test requires a
+  campaign and uses the attacking hero.
+- **Fonts and keyboard (PL-TXT-4, PL-YO-1, PL-TXT-3).** The new glyphs are
+  drawn only by fonts that have them (`catalog.py` lists them in the Russian
+  glyph set); the keyboard mapping lives in `locales/ru.json` and all edition
+  text in the catalogs under `te.*` ids, so the source has one code path for
+  every language.
+- **Save format.** The reserved header block of a save starts with
+  `SaveFormatTag` {"H1TE", version}. Version 1 is this edition; version 0
+  (original game) loads and has its tavern heroes reserved.
+- **Multiplayer.** `REMOTE_PROTOCOL_VERSION` 1 changes the serial handshake tag
+  (`TE`), the NetBIOS group (`Empire TE1 `) and the packet checksum seed, so
+  the edition never pairs with the original game.
+
+Catalogue corrections found while implementing: X14's metadata byte is
+unsigned; X23 is not an early-out; X28's retail `GetCell` already clamps; X35's
+second 0.99 user is `philAI::DamageGroup`; TE-BAL-1 affects only customized
+random castles; TE-CH-2's 101499 grants the spell book and spells, 101500
+excludes the castle code; the F9 guard is `gFreshSave`; MinerTexts has no
+general plural rule and its glyph hooks add « » — № (Ё/ё were already
+supported).
+
