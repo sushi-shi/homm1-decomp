@@ -19,7 +19,7 @@ Nothing is written to the copy.
 
 The per-user state directory (`$XDG_DATA_HOME/homm1-buka`, or `--state`):
 
-    game/      the installed game: DATA, ANIM, SOUND, MAPS and GAMES, the
+    game/      the installed game: DATA, ANIM, SOUND, MAPS, GAMES and HELP, the
                Smacker, Miles and Audiere DLLs, and HEROES.EXE or EDITOR.EXE,
                replaced on every launch. Files are copied once and never
                overwritten, so saved games, edited maps and high scores stay
@@ -321,6 +321,10 @@ def install_from_cabinet(cabinet: Path, work: Path) -> Path:
             raise PlayError(f"{cabinet}: no {group} file group; not the Buka 2003 installer")
         for entry in directory.iterdir():
             entry.rename(install / entry.name)
+    # The help book, which both programs open as .\HELP\HEROES.HLP.
+    help_book = unpacked / "Help_Files" / "Help"
+    if help_book.is_dir():
+        help_book.rename(install / "Help")
     return install
 
 
