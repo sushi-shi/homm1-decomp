@@ -120,7 +120,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
     H1_ENUM_ARRAY(i32, directionHexes, CombatHexDirection, COMBAT_DIRECTION_COUNT);
     H1_ENUM_LOCAL(CombatSide, i32) enemySide;
     i32 remainingSectors;
-    H1_ENUM_ARRAY(i8, pathValid, CombatHexDirection, COMBAT_DIRECTION_COUNT);
+    H1_ENUM_ARRAY(b8, pathValid, CombatHexDirection, COMBAT_DIRECTION_COUNT);
     H1_ENUM_ARRAY(i32, behindHexes, CombatHexDirection, COMBAT_DIRECTION_COUNT);
     i32 next;
     army* currentArmy;
@@ -131,7 +131,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
     H1_ENUM_SHARED(CombatHexDirection, i32) dir;
     i32 targetIndex;
     army* enemyArmy;
-    H1_ENUM_ARRAY(i8, canStandIn, CombatHexDirection, COMBAT_DIRECTION_COUNT);
+    H1_ENUM_ARRAY(b8, canStandIn, CombatHexDirection, COMBAT_DIRECTION_COUNT);
 
     currentArmy = &m_armies[m_currentSide][m_currentArmyIndex];
     enemySide = currentArmy->m_targetSide;
@@ -190,9 +190,9 @@ void combatManager::SetCombatDirections(i32 targetHex) {
         } else
             behindHexes[dir] = COMBAT_REAR_HEX_UNUSED;
         if (ValidHexToStandOn(directionHexes[dir]) && ValidHexToStandOn(behindHexes[dir]))
-            canStandIn[dir] = 1;
+            canStandIn[dir] = true;
         else
-            canStandIn[dir] = 0;
+            canStandIn[dir] = false;
     }
     if (currentArmy->m_stats.attributes & MONSTER_FLAGS_FLYING) {
         for (dir = COMBAT_DIRECTION_ADJACENT_FIRST; dir < COMBAT_DIRECTION_COUNT; dir++)
@@ -202,11 +202,11 @@ void combatManager::SetCombatDirections(i32 targetHex) {
             if (canStandIn[dir]) {
                 if (currentArmy->m_hex == directionHexes[dir]
                     || currentArmy->ValidPath(directionHexes[dir], ARMY_PATH_EXACT_TARGET_HEX))
-                    pathValid[dir] = 1;
+                    pathValid[dir] = true;
                 else
-                    pathValid[dir] = 0;
+                    pathValid[dir] = false;
             } else
-                pathValid[dir] = 0;
+                pathValid[dir] = false;
         }
     }
     m_validDirectionCount = 0;
@@ -215,7 +215,7 @@ void combatManager::SetCombatDirections(i32 targetHex) {
             m_validDirectionCount++;
     }
     if (!m_validDirectionCount)
-        pathValid[COMBAT_DIRECTION_WIDE_WEST] = 1;
+        pathValid[COMBAT_DIRECTION_WIDE_WEST] = true;
     memset(m_directionMap, -1, sizeof(m_directionMap));
     for (dir = COMBAT_DIRECTION_ADJACENT_FIRST; dir < COMBAT_DIRECTION_COUNT; dir++) {
         attackDirection = dir;
@@ -1507,7 +1507,7 @@ void combatManager::ResetMouse(void) {
         gMouseManager->MouseCoords(x, y);
         message.type = MESSAGE_WIDGET;
         message.command = WIDGET_COMMAND_HOVER;
-        message.id = y <= 0x1ca ? COMBAT_CONTROL_FIELD : 0;
+        message.id = y <= 0x1ca ? COMBAT_CONTROL_FIELD : COMBAT_CONTROL_NONE;
         ProcessCombatMsg(message);
     } else
         gMouseManager->SetPointer(COMBAT_POINTER_DEFAULT);

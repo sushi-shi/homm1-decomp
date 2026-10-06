@@ -148,7 +148,7 @@ void combatManager::SetupCombat(
         if (m_heroes[i] && m_heroes[i]->HasArtifact(ARTIFACT_BALLISTA))
             m_catapultAttackCount[i] = m_catapultAttacksRemaining[i] = 2;
         m_keepAttacksRemaining[i] = 1;
-        m_visitingHeroPresent[i] = 0;
+        m_visitingHeroPresent[i] = false;
         m_heroCastSpell[i] = 0;
     }
     m_castleSide[COMBAT_ATTACKER_SIDE] = 0;
@@ -156,9 +156,9 @@ void combatManager::SetupCombat(
         if (defenderTown->m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE) {
             m_armyGroups[COMBAT_DEFENDER_SIDE] = &m_heroes[COMBAT_DEFENDER_SIDE]->m_army;
             CombineGroups(&defenderTown->m_army, &m_heroes[COMBAT_DEFENDER_SIDE]->m_army);
-            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 1;
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = true;
         } else {
-            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = 0;
+            m_visitingHeroPresent[COMBAT_DEFENDER_SIDE] = false;
         }
         m_castleSide[COMBAT_DEFENDER_SIDE] =
             (defenderTown->m_buildings & H1_ENUM_BIT(BuildingSlotType, BUILDING_SLOT_CASTLE)) ? 1
@@ -347,10 +347,12 @@ void combatManager::GenerateMap(void) {
     i16 count;
     i16 armyCount;
 
-    m_catapultFrame[COMBAT_ATTACKER_SIDE] =
-        m_castleSide[COMBAT_DEFENDER_SIDE] == 1 ? 0 : COMBAT_CATAPULT_FRAME_NONE;
-    m_catapultFrame[COMBAT_DEFENDER_SIDE] =
-        m_castleSide[COMBAT_ATTACKER_SIDE] == 1 ? 0 : COMBAT_CATAPULT_FRAME_NONE;
+    m_catapultFrame[COMBAT_ATTACKER_SIDE] = m_castleSide[COMBAT_DEFENDER_SIDE] == 1
+                                                ? COMBAT_CATAPULT_FRAME_FIRST
+                                                : COMBAT_CATAPULT_FRAME_NONE;
+    m_catapultFrame[COMBAT_DEFENDER_SIDE] = m_castleSide[COMBAT_ATTACKER_SIDE] == 1
+                                                ? COMBAT_CATAPULT_FRAME_FIRST
+                                                : COMBAT_CATAPULT_FRAME_NONE;
     for (y = 0; y < COMBAT_GRID_ROWS; y++) {
         for (x = 0; x < COMBAT_GRID_COLUMNS; x++) {
             m_hexCells[y * COMBAT_GRID_COLUMNS + x].m_y =
@@ -558,9 +560,9 @@ i8 combatManager::MoreTreesNear(void) {
                 nearbyTileset =
                     H1_ENUM_DECODE(MapTileset, cell->m_objectTileset & MAP_CELL_TILESET_MASK);
                 if (nearbyTileset == TILESET_MTN32)
-                    nearbyTypeGrid[radius][dir] = 0;
+                    nearbyTypeGrid[radius][dir] = COMBAT_NEARBY_MOUNTAIN;
                 else if (nearbyTileset == TILESET_TREE32)
-                    nearbyTypeGrid[radius][dir] = 1;
+                    nearbyTypeGrid[radius][dir] = COMBAT_NEARBY_TREE;
             }
         }
     }
@@ -568,9 +570,9 @@ i8 combatManager::MoreTreesNear(void) {
     mountainCount = 0;
     for (radius = 0; radius < 3; radius++) {
         for (dir = MAP_DIRECTION_FIRST; dir < MAP_DIRECTION_COUNT; dir++) {
-            if (nearbyTypeGrid[radius][dir] == 0)
+            if (nearbyTypeGrid[radius][dir] == COMBAT_NEARBY_MOUNTAIN)
                 mountainCount++;
-            if (nearbyTypeGrid[radius][dir] == 1)
+            if (nearbyTypeGrid[radius][dir] == COMBAT_NEARBY_TREE)
                 treeCount++;
         }
     }
@@ -820,7 +822,7 @@ i8 combatManager::GetNextArmy(b32 checkMorale) {
     b32 skip;
 
     stackSide = m_currentSide;
-    for (speedLevelIndex = 0; speedLevelIndex < 5; speedLevelIndex++) {
+    for (speedLevelIndex = 0; speedLevelIndex < COMBAT_SPEED_PASS_COUNT; speedLevelIndex++) {
         for (sideIter = COMBAT_SIDE_FIRST; sideIter < COMBAT_SIDE_COUNT; sideIter++) {
             COMBAT_SWITCH_SIDE(stackSide);
             for (armyCounter = 0; armyCounter < m_numArmies[stackSide]; armyCounter++) {
@@ -924,7 +926,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
     gMaxExtentX = 200;
     gMinExtentY = 190;
     gMaxExtentY = 420;
-    m_catapultFrame[side] = 0;
+    m_catapultFrame[side] = COMBAT_CATAPULT_FRAME_FIRST;
     while (m_catapultFrame[side] < 8) {
         m_redrawExtent = true;
         DrawFrame(true);
@@ -1136,7 +1138,7 @@ void combatManager::CatAttack(H1_ENUM_PARAM(CombatSide, i8) side) {
         DrawFrame(true);
         m_catapultFrame[side]++;
     }
-    m_catapultFrame[side] = 0;
+    m_catapultFrame[side] = COMBAT_CATAPULT_FRAME_FIRST;
     m_redrawExtent = true;
     DrawFrame(true);
     gResourceManager->Dispose(boulderIcon);
@@ -1176,8 +1178,9 @@ void combatManager::KeepAttack(void) {
     float gainY;
     float inFlightY;
     i16 landX;
-    i8 shotTable[45] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 2, 0, 0, 0, 0, 1, 1,
-                        1, 1, 2, 0, 0, 0, 1, 1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
+    i8 shotTable[COMBAT_HEX_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1,
+                                      1, 2, 0, 0, 0, 0, 1, 1, 1, 1, 2, 0, 0, 0, 1,
+                                      1, 1, 1, 2, 2, 0, 0, 1, 1, 1, 1, 1, 2, 2, 0};
     i8 hisRow;
     i16 projectileSizeY;
     i32 mod;
@@ -1308,11 +1311,15 @@ void combatManager::KeepAttack(void) {
     if (mod < -20)
         mod = -20;
     numRolls = 5;
-    for (k = 7; k <= 12; k++) {
+    for (k = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_FIRST);
+         k <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_DWELLING_LAST);
+         k++) {
         if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
             numRolls += 4;
     }
-    for (k = 0; k <= 4; k++) {
+    for (k = H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_MAGE_GUILD);
+         k <= H1_ENUM_ENCODE(BuildingSlotType, BUILDING_SLOT_GENERIC_LAST);
+         k++) {
         if (m_combatTowns[COMBAT_DEFENDER_SIDE]->m_buildings & (1 << k))
             numRolls++;
     }

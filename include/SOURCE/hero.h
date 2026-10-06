@@ -13,6 +13,7 @@
 // forward declarations:
 class town;
 
+#define HERO_EVENT_NONE 0x0u
 #define HERO_EVENT_EMBARKED 0x80u
 #define HERO_EVENT_BUOY 0x2u
 #define HERO_EVENT_FOUNTAIN 0x4u
