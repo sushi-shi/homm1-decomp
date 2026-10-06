@@ -1,0 +1,7 @@
+# A font record whose glyph icon name fills its 13 bytes with no terminator:
+# the name was read and copied past its field. The name is cut to 12
+# characters, which no resource has: refused as a damaged archive.
+bytes 0C 00 09 00
+bytes 41 41 41 41 41 41 41 41 41 41 41 41 41
+bytes 04                    # kind
+expect refused
