@@ -256,7 +256,7 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
         gTimers[CURSOR_TURN_TIMER_SLOT] = KBTickCount() + delayTime;
         if (gConfig.walkSpeed != WALK_SPEED_JUMP) {
             if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
-                UpdateScreen(0, false);
+                UpdateScreen(false, false);
             if (gShowIt)
                 DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
         }
@@ -270,7 +270,7 @@ void advManager::TurnTo(H1_ENUM_PARAM(MapDirection, i8) direction) {
     if (gShowIt)
         DelayTil(&gTimers[CURSOR_TURN_TIMER_SLOT]);
     if (ComboDraw(m_mapOriginX, m_mapOriginY, false))
-        UpdateScreen(0, false);
+        UpdateScreen(false, false);
 }
 
 // Reads the current hero itself and tests the watch player's high bit
@@ -304,9 +304,9 @@ mapCell* advManager::MoveHero(
     b8 stopAfterMove,
     i32* eventX,
     i32* eventY,
-    i32* outOfMobility,
+    b32* outOfMobility,
     b8 processEvent,
-    i8* adjacentMonster
+    b8* adjacentMonster
 ) {
     mapCell* cellPtr;
     i32 inc;
@@ -324,8 +324,8 @@ mapCell* advManager::MoveHero(
 
     if (gThisNetHumanPlayer[gCurPlayer])
         SetNoDialogMenus(0);
-    *adjacentMonster = 0;
-    *outOfMobility = 0;
+    *adjacentMonster = false;
+    *outOfMobility = false;
     gHeroMoving = true;
     retCell = NULL;
     champion = gGame->GetHero(gCurPlayerData->m_currentHero);
@@ -342,7 +342,7 @@ mapCell* advManager::MoveHero(
             champion->m_remainingMobility,
             champion->m_heroClass
         )) {
-        *outOfMobility = 1;
+        *outOfMobility = true;
         StopCursor(true);
         goto movementDone;
     }
@@ -373,7 +373,7 @@ mapCell* advManager::MoveHero(
         boat->y = champion->m_y;
         StopCursor(true);
         CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-        UpdateScreen(0, false);
+        UpdateScreen(false, false);
         m_cursorActive = false;
     }
     if (nextCellItem->m_triggerType & MAP_TRIGGER_EVENT) {
@@ -428,7 +428,7 @@ mapCell* advManager::MoveHero(
             stoppingEvent:
                 StopCursor(true);
                 CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-                UpdateScreen(0, false);
+                UpdateScreen(false, false);
                 champion->m_remainingMobility -= CalcTerrainCost(
                     H1_ENUM_ENCODE(TerrainType, theTerrain),
                     H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
@@ -451,7 +451,7 @@ mapCell* advManager::MoveHero(
                     && gGame->GetTown(nextCellItem->m_objectMetadata)->HasGarrison()) {
                     StopCursor(true);
                     CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-                    UpdateScreen(0, false);
+                    UpdateScreen(false, false);
                     champion->m_remainingMobility -= CalcTerrainCost(
                         H1_ENUM_ENCODE(TerrainType, theTerrain),
                         H1_ENUM_ENCODE(MapDirection, direction) & CURSOR_DIAGONAL_DIRECTION_BIT,
@@ -504,7 +504,7 @@ mapCell* advManager::MoveHero(
         champion->m_x += xInc;
         champion->m_y += yInc;
         if (ComboDraw(false))
-            UpdateScreen(0, false);
+            UpdateScreen(false, false);
         gEveryOther = 1 - gEveryOther;
     } else {
         gEnlargeScreenBlit = false;
@@ -530,7 +530,7 @@ mapCell* advManager::MoveHero(
             }
             if (ComboDraw(false)) {
                 gLimitUpdMinX = UPDATE_NONE;
-                UpdateScreen(0, false);
+                UpdateScreen(false, false);
             }
             if (gShowIt)
                 DelayTilMilli(tick + delayNum);
@@ -556,7 +556,7 @@ mapCell* advManager::MoveHero(
     }
     StopCursor(stopAfterMove);
     if (processEvent && stopAfterMove && ComboDraw(false))
-        UpdateScreen(0, false);
+        UpdateScreen(false, false);
     SetEnvironmentOrigin(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER, 0);
     inc =
         GetCell(m_mapOriginX + ADVMGR_VIEW_CENTER, m_mapOriginY + ADVMGR_VIEW_CENTER)->m_tileIndex;
@@ -616,16 +616,16 @@ adjacentDone:
 
 // Redraws through the three-argument CompleteDraw.
 VA(0x00422df4, 0x161)
-void advManager::CheckAdjacentMon(i8* adjacentMonster) {
+void advManager::CheckAdjacentMon(b8* adjacentMonster) {
     i32 monsterX;
     i32 monsterY;
     hero* curHero;
-    i8 clearMonster;
+    b8 clearMonster;
     mapCell* heroCell;
     mapCell* monCell;
 
     curHero = gGame->GetHero(gCurPlayerData->m_currentHero);
-    clearMonster = 0;
+    clearMonster = false;
     if (FindAdjacentMonster(
             curHero->m_x,
             curHero->m_y,
@@ -636,7 +636,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
         )) {
         StopCursor(true);
         CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-        UpdateScreen(0, false);
+        UpdateScreen(false, false);
         monCell = GetCell(monsterX, monsterY);
         heroCell = GetCell(curHero->m_x, curHero->m_y);
         if (gThisNetHumanPlayer[gCurPlayer])
@@ -647,7 +647,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
                 &clearMonster,
                 curHero->m_x,
                 curHero->m_y,
-                1,
+                true,
                 monsterX,
                 monsterY
             );
@@ -658,7 +658,7 @@ void advManager::CheckAdjacentMon(i8* adjacentMonster) {
             if (gThisNetHumanPlayer[gCurPlayer])
                 FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
         }
-        *adjacentMonster = 1;
+        *adjacentMonster = true;
     }
 }
 

@@ -65,7 +65,6 @@
 *	*	[01]	call-argument	TransmitRemoteData(* argument [568]	TransmitRemoteData's reliable / retry-dialog / game-position-destination flags
 *	*	[01]	call-argument	FightValueOfStack(* argument [34]	philAI::FightValueOfStack's use-hero / use-town flags
 *	*	*	call-argument	DoCombat(* argument 10	the battle's random seed
-*	*	[01]	call-argument	CombatMonsterEvent(* argument 7	advManager::CombatMonsterEvent's hero-defends flag
 *	*	[01]	call-argument	AddWindow(* argument 3	the window's draw flag (heroWindow::Open forwards it to DrawWindow)
 *	*	[01]	call-argument	ViewArmy(* argument [23]	combatManager::ViewArmy's view flags
 *	*	[01]	call-argument	SetDrawRightToLeft(* argument 1	combatManager::SetDrawRightToLeft's right-to-left draw flag
@@ -149,7 +148,6 @@ src/SOURCE/AI.cpp	*	1	trivial-function-literal	1 initializer	a bit mask's first 
 src/SOURCE/FLY.cpp	*	[01]	trivial-function-literal	[01] store gComputeExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
 src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store gLimitToExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
 src/SOURCE/DRAWING.cpp	*	[01]	trivial-function-literal	[01] store gComputeExtent	a global int flag (BOOL-like; windows.h is not in scope) set or cleared
-src/SOURCE/HERO.cpp	*	[01]	trivial-function-literal	[01] store m_heroContextLocked	advManager's hero-context flag
 src/SOURCE/ARMY.cpp	*	[01]	trivial-function-literal	[01] store m_limitCreatureCount[]	a stack marked (1) or cleared (0) for the limited redraw
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store visited	a search node's visited bit
 src/SOURCE/FINDPATH.cpp	*	[01]	trivial-function-literal	[01] store rvFlag2	a search node's beyond-mobility bit
@@ -497,13 +495,10 @@ src/SOURCE/TOWNMGR.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or 
 src/SOURCE/kbwin.cpp	*	0	trivial-function-literal	0 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/kbwin.cpp	*	1	trivial-function-literal	1 return	a 0/1 predicate or success result of a non-BOOL (signed char/int/short) function
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store bShowIt	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_heroContextLocked	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store m_routeShown	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	0	trivial-function-literal	0 store taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 equality taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store bShowIt	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store m_playerDead[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store one	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/GAME.cpp	*	1	trivial-function-literal	1 store taken[[]]	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/HISCORE.cpp	*	0	trivial-function-literal	0 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
@@ -1007,13 +1002,11 @@ src/BASE/TEXTNTRY.cpp	*	1	call-argument	strcpy(* argument [12]	a one-character s
 src/BASE/INPUTMGR.cpp	KeyboardMessageHandler	0	call-argument	AppCommand(* argument [24]	AppCommand's zero wParam/lParam
 src/BASE/INPUTMGR.cpp	KeyboardMessageHandler	1	call-argument	SetFullScreenStatus(* argument 1	1 - x: the toggled full-screen state
 src/SOURCE/CURSOR.cpp	advManager::MoveHero	0	call-argument	CalcTerrainCost(* argument 2	a non-diagonal step
-src/SOURCE/CURSOR.cpp	*	1	call-argument	PlayerMonsterInteract(* argument 7	PlayerMonsterInteract's flag argument
 src/SOURCE/CURSOR.cpp	advManager::MoveHero	4	comparison-or-bound	operator <	the first ground tiles of each terrain run (% MAP_CELL_TILES_PER_TERRAIN < 4)
 src/SOURCE/EVENTS.cpp	*	*	call-argument	ChooseEvaluateBattle(* argument [567]	ChooseEvaluateBattle's flags and the 500 estimate
 src/SOURCE/EVENTS.cpp	*	*	call-argument	QuickCombat(* argument [56]	QuickCombat's flag arguments
 src/SOURCE/EVENTS.cpp	*	*	call-argument	SendHeroTownData(* argument 1[234]	SendHeroTownData's zero arguments
 src/SOURCE/EVENTS.cpp	*	*	call-argument	RestoreCell(* argument [126]	RestoreCell's whole-map (-1, -1) position and its restore mode
-src/SOURCE/EVENTS.cpp	*	0	call-argument	PlayerMonsterInteract(* argument 7	PlayerMonsterInteract's flag argument
 src/SOURCE/EVENTS.cpp	advManager::EraseObj	0x7f	comparison-or-bound	operator <	EraseObj's object-index limit
 src/SOURCE/ARMYGRP.cpp	armyGroup::GetMorale	2	arithmetic	compound assignment to morale	the Fizbin of Misfortune's morale penalty (two points)
 src/SOURCE/GAME.cpp	NewGameHandler	[23]	array-index	array subscript m_players	the new-game dialog compacts opponent seats 1..3 by fixed seat index

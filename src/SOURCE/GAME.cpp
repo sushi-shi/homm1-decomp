@@ -648,7 +648,7 @@ i16 game::LoadGame(char* filename, b32 origData, i32) {
             strcpy(gGame->m_saveName, filename);
     }
     close(theLoadHandle);
-    gAdvManager->m_heroContextLocked = 0;
+    gAdvManager->m_heroContextLocked = false;
     gCurPlayerData = &gGame->m_players[gCurPlayer];
     gCurPlayerBit = 1 << gCurPlayer;
     gCurWatchPlayer = gCurPlayer;
@@ -1106,7 +1106,7 @@ void game::ShowCampaignInfo(i32 scenario, b32 viewOnly, i32) {
         NormalDialog(localization::Tr("campaign.restart.confirm"), NORMAL_DIALOG_TYPE_YES_NO);
         if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
             InitCampaignMap(m_campaignScenario, 0);
-            gAdvManager->m_routeShown = 0;
+            gAdvManager->m_routeShown = false;
             gBottomViewOverride = BOTTOM_VIEW_NONE;
             gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
             gAdvManager->SetInitialMapOrigin();
@@ -1226,7 +1226,7 @@ void game::NewMap(char* mapName) {
     RandomizeEvents();
     m_deadPlayerCount = 0;
     for (i = m_playerCount; i < GAME_PLAYER_COUNT; i++)
-        m_playerDead[i] = 1;
+        m_playerDead[i] = true;
     for (i = 0; i < m_playerCount; i++) {
         m_players[i].m_ultimateArtifactHintChance = 0;
         m_players[i].m_ultimateArtifactHintX = PLAYER_ULTIMATE_HINT_NONE;
@@ -4011,7 +4011,7 @@ void game::ShowComputerScreen(void) {
         gAdvManager->UpdateHeroLocators(true, 1);
         gAdvManager->UpdateTownLocators(true, 1);
         gAdvManager->UpdBottomView(true, true, true);
-        gAdvManager->UpdateScreen(0, true);
+        gAdvManager->UpdateScreen(false, true);
         gAllBlack = false;
         gThisNetHumanPlayer[gCurPlayer] = saved;
         gMouseManager->ReallyShowPointer();
@@ -4049,7 +4049,7 @@ void game::WaitForPlayer(char* text, i32 player) {
         gAdvManager->CompleteDraw(true);
         gAdvManager->UpdateHeroLocators(true, 1);
         gAdvManager->UpdateTownLocators(true, 1);
-        gAdvManager->UpdateScreen(0, true);
+        gAdvManager->UpdateScreen(false, true);
         ShowHeroesLogo();
         gAllBlack = false;
         gMouseManager->ReallyShowPointer();
@@ -4594,7 +4594,7 @@ void game::DoNewTurn(void) {
     gAdvManager->UpdBottomView(true, true, true);
     gAdvManager->SetInitialMapOrigin();
     gAdvManager->CompleteDraw(false);
-    gAdvManager->UpdateScreen(0, false);
+    gAdvManager->UpdateScreen(false, false);
     CheckEndGame(false);
     if (gCurPlayerData->m_daysLeft >= 0) {
         if (gCurPlayerData->m_daysLeft == 1) {

@@ -214,7 +214,7 @@ void CheckDoMain(i32, b32 doMain) {
                         gAdvManager->m_previousOriginY,
                         false
                     ))
-                    gAdvManager->UpdateScreen(0, false);
+                    gAdvManager->UpdateScreen(false, false);
                 else
                     gAdvManager->UpdBottomView(false, true, true);
                 gShowIt = oldShowIt;
@@ -604,8 +604,8 @@ void philAI::DoAI(i32 player) {
     i32 unusedArray[4];
     hero* movingHero;
     i32 unusedFlags;
-    i32 exhaustedMobility;
-    i8 nearMonster;
+    b32 exhaustedMobility;
+    b8 nearMonster;
 
     halfShown = false;
     if (gGameOver)
@@ -695,13 +695,13 @@ void philAI::DoAI(i32 player) {
                     movingHero->m_remainingMobility
                 );
                 if (gSearchArray->m_pathLength > 0) {
-                    gAdvManager->UpdateScreen(0, false);
+                    gAdvManager->UpdateScreen(false, false);
                     if (movingHero->HasSpell(SPELL_DIMENSION_DOOR) && DoDimensionDoor(movingHero))
                         goto retarget;
                     stepCount = 0;
                     pathIndex = gSearchArray->m_pathLength - 1;
-                    exhaustedMobility = 0;
-                    nearMonster = 0;
+                    exhaustedMobility = false;
+                    nearMonster = false;
                     while (pathIndex >= 0 && stepCount < stepQuota) {
                         nextStopAfterStep = stepCount + 1 == stepQuota || pathIndex == 0;
                         if (pathIndex > 0 && GoodAdjacent(movingHero, &adjacentDirection)) {

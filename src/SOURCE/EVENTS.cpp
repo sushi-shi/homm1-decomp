@@ -44,7 +44,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     tag_message widgetEvent;
     H1_ENUM_LOCAL(MapObjectType, i8) eventKind;
     tag_message unusedMessage;
-    i8 removeObj;
+    b8 removeObj;
     H1_ENUM_LOCAL(EventFizzleType, i32) fizzleEffect;
     H1_ENUM_LOCAL(ArtifactType, i32) artifactId;
     i32 income;
@@ -57,14 +57,14 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     H1_ENUM_LOCAL(ResourceType, i32) eventResource;
     heroWindow* thiefWindow;
     boatRecord* boat;
-    i8 guardMonster;
+    b8 guardMonster;
     mapCell* previousCell;
     town* theirTown;
     i32 numTroops;
 
     visitingHero = gGame->GetHero(gCurPlayerData->m_currentHero);
     eventKind = MAP_TRIGGER_OBJECT(cell->m_triggerType);
-    removeObj = 0;
+    removeObj = false;
     fizzleEffect = EVENT_FIZZLE_HERO_LOSS;
     gEventMusicPlaying = true;
     gMouseManager->ReallyHidePointer();
@@ -108,7 +108,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
             m_cursorActive = true;
             CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-            UpdateScreen(0, false);
+            UpdateScreen(false, false);
             break;
         case MAP_OBJECT_MINE:
             if (gGame->m_mineOwners[cell->m_objectMetadata] == gCurPlayer)
@@ -202,7 +202,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         cell,
                         x,
                         y,
-                        0,
+                        false,
                         x,
                         y
                     )
@@ -248,7 +248,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                         * CHEST_EXPERIENCE_MULTIPLIER,
                     false
                 );
-            removeObj = 1;
+            removeObj = true;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
             visitingHero->CheckLevel();
             break;
@@ -460,7 +460,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                 H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK),
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
-            removeObj = 1;
+            removeObj = true;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
             gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
@@ -550,7 +550,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
                     : cell->m_objectMetadata
             );
-            removeObj = 1;
+            removeObj = true;
             fizzleEffect = EVENT_FIZZLE_PICKUP;
             break;
         case MAP_OBJECT_WINDMILL:
@@ -598,7 +598,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             if (gWindowManager->m_dialogResult == NORMAL_DIALOG_CONFIRM) {
                 RecruitEvent(visitingHero, CREATURE_GENIE, cell);
                 if (!cell->m_objectMetadata) {
-                    removeObj = 1;
+                    removeObj = true;
                     fizzleEffect = EVENT_FIZZLE_PICKUP;
                 }
             }
@@ -665,7 +665,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             HouseEvent(visitingHero, cell);
             break;
         case MAP_OBJECT_MONSTER:
-            PlayerMonsterInteract(cell, cell, visitingHero, &removeObj, x, y, 0, x, y);
+            PlayerMonsterInteract(cell, cell, visitingHero, &removeObj, x, y, false, x, y);
             break;
         case MAP_OBJECT_OBELISK:
             if (!(gGame->m_obeliskVisitors[cell->m_objectMetadata - 1]
@@ -816,7 +816,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                     );
                 giveArtifact:
                     GiveArtifact(visitingHero, H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex));
-                    removeObj = 1;
+                    removeObj = true;
                     fizzleEffect = EVENT_FIZZLE_PICKUP;
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
@@ -837,7 +837,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             cell,
                             x,
                             y,
-                            0,
+                            false,
                             x,
                             y
                         )
@@ -905,7 +905,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
                             0,
                             NORMAL_DIALOG_NO_OR_TEXT
                         );
-                        removeObj = 1;
+                        removeObj = true;
                     }
                     break;
             }
@@ -1185,7 +1185,7 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
     } else {
         CompleteDraw(false);
     }
-    UpdateScreen(0, false);
+    UpdateScreen(false, false);
     PlayMusic(TERRAIN_MUSIC_TRACK(m_currentTerrain));
     gMouseManager->ReallyShowPointer();
     CheckEndGame(false);
@@ -1508,7 +1508,7 @@ b8 advManager::GhostEvent(
                     cell,
                     x,
                     y,
-                    0,
+                    false,
                     x,
                     y
                 )
@@ -1537,7 +1537,7 @@ b8 advManager::GhostEvent(
                     cell,
                     x,
                     y,
-                    0,
+                    false,
                     x,
                     y
                 )
@@ -1566,7 +1566,7 @@ b8 advManager::GhostEvent(
                     cell,
                     x,
                     y,
-                    0,
+                    false,
                     x,
                     y
                 )
@@ -1588,7 +1588,17 @@ b8 advManager::GhostEvent(
             }
             break;
         default:
-            if (CombatMonsterEvent(eventHero, CREATURE_GHOST, GHOST_HUGE_COUNT, cell, x, y, 0, x, y)
+            if (CombatMonsterEvent(
+                    eventHero,
+                    CREATURE_GHOST,
+                    GHOST_HUGE_COUNT,
+                    cell,
+                    x,
+                    y,
+                    false,
+                    x,
+                    y
+                )
                 == COMBAT_RESULT_ATTACKER) {
                 artifact = GiveRandomArtifact(eventHero);
                 sprintf(gText, "%s", gEventText[textId]);
@@ -1683,7 +1693,7 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
     class mapCell* cell,
     i32 x,
     i32 y,
-    i8 heroDefends,
+    b8 heroDefends,
     i32 combatX,
     i32 combatY
 ) {
@@ -1699,7 +1709,7 @@ H1_ENUM_RETURN(CombatSide, i8) advManager::CombatMonsterEvent(
         m_combatMonsterY = combatY;
         m_combatMonsterFacingLeft = eventHero->m_x < combatX;
         if (ComboDraw(false))
-            UpdateScreen(0, false);
+            UpdateScreen(false, false);
         m_combatMonsterX = COMBAT_MONSTER_CELL_CLEARED;
     }
     CLEAR_ARMY_GROUP(*gMonGroup);
@@ -1911,7 +1921,7 @@ void advManager::HeroLoses(class hero* lostHero) {
     if (!lostHero)
         return;
     CompleteDraw(m_mapOriginX, m_mapOriginY, false);
-    UpdateScreen(0, false);
+    UpdateScreen(false, false);
     lostHero->Deallocate();
     FizzleCenter(EVENT_FIZZLE_HERO_LOSS);
     UpdateRadar(true, false);
@@ -1996,7 +2006,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     b32 isFree;
     i32 oldPlayer;
     i32 eventWork[4];
-    i8 removeEvent;
+    b8 removeEvent;
     hero* opponent;
     H1_ENUM_LOCAL(CombatSide, i32) fightOutcome;
     i32 battleResult;
@@ -2010,14 +2020,14 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
     i8 priorShowIt;
     boatRecord* boat;
     i32 success;
-    i8 guardMonster;
+    b8 guardMonster;
     float theirLosses;
     float ourLosses;
     H1_ENUM_ARRAY(i32, troopCost, ResourceType, RESOURCE_COUNT);
 
     heroTown = NULL;
     eventType = MAP_TRIGGER_OBJECT(cell->m_triggerType);
-    removeEvent = 0;
+    removeEvent = false;
     handled = false;
     oldPlayer = gCurPlayer;
     ownerPlayerData = gCurPlayerData;
@@ -2104,7 +2114,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                         * CHEST_EXPERIENCE_MULTIPLIER,
                     true
                 );
-            removeEvent = 1;
+            removeEvent = true;
             break;
         case MAP_OBJECT_BUOY:
             if (!(eventHero->m_eventFlags & HERO_EVENT_BUOY)) {
@@ -2157,7 +2167,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 H1_ENUM_DECODE(ResourceType, cell->m_objectMetadata & CAMPFIRE_RESOURCE_MASK),
                 cell->m_objectMetadata >> CAMPFIRE_AMOUNT_SHIFT
             );
-            removeEvent = 1;
+            removeEvent = true;
             gGame->m_mapSounds[m_mapOriginX + ADVMGR_VIEW_CENTER]
                               [m_mapOriginY + ADVMGR_VIEW_CENTER] = MAP_SOUND_NONE;
             break;
@@ -2188,7 +2198,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     ? cell->m_objectMetadata * RESOURCE_PILE_GOLD_MULTIPLIER
                     : cell->m_objectMetadata
             );
-            removeEvent = 1;
+            removeEvent = true;
             break;
         case MAP_OBJECT_WINDMILL:
             if (cell->m_objectMetadata != WINDMILL_EMPTY) {
@@ -2257,7 +2267,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 }
             }
             if (!cell->m_objectMetadata && eventType == MAP_OBJECT_ANCIENT_LAMP)
-                removeEvent = 1;
+                removeEvent = true;
             break;
         case MAP_OBJECT_MONSTER:
             ComputerMonsterInteract(cell, eventHero, &removeEvent);
@@ -2321,7 +2331,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                 case ARTIFACT_EVENT_MODE_PICKUP:
                 giveArtifact:
                     GiveArtifact(eventHero, H1_ENUM_DECODE(ArtifactType, cell->m_objectIndex));
-                    removeEvent = 1;
+                    removeEvent = true;
                     break;
                 case ARTIFACT_EVENT_MODE_GUARDED:
                     c = ARTIFACT_EVENT_GUARD_ROGUE_COUNT;
@@ -2338,7 +2348,7 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                             ARTIFACT_EVENT_GOLD_COST;
                         goto giveArtifact;
                     } else {
-                        removeEvent = 1;
+                        removeEvent = true;
                     }
                     break;
             }
@@ -2444,16 +2454,16 @@ void advManager::PlayerMonsterInteract(
     class mapCell* cell,
     class mapCell* combatCell,
     class hero* eventHero,
-    i8* removeMonsterObject,
+    b8* removeMonsterObject,
     i32 x,
     i32 y,
-    i8 unused,
+    b8 heroDefends,
     i32 combatX,
     i32 combatY
 ) {
     H1_ENUM_LOCAL(CombatSide, i32) result;
 
-    unused = 0;
+    heroDefends = false;
     if (cell->m_objectMetadata & MONSTER_WILLING_FLAG) {
         if (gPhilAI->FightValueOfStack(&eventHero->m_army, eventHero, false)
             > (cell->m_objectMetadata & MONSTER_COUNT_MASK)
@@ -2481,7 +2491,7 @@ void advManager::PlayerMonsterInteract(
                         cell->m_objectMetadata & MONSTER_COUNT_MASK,
                         ARMY_GROUP_EMPTY_SLOT
                     );
-                    *removeMonsterObject = 1;
+                    *removeMonsterObject = true;
                     return;
                 } else {
                     EventWindow(
@@ -2505,12 +2515,12 @@ void advManager::PlayerMonsterInteract(
         combatCell,
         x,
         y,
-        unused,
+        heroDefends,
         combatX,
         combatY
     );
     if (result == COMBAT_RESULT_ATTACKER || result == COMBAT_RESULT_DRAW)
-        *removeMonsterObject = 1;
+        *removeMonsterObject = true;
 }
 
 // Computer heroes absorb a willing stack (bit 7) they outmatch by
@@ -2519,7 +2529,7 @@ VA(0x00428e5f, 0x139)
 void advManager::ComputerMonsterInteract(
     class mapCell* cell,
     class hero* eventHero,
-    i8* removeMonsterObject
+    b8* removeMonsterObject
 ) {
     i32 numToBuy;
     i32 purchaseWorth;
@@ -2549,7 +2559,7 @@ void advManager::ComputerMonsterInteract(
                 cell->m_objectMetadata & MONSTER_COUNT_MASK,
                 bestSlot
             );
-            *removeMonsterObject = 1;
+            *removeMonsterObject = true;
         }
     } else {
         monsterCount = cell->m_objectMetadata & MONSTER_COUNT_MASK;
@@ -2561,7 +2571,7 @@ void advManager::ComputerMonsterInteract(
         );
         cell->m_objectMetadata = (cell->m_objectMetadata & MONSTER_WILLING_FLAG) + monsterCount;
         if (won)
-            *removeMonsterObject = 1;
+            *removeMonsterObject = true;
     }
 }
 

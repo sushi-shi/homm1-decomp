@@ -1500,7 +1500,7 @@ void PlayerDead(i32 player) {
     i32 i;
     gRetreatWin = 0;
     currentPlayer = &gGame->m_players[player];
-    gGame->m_playerDead[player] = 1;
+    gGame->m_playerDead[player] = true;
     ++gGame->m_deadPlayerCount;
     for (i = 0; i < GAME_MINE_COUNT; ++i) {
         if (gGame->m_mineOwners[i] == player)

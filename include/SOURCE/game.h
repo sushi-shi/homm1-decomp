@@ -286,7 +286,7 @@ public:
     i8 m_playerCount;
     i8 m_unused200;
     i8 m_deadPlayerCount;
-    i8 m_playerDead[GAME_PLAYER_COUNT];
+    b8 m_playerDead[GAME_PLAYER_COUNT];
     u16 m_day;
     u16 m_week;
     u16 m_month;

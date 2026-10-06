@@ -541,7 +541,7 @@ void hero::Deallocate(void) {
             gGame->m_map[m_x][m_y].m_flags &= ~MAP_CELL_HERO_CURSOR;
         }
         if (oldOwner == gCurPlayer)
-            gAdvManager->m_heroContextLocked = 0;
+            gAdvManager->m_heroContextLocked = false;
     }
     playerPtr->m_heroCount--;
     playerPtr->m_heroLocatorPage = 0;

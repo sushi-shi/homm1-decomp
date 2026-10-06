@@ -217,7 +217,7 @@ public:
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
     i8* m_routeMap;
-    i8 m_routeShown;
+    b8 m_routeShown;
     H1_ENUM_STORAGE(TerrainType, i8) m_currentTerrain;
     char m_unused9b[4];
     class mapCell (*m_mapData)[MAP_CELL_GRID_SIZE];
@@ -263,7 +263,7 @@ public:
     i16 m_cursorMapY;
     i16 m_previousCursorMapY;
     b8 m_comboHeroDrawn;
-    i32 m_heroContextLocked;
+    b32 m_heroContextLocked;
     b32 m_townContextLocked;
     b8 m_forceCompleteDraw;
     i8 m_combatMonsterX;
@@ -296,11 +296,11 @@ public:
         b8 stopAfterMove,
         i32* eventX,
         i32* eventY,
-        i32* outOfMobility,
+        b32* outOfMobility,
         b8 processEvent,
-        i8* adjacentMonster
+        b8* adjacentMonster
     );
-    void CheckAdjacentMon(i8* adjacentMonster);
+    void CheckAdjacentMon(b8* adjacentMonster);
     i16 ValidMoveWithEvent(class hero* movingHero, H1_ENUM_PARAM(MapDirection, i16) direction);
     i16 ValidMove(H1_ENUM_PARAM(MapDirection, i16) direction);
     void MoveOrigin(i16 directionX, i16 directionY);
@@ -318,7 +318,7 @@ public:
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessDeSelect(struct tag_message* message, i32* result, class mapCell** eventCell);
     b32 ProcessSearch(i32 x, i32 y);
     H1_ENUM_RETURN(MessageDispatchResult, i32) ProcessHover(struct tag_message* message);
-    void UpdateScreen(i8 cursorUpdate, b8 forceUpdate);
+    void UpdateScreen(b8 cursorUpdate, b8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, b32 forceDraw);
     void CompleteDraw(b32 forceDraw);
     i32 GetCloudLookup(i32 x, i32 y);
@@ -442,7 +442,7 @@ public:
         class mapCell* cell,
         i32 x,
         i32 y,
-        i8 heroDefends,
+        b8 heroDefends,
         i32 combatX,
         i32 combatY
     );
@@ -455,15 +455,15 @@ public:
         class mapCell* cell,
         class mapCell* combatCell,
         class hero* eventHero,
-        i8* removeMonsterObject,
+        b8* removeMonsterObject,
         i32 x,
         i32 y,
-        i8 unused,
+        b8 heroDefends,
         i32 combatX,
         i32 combatY
     );
     void
-    ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
+    ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, b8* removeMonsterObject);
     i32 DoNetCombat(RemoteMessage* packet);
     H1_ENUM_RETURN(CombatSide, i32) DoCombat(
         i32 x,
