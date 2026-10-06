@@ -28,7 +28,7 @@
 // The character each key types, by its US-layout character: the selected
 // language's keyboard table.
 DATA(0x004a1388)
-static u8 gInputCharacterMapCp1251[0x80] = localization::Chars("locale.keyboard");
+static u8 gInputCharacterMap[0x80] = localization::Chars("locale.keyboard");
 
 static inline void ResetEventQueue(inputManager* manager) {
     manager->m_writeIndex = 0;
@@ -304,9 +304,9 @@ void inputManager::SetKeyCodeType(i16 keyCodeType) {
 }
 
 VA(0x0046f085, 0x34)
-void TranslateInputCharacterCp1251(tag_message& event) {
-    if (event.keyCode >= 0 && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMapCp1251)))
-        event.keyCode = static_cast<i8>(gInputCharacterMapCp1251[event.keyCode]);
+void TranslateInputCharacter(tag_message& event) {
+    if (event.keyCode >= 0 && event.keyCode < static_cast<i32>(sizeof(gInputCharacterMap)))
+        event.keyCode = static_cast<i8>(gInputCharacterMap[event.keyCode]);
 }
 
 VA(0x0046f0b9, 0x312)
@@ -387,7 +387,7 @@ void inputManager::AsciiConvert(tag_message& event) {
         }
     }
     if ((event.modifiers & MESSAGE_MODIFIER_CONTROL_KEYS) == 0)
-        TranslateInputCharacterCp1251(event);
+        TranslateInputCharacter(event);
 }
 
 VA(0x0046f3cb, 0x46a)

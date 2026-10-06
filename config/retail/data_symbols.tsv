@@ -433,7 +433,7 @@ rva	size	symbol	provenance
 0x0009e720	4	_gCDTrackName	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x0009edac	4	?gNbListenName@@3PAEA	Typed initializer, pointer payload and retail caller/member/index dataflow
 0x000b4aa8	240	?iPlacesVisited@@3PAY01HA	Typed initializer, pointer payload and retail caller/member/index dataflow
-0x000a1388	128	_gInputCharacterMapCp1251	Complete payload and compiled/retail use
+0x000a1388	128	_gInputCharacterMap	Complete payload and compiled/retail use
 0x000a9e44	4	_?gLastGTimerTickCount@?1??AppWndProc@@YGJPAUHWND__@@IIJ@Z@4HA	Complete payload and compiled/retail use
 0x00092c94	96	?gDwellingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls
 0x000931b4	28	?gNeutralBuildingDescriptions@@3PAPADA	Dialog/resource pointer tables; both retail images, full slot/payload controls

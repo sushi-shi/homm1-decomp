@@ -944,7 +944,7 @@ rva	name
 0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ
 0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z
 0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z
-0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z
+0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z
 0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z
 0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ
 0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z
@@ -1492,7 +1492,7 @@ rva	name
 0x000a0ff8	?gMouseOffset@@3PAHA
 0x000a1004	?gHotSpot@@3PAY01EA
 0x000a1374	?gDynamicConstruct@@3PADA
-0x000a1388	_gInputCharacterMapCp1251
+0x000a1388	_gInputCharacterMap
 0x000a1484	_gIconXAdjust
 0x000a1488	_gIconYAdjust
 0x000a148c	_gIconDataBase

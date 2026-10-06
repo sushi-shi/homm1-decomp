@@ -215,7 +215,7 @@ INPUTMGR	?SetBooleanOption@inputManager@@QAEXF@Z	100.0000	100.0000	1	a5d4c38cfaf
 INPUTMGR	?SetKeyCodeType@inputManager@@QAEXF@Z	100.0000	100.0000	1	9831c665dddf	0x1dff2	100.0000	
 INPUTMGR	?SetMouseCoords@inputManager@@QAEXFF@Z	100.0000	100.0000	1	e2ade2ac1179	0x1dfc9	100.0000	
 INPUTMGR	?SetPositiveOption@inputManager@@QAEXF@Z	100.0000	100.0000	1	ac9a857289b2	0x1df98	100.0000	
-INPUTMGR	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	100.0000	100.0000	1	d81cc68f96ea	0x1e015	100.0000	
+INPUTMGR	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	100.0000	100.0000	1	d81cc68f96ea	0x1e015	100.0000	
 Icon2b	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:e6826bd8fc54	0x239a8	100.0000	
 Icon2b	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:e6826bd8fc54	0x23a82	100.0000	
 Icon2b	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	100.0000	100.0000	1	cpp:e6826bd8fc54	0x23732	100.0000	

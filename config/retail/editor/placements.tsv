@@ -117,7 +117,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0001df98	0x31	func	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006f008	masked game body 0x6f008 (49 bytes, 0 fields masked) unique at a census start
 0x0001dfc9	0x29	func	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	src	0x0006f039	masked game body 0x6f039 (41 bytes, 0 fields masked) unique at a census start
 0x0001dff2	0x23	func	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	src	0x0006f062	masked game body 0x6f062 (35 bytes, 1 fields masked) unique at a census start
-0x0001e015	0x34	func	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	src	0x0006f085	masked game body 0x6f085 (52 bytes, 1 fields masked) unique at a census start
+0x0001e015	0x34	func	?TranslateInputCharacter@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	src	0x0006f085	masked game body 0x6f085 (52 bytes, 1 fields masked) unique at a census start
 0x0001e049	0x312	func	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	BASE/INPUTMGR	src	0x0006f0b9	masked game body 0x6f0b9 (786 bytes, 37 fields masked) unique at a census start
 0x0001e35b	0x46a	func	?MakeScanCodeTable@inputManager@@QAEXXZ	BASE/INPUTMGR	src	0x0006f3cb	masked game body 0x6f3cb (1130 bytes, 0 fields masked) unique at a census start
 0x0001e800	0x102	func	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	src	0x0006b510	masked game body 0x6b510 (258 bytes, 9 fields masked) unique at a census start
@@ -361,7 +361,7 @@ rva	size	kind	name	unit	channel	game_rva	evidence
 0x0004c6d8	0x404	data	?LogicalPalette@@3UWingPalette@@A	SOURCE/wingraph	src	0x000a01a8	29 code reference(s) from placed bodies
 0x0004d144	0x12	data	?gDefaultConstruct@@3PADA	BASE/WINDOW	src	0x000a1360	1 code reference(s) from placed bodies
 0x0004d158	0x12	data	?gDynamicConstruct@@3PADA	BASE/WINDOW	src	0x000a1374	1 code reference(s) from placed bodies
-0x0004d16c	0x80	data	_gInputCharacterMapCp1251	BASE/INPUTMGR	src	0x000a1388	1 code reference(s) from placed bodies
+0x0004d16c	0x80	data	_gInputCharacterMap	BASE/INPUTMGR	src	0x000a1388	1 code reference(s) from placed bodies
 0x0004d228	0xc	data	?gMouseOffset@@3PAHA	BASE/MOUSEMGR	src	0x000a0ff8	1 code reference(s) from placed bodies
 0x0004d234	0x96	data	?gHotSpot@@3PAY01EA	BASE/MOUSEMGR	src	0x000a1004	2 code reference(s) from placed bodies
 0x0004d5d4	0x100	data	_gDimPalette	BASE/BMAP2	src	0x000a14b8	3 code reference(s) from placed bodies

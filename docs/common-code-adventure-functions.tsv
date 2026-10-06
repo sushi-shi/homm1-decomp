@@ -105,7 +105,7 @@ src/BASE/INPUTMGR.cpp	0x6efd7	inputManager::SetBooleanOption	read	none	Flag sett
 src/BASE/INPUTMGR.cpp	0x6f008	inputManager::SetPositiveOption	read	none	Clamped setter.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f039	inputManager::SetMouseCoords	read	none	Two stores.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f062	inputManager::SetKeyCodeType	read	none	Setter plus Flush.		kept-existing-source	100	100
-src/BASE/INPUTMGR.cpp	0x6f085	TranslateInputCharacterCp1251	read	none	Table translation; already the helper.		kept-existing-source	100	100
+src/BASE/INPUTMGR.cpp	0x6f085	TranslateInputCharacter	read	none	Table translation; already the helper.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f0b9	inputManager::AsciiConvert	read	none	Shift table and CyrillicToLower; already uses the shared fold.		kept-existing-source	100	100
 src/BASE/INPUTMGR.cpp	0x6f3cb	inputManager::MakeScanCodeTable	read	encode-scan-code	Thirty-five scan-code encodings: EncodeScanCode (inputManager.h).	EncodeScanCode	retained-exact	100	100
 src/BASE/MAKEFILEID.cpp	0x73610	MAKEFILEID	read	none	Name hash; single site.		kept-existing-source	100	100

@@ -11395,8 +11395,8 @@ site_rva	target_rva	symbol
 0x0006eee3	0x0003c7b0	_PollSound
 0x0006eee8	0x000a7b90	?gInputManager@@3PAVinputManager@@A
 0x0006efb0	0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z
-0x0006f0ac	0x000a1388	_gInputCharacterMapCp1251
-0x0006f333	0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z
+0x0006f0ac	0x000a1388	_gInputCharacterMap
+0x0006f333	0x0006f085	?TranslateInputCharacter@@YAXAAUtag_message@@@Z
 0x0006f8e7	0x00092194	?gEnlargeScreenBlit@@3HA
 0x0006fa1a	0x000a74a8	?gpWindowManager@@3PAVheroWindowManager@@A
 0x0006fa23	0x00072800	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z

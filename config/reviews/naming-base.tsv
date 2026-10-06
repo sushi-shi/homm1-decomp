@@ -44,3 +44,5 @@ local	fileRequester::Update	oldHumans/newPlayers/limit/newPos/nameIdIdx/colorVal
 local	fileRequester::DoKnob	offset/n/pos	grabOffset/grabPointerY/topRow	pointer-to-knob offset at the grab, the grab position, the dragged top row
 local	fileRequester::Open	dotPtr/enable	extensionStart/enableOk	the '.' cut from the save name; SetOK's argument
 local	fileRequester::fileRequester	moveValue/dotPtr	shiftRow/extensionStart	the insertion sort's shifting row; the extension split point
+static	BASE/INPUTMGR	gInputCharacterMapCp1251	gInputCharacterMap	the table is the selected language's keyboard catalog (localization::Chars("locale.keyboard")), not a CP1251 constant
+function	BASE/INPUTMGR	TranslateInputCharacterCp1251	TranslateInputCharacter	translates through the locale keyboard table
