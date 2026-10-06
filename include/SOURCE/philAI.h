@@ -272,7 +272,14 @@ enum AIHourGlassConstant {
 
 enum AIEventValueConstant {
     AI_CHANCE_CERTAIN = 100,
-    AI_DEBUG_TRACE_COLUMN = 15
+    AI_DEBUG_TRACE_COLUMN = 15,
+    AI_QUICK_COMBAT_TOWN_EXPERIENCE = 500,
+    // SlightlyHarderAI: worthless or visited objects and battles it is not
+    // sure to win are scored below anything else.
+    AI_HARDER_WORTHLESS_EVENT_VALUE = -1000,
+    AI_HARDER_LOSING_BATTLE_VALUE = -32000,
+    AI_TARGET_SEARCH_MARGIN = 0x2a,
+    AI_HARDER_TARGET_SEARCH_MARGIN = 0x7e
 };
 
 enum AIEventEvaluation {
