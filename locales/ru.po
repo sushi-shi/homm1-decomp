@@ -3892,6 +3892,10 @@ msgctxt "editor.startup.initialize.failed"
 msgid "Cannot initialize the system"
 msgstr "Не могу инициировать систему"
 
+msgctxt "editor.startup.cd.required"
+msgid "You must have the Heroes CD in the CD drive to use\nthe Heroes of Might and Magic editor.  \n\nPlease insert the CD and try again."
+msgstr "У вас должен быть компакт-диск героев в CD приводе, чтобы\nиспользовать редактор Героев Меча и Магии.  \n\nПожалуйста, вставьте компакт-диск и попробуйте еще раз."
+
 msgctxt "editor.instance.event_name"
 msgid "Heroes Editor"
 msgstr "Редактор Героев"
