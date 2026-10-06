@@ -24,6 +24,10 @@
           (builtins.filter (pkgs.lib.hasSuffix ".json") (builtins.attrNames (builtins.readDir ./locales)));
       };
       tools = [ pkgs.python3 wine pkgs.llvm pkgs.p7zip pkgs.unshield ];
+      portTools = [
+        pkgs.cmake pkgs.ninja pkgs.pkg-config pkgs.python3 pkgs.clang pkgs.gdb
+        pkgs.sdl3 pkgs.ffmpeg-headless pkgs.xvfb-run pkgs.imagemagick
+      ];
       environment = {
         HOMM1_TOOLCHAIN = "${toolchain}/toolchains";
         HOMM1_LOCALE_ARCHIVE = "${locales}/lib/locale/locale-archive";
@@ -45,6 +49,29 @@
           exec python3 "$root/play.py" --target ${target} "$@"
         '';
       };
+      # The native build (docs/port/README.md). Its tests run without game
+      # data; the sanitized check builds with AddressSanitizer and UBSan.
+      native = pkgs.stdenv.mkDerivation {
+        pname = "homm1-native";
+        version = "0";
+        src = self;
+        nativeBuildInputs = [ pkgs.cmake pkgs.ninja pkgs.pkg-config pkgs.python3 ];
+        buildInputs = [ pkgs.sdl3 pkgs.ffmpeg-headless ];
+        cmakeFlags = [ "-DCMAKE_BUILD_TYPE=RelWithDebInfo" ];
+        doCheck = true;
+        installPhase = ''
+          install -Dm755 heroes $out/bin/homm1
+        '';
+        meta.mainProgram = "homm1";
+      };
+      sanitized = native.overrideAttrs (old: {
+        pname = "homm1-native-sanitized";
+        cmakeFlags = old.cmakeFlags ++ [ "-DHOMM1_SANITIZERS=ON" ];
+        dontStrip = true;
+        # The game ends with exit() from deep inside its loop, so leak
+        # reports would be noise; the build sandbox also blocks LeakSanitizer.
+        preCheck = "export ASAN_OPTIONS=detect_leaks=0";
+      });
       app = name: target: description: {
         type = "app";
         program = "${runner name target}/bin/${name}";
@@ -57,9 +84,27 @@
       apps.${system} = {
         inherit play editor;
         default = play;
+        native = {
+          type = "app";
+          program = "${native}/bin/homm1";
+          meta.description = "The native game; pass --data DIR or set HOMM1_DATA";
+        };
       };
-      devShells.${system}.default = pkgs.mkShell ({
-        packages = tools;
-      } // environment);
+      packages.${system} = {
+        inherit native sanitized;
+      };
+      checks.${system} = {
+        inherit native sanitized;
+      };
+      devShells.${system} = {
+        default = pkgs.mkShell ({
+          packages = tools;
+        } // environment);
+        # The native port: CMake, a current compiler, SDL3 and FFmpeg, plus
+        # Xvfb and ImageMagick for headless runs and screenshots.
+        port = pkgs.mkShell {
+          packages = portTools;
+        };
+      };
     };
 }
