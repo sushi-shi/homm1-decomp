@@ -225,7 +225,7 @@ void fileRequester::Close(void) {
 // The editor's requester only loads maps.
 VA(0x00454459, 0x3cd)
 VA_AT(editor, 0x00416f00, 0x266)
-i16 fileRequester::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) fileRequester::Open(i16 priority) {
     const i16 scrollKnobId = FILE_REQUESTER_SCROLL_KNOB;
     tag_message message;
     i32 i;

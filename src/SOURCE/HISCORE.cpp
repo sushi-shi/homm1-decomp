@@ -33,7 +33,7 @@ VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
 VA(0x0043bdf3, 0x144)
-i16 highScoreManager::Open(i16 id) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) highScoreManager::Open(i16 id) {
     gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);

@@ -149,7 +149,7 @@ public:
     i32 m_field_0x34f;
 
     inputManager(void);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message&) OVERRIDE;
     void Flush(void);

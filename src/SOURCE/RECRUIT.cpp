@@ -74,7 +74,7 @@ void SetupRecruitWin(
 }
 
 VA(0x00450ef9, 0x25b)
-i16 recruitUnit::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) recruitUnit::Open(i16 priority) {
     i32 resourceMaximum;
     i32 goldMaximum;
 

@@ -219,7 +219,7 @@ inputManager::inputManager(void) {
 }
 
 VA(0x0046ed9e, 0xa4)
-i16 inputManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) inputManager::Open(i16 priority) {
     i16 positiveOption = 1;
     memset(m_eventRing, 0, sizeof(m_eventRing));
     ResetEventQueue(this);
@@ -262,8 +262,8 @@ tag_message inputManager::GetEvent(void) {
     if (gpInputManager->m_active != 1 || m_readIndex == m_writeIndex) {
         event.type = MESSAGE_NONE;
         event.id = 0;
-        event.command = event.id;
-        event.modifiers = event.command;
+        event.command = H1_ENUM_DECODE(BaseWidgetCommand, event.id);
+        event.modifiers = H1_ENUM_DECODE(MessageModifier, H1_ENUM_ENCODE(BaseWidgetCommand, event.command));
     } else {
         event = m_eventRing[m_readIndex];
         m_readIndex++;

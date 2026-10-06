@@ -42,7 +42,7 @@ public:
     i32 m_lastFileId;
 
     resourceManager();
-    virtual i16 Open(i16 priority);
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority);
     virtual void Close();
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message&);
     void GetBackdrop(char* name, bitmap* backdrop);

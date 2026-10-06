@@ -61,6 +61,7 @@ _GATES = {"data-identity": "homm1.verify.data_identity", "enum-reuse": "homm1.ve
           "compiler-artifacts": "homm1.verify.compiler_artifacts",
           "constants": "homm1.verify.constants",
           "enum-domains": "homm1.verify.enum_domains",
+          "strict-view": "homm1.verify.strict_view",
           "label-style": "homm1.verify.label_style",
           "line-directives": "homm1.verify.line_directives",
           "include-order": "homm1.verify.include_order",

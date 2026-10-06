@@ -29,9 +29,9 @@ iconWidget::iconWidget(
     i16 height,
     i16 iconId,
     i8 frame,
-    i8 orientation,
+    H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
     i16 id,
-    i16 kind,
+    H1_ENUM_PARAM(IconWidgetKind, i16) kind,
     i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
@@ -50,9 +50,9 @@ iconWidget::iconWidget(
     i16 height,
     char* name,
     i8 frame,
-    i8 orientation,
+    H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
     i16 id,
-    i16 kind,
+    H1_ENUM_PARAM(IconWidgetKind, i16) kind,
     i16 fillColor
 )
     : widget(x, y, width, height, id, kind) {
@@ -71,7 +71,9 @@ void iconWidget::Read(void) {
     m_icon = gpResourceManager->GetIcon(name);
     gpResourceManager->RestorePosition();
     m_frame = gpResourceManager->ReadWord();
-    m_orientation = gpResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK;
+    m_orientation = H1_ENUM_DECODE(
+        IconDrawOrientation, gpResourceManager->ReadWord() & ICON_WIDGET_ORIENTATION_MASK
+    );
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     m_fillColor = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;

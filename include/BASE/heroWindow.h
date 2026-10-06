@@ -19,10 +19,10 @@ H1_ENUM_FLAGS_BEGIN(WindowFlag, i16)
     WINDOW_UPDATE_SUPPRESS_MASK = 0x7fff
 H1_ENUM_FLAGS_END(WindowFlag)
 
-H1_ENUM_BEGIN(WindowState)
+H1_ENUM_FLAGS_BEGIN(WindowState, i16)
     WINDOW_STATE_CLOSED = 0,
     WINDOW_STATE_OPEN = 1
-H1_ENUM_END(WindowState)
+H1_ENUM_FLAGS_END(WindowState)
 
 // heroWindow::Open status.
 H1_ENUM_BEGIN(WindowOpenStatus)
@@ -61,7 +61,7 @@ public:
     heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags);
     heroWindow(i16 x, i16 y, char* resourceName);
     // --- methods ---
-    i16 Open(i16 zOrder, i8 flags);
+    H1_ENUM_RETURN(WindowOpenStatus, i16) Open(i16 zOrder, i8 flags);
     void RemoveAndDeleteWidget(i32 id);
     void Close(void);
     void AddWidget(class widget* newWidget, i16 zOrder);

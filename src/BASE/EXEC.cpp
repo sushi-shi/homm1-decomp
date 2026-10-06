@@ -50,7 +50,7 @@ executive::executive(void) {
 
 // Retail opens sound unconditionally and returns AX.
 VA(0x00472a25, 0xbd)
-i16 executive::InitSystem(void) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) executive::InitSystem(void) {
     if (gpResourceManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gResourceManagerInitError);
     if (gpInputManager->Open(BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
@@ -124,7 +124,7 @@ i16 executive::DoDialog(baseManager* manager) {
 }
 
 VA(0x00472d21, 0x149)
-i16 executive::AddManager(baseManager* manager, i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) executive::AddManager(baseManager* manager, i16 priority) {
     if (manager == NULL)
         return BASE_MANAGER_ERROR;
     if (priority == BASE_MANAGER_PRIORITY_UNASSIGNED) {
@@ -224,7 +224,7 @@ void executive::MainLoop(void) {
                         dispatch = 0;
                         break;
                     case MESSAGE_DISPATCH_FORWARD:
-                        if ((message.type & MESSAGE_EXECUTIVE) != 0) {
+                        if ((message.type & MESSAGE_EXECUTIVE) != MESSAGE_NONE) {
                             switch (message.executiveCommand) {
                                 case EXECUTIVE_COMMAND_TERMINATE_LOOP:
                                     done++;

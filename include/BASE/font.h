@@ -34,7 +34,7 @@ public:
     virtual ~font();
     // --- methods ---
     void DrawString(char* text, i16 x, i16 y, i16 color);
-    void DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align);
+    void DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, H1_ENUM_PARAM(FontAlignment, i16) align);
     i32 LineLength(char* str, i16 maxW);
     i32 LineWidth(char* text);
 };

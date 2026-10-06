@@ -42,7 +42,7 @@ public:
     swapManager(void);
     swapManager(class hero* leftHero, class hero* rightHero);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16 id) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---

@@ -357,7 +357,7 @@ extern i32 giMinExtentY;
 extern i32 gMonoIconSkip;
 extern u8 gMonoColorMap[];
 extern class inputManager* gpInputManager;
-extern i32 gCurExe;
+extern H1_ENUM_STORAGE(ConfigExecutable, i32) gCurExe;
 // giDebugLevel, set from the command line: NONE is release play; any level
 // shows the computer's routes and cell details (ADVMGR). From the second
 // level a saved game loads with another player count (REQUEST), every
@@ -429,7 +429,7 @@ extern i16 gCurLoadedSpellFileId;
 // ProcessCombatMsg records the hero casting from the combat screen.
 extern H1_ENUM_STORAGE(CombatSide, i32) giCurGeneral;
 // Area spells mark each stack once per cast: [side][army slot].
-extern i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+extern H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
 extern char* gDifficultyNames[];
 extern i32 gMapDifficulty;
 extern i32 gMapSize;

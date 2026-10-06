@@ -12,8 +12,10 @@
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
+#include <SOURCE/playerData.h>
 #include <SOURCE/resourceTypes.h>
 #include <SOURCE/spellTypes.h>
+#include <SOURCE/terrainTypes.h>
 
 // forward declarations:
 class armyGroup;
@@ -287,7 +289,7 @@ public:
     advManager(void);
     ~advManager();
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16 id) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 id) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---

@@ -32,11 +32,11 @@ public:
     // --- constructors ---
     executive(void);
     // --- methods ---
-    i16 InitSystem(void);
+    H1_ENUM_RETURN(BaseManagerStatus, i16) InitSystem(void);
     void ShutDownSystem(void);
     i16 DoDialog(class baseManager* manager);
     void PrintManagerList(void);
-    i16 AddManager(class baseManager* manager, i16 priority);
+    H1_ENUM_RETURN(BaseManagerStatus, i16) AddManager(class baseManager* manager, i16 priority);
     void RemoveManager(class baseManager* manager);
     void CallManager(class baseManager* manager);
     void MainLoop(void);

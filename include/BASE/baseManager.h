@@ -7,14 +7,17 @@
 struct tag_message;
 
 // executive::AddManager appends a manager whose priority is unassigned after
-// the list tail.
-H1_ENUM_BEGIN(BaseManagerPriority)
+// the list tail. A priority is a rank (the tail's plus one); this is its
+// sentinel, not a value domain.
+H1_ENUM_CONST_BEGIN(BaseManagerPriority)
     BASE_MANAGER_PRIORITY_UNASSIGNED = -1
-H1_ENUM_END(BaseManagerPriority)
+H1_ENUM_CONST_END(BaseManagerPriority)
 
 // Manager Open/AddManager status.
 H1_ENUM_BEGIN(BaseManagerStatus)
     BASE_MANAGER_SUCCESS = 0,
+    // heroWindowManager::Open when the screen bitmap is missing.
+    WINDOW_MANAGER_OPEN_FAILURE = 1,
     BASE_MANAGER_ERROR = 3
 H1_ENUM_END(BaseManagerStatus)
 
@@ -59,7 +62,7 @@ public:
         m_active = 1;
     }
     i16 GetInfo(H1_ENUM_PARAM(BaseManagerInfoField, i16) field);
-    virtual i16 Open(i16 priority) = 0;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) = 0;
     virtual void Close() = 0;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(tag_message& message) = 0;
 };

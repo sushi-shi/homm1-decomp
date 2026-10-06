@@ -19,12 +19,12 @@ resource::resource(void) {
 
 VA(0x0047768c, 0x43)
 resource::resource(
-    i16 category,
+    H1_ENUM_PARAM(ResourceCategory, i16) category,
     i16 id,
-    H1_ENUM_PARAM(ResourceReferenceCount, i16) refCount,
+    i16 refCount,
     resource* next
 ) {
-    m_resourceType = H1_ENUM_CAST(ResourceCategory, i16, category);
+    m_resourceType = category;
     m_id = id;
     m_refCount = refCount;
     m_next = next;

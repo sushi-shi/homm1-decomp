@@ -20,7 +20,7 @@ public:
 
     // --- constructors ---
     bitmap(void);
-    bitmap(i16 type, i16 width, i16 height);
+    bitmap(H1_ENUM_PARAM(BitmapType, i16) type, i16 width, i16 height);
     bitmap(i16 id);
     virtual ~bitmap();
     // --- methods ---

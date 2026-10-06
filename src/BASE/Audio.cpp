@@ -212,7 +212,7 @@ DATA(0x004ce10c)
 static int gMusicSource;
 
 VA(0x004692b6, 0x47)
-bool ShouldRepeatMusic(int track) {
+bool ShouldRepeatMusic(H1_ENUM_PARAM(MusicTrack, int) track) {
     if (track < MUSIC_TRACK_TERRAIN_END
         || (track >= MUSIC_TRACK_BATTLE_FIRST && track <= MUSIC_TRACK_BATTLE_LAST)
         || track == MUSIC_TRACK_BATTLE_4 || track == MUSIC_TRACK_CONGRATULATIONS

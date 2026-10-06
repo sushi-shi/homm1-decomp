@@ -3349,7 +3349,7 @@ i32 gColorMice = 0;
 DATA(0x004a98f0)
 i32 gSpecialMouseMasks = 0;
 DATA(0x004a98f4)
-i32 gCurExe = 0;
+H1_ENUM_STORAGE(ConfigExecutable, i32) gCurExe = CONFIG_EXECUTABLE_GAME;
 DATA(0x00492198)
 i32 gMenuCommand = APP_MENU_NONE;
 DATA(0x004a98f8)
@@ -4457,7 +4457,7 @@ class font* smallFont;
 DATA(0x004a7bb0)
 i32 giBottomViewOverrideEndTime;
 DATA(0x004a98c0)
-i8 gArmyEffected[COMBAT_SIDE_COUNT][ARMY_GROUP_SLOT_COUNT];
+H1_ENUM_ARRAY_ROWS(i8, gArmyEffected, CombatSide, COMBAT_SIDE_COUNT, ARMY_GROUP_SLOT_COUNT);
 DATA(0x004a74c4)
 i32 giBottomViewResource;
 DATA(0x004a9408)

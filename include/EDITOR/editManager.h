@@ -78,7 +78,7 @@ public:
 
     editManager(void);
     void SelectTool(i16 tool);
-    virtual i16 Open(i16 priority) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(tag_message& message) OVERRIDE;
 };

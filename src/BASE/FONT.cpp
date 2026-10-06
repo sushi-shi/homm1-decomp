@@ -71,7 +71,9 @@ void font::DrawString(char* text, i16 x, i16 y, i16 color) {
 }
 
 VA(0x0047203d, 0x34f)
-void font::DrawBoundedString(char* str, i16 x, i16 y, i16 width, i16 height, i16 color, i16 align) {
+void font::DrawBoundedString(
+    char* str, i16 x, i16 y, i16 width, i16 height, i16 color, H1_ENUM_PARAM(FontAlignment, i16) align
+) {
     i16 textLen;
     i32 baseGlyph;
     i16* theWidths;

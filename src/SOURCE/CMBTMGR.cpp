@@ -168,7 +168,7 @@ void combatManager::SetupCombat(
 // Open: screen buffer, combat window, icons, armies and field, then the
 // fade-in and a random combat theme.
 VA(0x00419118, 0x401)
-i16 combatManager::Open(i16 priority) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) combatManager::Open(i16 priority) {
     i32 song;
     class sample* sample;
     i32 musicList[4];

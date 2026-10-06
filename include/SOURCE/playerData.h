@@ -81,7 +81,7 @@ class playerAIData {
 public:
     playerAttentionWeights m_attentionWeights;
     char m_unused18[0x1c];
-    i32 m_income[RESOURCE_COUNT];
+    H1_ENUM_ARRAY(i32, m_income, ResourceType, RESOURCE_COUNT);
     i32 m_obeliskValue;
     // GetTurnAIVars stores MeanRVOfUnexploredTerritory here (+0xf5).
     i32 m_unexploredValue;
@@ -122,7 +122,7 @@ public:
     i8 m_currentTown;
     i8 m_townLocatorPage;
     i8 m_townIds[GAME_TOWN_COUNT];
-    i32 m_resources[RESOURCE_COUNT];
+    H1_ENUM_ARRAY(i32, m_resources, ResourceType, RESOURCE_COUNT);
     char m_unknown99[2];
     u8 m_obelisksVisited[PLAYER_PUZZLE_PIECE_STORAGE_SIZE];
     playerAIData m_aiData;

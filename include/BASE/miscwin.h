@@ -2,6 +2,7 @@
 #define HOMM1_BASE_MISCWIN_H
 
 #include <BASE/display.h>
+#include <BASE/icon.h>
 #include <Domains.h>
 
 // miscwin.cpp: Windows-side screen, palette and clipped-icon helpers.
@@ -12,7 +13,7 @@ void ClippedMonoIconToBitmap(
     i32 y,
     i32 frame,
     i32 color,
-    i32 mode,
+    H1_ENUM_PARAM(IconDrawOffsetMode, i32) mode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
@@ -24,7 +25,7 @@ void ClipIconToBitmap(
     i32 x,
     i32 y,
     i32 frame,
-    i32 mode,
+    H1_ENUM_PARAM(IconDrawOffsetMode, i32) mode,
     i32 clipX,
     i32 clipY,
     i32 clipW,

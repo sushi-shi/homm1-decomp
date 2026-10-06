@@ -49,7 +49,7 @@ void swapManager::Reset(void) {
 }
 
 VA(0x0045cfab, 0x2b4)
-i16 swapManager::Open(i16 id) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) swapManager::Open(i16 id) {
     tag_message message;
     i32 i;
 

@@ -21,6 +21,24 @@ H1_ENUM_CONST_BEGIN(FizzleDelayConstant)
     FIZZLE_USE_DEFAULT_DELAY = -1
 H1_ENUM_CONST_END(FizzleDelayConstant)
 
+H1_ENUM_BEGIN(WindowFadeMode)
+    WINDOW_FADE_IN = 0,
+    WINDOW_FADE_OUT = 1
+H1_ENUM_END(WindowFadeMode)
+
+// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen: the short fade
+// of dialogs and screen changes and the long fade of the window manager's
+// start-up.
+H1_ENUM_CONST_BEGIN(WindowFadeSteps)
+    WINDOW_FADE_STEPS_SHORT = 8,
+    WINDOW_FADE_STEPS_NORMAL = 0x80
+H1_ENUM_CONST_END(WindowFadeSteps)
+
+H1_ENUM_CONST_BEGIN(WindowManagerConstant)
+    WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
+    WINDOW_MANAGER_NO_HOVER_WIDGET = -1
+H1_ENUM_CONST_END(WindowManagerConstant)
+
 #pragma pack(push, 1)
 class heroWindowManager : public baseManager {
 public:
@@ -41,13 +59,18 @@ public:
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16 managerOrder) OVERRIDE;
+    virtual H1_ENUM_RETURN(BaseManagerStatus, i16) Open(i16 managerOrder) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual H1_ENUM_RETURN(MessageDispatchResult, i16) Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 UpdateHoverWindow(i16 x, i16 y);
     H1_ENUM_RETURN(MessageDispatchResult, i16) ConvertToHover(struct tag_message& message);
-    H1_ENUM_RETURN(MessageDispatchResult, i16) BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
+    H1_ENUM_RETURN(MessageDispatchResult, i16) BroadcastMessage(
+        H1_ENUM_PARAM(MessageType, i16) type,
+        H1_ENUM_PARAM(BaseWidgetCommand, i16) command,
+        i16 widgetId,
+        i16 value
+    );
     void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
     void RemoveWindow(class heroWindow* window);
     i16 DoDialog(class heroWindow* window, H1_ENUM_RETURN(MessageDispatchResult, i16) (*handler)(struct tag_message&), i32 fade);
@@ -55,7 +78,9 @@ public:
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);
     void Cleanup(void);
-    void FadeScreen(i16 direction, i16 steps, class palette* currentPalette);
+    void FadeScreen(
+        H1_ENUM_PARAM(WindowFadeMode, i16) direction, i16 steps, class palette* currentPalette
+    );
     void ScreenShot(void);
     void SaveFizzleSource(i16 x, i16 y, i16 width, i16 height);
     void FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay);
@@ -75,26 +100,6 @@ public:
 extern i8 gCyclePal[PALETTE_CYCLE_BYTES];
 void CycleColors(void);
 extern i8 gWindowFadeSavedUpdate;
-
-H1_ENUM_BEGIN(WindowFadeMode)
-    WINDOW_FADE_IN = 0,
-    WINDOW_FADE_OUT = 1
-H1_ENUM_END(WindowFadeMode)
-
-// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen: the short fade
-// of dialogs and screen changes and the long fade of the window manager's
-// start-up.
-H1_ENUM_BEGIN(WindowFadeSteps)
-    WINDOW_FADE_STEPS_SHORT = 8,
-    WINDOW_FADE_STEPS_NORMAL = 0x80
-H1_ENUM_END(WindowFadeSteps)
-
-H1_ENUM_CONST_BEGIN(WindowManagerConstant)
-    WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
-    WINDOW_MANAGER_NO_HOVER_WIDGET = -1,
-    // heroWindowManager::Open when the screen bitmap is missing.
-    WINDOW_MANAGER_OPEN_FAILURE = 1
-H1_ENUM_CONST_END(WindowManagerConstant)
 
 class palette;
 

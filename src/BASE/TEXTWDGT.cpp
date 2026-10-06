@@ -54,7 +54,9 @@ void textWidget::Read(void) {
     m_font = gpResourceManager->GetFont(name);
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
+    m_alignment = H1_ENUM_DECODE(
+        FontAlignment, static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK)
+    );
     m_id = gpResourceManager->ReadWord();
     m_kind = gpResourceManager->ReadWord();
     m_kind = WIDGET_KIND_TEXT;

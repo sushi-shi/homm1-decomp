@@ -131,7 +131,7 @@ VA(0x004012af, 0x14)
 advManager::~advManager() {}
 
 VA(0x004012c3, 0xd5d)
-i16 advManager::Open(i16 id) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) advManager::Open(i16 id) {
     i32 savedShowIt;
     i32 firstTime;
     i32 oldPlayerVal;
@@ -4879,14 +4879,14 @@ i16 advManager::ControlPanel(void) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAG_DIM_REQUEST;
         gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
         gPanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAG_DIM_REQUEST;
         gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
@@ -5202,7 +5202,7 @@ void advManager::AdvPanel(void) {
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_SEARCH;
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_COMMAND_DIMMED;
+            message.value = WIDGET_FLAG_DIM_REQUEST;
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_CAST_SPELL;
             adventurePanel->BroadcastMessage(message);

@@ -1,9 +1,11 @@
 #ifndef HOMM1_BASE_ICONM2B_H
 #define HOMM1_BASE_ICONM2B_H
 
-class icon;
+#include <BASE/icon.h>
+#include <Domains.h>
+
 class bitmap;
-void MonoIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 color, i32 offsetMode);
+void MonoIconToBitmap(icon* ic, bitmap* bmp, i32 x, i32 y, i32 frame, i32 color, H1_ENUM_PARAM(IconDrawOffsetMode, i32) offsetMode);
 void FlipMonoIconToBitmap(
     icon* ic,
     bitmap* bmp,
@@ -11,7 +13,7 @@ void FlipMonoIconToBitmap(
     i32 y,
     i32 frame,
     i32 color,
-    i32 offsetMode
+    H1_ENUM_PARAM(IconDrawOffsetMode, i32) offsetMode
 );
 
 #endif // HOMM1_BASE_ICONM2B_H

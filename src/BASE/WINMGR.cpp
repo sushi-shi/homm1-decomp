@@ -109,7 +109,7 @@ heroWindowManager::heroWindowManager(void) : baseManager() {
 }
 
 VA(0x0046a1eb, 0x10a)
-i16 heroWindowManager::Open(i16 managerOrder) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) heroWindowManager::Open(i16 managerOrder) {
     FadeOut(WINDOW_FADE_STEPS_NORMAL);
     m_screen = new bitmap();
     if (m_screen == NULL)
@@ -190,7 +190,12 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindowManager::Main(tag_message& 
 }
 
 VA(0x0046a4b4, 0x3d)
-H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindowManager::BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value) {
+H1_ENUM_RETURN(MessageDispatchResult, i16) heroWindowManager::BroadcastMessage(
+    H1_ENUM_PARAM(MessageType, i16) type,
+    H1_ENUM_PARAM(BaseWidgetCommand, i16) command,
+    i16 widgetId,
+    i16 value
+) {
     tag_message message;
     message.type = type;
     message.command = command;
@@ -377,7 +382,7 @@ void heroWindowManager::RedrawScreen(void) {
 
 VA(0x0046aaa3, 0xd3)
 #line 550 WINMGR_CPP_PATH
-void heroWindowManager::FadeScreen(i16 direction, i16 steps, palette* currentPalette) {
+void heroWindowManager::FadeScreen(H1_ENUM_PARAM(WindowFadeMode, i16) direction, i16 steps, palette* currentPalette) {
 #line 551
     H1_ASSERT(direction == WINDOW_FADE_IN || direction == WINDOW_FADE_OUT);
     if (currentPalette != NULL)

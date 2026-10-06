@@ -72,7 +72,9 @@ void textEntryWidget::Read(H1_ENUM_PARAM(TextEntryReadMode, i32) type) {
     m_font = gpResourceManager->GetFont(name);
     gpResourceManager->RestorePosition();
     m_color = gpResourceManager->ReadWord() & COLOR_INDEX_MASK;
-    m_alignment = static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK);
+    m_alignment = H1_ENUM_DECODE(
+        FontAlignment, static_cast<char>(gpResourceManager->ReadWord() & COLOR_INDEX_MASK)
+    );
     gpResourceManager->Read13(name);
     gpResourceManager->SavePosition();
     m_icon = gpResourceManager->GetIcon(name);

@@ -47,6 +47,11 @@ def _enum_domains():
     return fatal
 
 
+def _strict_view():
+    from homm1.verify import strict_view
+    return strict_view.gate_findings()
+
+
 def _label_style():
     from homm1.verify import label_style
     return label_style.violations()
@@ -174,6 +179,7 @@ TIERS: dict[str, list[tuple[str, object]]] = {
         ("undefined-closure", _undefined_closure),
         ("data-identity", _data_identity),
         ("review-claims", _review_claims),
+        ("strict-view", _strict_view),
     ],
     "full": [
         ("assert-relocs", _assert_relocs),

@@ -14,7 +14,8 @@
 #include <SOURCE/kbwin.h>
 
 DATA(0x004d7f60)
-i32 gLeftRightSave = 0;
+// The button modifiers of the last press, kept in a 32-bit global.
+i32 gLeftRightSave = MESSAGE_MODIFIER_NONE;
 
 VA(0x00476c80, 0x59)
 button::button(void) : widget(0, 0, 0, 0, 0, WIDGET_KIND_NONE) {
@@ -177,7 +178,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) button::Select(tag_message& message) 
     else
         message.command = WIDGET_NOTIFY_SELECT;
     glTimers[GLOBAL_BUTTON_REPEAT_TIMER_SLOT] = KBTickCount() + BUTTON_REPEAT_DELAY_TICKS;
-    gLeftRightSave = message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK;
+    gLeftRightSave = H1_ENUM_ENCODE(MessageModifier, message.modifiers & MESSAGE_MODIFIER_BUTTON_MASK);
     return MESSAGE_DISPATCH_FORWARD;
 }
 
@@ -190,7 +191,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) button::Deselect(tag_message& message
     gpWindowManager
         ->UpdateScreenRegion(m_owner->m_posX + m_x, m_owner->m_posY + m_y, m_width, m_height);
     SET_WIDGET_MESSAGE(message, WIDGET_NOTIFY_DESELECT, m_id);
-    message.modifiers = gLeftRightSave;
+    message.modifiers = H1_ENUM_DECODE(MessageModifier, gLeftRightSave);
     gLeftRightSave = MESSAGE_MODIFIER_NONE;
     return MESSAGE_DISPATCH_FORWARD;
 }

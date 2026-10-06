@@ -5,6 +5,7 @@
 #include <H1/Macros.h>
 #include <SOURCE/combatTypes.h>
 #include <SOURCE/creatureTypes.h>
+#include <SOURCE/PATH.h>
 #include <SOURCE/spellTypes.h>
 
 // army::m_animationSequence: the pose army::DrawToBuffer draws. 0 stands

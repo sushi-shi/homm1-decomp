@@ -25,7 +25,7 @@ bitmap::bitmap(void) : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_
 }
 
 VA(0x004731cc, 0x64)
-bitmap::bitmap(i16 type, i16 width, i16 height)
+bitmap::bitmap(H1_ENUM_PARAM(BitmapType, i16) type, i16 width, i16 height)
     : resource(RESOURCE_CATEGORY_BITMAP, 0, RESOURCE_REFERENCE_UNMANAGED, NULL) {
     m_bitmapType = type;
     m_width = width;
@@ -37,7 +37,7 @@ bitmap::bitmap(i16 type, i16 width, i16 height)
 VA(0x00473230, 0x106)
 bitmap::bitmap(i16 id) : resource(RESOURCE_CATEGORY_BITMAP, id, RESOURCE_REFERENCE_INITIAL, NULL) {
     gpResourceManager->PointToFile(id);
-    m_bitmapType = gpResourceManager->ReadWord();
+    m_bitmapType = H1_ENUM_DECODE(BitmapType, gpResourceManager->ReadWord());
     m_width = gpResourceManager->ReadWord();
     m_height = gpResourceManager->ReadWord();
     i32 size = m_width * m_height;

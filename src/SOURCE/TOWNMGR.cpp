@@ -146,7 +146,7 @@ townManager::townManager(void) {
 // Retail vtable slot 0 (0x0048d468). Builds the town window, objects,
 // strips and bank box.
 VA(0x0045f215, 0x728)
-i16 townManager::Open(i16 id) {
+H1_ENUM_RETURN(BaseManagerStatus, i16) townManager::Open(i16 id) {
     i16 crestFrame;
     tag_message message;
     i16 i;
@@ -1452,7 +1452,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             panel->BroadcastMessage(msg);
             msg.command = WIDGET_COMMAND_SET_FLAGS;
             msg.id = DIALOG_BUTTON_2;
-            msg.value = WIDGET_COMMAND_DIMMED;
+            msg.value = WIDGET_FLAG_DIM_REQUEST;
             panel->BroadcastMessage(msg);
         }
         gpWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);

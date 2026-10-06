@@ -147,11 +147,11 @@ heroWindow::heroWindow(i16 x, i16 y, char* resourceName) {
 }
 
 VA(0x0046d6f0, 0x85)
-i16 heroWindow::Open(i16 zOrder, i8 flags) {
-    if ((m_winState & WINDOW_STATE_OPEN) != 0)
+H1_ENUM_RETURN(WindowOpenStatus, i16) heroWindow::Open(i16 zOrder, i8 flags) {
+    if ((m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         return WINDOW_OPEN_FAILURE;
     gpMouseManager->ReallyHidePointer();
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0 && SaveBackground() != 0)
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE && SaveBackground() != 0)
         return WINDOW_OPEN_FAILURE;
     m_zOrder = zOrder;
     DrawWindow(flags);
@@ -163,13 +163,13 @@ i16 heroWindow::Open(i16 zOrder, i8 flags) {
 VA(0x0046d775, 0xa2)
 void heroWindow::Close(void) {
     widget *current, *next;
-    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != 0 && (m_winState & WINDOW_STATE_OPEN) != 0)
+    if ((m_winFlags & WINDOW_FLAG_SAVE_BACKGROUND) != WINDOW_FLAG_NONE && (m_winState & WINDOW_STATE_OPEN) != WINDOW_STATE_CLOSED)
         RestoreBackground();
     current = m_widgetListHead;
     while (current != NULL) {
         next = current->m_next;
         RemoveWidget(current);
-        if ((m_winFlags & WINDOW_FLAG_OWNS_WIDGETS) != 0)
+        if ((m_winFlags & WINDOW_FLAG_OWNS_WIDGETS) != WINDOW_FLAG_NONE)
             delete current;
         current = next;
     }

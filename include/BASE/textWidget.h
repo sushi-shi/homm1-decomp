@@ -1,6 +1,7 @@
 #ifndef HOMM1_BASE_TEXTWIDGET_H
 #define HOMM1_BASE_TEXTWIDGET_H
 
+#include <BASE/font.h>
 #include <BASE/message.h>
 #include <BASE/widget.h>
 #include <H1/Macros.h>
@@ -15,7 +16,7 @@ public:
     char* m_text;
     font* m_font;
     i16 m_color;
-    i8 m_alignment;
+    H1_ENUM_STORAGE(FontAlignment, i8) m_alignment;
     // --- constructors ---
     textWidget(void);
     textWidget(
