@@ -102,13 +102,13 @@ i32 oldmain(void) {
     PostprocessPalette(editorPalette->m_data);
     gMapX = 0;
     gMapY = 0;
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, editorPalette);
     if (gExec->AddManager(gEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown(localization::Tr("startup.manager.failed"));
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, editorPalette);
     gExec->MainLoop();
     gExec->RemoveManager(gEditManager);
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, editorPalette);
     gResourceManager->Dispose(editorPalette);
     ShutDown(NULL);
     return 0;

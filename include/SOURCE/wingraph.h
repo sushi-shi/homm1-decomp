@@ -119,9 +119,10 @@ extern i32 gDDPaintStart;
 extern i32 gBusyRetry;
 extern HDC gImageDC;
 extern HBITMAP gOldMonoBitmap;
-extern WingImage screenImage;
-extern WingPalette LogicalPalette;
-extern i32 Orientation;
+#define gScreenImage screenImage // spelling fixes .bss order
+extern WingImage gScreenImage;
+extern WingPalette gLogicalPalette;
+extern i32 gOrientation;
 extern void* gInitWin;
 extern i32 gTtlBlts;
 extern i32 gMainVideoModeColorDepth;

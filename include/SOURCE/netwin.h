@@ -95,14 +95,17 @@ extern CRITICAL_SECTION gNbSndLock;
 #define gNbRcvQueue gNetIncomingQueue // spelling fixes .bss order
 extern tag_Anchor gNbRcvQueue;
 extern tag_Anchor gNbSndQueue;
-extern tag_Anchor gNbFreeQueue;
+// Sent before gNbSndQueue (nb_snd's priority argument), as com_snd's
+// priority queue.
+#define gNbPriorityQueue gNbFreeQueue // spelling fixes .bss order
+extern tag_Anchor gNbPriorityQueue;
 extern HANDLE gNbEvents[9];
 // NetBIOS driver entry points REMOTE calls (C linkage, cdecl).
 H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions);
-H1_C_LINKAGE void __cdecl nb_term(i32);
-H1_C_LINKAGE i16 __cdecl nb_rcv(i32, u16 len, void* buffer);
-H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queueToFree);
-H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...);
-H1_C_LINKAGE u8 __cdecl nb_stat(i32, u16 session);
+H1_C_LINKAGE void __cdecl nb_term(i32 port);
+H1_C_LINKAGE i16 __cdecl nb_rcv(i32 port, u16 maxLength, void* buffer);
+H1_C_LINKAGE i16 __cdecl nb_snd(i32 port, u16 session, u16 length, void* data, i32 priority);
+H1_C_LINKAGE i16 __cdecl nb_sess(i32 port, i32 operation, ...);
+H1_C_LINKAGE u8 __cdecl nb_stat(i32 port, u16 session);
 
 #endif

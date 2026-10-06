@@ -288,6 +288,7 @@ i32 EarlySetup(void) {
 // oldmain: two intro videos, the stpmain.bin menu (new, load, campaign, high
 // scores, credits, quit), one network handshake and the campaign
 // replay/next-scenario loop.
+#define creditsDone gameDone // frame-slot spelling
 VA(0x0043d0c4, 0xccb)
 i32 oldmain(void) {
     char saveBuf[20];
@@ -299,7 +300,7 @@ i32 oldmain(void) {
     i8 initialScreen;
     i32 gamePlayer;
     i32 sendResult;
-    i8 gameDone;
+    i8 creditsDone;
     i8 leave;
     i16 command;
 
@@ -358,7 +359,7 @@ i32 oldmain(void) {
                 if (initialScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
-                    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 initialScreen = 0;
             }
             gMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -441,27 +442,27 @@ i32 oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_CREDITS:
-                gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                 gResourceManager->GetBackdrop("credits.bmp", gWindowManager->m_screen);
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
-                gameDone = 0;
+                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
+                creditsDone = 0;
                 gInputManager->Flush();
-                while (!gameDone) {
+                while (!creditsDone) {
                     Process1WindowsMessage();
                     switch (gInputManager->GetEvent().type) {
                         case MESSAGE_KEY_DOWN:
                         case MESSAGE_LEFT_BUTTON_DOWN:
                         case MESSAGE_RIGHT_BUTTON_DOWN:
-                            gameDone = 1;
+                            creditsDone = 1;
                     }
                 }
-                gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                 gResourceManager->GetBackdrop("heroes.bmp", gWindowManager->m_screen);
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 goto mainMenu;
             case MAIN_MENU_QUIT:
                 leave = 1;
@@ -521,11 +522,11 @@ i32 oldmain(void) {
         playScenario:
             if (gGame->m_campaignType > 0) {
                 if (!backdropLoaded) {
-                    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                     gResourceManager->GetBackdrop("heroes.bmp", gWindowManager->m_screen);
                     gWindowManager
                         ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                     backdropLoaded = 1;
                 }
                 gGame->ShowCampaignInfo(gGame->m_campaignScenario, 0, 0);
@@ -533,7 +534,7 @@ i32 oldmain(void) {
             gGameInitialized = 1;
             backdropLoaded = 0;
             StopAllAudio();
-            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
             if (gExec->AddManager(gAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
@@ -544,7 +545,7 @@ i32 oldmain(void) {
             gMapX = gAdvManager->m_mapOriginX;
             gMapY = gAdvManager->m_mapOriginY;
             gExec->RemoveManager(gAdvManager);
-            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
         }
 
         if (gGameOver) {
@@ -566,7 +567,7 @@ i32 oldmain(void) {
                 gResourceManager->GetBackdrop("heroes.bmp", gWindowManager->m_screen);
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 gWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
             } else {
@@ -593,7 +594,7 @@ i32 oldmain(void) {
                 gResourceManager->GetBackdrop("heroes.bmp", gWindowManager->m_screen);
                 gWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 backdropLoaded = 1;
             }
             if (gGame->m_campaignType > 0) {
@@ -632,6 +633,7 @@ i32 oldmain(void) {
     ShutDown(NULL);
     return 0;
 }
+#undef creditsDone
 
 VA(0x0043dd8f, 0x83)
 char toupper(char character) {
@@ -683,7 +685,7 @@ i32 InterpretCommandLine(void) {
     // Buka enables sound after parsing the legacy /S option.
     gNoSound = 0;
     sprintf(gAggPathName, "%s%s", gDataPath, "heroes.agg");
-    DEFAULT_AGGREGATE_NAME = gAggPathName;
+    gDefaultAggregateName = gAggPathName;
     gFrameStep = 6;
     for (i = 0; i < GAME_PLAYER_COUNT; i++)
         gHumanPlayer[i] = i < gNumHumanPlayers;
@@ -743,12 +745,13 @@ i16 InitMenuHandler(tag_message& message) {
 }
 
 VA(0x0043e1b2, 0x9)
-i16 NullHandler(tag_message&) {
+i16 NullHandler(tag_message& message) {
     return MESSAGE_DISPATCH_CONSUME;
 }
 
 // Two heroes are offered, each with its own view (its portrait, rcrthero.bin
 // ids 2-3) and recruit (ids 8-9) button.
+#define heroSlot pos // frame-slot spelling
 VA(0x0043e1bb, 0x15e)
 i16 RecruitHeroHandler(tag_message& message) {
     const i16 viewButton1Value = RECRUIT_HERO_PORTRAIT_FIRST;
@@ -756,7 +759,7 @@ i16 RecruitHeroHandler(tag_message& message) {
     const i16 recruitButton1 = RECRUIT_HERO_SELECT_FIRST;
     const i16 recruitButton2 = RECRUIT_HERO_SELECT_SECOND;
     i32 shouldClose = 0;
-    i32 pos;
+    i32 heroSlot;
 
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
@@ -764,12 +767,12 @@ i16 RecruitHeroHandler(tag_message& message) {
                 switch (message.id) {
                     case viewButton1Value:
                     case viewButton2Value:
-                        pos = message.id - viewButton1Value;
-                        gTownManager->m_recruitHeroes[pos]->HeroView(0);
+                        heroSlot = message.id - viewButton1Value;
+                        gTownManager->m_recruitHeroes[heroSlot]->HeroView(0);
                         gTownManager->RedrawTownScreen();
                         gTownManager->m_heroWindow0->DrawWindow();
                         gTownManager->m_heroWindow1->DrawWindow();
-                        gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                        gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                         break;
                     default:
                         break;
@@ -799,8 +802,9 @@ i16 RecruitHeroHandler(tag_message& message) {
     }
     return MESSAGE_DISPATCH_CONSUME;
 }
+#undef heroSlot
 
-// HoMM1 has seven neutral building slots before six per-faction dwellings.
+// Seven neutral building slots come before six per-faction dwellings.
 VA(0x0043e319, 0x30)
 char* GetBuildingName(i32 race, i16 building) {
     if (building < BUILDING_SLOT_DWELLING_FIRST)
@@ -864,56 +868,60 @@ void GetMonsterCost(i32 monster, i32* const cost) {
 }
 
 VA(0x0043e49c, 0x104)
-i8 CanBuild(town* t, i16 building) {
+i8 CanBuild(town* townPointer, i16 building) {
     mapCell* cell;
     u16 required;
-    if (BitTest(gGame->m_townBuiltToday, t->m_id))
+    if (BitTest(gGame->m_townBuiltToday, townPointer->m_id))
         return 0;
-    if (building != BUILDING_SLOT_CASTLE && !(t->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
+    if (building != BUILDING_SLOT_CASTLE
+        && !(townPointer->m_buildings & (1 << BUILDING_SLOT_CASTLE)))
         return 0;
     if (building == BUILDING_SLOT_SHIPYARD) {
-        cell = gAdvManager->GetCell(t->m_x - 1, t->m_y + 1);
+        cell = gAdvManager->GetCell(townPointer->m_x - 1, townPointer->m_y + 1);
         if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN)
             return 1;
         else
             return 0;
     }
-    if (building == BUILDING_SLOT_MAGE_GUILD && t->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+    if (building == BUILDING_SLOT_MAGE_GUILD
+        && townPointer->m_buildState >= TOWN_MAGE_GUILD_COST_LEVEL_LAST)
         return 0;
     if (building == BUILDING_SLOT_TENT)
         return 0;
     if (building < BUILDING_SLOT_DWELLING_FIRST)
         return 1;
     required = gDwellingRequirements
-        [t->m_type * BUILDING_SLOT_DWELLING_COUNT + (building - BUILDING_SLOT_DWELLING_FIRST)];
-    if ((required & t->m_buildings) == required)
+        [townPointer->m_type * BUILDING_SLOT_DWELLING_COUNT
+         + (building - BUILDING_SLOT_DWELLING_FIRST)];
+    if ((required & townPointer->m_buildings) == required)
         return 1;
     return 0;
 }
 
 VA(0x0043e5a0, 0xb6)
-i8 CanBuy(town* t, i16 type) {
+i8 CanBuy(town* townPointer, i16 building) {
     i32 cost[RESOURCE_COUNT];
-    playerData* rec;
-    i32 i;
+    playerData* player;
+    i32 resourceIndex;
     GetBuildingCost(
-        t->m_type,
-        type,
+        townPointer->m_type,
+        building,
         cost,
-        (t->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
-            ? (t->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST ? t->m_buildState + 1
-                                                                 : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
+        (townPointer->m_buildings & (1 << BUILDING_SLOT_MAGE_GUILD))
+            ? (townPointer->m_buildState < TOWN_MAGE_GUILD_COST_LEVEL_LAST
+                   ? townPointer->m_buildState + 1
+                   : TOWN_MAGE_GUILD_COST_LEVEL_LAST)
             : 0
     );
-    rec = &gGame->m_players[gCurPlayer];
-    for (i = 0; i < RESOURCE_COUNT; ++i) {
-        if (rec->m_resources[i] < cost[i])
+    player = &gGame->m_players[gCurPlayer];
+    for (resourceIndex = 0; resourceIndex < RESOURCE_COUNT; ++resourceIndex) {
+        if (player->m_resources[resourceIndex] < cost[resourceIndex])
             return 0;
     }
     return 1;
 }
 
-// HoMM1 keeps seven neutral value slots ahead of six per-faction dwellings.
+// Seven neutral value slots come before six per-faction dwellings.
 VA(0x0043e656, 0x3d)
 i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
     if (building < BUILDING_SLOT_DWELLING_FIRST) {
@@ -929,6 +937,10 @@ i32 GetBuildingBaseResourceValue(i32 race, i32 building, i32 level) {
 
 // NormalDialog measures the text with a temporary bigfont.fnt and frames
 // heroes with port%04d.icn.
+#define imageWidth resWidth       // frame-slot spelling
+#define imageWidget resourcePanel // frame-slot spelling
+#define labelWidget captionText   // frame-slot spelling
+#define message msg               // frame-slot spelling
 VA(0x0043e693, 0xdad)
 void NormalDialog(
     char* text,
@@ -941,37 +953,37 @@ void NormalDialog(
     i32 secondResourceValue,
     H1_ENUM_PARAM(NormalDialogOrText, i32) showOrText
 ) {
-    char* amounts[NORMAL_DIALOG_RESOURCE_COUNT];
-    i32 sizedHeight;
-    i32 resourceKind[NORMAL_DIALOG_RESOURCE_COUNT];
-    iconWidget* resourcePanel;
-    i32 width;
-    tag_message msg;
-    i32 rows;
-    char iconFile[NORMAL_DIALOG_FILENAME_LENGTH];
-    i32 resourceAmounts[NORMAL_DIALOG_RESOURCE_COUNT];
-    i32 wrappedLines;
-    i32 totalHeight;
     i32 iconFrameIndex;
     i16 showMessageText;
     i32 nextId;
     i32 panelHeight;
-    i32 frameHeight;
-    textWidget* captionText;
+    char* orWord;
+    tag_message message;
+    textWidget* labelWidget;
     i32 index;
     i32 resourceIconY;
     i32 addedHeight;
+    i32 wrappedLines;
+    i32 totalHeight;
+    i32 imageCenterX;
+    i32 imageWidth;
+    i32 imageHeight;
     i32 tallestImage;
     font* bigFont;
-    i32 resCenterX;
-    i32 resWidth;
-    char* orWord;
+    i32 rows;
+    char iconFile[NORMAL_DIALOG_FILENAME_LENGTH];
+    i32 resourceAmounts[NORMAL_DIALOG_RESOURCE_COUNT];
+    i32 width;
+    char* labelTexts[NORMAL_DIALOG_RESOURCE_COUNT];
+    i32 resourceKind[NORMAL_DIALOG_RESOURCE_COUNT];
+    iconWidget* imageWidget;
+    i32 frameHeight;
 
-    resCenterX = 0;
+    imageCenterX = 0;
     resourceIconY = 0;
     iconFrameIndex = 0;
     nextId = NORMAL_DIALOG_TEXT_WIDGET_FIRST_ID;
-    resWidth = 0;
+    imageWidth = 0;
     addedHeight = 0;
     showMessageText = 1;
     resourceKind[0] = firstResourceType;
@@ -990,31 +1002,31 @@ void NormalDialog(
     for (index = 0; index < NORMAL_DIALOG_RESOURCE_COUNT; index++) {
         switch (resourceKind[index]) {
             case NORMAL_DIALOG_ARTIFACT:
-                sizedHeight = 76;
+                imageHeight = 76;
                 break;
             case NORMAL_DIALOG_LUCK_BONUS:
-                sizedHeight = 28;
+                imageHeight = 28;
                 break;
             case NORMAL_DIALOG_LUCK_PENALTY:
-                sizedHeight = 57;
+                imageHeight = 57;
                 break;
             case NORMAL_DIALOG_MORALE_BONUS:
-                sizedHeight = 62;
+                imageHeight = 62;
                 break;
             case NORMAL_DIALOG_MORALE_PENALTY:
-                sizedHeight = 59;
+                imageHeight = 59;
                 break;
             case NORMAL_DIALOG_EXPERIENCE:
-                sizedHeight = 76;
+                imageHeight = 76;
                 break;
             case NORMAL_DIALOG_CREST:
-                sizedHeight = 55;
+                imageHeight = 55;
                 break;
             case NORMAL_DIALOG_HERO:
-                sizedHeight = 111;
+                imageHeight = 111;
                 break;
             case NORMAL_DIALOG_RESOURCE_GOLD:
-                sizedHeight = 26;
+                imageHeight = 26;
                 break;
             case RESOURCE_WOOD:
             case RESOURCE_MERCURY:
@@ -1022,17 +1034,17 @@ void NormalDialog(
             case RESOURCE_SULFUR:
             case RESOURCE_CRYSTAL:
             case RESOURCE_GEMS:
-                sizedHeight = 44;
+                imageHeight = 44;
                 break;
             case NORMAL_DIALOG_SPELL:
-                sizedHeight = 52;
+                imageHeight = 52;
                 break;
             default:
-                sizedHeight = 0;
+                imageHeight = 0;
                 break;
         }
-        if (sizedHeight > tallestImage)
-            tallestImage = sizedHeight;
+        if (imageHeight > tallestImage)
+            tallestImage = imageHeight;
     }
 
     if (tallestImage > 0)
@@ -1062,56 +1074,56 @@ void NormalDialog(
     if (!gNormalDialogWindow)
         MemError();
 
-    msg.type = MESSAGE_WIDGET;
-    msg.command = WIDGET_COMMAND_CLEAR_FLAGS;
-    msg.value = NORMAL_DIALOG_BUTTON_FLAGS;
+    message.type = MESSAGE_WIDGET;
+    message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+    message.value = NORMAL_DIALOG_BUTTON_FLAGS;
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_CANCEL
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        msg.id = NORMAL_DIALOG_BUTTON_OK;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        message.id = NORMAL_DIALOG_BUTTON_OK;
+        gNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_WAIT_OK && dialogType != NORMAL_DIALOG_TYPE_OK
         && dialogType != NORMAL_DIALOG_TYPE_NO_BUTTONS) {
-        msg.id = NORMAL_DIALOG_BUTTON_CANCEL;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        message.id = NORMAL_DIALOG_BUTTON_CANCEL;
+        gNormalDialogWindow->BroadcastMessage(message);
     }
     if (dialogType != NORMAL_DIALOG_TYPE_YES_NO) {
-        msg.id = NORMAL_DIALOG_BUTTON_YES;
-        gNormalDialogWindow->BroadcastMessage(msg);
-        msg.id = NORMAL_DIALOG_BUTTON_NO;
-        gNormalDialogWindow->BroadcastMessage(msg);
+        message.id = NORMAL_DIALOG_BUTTON_YES;
+        gNormalDialogWindow->BroadcastMessage(message);
+        message.id = NORMAL_DIALOG_BUTTON_NO;
+        gNormalDialogWindow->BroadcastMessage(message);
     }
 
     for (index = 0; index < NORMAL_DIALOG_RESOURCE_COUNT; index++) {
-        resourcePanel = NULL;
-        captionText = NULL;
+        imageWidget = NULL;
+        labelWidget = NULL;
         if (resourceKind[index] == NORMAL_DIALOG_NO_RESOURCE)
             break;
 
-        amounts[index] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
+        labelTexts[index] = static_cast<char*>(malloc(NORMAL_DIALOG_TEXT_LENGTH));
         if (resourceKind[index] <= NORMAL_DIALOG_RESOURCE_LAST) {
             if (resourceAmounts[index] > 0)
-                sprintf(amounts[index], "%d", resourceAmounts[index]);
+                sprintf(labelTexts[index], "%d", resourceAmounts[index]);
             else if (resourceAmounts[index] == 0)
-                strcpy(amounts[index], "");
+                strcpy(labelTexts[index], "");
             else
                 sprintf(
-                    amounts[index],
+                    labelTexts[index],
                     localization::Tr("dialog.income.per_day"),
                     -resourceAmounts[index]
                 );
             strcpy(iconFile, "resource.icn");
             iconFrameIndex = resourceKind[index];
         } else if (resourceKind[index] == NORMAL_DIALOG_SPELL) {
-            sprintf(amounts[index], "%s", gSpellNames[resourceAmounts[index]]);
+            sprintf(labelTexts[index], "%s", gSpellNames[resourceAmounts[index]]);
             strcpy(iconFile, "spells.icn");
             iconFrameIndex = resourceAmounts[index];
         } else if (resourceKind[index] == NORMAL_DIALOG_CREST) {
-            sprintf(amounts[index], "%s", "");
+            sprintf(labelTexts[index], "%s", "");
             strcpy(iconFile, "brcrest.icn");
             iconFrameIndex = resourceAmounts[index];
         } else if (resourceKind[index] == NORMAL_DIALOG_HERO) {
-            sprintf(amounts[index], "%s", "");
+            sprintf(labelTexts[index], "%s", "");
             sprintf(iconFile, "surrendr.icn");
             iconFrameIndex = 4;
         } else if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE
@@ -1119,54 +1131,54 @@ void NormalDialog(
                    || resourceKind[index] == NORMAL_DIALOG_MORALE_PENALTY
                    || resourceKind[index] == NORMAL_DIALOG_LUCK_BONUS
                    || resourceKind[index] == NORMAL_DIALOG_LUCK_PENALTY) {
-            strcpy(amounts[index], "");
+            strcpy(labelTexts[index], "");
             strcpy(iconFile, "expmrl.icn");
             iconFrameIndex = resourceKind[index] - NORMAL_DIALOG_EXPMRL_FIRST;
             if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE
                 && resourceAmounts[index] != NORMAL_DIALOG_NO_VALUE)
-                sprintf(amounts[index], "%d", resourceAmounts[index]);
+                sprintf(labelTexts[index], "%d", resourceAmounts[index]);
         } else {
-            strcpy(amounts[index], "");
+            strcpy(labelTexts[index], "");
             strcpy(iconFile, "resource.icn");
             iconFrameIndex = resourceKind[index];
         }
 
         switch (resourceKind[index]) {
             case NORMAL_DIALOG_ARTIFACT:
-                resWidth = 76;
-                sizedHeight = 76;
+                imageWidth = 76;
+                imageHeight = 76;
                 break;
             case NORMAL_DIALOG_LUCK_BONUS:
-                resWidth = 64;
-                sizedHeight = 28;
+                imageWidth = 64;
+                imageHeight = 28;
                 break;
             case NORMAL_DIALOG_LUCK_PENALTY:
-                resWidth = 64;
-                sizedHeight = 57;
+                imageWidth = 64;
+                imageHeight = 57;
                 break;
             case NORMAL_DIALOG_MORALE_BONUS:
-                resWidth = 64;
-                sizedHeight = 62;
+                imageWidth = 64;
+                imageHeight = 62;
                 break;
             case NORMAL_DIALOG_MORALE_PENALTY:
-                resWidth = 64;
-                sizedHeight = 59;
+                imageWidth = 64;
+                imageHeight = 59;
                 break;
             case NORMAL_DIALOG_EXPERIENCE:
-                resWidth = 64;
-                sizedHeight = 64;
+                imageWidth = 64;
+                imageHeight = 64;
                 break;
             case NORMAL_DIALOG_CREST:
-                resWidth = 50;
-                sizedHeight = 55;
+                imageWidth = 50;
+                imageHeight = 55;
                 break;
             case NORMAL_DIALOG_HERO:
-                resWidth = 111;
-                sizedHeight = 105;
+                imageWidth = 111;
+                imageHeight = 105;
                 break;
             case NORMAL_DIALOG_RESOURCE_GOLD:
-                resWidth = 76;
-                sizedHeight = 26;
+                imageWidth = 76;
+                imageHeight = 26;
                 break;
             case RESOURCE_WOOD:
             case RESOURCE_MERCURY:
@@ -1174,33 +1186,33 @@ void NormalDialog(
             case RESOURCE_SULFUR:
             case RESOURCE_CRYSTAL:
             case RESOURCE_GEMS:
-                resWidth = 38;
-                sizedHeight = 32;
+                imageWidth = 38;
+                imageHeight = 32;
                 break;
             case NORMAL_DIALOG_SPELL:
-                resWidth = 38;
-                sizedHeight = 40;
+                imageWidth = 38;
+                imageHeight = 40;
                 break;
         }
 
-        if (strlen(amounts[index]) > 0)
-            sizedHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
+        if (strlen(labelTexts[index]) > 0)
+            imageHeight += NORMAL_DIALOG_RESOURCE_LABEL_HEIGHT;
         if (index == 0) {
-            resCenterX = resourceKind[1] == NORMAL_DIALOG_NO_RESOURCE ? width / 2 : width / 3;
+            imageCenterX = resourceKind[1] == NORMAL_DIALOG_NO_RESOURCE ? width / 2 : width / 3;
         } else {
-            resCenterX = width * 2 / 3;
+            imageCenterX = width * 2 / 3;
         }
-        resourceIconY = panelHeight - sizedHeight - NORMAL_DIALOG_RESOURCE_BOTTOM_INSET;
+        resourceIconY = panelHeight - imageHeight - NORMAL_DIALOG_RESOURCE_BOTTOM_INSET;
         if (dialogType != NORMAL_DIALOG_TYPE_QUICK_VIEW)
             resourceIconY -= NORMAL_DIALOG_BUTTON_AREA_HEIGHT;
-        if (tallestImage > sizedHeight)
-            resourceIconY -= (tallestImage - sizedHeight) / 2;
+        if (tallestImage > imageHeight)
+            resourceIconY -= (tallestImage - imageHeight) / 2;
 
-        resourcePanel = new iconWidget(
-            resCenterX - resWidth / 2,
+        imageWidget = new iconWidget(
+            imageCenterX - imageWidth / 2,
             resourceIconY,
-            resWidth,
-            sizedHeight,
+            imageWidth,
+            imageHeight,
             iconFile,
             iconFrameIndex,
             ICON_DRAW_NORMAL,
@@ -1208,12 +1220,12 @@ void NormalDialog(
             ICON_WIDGET_DRAW,
             1
         );
-        if (!resourcePanel)
+        if (!imageWidget)
             MemError();
-        gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(imageWidget, WINDOW_Z_ORDER_APPEND);
         if (resourceKind[index] == NORMAL_DIALOG_ARTIFACT) {
-            resourcePanel = new iconWidget(
-                resCenterX - resWidth / 2 + 6,
+            imageWidget = new iconWidget(
+                imageCenterX - imageWidth / 2 + 6,
                 resourceIconY + 6,
                 76,
                 76,
@@ -1224,13 +1236,13 @@ void NormalDialog(
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!resourcePanel)
+            if (!imageWidget)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(imageWidget, WINDOW_Z_ORDER_APPEND);
         }
         if (resourceKind[index] == NORMAL_DIALOG_CREST) {
-            resourcePanel = new iconWidget(
-                resCenterX - resWidth / 2 - 4,
+            imageWidget = new iconWidget(
+                imageCenterX - imageWidth / 2 - 4,
                 resourceIconY - 4,
                 58,
                 55,
@@ -1241,14 +1253,14 @@ void NormalDialog(
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!resourcePanel)
+            if (!imageWidget)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(imageWidget, WINDOW_Z_ORDER_APPEND);
         }
         if (resourceKind[index] == NORMAL_DIALOG_HERO) {
             sprintf(iconFile, "port%04d.icn", resourceAmounts[index]);
-            resourcePanel = new iconWidget(
-                resCenterX - resWidth / 2 + 5,
+            imageWidget = new iconWidget(
+                imageCenterX - imageWidth / 2 + 5,
                 resourceIconY + 5,
                 101,
                 95,
@@ -1259,34 +1271,34 @@ void NormalDialog(
                 ICON_WIDGET_DRAW,
                 1
             );
-            if (!resourcePanel)
+            if (!imageWidget)
                 MemError();
-            gNormalDialogWindow->AddWidget(resourcePanel, WINDOW_Z_ORDER_APPEND);
+            gNormalDialogWindow->AddWidget(imageWidget, WINDOW_Z_ORDER_APPEND);
         }
-        captionText = new textWidget(
-            resCenterX - 50,
-            resourceIconY + sizedHeight - 10,
+        labelWidget = new textWidget(
+            imageCenterX - 50,
+            resourceIconY + imageHeight - 10,
             100,
             12,
-            amounts[index],
+            labelTexts[index],
             "smalfont.fnt",
             1,
             nextId++,
             WIDGET_KIND_TEXT
         );
-        if (!captionText)
+        if (!labelWidget)
             MemError();
-        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(labelWidget, WINDOW_Z_ORDER_APPEND);
     }
 
-    SET_WIDGET_MESSAGE(msg, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
-    msg.text = text;
-    gNormalDialogWindow->BroadcastMessage(msg);
+    SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, NORMAL_DIALOG_TEXT_WIDGET_ID);
+    message.text = text;
+    gNormalDialogWindow->BroadcastMessage(message);
 
     if (showOrText == NORMAL_DIALOG_SHOW_OR_TEXT) {
         orWord = static_cast<char*>(malloc(strlen(localization::Tr("dialog.choice.or")) + 1));
         strcpy(orWord, localization::Tr("dialog.choice.or"));
-        captionText = new textWidget(
+        labelWidget = new textWidget(
             width / 2 - 17,
             resourceIconY + 30,
             40,
@@ -1297,9 +1309,9 @@ void NormalDialog(
             nextId++,
             WIDGET_KIND_TEXT
         );
-        if (!captionText)
+        if (!labelWidget)
             MemError();
-        gNormalDialogWindow->AddWidget(captionText, WINDOW_Z_ORDER_APPEND);
+        gNormalDialogWindow->AddWidget(labelWidget, WINDOW_Z_ORDER_APPEND);
     }
 
     if (gAdvManager->m_active == 1)
@@ -1320,6 +1332,10 @@ void NormalDialog(
     }
     delete gNormalDialogWindow;
 }
+#undef imageWidth
+#undef imageWidget
+#undef labelWidget
+#undef message
 
 // @dead-code
 // Zero-ref: no effective incoming retail reference.
@@ -1533,9 +1549,9 @@ i8 gCombatAdjacency[45][6] = {
     {33, 43, -1, -1, 41, 32}, {34, -1, -1, -1, 42, 33}, {-1, -1, -1, -1, -1, -1},
 };
 DATA(0x0049053c)
-i16 horseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
+i16 gHorseFrameFlip[16] = {45, 46, 47, 48, 49, 50, 51, 52, 53, 179, 178, 177, 54, 175, 174, 55};
 DATA(0x0049055c)
-i16 boatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
+i16 gBoatFrameFlip[16] = {0, 0, 9, 9, 18, 18, 27, 27, 36, 36, 155, 155, 146, 146, 137, 137};
 DATA(0x0049057c)
 // Four player colors and the neutral-owner color; the following bytes are linker alignment.
 i16 gRadarOwnerColor[5] = {79, 105, 200, 129, 10};
@@ -1650,9 +1666,9 @@ void HandleRemoteSuddenExit(void) {
 }
 
 VA(0x0043f956, 0x238)
-// HoMM1 callers push four byte-sized values: player, an unused flag,
-// elimination and timeout.
-void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
+// The exiting player's position, whether it held the turn (unused here),
+// whether it was eliminated and whether it timed out.
+void ReceiveRemotePlayerExit(i8 position, i8 hadControl, i8 eliminated, i8 timedOut) {
     if (position == gThisGamePos) {
         sprintf(gText, localization::Tr("network.player.eliminated"));
         NormalDialog(gText, NORMAL_DIALOG_TYPE_OK);
@@ -1711,7 +1727,7 @@ void ReceiveRemotePlayerExit(i8 position, i8, i8 eliminated, i8 timedOut) {
 }
 
 VA(0x0043fb8e, 0x936)
-void CheckEndGame(i32 forced) {
+void CheckEndGame(i32 forceWin) {
     town* objectiveTown;
     i8 artifactOwner;
     hero* bearer;
@@ -1897,7 +1913,7 @@ void CheckEndGame(i32 forced) {
             gEndSequence = GAME_END_LOST;
         }
     }
-    if (forced) {
+    if (forceWin) {
         gGameOver = 1;
         gEndSequence = GAME_END_WON;
     }
@@ -2073,72 +2089,80 @@ i16 GetMonType(i32 score, i32 highScoreType) {
     return gScoreMon[0][SCORE_MONSTER_TYPE];
 }
 
+#define entries curScores            // frame-slot spelling
+#define shiftRank theDest            // frame-slot spelling
+#define file nextFile                // frame-slot spelling
+#define noScoreFile missingFileValue // frame-slot spelling
 VA(0x00440d39, 0x32d)
-i32 AddScoreToHighScore(i32 score, i32 standard, char*, char* scenarioName) {
-    HighScoreEntry curScores[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
+i32 AddScoreToHighScore(i32 score, i32 highScoreType, char*, char* scenarioName) {
+    HighScoreEntry entries[HIGH_SCORE_DISPLAY_ENTRY_COUNT];
     i32 entry;
-    i32 theDest;
-    i32 nextFile;
-    char savedName[352];
+    i32 shiftRank;
+    i32 file;
+    char scoreFile[352];
     char enteredPlayerName[20];
-    i8 missingFileValue;
+    i8 noScoreFile;
 
-    missingFileValue = 0;
-    if (standard == HIGH_SCORE_TYPE_STANDARD)
-        sprintf(savedName, "%sSTANDARD.HS", gDataPath);
+    noScoreFile = 0;
+    if (highScoreType == HIGH_SCORE_TYPE_STANDARD)
+        sprintf(scoreFile, "%sSTANDARD.HS", gDataPath);
     else
-        sprintf(savedName, "%sCAMPAIGN.HS", gDataPath);
-    nextFile = open(savedName, _O_BINARY);
-    if (nextFile == -1)
-        missingFileValue = 1;
-    if (missingFileValue) {
+        sprintf(scoreFile, "%sCAMPAIGN.HS", gDataPath);
+    file = open(scoreFile, _O_BINARY);
+    if (file == -1)
+        noScoreFile = 1;
+    if (noScoreFile) {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            memset(&curScores[entry], 0, sizeof(HighScoreEntry));
-            curScores[entry].score = HIGH_SCORE_EMPTY;
+            memset(&entries[entry], 0, sizeof(HighScoreEntry));
+            entries[entry].score = HIGH_SCORE_EMPTY;
         }
     } else {
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            read(nextFile, &curScores[entry], sizeof(curScores));
-        close(nextFile);
+            read(file, &entries[entry], sizeof(entries));
+        close(file);
     }
 
     gShowHighScore = 1;
-    gHighScoreType = standard;
+    gHighScoreType = highScoreType;
     gHighScoreRank = HIGH_SCORE_EMPTY;
     gScore = score;
     for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-        if ((score >= curScores[entry].score && standard == HIGH_SCORE_TYPE_STANDARD)
-            || (score <= curScores[entry].score && standard == HIGH_SCORE_TYPE_CAMPAIGN)
-            || curScores[entry].score == HIGH_SCORE_EMPTY) {
+        if ((score >= entries[entry].score && highScoreType == HIGH_SCORE_TYPE_STANDARD)
+            || (score <= entries[entry].score && highScoreType == HIGH_SCORE_TYPE_CAMPAIGN)
+            || entries[entry].score == HIGH_SCORE_EMPTY) {
             gHighScoreRank = entry;
             break;
         }
     }
 
     if (entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT) {
-        for (theDest = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; theDest >= entry; theDest--)
-            curScores[theDest + 1] = curScores[theDest];
+        for (shiftRank = HIGH_SCORE_DISPLAY_ENTRY_COUNT - 2; shiftRank >= entry; shiftRank--)
+            entries[shiftRank + 1] = entries[shiftRank];
         GetDataEntry(localization::Tr("score.name.prompt"), enteredPlayerName, 16, NULL);
-        strcpy(curScores[entry].playerName, enteredPlayerName);
-        strcpy(curScores[entry].scenarioName, scenarioName);
-        curScores[entry].score = score;
-        nextFile = open(savedName, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
-        if (nextFile == -1)
-            FileError(savedName);
+        strcpy(entries[entry].playerName, enteredPlayerName);
+        strcpy(entries[entry].scenarioName, scenarioName);
+        entries[entry].score = score;
+        file = open(scoreFile, _O_BINARY | _O_TRUNC | _O_CREAT | _O_WRONLY, _S_IWRITE);
+        if (file == -1)
+            FileError(scoreFile);
         for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++)
-            WRITE_FILE_VALUE(nextFile, curScores[entry]);
-        close(nextFile);
+            WRITE_FILE_VALUE(file, entries[entry]);
+        close(file);
     }
     return 0;
 }
+#undef entries
+#undef shiftRank
+#undef file
+#undef noScoreFile
 
 VA(0x00441066, 0x51)
-void BVResMsg(char* s, i32 res, i32 qty) {
+void BVResMsg(char* text, i32 resourceType, i32 quantity) {
     gBottomViewOverride = BOTTOM_VIEW_RESOURCE;
     gBottomViewOverrideEndTime = KBTickCount() + 5000;
-    gBottomViewResource = res;
-    gBottomViewResourceQty = qty;
-    strcpy(gBottomViewText, s);
+    gBottomViewResource = resourceType;
+    gBottomViewResourceQty = quantity;
+    strcpy(gBottomViewText, text);
     gAdvManager->UpdBottomView(1, 1, 1);
 }
 
@@ -2148,7 +2172,7 @@ void GOut(char* text) {
         AiPrint(text);
 }
 
-// HoMM1 maps every remote position other than the host to the one opponent slot.
+// Maps every remote position other than the host to the one opponent slot.
 VA(0x004410d6, 0x1b)
 i8 NetPosToGamePos(i32 netPos) {
     if (netPos == NET_POSITION_HOST)
@@ -2161,205 +2185,211 @@ i8 NetPosToGamePos(i32 netPos) {
 VA(0x004410f1, 0xb1)
 i8 WaitForOtherPlayer(void) {
     i32 result = 0;
-    RemoteMessage* data;
+    RemoteMessage* received;
     PollSound();
-    data = GetRemoteData(1);
-    if (data && data->type == REMOTE_MESSAGE_RELIABLE) {
-        switch (data->command) {
+    received = GetRemoteData(1);
+    if (received && received->type == REMOTE_MESSAGE_RELIABLE) {
+        switch (received->command) {
             case BOX_REMOTE_SETUP:
-                memcpy(gGamePosToNetPos, data->payload.data, GAME_PLAYER_COUNT);
+                memcpy(gGamePosToNetPos, received->payload.data, GAME_PLAYER_COUNT);
                 gThisGamePos = NetPosToGamePos(gThisNetPos);
                 gHostGamePos = NetPosToGamePos(NET_POSITION_HOST);
                 break;
             case BOX_REMOTE_SAVE:
-                result = gGame->ReceiveSaveGame(data->payload.saveSize, data->sender);
+                result = gGame->ReceiveSaveGame(received->payload.saveSize, received->sender);
                 break;
         }
     }
     return result;
 }
 
+#define remoteData dataObj         // frame-slot spelling
+#define firstLineId myBaseId       // frame-slot spelling
+#define pointerWasVisible oldShown // frame-slot spelling
 VA(0x004411a2, 0x65a)
 void PopNetBox(char* notice) {
-    RemoteMessage* dataObj;
-    i8 blinkState;
-    i8 lines;
-    i8 bClose;
-    i32 myBaseId;
-    font* fontPtr;
-    i8 oldShown;
-    i32 pause;
-    i32 curLimit;
-    i8 nextExitOnData;
-    i8 curText;
-    tag_message nextIncoming;
-    tag_message messageData;
-    i32 curLen;
-    char text[80];
+    RemoteMessage* remoteData;
+    i32 firstLineId;
     i8 savedShowIt;
-    i8 updateInputNum;
     i32 heightValue;
-    i32 oldMsgTime;
-    heroWindow* theWin;
-    i32 lastSuccess;
-    i32 curWidth;
+    tag_message event;
+    i8 pointerWasVisible;
+    i32 inputLength;
+    i8 enterPressed;
+    tag_message messageData;
+    i32 closeDelay;
+    i32 sendOk;
+    font* boxFont;
+    i8 redrawText;
+    i32 noticeStamp;
+    heroWindow* netBox;
+    i32 inputWidth;
+    char inputText[80];
+    i8 exitForIncomingData;
+    i8 closeWindow;
+    i8 redrawInput;
+    i8 cursorVisible;
+    i32 lineMax;
 
     if (!gRemoteOn)
         return;
-    curLimit = 60;
-    myBaseId = 1;
+    lineMax = 60;
+    firstLineId = 1;
     heightValue = 42;
-    fontPtr = gResourceManager->GetFont("bigfont.fnt");
-    oldMsgTime = 0;
+    boxFont = gResourceManager->GetFont("bigfont.fnt");
+    noticeStamp = 0;
     if (notice) {
         AddNetBoxLine(notice);
-        oldMsgTime = KBTickCount();
+        noticeStamp = KBTickCount();
     }
-    curLen = 0;
-    oldShown = gMouseManager->IsVis();
+    inputLength = 0;
+    pointerWasVisible = gMouseManager->IsVis();
     savedShowIt = gShowIt;
     gShowIt = 1;
-    theWin = new heroWindow(0, 418, "netbox.bin");
-    if (!theWin)
+    netBox = new heroWindow(0, 418, "netbox.bin");
+    if (!netBox)
         MemError();
     SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
     messageData.text = gNetBoxLine[0];
-    theWin->BroadcastMessage(messageData);
+    netBox->BroadcastMessage(messageData);
     messageData.id = NET_BOX_LINE_LATEST;
     messageData.text = gNetBoxLine[1];
-    theWin->BroadcastMessage(messageData);
-    gWindowManager->AddWindow(theWin, WINDOW_Z_ORDER_APPEND, 1);
+    netBox->BroadcastMessage(messageData);
+    gWindowManager->AddWindow(netBox, WINDOW_Z_ORDER_APPEND, 1);
     gMouseManager->ReallyHidePointer();
-    nextExitOnData = 0;
-    bClose = 0;
-    updateInputNum = 1;
-    blinkState = 0;
-    curText = 0;
-    lines = 1;
-    strcpy(text, "");
+    exitForIncomingData = 0;
+    closeWindow = 0;
+    redrawInput = 1;
+    cursorVisible = 0;
+    enterPressed = 0;
+    redrawText = 1;
+    strcpy(inputText, "");
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_ASCII);
 
-    while (!bClose) {
+    while (!closeWindow) {
         PollSound();
-        dataObj = GetRemoteData(0);
-        if (dataObj) {
-            if (dataObj->type != REMOTE_MESSAGE_RELIABLE) {
-                dataObj = GetRemoteData(1);
+        remoteData = GetRemoteData(0);
+        if (remoteData) {
+            if (remoteData->type != REMOTE_MESSAGE_RELIABLE) {
+                remoteData = GetRemoteData(1);
             } else {
-                switch (dataObj->command) {
+                switch (remoteData->command) {
                     case REMOTE_COMMAND_CHAT:
-                        dataObj = GetRemoteData(1);
-                        AddNetBoxLine(dataObj->payload.data);
-                        lines = 1;
-                        if (oldMsgTime)
-                            oldMsgTime = KBTickCount();
+                        remoteData = GetRemoteData(1);
+                        AddNetBoxLine(remoteData->payload.data);
+                        redrawText = 1;
+                        if (noticeStamp)
+                            noticeStamp = KBTickCount();
                         break;
                     default:
                         AddNetBoxLine(localization::Tr("network.incoming.close"));
-                        lines = 1;
-                        nextExitOnData = 1;
+                        redrawText = 1;
+                        exitForIncomingData = 1;
                         break;
                 }
             }
         }
 
         Process1WindowsMessage();
-        nextIncoming = gInputManager->GetEvent();
-        switch (nextIncoming.type) {
+        event = gInputManager->GetEvent();
+        switch (event.type) {
             case MESSAGE_KEY_DOWN:
-                oldMsgTime = 0;
-                switch (nextIncoming.keyCode) {
+                noticeStamp = 0;
+                switch (event.keyCode) {
                     case INPUT_ASCII_ESCAPE:
                     case EncodeScanCode(INPUT_SCAN_F1):
-                        bClose = 1;
+                        closeWindow = 1;
                         break;
                     case INPUT_ASCII_DELETE:
-                        if (curLen > 0)
-                            curLen--;
-                        updateInputNum = 1;
-                        blinkState = 1;
+                        if (inputLength > 0)
+                            inputLength--;
+                        redrawInput = 1;
+                        cursorVisible = 1;
                         break;
                     case '\n':
-                        curText = 1;
+                        enterPressed = 1;
                         break;
                     default:
-                        if (curLen < 58 && nextIncoming.keyCode) {
-                            text[curLen] = 0;
-                            curWidth = fontPtr->LineWidth(text);
-                            if (curWidth + 30 < 610) {
-                                text[curLen] = nextIncoming.keyCode & 0xff;
-                                curLen++;
-                                updateInputNum = 1;
-                                blinkState = 0;
+                        if (inputLength < 58 && event.keyCode) {
+                            inputText[inputLength] = 0;
+                            inputWidth = boxFont->LineWidth(inputText);
+                            if (inputWidth + 30 < 610) {
+                                inputText[inputLength] = event.keyCode & 0xff;
+                                inputLength++;
+                                redrawInput = 1;
+                                cursorVisible = 0;
                             }
                         }
                 }
         }
 
-        if (!updateInputNum && gTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
-            blinkState = 1 - blinkState;
-            updateInputNum = 1;
+        if (!redrawInput && gTimers[NET_BOX_BLINK_TIMER_SLOT] < KBTickCount()) {
+            cursorVisible = 1 - cursorVisible;
+            redrawInput = 1;
         }
-        if (curText) {
-            curText = 0;
-            text[curLen] = 0;
-            AddNetBoxLine(text);
-            lastSuccess = TransmitRemoteData(
-                text,
+        if (enterPressed) {
+            enterPressed = 0;
+            inputText[inputLength] = 0;
+            AddNetBoxLine(inputText);
+            sendOk = TransmitRemoteData(
+                inputText,
                 REMOTE_BROADCAST_PLAYER,
-                strlen(text) + 1,
+                strlen(inputText) + 1,
                 REMOTE_COMMAND_CHAT,
                 1
             );
-            if (!lastSuccess)
+            if (!sendOk)
                 ShutDown(NULL);
-            curLen = 0;
-            strcpy(text, "");
-            updateInputNum = 1;
-            lines = 1;
+            inputLength = 0;
+            strcpy(inputText, "");
+            redrawInput = 1;
+            redrawText = 1;
         }
-        if (lines) {
-            lines = 0;
+        if (redrawText) {
+            redrawText = 0;
             SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_LINE_PREVIOUS);
             messageData.text = gNetBoxLine[0];
-            theWin->BroadcastMessage(messageData);
+            netBox->BroadcastMessage(messageData);
             messageData.id = NET_BOX_LINE_LATEST;
             messageData.text = gNetBoxLine[1];
-            theWin->BroadcastMessage(messageData);
-            theWin->DrawWindow();
+            netBox->BroadcastMessage(messageData);
+            netBox->DrawWindow();
             gWindowManager->UpdateScreenRegion(0, 418, 639, 61);
         }
-        if (updateInputNum) {
-            updateInputNum = 0;
+        if (redrawInput) {
+            redrawInput = 0;
             gTimers[NET_BOX_BLINK_TIMER_SLOT] = KBTickCount() + NET_BOX_BLINK_DELAY;
-            if (blinkState)
-                text[curLen] = '_';
+            if (cursorVisible)
+                inputText[inputLength] = '_';
             else
-                text[curLen] = ' ';
-            text[curLen + 1] = 0;
+                inputText[inputLength] = ' ';
+            inputText[inputLength + 1] = 0;
             SET_WIDGET_MESSAGE(messageData, WIDGET_COMMAND_SET_TEXT, NET_BOX_INPUT);
-            messageData.text = text;
-            theWin->BroadcastMessage(messageData);
-            theWin->DrawWindow();
+            messageData.text = inputText;
+            netBox->BroadcastMessage(messageData);
+            netBox->DrawWindow();
             gWindowManager->UpdateScreenRegion(0, 460, 639, 16);
         }
-        if (oldMsgTime && oldMsgTime + 6000 < KBTickCount())
-            bClose = 1;
-        if (nextExitOnData) {
-            for (pause = 0; pause < 30; pause++) {
+        if (noticeStamp && noticeStamp + 6000 < KBTickCount())
+            closeWindow = 1;
+        if (exitForIncomingData) {
+            for (closeDelay = 0; closeDelay < 30; closeDelay++) {
                 PollSound();
                 DelayMilli(90);
             }
-            bClose = 1;
+            closeWindow = 1;
         }
     }
     gInputManager->SetKeyCodeType(INPUT_KEY_CODE_SCAN);
-    gWindowManager->RemoveWindow(theWin);
+    gWindowManager->RemoveWindow(netBox);
     gShowIt = savedShowIt;
-    if (oldShown)
+    if (pointerWasVisible)
         gMouseManager->ReallyShowPointer();
-    gResourceManager->Dispose(fontPtr);
+    gResourceManager->Dispose(boxFont);
 }
+#undef remoteData
+#undef firstLineId
+#undef pointerWasVisible
 
 // The net box holds two uncoloured lines.
 VA(0x004417fc, 0x28)
@@ -2419,20 +2449,21 @@ void FileError(char* filename) {
     ShutDown(message);
 }
 
-// HoMM1's victory screen: campaigns show the scenario's win text; standard
+// The victory screen: campaigns show the scenario's win text; standard
 // games score the days played, rank the result as a creature and file it with
 // the high scores.
+#define labelIndex ii // frame-slot spelling
 VA(0x00441977, 0x3f5)
 void ShowCongrats(void) {
     char name[32];
-    i32 ii;
-    i32 res;
+    i32 labelIndex;
+    i32 total;
     tag_message message;
-    i32 scoreAmount;
-    heroWindow* win;
+    i32 baseScore;
+    heroWindow* window;
 
-    scoreAmount = GetBaseScore(gCurTurn);
-    res = scoreAmount * gGame->m_difficultyRating / 100;
+    baseScore = GetBaseScore(gCurTurn);
+    total = baseScore * gGame->m_difficultyRating / 100;
     PlayMusic(MUSIC_TRACK_CONGRATULATIONS);
     gMouseManager->ReallyHidePointer();
     sprintf(gText, "congrats.bmp");
@@ -2441,51 +2472,52 @@ void ShowCongrats(void) {
     message.command = WIDGET_COMMAND_SET_TEXT;
     message.text = gText;
     if (gGame->m_campaignType > 0) {
-        win = new heroWindow(0, 0, "congrats.bin");
-        if (!win)
+        window = new heroWindow(0, 0, "congrats.bin");
+        if (!window)
             MemError();
         sprintf(gText, gCampaignWinTexts[gGame->m_campaignScenario]);
         message.id = CONGRATS_TITLE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
     } else {
-        win = new heroWindow(0, 0, "congspre.bin");
-        if (!win)
+        window = new heroWindow(0, 0, "congspre.bin");
+        if (!window)
             MemError();
-        sprintf(name, gArmyNames[GetMonType(res, HIGH_SCORE_TYPE_STANDARD)]);
+        sprintf(name, gArmyNames[GetMonType(total, HIGH_SCORE_TYPE_STANDARD)]);
         name[0] = CyrillicToUpper(name[0]);
         sprintf(gText, localization::Tr("congratulations.victory.title"));
         message.id = CONGRATS_TITLE;
-        win->BroadcastMessage(message);
-        for (ii = 0; ii < CONGRATS_SCORE_LABEL_COUNT; ii++) {
-            sprintf(gText, gScoreLabels[ii]);
-            message.id = ii + CONGRATS_SCORE_LABEL_FIRST;
-            win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
+        for (labelIndex = 0; labelIndex < CONGRATS_SCORE_LABEL_COUNT; labelIndex++) {
+            sprintf(gText, gScoreLabels[labelIndex]);
+            message.id = labelIndex + CONGRATS_SCORE_LABEL_FIRST;
+            window->BroadcastMessage(message);
         }
         sprintf(gText, "%d", gCurTurn);
         message.id = CONGRATS_DAYS;
-        win->BroadcastMessage(message);
-        sprintf(gText, "%d", scoreAmount);
+        window->BroadcastMessage(message);
+        sprintf(gText, "%d", baseScore);
         message.id = CONGRATS_BASE_SCORE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
         sprintf(gText, "%d%%", gGame->m_difficultyRating);
         message.id = CONGRATS_DIFFICULTY;
-        win->BroadcastMessage(message);
-        sprintf(gText, "%d", res);
+        window->BroadcastMessage(message);
+        sprintf(gText, "%d", total);
         message.id = CONGRATS_FINAL_SCORE;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
         sprintf(gText, "%s", name);
         message.id = CONGRATS_RATING;
-        win->BroadcastMessage(message);
+        window->BroadcastMessage(message);
     }
-    gWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
+    gWindowManager->AddWindow(window, WINDOW_Z_ORDER_APPEND, 1);
     gMouseManager->ReallyHidePointer();
-    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     CongratsWait();
-    gWindowManager->RemoveWindow(win);
-    delete win;
+    gWindowManager->RemoveWindow(window);
+    delete window;
     if (gGame->m_campaignType <= 0)
-        AddScoreToHighScore(res, HIGH_SCORE_TYPE_STANDARD, "", gGame->m_mapName);
+        AddScoreToHighScore(total, HIGH_SCORE_TYPE_STANDARD, "", gGame->m_mapName);
 }
+#undef labelIndex
 
 VA(0x00441d6c, 0x8b)
 void CongratsWait(void) {
@@ -2514,23 +2546,23 @@ void GetDataEntry(char* prompt, char* destination, i32 maximumLength, char* init
     gDataEntryDest = destination;
     gDataEntryMaxLen = maximumLength;
     strcpy(gDataEntryDest, "");
-    DataEntryWin = new heroWindow(0xb1, 0x14, "dataentr.bin");
-    if (!DataEntryWin)
+    gDataEntryWindow = new heroWindow(0xb1, 0x14, "dataentr.bin");
+    if (!gDataEntryWindow)
         MemError();
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_PROMPT);
     message.text = prompt;
-    DataEntryWin->BroadcastMessage(message);
+    gDataEntryWindow->BroadcastMessage(message);
     if (initialText)
         strcpy(textBuffer, initialText);
     else
         strcpy(textBuffer, "");
     message.id = DATA_ENTRY_TEXT;
     message.text = textBuffer;
-    DataEntryWin->BroadcastMessage(message);
+    gDataEntryWindow->BroadcastMessage(message);
     strcpy(destination, textBuffer);
     gDataEntryTime = 0;
-    gWindowManager->DoDialog(DataEntryWin, DataEntryWindowHandler, 0);
-    delete DataEntryWin;
+    gWindowManager->DoDialog(gDataEntryWindow, DataEntryWindowHandler, 0);
+    delete gDataEntryWindow;
 }
 
 VA(0x00441f97, 0x1af)
@@ -2542,7 +2574,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
         message.type = MESSAGE_LEFT_BUTTON_DOWN;
         message.x = 0xc3;
         message.y = 0x9a;
-        DataEntryWin->BroadcastMessage(message);
+        gDataEntryWindow->BroadcastMessage(message);
         return MESSAGE_DISPATCH_CONSUME;
     }
 
@@ -2559,7 +2591,7 @@ i16 DataEntryWindowHandler(tag_message& message) {
                         message.type = MESSAGE_WIDGET;
                         message.id = DATA_ENTRY_TEXT;
                         message.command = WIDGET_COMMAND_GET_TEXT;
-                        DataEntryWin->BroadcastMessage(message);
+                        gDataEntryWindow->BroadcastMessage(message);
                         if (strlen(message.text) == 0) {
                             break;
                         } else {
@@ -2568,8 +2600,8 @@ i16 DataEntryWindowHandler(tag_message& message) {
                         }
                         SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_TEXT, DATA_ENTRY_TEXT);
                         message.text = gDataEntryDest;
-                        DataEntryWin->BroadcastMessage(message);
-                        DataEntryWin->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
+                        gDataEntryWindow->BroadcastMessage(message);
+                        gDataEntryWindow->DrawWindow(1, DATA_ENTRY_TEXT, DATA_ENTRY_TEXT);
                         FINISH_DIALOG_MESSAGE(message);
                         return MESSAGE_DISPATCH_FORWARD;
                 }
@@ -2613,8 +2645,8 @@ i8 CheckMem(void) {
 
 // Towns carry a name index, and campaign maps override one town by position.
 VA(0x004421b7, 0x9d)
-char* GetTownName(i32 i) {
-    town* townPointer = gGame->GetTown(i);
+char* GetTownName(i32 townIndex) {
+    town* townPointer = gGame->GetTown(townIndex);
     if (gGame->m_campaignType > 0 && gCampaignScenarios[gGame->m_campaignScenario].victoryTownX >= 0
         && gCampaignScenarios[gGame->m_campaignScenario].victoryTownX == townPointer->m_x
         && gCampaignScenarios[gGame->m_campaignScenario].victoryTownY == townPointer->m_y)
@@ -2974,13 +3006,13 @@ void CleanUpMenus(void) {
 }
 
 VA(0x00442c49, 0x15)
-void UpdateAppSpecificMenus(void* hMenu) {
-    if (hMenu == gAdventureMenu)
+void UpdateAppSpecificMenus(void* menu) {
+    if (menu == gAdventureMenu)
         UpdateSystemOptionsMenu();
 }
 
 VA(0x00442c5e, 0x5)
-void EarlyResizeWindow(i32, i32, i32, i32) {
+void EarlyResizeWindow(i32 x, i32 y, i32 width, i32 height) {
     if (gClosingApp)
         return;
 }
@@ -2996,7 +3028,7 @@ i16 gHeroGoldCost = 2500;
 DATA(0x00490a90)
 i16 gVesaMode[6] = {640, 480, 256, 20226, 257, 0};
 DATA(0x00490a9c)
-tag_tilePoint normalDirTable[8] = {
+tag_tilePoint gNormalDirTable[8] = {
     {0, -1, 16},
     {1, -1, 16},
     {1, 0, 16},
@@ -3241,7 +3273,7 @@ WindowTextEntry gWinSetup[68] = {
     {609, 15}, {610, 15}, {611, 15}, {1, 16},
 };
 DATA(0x00491cd8)
-i8 townTheme[4] = {3, 0, 2, 1};
+i8 gTownTheme[4] = {3, 0, 2, 1};
 DATA(0x00491ce0)
 campaignScenario gCampaignScenarios[CAMPAIGN_SCENARIO_COUNT] = {
     {0,
@@ -3819,7 +3851,7 @@ char* gMoraleText[7] = {
     localization::Tr("table.gMoraleText.6"),
 };
 DATA(0x00492b58)
-char* onOffText[11] = {
+char* gOnOffText[11] = {
     localization::Tr("table.onOffText.0"),
     localization::Tr("table.onOffText.1"),
     localization::Tr("table.onOffText.2"),
@@ -3833,7 +3865,7 @@ char* onOffText[11] = {
     localization::Tr("table.onOffText.10")
 };
 DATA(0x00492b84)
-char* walkSpeedText[5] = {
+char* gWalkSpeedText[5] = {
     localization::Tr("table.walkSpeedText.0"),
     localization::Tr("table.walkSpeedText.1"),
     localization::Tr("table.walkSpeedText.2"),
@@ -4383,7 +4415,7 @@ char* gHandicapNames[5] = {
     localization::Tr("table.gHandicapNames.4")
 };
 DATA(0x0049330c)
-char* musicQualityText[3] = {
+char* gMusicQualityText[3] = {
     localization::Tr("table.musicQualityText.0"),
     localization::Tr("table.musicQualityText.1"),
     localization::Tr("table.musicQualityText.2")
@@ -4479,7 +4511,7 @@ palette* gPalette;
 DATA(0x004a74d8)
 resourceManager* gResourceManager;
 DATA(0x004a7fc0)
-u8 mapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
+u8 gMapExtra[MAP_CELL_GRID_SIZE][MAP_CELL_GRID_SIZE];
 DATA(0x004a74cc)
 i32 gSpecialHideCursor;
 DATA(0x004a74ac)
@@ -4489,7 +4521,7 @@ i32 gBlackoutPlayer;
 DATA(0x004a7838)
 char gNetBoxLine[2][60];
 DATA(0x004a7b98)
-heroWindow* DataEntryWin;
+heroWindow* gDataEntryWindow;
 DATA(0x004a74d0)
 i8 gWeekTypeExtra;
 DATA(0x004a74e4)
@@ -4583,7 +4615,7 @@ i32 gThisNetPos;
 DATA(0x004a973c)
 char gRegCDRomPath[352];
 DATA(0x004a7628)
-class heroWindow* heroWin;
+class heroWindow* gHeroScreenWindow;
 DATA(0x004a9400)
 class icon* gCurLoadedSpellIcon;
 DATA(0x004a7bb8)
@@ -4617,7 +4649,7 @@ i8 gMonthType;
 DATA(0x004a6c4c)
 char gMapDescription[124];
 DATA(0x004a7498)
-char* DEFAULT_AGGREGATE_NAME;
+char* gDefaultAggregateName;
 DATA(0x004a7b94)
 i8 gThisNetHumanPlayer[4];
 DATA(0x004a78b0)

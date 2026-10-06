@@ -1,4 +1,4 @@
-// Combat hex cells. HoMM1 cells are twelve bytes and draw the castle towers
+// Combat hex cells. Cells are twelve bytes and draw the castle towers
 // and walls themselves.
 
 #include <match.h>
@@ -75,8 +75,13 @@ void hexcell::DrawTower(i8 frame) {
             ICON_DRAW_OFFSET_FULL
         );
     else
-        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]
-            ->DrawToBuffer(mirrored ? m_x - 28 : m_x, m_y, 9, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
+        gCombatManager->m_combatIcons[COMBAT_ICON_CASTLE]->DrawToBuffer(
+            mirrored ? m_x - 28 : m_x,
+            m_y,
+            9,
+            ICON_DRAW_NORMAL,
+            ICON_DRAW_OFFSET_FULL
+        );
 }
 #undef mirrored
 

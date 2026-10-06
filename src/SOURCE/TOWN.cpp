@@ -81,7 +81,7 @@ void town::View(void) {
 
     townManager* manager = gTownManager;
     manager->SetTown(this);
-    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gExec->CallManager(gTownManager);
     if (m_occupyingHeroId != TOWN_OCCUPYING_HERO_NONE)
         gAdvManager->SetHeroContext(m_occupyingHeroId, 0);

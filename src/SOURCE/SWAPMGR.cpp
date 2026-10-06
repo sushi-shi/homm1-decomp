@@ -130,10 +130,13 @@ void swapManager::DrawSelector(void) {
                         selectorY0 = armyRow - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        selectorX0 = leftArtifactCol
-                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing : 0)
-                                - 1;
-                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing + artifactY0 - 1;
+                        selectorX0 =
+                            leftArtifactCol
+                            + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing
+                                                                              : 0)
+                            - 1;
+                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing
+                                     + artifactY0 - 1;
                         break;
                 }
                 break;
@@ -144,10 +147,13 @@ void swapManager::DrawSelector(void) {
                         selectorY0 = armyRow - 1;
                         break;
                     case SWAP_ITEM_ARTIFACT:
-                        selectorX0 = rightArtifactCol
-                                + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing : 0)
-                                - 1;
-                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing + artifactY0 - 1;
+                        selectorX0 =
+                            rightArtifactCol
+                            + (m_selectedSlot > SWAP_ARTIFACTS_PER_COLUMN - 1 ? artifactsSpacing
+                                                                              : 0)
+                            - 1;
+                        selectorY0 = m_selectedSlot % SWAP_ARTIFACTS_PER_COLUMN * artifactsSpacing
+                                     + artifactY0 - 1;
                         break;
                 }
                 break;
@@ -207,8 +213,7 @@ i16 swapManager::Main(struct tag_message& message) {
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                             break;
                         case CONTROL_RIGHT_HERO:
                             if (quickView)
@@ -218,8 +223,7 @@ i16 swapManager::Main(struct tag_message& message) {
                             Update();
                             m_window->DrawWindow();
                             Reset();
-                            gWindowManager
-                                ->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                            gWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                             break;
                         case CONTROL_LEFT_ARTIFACT_FIRST:
                         case CONTROL_LEFT_ARTIFACT_FIRST + 1:
@@ -551,7 +555,8 @@ void swapManager::SwapMons(void) {
             return;
         if (targetTroops->IsMember(selectedArmy->m_creatureTypes[m_selectedSlot])) {
             for (i = 0; i < ARMY_GROUP_SLOT_COUNT; i++) {
-                if (targetTroops->m_creatureTypes[i] == selectedArmy->m_creatureTypes[m_selectedSlot])
+                if (targetTroops->m_creatureTypes[i]
+                    == selectedArmy->m_creatureTypes[m_selectedSlot])
                     break;
             }
             targetTroops->m_creatureCounts[i] += selectedArmy->m_creatureCounts[m_selectedSlot];

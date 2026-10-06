@@ -58,7 +58,7 @@ button::button(
     i16 y,
     i16 width,
     i16 height,
-    char* iconId,
+    char* iconName,
     i16 normalFrame,
     i16 pressedFrame,
     i16 selectMode,
@@ -67,7 +67,7 @@ button::button(
     i16 kind
 )
     : widget(x, y, width, height, id, kind) {
-    m_icon = gResourceManager->GetIcon(iconId);
+    m_icon = gResourceManager->GetIcon(iconName);
     m_normalFrame = normalFrame;
     m_pressedFrame = pressedFrame;
     m_selectMode = selectMode;
@@ -76,11 +76,11 @@ button::button(
 
 VA(0x00476e34, 0xfb)
 void button::Read(void) {
-    char name[RESOURCE_NAME_CAPACITY];
+    char iconName[RESOURCE_NAME_CAPACITY];
     READ_WIDGET_GEOMETRY(this, gResourceManager);
-    gResourceManager->Read13(name);
+    gResourceManager->Read13(iconName);
     gResourceManager->SavePosition();
-    m_icon = gResourceManager->GetIcon(name);
+    m_icon = gResourceManager->GetIcon(iconName);
     gResourceManager->RestorePosition();
     m_normalFrame = gResourceManager->ReadWord();
     m_pressedFrame = gResourceManager->ReadWord();

@@ -47,8 +47,7 @@ WinMain(HINSTANCE instance, HINSTANCE previousInstance, char* commandLine, i32 s
 
     gAppInstance = instance;
 #ifdef HOMM1_EDITOR
-    gEventHandle =
-        CreateEventA(NULL, FALSE, FALSE, localization::Tr("editor.instance.event_name"));
+    gEventHandle = CreateEventA(NULL, FALSE, FALSE, localization::Tr("editor.instance.event_name"));
 #else
     gEventHandle =
         CreateEventA(NULL, FALSE, FALSE, localization::Tr("startup.instance.event_name"));
@@ -133,9 +132,8 @@ BOOL AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, ch
             reinterpret_cast<HBRUSH>(COLOR_WINDOW + 1); // Win32 system-color brush encoding.
         appClass.hInstance = instance;
         appClass.style = KBWIN_CLASS_STYLE;
-        appClass.lpfnWndProc = reinterpret_cast<WNDPROC>(
-            AppWndProc
-        ); // HoMM1 declares the procedure with void* handles.
+        appClass.lpfnWndProc =
+            reinterpret_cast<WNDPROC>(AppWndProc); // AppWndProc takes void* handles.
         appClass.cbWndExtra = 0;
         appClass.cbClsExtra = 0;
         if (RegisterClassA(&appClass) == 0)
@@ -317,19 +315,19 @@ long __stdcall AppWndProc(HWND window, u32 message, u32 messageParam, long messa
 
 // About-dialog callback.
 VA(0x004436ff, 0x67)
-BOOL __stdcall AppAbout(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam) {
-    i32 wmId;
-    WORD codeNotify;
-    HWND hwndCtl;
+BOOL __stdcall AppAbout(HWND dialog, UINT message, WPARAM messageParam, LPARAM messageData) {
+    HWND childWindow;
+    i32 commandId;
+    WORD notifyCode;
     switch (message) {
         case WM_INITDIALOG:
             return TRUE;
         case WM_COMMAND:
-            wmId = wParam & 0xffff;
-            hwndCtl = reinterpret_cast<HWND>(lParam); // WM_COMMAND passes HWND in LPARAM.
-            codeNotify = (wParam >> 16) & 0xffff;
-            if (wmId == IDOK)
-                EndDialog(hDlg, 1);
+            commandId = messageParam & 0xffff;
+            childWindow = reinterpret_cast<HWND>(messageData); // WM_COMMAND passes HWND in LPARAM.
+            notifyCode = (messageParam >> 16) & 0xffff;
+            if (commandId == IDOK)
+                EndDialog(dialog, 1);
             break;
     }
     PollSound();
@@ -401,18 +399,18 @@ void ResizeWindow(i32 x, i32 y, i32 width, i32 height) {
 
 VA(0x00443911, 0x165)
 i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData) {
-    DLGPROC lpfnDlgProc;
+    DLGPROC dialogProc;
     i32 command;
 
     command = LOWORD(messageParam);
     switch (command) {
         case KBWIN_MENU_ABOUT:
-            lpfnDlgProc =
+            dialogProc =
                 reinterpret_cast<DLGPROC>(AppAbout); // AppAbout is the BOOL dialog procedure.
 #ifdef HOMM1_EDITOR
-            DialogBoxParamA(gAppInstance, "EDITOR", window, lpfnDlgProc, 0);
+            DialogBoxParamA(gAppInstance, "EDITOR", window, dialogProc, 0);
 #else
-            DialogBoxParamA(gAppInstance, "HEROES", window, lpfnDlgProc, 0);
+            DialogBoxParamA(gAppInstance, "HEROES", window, dialogProc, 0);
 #endif
             break;
         case KBWIN_MENU_HELP:
@@ -547,36 +545,36 @@ void SetNoDialogMenus(i32 menusEnabled) {
 // enable table.
 VA(0x00443d1f, 0x12b)
 void SetMenus(HMENU menu, i32 enabled) {
-    i32 index;
-    i32 count;
     u32 id;
-    i32 match;
-    i32 pos;
-    i32 disabled;
+    i32 candidate;
+    i32 index;
+    i32 update;
+    i32 count;
+    i32 matchIndex;
 
     count = GetMenuItemCount(menu);
     for (index = 0; index < count; index++) {
         id = GetMenuItemID(menu, index);
         if (id == static_cast<u32>(-1)) {
             SetMenus(GetSubMenu(menu, index), enabled);
-            disabled = 0;
+            update = 0;
         } else {
-            disabled = 0;
+            update = 0;
             if (enabled) {
-                disabled = 1;
+                update = 1;
             } else {
-                match = 0;
-                for (pos = 0; pos < KBWIN_MENU_ENTRY_COUNT; pos++) {
-                    if (gMenuEnableStatus[pos].command == id)
-                        match = pos;
+                matchIndex = 0;
+                for (candidate = 0; candidate < KBWIN_MENU_ENTRY_COUNT; candidate++) {
+                    if (gMenuEnableStatus[candidate].command == id)
+                        matchIndex = candidate;
                 }
                 if (gInSetupDialog)
-                    disabled = 1 - gMenuEnableStatus[match].setupEnabled;
+                    update = 1 - gMenuEnableStatus[matchIndex].setupEnabled;
                 else
-                    disabled = 1 - gMenuEnableStatus[match].normalEnabled;
+                    update = 1 - gMenuEnableStatus[matchIndex].normalEnabled;
             }
         }
-        if (disabled != 0)
+        if (update != 0)
             EnableMenuItem(menu, id, enabled == 0 ? MF_GRAYED : MF_ENABLED);
     }
     UpdateDfltMenu(menu);
@@ -1135,14 +1133,14 @@ VA(0x00444702, 0x72)
 // Suppress the system's critical-error dialog while probing an empty drive.
 bool DriveSupportsFreeSpaceQuery(char driveLetter) {
     UINT oldMode;
-    char szPath[CD_DRIVE_QUERY_PATH_SIZE];
-    ULARGE_INTEGER availToCaller;
+    char path[CD_DRIVE_QUERY_PATH_SIZE];
+    ULARGE_INTEGER availableToCaller;
     ULARGE_INTEGER total;
     ULARGE_INTEGER freeBytes;
 
-    wsprintfA(szPath, "%c:", driveLetter);
+    wsprintfA(path, "%c:", driveLetter);
     oldMode = SetErrorMode(SEM_FAILCRITICALERRORS);
-    if (GetDiskFreeSpaceExA(szPath, &availToCaller, &total, &freeBytes) != FALSE) {
+    if (GetDiskFreeSpaceExA(path, &availableToCaller, &total, &freeBytes) != FALSE) {
         SetErrorMode(oldMode);
         return true;
     } else {
@@ -1153,29 +1151,30 @@ bool DriveSupportsFreeSpaceQuery(char driveLetter) {
 
 VA(0x00444774, 0x36f)
 // The disc probe now checks an Ogg track; it no longer opens an MCI CD device.
+#define key activeKeyVal // frame-slot spelling
 H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
-    u32 unusedErr;
-    u32 logicalDrives;
-    i32 eachCd;
-    i32 thisFh;
+    HKEY key;
+    char keyPath[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 tailResult;
+    i32 drivesCount;
+    char endBuffer[CD_PROBE_BUFFER_SIZE];
+    i32 probeFd;
     i32 index;
     i32 cdDrives[CD_DRIVE_LETTER_COUNT];
-    char endBuffer[CD_PROBE_BUFFER_SIZE];
-    i32 pos;
-    i32 tempDrives;
-    HKEY activeKeyVal;
-    char subKeyArray[REGISTRY_TEXT_BUFFER_SIZE];
+    i32 eachCd;
+    u32 unusedErr;
+    u32 logicalDrives;
 
     sprintf(gText, "%sHEROES.AGG", gDataPath);
-    thisFh = open(gText, _O_BINARY);
-    if (thisFh == -1) {
+    probeFd = open(gText, _O_BINARY);
+    if (probeFd == -1) {
         if (_chdir(gRegAppPath) == -1)
             return CD_SETUP_NO_APP_PATH;
-        thisFh = open(gText, _O_BINARY);
-        if (thisFh == -1)
+        probeFd = open(gText, _O_BINARY);
+        if (probeFd == -1)
             return CD_SETUP_NO_DATA;
     }
-    close(thisFh);
+    close(probeFd);
     logicalDrives = GetLogicalDrives();
     // Retail clears 26 bytes, although the drive slots are 32-bit integers.
     memset(cdDrives, 0, CD_DRIVE_LETTER_COUNT);
@@ -1187,50 +1186,50 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
             }
         }
     }
-    tempDrives = index;
+    drivesCount = index;
     if (strlen(gRegCDRomPath) > 0 && gRegCDRomPath[0] >= 'A' && gRegCDRomPath[0] <= 'Z'
         && DriveSupportsFreeSpaceQuery(gRegCDRomPath[0])) {
         sprintf(gText, "%s%s", gRegCDRomPath, gCDTrackName);
-        thisFh = open(gText, _O_BINARY);
-        if (thisFh != -1) {
-            close(thisFh);
+        probeFd = open(gText, _O_BINARY);
+        if (probeFd != -1) {
+            close(probeFd);
             return CD_SETUP_READY;
         }
     }
-    if (tempDrives <= 0)
+    if (drivesCount <= 0)
         return CD_SETUP_NO_DRIVE;
     for (eachCd = 0; eachCd < CD_SETUP_ATTEMPTS; eachCd++) {
-        for (index = 0; index < tempDrives; index++) {
+        for (index = 0; index < drivesCount; index++) {
             if (DriveSupportsFreeSpaceQuery(cdDrives[index] + 'A')) {
                 sprintf(gText, "%c:%s", cdDrives[index] + 'A', gCDTrackName);
-                thisFh = open(gText, _O_BINARY);
-                if (thisFh == -1)
+                probeFd = open(gText, _O_BINARY);
+                if (probeFd == -1)
                     continue;
-                pos = _lseek(thisFh, 0, SEEK_END);
-                if (pos != -1) {
-                    pos = _lseek(thisFh, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
-                    if (pos != -1)
-                        pos = read(thisFh, endBuffer, CD_AUTORUN_TAIL_BYTES);
+                tailResult = _lseek(probeFd, 0, SEEK_END);
+                if (tailResult != -1) {
+                    tailResult = _lseek(probeFd, -CD_AUTORUN_TAIL_BYTES, SEEK_CUR);
+                    if (tailResult != -1)
+                        tailResult = read(probeFd, endBuffer, CD_AUTORUN_TAIL_BYTES);
                 }
-                close(thisFh);
-                if (pos != -1) {
+                close(probeFd);
+                if (tailResult != -1) {
                     sprintf(gRegCDRomPath, "%c:", cdDrives[index] + 'A');
                     strcpy(
-                        subKeyArray,
+                        keyPath,
                         "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic Platinum\\1.000"
                     );
-                    activeKeyVal = NULL;
-                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, subKeyArray, 0, KEY_WRITE, &activeKeyVal)
+                    key = NULL;
+                    if (RegOpenKeyExA(HKEY_LOCAL_MACHINE, keyPath, 0, KEY_WRITE, &key)
                         == ERROR_SUCCESS) {
                         RegSetValueExA(
-                            activeKeyVal,
+                            key,
                             "HMM1 CDDrive",
                             0,
                             REG_SZ,
                             reinterpret_cast<LPBYTE>(gRegCDRomPath),
                             strlen(gRegCDRomPath) + 1
                         );
-                        RegCloseKey(activeKeyVal);
+                        RegCloseKey(key);
                     }
                     return CD_SETUP_READY;
                 }
@@ -1240,6 +1239,7 @@ H1_ENUM_RETURN(CdSetupResult, i32) SetupCDDrive(void) {
     }
     return CD_SETUP_NOT_FOUND;
 }
+#undef key
 
 VA(0x00444ae3, 0x6b)
 void SetWinText(heroWindow* window, i16 id) {

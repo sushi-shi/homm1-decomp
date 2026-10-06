@@ -22,7 +22,7 @@ armyGroup::armyGroup(void) {
 VA(0x004184e1, 0xd)
 void armyGroup::View(i32) {}
 
-// HoMM1 adds the town's building bit 4 and clamps to -3..3 in AX.
+// Adds the town's building bit 4 and clamps to -3..3.
 VA(0x004184ee, 0x11b)
 i16 armyGroup::GetMorale(hero* armyHero, town* occupiedTown) {
     i32 morale;
@@ -61,7 +61,6 @@ void armyGroup::Dismiss(i8 slot) {
     m_creatureCounts[slot] = 0;
 }
 
-// HoMM1 retail reads a signed byte parameter and returns in AL.
 VA(0x0041862f, 0x47)
 i8 armyGroup::IsMember(i8 creatureType) {
     for (i16 slot = 0; slot < ARMY_GROUP_SLOT_COUNT; ++slot) {
@@ -111,7 +110,6 @@ H1_ENUM_RETURN(ArmyGroupAlignmentResult, i8) armyGroup::IsHomogeneous(i8 alignme
     return ARMY_GROUP_ALIGNMENT_NO_MODIFIER;
 }
 
-// HoMM1 retail returns in AL and sign-extends its IsMember call results.
 VA(0x004187b4, 0x3b)
 i8 armyGroup::CanJoin(i8 creatureType) {
     if (IsMember(creatureType))

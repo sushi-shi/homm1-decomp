@@ -40,20 +40,20 @@ public:
     // --- constructors ---
     heroWindowManager(void);
     // --- virtual methods (vtable order) ---
-    virtual i16 Open(i16 managerOrder) OVERRIDE;
+    virtual i16 Open(i16 priority) OVERRIDE;
     virtual void Close(void) OVERRIDE;
     virtual i16 Main(struct tag_message& message) OVERRIDE;
     // --- methods ---
     i16 UpdateHoverWindow(i16 x, i16 y);
     i16 BroadcastMessage(i16 type, i16 command, i16 widgetId, i16 value);
-    void AddWindow(class heroWindow* window, i16 zOrder, i8 openFlags);
+    void AddWindow(class heroWindow* window, i16 zOrder, i8 updateScreen);
     void RemoveWindow(class heroWindow* window);
     i16 DoDialog(class heroWindow* window, i16 (*handler)(struct tag_message&), i32 fade);
     void UpdateScreen(void);
     void UpdateScreenRegion(i16 x, i16 y, i16 width, i16 height);
     void RedrawScreen(void);
     void Cleanup(void);
-    void FadeScreen(i16 direction, i16 steps, class palette* currentPalette);
+    void FadeScreen(i16 direction, i16 increment, class palette* currentPalette);
     void ScreenShot(void);
     void SaveFizzleSource(i16 x, i16 y, i16 width, i16 height);
     void FizzleForward(i16 x, i16 y, i16 width, i16 height, i32 delay);
@@ -79,13 +79,14 @@ H1_ENUM_BEGIN(WindowFadeMode)
     WINDOW_FADE_OUT = 1
 H1_ENUM_END(WindowFadeMode)
 
-// Palette fade lengths passed to FadeIn/FadeOut/FadeScreen: the short fade
-// of dialogs and screen changes and the long fade of the window manager's
-// start-up.
-H1_ENUM_BEGIN(WindowFadeSteps)
-    WINDOW_FADE_STEPS_SHORT = 8,
-    WINDOW_FADE_STEPS_NORMAL = 0x80
-H1_ENUM_END(WindowFadeSteps)
+// Palette-level increments passed to FadeIn/FadeOut/FadeScreen. A fade walks
+// the 64 palette levels by this increment (doubled in a window): SHORT fades
+// over eight frames; NORMAL passes the last level at once, so the palette
+// switches without a visible fade (the window manager's start-up).
+H1_ENUM_BEGIN(WindowFadeIncrement)
+    WINDOW_FADE_SHORT = 8,
+    WINDOW_FADE_NORMAL = 0x80
+H1_ENUM_END(WindowFadeIncrement)
 
 H1_ENUM_CONST_BEGIN(WindowManagerConstant)
     WINDOW_MANAGER_NO_DIALOG_RESULT = -1,
