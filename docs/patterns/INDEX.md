@@ -41,6 +41,7 @@ Short observations, not a wall database. [Scope and admission rules](README.md).
 - [VC6 /Ob2 emits file-scope initializer literals in source order (HoMM1 Buka, measured)](vc6-ob2-literal-order.md).
 - [VC6 string literal or named array (HoMM1 Buka, measured)](vc6-literal-vs-named-string.md) — named initialized data precedes the unit's unpooled literals, so `.data` order shows which a single-use string was.
 - [VC6 parenthesized cast operands keep a separate fild (HoMM1 Buka, measured)](vc6-parenthesized-cast-operand.md).
+- [LINK 3.10 names import members after the DLL name it records (HoMM1 Buka, measured)](link310-import-member-names.md) — `LIBRARY` name, else the `/OUT` name; the member name and the imported DLL string are one string, so the vendor libraries need no edit.
 - [LINK 6.00 import order follows the C runtime's `qsort` (HoMM1 Buka, measured)](link6-iat-qsort-runtime.md) — equal-key DLL imports end in the IAT order the linker's `MSVCRT` `qsort` leaves; the editor's retail order is the VC6 runtime's.
 - [VC6 helper forms: expression macros and value inlines are byte-neutral, statement macros and reference accessors are not (HoMM1 Buka, measured)](vc6-helper-forms.md).
 

@@ -13,9 +13,9 @@ reports the compare summary for exactly the units whose objects CHANGED - which
 is the question a matcher actually asks, and the reason the report is an in-graph
 edge rather than an unconditional call (a no-op build has nothing to report).
 
-"Changed" is decided by CONTENT, not mtime: homm1.graph.cc writes objects
-if-changed with the COFF timestamp stabilised, so a hash census before and
-after the build names precisely the units whose codegen moved.
+"Changed" is decided by CONTENT, not mtime: homm1.graph.cc rewrites an object
+only when it differs apart from the COFF timestamp, so a hash census before
+and after the build names precisely the units whose codegen moved.
 """
 
 from __future__ import annotations
