@@ -1,30 +1,43 @@
-# Heroes of Might and Magic — source
+# Heroes of Might and Magic — Win95 1.1 source
 
 C++ source for the Windows 95 release of Heroes of Might and Magic
-(New World Computing, May 1996 (Windows 95 1.1) `HEROES.EXE`), built with the original
+(New World Computing, May 1996 `HEROES.EXE`), built with the original
 Visual C++ 4.0 toolchain.
 
 ## Branches
 
-Win95 1.2 is maintained on [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2).
-See the [1.1 → 1.2 changes](https://github.com/sushi-shi/homm1-decomp/blob/decomp-win95-1.2/docs/win95-1.2.md)
-for behavior differences and port validation.
-
 ```text
-decomp-win95-1.0 ---> decomp-win95-1.1 ---> decomp-win95-1.2
-        |
-        v
-source-win95-1.0
+decomp-win95-1.0 -------------------> decomp-win95-1.1
+    |                                    |
+    v                                    v
+source-win95-1.0                     decomp-win95-1.2
+                                         |
+                                         v
+                                     decomp-buka-2003
+                                         |
+                 +-----------------------+---------+
+                 |                                 |
+                 v                                 v
+         source-buka-2003                  classic-buka-2003
+                 |
+      +----------+------------+
+      |                       |
+      v                       v
+  source-te                  port ------------------> port-te
 ```
 
-| Branch | Purpose |
-| --- | --- |
-| [decomp-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) | Reconstruction of the February 1996 Win95 1.0 `HEROES.EXE` |
-| [decomp-win95-1.1](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) | Reconstruction of the May 1996 Win95 1.1 `HEROES.EXE` |
-| [decomp-win95-1.2](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) | Maintained reconstruction of the August 1997 Win95 1.2 `HEROESW.EXE`, using VC4.1 |
-| [source-win95-1.0](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) | Generated clean source for Win95 1.0 |
+- [`decomp-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.0) — Win95 1.0 `HEROES.EXE` (Feb 1996)
+- [`decomp-win95-1.1`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.1) — Win95 1.1 `HEROES.EXE` (May 1996)
+- [`decomp-win95-1.2`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-win95-1.2) — Win95 1.2 `HEROESW.EXE` (Aug 1997), VC4.1
+- [`source-win95-1.0`](https://github.com/sushi-shi/homm1-decomp/tree/source-win95-1.0) — Clean source, Win95 1.0
+- [`decomp-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/decomp-buka-2003) — Buka 2003 game and editor, byte-identical
+- [`source-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/source-buka-2003) — Clean source, Buka 2003 (ru/en)
+- [`classic-buka-2003`](https://github.com/sushi-shi/homm1-decomp/tree/classic-buka-2003) — Reading view, UTF-8 Russian
+- [`source-te`](https://github.com/sushi-shi/homm1-decomp/tree/source-te) — Tournament Edition on the source
+- [`port`](https://github.com/sushi-shi/homm1-decomp/tree/port) — Native port: Linux, Windows, browser
+- [`port-te`](https://github.com/sushi-shi/homm1-decomp/tree/port-te) — Tournament Edition on the port
 
-## Play
+## Build and play
 
 On x86-64 Linux with Nix flakes enabled, from this directory:
 
