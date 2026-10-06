@@ -1,0 +1,7 @@
+# The shipped archive with one icon claiming 32512 frames in its 14070 bytes
+# of data: the whole archive is loaded by content and must be refused at
+# that icon, as a damaged archive.
+base DATA\HEROES.AGG
+set 454917 00 7F
+bytes 06            # kind: the whole archive
+expect refused

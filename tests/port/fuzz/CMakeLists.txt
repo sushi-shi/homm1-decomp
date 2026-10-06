@@ -79,10 +79,17 @@ homm1_fuzz_harness(fuzz_savegame
 
 # Maps and campaign maps through the file requester's header scan and
 # game::NewMap (game::LoadMap and the new game set-up that interprets it).
+# Every shipped map is started under every standard game set-up; the
+# campaign maps, which only start as their campaign scenario, are read with
+# game::LoadMap alone.
 homm1_fuzz_harness(fuzz_map
   SOURCES fuzz_map.cpp
   UNITS homm1_units
-  SHIPPED "MAPS\\*.MAP@00-0f" "MAPS\\*.CMP@00-0f")
+  SHIPPED "MAPS\\*.MAP@00-0f")
+add_test(NAME fuzz_map_campaign_replay
+  COMMAND fuzz_map_replay --shipped "MAPS\\*.CMP@80-a3")
+set_tests_properties(fuzz_map_campaign_replay PROPERTIES
+  SKIP_RETURN_CODE 77 TIMEOUT 600 ENVIRONMENT HOMM1_FUZZ_LOAD_ONLY=1)
 
 # Maps through the editor's reader, its checks and its writer.
 homm1_fuzz_harness(fuzz_editor_map
