@@ -401,7 +401,7 @@ void editManager::RemoveSmallRegions(void) {
                         if (x == maxX)
                             maxX++;
                         if (y == minY)
-                            minX--;
+                            minY--;
                         if (y == maxY)
                             maxY++;
                         if (minX < 0)
@@ -530,10 +530,10 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
             if (PlaceChainLink(&rootX, &rootY, direction, tileset, treeFamily)) {
                 placed += 12;
                 if (tileset == TILESET_TREE32) {
-                    if (Random(1, 100) < (direction % 1 ? 30 : 10))
+                    if (Random(1, 100) < (direction % 2 ? 30 : 10))
                         going = false;
                 } else {
-                    if (Random(1, 100) < (direction % 1 ? 40 : 20))
+                    if (Random(1, 100) < (direction % 2 ? 40 : 20))
                         going = false;
                 }
                 if (tileset == TILESET_TREE32) {
@@ -784,8 +784,9 @@ void editManager::PlaceTowns(void) {
         shareValue[slot] =
             static_cast<float>(regionSizes[slot]) / (static_cast<float>(gLandCellCount)) * 100.0f;
     }
+    // Largest region first.
     for (round = 1; round < continents; round++) {
-        for (slot = round; slot < continents; slot++) {
+        for (slot = 1; slot <= continents - round; slot++) {
             if (regionSizes[rank[slot]] < regionSizes[rank[slot + 1]]) {
                 t = rank[slot];
                 rank[slot] = rank[slot + 1];
@@ -919,35 +920,36 @@ void editManager::PlaceTowns(void) {
             }
         }
         for (peerIndex = 0; peerIndex < c; peerIndex++) {
-            if (castleRegion[c] != castleRegion[c - 1])
+            if (castleRegion[c] != castleRegion[peerIndex])
                 continue;
             if (keeps[peerIndex].x < keeps[c].x && keeps[peerIndex].y < keeps[c].y) {
                 fromX = tileX - 2;
                 fromY = tileY - 2;
                 destX = keeps[peerIndex].x + 1;
-                destY = keeps[peerIndex].x + 1;
+                destY = keeps[peerIndex].y + 1;
             } else if (keeps[peerIndex].x < keeps[c].x && keeps[peerIndex].y >= keeps[c].y) {
                 fromX = tileX + 1;
                 fromY = tileY + 1;
                 destX = keeps[peerIndex].x + 1;
-                destY = keeps[peerIndex].x - 2;
+                destY = keeps[peerIndex].y - 2;
             } else if (keeps[peerIndex].x >= keeps[c].x && keeps[peerIndex].y < keeps[c].y) {
                 fromX = tileX + 1;
                 fromY = tileY - 2;
                 destX = keeps[peerIndex].x + 1;
-                destY = keeps[peerIndex].x + 1;
+                destY = keeps[peerIndex].y + 1;
             } else {
                 fromX = tileX + 1;
                 fromY = tileY + 1;
                 destX = keeps[peerIndex].x - 1;
-                destY = keeps[peerIndex].x - 2;
+                destY = keeps[peerIndex].y - 2;
             }
             nearX = fromX;
             nearY = fromY;
             tracing = true;
             while (tracing) {
+                // The road has reached the other castle.
                 if (nearX == destX && nearY == destY)
-                    tracing = false;
+                    break;
                 if (destX > nearX)
                     stepX = 1;
                 else if (destX < nearX)
@@ -1086,8 +1088,8 @@ void editManager::PlaceTowns(void) {
                 if ((m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN)
                     == TERRAIN_DESERT)
                     PlaceOverlay(desertStoneLiths, tileX, tileY);
-                if ((m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN)
-                    == TERRAIN_SNOW)
+                else if ((m_map.cells[tileX][tileY].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN)
+                         == TERRAIN_SNOW)
                     PlaceOverlay(snowStoneLiths, tileX, tileY);
                 else
                     PlaceOverlay(stoneLiths, tileX, tileY);

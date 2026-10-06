@@ -946,3 +946,5 @@ section 1, each with the reproduction it was checked against.
   the recruit window gave both tavern heroes. The port's "weekly monster
   growth" row is not a defect: `game::PerWeek` grows a site's stock only
   below 100 and by at most 10, so the byte never exceeds 109.
+- *Random map generator (BUG-GEN-1–5):* region ranking, region bounds,
+  diagonal chain lengths, roads between castles, and desert stone liths.
