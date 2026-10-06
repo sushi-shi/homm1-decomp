@@ -19,7 +19,9 @@ from homm1.clean import source
 
 IMAGE_BASE = 0x400000
 TEMPLATE = "scripts/homm1/clean/template/"
-EXECUTABLE = ("build.py",)
+#: The game runner shared with `homm1 play`; the source tree carries it as play.py.
+RUNNER = "scripts/homm1/graph/play.py"
+EXECUTABLE = ("build.py", "play.py")
 
 
 def _units(files: dict[str, bytes]) -> list[dict]:
@@ -46,7 +48,8 @@ def manifest(files: dict[str, bytes]) -> dict:
     from homm1.graph.link import (BASE_LIBRARY, BASE_LIBRARY_AFTER, BASE_LIBRARY_FROM,
                                   CRT_LIBRARY, CRT_REPLACES, LINK_LIBS)
     config = tomllib.loads(files["config/units.toml"].decode())
-    units = config["unit"]
+    # The tree builds the game; editor-only units stay in the matching tree.
+    units = [unit for unit in config["unit"] if "game" in unit.get("images", ["game"])]
     keyed = []
     for index, unit in enumerate(units):
         rva = first_function(files, unit)
@@ -114,6 +117,7 @@ def project_files(files: dict[str, bytes], variant: str = "source") -> dict[str,
     if variant != "source":
         return output
     from homm1 import toolchain
+    output["play.py"] = files[RUNNER]
     output["build.json"] = (json.dumps(manifest(files), indent=2) + "\n").encode()
     output["flake.lock"], revision = flake_lock(files)
     contract = toolchain.release(manifest(files)["compiler"])

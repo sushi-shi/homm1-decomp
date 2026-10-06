@@ -19,7 +19,7 @@ from pathlib import Path
 
 from homm1 import manifest
 from homm1.core.od_slots import bucket
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 from homm1.sema import die, run
 from homm1.sema.index import index, short_name
 
@@ -151,7 +151,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     unit, inferred = _resolve(args.target)
     wanted = args.function or inferred
-    path = args.object or BUILD / "objdiff/base" / f"{unit}.obj"
+    path = args.object or IMAGE_BUILD / "objdiff/base" / f"{unit}.obj"
     if not path.is_file():
         die(f"candidate object is absent: {path}; build {unit} first")
     frames = frame_names(path.read_bytes())

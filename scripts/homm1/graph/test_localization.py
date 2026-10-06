@@ -316,6 +316,10 @@ class LocalizationTests(unittest.TestCase):
             with (root / 'config/retail' / name).open() as stream:
                 return list(csv.DictReader(stream, delimiter='\t'))
         rows = table('localization.tsv')
+        # Another image's own catalog entries keep their provenance beside
+        # that image's retail facts.
+        for image_table in sorted((root / 'config/retail').glob('*/localization.tsv')):
+            rows += table(image_table.relative_to(root / 'config/retail').as_posix())
         resource_rows = table('localization_resources.tsv')
         fixed_rows = table('localization_fixed_width.tsv')
         self.assertEqual(set(catalog.english),

@@ -42,18 +42,18 @@ from dataclasses import asdict, dataclass, field, replace
 from itertools import combinations
 from pathlib import Path
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 from homm1.verify.constant_context import semantic_context
 from homm1.verify.constants import _flags, _require_cl_mode, _source_path
 from homm1.verify.srcscan import blank_comments
 
 
-CDB = BUILD / "clangd/compile_commands.json"
-REPORT = BUILD / "gen/enum_reuse.tsv"
-COLLISION_REPORT = BUILD / "gen/enum_value_collisions.tsv"
-PAIR_REPORT = BUILD / "gen/enum_domain_pairs.tsv"
-ROLE_PAIR_REPORT = BUILD / "gen/enum_role_pairs.tsv"
-BARE_CONSTANTS = BUILD / "gen/bare_constants.tsv"
+CDB = IMAGE_BUILD / "clangd/compile_commands.json"
+REPORT = IMAGE_BUILD / "gen/enum_reuse.tsv"
+COLLISION_REPORT = IMAGE_BUILD / "gen/enum_value_collisions.tsv"
+PAIR_REPORT = IMAGE_BUILD / "gen/enum_domain_pairs.tsv"
+ROLE_PAIR_REPORT = IMAGE_BUILD / "gen/enum_role_pairs.tsv"
+BARE_CONSTANTS = IMAGE_BUILD / "gen/bare_constants.tsv"
 LEDGER = REPO / "config/reviews/enum-reuse.tsv"
 
 LEDGER_FIELDS = (
@@ -414,6 +414,18 @@ def collect(*, cdb: Path = CDB, repo: Path = REPO, jobs: int = 1):
     if not cdb.is_file():
         raise FileNotFoundError(f"{cdb}: no compile database; run homm1 configure")
     entries = json.loads(cdb.read_text())
+    # Units only another image compiles (src/EDITOR) are evaluated with that
+    # image's compile commands, so every source's enums are covered.
+    from homm1.core.paths import DEFAULT_IMAGE, image_build, images
+    seen = {entry["file"] for entry in entries}
+    for image in images():
+        other = image_build(image) / "clangd/compile_commands.json"
+        if image == DEFAULT_IMAGE or not other.is_file():
+            continue
+        for entry in json.loads(other.read_text()):
+            if entry["file"] not in seen:
+                seen.add(entry["file"])
+                entries.append(entry)
     entries = [
         entry for entry in entries
         if Path(entry["file"]).suffix in (".c", ".cpp")

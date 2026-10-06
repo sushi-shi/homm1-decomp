@@ -3888,6 +3888,26 @@ msgctxt "startup.instance.game_title"
 msgid "Heroes of Might and Magic"
 msgstr "Герои Меча и Магии"
 
+msgctxt "editor.startup.initialize.failed"
+msgid "Cannot initialize the system"
+msgstr "Не могу инициировать систему"
+
+msgctxt "editor.instance.event_name"
+msgid "Heroes Editor"
+msgstr "Редактор Героев"
+
+msgctxt "editor.instance.title"
+msgid "Heroes Editor"
+msgstr "Редактор Героев"
+
+msgctxt "editor.window.app_name"
+msgid "Heroes Editor"
+msgstr "Редактор Героев"
+
+msgctxt "editor.window.title"
+msgid "Heroes Editor"
+msgstr "Редактор Героев"
+
 msgctxt "startup.instance.already_running"
 msgid "Only one copy of %s may run at a time"
 msgstr "Только одна копия %s может быть запущена одновременно"

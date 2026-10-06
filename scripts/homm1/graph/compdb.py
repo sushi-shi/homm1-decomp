@@ -45,11 +45,11 @@ import shutil
 import sys
 from pathlib import Path
 
-from homm1.core.paths import BUILD, INCLUDE, REPO, msvc_dir, vendor_include_dirs
+from homm1.core.paths import BUILD, IMAGE_BUILD, INCLUDE, REPO, msvc_dir, vendor_include_dirs
 
-OUT_DIR = BUILD / "clangd"
+OUT_DIR = IMAGE_BUILD / "clangd"
 OUT_FILE = OUT_DIR / "compile_commands.json"
-MIRROR_DIR = OUT_DIR / "inc-lower"
+MIRROR_DIR = BUILD / "clangd" / "inc-lower"   # shared by every image
 
 #: MSVC 4.0 == cl 10.00 == _MSC_VER 1000.
 MSC_COMPAT = "10.00"
@@ -199,12 +199,16 @@ def generate(quiet: bool = False) -> bool:
 
     cpp_units = [u for u in units()
                  if Path(u["source"]).suffix.lower() != ".asm"]
+    # The selected image's compile defines select image-specific source
+    # (homm1.manifest.image_defines); the database is per image.
+    from homm1.manifest import image_defines
+    defines = image_defines()
     entries = [{
         "directory": str(REPO),
         "file": u["source"],
         # clang-cl driver form; clangd/clang parse it internally.
         "arguments": ["clang-cl", "/c", u["source"], *shared, *abi_flags(u),
-                      *localization_args(str(REPO / u["source"]))],
+                      *defines, *localization_args(str(REPO / u["source"]))],
     } for u in cpp_units]
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)

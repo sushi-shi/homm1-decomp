@@ -1,0 +1,6 @@
+id	nwc_string_rva	buka_string_rva	nwc_pointer_site	buka_pointer_site	original_commit	original_source	russian_sha256	evidence
+editor.instance.event_name	-	0x0004b83c	-	0x0000c9b0	-	src/SOURCE/kbwin.cpp	1fcc3076ed3f5aaa6e5c4d5ac6beeb88126b4a500925e79dc62665c8680a5166	EDITOR.EXE WinMain CreateEventA name; English is a translation (no English editor release)
+editor.instance.title	-	0x0004b84c	-	0x0000c9e1	-	src/SOURCE/kbwin.cpp	1fcc3076ed3f5aaa6e5c4d5ac6beeb88126b4a500925e79dc62665c8680a5166	EDITOR.EXE WinMain already-running message argument; English is a translation (no English editor release)
+editor.window.app_name	-	0x0004b7f8	-	-	-	src/SOURCE/kbwin.cpp	1fcc3076ed3f5aaa6e5c4d5ac6beeb88126b4a500925e79dc62665c8680a5166	EDITOR.EXE gAppName initializer (window class name); English is a translation (no English editor release)
+editor.window.title	-	0x0004b808	-	-	-	src/SOURCE/kbwin.cpp	1fcc3076ed3f5aaa6e5c4d5ac6beeb88126b4a500925e79dc62665c8680a5166	EDITOR.EXE gTitle initializer (window caption); English is a translation (no English editor release)
+editor.startup.initialize.failed	-	0x0004b30c	-	0x000084c1	-	src/EDITOR/EDITOR.cpp	fe8aff8d234abc5daab3b30af474c1dab37d55750a580ca93e4b46aaac86373a	EDITOR.EXE oldmain InitSystem failure; English is a translation (no English editor release)

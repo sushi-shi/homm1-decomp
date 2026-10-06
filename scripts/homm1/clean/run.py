@@ -81,8 +81,15 @@ def selected(files: dict[str, bytes]) -> dict[str, str]:
     The tree holds the unit sources, every header, and the resource script.
     Anything else under src/ fails generation rather than silently vanishing.
     """
-    chosen = {unit["source"]: "" for unit in _units(files)}
+    units = _units(files)
+    # The tree builds the game; units only another image links (the scenario
+    # editor's program unit) stay in the matching tree.
+    chosen = {unit["source"]: "" for unit in units
+              if "game" in unit.get("images", ["game"])}
+    other_images = {unit["source"] for unit in units} - set(chosen)
     for name in files:
+        if name in other_images:
+            continue
         top = name.split("/", 1)[0]
         if top in ("include", "vendor") and name.endswith(".h") \
                 and name not in source.DROP_FILES:

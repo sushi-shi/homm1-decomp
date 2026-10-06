@@ -64,6 +64,8 @@ The source tree also carries:
 - `locales/` (`messages.def`, `ru.po`, `format-variants.json`) and
   `catalog.py`;
 - a `build.json` link contract and `build.py`;
+- `play.py`, the game runner shared with `homm1 play` ([playing](play.md)),
+  behind the flake's `nix run .#play`;
 - a flake and a README.
 
 `build.json` keeps the retail object order, the BASE library and the retail
@@ -166,5 +168,9 @@ vendor SDK files) and supplies Wine and LLVM. `build.py` works as follows:
 - It links with the retail library line and object order.
 
 The program icon is a retail asset, so `--icon-from` extracts it from the
-user's executable. The generated README carries the branch diagram and these
-instructions.
+user's executable; `nix run .#play` passes the one from the imported game copy.
+`--out` moves `build/` elsewhere: the runner builds into its state directory
+when it runs from the flake's read-only copy. The generated README carries the
+branch diagram and these instructions. `homm1 clean --verify` also runs
+`nix run .#play -- --dry-run` against a fresh state directory (and checks the
+game copy named by `HOMM1_GAME`, when set).

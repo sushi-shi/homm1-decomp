@@ -33,11 +33,11 @@ import re
 import subprocess
 from pathlib import Path
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 
-CACHE = BUILD / "gen/func_fingerprints.tsv"
-SEED = BUILD / "clangd/func_fingerprints.tsv"   # old pipeline's cache (read-only)
-CDB_DIR = BUILD / "clangd"                       # compile_commands.json home
+CACHE = IMAGE_BUILD / "gen/func_fingerprints.tsv"
+SEED = IMAGE_BUILD / "clangd/func_fingerprints.tsv"   # old pipeline's cache (read-only)
+CDB_DIR = IMAGE_BUILD / "clangd"                       # compile_commands.json home
 
 FALLBACK = "cpp:"  # marks a fingerprint we could NOT resolve per-function
 OVERLOAD = "overload1:"  # exact-symbol body; legacy overload hashes were unions

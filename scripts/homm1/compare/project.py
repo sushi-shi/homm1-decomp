@@ -109,10 +109,10 @@ def main(argv=None) -> int:
     ap.add_argument("--target-dir", required=True, type=Path)
     ap.add_argument("--out-dir", required=True, type=Path)
     a = ap.parse_args(argv)
-    from homm1.manifest import load
+    from homm1.manifest import load, units
     manifest = load()
     build = manifest.get("build", {})
-    path = project(manifest.get("unit", []), a.target_dir, a.out_dir,
+    path = project(units(), a.target_dir, a.out_dir,
                    platform=build.get("platform", DEFAULT_PLATFORM),
                    compiler=build.get("compiler", DEFAULT_COMPILER))
     print(f"[project] {path}")

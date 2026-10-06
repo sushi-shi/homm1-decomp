@@ -20,6 +20,14 @@
 
 #include <string.h>
 
+// Retail assertion paths: each program's BASE objects were compiled in its own
+// checkout (HEROES.EXE and EDITOR.EXE assertion strings).
+#ifdef HOMM1_EDITOR
+#define OLDASM_CPP_PATH "U:\\HMM\\VSS\\HMM1\\Source\\Base\\OLDASM.CPP"
+#else
+#define OLDASM_CPP_PATH "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\OLDASM.CPP"
+#endif
+
 VA(0x0046f870, 0x185)
 void BlitBitmapToScreen(
     bitmap* sourceBitmap,
@@ -189,7 +197,7 @@ i16 AutoInitSVGA(void) {
 }
 
 VA(0x0046fd8a, 0x39)
-#line 207 "E:\\Users\\igorl\\VSS\\HMM\\HMM1\\Source\\Base\\OLDASM.CPP"
+#line 207 OLDASM_CPP_PATH
 i32 Random(i32 low, i32 high) {
 #line 191
     H1_ASSERT(high > low);

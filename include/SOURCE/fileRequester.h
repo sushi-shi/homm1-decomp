@@ -35,7 +35,10 @@ H1_ENUM_END(FileRequesterMode)
 H1_ENUM_CONST_BEGIN(FileRequesterSelectionConstant)
     FILE_REQUESTER_SELECTION_NONE = -1,
     FILE_REQUESTER_MAP_INFO_NONE = -2,
-    FILE_REQUESTER_EXTENSION_PLAYER_DIGIT = 3
+    FILE_REQUESTER_EXTENSION_PLAYER_DIGIT = 3,
+    // EDITOR.EXE's ShowThisMap hides a map whose name starts with one of the
+    // shipped scenario or campaign prefixes (this many characters).
+    FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH = 4
 H1_ENUM_CONST_END(FileRequesterSelectionConstant)
 
 // The list rows' text width, the gutter the scroll knob travels (56..212

@@ -1,0 +1,491 @@
+# editor reconstruction targets against the game: `homm1 --image editor audit placements --accounting docs/shared-function-accounting.tsv`.
+# call-site-named 5, identical-body 6, image-specific 131, shared-unit 346
+image	rva	name	unit	counterpart_image	counterpart_rva	counterpart	counterpart_unit	verdict	reason
+editor	0x00001000		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
+editor	0x00001044		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
+editor	0x000011cc		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
+editor	0x00001291		EDITOR/CLEARMGR					image-specific	no game body or call site corresponds
+editor	0x000017e0		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000018db		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000191c		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00001e96		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00001fb4		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002837		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000285f		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002883		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000028c2		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002b4d		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002c83		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002cac		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00002f2e		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003183		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000034ce		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003546		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000037e2		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003923		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000039f0		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003bd0		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003cc7		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00003d38		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00004913		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00004cd7		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00004f2d		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00005183		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000568f		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00005ebf		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000614a		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000635a		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006398		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006408		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000064ad		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006554		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000660f		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000698d		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006dac		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006e66		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00006f5b		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000071b7		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00007539		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00007667		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000076ac		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000773c		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000077bc		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000078e5		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00007de9		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00007fcf		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000080aa		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000080fc		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x0000822b		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x00008253		EDITOR/EDITMGR					image-specific	no game body or call site corresponds
+editor	0x000084aa		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x000085b0		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x000085c3		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x000085d1	?DelayTicks@@YAXH@Z	EDITOR/EDITOR	game	0x00046370	?DelayTicks@@YAXH@Z	SOURCE/NOOPT	identical-body	retail body identical (fields masked) to SOURCE/NOOPT ?DelayTicks@@YAXH@Z; separate translation unit
+editor	0x000085ff		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x0000863a	?DelayMilli@@YAXH@Z	EDITOR/EDITOR	game	0x000463d9	?DelayMilli@@YAXH@Z	SOURCE/NOOPT	identical-body	retail body identical (fields masked) to SOURCE/NOOPT ?DelayMilli@@YAXH@Z; separate translation unit
+editor	0x00008650	?DelayTilMilli@@YAXH@Z	EDITOR/EDITOR	game	0x000463ef	?DelayTilMilli@@YAXH@Z	SOURCE/NOOPT	identical-body	retail body identical (fields masked) to SOURCE/NOOPT ?DelayTilMilli@@YAXH@Z; separate translation unit
+editor	0x0000866b	?FileError@@YAXPAD@Z	EDITOR/EDITOR	game	0x00041943	?FileError@@YAXPAD@Z	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?FileError@@YAXPAD@Z; separate translation unit
+editor	0x0000869f	?ShutDown@@YAXPAD@Z	EDITOR/EDITOR	game		?ShutDown@@YAXPAD@Z		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xe91e; game callee 0x41824
+editor	0x00008746		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x0000881f		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00008995	?IsCDDrive@@YA_NH@Z	EDITOR/EDITOR	game	0x00042254	?IsCDDrive@@YA_NH@Z	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?IsCDDrive@@YA_NH@Z; separate translation unit
+editor	0x000089ce		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00008bda		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00008d11		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00008fc5		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00009056	?QuickViewWait@@YAXXZ	EDITOR/EDITOR	game	0x000404c4	?QuickViewWait@@YAXXZ	SOURCE/KB	identical-body	retail body identical (fields masked) to SOURCE/KB ?QuickViewWait@@YAXXZ; separate translation unit
+editor	0x000090d0		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x0000918e		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x000091e0	?CleanUpMenus@@YAXXZ	EDITOR/EDITOR	game		?CleanUpMenus@@YAXXZ		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xd47f; game callee 0x42bcc
+editor	0x0000921c	?EarlyShutDownSystem@@YAXXZ	EDITOR/EDITOR	game		?EarlyShutDownSystem@@YAXXZ		call-site-named	body not identical; callee of placed BASE/EXEC body at site 0x23d8b; game callee 0x42331
+editor	0x00009237		EDITOR/EDITOR					image-specific	no game body or call site corresponds
+editor	0x00009241	?HandleAppSpecificMenuCommands@@YAHH@Z	EDITOR/EDITOR	game		?HandleAppSpecificMenuCommands@@YAHH@Z		call-site-named	body not identical; callee of placed SOURCE/kbwin body at site 0xd726; game callee 0x4238b
+editor	0x000092c0		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x000092f2		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x00009415		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x000094b8		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x000097fb		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x00009c0b		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x00009f63		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000a11a		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000a459		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000a7f4		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000a968		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000ab25		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000acad		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000afda		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b329		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b460		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b4d3		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b67a		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b7cc		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000b927		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000bcf7		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000c05e		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000c17a		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000c30d		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000c705		EDITOR/EVENTMGR					image-specific	no game body or call site corresponds
+editor	0x0000c9a0	_WinMain@16	SOURCE/kbwin	game	0x00042ca0	_WinMain@16	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000caba	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	game	0x00042dba	?AppInit@@YAHPAUHINSTANCE__@@0HPAD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000cd44	?AppIdle@@YAHXZ	SOURCE/kbwin	game	0x00043048	?AppIdle@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000cd4e		SOURCE/kbwin					image-specific	no game body or call site corresponds
+editor	0x0000d410	_AppAbout@16	SOURCE/kbwin	game	0x000436ff	_AppAbout@16	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d477	?AppExit@@YAXXZ	SOURCE/kbwin	game	0x00043766	?AppExit@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d486	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	game	0x00043775	?Process1WindowsMessage@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d505	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	game	0x000437f4	?ResizeWindow@@YAXHHHH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d622	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	game	0x00043911	?AppCommand@@YAHPAUHWND__@@IIH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d787	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	game	0x00043a76	?UpdateDfltMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d835	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	game	0x00043b24	?KBChangeMenu@@YAXPAUHMENU__@@@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d8c6	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	game	0x00043bb5	?SetMenuStatus@@YAXH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000d9de	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	game	0x00043ccd	?SetNoDialogMenus@@YAXH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000da30	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	game	0x00043d1f	?SetMenus@@YAXPAUHMENU__@@H@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000db5b	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	game	0x00043e4a	?SetGameDefaults@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000dca0	?ReadPrefs@@YAXXZ	SOURCE/kbwin	game	0x00043f8f	?ReadPrefs@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e143	?WritePrefs@@YAXXZ	SOURCE/kbwin	game	0x000443f7	?WritePrefs@@YAXXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e466	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	game	0x00044702	?DriveSupportsFreeSpaceQuery@@YA_ND@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e4d8	?SetupCDDrive@@YAHXZ	SOURCE/kbwin	game	0x00044774	?SetupCDDrive@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e85f	?SetWinText@@YAXPAVheroWindow@@F@Z	SOURCE/kbwin	game	0x00044ae3	?SetWinText@@YAXPAVheroWindow@@F@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e8ca	?KBTickCount@@YAHXZ	SOURCE/kbwin	game	0x00044b4e	?KBTickCount@@YAHXZ	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e8d5	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	game	0x00044b59	?ProcessAssert@@YAXHPADH@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e92a	?FindToken@@YAPADPADD@Z	SOURCE/kbwin	game	0x00044bae	?FindToken@@YAPADPADD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000e97f	?FindLastToken@@YAPADPADD@Z	SOURCE/kbwin	game	0x00044bfe	?FindLastToken@@YAPADPADD@Z	SOURCE/kbwin	shared-unit	compiled from the shared SOURCE/kbwin source
+editor	0x0000ea10		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000ea3b		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000edad		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000eef6		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000f4f7		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000f681		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0000fa08		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x0001016e		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x00010260		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x000105b2		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x000106f9		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x00010c92		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x00010dc4		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x00010e33		EDITOR/OVERLAY					image-specific	no game body or call site corresponds
+editor	0x00010fa0		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00011365		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x0001143a		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00011a3b		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00011ef7		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00011f59		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00012327		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x0001262a		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00014576		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00014795		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x0001536b		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x0001609d		EDITOR/MAPOBJ					image-specific	no game body or call site corresponds
+editor	0x00016290		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x000164d8	??0fileRequester@@QAE@FFFPBD00@Z	SOURCE/REQUEST	game	0x00053b7a	??0fileRequester@@QAE@FFFPBD00@Z	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016dcb	??1fileRequester@@QAE@XZ	SOURCE/REQUEST	game	0x00054354	??1fileRequester@@QAE@XZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016ddf	?Close@fileRequester@@UAEXXZ	SOURCE/REQUEST	game	0x00054368	?Close@fileRequester@@UAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00016f00		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x00017166	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	game	0x00054826	?SetOK@fileRequester@@QAEXC@Z	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x000171cd		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x00017b50	?UpdateMapInfo@fileRequester@@QAEXXZ	SOURCE/REQUEST	game	0x00055329	?UpdateMapInfo@fileRequester@@QAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00017c01	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	game	0x000553a7	?DoKnob@fileRequester@@QAEXXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x00017e5c	?Update@fileRequester@@QAEXC@Z	SOURCE/REQUEST	game		?Update@fileRequester@@QAEXC@Z		call-site-named	body not identical; callee of placed SOURCE/REQUEST body at site 0x17dad; game callee 0x55602
+editor	0x000182d2	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	game	0x00055aa0	?GetMapName@fileRequester@@QAEPADXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x0001832b	?GetFilename@fileRequester@@QAEPADXZ	SOURCE/REQUEST	game	0x00055af9	?GetFilename@fileRequester@@QAEPADXZ	SOURCE/REQUEST	shared-unit	compiled from the shared SOURCE/REQUEST source
+editor	0x0001845a		SOURCE/REQUEST					image-specific	no game body or call site corresponds
+editor	0x000184a0		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x000184e1		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x00018a0d		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x00018b73		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x000192b4		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x00019404		EDITOR/TERRMGR					image-specific	no game body or call site corresponds
+editor	0x00019490	?DDRestoreDisplayMode@@YAXXZ	SOURCE/wingraph	game	0x00066710	?DDRestoreDisplayMode@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x000194ce	?DDQueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x0006674e	?DDQueryNewPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x000194fb	?CreatePrimary@@YAXXZ	SOURCE/wingraph	game	0x0006677b	?CreatePrimary@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019578	?SetupClipper@@YAXXZ	SOURCE/wingraph	game	0x000667f8	?SetupClipper@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019636	?DDInitGraphics@@YAXXZ	SOURCE/wingraph	game	0x000668b6	?DDInitGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001976f	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game	0x000669ef	?DDAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019c52	?DDInitializePalette@@YAXXZ	SOURCE/wingraph	game	0x00066ed3	?DDInitializePalette@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019d67	?DDSetPalette@@YAHXZ	SOURCE/wingraph	game	0x00066fe8	?DDSetPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019de9	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	game	0x0006706a	?DDCreateSurface@@YAPAUIDirectDrawSurface@@IIH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x00019ee7	?DDSD@@YAXHPADH@Z	SOURCE/wingraph	game	0x0006716a	?DDSD@@YAXHPADH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a2d4	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x00067557	?DDUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a3c9	?DDCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x0006764c	?DDCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a51d	?DDSetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	game	0x000677a0	?DDSetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a7ae	?WGQueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x00067a31	?WGQueryNewPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a820	?WGInitGraphics@@YAXXZ	SOURCE/wingraph	game	0x00067aa3	?WGInitGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001a95b	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x00067bde	?WGUpdatePalette@@YAXPAC@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001aae1	?WGInitializePalette@@YAXXZ	SOURCE/wingraph	game	0x00067d9b	?WGInitializePalette@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001ac83	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game	0x00067f3d	?WGAppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001ae3a	?WGCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x000680f4	?WGCleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001aea1	?ConnectToDLLs@@YAXXZ	SOURCE/wingraph	game	0x0006815b	?ConnectToDLLs@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001aef7	?DisconnectDLLs@@YAXXZ	SOURCE/wingraph	game	0x000681b1	?DisconnectDLLs@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001af11	?RestoreDisplayMode@@YAXXZ	SOURCE/wingraph	game	0x000681cb	?RestoreDisplayMode@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001af26	?SetPalette@@YAHXZ	SOURCE/wingraph	game	0x000681e0	?SetPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001af3d	?GetGraphicsInfo@@YAXXZ	SOURCE/wingraph	game	0x000681f7	?GetGraphicsInfo@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001afab	?InitGraphics@@YAXXZ	SOURCE/wingraph	game	0x00068265	?InitGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001aff1	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	game	0x000682ab	?AppPaint@@YAHPAUHWND__@@PAUHDC__@@@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b021	?InitializePalette@@YAXXZ	SOURCE/wingraph	game	0x000682db	?InitializePalette@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b03b	?UpdatePalette@@YAXPAC@Z	SOURCE/wingraph	game	0x000682f5	?UpdatePalette@@YAXPAC@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b063	?CleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	game	0x0006831d	?CleanUpWinGraphics@@YAXXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b082	?SetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	game	0x0006833c	?SetFullScreenStatus@@YAXH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b106	?QueryNewPalette@@YAHXZ	SOURCE/wingraph	game	0x000683c0	?QueryNewPalette@@YAHXZ	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b120	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	game	0x000683da	?SetGraphicsType@@YAHH@Z	SOURCE/wingraph	shared-unit	compiled from the shared SOURCE/wingraph source
+editor	0x0001b500	??0baseManager@@QAE@XZ	BASE/BASEMGR	game	0x000688c0	??0baseManager@@QAE@XZ	BASE/BASEMGR	shared-unit	compiled from the shared BASE/BASEMGR source
+editor	0x0001b55a	?GetInfo@baseManager@@QAEFF@Z	BASE/BASEMGR	game	0x0006891a	?GetInfo@baseManager@@QAEFF@Z	BASE/BASEMGR	shared-unit	compiled from the shared BASE/BASEMGR source
+editor	0x0001b5e0	??0heroWindow@@QAE@XZ	BASE/WINDOW	game	0x0006d020	??0heroWindow@@QAE@XZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001b672	??0heroWindow@@QAE@FFFFF@Z	BASE/WINDOW	game	0x0006d0b2	??0heroWindow@@QAE@FFFFF@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001b710	??0heroWindow@@QAE@FFPAD@Z	BASE/WINDOW	game	0x0006d150	??0heroWindow@@QAE@FFPAD@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001bcb0	?Open@heroWindow@@QAEFFC@Z	BASE/WINDOW	game	0x0006d6f0	?Open@heroWindow@@QAEFFC@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001bd35	?Close@heroWindow@@QAEXXZ	BASE/WINDOW	game	0x0006d775	?Close@heroWindow@@QAEXXZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001bdd7	?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z	BASE/WINDOW	game	0x0006d817	?AddWidget@heroWindow@@QAEXPAVwidget@@F@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001beea	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	BASE/WINDOW	game	0x0006d92a	?RemoveWidget@heroWindow@@QAEXPAVwidget@@@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001bfd1	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z	BASE/WINDOW	game	0x0006da11	?BroadcastMessage@heroWindow@@QAEFAAUtag_message@@@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c032	?DrawWindow@heroWindow@@QAEXXZ	BASE/WINDOW	game	0x0006da72	?DrawWindow@heroWindow@@QAEXXZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c047	?DrawWindow@heroWindow@@QAEXF@Z	BASE/WINDOW	game	0x0006da87	?DrawWindow@heroWindow@@QAEXF@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c06b	?DrawWindow@heroWindow@@QAEXFHH@Z	BASE/WINDOW	game	0x0006daab	?DrawWindow@heroWindow@@QAEXFHH@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c13e	?SaveBackground@heroWindow@@QAEFXZ	BASE/WINDOW	game	0x0006db7e	?SaveBackground@heroWindow@@QAEFXZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c1e8	?RestoreBackground@heroWindow@@QAEXXZ	BASE/WINDOW	game	0x0006dc28	?RestoreBackground@heroWindow@@QAEXXZ	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c272	?MoveWindow@heroWindow@@QAEXFF@Z	BASE/WINDOW	game	0x0006dcb2	?MoveWindow@heroWindow@@QAEXFF@Z	BASE/WINDOW	shared-unit	compiled from the shared BASE/WINDOW source
+editor	0x0001c470	??0button@@QAE@XZ	BASE/BUTTON	game	0x00076c80	??0button@@QAE@XZ	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001c4c9	??0button@@QAE@FFFFFFFFFFF@Z	BASE/BUTTON	game	0x00076cd9	??0button@@QAE@FFFFFFFFFFF@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001c577	??0button@@QAE@FFFFPADFFFFFF@Z	BASE/BUTTON	game	0x00076d87	??0button@@QAE@FFFFPADFFFFFF@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001c624	?Read@button@@QAEXXZ	BASE/BUTTON	game	0x00076e34	?Read@button@@QAEXXZ	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001c71f	??1button@@UAE@XZ	BASE/BUTTON	game	0x00076f2f	??1button@@UAE@XZ	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001c77a	?Main@button@@UAEFAAUtag_message@@@Z	BASE/BUTTON	game	0x00076f8a	?Main@button@@UAEFAAUtag_message@@@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001cb8f	?Select@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	game	0x0007739f	?Select@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001cc7b	?Deselect@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	game	0x0007748b	?Deselect@button@@QAEFAAUtag_message@@@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001cd35	?Draw@button@@UAEXXZ	BASE/BUTTON	game	0x00077545	?Draw@button@@UAEXXZ	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001ce10	??_Gbutton@@UAEPAXI@Z	BASE/BUTTON	game	0x00077620	??_Gbutton@@UAEPAXI@Z	BASE/BUTTON	shared-unit	compiled from the shared BASE/BUTTON source
+editor	0x0001ce40	??0iconWidget@@QAE@XZ	BASE/ICONWDGT	game	0x0006deb0	??0iconWidget@@QAE@XZ	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001ce8e	??0iconWidget@@QAE@FFFFFCCFFF@Z	BASE/ICONWDGT	game	0x0006defe	??0iconWidget@@QAE@FFFFFCCFFF@Z	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001cf30	??0iconWidget@@QAE@FFFFPADCCFFF@Z	BASE/ICONWDGT	game	0x0006dfa0	??0iconWidget@@QAE@FFFFPADCCFFF@Z	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001cfd1	?Read@iconWidget@@QAEXXZ	BASE/ICONWDGT	game	0x0006e041	?Read@iconWidget@@QAEXXZ	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001d0ca	??1iconWidget@@UAE@XZ	BASE/ICONWDGT	game	0x0006e13a	??1iconWidget@@UAE@XZ	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001d125	?Main@iconWidget@@UAEFAAUtag_message@@@Z	BASE/ICONWDGT	game	0x0006e195	?Main@iconWidget@@UAEFAAUtag_message@@@Z	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001d3c9	?Draw@iconWidget@@UAEXXZ	BASE/ICONWDGT	game	0x0006e439	?Draw@iconWidget@@UAEXXZ	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001d4c0	??_GiconWidget@@UAEPAXI@Z	BASE/ICONWDGT	game	0x0006e530	??_GiconWidget@@UAEPAXI@Z	BASE/ICONWDGT	shared-unit	compiled from the shared BASE/ICONWDGT source
+editor	0x0001d4f0	?KeyboardMessageHandler@@YAHPAXIIH@Z	BASE/INPUTMGR	game	0x0006e560	?KeyboardMessageHandler@@YAHPAXIIH@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001d954	?MouseMessageHandler@@YAHPAXIIH@Z	BASE/INPUTMGR	game	0x0006e9c4	?MouseMessageHandler@@YAHPAXIIH@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001dc8e	??0inputManager@@QAE@XZ	BASE/INPUTMGR	game	0x0006ecfe	??0inputManager@@QAE@XZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001dd2e	?Open@inputManager@@UAEFF@Z	BASE/INPUTMGR	game	0x0006ed9e	?Open@inputManager@@UAEFF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001ddd2	?Close@inputManager@@UAEXXZ	BASE/INPUTMGR	game	0x0006ee42	?Close@inputManager@@UAEXXZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001de36	?Main@inputManager@@UAEFAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006eea6	?Main@inputManager@@UAEFAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001de46	?Flush@inputManager@@QAEXXZ	BASE/INPUTMGR	game	0x0006eeb6	?Flush@inputManager@@QAEXXZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001de69	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	game	0x0006eed9	?GetEvent@inputManager@@QAE?AUtag_message@@XZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001df67	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006efd7	?SetBooleanOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001df98	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f008	?SetPositiveOption@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001dfc9	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	game	0x0006f039	?SetMouseCoords@inputManager@@QAEXFF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001dff2	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	game	0x0006f062	?SetKeyCodeType@inputManager@@QAEXF@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001e015	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f085	?TranslateInputCharacterCp1251@@YAXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001e049	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	BASE/INPUTMGR	game	0x0006f0b9	?AsciiConvert@inputManager@@QAEXAAUtag_message@@@Z	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001e35b	?MakeScanCodeTable@inputManager@@QAEXXZ	BASE/INPUTMGR	game	0x0006f3cb	?MakeScanCodeTable@inputManager@@QAEXXZ	BASE/INPUTMGR	shared-unit	compiled from the shared BASE/INPUTMGR source
+editor	0x0001e800	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	game	0x0006b510	??0mouseManager@@QAE@XZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001e902	?Open@mouseManager@@UAEFF@Z	BASE/MOUSEMGR	game	0x0006b612	?Open@mouseManager@@UAEFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001e99a	?Close@mouseManager@@UAEXXZ	BASE/MOUSEMGR	game	0x0006b6aa	?Close@mouseManager@@UAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001eb2a	?Main@mouseManager@@UAEFAAUtag_message@@@Z	BASE/MOUSEMGR	game	0x0006b83a	?Main@mouseManager@@UAEFAAUtag_message@@@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001eb3a	?SetPointer@mouseManager@@QAEXPADF@Z	BASE/MOUSEMGR	game	0x0006b84a	?SetPointer@mouseManager@@QAEXPADF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001eba2	?SetPointer@mouseManager@@QAEXF@Z	BASE/MOUSEMGR	game	0x0006b8b2	?SetPointer@mouseManager@@QAEXF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f25f	?ReallyShowPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bf6f	?ReallyShowPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f26a	?UnusedTwoArgumentHook1@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	game	0x0006bf7a	?UnusedTwoArgumentHook1@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f277	?ReallyHidePointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bf87	?ReallyHidePointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f282	?HideColorPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bf92	?HideColorPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f28d	?RestoreUnderlying@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bf9d	?RestoreUnderlying@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f298	?SaveAndDraw@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bfa8	?SaveAndDraw@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2a3	?UnusedTwoArgumentHook2@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	game	0x0006bfb3	?UnusedTwoArgumentHook2@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2b0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	BASE/MOUSEMGR	game	0x0006bfc0	?SaveAndDraw@mouseManager@@QAEXPAVbitmap@@FFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2bd	?MovePointer@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	game	0x0006bfcd	?MovePointer@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2ca	?ShowColorPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006bfda	?ShowColorPointer@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2d5	?NewUpdate@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	game	0x0006bfe5	?NewUpdate@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2e2	?WarpPointer@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	game	0x0006bff2	?WarpPointer@mouseManager@@QAEXFF@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2ef	?UnusedOneArgumentHook@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	game	0x0006bfff	?UnusedOneArgumentHook@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f2fc	?MouseCoords@mouseManager@@QAEXAAF0@Z	BASE/MOUSEMGR	game	0x0006c00c	?MouseCoords@mouseManager@@QAEXAAF0@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f352	?SetCursorShape@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	game	0x0006c062	?SetCursorShape@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f35f	?SetColorMice@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	game	0x0006c06f	?SetColorMice@mouseManager@@QAEXH@Z	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f36c	?HideSystemCursor@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006c07c	?HideSystemCursor@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f37f	?ShowSystemCursor@mouseManager@@QAEXXZ	BASE/MOUSEMGR	game	0x0006c08f	?ShowSystemCursor@mouseManager@@QAEXXZ	BASE/MOUSEMGR	shared-unit	compiled from the shared BASE/MOUSEMGR source
+editor	0x0001f3d0	??0resourceManager@@QAE@XZ	BASE/RESMGR	game	0x0006c0e0	??0resourceManager@@QAE@XZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f44a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	BASE/RESMGR	game	0x0006c15a	?GetBackdrop@resourceManager@@QAEXPADPAVbitmap@@@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f4c4	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HH@Z	BASE/RESMGR	game	0x0006c1d4	?GetBackdropAtLoc@resourceManager@@QAEXPADPAVbitmap@@HH@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f54b	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	BASE/RESMGR	game	0x0006c25b	?GetPalette@resourceManager@@QAEPAVpalette@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f60b	?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z	BASE/RESMGR	game	0x0006c31b	?GetBitmap@resourceManager@@QAEPAVbitmap@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f6cb	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	BASE/RESMGR	game	0x0006c3db	?GetIcon@resourceManager@@QAEPAVicon@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f6f7	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	BASE/RESMGR	game	0x0006c407	?GetIcon@resourceManager@@QAEPAVicon@@F@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f7a7	?GetTileset@resourceManager@@QAEPAVtileset@@PAD@Z	BASE/RESMGR	game	0x0006c4b7	?GetTileset@resourceManager@@QAEPAVtileset@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f867	?GetMouse@resourceManager@@QAEPAVmouse@@PAD@Z	BASE/RESMGR	game	0x0006c577	?GetMouse@resourceManager@@QAEPAVmouse@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f876	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	BASE/RESMGR	game	0x0006c586	?GetFont@resourceManager@@QAEPAVfont@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f936	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	BASE/RESMGR	game	0x0006c646	?GetSample@resourceManager@@QAEPAVsample@@PAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001f9f5	?Dispose@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	game	0x0006c705	?Dispose@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fa6a	?AddResource@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	game	0x0006c77a	?AddResource@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001faad	?Expunge@resourceManager@@QAEXXZ	BASE/RESMGR	game	0x0006c7bd	?Expunge@resourceManager@@QAEXXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fb2b	?Query@resourceManager@@QAEPAVresource@@F@Z	BASE/RESMGR	game	0x0006c83b	?Query@resourceManager@@QAEPAVresource@@F@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fb66	?Main@resourceManager@@UAEFAAUtag_message@@@Z	BASE/RESMGR	game	0x0006c876	?Main@resourceManager@@UAEFAAUtag_message@@@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fb76	?Open@resourceManager@@UAEFF@Z	BASE/RESMGR	game	0x0006c886	?Open@resourceManager@@UAEFF@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fbdc	?RemoveResource@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	game	0x0006c8ec	?RemoveResource@resourceManager@@QAEXPAVresource@@@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fc3d	?Close@resourceManager@@UAEXXZ	BASE/RESMGR	game	0x0006c94d	?Close@resourceManager@@UAEXXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fcab	?LoadAggregateHeader@resourceManager@@QAEFPAD@Z	BASE/RESMGR	game	0x0006c9bb	?LoadAggregateHeader@resourceManager@@QAEFPAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fd90	?PointToFile@resourceManager@@QAEXF@Z	BASE/RESMGR	game	0x0006caa0	?PointToFile@resourceManager@@QAEXF@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fe62	?GetFileSize@resourceManager@@QAEIF@Z	BASE/RESMGR	game	0x0006cb72	?GetFileSize@resourceManager@@QAEIF@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001ff23	?SavePosition@resourceManager@@QAEXXZ	BASE/RESMGR	game	0x0006cc33	?SavePosition@resourceManager@@QAEXXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001ff43	?RestorePosition@resourceManager@@QAEXXZ	BASE/RESMGR	game	0x0006cc53	?RestorePosition@resourceManager@@QAEXXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001ff66	?ReadByte@resourceManager@@QAECXZ	BASE/RESMGR	game	0x0006cc76	?ReadByte@resourceManager@@QAECXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001ffae	?ReadWord@resourceManager@@QAEFXZ	BASE/RESMGR	game	0x0006ccbe	?ReadWord@resourceManager@@QAEFXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x0001fff9	?ReadLong@resourceManager@@QAEHXZ	BASE/RESMGR	game	0x0006cd09	?ReadLong@resourceManager@@QAEHXZ	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x00020044	?MakeId@resourceManager@@QAEFPAD@Z	BASE/RESMGR	game	0x0006cd54	?MakeId@resourceManager@@QAEFPAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x00020085	?Read13@resourceManager@@QAEXPAD@Z	BASE/RESMGR	game	0x0006cd95	?Read13@resourceManager@@QAEXPAD@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x000200a0	?ReadBlock@resourceManager@@QAEXPAXI@Z	BASE/RESMGR	game	0x0006cdb0	?ReadBlock@resourceManager@@QAEXPAXI@Z	BASE/RESMGR	shared-unit	compiled from the shared BASE/RESMGR source
+editor	0x00020130	?CycleColors@@YAXXZ	BASE/WINMGR	game	0x00069fb0	?CycleColors@@YAXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x000202cc	??0heroWindowManager@@QAE@XZ	BASE/WINMGR	game	0x0006a14c	??0heroWindowManager@@QAE@XZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x0002036b	?Open@heroWindowManager@@UAEFF@Z	BASE/WINMGR	game	0x0006a1eb	?Open@heroWindowManager@@UAEFF@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020475	?Close@heroWindowManager@@UAEXXZ	BASE/WINMGR	game	0x0006a2f5	?Close@heroWindowManager@@UAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020513	?UpdateHoverWindow@heroWindowManager@@QAEFFF@Z	BASE/WINMGR	game	0x0006a393	?UpdateHoverWindow@heroWindowManager@@QAEFFF@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x000205d6	?Main@heroWindowManager@@UAEFAAUtag_message@@@Z	BASE/WINMGR	game	0x0006a456	?Main@heroWindowManager@@UAEFAAUtag_message@@@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020634	?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z	BASE/WINMGR	game	0x0006a4b4	?BroadcastMessage@heroWindowManager@@QAEFFFFF@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020671	?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z	BASE/WINMGR	game	0x0006a4f1	?AddWindow@heroWindowManager@@QAEXPAVheroWindow@@FC@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x000207d7	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	BASE/WINMGR	game	0x0006a657	?RemoveWindow@heroWindowManager@@QAEXPAVheroWindow@@@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x000208c0	?DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z	BASE/WINMGR	game	0x0006a740	?DoDialog@heroWindowManager@@QAEFPAVheroWindow@@P6AFAAUtag_message@@@ZH@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020a68	?UpdateScreen@heroWindowManager@@QAEXXZ	BASE/WINMGR	game	0x0006a8e8	?UpdateScreen@heroWindowManager@@QAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020a97	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	BASE/WINMGR	game	0x0006a917	?UpdateScreenRegion@heroWindowManager@@QAEXFFFF@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020bf4	?RedrawScreen@heroWindowManager@@QAEXXZ	BASE/WINMGR	game	0x0006aa74	?RedrawScreen@heroWindowManager@@QAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020c23	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	BASE/WINMGR	game	0x0006aaa3	?FadeScreen@heroWindowManager@@QAEXFFPAVpalette@@@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020cf6	?ScreenShot@heroWindowManager@@QAEXXZ	BASE/WINMGR	game	0x0006ab76	?ScreenShot@heroWindowManager@@QAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020d5b	?Cleanup@heroWindowManager@@QAEXXZ	BASE/WINMGR	game	0x0006abdb	?Cleanup@heroWindowManager@@QAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020d66	?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z	BASE/WINMGR	game	0x0006abe6	?SaveFizzleSource@heroWindowManager@@QAEXFFFF@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00020e59	?CreateFizzleTables@@YAXXZ	BASE/WINMGR	game	0x0006acd9	?CreateFizzleTables@@YAXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x0002129d	?FizzleForward@heroWindowManager@@QAEXFFFFH@Z	BASE/WINMGR	game	0x0006b11d	?FizzleForward@heroWindowManager@@QAEXFFFFH@Z	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00021607	?ReleaseFizzleSource@heroWindowManager@@QAEXXZ	BASE/WINMGR	game	0x0006b487	?ReleaseFizzleSource@heroWindowManager@@QAEXXZ	BASE/WINMGR	shared-unit	compiled from the shared BASE/WINMGR source
+editor	0x00021690	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	BASE/miscwin	game	0x0006f870	?BlitBitmapToScreen@@YAXPAVbitmap@@HHHHHH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021815	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	BASE/miscwin	game	0x0006f9f5	?GrabScreenBitmap@@YAXPAVbitmap@@HH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x0002184c	?BitmapToScreen@@YAXPAVbitmap@@@Z	BASE/miscwin	game	0x0006fa2c	?BitmapToScreen@@YAXPAVbitmap@@@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021875	?SetPalette@@YAXPACH@Z	BASE/miscwin	game	0x0006fa55	?SetPalette@@YAXPACH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x000218c5	?FadeIn@@YAXH@Z	BASE/miscwin	game	0x0006faa5	?FadeIn@@YAXH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021a32	?FadeOut@@YAXH@Z	BASE/miscwin	game	0x0006fc12	?FadeOut@@YAXH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021ba2	?AutoInitSVGA@@YAFXZ	BASE/miscwin	game	0x0006fd82	?AutoInitSVGA@@YAFXZ	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021baa	?Random@@YAHHH@Z	BASE/miscwin	game	0x0006fd8a	?Random@@YAHHH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021be3	?PostprocessPalette@@YAXPAC@Z	BASE/miscwin	game	0x0006fdc3	?PostprocessPalette@@YAXPAC@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021c78	?PostprocessBitmap@@YAXPAEHH@Z	BASE/miscwin	game	0x0006fe58	?PostprocessBitmap@@YAXPAEHH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021c7d	?PostprocessIcon@@YAXPAVicon@@@Z	BASE/miscwin	game	0x0006fe5d	?PostprocessIcon@@YAXPAVicon@@@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021c82	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	BASE/miscwin	game	0x0006fe62	?ClippedMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHHH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x00021e96	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	BASE/miscwin	game	0x00070076	?ClipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHHHHH@Z	BASE/miscwin	shared-unit	compiled from the shared BASE/miscwin source
+editor	0x000221e0	??0font@@QAE@F@Z	BASE/FONT	game	0x00071dd0	??0font@@QAE@F@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x000222a7	??1font@@UAE@XZ	BASE/FONT	game	0x00071e97	??1font@@UAE@XZ	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x00022302	?RemapCyrillicCharacter@@YAHH@Z	BASE/FONT	game	0x00071ef2	?RemapCyrillicCharacter@@YAHH@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x0002234e	?DrawString@font@@QAEXPADFFF@Z	BASE/FONT	game	0x00071f3e	?DrawString@font@@QAEXPADFFF@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x0002244d	?DrawBoundedString@font@@QAEXPADFFFFFF@Z	BASE/FONT	game	0x0007203d	?DrawBoundedString@font@@QAEXPADFFFFFF@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x0002279c	?LineLength@font@@QAEHPADF@Z	BASE/FONT	game	0x0007238c	?LineLength@font@@QAEHPADF@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x000229fb	?LineWidth@font@@QAEHPAD@Z	BASE/FONT	game	0x000725eb	?LineWidth@font@@QAEHPAD@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x00022b70	??_Gfont@@UAEPAXI@Z	BASE/FONT	game	0x00072760	??_Gfont@@UAEPAXI@Z	BASE/FONT	shared-unit	compiled from the shared BASE/FONT source
+editor	0x00022ba0	??0icon@@QAE@F@Z	BASE/ICON	game	0x00070ea0	??0icon@@QAE@F@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00022c5f	??1icon@@UAE@XZ	BASE/ICON	game	0x00070f5f	??1icon@@UAE@XZ	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00022c8a	?DrawToBuffer@icon@@QAEXFFFCC@Z	BASE/ICON	game	0x00070f8a	?DrawToBuffer@icon@@QAEXFFFCC@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00022fa1	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	BASE/ICON	game	0x000712a1	?ClipFillToBuffer@icon@@QAEXFFFFCCHHHH@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00022ff5	?FillToBuffer@icon@@QAEXFFFFCC@Z	BASE/ICON	game	0x000712f5	?FillToBuffer@icon@@QAEXFFFFCC@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00023153	?DimToBuffer@icon@@QAEXFFFCC@Z	BASE/ICON	game	0x00071453	?DimToBuffer@icon@@QAEXFFFCC@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00023440	??_Gicon@@UAEPAXI@Z	BASE/ICON	game	0x00071740	??_Gicon@@UAEPAXI@Z	BASE/ICON	shared-unit	compiled from the shared BASE/ICON source
+editor	0x00023470	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	BASE/BMAP2	game	0x00072800	?BlitBitmap@@YAXPAVbitmap@@HHHH0HH@Z	BASE/BMAP2	shared-unit	compiled from the shared BASE/BMAP2 source
+editor	0x000234e4	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	BASE/BMAP2	game	0x00072874	?MoveBitmapArea@@YAXPAVbitmap@@HHHHHH@Z	BASE/BMAP2	shared-unit	compiled from the shared BASE/BMAP2 source
+editor	0x000235ca	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	BASE/BMAP2	game	0x0007295a	?DimBitmapArea@@YAXPAVbitmap@@HHHH@Z	BASE/BMAP2	shared-unit	compiled from the shared BASE/BMAP2 source
+editor	0x00023616	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	BASE/BMAP2	game	0x000729a6	?FillBitmapArea@@YAXPAVbitmap@@HHHHH@Z	BASE/BMAP2	shared-unit	compiled from the shared BASE/BMAP2 source
+editor	0x0002365c	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	game	0x000703b8	?IconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x00023732	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	game	0x0007048e	?FlipIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x000237fe	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	BASE/Icon2b	game	0x0007055a	?MonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x000238d4	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	BASE/Icon2b	game	0x00070630	?FlipMonoIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x000239a8	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	game	0x00070704	?DimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x00023a82	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	game	0x000707de	?FlipDimIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2b	shared-unit	compiled from the shared BASE/Icon2b source
+editor	0x00023b58	_TileToBitmap	BASE/TILE	game	0x00070d6c	_TileToBitmap	BASE/TILE	shared-unit	compiled from the shared BASE/TILE source
+editor	0x00023c90	??0executive@@QAE@XZ	BASE/EXEC	game	0x000729f0	??0executive@@QAE@XZ	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00023cc5	?InitSystem@executive@@QAEFXZ	BASE/EXEC	game	0x00072a25	?InitSystem@executive@@QAEFXZ	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00023d82	?ShutDownSystem@executive@@QAEXXZ	BASE/EXEC	game	0x00072ae2	?ShutDownSystem@executive@@QAEXXZ	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00023e38	?DoDialog@executive@@QAEFPAVbaseManager@@@Z	BASE/EXEC	game	0x00072b98	?DoDialog@executive@@QAEFPAVbaseManager@@@Z	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00023fc1	?AddManager@executive@@QAEFPAVbaseManager@@F@Z	BASE/EXEC	game	0x00072d21	?AddManager@executive@@QAEFPAVbaseManager@@F@Z	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x0002410a	?RemoveManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	game	0x00072e6a	?RemoveManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x000241cd	?CallManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	game	0x00072f2d	?CallManager@executive@@QAEXPAVbaseManager@@@Z	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00024255	?MainLoop@executive@@QAEXXZ	BASE/EXEC	game	0x00072fb5	?MainLoop@executive@@QAEXXZ	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x000243c0	?Terminate@executive@@QAEXXZ	BASE/EXEC	game	0x00073120	?Terminate@executive@@QAEXXZ	BASE/EXEC	shared-unit	compiled from the shared BASE/EXEC source
+editor	0x00024420	??0palette@@QAE@XZ	BASE/PALETTE	game	0x000747d0	??0palette@@QAE@XZ	BASE/PALETTE	shared-unit	compiled from the shared BASE/PALETTE source
+editor	0x0002445a	??0palette@@QAE@F@Z	BASE/PALETTE	game	0x0007480a	??0palette@@QAE@F@Z	BASE/PALETTE	shared-unit	compiled from the shared BASE/PALETTE source
+editor	0x000244ed	??1palette@@UAE@XZ	BASE/PALETTE	game	0x0007489d	??1palette@@UAE@XZ	BASE/PALETTE	shared-unit	compiled from the shared BASE/PALETTE source
+editor	0x00024518	?Data@palette@@QAEPACXZ	BASE/PALETTE	game	0x000748c8	?Data@palette@@QAEPACXZ	BASE/PALETTE	shared-unit	compiled from the shared BASE/PALETTE source
+editor	0x00024570	??_Gpalette@@UAEPAXI@Z	BASE/PALETTE	game	0x00074920	??_Gpalette@@UAEPAXI@Z	BASE/PALETTE	shared-unit	compiled from the shared BASE/PALETTE source
+editor	0x000245a0	?CleanupSamples@@YAXXZ	BASE/Audio	game	0x000689a0	?CleanupSamples@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024702	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	BASE/Audio	game	0x00068b02	?FindSampleNode@@YAPAUAudiereSampleNode@@PAVsample@@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024737	?PlaySample@@YAXPAVsample@@@Z	BASE/Audio	game	0x00068b37	?PlaySample@@YAXPAVsample@@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024ac4	?LoadPlaySample@@YAPAVsample@@PAD@Z	BASE/Audio	game	0x00068ec4	?LoadPlaySample@@YAPAVsample@@PAD@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024aed	?StopSample@@YAXPAVsample@@@Z	BASE/Audio	game	0x00068eed	?StopSample@@YAXPAVsample@@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024b5e	?UpdateSampleVolume@@YAXPAVsample@@@Z	BASE/Audio	game	0x00068f5e	?UpdateSampleVolume@@YAXPAVsample@@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024bb6	?WaitSample@@YAXPAVsample@@@Z	BASE/Audio	game	0x00068fb6	?WaitSample@@YAXPAVsample@@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024c19	?StopAllSamples@@YAXXZ	BASE/Audio	game	0x00069019	?StopAllSamples@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024c90	?UpdateAllSampleVolumes@@YAXXZ	BASE/Audio	game	0x00069090	?UpdateAllSampleVolumes@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024cf1	?SuspendSamples@@YAXXZ	BASE/Audio	game	0x000690f1	?SuspendSamples@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024d03	?ResumeSamples@@YAXXZ	BASE/Audio	game	0x00069103	?ResumeSamples@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024d15	?SamplesSuspended@@YA_NXZ	BASE/Audio	game	0x00069115	?SamplesSuspended@@YA_NXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024eb6	?ShouldRepeatMusic@@YA_NH@Z	BASE/Audio	game	0x000692b6	?ShouldRepeatMusic@@YA_NH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00024efd	?PlayMusic@@YAXH@Z	BASE/Audio	game	0x000692fd	?PlayMusic@@YAXH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025338	?GetCurrentTrack@@YAHXZ	BASE/Audio	game	0x00069738	?GetCurrentTrack@@YAHXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025342	?StopMusic@@YAXXZ	BASE/Audio	game	0x00069742	?StopMusic@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x000254a6	?UpdateMusicVolume@@YAXXZ	BASE/Audio	game	0x000698a6	?UpdateMusicVolume@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x000254fb	?SetMusicSource@@YAXH@Z	BASE/Audio	game	0x000698fb	?SetMusicSource@@YAXH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025623	?MusicPlaying@@YA_NXZ	BASE/Audio	game	0x00069a23	?MusicPlaying@@YA_NXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025659	?SuspendMusic@@YAXXZ	BASE/Audio	game	0x00069a59	?SuspendMusic@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x0002566b	?ResumeMusic@@YAXXZ	BASE/Audio	game	0x00069a6b	?ResumeMusic@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x0002567d	?MusicSuspended@@YA_NXZ	BASE/Audio	game	0x00069a7d	?MusicSuspended@@YA_NXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025756	?VolumeLevel@@YAMH@Z	BASE/Audio	game	0x00069b56	?VolumeLevel@@YAMH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025765	?GetAudioDevice@@YA?AV?$RefPtr@VAudioDevice@audiere@@@audiere@@XZ	BASE/Audio	game	0x00069b65	?GetAudioDevice@@YA?AV?$RefPtr@VAudioDevice@audiere@@@audiere@@XZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x000257d5	?InitAudio@@YA_NXZ	BASE/Audio	game	0x00069bd5	?InitAudio@@YA_NXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025907	?ShutdownAudio@@YAXXZ	BASE/Audio	game	0x00069d07	?ShutdownAudio@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025963	?GetEffectsVolume@@YAMXZ	BASE/Audio	game	0x00069d63	?GetEffectsVolume@@YAMXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x0002596e	?ScaleSampleVolume@@YAMH@Z	BASE/Audio	game	0x00069d6e	?ScaleSampleVolume@@YAMH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025983	?GetMusicVolume@@YAMXZ	BASE/Audio	game	0x00069d83	?GetMusicVolume@@YAMXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x0002598e	?StopAllAudio@@YAXXZ	BASE/Audio	game	0x00069d8e	?StopAllAudio@@YAXXZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x0002599d	?SetEffectsVolume@@YAXH@Z	BASE/Audio	game	0x00069d9d	?SetEffectsVolume@@YAXH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x000259b9	?SetMusicVolume@@YAXH@Z	BASE/Audio	game	0x00069db9	?SetMusicVolume@@YAXH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x000259d5	?SetVolumes@@YAXHH@Z	BASE/Audio	game	0x00069dd5	?SetVolumes@@YAXHH@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source
+editor	0x00025a30	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	BASE/Audio	game	0x00069e30	??1?$RefPtr@VOutputStream@audiere@@@audiere@@QAE@XZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025a60	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	BASE/Audio	game	0x00069e60	??4?$RefPtr@VOutputStream@audiere@@@audiere@@QAEAAV01@PAVOutputStream@1@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025ac0	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	BASE/Audio	game	0x00069ec0	??1?$RefPtr@VSampleSource@audiere@@@audiere@@QAE@XZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025af0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	BASE/Audio	game	0x00069ef0	??4?$RefPtr@VSampleSource@audiere@@@audiere@@QAEAAV01@PAVSampleSource@1@@Z	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025b50	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	BASE/Audio	game	0x00069f50	??1?$RefPtr@VAudioDevice@audiere@@@audiere@@QAE@XZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025b80	??1AudiereSampleNode@@QAE@XZ	BASE/Audio	game	0x00069f80	??1AudiereSampleNode@@QAE@XZ	BASE/Audio	shared-unit	compiled from the shared BASE/Audio source (compiler-generated)
+editor	0x00025bb0	??0border@@QAE@XZ	BASE/BORDER	game	0x00074950	??0border@@QAE@XZ	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00025bee	??0border@@QAE@FFFFFFFPAD@Z	BASE/BORDER	game	0x0007498e	??0border@@QAE@FFFFFFFPAD@Z	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00025c8c	??1border@@UAE@XZ	BASE/BORDER	game	0x00074a2c	??1border@@UAE@XZ	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00025cf0	?Read@border@@QAEXXZ	BASE/BORDER	game	0x00074a90	?Read@border@@QAEXXZ	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00025dd9	?Main@border@@UAEFAAUtag_message@@@Z	BASE/BORDER	game	0x00074b79	?Main@border@@UAEFAAUtag_message@@@Z	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00025fb2	?Draw@border@@UAEXXZ	BASE/BORDER	game	0x00074d52	?Draw@border@@UAEXXZ	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x000260d0	??_Gborder@@UAEPAXI@Z	BASE/BORDER	game	0x00074e70	??_Gborder@@UAEPAXI@Z	BASE/BORDER	shared-unit	compiled from the shared BASE/BORDER source
+editor	0x00026100	??0backdropWidget@@QAE@XZ	BASE/BACKDROP	game	0x0006ce40	??0backdropWidget@@QAE@XZ	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x0002612b	??0backdropWidget@@QAE@FFFFFF@Z	BASE/BACKDROP	game	0x0006ce6b	??0backdropWidget@@QAE@FFFFFF@Z	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x0002616a	?Read@backdropWidget@@QAEXXZ	BASE/BACKDROP	game	0x0006ceaa	?Read@backdropWidget@@QAEXXZ	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x000261e1	?Main@backdropWidget@@UAEFAAUtag_message@@@Z	BASE/BACKDROP	game	0x0006cf21	?Main@backdropWidget@@UAEFAAUtag_message@@@Z	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x000261fa	?Draw@backdropWidget@@UAEXXZ	BASE/BACKDROP	game	0x0006cf3a	?Draw@backdropWidget@@UAEXXZ	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x00026290	??_GbackdropWidget@@UAEPAXI@Z	BASE/BACKDROP	game	0x0006cfd0	??_GbackdropWidget@@UAEPAXI@Z	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x000262c0	??1backdropWidget@@UAE@XZ	BASE/BACKDROP	game	0x0006d000	??1backdropWidget@@UAE@XZ	BASE/BACKDROP	shared-unit	compiled from the shared BASE/BACKDROP source
+editor	0x000262e0	??0textEntryWidget@@QAE@XZ	BASE/TEXTNTRY	game	0x00075830	??0textEntryWidget@@QAE@XZ	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x00026336	??0textEntryWidget@@QAE@FFFFFPAD0F0FFF@Z	BASE/TEXTNTRY	game	0x00075886	??0textEntryWidget@@QAE@FFFFFPAD0F0FFF@Z	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x000263f5	??1textEntryWidget@@UAE@XZ	BASE/TEXTNTRY	game	0x00075945	??1textEntryWidget@@UAE@XZ	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x00026450	?Read@textEntryWidget@@QAEXH@Z	BASE/TEXTNTRY	game	0x000759a0	?Read@textEntryWidget@@QAEXH@Z	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x000266b1	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	BASE/TEXTNTRY	game	0x00075c01	?Main@textEntryWidget@@UAEFAAUtag_message@@@Z	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x00027121	?Draw@textEntryWidget@@UAEXXZ	BASE/TEXTNTRY	game	0x00076671	?Draw@textEntryWidget@@UAEXXZ	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x000272e8	?SetupDisplayString@textEntryWidget@@QAEXPADG@Z	BASE/TEXTNTRY	game	0x00076838	?SetupDisplayString@textEntryWidget@@QAEXPADG@Z	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x00027560	??_GtextEntryWidget@@UAEPAXI@Z	BASE/TEXTNTRY	game	0x00076ab0	??_GtextEntryWidget@@UAEPAXI@Z	BASE/TEXTNTRY	shared-unit	compiled from the shared BASE/TEXTNTRY source
+editor	0x00027590	??0textWidget@@QAE@XZ	BASE/TEXTWDGT	game	0x00071770	??0textWidget@@QAE@XZ	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x000275e8	??0textWidget@@QAE@FFFFPAD0FFF@Z	BASE/TEXTWDGT	game	0x000717c8	??0textWidget@@QAE@FFFFPAD0FFF@Z	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x0002768d	?Read@textWidget@@QAEXXZ	BASE/TEXTWDGT	game	0x0007186d	?Read@textWidget@@QAEXXZ	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x000277b7	??1textWidget@@UAE@XZ	BASE/TEXTWDGT	game	0x00071997	??1textWidget@@UAE@XZ	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027821	?Main@textWidget@@UAEFAAUtag_message@@@Z	BASE/TEXTWDGT	game	0x00071a01	?Main@textWidget@@UAEFAAUtag_message@@@Z	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027a59	?Draw@textWidget@@UAEXXZ	BASE/TEXTWDGT	game	0x00071c39	?Draw@textWidget@@UAEXXZ	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027abf	?SetColorIndex@textWidget@@QAEXF@Z	BASE/TEXTWDGT	game	0x00071c9f	?SetColorIndex@textWidget@@QAEXF@Z	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027ad7	?SetText@textWidget@@QAEXPAD@Z	BASE/TEXTWDGT	game	0x00071cb7	?SetText@textWidget@@QAEXPAD@Z	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027bc0	??_GtextWidget@@UAEPAXI@Z	BASE/TEXTWDGT	game	0x00071da0	??_GtextWidget@@UAEPAXI@Z	BASE/TEXTWDGT	shared-unit	compiled from the shared BASE/TEXTWDGT source
+editor	0x00027bf0	??0dimmerWidget@@QAE@XZ	BASE/DIMMER	game	0x00076ae0	??0dimmerWidget@@QAE@XZ	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027c1b	??0dimmerWidget@@QAE@FFFFFF@Z	BASE/DIMMER	game	0x00076b0b	??0dimmerWidget@@QAE@FFFFFF@Z	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027c5a	?Read@dimmerWidget@@QAEXXZ	BASE/DIMMER	game	0x00076b4a	?Read@dimmerWidget@@QAEXXZ	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027cd1	?Main@dimmerWidget@@UAEFAAUtag_message@@@Z	BASE/DIMMER	game	0x00076bc1	?Main@dimmerWidget@@UAEFAAUtag_message@@@Z	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027cea	?Draw@dimmerWidget@@UAEXXZ	BASE/DIMMER	game	0x00076bda	?Draw@dimmerWidget@@UAEXXZ	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027d40	??_GdimmerWidget@@UAEPAXI@Z	BASE/DIMMER	game	0x00076c30	??_GdimmerWidget@@UAEPAXI@Z	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027d70	??1dimmerWidget@@UAE@XZ	BASE/DIMMER	game	0x00076c60	??1dimmerWidget@@UAE@XZ	BASE/DIMMER	shared-unit	compiled from the shared BASE/DIMMER source
+editor	0x00027d90	??0widget@@QAE@FFFFFF@Z	BASE/WIDGET	game	0x00075370	??0widget@@QAE@FFFFFF@Z	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00027e1b	??0widget@@QAE@XZ	BASE/WIDGET	game	0x000753fb	??0widget@@QAE@XZ	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00027e98	??1widget@@UAE@XZ	BASE/WIDGET	game	0x00075478	??1widget@@UAE@XZ	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00027eac	?Open@widget@@QAEFFPAVheroWindow@@@Z	BASE/WIDGET	game	0x0007548c	?Open@widget@@QAEFFPAVheroWindow@@@Z	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00027ed0	?Close@widget@@QAEXXZ	BASE/WIDGET	game	0x000754b0	?Close@widget@@QAEXXZ	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00027edb	?Main@widget@@UAEFAAUtag_message@@@Z	BASE/WIDGET	game	0x000754bb	?Main@widget@@UAEFAAUtag_message@@@Z	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x000281a3	?Dim@widget@@QAEXXZ	BASE/WIDGET	game	0x00075783	?Dim@widget@@QAEXXZ	BASE/WIDGET	shared-unit	compiled from the shared BASE/WIDGET source
+editor	0x00028250	??0bitmap@@QAE@XZ	BASE/BITMAP	game	0x00073180	??0bitmap@@QAE@XZ	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x0002829c	??0bitmap@@QAE@FFF@Z	BASE/BITMAP	game	0x000731cc	??0bitmap@@QAE@FFF@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x00028300	??0bitmap@@QAE@F@Z	BASE/BITMAP	game	0x00073230	??0bitmap@@QAE@F@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x00028406	??1bitmap@@UAE@XZ	BASE/BITMAP	game	0x00073336	??1bitmap@@UAE@XZ	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x00028444	?DrawToBuffer@bitmap@@QAEXFF@Z	BASE/BITMAP	game	0x00073374	?DrawToBuffer@bitmap@@QAEXFF@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x0002848f	?DrawToScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	game	0x000733bf	?DrawToScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x000284d0	?GrabScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	game	0x00073400	?GrabScreen@bitmap@@QAEXFF@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x000284f3	?GrabBitmap@bitmap@@QAEXPAV1@FF@Z	BASE/BITMAP	game	0x00073423	?GrabBitmap@bitmap@@QAEXPAV1@FF@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x0002852e	?Write@bitmap@@QAEXPAD@Z	BASE/BITMAP	game	0x0007345e	?Write@bitmap@@QAEXPAD@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x000285d1	?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z	BASE/BITMAP	game	0x00073501	?CopyTo@bitmap@@QAEXPAV1@HHHHHH@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x000286b0	??_Gbitmap@@UAEPAXI@Z	BASE/BITMAP	game	0x000735e0	??_Gbitmap@@UAEPAXI@Z	BASE/BITMAP	shared-unit	compiled from the shared BASE/BITMAP source
+editor	0x000286e0	??0tileset@@QAE@F@Z	BASE/TILESET	game	0x00074ea0	??0tileset@@QAE@F@Z	BASE/TILESET	shared-unit	compiled from the shared BASE/TILESET source
+editor	0x000287fc	??1tileset@@UAE@XZ	BASE/TILESET	game	0x00074fbc	??1tileset@@UAE@XZ	BASE/TILESET	shared-unit	compiled from the shared BASE/TILESET source
+editor	0x00028860	??_Gtileset@@UAEPAXI@Z	BASE/TILESET	game	0x00075020	??_Gtileset@@UAEPAXI@Z	BASE/TILESET	shared-unit	compiled from the shared BASE/TILESET source
+editor	0x00028890	??0sample@@QAE@PAD@Z	BASE/SAMPLE	game	0x00075050	??0sample@@QAE@PAD@Z	BASE/SAMPLE	shared-unit	compiled from the shared BASE/SAMPLE source
+editor	0x00028ac2	??1sample@@UAE@XZ	BASE/SAMPLE	game	0x00075282	??1sample@@UAE@XZ	BASE/SAMPLE	shared-unit	compiled from the shared BASE/SAMPLE source
+editor	0x00028b80	??_Gsample@@UAEPAXI@Z	BASE/SAMPLE	game	0x00075340	??_Gsample@@UAEPAXI@Z	BASE/SAMPLE	shared-unit	compiled from the shared BASE/SAMPLE source
+editor	0x00028bb0	?MAKEFILEID@@YAIPAD@Z	BASE/MAKEFILEID	game	0x00073610	?MAKEFILEID@@YAIPAD@Z	BASE/MAKEFILEID	shared-unit	compiled from the shared BASE/MAKEFILEID source
+editor	0x00028d20	??0resource@@QAE@XZ	BASE/RESOURCE	game	0x00077650	??0resource@@QAE@XZ	BASE/RESOURCE	shared-unit	compiled from the shared BASE/RESOURCE source
+editor	0x00028d5c	??0resource@@QAE@FFFPAV0@@Z	BASE/RESOURCE	game	0x0007768c	??0resource@@QAE@FFFPAV0@@Z	BASE/RESOURCE	shared-unit	compiled from the shared BASE/RESOURCE source
+editor	0x00028d9f	??1resource@@UAE@XZ	BASE/RESOURCE	game	0x000776cf	??1resource@@UAE@XZ	BASE/RESOURCE	shared-unit	compiled from the shared BASE/RESOURCE source
+editor	0x00028dec	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	game	0x000708b4	?ClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	shared-unit	compiled from the shared BASE/Icon2bc source
+editor	0x0002904c	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	game	0x00070b14	?FlipClippedIconToBitmap@@YAXPAVicon@@PAVbitmap@@HHHH@Z	BASE/Icon2bc	shared-unit	compiled from the shared BASE/Icon2bc source

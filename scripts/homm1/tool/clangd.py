@@ -36,10 +36,10 @@ import sys
 import time
 from pathlib import Path
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 from homm1.tool import ToolError
 
-CDB_DIR = BUILD / "clangd"
+CDB_DIR = IMAGE_BUILD / "clangd"
 CDB = CDB_DIR / "compile_commands.json"
 
 _CONTENT_LENGTH = re.compile(rb"Content-Length: (\d+)")

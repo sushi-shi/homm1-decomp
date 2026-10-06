@@ -20,6 +20,8 @@ joins source, reviewed retail tables and library providers into
 
 The model supplies a synthetic PDB to Vostok. Target objects live under
 `build/objdiff/target-new`; candidate objects under `build/objdiff/base`.
+Another image's tree mirrors this layout under `build/<image>/`
+([editor](editor.md)).
 VC4 EH records, compiler-generated code and reviewed referents retain their
 identity paths. Unrecognized destructor/static-init instruction forms fail
 closed rather than creating guessed claims. MASM units use explicit claims and

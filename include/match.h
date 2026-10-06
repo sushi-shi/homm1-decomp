@@ -55,12 +55,19 @@ typedef i32 b32;
 #include <string>
 
 // Reconstruction metadata. The compiler receives ordinary C++.
+// A claim spells an address of the program its source tree belongs to
+// (src/EDITOR and include/EDITOR: EDITOR.EXE; elsewhere: HEROES.EXE).
+// VA_AT names another program's body of the same function, for source one
+// program compiles differently from the other (`image` is a targets.json key).
 #ifdef __clang__
 #define VA(address, size) __attribute__((annotate("va:" #address " size:" #size), used))
+#define VA_AT(image, address, size)                                                  \
+    __attribute__((annotate("va:" #address " size:" #size " image:" #image), used))
 #define VA_DECL(address) __attribute__((annotate("decl-va:" #address)))
 #define DATA(address) __attribute__((annotate("data-va:" #address), used))
 #else
 #define VA(address, size)
+#define VA_AT(image, address, size)
 #define VA_DECL(address)
 #define DATA(address)
 #endif

@@ -28,7 +28,7 @@ import collections
 import re
 import sys
 
-from homm1.core.paths import BUILD, REPO
+from homm1.core.paths import BUILD, IMAGE_BUILD, REPO
 
 ROOTS = ("src", "include")
 
@@ -131,7 +131,7 @@ def self_recursion() -> list[str]:
 # --------------------------------------------------------------------------- #
 # nested static_casts (libclang; the board's full-tier metric)                #
 # --------------------------------------------------------------------------- #
-CDB = BUILD / "clangd/compile_commands.json"
+CDB = IMAGE_BUILD / "clangd/compile_commands.json"
 SOURCE_SUFFIXES = {".cpp", ".cc", ".cxx", ".h", ".hpp", ".inl"}
 STATIC_CAST = re.compile(r"\bstatic_cast\s*<")
 STRICT_MARKER = "GZ_STRICT_ENUMS"

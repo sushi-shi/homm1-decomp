@@ -26,10 +26,36 @@
 #include <stdio.h>
 #include <string.h>
 
-// An unreachable rejecting return follows the accepting one.
+// The game lists every map; the editor hides the shipped scenarios and
+// campaign maps, so the game's copy keeps only the accepting branch.
 VA(0x00453b70, 0xa)
-i32 ShowThisMap(char*) {
-    return 1;
+VA_AT(editor, 0x00416290, 0x248)
+i32 ShowThisMap(char* fileName) {
+#ifdef HOMM1_EDITOR
+    if (strnicmp(fileName, "AES3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "BEM2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "CAMP", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "CNM5", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "DNL3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "ENS1", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "FEL6", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "GHM4", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "HNM1", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "INM6", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "JEM7", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "KNS2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "LNS4", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "MIS7", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "NHL5", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "ONL7", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "PNM3", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "QNL1", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "RNL4", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "SEL2", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "THS5", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH)
+        && strnicmp(fileName, "UHS6", FILE_REQUESTER_SHIPPED_MAP_PREFIX_LENGTH))
+#endif
+        return 1;
     return 0;
 }
 
@@ -196,7 +222,9 @@ void fileRequester::Close(void) {
 
 // Selects the save slot whose extension digit matches the human player
 // count.
+// The editor's requester only loads maps.
 VA(0x00454459, 0x3cd)
+VA_AT(editor, 0x00416f00, 0x266)
 i16 fileRequester::Open(i16 priority) {
     const i16 scrollKnobId = FILE_REQUESTER_SCROLL_KNOB;
     tag_message message;
@@ -228,6 +256,13 @@ i16 fileRequester::Open(i16 priority) {
 
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
+#ifdef HOMM1_EDITOR
+    enable = 0;
+    message.id = nameLabelId;
+    sprintf(gText, localization::Tr("file.load.label"));
+    message.text = gText;
+    m_window->BroadcastMessage(message);
+#else
     if (m_mode == FILE_REQUESTER_SAVE) {
         enable = 1;
         const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
@@ -263,13 +298,16 @@ i16 fileRequester::Open(i16 priority) {
         message.text = gText;
         m_window->BroadcastMessage(message);
     }
+#endif
     const i16 entryId = FILE_REQUESTER_FILENAME_ENTRY;
     SET_WIDGET_MESSAGE(message, WIDGET_COMMAND_SET_MAX_LENGTH, entryId);
     message.value = FILE_REQUESTER_FILENAME_MAX_LENGTH;
     m_window->BroadcastMessage(message);
     Update(0);
+#ifndef HOMM1_EDITOR
     if (gShowMapInfo)
         gpWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
+#endif
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     SetOK(enable);
     UpdateMapInfo();
@@ -300,6 +338,7 @@ void fileRequester::SetOK(i8 enabled) {
 // Checks a saved game's human count, encoded as its extension digit, before
 // accepting it.
 VA(0x0045488d, 0xa9c)
+VA_AT(editor, 0x004171cd, 0x983)
 H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& message) {
     i32 firstShown;
     i32 stepSize;
@@ -485,6 +524,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
     }
 
     if (handled == 1) {
+#ifndef HOMM1_EDITOR
         if (gCampaignChoice <= 0 && m_mode == FILE_REQUESTER_LOAD && m_selectedIndex >= 0
             && gRequestingGames && message.value != FILE_REQUESTER_CANCEL) {
             key = m_extensions[m_selectedIndex].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
@@ -506,6 +546,7 @@ H1_ENUM_RETURN(MessageDispatchResult, i16) fileRequester::Main(tag_message& mess
                     handled = 0;
             }
         }
+#endif
         if (handled) {
             message.type = MESSAGE_EXECUTIVE;
             message.executiveCommand = EXECUTIVE_COMMAND_RETURN_RESULT;
@@ -586,7 +627,9 @@ void fileRequester::DoKnob(void) {
 
 // Ten text rows; saved games append their human count and map lists show
 // the header title.
+// The editor lists no saved games, so it shows no player-count suffix.
 VA(0x00455602, 0x49e)
+VA_AT(editor, 0x00417e5c, 0x476)
 void fileRequester::Update(i8 drawWindow) {
     double gutterFactor;
     i32 oldHumans;
@@ -622,11 +665,13 @@ void fileRequester::Update(i8 drawWindow) {
             oldHumans =
                 m_extensions[m_topIndex + y].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
             newPlayers = 0;
+#ifndef HOMM1_EDITOR
             if (oldHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
                 newPlayers = 1;
                 sprintf(prevExtra, " (%d %s)", oldHumans, localization::Tr("file.players.label"));
                 theSuffixWidth = bigFont->LineWidth(prevExtra);
             }
+#endif
             limit = FILE_REQUESTER_ROW_TEXT_WIDTH;
             if (newPlayers)
                 limit -= theSuffixWidth + FILE_REQUESTER_PLAYER_SUFFIX_GAP;
@@ -707,8 +752,11 @@ char* fileRequester::GetFilename(void) {
 
 // Fills GetMap's reqextra.bin window with the selected map's size,
 // difficulty and description.
+// The editor shows no map details.
 VA(0x00455c0e, 0x206)
+VA_AT(editor, 0x0041845a, 0xb)
 void fileRequester::ShowMapInfo(void) {
+#ifndef HOMM1_EDITOR
     const i32 sizeIdPos = FILE_REQUESTER_MAP_SIZE;
     const i32 levelId = FILE_REQUESTER_MAP_LEVEL;
     const i32 descriptionId = FILE_REQUESTER_MAP_DESCRIPTION;
@@ -738,6 +786,7 @@ void fileRequester::ShowMapInfo(void) {
         msg.text = m_mapInfo[m_selectedIndex].description;
     gReqExtraWindow->BroadcastMessage(msg);
     gReqExtraWindow->DrawWindow();
+#endif
 }
 
 // REQUEST owns retail .bss 0x004c5130-0x004c5137.

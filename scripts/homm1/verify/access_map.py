@@ -60,10 +60,10 @@ import struct
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from homm1.core.paths import BUILD
+from homm1.core.paths import BUILD, IMAGE_BUILD
 
-SQLITE = BUILD / "gen/data_access_map.sqlite"
-TSV = BUILD / "gen/data_access_map.tsv"
+SQLITE = IMAGE_BUILD / "gen/data_access_map.sqlite"
+TSV = IMAGE_BUILD / "gen/data_access_map.tsv"
 
 _WIDTH = {"BYTE": 1, "WORD": 2, "DWORD": 4, "QWORD": 8, "TBYTE": 10, "FWORD": 6}
 _WPTR = re.compile(r"\b(BYTE|WORD|DWORD|QWORD|TBYTE|FWORD) PTR\b")

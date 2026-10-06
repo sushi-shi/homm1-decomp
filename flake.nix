@@ -120,6 +120,11 @@
         touch "$out"
       '';
 
+      playLocales = pkgs.glibcLocales.override {
+        allLocales = false;
+        locales = [ "en_US.UTF-8/UTF-8" "ru_RU.UTF-8/UTF-8" ];
+      };
+
       python = pkgs.python3.withPackages (ps: [ ps.capstone ps.libclang ]);
       homm1-cli = pkgs.writeShellScriptBin "homm1" ''
         project_dir="''${HOMM1_DIR:-}"
@@ -154,22 +159,17 @@
           shellHook = commonHook;
         };
         build = pkgs.mkShell {
-          packages = commonTools ++ [ pkgs.wineWow64Packages.staging pkgs.libfaketime ];
+          # unshield reads the game CD's installer for `homm1 play --game`.
+          packages = commonTools ++ [ pkgs.wineWow64Packages.staging pkgs.libfaketime
+                                      pkgs.unshield ];
           shellHook = commonHook + ''
             export WINEPREFIX="$HOMM1_DIR/build/wineprefix"
             # The candidate link runs LINK.EXE at the retail link times.
             export HOMM1_FAKETIME_LIB="${pkgs.libfaketime}/lib/libfaketime.so.1"
             export WINEDLLOVERRIDES="mscoree,mshtml="
             export WINEDEBUG="fixme-all"
-          '';
-        };
-        # Playing, not building: gamescope's closure stays out of `.#build`.
-        # `homm1 play` writes build/game-wine/play.sh, which enters this shell
-        # when gamescope is not on PATH.
-        play = pkgs.mkShell {
-          packages = [ pkgs.gamescope pkgs.wineWow64Packages.staging ];
-          shellHook = ''
-            export WINEDLLOVERRIDES="mscoree,mshtml="
+            # `homm1 play` runs the Russian program under ru_RU.UTF-8.
+            export HOMM1_LOCALE_ARCHIVE="${playLocales}/lib/locale/locale-archive"
           '';
         };
       };
