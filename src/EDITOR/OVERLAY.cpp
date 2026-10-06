@@ -544,13 +544,13 @@ i32 PlaceOverlay(overlayType* type, i16 x, i16 y) {
                             && gOverlayTypes[i].frames[OVERLAY_FOOTPRINT_ANCHOR]
                                    == type->resourceFrame) {
                             PlaceMineResource(&gOverlayTypes[i], x + col, y - row, 0);
-                            i = 999;
+                            i = EDIT_END_SCAN;
                         }
                 } else {
                     for (i = 0; i < OVERLAY_TYPE_COUNT; i++)
                         if (gOverlayTypes[i].flags & OVERLAY_TYPE_RESOURCE_MARKER) {
                             PlaceMineResource(&gOverlayTypes[i], x + col, y - row, 0);
-                            i = 999;
+                            i = EDIT_END_SCAN;
                         }
                 }
             }

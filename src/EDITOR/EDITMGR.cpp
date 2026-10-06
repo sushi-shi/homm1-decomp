@@ -9873,59 +9873,54 @@ void editManager::BlendTerrain(i16 terrain, u8, u8 fromUndo, u8 skipBorders, u8 
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {
             if (m_map.cells[x][y].m_tileIndex / MAP_CELL_TILES_PER_TERRAIN == terrain) {
                 north = south = east = west = nw = ne = sw = se = 0;
-                if (y == 0 || gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] == terrain)
+                if (y == 0 || CELL_TERRAIN(&m_map.cells[x][y - 1]) == terrain)
                     north = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex];
-                if (y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x][y - 1]);
+                if (y == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x][y + 1]) == terrain)
                     south = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex];
-                if (x == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x][y + 1]);
+                if (x == MAP_CELL_GRID_SIZE || CELL_TERRAIN(&m_map.cells[x + 1][y]) == terrain)
                     east = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex];
-                if (x == 0 || gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex] == terrain)
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y]);
+                if (x == 0 || CELL_TERRAIN(&m_map.cells[x - 1][y]) == terrain)
                     west = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y]);
                 if (!((north && west) || (north && east) || (south && west) || (south && east))) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
-                            * MAP_CELL_TILES_PER_TERRAIN;
+                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
                     else
                         m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
                 }
-                if (x == 0 || y == 0
-                    || gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex] == terrain)
+                if (x == 0 || y == 0 || CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) == terrain)
                     nw = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y - 1]);
                 if (x == 0 || y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) == terrain)
                     sw = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x - 1][y + 1]);
                 if (x == MAP_CELL_GRID_SIZE || y == MAP_CELL_GRID_SIZE
-                    || gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) == terrain)
                     se = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (x == MAP_CELL_GRID_SIZE || y == 0
-                    || gGroundToTerrain[m_map.cells[x + 1][y - 1].m_tileIndex] == terrain)
+                    || CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) == terrain)
                     ne = 1;
                 else
-                    surrounding = gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex];
+                    surrounding = CELL_TERRAIN(&m_map.cells[x + 1][y + 1]);
                 if (!((north && ne && east) || (north && nw && west) || (south && se && east)
                       || (south && sw && west))
                     && !m_map.cells[x][y].m_objectTileset) {
                     if (fromUndo)
                         m_map.cells[x][y].m_tileIndex =
-                            gGroundToTerrain[m_undoMap.cells[x][y].m_tileIndex]
-                            * MAP_CELL_TILES_PER_TERRAIN;
+                            CELL_TERRAIN(&m_undoMap.cells[x][y]) * MAP_CELL_TILES_PER_TERRAIN;
                     else
                         m_map.cells[x][y].m_tileIndex = surrounding * MAP_CELL_TILES_PER_TERRAIN;
                 }
@@ -9942,15 +9937,15 @@ borders:
             terrainBase = thisTerrain * MAP_CELL_TILES_PER_TERRAIN;
             north = south = east = west = 0;
             if (thisTerrain != TERRAIN_DIRT) {
-                if (y > 0 && gGroundToTerrain[m_map.cells[x][y - 1].m_tileIndex] != thisTerrain)
+                if (y > 0 && CELL_TERRAIN(&m_map.cells[x][y - 1]) != thisTerrain)
                     north = 1;
                 if (y < MAP_CELL_GRID_SIZE - 1
-                    && gGroundToTerrain[m_map.cells[x][y + 1].m_tileIndex] != thisTerrain)
+                    && CELL_TERRAIN(&m_map.cells[x][y + 1]) != thisTerrain)
                     south = 1;
                 if (x < MAP_CELL_GRID_SIZE - 1
-                    && gGroundToTerrain[m_map.cells[x + 1][y].m_tileIndex] != thisTerrain)
+                    && CELL_TERRAIN(&m_map.cells[x + 1][y]) != thisTerrain)
                     east = 1;
-                if (x > 0 && gGroundToTerrain[m_map.cells[x - 1][y].m_tileIndex] != thisTerrain)
+                if (x > 0 && CELL_TERRAIN(&m_map.cells[x - 1][y]) != thisTerrain)
                     west = 1;
                 cell->m_flags &= ~(MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL);
                 if (north) {
@@ -10005,17 +10000,16 @@ borders:
                     );
                 }
                 if (!(north | south | east | west)) {
-                    if (x > 0 && y > 0
-                        && gGroundToTerrain[m_map.cells[x - 1][y - 1].m_tileIndex] != thisTerrain)
+                    if (x > 0 && y > 0 && CELL_TERRAIN(&m_map.cells[x - 1][y - 1]) != thisTerrain)
                         north = 1;
                     if (x < MAP_CELL_GRID_SIZE - 1 && y < MAP_CELL_GRID_SIZE - 1
-                        && gGroundToTerrain[m_map.cells[x + 1][y + 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x + 1][y + 1]) != thisTerrain)
                         south = 1;
                     if (x < MAP_CELL_GRID_SIZE - 1 && y > 0
-                        && gGroundToTerrain[m_map.cells[x + 1][y - 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x + 1][y - 1]) != thisTerrain)
                         east = 1;
                     if (x > 0 && y < MAP_CELL_GRID_SIZE - 1
-                        && gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex] != thisTerrain)
+                        && CELL_TERRAIN(&m_map.cells[x - 1][y + 1]) != thisTerrain)
                         west = 1;
                     if (north) {
                         SetTileVariant(

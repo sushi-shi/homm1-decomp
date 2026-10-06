@@ -1310,7 +1310,6 @@ src/EDITOR/OVERLAY.cpp	overlayManager::Open	0	call-argument	button(* argument 8	
 src/EDITOR/OVERLAY.cpp	*	5	call-argument	strnicmp(* argument 3	the length of the object-name prefix compared ("nmine", "mine-", "rovr-")
 src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	*	array subscript artifacts	the placed hero record's four artifact slots, emptied one by one
 src/EDITOR/OVERLAY.cpp	PlaceOverlay	[0-3]	trivial-function-literal	[0-3] array-index artifacts	the placed hero record's four artifact slots, emptied one by one
-src/EDITOR/OVERLAY.cpp	PlaceOverlay	999	store	store to i	ends the marker search after the first match (retail stores 999, past OVERLAY_TYPE_COUNT)
 src/EDITOR/OVERLAY.cpp	PlaceMineResource	1	trivial-function-literal	1 bound x	the mine's entrance cell lies one column west of its marker cell
 src/EDITOR/OVERLAY.cpp	overlayManager::PickOverlay	0	call-argument	heroWindow(i16, i16, i16, i16, i16) argument [12]	the full-screen picker window's origin
 src/EDITOR/OVERLAY.cpp	overlayManager::MeasureOverlay	[1-5]	*	*	the footprint's extent in cells: its highest occupied row or rightmost column, plus one

@@ -60,8 +60,6 @@ H1_ENUM_CONST_BEGIN(RandomMapConstant)
     // more) and spend an object's tries when it is placed.
     RANDOM_MAP_TRIES_PER_OBJECT = 100,
     RANDOM_MAP_TRIES_PER_MINE = 1000,
-    // A loop index past every bound: the scan ends after this pass.
-    RANDOM_MAP_END_SCAN = 999,
     // GenerateRandomMap's terrain index past TERRAIN_LAST once the base
     // terrain is painted.
     RANDOM_MAP_END_TERRAIN_SCAN = 99,

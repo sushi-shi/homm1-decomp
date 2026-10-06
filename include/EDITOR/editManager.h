@@ -30,6 +30,9 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     // m_placedX/m_placedY and the tool managers' last drag cell when there is
     // none.
     EDIT_NO_CELL = -1,
+    // A loop index stored past every extent to end a scan after its first
+    // match (the object table and map scans).
+    EDIT_END_SCAN = 999,
     // m_objectIcons: the adventure tileset slots (MapTileset), each loaded at
     // both zoom levels.
     EDIT_MANAGER_TILESET_COUNT = 21,

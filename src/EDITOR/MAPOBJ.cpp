@@ -387,7 +387,7 @@ void editManager::RemoveSmallRegions(void) {
                 continue;
             memset(inRegion, 0, MAP_CELL_GRID_SIZE * MAP_CELL_GRID_SIZE);
             (MAP_GRID_CELL(inRegion, startX, startY))++;
-            ground = giGroundToTerrain[m_map.cells[startX][startY].m_tileIndex];
+            ground = CELL_TERRAIN(&m_map.cells[startX][startY]);
             spread = 1;
             extent = 1;
             minX = startX - 1;
@@ -407,9 +407,9 @@ void editManager::RemoveSmallRegions(void) {
                     maxY = MAP_CELL_GRID_SIZE - 1;
                 for (y = minY; y <= maxY; y++) {
                     for (x = minX; x <= maxX; x++) {
-                        if (giGroundToTerrain[m_map.cells[x][y].m_tileIndex] != ground) {
+                        if (CELL_TERRAIN(&m_map.cells[x][y]) != ground) {
                             if (neighbourTerrain == TERRAIN_INVALID)
-                                neighbourTerrain = giGroundToTerrain[m_map.cells[x][y].m_tileIndex];
+                                neighbourTerrain = CELL_TERRAIN(&m_map.cells[x][y]);
                             continue;
                         }
                         if (MAP_GRID_CELL(inRegion, x, y))
@@ -511,7 +511,7 @@ void editManager::PlaceObstacleChains(i32 density, i32 tileset) {
             hunting = 0;
             rootX = Random(0, MAP_CELL_GRID_SIZE - 1);
             rootY = Random(0, MAP_CELL_GRID_SIZE - 1);
-            ground = giGroundToTerrain[m_map.cells[rootX][rootY].m_tileIndex];
+            ground = CELL_TERRAIN(&m_map.cells[rootX][rootY]);
             if (tileset == TILESET_TREE32 && ground == TERRAIN_LAVA && Random(0, 100) < 80)
                 hunting = 1;
             if (tileset == TILESET_TREE32 && ground == TERRAIN_DESERT && Random(0, 100) < 70)
@@ -613,7 +613,7 @@ i32 editManager::PlaceChainLink(i32* x, i32* y, i32 direction, i32 tileset, char
     if (*x < 0 || *x > MAP_CELL_GRID_SIZE - 1 || *y < 0 || *y > MAP_CELL_GRID_SIZE - 1)
         return 0;
     piece = CHAIN_PIECE_STEEP_RISING;
-    ground = giGroundToTerrain[m_map.cells[*x][*y].m_tileIndex];
+    ground = CELL_TERRAIN(&m_map.cells[*x][*y]);
     terrainBit = RANDOM_MAP_NO_CHAIN_TERRAIN;
     if (tileset == TILESET_MTN32) {
         switch (ground) {
@@ -780,7 +780,7 @@ void editManager::PlaceTowns(void) {
                     foundX = tileX;
                     foundY = tileY;
                     MAP_GRID_CELL(regionGrid, tileX, tileY) = regionId;
-                    tileX = tileY = RANDOM_MAP_END_SCAN;
+                    tileX = tileY = EDIT_END_SCAN;
                 }
             }
         }
@@ -814,7 +814,7 @@ void editManager::PlaceTowns(void) {
                 }
             }
         } else
-            regionId = RANDOM_MAP_END_SCAN;
+            regionId = EDIT_END_SCAN;
     }
     memset(regionSizes, 0, sizeof(regionSizes));
     for (tileX = 0; tileX < MAP_CELL_GRID_SIZE; tileX++)
@@ -1174,14 +1174,14 @@ void editManager::PlaceResourceSite(i32 x, i32 y, i32 resource) {
     } else if (resource == RESOURCE_MERCURY) {
         for (index = 0; index < OVERLAY_TYPE_COUNT; index++)
             if (!strnicmp(gOverlayTypes[index].name, "alch-0", 6)
-                && gOverlayTypes[index].terrainMask & 1 << ground)
+                && gOverlayTypes[index].terrainMask & OVERLAY_TERRAIN_BIT(ground))
                 site = &gOverlayTypes[index];
         PlaceOverlay(site, x, y);
     } else {
         sprintf(name, "rovr-0%d ", resource);
         for (index = 0; index < OVERLAY_TYPE_COUNT; index++) {
             if (!strnicmp(gOverlayTypes[index].name, "mine-0", 6)
-                && gOverlayTypes[index].terrainMask & 1 << ground)
+                && gOverlayTypes[index].terrainMask & OVERLAY_TERRAIN_BIT(ground))
                 site = &gOverlayTypes[index];
             if (!strcmpi(gOverlayTypes[index].name, name))
                 resourceMarker = &gOverlayTypes[index];
