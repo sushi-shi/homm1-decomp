@@ -28,8 +28,13 @@ endif()
 
 find_package(Python3 COMPONENTS Interpreter REQUIRED)
 # SDL3 from the system (or the toolchain's find root), else its source
-# release, fetched and built with the programs (Windows, emsdk).
-find_package(SDL3 CONFIG QUIET)
+# release, fetched and built with the programs (Windows, emsdk). Windows
+# links SDL into the programs, so only its static library will do there.
+if(WIN32)
+  find_package(SDL3 CONFIG QUIET COMPONENTS SDL3-static)
+else()
+  find_package(SDL3 CONFIG QUIET)
+endif()
 if(NOT SDL3_FOUND)
   message(STATUS "SDL3 not found; building SDL 3.4.8 from its source release")
   if(CMAKE_VERSION VERSION_LESS "3.25")
@@ -214,19 +219,16 @@ target_compile_options(homm1_platform PRIVATE ${HOMM1_SEMANTICS} ${HOMM1_STRICT_
   ${HOMM1_SANITIZE_FLAGS})
 target_link_options(homm1_platform PUBLIC ${HOMM1_SANITIZE_FLAGS})
 target_compile_definitions(homm1_platform PRIVATE HOMM1_PORT=1 HOMM1_CODEPAGE=${HOMM1_CODEPAGE})
-target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 homm1_vorbis homm1_flac)
 if(WIN32)
-  target_link_libraries(homm1_platform PUBLIC ws2_32)
-  # MinGW: the C++ runtime is linked in; the programs then need only SDL3
-  # and the compiler's thread library beside them.
-  target_link_options(homm1_platform PUBLIC -static-libgcc -static-libstdc++)
-  if(NOT SDL3_FOUND)
-    # A build on Windows itself: with SDL linked in too, the programs are
-    # single files.
-    target_link_options(homm1_platform PUBLIC -static)
-  endif()
+  target_link_libraries(homm1_platform PUBLIC SDL3::SDL3-static homm1_vorbis homm1_flac ws2_32)
+  # MinGW: SDL, the C++ runtime and the compiler's thread library are linked
+  # in, so each program is a single file that imports only Windows' own DLLs
+  # (nix/windows.nix checks that).
+  target_link_options(homm1_platform PUBLIC -static)
   # C99 formatting (%zu, %lld) for the log, as on other hosts.
   target_compile_definitions(homm1_platform PRIVATE __USE_MINGW_ANSI_STDIO=1)
+else()
+  target_link_libraries(homm1_platform PUBLIC SDL3::SDL3 homm1_vorbis homm1_flac)
 endif()
 
 # --------------------------------------------------------------------------

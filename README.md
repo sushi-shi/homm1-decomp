@@ -223,14 +223,13 @@ With Nix, on Linux:
 nix build .#windows
 ```
 
-`result/bin` holds the edition's `heroes.exe`, `heroes-editor.exe` and every
-DLL they need
-(`SDL3.dll`, `libmcfgthread-2.dll`). Copy these files into your installed
-game folder (the one with `DATA`, `MAPS`, `GAMES`, `SOUND` and `ANIM`) and
-start `heroes.exe` or `heroes-editor.exe` there; the edition's lossless music
-goes in an `Audio` folder there (`Track NN.flac`). Elsewhere, start them with
-`--data C:\Games\Heroes` or set `HOMM1_DATA` to that folder (the quotes cmd's
-`set HOMM1_DATA="C:\Games\Heroes"` keeps are fine).
+`result/bin` holds the edition's `heroes.exe` and `heroes-editor.exe`, each a
+single statically linked file that needs no DLL beside it. Copy them into
+your installed game folder (the one with `DATA`, `MAPS`, `GAMES`, `SOUND` and
+`ANIM`) and start `heroes.exe` or `heroes-editor.exe` there; the edition's
+lossless music goes in an `Audio` folder there (`Track NN.flac`). Elsewhere,
+start them with `--data C:\Games\Heroes` or set `HOMM1_DATA` to that folder
+(the quotes cmd's `set HOMM1_DATA="C:\Games\Heroes"` keeps are fine).
 
 On Windows itself, with [MinGW-w64](https://www.mingw-w64.org/) (for example
 MSYS2's UCRT64 GCC), CMake 3.25+, Ninja, Python 3 and Git on `PATH`:
@@ -240,9 +239,9 @@ cmake --preset windows
 cmake --build --preset windows
 ```
 
-CMake downloads SDL and links it in: `build\windows\heroes.exe` and
-`heroes-editor.exe` need no DLL beside them. Settings and the converted help
-are kept in `%APPDATA%\homm1`.
+CMake links SDL in, downloading it unless a static SDL3 is installed:
+`build\windows\heroes.exe` and `heroes-editor.exe` need no DLL beside them.
+Settings and the converted help are kept in `%APPDATA%\homm1`.
 
 ## Multiplayer
 
