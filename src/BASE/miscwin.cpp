@@ -306,6 +306,9 @@ void ClippedMonoIconToBitmap(
 // Clipped colour icon blit kept beside the mono path. Retail keeps every
 // working value in file statics, as in the assembly renderers.
 #define sClipY sClipPosY // spelling fixes .bss order
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cfb4c)
+static i32 sMiscOldField;
 DATA(0x004cfb50)
 static i32 sClipY;
 DATA(0x004cfb58)
@@ -328,6 +331,9 @@ DATA(0x004cfb6c)
 static u32 sClipRun;
 DATA(0x004cfbb0)
 static BOOL sClipInside;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cfb70)
+static u8 sMiscScanTable[64];
 
 VA(0x00470076, 0x307)
 void ClipIconToBitmap(

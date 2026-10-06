@@ -126,7 +126,7 @@ i32 combatManager::AICheckRetreat(void) {
 // the gate. The chosen move is nudged onto a free hex next to an enemy.
 VA(0x00411d88, 0x872)
 void combatManager::DoCompAI(i8) {
-    i8 strongerVal;
+    i8 theyOutshoot;
     i16 mainShooters[COMBAT_SIDE_COUNT];
     i32 newStrengths[COMBAT_SIDE_COUNT];
     i32 theSum;
@@ -136,7 +136,7 @@ void combatManager::DoCompAI(i8) {
     army* curArmy;
     i16 sideEnemy;
     i32 foeShootersNow;
-    i16 origMasks[COMBAT_SIDE_COUNT];
+    i16 flyerMask[COMBAT_SIDE_COUNT];
     i32 minShootPowerVal;
     i8 ndx;
     i32 localDummy;
@@ -156,19 +156,19 @@ void combatManager::DoCompAI(i8) {
     sideEnemy = 1 - m_currentSide;
     mainShooters[m_currentSide] = GetShooterMask(m_currentSide);
     mainShooters[sideEnemy] = GetShooterMask(sideEnemy);
-    origMasks[m_currentSide] = GetFlyerMask(m_currentSide);
-    origMasks[sideEnemy] = GetFlyerMask(sideEnemy);
+    flyerMask[m_currentSide] = GetFlyerMask(m_currentSide);
+    flyerMask[sideEnemy] = GetFlyerMask(sideEnemy);
     walkerMask[m_currentSide] = GetWalkerMask(m_currentSide);
     walkerMask[sideEnemy] = GetWalkerMask(sideEnemy);
     newStrengths[m_currentSide] = GetStrength(m_currentSide, mainShooters[m_currentSide]);
     newStrengths[sideEnemy] = GetStrength(sideEnemy, mainShooters[sideEnemy]);
     theSum = GetStrength(
         m_currentSide,
-        mainShooters[m_currentSide] | origMasks[m_currentSide] | walkerMask[m_currentSide]
+        mainShooters[m_currentSide] | flyerMask[m_currentSide] | walkerMask[m_currentSide]
     );
     minShootPowerVal = (theSum + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION;
     ourOutshoot = 0;
-    strongerVal = 0;
+    theyOutshoot = 0;
     myShootPower = GetStrength(m_currentSide, mainShooters[m_currentSide]);
     foeShootersNow = GetStrength(sideEnemy, mainShooters[sideEnemy]);
     if (m_castleSide[COMBAT_DEFENDER_SIDE]) {
@@ -189,7 +189,7 @@ void combatManager::DoCompAI(i8) {
     if ((theSum + COMBAT_AI_STRENGTH_ROUNDING) / COMBAT_AI_STRENGTH_FRACTION < myShootPower)
         ourOutshoot = 1;
     if (foeShootersNow > myShootPower)
-        strongerVal = 1;
+        theyOutshoot = 1;
     if (curArmy->m_stats.attributes & MONSTER_FLAGS_SHOOTER) {
         if (curArmy->m_stats.shots > 0)
             newPlan = COMBAT_AI_ATTACK_SHOOT;
@@ -210,7 +210,7 @@ void combatManager::DoCompAI(i8) {
                     SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
                 }
-                ndx = GetBestArmy(sideEnemy, origMasks[sideEnemy]);
+                ndx = GetBestArmy(sideEnemy, flyerMask[sideEnemy]);
                 if (ndx != COMBAT_ARMY_INDEX_NONE) {
                     SET_NEXT_COMBAT_MOVE(m_armies[sideEnemy][ndx].m_hex);
                     goto finish;
@@ -225,17 +225,17 @@ void combatManager::DoCompAI(i8) {
             }
             break;
         case COMBAT_AI_ATTACK_FLY:
-            if (ourOutshoot && !strongerVal) {
+            if (ourOutshoot && !theyOutshoot) {
                 if (AttemptAttack(curArmy, sideEnemy, mainShooters[sideEnemy]))
                     goto finish;
-                else if (AttemptAttack(curArmy, sideEnemy, origMasks[sideEnemy]))
+                else if (AttemptAttack(curArmy, sideEnemy, flyerMask[sideEnemy]))
                     goto finish;
                 else if (AttemptAttack(curArmy, sideEnemy, walkerMask[sideEnemy]))
                     goto finish;
             } else {
                 if (AttemptAttack(curArmy, sideEnemy, mainShooters[sideEnemy]))
                     goto finish;
-                else if (AttemptAttack(curArmy, sideEnemy, origMasks[sideEnemy]))
+                else if (AttemptAttack(curArmy, sideEnemy, flyerMask[sideEnemy]))
                     goto finish;
                 else if (AttemptAttack(curArmy, sideEnemy, walkerMask[sideEnemy]))
                     goto finish;
@@ -245,7 +245,7 @@ void combatManager::DoCompAI(i8) {
             if (AttemptAdjacentAttack(curArmy)) {
                 goto finish;
             } else {
-                if (ourOutshoot && !strongerVal) {
+                if (ourOutshoot && !theyOutshoot) {
                     if (WalkTowardArmyFront(curArmy, m_currentSide, mainShooters[m_currentSide]))
                         goto finish;
                 } else {
@@ -253,14 +253,14 @@ void combatManager::DoCompAI(i8) {
                         goto finish;
                     else if (AttemptAttack(curArmy, sideEnemy, walkerMask[sideEnemy]))
                         goto finish;
-                    else if (AttemptAttack(curArmy, sideEnemy, origMasks[sideEnemy]))
+                    else if (AttemptAttack(curArmy, sideEnemy, flyerMask[sideEnemy]))
                         goto finish;
                 }
                 if (WalkTowardArmy(curArmy, sideEnemy, mainShooters[sideEnemy]))
                     goto finish;
                 else if (WalkTowardArmy(curArmy, sideEnemy, walkerMask[sideEnemy]))
                     goto finish;
-                else if (WalkTowardArmy(curArmy, sideEnemy, origMasks[sideEnemy]))
+                else if (WalkTowardArmy(curArmy, sideEnemy, flyerMask[sideEnemy]))
                     goto finish;
                 if (m_currentSide == COMBAT_ATTACKER_SIDE && m_castleSide[COMBAT_DEFENDER_SIDE]
                     && curArmy->m_hex % COMBAT_GRID_COLUMNS < COMBAT_CASTLE_WALL_COLUMN - 1) {

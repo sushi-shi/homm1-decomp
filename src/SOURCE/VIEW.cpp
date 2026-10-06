@@ -162,13 +162,13 @@ i8 combatManager::ViewGeneral(i32 side, i32 allowActions, i32 quickView) {
 // their help line.
 VA(0x004663ee, 0x1a7)
 i16 HandleViewGeneral(tag_message& message) {
-    i32 pos;
+    i32 helpIndex;
     i16 prevCtrl;
     i16 borderId;
     i16 theBarId;
     i16 oldControl;
     i16 curSurrenderBtn;
-    i8 result;
+    i8 dialogEnded;
     i16 colorControlVal;
     i16 nameCtrl;
     i16 oldFrameWidgetId;
@@ -193,7 +193,7 @@ i16 HandleViewGeneral(tag_message& message) {
     curSurrenderBtn = GENERAL_SURRENDER;
     activeCtrl = GENERAL_CONTROL_THIRTEEN;
     oldFrameWidgetId = GENERAL_CONTROL_FOURTEEN;
-    result = 0;
+    dialogEnded = 0;
     if (message.type == MESSAGE_WIDGET) {
         switch (message.command) {
             case WIDGET_NOTIFY_DESELECT:
@@ -204,7 +204,7 @@ i16 HandleViewGeneral(tag_message& message) {
                     case DIALOG_BUTTON_0:
                         if (!(message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)) {
                             gWindowManager->m_dialogResult = message.id;
-                            result = 1;
+                            dialogEnded = 1;
                             break;
                         }
                 }
@@ -215,27 +215,27 @@ i16 HandleViewGeneral(tag_message& message) {
                 gWindowManager->m_lastHoverId = message.id;
                 switch (message.id) {
                     case GENERAL_CAST_SPELL:
-                        pos = GENERAL_HOVER_HELP_CAST_SPELL;
+                        helpIndex = GENERAL_HOVER_HELP_CAST_SPELL;
                         break;
                     case GENERAL_RETREAT:
-                        pos = GENERAL_HOVER_HELP_RETREAT;
+                        helpIndex = GENERAL_HOVER_HELP_RETREAT;
                         break;
                     case GENERAL_SURRENDER:
-                        pos = GENERAL_HOVER_HELP_SURRENDER;
+                        helpIndex = GENERAL_HOVER_HELP_SURRENDER;
                         break;
                     case DIALOG_BUTTON_0:
-                        pos = GENERAL_HOVER_HELP_CLOSE;
+                        helpIndex = GENERAL_HOVER_HELP_CLOSE;
                         break;
                     default:
-                        pos = GENERAL_HOVER_HELP_HERO;
+                        helpIndex = GENERAL_HOVER_HELP_HERO;
                         break;
                 }
-                gCombatManager->CombatMessage(gViewGeneralHelp[pos], 1);
+                gCombatManager->CombatMessage(gViewGeneralHelp[helpIndex], 1);
                 return MESSAGE_DISPATCH_CONSUME;
                 break;
         }
     }
-    if (result) {
+    if (dialogEnded) {
         message.id = WIDGET_COMMAND_DIALOG_SELECT;
         message.command = message.id;
         return MESSAGE_DISPATCH_FORWARD;

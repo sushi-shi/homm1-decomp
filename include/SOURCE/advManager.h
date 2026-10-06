@@ -55,16 +55,16 @@ H1_ENUM_CONST_BEGIN(AdventureFrameTimerConstant)
     TIMER_DELAY = 120
 H1_ENUM_CONST_END(AdventureFrameTimerConstant)
 
-// m_lastQuickViewX/Y: the map cell of the monster DoCombat turns to face the
-// attacker (DrawCell draws it facing); the constructor starts it at NONE
-// (-99, off every drawable cell) and DoCombat clears the x back to CLEARED
-// (-1) after the redraw.
-H1_ENUM_CONST_BEGIN(AdventureQuickViewCellConstant)
-    QUICK_VIEW_NONE = -99,
-    QUICK_VIEW_CLEARED = -1
-H1_ENUM_CONST_END(AdventureQuickViewCellConstant)
+// m_combatMonsterX/Y: the map cell of the monster CombatMonsterEvent turns to
+// face the attacker (DrawCell draws it facing); the constructor starts it at
+// NONE (-99, off every drawable cell) and CombatMonsterEvent clears the x back
+// to CLEARED (-1) after the redraw.
+H1_ENUM_CONST_BEGIN(AdventureCombatMonsterCellConstant)
+    COMBAT_MONSTER_CELL_NONE = -99,
+    COMBAT_MONSTER_CELL_CLEARED = -1
+H1_ENUM_CONST_END(AdventureCombatMonsterCellConstant)
 
-// m_lastHoverCell/m_hoverCellY before the mouse hovers a view cell.
+// m_hoverCellX/m_hoverCellY before the mouse hovers a view cell.
 H1_ENUM_CONST_BEGIN(AdventureCursorConstant)
     CURSOR_INVALID_POSITION = -1
 H1_ENUM_CONST_END(AdventureCursorConstant)
@@ -94,8 +94,8 @@ H1_ENUM_BEGIN(AdventureHeroIcon)
     ADVMGR_HERO_ICON_BOAT = 4
 H1_ENUM_END(AdventureHeroIcon)
 
-// m_selectedCell: the action ProcessSelect queues and advManager::DoSelect
-// runs.
+// m_pendingCommand: the action ProcessHover/ProcessSelect queue and
+// advManager::DoAdvCommand runs.
 H1_ENUM_BEGIN(AdventureCommand)
     ADVMGR_COMMAND_NONE = -1,
     ADVMGR_COMMAND_MOVE_TO = 1,
@@ -197,9 +197,10 @@ H1_ENUM_CONST_END(AdventurePanelButtonConstant)
      (message).id = ADVMGR_PANEL_BUTTON_LAST,                                                      \
      (window)->BroadcastMessage(message))
 
+// m_activeSounds: a playing map sound and its nearest ring distance.
 struct adventureSoundCell {
     i32 soundId;
-    i32 volume;
+    i32 distance;
 };
 
 // Retail constructor, Open and InitMainClasses' 0x260-byte allocation fix
@@ -207,12 +208,12 @@ struct adventureSoundCell {
 #pragma pack(push, 1)
 class advManager : public baseManager {
 public:
-    i8 m_selectedCell;
+    i8 m_pendingCommand;
     class widget* m_bottomViewPrimaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class widget* m_bottomViewSecondaryWidgets[ADVMGR_BOTTOM_VIEW_WIDGET_COUNT];
     class heroWindow* m_adventureWindow;
     // ShowRoute clears 72*72 bytes and stores signed route frames.
-    i8* m_visibilityMap;
+    i8* m_routeMap;
     i8 m_routeShown;
     i8 m_currentTerrain;
     char m_unused9b[4];
@@ -227,23 +228,23 @@ public:
     class tileset* m_cloudTiles;
     class tileset* m_stoneTiles;
     class icon* m_objectIcons[ADVMGR_OBJECT_ICON_COUNT];
-    class icon* m_puzzleIcon;
+    class icon* m_radarIcon;
     class icon* m_cloudOverlayIcon;
     i16 m_mapOriginX;
     i16 m_mapOriginY;
     i16 m_previousOriginX;
     i16 m_previousOriginY;
-    i16 m_lastHoverCell;
+    i16 m_hoverCellX;
     i16 m_hoverCellY;
     i16 m_commandTargetX;
     i16 m_commandTargetY;
-    i16 m_updateMinX;
-    i16 m_updateMinY;
-    i16 m_updateMaxX;
-    i16 m_updateMaxY;
+    i16 m_scrollOffsetX;
+    i16 m_scrollOffsetY;
+    i16 m_animationFrame;
+    i16 m_flagFrameCounter;
     i8 m_animationPhases[ADVMGR_ANIMATION_PHASE_COUNT];
     class icon* m_heroIcons[ADVMGR_HERO_ICON_COUNT];
-    class icon* m_boatShadowIcon;
+    class icon* m_shadowIcon;
     class icon* m_flagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     class icon* m_boatFlagIcons[ADVMGR_PLAYER_COLOR_COUNT];
     i8 m_cursorActive;
@@ -262,15 +263,15 @@ public:
     i32 m_heroContextLocked;
     i32 m_townContextLocked;
     i8 m_forceCompleteDraw;
-    i8 m_lastQuickViewX;
-    i8 m_lastQuickViewY;
-    i8 m_mineGuardianFacingLeft;
+    i8 m_combatMonsterX;
+    i8 m_combatMonsterY;
+    i8 m_combatMonsterFacingLeft;
     i32 m_activeSoundMask;
     adventureSoundCell m_activeSounds[ADVMGR_ACTIVE_SOUND_COUNT];
     class sample* m_loopingSamples[ADVMGR_ENVIRONMENT_SOUND_COUNT];
     class sample* m_cursorSamples[ADVMGR_CURSOR_SAMPLE_COUNT];
     i8 m_identifyHeroActive;
-    i8 m_openState;
+    i8 m_heroesLogoShown;
     // Main drops message types outside this mask (Open sets 0x32f).
     i16 m_messageTypeMask;
     // --- constructors ---
@@ -327,7 +328,7 @@ public:
     i32 ProcessHover(struct tag_message* message);
     void UpdateScreen(i8 cursorUpdate, i8 forceUpdate);
     void CompleteDraw(i16 originX, i16 originY, i32 forceDraw);
-    void CompleteDraw(i32 update);
+    void CompleteDraw(i32 forceDraw);
     i32 GetCloudLookup(i32 x, i32 y);
     void DrawCell(
         i16 mapX,
@@ -353,7 +354,7 @@ public:
     i8 UpdBottomViewHero(void);
     void HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windowY);
     char* GetArmySizeName(i16 armySize, H1_ENUM_PARAM(ArmySizeNameVariant, i8) grammar);
-    void TownQuickView(i8 townId, i8, i16 windowX, i16 windowY);
+    void TownQuickView(i8 townId, i8 locatorSlot, i16 windowX, i16 windowY);
     void RedrawAdvScreen(i32 update);
     void GiveTakeArtifactStat(class hero* targetHero, i8 artifact, i8 take);
     void DeactivateCurrTown(void);
@@ -368,7 +369,7 @@ public:
     void GrabScreen(void);
     void CheckCastSpell(void);
     i8 ComboDraw(i16 originX, i16 originY, i8 animate);
-    i8 ComboDraw(i32 update);
+    i8 ComboDraw(i32 animate);
     void SetEnvironmentOrigin(i16 originX, i16 originY, i16 stopSounds);
     void CheckLoadSample(i32 index);
     i32 GetSoundId(i32 x, i32 y);
@@ -449,13 +450,13 @@ public:
     i8 CombatMonsterEvent(
         class hero* eventHero,
         H1_ENUM_PARAM(CreatureType, i8) monsterType,
-        i16 count,
+        i16 monsterCount,
         class mapCell* cell,
         i32 x,
         i32 y,
         i8 heroDefends,
-        i32 fromX,
-        i32 fromY
+        i32 combatX,
+        i32 combatY
     );
     void TransferArtifacts(class hero* sourceHero, class hero* destHero);
     void HeroLoses(class hero* lostHero);
@@ -471,14 +472,14 @@ public:
         class mapCell* cell,
         class mapCell* combatCell,
         class hero* eventHero,
-        i8* handled,
+        i8* removeMonsterObject,
         i32 x,
         i32 y,
         i8 unused,
         i32 combatX,
         i32 combatY
     );
-    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* handled);
+    void ComputerMonsterInteract(class mapCell* cell, class hero* eventHero, i8* removeMonsterObject);
     i32 DoNetCombat(RemoteMessage* packet);
     i32 DoCombat(
         i32 x,
@@ -599,22 +600,32 @@ extern i8 gFreshSave;
 // ComboDraw's per-view-cell redraw marks and its animation frame clock.
 #define gComboDraw bComboDraw // spelling fixes .bss order
 extern i8 gComboDraw[][17];
-// DoAdvCommand's route event coordinates handed from MoveHero to DoEvent.
-extern i32 TrigX;
-extern i32 TrigY;
-// CURSOR globals: byte flags and the last two footstep sample handles
-// (0x004a0d4c/0x004a0d50).
+// The cell whose trigger MoveHero reports, handed from DoAdvCommand's walk
+// to DoEvent.
+#define gTriggerX TrigX // spelling fixes .bss order
+extern i32 gTriggerX;
+#define gTriggerY TrigY // spelling fixes .bss order
+extern i32 gTriggerY;
+// CURSOR globals: the footstep and alternate-frame flags, and the hero cursor
+// state DrawCursor saves and restores around gDrawSavedCursor.
 extern i8 gMoveSoundMade;
-extern i8 EveryOther;
-extern i8 S1cursorDirection;
-extern i16 S1cursorBaseFrame;
-extern i16 S1cursorFrameCount;
-extern i16 S1cursorCycle;
-extern i16 S1cursorTurning;
+#define gEveryOther EveryOther // spelling fixes .bss order
+extern i8 gEveryOther;
+#define gSavedCursorDirection S1cursorDirection // spelling fixes .bss order
+extern i8 gSavedCursorDirection;
+#define gSavedCursorBaseFrame S1cursorBaseFrame // spelling fixes .bss order
+extern i16 gSavedCursorBaseFrame;
+#define gSavedCursorFrameCount S1cursorFrameCount // spelling fixes .bss order
+extern i16 gSavedCursorFrameCount;
+#define gSavedCursorCycle S1cursorCycle // spelling fixes .bss order
+extern i16 gSavedCursorCycle;
+#define gSavedCursorTurning S1cursorTurning // spelling fixes .bss order
+extern i16 gSavedCursorTurning;
 extern i16 gStepDelay[];
 // MoveHero's pixels per walk step by speed and the step offsets.
 extern i16 gPixelsPerStep[];
-extern i16 startVals[];
+#define gStepScrollStart startVals // spelling fixes .bss order
+extern i16 gStepScrollStart[];
 #define gFrameStep giFrameStep // spelling fixes .bss order
 extern i32 gFrameStep;
 
@@ -670,7 +681,7 @@ H1_ENUM_CONST_END(AdventureLocatorWidget)
 // locators.icn frames: the empty hero slots (one per slot), the empty town
 // slots from EMPTY_TOWN_FIRST, the occupied hero frame, and the town frames
 // by town type from TOWN_FIRST, CASTLE_OFFSET further on once it has a castle.
-// m_visibilityMap while a route is shown (ShowRoute, DrawCell): a 1-based
+// m_routeMap while a route is shown (ShowRoute, DrawCell): a 1-based
 // route.icn frame (FRAME_MASK) with FLIPPED mirroring it. The last step is
 // the DESTINATION mark; steps the hero reaches today move REACHABLE_OFFSET
 // frames on to the second arrow set.
@@ -825,7 +836,7 @@ H1_ENUM_CONST_BEGIN(AdventureDrawConstant)
     HERO_BOAT_Y_OFFSET = -10
 H1_ENUM_CONST_END(AdventureDrawConstant)
 
-// UpdateScreen's dirty box and animation clock: m_updateMaxX cycles through
+// UpdateScreen's animation clock and dirty box: m_animationFrame cycles through
 // 6 steps and the columns start at 0/1/3/5; no limit box means the whole
 // 448-pixel viewport at 16,16; odd steps advance columns 1 and 3, even ones
 // 0 and 2, each modulo 6 frames.
@@ -905,7 +916,7 @@ H1_ENUM_CONST_BEGIN(AdventureSummonBoatConstant)
 H1_ENUM_CONST_END(AdventureSummonBoatConstant)
 
 // ViewPuzzle: puzzle.icn has one piece per obelisk bit
-// (playerData::m_obelisksVisited); the window sits beside the viewport; the
+// (playerData::m_puzzlePiecesRemoved); the window sits beside the viewport; the
 // view centre is nudged off the artifact by coordinate residues mod 3 (and
 // mod 2), then the uncovered pieces fizzle in over 220 ms.
 H1_ENUM_CONST_BEGIN(AdventurePuzzleViewConstant)
@@ -933,12 +944,13 @@ H1_ENUM_CONST_BEGIN(AdventureStateConstant)
     SCROLL_ICON_FRAME = 4
 H1_ENUM_CONST_END(AdventureStateConstant)
 
-// SetEnvironmentOrigin/InsertSound's looping map sounds: slots reset to the
-// far volume index, two passes (refresh known sounds, then insert new ones)
+// SetEnvironmentOrigin/InsertSound's looping map sounds: a slot's ring
+// distance (adventureSoundCell::distance, indexing gEnvironmentVolume) resets
+// to FAR_DISTANCE, two passes (refresh known sounds, then insert new ones)
 // over rings whose edges span radius * 2 cells, and sounds beyond
 // MAX_DISTANCE stop.
 H1_ENUM_CONST_BEGIN(AdventureEnvironmentSoundConstant)
-    ENVIRONMENT_SOUND_DEFAULT_VOLUME = 127,
+    ENVIRONMENT_SOUND_FAR_DISTANCE = 127,
     ENVIRONMENT_SOUND_MAX_DISTANCE = 5,
     ENVIRONMENT_SOUND_FIRST_LAYER = 1,
     ENVIRONMENT_SOUND_LAYER_COUNT = 2,

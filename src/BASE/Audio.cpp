@@ -14,18 +14,28 @@
 
 #include <stdio.h>
 
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cdde4)
+static int gAudioOldStore;
+#define gSampleBuffer gSampleBufferly // spelling fixes .bss order
 DATA(0x004cdf58)
 static void* gSampleBuffer;
+#define gSampleFrames gSampleFrames0 // spelling fixes .bss order
 DATA(0x004cdf5c)
 static int gSampleFrames;
+#define gSampleChannels gSampleChannelsa58 // spelling fixes .bss order
 DATA(0x004cdf60)
 static int gSampleChannels;
+#define gSampleRate gSampleRate7 // spelling fixes .bss order
 DATA(0x004cdf64)
 static int gSampleRate;
+#define gSampleFormat gSampleFormata98 // spelling fixes .bss order
 DATA(0x004cdf68)
 static audiere::SampleFormat gSampleFormat;
+#define gSamples gSamplesa // spelling fixes .bss order
 DATA(0x004ce104)
 static AudiereSampleNode* gSamples;
+#define gSampleSuspensions gSampleSuspensionsa6 // spelling fixes .bss order
 DATA(0x004ce108)
 static int gSampleSuspensions;
 
@@ -185,12 +195,11 @@ bool SamplesSuspended() {
     return gSampleSuspensions > 0;
 }
 
-inline AudiereSampleNode::~AudiereSampleNode() {}
 
 DATA(0x004cddec)
-audiere::OutputStreamPtr AudiereMusic::stream;
+audiere::OutputStreamPtr AudiereMusic::channel;
 DATA(0x004cdf6c)
-audiere::SampleSourcePtr AudiereMusic::source;
+audiere::SampleSourcePtr AudiereMusic::origin;
 DATA(0x004cdde8)
 static int gMusicSuspensions;
 DATA(0x004a0d70)
@@ -206,8 +215,10 @@ static int gCDTrackMap[100] = {
 
 DATA(0x004cddf0)
 static char gMusicFilename[352];
+#define gMusicPositions gMusicPositionsaat // spelling fixes .bss order
 DATA(0x004cdf74)
 static int gMusicPositions[100];
+#define gMusicSource gMusicSourcejxy // spelling fixes .bss order
 DATA(0x004ce10c)
 static int gMusicSource;
 
@@ -230,9 +241,9 @@ void PlayMusic(int track) {
     if (MusicSuspended())
         return;
     if (track == gCurrentTrack) {
-        if (AudiereMusic::stream) {
-            if (!AudiereMusic::stream->isPlaying())
-                AudiereMusic::stream->play();
+        if (AudiereMusic::channel) {
+            if (!AudiereMusic::channel->isPlaying())
+                AudiereMusic::channel->play();
         }
         return;
     }
@@ -262,17 +273,17 @@ void PlayMusic(int track) {
             if (gMusicPositions[track] > 0 && stream->isSeekable())
                 stream->setPosition(gMusicPositions[track]);
             stream->play();
-            if (AudiereMusic::stream) {
+            if (AudiereMusic::channel) {
                 if (gCurrentTrack >= 0) {
-                    if (AudiereMusic::stream->isSeekable() && ShouldRepeatMusic(gCurrentTrack))
-                        gMusicPositions[gCurrentTrack] = AudiereMusic::stream->getPosition();
+                    if (AudiereMusic::channel->isSeekable() && ShouldRepeatMusic(gCurrentTrack))
+                        gMusicPositions[gCurrentTrack] = AudiereMusic::channel->getPosition();
                     else
                         gMusicPositions[gCurrentTrack] = 0;
                 }
-                AudiereMusic::stream->stop();
+                AudiereMusic::channel->stop();
             }
-            AudiereMusic::stream = stream;
-            AudiereMusic::source = source;
+            AudiereMusic::channel = stream;
+            AudiereMusic::origin = source;
             gCurrentTrack = track;
         } else {
             StopMusic();
@@ -291,17 +302,17 @@ VA(0x00469742, 0x164)
 void StopMusic() {
     if (MusicSuspended())
         return;
-    if (AudiereMusic::stream) {
+    if (AudiereMusic::channel) {
         if (gCurrentTrack >= 0) {
-            if (AudiereMusic::stream->isSeekable() && ShouldRepeatMusic(gCurrentTrack))
-                gMusicPositions[gCurrentTrack] = AudiereMusic::stream->getPosition();
+            if (AudiereMusic::channel->isSeekable() && ShouldRepeatMusic(gCurrentTrack))
+                gMusicPositions[gCurrentTrack] = AudiereMusic::channel->getPosition();
             else
                 gMusicPositions[gCurrentTrack] = 0;
         }
-        AudiereMusic::stream->stop();
-        AudiereMusic::stream = NULL;
+        AudiereMusic::channel->stop();
+        AudiereMusic::channel = NULL;
     }
-    AudiereMusic::source = NULL;
+    AudiereMusic::origin = NULL;
     gCurrentTrack = -1;
 }
 
@@ -309,18 +320,18 @@ VA(0x004698a6, 0x55)
 void UpdateMusicVolume() {
     if (MusicSuspended())
         return;
-    if (!AudiereMusic::stream)
+    if (!AudiereMusic::channel)
         return;
-    AudiereMusic::stream->setVolume(GetMusicVolume());
+    AudiereMusic::channel->setVolume(GetMusicVolume());
 }
 
 VA(0x004698fb, 0x128)
 void SetMusicSource(int source) {
-    if (AudiereMusic::stream) {
-        AudiereMusic::stream->stop();
-        AudiereMusic::stream = NULL;
+    if (AudiereMusic::channel) {
+        AudiereMusic::channel->stop();
+        AudiereMusic::channel = NULL;
     }
-    AudiereMusic::source = NULL;
+    AudiereMusic::origin = NULL;
     for (int track = 0; track <= 99; ++track)
         gMusicPositions[track] = 0;
     gMusicSource = source;
@@ -333,9 +344,9 @@ void SetMusicSource(int source) {
 
 VA(0x00469a23, 0x36)
 bool MusicPlaying() {
-    if (!AudiereMusic::stream)
+    if (!AudiereMusic::channel)
         return false;
-    return AudiereMusic::stream->isPlaying();
+    return AudiereMusic::channel->isPlaying();
 }
 
 VA(0x00469a59, 0x12)
@@ -354,7 +365,9 @@ bool MusicSuspended() {
 }
 
 DATA(0x004cdf50)
-audiere::AudioDevicePtr AudiereDevice::device;
+audiere::AudioDevicePtr AudiereDevice::driver;
+DATA(0x004cdf54)
+int AudiereDevice::dummy;
 DATA(0x004a0f04)
 static float gEffectsVolume = 1.0f;
 DATA(0x004a0f08)
@@ -370,20 +383,20 @@ float VolumeLevel(int level) {
 
 VA(0x00469b65, 0x70)
 audiere::AudioDevicePtr GetAudioDevice() {
-    return AudiereDevice::device;
+    return AudiereDevice::driver;
 }
 
 VA(0x00469bd5, 0x132)
 bool InitAudio() {
     audiere::AudioDevice* device = audiere::OpenDevice("winmm", NULL);
     if (device) {
-        AudiereDevice::device = device;
+        AudiereDevice::driver = device;
     } else {
-        AudiereDevice::device = audiere::OpenDevice("null", NULL);
-        if (!AudiereDevice::device)
+        AudiereDevice::driver = audiere::OpenDevice("null", NULL);
+        if (!AudiereDevice::driver)
             return false;
         // Retail releases even a successful fallback device (RVA 0x69caf).
-        AudiereDevice::device = NULL;
+        AudiereDevice::driver = NULL;
         return true;
     }
     return true;
@@ -392,7 +405,7 @@ bool InitAudio() {
 VA(0x00469d07, 0x5c)
 void ShutdownAudio() {
     StopAllAudio();
-    AudiereDevice::device = NULL;
+    AudiereDevice::driver = NULL;
 }
 
 VA(0x00469d63, 0xb)

@@ -56,12 +56,16 @@ not yet modelled:
 - the adventure search's occupancy flags (resolved): `TestPossibleDirections`
   only clears and sets them, and `SeedPosition` reads them zero-extended, so
   the parameter and both callers' arrays are `u8`;
-- remaining views, each a different typed read of the same storage (9
+- remaining views, each a different typed read of the same storage (10
   sites, each with its reason at the cast):
   - `EVENTS_REMOTE_MESSAGE`/`EVENTS_REMOTE_HERO` overlay a received record's
     payload as the combat record or a hero fragment. `combatRemoteData` holds
     `armyGroup` and `town` objects, whose constructors keep it out of the
     `RemotePayload` union (VC6 rejects union members with constructors);
+  - `PollRemote` receives into `rcvBufIn` and reads it through
+    `REMOTE_MESSAGE`: retail places that buffer 4-byte aligned, which a
+    `RemoteMessage` object (8-byte aligned by VC6) cannot be, so it stays a
+    `char` array;
   - the wire layer frames the `char` packet buffers with `RemotePacketHeader`
     (`REMOTE_PACKET`) and walks them as unsigned bytes for the CRC. The receive
     buffer also carries the direct-connect `ID` text, so it stays `char`;

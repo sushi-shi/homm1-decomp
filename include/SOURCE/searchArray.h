@@ -105,7 +105,7 @@ public:
         i32 waterMode,
         i32 findAdjacentMonster,
         i32 mobility,
-        i32 costMode,
+        i32 heroClass,
         i32 targetX,
         i32 targetY,
         i32 continueSeed,

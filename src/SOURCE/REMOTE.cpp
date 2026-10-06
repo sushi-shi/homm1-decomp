@@ -280,6 +280,9 @@ i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType) {
 
 DATA(0x004cc7f0)
 i32 gIDCtr = 0;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cc7f4)
+i32 gUnusedRemoteWords[3] = {0, 0, 0};
 DATA(0x004cc800)
 i32 packetlen = 0;
 DATA(0x004cc804)
@@ -969,46 +972,51 @@ void PollRemote(void) {
     result = 1;
     while (result) {
     nextIncoming:
-        result = ReceiveRemoteData(NULL, &rcvBufIn, REMOTE_BROADCAST_PLAYER);
-        if (result && rcvBufIn.sender != gThisNetPos) {
-            if (rcvBufIn.type == REMOTE_MESSAGE_CONFIRM) {
-                gLastConfirm = rcvBufIn.id;
+        result = ReceiveRemoteData(NULL, REMOTE_MESSAGE(rcvBufIn), REMOTE_BROADCAST_PLAYER);
+        if (result && REMOTE_MESSAGE(rcvBufIn)->sender != gThisNetPos) {
+            if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_CONFIRM) {
+                gLastConfirm = REMOTE_MESSAGE(rcvBufIn)->id;
                 goto done;
-            } else if (rcvBufIn.type == REMOTE_MESSAGE_HEARTBEAT) {
-                if (rcvBufIn.payloadSize == 1 && rcvBufIn.payload.data[0] == 1)
+            } else if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_HEARTBEAT) {
+                if (REMOTE_MESSAGE(rcvBufIn)->payloadSize == 1 && REMOTE_MESSAGE(rcvBufIn)->payload.data[0] == 1)
                     gRemoteReady = 1;
                 gLastHeartbeatReceive = KBTickCount();
                 gHeartbeatSeen = 1;
                 if (gThisGamePos != gHostGamePos && gCurPlayer != gThisGamePos
-                    && gAdvManager->m_active == 1 && rcvBufIn.command / 16 != gThisGamePos) {
-                    gCurPlayer = rcvBufIn.command / 16;
-                    gCurHourGlassPhase = rcvBufIn.command - gCurPlayer * 16;
+                    && gAdvManager->m_active == 1 && REMOTE_MESSAGE(rcvBufIn)->command / 16 != gThisGamePos) {
+                    gCurPlayer = REMOTE_MESSAGE(rcvBufIn)->command / 16;
+                    gCurHourGlassPhase = REMOTE_MESSAGE(rcvBufIn)->command - gCurPlayer * 16;
                 }
                 goto done;
             } else if (newFull) {
                 goto done;
             }
-            if (rcvBufIn.type == REMOTE_MESSAGE_RELIABLE) {
+            if (REMOTE_MESSAGE(rcvBufIn)->type == REMOTE_MESSAGE_RELIABLE) {
                 sndBuf.sender = gThisNetPos;
-                sndBuf.id = rcvBufIn.id;
+                sndBuf.id = REMOTE_MESSAGE(rcvBufIn)->id;
                 sndBuf.type = REMOTE_MESSAGE_CONFIRM;
                 sndBuf.payloadSize = 0;
-                SendRemoteData(&sndBuf, NULL, rcvBufIn.sender, REMOTE_MESSAGE_HEADER_SIZE);
+                SendRemoteData(
+                    &sndBuf,
+                    NULL,
+                    REMOTE_MESSAGE(rcvBufIn)->sender,
+                    REMOTE_MESSAGE_HEADER_SIZE
+                );
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
-                if (rcvBuf[i].type && rcvBuf[i].id == rcvBufIn.id)
+                if (rcvBuf[i].type && rcvBuf[i].id == REMOTE_MESSAGE(rcvBufIn)->id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_RECENT_ID_COUNT; i++) {
-                if (gLastIds[i] == rcvBufIn.id)
+                if (gLastIds[i] == REMOTE_MESSAGE(rcvBufIn)->id)
                     goto nextIncoming;
             }
             for (i = 0; i < REMOTE_QUEUE_CAPACITY; i++) {
                 if (!rcvBuf[i].type) {
                     gInOrder[i] = gInOrderCtr++;
-                    memcpy(&rcvBuf[i], &rcvBufIn, REMOTE_MESSAGE_SIZE);
+                    memcpy(&rcvBuf[i], rcvBufIn, REMOTE_MESSAGE_SIZE);
                     numQueued++;
-                    gLastIds[gCurLastID] = rcvBufIn.id;
+                    gLastIds[gCurLastID] = REMOTE_MESSAGE(rcvBufIn)->id;
                     gCurLastID = (gCurLastID + 1) % REMOTE_RECENT_ID_COUNT;
                     if (numQueued == REMOTE_QUEUE_CAPACITY)
                         goto done;
@@ -1099,12 +1107,18 @@ DATA(0x004ca28c)
 i32 localstage;
 DATA(0x004ca1a0)
 char numbuf[40];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ca1c8)
+u8 gRemoteOldName[156];
 DATA(0x004cc670)
 i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 DATA(0x004cb510)
 i32 WFDCStage;
 DATA(0x004ca29c)
 char remoteidstr[8];
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004ca2a4)
+i32 gRemoteOldLong;
 DATA(0x004cb564)
 char PacketSend[256];
 DATA(0x004ca298)
@@ -1121,6 +1135,9 @@ DATA(0x004cb3dc)
 i32 remotestage;
 DATA(0x004cb3e4)
 i32 gNumNetGuests;
+// No retail code reads this; it holds its retail .bss place.
+DATA(0x004cb3e8)
+i32 gOldRemoteIdBits;
 DATA(0x004cb2b0)
 char GUIMRresp[40];
 DATA(0x004ca290)
@@ -1132,7 +1149,7 @@ char packet[256];
 DATA(0x004cb3ec)
 i32 gLastActionTime;
 DATA(0x004cb664)
-RemoteMessage rcvBufIn;
+char rcvBufIn[REMOTE_MESSAGE_SIZE];
 DATA(0x004cb514)
 char GUIMRresponse[80];
 DATA(0x004cbf70)

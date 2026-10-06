@@ -96,6 +96,9 @@ struct RemotePacketHeader {
 
 // API-forced: PacketSend/packet are byte buffers framed by this header.
 #define REMOTE_PACKET(buffer) (reinterpret_cast<RemotePacketHeader*>(buffer))
+// API-forced: rcvBufIn is a byte buffer read as a message record (retail
+// keeps it 4-byte aligned, as an array, not 8-byte aligned like a record).
+#define REMOTE_MESSAGE(buffer) (reinterpret_cast<RemoteMessage*>(buffer))
 
 // The combat action ProcessNextAction relays to the other player and
 // combatManager::Main replays (REMOTE_COMMAND_COMBAT_ACTION).
@@ -195,7 +198,7 @@ i8 WaitForGuest(void);
 extern i32 gLastHeartbeatSend;
 extern i32 gLastHeartbeatReceive;
 extern RemoteMessage sndBuf;
-extern RemoteMessage rcvBufIn;
+extern char rcvBufIn[REMOTE_MESSAGE_SIZE];
 #define gLastIds iLastIds // spelling fixes .bss order
 extern i32 gLastIds[REMOTE_RECENT_ID_COUNT];
 extern i32 gInOrderCtr;
