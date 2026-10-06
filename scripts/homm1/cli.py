@@ -115,7 +115,8 @@ def main(argv: list[str] | None = None) -> int:
         print(__doc__.strip())
         print("\noptions: --image {game,editor} selects the retail image (default game)")
         print("\ncommands: init inspect toolchain configure build link match play labels "
-              "model delink compare audit sema walls permute lsp ghidra verify workflow clean tool")
+              "model delink compare audit sema walls permute lsp ghidra verify workflow clean "
+              "localization tool")
         return 0 if argv else 2
     cmd, rest = argv[0], argv[1:]
     if cmd == "init":
@@ -136,6 +137,9 @@ def main(argv: list[str] | None = None) -> int:
     if cmd == "workflow":
         from homm1.workflow import main as workflow_main
         return workflow_main(rest)
+    if cmd == "localization":
+        from homm1.graph.localization import main as localization_main
+        return localization_main(rest)
     if cmd == "clean":
         from homm1.clean.run import main as clean_main
         return clean_main(rest)

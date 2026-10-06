@@ -1,9 +1,14 @@
-"""Static, byte-preserving Buka localization using master's IDs and PO format.
+"""Static, byte-preserving localization: catalog IDs become literal macros.
 
-Authored Tr("semantic.id") expressions become literal macros, never runtime calls.
-The compiler view preserves every source byte offset and newline: Clang's source
-annotations and AST-based tools still point into the authored file. Only generated
-files contain CP1251 byte escapes. Both Clang and VC6 see the same literal macros.
+Authored localization::Tr("id") / Chars("id") expressions become literal
+macros, never runtime calls. The compiler view preserves every source byte
+offset and newline: Clang's source annotations and AST-based tools still point
+into the authored file. Only generated files contain code page byte escapes.
+Both Clang and VC6 see the same literal macros.
+
+    homm1 localization check            validate the catalogs and source text
+    homm1 localization update [--check] regenerate locales/messages.pot and
+                                        rewrite every .po in template order
 """
 from __future__ import annotations
 
@@ -16,8 +21,8 @@ from pathlib import Path
 
 
 # Re-export the portable catalog API for existing analysis/build callers.
-from homm1.graph.catalog import (Catalog, tokens, quoted, literal, parse_registry,
-                                 parse_po, format_signature, hidden_text_errors)
+from homm1.graph.catalog import (Catalog, tokens, quoted, literal, parse_po,  # noqa: F401
+                                 format_signature, hidden_text_errors, LOCALES, TEMPLATE)
 
 
 def _write_generated(path, text):
@@ -31,16 +36,45 @@ def _write_generated(path, text):
     os.replace(temporary, path)
 
 
+def available_locales(repo):
+    """Every language with a descriptor (locales/<code>.json)."""
+    return sorted(path.stem for path in (Path(repo) / LOCALES).glob('*.json'))
+
+
 def matching_locale(repo):
     """The pinned target owns the matching locale, never an environment variable."""
-    target = Path(repo) / 'config/retail/targets.json'
-    if not target.is_file():
-        build = Path(repo) / 'build.json'
-        return json.loads(build.read_text()).get('locale', 'ru') if build.is_file() else 'ru'
-    locale = json.loads(target.read_text())['game'].get('locale', 'ru')
-    if locale not in ('ru', 'en'):
-        raise ValueError(f'unsupported matching locale: {locale}')
+    from homm1.graph import catalog
+    locale = catalog.matching_locale(repo) or 'ru'
+    if (Path(repo) / LOCALES).is_dir() and locale not in available_locales(repo):
+        raise ValueError(f'the matching locale {locale} has no locales/{locale}.json')
     return locale
+
+
+def output_dir(repo, locale):
+    """Generated localization files: the matching language under build/, any
+    other language beside its nonmatching objects (build/ordinary/<locale>)."""
+    repo = Path(repo)
+    if locale == matching_locale(repo):
+        return repo / 'build/localization'
+    return repo / 'build/ordinary' / locale / 'localization'
+
+
+def check_locale(repo, locale, out, kind):
+    """The ToolError message for an unknown or misplaced `locale`, else None."""
+    repo = Path(repo)
+    if locale not in available_locales(repo):
+        return f'unsupported locale: {locale} (have {", ".join(available_locales(repo))})'
+    if locale != matching_locale(repo) and \
+            not Path(out).resolve().is_relative_to(repo / 'build/ordinary' / locale):
+        return f'nonmatching {locale} {kind} must live under build/ordinary/{locale}'
+    return None
+
+
+def dependencies(repo):
+    """Every catalog input of a localized compile."""
+    root = Path(repo) / LOCALES
+    return [*sorted(p for p in root.iterdir() if p.suffix in ('.pot', '.po', '.json')),
+            Path(__file__), Path(__file__).with_name('catalog.py')]
 
 
 def prepare(repo, source, *, locale=None):
@@ -50,13 +84,13 @@ def prepare(repo, source, *, locale=None):
     overlay keeps authored paths AND offsets in libclang, including headers.
     """
     repo, source = Path(repo).resolve(), Path(source).resolve()
-    if not (repo / 'locales/messages.def').is_file():
+    if not (repo / LOCALES / TEMPLATE).is_file():
         return source, None, None, []  # Small standalone tool-test fixtures.
     from homm1.graph.scan import Scanner
     scanner = Scanner(repo)
     locale = locale or matching_locale(repo)
     catalog = Catalog.load(repo)
-    generated = repo / ('build/localization' if locale == 'ru' else 'build/ordinary/en/localization')
+    generated = output_dir(repo, locale)
     texts = {path: path.read_text(encoding='utf-8')
              for path in [source, *(repo / p for p in scanner.headers(str(source)))]}
     character_keys = {key for text in texts.values()
@@ -66,10 +100,6 @@ def prepare(repo, source, *, locale=None):
     digest = hashlib.sha256(header_text.encode()).hexdigest()
     header = generated / (digest + '.h')
     _write_generated(header, header_text)
-    dependencies = [repo / 'locales/messages.def', repo / 'locales/ru.po', Path(__file__),
-                    Path(__file__).with_name('catalog.py')]
-    if (repo / 'locales/format-variants.json').is_file():
-        dependencies.append(repo / 'locales/format-variants.json')
     roots, compiled = [], source
     views = {}
     for path, text in texts.items():
@@ -98,7 +128,7 @@ def prepare(repo, source, *, locale=None):
     overlay_text = json.dumps({'version': 0, 'use-external-names': False, 'roots': roots})
     overlay = generated / (hashlib.sha256(overlay_text.encode()).hexdigest() + '.json')
     _write_generated(overlay, overlay_text)
-    return compiled, header, overlay, dependencies
+    return compiled, header, overlay, dependencies(repo)
 
 
 def clang_args(repo, source, *, locale=None):
@@ -124,20 +154,14 @@ def check_formats(repo, source, *, locale=None):
     return [result.stderr] if result.returncode else []
 
 
-def check_tree(repo):
-    catalog = Catalog.load(repo)
-    errors, used = [], set()
-    for directory in ('src', 'include'):
-        for path in sorted((Path(repo) / directory).rglob('*')):
-            if path.suffix not in ('.cpp', '.h', '.c', '.hpp', '.inc', '.rc'):
-                continue
-            text = path.read_text(encoding='utf-8')
-            errors.extend(f'{path}:{line}: {message}' for line, message in hidden_text_errors(text))
-            try:
-                used.update(key for _, _, key in catalog.calls(text))
-            except ValueError as exc:
-                errors.append(f'{path}: {exc}')
-    return errors, used
+def check(repo):
+    """Every localization error of the checkout (an empty list passes)."""
+    from homm1.graph import catalog
+    try:
+        reference = matching_locale(repo)
+    except ValueError as exc:
+        return [str(exc)]
+    return catalog.check(repo, reference)
 
 
 from homm1.core.usage import logged
@@ -145,17 +169,21 @@ from homm1.core.usage import logged
 
 @logged
 def main(argv=None):
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--root', type=Path, default=Path.cwd())
+    from homm1.core.paths import REPO
+    from homm1.graph import catalog
+    parser = argparse.ArgumentParser(prog='homm1 localization', description=__doc__,
+                                     formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument('command', nargs='?', choices=('check', 'update'), default='check')
+    parser.add_argument('--root', type=Path, default=REPO)
+    parser.add_argument('--check', action='store_true',
+                        help='update: change nothing; fail when a file is out of date')
     args = parser.parse_args(argv)
     try:
-        errors, used = check_tree(args.root)
-    except (ValueError, UnicodeError) as exc:
-        errors, used = [str(exc)], set()
-    for error in errors:
-        print(error)
-    print(f'[localization] {len(used)} used IDs; {len(errors)} errors')
-    return int(bool(errors))
+        reference = matching_locale(args.root)
+    except ValueError as exc:
+        print(f'[localization] {exc}')
+        return 1
+    return catalog.run(args.command, args.root, reference, check_only=args.check)
 
 
 if __name__ == '__main__':

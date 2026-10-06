@@ -8,7 +8,7 @@
 // the user's HEROES.EXE in a temporary stage beside a copy of this file.
 
 // The renderer supplies the selected language; authored text stays in catalogs.
-LANGUAGE HOMM1_RESOURCE_LANGUAGE, 0x1
+LANGUAGE HOMM1_RESOURCE_LANGUAGE, HOMM1_RESOURCE_SUBLANGUAGE
 
 109 ICON "heroes.ico"
 

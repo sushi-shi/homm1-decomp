@@ -105,9 +105,9 @@ def _mods(*rel: str) -> list[str]:
 #: the labels edge is 311 clang passes, and making it depend on the whole
 #: toolchain would re-run all of them whenever an unrelated module is touched.
 TOOL_MODS = _mods("tool/__init__.py", "tool/wine.py", "core/paths.py")
-LOCALIZATION_MODS = _mods("graph/catalog.py", "graph/localization.py", "graph/scan.py") + [
-    "locales/messages.def", "locales/ru.po", "locales/format-variants.json",
-    "config/retail/targets.json"]
+LOCALIZATION_MODS = _mods("graph/catalog.py", "graph/localization.py", "graph/scan.py") + sorted(
+    str(p.relative_to(REPO)) for p in (REPO / "locales").glob("*")
+    if p.suffix in (".pot", ".po", ".json")) + ["config/retail/targets.json"]
 CL_MODS = LOCALIZATION_MODS + _mods("graph/cc.py", "tool/cl.py", "tool/fixedroot.py") + TOOL_MODS
 ML_MODS = _mods("graph/fixed_asm.py", "tool/ml.py") + TOOL_MODS
 COMPDB_MODS = LOCALIZATION_MODS + _mods("graph/compdb.py", "tool/clang.py", "manifest.py",
@@ -692,8 +692,9 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         # link-diff compares the linked candidate with its banked ceiling.
         w.build(VERIFY_STAMP, "verify_check",
                 inputs=[G.REPORT_JSON, FINGERPRINTS],
+                # the fast tier's localization gate reads the catalogs
                 implicit=[MANIFEST, graph.CANDIDATE_EXE, *VERIFY_BASELINES,
-                          *VERIFY_MODS])
+                          *VERIFY_MODS, *LOCALIZATION_MODS])
         w.newline()
 
         image_outputs = []
