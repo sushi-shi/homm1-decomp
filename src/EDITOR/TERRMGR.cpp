@@ -28,8 +28,8 @@ i32 gLastTerrain;
 
 VA(0x004184a0, 0x41)
 terrainManager::terrainManager(void)
-    : m_terrain(TERRAIN_WATER), m_lastX(TERRAIN_MANAGER_NO_CELL), m_lastY(TERRAIN_MANAGER_NO_CELL) {
-    m_dispatchMask = TERRAIN_MANAGER_DISPATCH_MASK;
+    : m_terrain(TERRAIN_WATER), m_lastX(EDIT_NO_CELL), m_lastY(EDIT_NO_CELL) {
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
 }
 
 VA(0x004184e1, 0x52c)
@@ -37,12 +37,12 @@ i16 terrainManager::Open(i16 priority) {
     i16 i;
 
     m_panel = new iconWidget(
-        TERRAIN_PANEL_X,
-        TERRAIN_PANEL_Y,
-        TERRAIN_PANEL_WIDTH,
-        TERRAIN_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        TERRAIN_PANEL_FRAME,
+        EDIT_FRAME_TOOL_PANEL,
         0,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
@@ -133,7 +133,7 @@ i16 terrainManager::Open(i16 priority) {
         ICON_WIDGET_DRAW,
         1
     );
-    for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++)
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
         gEditManager->m_window->AddWidget(m_terrainButtons[i], -1);
     m_highlight = new iconWidget(
         TERRAIN_BUTTON_X,
@@ -149,10 +149,10 @@ i16 terrainManager::Open(i16 priority) {
     );
     gEditManager->m_window->AddWidget(m_highlight, -1);
     m_backdrop = new backdropWidget(
-        TERRAIN_PANEL_X,
+        EDIT_TOOL_PANEL_X,
         TERRAIN_BACKDROP_Y,
-        TERRAIN_PANEL_WIDTH,
-        TERRAIN_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         WIDGET_ID_NONE,
         TERRAIN_BACKDROP_KIND
     );
@@ -171,7 +171,7 @@ VA(0x00418a0d, 0x166)
 void terrainManager::Close(void) {
     i16 i;
 
-    for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++) {
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++) {
         gEditManager->m_window->RemoveWidget(m_terrainButtons[i]);
         delete m_terrainButtons[i];
     }
@@ -339,8 +339,8 @@ i16 terrainManager::Main(tag_message& message) {
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
                             gEditManager->DrawRadar(1);
-                            m_lastY = TERRAIN_MANAGER_NO_CELL;
-                            m_lastX = TERRAIN_MANAGER_NO_CELL;
+                            m_lastY = EDIT_NO_CELL;
+                            m_lastX = EDIT_NO_CELL;
                             gEditManager->m_mapChanged = 1;
                             break;
                     }
@@ -388,7 +388,7 @@ void terrainManager::RandomizeTiles(void) {
     u8 tileTerrain;
     u8 tile;
 
-    for (i = 0; i < TERRAIN_MANAGER_TERRAIN_COUNT; i++)
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
         gEditManager->BlendTerrain(i, 1, 1, 0, 0);
     for (y = 0; y < MAP_CELL_GRID_SIZE; y++) {
         for (x = 0; x < MAP_CELL_GRID_SIZE; x++) {

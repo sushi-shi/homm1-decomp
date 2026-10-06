@@ -8971,8 +8971,8 @@ i16 editManager::Open(i16 priority) {
         416,
         16,
         "escroll.icn",
-        0,
-        0,
+        EDIT_SCROLL_HORIZONTAL_TRACK,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8983,8 +8983,8 @@ i16 editManager::Open(i16 priority) {
         16,
         416,
         "escroll.icn",
-        1,
-        0,
+        EDIT_SCROLL_VERTICAL_TRACK,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_TRACK,
         ICON_WIDGET_DRAW,
         1
@@ -8995,8 +8995,8 @@ i16 editManager::Open(i16 priority) {
         17,
         8,
         "escroll.icn",
-        2,
-        0,
+        EDIT_SCROLL_HORIZONTAL_KNOB,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_HORIZONTAL_KNOB,
         ICON_WIDGET_DRAW,
         1
@@ -9007,8 +9007,8 @@ i16 editManager::Open(i16 priority) {
         8,
         17,
         "escroll.icn",
-        3,
-        0,
+        EDIT_SCROLL_VERTICAL_KNOB,
+        ICON_DRAW_NORMAL,
         EDIT_CONTROL_VERTICAL_KNOB,
         ICON_WIDGET_DRAW,
         1
@@ -9043,7 +9043,7 @@ i16 editManager::Open(i16 priority) {
     DrawRadar(1);
     DrawView(m_viewX, m_viewY);
     UpdateMapView();
-    gMouseManager->SetPointer("editor.mse", 0);
+    gMouseManager->SetPointer("editor.mse", EDIT_POINTER_DEFAULT);
     gMouseManager->WarpPointer(LOGICAL_SCREEN_WIDTH / 2, 200);
     gMouseManager->ReallyShowPointer();
     gMouseManager->NewUpdate(1);
@@ -9074,7 +9074,7 @@ void editManager::Close(void) {
     }
     gResourceManager->Dispose(m_buttons);
     gResourceManager->Dispose(m_statusFont);
-    gMouseManager->SetPointer(-1);
+    gMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
 
@@ -9092,7 +9092,7 @@ i16 editManager::Main(tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    helpIndex = -1;
+    helpIndex = EDIT_BUTTON_HELP_NONE;
     switch (message.type) {
         case MESSAGE_WIDGET:
             switch (message.command) {
@@ -9200,52 +9200,52 @@ i16 editManager::Main(tag_message& message) {
                 case WIDGET_NOTIFY_RIGHT_CLICK:
                     switch (message.id) {
                         case EDIT_CONTROL_SCROLL_UP:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_UP_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_UP_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_LEFT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_SCROLL_DOWN_RIGHT:
-                            helpIndex = 1;
+                            helpIndex = EDIT_BUTTON_HELP_SCROLL;
                             break;
                         case EDIT_CONTROL_ZOOM:
-                            helpIndex = 2;
+                            helpIndex = EDIT_BUTTON_HELP_ZOOM;
                             break;
                         case EDIT_CONTROL_UNDO:
-                            helpIndex = 3;
+                            helpIndex = EDIT_BUTTON_HELP_UNDO;
                             break;
                         case EDIT_CONTROL_MAP_INFO:
-                            helpIndex = 4;
+                            helpIndex = EDIT_BUTTON_HELP_MAP_INFO;
                             break;
                         case EDIT_CONTROL_NEW:
-                            helpIndex = 5;
+                            helpIndex = EDIT_BUTTON_HELP_NEW;
                             break;
                         case EDIT_CONTROL_LOAD:
-                            helpIndex = 6;
+                            helpIndex = EDIT_BUTTON_HELP_LOAD;
                             break;
                         case EDIT_CONTROL_SAVE:
-                            helpIndex = 7;
+                            helpIndex = EDIT_BUTTON_HELP_SAVE;
                             break;
                         case EDIT_CONTROL_QUIT:
-                            helpIndex = 8;
+                            helpIndex = EDIT_BUTTON_HELP_QUIT;
                             break;
                         case EDIT_CONTROL_RANDOM_MAP:
-                            helpIndex = 9;
+                            helpIndex = EDIT_BUTTON_HELP_RANDOM_MAP;
                             break;
                     }
                     if (helpIndex >= 0)
@@ -9255,34 +9255,34 @@ i16 editManager::Main(tag_message& message) {
                     if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON) {
                         switch (message.id) {
                             case EDIT_CONTROL_RADAR:
-                                helpIndex = 1;
+                                helpIndex = EDIT_AREA_HELP_RADAR;
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_TRACK:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_HORIZONTAL_KNOB:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_VERTICAL_TRACK:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_VERTICAL_KNOB:
-                                helpIndex = 2;
+                                helpIndex = EDIT_AREA_HELP_SCROLLING;
                                 break;
                             case EDIT_CONTROL_TERRAIN:
-                                helpIndex = 3;
+                                helpIndex = EDIT_AREA_HELP_TERRAIN;
                                 break;
                             case EDIT_CONTROL_OBJECTS:
-                                helpIndex = 4;
+                                helpIndex = EDIT_AREA_HELP_OBJECTS;
                                 break;
                             case EDIT_CONTROL_DETAILS:
-                                helpIndex = 5;
+                                helpIndex = EDIT_AREA_HELP_DETAILS;
                                 break;
                             case EDIT_CONTROL_ERASER:
-                                helpIndex = 6;
+                                helpIndex = EDIT_AREA_HELP_ERASER;
                                 break;
                             case EDIT_CONTROL_MAP:
-                                helpIndex = 7;
+                                helpIndex = EDIT_AREA_HELP_MAP;
                                 break;
                         }
                         if (helpIndex >= 0)
@@ -9641,7 +9641,7 @@ void editManager::ToggleZoom(void) {
     UpdateMapView();
 }
 
-// The tool buttons show their frame pair from EDIT_TOOL_BUTTON_FRAME, the
+// The tool buttons show their frame pair from EDIT_FRAME_TOOL_BUTTONS, the
 // second frame for the selected tool.
 VA(0x00403546, 0x29c)
 void editManager::SelectTool(i16 tool) {
@@ -9659,7 +9659,7 @@ void editManager::SelectTool(i16 tool) {
         msg.type = MESSAGE_WIDGET;
         msg.id = i + EDIT_CONTROL_TERRAIN;
         msg.command = WIDGET_COMMAND_SET_FRAME;
-        msg.value = (i == tool) + i * 2 + EDIT_TOOL_BUTTON_FRAME;
+        msg.value = (i == tool) + i * 2 + EDIT_FRAME_TOOL_BUTTONS;
         m_window->BroadcastMessage(msg);
     }
     switch (tool) {
@@ -9784,7 +9784,8 @@ void SetTileVariant(mapCell* cell, i32 tile) {
     if (cell->m_objectTileset
         && cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN != tile / MAP_CELL_TILES_PER_TERRAIN)
         return;
-    if (cell->m_tileIndex < tile || cell->m_tileIndex >= tile + 4 || gVaryTiles)
+    if (cell->m_tileIndex < tile || cell->m_tileIndex >= tile + TERRAIN_TILE_VARIANT_COUNT
+        || gVaryTiles)
         cell->m_tileIndex = tile + Random(0, 3);
 }
 
@@ -9897,30 +9898,54 @@ borders:
                 cell->m_flags &= ~(MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL);
                 if (north) {
                     if (west) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     } else {
-                        SetTileVariant(cell, terrainBase + 4);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     }
                 } else if (south) {
                     if (west) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 8);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EAST_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else {
-                        SetTileVariant(cell, terrainBase + 4);
+                        SetTileVariant(
+                            cell,
+                            terrainBase + EDIT_TILE_NORTH_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     }
                 } else if (west) {
-                    SetTileVariant(cell, terrainBase + 12);
+                    SetTileVariant(
+                        cell,
+                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                    );
                     cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                 } else if (east) {
-                    SetTileVariant(cell, terrainBase + 12);
+                    SetTileVariant(
+                        cell,
+                        terrainBase + EDIT_TILE_EAST_EDGE * TERRAIN_TILE_VARIANT_COUNT
+                    );
                 }
                 if (!(north | south | east | west)) {
                     if (x > 0 && y > 0
@@ -9936,19 +9961,35 @@ borders:
                         && gGroundToTerrain[m_map.cells[x - 1][y + 1].m_tileIndex] != thisTerrain)
                         west = 1;
                     if (north) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else if (south) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |= MAP_CELL_GROUND_FLIP_VERTICAL;
                     } else if (east) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                     } else if (west) {
-                        SetTileVariant(cell, terrainBase + 16);
+                        SetTileVariant(
+                            cell,
+                            terrainBase
+                                + EDIT_TILE_NORTH_EAST_INNER_CORNER * TERRAIN_TILE_VARIANT_COUNT
+                        );
                         cell->m_flags |=
                             MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL;
                     } else {
-                        SetTileVariant(cell, terrainBase);
+                        SetTileVariant(cell, terrainBase + EDIT_TILE_PLAIN);
                     }
                 }
             }
@@ -10047,7 +10088,7 @@ void editManager::DoHorizontalKnob(void) {
     i16 y;
     i16 newX;
 
-    gMouseManager->SetCursorShape(2);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
     scale = 402.0 / (m_zoomedOut ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
@@ -10087,7 +10128,7 @@ void editManager::DoHorizontalKnob(void) {
             message = gInputManager->GetEvent();
         }
     }
-    gMouseManager->SetCursorShape(6);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     m_horizontalKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     m_horizontalTrack->m_flags &= ~WIDGET_FLAG_SELECTED;
 }
@@ -10101,7 +10142,7 @@ void editManager::DoVerticalKnob(void) {
     i16 y;
     i16 newY;
 
-    gMouseManager->SetCursorShape(4);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_VERTICAL_DRAG);
     scale = 402.0 / (m_zoomedOut ? 45 : 59);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
@@ -10142,7 +10183,7 @@ void editManager::DoVerticalKnob(void) {
             message = gInputManager->GetEvent();
         }
     }
-    gMouseManager->SetCursorShape(6);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     m_verticalKnob->m_flags &= ~WIDGET_FLAG_SELECTED;
     m_verticalTrack->m_flags &= ~WIDGET_FLAG_SELECTED;
 }
@@ -10155,7 +10196,8 @@ void editManager::SetCellSound(i16 x, i16 y) {
 
     cell = &m_map.cells[x][y];
     m_mapSounds[x][y] = MAP_SOUND_NONE;
-    if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN && cell->m_tileIndex > 3)
+    if (cell->m_tileIndex < MAP_CELL_TILES_PER_TERRAIN
+        && cell->m_tileIndex > TERRAIN_TILE_VARIANT_COUNT - 1)
         m_mapSounds[x][y] = MAP_SOUND_COAST;
     switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
         case MAP_OBJECT_BUOY:
@@ -10250,10 +10292,10 @@ void editManager::SetCoast(i16 x, i16 y) {
     cell = &m_map.cells[x][y];
     if (cell->m_tileIndex > MAP_CELL_TILES_PER_TERRAIN - 1)
         return;
-    switch (cell->m_tileIndex / EDIT_COAST_TILE_VARIANTS) {
-        case EDIT_COAST_OPEN:
+    switch (cell->m_tileIndex / TERRAIN_TILE_VARIANT_COUNT) {
+        case EDIT_TILE_PLAIN:
             return;
-        case EDIT_COAST_EDGE:
+        case EDIT_TILE_NORTH_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_VERTICAL) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
                     m_map.cells[x][y + 1].m_triggerType = MAP_OBJECT_COAST;
@@ -10262,7 +10304,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x][y - 1].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_OUTER_CORNER:
+        case EDIT_TILE_NORTH_EAST_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && !m_map.cells[x][y + 1].m_triggerType)
@@ -10295,7 +10337,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x + 1][y - 1].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_SIDE:
+        case EDIT_TILE_EAST_EDGE:
             if (cell->m_flags & MAP_CELL_GROUND_FLIP_HORIZONTAL) {
                 if (x > 0 && !m_map.cells[x - 1][y].m_triggerType)
                     m_map.cells[x - 1][y].m_triggerType = MAP_OBJECT_COAST;
@@ -10304,7 +10346,7 @@ void editManager::SetCoast(i16 x, i16 y) {
                     m_map.cells[x + 1][y].m_triggerType = MAP_OBJECT_COAST;
             }
             break;
-        case EDIT_COAST_INNER_CORNER:
+        case EDIT_TILE_NORTH_EAST_INNER_CORNER:
             if ((cell->m_flags & (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL))
                 == (MAP_CELL_GROUND_FLIP_VERTICAL | MAP_CELL_GROUND_FLIP_HORIZONTAL)) {
                 if (y < MAP_CELL_GRID_SIZE - 1 && x > 0 && !m_map.cells[x - 1][y + 1].m_triggerType)
@@ -10524,13 +10566,10 @@ void editManager::WriteTowns(i32 file) {
             spot = &m_map.cells[x][y];
             if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
                 || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                    && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + 2 * TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME + 3 * TOWN_RACE_FRAME_STRIDE))) {
+                    && (spot->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_KNIGHT)
+                        || spot->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)
+                        || spot->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)
+                        || spot->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
                 type = spot->m_objectIndex / TOWN_RACE_FRAME_STRIDE | MAP_TOWN_CASTLE_FLAG;
@@ -10550,16 +10589,10 @@ void editManager::WriteTowns(i32 file) {
             spot = &m_map.cells[x][y];
             if (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
                 || (spot->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                    && (spot->m_objectIndex == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + 2 * TOWN_RACE_FRAME_STRIDE
-                        || spot->m_objectIndex
-                               == EDIT_CASTLE_ENTRANCE_FRAME - TOWN_CASTLE_FRAME_OFFSET
-                                      + 3 * TOWN_RACE_FRAME_STRIDE))) {
+                    && (spot->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_KNIGHT)
+                        || spot->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_SORCERESS)
+                        || spot->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_BARBARIAN)
+                        || spot->m_objectIndex == EDIT_TOWN_FRAME(TOWN_TYPE_WARLOCK)))) {
                 write(file, &x, 1);
                 write(file, &y, 1);
                 type = spot->m_objectIndex / TOWN_RACE_FRAME_STRIDE;
@@ -10574,7 +10607,7 @@ void editManager::WriteTowns(i32 file) {
             }
         }
     }
-    if (castleCount < 4)
+    if (castleCount < EDIT_MAP_MIN_CASTLES)
         AddError(localization::Tr("editor.check.castles.few"));
     else if (setCastles >= 1 && setCastles < castleCount)
         AddError(localization::Tr("editor.check.castles.unset"));
@@ -10745,7 +10778,7 @@ i16 editManager::SaveMap(char* name) {
     i16 formatWord;
 
     ClearErrors();
-    gMouseManager->SetPointer(1);
+    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     CheckObjects();
     UpdateTriggers();
     sprintf(fileName, ".\\maps\\%s", name);
@@ -10783,7 +10816,7 @@ i16 editManager::SaveMap(char* name) {
         write(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
-    gMouseManager->SetPointer(0);
+    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     ShowErrors();
     return BASE_MANAGER_SUCCESS;
 }
@@ -10822,7 +10855,7 @@ i16 editManager::LoadMap(char* name) {
         gNewMapFormat = 1;
     else
         gNewMapFormat = 0;
-    gMouseManager->SetPointer(1);
+    gMouseManager->SetPointer(EDIT_POINTER_WAIT);
     read(handle, &width, sizeof(width));
     read(handle, &height, sizeof(height));
     read(handle, m_map.cells, sizeof(m_map.cells));
@@ -10846,7 +10879,7 @@ i16 editManager::LoadMap(char* name) {
         read(handle, &gNextObjectId, sizeof(gNextObjectId));
     }
     close(handle);
-    gMouseManager->SetPointer(0);
+    gMouseManager->SetPointer(EDIT_POINTER_DEFAULT);
     gEditManager->SaveUndo();
     if (!gNewMapFormat)
         NormalDialog(localization::Tr("editor.map.old_format"), NORMAL_DIALOG_TYPE_OK);
@@ -11150,7 +11183,8 @@ void ScatterDetails(void) {
             cellOwner = &gEditManager->m_map.cellPairs[x][y];
             if (cell->m_objectIndex == MAP_CELL_NO_FRAME
                 && cell->m_overlayIndex == MAP_CELL_NO_FRAME
-                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < 4 && Random(1, 100) <= 3) {
+                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < TERRAIN_TILE_VARIANT_COUNT
+                && Random(1, 100) <= 3) {
                 gNextObjectId++;
                 cellOwner->objectId = gNextObjectId;
                 switch (cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN) {

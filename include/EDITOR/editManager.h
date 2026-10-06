@@ -13,6 +13,7 @@
 #include <SOURCE/game.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/mapCell.h>
+#include <SOURCE/town.h>
 
 class font;
 class heroWindow;
@@ -23,9 +24,12 @@ struct tag_message;
 
 H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MANAGER_NO_TOOL = -1,
-    // Main tests message.type against this mask (key, mouse and widget
-    // messages).
+    // Every editor manager's Main (this one and the four tool managers)
+    // tests message.type against this mask (key, mouse and widget messages).
     EDIT_MANAGER_DISPATCH_MASK = 0x32f,
+    // m_placedX/m_placedY and the tool managers' last drag cell when there is
+    // none.
+    EDIT_NO_CELL = -1,
     // m_objectIcons: the adventure tileset slots (MapTileset), each loaded at
     // both zoom levels.
     EDIT_MANAGER_TILESET_COUNT = 21,
@@ -38,6 +42,9 @@ H1_ENUM_CONST_BEGIN(EditManagerConstant)
     EDIT_MAP_ARTIFACT_SLOTS = 37,
     // The save check allows at most this many obelisks.
     EDIT_MAP_OBELISK_LIMIT = 48,
+    // A map needs at least this many castles (or random castles): the save
+    // check warns below it and the generator retries.
+    EDIT_MAP_MIN_CASTLES = 4,
     // The version word the editor writes after the header (hexadecimal 1112;
     // the game reads map extras from version MAP_EXTRA_VERSION on).
     EDIT_MAP_VERSION = 0x1112
@@ -68,8 +75,62 @@ H1_ENUM_CONST_BEGIN(EditViewGeometry)
     EDIT_RADAR_CELL_PIXELS = 2,
     // The scroll knobs travel 35..428 along their tracks.
     EDIT_KNOB_FIRST = 35,
-    EDIT_KNOB_LAST = 428
+    EDIT_KNOB_LAST = 428,
+    // The selected tool's panel below the radar (each tool manager's
+    // backdrop and controls).
+    EDIT_TOOL_PANEL_X = 480,
+    EDIT_TOOL_PANEL_Y = 197,
+    EDIT_TOOL_PANEL_WIDTH = 144,
+    EDIT_TOOL_PANEL_HEIGHT = 139
 H1_ENUM_CONST_END(EditViewGeometry)
+
+// buttons.icn frames: the ruler cells (one square cell for both rulers when
+// zoomed out), the radar's colour cell and view boxes, the tool buttons'
+// frame pairs (normal, selected; EDIT_TOOL_COUNT of them) and the tool
+// panels' backdrops.
+H1_ENUM_CONST_BEGIN(EditButtonsFrame)
+    EDIT_FRAME_ZOOMED_RULER_CELL = 18,
+    EDIT_FRAME_TOOL_PANEL = 20,
+    EDIT_FRAME_RADAR_CELL = 21,
+    EDIT_FRAME_RADAR_VIEW = 22,
+    EDIT_FRAME_RADAR_ZOOMED_VIEW = 23,
+    EDIT_FRAME_TOP_RULER_CELL = 24,
+    EDIT_FRAME_LEFT_RULER_CELL = 25,
+    EDIT_FRAME_TOOL_BUTTONS = 26,
+    EDIT_FRAME_CLEAR_OPTIONS = 34,
+    EDIT_FRAME_CLEAR_OPTIONS_PRESSED = 35,
+    EDIT_FRAME_CLEAR_PANEL = 36,
+    EDIT_FRAME_EVENTS_PANEL = 37
+H1_ENUM_CONST_END(EditButtonsFrame)
+
+// escroll.icn frames: the map view's scroll tracks and knobs (the generator's
+// sliders reuse the horizontal knob), the arrow buttons (normal, pressed) and
+// the generator's short track.
+H1_ENUM_CONST_BEGIN(EditScrollFrame)
+    EDIT_SCROLL_HORIZONTAL_TRACK = 0,
+    EDIT_SCROLL_VERTICAL_TRACK = 1,
+    EDIT_SCROLL_HORIZONTAL_KNOB = 2,
+    EDIT_SCROLL_VERTICAL_KNOB = 3,
+    EDIT_SCROLL_LEFT_ARROW = 8,
+    EDIT_SCROLL_RIGHT_ARROW = 10,
+    EDIT_SCROLL_SHORT_TRACK = 20
+H1_ENUM_CONST_END(EditScrollFrame)
+
+// editor.mse pointer frames (mouseManager::SetPointer).
+H1_ENUM_CONST_BEGIN(EditPointerFrame)
+    EDIT_POINTER_DEFAULT = 0,
+    // Shown while a map is saved or loaded.
+    EDIT_POINTER_WAIT = 1
+H1_ENUM_CONST_END(EditPointerFrame)
+
+// The cursor shapes the drag loops request (mouseManager::SetCursorShape,
+// which ignores them under Windows): horizontal and vertical slider drags,
+// then the normal arrow.
+H1_ENUM_CONST_BEGIN(EditCursorShape)
+    EDIT_CURSOR_HORIZONTAL_DRAG = 2,
+    EDIT_CURSOR_VERTICAL_DRAG = 4,
+    EDIT_CURSOR_NORMAL = 6
+H1_ENUM_CONST_END(EditCursorShape)
 
 // editwind.bin widget ids and the tool commands.
 H1_ENUM_BEGIN(EditWindowControlId)
@@ -113,20 +174,19 @@ H1_ENUM_BEGIN(EditTool)
     EDIT_TOOL_COUNT = 4
 H1_ENUM_END(EditTool)
 
-H1_ENUM_CONST_BEGIN(EditToolButtonConstant)
-    // buttons.icn: the terrain tool button's frame pair; each tool's pair
-    // follows (normal, selected).
-    EDIT_TOOL_BUTTON_FRAME = 26
-H1_ENUM_CONST_END(EditToolButtonConstant)
-
-// IsCleared's mask: a bit per terrain (TerrainType) for the objects standing
-// on it, then the object classes the eraser lists after the terrains.
+// IsCleared's mask: a bit per object-tool category (gOverlayCategoryNames):
+// one per terrain (TerrainType) for the terrain objects standing on it, then
+// towns, monsters, artifacts and treasure.
 H1_ENUM_BEGIN(EditClearMask)
     EDIT_CLEAR_TOWNS = 0x80,
     EDIT_CLEAR_MONSTERS = 0x100,
     EDIT_CLEAR_ARTIFACTS = 0x200,
     EDIT_CLEAR_TREASURE = 0x400,
-    EDIT_CLEAR_ALL = 0xffff
+    EDIT_CLEAR_ALL = 0xffff,
+    // What a generator road between castles erases: all but towns, monsters
+    // and artifacts.
+    EDIT_CLEAR_ROAD =
+        EDIT_CLEAR_ALL & ~(EDIT_CLEAR_TOWNS | EDIT_CLEAR_MONSTERS | EDIT_CLEAR_ARTIFACTS)
 H1_ENUM_END(EditClearMask)
 
 // The looped environment sounds SetCellSound gives a cell (the game's
@@ -159,9 +219,7 @@ H1_ENUM_END(EditMapSound)
 // Object frames the editor recognises (frame indices of the named ICN
 // tilesets).
 H1_ENUM_CONST_BEGIN(EditObjectFrame)
-    // town32.icn: the entrance of the first race's castle; each race adds
-    // TOWN_RACE_FRAME_STRIDE and a town without a castle has its entrance
-    // TOWN_CASTLE_FRAME_OFFSET frames before.
+    // town32.icn: the entrance of the first race's castle (EDIT_CASTLE_FRAME).
     EDIT_CASTLE_ENTRANCE_FRAME = 22,
     // The sawmill frame WriteMines records as a wood mine (other mills of the
     // sawmill and alchemist types are mercury).
@@ -196,17 +254,26 @@ H1_ENUM_CONST_BEGIN(EditObjectFrame)
     EDIT_SOUND_WATER_LOOP_19_FRAME_B = 73
 H1_ENUM_CONST_END(EditObjectFrame)
 
-// Water tiles come in five runs of four: open water, then the coast's
-// straight edge, outer corner, side and inner corner (SmoothTerrain's
-// border tiles and SetCoast).
-H1_ENUM_BEGIN(EditCoastTile)
-    EDIT_COAST_OPEN = 0,
-    EDIT_COAST_EDGE = 1,
-    EDIT_COAST_OUTER_CORNER = 2,
-    EDIT_COAST_SIDE = 3,
-    EDIT_COAST_INNER_CORNER = 4,
-    EDIT_COAST_TILE_VARIANTS = 4
-H1_ENUM_END(EditCoastTile)
+// town32.icn: the entrance frame of a race's castle (TownType: each race's
+// frames follow the previous race's by TOWN_RACE_FRAME_STRIDE) and of its
+// town without a castle, TOWN_CASTLE_FRAME_OFFSET frames before.
+#define EDIT_CASTLE_FRAME(type) (EDIT_CASTLE_ENTRANCE_FRAME + (type) * TOWN_RACE_FRAME_STRIDE)
+#define EDIT_TOWN_FRAME(type) (EDIT_CASTLE_FRAME(type) - TOWN_CASTLE_FRAME_OFFSET)
+
+// A terrain's MAP_CELL_TILES_PER_TERRAIN ground tiles are five runs of
+// TERRAIN_TILE_VARIANT_COUNT interchangeable variants: the plain ground, then
+// the border tiles BlendTerrain fits against another terrain. A border tile
+// is drawn for a differing neighbour to the north or east (or north-east);
+// the ground-flip bits mirror it to the south and west. SetCoast reads the
+// water's border runs.
+H1_ENUM_BEGIN(EditTileRun)
+    EDIT_TILE_PLAIN = 0,
+    EDIT_TILE_NORTH_EDGE = 1,
+    EDIT_TILE_NORTH_EAST_CORNER = 2,
+    EDIT_TILE_EAST_EDGE = 3,
+    // Only the diagonal neighbour differs.
+    EDIT_TILE_NORTH_EAST_INNER_CORNER = 4
+H1_ENUM_END(EditTileRun)
 
 // DrawCell's layers.
 H1_ENUM_BEGIN(EditDrawLayer)

@@ -7,6 +7,7 @@
 
 #include <BASE/baseManager.h>
 #include <Domains.h>
+#include <EDITOR/EDITOR.h>
 #include <H1/Macros.h>
 #include <SOURCE/terrainTypes.h>
 
@@ -14,20 +15,9 @@ class backdropWidget;
 class iconWidget;
 struct tag_message;
 
-H1_ENUM_CONST_BEGIN(TerrainManagerConstant)
-    TERRAIN_MANAGER_TERRAIN_COUNT = 7,
-    TERRAIN_MANAGER_DISPATCH_MASK = 0x32f,
-    TERRAIN_MANAGER_NO_CELL = -1
-H1_ENUM_CONST_END(TerrainManagerConstant)
-
-// The tool panel: a buttons.icn backdrop, a column of seven terrains.icn
-// buttons and a highlight that frames the selected one.
+// The tool panel: a column of seven terrains.icn buttons and a highlight
+// that frames the selected one.
 H1_ENUM_CONST_BEGIN(TerrainManagerLayout)
-    TERRAIN_PANEL_X = 480,
-    TERRAIN_PANEL_Y = 197,
-    TERRAIN_PANEL_WIDTH = 144,
-    TERRAIN_PANEL_HEIGHT = 139,
-    TERRAIN_PANEL_FRAME = 20,
     TERRAIN_BUTTON_X = 488,
     TERRAIN_BUTTON_FIRST_Y = 204,
     TERRAIN_BUTTON_WIDTH = 96,
@@ -62,7 +52,7 @@ class terrainManager : public baseManager {
 public:
     // The selected terrain (TerrainType).
     u8 m_terrain;
-    iconWidget* m_terrainButtons[TERRAIN_MANAGER_TERRAIN_COUNT];
+    iconWidget* m_terrainButtons[EDITOR_TERRAIN_COUNT];
     backdropWidget* m_backdrop;
     iconWidget* m_highlight;
     iconWidget* m_panel;

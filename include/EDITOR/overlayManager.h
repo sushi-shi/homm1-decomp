@@ -39,6 +39,17 @@ H1_ENUM_CONST_BEGIN(OverlayTypeConstant)
     OVERLAY_TYPE_COUNT = 295
 H1_ENUM_CONST_END(OverlayTypeConstant)
 
+// overlayType::kind and gOverlayCategoryKinds: an object's class in the
+// object tool's categories. Terrain objects are listed by the terrain they
+// stand on (a category per terrain); each other class has one category.
+H1_ENUM_BEGIN(OverlayKind)
+    OVERLAY_KIND_TERRAIN = 0,
+    OVERLAY_KIND_TOWN = 1,
+    OVERLAY_KIND_MONSTER = 2,
+    OVERLAY_KIND_ARTIFACT = 3,
+    OVERLAY_KIND_TREASURE = 4
+H1_ENUM_END(OverlayKind)
+
 // One placeable object of the editor's object table: its tileset frames per
 // footprint cell and the masks of the cells it occupies.
 #pragma pack(push, 1)
@@ -46,8 +57,7 @@ struct overlayType {
     char name[OVERLAY_TYPE_NAME_LENGTH];
     // The object tileset (editManager::m_objectIcons).
     H1_ENUM_STORAGE(MapTileset, i8) tileset;
-    // The category class (gOverlayCategoryKinds); 0 for terrain objects.
-    i8 kind;
+    H1_ENUM_STORAGE(OverlayKind, i8) kind;
     // How often the generator's ScatterDecorations picks it (in 100).
     u16 frequency;
     // Cells on the object layer, which need free ground of a terrainMask
@@ -72,9 +82,7 @@ struct overlayType {
 };
 #pragma pack(pop)
 
-// Main tests message.type against the dispatch mask the managers share.
 H1_ENUM_CONST_BEGIN(OverlayManagerConstant)
-    OVERLAY_MANAGER_DISPATCH_MASK = 0x32f,
     OVERLAY_MANAGER_TYPE_CAPACITY = 128,
     OVERLAY_CATEGORY_COUNT = 11,
     OVERLAY_NO_SELECTION = -1,
@@ -92,11 +100,6 @@ H1_ENUM_BEGIN(OverlayControlId)
 H1_ENUM_END(OverlayControlId)
 
 H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
-    OVERLAY_PANEL_X = 480,
-    OVERLAY_PANEL_Y = 197,
-    OVERLAY_PANEL_WIDTH = 144,
-    OVERLAY_PANEL_HEIGHT = 139,
-    OVERLAY_PANEL_FRAME = 20,
     OVERLAY_PREVIEW_X = 509,
     OVERLAY_PREVIEW_Y = 227,
     OVERLAY_PREVIEW_WIDTH = 86,
@@ -110,8 +113,6 @@ H1_ENUM_CONST_BEGIN(OverlayManagerLayout)
     OVERLAY_NEXT_CATEGORY_X = 604,
     OVERLAY_CATEGORY_BUTTON_Y = 313,
     OVERLAY_CATEGORY_BUTTON_SIZE = 16,
-    OVERLAY_PREVIOUS_CATEGORY_FRAME = 8,
-    OVERLAY_NEXT_CATEGORY_FRAME = 10,
     OVERLAY_CATEGORY_NAME_X = 500,
     OVERLAY_CATEGORY_NAME_Y = 312,
     OVERLAY_CATEGORY_NAME_WIDTH = 104,
@@ -188,7 +189,7 @@ i32 PlaceMineResource(overlayType* type, i16 x, i16 y, i32 checkMine);
 
 // The editor's object table (EDITMGR's data).
 extern overlayType gOverlayTypes[];
-extern i32 gOverlayCategoryKinds[];
+extern H1_ENUM_STORAGE(OverlayKind, i32) gOverlayCategoryKinds[];
 extern i16 gSelectedOverlay;
 
 #endif // HOMM1_EDITOR_OVERLAYMANAGER_H

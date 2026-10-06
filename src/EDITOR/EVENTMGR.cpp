@@ -19,6 +19,7 @@
 #include <SOURCE/fileRequester.h>
 #include <SOURCE/KB.h>
 #include <SOURCE/kbwin.h>
+#include <SOURCE/mapObjectTypes.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,13 +34,13 @@ heroWindow* gClearWindow;
 DATA(0x004529a8)
 i16 gEventsLastHoverId;
 DATA(0x004529ac)
-iconWidget* gTerrainKnobs[EDITOR_GENERATOR_TERRAIN_COUNT];
+iconWidget* gTerrainKnobs[EDITOR_TERRAIN_COUNT];
 DATA(0x004529c8)
 editMapCellPair* gEditCellPair;
 DATA(0x004529cc)
 iconWidget* gDensityKnobs[EDITOR_GENERATOR_DENSITY_COUNT];
 DATA(0x004529e0)
-iconWidget* gTerrainTracks[EDITOR_GENERATOR_TERRAIN_COUNT];
+iconWidget* gTerrainTracks[EDITOR_TERRAIN_COUNT];
 DATA(0x00452a00)
 editTownExtra gTownEdit;
 DATA(0x00452a48)
@@ -51,19 +52,19 @@ heroWindow* gNewMapWindow;
 
 VA(0x004092c0, 0x32)
 eventsManager::eventsManager(void) {
-    m_dispatchMask = EVENTS_MANAGER_DISPATCH_MASK;
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     m_panel = NULL;
 }
 
 VA(0x004092f2, 0x123)
 i16 eventsManager::Open(i16 priority) {
     m_panel = new iconWidget(
-        EVENTS_PANEL_X,
-        EVENTS_PANEL_Y,
-        EVENTS_PANEL_WIDTH,
-        EVENTS_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        EVENTS_PANEL_FRAME,
+        EDIT_FRAME_EVENTS_PANEL,
         0,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
@@ -114,18 +115,30 @@ i16 eventsManager::Main(tag_message& message) {
                     cell = &gEditManager->m_map.cells[x][y];
                     switch (message.id) {
                         case EDIT_CONTROL_MAP:
-                            if (cell->m_triggerType == EVENTS_OBJECT_TOWN
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE
-                                || cell->m_triggerType == EVENTS_OBJECT_CASTLE_GATE)
+                            if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
+                                || cell->m_triggerType
+                                       == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_TOWN)
+                                || cell->m_triggerType
+                                       == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE))
                                 EditTown(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_MONSTER
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_2
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_3
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_4
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_5
-                                     || cell->m_triggerType == EVENTS_OBJECT_MONSTER_6)
+                            else if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_MONSTER)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_MONSTER)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_WEAK)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_MEDIUM)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_STRONG)
+                                     || cell->m_triggerType
+                                            == (MAP_TRIGGER_EVENT
+                                                | MAP_FILE_OBJECT_RANDOM_MONSTER_VERY_STRONG))
                                 EditMonster(x, y);
-                            else if (cell->m_triggerType == EVENTS_OBJECT_HERO)
+                            else if (cell->m_triggerType
+                                     == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_HERO))
                                 EditHero(x, y);
                             else
                                 EditCell(x, y);
@@ -144,14 +157,16 @@ i16 eventsManager::Main(tag_message& message) {
                                 || gEditManager->m_cursorY != newY) {
                                 gEditManager->m_cursorX = newX;
                                 gEditManager->m_cursorY = newY;
-                                newX = newX
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
-                                       + EVENTS_MAP_VIEW_ORIGIN;
-                                newY = newY
-                                           * (gEditManager->m_zoomedOut ? EVENTS_ZOOMED_CELL_SIZE
-                                                                        : EVENTS_CELL_SIZE)
-                                       + EVENTS_MAP_VIEW_ORIGIN;
+                                newX =
+                                    newX
+                                        * (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                     : EDIT_VIEW_CELL_PIXELS)
+                                    + EDIT_VIEW_LEFT;
+                                newY =
+                                    newY
+                                        * (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS
+                                                                     : EDIT_VIEW_CELL_PIXELS)
+                                    + EDIT_VIEW_TOP;
                                 gEditManager->DrawMap();
                                 m_cursorIcon->FillToBuffer(
                                     newX,
@@ -874,7 +889,7 @@ i32 ClearOptionsDialog(void) {
             0,
             MAP_CELL_GRID_SIZE,
             MAP_CELL_GRID_SIZE,
-            gClearFlags & CLEAR_FLAG_CLASS_MASK,
+            gClearFlags & EDIT_CLEAR_ALL,
             0
         );
     }
@@ -1041,10 +1056,7 @@ i16 MapDetailsWindowHandler(tag_message& message) {
             } else if (message.id == DETAILS_WINDOW_DESCRIPTION) {
                 gDetailsWindow->BroadcastMessage(request);
                 for (i = 0; i < MAP_HEADER_LANGUAGE_COUNT; i++)
-                    strcpy(
-                        gMapHeader->description[i],
-                        request.text
-                    );
+                    strcpy(gMapHeader->description[i], request.text);
             } else if (message.id == DETAILS_WINDOW_MAP_CODE) {
                 gDetailsWindow->BroadcastMessage(request);
                 strcpy(gText, request.text);
@@ -1086,14 +1098,14 @@ i32 NewMapDialog(void) {
     if (gNewMapWindow == NULL)
         MemError();
     SetWinText(gNewMapWindow, EVENTS_WINDOW_TEXT_NEW_MAP);
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++) {
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++) {
         gTerrainTracks[i] = new iconWidget(
             NEW_MAP_TRACK_X,
             i * NEW_MAP_ROW_HEIGHT + NEW_MAP_FIRST_TERRAIN_Y,
             NEW_MAP_TRACK_WIDTH,
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
-            NEW_MAP_TRACK_FRAME,
+            EDIT_SCROLL_SHORT_TRACK,
             0,
             i + NEW_MAP_FIRST_TERRAIN_TRACK,
             ICON_WIDGET_DRAW,
@@ -1106,7 +1118,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_KNOB_WIDTH,
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
-            NEW_MAP_KNOB_FRAME,
+            EDIT_SCROLL_HORIZONTAL_KNOB,
             0,
             i + NEW_MAP_FIRST_TERRAIN_KNOB,
             ICON_WIDGET_DRAW,
@@ -1121,7 +1133,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_TRACK_WIDTH,
             NEW_MAP_TRACK_HEIGHT,
             "escroll.icn",
-            NEW_MAP_TRACK_FRAME,
+            EDIT_SCROLL_SHORT_TRACK,
             0,
             i + NEW_MAP_FIRST_DENSITY_TRACK,
             ICON_WIDGET_DRAW,
@@ -1134,7 +1146,7 @@ i32 NewMapDialog(void) {
             NEW_MAP_KNOB_WIDTH,
             NEW_MAP_KNOB_HEIGHT,
             "escroll.icn",
-            NEW_MAP_KNOB_FRAME,
+            EDIT_SCROLL_HORIZONTAL_KNOB,
             0,
             i + NEW_MAP_FIRST_DENSITY_KNOB,
             ICON_WIDGET_DRAW,
@@ -1157,7 +1169,7 @@ void UpdateNewMapWindow(void) {
     tag_message message;
     i32 i;
 
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
         gTerrainKnobs[i]->m_x =
             NEW_MAP_KNOB_TRAVEL * gTerrainPercent[i] / 100.0 + NEW_MAP_KNOB_LEFT;
     for (i = 0; i < EDITOR_GENERATOR_DENSITY_COUNT; i++)
@@ -1187,10 +1199,10 @@ void BalanceTerrainPercents(i32 fixed) {
     remaining = 100.0 - gTerrainPercent[fixed];
     unfixedTotal = 0.0;
     total = 0.0;
-    for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
+    for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
         if (i != fixed)
             unfixedTotal += gTerrainPercent[i];
-    for (i = 1; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
+    for (i = 1; i < EDITOR_TERRAIN_COUNT; i++)
         total += gTerrainPercent[i];
     if (fixed != -1) {
         if (total < NEW_MAP_MINIMUM_LAND)
@@ -1204,7 +1216,7 @@ void BalanceTerrainPercents(i32 fixed) {
                 gTerrainPercent[1] = 1.0;
         }
         ratio = remaining / unfixedTotal;
-        for (i = 0; i < EDITOR_GENERATOR_TERRAIN_COUNT; i++)
+        for (i = 0; i < EDITOR_TERRAIN_COUNT; i++)
             if (i != fixed)
                 gTerrainPercent[i] = ratio * gTerrainPercent[i];
         if (gTerrainPercent[0] > NEW_MAP_MAXIMUM_WATER + 0.5) {
@@ -1225,15 +1237,14 @@ i16 NewMapWindowHandler(tag_message& message) {
         case WIDGET_NOTIFY_DESELECT:
             redraw = true;
             if (message.id >= NEW_MAP_FIRST_TERRAIN_DECREASE
-                && message.id < NEW_MAP_FIRST_TERRAIN_DECREASE + EDITOR_GENERATOR_TERRAIN_COUNT) {
+                && message.id < NEW_MAP_FIRST_TERRAIN_DECREASE + EDITOR_TERRAIN_COUNT) {
                 index = message.id - NEW_MAP_FIRST_TERRAIN_DECREASE;
                 gTerrainPercent[index] -= 1.0;
                 if (gTerrainPercent[index] < 0.0)
                     gTerrainPercent[index] = 0.0;
                 BalanceTerrainPercents(index);
             } else if (message.id >= NEW_MAP_FIRST_TERRAIN_INCREASE
-                       && message.id
-                              < NEW_MAP_FIRST_TERRAIN_INCREASE + EDITOR_GENERATOR_TERRAIN_COUNT) {
+                       && message.id < NEW_MAP_FIRST_TERRAIN_INCREASE + EDITOR_TERRAIN_COUNT) {
                 index = message.id - NEW_MAP_FIRST_TERRAIN_INCREASE;
                 gTerrainPercent[index] += 1.0;
                 if (gTerrainPercent[index] > 100.0)
@@ -1264,16 +1275,16 @@ i16 NewMapWindowHandler(tag_message& message) {
             break;
         case WIDGET_NOTIFY_SELECT:
             if (message.id >= NEW_MAP_FIRST_TERRAIN_TRACK
-                && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
+                && message.id < NEW_MAP_FIRST_TERRAIN_TRACK + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_TRACK);
             else if (message.id >= NEW_MAP_FIRST_TERRAIN_KNOB
-                     && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_TERRAIN_KNOB + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(1, message.id - NEW_MAP_FIRST_TERRAIN_KNOB);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_TRACK
-                     && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_DENSITY_TRACK + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_TRACK);
             else if (message.id >= NEW_MAP_FIRST_DENSITY_KNOB
-                     && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_GENERATOR_TERRAIN_COUNT)
+                     && message.id < NEW_MAP_FIRST_DENSITY_KNOB + EDITOR_TERRAIN_COUNT)
                 DragNewMapSlider(0, message.id - NEW_MAP_FIRST_DENSITY_KNOB);
             if (message.id >= NEW_MAP_SCATTER_TOWNS && message.id <= NEW_MAP_CENTRE_TOWNS) {
                 gScatterTowns = message.id == NEW_MAP_SCATTER_TOWNS;
@@ -1300,7 +1311,7 @@ void DragNewMapSlider(i32 terrain, i32 index) {
     i16 y;
     tag_message event;
 
-    gMouseManager->SetCursorShape(EVENTS_CURSOR_SLIDER);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_HORIZONTAL_DRAG);
     gMouseManager->MouseCoords(x, y);
     gInputManager->Flush();
     event.type = MESSAGE_MOUSE_MOVE;
@@ -1333,7 +1344,7 @@ void DragNewMapSlider(i32 terrain, i32 index) {
         } else
             event = gInputManager->GetEvent();
     }
-    gMouseManager->SetCursorShape(EVENTS_CURSOR_NORMAL);
+    gMouseManager->SetCursorShape(EDIT_CURSOR_NORMAL);
     gInputManager->Flush();
     if (terrain) {
         gTerrainKnobs[index]->m_flags &= ~WIDGET_FLAG_SELECTED;

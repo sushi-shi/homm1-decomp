@@ -27,43 +27,16 @@ H1_ENUM_CONST_BEGIN(EventsWindowText)
     EVENTS_WINDOW_TEXT_NEW_MAP = 0x6a
 H1_ENUM_CONST_END(EventsWindowText)
 
-// Main tests message.type against the dispatch mask the managers share.
 H1_ENUM_CONST_BEGIN(EventsManagerConstant)
-    EVENTS_MANAGER_DISPATCH_MASK = 0x32f,
-    // EditCell opens only from this debug level.
-    EVENTS_CELL_EDIT_DEBUG_LEVEL = 1,
-    // The hover cursor sits on 32-pixel cells (16 zoomed) from the map view's
-    // origin at (16, 16).
-    EVENTS_CELL_SIZE = 32,
-    EVENTS_ZOOMED_CELL_SIZE = 16,
-    EVENTS_MAP_VIEW_ORIGIN = 16
+// EditCell opens only from this debug level.
+    EVENTS_CELL_EDIT_DEBUG_LEVEL = 1
 H1_ENUM_CONST_END(EventsManagerConstant)
 
-// The tool panel (a buttons.icn frame).
 H1_ENUM_CONST_BEGIN(EventsManagerLayout)
-    EVENTS_PANEL_X = 480,
-    EVENTS_PANEL_Y = 197,
-    EVENTS_PANEL_WIDTH = 144,
-    EVENTS_PANEL_HEIGHT = 139,
-    EVENTS_PANEL_FRAME = 37,
-    // Every dialog opens at (16, 16).
+// Every dialog opens at (16, 16).
     EVENTS_DIALOG_X = 16,
     EVENTS_DIALOG_Y = 16
 H1_ENUM_CONST_END(EventsManagerLayout)
-
-// mapCell::m_triggerType values Main opens a dialog for.
-H1_ENUM_BEGIN(EventsObjectType)
-    EVENTS_OBJECT_MONSTER = 0x9a,
-    EVENTS_OBJECT_TOWN = 0xa8,
-    EVENTS_OBJECT_MONSTER_2 = 0xbf,
-    EVENTS_OBJECT_CASTLE = 0xc0,
-    EVENTS_OBJECT_CASTLE_GATE = 0xc1,
-    EVENTS_OBJECT_MONSTER_3 = 0xc3,
-    EVENTS_OBJECT_MONSTER_4 = 0xc4,
-    EVENTS_OBJECT_MONSTER_5 = 0xc5,
-    EVENTS_OBJECT_MONSTER_6 = 0xc6,
-    EVENTS_OBJECT_HERO = 0xc7
-H1_ENUM_END(EventsObjectType)
 
 // cellwin.bin: a text field per cell byte and per pair word, and toggles for
 // the bits of the cell's seventh byte and the object type's top bit.
@@ -126,7 +99,6 @@ H1_ENUM_CONST_BEGIN(ClearWindowConstant)
     CLEAR_FLAG_EVERY_CLASS = 0xfffff,
     CLEAR_FLAG_EVERYTHING = 0x100000,
     CLEAR_FLAG_WHOLE_MAP = 0x200000,
-    CLEAR_FLAG_CLASS_MASK = 0xffff,
     CLEAR_FLAG_ALL = 0x7fffffff
 H1_ENUM_CONST_END(ClearWindowConstant)
 
@@ -160,12 +132,10 @@ H1_ENUM_CONST_BEGIN(NewMapWindowConstant)
     NEW_MAP_TRACK_X = 154,
     NEW_MAP_TRACK_WIDTH = 250,
     NEW_MAP_TRACK_HEIGHT = 16,
-    NEW_MAP_TRACK_FRAME = 20,
     NEW_MAP_KNOB_X = 157,
     NEW_MAP_KNOB_Y_OFFSET = 3,
     NEW_MAP_KNOB_WIDTH = 17,
     NEW_MAP_KNOB_HEIGHT = 8,
-    NEW_MAP_KNOB_FRAME = 2,
     NEW_MAP_ROW_HEIGHT = 24,
     NEW_MAP_FIRST_TERRAIN_Y = 26,
     NEW_MAP_FIRST_DENSITY_Y = 222,
@@ -180,12 +150,6 @@ H1_ENUM_CONST_BEGIN(NewMapWindowConstant)
     NEW_MAP_MINIMUM_LAND = 20,
     NEW_MAP_MAXIMUM_WATER = 75
 H1_ENUM_CONST_END(NewMapWindowConstant)
-
-// mouseManager cursor shapes the slider drag switches between.
-H1_ENUM_CONST_BEGIN(EventsCursorConstant)
-    EVENTS_CURSOR_SLIDER = 2,
-    EVENTS_CURSOR_NORMAL = 6
-H1_ENUM_CONST_END(EventsCursorConstant)
 
 // Closes the running dialog: the dialog manager reads the select command.
 #define FINISH_DIALOG_SELECT(message)                                                              \

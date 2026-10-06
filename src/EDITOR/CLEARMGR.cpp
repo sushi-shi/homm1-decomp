@@ -22,21 +22,21 @@
 
 VA(0x00401000, 0x44)
 clearManager::clearManager(void) {
-    m_lastY = CLEAR_MANAGER_NO_CELL;
-    m_lastX = CLEAR_MANAGER_NO_CELL;
-    m_dispatchMask = CLEAR_MANAGER_DISPATCH_MASK;
+    m_lastY = EDIT_NO_CELL;
+    m_lastX = EDIT_NO_CELL;
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
     m_panel = NULL;
 }
 
 VA(0x00401044, 0x188)
 i16 clearManager::Open(i16 priority) {
     m_panel = new iconWidget(
-        CLEAR_PANEL_X,
-        CLEAR_PANEL_Y,
-        CLEAR_PANEL_WIDTH,
-        CLEAR_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        CLEAR_PANEL_FRAME,
+        EDIT_FRAME_CLEAR_PANEL,
         0,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
@@ -49,8 +49,8 @@ i16 clearManager::Open(i16 priority) {
         CLEAR_OPTIONS_BUTTON_WIDTH,
         CLEAR_OPTIONS_BUTTON_HEIGHT,
         "buttons.icn",
-        CLEAR_OPTIONS_BUTTON_FRAME,
-        CLEAR_OPTIONS_BUTTON_PRESSED_FRAME,
+        EDIT_FRAME_CLEAR_OPTIONS,
+        EDIT_FRAME_CLEAR_OPTIONS_PRESSED,
         0,
         BUTTON_NO_HOTKEY,
         EDIT_CONTROL_TOOL_OPTIONS,
@@ -158,8 +158,8 @@ i16 clearManager::Main(tag_message& message) {
                             gEditManager->DrawMap();
                             gEditManager->UpdateMapView();
                             gEditManager->DrawRadar(1);
-                            m_lastY = CLEAR_MANAGER_NO_CELL;
-                            m_lastX = CLEAR_MANAGER_NO_CELL;
+                            m_lastY = EDIT_NO_CELL;
+                            m_lastX = EDIT_NO_CELL;
                             gEditManager->m_mapChanged = 1;
                             break;
                     }

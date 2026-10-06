@@ -32,14 +32,25 @@
 
 DATA(0x0044bea4)
 i16 gSelectedOverlay = OVERLAY_NO_SELECTION;
-// Each category's object class: the seven terrains (0) list the objects of
-// their terrain, the others one class each.
+// Each category's object class: a category per terrain, then one per class.
 DATA(0x0044bea8)
-i32 gOverlayCategoryKinds[OVERLAY_CATEGORY_COUNT] = {0, 0, 0, 0, 0, 0, 0, 1, 2, 3, 4};
+H1_ENUM_STORAGE(OverlayKind, i32) gOverlayCategoryKinds[OVERLAY_CATEGORY_COUNT] = {
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TERRAIN,
+    OVERLAY_KIND_TOWN,
+    OVERLAY_KIND_MONSTER,
+    OVERLAY_KIND_ARTIFACT,
+    OVERLAY_KIND_TREASURE
+};
 
 VA(0x0040ea10, 0x2b)
 overlayManager::overlayManager(void) {
-    m_dispatchMask = OVERLAY_MANAGER_DISPATCH_MASK;
+    m_dispatchMask = EDIT_MANAGER_DISPATCH_MASK;
 }
 
 VA(0x0040ea3b, 0x372)
@@ -47,12 +58,12 @@ i16 overlayManager::Open(i16 priority) {
     gOverlayCategory = gOverlayShownCategory;
     m_previewDrawn = 0;
     m_panel = new iconWidget(
-        OVERLAY_PANEL_X,
-        OVERLAY_PANEL_Y,
-        OVERLAY_PANEL_WIDTH,
-        OVERLAY_PANEL_HEIGHT,
+        EDIT_TOOL_PANEL_X,
+        EDIT_TOOL_PANEL_Y,
+        EDIT_TOOL_PANEL_WIDTH,
+        EDIT_TOOL_PANEL_HEIGHT,
         "buttons.icn",
-        OVERLAY_PANEL_FRAME,
+        EDIT_FRAME_TOOL_PANEL,
         0,
         WIDGET_ID_NONE,
         ICON_WIDGET_DRAW,
@@ -78,8 +89,8 @@ i16 overlayManager::Open(i16 priority) {
         OVERLAY_CATEGORY_BUTTON_SIZE,
         OVERLAY_CATEGORY_BUTTON_SIZE,
         "escroll.icn",
-        OVERLAY_PREVIOUS_CATEGORY_FRAME,
-        OVERLAY_PREVIOUS_CATEGORY_FRAME + 1,
+        EDIT_SCROLL_LEFT_ARROW,
+        EDIT_SCROLL_LEFT_ARROW + 1,
         0,
         BUTTON_NO_HOTKEY,
         OVERLAY_PREVIOUS_CATEGORY_BUTTON,
@@ -91,8 +102,8 @@ i16 overlayManager::Open(i16 priority) {
         OVERLAY_CATEGORY_BUTTON_SIZE,
         OVERLAY_CATEGORY_BUTTON_SIZE,
         "escroll.icn",
-        OVERLAY_NEXT_CATEGORY_FRAME,
-        OVERLAY_NEXT_CATEGORY_FRAME + 1,
+        EDIT_SCROLL_RIGHT_ARROW,
+        EDIT_SCROLL_RIGHT_ARROW + 1,
         0,
         BUTTON_NO_HOTKEY,
         OVERLAY_NEXT_CATEGORY_BUTTON,
@@ -237,9 +248,8 @@ i16 overlayManager::Main(tag_message& message) {
                                 || gEditManager->m_cursorY != cellY) {
                                 if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
                                     if (cellX + m_width
-                                        > (gEditManager->m_zoomedOut
-                                               ? EDIT_VIEW_ZOOMED_CELLS
-                                               : EDIT_VIEW_CELLS))
+                                        > (gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELLS
+                                                                     : EDIT_VIEW_CELLS))
                                         cellX = !gEditManager->m_zoomedOut
                                                     ? EDIT_VIEW_CELLS - m_width
                                                     : EDIT_VIEW_ZOOMED_CELLS - m_width;
@@ -257,7 +267,7 @@ i16 overlayManager::Main(tag_message& message) {
                                                 * (gEditManager->m_zoomedOut
                                                        ? EDIT_VIEW_ZOOMED_CELL_PIXELS
                                                        : EDIT_VIEW_CELL_PIXELS)
-                                            + EDIT_VIEW_LEFT;
+                                            + EDIT_VIEW_TOP;
                                     if (gSelectedOverlay != OVERLAY_NO_SELECTION) {
                                         DrawFootprint(
                                             cellX,
@@ -314,8 +324,7 @@ void overlayManager::DrawFootprint(
     i16 cy;
 
     frame = !gEditManager->m_zoomedOut;
-    cellSize =
-        gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width
@@ -353,7 +362,8 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             if (type->overlayMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx)) {
                 if (x + cx < 0 || x + cx > MAP_CELL_GRID_SIZE - 1 || y - cy < 0
                     || y - cy > MAP_CELL_GRID_SIZE - 1
-                    || gEditManager->m_map.cells[x + cx][y - cy].m_overlayIndex != MAP_CELL_NO_FRAME)
+                    || gEditManager->m_map.cells[x + cx][y - cy].m_overlayIndex
+                           != MAP_CELL_NO_FRAME)
                     return 0;
             }
             if (!(type->overlayMask & 1 << (cy * OVERLAY_FOOTPRINT_COLUMNS + cx))
@@ -374,9 +384,8 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             || x + OVERLAY_FOOTPRINT_CORNER_COLUMN > MAP_CELL_GRID_SIZE - 1
             || y - OVERLAY_FOOTPRINT_CORNER_ROW < 0
             || y - OVERLAY_FOOTPRINT_CORNER_ROW > MAP_CELL_GRID_SIZE - 1
-            || gEditManager
-                       ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+            || gEditManager->m_map
+                       .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN][y - OVERLAY_FOOTPRINT_CORNER_ROW]
                        .m_overlayIndex
                    != MAP_CELL_NO_FRAME)
             return 0;
@@ -387,16 +396,15 @@ i16 CanPlaceOverlay(overlayType* type, i16 x, i16 y) {
             || x + OVERLAY_FOOTPRINT_CORNER_COLUMN > MAP_CELL_GRID_SIZE - 1
             || y - OVERLAY_FOOTPRINT_CORNER_ROW < 0
             || y - OVERLAY_FOOTPRINT_CORNER_ROW > MAP_CELL_GRID_SIZE - 1
-            || gEditManager
-                       ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+            || gEditManager->m_map
+                       .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN][y - OVERLAY_FOOTPRINT_CORNER_ROW]
                        .m_objectIndex
                    != MAP_CELL_NO_FRAME
             || !(
                 type->terrainMask
-                & 1 << gEditManager
-                               ->m_map.cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
-                                        [y - OVERLAY_FOOTPRINT_CORNER_ROW]
+                & 1 << gEditManager->m_map
+                               .cells[x + OVERLAY_FOOTPRINT_CORNER_COLUMN]
+                                     [y - OVERLAY_FOOTPRINT_CORNER_ROW]
                                .m_tileIndex
                            / MAP_CELL_TILES_PER_TERRAIN
             ))
@@ -576,8 +584,7 @@ void overlayManager::DrawOverlay(
     i16 cx;
     i16 cy;
 
-    cellSize =
-        gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
+    cellSize = gEditManager->m_zoomedOut ? EDIT_VIEW_ZOOMED_CELL_PIXELS : EDIT_VIEW_CELL_PIXELS;
     for (cy = 0; cy < OVERLAY_FOOTPRINT_ROWS; cy++)
         for (cx = 0; cx < OVERLAY_FOOTPRINT_COLUMNS; cx++)
             if (cy < height && cx < width
@@ -652,7 +659,7 @@ i16 overlayManager::LoadCategory(i16 category) {
     i16 i;
 
     m_typeCount = 0;
-    if (gOverlayCategoryKinds[category] == 0)
+    if (gOverlayCategoryKinds[category] == OVERLAY_KIND_TERRAIN)
         terrainBits = 1 << category;
     else
         terrainBits = 0xff;

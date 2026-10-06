@@ -12,12 +12,10 @@ struct mapStep {
     i32 y;
 };
 
-// PlaceTowns: castle slots (one per player), the land regions it numbers and
-// the object classes a road between castles erases.
+// PlaceTowns: castle slots (one per player) and the land regions it numbers.
 H1_ENUM_CONST_BEGIN(TownPlacementConstant)
     RANDOM_MAP_CASTLE_SLOTS = 4,
-    RANDOM_MAP_REGION_LIMIT = 255,
-    RANDOM_MAP_ROAD_CLEAR_MASK = 0xfc7f
+    RANDOM_MAP_REGION_LIMIT = 255
 H1_ENUM_CONST_END(TownPlacementConstant)
 
 H1_ENUM_CONST_BEGIN(RandomMapConstant)
@@ -30,13 +28,7 @@ H1_ENUM_CONST_BEGIN(RandomMapConstant)
     // PaintRandomTerrain drifts a seed every eighth step and its walk
     // weights every 64th.
     RANDOM_MAP_SEED_DRIFT_MASK = 7,
-    RANDOM_MAP_WEIGHT_DRIFT_MASK = 0x3f,
-    // HasEnoughCastles: the castle frames of the four town32.icn towns.
-    RANDOM_MAP_KNIGHT_CASTLE_FRAME = 22,
-    RANDOM_MAP_BARBARIAN_CASTLE_FRAME = 46,
-    RANDOM_MAP_SORCERESS_CASTLE_FRAME = 70,
-    RANDOM_MAP_WARLOCK_CASTLE_FRAME = 94,
-    RANDOM_MAP_MIN_CASTLES = 4
+    RANDOM_MAP_WEIGHT_DRIFT_MASK = 0x3f
 H1_ENUM_CONST_END(RandomMapConstant)
 
 // PlaceResourceSite's kinds (PlaceRandomObjects' Random(0, 6)): kinds from

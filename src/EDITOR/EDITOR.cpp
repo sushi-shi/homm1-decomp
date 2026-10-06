@@ -61,7 +61,7 @@ i32 gNewMapFormat = 1;
 DATA(0x004528e4)
 i32 gGeneratingMaps;
 DATA(0x0043f744)
-char* gEditButtonHelp[10] = {
+char* gEditButtonHelp[EDITOR_BUTTON_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditButtonHelp.1"),
     localization::Tr("table.gEditButtonHelp.2"),
@@ -74,7 +74,7 @@ char* gEditButtonHelp[10] = {
     localization::Tr("table.gEditButtonHelp.9"),
 };
 DATA(0x0043f76c)
-char* gEditAreaHelp[8] = {
+char* gEditAreaHelp[EDITOR_AREA_HELP_COUNT] = {
     "",
     localization::Tr("table.gEditAreaHelp.1"),
     localization::Tr("table.gEditAreaHelp.2"),
@@ -606,7 +606,7 @@ i32 gOverlayShownCategory;
 
 // The random map generator's settings (EVENTMGR's editnew.bin and MAPOBJ).
 DATA(0x0043f3a8)
-double gTerrainPercent[EDITOR_GENERATOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
+double gTerrainPercent[EDITOR_TERRAIN_COUNT] = {30.0, 30.0, 20.0, 0.0, 0.0, 0.0, 20.0};
 DATA(0x0043f3e0)
 double gDensityPercent[EDITOR_GENERATOR_DENSITY_COUNT] = {50.0, 50.0, 50.0, 50.0, 50.0};
 DATA(0x0043f408)
@@ -616,7 +616,7 @@ i32 gSaveUnseen;
 DATA(0x0045259c)
 i32 gLandCellCount;
 DATA(0x0043f78c)
-char* gGeneratorTerrainNames[EDITOR_GENERATOR_TERRAIN_COUNT] = {
+char* gGeneratorTerrainNames[EDITOR_TERRAIN_COUNT] = {
     localization::Tr("editor.terrain.name.0"),
     localization::Tr("editor.terrain.name.1"),
     localization::Tr("editor.terrain.name.2"),

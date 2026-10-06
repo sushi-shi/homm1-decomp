@@ -155,14 +155,14 @@ i32 editManager::HasEnoughCastles(void) {
             cell = &m_map.cells[x][y];
             if (cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_FILE_OBJECT_RANDOM_CASTLE)
                 || cell->m_triggerType == (MAP_TRIGGER_EVENT | MAP_OBJECT_TOWN)
-                       && (cell->m_objectIndex == RANDOM_MAP_KNIGHT_CASTLE_FRAME
-                           || cell->m_objectIndex == RANDOM_MAP_BARBARIAN_CASTLE_FRAME
-                           || cell->m_objectIndex == RANDOM_MAP_SORCERESS_CASTLE_FRAME
-                           || cell->m_objectIndex == RANDOM_MAP_WARLOCK_CASTLE_FRAME))
+                       && (cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_KNIGHT)
+                           || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_SORCERESS)
+                           || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_BARBARIAN)
+                           || cell->m_objectIndex == EDIT_CASTLE_FRAME(TOWN_TYPE_WARLOCK)))
                 count++;
         }
     }
-    return count >= RANDOM_MAP_MIN_CASTLES;
+    return count >= EDIT_MAP_MIN_CASTLES;
 }
 
 VA(0x00411ef7, 0x62)
@@ -961,7 +961,7 @@ void editManager::PlaceTowns(void) {
                            >= MAP_CELL_TILES_PER_TERRAIN) {
                     nearX += stepX;
                     scanY += stepY;
-                    roadMaskSet = RANDOM_MAP_ROAD_CLEAR_MASK;
+                    roadMaskSet = EDIT_CLEAR_ROAD;
                     gEditManager->ClearArea(nearX, scanY, 1, 1, roadMaskSet, 0);
                 }
             }
@@ -1125,7 +1125,7 @@ VA(0x00414795, 0xbd6)
 void editManager::PlaceRandomObjects(i32 density, i32 strength) {
     i32 valid;
     i32 siteIndex;
-    overlayType* obeliskTypes[EDITOR_GENERATOR_TERRAIN_COUNT];
+    overlayType* obeliskTypes[EDITOR_TERRAIN_COUNT];
     i32 attempts;
     overlayType* strong;
     i32 towns;
@@ -1155,7 +1155,7 @@ void editManager::PlaceRandomObjects(i32 density, i32 strength) {
     townObject = NULL;
     laid = 0;
     ScatterDecorations();
-    for (entry = 0; entry < EDITOR_GENERATOR_TERRAIN_COUNT; entry++)
+    for (entry = 0; entry < EDITOR_TERRAIN_COUNT; entry++)
         obeliskTypes[entry] = NULL;
     for (entry = 0; entry < OVERLAY_TYPE_COUNT; entry++) {
         if (!strcmpi(gOverlayTypes[entry].name, "xtown   "))
@@ -1518,7 +1518,7 @@ void editManager::PlaceTreasures(i32 density, i32 strength) {
 
 VA(0x0041609d, 0x1ac)
 void editManager::ScatterDecorations(void) {
-    i32 terrainChance[EDITOR_GENERATOR_TERRAIN_COUNT] = {15, 120, 120, 120, 120, 80, 120};
+    i32 terrainChance[EDITOR_TERRAIN_COUNT] = {15, 120, 120, 120, 120, 80, 120};
     overlayType* chosen;
     i32 selected;
     i32 dice;
@@ -1533,7 +1533,7 @@ void editManager::ScatterDecorations(void) {
             if (Random(1, 1000) <= terrainChance[cell->m_tileIndex / MAP_CELL_TILES_PER_TERRAIN]
                 && cell->m_objectIndex == MAP_CELL_NO_FRAME
                 && cell->m_overlayIndex == MAP_CELL_NO_FRAME
-                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < 4) {
+                && cell->m_tileIndex % MAP_CELL_TILES_PER_TERRAIN < TERRAIN_TILE_VARIANT_COUNT) {
                 attempts = 100;
                 while (attempts-- > 0) {
                     selected = Random(0, OVERLAY_TYPE_COUNT - 1);
