@@ -1,0 +1,10 @@
+# Linked-candidate ceiling: bytes differing from retail per region.
+# Written only by `homm1 verify link-diff --update`.
+region	differing
+size	0
+headers	87
+.text	3677
+.rdata	0
+.data	14
+.rsrc	0
+overlay	0

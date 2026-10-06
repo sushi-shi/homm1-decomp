@@ -133,6 +133,7 @@ VERIFY_MODS = _mods("verify/", "model.py", "core/tsv.py", "core/paths.py")
 #: the check edge.
 VERIFY_BASELINES = [
     "config/match_baseline.tsv",
+    "config/link_diff.tsv",
     "config/cleanliness/cleanliness-text-baseline.tsv",
     "config/cleanliness/cleanliness-semantic-baseline.tsv",
     "config/cleanliness/tu-order-baseline.tsv",
@@ -688,9 +689,11 @@ def emit(out: Path | None = None) -> tuple[int, int]:
         w.rule("verify_check",
                command="$py -m homm1.verify check --no-readme && touch $out",
                description="verify check (MAX gate + fast+normal tiers)")
+        # link-diff compares the linked candidate with its banked ceiling.
         w.build(VERIFY_STAMP, "verify_check",
                 inputs=[G.REPORT_JSON, FINGERPRINTS],
-                implicit=[MANIFEST, *VERIFY_BASELINES, *VERIFY_MODS])
+                implicit=[MANIFEST, graph.CANDIDATE_EXE, *VERIFY_BASELINES,
+                          *VERIFY_MODS])
         w.newline()
 
         image_outputs = []
