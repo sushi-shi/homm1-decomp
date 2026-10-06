@@ -283,6 +283,22 @@ enum ConfigConnection {
     CONFIG_CONNECTION_COUNT = 2
 };
 
+// gConfig.cheatMode: the adventure-map digit cheats are off, limited to the
+// original map reveal, or extended with the edition's resource, town, hero,
+// creature and artifact codes.
+enum CheatMode {
+    CHEAT_MODE_OFF = 0,
+    CHEAT_MODE_ORIGINAL = 1,
+    CHEAT_MODE_EXTENDED = 2
+};
+// gConfig.battleMessageFormat: the combat status bar forecasts the damage of
+// an attack or shot, or keeps the classic texts with or without the
+// edition's grammar fixes.
+enum BattleMessageFormat {
+    BATTLE_MESSAGE_FORECAST = 0,
+    BATTLE_MESSAGE_CLASSIC_PLUS = 1,
+    BATTLE_MESSAGE_CLASSIC = 2
+};
 struct configStruct {
     i32 walkSpeed;
     i32 musicVolume;
@@ -298,6 +314,15 @@ struct configStruct {
     i32 comPort[CONFIG_CONNECTION_COUNT];
     i32 baudRate[CONFIG_CONNECTION_COUNT];
     char modemInitString[100];
+    // Edition options, stored beside the preferences above.
+    i32 showEnemyMobility;
+    i32 softRetreatSurrender;
+    i32 slightlyHarderAI;
+    i32 cheatMode;
+    i32 originalCheatKeys;
+    i32 losslessAudio;
+    i32 playVideos;
+    i32 battleMessageFormat;
 };
 #define CURRENT_GRAPHICS_CONFIG (gConfig.gfx[gCurExe])
 struct tag_tilePoint {

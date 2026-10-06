@@ -8,7 +8,7 @@ FONT 8, "System"
 BEGIN
     ICON            "HEROES", -1, 9, 23, 18, 20
     CTEXT           localization::Tr("resource.HEROES.title"), -1, 22, 5, 101, 8
-    CTEXT           localization::Tr("resource.HEROES.version"), -1, 51, 32, 42, 8
+    CTEXT           localization::Tr("resource.HEROES.version"), -1, 7, 32, 132, 8
     CTEXT           "Copyright 1995-6, New World Computing", -1, 7, 47, 132, 8
     DEFPUSHBUTTON   localization::Tr("resource.HEROES.ok"), 1, 53, 59, 32, 14, 0x20000
 END

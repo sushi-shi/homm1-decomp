@@ -1207,7 +1207,7 @@ msgstr "Heroes of Might and Magic"
 
 #: src/SOURCE/Heroes.rc
 msgid "resource.HEROES.version"
-msgstr "Version 1.1"
+msgstr "Tournament Edition 1.05 f3"
 
 #: src/SOURCE/Heroes.rc
 msgid "resource.MNUADV.command40005"
@@ -1963,23 +1963,19 @@ msgstr "Invalid Teleport Destination"
 msgid "spell.teleport.select"
 msgstr "Select teleport destination."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.cd.inaccessible"
 msgstr "Unable to access CD Drive."
 
-#: src/SOURCE/KB.cpp
-msgid "startup.cd.required"
-msgstr "You must have the Heroes Win95 CD in the CD-ROM drive to play \nHeroes of Might and Magic.  \n\nPlease insert the CD and try again."
-
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.data.missing"
 msgstr "Unable to find the Heroes data files.  Please run the installation program."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
+#: src/EDITOR/EDITOR.cpp
 msgid "startup.directory.invalid"
 msgstr "Unable to change to the Heroes directory.  Please run the installation program."
 
-#: src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp src/SOURCE/kbwin.cpp
+#: src/EDITOR/EDITOR.cpp src/SOURCE/kbwin.cpp
 msgid "startup.error.title"
 msgstr "Startup Error"
 
@@ -2006,7 +2002,7 @@ msgstr "Heroes of Might and Magic"
 
 #: src/SOURCE/KB.cpp
 msgid "startup.loading.game"
-msgstr "Loading Heroes of Might and Magic for Windows 95 (version 1.2)"
+msgstr "# Loading Heroes of Might and Magic TE 1.05 f3 #"
 
 #: src/BASE/EXEC.cpp src/EDITOR/EDITOR.cpp src/SOURCE/KB.cpp
 msgid "startup.manager.failed"

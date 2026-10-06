@@ -85,8 +85,17 @@ enum PrefsConstant {
     KBWIN_CYCLE_INTERVAL = 150,
     KBWIN_CYCLE_WING_DELAY = 300,
     KBWIN_MIN_WIDTH = 240,
-    KBWIN_MIN_HEIGHT = 160
+    KBWIN_MIN_HEIGHT = 160,
+    // Process1WindowsMessage yields the processor for this many milliseconds
+    // per pass and forces a blocking GetMessage after this interval; the game
+    // runs with a 1 ms timer resolution.
+    KBWIN_IDLE_SLEEP = 1,
+    KBWIN_GET_MESSAGE_INTERVAL = 127,
+    KBWIN_TIMER_RESOLUTION = 1
 };
+
+// The edition keeps its preferences apart from the retail game's.
+#define PREFS_REGISTRY_KEY "SOFTWARE\\Buka\\3DO\\Heroes of Might and Magic\\HeroesWorld TE"
 
 extern HINSTANCE gAppInstance;
 extern HANDLE gEventHandle;
@@ -120,6 +129,7 @@ i32 AppCommand(HWND window, u32 message, u32 messageParam, i32 messageData);
 i32 AppIdle(void);
 void AppExit(void);
 void SetGameDefaults(void);
+void SetEditionDefaults(void);
 void ReadPrefs(void);
 i32 SetupCDDrive(void);
 i32 AppInit(HINSTANCE instance, HINSTANCE previousInstance, i32 showCommand, char* commandLine);
@@ -150,7 +160,13 @@ extern HWND gAppWindow;
 extern i32 gMainWinScreenWidth;
 extern i32 gMainWinScreenHeight;
 void ProcessAssert(i32 condition, char* file, i32 line);
+// Release builds compile assertions out; define H1_DEBUG_ASSERTS to report
+// failed assertions through ProcessAssert.
+#ifdef H1_DEBUG_ASSERTS
 #define H1_ASSERT(condition) ProcessAssert((condition), __FILE__, __LINE__)
+#else
+#define H1_ASSERT(condition) ((void)0)
+#endif
 void WritePrefs();
 char* FindToken(char* text, char token);
 

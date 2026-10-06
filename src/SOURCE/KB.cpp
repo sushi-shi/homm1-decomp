@@ -191,44 +191,6 @@ b32 EarlySetup(void) {
     ReadPrefs();
     if (!InterpretCommandLine())
         return true;
-    switch (SetupCDDrive()) {
-        case CD_SETUP_NO_DRIVE:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.cd.inaccessible"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NOT_FOUND:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.cd.required"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NO_APP_PATH:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.directory.invalid"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
-            exit(EXIT_SUCCESS);
-            break;
-        case CD_SETUP_NO_DATA:
-            MessageBoxA(
-                gAppWindow,
-                localization::Tr("startup.data.missing"),
-                localization::Tr("startup.error.title"),
-                MB_ICONHAND
-            );
-            exit(EXIT_SUCCESS);
-            break;
-    }
     InitVars();
     return true;
 }
