@@ -103,7 +103,7 @@ i32 searchArray::BuildPath(
     m_pathLength = 0;
     while (destinationX != startX || destinationY != startY) {
         searchNode* node = &m_cells[destinationX][destinationY];
-        if (node->x != destinationX && node->y != destinationY)
+        if (node->x != destinationX || node->y != destinationY)
             return 0;
         if (node->distance <= maximumCost) {
             *pathDirection = node->direction;

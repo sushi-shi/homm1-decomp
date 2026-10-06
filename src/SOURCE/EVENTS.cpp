@@ -1481,14 +1481,17 @@ i16 advManager::GiveArtifact(class hero* eventHero, i8 artifact) {
     return slot;
 }
 
+// A site's artifact; with none left, or no free slot for it, the hero takes
+// gold instead and no artifact is returned.
 i32 advManager::GiveRandomArtifact(class mapCell* cell, class hero* eventHero) {
     i8 artifact;
 
     artifact = gGame->CellRandomArtifactId(cell - &m_mapData[0][0]);
-    if (artifact == ARTIFACT_NONE)
+    if (artifact == ARTIFACT_NONE || eventHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT) {
         GiveResource(eventHero, RESOURCE_GOLD, EVENT_RANDOM_ARTIFACT_GOLD);
-    else
-        GiveArtifact(eventHero, artifact);
+        return ARTIFACT_NONE;
+    }
+    GiveArtifact(eventHero, artifact);
     return artifact;
 }
 
@@ -1661,12 +1664,13 @@ b8 advManager::GhostEvent(
                         NORMAL_DIALOG_NO_OR_TEXT
                     );
                 else
+                    // The artifact's gold comes with the site's own.
                     EventWindow(
                         EVENT_TEXT_CUSTOM,
                         NORMAL_DIALOG_TYPE_OK,
                         gText,
                         NORMAL_DIALOG_RESOURCE_GOLD,
-                        GHOST_HUGE_GOLD,
+                        GHOST_HUGE_GOLD + EVENT_RANDOM_ARTIFACT_GOLD,
                         NORMAL_DIALOG_NO_RESOURCE,
                         0,
                         NORMAL_DIALOG_NO_OR_TEXT
@@ -2364,6 +2368,10 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
             }
             break;
         case MAP_OBJECT_ARTIFACT:
+            // As for a player's hero, a hero with every slot full leaves the
+            // artifact where it lies.
+            if (eventHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
+                break;
             switch (cell->m_objectMetadata) {
                 case ARTIFACT_EVENT_MODE_PICKUP:
                 giveArtifact:
@@ -2451,7 +2459,11 @@ void advManager::DoAIEvent(class mapCell* cell, class hero* eventHero, i32 x, i3
                     break;
                 case DAEMON_REWARD_ARTIFACT:
                     GiveExperience(eventHero, DAEMON_EXPERIENCE, true);
-                    GiveRandomArtifact(cell, eventHero);
+                    // A hero with no free slot takes the gold instead.
+                    if (eventHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
+                        GiveResource(eventHero, RESOURCE_GOLD, DAEMON_GOLD);
+                    else
+                        GiveRandomArtifact(cell, eventHero);
                     break;
                 case DAEMON_REWARD_EXPERIENCE_GOLD:
                     GiveExperience(eventHero, DAEMON_EXPERIENCE, true);

@@ -923,3 +923,16 @@ and only the game sets 1 (abandoned) and 2 (ghosts waiting). The save-format
 tag, the fled-state byte, reserved tavern heroes, per-cell random artifacts
 and the town footprint metadata exist only in saved games and at game start,
 which the editor never reads.
+
+## 9. Retail gameplay bugs fixed on this branch
+
+Besides the edition's own fixes, this branch fixes the retail gameplay bugs
+that the native port documents and keeps (`docs/port/divergences.md` on
+`port`, "Retail gameplay bugs (kept)"); plain `port` stays faithful to the
+original game. They are not part of the edition's patch, so they are listed
+in `changes.tsv` as `BUG-*` rows (component `source`), outside the counts of
+section 1, each with the reproduction it was checked against.
+
+- *Computer player (BUG-AI-1–6):* the replaced stack's value, the affordable
+  creature count, sites visited by other players, stale route nodes, hero
+  distances, and artifacts taken without a free slot.

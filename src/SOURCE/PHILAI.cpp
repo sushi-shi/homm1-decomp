@@ -129,7 +129,7 @@ void ResetHeroRVs(b32 resetAll, i32 x, i32 y) {
     gHeroEventStratRVOfPos[x][y] = RV_UNSET;
     for (i = 0; i < GAME_HERO_COUNT; i++) {
         if (!resetAll
-            || MANHATTAN_LENGTH(x - gGame->m_heroRecs[i].m_x, y - gGame->m_heroRecs[i].m_x) < 10)
+            || MANHATTAN_LENGTH(x - gGame->m_heroRecs[i].m_x, y - gGame->m_heroRecs[i].m_y) < 10)
             gHeroLiveChance[i] = RV_UNSET;
     }
 }
@@ -1531,17 +1531,22 @@ i32 philAI::CreaturesToBuy(i32 creatureType, i32 availableCount) {
 
 i32 philAI::MaxBuyableCreatures(i32 creatureType) {
     i32 affordable;
+    i32 count;
     i32 i;
     i32 cost[RESOURCE_COUNT];
 
+    // The scarcest resource the creature costs limits the purchase.
     GetMonsterCost(creatureType, cost);
+    affordable = 9999;
     for (i = RESOURCE_FIRST; i < RESOURCE_COUNT; i++) {
         if (cost[i] == 0)
-            affordable = 9999;
-        else if (gCurPlayerData->m_resources[i] > 0)
-            affordable = gCurPlayerData->m_resources[i] / cost[i];
+            continue;
+        if (gCurPlayerData->m_resources[i] > 0)
+            count = gCurPlayerData->m_resources[i] / cost[i];
         else
-            affordable = 0;
+            count = 0;
+        if (count < affordable)
+            affordable = count;
     }
     return affordable;
 }
@@ -2270,7 +2275,7 @@ void philAI::EvaluateOneTimeCreaturePurchase(
             } else {
                 replacementValue =
                     aiHero->m_army.m_creatureCounts[index]
-                    * gMonsterDatabase[index].fightValue;
+                    * gMonsterDatabase[aiHero->m_army.m_creatureTypes[index]].fightValue;
                 if (replacementValue < leastStackValue) {
                     leastStackValue = replacementValue;
                     replacementSlot = index;
@@ -2468,8 +2473,10 @@ void philAI::HeroInteractionAtTown(
                && (townPointer->m_buildings
                    & (1 << BUILDING_SLOT_MAGE_GUILD))) {
         if (gCurPlayerData->m_resources[RESOURCE_GOLD] >= TOWN_SPELL_BOOK_COST) {
-            gAdvManager->GiveArtifact(heroPointer, ARTIFACT_MAGIC_BOOK);
-            gCurPlayerData->m_resources[RESOURCE_GOLD] -= TOWN_SPELL_BOOK_COST;
+            // A hero with every artifact slot full has no room for the book.
+            if (gAdvManager->GiveArtifact(heroPointer, ARTIFACT_MAGIC_BOOK)
+                != GIVE_ARTIFACT_NO_SLOT)
+                gCurPlayerData->m_resources[RESOURCE_GOLD] -= TOWN_SPELL_BOOK_COST;
         } else {
             heroPointer->m_remainingMobility = 0;
         }
@@ -3116,7 +3123,7 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
     *liveChance = AI_CHANCE_CERTAIN;
     gVisitResult = 0;
     gEventLocation = gAdvManager->GetCell(x, y);
-    gCellSeen = gMapVisitFlags[x][y] && gCurPlayerBit;
+    gCellSeen = (gMapVisitFlags[x][y] & gCurPlayerBit) != 0;
     switch (MAP_TRIGGER_OBJECT(gEventLocation->m_triggerType)) {
         case MAP_OBJECT_ARTIFACT:
             gArtifactPickupValue =
@@ -3166,6 +3173,9 @@ i32 philAI::ValueOfEventAtPosition(hero* aiHero, i16 x, i16 y, i32 immediate, i3
                 gVisitResult = gArtifactPickupValue * 0.6 + gArtifactGuardedValue * 0.2
                                + gArtifactPurchaseValue * 0.2;
             }
+            // A hero with every artifact slot full cannot take it.
+            if (aiHero->NumArtifacts() == HERO_ARTIFACT_SLOT_COUNT)
+                gVisitResult = WorthlessEventValue(0);
             break;
         case MAP_OBJECT_ALCHEMIST_LAB:
         case MAP_OBJECT_MINE:
