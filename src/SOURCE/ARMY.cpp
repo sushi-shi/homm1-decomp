@@ -289,9 +289,16 @@ void army::DrawToBuffer(i16 x, i16 y) {
                 }
                 gCombatManager->m_combatIcons[COMBAT_ICON_TEXTBAR]
                     ->DrawToBuffer(countX, y - 11, 5, ICON_DRAW_NORMAL, ICON_DRAW_OFFSET_FULL);
-                sprintf(countText, "%d", m_quantity);
-                gCombatManager->m_smallFont
-                    ->DrawBoundedString(countText, countX, y - 12, 20, 12, 1, FONT_ALIGN_CENTER);
+                FormatAbbreviatedCount(countText, m_quantity, ARMY_COUNT_THOUSANDS);
+                gCombatManager->m_smallFont->DrawBoundedString(
+                    countText,
+                    countX + 1,
+                    y - 12,
+                    20,
+                    12,
+                    1,
+                    FONT_ALIGN_CENTER
+                );
             }
             break;
         case ARMY_ANIMATION_WALK:
@@ -783,51 +790,7 @@ void army::SpecialAttack(void) {
     );
     delete backing;
     m_stats.shots--;
-    wallPenalty = false;
-    if (gCombatManager->m_castleSide[COMBAT_DEFENDER_SIDE]
-        && m_hex % COMBAT_GRID_COLUMNS <= COMBAT_CASTLE_WALL_COLUMN - 1
-        && enemyStack->m_hex % COMBAT_GRID_COLUMNS >= COMBAT_CASTLE_WALL_COLUMN + 1) {
-        i32 wallDistance;
-        i32 defenderRow;
-        i32 defenderColumn;
-        i32 archerColumn;
-        i32 unusedHex;
-        i32 wallRow;
-        i32 archerRow;
-        i32 pastWall;
-
-        archerColumn = m_hex % COMBAT_GRID_COLUMNS;
-        archerRow = m_hex / COMBAT_GRID_COLUMNS;
-        pastWall = archerColumn - COMBAT_CASTLE_WALL_COLUMN;
-        defenderColumn = enemyStack->m_hex % COMBAT_GRID_COLUMNS;
-        defenderRow = enemyStack->m_hex / COMBAT_GRID_COLUMNS;
-        wallDistance = COMBAT_CASTLE_WALL_COLUMN - archerColumn;
-        wallRow = defenderRow;
-        if (abs(defenderRow - archerRow) >= 2)
-            wallRow -= (defenderRow - archerRow) / 2;
-        if (abs(defenderRow - archerRow) % 2 == 1) {
-            if (pastWall < wallDistance
-                || pastWall == wallDistance
-                       && (archerRow == COMBAT_UPPER_WALL_ROW
-                           || archerRow == COMBAT_LOWER_WALL_ROW)) {
-                if (archerRow < defenderRow)
-                    wallRow--;
-                else
-                    wallRow++;
-            }
-        }
-        if (wallRow > COMBAT_GRID_LAST_ROW)
-            wallRow = COMBAT_GRID_LAST_ROW;
-        if (wallRow < 0)
-            wallRow = 0;
-        wallPenalty =
-            gCombatManager->m_hexCells[wallRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
-                    .m_obstacleIndex
-                == COMBAT_WALL_DAMAGED
-            || gCombatManager->m_hexCells[wallRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
-                       .m_obstacleIndex
-                   == COMBAT_WALL_INTACT;
-    }
+    wallPenalty = ShotCrossesCastleWall(enemyStack);
     DamageEnemy(
         enemyStack,
         &damageDone,
@@ -1468,6 +1431,68 @@ void army::CheckLuck(void) {
     }
 }
 
+// A shot from outside a castle at a stack inside it is aimed across the
+// wall row; an intact or damaged wall section on that line shields the
+// target.
+b8 army::ShotCrossesCastleWall(army* target) {
+    i32 wallDistance;
+    i32 defenderRow;
+    i32 archerColumn;
+    i32 wallRow;
+    i32 archerRow;
+    i32 pastWall;
+    i8 wall;
+
+    if (!gCombatManager->m_castleSide[COMBAT_DEFENDER_SIDE]
+        || m_hex % COMBAT_GRID_COLUMNS > COMBAT_CASTLE_WALL_COLUMN - 1
+        || target->m_hex % COMBAT_GRID_COLUMNS < COMBAT_CASTLE_WALL_COLUMN + 1)
+        return false;
+    archerColumn = m_hex % COMBAT_GRID_COLUMNS;
+    archerRow = m_hex / COMBAT_GRID_COLUMNS;
+    pastWall = archerColumn - COMBAT_CASTLE_WALL_COLUMN;
+    defenderRow = target->m_hex / COMBAT_GRID_COLUMNS;
+    wallDistance = COMBAT_CASTLE_WALL_COLUMN - archerColumn;
+    wallRow = defenderRow;
+    if (abs(defenderRow - archerRow) >= 2)
+        wallRow -= (defenderRow - archerRow) / 2;
+    if (abs(defenderRow - archerRow) % 2 == 1) {
+        if (pastWall < wallDistance
+            || pastWall == wallDistance
+                   && (archerRow == COMBAT_UPPER_WALL_ROW || archerRow == COMBAT_LOWER_WALL_ROW)) {
+            if (archerRow < defenderRow)
+                wallRow--;
+            else
+                wallRow++;
+        }
+    }
+    if (wallRow > COMBAT_GRID_LAST_ROW)
+        wallRow = COMBAT_GRID_LAST_ROW;
+    if (wallRow < 0)
+        wallRow = 0;
+    wall = gCombatManager->m_hexCells[wallRow * COMBAT_GRID_COLUMNS + COMBAT_CASTLE_WALL_COLUMN]
+               .m_obstacleIndex;
+    return wall == COMBAT_WALL_DAMAGED || wall == COMBAT_WALL_INTACT;
+}
+
+// The fixed part of the damage formula: attack against defense, and halved
+// damage for a shooter in melee or a weakened stack. Luck doubles or halves
+// the result afterwards.
+float army::ScaleDamage(army* target, float total, i32 rangedAttack, i32 defenseModifier) {
+    i16 battleDiff;
+
+    battleDiff = m_stats.attack - (target->m_stats.defense + defenseModifier);
+    if (battleDiff > STAT_CURVE_OFFSET)
+        battleDiff = STAT_CURVE_OFFSET;
+    if (battleDiff < -STAT_CURVE_OFFSET)
+        battleDiff = -STAT_CURVE_OFFSET;
+    total *= gBattleStat[battleDiff + STAT_CURVE_OFFSET];
+    if ((m_stats.attributes & MONSTER_FLAGS_SHOOTER) && !rangedAttack)
+        total /= 2;
+    if (m_damageMode == ARMY_DAMAGE_HALF)
+        total /= 2;
+    return total;
+}
+
 void army::DamageEnemy(
     class army* target,
     i32* damageResult,
@@ -1475,13 +1500,10 @@ void army::DamageEnemy(
     b32 rangedAttack,
     i32 defenseModifier
 ) {
-    i16 defenseExtra;
-    i16 battleDiff;
     i32 genieDamage;
     i32 damage;
     float rolledTotal;
     i16 creature;
-    i16 attackAdd;
 
     if (!target)
         return;
@@ -1500,24 +1522,12 @@ void army::DamageEnemy(
                 break;
         }
     }
-    attackAdd = 0;
-    defenseExtra = 0;
-    battleDiff =
-        m_stats.attack + attackAdd - (target->m_stats.defense + defenseExtra + defenseModifier);
-    if (battleDiff > STAT_CURVE_OFFSET)
-        battleDiff = STAT_CURVE_OFFSET;
-    if (battleDiff < -STAT_CURVE_OFFSET)
-        battleDiff = -STAT_CURVE_OFFSET;
-    rolledTotal *= gBattleStat[battleDiff + STAT_CURVE_OFFSET];
+    rolledTotal = ScaleDamage(target, rolledTotal, rangedAttack, defenseModifier);
     if (m_luck > ARMY_LUCK_NONE)
         rolledTotal *= 2;
     if (m_luck < ARMY_LUCK_NONE)
         rolledTotal /= 2;
     m_luck = ARMY_LUCK_NONE;
-    if ((m_stats.attributes & MONSTER_FLAGS_SHOOTER) && !rangedAttack)
-        rolledTotal /= 2;
-    if (m_damageMode == ARMY_DAMAGE_HALF)
-        rolledTotal /= 2;
     damage = rolledTotal + 0.5;
     if (m_creatureType == CREATURE_GENIE
         && SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_GENIE_ROLL_HIT) {

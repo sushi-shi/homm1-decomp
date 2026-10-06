@@ -960,6 +960,10 @@ i16 HeroHandler(struct tag_message& message) {
                     case HERO_SCREEN_EXPERIENCE:
                         curHeroLevel = gInfoViewedHero->GetLevel(gInfoViewedHero->m_experience);
                         nextLevelExp = gInfoViewedHero->GetExperience(curHeroLevel + 1);
+                        // Beyond the experience table GetLevel needs more than the
+                        // threshold, so show the first value that reaches the level.
+                        if (curHeroLevel >= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
+                            nextLevelExp++;
                         sprintf(
                             gText,
                             localization::Tr("hero.experience.details"),

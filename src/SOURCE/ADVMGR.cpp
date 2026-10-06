@@ -2428,6 +2428,33 @@ void advManager::UpdateRadar(b8 updateScreen, b32 partial) {
         );
 }
 
+// Whether the current hero (or, for an obelisk, the current player) has
+// already used the object on this cell.
+static i32 SiteVisited(mapCell* cell) {
+    hero* currentHero;
+
+    if ((cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) == MAP_OBJECT_OBELISK)
+        return gGame->m_obeliskVisitors[cell->m_objectMetadata - 1] & gCurPlayerBit;
+    if (gCurPlayerData->m_currentHero == HERO_ID_NONE)
+        return 0;
+    currentHero = gGame->GetHero(gCurPlayerData->m_currentHero);
+    switch (cell->m_triggerType & MAP_TRIGGER_TYPE_MASK) {
+        case MAP_OBJECT_BUOY:
+            return currentHero->m_eventFlags & HERO_EVENT_BUOY;
+        case MAP_OBJECT_FAERIE_RING:
+            return currentHero->m_eventFlags & HERO_EVENT_FAERIE_RING;
+        case MAP_OBJECT_FOUNTAIN:
+            return currentHero->m_eventFlags & HERO_EVENT_FOUNTAIN;
+        case MAP_OBJECT_OASIS:
+            return currentHero->m_eventFlags & HERO_EVENT_OASIS;
+        case MAP_OBJECT_STATUE:
+            return currentHero->m_eventFlags & HERO_EVENT_STATUE;
+        case MAP_OBJECT_GAZEBO:
+            return currentHero->m_visitedSites & (1 << cell->m_objectMetadata);
+    }
+    return 0;
+}
+
 void advManager::QuickInfo(i16 cellX, i16 cellY) {
     mapCell* currentCell;
     i16 posX;
@@ -2506,7 +2533,8 @@ void advManager::QuickInfo(i16 cellX, i16 cellY) {
                 default:
                     sprintf(
                         gText,
-                        "\n\n%s",
+                        SiteVisited(currentCell) ? localization::Tr("adventure.quick_info.visited")
+                                                 : "\n\n%s",
                         gObjectNames[currentCell->m_triggerType & MAP_TRIGGER_TYPE_MASK]
                     );
                     break;
@@ -3227,10 +3255,10 @@ b8 advManager::UpdBottomViewKingdom(void) {
     for (i = 0; i < KINGDOM_VIEW_ENTRY_COUNT; i++) {
         countText[i] = static_cast<char*>(malloc(BOTTOM_VIEW_COUNT_BUFFER_SIZE));
         if (i < KINGDOM_VIEW_CASTLE_ENTRY)
-            sprintf(
+            FormatAbbreviatedCount(
                 countText[i],
-                "%d",
-                gCurPlayerData->m_resources[i]
+                gCurPlayerData->m_resources[i],
+                i == RESOURCE_GOLD ? KINGDOM_VIEW_GOLD_THOUSANDS : KINGDOM_VIEW_THOUSANDS
             );
         else if (i == KINGDOM_VIEW_CASTLE_ENTRY)
             sprintf(countText[i], "%d", nCastles);
@@ -3254,7 +3282,12 @@ b8 advManager::UpdBottomViewKingdom(void) {
     return true;
 }
 
+// The count label's distance from the middle of the creature icon, by the
+// length of the count.
+static i32 gBottomHeroLabelOffset[] = {16, 16, 16, 14, 12};
+
 b8 advManager::UpdBottomViewHero(void) {
+    i32 bigCount;
     i8 creatureType;
     i16 slotNumPos;
     char* countStrData[ARMY_GROUP_SLOT_COUNT];
@@ -3341,21 +3374,28 @@ b8 advManager::UpdBottomViewHero(void) {
             nStacks++;
     }
     if (nStacks) {
+        // The stacks are laid out from the last slot, so the panel reads in
+        // army order; large counts are shown in thousands.
         slotNumPos = 0;
-        for (j = 0; j < ARMY_GROUP_SLOT_COUNT; j++) {
+        for (j = ARMY_GROUP_SLOT_COUNT - 1; j >= 0; j--) {
             creatureType = curHero->m_army.m_creatureTypes[j];
             if (creatureType != CREATURE_NONE) {
                 countStrData[slotNumPos] = static_cast<char*>(malloc(BOTTOM_HERO_LABEL_BYTES));
-                sprintf(countStrData[slotNumPos], "%d", curHero->m_army.m_creatureCounts[j]);
+                bigCount = curHero->m_army.m_creatureCounts[j] >= BOTTOM_HERO_THOUSANDS;
+                FormatAbbreviatedCount(
+                    countStrData[slotNumPos],
+                    curHero->m_army.m_creatureCounts[j],
+                    BOTTOM_HERO_THOUSANDS
+                );
                 y = slotNumPos <= 2 ? 38 : 3;
                 if (slotNumPos == 0) {
-                    iconDrawX = nStacks <= 2 ? 77 : 101;
+                    iconDrawX = nStacks <= 2 ? 81 : 97;
                 } else if (slotNumPos == 1) {
-                    iconDrawX = nStacks == BOTTOM_HERO_TWO_STACKS ? 28 : 52;
+                    iconDrawX = nStacks == BOTTOM_HERO_TWO_STACKS ? 32 : 52;
                 } else if (slotNumPos == BOTTOM_HERO_SLOT_THIRD) {
-                    iconDrawX = 3;
+                    iconDrawX = 7;
                 } else if (slotNumPos == BOTTOM_HERO_SLOT_FOURTH) {
-                    iconDrawX = nStacks == BOTTOM_HERO_FOUR_STACKS ? 77 : 101;
+                    iconDrawX = nStacks == BOTTOM_HERO_FOUR_STACKS ? 81 : 97;
                 } else {
                     iconDrawX = 52;
                 }
@@ -3374,15 +3414,15 @@ b8 advManager::UpdBottomViewHero(void) {
                     );
                 if (!m_bottomViewPrimaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_ICON_FIRST])
                     MemError();
-                if (gMons32Width[creatureType] < 28 && strlen(countStrData[slotNumPos]) <= 2)
-                    labelDrawX = iconDrawX + 30;
-                else
-                    labelDrawX = iconDrawX + gMons32Width[creatureType] + 2;
+                labelDrawX =
+                    iconDrawX + gMons32Width[creatureType] / 2
+                    + (bigCount ? BOTTOM_HERO_THOUSANDS_LABEL_OFFSET
+                                : gBottomHeroLabelOffset[strlen(countStrData[slotNumPos])]);
                 m_bottomViewSecondaryWidgets[slotNumPos + ADVMGR_BOTTOM_VIEW_HERO_TEXT_FIRST] =
                     new textWidget(
                         labelDrawX + BOTTOM_VIEW_PANEL_X,
                         y + 414,
-                        strlen(countStrData[slotNumPos]) * BOTTOM_HERO_CHARACTER_WIDTH,
+                        (strlen(countStrData[slotNumPos]) + bigCount) * BOTTOM_HERO_CHARACTER_WIDTH,
                         BOTTOM_HERO_LABEL_HEIGHT,
                         countStrData[slotNumPos],
                         "smalfont.fnt",
@@ -3468,7 +3508,19 @@ void advManager::HeroQuickView(i8 heroId, i8 locatorSlot, i16 windowX, i16 windo
     msg.id++;
     msg.value++;
     win->BroadcastMessage(msg);
-    sprintf(gText, "%s", targetHero->m_name);
+    // The name line also shows the movement points left today and the full
+    // day's movement; another player's heroes show it only with the
+    // ShowEnemyMobility option or under Identify Hero.
+    if (gConfig.showEnemyMobility || targetHero->m_owner == gCurPlayer || m_identifyHeroActive)
+        sprintf(
+            gText,
+            "%s: %d (%d)",
+            targetHero->m_name,
+            targetHero->m_remainingMobility,
+            targetHero->m_mobility
+        );
+    else
+        sprintf(gText, "%s", targetHero->m_name);
     msg.command = WIDGET_COMMAND_SET_TEXT;
     msg.id = QUICK_VIEW_NAME;
     msg.text = gText;

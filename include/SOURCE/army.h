@@ -47,6 +47,8 @@ enum ArmyCombatConstant {
     ARMY_QUANTITY_TEXT_SIZE = 12,
     ARMY_PATH_BLOCKED = 3,
     ARMY_CASTLE_WALL_DEFENSE_BONUS = 4,
+    // The battlefield count label shows thousands ("2k") from here on.
+    ARMY_COUNT_THOUSANDS = 1000,
     ARMY_PROTECTION_DEFENSE_BONUS = 3
 };
 
@@ -163,6 +165,8 @@ public:
     i16 GetAdjacentCellIndex(i16 hex, i16 direction);
     i16 ValidRange(i16 targetHex);
     i16 GetBestDirection(i16 sourceHex, i16 targetHex, i16 blockedMask);
+    b8 ShotCrossesCastleWall(army* target);
+    float ScaleDamage(army* target, float total, i32 rangedAttack, i32 defenseModifier);
 };
 #pragma pack(pop)
 

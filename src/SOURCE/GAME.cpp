@@ -2261,7 +2261,17 @@ void game::ViewArmy(
         sprintf(gText, "-%d", monsterInfoObj->stats.damageMax);
         strcat(statText, gText);
     }
-    sprintf(gText, "\n%s%d", gArmyStatText[4], monsterInfoObj->stats.hitPoints);
+    // In combat the line also shows what is left of the top creature.
+    if (gInCombat && theArmy)
+        sprintf(
+            gText,
+            "\n%s%d (%d)",
+            gArmyStatText[4],
+            theArmy->m_stats.hitPoints - theArmy->m_hitPointsLost,
+            monsterInfoObj->stats.hitPoints
+        );
+    else
+        sprintf(gText, "\n%s%d", gArmyStatText[4], monsterInfoObj->stats.hitPoints);
     strcat(statText, gText);
     sprintf(gText, "\n%s%s", gArmyStatText[5], gSpeedText[monsterInfoObj->stats.speed]);
     strcat(statText, gText);
