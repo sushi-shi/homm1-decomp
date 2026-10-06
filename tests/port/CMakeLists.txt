@@ -50,3 +50,8 @@ add_executable(editor_maps_test editor_maps_test.cpp)
 target_link_libraries(editor_maps_test PRIVATE homm1_editor_units)
 add_test(NAME editor_maps_test COMMAND editor_maps_test)
 set_tests_properties(editor_maps_test PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 600)
+
+# The file parsers' fuzz harnesses: replayed over their checked-in
+# regression inputs by default, built as libFuzzer programs with
+# -DHOMM1_FUZZERS=ON.
+add_subdirectory(fuzz)
