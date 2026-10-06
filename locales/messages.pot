@@ -50,6 +50,18 @@ msgid "adventure.quick_info.visited"
 msgstr ""
 
 #: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr ""
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr ""
 

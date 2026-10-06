@@ -71,7 +71,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
         case MAP_OBJECT_COAST:
             if (visitingHero->IsEmbarked()) {
                 visitingHero->m_eventFlags &= ~HERO_EVENT_EMBARKED;
-                visitingHero->m_remainingMobility = 0;
+                if (!gCheatUnlimitedMovement[gCurPlayer][visitingHero->m_id])
+                    visitingHero->m_remainingMobility = 0;
                 visitingHero->m_direction = m_cursorDirection;
                 m_cursorType = visitingHero->m_heroClass;
                 m_cursorFrame = GetCursorBaseFrame(m_cursorDirection);
@@ -97,7 +98,8 @@ void advManager::DoEvent(class mapCell* cell, i32 x, i32 y) {
             boat = &gGame->m_boats[cell->m_objectMetadata];
             gGame->RestoreCell(-1, -1, boat->savedTriggerType, boat->savedEventData, cell, 2);
             visitingHero->m_eventFlags |= HERO_EVENT_EMBARKED;
-            visitingHero->m_remainingMobility = 0;
+            if (!gCheatUnlimitedMovement[gCurPlayer][visitingHero->m_id])
+                visitingHero->m_remainingMobility = 0;
             boat->heroId = visitingHero->m_id;
             boat->owner = visitingHero->m_owner;
             m_cursorType = ADVMGR_HERO_ICON_BOAT;

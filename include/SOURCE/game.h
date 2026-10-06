@@ -337,6 +337,7 @@ public:
     i8 GetRandomArtifactId(void);
     i8 CellRandomArtifactId(i32 cellIndex);
     i32 CountObelisksVisitedBy(i8 player);
+    void QuickSaveName(char* name);
     void RandomizeHeroPool(void);
     void SetRandomHeroArmies(i16 heroId, i32 strongArmy);
     void ProcessRandomObjects(b32 castlesOnly);

@@ -49,6 +49,18 @@ msgid "adventure.quick_info.visited"
 msgstr "\n\n%s\n(Посещено)"
 
 #: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.confirm"
+msgstr "Вы действительно хотите загрузить быстрое сохранение?"
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_load.missing"
+msgstr "Быстрое сохранение не найдено."
+
+#: src/SOURCE/ADVMGR.cpp
+msgid "adventure.quick_save.done"
+msgstr "Игра успешно сохранена."
+
+#: src/SOURCE/ADVMGR.cpp
 msgid "adventure.save.success"
 msgstr "Игра успешно сохранена."
 

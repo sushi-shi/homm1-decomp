@@ -10,6 +10,7 @@
 #include <SOURCE/cursorTypes.h>
 #include <SOURCE/dialogTypes.h>
 #include <SOURCE/EVENTS.h>
+#include <SOURCE/gameTypes.h>
 #include <SOURCE/mapCell.h>
 #include <SOURCE/mapObjectTypes.h>
 #include <SOURCE/playerData.h>
@@ -335,6 +336,9 @@ public:
     b32 MouseInScrollZone(void);
     void SetInitialMapOrigin(void);
     void LoadRemote(void);
+    void ApplyExtendedCheat(i32 code);
+    void QuickSave(void);
+    b32 QuickLoad(void);
     RemoteMessage* CheckHandleNet(void);
     i16 CheckHandleNetPlayerWait(struct tag_message& message, b8 doMain);
     void TrimLoopingSounds(i32 maxSamples);
@@ -796,8 +800,38 @@ enum AdventureCheatConstant {
     CHEAT_SPELL_CHARGES = 5,
     CHEAT_MOBILITY = 2999,
     CHEAT_REVEAL_CENTER = 30,
-    CHEAT_REVEAL_RADIUS = 100
+    CHEAT_REVEAL_RADIUS = 100,
+    // The extended codes: resources, a full castle, unlimited movement, the
+    // spell book with every spell, all of these but the castle, levels,
+    // creatures (last two digits: the creature) and artifacts (last two
+    // digits: the artifact).
+    CHEAT_RESOURCES = 101496,
+    CHEAT_CASTLE = 101497,
+    CHEAT_MOVEMENT = 101498,
+    CHEAT_MAGIC = 101499,
+    CHEAT_ALL = 101500,
+    CHEAT_LEVELS_FIRST = 101501,
+    CHEAT_LEVELS_LAST = 101510,
+    CHEAT_CREATURE_FIRST = 101600,
+    CHEAT_CREATURE_LAST = 101627,
+    CHEAT_ARTIFACT_FIRST = 101700,
+    CHEAT_ARTIFACT_LAST = 101737,
+    CHEAT_CODE_ITEM_MODULUS = 100,
+    CHEAT_COMMON_RESOURCE_GIFT = 300,
+    CHEAT_RARE_RESOURCE_GIFT = 100,
+    CHEAT_GOLD_GIFT = 100000,
+    CHEAT_UNLIMITED_MOBILITY = 32000,
+    CHEAT_SPELL_CHARGES_FULL = 100,
+    CHEAT_MAX_LEVEL = 75,
+    CHEAT_CREATURE_WEEKS = 10,
+    CHEAT_GARRISON_MAX = 32000
 };
+
+// Heroes given unlimited movement or spells by the extended cheats, per
+// player; cleared whenever a game starts or is loaded.
+extern b8 gCheatUnlimitedMovement[GAME_PLAYER_COUNT][GAME_HERO_COUNT];
+extern b8 gCheatUnlimitedSpells[GAME_PLAYER_COUNT][GAME_HERO_COUNT];
+void ClearCheatState(void);
 
 enum AdventureEnemyTurnViewConstant {
     ENEMY_TURN_HOURGLASS_X = 493,
