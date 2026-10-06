@@ -18,7 +18,10 @@ commit.
 | Truncated files | Short reads were ignored and play continued with partly loaded state. | A truncated save or map is reported as a file error. |
 | Save names | A save name was used as a `printf` format (`sprintf(genName, filename)`, `sprintf(m_saveName, filename)`): a `%` in a typed name read arbitrary memory. | The name is copied. |
 | New map | `NewMap` copied the map name onto itself (`strcpy(gMapName, gMapName)`), which is undefined. | The copy is skipped when source and destination are the same. |
-| Saving | The file was truncated, then written; a failure in between lost the old save. | Natively, the new save replaces the old one only once completely written. The Visual C++ build writes as before. |
+| Saving | The file was truncated, then written; a failure in between lost the old save. | Natively, the new save or map replaces the old one only once completely written. The Visual C++ build writes as before. |
+| Editor terrain blending | `BlendTerrain` tested the map edges against 72, one past the last cell, and so read terrain beyond the cell grid for cells on the east and south edges (and, for the north-east neighbour, the south-east one, beyond the bottom row); the result depended on whatever followed the grid. | The edges are the last column and row; the north-east quirk is kept where the cell exists. |
+| Editor map reader | The extra-record count and lengths came from the file unchecked; a record was read through a larger editing structure than its file length. | Counts and lengths beyond the table or the file make the map invalid (the editor reports a file error); each record is allocated at least as large as the editing structure. Every shipped map reads unchanged. |
+| Editor map writer order | The file was opened before the town, mine and obelisk checks ran; a file that could not be created returned before them. | The file is written after the checks; if it cannot be written the editor reports the error after them. |
 
 ## Host differences (native port only)
 
@@ -27,8 +30,8 @@ commit.
 | Settings | Registry key `HKLM\SOFTWARE\Buka\3DO\Heroes of Might and Magic Platinum\1.000`; the modem init string was stored with a length of 4 bytes. | `$XDG_CONFIG_HOME/homm1/heroes.cfg`, same value names; the init string is stored whole. |
 | First start | Full screen. | In a window (F4 switches, as in the original). Later starts use the saved choice; `--window` and `--fullscreen` override it. |
 | Music source | The CD's `TRACKS` folder on a CD drive (asking for the CD when absent). | The `Tracks` folder in `$HOMM1_CD`, a `cd` folder beside the game folder, or the game folder; without it, the installed digital music in `SOUND`. |
-| Menu bar | A Windows menu bar in windowed mode (options, window sizes, help). | The menu model is kept and updated, but not drawn; every command is also reachable in the game's own screens. Window-size commands only record the size. |
-| Help and About | WinHelp file `HELP\HEROES.HLP`; an About dialog. | Help is unavailable; About shows a message box. |
+| Menu bar | A Windows menu bar in windowed mode (options, window sizes, help). | Drawn by the port in the same place with the game's small font and Windows' colours, for the game and the editor; an open menu runs a modal loop as Windows' did. Window-size commands size the window. |
+| Help and About | WinHelp file `HELP\HEROES.HLP`; an About dialog box. | Help is unavailable and its item greyed; About shows the About box's text in a message box. |
 | Network and serial play | NetBIOS, modem and direct cable. | Not available: choosing them reports the original's "NetBIOS not found" or serial error. |
 | Single instance | A named event refused a second copy. | No check. |
 

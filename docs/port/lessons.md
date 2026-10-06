@@ -124,6 +124,10 @@ because of how the original linker laid out memory. A different compiler,
 layout or allocator turns it into a crash or a different result; sanitizers
 report it at once.
 
+The scenario editor has its own: its terrain blending tested the map edges
+against the grid size instead of the last index and read cells beyond the
+grid (fixed where it happens, listed in the divergences).
+
 The assembly routines replaced by C++ have their own: the bit routines
 touch a 32-bit word around the addressed byte, zero or negative counts make
 loops run for billions of iterations, and the decoder reads past the end of
@@ -258,5 +262,26 @@ down where it is implemented:
   that wraps to 0 at the end, which is how the game detects a movie's end. A
   movie that cannot be opened returns no handle, which the game already
   handles.
+- **Menus** (`src/PORT/SOURCE/Menu.cpp`): built from the same `.rc` scripts
+  the Windows build compiles, so the items, their identifiers and their text
+  cannot drift; the game's own calls keep check marks and greyed items; and
+  an open menu runs a modal loop, because the game polls the pointer and
+  would otherwise scroll the map under an open menu, which Windows' modal
+  menu loop prevented.
 - **Networking** (`src/PORT/SOURCE/netwin.cpp`, `comwin.cpp`): reports itself
   unavailable through the original's own error path.
+
+## 14. One program, two builds, two programs
+
+**Mechanism.** The Windows build lists each program's units in its manifest;
+a second, hand-written list for the native build drifts as soon as the
+regenerated source adds or moves a unit, and the two programs (game and
+editor) share units compiled differently (`HOMM1_EDITOR`). Code moved out of
+a Windows unit into a shared one can break the other program's link.
+
+**Guard.** `tools/port/units.py` derives each native program's units from
+`build.json` with fixed substitutions for the Windows-bound units;
+`build.py --target all` and both native programs are built for every change,
+and the editor's map writer is checked against every shipped map
+(`editor_maps_test`), whose header lists what the writer legitimately
+derives instead of copying.
