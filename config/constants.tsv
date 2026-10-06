@@ -702,10 +702,10 @@ src/SOURCE/RECRUIT.cpp	*	1	trivial-function-literal	1 store m_active	a boolean f
 src/SOURCE/RECRUIT.cpp	*	1	trivial-function-literal	1 store m_noRoom	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/RECRUIT.cpp	*	1	trivial-function-literal	1 store m_recruited	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/RECRUIT.cpp	*	1	trivial-function-literal	1 store quickView	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store enable	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
+src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store enableOk	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store gRequestingGames	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/REQUEST.cpp	*	0	trivial-function-literal	0 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
-src/SOURCE/REQUEST.cpp	*	1	trivial-function-literal	1 store enable	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
+src/SOURCE/REQUEST.cpp	*	1	trivial-function-literal	1 store enableOk	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/REQUEST.cpp	*	1	trivial-function-literal	1 store gRequestingGames	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/REQUEST.cpp	*	1	trivial-function-literal	1 store m_active	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested
 src/SOURCE/SWAPMGR.cpp	*	0	trivial-function-literal	0 store found	a boolean flag or status (signed char/int, or a Win32/DirectDraw result tested against 0) set, cleared or tested

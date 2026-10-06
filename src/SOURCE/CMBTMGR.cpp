@@ -193,7 +193,7 @@ i16 combatManager::Open(i16 priority) {
     m_backgroundDrawn = 0;
     sample = LoadPlaySample("PREBATTL.82M");
     giNextAction = ACTION_NONE;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     m_sideRetreated[COMBAT_DEFENDER_SIDE] = 0;
     m_sideRetreated[COMBAT_ATTACKER_SIDE] = 0;
     m_combatResult = COMBAT_RESULT_PENDING;
@@ -227,7 +227,7 @@ i16 combatManager::Open(i16 priority) {
     m_combatPalette = gpResourceManager->GetPalette("kb.pal");
     KBChangeMenu(hmnuCmbt);
     CombatMessage("", 1);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, m_combatPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, m_combatPalette);
     gLimitedCombatUpdatePalette = 1;
     gpMouseManager->NewUpdate(1);
     gpMouseManager->WarpPointer(
@@ -277,7 +277,7 @@ void combatManager::Close(void) {
     }
     DrawCombatBorder();
     gLimitedCombatUpdatePalette = 0;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     delete m_backgroundBuffer;
     for (ii = 0; ii < COMBAT_SIDE_COUNT; ii++)
         UpdateArmyGroup(ii);

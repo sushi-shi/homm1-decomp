@@ -5,10 +5,13 @@
 #include <Domains.h>
 #include <H1/Macros.h>
 
+// DEFAULT and RECT entries wrap their text and refuse input past m_maxLines
+// lines; a SCROLLING entry keeps one line and scrolls it horizontally to the
+// cursor through m_displayOffset.
 H1_ENUM_BEGIN(TextEntryReadMode)
     TEXT_ENTRY_READ_DEFAULT = 1,
     TEXT_ENTRY_READ_RECT = 2,
-    TEXT_ENTRY_READ_MULTILINE = 3
+    TEXT_ENTRY_READ_SCROLLING = 3
 H1_ENUM_END(TextEntryReadMode)
 
 H1_ENUM_CONST_BEGIN(TextEntryConstant)

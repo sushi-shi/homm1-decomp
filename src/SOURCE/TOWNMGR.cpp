@@ -263,7 +263,7 @@ i16 townManager::Open(i16 id) {
     gpMouseManager->ReallyShowPointer();
     gpMouseManager->NewUpdate(1);
     KBChangeMenu(hmnuTown);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     m_castleDialogActive = 0;
     m_recruitResult = 0;
     m_lastHoverId = WINDOW_MANAGER_NO_HOVER_WIDGET;
@@ -291,7 +291,7 @@ void townManager::Close(void) {
     gpWindowManager->RemoveWindow(m_townWindow);
     delete m_townWindow;
     StopMusic();
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gpMouseManager->SetPointer(MOUSE_INVALID_CURSOR_FRAME);
     m_active = 0;
 }
@@ -590,8 +590,13 @@ i16 townManager::Main(struct tag_message& message) {
                                 TOWN_CLOSE_CONTROL,
                                 WIDGET_FLAG_UPDATE | WIDGET_FLAG_DIMMED
                             );
-                            m_coverWindow =
-                                new heroWindow(0, 0x100, LOGICAL_SCREEN_WIDTH, 6, WINDOW_FLAG_SAVE_BACKGROUND);
+                            m_coverWindow = new heroWindow(
+                                0,
+                                0x100,
+                                LOGICAL_SCREEN_WIDTH,
+                                6,
+                                WINDOW_FLAG_SAVE_BACKGROUND
+                            );
                             if (m_coverWindow == NULL)
                                 MemError();
                             gpWindowManager->AddWindow(m_coverWindow, WINDOW_Z_ORDER_APPEND, 1);
@@ -999,12 +1004,12 @@ void townManager::DoCommand(i8 command) {
             visitor = gpGame->GetHero(m_town->m_occupyingHeroId);
             visitor->HeroView(1);
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_GARRISON:
             gpGame->Overview();
             RedrawTownScreen();
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case TOWN_ARMY_COMMAND_SPLIT:
             SplitArmy();
@@ -1452,7 +1457,7 @@ i16 townManager::BuyBuild(i16 building, i8 cannotBuy, i8 quickView) {
             panel->BroadcastMessage(msg);
             msg.command = WIDGET_COMMAND_SET_FLAGS;
             msg.id = DIALOG_BUTTON_2;
-            msg.value = WIDGET_COMMAND_DIMMED;
+            msg.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
             panel->BroadcastMessage(msg);
         }
         gpWindowManager->DoDialog(panel, TrueFalseDialogHandler, 0);

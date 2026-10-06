@@ -33,8 +33,8 @@ VA(0x0043bddf, 0x14)
 highScoreManager::~highScoreManager() {}
 
 VA(0x0043bdf3, 0x144)
-i16 highScoreManager::Open(i16 id) {
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+i16 highScoreManager::Open(i16 priority) {
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     sprintf(gText, "hiscore.bmp");
     gpResourceManager->GetBackdrop(gText, gpWindowManager->m_screen);
     m_window = new heroWindow(0, 0, "hiscore.bin");
@@ -43,11 +43,11 @@ i16 highScoreManager::Open(i16 id) {
     Update();
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
-    m_priority = id;
+    m_priority = priority;
     m_active = 1;
     strcpy(m_name, "highScoreManager");
     KBChangeMenu(hmnuDflt);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
     return static_cast<i16>(BASE_MANAGER_SUCCESS);
 }
@@ -55,7 +55,7 @@ i16 highScoreManager::Open(i16 id) {
 // The window owner is at +0x59, active at +0x2e.
 VA(0x0043bf37, 0x4e)
 void highScoreManager::Close(void) {
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gpWindowManager->RemoveWindow(m_window);
     delete m_window;
     m_active = 0;
@@ -64,7 +64,7 @@ void highScoreManager::Close(void) {
 VA(0x0043bf85, 0x1fa)
 i16 highScoreManager::Main(struct tag_message& message) {
     i32 result;
-    i32 entry;
+    i32 rank;
     tag_message windowMessage;
 
     result = 0;
@@ -73,14 +73,14 @@ i16 highScoreManager::Main(struct tag_message& message) {
 
     if (glTimers[HIGH_SCORE_TIMER_SLOT] < KBTickCount()) {
         glTimers[HIGH_SCORE_TIMER_SLOT] = KBTickCount() + HIGH_SCORE_ANIMATION_DELAY;
-        for (entry = 0; entry < HIGH_SCORE_DISPLAY_ENTRY_COUNT; entry++) {
-            m_animationFrames[entry] =
-                (m_animationFrames[entry] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+        for (rank = 0; rank < HIGH_SCORE_DISPLAY_ENTRY_COUNT; rank++) {
+            m_animationFrames[rank] =
+                (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             windowMessage.type = MESSAGE_WIDGET;
-            windowMessage.id = entry + HIGH_SCORE_FIRST_MONSTER_WIDGET;
+            windowMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             windowMessage.command = WIDGET_COMMAND_SET_FRAME;
-            windowMessage.value = m_monsterTypes[entry] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                                  + m_animationFrames[entry] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+            windowMessage.value = m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
+                                  + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(windowMessage);
         }
         m_window->DrawWindow(0, HIGH_SCORE_ANIMATED_WIDGET_FIRST, HIGH_SCORE_ANIMATED_WIDGET_LAST);
@@ -165,8 +165,8 @@ void highScoreManager::Update(void) {
 
     hsMessage.id = HIGH_SCORE_SUBTITLE_WIDGET;
     hsMessage.command = WIDGET_COMMAND_SET_FRAME;
-    hsMessage.value =
-        m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME : HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
+    hsMessage.value = m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_SUBTITLE_FRAME
+                                           : HIGH_SCORE_STANDARD_SUBTITLE_FRAME;
     m_window->BroadcastMessage(hsMessage);
 
     hsMessage.id = m_showCampaignScores ? HIGH_SCORE_CAMPAIGN_BUTTON : HIGH_SCORE_STANDARD_BUTTON;
@@ -197,16 +197,18 @@ void highScoreManager::Update(void) {
         }
 
         hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
-        hsMessage.command = highScore.score == HIGH_SCORE_EMPTY ? WIDGET_COMMAND_CLEAR_FLAGS : WIDGET_COMMAND_SET_FLAGS;
+        hsMessage.command = highScore.score == HIGH_SCORE_EMPTY ? WIDGET_COMMAND_CLEAR_FLAGS
+                                                                : WIDGET_COMMAND_SET_FLAGS;
         hsMessage.value = WIDGET_FLAG_ENABLED | WIDGET_FLAG_DRAW;
         m_window->BroadcastMessage(hsMessage);
 
         if (highScore.score != HIGH_SCORE_EMPTY) {
-            m_animationFrames[rank] = (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
+            m_animationFrames[rank] =
+                (m_animationFrames[rank] + 1) % HIGH_SCORE_ANIMATION_FRAME_COUNT;
             hsMessage.id = rank + HIGH_SCORE_FIRST_MONSTER_WIDGET;
             hsMessage.command = WIDGET_COMMAND_SET_FRAME;
             hsMessage.value = m_monsterTypes[rank] * HIGH_SCORE_MONSTER_FRAME_STRIDE
-                            + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
+                              + m_animationFrames[rank] / HIGH_SCORE_ANIMATION_FRAME_DIVISOR;
             m_window->BroadcastMessage(hsMessage);
         }
 
@@ -218,19 +220,19 @@ void highScoreManager::Update(void) {
         m_window->BroadcastMessage(hsMessage);
 
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                     + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
+                       + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
         if (highScore.score != HIGH_SCORE_EMPTY)
             sprintf(gText, highScore.scenarioName);
         m_window->BroadcastMessage(hsMessage);
 
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                     + HIGH_SCORE_TEXT_SCORE_OFFSET;
+                       + HIGH_SCORE_TEXT_SCORE_OFFSET;
         if (highScore.score != HIGH_SCORE_EMPTY)
             sprintf(gText, "%d", highScore.score);
         m_window->BroadcastMessage(hsMessage);
 
         hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                     + HIGH_SCORE_TEXT_RATING_OFFSET;
+                       + HIGH_SCORE_TEXT_RATING_OFFSET;
         if (highScore.score != HIGH_SCORE_EMPTY) {
             sprintf(gText, "%s", gArmyNames[m_monsterTypes[rank]]);
             gText[0] = CyrillicToUpper(gText[0]);
@@ -249,13 +251,13 @@ void highScoreManager::Update(void) {
             hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET;
             m_window->BroadcastMessage(hsMessage);
             hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                         + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
+                           + HIGH_SCORE_TEXT_SCENARIO_OFFSET;
             m_window->BroadcastMessage(hsMessage);
             hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                         + HIGH_SCORE_TEXT_SCORE_OFFSET;
+                           + HIGH_SCORE_TEXT_SCORE_OFFSET;
             m_window->BroadcastMessage(hsMessage);
             hsMessage.id = rank * HIGH_SCORE_TEXT_WIDGET_STRIDE + HIGH_SCORE_FIRST_TEXT_WIDGET
-                         + HIGH_SCORE_TEXT_RATING_OFFSET;
+                           + HIGH_SCORE_TEXT_RATING_OFFSET;
             m_window->BroadcastMessage(hsMessage);
         }
     }

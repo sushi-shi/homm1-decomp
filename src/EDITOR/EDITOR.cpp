@@ -65,13 +65,13 @@ i32 oldmain(void) {
     PostprocessPalette(editorPalette->m_data);
     gMapX = 0;
     gMapY = 0;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, editorPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, editorPalette);
     if (gpExec->AddManager(gpEditManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
         ShutDown(localization::Tr("startup.manager.failed"));
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, editorPalette);
     gpExec->MainLoop();
     gpExec->RemoveManager(gpEditManager);
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, editorPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, editorPalette);
     gpResourceManager->Dispose(editorPalette);
     ShutDown(NULL);
     return 0;
@@ -122,12 +122,7 @@ void ShutDown(char* message) {
     if (message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
-        MessageBoxA(
-            hwndApp,
-            buffer,
-            localization::Tr("shutdown.unexpected.title"),
-            MB_ICONHAND
-        );
+        MessageBoxA(hwndApp, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     gClosingApp = 1;
     gpExec->ShutDownSystem();

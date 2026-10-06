@@ -35,11 +35,11 @@ void icon::DrawToBuffer(
     i16 y,
     i16 frame,
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-    H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
 ) {
     if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != ICON_DRAW_OFFSET_FULL)
+            if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
                 m_drawRight = x - m_frames[frame].x;
@@ -47,7 +47,7 @@ void icon::DrawToBuffer(
             m_drawTop = y + m_frames[frame].y;
             m_drawBottom = m_drawTop + m_frames[frame].h;
         } else {
-            if (mode != ICON_DRAW_OFFSET_FULL)
+            if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawLeft = x + (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
                 m_drawLeft = x + m_frames[frame].x;
@@ -72,14 +72,14 @@ void icon::DrawToBuffer(
         return;
     if (gbIconClipOn != 0) {
         if (orientation == ICON_DRAW_NORMAL)
-            ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            ClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
         else
-            FlipClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            FlipClippedIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
     } else {
         if (orientation == ICON_DRAW_NORMAL)
-            IconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            IconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
         else
-            FlipIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+            FlipIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
     }
 }
 
@@ -90,7 +90,7 @@ void icon::ClipFillToBuffer(
     i16 frame,
     i16 color,
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-    H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode,
+    H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
@@ -103,7 +103,7 @@ void icon::ClipFillToBuffer(
         y,
         frame,
         gMonoColorMap[color],
-        mode,
+        offsetMode,
         clipX,
         clipY,
         clipW,
@@ -118,7 +118,7 @@ void icon::FillToBuffer(
     i16 frame,
     i16 color,
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-    H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
 ) {
     if (orientation == ICON_DRAW_NORMAL) {
         if (gLimitToExtent) {
@@ -130,7 +130,15 @@ void icon::FillToBuffer(
                 || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY)
                 return;
         }
-        MonoIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, gMonoColorMap[color], mode);
+        MonoIconToBitmap(
+            this,
+            gpWindowManager->m_screen,
+            x,
+            y,
+            frame,
+            gMonoColorMap[color],
+            offsetMode
+        );
     } else {
         FlipMonoIconToBitmap(
             this,
@@ -139,7 +147,7 @@ void icon::FillToBuffer(
             y,
             frame,
             gMonoColorMap[color],
-            mode
+            offsetMode
         );
     }
 }
@@ -150,11 +158,11 @@ void icon::DimToBuffer(
     i16 y,
     i16 frame,
     H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-    H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+    H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
 ) {
     if (gComputeExtent != 0) {
         if (orientation != ICON_DRAW_NORMAL) {
-            if (mode != ICON_DRAW_OFFSET_FULL)
+            if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawRight = x - (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
                 m_drawRight = x - m_frames[frame].x;
@@ -162,7 +170,7 @@ void icon::DimToBuffer(
             m_drawTop = y + m_frames[frame].y;
             m_drawBottom = m_drawTop + m_frames[frame].h;
         } else {
-            if (mode != ICON_DRAW_OFFSET_FULL)
+            if (offsetMode != ICON_DRAW_OFFSET_FULL)
                 m_drawLeft = x + (m_frames[frame].x >> ICON_DRAW_QUARTER_OFFSET_SHIFT);
             else
                 m_drawLeft = x + m_frames[frame].x;
@@ -186,9 +194,9 @@ void icon::DimToBuffer(
             || m_drawTop > giMaxExtentY || m_drawBottom < giMinExtentY))
         return;
     if (orientation == ICON_DRAW_NORMAL)
-        DimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        DimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
     else
-        FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, mode);
+        FlipDimIconToBitmap(this, gpWindowManager->m_screen, x, y, frame, offsetMode);
 }
 
 VA_COMPGEN(0x00471740, 0x2e, "??_Gicon@@UAEPAXI@Z", 0x00470ea0)

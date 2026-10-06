@@ -333,7 +333,7 @@ i16 advManager::Open(i16 id) {
         gpGame->ShowComputerScreen();
     gpMouseManager->ReallyShowPointer();
     KBChangeMenu(hmnuAdv);
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
     giBottomViewOverride = BOTTOM_VIEW_NONE;
     gConfig.soundVolume = oldVolume;
     SetVolumes(gConfig.soundVolume, gConfig.musicVolume);
@@ -526,7 +526,7 @@ class mapCell* advManager::DoAdvCommand(void) {
             gpMouseManager->SetPointer(ADVENTURE_POINTER_DEFAULT);
             gpGame->GetHero(gpCurPlayer->m_currentHero)->HeroView(0);
             RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
         case ADVMGR_COMMAND_SELECT_HERO:
             SetHeroContext(
@@ -1265,7 +1265,7 @@ i32 advManager::ProcessDeSelect(
         case ADVENTURE_CONTROL_OVERVIEW:
             gpGame->Overview();
             RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
             break;
     }
     if (message->id >= BOTTOM_VIEW_DRAW_FIRST_WIDGET
@@ -4885,14 +4885,14 @@ i16 advManager::ControlPanel(void) {
         message.type = MESSAGE_WIDGET;
         message.id = CONTROL_NEW_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
         gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
         gPanel->BroadcastMessage(message);
         message.id = CONTROL_LOAD_GAME;
         message.command = WIDGET_COMMAND_SET_FLAGS;
-        message.value = WIDGET_COMMAND_DIMMED;
+        message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
         gPanel->BroadcastMessage(message);
         message.command = WIDGET_COMMAND_CLEAR_FLAGS;
         message.value = WIDGET_FLAG_ENABLED;
@@ -5208,7 +5208,7 @@ void advManager::AdvPanel(void) {
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_SEARCH;
             message.command = WIDGET_COMMAND_SET_FLAGS;
-            message.value = WIDGET_COMMAND_DIMMED;
+            message.value = WIDGET_FLAGS_ARGUMENT_DIMMED;
             adventurePanel->BroadcastMessage(message);
             message.id = PANEL_CAST_SPELL;
             adventurePanel->BroadcastMessage(message);

@@ -21,7 +21,7 @@ public:
     i16 m_fillColor;
     // --- constructors ---
     border(void);
-    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* name);
+    border(i16 x, i16 y, i16 width, i16 height, i16 id, i16 kind, i16 fillColor, char* bitmapName);
     virtual ~border() OVERRIDE;
     // --- virtual methods (vtable order) ---
     virtual void Draw(void) OVERRIDE;

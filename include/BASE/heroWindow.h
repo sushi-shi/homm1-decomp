@@ -60,15 +60,15 @@ public:
     heroWindow(i16 x, i16 y, i16 width, i16 height, i16 flags);
     heroWindow(i16 x, i16 y, char* resourceName);
     // --- methods ---
-    i16 Open(i16 zOrder, i8 flags);
+    i16 Open(i16 zOrder, i8 updateScreen);
     void RemoveAndDeleteWidget(i32 id);
     void Close(void);
     void AddWidget(class widget* newWidget, i16 zOrder);
-    void RemoveWidget(class widget* w);
+    void RemoveWidget(class widget* removedWidget);
     i16 BroadcastMessage(struct tag_message& message);
     void DrawWindow(void);
-    void DrawWindow(i16 flags);
-    void DrawWindow(i16 update, i32 firstId, i32 lastId);
+    void DrawWindow(i16 updateScreen);
+    void DrawWindow(i16 updateScreen, i32 firstId, i32 lastId);
     i16 SaveBackground(void);
     void RestoreBackground(void);
     void MoveWindow(i16 dx, i16 dy);
@@ -85,7 +85,7 @@ H1_ENUM_BEGIN(WindowWidgetRecordType)
     WIDGET_RECORD_DIMMER = 0x40,
     WIDGET_RECORD_TEXT_ENTRY = 0x100,
     WIDGET_RECORD_TEXT_ENTRY_RECT = 0x201,
-    WIDGET_RECORD_TEXT_ENTRY_MULTILINE = 0x202
+    WIDGET_RECORD_TEXT_ENTRY_SCROLLING = 0x202
 H1_ENUM_END(WindowWidgetRecordType)
 
 #endif // HOMM1_BASE_HEROWINDOW_H

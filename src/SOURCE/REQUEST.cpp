@@ -75,12 +75,12 @@ fileRequester::fileRequester(
     SMapHeader headerData;
     i32 found;
     char unusedName[FILE_REQUESTER_UNUSED_NAME_SIZE];
-    i32 moveValue;
+    i32 shiftRow;
     i32 entryIndex;
     char extension[FILE_REQUESTER_EXTENSION_SIZE];
     WIN32_FIND_DATA findFileData;
     i32 insertCount;
-    char* dotPtr;
+    char* extensionStart;
     char nameBuffer[FILE_REQUESTER_LOCAL_NAME_SIZE];
     HANDLE findHandleWork;
 
@@ -140,16 +140,16 @@ fileRequester::fileRequester(
         while (found) {
             if (ShowThisMap(findFileData.cFileName)) {
                 strcpy(nameBuffer, findFileData.cFileName);
-                dotPtr = FindLastToken(nameBuffer, '.');
-                if (dotPtr) {
-                    strcpy(extension, dotPtr);
-                    *dotPtr = 0;
+                extensionStart = FindLastToken(nameBuffer, '.');
+                if (extensionStart) {
+                    strcpy(extension, extensionStart);
+                    *extensionStart = 0;
                 }
                 for (entryIndex = 0; entryIndex < insertCount; entryIndex++) {
                     if (strcmpi(nameBuffer, m_fileNames[entryIndex].text) < 0) {
-                        for (moveValue = insertCount; moveValue > entryIndex; moveValue--) {
-                            strcpy(m_fileNames[moveValue].text, m_fileNames[moveValue - 1].text);
-                            strcpy(m_extensions[moveValue].text, m_extensions[moveValue - 1].text);
+                        for (shiftRow = insertCount; shiftRow > entryIndex; shiftRow--) {
+                            strcpy(m_fileNames[shiftRow].text, m_fileNames[shiftRow - 1].text);
+                            strcpy(m_extensions[shiftRow].text, m_extensions[shiftRow - 1].text);
                         }
                         goto insert;
                     }
@@ -230,8 +230,8 @@ i16 fileRequester::Open(i16 priority) {
     tag_message message;
     i32 i;
     const i16 nameLabelId = FILE_REQUESTER_FILENAME_LABEL;
-    char* dotPtr;
-    i8 enable;
+    char* extensionStart;
+    i8 enableOk;
 
     strcpy(gLastMapName, "");
     strcpy(gLastFilename, "");
@@ -257,19 +257,19 @@ i16 fileRequester::Open(i16 priority) {
     message.type = MESSAGE_WIDGET;
     message.command = WIDGET_COMMAND_SET_TEXT;
 #ifdef HOMM1_EDITOR
-    enable = 0;
+    enableOk = 0;
     message.id = nameLabelId;
     sprintf(gText, localization::Tr("file.load.label"));
     message.text = gText;
     m_window->BroadcastMessage(message);
 #else
     if (m_mode == FILE_REQUESTER_SAVE) {
-        enable = 1;
+        enableOk = 1;
         const i16 textEntryId = FILE_REQUESTER_FILENAME_ENTRY;
         strcpy(m_filename, gpGame->m_saveName);
-        dotPtr = FindLastToken(m_filename, '.');
-        if (dotPtr)
-            *dotPtr = 0;
+        extensionStart = FindLastToken(m_filename, '.');
+        if (extensionStart)
+            *extensionStart = 0;
         message.id = textEntryId;
         message.text = m_filename;
         m_window->BroadcastMessage(message);
@@ -284,12 +284,12 @@ i16 fileRequester::Open(i16 priority) {
                 m_selectedIndex = i;
         }
     } else {
-        enable = 0;
+        enableOk = 0;
         if (m_mode == FILE_REQUESTER_LOAD && m_defaultExtension[1] == 'M') {
             for (i = 0; i < m_fileCount; i++) {
                 if (!strnicmp(m_fileNames[i].text, gMapName, SAVE_FILE_BASE_NAME_LENGTH)) {
                     m_selectedIndex = i;
-                    enable = 1;
+                    enableOk = 1;
                 }
             }
         }
@@ -309,7 +309,7 @@ i16 fileRequester::Open(i16 priority) {
         gpWindowManager->AddWindow(gReqExtraWindow, WINDOW_Z_ORDER_APPEND, 1);
 #endif
     gpWindowManager->AddWindow(m_window, WINDOW_Z_ORDER_APPEND, 1);
-    SetOK(enable);
+    SetOK(enableOk);
     UpdateMapInfo();
     m_messageMask = BASE_MANAGER_ACCEPT_EXECUTIVE;
     m_priority = priority;
@@ -576,40 +576,40 @@ char* gFRDummy = "";
 VA(0x004553a7, 0x25b)
 void fileRequester::DoKnob(void) {
     i32 lastTop;
-    i16 pos;
+    i16 topRow;
     double scale;
     tag_message event;
     i16 x;
-    i16 n;
-    i16 offset;
+    i16 grabPointerY;
+    i16 grabOffset;
 
     gpMouseManager->SetCursorShape(4);
     lastTop = m_topIndex;
     scale = 156.0 / (m_fileCount - FILE_REQUESTER_LAST_ROW_OFFSET);
-    gpMouseManager->MouseCoords(x, n);
-    offset = n - m_scrollKnob->m_y;
+    gpMouseManager->MouseCoords(x, grabPointerY);
+    grabOffset = grabPointerY - m_scrollKnob->m_y;
     gpInputManager->Flush();
     event = gpInputManager->GetEvent();
     while (event.type != MESSAGE_LEFT_BUTTON_UP && event.type != MESSAGE_RIGHT_BUTTON_UP) {
         if (event.type == MESSAGE_MOUSE_MOVE) {
-            if (event.y < offset + FILE_REQUESTER_GUTTER_TOP)
-                event.y = offset + FILE_REQUESTER_GUTTER_TOP;
-            if (event.y > offset + FILE_REQUESTER_GUTTER_BOTTOM)
-                event.y = offset + FILE_REQUESTER_GUTTER_BOTTOM;
+            if (event.y < grabOffset + FILE_REQUESTER_GUTTER_TOP)
+                event.y = grabOffset + FILE_REQUESTER_GUTTER_TOP;
+            if (event.y > grabOffset + FILE_REQUESTER_GUTTER_BOTTOM)
+                event.y = grabOffset + FILE_REQUESTER_GUTTER_BOTTOM;
             gpMouseManager->Main(event);
-            m_scrollKnob->m_y = event.y - offset;
+            m_scrollKnob->m_y = event.y - grabOffset;
             if (m_fileCount > FILE_REQUESTER_VISIBLE_ROWS) {
-                pos = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
-                if (pos != lastTop) {
-                    if (pos > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
-                        pos = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
-                    if (pos < 0)
-                        pos = 0;
-                    m_topIndex = pos;
+                topRow = static_cast<i16>((m_scrollKnob->m_y - FILE_REQUESTER_GUTTER_TOP) / scale);
+                if (topRow != lastTop) {
+                    if (topRow > m_fileCount - FILE_REQUESTER_VISIBLE_ROWS)
+                        topRow = m_fileCount - FILE_REQUESTER_VISIBLE_ROWS;
+                    if (topRow < 0)
+                        topRow = 0;
+                    m_topIndex = topRow;
                     Update(0);
-                    m_scrollKnob->m_y = event.y - offset;
+                    m_scrollKnob->m_y = event.y - grabOffset;
                     m_window->DrawWindow();
-                    lastTop = pos;
+                    lastTop = topRow;
                 } else {
                     m_window->DrawWindow();
                 }
@@ -632,84 +632,89 @@ VA(0x00455602, 0x49e)
 VA_AT(editor, 0x00417e5c, 0x476)
 void fileRequester::Update(i8 drawWindow) {
     double gutterFactor;
-    i32 oldHumans;
-    i32 newPlayers;
-    i32 limit;
-    i32 newPos;
+    i32 textLimit;
     const i16 firstIdIdx = FILE_REQUESTER_LIST_FIRST;
-    const i16 nameIdIdx = FILE_REQUESTER_FILENAME_ENTRY;
-    char prevExtra[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
-    const i16 colorVal = 0xe8;
-    const i16 textColorValue = 1;
-    tag_message eventRec;
+    const i16 filenameEntryId = FILE_REQUESTER_FILENAME_ENTRY;
+    i32 length;
+    const i16 selectedColor = 0xe8;
+    i32 savedPlayerCount;
+    i32 hasPlayerSuffix;
+    const i16 plainColor = 1;
+    tag_message message;
+    char playersString[FILE_REQUESTER_UPDATE_STORAGE_SIZE];
     i32 theSuffixWidth;
     font* bigFont;
     i16 y;
 
-    eventRec.type = MESSAGE_WIDGET;
+    message.type = MESSAGE_WIDGET;
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     for (y = 0; y < FILE_REQUESTER_VISIBLE_ROWS; y++) {
-        eventRec.id = y + firstIdIdx;
+        message.id = y + firstIdIdx;
         if (m_topIndex + y >= m_fileCount) {
-            eventRec.command = WIDGET_COMMAND_CLEAR_FLAGS;
-            eventRec.value = WIDGET_FLAG_DRAW;
+            message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+            message.value = WIDGET_FLAG_DRAW;
         } else {
-            eventRec.command = WIDGET_COMMAND_SET_FLAGS;
-            eventRec.value = WIDGET_FLAG_DRAW;
-            m_window->BroadcastMessage(eventRec);
-            eventRec.command = WIDGET_COMMAND_SET_TEXT;
+            message.command = WIDGET_COMMAND_SET_FLAGS;
+            message.value = WIDGET_FLAG_DRAW;
+            m_window->BroadcastMessage(message);
+            message.command = WIDGET_COMMAND_SET_TEXT;
             if (gShowMapInfo)
                 sprintf(gText, "%s", m_mapNames[m_topIndex + y].text);
             else
                 sprintf(gText, "%s", m_fileNames[m_topIndex + y].text);
-            oldHumans =
+            savedPlayerCount =
                 m_extensions[m_topIndex + y].text[FILE_REQUESTER_EXTENSION_PLAYER_DIGIT] - '0';
-            newPlayers = 0;
+            hasPlayerSuffix = 0;
 #ifndef HOMM1_EDITOR
-            if (oldHumans != 1 && gCampaignChoice <= 0 && gRequestingGames) {
-                newPlayers = 1;
-                sprintf(prevExtra, " (%d %s)", oldHumans, localization::Tr("file.players.label"));
-                theSuffixWidth = bigFont->LineWidth(prevExtra);
+            if (savedPlayerCount != 1 && gCampaignChoice <= 0 && gRequestingGames) {
+                hasPlayerSuffix = 1;
+                sprintf(
+                    playersString,
+                    " (%d %s)",
+                    savedPlayerCount,
+                    localization::Tr("file.players.label")
+                );
+                theSuffixWidth = bigFont->LineWidth(playersString);
             }
 #endif
-            limit = FILE_REQUESTER_ROW_TEXT_WIDTH;
-            if (newPlayers)
-                limit -= theSuffixWidth + FILE_REQUESTER_PLAYER_SUFFIX_GAP;
-            newPos = strlen(gText);
-            while (bigFont->LineWidth(gText) > limit) {
-                newPos--;
-                gText[newPos] = 0;
+            textLimit = FILE_REQUESTER_ROW_TEXT_WIDTH;
+            if (hasPlayerSuffix)
+                textLimit -= theSuffixWidth + FILE_REQUESTER_PLAYER_SUFFIX_GAP;
+            length = strlen(gText);
+            while (bigFont->LineWidth(gText) > textLimit) {
+                length--;
+                gText[length] = 0;
             }
-            if (newPlayers)
-                strcat(gText, prevExtra);
-            eventRec.text = gText;
+            if (hasPlayerSuffix)
+                strcat(gText, playersString);
+            message.text = gText;
         }
-        m_window->BroadcastMessage(eventRec);
-        eventRec.command = WIDGET_COMMAND_SET_COLOR;
+        m_window->BroadcastMessage(message);
+        message.command = WIDGET_COMMAND_SET_COLOR;
         if (m_selectedIndex == m_topIndex + y)
-            eventRec.value = colorVal;
+            message.value = selectedColor;
         else
-            eventRec.value = textColorValue;
-        m_window->BroadcastMessage(eventRec);
+            message.value = plainColor;
+        m_window->BroadcastMessage(message);
     }
 
-    eventRec.id = nameIdIdx;
-    eventRec.command = WIDGET_COMMAND_SET_FLAGS;
-    eventRec.value = WIDGET_FLAG_ENABLED;
-    m_window->BroadcastMessage(eventRec);
+    message.id = filenameEntryId;
+    message.command = WIDGET_COMMAND_SET_FLAGS;
+    message.value = WIDGET_FLAG_ENABLED;
+    m_window->BroadcastMessage(message);
     if (m_selectedIndex != FILE_REQUESTER_SELECTION_NONE) {
-        eventRec.command = WIDGET_COMMAND_SET_TEXT;
+        message.command = WIDGET_COMMAND_SET_TEXT;
         if (gShowMapInfo)
             sprintf(gText, "%s", m_mapNames[m_selectedIndex].text);
         else
             sprintf(gText, "%s", m_fileNames[m_selectedIndex].text);
-        eventRec.text = gText;
-        m_window->BroadcastMessage(eventRec);
+        message.text = gText;
+        m_window->BroadcastMessage(message);
     }
     if (m_mode == FILE_REQUESTER_LOAD) {
-        eventRec.command = WIDGET_COMMAND_CLEAR_FLAGS;
-        eventRec.value = WIDGET_FLAG_ENABLED;
-        m_window->BroadcastMessage(eventRec);
+        message.command = WIDGET_COMMAND_CLEAR_FLAGS;
+        message.value = WIDGET_FLAG_ENABLED;
+        m_window->BroadcastMessage(message);
     }
     if (m_fileCount <= FILE_REQUESTER_VISIBLE_ROWS) {
         m_scrollKnob->m_y = 134;

@@ -583,7 +583,8 @@ i16 game::LoadGame(char* filename, i32 origData, i32) {
     read(oldHandle, m_playerDead, sizeof(m_playerDead));
     read(oldHandle, theHumans, GAME_PLAYER_COUNT);
     for (ix = 0; ix < GAME_PLAYER_COUNT; ix++) {
-        if ((theHumans[ix] || giDebugLevel >= GAME_DEBUG_LEVEL_ALL_HUMAN_MIN) && numHumans < giNumHumanPlayers) {
+        if ((theHumans[ix] || giDebugLevel >= GAME_DEBUG_LEVEL_ALL_HUMAN_MIN)
+            && numHumans < giNumHumanPlayers) {
             numHumans++;
             gbHumanPlayer[ix] = 1;
         } else {
@@ -1072,10 +1073,10 @@ void game::ShowCampaignInfo(i32 scenario, i32 fromMenu, i32) {
             InitCampaignMap(m_campaignScenario, 0);
             gpAdvManager->m_routeShown = 0;
             giBottomViewOverride = BOTTOM_VIEW_NONE;
-            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
             gpAdvManager->SetInitialMapOrigin();
             gpAdvManager->RedrawAdvScreen(1);
-            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
         }
     }
 }
@@ -2490,7 +2491,7 @@ void game::Overview(void) {
     gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
     bigFont = gpResourceManager->GetFont("bigfont.fnt");
     smallFontItem = gpResourceManager->GetFont("smalfont.fnt");
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gpResourceManager->GetBackdropAtLoc("overmain.bmp", gpWindowManager->m_screen, 96, 0);
     sprintf(gText, "overban%01d.bmp", gpCurPlayer->m_color);
     gpResourceManager->GetBackdropAtLoc(gText, gpWindowManager->m_screen, 0, 0);
@@ -2661,10 +2662,10 @@ void game::Overview(void) {
         smallFontItem->DrawBoundedString(gText, 100, 465, 400, 12, 1, FONT_ALIGN_LEFT);
         gpWindowManager->UpdateScreenRegion(100, 465, 400, 12);
     }
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     gpWindowManager->DoDialog(baseWin, TrueFalseDialogHandler, 0);
     delete baseWin;
-    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
     gpResourceManager->Dispose(ovIconRef);
     gpResourceManager->Dispose(smallFontItem);
     gpResourceManager->Dispose(bigFont);

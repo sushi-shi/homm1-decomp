@@ -1,0 +1,46 @@
+kind	owner	old	new	evidence
+param	border::border	name	bitmapName	GetBitmap(name): the background bitmap's resource name
+local	border::Read	name	bitmapName	Read13 then GetBitmap: the background bitmap name
+param	button::button(char*)	iconId	iconName	a resource name passed to GetIcon(char*), not an id; the i16 overload takes the id
+local	button::Read	name	iconName	Read13 then GetIcon: the button icon name
+param	iconWidget::iconWidget(char*)	name	iconName	GetIcon(char*) argument
+local	iconWidget::Read	name	iconName	Read13 then GetIcon
+param	icon::DrawToBuffer/ClipFillToBuffer/FillToBuffer/DimToBuffer	mode	offsetMode	IconDrawOffsetMode; the Icon*2b blitter prototypes already call it offsetMode
+param	ClippedMonoIconToBitmap/ClipIconToBitmap	mode	offsetMode	same IconDrawOffsetMode argument as the blitters
+enum	TextEntryReadMode	TEXT_ENTRY_READ_MULTILINE	TEXT_ENTRY_READ_SCROLLING	Draw/SetupDisplayString keep one line and scroll it by m_displayOffset; only the other modes are line-limited (LineLength > m_maxLines)
+enum	WindowWidgetRecordType	WIDGET_RECORD_TEXT_ENTRY_MULTILINE	WIDGET_RECORD_TEXT_ENTRY_SCROLLING	the record that reads a TEXT_ENTRY_READ_SCROLLING entry
+local	textEntryWidget::Main	lineLength	lineCount	font::LineLength returns a line count compared with m_maxLines
+local	heroWindow::heroWindow(x,y,name)	idx	finished	set on the end record to stop the read loop; not an index
+local	heroWindow::heroWindow(x,y,name)	jb	resourceFile	MakeId(resourceName) result passed to PointToFile
+local	heroWindow::heroWindow(x,y,name)	rec	recordKind	WindowWidgetRecordType tag read per widget record
+param	heroWindow::Open	flags	updateScreen	only forwarded to DrawWindow's update-screen flag
+param	heroWindow::DrawWindow	flags/update	updateScreen	non-zero blits the window to the screen after drawing
+param	heroWindow::RemoveWidget	w	removedWidget	generic name
+param	heroWindowManager::Open	managerOrder	priority	stored in m_priority; baseManager::Open names it priority
+param	heroWindowManager::AddWindow	openFlags	updateScreen	only forwarded to heroWindow::Open/DrawWindow
+param	heroWindowManager::FadeScreen	steps	increment	passed to FadeIn/FadeOut, which step the palette levels by it
+enum	WindowFadeIncrement	WindowFadeSteps/WINDOW_FADE_STEPS_SHORT/WINDOW_FADE_STEPS_NORMAL	WindowFadeIncrement/WINDOW_FADE_SHORT/WINDOW_FADE_NORMAL	values are palette-level increments, not step counts: 0x80 switches the palette at once (comment called it the long fade); donor SHORT_FADE/NORMAL_FADE
+local	heroWindowManager::Main	ret/w	dispatchResult/window	same loop as heroWindow::BroadcastMessage(dispatchResult)
+local	heroWindowManager::UpdateScreenRegion	savedPointerHidden/px	pointerInside/mousePosX	the flag records that the pointer lies in the updated region (nothing is saved); px is the pointer x beside mouseY
+local	executive::DoDialog	p	node	walks the manager list
+member	inputManager	m_keyState	m_scanCodeTable	filled by MakeScanCodeTable with each scan code's key code; AsciiConvert translates through it (no key state)
+param	KeyboardMessageHandler/MouseMessageHandler	<unnamed>	window/virtualKey/keyFlags	AppWndProc's window handle and wParam; prototype now matches the definition
+param	inputManager::Main/mouseManager::Main	<unnamed>	message	the dispatched message
+param	mouseManager hooks	<unnamed>	SaveAndDraw(buffer,x,y,cursorUpdate)/MovePointer(x,y)/WarpPointer(x,y)/NewUpdate(force)/SetCursorShape(shape)/SetColorMice(enabled)	callers' arguments (advManager::UpdateScreen, philAI CheckDoMain, combat/adventure Open)
+param	font::DrawBoundedString/LineLength	str/maxW	text/maxWidth	DrawString and LineWidth call it text
+local	font::DrawBoundedString	myText/bestDrawX/curPosIdx/u/v/spaceCharValue/theWidths/tempWidth/startIdx	textCopy/alignIndent/position/lineTop/breakChar/space/frameDirectory/widthUsed/lineStart	line-wrapping roles; frame slots kept
+local	font::LineLength	z/theLen/lw/mainStart/curLineEnd/v	lines/textLen/widthUsed/lineStart/lineEnd/breakChar	z counts the wrapped lines LineLength returns
+local	font::LineWidth	curCh/table/theLen/thisWidth	baseGlyph/widths/textLen/widthUsed	same roles as LineLength
+param	PostprocessBitmap/PostprocessIcon/PostprocessPalette	<unnamed>/data	pixels,width,height/loadedIcon/paletteData	bitmap::bitmap(id) and icon::icon pass the loaded pixels and icon; SetPalette names the palette bytes paletteData
+enum	BaseWidgetCommand	WIDGET_COMMAND_DIMMED	WIDGET_FLAGS_ARGUMENT_DIMMED	never a command: widget::Main compares it with the SET_FLAGS message value, and callers store it in message.value
+param	resourceManager::GetMouse/Main	<unnamed>	name/message	the resource-name argument and the dispatched message
+local	resourceManager::LoadAggregateHeader	aggregateFp	aggregateFd	an _open file descriptor stored in m_aggregateFd, not a FILE*
+param	MAKEFILEID	text	name	every caller hashes a resource file name
+param	DimBitmapArea/BlitBitmap/TileToBitmap	bmp,w,h/dx,dy/dest	image,width,height/destinationX,destinationY/destination	same roles as FillBitmapArea and BlitBitmapToScreen
+param	highScoreManager::Open	id	priority	stored in m_priority
+local	highScoreManager::Main	entry	rank	the score row index, as in the constructor and Update
+comment	highScoreManager.h	message.m_type	message.type	tag_message has no m_type
+local	fileRequester::Update	oldHumans/newPlayers/limit/newPos/nameIdIdx/colorVal/textColorValue/eventRec/prevExtra	savedPlayerCount/hasPlayerSuffix/textLimit/length/filenameEntryId/selectedColor/plainColor/message/playersString	the saved game's human count digit, the " (N players)" suffix flag and text, the row's pixel limit and the cut position
+local	fileRequester::DoKnob	offset/n/pos	grabOffset/grabPointerY/topRow	pointer-to-knob offset at the grab, the grab position, the dragged top row
+local	fileRequester::Open	dotPtr/enable	extensionStart/enableOk	the '.' cut from the save name; SetOK's argument
+local	fileRequester::fileRequester	moveValue/dotPtr	shiftRow/extensionStart	the insertion sort's shifting row; the extension split point

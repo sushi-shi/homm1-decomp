@@ -63,7 +63,7 @@ public:
         i16 y,
         i16 frame,
         H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
     );
     i32 CombatClipDrawToBuffer(
         i32 x,
@@ -81,7 +81,7 @@ public:
         i16 frame,
         i16 color,
         H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode,
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode,
         i32 clipX,
         i32 clipY,
         i32 clipW,
@@ -93,14 +93,14 @@ public:
         i16 frame,
         i16 color,
         H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
     );
     void DimToBuffer(
         i16 x,
         i16 y,
         i16 frame,
         H1_ENUM_PARAM(IconDrawOrientation, i8) orientation,
-        H1_ENUM_PARAM(IconDrawOffsetMode, i8) mode
+        H1_ENUM_PARAM(IconDrawOffsetMode, i8) offsetMode
     );
 };
 #pragma pack(pop)

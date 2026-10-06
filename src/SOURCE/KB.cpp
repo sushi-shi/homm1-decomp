@@ -275,7 +275,7 @@ i32 oldmain(void) {
                 if (initialScreen)
                     SetPalette(gPalette->m_data, 0);
                 else
-                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 initialScreen = 0;
             }
             gpMouseManager->SetPointer("advmice.mse", ADVENTURE_POINTER_DEFAULT);
@@ -358,11 +358,11 @@ i32 oldmain(void) {
                     goto mainMenu;
                 break;
             case MAIN_MENU_CREDITS:
-                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                 gpResourceManager->GetBackdrop("credits.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 gameDone = 0;
                 gpInputManager->Flush();
                 while (!gameDone) {
@@ -374,11 +374,11 @@ i32 oldmain(void) {
                             gameDone = 1;
                     }
                 }
-                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 goto mainMenu;
             case MAIN_MENU_QUIT:
                 leave = 1;
@@ -438,11 +438,11 @@ i32 oldmain(void) {
         playScenario:
             if (gpGame->m_campaignType > 0) {
                 if (!backdropLoaded) {
-                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
                     gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                     gpWindowManager
                         ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                     backdropLoaded = 1;
                 }
                 gpGame->ShowCampaignInfo(gpGame->m_campaignScenario, 0, 0);
@@ -450,7 +450,7 @@ i32 oldmain(void) {
             gGameInitialized = 1;
             backdropLoaded = 0;
             StopAllAudio();
-            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
             gMapX = 0;
             gMapY = 0;
             if (gpExec->AddManager(gpAdvManager, BASE_MANAGER_PRIORITY_UNASSIGNED))
@@ -461,7 +461,7 @@ i32 oldmain(void) {
             gMapX = gpAdvManager->m_mapOriginX;
             gMapY = gpAdvManager->m_mapOriginY;
             gpExec->RemoveManager(gpAdvManager);
-            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, gPalette);
+            gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, gPalette);
         }
 
         if (gGameOver) {
@@ -483,7 +483,7 @@ i32 oldmain(void) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 gpWindowManager->m_updateFlags = 1;
                 backdropLoaded = 1;
             } else {
@@ -510,7 +510,7 @@ i32 oldmain(void) {
                 gpResourceManager->GetBackdrop("heroes.bmp", gpWindowManager->m_screen);
                 gpWindowManager
                     ->UpdateScreenRegion(0, 0, LOGICAL_SCREEN_WIDTH, LOGICAL_SCREEN_HEIGHT);
-                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, gPalette);
+                gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, gPalette);
                 backdropLoaded = 1;
             }
             if (gpGame->m_campaignType > 0) {
@@ -686,7 +686,7 @@ i16 RecruitHeroHandler(tag_message& message) {
                         gpTownManager->RedrawTownScreen();
                         gpTownManager->m_heroWindow0->DrawWindow();
                         gpTownManager->m_heroWindow1->DrawWindow();
-                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+                        gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
                         break;
                     default:
                         break;
@@ -1012,7 +1012,11 @@ void NormalDialog(
             else if (resourceAmounts[index] == 0)
                 strcpy(amounts[index], "");
             else
-                sprintf(amounts[index], localization::Tr("dialog.income.per_day"), -resourceAmounts[index]);
+                sprintf(
+                    amounts[index],
+                    localization::Tr("dialog.income.per_day"),
+                    -resourceAmounts[index]
+                );
             strcpy(iconFile, "resource.icn");
             iconFrameIndex = resourceKind[index];
         } else if (resourceKind[index] == NORMAL_DIALOG_SPELL) {
@@ -1027,13 +1031,16 @@ void NormalDialog(
             sprintf(amounts[index], "%s", "");
             sprintf(iconFile, "surrendr.icn");
             iconFrameIndex = 4;
-        } else if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE || resourceKind[index] == NORMAL_DIALOG_MORALE_BONUS
-                   || resourceKind[index] == NORMAL_DIALOG_MORALE_PENALTY || resourceKind[index] == NORMAL_DIALOG_LUCK_BONUS
+        } else if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE
+                   || resourceKind[index] == NORMAL_DIALOG_MORALE_BONUS
+                   || resourceKind[index] == NORMAL_DIALOG_MORALE_PENALTY
+                   || resourceKind[index] == NORMAL_DIALOG_LUCK_BONUS
                    || resourceKind[index] == NORMAL_DIALOG_LUCK_PENALTY) {
             strcpy(amounts[index], "");
             strcpy(iconFile, "expmrl.icn");
             iconFrameIndex = resourceKind[index] - NORMAL_DIALOG_EXPMRL_FIRST;
-            if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE && resourceAmounts[index] != NORMAL_DIALOG_NO_VALUE)
+            if (resourceKind[index] == NORMAL_DIALOG_EXPERIENCE
+                && resourceAmounts[index] != NORMAL_DIALOG_NO_VALUE)
                 sprintf(amounts[index], "%d", resourceAmounts[index]);
         } else {
             strcpy(amounts[index], "");
@@ -1747,7 +1754,8 @@ void CheckEndGame(i32 forced) {
                 ));
                 if (!objectiveTown->m_owner)
                     won = 1;
-                if (gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_1 && objectiveTown->m_owner > 0) {
+                if (gpGame->m_campaignScenario == CAMPAIGN_SCENARIO_1
+                    && objectiveTown->m_owner > 0) {
                     defeated = 1;
                     strcpy(message, localization::Tr("endgame.enemy.captured_town"));
                 }
@@ -1757,7 +1765,8 @@ void CheckEndGame(i32 forced) {
                 artifactOwner = GAME_PLAYER_NONE;
                 for (playerIndex = 0; playerIndex < gpGame->m_playerCount; playerIndex++) {
                     if (!gpGame->m_playerDead[playerIndex]) {
-                        for (index = 0; index < gpGame->m_players[playerIndex].m_heroCount; index++) {
+                        for (index = 0; index < gpGame->m_players[playerIndex].m_heroCount;
+                             index++) {
                             bearer = gpGame->GetPlayerHero(playerIndex, index);
                             if (bearer->HasArtifact(ARTIFACT_ULTIMATE_BOOK)
                                 || bearer->HasArtifact(ARTIFACT_ULTIMATE_SWORD)
@@ -2294,12 +2303,7 @@ void ShutDown(char* message) {
     if (message) {
         strcpy(buffer, message);
         SetFullScreenStatus(0);
-        MessageBoxA(
-            hwndApp,
-            buffer,
-            localization::Tr("shutdown.unexpected.title"),
-            MB_ICONHAND
-        );
+        MessageBoxA(hwndApp, buffer, localization::Tr("shutdown.unexpected.title"), MB_ICONHAND);
     }
     CloseSmackers();
     ClearMapExtra();
@@ -2392,7 +2396,7 @@ void ShowCongrats(void) {
     }
     gpWindowManager->AddWindow(win, WINDOW_Z_ORDER_APPEND, 1);
     gpMouseManager->ReallyHidePointer();
-    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_STEPS_SHORT, NULL);
+    gpWindowManager->FadeScreen(WINDOW_FADE_IN, WINDOW_FADE_SHORT, NULL);
     CongratsWait();
     gpWindowManager->RemoveWindow(win);
     delete win;
@@ -2862,16 +2866,8 @@ void UpdateSystemOptionsMenu(void) {
             break;
     }
     CheckMenuItem(hmnuApp, checkedCommand, MF_CHECKED);
-    CheckMenuItem(
-        hmnuApp,
-        APP_MENU_CD_STEREO,
-        gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED
-    );
-    CheckMenuItem(
-        hmnuApp,
-        APP_MENU_SHOW_PATH,
-        gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED
-    );
+    CheckMenuItem(hmnuApp, APP_MENU_CD_STEREO, gConfig.musicSource ? MF_CHECKED : MF_UNCHECKED);
+    CheckMenuItem(hmnuApp, APP_MENU_SHOW_PATH, gConfig.showRoute ? MF_CHECKED : MF_UNCHECKED);
     CheckMenuItem(
         hmnuApp,
         APP_MENU_VIEW_ENEMY_MOVES,
@@ -4062,8 +4058,10 @@ char* gTownCommand[22] = {
 };
 DATA(0x00492f3c)
 char* gGameTypeHelp[5] = {
-    localization::Tr("table.gGameTypeHelp.0"), localization::Tr("table.gGameTypeHelp.1"),
-    localization::Tr("table.gGameTypeHelp.2"), localization::Tr("table.gGameTypeHelp.3"),
+    localization::Tr("table.gGameTypeHelp.0"),
+    localization::Tr("table.gGameTypeHelp.1"),
+    localization::Tr("table.gGameTypeHelp.2"),
+    localization::Tr("table.gGameTypeHelp.3"),
     localization::Tr("table.gGameTypeHelp.4"),
 };
 DATA(0x00492f50)

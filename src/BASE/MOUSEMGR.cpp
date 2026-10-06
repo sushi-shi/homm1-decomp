@@ -90,7 +90,7 @@ void mouseManager::Close(void) {
 }
 
 VA(0x0046b83a, 0x10)
-i16 mouseManager::Main(tag_message&) {
+i16 mouseManager::Main(tag_message& message) {
     return 0;
 }
 
@@ -148,26 +148,11 @@ void mouseManager::SetPointer(i16 frame) {
             cAndBits[cursorIndex] = static_cast<u8*>(malloc(MOUSE_CURSOR_AND_BYTES));
 
         if (gMouseCursorType == MOUSE_CURSOR_ADVENTURE)
-            sprintf(
-                filename,
-                "ADVM%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "ADVM%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
         else if (gMouseCursorType == MOUSE_CURSOR_SPELL)
-            sprintf(
-                filename,
-                "SPEL%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "SPEL%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
         else
-            sprintf(
-                filename,
-                "CMSE%s%02d.BMP",
-                gColorMice ? "CO" : "BW",
-                frame + 1
-            );
+            sprintf(filename, "CMSE%s%02d.BMP", gColorMice ? "CO" : "BW", frame + 1);
 
         gpResourceManager->PointToFile(gpResourceManager->MakeId(filename));
         gpResourceManager->ReadBlock(gColorBits[cursorIndex], MOUSE_CURSOR_BITMAP_HEADER_BYTES);
@@ -279,12 +264,12 @@ void mouseManager::UnusedTwoArgumentHook2(i16, i16) {}
 // advManager::UpdateScreen pushes the two origin words and a sign-extended
 // cursor flag word.
 VA(0x0046bfc0, 0xd)
-void mouseManager::SaveAndDraw(bitmap*, i16, i16, i16) {}
+void mouseManager::SaveAndDraw(bitmap* buffer, i16 x, i16 y, i16 cursorUpdate) {}
 
 // philAI's CheckDoMain still asks for a software pointer move; the Windows
 // build ignores it (`ret 8`).
 VA(0x0046bfcd, 0xd)
-void mouseManager::MovePointer(i16, i16) {}
+void mouseManager::MovePointer(i16 x, i16 y) {}
 
 VA(0x0046bfda, 0xb)
 void mouseManager::ShowColorPointer(void) {}
@@ -292,10 +277,10 @@ void mouseManager::ShowColorPointer(void) {}
 // townManager::Open forces a pointer refresh here; the Windows build keeps
 // only the one-argument return.
 VA(0x0046bfe5, 0xd)
-void mouseManager::NewUpdate(i32) {}
+void mouseManager::NewUpdate(i32 force) {}
 
 VA(0x0046bff2, 0xd)
-void mouseManager::WarpPointer(i16, i16) {}
+void mouseManager::WarpPointer(i16 x, i16 y) {}
 
 // Descriptive name: an empty one-argument hook (`ret 4`).
 // @dead-code
@@ -314,11 +299,11 @@ void mouseManager::MouseCoords(i16& x, i16& y) {
 }
 
 VA(0x0046c062, 0xd)
-void mouseManager::SetCursorShape(i32) {}
+void mouseManager::SetCursorShape(i32 shape) {}
 
 // advManager::Open passes the colour-pointer preference; Windows ignores it.
 VA(0x0046c06f, 0xd)
-void mouseManager::SetColorMice(i32) {}
+void mouseManager::SetColorMice(i32 enabled) {}
 
 VA(0x0046c07c, 0x13)
 void mouseManager::HideSystemCursor(void) {

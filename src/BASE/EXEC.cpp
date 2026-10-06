@@ -17,8 +17,7 @@
 DATA(0x004a15cc)
 char gResourceManagerInitError[] = localization::Tr("startup.resources.failed");
 DATA(0x004a1604)
-char gInputManagerInitError[] =
-    localization::Tr("startup.input.failed");
+char gInputManagerInitError[] = localization::Tr("startup.input.failed");
 DATA(0x004a162c)
 char gSoundManagerInitError[] = localization::Tr("startup.sound.failed");
 DATA(0x004a1644)
@@ -90,29 +89,26 @@ VA(0x00472b98, 0x189)
 i16 executive::DoDialog(baseManager* manager) {
     baseManager* savePrev[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     i32 idx;
-    baseManager* p;
+    baseManager* node;
     baseManager* saveMgr[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     baseManager* saveNext[EXECUTIVE_DIALOG_MANAGER_CAPACITY];
     executive ex;
     i32 count = 0;
-    p = m_managerListHead;
-    while (p != NULL) {
-        saveMgr[count] = p;
-        savePrev[count] = p->m_prev;
-        saveNext[count] = p->m_next;
-        p = p->m_next;
+    node = m_managerListHead;
+    while (node != NULL) {
+        saveMgr[count] = node;
+        savePrev[count] = node->m_prev;
+        saveNext[count] = node->m_next;
+        node = node->m_next;
         count++;
     }
     if (AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError1);
-    if (ex.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(gpMouseManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError2);
-    if (ex.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(gpWindowManager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError3);
-    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED)
-        != BASE_MANAGER_SUCCESS)
+    if (ex.AddManager(manager, BASE_MANAGER_PRIORITY_UNASSIGNED) != BASE_MANAGER_SUCCESS)
         ShutDown(gDialogManagerError4);
     ex.MainLoop();
     RemoveManager(manager);

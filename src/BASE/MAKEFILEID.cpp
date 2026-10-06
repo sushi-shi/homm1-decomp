@@ -7,12 +7,12 @@
 #include <string.h>
 
 VA(0x00473610, 0x12b)
-u32 MAKEFILEID(char* text) {
+u32 MAKEFILEID(char* name) {
     u16 fileId = 0;
     u16 highByte = 0;
-    i32 activeSize = strlen(text);
+    i32 activeSize = strlen(name);
     char* line = new char[activeSize + 1];
-    strcpy(line, text);
+    strcpy(line, name);
     for (i32 i = 0; i < activeSize; i++) {
         if (line[i] >= 'a' && line[i] <= 'z')
             line[i] &= ~('a' - 'A');

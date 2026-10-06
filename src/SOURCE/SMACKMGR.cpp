@@ -231,7 +231,7 @@ void SmackMain() {
         0
     );
     if (SmackOptions[gSmackNum].fadeIn)
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, NULL);
+        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
     active = 1;
     primaryOn = 0;
     companionOn = 0;
@@ -290,7 +290,7 @@ void SmackMain() {
     }
     if (SmackOptions[gSmackNum].fadeOut) {
         memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_SHORT, NULL);
+        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_SHORT, NULL);
         FillBitmapArea(
             gpWindowManager->m_screen,
             0,
@@ -310,7 +310,7 @@ void SmackMain() {
         );
     } else if (!gSmackCompleted) {
         memcpy(gpBufferPalette->m_data, gPalette->m_data, PALETTE_DATA_SIZE);
-        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_STEPS_NORMAL, NULL);
+        gpWindowManager->FadeScreen(WINDOW_FADE_OUT, WINDOW_FADE_NORMAL, NULL);
         FillBitmapArea(
             gpWindowManager->m_screen,
             0,

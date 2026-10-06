@@ -68,7 +68,8 @@ void BlitBitmapToScreen(
     RECT invalidRectangle;
     invalidRectangle.left = destinationX * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH;
     invalidRectangle.top = destinationY * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT;
-    invalidRectangle.right = (destinationX + width) * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
+    invalidRectangle.right =
+        (destinationX + width) * iMainWinScreenWidth / LOGICAL_SCREEN_WIDTH - 1;
     invalidRectangle.bottom =
         (destinationY + height) * gMainWinScreenHeight / LOGICAL_SCREEN_HEIGHT - 1;
     InvalidateRect(hwndApp, &invalidRectangle, FALSE);
@@ -206,25 +207,25 @@ i32 Random(i32 low, i32 high) {
 
 // Called on the loaded kb.pal data before SetPalette.
 VA(0x0046fdc3, 0x95)
-void PostprocessPalette(i8* data) {
+void PostprocessPalette(i8* paletteData) {
     PaletteColor* remapped = static_cast<PaletteColor*>(malloc(PALETTE_DATA_SIZE));
     memset(remapped, 0, PALETTE_DATA_SIZE);
     for (i32 index = 0; index < PALETTE_COLOR_COUNT; index++)
         memcpy(
             &remapped[gMonoColorMap[index]],
             // byte-evidenced: RGB triples of the raw palette.
-            &reinterpret_cast<PaletteColor*>(data)[index],
+            &reinterpret_cast<PaletteColor*>(paletteData)[index],
             sizeof(PaletteColor)
         );
-    memcpy(data, remapped, PALETTE_DATA_SIZE);
+    memcpy(paletteData, remapped, PALETTE_DATA_SIZE);
     free(remapped);
 }
 
 VA(0x0046fe58, 0x5)
-void PostprocessBitmap(u8*, i32, i32) {}
+void PostprocessBitmap(u8* pixels, i32 width, i32 height) {}
 
 VA(0x0046fe5d, 0x5)
-void PostprocessIcon(icon*) {}
+void PostprocessIcon(icon* loadedIcon) {}
 
 // HoMM1's C++ mono clipping path.
 
@@ -242,7 +243,7 @@ void ClippedMonoIconToBitmap(
     i32 y,
     i32 frame,
     i32 color,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
@@ -332,7 +333,7 @@ void ClipIconToBitmap(
     i32 x,
     i32 y,
     i32 frame,
-    i32 mode,
+    i32 offsetMode,
     i32 clipX,
     i32 clipY,
     i32 clipW,
