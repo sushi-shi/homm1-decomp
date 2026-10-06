@@ -127,7 +127,9 @@ def _renamed(sections: list[dict], symbols: list[tuple[str, int]], renames: dict
     by the readable name the generated tree compiles under."""
     if not renames:
         return sections, symbols
-    pattern = re.compile(r"(?<![A-Za-z0-9_])(" + "|".join(map(re.escape, renames))
+    # A name starts the symbol after its C decoration (`_name`) or after a
+    # C++ decoration character (`?name@@`, `@?1??f@@`).
+    pattern = re.compile(r"(?:(?<=^_)|(?<![A-Za-z0-9_]))(" + "|".join(map(re.escape, renames))
                          + r")(?![A-Za-z0-9_])")
 
     def name(spelling: str) -> str:
@@ -137,6 +139,25 @@ def _renamed(sections: list[dict], symbols: list[tuple[str, int]], renames: dict
                                   for offset, kind, n in section["relocations"]]
         section["defines"] = [name(n) for n in section["defines"]]
     return sections, [(name(n), sec) for n, sec in symbols]
+
+
+#: Largest alignment gap VC6 leaves before one uninitialized symbol.
+_BSS_PADDING = 8
+
+
+def _relaid_bss(ours: dict, theirs: dict, readable: set[str]) -> bool:
+    """True when two uninitialized sections differ only by the layout that
+    readable spellings choose: the compiler orders `.bss` by a hash of each
+    name, so a dropped `// spelling fixes .bss order` alias reorders the same
+    symbols and moves their alignment padding. The section must define an
+    aliased name, the same symbols, and differ in size by padding alone."""
+    if not readable or not isinstance(theirs["data"], int) or ours["name"] != theirs["name"] \
+            or ours["flags"] != theirs["flags"] or ours["relocations"] != theirs["relocations"]:
+        return False
+    words = {w for define in theirs["defines"] for w in re.findall(r"[A-Za-z]\w*", define)}
+    if not words & readable or sorted(ours["defines"]) != sorted(theirs["defines"]):
+        return False
+    return abs(ours["data"] - theirs["data"]) < _BSS_PADDING * len(theirs["defines"])
 
 
 def compare_objects(clean: Path, matching: Path, *, local_names: bool = True,
@@ -154,8 +175,11 @@ def compare_objects(clean: Path, matching: Path, *, local_names: bool = True,
     theirs = [s for s in theirs if not s["name"].startswith(".debug")]
     if len(ours) != len(theirs):
         return [f"{len(ours)} sections against {len(theirs)}"]
+    readable = set(renames.values()) if renames else set()
     differences = []
     for a, b in zip(ours, theirs):
+        if _relaid_bss(a, b, readable):
+            continue
         if (a["name"], a["flags"], a["data"], a["relocations"]) != \
                 (b["name"], b["flags"], b["data"], b["relocations"]):
             owner = ", ".join(b["defines"][:3]) or a["name"]
