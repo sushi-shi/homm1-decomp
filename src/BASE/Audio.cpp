@@ -120,7 +120,7 @@ void PlaySample(sample* resource) {
         delete dead;
     } else {
         gSamples->stream->setVolume(ScaleSampleVolume(resource->m_playbackData.volume));
-        gSamples->stream->setRepeat(resource->m_playbackData.repeat != 0 ? true : false);
+        gSamples->stream->setRepeat(resource->m_playbackData.repeat != false ? true : false);
         gSamples->stream->play();
     }
     CleanupSamples();

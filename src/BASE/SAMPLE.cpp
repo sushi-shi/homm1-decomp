@@ -20,7 +20,7 @@ sample::sample(char* name)
       ) {
     char fileName[SAMPLE_FILENAME_CAPACITY];
     m_playbackData.volume = SAMPLE_VOLUME_FULL;
-    m_playbackData.repeat = 0;
+    m_playbackData.repeat = false;
     m_playbackData.stereo = SAMPLE_LOAD_STEREO;
     m_playbackData.sampleFormat = SAMPLE_LOAD_FORMAT_16_BIT;
     m_playbackData.sampleRate = SAMPLE_LOAD_RATE_44100;

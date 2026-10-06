@@ -19,7 +19,7 @@ struct SamplePlaybackData {
     i32 volume;
     i32 sampleFormat;
     i32 stereo;
-    i32 repeat;
+    b32 repeat;
 };
 
 class sample : public resource {

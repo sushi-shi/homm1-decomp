@@ -46,7 +46,7 @@ and `include`. Preserve banked matches and the linked-image identity.
   names it, and neither the game nor the editor image reads one. The mouse's
   saved area and the player's unused save span are named from their code
   users, and 20 spans with no user at all are `m_unused*`/`m_padding*`.
-- [ ] Name bare constants: **969** open literals (`homm1 verify constants`
+- [ ] Name bare constants: **965** open literals (`homm1 verify constants`
   floor, both programs); about 2,000 0/1 flag literals became `true`/`false`
   on `b8`/`b32` storage, and compiler-proven NULL/bool/enum replacements are
   at 0.
