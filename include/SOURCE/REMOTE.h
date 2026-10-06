@@ -71,6 +71,11 @@ H1_ENUM_BEGIN(MultiplayerBaseType)
     MULTIPLAYER_BASE_UNSET = 10
 H1_ENUM_END(MultiplayerBaseType)
 
+// TransmitSaveGame and ReceiveSaveGame move the saved game LZHUF-encoded in
+// modem games, and in network games once the other side is ready.
+#define REMOTE_SAVE_ENCODED()                                                                      \
+    (!gMapBaseType || (gMapBaseType == MULTIPLAYER_BASE_NETWORK && gRemoteReady))
+
 // UnloadRemoteDriver's driver: the serial (com_*) driver for modem and direct
 // connect games, NetBIOS (nb_*) for network games (RemoteCleanup).
 H1_ENUM_BEGIN(RemoteDriverType)
@@ -95,6 +100,17 @@ struct RemotePacketHeader {
 // keeps it 4-byte aligned, as an array, not 8-byte aligned like a record).
 #define REMOTE_MESSAGE(buffer) (reinterpret_cast<RemoteMessage*>(buffer))
 
+// The combat action ProcessNextAction relays to the other player and
+// combatManager::Main replays (REMOTE_COMMAND_COMBAT_ACTION).
+#pragma pack(push, 1)
+struct CombatRemoteAction {
+    i32 nextAction;
+    i32 nextActionExtra;
+    i32 nextActionGridIndex;
+    i32 nextActionGridIndex2;
+};
+#pragma pack(pop)
+
 // A remote message's payload. TransmitRemoteData copies the caller's buffer to
 // +9 of the record; the save-game transfer builds its packets in this layout.
 #pragma pack(push, 1)
@@ -111,6 +127,7 @@ union RemotePayload {
         i16 index;
         char data[REMOTE_MESSAGE_SIZE - REMOTE_MESSAGE_HEADER_SIZE - 2];
     } segment;
+    CombatRemoteAction combatAction;
 };
 #pragma pack(pop)
 
@@ -139,13 +156,13 @@ extern i32 gLastConfirm;
 #define gInOrder iInOrder // spelling fixes .bss order
 extern i32 gInOrder[REMOTE_QUEUE_CAPACITY];
 extern RemoteMessage rcvBuf[REMOTE_QUEUE_CAPACITY];
-extern char rcvBufOut[REMOTE_MESSAGE_SIZE];
+extern RemoteMessage rcvBufOut;
 
-i32 SendRemoteData(u8* dataToSend, u8*, i32 destination, i32 length);
-i32 ReceiveRemoteData(u8*, u8* data, i32 decodeType);
+i32 SendRemoteData(RemoteMessage* dataToSend, u8*, i32 destination, i32 length);
+i32 ReceiveRemoteData(u8*, RemoteMessage* data, i32 decodeType);
 // The trailing destination flag defaults to game-position addressing.
 i32 TransmitRemoteData(
-    char* data,
+    void* data,
     i32 destination,
     i32 length,
     i8 command,
@@ -154,14 +171,14 @@ i32 TransmitRemoteData(
     i8 messageType = REMOTE_MESSAGE_DEFAULT,
     i8 gamePosDestination = 1
 );
-char* GetRemoteData(i8 remove);
+RemoteMessage* GetRemoteData(i8 remove);
 i32 TransmitAndWait(
-    char* bytes,
+    void* bytes,
     i32 destination,
     i32 length,
     i8 command,
     i8 responseCommand,
-    char** response
+    RemoteMessage** response
 );
 void RemoteCleanup(void);
 void UnloadRemoteDriver(H1_ENUM_PARAM(RemoteDriverType, i16) networkDriver);
@@ -169,8 +186,8 @@ i32 FileSize(char* filename);
 void WriteModemPacket(char* buffer, i32 length);
 char ReadPacket(void);
 void calc_crc(u16* crc, u8* data, i32 length);
-i32 EncodePacket(u8* data, i8 source, i8 destination, i32 length);
-i32 DecodePacket(u8* data, i32 source);
+i32 EncodePacket(RemoteMessage* data, i8 source, i8 destination, i32 length);
+i32 DecodePacket(RemoteMessage* data, i32 source);
 i8 InitNetHost(void);
 i8 InitNetGuest(void);
 i8 WaitForHost(void);

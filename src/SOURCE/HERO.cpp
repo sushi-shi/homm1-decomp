@@ -76,7 +76,7 @@ i16 hero::CalcMobility(void) {
             movePoints = seaBaseMobility;
         if (HasArtifact(ARTIFACT_SAILORS_ASTROLABE))
             movePoints += astrolabeMobility;
-        movePoints = static_cast<i32>(movePoints * gClassNavigationMod[m_heroClass]);
+        movePoints = movePoints * gClassNavigationMod[m_heroClass];
     } else {
         slowestSpeedValue = CREATURE_SPEED_FAST;
         for (creatureIndex = 0; creatureIndex < ARMY_GROUP_SLOT_COUNT; creatureIndex++) {
@@ -562,14 +562,12 @@ i32 hero::GetExperience(i32 level) {
     if (level <= HERO_EXPERIENCE_LEVEL_TABLE_COUNT)
         return gMinExpForLevel[m_heroClass][level - 1];
     curStage = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
-    incr = static_cast<i32>(
-        (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-         - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
-        * 1.2
-    );
+    incr = (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+            - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+           * 1.2;
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + incr;
     while (curStage < level) {
-        incr = static_cast<i32>(incr * 1.2);
+        incr = incr * 1.2;
         experience += incr;
         curStage++;
     }
@@ -586,15 +584,13 @@ i32 hero::GetLevel(i32 experienceValue) {
         if (experienceValue < gMinExpForLevel[m_heroClass][levelCounter - 1])
             return levelCounter - 1;
     }
-    growth = static_cast<i32>(
-        (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
-         - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
-        * 1.2
-    );
+    growth = (gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1]
+              - gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 2])
+             * 1.2;
     experience = gMinExpForLevel[m_heroClass][HERO_EXPERIENCE_LEVEL_TABLE_COUNT - 1] + growth;
     levelCounter = HERO_EXPERIENCE_LEVEL_TABLE_COUNT + 1;
     while (experienceValue > experience) {
-        growth = static_cast<i32>(growth * 1.2);
+        growth = growth * 1.2;
         experience += growth;
         levelCounter++;
     }

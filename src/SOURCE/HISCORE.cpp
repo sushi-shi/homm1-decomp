@@ -99,7 +99,7 @@ i16 highScoreManager::Main(struct tag_message& message) {
         }
         return MESSAGE_DISPATCH_CONTINUE;
     }
-    if ((message.modifiers & static_cast<i32>(MESSAGE_MODIFIER_RIGHT_BUTTON)))
+    if (message.modifiers & MESSAGE_MODIFIER_RIGHT_BUTTON)
         return MESSAGE_DISPATCH_CONSUME;
 
     switch (message.type) {

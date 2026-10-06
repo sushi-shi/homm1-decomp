@@ -46,7 +46,7 @@ H1_C_LINKAGE u16 __cdecl nb_init(u16 maxSessions) {
     if (is_netbios_avail() == 0)
         return 1;
     if (gNetbiosAvail != 0) {
-        gNbMaxSess = static_cast<u8>(maxSessions);
+        gNbMaxSess = maxSessions;
         for (jj = 0; jj < NETBIOS_SESSION_COUNT; jj++) {
             gNetStatus[jj] = 0;
             gNbSessLsn[jj] = NETBIOS_INVALID_ID;
@@ -155,7 +155,7 @@ H1_C_LINKAGE i16 __cdecl nb_snd(i32, u16 session, u16 len, void* data, i32 queue
         return NRC_SNUMOUT;
     node = static_cast<tag_Node*>(malloc(len + NETBIOS_PACKET_HEADER_SIZE));
     node->len = len;
-    node->sessionIndex = static_cast<u8>(session);
+    node->sessionIndex = session;
     memcpy(node->data, data, len);
     EnterCriticalSection(&gNbSndLock);
     if (queueToFree)
@@ -238,7 +238,7 @@ H1_C_LINKAGE i16 __cdecl nb_sess(i32, i32 operation, ...) {
             destinationSession = va_arg(nextList, i32);
             anyIsFree = va_arg(nextList, i32);
             if (savedSession == gNbMaxSess)
-                gNbMaxSess = static_cast<u8>(destinationSession);
+                gNbMaxSess = destinationSession;
             if (gNbSessLsn[savedSession] == NETBIOS_INVALID_ID)
                 return NRC_GOODRET;
             gNbSessLsn[destinationSession] = gNbSessLsn[savedSession];
@@ -574,7 +574,7 @@ void nb_recv_complete(i32 session) {
                     );
                     if (node != NULL) {
                         node->len = gNbSessNcb[session].ncb_length;
-                        node->sessionIndex = static_cast<u8>(session);
+                        node->sessionIndex = session;
                         memcpy(node->data, gNbRcvData[session], node->len);
                         EnterCriticalSection(&gNbRcvLock);
                         add_node(&gNbRcvQueue, node);

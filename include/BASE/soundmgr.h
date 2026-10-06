@@ -8,7 +8,6 @@ struct pcmwaveformat_tag;
 struct tagAUXCAPSA;
 extern pcmwaveformat_tag gWaveFormat;
 extern tagAUXCAPSA gAuxCaps;
-_DIG_DRIVER* WAVE_init_driver(u32 sampleRate, u16 bitsPerSample, u16 channels, u16 showErrors);
 
 H1_ENUM_CONST_BEGIN(CDPlaybackConstant)
     CD_POSITION_CAPACITY = 15
@@ -53,8 +52,5 @@ struct SampleChannelStruct {
     i32 currentChannel;
 };
 extern SampleChannelStruct SCS[];
-
-void SetReady2Poll(void);
-void HandleMCIError(i32 errorCode, char* command);
 
 #endif

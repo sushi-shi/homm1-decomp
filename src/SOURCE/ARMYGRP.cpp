@@ -175,7 +175,7 @@ void armyGroup::Swap(i8 slot, armyGroup* otherGroup, i8 otherSlot) {
 VA(0x004189b6, 0x133)
 void armyGroup::DamageGroup(float casualtyFraction) {
     i32 killed;
-    i32 killChance = static_cast<i32>(casualtyFraction * 100.0f);
+    i32 killChance = casualtyFraction * 100.0f;
     i32 i;
     i32 isFirstTroop = 1;
     i32 j;

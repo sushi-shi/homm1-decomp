@@ -1460,7 +1460,7 @@ void army::DamageEnemy(
         rolledTotal /= 2;
     if (m_damageMode == ARMY_DAMAGE_HALF)
         rolledTotal /= 2;
-    damage = static_cast<i32>(rolledTotal + 0.5);
+    damage = rolledTotal + 0.5;
     if (m_creatureType == CREATURE_GENIE
         && SRandom(1, ARMY_SPECIAL_ROLL_MAX) == ARMY_GENIE_ROLL_HIT) {
         hurt = ((target->m_quantity + 1) / 2) * target->m_stats.hitPoints;
