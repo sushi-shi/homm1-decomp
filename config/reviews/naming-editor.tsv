@@ -11,3 +11,9 @@ aliased	editManager::ClearArea	tag/ownerRec/thatCell	clearedId/cellIds/otherCell
 local	ScatterDetails	cellOwner	cellIds	the cell's editMapCellPair (object and overlay ids)
 aliased	editManager::WriteTowns	spot	cell	the scanned map cell
 aliased	editManager::WriteMines	spot/beaconX/beaconY/beaconCount/numCities/neighbour/mineNumber	cell/lighthouseX/lighthouseY/lighthouseCount/cityCount/markerCell/mineSlot	the lighthouse (MAP_OBJECT_LIGHTHOUSE, catalog "More than one lighthouse") and Dragon City counts, the cell east of a mine that carries its resource marker, and the game::m_mines slot (MINE_SLOT_STANDARD_FIRST on)
+member	overlayType	groundMask	footprintMask	every occupied cell: MeasureOverlay sizes the object from it, DrawFootprint outlines it, CanPlaceOverlay tests each of its cells and PlaceOverlay gives each its trigger; cells outside overlayMask go on the object layer; the table's masks equal the cells that have frames
+param	overlayManager::DrawFootprint	groundMask	footprintMask	callers pass overlayType::footprintMask
+member	overlayManager	m_unknown16ca	m_unused16ca	no instruction of EDITOR.EXE addresses offset 0x16ca of the manager (only m_font at 0x16ce is read); spelled as an unused span per the project convention
+enum	OverlayTypeConstant	OVERLAY_TYPE_MINE_RESOURCE	OVERLAY_TYPE_RESOURCE_MARKER	flag 1 is set on the rovr-0n resource markers (trigger MAP_OBJECT_RESOURCE_SHADOW) that Main and PlaceOverlay put on a mine's marker cell through PlaceMineResource, not on mines (mines carry OVERLAY_TYPE_SHOWS_RESOURCE)
+local	overlayManager::Main	result	finished	only ever 0; when 1, Main posts EXECUTIVE_COMMAND_TERMINATE_LOOP (same frame bucket)
+enum	OverlayManagerConstant	OVERLAY_TOWN_LIMIT	GAME_TOWN_COUNT	the "Town limit (%d) reached" check is the game's town table, which WriteTowns pads and game::LoadMap reads
