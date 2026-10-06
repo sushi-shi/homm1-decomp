@@ -74,24 +74,45 @@ def build_lowercase_mirror(real: Path, mirror: Path) -> Path:
 
     Every FOO.H under `real` gets a lowercase symlink `foo.h` (to the real,
     ABSOLUTE path) under `mirror`, preserving (lowercased) subdir structure.
-    Rebuilt only when `real` changes (a `.src` marker guards it) so a
-    toolchain bump does not leave dangling symlinks.
+    Rebuilt only when `real` changes (a `.src` marker inside it names the
+    source) so a toolchain bump does not leave dangling symlinks. Every
+    image's compdb edge shares the mirror and ninja runs them concurrently
+    with compiles that read it, so each edge builds a private copy, marker
+    included, and renames it into place: a mirror is never seen half built,
+    the first rename wins and only a stale mirror is ever removed.
     """
-    marker = mirror.parent / (mirror.name + ".src")
-    if mirror.is_dir() and marker.is_file() and marker.read_text() == str(real):
+    def current() -> bool:
+        marker = mirror / ".src"
+        return marker.is_file() and marker.read_text() == str(real)
+
+    if current():
         return mirror
-    if mirror.exists():
-        shutil.rmtree(mirror)
+    mirror.parent.mkdir(parents=True, exist_ok=True)
+    staging = mirror.parent / f".{mirror.name}.{os.getpid()}"
+    shutil.rmtree(staging, ignore_errors=True)
     for root, _dirs, files in os.walk(real):
         rel = os.path.relpath(root, real)
-        low = mirror if rel == "." else mirror / rel.lower()
+        low = staging if rel == "." else staging / rel.lower()
         low.mkdir(parents=True, exist_ok=True)
         for fn in files:
             link = low / fn.lower()
-            if not link.exists():
+            if not link.is_symlink():
                 link.symlink_to(os.path.join(root, fn))
-    marker.parent.mkdir(parents=True, exist_ok=True)
-    marker.write_text(str(real))
+    (staging / ".src").write_text(str(real))
+    for _ in range(2):
+        try:
+            os.rename(staging, mirror)
+            return mirror
+        except OSError:
+            if current():             # another edge renamed its copy first
+                break
+            stale = mirror.parent / f".{mirror.name}.stale.{os.getpid()}"
+            try:
+                os.rename(mirror, stale)
+            except OSError:
+                pass
+            shutil.rmtree(stale, ignore_errors=True)
+    shutil.rmtree(staging, ignore_errors=True)
     return mirror
 
 
@@ -125,7 +146,9 @@ def vc6_stl_overlay(mirror: Path) -> Path:
             text = text.replace("flags() & skipws", "flags() & ios_base::skipws")
         target = overlay / name
         if not target.exists() or target.read_text() != text:
-            target.write_text(text)
+            staged = overlay / f".{name}.{os.getpid()}"
+            staged.write_text(text)
+            os.replace(staged, target)   # another image's edge may read it
     return overlay
 
 

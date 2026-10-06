@@ -76,10 +76,11 @@ def media(variable: str, expected: str) -> Path:
 
 
 def extract_component(name: str, source: Path, destination: Path,
-                      config: dict, patch: Path | None = None) -> None:
+                      config: dict, work: Path, patch: Path | None = None) -> None:
+    """Extract `name`'s pinned files into `destination`, the media scratch
+    under `work`: everything below the archive root is packaged."""
     from homm1.toolchain import extract_media_files
-    extract_media_files(config, source, destination,
-                        destination.parent / f".{name}-media", patch)
+    extract_media_files(config, source, destination, work / f".{name}-media", patch)
 
 
 def reconstruct_pcjs_disk(source: Path, output: Path) -> None:
@@ -173,6 +174,8 @@ def entries(config: dict) -> dict:
     result = dict(config["files"])
     result.update(config.get("release_files", {}))
     result.update(config.get("resource_files", {}))
+    # the native C runtime a linked image's LINK ran against (the editor's)
+    result.update(config.get("linker_runtime_files", {}))
     return result
 
 
@@ -219,9 +222,9 @@ def main() -> None:
         verify(Path(sys.argv[2]).resolve(), configs)
         return
 
+    # the pinned release's asset name; its hash is pinned after the build
     output = Path(os.environ.get(
-        "OUTPUT", REPO / ("build/homm1-toolchain-buka-2003-v1.tar.xz" if COMPILER == "vc6"
-                         else "build/homm1-toolchain-win95-1.2-v1.tar.xz"))).resolve()
+        "OUTPUT", REPO / "build" / configs[COMPILER]["release"]["asset"])).resolve()
     installed = None
     if len(sys.argv) > 1:
         if len(sys.argv) != 3 or sys.argv[1] != "--from-installed":
@@ -244,7 +247,7 @@ def main() -> None:
                 source = media(variable, configs[name]["media"]["sha256"])
                 patch = (media("VC6_SP5", configs[name]["patch_media"]["sha256"])
                          if "patch_media" in configs[name] else None)
-                extract_component(name, source, root / name, configs[name], patch)
+                extract_component(name, source, root / name, configs[name], work, patch)
         if not installed:
             install_masm(Path(os.environ["MASM611_DISK1"]).resolve(), root / COMPILER, work)
         verify(root, configs)
