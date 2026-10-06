@@ -104,7 +104,7 @@ xvfb-run wine result/bin/heroes.exe --data 'Z:\home\me\.local\share\homm1-buka\g
 driver is a Linux script); the flake runs `file_test` and `data_root_test`
 from the package's `tests` output under Wine (`windows-tests`), and
 `HOMM1_DATA=DIR nix run .#windows-smoke` starts `heroes.exe` from a player's
-game folder three ways.
+game folder three ways, and `heroes-editor.exe` once.
 
 On Windows itself (MinGW-w64, CMake 3.25+, Ninja, Python 3), `cmake --preset
 windows` and `cmake --build --preset windows` build both programs in
@@ -330,7 +330,8 @@ The `*_replay` tests replay the fuzz harnesses' regression inputs (see
 launchers (`nix/game.nix`) without game data. `HOMM1_DATA=DIR nix run
 .#windows-smoke` starts the Windows build under Wine and Xvfb from a
 player's game folder three ways (from it, from another folder, with a quoted
-`HOMM1_DATA`) and requires the main menu each time.
+`HOMM1_DATA`) and the scenario editor from it, and requires the main menu
+(the editor's map) each time.
 `-DHOMM1_SANITIZERS_RECOVER=ON` keeps going after undefined behaviour, to
 survey a whole session.
 
